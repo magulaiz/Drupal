@@ -80,26 +80,23 @@
     margin: var(--off-canvas-vertical-spacing-unit) 0;
   }
 
-#drupal-off-canvas {
-
-  /* @todo - is this too broad? Will this affect <ul>s in CKEditor? */
-}
-
-#drupal-off-canvas ul:where(:not(.messages__list)) {
+#drupal-off-canvas .links,
+  #drupal-off-canvas .inline-block-list,
+  #drupal-off-canvas .layout-selection {
     margin: 0;
     padding: 0;
-    list-style: none;
+    list-style: none
   }
 
-#drupal-off-canvas li {
-    padding: calc(var(--off-canvas-vertical-spacing-unit)*0.25) 0;
-    border-bottom: 1px solid var(--off-canvas-border-color)
-  }
-
-#drupal-off-canvas li:last-child {
-      padding-bottom: 0;
-      border-bottom: none;
+#drupal-off-canvas .links li, #drupal-off-canvas .inline-block-list li, #drupal-off-canvas .layout-selection li {
+      padding: calc(var(--off-canvas-vertical-spacing-unit)*0.25) 0;
+      border-bottom: 1px solid var(--off-canvas-border-color)
     }
+
+#drupal-off-canvas .links li:last-child, #drupal-off-canvas .inline-block-list li:last-child, #drupal-off-canvas .layout-selection li:last-child {
+        padding-bottom: 0;
+        border-bottom: none;
+      }
 
 #drupal-off-canvas {
 

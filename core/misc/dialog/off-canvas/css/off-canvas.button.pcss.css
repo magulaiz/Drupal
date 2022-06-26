@@ -12,6 +12,7 @@
   --off-canvas-button-border-radius: 20em;
   --off-canvas-button-font-weight: 600;
   --off-canvas-primary-button-background-color: #277abd;
+  --off-canvas-primary-button-background-color-hover: #236aaf;
   --off-canvas-primary-button-text-color: #fff;
 
   & .button {

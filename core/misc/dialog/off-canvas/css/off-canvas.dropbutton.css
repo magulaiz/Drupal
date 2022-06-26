@@ -8,369 +8,187 @@
  * @file
  * Styles for dropbuttons in the off-canvas dialog.
  */
-#drupal-off-canvas .dropbutton-wrapper,
-  #drupal-off-canvas .dropbutton-widget {
-    position: static;
-    display: block;
-    transition: none;
-    -webkit-appearance: none;
-    appearance: none;
-  }
-#drupal-off-canvas .dropbutton-widget {
-    margin: 0;
-    padding: 0;
-    cursor: pointer;
-    transition: background 0.5s ease;
-    text-align: center;
-    text-decoration: none;
-    text-transform: none;
-    color: #fff;
-    border: 0;
-    border-radius: 1em;
-    background: #277abd;
-    font-weight: 600;
-    line-height: normal
-  }
-#drupal-off-canvas .dropbutton-widget:hover {
-      background: #2b8bd8;
-    }
-#drupal-off-canvas {
+#drupal-off-canvas .dropbutton-wrapper {
+    --dropbutton--height: 1.5rem;
+    --dropbutton--secondary-bg-color: var(--off-canvas-primary-button-background-color);
+    --dropbutton--active-bg-color: var(--off-canvas-primary-button-background-color-hover);
+    --dropbutton--border-color: transparent;
+    --dropbutton--border-width: 1px;
+    --dropbutton--border-radius: 2px;
+    --dropbutton--font-size: 0.75rem;
+    --dropbutton--text-color: white; /* Minimum 4.5:1 contrast ratio against --dropbutton--active-bg-color and --dropbutton--secondary-bg-color. */
+    --dropbutton--text-hover-color: white; /* Minimum 4.5:1 contrast ratio against --dropbutton--active-bg-color and --dropbutton--secondary-bg-color. */
 
-  /*
-  * Style dropbutton single.
-  */
-}
-#drupal-off-canvas .dropbutton-single .dropbutton-action a {
-      height: 2.2em;
-      /* Overlap icon for trigger. */
-      margin-top: -2em;
-      padding: 0;
-      cursor: pointer;
-    }
-#drupal-off-canvas .dropbutton-single .dropbutton-action:hover,
-    #drupal-off-canvas .dropbutton-single .dropbutton-action:focus,
-    #drupal-off-canvas .dropbutton-single .dropbutton-action a:hover,
-    #drupal-off-canvas .dropbutton-single .dropbutton-action a:focus {
-      text-decoration: none;
-      outline: none;
-    }
-#drupal-off-canvas .dropbutton-widget .dropbutton {
-    overflow: hidden;
-    margin: 0;
-    padding: 0;
+    margin-top: var(--off-canvas-vertical-spacing-unit);
+
+    margin-bottom: var(--off-canvas-vertical-spacing-unit)
+
+    /*
+     * Styles for when the dropbutton is expanded.
+     */
   }
-#drupal-off-canvas .dropbutton li,
-    #drupal-off-canvas .dropbutton a {
-      display: block;
-      width: auto;
-      padding: 0.25rem 0;
-      text-align: left;
-      color: #555;
-      outline: none
+#drupal-off-canvas .dropbutton-wrapper.open {
+      position: relative;
+      z-index: 100
     }
-#drupal-off-canvas .dropbutton li:hover,
-      #drupal-off-canvas .dropbutton li:focus,
-      #drupal-off-canvas .dropbutton a:hover,
-      #drupal-off-canvas .dropbutton a:focus {
-        color: #333;
-        outline: none;
-        background: transparent;
+#drupal-off-canvas .dropbutton-wrapper.open .secondary-action {
+        visibility: visible;
       }
-#drupal-off-canvas {
+#drupal-off-canvas .dropbutton-wrapper.open .dropbutton-widget {
+        border-radius: var(--dropbutton--border-radius) var(--dropbutton--border-radius) 0 0;
+      }
+#drupal-off-canvas .dropbutton-wrapper.open .dropbutton-toggle button:before {
+        transform: translateY(25%) rotate(225deg);
+      }
+#drupal-off-canvas .dropbutton-wrapper {
 
-  /*
-  * Style dropbutton multiple.
-  */
-}
-#drupal-off-canvas .dropbutton-multiple .dropbutton-widget {
-      width: 2em;
-      height: 2em;
-    }
-#drupal-off-canvas .dropbutton-multiple .dropbutton-widget:hover {
-      background-color: #2b8bd8;
-    }
-#drupal-off-canvas .dropbutton-multiple {
-
-    /* Hide the other actions until the dropbutton is triggered. */
+    /*
+    * Styles for single link variant of dropbutton.
+    */
   }
-#drupal-off-canvas .dropbutton-multiple .dropbutton .secondary-action {
-      display: none;
-    }
+[dir="ltr"] #drupal-off-canvas .dropbutton-wrapper.dropbutton-single .dropbutton-widget {
+        padding-right: 0
+}
+[dir="rtl"] #drupal-off-canvas .dropbutton-wrapper.dropbutton-single .dropbutton-widget {
+        padding-left: 0
+}
+#drupal-off-canvas .dropbutton-wrapper.dropbutton-single .dropbutton-action:first-child {
+          border-right: solid 1px var(--dropbutton--border-color); /* LTR */
+          border-radius: var(--dropbutton--border-radius)
+        }
+[dir="rtl"] #drupal-off-canvas .dropbutton-wrapper.dropbutton-single .dropbutton-action:first-child {
+            border: solid 1px var(--dropbutton--border-color);
+          }
+#drupal-off-canvas .dropbutton-wrapper.dropbutton-single .dropbutton-action a {
+          justify-content: center;
+        }
+[dir="ltr"] #drupal-off-canvas .dropbutton-widget {
+    padding-right: var(--dropbutton--height)
+}
+[dir="rtl"] #drupal-off-canvas .dropbutton-widget {
+    padding-left: var(--dropbutton--height)
+}
+#drupal-off-canvas .dropbutton-widget {
+    position: relative;
+    width: max-content;
+    max-width: 100%;
+    height: var(--dropbutton--height);
+    border-radius: var(--dropbutton--border-radius);
+  }
+[dir="ltr"] #drupal-off-canvas .dropbutton {
+    margin-left: 0
+}
+[dir="rtl"] #drupal-off-canvas .dropbutton {
+    margin-right: 0
+}
+[dir="ltr"] #drupal-off-canvas .dropbutton {
+    padding-left: 0
+}
+[dir="rtl"] #drupal-off-canvas .dropbutton {
+    padding-right: 0
+}
+#drupal-off-canvas .dropbutton {
+    height: var(--dropbutton--height);
+    margin-top: 0;
+    margin-bottom: 0;
+    list-style: none;
+    font-size: var(--dropbutton--font-size);
+  }
 #drupal-off-canvas {
 
-  /* The toggle to expand the button. */
-}
-[dir="ltr"] #drupal-off-canvas .dropbutton-toggle {
-    right: 0;
-}
-[dir="rtl"] #drupal-off-canvas .dropbutton-toggle {
-    left: 0;
+  /* This is the button that expands/collapses the secondary options. */
 }
 #drupal-off-canvas .dropbutton-toggle {
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    display: block;
-    width: 2em;
-    white-space: nowrap;
-    text-indent: 110%;
-    color: #fff;
-  }
-#drupal-off-canvas .dropbutton-toggle button {
-    display: block;
-    width: 100%;
-    height: 100%;
-    margin: 0;
     padding: 0;
-    cursor: pointer;
-    border: 0 solid transparent;
-    border-radius: 0 1em 1em 0 /* LTR */
-
-    /* PostCSS logical doesn't handle border radii. */
+    border: 0
   }
+[dir="ltr"] #drupal-off-canvas .dropbutton-toggle button {
+      right: 0
+}
 [dir="rtl"] #drupal-off-canvas .dropbutton-toggle button {
-      border-radius: 1em 0 0 1em;
-    }
-#drupal-off-canvas .dropbutton-toggle button:hover,
-    #drupal-off-canvas .dropbutton-toggle button:focus {
-      outline: none;
-    }
-#drupal-off-canvas {
-
-  /* The toggle arrow. */
+      left: 0
 }
-#drupal-off-canvas .dropbutton-arrow {
-    position: absolute;
-    display: block;
-    overflow: hidden;
-    width: 0;
-    height: 0;
-    margin-top: 0;
-    color: #fff;
-    border-width: 0.3333em 0.3333em 0;
-    border-style: solid;
-    border-right-color: transparent;
-    border-bottom-color: transparent;
-    border-left-color: transparent;
-    line-height: 0;
-  }
-[dir="ltr"] #drupal-off-canvas span.dropbutton-arrow {
-    right: 0.4375rem;
-}
-[dir="rtl"] #drupal-off-canvas span.dropbutton-arrow {
-    left: 0.4375rem;
-}
-#drupal-off-canvas span.dropbutton-arrow {
-    top: 0.4375rem;
-    background: transparent
-  }
-#drupal-off-canvas span.dropbutton-arrow:hover {
-      background: transparent;
-    }
-#drupal-off-canvas .dropbutton-action > .js-form-submit.form-submit,
-  #drupal-off-canvas .dropbutton-toggle button {
-    position: relative;
-    text-shadow: none;
-  }
-#drupal-off-canvas {
-
-  /*
-  * Dropbuttons when in a table cell.
-  */
-}
-#drupal-off-canvas td {
-    /* Make sure table cell doesn't collapse around absolute positioned dropbutton. */
-  }
-#drupal-off-canvas td .dropbutton-single {
-      min-width: 2em;
-    }
-#drupal-off-canvas td .dropbutton-multiple {
-      min-width: 2em;
-      margin-right: 0;
-      margin-left: 0;
-      padding-right: 0;
-      padding-left: 0;
-      border: 0
-    }
-#drupal-off-canvas td .dropbutton-multiple .dropbutton-action :is(a, input, button) {
-        width: auto;
-        padding: 0;
-        font-size: inherit;
-      }
-#drupal-off-canvas td .dropbutton-wrapper {
-      margin-bottom: 0;
-    }
-#drupal-off-canvas td {
-
-    /* Push the widget to the right so text expands left. */
-  }
-[dir="ltr"] #drupal-off-canvas td .dropbutton-widget {
-      right: 0.75rem;
-}
-[dir="rtl"] #drupal-off-canvas td .dropbutton-widget {
-      left: 0.75rem;
-}
-#drupal-off-canvas td .dropbutton-widget {
+#drupal-off-canvas .dropbutton-toggle button {
       position: absolute;
+      top: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: var(--dropbutton--height);
+      height: var(--dropbutton--height);
       padding: 0;
-      background: #277abd none;
+      cursor: pointer;
+      border-color: var(--dropbutton--border-color);
+      border-radius: 0 var(--border-radius) var(--border-radius) 0; /* LTR */
+      background: var(--dropbutton--active-bg-color)
     }
-#drupal-off-canvas td {
-
-    /* Push the wrapper to the right edge of the td. */
-  }
-[dir="ltr"] #drupal-off-canvas td .dropbutton-single,[dir="ltr"] 
-    #drupal-off-canvas td .dropbutton-multiple {
-      right: right;
-}
-[dir="rtl"] #drupal-off-canvas td .dropbutton-single,[dir="rtl"] 
-    #drupal-off-canvas td .dropbutton-multiple {
-      left: right;
-}
-[dir="ltr"] #drupal-off-canvas td .dropbutton-single,[dir="ltr"] 
-    #drupal-off-canvas td .dropbutton-multiple {
-      margin-right: 0;
-}
-[dir="rtl"] #drupal-off-canvas td .dropbutton-single,[dir="rtl"] 
-    #drupal-off-canvas td .dropbutton-multiple {
-      margin-left: 0;
-}
-[dir="ltr"] #drupal-off-canvas td .dropbutton-single,[dir="ltr"] 
-    #drupal-off-canvas td .dropbutton-multiple {
-      padding-right: 0;
-}
-[dir="rtl"] #drupal-off-canvas td .dropbutton-single,[dir="rtl"] 
-    #drupal-off-canvas td .dropbutton-multiple {
-      padding-left: 0;
-}
-#drupal-off-canvas td .dropbutton-single,
-    #drupal-off-canvas td .dropbutton-multiple {
-      position: relative;
-      min-width: initial;
-      max-width: initial;
-    }
-#drupal-off-canvas td .dropbutton-widget .dropbutton {
-      overflow: hidden;
-      width: 2em;
-      height: 2em;
-      margin: 0;
-      background: transparent;
-    }
-#drupal-off-canvas td {
-
-    /* Push text out of the way. */
-  }
-#drupal-off-canvas td .dropbutton-multiple li,
-    #drupal-off-canvas td .dropbutton-multiple a {
-      margin-left: -624.9375rem;
-      background: transparent;
-    }
-[dir="ltr"] #drupal-off-canvas td .dropbutton-multiple.open .dropbutton li,[dir="ltr"] 
-    #drupal-off-canvas td .dropbutton-multiple.open .dropbutton a {
-      margin-left: 0;
-}
-[dir="rtl"] #drupal-off-canvas td .dropbutton-multiple.open .dropbutton li,[dir="rtl"] 
-    #drupal-off-canvas td .dropbutton-multiple.open .dropbutton a {
-      margin-right: 0;
-}
-#drupal-off-canvas td .dropbutton-multiple.open .dropbutton li,
-    #drupal-off-canvas td .dropbutton-multiple.open .dropbutton a {
-      width: auto;
-      color: #fff;
-    }
-#drupal-off-canvas td {
-
-    /* Collapse the button to a circle. */
-  }
-#drupal-off-canvas td .dropbutton-toggle {
-      width: 2em;
-      height: 2em;
-      border-radius: 1em;
-    }
-#drupal-off-canvas td .dropbutton-wrapper .dropbutton-widget .dropbutton-toggle button {
-      border: 0;
-      background: transparent;
-    }
-#drupal-off-canvas td {
-
-    /* Prevent list item from expanding its container. */
-  }
-#drupal-off-canvas td ul.dropbutton li.edit {
-      width: 2em;
-      height: 2em;
-    }
-#drupal-off-canvas td {
-
-    /* Make li text transparent above icon so it's clickable. */
-  }
-#drupal-off-canvas td .dropbutton-single li.edit.dropbutton-action > a {
-      z-index: 1;
-      color: transparent;
-    }
-#drupal-off-canvas td {
-
-    /* Put pencil icon in place of hidden 'edit' text on single buttons. */
-  }
-#drupal-off-canvas td .dropbutton-single .edit:before {
-      display: block;
-      content: ".";
-      color: transparent;
-      background: transparent url(../icons/ffffff/pencil.svg) no-repeat center;
-      background-size: 0.875rem;
-    }
+#drupal-off-canvas .dropbutton-toggle button:focus {
+        outline: solid 2px var(--dropbutton--border-color);
+        outline-offset: -2px;
+      }
+#drupal-off-canvas .dropbutton-toggle button:before {
+        display: block;
+        width: 0.375rem;
+        height: 0.375rem;
+        content: "";
+        transform: translateY(-25%) rotate(45deg);
+        border-right: solid 2px var(--dropbutton--text-color);
+        border-bottom: solid 2px var(--dropbutton--text-color);
+      }
+[dir="rtl"] #drupal-off-canvas .dropbutton-toggle button {
+        border-radius: var(--dropbutton--border-radius) 0 0 var(--dropbutton--border-radius);
+      }
 #drupal-off-canvas {
 
-  /* Dropbutton when triggered expands to show secondary items. */
+  /* This is the first <li> element in the list of actions. */
 }
-#drupal-off-canvas .dropbutton-multiple.open {
-    z-index: 100
-
-    /* Create visual separation if there is an adjacent button. */
-  }
-#drupal-off-canvas .dropbutton-multiple.open .dropbutton-widget {
-      box-shadow: 0 3px 3px 2px rgba(0, 0, 0, 0.5);
+[dir="ltr"] #drupal-off-canvas .dropbutton-action:first-child {
+      margin-right: 2px
+}
+[dir="rtl"] #drupal-off-canvas .dropbutton-action:first-child {
+      margin-left: 2px
+}
+#drupal-off-canvas .dropbutton-action:first-child {
+      border: solid var(--dropbutton--border-width) var(--dropbutton--border-color);
+      border-radius: var(--dropbutton--border-radius) 0 0 var(--dropbutton--border-radius); /* LTR */
+      background: var(--dropbutton--active-bg-color)
     }
+[dir="rtl"] #drupal-off-canvas .dropbutton-action:first-child {
+        border: solid var(--dropbutton--border-width) var(--dropbutton--border-color);
+        border-radius: 0 var(--dropbutton--border-radius) var(--dropbutton--border-radius) 0;
+      }
+#drupal-off-canvas .dropbutton-action a {
+      display: flex;
+      align-items: center;
+      min-height: var(--dropbutton--height);
+      margin-bottom: -2px;
+      padding: 0 0.5625rem;
+      text-decoration: none;
+      color: var(--dropbutton--text-color);
+      font-weight: 600
+    }
+#drupal-off-canvas .dropbutton-action a:hover {
+        color: var(--dropbutton--text-hover-color);
+      }
+#drupal-off-canvas .dropbutton-action a:focus {
+        outline: solid 2px var(--dropbutton--border-color);
+        outline-offset: -1px; /* Overlap parent container by 1px. */
+      }
 #drupal-off-canvas {
 
-  /* Triggered dropbutton expands to show secondary items. */
+  /* These are the <li> elements other than the first. */
 }
-#drupal-off-canvas .dropbutton-multiple.open,
-  #drupal-off-canvas .dropbutton-multiple.open .dropbutton-widget {
-    display: block;
-    overflow: visible;
-    width: auto;
-    min-width: 0;
-    max-width: none;
-    height: auto;
-    padding: 0;
+#drupal-off-canvas .secondary-action {
+    visibility: hidden;
+    width: calc(100% + var(--dropbutton--height));
+    border-right: 1px solid var(--dropbutton--border-color);
+    border-left: 1px solid var(--dropbutton--border-color);
+    background-color: var(--dropbutton--secondary-bg-color)
   }
-#drupal-off-canvas {
-
-  /* Triggered dropbutton in td expands to show secondary items. */
-}
-[dir="ltr"] #drupal-off-canvas td .dropbutton-multiple.open .dropbutton,[dir="ltr"] 
-  #drupal-off-canvas .dropbutton-multiple.open .dropbutton .secondary-action {
-    padding-right: 1em;
-}
-[dir="rtl"] #drupal-off-canvas td .dropbutton-multiple.open .dropbutton,[dir="rtl"] 
-  #drupal-off-canvas .dropbutton-multiple.open .dropbutton .secondary-action {
-    padding-left: 1em;
-}
-#drupal-off-canvas td .dropbutton-multiple.open .dropbutton,
-  #drupal-off-canvas .dropbutton-multiple.open .dropbutton .secondary-action {
-    display: block;
-    width: auto;
-    height: auto;
-  }
-#drupal-off-canvas .dropbutton-multiple.open .dropbutton li a {
-    padding: 2px 1em;
-  }
-#drupal-off-canvas {
-
-  /* When open, the toggle arrow points upward. */
-}
-#drupal-off-canvas .dropbutton-multiple.open span.dropbutton-arrow {
-    top: 2px;
-    border-top-color: transparent;
-    border-bottom: 0.3333em solid;
-  }
+#drupal-off-canvas .secondary-action:last-child {
+      border-bottom: 1px solid var(--dropbutton--border-color);
+    }
+#drupal-off-canvas .secondary-action a:hover {
+      color: var(--dropbutton--text-hover-color);
+      background-color: var(--dropbutton--active-bg-color);
+    }
