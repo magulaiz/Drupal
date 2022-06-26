@@ -16,7 +16,7 @@
 
   padding: 0 var(--off-canvas-padding) var(--off-canvas-padding);
   color: var(--off-canvas-text-color);
-  background: var(--off-canvas-background-color);
+  background-color: var(--off-canvas-background-color);
 
   & *:focus {
     outline: solid var(--off-canvas-focus-outline-width) var(--off-canvas-focus-outline-color);

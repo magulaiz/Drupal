@@ -69,7 +69,7 @@
       let {
         settings
       } = _ref4;
-      $('.ui-dialog-off-canvas, .ui-dialog-off-canvas .ui-dialog-titlebar').toggleClass('ui-dialog-empty-title', !settings.title);
+      $('.ui-dialog-off-canvas, .ui-dialog-off-canvas .ui-dialog-titlebar').toggleClass('ui-dialog-empty-title', !settings.title).attr('id', 'drupal-off-canvas-wrapper');
     },
 
     handleDialogResize(event) {

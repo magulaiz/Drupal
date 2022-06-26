@@ -23,7 +23,7 @@
 
   padding: 0 var(--off-canvas-padding) var(--off-canvas-padding);
   color: var(--off-canvas-text-color);
-  background: var(--off-canvas-background-color)
+  background-color: var(--off-canvas-background-color)
 }
 
 #drupal-off-canvas *:focus {
