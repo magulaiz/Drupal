@@ -2,10 +2,11 @@
 
 namespace Drupal\user\EventSubscriber;
 
-use Drupal\Core\Logger\LoggerChannelFactoryInterface;
-use Drupal\Core\Messenger\MessengerInterface;
+use Drupal\Core\Batch\BatchBuilder;
+use Drupal\Core\Session\AnonymousUserSession;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\user\Event\AccountCancelEvent;
+use Drupal\user\UserInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
@@ -16,37 +17,12 @@ class AccountCancelSubscriber implements EventSubscriberInterface {
   use StringTranslationTrait;
 
   /**
-   * The messenger service.
-   *
-   * @var \Drupal\Core\Messenger\MessengerInterface
-   */
-  protected $messenger;
-
-  /**
-   * The channel logger service.
-   *
-   * @var \Psr\Log\LoggerInterface
-   */
-  protected $logger;
-
-  /**
-   * Constructs a new event subscriber.
-   *
-   * @param \Drupal\Core\Messenger\MessengerInterface $messenger
-   *   The messenger service.
-   * @param \Drupal\Core\Logger\LoggerChannelFactoryInterface $logger_factory
-   *   The channel logger factory service.
-   */
-  public function __construct(MessengerInterface $messenger, LoggerChannelFactoryInterface $logger_factory) {
-    $this->messenger = $messenger;
-    $this->logger = $logger_factory->get('user');
-  }
-
-  /**
    * {@inheritdoc}
    */
   public static function getSubscribedEvents(): array {
     return [
+      // Since batch and session API require a valid user account, the actual
+      // cancellation of a user account needs to happen last.
       AccountCancelEvent::class => 'onUserAccountCancel',
     ];
   }
@@ -58,13 +34,38 @@ class AccountCancelSubscriber implements EventSubscriberInterface {
    *   The user cancel event.
    */
   public function onUserAccountCancel(AccountCancelEvent $event): void {
-    $account = $event->getAccount();
-    $context = $event->getContext();
-    switch ($event->getMethod()) {
+    $batch_builder = (new BatchBuilder())
+      ->setTitle(t('Cancelling user account'))
+      ->addOperation(static::class . '::doCancelAccount', [
+        $event->getAccount(),
+        $event->getMethod(),
+        $event->getContext(),
+      ]);
+      batch_set($batch_builder->toArray());
+  }
+
+  /**
+   * Cancels a user account.
+   *
+   * Note that this method is declared static to avoid serialization of a huge
+   * object by the batch API.
+   *
+   * @param \Drupal\user\UserInterface $account
+   *   The user account to be cancelled.
+   * @param string $method
+   *   The cancellation method.
+   * @param array $context
+   *   A context array. Typically, an array of submitted form values.
+   */
+  public static function doCancelAccount(UserInterface $account, string $method, array $context): void {
+    $logger = \Drupal::logger('user');
+    $messenger = \Drupal::messenger();
+
+    switch ($method) {
       case 'user_cancel_block':
       case 'user_cancel_block_unpublish':
       default:
-        if (!in_array($event->getMethod(), ['user_cancel_block', 'user_cancel_block_unpublish'], TRUE)) {
+        if (!in_array($method, ['user_cancel_block', 'user_cancel_block_unpublish'], TRUE)) {
           @trigger_error('Using ' . __METHOD__ . '() subscriber to handle user account cancellation methods other than user_cancel_block, user_cancel_block_unpublish, user_cancel_reassign and user_cancel_delete is deprecated in drupal:9.5.0 and is removed from drupal:10.0.0. Third-party modules should add their own subscriber to handle custom cancellation methods. See https://www.drupal.org/node/3279455', E_USER_DEPRECATED);
         }
 
@@ -72,14 +73,12 @@ class AccountCancelSubscriber implements EventSubscriberInterface {
         if (!empty($context['user_cancel_notify'])) {
           _user_mail_notify('status_blocked', $account);
         }
-        $account->block();
-        $account->save();
-        $this->messenger->addStatus($this->t('Account %name has been disabled.', [
+        $account->block()->save();
+        $messenger->addStatus(t('Account %name has been disabled.', [
           '%name' => $account->getDisplayName(),
         ]));
-        $this->logger->notice('Blocked user: %name %email.', [
-          '%name' => $account->getAccountName(),
-          '%email' => '<' . $account->getEmail() . '>',
+        $logger->notice('Blocked user: %name %email.', [
+          '%name' => $account->getAccountName(), '%email' => '<' . $account->getEmail() . '>',
         ]);
         break;
 
@@ -90,13 +89,21 @@ class AccountCancelSubscriber implements EventSubscriberInterface {
           _user_mail_notify('status_canceled', $account);
         }
         $account->delete();
-        $this->messenger->addStatus($this->t('Account %name has been deleted.', [
+        $messenger->addStatus(t('Account %name has been deleted.', [
           '%name' => $account->getDisplayName(),
         ]));
-        $this->logger->notice('Deleted user: %name %email.', [
-          '%name' => $account->getAccountName(),
-          '%email' => '<' . $account->getEmail() . '>',
+        $logger->notice('Deleted user: %name %email.', [
+          '%name' => $account->getAccountName(), '%email' => '<' . $account->getEmail() . '>',
         ]);
+    }
+
+    // After cancelling account, ensure that user is logged out. We can't
+    // destroy their session though, as we might have information in it, and we
+    // can't  regenerate it because batch API uses the session ID, we will
+    // regenerate it in \Drupal\user\AccountCancellation::regenerateSession().
+    // @see \Drupal\user\AccountCancellation::regenerateSession()
+    if ($account->id() == \Drupal::currentUser()->id()) {
+      \Drupal::currentUser()->setAccount(new AnonymousUserSession());
     }
   }
 

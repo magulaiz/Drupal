@@ -24,7 +24,9 @@ use Drupal\Core\Url;
 use Drupal\image\Plugin\Field\FieldType\ImageItem;
 use Drupal\filter\FilterFormatInterface;
 use Drupal\system\Entity\Action;
+use Drupal\user\AccountCancellation;
 use Drupal\user\Entity\Role;
+use Drupal\user\EventSubscriber\AccountCancelSubscriber;
 use Drupal\user\RoleInterface;
 use Drupal\user\UserInterface;
 
@@ -616,7 +618,7 @@ function user_cancel($edit, $uid, $method) {
  */
 function _user_cancel($edit, $account, $method) {
   @trigger_error("_user_cancel is deprecated in drupal:9.5.0 and is removed from drupal:10.0.0. Use the method ::doCancelAccount() from the 'user.account_cancellation' service instead. See https://www.drupal.org/node/3279455", E_USER_DEPRECATED);
-  \Drupal::service('user.account_cancellation')->doCancelAccount($account, $method, $edit);
+  AccountCancelSubscriber::doCancelAccount($account, $method, $edit);
 }
 
 /**
@@ -631,7 +633,7 @@ function _user_cancel($edit, $account, $method) {
  */
 function _user_cancel_session_regenerate() {
   @trigger_error("_user_cancel_session_regenerate is deprecated in drupal:9.5.0 and is removed from drupal:10.0.0. Use the method ::regenerateSession() from the 'user.account_cancellation' service instead. See https://www.drupal.org/node/3279455", E_USER_DEPRECATED);
-  \Drupal::service('user.account_cancellation')->regenerateSession();
+  AccountCancellation::regenerateSession();
 }
 
 /**

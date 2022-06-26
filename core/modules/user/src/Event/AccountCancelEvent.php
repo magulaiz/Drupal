@@ -7,6 +7,13 @@ use Drupal\user\UserInterface;
 
 /**
  * Provides a user cancel event class.
+ *
+ * Subscribers are able to react on user account cancellation or implement their
+ * own cancellation logic. Also, by setting appropriate priories, they are able
+ * to suppress the execution of downstream subscribers, such as the default user
+ * account subscriber \Drupal\user\EventSubscriber\AccountCancelSubscriber.
+ *
+ * @see \Drupal\user\EventSubscriber\AccountCancelSubscriber
  */
 class AccountCancelEvent extends Event {
 
@@ -15,21 +22,21 @@ class AccountCancelEvent extends Event {
    *
    * @var \Drupal\user\UserInterface
    */
-  protected $account;
+  protected UserInterface $account;
 
   /**
    * The account cancellation method to use.
    *
    * @var string
    */
-  protected $method;
+  protected string $method;
 
   /**
    * Context array. Typically, an array of submitted form values.
    *
    * @var array
    */
-  protected $context;
+  protected array $context;
 
   /**
    * Constructs a new event instance.

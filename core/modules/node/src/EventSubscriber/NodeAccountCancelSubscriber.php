@@ -17,14 +17,14 @@ class NodeAccountCancelSubscriber implements EventSubscriberInterface {
    *
    * @var \Drupal\Core\Entity\EntityTypeManagerInterface
    */
-  protected $entityTypeManager;
+  protected EntityTypeManagerInterface $entityTypeManager;
 
   /**
    * The module handler service.
    *
    * @var \Drupal\Core\Extension\ModuleHandlerInterface
    */
-  protected $moduleHandler;
+  protected ModuleHandlerInterface $moduleHandler;
 
   /**
    * Constructs a new event subscriber instance.
@@ -57,26 +57,24 @@ class NodeAccountCancelSubscriber implements EventSubscriberInterface {
    *   The user cancel event.
    */
   public function onUserAccountCancel(AccountCancelEvent $event): void {
-    switch ($event->getMethod()) {
-      case 'user_cancel_block_unpublish':
-        // Unpublish nodes (current revisions).
-        $nids = $this->entityTypeManager->getStorage('node')->getQuery()
-          ->accessCheck(FALSE)
-          ->condition('uid', $event->getAccount()->id())
-          ->execute();
-        $this->moduleHandler->loadInclude('node', 'inc', 'node.admin');
-        node_mass_update($nids, ['status' => 0], NULL, TRUE);
-        break;
-
-      case 'user_cancel_reassign':
-        // Anonymize all of the nodes for this old account.
-        $this->moduleHandler->loadInclude('node', 'inc', 'node.admin');
-        $vids = $this->entityTypeManager->getStorage('node')->userRevisionIds($event->getAccount());
-        node_mass_update($vids, [
-          'uid' => 0,
-          'revision_uid' => 0,
-        ], NULL, TRUE, TRUE);
-        break;
+    $method = $event->getMethod();
+    if ($method === 'user_cancel_block_unpublish') {
+      // Unpublish nodes (current revisions).
+      $nids = $this->entityTypeManager->getStorage('node')->getQuery()
+        ->accessCheck(FALSE)
+        ->condition('uid', $event->getAccount()->id())
+        ->execute();
+      $this->moduleHandler->loadInclude('node', 'inc', 'node.admin');
+      node_mass_update($nids, ['status' => 0], NULL, TRUE);
+    }
+    elseif ($method === 'user_cancel_reassign') {
+      // Anonymize all the nodes for this old account.
+      $vids = $this->entityTypeManager->getStorage('node')->userRevisionIds($event->getAccount());
+      $this->moduleHandler->loadInclude('node', 'inc', 'node.admin');
+      node_mass_update($vids, [
+        'uid' => 0,
+        'revision_uid' => 0,
+      ], NULL, TRUE, TRUE);
     }
   }
 

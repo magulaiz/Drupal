@@ -17,14 +17,14 @@ class CommentAccountCancelSubscriber implements EventSubscriberInterface {
    *
    * @var \Drupal\Core\Entity\EntityTypeManagerInterface
    */
-  protected $entityTypeManager;
+  protected EntityTypeManagerInterface $entityTypeManager;
 
   /**
    * The config factory service.
    *
    * @var \Drupal\Core\Config\ConfigFactoryInterface
    */
-  protected $configFactory;
+  protected ConfigFactoryInterface $configFactory;
 
   /**
    * Constructs a new event subscriber instance.
@@ -55,29 +55,31 @@ class CommentAccountCancelSubscriber implements EventSubscriberInterface {
    *
    * @param \Drupal\user\Event\AccountCancelEvent $event
    *   The user cancel event.
+   *
+   * @todo Convert to a batch process in #3007581.
+   * @see https://www.drupal.org/project/drupal/issues/3007581
    */
   public function onUserAccountCancel(AccountCancelEvent $event): void {
-    switch ($event->getMethod()) {
-      case 'user_cancel_block_unpublish':
-        $comments = $this->entityTypeManager->getStorage('comment')->loadByProperties([
-          'uid' => $event->getAccount()->id(),
-        ]);
-        foreach ($comments as $comment) {
-          $comment->setUnpublished()->save();
-        }
-        break;
+    $method = $event->getMethod();
+    if (!in_array($method, [
+      'user_cancel_block_unpublish',
+      'user_cancel_reassign',
+    ], TRUE)) {
+      return;
+    }
 
-      case 'user_cancel_reassign':
-        /** @var \Drupal\comment\CommentInterface[] $comments */
-        $comments = $this->entityTypeManager->getStorage('comment')->loadByProperties([
-          'uid' => $event->getAccount()->id(),
-        ]);
-        foreach ($comments as $comment) {
-          $comment
-            ->setOwnerId(0)
-            ->setAuthorName($this->configFactory->get('user.settings')->get('anonymous'))
-            ->save();
-        }
+    /** @var \Drupal\comment\CommentInterface[] $comments */
+    $comments = $this->entityTypeManager->getStorage('comment')->loadByProperties([
+      'uid' => $event->getAccount()->id(),
+    ]);
+    $anonymous_name = $this->configFactory->get('user.settings')->get('anonymous');
+    foreach ($comments as $comment) {
+      if ($method === 'user_cancel_block_unpublish') {
+        $comment->setUnpublished()->save();
+      }
+      else {
+        $comment->setOwnerId(0)->setAuthorName($anonymous_name)->save();
+      }
     }
   }
 

@@ -16,7 +16,7 @@ class HistoryAccountCancelSubscriber implements EventSubscriberInterface {
    *
    * @var \Drupal\Core\Database\Connection
    */
-  protected $database;
+  protected Connection $database;
 
   /**
    * Constructs a new event subscriber instance.
@@ -46,12 +46,10 @@ class HistoryAccountCancelSubscriber implements EventSubscriberInterface {
    *   The user cancel event.
    */
   public function onUserAccountCancel(AccountCancelEvent $event): void {
-    switch ($event->getMethod()) {
-      case 'user_cancel_reassign':
-        $this->database->delete('history')
-          ->condition('uid', $event->getAccount()->id())
-          ->execute();
-        break;
+    if ($event->getMethod() === 'user_cancel_reassign') {
+      $this->database->delete('history')
+        ->condition('uid', $event->getAccount()->id())
+        ->execute();
     }
   }
 
