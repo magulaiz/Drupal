@@ -36,7 +36,7 @@ use Drupal\user\UserInterface;
  * @param string $method
  *   The account cancellation method.
  *
- * @deprecated in drupal:9.5.0 and is removed from drupal:10.0.0. In order to
+ * @deprecated in drupal:10.0.0 and is removed from drupal:11.0.0. In order to
  *   act on user account cancellation provide an event subscriber that listens
  *   to the \Drupal\user\Event\AccountCancelEvent event. The event subscriber
  *   can be defined with a priority higher than the core subscribers in order to
