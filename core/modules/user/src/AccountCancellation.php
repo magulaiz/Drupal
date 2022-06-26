@@ -22,7 +22,7 @@ use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
  * @see \Drupal\user\Event\AccountCancelEvent
  * @see \Drupal\user\EventSubscriber\AccountCancelSubscriber
  */
-class AccountCancellation {
+class AccountCancellation implements AccountCancellationInterface {
 
   use StringTranslationTrait;
 
@@ -54,15 +54,7 @@ class AccountCancellation {
   }
 
   /**
-   * Cancels a user account.
-   *
-   * @param \Drupal\user\UserInterface $account
-   *   The user account to be cancelled.
-   * @param string $method
-   *   The account cancellation method to use.
-   * @param array $context
-   *   (optional) Context array. Typically, an array of submitted form values as
-   *   this service is consumed via form API.
+   * {@inheritdoc}
    */
   public function cancel(UserInterface $account, string $method, array $context = []): void {
     // Initialize batch (to set title).

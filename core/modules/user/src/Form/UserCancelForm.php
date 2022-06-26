@@ -7,7 +7,7 @@ use Drupal\Core\Entity\ContentEntityConfirmFormBase;
 use Drupal\Core\Entity\EntityRepositoryInterface;
 use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\user\AccountCancellation;
+use Drupal\user\AccountCancellationInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -41,9 +41,9 @@ class UserCancelForm extends ContentEntityConfirmFormBase {
   /**
    * The account cancellation service.
    *
-   * @var \Drupal\user\AccountCancellation
+   * @var \Drupal\user\AccountCancellationInterface
    */
-  protected $accountCancellation;
+  protected AccountCancellationInterface $accountCancellation;
 
   /**
    * Constructs a new form instance.
@@ -54,12 +54,12 @@ class UserCancelForm extends ContentEntityConfirmFormBase {
    *   The entity type bundle service.
    * @param \Drupal\Component\Datetime\TimeInterface $time
    *   The time service.
-   * @param \Drupal\user\AccountCancellation $account_cancellation
+   * @param \Drupal\user\AccountCancellationInterface $account_cancellation
    *   The account cancellation service.
    *
    * @see https://www.drupal.org/node/3279455
    */
-  public function __construct(EntityRepositoryInterface $entity_repository, EntityTypeBundleInfoInterface $entity_type_bundle_info, TimeInterface $time, AccountCancellation $account_cancellation = NULL) {
+  public function __construct(EntityRepositoryInterface $entity_repository, EntityTypeBundleInfoInterface $entity_type_bundle_info, TimeInterface $time, AccountCancellationInterface $account_cancellation = NULL) {
     parent::__construct($entity_repository, $entity_type_bundle_info, $time);
     if (!$account_cancellation) {
       @trigger_error('Calling ' . __METHOD__ . '() without the $account_cancellation argument is deprecated in drupal:10.0.0 and it will be required in drupal:11.0.0. See https://www.drupal.org/node/3279455', E_USER_DEPRECATED);

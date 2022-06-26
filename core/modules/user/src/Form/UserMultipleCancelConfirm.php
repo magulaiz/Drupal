@@ -8,7 +8,7 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Messenger\MessengerInterface;
 use Drupal\Core\Url;
 use Drupal\Core\TempStore\PrivateTempStoreFactory;
-use Drupal\user\AccountCancellation;
+use Drupal\user\AccountCancellationInterface;
 use Drupal\user\UserStorageInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -43,9 +43,9 @@ class UserMultipleCancelConfirm extends ConfirmFormBase {
   /**
    * The account cancellation service.
    *
-   * @var \Drupal\user\AccountCancellation
+   * @var \Drupal\user\AccountCancellationInterface
    */
-  protected $accountCancellation;
+  protected AccountCancellationInterface $accountCancellation;
 
   /**
    * Constructs a new UserMultipleCancelConfirm.
@@ -56,12 +56,12 @@ class UserMultipleCancelConfirm extends ConfirmFormBase {
    *   The user storage.
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    *   The entity type manager.
-   * @param \Drupal\user\AccountCancellation $account_cancellation
+   * @param \Drupal\user\AccountCancellationInterface $account_cancellation
    *   The account cancellation service.
    *
    * @see https://www.drupal.org/node/3279455
    */
-  public function __construct(PrivateTempStoreFactory $temp_store_factory, UserStorageInterface $user_storage, EntityTypeManagerInterface $entity_type_manager, AccountCancellation $account_cancellation = NULL) {
+  public function __construct(PrivateTempStoreFactory $temp_store_factory, UserStorageInterface $user_storage, EntityTypeManagerInterface $entity_type_manager, AccountCancellationInterface $account_cancellation = NULL) {
     $this->tempStoreFactory = $temp_store_factory;
     $this->userStorage = $user_storage;
     $this->entityTypeManager = $entity_type_manager;

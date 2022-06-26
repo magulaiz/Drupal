@@ -52,7 +52,7 @@ use Drupal\jsonapi\ResourceType\ResourceType;
 use Drupal\jsonapi\ResourceType\ResourceTypeField;
 use Drupal\jsonapi\ResourceType\ResourceTypeRepositoryInterface;
 use Drupal\jsonapi\Revisions\ResourceVersionRouteEnhancer;
-use Drupal\user\AccountCancellation;
+use Drupal\user\AccountCancellationInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Drupal\Core\Http\Exception\CacheableBadRequestHttpException;
@@ -155,9 +155,9 @@ class EntityResource {
   /**
    * The account cancellation service.
    *
-   * @var \Drupal\user\AccountCancellation
+   * @var \Drupal\user\AccountCancellationInterface
    */
-  protected $accountCancellation;
+  protected AccountCancellationInterface $accountCancellation;
 
   /**
    * Instantiates an EntityResource object.
@@ -184,10 +184,10 @@ class EntityResource {
    *   The time service.
    * @param \Drupal\Core\Session\AccountInterface $user
    *   The current user account.
-   * @param \Drupal\user\AccountCancellation $account_cancellation
+   * @param \Drupal\user\AccountCancellationInterface $account_cancellation
    *   The account cancellation service.
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager, EntityFieldManagerInterface $field_manager, ResourceTypeRepositoryInterface $resource_type_repository, RendererInterface $renderer, EntityRepositoryInterface $entity_repository, IncludeResolver $include_resolver, EntityAccessChecker $entity_access_checker, FieldResolver $field_resolver, SerializerInterface $serializer, TimeInterface $time, AccountInterface $user, AccountCancellation $account_cancellation) {
+  public function __construct(EntityTypeManagerInterface $entity_type_manager, EntityFieldManagerInterface $field_manager, ResourceTypeRepositoryInterface $resource_type_repository, RendererInterface $renderer, EntityRepositoryInterface $entity_repository, IncludeResolver $include_resolver, EntityAccessChecker $entity_access_checker, FieldResolver $field_resolver, SerializerInterface $serializer, TimeInterface $time, AccountInterface $user, AccountCancellationInterface $account_cancellation) {
     $this->entityTypeManager = $entity_type_manager;
     $this->fieldManager = $field_manager;
     $this->resourceTypeRepository = $resource_type_repository;

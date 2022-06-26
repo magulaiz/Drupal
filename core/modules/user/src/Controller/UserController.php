@@ -8,7 +8,7 @@ use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Datetime\DateFormatterInterface;
 use Drupal\Core\Flood\FloodInterface;
 use Drupal\Core\Url;
-use Drupal\user\AccountCancellation;
+use Drupal\user\AccountCancellationInterface;
 use Drupal\user\Form\UserPasswordResetForm;
 use Drupal\user\UserDataInterface;
 use Drupal\user\UserInterface;
@@ -61,9 +61,9 @@ class UserController extends ControllerBase {
   /**
    * The account cancellation service.
    *
-   * @var \Drupal\user\AccountCancellation
+   * @var \Drupal\user\AccountCancellationInterface
    */
-  protected $accountCancellation;
+  protected AccountCancellationInterface $accountCancellation;
 
   /**
    * Constructs a UserController object.
@@ -78,12 +78,12 @@ class UserController extends ControllerBase {
    *   A logger instance.
    * @param \Drupal\Core\Flood\FloodInterface $flood
    *   The flood service.
-   * @param \Drupal\user\AccountCancellation $account_cancellation
+   * @param \Drupal\user\AccountCancellationInterface $account_cancellation
    *   The account cancellation service.
    *
    * @see https://www.drupal.org/node/3279455
    */
-  public function __construct(DateFormatterInterface $date_formatter, UserStorageInterface $user_storage, UserDataInterface $user_data, LoggerInterface $logger, FloodInterface $flood, AccountCancellation $account_cancellation = NULL) {
+  public function __construct(DateFormatterInterface $date_formatter, UserStorageInterface $user_storage, UserDataInterface $user_data, LoggerInterface $logger, FloodInterface $flood, AccountCancellationInterface $account_cancellation = NULL) {
     $this->dateFormatter = $date_formatter;
     $this->userStorage = $user_storage;
     $this->userData = $user_data;
