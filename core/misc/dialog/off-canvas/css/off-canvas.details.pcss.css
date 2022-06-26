@@ -3,74 +3,60 @@
  * Visual styling for summary and details in the off-canvas dialog.
  */
 #drupal-off-canvas {
+  --off-canvas-details-border: none;
   --off-canvas-details-background-color: #474747;
   --off-canvas-details-text-color: #ddd;
+  --off-canvas-details-summary-border: none;
+  --off-canvas-details-summary-padding: 10px 20px;
+  --off-canvas-details-summary-font-size: 14px;
+  --off-canvas-details-summary-background-color: #333;
+  --off-canvas-details-summary-text-color: #eee;
+  --off-canvas-details-summary-hover-background-color: #222;
+  --off-canvas-details-summary-hover-text-color: #fff;
 
   & details {
-    display: block;
+    border: var(--off-canvas-details-border);
+
+    &[open] {
+      padding-bottom: 20px;
+    }
   }
 
   & details,
-  & summary,
-  & .ui-dialog-content {
+  & summary {
     color: var(--off-canvas-details-text-color);
     background: var(--off-canvas-details-background-color);
   }
 
   & summary a {
-    padding-top: 0;
-    padding-bottom: 0;
     color: var(--off-canvas-details-text-color);
 
-    &:hover,
-    &:focus {
-      color: #fff;
+    &:hover {
+      color: var(--off-canvas-details-summary-hover-text-color);
     }
   }
 
   & details,
   & summary,
   & .details-wrapper {
-    /* Cancel out the padding of the parent. */
-    margin: 0 calc(-1 * var(--off-canvas-padding));
+    margin: 0 calc(-1 * var(--off-canvas-padding)); /* Cancel out the padding of the parent. */
     padding: 0 var(--off-canvas-padding);
-    border-width: 0;
   }
 
   & summary {
-    padding: 10px 20px;
-    transition: all 0.5s ease;
-    text-shadow: none;
-    font-size: 14px;
+    padding: var(--off-canvas-details-summary-padding);
+    color: var(--off-canvas-details-summary-text-color);
+    border: var(--off-canvas-details-summary-border);
+    background-color: var(--off-canvas-details-summary-background-color);
+    font-size: var(--off-canvas-details-summary-font-size);
 
-    &:hover,
-    &:focus {
-      background-color: #222;
+    &:hover {
+      color: var(--off-canvas-details-summary-hover-text-color);
+      background-color: var(--off-canvas-details-summary-hover-background-color);
     }
 
     &:focus {
       outline-offset: -4px; /* Ensure focus doesn't get cut off. */
     }
-  }
-
-  & details[open] {
-    padding-bottom: 10px;
-
-    & > summary {
-      color: #eee;
-      background-color: #333;
-    }
-
-    & > summary:hover {
-      color: #fff;
-      background-color: #222;
-    }
-  }
-
-  & details .placeholder {
-    color: inherit;
-    background: transparent;
-    font: inherit;
-    font-style: italic;
   }
 }

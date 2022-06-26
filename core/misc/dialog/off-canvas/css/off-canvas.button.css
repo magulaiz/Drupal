@@ -12,14 +12,18 @@
  */
 #drupal-off-canvas {
   --off-canvas-button-background-color: #777;
+  --off-canvas-button-hover-background-color: #777;
   --off-canvas-button-text-color: #f5f5f5;
+  --off-canvas-button-text-hover-color: #fff;
   --off-canvas-button-font-size: 0.875rem;
   --off-canvas-button-padding: 0.25rem 1.25rem;
+  --off-canvas-button-border-color: transparent;
   --off-canvas-button-border-radius: 20em;
   --off-canvas-button-font-weight: 600;
   --off-canvas-primary-button-background-color: #277abd;
-  --off-canvas-primary-button-background-color-hover: #236aaf;
-  --off-canvas-primary-button-text-color: #fff
+  --off-canvas-primary-button-background-hover-color: #236aaf;
+  --off-canvas-primary-button-text-color: #fff;
+  --off-canvas-primary-button-hover-text-color: #fff
 }
 #drupal-off-canvas .button {
     display: inline-block;
@@ -32,7 +36,7 @@
     transition: background 0.5s ease;
     text-align: center;
     color: var(--off-canvas-button-text-color);
-    border: solid 1px transparent;
+    border: solid 1px var(--off-canvas-button-border-color);
     border-radius: var(--off-canvas-button-border-radius);
     background: var(--off-canvas-button-background-color);
     font-family: inherit;
@@ -43,11 +47,11 @@
     appearance: none
   }
 #drupal-off-canvas .button:hover,
-    #drupal-off-canvas .button:focus,
     #drupal-off-canvas .button:active {
       z-index: 10;
       text-decoration: none;
-      color: #fff;
+      color: var(--off-canvas-button-text-hover-color);
+      background-color: var(--off-canvas-button-hover-background-color);
     }
 #drupal-off-canvas .button:focus,
     #drupal-off-canvas .button:active {
@@ -68,9 +72,9 @@
     background: var(--off-canvas-primary-button-background-color)
   }
 #drupal-off-canvas .button--primary:hover,
-    #drupal-off-canvas .button--primary:focus,
     #drupal-off-canvas .button--primary:active {
-      background: #236aaf;
+      color: var(--off-canvas-primary-button-hover-text-color);
+      background: var(--off-canvas-primary-button-background-hover-color);
     }
 [dir="ltr"] #drupal-off-canvas .button-action:before {
     margin-left: -0.2em
