@@ -10,14 +10,14 @@
  */
 #drupal-off-canvas .dropbutton-wrapper {
     --dropbutton--height: 1.5rem;
-    --dropbutton--secondary-bg-color: var(--off-canvas-primary-button-background-color);
-    --dropbutton--active-bg-color: var(--off-canvas-primary-button-background-color-hover);
+    --dropbutton--primary-bg-color: var(--off-canvas-primary-button-background-color);
+    --dropbutton--secondary-bg-color: var(--off-canvas-primary-button-background-hover-color);
     --dropbutton--border-color: transparent;
     --dropbutton--border-width: 1px;
     --dropbutton--border-radius: 2px;
     --dropbutton--font-size: 0.75rem;
-    --dropbutton--text-color: white; /* Minimum 4.5:1 contrast ratio against --dropbutton--active-bg-color and --dropbutton--secondary-bg-color. */
-    --dropbutton--text-hover-color: white; /* Minimum 4.5:1 contrast ratio against --dropbutton--active-bg-color and --dropbutton--secondary-bg-color. */
+    --dropbutton--text-color: var(--off-canvas-primary-button-text-color); /* Minimum 4.5:1 contrast ratio against --dropbutton--primary-bg-color and --dropbutton--secondary-bg-color. */
+    --dropbutton--text-hover-color: var(--off-canvas-primary-button-hover-text-color); /* Minimum 4.5:1 contrast ratio against --dropbutton--primary-bg-color and --dropbutton--secondary-bg-color. */
 
     margin-top: var(--off-canvas-vertical-spacing-unit);
 
@@ -120,7 +120,7 @@
       cursor: pointer;
       border-color: var(--dropbutton--border-color);
       border-radius: 0 var(--border-radius) var(--border-radius) 0; /* LTR */
-      background: var(--dropbutton--active-bg-color)
+      background: var(--dropbutton--primary-bg-color)
     }
 #drupal-off-canvas .dropbutton-toggle button:focus {
         outline: solid 2px var(--dropbutton--border-color);
@@ -151,7 +151,7 @@
 #drupal-off-canvas .dropbutton-action:first-child {
       border: solid var(--dropbutton--border-width) var(--dropbutton--border-color);
       border-radius: var(--dropbutton--border-radius) 0 0 var(--dropbutton--border-radius); /* LTR */
-      background: var(--dropbutton--active-bg-color)
+      background: var(--dropbutton--primary-bg-color)
     }
 [dir="rtl"] #drupal-off-canvas .dropbutton-action:first-child {
         border: solid var(--dropbutton--border-width) var(--dropbutton--border-color);
@@ -190,5 +190,5 @@
     }
 #drupal-off-canvas .secondary-action a:hover {
       color: var(--dropbutton--text-hover-color);
-      background-color: var(--dropbutton--active-bg-color);
+      background-color: var(--dropbutton--primary-bg-color);
     }

@@ -5,14 +5,14 @@
 #drupal-off-canvas {
   & .dropbutton-wrapper {
     --dropbutton--height: 24px;
-    --dropbutton--secondary-bg-color: var(--off-canvas-primary-button-background-color);
-    --dropbutton--active-bg-color: var(--off-canvas-primary-button-background-color-hover);
+    --dropbutton--primary-bg-color: var(--off-canvas-primary-button-background-color);
+    --dropbutton--secondary-bg-color: var(--off-canvas-primary-button-background-hover-color);
     --dropbutton--border-color: transparent;
     --dropbutton--border-width: 1px;
     --dropbutton--border-radius: 2px;
     --dropbutton--font-size: 12px;
-    --dropbutton--text-color: white; /* Minimum 4.5:1 contrast ratio against --dropbutton--active-bg-color and --dropbutton--secondary-bg-color. */
-    --dropbutton--text-hover-color: white; /* Minimum 4.5:1 contrast ratio against --dropbutton--active-bg-color and --dropbutton--secondary-bg-color. */
+    --dropbutton--text-color: var(--off-canvas-primary-button-text-color); /* Minimum 4.5:1 contrast ratio against --dropbutton--primary-bg-color and --dropbutton--secondary-bg-color. */
+    --dropbutton--text-hover-color: var(--off-canvas-primary-button-hover-text-color); /* Minimum 4.5:1 contrast ratio against --dropbutton--primary-bg-color and --dropbutton--secondary-bg-color. */
 
     margin-block: var(--off-canvas-vertical-spacing-unit);
 
@@ -96,7 +96,7 @@
       cursor: pointer;
       border-color: var(--dropbutton--border-color);
       border-radius: 0 var(--border-radius) var(--border-radius) 0; /* LTR */
-      background: var(--dropbutton--active-bg-color);
+      background: var(--dropbutton--primary-bg-color);
       inset-inline-end: 0;
 
       &:focus {
@@ -126,7 +126,7 @@
       margin-inline-end: 2px;
       border: solid var(--dropbutton--border-width) var(--dropbutton--border-color);
       border-radius: var(--dropbutton--border-radius) 0 0 var(--dropbutton--border-radius); /* LTR */
-      background: var(--dropbutton--active-bg-color);
+      background: var(--dropbutton--primary-bg-color);
 
       &:dir(rtl) {
         border: solid var(--dropbutton--border-width) var(--dropbutton--border-color);
@@ -169,7 +169,7 @@
 
     & a:hover {
       color: var(--dropbutton--text-hover-color);
-      background-color: var(--dropbutton--active-bg-color);
+      background-color: var(--dropbutton--primary-bg-color);
     }
   }
 }

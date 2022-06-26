@@ -16,7 +16,10 @@
   --drupal-off-canvas-form-border: solid 1px transparent;
   --drupal-off-canvas-form-border-radius: 2px;
   --drupal-off-canvas-form-font-size: 0.875rem;
-  --drupal-off-canvas-form-text-color: #333
+  --drupal-off-canvas-form-text-color: #333;
+  --drupal-off-canvas-fieldset-background-color: transparent;
+  --drupal-off-canvas-fieldset-border-width: 1px;
+  --drupal-off-canvas-fieldset-border-color: var(--off-canvas-border-color)
 }
 
 #drupal-off-canvas .ck-content {
@@ -50,9 +53,12 @@
   }
 
 #drupal-off-canvas fieldset.form-item, 
-  #drupal-off-canvas .fieldset {
+  #drupal-off-canvas .fieldset, 
+  #drupal-off-canvas fieldset {
     margin: calc(var(--off-canvas-vertical-spacing-unit)*2) 0;
     padding: var(--off-canvas-vertical-spacing-unit);
+    border: solid var(--drupal-off-canvas-fieldset-border-width) var(--drupal-off-canvas-fieldset-border-color);
+    background-color: var(--drupal-off-canvas-fieldset-background-color);
   }
 
 #drupal-off-canvas legend, 

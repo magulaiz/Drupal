@@ -9,7 +9,8 @@
  * Visual styling for summary and details in the off-canvas dialog.
  */
 #drupal-off-canvas {
-  --off-canvas-details-border: none;
+  --off-canvas-details-border-width: 0;
+  --off-canvas-details-border-color: none;
   --off-canvas-details-background-color: #474747;
   --off-canvas-details-text-color: #ddd;
   --off-canvas-details-summary-border: none;
@@ -21,8 +22,11 @@
   --off-canvas-details-summary-hover-text-color: #fff
 }
 #drupal-off-canvas details {
-    border: var(--off-canvas-details-border)
+    border: solid var(--off-canvas-details-border-color) var(--off-canvas-details-border-width)
   }
+#drupal-off-canvas details + details {
+      margin-top: calc(var(--off-canvas-details-border-width)*-1);
+    }
 #drupal-off-canvas details[open] {
       padding-bottom: 1.25rem;
     }

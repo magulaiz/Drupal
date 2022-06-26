@@ -10,6 +10,9 @@
   --drupal-off-canvas-form-border-radius: 2px;
   --drupal-off-canvas-form-font-size: 14px;
   --drupal-off-canvas-form-text-color: #333;
+  --drupal-off-canvas-fieldset-background-color: transparent;
+  --drupal-off-canvas-fieldset-border-width: 1px;
+  --drupal-off-canvas-fieldset-border-color: var(--off-canvas-border-color);
 
   & .ck-content {
     color: var(--drupal-off-canvas-form-text-color);
@@ -42,9 +45,12 @@
   }
 
   & fieldset.form-item, /* Bartik doesn't apply BEM classes, so we use the element with a class for specificity. */
-  & .fieldset {
+  & .fieldset,
+  & fieldset {
     margin: calc(2 * var(--off-canvas-vertical-spacing-unit)) 0;
     padding: var(--off-canvas-vertical-spacing-unit);
+    border: solid var(--drupal-off-canvas-fieldset-border-width) var(--drupal-off-canvas-fieldset-border-color);
+    background-color: var(--drupal-off-canvas-fieldset-background-color);
   }
 
   & legend, /* Bartik doesn't apply BEM classes, so we use the element. */
