@@ -80,6 +80,7 @@
     list-style: none;
 
     & li {
+      position: relative; /* Anchor throbber. */
       padding: calc(0.25 * var(--off-canvas-vertical-spacing-unit)) 0;
       border-bottom: 1px solid var(--off-canvas-border-color);
 
@@ -87,6 +88,14 @@
         padding-bottom: 0;
         border-bottom: none;
       }
+    }
+
+    & .throbber {
+      position: absolute;
+      top: 0;
+      inset-inline-end: 0;
+      bottom: 0;
+      margin-block: auto;
     }
   }
 

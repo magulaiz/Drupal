@@ -128,15 +128,6 @@
   font-size: 16px;
 }
 
-/**
- * Horizontally align list item to align throbber element inserted via ajax.
- */
-#drupal-off-canvas .layout-selection li {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-}
-
 #drupal-off-canvas .layout-selection a {
   display: flex;
   flex-wrap: wrap;
@@ -148,11 +139,15 @@
 #drupal-off-canvas .inline-block-create-button {
   display: block;
   padding: 24px;
-  padding-left: 44px;
+  padding-left: 44px; /* LTR */
   color: #eee;
   border-bottom: 1px solid #333;
   background: url(../../../misc/icons/bebebe/plus.svg) transparent 16px no-repeat;
   font-size: 16px;
+}
+
+[dir="rtl"] #drupal-off-canvas .inline-block-create-button {
+  padding-right: 44px;
 }
 
 #drupal-off-canvas .inline-block-create-button,
@@ -184,7 +179,7 @@
 #drupal-off-canvas .inline-block-list__item {
   display: block;
   flex-grow: 1;
-  padding: 15px 0 15px 25px;
+  padding: 15px 25px;
 }
 
 .layout-builder__add-section.is-layout-builder-highlighted {

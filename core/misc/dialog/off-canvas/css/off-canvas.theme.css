@@ -15,18 +15,21 @@
 /* Style the dialog-off-canvas container. This is the parent container of #drupal-off-canvas. */
 
 .ui-dialog.ui-dialog-off-canvas {
+  all: revert;
   z-index: 501; /* Layer the dialog just under the toolbar. */
-  padding: 0;
   color: #ddd;
-  border-radius: 0;
+  border: 1px solid transparent;
   background: #444;
   box-shadow: 0 0 4px 2px rgba(0, 0, 0, 0.3333)
 
-  /* Additional specificity needed. */
+  /*
+   * Prevent jQueryUI styles from leaking into the titlebar. No need to revert
+   * #drupal-off-canvas, which has its own reset.
+   */
 }
 
-.ui-dialog.ui-dialog-off-canvas.ui-widget {
-    border: 1px solid transparent;
+.ui-dialog.ui-dialog-off-canvas *:where(:not(#drupal-off-canvas *)) {
+    all: revert;
   }
 
 .ui-dialog.ui-dialog-off-canvas {
@@ -44,20 +47,13 @@
     font-weight: normal;
   }
 
-.ui-dialog.ui-dialog-off-canvas {
-
-  /* Hide the default jQuery UI dialog close button. */
-}
-
-.ui-dialog.ui-dialog-off-canvas .ui-dialog-titlebar-close .ui-icon {
-    visibility: hidden;
-  }
-
 [dir="ltr"] .ui-dialog.ui-dialog-off-canvas .ui-dialog-titlebar-close {
+    left: auto;
     right: 1em;
 }
 
 [dir="rtl"] .ui-dialog.ui-dialog-off-canvas .ui-dialog-titlebar-close {
+    right: auto;
     left: 1em;
 }
 
@@ -71,7 +67,10 @@
     background-color: transparent;
     background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16'%3e%3cpath fill='%23bebebe' d='M3.51 13.925c.194.194.512.195.706.001l3.432-3.431c.194-.194.514-.194.708 0l3.432 3.431c.192.194.514.193.707-.001l1.405-1.417c.191-.195.189-.514-.002-.709l-3.397-3.4c-.192-.193-.192-.514-.002-.708l3.401-3.43c.189-.195.189-.515 0-.709l-1.407-1.418c-.195-.195-.513-.195-.707-.001l-3.43 3.431c-.195.194-.516.194-.708 0l-3.432-3.431c-.195-.195-.512-.194-.706.001l-1.407 1.417c-.194.195-.194.515 0 .71l3.403 3.429c.193.195.193.514-.001.708l-3.4 3.399c-.194.195-.195.516-.001.709l1.406 1.419z'/%3e%3c/svg%3e");
     background-repeat: no-repeat;
-    background-position: center center
+    background-position: center center;
+    cursor: pointer;
+    text-indent: -624.9375rem;
+    overflow: hidden
   }
 
 .ui-dialog.ui-dialog-off-canvas .ui-dialog-titlebar-close:hover {
@@ -84,11 +83,19 @@
       outline-offset: 2px;
     }
 
+.ui-dialog.ui-dialog-off-canvas .ui-dialog-titlebar-close {
+
+    /* Hide the default jQuery UI dialog close button. */
+  }
+
+.ui-dialog.ui-dialog-off-canvas .ui-dialog-titlebar-close .ui-icon {
+      display: none;
+    }
+
 @media (forced-colors: active) {
 
 .ui-dialog.ui-dialog-off-canvas .ui-dialog-titlebar-close {
-      background-color: buttonText;
-      background-image: none;
+      background: buttonText;
       -webkit-mask-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16'%3e%3cpath fill='%23bebebe' d='M3.51 13.925c.194.194.512.195.706.001l3.432-3.431c.194-.194.514-.194.708 0l3.432 3.431c.192.194.514.193.707-.001l1.405-1.417c.191-.195.189-.514-.002-.709l-3.397-3.4c-.192-.193-.192-.514-.002-.708l3.401-3.43c.189-.195.189-.515 0-.709l-1.407-1.418c-.195-.195-.513-.195-.707-.001l-3.43 3.431c-.195.194-.516.194-.708 0l-3.432-3.431c-.195-.195-.512-.194-.706.001l-1.407 1.417c-.194.195-.194.515 0 .71l3.403 3.429c.193.195.193.514-.001.708l-3.4 3.399c-.194.195-.195.516-.001.709l1.406 1.419z'/%3e%3c/svg%3e");
       mask-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16'%3e%3cpath fill='%23bebebe' d='M3.51 13.925c.194.194.512.195.706.001l3.432-3.431c.194-.194.514-.194.708 0l3.432 3.431c.192.194.514.193.707-.001l1.405-1.417c.191-.195.189-.514-.002-.709l-3.397-3.4c-.192-.193-.192-.514-.002-.708l3.401-3.43c.189-.195.189-.515 0-.709l-1.407-1.418c-.195-.195-.513-.195-.707-.001l-3.43 3.431c-.195.194-.516.194-.708 0l-3.432-3.431c-.195-.195-.512-.194-.706.001l-1.407 1.417c-.194.195-.194.515 0 .71l3.403 3.429c.193.195.193.514-.001.708l-3.4 3.399c-.194.195-.195.516-.001.709l1.406 1.419z'/%3e%3c/svg%3e");
       -webkit-mask-repeat: no-repeat;
@@ -100,38 +107,19 @@
 
 [dir="ltr"] .ui-dialog.ui-dialog-off-canvas .ui-dialog-title {
     padding-left: 1.875rem;
-}
-
-[dir="rtl"] .ui-dialog.ui-dialog-off-canvas .ui-dialog-title {
-    padding-right: 1.875rem;
-}
-
-[dir="ltr"] .ui-dialog.ui-dialog-off-canvas .ui-dialog-title {
     padding-right: 0;
 }
 
 [dir="rtl"] .ui-dialog.ui-dialog-off-canvas .ui-dialog-title {
+    padding-right: 1.875rem;
     padding-left: 0;
 }
 
-[dir="ltr"] .ui-dialog.ui-dialog-off-canvas .ui-dialog-title {
-    text-align: left;
-}
-
-[dir="rtl"] .ui-dialog.ui-dialog-off-canvas .ui-dialog-title {
-    text-align: right;
-}
-
 .ui-dialog.ui-dialog-off-canvas .ui-dialog-title {
-    max-width: 13.125rem; /* Ensure that long titles do not overlap the close button. */
     margin: 0; /* Push the text away from the icon. */
     white-space: normal; /* Ensure that long titles are not truncated. */
     font-family: "Lucida Grande", "Lucida Sans Unicode", "liberation sans", sans-serif;
-    font-size: 1rem;
-    top: inline-end;
-    right: inline-end;
-    bottom: inline-end;
-    left: inline-end
+    font-size: 1rem
   }
 
 [dir="ltr"] .ui-dialog.ui-dialog-off-canvas .ui-dialog-title:before {

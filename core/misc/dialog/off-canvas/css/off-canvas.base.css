@@ -89,6 +89,7 @@
   }
 
 #drupal-off-canvas .links li, #drupal-off-canvas .inline-block-list li, #drupal-off-canvas .layout-selection li {
+      position: relative; /* Anchor throbber. */
       padding: calc(var(--off-canvas-vertical-spacing-unit)*0.25) 0;
       border-bottom: 1px solid var(--off-canvas-border-color)
     }
@@ -97,6 +98,22 @@
         padding-bottom: 0;
         border-bottom: none;
       }
+
+[dir="ltr"] #drupal-off-canvas .links .throbber,[dir="ltr"]  #drupal-off-canvas .inline-block-list .throbber,[dir="ltr"]  #drupal-off-canvas .layout-selection .throbber {
+      right: 0
+}
+
+[dir="rtl"] #drupal-off-canvas .links .throbber,[dir="rtl"]  #drupal-off-canvas .inline-block-list .throbber,[dir="rtl"]  #drupal-off-canvas .layout-selection .throbber {
+      left: 0
+}
+
+#drupal-off-canvas .links .throbber, #drupal-off-canvas .inline-block-list .throbber, #drupal-off-canvas .layout-selection .throbber {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      margin-top: auto;
+      margin-bottom: auto;
+    }
 
 #drupal-off-canvas {
 
