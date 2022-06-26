@@ -41,7 +41,7 @@ class AccountCancelSubscriber implements EventSubscriberInterface {
         $event->getMethod(),
         $event->getContext(),
       ]);
-      batch_set($batch_builder->toArray());
+    batch_set($batch_builder->toArray());
   }
 
   /**
@@ -78,7 +78,8 @@ class AccountCancelSubscriber implements EventSubscriberInterface {
           '%name' => $account->getDisplayName(),
         ]));
         $logger->notice('Blocked user: %name %email.', [
-          '%name' => $account->getAccountName(), '%email' => '<' . $account->getEmail() . '>',
+          '%name' => $account->getAccountName(),
+          '%email' => '<' . $account->getEmail() . '>',
         ]);
         break;
 
@@ -93,7 +94,8 @@ class AccountCancelSubscriber implements EventSubscriberInterface {
           '%name' => $account->getDisplayName(),
         ]));
         $logger->notice('Deleted user: %name %email.', [
-          '%name' => $account->getAccountName(), '%email' => '<' . $account->getEmail() . '>',
+          '%name' => $account->getAccountName(),
+          '%email' => '<' . $account->getEmail() . '>',
         ]);
     }
 

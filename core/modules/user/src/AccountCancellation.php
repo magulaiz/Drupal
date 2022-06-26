@@ -76,6 +76,8 @@ class AccountCancellation {
    *   The channel logger factory service.
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
    *   The module handler service.
+   * @param \Symfony\Contracts\EventDispatcher\EventDispatcherInterface $event_dispatcher
+   *   The event dispatcher service.
    */
   public function __construct(EntityTypeManagerInterface $entity_type_manager, MessengerInterface $messenger, LoggerChannelFactoryInterface $logger_factory, ModuleHandlerInterface $module_handler, EventDispatcherInterface $event_dispatcher) {
     $this->entityTypeManager = $entity_type_manager;
