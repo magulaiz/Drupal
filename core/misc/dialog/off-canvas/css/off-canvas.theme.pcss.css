@@ -2,18 +2,22 @@
  * @file
  * Styling for the off-canvas ui dialog. Including overrides for jQuery UI.
  *
- * Note that these elements are not nested within #drupal-off-canvas.
+ * Note that these elements are not nested within #drupal-off-canvas and still
+ * have some styles leaking in from jQueryUI.
  */
 
 /* Style the dialog-off-canvas container. This is the parent container of #drupal-off-canvas. */
 .ui-dialog.ui-dialog-off-canvas {
   --ui-off-canvas-box-shadow: 0 0 4px 2px rgba(0, 0, 0, 0.3);
+  --ui-off-canvas-title-background-color: #2d2d2d;
+  --ui-off-canvas-title-text-color: #fff;
+  --ui-off-canvas-title-padding: 1em;
+  --ui-off-canvas-title-font-size: 16px;
+  --ui-off-canvas-title-font-family: "Lucida Grande", "Lucida Sans Unicode", "liberation sans", sans-serif;
 
   all: revert;
   z-index: 501; /* Layer the dialog just under the toolbar. */
-  color: #ddd;
   border: 1px solid transparent;
-  background: #444;
   box-shadow: var(--ui-off-canvas-box-shadow);
 
   /*
@@ -26,60 +30,64 @@
 
   /* Style the off-canvas dialog header. */
   & .ui-dialog-titlebar {
-    padding: 1em;
-    color: #fff;
-    border: 0;
-    border-bottom: 1px solid #000;
-    border-radius: 0;
-    background: #2d2d2d;
-    font-weight: normal;
+    position: relative;
+    padding: var(--ui-off-canvas-title-padding);
+    color: var(--ui-off-canvas-title-text-color);
+    background-color: var(--ui-off-canvas-title-background-color);
+    font-family: var(--ui-off-canvas-title-font-family);
+    font-size: var(--ui-off-canvas-title-font-size);
   }
 
   & .ui-dialog-titlebar-close {
     position: absolute;
-    top: calc(50% - 6px);
+    top: 50%;
     overflow: hidden;
     width: 30px;
     height: 30px;
     cursor: pointer;
-    transition: all 0.5s ease;
+    transform: translateY(-50%);
     text-indent: -9999px;
-    border: 3px solid transparent;
+    color: inherit;
+    border: 1px solid transparent;
     background-color: transparent;
-    background-image: url(../../../icons/bebebe/ex.svg);
-    background-repeat: no-repeat;
-    background-position: center center;
-    inset-inline: auto 1em;
-
-    &:hover {
-      border: 3px solid #fff;
-      background-image: url(../../../icons/ffffff/ex.svg);
-    }
+    all: revert;
+    inset-inline: auto 10px;
 
     &:focus {
-      outline: solid 2px #fff;
+      outline: solid 2px currentColor;
       outline-offset: 2px;
+    }
+
+    &:before,
+    &:after {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 50%;
+      height: 0;
+      content: "";
+      border: solid 1px currentColor;
+    }
+
+    &:before {
+      transform: translate(-50%, 50%) rotate(-45deg);
+    }
+
+    &:after {
+      transform: translate(-50%, 50%) rotate(45deg);
     }
 
     /* Hide the default jQuery UI dialog close button. */
     & .ui-icon {
       display: none;
     }
-
-    @media (forced-colors: active) {
-      background: buttonText;
-      mask-image: url(../../../icons/bebebe/ex.svg);
-      mask-repeat: no-repeat;
-      mask-position: center center;
-    }
   }
 
   & .ui-dialog-title {
+    all: revert;
+    display: block;
     margin: 0;
-    padding-inline: 30px 0; /* Push the text away from the icon. */
-    white-space: normal; /* Ensure that long titles are not truncated. */
-    font-family: "Lucida Grande", "Lucida Sans Unicode", "liberation sans", sans-serif;
-    font-size: 16px;
+    padding-inline: 30px; /* Push the text away from the icons. */
 
     &:before {
       position: absolute;
@@ -89,8 +97,15 @@
       width: 20px;
       height: 100%;
       content: "";
-      background: transparent url(../../../icons/ffffff/pencil.svg) no-repeat scroll center center;
-      background-size: 100% auto;
+      background-color: currentColor;
+      mask-image: url(../../../icons/ffffff/pencil.svg);
+      mask-repeat: no-repeat;
+      mask-size: contain;
+      mask-position: center;
+
+      @media (forced-colors: active) {
+        background-color: canvastext;
+      }
     }
   }
 }
