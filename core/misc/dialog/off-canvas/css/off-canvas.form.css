@@ -14,6 +14,7 @@
   --drupal-off-canvas-input-padding: 0.5rem;
   --drupal-off-canvas-background-color: #fff;
   --drupal-off-canvas-form-border: solid 1px transparent;
+  --drupal-off-canvas-form-border-radius: 2px;
   --drupal-off-canvas-form-font-size: 0.875rem;
   --drupal-off-canvas-form-text-color: #333
 }
@@ -26,11 +27,15 @@
     padding: var(--off-canvas-vertical-spacing-unit) 0;
   }
 
+#drupal-off-canvas .form-items-inline > * {
+    display: inline-block;
+  }
+
 #drupal-off-canvas label {
     display: block;
   }
 
-#drupal-off-canvas .form-item.form-type-boolean {
+#drupal-off-canvas .form-type-boolean {
     padding: calc(var(--off-canvas-vertical-spacing-unit)*0.5) 0;
   }
 
@@ -70,17 +75,67 @@
     font-family: inherit;
   }
 
-#drupal-off-canvas input:where(:not([type="submit"], [type="checkbox"], [type="radio"])), #drupal-off-canvas select, #drupal-off-canvas textarea {
+#drupal-off-canvas input:where(:not([type="submit"], [type="checkbox"], [type="radio"], [type="file"])), #drupal-off-canvas select, #drupal-off-canvas textarea {
     max-width: 100%;
     padding: var(--drupal-off-canvas-input-padding);
     color: var(--drupal-off-canvas-form-text-color);
     border: var(--drupal-off-canvas-form-border);
+    border-radius: var(--drupal-off-canvas-form-border-radius);
     background-color: var(--drupal-off-canvas-background-color);
     font-size: var(--drupal-off-canvas-form-font-size);
   }
 
 #drupal-off-canvas input[type="checkbox"] + label, #drupal-off-canvas input[type="radio"] + label {
       display: inline;
+    }
+
+#drupal-off-canvas input[type="file"] {
+    margin-bottom: var(--off-canvas-vertical-spacing-unit);
+  }
+
+#drupal-off-canvas input[type="search"] {
+    -webkit-appearance: none;
+    appearance: none; /* Necessary for Safari. */
+  }
+
+[dir="ltr"] #drupal-off-canvas select {
+    padding-right: 0.625rem
+}
+
+[dir="rtl"] #drupal-off-canvas select {
+    padding-left: 0.625rem
+}
+
+#drupal-off-canvas select {
+    -webkit-appearance: none;
+    appearance: none;
+    border: var(--drupal-off-canvas-form-border);
+    border-radius: var(--drupal-off-canvas-form-border-radius);
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 14 9'%3e%3cpath fill='none' stroke-width='1.5' d='M1 1l6 6 6-6' stroke='%23545560'/%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: center right 5px; /* LTR */
+    background-size: 0.75rem
+  }
+
+[dir="rtl"] #drupal-off-canvas select {
+      background-position: center left 5px;
+    }
+
+@media (forced-colors: active) {
+
+[dir="ltr"] #drupal-off-canvas select {
+      padding-right: 0
+  }
+
+[dir="rtl"] #drupal-off-canvas select {
+      padding-left: 0
+  }
+
+#drupal-off-canvas select {
+      -webkit-appearance: revert;
+      appearance: revert;
+      background: revert
+  }
     }
 
 #drupal-off-canvas {

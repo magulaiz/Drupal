@@ -7,6 +7,7 @@
   --drupal-off-canvas-input-padding: 8px;
   --drupal-off-canvas-background-color: #fff;
   --drupal-off-canvas-form-border: solid 1px transparent;
+  --drupal-off-canvas-form-border-radius: 2px;
   --drupal-off-canvas-form-font-size: 14px;
   --drupal-off-canvas-form-text-color: #333;
 
@@ -18,11 +19,15 @@
     padding: var(--off-canvas-vertical-spacing-unit) 0;
   }
 
+  & .form-items-inline > * {
+    display: inline-block;
+  }
+
   & label {
     display: block;
   }
 
-  & .form-item.form-type-boolean {
+  & .form-type-boolean {
     padding: calc(0.5 * var(--off-canvas-vertical-spacing-unit)) 0;
   }
 
@@ -58,13 +63,14 @@
     font-family: inherit;
   }
 
-  & input:where(:not([type="submit"], [type="checkbox"], [type="radio"])),
+  & input:where(:not([type="submit"], [type="checkbox"], [type="radio"], [type="file"])),
   & select,
   & textarea {
     max-width: 100%;
     padding: var(--drupal-off-canvas-input-padding);
     color: var(--drupal-off-canvas-form-text-color);
     border: var(--drupal-off-canvas-form-border);
+    border-radius: var(--drupal-off-canvas-form-border-radius);
     background-color: var(--drupal-off-canvas-background-color);
     font-size: var(--drupal-off-canvas-form-font-size);
   }
@@ -73,6 +79,35 @@
   & input[type="radio"] {
     & + label {
       display: inline;
+    }
+  }
+
+  & input[type="file"] {
+    margin-bottom: var(--off-canvas-vertical-spacing-unit);
+  }
+
+  & input[type="search"] {
+    appearance: none; /* Necessary for Safari. */
+  }
+
+  & select {
+    appearance: none;
+    padding-inline-end: 10px;
+    border: var(--drupal-off-canvas-form-border);
+    border-radius: var(--drupal-off-canvas-form-border-radius);
+    background-image: url(../../../icons/545560/chevron-down.svg);
+    background-repeat: no-repeat;
+    background-position: center right 5px; /* LTR */
+    background-size: 12px;
+
+    &:dir(rtl) {
+      background-position: center left 5px;
+    }
+
+    @media (forced-colors: active) {
+      appearance: revert;
+      padding-inline-end: 0;
+      background: revert;
     }
   }
 
