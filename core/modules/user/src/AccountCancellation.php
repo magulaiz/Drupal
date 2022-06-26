@@ -3,13 +3,9 @@
 namespace Drupal\user;
 
 use Drupal\Core\Batch\BatchBuilder;
-use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
-use Drupal\Core\Logger\LoggerChannelFactoryInterface;
-use Drupal\Core\Messenger\MessengerInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\user\Event\AccountCancelEvent;
-use Psr\Log\LoggerInterface;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 /**
@@ -31,27 +27,6 @@ class AccountCancellation {
   use StringTranslationTrait;
 
   /**
-   * The entity type manager service.
-   *
-   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
-   */
-  protected EntityTypeManagerInterface $entityTypeManager;
-
-  /**
-   * The messenger service.
-   *
-   * @var \Drupal\Core\Messenger\MessengerInterface
-   */
-  protected MessengerInterface $messenger;
-
-  /**
-   * The channel logger service.
-   *
-   * @var \Psr\Log\LoggerInterface
-   */
-  protected LoggerInterface $logger;
-
-  /**
    * The module handler service.
    *
    * @var \Drupal\Core\Extension\ModuleHandlerInterface
@@ -68,21 +43,12 @@ class AccountCancellation {
   /**
    * Constructs a new service instance.
    *
-   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
-   *   The entity type manager service.
-   * @param \Drupal\Core\Messenger\MessengerInterface $messenger
-   *   The messenger service.
-   * @param \Drupal\Core\Logger\LoggerChannelFactoryInterface $logger_factory
-   *   The channel logger factory service.
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
    *   The module handler service.
    * @param \Symfony\Contracts\EventDispatcher\EventDispatcherInterface $event_dispatcher
    *   The event dispatcher service.
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager, MessengerInterface $messenger, LoggerChannelFactoryInterface $logger_factory, ModuleHandlerInterface $module_handler, EventDispatcherInterface $event_dispatcher) {
-    $this->entityTypeManager = $entity_type_manager;
-    $this->messenger = $messenger;
-    $this->logger = $logger_factory->get('user');
+  public function __construct(ModuleHandlerInterface $module_handler, EventDispatcherInterface $event_dispatcher) {
     $this->moduleHandler = $module_handler;
     $this->eventDispatcher = $event_dispatcher;
   }
@@ -90,30 +56,15 @@ class AccountCancellation {
   /**
    * Cancels a user account.
    *
-   * @param int $uid
-   *   The user ID of the user account to cancel.
+   * @param \Drupal\user\UserInterface $account
+   *   The user account to be cancelled.
    * @param string $method
    *   The account cancellation method to use.
    * @param array $context
    *   (optional) Context array. Typically, an array of submitted form values as
    *   this service is consumed via form API.
-   *
-   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
-   *   Thrown if the entity type doesn't exist.
-   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
-   *   Thrown if the storage handler couldn't be loaded.
    */
-  public function cancel(int $uid, string $method, array $context = []): void {
-    /** @var \Drupal\user\UserInterface $account */
-    $account = $this->entityTypeManager->getStorage('user')->load($uid);
-
-    if (!$account) {
-      $arguments = ['%id' => $uid];
-      $this->messenger->addError($this->t('The user account %id does not exist.', $arguments));
-      $this->logger->error('Attempted to cancel non-existing user account: %id.', $arguments);
-      return;
-    }
-
+  public function cancel(UserInterface $account, string $method, array $context = []): void {
     // Initialize batch (to set title).
     $batch_builder = (new BatchBuilder())
       ->setTitle($this->t('Cancelling account'));

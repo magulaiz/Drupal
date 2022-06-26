@@ -45,7 +45,7 @@ class UserDeprecatedCancelCustomMethodTest extends KernelTestBase {
    */
   public function testHookDeprecation(): void {
     $this->expectDeprecation('The deprecated hook hook_user_cancel() is implemented in these functions: user_cancel_deprecated_test_user_cancel(). The hook is deprecated in drupal:10.0.0 and is removed from drupal:11.0.0. In order to act on user account cancellation provide an event subscriber that listens to the \Drupal\user\Event\AccountCancelEvent event. The event subscriber can be defined with a priority higher than the core subscribers in order to cancel them by using AccountCancelEvent::stopPropagation(). See https://www.drupal.org/node/3279455');
-    $this->container->get('user.account_cancellation')->cancel($this->createUser()->id(), 'user_cancel_test_deprecated');
+    $this->container->get('user.account_cancellation')->cancel($this->createUser(), 'user_cancel_test_deprecated');
 
     $batch =& batch_get();
     // Bypass the progress bar and redirect.
@@ -63,7 +63,7 @@ class UserDeprecatedCancelCustomMethodTest extends KernelTestBase {
    */
   public function testProceduralCodeDeprecations(): void {
     $this->expectDeprecation("user_cancel is deprecated in drupal:10.0.0 and is removed from drupal:11.0.0. Use the method ::cancel() from the 'user.account_cancellation' service instead. See https://www.drupal.org/node/3279455");
-    user_cancel([], 123, 'abc');
+    user_cancel([], $this->createUser()->id(), 'abc');
     $this->expectDeprecation('_user_cancel is deprecated in drupal:10.0.0 and is removed from drupal:11.0.0. Instead, use \Drupal\user\EventSubscriber\AccountCancelSubscriber::doCancelAccount(). See https://www.drupal.org/node/3279455');
     _user_cancel([], $this->createUser(), 'abc');
     $this->expectDeprecation('_user_cancel_session_regenerate() is deprecated in drupal:10.0.0 and is removed from drupal:11.0.0. Instead, use \Drupal\user\AccountCancellation::regenerateSession(). See https://www.drupal.org/node/3279455');

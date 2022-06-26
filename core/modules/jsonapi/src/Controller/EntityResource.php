@@ -386,7 +386,7 @@ class EntityResource {
 
       // Allow other modules to act.
 
-      $this->accountCancellation->cancel($entity->id(), $cancel_method);
+      $this->accountCancellation->cancel($entity, $cancel_method);
       // Since $this->accountCancellation->cancel() is not invoked via Form API,
       // batch processing needs to be invoked manually.
       $batch =& batch_get();

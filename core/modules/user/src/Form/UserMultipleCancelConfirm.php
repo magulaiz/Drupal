@@ -224,14 +224,14 @@ class UserMultipleCancelConfirm extends ConfirmFormBase {
         if ($uid <= 1) {
           continue;
         }
+        // The $user global is not a complete user entity, so load the full
+        // entity.
+        $account = $this->userStorage->load($uid);
         // Prevent user administrators from deleting themselves without confirmation.
         if ($uid == $current_user_id) {
           $admin_form_mock = [];
           $admin_form_state = $form_state;
           $admin_form_state->unsetValue('user_cancel_confirm');
-          // The $user global is not a complete user entity, so load the full
-          // entity.
-          $account = $this->userStorage->load($uid);
           $admin_form = $this->entityTypeManager->getFormObject('user', 'cancel');
           $admin_form->setEntity($account);
           // Calling this directly required to init form object with $account.
@@ -239,7 +239,7 @@ class UserMultipleCancelConfirm extends ConfirmFormBase {
           $admin_form->submitForm($admin_form_mock, $admin_form_state);
         }
         else {
-          $this->accountCancellation->cancel($uid, $form_state->getValue('user_cancel_method'), $form_state->getValues());
+          $this->accountCancellation->cancel($account, $form_state->getValue('user_cancel_method'), $form_state->getValues());
         }
       }
     }
