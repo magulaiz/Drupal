@@ -92,7 +92,7 @@
 
   & select {
     appearance: none;
-    padding-inline-end: 10px;
+    padding-inline-end: 20px;
     border: var(--drupal-off-canvas-form-border);
     border-radius: var(--drupal-off-canvas-form-border-radius);
     background-image: url(../../../icons/545560/chevron-down.svg);
@@ -115,12 +115,17 @@
    * Autocomplete.
    */
   & .form-autocomplete {
+    padding-inline-end: 40px; /* Room for icon. */
     background-image: url(../../../icons/magnifier.svg);
     background-repeat: no-repeat;
-    background-position: center right 1px;
+    background-position: center right 1px; /* LTR */
 
     &.ui-autocomplete-loading {
       background-image: url(../../../icons/spinner.gif);
+    }
+
+    &:dir(rtl) {
+      background-position: center left 1px;
     }
   }
 
