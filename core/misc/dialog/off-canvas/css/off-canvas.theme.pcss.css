@@ -18,7 +18,7 @@
    * Prevent jQueryUI styles from leaking into the titlebar. No need to revert
    * #drupal-off-canvas, which has its own reset.
    */
-  & *:where(:not(#drupal-off-canvas *)) {
+  & *:where(:not(#drupal-off-canvas *, .ui-resizable-handle)) {
     all: revert;
   }
 
@@ -36,18 +36,18 @@
   & .ui-dialog-titlebar-close {
     position: absolute;
     top: calc(50% - 6px);
-    inset-inline: auto 1em;
+    overflow: hidden;
     width: 30px;
     height: 30px;
+    cursor: pointer;
     transition: all 0.5s ease;
+    text-indent: -9999px;
     border: 3px solid transparent;
     background-color: transparent;
     background-image: url(../../../icons/bebebe/ex.svg);
     background-repeat: no-repeat;
     background-position: center center;
-    cursor: pointer;
-    text-indent: -9999px;
-    overflow: hidden;
+    inset-inline: auto 1em;
 
     &:hover {
       border: 3px solid #fff;
