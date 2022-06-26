@@ -587,13 +587,13 @@ function user_pass_rehash(UserInterface $account, $timestamp) {
  * @param string $method
  *   The account cancellation method to use.
  *
- * @deprecated in drupal:9.5.0 and is removed from drupal:10.0.0. Use the method
- *   ::cancel() from the 'user.account_cancellation' service instead.
+ * @deprecated in drupal:10.0.0 and is removed from drupal:11.0.0. Use the
+ *   method ::cancel() from the 'user.account_cancellation' service instead.
  *
  * @see https://www.drupal.org/node/3279455
  */
 function user_cancel($edit, $uid, $method) {
-  @trigger_error("user_cancel is deprecated in drupal:9.5.0 and is removed from drupal:10.0.0. Use the method ::cancel() from the 'user.account_cancellation' service instead. See https://www.drupal.org/node/3279455", E_USER_DEPRECATED);
+  @trigger_error("user_cancel is deprecated in drupal:10.0.0 and is removed from drupal:11.0.0. Use the method ::cancel() from the 'user.account_cancellation' service instead. See https://www.drupal.org/node/3279455", E_USER_DEPRECATED);
   \Drupal::service('user.account_cancellation')->cancel($uid, $method, $edit);
 }
 
@@ -611,13 +611,13 @@ function user_cancel($edit, $uid, $method) {
  * @param string $method
  *   The account cancellation method to use.
  *
- * @deprecated in drupal:9.5.0 and is removed from drupal:10.0.0. Use the method
- *   ::doCancelAccount() from the 'user.account_cancellation' service instead.
+ * @deprecated in drupal:10.0.0 and is removed from drupal:11.0.0. Instead, use
+ *   \Drupal\user\EventSubscriber\AccountCancelSubscriber::doCancelAccount().
  *
  * @see https://www.drupal.org/node/3279455
  */
 function _user_cancel($edit, $account, $method) {
-  @trigger_error("_user_cancel is deprecated in drupal:9.5.0 and is removed from drupal:10.0.0. Use the method ::doCancelAccount() from the 'user.account_cancellation' service instead. See https://www.drupal.org/node/3279455", E_USER_DEPRECATED);
+  @trigger_error('_user_cancel is deprecated in drupal:10.0.0 and is removed from drupal:11.0.0. Instead, use \Drupal\user\EventSubscriber\AccountCancelSubscriber::doCancelAccount(). See https://www.drupal.org/node/3279455', E_USER_DEPRECATED);
   AccountCancelSubscriber::doCancelAccount($account, $method, $edit);
 }
 
@@ -626,13 +626,13 @@ function _user_cancel($edit, $account, $method) {
  *
  * Finished batch processing callback for cancelling a user account.
  *
- * @deprecated in drupal:9.5.0 and is removed from drupal:10.0.0. Use the method
- *   ::regenerateSession() from the 'user.account_cancellation' service instead.
+ * @deprecated in drupal:10.0.0 and is removed from drupal:11.0.0. Instead, use
+ *   \Drupal\user\AccountCancellation::regenerateSession().
  *
  * @see https://www.drupal.org/node/3279455
  */
 function _user_cancel_session_regenerate() {
-  @trigger_error("_user_cancel_session_regenerate is deprecated in drupal:9.5.0 and is removed from drupal:10.0.0. Use the method ::regenerateSession() from the 'user.account_cancellation' service instead. See https://www.drupal.org/node/3279455", E_USER_DEPRECATED);
+  @trigger_error('_user_cancel_session_regenerate() is deprecated in drupal:10.0.0 and is removed from drupal:11.0.0. Instead, use \Drupal\user\AccountCancellation::regenerateSession(). See https://www.drupal.org/node/3279455', E_USER_DEPRECATED);
   AccountCancellation::regenerateSession();
 }
 
