@@ -71,7 +71,7 @@ trait TestFileCreationTrait {
 
       // Copy other test files from fixtures.
       $original = \Drupal::root() . '/core/tests/fixtures/files';
-      $files = $file_system->scanDirectory($original, '/(html|image|javascript|php|sql)-.*/');
+      $files = $file_system->scanDirectory($original, '/(html|image|javascript|php|sql|webvtt)-.*/');
       foreach ($files as $file) {
         $file_system->copy($file->uri, PublicStream::basePath());
       }
@@ -81,7 +81,7 @@ trait TestFileCreationTrait {
 
     $files = [];
     // Make sure type is valid.
-    if (in_array($type, ['binary', 'html', 'image', 'javascript', 'php', 'sql', 'text'])) {
+    if (in_array($type, ['binary', 'html', 'image', 'javascript', 'php', 'sql', 'text', 'webvtt'])) {
       $files = $file_system->scanDirectory('public://', '/' . $type . '\-.*/');
 
       // If size is set then remove any files that are not of that size.

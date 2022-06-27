@@ -43,6 +43,21 @@ field.value.file:
   type: mapping
   label: 'Default value'
 
+field.storage_settings.media_track:
+  type: field.storage_settings.file
+  label: 'Media track settings'
+  mapping:
+    kind:
+      type: string
+      label: "Type of track, for the track's kind attribute"
+    languages:
+      type: string
+      label: "Language of track, for the track's srclang attribute"
+
+field.value.media_track:
+  type: mapping
+  label: 'Default value'
+
 base_file_field_field_settings:
   type: mapping
   mapping:
@@ -69,6 +84,23 @@ field.field_settings.file:
     description_field:
       type: boolean
       label: 'Enable Description field'
+
+field.field_settings.media_track:
+  type: base_file_field_field_settings
+  label: 'Media track settings'
+  mapping:
+    default:
+      type: boolean
+      label: 'Value of track default attribute'
+    kinds:
+      type: sequence
+      label: 'Options available to use for kind attribute'
+      sequence:
+        type: string
+        label: 'Language name'
+    languages:
+      type: string
+      label: 'Options available to use for srclang attribute'
 
 file.formatter.media:
   type: mapping
