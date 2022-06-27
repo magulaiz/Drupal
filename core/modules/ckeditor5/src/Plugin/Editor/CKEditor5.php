@@ -282,7 +282,6 @@ class CKEditor5 extends EditorBase implements ContainerFactoryPluginInterface {
             $this->messenger()->addMessage($message, $type);
           }
         }
-        // @todo, errors or warnings may be present that aren't specific to compatibility issues of contrib modules.
         if (isset($messages[MessengerInterface::TYPE_WARNING]) || isset($messages[MessengerInterface::TYPE_ERROR])) {
           $this->messenger()->addMessage($this->t('Check <a href=":handbook">this handbook page</a> for details about compatibility issues of contrib modules.', [
             ':handbook' => 'https://www.drupal.org/node/3273985',

@@ -264,14 +264,14 @@ final class SmartDefaultSettings {
 
       if (!empty($plugins_enabled) || !$source_editing_additions->allowsNothing()) {
         $beginning = $help_enabled ?
-          $this->t('To maintain the capabilities of this text format, <a target="_blank" href=":sdf_url">the CKEditor 5 migration</a> did the following:', [
-            ':sdf_url' => Url::fromRoute('help.page', ['name' => 'ckeditor5'], ['fragment' => 'migration-settings'])->toString(),
+          $this->t('To maintain the capabilities of this text format, <a target="_blank" href=":ck_migration_url">the CKEditor 5 migration</a> did the following:', [
+            ':ck_migration_url' => Url::fromRoute('help.page', ['name' => 'ckeditor5'], ['fragment' => 'migration-settings'])->toString(),
           ]) :
           $this->t('To maintain the capabilities of this text format, the CKEditor 5 migration did the following:');
 
         $plugin_info = !empty($plugins_enabled) ?
-          $this->t('Enabled these plugins: (<em>@plugins</em>).', [
-            '@plugins' => implode(', ', $plugins_enabled),
+          $this->t('Enabled these plugins: (%plugins).', [
+            '%plugins' => implode(', ', $plugins_enabled),
           ]) : '';
 
         $source_editing_info = '';
@@ -316,7 +316,7 @@ final class SmartDefaultSettings {
             'The @tag tag was added because it is <a target="_blank" href=":fundamental_tag_link">required by CKEditor 5</a>.',
             'The @tag tags were added because they are <a target="_blank" href=":fundamental_tag_link">required by CKEditor 5</a>.',
             [
-              '@tag' => implode(' + ', $missing_fundamental_tags->toCKEditor5ElementsArray()),
+              '@tag' => implode(', ', $missing_fundamental_tags->toCKEditor5ElementsArray()),
               ':fundamental_tag_link' => URL::fromRoute('help.page', ['name' => 'ckeditor5'], ['fragment' => 'required-tags'])->toString(),
             ]);
         }
@@ -325,26 +325,26 @@ final class SmartDefaultSettings {
             'The @tag tag was added because it is required by CKEditor 5.',
             'The @tag tags were added because they are required by CKEditor 5.',
             [
-              '@tag' => implode(' and ', $missing_fundamental_tags->toCKEditor5ElementsArray()),
+              '@tag' => implode(', ', $missing_fundamental_tags->toCKEditor5ElementsArray()),
             ]);
         }
 
         $added_elements_begin = !empty($attributes_to_tag) || !empty($added_tags) ? $this->t('A plugin introduced support for the following:') : '';
         $added_elements_tags = !empty($added_tags) ? $this->formatPlural(
           count($added_tags),
-          'The tag <em>:tags</em>;',
-          'The tags <em>:tags</em>;',
+          'The tag %tags;',
+          'The tags %tags;',
           [
-            ':tags' => implode(', ', array_map(function ($tag_name) {
+            '%tags' => implode(', ', array_map(function ($tag_name) {
               return "<$tag_name>";
             }, array_keys($added_tags))),
           ]) : '';
         $added_elements_attributes = !empty($attributes_to_tag) ? $this->formatPlural(
           count($attributes_to_tag),
-          'This attribute: <em>@attributes</em>;',
-          'These attributes: <em>@attributes</em>;',
+          'This attribute: %attributes;',
+          'These attributes: %attributes;',
           [
-            '@attributes' => rtrim(array_reduce(array_keys($attributes_to_tag), function ($carry, $item) use ($attributes_to_tag) {
+            '%attributes' => rtrim(array_reduce(array_keys($attributes_to_tag), function ($carry, $item) use ($attributes_to_tag) {
               $for_tags = implode(', ', array_map(function ($item) {
                 return "<$item>";
               }, $attributes_to_tag[$item]));
@@ -361,6 +361,7 @@ final class SmartDefaultSettings {
             ]
           ) :
           $this->t('Additional details are available in your logs.');
+
         $messages[MessengerInterface::TYPE_WARNING][] = $this->t('@beginning @added_elements_begin @fundamental_tags @added_elements_tags @added_elements_attributes @end',
           [
             '@beginning' => $beginning,
