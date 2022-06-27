@@ -162,7 +162,7 @@ class CKEditor5AllowedTagsTest extends CKEditor5TestBase {
 
     $page->selectFieldOption('editor[editor]', 'ckeditor5');
     $assert_session->assertWaitOnAjaxRequest();
-    $assert_session->pageTextContains(' The <br> and <p> tags were added because they are required by CKEditor 5');
+    $assert_session->pageTextContains('The <br>, <p> tags were added because they are required by CKEditor 5');
     $this->assertHtmlEsqueFieldValueEquals('filters[filter_html][settings][allowed_html]', $this->defaultElementsAfterUpdatingToCkeditor5);
 
     $page->pressButton('Save configuration');
