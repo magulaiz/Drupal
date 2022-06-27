@@ -15,8 +15,18 @@
 
 /* Style the dialog-off-canvas container. This is the parent container of #drupal-off-canvas. */
 
+[dir="ltr"] #drupal-off-canvas-wrapper {
+  border-left: solid var(--ui-off-canvas-inline-border-width) var(--ui-off-canvas-inline-border-color);
+}
+
+[dir="rtl"] #drupal-off-canvas-wrapper {
+  border-right: solid var(--ui-off-canvas-inline-border-width) var(--ui-off-canvas-inline-border-color);
+}
+
 #drupal-off-canvas-wrapper {
   --ui-off-canvas-box-shadow: 0 0 0.25rem 2px rgba(0, 0, 0, 0.3);
+  --ui-off-canvas-inline-border-color: #2d2d2d;
+  --ui-off-canvas-inline-border-width: 1px;
   --ui-off-canvas-title-background-color: #2d2d2d;
   --ui-off-canvas-title-text-color: #fff;
   --ui-off-canvas-title-padding: 1em;
@@ -25,7 +35,6 @@
 
   all: revert;
   z-index: 501; /* Layer the dialog just under the toolbar. */
-  border: 1px solid transparent;
   box-shadow: var(--ui-off-canvas-box-shadow)
 
   /*

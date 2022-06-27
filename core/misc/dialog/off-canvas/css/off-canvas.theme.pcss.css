@@ -9,6 +9,8 @@
 /* Style the dialog-off-canvas container. This is the parent container of #drupal-off-canvas. */
 #drupal-off-canvas-wrapper {
   --ui-off-canvas-box-shadow: 0 0 4px 2px rgba(0, 0, 0, 0.3);
+  --ui-off-canvas-inline-border-color: #2d2d2d;
+  --ui-off-canvas-inline-border-width: 1px;
   --ui-off-canvas-title-background-color: #2d2d2d;
   --ui-off-canvas-title-text-color: #fff;
   --ui-off-canvas-title-padding: 1em;
@@ -17,8 +19,8 @@
 
   all: revert;
   z-index: 501; /* Layer the dialog just under the toolbar. */
-  border: 1px solid transparent;
   box-shadow: var(--ui-off-canvas-box-shadow);
+  border-inline-start: solid var(--ui-off-canvas-inline-border-width) var(--ui-off-canvas-inline-border-color);
 
   /*
    * Prevent jQueryUI styles from leaking into the titlebar. No need to revert

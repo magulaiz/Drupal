@@ -4,8 +4,11 @@
  */
 
 #drupal-off-canvas {
+  --off-canvas-background-color-light: #666;
+  --off-canvas-background-color-medium: #444;
+  --off-canvas-background-color-dark: #222;
   --off-canvas-padding: 20px;
-  --off-canvas-background-color: #444;
+  --off-canvas-background-color: var(--off-canvas-background-color-medium);
   --off-canvas-text-color: #ddd;
   --off-canvas-link-color: #85bef4; /* @todo this is inaccessible. */
   --off-canvas-border-color: #666;
@@ -108,8 +111,8 @@
     height: 20px;
     /* stylelint-disable-next-line no-unknown-animations */
     animation: spin 1s ease-in-out infinite;
-    border: 2px solid var(--off-canvas-border-color);
-    border-top-color: #fff;
+    border: 2px solid var(--off-canvas-text-color);
+    border-top-color: transparent;
     border-radius: 50%;
   }
 

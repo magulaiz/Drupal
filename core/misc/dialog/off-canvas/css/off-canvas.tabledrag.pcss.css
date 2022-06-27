@@ -13,10 +13,6 @@
     font-weight: normal;
   }
 
-  & table .region-message {
-    color: #fff;
-  }
-
   & table .region-populated {
     display: none;
   }
@@ -51,6 +47,10 @@
   & .draggable a.tabledrag-handle:focus:after {
     text-decoration: none;
     background-image: url(../../../icons/787878/move.svg);
+
+    @media (forced-colors: active) {
+      background: linktext;
+    }
   }
 
   & tr td {
@@ -58,23 +58,20 @@
 
     & abbr {
       margin-inline: 0 5px;
+      text-decoration: none;
     }
   }
 
   & tr:hover td {
-    background: #222;
+    background: var(--off-canvas-background-color-light);
   }
 
   & tr.drag td {
-    background: #111;
-  }
-
-  & tr.drag-previous td {
-    background: #000;
+    background: var(--off-canvas-background-color-dark);
   }
 
   & tr.drag-previous:hover td {
-    background: #222;
+    background: var(--off-canvas-background-color-light);
   }
 
   & .tabledrag-changed-warning {
