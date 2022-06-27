@@ -312,7 +312,7 @@ class FileMediaTrackItem extends FileItem {
    */
   private static function secondsToTimecode($initial) {
     $seconds = floor($initial);
-    $milliseconds = (int) (($initial - $seconds) * 1000);
+    $milliseconds = round(($initial - $seconds) * 1000);
     $milliseconds = str_pad($milliseconds, 3, '0', STR_PAD_LEFT);
 
     $hours = round($seconds / 3600);
