@@ -212,7 +212,7 @@ h3 {
     padding-left: 3.85em; /* LTR */
   }
 
-  [dir="rtl"] ~ main {
+  [dir="rtl"] main {
     float: right;
     padding-right: 3.85em;
     padding-left: 0;
