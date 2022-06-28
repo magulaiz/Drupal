@@ -233,4 +233,13 @@
     color: inherit;
     background: transparent;
   }
+
+  /*
+   * This is the styling of the SVG within the layout selection list.
+   * @todo move this to Layout Builder module?
+   */
+  & .layout-icon__region {
+    fill: #f5f5f2;
+    stroke: #666;
+  }
 }
