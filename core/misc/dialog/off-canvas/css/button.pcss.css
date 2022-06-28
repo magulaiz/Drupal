@@ -4,7 +4,7 @@
  *
  * @see seven/css/components/buttons.css
  */
-#drupal-off-canvas {
+#drupal-off-canvas-wrapper {
   --off-canvas-button-background-color: #777;
   --off-canvas-button-hover-background-color: #999;
   --off-canvas-button-text-color: #f5f5f5;

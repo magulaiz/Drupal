@@ -5,34 +5,46 @@
  * @preserve
  */
 
- /**
+/**
  * @file
  * Styling for the off-canvas ui dialog. Including overrides for jQuery UI.
  *
- * Note that these elements are not nested within #drupal-off-canvas and still
+ * Note that these elements are not nested within #drupal-off-canvas-wrapper and still
  * have some styles leaking in from jQueryUI.
  */
 
- #drupal-off-canvas-wrapper .ui-dialog-titlebar {
+#drupal-off-canvas-wrapper {
+  --off-canvas-title-background-color: #2d2d2d;
+  --off-canvas-title-text-color: #fff;
+  --off-canvas-title-padding: 1em;
+  --off-canvas-title-font-size: 1rem
+}
+
+#drupal-off-canvas-wrapper .ui-dialog-titlebar {
     position: relative;
-    padding: var(--ui-off-canvas-title-padding);
-    color: var(--ui-off-canvas-title-text-color);
-    background-color: var(--ui-off-canvas-title-background-color);
-    font-family: var(--ui-off-canvas-title-font-family);
-    font-size: var(--ui-off-canvas-title-font-size);
+    padding: var(--off-canvas-title-padding);
+    color: var(--off-canvas-title-text-color);
+    background-color: var(--off-canvas-title-background-color);
+    font-family: var(--off-canvas-title-font-family);
+    font-size: var(--off-canvas-title-font-size);
   }
 
- [dir="ltr"] #drupal-off-canvas-wrapper .ui-dialog-titlebar-close {
+#drupal-off-canvas-wrapper {
+
+  /* Close button. */
+}
+
+[dir="ltr"] #drupal-off-canvas-wrapper .ui-dialog-titlebar-close {
     left: auto;
-    right: 0.625rem;
+    right: 0.625rem
 }
 
- [dir="rtl"] #drupal-off-canvas-wrapper .ui-dialog-titlebar-close {
+[dir="rtl"] #drupal-off-canvas-wrapper .ui-dialog-titlebar-close {
     right: auto;
-    left: 0.625rem;
+    left: 0.625rem
 }
 
- #drupal-off-canvas-wrapper .ui-dialog-titlebar-close {
+#drupal-off-canvas-wrapper .ui-dialog-titlebar-close {
     position: absolute;
     top: 50%;
     overflow: hidden;
@@ -48,17 +60,17 @@
     appearance: none
   }
 
- #drupal-off-canvas-wrapper .ui-dialog-titlebar-close:focus {
+#drupal-off-canvas-wrapper .ui-dialog-titlebar-close:focus {
       outline: solid 2px currentColor;
       outline-offset: 2px;
     }
 
- #drupal-off-canvas-wrapper .ui-dialog-titlebar-close {
+#drupal-off-canvas-wrapper .ui-dialog-titlebar-close {
 
     /* The plus icon. */
   }
 
- #drupal-off-canvas-wrapper .ui-dialog-titlebar-close:before,
+#drupal-off-canvas-wrapper .ui-dialog-titlebar-close:before,
     #drupal-off-canvas-wrapper .ui-dialog-titlebar-close:after {
       position: absolute;
       top: 50%;
@@ -69,24 +81,24 @@
       border: solid 1px currentColor;
     }
 
- #drupal-off-canvas-wrapper .ui-dialog-titlebar-close:before {
+#drupal-off-canvas-wrapper .ui-dialog-titlebar-close:before {
       transform: translate(-50%, 50%) rotate(-45deg);
     }
 
- #drupal-off-canvas-wrapper .ui-dialog-titlebar-close:after {
+#drupal-off-canvas-wrapper .ui-dialog-titlebar-close:after {
       transform: translate(-50%, 50%) rotate(45deg);
     }
 
- #drupal-off-canvas-wrapper .ui-dialog-titlebar-close {
+#drupal-off-canvas-wrapper .ui-dialog-titlebar-close {
 
     /* Hide the default jQuery UI dialog close button. */
   }
 
- #drupal-off-canvas-wrapper .ui-dialog-titlebar-close .ui-icon {
+#drupal-off-canvas-wrapper .ui-dialog-titlebar-close .ui-icon {
       display: none;
     }
 
- #drupal-off-canvas-wrapper .ui-dialog-title {
+#drupal-off-canvas-wrapper .ui-dialog-title {
     display: block;
     margin: 0;
     padding-left: 1.875rem;
@@ -95,15 +107,15 @@
     /* The pencil icon. */
   }
 
- [dir="ltr"] #drupal-off-canvas-wrapper .ui-dialog-title:before {
-      left: 1em;
+[dir="ltr"] #drupal-off-canvas-wrapper .ui-dialog-title:before {
+      left: 1em
 }
 
- [dir="rtl"] #drupal-off-canvas-wrapper .ui-dialog-title:before {
-      right: 1em;
+[dir="rtl"] #drupal-off-canvas-wrapper .ui-dialog-title:before {
+      right: 1em
 }
 
- #drupal-off-canvas-wrapper .ui-dialog-title:before {
+#drupal-off-canvas-wrapper .ui-dialog-title:before {
       position: absolute;
       top: 0;
       display: block;
@@ -121,9 +133,9 @@
       mask-position: center
     }
 
- @media (forced-colors: active) {
+@media (forced-colors: active) {
 
- #drupal-off-canvas-wrapper .ui-dialog-title:before {
+#drupal-off-canvas-wrapper .ui-dialog-title:before {
         background-color: canvastext
     }
       }

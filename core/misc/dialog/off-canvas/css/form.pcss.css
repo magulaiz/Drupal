@@ -3,7 +3,7 @@
  * Visual styling for forms in the off-canvas dialog.
  */
 
-#drupal-off-canvas {
+#drupal-off-canvas-wrapper {
   --drupal-off-canvas-input-padding: 8px;
   --drupal-off-canvas-background-color: #fff;
   --drupal-off-canvas-form-border: solid 1px transparent;

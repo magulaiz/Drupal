@@ -2,20 +2,26 @@
  * @file
  * Styling for the off-canvas ui dialog. Including overrides for jQuery UI.
  *
- * Note that these elements are not nested within #drupal-off-canvas and still
+ * Note that these elements are not nested within #drupal-off-canvas-wrapper and still
  * have some styles leaking in from jQueryUI.
  */
 
- #drupal-off-canvas-wrapper {
+#drupal-off-canvas-wrapper {
+  --off-canvas-title-background-color: #2d2d2d;
+  --off-canvas-title-text-color: #fff;
+  --off-canvas-title-padding: 1em;
+  --off-canvas-title-font-size: 16px;
+
   & .ui-dialog-titlebar {
     position: relative;
-    padding: var(--ui-off-canvas-title-padding);
-    color: var(--ui-off-canvas-title-text-color);
-    background-color: var(--ui-off-canvas-title-background-color);
-    font-family: var(--ui-off-canvas-title-font-family);
-    font-size: var(--ui-off-canvas-title-font-size);
+    padding: var(--off-canvas-title-padding);
+    color: var(--off-canvas-title-text-color);
+    background-color: var(--off-canvas-title-background-color);
+    font-family: var(--off-canvas-title-font-family);
+    font-size: var(--off-canvas-title-font-size);
   }
 
+  /* Close button. */
   & .ui-dialog-titlebar-close {
     position: absolute;
     top: 50%;

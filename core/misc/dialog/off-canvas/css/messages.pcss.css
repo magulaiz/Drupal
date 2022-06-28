@@ -1,0 +1,98 @@
+#drupal-off-canvas-wrapper {
+  & .messages {
+    position: relative; /* Anchor :before pseudo-element. */
+    padding: var(--off-canvas-vertical-spacing-unit);
+    padding-inline-start: 40px; /* Room for icon. */
+    border: solid 1px transparent;
+    background-color: #f3faef;
+
+    &:before {
+      position: absolute;
+      top: 50%;
+      display: block;
+      width: 20px;
+      height: 20px;
+      content: "";
+      transform: translateY(-50%);
+      background-repeat: no-repeat;
+      background-size: contain;
+      inset-inline-start: 10px;
+
+      @media (forced-colors: active) {
+        background: canvastext;
+        mask-repeat: none;
+        mask-size: contain;
+      }
+    }
+  }
+
+  /*
+    * Some themes (Olivero) insert SVG icon. We use a background icon, so we
+    * need to remove this.
+    */
+  & .messages__icon,
+  & .messages__close {
+    display: none;
+  }
+
+  & .messages__container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  & .messages__list {
+    margin: 0;
+    padding-inline-start: 20px;
+
+    & li {
+      border: 0;
+    }
+  }
+
+  & .messages abbr {
+    text-decoration: none;
+    color: #444;
+  }
+
+  & .messages--status {
+    color: #325e1c;
+
+    &:before {
+      background-image: url(../../../icons/73b355/check.svg);
+
+      @media (forced-colors: active) {
+        mask-image: url(../../../icons/73b355/check.svg);
+      }
+    }
+  }
+
+  & .messages--warning {
+    color: #734c00;
+
+    &:before {
+      background-image: url(../../../icons/e29700/warning.svg);
+
+      @media (forced-colors: active) {
+        mask-image: url(../../../icons/e29700/warning.svg);
+      }
+    }
+  }
+
+  & .messages--error {
+    color: #a51b00;
+
+    &:before {
+      background-image: url(../../../icons/e32700/error.svg);
+
+      @media (forced-colors: active) {
+        mask-image: url(../../../icons/e32700/error.svg);
+      }
+    }
+  }
+
+  & .messages--error div[role="alert"] {
+    color: inherit;
+    background: transparent;
+  }
+}

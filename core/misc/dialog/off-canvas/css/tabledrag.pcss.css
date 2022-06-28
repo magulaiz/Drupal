@@ -4,7 +4,7 @@
  *
  * @see tabledrag.js
  */
-#drupal-off-canvas {
+#drupal-off-canvas-wrapper {
   & .drag {
     cursor: move;
   }

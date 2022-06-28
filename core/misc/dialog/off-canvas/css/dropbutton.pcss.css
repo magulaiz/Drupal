@@ -2,7 +2,7 @@
  * @file
  * Styles for dropbuttons in the off-canvas dialog.
  */
-#drupal-off-canvas {
+#drupal-off-canvas-wrapper {
   --off-canvas-dropbutton-height: 24px;
   --off-canvas-dropbutton-primary-bg-color: var(--off-canvas-button-background-color);
   --off-canvas-dropbutton-secondary-bg-color: var(--off-canvas-button-hover-background-color);

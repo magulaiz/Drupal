@@ -3,7 +3,7 @@
  * Re-create utility styles that are removed in the reset.
  */
 
-#drupal-off-canvas {
+#drupal-off-canvas-wrapper {
   & .hidden {
     display: none;
   }

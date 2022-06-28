@@ -3,7 +3,7 @@
  * Visual styling for tables in the off-canvas dialog.
  */
 
-#drupal-off-canvas {
+#drupal-off-canvas-wrapper {
   & .draggable-table {
     width: 100%;
     margin: var(--off-canvas-vertical-spacing-unit) 0;

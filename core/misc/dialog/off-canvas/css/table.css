@@ -10,66 +10,66 @@
  * Visual styling for tables in the off-canvas dialog.
  */
 
-#drupal-off-canvas .draggable-table {
+#drupal-off-canvas-wrapper .draggable-table {
     width: 100%;
     margin: var(--off-canvas-vertical-spacing-unit) 0;
   }
 
-[dir="ltr"] #drupal-off-canvas td,[dir="ltr"] 
-  #drupal-off-canvas th {
+[dir="ltr"] #drupal-off-canvas-wrapper td,[dir="ltr"] 
+  #drupal-off-canvas-wrapper th {
     text-align: left;
 }
 
-[dir="rtl"] #drupal-off-canvas td,[dir="rtl"] 
-  #drupal-off-canvas th {
+[dir="rtl"] #drupal-off-canvas-wrapper td,[dir="rtl"] 
+  #drupal-off-canvas-wrapper th {
     text-align: right;
 }
 
-#drupal-off-canvas td,
-  #drupal-off-canvas th {
+#drupal-off-canvas-wrapper td,
+  #drupal-off-canvas-wrapper th {
     padding: 2px 0.5rem;
     vertical-align: middle;
     border-bottom: 1px solid var(--off-canvas-border-color);
   }
 
-#drupal-off-canvas th {
+#drupal-off-canvas-wrapper th {
     font-weight: bold;
   }
 
-#drupal-off-canvas th.checkbox,
-  #drupal-off-canvas td.checkbox {
+#drupal-off-canvas-wrapper th.checkbox,
+  #drupal-off-canvas-wrapper td.checkbox {
     width: 1.25rem;
     padding: 0;
     text-align: center;
   }
 
-#drupal-off-canvas div.checkbox.menu-enabled {
+#drupal-off-canvas-wrapper div.checkbox.menu-enabled {
     position: static;
     display: inline;
     width: auto;
   }
 
-#drupal-off-canvas {
+#drupal-off-canvas-wrapper {
 
   /* For lack of a better class, using this to grab the operations th. */
 }
 
-#drupal-off-canvas .tabledrag-has-colspan {
+#drupal-off-canvas-wrapper .tabledrag-has-colspan {
     padding-right: 1.25rem;
     text-align: right;
   }
 
-#drupal-off-canvas td {
+#drupal-off-canvas-wrapper td {
     padding: 0.375rem 0.5rem;
     color: var(--off-canvas-text-color);
   }
 
-#drupal-off-canvas {
+#drupal-off-canvas-wrapper {
 
   /* Hide overflow with ellipsis for links. */
 }
 
-#drupal-off-canvas td a {
+#drupal-off-canvas-wrapper td a {
     display: block;
     overflow: hidden;
     white-space: nowrap;

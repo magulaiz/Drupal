@@ -10,11 +10,11 @@
  * Re-create utility styles that are removed in the reset.
  */
 
-#drupal-off-canvas .hidden {
+#drupal-off-canvas-wrapper .hidden {
     display: none;
   }
 
-#drupal-off-canvas .visually-hidden {
+#drupal-off-canvas-wrapper .visually-hidden {
     position: absolute !important;
     overflow: hidden;
     clip: rect(1px, 1px, 1px, 1px);
@@ -23,8 +23,8 @@
     word-wrap: normal;
   }
 
-#drupal-off-canvas .visually-hidden.focusable:active,
-  #drupal-off-canvas .visually-hidden.focusable:focus {
+#drupal-off-canvas-wrapper .visually-hidden.focusable:active,
+  #drupal-off-canvas-wrapper .visually-hidden.focusable:focus {
     position: static !important;
     overflow: visible;
     clip: auto;
@@ -32,6 +32,6 @@
     height: auto;
   }
 
-#drupal-off-canvas .invisible {
+#drupal-off-canvas-wrapper .invisible {
     visibility: hidden;
   }

@@ -10,7 +10,7 @@
  *
  * @see seven/css/components/buttons.css
  */
-#drupal-off-canvas {
+#drupal-off-canvas-wrapper {
   --off-canvas-button-background-color: #777;
   --off-canvas-button-hover-background-color: #999;
   --off-canvas-button-text-color: #f5f5f5;
@@ -25,7 +25,7 @@
   --off-canvas-primary-button-text-color: #fff;
   --off-canvas-primary-button-hover-text-color: #fff
 }
-#drupal-off-canvas .button {
+#drupal-off-canvas-wrapper .button {
     display: inline-block;
     width: 100%;
     height: auto;
@@ -46,45 +46,45 @@
     -webkit-appearance: none;
     appearance: none
   }
-#drupal-off-canvas .button:hover,
-    #drupal-off-canvas .button:active {
+#drupal-off-canvas-wrapper .button:hover,
+    #drupal-off-canvas-wrapper .button:active {
       z-index: 10;
       text-decoration: none;
       color: var(--off-canvas-button-text-hover-color);
       background-color: var(--off-canvas-button-hover-background-color);
     }
-#drupal-off-canvas .button:disabled,
-    #drupal-off-canvas .button:disabled:active,
-    #drupal-off-canvas .button.is-disabled,
-    #drupal-off-canvas .button.is-disabled:active {
+#drupal-off-canvas-wrapper .button:disabled,
+    #drupal-off-canvas-wrapper .button:disabled:active,
+    #drupal-off-canvas-wrapper .button.is-disabled,
+    #drupal-off-canvas-wrapper .button.is-disabled:active {
       cursor: default;
       color: #5c5c5c;
       background: #555;
       font-weight: normal;
     }
-#drupal-off-canvas .button--primary {
+#drupal-off-canvas-wrapper .button--primary {
     margin-top: 0.9375rem;
     color: var(--off-canvas-primary-button-text-color);
     background: var(--off-canvas-primary-button-background-color)
   }
-#drupal-off-canvas .button--primary:hover,
-    #drupal-off-canvas .button--primary:active {
+#drupal-off-canvas-wrapper .button--primary:hover,
+    #drupal-off-canvas-wrapper .button--primary:active {
       color: var(--off-canvas-primary-button-hover-text-color);
       background: var(--off-canvas-primary-button-background-hover-color);
     }
-[dir="ltr"] #drupal-off-canvas .button-action:before {
+[dir="ltr"] #drupal-off-canvas-wrapper .button-action:before {
     margin-left: -0.2em
 }
-[dir="rtl"] #drupal-off-canvas .button-action:before {
+[dir="rtl"] #drupal-off-canvas-wrapper .button-action:before {
     margin-right: -0.2em
 }
-[dir="ltr"] #drupal-off-canvas .button-action:before {
+[dir="ltr"] #drupal-off-canvas-wrapper .button-action:before {
     padding-right: 0.2em
 }
-[dir="rtl"] #drupal-off-canvas .button-action:before {
+[dir="rtl"] #drupal-off-canvas-wrapper .button-action:before {
     padding-left: 0.2em
 }
-#drupal-off-canvas button.link {
+#drupal-off-canvas-wrapper button.link {
     display: inline;
     transition: color 0.5s ease;
     color: var(--off-canvas-link-color);
@@ -92,30 +92,30 @@
     background: transparent;
     font-size: var(--off-canvas-button-font-size)
   }
-#drupal-off-canvas button.link:hover,
-    #drupal-off-canvas button.link:focus {
+#drupal-off-canvas-wrapper button.link:hover,
+    #drupal-off-canvas-wrapper button.link:focus {
       text-decoration: none;
       color: var(--off-canvas-link-color);
     }
-#drupal-off-canvas .button--danger {
+#drupal-off-canvas-wrapper .button--danger {
     text-decoration: none;
     color: #c72100;
     border-radius: 0;
     font-weight: 400
   }
-#drupal-off-canvas .button--danger:hover,
-    #drupal-off-canvas .button--danger:focus,
-    #drupal-off-canvas .button--danger:active {
+#drupal-off-canvas-wrapper .button--danger:hover,
+    #drupal-off-canvas-wrapper .button--danger:focus,
+    #drupal-off-canvas-wrapper .button--danger:active {
       text-decoration: none;
       color: #ff2a00;
       text-shadow: none;
     }
-#drupal-off-canvas .button--danger:disabled,
-    #drupal-off-canvas .button--danger.is-disabled {
+#drupal-off-canvas-wrapper .button--danger:disabled,
+    #drupal-off-canvas-wrapper .button--danger.is-disabled {
       cursor: default;
       color: #737373;
     }
-.no-touchevents #drupal-off-canvas .button--small {
+.no-touchevents #drupal-off-canvas-wrapper .button--small {
     padding: 2px 1em;
     font-size: 0.8125rem
 }
