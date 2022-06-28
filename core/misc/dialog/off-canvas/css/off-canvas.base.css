@@ -13,7 +13,7 @@
 #drupal-off-canvas {
   --off-canvas-background-color-light: #666;
   --off-canvas-background-color-medium: #444;
-  --off-canvas-background-color-dark: #222;
+  --off-canvas-background-color-dark: #333;
   --off-canvas-padding: 1.25rem;
   --off-canvas-background-color: var(--off-canvas-background-color-medium);
   --off-canvas-text-color: #ddd;
@@ -36,7 +36,6 @@
 
 #drupal-off-canvas a,
   #drupal-off-canvas .link {
-    transition: color 0.5s ease;
     text-decoration: none;
     color: var(--off-canvas-link-color);
     font-family: var(--off-canvas-font-family);

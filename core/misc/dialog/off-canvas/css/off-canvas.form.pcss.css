@@ -44,7 +44,6 @@
     content: "*";
   }
 
-  & fieldset.form-item, /* Bartik doesn't apply BEM classes, so we use the element with a class for specificity. */
   & .fieldset,
   & fieldset {
     margin: calc(2 * var(--off-canvas-vertical-spacing-unit)) 0;
@@ -60,7 +59,7 @@
   }
 
   /* Bartik uses the .field-multiple-table CSS class on its tabledrag tables. */
-  & :is(.fieldset, fieldset.form-item, .draggable-table, .field-multiple-table) input:where(:not([type="submit"], [type="checkbox"], [type="radio"])) {
+  & :is(.fieldset, fieldset, .draggable-table, .field-multiple-table) input:where(:not([type="submit"], [type="checkbox"], [type="radio"])) {
     width: 100%; /* Prevent text fields from breaking out of tables and fieldsets at narrow widths. */
   }
 
