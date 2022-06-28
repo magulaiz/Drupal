@@ -934,11 +934,13 @@ drupal.dialog.off_canvas:
       misc/dialog/off-canvas/css/utility.css: {}
     component:
       misc/dialog/off-canvas/css/button.css: {}
+      misc/dialog/off-canvas/css/drupal.css: {}
       misc/dialog/off-canvas/css/form.css: {}
       misc/dialog/off-canvas/css/table.css: {}
       misc/dialog/off-canvas/css/details.css: {}
       misc/dialog/off-canvas/css/messages.css: {}
       misc/dialog/off-canvas/css/tabledrag.css: {}
+      misc/dialog/off-canvas/css/throbber.css: {}
       misc/dialog/off-canvas/css/dropbutton.css: {}
       misc/dialog/off-canvas/css/titlebar.css: {}
       misc/dialog/off-canvas/css/wrapper.css: {}

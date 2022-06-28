@@ -90,9 +90,4 @@
       }
     }
   }
-
-  & .messages--error div[role="alert"] {
-    color: inherit;
-    background: transparent;
-  }
 }

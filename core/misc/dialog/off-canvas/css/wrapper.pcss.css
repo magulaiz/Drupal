@@ -8,8 +8,6 @@
   --off-canvas-inline-border-width: 1px;
 
   z-index: 501; /* Layer the dialog just under the toolbar. */
-
-  /* Position the off-canvas dialog container outside the right of the viewport. */
   overflow: auto;
   box-sizing: border-box;
   height: 100%;
