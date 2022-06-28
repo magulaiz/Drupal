@@ -932,7 +932,6 @@ drupal.dialog.off_canvas:
       misc/dialog/off-canvas/css/reset.css: {}
       misc/dialog/off-canvas/css/base.css: {}
     component:
-      misc/dialog/off-canvas/css/motion.css: {}
       misc/dialog/off-canvas/css/button.css: {}
       misc/dialog/off-canvas/css/form.css: {}
       misc/dialog/off-canvas/css/table.css: {}

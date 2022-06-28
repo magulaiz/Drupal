@@ -30,3 +30,7 @@ body.js-off-canvas-dialog-open {
     position: fixed
 }
   }
+/* This is a page level content wrapper that shrinks when off-canvas is open. */
+.dialog-off-canvas-main-canvas {
+  transition: padding-right 0.7s ease, padding-left 0.7s ease, padding-top 0.3s ease;
+}
