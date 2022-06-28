@@ -68,7 +68,7 @@ class HelpTopicSearchTest extends HelpTopicTranslatedTestBase {
     $this->drupalGet('search/help');
     $this->submitForm(['keys' => 'not-a-word-english'], 'Search');
     $this->assertSearchResultsCount(0);
-    $this->assertSession()->statusMessageContains('Help search is not fully indexed', 'warning');
+    $this->assertSession()->elementTextContains('xpath', '//div[@data-drupal-messages]//div[contains(@aria-labelledby, "message-warning-title")]', 'Help search is not fully indexed');
 
     // Run cron until the topics are fully indexed, with a limit of 100 runs
     // to avoid infinite loops.
@@ -261,7 +261,7 @@ class HelpTopicSearchTest extends HelpTopicTranslatedTestBase {
     $this->drupalGet('admin/modules/uninstall');
     $this->submitForm($edit, 'Uninstall');
     $this->submitForm([], 'Uninstall');
-    $this->assertSession()->statusMessageContains('The selected modules have been uninstalled.', 'status');
+    $this->assertSession()->elementTextContains('xpath', '//div[@data-drupal-messages]//div[contains(@aria-labelledby, "message-status-title")]', 'The selected modules have been uninstalled.');
     $this->drupalGet('admin/help');
     $this->assertSession()->statusCodeEquals(200);
   }
@@ -278,7 +278,7 @@ class HelpTopicSearchTest extends HelpTopicTranslatedTestBase {
     $this->drupalGet('admin/modules/uninstall');
     $this->submitForm($edit, 'Uninstall');
     $this->submitForm([], 'Uninstall');
-    $this->assertSession()->statusMessageContains('The selected modules have been uninstalled.', 'status');
+    $this->assertSession()->elementTextContains('xpath', '//div[@data-drupal-messages]//div[contains(@aria-labelledby, "message-status-title")]', 'The selected modules have been uninstalled.');
     $this->drupalGet('admin/help');
     $this->assertSession()->statusCodeEquals(200);
 

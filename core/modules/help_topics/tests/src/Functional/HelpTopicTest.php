@@ -57,14 +57,17 @@ class HelpTopicTest extends BrowserTestBase {
   protected function setUp(): void {
     parent::setUp();
 
-    // These tests rely on some markup from the 'Seven' theme and we test theme
+    // These tests rely on some markup from the 'Claro' theme and we test theme
     // provided help topics.
-    \Drupal::service('theme_installer')->install(['seven', 'help_topics_test_theme']);
-    \Drupal::service('config.factory')->getEditable('system.theme')->set('admin', 'seven')->save();
+    \Drupal::service('theme_installer')->install([
+      'claro',
+      'help_topics_test_theme',
+    ]);
+    \Drupal::service('config.factory')->getEditable('system.theme')->set('admin', 'claro')->save();
 
     // Place various blocks.
     $settings = [
-      'theme' => 'seven',
+      'theme' => 'claro',
       'region' => 'help',
     ];
     $this->placeBlock('help_block', $settings);
