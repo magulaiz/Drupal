@@ -261,7 +261,7 @@ class HelpTopicSearchTest extends HelpTopicTranslatedTestBase {
     $this->drupalGet('admin/modules/uninstall');
     $this->submitForm($edit, 'Uninstall');
     $this->submitForm([], 'Uninstall');
-    $this->assertSession()->elementTextContains('xpath', '//div[@data-drupal-messages]//div[contains(@aria-labelledby, "message-status-title")]', 'The selected modules have been uninstalled.');
+    $this->assertSession()->elementTextContains('xpath', '//div[@data-drupal-messages]//div[contains(@aria-labelledby, "message-status-title")]//div[contains(@class, "messages__content")]', 'The selected modules have been uninstalled.');
     $this->drupalGet('admin/help');
     $this->assertSession()->statusCodeEquals(200);
   }
@@ -278,7 +278,7 @@ class HelpTopicSearchTest extends HelpTopicTranslatedTestBase {
     $this->drupalGet('admin/modules/uninstall');
     $this->submitForm($edit, 'Uninstall');
     $this->submitForm([], 'Uninstall');
-    $this->assertSession()->elementTextContains('xpath', '//div[@data-drupal-messages]//div[contains(@aria-labelledby, "message-status-title")]', 'The selected modules have been uninstalled.');
+    $this->assertSession()->statusMessageContains('The selected modules have been uninstalled.', 'status');
     $this->drupalGet('admin/help');
     $this->assertSession()->statusCodeEquals(200);
 
@@ -297,7 +297,7 @@ class HelpTopicSearchTest extends HelpTopicTranslatedTestBase {
    * @internal
    */
   protected function assertSearchResultsCount(int $count): void {
-    $this->assertSession()->elementsCount('css', '.help_search-results > li', $count);
+    $this->assertSession()->elementsCount('css', '#block-claro-content .item-list > ol > li', $count);
   }
 
 }
