@@ -1,0 +1,59 @@
+#drupal-off-canvas {
+  & .inline-block-create-button {
+    display: block;
+    padding: 24px;
+    padding-left: 44px;
+    color: #eee;
+    border-bottom: 1px solid #333;
+    background: url(../../../misc/icons/bebebe/plus.svg) transparent 16px no-repeat;
+    font-size: 16px;
+  }
+
+  & .layout-selection a {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 0;
+  }
+
+  & .inline-block-create-button {
+    display: block;
+    padding: 24px;
+    padding-inline-start: 44px;
+    color: #eee;
+    border-bottom: 1px solid #333;
+    background: url(../../../misc/icons/bebebe/plus.svg) transparent 16px no-repeat;
+    font-size: 16px;
+  }
+
+  & .inline-block-create-button,
+  & .inline-block-list__item {
+    margin: 0 -20px;
+    color: var(--off-canvas-text-color);
+
+    &:hover {
+      background-color: rgba(255, 255, 255, 0.05);
+    }
+
+    &:focus {
+      outline: solid 2px;
+      outline-offset: -4px; /* Prevent outline from being cut off. */
+    }
+  }
+
+  & .inline-block-list {
+    margin-bottom: 15px;
+
+    & li {
+      position: relative; /* Anchor throbber which gets AJAXed in. */
+    }
+  }
+
+  /* This is the <a> tag. */
+  & .inline-block-list__item {
+    display: block;
+    flex-grow: 1;
+    padding: 15px 25px;
+  }
+}

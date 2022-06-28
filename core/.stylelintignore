@@ -4,6 +4,8 @@ themes/olivero/**/*.css
 !themes/olivero/**/*.pcss.css
 misc/dialog/off-canvas/css/**/*.css
 !misc/dialog/off-canvas/css/**/*.pcss.css
+modules/layout_builder/css/**/*.css
+!modules/layout_builder/css/**/*.pcss.css
 themes/stable/css/core/dialog/off-canvas.reset.css
 themes/stable/css/core/dialog/off-canvas.base.css
 themes/stable9/css/core/dialog/off-canvas.reset.css
