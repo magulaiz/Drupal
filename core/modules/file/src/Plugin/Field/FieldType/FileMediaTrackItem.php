@@ -243,7 +243,7 @@ class FileMediaTrackItem extends FileItem {
 
       /** @var \Drupal\Core\File\FileSystemInterface $file_system */
       $file_system = \Drupal::service('file_system');
-      $tmp_file = $file_system->tempnam('temporary://', 'generateImage_');
+      $tmp_file = $file_system->tempnam('temporary://', 'generatedWebvtt_');
       $destination = $tmp_file . '.vtt';
       try {
         $file_system->move($tmp_file, $destination);
@@ -312,14 +312,13 @@ class FileMediaTrackItem extends FileItem {
    */
   private static function secondsToTimecode($initial) {
     $seconds = floor($initial);
-    $milliseconds = round(($initial - $seconds) * 1000);
+    $milliseconds = (int) (($initial - $seconds) * 1000);
     $milliseconds = str_pad($milliseconds, 3, '0', STR_PAD_LEFT);
-
     $hours = round($seconds / 3600);
     $hours = str_pad($hours, 2, '0', STR_PAD_LEFT);
-    $minutes = round(($seconds / 60) % 60);
+    $minutes = round(($seconds / 60)) % 60;
     $minutes = str_pad($minutes, 2, '0', STR_PAD_LEFT);
-    $seconds = round($seconds % 60);
+    $seconds = round($seconds) % 60;
     $seconds = str_pad($seconds, 2, '0', STR_PAD_LEFT);
 
     return $hours . ':' . $minutes . ':' . $seconds . '.' . $milliseconds;
