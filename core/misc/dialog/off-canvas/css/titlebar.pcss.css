@@ -6,31 +6,7 @@
  * have some styles leaking in from jQueryUI.
  */
 
-/* Style the dialog-off-canvas container. This is the parent container of #drupal-off-canvas. */
-#drupal-off-canvas-wrapper {
-  --ui-off-canvas-box-shadow: 0 0 4px 2px rgba(0, 0, 0, 0.3);
-  --ui-off-canvas-inline-border-color: #2d2d2d;
-  --ui-off-canvas-inline-border-width: 1px;
-  --ui-off-canvas-title-background-color: #2d2d2d;
-  --ui-off-canvas-title-text-color: #fff;
-  --ui-off-canvas-title-padding: 1em;
-  --ui-off-canvas-title-font-size: 16px;
-  --ui-off-canvas-title-font-family: "Lucida Grande", "Lucida Sans Unicode", "liberation sans", sans-serif;
-
-  all: revert;
-  z-index: 501; /* Layer the dialog just under the toolbar. */
-  box-shadow: var(--ui-off-canvas-box-shadow);
-  border-inline-start: solid var(--ui-off-canvas-inline-border-width) var(--ui-off-canvas-inline-border-color);
-
-  /*
-   * Prevent jQueryUI styles from leaking into the titlebar. No need to revert
-   * #drupal-off-canvas, which has its own reset.
-   */
-  & *:where(:not(#drupal-off-canvas, #drupal-off-canvas *, .ui-resizable-handle)) {
-    all: revert;
-  }
-
-  /* Style the off-canvas dialog header. */
+ #drupal-off-canvas-wrapper {
   & .ui-dialog-titlebar {
     position: relative;
     padding: var(--ui-off-canvas-title-padding);
@@ -60,6 +36,7 @@
       outline-offset: 2px;
     }
 
+    /* The plus icon. */
     &:before,
     &:after {
       position: absolute;
@@ -90,6 +67,7 @@
     margin: 0;
     padding-inline: 30px; /* Push the text away from the icons. */
 
+    /* The pencil icon. */
     &:before {
       position: absolute;
       top: 0;
