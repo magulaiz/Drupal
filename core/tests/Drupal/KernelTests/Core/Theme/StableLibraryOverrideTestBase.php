@@ -45,9 +45,7 @@ abstract class StableLibraryOverrideTestBase extends KernelTestBase {
    *
    * @var string[]
    */
-  protected $librariesToSkip = [
-    'core/drupal.dialog.off_canvas',
-  ];
+  protected $librariesToSkip = [];
 
   /**
    * Enable all core modules that are not hidden or experimental.
