@@ -14,5 +14,5 @@ keep track of those changes and how they affect your theme.
 ABOUT DRUPAL THEMING
 --------------------
 
-For more information, see Drupal.org's theming guide.
-https://www.drupal.org/docs/8/theming
+See https://www.drupal.org/docs/theming-drupal for more information on Theming
+Drupal.

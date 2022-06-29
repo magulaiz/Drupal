@@ -16,5 +16,5 @@ see https://www.drupal.org/node/2582945 for more info.
 ABOUT DRUPAL THEMING
 --------------------
 
-See https://www.drupal.org/docs/8/theming for more information on Drupal 8
-theming.
+See https://www.drupal.org/docs/theming-drupal for more information on Theming
+Drupal.
