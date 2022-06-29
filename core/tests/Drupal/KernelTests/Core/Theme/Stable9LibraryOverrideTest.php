@@ -21,6 +21,7 @@ class Stable9LibraryOverrideTest extends StableLibraryOverrideTestBase {
    */
   protected $librariesToSkip = [
     'core/drupal.dialog.off_canvas',
+    'layout_builder/drupal.layout_builder',
   ];
 
   /**
