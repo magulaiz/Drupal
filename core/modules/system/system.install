@@ -68,6 +68,10 @@ function system_requirements($phase) {
   /** @var \Drupal\Core\Extension\ThemeExtensionList $theme_extension_list */
   $theme_extension_list = \Drupal::service('extension.list.theme');
   $theme_extension_list->reset();
+  /** @var \Drupal\Core\Extension\ProfileExtensionList $profile_extension_list */
+  $profile_extension_list = \Drupal::service('extension.list.profile');
+  $profile_extension_list->reset();
+
   $requirements = [];
 
   // Report Drupal version
@@ -83,7 +87,7 @@ function system_requirements($phase) {
     // is not running the default installation profile.
     $profile = \Drupal::installProfile();
     if ($profile != 'standard') {
-      $info = $module_extension_list->getExtensionInfo($profile);
+      $info = $profile_extension_list->getExtensionInfo($profile);
       $requirements['install_profile'] = [
         'title' => t('Installation profile'),
         'value' => t('%profile_name (%profile-%version)', [
