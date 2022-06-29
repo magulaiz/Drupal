@@ -144,6 +144,23 @@
     }
   }
 
+  function offCanvasCss(element) {
+    const fenceName = 'data-drupal-ck-style-fence';
+    const editor = Drupal.CKEditor5Instances.get(element.getAttribute('data-ckeditor5-id'));
+    editor.ui.view.element.setAttribute(fenceName, '');
+
+    if (once('ckeditor5-off-canvas-reset', 'body').length) {
+      [...document.styleSheets].forEach(processRules);
+      const prefix = `#drupal-off-canvas-wrapper [${fenceName}]`;
+      const addedCss = [`${prefix} .ck.ck-content {display:block;min-height:5rem;}`, `${prefix} .ck.ck-content * {display:initial;background:initial;color:initial;padding:initial;}`, `${prefix} .ck.ck-content li {display:list-item}`, `${prefix} .ck.ck-content ol li {list-style-type: decimal}`, `${prefix} .ck[contenteditable], ${prefix} .ck[contenteditable] * {-webkit-user-modify: read-write;-moz-user-modify: read-write;}`];
+      const prefixedCss = [...addedCss].join('\n');
+      const offCanvasCssStyle = document.createElement('style');
+      offCanvasCssStyle.textContent = prefixedCss;
+      offCanvasCssStyle.setAttribute('id', 'ckeditor5-off-canvas-reset');
+      document.body.appendChild(offCanvasCssStyle);
+    }
+  }
+
   Drupal.editors.ckeditor5 = {
     attach(element, format) {
       const {
@@ -195,6 +212,10 @@
           }
         });
         const isOffCanvas = element.closest('#drupal-off-canvas');
+
+        if (isOffCanvas) {
+          offCanvasCss(element);
+        }
       }).catch(error => {
         console.error(error);
       });

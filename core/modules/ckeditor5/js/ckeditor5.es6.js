@@ -304,6 +304,45 @@
   }
 
   /**
+   * Adds CSS to ensure proper styling of CKEditor 5 inside off-canvas dialogs.
+   *
+   * @param {HTMLElement} element
+   *   The element the editor is attached to.
+   */
+  function offCanvasCss(element) {
+    const fenceName = 'data-drupal-ck-style-fence';
+    const editor = Drupal.CKEditor5Instances.get(
+      element.getAttribute('data-ckeditor5-id'),
+    );
+    editor.ui.view.element.setAttribute(fenceName, '');
+    // Only proceed if the styles haven't been added yet.
+    if (once('ckeditor5-off-canvas-reset', 'body').length) {
+      // For all rules on the page, add the donut scope for
+      // rules containing the #drupal-off-canvas selector.
+      [...document.styleSheets].forEach(processRules);
+
+      const prefix = `#drupal-off-canvas-wrapper [${fenceName}]`;
+      // Additional styles that need to be explicity added in addition to the
+      // prefixed versions of existing css in `existingCss`.
+      const addedCss = [
+        `${prefix} .ck.ck-content {display:block;min-height:5rem;}`,
+        `${prefix} .ck.ck-content * {display:initial;background:initial;color:initial;padding:initial;}`,
+        `${prefix} .ck.ck-content li {display:list-item}`,
+        `${prefix} .ck.ck-content ol li {list-style-type: decimal}`,
+        `${prefix} .ck[contenteditable], ${prefix} .ck[contenteditable] * {-webkit-user-modify: read-write;-moz-user-modify: read-write;}`,
+      ];
+
+      const prefixedCss = [...addedCss].join('\n');
+
+      // Create a new style tag with the prefixed styles added above.
+      const offCanvasCssStyle = document.createElement('style');
+      offCanvasCssStyle.textContent = prefixedCss;
+      offCanvasCssStyle.setAttribute('id', 'ckeditor5-off-canvas-reset');
+      document.body.appendChild(offCanvasCssStyle);
+    }
+  }
+
+  /**
    * Integration of CKEditor 5 with the Drupal editor API.
    *
    * @namespace
@@ -381,6 +420,10 @@
           });
 
           const isOffCanvas = element.closest('#drupal-off-canvas');
+
+          if (isOffCanvas) {
+            offCanvasCss(element);
+          }
         })
         .catch((error) => {
           // eslint-disable-next-line no-console
