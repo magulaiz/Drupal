@@ -4,6 +4,7 @@
  */
 
 #drupal-off-canvas-wrapper {
+  & .ajax-progress, /* This is the CSS class used in Claro. */
   & .ajax-progress-throbber {
     display: inline-block;
     width: 15px;
@@ -22,6 +23,7 @@
 
   & .layout-selection,
   & .inline-block-list {
+    & .ajax-progress,
     & .ajax-progress-throbber {
       position: absolute;
       inset-block-start: 0;

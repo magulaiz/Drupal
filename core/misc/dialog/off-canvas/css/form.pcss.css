@@ -18,7 +18,7 @@
     color: var(--drupal-off-canvas-input-text-color);
   }
 
-  & .form-item {
+  & .form-item:where(:not(fieldset)) {
     padding: var(--off-canvas-vertical-spacing-unit) 0;
   }
 
@@ -136,8 +136,12 @@
 
   /* This is the background <ul> for the autocomplete dropdown. */
   & .ui-autocomplete {
+    margin: 0;
+    padding: 0;
+    list-style: none;
     border: var(--drupal-off-canvas-input-border);
-    background-color: var(--drupal-off-canvas-background-color);
+    background-color: var(--drupal-off-canvas-input-background-color);
+    box-shadow: 0 1px 1px 0 var(--off-canvas-background-color); /* Ensure edge is visible if appearing over another form element. */
 
     & a {
       display: block;
@@ -155,5 +159,13 @@
         outline-offset: -2px;
       }
     }
+  }
+
+  /*
+   * Claro injects a "Loading" autocomplete message that affects the positioning
+   * of the ui-autocomplete dropdown. We remove this to normalize the markup.
+   */
+  & .claro-autocomplete__message {
+    display: none;
   }
 }
