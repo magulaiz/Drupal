@@ -82,37 +82,12 @@
     margin: var(--off-canvas-vertical-spacing-unit) 0;
   }
 
-#drupal-off-canvas-wrapper .links,
-  #drupal-off-canvas-wrapper .inline-block-list,
-  #drupal-off-canvas-wrapper .layout-selection {
+#drupal-off-canvas-wrapper .links {
     margin: 0;
     padding: 0;
     list-style: none
   }
 
-#drupal-off-canvas-wrapper .links li, #drupal-off-canvas-wrapper .inline-block-list li, #drupal-off-canvas-wrapper .layout-selection li {
-      position: relative; /* Anchor throbber. */
-      padding: calc(var(--off-canvas-vertical-spacing-unit)*0.25) 0;
-      border-bottom: 1px solid var(--off-canvas-border-color)
-    }
-
-#drupal-off-canvas-wrapper .links li:last-child, #drupal-off-canvas-wrapper .inline-block-list li:last-child, #drupal-off-canvas-wrapper .layout-selection li:last-child {
-        padding-bottom: 0;
-        border-bottom: none;
-      }
-
-[dir="ltr"] #drupal-off-canvas-wrapper .links .throbber,[dir="ltr"]  #drupal-off-canvas-wrapper .inline-block-list .throbber,[dir="ltr"]  #drupal-off-canvas-wrapper .layout-selection .throbber {
-      right: 0
-}
-
-[dir="rtl"] #drupal-off-canvas-wrapper .links .throbber,[dir="rtl"]  #drupal-off-canvas-wrapper .inline-block-list .throbber,[dir="rtl"]  #drupal-off-canvas-wrapper .layout-selection .throbber {
-      left: 0
-}
-
-#drupal-off-canvas-wrapper .links .throbber, #drupal-off-canvas-wrapper .inline-block-list .throbber, #drupal-off-canvas-wrapper .layout-selection .throbber {
-      position: absolute;
-      top: 0;
-      bottom: 0;
-      margin-top: auto;
-      margin-bottom: auto;
+#drupal-off-canvas-wrapper .links li {
+      margin: calc(var(--off-canvas-vertical-spacing-unit)/2) 0;
     }

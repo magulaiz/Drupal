@@ -27,6 +27,22 @@
   }
     }
 
+[dir="ltr"] #drupal-off-canvas-wrapper .layout-selection .throbber,[dir="ltr"]  #drupal-off-canvas-wrapper .inline-block-list .throbber {
+      right: 0.625rem
+}
+
+[dir="rtl"] #drupal-off-canvas-wrapper .layout-selection .throbber,[dir="rtl"]  #drupal-off-canvas-wrapper .inline-block-list .throbber {
+      left: 0.625rem
+}
+
+#drupal-off-canvas-wrapper .layout-selection .throbber, #drupal-off-canvas-wrapper .inline-block-list .throbber {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      margin-top: auto;
+      margin-bottom: auto;
+    }
+
 @keyframes off-canvas-throbber-spin {
   to {
     transform: rotate(360deg);

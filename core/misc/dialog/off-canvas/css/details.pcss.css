@@ -21,10 +21,6 @@
     & + details {
       margin-top: calc(-1 * var(--off-canvas-details-border-width));
     }
-
-    &[open] {
-      padding-bottom: 20px;
-    }
   }
 
   & details,
@@ -42,10 +38,13 @@
   }
 
   & details,
-  & summary,
-  & .details-wrapper {
+  & summary {
     margin: 0 calc(-1 * var(--off-canvas-padding)); /* Cancel out the padding of the parent. */
     padding: 0 var(--off-canvas-padding);
+  }
+
+  & .details-wrapper {
+    padding: var(--off-canvas-vertical-spacing-unit) 0;
   }
 
   & summary {

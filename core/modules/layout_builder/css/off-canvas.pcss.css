@@ -1,20 +1,71 @@
-#drupal-off-canvas {
-  & .layout-selection a {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 10px;
-    padding: 10px 0;
+#drupal-off-canvas-wrapper {
+  & .layout-selection {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+
+    & li {
+      position: relative; /* Anchor throbber. */
+      padding: calc(0.25 * var(--off-canvas-vertical-spacing-unit));
+      border-bottom: 1px solid var(--off-canvas-border-color);
+
+      &:last-child {
+        padding-bottom: 0;
+        border-bottom: none;
+      }
+    }
+
+    & a {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 10px;
+      padding: 10px;
+    }
+  }
+
+  /*
+  * This is the styling of the SVG within the layout selection list.
+  */
+  & .layout-icon__region {
+    fill: var(--off-canvas-text-color);
+    stroke: transparent;
+
+    @media (forced-colors: active) {
+      fill: canvastext;
+    }
   }
 
   & .inline-block-create-button {
+    --icon-size: 16px;
+
+    position: relative; /* Anchor pseudo-element. */
     display: block;
     padding: 24px;
-    padding-inline-start: 44px;
-    color: #eee;
+    padding-inline-start: calc(2 * var(--off-canvas-padding) + var(--icon-size) / 2); /* Room for icon */
     border-bottom: 1px solid #333;
-    background: url(../../../misc/icons/bebebe/plus.svg) transparent 16px no-repeat;
     font-size: 16px;
+
+    /* Plus icon. */
+    &:before {
+      position: absolute;
+      top: 50%;
+      left: var(--off-canvas-padding);
+      width: var(--icon-size);
+      height: var(--icon-size);
+      content: "";
+      transform: translateY(-50%);
+      background-image: url(../../../misc/icons/bebebe/plus.svg);
+      background-repeat: no-repeat;
+      background-size: contain;
+
+      @media (forced-colors: active) {
+        background: linktext;
+        mask-image: url(../../../misc/icons/bebebe/plus.svg);
+        mask-repeat: no-repeat;
+        mask-size: contain;
+      }
+    }
   }
 
   & .inline-block-create-button,
@@ -27,16 +78,23 @@
     }
 
     &:focus {
-      outline: solid 2px;
       outline-offset: -4px; /* Prevent outline from being cut off. */
     }
   }
 
   & .inline-block-list {
-    margin-bottom: 15px;
+    margin: 0 0 calc(2 * var(--off-canvas-vertical-spacing-unit));
+    padding: 0;
+    list-style: none;
 
     & li {
-      position: relative; /* Anchor throbber which gets AJAXed in. */
+      position: relative; /* Anchor throbber. */
+      padding: calc(0.25 * var(--off-canvas-vertical-spacing-unit)) 0;
+
+      &:last-child {
+        padding-bottom: 0;
+        border-bottom: none;
+      }
     }
   }
 
@@ -45,5 +103,6 @@
     display: block;
     flex-grow: 1;
     padding: 15px 25px;
+    border-bottom: 1px solid var(--off-canvas-border-color);
   }
 }

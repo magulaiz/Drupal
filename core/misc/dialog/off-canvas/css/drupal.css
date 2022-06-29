@@ -34,16 +34,3 @@
 #drupal-off-canvas-wrapper small .admin-link:after {
     content: "]";
   }
-
-#drupal-off-canvas-wrapper {
-
-  /*
-    * This is the styling of the SVG within the layout selection list.
-    * @todo move this to Layout Builder module?
-    */
-}
-
-#drupal-off-canvas-wrapper .layout-icon__region {
-    fill: #f5f5f2;
-    stroke: #666;
-  }

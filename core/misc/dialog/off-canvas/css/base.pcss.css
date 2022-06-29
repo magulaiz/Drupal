@@ -74,30 +74,13 @@
     margin: var(--off-canvas-vertical-spacing-unit) 0;
   }
 
-  & .links,
-  & .inline-block-list,
-  & .layout-selection {
+  & .links {
     margin: 0;
     padding: 0;
     list-style: none;
 
     & li {
-      position: relative; /* Anchor throbber. */
-      padding: calc(0.25 * var(--off-canvas-vertical-spacing-unit)) 0;
-      border-bottom: 1px solid var(--off-canvas-border-color);
-
-      &:last-child {
-        padding-bottom: 0;
-        border-bottom: none;
-      }
-    }
-
-    & .throbber {
-      position: absolute;
-      top: 0;
-      inset-inline-end: 0;
-      bottom: 0;
-      margin-block: auto;
+      margin: calc(var(--off-canvas-vertical-spacing-unit) /2) 0;
     }
   }
 }

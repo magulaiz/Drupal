@@ -9,16 +9,38 @@
 #drupal-off-canvas-wrapper {
   --off-canvas-title-background-color: #2d2d2d;
   --off-canvas-title-text-color: #fff;
-  --off-canvas-title-padding: 1em;
+  --off-canvas-title-padding: calc(3 * var(--off-canvas-vertical-spacing-unit));
   --off-canvas-title-font-size: 16px;
 
   & .ui-dialog-titlebar {
     position: relative;
-    padding: var(--off-canvas-title-padding);
+    margin: 0 calc(-1 * var(--off-canvas-padding));
+    padding: var(--off-canvas-title-padding) 50px;
     color: var(--off-canvas-title-text-color);
     background-color: var(--off-canvas-title-background-color);
     font-family: var(--off-canvas-title-font-family);
     font-size: var(--off-canvas-title-font-size);
+    font-weight: bold;
+
+    /* The pencil icon. */
+    &:before {
+      position: absolute;
+      top: 0;
+      inset-inline-start: 1em;
+      display: block;
+      width: 20px;
+      height: 100%;
+      content: "";
+      background-color: currentColor;
+      mask-image: url(../../../icons/ffffff/pencil.svg);
+      mask-repeat: no-repeat;
+      mask-size: contain;
+      mask-position: center;
+
+      @media (forced-colors: active) {
+        background-color: canvastext;
+      }
+    }
   }
 
   /* Close button. */
@@ -46,12 +68,12 @@
     &:before,
     &:after {
       position: absolute;
-      top: 50%;
+      top: calc(50% - 1px);
       left: 50%;
       width: 50%;
       height: 0;
       content: "";
-      border: solid 1px currentColor;
+      border-top: solid 2px currentColor;
     }
 
     &:before {
@@ -65,32 +87,6 @@
     /* Hide the default jQuery UI dialog close button. */
     & .ui-icon {
       display: none;
-    }
-  }
-
-  & .ui-dialog-title {
-    display: block;
-    margin: 0;
-    padding-inline: 30px; /* Push the text away from the icons. */
-
-    /* The pencil icon. */
-    &:before {
-      position: absolute;
-      top: 0;
-      inset-inline-start: 1em;
-      display: block;
-      width: 20px;
-      height: 100%;
-      content: "";
-      background-color: currentColor;
-      mask-image: url(../../../icons/ffffff/pencil.svg);
-      mask-repeat: no-repeat;
-      mask-size: contain;
-      mask-position: center;
-
-      @media (forced-colors: active) {
-        background-color: canvastext;
-      }
     }
   }
 }

@@ -17,6 +17,17 @@
       border-top-color: transparent;
     }
   }
+
+  & .layout-selection,
+  & .inline-block-list {
+    & .throbber {
+      position: absolute;
+      inset-block-start: 0;
+      inset-block-end: 0;
+      inset-inline-end: 10px;
+      margin-block: auto;
+    }
+  }
 }
 
 @keyframes off-canvas-throbber-spin {

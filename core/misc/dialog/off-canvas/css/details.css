@@ -27,9 +27,6 @@
 #drupal-off-canvas-wrapper details + details {
       margin-top: calc(var(--off-canvas-details-border-width)*-1);
     }
-#drupal-off-canvas-wrapper details[open] {
-      padding-bottom: 1.25rem;
-    }
 #drupal-off-canvas-wrapper details,
   #drupal-off-canvas-wrapper summary {
     color: var(--off-canvas-details-text-color);
@@ -42,10 +39,12 @@
       color: var(--off-canvas-details-summary-hover-text-color);
     }
 #drupal-off-canvas-wrapper details,
-  #drupal-off-canvas-wrapper summary,
-  #drupal-off-canvas-wrapper .details-wrapper {
+  #drupal-off-canvas-wrapper summary {
     margin: 0 calc(var(--off-canvas-padding)*-1); /* Cancel out the padding of the parent. */
     padding: 0 var(--off-canvas-padding);
+  }
+#drupal-off-canvas-wrapper .details-wrapper {
+    padding: var(--off-canvas-vertical-spacing-unit) 0;
   }
 #drupal-off-canvas-wrapper summary {
     padding: var(--off-canvas-details-summary-padding);
