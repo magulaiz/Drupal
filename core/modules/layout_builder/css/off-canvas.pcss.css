@@ -1,3 +1,8 @@
+/**
+ * @file
+ * Layout Builder styling for off-canvas UI.
+ */
+
 #drupal-off-canvas-wrapper {
   & .layout-selection {
     margin: 0;
@@ -15,6 +20,7 @@
       }
     }
 
+    /* Horizontally align icon and text. */
     & a {
       display: flex;
       flex-wrap: wrap;
@@ -25,8 +31,8 @@
   }
 
   /*
-  * This is the styling of the SVG within the layout selection list.
-  */
+   * This is the styling of the SVG within the layout selection list.
+   */
   & .layout-icon__region {
     fill: var(--off-canvas-text-color);
     stroke: transparent;
@@ -70,7 +76,7 @@
 
   & .inline-block-create-button,
   & .inline-block-list__item {
-    margin: 0 -20px;
+    margin: 0 calc(-1 * var(--off-canvas-padding));
     color: var(--off-canvas-text-color);
 
     &:hover {
@@ -89,6 +95,7 @@
 
     & li {
       position: relative; /* Anchor throbber. */
+      margin: 0;
       padding: calc(0.25 * var(--off-canvas-vertical-spacing-unit)) 0;
 
       &:last-child {
@@ -102,7 +109,7 @@
   & .inline-block-list__item {
     display: block;
     flex-grow: 1;
-    padding: 15px 25px;
+    padding: calc(2 * var(--off-canvas-vertical-spacing-unit)) var(--off-canvas-padding);
     border-bottom: 1px solid var(--off-canvas-border-color);
   }
 }

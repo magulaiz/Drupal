@@ -2,6 +2,7 @@
  * @file
  * Visual styling for summary and details in the off-canvas dialog.
  */
+
 #drupal-off-canvas-wrapper {
   --off-canvas-details-border-width: 0;
   --off-canvas-details-border-color: none;
