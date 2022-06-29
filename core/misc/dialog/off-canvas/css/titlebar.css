@@ -7,10 +7,7 @@
 
 /**
  * @file
- * Styling for the off-canvas ui dialog. Including overrides for jQuery UI.
- *
- * Note that these elements are not nested within #drupal-off-canvas-wrapper and still
- * have some styles leaking in from jQueryUI.
+ * Styling for the titlebar within the off-canvas dialog.
  */
 
 #drupal-off-canvas-wrapper {

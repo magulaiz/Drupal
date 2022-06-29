@@ -6,7 +6,7 @@
  */
 /**
  * @file
- * CSS for off-canvas dialog.
+ * CSS for off-canvas dialog wrapper.
  */
 [dir="ltr"] #drupal-off-canvas-wrapper {
   border-left: solid var(--off-canvas-inline-border-width) var(--off-canvas-inline-border-color)
