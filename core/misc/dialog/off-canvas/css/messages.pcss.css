@@ -1,3 +1,8 @@
+/**
+ * @file
+ * Styling for messages in the off-canvas dialog.
+ */
+
 #drupal-off-canvas-wrapper {
   & .messages {
     position: relative; /* Anchor :before pseudo-element. */

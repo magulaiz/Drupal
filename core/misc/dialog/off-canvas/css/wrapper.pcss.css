@@ -1,6 +1,6 @@
 /**
  * @file
- * CSS for off-canvas dialog.
+ * CSS for off-canvas dialog wrapper.
  */
 #drupal-off-canvas-wrapper {
   --off-canvas-box-shadow: 0 0 4px 2px rgba(0, 0, 0, 0.3);
