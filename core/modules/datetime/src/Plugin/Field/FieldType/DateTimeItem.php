@@ -86,12 +86,12 @@ class DateTimeItem extends FieldItemBase implements DateTimeItemInterface {
 
     $element['datetime_type'] = [
       '#type' => 'select',
-      '#title' => t('Date type'),
-      '#description' => t('Choose the type of date to create.'),
+      '#title' => $this->t('Date type'),
+      '#description' => $this->t('Choose the type of date to create.'),
       '#default_value' => $this->getSetting('datetime_type'),
       '#options' => [
-        static::DATETIME_TYPE_DATETIME => t('Date and time'),
-        static::DATETIME_TYPE_DATE => t('Date only'),
+        static::DATETIME_TYPE_DATETIME => $this->t('Date and time'),
+        static::DATETIME_TYPE_DATE => $this->t('Date only'),
       ],
       '#disabled' => $has_data,
     ];
