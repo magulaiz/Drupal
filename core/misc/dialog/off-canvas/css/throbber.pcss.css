@@ -4,11 +4,13 @@
  */
 
 #drupal-off-canvas-wrapper {
-  & .throbber {
+  & .ajax-progress-throbber {
     display: inline-block;
-    width: 20px;
-    height: 20px;
+    width: 15px;
+    height: 15px;
+    margin: 0 10px;
     animation: off-canvas-throbber-spin 1s linear infinite;
+    vertical-align: middle;
     border: 2px solid var(--off-canvas-text-color);
     border-top-color: transparent;
     border-radius: 50%;
@@ -20,11 +22,11 @@
 
   & .layout-selection,
   & .inline-block-list {
-    & .throbber {
+    & .ajax-progress-throbber {
       position: absolute;
       inset-block-start: 0;
       inset-block-end: 0;
-      inset-inline-end: 10px;
+      inset-inline-end: 0;
       margin-block: auto;
     }
   }

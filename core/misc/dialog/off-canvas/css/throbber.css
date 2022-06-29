@@ -10,11 +10,13 @@
  * Throbber for AJAX actions.
  */
 
-#drupal-off-canvas-wrapper .throbber {
+#drupal-off-canvas-wrapper .ajax-progress-throbber {
     display: inline-block;
-    width: 1.25rem;
-    height: 1.25rem;
+    width: 0.9375rem;
+    height: 0.9375rem;
+    margin: 0 0.625rem;
     animation: off-canvas-throbber-spin 1s linear infinite;
+    vertical-align: middle;
     border: 2px solid var(--off-canvas-text-color);
     border-top-color: transparent;
     border-radius: 50%
@@ -22,20 +24,20 @@
 
 @media (forced-colors: active) {
 
-#drupal-off-canvas-wrapper .throbber {
+#drupal-off-canvas-wrapper .ajax-progress-throbber {
       border-top-color: transparent
   }
     }
 
-[dir="ltr"] #drupal-off-canvas-wrapper .layout-selection .throbber,[dir="ltr"]  #drupal-off-canvas-wrapper .inline-block-list .throbber {
-      right: 0.625rem
+[dir="ltr"] #drupal-off-canvas-wrapper .layout-selection .ajax-progress-throbber,[dir="ltr"]  #drupal-off-canvas-wrapper .inline-block-list .ajax-progress-throbber {
+      right: 0
 }
 
-[dir="rtl"] #drupal-off-canvas-wrapper .layout-selection .throbber,[dir="rtl"]  #drupal-off-canvas-wrapper .inline-block-list .throbber {
-      left: 0.625rem
+[dir="rtl"] #drupal-off-canvas-wrapper .layout-selection .ajax-progress-throbber,[dir="rtl"]  #drupal-off-canvas-wrapper .inline-block-list .ajax-progress-throbber {
+      left: 0
 }
 
-#drupal-off-canvas-wrapper .layout-selection .throbber, #drupal-off-canvas-wrapper .inline-block-list .throbber {
+#drupal-off-canvas-wrapper .layout-selection .ajax-progress-throbber, #drupal-off-canvas-wrapper .inline-block-list .ajax-progress-throbber {
       position: absolute;
       top: 0;
       bottom: 0;
