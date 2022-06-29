@@ -1,10 +1,10 @@
 /**
  * @file
  * Recreate Drupal admin styling that was removed with reset.
+ * @see system.admin.css
  */
 
 #drupal-off-canvas-wrapper {
-  /* Some system classes. See system.admin.css. */
   & .panel {
     padding: 5px 5px 15px;
   }

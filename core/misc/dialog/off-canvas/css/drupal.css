@@ -8,11 +8,8 @@
 /**
  * @file
  * Recreate Drupal admin styling that was removed with reset.
+ * @see system.admin.css
  */
-
-#drupal-off-canvas-wrapper {
-  /* Some system classes. See system.admin.css. */
-}
 
 #drupal-off-canvas-wrapper .panel {
     padding: 0.3125rem 0.3125rem 0.9375rem;

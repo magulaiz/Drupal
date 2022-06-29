@@ -14,8 +14,8 @@
   --off-canvas-background-color-light: #666;
   --off-canvas-background-color-medium: #444;
   --off-canvas-background-color-dark: #333;
-  --off-canvas-padding: 1.25rem;
   --off-canvas-background-color: var(--off-canvas-background-color-medium);
+  --off-canvas-padding: 1.25rem;
   --off-canvas-text-color: #ddd;
   --off-canvas-link-color: #85bef4; /* @todo this is inaccessible. */
   --off-canvas-border-color: #666;

@@ -12,9 +12,9 @@
   --off-canvas-details-summary-padding: 10px 20px;
   --off-canvas-details-summary-font-size: 14px;
   --off-canvas-details-summary-background-color: #333;
+  --off-canvas-details-summary-background-color-hover: #222;
   --off-canvas-details-summary-text-color: #eee;
-  --off-canvas-details-summary-hover-background-color: #222;
-  --off-canvas-details-summary-hover-text-color: #fff;
+  --off-canvas-details-summary-text-color-hover: #fff;
 
   & details {
     border: solid var(--off-canvas-details-border-color) var(--off-canvas-details-border-width);
@@ -34,7 +34,7 @@
     color: var(--off-canvas-details-text-color);
 
     &:hover {
-      color: var(--off-canvas-details-summary-hover-text-color);
+      color: var(--off-canvas-details-summary-text-color-hover);
     }
   }
 
@@ -56,8 +56,8 @@
     font-size: var(--off-canvas-details-summary-font-size);
 
     &:hover {
-      color: var(--off-canvas-details-summary-hover-text-color);
-      background-color: var(--off-canvas-details-summary-hover-background-color);
+      color: var(--off-canvas-details-summary-text-color-hover);
+      background-color: var(--off-canvas-details-summary-background-color-hover);
     }
 
     &:focus {

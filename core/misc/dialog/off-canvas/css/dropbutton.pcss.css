@@ -4,14 +4,14 @@
  */
 #drupal-off-canvas-wrapper {
   --off-canvas-dropbutton-height: 24px;
-  --off-canvas-dropbutton-primary-bg-color: var(--off-canvas-button-background-color);
-  --off-canvas-dropbutton-secondary-bg-color: var(--off-canvas-button-hover-background-color);
+  --off-canvas-dropbutton-primary-background-color: var(--off-canvas-button-background-color);
+  --off-canvas-dropbutton-secondary-background-color: var(--off-canvas-button-hover-background-color);
   --off-canvas-dropbutton-border-color: transparent;
   --off-canvas-dropbutton-border-width: 1px;
   --off-canvas-dropbutton-border-radius: 2px;
   --off-canvas-dropbutton-font-size: 12px;
-  --off-canvas-dropbutton-text-color: var(--off-canvas-button-text-color); /* Minimum 4.5:1 contrast ratio against --off-canvas-dropbutton-primary-bg-color and --off-canvas-dropbutton-secondary-bg-color. */
-  --off-canvas-dropbutton-text-hover-color: var(--off-canvas-button-text-hover-color); /* Minimum 4.5:1 contrast ratio against --off-canvas-dropbutton-primary-bg-color and --off-canvas-dropbutton-secondary-bg-color. */
+  --off-canvas-dropbutton-text-color: var(--off-canvas-button-text-color); /* Minimum 4.5:1 contrast ratio against --off-canvas-dropbutton-primary-background-color and --off-canvas-dropbutton-secondary-background-color. */
+  --off-canvas-dropbutton-text-color-hover: var(--off-canvas-button-text-color-hover); /* Minimum 4.5:1 contrast ratio against --off-canvas-dropbutton-primary-background-color and --off-canvas-dropbutton-secondary-background-color. */
 
   & .dropbutton-wrapper {
     margin-block: var(--off-canvas-vertical-spacing-unit);
@@ -96,7 +96,7 @@
       cursor: pointer;
       border-color: var(--off-canvas-dropbutton-border-color);
       border-radius: 0 var(--border-radius) var(--border-radius) 0; /* LTR */
-      background: var(--off-canvas-dropbutton-primary-bg-color);
+      background: var(--off-canvas-dropbutton-primary-background-color);
       inset-inline-end: 0;
 
       &:focus {
@@ -126,7 +126,7 @@
       margin-inline-end: 2px;
       border: solid var(--off-canvas-dropbutton-border-width) var(--off-canvas-dropbutton-border-color);
       border-radius: var(--off-canvas-dropbutton-border-radius) 0 0 var(--off-canvas-dropbutton-border-radius); /* LTR */
-      background: var(--off-canvas-dropbutton-primary-bg-color);
+      background: var(--off-canvas-dropbutton-primary-background-color);
 
       &:dir(rtl) {
         border: solid var(--off-canvas-dropbutton-border-width) var(--off-canvas-dropbutton-border-color);
@@ -162,15 +162,15 @@
     margin-top: var(--off-canvas-dropbutton-border-width);
     border-right: var(--off-canvas-dropbutton-border-width) solid var(--off-canvas-dropbutton-border-color);
     border-left: var(--off-canvas-dropbutton-border-width) solid var(--off-canvas-dropbutton-border-color);
-    background-color: var(--off-canvas-dropbutton-primary-bg-color);
+    background-color: var(--off-canvas-dropbutton-primary-background-color);
 
     &:last-child {
       border-bottom: var(--off-canvas-dropbutton-border-width) solid var(--off-canvas-dropbutton-border-color);
     }
 
     & a:hover {
-      color: var(--off-canvas-dropbutton-text-hover-color);
-      background-color: var(--off-canvas-dropbutton-secondary-bg-color);
+      color: var(--off-canvas-dropbutton-text-color-hover);
+      background-color: var(--off-canvas-dropbutton-secondary-background-color);
     }
   }
 }

@@ -11,19 +11,19 @@
  */
 
 #drupal-off-canvas-wrapper {
-  --drupal-off-canvas-input-padding: 0.5rem;
-  --drupal-off-canvas-background-color: #fff;
-  --drupal-off-canvas-form-border: solid 1px transparent;
-  --drupal-off-canvas-form-border-radius: 2px;
-  --drupal-off-canvas-form-font-size: 0.875rem;
-  --drupal-off-canvas-form-text-color: #333;
+  --drupal-off-canvas-input-padding: var(--off-canvas-vertical-spacing-unit);
+  --drupal-off-canvas-input-background-color: #fff;
+  --drupal-off-canvas-input-border: solid 1px transparent;
+  --drupal-off-canvas-input-border-radius: 2px;
+  --drupal-off-canvas-input-font-size: 0.875rem;
+  --drupal-off-canvas-input-text-color: #333;
   --drupal-off-canvas-fieldset-background-color: transparent;
   --drupal-off-canvas-fieldset-border-width: 1px;
   --drupal-off-canvas-fieldset-border-color: var(--off-canvas-border-color)
 }
 
 #drupal-off-canvas-wrapper .ck-content {
-    color: var(--drupal-off-canvas-form-text-color);
+    color: var(--drupal-off-canvas-input-text-color);
   }
 
 #drupal-off-canvas-wrapper .form-item {
@@ -83,11 +83,11 @@
 #drupal-off-canvas-wrapper input:where(:not([type="submit"], [type="checkbox"], [type="radio"], [type="file"])), #drupal-off-canvas-wrapper select, #drupal-off-canvas-wrapper textarea {
     max-width: 100%;
     padding: var(--drupal-off-canvas-input-padding);
-    color: var(--drupal-off-canvas-form-text-color);
-    border: var(--drupal-off-canvas-form-border);
-    border-radius: var(--drupal-off-canvas-form-border-radius);
-    background-color: var(--drupal-off-canvas-background-color);
-    font-size: var(--drupal-off-canvas-form-font-size);
+    color: var(--drupal-off-canvas-input-text-color);
+    border: var(--drupal-off-canvas-input-border);
+    border-radius: var(--drupal-off-canvas-input-border-radius);
+    background-color: var(--drupal-off-canvas-input-background-color);
+    font-size: var(--drupal-off-canvas-input-font-size);
   }
 
 #drupal-off-canvas-wrapper input[type="checkbox"] + label, #drupal-off-canvas-wrapper input[type="radio"] + label {
@@ -114,8 +114,8 @@
 #drupal-off-canvas-wrapper select {
     -webkit-appearance: none;
     appearance: none;
-    border: var(--drupal-off-canvas-form-border);
-    border-radius: var(--drupal-off-canvas-form-border-radius);
+    border: var(--drupal-off-canvas-input-border);
+    border-radius: var(--drupal-off-canvas-input-border-radius);
     background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 14 9'%3e%3cpath fill='none' stroke-width='1.5' d='M1 1l6 6 6-6' stroke='%23545560'/%3e%3c/svg%3e");
     background-repeat: no-repeat;
     background-position: center right 5px; /* LTR */
@@ -178,7 +178,7 @@
 }
 
 #drupal-off-canvas-wrapper .ui-autocomplete {
-    border: var(--drupal-off-canvas-form-border);
+    border: var(--drupal-off-canvas-input-border);
     background-color: var(--drupal-off-canvas-background-color)
   }
 
@@ -186,8 +186,8 @@
       display: block;
       padding: var(--drupal-off-canvas-input-padding);
       cursor: pointer;
-      color: var(--drupal-off-canvas-form-text-color);
-      font-size: var(--drupal-off-canvas-form-font-size)
+      color: var(--drupal-off-canvas-input-text-color);
+      font-size: var(--drupal-off-canvas-input-font-size)
     }
 
 #drupal-off-canvas-wrapper .ui-autocomplete a:hover {

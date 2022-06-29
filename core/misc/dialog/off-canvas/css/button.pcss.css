@@ -6,18 +6,18 @@
  */
 #drupal-off-canvas-wrapper {
   --off-canvas-button-background-color: #777;
-  --off-canvas-button-hover-background-color: #999;
+  --off-canvas-button-background-color-hover: #999;
   --off-canvas-button-text-color: #f5f5f5;
-  --off-canvas-button-text-hover-color: #fff;
+  --off-canvas-button-text-color-hover: #fff;
   --off-canvas-button-font-size: 14px;
   --off-canvas-button-padding: 4px 20px;
   --off-canvas-button-border-color: transparent;
   --off-canvas-button-border-radius: 20em;
   --off-canvas-button-font-weight: 600;
   --off-canvas-primary-button-background-color: #277abd;
-  --off-canvas-primary-button-background-hover-color: #236aaf;
+  --off-canvas-primary-button-background-color-hover: #236aaf;
   --off-canvas-primary-button-text-color: #fff;
-  --off-canvas-primary-button-hover-text-color: #fff;
+  --off-canvas-primary-button-text-color-hover: #fff;
 
   & .button {
     display: inline-block;
@@ -43,8 +43,8 @@
     &:active {
       z-index: 10;
       text-decoration: none;
-      color: var(--off-canvas-button-text-hover-color);
-      background-color: var(--off-canvas-button-hover-background-color);
+      color: var(--off-canvas-button-text-color-hover);
+      background-color: var(--off-canvas-button-background-color-hover);
     }
 
     &:disabled,
@@ -65,7 +65,7 @@
 
     &:hover,
     &:active {
-      color: var(--off-canvas-primary-button-hover-text-color);
+      color: var(--off-canvas-primary-button-text-color-hover);
       background: var(--off-canvas-primary-button-background-hover-color);
     }
   }

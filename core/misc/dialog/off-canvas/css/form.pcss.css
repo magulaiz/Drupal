@@ -4,18 +4,18 @@
  */
 
 #drupal-off-canvas-wrapper {
-  --drupal-off-canvas-input-padding: 8px;
-  --drupal-off-canvas-background-color: #fff;
-  --drupal-off-canvas-form-border: solid 1px transparent;
-  --drupal-off-canvas-form-border-radius: 2px;
-  --drupal-off-canvas-form-font-size: 14px;
-  --drupal-off-canvas-form-text-color: #333;
+  --drupal-off-canvas-input-padding: var(--off-canvas-vertical-spacing-unit);
+  --drupal-off-canvas-input-background-color: #fff;
+  --drupal-off-canvas-input-border: solid 1px transparent;
+  --drupal-off-canvas-input-border-radius: 2px;
+  --drupal-off-canvas-input-font-size: 14px;
+  --drupal-off-canvas-input-text-color: #333;
   --drupal-off-canvas-fieldset-background-color: transparent;
   --drupal-off-canvas-fieldset-border-width: 1px;
   --drupal-off-canvas-fieldset-border-color: var(--off-canvas-border-color);
 
   & .ck-content {
-    color: var(--drupal-off-canvas-form-text-color);
+    color: var(--drupal-off-canvas-input-text-color);
   }
 
   & .form-item {
@@ -73,11 +73,11 @@
   & textarea {
     max-width: 100%;
     padding: var(--drupal-off-canvas-input-padding);
-    color: var(--drupal-off-canvas-form-text-color);
-    border: var(--drupal-off-canvas-form-border);
-    border-radius: var(--drupal-off-canvas-form-border-radius);
-    background-color: var(--drupal-off-canvas-background-color);
-    font-size: var(--drupal-off-canvas-form-font-size);
+    color: var(--drupal-off-canvas-input-text-color);
+    border: var(--drupal-off-canvas-input-border);
+    border-radius: var(--drupal-off-canvas-input-border-radius);
+    background-color: var(--drupal-off-canvas-input-background-color);
+    font-size: var(--drupal-off-canvas-input-font-size);
   }
 
   & input[type="checkbox"],
@@ -98,8 +98,8 @@
   & select {
     appearance: none;
     padding-inline-end: 20px;
-    border: var(--drupal-off-canvas-form-border);
-    border-radius: var(--drupal-off-canvas-form-border-radius);
+    border: var(--drupal-off-canvas-input-border);
+    border-radius: var(--drupal-off-canvas-input-border-radius);
     background-image: url(../../../icons/545560/chevron-down.svg);
     background-repeat: no-repeat;
     background-position: center right 5px; /* LTR */
@@ -136,15 +136,15 @@
 
   /* This is the background <ul> for the autocomplete dropdown. */
   & .ui-autocomplete {
-    border: var(--drupal-off-canvas-form-border);
+    border: var(--drupal-off-canvas-input-border);
     background-color: var(--drupal-off-canvas-background-color);
 
     & a {
       display: block;
       padding: var(--drupal-off-canvas-input-padding);
       cursor: pointer;
-      color: var(--drupal-off-canvas-form-text-color);
-      font-size: var(--drupal-off-canvas-form-font-size);
+      color: var(--drupal-off-canvas-input-text-color);
+      font-size: var(--drupal-off-canvas-input-font-size);
 
       &:hover {
         background-color: #eee;
