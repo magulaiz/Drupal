@@ -14,10 +14,10 @@
   border-inline-start: solid var(--off-canvas-border-width) var(--off-canvas-border-color);
   box-shadow: var(--off-canvas-box-shadow);
 
- /*
-  * Force the off-canvas dialog to be 100% width at the same breakpoint the
-  * dialog system uses to expand dialog widths.
-  */
+  /*
+   * Force the off-canvas dialog to be 100% width at the same breakpoint the
+   * dialog system uses to expand dialog widths.
+   */
   @media (max-width: 768px) {
     width: 100% !important;
   }

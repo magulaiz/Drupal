@@ -11,9 +11,9 @@
  */
 
 #drupal-off-canvas-wrapper {
+  --off-canvas-title-padding: calc(var(--off-canvas-vertical-spacing-unit)*3);
   --off-canvas-title-background-color: #2d2d2d;
   --off-canvas-title-text-color: #fff;
-  --off-canvas-title-padding: calc(var(--off-canvas-vertical-spacing-unit)*3);
   --off-canvas-title-font-size: 1rem
 }
 
