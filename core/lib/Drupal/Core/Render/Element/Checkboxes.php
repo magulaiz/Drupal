@@ -82,7 +82,7 @@ class Checkboxes extends FormElement {
         // Only enabled checkboxes receive their values from the form
         // submission, the disabled checkboxes use their default value.
         $default_value = NULL;
-        if (isset($value[$key]) || (!empty($element[$key]['#disabled']) && in_array($key, $element['#default_value'], TRUE))) {
+        if (isset($value[$key]) || (!empty($element[$key]['#disabled']) && in_array((string) $key, $element['#default_value'], TRUE))) {
           $default_value = $key;
         }
 
