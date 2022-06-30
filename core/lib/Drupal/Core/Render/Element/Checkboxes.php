@@ -67,10 +67,9 @@ class Checkboxes extends FormElement {
       }
       $weight = 0;
       foreach ($element['#options'] as $key => $choice) {
-        // Integer 0 is not a valid #return_value, so use '0' instead.
-        // @see \Drupal\Core\Render\Element\Checkbox::valueCallback().
-        // Cast all integer keys to strings for consistency
-        //   with \Drupal\Core\Render\Element\Radios::processRadios().
+        // Cast all integer keys to strings because in #default_value we always
+        // have integers as strings, also to be consistent with behavior of
+        // \Drupal\Core\Render\Element\Radios::processRadios().
         if (is_int($key)) {
           $key = strval($key);
         }
