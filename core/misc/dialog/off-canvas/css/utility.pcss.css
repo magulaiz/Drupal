@@ -12,18 +12,17 @@
     position: absolute !important;
     overflow: hidden;
     clip: rect(1px, 1px, 1px, 1px);
-    width: 1px;
-    height: 1px;
+    width: 1px !important;
+    height: 1px !important;
     word-wrap: normal;
-  }
 
-  & .visually-hidden.focusable:active,
-  & .visually-hidden.focusable:focus {
-    position: static !important;
-    overflow: visible;
-    clip: auto;
-    width: auto;
-    height: auto;
+    &.focusable:is(:active, :focus) {
+      position: static !important;
+      overflow: visible;
+      clip: auto;
+      width: auto !important;
+      height: auto !important;
+    }
   }
 
   & .invisible {

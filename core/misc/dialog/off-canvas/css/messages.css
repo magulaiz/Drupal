@@ -31,7 +31,8 @@
 
 #drupal-off-canvas-wrapper .messages {
     position: relative; /* Anchor :before pseudo-element. */
-    padding: var(--off-canvas-vertical-spacing-unit); /* Room for icon. */
+    margin-top: calc(var(--off-canvas-vertical-spacing-unit)*2);
+    padding: calc(var(--off-canvas-vertical-spacing-unit)*2); /* Room for icon. */
     border: solid 1px transparent;
     background-color: var(--off-canvas-messages-background-color)
 
@@ -68,6 +69,10 @@
         mask-size: contain
     }
       }
+
+#drupal-off-canvas-wrapper h2 {
+    margin-top: 0;
+  }
 
 #drupal-off-canvas-wrapper {
 
@@ -109,6 +114,7 @@
 @media (forced-colors: active) {
 
 #drupal-off-canvas-wrapper .messages--status:before {
+        background: canvastext;
         -webkit-mask-image: var(--off-canvas-messages-icon-status);
         mask-image: var(--off-canvas-messages-icon-status)
     }
@@ -125,6 +131,7 @@
 @media (forced-colors: active) {
 
 #drupal-off-canvas-wrapper .messages--warning:before {
+        background: canvastext;
         -webkit-mask-image: var(--off-canvas-messages-icon-warning);
         mask-image: var(--off-canvas-messages-icon-warning)
     }
@@ -141,6 +148,7 @@
 @media (forced-colors: active) {
 
 #drupal-off-canvas-wrapper .messages--error:before {
+        background: canvastext;
         -webkit-mask-image: var(--off-canvas-messages-icon-error);
         mask-image: var(--off-canvas-messages-icon-error)
     }

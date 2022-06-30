@@ -82,6 +82,11 @@
     margin: var(--off-canvas-vertical-spacing-unit) 0;
   }
 
+#drupal-off-canvas-wrapper img {
+    max-width: 100%;
+    height: auto;
+  }
+
 #drupal-off-canvas-wrapper .links {
     margin: 0;
     padding: 0;

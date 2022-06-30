@@ -15,7 +15,8 @@
 
   & .messages {
     position: relative; /* Anchor :before pseudo-element. */
-    padding: var(--off-canvas-vertical-spacing-unit);
+    margin-top: calc(2 * var(--off-canvas-vertical-spacing-unit));
+    padding: calc(2 * var(--off-canvas-vertical-spacing-unit));
     padding-inline-start: calc(2 * var(--off-canvas-messages-icon-size)); /* Room for icon. */
     border: solid 1px transparent;
     background-color: var(--off-canvas-messages-background-color);
@@ -39,6 +40,10 @@
         mask-size: contain;
       }
     }
+  }
+
+  & h2 {
+    margin-top: 0;
   }
 
   /*
@@ -66,6 +71,7 @@
       background-image: var(--off-canvas-messages-icon-status);
 
       @media (forced-colors: active) {
+        background: canvastext;
         mask-image: var(--off-canvas-messages-icon-status);
       }
     }
@@ -78,6 +84,7 @@
       background-image: var(--off-canvas-messages-icon-warning);
 
       @media (forced-colors: active) {
+        background: canvastext;
         mask-image: var(--off-canvas-messages-icon-warning);
       }
     }
@@ -90,6 +97,7 @@
       background-image: var(--off-canvas-messages-icon-error);
 
       @media (forced-colors: active) {
+        background: canvastext;
         mask-image: var(--off-canvas-messages-icon-error);
       }
     }
