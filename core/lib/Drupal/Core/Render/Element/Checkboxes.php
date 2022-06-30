@@ -153,7 +153,7 @@ class Checkboxes extends FormElement {
           }
         }
       }
-      
+
       return $value;
     }
   }
