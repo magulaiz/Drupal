@@ -142,7 +142,19 @@ class Checkboxes extends FormElement {
       return array_combine($input, $input);
     }
     else {
-      return [];
+      $value = [];
+
+      // Because the disabled checkboxes don't receive their input from the
+      // form submission, we should fill their default value.
+      if (!empty($element['#default_value'])) {
+        foreach ($element['#default_value'] as $key) {
+          if (!empty($element[$key]['#disabled'])) {
+            $value[$key] = $key;
+          }
+        }
+      }
+      
+      return $value;
     }
   }
 
