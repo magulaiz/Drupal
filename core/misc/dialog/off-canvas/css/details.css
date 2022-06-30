@@ -25,38 +25,19 @@
 }
 
 #drupal-off-canvas-wrapper details {
-    border: solid var(--off-canvas-details-border-color) var(--off-canvas-details-border-width)
+    margin: var(--off-canvas-vertical-spacing-unit) calc(var(--off-canvas-padding)*-1); /* Cancel out the padding of the parent. */
+    padding: 0 var(--off-canvas-padding);
+    color: var(--off-canvas-details-text-color);
+    border: solid var(--off-canvas-details-border-color) var(--off-canvas-details-border-width);
+    background: var(--off-canvas-details-background-color)
   }
 
 #drupal-off-canvas-wrapper details + details {
       margin-top: calc(var(--off-canvas-details-border-width)*-1);
     }
 
-#drupal-off-canvas-wrapper details,
-  #drupal-off-canvas-wrapper summary {
-    color: var(--off-canvas-details-text-color);
-    background: var(--off-canvas-details-background-color);
-  }
-
-#drupal-off-canvas-wrapper summary a {
-    color: var(--off-canvas-details-text-color)
-  }
-
-#drupal-off-canvas-wrapper summary a:hover {
-      color: var(--off-canvas-details-summary-text-color-hover);
-    }
-
-#drupal-off-canvas-wrapper details,
-  #drupal-off-canvas-wrapper summary {
-    margin: 0 calc(var(--off-canvas-padding)*-1); /* Cancel out the padding of the parent. */
-    padding: 0 var(--off-canvas-padding);
-  }
-
-#drupal-off-canvas-wrapper .details-wrapper {
-    padding: var(--off-canvas-vertical-spacing-unit) 0;
-  }
-
 #drupal-off-canvas-wrapper summary {
+    margin: 0 calc(var(--off-canvas-padding)*-1);
     padding: var(--off-canvas-details-summary-padding);
     color: var(--off-canvas-details-summary-text-color);
     border: var(--off-canvas-details-summary-border);
@@ -72,3 +53,18 @@
 #drupal-off-canvas-wrapper summary:focus {
       outline-offset: -4px; /* Ensure focus doesn't get cut off. */
     }
+
+#drupal-off-canvas-wrapper summary {
+
+    a {
+      color: var(--off-canvas-details-text-color)
+    }
+
+      a:hover {
+        color: var(--off-canvas-details-summary-text-color-hover);
+      }
+  }
+
+#drupal-off-canvas-wrapper .details-wrapper {
+    padding: var(--off-canvas-vertical-spacing-unit) 0;
+  }

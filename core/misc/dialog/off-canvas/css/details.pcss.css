@@ -17,38 +17,19 @@
   --off-canvas-details-summary-text-color-hover: #fff;
 
   & details {
+    margin: var(--off-canvas-vertical-spacing-unit) calc(-1 * var(--off-canvas-padding)); /* Cancel out the padding of the parent. */
+    padding: 0 var(--off-canvas-padding);
+    color: var(--off-canvas-details-text-color);
     border: solid var(--off-canvas-details-border-color) var(--off-canvas-details-border-width);
+    background: var(--off-canvas-details-background-color);
 
     & + details {
       margin-top: calc(-1 * var(--off-canvas-details-border-width));
     }
   }
 
-  & details,
   & summary {
-    color: var(--off-canvas-details-text-color);
-    background: var(--off-canvas-details-background-color);
-  }
-
-  & summary a {
-    color: var(--off-canvas-details-text-color);
-
-    &:hover {
-      color: var(--off-canvas-details-summary-text-color-hover);
-    }
-  }
-
-  & details,
-  & summary {
-    margin: 0 calc(-1 * var(--off-canvas-padding)); /* Cancel out the padding of the parent. */
-    padding: 0 var(--off-canvas-padding);
-  }
-
-  & .details-wrapper {
-    padding: var(--off-canvas-vertical-spacing-unit) 0;
-  }
-
-  & summary {
+    margin: 0 calc(-1 * var(--off-canvas-padding));
     padding: var(--off-canvas-details-summary-padding);
     color: var(--off-canvas-details-summary-text-color);
     border: var(--off-canvas-details-summary-border);
@@ -63,5 +44,17 @@
     &:focus {
       outline-offset: -4px; /* Ensure focus doesn't get cut off. */
     }
+
+    a {
+      color: var(--off-canvas-details-text-color);
+
+      &:hover {
+        color: var(--off-canvas-details-summary-text-color-hover);
+      }
+    }
+  }
+
+  & .details-wrapper {
+    padding: var(--off-canvas-vertical-spacing-unit) 0;
   }
 }

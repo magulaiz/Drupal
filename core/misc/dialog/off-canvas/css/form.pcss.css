@@ -14,6 +14,15 @@
   --drupal-off-canvas-fieldset-border-width: 1px;
   --drupal-off-canvas-fieldset-border-color: var(--off-canvas-border-color);
 
+  & form {
+    padding-block: var(--off-canvas-padding);
+
+    & > *:first-child {
+      margin-top: 0;
+      padding-top: 0;
+    }
+  }
+
   & .ck-content {
     color: var(--drupal-off-canvas-input-text-color);
   }
