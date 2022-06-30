@@ -16,18 +16,4 @@
     text-align: start;
     vertical-align: middle;
   }
-
-  & th {
-    font-weight: bold;
-  }
-
-  & th.checkbox {
-    text-align: center;
-  }
-
-  & .checkbox.menu-enabled {
-    position: static;
-    display: inline;
-    width: auto;
-  }
 }

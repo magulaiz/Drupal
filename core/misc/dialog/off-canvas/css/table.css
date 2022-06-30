@@ -33,17 +33,3 @@
     padding: var(--off-canvas-table-cell-padding);
     vertical-align: middle;
   }
-
-#drupal-off-canvas-wrapper th {
-    font-weight: bold;
-  }
-
-#drupal-off-canvas-wrapper th.checkbox {
-    text-align: center;
-  }
-
-#drupal-off-canvas-wrapper .checkbox.menu-enabled {
-    position: static;
-    display: inline;
-    width: auto;
-  }

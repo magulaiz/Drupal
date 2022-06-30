@@ -19,7 +19,9 @@
       background-color: var(--off-canvas-background-color-light);
     }
 
+    /* Appears when the row is being dragged. */
     &.drag {
+      cursor: move;
       background-color: var(--off-canvas-background-color-dark);
     }
   }
@@ -74,16 +76,9 @@
     }
   }
 
-  & .drag {
-    cursor: move;
-  }
-
-  & .region-populated {
-    display: none;
-  }
-
-  & .add-new .tabledrag-changed {
-    display: none;
+  /* Make the row weight <select> as small as possible. */
+  & .tabledrag-hide select {
+    all: revert;
   }
 
   & .tabledrag-changed-warning {
@@ -97,7 +92,7 @@
   }
 
   & .indentation {
-    padding-inline-start: 10px;
+    width: 5px;
   }
 
   @nest .touchevents & .draggable td {
