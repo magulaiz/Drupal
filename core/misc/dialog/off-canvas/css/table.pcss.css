@@ -4,53 +4,30 @@
  */
 
 #drupal-off-canvas-wrapper {
-  & .draggable-table {
-    width: 100%;
-    margin: var(--off-canvas-vertical-spacing-unit) 0;
+  --off-canvas-table-cell-padding: 2px;
+
+  & tr {
+    border-bottom: 1px solid var(--off-canvas-border-color);
   }
 
   & td,
   & th {
-    padding: 2px 8px;
+    padding: var(--off-canvas-table-cell-padding);
     text-align: start;
     vertical-align: middle;
-    border-bottom: 1px solid var(--off-canvas-border-color);
   }
 
   & th {
     font-weight: bold;
   }
 
-  & th.checkbox,
-  & td.checkbox {
-    width: 20px;
-    padding: 0;
+  & th.checkbox {
     text-align: center;
   }
 
-  & div.checkbox.menu-enabled {
+  & .checkbox.menu-enabled {
     position: static;
     display: inline;
     width: auto;
-  }
-
-  /* For lack of a better class, using this to grab the operations th. */
-  & .tabledrag-has-colspan {
-    padding-right: 20px;
-    text-align: right;
-  }
-
-  & td {
-    padding: 6px 8px;
-    color: var(--off-canvas-text-color);
-  }
-
-  /* Hide overflow with ellipsis for links. */
-  & td a {
-    display: block;
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    background: transparent;
   }
 }

@@ -4,57 +4,44 @@
  *
  * @see tabledrag.js
  */
+
 #drupal-off-canvas-wrapper {
-  & .drag {
-    cursor: move;
+  --off-canvas-first-cell-padding-start: calc(var(--off-canvas-padding) / 2);
+
+  & .draggable-table {
+    width: calc(100% + 2 * var(--off-canvas-padding));
+    margin: var(--off-canvas-vertical-spacing-unit) calc(-1 * var(--off-canvas-padding));
   }
 
-  & tr.region-title {
-    font-weight: normal;
-  }
+  & tr {
+    &:hover,
+    &:focus-within {
+      background-color: var(--off-canvas-background-color-light);
+    }
 
-  & table .region-populated {
-    display: none;
-  }
-
-  & .add-new .tabledrag-changed {
-    display: none;
-  }
-
-  & a.tabledrag-handle:after {
-    display: block;
-    width: 20px;
-    height: 20px;
-    margin: 0;
-    padding: 0;
-    content: "";
-    cursor: move;
-    background-color: transparent;
-    /* Use lighter drag icon against dark background. */
-    background-image: url(../../../icons/bebebe/move.svg);
-    background-repeat: no-repeat;
-    background-position: center;
-
-    @media (forced-colors: active) {
-      background: linktext;
-      mask-image: url(../../../icons/bebebe/move.svg);
-      mask-repeat: no-repeat;
-      mask-position: center;
+    &.drag {
+      background-color: var(--off-canvas-background-color-dark);
     }
   }
 
-  & .draggable a.tabledrag-handle:hover:after,
-  & .draggable a.tabledrag-handle:focus:after {
-    text-decoration: none;
-    background-image: url(../../../icons/787878/move.svg);
-
-    @media (forced-colors: active) {
-      background: linktext;
-    }
+  & th:first-child {
+    padding-inline-start: var(--off-canvas-first-cell-padding-start);
   }
 
-  & tr td {
-    transition: background 0.3s ease;
+  & td {
+    transition: background-color 0.3s ease;
+
+    /* We have to horizontally align all descendent nodes including text nodes
+     * that do not have wrapper elements. Since we use flex to do this, we need
+     * try to keep it vertically centered, so we have to give it a minimum height
+     * to match the rest of the table cells. */
+    &:first-child {
+      display: flex;
+      align-items: center;
+      min-height: 50px;
+      padding-inline-start: var(--off-canvas-first-cell-padding-start);
+      gap: var(--off-canvas-table-cell-padding);
+    }
 
     & abbr {
       margin-inline: 0 5px;
@@ -62,16 +49,41 @@
     }
   }
 
-  & tr:hover td {
-    background: var(--off-canvas-background-color-light);
+  & .tabledrag-handle {
+    flex-shrink: 0;
+
+    &:after {
+      display: block;
+      width: 20px;
+      height: 20px;
+      margin: 0;
+      padding: 0;
+      content: "";
+      cursor: move;
+      background-color: transparent;
+      background-image: url(../../../icons/bebebe/move.svg);
+      background-repeat: no-repeat;
+      background-position: center;
+
+      @media (forced-colors: active) {
+        background: linktext;
+        mask-image: url(../../../icons/bebebe/move.svg);
+        mask-repeat: no-repeat;
+        mask-position: center;
+      }
+    }
   }
 
-  & tr.drag td {
-    background: var(--off-canvas-background-color-dark);
+  & .drag {
+    cursor: move;
   }
 
-  & tr.drag-previous:hover td {
-    background: var(--off-canvas-background-color-light);
+  & .region-populated {
+    display: none;
+  }
+
+  & .add-new .tabledrag-changed {
+    display: none;
   }
 
   & .tabledrag-changed-warning {
@@ -85,12 +97,6 @@
   }
 
   & .indentation {
-    inset: start;
-    width: auto;
-    height: auto;
-    margin-block: 0;
-    margin-inline: -10px 3px;
-    padding: 0;
     padding-inline-start: 10px;
   }
 
