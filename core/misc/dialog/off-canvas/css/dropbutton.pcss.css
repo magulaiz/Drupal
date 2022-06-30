@@ -9,6 +9,7 @@
   --off-canvas-dropbutton-border-color: transparent;
   --off-canvas-dropbutton-border-width: 1px;
   --off-canvas-dropbutton-border-radius: 2px;
+  --off-canvas-dropbutton-focus-outline-color: var(--off-canvas-focus-outline-color);
   --off-canvas-dropbutton-font-size: 12px;
   --off-canvas-dropbutton-text-color: var(--off-canvas-button-text-color); /* Minimum 4.5:1 contrast ratio against --off-canvas-dropbutton-primary-background-color and --off-canvas-dropbutton-secondary-background-color. */
   --off-canvas-dropbutton-text-color-hover: var(--off-canvas-button-text-color-hover); /* Minimum 4.5:1 contrast ratio against --off-canvas-dropbutton-primary-background-color and --off-canvas-dropbutton-secondary-background-color. */
@@ -100,7 +101,7 @@
       inset-inline-end: 0;
 
       &:focus {
-        outline: solid 2px var(--off-canvas-dropbutton-border-color);
+        outline: solid 2px var(--off-canvas-dropbutton-focus-outline-color);
         outline-offset: -2px;
       }
 
@@ -149,7 +150,7 @@
       }
 
       &:focus {
-        outline: solid 2px var(--off-canvas-dropbutton-border-color);
+        outline: solid 2px var(--off-canvas-dropbutton-focus-outline-color);
         outline-offset: -1px; /* Overlap parent container by 1px. */
       }
     }

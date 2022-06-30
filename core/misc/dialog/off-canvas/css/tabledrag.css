@@ -13,36 +13,23 @@
  */
 
 #drupal-off-canvas-wrapper {
-  --off-canvas-first-cell-padding-start: calc(var(--off-canvas-padding)/2)
+  /* The draggable <tr> element. */
 }
 
-#drupal-off-canvas-wrapper .draggable-table {
-    width: calc(100% + var(--off-canvas-padding)*2);
-    margin: var(--off-canvas-vertical-spacing-unit) calc(var(--off-canvas-padding)*-1);
-  }
-
-#drupal-off-canvas-wrapper tr:hover,
-    #drupal-off-canvas-wrapper tr:focus-within {
+#drupal-off-canvas-wrapper .draggable:hover,
+    #drupal-off-canvas-wrapper .draggable:focus-within {
       background-color: var(--off-canvas-background-color-light);
     }
 
-#drupal-off-canvas-wrapper tr {
+#drupal-off-canvas-wrapper .draggable {
 
     /* Appears when the row is being dragged. */
   }
 
-#drupal-off-canvas-wrapper tr.drag {
+#drupal-off-canvas-wrapper .draggable.drag {
       cursor: move;
       background-color: var(--off-canvas-background-color-dark);
     }
-
-[dir="ltr"] #drupal-off-canvas-wrapper th:first-child {
-    padding-left: var(--off-canvas-first-cell-padding-start)
-}
-
-[dir="rtl"] #drupal-off-canvas-wrapper th:first-child {
-    padding-right: var(--off-canvas-first-cell-padding-start)
-}
 
 #drupal-off-canvas-wrapper td {
     transition: background-color 0.3s ease
@@ -53,14 +40,6 @@
      * to match the rest of the table cells. */
   }
 
-[dir="ltr"] #drupal-off-canvas-wrapper td:first-child {
-      padding-left: var(--off-canvas-first-cell-padding-start)
-}
-
-[dir="rtl"] #drupal-off-canvas-wrapper td:first-child {
-      padding-right: var(--off-canvas-first-cell-padding-start)
-}
-
 #drupal-off-canvas-wrapper td:first-child {
       display: flex;
       align-items: center;
@@ -70,12 +49,12 @@
 
 [dir="ltr"] #drupal-off-canvas-wrapper td abbr {
       margin-left: 0;
-      margin-right: 0.3125rem
+      margin-right: 0.3125rem;
 }
 
 [dir="rtl"] #drupal-off-canvas-wrapper td abbr {
       margin-right: 0;
-      margin-left: 0.3125rem
+      margin-left: 0.3125rem;
 }
 
 #drupal-off-canvas-wrapper td abbr {
@@ -115,7 +94,7 @@
 
 #drupal-off-canvas-wrapper {
 
-  /* Make the row weight <select> as small as possible. */
+  /* Make the "row weight" <select> as small as possible. */
 }
 
 #drupal-off-canvas-wrapper .tabledrag-hide select {
@@ -123,16 +102,16 @@
   }
 
 #drupal-off-canvas-wrapper .tabledrag-changed-warning {
-    margin-bottom: 0.5em;
+    margin-bottom: var(--off-canvas-vertical-spacing-unit);
     font-size: 0.875rem;
   }
 
 [dir="ltr"] #drupal-off-canvas-wrapper .tabledrag-toggle-weight-wrapper {
-    text-align: right
+    text-align: right;
 }
 
 [dir="rtl"] #drupal-off-canvas-wrapper .tabledrag-toggle-weight-wrapper {
-    text-align: left
+    text-align: left;
 }
 
 #drupal-off-canvas-wrapper .tabledrag-toggle-weight-wrapper {

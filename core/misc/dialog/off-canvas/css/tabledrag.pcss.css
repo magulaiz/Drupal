@@ -6,14 +6,8 @@
  */
 
 #drupal-off-canvas-wrapper {
-  --off-canvas-first-cell-padding-start: calc(var(--off-canvas-padding) / 2);
-
-  & .draggable-table {
-    width: calc(100% + 2 * var(--off-canvas-padding));
-    margin: var(--off-canvas-vertical-spacing-unit) calc(-1 * var(--off-canvas-padding));
-  }
-
-  & tr {
+  /* The draggable <tr> element. */
+  & .draggable {
     &:hover,
     &:focus-within {
       background-color: var(--off-canvas-background-color-light);
@@ -24,10 +18,6 @@
       cursor: move;
       background-color: var(--off-canvas-background-color-dark);
     }
-  }
-
-  & th:first-child {
-    padding-inline-start: var(--off-canvas-first-cell-padding-start);
   }
 
   & td {
@@ -41,7 +31,6 @@
       display: flex;
       align-items: center;
       min-height: 50px;
-      padding-inline-start: var(--off-canvas-first-cell-padding-start);
       gap: var(--off-canvas-table-cell-padding);
     }
 
@@ -76,13 +65,13 @@
     }
   }
 
-  /* Make the row weight <select> as small as possible. */
+  /* Make the "row weight" <select> as small as possible. */
   & .tabledrag-hide select {
     all: revert;
   }
 
   & .tabledrag-changed-warning {
-    margin-bottom: 0.5em;
+    margin-bottom: var(--off-canvas-vertical-spacing-unit);
     font-size: 14px;
   }
 
