@@ -13,6 +13,7 @@
 #drupal-off-canvas-wrapper .ajax-progress, 
   #drupal-off-canvas-wrapper .ajax-progress-throbber {
     display: inline-block;
+    overflow: hidden;
     width: 0.9375rem;
     height: 0.9375rem;
     margin: 0 0.625rem;

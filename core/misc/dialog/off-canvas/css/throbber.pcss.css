@@ -7,6 +7,7 @@
   & .ajax-progress, /* This is the CSS class used in Claro. */
   & .ajax-progress-throbber {
     display: inline-block;
+    overflow: hidden;
     width: 15px;
     height: 15px;
     margin: 0 10px;
