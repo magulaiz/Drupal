@@ -214,15 +214,13 @@ class ComponentGenerator {
   /**
    * Common default metadata for all components.
    *
-   * @todo Add change record link.
-   *
    * @return array
    */
   protected function initialPackageMetadata() {
     return [
       'extra' => [
         '_readme' => [
-          'This file was partially generated automatically. See: [change record]',
+          'This file was partially generated automatically. See: https://www.drupal.org/node/3293830',
         ],
       ],
       // Always reconcile PHP version.
