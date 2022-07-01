@@ -167,7 +167,7 @@ Content Translation
 - ?
 
 Contextual
-- ?
+- Lee Rowlands 'larowlan' https://www.drupal.org/u/larowlan
 
 Cron
 - ?
@@ -533,6 +533,10 @@ Decoupled Menus Initiative
 
 Media Initiative
 - Janez Urevc 'slashrsm' https://www.drupal.org/u/slashrsm
+
+Project Browser Initiative
+- Leslie Glynn 'leslieg' https://www.drupal.org/u/leslieg
+- Chris Wells 'chrisfromredfin' https://www.drupal.org/u/chrisfromredfin
 
 
 Core mentoring coordinators

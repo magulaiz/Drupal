@@ -51,7 +51,8 @@
         "allow-plugins": {
             "composer/installers": true,
             "drupal/core-project-message": true,
-            "drupal/core-vendor-hardening": true
+            "drupal/core-vendor-hardening": true,
+            "dealerdirect/phpcodesniffer-composer-installer": true
         }
     },
     "extra": {
@@ -108,8 +109,8 @@
             "Drupal\\Composer\\Composer::generateMetapackages",
             "Drupal\\Composer\\Composer::generateComponentPackages"
         ],
-        "phpcs": "phpcs --standard=core/phpcs.xml.dist --runtime-set installed_paths $($COMPOSER_BINARY config vendor-dir)/drupal/coder/coder_sniffer --",
-        "phpcbf": "phpcbf --standard=core/phpcs.xml.dist --runtime-set installed_paths $($COMPOSER_BINARY config vendor-dir)/drupal/coder/coder_sniffer --"
+        "phpcs": "phpcs --standard=core/phpcs.xml.dist --",
+        "phpcbf": "phpcbf --standard=core/phpcs.xml.dist --"
     },
     "repositories": [
         {

@@ -534,7 +534,7 @@ function show(&$element) {
  *   (optional) The Drupal Kernel. It is the caller's responsibility to rebuild
  *   the container if this is passed in. Sometimes drupal_flush_all_caches is
  *   used as a batch operation so $kernel will be an array, in this instance it
- *   will be treated as if it it NULL.
+ *   will be treated as if it is NULL.
  */
 function drupal_flush_all_caches($kernel = NULL) {
   // This is executed based on old/previously known information if $kernel is
@@ -558,7 +558,9 @@ function drupal_flush_all_caches($kernel = NULL) {
   // Wipe the Twig PHP Storage cache.
   \Drupal::service('twig')->invalidate();
 
-  // Rebuild theme data that is stored in state.
+  // Rebuild profile, profile, theme_engine and theme data.
+  \Drupal::service('extension.list.profile')->reset();
+  \Drupal::service('extension.list.theme_engine')->reset();
   \Drupal::service('theme_handler')->refreshInfo();
   // In case the active theme gets requested later in the same request we need
   // to reset the theme manager.
@@ -601,7 +603,7 @@ function drupal_flush_all_caches($kernel = NULL) {
  */
 function _drupal_flush_css_js() {
   // The timestamp is converted to base 36 in order to make it more compact.
-  Drupal::state()->set('system.css_js_query_string', base_convert(REQUEST_TIME, 10, 36));
+  Drupal::state()->set('system.css_js_query_string', base_convert(\Drupal::time()->getRequestTime(), 10, 36));
 }
 
 /**
