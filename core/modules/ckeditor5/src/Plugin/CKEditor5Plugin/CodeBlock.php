@@ -177,7 +177,7 @@ class CodeBlock extends CKEditor5PluginDefault implements CKEditor5PluginConfigu
    */
   public function getDynamicPluginConfig(array $static_plugin_config, EditorInterface $editor): array {
     $enabled_languages = $this->getEnabledLanguages();
-    $all_language_options = $static_plugin_config['languages'];
+    $all_language_options = $static_plugin_config['codeBlock']['languages'];
 
     $configured_language_options = array_filter($all_language_options, function ($option) use ($enabled_languages) {
       return in_array($option['language'], $enabled_languages, TRUE);
