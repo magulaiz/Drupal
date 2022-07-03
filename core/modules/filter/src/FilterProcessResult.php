@@ -118,7 +118,7 @@ class FilterProcessResult extends BubbleableMetadata {
    *
    * This generates its own placeholder markup for one major reason: to not have
    * FilterProcessResult depend on the Renderer service, because this is a value
-   * object. As a side-effect and added benefit, this makes it easier to
+   * object. As a side effect and added benefit, this makes it easier to
    * distinguish placeholders for filtered text versus generic render system
    * placeholders.
    *
@@ -139,10 +139,14 @@ class FilterProcessResult extends BubbleableMetadata {
     $placeholder_markup = '<drupal-filter-placeholder callback="' . Html::escape($callback) . '" arguments="' . Html::escape($arguments) . '" token="' . Html::escape($token) . '"></drupal-filter-placeholder>';
 
     // Add the placeholder attachment.
+    $callback_pieces = explode('::', $callback);
     $this->addAttachments([
       'placeholders' => [
         $placeholder_markup => [
-          '#lazy_builder' => [$callback, $args],
+          '#lazy_builder' => [
+            'static::' . $callback_pieces[0], $callback_pieces[1],
+            $args,
+          ],
         ],
       ],
     ]);
