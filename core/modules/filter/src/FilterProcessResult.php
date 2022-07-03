@@ -144,7 +144,7 @@ class FilterProcessResult extends BubbleableMetadata {
       'placeholders' => [
         $placeholder_markup => [
           '#lazy_builder' => [
-            ['static::' . $callback_pieces[0], $callback_pieces[1]],
+            [$callback_pieces[0], $callback_pieces[1]],
             $args,
           ],
         ],
