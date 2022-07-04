@@ -27,23 +27,22 @@ class TestDatabase {
   protected $databasePrefix;
 
   /**
-   * Returns the database connection to the site running Simpletest.
+   * Returns the database connection to the site under test.
    *
    * @return \Drupal\Core\Database\Connection
    *   The database connection to use for inserting assertions.
    *
-   * @see \Drupal\simpletest\TestBase::prepareEnvironment()
+   * @see \Drupal\Core\Test\TestSetupTrait::getDatabaseConnection()
    */
   public static function getConnection() {
     // Check whether there is a test runner connection.
     // @see run-tests.sh
-    // @todo Convert Simpletest UI runner to create + use this connection, too.
     try {
       $connection = Database::getConnection('default', 'test-runner');
     }
     catch (ConnectionNotDefinedException $e) {
       // Check whether there is a backup of the original default connection.
-      // @see TestBase::prepareEnvironment()
+      // @see \Drupal\Core\Test\TestSetupTrait::changeDatabasePrefix()
       try {
         $connection = Database::getConnection('default', 'simpletest_original_default');
       }
