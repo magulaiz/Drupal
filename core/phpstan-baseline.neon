@@ -1334,6 +1334,11 @@ parameters:
 			path: modules/node/src/NodeTypeForm.php
 
 		-
+			message: "#^\\#lazy_builder value 'non\\-empty\\-string' at key '0' is invalid\\.$#"
+			count: 1
+			path: modules/node/src/NodeViewBuilder.php
+
+		-
 			message: "#^Access to an undefined property Drupal\\\\node\\\\Plugin\\\\views\\\\argument\\\\Type\\:\\:\\$name_alias\\.$#"
 			count: 1
 			path: modules/node/src/Plugin/views/argument/Type.php
