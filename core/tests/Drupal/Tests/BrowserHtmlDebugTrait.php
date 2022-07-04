@@ -182,7 +182,9 @@ trait BrowserHtmlDebugTrait {
               /** @var \Psr\Http\Message\StreamInterface $stream */
               $stream = $response->getBody();
 
-              // Get the response body as a string.
+              // Get the response body as a string. If the request is sent with
+              // $options['sink'] set, then $stream is set to $options['sink'],
+              // which may not be readable.
               $body = $stream->isReadable()
                 ? (string) $stream
                 : 'Response is not readable.';
