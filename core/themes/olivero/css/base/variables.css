@@ -118,6 +118,8 @@
   --sp10: calc(10 * var(--sp));
   --sp11: calc(11 * var(--sp));
   --sp12: calc(12 * var(--sp));
+  --grid-2-col-width: calc(var(--grid-col-width) * 2 + var(--grid-gap));
+  --grid-3-col-width: calc(var(--grid-col-width) * 3 + var(--grid-gap) * 2);
 
   /**
    * Gray colors.
