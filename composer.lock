@@ -501,8 +501,8 @@
                 "asm89/stack-cors": "^2.1",
                 "composer-runtime-api": "^2.1",
                 "composer/semver": "^3.3",
-                "doctrine/annotations": "^1.14",
-                "egulias/email-validator": "^3.2.1|^4.0",
+                "doctrine/annotations": "^1.13",
+                "egulias/email-validator": "^2.1.22|^3.1",
                 "ext-date": "*",
                 "ext-dom": "*",
                 "ext-filter": "*",
@@ -646,6 +646,45 @@
                 "GPL-2.0-or-later"
             ],
             "description": "Drupal is an open source content management platform powering millions of websites and applications.",
+            "transport-options": {
+                "relative": true
+            }
+        },
+        {
+            "name": "drupal/core-drupal-locations",
+            "version": "10.0.x-dev",
+            "dist": {
+                "type": "path",
+                "url": "composer/Plugin/Locations",
+                "reference": "4e5d6e67f8a4223d370167f7f2c766ade9120dd0"
+            },
+            "require": {
+                "composer-plugin-api": "^1 || ^2",
+                "php": ">=7.3.0"
+            },
+            "require-dev": {
+                "composer/composer": "^1.8@stable"
+            },
+            "type": "composer-plugin",
+            "extra": {
+                "class": "Drupal\\Composer\\Plugin\\Locations\\LocationWriterPlugin",
+                "branch-alias": {
+                    "dev-master": "1.0.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Drupal\\Composer\\Plugin\\Locations\\": ""
+                }
+            },
+            "license": [
+                "GPL-2.0-or-later"
+            ],
+            "description": "Writes a class definining Drupal's install location.",
+            "homepage": "https://www.drupal.org/project/drupal",
+            "keywords": [
+                "drupal"
+            ],
             "transport-options": {
                 "relative": true
             }
@@ -9631,6 +9670,7 @@
     "minimum-stability": "dev",
     "stability-flags": {
         "drupal/core": 20,
+        "drupal/core-drupal-locations": 20,
         "drupal/core-project-message": 20,
         "drupal/core-vendor-hardening": 20
     },
