@@ -37,7 +37,6 @@ class LoginLogoutMenuLink extends MenuLinkDefault {
     array $configuration,
     $plugin_id,
     $plugin_definition,
-    #[Autowire(service: 'menu_link.static.overrides')]
     StaticMenuLinkOverridesInterface $static_override,
     #[Autowire(service: 'current_user')]
     AccountInterface $current_user,
