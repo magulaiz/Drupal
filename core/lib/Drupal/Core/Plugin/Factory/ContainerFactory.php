@@ -18,22 +18,32 @@ class ContainerFactory extends DefaultFactory {
     $plugin_class = static::getPluginClass($plugin_id, $plugin_definition, $this->interface);
     $container = \Drupal::getContainer();
 
-    // If the plugin provides a factory method, pass the container to it.
-    if (is_subclass_of($plugin_class, 'Drupal\Core\Plugin\ContainerFactoryPluginInterface')) {
+    // Check if the constructor can be autowired by traversing the hierarchy.
+    $constructor_class = $plugin_class;
+    $args = [$configuration, $plugin_id, $plugin_definition];
+    do {
+      $constructor = new \ReflectionMethod($constructor_class, '__construct');
+      if (!isset($parameters)) {
+        $parameters = $constructor->getParameters();
+      }
+      foreach ($constructor->getParameters() as $pos => $parameter) {
+        foreach ($parameter->getAttributes() as $attribute) {
+          if ($attribute->getName() === Autowire::class) {
+            $args[$pos] = $container->get((string) $attribute->newInstance()->value);
+          }
+        }
+      }
+      $constructor_class = get_parent_class($constructor_class);
+    } while ($constructor_class && count($args) !== count($parameters));
+
+    // If we couldn't autowire the plugin and it provides a factory method,
+    // pass the container to it.
+    if (count($args) !== count($parameters) && method_exists($plugin_class, 'create')) {
       return $plugin_class::create($container, $configuration, $plugin_id, $plugin_definition);
     }
 
-    // Otherwise, create the plugin directly, autowiring any additional
-    // constructor parameters.
-    $constructor = new \ReflectionMethod($plugin_class, '__construct');
-    $args = [$configuration, $plugin_id, $plugin_definition];
-    foreach ($constructor->getParameters() as $pos => $parameter) {
-      foreach ($parameter->getAttributes() as $attribute) {
-        if ($attribute->getName() === Autowire::class) {
-          $args[$pos] = $container->get((string) $attribute->newInstance()->value);
-        }
-      }
-    }
+    // Otherwise, create the plugin directly.
+    ksort($args);
     return new $plugin_class(...$args);
   }
 
