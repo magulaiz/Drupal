@@ -2,14 +2,13 @@
 
 namespace Drupal\Core\Menu;
 
-use Drupal\Core\Plugin\Attribute\Service;
-use Drupal\Core\Plugin\ContainerAutowiredPluginInterface;
 use Drupal\Core\Url;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 
 /**
  * Provides a default implementation for menu link plugins.
  */
-class MenuLinkDefault extends MenuLinkBase implements ContainerAutowiredPluginInterface {
+class MenuLinkDefault extends MenuLinkBase {
 
   /**
    * {@inheritdoc}
@@ -45,7 +44,7 @@ class MenuLinkDefault extends MenuLinkBase implements ContainerAutowiredPluginIn
     array $configuration,
     $plugin_id,
     $plugin_definition,
-    #[Service('menu_link.static.overrides')]
+    #[Autowire(service: 'menu_link.static.overrides')]
     StaticMenuLinkOverridesInterface $static_override,
   ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);

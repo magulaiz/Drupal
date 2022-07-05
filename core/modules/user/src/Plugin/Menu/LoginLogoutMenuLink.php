@@ -4,8 +4,8 @@ namespace Drupal\user\Plugin\Menu;
 
 use Drupal\Core\Menu\MenuLinkDefault;
 use Drupal\Core\Menu\StaticMenuLinkOverridesInterface;
-use Drupal\Core\Plugin\Attribute\Service;
 use Drupal\Core\Session\AccountInterface;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 
 /**
  * A menu link that shows "Log in" or "Log out" as appropriate.
@@ -37,9 +37,9 @@ class LoginLogoutMenuLink extends MenuLinkDefault {
     array $configuration,
     $plugin_id,
     $plugin_definition,
-    #[Service('menu_link.static.overrides')]
+    #[Autowire(service: 'menu_link.static.overrides')]
     StaticMenuLinkOverridesInterface $static_override,
-    #[Service('current_user')]
+    #[Autowire(service: 'current_user')]
     AccountInterface $current_user,
   ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition, $static_override);
