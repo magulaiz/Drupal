@@ -23,22 +23,29 @@ class ContainerFactory extends DefaultFactory {
     $args = [$configuration, $plugin_id, $plugin_definition];
     do {
       $constructor = new \ReflectionMethod($constructor_class, '__construct');
-      if (!isset($parameters)) {
-        $parameters = $constructor->getParameters();
+      $parameters = $constructor->getParameters();
+
+      // Store the original number of parameters to check later.
+      if (!isset($parameter_count)) {
+        $parameter_count = count($parameters);
       }
-      foreach ($constructor->getParameters() as $pos => $parameter) {
-        foreach ($parameter->getAttributes() as $attribute) {
-          if ($attribute->getName() === Autowire::class) {
-            $args[$pos] = $container->get((string) $attribute->newInstance()->value);
+
+      // Check each argument that has not yet been filled in.
+      foreach ($parameters as $pos => $parameter) {
+        if (!isset($args[$pos])) {
+          foreach ($parameter->getAttributes() as $attribute) {
+            if ($attribute->getName() === Autowire::class) {
+              $args[$pos] = $container->get((string) $attribute->newInstance()->value);
+            }
           }
         }
       }
       $constructor_class = get_parent_class($constructor_class);
-    } while ($constructor_class && count($args) !== count($parameters));
+    } while ($constructor_class && count($args) !== $parameter_count);
 
     // If we couldn't autowire the plugin and it provides a factory method,
     // pass the container to it.
-    if (count($args) !== count($parameters) && method_exists($plugin_class, 'create')) {
+    if (count($args) !== $parameter_count && method_exists($plugin_class, 'create')) {
       return $plugin_class::create($container, $configuration, $plugin_id, $plugin_definition);
     }
 

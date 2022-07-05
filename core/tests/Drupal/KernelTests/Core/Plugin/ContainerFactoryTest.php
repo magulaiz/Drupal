@@ -20,21 +20,23 @@ class ContainerFactoryTest extends KernelTestBase {
    * Tests that ContainerFactory can create plugin instances.
    */
   public function testContainerFactory() {
-    $plugin = $this->container->get('plugin.manager.block')->createInstance('container_factory');
+    $manager = $this->container->get('plugin.manager.block');
+
+    $plugin = $manager->createInstance('container_factory');
     $this->assertSame($plugin->routeMatch, $this->container->get('current_route_match'));
 
-    $plugin = $this->container->get('plugin.manager.block')->createInstance('autowire');
+    $plugin = $manager->createInstance('autowire');
     $this->assertSame($plugin->routeMatch, $this->container->get('current_route_match'));
 
-    $plugin = $this->container->get('plugin.manager.block')->createInstance('container_factory_subclass');
-    $this->assertSame($plugin->routeMatch, $this->container->get('current_route_match'));
-    $this->assertSame($plugin->eventDispatcher, $this->container->get('event_dispatcher'));
-
-    $plugin = $this->container->get('plugin.manager.block')->createInstance('autowire_subclass');
+    $plugin = $manager->createInstance('container_factory_subclass');
     $this->assertSame($plugin->routeMatch, $this->container->get('current_route_match'));
     $this->assertSame($plugin->eventDispatcher, $this->container->get('event_dispatcher'));
 
-    $plugin = $this->container->get('plugin.manager.block')->createInstance('fully_autowire');
+    $plugin = $manager->createInstance('autowire_subclass');
+    $this->assertSame($plugin->routeMatch, $this->container->get('current_route_match'));
+    $this->assertSame($plugin->eventDispatcher, $this->container->get('event_dispatcher'));
+
+    $plugin = $manager->createInstance('fully_autowire');
     $this->assertSame($plugin->routeMatch, $this->container->get('current_route_match'));
     $this->assertSame($plugin->eventDispatcher, $this->container->get('event_dispatcher'));
   }
