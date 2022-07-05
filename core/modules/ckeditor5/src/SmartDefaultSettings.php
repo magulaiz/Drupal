@@ -12,6 +12,7 @@ use Drupal\ckeditor5\Plugin\CKEditor5PluginElementsSubsetInterface;
 use Drupal\ckeditor5\Plugin\CKEditor5PluginManagerInterface;
 use Drupal\Component\Assertion\Inspector;
 use Drupal\Component\Plugin\PluginManagerInterface;
+use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Messenger\MessengerInterface;
 use Drupal\Core\Session\AccountInterface;
@@ -296,7 +297,7 @@ final class SmartDefaultSettings {
           ) :
           $this->t('Additional details are available in your logs.');
 
-        $messages[MessengerInterface::TYPE_STATUS][] = $this->t('@beginning @plugin_info @source_editing_info. @end', [
+        $messages[MessengerInterface::TYPE_STATUS][] = new FormattableMarkup('@beginning @plugin_info @source_editing_info. @end', [
           '@beginning' => $beginning,
           '@plugin_info' => $plugin_info,
           '@source_editing_info' => $source_editing_info,
@@ -362,7 +363,7 @@ final class SmartDefaultSettings {
           ) :
           $this->t('Additional details are available in your logs.');
 
-        $messages[MessengerInterface::TYPE_WARNING][] = $this->t('@beginning @added_elements_begin @fundamental_tags @added_elements_tags @added_elements_attributes @end',
+        $messages[MessengerInterface::TYPE_WARNING][] = new FormattableMarkup('@beginning @added_elements_begin @fundamental_tags @added_elements_tags @added_elements_attributes @end',
           [
             '@beginning' => $beginning,
             '@added_elements_begin' => $added_elements_begin,
