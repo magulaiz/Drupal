@@ -2,6 +2,8 @@
 
 namespace Drupal\Core\Security;
 
+use Drupal\Core\Security\Attribute\TrustedCallback;
+
 /**
  * Ensures that TrustedCallbackInterface can be enforced for callback methods.
  *
@@ -71,6 +73,14 @@ trait DoTrustedCallbackTrait {
           $methods = call_user_func($object_or_classname . '::trustedCallbacks');
         }
         $safe_callback = in_array($method_name, $methods, TRUE);
+      }
+      if (!$safe_callback) {
+        $method = new \ReflectionMethod($object_or_classname, $method_name);
+        foreach ($method->getAttributes() as $attribute) {
+          if ($attribute->getName() === TrustedCallback::class) {
+            $safe_callback = TRUE;
+          }
+        }
       }
     }
     elseif ($callback instanceof \Closure) {
