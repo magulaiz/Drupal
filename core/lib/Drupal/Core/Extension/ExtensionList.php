@@ -538,7 +538,7 @@ abstract class ExtensionList {
    *   If there is no extension with the supplied name.
    */
   public function getPath($extension_name) {
-    return dirname($this->getPathname($extension_name));
+    return dirname($this->getPathname($extension_name) ?? '');
   }
 
   /**

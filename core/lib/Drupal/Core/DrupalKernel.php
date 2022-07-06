@@ -308,7 +308,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
     // - Removing the namespace directories from the path.
     // - Getting the path to the directory two levels up from the path
     //   determined in the previous step.
-    return dirname(substr(__DIR__, 0, -strlen(__NAMESPACE__)), 2);
+    return dirname(substr(__DIR__, 0, -strlen(__NAMESPACE__)) ?? '', 2);
   }
 
   /**
@@ -649,7 +649,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
       if (class_exists($class)) {
         $this->serviceProviderClasses['app'][$module] = $class;
       }
-      $filename = dirname($filename) . "/$module.services.yml";
+      $filename = dirname($filename ?? '') . "/$module.services.yml";
       if (file_exists($filename)) {
         $this->serviceYamls['app'][$module] = $filename;
       }
@@ -1094,7 +1094,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
 
     // For a request URI of '/index.php/foo', $_SERVER['SCRIPT_NAME'] is
     // '/index.php', whereas $_SERVER['PHP_SELF'] is '/index.php/foo'.
-    if ($dir = rtrim(dirname($request->server->get('SCRIPT_NAME')), '\/')) {
+    if ($dir = rtrim(dirname($request->server->get('SCRIPT_NAME') ?? ''), '\/')) {
       // Remove "core" directory if present, allowing install.php,
       // authorize.php, and others to auto-detect a base path.
       $core_position = strrpos($dir, '/core');
@@ -1432,7 +1432,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
   protected function getModuleNamespacesPsr4($module_file_names) {
     $namespaces = [];
     foreach ($module_file_names as $module => $filename) {
-      $namespaces["Drupal\\$module"] = dirname($filename) . '/src';
+      $namespaces["Drupal\\$module"] = dirname($filename ?? '') . '/src';
     }
     return $namespaces;
   }
