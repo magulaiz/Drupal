@@ -342,6 +342,7 @@ services:
   config.storage:
     class: Drupal\Core\Config\CachedStorage
     arguments: ['@config.storage.active', '@cache.config']
+  Drupal\Core\Config\StorageCacheInterface: '@config.storage'
   config.storage.active:
     class: Drupal\Core\Config\DatabaseStorage
     arguments: ['@database', 'config']
@@ -351,6 +352,7 @@ services:
   config.import_transformer:
     class: Drupal\Core\Config\ImportStorageTransformer
     arguments: ['@event_dispatcher', '@database', '@lock', '@lock.persistent']
+  Drupal\Core\Config\ImportStorageTransformer: '@config.import_transformer'
   config.storage.export:
     class: Drupal\Core\Config\ManagedStorage
     arguments: ['@config.storage.export.manager']
@@ -380,6 +382,7 @@ services:
   Drupal\Core\Config\TypedConfigManagerInterface: '@config.typed'
   context.handler:
     class: Drupal\Core\Plugin\Context\ContextHandler
+  Drupal\Core\Plugin\Context\ContextHandlerInterface: '@context.handler'
   context.repository:
     class: Drupal\Core\Plugin\Context\LazyContextRepository
     arguments: ['@service_container']
@@ -391,6 +394,7 @@ services:
   diff.formatter:
     class: Drupal\Core\Diff\DiffFormatter
     arguments: ['@config.factory']
+  Drupal\Core\Diff\DiffFormatter: '@diff.formatter'
   database:
     class: Drupal\Core\Database\Connection
     factory: Drupal\Core\Database\Database::getConnection
@@ -484,6 +488,7 @@ services:
     arguments: ['security']
   logger.log_message_parser:
     class: Drupal\Core\Logger\LogMessageParser
+  Drupal\Core\Logger\LogMessageParserInterface: '@logger.log_message_parser'
 
   serialization.json:
     class: Drupal\Component\Serialization\Json
@@ -509,6 +514,7 @@ services:
   queue.database:
     class: Drupal\Core\Queue\QueueDatabaseFactory
     arguments: ['@database']
+  Drupal\Core\Queue\QueueDatabaseFactory: '@queue.database'
   path.current:
     class: Drupal\Core\Path\CurrentPathStack
     arguments: ['@request_stack']
@@ -528,9 +534,12 @@ services:
   http_client:
     class: GuzzleHttp\Client
     factory: ['@http_client_factory', 'fromOptions']
+  GuzzleHttp\ClientInterface: '@http_client'
+  Psr\Http\Client\ClientInterface: '@http_client'
   http_client_factory:
     class: Drupal\Core\Http\ClientFactory
     arguments: ['@http_handler_stack']
+  Drupal\Core\Http\ClientFactory: '@http_client_factory'
   plugin.manager.link_relation_type:
     class: \Drupal\Core\Http\LinkRelationTypeManager
     arguments: ['%app.root%', '@module_handler', '@cache.discovery']
@@ -622,8 +631,10 @@ services:
   theme_installer:
     class: Drupal\Core\Extension\ThemeInstaller
     arguments: ['@theme_handler', '@config.factory', '@config.installer', '@module_handler', '@config.manager', '@asset.css.collection_optimizer', '@router.builder', '@logger.channel.default', '@state', '@extension.list.module']
+  Drupal\Core\Extension\ThemeInstallerInterface: '@theme_installer'
   entity.memory_cache:
     class: Drupal\Core\Cache\MemoryCache\MemoryCache
+  Drupal\Core\Cache\MemoryCache\MemoryCacheInterface: '@entity.memory_cache'
   entity_type.manager:
     class: Drupal\Core\Entity\EntityTypeManager
     arguments: ['@container.namespaces', '@module_handler', '@cache.discovery', '@string_translation', '@class_resolver', '@entity.last_installed_schema.repository']
@@ -658,6 +669,7 @@ services:
   entity_bundle.listener:
     class: Drupal\Core\Entity\EntityBundleListener
     arguments: ['@entity_type.manager', '@entity_type.bundle.info', '@entity_field.manager', '@module_handler']
+  Drupal\Core\Entity\EntityBundleListenerInterface: '@entity_bundle.listener'
   entity_route_subscriber:
     class: Drupal\Core\EventSubscriber\EntityRouteProviderSubscriber
     arguments: ['@entity_type.manager']
@@ -666,6 +678,7 @@ services:
   entity.definition_update_manager:
     class: Drupal\Core\Entity\EntityDefinitionUpdateManager
     arguments: ['@entity_type.manager', '@entity.last_installed_schema.repository', '@entity_field.manager', '@entity_type.listener', '@field_storage_definition.listener']
+  Drupal\Core\Entity\EntityDefinitionUpdateManagerInterface: '@entity.definition_update_manager'
   entity.last_installed_schema.repository:
     class: Drupal\Core\Entity\EntityLastInstalledSchemaRepository
     arguments: ['@keyvalue', '@cache.discovery']
@@ -685,6 +698,7 @@ services:
   entity.form_builder:
     class: Drupal\Core\Entity\EntityFormBuilder
     arguments: ['@entity_type.manager', '@form_builder']
+  Drupal\Core\Entity\EntityFormBuilderInterface: '@entity.form_builder'
   entity.bundle_config_import_validator:
     class: Drupal\Core\Entity\Event\BundleConfigImportValidate
     arguments: ['@config.manager', '@entity_type.manager']
@@ -693,9 +707,11 @@ services:
   entity.autocomplete_matcher:
     class: Drupal\Core\Entity\EntityAutocompleteMatcher
     arguments: ['@plugin.manager.entity_reference_selection']
+  Drupal\Core\Entity\EntityAutocompleteMatcherInterface: '@entity.autocomplete_matcher'
   plugin_form.factory:
     class: Drupal\Core\Plugin\PluginFormFactory
     arguments: ['@class_resolver']
+  Drupal\Core\Plugin\PluginFormFactoryInterface: '@plugin_form.factory'
   plugin.manager.entity_reference_selection:
     class: Drupal\Core\Entity\EntityReferenceSelection\SelectionPluginManager
     parent: default_plugin_manager
@@ -704,6 +720,7 @@ services:
     class: Drupal\Core\Block\BlockManager
     parent: default_plugin_manager
     arguments: ['@logger.channel.default']
+  Drupal\Core\Block\BlockManagerInterface: '@plugin.manager.block'
   plugin.manager.field.field_type:
     class: Drupal\Core\Field\FieldTypePluginManager
     arguments: ['@container.namespaces', '@cache.discovery', '@module_handler', '@typed_data_manager']
@@ -732,6 +749,7 @@ services:
   menu.default_tree_manipulators:
     class: Drupal\Core\Menu\DefaultMenuLinkTreeManipulators
     arguments: ['@access_manager', '@current_user', '@entity_type.manager']
+  Drupal\Core\Menu\DefaultMenuLinkTreeManipulators: '@menu.default_tree_manipulators'
   menu.active_trail:
     class: Drupal\Core\Menu\MenuActiveTrail
     arguments: ['@plugin.manager.menu.link', '@current_route_match', '@cache.menu', '@lock']
@@ -741,15 +759,19 @@ services:
   menu.parent_form_selector:
     class: Drupal\Core\Menu\MenuParentFormSelector
     arguments: ['@menu.link_tree', '@entity_type.manager', '@string_translation']
+  Drupal\Core\Menu\MenuParentFormSelectorInterface: '@menu.parent_form_selector'
   plugin.manager.menu.local_action:
     class: Drupal\Core\Menu\LocalActionManager
     arguments: ['@http_kernel.controller.argument_resolver', '@request_stack', '@current_route_match', '@router.route_provider', '@module_handler', '@cache.discovery', '@language_manager', '@access_manager', '@current_user']
+  Drupal\Core\Menu\LocalActionManagerInterface: '@plugin.manager.menu.local_action'
   plugin.manager.menu.local_task:
     class: Drupal\Core\Menu\LocalTaskManager
     arguments: ['@http_kernel.controller.argument_resolver', '@request_stack', '@current_route_match', '@router.route_provider', '@module_handler', '@cache.discovery', '@language_manager', '@access_manager', '@current_user']
+  Drupal\Core\Menu\LocalTaskManagerInterface: '@plugin.manager.menu.local_task'
   plugin.manager.menu.contextual_link:
     class: Drupal\Core\Menu\ContextualLinkManager
     arguments: ['@controller_resolver', '@module_handler', '@cache.discovery', '@language_manager', '@access_manager', '@current_user', '@request_stack']
+  Drupal\Core\Menu\ContextualLinkManagerInterface: '@plugin.manager.menu.contextual_link'
   plugin.manager.display_variant:
     class: Drupal\Core\Display\VariantManager
     parent: default_plugin_manager
@@ -982,9 +1004,11 @@ services:
   link_generator:
     class: Drupal\Core\Utility\LinkGenerator
     arguments: ['@url_generator', '@module_handler', '@renderer']
+  Drupal\Core\Utility\LinkGeneratorInterface: '@link_generator'
   router:
     class: Drupal\Core\Routing\AccessAwareRouter
     arguments: ['@router.no_access_checks', '@access_manager', '@current_user']
+  Drupal\Core\Routing\AccessAwareRouterInterface: '@router'
   router.no_access_checks:
     class: \Drupal\Core\Routing\Router
     arguments: ['@router.route_provider', '@path.current', '@url_generator']
@@ -1045,6 +1069,7 @@ services:
   path.validator:
     class: Drupal\Core\Path\PathValidator
     arguments: ['@router', '@router.no_access_checks', '@current_user', '@path_processor_manager']
+  Drupal\Core\Path\PathValidatorInterface: '@path.validator'
 
   # The argument to the hashing service defined in services.yml, to the
   # constructor of PhpassHashedPassword is the log2 number of iterations for
@@ -1055,8 +1080,10 @@ services:
   password:
     class: Drupal\Core\Password\PhpassHashedPassword
     arguments: [16]
+  Drupal\Core\Password\PasswordInterface: '@password'
   password_generator:
     class: Drupal\Core\Password\DefaultPasswordGenerator
+  Drupal\Core\Password\PasswordGeneratorInterface: '@password_generator'
   request_format_route_filter:
     class: Drupal\Core\Routing\RequestFormatRouteFilter
     tags:
@@ -1212,9 +1239,11 @@ services:
   controller.form:
     class: Drupal\Core\Controller\HtmlFormController
     arguments: ['@http_kernel.controller.argument_resolver', '@form_builder', '@class_resolver']
+  Drupal\Core\Controller\HtmlFormController: '@controller.form'
   controller.entity_form:
     class: Drupal\Core\Entity\HtmlEntityFormController
     arguments: ['@http_kernel.controller.argument_resolver', '@form_builder', '@entity_type.manager']
+  Drupal\Core\Entity\HtmlEntityFormController: '@controller.entity_form'
   form_ajax_response_builder:
     class: Drupal\Core\Form\FormAjaxResponseBuilder
     arguments: ['@main_content_renderer.ajax', '@current_route_match']
@@ -1450,12 +1479,15 @@ services:
   plugin.manager.mail:
     class: Drupal\Core\Mail\MailManager
     arguments: ['@container.namespaces', '@cache.discovery', '@module_handler', '@config.factory', '@logger.factory', '@string_translation', '@renderer']
+  Drupal\Core\Mail\MailManagerInterface: '@plugin.manager.mail'
   plugin.manager.condition:
     class: Drupal\Core\Condition\ConditionManager
     parent: default_plugin_manager
+  Drupal\Core\Executable\ExecutableManagerInterface: '@plugin.manager.condition'
   plugin.manager.element_info:
     class: Drupal\Core\Render\ElementInfoManager
     arguments: ['@container.namespaces', '@cache.discovery', '@cache_tags.invalidator', '@module_handler', '@theme.manager']
+  Drupal\Core\Render\ElementInfoManagerInterface: '@plugin.manager.element_info'
   stream_wrapper_manager:
     class: Drupal\Core\StreamWrapper\StreamWrapperManager
     calls:
@@ -1491,6 +1523,7 @@ services:
   image.factory:
     class: Drupal\Core\Image\ImageFactory
     arguments: ['@image.toolkit.manager']
+  Drupal\Core\Image\ImageFactory: '@image.factory'
   breadcrumb:
     class: Drupal\Core\Breadcrumb\BreadcrumbManager
     arguments: ['@module_handler']
@@ -1499,6 +1532,7 @@ services:
   token:
     class: Drupal\Core\Utility\Token
     arguments: ['@module_handler', '@cache.default', '@language_manager', '@cache_tags.invalidator', '@renderer']
+  Drupal\Core\Utility\Token: '@token'
   batch.storage:
     class: Drupal\Core\Batch\BatchStorage
     arguments: ['@database', '@session', '@csrf_token']
@@ -1508,6 +1542,7 @@ services:
   country_manager:
     class: Drupal\Core\Locale\CountryManager
     arguments: ['@module_handler']
+  Drupal\Core\Locale\CountryManagerInterface: '@country_manager'
   date.formatter:
     class: Drupal\Core\Datetime\DateFormatter
     arguments: ['@entity_type.manager', '@language_manager', '@string_translation', '@config.factory', '@request_stack']
@@ -1706,6 +1741,7 @@ services:
   file.htaccess_writer:
     class: Drupal\Core\File\HtaccessWriter
     arguments: ['@logger.channel.security', '@stream_wrapper_manager']
+  Drupal\Core\File\HtaccessWriterInterface: '@file.htaccess_writer'
   file.mime_type.guesser:
     class: Drupal\Core\File\MimeType\MimeTypeGuesser
     arguments: ['@stream_wrapper_manager']
@@ -1756,6 +1792,7 @@ services:
       - { name: placeholder_strategy, priority: -1000 }
   email.validator:
     class: Drupal\Component\Utility\EmailValidator
+  Drupal\Component\Utility\EmailValidatorInterface: '@email.validator'
   update.update_hook_registry:
     class: Drupal\Core\Update\UpdateHookRegistry
     factory: ['@update.update_hook_registry_factory', create]
@@ -1773,6 +1810,7 @@ services:
     parent: container.trait
   uuid:
     class: Drupal\Component\Uuid\Php
+  Drupal\Component\Uuid\UuidInterface: '@uuid'
   response_filter.active_link:
     class: Drupal\Core\EventSubscriber\ActiveLinkResponseFilter
     arguments: ['@current_user', '@path.current', '@path.matcher', '@language_manager']
@@ -1801,6 +1839,7 @@ services:
   pager.manager:
     class: Drupal\Core\Pager\PagerManager
     arguments: ['@pager.parameters']
+  Drupal\Core\Pager\PagerManagerInterface: '@pager.manager'
   pager.parameters:
     class: Drupal\Core\Pager\PagerParameters
     arguments: ['@request_stack']
