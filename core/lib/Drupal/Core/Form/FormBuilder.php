@@ -1025,6 +1025,14 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
       // Prior to checking properties of child elements, their default
       // properties need to be loaded.
       if (isset($element[$key]['#type']) && empty($element[$key]['#defaults_loaded']) && ($info = $this->elementInfo->getInfo($element[$key]['#type']))) {
+        // Workaround to keep custom callback_form_element_process list for the
+        // issue https://www.drupal.org/project/drupal/issues/3294480.
+        if (isset($element[$key]['#process']) && isset($info['#process'])) {
+          $element[$key]['#process'] = array_merge(
+            $element[$key]['#process'],
+            $info['#process']
+          );
+        }
         $element[$key] += $info;
         $element[$key]['#defaults_loaded'] = TRUE;
       }
