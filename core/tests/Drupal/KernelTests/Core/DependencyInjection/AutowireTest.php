@@ -31,7 +31,7 @@ class AutowireTest extends KernelTestBase {
   }
 
   /**
-   * Tests that core services have aliases correctly defined where possible
+   * Tests that core services have aliases correctly defined where possible.
    */
   public function testCoreServiceAliases(): void {
     $services = [];
