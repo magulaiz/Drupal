@@ -47,6 +47,11 @@ class AutowireTest extends KernelTestBase {
 
     $interfaces = [];
     foreach (get_declared_classes() as $class) {
+      // Ignore proxy classes for autowiring purposes.
+      if (strpos($class, '\\ProxyClass\\') !== FALSE) {
+        continue;
+      }
+
       foreach (class_implements($class) as $interface) {
         $interfaces[$interface][] = $class;
       }
