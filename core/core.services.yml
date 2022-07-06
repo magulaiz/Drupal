@@ -58,6 +58,7 @@ parameters:
   tempstore.expire: 604800
 services:
   Symfony\Component\DependencyInjection\ContainerInterface: '@service_container'
+  Drupal\Core\DrupalKernelInterface: '@kernel'
   # Simple cache contexts, directly derived from the request context.
   cache_context.ip:
     class: Drupal\Core\Cache\Context\IpCacheContext
@@ -532,6 +533,7 @@ services:
     arguments: ['@service_container']
     tags:
       - { name: service_id_collector, tag: http_client_middleware }
+  Drupal\Core\Http\HandlerStackConfigurator: '@http_handler_stack_configurator'
   http_client:
     class: GuzzleHttp\Client
     factory: ['@http_client_factory', 'fromOptions']
@@ -580,7 +582,7 @@ services:
       - { name: service_collector, tag: 'module_install.uninstall_validator', call: addUninstallValidator }
     arguments: ['%app.root%', '@module_handler', '@kernel', '@database', '@update.update_hook_registry']
     lazy: true
-  Drupal\Core\DrupalKernelInterface: '@kernel'
+  Drupal\Core\Extension\ModuleInstallerInterface: '@module_installer'
   extension.list.module:
     class: Drupal\Core\Extension\ModuleExtensionList
     arguments: ['%app.root%', 'module', '@cache.default', '@info_parser', '@module_handler', '@state', '@config.factory', '@extension.list.profile', '%install_profile%', '%container.modules%']
@@ -841,6 +843,7 @@ services:
   http_kernel.controller.argument_metadata_factory:
     class: Symfony\Component\HttpKernel\ControllerMetadata\ArgumentMetadataFactory
     public: false
+  Symfony\Component\HttpKernel\ControllerMetadata\ArgumentMetadataFactoryInterface: '@http_kernel.controller.argument_metadata_factory'
   argument_resolver.request_attribute:
     class: Symfony\Component\HttpKernel\Controller\ArgumentResolver\RequestAttributeValueResolver
     public: false
@@ -1478,6 +1481,7 @@ services:
     arguments: ['@database', '@request_stack']
     tags:
       - { name: backend_overridable }
+  Drupal\Core\Flood\FloodInterface: '@flood'
   plugin.manager.mail:
     class: Drupal\Core\Mail\MailManager
     arguments: ['@container.namespaces', '@cache.discovery', '@module_handler', '@config.factory', '@logger.factory', '@string_translation', '@renderer']
@@ -1522,6 +1526,7 @@ services:
     parent: default_plugin_manager
     tags:
       - { name: plugin_manager_cache_clear }
+  Drupal\Core\ImageToolkit\ImageToolkitOperationManagerInterface: '@image.toolkit.operation.manager'
   image.factory:
     class: Drupal\Core\Image\ImageFactory
     arguments: ['@image.toolkit.manager']
@@ -1531,6 +1536,7 @@ services:
     arguments: ['@module_handler']
     tags:
       - { name: service_collector, tag: breadcrumb_builder, call: addBuilder }
+  Drupal\Core\Breadcrumb\ChainBreadcrumbBuilderInterface: '@breadcrumb'
   token:
     class: Drupal\Core\Utility\Token
     arguments: ['@module_handler', '@cache.default', '@language_manager', '@cache_tags.invalidator', '@renderer']
@@ -1541,6 +1547,7 @@ services:
     tags:
       - { name: backend_overridable }
     lazy: true
+  Drupal\Core\Batch\BatchStorageInterface: '@batch.storage'
   country_manager:
     class: Drupal\Core\Locale\CountryManager
     arguments: ['@module_handler']
@@ -1614,6 +1621,7 @@ services:
   session.attribute_bag:
     class: Symfony\Component\HttpFoundation\Session\Attribute\AttributeBag
     public: false
+  Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface: '@session.attribute_bag'
   session_handler:
     alias: session_handler.storage
   session_handler.storage:
@@ -1633,6 +1641,7 @@ services:
       - { name: backend_overridable }
     calls:
       - [setWriteSafeHandler, ['@session_handler.write_safe']]
+  Drupal\Core\Session\SessionManagerInterface: '@session_manager'
   session_manager.metadata_bag:
     class: Drupal\Core\Session\MetadataBag
     arguments: ['@settings']
@@ -1698,6 +1707,7 @@ services:
     arguments: ['%app.root%', '@cache.default', '%twig_extension_hash%', '@state', '@twig.loader', '%twig.config%']
     tags:
       - { name: service_collector, tag: 'twig.extension', call: addExtension }
+  Drupal\Core\Template\TwigEnvironment: '@twig'
   twig.extension:
     class: Drupal\Core\Template\TwigExtension
     arguments: ['@renderer', '@url_generator', '@theme.manager', '@date.formatter', '@file_url_generator']

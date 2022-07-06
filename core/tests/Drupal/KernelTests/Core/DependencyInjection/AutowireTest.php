@@ -40,7 +40,21 @@ class AutowireTest extends KernelTestBase {
       if (is_string($service)) {
         $aliases[$id] = substr($service, 1);
       }
-      elseif (isset($service['class']) && class_exists($service['class']) && empty($service['tags']) && (!isset($service['public']) || $service['public'])) {
+      elseif (isset($service['class']) && class_exists($service['class'])) {
+        // Ignore certain tagged services.
+        if (isset($service['tags'])) {
+          foreach ($service['tags'] as $tag) {
+            if (in_array($tag['name'], [
+              'access_check',
+              'cache.context',
+              'context_provider',
+              'module_install.uninstall_validator',
+            ])) {
+              continue 2;
+            }
+          }
+        }
+
         $services[$id] = $service['class'];
       }
     }
