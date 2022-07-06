@@ -391,6 +391,7 @@ services:
     class: Drupal\Core\Cron
     arguments: ['@module_handler', '@lock', '@queue', '@state', '@account_switcher', '@logger.channel.cron', '@plugin.manager.queue_worker', '@datetime.time']
     lazy: true
+  Drupal\Core\CronInterface: '@cron'
   diff.formatter:
     class: Drupal\Core\Diff\DiffFormatter
     arguments: ['@config.factory']
@@ -782,6 +783,7 @@ services:
   plugin.cache_clearer:
     class: Drupal\Core\Plugin\CachedDiscoveryClearer
     lazy: true
+  Drupal\Core\Plugin\CachedDiscoveryClearerInterface: '@plugin.cache_clearer'
   paramconverter.menu_link:
     class: Drupal\Core\ParamConverter\MenuLinkPluginConverter
     tags:
