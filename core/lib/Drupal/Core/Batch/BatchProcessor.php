@@ -13,7 +13,6 @@ use Drupal\Core\Form\FormSubmitterInterface;
 use Drupal\Core\Path\PathValidatorInterface;
 use Drupal\Core\Queue\Batch;
 use Drupal\Core\Queue\BatchMemory;
-use Drupal\Core\Queue\QueueInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\Theme\ThemeManagerInterface;
