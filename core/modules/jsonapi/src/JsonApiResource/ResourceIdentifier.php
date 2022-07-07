@@ -393,7 +393,7 @@ class ResourceIdentifier implements ResourceIdentifierInterface {
    * @return string
    *   The property name which has an entity as its value.
    */
-  protected static function getDataReferencePropertyName(EntityReferenceItem $item) {
+  public static function getDataReferencePropertyName(EntityReferenceItem $item) {
     foreach ($item->getDataDefinition()->getPropertyDefinitions() as $property_name => $property_definition) {
       if ($property_definition instanceof DataReferenceDefinitionInterface) {
         return $property_name;
