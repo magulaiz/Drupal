@@ -20,8 +20,13 @@ class ContainerFactory extends DefaultFactory {
     // Check if the constructor can be autowired by traversing the hierarchy.
     $constructor_class = $plugin_class;
     $args = [$configuration, $plugin_id, $plugin_definition];
+    $parameter_count = 0;
     do {
-      $constructor = new \ReflectionMethod($constructor_class, '__construct');
+      try {
+        $constructor = new \ReflectionMethod($constructor_class, '__construct');
+      } catch (\ReflectionException $e) {
+        break;
+      }
       $parameters = $constructor->getParameters();
 
       // Store the original number of parameters to check later.
