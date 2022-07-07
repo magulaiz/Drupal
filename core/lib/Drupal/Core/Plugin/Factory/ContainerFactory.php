@@ -16,7 +16,6 @@ class ContainerFactory extends DefaultFactory {
   public function createInstance($plugin_id, array $configuration = []) {
     $plugin_definition = $this->discovery->getDefinition($plugin_id);
     $plugin_class = static::getPluginClass($plugin_id, $plugin_definition, $this->interface);
-    $container = \Drupal::getContainer();
 
     // Check if the constructor can be autowired by traversing the hierarchy.
     $constructor_class = $plugin_class;
@@ -35,7 +34,7 @@ class ContainerFactory extends DefaultFactory {
         if (!isset($args[$pos])) {
           foreach ($parameter->getAttributes() as $attribute) {
             if ($attribute->getName() === Autowire::class) {
-              $args[$pos] = $container->get((string) $attribute->newInstance()->value);
+              $args[$pos] = \Drupal::service((string) $attribute->newInstance()->value);
             }
           }
         }
@@ -46,7 +45,7 @@ class ContainerFactory extends DefaultFactory {
     // If we couldn't autowire the plugin and it provides a factory method,
     // pass the container to it.
     if (count($args) !== $parameter_count && method_exists($plugin_class, 'create')) {
-      return $plugin_class::create($container, $configuration, $plugin_id, $plugin_definition);
+      return $plugin_class::create(\Drupal::getContainer(), $configuration, $plugin_id, $plugin_definition);
     }
 
     // Otherwise, create the plugin directly.
