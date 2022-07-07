@@ -148,8 +148,11 @@ class StyleSensibleElementConstraintValidator extends ConstraintValidator implem
         // elements as part of their definition. Because of this, the $haystack
         // is calculated differently for Source Editing.
         $text_editor = $this->createTextEditorObjectFromContext();
-        $source_tags = $text_editor->getSettings()['plugins']['ckeditor5_sourceEditing']['allowed_tags'];
-        $haystack = HTMLRestrictions::fromString(implode($source_tags));
+        $editor_plugins = $text_editor->getSettings()['plugins'];
+        if (!empty($editor_plugins['ckeditor5_sourceEditing'])) {
+          $source_tags = $editor_plugins['ckeditor5_sourceEditing']['allowed_tags'];
+          $haystack = HTMLRestrictions::fromString(implode($source_tags));
+        }
       }
       if (self::intersectionWithClasses($needle, $haystack)) {
         return $definition->label();
