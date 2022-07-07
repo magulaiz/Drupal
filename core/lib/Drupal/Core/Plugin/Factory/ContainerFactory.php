@@ -24,10 +24,11 @@ class ContainerFactory extends DefaultFactory {
     do {
       try {
         $constructor = new \ReflectionMethod($constructor_class, '__construct');
-      } catch (\ReflectionException $e) {
+        $parameters = $constructor->getParameters();
+      }
+      catch (\ReflectionException $e) {
         break;
       }
-      $parameters = $constructor->getParameters();
 
       // Store the original number of parameters to check later.
       if (!isset($parameter_count)) {
