@@ -124,7 +124,7 @@ class Date extends NumericFilter {
     // Store this because it will get overwritten.
     $type = NULL;
     if ($this->isAGroup()) {
-      if (is_array($this->group_info)) {
+      if (!empty($this->group_info['type'])) {
         $type = $this->group_info['type'];
       }
     }
