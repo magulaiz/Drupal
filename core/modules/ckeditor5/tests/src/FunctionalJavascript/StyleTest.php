@@ -110,6 +110,30 @@ JS;
     // of the error, but only the "Styles" text area in the vertical tab.
     $assert_session->elementNotExists('css', '.vertical-tabs__pane[data-ckeditor5-plugin-id="ckeditor5_style"][aria-invalid="true"]');
     $assert_session->elementExists('css', '.vertical-tabs__pane[data-ckeditor5-plugin-id="ckeditor5_style"] textarea[data-drupal-selector="edit-editor-settings-plugins-ckeditor5-style-styles"][aria-invalid="true"]');
+
+    // Confirm that the Style plugin validation can accept tags allowed by
+    // Source Editing config.
+    // Make `<aside class>` creatable.
+    $this->drupalGet('admin/config/content/formats/manage/ckeditor5');
+    $this->assertNotEmpty($assert_session->elementExists('css', '.ckeditor5-toolbar-item-sourceEditing'));
+    $this->triggerKeyUp('.ckeditor5-toolbar-item-sourceEditing', 'ArrowDown');
+    $assert_session->assertWaitOnAjaxRequest();
+    // The Source Editing plugin settings form should now be present and should
+    // have no allowed tags configured.
+    $page->clickLink('Source editing');
+    $this->assertNotNull($assert_session->waitForElementVisible('css', '[data-drupal-selector="edit-editor-settings-plugins-ckeditor5-sourceediting-allowed-tags"]'));
+    $javascript = <<<JS
+      const allowedTags = document.querySelector('[data-drupal-selector="edit-editor-settings-plugins-ckeditor5-sourceediting-allowed-tags"]');
+      allowedTags.value = '<aside class>';
+      allowedTags.dispatchEvent(new Event('input'));
+JS;
+    $this->getSession()->executeScript($javascript);
+    // Dispatching an `input` event does not work in WebDriver. Enabling another
+    // toolbar item which has no associated HTML elements forces it.
+    $this->triggerKeyUp('.ckeditor5-toolbar-item-undo', 'ArrowDown');
+    $assert_session->assertWaitOnAjaxRequest();
+    $page->clickLink('Style');
+    $this->assertNotNull($styles_textarea = $assert_session->waitForElementVisible('css', '[data-drupal-selector="edit-editor-settings-plugins-ckeditor5-style-styles"]'));
   }
 
   /**
