@@ -125,7 +125,7 @@ JS;
     $page->clickLink('Source editing');
     $this->assertNotNull($assert_session->waitForElementVisible('css', '[data-drupal-selector="edit-editor-settings-plugins-ckeditor5-sourceediting-allowed-tags"]'));
     $javascript = <<<JS
-      const allowedTags = document.querySelector('[data-drupal-selector="edit-editor-settings-plugins-ckeditor5-sourceEditing-allowed-tags"]');
+      const allowedTags = document.querySelector('[data-drupal-selector="edit-editor-settings-plugins-ckeditor5-sourceediting-allowed-tags"]');
       allowedTags.value = '<aside class>';
       allowedTags.dispatchEvent(new Event('input'));
 JS;
