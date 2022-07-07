@@ -86,12 +86,12 @@ class HandleMultiplesTest extends KernelTestBase {
         ],
         // Process pipeline for testing 'get' overriding an array.
         'get_from_multiple' => [
-          // Returns a string.
+          // Returns an array.
           [
             'plugin' => 'get',
             'source' => 'multiple',
           ],
-          // Ignore previous and return an array.
+          // Ignore previous and return a string.
           [
             'plugin' => 'get',
             'source' => 'scalar',
