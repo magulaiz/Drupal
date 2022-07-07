@@ -46,6 +46,11 @@ base:
         weight: -10
       css/components/ui-dialog.css:
         weight: -10
+book-navigation:
+  version: VERSION
+  css:
+    component:
+      css/components/book-navigation.css: {  }
 dialog:
   version: VERSION
   css:
@@ -64,6 +69,12 @@ file:
     component:
       css/components/file.css:
         weight: -10
+forum:
+  version: VERSION
+  css:
+    component:
+      css/components/forum.css:
+        weight: -10
 image-widget:
   version: VERSION
   css:
@@ -74,6 +85,11 @@ indented:
   css:
     component:
       css/components/indented.css: {  }
+media_library:
+  version: VERSION
+  css:
+    layout:
+      css/layout/media-library.css: {  }
 messages:
   version: VERSION
   css:
@@ -103,3 +119,12 @@ user:
     component:
       css/components/user.css:
         weight: -10
+media_embed_error:
+  version: VERSION
+  css:
+    component:
+      css/components/media-embed-error.css: {  }
+media_embed_ckeditor_theme:
+  version: VERSION
+  js:
+    js/media_embed_ckeditor.theme.js: {  }
