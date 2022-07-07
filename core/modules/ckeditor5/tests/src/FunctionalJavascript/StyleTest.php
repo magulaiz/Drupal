@@ -113,9 +113,7 @@ JS;
     $assert_session->elementNotExists('css', '.vertical-tabs__pane[data-ckeditor5-plugin-id="ckeditor5_style"][aria-invalid="true"]');
     $assert_session->elementExists('css', '.vertical-tabs__pane[data-ckeditor5-plugin-id="ckeditor5_style"] textarea[data-drupal-selector="edit-editor-settings-plugins-ckeditor5-style-styles"][aria-invalid="true"]');
 
-    // Confirm that the Style plugin validation can accept tags allowed by
-    // Source Editing config.
-    // Make `<aside class>` creatable.
+    // Test configuration overlaps across plugins.
     $this->drupalGet('admin/config/content/formats/manage/ckeditor5');
     $this->assertNotEmpty($assert_session->elementExists('css', '.ckeditor5-toolbar-item-sourceEditing'));
     $this->triggerKeyUp('.ckeditor5-toolbar-item-sourceEditing', 'ArrowDown');
@@ -124,18 +122,29 @@ JS;
     // have no allowed tags configured.
     $page->clickLink('Source editing');
     $this->assertNotNull($assert_session->waitForElementVisible('css', '[data-drupal-selector="edit-editor-settings-plugins-ckeditor5-sourceediting-allowed-tags"]'));
+
+    // Make `<aside class>` creatable.
     $javascript = <<<JS
       const allowedTags = document.querySelector('[data-drupal-selector="edit-editor-settings-plugins-ckeditor5-sourceediting-allowed-tags"]');
       allowedTags.value = '<aside class>';
-      allowedTags.dispatchEvent(new Event('input'));
+      allowedTags.dispatchEvent(new Event('change'));
 JS;
     $this->getSession()->executeScript($javascript);
-    // Dispatching an `input` event does not work in WebDriver. Enabling another
-    // toolbar item which has no associated HTML elements forces it.
-    $this->triggerKeyUp('.ckeditor5-toolbar-item-undo', 'ArrowDown');
     $assert_session->assertWaitOnAjaxRequest();
-    $page->clickLink('Style');
-    $this->assertNotNull($styles_textarea = $assert_session->waitForElementVisible('css', '[data-drupal-selector="edit-editor-settings-plugins-ckeditor5-style-styles"]'));
+
+    // Create a style with `aside` and a class name.
+    $javascript = <<<JS
+      const allowedTags = document.querySelector('[data-drupal-selector="edit-editor-settings-plugins-ckeditor5-style-styles"]');
+      allowedTags.value = 'aside.error|Aside';
+      allowedTags.dispatchEvent(new Event('change'));
+JS;
+    $this->getSession()->executeScript($javascript);
+    $assert_session->assertWaitOnAjaxRequest();
+
+    // The CKEditor 5 module should refuse to create configuration overlaps
+    // across plugins.
+    // @see \Drupal\ckeditor5\Plugin\Validation\Constraint\StyleSensibleElementConstraintValidator::findStyleConflictingPluginLabel()
+    $assert_session->waitForElement('css', '[role=alert][data-drupal-message-type="error"]:contains("A style must only specify classes not supported by other plugins.")');
   }
 
   /**
