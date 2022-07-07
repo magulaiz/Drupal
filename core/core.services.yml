@@ -1543,7 +1543,7 @@ services:
   Drupal\Core\Utility\Token: '@token'
   batch.processor:
     class: Drupal\Core\Batch\BatchProcessor
-    arguments: ['%app.root%', '@date.formatter', '@form_submitter', '@request_stack', '@module_handler', '@theme.manager', '@current_route_match']
+    arguments: ['%app.root%', '@date.formatter', '@form_submitter', '@request_stack', '@module_handler', '@theme.manager', '@current_route_match', '@?database', '@?batch.storage', '@?path.validator']
   batch.storage:
     class: Drupal\Core\Batch\BatchStorage
     arguments: ['@database', '@session', '@csrf_token']
