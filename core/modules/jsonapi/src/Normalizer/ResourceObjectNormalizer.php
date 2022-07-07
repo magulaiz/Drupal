@@ -2,6 +2,7 @@
 
 namespace Drupal\jsonapi\Normalizer;
 
+use Drupal\Core\Cache\CacheableDependencyInterface;
 use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Field\EntityReferenceFieldItemListInterface;
 use Drupal\Core\Field\FieldItemListInterface;
@@ -179,9 +180,10 @@ class ResourceObjectNormalizer extends NormalizerBase {
         $relationship = Relationship::createFromEntityReferenceField($resource_object, $field);
         $normalized_field = $this->serializer->normalize($relationship, $format, $context);
         foreach ($field->filterEmptyItems() as $item) {
-          $cacheable_metadata->addCacheableDependency(
-            $item->get(ResourceIdentifier::getDataReferencePropertyName($item))
-          );
+          $property = $item->get(ResourceIdentifier::getDataReferencePropertyName($item));
+          if ($property instanceof CacheableDependencyInterface) {
+            $cacheable_metadata->addCacheableDependency($property);
+          }
         }
       }
       else {
