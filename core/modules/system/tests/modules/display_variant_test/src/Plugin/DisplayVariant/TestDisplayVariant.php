@@ -67,6 +67,9 @@ class TestDisplayVariant extends VariantBase implements PageVariantInterface, Co
    * {@inheritdoc}
    */
   public function setMainContent(array $main_content) {
+    if (empty($this->getConfiguration()['required_configuration'])) {
+      throw new \Exception('Required configuration is missing!');
+    }
     $this->mainContent = $main_content;
     return $this;
   }
@@ -75,6 +78,9 @@ class TestDisplayVariant extends VariantBase implements PageVariantInterface, Co
    * {@inheritdoc}
    */
   public function setTitle($title) {
+    if (empty($this->getConfiguration()['required_configuration'])) {
+      throw new \Exception('Required configuration is missing!');
+    }
     $this->title = $title;
     return $this;
   }
