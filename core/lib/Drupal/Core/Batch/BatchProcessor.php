@@ -128,6 +128,12 @@ class BatchProcessor implements BatchProcessorInterface {
    *   The theme manager service.
    * @param \Drupal\Core\Routing\RouteMatchInterface $route_match
    *   The route match service.
+   * @param \Drupal\Core\Database\Connection|null $connection
+   *   (optional) Database connection.
+   * @param \Drupal\Core\Batch\BatchStorageInterface|null $batch_storage
+   *   (optional) Batch storage.
+   * @param \Drupal\Core\Path\PathValidatorInterface|null $path_validator
+   *   (optional) Path validation service.
    */
   public function __construct(string $root, DateFormatterInterface $date_formatter, FormSubmitterInterface $form_submitter, RequestStack $request_stack, ModuleHandlerInterface $module_handler, ThemeManagerInterface $theme_manager, RouteMatchInterface $route_match) {
     $this->root = $root;
