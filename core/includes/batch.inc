@@ -15,6 +15,7 @@
  */
 
 use Drupal\Core\Batch\Percentage;
+use Drupal\Core\Url;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -59,7 +60,7 @@ function _batch_page(Request $request) {
   // updated.
   // @see _batch_shutdown()
   // @see \Symfony\Component\HttpFoundation\Response::send()
-  drupal_register_shutdown_function('_batch_shutdown');
+  drupal_register_shutdown_function([$batch_processor, 'shutdown']);
   _batch_needs_update(TRUE);
 
   $build = [];
