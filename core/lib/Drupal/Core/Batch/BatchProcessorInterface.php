@@ -2,7 +2,9 @@
 
 namespace Drupal\Core\Batch;
 
+use Drupal\Core\Queue\QueueInterface;
 use Drupal\Core\Url;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 
 /**
  * Defines a common interface for batch processors.
@@ -28,7 +30,7 @@ interface BatchProcessorInterface {
    *   An associative array defining the batch. The array can be built by using
    *   toArray() method of a populated \Drupal\Core\Batch\BatchBuilder object.
    */
-  public function queue($batch_definition);
+  public function queue(array $batch_definition): void;
 
   /**
    * Returns a queue object for a batch set.
@@ -36,10 +38,10 @@ interface BatchProcessorInterface {
    * @param array $batch_set
    *   The batch set.
    *
-   * @return \Drupal\Core\Queue\QueueInterface
+   * @return \Drupal\Core\Queue\QueueInterface|null
    *   The queue object.
    */
-  public function getQueue(array $batch_set);
+  public function getQueue(array $batch_set): ?QueueInterface;
 
   /**
    * Populates a job queue with the operations of a batch set.
@@ -56,7 +58,7 @@ interface BatchProcessorInterface {
    *
    * @internal
    */
-  public function queuePopulate(array &$batch, $set_id);
+  public function queuePopulate(array &$batch, string $set_id): void;
 
   /**
    * Processes the batch.
@@ -64,7 +66,7 @@ interface BatchProcessorInterface {
    * This function is generally not needed in form submit handlers;
    * Form API takes care of batches that were set during form submission.
    *
-   * @param \Drupal\Core\Url|string $redirect
+   * @param \Drupal\Core\Url|string|null $redirect
    *   (optional) Either path or Url object to redirect to when the batch has
    *   finished processing. Note that to simply force a batch to (conditionally)
    *   redirect to a custom location after it is finished processing but to
@@ -74,10 +76,10 @@ interface BatchProcessorInterface {
    *   \Symfony\Component\HttpFoundation\RedirectResponse, which will be used
    *   automatically by the standard batch processing pipeline (and which takes
    *   precedence over this parameter).
-   * @param \Drupal\Core\Url $url
+   * @param \Drupal\Core\Url|null $url
    *   (optional) URL of the batch processing page.
    *   Should only be used for separate scripts like update.php.
-   * @param string $redirect_callback
+   * @param string|null $redirect_callback
    *   (optional) Specify a function to be called to redirect to the progressive
    *   processing page.
    *
@@ -85,12 +87,12 @@ interface BatchProcessorInterface {
    *   A redirect response if the batch is progressive. No return value
    *   otherwise.
    */
-  public function process($redirect = NULL, Url $url = NULL, $redirect_callback = NULL);
+  public function process(Url|string $redirect = NULL, Url $url = NULL, string $redirect_callback = NULL): ?RedirectResponse;
 
   /**
    * Retrieves the current batch.
    */
-  public function &getCurrentBatch();
+  public function &getCurrentBatch(): ?array;
 
   /**
    * Returns a queue object for a batch set.
@@ -103,7 +105,7 @@ interface BatchProcessorInterface {
    *
    * @internal
    */
-  public function getQueueForBatch($batch);
+  public function getQueueForBatch(array $batch): ?QueueInterface;
 
   /**
    * Returns the batch set being currently processed.
@@ -113,7 +115,7 @@ interface BatchProcessorInterface {
    *
    * @internal
    */
-  public function getCurrentSet();
+  public function getCurrentSet(): array;
 
   /**
    * Retrieves the next set in a batch.
@@ -128,7 +130,7 @@ interface BatchProcessorInterface {
    *
    * @internal
    */
-  public function nextSet();
+  public function nextSet(): bool;
 
   /**
    * Processes sets in a batch.
@@ -143,7 +145,7 @@ interface BatchProcessorInterface {
    *
    * @internal
    */
-  public function processQueue();
+  public function processQueue(): array|NULL|RedirectResponse;
 
   /**
    * Ends the batch processing.
@@ -157,7 +159,7 @@ interface BatchProcessorInterface {
    *
    * @internal
    */
-  public function finishedProcessing();
+  public function finishedProcessing(): ?RedirectResponse;
 
   /**
    * Shutdown function: Stores the current batch data for the next request.
@@ -165,6 +167,6 @@ interface BatchProcessorInterface {
    * @see _batch_page()
    * @see drupal_register_shutdown_function()
    */
-  public function shutdown();
+  public function shutdown(): void;
 
 }

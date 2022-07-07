@@ -4,11 +4,13 @@ namespace Drupal\Core\Batch;
 
 use Drupal\Component\Utility\Timer;
 use Drupal\Component\Utility\UrlHelper;
+use Drupal\Core\Database\Connection;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Datetime\DateFormatterInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Form\FormState;
 use Drupal\Core\Form\FormSubmitterInterface;
+use Drupal\Core\Path\PathValidatorInterface;
 use Drupal\Core\Queue\Batch;
 use Drupal\Core\Queue\BatchMemory;
 use Drupal\Core\Queue\QueueInterface;
@@ -31,84 +33,84 @@ class BatchProcessor implements BatchProcessorInterface {
    *
    * @var string
    */
-  protected $root;
+  protected string $root;
 
   /**
    * The batch storage service.
    *
    * @var \Drupal\Core\Batch\BatchStorageInterface
    */
-  protected $batchStorage;
+  protected BatchStorageInterface $batchStorage;
 
   /**
    * The date formatter used to calculate the needed time for the batch.
    *
    * @var \Drupal\Core\Datetime\DateFormatterInterface
    */
-  protected $dateFormatter;
+  protected DateFormatterInterface $dateFormatter;
 
   /**
    * The form submitter used to redirect at the end of the batch.
    *
    * @var \Drupal\Core\Form\FormSubmitterInterface
    */
-  protected $formSubmitter;
+  protected FormSubmitterInterface $formSubmitter;
 
   /**
    * The request stack.
    *
    * @var \Symfony\Component\HttpFoundation\RequestStack
    */
-  protected $requestStack;
+  protected RequestStack $requestStack;
 
   /**
    * Path validator service.
    *
    * @var \Drupal\Core\Path\PathValidatorInterface
    */
-  protected $pathValidator;
+  protected PathValidatorInterface $pathValidator;
 
   /**
    * Database connection.
    *
    * @var \Drupal\Core\Database\Connection
    */
-  protected $connection;
+  protected Connection $connection;
 
   /**
    * Module handler.
    *
    * @var \Drupal\Core\Extension\ModuleHandlerInterface
    */
-  protected $moduleHandler;
+  protected ModuleHandlerInterface $moduleHandler;
 
   /**
    * Theme manager.
    *
    * @var \Drupal\Core\Theme\ThemeManagerInterface
    */
-  protected $themeManager;
+  protected ThemeManagerInterface $themeManager;
 
   /**
    * Route match.
    *
    * @var \Drupal\Core\Routing\RouteMatchInterface
    */
-  protected $routeMatch;
+  protected RouteMatchInterface $routeMatch;
 
   /**
    * In memory batch cache.
    *
-   * @var array
+   * @var array|null
    */
-  protected $batch = [];
+  protected ?array $batch = NULL;
 
   /**
    * Queue list storage.
    *
    * @var \Drupal\Core\Queue\QueueInterface[]
    */
-  protected $queues = [];
+  protected array $queues = [];
 
   /**
    * Creates a new BatchProcessor.
@@ -128,7 +130,7 @@ class BatchProcessor implements BatchProcessorInterface {
    * @param \Drupal\Core\Routing\RouteMatchInterface $route_match
    *   The route match service.
    */
-  public function __construct($root, DateFormatterInterface $date_formatter, FormSubmitterInterface $form_submitter, RequestStack $request_stack, ModuleHandlerInterface $module_handler, ThemeManagerInterface $theme_manager, RouteMatchInterface $route_match) {
+  public function __construct(string $root, DateFormatterInterface $date_formatter, FormSubmitterInterface $form_submitter, RequestStack $request_stack, ModuleHandlerInterface $module_handler, ThemeManagerInterface $theme_manager, RouteMatchInterface $route_match, Connection $connection = NULL, BatchStorageInterface $batch_storage = NULL, PathValidatorInterface $path_validator = NULL) {
     $this->root = $root;
     $this->dateFormatter = $date_formatter;
     $this->formSubmitter = $form_submitter;
@@ -136,6 +138,9 @@ class BatchProcessor implements BatchProcessorInterface {
     $this->moduleHandler = $module_handler;
     $this->themeManager = $theme_manager;
     $this->routeMatch = $route_match;
+    $this->connection = $connection;
+    $this->batchStorage = $batch_storage;
+    $this->pathValidator = $path_validator;
   }
 
   /**
@@ -180,7 +185,7 @@ class BatchProcessor implements BatchProcessorInterface {
   /**
    * {@inheritdoc}
    */
-  public function queue($batch_definition) {
+  public function queue(array $batch_definition): void {
     if ($batch_definition) {
       $batch = &$this->getCurrentBatch();
 
@@ -238,7 +243,7 @@ class BatchProcessor implements BatchProcessorInterface {
   /**
    * {@inheritdoc}
    */
-  public function queuePopulate(array &$batch, $set_id) {
+  public function queuePopulate(array &$batch, string $set_id): void {
     $batch_set = &$batch['sets'][$set_id];
 
     if (isset($batch_set['operations'])) {
@@ -262,7 +267,7 @@ class BatchProcessor implements BatchProcessorInterface {
   /**
    * {@inheritdoc}
    */
-  public function getQueue(array $batch_set) {
+  public function getQueue(array $batch_set): ?QueueInterface {
     if (isset($batch_set['queue'])) {
       $name = $batch_set['queue']['name'];
       $class = $batch_set['queue']['class'];
@@ -272,12 +277,13 @@ class BatchProcessor implements BatchProcessorInterface {
       }
       return $this->queues[$class][$name];
     }
+    return NULL;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function process($redirect = NULL, Url $url = NULL, $redirect_callback = NULL) {
+  public function process(Url|string $redirect = NULL, Url $url = NULL, string $redirect_callback = NULL): ?RedirectResponse {
     $batch = &$this->getCurrentBatch();
 
     if (isset($batch)) {
@@ -285,7 +291,7 @@ class BatchProcessor implements BatchProcessorInterface {
       $process_info = [
         'current_set' => 0,
         'progressive' => TRUE,
-        'url' => isset($url) ? $url : Url::fromRoute('system.batch_page.html'),
+        'url' => $url ?? Url::fromRoute('system.batch_page.html'),
         'source_url' => Url::fromRouteMatch($this->routeMatch)->mergeOptions(['query' => $this->requestStack->getCurrentRequest()->query->all()]),
         'batch_redirect' => $redirect,
         'theme' => $this->themeManager->getActiveTheme()->getName(),
@@ -314,7 +320,6 @@ class BatchProcessor implements BatchProcessorInterface {
         // the generic error message.
         /** @var \Drupal\Core\Url $batch_url */
         $batch_url = $batch['url'];
-        /** @var \Drupal\Core\Url $error_url */
         $error_url = clone $batch_url;
         $query_options = $error_url->getOption('query');
         $query_options['id'] = $batch['id'];
@@ -326,13 +331,13 @@ class BatchProcessor implements BatchProcessorInterface {
         // Clear the way for the redirection to the batch processing page, by
         // saving and unsetting the 'destination', if there is any.
         $request = $this->requestStack->getCurrentRequest();
-        if ($request->query->has('destination')) {
+        if ($request && $request->query->has('destination')) {
           $batch['destination'] = $request->query->get('destination');
           $request->query->remove('destination');
         }
 
         // Store the batch.
-        $this->getBatchStorage()->create($batch);
+        $this->getBatchStorage()?->create($batch);
 
         // Set the batch number in the session to guarantee that it will stay
         // alive.
@@ -356,19 +361,20 @@ class BatchProcessor implements BatchProcessorInterface {
         $this->processQueue();
       }
     }
+    return NULL;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function &getCurrentBatch() {
+  public function &getCurrentBatch(): ?array {
     return $this->batch;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function processQueue() {
+  public function processQueue(): array|NULL|RedirectResponse {
     $batch       = &$this->getCurrentBatch();
     $current_set = &$this->getCurrentSet();
     // Indicate that this batch set needs to be initialized.
@@ -499,7 +505,7 @@ class BatchProcessor implements BatchProcessorInterface {
   /**
    * {@inheritdoc}
    */
-  public function &getCurrentSet() {
+  public function &getCurrentSet(): array {
     $batch = &$this->getCurrentBatch();
     return $batch['sets'][$batch['current_set']];
   }
@@ -507,7 +513,7 @@ class BatchProcessor implements BatchProcessorInterface {
   /**
    * {@inheritdoc}
    */
-  public function nextSet() {
+  public function nextSet(): bool {
     $batch = &$this->getCurrentBatch();
     if (isset($batch['sets'][$batch['current_set'] + 1])) {
       $batch['current_set']++;
@@ -520,13 +526,13 @@ class BatchProcessor implements BatchProcessorInterface {
       }
       return TRUE;
     }
-    return NULL;
+    return FALSE;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function finishedProcessing() {
+  public function finishedProcessing(): ?RedirectResponse {
     $batch = &$this->getCurrentBatch();
     $batch_finished_redirect = NULL;
 
@@ -560,7 +566,7 @@ class BatchProcessor implements BatchProcessorInterface {
 
     // Clean up the batch table and unset the static $batch variable.
     if ($batch['progressive']) {
-      $this->getBatchStorage()->delete($batch['id']);
+      $this->getBatchStorage()?->delete($batch['id']);
       foreach ($batch['sets'] as $batch_set) {
         if ($queue = $this->getQueue($batch_set)) {
           $queue->deleteQueue();
@@ -590,9 +596,7 @@ class BatchProcessor implements BatchProcessorInterface {
       if (isset($batch_finished_redirect)) {
         return $batch_finished_redirect;
       }
-      elseif (!isset($_batch['form_state'])) {
-        $_batch['form_state'] = new FormState();
-      }
+      $_batch['form_state'] ??= new FormState();
       if ($_batch['form_state']->getRedirect() === NULL) {
         $redirect = $_batch['batch_redirect'] ?: $_batch['source_url'];
         // Any path with a scheme does not correspond to a route.
@@ -602,7 +606,7 @@ class BatchProcessor implements BatchProcessorInterface {
             $redirect = Url::fromUri($options['path'], $options);
           }
           else {
-            $redirect = $this->getPathValidator()->getUrlIfValid($options['path']);
+            $redirect = $this->getPathValidator()?->getUrlIfValid($options['path']);
             if (!$redirect) {
               // Stay on the same page if the redirect was invalid.
               $redirect = Url::fromRoute('<current>');
@@ -636,19 +640,20 @@ class BatchProcessor implements BatchProcessorInterface {
         return new RedirectResponse($_batch['source_url']->setAbsolute()->toString());
       }
     }
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getQueueForBatch($batch) {
     return NULL;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function shutdown() {
+  public function getQueueForBatch($batch): ?QueueInterface {
+    return NULL;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function shutdown(): void {
     if (($batch = $this->getCurrentBatch()) && _batch_needs_update()) {
       $this->getBatchStorage()->update($batch);
     }
