@@ -484,9 +484,9 @@ class BatchProcessor implements BatchProcessorInterface {
         '@total'      => $total,
         '@current'    => floor($current),
         '@percentage' => $percentage,
-        '@elapsed'    => $this->dateFormatter->formatInterval($elapsed / 1000),
+        '@elapsed'    => $this->dateFormatter->formatInterval((int) ($elapsed / 1000)),
         // If possible, estimate remaining processing time.
-        '@estimate'   => ($current > 0) ? $this->dateFormatter->formatInterval(($elapsed * ($total - $current) / $current) / 1000) : '-',
+        '@estimate'   => ($current > 0) ? $this->dateFormatter->formatInterval((int) (($elapsed * ($total - $current) / $current) / 1000)) : '-',
       ];
       $message    = strtr($progress_message, $values);
       if (!empty($task_message)) {
@@ -549,7 +549,7 @@ class BatchProcessor implements BatchProcessorInterface {
             $batch_set['results'],
             $operations,
             $this->dateFormatter
-              ->formatInterval($batch_set['elapsed'] / 1000),
+              ->formatInterval((int) ($batch_set['elapsed'] / 1000)),
           ]);
           // If a batch 'finished' callback requested a redirect after the batch
           // is complete, save that for later use. If more than one batch set
