@@ -438,13 +438,13 @@ abstract class Connection {
    * @param string $table
    *   (optional) The table to find the prefix for.
    *
-   * @deprecated in drupal:10.0.0 and is removed from drupal:11.0.0.
+   * @deprecated in drupal:10.1.0 and is removed from drupal:11.0.0.
    * Instead, you should just use Connection::getPrefix().
    *
    * @see https://www.drupal.org/node/3260849
    */
   public function tablePrefix($table = 'default') {
-    @trigger_error(__METHOD__ . '() is deprecated in drupal:10.0.0 and is removed from drupal:11.0.0. Instead, you should just use Connection::getPrefix(). See https://www.drupal.org/node/3260849', E_USER_DEPRECATED);
+    @trigger_error(__METHOD__ . '() is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Instead, you should just use Connection::getPrefix(). See https://www.drupal.org/node/3260849', E_USER_DEPRECATED);
     return $this->prefix;
   }
 
