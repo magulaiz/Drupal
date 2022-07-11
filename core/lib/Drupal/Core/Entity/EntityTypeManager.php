@@ -248,7 +248,7 @@ class EntityTypeManager extends DefaultPluginManager implements EntityTypeManage
   /**
    * {@inheritdoc}
    */
-  public function getHandler($entity_type_id, $handler_type) {
+  public function getHandler($entity_type_id, $handler_type, $nested = FALSE) {
     if (!isset($this->handlers[$handler_type][$entity_type_id])) {
       $definition = $this->getDefinition($entity_type_id);
       $class = $definition->getHandlerClass($handler_type);
