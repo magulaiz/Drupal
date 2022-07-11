@@ -124,12 +124,14 @@
         this.listenTo(this.model, 'change:isActive', this.toggleTour);
 
         // Reposition the active tour within the viewport changes.
-        $(document)
-          .on('drupalViewportOffsetChange.tours', () => {
-            if (this.model.get('isActive') && this.model.get('activeTour').currentStep) {
-              this.model.get('activeTour').currentStep.tooltip.update();
-            }
-          });
+        $(document).on('drupalViewportOffsetChange.tours', () => {
+          if (
+            this.model.get('isActive') &&
+            this.model.get('activeTour').currentStep
+          ) {
+            this.model.get('activeTour').currentStep.tooltip.update();
+          }
+        });
       },
 
       /**
