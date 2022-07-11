@@ -250,16 +250,21 @@ class EntityTypeManager extends DefaultPluginManager implements EntityTypeManage
    * {@inheritdoc}
    */
   public function getHandler($entity_type_id, $handler_type, $nested = FALSE) {
-    if (!isset($this->handlers[$handler_type][$entity_type_id])) {
+    if (!isset($this->handlers[$handler_type][$entity_type_id]) || ($nested && !isset($this->handlers[$handler_type][$entity_type_id][$nested]))) {
       $definition = $this->getDefinition($entity_type_id);
-      $class = $definition->getHandlerClass($handler_type);
+      $class = $definition->getHandlerClass($handler_type, $nested);
       if (!$class) {
-        throw new InvalidPluginDefinitionException($entity_type_id, sprintf('The "%s" entity type did not specify a %s handler.', $entity_type_id, $handler_type));
+        throw new InvalidPluginDefinitionException($entity_type_id, sprintf('The "%s" entity type did not specify a %s handler.', $entity_type_id, ($nested ? "$handler_type:$nested" : $handler_type)));
       }
-      $this->handlers[$handler_type][$entity_type_id] = $this->createHandlerInstance($class, $definition);
+      if ($nested) {
+        $this->handlers[$handler_type][$entity_type_id][$nested] = $this->createHandlerInstance($class, $definition);
+      }
+      else {
+        $this->handlers[$handler_type][$entity_type_id] = $this->createHandlerInstance($class, $definition);
+      }
     }
 
-    return $nested ? $this->handlers[$handler_type][$nested] : $this->handlers[$handler_type][$entity_type_id];
+    return $nested ? $this->handlers[$handler_type][$entity_type_id][$nested] : $this->handlers[$handler_type][$entity_type_id];
   }
 
   /**
