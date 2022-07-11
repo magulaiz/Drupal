@@ -174,7 +174,7 @@ class EntityTypeManagerTest extends UnitTestCase {
   public function testGetStorage() {
     $class = $this->getTestHandlerClass();
     $entity = $this->prophesize(EntityTypeInterface::class);
-    $entity->getHandlerClass('storage')->willReturn($class);
+    $entity->getHandlerClass('storage', FALSE)->willReturn($class);
     $this->setUpEntityTypeDefinitions(['test_entity_type' => $entity]);
 
     $this->assertInstanceOf($class, $this->entityTypeManager->getStorage('test_entity_type'));
@@ -188,7 +188,7 @@ class EntityTypeManagerTest extends UnitTestCase {
   public function testGetListBuilder() {
     $class = $this->getTestHandlerClass();
     $entity = $this->prophesize(EntityTypeInterface::class);
-    $entity->getHandlerClass('list_builder')->willReturn($class);
+    $entity->getHandlerClass('list_builder', FALSE)->willReturn($class);
     $this->setUpEntityTypeDefinitions(['test_entity_type' => $entity]);
 
     $this->assertInstanceOf($class, $this->entityTypeManager->getListBuilder('test_entity_type'));
@@ -202,7 +202,7 @@ class EntityTypeManagerTest extends UnitTestCase {
   public function testGetViewBuilder() {
     $class = $this->getTestHandlerClass();
     $entity = $this->prophesize(EntityTypeInterface::class);
-    $entity->getHandlerClass('view_builder')->willReturn($class);
+    $entity->getHandlerClass('view_builder', FALSE)->willReturn($class);
     $this->setUpEntityTypeDefinitions(['test_entity_type' => $entity]);
 
     $this->assertInstanceOf($class, $this->entityTypeManager->getViewBuilder('test_entity_type'));
@@ -216,7 +216,7 @@ class EntityTypeManagerTest extends UnitTestCase {
   public function testGetAccessControlHandler() {
     $class = $this->getTestHandlerClass();
     $entity = $this->prophesize(EntityTypeInterface::class);
-    $entity->getHandlerClass('access')->willReturn($class);
+    $entity->getHandlerClass('access', FALSE)->willReturn($class);
     $this->setUpEntityTypeDefinitions(['test_entity_type' => $entity]);
 
     $this->assertInstanceOf($class, $this->entityTypeManager->getAccessControlHandler('test_entity_type'));
@@ -271,14 +271,14 @@ class EntityTypeManagerTest extends UnitTestCase {
   public function testGetHandler() {
     $class = get_class($this->getMockForAbstractClass(TestEntityHandlerBase::class));
     $apple = $this->prophesize(EntityTypeInterface::class);
-    $apple->getHandlerClass('storage')->willReturn($class);
+    $apple->getHandlerClass('storage', FALSE)->willReturn($storage_class);
 
     $this->setUpEntityTypeDefinitions([
       'apple' => $apple,
     ]);
 
     $apple_controller = $this->entityTypeManager->getHandler('apple', 'storage');
-    $this->assertInstanceOf($class, $apple_controller);
+    $this->assertInstanceOf($storage_class, $apple_controller);
     $this->assertInstanceOf(ModuleHandlerInterface::class, $apple_controller->moduleHandler);
     $this->assertInstanceOf(TranslationInterface::class, $apple_controller->stringTranslation);
   }
@@ -290,7 +290,7 @@ class EntityTypeManagerTest extends UnitTestCase {
    */
   public function testGetHandlerMissingHandler() {
     $entity = $this->prophesize(EntityTypeInterface::class);
-    $entity->getHandlerClass('storage')->willReturn('');
+    $entity->getHandlerClass('storage', FALSE)->willReturn('');
     $this->setUpEntityTypeDefinitions(['test_entity_type' => $entity]);
     $this->expectException(InvalidPluginDefinitionException::class);
     $this->entityTypeManager->getHandler('test_entity_type', 'storage');
