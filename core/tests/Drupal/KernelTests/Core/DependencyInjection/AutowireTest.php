@@ -6,6 +6,7 @@ use Drupal\autowire_test\TestInjection;
 use Drupal\autowire_test\TestInjection2;
 use Drupal\autowire_test\TestService;
 use Drupal\Core\Database\Connection;
+use Drupal\Core\DrupalKernelInterface;
 use Drupal\Core\Serialization\Yaml;
 use Drupal\KernelTests\KernelTestBase;
 
@@ -33,6 +34,8 @@ class AutowireTest extends KernelTestBase {
     $this->assertInstanceOf(TestInjection2::class, $service->getTestInjection2());
     // Ensure an autowired core class works.
     $this->assertInstanceOf(Connection::class, $service->getDatabase());
+    // Ensure an autowired core synthetic class works.
+    $this->assertInstanceOf(DrupalKernelInterface::class, $service->getKernel());
   }
 
   /**

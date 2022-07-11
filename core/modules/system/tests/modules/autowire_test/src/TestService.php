@@ -3,6 +3,7 @@
 namespace Drupal\autowire_test;
 
 use Drupal\Core\Database\Connection;
+use Drupal\Core\DrupalKernelInterface;
 
 class TestService {
 
@@ -21,10 +22,16 @@ class TestService {
    */
   protected $database;
 
-  public function __construct(TestInjectionInterface $test_injection, TestInjection2 $test_injection2, Connection $database) {
+  /**
+   * The Drupal kernel.
+   */
+  protected $kernel;
+
+  public function __construct(TestInjectionInterface $test_injection, TestInjection2 $test_injection2, Connection $database, DrupalKernelInterface $kernel) {
     $this->testInjection = $test_injection;
     $this->testInjection2 = $test_injection2;
     $this->database = $database;
+    $this->kernel = $kernel;
   }
 
   public function getTestInjection(): TestInjectionInterface {
@@ -37,6 +44,10 @@ class TestService {
 
   public function getDatabase(): Connection {
     return $this->database;
+  }
+
+  public function getKernel(): DrupalKernelInterface {
+    return $this->kernel;
   }
 
 }

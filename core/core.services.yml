@@ -57,8 +57,6 @@ parameters:
     supportsCredentials: false
   tempstore.expire: 604800
 services:
-  Symfony\Component\DependencyInjection\ContainerInterface: '@service_container'
-  Drupal\Core\DrupalKernelInterface: '@kernel'
   # Simple cache contexts, directly derived from the request context.
   cache_context.ip:
     class: Drupal\Core\Cache\Context\IpCacheContext
