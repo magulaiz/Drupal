@@ -45,8 +45,15 @@
       click: 'onClick'
     },
     initialize: function initialize() {
+      var _this = this;
+
       this.listenTo(this.model, 'change:tour change:isActive', this.render);
       this.listenTo(this.model, 'change:isActive', this.toggleTour);
+      $(document).on('drupalViewportOffsetChange.tours', function () {
+        if (_this.model.get('isActive') && _this.model.get('activeTour').currentStep) {
+          _this.model.get('activeTour').currentStep.tooltip.update();
+        }
+      });
     },
     render: function render() {
       this.$el.toggleClass('hidden', this._getTour().length === 0);
