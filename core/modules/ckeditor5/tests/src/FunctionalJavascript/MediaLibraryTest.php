@@ -83,6 +83,9 @@ class MediaLibraryTest extends WebDriverTestBase {
           'ckeditor5_sourceEditing' => [
             'allowed_tags' => [],
           ],
+          'media_media' => [
+            'allow_view_mode_override' => FALSE,
+          ],
         ],
       ],
     ])->save();
@@ -152,7 +155,7 @@ class MediaLibraryTest extends WebDriverTestBase {
     $this->pressEditorButton('Insert Drupal Media');
     $assert_session = $this->assertSession();
     $page = $this->getSession()->getPage();
-    $this->assertNotEmpty($assert_session->waitForId('drupal-modal'));
+    $this->assertNotEmpty($assert_session->waitForElementVisible('css', '#drupal-modal #media-library-content'));
 
     // Ensure that the tab order is correct.
     $tabs = $page->findAll('css', '.media-library-menu__link');
@@ -193,7 +196,8 @@ class MediaLibraryTest extends WebDriverTestBase {
     $this->drupalGet('/node/add/blog');
     $this->waitForEditor();
     $this->pressEditorButton('Insert Drupal Media');
-    $assert_session->waitForElement('css', '.js-media-library-item')->click();
+    $this->assertNotEmpty($assert_session->waitForElementVisible('css', '#drupal-modal #media-library-content'));
+    $assert_session->elementExists('css', '.js-media-library-item')->click();
     $assert_session->elementExists('css', '.ui-dialog-buttonpane')->pressButton('Insert selected');
     $this->assertNotEmpty($assert_session->waitForElementVisible('css', $media_preview_selector, 1000));
     $xpath = new \DOMXPath($this->getEditorDataAsDom());
@@ -228,12 +232,7 @@ class MediaLibraryTest extends WebDriverTestBase {
         ->setFilterConfig('media_embed', [
           'status' => TRUE,
           'settings' => [
-            'default_view_mode' => 'view_mode_1',
             'allowed_media_types' => $allowed_media_types,
-            'allowed_view_modes' => [
-              'view_mode_1' => 'view_mode_1',
-              'view_mode_2' => 'view_mode_2',
-            ],
           ],
         ])->save();
 
@@ -244,7 +243,7 @@ class MediaLibraryTest extends WebDriverTestBase {
       $this->pressEditorButton('Insert Drupal Media');
 
       $assert_session = $this->assertSession();
-      $this->assertNotEmpty($assert_session->waitForId('media-library-wrapper'));
+      $this->assertNotEmpty($assert_session->waitForElementVisible('css', '#drupal-modal #media-library-wrapper'));
 
       if (empty($allowed_media_types) || count($allowed_media_types) === 2) {
         $assert_session->elementExists('css', 'li.media-library-menu-image');
@@ -264,6 +263,42 @@ class MediaLibraryTest extends WebDriverTestBase {
         $assert_session->elementTextContains('css', '.media-library-item__name', 'Le baron Vladimir Harkonnen');
       }
     }
+  }
+
+  /**
+   * Ensures that alt text can be changed on Media Library inserted Media.
+   */
+  public function testAlt() {
+    $page = $this->getSession()->getPage();
+    $assert_session = $this->assertSession();
+
+    $this->drupalGet('/node/add/blog');
+    $this->waitForEditor();
+    $this->pressEditorButton('Insert Drupal Media');
+    $this->assertNotEmpty($assert_session->waitForElementVisible('css', '#drupal-modal #media-library-content'));
+    $assert_session->elementExists('css', '.js-media-library-item')->click();
+    $assert_session->elementExists('css', '.ui-dialog-buttonpane')->pressButton('Insert selected');
+    $this->assertNotEmpty($assert_session->waitForElementVisible('css', '.ck-widget.drupal-media img'));
+
+    // Test that clicking the media widget triggers a CKEditor balloon panel
+    // with a single button to override the alt text.
+    $this->click('.ck-widget.drupal-media');
+    $this->assertVisibleBalloon('[aria-label="Drupal Media toolbar"]');
+    // Click the "Override media image text alternative" button.
+    $this->getBalloonButton('Override media image alternative text')->click();
+    $this->assertVisibleBalloon('.ck-media-alternative-text-form');
+    // Assert that the value is currently empty.
+    $alt_override_input = $page->find('css', '.ck-balloon-panel .ck-media-alternative-text-form input[type=text]');
+    $this->assertSame('', $alt_override_input->getValue());
+
+    $test_alt = 'Alt text override';
+    $alt_override_input->setValue($test_alt);
+    $this->getBalloonButton('Save')->click();
+
+    $this->assertNotEmpty($assert_session->waitForElementVisible('css', '.ck-widget.drupal-media img[alt*="' . $test_alt . '"]'));
+    $xpath = new \DOMXPath($this->getEditorDataAsDom());
+    $drupal_media = $xpath->query('//drupal-media')[0];
+    $this->assertEquals($test_alt, $drupal_media->getAttribute('alt'));
   }
 
 }

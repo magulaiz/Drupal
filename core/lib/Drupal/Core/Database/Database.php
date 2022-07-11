@@ -272,7 +272,9 @@ abstract class Database {
    * Under normal circumstances the preferred way to specify database
    * credentials is via settings.php. However, this method allows them to be
    * added at arbitrary times, such as during unit tests, when connecting to
-   * admin-defined third party databases, etc.
+   * admin-defined third party databases, etc. Use
+   * \Drupal\Core\Database\Database::setActiveConnection to select the
+   * connection to use.
    *
    * If the given key/target pair already exists, this method will be ignored.
    *
@@ -284,6 +286,8 @@ abstract class Database {
    *   The database connection information, as defined in settings.php. The
    *   structure of this array depends on the database driver it is connecting
    *   to.
+   *
+   * @see \Drupal\Core\Database\Database::setActiveConnection
    */
   final public static function addConnectionInfo($key, $target, array $info) {
     if (empty(self::$databaseInfo[$key][$target])) {
@@ -404,8 +408,8 @@ abstract class Database {
 
     $driver_class = self::$databaseInfo[$key][$target]['namespace'] . '\\Connection';
 
-    $pdo_connection = $driver_class::open(self::$databaseInfo[$key][$target]);
-    $new_connection = new $driver_class($pdo_connection, self::$databaseInfo[$key][$target]);
+    $client_connection = $driver_class::open(self::$databaseInfo[$key][$target]);
+    $new_connection = new $driver_class($client_connection, self::$databaseInfo[$key][$target]);
     $new_connection->setTarget($target);
     $new_connection->setKey($key);
 
@@ -438,8 +442,8 @@ abstract class Database {
     else {
       unset(self::$connections[$key]);
     }
-    // Force garbage collection to run. This ensures that PDO connection objects
-    // and destroyed and results in the connections being closed.
+    // Force garbage collection to run. This ensures that client connection
+    // objects and results in the connection being being closed are destroyed.
     gc_collect_cycles();
   }
 
