@@ -258,7 +258,7 @@ class EntityTypeManager extends DefaultPluginManager implements EntityTypeManage
       $this->handlers[$handler_type][$entity_type_id] = $this->createHandlerInstance($class, $definition);
     }
 
-    return $this->handlers[$handler_type][$entity_type_id];
+    return $nested ? $this->handlers[$handler_type][$nested] : $this->handlers[$handler_type][$entity_type_id];
   }
 
   /**
