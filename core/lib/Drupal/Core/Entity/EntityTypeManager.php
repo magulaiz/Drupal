@@ -38,7 +38,8 @@ class EntityTypeManager extends DefaultPluginManager implements EntityTypeManage
   use ContainerAwareTrait;
 
   /**
-   * Contains instantiated handlers keyed by handler type and entity type.
+   * Contains instantiated handlers keyed by handler type, entity type, and
+   * optionally nested type.
    *
    * @var array
    */
