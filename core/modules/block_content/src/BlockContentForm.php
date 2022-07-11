@@ -36,6 +36,24 @@ class BlockContentForm extends ContentEntityForm {
     // names.
     $form['#attributes']['class'][0] = 'block-' . Html::getClass($block->bundle()) . '-form';
 
+    // Block content author information for administrators.
+    if (isset($form['uid'])) {
+      $form['author'] = [
+        '#type' => 'details',
+        '#title' => $this->t('Authoring information'),
+        '#group' => 'advanced',
+        '#attributes' => [
+          'class' => ['block-content-form-author'],
+        ],
+        '#weight' => 90,
+        '#optional' => TRUE,
+      ];
+
+      $form['uid']['#group'] = 'author';
+    }
+
+    $form['#attached']['library'][] = 'block_content/form';
+
     return $form;
   }
 
