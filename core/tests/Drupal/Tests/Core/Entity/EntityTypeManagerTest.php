@@ -269,9 +269,11 @@ class EntityTypeManagerTest extends UnitTestCase {
    * @covers ::getHandler
    */
   public function testGetHandler() {
-    $class = get_class($this->getMockForAbstractClass(TestEntityHandlerBase::class));
+    $storage_class = get_class($this->getMockForAbstractClass(TestEntityHandlerBase::class));
+    $nested_class = get_class($this->getMockForAbstractClass(TestEntityHandlerBase::class));
     $apple = $this->prophesize(EntityTypeInterface::class);
     $apple->getHandlerClass('storage', FALSE)->willReturn($storage_class);
+    $apple->getHandlerClass('parent', 'nested')->willReturn($nested_class);
 
     $this->setUpEntityTypeDefinitions([
       'apple' => $apple,
@@ -281,6 +283,11 @@ class EntityTypeManagerTest extends UnitTestCase {
     $this->assertInstanceOf($storage_class, $apple_controller);
     $this->assertInstanceOf(ModuleHandlerInterface::class, $apple_controller->moduleHandler);
     $this->assertInstanceOf(TranslationInterface::class, $apple_controller->stringTranslation);
+
+    $apple_nested_handler = $this->entityTypeManager->getHandler('apple', 'parent', 'nested');
+    $this->assertInstanceOf($nested_class, $apple_nested_handler);
+    $this->assertInstanceOf(ModuleHandlerInterface::class, $apple_nested_handler->moduleHandler);
+    $this->assertInstanceOf(TranslationInterface::class, $apple_nested_handler->stringTranslation);
   }
 
   /**
