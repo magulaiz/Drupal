@@ -15,8 +15,9 @@ services:
     alias: 'Drupal\autowire_test\TestInjection'
     public: false
 
-  # A service that tests autowiring for two constructor arguments:
+  # A service that tests autowiring for three constructor arguments:
   # - One type-hinted to TestInjectionInterface.
   # - One type-hinted to TestInjection2.
+  # - One type-hinted to \Drupal\Core\Database\Connection.
   Drupal\autowire_test\TestService:
     autowire: true
