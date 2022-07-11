@@ -92,14 +92,8 @@ class JsCollectionRenderer implements AssetCollectionRendererInterface {
           $query_string_separator = (strpos($js_asset['data'], '?') !== FALSE) ? '&' : '?';
           $element['#attributes']['src'] = $this->fileUrlGenerator->generateString($js_asset['data']);
           // Add the cache-busting query string if this is an aggregate file
-          // and settings enabled
-          if (Settings::get('css_js_query_string_for_compressed', '1111') && isset($js_asset['preprocessed'])) {
-            $element['#attributes']['src'] .= $query_string_separator . ($js_asset['cache'] ? $query_string : REQUEST_TIME);
-          }
-
-          // Only add the cache-busting query string if this isn't an aggregate
-          // file.
-          if (!isset($js_asset['preprocessed'])) {
+          // and settings enabled or if this isn't an aggregate file.
+          if (Settings::get('css_js_query_string_for_compressed', FALSE) || !isset($js_asset['preprocessed'])) {
             $element['#attributes']['src'] .= $query_string_separator . ($js_asset['cache'] ? $query_string : REQUEST_TIME);
           }
           break;
