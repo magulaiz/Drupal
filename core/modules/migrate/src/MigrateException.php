@@ -13,7 +13,7 @@ class MigrateException extends \Exception {
   /**
    * The level of the error being reported.
    *
-   * The value is a \Drupal\migrate\Plugin\MigrationInterface::MESSAGE_* constant.
+   * The value is a MigrationInterface::MESSAGE_* constant.
    *
    * @var int
    *
@@ -24,7 +24,7 @@ class MigrateException extends \Exception {
   /**
    * The status to record in the map table for the current item.
    *
-   * The value is a \Drupal\migrate\Plugin\MigrateIdMapInterface::STATUS_* constant.
+   * The value is a MigrateIdMapInterface::STATUS_* constant.
    *
    * @var int
    *
