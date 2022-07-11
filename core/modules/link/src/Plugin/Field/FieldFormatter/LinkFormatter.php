@@ -255,26 +255,27 @@ class LinkFormatter extends FormatterBase {
 
       if ($url->isRouted() && preg_match('/^entity\.(\w+)\.canonical$/', $url->getRouteName(), $matches)) {
         // Check access to the canonical entity route.
-        $entity_type = $matches[1];
-        if (!empty($url->getRouteParameters()[$entity_type])) {
-          $entity_param = $url->getRouteParameters()[$entity_type];
-          if ($entity_param instanceof EntityInterface) {
-            $entity = $entity_param;
+        $link_entity_type = $matches[1];
+        if (!empty($url->getRouteParameters()[$link_entity_type])) {
+          $link_entity = NULL;
+          $link_entity_param = $url->getRouteParameters()[$link_entity_type];
+          if ($link_entity_param instanceof EntityInterface) {
+            $link_entity = $link_entity_param;
           }
-          elseif (is_string($entity_param) || is_numeric($entity_param)) {
+          elseif (is_string($link_entity_param) || is_numeric($link_entity_param)) {
             try {
-              $storage = $this->entityTypeManager->getStorage($entity_type);
-              $entity = $storage->load($entity_param);
+              $link_entity_type_storage = $this->entityTypeManager->getStorage($link_entity_type);
+              $link_entity = $link_entity_type_storage->load($link_entity_param);
             }
             catch (InvalidPluginDefinitionException | PluginNotFoundException $e) {
             }
           }
           // Set the entity in the correct language for display.
-          if ($entity instanceof TranslatableInterface) {
-            $entity = $this->entityRepository->getTranslationFromContext($entity, $langcode);
+          if ($link_entity instanceof TranslatableInterface) {
+            $link_entity = $this->entityRepository->getTranslationFromContext($link_entity, $langcode);
           }
-          if ($entity instanceof EntityInterface) {
-            $access = $entity->access('view', NULL, TRUE);
+          if ($link_entity instanceof EntityInterface) {
+            $access = $link_entity->access('view', NULL, TRUE);
             // Add the access result's cacheability, ::view() needs it.
             $item->_accessCacheability = CacheableMetadata::createFromObject($access);
             if (!$access->isAllowed()) {
