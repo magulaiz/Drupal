@@ -5,6 +5,7 @@ namespace Drupal\config\Form;
 use Drupal\Component\Serialization\Exception\InvalidDataTypeException;
 use Drupal\config\StorageReplaceDataWrapper;
 use Drupal\Core\Batch\BatchBuilder;
+use Drupal\Core\Batch\BatchProcessorInterface;
 use Drupal\Core\Config\ConfigImporter;
 use Drupal\Core\Config\ConfigImporterException;
 use Drupal\Core\Config\ConfigManagerInterface;
@@ -134,6 +135,13 @@ class ConfigSingleImportForm extends ConfirmFormBase {
   protected $data = [];
 
   /**
+   * Batch processor.
+   *
+   * @var \Drupal\Core\Batch\BatchProcessorInterface
+   */
+  protected BatchProcessorInterface $batchProcessor;
+
+  /**
    * Constructs a new ConfigSingleImportForm.
    *
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
@@ -160,8 +168,12 @@ class ConfigSingleImportForm extends ConfirmFormBase {
    *   The module extension list.
    * @param \Drupal\Core\Extension\ThemeExtensionList $extension_list_theme
    *   The theme extension list.
+   * @param \Drupal\Core\Batch\BatchProcessorInterface|null $batch_processor
+   *   Batch processor.
+   *
+   * @see https://www.drupal.org/node/3229844
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager, StorageInterface $config_storage, RendererInterface $renderer, EventDispatcherInterface $event_dispatcher, ConfigManagerInterface $config_manager, LockBackendInterface $lock, TypedConfigManagerInterface $typed_config, ModuleHandlerInterface $module_handler, ModuleInstallerInterface $module_installer, ThemeHandlerInterface $theme_handler, ModuleExtensionList $extension_list_module, ThemeExtensionList $extension_list_theme = NULL) {
+  public function __construct(EntityTypeManagerInterface $entity_type_manager, StorageInterface $config_storage, RendererInterface $renderer, EventDispatcherInterface $event_dispatcher, ConfigManagerInterface $config_manager, LockBackendInterface $lock, TypedConfigManagerInterface $typed_config, ModuleHandlerInterface $module_handler, ModuleInstallerInterface $module_installer, ThemeHandlerInterface $theme_handler, ModuleExtensionList $extension_list_module, ThemeExtensionList $extension_list_theme = NULL, BatchProcessorInterface $batch_processor = NULL) {
     $this->entityTypeManager = $entity_type_manager;
     $this->configStorage = $config_storage;
     $this->renderer = $renderer;
@@ -180,6 +192,11 @@ class ConfigSingleImportForm extends ConfirmFormBase {
       $extension_list_theme = \Drupal::service('extension.list.theme');
     }
     $this->themeExtensionList = $extension_list_theme;
+    if ($batch_processor === NULL) {
+      @trigger_error('Calling ' . __METHOD__ . ' without the $batch_processor argument is deprecated in drupal:10.1.0 and it will be required in drupal:11.0.0. See https://www.drupal.org/node/3229844', E_USER_DEPRECATED);
+      $batch_processor = \Drupal::service('batch.processor');
+    }
+    $this->batchProcessor = $batch_processor;
   }
 
   /**
@@ -198,7 +215,8 @@ class ConfigSingleImportForm extends ConfirmFormBase {
       $container->get('module_installer'),
       $container->get('theme_handler'),
       $container->get('extension.list.module'),
-      $container->get('extension.list.theme')
+      $container->get('extension.list.theme'),
+      $container->get('batch.processor')
     );
   }
 
@@ -421,9 +439,6 @@ class ConfigSingleImportForm extends ConfirmFormBase {
       return;
     }
 
-    /** @var \Drupal\Core\Batch\BatchProcessorInterface $batch_processor */
-    $batch_processor = \Drupal::service('batch.processor');
-
     /** @var \Drupal\Core\Config\ConfigImporter $config_importer */
     $config_importer = $form_state->get('config_importer');
     if ($config_importer->alreadyImporting()) {
@@ -441,7 +456,7 @@ class ConfigSingleImportForm extends ConfirmFormBase {
         foreach ($sync_steps as $sync_step) {
           $batch_builder->addOperation([ConfigImporterBatch::class, 'process'], [$config_importer, $sync_step]);
         }
-        $batch_processor->queue($batch_builder->toArray());
+        $this->batchProcessor->queue($batch_builder->toArray());
       }
       catch (ConfigImporterException $e) {
         // There are validation errors.

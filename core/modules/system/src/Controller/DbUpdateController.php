@@ -3,6 +3,7 @@
 namespace Drupal\system\Controller;
 
 use Drupal\Core\Batch\BatchBuilder;
+use Drupal\Core\Batch\BatchProcessorInterface;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Extension\ModuleHandlerInterface;
@@ -79,6 +80,13 @@ class DbUpdateController extends ControllerBase {
   protected $postUpdateRegistry;
 
   /**
+   * Batch processor.
+   *
+   * @var \Drupal\Core\Batch\BatchProcessorInterface
+   */
+  protected BatchProcessorInterface $batchProcessor;
+
+  /**
    * Constructs a new UpdateController.
    *
    * @param string $root
@@ -97,8 +105,12 @@ class DbUpdateController extends ControllerBase {
    *   The bare HTML page renderer.
    * @param \Drupal\Core\Update\UpdateRegistry $post_update_registry
    *   The post update registry.
+   * @param \Drupal\Core\Batch\BatchProcessorInterface|null $batch_processor
+   *   Batch processor.
+   *
+   * @see https://www.drupal.org/node/3229844
    */
-  public function __construct($root, KeyValueExpirableFactoryInterface $key_value_expirable_factory, CacheBackendInterface $cache, StateInterface $state, ModuleHandlerInterface $module_handler, AccountInterface $account, BareHtmlPageRendererInterface $bare_html_page_renderer, UpdateRegistry $post_update_registry) {
+  public function __construct($root, KeyValueExpirableFactoryInterface $key_value_expirable_factory, CacheBackendInterface $cache, StateInterface $state, ModuleHandlerInterface $module_handler, AccountInterface $account, BareHtmlPageRendererInterface $bare_html_page_renderer, UpdateRegistry $post_update_registry, BatchProcessorInterface $batch_processor = NULL) {
     $this->root = $root;
     $this->keyValueExpirableFactory = $key_value_expirable_factory;
     $this->cache = $cache;
@@ -107,6 +119,11 @@ class DbUpdateController extends ControllerBase {
     $this->account = $account;
     $this->bareHtmlPageRenderer = $bare_html_page_renderer;
     $this->postUpdateRegistry = $post_update_registry;
+    if ($batch_processor === NULL) {
+      @trigger_error('Calling ' . __METHOD__ . ' without the $batch_processor argument is deprecated in drupal:10.1.0 and it will be required in drupal:11.0.0. See https://www.drupal.org/node/3229844', E_USER_DEPRECATED);
+      $batch_processor = \Drupal::service('batch.processor');
+    }
+    $this->batchProcessor = $batch_processor;
   }
 
   /**
@@ -121,7 +138,8 @@ class DbUpdateController extends ControllerBase {
       $container->get('module_handler'),
       $container->get('current_user'),
       $container->get('bare_html_page_renderer'),
-      $container->get('update.post_update_registry')
+      $container->get('update.post_update_registry'),
+      $container->get('batch.processor')
     );
   }
 
@@ -635,12 +653,11 @@ class DbUpdateController extends ControllerBase {
         $batch_builder->addOperation('update_invoke_post_update', [$function]);
       }
     }
-    /** @var \Drupal\Core\Batch\BatchProcessorInterface $batch_processor */
-    $batch_processor = \Drupal::service('batch.processor');
-    $batch_processor->queue($batch_builder->toArray());
+
+    $this->batchProcessor->queue($batch_builder->toArray());
 
     // @todo Revisit once https://www.drupal.org/node/2548095 is in.
-    return $batch_processor->process(Url::fromUri('base://results'), Url::fromUri('base://start'));
+    return $this->batchProcessor->process(Url::fromUri('base://results'), Url::fromUri('base://start'));
   }
 
   /**

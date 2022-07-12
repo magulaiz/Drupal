@@ -3,6 +3,7 @@
 namespace Drupal\migrate_drupal_ui\Form;
 
 use Drupal\Core\Batch\BatchBuilder;
+use Drupal\Core\Batch\BatchProcessorInterface;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Extension\Exception\UnknownExtensionException;
 use Drupal\Core\Extension\ModuleHandlerInterface;
@@ -62,6 +63,13 @@ class ReviewForm extends MigrateUpgradeFormBase {
   protected $systemData;
 
   /**
+   * Batch processor.
+   *
+   * @var \Drupal\Core\Batch\BatchProcessorInterface
+   */
+  protected BatchProcessorInterface $batchProcessor;
+
+  /**
    * ReviewForm constructor.
    *
    * @param \Drupal\Core\State\StateInterface $state
@@ -76,11 +84,20 @@ class ReviewForm extends MigrateUpgradeFormBase {
    *   The config factory service.
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
    *   The module handler service.
+   * @param \Drupal\Core\Batch\BatchProcessorInterface|null $batch_processor
+   *   Batch processor.
+   *
+   * @see https://www.drupal.org/node/3229844
    */
-  public function __construct(StateInterface $state, MigrationPluginManagerInterface $migration_plugin_manager, PrivateTempStoreFactory $tempstore_private, MigrationState $migrationState, ConfigFactoryInterface $config_factory, ModuleHandlerInterface $module_handler) {
+  public function __construct(StateInterface $state, MigrationPluginManagerInterface $migration_plugin_manager, PrivateTempStoreFactory $tempstore_private, MigrationState $migrationState, ConfigFactoryInterface $config_factory, ModuleHandlerInterface $module_handler = NULL, BatchProcessorInterface $batch_processor = NULL) {
     parent::__construct($config_factory, $migration_plugin_manager, $state, $tempstore_private);
     $this->migrationState = $migrationState;
     $this->moduleHandler = $module_handler;
+    if ($batch_processor === NULL) {
+      @trigger_error('Calling ' . __METHOD__ . ' without the $batch_processor argument is deprecated in drupal:10.1.0 and it will be required in drupal:11.0.0. See https://www.drupal.org/node/3229844', E_USER_DEPRECATED);
+      $batch_processor = \Drupal::service('batch.processor');
+    }
+    $this->batchProcessor = $batch_processor;
   }
 
   /**
@@ -246,9 +263,7 @@ class ReviewForm extends MigrateUpgradeFormBase {
         'run',
       ], [array_keys($this->migrations), $config])
       ->setFinishCallback([MigrateUpgradeImportBatch::class, 'finished']);
-    /** @var \Drupal\Core\Batch\BatchProcessorInterface $batch_processor */
-    $batch_processor = \Drupal::service('batch.processor');
-    $batch_processor->queue($batch_builder->toArray());
+    $this->batchProcessor->queue($batch_builder->toArray());
     $form_state->setRedirect('<front>');
     $this->store->set('step', 'overview');
     $this->state->set('migrate_drupal_ui.performed', REQUEST_TIME);

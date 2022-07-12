@@ -9,9 +9,9 @@
  * form.inc.
  *
  * @see form.inc
- * @see batch_set()
- * @see batch_process()
- * @see batch_get()
+ * @see \Drupal\Core\Batch\BatchProcessorInterface::queue()
+ * @see \Drupal\Core\Batch\BatchProcessorInterface::process()
+ * @see \Drupal\Core\Batch\BatchProcessorInterface::getCurrentBatch()
  */
 
 use Drupal\Core\Batch\Percentage;
@@ -26,7 +26,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
  * @param \Symfony\Component\HttpFoundation\Request $request
  *   The current request object.
  *
- * @see _batch_shutdown()
+ * @see \Drupal\Core\Batch\BatchProcessorInterface::shutdown()
  */
 function _batch_page(Request $request) {
   /** @var \Drupal\Core\Batch\BatchProcessorInterface $batch_processor */
@@ -243,6 +243,29 @@ function _batch_progress_page() {
 }
 
 /**
+ * Processes sets in a batch.
+ *
+ * If the batch was marked for progressive execution (default), this executes as
+ * many operations in batch sets until an execution time of 1 second has been
+ * exceeded. It will continue with the next operation of the same batch set in
+ * the next request.
+ *
+ * @return array
+ *   An array containing a completion value (in percent) and a status message.
+ *
+ * @deprecated in drupal:10.1.0 and is removed from drupal:11.0.0.
+ *   Use \Drupal\Core\Batch\BatchProcessorInterface::process() instead.
+ *
+ * @see https://www.drupal.org/node/3229844
+ */
+function _batch_process() {
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use \Drupal\Core\Batch\BatchProcessorInterface::process() instead. See https://www.drupal.org/node/3229844', E_USER_DEPRECATED);
+  /** @var \Drupal\Core\Batch\BatchProcessorInterface $batch_processor */
+  $batch_processor = \Drupal::service('batch.processor');
+  return $batch_processor->process();
+}
+
+/**
  * Formats the percent completion for a batch set.
  *
  * @param int $total
@@ -259,16 +282,27 @@ function _batch_progress_page() {
  *   until we are finished, but we also never print more decimal places than
  *   are meaningful.
  *
+ * @deprecated in drupal:10.1.0 and is removed from drupal:11.0.0.
+ *   Use \Drupal\Core\Batch\Percentage::format() instead.
+ *
+ * @see https://www.drupal.org/node/3229844
  * @see \Drupal\Core\Batch\BatchProcessorInterface::processQueue()
  */
 function _batch_api_percentage($total, $current) {
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use \Drupal\Core\Batch\Percentage::format() instead. See https://www.drupal.org/node/3229844', E_USER_DEPRECATED);
   return Percentage::format($total, $current);
 }
 
 /**
  * Returns the batch set being currently processed.
+ *
+ * @deprecated in drupal:10.1.0 and is removed from drupal:11.0.0.
+ *   Use \Drupal\Core\Batch\BatchProcessorInterface::getCurrentSet() instead.
+ *
+ * @see https://www.drupal.org/node/3229844
  */
 function &_batch_current_set() {
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use \Drupal\Core\Batch\BatchProcessorInterface::getCurrentSet() instead. See https://www.drupal.org/node/3229844', E_USER_DEPRECATED);
   /** @var \Drupal\Core\Batch\BatchProcessorInterface $batch_processor */
   $batch_processor = \Drupal::service('batch.processor');
   // Only variables can be returned by reference.
@@ -286,8 +320,14 @@ function &_batch_current_set() {
  * @return true|null
  *   TRUE if a subsequent set was found in the batch; no value will be returned
  *   if no subsequent set was found.
+ *
+ * @deprecated in drupal:10.1.0 and is removed from drupal:11.0.0.
+ *   Use \Drupal\Core\Batch\BatchProcessorInterface::nextSet() instead.
+ *
+ * @see https://www.drupal.org/node/3229844
  */
 function _batch_next_set() {
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use \Drupal\Core\Batch\BatchProcessorInterface::nextSet() instead. See https://www.drupal.org/node/3229844', E_USER_DEPRECATED);
   /** @var \Drupal\Core\Batch\BatchProcessorInterface $batch_processor */
   $batch_processor = \Drupal::service('batch.processor');
   return $batch_processor->nextSet();
@@ -298,8 +338,14 @@ function _batch_next_set() {
  *
  * Call the 'finished' callback of each batch set to allow custom handling of
  * the results and resolve page redirection.
+ *
+ * @deprecated in drupal:10.1.0 and is removed from drupal:11.0.0.
+ *   Use \Drupal\Core\Batch\BatchProcessorInterface::finishedProcessing() instead.
+ *
+ * @see https://www.drupal.org/node/3229844
  */
 function _batch_finished() {
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use \Drupal\Core\Batch\BatchProcessorInterface::finishedProcessing() instead. See https://www.drupal.org/node/3229844', E_USER_DEPRECATED);
   /** @var \Drupal\Core\Batch\BatchProcessorInterface $batch_processor */
   $batch_processor = \Drupal::service('batch.processor');
   return $batch_processor->finishedProcessing();
@@ -310,10 +356,15 @@ function _batch_finished() {
  *
  * @see _batch_page()
  * @see drupal_register_shutdown_function()
+ *
+ * @deprecated in drupal:10.1.0 and is removed from drupal:11.0.0.
+ *   Use \Drupal\Core\Batch\BatchProcessorInterface::shutdown() instead.
+ *
+ * @see https://www.drupal.org/node/3229844
  */
 function _batch_shutdown() {
-  @trigger_error('_batch_shutdown() is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Use \Drupal\Core\Batch\BatchProcessorInterface::shutdown() instead. See https://www.drupal.org/node/3229844', E_USER_DEPRECATED);
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use \Drupal\Core\Batch\BatchProcessorInterface::shutdown() instead. See https://www.drupal.org/node/3229844', E_USER_DEPRECATED);
   /** @var \Drupal\Core\Batch\BatchProcessorInterface $batch_processor */
   $batch_processor = \Drupal::service('batch.processor');
-  $batch_processor->shutdown();
+  return $batch_processor->shutdown();
 }

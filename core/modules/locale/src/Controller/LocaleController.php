@@ -2,12 +2,46 @@
 
 namespace Drupal\locale\Controller;
 
+use Drupal\Core\Batch\BatchProcessorInterface;
 use Drupal\Core\Controller\ControllerBase;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Return response for manual check translations.
  */
 class LocaleController extends ControllerBase {
+
+  /**
+   * Batch processor.
+   *
+   * @var \Drupal\Core\Batch\BatchProcessorInterface
+   */
+  protected BatchProcessorInterface $batchProcessor;
+
+  /**
+   * Constructs a new LocaleController.
+   *
+   * @param \Drupal\Core\Batch\BatchProcessorInterface|null $batch_processor
+   *   Batch processor.
+   *
+   * @see https://www.drupal.org/node/3229844
+   */
+  public function __construct(BatchProcessorInterface $batch_processor = NULL) {
+    if ($batch_processor === NULL) {
+      @trigger_error('Calling ' . __METHOD__ . ' without the $batch_processor argument is deprecated in drupal:10.1.0 and it will be required in drupal:11.0.0. See https://www.drupal.org/node/3229844', E_USER_DEPRECATED);
+      $batch_processor = \Drupal::service('batch.processor');
+    }
+    $this->batchProcessor = $batch_processor;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container) {
+    return new static(
+      $container->get('batch.processor')
+    );
+  }
 
   /**
    * Checks for translation updates and displays the translations status.
@@ -26,13 +60,10 @@ class LocaleController extends ControllerBase {
     locale_translation_flush_projects();
     locale_translation_check_projects();
 
-    /** @var \Drupal\Core\Batch\BatchProcessorInterface $batch_processor */
-    $batch_processor = \Drupal::service('batch.processor');
-
     // Execute a batch if required. A batch is only used when remote files
     // are checked.
-    if ($batch_processor->getCurrentBatch()) {
-      return $batch_processor->process('admin/reports/translations');
+    if ($this->batchProcessor->getCurrentBatch()) {
+      return $this->batchProcessor->process('admin/reports/translations');
     }
 
     return $this->redirect('locale.translate_status');

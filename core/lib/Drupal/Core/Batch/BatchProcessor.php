@@ -230,19 +230,9 @@ class BatchProcessor implements BatchProcessorInterface {
   }
 
   /**
-   * Appends a batch set to a running batch.
-   *
-   * Inserts the new set right after the current one to ensure execution order,
-   * and stores its operations in a queue. If the current batch has already
-   * inserted a new set, additional sets will be inserted after the last
-   * inserted set.
-   *
-   * @param array &$batch
-   *   The batch array.
-   * @param array $batch_set
-   *   The batch set.
+   * {@inheritdoc}
    */
-  protected function appendSet(array &$batch, array $batch_set): void {
+  public function appendSet(array &$batch, array $batch_set): void {
     $append_after_index = $batch['current_set'];
     $reached_current_set = FALSE;
     foreach ($batch['sets'] as $index => $set) {

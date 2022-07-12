@@ -33,6 +33,23 @@ interface BatchProcessorInterface {
   public function queue(array $batch_definition): void;
 
   /**
+   * Appends a batch set to a running batch.
+   *
+   * Inserts the new set right after the current one to ensure execution order,
+   * and stores its operations in a queue. If the current batch has already
+   * inserted a new set, additional sets will be inserted after the last
+   * inserted set.
+   *
+   * @param array &$batch
+   *   The batch array.
+   * @param array $batch_set
+   *   The batch set.
+   *
+   * @internal
+   */
+  public function appendSet(array &$batch, array $batch_set): void;
+
+  /**
    * Returns a queue object for a batch set.
    *
    * @param array $batch_set

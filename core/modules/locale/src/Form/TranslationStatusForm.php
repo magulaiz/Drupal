@@ -2,6 +2,7 @@
 
 namespace Drupal\locale\Form;
 
+use Drupal\Core\Batch\BatchProcessorInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
@@ -31,12 +32,20 @@ class TranslationStatusForm extends FormBase {
   protected $state;
 
   /**
+   * Batch processor.
+   *
+   * @var \Drupal\Core\Batch\BatchProcessorInterface
+   */
+  protected BatchProcessorInterface $batchProcessor;
+
+  /**
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container) {
     return new static(
       $container->get('module_handler'),
-      $container->get('state')
+      $container->get('state'),
+      $container->get('batch.processor')
     );
   }
 
@@ -47,10 +56,19 @@ class TranslationStatusForm extends FormBase {
    *   A module handler.
    * @param \Drupal\Core\State\StateInterface $state
    *   The state service.
+   * @param \Drupal\Core\Batch\BatchProcessorInterface|null $batch_processor
+   *   Batch processor.
+   *
+   * @see https://www.drupal.org/node/3229844
    */
-  public function __construct(ModuleHandlerInterface $module_handler, StateInterface $state) {
+  public function __construct(ModuleHandlerInterface $module_handler, StateInterface $state, BatchProcessorInterface $batch_processor = NULL) {
     $this->moduleHandler = $module_handler;
     $this->state = $state;
+    if ($batch_processor === NULL) {
+      @trigger_error('Calling ' . __METHOD__ . ' without the $batch_processor argument is deprecated in drupal:10.1.0 and it will be required in drupal:11.0.0. See https://www.drupal.org/node/3229844', E_USER_DEPRECATED);
+      $batch_processor = \Drupal::service('batch.processor');
+    }
+    $this->batchProcessor = $batch_processor;
   }
 
   /**
@@ -276,9 +294,6 @@ class TranslationStatusForm extends FormBase {
     // translations will be overwritten by imported strings.
     $options = _locale_translation_default_update_options();
 
-    /** @var \Drupal\Core\Batch\BatchProcessorInterface $batch_processor */
-    $batch_processor = \Drupal::service('batch.processor');
-
     // If the status was updated recently we can immediately start fetching the
     // translation updates. If the status is expired we clear it and run a batch
     // to update the status and then fetch the translation updates.
@@ -286,15 +301,15 @@ class TranslationStatusForm extends FormBase {
     if ($last_checked < REQUEST_TIME - LOCALE_TRANSLATION_STATUS_TTL) {
       locale_translation_clear_status();
       $batch = locale_translation_batch_update_build([], $langcodes, $options);
-      $batch_processor->queue($batch);
+      $this->batchProcessor->queue($batch);
     }
     else {
       // Set a batch to download and import translations.
       $batch = locale_translation_batch_fetch_build($projects, $langcodes, $options);
-      $batch_processor->queue($batch);
+      $this->batchProcessor->queue($batch);
       // Set a batch to update configuration as well.
       if ($batch = locale_config_batch_update_components($options, $langcodes)) {
-        $batch_processor->queue($batch);
+        $this->batchProcessor->queue($batch);
       }
     }
   }

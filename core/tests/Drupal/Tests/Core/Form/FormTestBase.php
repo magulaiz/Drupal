@@ -3,12 +3,14 @@
 namespace Drupal\Tests\Core\Form;
 
 use Drupal\Component\Utility\Html;
+use Drupal\Core\Batch\BatchProcessorInterface;
 use Drupal\Core\Form\FormBuilder;
 use Drupal\Core\Form\FormInterface;
 use Drupal\Core\Form\FormState;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Form\FormValidator;
 use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
@@ -143,6 +145,13 @@ abstract class FormTestBase extends UnitTestCase {
   protected $themeManager;
 
   /**
+   * Mocked batch processor.
+   *
+   * @var \Drupal\Core\Batch\BatchProcessorInterface|\PHPUnit\Framework\MockObject\MockObject
+   */
+  protected BatchProcessorInterface|MockObject $batchProcessor;
+
+  /**
    * {@inheritdoc}
    */
   protected function setUp(): void {
@@ -156,6 +165,7 @@ abstract class FormTestBase extends UnitTestCase {
     $this->formCache = $this->createMock('Drupal\Core\Form\FormCacheInterface');
     $this->cache = $this->createMock('Drupal\Core\Cache\CacheBackendInterface');
     $this->urlGenerator = $this->createMock('Drupal\Core\Routing\UrlGeneratorInterface');
+    $this->batchProcessor = $this->createMock(BatchProcessorInterface::class);
 
     $this->classResolver = $this->getClassResolverStub();
 
@@ -182,8 +192,7 @@ abstract class FormTestBase extends UnitTestCase {
     $form_error_handler = $this->createMock('Drupal\Core\Form\FormErrorHandlerInterface');
     $this->formValidator = new FormValidator($this->requestStack, $this->getStringTranslationStub(), $this->csrfToken, $this->logger, $form_error_handler);
     $this->formSubmitter = $this->getMockBuilder('Drupal\Core\Form\FormSubmitter')
-      ->setConstructorArgs([$this->requestStack, $this->urlGenerator])
-      ->onlyMethods(['batchGet'])
+      ->setConstructorArgs([$this->requestStack, $this->urlGenerator, $this->batchProcessor])
       ->getMock();
     $this->root = dirname(substr(__DIR__, 0, -strlen(__NAMESPACE__)), 2);
 
