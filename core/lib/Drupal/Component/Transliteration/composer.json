@@ -5,7 +5,6 @@
     "license": "GPL-2.0-or-later",
     "support": {
         "issues": "https://www.drupal.org/project/issues/drupal",
-        "irc": "irc://irc.freenode.net/drupal-contribute",
         "source": "https://www.drupal.org/project/drupal/git-instructions"
     },
     "autoload": {

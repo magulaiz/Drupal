@@ -1,5 +1,11 @@
 {
     "name": "drupal/core-bridge",
+    "abandoned": true,
+    "extra": {
+        "_readme": [
+            "This file was partially generated automatically. See: https://www.drupal.org/node/3293830"
+        ]
+    },
     "description": "Bridge.",
     "keywords": [
         "drupal"
@@ -14,10 +20,5 @@
         "psr-4": {
             "Drupal\\Component\\Bridge\\": ""
         }
-    },
-    "extra": {
-        "_readme": [
-            "This file was partially generated automatically. See: https://www.drupal.org/node/3293830"
-        ]
     }
 }
