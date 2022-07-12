@@ -119,14 +119,38 @@ trait BrowserHtmlDebugTrait {
       return;
     }
     $message = $message ?: $this->getSession()->getPage()->getContent();
-    $message = '<hr />ID #' . $this->htmlOutputCounter . ' (<a href="' . $this->htmlOutputClassName . '-' . ($this->htmlOutputCounter - 1) . '-' . $this->htmlOutputTestId . '.html">Previous</a> | <a href="' . $this->htmlOutputClassName . '-' . ($this->htmlOutputCounter + 1) . '-' . $this->htmlOutputTestId . '.html">Next</a>)<hr />' . $message;
-    $html_output_filename = $this->htmlOutputClassName . '-' . $this->htmlOutputCounter . '-' . $this->htmlOutputTestId . '.html';
+    $message = '<hr />ID #' . $this->htmlOutputCounter . ' (<a href="' . $this->htmlOutputFilename($this->htmlOutputCounter - 1) . '">Previous</a> | <a href="' . $this->htmlOutputFilename($this->htmlOutputCounter + 1) . '">Next</a>)<hr />' . $message;
+    $html_output_filename = $this->htmlOutputFilename($this->htmlOutputCounter);
     file_put_contents($this->htmlOutputDirectory . '/' . $html_output_filename, $message);
     file_put_contents($this->htmlOutputCounterStorage, $this->htmlOutputCounter++);
     // Do not use the file_url_generator service as the module_handler service
     // might not be available.
     $uri = $this->htmlOutputBaseUrl . '/sites/simpletest/browser_output/' . $html_output_filename;
     file_put_contents($this->htmlOutputFile, $uri . "\n", FILE_APPEND);
+  }
+
+  /**
+   * Creates a filename for an HTML output file.
+   *
+   * The filename is built up of the name of the test class, the test method,
+   * the data set identifier if one is being used, and a counter.
+   *
+   * @param int $counter
+   *   The counter for the output.
+   *
+   * @return string
+   *   The filename.
+   */
+  protected function htmlOutputFilename($counter) {
+    if ($this->usesDataProvider()) {
+      // Test uses a data provider: include the data set name.
+      $html_output_filename = $this->htmlOutputClassName . '-' . $this->getName(FALSE) . '-' . $this->dataName() . '-' . $counter . '-' . $this->htmlOutputTestId . '.html';
+    }
+    else {
+      $html_output_filename = $this->htmlOutputClassName . '-' . $this->getName() . '-' . $counter . '-' . $this->htmlOutputTestId . '.html';
+    }
+
+    return $html_output_filename;
   }
 
   /**
