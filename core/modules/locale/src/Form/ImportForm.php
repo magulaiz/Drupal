@@ -3,6 +3,7 @@
 namespace Drupal\locale\Form;
 
 use Drupal\Component\Utility\Environment;
+use Drupal\Core\Batch\BatchProcessorInterface;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Form\FormStateInterface;
@@ -39,12 +40,20 @@ class ImportForm extends FormBase {
   protected $languageManager;
 
   /**
+   * Batch processor.
+   *
+   * @var \Drupal\Core\Batch\BatchProcessorInterface
+   */
+  protected BatchProcessorInterface $batchProcessor;
+
+  /**
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container) {
     return new static(
       $container->get('module_handler'),
-      $container->get('language_manager')
+      $container->get('language_manager'),
+      $container->get('batch.processor')
     );
   }
 
@@ -55,10 +64,19 @@ class ImportForm extends FormBase {
    *   The module handler service.
    * @param \Drupal\language\ConfigurableLanguageManagerInterface $language_manager
    *   The configurable language manager.
+   * @param \Drupal\Core\Batch\BatchProcessorInterface|null $batch_processor
+   *   Batch processor.
+   *
+   * @see https://www.drupal.org/node/3229844
    */
-  public function __construct(ModuleHandlerInterface $module_handler, ConfigurableLanguageManagerInterface $language_manager) {
+  public function __construct(ModuleHandlerInterface $module_handler, ConfigurableLanguageManagerInterface $language_manager, BatchProcessorInterface $batch_processor = NULL) {
     $this->moduleHandler = $module_handler;
     $this->languageManager = $language_manager;
+    if ($batch_processor === NULL) {
+      @trigger_error('Calling ' . __METHOD__ . ' without the $batch_processor argument is deprecated in drupal:10.1.0 and it will be required in drupal:11.0.0. See https://www.drupal.org/node/3229844', E_USER_DEPRECATED);
+      $batch_processor = \Drupal::service('batch.processor');
+    }
+    $this->batchProcessor = $batch_processor;
   }
 
   /**
@@ -186,16 +204,12 @@ class ImportForm extends FormBase {
     ]);
     $this->moduleHandler->loadInclude('locale', 'bulk.inc');
     $file = locale_translate_file_attach_properties($this->file, $options);
-
-    /** @var \Drupal\Core\Batch\BatchProcessorInterface $batch_processor */
-    $batch_processor = \Drupal::service('batch.processor');
-
     $batch = locale_translate_batch_build([$file->uri => $file], $options);
-    $batch_processor->queue($batch);
+    $this->batchProcessor->queue($batch);
 
     // Create or update all configuration translations for this language.
     if ($batch = locale_config_batch_update_components($options, [$form_state->getValue('langcode')])) {
-      $batch_processor->queue($batch);
+      $this->batchProcessor->queue($batch);
     }
 
     $form_state->setRedirect('locale.translate_page');

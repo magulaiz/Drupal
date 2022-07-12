@@ -3,6 +3,7 @@
 namespace Drupal\update\Controller;
 
 use Drupal\Core\Batch\BatchBuilder;
+use Drupal\Core\Batch\BatchProcessorInterface;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Render\RendererInterface;
 use Drupal\update\UpdateFetcherInterface;
@@ -29,16 +30,32 @@ class UpdateController extends ControllerBase {
   protected $renderer;
 
   /**
+   * Batch processor.
+   *
+   * @var \Drupal\Core\Batch\BatchProcessorInterface
+   */
+  protected BatchProcessorInterface $batchProcessor;
+
+  /**
    * Constructs update status data.
    *
    * @param \Drupal\update\UpdateManagerInterface $update_manager
    *   Update Manager Service.
    * @param \Drupal\Core\Render\RendererInterface $renderer
    *   The renderer.
+   * @param \Drupal\Core\Batch\BatchProcessorInterface|null $batch_processor
+   *   Batch processor.
+   *
+   * @see https://www.drupal.org/node/3229844
    */
-  public function __construct(UpdateManagerInterface $update_manager, RendererInterface $renderer) {
+  public function __construct(UpdateManagerInterface $update_manager, RendererInterface $renderer, BatchProcessorInterface $batch_processor = NULL) {
     $this->updateManager = $update_manager;
     $this->renderer = $renderer;
+    if ($batch_processor === NULL) {
+      @trigger_error('Calling ' . __METHOD__ . ' without the $batch_processor argument is deprecated in drupal:10.1.0 and it will be required in drupal:11.0.0. See https://www.drupal.org/node/3229844', E_USER_DEPRECATED);
+      $batch_processor = \Drupal::service('batch.processor');
+    }
+    $this->batchProcessor = $batch_processor;
   }
 
   /**
@@ -47,7 +64,8 @@ class UpdateController extends ControllerBase {
   public static function create(ContainerInterface $container) {
     return new static(
       $container->get('update.manager'),
-      $container->get('renderer')
+      $container->get('renderer'),
+      $container->get('batch.processor')
     );
   }
 
@@ -93,10 +111,8 @@ class UpdateController extends ControllerBase {
       ->setProgressMessage(t('Trying to check available update data ...'))
       ->setErrorMessage(t('Error checking available update data.'))
       ->setFinishCallback('update_fetch_data_finished');
-    /** @var \Drupal\Core\Batch\BatchProcessorInterface $batch_processor */
-    $batch_processor = \Drupal::service('batch.processor');
-    $batch_processor->queue($batch_builder->toArray());
-    return $batch_processor->process('admin/reports/updates');
+    $this->batchProcessor->queue($batch_builder->toArray());
+    return $this->batchProcessor->process('admin/reports/updates');
   }
 
 }

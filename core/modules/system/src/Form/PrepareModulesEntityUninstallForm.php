@@ -3,6 +3,7 @@
 namespace Drupal\system\Form;
 
 use Drupal\Core\Batch\BatchBuilder;
+use Drupal\Core\Batch\BatchProcessorInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\ConfirmFormBase;
 use Drupal\Core\Form\FormStateInterface;
@@ -34,13 +35,29 @@ class PrepareModulesEntityUninstallForm extends ConfirmFormBase {
   protected $entityTypeManager;
 
   /**
+   * Batch processor.
+   *
+   * @var \Drupal\Core\Batch\BatchProcessorInterface
+   */
+  protected BatchProcessorInterface $batchProcessor;
+
+  /**
    * Constructs a PrepareModulesEntityUninstallForm object.
    *
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    *   The entity type manager.
+   * @param \Drupal\Core\Batch\BatchProcessorInterface|null $batch_processor
+   *   Batch processor.
+   *
+   * @see https://www.drupal.org/node/3229844
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager) {
+  public function __construct(EntityTypeManagerInterface $entity_type_manager, BatchProcessorInterface $batch_processor = NULL) {
     $this->entityTypeManager = $entity_type_manager;
+    if ($batch_processor === NULL) {
+      @trigger_error('Calling ' . __METHOD__ . ' without the $batch_processor argument is deprecated in drupal:10.1.0 and it will be required in drupal:11.0.0. See https://www.drupal.org/node/3229844', E_USER_DEPRECATED);
+      $batch_processor = \Drupal::service('batch.processor');
+    }
+    $this->batchProcessor = $batch_processor;
   }
 
   /**
@@ -48,7 +65,8 @@ class PrepareModulesEntityUninstallForm extends ConfirmFormBase {
    */
   public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('entity_type.manager')
+      $container->get('entity_type.manager'),
+      $container->get('batch.processor')
     );
   }
 
@@ -189,9 +207,7 @@ class PrepareModulesEntityUninstallForm extends ConfirmFormBase {
       ->setProgressMessage('')
       ->setFinishCallback([__CLASS__, 'moduleBatchFinished'])
       ->addOperation([__CLASS__, 'deleteContentEntities'], [$entity_type_id]);
-    /** @var \Drupal\Core\Batch\BatchProcessorInterface $batch_process */
-    $batch_process = \Drupal::service('batch.processor');
-    $batch_process->queue($batch_builder->toArray());
+    $this->batchProcessor->queue($batch_builder->toArray());
   }
 
   /**

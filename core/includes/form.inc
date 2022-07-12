@@ -738,11 +738,42 @@ function template_preprocess_form_element_label(&$variables) {
  *       Typically, the class will either be \Drupal\Core\Queue\Batch or
  *       \Drupal\Core\Queue\BatchMemory. Defaults to Batch if progressive is
  *       TRUE, or to BatchMemory if progressive is FALSE.
+ *
+ * @deprecated in drupal:10.1.0 and is removed from drupal:11.0.0.
+ *   Use \Drupal\Core\Batch\BatchProcessorInterface::queue() instead.
+ *
+ * @see https://www.drupal.org/node/3229844
  */
 function batch_set($batch_definition) {
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use \Drupal\Core\Batch\BatchProcessorInterface::queue() instead. See https://www.drupal.org/node/3229844', E_USER_DEPRECATED);
   /** @var \Drupal\Core\Batch\BatchProcessorInterface $batch_processor */
   $batch_processor = \Drupal::service('batch.processor');
   $batch_processor->queue($batch_definition);
+}
+
+/**
+ * Appends a batch set to a running batch.
+ *
+ * Inserts the new set right after the current one to ensure execution order,
+ * and stores its operations in a queue. If the current batch has already
+ * inserted a new set, additional sets will be inserted after the last inserted
+ * set.
+ *
+ * @param &$batch
+ *   The batch array.
+ * @param $batch_set
+ *   The batch set.
+ *
+ * @deprecated in drupal:10.1.0 and is removed from drupal:11.0.0.
+ *   Use \Drupal\Core\Batch\BatchProcessorInterface::appendSet() instead.
+ *
+ * @see https://www.drupal.org/node/3229844
+ */
+function _batch_append_set(&$batch, $batch_set) {
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use \Drupal\Core\Batch\BatchProcessorInterface::queue() instead. See https://www.drupal.org/node/3229844', E_USER_DEPRECATED);
+  /** @var \Drupal\Core\Batch\BatchProcessorInterface $batch_processor */
+  $batch_processor = \Drupal::service('batch.processor');
+  $batch_processor->appendSet($batch, $batch_set);
 }
 
 /**
@@ -773,8 +804,14 @@ function batch_set($batch_definition) {
  *
  * @return \Symfony\Component\HttpFoundation\RedirectResponse|null
  *   A redirect response if the batch is progressive. No return value otherwise.
+ *
+ * @deprecated in drupal:10.1.0 and is removed from drupal:11.0.0.
+ *   Use \Drupal\Core\Batch\BatchProcessorInterface::process() instead.
+ *
+ * @see https://www.drupal.org/node/3229844
  */
 function batch_process($redirect = NULL, Url $url = NULL, $redirect_callback = NULL) {
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use \Drupal\Core\Batch\BatchProcessorInterface::process() instead. See https://www.drupal.org/node/3229844', E_USER_DEPRECATED);
   /** @var \Drupal\Core\Batch\BatchProcessorInterface $batch_processor */
   $batch_processor = \Drupal::service('batch.processor');
   $batch_processor->process($redirect, $url, $redirect_callback);
@@ -782,8 +819,14 @@ function batch_process($redirect = NULL, Url $url = NULL, $redirect_callback = N
 
 /**
  * Retrieves the current batch.
+ *
+ * @deprecated in drupal:10.1.0 and is removed from drupal:11.0.0.
+ *   Use \Drupal\Core\Batch\BatchProcessorInterface::getCurrentBatch() instead.
+ *
+ * @see https://www.drupal.org/node/3229844
  */
 function &batch_get() {
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use \Drupal\Core\Batch\BatchProcessorInterface::getCurrentBatch() instead. See https://www.drupal.org/node/3229844', E_USER_DEPRECATED);
   /** @var \Drupal\Core\Batch\BatchProcessorInterface $batch_processor */
   $batch_processor = \Drupal::service('batch.processor');
   return $batch_processor->getCurrentBatch();
@@ -801,8 +844,14 @@ function &batch_get() {
  *   The batch array.
  * @param $set_id
  *   The id of the set to process.
+ *
+ * @deprecated in drupal:10.1.0 and is removed from drupal:11.0.0.
+ *   Use \Drupal\Core\Batch\BatchProcessorInterface::queuePopulate() instead.
+ *
+ * @see https://www.drupal.org/node/3229844
  */
 function _batch_populate_queue(&$batch, $set_id) {
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use \Drupal\Core\Batch\BatchProcessorInterface::queuePopulate() instead. See https://www.drupal.org/node/3229844', E_USER_DEPRECATED);
   /** @var \Drupal\Core\Batch\BatchProcessorInterface $batch_processor */
   $batch_processor = \Drupal::service('batch.processor');
   $batch_processor->queuePopulate($batch, $set_id);
@@ -816,8 +865,14 @@ function _batch_populate_queue(&$batch, $set_id) {
  *
  * @return \Drupal\Core\Queue\QueueInterface|null
  *   The queue object.
+ *
+ * @deprecated in drupal:10.1.0 and is removed from drupal:11.0.0.
+ *   Use \Drupal\Core\Batch\BatchProcessorInterface::getQueue() instead.
+ *
+ * @see https://www.drupal.org/node/3229844
  */
 function _batch_queue($batch_set) {
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use \Drupal\Core\Batch\BatchProcessorInterface::getQueue() instead. See https://www.drupal.org/node/3229844', E_USER_DEPRECATED);
   /** @var \Drupal\Core\Batch\BatchProcessorInterface $batch_processor */
   $batch_processor = \Drupal::service('batch.processor');
   return $batch_processor->getQueue($batch_set);

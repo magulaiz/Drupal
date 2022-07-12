@@ -2,7 +2,7 @@
 
 namespace Drupal\system\Controller;
 
-use Drupal\Core\Batch\BatchStorageInterface;
+use Drupal\Core\Batch\BatchProcessorInterface;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -15,13 +15,36 @@ use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 class BatchController implements ContainerInjectionInterface {
 
   /**
-   * Constructs a new BatchController.
+   * The app root.
+   *
+   * @var string
    */
-  public function __construct(
-    protected string $root,
-    protected BatchStorageInterface $batchStorage
-  ) {
-    require_once $this->root . '/core/includes/batch.inc';
+  protected $root;
+
+  /**
+   * Batch processor.
+   *
+   * @var \Drupal\Core\Batch\BatchProcessorInterface
+   */
+  protected BatchProcessorInterface $batchProcessor;
+
+  /**
+   * Constructs a new BatchController.
+   *
+   * @param string $root
+   *   The app root.
+   * @param \Drupal\Core\Batch\BatchProcessorInterface|null $batch_processor
+   *   Batch processor.
+   *
+   * @see https://www.drupal.org/node/3229844
+   */
+  public function __construct($root, BatchProcessorInterface $batch_processor = NULL) {
+    $this->root = $root;
+    if ($batch_processor === NULL) {
+      @trigger_error('Calling ' . __METHOD__ . ' without the $batch_processor argument is deprecated in drupal:10.1.0 and it will be required in drupal:11.0.0. See https://www.drupal.org/node/3229844', E_USER_DEPRECATED);
+      $batch_processor = \Drupal::service('batch.processor');
+    }
+    $this->batchProcessor = $batch_processor;
   }
 
   /**
@@ -30,7 +53,7 @@ class BatchController implements ContainerInjectionInterface {
   public static function create(ContainerInterface $container) {
     return new static(
       $container->getParameter('app.root'),
-      $container->get('batch.storage'),
+      $container->get('batch.processor')
     );
   }
 
@@ -82,10 +105,7 @@ class BatchController implements ContainerInjectionInterface {
    *   The page title.
    */
   public function batchPageTitle() {
-    /** @var \Drupal\Core\Batch\BatchProcessorInterface $batch_processor */
-    $batch_processor = \Drupal::service('batch.processor');
-
-    $current_set = $batch_processor->getCurrentSet();
+    $current_set = $this->batchProcessor->getCurrentSet();
     return !empty($current_set['title']) ? $current_set['title'] : '';
   }
 

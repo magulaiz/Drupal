@@ -3,6 +3,7 @@
 namespace Drupal\views\Form;
 
 use Drupal\Component\Utility\Html;
+use Drupal\Core\Batch\BatchProcessorInterface;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Path\CurrentPathStack;
@@ -34,16 +35,32 @@ class ViewsExposedForm extends FormBase {
   protected $currentPathStack;
 
   /**
+   * Batch processor.
+   *
+   * @var \Drupal\Core\Batch\BatchProcessorInterface
+   */
+  protected BatchProcessorInterface $batchProcessor;
+
+  /**
    * Constructs a new ViewsExposedForm.
    *
    * @param \Drupal\views\ExposedFormCache $exposed_form_cache
    *   The exposed form cache.
    * @param \Drupal\Core\Path\CurrentPathStack $current_path_stack
    *   The current path stack.
+   * @param \Drupal\Core\Batch\BatchProcessorInterface|null $batch_processor
+   *   Batch processor.
+   *
+   * @see https://www.drupal.org/node/3229844
    */
-  public function __construct(ExposedFormCache $exposed_form_cache, CurrentPathStack $current_path_stack) {
+  public function __construct(ExposedFormCache $exposed_form_cache, CurrentPathStack $current_path_stack, BatchProcessorInterface $batch_processor = NULL) {
     $this->exposedFormCache = $exposed_form_cache;
     $this->currentPathStack = $current_path_stack;
+    if ($batch_processor === NULL) {
+      @trigger_error('Calling ' . __METHOD__ . ' without the $batch_processor argument is deprecated in drupal:10.1.0 and it will be required in drupal:11.0.0. See https://www.drupal.org/node/3229844', E_USER_DEPRECATED);
+      $batch_processor = \Drupal::service('batch.processor');
+    }
+    $this->batchProcessor = $batch_processor;
   }
 
   /**
@@ -67,11 +84,8 @@ class ViewsExposedForm extends FormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
-    /** @var \Drupal\Core\Batch\BatchProcessorInterface $batch_processor */
-    $batch_processor = \Drupal::service('batch.processor');
-
     // Don't show the form when batch operations are in progress.
-    if ($batch = $batch_processor->getCurrentBatch() && isset($batch['current_set'])) {
+    if (($batch = $this->batchProcessor->getCurrentBatch()) && isset($batch['current_set'])) {
       return [
         // Set the theme callback to be nothing to avoid errors in template_preprocess_views_exposed_form().
         '#theme' => '',

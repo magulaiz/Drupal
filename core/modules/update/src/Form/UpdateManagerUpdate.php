@@ -3,6 +3,7 @@
 namespace Drupal\update\Form;
 
 use Drupal\Core\Batch\BatchBuilder;
+use Drupal\Core\Batch\BatchProcessorInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
@@ -37,16 +38,32 @@ class UpdateManagerUpdate extends FormBase {
   protected $state;
 
   /**
+   * Batch processor.
+   *
+   * @var \Drupal\Core\Batch\BatchProcessorInterface
+   */
+  protected BatchProcessorInterface $batchProcessor;
+
+  /**
    * Constructs a new UpdateManagerUpdate object.
    *
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
    *   The module handler.
    * @param \Drupal\Core\State\StateInterface $state
    *   The state service.
+   * @param \Drupal\Core\Batch\BatchProcessorInterface|null $batch_processor
+   *   Batch processor.
+   *
+   * @see https://www.drupal.org/node/3229844
    */
-  public function __construct(ModuleHandlerInterface $module_handler, StateInterface $state) {
+  public function __construct(ModuleHandlerInterface $module_handler, StateInterface $state, BatchProcessorInterface $batch_processor = NULL) {
     $this->moduleHandler = $module_handler;
     $this->state = $state;
+    if ($batch_processor === NULL) {
+      @trigger_error('Calling ' . __METHOD__ . ' without the $batch_processor argument is deprecated in drupal:10.1.0 and it will be required in drupal:11.0.0. See https://www.drupal.org/node/3229844', E_USER_DEPRECATED);
+      $batch_processor = \Drupal::service('batch.processor');
+    }
+    $this->batchProcessor = $batch_processor;
   }
 
   /**
@@ -62,7 +79,8 @@ class UpdateManagerUpdate extends FormBase {
   public static function create(ContainerInterface $container) {
     return new static(
       $container->get('module_handler'),
-      $container->get('state')
+      $container->get('state'),
+      $container->get('batch.processor')
     );
   }
 
@@ -389,9 +407,7 @@ class UpdateManagerUpdate extends FormBase {
         $form_state->getValue(['project_downloads', $project]),
       ]);
     }
-    /** @var \Drupal\Core\Batch\BatchProcessorInterface $batch_processor */
-    $batch_processor = \Drupal::service('batch.processor');
-    $batch_processor->queue($batch_builder->toArray());
+    $this->batchProcessor->queue($batch_builder->toArray());
   }
 
 }

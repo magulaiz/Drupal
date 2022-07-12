@@ -2,6 +2,7 @@
 
 namespace Drupal\system\Theme;
 
+use Drupal\Core\Batch\BatchProcessorInterface;
 use Drupal\Core\Batch\BatchStorageInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Theme\ThemeNegotiatorInterface;
@@ -27,16 +28,32 @@ class BatchNegotiator implements ThemeNegotiatorInterface {
   protected $requestStack;
 
   /**
+   * Batch processor.
+   *
+   * @var \Drupal\Core\Batch\BatchProcessorInterface
+   */
+  protected BatchProcessorInterface $batchProcessor;
+
+  /**
    * Constructs a BatchNegotiator.
    *
    * @param \Drupal\Core\Batch\BatchStorageInterface $batch_storage
    *   The batch storage.
    * @param \Symfony\Component\HttpFoundation\RequestStack $request_stack
    *   The request stack used to retrieve the current request.
+   * @param \Drupal\Core\Batch\BatchProcessorInterface|null $batch_processor
+   *   Batch processor.
+   *
+   * @see https://www.drupal.org/node/3229844
    */
-  public function __construct(BatchStorageInterface $batch_storage, RequestStack $request_stack) {
+  public function __construct(BatchStorageInterface $batch_storage, RequestStack $request_stack, BatchProcessorInterface $batch_processor = NULL) {
     $this->batchStorage = $batch_storage;
     $this->requestStack = $request_stack;
+    if ($batch_processor === NULL) {
+      @trigger_error('Calling ' . __METHOD__ . ' without the $batch_processor argument is deprecated in drupal:10.1.0 and it will be required in drupal:11.0.0. See https://www.drupal.org/node/3229844', E_USER_DEPRECATED);
+      $batch_processor = \Drupal::service('batch.processor');
+    }
+    $this->batchProcessor = $batch_processor;
   }
 
   /**
@@ -50,12 +67,9 @@ class BatchNegotiator implements ThemeNegotiatorInterface {
    * {@inheritdoc}
    */
   public function determineActiveTheme(RouteMatchInterface $route_match) {
-    /** @var \Drupal\Core\Batch\BatchProcessorInterface $batch_processor */
-    $batch_processor = \Drupal::service('batch.processor');
-
     // Retrieve the current state of the batch.
     $request = $this->requestStack->getCurrentRequest();
-    $batch = &$batch_processor->getCurrentBatch();
+    $batch = &$this->batchProcessor->getCurrentBatch();
     if (!$batch && $request->request->has('id')) {
       $batch = $this->batchStorage->load($request->request->get('id'));
     }
