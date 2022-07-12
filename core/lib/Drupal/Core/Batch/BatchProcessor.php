@@ -184,11 +184,9 @@ class BatchProcessor implements BatchProcessorInterface {
    */
   public function queue(array $batch_definition): void {
     if ($batch_definition) {
-      $batch = &$this->getCurrentBatch();
-
       // Initialize the batch if needed.
-      if (empty($batch)) {
-        $batch = [
+      if (empty($this->batch)) {
+        $this->batch = [
           'sets' => [],
           'has_form_submits' => FALSE,
         ];
@@ -220,21 +218,73 @@ class BatchProcessor implements BatchProcessorInterface {
       $batch_set['count'] = $batch_set['total'];
 
       // Add the set to the batch.
-      if (empty($batch['id'])) {
+      if (empty($this->batch['id'])) {
         // The batch is not running yet. Simply add the new set.
-        $batch['sets'][] = $batch_set;
+        $this->batch['sets'][] = $batch_set;
       }
       else {
-        // The set is being added while the batch is running. Insert the new set
-        // right after the current one to ensure execution order, and store its
-        // operations in a queue.
-        $index = $batch['current_set'] + 1;
-        $slice1 = array_slice($batch['sets'], 0, $index);
-        $slice2 = array_slice($batch['sets'], $index);
-        $batch['sets'] = array_merge($slice1, [$batch_set], $slice2);
-        $this->queuePopulate($batch, $index);
+        // The set is being added while the batch is running.
+        $this->appendSet($this->batch, $batch_set);
       }
     }
+  }
+
+  /**
+   * Appends a batch set to a running batch.
+   *
+   * Inserts the new set right after the current one to ensure execution order,
+   * and stores its operations in a queue. If the current batch has already
+   * inserted a new set, additional sets will be inserted after the last
+   * inserted set.
+   *
+   * @param array &$batch
+   *   The batch array.
+   * @param array $batch_set
+   *   The batch set.
+   */
+  protected function appendSet(array &$batch, array $batch_set): void {
+    $append_after_index = $batch['current_set'];
+    $reached_current_set = FALSE;
+    foreach ($batch['sets'] as $index => $set) {
+      // As the indexes are not ordered numerically we need to first reach the
+      // index of the current set and then search for the proper place to append
+      // the new batch set.
+      if (!$reached_current_set) {
+        if ($index === $batch['current_set']) {
+          $reached_current_set = TRUE;
+        }
+        continue;
+      }
+      if ($index > $append_after_index) {
+        if (isset($set['appended_after_index'])) {
+          $append_after_index = $index;
+        }
+        else {
+          break;
+        }
+      }
+    }
+    $batch_set['appended_after_index'] = $append_after_index;
+
+    // Iterate by reference over the existing batch sets and assign them by
+    // reference in the new batch sets array in order not to break a retrieved
+    // reference to the current set. Among other places a reference to the
+    // current set is being retrieved in _batch_process(). Additionally, we have
+    // to preserve the original indexes, as they are used to generate the queue
+    // name of each batch set, otherwise the operations of the new batch set
+    // will be queued in the queue of a previous batch set.
+    // @see _batch_populate_queue().
+    $new_sets = [];
+    foreach ($batch['sets'] as $index => &$set) {
+      $new_sets[$index] = &$set;
+      if ($index === $append_after_index) {
+        $new_set_index = count($batch['sets']);
+        $new_sets[$new_set_index] = $batch_set;
+      }
+    }
+
+    $batch['sets'] = $new_sets;
+    $this->queuePopulate($batch, $new_set_index);
   }
 
   /**
@@ -281,9 +331,7 @@ class BatchProcessor implements BatchProcessorInterface {
    * {@inheritdoc}
    */
   public function process(Url|string $redirect = NULL, Url $url = NULL, string $redirect_callback = NULL): ?RedirectResponse {
-    $batch = &$this->getCurrentBatch();
-
-    if (isset($batch)) {
+    if ($this->batch) {
       // Add process information.
       $process_info = [
         'current_set' => 0,
@@ -294,58 +342,58 @@ class BatchProcessor implements BatchProcessorInterface {
         'theme' => $this->themeManager->getActiveTheme()->getName(),
         'redirect_callback' => $redirect_callback,
       ];
-      $batch += $process_info;
+      $this->batch += $process_info;
 
       // The batch is now completely built. Allow other modules to make changes
       // to the batch so that it is easier to reuse batch processes in other
       // environments.
-      $this->moduleHandler->alter('batch', $batch);
+      $this->moduleHandler->alter('batch', $this->batch);
 
       // Assign an arbitrary id: don't rely on a serial column in the 'batch'
       // table, since non-progressive batches skip database storage completely.
-      $batch['id'] = $this->getConnection()->nextId();
+      $this->batch['id'] = $this->getConnection()->nextId();
 
       // Move operations to a job queue. Non-progressive batches will use a
       // memory-based queue.
-      foreach ($batch['sets'] as $key => $batch_set) {
-        $this->queuePopulate($batch, $key);
+      foreach ($this->batch['sets'] as $key => $batch_set) {
+        $this->queuePopulate($this->batch, $key);
       }
 
       // Initiate processing.
-      if ($batch['progressive']) {
+      if ($this->batch['progressive']) {
         // Now that we have a batch id, we can generate the redirection link in
         // the generic error message.
         /** @var \Drupal\Core\Url $batch_url */
-        $batch_url = $batch['url'];
+        $batch_url = $this->batch['url'];
         $error_url = clone $batch_url;
         $query_options = $error_url->getOption('query');
-        $query_options['id'] = $batch['id'];
+        $query_options['id'] = $this->batch['id'];
         $query_options['op'] = 'finished';
         $error_url->setOption('query', $query_options);
 
-        $batch['error_message'] = $this->t('Please continue to <a href=":error_url">the error page</a>', [':error_url' => $error_url->toString(TRUE)->getGeneratedUrl()]);
+        $this->batch['error_message'] = $this->t('Please continue to <a href=":error_url">the error page</a>', [':error_url' => $error_url->toString(TRUE)->getGeneratedUrl()]);
 
         // Clear the way for the redirection to the batch processing page, by
         // saving and unsetting the 'destination', if there is any.
         $request = $this->requestStack->getCurrentRequest();
         if ($request && $request->query->has('destination')) {
-          $batch['destination'] = $request->query->get('destination');
+          $this->batch['destination'] = $request->query->get('destination');
           $request->query->remove('destination');
         }
 
         // Store the batch.
-        $this->getBatchStorage()?->create($batch);
+        $this->getBatchStorage()?->create($this->batch);
 
         // Set the batch number in the session to guarantee that it will stay
         // alive.
-        $_SESSION['batches'][$batch['id']] = TRUE;
+        $_SESSION['batches'][$this->batch['id']] = TRUE;
 
         // Redirect for processing.
         $query_options = $error_url->getOption('query');
         $query_options['op'] = 'start';
-        $query_options['id'] = $batch['id'];
+        $query_options['id'] = $this->batch['id'];
         $batch_url->setOption('query', $query_options);
-        if (($function = $batch['redirect_callback']) && function_exists($function)) {
+        if (($function = $this->batch['redirect_callback']) && function_exists($function)) {
           $function($batch_url->toString(), ['query' => $query_options]);
         }
         else {
@@ -372,7 +420,6 @@ class BatchProcessor implements BatchProcessorInterface {
    * {@inheritdoc}
    */
   public function processQueue(): array|NULL|RedirectResponse {
-    $batch       = &$this->getCurrentBatch();
     $current_set = &$this->getCurrentSet();
     // Indicate that this batch set needs to be initialized.
     $set_changed = TRUE;
@@ -381,7 +428,7 @@ class BatchProcessor implements BatchProcessorInterface {
     // by \Drupal::formBuilder()->submitForm(), initialize a timer to determine
     // whether we need to proceed with the same batch phase when a processing
     // time of 1 second has been exceeded.
-    if ($batch['progressive']) {
+    if ($this->batch['progressive']) {
       Timer::start('batch_processing');
     }
 
@@ -394,6 +441,7 @@ class BatchProcessor implements BatchProcessorInterface {
     $finished = 1;
     // Initialize $old_set.
     $old_set = $current_set;
+    $task_message = '';
     while (!$current_set['success']) {
       // If this is the first time we iterate this batch set in the current
       // request, we check if it requires an additional file for functions
@@ -402,7 +450,7 @@ class BatchProcessor implements BatchProcessorInterface {
         include_once $this->root . '/' . $current_set['file'];
       }
 
-      $task_message = $label = '';
+      $task_message = '';
       // Assume a single pass operation and set the completion level to 1 by
       // default.
       $finished = 1;
@@ -448,14 +496,14 @@ class BatchProcessor implements BatchProcessorInterface {
       $queue = $this->getQueue($current_set);
 
       // If we are in progressive mode, break processing after 1 second.
-      if ($batch['progressive'] && Timer::read('batch_processing') > 1000) {
+      if ($this->batch['progressive'] && Timer::read('batch_processing') > 1000) {
         // Record elapsed wall clock time.
         $current_set['elapsed'] = round((microtime(TRUE) - $current_set['start']) * 1000, 2);
         break;
       }
     }
 
-    if ($batch['progressive']) {
+    if ($this->batch['progressive']) {
       // Gather progress information.
       // Reporting 100% progress will cause the whole batch to be considered
       // processed. If processing was paused right after moving to a new set,
@@ -477,7 +525,7 @@ class BatchProcessor implements BatchProcessorInterface {
       // Total progress is the number of operations that have fully run plus the
       // completion level of the current operation.
       $current    = $total - $remaining + $finished;
-      $percentage = _batch_api_percentage($total, $current);
+      $percentage = Percentage::format($total, $current);
       $elapsed    = $current_set['elapsed'] ?? 0;
       $values     = [
         '@remaining'  => $remaining,
@@ -489,11 +537,8 @@ class BatchProcessor implements BatchProcessorInterface {
         '@estimate'   => ($current > 0) ? $this->dateFormatter->formatInterval((int) (($elapsed * ($total - $current) / $current) / 1000)) : '-',
       ];
       $message    = strtr($progress_message, $values);
-      if (!empty($task_message)) {
-        $label = $task_message;
-      }
 
-      return [$percentage, $message, $label];
+      return [$percentage, $message, $task_message];
     }
     // If we are not in progressive mode, the entire batch has been processed.
     return $this->finishedProcessing();
@@ -503,23 +548,26 @@ class BatchProcessor implements BatchProcessorInterface {
    * {@inheritdoc}
    */
   public function &getCurrentSet(): array {
-    $batch = &$this->getCurrentBatch();
-    return $batch['sets'][$batch['current_set']];
+    return $this->batch['sets'][$this->batch['current_set']];
   }
 
   /**
    * {@inheritdoc}
    */
   public function nextSet(): bool {
-    $batch = &$this->getCurrentBatch();
-    if (isset($batch['sets'][$batch['current_set'] + 1])) {
-      $batch['current_set']++;
+    $set_indexes = array_keys($this->batch['sets']);
+    $current_set_index_key = array_search($this->batch['current_set'], $set_indexes);
+    if (isset($set_indexes[$current_set_index_key + 1])) {
+      $this->batch['current_set'] = $set_indexes[$current_set_index_key + 1];
       $current_set = &$this->getCurrentSet();
       if (isset($current_set['form_submit']) && ($callback = $current_set['form_submit']) && is_callable($callback)) {
         // We use our stored copies of $form and $form_state to account for
         // possible alterations by previous form submit handlers.
-        $complete_form = &$batch['form_state']->getCompleteForm();
-        call_user_func_array($callback, [&$complete_form, &$batch['form_state']]);
+        $complete_form = &$this->batch['form_state']->getCompleteForm();
+        call_user_func_array($callback, [
+          &$complete_form,
+          &$this->batch['form_state'],
+        ]);
       }
       return TRUE;
     }
@@ -530,11 +578,10 @@ class BatchProcessor implements BatchProcessorInterface {
    * {@inheritdoc}
    */
   public function finishedProcessing(): ?RedirectResponse {
-    $batch = &$this->getCurrentBatch();
     $batch_finished_redirect = NULL;
 
     // Execute the 'finished' callbacks for each batch set, if defined.
-    foreach ($batch['sets'] as $batch_set) {
+    foreach ($this->batch['sets'] as $batch_set) {
       if (isset($batch_set['finished'])) {
         // Check if the set requires an additional file for function
         // definitions.
@@ -561,24 +608,24 @@ class BatchProcessor implements BatchProcessorInterface {
       }
     }
 
-    // Clean up the batch table and unset the static $batch variable.
-    if ($batch['progressive']) {
-      $this->getBatchStorage()?->delete($batch['id']);
-      foreach ($batch['sets'] as $batch_set) {
+    // Clean up the batch table and unset the static $this->batch variable.
+    if ($this->batch['progressive']) {
+      $this->getBatchStorage()?->delete($this->batch['id']);
+      foreach ($this->batch['sets'] as $batch_set) {
         if ($queue = $this->getQueue($batch_set)) {
           $queue->deleteQueue();
         }
       }
       // Clean-up the session. Not needed for CLI updates.
       if (isset($_SESSION)) {
-        unset($_SESSION['batches'][$batch['id']]);
+        unset($_SESSION['batches'][$this->batch['id']]);
         if (empty($_SESSION['batches'])) {
           unset($_SESSION['batches']);
         }
       }
     }
-    $_batch = $batch;
-    $batch = NULL;
+    $_batch = $this->batch;
+    $this->batch = NULL;
 
     // Redirect if needed.
     if ($_batch['progressive']) {
@@ -651,8 +698,8 @@ class BatchProcessor implements BatchProcessorInterface {
    * {@inheritdoc}
    */
   public function shutdown(): void {
-    if (($batch = $this->getCurrentBatch()) && _batch_needs_update()) {
-      $this->getBatchStorage()->update($batch);
+    if (($this->batch) && _batch_needs_update()) {
+      $this->getBatchStorage()->update($this->batch);
     }
   }
 
