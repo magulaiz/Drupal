@@ -243,23 +243,6 @@ function _batch_progress_page() {
 }
 
 /**
- * Processes sets in a batch.
- *
- * If the batch was marked for progressive execution (default), this executes as
- * many operations in batch sets until an execution time of 1 second has been
- * exceeded. It will continue with the next operation of the same batch set in
- * the next request.
- *
- * @return array
- *   An array containing a completion value (in percent) and a status message.
- */
-function _batch_process() {
-  /** @var \Drupal\Core\Batch\BatchProcessorInterface $batch_processor */
-  $batch_processor = \Drupal::service('batch.processor');
-  return $batch_processor->processQueue();
-}
-
-/**
  * Formats the percent completion for a batch set.
  *
  * @param int $total
