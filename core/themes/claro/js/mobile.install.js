@@ -5,7 +5,7 @@
 * @preserve
 **/
 
-(function (Drupal) {
+(function () {
   function findActiveStep(steps) {
     for (var i = 0; i < steps.length; i++) {
       if (steps[i].className === 'is-active') {
@@ -35,4 +35,4 @@
   if (document.addEventListener) {
     document.addEventListener('DOMContentLoaded', installStepsSetup);
   }
-})(Drupal);
+})();
