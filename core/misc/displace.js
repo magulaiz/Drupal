@@ -104,4 +104,4 @@
     offsets: offsets,
     calculateOffset: calculateOffset
   });
-})(jQuery, Drupal, Drupal.debounce);
+})(cash, Drupal, Drupal.debounce);

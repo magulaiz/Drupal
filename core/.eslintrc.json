@@ -11,6 +11,7 @@
     "node": true
   },
   "globals": {
+    "cash": true,
     "Drupal": true,
     "drupalSettings": true,
     "drupalTranslations": true,

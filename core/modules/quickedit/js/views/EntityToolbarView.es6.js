@@ -3,7 +3,7 @@
  * A Backbone View that provides an entity level toolbar.
  */
 
-(function ($, _, Backbone, Drupal, debounce, Popper) {
+(function ($$$, $, _, Backbone, Drupal, debounce, Popper) {
   Drupal.quickedit.EntityToolbarView = Backbone.View.extend(
     /** @lends Drupal.quickedit.EntityToolbarView# */ {
       /**
@@ -37,7 +37,7 @@
       initialize(options) {
         const that = this;
         this.appModel = options.appModel;
-        this.$entity = $(this.model.get('el'));
+        this.$entity = $$$(this.model.get('el'));
 
         // Rerender whenever the entity state changes.
         this.listenTo(
@@ -60,9 +60,14 @@
 
         // Reposition the entity toolbar as the viewport and the position within
         // the viewport changes.
+        $$$(window).on(
+          'resize.quickedit scroll.quickedit',
+          debounce($$$.proxy(this.windowChangeHandler, this), 150),
+        );
+
         $(window).on(
-          'resize.quickedit scroll.quickedit drupalViewportOffsetChange.quickedit',
-          debounce($.proxy(this.windowChangeHandler, this), 150),
+          'drupalViewportOffsetChange.quickedit',
+          debounce($$$.proxy(this.windowChangeHandler, this), 150),
         );
 
         // Adjust the fence placement within which the entity toolbar may be
@@ -96,14 +101,14 @@
       render() {
         if (this.model.get('isActive')) {
           // If the toolbar container doesn't exist, create it.
-          const $body = $('body');
+          const $body = $$$('body');
           if ($body.children('#quickedit-entity-toolbar').length === 0) {
             $body.append(this.$el);
           }
           // The fence will define an area on the screen that the entity toolbar
           // will be positioned within.
           if ($body.children('#quickedit-toolbar-fence').length === 0) {
-            this.$fence = $(Drupal.theme('quickeditEntityToolbarFence'))
+            this.$fence = $$$(Drupal.theme('quickeditEntityToolbarFence'))
               .css(Drupal.displace())
               .appendTo($body);
           }
@@ -158,9 +163,8 @@
         this.$fence.remove();
 
         // Stop listening to additional events.
-        $(window).off(
-          'resize.quickedit scroll.quickedit drupalViewportOffsetChange.quickedit',
-        );
+        $$$(window).off('resize.quickedit scroll.quickedit');
+        $(window).off('drupalViewportOffsetChange.quickedit');
         $(document).off('drupalViewportOffsetChange.quickedit');
 
         Backbone.View.prototype.remove.call(this);
@@ -433,7 +437,7 @@
        *   The toolbar element.
        */
       buildToolbarEl() {
-        const $toolbar = $(
+        const $toolbar = $$$(
           Drupal.theme('quickeditEntityToolbar', {
             id: 'quickedit-entity-toolbar',
           }),
@@ -571,4 +575,4 @@
       },
     },
   );
-})(jQuery, _, Backbone, Drupal, Drupal.debounce, Popper);
+})(jQuery, cash, _, Backbone, Drupal, Drupal.debounce, Popper);

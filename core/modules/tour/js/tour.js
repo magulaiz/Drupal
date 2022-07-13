@@ -45,8 +45,15 @@
       click: 'onClick'
     },
     initialize: function initialize() {
+      var _this = this;
+
       this.listenTo(this.model, 'change:tour change:isActive', this.render);
       this.listenTo(this.model, 'change:isActive', this.toggleTour);
+      $(document).on('drupalViewportOffsetChange.tours', function () {
+        if (_this.model.get('isActive') && _this.model.get('activeTour').currentStep) {
+          _this.model.get('activeTour').currentStep.tooltip.update();
+        }
+      });
     },
     render: function render() {
       this.$el.toggleClass('hidden', this._getTour().length === 0);
@@ -167,4 +174,4 @@
   Drupal.theme.tourItemContent = function (tourStepConfig) {
     return "".concat(tourStepConfig.body, "<div class=\"tour-progress\">").concat(tourStepConfig.counter, "</div>");
   };
-})(jQuery, Backbone, Drupal, drupalSettings, document, window.Shepherd);
+})(cash, Backbone, Drupal, drupalSettings, document, window.Shepherd);

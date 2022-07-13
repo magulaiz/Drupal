@@ -3,7 +3,7 @@ tour:
   js:
     js/tour.js: {}
   dependencies:
-    - core/jquery
+    - core/cash
     - core/once
     - core/jquery.once.bc
     - core/drupal

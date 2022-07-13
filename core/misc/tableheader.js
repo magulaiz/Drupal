@@ -10,7 +10,7 @@
     var $table = $(table);
     this.$originalTable = $table;
     this.$originalHeader = $table.children('thead');
-    this.$originalHeaderCells = this.$originalHeader.find('> tr > th');
+    this.$originalHeaderCells = this.$originalHeader.find('tr > th');
     this.displayWeight = null;
     this.$originalTable.addClass('sticky-table');
     this.tableHeight = $table[0].clientHeight;
@@ -93,7 +93,7 @@
         position: 'fixed',
         top: '0px'
       }).append($stickyHeader).insertBefore(this.$originalTable);
-      this.$stickyHeaderCells = $stickyHeader.find('> tr > th');
+      this.$stickyHeaderCells = $stickyHeader.find('tr > th');
       this.recalculateSticky();
     },
     stickyPosition: function stickyPosition(offsetTop, offsetLeft) {
@@ -157,4 +157,4 @@
     }
   });
   Drupal.TableHeader = TableHeader;
-})(jQuery, Drupal, window.Drupal.displace);
+})(cash, Drupal, window.Drupal.displace);

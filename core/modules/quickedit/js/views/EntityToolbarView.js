@@ -5,7 +5,7 @@
 * @preserve
 **/
 
-(function ($, _, Backbone, Drupal, debounce, Popper) {
+(function ($$$, $, _, Backbone, Drupal, debounce, Popper) {
   Drupal.quickedit.EntityToolbarView = Backbone.View.extend({
     _fieldToolbarRoot: null,
     events: function events() {
@@ -19,11 +19,12 @@
     initialize: function initialize(options) {
       var that = this;
       this.appModel = options.appModel;
-      this.$entity = $(this.model.get('el'));
+      this.$entity = $$$(this.model.get('el'));
       this.listenTo(this.model, 'change:isActive change:isDirty change:state', this.render);
       this.listenTo(this.appModel, 'change:highlightedField change:activeField', this.render);
       this.listenTo(this.model.get('fields'), 'change:state', this.fieldStateChange);
-      $(window).on('resize.quickedit scroll.quickedit drupalViewportOffsetChange.quickedit', debounce($.proxy(this.windowChangeHandler, this), 150));
+      $$$(window).on('resize.quickedit scroll.quickedit', debounce($$$.proxy(this.windowChangeHandler, this), 150));
+      $(window).on('drupalViewportOffsetChange.quickedit', debounce($$$.proxy(this.windowChangeHandler, this), 150));
       $(document).on('drupalViewportOffsetChange.quickedit', function (event, offsets) {
         if (that.$fence) {
           that.$fence.css(offsets);
@@ -36,14 +37,14 @@
     },
     render: function render() {
       if (this.model.get('isActive')) {
-        var $body = $('body');
+        var $body = $$$('body');
 
         if ($body.children('#quickedit-entity-toolbar').length === 0) {
           $body.append(this.$el);
         }
 
         if ($body.children('#quickedit-toolbar-fence').length === 0) {
-          this.$fence = $(Drupal.theme('quickeditEntityToolbarFence')).css(Drupal.displace()).appendTo($body);
+          this.$fence = $$$(Drupal.theme('quickeditEntityToolbarFence')).css(Drupal.displace()).appendTo($body);
         }
 
         this.label();
@@ -74,7 +75,8 @@
     },
     remove: function remove() {
       this.$fence.remove();
-      $(window).off('resize.quickedit scroll.quickedit drupalViewportOffsetChange.quickedit');
+      $$$(window).off('resize.quickedit scroll.quickedit');
+      $(window).off('drupalViewportOffsetChange.quickedit');
       $(document).off('drupalViewportOffsetChange.quickedit');
       Backbone.View.prototype.remove.call(this);
     },
@@ -229,7 +231,7 @@
       clearTimeout(this.timer);
     },
     buildToolbarEl: function buildToolbarEl() {
-      var $toolbar = $(Drupal.theme('quickeditEntityToolbar', {
+      var $toolbar = $$$(Drupal.theme('quickeditEntityToolbar', {
         id: 'quickedit-entity-toolbar'
       }));
       $toolbar.find('.quickedit-toolbar-entity').prepend(Drupal.theme('quickeditToolgroup', {
@@ -292,4 +294,4 @@
       this.$el.removeClass('quickedit-animate-invisible');
     }
   });
-})(jQuery, _, Backbone, Drupal, Drupal.debounce, Popper);
+})(jQuery, cash, _, Backbone, Drupal, Drupal.debounce, Popper);
