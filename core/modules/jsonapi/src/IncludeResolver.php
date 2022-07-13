@@ -148,7 +148,7 @@ class IncludeResolver {
         }
         else {
           @trigger_error(
-            sprintf('Entity reference field items not implementing %s are deprecated in Drupal 9.5.0 and must do so in Drupal 10.0.0.', EntityReferenceItemInterface::class),
+            sprintf('Entity reference field items not implementing %s are deprecated in Drupal 9.5.0 and must do so in Drupal 11.0.0.', EntityReferenceItemInterface::class),
             E_USER_DEPRECATED
           );
           $target_type = $field_list->getFieldDefinition()->getFieldStorageDefinition()->getSetting('target_type');
