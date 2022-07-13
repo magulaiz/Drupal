@@ -27,7 +27,11 @@
       var header = document.querySelector('header[role="banner"]');
       var stepIndicator = document.createElement('div');
       stepIndicator.className = 'step-indicator';
-      stepIndicator.innerHTML = "\n        <span class=\"visually-hidden\">Install Step ".concat(findActiveStep(steps), " of ").concat(steps.length, "</span>\n        <span aria-hidden=\"true\">").concat(findActiveStep(steps), "/").concat(steps.length, "</span>\n      ");
+      var auralView = Drupal.t('Install Step @step of @total_steps', {
+        '@step': findActiveStep(steps),
+        '@total_steps': steps.length
+      });
+      stepIndicator.innerHTML = "\n        <span class=\"visually-hidden\">".concat(auralView, "</span>\n        <span aria-hidden=\"true\">").concat(findActiveStep(steps), "/").concat(steps.length, "</span>\n      ");
       header.appendChild(stepIndicator);
     }
   }

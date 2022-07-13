@@ -1,4 +1,4 @@
-(() => {
+((Drupal) => {
   function findActiveStep(steps) {
     for (let i = 0; i < steps.length; i++) {
       if (steps[i].className === 'is-active') {
@@ -18,10 +18,12 @@
       const header = document.querySelector('header[role="banner"]');
       const stepIndicator = document.createElement('div');
       stepIndicator.className = 'step-indicator';
+      const auralView = Drupal.t('Install Step @step of @total_steps', {
+        '@step': findActiveStep(steps),
+        '@total_steps': steps.length,
+      });
       stepIndicator.innerHTML = `
-        <span class="visually-hidden">Install Step ${findActiveStep(
-          steps,
-        )} of ${steps.length}</span>
+        <span class="visually-hidden">${auralView}</span>
         <span aria-hidden="true">${findActiveStep(steps)}/${steps.length}</span>
       `;
       header.appendChild(stepIndicator);
@@ -31,4 +33,4 @@
   if (document.addEventListener) {
     document.addEventListener('DOMContentLoaded', installStepsSetup);
   }
-})();
+})(Drupal);

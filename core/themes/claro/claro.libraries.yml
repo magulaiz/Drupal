@@ -106,6 +106,7 @@ install-page:
     theme:
       css/theme/install-page.css: {}
   dependencies:
+    - core/drupal
     - claro/maintenance-page
 
 drupal.nav-tabs:
