@@ -343,9 +343,6 @@ services:
   config.storage.sync:
     class: Drupal\Core\Config\FileStorage
     factory: Drupal\Core\Config\FileStorageFactory::getSync
-  config.storage.staging:
-    alias: config.storage.sync
-    deprecated: The "%alias_id%" service is deprecated in drupal:8.0.0 and is removed from drupal:10.0.0. Use the "config.storage.sync" service instead. See https://www.drupal.org/node/2574957
   config.storage.snapshot:
     class: Drupal\Core\Config\DatabaseStorage
     arguments: ['@database', config_snapshot]
@@ -1257,6 +1254,7 @@ services:
     class: Drupal\Core\EventSubscriber\ConfigImportSubscriber
     tags:
       - { name: event_subscriber }
+      - { name: service_collector, tag: 'module_install.uninstall_validator', call: addUninstallValidator }
     arguments: ['@theme_handler', '@extension.list.module']
   config_snapshot_subscriber:
     class: Drupal\Core\EventSubscriber\ConfigSnapshotSubscriber
@@ -1302,10 +1300,6 @@ services:
     tags:
       - { name: event_subscriber }
     arguments: ['@config.factory', '@http_kernel']
-  exception.test_site:
-    class: Drupal\Core\EventSubscriber\ExceptionTestSiteSubscriber
-    tags:
-      - { name: event_subscriber }
   exception.enforced_form_response:
     class: Drupal\Core\EventSubscriber\EnforcedFormResponseSubscriber
     tags:
@@ -1418,7 +1412,7 @@ services:
     arguments: ['%app.root%', '@theme_handler', '@cache.bootstrap', '@module_handler']
   theme.registry:
     class: Drupal\Core\Theme\Registry
-    arguments: ['%app.root%', '@cache.default', '@lock', '@module_handler', '@theme_handler', '@theme.initialization', null, '@cache.bootstrap', '@extension.list.module']
+    arguments: ['%app.root%', '@cache.default', '@lock', '@module_handler', '@theme_handler', '@theme.initialization', '@cache.bootstrap', '@extension.list.module']
     tags:
       - { name: needs_destruction }
     calls:

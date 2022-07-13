@@ -138,6 +138,11 @@ class Sql extends QueryPluginBase {
   protected $messenger;
 
   /**
+   * The count field definition.
+   */
+  public array $count_field;
+
+  /**
    * Constructs a Sql object.
    *
    * @param array $configuration
@@ -973,6 +978,7 @@ class Sql extends QueryPluginBase {
 
   /**
    * Add a complex HAVING clause to the query.
+   *
    * The caller is responsible for ensuring that all fields are fully qualified
    * (TABLE.FIELD) and that the table and an appropriate GROUP BY already exist in the query.
    * Internally the dbtng method "having" is used.

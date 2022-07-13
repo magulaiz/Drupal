@@ -85,13 +85,14 @@ class Composer {
 
   /**
    * Ensure that the minimum required version of Composer is running.
+   *
    * Throw an exception if Composer is too old.
    */
   public static function ensureComposerVersion(): void {
     $composerVersion = method_exists(ComposerApp::class, 'getVersion') ?
       ComposerApp::getVersion() : ComposerApp::VERSION;
-    if (Comparator::lessThan($composerVersion, '1.9.0')) {
-      throw new \RuntimeException("Drupal core development requires Composer 1.9.0, but Composer $composerVersion is installed. Please run 'composer self-update'.");
+    if (Comparator::lessThan($composerVersion, '2.3.5')) {
+      throw new \RuntimeException("Drupal core development requires Composer 2.3.5, but Composer $composerVersion is installed. Please run 'composer self-update'.");
     }
   }
 

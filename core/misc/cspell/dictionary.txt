@@ -31,8 +31,6 @@ andif
 annot
 anonyme
 anothermodule
-anotherwordenglish
-anotherwordgerman
 antilop
 anyall
 applix
@@ -49,7 +47,6 @@ arrowstop
 arrowthick
 arrowthickstop
 arrr
-asdrsad
 assertable
 asterix
 atsign
@@ -94,7 +91,6 @@ bangpow
 barbar
 barchart
 barfoo
-barmm
 barqux
 bartik
 bartik's
@@ -163,6 +159,7 @@ bundleless
 bundlenode
 buttonpane
 buttonset
+buttontext
 buytaert
 cacheability
 cacheable
@@ -223,7 +220,6 @@ clearfix
 cleartype
 clicksorter
 clist
-cloner
 closethick
 cnenzrgre
 cnfi
@@ -295,6 +291,7 @@ dblog
 dbtng
 dburl
 ddev
+dealerdirect
 deckard
 deconstructor
 deduplicated
@@ -329,7 +326,6 @@ desaturated
 desaturates
 desaturating
 descripcion
-deserialization
 destructable
 deutsch
 deutscher
@@ -430,7 +426,6 @@ entityviewedit
 eridani
 errmode
 errrf
-eslintignore
 espagnol
 estraven
 etag
@@ -457,6 +452,7 @@ fatals
 favourite
 favstar
 fcgi
+fdiv
 februar
 fetchmode
 fffffg
@@ -501,7 +497,6 @@ foobarbaz
 foobargorilla
 foobars
 foofoo
-foomm
 foos
 formatless
 formattable
@@ -563,15 +558,14 @@ hasher
 hashmarks
 hateoas
 hbox
-heartz
 heke
 heroless
 herpderp
 herro
 heure
 heures
+hexcode
 hidpi
-hilfetestmodul
 hilited
 hinode
 hippopotamidae
@@ -895,15 +889,11 @@ nonconfigurable
 nonexistingfilename
 nonoptional
 nonspacing
-nonwordgerman
-nonworditem
 noquotes
 noschema
 nosniff
 nostart
 notag
-notawordenglish
-notawordgerman
 notexisting
 nothere
 notnull
@@ -972,6 +962,7 @@ permissionless
 persistable
 phpass
 phpcbf
+phpcodesniffer
 phpcs
 phpdocumentor
 phpfile
@@ -1015,7 +1006,6 @@ precache
 precompiled
 preconfigure
 preconfigured
-preconnect
 precreated
 predelete
 prefetches
@@ -1091,7 +1081,6 @@ rdfa
 rdfs
 readmore
 readonlydir
-readystate
 realelement
 realise
 realpaths
@@ -1111,7 +1100,6 @@ referencers
 referer
 refinable
 regexes
-reimplement
 reindex
 reindexing
 reinject
@@ -1172,7 +1160,6 @@ scorewords
 screenreaders
 scriptable
 scrollbars
-sdeeeee
 searchdirs
 searchfield
 sebe
@@ -1205,6 +1192,7 @@ skiptags
 skos
 skynet
 slatkin
+slevomat
 sloopal
 smacss
 smalldatetime
@@ -1229,7 +1217,6 @@ splitbuttons
 spreadsheetml
 sqlpassword
 sqlusername
-sqruct
 squaresmall
 squiz
 squizlabs
@@ -1422,8 +1409,6 @@ toplevel
 topop
 torder
 totalcount
-totranslate
-touchevent
 touchevents
 tparams
 trackback
@@ -1450,6 +1435,7 @@ typehints
 typemanager
 tzid
 uberawesome
+ui's
 uicrud
 uids
 ulwa
@@ -1542,7 +1528,6 @@ uploaders
 uploadprogress
 uppercased
 upscaling
-upsert
 urandom
 urlalias
 urldecoding
@@ -1578,7 +1563,6 @@ vxezb
 vxfbk
 waitfor
 wcprops
-wcsrefsdf
 webassert
 webcal
 webdriver
@@ -1660,5 +1644,4 @@ zzgroup
 åwesome
 èxample
 über
-übersetzung
 ȅchȏ

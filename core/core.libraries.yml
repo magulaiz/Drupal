@@ -29,10 +29,10 @@ ckeditor:
 
 ckeditor5:
   remote: https://github.com/ckeditor/ckeditor5
-  version: "34.0.0"
+  version: "34.1.0"
   license:
     name: GNU-GPL-2.0-or-later
-    url: https://github.com/ckeditor/ckeditor5/blob/v34.0.0/LICENSE.md
+    url: https://github.com/ckeditor/ckeditor5/blob/v34.1.0/LICENSE.md
     gpl-compatible: true
   js:
     # This file is not aggregated to force the creation of a new aggregate file
@@ -46,10 +46,10 @@ ckeditor5:
 
 ckeditor5.editorClassic:
   remote: https://github.com/ckeditor/ckeditor5
-  version: "34.0.0"
+  version: "34.1.0"
   license:
     name: GNU-GPL-2.0-or-later
-    url: https://github.com/ckeditor/ckeditor5/blob/v34.0.0/LICENSE.md
+    url: https://github.com/ckeditor/ckeditor5/blob/v34.1.0/LICENSE.md
     gpl-compatible: true
   js:
     assets/vendor/ckeditor5/editor-classic/editor-classic.js: { minified: true }
@@ -58,10 +58,10 @@ ckeditor5.editorClassic:
 
 ckeditor5.editorDecoupled:
   remote: https://github.com/ckeditor/ckeditor5
-  version: "34.0.0"
+  version: "34.1.0"
   license:
     name: GNU-GPL-2.0-or-later
-    url: https://github.com/ckeditor/ckeditor5/blob/v34.0.0/LICENSE.md
+    url: https://github.com/ckeditor/ckeditor5/blob/v34.1.0/LICENSE.md
     gpl-compatible: true
   js:
     assets/vendor/ckeditor5/editor-decoupled/editor-decoupled.js: { minified: true }
@@ -71,10 +71,10 @@ ckeditor5.editorDecoupled:
 
 ckeditor5.internal:
   remote: https://github.com/ckeditor/ckeditor5
-  version: "34.0.0"
+  version: "34.1.0"
   license:
     name: GNU-GPL-2.0-or-later
-    url: https://github.com/ckeditor/ckeditor5/blob/v34.0.0/LICENSE.md
+    url: https://github.com/ckeditor/ckeditor5/blob/v34.1.0/LICENSE.md
     gpl-compatible: true
   js:
     assets/vendor/ckeditor5/essentials/essentials.js: { minified: true }
@@ -84,10 +84,10 @@ ckeditor5.internal:
 
 ckeditor5.heading:
   remote: https://github.com/ckeditor/ckeditor5
-  version: "34.0.0"
+  version: "34.1.0"
   license:
     name: GNU-GPL-2.0-or-later
-    url: https://github.com/ckeditor/ckeditor5/blob/v34.0.0/LICENSE.md
+    url: https://github.com/ckeditor/ckeditor5/blob/v34.1.0/LICENSE.md
     gpl-compatible: true
   js:
     assets/vendor/ckeditor5/heading/heading.js: { minified: true }
@@ -97,10 +97,10 @@ ckeditor5.heading:
 
 ckeditor5.basic:
   remote: https://github.com/ckeditor/ckeditor5
-  version: "34.0.0"
+  version: "34.1.0"
   license:
     name: GNU-GPL-2.0-or-later
-    url: https://github.com/ckeditor/ckeditor5/blob/v34.0.0/LICENSE.md
+    url: https://github.com/ckeditor/ckeditor5/blob/v34.1.0/LICENSE.md
     gpl-compatible: true
   js:
     assets/vendor/ckeditor5/basic-styles/basic-styles.js: { minified: true }
@@ -110,10 +110,10 @@ ckeditor5.basic:
 
 ckeditor5.specialCharacters:
   remote: https://github.com/ckeditor/ckeditor5
-  version: "34.0.0"
+  version: "34.1.0"
   license:
     name: GNU-GPL-2.0-or-later
-    url: https://github.com/ckeditor/ckeditor5/blob/v34.0.0/LICENSE.md
+    url: https://github.com/ckeditor/ckeditor5/blob/v34.1.0/LICENSE.md
     gpl-compatible: true
   js:
     assets/vendor/ckeditor5/special-characters/special-characters.js: { minified: true }
@@ -123,10 +123,10 @@ ckeditor5.specialCharacters:
 
 ckeditor5.blockquote:
   remote: https://github.com/ckeditor/ckeditor5
-  version: "34.0.0"
+  version: "34.1.0"
   license:
     name: GNU-GPL-2.0-or-later
-    url: https://github.com/ckeditor/ckeditor5/blob/v34.0.0/LICENSE.md
+    url: https://github.com/ckeditor/ckeditor5/blob/v34.1.0/LICENSE.md
     gpl-compatible: true
   js:
     assets/vendor/ckeditor5/block-quote/block-quote.js: { minified: true }
@@ -136,10 +136,10 @@ ckeditor5.blockquote:
 
 ckeditor5.image:
   remote: https://github.com/ckeditor/ckeditor5
-  version: "34.0.0"
+  version: "34.1.0"
   license:
     name: GNU-GPL-2.0-or-later
-    url: https://github.com/ckeditor/ckeditor5/blob/v34.0.0/LICENSE.md
+    url: https://github.com/ckeditor/ckeditor5/blob/v34.1.0/LICENSE.md
     gpl-compatible: true
   js:
     assets/vendor/ckeditor5/image/image.js: { minified: true }
@@ -149,10 +149,10 @@ ckeditor5.image:
 
 ckeditor5.link:
   remote: https://github.com/ckeditor/ckeditor5
-  version: "34.0.0"
+  version: "34.1.0"
   license:
     name: GNU-GPL-2.0-or-later
-    url: https://github.com/ckeditor/ckeditor5/blob/v34.0.0/LICENSE.md
+    url: https://github.com/ckeditor/ckeditor5/blob/v34.1.0/LICENSE.md
     gpl-compatible: true
   js:
     assets/vendor/ckeditor5/link/link.js: { minified: true }
@@ -162,11 +162,10 @@ ckeditor5.link:
 
 ckeditor5.list:
   remote: https://github.com/ckeditor/ckeditor5
-  version: "34.0.1"
+  version: "34.1.0"
   license:
     name: GNU-GPL-2.0-or-later
-    # @todo A 34.0.1 link does not exist; https://www.drupal.org/project/drupal/issues/3277438 will make this in sync again.
-    url: https://github.com/ckeditor/ckeditor5/blob/v34.0.0/LICENSE.md
+    url: https://github.com/ckeditor/ckeditor5/blob/v34.1.0/LICENSE.md
     gpl-compatible: true
   js:
     assets/vendor/ckeditor5/list/list.js: { minified: true }
@@ -176,10 +175,10 @@ ckeditor5.list:
 
 ckeditor5.horizontalLine:
   remote: https://github.com/ckeditor/ckeditor5
-  version: "34.0.0"
+  version: "34.1.0"
   license:
     name: GNU-GPL-2.0-or-later
-    url: https://github.com/ckeditor/ckeditor5/blob/v34.0.0/LICENSE.md
+    url: https://github.com/ckeditor/ckeditor5/blob/v34.1.0/LICENSE.md
     gpl-compatible: true
   js:
     assets/vendor/ckeditor5/horizontal-line/horizontal-line.js: { minified: true }
@@ -189,10 +188,10 @@ ckeditor5.horizontalLine:
 
 ckeditor5.htmlSupport:
   remote: https://github.com/ckeditor/ckeditor5
-  version: "34.0.0"
+  version: "34.1.0"
   license:
     name: GNU-GPL-2.0-or-later
-    url: https://github.com/ckeditor/ckeditor5/blob/v34.0.0/LICENSE.md
+    url: https://github.com/ckeditor/ckeditor5/blob/v34.1.0/LICENSE.md
     gpl-compatible: true
   js:
     assets/vendor/ckeditor5/html-support/html-support.js: { minified: true }
@@ -202,10 +201,10 @@ ckeditor5.htmlSupport:
 
 ckeditor5.alignment:
   remote: https://github.com/ckeditor/ckeditor5
-  version: "34.0.0"
+  version: "34.1.0"
   license:
     name: GNU-GPL-2.0-or-later
-    url: https://github.com/ckeditor/ckeditor5/blob/v34.0.0/LICENSE.md
+    url: https://github.com/ckeditor/ckeditor5/blob/v34.1.0/LICENSE.md
     gpl-compatible: true
   js:
     assets/vendor/ckeditor5/alignment/alignment.js: { minified: true }
@@ -215,10 +214,10 @@ ckeditor5.alignment:
 
 ckeditor5.removeFormat:
   remote: https://github.com/ckeditor/ckeditor5
-  version: "34.0.0"
+  version: "34.1.0"
   license:
     name: GNU-GPL-2.0-or-later
-    url: https://github.com/ckeditor/ckeditor5/blob/v34.0.0/LICENSE.md
+    url: https://github.com/ckeditor/ckeditor5/blob/v34.1.0/LICENSE.md
     gpl-compatible: true
   js:
     assets/vendor/ckeditor5/remove-format/remove-format.js: { minified: true }
@@ -228,10 +227,10 @@ ckeditor5.removeFormat:
 
 ckeditor5.pasteFromOffice:
   remote: https://github.com/ckeditor/ckeditor5
-  version: "34.0.0"
+  version: "34.1.0"
   license:
     name: GNU-GPL-2.0-or-later
-    url: https://github.com/ckeditor/ckeditor5/blob/v34.0.0/LICENSE.md
+    url: https://github.com/ckeditor/ckeditor5/blob/v34.1.0/LICENSE.md
     gpl-compatible: true
   js:
     assets/vendor/ckeditor5/paste-from-office/paste-from-office.js: { minified: true }
@@ -240,10 +239,10 @@ ckeditor5.pasteFromOffice:
 
 ckeditor5.indent:
   remote: https://github.com/ckeditor/ckeditor5
-  version: "34.0.0"
+  version: "34.1.0"
   license:
     name: GNU-GPL-2.0-or-later
-    url: https://github.com/ckeditor/ckeditor5/blob/v34.0.0/LICENSE.md
+    url: https://github.com/ckeditor/ckeditor5/blob/v34.1.0/LICENSE.md
     gpl-compatible: true
   js:
     assets/vendor/ckeditor5/indent/indent.js: { minified: true }
@@ -253,10 +252,10 @@ ckeditor5.indent:
 
 ckeditor5.sourceEditing:
   remote: https://github.com/ckeditor/ckeditor5
-  version: "34.0.0"
+  version: "34.1.0"
   license:
     name: GNU-GPL-2.0-or-later
-    url: https://github.com/ckeditor/ckeditor5/blob/v34.0.0/LICENSE.md
+    url: https://github.com/ckeditor/ckeditor5/blob/v34.1.0/LICENSE.md
     gpl-compatible: true
   js:
     assets/vendor/ckeditor5/source-editing/source-editing.js: { minified: true }
@@ -266,10 +265,10 @@ ckeditor5.sourceEditing:
 
 ckeditor5.table:
   remote: https://github.com/ckeditor/ckeditor5
-  version: "34.0.0"
+  version: "34.1.0"
   license:
     name: GNU-GPL-2.0-or-later
-    url: https://github.com/ckeditor/ckeditor5/blob/v34.0.0/LICENSE.md
+    url: https://github.com/ckeditor/ckeditor5/blob/v34.1.0/LICENSE.md
     gpl-compatible: true
   js:
     assets/vendor/ckeditor5/table/table.js: { minified: true }
@@ -279,10 +278,10 @@ ckeditor5.table:
 
 ckeditor5.language:
   remote: https://github.com/ckeditor/ckeditor5
-  version: "34.0.0"
+  version: "34.1.0"
   license:
     name: GNU-GPL-2.0-or-later
-    url: https://github.com/ckeditor/ckeditor5/blob/v34.0.0/LICENSE.md
+    url: https://github.com/ckeditor/ckeditor5/blob/v34.1.0/LICENSE.md
     gpl-compatible: true
   js:
     assets/vendor/ckeditor5/language/language.js: { minified: true }
@@ -292,10 +291,10 @@ ckeditor5.language:
 
 ckeditor5.codeBlock:
   remote: https://github.com/ckeditor/ckeditor5
-  version: "34.0.0"
+  version: "34.1.0"
   license:
     name: GNU-GPL-2.0-or-later
-    url: https://github.com/ckeditor/ckeditor5/blob/v34.0.0/LICENSE.md
+    url: https://github.com/ckeditor/ckeditor5/blob/v34.1.0/LICENSE.md
     gpl-compatible: true
   js:
     assets/vendor/ckeditor5/code-block/code-block.js: { minified: true }
@@ -313,14 +312,9 @@ ckeditor5.translations:
     assets/vendor/ckeditor5/translation.js: {}
 
 css.escape:
-  remote: https://github.com/mathiasbynens/CSS.escape
-  version: "1.5.1"
-  license:
-    name: MIT
-    url: https://raw.githubusercontent.com/mathiasbynens/CSS.escape/v1.5.1/LICENSE-MIT.txt
-    gpl-compatible: true
-  js:
-    assets/vendor/css-escape/css.escape.js: { weight: -20 }
+  version: VERSION
+  drupalSettings: {}
+  deprecated: The %library_id% asset library is deprecated in Drupal 10.0.0 and will be removed in Drupal 11.0.0. See https://www.drupal.org/node/3280410
 
 drupal:
   version: VERSION
@@ -373,7 +367,6 @@ drupal.ajax:
     - core/jquery
     - core/drupal
     - core/drupalSettings
-    - core/drupal.nodelist.foreach
     - core/drupal.progress
     - core/once
     - core/tabbable
@@ -438,16 +431,15 @@ drupal.autocomplete:
     - core/tabbable.jquery.shim
     - core/drupal.jquery.position
 
-
 drupal.array.find:
   version: VERSION
-  js:
-    misc/polyfills/array.find.js: { weight: -20 }
+  drupalSettings: {}
+  deprecated: The %library_id% asset library is deprecated in Drupal 10.0.0 and will be removed in Drupal 11.0.0. See https://www.drupal.org/node/3280410
 
 drupal.array.includes:
   version: VERSION
-  js:
-    misc/polyfills/array.includes.js: { weight: -20 }
+  drupalSettings: {}
+  deprecated: The %library_id% asset library is deprecated in Drupal 10.0.0 and will be removed in Drupal 11.0.0. See https://www.drupal.org/node/3280410
 
 drupal.batch:
   version: VERSION
@@ -483,8 +475,8 @@ drupal.collapse:
 
 drupal.customevent:
   version: VERSION
-  js:
-    misc/polyfills/customevent.js: { weight: -20 }
+  drupalSettings: {}
+  deprecated: The %library_id% asset library is deprecated in Drupal 10.0.0 and will be removed in Drupal 11.0.0. See https://www.drupal.org/node/3280410
 
 drupal.debounce:
   version: VERSION
@@ -584,15 +576,13 @@ drupal.dropbutton:
 
 drupal.element.closest:
   version: VERSION
-  js:
-    misc/polyfills/element.closest.js: { weight: -20 }
-  dependencies:
-    - core/drupal.element.matches
+  drupalSettings: {}
+  deprecated: The %library_id% asset library is deprecated in Drupal 10.0.0 and will be removed in Drupal 11.0.0. See https://www.drupal.org/node/3280410
 
 drupal.element.matches:
   version: VERSION
-  js:
-    misc/polyfills/element.matches.js: { weight: -20 }
+  drupalSettings: {}
+  deprecated: The %library_id% asset library is deprecated in Drupal 10.0.0 and will be removed in Drupal 11.0.0. See https://www.drupal.org/node/3280410
 
 drupal.entity-form:
   version: VERSION
@@ -632,13 +622,13 @@ drupal.message:
 
 drupal.nodelist.foreach:
   version: VERSION
-  js:
-    misc/polyfills/nodelist.foreach.js: { weight: -20 }
+  drupalSettings: {}
+  deprecated: The %library_id% asset library is deprecated in Drupal 10.0.0 and will be removed in Drupal 11.0.0. See https://www.drupal.org/node/3280410
 
 drupal.object.assign:
   version: VERSION
-  js:
-    misc/polyfills/object.assign.js: { weight: -20 }
+  drupalSettings: {}
+  deprecated: The %library_id% asset library is deprecated in Drupal 10.0.0 and will be removed in Drupal 11.0.0. See https://www.drupal.org/node/3280410
 
 drupal.progress:
   version: VERSION
@@ -661,8 +651,8 @@ drupal.states:
 
 drupal.string.includes:
   version: VERSION
-  js:
-    misc/polyfills/string.includes.js: { weight: -20 }
+  drupalSettings: {}
+  deprecated: The %library_id% asset library is deprecated in Drupal 10.0.0 and will be removed in Drupal 11.0.0. See https://www.drupal.org/node/3280410
 
 drupal.tabbingmanager:
   version: VERSION
@@ -719,7 +709,6 @@ drupal.timezone:
   js:
     misc/timezone.js: {}
   dependencies:
-    - core/drupal.nodelist.foreach
     - core/jquery
     - core/once
     - core/drupal
@@ -748,13 +737,9 @@ drupal.vertical-tabs:
     - core/drupal.form
 
 es6-promise:
-  version: "4.2.8"
-  license:
-    name: MIT
-    url: https://raw.githubusercontent.com/stefanpenner/es6-promise/v4.2.8/LICENSE
-    gpl-compatible: true
-  js:
-    assets/vendor/es6-promise/es6-promise.auto.min.js: { weight: -20, minified: true }
+  version: VERSION
+  drupalSettings: {}
+  deprecated: The %library_id% asset library is deprecated in Drupal 10.0.0 and will be removed in Drupal 11.0.0. See https://www.drupal.org/node/3280410
 
 jquery:
   remote: https://github.com/jquery/jquery
@@ -850,18 +835,11 @@ once:
     gpl-compatible: true
   js:
     assets/vendor/once/once.min.js: { weight: -19, minified: true }
-  dependencies:
-    - core/drupal.element.matches
 
 picturefill:
-  remote: https://github.com/scottjehl/picturefill
-  version: "3.0.3"
-  license:
-    name: MIT
-    url: https://raw.githubusercontent.com/scottjehl/picturefill/3.0.3/LICENSE
-    gpl-compatible: true
-  js:
-    assets/vendor/picturefill/picturefill.min.js: { weight: -10, minified: true }
+  version: VERSION
+  drupalSettings: {}
+  deprecated: The %library_id% asset library is deprecated in Drupal 10.0.0 and will be removed in Drupal 11.0.0. See https://www.drupal.org/node/3280410
 
 popperjs:
   version: "2.11.5"
@@ -871,10 +849,6 @@ popperjs:
     gpl-compatible: true
   js:
     assets/vendor/popperjs/popper.min.js: { minified: true }
-  dependencies:
-    - core/drupal.array.find
-    - core/es6-promise
-    - core/drupal.object.assign
 
 sortable:
   remote: https://github.com/SortableJS/Sortable
@@ -895,8 +869,6 @@ tabbable:
     gpl-compatible: true
   js:
     assets/vendor/tabbable/index.umd.min.js: { weight: -1, minified: true }
-  dependencies:
-    - core/css.escape
 
 tabbable.jquery.shim:
   version: VERSION
