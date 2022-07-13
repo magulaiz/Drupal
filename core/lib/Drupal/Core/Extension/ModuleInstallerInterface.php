@@ -78,7 +78,7 @@ interface ModuleInstallerInterface {
   public function uninstall(array $module_list, $uninstall_dependents = TRUE);
 
   /**
-   * Adds module a uninstall validator.
+   * Adds a module uninstall validator.
    *
    * @param \Drupal\Core\Extension\ModuleUninstallValidatorInterface $uninstall_validator
    *   The uninstall validator to add.
