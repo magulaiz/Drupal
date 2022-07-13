@@ -5,7 +5,7 @@
 * @preserve
 **/
 
-(function () {
+(function (Drupal) {
   function findActiveStep(steps) {
     for (var i = 0; i < steps.length; i++) {
       if (steps[i].className === 'is-active') {
@@ -27,11 +27,7 @@
       var header = document.querySelector('header[role="banner"]');
       var stepIndicator = document.createElement('div');
       stepIndicator.className = 'step-indicator';
-      var auralView = Drupal.t('Install Step @step of @total_steps', {
-        '@step': findActiveStep(steps),
-        '@total_steps': steps.length
-      });
-      stepIndicator.innerHTML = "\n        <span class=\"visually-hidden\">".concat(auralView, "</span>\n        <span aria-hidden=\"true\">").concat(findActiveStep(steps), "/").concat(steps.length, "</span>\n      ");
+      stepIndicator.innerHTML = "".concat(findActiveStep(steps), "/").concat(steps.length);
       header.appendChild(stepIndicator);
     }
   }
@@ -39,4 +35,4 @@
   if (document.addEventListener) {
     document.addEventListener('DOMContentLoaded', installStepsSetup);
   }
-})();
+})(Drupal);
