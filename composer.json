@@ -97,13 +97,7 @@
     "autoload-dev": {
         "psr-4": {
             "Drupal\\Composer\\": "composer"
-        },
-        "classmap": [
-            "core/tests/Drupal/Tests/DocumentElement.php"
-        ],
-        "files": [
-            "core/includes/browserkit_driver_shim.php"
-        ]
+        }
     },
     "scripts": {
         "pre-install-cmd": "Drupal\\Composer\\Composer::ensureComposerVersion",

@@ -80,6 +80,11 @@
             "includes/bootstrap.inc"
         ]
     },
+    "autoload-dev": {
+        "files": [
+            "includes/dev_class_aliases.php"
+        ]
+    },
     "config": {
         "preferred-install": "dist"
     },
