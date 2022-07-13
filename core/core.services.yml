@@ -963,6 +963,7 @@ services:
     tags:
       - { name: backend_overridable }
     lazy: true
+  Drupal\Core\Lock\LockBackendInterface: '@lock'
   lock.persistent:
     class: Drupal\Core\Lock\PersistentDatabaseLockBackend
     arguments: ['@database']
@@ -1657,6 +1658,7 @@ services:
   asset.css.collection_renderer:
     class: Drupal\Core\Asset\CssCollectionRenderer
     arguments: [ '@state', '@file_url_generator' ]
+  Drupal\Core\Asset\AssetCollectionRendererInterface $css_collection_renderer: '@asset.css.collection_renderer'
   asset.css.collection_optimizer:
     class: Drupal\Core\Asset\CssCollectionOptimizerLazy
     arguments: [ '@asset.css.collection_grouper', '@asset.css.optimizer', '@theme.manager', '@library.dependency_resolver', '@request_stack', '@file_system', '@config.factory', '@file_url_generator', '@datetime.time', '@language_manager', '@state']
@@ -1671,6 +1673,7 @@ services:
   asset.js.collection_renderer:
     class: Drupal\Core\Asset\JsCollectionRenderer
     arguments: [ '@state', '@file_url_generator' ]
+  Drupal\Core\Asset\AssetCollectionRendererInterface $js_collection_renderer: '@asset.js.collection_renderer'
   asset.js.collection_optimizer:
     class: Drupal\Core\Asset\JsCollectionOptimizerLazy
     arguments: [ '@asset.js.collection_grouper', '@asset.js.optimizer', '@theme.manager', '@library.dependency_resolver', '@request_stack', '@file_system', '@config.factory', '@file_url_generator', '@datetime.time', '@language_manager', '@state']
