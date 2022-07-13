@@ -8,6 +8,13 @@ use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 
 /**
  * Defines a factory for logging channels.
+ *
+ * Modules that require a static logging channel should declare a service named
+ * logger.channel.[module], based on the logger.channel_base service, and then
+ * inject that channel as a service.
+ *
+ * This service should only be used directly by code that requires dynamic
+ * logging channels.
  */
 class LoggerChannelFactory implements LoggerChannelFactoryInterface, ContainerAwareInterface {
   use ContainerAwareTrait;

@@ -79,7 +79,7 @@ class UserRegistrationResource extends ResourceBase {
       $plugin_id,
       $plugin_definition,
       $container->getParameter('serializer.formats'),
-      $container->get('logger.factory')->get('rest'),
+      $container->get('logger.channel.rest'),
       $container->get('config.factory')->get('user.settings'),
       $container->get('current_user')
     );

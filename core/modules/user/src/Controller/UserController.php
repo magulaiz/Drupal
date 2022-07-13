@@ -88,7 +88,7 @@ class UserController extends ControllerBase {
       $container->get('date.formatter'),
       $container->get('entity_type.manager')->getStorage('user'),
       $container->get('user.data'),
-      $container->get('logger.factory')->get('user'),
+      $container->get('logger.channel.user'),
       $container->get('flood')
     );
   }

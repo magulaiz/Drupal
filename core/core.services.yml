@@ -469,6 +469,9 @@ services:
   logger.channel.default:
     parent: logger.channel_base
     arguments: ['system']
+  logger.channel.action:
+    parent: logger.channel_base
+    arguments: ['action']
   logger.channel.php:
     parent: logger.channel_base
     arguments: ['php']
@@ -479,8 +482,7 @@ services:
     parent: logger.channel_base
     arguments: ['cron']
   logger.channel.file:
-    class: Drupal\Core\Logger\LoggerChannel
-    factory: ['@logger.factory', 'get']
+    parent: logger.channel_base
     arguments: ['file']
   logger.channel.form:
     parent: logger.channel_base

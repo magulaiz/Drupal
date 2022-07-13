@@ -147,7 +147,7 @@ class UserAuthenticationController extends ControllerBase implements ContainerIn
       $container->get('router.route_provider'),
       $serializer,
       $formats,
-      $container->get('logger.factory')->get('user')
+      $container->get('logger.channel.user')
     );
   }
 

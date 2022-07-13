@@ -34,7 +34,7 @@ class ConnectionFailureTest extends KernelTestBase {
     Database::closeConnection();
 
     // Create a log entry.
-    $this->container->get('logger.factory')->get('php')->error('testConnectionFailureLogging');
+    $this->container->get('logger.channel.php')->error('testConnectionFailureLogging');
 
     // Re-establish the default database connection.
     $database = Database::getConnection();

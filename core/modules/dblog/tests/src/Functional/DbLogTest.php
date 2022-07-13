@@ -251,7 +251,7 @@ class DbLogTest extends BrowserTestBase {
   public function testMessageParsing() {
     $this->drupalLogin($this->adminUser);
     // Log a common twig error with {{ }} and { } variables.
-    \Drupal::service('logger.factory')->get("php")
+    \Drupal::service('logger.channel.php')
       ->error('Incorrect parameter {{foo}} in path {path}: {value}',
         ['foo' => 'bar', 'path' => '/baz', 'value' => 'horse']
       );

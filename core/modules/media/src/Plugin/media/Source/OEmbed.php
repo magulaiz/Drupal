@@ -192,7 +192,7 @@ class OEmbed extends MediaSourceBase implements OEmbedInterface {
       $container->get('entity_field.manager'),
       $container->get('config.factory'),
       $container->get('plugin.manager.field.field_type'),
-      $container->get('logger.factory')->get('media'),
+      $container->get('logger.channel.media'),
       $container->get('messenger'),
       $container->get('http_client'),
       $container->get('media.oembed.resource_fetcher'),
