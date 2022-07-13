@@ -34,8 +34,8 @@ h3 {
 }
 
 .site-name--subtle {
-  color: var(--color-gray-800);
   margin-top: var(--space-s);
+  color: var(--color-gray-800);
   font-size: var(--font-size-h4);
 }
 
