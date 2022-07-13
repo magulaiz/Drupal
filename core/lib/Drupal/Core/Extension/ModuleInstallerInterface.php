@@ -30,6 +30,11 @@ interface ModuleInstallerInterface {
    *   (optional) If TRUE, dependencies will automatically be installed in the
    *   correct order. This incurs a significant performance cost, so use FALSE
    *   if you know $module_list is already complete.
+   * @param bool $enable_lock
+   *   (optional) If TRUE, a lock will be enabled to prevent concurrent
+   *   installations from occurring. This is important to stop more than one
+   *   request from enabling modules in parallel resulting in a potentially
+   *   broken site.
    *
    * @return bool
    *   TRUE if the modules were successfully installed.
@@ -41,11 +46,14 @@ interface ModuleInstallerInterface {
    *   Thrown when the extension's name is longer than
    *   DRUPAL_EXTENSION_NAME_MAX_LENGTH.
    *
+   * @throws \Drupal\Core\Extension\Exception\ExtensionInstallLockException
+   *   Thrown when enable_lock is TRUE and a lock is already in place.
+   *
    * @see hook_module_preinstall()
    * @see hook_install()
    * @see hook_modules_installed()
    */
-  public function install(array $module_list, $enable_dependencies = TRUE);
+  public function install(array $module_list, $enable_dependencies = TRUE, $enable_lock = FALSE);
 
   /**
    * Uninstalls a given list of modules.

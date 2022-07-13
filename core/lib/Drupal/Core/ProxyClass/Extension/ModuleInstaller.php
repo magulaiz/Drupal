@@ -78,9 +78,9 @@ namespace Drupal\Core\ProxyClass\Extension {
         /**
          * {@inheritdoc}
          */
-        public function install(array $module_list, $enable_dependencies = true)
+        public function install(array $module_list, $enable_dependencies = true, $enable_lock = false)
         {
-            return $this->lazyLoadItself()->install($module_list, $enable_dependencies);
+            return $this->lazyLoadItself()->install($module_list, $enable_dependencies, $enable_lock);
         }
 
         /**
