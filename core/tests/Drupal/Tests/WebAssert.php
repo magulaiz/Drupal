@@ -1063,7 +1063,6 @@ class WebAssert extends MinkWebAssert {
    */
   public function statusMessageContains(string $message, string $type = NULL): void {
     $selector = $this->buildStatusMessageSelector($message, $type);
-    dump($selector);
     try {
       $this->elementExists('xpath', $selector);
     }
