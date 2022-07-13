@@ -18,14 +18,7 @@
       const header = document.querySelector('header[role="banner"]');
       const stepIndicator = document.createElement('div');
       stepIndicator.className = 'step-indicator';
-      const auralView = Drupal.t('Install Step @step of @total_steps', {
-        '@step': findActiveStep(steps),
-        '@total_steps': steps.length,
-      });
-      stepIndicator.innerHTML = `
-        <span class="visually-hidden">${auralView}</span>
-        <span aria-hidden="true">${findActiveStep(steps)}/${steps.length}</span>
-      `;
+      stepIndicator.innerHTML = `${findActiveStep(steps)}/${steps.length}`;
       header.appendChild(stepIndicator);
     }
   }
