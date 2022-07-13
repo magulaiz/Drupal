@@ -1063,6 +1063,7 @@ class WebAssert extends MinkWebAssert {
    */
   public function statusMessageContains(string $message, string $type = NULL): void {
     $selector = $this->buildStatusMessageSelector($message, $type);
+    dump($selector);
     try {
       $this->elementExists('xpath', $selector);
     }
@@ -1133,9 +1134,10 @@ class WebAssert extends MinkWebAssert {
         $aria_label = 'Warning message';
     }
 
-    if ($message && $aria_label) {
-      $selector = $this->buildXPathQuery($selector . '//div[contains(@aria-label, :aria_label) and contains(., :message)]', [
+    if ($message && ($aria_label || $type)) {
+      $selector = $this->buildXPathQuery($selector . '//div[(contains(@aria-label, :aria_label) or contains(@aria-labelledby, :type)) and contains(., :message)]', [
         ':aria_label' => $aria_label,
+        ':type' => $type,
         ':message' => $message,
       ]);
     }
