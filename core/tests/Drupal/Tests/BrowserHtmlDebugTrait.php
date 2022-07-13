@@ -144,7 +144,7 @@ trait BrowserHtmlDebugTrait {
   protected function htmlOutputFilename($counter) {
     if ($this->usesDataProvider()) {
       // Test uses a data provider: include the data set name.
-      $html_output_filename = $this->htmlOutputClassName . '-' . $this->getName(FALSE) . '-' . $this->dataName() . '-' . $counter . '-' . $this->htmlOutputTestId . '.html';
+      $html_output_filename = $this->htmlOutputClassName . '-' . $this->getName(FALSE) . '-dataset__' . $this->dataName() . '-' . $counter . '-' . $this->htmlOutputTestId . '.html';
     }
     else {
       $html_output_filename = $this->htmlOutputClassName . '-' . $this->getName() . '-' . $counter . '-' . $this->htmlOutputTestId . '.html';
