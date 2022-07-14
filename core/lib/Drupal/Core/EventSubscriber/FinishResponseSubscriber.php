@@ -315,8 +315,6 @@ class FinishResponseSubscriber implements EventSubscriberInterface {
    *
    * @param \Symfony\Component\HttpKernel\Event\ResponseEvent $event
    *   The event to process.
-   *
-   * @return void
    */
   public function setContentLengthHeader(ResponseEvent $event) {
     $response = $event->getResponse();
