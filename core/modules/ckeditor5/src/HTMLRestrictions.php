@@ -349,6 +349,14 @@ final class HTMLRestrictions {
       throw new \DomainException('text formats with only filters that forbid tags rather than allowing tags are not yet supported.');
     }
 
+    // When allowing all tags on an attribute, transform FilterHtml output from
+    // ['tag' => ['*'=> TRUE]] to ['tag' => TRUE]
+    foreach ($restrictions['allowed'] as $element => $attributes) {
+      if (is_array($attributes) && isset($attributes['*']) && $attributes['*'] === TRUE) {
+        $restrictions['allowed'][$element] = TRUE;
+      }
+    }
+
     $allowed = $restrictions['allowed'];
 
     return new self($allowed);
@@ -398,6 +406,14 @@ final class HTMLRestrictions {
       if (isset($allowed_elements[$processed])) {
         $allowed_elements[$original] = $allowed_elements[$processed];
         unset($allowed_elements[$processed]);
+      }
+    }
+
+    // When allowing all tags on an attribute, transform FilterHtml output from
+    // ['tag' => ['*'=> TRUE]] to ['tag' => TRUE]
+    foreach ($allowed_elements as $element => $attributes) {
+      if (is_array($attributes) && isset($attributes['*']) && $attributes['*'] === TRUE) {
+        $allowed_elements[$element] = TRUE;
       }
     }
 
