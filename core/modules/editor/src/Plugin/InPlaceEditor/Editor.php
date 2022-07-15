@@ -32,7 +32,7 @@ class Editor extends PluginBase implements InPlaceEditorInterface {
     // associated editor and that editor supports inline editing.
     elseif ($editor = editor_load($items[0]->format)) {
       $definition = \Drupal::service('plugin.manager.editor')->getDefinition($editor->getEditor());
-      if ($definition['supports_inline_editing'] === TRUE) {
+      if (isset($definition['supports_inline_editing']) && $definition['supports_inline_editing'] === TRUE) {
         return TRUE;
       }
     }
