@@ -10,7 +10,7 @@ use Drupal\Core\Form\FormStateInterface;
  * Provides a form element for a set of dynamic options.
  *
  * Depending on the number of options and the threshold value, if behaves as a
- * set of checkboxes / radiobuttons or as a select form element.
+ * set of checkboxes / radios or as a select form element.
  *
  * Global properties:
  * - #options: An associative array whose keys are the values returned for each
@@ -21,12 +21,12 @@ use Drupal\Core\Form\FormStateInterface;
  *   or not (FALSE). Defaults to FALSE.
  * - #multiple: (optional) Indicates whether one or more options can be
  *   selected. It is used to determine whether to render checkboxes or
- *   radiobuttons. Defaults to FALSE.
+ *   radios. Defaults to FALSE.
  * - #select_threshold: If the number of options is bigger than the threshold, a
- *   select element rendered be used instead of checkboxes / radiobuttons.
+ *   select element rendered be used instead of checkboxes / radios.
  *   Defaults to 7.
  * Select specific properties. These properties only applies is the rendered
- * element is a select instead of checkboxes / radiobuttons:
+ * element is a select instead of checkboxes / radios:
  * - #sort_options: (optional) If set to TRUE (default is FALSE), sort the
  *   options by their labels, after rendering and translation is complete.
  *   Can be set within an option group to sort that group.
@@ -134,7 +134,7 @@ class DynamicOptions extends FormElement {
 
       $element['#type'] = 'select';
       $element += [
-        '#pre_render' =>  [
+        '#pre_render' => [
           [Select::class, 'preRenderSelect'],
         ],
         '#theme_wrappers' => ['form_element'],
@@ -150,7 +150,7 @@ class DynamicOptions extends FormElement {
       $element += [
         '#theme_wrappers' => [$type],
         '#pre_render' => [
-          [$class, 'preRenderCompositeFormElement']
+          [$class, 'preRenderCompositeFormElement'],
         ],
       ];
     }
