@@ -36,10 +36,11 @@
 @media screen and (min-width: 60rem) { /* 960px */
   .views-display-columns {
     display: grid;
-    grid-gap: 1rem;
+    grid-template-areas:
+      "left right"
+      "bottom bottom";
     grid-template-columns: 1fr 1fr;
-    grid-template-areas: "left right"
-                         "bottom bottom";
+    grid-gap: 1rem;
   }
   .views-display-columns > *:last-child {
     grid-area: bottom;
@@ -76,6 +77,7 @@ html.js span.js-only {
   display: grid;
   grid-gap: 1rem;
 }
+
 @media screen and (min-width: 100em) { /* 1600px */
   .views-edit-wrapper {
     grid-template-columns: 2fr 3fr;
