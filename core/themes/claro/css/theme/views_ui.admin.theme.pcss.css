@@ -270,8 +270,8 @@ td.group-title {
 }
 .edit-display-settings {
   padding: var(--space-l) var(--space-l) 0 var(--space-l);
-  border-left: 1px solid var(--color-lightgray-o-80);
   border-right: 1px solid var(--color-lightgray-o-80);
+  border-left: 1px solid var(--color-lightgray-o-80);
 }
 .edit-display-settings-top.views-ui-display-tab-bucket.views-ui-display-tab-bucket {
   position: relative;
@@ -558,8 +558,8 @@ td.group-title {
   position: relative;
 }
 .view-preview-form .form-item--live-preview {
-  margin-left: 3rem;
   margin-right: 3rem;
+  margin-left: 3rem;
 }
 .views-live-preview {
   padding: var(--space-m);
