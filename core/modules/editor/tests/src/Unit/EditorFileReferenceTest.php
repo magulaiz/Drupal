@@ -28,7 +28,7 @@ class EditorFileReferenceTest extends UnitTestCase {
     $plugin_definition = ['provider' => 'editor'];
     $entity_repository = $this->prophesize(EntityRepositoryInterface::class);
     $image_factory = $this->prophesize(ImageFactory::class);
-    $this->expectDeprecation('Calling Drupal\editor\Plugin\Filter\EditorFileReference::__construct() with the $image_factory argument is deprecated in drupal:9.4.0 and is removed in drupal:10.0.0. See https://www.drupal.org/node/3173719');
+    $this->expectDeprecation('Calling Drupal\editor\Plugin\Filter\EditorFileReference::__construct() with the $image_factory argument is deprecated in drupal:10.1.0 and is removed in drupal:11.0.0. See https://www.drupal.org/node/3173719');
     new EditorFileReference($configuration, $plugin_id, $plugin_definition, $entity_repository->reveal(), $image_factory->reveal());
   }
 
