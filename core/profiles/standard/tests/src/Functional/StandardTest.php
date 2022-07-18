@@ -142,6 +142,7 @@ class StandardTest extends BrowserTestBase {
       // the filter.
       $filter->filters();
       $filter->removeFilter('editor_file_reference');
+      $filter->removeFilter('editor_image_lazy_load');
       $filter->save();
     }
     \Drupal::service('module_installer')->uninstall(['editor', 'ckeditor5']);
