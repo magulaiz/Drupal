@@ -62,7 +62,7 @@ final class ResponsiveImageConfigUpdater {
     $deprecations_triggered = &$this->triggeredDeprecations['3267870'][$responsive_image_style->id()];
     if ($this->deprecationsEnabled && $changed && !$deprecations_triggered) {
       $deprecations_triggered = TRUE;
-      @trigger_error(sprintf('The responsive image style multiplier re-ordering update for "%s" is deprecated in drupal:9.4.0 and is removed from drupal:11.0.0. Profile, module and theme provided Responsive Image configuration should be updated to accommodate the changes described at https://www.drupal.org/node/3274803.', $responsive_image_style->id()), E_USER_DEPRECATED);
+      @trigger_error(sprintf('The responsive image style multiplier re-ordering update for "%s" is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Profile, module and theme provided Responsive Image configuration should be updated to accommodate the changes described at https://www.drupal.org/node/3274803.', $responsive_image_style->id()), E_USER_DEPRECATED);
     }
 
     return $changed;
