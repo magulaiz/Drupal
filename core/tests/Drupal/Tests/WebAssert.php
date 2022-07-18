@@ -1133,9 +1133,11 @@ class WebAssert extends MinkWebAssert {
         $aria_label = 'Warning message';
     }
 
-    if ($message && ($aria_label || $type)) {
+    if ($message && $aria_label && $type) {
       $selector = $this->buildXPathQuery($selector . '//div[(contains(@aria-label, :aria_label) or contains(@aria-labelledby, :type)) and contains(., :message)]', [
+        // Value of the 'aria-label' attribute, used in Seven and Bartik
         ':aria_label' => $aria_label,
+        // Value of the 'aria-labelledby' attribute, used in Claro and Olivero.
         ':type' => $type,
         ':message' => $message,
       ]);
