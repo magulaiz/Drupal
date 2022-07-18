@@ -23,7 +23,7 @@
         var toggleBlockEntry = function toggleBlockEntry(index, link) {
           var $link = $(link);
           var textMatch = $link.text().toLowerCase().indexOf(query) !== -1;
-          $link.toggle(textMatch);
+          $link.parent().toggle(textMatch);
         };
 
         if (query.length >= 2) {
@@ -37,7 +37,7 @@
           layoutBuilderBlocksFiltered = false;
           $categories.find('.js-layout-builder-category[remember-closed]').removeAttr('open').removeAttr('remember-closed');
           $categories.find('.js-layout-builder-category').show();
-          $filterLinks.show();
+          $filterLinks.parent().show();
           announce(Drupal.t('All available blocks are listed.'));
         }
       };

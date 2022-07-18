@@ -45,7 +45,7 @@
         const toggleBlockEntry = (index, link) => {
           const $link = $(link);
           const textMatch = $link.text().toLowerCase().indexOf(query) !== -1;
-          $link.toggle(textMatch);
+          $link.parent().toggle(textMatch);
         };
 
         // Filter if the length of the query is at least 2 characters.
@@ -83,7 +83,7 @@
             .removeAttr('open')
             .removeAttr('remember-closed');
           $categories.find('.js-layout-builder-category').show();
-          $filterLinks.show();
+          $filterLinks.parent().show();
           announce(Drupal.t('All available blocks are listed.'));
         }
       };
