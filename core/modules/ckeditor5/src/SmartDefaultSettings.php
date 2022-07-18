@@ -840,12 +840,13 @@ final class SmartDefaultSettings {
    *   The text editor config entity to update.
    *
    * @return array|null
-   *   NULL when nothing happened, otherwise an array with three values:
+   *   NULL when nothing happened, otherwise an array with four values:
    *   1. a description (for use in a message) of which CKEditor 5 plugins were
    *      enabled to match the HTML tags allowed by the text format.
    *   2. a description (for use in a message) of which CKEditor 5 plugins were
    *      enabled to match the HTML attributes allowed by the text format.
-   *   3. the unsupported elements, in an HTMLRestrictions value object
+   *   3. the unsupported elements, in an HTMLRestrictions value object.
+   *   4. the list of enabled plugin labels.
    */
   private function addToolbarItemsToMatchHtmlElementsInFormat(FilterFormatInterface $format, EditorInterface $editor): ?array {
     $html_restrictions_needed_elements = $format->getHtmlRestrictions();
@@ -948,6 +949,7 @@ final class SmartDefaultSettings {
           NULL,
           NULL,
           $still_needed,
+          NULL,
         ];
       }
     }

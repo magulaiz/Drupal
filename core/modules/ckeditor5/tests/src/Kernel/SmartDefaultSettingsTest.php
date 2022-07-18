@@ -1301,27 +1301,17 @@ class SmartDefaultSettingsTest extends KernelTestBase {
       ],
       'expected_superset' => '',
       'expected_fundamental_compatibility_violations' => [],
+      'expected_db_logs' => [
+        'status' => [
+          //"The following tags were permitted by the <em class=\"placeholder\">A CKEditor 4 configured to have span styles</em> text format's filter configuration, but no plugin was available that supports them. To ensure the tags remain supported by this text format, the following were added to the Source Editing plugin's <em>Manually editable HTML tags</em>: &lt;span&gt;. The text format must be saved to make these changes active.",
+          //'To maintain the capabilities of this text format, <a target="_blank" href="/admin/help/ckeditor5#migration-settings">the CKEditor 5 migration</a> did the following:  Added these tags/attributes to the Source Editing Plugin\'s <a target="_blank" href="/admin/help/ckeditor5#source-editing">Manually editable HTML tags</a> setting: &lt;span&gt;. Additional details are available in your logs.',
+        ],
+      ],
       'expected_messages' => [
         'status' => [
           "The following tags were permitted by this format's filter configuration, but no plugin was available that supports them. To ensure the tags remain supported by this text format, the following were added to the Source Editing plugin's <em>Manually editable HTML tags</em>: &lt;span&gt;.",
         ],
       ],
-    ];
-
-    yield "cke4_plugins_with_settings_for_disabled_plugins can be switched to CKEditor 5 without problems; irrelevant settings are dropped" => [
-      'format_id' => 'cke4_plugins_with_settings_for_disabled_plugins',
-      'filters_to_drop' => [],
-      'expected_ckeditor5_settings' => [
-        'toolbar' => [
-          'items' => [
-            'bold',
-          ],
-        ],
-        'plugins' => [],
-      ],
-      'expected_superset' => '',
-      'expected_fundamental_compatibility_violations' => [],
-      'expected_messages' => [],
     ];
 
     yield "cke4_contrib_plugins_now_in_core can be switched to CKEditor 5 without problems" => [
