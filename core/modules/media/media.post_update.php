@@ -5,7 +5,10 @@
  * Post update functions for Media.
  */
 
+use Drupal\Core\Config\Entity\ConfigEntityUpdater;
+use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Field\Entity\BaseFieldOverride;
+use Drupal\media\MediaConfigUpdater;
 
 /**
  * Implements hook_removed_post_updates().
@@ -33,4 +36,16 @@ function media_post_update_modify_base_field_author_override() {
   foreach (BaseFieldOverride::loadMultiple($uid_fields) as $base_field_override) {
     $base_field_override->setDefaultValueCallback('Drupal\media\Entity\Media::getDefaultEntityOwner')->save();
   }
+}
+
+/**
+ * Add the oembed iframe loading attribute setting to field formatter instances.
+ */
+function media_post_update_oembed_loading_attribute(array &$sandbox = NULL): void {
+  $media_config_updater = \Drupal::classResolver(MediaConfigUpdater::class);
+  assert($media_config_updater instanceof MediaConfigUpdater);
+  $media_config_updater->setDeprecationsEnabled(TRUE);
+  \Drupal::classResolver(ConfigEntityUpdater::class)->update($sandbox, 'entity_view_display', function (EntityViewDisplayInterface $view_display) use ($media_config_updater): bool {
+    return $media_config_updater->processOembedEagerLoadField($view_display);
+  });
 }
