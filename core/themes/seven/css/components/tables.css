@@ -126,6 +126,12 @@ th.select-all {
   width: 1px;
 }
 
+/* Reduce the spacing of the 'operations' <th> element. */
+th.ui-operations {
+  width: 1px;
+  padding-inline-end: 10em;
+}
+
 /**
  * Captions.
  */
