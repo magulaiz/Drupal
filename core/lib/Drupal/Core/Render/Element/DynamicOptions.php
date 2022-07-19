@@ -127,33 +127,28 @@ class DynamicOptions extends FormElement {
    * Processes a dynamic_options form element.
    */
   public static function processDynamicOptions(&$element, FormStateInterface $form_state, &$complete_form) {
+    /** @var \Drupal\Core\Render\ElementInfoManagerInterface $manager */
+    $manager = \Drupal::service('plugin.manager.element_info');
     $args = [&$element, &$form_state, &$complete_form];
-    if (count($element['#options']) > $element['#select_threshold']) {
-      call_user_func_array([Select::class, 'processSelect'], $args);
-      call_user_func_array([Select::class, 'processAjaxForm'], $args);
 
-      $element['#type'] = 'select';
-      $element += [
-        '#pre_render' => [
-          [Select::class, 'preRenderSelect'],
-        ],
-        '#theme_wrappers' => ['form_element'],
-        '#theme' => 'select',
-      ];
+    // Determine the basic form element to render.
+    if (count($element['#options']) > $element['#select_threshold']) {
+      $type = 'select';
     }
     else {
-      [$class, $type] = $element['#multiple'] ? [Checkboxes::class, 'checkboxes'] : [Radios::class, 'radios'];
-      $callback = $element['#multiple'] ? [$class, 'processCheckboxes'] : [$class, 'processRadios'];
-      call_user_func_array($callback, $args);
-
-      $element['#type'] = $type;
-      $element += [
-        '#theme_wrappers' => [$type],
-        '#pre_render' => [
-          [$class, 'preRenderCompositeFormElement'],
-        ],
-      ];
+      $type = $element['#multiple'] ? 'checkboxes' : 'radios';
     }
+
+    $info = $manager->getInfo($type);
+
+    // Call the basic element #process functions.
+    foreach ($info['#process'] as $callback) {
+      call_user_func_array($callback, $args);
+    }
+
+    // Set the basic element definition.
+    $element['#type'] = $type;
+    $element += $info;
 
     return $element;
   }
