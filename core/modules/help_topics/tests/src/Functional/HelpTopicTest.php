@@ -60,7 +60,6 @@ class HelpTopicTest extends BrowserTestBase {
     // These tests rely on some markup from the 'stark' theme and we test theme
     // provided help topics.
     \Drupal::service('theme_installer')->install(['help_topics_test_theme']);
-    \Drupal::service('config.factory')->getEditable('system.theme')->set('admin', 'stark')->save();
 
     // Place various blocks.
     $settings = [
