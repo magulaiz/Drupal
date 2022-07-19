@@ -126,7 +126,7 @@ class BulkForm extends FieldPluginBase implements CacheableDependencyInterface {
     $entity_type = $this->getEntityType();
     // Filter the actions to only include those for this entity type.
     $this->actions = array_filter($this->actionStorage->loadMultiple(), function ($action) use ($entity_type) {
-      return $action->getType() == $entity_type;
+      return $action->getType() == $entity_type && $action->access('execute');
     });
   }
 
