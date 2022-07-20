@@ -4,7 +4,6 @@ namespace Drupal\BuildTests\Composer\Component;
 
 use Drupal\BuildTests\Composer\ComposerBuildTestBase;
 use Drupal\Composer\Composer;
-use Symfony\Component\Finder\Finder;
 
 /**
  * Demonstrate that the Component generator responds to release tagging.
@@ -20,13 +19,6 @@ use Symfony\Component\Finder\Finder;
 class ComponentsTaggedReleaseTest extends ComposerBuildTestBase {
 
   /**
-   * Relative path from Drupal root to the Components directory.
-   *
-   * @var string
-   */
-  protected static $componentsPath = '/core/lib/Drupal/Component';
-
-  /**
    * Highly arbitrary version and constraint expectations.
    *
    * @return array
@@ -34,7 +26,7 @@ class ComponentsTaggedReleaseTest extends ComposerBuildTestBase {
    *   - Second element is the resulting constraint which should be present in
    *     the component core dependencies.
    */
-  public function providerVersionConstraint() {
+  public function providerVersionConstraint(): array {
     return [
       // [Tag, constraint]
       '1.0.x-dev' => ['1.0.x-dev', '1.0.x-dev'],
@@ -49,7 +41,7 @@ class ComponentsTaggedReleaseTest extends ComposerBuildTestBase {
    *
    * @dataProvider providerVersionConstraint
    */
-  public function testReleaseTagging($tag, $constraint) {
+  public function testReleaseTagging(string $tag, string $constraint): void {
     $this->copyCodebase();
     $drupal_root = $this->getWorkspaceDirectory();
 
@@ -64,11 +56,7 @@ class ComponentsTaggedReleaseTest extends ComposerBuildTestBase {
     $this->assertErrorOutputContains('generateComponentPackages');
 
     // Find all the components.
-    $component_finder = new Finder();
-    $component_finder->name('composer.json')
-      ->in($drupal_root . static::$componentsPath)
-      ->ignoreUnreadableDirs()
-      ->depth(1);
+    $component_finder = $this->getComponentPathsFinder($drupal_root);
 
     // Loop through all the component packages.
     /** @var \Symfony\Component\Finder\SplFileInfo $composer_json */

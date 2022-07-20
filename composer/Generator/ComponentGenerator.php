@@ -33,14 +33,14 @@ class ComponentGenerator {
   /**
    * Data from drupal/drupal's composer.json file.
    *
-   * @var array
+   * @var \Drupal\Composer\Generator\Util\DrupalCoreComposer
    */
   protected $drupalProjectInfo;
 
   /**
    * Data from drupal/core's composer.json file.
    *
-   * @var array
+   * @var \Drupal\Composer\Generator\Util\DrupalCoreComposer
    */
   protected $drupalCoreInfo;
 
@@ -55,8 +55,9 @@ class ComponentGenerator {
    * Find all the composer.json files for components.
    *
    * @return \Symfony\Component\Finder\Finder
+   *   A Finder object with all the composer.json files for components.
    */
-  public function getComponentPathsFinder() {
+  public function getComponentPathsFinder(): Finder {
     $composer_json_finder = new Finder();
     $composer_json_finder->name('composer.json')
       ->in($this->componentBaseDir)
@@ -73,7 +74,7 @@ class ComponentGenerator {
    * @param string $base_dir
    *   Directory where drupal/drupal repository is located.
    */
-  public function generate(Event $event, $base_dir) {
+  public function generate(Event $event, string $base_dir): void {
     $io = $event->getIO();
     // General information from drupal/drupal and drupal/core composer.json
     // and composer.lock files.
@@ -101,9 +102,10 @@ class ComponentGenerator {
    *   Relative path to the composer.json file for a component.
    *
    * @return bool
-   *   TRUE if the generated component package is different than what is on disk.
+   *   TRUE if the generated component package is different from what is on
+   *   disk.
    */
-  protected function generateComponentPackage(Event $event, $component_pathname) {
+  protected function generateComponentPackage(Event $event, string $component_pathname): bool {
     $io = $event->getIO();
     $composer_json_path = $this->componentBaseDir . '/' . $component_pathname;
     $original_composer_json = file_exists($composer_json_path) ? file_get_contents($composer_json_path) : '';
@@ -113,7 +115,7 @@ class ComponentGenerator {
     $updated_composer_json = static::encode($composer_json_data);
 
     // Exit early if nothing changed.
-    if (trim($original_composer_json, " \t\r\0\x0B") == trim($updated_composer_json, " \t\r\0\x0B")) {
+    if (trim($original_composer_json, " \t\r\0\x0B") === trim($updated_composer_json, " \t\r\0\x0B")) {
       return FALSE;
     }
 
@@ -121,7 +123,7 @@ class ComponentGenerator {
     $display_path = static::$relativeComponentPath . '/' . $component_pathname;
     $io->write("Updated component file <info>$display_path</info>.");
 
-    // Write the composer.json file back to disk
+    // Write the composer.json file back to disk.
     $fs = new Filesystem();
     $fs->ensureDirectoryExists(dirname($composer_json_path));
     file_put_contents($composer_json_path, $updated_composer_json);
@@ -140,7 +142,7 @@ class ComponentGenerator {
    * @return array
    *   Structured data to be turned back into JSON.
    */
-  protected function getPackage(IOInterface $io, $original_json) {
+  protected function getPackage(IOInterface $io, string $original_json): array {
     $original_data = json_decode($original_json, TRUE);
     $package_data = array_merge($original_data, $this->initialPackageMetadata());
 
@@ -158,12 +160,10 @@ class ComponentGenerator {
       if ($info = $this->drupalProjectInfo->packageLockInfo($package_name)) {
         $package_data['require'][$package_name] = $info['version'];
       }
-      else {
-        // The package wasn't in the lock file, which means we need to tell the
-        // user. But there are some packages we want to exclude from this list.
-        if ($package_name !== 'php' && (strpos($package_name, 'drupal/core-') === FALSE)) {
-          $not_in_core[$package_name] = $package_name;
-        }
+      // The package wasn't in the lock file, which means we need to tell the
+      // user. But there are some packages we want to exclude from this list.
+      elseif ($package_name !== 'php' && (strpos($package_name, 'drupal/core-') === FALSE)) {
+        $not_in_core[$package_name] = $package_name;
       }
 
       // Reconcile looser constraints from drupal/core, and we're totally OK
@@ -207,7 +207,7 @@ class ComponentGenerator {
    * @return string
    *   Encoded version of provided json data.
    */
-  public static function encode($composer_json_data) {
+  public static function encode(array $composer_json_data): string {
     return json_encode($composer_json_data, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES) . "\n";
   }
 
@@ -215,8 +215,9 @@ class ComponentGenerator {
    * Common default metadata for all components.
    *
    * @return array
+   *   An array containing the common default metadata for all components.
    */
-  protected function initialPackageMetadata() {
+  protected function initialPackageMetadata(): array {
     return [
       'extra' => [
         '_readme' => [

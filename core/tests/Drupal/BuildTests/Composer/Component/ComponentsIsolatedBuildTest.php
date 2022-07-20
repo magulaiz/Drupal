@@ -2,9 +2,8 @@
 
 namespace Drupal\BuildTests\Composer\Component;
 
-use Drupal\BuildTests\Framework\BuildTestBase;
+use Drupal\BuildTests\Composer\ComposerBuildTestBase;
 use Drupal\Composer\Composer;
-use Symfony\Component\Finder\Finder;
 
 /**
  * Try to install dependencies per component, using Composer.
@@ -17,26 +16,22 @@ use Symfony\Component\Finder\Finder;
  *
  * @requires externalCommand composer
  */
-class ComponentsIsolatedBuildTest extends BuildTestBase {
+class ComponentsIsolatedBuildTest extends ComposerBuildTestBase {
 
   /**
-   * Relative path from Drupal root to the Components directory.
+   * Provides an array with relative paths to the component paths.
    *
-   * @var string
+   * @return array
+   *   An array with relative paths to the component paths.
    */
-  protected static $componentsPath = '/core/lib/Drupal/Component';
-
-  public function provideComponentPaths() {
+  public function provideComponentPaths(): array {
     $data = [];
     // During the dataProvider phase, there is not a workspace directory yet.
     // So we will find relative paths and assemble them with the workspace
     // path later.
     $drupal_root = $this->getDrupalRoot();
-    $composer_json_finder = new Finder();
-    $composer_json_finder->name('composer.json')
-      ->in($drupal_root . static::$componentsPath)
-      ->ignoreUnreadableDirs()
-      ->depth(1);
+    $composer_json_finder = $this->getComponentPathsFinder($drupal_root);
+
     /** @var \Symfony\Component\Finder\SplFileInfo $path */
     foreach ($composer_json_finder->getIterator() as $path) {
       $data[] = ['/' . $path->getRelativePath()];
@@ -49,7 +44,7 @@ class ComponentsIsolatedBuildTest extends BuildTestBase {
    *
    * @dataProvider provideComponentPaths
    */
-  public function testComponentComposerJson($component_path) {
+  public function testComponentComposerJson(string $component_path): void {
     // Only copy the components. Copy all of them because some of them depend on
     // each other.
     $finder = $this->getCodebaseFinder();
@@ -66,7 +61,13 @@ class ComponentsIsolatedBuildTest extends BuildTestBase {
     $this->assertCommandSuccessful();
   }
 
-  protected function addExpectedRepositories($working_dir) {
+  /**
+   * Adds expected repositories as path repositories to package under test.
+   *
+   * @param string $working_dir
+   *   The working directory.
+   */
+  protected function addExpectedRepositories(string $working_dir): void {
     $repo_paths = [
       'Render' => 'drupal/core-render',
       'Utility' => 'drupal/core-utility',
