@@ -69,7 +69,8 @@ class ViewsExposedForm extends FormBase {
   public static function create(ContainerInterface $container) {
     return new static(
       $container->get('views.exposed_form_cache'),
-      $container->get('path.current')
+      $container->get('path.current'),
+      $container->get('batch.processor')
     );
   }
 
