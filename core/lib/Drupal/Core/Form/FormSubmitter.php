@@ -160,7 +160,7 @@ class FormSubmitter implements FormSubmitterInterface {
   /**
    * Batch processor getter.
    *
-   * Defined to avoid circular depependency issue.
+   * Defined to avoid circular dependency issue.
    *
    * @return \Drupal\Core\Batch\BatchProcessorInterface
    */
