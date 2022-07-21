@@ -6,7 +6,6 @@
 @import "../base/variables.pcss.css";
 
 .wide-image {
-  margin-left: 0;
   margin-block-start: var(--sp0-5);
   margin-block-end: var(--sp2);
   margin-inline-start: 0;
@@ -15,22 +14,22 @@
   @media (--grid-md) {
     width: calc(14 * var(--grid-col-width--md) + 13 * var(--grid-gap--md));
     margin-block: var(--sp2) var(--sp4);
-    margin-inline-start: calc(-1 * ((var(--grid-col-width--md) + var(--grid-gap--md))));
+    /* margin-inline-start: calc(-1 * ((var(--grid-col-width--md) + var(--grid-gap--md)))); */
   }
 
   @media (--lg) {
     width: calc(12 * var(--grid-col-width--lg) + 11 * var(--grid-gap--lg));
-    margin-inline-start: calc(-1 * (var(--grid-col-width--lg) + var(--grid-gap--lg)));
+    /* margin-inline-start: calc(-1 * (var(--grid-col-width--lg) + var(--grid-gap--lg))); */
   }
 
   @media (--nav) {
     width: calc(12 * var(--grid-col-width--nav) + 11 * var(--grid-gap--nav));
-    margin-inline-start: calc(-1 * (var(--grid-col-width--nav) + var(--grid-gap--nav)));
+    /* margin-inline-start: calc(-1 * (var(--grid-col-width--nav) + var(--grid-gap--nav))); */
   }
 
   @media (--grid-max) {
     width: calc(12 * var(--grid-col-width--max) + 11 * var(--grid-gap--max));
-    margin-inline-start: calc(-1 * (var(--grid-col-width--max) + var(--grid-gap--max)));
+    /* margin-inline-start: calc(-1 * (var(--grid-col-width--max) + var(--grid-gap--max))); */
   }
 }
 
