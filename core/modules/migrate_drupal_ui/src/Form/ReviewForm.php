@@ -110,7 +110,8 @@ class ReviewForm extends MigrateUpgradeFormBase {
       $container->get('tempstore.private'),
       $container->get('migrate_drupal.migration_state'),
       $container->get('config.factory'),
-      $container->get('module_handler')
+      $container->get('module_handler'),
+      $container->get('batch.processor')
     );
   }
 
