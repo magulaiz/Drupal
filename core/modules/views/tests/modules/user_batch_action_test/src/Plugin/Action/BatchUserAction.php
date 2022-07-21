@@ -3,6 +3,7 @@
 namespace Drupal\user_batch_action_test\Plugin\Action;
 
 use Drupal\Core\Action\ActionBase;
+use Drupal\Core\Batch\BatchBuilder;
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Session\AccountInterface;
 
@@ -21,26 +22,23 @@ class BatchUserAction extends ActionBase {
    * {@inheritdoc}
    */
   public function executeMultiple(array $entities) {
-    $operations = [];
-
-    foreach ($entities as $entity) {
-      $operations[] = [
-        [static::class, 'processBatch'],
-        [
+    if (!empty($entities)) {
+      $batch = new BatchBuilder();
+      foreach ($entities as $entity) {
+        $batch->addOperation(
+          [static::class, 'processBatch'],
           [
-            'entity_type' => $entity->getEntityTypeId(),
-            'entity_id' => $entity->id(),
+            [
+              'entity_type' => $entity->getEntityTypeId(),
+              'entity_id' => $entity->id(),
+            ],
           ],
-        ],
-      ];
-    }
-
-    if ($operations) {
-      $batch = [
-        'operations' => $operations,
-        'finished' => [static::class, 'finishBatch'],
-      ];
-      batch_set($batch);
+        );
+      }
+      $batch->setFinishCallback([static::class, 'finishBatch']);
+      /** @var \Drupal\Core\Batch\BatchProcessorInterface $batch_processor */
+      $batch_processor = \Drupal::service('batch.processor');
+      $batch_processor->queue($batch->toArray());
     }
   }
 

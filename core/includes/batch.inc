@@ -58,7 +58,7 @@ function _batch_page(Request $request) {
   // However, we must ensure to only update in the shutdown phase in this
   // particular case we track whether the batch information still needs to be
   // updated.
-  // @see _batch_shutdown()
+  // @see \Drupal\Core\Batch\BatchProcessorInterface::shutdown()
   // @see \Symfony\Component\HttpFoundation\Response::send()
   drupal_register_shutdown_function([$batch_processor, 'shutdown']);
   _batch_needs_update(TRUE);
