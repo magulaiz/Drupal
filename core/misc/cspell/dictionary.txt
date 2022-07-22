@@ -25,12 +25,12 @@ alternatif
 amet
 amphibius
 ampm
+analyse
+analysed
 andif
 annot
 anonyme
 anothermodule
-anotherwordenglish
-anotherwordgerman
 antilop
 anyall
 applix
@@ -47,10 +47,8 @@ arrowstop
 arrowthick
 arrowthickstop
 arrr
-asdrsad
 assertable
 asterix
-atomentry
 atsign
 attrval
 attrvals
@@ -64,7 +62,6 @@ autocompleting
 autocreate
 autocreated
 autocreation
-autodetect
 autoescape
 autoescaped
 autoescaping
@@ -87,7 +84,6 @@ autowired
 autowiring
 backlink
 backlinks
-backport
 backreferences
 backtraces
 bakeware
@@ -95,7 +91,6 @@ bangpow
 barbar
 barchart
 barfoo
-barmm
 barqux
 bartik
 bartik's
@@ -164,6 +159,7 @@ bundleless
 bundlenode
 buttonpane
 buttonset
+buttontext
 buytaert
 cacheability
 cacheable
@@ -187,7 +183,6 @@ canonicalizing
 canvastext
 castable
 catalana
-catbro
 catchable
 ccyy
 ccyymm
@@ -225,7 +220,6 @@ clearfix
 cleartype
 clicksorter
 clist
-cloner
 closethick
 cnenzrgre
 cnfi
@@ -234,6 +228,7 @@ codesniffer
 colgroups
 collegehumor
 colonpos
+colour
 colspans
 columnschange
 comida
@@ -296,6 +291,7 @@ dblog
 dbtng
 dburl
 ddev
+dealerdirect
 deckard
 deconstructor
 deduplicated
@@ -330,7 +326,6 @@ desaturated
 desaturates
 desaturating
 descripcion
-deserialization
 destructable
 deutsch
 deutscher
@@ -426,17 +421,14 @@ enim
 enoki
 enregistrer
 entit
-entitynodeedit
 entitytype
 entityviewedit
 eridani
 errmode
 errrf
-eslintignore
 espagnol
 estraven
 etag
-etags
 eurozone
 evenodd
 eventhandler
@@ -460,8 +452,8 @@ fatals
 favourite
 favstar
 fcgi
+fdiv
 februar
-feededit
 fetchmode
 fffffg
 fichiers
@@ -505,7 +497,6 @@ foobarbaz
 foobargorilla
 foobars
 foofoo
-foomm
 foos
 formatless
 formattable
@@ -567,16 +558,14 @@ hasher
 hashmarks
 hateoas
 hbox
-heartz
 heke
 heroless
 herpderp
 herro
 heure
 heures
+hexcode
 hidpi
-hijklmn
-hilfetestmodul
 hilited
 hinode
 hippopotamidae
@@ -620,7 +609,6 @@ indexname
 ingoa
 inited
 inno
-inputtypes
 insidekeyword
 inspectable
 instaclick
@@ -778,7 +766,7 @@ metapackage
 metapackages
 metatag
 metatags
-meΦΩ
+meφω
 mglaman
 miaus
 middlewares
@@ -882,6 +870,7 @@ nmsgstr
 nntp
 noaccess
 noadd
+noblanks
 nocache
 nocase
 nocdata
@@ -893,7 +882,6 @@ nodo
 noemptytag
 noevent
 nofields
-noindex
 nojs
 nolink
 nomask
@@ -902,15 +890,11 @@ nonconfigurable
 nonexistingfilename
 nonoptional
 nonspacing
-nonwordgerman
-nonworditem
 noquotes
 noschema
 nosniff
 nostart
 notag
-notawordenglish
-notawordgerman
 notexisting
 nothere
 notnull
@@ -979,6 +963,7 @@ permissionless
 persistable
 phpass
 phpcbf
+phpcodesniffer
 phpcs
 phpdocumentor
 phpfile
@@ -1022,7 +1007,6 @@ precache
 precompiled
 preconfigure
 preconfigured
-preconnect
 precreated
 predelete
 prefetches
@@ -1098,8 +1082,8 @@ rdfa
 rdfs
 readmore
 readonlydir
-readystate
 realelement
+realise
 realpaths
 realword
 rebuilder
@@ -1117,7 +1101,6 @@ referencers
 referer
 refinable
 regexes
-reimplement
 reindex
 reindexing
 reinject
@@ -1178,7 +1161,6 @@ scorewords
 screenreaders
 scriptable
 scrollbars
-sdeeeee
 searchdirs
 searchfield
 sebe
@@ -1211,6 +1193,7 @@ skiptags
 skos
 skynet
 slatkin
+slevomat
 sloopal
 smacss
 smalldatetime
@@ -1235,7 +1218,6 @@ splitbuttons
 spreadsheetml
 sqlpassword
 sqlusername
-sqruct
 squaresmall
 squiz
 squizlabs
@@ -1248,7 +1230,6 @@ starterkit
 starzzzz
 statuscode
 stdclass
-stdlib
 stitle
 streamwrapper
 streamwrappers
@@ -1354,12 +1335,10 @@ testcase
 testcases
 testcontent
 testcontextawareblock
-testcontextual
 testdescription
 testdialog
 testdisplay
 testen
-testfetch
 testfield
 testfilename
 testfilter
@@ -1431,8 +1410,6 @@ toplevel
 topop
 torder
 totalcount
-totranslate
-touchevent
 touchevents
 tparams
 trackback
@@ -1459,6 +1436,7 @@ typehints
 typemanager
 tzid
 uberawesome
+ui's
 uicrud
 uids
 ulwa
@@ -1490,7 +1468,6 @@ unflagged
 ungenerated
 ungroup
 ungroupable
-ungrouped
 unhashed
 unhide
 unidecode
@@ -1501,7 +1478,6 @@ uninstallation
 uninstallations
 uninstantiatable
 uninstantiated
-unioned
 unitalicize
 unixepoch
 unixtimestamp
@@ -1512,7 +1488,6 @@ unminified
 unmoderated
 unoptimized
 unpad
-unparsable
 unparseable
 unpermissioned
 unprefix
@@ -1554,7 +1529,6 @@ uploaders
 uploadprogress
 uppercased
 upscaling
-upsert
 urandom
 urlalias
 urldecoding
@@ -1590,7 +1564,6 @@ vxezb
 vxfbk
 waitfor
 wcprops
-wcsrefsdf
 webassert
 webcal
 webdriver
@@ -1633,7 +1606,6 @@ xlen
 xlgp
 xmlhttp
 xmlhttprequest
-xmlurl
 xoxo
 xpsdocument
 xsiemax
@@ -1670,9 +1642,7 @@ zwei
 zwjhek
 zxvf
 zzgroup
-Èxample
-Über
-Übersetzung
 åwesome
+èxample
 über
-Ȅchȏ
+ȅchȏ

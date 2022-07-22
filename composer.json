@@ -21,22 +21,22 @@
         "composer/composer": "^2.3.5",
         "drupal/coder": "^8.3.10",
         "instaclick/php-webdriver": "^1.4.1",
-        "mglaman/phpstan-drupal": "^1.1.9",
+        "mglaman/phpstan-drupal": "^1.1.21",
         "mikey179/vfsstream": "^1.6.8",
         "phpunit/phpunit": "^9.5",
         "phpspec/prophecy-phpunit": "^2",
         "phpstan/extension-installer": "^1.1",
-        "phpstan/phpstan": "^1.4.0",
-        "symfony/css-selector": "^6.0",
-        "symfony/phpunit-bridge": "^6.0",
-        "symfony/var-dumper": "^6.0",
-        "symfony/error-handler": "^6.0",
+        "phpstan/phpstan": "^1.8",
+        "symfony/css-selector": "^6.1",
+        "symfony/phpunit-bridge": "^6.1.2",
+        "symfony/var-dumper": "^6.1",
+        "symfony/error-handler": "^6.1",
         "justinrainbow/json-schema": "^5.2",
-        "symfony/filesystem": "^6.0",
-        "symfony/finder": "^6.0",
-        "symfony/lock": "^6.0",
-        "symfony/browser-kit": "^6.0",
-        "symfony/dom-crawler": "^6.0",
+        "symfony/filesystem": "^6.1",
+        "symfony/finder": "^6.1",
+        "symfony/lock": "^6.1",
+        "symfony/browser-kit": "^6.1",
+        "symfony/dom-crawler": "^6.1",
         "easyrdf/easyrdf": "^1.0"
     },
     "replace": {
@@ -54,7 +54,8 @@
             "composer/installers": true,
             "drupal/core-project-message": true,
             "drupal/core-vendor-hardening": true,
-            "phpstan/extension-installer": true
+            "phpstan/extension-installer": true,
+            "dealerdirect/phpcodesniffer-composer-installer": true
         }
     },
     "extra": {
@@ -109,8 +110,8 @@
         "post-update-cmd": [
             "Drupal\\Composer\\Composer::generateMetapackages"
         ],
-        "phpcs": "phpcs --standard=core/phpcs.xml.dist --runtime-set installed_paths $($COMPOSER_BINARY config vendor-dir)/drupal/coder/coder_sniffer --",
-        "phpcbf": "phpcbf --standard=core/phpcs.xml.dist --runtime-set installed_paths $($COMPOSER_BINARY config vendor-dir)/drupal/coder/coder_sniffer --"
+        "phpcs": "phpcs --standard=core/phpcs.xml.dist --",
+        "phpcbf": "phpcbf --standard=core/phpcs.xml.dist --"
     },
     "repositories": [
         {

@@ -77,23 +77,7 @@ const assetsFolder = `${coreFolder}/assets/vendor`;
     {
       pack: 'backbone',
       library: 'internal.backbone',
-      files: ['backbone.js', 'backbone-min.js', 'backbone-min.map'],
-    },
-    {
-      pack: 'css.escape',
-      folder: 'css-escape',
-      library: 'css.escape',
-      files: ['css.escape.js'],
-    },
-    {
-      pack: 'es6-promise',
-      files: [
-        { from: 'dist/es6-promise.auto.min.js', to: 'es6-promise.auto.min.js' },
-        {
-          from: 'dist/es6-promise.auto.min.map',
-          to: 'es6-promise.auto.min.map',
-        },
-      ],
+      files: ['backbone.js', 'backbone-min.js', 'backbone-min.js.map'],
     },
     {
       pack: 'farbtastic',
@@ -116,7 +100,7 @@ const assetsFolder = `${coreFolder}/assets/vendor`;
     },
     {
       pack: 'jquery-form',
-      library: 'jquery.form',
+      library: 'internal.jquery.form',
       files: [
         { from: 'dist/jquery.form.min.js', to: 'jquery.form.min.js' },
         { from: 'dist/jquery.form.min.js.map', to: 'jquery.form.min.js.map' },
@@ -141,10 +125,6 @@ const assetsFolder = `${coreFolder}/assets/vendor`;
         { from: 'dist/once.min.js', to: 'once.min.js' },
         { from: 'dist/once.min.js.map', to: 'once.min.js.map' },
       ],
-    },
-    {
-      pack: 'picturefill',
-      files: [{ from: 'dist/picturefill.min.js', to: 'picturefill.min.js' }],
     },
     {
       pack: '@popperjs/core',
@@ -215,11 +195,9 @@ const assetsFolder = `${coreFolder}/assets/vendor`;
         'ui/keycode.js',
         'ui/labels.js',
         'ui/plugin.js',
-        'ui/position.js',
         'ui/safe-active-element.js',
         'ui/safe-blur.js',
         'ui/scroll-parent.js',
-        'ui/tabbable.js',
         'ui/unique-id.js',
         'ui/version.js',
         'ui/widget.js',

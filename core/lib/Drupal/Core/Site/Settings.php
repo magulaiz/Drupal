@@ -37,24 +37,7 @@ final class Settings {
    *
    * @see self::handleDeprecations()
    */
-  private static $deprecatedSettings = [
-    'sanitize_input_whitelist' => [
-      'replacement' => 'sanitize_input_safe_keys',
-      'message' => 'The "sanitize_input_whitelist" setting is deprecated in drupal:9.1.0 and will be removed in drupal:10.0.0. Use Drupal\Core\Security\RequestSanitizer::SANITIZE_INPUT_SAFE_KEYS instead. See https://www.drupal.org/node/3163148.',
-    ],
-    'twig_sandbox_whitelisted_classes' => [
-      'replacement' => 'twig_sandbox_allowed_classes',
-      'message' => 'The "twig_sandbox_whitelisted_classes" setting is deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. Use "twig_sandbox_allowed_classes" instead. See https://www.drupal.org/node/3162897.',
-    ],
-    'twig_sandbox_whitelisted_methods' => [
-      'replacement' => 'twig_sandbox_allowed_methods',
-      'message' => 'The "twig_sandbox_whitelisted_methods" setting is deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. Use "twig_sandbox_allowed_methods" instead. See https://www.drupal.org/node/3162897.',
-    ],
-    'twig_sandbox_whitelisted_prefixes' => [
-      'replacement' => 'twig_sandbox_allowed_prefixes',
-      'message' => 'The "twig_sandbox_whitelisted_prefixes" setting is deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. Use "twig_sandbox_allowed_prefixes" instead. See https://www.drupal.org/node/3162897.',
-    ],
-  ];
+  private static $deprecatedSettings = [];
 
   /**
    * Constructor.
@@ -163,24 +146,6 @@ final class Settings {
     foreach ($databases as $key => $targets) {
       foreach ($targets as $target => $info) {
         // Backwards compatibility layer for Drupal 8 style database connection
-        // arrays. Those do not have the 'autoload' key set for core database
-        // drivers.
-        if (empty($info['autoload'])) {
-          switch (strtolower($info['driver'])) {
-            case 'mysql':
-              $info['autoload'] = 'core/modules/mysql/src/Driver/Database/mysql/';
-              break;
-
-            case 'pgsql':
-              $info['autoload'] = 'core/modules/pgsql/src/Driver/Database/pgsql/';
-              break;
-
-            case 'sqlite':
-              $info['autoload'] = 'core/modules/sqlite/src/Driver/Database/sqlite/';
-              break;
-          }
-        }
-        // Backwards compatibility layer for Drupal 8 style database connection
         // arrays. Those have the wrong 'namespace' key set, or not set at all
         // for core supported database drivers.
         if (empty($info['namespace']) || (strpos($info['namespace'], 'Drupal\\Core\\Database\\Driver\\') === 0)) {
@@ -198,6 +163,24 @@ final class Settings {
               break;
           }
         }
+        // Backwards compatibility layer for Drupal 8 style database connection
+        // arrays. Those do not have the 'autoload' key set for core database
+        // drivers.
+        if (empty($info['autoload'])) {
+          switch (trim($info['namespace'], '\\')) {
+            case "Drupal\\mysql\\Driver\\Database\\mysql":
+              $info['autoload'] = "core/modules/mysql/src/Driver/Database/mysql/";
+              break;
+
+            case "Drupal\\pgsql\\Driver\\Database\\pgsql":
+              $info['autoload'] = "core/modules/pgsql/src/Driver/Database/pgsql/";
+              break;
+
+            case "Drupal\\sqlite\\Driver\\Database\\sqlite":
+              $info['autoload'] = "core/modules/sqlite/src/Driver/Database/sqlite/";
+              break;
+          }
+        }
 
         Database::addConnectionInfo($key, $target, $info);
         // If the database driver is provided by a module, then its code may
@@ -207,7 +190,7 @@ final class Settings {
         // the database. Therefore, allow the connection info to specify an
         // autoload directory for the driver.
         if (isset($info['autoload'])) {
-          $class_loader->addPsr4($info['namespace'] . '\\', $info['autoload']);
+          $class_loader->addPsr4($info['namespace'] . '\\', $app_root . '/' . $info['autoload']);
         }
       }
     }

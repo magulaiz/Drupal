@@ -50,6 +50,16 @@ abstract class RowPluginBase extends PluginBase {
   protected $usesFields = FALSE;
 
   /**
+   * The actual field used.
+   */
+  public string $base_field;
+
+  /**
+   * The field alias.
+   */
+  public string $field_alias;
+
+  /**
    * Returns the usesFields property.
    *
    * @return bool
@@ -126,6 +136,7 @@ abstract class RowPluginBase extends PluginBase {
 
   /**
    * Perform any necessary changes to the form values prior to storage.
+   *
    * There is no need for this function to actually store the data.
    */
   public function submitOptionsForm(&$form, FormStateInterface $form_state) {}

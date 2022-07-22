@@ -105,22 +105,14 @@ class CKEditor extends EditorBase implements ContainerFactoryPluginInterface {
    * @param \Drupal\Core\Extension\ModuleExtensionList $module_list
    *   The module list service.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, CKEditorPluginManager $ckeditor_plugin_manager, ModuleHandlerInterface $module_handler, LanguageManagerInterface $language_manager, RendererInterface $renderer, StateInterface $state, FileUrlGeneratorInterface $file_url_generator = NULL, ModuleExtensionList $module_list = NULL) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, CKEditorPluginManager $ckeditor_plugin_manager, ModuleHandlerInterface $module_handler, LanguageManagerInterface $language_manager, RendererInterface $renderer, StateInterface $state, FileUrlGeneratorInterface $file_url_generator, ModuleExtensionList $module_list) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->ckeditorPluginManager = $ckeditor_plugin_manager;
     $this->moduleHandler = $module_handler;
     $this->languageManager = $language_manager;
     $this->renderer = $renderer;
     $this->state = $state;
-    if (!$file_url_generator) {
-      @trigger_error('Calling CKEditor::__construct() without the $file_url_generator argument is deprecated in drupal:9.3.0 and will be required before drupal:10.0.0. See https://www.drupal.org/node/2940031', E_USER_DEPRECATED);
-      $file_url_generator = \Drupal::service('file_url_generator');
-    }
     $this->fileUrlGenerator = $file_url_generator;
-    if (!$module_list) {
-      @trigger_error('Calling CKEditor::__construct() without the $module_list argument is deprecated in drupal:9.3.0 and is required in drupal:10.0.0. See https://www.drupal.org/node/2940438', E_USER_DEPRECATED);
-      $module_list = \Drupal::service('extension.list.module');
-    }
     $this->moduleList = $module_list;
   }
 
@@ -174,7 +166,7 @@ class CKEditor extends EditorBase implements ContainerFactoryPluginInterface {
           ],
         ],
       ],
-      'plugins' => ['language' => ['language_list' => 'un']],
+      'plugins' => [],
     ];
   }
 
@@ -295,6 +287,24 @@ class CKEditor extends EditorBase implements ContainerFactoryPluginInterface {
     if ($form_state->hasValue('plugins')) {
       $form_state->unsetValue('plugin_settings');
     }
+
+    // Ensure plugin settings are only saved for plugins that are actually
+    // enabled.
+    $about_to_be_saved_editor = Editor::create([
+      'editor' => 'ckeditor',
+      'settings' => [
+        'toolbar' => $form_state->getValue('toolbar'),
+        'plugins' => $form_state->getValue('plugins'),
+      ],
+    ]);
+    $enabled_plugins = _ckeditor_get_enabled_plugins($about_to_be_saved_editor);
+    $plugin_settings = $form_state->getValue('plugins', []);
+    foreach (array_keys($plugin_settings) as $plugin_id) {
+      if (!in_array($plugin_id, $enabled_plugins, TRUE)) {
+        unset($plugin_settings[$plugin_id]);
+      }
+    }
+    $form_state->setValue('plugins', $plugin_settings);
   }
 
   /**
