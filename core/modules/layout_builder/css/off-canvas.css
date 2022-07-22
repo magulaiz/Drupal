@@ -18,7 +18,7 @@
 
 #drupal-off-canvas-wrapper .layout-selection li {
       position: relative; /* Anchor throbber. */
-      padding: calc(var(--off-canvas-vertical-spacing-unit)*0.25);
+      padding: calc(0.25 * var(--off-canvas-vertical-spacing-unit));
       border-bottom: 1px solid var(--off-canvas-border-color)
     }
 
@@ -60,11 +60,11 @@
     }
 
 [dir="ltr"] #drupal-off-canvas-wrapper .inline-block-create-button {
-    padding-left: calc(var(--off-canvas-padding)*2 + var(--icon-size)/2)
+    padding-left: calc(2 * var(--off-canvas-padding) + var(--icon-size) / 2)
 }
 
 [dir="rtl"] #drupal-off-canvas-wrapper .inline-block-create-button {
-    padding-right: calc(var(--off-canvas-padding)*2 + var(--icon-size)/2)
+    padding-right: calc(2 * var(--off-canvas-padding) + var(--icon-size) / 2)
 }
 
 #drupal-off-canvas-wrapper .inline-block-create-button {
@@ -107,7 +107,7 @@
 
 #drupal-off-canvas-wrapper .inline-block-create-button,
   #drupal-off-canvas-wrapper .inline-block-list__item {
-    margin: 0 calc(var(--off-canvas-padding)*-1);
+    margin: 0 calc(-1 * var(--off-canvas-padding));
     color: var(--off-canvas-text-color)
   }
 
@@ -120,7 +120,7 @@
     }
 
 #drupal-off-canvas-wrapper .inline-block-list {
-    margin: 0 0 calc(var(--off-canvas-vertical-spacing-unit)*2);
+    margin: 0 0 calc(2 * var(--off-canvas-vertical-spacing-unit));
     padding: 0;
     list-style: none
   }
@@ -128,7 +128,7 @@
 #drupal-off-canvas-wrapper .inline-block-list li {
       position: relative; /* Anchor throbber. */
       margin: 0;
-      padding: calc(var(--off-canvas-vertical-spacing-unit)*0.25) 0
+      padding: calc(0.25 * var(--off-canvas-vertical-spacing-unit)) 0
     }
 
 #drupal-off-canvas-wrapper .inline-block-list li:last-child {
@@ -144,6 +144,6 @@
 #drupal-off-canvas-wrapper .inline-block-list__item {
     display: block;
     flex-grow: 1;
-    padding: calc(var(--off-canvas-vertical-spacing-unit)*2) var(--off-canvas-padding);
+    padding: calc(2 * var(--off-canvas-vertical-spacing-unit)) var(--off-canvas-padding);
     border-bottom: 1px solid var(--off-canvas-border-color);
   }

@@ -12,12 +12,12 @@
 
 #drupal-off-canvas-wrapper {
   --off-canvas-table-cell-padding: 2px;
-  --off-canvas-first-cell-padding-start: calc(var(--off-canvas-padding)/2)
+  --off-canvas-first-cell-padding-start: calc(var(--off-canvas-padding) / 2)
 }
 
 #drupal-off-canvas-wrapper table {
-    width: calc(100% + var(--off-canvas-padding)*2);
-    margin: var(--off-canvas-vertical-spacing-unit) calc(var(--off-canvas-padding)*-1);
+    width: calc(100% + 2 * var(--off-canvas-padding));
+    margin: var(--off-canvas-vertical-spacing-unit) calc(-1 * var(--off-canvas-padding));
   }
 
 #drupal-off-canvas-wrapper tr {

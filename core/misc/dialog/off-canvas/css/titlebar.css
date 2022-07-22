@@ -11,7 +11,7 @@
  */
 
 #drupal-off-canvas-wrapper {
-  --off-canvas-title-padding: calc(var(--off-canvas-vertical-spacing-unit)*3);
+  --off-canvas-title-padding: calc(3 * var(--off-canvas-vertical-spacing-unit));
   --off-canvas-title-background-color: #2d2d2d;
   --off-canvas-title-text-color: #fff;
   --off-canvas-title-font-size: 1rem
@@ -19,7 +19,7 @@
 
 #drupal-off-canvas-wrapper .ui-dialog-titlebar {
     position: relative;
-    margin: 0 calc(var(--off-canvas-padding)*-1);
+    margin: 0 calc(-1 * var(--off-canvas-padding));
     padding: var(--off-canvas-title-padding) 3.125rem;
     color: var(--off-canvas-title-text-color);
     background-color: var(--off-canvas-title-background-color);

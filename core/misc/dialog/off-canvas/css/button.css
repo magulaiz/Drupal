@@ -16,7 +16,7 @@
   --off-canvas-button-text-color: #f5f5f5;
   --off-canvas-button-text-color-hover: #fff;
   --off-canvas-button-font-size: 0.875rem;
-  --off-canvas-button-padding: calc(var(--off-canvas-vertical-spacing-unit)/2) 1.25rem;
+  --off-canvas-button-padding: calc(var(--off-canvas-vertical-spacing-unit) / 2) 1.25rem;
   --off-canvas-button-border-color: transparent;
   --off-canvas-button-border-radius: 20em;
   --off-canvas-button-font-weight: 600;

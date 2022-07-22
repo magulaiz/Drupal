@@ -49,12 +49,12 @@
   }
 
 #drupal-off-canvas-wrapper .form-type-boolean {
-    padding: calc(var(--off-canvas-vertical-spacing-unit)*0.5) 0;
+    padding: calc(0.5 * var(--off-canvas-vertical-spacing-unit)) 0;
   }
 
 #drupal-off-canvas-wrapper .description,
   #drupal-off-canvas-wrapper .form-item__description {
-    margin: calc(var(--off-canvas-vertical-spacing-unit)*0.5) 0;
+    margin: calc(0.5 * var(--off-canvas-vertical-spacing-unit)) 0;
     font-size: 0.75rem;
   }
 
@@ -64,7 +64,7 @@
 
 #drupal-off-canvas-wrapper .fieldset,
   #drupal-off-canvas-wrapper fieldset {
-    margin: calc(var(--off-canvas-vertical-spacing-unit)*2) 0;
+    margin: calc(2 * var(--off-canvas-vertical-spacing-unit)) 0;
     padding: var(--off-canvas-vertical-spacing-unit);
     border: solid var(--drupal-off-canvas-fieldset-border-width) var(--drupal-off-canvas-fieldset-border-color);
     background-color: var(--drupal-off-canvas-fieldset-background-color);
