@@ -2,6 +2,7 @@
 
 namespace Drupal\FunctionalJavascriptTests\Core\Field;
 
+use Drupal\Component\Serialization\Json;
 use Drupal\Core\Entity\Entity\EntityViewDisplay;
 use Drupal\entity_test\Entity\EntityTest;
 use Drupal\field\Entity\FieldConfig;
@@ -143,16 +144,13 @@ class TimestampFormatterWithTimeDiffTest extends WebDriverTestBase {
     $this->drupalGet($this->entity->toUrl());
 
     $time_element = $this->getSession()->getPage()->find('css', 'time');
-    $time_diff = $time_element->getText();
+    $time_diff_text = $time_element->getText();
+    $time_diff_settings = Json::decode($time_element->getAttribute('data-drupal-time-diff'));
 
     // Check that the timestamp is represented as a time difference.
-    $this->assertMatchesRegularExpression('/^\d+ seconds? ago$/', $time_diff);
-
-    // Wait at least 5 seconds.
-    $this->getSession()->wait(5000);
-
-    // The time diff hasn't been refreshed.
-    $this->assertSame($time_diff, $time_element->getText());
+    $this->assertMatchesRegularExpression('/^\d+ seconds? ago$/', $time_diff_text);
+    // Check that the refresh is zero (no refresh).
+    $this->assertSame(0, $time_diff_settings['refresh']);
   }
 
   /**
