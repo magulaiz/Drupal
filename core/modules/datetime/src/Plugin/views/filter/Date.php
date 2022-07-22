@@ -110,11 +110,29 @@ class Date extends NumericDate implements ContainerFactoryPluginInterface {
     }
 
     $identifier = $this->options['expose']['identifier'];
-    $value = $form_state->getValue($identifier);
+    $input = $form_state->getValue($identifier);
 
-    if (!empty($value['value'])) {
+    $values =[];
+    if (is_array($input)) {
+      if (!empty($input['value'])) {
+        $values[] = $input['value'];
+      }
+      else {
+        if (!empty($input['min'])) {
+          $values[] = $input['min'];
+        }
+        if (!empty($input['max'])) {
+          $values[] = $input['max'];
+        }
+      }
+    }
+    elseif (!empty($input)) {
+      $values[] = $input;
+    }
+
+    foreach ($values as $value) {
       try {
-        (new DrupalDateTime($value['value']))->getTimestamp();
+        (new DrupalDateTime($value))->getTimestamp();
       }
       catch (\Exception $e) {
         if (isset($form[$identifier])) {
@@ -125,6 +143,7 @@ class Date extends NumericDate implements ContainerFactoryPluginInterface {
         }
         // Set the form error message.
         $form_state->setError($field, $this->t('Invalid date format.'));
+        break;
       }
     }
   }
