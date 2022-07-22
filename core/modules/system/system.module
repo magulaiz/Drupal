@@ -1385,7 +1385,7 @@ function system_archiver_info_alter(&$info) {
  *
  * @see https://www.drupal.org/node/2993639
  *
- * @todo Remove this BC layer in drupal:10.0.0.
+ * @todo Remove this BC layer in drupal:11.0.0.
  */
 function system_entity_view_display_presave(EntityViewDisplayInterface $entity_view_display): void {
   /** @var \Drupal\Core\Field\FormatterPluginManager $field_formatter_manager */
@@ -1405,7 +1405,7 @@ function system_entity_view_display_presave(EntityViewDisplayInterface $entity_v
     }
 
     if (!isset($component['settings']['tooltip']) || !isset($component['settings']['time_diff'])) {
-      @trigger_error("The 'timestamp' formatter plugin 'tooltip' and 'time_diff' settings were added in drupal:9.2.0 and will be mandatory in Drupal 10.0.0. See https://www.drupal.org/node/2993639", E_USER_DEPRECATED);
+      @trigger_error("The 'timestamp' formatter plugin 'tooltip' and 'time_diff' settings were added in drupal:10.1.0 and will be mandatory in Drupal 11.0.0. See https://www.drupal.org/node/2993639", E_USER_DEPRECATED);
       $entity_view_display->setComponent($name, $component);
     }
   }
