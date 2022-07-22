@@ -441,7 +441,7 @@
             "dist": {
                 "type": "path",
                 "url": "core",
-                "reference": "e2a0c8f35b82a821f3c5dafbd2c8951f1a86b49c"
+                "reference": "3e23adc21adb7eb52266d9ab71adcbf90c1dfc38"
             },
             "require": {
                 "asm89/stack-cors": "^2.0.2",
@@ -546,6 +546,14 @@
                 ],
                 "files": [
                     "includes/bootstrap.inc"
+                ]
+            },
+            "autoload-dev": {
+                "classmap": [
+                    "tests/Drupal/Tests/DocumentElement.php"
+                ],
+                "files": [
+                    "includes/dev_class_aliases.php"
                 ]
             },
             "scripts": {

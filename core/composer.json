@@ -80,6 +80,14 @@
             "includes/bootstrap.inc"
         ]
     },
+    "autoload-dev": {
+        "classmap": [
+            "tests/Drupal/Tests/DocumentElement.php"
+        ],
+        "files": [
+            "includes/dev_class_aliases.php"
+        ]
+    },
     "config": {
         "preferred-install": "dist"
     },
