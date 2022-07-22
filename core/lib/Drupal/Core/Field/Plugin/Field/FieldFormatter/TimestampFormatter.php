@@ -29,6 +29,13 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class TimestampFormatter extends FormatterBase {
 
   /**
+   * Used to specify a date format that is customizable by user.
+   *
+   * @var string
+   */
+  protected const CUSTOM_DATE_FORMAT = 'custom';
+
+  /**
    * The date formatter service.
    *
    * @var \Drupal\Core\Datetime\DateFormatterInterface
@@ -120,7 +127,7 @@ class TimestampFormatter extends FormatterBase {
     foreach ($this->dateFormatStorage->loadMultiple() as $machine_name => $value) {
       $date_formats[$machine_name] = $this->t('@name format: @date', ['@name' => $value->label(), '@date' => $this->dateFormatter->format(REQUEST_TIME, $machine_name)]);
     }
-    $date_formats['custom'] = $this->t('Custom');
+    $date_formats[static::CUSTOM_DATE_FORMAT] = $this->t('Custom');
 
     $time_diff = $this->getSetting('time_diff');
 
@@ -186,7 +193,9 @@ class TimestampFormatter extends FormatterBase {
       '#title' => $this->t('Custom date format'),
       '#description' => $this->t('See <a href="https://www.php.net/manual/datetime.format.php#refsect1-datetime.format-parameters" target="_blank">the documentation for PHP date formats</a>.'),
       '#default_value' => $this->getSetting('custom_date_format'),
-      '#states' => $this->buildStates(['date_format'], ['value' => 'custom']),
+      '#states' => $this->buildStates(['date_format'], [
+        'value' => static::CUSTOM_DATE_FORMAT,
+      ]),
     ];
 
     $form['timezone'] = [
@@ -212,7 +221,9 @@ class TimestampFormatter extends FormatterBase {
       '#title' => $this->t('Tooltip custom date format'),
       '#description' => $this->t('See <a href="http://php.net/manual/function.date.php" target="_blank">the documentation for PHP date formats</a>.'),
       '#default_value' => $tooltip['custom_date_format'],
-      '#states' => $this->buildStates(['tooltip', 'date_format'], ['value' => 'custom']),
+      '#states' => $this->buildStates(['tooltip', 'date_format'], [
+        'value' => static::CUSTOM_DATE_FORMAT,
+      ]),
     ];
 
     return $form;
@@ -226,7 +237,7 @@ class TimestampFormatter extends FormatterBase {
 
     $time_diff = $this->getSetting('time_diff');
     $date_format = $this->getSetting('date_format');
-    $date_format = $date_format === 'custom' ? $this->getSetting('custom_date_format') : $date_format;
+    $date_format = $date_format === static::CUSTOM_DATE_FORMAT ? $this->getSetting('custom_date_format') : $date_format;
 
     if ($time_diff['enabled']) {
       $summary[] = $this->t('Displayed as a time difference');
@@ -256,7 +267,7 @@ class TimestampFormatter extends FormatterBase {
     $tooltip = $this->getSetting('tooltip');
     if (!empty($tooltip['date_format'])) {
       $tooltip_date_format = $tooltip['date_format'];
-      $tooltip_date_format = $tooltip_date_format === 'custom' ? $tooltip['custom_date_format'] : $tooltip_date_format;
+      $tooltip_date_format = $tooltip_date_format === static::CUSTOM_DATE_FORMAT ? $tooltip['custom_date_format'] : $tooltip_date_format;
       $summary[] = $this->t('Tooltip date format: @date_format', ['@date_format' => $tooltip_date_format]);
     }
 
@@ -285,7 +296,7 @@ class TimestampFormatter extends FormatterBase {
         '#attributes' => [
           // The representation of the date/time as RFC3339 "date-time".
           // @see https://www.ietf.org/rfc/rfc3339.txt
-          'datetime' => $this->dateFormatter->format($item->value, 'custom', \DateTimeInterface::RFC3339, $timezone),
+          'datetime' => $this->dateFormatter->format($item->value, static::CUSTOM_DATE_FORMAT, \DateTimeInterface::RFC3339, $timezone),
         ],
         '#text' => $this->dateFormatter->format($item->value, $date_format, $custom_date_format, $timezone, $langcode),
         '#cache' => [
