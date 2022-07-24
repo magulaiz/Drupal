@@ -49,7 +49,7 @@ class MigrationTest extends UnitTestCase {
     $destination_plugin_manager = $this->createMock('\Drupal\migrate\Plugin\MigrateDestinationPluginManager');
     $id_map_plugin_manager = $this->createMock('\Drupal\migrate\Plugin\MigratePluginManagerInterface');
 
-    $this->expectDeprecation("Invalid migration dependencies for {$plugin_id} is deprecated in drupal:9.4.0 and will cause an error in drupal:11.0.0. See https://www.drupal.org/node/3183069");
+    $this->expectDeprecation("Invalid migration dependencies for {$plugin_id} is deprecated in drupal:10.1.0 and will cause an error in drupal:11.0.0. See https://www.drupal.org/node/3183069");
     $migration = new Migration($configuration, $plugin_id, [], $migration_plugin_manager, $source_plugin_manager, $process_plugin_manager, $destination_plugin_manager, $id_map_plugin_manager);
   }
 
@@ -207,7 +207,7 @@ class MigrationTest extends UnitTestCase {
     $migration->setPluginId($plugin_id);
 
     // Migration dependencies expects ['optional' => []] or ['required' => []]].
-    $this->expectDeprecation("Invalid migration dependencies for {$plugin_id} is deprecated in drupal:9.4.0 and will cause an error in drupal:11.0.0. See https://www.drupal.org/node/3183069");
+    $this->expectDeprecation("Invalid migration dependencies for {$plugin_id} is deprecated in drupal:10.1.0 and will cause an error in drupal:11.0.0. See https://www.drupal.org/node/3183069");
     $migration->set('migration_dependencies', $dependencies);
 
     $this->expectException(InvalidPluginDefinitionException::class);
@@ -282,7 +282,7 @@ class MigrationTest extends UnitTestCase {
    */
   public function testGetMigrationDependencies() {
     $migration = new TestMigration();
-    $this->expectDeprecation('Migration::getMigrationDependencies() is deprecated in drupal:9.4.0 and is removed from drupal:11.0.0. In most cases, use getExpandedDependencies(). See https://www.drupal.org/node/3183069');
+    $this->expectDeprecation('Migration::getMigrationDependencies() is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. In most cases, use getExpandedDependencies(). See https://www.drupal.org/node/3183069');
     $migration->getMigrationDependencies();
   }
 
