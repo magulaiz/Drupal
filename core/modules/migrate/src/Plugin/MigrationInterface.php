@@ -295,7 +295,7 @@ interface MigrationInterface extends PluginInspectionInterface, DerivativeInspec
    * @deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. In most
    * cases, use getExpandedDependencies().
    *
-   * @see https://www.drupal.org/node/3183069
+   * @see https://www.drupal.org/node/3266691
    */
   public function getMigrationDependencies();
 
