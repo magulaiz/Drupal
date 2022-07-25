@@ -23,39 +23,40 @@ use Drupal\Core\Form\FormStateInterface;
  * - #select_threshold: (optional) If the number of options is bigger than the
  *   threshold, a select element rendered be used instead of checkboxes or
  *   radios. Defaults to 7.
- * Select specific properties. These properties only applies is the rendered
- * element is a select instead of checkboxes / radios:
- * - #sort_options: (optional) If set to TRUE (default is FALSE), sort the
- *   options by their labels, after rendering and translation is complete.
- *   Can be set within an option group to sort that group.
- * - #sort_start: (optional) Option index to start sorting at, where 0 is the
- *   first option. Can be used within an option group. If an empty option is
- *   being added automatically (see #empty_option and #empty_value properties),
- *   this defaults to 1 to keep the empty option at the top of the list.
- *   Otherwise, it defaults to 0.
- * - #empty_option: (optional) The label to show for the first default option.
- *   By default, the label is automatically set to "- Select -" for a required
- *   field and "- None -" for an optional field.
- * - #empty_value: (optional) The value for the first default option, which is
- *   used to determine whether the user submitted a value or not.
- *   - If #required is TRUE, this defaults to '' (an empty string).
- *   - If #required is not TRUE and this value isn't set, then no extra option
- *     is added to the select control, leaving the control in a slightly
- *     illogical state, because there's no way for the user to select nothing,
- *     since all user agents automatically preselect the first available
- *     option. But people are used to this being the behavior of select
- *     controls.
- *     @todo Address the above issue in Drupal 8.
- *   - If #required is not TRUE and this value is set (most commonly to an
- *     empty string), then an extra option (see #empty_option above)
- *     representing a "non-selection" is added with this as its value.
  * - #multiple: (optional) Indicates whether one or more options can be
  *   selected. Defaults to FALSE.
  * - #default_value: Must be NULL or not set in case there is no value for the
  *   element yet, in which case a first default option is inserted by default.
  *   Whether this first option is a valid option depends on whether the field
  *   is #required or not.
- * - #size: The number of rows in the list that should be visible at one time.
+ * - #select_options: (optional) Select specific properties. These properties
+ *   only applies is the rendered element is a select instead of checkboxes /
+ *   radios:
+ *   - #sort_options: (optional) If set to TRUE (default is FALSE), sort the
+ *     options by their labels, after rendering and translation is complete.
+ *     Can be set within an option group to sort that group.
+ *   - #sort_start: (optional) Option index to start sorting at, where 0 is the
+ *     first option. Can be used within an option group. If an empty option is
+ *     being added automatically (see #empty_option and #empty_value properties),
+ *     this defaults to 1 to keep the empty option at the top of the list.
+ *     Otherwise, it defaults to 0.
+ *   - #empty_option: (optional) The label to show for the first default option.
+ *     By default, the label is automatically set to "- Select -" for a required
+ *     field and "- None -" for an optional field.
+ *   - #empty_value: (optional) The value for the first default option, which is
+ *     used to determine whether the user submitted a value or not.
+ *     - If #required is TRUE, this defaults to '' (an empty string).
+ *     - If #required is not TRUE and this value isn't set, then no extra option
+ *       is added to the select control, leaving the control in a slightly
+ *       illogical state, because there's no way for the user to select nothing,
+ *       since all user agents automatically preselect the first available
+ *       option. But people are used to this being the behavior of select
+ *       controls.
+ *       @todo Address the above issue in Drupal 8.
+ *     - If #required is not TRUE and this value is set (most commonly to an
+ *       empty string), then an extra option (see #empty_option above)
+ *       representing a "non-selection" is added with this as its value.
+ *   - #size: The number of rows in the list that should be visible at one time.
  *
  * Usage example, in this case will behave as 'radios' form element:
  * @code
@@ -86,6 +87,9 @@ use Drupal\Core\Form\FormStateInterface;
  *   '#options' => array('blue' => $this->t('Blue'), 'red' => $this->t('Red')),
  *   '#title' => $this->t('Which colors do you like?'),
  *   '#select_threshold' => 1,
+ *   '#select_options' => [
+ *     '#empty_option' => $this->t('- Pick a value -'),
+ *   ],
  *   ...
  * );
  * @endcode
@@ -130,12 +134,16 @@ class DynamicOptions extends FormElement {
     $args = [&$element, &$form_state, &$complete_form];
 
     // Determine the basic form element to render.
+    $type = $element['#multiple'] ? 'checkboxes' : 'radios';
     if (count($element['#options']) > $element['#select_threshold']) {
       $type = 'select';
     }
-    else {
-      $type = $element['#multiple'] ? 'checkboxes' : 'radios';
+
+    // Apply the select specific properties if defined and remove them.
+    if ($type == 'select' && isset($element['#select_options'])) {
+      $element += $element['#select_options'];
     }
+    unset($element['#select_options']);
 
     $info = $manager->getInfo($type);
 
