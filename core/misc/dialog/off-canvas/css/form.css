@@ -208,8 +208,9 @@
         background-color: #eee;
       }
 
-#drupal-off-canvas-wrapper .ui-autocomplete a:focus {
-        outline: solid 1px #000;
+#drupal-off-canvas-wrapper .ui-autocomplete a:focus,
+      #drupal-off-canvas-wrapper .ui-autocomplete a.ui-state-active {
+        outline: solid 2px currentColor;
         outline-offset: -2px;
       }
 

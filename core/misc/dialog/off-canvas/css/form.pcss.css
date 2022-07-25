@@ -163,8 +163,9 @@
         background-color: #eee;
       }
 
-      &:focus {
-        outline: solid 1px #000;
+      &:focus,
+      &.ui-state-active {
+        outline: solid 2px currentColor;
         outline-offset: -2px;
       }
     }
