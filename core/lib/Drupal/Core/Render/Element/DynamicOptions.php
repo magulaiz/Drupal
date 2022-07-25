@@ -20,9 +20,9 @@ use Drupal\Core\Form\FormStateInterface;
  * - #multiple: (optional) Indicates whether one or more options can be
  *   selected. It is used to determine whether to render checkboxes or
  *   radios. Defaults to FALSE.
- * - #select_threshold: If the number of options is bigger than the threshold, a
- *   select element rendered be used instead of checkboxes / radios.
- *   Defaults to 7.
+ * - #select_threshold: (optional) If the number of options is bigger than the
+ *   threshold, a select element rendered be used instead of checkboxes or
+ *   radios. Defaults to 7.
  * Select specific properties. These properties only applies is the rendered
  * element is a select instead of checkboxes / radios:
  * - #sort_options: (optional) If set to TRUE (default is FALSE), sort the
