@@ -1302,10 +1302,9 @@ class SmartDefaultSettingsTest extends KernelTestBase {
       'expected_superset' => '',
       'expected_fundamental_compatibility_violations' => [],
       'expected_db_logs' => [
-        /* 'status' => [
+        'status' => [
           "The following tags were permitted by the <em class=\"placeholder\">A CKEditor 4 configured to have span styles</em> text format's filter configuration, but no plugin was available that supports them. To ensure the tags remain supported by this text format, the following were added to the Source Editing plugin's <em>Manually editable HTML tags</em>: &lt;span&gt;. The text format must be saved to make these changes active.",
-          'To maintain the capabilities of this text format, <a target="_blank" href="/admin/help/ckeditor5#migration-settings">the CKEditor 5 migration</a> did the following:  Added these tags/attributes to the Source Editing Plugin\'s <a target="_blank" href="/admin/help/ckeditor5#source-editing">Manually editable HTML tags</a> setting: &lt;span&gt;. Additional details are available in your logs.',
-        ], */
+        ],
       ],
       'expected_messages' => [
         'status' => [
