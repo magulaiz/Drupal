@@ -121,6 +121,7 @@
         "drupal/image": "self.version",
         "drupal/inline_form_errors": "self.version",
         "drupal/jsonapi": "self.version",
+        "drupal/jsonapi_translation": "self.version",
         "drupal/language": "self.version",
         "drupal/layout_builder": "self.version",
         "drupal/layout_discovery": "self.version",
