@@ -84,7 +84,7 @@ final class Linkset extends ControllerBase {
     $data = ['linkset' => $linkset];
     // Set the response content-type header.
     $headers = ['content-type' => 'application/linkset+json'];
-    $response = CacheableJsonResponse::create($data, 200, $headers);
+    $response = new CacheableJsonResponse($data, 200, $headers);
     // Attach cacheability metadata to the response.
     $response->addCacheableDependency($cacheability);
     return $response;
