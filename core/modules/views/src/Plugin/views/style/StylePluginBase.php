@@ -281,7 +281,6 @@ abstract class StylePluginBase extends PluginBase {
       $options = ['' => $this->t('- None -')];
       $field_labels = $this->displayHandler->getFieldLabels(TRUE);
       $heading_options = [
-        'H1' => $this->t('h1'),
         'H2' => $this->t('h2'),
         'H3' => $this->t('h3'),
         'H4' => $this->t('h4'),
