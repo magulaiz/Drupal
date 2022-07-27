@@ -280,6 +280,14 @@ abstract class StylePluginBase extends PluginBase {
     if ($this->usesFields() && $this->usesGrouping()) {
       $options = ['' => $this->t('- None -')];
       $field_labels = $this->displayHandler->getFieldLabels(TRUE);
+      $heading_options = [
+        'H1' => $this->t('h1'),
+        'H2' => $this->t('h2'),
+        'H3' => $this->t('h3'),
+        'H4' => $this->t('h4'),
+        'H5' => $this->t('h5'),
+        'H6' => $this->t('h6'),
+        ];
       $options += $field_labels;
       // If there are no fields, we can't group on them.
       if (count($options) > 1) {
@@ -307,6 +315,14 @@ abstract class StylePluginBase extends PluginBase {
             '#default_value' => $grouping['field'],
             '#description' => $this->t('You may optionally specify a field by which to group the records. Leave blank to not group.'),
           ];
+          $form['grouping'][$i]['group_heading_level'] = [
+            '#type' => 'select',
+            '#title' => $this->t('Group Heading Level', ['@number' => $i + 1]),
+            '#options' => $heading_options,
+            '#default_value' => 'h3',
+            '#description' => $this->t('You may specify a heading level by which to group the records.'),
+          ];
+
           $form['grouping'][$i]['rendered'] = [
             '#type' => 'checkbox',
             '#title' => $this->t('Use rendered output to group rows'),
@@ -369,7 +385,7 @@ abstract class StylePluginBase extends PluginBase {
     // Don't run validation on style plugins without the grouping setting.
     if ($form_state->hasValue(['style_options', 'grouping'])) {
       // Don't save grouping if no field is specified.
-      $groupings = $form_state->getValue(['style_options', 'grouping']);
+      $groupings = $form_state->getValue(['style_options', 'grouping', 'group_heading_level']);
       foreach ($groupings as $index => $grouping) {
         if (empty($grouping['field'])) {
           $form_state->unsetValue(['style_options', 'grouping', $index]);

@@ -8,6 +8,7 @@
  * - rows: A list of the view's row items.
  *   - attributes: The row's HTML attributes.
  *   - content: The row's content.
+ * - group_heading_level: The heading level selected in the views configuration.
  * - view: The view object.
  * - default_row_class: A flag indicating whether default classes should be
  *   used on rows.
@@ -18,7 +19,7 @@
  */
 #}
 {% if title %}
-  <h3>{{ title }}</h3>
+    <{{ group_heading_level }}> {{ title }} </{{ group_heading_level }}>
 {% endif %}
 {% for row in rows %}
   {%

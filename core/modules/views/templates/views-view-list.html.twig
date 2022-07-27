@@ -8,6 +8,7 @@
  * - rows: A list of rows for this list.
  *   - attributes: The row's HTML attributes.
  *   - content: The row's contents.
+ * - group_heading_level: The heading level selected in the views configuration
  * - title: The title of this group of rows. May be empty.
  * - list: @todo.
  *   - type: Starting tag will be either a ul or ol.
@@ -22,7 +23,7 @@
   <div{{ attributes }}>
 {% endif %}
   {% if title %}
-    <h3>{{ title }}</h3>
+    <{{ group_heading_level }}> {{ title }} </{{ group_heading_level }}>
   {% endif %}
 
   <{{ list.type }}{{ list.attributes }}>

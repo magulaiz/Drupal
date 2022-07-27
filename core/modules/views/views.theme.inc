@@ -215,11 +215,13 @@ function template_preprocess_views_view_fields(&$variables) {
  *   - rows: The rows returned from the view.
  *   - grouping_level: Integer indicating the hierarchical level of the
  *     grouping.
+ *   - group_heading_level: The HTML heading the results should be marked up
+ *     with.
  *   - content: The content to be grouped.
  *   - title: The group heading.
  */
 function template_preprocess_views_view_grouping(&$variables) {
-  $variables['content'] = $variables['view']->style_plugin->renderGroupingSets($variables['rows'], $variables['grouping_level']);
+  $variables['content'] = $variables['view']->style_plugin->renderGroupingSets($variables['rows'], $variables['grouping_level'], $variables['group_heading_level']);
 }
 
 /**
@@ -956,7 +958,7 @@ function template_preprocess_views_view_opml(&$variables) {
   }
   $variables['title'] = $title;
   $variables['items'] = $items;
-  $variables['updated'] = gmdate(DATE_RFC2822, \Drupal::time()->getRequestTime());
+  $variables['updated'] = gmdate(DATE_RFC2822, REQUEST_TIME);
 
   // During live preview we don't want to output the header since the contents
   // of the feed are being displayed inside a normal HTML page.
