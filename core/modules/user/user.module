@@ -439,12 +439,6 @@ function template_preprocess_username(&$variables) {
 function user_login_finalize(UserInterface $account) {
   \Drupal::currentUser()->setAccount($account);
   \Drupal::logger('user')->notice('Session opened for %name.', ['%name' => $account->getAccountName()]);
-  // Update the user table timestamp noting user has logged in.
-  // This is also used to invalidate one-time login links.
-  $account->setLastLoginTime(\Drupal::time()->getRequestTime());
-  \Drupal::entityTypeManager()
-    ->getStorage('user')
-    ->updateLastLoginTimestamp($account);
 
   // Regenerate the session ID to prevent against session fixation attacks.
   // This is called before hook_user_login() in case one of those functions

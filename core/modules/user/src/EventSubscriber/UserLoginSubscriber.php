@@ -2,6 +2,7 @@
 
 namespace Drupal\user\EventSubscriber;
 
+use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Messenger\MessengerInterface;
 use Drupal\Core\Routing\RedirectDestinationInterface;
@@ -15,6 +16,13 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 class UserLoginSubscriber implements EventSubscriberInterface {
 
   use StringTranslationTrait;
+
+  /**
+   * The time service.
+   *
+   * @var \Drupal\Component\Datetime\TimeInterface
+   */
+  protected TimeInterface $time;
 
   /**
    * The config factory service.
@@ -40,6 +48,8 @@ class UserLoginSubscriber implements EventSubscriberInterface {
   /**
    * Constructs a new event subscriber service.
    *
+   * @param \Drupal\Component\Datetime\TimeInterface $time
+   *   The time service.
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   The config factory service.
    * @param \Drupal\Core\Messenger\MessengerInterface $messenger
@@ -47,7 +57,8 @@ class UserLoginSubscriber implements EventSubscriberInterface {
    * @param \Drupal\Core\Routing\RedirectDestinationInterface $redirect_destination
    *   The redirect destination service.
    */
-  public function __construct(ConfigFactoryInterface $config_factory, MessengerInterface $messenger, RedirectDestinationInterface $redirect_destination) {
+  public function __construct(TimeInterface $time, ConfigFactoryInterface $config_factory, MessengerInterface $messenger, RedirectDestinationInterface $redirect_destination) {
+    $this->time = $time;
     $this->configFactory = $config_factory;
     $this->messenger = $messenger;
     $this->redirectDestination = $redirect_destination;
@@ -69,11 +80,19 @@ class UserLoginSubscriber implements EventSubscriberInterface {
    *   The user login event.
    */
   public function onUserLogin(UserLoginEvent $event): void {
+    $account = $event->getAccount();
+
+    // Update the user table timestamp noting user has logged in. This is also
+    // used to invalidate one-time login links.
+    $account->setLastLoginTime($this->time->getRequestTime());
+    // @todo Not injecting as this will be changed later.
+    \Drupal::entityTypeManager()
+      ->getStorage('user')
+      ->updateLastLoginTimestamp($account);
+
     // Reset static cache of default variables in template_preprocess() to
     // reflect the new user.
     drupal_static_reset('template_preprocess');
-
-    $account = $event->getAccount();
 
     // If the user has a NULL time zone, notify them to set a time zone.
     $config = $this->configFactory->get('system.date');
