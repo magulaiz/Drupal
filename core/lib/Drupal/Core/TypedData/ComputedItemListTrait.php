@@ -151,4 +151,11 @@ trait ComputedItemListTrait {
     return $this;
   }
 
+  /**
+   * Enforces re-computing the field.
+   */
+  public function resetComputedValue(): void {
+    $this->valueComputed = FALSE;
+  }
+
 }

@@ -73,6 +73,6 @@ services:
     arguments: ['user']
   user.login.subscriber:
     class: Drupal\user\EventSubscriber\UserLoginSubscriber
-    arguments: ['@datetime.time', '@config.factory', '@messenger', '@redirect.destination']
+    arguments: ['@datetime.time', '@keyvalue', '@config.factory', '@messenger', '@redirect.destination']
     tags:
       - { name: 'event_subscriber' }
