@@ -1305,3 +1305,13 @@ function user_entity_operation(EntityInterface $entity) {
   ];
 
 }
+
+/**
+ * Implements hook_ENTITY_TYPE_delete().
+ */
+function user_user_delete(UserInterface $account) {
+  \Drupal::keyValue('user.timestamp')->deleteMultiple([
+    "{$account->id()}:access",
+    "{$account->id()}:login",
+  ]);
+}
