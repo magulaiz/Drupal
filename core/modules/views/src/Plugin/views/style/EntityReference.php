@@ -2,6 +2,7 @@
 
 namespace Drupal\views\Plugin\views\style;
 
+use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\Xss;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\views\ResultRow;
@@ -104,7 +105,7 @@ class EntityReference extends StylePluginBase {
   protected function extractResultsFromGroup(array $grouping, $id_field_alias, array &$results, array $parent_groups = []) {
     // If there is no grouping, $group === ''.
     if (!empty($grouping['group'])) {
-      $parent_groups[] = $grouping['group'];
+      $parent_groups[] = trim(Html::decodeEntities($grouping['group']));
     }
     foreach ($grouping['rows'] as $row) {
       if (is_array($row)) {
