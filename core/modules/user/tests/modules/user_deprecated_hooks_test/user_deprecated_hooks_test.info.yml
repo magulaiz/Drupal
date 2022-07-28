@@ -1,0 +1,5 @@
+name: User module deprecated hooks tests
+type: module
+description: Support module for testing user deprecated hooks.
+package: Testing
+version: VERSION

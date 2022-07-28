@@ -71,3 +71,8 @@ services:
   logger.channel.user:
     parent: logger.channel_base
     arguments: ['user']
+  user.login.subscriber:
+    class: Drupal\user\EventSubscriber\UserLoginSubscriber
+    arguments: ['@config.factory', '@messenger', '@redirect.destination']
+    tags:
+      - { name: 'event_subscriber' }

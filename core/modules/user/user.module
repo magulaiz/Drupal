@@ -455,29 +455,8 @@ function user_login_finalize(UserInterface $account) {
   $session->migrate();
   $session->set('uid', $account->id());
   $session->set('check_logged_in', TRUE);
-  \Drupal::moduleHandler()->invokeAll('user_login', [$account]);
+  \Drupal::moduleHandler()->invokeAllDeprecated('hook_user_login() is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. In order to act on user login, subscribe to Drupal\user\Event\UserLoginEvent event. See https://www.drupal.org/node/3300476', 'user_login', [$account]);
   \Drupal::service('event_dispatcher')->dispatch(new UserLoginEvent($account));
-}
-
-/**
- * Implements hook_user_login().
- */
-function user_user_login(UserInterface $account) {
-  // Reset static cache of default variables in template_preprocess() to reflect
-  // the new user.
-  drupal_static_reset('template_preprocess');
-
-  // If the user has a NULL time zone, notify them to set a time zone.
-  $config = \Drupal::config('system.date');
-  if (!$account->getTimezone() && $config->get('timezone.user.configurable') && $config->get('timezone.user.warn')) {
-    \Drupal::messenger()
-      ->addStatus(t('Configure your <a href=":user-edit">account time zone setting</a>.', [
-        ':user-edit' => $account->toUrl('edit-form', [
-          'query' => \Drupal::destination()->getAsArray(),
-          'fragment' => 'edit-timezone',
-        ])->toString(),
-      ]));
-  }
 }
 
 /**
