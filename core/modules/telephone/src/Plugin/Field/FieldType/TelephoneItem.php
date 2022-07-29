@@ -21,6 +21,8 @@ use Drupal\Core\TypedData\DataDefinition;
  */
 class TelephoneItem extends FieldItemBase {
 
+  const MAX_LENGTH = 256;
+
   /**
    * {@inheritdoc}
    */
