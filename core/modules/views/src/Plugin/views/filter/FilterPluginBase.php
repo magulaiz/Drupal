@@ -1457,7 +1457,7 @@ abstract class FilterPluginBase extends HandlerBase implements CacheableDependen
     // False means that we got a setting that means to recurse ourselves,
     // so we should erase whatever happened to be there.
     $session = $this->view->getRequest()->getSession();
-    $views_session = $session->get('views', []);
+    $views_session = NULL !== $session ? $session->get('views', []) : [];
     if ($status === FALSE && isset($views_session[$this->view->storage->id()][$display_id])) {
       unset($views_session[$this->view->storage->id()][$display_id][$this->options['group_info']['identifier']]);
     }
@@ -1563,7 +1563,7 @@ abstract class FilterPluginBase extends HandlerBase implements CacheableDependen
     // False means that we got a setting that means to recurse ourselves,
     // so we should erase whatever happened to be there.
     $session = $this->view->getRequest()->getSession();
-    $views_session = $session->get('views', []);
+    $views_session = NULL !== $session ? $session->get('views', []) : [];
     if (!$status && isset($views_session[$this->view->storage->id()][$display_id])) {
       $session_ref = &$views_session[$this->view->storage->id()][$display_id];
       if ($operator && isset($session_ref[$this->options['expose']['operator_id']])) {
