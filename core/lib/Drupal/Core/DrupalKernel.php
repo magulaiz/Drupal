@@ -903,7 +903,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
     // The request stack is preserved across container rebuilds. Allow other
     // parts of the codebase to react on container initialization in subrequest.
     if (($request_stack = $this->container->get('request_stack', ContainerInterface::NULL_ON_INVALID_REFERENCE))) {
-      if ($request = $request_stack->getMasterRequest()) {
+      if ($request = $request_stack->getMainRequest()) {
         $this->container->get('event_dispatcher')->dispatch(new Event(), self::CONTAINER_INITIALIZE_SUBREQUEST_FINISHED);
       }
     }
