@@ -20,6 +20,7 @@
   padding: 0 var(--off-canvas-padding) var(--off-canvas-padding);
   color: var(--off-canvas-text-color);
   background-color: var(--off-canvas-background-color);
+  font-family: var(--off-canvas-font-family);
 
   & *:focus {
     outline: solid var(--off-canvas-focus-outline-width) var(--off-canvas-focus-outline-color);
@@ -30,7 +31,6 @@
   & .link {
     text-decoration: none;
     color: var(--off-canvas-link-color);
-    font-family: var(--off-canvas-font-family);
   }
 
   & hr {
