@@ -46,8 +46,6 @@ class UserUpdateTest extends UpdatePathTestBase {
     $this->runUpdates();
 
     $definitions = \Drupal::service('entity_field.manager')->getFieldDefinitions('user', 'user');
-
-    $key_value = \Drupal::keyValue('user.timestamp');
     foreach ($fields as $field => $getter) {
       // Check field definitions update.
       $class = 'Drupal\user\UserLast' . ucfirst($field) . 'FieldItemList';
@@ -58,7 +56,7 @@ class UserUpdateTest extends UpdatePathTestBase {
       $this->assertFalse($schema->fieldExists('users_field_data', $field));
 
       // Check that values were ported to the key/value store.
-      $this->assertSame($data->{$field}, $key_value->get("1:$field"));
+      $this->assertSame($data->{$field}, \Drupal::keyValue("user.timestamp.$field")->get(1));
 
       // Check using entity API.
       $this->assertSame($data->{$field}, User::load(1)->{$getter}());

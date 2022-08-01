@@ -70,7 +70,7 @@ class UserLoginSubscriber implements EventSubscriberInterface {
    */
   public function __construct(TimeInterface $time, KeyValueFactoryInterface $key_value_factory, ConfigFactoryInterface $config_factory, MessengerInterface $messenger, RedirectDestinationInterface $redirect_destination) {
     $this->time = $time;
-    $this->keyValue = $key_value_factory->get('user.timestamp');
+    $this->keyValue = $key_value_factory->get('user.timestamp.login');
     $this->configFactory = $config_factory;
     $this->messenger = $messenger;
     $this->redirectDestination = $redirect_destination;
@@ -97,7 +97,7 @@ class UserLoginSubscriber implements EventSubscriberInterface {
     // Update the user login timestamp noting user has logged in. This is also
     // used to invalidate one-time login links.
     $account->get('login')->resetComputedValue();
-    $this->keyValue->set("{$account->id()}:login", $this->time->getRequestTime());
+    $this->keyValue->set($account->id(), $this->time->getRequestTime());
 
     // Reset static cache of default variables in template_preprocess() to
     // reflect the new user.

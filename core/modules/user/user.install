@@ -104,12 +104,12 @@ function user_update_last_removed() {
 function user_update_10100(array &$sandbox): string {
   $fields = ['access', 'login'];
   $storage = \Drupal::entityTypeManager()->getStorage('user');
-  $key_value = \Drupal::keyValue('user.timestamp');
 
-  if (!isset($sandbox['last_uid'])) {
+  if (!isset($sandbox['uids'])) {
     $sandbox['uids'] = array_values(
       $storage->getQuery()
         ->condition('uid', 0, '>')
+        ->sort('uid')
         ->accessCheck(FALSE)
         ->execute()
     );
@@ -120,7 +120,7 @@ function user_update_10100(array &$sandbox): string {
   $uids = array_splice($sandbox['uids'], 0, 50);
   foreach ($storage->loadMultiple($uids) as $uid => $account) {
     foreach ($fields as $field) {
-      $key_value->set("$uid:$field", $account->get($field)->value);
+      \Drupal::keyValue("user.timestamp.$field")->set($uid, $account->get($field)->value);
     }
   }
   $sandbox['processed'] += count($uids);
