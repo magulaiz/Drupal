@@ -4,6 +4,7 @@ namespace Drupal\Tests\user\Functional\Update;
 
 use Drupal\FunctionalTests\Update\UpdatePathTestBase;
 use Drupal\user\Entity\User;
+use Drupal\user\UserTimestampFieldItemList;
 
 /**
  * Update path tests for user module.
@@ -48,9 +49,8 @@ class UserUpdateTest extends UpdatePathTestBase {
     $definitions = \Drupal::service('entity_field.manager')->getFieldDefinitions('user', 'user');
     foreach ($fields as $field => $getter) {
       // Check field definitions update.
-      $class = 'Drupal\user\UserLast' . ucfirst($field) . 'FieldItemList';
       $this->assertTrue($definitions[$field]->isComputed());
-      $this->assertSame($class, $definitions[$field]->getClass());
+      $this->assertSame(UserTimestampFieldItemList::class, $definitions[$field]->getClass());
 
       // Check that table columns were removed.
       $this->assertFalse($schema->fieldExists('users_field_data', $field));
