@@ -46,12 +46,7 @@ class UserUpdateTest extends UpdatePathTestBase {
 
     $this->runUpdates();
 
-    $definitions = \Drupal::service('entity_field.manager')->getFieldDefinitions('user', 'user');
     foreach ($fields as $field => $getter) {
-      // Check field definitions update.
-      $this->assertTrue($definitions[$field]->isComputed());
-      $this->assertSame(UserTimestampFieldItemList::class, $definitions[$field]->getClass());
-
       // Check that table columns were removed.
       $this->assertFalse($schema->fieldExists('users_field_data', $field));
 
