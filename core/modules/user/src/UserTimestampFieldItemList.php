@@ -2,9 +2,10 @@
 
 namespace Drupal\user;
 
+use Drupal\Core\Field\FieldItemList;
 use Drupal\Core\TypedData\ComputedItemListTrait;
 
-trait UserTimestampTrait {
+class UserTimestampFieldItemList extends FieldItemList {
 
   use ComputedItemListTrait;
 

@@ -12,8 +12,7 @@ use Drupal\user\RoleInterface;
 use Drupal\user\StatusItem;
 use Drupal\user\TimeZoneItem;
 use Drupal\user\UserInterface;
-use Drupal\user\UserLastAccessFieldItemList;
-use Drupal\user\UserLastLoginFieldItemList;
+use Drupal\user\UserTimestampFieldItemList;
 
 /**
  * Defines the user entity class.
@@ -533,13 +532,13 @@ class User extends ContentEntityBase implements UserInterface {
       ->setLabel(t('Last access'))
       ->setDescription(t('The time that the user last accessed the site.'))
       ->setComputed(TRUE)
-      ->setClass(UserLastAccessFieldItemList::class);
+      ->setClass(UserTimestampFieldItemList::class);
 
     $fields['login'] = BaseFieldDefinition::create('timestamp')
       ->setLabel(t('Last login'))
       ->setDescription(t('The time that the user last logged in.'))
       ->setComputed(TRUE)
-      ->setClass(UserLastLoginFieldItemList::class);
+      ->setClass(UserTimestampFieldItemList::class);
 
     $fields['init'] = BaseFieldDefinition::create('email')
       ->setLabel(t('Initial email'))
