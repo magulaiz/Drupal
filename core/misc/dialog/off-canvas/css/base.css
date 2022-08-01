@@ -16,7 +16,7 @@
   --off-canvas-background-color-dark: #333;
   --off-canvas-background-color: var(--off-canvas-background-color-medium);
   --off-canvas-padding: 1.25rem;
-  --off-canvas-text-color: #ddd;
+  --off-canvas-text-color: #e5e5e5;
   --off-canvas-link-color: #85bef4; /* @todo this is inaccessible. */
   --off-canvas-border-color: #666;
   --off-canvas-font-family: "Lucida Grande", "Lucida Sans Unicode", "liberation sans", sans-serif;

@@ -69,7 +69,7 @@
 #drupal-off-canvas-wrapper .button--primary:hover,
     #drupal-off-canvas-wrapper .button--primary:active {
       color: var(--off-canvas-primary-button-text-color-hover);
-      background: var(--off-canvas-primary-button-background-hover-color);
+      background: var(--off-canvas-primary-button-background-color-hover);
     }
 #drupal-off-canvas-wrapper button.link {
     display: inline;
