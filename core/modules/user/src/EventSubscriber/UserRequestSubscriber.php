@@ -68,12 +68,12 @@ class UserRequestSubscriber implements EventSubscriberInterface {
     }
     $this->entityTypeManager = $entity_type_manager;
     if (!$key_value_factory) {
-      @trigger_error('Calling ' . __METHOD__ . ' without the $key_value_factory argument is deprecated in drupal:10.1.0 and it will be required in drupal:11.0.0. See https://www.drupal.org/node/3300476', E_USER_DEPRECATED);
+      @trigger_error('Calling ' . __METHOD__ . '() without the $key_value_factory argument is deprecated in drupal:10.1.0 and it will be required in drupal:11.0.0. See https://www.drupal.org/node/3300476', E_USER_DEPRECATED);
       $key_value_factory = \Drupal::service('keyvalue');
     }
     $this->keyValue = $key_value_factory->get('user.timestamp.access');
     if (!$time) {
-      @trigger_error('Calling ' . __METHOD__ . ' without the $time argument is deprecated in drupal:10.1.0 and it will be required in drupal:11.0.0. See https://www.drupal.org/node/3300476', E_USER_DEPRECATED);
+      @trigger_error('Calling ' . __METHOD__ . '() without the $time argument is deprecated in drupal:10.1.0 and it will be required in drupal:11.0.0. See https://www.drupal.org/node/3300476', E_USER_DEPRECATED);
       $time = \Drupal::service('datetime.time');
     }
     $this->time = $time;
