@@ -96,8 +96,9 @@ class UserLoginSubscriber implements EventSubscriberInterface {
 
     // Update the user login timestamp noting user has logged in. This is also
     // used to invalidate one-time login links.
-    $account->get('login')->resetComputedValue();
-    $this->keyValue->set($account->id(), $this->time->getRequestTime());
+    $request_time = $this->time->getRequestTime();
+    $account->setLastLoginTime($request_time);
+    $this->keyValue->set($account->id(), $request_time);
 
     // Reset static cache of default variables in template_preprocess() to
     // reflect the new user.
