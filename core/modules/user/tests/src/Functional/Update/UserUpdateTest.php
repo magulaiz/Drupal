@@ -4,7 +4,6 @@ namespace Drupal\Tests\user\Functional\Update;
 
 use Drupal\FunctionalTests\Update\UpdatePathTestBase;
 use Drupal\user\Entity\User;
-use Drupal\user\UserTimestampFieldItemList;
 
 /**
  * Update path tests for user module.
