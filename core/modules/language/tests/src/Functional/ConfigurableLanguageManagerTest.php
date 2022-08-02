@@ -266,4 +266,14 @@ class ConfigurableLanguageManagerTest extends BrowserTestBase {
     $assert_session->pageTextNotContains($field_label_es);
   }
 
+  /**
+   * {@inheritDoc}
+   */
+  protected function drupalGet($path, array $options = [], array $headers = []) {
+    parent::drupalGet($path, $options, $headers);
+    // Locale lookup clears caches after the response is flushed to the client;
+    // wait for Drupal to perform its termination work before continuing.
+    sleep(1);
+  }
+
 }
