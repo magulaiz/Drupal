@@ -13,7 +13,6 @@ use Drupal\node\Entity\NodeType;
 use Drupal\Tests\jsonapi\Traits\CommonCollectionFilterAccessTestPatternsTrait;
 use Drupal\user\Entity\User;
 use GuzzleHttp\RequestOptions;
-use Symfony\Component\HttpFoundation\Response;
 
 /**
  * JSON:API integration test for the "Node" content entity type.

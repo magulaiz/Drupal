@@ -270,11 +270,12 @@ class ConfigurableLanguageManagerTest extends BrowserTestBase {
    * {@inheritDoc}
    */
   protected function drupalGet($path, array $options = [], array $headers = []) {
-    parent::drupalGet($path, $options, $headers);
+    $response = parent::drupalGet($path, $options, $headers);
     // The \Drupal\locale\LocaleTranslation service clears caches after the
     // response is flushed to the client; wait for Drupal to perform its
     // termination work before continuing.
     sleep(1);
+    return $response;
   }
 
 }
