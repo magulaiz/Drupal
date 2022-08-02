@@ -79,6 +79,9 @@ class LocaleLocaleLookupTest extends BrowserTestBase {
     _locale_refresh_translations(['fr'], [$lid]);
 
     // Check that 'count[2]' was fixed for render value.
+    // Locale module does cache clearing on termination; allow for this to
+    // complete before proceeding with next data provider value.
+    sleep(1);
     $this->drupalGet('');
     $this->assertSession()->pageTextContains($expected);
 
