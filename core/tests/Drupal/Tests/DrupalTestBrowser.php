@@ -256,7 +256,7 @@ class DrupalTestBrowser extends AbstractBrowser {
         $headers = $response->getHeaders();
         $headers['Content-Type'] = $content_type . ';charset=' . $matches[1];
 
-        $response = new Response($response->getContent(), $response->getStatus(), $headers);
+        $response = new Response($response->getContent(), $response->getStatusCode(), $headers);
       }
     }
 
