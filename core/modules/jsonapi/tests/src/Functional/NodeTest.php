@@ -393,8 +393,7 @@ class NodeTest extends ResourceTestBase {
     // $url = $this->entity->toUrl('jsonapi');
     $request_options = $this->getAuthenticationRequestOptions();
     $request_options[RequestOptions::QUERY] = ['fields' => ['node--camelids' => 'title']];
-    $response = $this->request('GET', $url, $request_options);
-    $this->assertEquals(Response::HTTP_OK, $response->getStatusCode(), $response->getBody()->getContents());
+    $this->request('GET', $url, $request_options);
     // Ensure the normalization cache is being incrementally built. After
     // requesting the title, only the title is in the cache.
     $this->assertNormalizedFieldsAreCached(['title']);
