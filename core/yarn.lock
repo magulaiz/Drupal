@@ -1137,6 +1137,13 @@
   dependencies:
     ckeditor5 "^34.1.0"
 
+"@ckeditor/ckeditor5-style@34.1.x":
+  version "34.1.0"
+  resolved "https://registry.yarnpkg.com/@ckeditor/ckeditor5-style/-/ckeditor5-style-34.1.0.tgz#b7fbc1c0250630d9e810b560bc1adc0dbf839d4f"
+  integrity sha512-ga+Gv1Erlp+WkPQ1ZPoWPc7HTevW/3lnZ1SXWrNgx+gMDjQ7VA+m1EXNs8sWtZdxs9YwO+F5tRTsCTRpfOw5Zg==
+  dependencies:
+    ckeditor5 "^34.1.0"
+
 "@ckeditor/ckeditor5-table@34.1.x":
   version "34.1.0"
   resolved "https://registry.yarnpkg.com/@ckeditor/ckeditor5-table/-/ckeditor5-table-34.1.0.tgz#53f266987ac80cdbd48fbeedd89d87fd80cae10d"
