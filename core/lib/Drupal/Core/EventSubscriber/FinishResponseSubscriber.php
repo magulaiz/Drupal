@@ -306,6 +306,7 @@ class FinishResponseSubscriber implements EventSubscriberInterface {
    *   The event to process.
    */
   public function setContentLengthHeader(ResponseEvent $event): void {
+    return;
     $response = $event->getResponse();
     if ($response instanceof StreamedResponse) {
       return;
