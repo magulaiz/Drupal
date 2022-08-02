@@ -13,6 +13,7 @@ use Drupal\node\Entity\NodeType;
 use Drupal\Tests\jsonapi\Traits\CommonCollectionFilterAccessTestPatternsTrait;
 use Drupal\user\Entity\User;
 use GuzzleHttp\RequestOptions;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * JSON:API integration test for the "Node" content entity type.
@@ -392,7 +393,8 @@ class NodeTest extends ResourceTestBase {
     // $url = $this->entity->toUrl('jsonapi');
     $request_options = $this->getAuthenticationRequestOptions();
     $request_options[RequestOptions::QUERY] = ['fields' => ['node--camelids' => 'title']];
-    $this->request('GET', $url, $request_options);
+    $response = $this->request('GET', $url, $request_options);
+    $this->assertEquals(Response::HTTP_OK, $response->getStatusCode(), $response->getBody()->getContents());
     // Ensure the normalization cache is being incrementally built. After
     // requesting the title, only the title is in the cache.
     $this->assertNormalizedFieldsAreCached(['title']);
