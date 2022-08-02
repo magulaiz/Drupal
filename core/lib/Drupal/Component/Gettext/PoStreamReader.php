@@ -245,7 +245,7 @@ class PoStreamReader implements PoStreamInterface, PoReaderInterface {
   private function readLine() {
     // Read a line and set the stream finished indicator if it was not
     // possible anymore.
-    $line = fgets($this->fd);
+    $line = $this->fd ? fgets($this->fd) : FALSE;
     $this->finished = ($line === FALSE);
 
     if (!$this->finished) {
