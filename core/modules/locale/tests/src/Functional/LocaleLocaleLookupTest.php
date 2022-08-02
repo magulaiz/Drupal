@@ -72,7 +72,7 @@ class LocaleLocaleLookupTest extends BrowserTestBase {
     // data after the response is flushed to the client. We do not want to race
     // with any string translations that may be saving from the login in
     // ::setUp().
-    sleep(3);
+    sleep(1);
     $string_storage = \Drupal::service('locale.storage');
     $string = $string_storage->findString(['source' => 'Member for', 'context' => '']);
     $lid = $string->getId();
