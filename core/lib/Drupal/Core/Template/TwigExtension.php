@@ -7,6 +7,7 @@ use Drupal\Component\Render\MarkupInterface;
 use Drupal\Core\Cache\CacheableDependencyInterface;
 use Drupal\Core\Datetime\DateFormatterInterface;
 use Drupal\Core\File\FileUrlGeneratorInterface;
+use Drupal\Core\Messenger\MessengerInterface;
 use Drupal\Core\Render\AttachmentsInterface;
 use Drupal\Core\Render\BubbleableMetadata;
 use Drupal\Core\Render\Markup;
@@ -70,6 +71,13 @@ class TwigExtension extends AbstractExtension {
   protected $fileUrlGenerator;
 
   /**
+   * The messenger service.
+   *
+   * @var \Drupal\Core\Messenger\MessengerInterface
+   */
+  protected $messenger;
+
+  /**
    * Constructs \Drupal\Core\Template\TwigExtension.
    *
    * @param \Drupal\Core\Render\RendererInterface $renderer
@@ -82,13 +90,16 @@ class TwigExtension extends AbstractExtension {
    *   The date formatter.
    * @param \Drupal\Core\File\FileUrlGeneratorInterface $file_url_generator
    *   The file URL generator.
+   * @param \Drupal\Core\Messenger\MessengerInterface $messenger
+   *   The messenger service.
    */
-  public function __construct(RendererInterface $renderer, UrlGeneratorInterface $url_generator, ThemeManagerInterface $theme_manager, DateFormatterInterface $date_formatter, FileUrlGeneratorInterface $file_url_generator) {
+  public function __construct(RendererInterface $renderer, UrlGeneratorInterface $url_generator, ThemeManagerInterface $theme_manager, DateFormatterInterface $date_formatter, FileUrlGeneratorInterface $file_url_generator, MessengerInterface $messenger) {
     $this->renderer = $renderer;
     $this->urlGenerator = $url_generator;
     $this->themeManager = $theme_manager;
     $this->dateFormatter = $date_formatter;
     $this->fileUrlGenerator = $file_url_generator;
+    $this->messenger = $messenger;
   }
 
   /**
@@ -143,6 +154,8 @@ class TwigExtension extends AbstractExtension {
       // This filter will render a renderable array to use the string results.
       new TwigFilter('render', [$this, 'renderVar']),
       new TwigFilter('format_date', [$this->dateFormatter, 'format']),
+      // Add new theme hook suggestions directly from a Twig template.
+      new TwigFilter('as', [$this, 'suggestThemeHook']),
     ];
   }
 
@@ -651,6 +664,65 @@ class TwigExtension extends AbstractExtension {
       unset($filtered_element[$key]);
     }
     return $filtered_element;
+  }
+
+  /**
+   * Adds a theme suggestion to the element.
+   *
+   * @param array $element
+   *   A theme element render array.
+   * @param string $suggestion
+   *   The theme suggestion, without the base theme hook.
+   *
+   * @return array
+   *   The element with the full theme suggestion added as the highest priority.
+   */
+  public function suggestThemeHook(array $element, string $suggestion = NULL): array {
+    // Make sure we have a valid theme element render array.
+    if (empty($element['#theme'])) {
+      // Throw assertion for non-empty elements, but allow empty elements (like
+      // field content with no items) to proceed without theme suggestion.
+      \assert(\array_diff_key($element, [
+        '#cache' => TRUE,
+        '#weight' => TRUE,
+        '#attached' => TRUE,
+      ]) === [], 'Invalid target for the "|as" Twig filter; element does not have a "#theme" key.');
+      return $element;
+    }
+    // Transform the theme hook to a format that supports multiple suggestions.
+    if (!\is_iterable($element['#theme'])) {
+      $element['#theme'] = [$element['#theme']];
+    }
+    // Replace dashes with underscores (support suggestions that match the
+    // target template name rather than the underlying theme hook).
+    $suggestion = \str_replace('-', '_', $suggestion);
+    // Add the base theme hook to the suggestion. The last item in the list of
+    // theme hooks has the lowest priority; assume it's the "base" theme hook.
+    $base_theme_hook = \end($element['#theme']);
+    $suggestion = $base_theme_hook . '__' . $suggestion;
+    // If it's already been added, we're done.
+    if (\in_array($suggestion, $element['#theme'])) {
+      return $element;
+    }
+    // Add the suggestion to the front (highest priority).
+    \array_unshift($element['#theme'], $suggestion);
+
+    // Reset the "#printed" flag to make sure the content gets rendered with the
+    // new suggestion in place.
+    if (!empty($element['#printed'])) {
+      // Warn about re-rendering.
+      $this->messenger->addWarning('Adding a theme suggestion to already-rendered content may result in re-rendering.');
+      unset($element['#printed']);
+    }
+
+    // Add a cache key to prevent using render cache from before the suggestion
+    // was added. If there are no cache keys already set, don't add one, as that
+    // would enable caching on this element where there wasn't any before.
+    if (isset($element['#cache']['keys'])) {
+      $element['#cache']['keys'][] = $suggestion;
+    }
+
+    return $element;
   }
 
 }
