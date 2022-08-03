@@ -78,7 +78,7 @@
 
           {{ link(item.title, item.url, {
             'class': link_classes,
-            'data-drupal-selector': is_top_level_menu ? 'main-nav-menu-link-has-children' : false,
+            'data-drupal-selector': is_top_level_menu and item.below ? 'main-nav-menu-link-has-children' : false,
             'aria-controls': is_parent_button ? aria_id : false,
             'aria-expanded': is_parent_button ? 'false' : false,
             })

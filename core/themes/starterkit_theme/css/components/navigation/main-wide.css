@@ -17,12 +17,33 @@
 
 /* Second level <ul> menu element. */
 .main-nav__menu--level-2 {
-  display: none;
+  visibility: hidden;
+  position: absolute;
+  top: 100%;
+  inset-inline-start: 0;
+  width: max-content;
+  max-width: 15rem;
+  padding: 0.25rem 0;
+  background-color: white;
+  z-index: 1;
+  border: solid 1px currentColor;
+  opacity: 0;
+  transition: 0.2s;
+}
+
+.main-nav__menu--level-2.is-active-menu-parent,
+html:not(.js) .main-nav__menu-item--level-1:is(:hover, :focus-within) .main-nav__menu--level-2 {
+  visibility: visible;
+  opacity: 1;
 }
 
 /* Menu item <li>. */
 .main-nav__menu-item {
   display: flex;
+}
+
+.main-nav__menu-item--has-children {
+  position: relative; /* Anchor child menus. */
 }
 
 /* Link element (can be <a>, <button>, or <span>). */
@@ -45,6 +66,7 @@
   background: transparent;
 }
 
+/* Down chevron icon. */
 .main-nav__button-toggle:after {
   display: block;
   width: 0.25rem;
@@ -67,6 +89,7 @@
   align-items: center;
 }
 
+/* Down chevron icon. */
 .main-nav__menu-link--button.main-nav__menu-link--has-children:after {
   display: block;
   width: 0.25rem;
