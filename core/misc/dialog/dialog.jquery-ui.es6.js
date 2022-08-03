@@ -71,5 +71,13 @@
       }
       $(hasFocus).eq(0).trigger('focus');
     },
+    _allowInteraction(event, ...args) {
+      // CKEditor dialogs don't work inside on jQuery UI dialogs, see https://www.drupal.org/project/drupal/issues/3065095
+      if ($(event.target).closest('.cke_dialog').length) {
+        return true;
+      }
+
+      return this._super(event, ...args);
+    },
   });
 })(jQuery, window.tabbable);
