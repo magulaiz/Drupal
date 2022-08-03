@@ -127,8 +127,7 @@
           if ('scrollBehavior' in document.documentElement.style) {
             window.scrollBy({
               top: scrollAmount,
-              left: 0,
-              behavior: 'smooth'
+              left: 0
             });
           } else {
             window.scrollBy(0, scrollAmount);
