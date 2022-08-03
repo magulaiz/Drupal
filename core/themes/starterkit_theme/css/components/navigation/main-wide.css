@@ -39,17 +39,41 @@
 /* <button> element that is generated when <a> link elements have submenus. */
 .main-nav__button-toggle {
   display: flex;
+  align-self: center;
   appearance: none;
   border: 0;
   background: transparent;
 }
 
-.main-nav__button-toggle:before {
+.main-nav__button-toggle:after {
   display: block;
-  content: "";
   width: 0.25rem;
   height: 0.25rem;
-  border-left: solid 2px currentColor;
+  content: "";
+  transform: rotate(-45deg) translateY(-100%);
   border-bottom: solid 2px currentColor;
-  transform: rotate(-45deg) translatey(-100%);
+  border-left: solid 2px currentColor;
+}
+
+/* Menu links that are <button> elements. */
+.main-nav__menu-link--button {
+  appearance: none;
+  border: 0;
+  background: transparent;
+}
+
+.main-nav__menu-link--button.main-nav__menu-link--has-children {
+  display: flex;
+  align-items: center;
+}
+
+.main-nav__menu-link--button.main-nav__menu-link--has-children:after {
+  display: block;
+  width: 0.25rem;
+  height: 0.25rem;
+  margin-inline-start: 0.75rem;
+  content: "";
+  transform: rotate(-45deg) translateY(-100%);
+  border-bottom: solid 2px currentColor;
+  border-left: solid 2px currentColor;
 }

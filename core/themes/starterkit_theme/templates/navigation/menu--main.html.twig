@@ -74,32 +74,28 @@
             @see https://www.drupal.org/project/drupal/issues/3115445
           #}
           {% set aria_id = (aria_id ~ loop.index )|clean_id %}
+          {% set is_parent_button = is_top_level_menu and item.below and menu_item_type == 'button' %}
 
           {{ link(item.title, item.url, {
             'class': link_classes,
             'data-drupal-selector': is_top_level_menu ? 'main-nav-menu-link-has-children' : false,
+            'aria-controls': is_parent_button ? aria_id : false,
+            'aria-expanded': is_parent_button ? 'false' : false,
             })
           }}
 
           {% if item.below %}
-            {#
-              Aria-hidden  and tabindex attributes are removed via JS. Button is non-functional,
-              but still visible in non-JS environments so that chevron can indicate presence of
-              drop menu).
-            #}
-            {% if is_top_level_menu %}
+            {# If this is a lop level <a> element that has a submenu, insert a <button> element to toggle the submenu. #}
+            {% if is_top_level_menu and menu_item_type != 'button' %}
               {% set toggle_button_attributes = create_attribute({
                 'class': 'main-nav__button-toggle',
                 'data-drupal-selector': 'main-nav-submenu-toggle-button',
                 'aria-controls': aria_id,
                 'aria-expanded': 'false',
-                'aria-hidden': 'true',
-                'tabindex': '-1',
               }) %}
 
               <button{{ toggle_button_attributes }}>
                 <span class="visually-hidden">{{ '@title sub-navigation'|t({'@title': item.title}) }}</span>
-                <span class="icon--menu-toggle"></span>
               </button>
             {% endif %}
 
