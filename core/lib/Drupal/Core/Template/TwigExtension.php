@@ -698,9 +698,7 @@ class TwigExtension extends AbstractExtension {
 
     // Reset the "#printed" flag to make sure the content gets rendered with the
     // new suggestion in place.
-    if (!empty($element['#printed'])) {
-      unset($element['#printed']);
-    }
+    unset($element['#printed']);
 
     // Add a cache key to prevent using render cache from before the suggestion
     // was added. If there are no cache keys already set, don't add one, as that
