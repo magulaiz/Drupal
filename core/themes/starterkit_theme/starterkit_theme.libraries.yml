@@ -136,5 +136,5 @@ main-menu:
     component:
       css/components/navigation/main-narrow.css: {  }
       css/components/navigation/main-wide.css: {  }
-    js:
-    js/navigation-main.js: {  }
+  js:
+    js/main-menu.js: {  }

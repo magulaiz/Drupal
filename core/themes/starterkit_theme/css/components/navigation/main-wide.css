@@ -1,3 +1,55 @@
-body {
-  background: red !important;
+/* The <nav> element. */
+.menu--main {
+
+}
+
+/* The menu <ul> elements. */
+.main-nav__menu {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* Top level <ul> menu element. */
+.main-nav__menu--level-1 {
+  display: flex;
+}
+
+/* Second level <ul> menu element. */
+.main-nav__menu--level-2 {
+  display: none;
+}
+
+/* Menu item <li>. */
+.main-nav__menu-item {
+  display: flex;
+}
+
+/* Link element (can be <a>, <button>, or <span>). */
+.main-nav__menu-link {
+  display: block;
+  padding: 0.5rem 1rem;
+}
+
+/* <a> link elements that have submenus. */
+.main-nav__menu-link--link.main-nav__menu-link--has-children {
+  padding-inline-end: 0.5rem;
+}
+
+/* <button> element that is generated when <a> link elements have submenus. */
+.main-nav__button-toggle {
+  display: flex;
+  appearance: none;
+  border: 0;
+  background: transparent;
+}
+
+.main-nav__button-toggle:before {
+  display: block;
+  content: "";
+  width: 0.25rem;
+  height: 0.25rem;
+  border-left: solid 2px currentColor;
+  border-bottom: solid 2px currentColor;
+  transform: rotate(-45deg) translatey(-100%);
 }
