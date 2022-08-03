@@ -673,12 +673,12 @@ class TwigExtension extends AbstractExtension {
    * @return array
    *   The element with the full theme suggestion added as the highest priority.
    */
-  public function suggestThemeHook(array $element, string $suggestion = NULL): array {
+  public function suggestThemeHook(array $element, string $suggestion): array {
     // Make sure we have a valid theme element render array.
     if (empty($element['#theme'])) {
       // Throw assertion for non-empty elements, but allow empty elements (like
       // field content with no items) to proceed without theme suggestion.
-      \assert(\array_diff_key($element, [
+      assert(array_diff_key($element, [
         '#cache' => TRUE,
         '#weight' => TRUE,
         '#attached' => TRUE,
@@ -686,22 +686,22 @@ class TwigExtension extends AbstractExtension {
       return $element;
     }
     // Transform the theme hook to a format that supports multiple suggestions.
-    if (!\is_iterable($element['#theme'])) {
+    if (!is_iterable($element['#theme'])) {
       $element['#theme'] = [$element['#theme']];
     }
     // Replace dashes with underscores (support suggestions that match the
     // target template name rather than the underlying theme hook).
-    $suggestion = \str_replace('-', '_', $suggestion);
+    $suggestion = str_replace('-', '_', $suggestion);
     // Add the base theme hook to the suggestion. The last item in the list of
     // theme hooks has the lowest priority; assume it's the "base" theme hook.
-    $base_theme_hook = \end($element['#theme']);
+    $base_theme_hook = end($element['#theme']);
     $suggestion = $base_theme_hook . '__' . $suggestion;
     // If it's already been added, we're done.
-    if (\in_array($suggestion, $element['#theme'])) {
+    if (in_array($suggestion, $element['#theme'])) {
       return $element;
     }
     // Add the suggestion to the front (highest priority).
-    \array_unshift($element['#theme'], $suggestion);
+    array_unshift($element['#theme'], $suggestion);
 
     // Reset the "#printed" flag to make sure the content gets rendered with the
     // new suggestion in place.
