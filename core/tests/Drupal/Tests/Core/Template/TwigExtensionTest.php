@@ -425,6 +425,166 @@ class TwigExtensionTest extends UnitTestCase {
     $this->assertEquals(['foo', 'bar'], $build['#url']->getOption('attributes')['class']);
   }
 
+  /**
+   * Tests Twig 'as' filter.
+   *
+   * @covers ::suggestThemeHook
+   * @dataProvider providerTestTwigAsFilter
+   */
+  public function testTwigAsFilter($original_render_array, $suggestion, $expected_render_array) {
+    $processed_render_array = $this->systemUnderTest->suggestThemeHook($original_render_array, $suggestion);
+    $this->assertEquals($expected_render_array, $processed_render_array);
+  }
+
+  /**
+   * A data provider for ::testTwigAsFilter().
+   *
+   * @return \Iterator
+   */
+  public function providerTestTwigAsFilter(): \Iterator {
+    yield 'suggestion should be added' => [
+      [
+        '#theme' => 'kitten',
+        '#name' => 'Mila',
+      ],
+      'cute',
+      [
+        '#theme' => [
+          'kitten__cute',
+          'kitten',
+        ],
+        '#name' => 'Mila',
+      ],
+    ];
+
+    yield 'suggestion should have highest priority' => [
+      [
+        '#theme' => [
+          'kitten__stripy',
+          'kitten',
+        ],
+        '#name' => 'Mila',
+      ],
+      'cute',
+      [
+        '#theme' => [
+          'kitten__cute',
+          'kitten__stripy',
+          'kitten',
+        ],
+        '#name' => 'Mila',
+      ],
+    ];
+
+    yield '#printed should be removed after suggestion was added' => [
+      [
+        '#theme' => 'kitten',
+        '#name' => 'Mila',
+        '#printed' => TRUE,
+      ],
+      'cute',
+      [
+        '#theme' => [
+          'kitten__cute',
+          'kitten',
+        ],
+        '#name' => 'Mila',
+      ],
+    ];
+
+    yield 'pre-existing suggestion should not be added' => [
+      [
+        '#theme' => [
+          'kitten__cute',
+          'kitten',
+        ],
+        '#name' => 'Mila',
+      ],
+      'cute',
+      [
+        '#theme' => [
+          'kitten__cute',
+          'kitten',
+        ],
+        '#name' => 'Mila',
+      ],
+    ];
+
+    yield '#printed should not be removed when suggestion was not added' => [
+      [
+        '#theme' => [
+          'kitten__cute',
+          'kitten',
+        ],
+        '#name' => 'Mila',
+        '#printed' => TRUE,
+      ],
+      'cute',
+      [
+        '#theme' => [
+          'kitten__cute',
+          'kitten',
+        ],
+        '#name' => 'Mila',
+        '#printed' => TRUE,
+      ],
+    ];
+
+    yield 'cache key should be added' => [
+      [
+        '#theme' => 'kitten',
+        '#name' => 'Mila',
+        '#cache' => [
+          'keys' => [
+            'kitten',
+          ]
+        ],
+      ],
+      'cute',
+      [
+        '#theme' => [
+          'kitten__cute',
+          'kitten',
+        ],
+        '#name' => 'Mila',
+        '#cache' => [
+          'keys' => [
+            'kitten',
+            'kitten__cute',
+          ],
+        ],
+      ],
+    ];
+
+    yield 'cache key should not be added when suggestion was not added' => [
+      [
+        '#theme' => [
+          'kitten__cute',
+          'kitten'
+        ],
+        '#name' => 'Mila',
+        '#cache' => [
+          'keys' => [
+            'kitten',
+          ]
+        ],
+      ],
+      'cute',
+      [
+        '#theme' => [
+          'kitten__cute',
+          'kitten',
+        ],
+        '#name' => 'Mila',
+        '#cache' => [
+          'keys' => [
+            'kitten',
+          ],
+        ],
+      ],
+    ];
+  }
+
 }
 
 class TwigExtensionTestString {
