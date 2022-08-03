@@ -7,7 +7,6 @@ use Drupal\Component\Render\MarkupInterface;
 use Drupal\Core\Cache\CacheableDependencyInterface;
 use Drupal\Core\Datetime\DateFormatterInterface;
 use Drupal\Core\File\FileUrlGeneratorInterface;
-use Drupal\Core\Messenger\MessengerInterface;
 use Drupal\Core\Render\AttachmentsInterface;
 use Drupal\Core\Render\BubbleableMetadata;
 use Drupal\Core\Render\Markup;
@@ -90,16 +89,13 @@ class TwigExtension extends AbstractExtension {
    *   The date formatter.
    * @param \Drupal\Core\File\FileUrlGeneratorInterface $file_url_generator
    *   The file URL generator.
-   * @param \Drupal\Core\Messenger\MessengerInterface $messenger
-   *   The messenger service.
    */
-  public function __construct(RendererInterface $renderer, UrlGeneratorInterface $url_generator, ThemeManagerInterface $theme_manager, DateFormatterInterface $date_formatter, FileUrlGeneratorInterface $file_url_generator, MessengerInterface $messenger) {
+  public function __construct(RendererInterface $renderer, UrlGeneratorInterface $url_generator, ThemeManagerInterface $theme_manager, DateFormatterInterface $date_formatter, FileUrlGeneratorInterface $file_url_generator) {
     $this->renderer = $renderer;
     $this->urlGenerator = $url_generator;
     $this->themeManager = $theme_manager;
     $this->dateFormatter = $date_formatter;
     $this->fileUrlGenerator = $file_url_generator;
-    $this->messenger = $messenger;
   }
 
   /**
@@ -710,8 +706,6 @@ class TwigExtension extends AbstractExtension {
     // Reset the "#printed" flag to make sure the content gets rendered with the
     // new suggestion in place.
     if (!empty($element['#printed'])) {
-      // Warn about re-rendering.
-      $this->messenger->addWarning('Adding a theme suggestion to already-rendered content may result in re-rendering.');
       unset($element['#printed']);
     }
 
