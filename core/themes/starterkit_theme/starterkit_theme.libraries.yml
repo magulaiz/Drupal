@@ -130,3 +130,11 @@ media_embed_ckeditor_theme:
   version: VERSION
   js:
     js/media_embed_ckeditor.theme.js: {  }
+main-menu:
+  version: VERSION
+  css:
+    component:
+      css/components/navigation/main-narrow.css: {  }
+      css/components/navigation/main-wide.css: {  }
+    js:
+    js/navigation-main.js: {  }

@@ -1,13 +1,19 @@
 name: starterkit_theme
 type: theme
 'base theme': stable9
-hidden: true
-starterkit: true
 version: VERSION
 libraries:
   - starterkit_theme/base
   - starterkit_theme/messages
   - core/normalize
+regions:
+  header: Header
+  primary_menu: 'Primary menu'
+  highlighted: Highlighted
+  content: Content
+  sidebar_left: 'Left sidebar'
+  sidebar_right: 'Right sidebar'
+  footer: 'Footer'
 libraries-extend:
   user/drupal.user:
     - starterkit_theme/user
