@@ -185,7 +185,7 @@ interface BookManagerInterface {
    * @param array $link
    *   The link data to save.
    * @param bool $new
-   *   Is this a new book.
+   *   Is this a new link.
    *
    * @return array
    *   The book data of that node.
