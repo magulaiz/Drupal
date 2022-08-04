@@ -1,0 +1,105 @@
+/**
+ * @file
+ * Styling for the main menu at narrow widths.
+ */
+
+@media (max-width: 1000px) {
+  /* The <nav> element. */
+  .main-nav {
+    position: absolute;
+    inset-block-start: 0;
+    inset-inline-end:0;
+    z-index: 1;
+    width: 100%;
+    height: 100%;
+    max-width: 500px;
+    border-inline-start: solid 1px black;
+    background: #eee;
+  }
+
+  /* The menu <ul> elements. */
+  .main-nav__menu {
+    margin: 0;
+    padding: 0;
+  }
+
+  /* Top level <ul> menu element. */
+  .main-nav__menu--level-1 {
+    margin-top: 100px;
+    padding: 0.5rem;
+    overflow: auto;
+  }
+
+  /* Second level <ul> menu element. */
+  .main-nav__menu--level-2 {
+    display: none;
+  }
+
+  /* Menu item <li>. */
+  .main-nav__menu-item {
+    display: flex;
+
+  }
+
+  .main-nav__menu-item--level-1 {
+    font-size: 1.5rem;
+  }
+
+  .main-nav__menu-item--has-children {
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  /* Link element (can be <a>, <button>, or <span>). */
+  .main-nav__menu-link {
+    padding: 0.5rem 1rem;
+  }
+
+  /* <a> link elements that have submenus. */
+  .main-nav__menu-link--link.main-nav__menu-link--has-children {
+
+  }
+
+  /* <button> element that is generated when <a> link elements have submenus. */
+  .main-nav__button-toggle {
+    position: relative; /* Anchor pseudo-elements. */
+    width: 2rem;
+    height: 2rem;
+    appearance: none;
+    border: 0;
+    background: transparent;
+  }
+
+  .main-nav__button-toggle:before,
+  .main-nav__button-toggle:after {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    content: "";
+    width: 60%;
+    height: 0px;
+    border-top: solid 3px currentColor;
+  }
+
+  .main-nav__button-toggle:after {
+    transform: translate(-50%, -50%) rotate(90deg);
+  }
+
+  /* Menu links that are <button> elements. */
+  .main-nav__menu-link--button {
+    appearance: none;
+    border: 0;
+    background: transparent;
+  }
+
+  .main-nav__menu-link--button.main-nav__menu-link--has-children {
+
+  }
+
+  /* Down chevron icon. */
+  .main-nav__menu-link--button.main-nav__menu-link--has-children:after {
+
+  }
+}

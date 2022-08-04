@@ -1,102 +1,104 @@
-/* The <nav> element. */
-.menu--main {
+/**
+ * @file
+ * Styling for the main menu at wide widths.
+ */
 
-}
+ @media (min-width: 1000px) {
+  /* The menu <ul> elements. */
+  .main-nav__menu {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
 
-/* The menu <ul> elements. */
-.main-nav__menu {
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
+  /* Top level <ul> menu element. */
+  .main-nav__menu--level-1 {
+    display: flex;
+  }
 
-/* Top level <ul> menu element. */
-.main-nav__menu--level-1 {
-  display: flex;
-}
+  /* Second level <ul> menu element. */
+  .main-nav__menu--level-2 {
+    visibility: hidden;
+    position: absolute;
+    top: 100%;
+    inset-inline-start: 0;
+    width: max-content;
+    max-width: 15rem;
+    padding: 0.25rem 0;
+    background-color: white;
+    z-index: 1;
+    border: solid 1px currentColor;
+    opacity: 0;
+    transition: 0.2s;
+  }
 
-/* Second level <ul> menu element. */
-.main-nav__menu--level-2 {
-  visibility: hidden;
-  position: absolute;
-  top: 100%;
-  inset-inline-start: 0;
-  width: max-content;
-  max-width: 15rem;
-  padding: 0.25rem 0;
-  background-color: white;
-  z-index: 1;
-  border: solid 1px currentColor;
-  opacity: 0;
-  transition: 0.2s;
-}
+  .main-nav__menu--level-2.is-active-menu-parent,
+  html:not(.js) .main-nav__menu-item--level-1:is(:hover, :focus-within) .main-nav__menu--level-2 {
+    visibility: visible;
+    opacity: 1;
+  }
 
-.main-nav__menu--level-2.is-active-menu-parent,
-html:not(.js) .main-nav__menu-item--level-1:is(:hover, :focus-within) .main-nav__menu--level-2 {
-  visibility: visible;
-  opacity: 1;
-}
+  /* Menu item <li>. */
+  .main-nav__menu-item {
+    display: flex;
+  }
 
-/* Menu item <li>. */
-.main-nav__menu-item {
-  display: flex;
-}
+  .main-nav__menu-item--has-children {
+    position: relative; /* Anchor child menus. */
+  }
 
-.main-nav__menu-item--has-children {
-  position: relative; /* Anchor child menus. */
-}
+  /* Link element (can be <a>, <button>, or <span>). */
+  .main-nav__menu-link {
+    display: block;
+    padding: 0.5rem 1rem;
+  }
 
-/* Link element (can be <a>, <button>, or <span>). */
-.main-nav__menu-link {
-  display: block;
-  padding: 0.5rem 1rem;
-}
+  /* <a> link elements that have submenus. */
+  .main-nav__menu-link--link.main-nav__menu-link--has-children {
+    padding-inline-end: 0.5rem;
+  }
 
-/* <a> link elements that have submenus. */
-.main-nav__menu-link--link.main-nav__menu-link--has-children {
-  padding-inline-end: 0.5rem;
-}
+  /* <button> element that is generated when <a> link elements have submenus. */
+  .main-nav__button-toggle {
+    display: flex;
+    align-self: center;
+    appearance: none;
+    border: 0;
+    background: transparent;
+  }
 
-/* <button> element that is generated when <a> link elements have submenus. */
-.main-nav__button-toggle {
-  display: flex;
-  align-self: center;
-  appearance: none;
-  border: 0;
-  background: transparent;
-}
+  /* Down chevron icon. */
+  .main-nav__button-toggle:after {
+    display: block;
+    width: 0.25rem;
+    height: 0.25rem;
+    content: "";
+    transform: rotate(-45deg) translateY(-100%);
+    border-bottom: solid 2px currentColor;
+    border-left: solid 2px currentColor;
+  }
 
-/* Down chevron icon. */
-.main-nav__button-toggle:after {
-  display: block;
-  width: 0.25rem;
-  height: 0.25rem;
-  content: "";
-  transform: rotate(-45deg) translateY(-100%);
-  border-bottom: solid 2px currentColor;
-  border-left: solid 2px currentColor;
-}
+  /* Menu links that are <button> elements. */
+  .main-nav__menu-link--button {
+    appearance: none;
+    border: 0;
+    background: transparent;
+  }
 
-/* Menu links that are <button> elements. */
-.main-nav__menu-link--button {
-  appearance: none;
-  border: 0;
-  background: transparent;
-}
+  .main-nav__menu-link--button.main-nav__menu-link--has-children {
+    display: flex;
+    align-items: center;
+  }
 
-.main-nav__menu-link--button.main-nav__menu-link--has-children {
-  display: flex;
-  align-items: center;
-}
-
-/* Down chevron icon. */
-.main-nav__menu-link--button.main-nav__menu-link--has-children:after {
-  display: block;
-  width: 0.25rem;
-  height: 0.25rem;
-  margin-inline-start: 0.75rem;
-  content: "";
-  transform: rotate(-45deg) translateY(-100%);
-  border-bottom: solid 2px currentColor;
-  border-left: solid 2px currentColor;
+  /* Down chevron icon. */
+  .main-nav__menu-link--button.main-nav__menu-link--has-children:after {
+    display: block;
+    width: 0.25rem;
+    height: 0.25rem;
+    margin-inline-start: 0.75rem;
+    content: "";
+    transform: rotate(-45deg) translateY(-100%);
+    border-bottom: solid 2px currentColor;
+    border-left: solid 2px currentColor;
+  }
 }
