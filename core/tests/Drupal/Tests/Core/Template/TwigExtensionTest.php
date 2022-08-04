@@ -457,6 +457,21 @@ class TwigExtensionTest extends UnitTestCase {
       ],
     ];
 
+    yield 'suggestion should extend existing suggestions' => [
+      [
+        '#theme' => 'kitten__stripy',
+        '#name' => 'Mila',
+      ],
+      'cute',
+      [
+        '#theme' => [
+          'kitten__stripy__cute',
+          'kitten__stripy',
+        ],
+        '#name' => 'Mila',
+      ],
+    ];
+
     yield 'suggestion should have highest priority' => [
       [
         '#theme' => [
