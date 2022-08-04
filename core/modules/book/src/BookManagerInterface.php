@@ -180,7 +180,7 @@ interface BookManagerInterface {
   public function updateOutline(NodeInterface $node);
 
   /**
-   * Saves/Updates link of a single book entry.
+   * Saves link of a single book entry.
    *
    * @param array $link
    *   The link data to save.
@@ -188,7 +188,7 @@ interface BookManagerInterface {
    *   Is this a new link.
    *
    * @return array
-   *   The saved link data of the book.
+   *   The saved link array has information about the book.
    */
   public function saveBookLink(array $link, $new);
 
