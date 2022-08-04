@@ -183,7 +183,9 @@ interface BookManagerInterface {
    * Saves link of a single book entry.
    *
    * @param array $link
-   *   The link data to save.
+   *   The link data to save. $link['nid'] must be set. Other keys in this array
+   *   get default values from ::getLinkDefaults(). The array keys available to
+   *   be set are documented in BookOutlineStorageInterface::loadMultiple().
    * @param bool $new
    *   Is this a new link.
    *
