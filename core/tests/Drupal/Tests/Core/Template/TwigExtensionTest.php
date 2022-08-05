@@ -483,6 +483,7 @@ class TwigExtensionTest extends UnitTestCase {
       'cute',
       [
         '#theme' => [
+          'kitten__stripy__cute',
           'kitten__cute',
           'kitten__stripy',
           'kitten',
@@ -507,44 +508,6 @@ class TwigExtensionTest extends UnitTestCase {
       ],
     ];
 
-    yield 'pre-existing suggestion should not be added' => [
-      [
-        '#theme' => [
-          'kitten__cute',
-          'kitten',
-        ],
-        '#name' => 'Mila',
-      ],
-      'cute',
-      [
-        '#theme' => [
-          'kitten__cute',
-          'kitten',
-        ],
-        '#name' => 'Mila',
-      ],
-    ];
-
-    yield '#printed should not be removed when suggestion was not added' => [
-      [
-        '#theme' => [
-          'kitten__cute',
-          'kitten',
-        ],
-        '#name' => 'Mila',
-        '#printed' => TRUE,
-      ],
-      'cute',
-      [
-        '#theme' => [
-          'kitten__cute',
-          'kitten',
-        ],
-        '#name' => 'Mila',
-        '#printed' => TRUE,
-      ],
-    ];
-
     yield 'cache key should be added' => [
       [
         '#theme' => 'kitten',
@@ -566,34 +529,6 @@ class TwigExtensionTest extends UnitTestCase {
           'keys' => [
             'kitten',
             'kitten__cute',
-          ],
-        ],
-      ],
-    ];
-
-    yield 'cache key should not be added when suggestion was not added' => [
-      [
-        '#theme' => [
-          'kitten__cute',
-          'kitten',
-        ],
-        '#name' => 'Mila',
-        '#cache' => [
-          'keys' => [
-            'kitten',
-          ],
-        ],
-      ],
-      'cute',
-      [
-        '#theme' => [
-          'kitten__cute',
-          'kitten',
-        ],
-        '#name' => 'Mila',
-        '#cache' => [
-          'keys' => [
-            'kitten',
           ],
         ],
       ],
