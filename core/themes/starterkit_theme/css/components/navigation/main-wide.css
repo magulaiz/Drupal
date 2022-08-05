@@ -4,6 +4,11 @@
  */
 
  @media (min-width: 1000px) {
+  /* Hide the mobile button when desktop navigation is enabled. */
+  .main-nav__mobile-button {
+    display: none;
+  }
+
   /* The menu <ul> elements. */
   .main-nav__menu {
     margin: 0;
