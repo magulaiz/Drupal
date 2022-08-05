@@ -660,13 +660,13 @@ class TwigExtension extends AbstractExtension {
    *
    * @param array $element
    *   A theme element render array.
-   * @param string $suggestion
-   *   The theme suggestion, without the base theme hook.
+   * @param string|\Stringable $suggestion
+   *   The theme suggestion part to append to the existing theme hook(s).
    *
    * @return array
    *   The element with the full theme suggestion added as the highest priority.
    */
-  public function suggestThemeHook(array $element, string $suggestion): array {
+  public function suggestThemeHook(array $element, string|\Stringable $suggestion): array {
     // Make sure we have a valid theme element render array.
     if (empty($element['#theme'])) {
       // Throw assertion for non-empty elements, but allow empty elements (like
@@ -678,23 +678,25 @@ class TwigExtension extends AbstractExtension {
       ]) === [], 'Invalid target for the "|as" Twig filter; element does not have a "#theme" key.');
       return $element;
     }
+
+    // Replace dashes with underscores to support suggestions that match the
+    // target template name rather than the underlying theme hook.
+    $suggestion = str_replace('-', '_', $suggestion);
+
     // Transform the theme hook to a format that supports multiple suggestions.
     if (!is_iterable($element['#theme'])) {
       $element['#theme'] = [$element['#theme']];
     }
-    // Replace dashes with underscores (support suggestions that match the
-    // target template name rather than the underlying theme hook).
-    $suggestion = str_replace('-', '_', $suggestion);
-    // Add the base theme hook to the suggestion. The last item in the list of
-    // theme hooks has the lowest priority; assume it's the "base" theme hook.
-    $base_theme_hook = end($element['#theme']);
-    $suggestion = $base_theme_hook . '__' . $suggestion;
-    // If it's already been added, we're done.
-    if (in_array($suggestion, $element['#theme'])) {
-      return $element;
+
+    // Add _new_ suggestions for each existing theme hook. Simply modifying the
+    // existing items (appending to each theme hook instead of adding new ones)
+    // would cause the original hooks to be unavailable as fallbacks.
+    //
+    // Start with the lowest priority theme hook.
+    foreach (array_reverse($element['#theme']) as $theme_hook) {
+      // Add new suggestions to the front (highest priority).
+      array_unshift($element['#theme'], $theme_hook . '__' . $suggestion);
     }
-    // Add the suggestion to the front (highest priority).
-    array_unshift($element['#theme'], $suggestion);
 
     // Reset the "#printed" flag to make sure the content gets rendered with the
     // new suggestion in place.
