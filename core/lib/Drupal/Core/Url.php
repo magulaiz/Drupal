@@ -281,7 +281,14 @@ class Url implements TrustedCallbackInterface {
     if (preg_match('/^base:\d/', $uri)) {
       $uri = str_replace('base:', 'base:/', $uri);
     }
-    $uri_parts = parse_url($uri);
+    if (preg_match('/^tel:/', $uri)) {
+      $parts = explode(':', $uri);
+      $uri_parts['scheme'] = $parts[0];
+      $uri_parts['path'] = $parts[1];
+    }
+    else {
+      $uri_parts = parse_url($uri);
+    }
     if ($uri_parts === FALSE) {
       throw new \InvalidArgumentException("The URI '$uri' is malformed.");
     }
