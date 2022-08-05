@@ -15,5 +15,5 @@ https://www.drupal.org/docs/8/core/themes/bartik-theme
 ABOUT DRUPAL THEMING
 --------------------
 
-See https://www.drupal.org/docs/8/theming for more information on Drupal
-theming.
+See https://www.drupal.org/docs/theming-drupal for more information on Theming
+Drupal.
