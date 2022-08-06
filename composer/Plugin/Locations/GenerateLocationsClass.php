@@ -97,14 +97,14 @@ class GenerateLocationsClass {
   public static function generate(Composer $composer, IOInterface $io) {
     $extra = $composer->getPackage()->getExtra();
 
+    // Composer changes the current directory to the project root, even if it
+    // run in a subdirectory.
+    $absolute_project_root = getcwd();
+
     if (isset($extra['drupal-scaffold']['locations']['web-root'])) {
       // The root composer.json defines a scaffold location for Drupal. We
       // therefore know this is the app root.
       $web_root = $extra['drupal-scaffold']['locations']['web-root'];
-
-      // Composer changes the current directory to the project root, even if it
-      // run in a subdirectory.
-      $absolute_project_root = getcwd();
 
       $absolute_app_root = $absolute_project_root . '/' . $web_root;
       $absolute_app_root = realpath($absolute_app_root);
