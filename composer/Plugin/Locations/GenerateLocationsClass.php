@@ -33,6 +33,10 @@ use Composer\Factory;
  * },
  * @endcode
  *
+ * To ensure the project's codebase is portable, the generated class must not
+ * use absolute paths. It should instead use the __DIR__ constant, which in the
+ * generated class will give the project root.
+ *
  * @internal
  */
 class GenerateLocationsClass {
@@ -71,7 +75,7 @@ class GenerateLocationsClass {
        * This is the directory containing the scaffolded index.php file which is
        * Drupal's web entry point.
        */
-      public const APP_ROOT = '%app_root';
+      public const APP_ROOT = __DIR__ . '%app_root';
 
     }
     EOF;
