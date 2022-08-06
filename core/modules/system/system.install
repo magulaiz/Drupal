@@ -60,11 +60,7 @@ function system_requirements($phase) {
       $profile_value = $info['version'] ? '%profile_name (%profile-%version)' : '%profile_name (%profile)';
       $requirements['install_profile'] = [
         'title' => t('Installation profile'),
-        'value' => t($profile_value, [
-          '%profile_name' => $info['name'],
-          '%profile' => $profile,
-          '%version' => $info['version'] ?? '',
-        ]),
+        'value' => $info['name'] . ' (' . $profile . ($info['version'] ? '-' . $info['version'] : '') . ')',
         'severity' => REQUIREMENT_INFO,
         'weight' => -9,
       ];
