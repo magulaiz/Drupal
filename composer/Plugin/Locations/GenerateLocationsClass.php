@@ -23,9 +23,15 @@ use Composer\Factory;
  * when we have access this data, this plugin writes a PHP class file which
  * defines the locations as class constants.
  *
- * The class file is written into this plugin's own directory, so it is
- * available to the autoloader. A .gitignore file ensures it is not committed
- * to version control.
+ * The class file is written into the Composer project root. To be loadable, it
+ * must be defined to the autoloader in the project's composer.json:
+ * @code
+ * "autoload": {
+ *     "psr-4": {
+ *         "Drupal\\Locations\\": ""
+ *     }
+ * },
+ * @endcode
  *
  * @internal
  */
@@ -42,7 +48,7 @@ class GenerateLocationsClass {
   private static $generatedFileTemplate = <<<'EOF'
     <?php
 
-    namespace Drupal\Composer\Plugin\Locations;
+    namespace Drupal\Locations;
 
     /**
      * Defines the Drupal app root.
@@ -94,12 +100,14 @@ class GenerateLocationsClass {
 
       // Composer changes the current directory to the project root, even if it
       // run in a subdirectory.
-      $absolute_app_root = getcwd() . '/' . $web_root;
+      $absolute_project_root = getcwd();
+
+      $absolute_app_root = $absolute_project_root . '/' . $web_root;
       $absolute_app_root = realpath($absolute_app_root);
 
       $io->write("Drupal app root defined as {$absolute_app_root}.");
 
-      static::generateLocations($composer, $io, $absolute_app_root);
+      static::generateLocations($composer, $io, $absolute_project_root, $absolute_app_root);
     }
     else {
       // Get the project root's absolute path from the root composer file path.
@@ -109,7 +117,7 @@ class GenerateLocationsClass {
 
       $io->write("Drupal app root assumed to be the Composer project root, {$absolute_app_root}.");
 
-      static::generateLocations($composer, $io, $absolute_app_root);
+      static::generateLocations($composer, $io, $absolute_project_root, $absolute_app_root);
     }
 
   }
@@ -121,22 +129,39 @@ class GenerateLocationsClass {
    *   The Composer object.
    * @param \Composer\IO\IOInterface $io
    *   The Composer I/O object.
+   * @param string $absolute_project_root
+   *   The absolute path to the Composer project root, without a trailing slash.
    * @param string $absolute_app_root
-   *   The absolute path to the Drupal app root.
+   *   The absolute path to the Drupal app root, without a trailing slash.
    */
-  protected static function generateLocations(Composer $composer, IOInterface $io, $absolute_app_root) {
+  protected static function generateLocations(Composer $composer, IOInterface $io, $absolute_project_root, $absolute_app_root) {
     $class_php = str_replace('%app_root', $absolute_app_root, static::$generatedFileTemplate);
 
-    $file_location = __DIR__ . '/DrupalLocation.php';
+    $file_location = static::getLocationsClassDirectory($absolute_project_root, $absolute_app_root) . '/DrupalLocation.php';
 
     $result = file_put_contents($file_location, $class_php);
 
     if ($result !== FALSE) {
-      $io->write("Writing Drupal locations class.");
+      $io->write("Writing Drupal locations class to $file_location.");
     }
     else {
       $io->writeError("There was a problem writing the Drupal locations class to $file_location.");
     }
+  }
+
+  /**
+   * Gets the directory to write the locations class to.
+   *
+   * @param string $absolute_project_root
+   *   The absolute path to the Composer project root, without a trailing slash.
+   * @param string $absolute_app_root
+   *   The absolute path to the Drupal app root, without a trailing slash.
+   *
+   * @return string
+   *   The absolute path of the directory to write to.
+   */
+  protected static function getLocationsClassDirectory(string $absolute_project_root, string $absolute_app_root): string {
+    return $absolute_project_root;
   }
 
 }
