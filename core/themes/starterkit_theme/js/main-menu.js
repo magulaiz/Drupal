@@ -4,15 +4,14 @@
  */
 
 ((Drupal) => {
-  const isDesktopNav = () => {
-    return true;
-  };
+  const mobileNavigationButton = document.querySelector('[data-drupal-selector="main-nav__mobile-button"]');
+  function isDesktopNav() {
+    return mobileNavigationButton.clientHeight > 0;
+  }
 
   const buttonSelector = '[data-drupal-selector="main-nav-submenu-toggle-button"], button[data-drupal-selector="main-nav-menu-link-has-children"]';
 
-  const secondLevelNavMenus = document.querySelectorAll(
-    '[data-drupal-selector="main-nav-menu-item-has-children"]',
-  );
+  const secondLevelNavMenus = document.querySelectorAll('[data-drupal-selector="main-nav-menu-item-has-children"]');
 
   /**
    * Shows and hides the specified menu item's second level submenu.
@@ -154,12 +153,26 @@
     return subNavsAreOpen;
   }
 
+  // Open mobile navigation
+  function handleMobileNavigationButtonClick(e) {
+    const isExpanded = e.currentTarget.getAttribute('aria-expanded') === 'true';
+    const navigation = document.querySelector(`#${ e.currentTarget.getAttribute('aria-controls') }`);
+
+    e.currentTarget.setAttribute('aria-expanded', !isExpanded);
+    navigation.classList.toggle('is-expanded', !isExpanded);
+  }
+
+
+
   // Ensure that desktop submenus close when escape key is pressed.
   document.addEventListener('keyup', (e) => {
     if (e.key === 'Escape') {
       if (isDesktopNav()) closeAllSubNav();
     }
   });
+
+  // Open mobile menu.
+  mobileNavigationButton.addEventListener('click', handleMobileNavigationButtonClick);
 
   // If user taps outside of menu, close all menus.
   // document.addEventListener(

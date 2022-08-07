@@ -8,6 +8,7 @@
   appearance: none;
   border: 0;
   background: transparent;
+  z-index: 10; /* Appear above the expanded mobile menu. */
 }
 
 .mobile-nav-button__icon {
@@ -17,14 +18,17 @@
   width: 80%;
   height: 0;
   border-top: solid 3px currentColor;
+  transition: border-top-color 0.2s;
 }
 
-.mobile-nav-button__icon:is(:before, :after) {
+.mobile-nav-button__icon::before,
+.mobile-nav-button__icon:after {
   content: "";
   position: absolute;
   left: 0;
   width: 100%;
   height: 0;
+  transition: all 0.2s;
 }
 
 .mobile-nav-button__icon:before {
@@ -37,16 +41,16 @@
   border-bottom: solid 3px currentColor;
 }
 
-.mobile-nav-button__icon[aria-expanded="true"] {
+.main-nav__mobile-button[aria-expanded="true"] .mobile-nav-button__icon {
   border-top-color: transparent;
 }
 
-.mobile-nav-button__icon[aria-expanded="true"]:before {
+.main-nav__mobile-button[aria-expanded="true"] .mobile-nav-button__icon:before {
   top: calc(50% - 1px); /* 1px is half the border-width. */
   transform: rotate(-45deg);
 }
 
-.mobile-nav-button__icon[aria-expanded="true"]:after {
+.main-nav__mobile-button[aria-expanded="true"] .mobile-nav-button__icon:after {
   top: calc(50% - 1px); /* 1px is half the border-width. */
   transform: rotate(45deg);
 }
