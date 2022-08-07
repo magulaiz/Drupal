@@ -7,15 +7,15 @@
   /* The <nav> element. */
   .main-nav {
     position: absolute;
-    inset-block-start: 0;
-    inset-inline-start: 100%;
     z-index: 1;
     width: 100%;
-    height: 100%;
     max-width: 500px;
+    height: 100%;
+    transition: transform 0.2s;
     border-inline-start: solid 1px black;
     background: #eee;
-    transition: transform 0.2s;
+    inset-block-start: 0;
+    inset-inline-start: 100%;
   }
 
   .main-nav.is-expanded {
@@ -34,9 +34,9 @@
 
   /* Top level <ul> menu element. */
   .main-nav__menu--level-1 {
+    overflow: auto;
     margin-top: 100px;
     padding: 0.5rem;
-    overflow: auto;
   }
 
   /* Second level <ul> menu element. */
@@ -62,8 +62,8 @@
 
   .main-nav__menu-item--has-children {
     flex-wrap: wrap;
-    justify-content: space-between;
     align-items: center;
+    justify-content: space-between;
   }
 
   /* Link element (can be <a>, <button>, or <span>). */
@@ -97,17 +97,17 @@
   .main-nav__button-icon:before,
   .main-nav__button-icon:after {
     position: absolute;
-    inset-block-start: calc(50% - var(--icon-line-width) / 2);
-    inset-inline-start: 0;
-    content: "";
     width: 100%;
     height: 0;
+    content: "";
     border-top: solid var(--icon-line-width) currentColor;
+    inset-block-start: calc(50% - var(--icon-line-width) / 2);
+    inset-inline-start: 0;
   }
 
   .main-nav__button-icon:after {
-    transform: rotate(90deg);
     transition: opacity 0.2s;
+    transform: rotate(90deg);
   }
 
   /* Turn the plus icon into a minus when parent button is expanded. */
@@ -117,12 +117,12 @@
 
   /* Menu links that are <button> elements. */
   .main-nav__menu-link--button {
-    appearance: none;
-    border: 0;
-    background: transparent;
-    text-align: start;
     display: flex;
     align-items: center;
+    text-align: start;
+    border: 0;
+    background: transparent;
+    appearance: none;
   }
 
   .main-nav__menu-link--button.main-nav__menu-link--has-children {

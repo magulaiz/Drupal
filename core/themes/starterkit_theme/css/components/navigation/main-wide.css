@@ -3,7 +3,7 @@
  * Styling for the main menu at wide widths.
  */
 
- @media (min-width: 1000px) {
+@media (min-width: 1000px) {
   .main-nav__mobile-button {
     display: none; /* Hide the mobile button when desktop navigation is enabled. */
   }
@@ -22,18 +22,18 @@
 
   /* Second level <ul> menu element. */
   .main-nav__menu--level-2 {
-    visibility: hidden;
     position: absolute;
+    z-index: 1;
     top: 100%;
-    inset-inline-start: 0;
+    visibility: hidden;
     width: max-content;
     max-width: 15rem;
     padding: var(--padding-y) 0;
-    background-color: white;
-    z-index: 1;
-    border: solid 1px currentColor;
-    opacity: 0;
     transition: 0.2s;
+    opacity: 0;
+    border: solid 1px currentColor;
+    background-color: white;
+    inset-inline-start: 0;
   }
 
   .main-nav__menu--level-2.is-active-menu-parent,
@@ -65,11 +65,11 @@
     display: flex;
     align-items: center;
     align-self: stretch;
-    appearance: none;
+    padding: 0;
     border: 0;
     background: transparent;
+    appearance: none;
     margin-inline: calc(-1 * var(--padding-x)) var(--padding-x);
-    padding: 0;
   }
 
   /* Menu links that are <button> elements. */
@@ -93,11 +93,11 @@
   .main-nav__button-icon {
     --icon-size: 8px;
 
+    position: relative;
     display: block;
-    margin-inline: calc(var(--padding-x) / 2);
     width: var(--icon-size);
     height: var(--icon-size);
-    position: relative;
+    margin-inline: calc(var(--padding-x) / 2);
   }
 
   /* Down chevron icon. */
