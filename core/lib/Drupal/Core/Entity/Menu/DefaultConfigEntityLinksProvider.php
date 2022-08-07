@@ -15,7 +15,7 @@ class DefaultConfigEntityLinksProvider extends BaseEntityLinksProvider implement
    * Config entity types that have a collection route typically get a menu link
    * that is placed in the 'admin > structure' section.
    */
-  protected $collectionParentMenuLinkId = 'system.admin_content';
+  protected $collectionParentMenuLinkId = 'system.admin_structure';
 
   /**
    * {@inheritdoc}
