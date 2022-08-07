@@ -54,8 +54,12 @@ class UserLocalTaskTest extends UnitTestCase {
     ]);
     $entity_type_manager = $prophecy->reveal();
 
-    $routeProvider = $this->prophesize(RouteProviderInterface::class);
-    $routeProvider->getRoutesByNames($this->any())->willReturn(NULL);
+    // The route provider is only used to check that the route exists, so make
+    // sure that getRoutesByNames() returns a non-empty array.
+    $prophecy = $this->prophesize(RouteProviderInterface::class);
+    $prophecy->getRoutesByNames(['entity.entity_bundle_of_id.entity_permissions_form'])
+      ->willReturn(['not empty']);
+    $routeProvider = $prophecy->reveal();
 
     $this->deriver = new UserLocalTask($entity_type_manager, $this->getStringTranslationStub(), $routeProvider);
   }
