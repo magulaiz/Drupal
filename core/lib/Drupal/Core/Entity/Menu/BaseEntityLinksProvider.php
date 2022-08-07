@@ -128,7 +128,7 @@ abstract class BaseEntityLinksProvider implements EntityLinksProviderInterface, 
       $task_derivative_plugins[$this->getRouteName('edit_form')] = $edit_link;
     }
 
-    if ($delete_form_task_link = $this->getDeleteFormtaskLink($base_plugin_definition)) {
+    if ($delete_form_task_link = $this->getDeleteFormTaskLink($base_plugin_definition)) {
       $task_derivative_plugins[$this->getRouteName('delete_form')] = $delete_form_task_link;
     }
 
