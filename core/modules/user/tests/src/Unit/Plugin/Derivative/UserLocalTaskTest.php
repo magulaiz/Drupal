@@ -4,6 +4,7 @@ namespace Drupal\Tests\user\Unit\Plugin\Derivative;
 
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Routing\RouteProviderInterface;
 use Drupal\Tests\UnitTestCase;
 use Drupal\user\Plugin\Derivative\UserLocalTask;
 
@@ -53,7 +54,10 @@ class UserLocalTaskTest extends UnitTestCase {
     ]);
     $entity_type_manager = $prophecy->reveal();
 
-    $this->deriver = new UserLocalTask($entity_type_manager, $this->getStringTranslationStub());
+    $routeProvider = $this->prophesize(RouteProviderInterface::class);
+    $routeProvider->getRoutesByNames($this->any())->willReturn(NULL);
+
+    $this->deriver = new UserLocalTask($entity_type_manager, $this->getStringTranslationStub(), $routeProvider);
   }
 
   /**
