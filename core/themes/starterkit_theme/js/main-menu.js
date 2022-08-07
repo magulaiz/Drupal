@@ -153,11 +153,12 @@
     return subNavsAreOpen;
   }
 
-  // Open mobile navigation
+  // Toggle mobile navigation
   function handleMobileNavigationButtonClick(e) {
     const isExpanded = e.currentTarget.getAttribute('aria-expanded') === 'true';
     const navigation = document.querySelector(`#${ e.currentTarget.getAttribute('aria-controls') }`);
 
+    document.body.classList.toggle('is-active-mobile-menu', !isExpanded);
     e.currentTarget.setAttribute('aria-expanded', !isExpanded);
     navigation.classList.toggle('is-expanded', !isExpanded);
   }
@@ -167,7 +168,10 @@
   // Ensure that desktop submenus close when escape key is pressed.
   document.addEventListener('keyup', (e) => {
     if (e.key === 'Escape') {
-      if (isDesktopNav()) closeAllSubNav();
+      closeAllSubNav();
+      if (mobileNavigationButton.getAttribute('aria-expanded') === 'true') {
+        mobileNavigationButton.click();
+      }
     }
   });
 
@@ -175,18 +179,18 @@
   mobileNavigationButton.addEventListener('click', handleMobileNavigationButtonClick);
 
   // If user taps outside of menu, close all menus.
-  // document.addEventListener(
-  //   'touchstart',
-  //   (e) => {
-  //     if (
-  //       areAnySubNavsOpen() &&
-  //       !e.target.matches(
-  //         '[data-drupal-selector="header-nav"], [data-drupal-selector="header-nav"] *',
-  //       )
-  //     ) {
-  //       closeAllSubNav();
-  //     }
-  //   },
-  //   { passive: true },
-  // );
+  document.addEventListener(
+    'touchstart',
+    (e) => {
+      if (
+        areAnySubNavsOpen() &&
+        !e.target.matches(
+          '[data-drupal-selector="main-nav-menu--level-1"] *',
+        )
+      ) {
+        closeAllSubNav();
+      }
+    },
+    { passive: true },
+  );
 })(Drupal);

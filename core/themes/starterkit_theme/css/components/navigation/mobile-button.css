@@ -12,13 +12,16 @@
 }
 
 .mobile-nav-button__icon {
+  --line-width: 3px;
+  --icon-size: 80%;
+
   position: absolute;
-  top: calc(50% - 1px); /* 1px is half the border-width. */
-  left: 10%;
-  width: 80%;
+  top: calc(50% - var(--line-width) / 2);
+  left: calc((100% - var(--icon-size)) / 2);
+  width: var(--icon-size);
   height: 0;
   transition: border-top-color 0.2s;
-  border-top: solid 3px currentColor;
+  border-top: solid var(--line-width) currentColor;
 }
 
 .mobile-nav-button__icon::before,
@@ -33,12 +36,12 @@
 
 .mobile-nav-button__icon:before {
   top: -13px;
-  border-top: solid 3px currentColor;
+  border-top: solid var(--line-width) currentColor;
 }
 
 .mobile-nav-button__icon:after {
-  top: 8px;
-  border-bottom: solid 3px currentColor;
+  top: 7px;
+  border-bottom: solid var(--line-width) currentColor;
 }
 
 .main-nav__mobile-button[aria-expanded="true"] .mobile-nav-button__icon {
@@ -46,11 +49,11 @@
 }
 
 .main-nav__mobile-button[aria-expanded="true"] .mobile-nav-button__icon:before {
-  top: calc(50% - 1px); /* 1px is half the border-width. */
+  top: calc(50% - var(--line-width) / 2);
   transform: rotate(-45deg);
 }
 
 .main-nav__mobile-button[aria-expanded="true"] .mobile-nav-button__icon:after {
-  top: calc(50% - 1px); /* 1px is half the border-width. */
+  top: calc(50% - var(--line-width) / 2);
   transform: rotate(45deg);
 }

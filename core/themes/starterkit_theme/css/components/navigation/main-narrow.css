@@ -8,10 +8,11 @@
   .main-nav {
     position: absolute;
     z-index: 1;
+    visibility: hidden;
     width: 100%;
     max-width: 500px;
     height: 100%;
-    transition: transform 0.2s;
+    transition: transform 0.2s, visibility 0.2s;
     border-inline-start: solid 1px black;
     background: #eee;
     inset-block-start: 0;
@@ -19,6 +20,7 @@
   }
 
   .main-nav.is-expanded {
+    visibility: visible;
     transform: translateX(-100%);
   }
 
@@ -34,8 +36,11 @@
 
   /* Top level <ul> menu element. */
   .main-nav__menu--level-1 {
+    --mobile-nav-button-room: 100px; /* Room for the button that opens/closes the mobile navigation. */
+
     overflow: auto;
-    margin-top: 100px;
+    height: calc(100% - var(--mobile-nav-button-room)); /* Necessary for proper scrolling if viewport is short. */
+    margin-top: var(--mobile-nav-button-room);
     padding: 0.5rem;
   }
 
@@ -128,5 +133,26 @@
   .main-nav__menu-link--button.main-nav__menu-link--has-children {
     justify-content: space-between;
     padding-inline-end: 0; /* Align icon properly. */
+  }
+
+  .main-nav-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    visibility: hidden;
+    width: 100%;
+    height: 100%;
+    opacity: 0.3;
+    background-color: black;
+  }
+
+  body.is-active-mobile-menu {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+  }
+
+  body.is-active-mobile-menu .main-nav-overlay {
+    visibility: visible;
   }
 }
