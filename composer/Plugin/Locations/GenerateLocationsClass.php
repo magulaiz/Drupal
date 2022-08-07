@@ -78,6 +78,7 @@ class GenerateLocationsClass {
       public const APP_ROOT = __DIR__ . '%app_root';
 
     }
+
     EOF;
 
   /**
