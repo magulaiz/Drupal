@@ -2,10 +2,6 @@
 
 namespace Drupal\Tests\system\Kernel\Entity;
 
-use Drupal\Component\Utility\Html;
-use Drupal\field\Tests\EntityReference\EntityReferenceTestTrait;
-use Drupal\field\Entity\FieldConfig;
-use Drupal\node\Entity\NodeType;
 use Drupal\KernelTests\KernelTestBase;
 
 /**

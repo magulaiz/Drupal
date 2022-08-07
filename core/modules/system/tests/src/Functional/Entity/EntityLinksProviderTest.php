@@ -2,7 +2,6 @@
 
 namespace Drupal\Tests\system\Functional\Entity;
 
-use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\Tests\BrowserTestBase;
 
 /**
