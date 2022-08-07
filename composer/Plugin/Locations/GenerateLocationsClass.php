@@ -141,7 +141,12 @@ class GenerateLocationsClass {
   protected static function generateLocations(Composer $composer, IOInterface $io, $absolute_project_root, $absolute_app_root) {
     $class_php = str_replace('%app_root', $absolute_app_root, static::$generatedFileTemplate);
 
-    $file_location = static::getLocationsClassDirectory($absolute_project_root, $absolute_app_root) . '/DrupalLocation.php';
+    $locations_class_directory = static::getLocationsClassDirectory($absolute_project_root, $absolute_app_root);
+    if (!is_writable($locations_class_directory)) {
+      throw new \Exception(sprintf("The directory %s is not writable.", $locations_class_directory));
+    }
+
+    $file_location = $locations_class_directory . '/DrupalLocation.php';
 
     $result = file_put_contents($file_location, $class_php);
 
