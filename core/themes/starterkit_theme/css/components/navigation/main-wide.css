@@ -60,26 +60,43 @@
 
   /* <a> link elements that have submenus. */
   .main-nav__menu-link--link.main-nav__menu-link--has-children {
-    padding-inline-end: 0.5rem;
+    padding-inline-end: 0;
+  }
+
+  .main-nav__menu-link--link + .main-nav__button-toggle {
+    margin-inline-end: 8px;
+  }
+
+  .main-nav__menu-link--link .main-nav__button-icon {
+    margin-inline-start: 8px;
   }
 
   /* <button> element that is generated when <a> link elements have submenus. */
   .main-nav__button-toggle {
     display: flex;
-    align-self: center;
+    align-items: center;
+    align-self: stretch;
     appearance: none;
     border: 0;
     background: transparent;
     padding: 0;
   }
 
-  /* Down chevron icon. */
-  .main-nav__button-toggle:after {
+  .main-nav__button-icon {
+    --icon-size: 8px;
     display: block;
-    width: 0.25rem;
-    height: 0.25rem;
+    margin-inline: 8px;
+    width: var(--icon-size);
+    height: var(--icon-size);
+    position: relative;
+  }
+  /* Down chevron icon. */
+  .main-nav__button-icon:after {
+    display: block;
+    width: 100%;
+    height: 100%;
     content: "";
-    transform: rotate(-45deg) translateY(-100%);
+    transform: translatey(-25%) rotate(-45deg);
     border-bottom: solid 2px currentColor;
     border-left: solid 2px currentColor;
   }
@@ -94,17 +111,7 @@
   .main-nav__menu-link--button.main-nav__menu-link--has-children {
     display: flex;
     align-items: center;
+    padding-inline-end: 8px;
   }
 
-  /* Down chevron icon. */
-  .main-nav__menu-link--button.main-nav__menu-link--has-children:after {
-    display: block;
-    width: 0.25rem;
-    height: 0.25rem;
-    margin-inline-start: 0.75rem;
-    content: "";
-    transform: rotate(-45deg) translateY(-100%);
-    border-bottom: solid 2px currentColor;
-    border-left: solid 2px currentColor;
-  }
 }
