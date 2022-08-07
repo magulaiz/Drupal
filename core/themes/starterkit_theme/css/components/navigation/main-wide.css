@@ -4,12 +4,11 @@
  */
 
  @media (min-width: 1000px) {
-  /* Hide the mobile button when desktop navigation is enabled. */
   .main-nav__mobile-button {
-    display: none;
+    display: none; /* Hide the mobile button when desktop navigation is enabled. */
   }
 
-  /* The menu <ul> elements. */
+  /* All menu <ul> elements. */
   .main-nav__menu {
     margin: 0;
     padding: 0;
@@ -29,7 +28,7 @@
     inset-inline-start: 0;
     width: max-content;
     max-width: 15rem;
-    padding: 0.25rem 0;
+    padding: var(--padding-y) 0;
     background-color: white;
     z-index: 1;
     border: solid 1px currentColor;
@@ -45,6 +44,9 @@
 
   /* Menu item <li>. */
   .main-nav__menu-item {
+    --padding-x: 1rem;
+    --padding-y: 0.5rem;
+
     display: flex;
   }
 
@@ -55,20 +57,7 @@
   /* Link element (can be <a>, <button>, or <span>). */
   .main-nav__menu-link {
     display: block;
-    padding: 0.5rem 1rem;
-  }
-
-  /* <a> link elements that have submenus. */
-  .main-nav__menu-link--link.main-nav__menu-link--has-children {
-    padding-inline-end: 0;
-  }
-
-  .main-nav__menu-link--link + .main-nav__button-toggle {
-    margin-inline-end: 8px;
-  }
-
-  .main-nav__menu-link--link .main-nav__button-icon {
-    margin-inline-start: 8px;
+    padding: var(--padding-y) var(--padding-x);
   }
 
   /* <button> element that is generated when <a> link elements have submenus. */
@@ -79,26 +68,8 @@
     appearance: none;
     border: 0;
     background: transparent;
+    margin-inline: calc(-1 * var(--padding-x)) var(--padding-x);
     padding: 0;
-  }
-
-  .main-nav__button-icon {
-    --icon-size: 8px;
-    display: block;
-    margin-inline: 8px;
-    width: var(--icon-size);
-    height: var(--icon-size);
-    position: relative;
-  }
-  /* Down chevron icon. */
-  .main-nav__button-icon:after {
-    display: block;
-    width: 100%;
-    height: 100%;
-    content: "";
-    transform: translatey(-25%) rotate(-45deg);
-    border-bottom: solid 2px currentColor;
-    border-left: solid 2px currentColor;
   }
 
   /* Menu links that are <button> elements. */
@@ -114,4 +85,29 @@
     padding-inline-end: 8px;
   }
 
+  /* Chevron icon. */
+  .main-nav__button-icon {
+    margin-inline-start: calc(var(--padding-x) / 2);
+  }
+
+  .main-nav__button-icon {
+    --icon-size: 8px;
+
+    display: block;
+    margin-inline: calc(var(--padding-x) / 2);
+    width: var(--icon-size);
+    height: var(--icon-size);
+    position: relative;
+  }
+
+  /* Down chevron icon. */
+  .main-nav__button-icon:after {
+    display: block;
+    width: 100%;
+    height: 100%;
+    content: "";
+    transform: translateY(-25%) rotate(-45deg);
+    border-bottom: solid 2px currentColor;
+    border-left: solid 2px currentColor;
+  }
 }
