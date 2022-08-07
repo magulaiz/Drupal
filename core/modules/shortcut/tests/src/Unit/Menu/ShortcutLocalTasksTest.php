@@ -3,6 +3,7 @@
 namespace Drupal\Tests\shortcut\Unit\Menu;
 
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Routing\RouteProviderInterface;
 use Drupal\Tests\Core\Menu\LocalTaskIntegrationTestBase;
 
 /**
@@ -25,6 +26,11 @@ class ShortcutLocalTasksTest extends LocalTaskIntegrationTestBase {
       ->method('getDefinitions')
       ->will($this->returnValue([]));
     $this->container->set('entity_type.manager', $entity_type_manager);
+    $route_provider = $this->createMock(RouteProviderInterface::class);
+    $route_provider->expects($this->any())
+      ->method('getRoutesByNames')
+      ->will($this->returnValue(['not empty']));
+    $this->container->set('router.route_provider', $route_provider);
     $this->container->set('string_translation', $this->getStringTranslationStub());
   }
 
