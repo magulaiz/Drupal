@@ -37,10 +37,14 @@ class UserLocalTask extends DeriverBase implements ContainerDeriverInterface {
    *   The entity type manager.
    * @param \Drupal\Core\StringTranslation\TranslationInterface $string_translation
    *   The translation manager.
-   * @param \Drupal\Core\Routing\RouteProviderInterface $route_provider
+   * @param \Drupal\Core\Routing\RouteProviderInterface|null $route_provider
    *   The route provider.
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager, TranslationInterface $string_translation, RouteProviderInterface $route_provider) {
+  public function __construct(EntityTypeManagerInterface $entity_type_manager, TranslationInterface $string_translation, ?RouteProviderInterface $route_provider = NULL) {
+    if ($route_provider === NULL) {
+      @trigger_error('Calling ' . __METHOD__ . ' without the $route_provider argument is deprecated in drupal:10.1.0 and it will be required in drupal:11.0.0. See https://www.drupal.org/node/3302306', E_USER_DEPRECATED);
+      $route_provider = \Drupal::service('router.route_provider');
+    }
     $this->entityTypeManager = $entity_type_manager;
     $this->stringTranslation = $string_translation;
     $this->routeProvider = $route_provider;
