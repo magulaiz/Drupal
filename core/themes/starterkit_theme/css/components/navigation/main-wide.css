@@ -29,7 +29,7 @@
     width: max-content;
     max-width: 15rem;
     padding: var(--padding-y) 0;
-    transition: 0.2s;
+    transition: visibility 0.2s, opacity 0.2s;
     opacity: 0;
     border: solid 1px currentColor;
     background-color: white;
@@ -82,7 +82,7 @@
   .main-nav__menu-link--button.main-nav__menu-link--has-children {
     display: flex;
     align-items: center;
-    padding-inline-end: 8px;
+    padding-inline-end: calc(var(--padding-x) / 2);
   }
 
   /* Chevron icon. */
