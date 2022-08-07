@@ -23,7 +23,7 @@ class EntityLinksProviderTest extends BrowserTestBase {
    */
   protected static $modules = [
     'block',
-    'entity_test'
+    'entity_test',
   ];
 
   /**
