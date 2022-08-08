@@ -10,6 +10,7 @@ use Drupal\Core\Entity\EntityStorageException;
 use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Extension\Exception\ObsoleteExtensionException;
 use Drupal\Core\Installer\InstallerKernel;
+use Drupal\Core\Logger\LoggerChannelFactoryInterface;
 use Drupal\Core\Serialization\Yaml;
 use Drupal\Core\Update\UpdateHookRegistry;
 use Drupal\Core\Utility\Error;
@@ -96,7 +97,7 @@ class ModuleInstaller implements ModuleInstallerInterface {
     $this->connection = $connection;
     $this->updateRegistry = $update_registry;
     if ($this->logger === NULL) {
-      @trigger_error('Calling ' . __METHOD__ . ' without the $logger argument is deprecated in drupal:10.1.0 and it will be required in drupal:11.0.0. See https://www.drupal.org/node/2932520', E_USER_DEPRECATED);
+      @trigger_error('Calling ' . __METHOD__ . ' without the $logger argument is deprecated in drupal:10.2.0 and it will be required in drupal:11.0.0. See https://www.drupal.org/node/2932520', E_USER_DEPRECATED);
       $this->logger = \Drupal::service('logger.channel.system');
     }
   }
@@ -356,7 +357,7 @@ class ModuleInstaller implements ModuleInstallerInterface {
         $this->moduleHandler->invoke($module, 'install', [$sync_status]);
 
         // Record the fact that it was installed.
-        \Drupal::logger('system')->info('%module module installed.', ['%module' => $module]);
+        $this->logger->info('%module module installed.', ['%module' => $module]);
       }
     }
 
@@ -532,7 +533,7 @@ class ModuleInstaller implements ModuleInstallerInterface {
       // @see https://www.drupal.org/node/2208429
       \Drupal::service('theme_handler')->refreshInfo();
 
-      \Drupal::logger('system')->info('%module module uninstalled.', ['%module' => $module]);
+      $this->logger->info('%module module uninstalled.', ['%module' => $module]);
 
       /** @var \Drupal\Core\Update\UpdateHookRegistry $update_registry */
       $update_registry = \Drupal::service('update.update_hook_registry');

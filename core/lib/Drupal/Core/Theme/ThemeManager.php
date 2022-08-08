@@ -3,10 +3,12 @@
 namespace Drupal\Core\Theme;
 
 use Drupal\Component\Render\MarkupInterface;
+use Drupal\Core\Logger\LoggerChannelFactoryInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Routing\StackedRouteMatchInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Template\Attribute;
+use Psr\Log\LoggerInterface;
 
 /**
  * Provides the default implementation of a theme manager.
@@ -56,6 +58,13 @@ class ThemeManager implements ThemeManagerInterface {
   protected $root;
 
   /**
+   * The logger service.
+   *
+   * @var \Psr\Log\LoggerInterface
+   */
+  protected LoggerInterface $logger;
+
+  /**
    * Constructs a new ThemeManager object.
    *
    * @param string $root
@@ -66,12 +75,23 @@ class ThemeManager implements ThemeManagerInterface {
    *   The theme initialization.
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
    *   The module handler.
+   * @param \Drupal\Core\Logger\LoggerChannelFactoryInterface|null $logger_factory
+   *   The logger factory.
+   *
+   * @see https://www.drupal.org/node/3160464
    */
-  public function __construct($root, ThemeNegotiatorInterface $theme_negotiator, ThemeInitializationInterface $theme_initialization, ModuleHandlerInterface $module_handler) {
+  public function __construct($root, ThemeNegotiatorInterface $theme_negotiator, ThemeInitializationInterface $theme_initialization, ModuleHandlerInterface $module_handler, LoggerChannelFactoryInterface $logger_factory = NULL) {
     $this->root = $root;
     $this->themeNegotiator = $theme_negotiator;
     $this->themeInitialization = $theme_initialization;
     $this->moduleHandler = $module_handler;
+    if ($logger_factory === NULL) {
+      @trigger_error('Calling ' . __METHOD__ . ' without the $logger_factory argument is deprecated in drupal:10.1.0 and it will be required in drupal:11.0.0. See https://www.drupal.org/node/3160464', E_USER_DEPRECATED);
+      $this->logger = \Drupal::logger('theme');
+    }
+    else {
+      $this->logger = $logger_factory->get('theme');
+    }
   }
 
   /**
@@ -170,7 +190,7 @@ class ThemeManager implements ThemeManagerInterface {
         // Only log a message when not trying theme suggestions ($hook being an
         // array).
         if (!isset($candidate)) {
-          \Drupal::logger('theme')->warning('Theme hook %hook not found.', ['%hook' => $hook]);
+          $this->logger->warning('Theme hook %hook not found.', ['%hook' => $hook]);
         }
         // There is no theme implementation for the hook passed. Return FALSE so
         // the function calling
