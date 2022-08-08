@@ -57,7 +57,6 @@ function system_requirements($phase) {
     if ($profile != 'standard') {
       $info = $module_extension_list->getExtensionInfo($profile);
 
-      $profile_value = $info['version'] ? '%profile_name (%profile-%version)' : '%profile_name (%profile)';
       $requirements['install_profile'] = [
         'title' => t('Installation profile'),
         'value' => $info['name'] . ' (' . $profile . ($info['version'] ? '-' . $info['version'] : '') . ')',
