@@ -268,7 +268,7 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
       return $this->definition['element type'];
     }
 
-    return 'span';
+    return 'div';
   }
 
   /**
