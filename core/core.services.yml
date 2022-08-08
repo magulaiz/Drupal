@@ -578,7 +578,7 @@ services:
     class: Drupal\Core\Extension\ModuleInstaller
     tags:
       - { name: service_collector, tag: 'module_install.uninstall_validator', call: addUninstallValidator }
-    arguments: ['%app.root%', '@module_handler', '@kernel', '@database', '@update.update_hook_registry']
+    arguments: ['%app.root%', '@module_handler', '@kernel', '@database', '@update.update_hook_registry', '@logger.factory']
     lazy: true
   Drupal\Core\Extension\ModuleInstallerInterface: '@module_installer'
   extension.list.module:
@@ -1556,7 +1556,7 @@ services:
   Drupal\Core\Datetime\DateFormatterInterface: '@date.formatter'
   theme.manager:
     class: Drupal\Core\Theme\ThemeManager
-    arguments: ['%app.root%', '@theme.negotiator', '@theme.initialization', '@module_handler']
+    arguments: ['%app.root%', '@theme.negotiator', '@theme.initialization', '@module_handler', '@logger.factory']
     calls:
       - [setThemeRegistry, ['@theme.registry']]
   Drupal\Core\Theme\ThemeManagerInterface: '@theme.manager'
