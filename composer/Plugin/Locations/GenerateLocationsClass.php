@@ -112,7 +112,9 @@ class GenerateLocationsClass {
 
       $io->write("Drupal app root defined as {$absolute_app_root}.");
 
-      static::generateLocations($composer, $io, $absolute_project_root, $absolute_app_root);
+      $relative_web_root = '/' . trim($web_root, '/');
+
+      static::generateLocations($composer, $io, $absolute_project_root, $absolute_app_root, $relative_web_root);
     }
     else {
       // Get the project root's absolute path from the root composer file path.
@@ -122,7 +124,7 @@ class GenerateLocationsClass {
 
       $io->write("Drupal app root assumed to be the Composer project root, {$absolute_app_root}.");
 
-      static::generateLocations($composer, $io, $absolute_project_root, $absolute_app_root);
+      static::generateLocations($composer, $io, $absolute_project_root, $absolute_app_root, '');
     }
 
   }
@@ -138,9 +140,12 @@ class GenerateLocationsClass {
    *   The absolute path to the Composer project root, without a trailing slash.
    * @param string $absolute_app_root
    *   The absolute path to the Drupal app root, without a trailing slash.
+   * @param string $relative_app_root
+   *   The relative path to the Drupal app root, relative to the Composer
+   *   project root, with an initial slash, and without a trailing slash.
    */
-  protected static function generateLocations(Composer $composer, IOInterface $io, $absolute_project_root, $absolute_app_root) {
-    $class_php = str_replace('%app_root', $absolute_app_root, static::$generatedFileTemplate);
+  protected static function generateLocations(Composer $composer, IOInterface $io, $absolute_project_root, $absolute_app_root, $relative_app_root) {
+    $class_php = str_replace('%app_root', $relative_app_root, static::$generatedFileTemplate);
 
     $locations_class_directory = static::getLocationsClassDirectory($absolute_project_root, $absolute_app_root);
     if (!is_writable($locations_class_directory)) {
