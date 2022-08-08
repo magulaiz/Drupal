@@ -469,6 +469,13 @@ class MenuForm extends EntityForm {
             'url' => $link->getTranslateRoute(),
           ];
         }
+
+        foreach ($operations as $name => $operation) {
+          if (!$operation['url']->access()) {
+            unset($operations[$name]);
+          }
+        }
+
         $form[$id]['operations'] = [
           '#type' => 'operations',
           '#links' => $operations,
