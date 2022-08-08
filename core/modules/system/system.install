@@ -56,7 +56,6 @@ function system_requirements($phase) {
     $profile = \Drupal::installProfile();
     if ($profile != 'standard') {
       $info = $module_extension_list->getExtensionInfo($profile);
-
       $requirements['install_profile'] = [
         'title' => t('Installation profile'),
         'value' => $info['name'] . ' (' . $profile . ($info['version'] ? '-' . $info['version'] : '') . ')',
