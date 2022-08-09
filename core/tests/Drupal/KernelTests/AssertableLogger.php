@@ -2,6 +2,7 @@
 
 namespace Drupal\KernelTests;
 
+use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Logger\RfcLoggerTrait;
 use Psr\Log\LoggerInterface;
 
@@ -36,7 +37,7 @@ class AssertableLogger implements LoggerInterface {
    * {@inheritdoc}
    */
   public function log($level, $message, array $context = []): void {
-    $this->handleLog($level, $context['channel'] ?? '', $message);
+    $this->handleLog($level, $context['channel'] ?? '', $message, $context);
   }
 
   /**
@@ -131,20 +132,26 @@ class AssertableLogger implements LoggerInterface {
    *   The logger channel.
    * @param string $message
    *   The log message.
+   * @param array $context
+   *   The log context array.
    */
-  protected function handleLog(int $level, string $channel, string $message): void {
+  protected function handleLog(int $level, string $channel, string $message, array $context): void {
     $is_expected = $this->handleLogExpectations($level, $channel, $message);
     if ($is_expected) {
       return;
     }
     $is_disallowed = !$this->isLogAllowed($level, $channel, $message) && $this->isLogDisallowed($level, $channel, $message);
     if ($is_disallowed) {
+      // Fill in any placeholders with values from the log context.
+      $placeholders = preg_grep('/^[@%:]/', array_keys($context));
+      $message = new FormattableMarkup($message, array_intersect_key($context, array_flip($placeholders)));
+
       $e = new \Exception();
       $trace = explode("\n", $e->getTraceAsString());
       $this->disallowedLogs[] = [
         'level' => $level,
         'channel' => $channel,
-        'message' => $message,
+        'message' => (string) $message,
         'trace' => $trace,
       ];
     }
