@@ -484,11 +484,17 @@ class KernelTestBaseTest extends KernelTestBase {
    */
   public function testDisallowedLogging() {
     $this->expectNoLogsAsSevereAs(RfcLogLevel::ERROR);
-    \Drupal::logger('test')->error('a test error');
+    \Drupal::logger('test')->error('A test error with parameters @foo and %bar.', [
+      '@foo' => 'value foo',
+      '%bar' => 'value bar',
+      'not a placeholder' => 'other value',
+    ]);
     try {
       $this->assertLogExpectationsMet();
     }
     catch (ExpectationFailedException $e) {
+      $this->assertStringContainsString('[message] => A test error with parameters value foo and <em class="placeholder">value bar</em>.', $e->getMessage());
+
       // ::assertLogExpectations correctly failed. An error log was generated,
       // but it was expected that no error logs would be generated.
       // Unset the disallowed logs so that assertPostConditions does not fail the test.
