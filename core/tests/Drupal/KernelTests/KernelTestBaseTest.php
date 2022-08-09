@@ -494,6 +494,7 @@ class KernelTestBaseTest extends KernelTestBase {
     }
     catch (ExpectationFailedException $e) {
       $this->assertStringContainsString('[message] => A test error with parameters value foo and <em class="placeholder">value bar</em>.', $e->getMessage());
+      $this->assertStringContainsString('Drupal\KernelTests\KernelTestBaseTest->testDisallowedLogging()', $e->getMessage());
 
       // ::assertLogExpectations correctly failed. An error log was generated,
       // but it was expected that no error logs would be generated.
