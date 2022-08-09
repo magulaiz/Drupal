@@ -70,11 +70,3 @@ function system_post_update_enable_provider_database_driver() {
     \Drupal::service('module_installer')->install(array_keys($modules_to_install));
   }
 }
-
-/**
- * Add new menu linkset endpoint settings.
- */
-function system_post_update_linkset_settings() {
-  $config = \Drupal::configFactory()->getEditable('system.linkset');
-  $config->set('enable_endpoint', FALSE)->save();
-}
