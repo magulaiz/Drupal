@@ -238,6 +238,16 @@ class ConfigurableLanguageManager extends LanguageManager implements Configurabl
   /**
    * {@inheritdoc}
    */
+  public function setCurrentLanguage(LanguageInterface $language, $type = LanguageInterface::TYPE_INTERFACE) {
+    $current_language = $this->getCurrentLanguage();
+    $this->negotiatedLanguages[$type] = $language;
+
+    return $current_language;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function reset($type = NULL) {
     if (!isset($type)) {
       $this->initialized = FALSE;
