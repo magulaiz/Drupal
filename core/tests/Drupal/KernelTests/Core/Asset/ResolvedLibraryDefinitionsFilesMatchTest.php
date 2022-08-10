@@ -161,7 +161,14 @@ class ResolvedLibraryDefinitionsFilesMatchTest extends KernelTestBase {
     // Then verify all libraries for each core theme. This may seem like
     // overkill but themes can override and extend other extensions' libraries
     // and these changes are only applied for the active theme.
+    /** @var \Drupal\Core\Extension\ThemeHandlerInterface $theme_handler */
+    $theme_data = \Drupal::service('theme_handler')->listInfo();
     foreach ($this->allThemes as $theme) {
+      // Skip obsolete and deprecated themes.
+      $info = $theme->info;
+      if ($info[ExtensionLifecycle::LIFECYCLE_IDENTIFIER] === ExtensionLifecycle::OBSOLETE || $info[ExtensionLifecycle::LIFECYCLE_IDENTIFIER] === ExtensionLifecycle::DEPRECATED) {
+        continue;
+      }
       $this->themeManager->setActiveTheme($this->themeInitialization->getActiveThemeByName($theme));
       $this->libraryDiscovery->clearCachedDefinitions();
 
