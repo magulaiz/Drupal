@@ -46,6 +46,7 @@ interface CacheableDependencyInterface {
    *
    * @return int
    *   The maximum time in seconds that this object may be cached.
+   *   A non-expiring cache may be instantiated by returning Cache::Permanent.
    */
   public function getCacheMaxAge();
 
