@@ -166,14 +166,14 @@
   // Toggle mobile navigation
   function handleMobileNavigationButtonClick(e) {
     const isExpanded = e.currentTarget.getAttribute('aria-expanded') === 'true';
-    const navigation = document.querySelector(`#${ e.currentTarget.getAttribute('aria-controls') }`);
-
-    document.body.classList.toggle('is-active-mobile-menu', !isExpanded);
-    e.currentTarget.setAttribute('aria-expanded', !isExpanded);
-    navigation.classList.toggle('is-expanded', !isExpanded);
+    toggleMobileNav(!isExpanded);
   }
 
-
+  function toggleMobileNav(toState) {
+    document.body.classList.toggle('is-active-mobile-menu', toState);
+    mobileNavigationButton.setAttribute('aria-expanded', toState);
+    primaryNavigationRegion.classList.toggle('is-expanded', toState);
+  }
 
   // Ensure that desktop submenus close when escape key is pressed.
   document.addEventListener('keyup', (e) => {
@@ -185,23 +185,14 @@
     }
   });
 
-
-
   // Init mobile menu
   mobileNavigationButton.setAttribute('aria-expanded', 'false');
   mobileNavigationButton.setAttribute('aria-controls', primaryNavigationRegion.getAttribute('id'));
   mobileNavigationButton.addEventListener('click', handleMobileNavigationButtonClick);
 
   // If user taps outside of menu, close all menus.
-  document.addEventListener(
-    'touchstart',
-    (e) => {
-      if (
-        areAnySubNavsOpen() &&
-        !e.target.matches(
-          '[data-drupal-selector="main-nav-menu--level-1"] *',
-        )
-      ) {
+  document.addEventListener('touchstart', (e) => {
+      if (areAnySubNavsOpen() && !e.target.matches('[data-drupal-selector="main-nav-menu--level-1"] *')) {
         closeAllSubNav();
       }
     },
@@ -228,5 +219,11 @@
         e.preventDefault();
       }
     }
+  });
+
+  // Remove overlays when browser is resized and desktop nav appears.
+  window.addEventListener('resize', () => {
+    toggleMobileNav(false);
+    closeAllSubNav();
   });
 })(Drupal);
