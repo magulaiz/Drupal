@@ -141,3 +141,7 @@ main-menu:
       css/components/navigation/mobile-button.css: {  }
   js:
     js/main-menu.js: {  }
+  dependencies:
+    - core/drupal
+    - core/once
+    - core/tabbable

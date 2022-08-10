@@ -9,6 +9,7 @@
   inset-block-start: calc(1rem + var(--drupal-displace-offset-top, 0px));
   inset-inline-end: 1rem;
   appearance: none;
+  overflow: hidden;
 }
 
 /* .main-nav__mobile-button[aria-expanded="true"] {

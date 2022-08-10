@@ -5,7 +5,7 @@
 
 ((Drupal) => {
   const mobileNavigationButton = document.querySelector('[data-drupal-selector="main-nav__mobile-button"]');
-  const primaryMenuRegion = document.querySelector('[data-drupal-selector="region-primary-navigation"]');
+  const primaryNavigationRegion = document.querySelector('[data-drupal-selector="region-primary-navigation"]');
   function isDesktopNav() {
     return mobileNavigationButton.clientHeight === 0;
   }
@@ -13,6 +13,15 @@
   const secondLevelToggleButtonSelector = '[data-drupal-selector="main-nav-submenu-toggle-button"], button[data-drupal-selector="main-nav-menu-link-has-children"]';
   const secondLevelNavMenus = document.querySelectorAll('[data-drupal-selector="main-nav-menu-item-has-children"]');
 
+  /**
+   * Checks if primaryNavigationRegion contains "is-expanded" class.
+   *
+   * @return {boolean}
+   *   True if navWrapper contains "is-expanded" class, false if not.
+   */
+  function isMobileNavExpanded() {
+    return !isDesktopNav() && primaryNavigationRegion.classList.contains('is-expanded');
+  }
 
   /**
    * Shows and hides the specified menu item's second level submenu.
@@ -180,7 +189,7 @@
 
   // Init mobile menu
   mobileNavigationButton.setAttribute('aria-expanded', 'false');
-  mobileNavigationButton.setAttribute('aria-controls', primaryMenuRegion.getAttribute('id'));
+  mobileNavigationButton.setAttribute('aria-controls', primaryNavigationRegion.getAttribute('id'));
   mobileNavigationButton.addEventListener('click', handleMobileNavigationButtonClick);
 
   // If user taps outside of menu, close all menus.
@@ -198,4 +207,26 @@
     },
     { passive: true },
   );
+
+  // Focus trap. This is added to the header element because the navButton
+  // element is not a child element of the navWrapper element, and the keydown
+  // event would not fire if focus is on the navButton element.
+  document.body.addEventListener('keydown', (e) => {
+    if (e.key === 'Tab' && isMobileNavExpanded()) {
+      const tabbableNavElements = tabbable.tabbable(primaryNavigationRegion);
+      tabbableNavElements.unshift(mobileNavigationButton);
+      const firstTabbableEl = tabbableNavElements[0];
+      const lastTabbableEl = tabbableNavElements[tabbableNavElements.length - 1];
+
+      if (e.shiftKey) {
+        if (document.activeElement === firstTabbableEl) {
+          lastTabbableEl.focus();
+          e.preventDefault();
+        }
+      } else if (document.activeElement === lastTabbableEl) {
+        firstTabbableEl.focus();
+        e.preventDefault();
+      }
+    }
+  });
 })(Drupal);
