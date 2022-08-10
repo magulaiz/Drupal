@@ -11,6 +11,10 @@
   appearance: none;
 }
 
+/* .main-nav__mobile-button[aria-expanded="true"] {
+  inset-inline-end: calc(100% - var(--drupal-displace-offset-left, 0px));
+} */
+
 .mobile-nav-button__icon {
   --line-width: 3px;
   --icon-size: 80%;

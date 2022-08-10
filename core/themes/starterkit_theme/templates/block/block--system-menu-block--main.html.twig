@@ -38,12 +38,8 @@
     'main-nav',
   ]
 %}
-{% set heading_id = attributes.id ~ '-menu'|clean_id %}
-{% set nav_id = attributes.id ~ '-nav'|clean_id %}
-<button class="main-nav__mobile-button" data-drupal-selector="main-nav__mobile-button" aria-labelledby="{{ heading_id }}" aria-controls="{{ nav_id }}" aria-expanded="false">
-  <span class="mobile-nav-button__icon"></span>
-</button>
-<nav aria-labelledby="{{ heading_id }}"{{ attributes.addClass(classes)|without('aria-labelledby').setAttribute('id', nav_id) }}>
+
+<nav aria-labelledby="{{ heading_id }}"{{ attributes.addClass(classes)|without('aria-labelledby') }}>
   {# Label. If not displayed, we still provide it for screen readers. #}
   {% if not configuration.label_display %}
     {% set title_attributes = title_attributes.addClass('visually-hidden') %}
@@ -57,4 +53,3 @@
     {{ content }}
   {% endblock %}
 </nav>
-<div class="main-nav-overlay" data-drupal-selector="main-nav-overlay"></div>

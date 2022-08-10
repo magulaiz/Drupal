@@ -4,8 +4,8 @@
  */
 
 @media (max-width: 1000px) {
-  /* The <nav> element. */
-  .main-nav {
+  /* Region wrapper <div>. This is the element that shows/hides on narrow screens. */
+  .region-primary-navigation {
     position: absolute;
     z-index: 1;
     visibility: hidden;
@@ -15,20 +15,34 @@
     transition: transform 0.2s, visibility 0.2s;
     border-inline-start: solid 1px black;
     background: #eee;
-    inset-block-start: 0;
+    inset-block-start: var(--drupal-displace-offset-top, 0px);
     inset-inline-start: 100%;
   }
 
-  .main-nav.is-expanded {
+  .region-primary-navigation.is-expanded {
     visibility: visible;
     transform: translateX(-100%);
   }
 
-  [dir="rtl"] .main-nav.is-expanded {
+  [dir="rtl"] .region-primary-navigation.is-expanded {
     transform: translateX(100%);
   }
 
-  /* <ul> Menu elements. */
+  .region-primary-navigation__scrollable {
+    --mobile-nav-button-space: 60px; /* Make space for the button that opens/closes the mobile navigation. */
+
+    overflow: auto;
+    height: calc(100% - var(--mobile-nav-button-space)); /* Necessary for proper scrolling if viewport is short. */
+    margin-top: var(--mobile-nav-button-space);
+    padding: 1rem;
+  }
+
+  /* <nav> element. */
+  .main-nav {
+    padding-inline: 0;
+  }
+
+  /* <ul> menu elements. */
   .main-nav__menu {
     margin: 0;
     padding: 0;
@@ -36,12 +50,7 @@
 
   /* Top level <ul> menu element. */
   .main-nav__menu--level-1 {
-    --mobile-nav-button-room: 100px; /* Room for the button that opens/closes the mobile navigation. */
-
-    overflow: auto;
-    height: calc(100% - var(--mobile-nav-button-room)); /* Necessary for proper scrolling if viewport is short. */
-    margin-top: var(--mobile-nav-button-room);
-    padding: 0.5rem;
+    margin-block: 2rem;
   }
 
   /* Second level <ul> menu element. */
@@ -86,7 +95,7 @@
     background: transparent;
   }
 
-  /* This is the toggle icon that appears within parent <button> elements, and
+  /* This is the toggle icon that appears within both parent <button> elements, and
      <button> elements that get generated next to parent <a> links. */
   .main-nav__button-icon {
     --icon-size: 20px;
@@ -148,7 +157,7 @@
 
   body.is-active-mobile-menu {
     position: fixed;
-    width: 100%;
+    width: calc(100% - var(--drupal-displace-offset-left, 0px) - var(--drupal-displace-offset-right, 0px));
     height: 100%;
   }
 

@@ -8,7 +8,7 @@ libraries:
   - core/normalize
 regions:
   header: Header
-  primary_menu: 'Primary menu'
+  primary_navigation: 'Primary navigation'
   highlighted: Highlighted
   content: Content
   sidebar_left: 'Left sidebar'

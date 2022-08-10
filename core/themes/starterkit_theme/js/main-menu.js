@@ -5,13 +5,14 @@
 
 ((Drupal) => {
   const mobileNavigationButton = document.querySelector('[data-drupal-selector="main-nav__mobile-button"]');
+  const primaryMenuRegion = document.querySelector('[data-drupal-selector="region-primary-navigation"]');
   function isDesktopNav() {
     return mobileNavigationButton.clientHeight === 0;
   }
 
-  const buttonSelector = '[data-drupal-selector="main-nav-submenu-toggle-button"], button[data-drupal-selector="main-nav-menu-link-has-children"]';
-
+  const secondLevelToggleButtonSelector = '[data-drupal-selector="main-nav-submenu-toggle-button"], button[data-drupal-selector="main-nav-menu-link-has-children"]';
   const secondLevelNavMenus = document.querySelectorAll('[data-drupal-selector="main-nav-menu-item-has-children"]');
+
 
   /**
    * Shows and hides the specified menu item's second level submenu.
@@ -22,7 +23,7 @@
    *   Optional state where we want the submenu to end up.
    */
   function toggleSubNav(topLevelMenuItem, toState) {
-    const button = topLevelMenuItem.querySelector(buttonSelector);
+    const button = topLevelMenuItem.querySelector(secondLevelToggleButtonSelector);
     const secondLevelMenuSelector = '[data-drupal-selector="main-nav-menu--level-2"]';
     const state =
       toState !== undefined
@@ -33,7 +34,7 @@
       // If desktop nav, ensure all menus close before expanding new one.
       if (isDesktopNav()) {
         secondLevelNavMenus.forEach((el) => {
-          el.querySelector(buttonSelector).setAttribute(
+          el.querySelector(secondLevelToggleButtonSelector).setAttribute(
             'aria-expanded',
             'false',
           );
@@ -73,7 +74,7 @@
 
   // Add event listeners onto each sub navigation parent and button.
   secondLevelNavMenus.forEach((el) => {
-    const button = el.querySelector(buttonSelector);
+    const button = el.querySelector(secondLevelToggleButtonSelector);
 
     // If touch event, prevent mouseover event from triggering the submenu.
     el.addEventListener(
@@ -126,7 +127,7 @@
     secondLevelNavMenus.forEach((el) => {
       // Return focus to the toggle button if the submenu contains focus.
       if (el.contains(document.activeElement)) {
-        el.querySelector(buttonSelector).focus();
+        el.querySelector(secondLevelToggleButtonSelector).focus();
       }
       toggleSubNav(el, false);
     });
@@ -142,7 +143,7 @@
     let subNavsAreOpen = false;
 
     secondLevelNavMenus.forEach((el) => {
-      const button = el.querySelector(buttonSelector);
+      const button = el.querySelector(secondLevelToggleButtonSelector);
       const state = button.getAttribute('aria-expanded') === 'true';
 
       if (state) {
@@ -175,7 +176,11 @@
     }
   });
 
-  // Open mobile menu.
+
+
+  // Init mobile menu
+  mobileNavigationButton.setAttribute('aria-expanded', 'false');
+  mobileNavigationButton.setAttribute('aria-controls', primaryMenuRegion.getAttribute('id'));
   mobileNavigationButton.addEventListener('click', handleMobileNavigationButtonClick);
 
   // If user taps outside of menu, close all menus.
