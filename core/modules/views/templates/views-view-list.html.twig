@@ -8,11 +8,11 @@
  * - rows: A list of rows for this list.
  *   - attributes: The row's HTML attributes.
  *   - content: The row's contents.
- * - group_heading_level: The heading level selected in the views configuration
  * - title: The title of this group of rows. May be empty.
  * - list: @todo.
  *   - type: Starting tag will be either a ul or ol.
  *   - attributes: HTML attributes for the list element.
+ * - group_heading_level: The HTML heading element used to wrap the group label.
  *
  * @see template_preprocess_views_view_list()
  *
@@ -23,7 +23,7 @@
   <div{{ attributes }}>
 {% endif %}
   {% if title %}
-    <{{ group_heading_level }}> {{ title }} </{{ group_heading_level }}>
+    <{{ group_heading_level }}>{{ title }}</{{ group_heading_level }}>
   {% endif %}
 
   <{{ list.type }}{{ list.attributes }}>

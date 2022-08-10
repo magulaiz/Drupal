@@ -281,11 +281,11 @@ abstract class StylePluginBase extends PluginBase {
       $options = ['' => $this->t('- None -')];
       $field_labels = $this->displayHandler->getFieldLabels(TRUE);
       $heading_options = [
-        'H2' => $this->t('h2'),
-        'H3' => $this->t('h3'),
-        'H4' => $this->t('h4'),
-        'H5' => $this->t('h5'),
-        'H6' => $this->t('h6'),
+        'h2' => $this->t('H2'),
+        'h3' => $this->t('H3'),
+        'h4' => $this->t('H4'),
+        'h5' => $this->t('H5'),
+        'h6' => $this->t('H6'),
         ];
       $options += $field_labels;
       // If there are no fields, we can't group on them.
@@ -318,7 +318,7 @@ abstract class StylePluginBase extends PluginBase {
             '#type' => 'select',
             '#title' => $this->t('Group Heading Level', ['@number' => $i + 1]),
             '#options' => $heading_options,
-            '#default_value' => 'h3',
+            '#default_value' => $grouping['group_heading_level'],
             '#description' => $this->t('You may specify a heading level by which to group the records.'),
           ];
 
@@ -384,7 +384,7 @@ abstract class StylePluginBase extends PluginBase {
     // Don't run validation on style plugins without the grouping setting.
     if ($form_state->hasValue(['style_options', 'grouping'])) {
       // Don't save grouping if no field is specified.
-      $groupings = $form_state->getValue(['style_options', 'grouping', 'group_heading_level']);
+      $groupings = $form_state->getValue(['style_options', 'grouping']);
       foreach ($groupings as $index => $grouping) {
         if (empty($grouping['field'])) {
           $form_state->unsetValue(['style_options', 'grouping', $index]);
@@ -538,6 +538,7 @@ abstract class StylePluginBase extends PluginBase {
       }
 
       $single_output['#grouping_level'] = $level;
+      $single_output['#group_heading_level'] = $this->options['grouping'][$level]['group_heading_level'];
       $single_output['#title'] = $set['group'];
       $output[] = $single_output;
     }
@@ -608,6 +609,7 @@ abstract class StylePluginBase extends PluginBase {
           $field = $info['field'];
           $rendered = $info['rendered'] ?? $group_rendered;
           $rendered_strip = $info['rendered_strip'] ?? FALSE;
+          $group_heading_level = $info['group_heading_level'];
           $grouping = '';
           $group_content = '';
           // Group on the rendered version of the field, not the raw.  That way,
@@ -639,6 +641,7 @@ abstract class StylePluginBase extends PluginBase {
           if (empty($set[$grouping])) {
             $set[$grouping]['group'] = $group_content;
             $set[$grouping]['level'] = $level;
+            $set[$grouping]['group_heading_level'] = $group_heading_level;
             $set[$grouping]['rows'] = [];
           }
 
