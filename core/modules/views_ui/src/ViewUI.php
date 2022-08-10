@@ -4,6 +4,7 @@ namespace Drupal\views_ui;
 
 use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\Timer;
+use Drupal\Core\Cache\ObjectWithRefinableCacheabilityInterface;
 use Drupal\Core\EventSubscriber\AjaxResponseSubscriber;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Link;
@@ -24,7 +25,7 @@ use Symfony\Component\HttpFoundation\Request;
  * Stores UI related temporary settings.
  */
 #[\AllowDynamicProperties]
-class ViewUI implements ViewEntityInterface {
+class ViewUI implements ViewEntityInterface, ObjectWithRefinableCacheabilityInterface {
 
   /**
    * Indicates if a view is currently being edited.

@@ -4,6 +4,7 @@ namespace Drupal\Core\Plugin\Context;
 
 use Drupal\Component\Plugin\Context\ContextInterface as ComponentContextInterface;
 use Drupal\Core\Cache\CacheableDependencyInterface;
+use Drupal\Core\Cache\ObjectWithRefinableCacheabilityInterface;
 
 /**
  * Context data and definitions for plugins supporting caching and return docs.
@@ -11,7 +12,7 @@ use Drupal\Core\Cache\CacheableDependencyInterface;
  * @see \Drupal\Component\Plugin\Context\ContextInterface
  * @see \Drupal\Core\Plugin\Context\ContextDefinitionInterface
  */
-interface ContextInterface extends ComponentContextInterface, CacheableDependencyInterface {
+interface ContextInterface extends ComponentContextInterface, CacheableDependencyInterface, ObjectWithRefinableCacheabilityInterface {
 
   /**
    * {@inheritdoc}
@@ -26,24 +27,6 @@ interface ContextInterface extends ComponentContextInterface, CacheableDependenc
    * @return \Drupal\Core\TypedData\TypedDataInterface
    */
   public function getContextData();
-
-  /**
-   * Adds a dependency on an object: merges its cacheability metadata.
-   *
-   * For example, when a context depends on some configuration, an entity, or an
-   * access result, we must make sure their cacheability metadata is present on
-   * the response. This method makes doing that simple.
-   *
-   * @param \Drupal\Core\Cache\CacheableDependencyInterface|mixed $dependency
-   *   The dependency. If the object implements CacheableDependencyInterface,
-   *   then its cacheability metadata will be used. Otherwise, the passed in
-   *   object must be assumed to be uncacheable, so max-age 0 is set.
-   *
-   * @return $this
-   *
-   * @see \Drupal\Core\Cache\CacheableMetadata::createFromObject()
-   */
-  public function addCacheableDependency($dependency);
 
   /**
    * Creates a new context with a different value.
