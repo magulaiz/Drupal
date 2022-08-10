@@ -55,7 +55,7 @@ class SystemLocalTasksTest extends LocalTaskIntegrationTestBase {
 
     // Mock the entity type manager: the local task deriver
     // \Drupal\Core\Entity\Plugin\Derivative\EntityTaskLinkDeriver calls it.
-    $this->entityTypeManager = $this->getMock(EntityTypeManagerInterface::class);
+    $this->entityTypeManager = $this->createMock(EntityTypeManagerInterface::class);
     $this->entityTypeManager->expects($this->any())
       ->method('getDefinitions')
       ->willReturn([]);
