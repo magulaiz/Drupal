@@ -99,6 +99,10 @@ class GenerateThemeTest extends QuickStartTestBase {
     self::assertArrayHasKey('generator', $info);
     self::assertEquals('starterkit_theme:9.4.0', $info['generator']);
 
+    // Confirm readme is rewritten.
+    $readme_file = $this->getWorkspaceDirectory() . "/$theme_path_relative/README.md";
+    $this->assertEquals('test_custom_theme theme, generated with starterkit_theme', file_get_contents($readme_file));
+
     // Ensure that the generated theme can be installed.
     $this->installQuickStart('minimal');
     $this->formLogin($this->adminUsername, $this->adminPassword);
