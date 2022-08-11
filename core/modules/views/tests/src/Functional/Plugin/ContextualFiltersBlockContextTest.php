@@ -31,7 +31,7 @@ class ContextualFiltersBlockContextTest extends ViewTestBase {
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'classy';
+  protected $defaultTheme = 'stable';
 
   /**
    * Views used by this test.

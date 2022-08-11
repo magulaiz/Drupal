@@ -35,7 +35,7 @@ class ExposedFormTest extends ViewTestBase {
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'classy';
+  protected $defaultTheme = 'stark';
 
   /**
    * Nodes to test.
@@ -420,7 +420,7 @@ class ExposedFormTest extends ViewTestBase {
    * @internal
    */
   protected function assertIds(array $ids): void {
-    $elements = $this->cssSelect('div.view-test-exposed-form-sort-items-per-page div.views-row span.field-content');
+    $elements = $this->cssSelect('div.views-row > div.views-field-id > span.field-content');
     $actual_ids = [];
     foreach ($elements as $element) {
       $actual_ids[] = (int) $element->getText();

@@ -34,7 +34,7 @@ class FilterDateTest extends ViewTestBase {
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'classy';
+  protected $defaultTheme = 'stark';
 
   /**
    * The date formatter.
@@ -258,18 +258,18 @@ class FilterDateTest extends ViewTestBase {
 
     $this->drupalGet($path);
     $this->submitForm([], 'Apply');
-    $results = $this->cssSelect('.view-content .field-content');
+    $results = $this->cssSelect('.views-row > .views-field > .field-content');
     $this->assertCount(4, $results);
     $this->submitForm(['created' => '1'], 'Apply');
-    $results = $this->cssSelect('.view-content .field-content');
+    $results = $this->cssSelect('.views-row > .views-field > .field-content');
     $this->assertCount(1, $results);
     $this->assertEquals($this->nodes[3]->id(), $results[0]->getText());
     $this->submitForm(['created' => '2'], 'Apply');
-    $results = $this->cssSelect('.view-content .field-content');
+    $results = $this->cssSelect('.views-row > .views-field > .field-content');
     $this->assertCount(1, $results);
     $this->assertEquals($this->nodes[3]->id(), $results[0]->getText());
     $this->submitForm(['created' => '3'], 'Apply');
-    $results = $this->cssSelect('.view-content .field-content');
+    $results = $this->cssSelect('.views-row > .views-field > .field-content');
     $this->assertCount(1, $results);
     $this->assertEquals($this->nodes[1]->id(), $results[0]->getText());
 
@@ -288,13 +288,13 @@ class FilterDateTest extends ViewTestBase {
 
     // Test that the filter works as expected.
     $this->drupalGet($path);
-    $results = $this->cssSelect('.view-content .field-content');
+    $results = $this->cssSelect('.views-row > .views-field > .field-content');
     $this->assertCount(1, $results);
     $this->assertEquals($this->nodes[3]->id(), $results[0]->getText());
     $this->submitForm([
       'created' => $this->dateFormatter->format(250000, 'custom', 'Y-m-d H:i:s'),
     ], 'Apply');
-    $results = $this->cssSelect('.view-content .field-content');
+    $results = $this->cssSelect('.views-row > .views-field > .field-content');
     $this->assertCount(2, $results);
     $this->assertEquals($this->nodes[2]->id(), $results[0]->getText());
     $this->assertEquals($this->nodes[3]->id(), $results[1]->getText());

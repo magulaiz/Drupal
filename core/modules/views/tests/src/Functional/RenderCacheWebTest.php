@@ -19,7 +19,7 @@ class RenderCacheWebTest extends ViewTestBase {
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'classy';
+  protected $defaultTheme = 'stark';
 
   /**
    * {@inheritdoc}
@@ -64,15 +64,15 @@ class RenderCacheWebTest extends ViewTestBase {
     $this->assertEquals([], $this->cssSelect('div.region-header div.views-field-title'));
 
     $this->drupalGet($this->nodes[0]->toUrl());
-    $result = $this->cssSelect('div.region-header div.views-field-title')[0]->getText();
+    $result = $this->cssSelect('header div.views-field-title')[0]->getText();
     $this->assertEquals('test title 1', $result);
 
     $this->drupalGet($this->nodes[1]->toUrl());
-    $result = $this->cssSelect('div.region-header div.views-field-title')[0]->getText();
+    $result = $this->cssSelect('header div.views-field-title')[0]->getText();
     $this->assertEquals('test title 2', $result);
 
     $this->drupalGet($this->nodes[0]->toUrl());
-    $result = $this->cssSelect('div.region-header div.views-field-title')[0]->getText();
+    $result = $this->cssSelect('header div.views-field-title')[0]->getText();
     $this->assertEquals('test title 1', $result);
   }
 
@@ -82,7 +82,7 @@ class RenderCacheWebTest extends ViewTestBase {
   public function testRepeatedDisplay() {
     $this->drupalGet("views_test_render_cache/node_id_argument/block_1/{$this->nodes[0]->id()}/{$this->nodes[1]->id()}");
     // Confirm there are two displays.
-    $displays = $this->cssSelect('.views-element-container .view-id-node_id_argument.view-display-id-block_1');
+    $displays = $this->cssSelect('.views-element-container .views-row > .views-field-title');
     $this->assertCount(2, $displays, 'There are two displays');
     // First display should only have test title 1.
     $this->assertSame($this->nodes[0]->getTitle(), $displays[0]->getText());
