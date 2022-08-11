@@ -104,7 +104,6 @@ class GenerateTheme extends Command {
       return 1;
     }
 
-
     // Rename files based on the theme machine name.
     $file_pattern = "/$source_theme_name\.(theme|[^.]+\.yml)/";
     if ($files = @scandir($tmp_dir)) {
