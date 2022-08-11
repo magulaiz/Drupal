@@ -295,7 +295,7 @@ class FieldRenderedEntityTranslationTest extends ViewTestBase {
     $rows = $this->cssSelect('div.views-row');
     foreach ($rows as $row) {
       $actual[] = [
-        'title' => $row->find('xpath', (new CssSelectorConverter())->toXPath('h2 a .field--name-title'))->getText(),
+        'title' => $row->find('xpath', (new CssSelectorConverter())->toXPath('h2 a > span'))->getText(),
       ];
     }
     $this->assertEquals($actual, $expected);
