@@ -99,7 +99,7 @@ class GenerateTheme extends Command {
 
     // Readme is specific to Starterkit, so remove it from the generated theme.
     $readme_file = "$tmp_dir/README.md";
-    if (!file_put_contents($readme_file, "$destination_theme theme, generated with starterkit_theme")) {
+    if (!file_put_contents($readme_file, "$destination_theme theme, generated from $source_theme_name. Additional information on generating themes can be found in the [Starterkit documentation](https://www.drupal.org/docs/core-modules-and-themes/core-themes/starterkit-theme).")) {
       $io->getErrorStyle()->error("The readme could not be rewritten.");
       return 1;
     }
