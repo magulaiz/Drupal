@@ -221,9 +221,27 @@
     }
   });
 
+  // Close overlay when click
+  document.querySelector('[data-drupal-selector="main-nav-overlay"]').addEventListener('click', () => {
+    toggleMobileNav(false);
+  });
+
   // Remove overlays when browser is resized and desktop nav appears.
   window.addEventListener('resize', () => {
     toggleMobileNav(false);
     closeAllSubNav();
+  });
+
+
+  // If hyperlink links to an anchor in the current page, close the
+  // mobile menu after the click.
+  primaryNavigationRegion.addEventListener('click', (e) => {
+    if (
+      e.target.matches(
+        `[href*="${window.location.pathname}#"], [href*="${window.location.pathname}#"] *, [href^="#"], [href^="#"] *`,
+      )
+    ) {
+      toggleMobileNav(false);
+    }
   });
 })(Drupal);
