@@ -564,7 +564,7 @@ class BrowserTestBaseTest extends BrowserTestBase {
     catch (ExpectationException $e) {
       // Expected exception; just continue testing.
     }
-
+    $this->assertOption('options', 0);
     $this->assertOption('options', 1);
     try {
       $this->assertOption('options', 4);
