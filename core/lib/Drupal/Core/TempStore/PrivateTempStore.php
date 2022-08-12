@@ -238,9 +238,6 @@ class PrivateTempStore {
    * Ensures that an anonymous user has a session created for them, as
    * otherwise subsequent page loads will not be able to retrieve their
    * tempstore data.
-   *
-   * @todo when https://www.drupal.org/node/2865991 is resolved, use force
-   * start session API.
    */
   protected function startSession() {
     $has_session = $this->requestStack
