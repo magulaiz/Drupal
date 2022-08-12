@@ -528,7 +528,7 @@ class TwigExtensionTest extends UnitTestCase {
         '#cache' => [
           'keys' => [
             'kitten',
-            'kitten__cute',
+            'cute',
           ],
         ],
       ],
