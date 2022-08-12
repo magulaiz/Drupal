@@ -1,0 +1,5 @@
+name: Views test add selectors theme
+type: theme
+base theme: false
+description: Theme that adds additional classes to elements within views so they are easier to target with tests.
+version: VERSION

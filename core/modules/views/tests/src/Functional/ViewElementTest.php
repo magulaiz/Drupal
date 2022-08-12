@@ -21,7 +21,7 @@ class ViewElementTest extends ViewTestBase {
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'stark';
+  protected $defaultTheme = 'views_test_add_selectors_theme';
 
   /**
    * {@inheritdoc}

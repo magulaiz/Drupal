@@ -20,7 +20,7 @@ class StyleSummaryTest extends ViewTestBase {
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'stark';
+  protected $defaultTheme = 'views_test_add_selectors_theme';
 
   /**
    * {@inheritdoc}
@@ -60,7 +60,7 @@ class StyleSummaryTest extends ViewTestBase {
     $this->drupalGet('test-summary');
 
     // Ensure styles are properly added for summary views.
-    $this->assertSession()->responseContains('stable9/css/views/views.module.css');
+    $this->assertSession()->responseContains('core/modules/views/css/views.module.css');
 
     $summary_list = $this->cssSelect('ul.views-summary li');
     $this->assertCount(4, $summary_list);
@@ -68,7 +68,6 @@ class StyleSummaryTest extends ViewTestBase {
     foreach ($summary_list as $summary_list_item) {
       $this->assertEquals('(5)', trim(explode(' ', $summary_list_item->getText())[1]));
     }
-
     $summary_links = $this->cssSelect('ul.views-summary a');
     $this->assertCount(4, $summary_links);
     foreach ($summary_links as $index => $summary_link) {
@@ -105,7 +104,6 @@ class StyleSummaryTest extends ViewTestBase {
 
     $this->drupalGet('admin/structure/views/nojs/handler/test_summary/page_1/argument/type');
     $this->drupalGet('test-summary');
-
     $summary_list = $this->cssSelect('.views-summary-unformatted');
     $this->assertCount(3, $summary_list);
 

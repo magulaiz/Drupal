@@ -32,7 +32,7 @@ class DisplayPageWebTest extends ViewTestBase {
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'stark';
+  protected $defaultTheme = 'views_test_add_selectors_theme';
 
   /**
    * {@inheritdoc}
@@ -112,8 +112,7 @@ class DisplayPageWebTest extends ViewTestBase {
     $this->drupalLogin($admin_user);
     $this->drupalPlaceBlock('system_menu_block:tools');
     $this->drupalGet('<front>');
-
-    $menu_link = $this->cssSelect('nav.block-menu ul.menu a');
+    $menu_link = $this->cssSelect('nav[id^="block"] ul a[data-drupal-link-system-path]');
     $this->assertEquals('Test menu link', $menu_link[0]->getText());
     $this->container->get('module_installer')->install(['menu_ui', 'menu_link_content']);
 
@@ -122,7 +121,7 @@ class DisplayPageWebTest extends ViewTestBase {
     $this->submitForm(['title' => 'New title'], 'Save');
 
     $this->drupalGet('<front>');
-    $menu_link = $this->cssSelect('nav.block-menu ul.menu a');
+    $menu_link = $this->cssSelect('nav[id^="block"] ul a[data-drupal-link-system-path]');
     $this->assertEquals('New title', $menu_link[0]->getText());
   }
 
