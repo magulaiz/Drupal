@@ -31,9 +31,9 @@ class MenuLinksetSettingsForm extends ConfigFormBase {
     $form['linkset']['enable_endpoint'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Enable the menu linkset endpoint'),
-      '#description' => $this->t('See the <a href="@docs-link">decoupled menus documentation</a> for more information.', array(
+      '#description' => $this->t('See the <a href="@docs-link">decoupled menus documentation</a> for more information.', [
           '@docs-link' => 'https://www.drupal.org/docs/develop/decoupled-drupal/decoupled-menus',
-      )),
+    ]),
       '#default_value' => $this->config('system.linkset')->get('enable_endpoint'),
     ];
     return parent::buildForm($form, $form_state);
