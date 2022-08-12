@@ -113,7 +113,7 @@
           // Timeout is added to ensure that users of assistive devices (such as
           // mouse grid tools) do not simultaneously trigger both the mouseover
           // and click events. When these events are triggered together, the
-          // submenu to appear to not open.
+          // submenu will appear to not open.
           setTimeout(() => {
             el.classList.remove('is-active-mouseover-event');
           }, 500);
@@ -208,7 +208,7 @@
    */
   function init(el) {
     primaryNavigationRegion = el;
-    mobileNavigationButton = document.querySelector(
+    mobileNavigationButton = context.querySelector(
       '[data-drupal-selector="main-nav__mobile-button"]',
     );
     secondLevelNavMenus = primaryNavigationRegion.querySelectorAll(
@@ -229,7 +229,7 @@
 
     document.body.addEventListener('keydown', focusTrap);
 
-    // Close overlay when click
+    // Close overlay on click.
     document
       .querySelector('[data-drupal-selector="main-nav-overlay"]')
       .addEventListener('click', () => {
