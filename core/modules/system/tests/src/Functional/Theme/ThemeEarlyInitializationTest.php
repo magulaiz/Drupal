@@ -22,7 +22,7 @@ class ThemeEarlyInitializationTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'classy';
+  protected $defaultTheme = 'olivero';
 
   /**
    * Tests that the theme system can generate output in a request listener.
@@ -33,7 +33,7 @@ class ThemeEarlyInitializationTest extends BrowserTestBase {
     $this->assertSession()->responseContains('Themed output generated in a KernelEvents::REQUEST listener');
     // Verify that the default theme's CSS still appears even though the theme
     // system was initialized early.
-    $this->assertSession()->responseContains('classy/css/components/action-links.css');
+    $this->assertSession()->responseContains('olivero/css/base/base.css');
   }
 
 }

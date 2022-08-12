@@ -22,7 +22,7 @@ class EntityViewControllerTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'classy';
+  protected $defaultTheme = 'stark';
 
   /**
    * Array of test entities.
@@ -47,16 +47,17 @@ class EntityViewControllerTest extends BrowserTestBase {
    * Tests EntityViewController.
    */
   public function testEntityViewController() {
-    $get_label_markup = function ($label) {
-      return '<h1 class="page-title">
-            <div class="field field--name-name field--type-string field--label-hidden field__item">' . $label . '</div>
-      </h1>';
+    $page = $this->getSession()->getPage();
+    $check_label_markup = function ($label) use ($page) {
+      $h1 = $page->findAll('css', 'h1');
+      $this->assertCount(1, $h1);
+      return $h1[0]->find('css', 'div')->getText();
     };
 
     foreach ($this->entities as $entity) {
       $this->drupalGet('entity_test/' . $entity->id());
       $this->assertSession()->pageTextContains($entity->label());
-      $this->assertSession()->responseContains($get_label_markup($entity->label()));
+      $this->assertSession()->responseContains($check_label_markup($entity->label()));
       $this->assertSession()->pageTextContains('full');
 
       $this->drupalGet('entity_test_converter/' . $entity->id());
@@ -77,7 +78,7 @@ class EntityViewControllerTest extends BrowserTestBase {
     $entity_test_rev->save();
     $this->drupalGet('entity_test_rev/' . $entity_test_rev->id() . '/revision/' . $entity_test_rev->revision_id->value . '/view');
     $this->assertSession()->pageTextContains($entity_test_rev->label());
-    $this->assertSession()->responseContains($get_label_markup($entity_test_rev->label()));
+    $this->assertSession()->responseContains($check_label_markup($entity_test_rev->label()));
 
     // As entity_test IDs must be integers, make sure requests for non-integer
     // IDs return a page not found error.

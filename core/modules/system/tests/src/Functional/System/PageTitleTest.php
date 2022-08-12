@@ -24,7 +24,7 @@ class PageTitleTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'classy';
+  protected $defaultTheme = 'stark';
 
   protected $contentUser;
   protected $savedTitle;
@@ -120,14 +120,16 @@ class PageTitleTest extends BrowserTestBase {
     $this->drupalGet('test-render-title');
 
     $this->assertSession()->titleEquals('Foo | Drupal');
-    $result = $this->xpath('//h1[@class="page-title"]');
+    $result = $this->xpath('//h1');
+    $this->assertCount(1, $result);
     $this->assertEquals('Foo', $result[0]->getText());
 
     // Test forms
     $this->drupalGet('form-test/object-builder');
 
     $this->assertSession()->titleEquals('Test dynamic title | Drupal');
-    $result = $this->xpath('//h1[@class="page-title"]');
+    $result = $this->xpath('//h1');
+    $this->assertCount(1, $result);
     $this->assertEquals('Test dynamic title', $result[0]->getText());
 
     // Set some custom translated strings.
@@ -152,14 +154,16 @@ class PageTitleTest extends BrowserTestBase {
     $this->drupalGet('test-page-static-title');
 
     $this->assertSession()->titleEquals('Static title translated | Drupal');
-    $result = $this->xpath('//h1[@class="page-title"]');
+    $result = $this->xpath('//h1');
+    $this->assertCount(1, $result);
     $this->assertEquals('Static title translated', $result[0]->getText());
 
     // Test the dynamic '_title_callback' route option.
     $this->drupalGet('test-page-dynamic-title');
 
     $this->assertSession()->titleEquals('Dynamic title | Drupal');
-    $result = $this->xpath('//h1[@class="page-title"]');
+    $result = $this->xpath('//h1');
+    $this->assertCount(1, $result);
     $this->assertEquals('Dynamic title', $result[0]->getText());
 
     // Ensure that titles are cacheable and are escaped normally if the

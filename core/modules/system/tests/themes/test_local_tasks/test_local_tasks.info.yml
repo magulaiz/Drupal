@@ -1,0 +1,5 @@
+name: 'Test local tasks'
+type: theme
+description: 'To facilitate testing local tasks'
+version: VERSION
+base theme: false
