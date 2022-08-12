@@ -98,8 +98,9 @@
       .prepend(Drupal.theme('contextualTrigger'));
 
     // Set the destination parameter on each of the contextual links.
+    // Append query string if any as well to the destination parameter.
     const destination = `destination=${Drupal.encodePath(
-      Drupal.url(drupalSettings.path.currentPath),
+      Drupal.url(drupalSettings.path.currentPath + window.location.search),
     )}`;
     $contextual.find('.contextual-links a').each(function () {
       const url = this.getAttribute('href');
