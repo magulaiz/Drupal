@@ -35,6 +35,7 @@ class SevenLayoutBuilderTest extends BrowserTestBase {
    * {@inheritdoc}
    */
   protected function setUp(): void {
+    $this->markTestSkipped("The theme 'seven' is deprecated.");
     parent::setUp();
 
     $this->drupalPlaceBlock('page_title_block', ['region' => 'header']);
