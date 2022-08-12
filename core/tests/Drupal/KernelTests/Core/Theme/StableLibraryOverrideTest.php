@@ -45,6 +45,7 @@ class StableLibraryOverrideTest extends StableLibraryOverrideTestBase {
   protected $librariesToSkip = [
     'core/drupal.dialog.off_canvas',
     'layout_builder/drupal.layout_builder',
+    'views/views.responsive-grid',
   ];
 
   /**
