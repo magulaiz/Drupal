@@ -1,0 +1,5 @@
+name: Media library templates
+type: theme
+base theme: false
+description: Theme that loads media library templates to faciliate easier testing.
+version: VERSION

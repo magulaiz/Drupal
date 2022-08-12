@@ -27,7 +27,7 @@ class MediaLibraryTest extends WebDriverTestBase {
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'classy';
+  protected $defaultTheme = 'media_library_templates';
 
   /**
    * The user to use during testing.
