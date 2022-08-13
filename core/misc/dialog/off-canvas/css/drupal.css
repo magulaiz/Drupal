@@ -9,6 +9,8 @@
  * @file
  * Recreate Drupal admin styling that was removed with reset.
  * @see system.admin.css
+ *
+ * @internal
  */
 
 #drupal-off-canvas-wrapper .panel {

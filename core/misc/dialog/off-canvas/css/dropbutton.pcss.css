@@ -1,6 +1,8 @@
 /**
  * @file
  * Styles for dropbuttons in the off-canvas dialog.
+ *
+ * @internal
  */
 #drupal-off-canvas-wrapper {
   --off-canvas-dropbutton-height: 24px;

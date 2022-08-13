@@ -8,6 +8,8 @@
 /**
  * @file
  * Re-create utility styles for off-canvas dialog that are removed in the reset.
+ *
+ * @internal
  */
 
 #drupal-off-canvas-wrapper .hidden {
