@@ -15,6 +15,8 @@ class Stable9LibraryOverrideTest extends StableLibraryOverrideTestBase {
    * @var string[]
    */
   protected $librariesToSkip = [
+    'core/drupal.dialog.off_canvas',
+    'layout_builder/drupal.layout_builder',
     'views/views.responsive-grid',
   ];
 
@@ -22,16 +24,6 @@ class Stable9LibraryOverrideTest extends StableLibraryOverrideTestBase {
    * {@inheritdoc}
    */
   protected static $modules = ['system', 'user', 'path_alias'];
-
-  /**
-   * A list of libraries to skip checking, in the format extension/library_name.
-   *
-   * @var string[]
-   */
-  protected $librariesToSkip = [
-    'core/drupal.dialog.off_canvas',
-    'layout_builder/drupal.layout_builder',
-  ];
 
   /**
    * {@inheritdoc}
