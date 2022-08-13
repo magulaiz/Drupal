@@ -45,6 +45,13 @@ class CKEditorIntegrationTest extends WebDriverTestBase {
   protected static $modules = ['node', 'ckeditor', 'filter', 'ckeditor_test'];
 
   /**
+   * The Editor config entity used for testing.
+   *
+   * @var \Drupal\editor\Entity\Editor
+   */
+  protected $editor;
+
+  /**
    * {@inheritdoc}
    */
   protected function setUp(): void {
@@ -58,10 +65,11 @@ class CKEditorIntegrationTest extends WebDriverTestBase {
     ]);
     $this->filterFormat->save();
 
-    Editor::create([
+    $this->editor = Editor::create([
       'format' => 'filtered_html',
       'editor' => 'ckeditor',
-    ])->save();
+    ]);
+    $this->editor->save();
 
     // Create a node type for testing.
     NodeType::create(['type' => 'page', 'name' => 'page'])->save();
@@ -232,6 +240,34 @@ class CKEditorIntegrationTest extends WebDriverTestBase {
     $this->assertCount(1, $old_keys, 'Only one off-canvas style was cached before clearing caches.');
     $this->assertCount(1, $new_keys, 'Only one off-canvas style was cached after clearing caches.');
     $this->assertNotEquals($old_keys, $new_keys, 'Clearing caches changed the off-canvas style cache key.');
+  }
+
+  /**
+   * Tests that CKEditor dialogs do work inside of jQuery UI dialogs.
+   */
+  public function testCkeditorDialogInJqueryUiDialog() {
+    $assert_session = $this->assertSession();
+    $page = $this->getSession()->getPage();
+
+    // Add the table button.
+    $settings = $this->editor->getSettings();
+    $settings['toolbar']['rows'][0][0]['items'][] = 'Table';
+    $this->editor->setSettings($settings);
+    $this->editor->save();
+
+    $this->drupalGet('/ckeditor_test/dialog');
+
+    // Open the dialog modal.
+    $page->clickLink('Add Node');
+    $assert_session->waitForElementVisible('css', '.ui-dialog');
+    $assert_session->assertWaitOnAjaxRequest();
+
+    // Click the table button.
+    $assert_session->elementExists('css', '.cke_button__table');
+    $this->click('.cke_button__table');
+
+    // Fill the rows field.
+    $page->fillField('Rows', 4);
   }
 
 }

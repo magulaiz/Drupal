@@ -599,6 +599,7 @@ drupal.dialog.ajax:
     - core/drupal.ajax
     - core/drupal.dialog
     - core/tabbable
+    - core/drupal.touchevents-test
 
 drupal.displace:
   version: VERSION
