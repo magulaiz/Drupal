@@ -47,8 +47,6 @@ destination:
 migration_dependencies:
   required:
     - d7_user_role
-    - user_timestamp:access:d7
-    - user_timestamp:login:d7
   optional:
     - d7_field_instance
     - d7_file
