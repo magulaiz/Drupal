@@ -11,20 +11,12 @@ use Symfony\Contracts\EventDispatcher\Event;
 class UserLoginEvent extends Event {
 
   /**
-   * The user account.
-   *
-   * @var \Drupal\user\UserInterface
-   */
-  protected UserInterface $account;
-
-  /**
    * Constructs a new event instance.
    *
    * @param \Drupal\user\UserInterface $account
    *   The account of user just logged in.
    */
-  public function __construct(UserInterface $account) {
-    $this->account = $account;
+  public function __construct(protected UserInterface $account) {
   }
 
   /**
