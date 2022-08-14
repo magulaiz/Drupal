@@ -14,8 +14,6 @@ process:
   pass: pass
   mail: mail
   created: created
-  access: access
-  login: login
   status: status
   timezone:
     plugin: user_update_7002
@@ -48,6 +46,8 @@ destination:
 migration_dependencies:
   required:
     - d6_user_role
+    - user_timestamp:access:d6
+    - user_timestamp:login:d6
   optional:
     - language
     - default_language

@@ -98,6 +98,11 @@ class MigrateUserTest extends MigrateDrupal7TestBase {
     $this->assertSame($created, (int) $user->getCreatedTime());
     $this->assertSame($access, (int) $user->getLastAccessedTime());
     $this->assertSame($login, (int) $user->getLastLoginTime());
+    // For user timestamps perform an additional storage check.
+    $user_timestamp = $this->container->get('user.timestamp');
+    $this->assertEquals($access, $user_timestamp->getLastAccessTime($user));
+    $this->assertEquals($login, $user_timestamp->getLastLoginTime($user));
+
     $this->assertNotSame($blocked, (bool) $user->isBlocked());
 
     // Ensure the user's langcode, preferred_langcode and

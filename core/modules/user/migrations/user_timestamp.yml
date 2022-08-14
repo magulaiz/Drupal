@@ -1,0 +1,8 @@
+id: user_timestamp
+deriver: Drupal\user\Plugin\migrate\UserTimestampDeriver
+source:
+  # The source plugin ID is here just to make this plugin discoverable, as
+  # migration plugin discovery is filtering out migrations lacking a valid
+  # source plugin. Later, the source plugin ID is overridden in deriver.
+  # See \Drupal\user\Plugin\migrate\UserTimestampDeriver::getDerivativeDefinitions()
+  plugin: d6_user
