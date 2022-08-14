@@ -36,7 +36,7 @@ class UserTimestampDeriver extends DeriverBase {
             'value' => $field,
           ],
           'destination' => [
-            'plugin' => 'key_value'
+            'plugin' => 'key_value',
           ],
         ] + $base_plugin_definition;
       }
