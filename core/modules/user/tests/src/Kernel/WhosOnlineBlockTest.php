@@ -2,9 +2,13 @@
 
 namespace Drupal\Tests\user\Kernel;
 
-use Drupal\block\Entity\Block;
+use Drupal\Core\DependencyInjection\ContainerBuilder;
+use Drupal\Core\KeyValueStore\KeyValueFactory;
 use Drupal\KernelTests\KernelTestBase;
+use Drupal\block\Entity\Block;
 use Drupal\user\Entity\User;
+use Symfony\Component\DependencyInjection\Parameter;
+use Symfony\Component\DependencyInjection\Reference;
 
 /**
  * Tests the Who's Online Block.
@@ -69,9 +73,24 @@ class WhosOnlineBlockTest extends KernelTestBase {
   }
 
   /**
+   * {@inheritdoc}
+   */
+  public function register(ContainerBuilder $container) {
+    parent::register($container);
+    // Restore production key/value factory service.
+    // @see \Drupal\KernelTests\KernelTestBase::register()
+    $container->removeAlias('keyvalue');
+    $container
+      ->register('keyvalue', KeyValueFactory::class)
+      ->addArgument(new Reference('service_container'))
+      ->addArgument(new Parameter('factory.keyvalue'));
+  }
+
+  /**
    * Tests the Who's Online block.
    */
   public function testWhosOnlineBlock() {
+    $user_timestamp = $this->container->get('user.timestamp');
     $request_time = \Drupal::time()->getRequestTime();
     // Generate users.
     $user1 = User::create([
@@ -80,16 +99,16 @@ class WhosOnlineBlockTest extends KernelTestBase {
     ]);
     $user1->addRole('administrator');
     $user1->activate();
-    $user1->setLastAccessTime($request_time);
     $user1->save();
+    $user_timestamp->setLastAccessTime($user1, $request_time);
 
     $user2 = User::create([
       'name' => 'user2',
       'mail' => 'user2@example.com',
     ]);
     $user2->activate();
-    $user2->setLastAccessTime($request_time + 1);
     $user2->save();
+    $user_timestamp->setLastAccessTime($user2, $request_time + 1);
 
     $user3 = User::create([
       'name' => 'user3',
@@ -100,6 +119,7 @@ class WhosOnlineBlockTest extends KernelTestBase {
     $inactive_time = $request_time - (60 * 60);
     $user3->setLastAccessTime($inactive_time);
     $user3->save();
+    $user_timestamp->setLastAccessTime($user3, $inactive_time);
 
     // Test block output.
     \Drupal::currentUser()->setAccount($user1);
