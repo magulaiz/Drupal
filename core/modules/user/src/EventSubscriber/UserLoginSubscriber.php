@@ -20,7 +20,7 @@ class UserLoginSubscriber implements EventSubscriberInterface {
   /**
    * Constructs a new event subscriber service.
    *
-   * @param UserTimestampInterface $userTimestamp
+   * @param \Drupal\user\UserTimestampInterface $userTimestamp
    *   The user timestamp service.
    * @param \Drupal\Core\Config\ConfigFactoryInterface $configFactory
    *   The config factory service.
