@@ -2,14 +2,12 @@
 
 namespace Drupal\user\EventSubscriber;
 
-use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Core\Config\ConfigFactoryInterface;
-use Drupal\Core\KeyValueStore\KeyValueFactoryInterface;
-use Drupal\Core\KeyValueStore\KeyValueStoreInterface;
 use Drupal\Core\Messenger\MessengerInterface;
 use Drupal\Core\Routing\RedirectDestinationInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\user\Event\UserLoginEvent;
+use Drupal\user\UserTimestampInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
@@ -20,60 +18,23 @@ class UserLoginSubscriber implements EventSubscriberInterface {
   use StringTranslationTrait;
 
   /**
-   * The time service.
-   *
-   * @var \Drupal\Component\Datetime\TimeInterface
-   */
-  protected TimeInterface $time;
-
-  /**
-   * The 'user.timestamp' key value store.
-   *
-   * @var \Drupal\Core\KeyValueStore\KeyValueStoreInterface
-   */
-  protected KeyValueStoreInterface $keyValue;
-
-  /**
-   * The config factory service.
-   *
-   * @var \Drupal\Core\Config\ConfigFactoryInterface
-   */
-  protected ConfigFactoryInterface $configFactory;
-
-  /**
-   * The messenger service.
-   *
-   * @var \Drupal\Core\Messenger\MessengerInterface
-   */
-  protected MessengerInterface $messenger;
-
-  /**
-   * The redirect destination service.
-   *
-   * @var \Drupal\Core\Routing\RedirectDestinationInterface
-   */
-  protected RedirectDestinationInterface $redirectDestination;
-
-  /**
    * Constructs a new event subscriber service.
    *
-   * @param \Drupal\Component\Datetime\TimeInterface $time
-   *   The time service.
-   * @param \Drupal\Core\KeyValueStore\KeyValueFactoryInterface $key_value_factory
-   *   The key-value factory service.
-   * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
+   * @param UserTimestampInterface $userTimestamp
+   *   The user timestamp service.
+   * @param \Drupal\Core\Config\ConfigFactoryInterface $configFactory
    *   The config factory service.
    * @param \Drupal\Core\Messenger\MessengerInterface $messenger
    *   The messenger service.
-   * @param \Drupal\Core\Routing\RedirectDestinationInterface $redirect_destination
+   * @param \Drupal\Core\Routing\RedirectDestinationInterface $redirectDestination
    *   The redirect destination service.
    */
-  public function __construct(TimeInterface $time, KeyValueFactoryInterface $key_value_factory, ConfigFactoryInterface $config_factory, MessengerInterface $messenger, RedirectDestinationInterface $redirect_destination) {
-    $this->time = $time;
-    $this->keyValue = $key_value_factory->get('user.timestamp.login');
-    $this->configFactory = $config_factory;
-    $this->messenger = $messenger;
-    $this->redirectDestination = $redirect_destination;
+  public function __construct(
+    protected UserTimestampInterface $userTimestamp,
+    protected ConfigFactoryInterface $configFactory,
+    protected MessengerInterface $messenger,
+    protected RedirectDestinationInterface $redirectDestination,
+  ) {
   }
 
   /**
@@ -96,9 +57,7 @@ class UserLoginSubscriber implements EventSubscriberInterface {
 
     // Update the user login timestamp noting user has logged in. This is also
     // used to invalidate one-time login links.
-    $request_time = $this->time->getRequestTime();
-    $account->setLastLoginTime($request_time);
-    $this->keyValue->set($account->id(), $request_time);
+    $this->userTimestamp->setLastLoginTime($account);
 
     // Reset static cache of default variables in template_preprocess() to
     // reflect the new user.

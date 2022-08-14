@@ -49,9 +49,9 @@ class UserDeprecationTest extends KernelTestBase {
     /** @var \Drupal\user\UserStorageInterface $storage */
     $storage = $this->container->get('entity_type.manager')->getStorage('user');
     $account = $this->createUser();
-    $this->expectDeprecation('Drupal\user\UserStorage::updateLastAccessTimestamp() is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. No replacement is provided. See https://www.drupal.org/node/3300476');
+    $this->expectDeprecation("Drupal\user\UserStorage::updateLastAccessTimestamp() is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Instead, use the 'user.timestamp' service with the ::setLastAccessTime() method. See https://www.drupal.org/node/3300476");
     $storage->updateLastAccessTimestamp($account, \Drupal::time()->getRequestTime());
-    $this->expectDeprecation('Drupal\user\UserStorage::updateLastLoginTimestamp() is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. No replacement is provided. See https://www.drupal.org/node/3300476');
+    $this->expectDeprecation("Drupal\user\UserStorage::updateLastLoginTimestamp() is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Instead, use the 'user.timestamp' service with the ::setLastLoginTime() method. See https://www.drupal.org/node/3300476");
     $storage->updateLastLoginTimestamp($account);
   }
 
@@ -59,9 +59,8 @@ class UserDeprecationTest extends KernelTestBase {
    * @covers \Drupal\user\EventSubscriber\UserRequestSubscriber::__construct
    */
   public function testUserRequestSubscriberConstructorParams(): void {
-    $this->expectDeprecation('The $entity_type_manager argument is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. See https://www.drupal.org/node/3300476');
-    $this->expectDeprecation('Calling Drupal\user\EventSubscriber\UserRequestSubscriber::__construct() without the $key_value_factory argument is deprecated in drupal:10.1.0 and it will be required in drupal:11.0.0. See https://www.drupal.org/node/3300476');
-    $this->expectDeprecation('Calling Drupal\user\EventSubscriber\UserRequestSubscriber::__construct() without the $time argument is deprecated in drupal:10.1.0 and it will be required in drupal:11.0.0. See https://www.drupal.org/node/3300476');
+    $this->expectDeprecation('The $entityTypeManager argument is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. See https://www.drupal.org/node/3300476');
+    $this->expectDeprecation('Calling Drupal\user\EventSubscriber\UserRequestSubscriber::__construct() without the $userTimestamp argument is deprecated in drupal:10.1.0 and it will be required in drupal:11.0.0. See https://www.drupal.org/node/3300476');
     new UserRequestSubscriber($this->createUser(), $this->container->get('entity_type.manager'));
   }
 

@@ -38,7 +38,7 @@ services:
       - { name: event_subscriber }
   user_last_access_subscriber:
     class: Drupal\user\EventSubscriber\UserRequestSubscriber
-    arguments: ['@current_user', null, '@keyvalue', '@datetime.time']
+    arguments: ['@current_user', null, '@user.timestamp']
     tags:
       - { name: event_subscriber }
   theme.negotiator.admin_theme:
@@ -73,9 +73,12 @@ services:
     arguments: ['user']
   user.login.subscriber:
     class: Drupal\user\EventSubscriber\UserLoginSubscriber
-    arguments: ['@datetime.time', '@keyvalue', '@config.factory', '@messenger', '@redirect.destination']
+    arguments: ['@user.timestamp', '@config.factory', '@messenger', '@redirect.destination']
     tags:
       - { name: 'event_subscriber' }
   user.keyvalue.database:
     class: Drupal\Core\KeyValueStore\KeyValueDatabaseFactory
     arguments: ['@serialization.string', '@database']
+  user.timestamp:
+    class: Drupal\user\UserTimestamp
+    arguments: ['@keyvalue', '@datetime.time', '@settings']
