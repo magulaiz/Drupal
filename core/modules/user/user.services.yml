@@ -76,3 +76,6 @@ services:
     arguments: ['@datetime.time', '@keyvalue', '@config.factory', '@messenger', '@redirect.destination']
     tags:
       - { name: 'event_subscriber' }
+  user.keyvalue.database:
+    class: Drupal\Core\KeyValueStore\KeyValueDatabaseFactory
+    arguments: ['@serialization.string', '@database']
