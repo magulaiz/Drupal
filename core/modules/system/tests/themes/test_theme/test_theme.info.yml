@@ -12,7 +12,7 @@ name: '<strong>Test theme</strong>'
 type: theme
 description: 'Theme for testing the theme system'
 version: VERSION
-base theme: classy
+base theme: false
 logo: images/logo2.svg
 libraries:
   - test_theme/global-styling
@@ -37,7 +37,7 @@ libraries-override:
   system/base:
     css:
       component:
-        /core/themes/stable/css/system/components/js.module.css: false
+        css/components/js.module.css: false
   # It works for JS as well.
   core/jquery:
     js:

@@ -31,8 +31,8 @@ class FunctionsTest extends KernelTestBase {
     parent::setUp();
 
     // Enable the Classy theme.
-    $this->container->get('theme_installer')->install(['classy']);
-    $this->config('system.theme')->set('default', 'classy')->save();
+    $this->container->get('theme_installer')->install(['test_theme_functions']);
+    $this->config('system.theme')->set('default', 'test_theme_functions')->save();
   }
 
   /**
