@@ -68,6 +68,7 @@ class StyleSummaryTest extends ViewTestBase {
     foreach ($summary_list as $summary_list_item) {
       $this->assertEquals('(5)', trim(explode(' ', $summary_list_item->getText())[1]));
     }
+
     $summary_links = $this->cssSelect('ul.views-summary a');
     $this->assertCount(4, $summary_links);
     foreach ($summary_links as $index => $summary_link) {
@@ -104,6 +105,7 @@ class StyleSummaryTest extends ViewTestBase {
 
     $this->drupalGet('admin/structure/views/nojs/handler/test_summary/page_1/argument/type');
     $this->drupalGet('test-summary');
+
     $summary_list = $this->cssSelect('.views-summary-unformatted');
     $this->assertCount(3, $summary_list);
 

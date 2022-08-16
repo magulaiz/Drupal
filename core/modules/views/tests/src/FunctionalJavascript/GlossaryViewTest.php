@@ -32,7 +32,7 @@ class GlossaryViewTest extends WebDriverTestBase {
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'stark';
+  protected $defaultTheme = 'views_test_add_selectors_theme';
 
   /**
    * @var array
@@ -89,13 +89,13 @@ class GlossaryViewTest extends WebDriverTestBase {
     $web_assert = $this->assertSession();
 
     $page = $session->getPage();
-    $rows = $page->findAll('css', '.views-element-container .cols-3 tr');
+    $rows = $page->findAll('css', '.view-test-glossary tr');
     // We expect 2 rows plus the header row.
     $this->assertCount(3, $rows);
     // Click on the P link, this should show 4 rows plus the header row.
     $page->clickLink('P');
     $web_assert->assertWaitOnAjaxRequest();
-    $rows = $page->findAll('css', '.views-element-container .cols-3 tr');
+    $rows = $page->findAll('css', '.view-test-glossary tr');
     $this->assertCount(5, $rows);
   }
 
@@ -119,14 +119,14 @@ class GlossaryViewTest extends WebDriverTestBase {
 
     $page = $session->getPage();
 
-    $rows = $page->findAll('css', '.views-element-container .cols-3 tr');
+    $rows = $page->findAll('css', '.view-test-glossary tr');
     // We expect 2 rows plus the header row.
     $this->assertCount(3, $rows);
     // Click on the P link, this should show 4 rows plus the header row.
     $page->clickLink('P');
     $web_assert->assertWaitOnAjaxRequest();
 
-    $rows = $page->findAll('css', '.views-element-container .cols-3 tr');
+    $rows = $page->findAll('css', '.view-test-glossary tr');
     $this->assertCount(5, $rows);
   }
 
