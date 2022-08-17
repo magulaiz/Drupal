@@ -25,6 +25,7 @@ class ContentPreviewToggleTest extends WebDriverTestBase {
     'block',
     'node',
     'contextual',
+    'off_canvas_test'
   ];
 
   /**
