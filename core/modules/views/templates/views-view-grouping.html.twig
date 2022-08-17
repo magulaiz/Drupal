@@ -17,7 +17,9 @@
  * @ingroup themeable
  */
 #}
+{% if title %}
 <{{ group_heading_level }}>
 {{ title }}
 </{{ group_heading_level }}>
+{% endif %}
 {{ content }}
