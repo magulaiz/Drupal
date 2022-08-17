@@ -6,9 +6,10 @@ used as a base theme. Starterkit is for **generating new themes** that include
 reasonably un-opinionated 'starter' templates and styles that eliminate much of
 the initial work required to create a theme.
 
-Starterkit is the recommended approach for creating new themes.
-A new theme can be generated in the /themes directory by running the following
+Starterkit is the recommended approach for creating new themes. You can create a
+Starterkit generated theme in the /themes directory by running the following
 command:
+
 `php core/scripts/drupal generate-theme --starterkit [theme_name] my_new_theme`
 
 For more information, consult the 
