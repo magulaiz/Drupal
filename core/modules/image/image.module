@@ -352,7 +352,7 @@ function image_entity_presave(EntityInterface $entity) {
 
   $uuid = $default_image['uuid'];
   if ($uuid) {
-    $original_uuid = isset($entity->original) ? $entity->original->getSetting('default_image')['uuid'] : NULL;
+    $original_uuid = $entity->getOriginalDefaultRevision() ? $entity->getOriginalDefaultRevision()->getSetting('default_image')['uuid'] : NULL;
     if ($uuid != $original_uuid) {
       $file = \Drupal::service('entity.repository')->loadEntityByUuid('file', $uuid);
       if ($file) {

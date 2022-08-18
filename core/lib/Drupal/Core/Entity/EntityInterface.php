@@ -442,4 +442,24 @@ interface EntityInterface extends AccessibleInterface, CacheableDependencyInterf
    */
   public function getConfigTarget();
 
+  /**
+   * Returns the unchanged entity for the default revision.
+   *
+   * This is only available while an entity is being saved.
+   *
+   * @return static|null
+   *   The unchanged entity.
+   */
+  public function getOriginalDefaultRevision(): ?EntityInterface;
+
+  /**
+   * Set the unchanged entity for the default revision.
+   *
+   * @param EntityInterface|null $original
+   *   The unchanged entity.
+   *
+   * @return $this
+   */
+  public function setOriginalDefaultRevision(?EntityInterface $original);
+
 }

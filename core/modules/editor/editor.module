@@ -374,7 +374,7 @@ function editor_entity_update(EntityInterface $entity) {
 
   // On new revisions, all files are considered to be a new usage and no
   // deletion of previous file usages are necessary.
-  if (!empty($entity->original) && $entity->getRevisionId() != $entity->original->getRevisionId()) {
+  if ($entity->getOriginalDefaultRevision() && $entity->getRevisionId() != $entity->getOriginalDefaultRevision()->getRevisionId()) {
     $referenced_files_by_field = _editor_get_file_uuids_by_field($entity);
     foreach ($referenced_files_by_field as $uuids) {
       _editor_record_file_usage($uuids, $entity);
@@ -385,8 +385,8 @@ function editor_entity_update(EntityInterface $entity) {
   // File references that existed both in the previous version of the revision
   // and in the new one don't need their usage to be updated.
   else {
-    $original_uuids_by_field = empty($entity->original) ? [] :
-      _editor_get_file_uuids_by_field($entity->original);
+    $original_uuids_by_field = !$entity->getOriginalDefaultRevision() ? [] :
+      _editor_get_file_uuids_by_field($entity->getOriginalDefaultRevision());
 
     $uuids_by_field = _editor_get_file_uuids_by_field($entity);
 

@@ -48,6 +48,21 @@ abstract class EntityBase implements EntityInterface {
   protected $typedData;
 
   /**
+   * The original unchanged entity.
+   *
+   * This property will be set and used during the saving process.
+   *
+   * @var static|null
+   *
+   * @deprecated in drupal:9.5.0 and is removed from drupal:11.0.0. Use
+   *   \Drupal\Core\Entity\EntityInterface::getOriginalDefaultRevision()
+   *   instead.
+   *
+   * @see https://www.drupal.org/node/3295826
+   */
+  public $original;
+
+  /**
    * Constructs an Entity object.
    *
    * @param array $values
@@ -648,6 +663,21 @@ abstract class EntityBase implements EntityInterface {
     // For content entities, use the UUID for the config target identifier.
     // This ensures that references to the target can be deployed reliably.
     return $this->uuid();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getOriginalDefaultRevision(): ?EntityInterface {
+    return $this->original;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setOriginalDefaultRevision(?EntityInterface $original) {
+    $this->original = $original;
+    return $this;
   }
 
 }

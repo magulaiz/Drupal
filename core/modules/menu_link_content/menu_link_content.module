@@ -79,11 +79,11 @@ function _menu_link_content_update_path_alias($path) {
  * Implements hook_ENTITY_TYPE_update() for 'path_alias'.
  */
 function menu_link_content_path_alias_update(PathAliasInterface $path_alias) {
-  if ($path_alias->getAlias() != $path_alias->original->getAlias()) {
+  if ($path_alias->getAlias() != $path_alias->getOriginalDefaultRevision()->getAlias()) {
     _menu_link_content_update_path_alias($path_alias->getAlias());
-    _menu_link_content_update_path_alias($path_alias->original->getAlias());
+    _menu_link_content_update_path_alias($path_alias->getOriginalDefaultRevision()->getAlias());
   }
-  elseif ($path_alias->getPath() != $path_alias->original->getPath()) {
+  elseif ($path_alias->getPath() != $path_alias->getOriginalDefaultRevision()->getPath()) {
     _menu_link_content_update_path_alias($path_alias->getAlias());
   }
 }

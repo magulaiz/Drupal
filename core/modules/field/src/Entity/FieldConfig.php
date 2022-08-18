@@ -166,17 +166,17 @@ class FieldConfig extends FieldConfigBase implements FieldConfigInterface {
     }
     else {
       // Some updates are always disallowed.
-      if ($this->entity_type != $this->original->entity_type) {
+      if ($this->entity_type != $this->getOriginalDefaultRevision()->entity_type) {
         throw new FieldException("Cannot change an existing field's entity_type.");
       }
-      if ($this->bundle != $this->original->bundle) {
+      if ($this->bundle != $this->getOriginalDefaultRevision()->bundle) {
         throw new FieldException("Cannot change an existing field's bundle.");
       }
-      if ($storage_definition->uuid() != $this->original->getFieldStorageDefinition()->uuid()) {
+      if ($storage_definition->uuid() != $this->getOriginalDefaultRevision()->getFieldStorageDefinition()->uuid()) {
         throw new FieldException("Cannot change an existing field's storage.");
       }
       // Notify the entity storage.
-      \Drupal::service('field_definition.listener')->onFieldDefinitionUpdate($this, $this->original);
+      \Drupal::service('field_definition.listener')->onFieldDefinitionUpdate($this, $this->getOriginalDefaultRevision());
     }
 
     parent::preSave($storage);

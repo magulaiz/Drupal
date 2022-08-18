@@ -169,12 +169,12 @@ class ContentTranslationSynchronizedFieldsConstraintValidator extends Constraint
    *   The unchanged entity.
    */
   protected function getOriginalEntity(ContentEntityInterface $entity) {
-    if (!isset($entity->original)) {
+    if (!$entity->getOriginalDefaultRevision()) {
       $storage = $this->entityTypeManager->getStorage($entity->getEntityTypeId());
       $original = $entity->isDefaultRevision() ? $storage->loadUnchanged($entity->id()) : $storage->loadRevision($entity->getLoadedRevisionId());
     }
     else {
-      $original = $entity->original;
+      $original = $entity->getOriginalDefaultRevision();
     }
     return $original;
   }

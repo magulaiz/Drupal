@@ -520,14 +520,14 @@ function content_translation_form_field_config_edit_form_alter(array &$form, For
  * Implements hook_entity_presave().
  */
 function content_translation_entity_presave(EntityInterface $entity) {
-  if ($entity instanceof ContentEntityInterface && $entity->isTranslatable() && !$entity->isNew() && isset($entity->original)) {
+  if ($entity instanceof ContentEntityInterface && $entity->isTranslatable() && !$entity->isNew() && $entity->getOriginalDefaultRevision()) {
     /** @var \Drupal\content_translation\ContentTranslationManagerInterface $manager */
     $manager = \Drupal::service('content_translation.manager');
     if (!$manager->isEnabled($entity->getEntityTypeId(), $entity->bundle())) {
       return;
     }
     $langcode = $entity->language()->getId();
-    $source_langcode = !$entity->original->hasTranslation($langcode) ? $manager->getTranslationMetadata($entity)->getSource() : NULL;
+    $source_langcode = !$entity->getOriginalDefaultRevision()->hasTranslation($langcode) ? $manager->getTranslationMetadata($entity)->getSource() : NULL;
     \Drupal::service('content_translation.synchronizer')->synchronizeFields($entity, $langcode, $source_langcode);
   }
 }

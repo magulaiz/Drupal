@@ -124,7 +124,7 @@ class LayoutBuilderEntityViewDisplay extends BaseEntityViewDisplay implements La
   public function preSave(EntityStorageInterface $storage) {
     parent::preSave($storage);
 
-    $original_value = isset($this->original) ? $this->original->isOverridable() : FALSE;
+    $original_value = $this->getOriginalDefaultRevision() ? $this->getOriginalDefaultRevision()->isOverridable() : FALSE;
     $new_value = $this->isOverridable();
     if ($original_value !== $new_value) {
       $entity_type_id = $this->getTargetEntityTypeId();
@@ -138,7 +138,7 @@ class LayoutBuilderEntityViewDisplay extends BaseEntityViewDisplay implements La
       }
     }
 
-    $already_enabled = isset($this->original) ? $this->original->isLayoutBuilderEnabled() : FALSE;
+    $already_enabled = $this->getOriginalDefaultRevision() ? $this->getOriginalDefaultRevision()->isLayoutBuilderEnabled() : FALSE;
     $set_enabled = $this->isLayoutBuilderEnabled();
     if ($already_enabled !== $set_enabled) {
       if ($set_enabled) {

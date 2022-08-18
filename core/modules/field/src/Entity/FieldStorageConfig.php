@@ -371,21 +371,20 @@ class FieldStorageConfig extends ConfigEntityBase implements FieldStorageConfigI
     $module_handler = \Drupal::moduleHandler();
 
     // Some updates are always disallowed.
-    if ($this->getType() != $this->original->getType()) {
-      throw new FieldException(sprintf('Cannot change the field type for an existing field storage. The field storage %s has the type %s.', $this->id(), $this->original->getType()));
-    }
-    if ($this->getTargetEntityTypeId() != $this->original->getTargetEntityTypeId()) {
-      throw new FieldException(sprintf('Cannot change the entity type for an existing field storage. The field storage %s has the type %s.', $this->id(), $this->original->getTargetEntityTypeId()));
+    if ($this->getType() != $this->getOriginalDefaultRevision()->getType()) {
+      throw new FieldException(sprintf('Cannot change the field type for an existing field storage. The field storage %s has the type %s.', $this->id(), $this->getOriginalDefaultRevision()->getType()));    }
+    if ($this->getTargetEntityTypeId() != $this->getOriginalDefaultRevision()->getTargetEntityTypeId()) {
+      throw new FieldException(sprintf('Cannot change the entity type for an existing field storage. The field storage %s has the type %s.', $this->id(), $this->getOriginalDefaultRevision()->getTargetEntityTypeId()));
     }
 
     // See if any module forbids the update by throwing an exception. This
     // invokes hook_field_storage_config_update_forbid().
-    $module_handler->invokeAll('field_storage_config_update_forbid', [$this, $this->original]);
+    $module_handler->invokeAll('field_storage_config_update_forbid', [$this, $this->getOriginalDefaultRevision()]);
 
     // Notify the field storage definition listener. A listener can reject the
     // definition update as invalid by raising an exception, which stops
     // execution before the definition is written to config.
-    \Drupal::service('field_storage_definition.listener')->onFieldStorageDefinitionUpdate($this, $this->original);
+    \Drupal::service('field_storage_definition.listener')->onFieldStorageDefinitionUpdate($this, $this->getOriginalDefaultRevision());
   }
 
   /**

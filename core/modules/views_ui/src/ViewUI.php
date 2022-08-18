@@ -4,6 +4,7 @@ namespace Drupal\views_ui;
 
 use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\Timer;
+use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\EventSubscriber\AjaxResponseSubscriber;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Link;
@@ -1362,6 +1363,21 @@ class ViewUI implements ViewEntityInterface {
    */
   public function unsetLock() {
     $this->lock = NULL;
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getOriginalDefaultRevision(): ?EntityInterface {
+    return $this->storage->getOriginalDefaultRevision();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setOriginalDefaultRevision(?EntityInterface $original) {
+    $this->storage->setOriginalDefaultRevision($original);
     return $this;
   }
 
