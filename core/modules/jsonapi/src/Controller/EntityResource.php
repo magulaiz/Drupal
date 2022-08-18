@@ -687,15 +687,13 @@ class EntityResource {
     /** @var \Drupal\Core\Field\EntityReferenceFieldItemListInterface $resource_identifiers */
     $resource_identifiers = $this->deserialize($resource_type, $request, ResourceIdentifier::class, $related);
     $internal_relationship_field_name = $resource_type->getInternalName($related);
-    // According to the specification, PATCH works a little bit different if the
-    // relationship is to-one or to-many.
     /** @var \Drupal\Core\Field\EntityReferenceFieldItemListInterface $field_list */
     $field_list = $entity->{$internal_relationship_field_name};
     $field_definition = $field_list->getFieldDefinition();
     $is_multiple = $field_definition->getFieldStorageDefinition()->isMultiple();
     $method = $is_multiple ? 'doPatchMultipleRelationship' : 'doPatchIndividualRelationship';
     $this->{$method}($entity, $resource_identifiers, $field_definition);
-    $this->validate($entity);
+    static::validate($entity, [$field_definition->getName()]);
     $entity->save();
     $requires_response = static::relationshipResponseRequiresBody($resource_identifiers, ResourceIdentifier::toResourceIdentifiersWithArityRequired($field_list));
     return $this->getRelationship($resource_type, $entity, $related, $request, $requires_response ? 200 : 204);
@@ -799,7 +797,7 @@ class EntityResource {
     }
 
     // Save the entity and return the response object.
-    static::validate($entity);
+    static::validate($entity, [$field_list->getName()]);
     $entity->save();
     return $this->getRelationship($resource_type, $entity, $related, $request, 204);
   }
