@@ -797,7 +797,7 @@ class EntityResource {
     }
 
     // Save the entity and return the response object.
-    static::validate($entity, [$field_list->getName()]);
+    static::validate($entity, [$field_list->getFieldDefinition()->getName()]);
     $entity->save();
     return $this->getRelationship($resource_type, $entity, $related, $request, 204);
   }
