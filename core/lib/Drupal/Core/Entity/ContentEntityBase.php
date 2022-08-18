@@ -1227,11 +1227,6 @@ abstract class ContentEntityBase extends EntityBase implements \IteratorAggregat
     $original = $this->original;
     $this->original = &$original;
 
-    // Ensure the original property is actually cloned by overwriting the
-    // original reference with one pointing to a copy of it.
-    $original = $this->original;
-    $this->original = &$original;
-
     $fields = $this->fields;
     $this->fields = &$fields;
 
