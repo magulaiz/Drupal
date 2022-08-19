@@ -77,6 +77,8 @@ function editor_post_update_upgrade_ckeditor_4_to_5(&$sandbox = []) {
       [
         ':dblog_url' => Url::fromRoute('dblog.overview')
           ->setOption('query', ['type[]' => 'ckeditor5'])
+          // @todo Simplify with https://www.drupal.org/node/2548095
+          ->setOption('base_url', $GLOBALS['base_url'])
           ->toString(),
       ]
     )
