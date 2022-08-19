@@ -55,13 +55,13 @@
     position: relative; /* Anchor child menus. */
   }
 
-  /* Link element (can be <a>, <button>, or <span>). */
+  /* Link component (can be <a>, <button>, or <span>). */
   .main-nav__menu-link {
     display: block;
     padding: var(--padding-y) var(--padding-x);
   }
 
-  /* <button> element that is generated when <a> link elements have submenus. */
+  /* <button> element that is generated when top-level <a> link components have submenus. */
   .main-nav__button-toggle {
     display: flex;
     align-items: center;
@@ -75,14 +75,15 @@
 
   /* Menu links that are <button> elements. */
   .main-nav__menu-link--button {
+    display: flex;
+    align-items: center;
     appearance: none;
     border: 0;
     background: transparent;
   }
 
   .main-nav__menu-link--button.main-nav__menu-link--has-children {
-    display: flex;
-    align-items: center;
+
     padding-inline-end: calc(var(--padding-x) / 2);
   }
 
