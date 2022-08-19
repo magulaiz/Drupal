@@ -1,0 +1,142 @@
+<?php
+
+/**
+ * @file
+ * Fetch community announcements from www.drupal.org feed.
+ */
+
+use Drupal\Core\Url;
+use Drupal\Component\Serialization\Json;
+use Drupal\Core\Routing\RouteMatchInterface;
+
+/**
+ * Implements hook_help().
+ */
+function announcements_feed_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    case 'help.page.announcements_feed':
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('The Announcements Feed module notifies site users about the latest announcements from the Drupal community. For more information, see the <a href=":documentation">online documentation for the Announcements Feed module</a>.', [':documentation' => 'https://www.drupal.org/docs/core-modules-and-themes/core-modules/announcements-feed']) . '</p>';
+      $output .= '<h3>' . t('Uses') . '</h3>';
+      $output .= '<dl><dt>' . t('Accessing announcements') . '</dt>';
+      $output .= '<dd>' . t('Site users with the "View drupal.org announcements" permission may click on the "Announcements" item in the administration toolbar to see all announcements relevant to the Drupal version used.') . '</dd>';
+      $output .= '</dl>';
+      return $output;
+  }
+}
+
+/**
+ * Implements hook_toolbar().
+ */
+function announcements_feed_toolbar() {
+  $items = [];
+  if (\Drupal::currentUser()->hasPermission('access announcements')) {
+    $current_user_id = \Drupal::currentUser()->id();
+    $items['announcement'] = [
+      '#cache' => [
+        'contexts' => [
+          'user',
+        ],
+        'tags' => [
+          'announcements_feed:feed:' . $current_user_id,
+        ],
+      ],
+    ];
+    $announce_icon = 'announce-default';
+
+    $user_status = \Drupal::service('announcements_feed.user_status');
+    // Check for new announcements for the current user.
+    try {
+      $new_announcements = $user_status->getNewAnnouncements();
+    }
+    catch (\Exception $e) {
+      \Drupal::messenger()->addError('An error occurred while parsing the announcements feed, check the logs for more information.');
+    }
+
+    if (!empty($new_announcements)) {
+      $announce_icon = 'announce-new';
+    }
+
+    $items['announcement'] += [
+      '#type' => 'toolbar_item',
+      'tab' => [
+        '#type' => 'link',
+        '#title' => t('Announcements'),
+        '#url' => Url::fromRoute('announcements_feed.announcement'),
+        '#attributes' => [
+          'title' => t('Announcements'),
+          'data-drupal-announce-trigger' => '',
+          'class' => [
+            'toolbar-icon',
+            'toolbar-icon-announce',
+            'use-ajax',
+            'announce-canvas-link',
+            $announce_icon,
+          ],
+          'data-dialog-renderer' => 'off_canvas',
+          'data-dialog-type' => 'dialog',
+          'data-dialog-options' => Json::encode(
+            [
+              'announce' => TRUE,
+              'width' => '25%',
+              'classes' => [
+                'ui-dialog' => 'announce-dialog',
+                'ui-dialog-titlebar' => 'announce-titlebar',
+                'ui-dialog-title' => 'announce-title',
+                'ui-dialog-titlebar-close' => 'announce-close',
+                'ui-dialog-content' => 'announce-body',
+              ],
+            ]),
+        ],
+        '#attached' => [
+          'library' => [
+            'announcements_feed/drupal.announcements_feed.toolbar',
+          ],
+        ],
+      ],
+      '#wrapper_attributes' => [
+        'class' => ['announce-toolbar-tab'],
+      ],
+      '#weight' => 3399,
+    ];
+  }
+  return $items;
+}
+
+/**
+ * Implements hook_theme().
+ */
+function announcements_feed_theme($existing, $type, $theme, $path) {
+  return [
+    'announcements_feed' => [
+      'variables' => [
+        'featured' => NULL,
+        'standard' => NULL,
+        'count' => 0,
+      ],
+    ],
+    'announcements_feed_admin' => [
+      'variables' => [
+        'featured' => NULL,
+        'standard' => NULL,
+        'count' => 0,
+      ],
+    ],
+  ];
+}
+
+/**
+ * Implements hook_cron().
+ */
+function announcements_feed_cron() {
+  $config = \Drupal::config('announcements_feed.settings');
+  $interval = $config->get('cron_interval');
+  $last_check = \Drupal::state()->get('announcements_feed.last_fetch', 0);
+  $time = \Drupal::time()->getRequestTime();
+  if (($time - $last_check) > $interval) {
+    \Drupal::state()->set('announcements_feed.last_fetch', $time);
+    \Drupal::service('keyvalue.expirable')->get('announcements_feed')->delete('announcements');
+    \Drupal::service('announcements_feed.fetcher')->fetch();
+  }
+}

@@ -1,0 +1,6 @@
+services:
+  http_client.announce_feed_test:
+    public: false
+    class: Drupal\announce_feed_test\AnnounceTestHttpClient
+    decorates: http_client
+    arguments: ['@http_client.announce_feed_test.inner']

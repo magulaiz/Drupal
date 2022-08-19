@@ -1,0 +1,22 @@
+.announce-dialog #drupal-off-canvas {
+  color: #000;
+  background: #e0e0d8;
+}
+
+.announce-dialog #drupal-off-canvas a,
+.announce-dialog #drupal-off-canvas .link {
+  color: #0074bd;
+}
+
+.announce-dialog #drupal-off-canvas .announcement_teaser,
+.announce-dialog #drupal-off-canvas .announce_date {
+  color: #333;
+}
+
+.announce-dialog #drupal-off-canvas .announcements__featured {
+  border-bottom-color: #a6a6a6;
+}
+
+.announce-dialog #drupal-off-canvas .announcements-standard {
+  border-bottom-color: #a6a6a6;
+}

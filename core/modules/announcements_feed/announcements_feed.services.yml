@@ -1,0 +1,13 @@
+parameters:
+  announcements_feed.feed_url: https://www.drupal.org/announcements.json
+
+services:
+  announcements_feed.fetcher:
+    class: Drupal\announcements_feed\AnnounceFetcher
+    arguments: ['@http_client', '@config.factory', '@keyvalue.expirable', '@logger.channel.announcements_feed', '%announcements_feed.feed_url%']
+  announcements_feed.user_status:
+    class: Drupal\announcements_feed\AnnounceUserStatus
+    arguments: ['@announcements_feed.fetcher', '@user.data', '@current_user']
+  logger.channel.announcements_feed:
+    parent: logger.channel_base
+    arguments: ['announcements_feed']
