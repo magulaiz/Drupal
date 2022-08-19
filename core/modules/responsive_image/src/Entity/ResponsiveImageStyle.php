@@ -129,10 +129,9 @@ class ResponsiveImageStyle extends ConfigEntityBase implements ResponsiveImageSt
     foreach ($this->image_style_mappings as &$mapping) {
       if ($mapping['breakpoint_id'] === $breakpoint_id && $mapping['multiplier'] === $multiplier) {
         $mapping = $image_style_mapping + [
-            'breakpoint_id' => $breakpoint_id,
-            'multiplier' => $multiplier,
-          ];
-        $this->keyedImageStyleMappings = NULL;
+          'breakpoint_id' => $breakpoint_id,
+          'multiplier' => $multiplier,
+        ];
         $this->sortMappings();
         return $this;
       }
@@ -141,7 +140,6 @@ class ResponsiveImageStyle extends ConfigEntityBase implements ResponsiveImageSt
       'breakpoint_id' => $breakpoint_id,
       'multiplier' => $multiplier,
     ];
-    $this->keyedImageStyleMappings = NULL;
     $this->sortMappings();
     return $this;
   }
@@ -150,6 +148,7 @@ class ResponsiveImageStyle extends ConfigEntityBase implements ResponsiveImageSt
    * Sort mappings by breakpoint ID and multiplier.
    */
   protected function sortMappings(): void {
+    $this->keyedImageStyleMappings = NULL;
     $breakpoints = \Drupal::service('breakpoint.manager')->getBreakpointsByGroup($this->getBreakpointGroup());
     if (empty($breakpoints)) {
       return;
