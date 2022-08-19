@@ -101,7 +101,7 @@ class GenerateThemeTest extends QuickStartTestBase {
 
     // Confirm readme is rewritten.
     $readme_file = $this->getWorkspaceDirectory() . "/$theme_path_relative/README.md";
-    $this->assertEquals('test_custom_theme theme, generated from starterkit_theme. Additional information on generating themes can be found in the [Starterkit documentation](https://www.drupal.org/docs/core-modules-and-themes/core-themes/starterkit-theme).', file_get_contents($readme_file));
+    $this->assertSame('test_custom_theme theme, generated from starterkit_theme. Additional information on generating themes can be found in the [Starterkit documentation](https://www.drupal.org/docs/core-modules-and-themes/core-themes/starterkit-theme).', file_get_contents($readme_file));
 
     // Ensure that the generated theme can be installed.
     $this->installQuickStart('minimal');
@@ -138,7 +138,7 @@ class GenerateThemeTest extends QuickStartTestBase {
 
     $process = $this->generateThemeFromStarterkit();
     $result = $process->run();
-    $this->assertEquals('Theme generated successfully to themes/test_custom_theme', trim($process->getOutput()), $process->getErrorOutput());
+    $this->assertSame('Theme generated successfully to themes/test_custom_theme', trim($process->getOutput()), $process->getErrorOutput());
     $this->assertSame(0, $result);
     $install_command = [
       $this->php,
@@ -149,16 +149,14 @@ class GenerateThemeTest extends QuickStartTestBase {
       '--description="Custom theme generated from a theme other than starterkit_theme"',
       '--starterkit=test_custom_theme',
     ];
-    $process = new Process($install_command, NULL);
-    $process->setTimeout(60);
+    $process = new Process($install_command);
     $process->run();
-    $this->assertEquals('Theme generated successfully to themes/generated_from_another_theme', trim($process->getOutput()), $process->getErrorOutput());
+    $this->assertSame('Theme generated successfully to themes/generated_from_another_theme', trim($process->getOutput()), $process->getErrorOutput());
     $this->assertSame(0, $result);
-    $theme_path_relative = 'themes/generated_from_another_theme';
 
     // Confirm readme is rewritten.
-    $readme_file = $this->getWorkspaceDirectory() . "/$theme_path_relative/README.md";
-    $this->assertEquals('generated_from_another_theme theme, generated from test_custom_theme. Additional information on generating themes can be found in the [Starterkit documentation](https://www.drupal.org/docs/core-modules-and-themes/core-themes/starterkit-theme).', file_get_contents($readme_file));
+    $readme_file = $this->getWorkspaceDirectory() . '/themes/generated_from_another_theme/README.md';
+    $this->assertSame('generated_from_another_theme theme, generated from test_custom_theme. Additional information on generating themes can be found in the [Starterkit documentation](https://www.drupal.org/docs/core-modules-and-themes/core-themes/starterkit-theme).', file_get_contents($readme_file));
   }
 
   /**
