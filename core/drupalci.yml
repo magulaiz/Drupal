@@ -14,7 +14,7 @@ build:
       # suppress-deprecations is false in order to be alerted to usages of
       # deprecated code.
       run_tests.javascript:
-        concurrency: 800
+        concurrency: 2000
         types: 'PHPUnit-FunctionalJavascript'
         testgroups: '--class "Drupal\Tests\settings_tray\FunctionalJavascript\SettingsTrayBlockFormTest"'
         suppress-deprecations: false
