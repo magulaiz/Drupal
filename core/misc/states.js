@@ -257,7 +257,7 @@
   states.Trigger.states = {
     empty: {
       keyup() {
-        return this.val() === '';
+        return this[0].value === '';
       }
 
     },
@@ -275,18 +275,20 @@
     value: {
       keyup() {
         if (this.length > 1) {
-          return this.filter(':checked').val() || false;
+          const checked = this.filter(':checked');
+          return checked.length ? checked[0].value || false : false;
         }
 
-        return this.val();
+        return this[0].value;
       },
 
       change() {
         if (this.length > 1) {
-          return this.filter(':checked').val() || false;
+          const checked = this.filter(':checked');
+          return checked.length ? checked[0].value || false : false;
         }
 
-        return this.val();
+        return this[0].value;
       }
 
     },

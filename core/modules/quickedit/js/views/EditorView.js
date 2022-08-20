@@ -92,7 +92,9 @@
 
       function fillAndSubmitForm(value) {
         const $form = $(`#${backstageId}`).find('form');
-        $form.find(':input[type!="hidden"][type!="submit"]:not(select)').not('[name$="\\[summary\\]"]').val(value);
+        $form.find(':input[type!="hidden"][type!="submit"]:not(select)').not('[name$="\\[summary\\]"]').toArray().forEach(elem => {
+          elem.value = value;
+        });
         $form.find('.quickedit-form-submit').trigger('click.quickedit');
       }
 
