@@ -368,6 +368,7 @@ final class SmartDefaultSettings {
             }, ''), " ,"),
           ]
         ) : '';
+        $can_access_dblog = ($this->currentUser->hasPermission('access site reports') && $this->moduleHandler->moduleExists('dblog'));
         $end = $can_access_dblog ?
           $this->t('Additional details are available <a target="_blank" href=":dblog_url">in your logs</a>.',
             [
