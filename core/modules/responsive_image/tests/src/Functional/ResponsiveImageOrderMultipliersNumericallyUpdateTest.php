@@ -20,7 +20,7 @@ class ResponsiveImageOrderMultipliersNumericallyUpdateTest extends UpdatePathTes
    */
   protected function setDatabaseDumpFiles(): void {
     $this->databaseDumpFiles = [
-      __DIR__ . '/../../../../system/tests/fixtures/update/drupal-9.3.0.filled.standard.php.gz',
+      __DIR__ . '/../../../../system/tests/fixtures/update/drupal-9.4.0.filled.standard.php.gz',
       __DIR__ . '/../../fixtures/update/responsive_image.php',
       __DIR__ . '/../../fixtures/update/responsive_image-order-multipliers-numerically.php',
     ];
