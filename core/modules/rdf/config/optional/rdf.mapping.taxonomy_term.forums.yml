@@ -2,14 +2,18 @@ langcode: en
 status: true
 dependencies:
   config:
-    - taxonomy.vocabulary.tags
+    - taxonomy.vocabulary.forums
   module:
     - taxonomy
-id: taxonomy_term.tags
+  enforced:
+    module:
+      - forum
+id: taxonomy_term.forums
 targetEntityType: taxonomy_term
-bundle: tags
+bundle: forums
 types:
-  - 'schema:Thing'
+  - 'sioc:Container'
+  - 'sioc:Forum'
 fieldMappings:
   name:
     properties:
