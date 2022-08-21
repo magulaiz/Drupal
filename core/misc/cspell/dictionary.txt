@@ -444,7 +444,6 @@ fakepath
 falsey
 falsish
 fapi
-farb
 farbtastic
 fatals
 favourite
@@ -489,7 +488,6 @@ fodg
 fodp
 fods
 fodt
-fontsizer
 fooalert
 foobarbaz
 foobargorilla
