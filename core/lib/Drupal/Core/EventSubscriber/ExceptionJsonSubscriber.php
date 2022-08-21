@@ -57,10 +57,13 @@ class ExceptionJsonSubscriber extends HttpExceptionSubscriberBase {
    */
   public function onException(ExceptionEvent $event) {
     $request = $event->getRequest();
-    $exception = $event->getThrowable();
 
     $format = $request->query->get(MainContentViewSubscriber::WRAPPER_FORMAT, $request->getRequestFormat());
 
+    if (!in_array($format, $this->getHandledFormats())) {
+      return;
+    }
+    $exception = $event->getThrowable();
     if (!$exception instanceof HttpException) {
       $error_level = $this->configFactory
         ->get('system.logging')->get('error_level') ?? ERROR_REPORTING_HIDE;
