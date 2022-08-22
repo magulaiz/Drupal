@@ -34,8 +34,8 @@ class FieldNormalizer extends NormalizerBase implements DenormalizerInterface {
         ?: new CacheableNormalization(
           $field instanceof EmptyFieldItemListCacheabilityInterface
             ? $field->getEmptyListCacheability()
-            : new CacheableMetadata()
-          , NULL
+            : new CacheableMetadata(),
+          NULL
         )
       : CacheableNormalization::aggregate($normalized_items);
   }
