@@ -4,6 +4,7 @@ namespace Drupal\jsonapi\Normalizer;
 
 use Drupal\Core\Cache\CacheableDependencyInterface;
 use Drupal\Core\Cache\CacheableMetadata;
+use Drupal\Core\Field\EmptyFieldItemListCacheabilityInterface;
 use Drupal\Core\Field\EntityReferenceFieldItemListInterface;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\jsonapi\EventSubscriber\ResourceObjectNormalizationCacher;
@@ -179,10 +180,14 @@ class ResourceObjectNormalizer extends NormalizerBase {
         $resource_object = $context['resource_object'];
         $relationship = Relationship::createFromEntityReferenceField($resource_object, $field);
         $normalized_field = $this->serializer->normalize($relationship, $format, $context);
-        foreach ($field->filterEmptyItems() as $item) {
-          $property = $item->get(ResourceIdentifier::getDataReferencePropertyName($item));
-          if ($property instanceof CacheableDependencyInterface) {
-            $cacheable_metadata->addCacheableDependency($property);
+        $field_items = $field->filterEmptyItems();
+        if (!$field_items && $field instanceof EmptyFieldItemListCacheabilityInterface) {
+          $cacheable_metadata->addCacheableDependency($field->getEmptyListCacheability());
+        }
+        foreach ($field_items as $item) {
+          $primary_property = $item->get(ResourceIdentifier::getDataReferencePropertyName($item));
+          if ($primary_property instanceof CacheableDependencyInterface) {
+            $cacheable_metadata->addCacheableDependency($primary_property);
           }
         }
       }
