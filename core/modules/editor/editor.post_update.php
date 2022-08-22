@@ -5,6 +5,7 @@
  * Post update functions for Editor.
  */
 
+use Drupal\ckeditor5\HTMLRestrictions;
 use Drupal\Core\Config\Entity\ConfigEntityUpdater;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Render\Markup;
@@ -42,11 +43,12 @@ function editor_post_update_upgrade_ckeditor_4_to_5(&$sandbox = []) {
     throw new \Exception('The CKEditor 5 module could not be installed');
   }
   $ckeditor5_smart_default_settings = \Drupal::service('ckeditor5.smart_default_settings');
+  $ckeditor5_plugin_manager = \Drupal::service('plugin.manager.ckeditor5.plugin');
 
   // Update affected Editor config entities.
   $config_entity_updater = \Drupal::classResolver(ConfigEntityUpdater::class);
   $all_messages = [];
-  $config_entity_updater->update($sandbox, 'editor', function (EditorInterface $editor) use ($ckeditor5_smart_default_settings, &$all_messages) : bool {
+  $config_entity_updater->update($sandbox, 'editor', function (EditorInterface $editor) use ($ckeditor5_smart_default_settings, $ckeditor5_plugin_manager, &$all_messages) : bool {
     assert($ckeditor5_smart_default_settings instanceof SmartDefaultSettings);
 
     // Only update Text Editor config entities that use CKEditor 4.
@@ -62,7 +64,19 @@ function editor_post_update_upgrade_ckeditor_4_to_5(&$sandbox = []) {
     $editor->setEditor($updated_editor->getEditor());
     $editor->setSettings($updated_editor->getSettings());
 
-    // @todo Also ensure text format updates are retained!
+    // If the equivalent CKEditor 5 configuration requires addition to the list
+    // of allowed HTML tags for the `filter_html` filter, apply those changes
+    // too, just like ckeditor5_form_filter_format_form_alter() would.
+    $allowed_tags = HTMLRestrictions::fromTextFormat($format);
+    $enabled_plugins = array_keys($ckeditor5_plugin_manager->getEnabledDefinitions($updated_editor));
+    $updated_allowed_tags = new HTMLRestrictions($ckeditor5_plugin_manager->getProvidedElements($enabled_plugins, $updated_editor));
+    if (!$updated_allowed_tags->diff($allowed_tags)->allowsNothing()) {
+      $updated_format = clone $format;
+      $filter_html_config = $format->filters('filter_html')->getConfiguration();
+      $filter_html_config['settings']['allowed_html'] = $updated_allowed_tags->toFilterHtmlAllowedTagsString();
+      $updated_format->setFilterConfig('filter_html', $filter_html_config);
+      $updated_format->trustData()->save();
+    }
 
     // Collect all messages, to combine in a single string at the end.
     $all_messages[$editor->id()] = $messages;
