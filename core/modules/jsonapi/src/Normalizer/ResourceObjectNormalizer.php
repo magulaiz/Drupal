@@ -181,7 +181,7 @@ class ResourceObjectNormalizer extends NormalizerBase {
         $relationship = Relationship::createFromEntityReferenceField($resource_object, $field);
         $normalized_field = $this->serializer->normalize($relationship, $format, $context);
         $field_items = $field->filterEmptyItems();
-        if (!$field_items && $field instanceof EmptyFieldItemListCacheabilityInterface) {
+        if (!$field_items->count() && $field instanceof EmptyFieldItemListCacheabilityInterface) {
           $cacheable_metadata->addCacheableDependency($field->getEmptyListCacheability());
         }
         foreach ($field_items as $item) {
