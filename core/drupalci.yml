@@ -15,7 +15,7 @@ build:
       # deprecated code.
       run_tests.javascript:
         concurrency: 15
-        repeat: 2000
+        repeat: 400
         types: 'PHPUnit-FunctionalJavascript'
         testgroups: '--class "Drupal\Tests\settings_tray\FunctionalJavascript\SettingsTrayBlockFormTest"'
         suppress-deprecations: false
