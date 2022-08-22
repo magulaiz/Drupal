@@ -204,6 +204,7 @@ chien
 chiens
 childlist
 chocolatiers
+chotchkies
 chromedriver
 chtext
 chumillas
@@ -623,6 +624,7 @@ inator
 indexname
 ingoa
 inited
+initech
 inno
 inputtypes
 insidekeyword
@@ -744,6 +746,7 @@ lrdd
 lstitle
 ltitle
 ltlanguage
+lumbergh
 lundi
 lzop
 maailma
@@ -1595,6 +1598,7 @@ vorige
 vous
 vxezb
 vxfbk
+waddams
 waitfor
 wcprops
 webassert

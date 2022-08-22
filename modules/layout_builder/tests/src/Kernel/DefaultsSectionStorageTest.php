@@ -114,7 +114,7 @@ class DefaultsSectionStorageTest extends KernelTestBase {
         'layout_onecol',
         [],
         [
-          'first-uuid' => new SectionComponent('first-uuid', 'content', ['id' => 'foo'], ['harold' => 'maude']),
+          'first-uuid' => new SectionComponent('first-uuid', 'content', ['id' => 'foo'], [], ['layout_builder_defaults_test' => ['harold' => 'maude']]),
         ],
         ['layout_builder_defaults_test' => ['which_party' => 'third']]
       ),
