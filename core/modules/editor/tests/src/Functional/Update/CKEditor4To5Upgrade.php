@@ -103,7 +103,7 @@ class CKEditor4To5Upgrade extends UpdatePathTestBase {
           // existing problems.
           '<img data-entity-uuid data-entity-type>',
         ],
-      ]
+      ],
     ];
   }
 
