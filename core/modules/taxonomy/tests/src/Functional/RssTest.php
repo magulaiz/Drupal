@@ -86,12 +86,10 @@ class RssTest extends TaxonomyTestBase {
     // Create two taxonomy terms.
     $term1 = $this->createTerm($this->vocabulary);
 
-    // RSS display must be added manually.
-    $this->drupalGet("admin/structure/types/manage/article/display");
-    $edit = [
-      "display_modes_custom[rss]" => '1',
-    ];
-    $this->submitForm($edit, 'Save');
+    // Add the RSS display.
+    $default_display = $this->container->get('entity_display.repository')->getViewDisplay('node', 'article');
+    $rss_display = $default_display->createCopy('rss');
+    $rss_display->save();
 
     // Change the format to 'RSS category'.
     $this->drupalGet("admin/structure/types/manage/article/display/rss");
