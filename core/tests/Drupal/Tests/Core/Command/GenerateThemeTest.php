@@ -137,9 +137,9 @@ class GenerateThemeTest extends QuickStartTestBase {
     file_put_contents($starterkit_info_yml, Yaml::encode($info));
 
     $process = $this->generateThemeFromStarterkit();
-    $result = $process->run();
+    $exit_code = $process->run();
     $this->assertSame('Theme generated successfully to themes/test_custom_theme', trim($process->getOutput()), $process->getErrorOutput());
-    $this->assertSame(0, $result);
+    $this->assertSame(0, $exit_code);
     $install_command = [
       $this->php,
       'core/scripts/drupal',
@@ -150,9 +150,9 @@ class GenerateThemeTest extends QuickStartTestBase {
       '--starterkit=test_custom_theme',
     ];
     $process = new Process($install_command);
-    $process->run();
+    $exit_code = $process->run();
     $this->assertSame('Theme generated successfully to themes/generated_from_another_theme', trim($process->getOutput()), $process->getErrorOutput());
-    $this->assertSame(0, $result);
+    $this->assertSame(0, $exit_code);
 
     // Confirm readme is rewritten.
     $readme_file = $this->getWorkspaceDirectory() . '/themes/generated_from_another_theme/README.md';
