@@ -74,9 +74,6 @@ Automated Cron
 Ban
 - ?
 
-Bartik
-- Emma Maria Karayiannis 'emma.maria' https://www.drupal.org/u/emma.maria
-
 Base system
 - ?
 
@@ -128,9 +125,6 @@ Claro
 
 Classy
 - David Hernandez 'davidhernandez' https://www.drupal.org/u/davidhernandez
-
-Color
-- ?
 
 Comment
 - Lee Rowlands 'larowlan' https://www.drupal.org/u/larowlan

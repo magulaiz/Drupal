@@ -93,7 +93,6 @@ barchart
 barfoo
 barqux
 bartik
-bartik's
 basefield
 basepath
 basestrings
@@ -416,7 +415,6 @@ endofscript
 endpo
 endset
 endtrans
-eniac
 enim
 enoki
 enregistrer
@@ -446,7 +444,6 @@ fakepath
 falsey
 falsish
 fapi
-farb
 farbtastic
 fatals
 favourite
@@ -491,7 +488,6 @@ fodg
 fodp
 fods
 fodt
-fontsizer
 fooalert
 foobarbaz
 foobargorilla
@@ -1088,7 +1084,6 @@ realpaths
 realword
 rebuilder
 reclosed
-recolorable
 redeclaration
 redirections
 redstrawberryhiddenfield
@@ -1180,7 +1175,6 @@ siema
 silverlight
 silvie
 simpletest
-simpletest's
 singlebyte
 sioc
 sioct
@@ -1469,7 +1463,6 @@ ungenerated
 ungroup
 ungroupable
 unhashed
-unhide
 unidecode
 unidecoder
 unindented
