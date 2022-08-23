@@ -29,11 +29,16 @@ interface EditorPluginInterface extends PluginInspectionInterface, PluginFormInt
   /**
    * Returns the default settings for this configurable text editor.
    *
+   * @param \Drupal\filter\FilterFormatInterface $textformat
+   *   (optional) The text format for which to compute smart default settings.
+   * @param \Drupal\editor\EditorInterface $old_text_editor
+   *   (optional) A configured text editor object.
+   *
    * @return array
    *   An array of settings as they would be stored by a configured text editor
    *   entity (\Drupal\editor\Entity\Editor).
    */
-  public function getDefaultSettings(FilterFormatInterface $textformat, EditorInterface $old_text_editor);
+  public function getDefaultSettings(FilterFormatInterface $textformat = NULL, EditorInterface $old_text_editor = NULL);
 
   /**
    * Returns JavaScript settings to be attached.
