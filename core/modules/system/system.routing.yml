@@ -523,3 +523,14 @@ system.csrftoken:
 
 route_callbacks:
   - '\Drupal\system\Routing\AssetRoutes::routes'
+
+system.linkset_settings:
+  path: '/admin/config/services/linkset'
+  defaults:
+    _title: 'Menu Linkset Settings'
+    _form: 'Drupal\system\Form\MenuLinksetSettingsForm'
+  requirements:
+    _permission: 'administer site configuration'
+
+route_callbacks:
+  - '\Drupal\system\Routing\MenuLinksetRoutes::routes'
