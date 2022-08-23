@@ -34,7 +34,7 @@ function editor_post_update_upgrade_ckeditor_4_to_5(&$sandbox = []) {
     $info = \Drupal::service('extension.list.module')->getExtensionInfo('ckeditor');
     // https://www.drupal.org/project/ckeditor is not in the 'Core' package.
     if (!isset($info['package']) || $info['package'] !== 'Core') {
-      return 'Skipping the automatic CKEditor 4 to 5 upgrade path because the contributed CKEditor 4 module is installed.';
+      return 'Skipping the automatic CKEditor 4 to 5 upgrade path because the contributed CKEditor 4 module is installed. You can manually upgrade each text editor to CKEditor 5 at any time by navigating to the "Text formats and editors" and changing the text editor from CKEditor 4 to 5: this uses the same upgrade path logic.';
     }
   }
 
