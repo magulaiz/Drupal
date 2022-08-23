@@ -60,7 +60,7 @@ function editor_post_update_upgrade_ckeditor_4_to_5(&$sandbox = []) {
     [$updated_editor, $messages] = $ckeditor5_smart_default_settings->computeSmartDefaultSettings($editor, $format);
     assert($updated_editor instanceof EditorInterface);
 
-    // Overwrite $editor, to let ConfigEntityUpdater update it.
+    // Update $editor, to let ConfigEntityUpdater update it.
     $editor->setEditor($updated_editor->getEditor());
     $editor->setSettings($updated_editor->getSettings());
 
