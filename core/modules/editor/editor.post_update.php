@@ -56,7 +56,7 @@ function editor_post_update_upgrade_ckeditor_4_to_5(&$sandbox = []) {
     }
 
     $format = $editor->getFilterFormat();
-    [$updated_editor, ] = $ckeditor5_smart_default_settings->computeSmartDefaultSettings($editor, $format);
+    [$updated_editor] = $ckeditor5_smart_default_settings->computeSmartDefaultSettings($editor, $format);
     assert($updated_editor instanceof EditorInterface);
 
     // Update $editor, to let ConfigEntityUpdater update it.
