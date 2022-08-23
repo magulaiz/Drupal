@@ -98,12 +98,11 @@ class RssTest extends TaxonomyTestBase {
     ]);
     $rss_display->save();
 
-    // Post an article.
-    $edit = [];
-    $edit['title[0][value]'] = $this->randomMachineName();
-    $edit[$this->fieldName . '[]'] = $term1->id();
-    $this->drupalGet('node/add/article');
-    $this->submitForm($edit, 'Save');
+    // Creae an article.
+    $node = $this->drupalCreateNode([
+      'type' => 'article',
+      $this->fieldName => $term1->id(),
+    ]);
 
     // Check that the term is displayed when the RSS feed is viewed.
     $this->drupalGet('rss.xml');
@@ -136,7 +135,6 @@ class RssTest extends TaxonomyTestBase {
     $view->getDisplay()->overrideOption('arguments', $arguments);
     $view->storage->save();
     // Check the article is shown in the feed.
-    $node = $this->drupalGetNodeByTitle($edit['title[0][value]']);
     $raw_xml = '<title>' . $node->label() . '</title>';
     $this->drupalGet('taxonomy/term/all/feed');
     $this->assertSession()->responseContains($raw_xml);
