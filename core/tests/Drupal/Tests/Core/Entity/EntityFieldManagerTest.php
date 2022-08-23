@@ -922,10 +922,10 @@ abstract class EntityTypeManagerTestEntity implements \Iterator, ContentEntityIn
 }
 
 /**
- * Provides an extending bundle class for the above entity with dummy static
- * method implementations.
+ * Provides a bundle specific class with dummy static method implementations.
  */
 abstract class EntityTypeManagerTestEntityBundle extends EntityTypeManagerTestEntity {
+
   /**
    * The bundle class field definitions.
    *
