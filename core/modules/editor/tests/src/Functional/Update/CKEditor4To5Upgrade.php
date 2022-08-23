@@ -69,7 +69,7 @@ class CKEditor4To5Upgrade extends UpdatePathTestBase {
     $after = HTMLRestrictions::fromString($allowed_html_after);
     $this->assertSame($expected_superset, $after->diff($before)->toCKEditor5ElementsArray());
 
-    $this->assertSession()->pageTextContains('Updated 3 Text Editors that used CKEditor 4 to use CKEditor 5 instead (basic_html, full_html, test_text_format).');
+    $this->assertSession()->pageTextContains('Updated 3 Text Editors that used CKEditor 4 to use CKEditor 5 instead (Basic HTML, Full HTML, Test text format).');
   }
 
   /**

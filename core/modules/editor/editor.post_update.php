@@ -8,7 +8,6 @@
 use Drupal\ckeditor5\HTMLRestrictions;
 use Drupal\Core\Config\Entity\ConfigEntityUpdater;
 use Drupal\Core\Extension\ModuleHandlerInterface;
-use Drupal\Core\Render\Markup;
 use Drupal\Core\Url;
 use Drupal\ckeditor5\SmartDefaultSettings;
 use Drupal\editor\EditorInterface;
@@ -47,8 +46,8 @@ function editor_post_update_upgrade_ckeditor_4_to_5(&$sandbox = []) {
 
   // Update affected Editor config entities.
   $config_entity_updater = \Drupal::classResolver(ConfigEntityUpdater::class);
-  $all_messages = [];
-  $config_entity_updater->update($sandbox, 'editor', function (EditorInterface $editor) use ($ckeditor5_smart_default_settings, $ckeditor5_plugin_manager, &$all_messages) : bool {
+  $updated_editors = [];
+  $config_entity_updater->update($sandbox, 'editor', function (EditorInterface $editor) use ($ckeditor5_smart_default_settings, $ckeditor5_plugin_manager, &$updated_editors) : bool {
     assert($ckeditor5_smart_default_settings instanceof SmartDefaultSettings);
 
     // Only update Text Editor config entities that use CKEditor 4.
@@ -57,7 +56,7 @@ function editor_post_update_upgrade_ckeditor_4_to_5(&$sandbox = []) {
     }
 
     $format = $editor->getFilterFormat();
-    [$updated_editor, $messages] = $ckeditor5_smart_default_settings->computeSmartDefaultSettings($editor, $format);
+    [$updated_editor,] = $ckeditor5_smart_default_settings->computeSmartDefaultSettings($editor, $format);
     assert($updated_editor instanceof EditorInterface);
 
     // Update $editor, to let ConfigEntityUpdater update it.
@@ -78,8 +77,8 @@ function editor_post_update_upgrade_ckeditor_4_to_5(&$sandbox = []) {
       $updated_format->trustData()->save();
     }
 
-    // Collect all messages, to combine in a single string at the end.
-    $all_messages[$editor->id()] = $messages;
+    // Track all updated editors, to inform the user at the end.
+    $updated_editors[$editor->id()] = $editor->label();
 
     return TRUE;
   });
@@ -96,8 +95,8 @@ function editor_post_update_upgrade_ckeditor_4_to_5(&$sandbox = []) {
       ]
     )
     : t('Additional details are available in your logs.');
-  return t('Updated @count Text Editors that used CKEditor 4 to use CKEditor 5 instead (<code>@list</code>).', [
-    '@count' => count($all_messages),
-    '@list' => Markup::create(implode('</code>, <code>', array_keys($all_messages))),
+  return t('Updated @count Text Editors that used CKEditor 4 to use CKEditor 5 instead (%list).', [
+    '@count' => count($updated_editors),
+    '%list' => implode(', ', $updated_editors),
   ]) . '<br>' . $upgrade_details;
 }
