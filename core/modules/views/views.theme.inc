@@ -215,13 +215,13 @@ function template_preprocess_views_view_fields(&$variables) {
  *   - rows: The rows returned from the view.
  *   - grouping_level: Integer indicating the hierarchical level of the
  *     grouping.
- *   - group_heading_level: The HTML heading the results should be marked up
+ *   - grouping_label_element: The HTML heading the results should be marked up
  *     with.
  *   - content: The content to be grouped.
  *   - title: The group heading.
  */
 function template_preprocess_views_view_grouping(&$variables) {
-  $variables['content'] = $variables['view']->style_plugin->renderGroupingSets($variables['rows'], $variables['grouping_level'], $variables['group_heading_level']);
+  $variables['content'] = $variables['view']->style_plugin->renderGroupingSets($variables['rows'], $variables['grouping_level'], $variables['grouping_label_element']);
 }
 
 /**

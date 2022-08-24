@@ -269,6 +269,13 @@ abstract class StylePluginBase extends PluginBase {
   }
 
   /**
+   * Retrieve labels from views configuration.
+   */ 
+  public function getLabelElements() {
+    return \Drupal::config('views.settings')->get('field_rewrite_elements');    
+  }
+
+  /**
    * {@inheritdoc}
    */
   public function buildOptionsForm(&$form, FormStateInterface $form_state) {
@@ -280,13 +287,6 @@ abstract class StylePluginBase extends PluginBase {
     if ($this->usesFields() && $this->usesGrouping()) {
       $options = ['' => $this->t('- None -')];
       $field_labels = $this->displayHandler->getFieldLabels(TRUE);
-      $heading_options = [
-        'h2' => $this->t('H2'),
-        'h3' => $this->t('H3'),
-        'h4' => $this->t('H4'),
-        'h5' => $this->t('H5'),
-        'h6' => $this->t('H6'),
-        ];
       $options += $field_labels;
       // If there are no fields, we can't group on them.
       if (count($options) > 1) {
@@ -314,11 +314,11 @@ abstract class StylePluginBase extends PluginBase {
             '#default_value' => $grouping['field'],
             '#description' => $this->t('You may optionally specify a field by which to group the records. Leave blank to not group.'),
           ];
-          $form['grouping'][$i]['group_heading_level'] = [
+          $form['grouping'][$i]['grouping_label_element'] = [
             '#type' => 'select',
             '#title' => $this->t('Group Heading Level', ['@number' => $i + 1]),
-            '#options' => $heading_options,
-            '#default_value' => $grouping['group_heading_level'],
+            '#options' => $this->getLabelElements(),
+            '#default_value' => $grouping['grouping_label_element'],
             '#description' => $this->t('You may specify a heading level by which to group the records.'),
           ];
 
@@ -538,7 +538,7 @@ abstract class StylePluginBase extends PluginBase {
       }
 
       $single_output['#grouping_level'] = $level;
-      $single_output['#group_heading_level'] = $this->options['grouping'][$level]['group_heading_level'];
+      $single_output['#grouping_label_element'] = $this->options['grouping'][$level]['grouping_label_element'];
       $single_output['#title'] = $set['group'];
       $output[] = $single_output;
     }
@@ -609,7 +609,7 @@ abstract class StylePluginBase extends PluginBase {
           $field = $info['field'];
           $rendered = $info['rendered'] ?? $group_rendered;
           $rendered_strip = $info['rendered_strip'] ?? FALSE;
-          $group_heading_level = $info['group_heading_level'];
+          $grouping_label_element = $info['grouping_label_element'];
           $grouping = '';
           $group_content = '';
           // Group on the rendered version of the field, not the raw.  That way,
@@ -641,7 +641,7 @@ abstract class StylePluginBase extends PluginBase {
           if (empty($set[$grouping])) {
             $set[$grouping]['group'] = $group_content;
             $set[$grouping]['level'] = $level;
-            $set[$grouping]['group_heading_level'] = $group_heading_level;
+            $set[$grouping]['grouping_label_element'] = $grouping_label_element;
             $set[$grouping]['rows'] = [];
           }
 
