@@ -1028,7 +1028,7 @@ class ValidatorsTest extends KernelTestBase {
       ],
       'filters' => [],
       'violations' => [
-        'settings.plugins.ckeditor5_imageResize' => 'Configuration for the enabled plugin "<em class="placeholder">Image resize</em>" (<em class="placeholder">ckeditor5_imageResize</em>) is missing.'
+        'settings.plugins.ckeditor5_imageResize' => 'Configuration for the enabled plugin "<em class="placeholder">Image resize</em>" (<em class="placeholder">ckeditor5_imageResize</em>) is missing.',
       ],
     ];
     $data['VALID: drupalInsertImage toolbar item without image upload'] = [
