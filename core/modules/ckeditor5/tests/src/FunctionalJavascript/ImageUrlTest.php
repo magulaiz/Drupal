@@ -2,11 +2,8 @@
 
 namespace Drupal\Tests\ckeditor5\FunctionalJavascript;
 
-use Drupal\Component\Utility\Html;
 use Drupal\editor\Entity\Editor;
-use Drupal\file\Entity\File;
 use Drupal\filter\Entity\FilterFormat;
-use Drupal\node\Entity\Node;
 use Drupal\Tests\TestFileCreationTrait;
 use Drupal\Tests\ckeditor5\Traits\CKEditor5TestTrait;
 use Drupal\ckeditor5\Plugin\Editor\CKEditor5;
