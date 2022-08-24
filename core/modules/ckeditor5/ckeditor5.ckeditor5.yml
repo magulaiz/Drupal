@@ -618,7 +618,6 @@ ckeditor5_imageAlign:
       - <img data-align>
     conditions:
       toolbarItem: drupalImage
-      imageUploadStatus: true
       filter: filter_align
 
 ckeditor5_indent:
