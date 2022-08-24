@@ -51,12 +51,7 @@ class DbUpdateNegotiator implements ThemeNegotiatorInterface {
    * {@inheritdoc}
    */
   public function determineActiveTheme(RouteMatchInterface $route_match) {
-    $custom_theme = Settings::get('maintenance_theme');
-    if (!$custom_theme) {
-      $custom_theme = 'claro';
-    }
-
-    return $custom_theme;
+    return Settings::get('maintenance_theme') ?: 'claro';
   }
 
 }
