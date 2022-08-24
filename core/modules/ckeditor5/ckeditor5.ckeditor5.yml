@@ -496,6 +496,7 @@ ckeditor5_image:
       - image.Image
       - image.ImageToolbar
       - drupalImage.DrupalImage
+      - drupalImage.DrupalInsertImage
     config:
       image:
         toolbar: [drupalImageAlternativeText]
@@ -508,18 +509,19 @@ ckeditor5_image:
       - <img>
       - <img src alt height width>
     toolbar_items:
-      drupalImage:
+      drupalInsertImage:
         label: Image
     conditions:
-      toolbarItem: drupalImage
+      toolbarItem: drupalInsertImage
 
 ckeditor5_imageUpload:
   ckeditor5:
     plugins:
       - image.ImageUpload
       - drupalImage.DrupalImageUpload
+      - drupalImage.DrupalInsertImage
     config:
-      drupalImage:
+      drupalInsertImage:
         upload: true
       image:
         upload:
@@ -529,23 +531,23 @@ ckeditor5_imageUpload:
     elements:
       - <img data-entity-uuid data-entity-type>
     conditions:
-      toolbarItem: drupalImage
+      toolbarItem: drupalInsertImage
       imageUploadStatus: true
       plugins: [ckeditor5_image]
 
 ckeditor5_imageUrl:
   ckeditor5:
     plugins:
-      - drupalImage.DrupalImageInsert
+      - drupalImage.DrupalInsertImage
     config:
-      drupalImage:
+      drupalInsertImage:
         upload: false
   drupal:
     label: Image URL
     elements:
       - <img src>
     conditions:
-      toolbarItem: drupalImage
+      toolbarItem: drupalInsertImage
       imageUploadStatus: false
       plugins: [ckeditor5_image]
 
