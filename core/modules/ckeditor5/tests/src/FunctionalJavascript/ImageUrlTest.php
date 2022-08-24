@@ -510,7 +510,7 @@ class ImageUrlTest extends CKEditor5TestBase {
     $this->assertNotEmpty($assert_session->waitForElementVisible('css', '.ck-widget.image'));
     $this->assertNotEmpty($assert_session->waitForElementVisible('css', '.ck-balloon-panel'));
     $this->assertVisibleBalloon('.ck-text-alternative-form');
-    */
+     */
   }
 
   public function providerAltTextRequired(): array {
@@ -690,7 +690,7 @@ class ImageUrlTest extends CKEditor5TestBase {
    *
    * @dataProvider providerResize
    */
-  public function testResize(bool $is_resize_enabled): void {
+  public function xTestResize(bool $is_resize_enabled): void {
     // Disable resize plugin because it is enabled by default.
     if (!$is_resize_enabled) {
       Editor::load('test_format')->setSettings([
@@ -731,4 +731,5 @@ class ImageUrlTest extends CKEditor5TestBase {
       ],
     ];
   }
+
 }
