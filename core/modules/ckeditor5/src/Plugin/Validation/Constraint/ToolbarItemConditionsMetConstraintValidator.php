@@ -58,13 +58,7 @@ class ToolbarItemConditionsMetConstraintValidator extends ConstraintValidator im
           break;
 
         case 'imageUploadStatus':
-          $image_upload_settings = $text_editor->getImageUploadSettings();
-          if (!isset($image_upload_settings['status']) || (bool) $image_upload_settings['status'] !== TRUE) {
-            $this->context->buildViolation($constraint->imageUploadStatusRequiredMessage)
-              ->setParameter('%toolbar_item', (string) $toolbar_item_label)
-              ->setInvalidValue($toolbar_item)
-              ->addViolation();
-          }
+          // Nothing to validate.
           break;
 
         case 'filter':

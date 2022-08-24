@@ -501,13 +501,53 @@ ckeditor5_image:
         toolbar: [drupalImageAlternativeText]
   drupal:
     label: Image
+    class: \Drupal\ckeditor5\Plugin\CKEditor5Plugin\Image
     library: ckeditor5/drupal.ckeditor5.image
+    admin_library: ckeditor5/admin.image
     elements:
       - <img>
-      - <img src alt data-entity-uuid data-entity-type height width>
+      - <img src alt height width>
+    toolbar_items:
+      drupalImage:
+        label: Image
     conditions:
-      toolbarItem: uploadImage
+      toolbarItem: drupalImage
+
+ckeditor5_imageUpload:
+  ckeditor5:
+    plugins:
+      - image.ImageUpload
+      - drupalImage.DrupalImageUpload
+    config:
+      drupalImage:
+        upload: true
+      image:
+        upload:
+          types: ["jpeg", "png", "gif"]
+  drupal:
+    label: Image Upload
+    elements:
+      - <img data-entity-uuid data-entity-type>
+    conditions:
+      toolbarItem: drupalImage
       imageUploadStatus: true
+      plugins: [ckeditor5_image]
+
+ckeditor5_imageUrl:
+  ckeditor5:
+    plugins:
+      - drupalImage.DrupalImageInsert
+    config:
+      drupalImage:
+        upload: false
+  drupal:
+    label: Image URL
+    elements:
+      - <img src>
+    conditions:
+      toolbarItem: drupalImage
+      imageUploadStatus: false
+      plugins: [ckeditor5_image]
 
 ckeditor5_imageResize:
   ckeditor5:
@@ -542,8 +582,7 @@ ckeditor5_imageCaption:
     elements:
       - <img data-caption>
     conditions:
-      toolbarItem: uploadImage
-      imageUploadStatus: true
+      toolbarItem: drupalImage
       filter: filter_caption
 
 ckeditor5_imageAlign:
@@ -577,7 +616,7 @@ ckeditor5_imageAlign:
     elements:
       - <img data-align>
     conditions:
-      toolbarItem: uploadImage
+      toolbarItem: drupalImage
       imageUploadStatus: true
       filter: filter_align
 

@@ -45,7 +45,7 @@ class EnabledConfigurablePluginsConstraintValidator extends ConstraintValidator 
         // the Text Editor config entity's built-in image upload settings.
         // @see \Drupal\editor\Entity\Editor::getImageUploadSettings()
         // @see editor_image_upload_settings_form()
-        // @see \Drupal\ckeditor5\Plugin\CKEditor5Plugin\ImageUpload::buildConfigurationForm()
+        // @see \Drupal\ckeditor5\Plugin\CKEditor5Plugin\Image::buildConfigurationForm()
         continue;
       }
 
