@@ -507,7 +507,7 @@ ckeditor5_image:
     admin_library: ckeditor5/admin.image
     elements:
       - <img>
-      - <img src alt height width>
+      - <img alt height width>
     toolbar_items:
       drupalInsertImage:
         label: Image
@@ -519,7 +519,6 @@ ckeditor5_imageUpload:
     plugins:
       - image.ImageUpload
       - drupalImage.DrupalImageUpload
-      - drupalImage.DrupalInsertImage
     config:
       drupalInsertImage:
         upload: true

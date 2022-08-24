@@ -432,9 +432,7 @@ class CKEditor5PluginManager extends DefaultPluginManager implements CKEditor5Pl
 
         case 'imageUploadStatus':
           $image_upload_status = $editor->getImageUploadSettings()['status'] ?? FALSE;
-          if (!$image_upload_status) {
-            return TRUE;
-          }
+          return $image_upload_status !== $required_value;
           break;
 
         case 'filter':
