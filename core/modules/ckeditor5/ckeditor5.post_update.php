@@ -5,6 +5,7 @@
  * Post update functions for CKEditor 5.
  */
 
+use Drupal\ckeditor5\HTMLRestrictions;
 use Drupal\Core\Config\Entity\ConfigEntityUpdater;
 use Drupal\editor\Entity\Editor;
 
@@ -42,6 +43,72 @@ function ckeditor5_post_update_alignment_buttons(&$sandbox = []) {
           $needs_update = TRUE;
         }
       }
+    }
+    if ($needs_update) {
+      $editor->setSettings($settings);
+    }
+    return $needs_update;
+  };
+
+  $config_entity_updater->update($sandbox, 'editor', $callback);
+}
+
+/**
+ * The image toolbar item changed from `uploadImage` to `drupalInsertImage`.
+ *
+ * Also, `uploadImage` always allowed all of the following attributes on <img>:
+ * - `src`
+ * - `alt`
+ * - `data-entity-uuid`
+ * - `data-entity-type`
+ * - `height`
+ * - `width`
+ *
+ * For `drupalInsertImage`, only `alt`, `width` and `height` are always needed.
+ * `src` is only needed if image uploads are disabled. `data-entity-uuid` and
+ * `data-entity-type` are only needed if image uploads are enabled. To ensure
+ * the same HTML remains editable (as well as to ensure the HTML allowed by the
+ * `filter_html` filter still matches the CKEditor 5 configuration), the
+ * `ckeditor5_sourceEditing` plugin must be used to allow either:
+ * - `<img src>` (if image uploads are enabled)
+ * - `<img data-entity-uuid data-entity-type>` (if image uploads are disabled)
+ */
+function ckeditor5_post_update_image_toolbar_item(&$sandbox = []) {
+  $config_entity_updater = \Drupal::classResolver(ConfigEntityUpdater::class);
+
+  $callback = function (Editor $editor) {
+    // Only try to update editors using CKEditor 5.
+    if ($editor->getEditor() !== 'ckeditor5') {
+      return FALSE;
+    }
+
+    $needs_update = FALSE;
+    // Only update if the editor is using the `uploadImage` toolbar item.
+    $settings = $editor->getSettings();
+    if (is_array($settings['toolbar']['items']) && in_array('uploadImage', $settings['toolbar']['items'], TRUE)) {
+      // Replace `uploadImage` with `drupalInsertImage`.
+      $settings['toolbar']['items'] = str_replace('uploadImage', 'drupalInsertImage', $settings['toolbar']['items']);
+      // Add `sourceEditing` toolbar item if it does not already exist.
+      if (!in_array('sourceEditing', $settings['toolbar']['items'], TRUE)) {
+        $settings['toolbar']['items'][] = '|';
+        $settings['toolbar']['items'][] = 'sourceEditing';
+        // @see \Drupal\ckeditor5\Plugin\CKEditor5Plugin\SourceEditing::defaultConfiguration()
+        $settings['plugins']['ckeditor5_sourceEditing'] = ['allowed_tags' => []];
+      }
+      // Either `<img src>` (now only enabled when uploads are disabled) or
+      // `<img data-entity-uuid data-entity-type>` (now only enabled when
+      // uploads are enabled) must be explicitly added to the allowed tags for
+      // `ckeditor5_sourceEditing` to avoid a BC break for editing pre-existing
+      // content (the exact same HTML must remain editable).
+      $source_editing_allowed_tags = HTMLRestrictions::fromString(implode(' ', $settings['plugins']['ckeditor5_sourceEditing']['allowed_tags']));
+      if ($editor->getImageUploadSettings()['status']) {
+        $source_editing_allowed_tags = $source_editing_allowed_tags->merge(HTMLRestrictions::fromString('<img src>'));
+      }
+      else {
+        $source_editing_allowed_tags = $source_editing_allowed_tags->merge(HTMLRestrictions::fromString('<img data-entity-uuid data-entity-type>'));
+      }
+      $settings['plugins']['ckeditor5_sourceEditing']['allowed_tags'] = $source_editing_allowed_tags->toCKEditor5ElementsArray();
+      $needs_update = TRUE;
     }
     if ($needs_update) {
       $editor->setSettings($settings);
