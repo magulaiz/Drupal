@@ -196,6 +196,13 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
   protected $configImporter;
 
   /**
+   * The entity type manager service.
+   *
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
+   */
+  protected $entityTypeManager;
+
+  /**
    * The app root.
    *
    * @var string
@@ -251,6 +258,8 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
     $this->initFileCache();
     $this->bootEnvironment();
     $this->bootKernel();
+
+    $this->entityTypeManager = $this->container->get('entity_type.manager');
   }
 
   /**

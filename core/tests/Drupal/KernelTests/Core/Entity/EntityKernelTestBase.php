@@ -35,13 +35,6 @@ abstract class EntityKernelTestBase extends KernelTestBase {
   ];
 
   /**
-   * The entity type manager service.
-   *
-   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
-   */
-  protected $entityTypeManager;
-
-  /**
    * A list of generated identifiers.
    *
    * @var array
@@ -61,7 +54,6 @@ abstract class EntityKernelTestBase extends KernelTestBase {
   protected function setUp(): void {
     parent::setUp();
 
-    $this->entityTypeManager = $this->container->get('entity_type.manager');
     $this->state = $this->container->get('state');
 
     $this->installSchema('system', 'sequences');
