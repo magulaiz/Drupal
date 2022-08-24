@@ -537,6 +537,7 @@ ckeditor5_imageUrl:
       - image.ImageInsertUI
   drupal:
     label: Image URL
+    elements: false
     conditions:
       imageUploadStatus: false
       plugins: [ckeditor5_image]
