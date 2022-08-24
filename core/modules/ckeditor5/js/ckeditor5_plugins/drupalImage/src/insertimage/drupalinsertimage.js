@@ -12,8 +12,8 @@ class DrupalInsertImage extends Plugin {
   init() {
     const { editor } = this;
     editor.ui.componentFactory.add('drupalInsertImage', () => {
-      // Use upstream inserImage component when ImageInsertUI is enabled. The
-      // upstream inserImage button supports inserting of external images
+      // Use upstream insertImage component when ImageInsertUI is enabled. The
+      // upstream insertImage button supports inserting of external images
       // and uploading images. Out-of-the-box Drupal only uses the insertImage
       // button for inserting external images.
       if (editor.plugins.has('ImageInsertUI')) {
