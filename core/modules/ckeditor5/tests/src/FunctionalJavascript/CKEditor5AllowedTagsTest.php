@@ -48,7 +48,7 @@ class CKEditor5AllowedTagsTest extends CKEditor5TestBase {
    *
    * @var string
    */
-  protected $defaultElementsAfterUpdatingToCkeditor5 = '<br> <p> <h2 id> <h3 id> <h4 id> <h5 id> <h6 id> <cite> <dl> <dt> <dd> <img src alt data-entity-type data-entity-uuid> <a hreflang href> <blockquote cite> <ul type> <ol type start> <strong> <em> <code> <li>';
+  protected $defaultElementsAfterUpdatingToCkeditor5 = '<br> <p> <h2 id> <h3 id> <h4 id> <h5 id> <h6 id> <cite> <dl> <dt> <dd> <a hreflang href> <blockquote cite> <ul type> <ol type start> <img data-entity-type data-entity-uuid alt height width src> <strong> <em> <code> <li>';
 
   /**
    * Test enabling CKEditor 5 in a way that triggers validation.
@@ -167,20 +167,19 @@ class CKEditor5AllowedTagsTest extends CKEditor5TestBase {
 
     $page->pressButton('Save configuration');
 
-    $assert_session->pageTextContains('The Image upload toolbar item requires image uploads to be enabled.');
-    $page->clickLink('Image Upload');
+    $page->clickLink('Image');
     $assert_session->waitForText('Enable image uploads');
-    $this->assertTrue($page->hasUncheckedField('editor[settings][plugins][ckeditor5_imageUpload][status]'));
-    $page->checkField('editor[settings][plugins][ckeditor5_imageUpload][status]');
+    $this->assertTrue($page->hasUncheckedField('editor[settings][plugins][ckeditor5_image][status]'));
+    $page->checkField('editor[settings][plugins][ckeditor5_image][status]');
     $assert_session->assertWaitOnAjaxRequest();
     $page->pressButton('Save configuration');
-    $this->assertSession()->pageTextContains('The following attribute(s) are already supported by enabled plugins and should not be added to the Source Editing "Manually editable HTML tags" field: Image (<img src alt data-entity-uuid data-entity-type>)');
+    $this->assertSession()->pageTextContains('The following attribute(s) are already supported by enabled plugins and should not be added to the Source Editing "Manually editable HTML tags" field: Image Upload (<img data-entity-uuid data-entity-type>).');
 
     $assert_session->assertWaitOnAjaxRequest();
     $assert_session->waitForText('Manually editable HTML tags');
     $source_edit_tags_field = $assert_session->fieldExists('editor[settings][plugins][ckeditor5_sourceEditing][allowed_tags]');
     $source_edit_tags_field_value = $source_edit_tags_field->getValue();
-    $source_edit_tags_field->setValue(str_replace('<img src alt data-entity-type data-entity-uuid>', '', $source_edit_tags_field_value));
+    $source_edit_tags_field->setValue(str_replace('<img data-entity-type data-entity-uuid>', '', $source_edit_tags_field_value));
     $assert_session->assertWaitOnAjaxRequest();
     $page->pressButton('Save configuration');
 
@@ -206,50 +205,57 @@ class CKEditor5AllowedTagsTest extends CKEditor5TestBase {
     // The image upload settings form should not be present.
     $assert_session->elementNotExists('css', '[data-drupal-selector="edit-editor-settings-plugins-ckeditor5-imageupload"]');
 
-    $this->assertNotEmpty($assert_session->waitForElement('css', '.ckeditor5-toolbar-item-uploadImage'));
-    $this->triggerKeyUp('.ckeditor5-toolbar-item-uploadImage', 'ArrowDown');
+    $this->assertNotEmpty($assert_session->waitForElement('css', '.ckeditor5-toolbar-item-drupalInsertImage'));
+    $this->triggerKeyUp('.ckeditor5-toolbar-item-drupalInsertImage', 'ArrowDown');
     $assert_session->assertWaitOnAjaxRequest();
 
     // The image upload settings form should now be present.
-    $assert_session->elementExists('css', '[data-drupal-selector="edit-editor-settings-plugins-ckeditor5-imageupload"]');
+    $assert_session->elementExists('css', '[data-drupal-selector="edit-editor-settings-plugins-ckeditor5-image"]');
 
-    $this->assertNotEmpty($assert_session->waitForElement('css', '.ckeditor5-toolbar-active .ckeditor5-toolbar-item-uploadImage'));
+    $this->assertNotEmpty($assert_session->waitForElement('css', '.ckeditor5-toolbar-active .ckeditor5-toolbar-item-drupalInsertImage'));
 
-    // The image upload plugin is enabled, but <img> not yet allowed.
-    $this->assertEquals($this->allowedElements, $allowed_html_field->getValue());
+    // The image insert plugin is enabled and inserting <img> is allowed.
+    $this->assertEquals($this->allowedElements . ' <img alt height width src>', $allowed_html_field->getValue());
 
-    $page->clickLink('Image Upload');
+    $page->clickLink('Image');
     $assert_session->waitForText('Enable image uploads');
-    $this->assertTrue($page->hasUncheckedField('editor[settings][plugins][ckeditor5_imageUpload][status]'));
-    $page->checkField('editor[settings][plugins][ckeditor5_imageUpload][status]');
+    $this->assertTrue($page->hasUncheckedField('editor[settings][plugins][ckeditor5_image][status]'));
+    $page->checkField('editor[settings][plugins][ckeditor5_image][status]');
     $assert_session->assertWaitOnAjaxRequest();
 
     // Enabling image uploads adds <img> with several attributes to allowed
     // tags.
-    $this->assertEquals($this->allowedElements . ' <img src alt data-entity-uuid data-entity-type height width>', $allowed_html_field->getValue());
+    $this->assertEquals($this->allowedElements . ' <img alt height width data-entity-uuid data-entity-type>', $allowed_html_field->getValue());
 
     // Also enabling the caption filter will add the data-caption attribute to
     // <img>.
     $this->assertTrue($page->hasUncheckedField('filters[filter_caption][status]'));
     $page->checkField('filters[filter_caption][status]');
     $assert_session->assertWaitOnAjaxRequest();
-    $this->assertEquals($this->allowedElements . ' <img src alt data-entity-uuid data-entity-type height width data-caption>', $allowed_html_field->getValue());
+    $this->assertEquals($this->allowedElements . ' <img alt height width data-entity-uuid data-entity-type data-caption>', $allowed_html_field->getValue());
 
     // Also enabling the alignment filter will add the data-align attribute to
     // <img>.
     $this->assertTrue($page->hasUncheckedField('filters[filter_align][status]'));
     $page->checkField('filters[filter_align][status]');
     $assert_session->assertWaitOnAjaxRequest();
-    $this->assertEquals($this->allowedElements . ' <img src alt data-entity-uuid data-entity-type height width data-caption data-align>', $allowed_html_field->getValue());
+    $this->assertEquals($this->allowedElements . ' <img alt height width data-entity-uuid data-entity-type data-caption data-align>', $allowed_html_field->getValue());
 
     // Disable image upload.
-    $page->clickLink('Image Upload');
+    $page->clickLink('Image');
     $assert_session->waitForText('Enable image uploads');
-    $this->assertTrue($page->hasCheckedField('editor[settings][plugins][ckeditor5_imageUpload][status]'));
-    $page->uncheckField('editor[settings][plugins][ckeditor5_imageUpload][status]');
+    $this->assertTrue($page->hasCheckedField('editor[settings][plugins][ckeditor5_image][status]'));
+    $page->uncheckField('editor[settings][plugins][ckeditor5_image][status]');
     $assert_session->assertWaitOnAjaxRequest();
 
-    // Confirm <img> is no longer an allowed tag, once image upload disabled.
+    // The image insert is still allowed when image uploads are disabled.
+    $this->assertEquals($this->allowedElements . ' <img alt height width src data-caption data-align>', $allowed_html_field->getValue());
+
+    $this->assertNotEmpty($assert_session->waitForElement('css', '.ckeditor5-toolbar-item-drupalInsertImage'));
+    $this->triggerKeyUp('.ckeditor5-toolbar-item-drupalInsertImage', 'ArrowUp');
+    $assert_session->assertWaitOnAjaxRequest();
+
+    // Confirm <img> is no longer an allowed tag, once image insert is disabled.
     $this->assertEquals($this->allowedElements, $allowed_html_field->getValue());
   }
 

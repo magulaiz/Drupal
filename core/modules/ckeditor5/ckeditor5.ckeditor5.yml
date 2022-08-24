@@ -528,7 +528,6 @@ ckeditor5_imageUpload:
     elements:
       - <img data-entity-uuid data-entity-type>
     conditions:
-      toolbarItem: drupalInsertImage
       imageUploadStatus: true
       plugins: [ckeditor5_image]
 
@@ -541,7 +540,6 @@ ckeditor5_imageUrl:
     elements:
       - <img src>
     conditions:
-      toolbarItem: drupalInsertImage
       imageUploadStatus: false
       plugins: [ckeditor5_image]
 
@@ -578,8 +576,8 @@ ckeditor5_imageCaption:
     elements:
       - <img data-caption>
     conditions:
-      toolbarItem: drupalImage
       filter: filter_caption
+      plugins: [ckeditor5_image]
 
 ckeditor5_imageAlign:
   ckeditor5:
@@ -612,8 +610,8 @@ ckeditor5_imageAlign:
     elements:
       - <img data-align>
     conditions:
-      toolbarItem: drupalImage
       filter: filter_align
+      plugins: [ckeditor5_image]
 
 ckeditor5_indent:
   ckeditor5:
