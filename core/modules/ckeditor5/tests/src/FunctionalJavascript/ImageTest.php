@@ -85,7 +85,7 @@ class ImageTest extends CKEditor5TestBase {
       'settings' => [
         'toolbar' => [
           'items' => [
-            'uploadImage',
+            'drupalInsertImage',
             'sourceEditing',
             'link',
             'italic',
@@ -674,7 +674,7 @@ class ImageTest extends CKEditor5TestBase {
       Editor::load('test_format')->setSettings([
         'toolbar' => [
           'items' => [
-            'uploadImage',
+            'drupalInsertImage',
           ],
         ],
         'plugins' => [
@@ -723,21 +723,21 @@ class ImageTest extends CKEditor5TestBase {
 
     // The image resize and upload plugin settings forms should be present.
     $assert_session->elementExists('css', '[data-drupal-selector="edit-editor-settings-plugins-ckeditor5-imageresize"]');
-    $assert_session->elementExists('css', '[data-drupal-selector="edit-editor-settings-plugins-ckeditor5-imageupload"]');
+    $assert_session->elementExists('css', '[data-drupal-selector="edit-editor-settings-plugins-ckeditor5-image"]');
 
-    // Removing the imageUpload button from the toolbar must remove the plugin
-    // settings forms too.
-    $this->triggerKeyUp('.ckeditor5-toolbar-item-uploadImage', 'ArrowUp');
+    // Removing the drupalImageInsert button from the toolbar must remove the
+    // plugin settings forms too.
+    $this->triggerKeyUp('.ckeditor5-toolbar-item-drupalInsertImage', 'ArrowUp');
     $assert_session->assertWaitOnAjaxRequest();
     $assert_session->elementNotExists('css', '[data-drupal-selector="edit-editor-settings-plugins-ckeditor5-imageresize"]');
-    $assert_session->elementNotExists('css', '[data-drupal-selector="edit-editor-settings-plugins-ckeditor5-imageupload"]');
+    $assert_session->elementNotExists('css', '[data-drupal-selector="edit-editor-settings-plugins-ckeditor5-image"]');
 
-    // Re-adding the imageUpload button to the toolbar must re-add the plugin
-    // settings forms too.
-    $this->triggerKeyUp('.ckeditor5-toolbar-item-uploadImage', 'ArrowDown');
+    // Re-adding the drupalImageInsert button to the toolbar must re-add the
+    // plugin settings forms too.
+    $this->triggerKeyUp('.ckeditor5-toolbar-item-drupalInsertImage', 'ArrowDown');
     $assert_session->assertWaitOnAjaxRequest();
     $assert_session->elementExists('css', '[data-drupal-selector="edit-editor-settings-plugins-ckeditor5-imageresize"]');
-    $assert_session->elementExists('css', '[data-drupal-selector="edit-editor-settings-plugins-ckeditor5-imageupload"]');
+    $assert_session->elementExists('css', '[data-drupal-selector="edit-editor-settings-plugins-ckeditor5-image"]');
   }
 
 }
