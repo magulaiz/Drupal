@@ -90,26 +90,41 @@ class CKEditor5UpdateImageToolbarItemTest extends UpdatePathTestBase {
     );
 
     // 2. Even though `sourceEditing` may not be enabled before this update, it
-    // definitely must be after.
-    if (!$source_editing_is_already_enabled) {
-      $this->assertNotContains('sourceEditing', $editor_before->getSettings()['toolbar']['items']);
+    // must be after, at least if image uploads are disabled: extra mark-up will
+    // be added to its configuration to avoid breaking backwards compatibility.
+    if (!$image_uploads_are_enabled) {
+      if (!$source_editing_is_already_enabled) {
+        $this->assertNotContains('sourceEditing', $editor_before->getSettings()['toolbar']['items']);
+      }
+      $this->assertContains('sourceEditing', $editor_after->getSettings()['toolbar']['items']);
+      $source_editing_before = $source_editing_is_already_enabled
+        ? static::getSourceEditingRestrictions($editor_before)
+        : HTMLRestrictions::emptySet();
+      $source_editing_after = static::getSourceEditingRestrictions($editor_after);
+      if ($source_editing_is_already_enabled) {
+        // Nothing has been removed from the allowed source editing tags.
+        $this->assertFalse($source_editing_before->allowsNothing());
+        $this->assertTrue($source_editing_before->diff($source_editing_after)
+          ->allowsNothing());
+      }
+      $this->assertSame($expected_source_editing_additions, $source_editing_after->diff($source_editing_before)
+        ->toCKEditor5ElementsArray());
     }
-    $this->assertContains('sourceEditing', $editor_after->getSettings()['toolbar']['items']);
-
-    // 3.Either `<img src>` or `<img data-entity-uuid data-entity-type>` must
-    // now be allowed in `ckeditor5_sourceEditing`.
-    $source_editing_before = $source_editing_is_already_enabled
-      ? static::getSourceEditingRestrictions($editor_before)
-      : HTMLRestrictions::emptySet();
-    $source_editing_after = static::getSourceEditingRestrictions($editor_after);
-    if ($source_editing_is_already_enabled) {
-      // Nothing has been removed from the allowed source editing tags.
-      $this->assertFalse($source_editing_before->allowsNothing());
-      $this->assertTrue($source_editing_before->diff($source_editing_after)->allowsNothing());
+    // Otherwise verify that sourceEditing configuration remains unchanged.
+    else {
+      if (!$source_editing_is_already_enabled) {
+        $this->assertNotContains('sourceEditing', $editor_before->getSettings()['toolbar']['items']);
+      }
+      else {
+        $this->assertContains('sourceEditing', $editor_before->getSettings()['toolbar']['items']);
+        $this->assertSame(
+          static::getSourceEditingRestrictions($editor_before)->toCKEditor5ElementsArray(),
+          static::getSourceEditingRestrictions($editor_after)->toCKEditor5ElementsArray()
+        );
+      }
     }
-    $this->assertSame($expected_source_editing_additions, $source_editing_after->diff($source_editing_before)->toCKEditor5ElementsArray());
 
-    // 4. `filter_html` restrictions MUST remain unchanged.
+    // 3. `filter_html` restrictions MUST remain unchanged.
     if ($filter_html_is_enabled) {
       $filter_html_before = static::getFilterHtmlRestrictions($filter_format_before);
       $filter_html_after = static::getFilterHtmlRestrictions($filter_format_after);
@@ -117,7 +132,7 @@ class CKEditor5UpdateImageToolbarItemTest extends UpdatePathTestBase {
       $this->assertTrue($filter_html_after->diff($filter_html_before)->allowsNothing());
     }
 
-    // 5. After: text format and editor still form a valid pair.
+    // 4. After: text format and editor still form a valid pair.
     $this->assertSame([], array_map(
       function (ConstraintViolation $v) {
         return (string) $v->getMessage();
@@ -149,7 +164,7 @@ class CKEditor5UpdateImageToolbarItemTest extends UpdatePathTestBase {
             'image uploads' => $image_uploads_enabled,
             'sourceEditing already enabled' => $source_editing_already_enabled,
             'expected sourceEditing additions' => $image_uploads_enabled
-              ? ['<img src>']
+              ? []
               : ['<img data-entity-uuid data-entity-type>'],
           ];
         }
