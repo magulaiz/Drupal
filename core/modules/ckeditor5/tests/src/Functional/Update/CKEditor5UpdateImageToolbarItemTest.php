@@ -46,12 +46,10 @@ class CKEditor5UpdateImageToolbarItemTest extends UpdatePathTestBase {
     $format = FilterFormat::load('test_format_image');
     if (!$filter_html_is_enabled) {
       $format->setFilterConfig('filter_html', ['status' => FALSE]);
-      $format->trustData()->save();
     }
     $editor = Editor::load('test_format_image');
     if (!$image_uploads_are_enabled) {
       $editor->setImageUploadSettings(['status' => FALSE]);
-      $editor->trustData()->save();
     }
     if (!$source_editing_is_already_enabled) {
       $settings = $editor->getSettings();
@@ -60,16 +58,16 @@ class CKEditor5UpdateImageToolbarItemTest extends UpdatePathTestBase {
       // Remove the corresponding plugin settings (allowing `<img data-foo>`).
       unset($settings['plugins']['ckeditor5_sourceEditing']);
       $editor->setSettings($settings);
-      $editor->trustData()->save();
       if ($filter_html_is_enabled) {
         // Stop allowing `<img data-foo>`.
         $filter_html_config = $format->filters('filter_html')
           ->getConfiguration();
         $filter_html_config['settings']['allowed_html'] = str_replace('data-foo', '', $filter_html_config['settings']['allowed_html']);
         $format->setFilterConfig('filter_html', $filter_html_config);
-        $format->trustData()->save();
       }
     }
+    $format->trustData()->save();
+    $editor->trustData()->save();
 
     // Run update path; snapshot the Text Format and Editor before and after.
     $editor_before = Editor::load('test_format_image');
