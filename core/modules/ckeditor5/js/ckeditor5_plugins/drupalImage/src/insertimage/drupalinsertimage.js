@@ -1,3 +1,4 @@
+/* eslint-disable import/no-extraneous-dependencies */
 import { Plugin } from 'ckeditor5/src/core';
 
 /**
@@ -21,7 +22,7 @@ class DrupalInsertImage extends Plugin {
       }
       // If ImageInsertUI plugin is not enabled, fallback to using uploadImage
       // upstream button.
-      else if (editor.plugins.has('ImageUpload')) {
+      if (editor.plugins.has('ImageUpload')) {
         return editor.ui.componentFactory.create('uploadImage');
       }
 
