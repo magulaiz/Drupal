@@ -690,7 +690,7 @@ class ImageUrlTest extends CKEditor5TestBase {
    *
    * @dataProvider providerResize
    */
-  public function xtestResize(bool $is_resize_enabled): void {
+  public function testResize(bool $is_resize_enabled): void {
     // Disable resize plugin because it is enabled by default.
     if (!$is_resize_enabled) {
       Editor::load('test_format')->setSettings([
