@@ -928,7 +928,7 @@ final class SmartDefaultSettings {
       // Skip image upload as its configuration is stored in a discrete
       // property of the $editor object, not its settings. Also skip any plugin
       // that already has configuration data as default values are not needed.
-      if ($plugin_name === 'ckeditor5_imageUpload' || isset($settings['plugins'][$plugin_name])) {
+      if ($plugin_name === 'ckeditor5_image' || isset($settings['plugins'][$plugin_name])) {
         continue;
       }
       $update_settings = TRUE;
