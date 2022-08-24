@@ -520,8 +520,6 @@ ckeditor5_imageUpload:
       - image.ImageUpload
       - drupalImage.DrupalImageUpload
     config:
-      drupalInsertImage:
-        upload: true
       image:
         upload:
           types: ["jpeg", "png", "gif"]
@@ -537,10 +535,7 @@ ckeditor5_imageUpload:
 ckeditor5_imageUrl:
   ckeditor5:
     plugins:
-      - drupalImage.DrupalInsertImage
-    config:
-      drupalInsertImage:
-        upload: false
+      - image.ImageInsertUI
   drupal:
     label: Image URL
     elements:
