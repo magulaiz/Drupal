@@ -85,7 +85,7 @@ function editor_post_update_upgrade_ckeditor_4_to_5(&$sandbox = []) {
 
   // Inform the user.
   $upgrade_details = $module_handler->moduleExists('dblog')
-    ? t('Additional details are available <a target="_blank" href=":dblog_url">in your logs</a>.',
+    ? t('Additional details are available in the <a target="_blank" href=":dblog_url">site logs</a>.',
       [
         ':dblog_url' => Url::fromRoute('dblog.overview')
           ->setOption('query', ['type[]' => 'ckeditor5'])
@@ -94,7 +94,7 @@ function editor_post_update_upgrade_ckeditor_4_to_5(&$sandbox = []) {
           ->toString(),
       ]
     )
-    : t('Additional details are available in your logs.');
+    : t('Additional details are available in the site logs.');
   return t('Updated @count Text Editors that used CKEditor 4 to use CKEditor 5 instead (%list).', [
     '@count' => count($updated_editors),
     '%list' => implode(', ', $updated_editors),
