@@ -7,7 +7,7 @@ use Drupal\editor\Entity\Editor;
 use Drupal\filter\Entity\FilterFormat;
 use Symfony\Component\Validator\ConstraintViolation;
 
-// cspell:ignore imageresize imageupload
+// cspell:ignore imageresize
 
 /**
  * @coversDefaultClass \Drupal\ckeditor5\Plugin\CKEditor5Plugin\Image
