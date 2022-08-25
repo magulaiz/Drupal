@@ -132,7 +132,6 @@ blockrecipe
 blocktest
 bloggy
 blub
-bnode
 bodyformat
 bodyless
 bodyvalue
@@ -465,7 +464,6 @@ fieldlinks
 fieldnames
 fieldsets
 filecount
-filefields
 filelist
 filemime
 filesort
@@ -503,7 +501,6 @@ fourthcolumn
 fozzie
 fqcn
 fraîche
-freenode
 frombracket
 frontpage
 fsdf
@@ -597,7 +594,6 @@ iframeupload
 ignoretag
 imagecache
 imagecreatefrom
-imagefields
 imagetest
 imagetextalternative
 inator
@@ -848,7 +844,6 @@ ndocs
 nearbykeyword
 necolas
 negotiatiors
-nemo
 networkerror
 newcol
 newdata
@@ -1074,8 +1069,6 @@ rasterize
 rasterized
 rasterizes
 rawurlencoded
-rdfa
-rdfs
 readmore
 readonlydir
 realelement
@@ -1170,21 +1163,18 @@ shatner
 shorterthan
 shortlink
 showblocks
-sidebarborders
 siema
 silverlight
 silvie
 simpletest
 singlebyte
 sioc
-sioct
 sirbrillig
 sisko
 sitename
 sitewide
 sivun
 skiptags
-skos
 skynet
 slatkin
 slevomat
@@ -1388,7 +1378,6 @@ tiplist
 titel
 titlealert
 titlebar
-titleslogan
 tlds
 tmpfs
 tnid
