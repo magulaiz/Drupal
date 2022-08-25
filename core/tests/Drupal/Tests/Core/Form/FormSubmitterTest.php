@@ -3,6 +3,7 @@
 namespace Drupal\Tests\Core\Form;
 
 use Drupal\Core\DependencyInjection\ContainerBuilder;
+use Drupal\Core\EventSubscriber\RedirectResponseSubscriber;
 use Drupal\Core\Form\FormState;
 use Drupal\Core\Routing\UrlGeneratorInterface;
 use Drupal\Core\Url;
@@ -33,12 +34,18 @@ class FormSubmitterTest extends UnitTestCase {
   protected $unroutedUrlAssembler;
 
   /**
+   * @var \PHPUnit\Framework\MockObject\MockObject|\Drupal\Core\EventSubscriber\RedirectResponseSubscriber
+   */
+  protected $redirectResponseSubscriber;
+
+  /**
    * {@inheritdoc}
    */
   protected function setUp(): void {
     parent::setUp();
     $this->urlGenerator = $this->createMock(UrlGeneratorInterface::class);
     $this->unroutedUrlAssembler = $this->createMock(UnroutedUrlAssemblerInterface::class);
+    $this->redirectResponseSubscriber = $this->createMock(RedirectResponseSubscriber::class);
   }
 
   /**
@@ -255,7 +262,7 @@ class FormSubmitterTest extends UnitTestCase {
     $request_stack = new RequestStack();
     $request_stack->push(Request::create('/test-path'));
     return $this->getMockBuilder('Drupal\Core\Form\FormSubmitter')
-      ->setConstructorArgs([$request_stack, $this->urlGenerator])
+      ->setConstructorArgs([$request_stack, $this->urlGenerator, $this->redirectResponseSubscriber])
       ->onlyMethods(['batchGet'])
       ->getMock();
   }

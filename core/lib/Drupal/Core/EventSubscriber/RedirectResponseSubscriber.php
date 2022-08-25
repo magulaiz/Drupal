@@ -26,6 +26,13 @@ class RedirectResponseSubscriber implements EventSubscriberInterface {
   protected $unroutedUrlAssembler;
 
   /**
+   * Whether to ignore the destination query parameter when redirecting.
+   *
+   * @var bool
+   */
+  protected $ignoreDestination = FALSE;
+
+  /**
    * Constructs a RedirectResponseSubscriber object.
    *
    * @param \Drupal\Core\Utility\UnroutedUrlAssemblerInterface $url_assembler
@@ -53,7 +60,7 @@ class RedirectResponseSubscriber implements EventSubscriberInterface {
       // If $response is already a SecuredRedirectResponse, it might reject the
       // new target as invalid, in which case proceed with the old target.
       $destination = $request->query->get('destination');
-      if ($destination) {
+      if ($destination && !$this->ignoreDestination) {
         // The 'Location' HTTP header must always be absolute.
         $destination = $this->getDestinationAsAbsoluteUrl($destination, $request->getSchemeAndHttpHost());
         try {
@@ -126,6 +133,17 @@ class RedirectResponseSubscriber implements EventSubscriberInterface {
       }
     }
     return $destination;
+  }
+
+  /**
+   * Set whether the redirect response will ignore the destination query param.
+   *
+   * @param bool $status
+   *   (optional) TRUE if the destination query parameter should be ignored.
+   *   FALSE if not. Defaults to TRUE.
+   */
+  public function ignoreDestination($status = TRUE) {
+    $this->ignoreDestination = $status;
   }
 
   /**
