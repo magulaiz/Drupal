@@ -78,6 +78,23 @@ abstract class ImageTestBase extends CKEditor5TestBase {
   }
 
   /**
+   * Add an image to the CKEditor 5 editable zone.
+   */
+  protected function addImage() {
+    $page = $this->getSession()->getPage();
+    $assert_session = $this->assertSession();
+    $image_selector = '.ck-widget.image-inline';
+    $src = $this->imageAttributes()['src'];
+    $this->waitForEditor();
+    $this->pressEditorButton('Insert image');
+    $panel = $page->find('css', '.ck-dropdown__panel.ck-image-insert__panel');
+    $src_input = $panel->find('css', 'input[type=text]');
+    $src_input->setValue($src);
+    $panel->find('xpath', "//button[span[text()='Insert']]")->click();
+    $this->assertNotEmpty($assert_session->waitForElementVisible('css', $image_selector));
+  }
+
+  /**
    * Ensures that attributes are retained on conversion.
    */
   public function testAttributeRetentionDuringUpcasting() {
@@ -416,6 +433,14 @@ abstract class ImageTestBase extends CKEditor5TestBase {
     // Save the node and confirm that the alt text is retained.
     $page->pressButton('Save');
     $this->assertNotEmpty($assert_session->waitForElement('css', 'img[alt="There is now alt text"]'));
+
+    // Ensure that alt form is opened after image upload.
+    $this->drupalGet($this->host->toUrl('edit-form'));
+    $this->waitForEditor();
+    $this->addImage();
+    $this->assertNotEmpty($assert_session->waitForElementVisible('css', '.ck-widget.image'));
+    $this->assertNotEmpty($assert_session->waitForElementVisible('css', '.ck-balloon-panel'));
+    $this->assertVisibleBalloon('.ck-text-alternative-form');
   }
 
   public function providerAltTextRequired(): array {
@@ -617,14 +642,7 @@ abstract class ImageTestBase extends CKEditor5TestBase {
     $assert_session = $this->assertSession();
     $this->drupalGet('node/add');
     $page->fillField('title[0][value]', 'My test content');
-
-    $this->waitForEditor();
-    $this->pressEditorButton('Insert image');
-    $panel = $page->find('css', '.ck-dropdown__panel.ck-image-insert__panel');
-    $src_input = $panel->find('css', 'input[type=text]');
-    $src_input->setValue($this->imageAttributes()['src']);
-    $panel->find('xpath', "//button[span[text()='Insert']]")->click();
-
+    $this->addImage();
     $image_figure = $assert_session->waitForElementVisible('css', 'figure');
     $this->assertSame($is_resize_enabled, $image_figure->hasClass('ck-widget_with-resizer'));
   }
