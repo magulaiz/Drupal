@@ -154,7 +154,7 @@ class CKEditor5UpdateImageToolbarItemTest extends UpdatePathTestBase {
       foreach ([TRUE, FALSE] as $image_uploads_enabled) {
         $test_case_label_part_two = sprintf("image uploads %s", $image_uploads_enabled ? 'enabled' : 'disabled');
         foreach ([TRUE, FALSE] as $source_editing_already_enabled) {
-          $test_case_label_part_three = sprintf("sourceEditing already %s", $source_editing_already_enabled ? 'enabled' : 'disabled');
+          $test_case_label_part_three = sprintf("sourceEditing initially %s", $source_editing_already_enabled ? 'enabled' : 'disabled');
           // Generate the test case.
           $label = implode(', ', [$test_case_label_part_one, $test_case_label_part_two, $test_case_label_part_three]);
           $test_cases[$label] = [
