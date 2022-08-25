@@ -177,6 +177,8 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
    *   The entity type bundle info.
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    *   The entity type manager.
+   * @param \Symfony\Component\DependencyInjection\ContainerInterface $container
+   *   The DI container.
    */
   public function __construct(EntityTypeInterface $entity_type, Connection $database, EntityFieldManagerInterface $entity_field_manager, CacheBackendInterface $cache, LanguageManagerInterface $language_manager, MemoryCacheInterface $memory_cache, EntityTypeBundleInfoInterface $entity_type_bundle_info, EntityTypeManagerInterface $entity_type_manager, ContainerInterface $container) {
     parent::__construct($entity_type, $entity_field_manager, $cache, $memory_cache, $entity_type_bundle_info, $container);
@@ -506,7 +508,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
     foreach ($values as $id => $entity_values) {
       $bundle = $this->bundleKey ? $entity_values[$this->bundleKey][LanguageInterface::LANGCODE_DEFAULT] : NULL;
       // Turn the record into an entity class.
-      /** @var ContentEntityInterface::class $entity_class */
+      /** @var \Drupal\Core\Entity\ContentEntityInterface::class $entity_class */
       $entity_class = $this->getEntityClass($bundle);
       $entities[$id] = $entity_class::createInstance($this->container, $entity_values, $this->entityTypeId, $bundle, array_keys($translations[$id]));
     }
