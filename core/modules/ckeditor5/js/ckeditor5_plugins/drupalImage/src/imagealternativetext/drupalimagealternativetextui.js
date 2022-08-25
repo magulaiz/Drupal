@@ -61,22 +61,30 @@ export default class DrupalImageAlternativeTextUi extends Plugin {
     this._createForm();
     this._createMissingAltTextComponent();
 
+    const showAlternativeTextForm = () => {
+      const imageUtils = this.editor.plugins.get('ImageUtils');
+      // Show form after upload if there's image widget in the current
+      // selection.
+      if (
+        imageUtils.getClosestSelectedImageWidget(
+          this.editor.editing.view.document.selection,
+        )
+      ) {
+        this._showForm();
+      }
+    };
+
+
+    if (this.editor.commands.get('insertImage')) {
+      const insertImage = this.editor.commands.get('insertImage');
+      insertImage.on('execute', showAlternativeTextForm);
+    }
     if (this.editor.plugins.has('ImageUploadEditing')) {
       const imageUploadEditing = this.editor.plugins.get('ImageUploadEditing');
-      const imageUtils = this.editor.plugins.get('ImageUtils');
-      imageUploadEditing.on('uploadComplete', () => {
-        // Show form after upload if there's image widget in the current
-        // selection.
-        if (
-          imageUtils.getClosestSelectedImageWidget(
-            this.editor.editing.view.document.selection,
-          )
-        ) {
-          this._showForm();
-        }
-      });
+      imageUploadEditing.on('uploadComplete', showAlternativeTextForm);
     }
   }
+
 
   /**
    * Creates a missing alt text view which can be displayed within image widgets
