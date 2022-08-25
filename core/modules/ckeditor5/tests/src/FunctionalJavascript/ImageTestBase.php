@@ -61,12 +61,18 @@ abstract class ImageTestBase extends CKEditor5TestBase {
   /**
    * Helper to format attributes.
    *
+   * @param bool $reverse
+   *   Reverse attributes when printing them.
+   *
    * @return string
    */
-  protected function imageAttributesAsString() {
+  protected function imageAttributesAsString($reverse = FALSE) {
     $string = [];
     foreach ($this->imageAttributes() as $key => $value) {
       $string[] = $key . '="' . $value . '"';
+    }
+    if ($reverse) {
+      $string = array_reverse($string);
     }
     return implode(' ', $string);
   }
@@ -540,7 +546,7 @@ abstract class ImageTestBase extends CKEditor5TestBase {
 
     // The foo attribute is added to be removed later by CKEditor 5 to make sure
     // CKEditor 5 was able to downcast data.
-    $img_tag = '<img alt="drupalimage test image" data-caption="Alpacas &lt;em&gt;are&lt;/em&gt; cute" foo="bar" ' . $this->imageAttributesAsString() . ' >';
+    $img_tag = '<img ' . $this->imageAttributesAsString() . ' alt="drupalimage test image" data-caption="Alpacas &lt;em&gt;are&lt;/em&gt; cute" foo="bar">';
     $this->host->body->value = $img_tag;
     $this->host->save();
 
@@ -558,7 +564,7 @@ abstract class ImageTestBase extends CKEditor5TestBase {
     $page->pressButton('Save');
 
     $src = $this->imageAttributes()['src'];
-    $this->assertEquals('<img ' . $this->imageAttributesAsString() . ' alt="drupalimage test image" data-caption="Alpacas &lt;em&gt;are&lt;/em&gt; cute">', Node::load(1)->get('body')->value);
+    $this->assertEquals('<img ' . $this->imageAttributesAsString(TRUE) . ' alt="drupalimage test image" data-caption="Alpacas &lt;em&gt;are&lt;/em&gt; cute">', Node::load(1)->get('body')->value);
     $assert_session->elementExists('xpath', '//figure/img[@src="' . $src . '" and not(@data-caption)]');
     $assert_session->responseContains('<figcaption>Alpacas <em>are</em> cute</figcaption>');
   }
