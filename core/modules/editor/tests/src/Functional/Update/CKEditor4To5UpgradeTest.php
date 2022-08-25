@@ -13,7 +13,7 @@ use Drupal\FunctionalTests\Update\UpdatePathTestBase;
  *
  * @group Update
  */
-class CKEditor4To5Upgrade extends UpdatePathTestBase {
+class CKEditor4To5UpgradeTest extends UpdatePathTestBase {
 
   /**
    * {@inheritdoc}
