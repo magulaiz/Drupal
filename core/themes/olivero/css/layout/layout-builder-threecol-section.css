@@ -24,71 +24,24 @@
 /* Width of the entire grid maxes out. */
 
 .layout--threecol-section {
-  display: flex;
-  flex-wrap: wrap
+  display: grid;
+  grid-gap: var(--grid-gap);
 }
 
-.layout--threecol-section > .layout__region {
-    flex: 1 0 100%;
-    margin-bottom: var(--grid-gap)
-  }
-
 @media (min-width: 62.5rem) {
-
-.layout--threecol-section > .layout__region {
-      flex-grow: 0;
-      flex-shrink: 0;
-      margin-bottom: 0
-  }
-    }
-
-@media (min-width: 62.5rem) {
-    [dir="ltr"] .layout--threecol-section > .layout__region--first {
-      margin-right: calc(var(--grid-gap) * 0.5)
-  }
-    [dir="rtl"] .layout--threecol-section > .layout__region--first {
-      margin-left: calc(var(--grid-gap) * 0.5)
+  .layout--threecol-section--25-50-25 {
+    grid-template-columns: var(--grid-2-col-width) 1fr var(--grid-2-col-width);
   }
 
-    .layout--threecol-section > .layout__region--second {
-      margin-left: calc(var(--grid-gap) * 0.5);
-      margin-right: calc(var(--grid-gap) * 0.5);
-    }
-
-    [dir="ltr"] .layout--threecol-section > .layout__region--third {
-      margin-left: calc(var(--grid-gap) * 0.5)
+  .layout--threecol-section--25-25-50 {
+    grid-template-columns: var(--grid-2-col-width) var(--grid-2-col-width) 1fr;
   }
 
-    [dir="rtl"] .layout--threecol-section > .layout__region--third {
-      margin-right: calc(var(--grid-gap) * 0.5)
+  .layout--threecol-section--50-25-25 {
+    grid-template-columns: 1fr var(--grid-2-col-width) var(--grid-2-col-width);
   }
-    .layout--threecol-section--25-50-25 > .layout__region--first,
-    .layout--threecol-section--25-50-25 > .layout__region--third {
-      flex-basis: calc(25% - (var(--grid-gap) * 0.5));
-    }
 
-    .layout--threecol-section--25-50-25 > .layout__region--second {
-      flex-basis: calc(50% - var(--grid-gap));
-    }
-    .layout--threecol-section--25-25-50 > .layout__region--first,
-    .layout--threecol-section--25-25-50 > .layout__region--second {
-      flex-basis: calc(25% - (var(--grid-gap) * 0.5));
-    }
-
-    .layout--threecol-section--25-25-50 > .layout__region--third {
-      flex-basis: calc(50% - var(--grid-gap));
-    }
-    .layout--threecol-section--50-25-25 > .layout__region--first {
-      flex-basis: calc(50% - var(--grid-gap));
-    }
-
-    .layout--threecol-section--50-25-25 > .layout__region--second,
-    .layout--threecol-section--50-25-25 > .layout__region--third {
-      flex-basis: calc(25% - (var(--grid-gap) * 0.5));
-    }
-    .layout--threecol-section--33-34-33 > .layout__region--first,
-    .layout--threecol-section--33-34-33 > .layout__region--second,
-    .layout--threecol-section--33-34-33 > .layout__region--third {
-      flex-basis: calc(33.33% - (var(--grid-gap) * 0.667));
-    }
+  .layout--threecol-section--33-34-33 {
+    grid-template-columns: repeat(3, 1fr);
+  }
 }

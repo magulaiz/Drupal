@@ -6,79 +6,28 @@
 @import "../base/media-queries.pcss.css";
 
 .layout--twocol-section {
-  display: flex;
-  flex-wrap: wrap;
-
-  & > .layout__region {
-    flex: 1 0 100%;
-    margin-block-end: var(--grid-gap);
-
-    @media (--md) {
-      flex-grow: 0;
-      flex-shrink: 0;
-      margin-block-end: 0;
-    }
-  }
+  display: grid;
+  gap: var(--grid-gap);
 }
 
 @media (--md) {
   .layout--twocol-section--50-50 {
-    & > .layout__region--first {
-      flex-basis: calc(50% - (var(--grid-gap) * 0.5));
-      margin-inline-end: calc(var(--grid-gap) * 0.5);
-    }
-
-    & > .layout__region--second {
-      flex-basis: calc(50% - (var(--grid-gap) * 0.5));
-      margin-inline-start: calc(var(--grid-gap) * 0.5);
-    }
+    grid-template-columns: repeat(2, 1fr);
   }
 
   .layout--twocol-section--33-67 {
-    & > .layout__region--first {
-      flex-basis: calc(33.33% - (var(--grid-gap) * 0.3333));
-      margin-inline-end: calc(var(--grid-gap) * 0.3333);
-    }
-
-    & > .layout__region--second {
-      flex-basis: calc(66.66% - (var(--grid-gap) * 0.6666));
-      margin-inline-start: calc(var(--grid-gap) * 0.6666);
-    }
+    grid-template-columns: var(--grid-3-col-width) 1fr;
   }
 
   .layout--twocol-section--67-33 {
-    & > .layout__region--first {
-      flex-basis: calc(66.66% - (var(--grid-gap) * 0.6666));
-      margin-inline-end: calc(var(--grid-gap) * 0.6666);
-    }
-
-    & > .layout__region--second {
-      flex-basis: calc(33.33% - (var(--grid-gap) * 0.3333));
-      margin-inline-start: calc(var(--grid-gap) * 0.3333);
-    }
+    grid-template-columns: 1fr var(--grid-3-col-width);
   }
 
   .layout--twocol-section--25-75 {
-    & > .layout__region--first {
-      flex-basis: calc(25% - (var(--grid-gap) * 0.25));
-      margin-inline-end: calc(var(--grid-gap) * 0.25);
-    }
-
-    & > .layout__region--second {
-      flex-basis: calc(75% - (var(--grid-gap) * 0.75));
-      margin-inline-start: calc(var(--grid-gap) * 0.75);
-    }
+    grid-template-columns: var(--grid-2-col-width) 1fr;
   }
 
   .layout--twocol-section--75-25 {
-    & > .layout__region--first {
-      flex-basis: calc(75% - (var(--grid-gap) * 0.75));
-      margin-inline-end: calc(var(--grid-gap) * 0.75);
-    }
-
-    & > .layout__region--second {
-      flex-basis: calc(25% - (var(--grid-gap) * 0.25));
-      margin-inline-start: calc(var(--grid-gap) * 0.25);
-    }
+    grid-template-columns: 1fr var(--grid-2-col-width);
   }
 }
