@@ -388,7 +388,6 @@ drush
 drépal
 défaut
 détruire
-easyrdf
 editables
 editdrupalimage
 editunblock
