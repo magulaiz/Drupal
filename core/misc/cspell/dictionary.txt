@@ -131,7 +131,6 @@ blockrecipe
 blocktest
 bloggy
 blub
-bnode
 bodyformat
 bodyless
 bodyvalue
@@ -463,7 +462,6 @@ fieldlinks
 fieldnames
 fieldsets
 filecount
-filefields
 filelist
 filemime
 filesort
@@ -592,7 +590,6 @@ iframeupload
 ignoretag
 imagecache
 imagecreatefrom
-imagefields
 imagetest
 imagetextalternative
 inator
@@ -842,7 +839,7 @@ ndocs
 nearbykeyword
 necolas
 negotiatiors
-nemo
+networkerror
 newcol
 newdata
 newfieldinitial
@@ -1062,8 +1059,6 @@ rasterize
 rasterized
 rasterizes
 rawurlencoded
-rdfa
-rdfs
 readmore
 readonlydir
 realelement
@@ -1164,14 +1159,12 @@ silvie
 simpletest
 singlebyte
 sioc
-sioct
 sirbrillig
 sisko
 sitename
 sitewide
 sivun
 skiptags
-skos
 skynet
 slatkin
 slevomat
