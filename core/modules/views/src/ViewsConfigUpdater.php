@@ -111,9 +111,6 @@ class ViewsConfigUpdater implements ContainerInjectionInterface {
   }
 
   /**
-      if ($this->processOembedEagerLoadFieldHandler($handler, $handler_type, $view)) {
-        $changed = TRUE;
-      }
    * Processes all display handlers.
    *
    * @param \Drupal\views\ViewEntityInterface $view

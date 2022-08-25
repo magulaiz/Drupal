@@ -276,7 +276,7 @@ class OEmbedFormatter extends FormatterBase {
       ],
       'loading' => [
         '#type' => 'details',
-        '#title' => $this->t('Iframe loading'),
+        '#title' => $this->t('oEmbed loading'),
         '#description' => $this->t('Lazy render iframe with native loading attribute (<em>loading="lazy"</em>). This improves performance by allowing browsers to lazily load assets.'),
         'attribute' => [
           '#title' => $this->t('Iframe loading attribute'),
