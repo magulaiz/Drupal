@@ -70,6 +70,8 @@ class KeyValueEntityStorage extends EntityStorageBase {
    *   The language manager.
    * @param \Drupal\Core\Cache\MemoryCache\MemoryCacheInterface $memory_cache
    *   The memory cache.
+   * @param \Symfony\Component\DependencyInjection\ContainerInterface $container
+   *   The DI container.
    */
   public function __construct(EntityTypeInterface $entity_type, KeyValueStoreInterface $key_value_store, UuidInterface $uuid_service, LanguageManagerInterface $language_manager, MemoryCacheInterface $memory_cache, ContainerInterface $container) {
     parent::__construct($entity_type, $memory_cache);

@@ -74,6 +74,8 @@ abstract class ContentEntityStorageBase extends EntityStorageBase implements Con
    *   The memory cache backend.
    * @param \Drupal\Core\Entity\EntityTypeBundleInfoInterface $entity_type_bundle_info
    *   The entity type bundle info.
+   * @param \Symfony\Component\DependencyInjection\ContainerInterface $container
+   *   The DI container.
    */
   public function __construct(EntityTypeInterface $entity_type, EntityFieldManagerInterface $entity_field_manager, CacheBackendInterface $cache, MemoryCacheInterface $memory_cache, EntityTypeBundleInfoInterface $entity_type_bundle_info, ContainerInterface $container) {
     parent::__construct($entity_type, $memory_cache);
