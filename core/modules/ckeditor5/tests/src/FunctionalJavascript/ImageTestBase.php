@@ -82,8 +82,6 @@ abstract class ImageTestBase extends CKEditor5TestBase {
    */
   protected function addImage() {
     $page = $this->getSession()->getPage();
-    $assert_session = $this->assertSession();
-    $image_selector = '.ck-widget.image-inline';
     $src = $this->imageAttributes()['src'];
     $this->waitForEditor();
     $this->pressEditorButton('Insert image');
@@ -91,7 +89,6 @@ abstract class ImageTestBase extends CKEditor5TestBase {
     $src_input = $panel->find('css', 'input[type=text]');
     $src_input->setValue($src);
     $panel->find('xpath', "//button[span[text()='Insert']]")->click();
-    $this->assertNotEmpty($assert_session->waitForElementVisible('css', $image_selector));
   }
 
   /**
