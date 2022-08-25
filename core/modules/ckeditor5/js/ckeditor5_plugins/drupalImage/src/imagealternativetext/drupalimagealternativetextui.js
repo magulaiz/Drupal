@@ -74,7 +74,6 @@ export default class DrupalImageAlternativeTextUi extends Plugin {
       }
     };
 
-
     if (this.editor.commands.get('insertImage')) {
       const insertImage = this.editor.commands.get('insertImage');
       insertImage.on('execute', showAlternativeTextForm);
@@ -84,7 +83,6 @@ export default class DrupalImageAlternativeTextUi extends Plugin {
       imageUploadEditing.on('uploadComplete', showAlternativeTextForm);
     }
   }
-
 
   /**
    * Creates a missing alt text view which can be displayed within image widgets
