@@ -38,8 +38,8 @@ function editor_post_update_upgrade_ckeditor_4_to_5(&$sandbox = []) {
   }
 
   // Install the CKEditor 5 module if it is not already installed.
-  if (!$module_handler->moduleExists('ckeditor5') && !\Drupal::service('module_installer')->install(['ckeditor5'])) {
-    throw new \Exception('The CKEditor 5 module could not be installed');
+  if (!$module_handler->moduleExists('ckeditor5')) {
+    \Drupal::service('module_installer')->install(['ckeditor5']);
   }
   $ckeditor5_smart_default_settings = \Drupal::service('ckeditor5.smart_default_settings');
   $ckeditor5_plugin_manager = \Drupal::service('plugin.manager.ckeditor5.plugin');
