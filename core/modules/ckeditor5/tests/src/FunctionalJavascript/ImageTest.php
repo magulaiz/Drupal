@@ -6,7 +6,6 @@ use Drupal\Component\Utility\Html;
 use Drupal\editor\Entity\Editor;
 use Drupal\file\Entity\File;
 use Drupal\filter\Entity\FilterFormat;
-use Drupal\node\Entity\Node;
 use Drupal\ckeditor5\Plugin\Editor\CKEditor5;
 use Symfony\Component\Validator\ConstraintViolation;
 
@@ -25,6 +24,11 @@ class ImageTest extends ImageTestBase {
    * @var \Drupal\file\FileInterface
    */
   protected $file;
+
+  /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'classy';
 
   /**
    * {@inheritdoc}
@@ -137,7 +141,7 @@ class ImageTest extends ImageTestBase {
     }
 
     // Make the test content has a block image and an inline image.
-    $img_tag = '<img data-entity-type="file" data-entity-uuid="' . $this->file->uuid() . '" src="' . $this->file->createFileUrl() . '" width="500" />';
+    $img_tag = '<img ' . $this->imageAttributesAsString() . ' width="500" />';
     $this->host->body->value .= $img_tag . "<p>$img_tag</p>";
     $this->host->save();
 
