@@ -55,6 +55,8 @@ abstract class ContentEntityStorageBase extends EntityStorageBase implements Con
   protected $latestRevisionIds = [];
 
   /**
+   * The DI container.
+   *
    * @var \Symfony\Component\DependencyInjection\ContainerInterface
    */
   protected $container;

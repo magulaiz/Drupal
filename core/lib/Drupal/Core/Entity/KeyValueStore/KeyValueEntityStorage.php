@@ -51,6 +51,8 @@ class KeyValueEntityStorage extends EntityStorageBase {
   protected $languageManager;
 
   /**
+   * The DI container.
+   *
    * @var \Symfony\Component\DependencyInjection\ContainerInterface
    */
   protected $container;
@@ -101,7 +103,7 @@ class KeyValueEntityStorage extends EntityStorageBase {
     // Set default language to site default if not provided.
     $values += [$this->getEntityType()->getKey('langcode') => $this->languageManager->getDefaultLanguage()->getId()];
 
-    /** @var EntityInterface::class $entity_class */
+    /** @var \Drupal\Core\Entity\EntityInterface::class $entity_class */
     $entity_class = $this->getEntityClass();
     $entity = $entity_class::createInstance($this->container, $values, $this->entityTypeId);
 

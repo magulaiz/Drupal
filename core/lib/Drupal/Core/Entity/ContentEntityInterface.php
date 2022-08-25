@@ -25,6 +25,23 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  */
 interface ContentEntityInterface extends \Traversable, FieldableEntityInterface, TranslatableRevisionableInterface, SynchronizableInterface {
 
+  /**
+   * Creates an instance of the entity to allow for DI.
+   * @param \Symfony\Component\DependencyInjection\ContainerInterface $container
+   *   The container.
+   * @param array $values
+   *   An array of values to set, keyed by property name. If the entity type
+   *   has bundles, the bundle key has to be specified.
+   * @param string $entity_type
+   *   The type of the entity to create.
+   * @param $bundle
+   *   The bundle of the entity to create.
+   * @param $translations
+   *   Any entity translations.
+   *
+   * @return \Drupal\Core\Entity\ContentEntityInterface
+   *   The created entity.
+   */
   public static function createInstance(ContainerInterface $container, array $values, string $entity_type, $bundle = FALSE, $translations = []);
 
 }
