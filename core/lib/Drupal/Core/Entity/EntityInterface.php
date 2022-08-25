@@ -5,6 +5,7 @@ namespace Drupal\Core\Entity;
 use Drupal\Core\Access\AccessibleInterface;
 use Drupal\Core\Cache\CacheableDependencyInterface;
 use Drupal\Core\Cache\RefinableCacheableDependencyInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Defines a common interface for all entity objects.
@@ -12,6 +13,8 @@ use Drupal\Core\Cache\RefinableCacheableDependencyInterface;
  * @ingroup entity_api
  */
 interface EntityInterface extends AccessibleInterface, CacheableDependencyInterface, RefinableCacheableDependencyInterface {
+
+  public static function createInstance(ContainerInterface $container, array $values, string $entity_type);
 
   /**
    * Gets the entity UUID (Universally Unique Identifier).
