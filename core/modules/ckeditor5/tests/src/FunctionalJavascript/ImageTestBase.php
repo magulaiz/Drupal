@@ -8,8 +8,6 @@ use Drupal\filter\Entity\FilterFormat;
 use Drupal\node\Entity\Node;
 use Drupal\Tests\TestFileCreationTrait;
 use Drupal\Tests\ckeditor5\Traits\CKEditor5TestTrait;
-use Drupal\ckeditor5\Plugin\Editor\CKEditor5;
-use Symfony\Component\Validator\ConstraintViolation;
 
 // cspell:ignore imageresize imageupload
 
@@ -72,6 +70,7 @@ abstract class ImageTestBase extends CKEditor5TestBase {
     }
     return implode(' ', $string);
   }
+
   /**
    * Ensures that attributes are retained on conversion.
    */

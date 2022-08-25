@@ -3,10 +3,8 @@
 namespace Drupal\Tests\ckeditor5\FunctionalJavascript;
 
 use Drupal\ckeditor5\Plugin\Editor\CKEditor5;
-use Drupal\Component\Utility\Html;
 use Drupal\editor\Entity\Editor;
 use Drupal\filter\Entity\FilterFormat;
-use Drupal\node\Entity\Node;
 use Symfony\Component\Validator\ConstraintViolation;
 
 // cspell:ignore imageresize imageupload
@@ -90,6 +88,7 @@ class ImageUrlTest extends ImageTestBase {
 
     $this->drupalLogin($this->adminUser);
   }
+
   /**
    * Tests the Drupal image URL widget.
    */
