@@ -14,6 +14,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  */
 interface EntityInterface extends AccessibleInterface, CacheableDependencyInterface, RefinableCacheableDependencyInterface {
 
+  public static function createInstance(ContainerInterface $container, array $values, string $entity_type);
+
   /**
    * Creates an instance of the entity to allow for DI.
    * @param \Symfony\Component\DependencyInjection\ContainerInterface $container
