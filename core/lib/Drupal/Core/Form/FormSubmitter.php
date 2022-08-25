@@ -137,6 +137,8 @@ class FormSubmitter implements FormSubmitterInterface {
   public function redirectForm(FormStateInterface $form_state) {
     $redirect = $form_state->getRedirect();
 
+    $this->redirectResponseSubscriber->ignoreDestination($form_state->getIgnoreDestination());
+
     // Allow using redirect responses directly if needed.
     if ($redirect instanceof RedirectResponse) {
       return $redirect;
@@ -152,8 +154,6 @@ class FormSubmitter implements FormSubmitterInterface {
       $request = $this->requestStack->getCurrentRequest();
       $url = $this->urlGenerator->generateFromRoute('<current>', [], ['query' => $request->query->all(), 'absolute' => TRUE]);
     }
-
-    $this->redirectResponseSubscriber->ignoreDestination($form_state->getIgnoreDestination());
 
     if ($url) {
       // According to RFC 7231, 303 See Other status code must be used to redirect

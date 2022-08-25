@@ -60,13 +60,23 @@ class RedirectResponseSubscriber implements EventSubscriberInterface {
       // If $response is already a SecuredRedirectResponse, it might reject the
       // new target as invalid, in which case proceed with the old target.
       $destination = $request->query->get('destination');
-      if ($destination && !$this->ignoreDestination) {
-        // The 'Location' HTTP header must always be absolute.
-        $destination = $this->getDestinationAsAbsoluteUrl($destination, $request->getSchemeAndHttpHost());
-        try {
-          $response->setTargetUrl($destination);
+      if ($destination) {
+        if (!$this->ignoreDestination) {
+          // The 'Location' HTTP header must always be absolute.
+          $destination = $this->getDestinationAsAbsoluteUrl($destination, $request->getSchemeAndHttpHost());
+          try {
+            $response->setTargetUrl($destination);
+          }
+          catch (\InvalidArgumentException $e) {
+          }
         }
-        catch (\InvalidArgumentException $e) {
+        else {
+          $target_url = $response->getTargetUrl();
+          $query_string = parse_url($target_url, PHP_URL_QUERY) ?: '';
+          parse_str($query_string, $query);
+          $query['destination'] = $destination;
+          $target_url = substr($target_url, 0, strpos($target_url, '?')) . '?' . \GuzzleHttp\http_build_query($query);
+          $response->setTargetUrl($target_url);
         }
       }
 
