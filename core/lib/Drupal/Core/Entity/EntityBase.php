@@ -4,14 +4,15 @@ namespace Drupal\Core\Entity;
 
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\RefinableCacheableDependencyTrait;
-use Drupal\Core\DependencyInjection\DependencySerializationTrait;
 use Drupal\Core\Config\Entity\Exception\ConfigEntityIdLengthException;
+use Drupal\Core\DependencyInjection\DependencySerializationTrait;
 use Drupal\Core\Entity\Exception\UndefinedLinkTemplateException;
 use Drupal\Core\Language\Language;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Link;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Url;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Routing\Exception\MissingMandatoryParametersException;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
 
@@ -62,6 +63,10 @@ abstract class EntityBase implements EntityInterface {
     foreach ($values as $key => $value) {
       $this->$key = $value;
     }
+  }
+
+  public static function createInstance(ContainerInterface $container, array $values, string $entity_type) {
+    return new static($values, $entity_type);
   }
 
   /**

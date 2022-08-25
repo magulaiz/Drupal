@@ -2,6 +2,8 @@
 
 namespace Drupal\Core\Entity;
 
+use Symfony\Component\DependencyInjection\ContainerInterface;
+
 /**
  * Defines a common interface for all content entity objects.
  *
@@ -22,5 +24,7 @@ namespace Drupal\Core\Entity;
  * @ingroup entity_api
  */
 interface ContentEntityInterface extends \Traversable, FieldableEntityInterface, TranslatableRevisionableInterface, SynchronizableInterface {
+
+  public static function createInstance(ContainerInterface $container, array $values, string $entity_type, $bundle = FALSE, $translations = []);
 
 }
