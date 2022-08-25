@@ -55,13 +55,6 @@ abstract class ContentEntityStorageBase extends EntityStorageBase implements Con
   protected $latestRevisionIds = [];
 
   /**
-   * The DI container.
-   *
-   * @var \Symfony\Component\DependencyInjection\ContainerInterface
-   */
-  protected $container;
-
-  /**
    * Constructs a ContentEntityStorageBase object.
    *
    * @param \Drupal\Core\Entity\EntityTypeInterface $entity_type
@@ -74,16 +67,13 @@ abstract class ContentEntityStorageBase extends EntityStorageBase implements Con
    *   The memory cache backend.
    * @param \Drupal\Core\Entity\EntityTypeBundleInfoInterface $entity_type_bundle_info
    *   The entity type bundle info.
-   * @param \Symfony\Component\DependencyInjection\ContainerInterface $container
-   *   The DI container.
    */
-  public function __construct(EntityTypeInterface $entity_type, EntityFieldManagerInterface $entity_field_manager, CacheBackendInterface $cache, MemoryCacheInterface $memory_cache, EntityTypeBundleInfoInterface $entity_type_bundle_info, ContainerInterface $container) {
+  public function __construct(EntityTypeInterface $entity_type, EntityFieldManagerInterface $entity_field_manager, CacheBackendInterface $cache, MemoryCacheInterface $memory_cache, EntityTypeBundleInfoInterface $entity_type_bundle_info) {
     parent::__construct($entity_type, $memory_cache);
     $this->bundleKey = $this->entityType->getKey('bundle');
     $this->entityFieldManager = $entity_field_manager;
     $this->cacheBackend = $cache;
     $this->entityTypeBundleInfo = $entity_type_bundle_info;
-    $this->container = $container;
   }
 
   /**
@@ -122,8 +112,7 @@ abstract class ContentEntityStorageBase extends EntityStorageBase implements Con
       $container->get('entity_field.manager'),
       $container->get('cache.entity'),
       $container->get('entity.memory_cache'),
-      $container->get('entity_type.bundle.info'),
-      $container
+      $container->get('entity_type.bundle.info')
     );
   }
 

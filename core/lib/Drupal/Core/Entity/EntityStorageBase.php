@@ -112,7 +112,6 @@ abstract class EntityStorageBase extends EntityHandlerBase implements EntityStor
     $this->memoryCache = $memory_cache;
     $this->memoryCacheTag = 'entity.memory_cache:' . $this->entityTypeId;
 
-    // This is temporary for proof of concept
     // @todo Require extending classes to pass in the container?
     $this->container = \Drupal::getContainer();
   }

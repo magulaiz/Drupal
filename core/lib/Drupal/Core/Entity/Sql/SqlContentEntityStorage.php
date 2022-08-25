@@ -153,8 +153,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
       $container->get('language_manager'),
       $container->get('entity.memory_cache'),
       $container->get('entity_type.bundle.info'),
-      $container->get('entity_type.manager'),
-      $container
+      $container->get('entity_type.manager')
     );
   }
 
@@ -177,10 +176,8 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
    *   The entity type bundle info.
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    *   The entity type manager.
-   * @param \Symfony\Component\DependencyInjection\ContainerInterface $container
-   *   The DI container.
    */
-  public function __construct(EntityTypeInterface $entity_type, Connection $database, EntityFieldManagerInterface $entity_field_manager, CacheBackendInterface $cache, LanguageManagerInterface $language_manager, MemoryCacheInterface $memory_cache, EntityTypeBundleInfoInterface $entity_type_bundle_info, EntityTypeManagerInterface $entity_type_manager, ContainerInterface $container) {
+  public function __construct(EntityTypeInterface $entity_type, Connection $database, EntityFieldManagerInterface $entity_field_manager, CacheBackendInterface $cache, LanguageManagerInterface $language_manager, MemoryCacheInterface $memory_cache, EntityTypeBundleInfoInterface $entity_type_bundle_info, EntityTypeManagerInterface $entity_type_manager) {
     parent::__construct($entity_type, $entity_field_manager, $cache, $memory_cache, $entity_type_bundle_info, $container);
     $this->database = $database;
     $this->languageManager = $language_manager;
