@@ -63,7 +63,7 @@ export default class DrupalImageAlternativeTextUi extends Plugin {
 
     const showAlternativeTextForm = () => {
       const imageUtils = this.editor.plugins.get('ImageUtils');
-      // Show form after upload if there's image widget in the current
+      // Show form after upload if there's an image widget in the current
       // selection.
       if (
         imageUtils.getClosestSelectedImageWidget(
