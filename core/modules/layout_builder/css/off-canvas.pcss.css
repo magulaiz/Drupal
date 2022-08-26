@@ -112,4 +112,10 @@
     padding: calc(2 * var(--off-canvas-vertical-spacing-unit)) var(--off-canvas-padding);
     border-bottom: 1px solid var(--off-canvas-border-color);
   }
+
+  /* Highlight the active block in the Move Block dialog. */
+  & .layout-builder-components-table__block-label--current {
+    padding-left: 17px;
+    border-left: solid 5px;
+  }
 }

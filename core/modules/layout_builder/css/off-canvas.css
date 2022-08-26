@@ -147,3 +147,13 @@
     padding: calc(2 * var(--off-canvas-vertical-spacing-unit)) var(--off-canvas-padding);
     border-bottom: 1px solid var(--off-canvas-border-color);
   }
+
+#drupal-off-canvas-wrapper {
+
+  /* Highlight the active block in the Move Block dialog. */
+}
+
+#drupal-off-canvas-wrapper .layout-builder-components-table__block-label--current {
+    padding-left: 1.0625rem;
+    border-left: solid 5px;
+  }
