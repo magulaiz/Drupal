@@ -109,7 +109,7 @@ class SmartDefaultSettingsTest extends KernelTestBase {
     Editor::create(
       ['format' => 'basic_html_without_image_uploads']
       +
-      Yaml::parseFile('core/profiles/standard/config/install/editor.editor.basic_html.yml')
+      Yaml::parseFile('core/modules/ckeditor5/tests/fixtures/ckeditor4_config/editor.editor.basic_html.yml')
     )->setImageUploadSettings(['status' => FALSE])->save();
 
     $allowed_html_parents = ['filters', 'filter_html', 'settings', 'allowed_html'];
