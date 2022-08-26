@@ -32,7 +32,7 @@ class NoJavaScriptAnonymousTest extends BrowserTestBase {
     'history',
     'block',
     'breakpoint',
-    'ckeditor',
+    'ckeditor5',
     'config',
     'comment',
     'contextual',
