@@ -12,7 +12,7 @@ name: '<strong>Test theme</strong>'
 type: theme
 description: 'Theme for testing the theme system'
 version: VERSION
-base theme: classy
+base theme: false
 logo: images/logo2.svg
 libraries:
   - test_theme/global-styling
@@ -22,18 +22,6 @@ libraries-override:
   # Remove an entire library.
   core/drupal.progress: false
   # Replace particular library assets.
-  classy/base:
-    css:
-      component:
-        css/components/button.css: css/my-button.css
-        css/components/collapse-processed.css: css/my-collapse-processed.css
-        css/components/container-inline.css: /themes/my_theme/css/my-container-inline.css
-        css/components/details.css: /themes/my_theme/css/my-details.css
-  # Remove particular library assets.
-  classy/dialog:
-    css:
-      component:
-        css/components/dialog.css: false
   system/base:
     css:
       component:

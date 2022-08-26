@@ -19,7 +19,3 @@ libraries-override:
     css:
       base:
         css/base-remove.css: false
-
-libraries-extend:
-  classy/base:
-    - test_basetheme/global-styling
