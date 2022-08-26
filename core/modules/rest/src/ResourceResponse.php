@@ -2,6 +2,8 @@
 
 namespace Drupal\rest;
 
+@trigger_error('The ' . __NAMESPACE__ . '\ResourceResponse is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use the \Drupal\Core\ResourceResponse\ResourceResponse class instead.', E_USER_DEPRECATED);
+
 use Drupal\Core\Cache\CacheableResponseInterface;
 use Drupal\Core\Cache\CacheableResponseTrait;
 use Symfony\Component\HttpFoundation\Response;
@@ -16,6 +18,10 @@ use Symfony\Component\HttpFoundation\Response;
  *
  * Routes that return this response must specify the '_format' requirement.
  *
+ * @deprecated in drupal:10.1.0 and is removed from drupal:11.0.0.
+ *   Use the \Drupal\Core\ResourceResponse\ResourceResponse class instead.
+ *
+ * @see https://www.drupal.org/node/3306206
  * @see \Drupal\rest\ModifiedResourceResponse
  */
 class ResourceResponse extends Response implements CacheableResponseInterface, ResourceResponseInterface {
