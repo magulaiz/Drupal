@@ -374,7 +374,7 @@ class CKEditor5 extends EditorBase implements ContainerFactoryPluginInterface {
 
     $editor_settings = $editor->getSettings();
     // This form field requires a JSON-style array of valid toolbar items.
-    // e.g. ["bold","italic","|","uploadImage"].
+    // e.g. ["bold","italic","|","drupalInsertImage"].
     // CKEditor 5 config for toolbar items takes an array of strings which
     // correspond to the keys under toolbar_items in a plugin yml or annotation.
     // @see https://ckeditor.com/docs/ckeditor5/latest/features/toolbar/toolbar.html
