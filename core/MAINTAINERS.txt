@@ -74,9 +74,6 @@ Automated Cron
 Ban
 - ?
 
-Bartik
-- Emma Maria Karayiannis 'emma.maria' https://www.drupal.org/u/emma.maria
-
 Base system
 - ?
 
@@ -128,9 +125,6 @@ Claro
 
 Classy
 - David Hernandez 'davidhernandez' https://www.drupal.org/u/davidhernandez
-
-Color
-- ?
 
 Comment
 - Lee Rowlands 'larowlan' https://www.drupal.org/u/larowlan
@@ -383,9 +377,6 @@ Serialization
 
 Settings Tray
 - Ted Bowman 'tedbow' https://www.drupal.org/u/tedbow
-
-Seven
-- ?
 
 Shortcut
 - Tobias Zimmermann 'tstoeckler' https://www.drupal.org/u/tstoeckler
