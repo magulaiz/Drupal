@@ -8,6 +8,9 @@ use Drupal\Core\Plugin\Context\ContextInterface;
 use Drupal\Core\Plugin\Context\EntityContextDefinition;
 use Drupal\Core\TypedData\Exception\ContextNotFoundException;
 
+/**
+ * The typed data resolver class.
+ */
 class TypedDataResolver implements TypedDataResolverInterface {
 
   /**
