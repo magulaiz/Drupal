@@ -34,7 +34,7 @@ class FilterDateTest extends ViewTestBase {
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'classy';
+  protected $defaultTheme = 'views_test_add_selectors_theme';
 
   /**
    * The date formatter.

@@ -31,7 +31,7 @@ class ContextualFiltersBlockContextTest extends ViewTestBase {
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'classy';
+  protected $defaultTheme = 'stark';
 
   /**
    * Views used by this test.
@@ -103,7 +103,7 @@ class ContextualFiltersBlockContextTest extends ViewTestBase {
 
     // Place test block via block UI to check if contexts are correctly exposed.
     $this->drupalGet(
-      'admin/structure/block/add/views_block:test_view_block_with_context-block_1/classy',
+      'admin/structure/block/add/views_block:test_view_block_with_context-block_1/stark',
       ['query' => ['region' => 'content']]
     );
     $edit = [

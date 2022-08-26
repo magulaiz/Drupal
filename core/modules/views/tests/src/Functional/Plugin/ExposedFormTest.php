@@ -35,7 +35,7 @@ class ExposedFormTest extends ViewTestBase {
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'classy';
+  protected $defaultTheme = 'views_test_add_selectors_theme';
 
   /**
    * Nodes to test.

@@ -32,7 +32,7 @@ class GlossaryViewTest extends WebDriverTestBase {
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'classy';
+  protected $defaultTheme = 'views_test_add_selectors_theme';
 
   /**
    * @var array
