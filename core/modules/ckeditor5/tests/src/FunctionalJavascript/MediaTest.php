@@ -77,7 +77,7 @@ class MediaTest extends WebDriverTestBase {
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'classy';
+  protected $defaultTheme = 'media_library_templates';
 
   /**
    * {@inheritdoc}
@@ -446,6 +446,7 @@ class MediaTest extends WebDriverTestBase {
       ->save();
     $this->drupalGet($this->host->toUrl('edit-form'));
     $this->waitForEditor();
+    // Failed asserting that a NULL is not empty.
     $this->assertNotEmpty($assert_session->waitForElement('css', '.ck-widget.drupal-media .this-error-message-is-themeable.media-embed-error--missing-source'));
     // @todo Uncomment this in https://www.drupal.org/project/ckeditor5/issues/3194084.
     // @codingStandardsIgnoreLine
@@ -476,8 +477,8 @@ class MediaTest extends WebDriverTestBase {
 
     // Configure a different default and admin theme, like on most Drupal sites.
     $this->config('system.theme')
-      ->set('default', 'stable')
-      ->set('admin', 'classy')
+      ->set('default', 'media_library_templates')
+      ->set('admin', 'stark')
       ->save();
 
     // Assert that when looking at an embedded entity in the CKEditor Widget,
@@ -488,7 +489,7 @@ class MediaTest extends WebDriverTestBase {
     $assert_session = $this->assertSession();
     $this->assertNotEmpty($assert_session->waitForElementVisible('css', 'img[src*="image-test.png"]'));
     $element = $assert_session->elementExists('css', '[data-media-embed-test-active-theme]');
-    $this->assertSame('stable', $element->getAttribute('data-media-embed-test-active-theme'));
+    $this->assertSame('media_library_templates', $element->getAttribute('data-media-embed-test-active-theme'));
     // Assert that the first preview request transferred >500 B over the wire.
     // Then toggle source mode on and off. This causes the CKEditor widget to be
     // destroyed and then reconstructed. Assert that during this reconstruction,
@@ -1163,7 +1164,7 @@ class MediaTest extends WebDriverTestBase {
 
     $page->pressButton('Save');
     // Check that the 'content has been updated' message status appears to confirm we left the editor.
-    $this->assertNotEmpty($assert_session->waitForElementVisible('css', '.messages.messages--status'));
+    $this->assertNotEmpty($assert_session->waitForElementVisible('css', '[data-drupal-messages] [aria-label="Status message"]'));
     // Check that the class is correct in the front end.
     $assert_session->elementExists('css', 'figure.align-center');
     // Go back to the editor to check that the alignment class still exists.

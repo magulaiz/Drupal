@@ -57,7 +57,7 @@ class ImageTest extends CKEditor5TestBase {
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'classy';
+  protected $defaultTheme = 'stark';
 
   /**
    * {@inheritdoc}
@@ -548,7 +548,7 @@ class ImageTest extends CKEditor5TestBase {
 
     $page->pressButton('Save');
     // Check that the 'content has been updated' message status appears to confirm we left the editor.
-    $this->assertNotEmpty($assert_session->waitForElementVisible('css', '.messages.messages--status'));
+    $this->assertNotEmpty($assert_session->waitForElementVisible('css', '[data-drupal-messages] [aria-label="Status message"]'));
     // Check that the class is correct in the front end.
     $assert_session->elementExists('css', 'img.align-center');
     // Go back to the editor to check that the alignment class still exists.
