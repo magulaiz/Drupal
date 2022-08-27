@@ -42,6 +42,19 @@ responsive_image.image_mapping_type.image_style:
   type: string
   label: 'Image style'
 
+responsive_image.image_mapping_type.group_image_styles:
+  type: mapping
+  mapping:
+    first:
+      type: string
+      label: 'First Image style'
+    second:
+      type: string
+      label: 'Second Image style'
+    third:
+      type: string
+      label: 'Third Image style'
+
 responsive_image.image_mapping_type.sizes:
   type: mapping
   mapping:

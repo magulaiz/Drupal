@@ -139,10 +139,43 @@ class ResponsiveImageStyleForm extends EntityForm {
           '#options' => [
             'sizes' => $this->t('Select multiple image styles and use the sizes attribute.'),
             'image_style' => $this->t('Select a single image style.'),
+            'group_image_styles' => $this->t('Select few image styles. (Avif, Webp etc)'),
             '_none' => $this->t('Do not use this breakpoint.'),
           ],
           '#default_value' => $image_style_mapping['image_mapping_type'] ?? '_none',
           '#description' => $description,
+        ];
+        $form['keyed_styles'][$breakpoint_id][$multiplier]['group_image_styles'] = [
+          '#type' => 'container',
+          '#title' => $this->t('Group of Image styles'),
+          '#states' => [
+            'visible' => [
+              ':input[name="keyed_styles[' . $breakpoint_id . '][' . $multiplier . '][image_mapping_type]"]' => ['value' => 'group_image_styles'],
+            ],
+          ],
+        ];
+        $form['keyed_styles'][$breakpoint_id][$multiplier]['group_image_styles']['first'] = [
+          '#type' => 'select',
+          '#title' => $this->t('First Image Style'),
+          '#options' => $image_styles,
+          '#default_value' => $image_style_mapping['image_mapping']['first'] ?? '',
+          '#states' => [
+            'required' => [
+              ':input[name="keyed_styles[' . $breakpoint_id . '][' . $multiplier . '][image_mapping_type]"]' => ['value' => 'group_image_styles'],
+            ],
+          ],
+        ];
+        $form['keyed_styles'][$breakpoint_id][$multiplier]['group_image_styles']['second'] = [
+          '#type' => 'select',
+          '#title' => $this->t('Second Image Style'),
+          '#options' => $image_styles,
+          '#default_value' => $image_style_mapping['image_mapping']['second'] ?? '',
+        ];
+        $form['keyed_styles'][$breakpoint_id][$multiplier]['group_image_styles']['third'] = [
+          '#type' => 'select',
+          '#title' => $this->t('Third Image Style'),
+          '#options' => $image_styles,
+          '#default_value' => $image_style_mapping['image_mapping']['third'] ?? '',
         ];
         $form['keyed_styles'][$breakpoint_id][$multiplier]['image_style'] = [
           '#type' => 'select',
@@ -269,6 +302,17 @@ class ResponsiveImageStyleForm extends EntityForm {
             $mapping = [
               'image_mapping_type' => 'image_style',
               'image_mapping' => $image_style_mapping['image_style'],
+            ];
+            $responsive_image_style->addImageStyleMapping($breakpoint_id, $multiplier, $mapping);
+          }
+          elseif ($image_style_mapping['image_mapping_type'] === 'group_image_styles') {
+            $mapping = [
+              'image_mapping_type' => 'group_image_styles',
+              'image_mapping' => [
+                'first' => $image_style_mapping['group_image_styles']['first'],
+                'second' => $image_style_mapping['group_image_styles']['second'],
+                'third' => $image_style_mapping['group_image_styles']['third'],
+              ],
             ];
             $responsive_image_style->addImageStyleMapping($breakpoint_id, $multiplier, $mapping);
           }

@@ -383,6 +383,19 @@ function _responsive_image_build_source_attributes(array $variables, BreakpointI
   foreach (array_reverse($multipliers) as $multiplier => $image_style_mapping) {
     switch ($image_style_mapping['image_mapping_type']) {
       // Create a <source> tag with the 'sizes' attribute.
+      case 'group_image_styles':
+        foreach ($image_style_mapping['image_mapping'] as $image_style_name) {
+          // Get MIME type.
+          $derivative_mime_type = responsive_image_get_mime_type($image_style_name, $extension);
+          $derivative_mime_types[] = $derivative_mime_type;
+          $srcset = [
+            _responsive_image_image_style_url($image_style_mapping['image_mapping']['first'], $variables['uri']) . ' ' . $multiplier,
+            _responsive_image_image_style_url($image_style_mapping['image_mapping']['second'], $variables['uri']) . ' ' . $multiplier,
+            _responsive_image_image_style_url($image_style_mapping['image_mapping']['third'], $variables['uri']) . ' ' . $multiplier,
+          ];
+        }
+        break;
+
       case 'sizes':
         // Loop through the image styles for this breakpoint and multiplier.
         foreach ($image_style_mapping['image_mapping']['sizes_image_styles'] as $image_style_name) {
