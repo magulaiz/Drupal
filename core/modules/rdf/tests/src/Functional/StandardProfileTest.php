@@ -213,7 +213,11 @@ class StandardProfileTest extends BrowserTestBase {
     // Set URIs.
     // Image.
     $image_file = $this->article->get('field_image')->entity;
-    $this->imageUri = ImageStyle::load('wide')->buildUrl($image_file->getFileUri());
+    $this->imageUri = \Drupal::service('image.processor')->createInstance('derivative')
+      ->setImageStyle(ImageStyle::load('wide'))
+      ->setSourceImageUri($image_file->getFileUri())
+      ->getDerivativeImageUrl()
+      ->toString();
     // Term.
     $this->termUri = $this->term->toUrl('canonical', ['absolute' => TRUE])->toString();
     // Article.

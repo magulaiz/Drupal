@@ -403,6 +403,7 @@ elbonia
 elementspath
 elems
 encapsed
+encryptable
 endapply
 endautoescape
 endcode
