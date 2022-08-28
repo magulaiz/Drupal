@@ -139,6 +139,8 @@ abstract class FilterPluginBase extends HandlerBase implements CacheableDependen
             RoleInterface::AUTHENTICATED_ID => RoleInterface::AUTHENTICATED_ID,
           ],
         ],
+        'any_label_override' => ['default' => FALSE, 'bool' => TRUE],
+        'any_label' => ['default' => '', 'translatable' => TRUE],
       ],
     ];
 
@@ -553,6 +555,26 @@ abstract class FilterPluginBase extends HandlerBase implements CacheableDependen
       '#size' => 60,
     ];
 
+    if (empty($this->always_required) && empty($this->always_multiple)) {
+      $form['expose']['any_label_override'] = [
+        '#type' => 'checkbox',
+        '#title' => $this->t('Override Any Label'),
+        '#default_value' => $this->options['expose']['any_label_override'],
+        '#description' => $this->t('Allow the user to override Any option in select list.'),
+      ];
+      $form['expose']['any_label'] = [
+        '#type' => 'textfield',
+        '#default_value' => $this->options['expose']['any_label'],
+        '#title' => $this->t('Any Label'),
+        '#size' => 40,
+        '#states' => [
+          'invisible' => [
+            ':input[name="options[expose][any_label_override]"]' => ['checked' => FALSE],
+          ],
+        ],
+      ];
+    }
+
     if (!empty($form['operator']['#type'])) {
       // Increase the width of the left (operator) column.
       $form['operator']['#prefix'] = '<div class="views-group-box views-left-40">';
@@ -677,6 +699,9 @@ abstract class FilterPluginBase extends HandlerBase implements CacheableDependen
       $form_state->setError(
         $form['expose']['operator_list'],
         $this->t('You selected the "@operator" operator as the default value but is not included in the list of limited operators.', ['@operator' => $this->operatorOptions()[$selected_operator]]));
+    }
+    if (!empty($form_state['values']['options']['expose']['any_label_override']) && empty($form_state['values']['options']['expose']['any_label'])) {
+      $form_state->setError($form['expose']['any_label'], $this->t('Any label is required.'));
     }
   }
 
@@ -827,6 +852,8 @@ abstract class FilterPluginBase extends HandlerBase implements CacheableDependen
       'remember' => FALSE,
       'multiple' => FALSE,
       'required' => FALSE,
+      'any_label_override' => FALSE,
+      'any_label' => $this->definition['title'],
     ];
   }
 
@@ -1303,6 +1330,13 @@ abstract class FilterPluginBase extends HandlerBase implements CacheableDependen
     }
 
     if ($type == 'value' && empty($this->always_required) && empty($this->options['expose']['required']) && $form['#type'] == 'select' && empty($form['#multiple'])) {
+      if ($this->options['expose']['any_label_override']) {
+        $label = $this->options['expose']['any_label'];
+        $any_label = = \Drupal::config('views.settings')->get('ui.exposed_filter_any_label') == 'old_any' ? $this->t('<@label>', ['@label' => $label]) : $this->t('- @label -', ['@label' => $label]);
+      }
+      else {
+        $any_label = = \Drupal::config('views.settings')->get('ui.exposed_filter_any_label') == 'old_any' ? t('<Any>') : t('- Any -');
+      }
       $form['#options'] = ['All' => $this->t('- Any -')] + $form['#options'];
       $form['#default_value'] = 'All';
     }
