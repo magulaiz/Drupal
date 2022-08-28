@@ -700,7 +700,9 @@ abstract class FilterPluginBase extends HandlerBase implements CacheableDependen
         $form['expose']['operator_list'],
         $this->t('You selected the "@operator" operator as the default value but is not included in the list of limited operators.', ['@operator' => $this->operatorOptions()[$selected_operator]]));
     }
-    if (!empty($form_state['values']['options']['expose']['any_label_override']) && empty($form_state['values']['options']['expose']['any_label'])) {
+    $any_label_override =  $form_state->getValue(['options', 'expose', 'any_label_override']);
+    $any_label =  $form_state->getValue(['options', 'expose', 'any_label']);
+    if (!empty($any_label_override) && empty($any_label)) {
       $form_state->setError($form['expose']['any_label'], $this->t('Any label is required.'));
     }
   }
@@ -936,7 +938,7 @@ abstract class FilterPluginBase extends HandlerBase implements CacheableDependen
 
       // Limit the exposed operators if needed.
       if (!empty($this->options['expose']['operator_limit_selection']) &&
-          !empty($this->options['expose']['operator_list'])) {
+        !empty($this->options['expose']['operator_list'])) {
 
         $options = $this->operatorOptions();
         $operator_list = $this->options['expose']['operator_list'];
@@ -1330,14 +1332,12 @@ abstract class FilterPluginBase extends HandlerBase implements CacheableDependen
     }
 
     if ($type == 'value' && empty($this->always_required) && empty($this->options['expose']['required']) && $form['#type'] == 'select' && empty($form['#multiple'])) {
+      $any_label = \Drupal::config('views.settings')->get('ui.exposed_filter_any_label') == 'old_any' ? t('<Any>') : t('- Any -');
       if ($this->options['expose']['any_label_override']) {
         $label = $this->options['expose']['any_label'];
-        $any_label = = \Drupal::config('views.settings')->get('ui.exposed_filter_any_label') == 'old_any' ? $this->t('<@label>', ['@label' => $label]) : $this->t('- @label -', ['@label' => $label]);
+        $any_label = $label;
       }
-      else {
-        $any_label = = \Drupal::config('views.settings')->get('ui.exposed_filter_any_label') == 'old_any' ? t('<Any>') : t('- Any -');
-      }
-      $form['#options'] = ['All' => $this->t('- Any -')] + $form['#options'];
+      $form['#options'] = ['All' => $any_label] + $form['#options'];
       $form['#default_value'] = 'All';
     }
 
