@@ -572,7 +572,7 @@ abstract class FilterPluginBase extends HandlerBase implements CacheableDependen
             ':input[name="options[expose][any_label_override]"]' => ['checked' => FALSE],
           ],
           'required' => [
-            ':input[name="options[expose][any_label_override]"]' => ['checked' => FALSE],
+            ':input[name="options[expose][any_label_override]"]' => ['checked' => TRUE],
           ],
         ],
       ];
