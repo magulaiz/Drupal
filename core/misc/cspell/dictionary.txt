@@ -68,6 +68,7 @@ autocreation
 autoescape
 autoescaped
 autoescaping
+autoformat
 autofix
 autogenerator
 autoloadable

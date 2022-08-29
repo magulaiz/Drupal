@@ -15,7 +15,7 @@ use org\bovigo\vfs\vfsStream;
 use Symfony\Component\DependencyInjection\ParameterBag\FrozenParameterBag;
 use Symfony\Component\Yaml\Yaml;
 
-// cspell:ignore layercake everytextcontainer justheading
+// cspell:ignore layercake everytextcontainer justheading autoformat
 
 /**
  * Tests different ways of enabling CKEditor 5 plugins.
@@ -1047,6 +1047,7 @@ PHP,
     // Case 1: no extra CKEditor 5 plugins.
     $definitions = array_keys($this->manager->getEnabledDefinitions($editor));
     $default_plugins = [
+      'ckeditor5_autoformat',
       'ckeditor5_bold',
       'ckeditor5_emphasis',
       'ckeditor5_essentials',
@@ -1168,6 +1169,7 @@ PHP,
     $editor = Editor::load('full_html');
     $definitions = array_keys($this->manager->getEnabledDefinitions($editor));
     $default_plugins = [
+      'ckeditor5_autoformat',
       'ckeditor5_arbitraryHtmlSupport',
       'ckeditor5_bold',
       'ckeditor5_emphasis',

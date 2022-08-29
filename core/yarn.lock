@@ -906,6 +906,13 @@
   dependencies:
     ckeditor5 "^35.0.1"
 
+"@ckeditor/ckeditor5-autoformat@35.0.x":
+  version "35.0.1"
+  resolved "https://registry.yarnpkg.com/@ckeditor/ckeditor5-autoformat/-/ckeditor5-autoformat-35.0.1.tgz#37303c8ac9f0112218d48e1f632b32858eb738c1"
+  integrity sha512-Q/dWKR3IASmlSRC7GY14hWJ6t1alKG5+9gPvGfF2qQhvKYkGdUEdvhiUs2xcvRuIOzR4nszYvy9Kj9j+NReBRQ==
+  dependencies:
+    ckeditor5 "^35.0.1"
+
 "@ckeditor/ckeditor5-basic-styles@35.0.x":
   version "35.0.1"
   resolved "https://registry.yarnpkg.com/@ckeditor/ckeditor5-basic-styles/-/ckeditor5-basic-styles-35.0.1.tgz#1103152308e46bd8d40c1f55ae60974b81474427"
