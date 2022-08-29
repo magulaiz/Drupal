@@ -55,22 +55,6 @@ function ckeditor5_post_update_alignment_buttons(&$sandbox = []) {
 
 /**
  * The image toolbar item changed from `uploadImage` to `drupalInsertImage`.
- *
- * Also, `uploadImage` always allowed all of the following attributes on <img>:
- * - `src`
- * - `alt`
- * - `data-entity-uuid`
- * - `data-entity-type`
- * - `height`
- * - `width`
- *
- * For `drupalInsertImage`, only `src`, `alt`, `width`, `height` are always
- * needed.
- * `data-entity-uuid` and `data-entity-type` are only needed if image uploads
- * are enabled. To ensure the same HTML remains editable (as well as to ensure
- * the HTML allowed by the `filter_html` filter still matches the CKEditor 5
- * configuration), the `ckeditor5_sourceEditing` plugin must be used to allow
- * `<img data-entity-uuid data-entity-type>` if image uploads are disabled.
  */
 function ckeditor5_post_update_image_toolbar_item(&$sandbox = []) {
   $config_entity_updater = \Drupal::classResolver(ConfigEntityUpdater::class);
@@ -87,10 +71,12 @@ function ckeditor5_post_update_image_toolbar_item(&$sandbox = []) {
     if (is_array($settings['toolbar']['items']) && in_array('uploadImage', $settings['toolbar']['items'], TRUE)) {
       // Replace `uploadImage` with `drupalInsertImage`.
       $settings['toolbar']['items'] = str_replace('uploadImage', 'drupalInsertImage', $settings['toolbar']['items']);
-      // `<img data-entity-uuid data-entity-type>` (now only enabled when
-      // uploads are enabled) must be explicitly added to the allowed tags for
-      // `ckeditor5_sourceEditing` to avoid a BC break for editing pre-existing
-      // content (the exact same HTML must remain editable).
+      // `<img data-entity-uuid data-entity-type>` are implicitly supported when
+      // uploads are enabled as the attributes are necessary for upload
+      // functionality. If uploads aren't enabled, these attributes must still
+      // be supported to ensure existing content that may have them (despite
+      // uploads being disabled) remains editable. In this use case, the
+      // attributes are added to the `ckeditor5_sourceEditing` allowed tags.
       if (!$editor->getImageUploadSettings()['status']) {
         // Add `sourceEditing` toolbar item if it does not already exist.
         if (!in_array('sourceEditing', $settings['toolbar']['items'], TRUE)) {
