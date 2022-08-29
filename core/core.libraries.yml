@@ -345,7 +345,7 @@ ckeditor5.autoformat:
     url: https://github.com/ckeditor/ckeditor5/blob/v35.0.1/LICENSE.md
     gpl-compatible: true
   js:
-    assets/vendor/ckeditor5/autoformat.js: { preprocess: false, minified: true }
+    assets/vendor/ckeditor5/autoformat/autoformat.js: { preprocess: false, minified: true }
   dependencies:
     - ckeditor5/ckeditor5
 
