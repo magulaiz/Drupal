@@ -8,7 +8,7 @@ use WebDriver\Key;
 /**
  * Base class for testing the QuickEdit.
  */
-class QuickEditJavascriptTestBase extends WebDriverTestBase {
+abstract class QuickEditJavascriptTestBase extends WebDriverTestBase {
 
   /**
    * {@inheritdoc}
