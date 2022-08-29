@@ -6,6 +6,7 @@ global-styling:
       css/base/variables.css: {}
       css/base/base.css: {}
       css/base/utility.css: {}
+      css/base/root-frontend.pcss.css: {}
     layout:
       css/layout/layout.css: {}
       css/layout/grid.css: {}
@@ -21,6 +22,7 @@ global-styling:
     component:
       css/components/block.css: {}
       css/components/breadcrumb.css: {}
+      css/components/card.css: {}
       css/components/embedded-media.css: {}
       css/components/footer.css: {}
       css/components/button.css: {}

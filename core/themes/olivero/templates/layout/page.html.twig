@@ -110,6 +110,9 @@
             {% else %}
               <main role="main">
                 {{ page.content_above }}
+                {% if is_front %}
+                  {{ include('@olivero/_card-demo.twig') }}
+                {% endif %}
                 {{ page.content }}
               </main>
             {% endif %}
