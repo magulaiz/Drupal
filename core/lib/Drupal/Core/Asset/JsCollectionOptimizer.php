@@ -136,7 +136,7 @@ class JsCollectionOptimizer implements AssetCollectionOptimizerInterface {
               // Set the URI for this group's aggregate file.
               $js_assets[$order]['data'] = $uri;
               // Implement SRI.
-              $this->addSriArguments($js_assets[$order], $data);
+              $this->addSriAttributes($js_assets[$order], $data);
               // Persist the URI for this aggregate file.
               $map[$key] = $uri;
               $this->state->set('system.js_cache_files', $map);
@@ -144,7 +144,7 @@ class JsCollectionOptimizer implements AssetCollectionOptimizerInterface {
             else {
               // Use the persisted URI for the optimized JS file.
               $js_assets[$order]['data'] = $uri;
-              $this->addSriArguments($js_assets[$order], file_get_contents($uri));
+              $this->addSriAttributes($js_assets[$order], file_get_contents($uri));
             }
             $js_assets[$order]['preprocessed'] = TRUE;
           }
@@ -170,7 +170,7 @@ class JsCollectionOptimizer implements AssetCollectionOptimizerInterface {
    * @param string $data
    *   Content of the asset file.
    */
-  protected function addSriArguments(array &$js_assets, string $data) {
+  protected function addSriAttributes(array &$js_assets, string $data): void {
     if (!isset($js_assets['attributes']['integrity'])) {
       $hash = base64_encode(hash('sha384', $data, TRUE));
       $attributes = [
