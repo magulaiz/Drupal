@@ -58,6 +58,12 @@
 
         Drupal.toolbar.models.toolbarModel = model;
 
+        // Indicate on the toolbarModel that the page has finished loading
+        // and Big Pipe has populated all its placeholders.
+        window.addEventListener('load', () => {
+          Drupal.toolbar.models.toolbarModel.set('isPageLoaded', true);
+        });
+
         // Attach a listener to the configured media query breakpoints.
         // Executes it before Drupal.toolbar.views to avoid extra rendering.
         Object.keys(options.breakpoints).forEach((label) => {
