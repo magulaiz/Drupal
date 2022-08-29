@@ -38,6 +38,13 @@ class ThemeTest extends BrowserTestBase {
    */
   protected $defaultTheme = 'classy';
 
+  /**
+   * A test node.
+   *
+   * @var \Drupal\node\Entity\Node
+   */
+  protected $node;
+
   protected function setUp(): void {
     parent::setUp();
 
@@ -60,7 +67,7 @@ class ThemeTest extends BrowserTestBase {
    */
   public function testThemeSettings() {
     // Ensure a disabled theme settings form URL returns 404.
-    $this->drupalGet('admin/appearance/settings/bartik');
+    $this->drupalGet('admin/appearance/settings/olivero');
     $this->assertSession()->statusCodeEquals(404);
     // Ensure a non existent theme settings form URL returns 404.
     $this->drupalGet('admin/appearance/settings/' . $this->randomMachineName());
@@ -194,14 +201,14 @@ class ThemeTest extends BrowserTestBase {
     $this->drupalGet('');
     $this->assertSession()->elementAttributeContains('xpath', '//header//a[@rel="home"]/img', 'src', $file_url_generator->generateString($uploaded_filename));
 
-    $this->container->get('theme_installer')->install(['bartik']);
+    $this->container->get('theme_installer')->install(['olivero']);
 
     // Ensure only valid themes are listed in the local tasks.
     $this->drupalPlaceBlock('local_tasks_block', ['region' => 'header']);
     $this->drupalGet('admin/appearance/settings');
     $theme_handler = \Drupal::service('theme_handler');
     $this->assertSession()->linkExists($theme_handler->getName('classy'));
-    $this->assertSession()->linkExists($theme_handler->getName('bartik'));
+    $this->assertSession()->linkExists($theme_handler->getName('olivero'));
     $this->assertSession()->linkNotExists($theme_handler->getName('stable'));
 
     // If a hidden theme is an admin theme it should be viewable.
@@ -231,14 +238,14 @@ class ThemeTest extends BrowserTestBase {
    * Tests the theme settings logo form.
    */
   public function testThemeSettingsLogo() {
-    // Visit Bartik's theme settings page to replace the logo.
-    $this->container->get('theme_installer')->install(['bartik']);
-    $this->drupalGet('admin/appearance/settings/bartik');
+    // Visit Olivero's theme settings page to replace the logo.
+    $this->container->get('theme_installer')->install(['olivero']);
+    $this->drupalGet('admin/appearance/settings/olivero');
     $edit = [
       'default_logo' => FALSE,
       'logo_path' => 'core/misc/druplicon.png',
     ];
-    $this->drupalGet('admin/appearance/settings/bartik');
+    $this->drupalGet('admin/appearance/settings/olivero');
     $this->submitForm($edit, 'Save configuration');
     $this->assertSession()->fieldValueEquals('default_logo', FALSE);
     $this->assertSession()->fieldValueEquals('logo_path', 'core/misc/druplicon.png');
@@ -255,7 +262,7 @@ class ThemeTest extends BrowserTestBase {
    * Tests the 'rendered' cache tag is cleared when saving theme settings.
    */
   public function testThemeSettingsRenderCacheClear() {
-    $this->container->get('theme_installer')->install(['bartik']);
+    $this->container->get('theme_installer')->install(['olivero']);
     // Ensure the frontpage is cached for anonymous users. The render cache will
     // cleared by installing a theme.
     $this->drupalLogout();
@@ -265,9 +272,9 @@ class ThemeTest extends BrowserTestBase {
     $this->assertSession()->responseHeaderEquals('X-Drupal-Cache', 'HIT');
 
     $this->drupalLogin($this->adminUser);
-    // Save Bartik's theme settings which should invalidate the 'rendered' cache
+    // Save Olivero's theme settings which should invalidate the 'rendered' cache
     // tag in \Drupal\system\EventSubscriber\ConfigCacheTag.
-    $this->drupalGet('admin/appearance/settings/bartik');
+    $this->drupalGet('admin/appearance/settings/olivero');
     $this->submitForm([], 'Save configuration');
     $this->drupalLogout();
     $this->drupalGet('');
@@ -278,19 +285,28 @@ class ThemeTest extends BrowserTestBase {
    * Tests the administration theme functionality.
    */
   public function testAdministrationTheme() {
-    $this->container->get('theme_installer')->install(['seven']);
+    $this->container->get('theme_installer')->install(['claro']);
 
     // Install an administration theme and show it on the node admin pages.
     $edit = [
-      'admin_theme' => 'seven',
+      'admin_theme' => 'claro',
       'use_admin_theme' => TRUE,
     ];
     $this->drupalGet('admin/appearance');
     $this->submitForm($edit, 'Save configuration');
 
+    // Check the display of non stable themes.
+    $themes = \Drupal::service('theme_handler')->rebuildThemeData();
+    $experimental_version = $themes['experimental_theme_test']->info['version'];
+    $deprecated_version = $themes['deprecated_theme_test']->info['version'];
+    $this->drupalGet('admin/appearance');
+    $this->assertSession()->pageTextContains('Experimental test ' . $experimental_version . ' (experimental theme)');
+    $this->assertSession()->pageTextContains('Test deprecated theme ' . $deprecated_version . ' (Deprecated)');
+    $this->assertSession()->elementExists('xpath', "//a[contains(@href, 'http://example.com/deprecated_theme')]");
+
     // Check that the administration theme is used on an administration page.
     $this->drupalGet('admin/config');
-    $this->assertSession()->responseContains('core/themes/seven');
+    $this->assertSession()->responseContains('core/themes/claro');
 
     // Check that the site default theme used on node page.
     $this->drupalGet('node/' . $this->node->id());
@@ -298,11 +314,11 @@ class ThemeTest extends BrowserTestBase {
 
     // Check that the administration theme is used on the add content page.
     $this->drupalGet('node/add');
-    $this->assertSession()->responseContains('core/themes/seven');
+    $this->assertSession()->responseContains('core/themes/claro');
 
     // Check that the administration theme is used on the edit content page.
     $this->drupalGet('node/' . $this->node->id() . '/edit');
-    $this->assertSession()->responseContains('core/themes/seven');
+    $this->assertSession()->responseContains('core/themes/claro');
 
     // Disable the admin theme on the node admin pages.
     $edit = [
@@ -311,9 +327,13 @@ class ThemeTest extends BrowserTestBase {
     $this->drupalGet('admin/appearance');
     $this->submitForm($edit, 'Save configuration');
 
+    // Check that obsolete themes are not displayed.
+    $this->drupalGet('admin/appearance');
+    $this->assertSession()->pageTextNotContains('Obsolete test theme');
+
     // Check that the administration theme is used on an administration page.
     $this->drupalGet('admin/config');
-    $this->assertSession()->responseContains('core/themes/seven');
+    $this->assertSession()->responseContains('core/themes/claro');
 
     // Ensure that the admin theme is also visible on the 403 page.
     $normal_user = $this->drupalCreateUser(['view the administration theme']);
@@ -321,7 +341,7 @@ class ThemeTest extends BrowserTestBase {
     // Check that the administration theme is used on an administration page.
     $this->drupalGet('admin/config');
     $this->assertSession()->statusCodeEquals(403);
-    $this->assertSession()->responseContains('core/themes/seven');
+    $this->assertSession()->responseContains('core/themes/claro');
     $this->drupalLogin($this->adminUser);
 
     // Check that the site default theme used on the add content page.
@@ -356,15 +376,15 @@ class ThemeTest extends BrowserTestBase {
     $this->config('system.theme')->set('default', 'stark')->save();
     $this->drupalPlaceBlock('local_tasks_block');
 
-    // Install Bartik and set it as the default theme.
-    $theme_installer->install(['bartik']);
+    // Install Olivero and set it as the default theme.
+    $theme_installer->install(['olivero']);
     $this->drupalGet('admin/appearance');
     $this->clickLink('Set as default');
-    $this->assertEquals('bartik', $this->config('system.theme')->get('default'));
+    $this->assertEquals('olivero', $this->config('system.theme')->get('default'));
 
     // Test the default theme on the secondary links (blocks admin page).
     $this->drupalGet('admin/structure/block');
-    $this->assertSession()->pageTextContains('Bartik(active tab)');
+    $this->assertSession()->pageTextContains('Olivero(active tab)');
     // Switch back to Stark and test again to test that the menu cache is cleared.
     $this->drupalGet('admin/appearance');
     // Stark is the first 'Set as default' link.
@@ -400,25 +420,25 @@ class ThemeTest extends BrowserTestBase {
    * Tests uninstalling of themes works.
    */
   public function testUninstallingThemes() {
-    // Install Bartik and set it as the default theme.
-    \Drupal::service('theme_installer')->install(['bartik']);
-    // Set up seven as the admin theme.
-    \Drupal::service('theme_installer')->install(['seven']);
+    // Install olivero.
+    \Drupal::service('theme_installer')->install(['olivero']);
+    // Set up Claro as the admin theme.
+    \Drupal::service('theme_installer')->install(['claro']);
     $edit = [
-      'admin_theme' => 'seven',
+      'admin_theme' => 'claro',
       'use_admin_theme' => TRUE,
     ];
     $this->drupalGet('admin/appearance');
     $this->submitForm($edit, 'Save configuration');
-    $this->drupalGet('admin/appearance');
-    $this->clickLink('Set as default');
 
-    // Check that seven cannot be uninstalled as it is the admin theme.
-    $this->assertSession()->responseNotContains('Uninstall Seven theme');
-    // Check that bartik cannot be uninstalled as it is the default theme.
-    $this->assertSession()->responseNotContains('Uninstall Bartik theme');
+    // Set olivero as the default theme.
+    $this->cssSelect('a[title="Set Olivero as default theme"]')[0]->click();
+    // Check that claro cannot be uninstalled as it is the admin theme.
+    $this->assertSession()->responseNotContains('Uninstall claro theme');
+    // Check that olivero cannot be uninstalled as it is the default theme.
+    $this->assertSession()->responseNotContains('Uninstall Olivero theme');
     // Check that the classy theme cannot be uninstalled as it is a base theme
-    // of seven and bartik.
+    // of claro and olivero.
     $this->assertSession()->responseNotContains('Uninstall Classy theme');
 
     // Install Stark and set it as the default theme.
@@ -431,28 +451,27 @@ class ThemeTest extends BrowserTestBase {
     $this->drupalGet('admin/appearance');
     $this->submitForm($edit, 'Save configuration');
 
-    // Check that seven can be uninstalled now.
-    $this->assertSession()->responseContains('Uninstall Seven theme');
+    // Check that claro can be uninstalled now.
+    $this->assertSession()->responseContains('Uninstall claro theme');
     // Check that the classy theme still cannot be uninstalled as it is a
-    // base theme of bartik.
+    // base theme of olivero.
     $this->assertSession()->responseNotContains('Uninstall Classy theme');
 
     // Change the default theme to stark, stark is second in the list.
     $this->clickLink('Set as default', 1);
 
-    // Check that bartik can be uninstalled now.
-    $this->assertSession()->responseContains('Uninstall Bartik theme');
+    // Check that olivero can be uninstalled now.
+    $this->assertSession()->responseContains('Uninstall Olivero theme');
 
     // Check that the classy theme still can't be uninstalled as neither of its
     // base themes have been.
     $this->assertSession()->responseNotContains('Uninstall Classy theme');
 
-    // Uninstall each of the three themes starting with Bartik.
-    $this->clickLink('Uninstall');
-    $this->assertSession()->responseContains('The <em class="placeholder">Bartik</em> theme has been uninstalled');
-    // Seven is the second in the list.
-    $this->clickLink('Uninstall');
-    $this->assertSession()->responseContains('The <em class="placeholder">Seven</em> theme has been uninstalled');
+    // Uninstall each of the two themes starting with Olivero.
+    $this->cssSelect('a[title="Uninstall Olivero theme"]')[0]->click();
+    $this->assertSession()->responseContains('The <em class="placeholder">Olivero</em> theme has been uninstalled');
+    $this->cssSelect('a[title="Uninstall Claro theme"]')[0]->click();
+    $this->assertSession()->responseContains('The <em class="placeholder">Claro</em> theme has been uninstalled');
 
     // Check that the classy theme still can't be uninstalled as it is hidden.
     $this->assertSession()->responseNotContains('Uninstall Classy theme');
@@ -463,7 +482,7 @@ class ThemeTest extends BrowserTestBase {
    */
   public function testInstallAndSetAsDefault() {
     $themes = [
-      'bartik' => 'Bartik',
+      'olivero' => 'Olivero',
       'test_core_semver' => 'Theme test with semver core version',
     ];
     foreach ($themes as $theme_machine_name => $theme_name) {

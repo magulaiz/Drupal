@@ -18,10 +18,10 @@
         "behat/mink": "^1.8",
         "friends-of-behat/mink-browserkit-driver": "^1.4",
         "behat/mink-selenium2-driver": "^1.4",
-        "composer/composer": "^2.0.2",
+        "composer/composer": "^2.2.12",
         "drupal/coder": "^8.3.10",
         "instaclick/php-webdriver": "^1.4.1",
-        "mikey179/vfsstream": "^1.6.8",
+        "mikey179/vfsstream": "^1.6.11",
         "phpunit/phpunit": "^8.5.14 || ^9",
         "phpspec/prophecy": "^1.12",
         "symfony/css-selector": "^4.4",
@@ -37,8 +37,6 @@
         "easyrdf/easyrdf": "^0.9 || ^1.0"
     },
     "replace": {
-        "paragonie/random_compat": "9.99.99",
-        "symfony/polyfill-php70": "*",
         "symfony/polyfill-php72": "*",
         "symfony/polyfill-php73": "*"
     },
@@ -53,7 +51,9 @@
         "allow-plugins": {
             "composer/installers": true,
             "drupal/core-project-message": true,
-            "drupal/core-vendor-hardening": true
+            "drupal/core-vendor-hardening": true,
+            "dealerdirect/phpcodesniffer-composer-installer": true,
+            "phpstan/extension-installer": true
         }
     },
     "extra": {
@@ -104,13 +104,14 @@
         "drupal-phpunit-upgrade-check": "Drupal\\Core\\Composer\\Composer::upgradePHPUnit",
         "drupal-phpunit-upgrade": [
             "@composer update phpunit/phpunit --with-dependencies --no-progress",
-            "@composer require phpspec/prophecy-phpunit:^2 --no-progress --no-suggest"
+            "@composer require phpspec/prophecy-phpunit:^2 --no-progress"
         ],
         "post-update-cmd": [
-            "Drupal\\Composer\\Composer::generateMetapackages"
+            "Drupal\\Composer\\Composer::generateMetapackages",
+            "Drupal\\Composer\\Composer::generateComponentPackages"
         ],
-        "phpcs": "phpcs --standard=core/phpcs.xml.dist --runtime-set installed_paths $($COMPOSER_BINARY config vendor-dir)/drupal/coder/coder_sniffer --",
-        "phpcbf": "phpcbf --standard=core/phpcs.xml.dist --runtime-set installed_paths $($COMPOSER_BINARY config vendor-dir)/drupal/coder/coder_sniffer --"
+        "phpcs": "phpcs --standard=core/phpcs.xml.dist --",
+        "phpcbf": "phpcbf --standard=core/phpcs.xml.dist --"
     },
     "repositories": [
         {

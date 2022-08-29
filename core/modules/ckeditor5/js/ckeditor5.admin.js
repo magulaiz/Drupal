@@ -25,9 +25,9 @@ function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToAr
 
 function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
 
-function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) { symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); } keys.push.apply(keys, symbols); } return keys; }
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
 
-function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys(Object(source), !0).forEach(function (key) { _defineProperty(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
@@ -35,7 +35,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
-function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
 
 (function (Drupal, drupalSettings, $, JSON, once, Sortable, _ref) {
   var tabbable = _ref.tabbable;
@@ -172,6 +172,12 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
     }).map(function (helpItem) {
       return helpItem.message;
     });
+    var existingToolbarHelpText = document.querySelector('[data-drupal-selector="ckeditor5-admin-help-message"]');
+
+    if (existingToolbarHelpText && toolbarHelpText.join('').trim() !== existingToolbarHelpText.textContent.trim()) {
+      Drupal.announce(toolbarHelpText.join(' '));
+    }
+
     root.innerHTML = Drupal.theme.ckeditor5Admin({
       availableButtons: Drupal.theme.ckeditor5AvailableButtons({
         buttons: availableButtons.filter(function (button) {
@@ -561,11 +567,16 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
         label = _ref7$button.label,
         id = _ref7$button.id,
         listType = _ref7.listType;
+    var buttonInstructions = {
+      divider: Drupal.t('Press the down arrow key to use this divider in the active button list'),
+      available: Drupal.t('Press the down arrow key to activate'),
+      active: Drupal.t('Press the up arrow key to deactivate. Use the right and left arrow keys to move position')
+    };
     var visuallyHiddenLabel = Drupal.t("@listType button @label", {
       '@listType': listType !== 'divider' ? listType : 'available',
       '@label': label
     });
-    return "\n      <li class=\"ckeditor5-toolbar-item ckeditor5-toolbar-item-".concat(id, "\" role=\"option\" tabindex=\"0\" data-drupal-selector=\"ckeditor5-toolbar-button\" data-id=\"").concat(id, "\" data-label=\"").concat(label, "\" data-divider=\"").concat(listType === 'divider', "\">\n        <span class=\"ckeditor5-toolbar-button ckeditor5-toolbar-button-").concat(id, "\">\n          <span class=\"visually-hidden\">").concat(visuallyHiddenLabel, "</span>\n        </span>\n        <span class=\"ckeditor5-toolbar-tooltip\" aria-hidden=\"true\">").concat(label, "</span>\n      </li>\n    ");
+    return "\n      <li class=\"ckeditor5-toolbar-item ckeditor5-toolbar-item-".concat(id, "\" role=\"option\" tabindex=\"0\" data-drupal-selector=\"ckeditor5-toolbar-button\" data-id=\"").concat(id, "\" data-label=\"").concat(label, "\" data-divider=\"").concat(listType === 'divider', "\">\n        <span class=\"ckeditor5-toolbar-button ckeditor5-toolbar-button-").concat(id, "\">\n          <span class=\"visually-hidden\">").concat(visuallyHiddenLabel, ". ").concat(buttonInstructions[listType], "</span>\n        </span>\n        <span class=\"ckeditor5-toolbar-tooltip\" aria-hidden=\"true\">").concat(label, " </span>\n      </li>\n    ");
   };
 
   Drupal.theme.ckeditor5Admin = function (_ref8) {
@@ -573,7 +584,7 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
         dividerButtons = _ref8.dividerButtons,
         activeToolbar = _ref8.activeToolbar,
         helpMessage = _ref8.helpMessage;
-    return "\n    <div aria-live=\"polite\" data-drupal-selector=\"ckeditor5-admin-help-message\">\n      <p>".concat(helpMessage.join('</p><p>'), "</p>\n    </div>\n    <div class=\"ckeditor5-toolbar-disabled\">\n      <div class=\"ckeditor5-toolbar-available\">\n        <label id=\"ckeditor5-toolbar-available-buttons-label\">").concat(Drupal.t('Available buttons'), "</label>\n        ").concat(availableButtons, "\n      </div>\n      <div class=\"ckeditor5-toolbar-divider\">\n        <label id=\"ckeditor5-toolbar-divider-buttons-label\">").concat(Drupal.t('Button divider'), "</label>\n        ").concat(dividerButtons, "\n      </div>\n    </div>\n    <div class=\"ckeditor5-toolbar-active\">\n      <label id=\"ckeditor5-toolbar-active-buttons-label\">").concat(Drupal.t('Active toolbar'), "</label>\n      ").concat(activeToolbar, "\n    </div>\n    ");
+    return "\n    <div data-drupal-selector=\"ckeditor5-admin-help-message\">\n      <p>".concat(helpMessage.join('</p><p>'), "</p>\n    </div>\n    <div class=\"ckeditor5-toolbar-disabled\">\n      <div class=\"ckeditor5-toolbar-available\">\n        <label id=\"ckeditor5-toolbar-available-buttons-label\">").concat(Drupal.t('Available buttons'), "</label>\n        ").concat(availableButtons, "\n      </div>\n      <div class=\"ckeditor5-toolbar-divider\">\n        <label id=\"ckeditor5-toolbar-divider-buttons-label\">").concat(Drupal.t('Button divider'), "</label>\n        ").concat(dividerButtons, "\n      </div>\n    </div>\n    <div class=\"ckeditor5-toolbar-active\">\n      <label id=\"ckeditor5-toolbar-active-buttons-label\">").concat(Drupal.t('Active toolbar'), "</label>\n      ").concat(activeToolbar, "\n    </div>\n    ");
   };
 
   var originalFilterStatusAttach = Drupal.behaviors.filterStatus.attach;

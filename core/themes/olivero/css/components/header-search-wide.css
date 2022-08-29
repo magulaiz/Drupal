@@ -120,7 +120,7 @@
     color: #fff;
     border: solid 1px transparent;
     box-shadow: none;
-    font-family: serif;
+    font-family: "Lora", "georgia", serif;
     font-size: 2rem;
     -webkit-appearance: none
   }
@@ -205,7 +205,7 @@
     background-color: transparent
 
     /*
-      When in Windows high contrast mode, FF will will not output either background
+      When in Windows high contrast mode, FF will not output either background
       images or SVGs that are nested directly within a <button> element, so we add a <span>.
     */
   }

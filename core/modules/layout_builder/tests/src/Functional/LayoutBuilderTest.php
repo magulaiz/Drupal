@@ -19,6 +19,7 @@ class LayoutBuilderTest extends BrowserTestBase {
    * {@inheritdoc}
    */
   protected static $modules = [
+    'field_ui',
     'views',
     'layout_builder',
     'layout_builder_views_test',
@@ -109,6 +110,30 @@ class LayoutBuilderTest extends BrowserTestBase {
     $page = $this->getSession()->getPage();
 
     $this->drupalLogin($this->drupalCreateUser(['configure any layout']));
+
+    LayoutBuilderEntityViewDisplay::load('node.bundle_with_section_field.default')
+      ->enableLayoutBuilder()
+      ->setOverridable()
+      ->save();
+
+    $this->drupalGet('node/1');
+    $page->clickLink('Layout');
+    $assert_session->elementTextContains('css', '.layout-builder__message.layout-builder__message--overrides', 'You are editing the layout for this Bundle with section field content item.');
+    $assert_session->linkNotExists('Edit the template for all Bundle with section field content items instead.');
+  }
+
+  /**
+   * Tests Layout Builder overrides without Field UI installed.
+   */
+  public function testOverridesWithoutFieldUi() {
+    $this->container->get('module_installer')->uninstall(['field_ui']);
+
+    $assert_session = $this->assertSession();
+    $page = $this->getSession()->getPage();
+
+    // @todo In https://www.drupal.org/node/540008 switch this to logging in as
+    //   a user with the 'configure any layout' permission.
+    $this->drupalLogin($this->rootUser);
 
     LayoutBuilderEntityViewDisplay::load('node.bundle_with_section_field.default')
       ->enableLayoutBuilder()
@@ -669,6 +694,38 @@ class LayoutBuilderTest extends BrowserTestBase {
     $assert_session->elementExists('css', '.attribute-test-class');
     $assert_session->elementExists('css', '[custom-attribute=test]');
     $assert_session->elementExists('css', 'div[data-contextual-id*="layout_builder_test"]');
+  }
+
+  /**
+   * Tests preview-aware layout & block plugins.
+   */
+  public function testPreviewAwarePlugins() {
+    $assert_session = $this->assertSession();
+    $page = $this->getSession()->getPage();
+
+    $this->drupalLogin($this->drupalCreateUser([
+      'configure any layout',
+      'administer node display',
+    ]));
+
+    $this->drupalGet('admin/structure/types/manage/bundle_with_section_field/display/default');
+    $this->submitForm(['layout[enabled]' => TRUE], 'Save');
+    $page->clickLink('Manage layout');
+    $page->clickLink('Add section');
+    $page->clickLink('Layout Builder Test Plugin');
+    $page->pressButton('Add section');
+    $page->clickLink('Add block');
+    $page->clickLink('Preview-aware block');
+    $page->pressButton('Add block');
+
+    $assert_session->elementExists('css', '.go-birds-preview');
+    $assert_session->pageTextContains('This block is being rendered in preview mode.');
+
+    $page->pressButton('Save layout');
+    $this->drupalGet('node/1');
+
+    $assert_session->elementNotExists('css', '.go-birds-preview');
+    $assert_session->pageTextContains('This block is being rendered normally.');
   }
 
   /**

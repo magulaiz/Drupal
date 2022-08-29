@@ -2520,9 +2520,14 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
     // Check for missing relationships.
     $relationships = array_keys($this->getHandlers('relationship'));
     foreach (ViewExecutable::getHandlerTypes() as $type => $handler_type_info) {
-      foreach ($this->getHandlers($type) as $handler_id => $handler) {
+      foreach ($this->getHandlers($type) as $handler) {
         if (!empty($handler->options['relationship']) && $handler->options['relationship'] != 'none' && !in_array($handler->options['relationship'], $relationships)) {
-          $errors[] = $this->t('The %handler_type %handler uses a relationship that has been removed.', ['%handler_type' => $handler_type_info['lstitle'], '%handler' => $handler->adminLabel()]);
+          $errors[] = $this->t('The %relationship_name relationship used in %handler_type %handler is not present in the %display_name display.', [
+            '%relationship_name' => $handler->options['relationship'],
+            '%handler_type' => $handler_type_info['lstitle'],
+            '%handler' => $handler->adminLabel(),
+            '%display_name' => $this->display['display_title'],
+          ]);
         }
       }
     }

@@ -40,33 +40,17 @@
         });
 
         ajaxObject.success = function (response, status) {
-          var _this = this;
+          return Promise.resolve(Drupal.Ajax.prototype.success.call(ajaxObject, response, status)).then(function () {
+            var mediaLibraryContent = document.getElementById('media-library-content');
 
-          if (this.progress.element) {
-            $(this.progress.element).remove();
-          }
+            if (mediaLibraryContent) {
+              var tabbableContent = tabbable(mediaLibraryContent);
 
-          if (this.progress.object) {
-            this.progress.object.stopMonitoring();
-          }
-
-          $(this.element).prop('disabled', false);
-          Object.keys(response || {}).forEach(function (i) {
-            if (response[i].command && _this.commands[response[i].command]) {
-              _this.commands[response[i].command](_this, response[i], status);
+              if (tabbableContent.length) {
+                tabbableContent[0].focus();
+              }
             }
           });
-          var mediaLibraryContent = document.getElementById('media-library-content');
-
-          if (mediaLibraryContent) {
-            var tabbableContent = tabbable(mediaLibraryContent);
-
-            if (tabbableContent.length) {
-              tabbableContent[0].focus();
-            }
-          }
-
-          this.settings = null;
         };
 
         ajaxObject.execute();
@@ -175,8 +159,16 @@
           currentSelection.splice(position, 1);
         }
 
-        $form.find('#media-library-modal-selection').val(currentSelection.join()).trigger('change');
-        $('.js-media-library-add-form-current-selection').val(currentSelection.join());
+        var mediaLibraryModalSelection = document.querySelector('#media-library-modal-selection');
+
+        if (mediaLibraryModalSelection) {
+          mediaLibraryModalSelection.value = currentSelection.join();
+          $(mediaLibraryModalSelection).trigger('change');
+        }
+
+        document.querySelectorAll('.js-media-library-add-form-current-selection').forEach(function (item) {
+          item.value = currentSelection.join();
+        });
       });
       $(once('media-library-selection-change', $form.find('#media-library-modal-selection'))).on('change', function (e) {
         updateSelectionCount(settings.media_library.selection_remaining);
