@@ -15,7 +15,7 @@ use org\bovigo\vfs\vfsStream;
 use Symfony\Component\DependencyInjection\ParameterBag\FrozenParameterBag;
 use Symfony\Component\Yaml\Yaml;
 
-// cspell:ignore layercake everytextcontainer justheading autoformat
+// cspell:ignore layercake everytextcontainer justheading
 
 /**
  * Tests different ways of enabling CKEditor 5 plugins.

@@ -232,6 +232,7 @@ class NodeTypeTest extends NodeTestBase {
     $admin_user_1 = $this->drupalCreateUser([
       'administer content types',
       'administer node fields',
+      'administer permissions',
     ]);
     $this->drupalLogin($admin_user_1);
 
