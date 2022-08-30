@@ -10,6 +10,9 @@
   const searchWideWrapper = document.querySelector(
     '[data-drupal-selector="block-search-wide-wrapper"]',
   );
+  const searchBlockForm2 = document.querySelector(
+    '[data-drupal-selector="search-block-form-2"]'
+  );
 
   /**
    * Determine if search is visible.
@@ -91,11 +94,12 @@
    * Close the wide search container if focus moves from either the container
    * or its toggle button.
    */
-  document
-    .querySelector('[data-drupal-selector="search-block-form-2"]')
+  if (searchBlockForm2 !== null) {
+    searchBlockForm2
     .addEventListener('focusout', (e) => {
       if (!e.currentTarget.contains(e.relatedTarget)) {
         toggleSearchVisibility(false);
       }
     });
+  }
 })(Drupal);
