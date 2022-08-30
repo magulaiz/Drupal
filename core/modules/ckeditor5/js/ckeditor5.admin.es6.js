@@ -530,6 +530,12 @@
    */
   Drupal.behaviors.ckeditor5Admin = {
     attach(context) {
+      // [data-drupal-selector] attribute can be changed on ajax, but it
+      // should be static. That's why selectors written with prefixed
+      // value using "^".
+      // @todo Remove "^" for the following selectors when https://www.drupal.org/i/2897377 is fixed.
+      const filterFormSelectors =
+        '[data-drupal-selector^="filter-format-edit-form"], [data-drupal-selector^="filter-format-add-form"]';
       once('ckeditor5-admin-toolbar', '#ckeditor5-toolbar-app').forEach(
         (container) => {
           const selectedTextarea = context.querySelector(
@@ -646,9 +652,7 @@
        *   An object with one or more items with the structure { ui-property: stored-value }
        */
       const updateUiStateStorage = (states) => {
-        const form = document.querySelector(
-          '#filter-format-edit-form, #filter-format-add-form',
-        );
+        const form = document.querySelector(filterFormSelectors);
 
         // Get the current stored UI state as an object.
         const currentStates = form.hasAttribute('data-drupal-ui-state')
@@ -673,9 +677,7 @@
        *   When present, the stored value of the property.
        */
       const getUiStateStorage = (property) => {
-        const form = document.querySelector(
-          '#filter-format-edit-form, #filter-format-add-form',
-        );
+        const form = document.querySelector(filterFormSelectors);
 
         if (form === null) {
           return;
@@ -691,10 +693,7 @@
 
       // Add an attribute to the parent form for storing UI states, so this
       // information can be retrieved after AJAX rebuilds.
-      once(
-        'ui-state-storage',
-        '#filter-format-edit-form, #filter-format-add-form',
-      ).forEach((form) => {
+      once('ui-state-storage', filterFormSelectors).forEach((form) => {
         form.setAttribute('data-drupal-ui-state', JSON.stringify({}));
       });
 

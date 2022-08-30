@@ -273,6 +273,7 @@
 
   Drupal.behaviors.ckeditor5Admin = {
     attach(context) {
+      const filterFormSelectors = '[data-drupal-selector^="filter-format-edit-form"], [data-drupal-selector^="filter-format-add-form"]';
       once('ckeditor5-admin-toolbar', '#ckeditor5-toolbar-app').forEach(container => {
         const selectedTextarea = context.querySelector('#ckeditor5-toolbar-buttons-selected');
         const available = Object.entries(JSON.parse(context.querySelector('#ckeditor5-toolbar-buttons-available').innerHTML)).map(_ref2 => {
@@ -345,7 +346,7 @@
       });
 
       const updateUiStateStorage = states => {
-        const form = document.querySelector('#filter-format-edit-form, #filter-format-add-form');
+        const form = document.querySelector(filterFormSelectors);
         const currentStates = form.hasAttribute('data-drupal-ui-state') ? JSON.parse(form.getAttribute('data-drupal-ui-state')) : {};
         form.setAttribute('data-drupal-ui-state', JSON.stringify({ ...currentStates,
           ...states
@@ -353,7 +354,7 @@
       };
 
       const getUiStateStorage = property => {
-        const form = document.querySelector('#filter-format-edit-form, #filter-format-add-form');
+        const form = document.querySelector(filterFormSelectors);
 
         if (form === null) {
           return;
@@ -362,7 +363,7 @@
         return form.hasAttribute('data-drupal-ui-state') ? JSON.parse(form.getAttribute('data-drupal-ui-state'))[property] : null;
       };
 
-      once('ui-state-storage', '#filter-format-edit-form, #filter-format-add-form').forEach(form => {
+      once('ui-state-storage', filterFormSelectors).forEach(form => {
         form.setAttribute('data-drupal-ui-state', JSON.stringify({}));
       });
 
