@@ -3,7 +3,6 @@
 namespace Drupal\Tests\datetime\Kernel\Views;
 
 use Drupal\Component\Datetime\DateTimePlus;
-use Drupal\datetime\Plugin\Field\FieldType\DateTimeItem;
 use Drupal\datetime\Plugin\Field\FieldType\DateTimeItemInterface;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\node\Entity\NodeType;
@@ -71,7 +70,7 @@ abstract class DateTimeHandlerTestBase extends ViewsKernelTestBase {
       'field_name' => static::$field_name,
       'entity_type' => 'node',
       'type' => static::$field_type,
-      'settings' => ['datetime_type' => DateTimeItem::DATETIME_TYPE_DATETIME],
+      'settings' => ['datetime_type' => DateTimeItemInterface::DATETIME_TYPE_DATETIME],
     ]);
     $fieldStorage->save();
     $field = FieldConfig::create([

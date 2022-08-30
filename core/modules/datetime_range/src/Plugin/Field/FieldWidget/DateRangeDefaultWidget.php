@@ -6,7 +6,8 @@ use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\datetime_range\Plugin\Field\FieldType\DateRangeItem;
+use Drupal\datetime\Plugin\Field\FieldType\DateTimeItemInterface;
+use Drupal\datetime\Plugin\Field\FieldType\DateRangeItemInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -60,8 +61,8 @@ class DateRangeDefaultWidget extends DateRangeWidgetBase {
 
     // Identify the type of date and time elements to use.
     switch ($this->getFieldSetting('datetime_type')) {
-      case DateRangeItem::DATETIME_TYPE_DATE:
-      case DateRangeItem::DATETIME_TYPE_ALLDAY:
+      case DateTimeItemInterface::DATETIME_TYPE_DATE:
+      case DateRangeItemInterface::DATETIME_TYPE_ALLDAY:
         $date_type = 'date';
         $time_type = 'none';
         $date_format = $this->dateStorage->load('html_date')->getPattern();

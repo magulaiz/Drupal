@@ -7,6 +7,7 @@ use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\TypedData\DataDefinition;
 use Drupal\datetime\DateTimeComputed;
+use Drupal\datetime\Plugin\Field\FieldType\DateRangeItemInterface;
 use Drupal\datetime\Plugin\Field\FieldType\DateTimeItem;
 use Drupal\datetime\Plugin\Field\FieldType\DateTimeItemInterface;
 
@@ -23,11 +24,6 @@ use Drupal\datetime\Plugin\Field\FieldType\DateTimeItemInterface;
  * )
  */
 class DateRangeItem extends DateTimeItem {
-
-  /**
-   * Value for the 'datetime_type' setting: store a date and time.
-   */
-  const DATETIME_TYPE_ALLDAY = 'allday';
 
   /**
    * {@inheritdoc}
@@ -81,7 +77,7 @@ class DateRangeItem extends DateTimeItem {
   public function storageSettingsForm(array &$form, FormStateInterface $form_state, $has_data) {
     $element = parent::storageSettingsForm($form, $form_state, $has_data);
 
-    $element['datetime_type']['#options'][static::DATETIME_TYPE_ALLDAY] = $this->t('All Day');
+    $element['datetime_type']['#options'][DateRangeItemInterface::DATETIME_TYPE_ALLDAY] = $this->t('All Day');
 
     return $element;
   }

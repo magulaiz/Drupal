@@ -3,10 +3,10 @@
 namespace Drupal\datetime\Plugin\Field\FieldWidget;
 
 use Drupal\Core\Entity\EntityStorageInterface;
-use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
+use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\datetime\Plugin\Field\FieldType\DateTimeItem;
+use Drupal\datetime\Plugin\Field\FieldType\DateTimeItemInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -60,7 +60,7 @@ class DateTimeDefaultWidget extends DateTimeWidgetBase {
 
     // If the field is date-only, make sure the title is displayed. Otherwise,
     // wrap everything in a fieldset, and the title will be shown in the legend.
-    if ($this->getFieldSetting('datetime_type') === DateTimeItem::DATETIME_TYPE_DATE) {
+    if ($this->getFieldSetting('datetime_type') === DateTimeItemInterface::DATETIME_TYPE_DATE) {
       $element['value']['#title'] = $this->fieldDefinition->getLabel();
       $element['value']['#description'] = $this->fieldDefinition->getDescription();
     }
@@ -70,7 +70,7 @@ class DateTimeDefaultWidget extends DateTimeWidgetBase {
 
     // Identify the type of date and time elements to use.
     switch ($this->getFieldSetting('datetime_type')) {
-      case DateTimeItem::DATETIME_TYPE_DATE:
+      case DateTimeItemInterface::DATETIME_TYPE_DATE:
         $date_type = 'date';
         $time_type = 'none';
         $date_format = $this->dateStorage->load('html_date')->getPattern();

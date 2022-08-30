@@ -3,7 +3,6 @@
 namespace Drupal\datetime\Plugin\Validation\Constraint;
 
 use Drupal\Component\Datetime\DateTimePlus;
-use Drupal\datetime\Plugin\Field\FieldType\DateTimeItem;
 use Drupal\datetime\Plugin\Field\FieldType\DateTimeItemInterface;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
@@ -25,7 +24,7 @@ class DateTimeFormatConstraintValidator extends ConstraintValidator {
       }
       else {
         $datetime_type = $item->getFieldDefinition()->getSetting('datetime_type');
-        $format = $datetime_type === DateTimeItem::DATETIME_TYPE_DATE ? DateTimeItemInterface::DATE_STORAGE_FORMAT : DateTimeItemInterface::DATETIME_STORAGE_FORMAT;
+        $format = $datetime_type === DateTimeItemInterface::DATETIME_TYPE_DATE ? DateTimeItemInterface::DATE_STORAGE_FORMAT : DateTimeItemInterface::DATETIME_STORAGE_FORMAT;
         $date = NULL;
         try {
           $date = DateTimePlus::createFromFormat($format, $value, new \DateTimeZone(DateTimeItemInterface::STORAGE_TIMEZONE));

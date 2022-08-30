@@ -3,7 +3,7 @@
 namespace Drupal\Tests\datetime_range\Functional\EntityResource\EntityTest;
 
 use Drupal\Core\Url;
-use Drupal\datetime_range\Plugin\Field\FieldType\DateRangeItem;
+use Drupal\datetime\Plugin\Field\FieldType\DateRangeItemInterface;
 use Drupal\entity_test\Entity\EntityTest;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
@@ -55,7 +55,7 @@ class EntityTestDateRangeTest extends EntityTestResourceTestBase {
       'field_name' => static::$fieldName,
       'type' => 'daterange',
       'entity_type' => static::$entityTypeId,
-      'settings' => ['datetime_type' => DateRangeItem::DATETIME_TYPE_ALLDAY],
+      'settings' => ['datetime_type' => DateRangeItemInterface::DATETIME_TYPE_ALLDAY],
     ])->save();
 
     FieldConfig::create([
