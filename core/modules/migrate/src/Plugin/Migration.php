@@ -427,7 +427,7 @@ class Migration extends PluginBase implements MigrationInterface, RequirementsIn
             $this->processPlugins[$index][$property][] = $this->processPluginManager->createInstance('get', $configuration, $this);
           }
           if (empty($configuration['plugin'])) {
-            throw new MigrateException("Missing 'plugin' property for migration: '{$configuration['migration']}', property: '{$property}'");
+            throw new MigrateException("Missing 'plugin' property for '{$property}' in migration: '{$this->getBaseId()}'");
           }
           // Get is already handled.
           if ($configuration['plugin'] != 'get') {
@@ -706,7 +706,7 @@ class Migration extends PluginBase implements MigrationInterface, RequirementsIn
    */
   protected function findMigrationDependencies($process) {
     $return = [];
-    foreach ($this->getProcessNormalized($process) as $process_pipeline) {
+    foreach ($this->getProcessNormalized($process) as $property => $process_pipeline) {
       foreach ($process_pipeline as $plugin_configuration) {
         // If the migration uses a deriver and has a migration_lookup with
         // itself as the source migration, then skip adding dependencies.
@@ -718,7 +718,7 @@ class Migration extends PluginBase implements MigrationInterface, RequirementsIn
           continue;
         }
         if (empty($plugin_configuration['plugin'])) {
-          throw new MigrateException("Missing 'plugin' property for migration: '{$plugin_configuration['migration']}'");
+          throw new MigrateException("Missing 'plugin' property for '{$property}' in migration: '{$this->getBaseId()}'");
         }
         if (in_array($plugin_configuration['plugin'], ['migration', 'migration_lookup'], TRUE)) {
           $return = array_merge($return, (array) $plugin_configuration['migration']);
