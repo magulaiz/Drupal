@@ -426,6 +426,9 @@ class Migration extends PluginBase implements MigrationInterface, RequirementsIn
           if (isset($configuration['source'])) {
             $this->processPlugins[$index][$property][] = $this->processPluginManager->createInstance('get', $configuration, $this);
           }
+          if (empty($configuration['plugin'])) {
+            throw new MigrateException("Missing 'plugin' property for migration: '{$configuration['migration']}', property: '{$property}'");
+          }
           // Get is already handled.
           if ($configuration['plugin'] != 'get') {
             $this->processPlugins[$index][$property][] = $this->processPluginManager->createInstance($configuration['plugin'], $configuration, $this);
@@ -713,6 +716,9 @@ class Migration extends PluginBase implements MigrationInterface, RequirementsIn
             && $plugin_configuration['plugin'] === 'migration_lookup'
             && $plugin_configuration['migration'] == $this->getBaseId()) {
           continue;
+        }
+        if (empty($plugin_configuration['plugin'])) {
+          throw new MigrateException("Missing 'plugin' property for migration: '{$plugin_configuration['migration']}'");
         }
         if (in_array($plugin_configuration['plugin'], ['migration', 'migration_lookup'], TRUE)) {
           $return = array_merge($return, (array) $plugin_configuration['migration']);
