@@ -2,8 +2,8 @@
 
 namespace Drupal\rest_test\Plugin\rest\resource;
 
+use Drupal\Core\ResourceResponse\ResourceResponse;
 use Drupal\rest\Plugin\ResourceBase;
-use Drupal\rest\ResourceResponse;
 
 /**
  * Class used to test that serialization_class is optional.
@@ -23,7 +23,7 @@ class NoSerializationClassTestResource extends ResourceBase {
    * @param array $data
    *   An array with the payload.
    *
-   * @return \Drupal\rest\ResourceResponse
+   * @return \Drupal\Core\ResourceResponse\ResourceResponse
    */
   public function post(array $data) {
     return new ResourceResponse($data);

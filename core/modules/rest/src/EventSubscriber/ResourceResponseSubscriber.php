@@ -6,8 +6,8 @@ use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Cache\CacheableResponse;
 use Drupal\Core\Cache\CacheableResponseInterface;
 use Drupal\Core\Render\RendererInterface;
+use Drupal\Core\ResourceResponse\ResourceResponseInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
-use Drupal\rest\ResourceResponseInterface;
 use Drupal\serialization\Normalizer\CacheableNormalizerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -136,7 +136,7 @@ class ResourceResponseSubscriber implements EventSubscriberInterface {
    *
    * @param \Symfony\Component\HttpFoundation\Request $request
    *   The request object.
-   * @param \Drupal\rest\ResourceResponseInterface $response
+   * @param \Drupal\Core\ResourceResponse\ResourceResponseInterface $response
    *   The response from the REST resource.
    * @param \Symfony\Component\Serializer\SerializerInterface $serializer
    *   The serializer to use.
@@ -176,7 +176,7 @@ class ResourceResponseSubscriber implements EventSubscriberInterface {
    * requires unserializing the PHP data when reading this response object from
    * cache, which can be very costly, and is unnecessary.
    *
-   * @param \Drupal\rest\ResourceResponseInterface $response
+   * @param \Drupal\Core\ResourceResponse\ResourceResponseInterface $response
    *   A fully rendered resource response.
    *
    * @return \Drupal\Core\Cache\CacheableResponse|\Symfony\Component\HttpFoundation\Response

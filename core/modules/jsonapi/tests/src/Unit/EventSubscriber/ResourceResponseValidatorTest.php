@@ -8,7 +8,7 @@ use Drupal\jsonapi\Routing\Routes;
 use JsonSchema\Validator;
 use Drupal\Core\Extension\Extension;
 use Drupal\Core\Extension\ModuleHandlerInterface;
-use Drupal\rest\ResourceResponse;
+use Drupal\Core\ResourceResponse\ResourceResponse;
 use Drupal\Tests\UnitTestCase;
 use Prophecy\Argument;
 use Psr\Log\LoggerInterface;
@@ -226,7 +226,7 @@ EOD
    * @param string|null $json
    *   The JSON with which to create a mock response.
    *
-   * @return \Drupal\rest\ResourceResponse
+   * @return \Drupal\Core\ResourceResponse\ResourceResponse
    *   The mock response object.
    */
   protected function createResponse($json = NULL) {

@@ -59,7 +59,7 @@ class RequestHandler implements ContainerInjectionInterface {
    * @param \Drupal\rest\RestResourceConfigInterface $_rest_resource_config
    *   The REST resource config entity.
    *
-   * @return \Drupal\rest\ResourceResponseInterface|\Symfony\Component\HttpFoundation\Response
+   * @return \Drupal\Core\ResourceResponse\ResourceResponseInterface|\Symfony\Component\HttpFoundation\Response
    *   The REST resource response.
    */
   public function handle(RouteMatchInterface $route_match, Request $request, RestResourceConfigInterface $_rest_resource_config) {
@@ -79,7 +79,7 @@ class RequestHandler implements ContainerInjectionInterface {
    * @param \Drupal\rest\RestResourceConfigInterface $_rest_resource_config
    *   The REST resource config entity.
    *
-   * @return \Symfony\Component\HttpFoundation\Response|\Drupal\rest\ResourceResponseInterface
+   * @return \Symfony\Component\HttpFoundation\Response|\Drupal\Core\ResourceResponse\ResourceResponseInterface
    *   The REST resource response.
    */
   public function handleRaw(RouteMatchInterface $route_match, Request $request, RestResourceConfigInterface $_rest_resource_config) {
@@ -91,12 +91,12 @@ class RequestHandler implements ContainerInjectionInterface {
   /**
    * Prepares the REST resource response.
    *
-   * @param \Drupal\rest\ResourceResponseInterface $response
+   * @param \Drupal\Core\ResourceResponse\ResourceResponseInterface $response
    *   The REST resource response.
    * @param \Drupal\rest\RestResourceConfigInterface $resource_config
    *   The REST resource config entity.
    *
-   * @return \Drupal\rest\ResourceResponseInterface
+   * @return \Drupal\Core\ResourceResponse\ResourceResponseInterface
    *   The prepared REST resource response.
    */
   protected function prepareResponse($response, RestResourceConfigInterface $resource_config) {
@@ -204,7 +204,7 @@ class RequestHandler implements ContainerInjectionInterface {
    * @param \Drupal\rest\Plugin\ResourceInterface $resource
    *   The REST resource plugin.
    *
-   * @return \Symfony\Component\HttpFoundation\Response|\Drupal\rest\ResourceResponseInterface
+   * @return \Symfony\Component\HttpFoundation\Response|\Drupal\Core\ResourceResponse\ResourceResponseInterface
    *   The REST resource response.
    */
   protected function delegateToRestResourcePlugin(RouteMatchInterface $route_match, Request $request, $unserialized, ResourceInterface $resource) {
@@ -250,7 +250,6 @@ class RequestHandler implements ContainerInjectionInterface {
     // not based on position but on name and typehint, specify commonly used
     // names here. Similarly, those methods receive the original stored object
     // as the first method argument.
-
     $route_arguments_entity = NULL;
     // Try to find a parameter which is an entity.
     foreach ($route_arguments as $value) {

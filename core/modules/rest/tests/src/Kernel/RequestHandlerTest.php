@@ -3,11 +3,11 @@
 namespace Drupal\Tests\rest\Kernel;
 
 use Drupal\Component\Serialization\Json;
+use Drupal\Core\ResourceResponse\ResourceResponse;
 use Drupal\Core\Routing\RouteMatch;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\rest\Plugin\ResourceBase;
 use Drupal\rest\RequestHandler;
-use Drupal\rest\ResourceResponse;
 use Drupal\rest\RestResourceConfigInterface;
 use Prophecy\Argument;
 use Symfony\Component\HttpFoundation\Request;
