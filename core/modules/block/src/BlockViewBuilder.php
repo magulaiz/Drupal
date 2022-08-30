@@ -73,7 +73,10 @@ class BlockViewBuilder extends EntityViewBuilder implements TrustedCallbackInter
         // Assign a #lazy_builder callback, which will generate a #pre_render-
         // able block lazily (when necessary).
         $build[$entity_id] += [
-          '#lazy_builder' => [static::class . '::lazyBuilder', [$entity_id, $view_mode, $langcode]],
+          '#lazy_builder' => [
+            [static::class, 'lazyBuilder'],
+            [$entity_id, $view_mode, $langcode],
+          ],
         ];
       }
     }
@@ -123,7 +126,7 @@ class BlockViewBuilder extends EntityViewBuilder implements TrustedCallbackInter
       '#derivative_plugin_id' => $derivative_id,
       '#id' => $entity->id(),
       '#pre_render' => [
-        static::class . '::preRender',
+        [static::class, 'preRender'],
       ],
       // Add the entity so that it can be used in the #pre_render method.
       '#block' => $entity,

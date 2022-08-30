@@ -25,7 +25,7 @@ class BigPipeRegressionTestController implements TrustedCallbackInterface {
     return [
       '#prefix' => BigPipeMarkup::create('<p>Hi, my train will arrive at '),
       'time' => [
-        '#lazy_builder' => [static::class . '::currentTime', []],
+        '#lazy_builder' => [[static::class, 'currentTime'], []],
         '#create_placeholder' => TRUE,
       ],
       '#suffix' => BigPipeMarkup::create(' — will I still be able to catch the connection to the center?</p>'),
