@@ -690,7 +690,6 @@ marz
 marzo
 matchout
 mathematica
-mattfarina
 maxage
 maxdepth
 maximumred
@@ -1046,7 +1045,6 @@ revlog
 revpub
 ribisi
 ritchie
-robloach
 rolename
 roly
 routable
