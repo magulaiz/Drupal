@@ -272,7 +272,18 @@ abstract class StylePluginBase extends PluginBase {
    * Retrieve labels from views configuration.
    */ 
   public function getLabelElements() {
-    return \Drupal::config('views.settings')->get('field_rewrite_elements');    
+    static $labelElements = NULL;
+    if (!isset($labelElements)) {
+      $labelElements = [
+        'h3' => $this
+          ->t('- Use default -'),
+        '' => $this
+          ->t('- None (No wrapping HTML) -'),
+      ];
+      $labelElements += \Drupal::config('views.settings')
+        ->get('field_rewrite_elements');
+    }
+    return $labelElements;
   }
 
   /**
@@ -316,7 +327,7 @@ abstract class StylePluginBase extends PluginBase {
           ];
           $form['grouping'][$i]['grouping_label_element'] = [
             '#type' => 'select',
-            '#title' => $this->t('Group Heading Level', ['@number' => $i + 1]),
+            '#title' => $this->t('Grouping Label Tag', ['@number' => $i + 1]),
             '#options' => $this->getLabelElements(),
             '#default_value' => $grouping['grouping_label_element'],
             '#description' => $this->t('You may specify a heading level by which to group the records.'),

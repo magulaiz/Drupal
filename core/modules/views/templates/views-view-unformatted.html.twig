@@ -19,7 +19,11 @@
  */
 #}
 {% if title %}
-    <{{ grouping_label_element }}> {{ title }} </{{ grouping_label_element }}>
+  {% if grouping_label_element is empty %}
+    {{ title }}
+  {% else %}
+    <{{ grouping_label_element }}>{{ title }}</{{ grouping_label_element }}>
+  {% endif %}
 {% endif %}
 {% for row in rows %}
   {%
