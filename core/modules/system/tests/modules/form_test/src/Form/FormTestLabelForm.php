@@ -187,7 +187,6 @@ class FormTestLabelForm extends FormBase {
         'id' => 'was_set_within_attributes',
       ],
     ];
-
     return $form;
   }
 
