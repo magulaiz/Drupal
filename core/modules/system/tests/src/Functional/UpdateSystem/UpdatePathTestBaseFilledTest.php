@@ -384,7 +384,6 @@ class UpdatePathTestBaseFilledTest extends UpdatePathTestBaseTest {
       'text',
       'toolbar',
       'tour',
-      'tracker',
       'update',
       'user',
       'views_ui',

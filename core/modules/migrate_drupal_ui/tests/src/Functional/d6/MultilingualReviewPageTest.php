@@ -29,8 +29,6 @@ class MultilingualReviewPageTest extends MultilingualReviewPageTestBase {
     'forum',
     'statistics',
     'syslog',
-    // @todo Remove tracker in https://www.drupal.org/project/drupal/issues/3261452
-    'tracker',
     'update',
     // Test migrations states.
     'migrate_state_finished_test',
@@ -126,8 +124,6 @@ class MultilingualReviewPageTest extends MultilingualReviewPageTestBase {
       'Taxonomy',
       'Text',
       'Throttle',
-      // @todo Remove Tracker in https://www.drupal.org/project/drupal/issues/3261452
-      'Tracker',
       'Trigger',
       'Update status',
       'Upload',
@@ -155,6 +151,7 @@ class MultilingualReviewPageTest extends MultilingualReviewPageTestBase {
       'Devel node access',
       // Option Widgets is set not_finished in migrate_state_not_finished_test.
       'Option Widgets',
+      'Tracker',
       'Views',
       'Views translation',
       'migrate_status_active_test',

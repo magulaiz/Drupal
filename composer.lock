@@ -439,10 +439,16 @@
         {
             "name": "drupal/core",
             "version": "10.0.x-dev",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/drupal/core.git",
+                "reference": "f0f8f5f367dc3b35a8401270159c792c78b60223"
+            },
             "dist": {
-                "type": "path",
-                "url": "core",
-                "reference": "aa03b1c4869c7a1f5907d9e4f1297c97781ba1da"
+                "type": "zip",
+                "url": "https://api.github.com/repos/drupal/core/zipball/f0f8f5f367dc3b35a8401270159c792c78b60223",
+                "reference": "f0f8f5f367dc3b35a8401270159c792c78b60223",
+                "shasum": ""
             },
             "require": {
                 "asm89/stack-cors": "^2.0.2",
@@ -544,6 +550,9 @@
                 }
             },
             "autoload": {
+                "files": [
+                    "includes/bootstrap.inc"
+                ],
                 "psr-4": {
                     "Drupal\\Core\\": "lib/Drupal/Core",
                     "Drupal\\Component\\": "lib/Drupal/Component"
@@ -570,23 +579,17 @@
                     "lib/Drupal/Core/DrupalKernelInterface.php",
                     "lib/Drupal/Core/Installer/InstallerRedirectTrait.php",
                     "lib/Drupal/Core/Site/Settings.php"
-                ],
-                "files": [
-                    "includes/bootstrap.inc"
                 ]
             },
-            "scripts": {
-                "pre-autoload-dump": [
-                    "Drupal\\Core\\Composer\\Composer::preAutoloadDump"
-                ]
-            },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "GPL-2.0-or-later"
             ],
             "description": "Drupal is an open source content management platform powering millions of websites and applications.",
-            "transport-options": {
-                "relative": true
-            }
+            "support": {
+                "source": "https://github.com/drupal/core/tree/10.0.x"
+            },
+            "time": "2022-08-26T18:09:41+00:00"
         },
         {
             "name": "drupal/core-project-message",
