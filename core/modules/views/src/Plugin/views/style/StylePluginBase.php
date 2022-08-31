@@ -270,7 +270,7 @@ abstract class StylePluginBase extends PluginBase {
 
   /**
    * Retrieve labels from views configuration.
-   */ 
+   */
   public function getLabelElements() {
     static $labelElements = NULL;
     if (!isset($labelElements)) {
