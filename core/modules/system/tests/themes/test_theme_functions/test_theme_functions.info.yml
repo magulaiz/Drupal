@@ -1,0 +1,4 @@
+name: Test Theme Functions
+description: Theme with templates to facilitate testing theme functions
+type: theme
+base theme: false

@@ -31,7 +31,7 @@ class FormTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'classy';
+  protected $defaultTheme = 'stark';
 
   protected function setUp(): void {
     parent::setUp();
@@ -190,7 +190,7 @@ class FormTest extends BrowserTestBase {
     }
 
     // Check the page for error messages.
-    $errors = $this->xpath('//div[contains(@class, "error")]//li');
+    $errors = $this->xpath('//div[contains(@aria-label, "Error message")]//li');
     foreach ($errors as $error) {
       $expected_key = array_search($error->getText(), $expected);
       // If the error message is not one of the expected messages, fail.
@@ -231,7 +231,7 @@ class FormTest extends BrowserTestBase {
     $this->submitForm($edit, 'Submit');
     // Verify that no error message is displayed when all required fields are
     // filled.
-    $this->assertSession()->elementNotExists('xpath', '//div[contains(@class, "error")]');
+    $this->assertSession()->elementNotExists('xpath', '//div[contains(@aria-label, "Error message")]');
     $this->assertSession()->pageTextContains("The form_test_validate_required_form form was submitted successfully.");
   }
 
@@ -260,7 +260,7 @@ class FormTest extends BrowserTestBase {
     $this->submitForm($edit, 'Submit');
     // Verify that error message is displayed with invalid token even when
     // required fields are filled.
-    $this->assertSession()->elementExists('xpath', '//div[contains(@class, "error")]');
+    $this->assertSession()->elementExists('xpath', '//div[contains(@aria-label, "Error message")]');
 
     $assert = $this->assertSession();
     $element = $assert->fieldExists('textfield');
@@ -286,7 +286,7 @@ class FormTest extends BrowserTestBase {
     $this->submitForm($edit, 'Submit');
     // Verify that the error message is displayed with invalid token even when
     // required fields are filled.
-    $this->assertSession()->elementExists('xpath', '//div[contains(@class, "error")]');
+    $this->assertSession()->elementExists('xpath', '//div[contains(@aria-label, "Error message")]');
     $this->assertSession()->pageTextContains('The form has become outdated.');
     $this->assertSession()->fieldValueEquals('textfield', '');
     $this->assertSession()->fieldValueEquals('textarea', '');
@@ -304,7 +304,7 @@ class FormTest extends BrowserTestBase {
     $this->submitForm($edit, 'Submit');
     // Verify that the error message is displayed with invalid token even when
     // required fields are filled.'
-    $this->assertSession()->elementExists('xpath', '//div[contains(@class, "error")]');
+    $this->assertSession()->elementExists('xpath', '//div[contains(@aria-label, "Error message")]');
     $this->assertSession()->pageTextContains('The form has become outdated.');
     $this->assertSession()->fieldValueEquals('integer_step', 5);
 
@@ -319,7 +319,7 @@ class FormTest extends BrowserTestBase {
     $this->submitForm($edit, 'Submit');
     // Verify that the error message is displayed with invalid token even when
     // required fields are filled.
-    $this->assertSession()->elementExists('xpath', '//div[contains(@class, "error")]');
+    $this->assertSession()->elementExists('xpath', '//div[contains(@aria-label, "Error message")]');
     $this->assertSession()->pageTextContains('The form has become outdated.');
     $this->assertSession()->fieldValueEquals('url', '');
   }
@@ -366,7 +366,7 @@ class FormTest extends BrowserTestBase {
     ];
     $this->submitForm($edit, 'Submit');
     // Verify that no error input form element class is present.
-    $this->assertSession()->elementNotExists('xpath', '//input[contains(@class, "error")]');
+    $this->assertSession()->elementNotExists('xpath', '//input[contains(@aria-label, "Error message")]');
     $this->assertSession()->pageTextContains("The form_test_validate_required_form_no_title form was submitted successfully.");
   }
 

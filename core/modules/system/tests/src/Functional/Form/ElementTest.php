@@ -22,7 +22,7 @@ class ElementTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'classy';
+  protected $defaultTheme = 'stark';
 
   /**
    * Tests placeholder text for elements that support placeholders.
@@ -139,9 +139,9 @@ class ElementTest extends BrowserTestBase {
    */
   public function testGroupElements() {
     $this->drupalGet('form-test/group-details');
-    $this->assertSession()->elementsCount('xpath', '//div[@class="details-wrapper"]//div[@class="details-wrapper"]//label', 1);
+    $this->assertSession()->elementsCount('xpath', '//details//details//label', 1);
     $this->drupalGet('form-test/group-container');
-    $this->assertSession()->elementsCount('xpath', '//div[@id="edit-container"]//div[@class="details-wrapper"]//label', 1);
+    $this->assertSession()->elementsCount('xpath', '//div[@id="edit-container"]//details//label', 1);
     $this->drupalGet('form-test/group-fieldset');
     $this->assertSession()->elementsCount('xpath', '//fieldset[@id="edit-fieldset"]//div[@id="edit-meta"]//label', 1);
     $this->assertSession()->elementTextEquals('xpath', '//fieldset[@id="edit-fieldset-zero"]//legend', '0');

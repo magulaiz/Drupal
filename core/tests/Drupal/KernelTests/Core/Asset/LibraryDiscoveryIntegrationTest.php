@@ -171,7 +171,7 @@ class LibraryDiscoveryIntegrationTest extends KernelTestBase {
    */
   public function testLibrariesExtend() {
     // Activate classy themes and verify the libraries are not extended.
-    $this->activateTheme('classy');
+    $this->activateTheme('stark');
     $this->assertNoAssetInLibrary('core/modules/system/tests/themes/test_theme_libraries_extend/css/extend_1.css', 'classy', 'book-navigation', 'css');
     $this->assertNoAssetInLibrary('core/modules/system/tests/themes/test_theme_libraries_extend/js/extend_1.js', 'classy', 'book-navigation', 'js');
     $this->assertNoAssetInLibrary('core/modules/system/tests/themes/test_theme_libraries_extend/css/extend_2.css', 'classy', 'book-navigation', 'css');

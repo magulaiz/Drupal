@@ -1,0 +1,22 @@
+<?php
+
+/**
+ * @file
+ * Test theme.
+ */
+
+use Drupal\Component\Utility\Html;
+
+/**
+ * Implements template_preprocess_links().
+ */
+function test_theme_functions_preprocess_links(&$variables) {
+  if (!empty($variables['links'])) {
+    foreach ($variables['links'] as $key => $value) {
+      if (!is_numeric($key)) {
+        $class = Html::getClass($key);
+        $variables['links'][$key]['attributes']->addClass($class);
+      }
+    }
+  }
+}

@@ -28,7 +28,7 @@ class BreadcrumbFrontCacheContextsTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'classy';
+  protected $defaultTheme = 'stark';
 
   /**
    * A test node with path alias.
@@ -87,7 +87,7 @@ class BreadcrumbFrontCacheContextsTest extends BrowserTestBase {
     // Verify that breadcrumb appears correctly for the test content
     // (which is not set as front page).
     $this->drupalGet($this->nodeWithAlias->path->alias);
-    $breadcrumbs = $this->assertSession()->elementExists('css', '.block-system-breadcrumb-block');
+    $breadcrumbs = $this->assertSession()->elementExists('css', '[aria-labelledby="system-breadcrumb"]');
     $crumbs = $breadcrumbs->findAll('css', 'ol li');
     $this->assertCount(1, $crumbs);
     $this->assertSame('Home', $crumbs[0]->getText());

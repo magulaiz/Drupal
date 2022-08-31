@@ -30,9 +30,10 @@ class FunctionsTest extends KernelTestBase {
   protected function setUp(): void {
     parent::setUp();
 
-    // Enable the Classy theme.
-    $this->container->get('theme_installer')->install(['classy']);
-    $this->config('system.theme')->set('default', 'classy')->save();
+    // Enable the "Test Theme Functions" theme, which adds templates used by
+    // this test to better assess rendered output.
+    $this->container->get('theme_installer')->install(['test_theme_functions']);
+    $this->config('system.theme')->set('default', 'test_theme_functions')->save();
   }
 
   /**

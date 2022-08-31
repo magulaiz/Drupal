@@ -23,7 +23,7 @@ class LocalTasksTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'classy';
+  protected $defaultTheme = 'test_local_tasks';
 
   /**
    * The local tasks block under testing.
