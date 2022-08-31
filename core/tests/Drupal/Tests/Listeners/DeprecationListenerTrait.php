@@ -143,6 +143,7 @@ trait DeprecationListenerTrait {
       'The "core/drupal.date" asset library is deprecated in drupal:9.4.0 and is removed from drupal:10.0.0. There is no replacement. See https://www.drupal.org/node/3258267',
       "Drupal\Core\Render\Element\Date::processDate() is deprecated in drupal:9.4.0 and is removed from drupal:10.0.0. There is no replacement. See https://www.drupal.org/node/3258267",
       // The CKEditor 4 asset library is deprecated.
+      'The "core/ckeditor" asset library is deprecated in drupal:9.5.0 and is removed from drupal:10.0.0. There is no replacement. See https://www.drupal.org/node/3304481',
       'Theme "core" is extending a deprecated library. The "core/ckeditor" asset library is deprecated in drupal:9.5.0 and is removed from drupal:10.0.0. There is no replacement. See https://www.drupal.org/node/3304481',
     ];
   }
