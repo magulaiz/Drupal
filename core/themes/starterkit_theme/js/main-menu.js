@@ -96,6 +96,10 @@
   }
 
   function toggleMobileNav(toState) {
+    if (primaryNavigationRegion.contains(document.activeElement)) {
+      mobileNavigationButton.focus();
+    }
+
     document.body.classList.toggle('is-active-mobile-menu', toState);
     mobileNavigationButton.setAttribute('aria-expanded', toState);
     primaryNavigationRegion.classList.toggle('is-expanded', toState);
@@ -122,7 +126,7 @@
 
   function init(el) {
     primaryNavigationRegion = el;
-    mobileNavigationButton = context.querySelector('[data-drupal-selector="main-nav__mobile-button"]');
+    mobileNavigationButton = document.querySelector('[data-drupal-selector="main-nav__mobile-button"]');
     secondLevelNavMenus = primaryNavigationRegion.querySelectorAll('[data-drupal-selector="main-nav-menu-item-has-children"]');
     secondLevelToggleButtonSelector = '[data-drupal-selector="main-nav-submenu-toggle-button"], button[data-drupal-selector="main-nav-menu-link-has-children"]';
     initSecondLevelNav(secondLevelNavMenus);

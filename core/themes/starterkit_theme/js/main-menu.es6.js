@@ -168,6 +168,10 @@
    * @param {boolean} toState - if navigation will be expanded or collapsed.
    */
   function toggleMobileNav(toState) {
+    if (primaryNavigationRegion.contains(document.activeElement)) {
+      mobileNavigationButton.focus();
+    }
+
     document.body.classList.toggle('is-active-mobile-menu', toState);
     mobileNavigationButton.setAttribute('aria-expanded', toState);
     primaryNavigationRegion.classList.toggle('is-expanded', toState);
@@ -205,7 +209,7 @@
    */
   function init(el) {
     primaryNavigationRegion = el;
-    mobileNavigationButton = context.querySelector(
+    mobileNavigationButton = document.querySelector(
       '[data-drupal-selector="main-nav__mobile-button"]',
     );
     secondLevelNavMenus = primaryNavigationRegion.querySelectorAll(
