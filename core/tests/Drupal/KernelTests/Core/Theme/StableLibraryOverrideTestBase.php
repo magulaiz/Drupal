@@ -43,9 +43,20 @@ abstract class StableLibraryOverrideTestBase extends KernelTestBase {
   /**
    * A list of libraries to skip checking, in the format extension/library_name.
    *
+   * Alternatively: allows a regular expression.
+   *
    * @var string[]
    */
   protected $librariesToSkip = [
+    // CKEditor 5 has a much faster release cadence for major and minor releases
+    // than Drupal. CKEditor 5 does not provide continued support for major or
+    // minor releases; they almost never issue patch releases. Drupal therefore
+    // has to keep its integration up-to-date with upstream. It is hence
+    // impossible to provide "stable overrides", since the stability is not
+    // controlled by Drupal, but by upstream.
+    // Hence all CKEditor 5 asset libraries are considered internal.
+    // @see https://ckeditor.com/docs/ckeditor5/latest/support/versioning-policy.html
+    '/ckeditor5\/.*/',
     // This is a deprecated library that will trigger warnings.
     'image/quickedit.inPlaceEditor.image',
   ];

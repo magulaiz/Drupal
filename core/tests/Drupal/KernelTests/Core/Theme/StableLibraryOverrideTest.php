@@ -38,16 +38,6 @@ class StableLibraryOverrideTest extends StableLibraryOverrideTestBase {
   protected $allModules;
 
   /**
-   * A list of libraries to skip checking, in the format extension/library_name.
-   *
-   * @var string[]
-   */
-  protected $librariesToSkip = [
-    // This is a deprecated library that will trigger warnings.
-    'image/quickedit.inPlaceEditor.image',
-  ];
-
-  /**
    * {@inheritdoc}
    */
   protected static $modules = ['system', 'user', 'path_alias'];
@@ -87,6 +77,16 @@ class StableLibraryOverrideTest extends StableLibraryOverrideTestBase {
       foreach ($libraries as $library_name => $library) {
         // Allow skipping libraries.
         if (in_array("$extension/$library_name", $this->librariesToSkip)) {
+          continue;
+        }
+        // Allow skipping libraries by regex.
+        $matches_regex = array_reduce($this->librariesToSkip, function (bool $carry, string $skip) use ($extension, $library_name) {
+          if ($skip[0] === '/' && preg_match($skip, "$extension/$library_name")) {
+            return TRUE;
+          }
+          return $carry;
+        }, FALSE);
+        if ($matches_regex) {
           continue;
         }
         $library_after = $libraries_after[$extension][$library_name];
