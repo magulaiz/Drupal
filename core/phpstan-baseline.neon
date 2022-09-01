@@ -103,16 +103,6 @@ parameters:
 		-
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 1
-			path: lib/Drupal/Core/Asset/CssCollectionOptimizer.php
-
-		-
-			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
-			count: 1
-			path: lib/Drupal/Core/Asset/JsCollectionOptimizer.php
-
-		-
-			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
-			count: 1
 			path: lib/Drupal/Core/Asset/JsCollectionRenderer.php
 
 		-
@@ -699,11 +689,6 @@ parameters:
 			message: "#^Inner named functions are not supported by PHPStan\\. Consider refactoring to an anonymous function, class method, or a top\\-level\\-defined function\\. See issue \\#165 \\(https\\://github\\.com/phpstan/phpstan/issues/165\\) for more details\\.$#"
 			count: 2
 			path: modules/ckeditor5/ckeditor5.module
-
-		-
-			message: "#^Function color_palette_color_value\\(\\) should return string but return statement is missing\\.$#"
-			count: 1
-			path: modules/color/color.module
 
 		-
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
@@ -2082,11 +2067,6 @@ parameters:
 			message: "#^Array has 2 duplicate keys with value 'ClassWithConstants\\.SOME_KEY' \\(\\\\Drupal\\\\Tests\\\\Component\\\\Annotation\\\\Doctrine\\\\Fixtures\\\\ClassWithConstants\\:\\:SOME_KEY, \\\\Drupal\\\\Tests\\\\Component\\\\Annotation\\\\Doctrine\\\\Fixtures\\\\ClassWithConstants\\:\\:SOME_KEY\\)\\.$#"
 			count: 1
 			path: tests/Drupal/Tests/Component/Annotation/Doctrine/DocParserTest.php
-
-		-
-			message: "#^Function container_test_file_service_test_service_function not found\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Component/DependencyInjection/ContainerTest.php
 
 		-
 			message: "#^Cannot unset offset int on array\\<string, mixed\\>\\.$#"

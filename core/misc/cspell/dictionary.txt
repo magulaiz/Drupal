@@ -15,7 +15,6 @@ ahah
 aimez
 aiufyfh
 ajaxcallback
-ajaxify
 ajaxing
 akiko
 allwords
@@ -93,7 +92,6 @@ barchart
 barfoo
 barqux
 bartik
-bartik's
 basefield
 basepath
 basestrings
@@ -362,7 +360,6 @@ drivertestpqsql
 drivertext
 dropbutton
 dropbuttons
-dropzone
 drudbal
 drup
 drupalci
@@ -416,7 +413,6 @@ endofscript
 endpo
 endset
 endtrans
-eniac
 enim
 enoki
 enregistrer
@@ -446,7 +442,6 @@ fakepath
 falsey
 falsish
 fapi
-farb
 farbtastic
 fatals
 favourite
@@ -477,7 +472,6 @@ filesystems
 filetransfer
 filevalidationerror
 filterprovider
-filtertypes
 findwith
 firstcolumn
 fixnull
@@ -491,7 +485,6 @@ fodg
 fodp
 fods
 fodt
-fontsizer
 fooalert
 foobarbaz
 foobargorilla
@@ -507,7 +500,6 @@ fourthcolumn
 fozzie
 fqcn
 fraîche
-freenode
 frombracket
 frontpage
 fsdf
@@ -515,7 +507,6 @@ fudgy
 fulldata
 fulldate
 fulltext
-fullwidth
 funciona
 functionaljavascripttest
 functionaltest
@@ -783,7 +774,6 @@ minusthick
 missingkey
 missingkeys
 miterlimit
-mjuc
 mlfr
 mlid
 mlids
@@ -853,7 +843,6 @@ nearbykeyword
 necolas
 negotiatiors
 nemo
-networkerror
 newcol
 newdata
 newfieldinitial
@@ -875,7 +864,6 @@ nocache
 nocase
 nocdata
 nocookie
-nocssjs
 nodereference
 nodir
 nodo
@@ -988,7 +976,6 @@ plusthick
 poink
 pommes
 ponedjeljak
-popperedge
 popperjs
 porterstemmer
 português
@@ -1058,9 +1045,6 @@ pwprompt
 queryor
 querystring
 questionmark
-quickedit
-quickediting
-quickeditor
 quicklinks
 quickstart
 quinlan
@@ -1088,7 +1072,6 @@ realpaths
 realword
 rebuilder
 reclosed
-recolorable
 redeclaration
 redirections
 redstrawberryhiddenfield
@@ -1175,12 +1158,10 @@ shatner
 shorterthan
 shortlink
 showblocks
-sidebarborders
 siema
 silverlight
 silvie
 simpletest
-simpletest's
 singlebyte
 sioc
 sioct
@@ -1269,7 +1250,6 @@ subrequests
 subresults
 subselect
 subsequentially
-subseven
 subshell
 substrategies
 subsubtheme
@@ -1395,15 +1375,12 @@ tiplist
 titel
 titlealert
 titlebar
-titleslogan
 tlds
 tmpfs
 tnid
 toggleable
 togglewrap
 tongatapu
-toolgroup
-toolgroups
 toolkits
 toolongdomainexampledomainexampledomainexampledomainexampledomain
 toplevel
@@ -1441,7 +1418,6 @@ uicrud
 uids
 ulwa
 umami
-unajaxify
 unaliased
 unallowed
 unassigning
@@ -1457,9 +1433,7 @@ unchecking
 unclickable
 uncollapsible
 unconfigured
-undecorate
 undelayed
-undelegate
 undoable
 undraggable
 unextracted
@@ -1469,7 +1443,6 @@ ungenerated
 ungroup
 ungroupable
 unhashed
-unhide
 unidecode
 unidecoder
 unindented
@@ -1487,10 +1460,8 @@ unmatch
 unminified
 unmoderated
 unoptimized
-unpad
 unparseable
 unpermissioned
-unprefix
 unprefixed
 unpreloaded
 unpromote
@@ -1547,7 +1518,6 @@ veniam
 verison
 versionable
 versionless
-veryfast
 verygreatdrupalmodule
 vfsstream
 vibber
@@ -1555,7 +1525,6 @@ vids
 viewmode
 viewports
 viewsviewfiles
-vmov
 vocabs
 volgende
 vorige
@@ -1632,7 +1601,6 @@ zendframework
 zettabyte
 zettabytes
 zipf's
-znor
 zomg
 zoneinfo
 zonelist

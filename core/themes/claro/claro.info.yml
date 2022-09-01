@@ -37,11 +37,6 @@ libraries-override:
       theme:
         css/system.admin.css: false
 
-  core/drupal.dialog.off_canvas:
-    css:
-      base:
-        misc/dialog/off-canvas.theme.css: css/base/off-canvas.theme.css
-
   core/drupal.dropbutton:
     css:
       component:
@@ -165,13 +160,13 @@ libraries-extend:
   media_library/widget:
     - claro/media_library.theme
 
-quickedit_stylesheets:
-  - css/components/quickedit.css
 ckeditor_stylesheets:
   - css/base/elements.css
   - css/base/typography.css
   - css/theme/ckeditor-frame.css
   - css/classy/components/media-embed-error.css
+
+ckeditor5-stylesheets: false
 
 regions:
   header: 'Header'

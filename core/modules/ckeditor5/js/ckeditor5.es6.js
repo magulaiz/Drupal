@@ -321,7 +321,7 @@
       // rules containing the #drupal-off-canvas selector.
       [...document.styleSheets].forEach(processRules);
 
-      const prefix = `#drupal-off-canvas [${fenceName}]`;
+      const prefix = `#drupal-off-canvas-wrapper [${fenceName}]`;
       // Additional styles that need to be explicity added in addition to the
       // prefixed versions of existing css in `existingCss`.
       const addedCss = [
@@ -331,51 +331,8 @@
         `${prefix} .ck.ck-content ol li {list-style-type: decimal}`,
         `${prefix} .ck[contenteditable], ${prefix} .ck[contenteditable] * {-webkit-user-modify: read-write;-moz-user-modify: read-write;}`,
       ];
-      // Styles to ensure block elements are displayed as such inside
-      // off-canvas dialogs. These are all element types that are styled with
-      // ` all: initial;` in the off-canvas reset that should default to being
-      // displayed as blocks within CKEditor.
-      // @see core/misc/dialog/off-canvas.reset.pcss.css
-      const blockSelectors = [
-        'h1',
-        'h2',
-        'h3',
-        'h4',
-        'h5',
-        'h6',
-        'p',
-        'ol',
-        'ul',
-        'address',
-        'article',
-        'aside',
-        'blockquote',
-        'body',
-        'dd',
-        'div',
-        'dl',
-        'dt',
-        'fieldset',
-        'figcaption',
-        'figure',
-        'footer',
-        'form',
-        'header',
-        'hgroup',
-        'hr',
-        'html',
-        'legend',
-        'main',
-        'menu',
-        'pre',
-        'section',
-        'xmp',
-      ]
-        .map((blockElement) => `${prefix} .ck.ck-content ${blockElement}`)
-        .join(', \n');
-      const blockCss = `${blockSelectors} { display: block; }`;
 
-      const prefixedCss = [...addedCss, blockCss].join('\n');
+      const prefixedCss = [...addedCss].join('\n');
 
       // Create a new style tag with the prefixed styles added above.
       const offCanvasCssStyle = document.createElement('style');
@@ -497,38 +454,11 @@
         editor.updateSourceElement();
       } else {
         element.removeAttribute('contentEditable');
-
-        // Prepare variables that will be used when discarding Quickedit changes.
-        let textElement = null;
-        let originalValue = null;
-        const usingQuickEdit = (((Drupal || {}).quickedit || {}).editors || {})
-          .editor;
-        if (usingQuickEdit) {
-          // The revert() function in QuickEdit's text editor does not work with
-          // CKEditor 5, as it is triggered before CKEditor 5 is fully
-          // destroyed. This function is overridden so the functionality it
-          // provides can happen after the CKEditor destroy() promise is
-          // fulfilled.
-          // This pulls the necessary values from the QuickEdit Backbone Model
-          // before it is destroyed, so they can be used by
-          // `editor.destroy().then()` to perform the expected revert.
-          Drupal.quickedit.editors.editor.prototype.revert =
-            function revertQuickeditChanges() {
-              textElement = this.$textElement[0];
-              originalValue = this.model.get('originalValue');
-            };
-        }
-
-        editor
+        // Return the promise to allow external code to queue code to
+        // execute after the destroy is complete.
+        return editor
           .destroy()
           .then(() => {
-            // If textElement and originalValue are not null, a QuickEdit
-            // revert has been requested. Perform the revert here as it
-            // can't happen until the CKEditor instance is destroyed.
-            if (textElement && originalValue) {
-              textElement.innerHTML = originalValue;
-            }
-
             // Clean up stored references.
             Drupal.CKEditor5Instances.delete(id);
             callbacks.delete(id);
@@ -565,8 +495,6 @@
      *   The text format used in the editor.
      * @param {string} [mainToolbarId]
      *   The id attribute for the main editor toolbar, if any.
-     *
-     * @see Drupal.quickedit.editors.editor
      */
     attachInlineEditor(element, format, mainToolbarId) {
       const { editorDecoupled } = CKEditor5;
@@ -594,8 +522,7 @@
           editor.model.document.on('change:data', () => {
             const callback = callbacks.get(id);
             if (callback) {
-              // Quick Edit requires the current data to update EditorModel.
-              // @see Drupal.quickedit.editors.editor
+              // Allow modules to update EditorModel by providing the current data.
               debounce(callback, 400)(editor.getData());
             }
           });

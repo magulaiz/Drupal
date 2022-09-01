@@ -16,6 +16,7 @@ use Drupal\Tests\rdf\Traits\RdfParsingTrait;
  * Tests the RDF mappings and RDFa markup on top of the standard profile.
  *
  * @group rdf
+ * @group legacy
  */
 class StandardProfileTest extends BrowserTestBase {
 
@@ -24,7 +25,7 @@ class StandardProfileTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'classy';
+  protected $defaultTheme = 'starterkit_theme';
 
   /**
    * The profile used during tests.
@@ -496,7 +497,7 @@ class StandardProfileTest extends BrowserTestBase {
     $expected_value = [
       'type' => 'literal',
       // There is an extra carriage return in the value when parsing comments as
-      // output by Bartik, so it must be added to the expected value.
+      // output by Classy, so it must be added to the expected value.
       'value' => "$text
 ",
       'lang' => 'en',

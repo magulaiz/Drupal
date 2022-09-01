@@ -15,6 +15,7 @@ use Drupal\comment\Entity\Comment;
  * Tests the RDFa markup of comments.
  *
  * @group rdf
+ * @group legacy
  */
 class CommentAttributesTest extends CommentTestBase {
 
@@ -196,7 +197,7 @@ class CommentAttributesTest extends CommentTestBase {
     // Posts comment #2 as anonymous user.
     $anonymous_user = [];
     $anonymous_user['name'] = $this->randomMachineName();
-    $anonymous_user['mail'] = 'tester@simpletest.org';
+    $anonymous_user['mail'] = 'test@example.org';
     $anonymous_user['homepage'] = 'http://example.org/';
     $comment2 = $this->saveComment($this->node->id(), 0, $anonymous_user);
 
