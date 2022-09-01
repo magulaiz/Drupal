@@ -267,12 +267,6 @@ const assetsFolder = `${coreFolder}/assets/vendor`;
         console.log(`Copy ${sourceFolder}/${file.from} to ${destFolder}/${file.to}`);
         await copyFile(sourceFile, destFile);
       }
-
-      // This file comes from a zip file that hasn't been updated in years
-      // hardcode the permission fix to pass the commit checks.
-      if (['marker.png'].includes(file.to)) {
-        await chmod(destFile, 0o644);
-      }
     }
   }
 
