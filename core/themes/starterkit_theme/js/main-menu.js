@@ -19,7 +19,7 @@
   function toggleSubNav(topLevelMenuItem, toState) {
     const button = topLevelMenuItem.querySelector(secondLevelToggleButtonSelector);
     const secondLevelMenuSelector = '[data-drupal-selector="main-nav-menu--level-2"]';
-    const state = toState ?? button.getAttribute('aria-expanded') !== 'true';
+    const state = toState !== undefined ? toState : button.getAttribute('aria-expanded') !== 'true';
 
     if (state) {
       if (isDesktopNav()) {

@@ -15,7 +15,7 @@
     transition: transform 0.2s, visibility 0.2s;
     border-inline-start: solid 1px black;
     background: #eee;
-    inset-block-start: var(--drupal-displace-offset-top, 0px);
+    inset-block-start: var(--drupal-displace-offset-top, 0);
     inset-inline-start: 100%;
   }
 

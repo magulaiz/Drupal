@@ -40,7 +40,10 @@
     );
     const secondLevelMenuSelector =
       '[data-drupal-selector="main-nav-menu--level-2"]';
-    const state = toState ?? button.getAttribute('aria-expanded') !== 'true';
+    const state =
+      toState !== undefined
+        ? toState
+        : button.getAttribute('aria-expanded') !== 'true';
 
     if (state) {
       // If desktop nav, ensure all menus close before expanding new one.

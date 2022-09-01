@@ -83,7 +83,6 @@
   }
 
   .main-nav__menu-link--button.main-nav__menu-link--has-children {
-
     padding-inline-end: calc(var(--padding-x) / 2);
   }
 
