@@ -40,10 +40,7 @@
     );
     const secondLevelMenuSelector =
       '[data-drupal-selector="main-nav-menu--level-2"]';
-    const state =
-      toState !== undefined
-        ? toState
-        : button.getAttribute('aria-expanded') !== 'true';
+    const state = toState ?? button.getAttribute('aria-expanded') !== 'true';
 
     if (state) {
       // If desktop nav, ensure all menus close before expanding new one.
@@ -85,7 +82,7 @@
       const menuParentItem = e.target.closest(
         '[data-drupal-selector="main-nav-menu-item-has-children"]',
       );
-      if (!menuParentItem?.contains(document.activeElement)) {
+      if (!menuParentItem.contains(document.activeElement)) {
         toggleSubNav(menuParentItem, false);
       }
     }, 200);

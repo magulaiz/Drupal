@@ -19,7 +19,7 @@
   function toggleSubNav(topLevelMenuItem, toState) {
     const button = topLevelMenuItem.querySelector(secondLevelToggleButtonSelector);
     const secondLevelMenuSelector = '[data-drupal-selector="main-nav-menu--level-2"]';
-    const state = toState !== undefined ? toState : button.getAttribute('aria-expanded') !== 'true';
+    const state = toState ?? button.getAttribute('aria-expanded') !== 'true';
 
     if (state) {
       if (isDesktopNav()) {
@@ -43,7 +43,7 @@
     setTimeout(() => {
       const menuParentItem = e.target.closest('[data-drupal-selector="main-nav-menu-item-has-children"]');
 
-      if (!(menuParentItem !== null && menuParentItem !== void 0 && menuParentItem.contains(document.activeElement))) {
+      if (!menuParentItem.contains(document.activeElement)) {
         toggleSubNav(menuParentItem, false);
       }
     }, 200);
@@ -122,7 +122,7 @@
 
   function init(el) {
     primaryNavigationRegion = el;
-    mobileNavigationButton = document.querySelector('[data-drupal-selector="main-nav__mobile-button"]');
+    mobileNavigationButton = context.querySelector('[data-drupal-selector="main-nav__mobile-button"]');
     secondLevelNavMenus = primaryNavigationRegion.querySelectorAll('[data-drupal-selector="main-nav-menu-item-has-children"]');
     secondLevelToggleButtonSelector = '[data-drupal-selector="main-nav-submenu-toggle-button"], button[data-drupal-selector="main-nav-menu-link-has-children"]';
     initSecondLevelNav(secondLevelNavMenus);
