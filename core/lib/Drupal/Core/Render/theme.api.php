@@ -591,7 +591,8 @@ function hook_preprocess_HOOK(&$variables) {
     if ($node instanceof NodeInterface) {
       $variables['node_type'] = $node->getType();
     }
-  }}
+  }
+}
 
 /**
  * Provides alternate named suggestions for a specific theme hook.
