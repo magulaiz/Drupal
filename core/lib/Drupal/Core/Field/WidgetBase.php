@@ -240,27 +240,25 @@ abstract class WidgetBase extends PluginSettingsBase implements WidgetInterface,
           ];
 
           if ($cardinality == FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED) {
-            $remove_button = [
-              '#delta' => $delta,
-              '#name' => str_replace('-', '_', $id_prefix) . "_{$delta}_add_more_remove_button",
-              '#type' => 'submit',
-              '#value' => $this->t('Remove'),
-              '#validate' => [],
-              '#submit' => [[static::class, 'submitRemove']],
-              '#limit_validation_errors' => [],
-              '#attributes' => [
-                'class' => ['remove-field-delta--' . $delta],
-              ],
-              '#ajax' => [
-                'callback' => [static::class, 'removeAjaxContentRefresh'],
-                'wrapper' => $wrapper_id,
-                'effect' => 'fade',
-              ],
-            ];
-
             $element['_actions'] = [
-              'remove_button' => $remove_button,
-              '#weight' => 101,
+              'remove_button' => [
+                '#delta' => $delta,
+                '#name' => str_replace('-', '_', $id_prefix) . "_{$delta}_add_more_remove_button",
+                '#type' => 'submit',
+                '#value' => $this->t('Remove'),
+                '#validate' => [],
+                '#submit' => [[static::class, 'submitRemove']],
+                '#limit_validation_errors' => [],
+                '#attributes' => [
+                  'class' => ['remove-field-delta--' . $delta],
+                ],
+                '#ajax' => [
+                  'callback' => [static::class, 'removeAjaxContentRefresh'],
+                  'wrapper' => $wrapper_id,
+                  'effect' => 'fade',
+                ],
+              ],
+              '#weight' => 10,
             ];
           }
         }
