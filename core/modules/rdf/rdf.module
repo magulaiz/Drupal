@@ -239,7 +239,7 @@ function rdf_node_build_defaults_alter(array &$build, NodeInterface $node) {
     $node->rss_namespaces = [];
   }
   foreach (rdf_get_namespaces() as $prefix => $uri) {
-    if($prefix === 'dc') {
+    if ($prefix === 'dc') {
       continue;
     }
     $node->rss_namespaces["xmlns:$prefix"] = $uri;

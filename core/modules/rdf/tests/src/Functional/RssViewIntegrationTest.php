@@ -41,9 +41,8 @@ class RssViewIntegrationTest extends BrowserTestBase {
     $document = new \DOMDocument();
     $this->assertTrue($document->loadXML($xml));
 
-
     foreach (rdf_get_namespaces() as $prefix => $uri) {
-      if($prefix === 'dc') {
+      if ($prefix === 'dc') {
         continue;
       }
       $this->assertSame($uri, $document->lookupNamespaceURI($prefix));
