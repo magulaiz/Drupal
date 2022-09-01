@@ -179,7 +179,10 @@ abstract class WidgetBase extends PluginSettingsBase implements WidgetInterface,
     // Determine the number of widgets to display.
     switch ($cardinality) {
       case FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED:
-        $max = $field_state['items_count'] - 1;
+        $max = $field_state['items_count'];
+        if ( $field_state['items_count'] > 1) {
+          $max = $field_state['items_count'] - 1;
+        }
         $is_multiple = TRUE;
         break;
 
