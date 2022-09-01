@@ -1156,7 +1156,6 @@ silverlight
 silvie
 simpletest
 singlebyte
-sioc
 sirbrillig
 sisko
 sitename
@@ -1199,6 +1198,7 @@ ssid
 stardivision
 starrrrr
 starterkit
+starterkit's
 starzzzz
 statuscode
 stdclass
