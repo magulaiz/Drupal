@@ -2,7 +2,7 @@ base:
   version: VERSION
   css:
     base:
-      css/base/base.css:
+      css/base/base.css: { }
     component:
       css/components/action-links.css:
         weight: -10
