@@ -4,10 +4,10 @@
  */
 
 ((Drupal, once) => {
-  let primaryNavigationRegion,
-    mobileNavigationButton,
-    secondLevelNavMenus,
-    secondLevelToggleButtonSelector;
+  let primaryNavigationRegion;
+  let mobileNavigationButton;
+  let secondLevelNavMenus;
+  let secondLevelToggleButtonSelector;
 
   function isDesktopNav() {
     return mobileNavigationButton.clientHeight === 0;
@@ -155,17 +155,6 @@
   }
 
   /**
-   * Handle mobile navigation click event.
-   *
-   * @param {Event} e
-   *   The event object.
-   */
-  function handleMobileNavigationButtonClick(e) {
-    const isExpanded = e.currentTarget.getAttribute('aria-expanded') === 'true';
-    toggleMobileNav(!isExpanded);
-  }
-
-  /**
    * Expand/collapse mobile navigation.
    *
    * @param {boolean} toState - if navigation will be expanded or collapsed.
@@ -178,6 +167,17 @@
     document.body.classList.toggle('is-active-mobile-menu', toState);
     mobileNavigationButton.setAttribute('aria-expanded', toState);
     primaryNavigationRegion.classList.toggle('is-expanded', toState);
+  }
+
+  /**
+   * Handle mobile navigation click event.
+   *
+   * @param {Event} e
+   *   The event object.
+   */
+  function handleMobileNavigationButtonClick(e) {
+    const isExpanded = e.currentTarget.getAttribute('aria-expanded') === 'true';
+    toggleMobileNav(!isExpanded);
   }
 
   /**

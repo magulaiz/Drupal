@@ -6,7 +6,10 @@
 **/
 
 ((Drupal, once) => {
-  let primaryNavigationRegion, mobileNavigationButton, secondLevelNavMenus, secondLevelToggleButtonSelector;
+  let primaryNavigationRegion;
+  let mobileNavigationButton;
+  let secondLevelNavMenus;
+  let secondLevelToggleButtonSelector;
 
   function isDesktopNav() {
     return mobileNavigationButton.clientHeight === 0;
@@ -90,11 +93,6 @@
     });
   }
 
-  function handleMobileNavigationButtonClick(e) {
-    const isExpanded = e.currentTarget.getAttribute('aria-expanded') === 'true';
-    toggleMobileNav(!isExpanded);
-  }
-
   function toggleMobileNav(toState) {
     if (primaryNavigationRegion.contains(document.activeElement)) {
       mobileNavigationButton.focus();
@@ -103,6 +101,11 @@
     document.body.classList.toggle('is-active-mobile-menu', toState);
     mobileNavigationButton.setAttribute('aria-expanded', toState);
     primaryNavigationRegion.classList.toggle('is-expanded', toState);
+  }
+
+  function handleMobileNavigationButtonClick(e) {
+    const isExpanded = e.currentTarget.getAttribute('aria-expanded') === 'true';
+    toggleMobileNav(!isExpanded);
   }
 
   function focusTrap(e) {
