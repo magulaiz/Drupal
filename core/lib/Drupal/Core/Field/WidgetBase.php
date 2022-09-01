@@ -174,18 +174,12 @@ abstract class WidgetBase extends PluginSettingsBase implements WidgetInterface,
     $field_name = $this->fieldDefinition->getName();
     $cardinality = $this->fieldDefinition->getFieldStorageDefinition()->getCardinality();
     $parents = $form['#parents'];
+    $field_state = static::getWidgetState($parents, $field_name, $form_state);
 
     // Determine the number of widgets to display.
     switch ($cardinality) {
       case FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED:
-        $field_state = static::getWidgetState($parents, $field_name, $form_state);
-        $max = $field_state['items_count'];
-        if ($field_state['items_count'] != 0) {
-          $trigger = $form_state->getTriggeringElement();
-          if (empty($trigger['#name'])) {
-            $max--;
-          }
-        }
+        $max = $field_state['items_count'] - 1;
         $is_multiple = TRUE;
         break;
 
@@ -286,15 +280,16 @@ abstract class WidgetBase extends PluginSettingsBase implements WidgetInterface,
 
       // Add 'add more' button, if not working with a programmed form.
       if ($cardinality == FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED && !$form_state->isProgrammed()) {
+        $elements['#wrapper_id'] = $wrapper_id;
         $elements['#prefix'] = '<div id="' . $wrapper_id . '">';
         $elements['#suffix'] = '</div>';
 
         $elements['add_more'] = [
           '#type' => 'submit',
-          '#name' => strtr($id_prefix, '-', '_') . '_add_more',
-          '#value' => t('Add another item'),
+          '#name' => str_replace('-', '_', $id_prefix) . '_add_more',
+          '#value' => $delta > 0 ? $this->t('Add another item') : $this->t('Add item'),
           '#attributes' => ['class' => ['field-add-more-submit']],
-          '#limit_validation_errors' => [array_merge($parents, [$field_name])],
+          '#limit_validation_errors' => [],
           '#submit' => [[static::class, 'addMoreSubmit']],
           '#ajax' => [
             'callback' => [static::class, 'addMoreAjax'],
@@ -363,8 +358,8 @@ abstract class WidgetBase extends PluginSettingsBase implements WidgetInterface,
 
     // Add a DIV around the delta receiving the Ajax effect.
     $delta = $element['#max_delta'];
-    $element[$delta]['#prefix'] = '<div class="ajax-new-content">' . ($element[$delta]['#prefix'] ?? '');
-    $element[$delta]['#suffix'] = ($element[$delta]['#suffix'] ?? '') . '</div>';
+    $element[$delta]['#prefix'] = '<div class="ajax-new-content">' . (isset($element[$delta]['#prefix']) ? $element[$delta]['#prefix'] : '');
+    $element[$delta]['#suffix'] = (isset($element[$delta]['#suffix']) ? $element[$delta]['#suffix'] : '') . '</div>';
 
     return $element;
   }
@@ -503,8 +498,8 @@ abstract class WidgetBase extends PluginSettingsBase implements WidgetInterface,
       // Put delta mapping in $form_state, so that flagErrors() can use it.
       $field_state = static::getWidgetState($form['#parents'], $field_name, $form_state);
       foreach ($items as $delta => $item) {
-        $field_state['original_deltas'][$delta] = $item->_original_delta ?? $delta;
-        unset($item->_original_delta, $item->_weight, $item->_actions);
+        $field_state['original_deltas'][$delta] = isset($item->_original_delta) ? $item->_original_delta : $delta;
+        unset($item->_original_delta, $item->_weight);
       }
       static::setWidgetState($form['#parents'], $field_name, $form_state, $field_state);
     }
