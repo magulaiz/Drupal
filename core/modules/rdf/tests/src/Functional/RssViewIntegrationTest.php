@@ -6,6 +6,7 @@ use Drupal\Tests\BrowserTestBase;
 
 /**
  * @group rdf
+ * @group legacy
  */
 class RssViewIntegrationTest extends BrowserTestBase {
 
