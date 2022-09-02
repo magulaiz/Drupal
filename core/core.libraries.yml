@@ -806,11 +806,9 @@ shepherd:
     assets/vendor/shepherd/shepherd.min.js: { minified: true }
 
 drupal.jquery.position:
-  # For most positioning needs, the core/popperjs library should be used. This
-  # is a modified version of jQuery UI position for that does not require any
-  # jQuery UI assets, only jQuery. It is provided by core for use with
-  # pre-existing libraries that expect the jQuery UI position API. Popperjs is
-  # recommended for any new uses.
+  # This is a modified version of jQuery UI position for that does not require
+  # any jQuery UI assets, only jQuery. It is provided by core for use with
+  # pre-existing libraries that expect the jQuery UI position API.
   version: VERSION
   js:
     misc/position.js: {}
