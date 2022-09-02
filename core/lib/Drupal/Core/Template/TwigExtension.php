@@ -658,20 +658,20 @@ class TwigExtension extends AbstractExtension {
   /**
    * Adds a theme suggestion to the element.
    *
-   * @param array $element
+   * @param array|null $element
    *   A theme element render array.
    * @param string|\Stringable $suggestion
    *   The theme suggestion part to append to the existing theme hook(s).
    *
-   * @return array
+   * @return array|null
    *   The element with the full theme suggestion added as the highest priority.
    */
-  public function suggestThemeHook(array $element, string|\Stringable $suggestion): array {
+  public function suggestThemeHook(?array $element, string|\Stringable $suggestion): ?array {
     // Make sure we have a valid theme element render array.
     if (empty($element['#theme'])) {
-      // Throw assertion for non-empty elements, but allow empty elements (like
-      // field content with no items) to proceed without theme suggestion.
-      assert(array_diff_key($element, [
+      // Throw assertion for render arrays that contain more than just metadata
+      // (e.g., don't assert on empty field content).
+      assert(array_diff_key($element ?? [], [
         '#cache' => TRUE,
         '#weight' => TRUE,
         '#attached' => TRUE,

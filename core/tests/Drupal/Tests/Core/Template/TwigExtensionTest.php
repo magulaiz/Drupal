@@ -533,6 +533,12 @@ class TwigExtensionTest extends UnitTestCase {
         ],
       ],
     ];
+
+    yield 'null/missing content should be ignored' => [
+      NULL,
+      'cute',
+      NULL,
+    ];
   }
 
 }
