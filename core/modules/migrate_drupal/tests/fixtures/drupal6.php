@@ -3457,7 +3457,7 @@ $connection->insert('content_node_field_instance')
   'type_name' => 'employee',
   'weight' => '36',
   'label' => 'Company 4',
-  'widget_type' => 'nodereference_autocomplete',
+  'widget_type' => 'nodereference_url',
   'widget_settings' => 'a:7:{s:18:"autocomplete_match";s:8:"contains";s:4:"size";s:2:"60";s:13:"default_value";a:1:{i:0;a:2:{s:3:"nid";N;s:14:"_error_element";s:50:"default_value_widget][field_company_4][0][nid][nid";}}s:17:"default_value_php";N;s:9:"node_link";a:5:{s:6:"teaser";i:0;s:4:"full";i:1;s:5:"title";s:14:"Company create";s:11:"hover_title";s:0:"";s:11:"destination";s:4:"node";}s:8:"fallback";s:12:"autocomplete";s:13:"edit_fallback";i:1;}',
   'display_settings' => 'a:5:{s:5:"label";a:2:{s:6:"format";s:5:"above";s:7:"exclude";i:0;}i:5;a:2:{s:6:"format";s:7:"default";s:7:"exclude";i:0;}s:6:"teaser";a:2:{s:6:"format";s:7:"default";s:7:"exclude";i:0;}s:4:"full";a:2:{s:6:"format";s:7:"default";s:7:"exclude";i:0;}i:4;a:2:{s:6:"format";s:7:"default";s:7:"exclude";i:0;}}',
   'description' => '',
