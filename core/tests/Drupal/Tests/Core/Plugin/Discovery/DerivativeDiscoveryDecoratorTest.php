@@ -132,7 +132,7 @@ class DerivativeDiscoveryDecoratorTest extends UnitTestCase {
   }
 
   /**
-   * Tests the getDerivativeFetcher method with a non-existent class.
+   * Tests the getDerivativeFetcher method with a nonexistent class.
    *
    * @see \Drupal\Component\Plugin\Discovery\DerivativeDiscoveryDecorator::getDeriver().\
    */

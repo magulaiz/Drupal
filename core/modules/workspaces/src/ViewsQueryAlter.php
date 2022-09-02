@@ -406,7 +406,7 @@ class ViewsQueryAlter implements ContainerInjectionInterface {
   /**
    * Moves a 'workspace_association' table to appear before the given alias.
    *
-   * Because Workspace chains possibly pre-existing tables onto the
+   * Because Workspace chains possibly preexisting tables onto the
    * 'workspace_association' table, we have to ensure that the
    * 'workspace_association' table appears in the query before the alias it's
    * chained on or the SQL is invalid.

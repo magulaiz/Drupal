@@ -207,16 +207,16 @@ class LibraryDiscoveryIntegrationTest extends KernelTestBase {
     $this->assertAssetInLibrary('core/modules/system/tests/themes/test_basetheme/css/base-libraries-extend.css', 'starterkit_theme', 'base', 'css');
     $this->assertAssetInLibrary('core/modules/system/tests/themes/test_subtheme/css/sub-libraries-extend.css', 'starterkit_theme', 'base', 'css');
 
-    // Activate test theme that extends with a non-existent library. An
+    // Activate test theme that extends with a nonexistent library. An
     // exception should be thrown.
     $this->activateTheme('test_theme_libraries_extend');
     try {
       $this->libraryDiscovery->getLibraryByName('core', 'drupal.dialog');
-      $this->fail('Throw Exception when specifying non-existent libraries-extend.');
+      $this->fail('Throw Exception when specifying nonexistent libraries-extend.');
     }
     catch (InvalidLibrariesExtendSpecificationException $e) {
       $expected_message = 'The specified library "test_theme_libraries_extend/non_existent_library" does not exist.';
-      $this->assertEquals($expected_message, $e->getMessage(), 'Throw Exception when specifying non-existent libraries-extend.');
+      $this->assertEquals($expected_message, $e->getMessage(), 'Throw Exception when specifying nonexistent libraries-extend.');
     }
 
     // Also, test non-string libraries-extend. An exception should be thrown.

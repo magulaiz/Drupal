@@ -10,7 +10,7 @@ use Drupal\Tests\migrate_drupal_ui\Functional\MigrateUpgradeExecuteTestBase;
  * Tests the classic node migration runs.
  *
  * The classic node migration will run and not the complete node migration
- * when there is a pre-existing classic node migrate map table.
+ * when there is a preexisting classic node migrate map table.
  *
  * @group migrate_drupal_ui
  */

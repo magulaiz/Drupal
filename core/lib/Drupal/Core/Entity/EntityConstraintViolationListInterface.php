@@ -10,7 +10,7 @@ use Symfony\Component\Validator\ConstraintViolationListInterface;
  *
  * The Symfony violation list is extended with methods that allow filtering
  * violations by fields and field access. Forms leverage that to skip possibly
- * pre-existing violations that cannot be caused or fixed by the form.
+ * preexisting violations that cannot be caused or fixed by the form.
  */
 interface EntityConstraintViolationListInterface extends ConstraintViolationListInterface {
 

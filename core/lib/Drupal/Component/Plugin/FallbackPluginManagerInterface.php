@@ -3,7 +3,7 @@
 namespace Drupal\Component\Plugin;
 
 /**
- * An interface implemented by plugin managers with fallback plugin behaviors.
+ * An interface implemented by plugin managers with fallback plugin behavior.
  */
 interface FallbackPluginManagerInterface {
 

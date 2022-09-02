@@ -272,7 +272,7 @@ class ImageFieldDefaultImagesTest extends ImageFieldTestBase {
     ]);
     $field_storage->save();
     $settings = $field_storage->getSettings();
-    // The non-existent default image should not be saved.
+    // The nonexistent default image should not be saved.
     $this->assertNull($settings['default_image']['uuid']);
 
     $field = FieldConfig::create([
@@ -287,7 +287,7 @@ class ImageFieldDefaultImagesTest extends ImageFieldTestBase {
     ]);
     $field->save();
     $settings = $field->getSettings();
-    // The non-existent default image should not be saved.
+    // The nonexistent default image should not be saved.
     $this->assertNull($settings['default_image']['uuid']);
   }
 

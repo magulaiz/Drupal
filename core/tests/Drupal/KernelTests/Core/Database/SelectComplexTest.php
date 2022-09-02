@@ -255,7 +255,7 @@ class SelectComplexTest extends DatabaseTestBase {
    */
   public function testCountQueryFieldRemovals() {
     // countQuery should remove all fields and expressions, so this can be
-    // tested by adding a non-existent field and expression: if it ends
+    // tested by adding a nonexistent field and expression: if it ends
     // up in the query, an error will be thrown. If not, it will return the
     // number of records, which in this case happens to be 4 (there are four
     // records in the {test} table).

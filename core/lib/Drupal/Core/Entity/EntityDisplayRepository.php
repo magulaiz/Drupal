@@ -212,7 +212,7 @@ class EntityDisplayRepository implements EntityDisplayRepositoryInterface {
     $options = $this->getDisplayModeOptions($display_type, $entity_type_id);
 
     // Filter out modes for which the entity display is disabled
-    // (or non-existent).
+    // (or nonexistent).
     $load_ids = [];
     // Get the list of available entity displays for the current bundle.
     foreach (array_keys($options) as $mode) {

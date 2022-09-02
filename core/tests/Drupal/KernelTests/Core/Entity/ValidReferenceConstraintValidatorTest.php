@@ -81,7 +81,7 @@ class ValidReferenceConstraintValidatorTest extends EntityKernelTestBase {
   }
 
   /**
-   * Tests the validation of pre-existing items in an entity reference field.
+   * Tests the validation of preexisting items in an entity reference field.
    */
   public function testPreExistingItemsValidation() {
     // Create two types of users, with and without access to bypass content
@@ -151,14 +151,14 @@ class ValidReferenceConstraintValidatorTest extends EntityKernelTestBase {
     ]);
 
     // Check that users with access are able pass the validation for fields
-    // without pre-existing content.
+    // without preexisting content.
     $this->container->get('account_switcher')->switchTo($user_with_access);
 
     $violations = $referencing_entity->field_test->validate();
     $this->assertCount(0, $violations);
 
     // Check that users without access are not able pass the validation for
-    // fields without pre-existing content.
+    // fields without preexisting content.
     $this->container->get('account_switcher')->switchTo($user_without_access);
 
     $violations = $referencing_entity->field_test->validate();
@@ -168,10 +168,10 @@ class ValidReferenceConstraintValidatorTest extends EntityKernelTestBase {
       '%id' => $unpublished_node->id(),
     ]), $violations[0]->getMessage());
 
-    // Now save the referencing entity which will create a pre-existing state
+    // Now save the referencing entity which will create a preexisting state
     // for it and repeat the checks. This time, the user without access should
     // be able to pass the validation as well because it's not changing the
-    // pre-existing state.
+    // preexisting state.
     $referencing_entity->save();
 
     $this->container->get('account_switcher')->switchTo($user_with_access);
@@ -180,7 +180,7 @@ class ValidReferenceConstraintValidatorTest extends EntityKernelTestBase {
     $this->assertCount(0, $violations);
 
     // Check that users without access are able pass the validation for fields
-    // with pre-existing content.
+    // with preexisting content.
     $this->container->get('account_switcher')->switchTo($user_without_access);
 
     $violations = $referencing_entity->field_test->validate();
@@ -198,7 +198,7 @@ class ValidReferenceConstraintValidatorTest extends EntityKernelTestBase {
     $violations = $referencing_entity->field_test->validate();
     $this->assertCount(0, $violations);
 
-    // Remove one of the referenceable bundles and check that a pre-existing node
+    // Remove one of the referenceable bundles and check that a preexisting node
     // of that bundle can not be referenced anymore.
     $field = FieldConfig::loadByName('entity_test', 'entity_test', 'field_test');
     $field->setSetting('handler_settings', ['target_bundles' => ['article']]);
@@ -212,7 +212,7 @@ class ValidReferenceConstraintValidatorTest extends EntityKernelTestBase {
       '%id' => $different_bundle_node->id(),
     ]), $violations[0]->getMessage());
 
-    // Delete the last node and check that the pre-existing reference is not
+    // Delete the last node and check that the preexisting reference is not
     // valid anymore.
     $deleted_node->delete();
 

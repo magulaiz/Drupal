@@ -326,7 +326,7 @@ class ViewsDataTest extends UnitTestCase {
   }
 
   /**
-   * Tests building the views data with a non existing table.
+   * Tests building the views data with a nonexistent table.
    */
   public function testNonExistingTableGetCache() {
     $random_table_name = $this->randomMachineName();
@@ -455,7 +455,7 @@ class ViewsDataTest extends UnitTestCase {
   }
 
   /**
-   * Tests the cache calls for a non-existent table.
+   * Tests the cache calls for a nonexistent table.
    *
    * Warm cache:
    *   - all tables
@@ -496,7 +496,7 @@ class ViewsDataTest extends UnitTestCase {
   }
 
   /**
-   * Tests the cache calls for a non-existent table.
+   * Tests the cache calls for a nonexistent table.
    *
    * Warm cache:
    *   - all tables

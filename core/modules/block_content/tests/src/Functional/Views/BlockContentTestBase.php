@@ -80,7 +80,7 @@ abstract class BlockContentTestBase extends ViewTestBase {
    *   Created custom block type.
    */
   protected function createBlockContentType(array $values = []) {
-    // Find a non-existent random type name.
+    // Find a nonexistent random type name.
     if (!isset($values['id'])) {
       do {
         $id = strtolower($this->randomMachineName(8));

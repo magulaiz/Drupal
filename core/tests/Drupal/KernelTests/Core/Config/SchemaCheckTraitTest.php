@@ -41,7 +41,7 @@ class SchemaCheckTraitTest extends KernelTestBase {
    * Tests \Drupal\Core\Config\Schema\SchemaCheckTrait.
    */
   public function testTrait() {
-    // Test a non existing schema.
+    // Test a nonexistent schema.
     $ret = $this->checkConfigSchema($this->typedConfig, 'config_schema_test.noschema', $this->config('config_schema_test.noschema')->get());
     $this->assertFalse($ret);
 

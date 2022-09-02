@@ -75,7 +75,7 @@ class ModuleHandlerTest extends UnitTestCase {
     $this->assertTrue(function_exists('module_handler_test_added_helper'), 'Function exists after being loaded.');
     $this->assertTrue($module_handler->load('module_handler_test_added'));
 
-    $this->assertFalse($module_handler->load('module_handler_test_dne'), 'Non-existent modules returns false.');
+    $this->assertFalse($module_handler->load('module_handler_test_dne'), 'Nonexistent modules returns false.');
   }
 
   /**

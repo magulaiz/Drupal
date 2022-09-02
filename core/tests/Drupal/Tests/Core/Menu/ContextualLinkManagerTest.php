@@ -123,7 +123,7 @@ class ContextualLinkManagerTest extends UnitTestCase {
       ->method('getDefinitions')
       ->will($this->returnValue($definitions));
 
-    // Test with a non existing group.
+    // Test with a nonexistent group.
     $result = $this->contextualLinkManager->getContextualLinkPluginsByGroup('group_non_existing');
     $this->assertEmpty($result);
 

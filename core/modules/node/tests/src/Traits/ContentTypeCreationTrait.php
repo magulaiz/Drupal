@@ -24,7 +24,7 @@ trait ContentTypeCreationTrait {
    *   Created content type.
    */
   protected function createContentType(array $values = []) {
-    // Find a non-existent random type name.
+    // Find a nonexistent random type name.
     if (!isset($values['type'])) {
       do {
         $id = strtolower($this->randomMachineName(8));

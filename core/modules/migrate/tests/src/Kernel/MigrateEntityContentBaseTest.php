@@ -107,7 +107,7 @@ class MigrateEntityContentBaseTest extends KernelTestBase {
     // Create a destination.
     $this->createDestination(['translations' => TRUE]);
 
-    // Create some pre-existing entities.
+    // Create some preexisting entities.
     $this->storage->create(['id' => 1, 'langcode' => 'en'])->save();
     $this->storage->create(['id' => 2, 'langcode' => 'fr'])->save();
     $translated = $this->storage->create(['id' => 3, 'langcode' => 'en']);

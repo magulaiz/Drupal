@@ -352,7 +352,7 @@ class ConfigEntityQueryTest extends KernelTestBase {
     $this->assertResults(['1', '2', '3', '4', '5', '6', '7']);
 
     $this->queryResults = $this->entityStorage->getQuery()
-      ->exists('non-existent')
+      ->exists('nonexistent')
       ->execute();
     $this->assertResults([]);
 
@@ -362,7 +362,7 @@ class ConfigEntityQueryTest extends KernelTestBase {
     $this->assertResults([]);
 
     $this->queryResults = $this->entityStorage->getQuery()
-      ->notExists('non-existent')
+      ->notExists('nonexistent')
       ->execute();
     $this->assertResults(['1', '2', '3', '4', '5', '6', '7']);
   }

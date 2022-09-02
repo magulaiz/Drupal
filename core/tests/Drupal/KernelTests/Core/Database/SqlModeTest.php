@@ -37,7 +37,7 @@ class SqlModeTest extends DatabaseTestBase {
     $info = parent::getDatabaseConnectionInfo();
 
     // This runs during setUp(), so is not yet skipped for non MySQL databases.
-    // We defer skipping the test to later in setUp(), so that that can be
+    // We defer skipping the test to later in setUp(), so that can be
     // based on databaseType() rather than 'driver', but here all we have to go
     // on is 'driver'.
     if ($info['default']['driver'] === 'mysql') {

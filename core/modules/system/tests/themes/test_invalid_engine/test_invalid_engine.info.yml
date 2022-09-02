@@ -1,6 +1,6 @@
 name: 'Theme test with invalid theme engine'
 type: theme
-description: 'Test theme which has a non-existent theme engine.'
+description: 'Test theme which has a nonexistent theme engine.'
 version: VERSION
 engine: not_real_engine
 base theme: false

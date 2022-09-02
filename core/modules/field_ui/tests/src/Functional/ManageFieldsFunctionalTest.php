@@ -857,7 +857,7 @@ class ManageFieldsFunctionalTest extends BrowserTestBase {
   }
 
   /**
-   * Tests the access to non-existent field URLs.
+   * Tests the access to nonexistent field URLs.
    */
   public function testNonExistentFieldUrls() {
     $field_id = 'node.foo.bar';

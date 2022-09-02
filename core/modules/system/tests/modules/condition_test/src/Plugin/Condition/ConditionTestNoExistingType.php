@@ -28,7 +28,7 @@ class ConditionTestNoExistingType extends ConditionPluginBase {
    * {@inheritdoc}
    */
   public function summary() {
-    return $this->t('Condition that requires a non-existent context.');
+    return $this->t('Condition that requires a nonexistent context.');
   }
 
 }

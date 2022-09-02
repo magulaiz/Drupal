@@ -100,11 +100,11 @@ class DownloadTest extends FileManagedTestBase {
     $response = $http_client->head($url, ['http_errors' => FALSE]);
     $this->assertSame(403, $response->getStatusCode(), 'Correctly denied access to a file when file_test sets the header to -1.');
 
-    // Try non-existent file.
+    // Try nonexistent file.
     file_test_reset();
     $url = $this->fileUrlGenerator->generateAbsoluteString('private://' . $this->randomMachineName());
     $response = $http_client->head($url, ['http_errors' => FALSE]);
-    $this->assertSame(404, $response->getStatusCode(), 'Correctly returned 404 response for a non-existent file.');
+    $this->assertSame(404, $response->getStatusCode(), 'Correctly returned 404 response for a nonexistent file.');
     // Assert that hook_file_download is not called.
     $this->assertEquals([], \Drupal::state()->get('file_test.results')['download']);
 

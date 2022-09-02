@@ -69,7 +69,7 @@ class FieldMissingTypeTest extends EntityKernelTestBase {
       $this->fieldName => $this->randomString(),
     ]);
     $entity->save();
-    // Hack the field storage to use a non-existent field type.
+    // Hack the field storage to use a nonexistent field type.
     $this->config('field.storage.entity_test_mulrev.' . $this->fieldName)->set('type', 'foo_field_storage')->save();
     \Drupal::service('entity_field.manager')->clearCachedFieldDefinitions();
     EntityTestMulRev::load($entity->id());
@@ -89,7 +89,7 @@ class FieldMissingTypeTest extends EntityKernelTestBase {
       $this->fieldName => $this->randomString(),
     ]);
     $entity->save();
-    // Hack the field to use a non-existent field type.
+    // Hack the field to use a nonexistent field type.
     $this->config('field.field.entity_test_mulrev.entity_test_mulrev.' . $this->fieldName)->set('field_type', 'foo_field')->save();
     \Drupal::service('entity_field.manager')->clearCachedFieldDefinitions();
     EntityTestMulRev::load($entity->id());

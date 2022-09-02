@@ -48541,7 +48541,7 @@ $connection->insert('registry')
   'weight' => '0',
 ))
 ->values(array(
-  'name' => 'EntityAPIi18nItegrationTestCase',
+  'name' => 'EntityAPIi18nIntegrationTestCase',
   'type' => 'class',
   'filename' => 'sites/all/modules/entity/entity.test',
   'module' => 'entity',

@@ -2054,7 +2054,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
 
     $request_options[RequestOptions::BODY] = $parseable_invalid_request_body_4;
 
-    // DX: 422 when request document contains non-existent field.
+    // DX: 422 when request document contains nonexistent field.
     $response = $this->request('POST', $url, $request_options);
     $this->assertResourceErrorResponse(422, sprintf("The attribute field_nonexistent does not exist on the %s resource type.", static::$resourceTypeName), $url, $response, FALSE);
 
@@ -2295,7 +2295,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
 
     $request_options[RequestOptions::BODY] = $parseable_invalid_request_body_4;
 
-    // DX: 422 when request document contains non-existent field.
+    // DX: 422 when request document contains nonexistent field.
     $response = $this->request('PATCH', $url, $request_options);
     $this->assertResourceErrorResponse(422, sprintf("The attribute field_nonexistent does not exist on the %s resource type.", static::$resourceTypeName), $url, $response, FALSE);
 
@@ -2528,7 +2528,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
     $response = $this->request('DELETE', $url, $request_options);
     $this->assertResourceResponse(204, NULL, $response);
 
-    // DX: 404 when non-existent.
+    // DX: 404 when nonexistent.
     $response = $this->request('DELETE', $url, $request_options);
     $this->assertSame(404, $response->getStatusCode());
   }

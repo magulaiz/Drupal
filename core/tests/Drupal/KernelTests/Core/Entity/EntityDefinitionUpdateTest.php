@@ -257,7 +257,7 @@ class EntityDefinitionUpdateTest extends EntityKernelTestBase {
     $this->assertTrue($this->entityDefinitionUpdateManager->needsUpdates(), 'EntityDefinitionUpdateManager reports that updates are needed.');
     $changes = $this->entityDefinitionUpdateManager->getChangeSummary();
     $this->assertCount(1, $changes['entity_test_update']);
-    $this->assertEquals('The A new base field field needs to be installed.', strip_tags($changes['entity_test_update'][0]));
+    $this->assertEquals('The A new base field needs to be installed.', strip_tags($changes['entity_test_update'][0]));
     $this->applyEntityUpdates();
     $this->assertTrue($this->database->schema()->fieldExists('entity_test_update', 'new_base_field'), 'Column created in shared table for new_base_field.');
 
@@ -267,7 +267,7 @@ class EntityDefinitionUpdateTest extends EntityKernelTestBase {
     $this->assertTrue($this->entityDefinitionUpdateManager->needsUpdates(), 'EntityDefinitionUpdateManager reports that updates are needed.');
     $changes = $this->entityDefinitionUpdateManager->getChangeSummary();
     $this->assertCount(1, $changes['entity_test_update']);
-    $this->assertEquals('The A new base field field needs to be updated.', strip_tags($changes['entity_test_update'][0]));
+    $this->assertEquals('The A new base field needs to be updated.', strip_tags($changes['entity_test_update'][0]));
     $this->applyEntityUpdates();
     $this->assertTrue($this->database->schema()->indexExists('entity_test_update', 'entity_test_update_field__new_base_field'), 'Index created.');
 
@@ -277,7 +277,7 @@ class EntityDefinitionUpdateTest extends EntityKernelTestBase {
     $this->assertTrue($this->entityDefinitionUpdateManager->needsUpdates(), 'EntityDefinitionUpdateManager reports that updates are needed.');
     $changes = $this->entityDefinitionUpdateManager->getChangeSummary();
     $this->assertCount(1, $changes['entity_test_update']);
-    $this->assertEquals('The A new base field field needs to be updated.', strip_tags($changes['entity_test_update'][0]));
+    $this->assertEquals('The A new base field needs to be updated.', strip_tags($changes['entity_test_update'][0]));
     $this->applyEntityUpdates();
     $this->assertFalse($this->database->schema()->indexExists('entity_test_update', 'entity_test_update_field__new_base_field'), 'Index deleted.');
 
@@ -288,7 +288,7 @@ class EntityDefinitionUpdateTest extends EntityKernelTestBase {
     $this->assertTrue($this->entityDefinitionUpdateManager->needsUpdates(), 'EntityDefinitionUpdateManager reports that updates are needed.');
     $changes = $this->entityDefinitionUpdateManager->getChangeSummary();
     $this->assertCount(1, $changes['entity_test_update']);
-    $this->assertEquals('The A new base field field needs to be updated.', strip_tags($changes['entity_test_update'][0]));
+    $this->assertEquals('The A new base field needs to be updated.', strip_tags($changes['entity_test_update'][0]));
     $this->applyEntityUpdates();
     $this->assertFalse($this->database->schema()->fieldExists('entity_test_update', 'new_base_field'), 'Original column deleted in shared table for new_base_field.');
     $this->assertTrue($this->database->schema()->fieldExists('entity_test_update', 'new_base_field__value'), 'Value column created in shared table for new_base_field.');
@@ -300,7 +300,7 @@ class EntityDefinitionUpdateTest extends EntityKernelTestBase {
     $this->assertTrue($this->entityDefinitionUpdateManager->needsUpdates(), 'EntityDefinitionUpdateManager reports that updates are needed.');
     $changes = $this->entityDefinitionUpdateManager->getChangeSummary();
     $this->assertCount(1, $changes['entity_test_update']);
-    $this->assertEquals('The A new base field field needs to be uninstalled.', strip_tags($changes['entity_test_update'][0]));
+    $this->assertEquals('The A new base field needs to be uninstalled.', strip_tags($changes['entity_test_update'][0]));
     $this->applyEntityUpdates();
     $this->assertFalse($this->database->schema()->fieldExists('entity_test_update', 'new_base_field_value'), 'Value column deleted from shared table for new_base_field.');
     $this->assertFalse($this->database->schema()->fieldExists('entity_test_update', 'new_base_field_format'), 'Format column deleted from shared table for new_base_field.');
@@ -346,7 +346,7 @@ class EntityDefinitionUpdateTest extends EntityKernelTestBase {
     $this->assertTrue($this->entityDefinitionUpdateManager->needsUpdates(), 'EntityDefinitionUpdateManager reports that updates are needed.');
     $changes = $this->entityDefinitionUpdateManager->getChangeSummary();
     $this->assertCount(1, $changes['entity_test_update']);
-    $this->assertEquals('The A new bundle field field needs to be installed.', strip_tags($changes['entity_test_update'][0]));
+    $this->assertEquals('The A new bundle field needs to be installed.', strip_tags($changes['entity_test_update'][0]));
     $this->applyEntityUpdates();
     $this->assertTrue($this->database->schema()->tableExists('entity_test_update__new_bundle_field'), 'Dedicated table created for new_bundle_field.');
 
@@ -357,7 +357,7 @@ class EntityDefinitionUpdateTest extends EntityKernelTestBase {
     $this->assertTrue($this->entityDefinitionUpdateManager->needsUpdates(), 'EntityDefinitionUpdateManager reports that updates are needed.');
     $changes = $this->entityDefinitionUpdateManager->getChangeSummary();
     $this->assertCount(1, $changes['entity_test_update']);
-    $this->assertEquals('The A new bundle field field needs to be updated.', strip_tags($changes['entity_test_update'][0]));
+    $this->assertEquals('The A new bundle field needs to be updated.', strip_tags($changes['entity_test_update'][0]));
     $this->applyEntityUpdates();
     $this->assertTrue($this->database->schema()->fieldExists('entity_test_update__new_bundle_field', 'new_bundle_field_format'), 'Format column created in dedicated table for new_base_field.');
 
@@ -367,7 +367,7 @@ class EntityDefinitionUpdateTest extends EntityKernelTestBase {
     $this->assertTrue($this->entityDefinitionUpdateManager->needsUpdates(), 'EntityDefinitionUpdateManager reports that updates are needed.');
     $changes = $this->entityDefinitionUpdateManager->getChangeSummary();
     $this->assertCount(1, $changes['entity_test_update']);
-    $this->assertEquals('The A new bundle field field needs to be uninstalled.', strip_tags($changes['entity_test_update'][0]));
+    $this->assertEquals('The A new bundle field needs to be uninstalled.', strip_tags($changes['entity_test_update'][0]));
     $this->applyEntityUpdates();
     $this->assertFalse($this->database->schema()->tableExists('entity_test_update__new_bundle_field'), 'Dedicated table deleted for new_bundle_field.');
   }
@@ -375,7 +375,7 @@ class EntityDefinitionUpdateTest extends EntityKernelTestBase {
   /**
    * Tests creating and deleting a base field if entities exist.
    *
-   * This tests deletion when there are existing entities, but non-existent data
+   * This tests deletion when there are existing entities, but nonexistent data
    * for the field being deleted.
    *
    * @see testBaseFieldDeleteWithExistingData()
@@ -431,7 +431,7 @@ class EntityDefinitionUpdateTest extends EntityKernelTestBase {
   /**
    * Tests creating and deleting a bundle field if entities exist.
    *
-   * This tests deletion when there are existing entities, but non-existent data
+   * This tests deletion when there are existing entities, but nonexistent data
    * for the field being deleted.
    *
    * @see testBundleFieldDeleteWithExistingData()
@@ -1308,7 +1308,7 @@ class EntityDefinitionUpdateTest extends EntityKernelTestBase {
         ->setLabel(t('A new base field'))
         ->setInitialValueFromField('field_that_does_not_exist');
       $this->entityDefinitionUpdateManager->installFieldStorageDefinition('new_base_field', 'entity_test_update', 'entity_test', $storage_definition);
-      $this->fail('Using a non-existent field as initial value does not work.');
+      $this->fail('Using a nonexistent field as initial value does not work.');
     }
     catch (FieldException $e) {
       $this->assertEquals('Illegal initial value definition on new_base_field: The field field_that_does_not_exist does not exist.', $e->getMessage());

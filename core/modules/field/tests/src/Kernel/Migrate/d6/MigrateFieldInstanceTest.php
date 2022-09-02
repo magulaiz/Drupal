@@ -175,7 +175,7 @@ class MigrateFieldInstanceTest extends MigrateDrupal6TestBase {
   }
 
   /**
-   * Tests migrating fields into non-existent content types.
+   * Tests migrating fields into nonexistent content types.
    */
   public function testMigrateFieldIntoUnknownNodeType() {
     $this->sourceDatabase->delete('node_type')

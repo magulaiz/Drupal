@@ -18,7 +18,7 @@ class EntityForm extends FormBase implements EntityFormInterface {
   /**
    * The name of the current operation.
    *
-   * Subclasses may use this to implement different behaviors depending on its
+   * Subclasses may use this to implement different behavior depending on its
    * value.
    *
    * @var string

@@ -52,7 +52,7 @@ class ContactController extends ControllerBase {
    *   \Drupal\Core\Render\RendererInterface::render().
    *
    * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
-   *   Exception is thrown when user tries to access non existing default
+   *   Exception is thrown when user tries to access nonexistent default
    *   contact form.
    */
   public function contactSitePage(ContactFormInterface $contact_form = NULL) {

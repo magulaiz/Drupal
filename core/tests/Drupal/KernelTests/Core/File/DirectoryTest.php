@@ -66,7 +66,7 @@ class DirectoryTest extends FileTestBase {
     $directory = $default_scheme . '://' . $this->randomMachineName() . '/' . $this->randomMachineName();
     $this->assertDirectoryDoesNotExist($directory);
 
-    // Non-existent directory.
+    // Nonexistent directory.
     /** @var \Drupal\Core\File\FileSystemInterface $file_system */
     $file_system = \Drupal::service('file_system');
     $this->assertFalse($file_system->prepareDirectory($directory, 0), 'Error reported for non-existing directory.', 'File');
@@ -150,7 +150,7 @@ class DirectoryTest extends FileTestBase {
    * filepath.
    */
   public function testFileDestination() {
-    // First test for non-existent file.
+    // First test for nonexistent file.
     $destination = 'core/misc/xyz.txt';
     /** @var \Drupal\Core\File\FileSystemInterface $file_system */
     $file_system = \Drupal::service('file_system');

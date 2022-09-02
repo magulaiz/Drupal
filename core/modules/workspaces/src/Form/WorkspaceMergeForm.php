@@ -91,7 +91,7 @@ class WorkspaceMergeForm extends ConfirmFormBase implements WorkspaceFormInterfa
     ];
 
     // List the changes that can be merged into the target.
-    if ($source_rev_diff = $workspace_merger->getDifferringRevisionIdsOnSource()) {
+    if ($source_rev_diff = $workspace_merger->getDifferingRevisionIdsOnSource()) {
       $total_count = $workspace_merger->getNumberOfChangesOnSource();
       $form['merge'] = [
         '#theme' => 'item_list',

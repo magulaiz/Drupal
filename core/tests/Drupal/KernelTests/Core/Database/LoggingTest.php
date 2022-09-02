@@ -91,7 +91,7 @@ class LoggingTest extends DatabaseTestBase {
 
     $this->connection->query('SELECT [name] FROM {test} WHERE [age] > :age', [':age' => 25])->fetchCol();
 
-    // We use "fake" here as a target because any non-existent target will do.
+    // We use "fake" here as a target because any nonexistent target will do.
     // However, because all of the tests in this class share a single page
     // request there is likely to be a target of "replica" from one of the other
     // unit tests, so we use a target here that we know with absolute certainty

@@ -371,12 +371,12 @@ class EntityReferenceFieldItemNormalizerTest extends UnitTestCase {
    */
   public function testDenormalizeWithTypeWithIncorrectUuid() {
     $this->expectException(InvalidArgumentException::class);
-    $this->expectExceptionMessage('No "test_type" entity found with UUID "unique-but-none-non-existent" for field "field_reference"');
+    $this->expectExceptionMessage('No "test_type" entity found with UUID "unique-but-none-nonexistent" for field "field_reference"');
 
     $data = [
       'target_id' => 'test',
       'target_type' => 'test_type',
-      'target_uuid' => 'unique-but-none-non-existent',
+      'target_uuid' => 'unique-but-none-nonexistent',
     ];
     $this->entityRepository
       ->loadEntityByUuid($data['target_type'], $data['target_uuid'])

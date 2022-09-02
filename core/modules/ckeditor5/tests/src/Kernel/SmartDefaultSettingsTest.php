@@ -196,7 +196,7 @@ class SmartDefaultSettingsTest extends KernelTestBase {
     );
     $settings = $basic_html_editor_with_media_embed->getSettings();
     // Add "insert media from library" button to CKEditor 4 configuration, the
-    // pre-existing toolbar item group labeled "Media".
+    // preexisting toolbar item group labeled "Media".
     $settings['toolbar']['rows'][0][3]['items'][] = 'DrupalMediaLibrary';
     $basic_html_editor_with_media_embed->setSettings($settings);
     $basic_html_editor_with_media_embed->setSyncing(TRUE)->save();
@@ -215,7 +215,7 @@ class SmartDefaultSettingsTest extends KernelTestBase {
     );
     $settings = $basic_html_editor_with_media_embed_view_mode_enabled_no_view_modes_configured->getSettings();
     // Add "insert media from library" button to CKEditor 4 configuration, the
-    // pre-existing toolbar item group labeled "Media".
+    // preexisting toolbar item group labeled "Media".
     $settings['toolbar']['rows'][0][3]['items'][] = 'DrupalMediaLibrary';
     $basic_html_editor_with_media_embed_view_mode_enabled_no_view_modes_configured->setSettings($settings);
     $basic_html_editor_with_media_embed_view_mode_enabled_no_view_modes_configured->setSyncing(TRUE)->save();
@@ -243,7 +243,7 @@ class SmartDefaultSettingsTest extends KernelTestBase {
     );
     $settings = $basic_html_editor_with_media_embed_view_mode_enabled_two_view_modes_configured->getSettings();
     // Add "insert media from library" button to CKEditor 4 configuration, the
-    // pre-existing toolbar item group labeled "Media".
+    // preexisting toolbar item group labeled "Media".
     $settings['toolbar']['rows'][0][3]['items'][] = 'DrupalMediaLibrary';
     $basic_html_editor_with_media_embed_view_mode_enabled_two_view_modes_configured->setSettings($settings);
     $basic_html_editor_with_media_embed_view_mode_enabled_two_view_modes_configured->setSyncing(TRUE)->save();

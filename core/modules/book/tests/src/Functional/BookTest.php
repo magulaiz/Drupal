@@ -263,7 +263,7 @@ class BookTest extends BrowserTestBase {
     $this->drupalGet('book/export/foobar/' . $this->book->id());
     $this->assertSession()->statusCodeEquals(404);
 
-    // Make sure we get a 404 on a non-existent book node.
+    // Make sure we get a 404 on a nonexistent book node.
     $this->drupalGet('book/export/html/123');
     $this->assertSession()->statusCodeEquals(404);
 

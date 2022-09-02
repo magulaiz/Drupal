@@ -109,7 +109,7 @@ final class SmartDefaultSettings {
    */
   public function computeSmartDefaultSettings(?EditorInterface $text_editor, FilterFormatInterface $text_format): array {
     if ($text_format->isNew()) {
-      throw new \InvalidArgumentException('Smart default settings can only be computed when there is a pre-existing text format.');
+      throw new \InvalidArgumentException('Smart default settings can only be computed when there is a preexisting text format.');
     }
     if ($text_editor && $text_editor->id() !== $text_format->id()) {
       throw new \InvalidArgumentException('The given text editor and text format must form a pair.');
@@ -129,7 +129,7 @@ final class SmartDefaultSettings {
       $property->setValue($text_editor, $text_format);
     }
 
-    // When there is a pre-existing text editor, pass that. Otherwise, generate
+    // When there is a preexisting text editor, pass that. Otherwise, generate
     // an empty shell of a text editor config entity — this will then
     // automatically get the default CKEditor 5 settings.
     // @todo Update after https://www.drupal.org/project/drupal/issues/3226673.

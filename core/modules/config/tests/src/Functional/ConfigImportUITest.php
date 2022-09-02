@@ -526,7 +526,7 @@ class ConfigImportUITest extends BrowserTestBase {
     $this->submitForm([], 'Import all');
     $this->assertSession()->pageTextContains('The configuration cannot be imported because it failed validation for the following reasons:');
     $this->assertSession()->pageTextContains('Unable to uninstall the Text module since the Node module is installed.');
-    $this->assertSession()->pageTextContains('Unable to uninstall the Theme test base theme theme since the Theme test subtheme theme is installed.');
+    $this->assertSession()->pageTextContains('Unable to uninstall the Theme test base theme since the Theme test subtheme theme is installed.');
     $this->assertSession()->pageTextContains('Unable to install the does_not_exist module since it does not exist.');
     $this->assertSession()->pageTextContains('Unable to install the does_not_exist theme since it does not exist.');
   }

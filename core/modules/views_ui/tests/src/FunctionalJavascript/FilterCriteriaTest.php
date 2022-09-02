@@ -78,7 +78,7 @@ class FilterCriteriaTest extends WebDriverTestBase {
     $create_new_filter_group->click();
     $assert_session->assertWaitOnAjaxRequest();
 
-    // Validate dragging behaviors.
+    // Validate dragging behavior.
 
     // First get relevant elements and the current values.
     $status_extra_row = $page->findById("views-row-status_extra");

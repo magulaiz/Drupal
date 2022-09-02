@@ -203,8 +203,8 @@ class MigrateTaxonomyTermTest extends MigrateDrupal7TestBase {
     $this->assertSame($term->bundle(), $term_is->bundle());
     $this->assertSame($term->getWeight(), $term_fr->getWeight());
     $this->assertSame($term->getWeight(), $term_is->getWeight());
-    $this->assertSame($term->parent->terget_id, $term_fr->parent->terget_id);
-    $this->assertSame($term->parent->terget_id, $term_is->parent->terget_id);
+    $this->assertSame($term->parent->target_id, $term_fr->parent->target_id);
+    $this->assertSame($term->parent->target_id, $term_is->parent->target_id);
   }
 
   /**

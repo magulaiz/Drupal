@@ -85,7 +85,7 @@ class WorkspacePublishForm extends ConfirmFormBase implements WorkspaceFormInter
     $form['#title'] = $this->t('Publish %source_label workspace', $args);
 
     // List the changes that can be pushed.
-    if ($source_rev_diff = $workspace_publisher->getDifferringRevisionIdsOnSource()) {
+    if ($source_rev_diff = $workspace_publisher->getDifferingRevisionIdsOnSource()) {
       $total_count = $workspace_publisher->getNumberOfChangesOnSource();
       $form['description'] = [
         '#theme' => 'item_list',

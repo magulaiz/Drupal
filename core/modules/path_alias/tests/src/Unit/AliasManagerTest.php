@@ -469,8 +469,8 @@ class AliasManagerTest extends UnitTestCase {
     // `lookupPathAlias` if cache is cleared).
     $this->assertEquals($alias, $this->aliasManager->getAliasByPath($path, $language->getId()));
 
-    // Clear non-existent source.
-    $this->aliasManager->cacheClear('non-existent');
+    // Clear nonexistent source.
+    $this->aliasManager->cacheClear('nonexistent');
   }
 
   /**

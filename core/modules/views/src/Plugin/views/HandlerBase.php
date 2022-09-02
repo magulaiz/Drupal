@@ -513,7 +513,7 @@ abstract class HandlerBase extends PluginBase implements ViewsHandlerInterface {
     // Ensure this gets set to something.
     $this->relationship = NULL;
 
-    // Don't process non-existent relationships.
+    // Don't process nonexistent relationships.
     if (empty($this->options['relationship']) || $this->options['relationship'] == 'none') {
       return;
     }

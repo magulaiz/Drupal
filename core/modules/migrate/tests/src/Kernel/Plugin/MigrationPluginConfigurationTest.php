@@ -60,7 +60,7 @@ class MigrationPluginConfigurationTest extends KernelTestBase {
           ],
         ],
       ],
-      // Tests overriding pre-existing configuration in a migration.
+      // Tests overriding preexisting configuration in a migration.
       [
         // New configuration.
         'd7_blocked_ips',

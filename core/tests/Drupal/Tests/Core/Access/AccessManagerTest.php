@@ -448,7 +448,7 @@ class AccessManagerTest extends UnitTestCase {
   }
 
   /**
-   * Tests checkNamedRoute given an invalid/non existing route name.
+   * Tests checkNamedRoute given an invalid/nonexistent route name.
    */
   public function testCheckNamedRouteWithNonExistingRoute() {
     $this->routeProvider->expects($this->any())
@@ -457,8 +457,8 @@ class AccessManagerTest extends UnitTestCase {
 
     $this->setupAccessChecker();
 
-    $this->assertEquals(FALSE, $this->accessManager->checkNamedRoute('test_route_1', [], $this->account), 'A non existing route lead to access.');
-    $this->assertEquals(AccessResult::forbidden()->addCacheTags(['config:core.extension']), $this->accessManager->checkNamedRoute('test_route_1', [], $this->account, TRUE), 'A non existing route lead to access.');
+    $this->assertEquals(FALSE, $this->accessManager->checkNamedRoute('test_route_1', [], $this->account), 'A nonexistent route lead to access.');
+    $this->assertEquals(AccessResult::forbidden()->addCacheTags(['config:core.extension']), $this->accessManager->checkNamedRoute('test_route_1', [], $this->account, TRUE), 'A nonexistent route lead to access.');
   }
 
   /**

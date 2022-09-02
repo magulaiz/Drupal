@@ -42,7 +42,7 @@ trait OEmbedTestTrait {
    * Configures the http_client service so that all requests are carried out
    * relative to the URL of the fixtures directory. For example, after calling
    * this method, a request for foobar.html will actually request
-   * http://test-site/path/to/fuxtures/foobar.html.
+   * http://test-site/path/to/fixtures/foobar.html.
    */
   protected function lockHttpClientToFixtures() {
     $this->writeSettings([

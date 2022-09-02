@@ -114,7 +114,7 @@ class MigrateLanguageNegotiationSettingsTest extends MigrateDrupal7TestBase {
   }
 
   /**
-   * Tests the migration with non-existent variables.
+   * Tests the migration with nonexistent variables.
    */
   public function testLanguageNegotiationWithNonExistentVariables() {
     $this->sourceDatabase->delete('variable')

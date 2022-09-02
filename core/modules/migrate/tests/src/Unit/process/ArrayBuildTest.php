@@ -40,7 +40,7 @@ class ArrayBuildTest extends MigrateProcessTestCase {
   }
 
   /**
-   * Tests non-existent key for the key configuration.
+   * Tests nonexistent key for the key configuration.
    */
   public function testNonExistentKey() {
     $source = [
@@ -52,7 +52,7 @@ class ArrayBuildTest extends MigrateProcessTestCase {
   }
 
   /**
-   * Tests non-existent key for the value configuration.
+   * Tests nonexistent key for the value configuration.
    */
   public function testNonExistentValue() {
     $source = [

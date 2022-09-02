@@ -250,7 +250,7 @@ class ContainerTest extends TestCase {
   }
 
   /**
-   * Tests that Container::get() for non-existent services works properly.
+   * Tests that Container::get() for nonexistent services works properly.
    *
    * @covers ::get
    * @covers ::createService
@@ -283,7 +283,7 @@ class ContainerTest extends TestCase {
   }
 
   /**
-   * Tests that Container::get() for non-existent parameters works properly.
+   * Tests that Container::get() for nonexistent parameters works properly.
    *
    * @covers ::get
    * @covers ::createService
@@ -312,7 +312,7 @@ class ContainerTest extends TestCase {
   }
 
   /**
-   * Tests that Container::get() for non-existent parameters works properly.
+   * Tests that Container::get() for nonexistent parameters works properly.
    *
    * @covers ::get
    * @covers ::createService
@@ -324,7 +324,7 @@ class ContainerTest extends TestCase {
   }
 
   /**
-   * Tests that Container::get() for non-existent dependencies works properly.
+   * Tests that Container::get() for nonexistent dependencies works properly.
    *
    * @covers ::get
    * @covers ::createService
@@ -336,7 +336,7 @@ class ContainerTest extends TestCase {
   }
 
   /**
-   * Tests that Container::get() for non-existent dependencies works properly.
+   * Tests that Container::get() for nonexistent dependencies works properly.
    *
    * @covers ::get
    * @covers ::createService
@@ -349,7 +349,7 @@ class ContainerTest extends TestCase {
   }
 
   /**
-   * Tests that Container::get() for non-existent services works properly.
+   * Tests that Container::get() for nonexistent services works properly.
    *
    * @covers ::get
    * @covers ::createService

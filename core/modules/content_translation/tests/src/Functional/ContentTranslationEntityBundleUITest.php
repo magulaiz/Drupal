@@ -5,7 +5,7 @@ namespace Drupal\Tests\content_translation\Functional;
 use Drupal\Tests\BrowserTestBase;
 
 /**
- * Tests the content translation behaviors on entity bundle UI.
+ * Tests the content translation behavior on entity bundle UI.
  *
  * @group content_translation
  */

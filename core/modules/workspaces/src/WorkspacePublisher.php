@@ -92,7 +92,7 @@ class WorkspacePublisher implements WorkspacePublisherInterface {
       // @todo Handle the publishing of a workspace with a batch operation in
       //   https://www.drupal.org/node/2958752.
       $this->workspaceManager->executeOutsideWorkspace(function () {
-        foreach ($this->getDifferringRevisionIdsOnSource() as $entity_type_id => $revision_difference) {
+        foreach ($this->getDifferingRevisionIdsOnSource() as $entity_type_id => $revision_difference) {
 
           $entity_revisions = $this->entityTypeManager->getStorage($entity_type_id)
             ->loadMultipleRevisions(array_keys($revision_difference));
@@ -153,7 +153,7 @@ class WorkspacePublisher implements WorkspacePublisherInterface {
   /**
    * {@inheritdoc}
    */
-  public function getDifferringRevisionIdsOnTarget() {
+  public function getDifferingRevisionIdsOnTarget() {
     $target_revision_difference = [];
 
     $tracked_entities = $this->workspaceAssociation->getTrackedEntities($this->sourceWorkspace->id());
@@ -185,7 +185,7 @@ class WorkspacePublisher implements WorkspacePublisherInterface {
   /**
    * {@inheritdoc}
    */
-  public function getDifferringRevisionIdsOnSource() {
+  public function getDifferingRevisionIdsOnSource() {
     // Get the Workspace association revisions which haven't been pushed yet.
     return $this->workspaceAssociation->getTrackedEntities($this->sourceWorkspace->id());
   }
@@ -194,7 +194,7 @@ class WorkspacePublisher implements WorkspacePublisherInterface {
    * {@inheritdoc}
    */
   public function getNumberOfChangesOnTarget() {
-    $total_changes = $this->getDifferringRevisionIdsOnTarget();
+    $total_changes = $this->getDifferingRevisionIdsOnTarget();
     return count($total_changes, COUNT_RECURSIVE) - count($total_changes);
   }
 
@@ -202,7 +202,7 @@ class WorkspacePublisher implements WorkspacePublisherInterface {
    * {@inheritdoc}
    */
   public function getNumberOfChangesOnSource() {
-    $total_changes = $this->getDifferringRevisionIdsOnSource();
+    $total_changes = $this->getDifferingRevisionIdsOnSource();
     return count($total_changes, COUNT_RECURSIVE) - count($total_changes);
   }
 

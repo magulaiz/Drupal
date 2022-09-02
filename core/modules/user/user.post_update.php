@@ -19,7 +19,7 @@ function user_removed_post_updates() {
 }
 
 /**
- * Calculate role dependencies and remove non-existent permissions.
+ * Calculate role dependencies and remove nonexistent permissions.
  */
 function user_post_update_update_roles(&$sandbox = NULL) {
   $cleaned_roles = [];
@@ -29,7 +29,7 @@ function user_post_update_update_roles(&$sandbox = NULL) {
     if (!empty($removed_permissions)) {
       $cleaned_roles[] = $role->label();
       \Drupal::logger('update')->notice(
-        'The role %role has had the following non-existent permission(s) removed: %permissions.',
+        'The role %role has had the following nonexistent permission(s) removed: %permissions.',
         ['%role' => $role->label(), '%permissions' => implode(', ', $removed_permissions)]
       );
     }
@@ -41,8 +41,8 @@ function user_post_update_update_roles(&$sandbox = NULL) {
   if (!empty($cleaned_roles)) {
     return new PluralTranslatableMarkup(
       count($cleaned_roles),
-      'The role %role_list has had non-existent permissions removed. Check the logs for details.',
-      'The roles %role_list have had non-existent permissions removed. Check the logs for details.',
+      'The role %role_list has had nonexistent permissions removed. Check the logs for details.',
+      'The roles %role_list have had nonexistent permissions removed. Check the logs for details.',
       ['%role_list' => implode(', ', $cleaned_roles)]
     );
   }

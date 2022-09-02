@@ -172,7 +172,7 @@ class PrepareUninstallTest extends BrowserTestBase {
     $this->assertSession()->pageTextContains('The selected modules have been uninstalled.');
     $this->assertSession()->pageTextNotContains('Allows content to be submitted to the site and displayed on pages.');
 
-    // Ensure a 404 is returned when accessing a non-existent entity type.
+    // Ensure a 404 is returned when accessing a nonexistent entity type.
     $this->drupalGet('admin/modules/uninstall/entity/node');
     $this->assertSession()->statusCodeEquals(404);
 

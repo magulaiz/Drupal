@@ -34,11 +34,11 @@ class HandlerFilterPermissionTest extends UserKernelTestBase {
     $column_map = ['uid' => 'uid'];
     $view = Views::getView('test_filter_permission');
 
-    // Filter by a non existing permission.
+    // Filter by a nonexistent permission.
     $view->initHandlers();
     $view->filter['permission']->value = ['non_existent_permission'];
     $this->executeView($view);
-    $this->assertCount(4, $view->result, 'A non existent permission is not filtered so everything is the result.');
+    $this->assertCount(4, $view->result, 'A nonexistent permission is not filtered so everything is the result.');
     $expected[] = ['uid' => 1];
     $expected[] = ['uid' => 2];
     $expected[] = ['uid' => 3];

@@ -870,7 +870,7 @@ class FormStateDecoratorBaseTest extends UnitTestCase {
       [__FILE__, 'foo', 'inc', 'foo'],
       [__FILE__, 'foo', 'inc', 'foo.admin'],
       [__FILE__, 'bar', 'inc', 'bar'],
-      // Non-existent files.
+      // Nonexistent files.
       [FALSE, 'foo', 'php', 'foo'],
       [FALSE, 'bar', 'php', 'foo'],
     ];

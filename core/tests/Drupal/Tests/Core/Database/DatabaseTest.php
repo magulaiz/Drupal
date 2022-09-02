@@ -95,8 +95,8 @@ class DatabaseTest extends UnitTestCase {
   public function providerFindDriverAutoloadDirectoryException() {
     return [
       'test module but tests not included' => ["Cannot find the module 'driver_test' for the database driver namespace 'Drupal\driver_test\Driver\Database\DrivertestMysql'", 'Drupal\driver_test\Driver\Database\DrivertestMysql', FALSE],
-      'non-existent driver in test module' => ["Cannot find the database driver namespace 'Drupal\driver_test\Driver\Database\sqlite' in module 'driver_test'", 'Drupal\driver_test\Driver\Database\sqlite', TRUE],
-      'non-existent module' => ["Cannot find the module 'does_not_exist' for the database driver namespace 'Drupal\does_not_exist\Driver\Database\mysql'", 'Drupal\does_not_exist\Driver\Database\mysql', TRUE],
+      'nonexistent driver in test module' => ["Cannot find the database driver namespace 'Drupal\driver_test\Driver\Database\sqlite' in module 'driver_test'", 'Drupal\driver_test\Driver\Database\sqlite', TRUE],
+      'nonexistent module' => ["Cannot find the module 'does_not_exist' for the database driver namespace 'Drupal\does_not_exist\Driver\Database\mysql'", 'Drupal\does_not_exist\Driver\Database\mysql', TRUE],
     ];
   }
 

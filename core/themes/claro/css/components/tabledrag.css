@@ -170,7 +170,7 @@ body.drag {
 .tabledrag-handle:focus::before {
   display: block;
   width: 2rem; /* Same as height. */
-  height: 2rem; /* Hande svg height + its vertical padding */
+  height: 2rem; /* Handle svg height + its vertical padding */
   margin: 0 -0.5rem -2rem; /* Bottom: handle height as negative value. */
   content: "";
   border-radius: 2px;

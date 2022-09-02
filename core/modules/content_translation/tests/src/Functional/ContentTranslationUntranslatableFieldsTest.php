@@ -8,7 +8,7 @@ use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\language\Entity\ConfigurableLanguage;
 
 /**
- * Tests the untranslatable fields behaviors.
+ * Tests the untranslatable fields behavior.
  *
  * @group content_translation
  */

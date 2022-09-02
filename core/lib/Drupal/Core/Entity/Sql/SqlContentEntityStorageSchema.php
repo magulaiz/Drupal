@@ -2433,7 +2433,7 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
   }
 
   /**
-   * Checks whether a database table is non-existent or empty.
+   * Checks whether a database table is nonexistent or empty.
    *
    * Empty tables can be dropped and recreated without data loss.
    *

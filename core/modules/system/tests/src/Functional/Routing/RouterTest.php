@@ -247,7 +247,7 @@ class RouterTest extends BrowserTestBase {
     $this->assertSession()->statusCodeEquals(200);
     $this->assertSession()->pageTextContains('User route "entity.user.canonical" was matched.');
 
-    // Try to match a route for a non-existent user.
+    // Try to match a route for a nonexistent user.
     $this->drupalGet('router_test/test14/2');
     $this->assertSession()->statusCodeEquals(200);
     $this->assertSession()->pageTextContains('Route not matched.');

@@ -8,7 +8,7 @@ use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\RequirementsPageTrait;
 
 /**
- * Tries to update a module which has no pre-existing schema.
+ * Tries to update a module which has no preexisting schema.
  *
  * @group Update
  */

@@ -295,7 +295,7 @@ class ContentTranslationWorkflowsTest extends ContentTranslationTestBase {
   }
 
   /**
-   * Checks that workflows have the expected behaviors for the given user.
+   * Checks that workflows have the expected behavior for the given user.
    *
    * @param \Drupal\user\UserInterface $user
    *   The user to test the workflow behavior against.

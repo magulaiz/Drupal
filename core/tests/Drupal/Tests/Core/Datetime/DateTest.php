@@ -164,8 +164,7 @@ class DateTest extends UnitTestCase {
 
     // Removed characters related to timezone 'e' and 'T', as test does not have
     // timezone set.
-    $date_characters = 'dDjlNSwzWFmMntLoYyaABgGhHisuIOPZcrU';
-    $date_chars = str_split($date_characters);
+    $date_chars = str_split('dDjlNSwzWFmMntLoYyaABgGhHisuIOPZcrU');
 
     foreach ($date_chars as $val) {
       $this->assertEquals($expected[$val], date($val, $timestamp));

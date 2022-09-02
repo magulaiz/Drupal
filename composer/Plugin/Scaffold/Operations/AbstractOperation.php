@@ -5,7 +5,7 @@ namespace Drupal\Composer\Plugin\Scaffold\Operations;
 use Drupal\Composer\Plugin\Scaffold\ScaffoldFilePath;
 
 /**
- * Provides default behaviors for operations.
+ * Provides default behavior for operations.
  *
  * @internal
  */

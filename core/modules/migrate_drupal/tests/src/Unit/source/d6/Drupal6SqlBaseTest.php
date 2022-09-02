@@ -107,7 +107,7 @@ class Drupal6SqlBaseTest extends MigrateTestCase {
    * Tests for Drupal6SqlBase::getModuleSchemaVersion().
    */
   public function testGetModuleSchemaVersion() {
-    // Non-existent module.
+    // Nonexistent module.
     $this->assertFalse($this->base->getModuleSchemaVersionWrapper('module3'));
 
     // Disabled module should still return schema version.

@@ -72,7 +72,7 @@ class ItemList extends TypedData implements \IteratorAggregate, ListInterface {
           $this->list[$delta]->setValue($value, FALSE);
         }
       }
-      // Truncate extraneous pre-existing values.
+      // Truncate extraneous preexisting values.
       $this->list = array_slice($this->list, 0, count($values));
     }
     // Notify the parent of any changes.

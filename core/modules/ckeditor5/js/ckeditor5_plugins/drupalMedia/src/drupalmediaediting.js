@@ -308,7 +308,7 @@ export default class DrupalMediaEditing extends Plugin {
           // `<a>`.
           let media = getPreviewContainer(container.getChildren());
 
-          // Use pre-existing media preview container if one exists. If the
+          // Use preexisting media preview container if one exists. If the
           // preview element doesn't exist, create a new element.
           if (media) {
             // Stop processing if media preview is unavailable or a preview is

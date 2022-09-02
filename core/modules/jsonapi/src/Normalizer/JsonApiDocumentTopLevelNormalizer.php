@@ -268,7 +268,7 @@ class JsonApiDocumentTopLevelNormalizer extends NormalizerBase implements Denorm
     $link_hash_salt = Crypt::randomBytesBase64();
     foreach ($normalized_omissions as $omission) {
       $cacheability->addCacheableDependency($omission);
-      // Add the errors to the pre-existing errors.
+      // Add the errors to the preexisting errors.
       foreach ($omission->getNormalization() as $error) {
         // JSON:API links cannot be arrays and the spec generally favors link
         // relation types as keys. 'item' is the right link relation type, but

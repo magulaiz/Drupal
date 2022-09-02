@@ -275,14 +275,14 @@ class AreaDisplayLinkTest extends ViewsKernelTestBase {
     $this->assertSame('<em class="placeholder">Page 1</em>: The link in the <em class="placeholder">header</em> area has no configured display.', $errors['page_1'][0]->__toString());
 
     // Assert an error is shown when linking to a display ID that doesn't exist.
-    $display_link['display_link_3']['display_id'] = 'non-existent';
+    $display_link['display_link_3']['display_id'] = 'nonexistent';
     $view->displayHandlers->get('page_1')->overrideOption('header', $display_link);
     $view->destroy();
     $view->setDisplay('page_1');
     $errors = $view->validate();
     $this->assertCount(1, $errors);
     $this->assertCount(1, $errors['page_1']);
-    $this->assertSame('<em class="placeholder">Page 1</em>: The link in the <em class="placeholder">header</em> area points to the <em class="placeholder">non-existent</em> display which no longer exists.', $errors['page_1'][0]->__toString());
+    $this->assertSame('<em class="placeholder">Page 1</em>: The link in the <em class="placeholder">header</em> area points to the <em class="placeholder">nonexistent</em> display which no longer exists.', $errors['page_1'][0]->__toString());
 
     // Assert an error is shown when linking to a display without a path.
     $display_link['display_link_3']['display_id'] = 'block_1';

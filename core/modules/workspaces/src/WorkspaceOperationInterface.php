@@ -44,7 +44,7 @@ interface WorkspaceOperationInterface {
    *   A multidimensional array of revision identifiers, keyed by entity type
    *   IDs.
    */
-  public function getDifferringRevisionIdsOnTarget();
+  public function getDifferingRevisionIdsOnTarget();
 
   /**
    * Gets the revision identifiers for items which have changed on the source.
@@ -53,7 +53,7 @@ interface WorkspaceOperationInterface {
    *   A multidimensional array of revision identifiers, keyed by entity type
    *   IDs.
    */
-  public function getDifferringRevisionIdsOnSource();
+  public function getDifferingRevisionIdsOnSource();
 
   /**
    * Gets the total number of items which have changed on the target.

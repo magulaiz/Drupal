@@ -148,7 +148,7 @@ body.drag {
 .tabledrag-handle:focus::before {
   display: block;
   width: calc(var(--space-m) + (var(--space-xs) * 2)); /* Same as height. */
-  height: calc(var(--space-m) + (var(--space-xs) * 2)); /* Hande svg height + its vertical padding */
+  height: calc(var(--space-m) + (var(--space-xs) * 2)); /* Handle svg height + its vertical padding */
   margin: 0 calc(var(--space-xs) * -1) calc((var(--space-m) + (var(--space-xs) * 2)) * -1); /* Bottom: handle height as negative value. */
   content: "";
   border-radius: var(--base-border-radius);

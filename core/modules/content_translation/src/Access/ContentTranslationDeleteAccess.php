@@ -55,7 +55,7 @@ class ContentTranslationDeleteAccess implements AccessInterface {
    * Checks access to translation deletion for the specified route match.
    *
    * @param \Drupal\Core\Routing\RouteMatchInterface $route_match
-   *   The parameterized route.
+   *   The parametrized route.
    * @param \Drupal\Core\Session\AccountInterface $account
    *   The currently logged in account.
    *

@@ -18,7 +18,7 @@ class PluginTest extends TestCase {
    */
   public function testGet() {
     // Assert all values are accepted through constructor and default value is
-    // used for non existent but defined property.
+    // used for nonexistent but defined property.
     $plugin = new PluginStub([
       1 => 'oak',
       'foo' => 'bar',

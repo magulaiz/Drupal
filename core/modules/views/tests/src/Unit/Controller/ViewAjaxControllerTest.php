@@ -124,7 +124,7 @@ class ViewAjaxControllerTest extends UnitTestCase {
   }
 
   /**
-   * Tests non-existent view with view_name and view_display_id.
+   * Tests nonexistent view with view_name and view_display_id.
    */
   public function testMissingView() {
     $request = new Request();

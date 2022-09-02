@@ -94,7 +94,7 @@ class WorkspaceMerger implements WorkspaceMergerInterface {
 
     $transaction = $this->database->startTransaction();
     try {
-      foreach ($this->getDifferringRevisionIdsOnSource() as $entity_type_id => $revision_difference) {
+      foreach ($this->getDifferingRevisionIdsOnSource() as $entity_type_id => $revision_difference) {
         $revisions_on_source = $this->entityTypeManager->getStorage($entity_type_id)
           ->loadMultipleRevisions(array_keys($revision_difference));
 
@@ -145,7 +145,7 @@ class WorkspaceMerger implements WorkspaceMergerInterface {
   /**
    * {@inheritdoc}
    */
-  public function getDifferringRevisionIdsOnTarget() {
+  public function getDifferingRevisionIdsOnTarget() {
     $target_revision_difference = [];
 
     $tracked_entities_on_source = $this->workspaceAssociation->getTrackedEntities($this->sourceWorkspace->id());
@@ -169,7 +169,7 @@ class WorkspaceMerger implements WorkspaceMergerInterface {
   /**
    * {@inheritdoc}
    */
-  public function getDifferringRevisionIdsOnSource() {
+  public function getDifferingRevisionIdsOnSource() {
     $source_revision_difference = [];
 
     $tracked_entities_on_source = $this->workspaceAssociation->getTrackedEntities($this->sourceWorkspace->id());
@@ -194,7 +194,7 @@ class WorkspaceMerger implements WorkspaceMergerInterface {
    * {@inheritdoc}
    */
   public function getNumberOfChangesOnTarget() {
-    $total_changes = $this->getDifferringRevisionIdsOnTarget();
+    $total_changes = $this->getDifferingRevisionIdsOnTarget();
     return count($total_changes, COUNT_RECURSIVE) - count($total_changes);
   }
 
@@ -202,7 +202,7 @@ class WorkspaceMerger implements WorkspaceMergerInterface {
    * {@inheritdoc}
    */
   public function getNumberOfChangesOnSource() {
-    $total_changes = $this->getDifferringRevisionIdsOnSource();
+    $total_changes = $this->getDifferingRevisionIdsOnSource();
     return count($total_changes, COUNT_RECURSIVE) - count($total_changes);
   }
 

@@ -52,7 +52,7 @@ class ModuleTest extends ViewsKernelTestBase {
       'area' => BrokenArea::class,
       'filter' => BrokenFilter::class,
     ];
-    // Test non-existent tables/fields.
+    // Test nonexistent tables/fields.
     $items = [
       [
         'table' => 'table_invalid',
@@ -218,7 +218,7 @@ class ModuleTest extends ViewsKernelTestBase {
     $plugins = Views::fetchPluginNames('style', 'test');
     $this->assertSame(['mapping_test', 'test_style', 'test_template_style'], array_keys($plugins));
 
-    // Test a non existent style plugin type returns no plugins.
+    // Test a nonexistent style plugin type returns no plugins.
     $plugins = Views::fetchPluginNames('style', $this->randomString());
     $this->assertSame([], $plugins);
   }

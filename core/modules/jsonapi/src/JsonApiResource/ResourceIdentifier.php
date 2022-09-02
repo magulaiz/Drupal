@@ -436,9 +436,9 @@ class ResourceIdentifier implements ResourceIdentifierInterface {
       ];
     };
     $resource_type = reset($relatable_resource_types);
-    // A non-empty entity reference field that refers to a non-existent entity
+    // A non-empty entity reference field that refers to a nonexistent entity
     // is not a data integrity problem. For example, Term entities' "parent"
-    // entity reference field uses target_id zero to refer to the non-existent
+    // entity reference field uses target_id zero to refer to the nonexistent
     // "<root>" term. And references to entities that no longer exist are not
     // cleaned up by Drupal; hence we map it to a "missing" resource.
     if ($field->getFieldDefinition()->getSetting('target_type') === 'taxonomy_term' && $item->get('target_id')->getCastedValue() === 0) {

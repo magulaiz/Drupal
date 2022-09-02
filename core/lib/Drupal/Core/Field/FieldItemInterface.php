@@ -121,7 +121,7 @@ interface FieldItemInterface extends ComplexDataInterface {
    *   The property value.
    *
    * @throws \InvalidArgumentException
-   *   If a non-existent property is accessed.
+   *   If a nonexistent property is accessed.
    */
   public function __get($property_name);
 
@@ -136,7 +136,7 @@ interface FieldItemInterface extends ComplexDataInterface {
    *   passed instead of a plain value.
    *
    * @throws \InvalidArgumentException
-   *   If a non-existent property is set.
+   *   If a nonexistent property is set.
    */
   public function __set($property_name, $value);
 

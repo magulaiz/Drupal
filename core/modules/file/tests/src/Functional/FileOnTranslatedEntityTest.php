@@ -130,7 +130,7 @@ class FileOnTranslatedEntityTest extends FileFieldTestBase {
     $file = File::load($second_fid);
     $this->assertTrue($file->isPermanent());
 
-    // Translate the node into dutch: remove the existing file.
+    // Translate the node into Dutch: remove the existing file.
     $this->drupalGet('node/' . $default_language_node->id() . '/translations/add/en/nl');
     $this->submitForm([], 'Remove');
 

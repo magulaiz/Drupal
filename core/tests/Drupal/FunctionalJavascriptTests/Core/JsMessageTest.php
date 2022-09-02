@@ -8,7 +8,7 @@ use Drupal\js_message_test\Controller\JSMessageTestController;
 /**
  * Tests core/drupal.message library.
  *
- * @group Javascript
+ * @group JavaScript
  */
 class JsMessageTest extends WebDriverTestBase {
 

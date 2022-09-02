@@ -253,7 +253,7 @@ class MigrationLookup extends ProcessPluginBase implements ContainerFactoryPlugi
         // For BC reasons, we must allow attempting to stub a derived migration.
       }
       catch (PluginNotFoundException $e) {
-        // For BC reasons, we must allow attempting to stub a non-existent
+        // For BC reasons, we must allow attempting to stub a nonexistent
         // migration.
       }
       catch (MigrateException $e) {

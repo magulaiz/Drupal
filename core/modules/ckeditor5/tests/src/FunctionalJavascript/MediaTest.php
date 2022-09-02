@@ -737,7 +737,7 @@ class MediaTest extends WebDriverTestBase {
 
     // Test that setting alt value to two double quotes will signal to the
     // MediaEmbed filter to unset the attribute on the media image field.
-    // We intentionally add a space space after the two double quotes to test
+    // We intentionally add a space after the two double quotes to test
     // the string is trimmed to two quotes.
     $alt_override_input->setValue('"" ');
     $this->getBalloonButton('Save')->click();

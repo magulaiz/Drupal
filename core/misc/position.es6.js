@@ -8,7 +8,7 @@
  * standards, and restructured so it extends jQuery core instead of jQuery UI.
  *
  * For most positioning needs, the core/popperjs library should be used instead
- * of the functionality provided here. This is provided to support pre-existing
+ * of the functionality provided here. This is provided to support preexisting
  * code that expects the jQuery position API.
  *
  * @see https://github.com/jquery/jquery-ui/blob/1.12.1/LICENSE.txt

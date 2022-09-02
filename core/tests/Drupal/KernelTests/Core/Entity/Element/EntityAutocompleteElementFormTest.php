@@ -288,16 +288,16 @@ class EntityAutocompleteElementFormTest extends EntityKernelTestBase implements 
     // Test 'single' with an entity label that doesn't exist
     $form_state = (new FormState())
       ->setValues([
-        'single' => 'single - non-existent label',
+        'single' => 'single - nonexistent label',
       ]);
     $form_builder->submitForm($this, $form_state);
     $this->assertCount(1, $form_state->getErrors());
-    $this->assertEquals(t('There are no test entity entities matching "%value".', ['%value' => 'single - non-existent label']), $form_state->getErrors()['single']);
+    $this->assertEquals(t('There are no test entity entities matching "%value".', ['%value' => 'single - nonexistent label']), $form_state->getErrors()['single']);
 
     // Test 'single' with an entity ID that doesn't exist.
     $form_state = (new FormState())
       ->setValues([
-        'single' => 'single - non-existent label (42)',
+        'single' => 'single - nonexistent label (42)',
       ]);
     $form_builder->submitForm($this, $form_state);
     $this->assertCount(1, $form_state->getErrors());
@@ -307,20 +307,20 @@ class EntityAutocompleteElementFormTest extends EntityKernelTestBase implements 
     // set to FALSE.
     $form_state = (new FormState())
       ->setValues([
-        'single_no_validate' => 'single - non-existent label',
-        'single_autocreate_no_validate' => 'single - autocreate non-existent label',
+        'single_no_validate' => 'single - nonexistent label',
+        'single_autocreate_no_validate' => 'single - autocreate nonexistent label',
       ]);
     $form_builder->submitForm($this, $form_state);
 
     // The element without 'autocreate' support still has to emit a warning when
     // the input doesn't end with an entity ID enclosed in parentheses.
     $this->assertCount(1, $form_state->getErrors());
-    $this->assertEquals(t('There are no test entity entities matching "%value".', ['%value' => 'single - non-existent label']), $form_state->getErrors()['single_no_validate']);
+    $this->assertEquals(t('There are no test entity entities matching "%value".', ['%value' => 'single - nonexistent label']), $form_state->getErrors()['single_no_validate']);
 
     $form_state = (new FormState())
       ->setValues([
-        'single_no_validate' => 'single - non-existent label (42)',
-        'single_autocreate_no_validate' => 'single - autocreate non-existent label (43)',
+        'single_no_validate' => 'single - nonexistent label (42)',
+        'single_autocreate_no_validate' => 'single - autocreate nonexistent label (43)',
       ]);
     $form_builder->submitForm($this, $form_state);
 

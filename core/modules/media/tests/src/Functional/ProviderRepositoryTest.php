@@ -55,7 +55,7 @@ class ProviderRepositoryTest extends MediaFunctionalTestBase {
   }
 
   /**
-   * Tests that provider discovery fails with a non-existent provider database.
+   * Tests that provider discovery fails with a nonexistent provider database.
    *
    * @param string $providers_url
    *   The URL of the provider database.

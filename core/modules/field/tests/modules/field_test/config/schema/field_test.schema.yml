@@ -109,7 +109,7 @@ field.storage_settings.test_field_with_preconfigured_options:
 
 field.field_settings.test_field:
   type: mapping
-  label: 'Test field field settings'
+  label: 'Test field settings'
   mapping:
     test_field_setting:
       type: string
@@ -127,7 +127,7 @@ field.field_settings.test_field_with_dependencies:
 
 field.field_settings.hidden_test_field:
   type: field.field_settings.test_field
-  label: 'Hidden test field field settings'
+  label: 'Hidden test field settings'
 
 field.field_settings.test_field_with_preconfigured_options:
   type: field.field_settings.test_field

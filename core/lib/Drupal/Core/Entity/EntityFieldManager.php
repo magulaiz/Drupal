@@ -261,7 +261,7 @@ class EntityFieldManager implements EntityFieldManagerInterface {
     if ($entity_type->isRevisionable() && $entity_type->isTranslatable()) {
       // The 'revision_translation_affected' field should always be defined.
       // This field has been added unconditionally in Drupal 8.4.0 and it is
-      // overriding any pre-existing definition on purpose so that any
+      // overriding any preexisting definition on purpose so that any
       // differences are immediately available in the status report.
       $base_field_definitions[$keys['revision_translation_affected']] = BaseFieldDefinition::create('boolean')
         ->setLabel($this->t('Revision translation affected'))

@@ -48,7 +48,7 @@ class DialogPositionTest extends WebDriverTestBase {
     $this->assertNull($dialog, 'Dialog is closed after clicking the close button.');
 
     // Resize the window. The test should pass after waiting for JavaScript to
-    // finish as no Javascript errors should have been triggered. If there were
+    // finish as no JavaScript errors should have been triggered. If there were
     // javascript errors the test will fail on that.
     $session->resizeWindow(625, 625);
     $assert_session->assertWaitOnAjaxRequest();

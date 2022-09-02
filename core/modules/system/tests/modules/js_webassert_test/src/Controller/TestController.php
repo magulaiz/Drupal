@@ -32,7 +32,7 @@ var interval = setInterval(function() {
 </div>
 JS;
     return [
-      // Javascript should not be injected into a page this way unless in test
+      // JavaScript should not be injected into a page this way unless in test
       // code.
       '#markup' => Markup::create($markup),
     ];

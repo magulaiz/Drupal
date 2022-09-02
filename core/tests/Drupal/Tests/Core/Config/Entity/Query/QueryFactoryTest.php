@@ -47,14 +47,14 @@ class QueryFactoryTest extends UnitTestCase {
       $this->getConfigObject('test')->set('uuid.blah', 'abc'),
     ];
 
-    // Tests a non existent key.
+    // Tests a nonexistent key.
     $tests[] = [
       [],
       'uuid',
       $this->getConfigObject('test'),
     ];
 
-    // Tests a non existent sub key.
+    // Tests a nonexistent sub key.
     $tests[] = [
       [],
       'uuid.blah',

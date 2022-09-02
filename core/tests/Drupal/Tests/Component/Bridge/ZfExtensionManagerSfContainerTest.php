@@ -70,7 +70,7 @@ class ZfExtensionManagerSfContainerTest extends TestCase {
    */
   public function testGetContainerException() {
     $this->expectException(ServiceNotFoundException::class);
-    $this->expectExceptionMessage('You have requested a non-existent service "test.foo".');
+    $this->expectExceptionMessage('You have requested a nonexistent service "test.foo".');
     $container = new ContainerBuilder();
     $bridge = new ZfExtensionManagerSfContainer('test.');
     $bridge->setContainer($container);

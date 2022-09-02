@@ -65,25 +65,25 @@ class FieldDefinitionIntegrityTest extends KernelTestBase {
     foreach ($field_type_manager->getDefinitions() as $definition) {
       // Test default field widgets.
       if (isset($definition['default_widget'])) {
-        $this->assertContains($definition['default_widget'], $available_field_widget_ids, sprintf('Field type %s uses a non-existent field widget by default: %s', $definition['id'], $definition['default_widget']));
+        $this->assertContains($definition['default_widget'], $available_field_widget_ids, sprintf('Field type %s uses a nonexistent field widget by default: %s', $definition['id'], $definition['default_widget']));
       }
 
       // Test default field formatters.
       if (isset($definition['default_formatter'])) {
-        $this->assertContains($definition['default_formatter'], $available_field_formatter_ids, sprintf('Field type %s uses a non-existent field formatter by default: %s', $definition['id'], $definition['default_formatter']));
+        $this->assertContains($definition['default_formatter'], $available_field_formatter_ids, sprintf('Field type %s uses a nonexistent field formatter by default: %s', $definition['id'], $definition['default_formatter']));
       }
     }
 
     // Test the field widget plugins.
     foreach ($field_widget_manager->getDefinitions() as $definition) {
       $missing_field_type_ids = array_diff($definition['field_types'], $available_field_type_ids);
-      $this->assertEmpty($missing_field_type_ids, sprintf('Field widget %s integrates with non-existent field types: %s', $definition['id'], implode(', ', $missing_field_type_ids)));
+      $this->assertEmpty($missing_field_type_ids, sprintf('Field widget %s integrates with nonexistent field types: %s', $definition['id'], implode(', ', $missing_field_type_ids)));
     }
 
     // Test the field formatter plugins.
     foreach ($field_formatter_manager->getDefinitions() as $definition) {
       $missing_field_type_ids = array_diff($definition['field_types'], $available_field_type_ids);
-      $this->assertEmpty($missing_field_type_ids, sprintf('Field formatter %s integrates with non-existent field types: %s', $definition['id'], implode(', ', $missing_field_type_ids)));
+      $this->assertEmpty($missing_field_type_ids, sprintf('Field formatter %s integrates with nonexistent field types: %s', $definition['id'], implode(', ', $missing_field_type_ids)));
     }
   }
 

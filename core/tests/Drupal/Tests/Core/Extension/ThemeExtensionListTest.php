@@ -150,7 +150,7 @@ class ThemeExtensionListTest extends UnitTestCase {
     ];
     $data[] = [$themes, 'test_1', []];
 
-    // Tests a theme with a non existing base theme.
+    // Tests a theme with a nonexistent base theme.
     $themes = [];
     $themes['test_1'] = (object) [
       'name' => 'test_1',

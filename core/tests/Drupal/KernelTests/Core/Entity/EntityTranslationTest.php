@@ -102,7 +102,7 @@ class EntityTranslationTest extends EntityLanguageTestBase {
     // Try to get a value using a language code for a non-existing translation.
     try {
       $entity->getTranslation($this->langcodes[2])->get($this->fieldName)->value;
-      $this->fail('Getting a non existing translation results in an error.');
+      $this->fail('Getting a nonexistent translation results in an error.');
     }
     catch (\InvalidArgumentException $e) {
       // Expected exception; just continue testing.

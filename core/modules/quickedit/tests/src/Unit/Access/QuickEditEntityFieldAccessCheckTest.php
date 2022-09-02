@@ -112,7 +112,7 @@ class QuickEditEntityFieldAccessCheckTest extends UnitTestCase {
     $data = [];
     // Tests the access method without a field_name.
     $data[] = [NULL, LanguageInterface::LANGCODE_NOT_SPECIFIED];
-    // Tests the access method with a non-existent field.
+    // Tests the access method with a nonexistent field.
     $data[] = ['not_valid', LanguageInterface::LANGCODE_NOT_SPECIFIED];
     // Tests the access method without a langcode.
     $data[] = ['valid', NULL];

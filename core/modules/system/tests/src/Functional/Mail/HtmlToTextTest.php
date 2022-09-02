@@ -194,7 +194,7 @@ class HtmlToTextTest extends BrowserTestBase {
   /**
    * Tests that whitespace is collapsed.
    */
-  public function testDrupalHtmltoTextCollapsesWhitespace() {
+  public function testDrupalHtmlToTextCollapsesWhitespace() {
     $input = "<p>Drupal  Drupal\n\nDrupal<pre>Drupal  Drupal\n\nDrupal</pre>Drupal  Drupal\n\nDrupal</p>";
     // @todo The whitespace should be collapsed.
     $collapsed = "Drupal  Drupal\n\nDrupalDrupal  Drupal\n\nDrupalDrupal  Drupal\n\nDrupal\n\n";

@@ -5,7 +5,7 @@ namespace Drupal\Core\Installer;
 use Drupal\Core\DrupalKernel;
 
 /**
- * Extend DrupalKernel to handle force some kernel behaviors.
+ * Extend DrupalKernel to handle force some kernel behavior.
  */
 class InstallerKernel extends DrupalKernel {
 

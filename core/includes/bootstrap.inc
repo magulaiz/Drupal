@@ -624,7 +624,7 @@ function &drupal_static($name, $default_value = NULL, $reset = FALSE) {
   if (isset($data[$name]) || array_key_exists($name, $data)) {
     // Non-NULL $name and both $data[$name] and $default[$name] statics exist.
     if ($reset) {
-      // Reset pre-existing static variable to its default value.
+      // Reset preexisting static variable to its default value.
       $data[$name] = $default[$name];
     }
     return $data[$name];

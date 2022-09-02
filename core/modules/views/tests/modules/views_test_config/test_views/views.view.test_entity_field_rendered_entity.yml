@@ -5,8 +5,8 @@ dependencies:
     - core.entity_view_mode.node.default
   module:
     - node
-id: test_entity_field_renderered_entity
-label: test_entity_field_renderered_entity
+id: test_entity_field_rendered_entity
+label: test_entity_field_rendered_entity
 module: views
 description: ''
 tag: ''
@@ -119,7 +119,7 @@ display:
     position: 1
     display_options:
       rendering_language: '***LANGUAGE_entity_translation***'
-      path: test_entity_field_renderered_entity/entity_translation
+      path: test_entity_field_rendered_entity/entity_translation
       display_extenders: {  }
     cache_metadata:
       max-age: -1
@@ -135,7 +135,7 @@ display:
     position: 2
     display_options:
       rendering_language: '***LANGUAGE_entity_default***'
-      path: test_entity_field_renderered_entity/entity_default
+      path: test_entity_field_rendered_entity/entity_default
       display_extenders: {  }
     cache_metadata:
       max-age: -1
@@ -151,7 +151,7 @@ display:
     position: 3
     display_options:
       rendering_language: '***LANGUAGE_site_default***'
-      path: test_entity_field_renderered_entity/site_default
+      path: test_entity_field_rendered_entity/site_default
       display_extenders: {  }
     cache_metadata:
       max-age: -1
@@ -167,7 +167,7 @@ display:
     position: 4
     display_options:
       rendering_language: '***LANGUAGE_language_interface***'
-      path: test_entity_field_renderered_entity/language_interface
+      path: test_entity_field_rendered_entity/language_interface
       display_extenders: {  }
     cache_metadata:
       max-age: -1
@@ -183,7 +183,7 @@ display:
     position: 5
     display_options:
       rendering_language: en
-      path: test_entity_field_renderered_entity/en
+      path: test_entity_field_rendered_entity/en
       display_extenders: {  }
     cache_metadata:
       max-age: -1
@@ -199,7 +199,7 @@ display:
     position: 6
     display_options:
       rendering_language: es
-      path: test_entity_field_renderered_entity/es
+      path: test_entity_field_rendered_entity/es
       display_extenders: {  }
     cache_metadata:
       max-age: -1

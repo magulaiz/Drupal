@@ -182,7 +182,7 @@ class FormValidatorTest extends UnitTestCase {
 
   public function providerTestHandleErrorsWithLimitedValidation() {
     return [
-      // Test with a non-existent section.
+      // Test with a nonexistent section.
       [
         [['test1'], ['test3']],
         [],

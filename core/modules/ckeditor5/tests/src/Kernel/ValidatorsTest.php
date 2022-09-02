@@ -122,7 +122,7 @@ class ValidatorsTest extends KernelTestBase {
       'settings' => ['__DEFAULT__'],
       'violations' => [],
     ];
-    $data['non-existent toolbar button'] = [
+    $data['nonexistent toolbar button'] = [
       'settings' => [
         'toolbar' => [
           'items' => [
@@ -1258,7 +1258,7 @@ class ValidatorsTest extends KernelTestBase {
         'settings.plugins.ckeditor5_style' => 'The <em class="placeholder">Style</em> plugin needs another plugin to create <code>&lt;blockquote&gt;</code>, for it to be able to create the following attributes: <code>&lt;blockquote class=&quot;highlighted&quot;&gt;</code>. Enable a plugin that supports creating this tag. If none exists, you can configure the Source Editing plugin to support it.',
       ],
     ];
-    $data['INVALID: Style plugin configured to add class already added by an other plugin'] = [
+    $data['INVALID: Style plugin configured to add class already added by another plugin'] = [
       'settings' => [
         'toolbar' => [
           'items' => [

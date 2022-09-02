@@ -470,7 +470,7 @@ class ConfigInstaller implements ConfigInstallerInterface {
   }
 
   /**
-   * Finds pre-existing configuration objects for the provided extension.
+   * Finds preexisting configuration objects for the provided extension.
    *
    * Extensions can not be installed if configuration objects exist in the
    * active storage with the same names. This can happen in a number of ways,

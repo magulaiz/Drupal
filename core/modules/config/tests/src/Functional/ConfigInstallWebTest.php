@@ -126,7 +126,7 @@ class ConfigInstallWebTest extends BrowserTestBase {
   }
 
   /**
-   * Tests pre-existing configuration detection.
+   * Tests preexisting configuration detection.
    */
   public function testPreExistingConfigInstall() {
     $this->drupalLogin($this->adminUser);

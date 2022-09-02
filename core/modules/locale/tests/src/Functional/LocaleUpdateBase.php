@@ -294,7 +294,7 @@ EOF;
    * @param string $source
    *   Translation source string.
    * @param string $translation
-   *   Translation to check. Use empty string to check for a non-existent
+   *   Translation to check. Use empty string to check for a nonexistent
    *   translation.
    * @param string $langcode
    *   Language code of the language to translate to.

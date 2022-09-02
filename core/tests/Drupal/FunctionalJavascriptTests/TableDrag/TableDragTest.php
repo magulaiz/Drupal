@@ -242,7 +242,7 @@ class TableDragTest extends WebDriverTestBase {
   }
 
   /**
-   * Tests the root and leaf behaviors for rows.
+   * Tests the root and leaf behavior for rows.
    */
   public function testRootLeafDraggableRowsWithKeyboard() {
     $this->state->set('tabledrag_test_table', [

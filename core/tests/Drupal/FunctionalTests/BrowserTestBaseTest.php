@@ -57,7 +57,7 @@ class BrowserTestBaseTest extends BrowserTestBase {
     $text = $this->getTextContent();
     $this->assertStringContainsString('Test page text.', $text);
     $this->assertStringNotContainsString('</html>', $text);
-    // Ensure Drupal Javascript settings are not part of the page text.
+    // Ensure Drupal JavaScript settings are not part of the page text.
     $this->assertArrayHasKey('currentPathIsAdmin', $this->getDrupalSettings()['path']);
     $this->assertStringNotContainsString('currentPathIsAdmin', $text);
 
@@ -713,7 +713,7 @@ class BrowserTestBaseTest extends BrowserTestBase {
     $this->assertSession()->checkboxChecked('edit-checkbox-enabled');
     $this->assertSession()->checkboxNotChecked('edit-checkbox-disabled');
 
-    // Test that the assertion fails correctly with non-existent field id.
+    // Test that the assertion fails correctly with nonexistent field id.
     try {
       $this->assertSession()->checkboxNotChecked('incorrect_checkbox_id');
       $this->fail('The "incorrect_checkbox_id" field was found');

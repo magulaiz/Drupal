@@ -69,7 +69,7 @@ class ThemeTest extends BrowserTestBase {
     // Ensure a disabled theme settings form URL returns 404.
     $this->drupalGet('admin/appearance/settings/olivero');
     $this->assertSession()->statusCodeEquals(404);
-    // Ensure a non existent theme settings form URL returns 404.
+    // Ensure a nonexistent theme settings form URL returns 404.
     $this->drupalGet('admin/appearance/settings/' . $this->randomMachineName());
     $this->assertSession()->statusCodeEquals(404);
     // Ensure a hidden theme settings form URL returns 404.

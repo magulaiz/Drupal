@@ -103,7 +103,7 @@ class Tasks extends InstallTasks {
         }
       }
       else {
-        // Database connection failed for some other reason than a non-existent
+        // Database connection failed for some other reason than a nonexistent
         // database.
         $this->fail(t('Failed to connect to database. The database engine reports the following message: %error.<ul><li>Does the database file exist?</li><li>Does web server have permission to write to the database file?</li>Does the web server have permission to write to the directory the database file should be created in?</li></ul>', ['%error' => $e->getMessage()]));
         return FALSE;

@@ -28,7 +28,7 @@ class RetrieveFileTest extends BrowserTestBase {
     $filename = 'Файл для тестирования ' . $this->randomMachineName();
     $url = \Drupal::service('file_url_generator')->generateAbsoluteString($sourcedir . '/' . $filename);
     $retrieved_file = system_retrieve_file($url);
-    $this->assertFalse($retrieved_file, 'Non-existent file not fetched.');
+    $this->assertFalse($retrieved_file, 'Nonexistent file not fetched.');
 
     // Actually create that file, download it via HTTP and test the returned path.
     file_put_contents($sourcedir . '/' . $filename, 'testing');

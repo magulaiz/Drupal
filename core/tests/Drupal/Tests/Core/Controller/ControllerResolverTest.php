@@ -92,7 +92,7 @@ class ControllerResolverTest extends UnitTestCase {
   }
 
   /**
-   * Tests createController() with a non-existent class.
+   * Tests createController() with a nonexistent class.
    */
   public function testCreateControllerNonExistentClass() {
     $this->expectException(\InvalidArgumentException::class);

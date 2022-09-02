@@ -297,7 +297,7 @@ class PathValidatorTest extends UnitTestCase {
   }
 
   /**
-   * Tests the isValid() method with a non-existent path.
+   * Tests the isValid() method with a nonexistent path.
    *
    * @covers ::isValid
    */

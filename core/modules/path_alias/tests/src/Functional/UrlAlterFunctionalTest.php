@@ -65,7 +65,7 @@ class UrlAlterFunctionalTest extends BrowserTestBase {
     $this->assertSession()->statusCodeEquals(200);
     $this->assertUrlOutboundAlter("/user/$uid/edit", '/alias/test2');
 
-    // Test a non-existent user is not altered.
+    // Test a nonexistent user is not altered.
     $uid++;
     $this->assertUrlOutboundAlter("/user/$uid", "/user/$uid");
 

@@ -26,7 +26,7 @@ class UserUpdateRoleDependenciesTest extends UpdatePathTestBase {
    * Tests that roles have dependencies and only existing permissions.
    */
   public function testRolePermissions() {
-    // Edit the role to have a non-existent permission.
+    // Edit the role to have a nonexistent permission.
     $raw_config = $this->config('user.role.authenticated');
     $permissions = $raw_config->get('permissions');
     $permissions[] = 'does_not_exist';
@@ -39,7 +39,7 @@ class UserUpdateRoleDependenciesTest extends UpdatePathTestBase {
     $this->assertEquals([], $authenticated->getDependencies());
 
     $this->runUpdates();
-    $this->assertSession()->pageTextContains('The roles Anonymous user, Authenticated user have had non-existent permissions removed. Check the logs for details.');
+    $this->assertSession()->pageTextContains('The roles Anonymous user, Authenticated user have had nonexistent permissions removed. Check the logs for details.');
     $authenticated = Role::load('authenticated');
     $this->assertFalse($authenticated->hasPermission('does_not_exist'), 'Authenticated role does not have a permission that does not exist');
     $this->assertEquals(['config' => ['filter.format.basic_html'], 'module' => ['comment', 'contact', 'filter', 'shortcut', 'system']], $authenticated->getDependencies());
@@ -47,10 +47,10 @@ class UserUpdateRoleDependenciesTest extends UpdatePathTestBase {
     $this->drupalLogin($this->createUser(['access site reports']));
     $this->drupalGet('admin/reports/dblog', ['query' => ['type[]' => 'update']]);
     $this->clickLink('The role Authenticated user has had the following non-…');
-    $this->assertSession()->pageTextContains('The role Authenticated user has had the following non-existent permission(s) removed: use text format plain_text, does_not_exist.');
+    $this->assertSession()->pageTextContains('The role Authenticated user has had the following nonexistent permission(s) removed: use text format plain_text, does_not_exist.');
     $this->getSession()->back();
     $this->clickLink('The role Anonymous user has had the following non-…');
-    $this->assertSession()->pageTextContains('The role Anonymous user has had the following non-existent permission(s) removed: use text format plain_text.');
+    $this->assertSession()->pageTextContains('The role Anonymous user has had the following nonexistent permission(s) removed: use text format plain_text.');
   }
 
 }

@@ -16,7 +16,7 @@ class PhpRequirementsTest extends UnitTestCase {
   /**
    * Ensures that PHP EOL dates are valid.
    *
-   * This ensures that that all of the PHP EOL Date items are valid ISO 8601
+   * This ensures that all of the PHP EOL Date items are valid ISO 8601
    * dates and are keyed by a valid version number.
    */
   public function testPhpEolDates(): void {

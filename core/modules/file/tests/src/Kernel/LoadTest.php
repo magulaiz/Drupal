@@ -13,7 +13,7 @@ use Drupal\file\FileInterface;
 class LoadTest extends FileManagedUnitTestBase {
 
   /**
-   * Try to load a non-existent file by fid.
+   * Try to load a nonexistent file by fid.
    */
   public function testLoadMissingFid() {
     $this->assertNull(File::load(-1), 'Try to load an invalid fid fails.');
@@ -21,7 +21,7 @@ class LoadTest extends FileManagedUnitTestBase {
   }
 
   /**
-   * Try to load a non-existent file by URI.
+   * Try to load a nonexistent file by URI.
    */
   public function testLoadMissingFilepath() {
     $files = \Drupal::entityTypeManager()->getStorage('file')->loadByProperties(['uri' => 'foobar://misc/druplicon.png']);
@@ -30,7 +30,7 @@ class LoadTest extends FileManagedUnitTestBase {
   }
 
   /**
-   * Try to load a non-existent file by status.
+   * Try to load a nonexistent file by status.
    */
   public function testLoadInvalidStatus() {
     $files = \Drupal::entityTypeManager()->getStorage('file')->loadByProperties(['status' => -99]);

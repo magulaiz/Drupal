@@ -75,8 +75,8 @@ class WorkspaceMergerTest extends KernelTestBase {
    * @covers ::merge
    * @covers ::getNumberOfChangesOnSource
    * @covers ::getNumberOfChangesOnTarget
-   * @covers ::getDifferringRevisionIdsOnSource
-   * @covers ::getDifferringRevisionIdsOnTarget
+   * @covers ::getDifferingRevisionIdsOnSource
+   * @covers ::getDifferingRevisionIdsOnTarget
    */
   public function testWorkspaceMerger() {
     $this->initializeWorkspacesModule();
@@ -155,7 +155,7 @@ class WorkspaceMergerTest extends KernelTestBase {
     $workspace_merger = \Drupal::service('workspaces.operation_factory')->getMerger($this->workspaces['local_1'], $this->workspaces['dev']);
 
     // Check that there is no content in Dev that's not also in Local 1.
-    $this->assertEmpty($workspace_merger->getDifferringRevisionIdsOnTarget());
+    $this->assertEmpty($workspace_merger->getDifferingRevisionIdsOnTarget());
     $this->assertEquals(0, $workspace_merger->getNumberOfChangesOnTarget());
 
     // Check that there is only one node in Local 1 that's not available in Dev,
@@ -163,16 +163,16 @@ class WorkspaceMergerTest extends KernelTestBase {
     $expected = [
       'node' => [7 => 4],
     ];
-    $this->assertEquals($expected, $workspace_merger->getDifferringRevisionIdsOnSource());
+    $this->assertEquals($expected, $workspace_merger->getDifferingRevisionIdsOnSource());
     $this->assertEquals(1, $workspace_merger->getNumberOfChangesOnSource());
 
     // Merge the contents of Local 1 into Dev, and check that Dev, Local 1 and
     // Local 2 have the same content.
     $workspace_merger->merge();
 
-    $this->assertEmpty($workspace_merger->getDifferringRevisionIdsOnTarget());
+    $this->assertEmpty($workspace_merger->getDifferingRevisionIdsOnTarget());
     $this->assertEquals(0, $workspace_merger->getNumberOfChangesOnTarget());
-    $this->assertEmpty($workspace_merger->getDifferringRevisionIdsOnSource());
+    $this->assertEmpty($workspace_merger->getDifferingRevisionIdsOnSource());
     $this->assertEquals(0, $workspace_merger->getNumberOfChangesOnSource());
 
     $this->switchToWorkspace('dev');
@@ -188,7 +188,7 @@ class WorkspaceMergerTest extends KernelTestBase {
     $workspace_merger = \Drupal::service('workspaces.operation_factory')->getMerger($this->workspaces['local_1'], $this->workspaces['stage']);
 
     // Check that there is no content in Stage that's not also in Local 1.
-    $this->assertEmpty($workspace_merger->getDifferringRevisionIdsOnTarget());
+    $this->assertEmpty($workspace_merger->getDifferingRevisionIdsOnTarget());
     $this->assertEquals(0, $workspace_merger->getNumberOfChangesOnTarget());
 
     // Check that the difference between Local 1 and Stage are the two revisions
@@ -199,7 +199,7 @@ class WorkspaceMergerTest extends KernelTestBase {
         7 => 4,
       ],
     ];
-    $this->assertEquals($expected, $workspace_merger->getDifferringRevisionIdsOnSource());
+    $this->assertEquals($expected, $workspace_merger->getDifferingRevisionIdsOnSource());
     $this->assertEquals(2, $workspace_merger->getNumberOfChangesOnSource());
 
     // Check that Local 1 can not be merged directly into Stage, since it can

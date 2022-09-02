@@ -110,7 +110,7 @@ class MigrateFilterFormatTest extends MigrateDrupal7TestBase implements MigrateD
     // changed to filter_null.
     $this->assertEntity('php_code', 'PHP code', ['filter_null' => 0], 11, FALSE);
 
-    // Test a non-existent format.
+    // Test a nonexistent format.
     $this->assertEntity('image_resize_filter', 'Image resize', [], 0, TRUE);
 
     // For each filter that does not exist on the destination, there should be

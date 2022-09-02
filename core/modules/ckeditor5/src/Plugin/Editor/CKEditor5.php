@@ -267,7 +267,7 @@ class CKEditor5 extends EditorBase implements ContainerFactoryPluginInterface {
     $language = $this->languageManager->getCurrentLanguage();
 
     // When enabling CKEditor 5, generate sensible settings from the
-    // pre-existing text editor/format rather than the hardcoded defaults
+    // preexisting text editor/format rather than the hardcoded defaults
     // whenever possible.
     // @todo Remove after https://www.drupal.org/project/drupal/issues/3226673.
     $format = $form_state->getFormObject()->getEntity();

@@ -54,7 +54,7 @@ class InstallerTranslationQueryTest extends InstallerTestBase {
   }
 
   /**
-   * Verifies the expected behaviors of the installation result.
+   * Verifies the expected behavior of the installation result.
    */
   public function testInstaller() {
     $this->assertSession()->addressEquals('user/1');

@@ -46,10 +46,10 @@ class FileCopyTest extends FileTestBase {
   }
 
   /**
-   * Copy a non-existent file.
+   * Copy a nonexistent file.
    */
   public function testNonExistent() {
-    // Copy non-existent file
+    // Copy nonexistent file
     $desired_filepath = $this->randomMachineName();
     $this->assertFileDoesNotExist($desired_filepath);
     $this->expectException(FileNotExistsException::class);

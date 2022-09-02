@@ -45,7 +45,7 @@ class HelpTopicTwigLoaderTest extends UnitTestCase {
    */
   public function testConstructor() {
     // Verify that the module/theme directories were added in the constructor,
-    // and non-existent directories were omitted.
+    // and nonexistent directories were omitted.
     $paths = $this->helpLoader->getPaths(HelpTopicTwigLoader::MAIN_NAMESPACE);
     $this->assertCount(2, $paths);
     $this->assertContains($this->directories['module']['test'] . '/help_topics', $paths);

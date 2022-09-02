@@ -161,7 +161,7 @@ interface EntityFormDisplayInterface extends EntityDisplayInterface {
    * is invoked.
    *
    * The method flags constraint violations related to fields shown on the
-   * form as form errors on the correct form elements. Possibly pre-existing
+   * form as form errors on the correct form elements. Possibly preexisting
    * violations of hidden fields (so fields not appearing in the display) are
    * ignored. Other, non-field related violations are passed through and set as
    * form errors according to the property path of the violations.

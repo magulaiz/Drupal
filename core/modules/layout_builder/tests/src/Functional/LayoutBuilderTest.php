@@ -1365,12 +1365,12 @@ class LayoutBuilderTest extends BrowserTestBase {
 
     $this->drupalLogin($this->createUser(['configure any layout']));
 
-    // Prepare an object with a pre-existing section.
+    // Prepare an object with a preexisting section.
     $this->container->get('config.factory')->getEditable('layout_builder_test.test_simple_config.existing')
       ->set('sections', [(new Section('layout_twocol'))->toArray()])
       ->save();
 
-    // The pre-existing section is found.
+    // The preexisting section is found.
     $this->drupalGet('layout-builder-test-simple-config/existing');
     $assert_session->elementsCount('css', '.layout', 1);
     $assert_session->elementsCount('css', '.layout--twocol', 1);

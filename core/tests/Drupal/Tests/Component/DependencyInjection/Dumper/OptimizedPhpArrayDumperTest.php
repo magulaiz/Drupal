@@ -709,7 +709,7 @@ namespace Symfony\Component\ExpressionLanguage {
 
   if (!class_exists('\Symfony\Component\ExpressionLanguage\Expression')) {
     /**
-     * Dummy class to ensure non-existent Symfony component can be tested.
+     * Dummy class to ensure nonexistent Symfony component can be tested.
      */
     class Expression {
 

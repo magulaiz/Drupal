@@ -334,7 +334,7 @@ class FileSystem implements FileSystemInterface {
       throw new NotRegularFileException("Cannot delete '$path' because it is a directory. Use deleteRecursive() instead.");
     }
 
-    // Return TRUE for non-existent file, but log that nothing was actually
+    // Return TRUE for nonexistent file, but log that nothing was actually
     // deleted, as the current state is the intended result.
     if (!file_exists($path)) {
       $this->logger->notice('The file %path was not deleted because it does not exist.', ['%path' => $path]);

@@ -405,7 +405,7 @@ class RowTest extends UnitTestCase {
           'destination_value_3',
         ],
       ],
-      'Mix of keys including non-existent' => [
+      'Mix of keys including nonexistent' => [
         'keys' => [
           'shared_key_1',
           '@shared_key_1',

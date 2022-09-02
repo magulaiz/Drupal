@@ -139,7 +139,7 @@ class EntityReferenceFieldTest extends EntityKernelTestBase {
       $reference_field[]['target_id'] = $target_entity->id();
     }
 
-    // Also attach a non-existent entity and a NULL target id.
+    // Also attach a nonexistent entity and a NULL target id.
     $reference_field[3]['target_id'] = 99999;
     $target_entities[3] = NULL;
     $reference_field[4]['target_id'] = NULL;
@@ -168,7 +168,7 @@ class EntityReferenceFieldTest extends EntityKernelTestBase {
 
     // Test returned entities:
     // - Deltas must be preserved.
-    // - Non-existent entities must not be retrieved in target entities result.
+    // - Nonexistent entities must not be retrieved in target entities result.
     foreach ($target_entities as $delta => $target_entity) {
       if (!empty($target_entity)) {
         if (!$target_entity->isNew()) {
@@ -183,7 +183,7 @@ class EntityReferenceFieldTest extends EntityKernelTestBase {
         }
       }
       else {
-        // A non-existent or NULL entity target id must not return any item in
+        // A nonexistent or NULL entity target id must not return any item in
         // the target entities set.
         $this->assertFalse(isset($entities[$delta]));
       }

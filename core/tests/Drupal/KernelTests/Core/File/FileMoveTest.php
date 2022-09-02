@@ -52,7 +52,7 @@ class FileMoveTest extends FileTestBase {
    * Try to move a missing file.
    */
   public function testMissing() {
-    // Move non-existent file.
+    // Move nonexistent file.
     $this->expectException(FileNotExistsException::class);
     \Drupal::service('file_system')->move($this->randomMachineName(), $this->randomMachineName());
   }

@@ -900,7 +900,7 @@ class DateTimePlusTest extends TestCase {
   }
 
   /**
-   * Tests that chained calls to non-existent functions throw an exception.
+   * Tests that chained calls to nonexistent functions throw an exception.
    *
    * @covers ::__call
    */

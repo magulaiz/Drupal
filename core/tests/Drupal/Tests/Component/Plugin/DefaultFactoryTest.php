@@ -69,7 +69,7 @@ class DefaultFactoryTest extends TestCase {
   }
 
   /**
-   * Tests getPluginClass() with a non-existent class definition.
+   * Tests getPluginClass() with a nonexistent class definition.
    *
    * @covers ::getPluginClass
    */
@@ -80,7 +80,7 @@ class DefaultFactoryTest extends TestCase {
   }
 
   /**
-   * Tests getPluginClass() with a non-existent class definition.
+   * Tests getPluginClass() with a nonexistent class definition.
    *
    * @covers ::getPluginClass
    */

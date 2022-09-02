@@ -6,7 +6,7 @@ namespace Drupal\Tests\Component\Annotation\Doctrine\Fixtures;
  * @Annotation
  * @Target("ALL")
  */
-final class AnnotationWithRequiredAttributesWithoutContructor
+final class AnnotationWithRequiredAttributesWithoutConstructor
 {
 
     /**

@@ -340,7 +340,7 @@ class Sql extends QueryPluginBase {
   /**
    * A relationship is an alternative endpoint to a series of table
    * joins. Relationships must be aliases of the primary table and
-   * they must join either to the primary table or to a pre-existing
+   * they must join either to the primary table or to a preexisting
    * relationship.
    *
    * An example of a relationship would be a node reference table.

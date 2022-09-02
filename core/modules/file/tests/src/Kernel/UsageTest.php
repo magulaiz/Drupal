@@ -135,7 +135,7 @@ class UsageTest extends FileManagedUnitTestBase {
       ->fetchField();
     $this->assertFalse($count, 'The count was removed entirely when empty.');
 
-    // Non-existent decrement.
+    // Nonexistent decrement.
     $file_usage->delete($file, 'testing', 'bar', 2);
     $count = $connection->select('file_usage', 'f')
       ->fields('f', ['count'])

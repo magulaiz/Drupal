@@ -178,7 +178,7 @@ class StaticMenuLinkOverridesTest extends UnitTestCase {
    */
   public function providerTestDeleteOverrides() {
     $data = [];
-    // Delete a non existing ID.
+    // Delete a nonexistent ID.
     $data[] = ['test0', [], []];
     // Delete an existing ID.
     $data[] = ['test1', ['test1' => ['parent' => 'test0']], []];

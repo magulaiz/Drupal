@@ -6,7 +6,7 @@ use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\Tests\BrowserTestBase;
 
 /**
- * Tests the content translation behaviors on date formats.
+ * Tests the content translation behavior on date formats.
  *
  * @group config_translation
  */

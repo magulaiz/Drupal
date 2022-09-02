@@ -200,7 +200,7 @@ class MakeUniqueEntityFieldTest extends MigrateProcessTestCase {
       ->method('condition')
       ->willReturnMap($map);
 
-    // Entity 'forums' is pre-existing, entity 'test_vocab' was migrated.
+    // Entity 'forums' is preexisting, entity 'test_vocab' was migrated.
     $this->idMap
       ->method('lookupSourceId')
       ->willReturnMap([

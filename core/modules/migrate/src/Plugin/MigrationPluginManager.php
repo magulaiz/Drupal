@@ -73,9 +73,9 @@ class MigrationPluginManager extends DefaultPluginManager implements MigrationPl
       }, $this->moduleHandler->getModuleDirectories());
 
       $yaml_discovery = new YamlDirectoryDiscovery($directories, 'migrate');
-      // This gets rid of migrations which try to use a non-existent source
+      // This gets rid of migrations which try to use a nonexistent source
       // plugin. The common case for this is if the source plugin has, or
-      // specifies, a non-existent provider.
+      // specifies, a nonexistent provider.
       $only_with_source_discovery = new NoSourcePluginDecorator($yaml_discovery);
       // This gets rid of migrations with explicit providers set if one of the
       // providers do not exist before we try to use a potentially non-existing

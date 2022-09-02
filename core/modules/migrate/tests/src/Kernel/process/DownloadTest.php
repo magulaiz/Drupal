@@ -34,7 +34,7 @@ class DownloadTest extends FileTestBase {
    * Tests a download that overwrites an existing local file.
    */
   public function testOverwritingDownload() {
-    // Create a pre-existing file at the destination.
+    // Create a preexisting file at the destination.
     $destination_uri = $this->createUri('existing_file.txt');
 
     // Test destructive download.
@@ -47,7 +47,7 @@ class DownloadTest extends FileTestBase {
    * Tests a download that renames the downloaded file if there's a collision.
    */
   public function testNonDestructiveDownload() {
-    // Create a pre-existing file at the destination.
+    // Create a preexisting file at the destination.
     $destination_uri = $this->createUri('another_existing_file.txt');
 
     // Test non-destructive download.
@@ -60,7 +60,7 @@ class DownloadTest extends FileTestBase {
    * Tests that an exception is thrown if the destination URI is not writable.
    */
   public function testWriteProtectedDestination() {
-    // Create a pre-existing file at the destination.
+    // Create a preexisting file at the destination.
     $destination_uri = $this->createUri('not-writable.txt');
 
     // Make the destination non-writable.

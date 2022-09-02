@@ -158,7 +158,7 @@ class FileCopyTest extends FileTestBase {
   }
 
   /**
-   * Tests that non-existent files throw an exception.
+   * Tests that nonexistent files throw an exception.
    */
   public function testNonExistentSourceFile() {
     $source = '/non/existent/file';

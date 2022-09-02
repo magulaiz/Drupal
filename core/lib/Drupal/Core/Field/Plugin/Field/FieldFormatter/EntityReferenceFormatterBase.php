@@ -124,7 +124,7 @@ abstract class EntityReferenceFormatterBase extends FormatterBase {
     $ids = [];
     foreach ($entities_items as $items) {
       foreach ($items as $item) {
-        // To avoid trying to reload non-existent entities in
+        // To avoid trying to reload nonexistent entities in
         // getEntitiesToView(), explicitly mark the items where $item->entity
         // contains a valid entity ready for display. All items are initialized
         // at FALSE.

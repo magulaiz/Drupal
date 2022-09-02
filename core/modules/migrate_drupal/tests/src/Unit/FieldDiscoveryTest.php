@@ -117,7 +117,7 @@ class FieldDiscoveryTest extends UnitTestCase {
           ],
         ],
       ],
-      'Non-existent Entity' => [
+      'Nonexistent Entity' => [
         'entity_type_id' => 'custom_entity',
         'expected_fields' => [],
       ],
@@ -199,12 +199,12 @@ class FieldDiscoveryTest extends UnitTestCase {
           'cfield_5' => ['field_info_key' => 'field_5_data'],
         ],
       ],
-      'Non-existent Entity Type' => [
+      'Nonexistent Entity Type' => [
         'entity_type_id' => 'custom_entity',
         'bundle' => 'content_type_1',
         'expected_fields' => [],
       ],
-      'Non-existent Bundle' => [
+      'Nonexistent Bundle' => [
         'entity_type_id' => 'node',
         'bundle' => 'content_type_3',
         'expected_fields' => [],

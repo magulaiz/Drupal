@@ -41,7 +41,7 @@ class PrefixInfoTest extends DatabaseTestBase {
     $db1_info = $method->invoke($db1_schema);
 
     // We change the database after opening the connection, so as to prevent
-    // connecting to a non-existent database.
+    // connecting to a nonexistent database.
     $reflection = new \ReflectionObject($db2_connection);
     $property = $reflection->getProperty('connectionOptions');
     $property->setAccessible(TRUE);

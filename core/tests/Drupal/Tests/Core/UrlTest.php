@@ -86,7 +86,7 @@ class UrlTest extends UnitTestCase {
       ['node', NULL, FALSE, 'node'],
       ['node/1', NULL, FALSE, 'node/1'],
       ['node/2/edit', NULL, FALSE, 'node/2/edit'],
-      ['non-existent', NULL, FALSE, 'non-existent'],
+      ['nonexistent', NULL, FALSE, 'nonexistent'],
     ];
 
     // $this->map has $collect_bubbleable_metadata = FALSE; also generate the

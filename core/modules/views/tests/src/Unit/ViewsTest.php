@@ -74,7 +74,7 @@ class ViewsTest extends UnitTestCase {
   }
 
   /**
-   * Tests the getView() method against a non-existent view.
+   * Tests the getView() method against a nonexistent view.
    *
    * @covers ::getView
    */

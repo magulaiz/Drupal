@@ -57,7 +57,7 @@ class ConfigOtherModuleTest extends BrowserTestBase {
     // Default configuration provided by config_test should still exist.
     $this->assertNotEmpty($this->getStorage()->load('dotted.default'), 'The configuration is not deleted.');
 
-    // Re-enable module to test that pre-existing optional configuration does
+    // Re-enable module to test that preexisting optional configuration does
     // not throw an error.
     $this->installModule('config_other_module_config_test');
     $this->assertTrue(\Drupal::moduleHandler()->moduleExists('config_other_module_config_test'), 'The config_other_module_config_test module is installed.');
