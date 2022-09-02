@@ -52,6 +52,7 @@ class YamlPecl implements SerializationInterface {
     $ndocs = 0;
     $data = yaml_parse($raw, 0, $ndocs, [
       YAML_BOOL_TAG => '\Drupal\Component\Serialization\YamlPecl::applyBooleanCallbacks',
+      '!php/const' => '\Drupal\Component\Serialization\YamlPecl::parsePhpConstant',
     ]);
     restore_error_handler();
     return $data;
@@ -105,6 +106,23 @@ class YamlPecl implements SerializationInterface {
       'true' => TRUE,
     ];
     return $map[strtolower($value)];
+  }
+
+  /**
+   * Parse PHP constants from the encoded content.
+   *
+   * @param mixed $value
+   *   Value from YAML file.
+   * @param string $tag
+   *   Tag that triggered the callback.
+   * @param int $flags
+   *   Scalar entity style flags.
+   *
+   * @return string
+   *   The value of $value interpreted as a constant.
+   */
+  public static function parsePhpConstant($value, $tag, $flags) {
+    return constant($value);
   }
 
 }
