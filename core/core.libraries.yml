@@ -854,15 +854,6 @@ picturefill:
   drupalSettings: {}
   deprecated: The %library_id% asset library is deprecated in Drupal 10.0.0 and will be removed in Drupal 11.0.0. See https://www.drupal.org/node/3280410
 
-popperjs:
-  version: "2.11.5"
-  license:
-    name: MIT
-    url: https://raw.githubusercontent.com/popperjs/popper-core/v2.11.5/LICENSE.md
-    gpl-compatible: true
-  js:
-    assets/vendor/popperjs/popper.min.js: { minified: true }
-
 sortable:
   remote: https://github.com/SortableJS/Sortable
   version: "1.15.0"
