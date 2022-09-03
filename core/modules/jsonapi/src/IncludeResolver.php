@@ -140,7 +140,7 @@ class IncludeResolver {
         if (is_subclass_of($field_list->getItemDefinition()->getClass(), EntityReferenceItemInterface::class)) {
           foreach ($field_list as $field_item) {
             if ($field_item->entity instanceof EntityInterface) {
-              // Support entity reference fields, which don't have the referenced
+              // Support entity reference fields that don't have the referenced
               // target type stored in settings.
               $references[$field_item->entity->getEntityTypeId()][] = $field_item->get($field_item::mainPropertyName())->getValue();
             }
