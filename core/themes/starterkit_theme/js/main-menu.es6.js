@@ -9,6 +9,12 @@
   let secondLevelNavMenus;
   let secondLevelToggleButtonSelector;
 
+  /**
+   * Determines if the mobile navigation is open by checking if its
+   * disclosure button is visible.
+   *
+   * @returns {boolean}
+   */
   function isDesktopNav() {
     return mobileNavigationButton.clientHeight === 0;
   }
@@ -91,7 +97,14 @@
     }, 200);
   }
 
-  // Add event listeners onto each sub navigation parent and button.
+  /**
+   * Sets up event listeners to manage display of second-level menus. Also
+   * contains logic of when event listeners will fire to ensure that touch
+   * devices do not simultaneously fire mouseover and click events.
+   *
+   * @param {NodeList} secondLevelNavMenus
+   *   NodeList containing all top-level <li> elements that have submenus.
+   */
   function initSecondLevelNav(secondLevelNavMenus) {
     secondLevelNavMenus.forEach((el) => {
       const button = el.querySelector(secondLevelToggleButtonSelector);
@@ -120,12 +133,14 @@
         }
       });
 
+      // Only fire click event if the mouseover event has not just fired.
       button.addEventListener('click', () => {
         if (!el.classList.contains('is-active-mouseover-event')) {
           toggleSubNav(el);
         }
       });
 
+      // Only close menu on mouseout if it does not contain focused element.
       el.addEventListener('mouseout', () => {
         if (
           isDesktopNav() &&
@@ -246,7 +261,7 @@
       closeAllSubNav();
     });
 
-    // Init mobile menu
+    // Initialize the mobile menu button.
     mobileNavigationButton.setAttribute('aria-expanded', 'false');
     mobileNavigationButton.setAttribute(
       'aria-controls',
