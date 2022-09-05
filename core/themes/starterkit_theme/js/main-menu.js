@@ -135,7 +135,7 @@
     initSecondLevelNav(secondLevelNavMenus);
     document.addEventListener('keyup', e => {
       if (e.key === 'Escape') {
-        if (!primaryNavigationRegion.querySelector(':is([data-drupal-selector="main-nav-menu-link-has-children"], [data-drupal-selector="main-nav-submenu-toggle-button"])[aria-expanded="true"]')) {
+        if (!primaryNavigationRegion.querySelector(`:is(${secondLevelToggleButtonSelector})[aria-expanded="true"]`)) {
           toggleMobileNav(false);
         }
 
