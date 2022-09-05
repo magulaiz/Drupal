@@ -11,6 +11,7 @@ use Drupal\Tests\BrowserTestBase;
  * Tests Quick Edit module integration endpoints.
  *
  * @group quickedit
+ * @group legacy
  */
 class EditorIntegrationLoadingTest extends BrowserTestBase {
 
@@ -24,7 +25,7 @@ class EditorIntegrationLoadingTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'classy';
+  protected $defaultTheme = 'starterkit_theme';
 
   /**
    * The basic permissions necessary to view content and use in-place editing.

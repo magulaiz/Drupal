@@ -12,6 +12,7 @@ use Drupal\user\UserInterface;
  *
  * @group node
  * @group rdf
+ * @group legacy
  */
 class NodeDisplayConfigurableTest extends NodeTestBase {
 
@@ -167,9 +168,6 @@ class NodeDisplayConfigurableTest extends NodeTestBase {
   public function provideThemes() {
     return [
       ['claro', 'footer', TRUE],
-      // @todo Remove Classy from data provider in
-      // https://www.drupal.org/project/drupal/issues/3110137.
-      ['classy', 'footer', TRUE],
       // @todo Add coverage for olivero after fixing
       // https://www.drupal.org/project/drupal/issues/3215220.
       // ['olivero', 'footer', TRUE],

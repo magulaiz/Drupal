@@ -16,6 +16,7 @@ use Drupal\Tests\rdf\Traits\RdfParsingTrait;
  * Tests the RDF mappings and RDFa markup on top of the standard profile.
  *
  * @group rdf
+ * @group legacy
  */
 class StandardProfileTest extends BrowserTestBase {
 
@@ -24,7 +25,7 @@ class StandardProfileTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'classy';
+  protected $defaultTheme = 'starterkit_theme';
 
   /**
    * The profile used during tests.
