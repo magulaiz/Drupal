@@ -55,6 +55,8 @@ process:
       plugin: static_map
       bypass: true
       source: '@widget_type'
+      # This static mapping is retained only for backwards compatibility. It is
+      # recommended to use MigrateFieldInterface::getFieldWidgetMap*() instead.
       map: { }
   'options/settings':
     plugin: field_instance_widget_settings
