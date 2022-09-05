@@ -19,7 +19,7 @@ use Symfony\Component\Routing\Exception\RouteNotFoundException;
 /**
  * Defines a base entity class.
  */
-abstract class EntityBase implements EntityInterface {
+abstract class EntityBase implements InjectableEntityInterface {
 
   use RefinableCacheableDependencyTrait;
 
