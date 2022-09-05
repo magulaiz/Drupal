@@ -717,8 +717,6 @@ services:
     arguments: ['@config.factory']
   request_stack:
     class: Drupal\Core\Http\RequestStack
-    tags:
-      - { name: persist }
   current_route_match:
      class: Drupal\Core\Routing\CurrentRouteMatch
      arguments: ['@request_stack']
@@ -873,8 +871,6 @@ services:
     lazy: true
   router.request_context:
     class: Drupal\Core\Routing\RequestContext
-    tags:
-      - { name: persist }
     calls:
       - [fromRequestStack, ['@request_stack']]
   router.admin_context:
