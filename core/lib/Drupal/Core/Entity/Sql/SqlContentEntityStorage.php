@@ -178,7 +178,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
    *   The entity type manager.
    */
   public function __construct(EntityTypeInterface $entity_type, Connection $database, EntityFieldManagerInterface $entity_field_manager, CacheBackendInterface $cache, LanguageManagerInterface $language_manager, MemoryCacheInterface $memory_cache, EntityTypeBundleInfoInterface $entity_type_bundle_info, EntityTypeManagerInterface $entity_type_manager) {
-    parent::__construct($entity_type, $entity_field_manager, $cache, $memory_cache, $entity_type_bundle_info, $container);
+    parent::__construct($entity_type, $entity_field_manager, $cache, $memory_cache, $entity_type_bundle_info);
     $this->database = $database;
     $this->languageManager = $language_manager;
     $this->entityTypeManager = $entity_type_manager;
