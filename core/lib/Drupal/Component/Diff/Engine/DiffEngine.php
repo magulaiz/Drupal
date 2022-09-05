@@ -133,7 +133,7 @@ class DiffEngine {
    */
   protected function _line_hash($line) {
     if (mb_strlen($line) > $this::MAX_XREF_LENGTH) {
-      return hash('crc32b', $line);
+      return hash('xxh64', $line);
     }
     else {
       return $line;
