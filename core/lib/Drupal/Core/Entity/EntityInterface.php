@@ -15,21 +15,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 interface EntityInterface extends AccessibleInterface, CacheableDependencyInterface, RefinableCacheableDependencyInterface {
 
   /**
-   * Creates an instance of the entity to allow for DI.
-   * @param \Symfony\Component\DependencyInjection\ContainerInterface $container
-   *   The container.
-   * @param array $values
-   *   An array of values to set, keyed by property name. If the entity type
-   *   has bundles, the bundle key has to be specified.
-   * @param string $entity_type
-   *   The type of the entity to create.
-   *
-   * @return \Drupal\Core\Entity\EntityInterface
-   *   The created entity.
-   */
-  public static function createInstance(ContainerInterface $container, array $values, string $entity_type);
-
-  /**
    * Gets the entity UUID (Universally Unique Identifier).
    *
    * The UUID is guaranteed to be unique and can be used to identify an entity
