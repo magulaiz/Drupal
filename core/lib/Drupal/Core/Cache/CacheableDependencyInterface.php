@@ -46,7 +46,7 @@ interface CacheableDependencyInterface {
    *
    * @return int
    *   The maximum time in seconds that this object may be cached.
-   *   An object may be cached indefinitely/permanently by returning
+   *   An object may be cached permanently by returning
    *   \Drupal\Core\Cache\Cache::PERMANENT.
    */
   public function getCacheMaxAge();
