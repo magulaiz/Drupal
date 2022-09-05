@@ -252,7 +252,7 @@ class Fixtures {
    */
   public function tmpDir($prefix) {
     $prefix .= static::persistentPrefix();
-    $tmpDir = sys_get_temp_dir() . '/scaffold-' . $prefix . uniqid(md5($prefix . microtime()), TRUE);
+    $tmpDir = sys_get_temp_dir() . '/scaffold-' . $prefix . uniqid(hash('xxh64', $prefix . microtime()), TRUE);
     $this->tmpDirs[] = $tmpDir;
     return $tmpDir;
   }
@@ -269,7 +269,7 @@ class Fixtures {
    */
   protected static function persistentPrefix() {
     if (empty(static::$randomPrefix)) {
-      static::$randomPrefix = getmypid() . md5(microtime());
+      static::$randomPrefix = getmypid() . hash('xxh64', microtime());
     }
     return static::$randomPrefix;
   }
