@@ -43,7 +43,7 @@ class DrupalComponentTest extends TestCase {
    */
   public function testComponentLicense($component_path) {
     $this->assertFileExists($component_path . DIRECTORY_SEPARATOR . 'LICENSE.txt');
-    $this->assertSame('e84dac1d9fbb5a4a69e38654ce644cea769aa76b', hash_file('sha1', $component_path . DIRECTORY_SEPARATOR . 'LICENSE.txt'));
+    $this->assertSame('9948a94c294e1ab9', hash_file('xxh64', $component_path . DIRECTORY_SEPARATOR . 'LICENSE.txt'));
   }
 
   /**
