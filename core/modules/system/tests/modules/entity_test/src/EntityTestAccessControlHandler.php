@@ -65,6 +65,26 @@ class EntityTestAccessControlHandler extends EntityAccessControlHandler {
       return $access;
     }
 
+    // Revision access checks use label instead of permission so access can
+    // vary by individual revisions, since 'name' field can vary by revision.
+    $labels = explode(',', $entity->label());
+    $labels = array_map('trim', $labels);
+    if (in_array($operation, [
+      'view all revisions',
+      'view revision',
+    ], TRUE)) {
+      return AccessResult::allowedIf(in_array($operation, $labels, TRUE));
+    }
+    elseif ($operation === 'revert') {
+      // Disallow deleting latest and current revision.
+      return AccessResult::allowedIf(!$entity->isDefaultRevision() && !$entity->isLatestRevision() && in_array('revert', $labels, TRUE));
+    }
+    elseif ($operation === 'delete revision') {
+      // Disallow reverting to latest (a pointless exercise).
+      return AccessResult::allowedIf(!$entity->isLatestRevision() && in_array('delete revision', $labels, TRUE));
+
+    }
+
     // No opinion.
     return AccessResult::neutral();
 
