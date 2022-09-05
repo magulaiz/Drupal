@@ -24,11 +24,8 @@ class InstallerMissingVersionTest extends BrowserTestBase {
   /**
    * Tests the report status page after install a module without version.
    */
-  public function testProfileOnStatusPage() {
-    $user = $this->drupalCreateUser([
-      'administer site configuration',
-      'access site reports',
-    ]);
+  public function testProfileOnStatusPage(): void {
+    $user = $this->createUser(['administer site configuration', 'access site reports']);
     $this->drupalLogin($user);
     $this->drupalGet('admin/reports/status');
 

@@ -1,4 +1,5 @@
 name: 'Testing install missing version'
 type: profile
 description: 'Minimal profile for testing install profiles without version key.'
+version: VERSION
 hidden: true
