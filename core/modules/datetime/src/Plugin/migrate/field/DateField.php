@@ -35,9 +35,9 @@ class DateField extends FieldPluginBase {
       // The date_plain formatter exists in Drupal 7 but not Drupal 6. It is
       // added here because this plugin is declared for Drupal 6 and Drupal 7.
       'date_plain' => 'datetime_plain',
-      // The date formatter exists in Drupal 6 but not Drupal 7. See
-      // ::getFieldFormatterType() for details. It is added here because this
-      // plugin is declared for Drupal 6 and Drupal 7.
+      // The default formatter exists in Drupal 6 but not Drupal 7.
+      // See ::getFieldFormatterType() for details. It is added here because
+      // this plugin is declared for Drupal 6 and Drupal 7.
       'default' => 'datetime_default',
     ];
   }
