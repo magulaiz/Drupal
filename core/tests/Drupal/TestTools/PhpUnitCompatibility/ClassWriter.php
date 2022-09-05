@@ -102,7 +102,7 @@ final class ClassWriter {
     $full_path = $directory . '/' . $file_name;
 
     // Only write when necessary.
-    if (!file_exists($full_path) || md5_file($full_path) !== md5($altered_code)) {
+    if (!file_exists($full_path) || hash_file('xxh64', $full_path) !== hash('xxh64', $altered_code)) {
       // Create directory when necessary.
       if (!is_dir($directory) && !@mkdir($directory, 0777, TRUE) && !is_dir($directory)) {
         throw new \RuntimeException('Unable to create directory: ' . $directory);
