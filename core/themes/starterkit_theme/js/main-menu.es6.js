@@ -241,8 +241,16 @@
     // Ensure that desktop submenus close when escape key is pressed.
     document.addEventListener('keyup', (e) => {
       if (e.key === 'Escape') {
+        // Only close mobile navigation if all submenus are already closed.
+        if (
+          !primaryNavigationRegion.querySelector(
+            ':is([data-drupal-selector="main-nav-menu-link-has-children"], [data-drupal-selector="main-nav-submenu-toggle-button"])[aria-expanded="true"]',
+          )
+        ) {
+          toggleMobileNav(false);
+        }
+
         closeAllSubNav();
-        toggleMobileNav(false);
       }
     });
 
