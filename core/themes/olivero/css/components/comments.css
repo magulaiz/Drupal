@@ -119,7 +119,11 @@
 
 .comment {
   position: relative;
-  padding-top: 2.25rem
+  padding-top: 2.25rem;
+}
+
+.comment__content h3 {
+    margin-top: 0.25rem;
 }
 
 @media (min-width: 43.75rem) {
