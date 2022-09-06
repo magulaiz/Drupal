@@ -332,7 +332,7 @@ ckeditor5_invalid_plugin_foo_bar:
     elements:
       - <foo>
       - <bar>
-    admin_library:  ckeditor5/internal.admin.basic
+    admin_library: ckeditor5/internal.admin.basic
 YAML,
       NULL,
     ];
@@ -348,7 +348,7 @@ ckeditor5_invalid_plugin_foo_bar:
     elements:
       - <foo>
       - <bar>
-    admin_library:  ckeditor5/internal.admin.basic
+    admin_library: ckeditor5/internal.admin.basic
     conditions:
       foo: bar
 YAML,
@@ -364,7 +364,7 @@ ckeditor5_invalid_plugin_foo_bar:
     elements:
       - <foo>
       - <bar>
-    admin_library:  ckeditor5/internal.admin.basic
+    admin_library: ckeditor5/internal.admin.basic
     conditions:
       toolbarItem: [bold, italic]
 YAML,
@@ -380,7 +380,7 @@ ckeditor5_invalid_plugin_foo_bar:
     elements:
       - <foo>
       - <bar>
-    admin_library:  ckeditor5/internal.admin.basic
+    admin_library: ckeditor5/internal.admin.basic
     conditions:
       toolbarItem: bold
 YAML,
@@ -396,7 +396,7 @@ ckeditor5_invalid_plugin_foo_bar:
     elements:
       - <foo>
       - <bar>
-    admin_library:  ckeditor5/internal.admin.basic
+    admin_library: ckeditor5/internal.admin.basic
     conditions:
       toolbarItem: bold
       filter: true
@@ -413,7 +413,7 @@ ckeditor5_invalid_plugin_foo_bar:
     elements:
       - <foo>
       - <bar>
-    admin_library:  ckeditor5/internal.admin.basic
+    admin_library: ckeditor5/internal.admin.basic
     conditions:
       toolbarItem: bold
       filter: filter_caption
@@ -430,7 +430,7 @@ ckeditor5_invalid_plugin_foo_bar:
     elements:
       - <foo>
       - <bar>
-    admin_library:  ckeditor5/internal.admin.basic
+    admin_library: ckeditor5/internal.admin.basic
     conditions:
       toolbarItem: bold
       filter: filter_caption
@@ -448,7 +448,7 @@ ckeditor5_invalid_plugin_foo_bar:
     elements:
       - <foo>
       - <bar>
-    admin_library:  ckeditor5/internal.admin.basic
+    admin_library: ckeditor5/internal.admin.basic
     conditions:
       toolbarItem: bold
       filter: filter_caption
@@ -466,7 +466,7 @@ ckeditor5_invalid_plugin_foo_bar:
     elements:
       - <foo>
       - <bar>
-    admin_library:  ckeditor5/internal.admin.basic
+    admin_library: ckeditor5/internal.admin.basic
     conditions:
       toolbarItem: bold
       filter: filter_caption
@@ -485,7 +485,7 @@ ckeditor5_invalid_plugin_foo_bar:
     elements:
       - <foo>
       - <bar>
-    admin_library:  ckeditor5/internal.admin.basic
+    admin_library: ckeditor5/internal.admin.basic
     conditions:
       toolbarItem: bold
       filter: filter_caption
@@ -504,7 +504,7 @@ ckeditor5_invalid_plugin_foo_bar:
     elements:
       - <foo>
       - <bar>
-    admin_library:  ckeditor5/internal.admin.basic
+    admin_library: ckeditor5/internal.admin.basic
     conditions: []
 YAML,
       NULL,
@@ -519,7 +519,7 @@ ckeditor5_invalid_plugin_foo_bar:
     elements:
       - <foo>
       - <bar>
-    admin_library:  ckeditor5/internal.admin.basic
+    admin_library: ckeditor5/internal.admin.basic
     conditions: false
 YAML,
       NULL,
@@ -537,7 +537,7 @@ ckeditor5_invalid_plugin_foo_bar:
     elements:
       - <foo>
       - <bar>
-    admin_library:  ckeditor5/internal.admin.basic
+    admin_library: ckeditor5/internal.admin.basic
 YAML,
       'The CKEditor 5 "ckeditor5_invalid_plugin_foo_bar" provides a plugin class: "Drupal\ckeditor5_invalid_plugin\Plugin\CKEditor5Plugin\FooBar", but it does not exist.',
     ];
@@ -553,7 +553,7 @@ ckeditor5_invalid_plugin_foo_bar:
     elements:
       - <foo>
       - <bar>
-    admin_library:  ckeditor5/internal.admin.basic
+    admin_library: ckeditor5/internal.admin.basic
 YAML,
       'CKEditor 5 plugins must implement \Drupal\ckeditor5\Plugin\CKEditor5PluginInterface. "ckeditor5_invalid_plugin_foo_bar" does not.',
       [
@@ -582,7 +582,7 @@ ckeditor5_invalid_plugin_foo_bar:
     elements:
       - <foo>
       - <bar>
-    admin_library:  ckeditor5/internal.admin.basic
+    admin_library: ckeditor5/internal.admin.basic
 YAML,
       NULL,
       [
@@ -614,7 +614,7 @@ ckeditor5_invalid_plugin_foo_bar:
     elements:
       - <foo>
       - <bar>
-    admin_library:  ckeditor5/internal.admin.basic
+    admin_library: ckeditor5/internal.admin.basic
 YAML,
       NULL,
       [
@@ -653,7 +653,7 @@ ckeditor5_invalid_plugin_foo_bar:
     elements:
       - <foo>
       - <bar>
-    admin_library:  ckeditor5/internal.admin.basic
+    admin_library: ckeditor5/internal.admin.basic
 YAML,
       'The "ckeditor5_invalid_plugin_foo_bar" CKEditor 5 plugin definition is configurable, has non-empty default configuration but has no config schema. Config schema is required for validation.',
       [
@@ -692,7 +692,7 @@ ckeditor5_invalid_plugin_foo_bar:
     elements:
       - <foo>
       - <bar>
-    admin_library:  ckeditor5/internal.admin.basic
+    admin_library: ckeditor5/internal.admin.basic
 YAML,
       NULL,
       [
@@ -744,7 +744,7 @@ ckeditor5_invalid_plugin_foo_bar:
     elements:
       - <foo>
       - <bar>
-    admin_library:  ckeditor5/internal.admin.basic
+    admin_library: ckeditor5/internal.admin.basic
 YAML,
       'The "ckeditor5_invalid_plugin_foo_bar" CKEditor 5 plugin definition is configurable, but its default configuration does not match its config schema. The following errors were found: [foo] The configuration property foo.bar doesn\'t exist, [baz] missing schema.',
       [
@@ -796,7 +796,7 @@ ckeditor5_invalid_plugin_foo_bar:
     elements:
       - <foo>
       - <bar>
-    admin_library:  ckeditor5/internal.admin.basic
+    admin_library: ckeditor5/internal.admin.basic
 YAML,
       NULL,
       [
