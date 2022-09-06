@@ -79,14 +79,8 @@ class StableLibraryOverrideTest extends StableLibraryOverrideTestBase {
         if (in_array("$extension/$library_name", $this->librariesToSkip)) {
           continue;
         }
-        // Allow skipping libraries by regex.
-        $matches_regex = array_reduce($this->librariesToSkip, function (bool $carry, string $skip) use ($extension, $library_name) {
-          if ($skip[0] === '/' && preg_match($skip, "$extension/$library_name")) {
-            return TRUE;
-          }
-          return $carry;
-        }, FALSE);
-        if ($matches_regex) {
+        // Skip internal libraries.
+        if (substr($library_name, 0, 9) === 'internal.') {
           continue;
         }
         $library_after = $libraries_after[$extension][$library_name];
