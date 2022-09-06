@@ -15,12 +15,12 @@ internal.ckeditor5.language:
   dependencies:
     - core/ckeditor5.language
 
-internal.drupal.ckeditor5.internal:
+internal.drupal.ckeditor5.htmlEngine:
   js:
     js/build/drupalHtmlEngine.js: { minified: true }
   dependencies:
     - core/ckeditor5
-    - core/ckeditor5.internal
+    - core/ckeditor5.essentials
 
 internal.drupal.ckeditor5:
   js:
@@ -141,10 +141,10 @@ internal.admin.removeFormat:
     theme:
       css/remove-format.css: { }
 
-internal.admin.internal:
+internal.admin.essentials:
   css:
     theme:
-      css/internal.admin.css: { }
+      css/essentials.admin.css: { }
 
 internal.admin.basic:
   css:
@@ -171,7 +171,7 @@ internal.admin.heading:
     theme:
       css/heading.admin.css: { }
   dependencies:
-    - core/ckeditor5.internal
+    - core/ckeditor5.essentials
 
 internal.admin.horizontalLine:
   css:

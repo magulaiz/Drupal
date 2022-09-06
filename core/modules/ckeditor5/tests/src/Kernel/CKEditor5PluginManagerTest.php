@@ -1060,10 +1060,10 @@ PHP,
     $default_libraries = [
       'ckeditor5/internal.drupal.ckeditor5',
       'ckeditor5/internal.drupal.ckeditor5.emphasis',
-      'ckeditor5/internal.drupal.ckeditor5.internal',
+      'ckeditor5/internal.drupal.ckeditor5.htmlEngine',
       'core/ckeditor5.basic',
+      'core/ckeditor5.essentials',
       'core/ckeditor5.htmlSupport',
-      'core/ckeditor5.internal',
       'core/ckeditor5.pasteFromOffice',
     ];
     $this->assertSame($default_libraries, $this->manager->getEnabledLibraries($editor));
@@ -1180,10 +1180,10 @@ PHP,
     $default_libraries = [
       'ckeditor5/internal.drupal.ckeditor5',
       'ckeditor5/internal.drupal.ckeditor5.emphasis',
-      'ckeditor5/internal.drupal.ckeditor5.internal',
+      'ckeditor5/internal.drupal.ckeditor5.htmlEngine',
       'core/ckeditor5.basic',
+      'core/ckeditor5.essentials',
       'core/ckeditor5.htmlSupport',
-      'core/ckeditor5.internal',
       'core/ckeditor5.pasteFromOffice',
     ];
     $this->assertSame($default_libraries, $this->manager->getEnabledLibraries($editor));

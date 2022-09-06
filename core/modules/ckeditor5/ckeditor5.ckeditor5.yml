@@ -9,8 +9,8 @@ ckeditor5_essentials:
       - essentials.Essentials
   drupal:
     label: Essentials
-    library: ckeditor5/internal.drupal.ckeditor5.internal
-    admin_library: ckeditor5/internal.admin.internal
+    library: ckeditor5/internal.drupal.ckeditor5.htmlEngine
+    admin_library: ckeditor5/internal.admin.essentials
     toolbar_items:
       undo:
         label: Undo
@@ -25,8 +25,8 @@ ckeditor5_paragraph:
     plugins: [paragraph.Paragraph]
   drupal:
     label: Paragraph
-    library: core/ckeditor5.internal
-    admin_library: ckeditor5/internal.admin.internal
+    library: core/ckeditor5.essentials
+    admin_library: ckeditor5/internal.admin.essentials
     elements:
       - <p>
 
@@ -48,7 +48,7 @@ ckeditor5_heading:
           - { model: 'heading6', view: 'h6', title: 'Heading 6', class: 'ck-heading_heading6' }
   drupal:
     label: Headings
-    library: core/ckeditor5.internal
+    library: core/ckeditor5.essentials
     admin_library: ckeditor5/internal.admin.heading
     class: Drupal\ckeditor5\Plugin\CKEditor5Plugin\Heading
     toolbar_items:
