@@ -56,7 +56,7 @@ abstract class StableLibraryOverrideTestBase extends KernelTestBase {
     // controlled by Drupal, but by upstream.
     // Hence all CKEditor 5 asset libraries are considered internal.
     // @see https://ckeditor.com/docs/ckeditor5/latest/support/versioning-policy.html
-    '/ckeditor5\/.*/',
+    '/ckeditor5\/internal\..*/',
     // This is a deprecated library that will trigger warnings.
     'image/quickedit.inPlaceEditor.image',
   ];
