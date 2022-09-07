@@ -137,6 +137,7 @@ class ResourceObject implements CacheableDependencyInterface, ResourceIdentifier
       $versionIdentifier,
       $this->getFields(),
       $this->getLinks(),
+      $this->getLanguage(),
       [ResourceIdentifier::ARITY_KEY => $arity] + $this->getMeta()
     );
   }
