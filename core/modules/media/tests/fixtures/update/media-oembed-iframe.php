@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Test oembed iframe update by adding an oembed field display without config.
+ * Test oembed update by adding an oembed field display without config.
  */
 
 use Drupal\Core\Database\Database;

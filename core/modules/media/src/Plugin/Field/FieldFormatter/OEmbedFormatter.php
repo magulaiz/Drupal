@@ -277,16 +277,16 @@ class OEmbedFormatter extends FormatterBase {
       'loading' => [
         '#type' => 'details',
         '#title' => $this->t('oEmbed loading'),
-        '#description' => $this->t('Lazy render iframe with native loading attribute (<em>loading="lazy"</em>). This improves performance by allowing browsers to lazily load assets.'),
+        '#description' => $this->t('Lazy render oEmbed with native loading attribute (<em>loading="lazy"</em>). This improves performance by allowing browsers to lazily load assets.'),
         'attribute' => [
-          '#title' => $this->t('Iframe loading attribute'),
+          '#title' => $this->t('oEmbed loading attribute'),
           '#type' => 'radios',
           '#default_value' => $this->getSetting('loading')['attribute'],
           '#options' => [
             'lazy' => $this->t('Lazy (<em>loading="lazy"</em>)'),
             'eager' => $this->t('Eager (<em>loading="eager"</em>)'),
           ],
-          '#description' => $this->t('Select the loading attribute for iframes. <a href=":link">Learn more about the loading attribute for iframes.</a>', [
+          '#description' => $this->t('Select the loading attribute for oEmbed. <a href=":link">Learn more about the loading attribute for oEmbed.</a>', [
             ':link' => 'https://html.spec.whatwg.org/multipage/urls-and-fetching.html#lazy-loading-attributes',
           ]),
         ],

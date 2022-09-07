@@ -23,7 +23,7 @@ function media_removed_post_updates() {
 }
 
 /**
- * Add the oembed iframe loading attribute setting to field formatter instances.
+ * Add the oEmbed loading attribute setting to field formatter instances.
  */
 function media_post_update_oembed_loading_attribute(array &$sandbox = NULL): void {
   $media_config_updater = \Drupal::classResolver(MediaConfigUpdater::class);

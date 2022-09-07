@@ -111,7 +111,7 @@ class OEmbedFormatterTest extends MediaFunctionalTestBase {
           'loading' => ['attribute' => 'eager'],
         ],
         [
-          'iframe' => [
+          'oembed' => [
             'src' => '/media/oembed?url=https%3A//twitter.com/drupaldevdays/status/935643039741202432',
             'width' => '550',
             'height' => '360',

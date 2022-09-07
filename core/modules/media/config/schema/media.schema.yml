@@ -61,7 +61,7 @@ field.formatter.settings.oembed:
       label: 'Maximum height'
     loading:
       type: mapping
-      label: 'Iframe loading settings'
+      label: 'oEmbed loading settings'
       mapping:
         attribute:
           type: string
