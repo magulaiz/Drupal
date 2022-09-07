@@ -93,6 +93,7 @@ Block
 
 Block Content
 - Lee Rowlands 'larowlan' https://www.drupal.org/u/larowlan
+- Stephen Mustgrave 'smustgrave' https://www.drupal.org/u/smustgrave
 
 Book
 - Peter Wolanin 'pwolanin' https://www.drupal.org/u/pwolanin
@@ -347,9 +348,6 @@ Queue
 Quick Edit
 - Wim Leers 'Wim Leers' https://www.drupal.org/u/wim-leers
 - Théodore Biadala 'nod_' https://www.drupal.org/u/nod_
-
-RDF
-- ?
 
 Render API
 - Alex Bronstein 'effulgentsia' https://www.drupal.org/u/effulgentsia
