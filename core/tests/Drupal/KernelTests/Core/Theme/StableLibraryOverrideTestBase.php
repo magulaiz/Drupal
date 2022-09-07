@@ -43,8 +43,6 @@ abstract class StableLibraryOverrideTestBase extends KernelTestBase {
   /**
    * A list of libraries to skip checking, in the format extension/library_name.
    *
-   * Alternatively: allows a regular expression.
-   *
    * @var string[]
    */
   protected $librariesToSkip = [
