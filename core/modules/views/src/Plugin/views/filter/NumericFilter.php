@@ -391,7 +391,7 @@ class NumericFilter extends FilterPluginBase {
       $output .= ' ' . $this->t('@min and @max', ['@min' => $this->value['min'], '@max' => $this->value['max']]);
     }
     elseif (in_array($this->operator, $this->operatorValues(1))) {
-      $output .= ' ' . $this->value['value'];
+      $output .= ' ' . $this->value['value'] ?? $this->value;
     }
     return $output;
   }
