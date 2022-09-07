@@ -6,6 +6,7 @@
  */
 
 use Drupal\Component\FileSystem\FileSystem as FileSystemComponent;
+use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Component\Utility\Bytes;
 use Drupal\Component\Utility\Crypt;
 use Drupal\Component\Utility\Environment;
@@ -57,10 +58,10 @@ function system_requirements($phase) {
     if ($profile != 'standard') {
       $info = $module_extension_list->getExtensionInfo($profile);
       if ($info['version']) {
-        $value = t('%profile_name (%profile-%version)', ['%profile_name' => $info['name'], '%profile' => $profile, '%version' => $info['version']]);
+        $value = new FormattableMarkup('%profile_name (%profile-%version)', ['%profile_name' => $info['name'], '%profile' => $profile, '%version' => $info['version']]);
       }
       else {
-        $value = t('%profile_name (%profile)', ['%profile_name' => $info['name'], '%profile' => $profile]);
+        $value = new FormattableMarkup('%profile_name (%profile)', ['%profile_name' => $info['name'], '%profile' => $profile]);
       }
       $requirements['install_profile'] = [
         'title' => t('Installation profile'),
