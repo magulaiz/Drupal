@@ -13,6 +13,7 @@
         allowedContent: {
           'drupal-media': {
             attributes: {
+              '!data-entity-bundle': true,
               '!data-entity-type': true,
               '!data-entity-uuid': true,
               '!data-view-mode': true,
@@ -32,6 +33,7 @@
         requiredContent: new CKEDITOR.style({
           element: 'drupal-media',
           attributes: {
+            'data-entity-bundle': '',
             'data-entity-type': '',
             'data-entity-uuid': '',
           },

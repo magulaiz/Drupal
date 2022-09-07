@@ -66,6 +66,7 @@ class MediaLibraryEditorOpener implements MediaLibraryOpenerInterface {
     $response = new AjaxResponse();
     $values = [
       'attributes' => [
+        'data-entity-bundle' => $selected_media->bundle(),
         'data-entity-type' => 'media',
         'data-entity-uuid' => $selected_media->uuid(),
         'data-align' => 'center',

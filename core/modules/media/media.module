@@ -445,6 +445,7 @@ function media_filter_format_edit_form_validate($form, FormStateInterface $form_
     }
     else {
       $required_attributes = [
+        'data-entity-bundle',
         'data-entity-type',
         'data-entity-uuid',
       ];
