@@ -35,7 +35,7 @@ class TypedDataResolver implements TypedDataResolverInterface {
           }
         }
 
-        // Forward to the target value if this is a data reference.
+        // Get the target value if this is a data reference.
         if ($data instanceof DataReferenceInterface) {
           $data = $data->getTarget();
         }
@@ -64,7 +64,7 @@ class TypedDataResolver implements TypedDataResolverInterface {
           }
         }
 
-        // Forward to the target definition if this is a data reference
+        // Get the target definition if this is a data reference
         // definition.
         if ($data_definition instanceof DataReferenceDefinitionInterface) {
           $data_definition = $data_definition->getTargetDefinition();
@@ -76,7 +76,7 @@ class TypedDataResolver implements TypedDataResolverInterface {
         $data_definition = $data_definition->getPropertyDefinition($name);
       }
 
-      // Forward to the target definition if this is a data reference
+      // Get the target definition if this is a data reference
       // definition.
       if ($data_definition instanceof DataReferenceDefinitionInterface) {
         $data_definition = $data_definition->getTargetDefinition();
