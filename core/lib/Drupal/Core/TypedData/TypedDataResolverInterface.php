@@ -12,9 +12,9 @@ interface TypedDataResolverInterface {
   /**
    * Convert a property to a context.
    *
-   * This method will respect the value of contexts as well, so if a context
-   * object is pass that contains a value, the appropriate value will be
-   * extracted and injected into the resulting context object if available.
+   * The value of contexts is respected. If a context object is passed that
+   * contains a value, the appropriate value will be extracted and injected
+   * into the resulting context object.
    *
    * @param string $property_path
    *   The name of the property.
