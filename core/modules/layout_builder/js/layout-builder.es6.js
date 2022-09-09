@@ -62,6 +62,7 @@
 
           // Only display categories containing visible links.
           $categories.find('.js-layout-builder-category').each((index, element) => {
+            $(element).show();
             if(!$(element).find('a:visible').length) {
               return $(element).hide();
             }

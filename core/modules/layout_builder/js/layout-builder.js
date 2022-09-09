@@ -30,6 +30,7 @@
           $categories.find('.js-layout-builder-category').attr('open', '');
           $filterLinks.each(toggleBlockEntry);
           $categories.find('.js-layout-builder-category').each(function(index, element) {
+            $(element).show();
             if(!$(element).find('a:visible').length) {
               return $(element).hide();
             }
