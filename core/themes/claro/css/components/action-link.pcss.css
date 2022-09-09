@@ -190,12 +190,6 @@
   background-image: url(../../images/icons/ab1b1b/plus.svg);
 }
 
-@media screen and (-ms-high-contrast: active) {
-  .action-link--icon-plus.action-link--icon-plus.action-link--icon-plus::before {
-    background-image: url(../../images/icons/windowText/plus.svg);
-  }
-}
-
 @media (forced-colors: active) {
   .action-link--icon-plus::before {
     background: linktext !important;
@@ -225,12 +219,6 @@
 }
 .action-link--icon-trash.action-link--danger:active::before {
   background-image: url(../../images/icons/ab1b1b/trash.svg);
-}
-
-@media screen and (-ms-high-contrast: active) {
-  .action-link--icon-trash.action-link--icon-trash.action-link--icon-trash::before {
-    background-image: url(../../images/icons/windowText/trash.svg) !important;
-  }
 }
 
 @media (forced-colors: active) {
@@ -264,12 +252,6 @@
   background-image: url(../../images/icons/ab1b1b/ex.svg);
 }
 
-@media screen and (-ms-high-contrast: active) {
-  .action-link--icon-ex.action-link--icon-ex.action-link--icon-ex::before {
-    background-image: url(../../images/icons/windowText/ex.svg) !important;
-  }
-}
-
 @media (forced-colors: active) {
   .action-link--icon-ex::before {
     background: linktext !important;
@@ -299,12 +281,6 @@
 }
 .action-link--icon-checkmark.action-link--danger:active::before {
   background-image: url(../../images/icons/ab1b1b/checkmark.svg);
-}
-
-@media screen and (-ms-high-contrast: active) {
-  .action-link--icon-checkmark.action-link--icon-checkmark.action-link--icon-checkmark::before {
-    background-image: url(../../images/icons/windowText/checkmark.svg) !important;
-  }
 }
 
 @media (forced-colors: active) {
@@ -338,12 +314,6 @@
   background-image: url(../../images/icons/ab1b1b/cog.svg);
 }
 
-@media screen and (-ms-high-contrast: active) {
-  .action-link--icon-cog.action-link--icon-cog.action-link--icon-cog::before {
-    background-image: url(../../images/icons/windowText/cog.svg) !important;
-  }
-}
-
 @media (forced-colors: active) {
   .action-link--icon-cog::before {
     background: linktext !important;
@@ -373,12 +343,6 @@
 }
 .action-link--icon-show.action-link--danger:active::before {
   background-image: url(../../images/icons/ab1b1b/show.svg);
-}
-
-@media screen and (-ms-high-contrast: active) {
-  .action-link--icon-show.action-link--icon-show.action-link--icon-show::before {
-    background-image: url(../../images/icons/windowText/show.svg) !important;
-  }
 }
 
 @media (forced-colors: active) {
@@ -412,12 +376,6 @@
   background-image: url(../../images/icons/ab1b1b/hide.svg);
 }
 
-@media screen and (-ms-high-contrast: active) {
-  .action-link--icon-hide.action-link--icon-hide.action-link--icon-hide::before {
-    background-image: url(../../images/icons/windowText/hide.svg);
-  }
-}
-
 @media (forced-colors: active) {
   .action-link--icon-hide::before {
     background: linktext !important;
@@ -449,12 +407,6 @@
   background-image: url("../../images/icons/ab1b1b/key.svg");
 }
 
-@media screen and (-ms-high-contrast: active) {
-  .action-link--icon-key.action-link--icon-key.action-link--icon-key::before {
-    background-image: url("../../images/icons/windowText/key.svg") !important;
-  }
-}
-
 @media (forced-colors: active) {
   .action-link--icon-key::before {
     background: linktext !important;
@@ -484,12 +436,6 @@
 }
 .action-link--icon-questionmark.action-link--danger:active::before {
   background-image: url("../../images/icons/ab1b1b/questionmark.svg");
-}
-
-@media screen and (-ms-high-contrast: active) {
-  .action-link--icon-questionmark.action-link--icon-questionmark.action-link--icon-questionmark::before {
-    background-image: url("../../images/icons/windowText/questionmark.svg") !important;
-  }
 }
 
 @media (forced-colors: active) {
