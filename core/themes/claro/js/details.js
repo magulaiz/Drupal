@@ -4,6 +4,15 @@
  */
 
 (($, Drupal) => {
+  /**
+   * Workaround for Firefox.
+   *
+   * Firefox applies the focus state only for keyboard navigation.
+   * We have to manually trigger focus to make the behavior consistent across
+   * browsers.
+   *
+   * @type {Drupal~behavior}
+   */
   Drupal.behaviors.claroDetails = {
     attach(context) {
       // The second argument of once() needs to be an instance of Element, but
@@ -28,5 +37,13 @@
   Drupal.theme.detailsSummarizedContentWrapper = () =>
     `<span class="claro-details__summary-summary"></span>`;
 
-  Drupal.theme.detailsSummarizedContentText = text => text || '';
+  /**
+   * Theme override of summarized details content text.
+   *
+   * @param {string|null} [text]
+   *   (optional) The summarized content displayed in the summary.
+   * @return {string}
+   *   The formatted summarized content text.
+   */
+  Drupal.theme.detailsSummarizedContentText = (text) => text || '';
 })(jQuery, Drupal);
