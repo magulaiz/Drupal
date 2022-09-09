@@ -62,26 +62,10 @@ function dblog_menu_links_discovered_alter(&$links) {
  * Controls the size of the log table, paring it to 'dblog_row_limit' messages.
  */
 function dblog_cron() {
-  // Cleanup the watchdog table.
   $row_limit = \Drupal::config('dblog.settings')->get('row_limit');
 
-  // For row limit n, get the wid of the nth row in descending wid order.
-  // Counting the most recent n rows avoids issues with wid number sequences,
-  // e.g. auto_increment value > 1 or rows deleted directly from the table.
-  if ($row_limit > 0) {
-    $connection = \Drupal::database();
-    $min_row = $connection->select('watchdog', 'w')
-      ->fields('w', ['wid'])
-      ->orderBy('wid', 'DESC')
-      ->range($row_limit - 1, 1)
-      ->execute()->fetchField();
-
-    // Delete all table entries older than the nth row, if nth row was found.
-    if ($min_row) {
-      $connection->delete('watchdog')
-        ->condition('wid', $min_row, '<')
-        ->execute();
-    }
+  if (!empty($row_limit)) {
+    \Drupal::entityTypeManager()->getStorage('dblog')->deleteAll($row_limit);
   }
 }
 
@@ -92,8 +76,8 @@ function dblog_cron() {
  *   List of uniquely defined database log message types.
  */
 function _dblog_get_message_types() {
-  return \Drupal::database()->query('SELECT DISTINCT([type]) FROM {watchdog} ORDER BY [type]')
-    ->fetchAllKeyed(0, 0);
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. See https://www.drupal.org/node/3236383', E_USER_DEPRECATED);
+  return \Drupal::entityTypeManager()->getStorage('dblog')->messageTypes();
 }
 
 /**
@@ -127,5 +111,14 @@ function dblog_logging_settings_submit($form, FormStateInterface $form_state) {
 function dblog_views_pre_render(ViewExecutable $view) {
   if (isset($view) && ($view->storage->get('base_table') == 'watchdog')) {
     $view->element['#attached']['library'][] = 'dblog/drupal.dblog';
+  }
+}
+
+/**
+ * Implements hook_module_preuninstall().
+ */
+function dblog_module_preuninstall($module) {
+  if ($module === 'dblog') {
+    \Drupal::entityTypeManager()->getStorage('dblog')->deleteAll();
   }
 }

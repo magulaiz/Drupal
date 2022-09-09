@@ -81,6 +81,8 @@ class Upgrade7Test extends MigrateUpgradeExecuteTestBase {
       'configurable_language' => 5,
       'contact_form' => 3,
       'contact_message' => 0,
+      // Dblog entries are not fixed, ignore the actual number.
+      'dblog' => 0,
       'editor' => 2,
       'field_config' => 90,
       'field_storage_config' => 69,

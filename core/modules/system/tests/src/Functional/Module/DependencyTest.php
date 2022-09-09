@@ -228,26 +228,26 @@ class DependencyTest extends ModuleTestBase {
     $this->assertModules(['module_test'], TRUE);
     \Drupal::state()->set('module_test.dependency', 'dependency');
     // module_test creates a dependency chain:
-    // - dblog depends on config
+    // - syslog depends on config
     // - config depends on help
-    $expected_order = ['help', 'config', 'dblog'];
+    $expected_order = ['help', 'config', 'syslog'];
 
     // Enable the modules through the UI, verifying that the dependency chain
     // is correct.
     $edit = [];
-    $edit['modules[dblog][enable]'] = 'dblog';
+    $edit['modules[syslog][enable]'] = 'syslog';
     $this->drupalGet('admin/modules');
     $this->submitForm($edit, 'Install');
-    $this->assertModules(['dblog'], FALSE);
+    $this->assertModules(['syslog'], FALSE);
     // Note that dependencies are sorted alphabetically in the confirmation
     // message.
-    $this->assertSession()->pageTextContains('You must enable the Configuration Manager, Help modules to install Database Logging.');
+    $this->assertSession()->pageTextContains('You must enable the Configuration Manager, Help modules to install Syslog.');
 
     $edit['modules[config][enable]'] = 'config';
     $edit['modules[help][enable]'] = 'help';
     $this->drupalGet('admin/modules');
     $this->submitForm($edit, 'Install');
-    $this->assertModules(['dblog', 'config', 'help'], TRUE);
+    $this->assertModules(['syslog', 'config', 'help'], TRUE);
 
     // Check the actual order which is saved by module_test_modules_enabled().
     $module_order = \Drupal::state()->get('module_test.install_order', []);

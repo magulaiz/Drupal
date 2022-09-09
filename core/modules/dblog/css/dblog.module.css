@@ -35,3 +35,12 @@
 .admin-dblog .dblog-emergency .icon {
   background-image: url(../../../misc/icons/e32700/error.svg);
 }
+#admin-dblog td.severity-0,
+#admin-dblog td.severity-1,
+#admin-dblog td.severity-2,
+#admin-dblog td.severity-3 {
+  background: url(../../../misc/icons/e32700/error.svg) no-repeat center;
+}
+#admin-dblog td.severity-4 {
+  background: no-repeat center url(../../../misc/icons/e29700/warning.svg);
+}

@@ -5,6 +5,11 @@
  * Install, update and uninstall functions for the dblog module.
  */
 
+use Drupal\dblog\Entity\DblogEntry;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\dblog\DblogEntryStorage;
+use Drupal\Core\Entity\ContentEntityType;
+
 /**
  * Implements hook_schema().
  */
@@ -114,4 +119,58 @@ function dblog_update_10100(&$sandbox = NULL) {
     ];
     $connection->schema()->changeField('watchdog', 'timestamp', 'timestamp', $new);
   }
+}
+
+/**
+ * Install the 'dblog entry' entity type.
+ */
+function dblog_update_10101() {
+  $entity_definition_update_manager = \Drupal::entityDefinitionUpdateManager();
+  if (!$entity_definition_update_manager->getEntityType('dblog')) {
+    $entity_type = new ContentEntityType([
+      'id' => 'dblog',
+      'class' => DblogEntry::class,
+      'label' => new TranslatableMarkup('Dblog Entry'),
+      'translatable' => FALSE,
+      'handlers' => [
+        'storage' => DblogEntryStorage::class,
+      ],
+      'base_table' => 'watchdog',
+      'entity_keys' => [
+        'id' => 'wid',
+      ],
+    ]);
+    $field_storage_definitions = DblogEntry::baseFieldDefinitions($entity_type);
+    $entity_definition_update_manager->installFieldableEntityType($entity_type, $field_storage_definitions);
+
+    return t('The "dblog entry" entity type has been installed.');
+  }
+}
+
+/**
+ * Changes class used by dblog to indicate severity icons.
+ */
+function dblog_update_10102() {
+  $view = \Drupal::configFactory()->getEditable('views.view.watchdog');
+  if ($view->isNew()) {
+    return;
+  }
+  $key = 'display.default.display_options.style.options.row_class';
+  $style = $view->get($key);
+
+  if (empty($style)) {
+    return;
+  }
+
+  $search = '{{ severity }}';
+  $replace = 'severity-{{ severity }}';
+
+  // If the new pattern is already there, nothing else is required.
+  if (!empty($style) && strpos($style, $replace) !== FALSE) {
+    return;
+  }
+
+  $new_style = str_replace($search, $replace, $style);
+  $style = $view->set($key, $new_style);
+  $view->save();
 }

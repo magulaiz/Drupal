@@ -2,15 +2,15 @@
 
 namespace Drupal\Tests\dblog\Kernel;
 
-use Drupal\dblog\Controller\DbLogController;
+use Drupal\dblog\Entity\DblogEntry;
 use Drupal\KernelTests\KernelTestBase;
 
 /**
- * Tests for the DbLogController class.
+ * Tests for the DblogEntry class.
  *
  * @group dblog
  */
-class DbLogControllerTest extends KernelTestBase {
+class DbLogEntryTest extends KernelTestBase {
 
   /**
    * {@inheritdoc}
@@ -57,25 +57,26 @@ class DbLogControllerTest extends KernelTestBase {
       ->fetchField();
 
     $this->assertEquals($log, $link);
+
+    $log = DblogEntry::create(['link' => $link]);
+    $this->assertEquals($log->getLink(), $link);
   }
 
   /**
    * Tests corrupted log entries can still display available data.
    */
   public function testDbLogCorrupted() {
-    $dblog_controller = DbLogController::create($this->container);
-
+    $dblog_formatter = \Drupal::service('dblog.formatter');
     // Check message with properly serialized data.
-    $message = (object) [
+    $entry = DblogEntry::create([
       'message' => 'Sample message with placeholder: @placeholder',
       'variables' => serialize(['@placeholder' => 'test placeholder']),
-    ];
+    ]);
 
-    $this->assertEquals('Sample message with placeholder: test placeholder', $dblog_controller->formatMessage($message));
+    $this->assertEquals('Sample message with placeholder: test placeholder', $entry->getFormattedMessage($dblog_formatter));
 
-    // Check that controller work with corrupted data.
-    $message->variables = 'BAD SERIALIZED DATA';
-    $formatted = $dblog_controller->formatMessage($message);
+    $entry->variables = 'BAD SERIALIZED DATA';
+    $formatted = $entry->getFormattedMessage($dblog_formatter);
     $this->assertEquals('Log data is corrupted and cannot be unserialized: Sample message with placeholder: @placeholder', $formatted);
   }
 

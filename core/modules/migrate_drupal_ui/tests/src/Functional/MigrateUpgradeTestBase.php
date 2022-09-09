@@ -255,6 +255,13 @@ abstract class MigrateUpgradeTestBase extends BrowserTestBase {
     foreach ($entity_definitions as $entity_type) {
       $actual_entity_counts[$entity_type] = (int) \Drupal::entityQuery($entity_type)->accessCheck(FALSE)->count()->execute();
     }
+
+    // Special case for dblog entries, that returns different values even in
+    // consecutive test runs.
+    // Ensure the migration worked, and then discard this value.
+    $this->assertGreaterThan(0, $actual_entity_counts['dblog']);
+    $actual_entity_counts['dblog'] = 0;
+
     $this->assertSame($entity_counts, $actual_entity_counts);
 
     $plugin_manager = \Drupal::service('plugin.manager.migration');
