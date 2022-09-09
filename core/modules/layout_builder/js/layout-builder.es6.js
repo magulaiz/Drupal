@@ -61,11 +61,11 @@
           $filterLinks.each(toggleBlockEntry);
 
           // Only display categories containing visible links.
-          $categories
-            .find(
-              '.js-layout-builder-category:not(:has(.js-layout-builder-block-link:visible))',
-            )
-            .hide();
+          $categories.find('.js-layout-builder-category').each((index, element) => {
+            if(!$(element).find('a:visible').length) {
+              return $(element).hide();
+            }
+          });
 
           announce(
             formatPlural(

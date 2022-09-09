@@ -29,7 +29,11 @@
           $categories.find('.js-layout-builder-category:not([open])').attr('remember-closed', '');
           $categories.find('.js-layout-builder-category').attr('open', '');
           $filterLinks.each(toggleBlockEntry);
-          $categories.find('.js-layout-builder-category:not(:has(.js-layout-builder-block-link:visible))').hide();
+          $categories.find('.js-layout-builder-category').each(function(index, element) {
+            if(!$(element).find('a:visible').length) {
+              return $(element).hide();
+            }
+          });
           announce(formatPlural($categories.find('.js-layout-builder-block-link:visible').length, '1 block is available in the modified list.', '@count blocks are available in the modified list.'));
           layoutBuilderBlocksFiltered = true;
         } else if (layoutBuilderBlocksFiltered) {
