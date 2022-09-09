@@ -334,11 +334,12 @@ td .claro-details {
 
 /**
  * Active has to be here for Firefox.
+ * Merges standard collapse-processed selectors.
  */
 
-[open] > .claro-details__summary--accordion:not(:focus):not(:active)::after,
-[open] > .claro-details__summary--accordion-item:not(:focus):not(:active)::after,
-[open] > .claro-details__summary--vertical-tabs-item:not(:focus):not(:active)::after {
+[open] > .claro-details__summary--accordion:not(:focus, :active)::after,
+[open] > .claro-details__summary--accordion-item:not(:focus, :active)::after,
+[open] > .claro-details__summary--vertical-tabs-item:not(:focus, :active)::after {
   opacity: 1;
   border: var(--details-summary-focus-border-size) solid var(--color-absolutezero);
   border-width: 0 0 0 var(--details-summary-focus-border-size); /* LTR */
