@@ -34,6 +34,11 @@ class OffCanvasTest extends OffCanvasTestBase {
    * Tests that non-contextual links will work with the off-canvas dialog.
    *
    * @dataProvider themeDataProvider
+   *
+   * @group legacy
+   *
+   * @todo Remove this test from the `legacy` group when Stable has been removed
+   *   from core.
    */
   public function testOffCanvasLinks($theme) {
     $this->enableTheme($theme);
@@ -111,6 +116,11 @@ class OffCanvasTest extends OffCanvasTestBase {
 
   /**
    * Tests the body displacement behaves differently at a narrow width.
+   *
+   * @group legacy
+   *
+   * @todo Remove this test from the `legacy` group when Stable has been removed
+   *   from core.
    */
   public function testNarrowWidth() {
     $narrow_width_breakpoint = 768;
