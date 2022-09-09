@@ -2,7 +2,7 @@ dblog.overview:
   title: 'Recent log messages'
   parent: system.admin_reports
   description: 'View events that have recently been logged.'
-  route_name: dblog.overview
+  route_name: entity.dblog.collection
   weight: -1
 dblog.page_not_found:
   title: 'Top ''page not found'' errors'

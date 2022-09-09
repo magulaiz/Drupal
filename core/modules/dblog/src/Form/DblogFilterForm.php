@@ -4,6 +4,9 @@ namespace Drupal\dblog\Form;
 
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Logger\RfcLogLevel;
+use Drupal\dblog\DblogEntryStorageInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Provides the database logging filter form.
@@ -13,6 +16,13 @@ use Drupal\Core\Form\FormStateInterface;
 class DblogFilterForm extends FormBase {
 
   /**
+   * The dblog entry storage.
+   *
+   * @var \Drupal\dblog\DblogEntryStorageInterface
+   */
+  protected $dblogStorage;
+
+  /**
    * {@inheritdoc}
    */
   public function getFormId() {
@@ -20,10 +30,25 @@ class DblogFilterForm extends FormBase {
   }
 
   /**
+   * Constructs a DblogFilterForm object.
+   */
+  public function __construct(DblogEntryStorageInterface $dblog_storage) {
+    $this->dblogStorage = $dblog_storage;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container) {
+    return new static(
+      $container->get('entity_type.manager')->getStorage('dblog')
+    );
+  }
+
+  /**
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
-    $filters = dblog_filters();
 
     $form['filters'] = [
       '#type' => 'details',
@@ -31,15 +56,25 @@ class DblogFilterForm extends FormBase {
       '#open' => TRUE,
     ];
     $session_filters = $this->getRequest()->getSession()->get('dblog_overview_filter', []);
-    foreach ($filters as $key => $filter) {
-      $form['filters']['status'][$key] = [
-        '#title' => $filter['title'],
-        '#type' => 'select',
-        '#multiple' => TRUE,
-        '#size' => 8,
-        '#options' => $filter['options'],
-      ];
 
+    $types = $this->dblogStorage->messageTypes();
+    $form['filters']['status']['type'] = [
+      '#title' => $this->t('Type'),
+      '#type' => 'select',
+      '#multiple' => TRUE,
+      '#size' => 8,
+      '#options' => $types,
+      '#access' => !empty($types),
+    ];
+    $form['filters']['status']['severity'] = [
+      '#title' => $this->t('Severity'),
+      '#type' => 'select',
+      '#multiple' => TRUE,
+      '#size' => 8,
+      '#options' => RfcLogLevel::getLevels(),
+    ];
+
+    foreach (['type', 'severity'] as $key) {
       if (!empty($session_filters[$key])) {
         $form['filters']['status'][$key]['#default_value'] = $session_filters[$key];
       }
@@ -77,9 +112,8 @@ class DblogFilterForm extends FormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    $filters = dblog_filters();
     $session_filters = $this->getRequest()->getSession()->get('dblog_overview_filter', []);
-    foreach ($filters as $name => $filter) {
+    foreach (['severity', 'type'] as $name) {
       if ($form_state->hasValue($name)) {
         $session_filters[$name] = $form_state->getValue($name);
       }

@@ -37,6 +37,12 @@ class ContentUninstallValidator implements ModuleUninstallValidatorInterface {
    * {@inheritdoc}
    */
   public function validate($module) {
+    // Even when dblog provides content entries, they are safe to be deleted
+    // when the module is uninstalled. This was the legacy behavior of dblog
+    // before introducing entity support.
+    if ($module == 'dblog') {
+      return [];
+    }
     $entity_types = $this->entityTypeManager->getDefinitions();
     $reasons = [];
     foreach ($entity_types as $entity_type) {
