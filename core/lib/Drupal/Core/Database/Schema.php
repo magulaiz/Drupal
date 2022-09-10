@@ -374,9 +374,9 @@ abstract class Schema implements PlaceholderInterface {
   /**
    * Validates a primary key schema definition.
    *
-   * @param array $key_fields
+   * @param array<string|array{0: string, 1: int}> $key_fields
    *   An array containing the fields that will form the primary key.
-   * @param array $fields
+   * @param array{description: string, type: string, serialize: bool, size: string, 'not null': bool, default: scalar|array<scalar>, length: string, unsigned: bool, precision: int, scale: int, binary: bool} $fields
    *   (Optional) An array containing the field specifications of the table,
    *   as per the schema data structure format.
    *
@@ -461,9 +461,9 @@ abstract class Schema implements PlaceholderInterface {
   /**
    * Validates a unique key schema definition.
    *
-   * @param array $key_fields
+   * @param array<string|array{0: string, 1: int}> $key_fields
    *   An array containing the fields that will form the unique key.
-   * @param array $fields
+   * @param array{description: string, type: string, serialize: bool, size: string, 'not null': bool, default: scalar|array<scalar>, length: string, unsigned: bool, precision: int, scale: int, binary: bool} $fields
    *   (Optional) An array containing the field specifications of the table,
    *   as per the schema data structure format.
    *
