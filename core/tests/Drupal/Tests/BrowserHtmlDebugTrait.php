@@ -179,10 +179,12 @@ trait BrowserHtmlDebugTrait {
               $html_output = 'Called from ' . $caller['function'] . ' line ' . $caller['line'];
               $html_output .= '<hr />' . $request->getMethod() . ' request to: ' . $request->getUri();
 
-              /* $var \Psr\Http\Message\StreamInterface $stream */
+              /** @var \Psr\Http\Message\StreamInterface $stream */
               $stream = $response->getBody();
 
-              // Get the response body as a string.
+              // Get the response body as a string. The response stream is set
+              // to the sink, which defaults to a readable temp stream but can
+              // be overridden by setting $options['sink'].
               $body = $stream->isReadable()
                 ? (string) $stream
                 : 'Response is not readable.';

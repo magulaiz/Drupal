@@ -77,23 +77,7 @@ const assetsFolder = `${coreFolder}/assets/vendor`;
     {
       pack: 'backbone',
       library: 'internal.backbone',
-      files: ['backbone.js', 'backbone-min.js', 'backbone-min.map'],
-    },
-    {
-      pack: 'css.escape',
-      folder: 'css-escape',
-      library: 'css.escape',
-      files: ['css.escape.js'],
-    },
-    {
-      pack: 'es6-promise',
-      files: [
-        { from: 'dist/es6-promise.auto.min.js', to: 'es6-promise.auto.min.js' },
-        {
-          from: 'dist/es6-promise.auto.min.map',
-          to: 'es6-promise.auto.min.map',
-        },
-      ],
+      files: ['backbone.js', 'backbone-min.js', 'backbone-min.js.map'],
     },
     {
       pack: 'farbtastic',
@@ -140,18 +124,6 @@ const assetsFolder = `${coreFolder}/assets/vendor`;
         { from: 'dist/once.js', to: 'once.js' },
         { from: 'dist/once.min.js', to: 'once.min.js' },
         { from: 'dist/once.min.js.map', to: 'once.min.js.map' },
-      ],
-    },
-    {
-      pack: 'picturefill',
-      files: [{ from: 'dist/picturefill.min.js', to: 'picturefill.min.js' }],
-    },
-    {
-      pack: '@popperjs/core',
-      folder: 'popperjs',
-      files: [
-        { from: 'dist/umd/popper.min.js', to: 'popper.min.js' },
-        { from: 'dist/umd/popper.min.js.map', to: 'popper.min.js.map' },
       ],
     },
     {
