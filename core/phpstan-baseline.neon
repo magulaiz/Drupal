@@ -1,11 +1,6 @@
 parameters:
 	ignoreErrors:
 		-
-			message: "#^Function format_size\\(\\) should return Drupal\\\\Core\\\\StringTranslation\\\\TranslatableMarkup but return statement is missing\\.$#"
-			count: 1
-			path: includes/common.inc
-
-		-
 			message: "#^Function install_config_download_translations\\(\\) should return string but return statement is missing\\.$#"
 			count: 1
 			path: includes/install.core.inc
@@ -191,16 +186,6 @@ parameters:
 			path: lib/Drupal/Core/Database/Query/Merge.php
 
 		-
-			message: "#^Access to an undefined property Drupal\\\\Core\\\\Database\\\\Query\\\\Select\\:\\:\\$alterMetaData\\.$#"
-			count: 1
-			path: lib/Drupal/Core/Database/Query/Select.php
-
-		-
-			message: "#^Access to an undefined property Drupal\\\\Core\\\\Database\\\\Query\\\\Select\\:\\:\\$alterTags\\.$#"
-			count: 3
-			path: lib/Drupal/Core/Database/Query/Select.php
-
-		-
 			message: "#^Access to an undefined property Drupal\\\\Core\\\\Database\\\\Query\\\\Truncate\\:\\:\\$condition\\.$#"
 			count: 2
 			path: lib/Drupal/Core/Database/Query/Truncate.php
@@ -319,11 +304,6 @@ parameters:
 			message: "#^Access to an undefined property Drupal\\\\Core\\\\EventSubscriber\\\\RedirectResponseSubscriber\\:\\:\\$requestContext\\.$#"
 			count: 2
 			path: lib/Drupal/Core/EventSubscriber/RedirectResponseSubscriber.php
-
-		-
-			message: "#^Access to an undefined property Drupal\\\\Core\\\\Field\\\\Entity\\\\BaseFieldOverride\\:\\:\\$original\\.$#"
-			count: 5
-			path: lib/Drupal/Core/Field/Entity/BaseFieldOverride.php
 
 		-
 			message: "#^Method Drupal\\\\Core\\\\Field\\\\FieldItemBase\\:\\:generateSampleValue\\(\\) should return array but return statement is missing\\.$#"
@@ -486,16 +466,6 @@ parameters:
 			path: lib/Drupal/Core/Menu/MenuLinkManager.php
 
 		-
-			message: "#^\\#pre_render value 'non\\-empty\\-string' at key '0' is invalid\\.$#"
-			count: 1
-			path: lib/Drupal/Core/Render/Element/Pager.php
-
-		-
-			message: "#^Cannot unset offset 'options' on array\\{url\\: string\\|null\\}\\.$#"
-			count: 1
-			path: lib/Drupal/Core/Render/Element/RenderElement.php
-
-		-
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 2
 			path: lib/Drupal/Core/Session/SessionHandler.php
@@ -611,11 +581,6 @@ parameters:
 			path: modules/ban/src/Plugin/migrate/destination/BlockedIp.php
 
 		-
-			message: "#^\\#lazy_builder value 'non\\-empty\\-string' at key '0' is invalid\\.$#"
-			count: 1
-			path: modules/big_pipe/tests/modules/big_pipe_regression_test/src/BigPipeRegressionTestController.php
-
-		-
 			message: "#^\\#lazy_builder callback 'hello_or_yarhar' at key '0' is not callable\\.$#"
 			count: 1
 			path: modules/big_pipe/tests/modules/big_pipe_test/src/BigPipePlaceholderTestCases.php
@@ -624,21 +589,6 @@ parameters:
 			message: "#^\\#pre_render callback 'current_time' at key '0' is not callable\\.$#"
 			count: 1
 			path: modules/big_pipe/tests/modules/big_pipe_test/src/BigPipePlaceholderTestCases.php
-
-		-
-			message: "#^\\#lazy_builder value 'non\\-empty\\-string' at key '0' is invalid\\.$#"
-			count: 3
-			path: modules/big_pipe/tests/modules/big_pipe_test/src/BigPipeTestController.php
-
-		-
-			message: "#^\\#lazy_builder value 'non\\-empty\\-string' at key '0' is invalid\\.$#"
-			count: 1
-			path: modules/block/src/BlockViewBuilder.php
-
-		-
-			message: "#^\\#pre_render value 'non\\-empty\\-string' at key '0' is invalid\\.$#"
-			count: 1
-			path: modules/block/src/BlockViewBuilder.php
 
 		-
 			message: "#^Access to an undefined property Drupal\\\\block\\\\Plugin\\\\migrate\\\\process\\\\BlockTheme\\:\\:\\$themes\\.$#"
@@ -711,16 +661,6 @@ parameters:
 			path: modules/ckeditor5/ckeditor5.module
 
 		-
-			message: "#^Function color_palette_color_value\\(\\) should return string but return statement is missing\\.$#"
-			count: 1
-			path: modules/color/color.module
-
-		-
-			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
-			count: 1
-			path: modules/comment/comment.module
-
-		-
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 1
 			path: modules/comment/src/CommentForm.php
@@ -746,11 +686,6 @@ parameters:
 			path: modules/comment/src/Plugin/views/field/NodeNewComments.php
 
 		-
-			message: "#^Access to an undefined property Drupal\\\\comment\\\\Plugin\\\\views\\\\field\\\\StatisticsLastCommentName\\:\\:\\$uid\\.$#"
-			count: 2
-			path: modules/comment/src/Plugin/views/field/StatisticsLastCommentName.php
-
-		-
 			message: "#^Access to an undefined property Drupal\\\\comment\\\\Plugin\\\\views\\\\field\\\\StatisticsLastCommentName\\:\\:\\$user_field\\.$#"
 			count: 1
 			path: modules/comment/src/Plugin/views/field/StatisticsLastCommentName.php
@@ -769,11 +704,6 @@ parameters:
 			message: "#^Access to an undefined property Drupal\\\\comment\\\\Plugin\\\\views\\\\filter\\\\StatisticsLastUpdated\\:\\:\\$node_table\\.$#"
 			count: 1
 			path: modules/comment/src/Plugin/views/filter/StatisticsLastUpdated.php
-
-		-
-			message: "#^Access to an undefined property Drupal\\\\comment\\\\Plugin\\\\views\\\\row\\\\Rss\\:\\:\\$field_alias\\.$#"
-			count: 1
-			path: modules/comment/src/Plugin/views/row/Rss.php
 
 		-
 			message: "#^Access to an undefined property Drupal\\\\comment\\\\Plugin\\\\views\\\\sort\\\\StatisticsLastCommentName\\:\\:\\$user_field\\.$#"
@@ -901,16 +831,6 @@ parameters:
 			path: modules/dblog/tests/src/Kernel/DbLogTest.php
 
 		-
-			message: "#^Access to an undefined property Drupal\\\\field\\\\Entity\\\\FieldConfig\\:\\:\\$original\\.$#"
-			count: 4
-			path: modules/field/src/Entity/FieldConfig.php
-
-		-
-			message: "#^Access to an undefined property Drupal\\\\field\\\\Entity\\\\FieldStorageConfig\\:\\:\\$original\\.$#"
-			count: 6
-			path: modules/field/src/Entity/FieldStorageConfig.php
-
-		-
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 2
 			path: modules/field/tests/src/Functional/NestedFormTest.php
@@ -944,11 +864,6 @@ parameters:
 			message: "#^Access to an undefined property Drupal\\\\field_ui\\\\Plugin\\\\Derivative\\\\FieldUiLocalAction\\:\\:\\$routeProvider\\.$#"
 			count: 1
 			path: modules/field_ui/src/Plugin/Derivative/FieldUiLocalAction.php
-
-		-
-			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
-			count: 1
-			path: modules/file/file.module
 
 		-
 			message: "#^Method Drupal\\\\file\\\\Plugin\\\\Field\\\\FieldType\\\\FileFieldItemList\\:\\:defaultValuesForm\\(\\) should return array but return statement is missing\\.$#"
@@ -991,11 +906,6 @@ parameters:
 			path: modules/file/tests/src/Kernel/UsageTest.php
 
 		-
-			message: "#^\\#lazy_builder value 'string' at key '0' is invalid\\.$#"
-			count: 1
-			path: modules/filter/src/FilterProcessResult.php
-
-		-
 			message: "#^Access to an undefined property Drupal\\\\filter\\\\Plugin\\\\migrate\\\\process\\\\d6\\\\FilterFormatPermission\\:\\:\\$migration\\.$#"
 			count: 1
 			path: modules/filter/src/Plugin/migrate/process/d6/FilterFormatPermission.php
@@ -1011,11 +921,6 @@ parameters:
 			path: modules/help_topics/src/Plugin/HelpSection/HelpTopicSection.php
 
 		-
-			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
-			count: 3
-			path: modules/history/history.module
-
-		-
 			message: "#^Method Drupal\\\\history\\\\Plugin\\\\views\\\\field\\\\HistoryUserTimestamp\\:\\:render\\(\\) should return Drupal\\\\Component\\\\Render\\\\MarkupInterface\\|string but return statement is missing\\.$#"
 			count: 1
 			path: modules/history/src/Plugin/views/field/HistoryUserTimestamp.php
@@ -1029,11 +934,6 @@ parameters:
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 2
 			path: modules/history/tests/src/Kernel/Views/HistoryTimestampTest.php
-
-		-
-			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
-			count: 1
-			path: modules/image/image.admin.inc
 
 		-
 			message: "#^Method Drupal\\\\image\\\\Form\\\\ImageStyleEditForm\\:\\:save\\(\\) should return int but return statement is missing\\.$#"
@@ -1076,39 +976,14 @@ parameters:
 			path: modules/language/src/LanguageNegotiationMethodManager.php
 
 		-
-			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
-			count: 2
-			path: modules/locale/locale.batch.inc
-
-		-
-			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
-			count: 1
-			path: modules/locale/locale.bulk.inc
-
-		-
 			message: "#^Function locale_config_batch_update_components\\(\\) should return array but return statement is missing\\.$#"
 			count: 1
 			path: modules/locale/locale.bulk.inc
 
 		-
-			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
-			count: 1
-			path: modules/locale/locale.compare.inc
-
-		-
 			message: "#^Function locale_translation_check_projects\\(\\) should return array but return statement is missing\\.$#"
 			count: 1
 			path: modules/locale/locale.compare.inc
-
-		-
-			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
-			count: 3
-			path: modules/locale/locale.module
-
-		-
-			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
-			count: 2
-			path: modules/locale/locale.translation.inc
 
 		-
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
@@ -1221,15 +1096,7 @@ parameters:
 			path: modules/migrate/tests/src/Kernel/MigrateTestBase.php
 
 		-
-			message: """
-				#^Cannot unset offset 'menu_ui' on array\\{system\\: 'finished\\:
-				  6\\:
-				   …', menu_link_content\\: 'finished\\:
-				  6\\:
-				   …', menu\\: 'finished\\:
-				  6\\:
-				   …'\\}\\.$#
-			"""
+			message: "#^Cannot unset offset 'menu_ui' on array\\{system\\: \"finished\\:\\\\n  6\\:\\\\n   …\", menu_link_content\\: \"finished\\:\\\\n  6\\:\\\\n   …\", menu\\: \"finished\\:\\\\n  6\\:\\\\n   …\"\\}\\.$#"
 			count: 1
 			path: modules/migrate_drupal/tests/src/Unit/MigrationStateUnitTest.php
 
@@ -1277,21 +1144,6 @@ parameters:
 			message: "#^Method Drupal\\\\node\\\\NodeTypeForm\\:\\:save\\(\\) should return int but return statement is missing\\.$#"
 			count: 1
 			path: modules/node/src/NodeTypeForm.php
-
-		-
-			message: "#^\\#lazy_builder value 'non\\-empty\\-string' at key '0' is invalid\\.$#"
-			count: 1
-			path: modules/node/src/NodeViewBuilder.php
-
-		-
-			message: "#^Access to an undefined property Drupal\\\\node\\\\Plugin\\\\views\\\\argument\\\\Type\\:\\:\\$name_alias\\.$#"
-			count: 1
-			path: modules/node/src/Plugin/views/argument/Type.php
-
-		-
-			message: "#^Access to an undefined property Drupal\\\\node\\\\Plugin\\\\views\\\\row\\\\Rss\\:\\:\\$field_alias\\.$#"
-			count: 2
-			path: modules/node/src/Plugin/views/row/Rss.php
 
 		-
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
@@ -1354,16 +1206,6 @@ parameters:
 			path: modules/options/src/Plugin/Field/FieldType/ListStringItem.php
 
 		-
-			message: "#^Access to an undefined property Drupal\\\\options\\\\Plugin\\\\views\\\\argument\\\\NumberListField\\:\\:\\$name_alias\\.$#"
-			count: 1
-			path: modules/options/src/Plugin/views/argument/NumberListField.php
-
-		-
-			message: "#^Access to an undefined property Drupal\\\\options\\\\Plugin\\\\views\\\\argument\\\\StringListField\\:\\:\\$name_alias\\.$#"
-			count: 1
-			path: modules/options/src/Plugin/views/argument/StringListField.php
-
-		-
 			message: "#^Method Drupal\\\\path\\\\PathAliasForm\\:\\:save\\(\\) should return int but return statement is missing\\.$#"
 			count: 1
 			path: modules/path/src/PathAliasForm.php
@@ -1382,11 +1224,6 @@ parameters:
 			message: "#^Method Drupal\\\\pgsql\\\\Driver\\\\Database\\\\pgsql\\\\Upsert\\:\\:execute\\(\\) should return int but return statement is missing\\.$#"
 			count: 1
 			path: modules/pgsql/src/Driver/Database/pgsql/Upsert.php
-
-		-
-			message: "#^Call to an undefined method Drupal\\\\Tests\\\\rdf\\\\Kernel\\\\Field\\\\FieldRdfaTestBase\\:\\:drupalGet\\(\\)\\.$#"
-			count: 2
-			path: modules/rdf/tests/src/Kernel/Field/FieldRdfaTestBase.php
 
 		-
 			message: "#^Method Drupal\\\\responsive_image\\\\ResponsiveImageStyleForm\\:\\:save\\(\\) should return int but return statement is missing\\.$#"
@@ -1417,21 +1254,6 @@ parameters:
 			message: "#^Method Drupal\\\\search\\\\Form\\\\SearchPageFormBase\\:\\:save\\(\\) should return int but return statement is missing\\.$#"
 			count: 1
 			path: modules/search/src/Form/SearchPageFormBase.php
-
-		-
-			message: "#^Access to an undefined property Drupal\\\\search\\\\Plugin\\\\views\\\\argument\\\\Search\\:\\:\\$operator\\.$#"
-			count: 1
-			path: modules/search/src/Plugin/views/argument/Search.php
-
-		-
-			message: "#^Access to an undefined property Drupal\\\\search\\\\Plugin\\\\views\\\\argument\\\\Search\\:\\:\\$search_score\\.$#"
-			count: 1
-			path: modules/search/src/Plugin/views/argument/Search.php
-
-		-
-			message: "#^Access to an undefined property Drupal\\\\search\\\\Plugin\\\\views\\\\filter\\\\Search\\:\\:\\$search_score\\.$#"
-			count: 1
-			path: modules/search/src/Plugin/views/filter/Search.php
 
 		-
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
@@ -1507,16 +1329,6 @@ parameters:
 			message: "#^Method Drupal\\\\system\\\\Form\\\\ModulesListNonStableConfirmForm\\:\\:getQuestion\\(\\) should return Drupal\\\\Core\\\\StringTranslation\\\\TranslatableMarkup but return statement is missing\\.$#"
 			count: 1
 			path: modules/system/src/Form/ModulesListNonStableConfirmForm.php
-
-		-
-			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
-			count: 2
-			path: modules/system/system.install
-
-		-
-			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
-			count: 6
-			path: modules/system/system.tokens.inc
 
 		-
 			message: "#^Access to an undefined property Drupal\\\\accept_header_routing_test\\\\AcceptHeaderMiddleware\\:\\:\\$app\\.$#"
@@ -1609,11 +1421,6 @@ parameters:
 			path: modules/taxonomy/src/Plugin/migrate/source/d7/TermTranslation.php
 
 		-
-			message: "#^Access to an undefined property Drupal\\\\taxonomy\\\\Plugin\\\\views\\\\argument\\\\IndexTidDepthModifier\\:\\:\\$position\\.$#"
-			count: 1
-			path: modules/taxonomy/src/Plugin/views/argument/IndexTidDepthModifier.php
-
-		-
 			message: "#^Call to function unset\\(\\) contains undefined variable \\$handler\\.$#"
 			count: 1
 			path: modules/taxonomy/src/Plugin/views/argument/IndexTidDepthModifier.php
@@ -1685,23 +1492,8 @@ parameters:
 
 		-
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
-			count: 1
-			path: modules/update/update.fetch.inc
-
-		-
-			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
-			count: 4
-			path: modules/update/update.module
-
-		-
-			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 2
 			path: modules/user/src/Controller/UserController.php
-
-		-
-			message: "#^Method Drupal\\\\user\\\\Entity\\\\User\\:\\:setExistingPassword\\(\\) should return \\$this\\(Drupal\\\\user\\\\Entity\\\\User\\) but return statement is missing\\.$#"
-			count: 1
-			path: modules/user/src/Entity/User.php
 
 		-
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
@@ -1712,11 +1504,6 @@ parameters:
 			message: "#^Method Drupal\\\\user\\\\Plugin\\\\views\\\\field\\\\UserData\\:\\:render\\(\\) should return Drupal\\\\Component\\\\Render\\\\MarkupInterface\\|string but return statement is missing\\.$#"
 			count: 1
 			path: modules/user/src/Plugin/views/field/UserData.php
-
-		-
-			message: "#^Access to an undefined property Drupal\\\\user\\\\Plugin\\\\views\\\\filter\\\\Current\\:\\:\\$value_value\\.$#"
-			count: 1
-			path: modules/user/src/Plugin/views/filter/Current.php
 
 		-
 			message: "#^Access to an undefined property Drupal\\\\user\\\\Plugin\\\\views\\\\filter\\\\Name\\:\\:\\$validated_exposed_input\\.$#"
@@ -1774,29 +1561,9 @@ parameters:
 			path: modules/user/tests/src/FunctionalJavascript/UserPasswordResetTest.php
 
 		-
-			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
-			count: 5
-			path: modules/user/user.module
-
-		-
 			message: "#^Method Drupal\\\\views\\\\Form\\\\ViewsFormMainForm\\:\\:getFormId\\(\\) should return string but return statement is missing\\.$#"
 			count: 1
 			path: modules/views/src/Form/ViewsFormMainForm.php
-
-		-
-			message: "#^Access to an undefined property \\$this\\(Drupal\\\\views\\\\ManyToOneHelper\\)\\:\\:\\$handler\\.$#"
-			count: 1
-			path: modules/views/src/ManyToOneHelper.php
-
-		-
-			message: "#^Access to an undefined property Drupal\\\\views\\\\ManyToOneHelper\\:\\:\\$handler\\.$#"
-			count: 58
-			path: modules/views/src/ManyToOneHelper.php
-
-		-
-			message: "#^Access to an undefined property Drupal\\\\views\\\\Plugin\\\\views\\\\HandlerBase\\:\\:\\$is_handler\\.$#"
-			count: 1
-			path: modules/views/src/Plugin/views/HandlerBase.php
 
 		-
 			message: "#^Method Drupal\\\\views\\\\Plugin\\\\views\\\\HandlerBase\\:\\:getTableJoin\\(\\) should return Drupal\\\\views\\\\Plugin\\\\views\\\\join\\\\JoinPluginBase but return statement is missing\\.$#"
@@ -1809,139 +1576,9 @@ parameters:
 			path: modules/views/src/Plugin/views/area/HTTPStatusCode.php
 
 		-
-			message: "#^Access to an undefined property Drupal\\\\views\\\\Plugin\\\\views\\\\argument\\\\ArgumentPluginBase\\:\\:\\$argument_validated\\.$#"
-			count: 2
-			path: modules/views/src/Plugin/views/argument/ArgumentPluginBase.php
-
-		-
-			message: "#^Access to an undefined property Drupal\\\\views\\\\Plugin\\\\views\\\\argument\\\\ArgumentPluginBase\\:\\:\\$base_alias\\.$#"
-			count: 3
-			path: modules/views/src/Plugin/views/argument/ArgumentPluginBase.php
-
-		-
-			message: "#^Access to an undefined property Drupal\\\\views\\\\Plugin\\\\views\\\\argument\\\\ArgumentPluginBase\\:\\:\\$count_alias\\.$#"
-			count: 1
-			path: modules/views/src/Plugin/views/argument/ArgumentPluginBase.php
-
-		-
-			message: "#^Access to an undefined property Drupal\\\\views\\\\Plugin\\\\views\\\\argument\\\\ArgumentPluginBase\\:\\:\\$is_default\\.$#"
-			count: 1
-			path: modules/views/src/Plugin/views/argument/ArgumentPluginBase.php
-
-		-
-			message: "#^Access to an undefined property Drupal\\\\views\\\\Plugin\\\\views\\\\argument\\\\ArgumentPluginBase\\:\\:\\$name_alias\\.$#"
-			count: 5
-			path: modules/views/src/Plugin/views/argument/ArgumentPluginBase.php
-
-		-
-			message: "#^Access to an undefined property Drupal\\\\views\\\\Plugin\\\\views\\\\argument\\\\ArgumentPluginBase\\:\\:\\$name_table_alias\\.$#"
-			count: 3
-			path: modules/views/src/Plugin/views/argument/ArgumentPluginBase.php
-
-		-
-			message: "#^Access to an undefined property Drupal\\\\views\\\\Plugin\\\\views\\\\argument\\\\ArgumentPluginBase\\:\\:\\$operator\\.$#"
-			count: 1
-			path: modules/views/src/Plugin/views/argument/ArgumentPluginBase.php
-
-		-
-			message: "#^Access to an undefined property Drupal\\\\views\\\\Plugin\\\\views\\\\argument\\\\ArgumentPluginBase\\:\\:\\$position\\.$#"
-			count: 1
-			path: modules/views/src/Plugin/views/argument/ArgumentPluginBase.php
-
-		-
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 1
 			path: modules/views/src/Plugin/views/argument/Date.php
-
-		-
-			message: "#^Access to an undefined property Drupal\\\\views\\\\Plugin\\\\views\\\\argument\\\\DayDate\\:\\:\\$base_alias\\.$#"
-			count: 1
-			path: modules/views/src/Plugin/views/argument/DayDate.php
-
-		-
-			message: "#^Access to an undefined property Drupal\\\\views\\\\Plugin\\\\views\\\\argument\\\\DayDate\\:\\:\\$name_alias\\.$#"
-			count: 1
-			path: modules/views/src/Plugin/views/argument/DayDate.php
-
-		-
-			message: "#^Access to an undefined property Drupal\\\\views\\\\Plugin\\\\views\\\\argument\\\\Formula\\:\\:\\$base_alias\\.$#"
-			count: 1
-			path: modules/views/src/Plugin/views/argument/Formula.php
-
-		-
-			message: "#^Access to an undefined property Drupal\\\\views\\\\Plugin\\\\views\\\\argument\\\\Formula\\:\\:\\$name_alias\\.$#"
-			count: 1
-			path: modules/views/src/Plugin/views/argument/Formula.php
-
-		-
-			message: "#^Access to an undefined property Drupal\\\\views\\\\Plugin\\\\views\\\\argument\\\\FullDate\\:\\:\\$name_alias\\.$#"
-			count: 1
-			path: modules/views/src/Plugin/views/argument/FullDate.php
-
-		-
-			message: "#^Access to an undefined property Drupal\\\\views\\\\Plugin\\\\views\\\\argument\\\\LanguageArgument\\:\\:\\$name_alias\\.$#"
-			count: 1
-			path: modules/views/src/Plugin/views/argument/LanguageArgument.php
-
-		-
-			message: "#^Access to an undefined property Drupal\\\\views\\\\Plugin\\\\views\\\\argument\\\\ManyToOne\\:\\:\\$base_alias\\.$#"
-			count: 2
-			path: modules/views/src/Plugin/views/argument/ManyToOne.php
-
-		-
-			message: "#^Access to an undefined property Drupal\\\\views\\\\Plugin\\\\views\\\\argument\\\\ManyToOne\\:\\:\\$helper\\.$#"
-			count: 5
-			path: modules/views/src/Plugin/views/argument/ManyToOne.php
-
-		-
-			message: "#^Access to an undefined property Drupal\\\\views\\\\Plugin\\\\views\\\\argument\\\\ManyToOne\\:\\:\\$operator\\.$#"
-			count: 4
-			path: modules/views/src/Plugin/views/argument/ManyToOne.php
-
-		-
-			message: "#^Access to an undefined property Drupal\\\\views\\\\Plugin\\\\views\\\\argument\\\\MonthDate\\:\\:\\$base_alias\\.$#"
-			count: 1
-			path: modules/views/src/Plugin/views/argument/MonthDate.php
-
-		-
-			message: "#^Access to an undefined property Drupal\\\\views\\\\Plugin\\\\views\\\\argument\\\\MonthDate\\:\\:\\$name_alias\\.$#"
-			count: 1
-			path: modules/views/src/Plugin/views/argument/MonthDate.php
-
-		-
-			message: "#^Access to an undefined property Drupal\\\\views\\\\Plugin\\\\views\\\\argument\\\\StringArgument\\:\\:\\$base_alias\\.$#"
-			count: 3
-			path: modules/views/src/Plugin/views/argument/StringArgument.php
-
-		-
-			message: "#^Access to an undefined property Drupal\\\\views\\\\Plugin\\\\views\\\\argument\\\\StringArgument\\:\\:\\$helper\\.$#"
-			count: 5
-			path: modules/views/src/Plugin/views/argument/StringArgument.php
-
-		-
-			message: "#^Access to an undefined property Drupal\\\\views\\\\Plugin\\\\views\\\\argument\\\\StringArgument\\:\\:\\$operator\\.$#"
-			count: 4
-			path: modules/views/src/Plugin/views/argument/StringArgument.php
-
-		-
-			message: "#^Access to an undefined property Drupal\\\\views\\\\Plugin\\\\views\\\\argument\\\\WeekDate\\:\\:\\$name_alias\\.$#"
-			count: 1
-			path: modules/views/src/Plugin/views/argument/WeekDate.php
-
-		-
-			message: "#^Access to an undefined property Drupal\\\\views\\\\Plugin\\\\views\\\\argument\\\\YearMonthDate\\:\\:\\$name_alias\\.$#"
-			count: 1
-			path: modules/views/src/Plugin/views/argument/YearMonthDate.php
-
-		-
-			message: "#^Access to an undefined property Drupal\\\\views\\\\Plugin\\\\views\\\\argument_default\\\\ArgumentDefaultPluginBase\\:\\:\\$option_name\\.$#"
-			count: 1
-			path: modules/views/src/Plugin/views/argument_default/ArgumentDefaultPluginBase.php
-
-		-
-			message: "#^Access to an undefined property Drupal\\\\views\\\\Plugin\\\\views\\\\argument_validator\\\\ArgumentValidatorPluginBase\\:\\:\\$option_name\\.$#"
-			count: 1
-			path: modules/views/src/Plugin/views/argument_validator/ArgumentValidatorPluginBase.php
 
 		-
 			message: "#^Undefined variable\\: \\$arg$#"
@@ -1959,39 +1596,9 @@ parameters:
 			path: modules/views/src/Plugin/views/cache/Time.php
 
 		-
-			message: "#^Access to an undefined property Drupal\\\\views\\\\Plugin\\\\views\\\\display\\\\DisplayPluginBase\\:\\:\\$default_display\\.$#"
-			count: 2
-			path: modules/views/src/Plugin/views/display/DisplayPluginBase.php
-
-		-
-			message: "#^Access to an undefined property Drupal\\\\views\\\\Plugin\\\\views\\\\display\\\\DisplayPluginBase\\:\\:\\$has_exposed\\.$#"
-			count: 3
-			path: modules/views/src/Plugin/views/display/DisplayPluginBase.php
-
-		-
 			message: "#^Cannot unset offset 'items_per_page' on array\\{access\\: array\\{'access'\\}, cache\\: array\\{'cache'\\}, title\\: array\\{'title'\\}, css_class\\: array\\{'css_class'\\}, use_ajax\\: array\\{'use_ajax'\\}, hide_attachment_summary\\: array\\{'hide_attachment…'\\}, show_admin_links\\: array\\{'show_admin_links'\\}, group_by\\: array\\{'group_by'\\}, \\.\\.\\.\\}\\.$#"
 			count: 1
 			path: modules/views/src/Plugin/views/display/DisplayPluginBase.php
-
-		-
-			message: "#^Access to an undefined property Drupal\\\\views\\\\Plugin\\\\views\\\\display\\\\EntityReference\\:\\:\\$id_field_alias\\.$#"
-			count: 1
-			path: modules/views/src/Plugin/views/display/EntityReference.php
-
-		-
-			message: "#^Access to an undefined property Drupal\\\\views\\\\Plugin\\\\views\\\\field\\\\Boolean\\:\\:\\$formats\\.$#"
-			count: 4
-			path: modules/views/src/Plugin/views/field/Boolean.php
-
-		-
-			message: "#^Access to an undefined property Drupal\\\\views\\\\Plugin\\\\views\\\\field\\\\BulkForm\\:\\:\\$last_render\\.$#"
-			count: 1
-			path: modules/views/src/Plugin/views/field/BulkForm.php
-
-		-
-			message: "#^Access to an undefined property Drupal\\\\views\\\\Plugin\\\\views\\\\field\\\\Counter\\:\\:\\$last_render\\.$#"
-			count: 1
-			path: modules/views/src/Plugin/views/field/Counter.php
 
 		-
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
@@ -2004,11 +1611,6 @@ parameters:
 			path: modules/views/src/Plugin/views/field/Date.php
 
 		-
-			message: "#^Access to an undefined property Drupal\\\\views\\\\Plugin\\\\views\\\\field\\\\EntityField\\:\\:\\$group_fields\\.$#"
-			count: 1
-			path: modules/views/src/Plugin/views/field/EntityField.php
-
-		-
 			message: "#^Method Drupal\\\\views\\\\Plugin\\\\views\\\\field\\\\EntityField\\:\\:getFieldStorageDefinition\\(\\) should return Drupal\\\\Core\\\\Field\\\\FieldStorageDefinitionInterface but return statement is missing\\.$#"
 			count: 1
 			path: modules/views/src/Plugin/views/field/EntityField.php
@@ -2017,31 +1619,6 @@ parameters:
 			message: "#^Method Drupal\\\\views\\\\Plugin\\\\views\\\\field\\\\EntityField\\:\\:renderItems\\(\\) should return string but return statement is missing\\.$#"
 			count: 1
 			path: modules/views/src/Plugin/views/field/EntityField.php
-
-		-
-			message: "#^Access to an undefined property \\$this\\(Drupal\\\\views\\\\Plugin\\\\views\\\\field\\\\FieldPluginBase\\)&Drupal\\\\views\\\\Plugin\\\\views\\\\field\\\\MultiItemsFieldHandlerInterface\\:\\:\\$last_render\\.$#"
-			count: 1
-			path: modules/views/src/Plugin/views/field/FieldPluginBase.php
-
-		-
-			message: "#^Access to an undefined property Drupal\\\\views\\\\Plugin\\\\views\\\\field\\\\FieldPluginBase\\:\\:\\$last_render\\.$#"
-			count: 10
-			path: modules/views/src/Plugin/views/field/FieldPluginBase.php
-
-		-
-			message: "#^Access to an undefined property Drupal\\\\views\\\\Plugin\\\\views\\\\field\\\\FieldPluginBase\\:\\:\\$last_render_text\\.$#"
-			count: 2
-			path: modules/views/src/Plugin/views/field/FieldPluginBase.php
-
-		-
-			message: "#^Access to an undefined property Drupal\\\\views\\\\Plugin\\\\views\\\\field\\\\FieldPluginBase\\:\\:\\$last_tokens\\.$#"
-			count: 1
-			path: modules/views/src/Plugin/views/field/FieldPluginBase.php
-
-		-
-			message: "#^Access to an undefined property Drupal\\\\views\\\\Plugin\\\\views\\\\field\\\\Markup\\:\\:\\$format\\.$#"
-			count: 2
-			path: modules/views/src/Plugin/views/field/Markup.php
 
 		-
 			message: "#^Method Drupal\\\\views\\\\Plugin\\\\views\\\\field\\\\Markup\\:\\:render\\(\\) should return Drupal\\\\Component\\\\Render\\\\MarkupInterface\\|string but return statement is missing\\.$#"
@@ -2079,69 +1656,14 @@ parameters:
 			path: modules/views/src/Plugin/views/query/QueryPluginBase.php
 
 		-
-			message: "#^Access to an undefined property Drupal\\\\views\\\\Plugin\\\\views\\\\query\\\\QueryPluginBase\\:\\:\\$offset\\.$#"
-			count: 1
-			path: modules/views/src/Plugin/views/query/QueryPluginBase.php
-
-		-
-			message: "#^Access to an undefined property Drupal\\\\views\\\\Plugin\\\\views\\\\query\\\\Sql\\:\\:\\$count_field\\.$#"
-			count: 2
-			path: modules/views/src/Plugin/views/query/Sql.php
-
-		-
-			message: "#^Access to an undefined property Drupal\\\\views\\\\Plugin\\\\views\\\\relationship\\\\EntityReverse\\:\\:\\$first_alias\\.$#"
-			count: 1
-			path: modules/views/src/Plugin/views/relationship/EntityReverse.php
-
-		-
-			message: "#^Access to an undefined property Drupal\\\\views\\\\Plugin\\\\views\\\\relationship\\\\EntityReverse\\:\\:\\$joinManager\\.$#"
-			count: 3
-			path: modules/views/src/Plugin/views/relationship/EntityReverse.php
-
-		-
 			message: "#^Undefined variable\\: \\$def$#"
 			count: 2
 			path: modules/views/src/Plugin/views/relationship/EntityReverse.php
 
 		-
-			message: "#^Access to an undefined property Drupal\\\\views\\\\Plugin\\\\views\\\\relationship\\\\GroupwiseMax\\:\\:\\$subquery_namespace\\.$#"
-			count: 2
-			path: modules/views/src/Plugin/views/relationship/GroupwiseMax.php
-
-		-
-			message: "#^Access to an undefined property \\$this\\(Drupal\\\\views\\\\Plugin\\\\views\\\\row\\\\RowPluginBase\\)\\:\\:\\$base_field\\.$#"
-			count: 2
-			path: modules/views/src/Plugin/views/row/RowPluginBase.php
-
-		-
-			message: "#^Access to an undefined property \\$this\\(Drupal\\\\views\\\\Plugin\\\\views\\\\row\\\\RowPluginBase\\)\\:\\:\\$field_alias\\.$#"
-			count: 2
-			path: modules/views/src/Plugin/views/row/RowPluginBase.php
-
-		-
 			message: "#^Access to an undefined property Drupal\\\\views\\\\Plugin\\\\views\\\\sort\\\\GroupByNumeric\\:\\:\\$handler\\.$#"
 			count: 1
 			path: modules/views/src/Plugin/views/sort/GroupByNumeric.php
-
-		-
-			message: "#^Access to an undefined property Drupal\\\\views\\\\Plugin\\\\views\\\\style\\\\Rss\\:\\:\\$channel_elements\\.$#"
-			count: 1
-			path: modules/views/src/Plugin/views/style/Rss.php
-
-		-
-			message: "#^Access to an undefined property Drupal\\\\views\\\\Plugin\\\\views\\\\style\\\\Rss\\:\\:\\$namespaces\\.$#"
-			count: 1
-			path: modules/views/src/Plugin/views/style/Rss.php
-
-		-
-			message: "#^Access to an undefined property Drupal\\\\views\\\\ViewExecutable\\:\\:\\$build_time\\.$#"
-			count: 2
-			path: modules/views/src/ViewExecutable.php
-
-		-
-			message: "#^Access to an undefined property Drupal\\\\views\\\\ViewExecutable\\:\\:\\$plugin_name\\.$#"
-			count: 1
-			path: modules/views/src/ViewExecutable.php
 
 		-
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
@@ -2152,11 +1674,6 @@ parameters:
 			message: "#^Configuration entity must define a `config_export` key\\. See https\\://www\\.drupal\\.org/node/2481909$#"
 			count: 1
 			path: modules/views/tests/modules/views_config_entity_test/src/Entity/ViewsConfigEntityTest.php
-
-		-
-			message: "#^Access to an undefined property Drupal\\\\views_test_data\\\\Plugin\\\\views\\\\field\\\\FieldFormButtonTest\\:\\:\\$last_render\\.$#"
-			count: 1
-			path: modules/views/tests/modules/views_test_data/src/Plugin/views/field/FieldFormButtonTest.php
 
 		-
 			message: "#^Method Drupal\\\\views_test_data\\\\Plugin\\\\views\\\\filter\\\\FilterTest\\:\\:buildOptionsForm\\(\\) should return array but return statement is missing\\.$#"
@@ -2214,14 +1731,14 @@ parameters:
 			path: modules/views/tests/src/Kernel/RenderCacheIntegrationTest.php
 
 		-
-			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
+			message: "#^Cannot unset offset mixed on array\\.$#"
 			count: 1
 			path: modules/views/views.theme.inc
 
 		-
-			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
+			message: "#^Cannot unset offset '\\#title' on array\\{\\#theme_wrappers\\: array\\{'container'\\}, \\#attributes\\: array\\{class\\: array\\{'scroll'\\}, data\\-drupal\\-views\\-scroll\\: true\\}\\}\\.$#"
 			count: 1
-			path: modules/views/views.views_execution.inc
+			path: modules/views_ui/src/Form/Ajax/Display.php
 
 		-
 			message: "#^Method Drupal\\\\views_ui\\\\ViewEditForm\\:\\:save\\(\\) should return int but return statement is missing\\.$#"
@@ -2419,11 +1936,6 @@ parameters:
 			path: tests/Drupal/Tests/Component/Annotation/Doctrine/DocParserTest.php
 
 		-
-			message: "#^Function container_test_file_service_test_service_function not found\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Component/DependencyInjection/ContainerTest.php
-
-		-
 			message: "#^Cannot unset offset int on array\\<string, mixed\\>\\.$#"
 			count: 1
 			path: tests/Drupal/Tests/Component/PhpStorage/FileStorageReadOnlyTest.php
@@ -2484,7 +1996,7 @@ parameters:
 			path: tests/Drupal/Tests/Core/Render/RendererCallbackTest.php
 
 		-
-			message: "#^\\#post_render callback class 'Drupal\\\\Tests\\\\Core\\\\Render\\\\RendererCallbackTest' at key '0' does not implement Drupal\\\\Core\\\\Security\\\\TrustedCallbackInterface\\.$#"
+			message: "#^\\#post_render callback class 'static\\(Drupal\\\\Tests\\\\Core\\\\Render\\\\RendererCallbackTest\\)' at key '0' does not implement Drupal\\\\Core\\\\Security\\\\TrustedCallbackInterface\\.$#"
 			count: 1
 			path: tests/Drupal/Tests/Core/Render/RendererCallbackTest.php
 
@@ -2497,8 +2009,3 @@ parameters:
 			message: "#^Cannot unset offset '\\#cache' on array\\{\\#lazy_builder\\: array\\{'Drupal\\\\\\\\Tests\\\\\\\\Core…', array\\{mixed\\}\\}\\}\\.$#"
 			count: 1
 			path: tests/Drupal/Tests/Core/Render/RendererPlaceholdersTest.php
-
-		-
-			message: "#^\\#access_callback value ''Drupal\\\\\\\\Tests\\\\\\\\Core…'\\|'Drupal\\\\\\\\Tests\\\\\\\\Core…'\\|'Drupal\\\\\\\\Tests\\\\\\\\Core…'\\|'Drupal\\\\\\\\Tests\\\\\\\\Core…'' at key '0' is invalid\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Core/Render/RendererTest.php

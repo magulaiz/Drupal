@@ -37,7 +37,7 @@
 
 :root {
   --size-summary-border-radius: calc(var(--details-border-size-radius) - var(--details-border-size));
-  --summary-accordion-padding-vertical: calc(var(--space-l) + var(--space-m)/2 - var(--space-l)/2);
+  --summary-accordion-padding-vertical: calc(var(--space-l) + ((var(--space-m) - var(--space-l)) / 2));
   --summary-accordion-line-height: var(--space-l);
 }
 
@@ -49,7 +49,19 @@
   border: var(--details-border-size) solid var(--details-border-color);
   border-radius: var(--details-border-size-radius);
   background-color: var(--color-white);
-  box-shadow: var(--details-box-shadow);
+  box-shadow: var(--details-box-shadow)
+
+  /*
+   * The following width and min-width values ensure that the <details> element
+   * does not shift widths when opening, in the event that a parent table
+   * element constrains the width. This can happen when toggling the
+   * "lazy-load" option within an image field.
+   */
+}
+
+td .claro-details {
+    width: min-content;
+    min-width: 100%
 }
 
 .claro-details--accordion-item,
@@ -148,7 +160,7 @@
   display: inline-block;
   width: var(--space-m);
   height: var(--space-m);
-  margin-top: calc(var(--space-m)/-2);
+  margin-top: calc(var(--space-m) / -2);
   content: "";
   transition: transform var(--details-transform-transition-duration) ease-in 0s;
   transform: rotate(90deg); /* LTR */
@@ -298,7 +310,7 @@
 
   .claro-details[open] > .claro-details__summary::before,
   [dir="rtl"] .claro-details[open] > .claro-details__summary::before {
-    margin-top: -0.0625rem;
+    margin-top: calc(0.125rem / -2);
     margin-right: 0.125rem;
     transform: rotate(-45deg); /* for LTR and RTL */
     background: none;
@@ -325,11 +337,11 @@
  * Merges standard collapse-processed selectors.
  */
 
-[open] > .claro-details__summary--accordion:not(:focus):not(:active)::after,
-[open] > .claro-details__summary--accordion-item:not(:focus):not(:active)::after,
+[open] > .claro-details__summary--accordion:not(:focus, :active)::after,
+[open] > .claro-details__summary--accordion-item:not(:focus, :active)::after,
 .collapse-processed[open] > .claro-details__summary--accordion .details-title:not(:focus)::after,
 .collapse-processed[open] > .claro-details__summary--accordion-item .details-title:not(:focus)::after,
-[open] > .claro-details__summary--vertical-tabs-item:not(:focus):not(:active)::after,
+[open] > .claro-details__summary--vertical-tabs-item:not(:focus, :active)::after,
 .collapse-processed[open] > .claro-details__summary--vertical-tabs-item .details-title:not(:focus)::after {
   opacity: 1;
   border: var(--details-summary-focus-border-size) solid var(--color-absolutezero);
@@ -451,7 +463,7 @@
   margin-bottom: var(--space-m);
   color: var(--input-fg-color--description);
   font-size: var(--font-size-xs); /* ~13px */
-  line-height: 1.0625rem; /* 17px */
+  line-height: calc(17rem / 16); /* 17px */
 }
 
 .claro-details__description.is-disabled {

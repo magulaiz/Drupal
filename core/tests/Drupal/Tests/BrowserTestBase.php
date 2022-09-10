@@ -77,13 +77,6 @@ abstract class BrowserTestBase extends TestCase {
   use ExtensionListTestTrait;
 
   /**
-   * The database prefix of this test run.
-   *
-   * @var string
-   */
-  protected $databasePrefix;
-
-  /**
    * Time limit in seconds for the test.
    *
    * @var int
@@ -203,13 +196,6 @@ abstract class BrowserTestBase extends TestCase {
    * @var array
    */
   protected $originalShutdownCallbacks = [];
-
-  /**
-   * The app root.
-   *
-   * @var string
-   */
-  protected $root;
 
   /**
    * The original container.
@@ -420,7 +406,7 @@ abstract class BrowserTestBase extends TestCase {
   }
 
   /**
-   * Clean up the Simpletest environment.
+   * Clean up the test environment.
    */
   protected function cleanupEnvironment() {
     // Remove all prefixed tables.
@@ -547,7 +533,7 @@ abstract class BrowserTestBase extends TestCase {
   }
 
   /**
-   * Installs Drupal into the Simpletest site.
+   * Installs Drupal into the test site.
    */
   public function installDrupal() {
     $this->initUserSession();
