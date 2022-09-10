@@ -87,6 +87,17 @@ class RedirectTest extends BrowserTestBase {
     // When using an empty redirection string, there should be no redirection,
     // and the query parameters should be passed along.
     $this->assertSession()->addressEquals($path . '?foo=bar');
+
+    // Test basic redirection, ignoring the the 'destination' query parameter.
+    $options['query']['destination'] = $this->randomMachineName();
+    $edit = [
+      'redirection' => TRUE,
+      'destination' => $this->randomMachineName(),
+      'ignore_destination' => TRUE,
+    ];
+    $this->drupalGet($path, $options);
+    $this->submitForm($edit, 'Submit');
+    $this->assertSession()->addressEquals($edit['destination']);
   }
 
   /**

@@ -140,6 +140,13 @@ class FormState implements FormStateInterface {
   protected $redirect;
 
   /**
+   * Used to ignore destination when redirecting.
+   *
+   * @var bool
+   */
+  protected $ignoreDestination = FALSE;
+
+  /**
    * If set to TRUE the form will NOT perform a redirect, even if
    * self::$redirect is set.
    *
@@ -1031,6 +1038,21 @@ class FormState implements FormStateInterface {
     }
 
     return $this->redirect;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function ignoreDestination($status = TRUE) {
+    $this->ignoreDestination = $status;
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getIgnoreDestination() {
+    return $this->ignoreDestination;
   }
 
   /**
