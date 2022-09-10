@@ -5,10 +5,11 @@ includes:
 
 parameters:
 
-  level: 5
+  level: 0
 
   paths:
-    - ./lib/Drupal/Core/Database
+    - .
+    - ../composer
 
   excludePaths:
     # Skip settings.
