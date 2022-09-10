@@ -556,16 +556,6 @@ parameters:
 			path: lib/Drupal/Core/Updater/Updater.php
 
 		-
-			message: "#^Cannot unset offset 'href' on array\\{type\\: 'button'\\}\\.$#"
-			count: 1
-			path: lib/Drupal/Core/Utility/LinkGenerator.php
-
-		-
-			message: "#^Cannot unset offset 'hreflang' on array\\{type\\: 'button'\\}\\.$#"
-			count: 1
-			path: lib/Drupal/Core/Utility/LinkGenerator.php
-
-		-
 			message: "#^Access to an undefined property Drupal\\\\Core\\\\Validation\\\\ConstraintValidatorFactory\\:\\:\\$classResolver\\.$#"
 			count: 2
 			path: lib/Drupal/Core/Validation/ConstraintValidatorFactory.php
@@ -1629,26 +1619,6 @@ parameters:
 			message: "#^Method Drupal\\\\views\\\\Plugin\\\\views\\\\field\\\\PrerenderList\\:\\:renderItems\\(\\) should return string but return statement is missing\\.$#"
 			count: 1
 			path: modules/views/src/Plugin/views/field/PrerenderList.php
-
-		-
-			message: "#^Access to an undefined property Drupal\\\\views\\\\Plugin\\\\views\\\\filter\\\\BooleanOperator\\:\\:\\$valueOptions\\.$#"
-			count: 7
-			path: modules/views/src/Plugin/views/filter/BooleanOperator.php
-
-		-
-			message: "#^Access to an undefined property Drupal\\\\views\\\\Plugin\\\\views\\\\filter\\\\BooleanOperator\\:\\:\\$value_value\\.$#"
-			count: 3
-			path: modules/views/src/Plugin/views/filter/BooleanOperator.php
-
-		-
-			message: "#^Access to an undefined property Drupal\\\\views\\\\Plugin\\\\views\\\\filter\\\\Bundle\\:\\:\\$real_field\\.$#"
-			count: 1
-			path: modules/views/src/Plugin/views/filter/Bundle.php
-
-		-
-			message: "#^Access to an undefined property Drupal\\\\views\\\\Plugin\\\\views\\\\join\\\\Subquery\\:\\:\\$left_query\\.$#"
-			count: 2
-			path: modules/views/src/Plugin/views/join/Subquery.php
 
 		-
 			message: "#^Access to an undefined property Drupal\\\\views\\\\Plugin\\\\views\\\\query\\\\QueryPluginBase\\:\\:\\$groupOperator\\.$#"
