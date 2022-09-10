@@ -491,24 +491,6 @@ td .claro-details {
   font-weight: normal;
 }
 
-@media (forced-colors: active) {
-  .collapse-processed[open] > .claro-details__summary--accordion .details-title:not(:focus)::after,
-  .collapse-processed[open] > .claro-details__summary--accordion-item .details-title:not(:focus)::after,
-  .collapse-processed[open] > .claro-details__summary--vertical-tabs-item .details-title:not(:focus)::after {
-    top: -1px;
-    right: -1px;
-    bottom: -1px;
-    left: -1px;
-  }
-  .collapse-processed > .claro-details__summary .details-title::after {
-    top: -0.3125rem;
-    right: -0.3125rem;
-    bottom: -0.3125rem;
-    left: -0.3125rem;
-    border: 2px dotted;
-  }
-}
-
 .required-mark::after {
   display: inline-block;
   width: 0.4375rem;
