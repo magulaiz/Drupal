@@ -217,13 +217,12 @@ printf "\n"
 
 # Run PHPStan on all files on DrupalCI or when phpstan files are changed.
 # APCu is disabled to ensure that the composer classmap is not corrupted.
-#if [[ $PHPSTAN_DIST_FILE_CHANGED == "1" ]] || [[ "$DRUPALCI" == "1" ]]; then
 
 # Set *manually* this variable to '1' to (re)generate the PHPStan baseline in
 # DrupalCI runs.
 # The new baseline will be available in the Jenkins test run artifacts under
 # the artifacts/phpstan directory. The DrupalCI test run will be interrupted.
-PHPSTAN_GENERATE_BASELINE=1
+PHPSTAN_GENERATE_BASELINE=0
 
 if [[ "$DRUPALCI" == "1" ]] && [[ $PHPSTAN_GENERATE_BASELINE == "1" ]]; then
   printf "\nGenerating PHPStan baseline.\n"
