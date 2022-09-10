@@ -297,7 +297,7 @@ EOD;
         $this->validateUniqueKeySchema($key, $table['fields']);
         $sql_keys[] = 'CONSTRAINT ' . $this->ensureIdentifiersLength($name, $key_name, 'key') . ' UNIQUE (' . implode(', ', $this->fieldNames($key)) . ')';
       }
-      }
+    }
 
     $sql = "CREATE TABLE {" . $name . "} (\n\t";
     $sql .= implode(",\n\t", $sql_fields);
@@ -641,7 +641,7 @@ EOD;
     // Fields that are part of a PRIMARY KEY must be added as NOT NULL.
     $is_primary_key = isset($new_keys['primary key']) && in_array($field, $this->fieldNames($new_keys['primary key']), TRUE);
     if ($is_primary_key) {
-        $this->validatePrimaryKeySchema($new_keys['primary key'], [$field => $spec]);
+      $this->validatePrimaryKeySchema($new_keys['primary key'], [$field => $spec]);
     }
 
     if (!empty($new_keys['unique keys'])) {

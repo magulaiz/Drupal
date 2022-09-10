@@ -417,7 +417,7 @@ class Schema extends DatabaseSchema {
     }
 
     // Fields that are part of a PRIMARY KEY must be added as NOT NULL.
-    is_primary_key = isset($keys_new['primary key']) && in_array($field, $this->fieldNames($keys_new['primary key']), TRUE);
+    $is_primary_key = isset($keys_new['primary key']) && in_array($field, $this->fieldNames($keys_new['primary key']), TRUE);
     if ($is_primary_key) {
       $this->validatePrimaryKeySchema($keys_new['primary key'], [$field => $spec]);
     }
