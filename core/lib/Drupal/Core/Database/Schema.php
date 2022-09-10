@@ -6,6 +6,10 @@ use Drupal\Core\Database\Query\PlaceholderInterface;
 
 /**
  * Provides a base implementation for Database Schema.
+ *
+ * @phpstan-type TableColumnDefinition array{description: string, type: string, serialize: bool, size: string, 'not null': bool, default: scalar|array<scalar>, length: string, unsigned: bool, precision: int, scale: int, binary: bool}
+ * @phpstan-type TableColumns array<string, TableColumnDefinition>
+ * @phpstan-type KeyColumns array<string|array{0: string, 1: int}>
  */
 abstract class Schema implements PlaceholderInterface {
 
@@ -374,9 +378,9 @@ abstract class Schema implements PlaceholderInterface {
   /**
    * Validates a primary key schema definition.
    *
-   * @param array<string|array{0: string, 1: int}> $key_fields
+   * @param KeyColumns $key_fields
    *   An array containing the fields that will form the primary key.
-   * @param array{description: string, type: string, serialize: bool, size: string, 'not null': bool, default: scalar|array<scalar>, length: string, unsigned: bool, precision: int, scale: int, binary: bool} $fields
+   * @param TableColumns $fields
    *   (Optional) An array containing the field specifications of the table,
    *   as per the schema data structure format.
    *
@@ -461,9 +465,9 @@ abstract class Schema implements PlaceholderInterface {
   /**
    * Validates a unique key schema definition.
    *
-   * @param array<string|array{0: string, 1: int}> $key_fields
+   * @param KeyColumns $key_fields
    *   An array containing the fields that will form the unique key.
-   * @param array{description: string, type: string, serialize: bool, size: string, 'not null': bool, default: scalar|array<scalar>, length: string, unsigned: bool, precision: int, scale: int, binary: bool} $fields
+   * @param TableColumns $fields
    *   (Optional) An array containing the field specifications of the table,
    *   as per the schema data structure format.
    *
