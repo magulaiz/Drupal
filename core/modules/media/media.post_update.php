@@ -14,5 +14,6 @@ function media_removed_post_updates() {
     'media_post_update_storage_handler' => '9.0.0',
     'media_post_update_enable_standalone_url' => '9.0.0',
     'media_post_update_add_status_extra_filter' => '9.0.0',
+    'media_post_update_modify_base_field_author_override' => '10.0.0',
   ];
 }

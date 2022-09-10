@@ -37,7 +37,7 @@ abstract class MTimeProtectedFileStorageBase extends PhpStorageTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     // Random generator.
@@ -76,7 +76,7 @@ abstract class MTimeProtectedFileStorageBase extends PhpStorageTestBase {
    */
   public function testSecurity() {
     $php = new $this->storageClass($this->settings);
-    $name = 'simpletest.php';
+    $name = 'test.php';
     $php->save($name, '<?php');
     $expected_root_directory = $this->directory . '/test';
     if (substr($name, -4) === '.php') {

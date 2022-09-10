@@ -154,6 +154,19 @@ class ThemeInstallerTest extends KernelTestBase {
   }
 
   /**
+   * Tests trying to install a deprecated theme.
+   *
+   * @covers ::install
+   *
+   * @group legacy
+   */
+  public function testInstallDeprecated() {
+    $this->expectDeprecation("The theme 'deprecated_theme_test' is deprecated. See https://example.com/deprecated");
+    $this->themeInstaller()->install(['deprecated_theme_test']);
+    $this->assertTrue(\Drupal::service('theme_handler')->themeExists('deprecated_theme_test'));
+  }
+
+  /**
    * Data provider for testInstallThemeWithUnmetModuleDependencies().
    */
   public function providerTestInstallThemeWithUnmetModuleDependencies() {
@@ -217,7 +230,7 @@ class ThemeInstallerTest extends KernelTestBase {
    */
   public function testUninstallDefault() {
     $name = 'stark';
-    $other_name = 'bartik';
+    $other_name = 'olivero';
     $this->themeInstaller()->install([$name, $other_name]);
     $this->config('system.theme')->set('default', $name)->save();
 
@@ -244,7 +257,7 @@ class ThemeInstallerTest extends KernelTestBase {
    */
   public function testUninstallAdmin() {
     $name = 'stark';
-    $other_name = 'bartik';
+    $other_name = 'olivero';
     $this->themeInstaller()->install([$name, $other_name]);
     $this->config('system.theme')->set('admin', $name)->save();
 
@@ -378,7 +391,7 @@ class ThemeInstallerTest extends KernelTestBase {
    * @see module_test_system_info_alter()
    */
   public function testThemeInfoAlter() {
-    $name = 'seven';
+    $name = 'stark';
     $this->container->get('state')->set('module_test.hook_system_info_alter', TRUE);
 
     $this->themeInstaller()->install([$name]);

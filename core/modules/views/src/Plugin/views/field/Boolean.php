@@ -30,6 +30,11 @@ use Drupal\views\Plugin\views\display\DisplayPluginBase;
 class Boolean extends FieldPluginBase {
 
   /**
+   * The allowed formats.
+   */
+  public array $formats;
+
+  /**
    * {@inheritdoc}
    */
   protected function defineOptions() {
@@ -56,7 +61,7 @@ class Boolean extends FieldPluginBase {
       'boolean' => [1, 0],
       'unicode-yes-no' => ['✔', '✖'],
     ];
-    $output_formats = isset($this->definition['output formats']) ? $this->definition['output formats'] : [];
+    $output_formats = $this->definition['output formats'] ?? [];
     $custom_format = ['custom' => [t('Custom')]];
     $this->formats = array_merge($default_formats, $output_formats, $custom_format);
   }

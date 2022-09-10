@@ -53,12 +53,14 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
 
   /**
    * Indicator of the renderText() method for rendering a single item.
+   *
    * (If no render_item() is present).
    */
   const RENDER_TEXT_PHASE_SINGLE_ITEM = 0;
 
   /**
    * Indicator of the renderText() method for rendering the whole element.
+   *
    * (if no render_item() method is available).
    */
   const RENDER_TEXT_PHASE_COMPLETELY = 1;
@@ -103,6 +105,21 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
    * @var \Drupal\Core\Render\RendererInterface
    */
   protected $renderer;
+
+  /**
+   * The last rendered value.
+   */
+  public string|MarkupInterface|NULL $last_render;
+
+  /**
+   * The last rendered text.
+   */
+  public string|MarkupInterface|NULL $last_render_text;
+
+  /**
+   * The last rendered tokens.
+   */
+  public array $last_tokens;
 
   /**
    * Keeps track of the last render index.
@@ -228,7 +245,7 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
    * {@inheritdoc}
    */
   public function clickSortable() {
-    return isset($this->definition['click sortable']) ? $this->definition['click sortable'] : TRUE;
+    return $this->definition['click sortable'] ?? TRUE;
   }
 
   /**

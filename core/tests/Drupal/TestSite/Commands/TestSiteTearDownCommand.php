@@ -37,7 +37,7 @@ class TestSiteTearDownCommand extends Command {
   /**
    * {@inheritdoc}
    */
-  protected function execute(InputInterface $input, OutputInterface $output) {
+  protected function execute(InputInterface $input, OutputInterface $output): int {
     $db_prefix = $input->getArgument('db-prefix');
     // Validate the db_prefix argument.
     try {
@@ -81,7 +81,7 @@ class TestSiteTearDownCommand extends Command {
     // Connect to the test database.
     $root = dirname(__DIR__, 5);
     $database = Database::convertDbUrlToConnectionInfo($db_url, $root);
-    $database['prefix'] = ['default' => $test_database->getDatabasePrefix()];
+    $database['prefix'] = $test_database->getDatabasePrefix();
     Database::addConnectionInfo(__CLASS__, 'default', $database);
 
     // Remove all the tables.

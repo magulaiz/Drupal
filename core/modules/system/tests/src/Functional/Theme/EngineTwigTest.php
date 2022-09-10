@@ -69,7 +69,7 @@ class EngineTwigTest extends BrowserTestBase {
 
     // Make sure we got something.
     $content = $this->getSession()->getPage()->getContent();
-    $this->assertFalse(empty($content), 'Page content is not empty');
+    $this->assertNotEmpty($content, 'Page content is not empty');
     foreach ($expected as $string) {
       $this->assertSession()->responseContains('<div>' . $string . '</div>');
     }
@@ -103,7 +103,7 @@ class EngineTwigTest extends BrowserTestBase {
     $this->assertCacheContext('url.site');
 
     $content = $this->getSession()->getPage()->getContent();
-    $this->assertFalse(empty($content), 'Page content is not empty');
+    $this->assertNotEmpty($content, 'Page content is not empty');
     foreach ($expected as $string) {
       $this->assertSession()->responseContains('<div>' . $string . '</div>');
     }
@@ -122,7 +122,7 @@ class EngineTwigTest extends BrowserTestBase {
     ];
 
     $content = $this->getSession()->getPage()->getContent();
-    $this->assertFalse(empty($content), 'Page content is not empty');
+    $this->assertNotEmpty($content, 'Page content is not empty');
     foreach ($expected as $string) {
       $this->assertSession()->responseContains('<div>' . $string . '</div>');
     }
@@ -144,7 +144,7 @@ class EngineTwigTest extends BrowserTestBase {
    */
   public function testTwigAttachLibrary() {
     $this->drupalGet('/twig-theme-test/attach-library');
-    $this->assertSession()->responseContains('ckeditor.js');
+    $this->assertSession()->responseContains('ckeditor5-dll.js');
   }
 
   /**

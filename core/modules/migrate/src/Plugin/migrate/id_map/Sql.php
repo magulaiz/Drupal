@@ -21,6 +21,8 @@ use Drupal\migrate\Event\MigrateMapDeleteEvent;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
+// cspell:ignore destid idmap sourceid
+
 /**
  * Defines the sql based ID map implementation.
  *
@@ -109,9 +111,9 @@ class Sql extends PluginBase implements MigrateIdMapInterface, ContainerFactoryP
   /**
    * The result.
    *
-   * @var null
+   * @var \Drupal\Core\Database\StatementInterface
    */
-  protected $result = NULL;
+  protected $result;
 
   /**
    * The source identifiers.
@@ -130,7 +132,7 @@ class Sql extends PluginBase implements MigrateIdMapInterface, ContainerFactoryP
   /**
    * The current row.
    *
-   * @var null
+   * @var array|false|null
    */
   protected $currentRow = NULL;
 
@@ -169,7 +171,7 @@ class Sql extends PluginBase implements MigrateIdMapInterface, ContainerFactoryP
 
     // Default generated table names, limited to 63 characters.
     $machine_name = str_replace(':', '__', $this->migration->id());
-    $prefix_length = strlen($this->database->tablePrefix());
+    $prefix_length = strlen($this->database->getPrefix());
     $this->mapTableName = 'migrate_map_' . mb_strtolower($machine_name);
     $this->mapTableName = mb_substr($this->mapTableName, 0, 63 - $prefix_length);
     $this->messageTableName = 'migrate_message_' . mb_strtolower($machine_name);
@@ -323,10 +325,10 @@ class Sql extends PluginBase implements MigrateIdMapInterface, ContainerFactoryP
       $source_id_schema = [];
       $indexes = [];
       foreach ($this->migration->getSourcePlugin()->getIds() as $id_definition) {
-        $mapkey = 'sourceid' . $count++;
-        $indexes['source'][] = $mapkey;
-        $source_id_schema[$mapkey] = $this->getFieldSchema($id_definition);
-        $source_id_schema[$mapkey]['not null'] = TRUE;
+        $map_key = 'sourceid' . $count++;
+        $indexes['source'][] = $map_key;
+        $source_id_schema[$map_key] = $this->getFieldSchema($id_definition);
+        $source_id_schema[$map_key]['not null'] = TRUE;
       }
 
       $source_ids_hash[$this::SOURCE_IDS_HASH] = [
@@ -342,9 +344,9 @@ class Sql extends PluginBase implements MigrateIdMapInterface, ContainerFactoryP
       $count = 1;
       foreach ($this->migration->getDestinationPlugin()->getIds() as $id_definition) {
         // Allow dest identifier fields to be NULL (for IGNORED/FAILED cases).
-        $mapkey = 'destid' . $count++;
-        $fields[$mapkey] = $this->getFieldSchema($id_definition);
-        $fields[$mapkey]['not null'] = FALSE;
+        $map_key = 'destid' . $count++;
+        $fields[$map_key] = $this->getFieldSchema($id_definition);
+        $fields[$map_key]['not null'] = FALSE;
       }
       $fields['source_row_status'] = [
         'type' => 'int',
@@ -368,6 +370,7 @@ class Sql extends PluginBase implements MigrateIdMapInterface, ContainerFactoryP
         'not null' => TRUE,
         'default' => 0,
         'description' => 'UNIX timestamp of the last time this row was imported',
+        'size' => 'big',
       ];
       $fields['hash'] = [
         'type' => 'varchar',
@@ -441,6 +444,7 @@ class Sql extends PluginBase implements MigrateIdMapInterface, ContainerFactoryP
           'description' => 'Messages generated during a migration process',
           'fields' => $fields,
           'primary key' => ['msgid'],
+          'indexes' => [$this::SOURCE_IDS_HASH => [$this::SOURCE_IDS_HASH]],
         ];
         $this->getDatabase()->schema()->createTable($this->messageTableName(), $schema);
       }
@@ -570,8 +574,8 @@ class Sql extends PluginBase implements MigrateIdMapInterface, ContainerFactoryP
   public function lookupSourceId(array $destination_id_values) {
     $source_id_fields = $this->sourceIdFields();
     $query = $this->getDatabase()->select($this->mapTableName(), 'map');
-    foreach ($source_id_fields as $source_field_name => $idmap_field_name) {
-      $query->addField('map', $idmap_field_name, $source_field_name);
+    foreach ($source_id_fields as $source_field_name => $id_map_field_name) {
+      $query->addField('map', $id_map_field_name, $source_field_name);
     }
     foreach ($this->destinationIdFields() as $field_name => $destination_id) {
       $query->condition("map.$destination_id", $destination_id_values[$field_name], '=');
@@ -887,6 +891,7 @@ class Sql extends PluginBase implements MigrateIdMapInterface, ContainerFactoryP
    *
    * This is called before beginning a foreach loop.
    */
+  #[\ReturnTypeWillChange]
   public function rewind() {
     $this->currentRow = NULL;
     $fields = [];
@@ -908,6 +913,7 @@ class Sql extends PluginBase implements MigrateIdMapInterface, ContainerFactoryP
    *
    * This is called when entering a loop iteration, returning the current row.
    */
+  #[\ReturnTypeWillChange]
   public function current() {
     return $this->currentRow;
   }
@@ -919,6 +925,7 @@ class Sql extends PluginBase implements MigrateIdMapInterface, ContainerFactoryP
    * current row. It must be a scalar - we will serialize to fulfill the
    * requirement, but using getCurrentKey() is preferable.
    */
+  #[\ReturnTypeWillChange]
   public function key() {
     return serialize($this->currentKey);
   }
@@ -929,9 +936,9 @@ class Sql extends PluginBase implements MigrateIdMapInterface, ContainerFactoryP
   public function currentDestination() {
     if ($this->valid()) {
       $result = [];
-      foreach ($this->destinationIdFields() as $destination_field_name => $idmap_field_name) {
-        if (!is_null($this->currentRow[$idmap_field_name])) {
-          $result[$destination_field_name] = $this->currentRow[$idmap_field_name];
+      foreach ($this->destinationIdFields() as $destination_field_name => $id_map_field_name) {
+        if (!is_null($this->currentRow[$id_map_field_name])) {
+          $result[$destination_field_name] = $this->currentRow[$id_map_field_name];
         }
       }
       return $result;
@@ -963,6 +970,7 @@ class Sql extends PluginBase implements MigrateIdMapInterface, ContainerFactoryP
    * This is called at the bottom of the loop implicitly, as well as explicitly
    * from rewind().
    */
+  #[\ReturnTypeWillChange]
   public function next() {
     $this->currentRow = $this->result->fetchAssoc();
     $this->currentKey = [];
@@ -981,6 +989,7 @@ class Sql extends PluginBase implements MigrateIdMapInterface, ContainerFactoryP
    * This is called at the top of the loop, returning TRUE to process the loop
    * and FALSE to terminate it.
    */
+  #[\ReturnTypeWillChange]
   public function valid() {
     return $this->currentRow !== FALSE;
   }

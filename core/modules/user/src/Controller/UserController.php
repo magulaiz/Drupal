@@ -244,7 +244,7 @@ class UserController extends ControllerBase {
     elseif ($user->isAuthenticated() && ($timestamp >= $user->getLastLoginTime()) && ($timestamp <= $current) && hash_equals($hash, user_pass_rehash($user, $timestamp))) {
       user_login_finalize($user);
       $this->logger->notice('User %name used one-time login link at time %timestamp.', ['%name' => $user->getDisplayName(), '%timestamp' => $timestamp]);
-      $this->messenger()->addStatus($this->t('You have just used your one-time login link. It is no longer necessary to use this link to log in. Please change your password.'));
+      $this->messenger()->addStatus($this->t('You have just used your one-time login link. It is no longer necessary to use this link to log in. Please set your password.'));
       // Let the user's password be changed without the current password
       // check.
       $token = Crypt::randomBytesBase64(55);
@@ -345,7 +345,7 @@ class UserController extends ControllerBase {
       // Validate expiration and hashed password/login.
       if ($timestamp <= $current && $current - $timestamp < $timeout && $user->id() && $timestamp >= $user->getLastLoginTime() && hash_equals($hashed_pass, user_pass_rehash($user, $timestamp))) {
         $edit = [
-          'user_cancel_notify' => isset($account_data['cancel_notify']) ? $account_data['cancel_notify'] : $this->config('user.settings')->get('notify.status_canceled'),
+          'user_cancel_notify' => $account_data['cancel_notify'] ?? $this->config('user.settings')->get('notify.status_canceled'),
         ];
         user_cancel($edit, $user->id(), $account_data['cancel_method']);
         // Since user_cancel() is not invoked via Form API, batch processing

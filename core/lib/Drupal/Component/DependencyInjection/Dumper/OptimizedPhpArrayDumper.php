@@ -56,7 +56,7 @@ class OptimizedPhpArrayDumper extends Dumper {
   /**
    * {@inheritdoc}
    */
-  public function dump(array $options = []) {
+  public function dump(array $options = []): string|array {
     return serialize($this->getArray());
   }
 
@@ -156,9 +156,6 @@ class OptimizedPhpArrayDumper extends Dumper {
       if (is_array($value)) {
         $value = $this->prepareParameters($value, $escape);
       }
-      elseif ($value instanceof Reference) {
-        $value = $this->dumpValue($value);
-      }
 
       $filtered[$key] = $value;
     }
@@ -250,8 +247,8 @@ class OptimizedPhpArrayDumper extends Dumper {
       $service['shared'] = $definition->isShared();
     }
 
-    if (($decorated = $definition->getDecoratedService()) !== NULL) {
-      throw new InvalidArgumentException("The 'decorated' definition is not supported by the Drupal 8 run-time container. The Container Builder should have resolved that during the DecoratorServicePass compiler pass.");
+    if ($definition->getDecoratedService() !== NULL) {
+      throw new InvalidArgumentException("The 'decorated' definition is not supported by the Drupal run-time container. The Container Builder should have resolved that during the DecoratorServicePass compiler pass.");
     }
 
     if ($callable = $definition->getFactory()) {

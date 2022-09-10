@@ -31,7 +31,9 @@ class ContextualLinksTest extends WebDriverTestBase {
     parent::setUp();
 
     $this->drupalLogin($this->createUser(['access contextual links']));
-    $this->placeBlock('system_branding_block', ['id' => 'branding']);
+    $this->placeBlock('system_branding_block', [
+      'id' => 'branding',
+    ]);
   }
 
   /**
@@ -56,6 +58,9 @@ class ContextualLinksTest extends WebDriverTestBase {
     $this->drupalGet('user');
     $contextualLinks = $this->assertSession()->waitForElement('css', '.contextual button');
     $this->assertNotEmpty($contextualLinks);
+
+    // Confirm touchevents detection is loaded with Contextual Links
+    $this->assertSession()->elementExists('css', 'html.no-touchevents');
 
     // Ensure visibility remains correct after cached paged load.
     $this->drupalGet('user');

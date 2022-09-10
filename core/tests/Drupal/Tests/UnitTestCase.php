@@ -46,7 +46,7 @@ abstract class UnitTestCase extends TestCase {
   /**
    * {@inheritdoc}
    */
-  public static function setUpBeforeClass() {
+  public static function setUpBeforeClass(): void {
     parent::setUpBeforeClass();
     VarDumper::setHandler(TestVarDumper::class . '::cliHandler');
   }
@@ -54,7 +54,7 @@ abstract class UnitTestCase extends TestCase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
     // Ensure that an instantiated container in the global state of \Drupal from
     // a previous test does not leak into this test.
@@ -95,25 +95,6 @@ abstract class UnitTestCase extends TestCase {
       $this->randomGenerator = new Random();
     }
     return $this->randomGenerator;
-  }
-
-  /**
-   * Asserts if two arrays are equal by sorting them first.
-   *
-   * @param array $expected
-   * @param array $actual
-   * @param string $message
-   *
-   * @deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. Use
-   *   ::assertEquals, ::assertEqualsCanonicalizing, or ::assertSame instead.
-   *
-   * @see https://www.drupal.org/node/3136304
-   */
-  protected function assertArrayEquals(array $expected, array $actual, $message = NULL) {
-    @trigger_error(__METHOD__ . "() is deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. Use ::assertEquals(), ::assertEqualsCanonicalizing(), or ::assertSame() instead. See https://www.drupal.org/node/3136304", E_USER_DEPRECATED);
-    ksort($expected);
-    ksort($actual);
-    $this->assertEquals($expected, $actual, !empty($message) ? $message : '');
   }
 
   /**

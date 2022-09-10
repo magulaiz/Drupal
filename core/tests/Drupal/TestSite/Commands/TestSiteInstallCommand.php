@@ -47,13 +47,6 @@ class TestSiteInstallCommand extends Command {
   protected $timeLimit = 500;
 
   /**
-   * The database prefix of this test run.
-   *
-   * @var string
-   */
-  protected $databasePrefix;
-
-  /**
    * The language to install the site in.
    *
    * @var string
@@ -81,7 +74,7 @@ class TestSiteInstallCommand extends Command {
   /**
    * {@inheritdoc}
    */
-  protected function execute(InputInterface $input, OutputInterface $output) {
+  protected function execute(InputInterface $input, OutputInterface $output): int {
     // Determines and validates the setup class prior to installing a database
     // to avoid creating unnecessary sites.
     $root = dirname(__DIR__, 5);

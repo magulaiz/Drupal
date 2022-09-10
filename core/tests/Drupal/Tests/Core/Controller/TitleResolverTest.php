@@ -9,7 +9,7 @@ namespace Drupal\Tests\Core\Controller;
 
 use Drupal\Core\Controller\TitleResolver;
 use Drupal\Tests\UnitTestCase;
-use Symfony\Component\HttpFoundation\ParameterBag;
+use Symfony\Component\HttpFoundation\InputBag;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Route;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
@@ -86,7 +86,7 @@ class TitleResolverTest extends UnitTestCase {
    * @dataProvider providerTestStaticTitleWithParameter
    */
   public function testStaticTitleWithParameter($title, $expected_title) {
-    $raw_variables = new ParameterBag(['test' => 'value', 'test2' => 'value2']);
+    $raw_variables = new InputBag(['test' => 'value', 'test2' => 'value2']);
     $request = new Request();
     $request->attributes->set('_raw_variables', $raw_variables);
 
@@ -100,6 +100,24 @@ class TitleResolverTest extends UnitTestCase {
       ['static title @test', new TranslatableMarkup('static title @test', ['@test' => 'value', '%test' => 'value', '@test2' => 'value2', '%test2' => 'value2'], [], $translation_manager)],
       ['static title %test', new TranslatableMarkup('static title %test', ['@test' => 'value', '%test' => 'value', '@test2' => 'value2', '%test2' => 'value2'], [], $translation_manager)],
     ];
+  }
+
+  /**
+   * Tests a static title with a NULL value parameter.
+   *
+   * @see \Drupal\Core\Controller\TitleResolver::getTitle()
+   */
+  public function testStaticTitleWithNullValueParameter() {
+    $raw_variables = new InputBag(['test' => NULL, 'test2' => 'value']);
+    $request = new Request();
+    $request->attributes->set('_raw_variables', $raw_variables);
+
+    $route = new Route('/test-route', ['_title' => 'static title %test @test']);
+    $translatable_markup = $this->titleResolver->getTitle($request, $route);
+    $this->assertSame('', $translatable_markup->getArguments()['@test']);
+    $this->assertSame('', $translatable_markup->getArguments()['%test']);
+    $this->assertSame('value', $translatable_markup->getArguments()['@test2']);
+    $this->assertSame('value', $translatable_markup->getArguments()['%test2']);
   }
 
   /**

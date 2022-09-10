@@ -18,9 +18,11 @@ class CommentCSSTest extends CommentTestBase {
   use GeneratePermutationsTrait;
 
   /**
-   * {@inheritdoc}
+   * The theme to install as the default for testing.
+   *
+   * @var string
    */
-  protected $defaultTheme = 'classy';
+  protected $defaultTheme = 'starterkit_theme';
 
   protected function setUp(): void {
     parent::setUp();

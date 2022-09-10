@@ -282,8 +282,8 @@ class BigPipe {
     $attachments = $response->getAttachments();
 
     // First, gather the BigPipe placeholders that must be replaced.
-    $placeholders = isset($attachments['big_pipe_placeholders']) ? $attachments['big_pipe_placeholders'] : [];
-    $nojs_placeholders = isset($attachments['big_pipe_nojs_placeholders']) ? $attachments['big_pipe_nojs_placeholders'] : [];
+    $placeholders = $attachments['big_pipe_placeholders'] ?? [];
+    $nojs_placeholders = $attachments['big_pipe_nojs_placeholders'] ?? [];
 
     // BigPipe sends responses using "Transfer-Encoding: chunked". To avoid
     // sending already-sent assets, it is necessary to track cumulative assets
@@ -330,7 +330,7 @@ class BigPipe {
     // Extract the scripts_bottom markup: the no-JS BigPipe placeholders that we
     // will render may attach additional asset libraries, and if so, it will be
     // necessary to re-render scripts_bottom.
-    list($pre_scripts_bottom, $scripts_bottom, $post_scripts_bottom) = explode('<drupal-big-pipe-scripts-bottom-marker>', $pre_body, 3);
+    [$pre_scripts_bottom, $scripts_bottom, $post_scripts_bottom] = explode('<drupal-big-pipe-scripts-bottom-marker>', $pre_body, 3);
     $cumulative_assets_initial = clone $cumulative_assets;
 
     $this->sendNoJsPlaceholders($pre_scripts_bottom . $post_scripts_bottom, $no_js_placeholders, $cumulative_assets);
@@ -637,7 +637,7 @@ EOF;
    *   The request for which a response is being sent.
    * @param int $request_type
    *   The request type. Can either be
-   *   \Symfony\Component\HttpKernel\HttpKernelInterface::MASTER_REQUEST or
+   *   \Symfony\Component\HttpKernel\HttpKernelInterface::MAIN_REQUEST or
    *   \Symfony\Component\HttpKernel\HttpKernelInterface::SUB_REQUEST.
    * @param \Symfony\Component\HttpFoundation\Response $response
    *   The response to filter.
@@ -646,7 +646,7 @@ EOF;
    *   The filtered response.
    */
   protected function filterResponse(Request $request, $request_type, Response $response) {
-    assert($request_type === HttpKernelInterface::MASTER_REQUEST || $request_type === HttpKernelInterface::SUB_REQUEST);
+    assert($request_type === HttpKernelInterface::MAIN_REQUEST || $request_type === HttpKernelInterface::SUB_REQUEST);
     $this->requestStack->push($request);
     $event = new ResponseEvent($this->httpKernel, $request, $request_type, $response);
     $this->eventDispatcher->dispatch($event, KernelEvents::RESPONSE);
@@ -774,7 +774,7 @@ EOF;
     if (strlen($pattern) < 31000) {
       // Only small (<31K characters) patterns can be handled by preg_split().
       $flags = PREG_SPLIT_NO_EMPTY | PREG_SPLIT_DELIM_CAPTURE;
-      $result = preg_split($pattern, $html_string, NULL, $flags);
+      $result = preg_split($pattern, $html_string, 0, $flags);
     }
     else {
       // For large amounts of placeholders we use a simpler but slower approach.

@@ -23,11 +23,11 @@ abstract class BaseFieldDefinitionTestBase extends UnitTestCase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     // getModuleAndPath() returns an array of the module name and directory.
-    list($module_name, $module_dir) = $this->getModuleAndPath();
+    [$module_name, $module_dir] = $this->getModuleAndPath();
 
     $namespaces = new \ArrayObject();
     $namespaces["Drupal\\$module_name"] = $module_dir . '/src';

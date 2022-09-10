@@ -19,12 +19,12 @@ class DeprecatedServicePass implements CompilerPassInterface {
     $deprecated_services = [];
     foreach ($container->getDefinitions() as $service_id => $definition) {
       if ($definition->isDeprecated()) {
-        $deprecated_services[$service_id] = $definition->getDeprecationMessage($service_id);
+        $deprecated_services[$service_id] = $definition->getDeprecation($service_id)['message'];
       }
     }
     foreach ($container->getAliases() as $service_id => $definition) {
       if ($definition->isDeprecated()) {
-        $deprecated_services[$service_id] = $definition->getDeprecationMessage($service_id);
+        $deprecated_services[$service_id] = $definition->getDeprecation($service_id)['message'];
       }
     }
     $container->setParameter('_deprecated_service_list', $deprecated_services);

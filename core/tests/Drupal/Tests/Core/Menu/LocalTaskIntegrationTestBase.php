@@ -40,7 +40,7 @@ abstract class LocalTaskIntegrationTestBase extends UnitTestCase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $container = new ContainerBuilder();
@@ -58,7 +58,7 @@ abstract class LocalTaskIntegrationTestBase extends UnitTestCase {
     $manager = $this
       ->getMockBuilder('Drupal\Core\Menu\LocalTaskManager')
       ->disableOriginalConstructor()
-      ->setMethods(NULL)
+      ->onlyMethods([])
       ->getMock();
 
     $argumentResolver = $this->createMock('Symfony\Component\HttpKernel\Controller\ArgumentResolverInterface');

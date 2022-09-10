@@ -8,7 +8,6 @@ use Drupal\Tests\system\Functional\Cache\AssertPageCacheContextsAndTagsTrait;
 use Drupal\Tests\views\Functional\ViewTestBase;
 use Drupal\views\ViewExecutable;
 use Drupal\views\Views;
-use Drupal\views\Entity\View;
 
 /**
  * Tests exposed forms functionality.
@@ -24,7 +23,7 @@ class ExposedFormTest extends ViewTestBase {
    *
    * @var array
    */
-  public static $testViews = ['test_exposed_form_buttons', 'test_exposed_block', 'test_exposed_form_sort_items_per_page', 'test_exposed_form_pager'];
+  public static $testViews = ['test_exposed_form_buttons', 'test_exposed_form_buttons_required', 'test_exposed_block', 'test_exposed_form_sort_items_per_page', 'test_exposed_form_pager'];
 
   /**
    * Modules to enable.
@@ -36,7 +35,7 @@ class ExposedFormTest extends ViewTestBase {
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'classy';
+  protected $defaultTheme = 'starterkit_theme';
 
   /**
    * Nodes to test.
@@ -45,8 +44,8 @@ class ExposedFormTest extends ViewTestBase {
    */
   protected $nodes = [];
 
-  protected function setUp($import_test_views = TRUE): void {
-    parent::setUp($import_test_views);
+  protected function setUp($import_test_views = TRUE, $modules = ['views_test_config']): void {
+    parent::setUp($import_test_views, $modules);
 
     $this->enableViewsTestModule();
 
@@ -298,23 +297,27 @@ class ExposedFormTest extends ViewTestBase {
    * Tests the input required exposed form type.
    */
   public function testInputRequired() {
-    $view = View::load('test_exposed_form_buttons');
-    $display = &$view->getDisplay('default');
-    $display['display_options']['exposed_form']['type'] = 'input_required';
-    $view->save();
-
-    $this->drupalGet('test_exposed_form_buttons');
+    $this->drupalGet('test_exposed_form_buttons_required');
     $this->assertSession()->statusCodeEquals(200);
-    $this->helperButtonHasLabel('edit-submit-test-exposed-form-buttons', 'Apply');
+    $this->helperButtonHasLabel('edit-submit-test-exposed-form-buttons-required', 'Apply');
 
     // Ensure that no results are displayed by default when no input is
     // provided.
     $this->assertSession()->elementNotExists('xpath', "//div[contains(@class, 'views-row')]");
-
-    $this->drupalGet('test_exposed_form_buttons', ['query' => ['type' => 'article']]);
+    // Ensure that no error element is shown.
+    $this->assertSession()->elementNotExists('css', '.messages--error');
+    $this->assertFalse($this->getSession()->getPage()->findField('type')->hasClass('error'));
+    $edit = [
+      'type' => 'article',
+    ];
+    $this->submitForm($edit, 'Apply');
 
     // Ensure that results are displayed by default when input is provided.
     $this->assertSession()->elementsCount('xpath', "//div[contains(@class, 'views-row')]", 5);
+
+    // Test exposed filter on preview.
+    $this->drupalGet('admin/structure/views/view/test_view/test_exposed_form_buttons_required');
+    $this->assertSession()->elementNotExists('css', '.messages--error');
   }
 
   /**
@@ -325,7 +328,6 @@ class ExposedFormTest extends ViewTestBase {
     $display = &$view->storage->getDisplay('default');
     $display['display_options']['exposed_form']['type'] = 'input_required';
     // Set up the "on demand text".
-    // @see https://www.drupal.org/node/535868
     $on_demand_text = 'Select any filter and click Apply to see results.';
     $display['display_options']['exposed_form']['options']['text_input_required'] = $on_demand_text;
     $display['display_options']['exposed_form']['options']['text_input_required_format'] = filter_default_format();
@@ -414,8 +416,10 @@ class ExposedFormTest extends ViewTestBase {
    *
    * @param int[] $ids
    *   The ids to check.
+   *
+   * @internal
    */
-  protected function assertIds(array $ids) {
+  protected function assertIds(array $ids): void {
     $elements = $this->cssSelect('div.view-test-exposed-form-sort-items-per-page div.views-row span.field-content');
     $actual_ids = [];
     foreach ($elements as $element) {
@@ -492,8 +496,10 @@ class ExposedFormTest extends ViewTestBase {
    *
    * @param array $bundles
    *   Bundles of nodes.
+   *
+   * @internal
    */
-  protected function assertNodesExist(array $bundles) {
+  protected function assertNodesExist(array $bundles): void {
     foreach ($this->nodes as $node) {
       if (in_array($node->bundle(), $bundles)) {
         $this->assertSession()->pageTextContains($node->label());

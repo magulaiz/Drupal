@@ -2,13 +2,14 @@
 
 namespace Drupal\Tests\Core\Database\Driver\mysql;
 
-use Drupal\Core\Database\Driver\mysql\Connection;
+use Drupal\mysql\Driver\Database\mysql\Connection;
 use Drupal\Tests\UnitTestCase;
+use Prophecy\Argument;
 
 /**
  * Tests MySQL database connections.
  *
- * @coversDefaultClass \Drupal\Core\Database\Driver\mysql\Connection
+ * @coversDefaultClass \Drupal\mysql\Driver\Database\mysql\Connection
  * @group Database
  */
 class ConnectionTest extends UnitTestCase {
@@ -30,7 +31,7 @@ class ConnectionTest extends UnitTestCase {
   /**
    * {@inheritdoc}
    */
-  public function setUp(): void {
+  protected function setUp(): void {
     $this->pdoStatement = $this->prophesize(\PDOStatement::class);
     $this->pdoConnection = $this->prophesize(\PDO::class);
   }
@@ -38,9 +39,24 @@ class ConnectionTest extends UnitTestCase {
   /**
    * Creates a Connection object for testing.
    *
-   * @return \Drupal\Core\Database\Driver\mysql\Connection
+   * @return \Drupal\mysql\Driver\Database\mysql\Connection
    */
   private function createConnection(): Connection {
+    $this->pdoStatement
+      ->setFetchMode(Argument::any())
+      ->shouldBeCalled()
+      ->willReturn(TRUE);
+
+    $this->pdoStatement
+      ->execute(Argument::any())
+      ->shouldBeCalled()
+      ->willReturn(TRUE);
+
+    $this->pdoConnection
+      ->prepare('SELECT VERSION()', Argument::any())
+      ->shouldBeCalled()
+      ->willReturn($this->pdoStatement->reveal());
+
     /** @var \PDO $pdo_connection */
     $pdo_connection = $this->pdoConnection->reveal();
 
@@ -48,6 +64,7 @@ class ConnectionTest extends UnitTestCase {
 
       public function __construct(\PDO $connection) {
         $this->connection = $connection;
+        $this->setPrefix('');
       }
 
     };
@@ -60,14 +77,9 @@ class ConnectionTest extends UnitTestCase {
    */
   public function testVersionAndIsMariaDb(bool $expected_is_mariadb, string $server_version, string $expected_version): void {
     $this->pdoStatement
-      ->fetchColumn()
+      ->fetchColumn(Argument::any())
       ->shouldBeCalled()
       ->willReturn($server_version);
-
-    $this->pdoConnection
-      ->query('SELECT VERSION()')
-      ->shouldBeCalled()
-      ->willReturn($this->pdoStatement->reveal());
 
     $connection = $this->createConnection();
 

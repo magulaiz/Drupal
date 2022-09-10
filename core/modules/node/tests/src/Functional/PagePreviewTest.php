@@ -45,9 +45,11 @@ class PagePreviewTest extends NodeTestBase {
   ];
 
   /**
-   * {@inheritdoc}
+   * The theme to install as the default for testing.
+   *
+   * @var string
    */
-  protected $defaultTheme = 'classy';
+  protected $defaultTheme = 'starterkit_theme';
 
   /**
    * The name of the created field.
@@ -55,6 +57,13 @@ class PagePreviewTest extends NodeTestBase {
    * @var string
    */
   protected $fieldName;
+
+  /**
+   * A term.
+   *
+   * @var \Drupal\taxonomy\Entity\Term
+   */
+  protected Term $term;
 
   protected function setUp(): void {
     parent::setUp();
@@ -77,13 +86,11 @@ class PagePreviewTest extends NodeTestBase {
     ]);
     $vocabulary->save();
 
-    $this->vocabulary = $vocabulary;
-
     // Add a term to the vocabulary.
     $term = Term::create([
       'name' => $this->randomMachineName(),
       'description' => $this->randomMachineName(),
-      'vid' => $this->vocabulary->id(),
+      'vid' => $vocabulary->id(),
       'langcode' => LanguageInterface::LANGCODE_NOT_SPECIFIED,
     ]);
     $term->save();
@@ -113,7 +120,7 @@ class PagePreviewTest extends NodeTestBase {
     $this->fieldName = mb_strtolower($this->randomMachineName());
     $handler_settings = [
       'target_bundles' => [
-        $this->vocabulary->id() => $this->vocabulary->id(),
+        $vocabulary->id() => $vocabulary->id(),
       ],
       'auto_create' => TRUE,
     ];
@@ -213,7 +220,7 @@ class PagePreviewTest extends NodeTestBase {
 
     // Check that we see the class of the node type on the body element.
     $body_class_element = $this->xpath("//body[contains(@class, 'page-node-type-page')]");
-    $this->assertTrue(!empty($body_class_element), 'Node type body class found.');
+    $this->assertNotEmpty($body_class_element, 'Node type body class found.');
 
     // Get the UUID.
     $url = parse_url($this->getUrl());

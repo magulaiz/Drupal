@@ -39,15 +39,15 @@ abstract class TourTestBasic extends TourTestBase {
    */
   protected $permissions = ['access tour'];
 
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     // Make sure we are using distinct default and administrative themes for
     // the duration of these tests.
-    $this->container->get('theme_installer')->install(['bartik', 'seven']);
+    $this->container->get('theme_installer')->install(['olivero', 'claro']);
     $this->config('system.theme')
-      ->set('default', 'bartik')
-      ->set('admin', 'seven')
+      ->set('default', 'olivero')
+      ->set('admin', 'claro')
       ->save();
 
     $this->permissions[] = 'view the administration theme';

@@ -71,7 +71,7 @@ class TwigExtensionTest extends UnitTestCase {
   /**
    * {@inheritdoc}
    */
-  public function setUp(): void {
+  protected function setUp(): void {
     parent::setUp();
 
     $this->renderer = $this->createMock('\Drupal\Core\Render\RendererInterface');
@@ -356,6 +356,33 @@ class TwigExtensionTest extends UnitTestCase {
       ]);
     $result = $this->systemUnderTest->renderVar($link);
     $this->assertEquals('<a href="http://example.com"></a>', $result);
+  }
+
+  /**
+   * @covers ::renderVar
+   * @dataProvider providerTestRenderVarEarlyReturn
+   */
+  public function testRenderVarEarlyReturn($expected, $input) {
+    $result = $this->systemUnderTest->renderVar($input);
+    $this->assertSame($expected, $result);
+  }
+
+  /**
+   * Data provider for ::testRenderVarEarlyReturn().
+   */
+  public function providerTestRenderVarEarlyReturn() {
+    return [
+      'null' => ['', NULL],
+      'empty array' => ['', []],
+      'float zero' => [0, 0.0],
+      'float non-zero' => [10.0, 10.0],
+      'int zero' => [0, 0],
+      'int non-zero' => [10, 10],
+      'empty string' => ['', ''],
+      'string' => ['test', 'test'],
+      'FALSE' => ['', FALSE],
+      'TRUE' => [TRUE, TRUE],
+    ];
   }
 
   /**

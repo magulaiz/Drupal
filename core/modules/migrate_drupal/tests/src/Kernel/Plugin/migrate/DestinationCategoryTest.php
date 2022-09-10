@@ -3,7 +3,6 @@
 namespace Drupal\Tests\migrate_drupal\Kernel\Plugin\migrate;
 
 use Drupal\ban\Plugin\migrate\destination\BlockedIp;
-use Drupal\color\Plugin\migrate\destination\Color;
 use Drupal\KernelTests\FileSystemModuleDiscoveryDataProviderTrait;
 use Drupal\migrate\Plugin\migrate\destination\ComponentEntityDisplayBase;
 use Drupal\migrate\Plugin\migrate\destination\Config;
@@ -67,8 +66,10 @@ class DestinationCategoryTest extends MigrateDrupalTestBase {
    *
    * @param \Drupal\migrate\Plugin\MigrationInterface[] $migrations
    *   The migrations.
+   *
+   * @internal
    */
-  protected function assertCategories($migrations) {
+  protected function assertCategories(array $migrations): void {
     foreach ($migrations as $id => $migration) {
       $object_classes = class_parents($migration->getDestinationPlugin());
       $object_classes[] = get_class($migration->getDestinationPlugin());
@@ -98,7 +99,6 @@ class DestinationCategoryTest extends MigrateDrupalTestBase {
    */
   protected function getConfigurationClasses() {
     return [
-      Color::class,
       Config::class,
       EntityConfigBase::class,
       ThemeSettings::class,

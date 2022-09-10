@@ -24,8 +24,6 @@ class SessionTest extends BrowserTestBase {
    */
   protected $defaultTheme = 'stark';
 
-  protected $dumpHeaders = TRUE;
-
   /**
    * Tests for \Drupal\Core\Session\WriteSafeSessionHandler::setSessionWritable()
    * ::isSessionWritable and \Drupal\Core\Session\SessionManager::regenerate().
@@ -60,7 +58,7 @@ class SessionTest extends BrowserTestBase {
     $this->drupalGet('session-test/id');
     $matches = [];
     preg_match('/\s*session_id:(.*)\n/', $this->getSession()->getPage()->getContent(), $matches);
-    $this->assertTrue(!empty($matches[1]), 'Found session ID before logging in.');
+    $this->assertNotEmpty($matches[1], 'Found session ID before logging in.');
     $original_session = $matches[1];
 
     // We cannot use $this->drupalLogin($user); because we exit in
@@ -77,7 +75,7 @@ class SessionTest extends BrowserTestBase {
     $this->drupalGet('session-test/id');
     $matches = [];
     preg_match('/\s*session_id:(.*)\n/', $this->getSession()->getPage()->getContent(), $matches);
-    $this->assertTrue(!empty($matches[1]), 'Found session ID after logging in.');
+    $this->assertNotEmpty($matches[1], 'Found session ID after logging in.');
     $this->assertNotSame($original_session, $matches[1], 'Session ID changed after login.');
   }
 
@@ -371,9 +369,11 @@ class SessionTest extends BrowserTestBase {
   }
 
   /**
-   * Assert whether the SimpleTest browser sent a session cookie.
+   * Assert whether the test browser sent a session cookie.
+   *
+   * @internal
    */
-  public function assertSessionCookie($sent) {
+  public function assertSessionCookie(bool $sent): void {
     if ($sent) {
       $this->assertNotEmpty($this->getSessionCookies()->count(), 'Session cookie was sent.');
     }
@@ -384,8 +384,10 @@ class SessionTest extends BrowserTestBase {
 
   /**
    * Assert whether $_SESSION is empty at the beginning of the request.
+   *
+   * @internal
    */
-  public function assertSessionEmpty($empty) {
+  public function assertSessionEmpty(bool $empty): void {
     if ($empty) {
       $this->assertSession()->responseHeaderEquals('X-Session-Empty', '1');
     }

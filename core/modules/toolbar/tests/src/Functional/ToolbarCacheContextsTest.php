@@ -67,12 +67,14 @@ class ToolbarCacheContextsTest extends BrowserTestBase {
    * Tests toolbar cache integration.
    */
   public function testCacheIntegration() {
-    $this->installExtraModules(['dynamic_page_cache']);
+    $this->installExtraModules(['csrf_test', 'dynamic_page_cache']);
     $this->drupalLogin($this->adminUser);
     $this->drupalGet('test-page');
     $this->assertSession()->responseHeaderEquals('X-Drupal-Dynamic-Cache', 'MISS');
+    $this->assertCacheContexts(['session', 'user', 'url.query_args:' . MainContentViewSubscriber::WRAPPER_FORMAT], 'Expected cache contexts found with CSRF token link.');
     $this->drupalGet('test-page');
     $this->assertSession()->responseHeaderEquals('X-Drupal-Dynamic-Cache', 'HIT');
+    $this->assertCacheContexts(['session', 'user', 'url.query_args:' . MainContentViewSubscriber::WRAPPER_FORMAT], 'Expected cache contexts found with CSRF token link.');
   }
 
   /**
@@ -107,8 +109,10 @@ class ToolbarCacheContextsTest extends BrowserTestBase {
    *   Expected cache contexts for both users.
    * @param string $message
    *   (optional) A verbose message to output.
+   *
+   * @internal
    */
-  protected function assertToolbarCacheContexts(array $cache_contexts, $message = NULL) {
+  protected function assertToolbarCacheContexts(array $cache_contexts, string $message = NULL): void {
     // Default cache contexts that should exist on all test cases.
     $default_cache_contexts = [
       'languages:language_interface',

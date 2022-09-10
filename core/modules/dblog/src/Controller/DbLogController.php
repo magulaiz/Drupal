@@ -35,25 +35,11 @@ class DbLogController extends ControllerBase {
   protected $database;
 
   /**
-   * The module handler service.
-   *
-   * @var \Drupal\Core\Extension\ModuleHandlerInterface
-   */
-  protected $moduleHandler;
-
-  /**
    * The date formatter service.
    *
    * @var \Drupal\Core\Datetime\DateFormatterInterface
    */
   protected $dateFormatter;
-
-  /**
-   * The form builder service.
-   *
-   * @var \Drupal\Core\Form\FormBuilderInterface
-   */
-  protected $formBuilder;
 
   /**
    * The user storage.
@@ -136,9 +122,9 @@ class DbLogController extends ControllerBase {
 
     $classes = static::getLogLevelClassMap();
 
-    $this->moduleHandler->loadInclude('dblog', 'admin.inc');
+    $this->moduleHandler()->loadInclude('dblog', 'admin.inc');
 
-    $build['dblog_filter_form'] = $this->formBuilder->getForm('Drupal\dblog\Form\DblogFilterForm');
+    $build['dblog_filter_form'] = $this->formBuilder()->getForm('Drupal\dblog\Form\DblogFilterForm');
 
     $header = [
       // Icon column.
@@ -333,7 +319,7 @@ class DbLogController extends ControllerBase {
       return;
     }
 
-    $this->moduleHandler->loadInclude('dblog', 'admin.inc');
+    $this->moduleHandler()->loadInclude('dblog', 'admin.inc');
 
     $filters = dblog_filters();
 
@@ -407,7 +393,7 @@ class DbLogController extends ControllerBase {
    *   empty uri or invalid, fallback to the provided $uri.
    */
   protected function createLink($uri) {
-    if (UrlHelper::isValid($uri, TRUE)) {
+    if ($uri !== NULL && UrlHelper::isValid($uri, TRUE)) {
       return new Link($uri, Url::fromUri($uri));
     }
     return $uri;

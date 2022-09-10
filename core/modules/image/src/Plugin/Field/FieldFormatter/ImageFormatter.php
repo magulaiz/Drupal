@@ -22,9 +22,6 @@ use Drupal\Core\Cache\Cache;
  *   label = @Translation("Image"),
  *   field_types = {
  *     "image"
- *   },
- *   quickedit = {
- *     "editor" = "image"
  *   }
  * )
  */
@@ -67,7 +64,7 @@ class ImageFormatter extends ImageFormatterBase {
    * @param string $view_mode
    *   The view mode.
    * @param array $third_party_settings
-   *   Any third party settings settings.
+   *   Any third party settings.
    * @param \Drupal\Core\Session\AccountInterface $current_user
    *   The current user.
    * @param \Drupal\Core\Entity\EntityStorageInterface $image_style_storage
@@ -75,14 +72,10 @@ class ImageFormatter extends ImageFormatterBase {
    * @param \Drupal\Core\File\FileUrlGeneratorInterface $file_url_generator
    *   The file URL generator.
    */
-  public function __construct($plugin_id, $plugin_definition, FieldDefinitionInterface $field_definition, array $settings, $label, $view_mode, array $third_party_settings, AccountInterface $current_user, EntityStorageInterface $image_style_storage, FileUrlGeneratorInterface $file_url_generator = NULL) {
+  public function __construct($plugin_id, $plugin_definition, FieldDefinitionInterface $field_definition, array $settings, $label, $view_mode, array $third_party_settings, AccountInterface $current_user, EntityStorageInterface $image_style_storage, FileUrlGeneratorInterface $file_url_generator) {
     parent::__construct($plugin_id, $plugin_definition, $field_definition, $settings, $label, $view_mode, $third_party_settings);
     $this->currentUser = $current_user;
     $this->imageStyleStorage = $image_style_storage;
-    if (!$file_url_generator) {
-      @trigger_error('Calling ImageFormatter::__construct() without the $file_url_generator argument is deprecated in drupal:9.3.0 and the $file_url_generator argument will be required in drupal:10.0.0. See https://www.drupal.org/node/2940031', E_USER_DEPRECATED);
-      $file_url_generator = \Drupal::service('file_url_generator');
-    }
     $this->fileUrlGenerator = $file_url_generator;
   }
 
@@ -111,6 +104,9 @@ class ImageFormatter extends ImageFormatterBase {
     return [
       'image_style' => '',
       'image_link' => '',
+      'image_loading' => [
+        'attribute' => 'lazy',
+      ],
     ] + parent::defaultSettings();
   }
 
@@ -118,6 +114,8 @@ class ImageFormatter extends ImageFormatterBase {
    * {@inheritdoc}
    */
   public function settingsForm(array $form, FormStateInterface $form_state) {
+    $element = parent::settingsForm($form, $form_state);
+
     $image_styles = image_style_options(FALSE);
     $description_link = Link::fromTextAndUrl(
       $this->t('Configure Image Styles'),
@@ -144,6 +142,29 @@ class ImageFormatter extends ImageFormatterBase {
       '#empty_option' => t('Nothing'),
       '#options' => $link_types,
     ];
+
+    $image_loading = $this->getSetting('image_loading');
+    $element['image_loading'] = [
+      '#type' => 'details',
+      '#title' => $this->t('Image loading'),
+      '#weight' => 10,
+      '#description' => $this->t('Lazy render images with native image loading attribute (<em>loading="lazy"</em>). This improves performance by allowing browsers to lazily load images.'),
+    ];
+    $loading_attribute_options = [
+      'lazy' => $this->t('Lazy (<em>loading="lazy"</em>)'),
+      'eager' => $this->t('Eager (<em>loading="eager"</em>)'),
+    ];
+    $element['image_loading']['attribute'] = [
+      '#title' => $this->t('Image loading attribute'),
+      '#type' => 'radios',
+      '#default_value' => $image_loading['attribute'],
+      '#options' => $loading_attribute_options,
+      '#description' => $this->t('Select the loading attribute for images. <a href=":link">Learn more about the loading attribute for images.</a>', [
+        ':link' => 'https://html.spec.whatwg.org/multipage/urls-and-fetching.html#lazy-loading-attributes',
+      ]),
+    ];
+    $element['image_loading']['attribute']['lazy']['#description'] = $this->t('Delays loading the image until that section of the page is visible in the browser. When in doubt, lazy loading is recommended.');
+    $element['image_loading']['attribute']['eager']['#description'] = $this->t('Force browsers to download an image as soon as possible. This is the browser default for legacy reasons. Only use this option when the image is always expected to render.');
 
     return $element;
   }
@@ -177,7 +198,12 @@ class ImageFormatter extends ImageFormatterBase {
       $summary[] = $link_types[$image_link_setting];
     }
 
-    return $summary;
+    $image_loading = $this->getSetting('image_loading');
+    $summary[] = $this->t('Image loading: @attribute', [
+      '@attribute' => $image_loading['attribute'],
+    ]);
+
+    return array_merge($summary, parent::settingsSummary());
   }
 
   /**
@@ -226,6 +252,9 @@ class ImageFormatter extends ImageFormatterBase {
       $item = $file->_referringItem;
       $item_attributes = $item->_attributes;
       unset($item->_attributes);
+
+      $image_loading_settings = $this->getSetting('image_loading');
+      $item_attributes['loading'] = $image_loading_settings['attribute'];
 
       $elements[$delta] = [
         '#theme' => 'image_formatter',

@@ -1,5 +1,5 @@
-import path from 'path';
-import glob from 'glob';
+const path = require('path');
+const glob = require('glob');
 
 // Find directories which have Nightwatch tests in them.
 const regex = /(.*\/?tests\/?.*\/Nightwatch)\/.*/g;
@@ -62,7 +62,7 @@ module.exports = {
       desiredCapabilities: {
         browserName: 'chrome',
         acceptSslCerts: true,
-        chromeOptions: {
+        'goog:chromeOptions': {
           w3c: false,
           args: process.env.DRUPAL_TEST_WEBDRIVER_CHROME_ARGS
             ? process.env.DRUPAL_TEST_WEBDRIVER_CHROME_ARGS.split(' ')
@@ -76,6 +76,7 @@ module.exports = {
         path: `${process.env.DRUPAL_NIGHTWATCH_OUTPUT}/screenshots`,
       },
       end_session_on_fail: false,
+      skip_testcases_on_fail: false,
     },
     local: {
       webdriver: {
@@ -86,7 +87,7 @@ module.exports = {
       desiredCapabilities: {
         browserName: 'chrome',
         acceptSslCerts: true,
-        chromeOptions: {
+        'goog:chromeOptions': {
           w3c: false,
           args: process.env.DRUPAL_TEST_WEBDRIVER_CHROME_ARGS
             ? process.env.DRUPAL_TEST_WEBDRIVER_CHROME_ARGS.split(' ')
@@ -100,6 +101,7 @@ module.exports = {
         path: `${process.env.DRUPAL_NIGHTWATCH_OUTPUT}/screenshots`,
       },
       end_session_on_fail: false,
+      skip_testcases_on_fail: false,
     },
   },
 };

@@ -65,6 +65,7 @@ class MigrateSqlIdMapEnsureTablesTest extends MigrateTestCase {
       'not null' => TRUE,
       'default' => 0,
       'description' => 'UNIX timestamp of the last time this row was imported',
+      'size' => 'big',
     ];
     $fields['hash'] = [
       'type' => 'varchar',
@@ -109,6 +110,9 @@ class MigrateSqlIdMapEnsureTablesTest extends MigrateTestCase {
       'description' => 'Messages generated during a migration process',
       'fields' => $fields,
       'primary key' => ['msgid'],
+      'indexes' => [
+        'source_ids_hash' => ['source_ids_hash'],
+      ],
     ];
 
     $schema = $this->getMockBuilder('Drupal\Core\Database\Schema')
@@ -197,6 +201,9 @@ class MigrateSqlIdMapEnsureTablesTest extends MigrateTestCase {
     $database->expects($this->any())
       ->method('schema')
       ->willReturn($schema);
+    $database->expects($this->any())
+      ->method('tablePrefix')
+      ->willReturn('');
     $migration = $this->getMigration();
     $plugin = $this->createMock('Drupal\migrate\Plugin\MigrateSourceInterface');
     $plugin->expects($this->any())

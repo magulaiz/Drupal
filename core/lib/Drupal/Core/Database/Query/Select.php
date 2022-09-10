@@ -119,6 +119,16 @@ class Select extends Query implements SelectInterface {
   protected $forUpdate = FALSE;
 
   /**
+   * The query metadata for alter purposes.
+   */
+  public array $alterMetaData;
+
+  /**
+   * The query tags.
+   */
+  public array $alterTags;
+
+  /**
    * Constructs a Select object.
    *
    * @param \Drupal\Core\Database\Connection $connection
@@ -131,9 +141,11 @@ class Select extends Query implements SelectInterface {
    *   Array of query options.
    */
   public function __construct(Connection $connection, $table, $alias = NULL, $options = []) {
+    // @todo Remove $options['return'] in Drupal 11.
+    // @see https://www.drupal.org/project/drupal/issues/3256524
     $options['return'] = Database::RETURN_STATEMENT;
     parent::__construct($connection, $options);
-    $conjunction = isset($options['conjunction']) ? $options['conjunction'] : 'AND';
+    $conjunction = $options['conjunction'] ?? 'AND';
     $this->condition = $this->connection->condition($conjunction);
     $this->having = $this->connection->condition($conjunction);
     $this->addJoin(NULL, $table, $alias);
@@ -180,7 +192,7 @@ class Select extends Query implements SelectInterface {
    * {@inheritdoc}
    */
   public function getMetaData($key) {
-    return isset($this->alterMetaData[$key]) ? $this->alterMetaData[$key] : NULL;
+    return $this->alterMetaData[$key] ?? NULL;
   }
 
   /**

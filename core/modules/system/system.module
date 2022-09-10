@@ -13,9 +13,10 @@ use Drupal\Core\Asset\AttachedAssetsInterface;
 use Drupal\Core\Block\BlockPluginInterface;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Database\Query\AlterableInterface;
-use Drupal\Core\Extension\Extension;
 use Drupal\Core\Entity\ContentEntityTypeInterface;
+use Drupal\Core\Extension\Extension;
 use Drupal\Core\File\Exception\FileException;
+use Drupal\Core\File\Exception\InvalidStreamWrapperException;
 use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\KeyValueStore\KeyValueDatabaseExpirableFactory;
@@ -26,6 +27,8 @@ use Drupal\Core\PageCache\RequestPolicyInterface;
 use Drupal\Core\Queue\QueueGarbageCollectionInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Routing\StackedRouteMatchInterface;
+use Drupal\Core\Site\Settings;
+use Drupal\Core\StreamWrapper\StreamWrapperManager;
 use Drupal\Core\Url;
 use GuzzleHttp\Exception\TransferException;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -251,6 +254,14 @@ function system_theme() {
     'system_security_advisories_fetch_error_message' => [
       'file' => 'system.theme.inc',
       'variables' => ['error_message' => []],
+    ],
+    'entity_page_title' => [
+      'variables' => [
+        'attributes' => [],
+        'title' => NULL,
+        'entity' => NULL,
+        'view_mode' => NULL,
+      ],
     ],
   ]);
 }
@@ -604,7 +615,7 @@ function system_page_attachments(array &$page) {
   }
 
   // Get the major Drupal version.
-  list($version,) = explode('.', \Drupal::VERSION);
+  [$version] = explode('.', \Drupal::VERSION);
 
   // Attach default meta tags.
   $meta_default = [
@@ -890,19 +901,6 @@ function system_region_list($theme, $show = REGIONS_ALL) {
 }
 
 /**
- * Array sorting callback; sorts modules by their name.
- *
- * @deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Use
- *   \Drupal\Core\Extension\ExtensionList::sortByName() instead.
- *
- * @see https://www.drupal.org/node/3225999
- */
-function system_sort_modules_by_info_name($a, $b) {
-  @trigger_error('system_sort_modules_by_info_name() is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Use \Drupal\Core\Extension\ExtensionList::sortByName() instead. See https://www.drupal.org/node/3225999', E_USER_DEPRECATED);
-  return strcasecmp($a->info['name'], $b->info['name']);
-}
-
-/**
  * Sorts themes by their names, with the default theme listed first.
  *
  * Callback for uasort() within
@@ -943,7 +941,7 @@ function system_system_info_alter(&$info, Extension $file, $type) {
  */
 function system_default_region($theme) {
   $regions = array_keys(system_region_list($theme, REGIONS_VISIBLE));
-  return isset($regions[0]) ? $regions[0] : '';
+  return $regions[0] ?? '';
 }
 
 /**
@@ -1024,10 +1022,9 @@ function system_get_module_admin_tasks($module, array $info) {
   if ($permission_handler->moduleProvidesPermissions($module)) {
     /** @var \Drupal\Core\Access\AccessManagerInterface $access_manager */
     $access_manager = \Drupal::service('access_manager');
-    if ($access_manager->checkNamedRoute('user.admin_permissions', [], \Drupal::currentUser())) {
+    if ($access_manager->checkNamedRoute('user.admin_permissions.module', ['modules' => $module], \Drupal::currentUser())) {
       /** @var \Drupal\Core\Url $url */
-      $url = new Url('user.admin_permissions');
-      $url->setOption('fragment', 'module-' . $module);
+      $url = new Url('user.admin_permissions.module', ['modules' => $module]);
       $admin_tasks["user.admin_permissions.$module"] = [
         'title' => t('Configure @module permissions', ['@module' => $info['name']]),
         'description' => '',
@@ -1198,13 +1195,20 @@ function system_retrieve_file($url, $destination = NULL, $managed = FALSE, $repl
     $data = (string) \Drupal::httpClient()
       ->get($url)
       ->getBody();
-    $local = $managed ? file_save_data($data, $path, $replace) : $file_system->saveData($data, $path, $replace);
+    if ($managed) {
+      /** @var \Drupal\file\FileRepositoryInterface $file_repository */
+      $file_repository = \Drupal::service('file.repository');
+      $local = $file_repository->writeData($data, $path, $replace);
+    }
+    else {
+      $local = $file_system->saveData($data, $path, $replace);
+    }
   }
   catch (TransferException $exception) {
     \Drupal::messenger()->addError(t('Failed to fetch file due to error "%error"', ['%error' => $exception->getMessage()]));
     return FALSE;
   }
-  catch (FileException $e) {
+  catch (FileException | InvalidStreamWrapperException $e) {
     \Drupal::messenger()->addError(t('Failed to save file due to error "%error"', ['%error' => $e->getMessage()]));
     return FALSE;
   }
@@ -1367,6 +1371,24 @@ function system_page_top() {
           $display_as_errors ? $messenger->addError($help_link) : $messenger->addWarning($help_link);
         }
       }
+    }
+  }
+}
+
+/**
+ * Implements hook_file_download().
+ */
+function system_file_download($uri) {
+  $core_schemes = ['public', 'private', 'temporary'];
+  $additional_public_schemes = array_diff(Settings::get('file_additional_public_schemes', []), $core_schemes);
+  if ($additional_public_schemes) {
+    $scheme = StreamWrapperManager::getScheme($uri);
+    if (in_array($scheme, $additional_public_schemes, TRUE)) {
+      return [
+        // Returning any header grants access, and setting the 'Cache-Control'
+        // header is appropriate for public files.
+        'Cache-Control' => 'public',
+      ];
     }
   }
 }

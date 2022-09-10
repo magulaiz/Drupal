@@ -31,6 +31,7 @@ class TranslateFilterForm extends TranslateFormBase {
       '#type' => 'details',
       '#title' => $this->t('Filter translatable strings'),
       '#open' => TRUE,
+      '#attributes' => ['class' => ['clearfix']],
     ];
     foreach ($filters as $key => $filter) {
       // Special case for 'string' filter.
@@ -43,7 +44,7 @@ class TranslateFilterForm extends TranslateFormBase {
         ];
       }
       else {
-        $empty_option = isset($filter['options'][$filter['default']]) ? $filter['options'][$filter['default']] : '- None -';
+        $empty_option = $filter['options'][$filter['default']] ?? '- None -';
         $form['filters']['status'][$key] = [
           '#title' => $filter['title'],
           '#type' => 'select',

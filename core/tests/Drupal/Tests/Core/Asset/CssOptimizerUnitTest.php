@@ -63,10 +63,22 @@ class CssOptimizerUnitTest extends UnitTestCase {
           'media' => 'all',
           'preprocess' => TRUE,
           'data' => $path . 'css_input_without_import.css',
-          'browsers' => ['IE' => TRUE, '!IE' => TRUE],
           'basename' => 'css_input_without_import.css',
         ],
         file_get_contents($absolute_path . 'css_input_without_import.css.optimized.css'),
+      ],
+      [
+        [
+          'group' => -100,
+          'type' => 'file',
+          'weight' => 0.012,
+          'media' => 'screen',
+          'preprocess' => TRUE,
+          'data' => $path . 'css_input_simple.css',
+          'browsers' => ['IE' => TRUE, '!IE' => TRUE],
+          'basename' => 'css_input_simple.css',
+        ],
+        file_get_contents($absolute_path . 'css_input_simple_with_media.css.optimized.css'),
       ],
       // File. Tests:
       // - Proper URLs in imported files. (https://www.drupal.org/node/265719)
@@ -76,6 +88,8 @@ class CssOptimizerUnitTest extends UnitTestCase {
       //   (https://www.drupal.org/node/1961340)
       // - Imported files that are external (protocol-relative URL or not)
       //   should not be expanded. (https://www.drupal.org/node/2014851)
+      //   Potential forms of @import might also include media queries.
+      //   (https://developer.mozilla.org/en-US/docs/Web/CSS/@import)
       [
         [
           'group' => -100,
@@ -84,10 +98,9 @@ class CssOptimizerUnitTest extends UnitTestCase {
           'media' => 'all',
           'preprocess' => TRUE,
           'data' => $path . 'css_input_with_import.css',
-          'browsers' => ['IE' => TRUE, '!IE' => TRUE],
           'basename' => 'css_input_with_import.css',
         ],
-        str_replace('url(images/icon.png)', 'url(generated-relative-url:' . $path . 'images/icon.png)', file_get_contents($absolute_path . 'css_input_with_import.css.optimized.css')),
+        str_replace("url('import1.css')", 'url(generated-relative-url:' . $path . 'import1.css)', str_replace('url(images/icon.png)', 'url(generated-relative-url:' . $path . 'images/icon.png)', file_get_contents($absolute_path . 'css_input_with_import.css.optimized.css'))),
       ],
       // File. Tests:
       // - Retain comment hacks.
@@ -99,7 +112,6 @@ class CssOptimizerUnitTest extends UnitTestCase {
           'media' => 'all',
           'preprocess' => TRUE,
           'data' => $path . 'comment_hacks.css',
-          'browsers' => ['IE' => TRUE, '!IE' => TRUE],
           'basename' => 'comment_hacks.css',
         ],
         file_get_contents($absolute_path . 'comment_hacks.css.optimized.css'),
@@ -116,7 +128,6 @@ class CssOptimizerUnitTest extends UnitTestCase {
           'media' => 'all',
           'preprocess' => TRUE,
           'data' => $path . 'css_subfolder/css_input_with_import.css',
-          'browsers' => ['IE' => TRUE, '!IE' => TRUE],
           'basename' => 'css_input_with_import.css',
         ],
         str_replace('url(../images/icon.png)', 'url(generated-relative-url:' . $path . 'images/icon.png)', file_get_contents($absolute_path . 'css_subfolder/css_input_with_import.css.optimized.css')),
@@ -132,7 +143,6 @@ class CssOptimizerUnitTest extends UnitTestCase {
           'media' => 'all',
           'preprocess' => TRUE,
           'data' => $path . 'charset_sameline.css',
-          'browsers' => ['IE' => TRUE, '!IE' => TRUE],
           'basename' => 'charset_sameline.css',
         ],
         file_get_contents($absolute_path . 'charset.css.optimized.css'),
@@ -145,7 +155,6 @@ class CssOptimizerUnitTest extends UnitTestCase {
           'media' => 'all',
           'preprocess' => TRUE,
           'data' => $path . 'charset_newline.css',
-          'browsers' => ['IE' => TRUE, '!IE' => TRUE],
           'basename' => 'charset_newline.css',
         ],
         file_get_contents($absolute_path . 'charset.css.optimized.css'),
@@ -158,7 +167,6 @@ class CssOptimizerUnitTest extends UnitTestCase {
           'media' => 'all',
           'preprocess' => TRUE,
           'data' => $path . 'css_input_with_bom.css',
-          'browsers' => ['IE' => TRUE, '!IE' => TRUE],
           'basename' => 'css_input_with_bom.css',
         ],
         '.byte-order-mark-test{content:"☃";}' . "\n",
@@ -171,7 +179,6 @@ class CssOptimizerUnitTest extends UnitTestCase {
           'media' => 'all',
           'preprocess' => TRUE,
           'data' => $path . 'css_input_with_charset.css',
-          'browsers' => ['IE' => TRUE, '!IE' => TRUE],
           'basename' => 'css_input_with_charset.css',
         ],
         '.charset-test{content:"€";}' . "\n",
@@ -184,7 +191,6 @@ class CssOptimizerUnitTest extends UnitTestCase {
           'media' => 'all',
           'preprocess' => TRUE,
           'data' => $path . 'css_input_with_bom_and_charset.css',
-          'browsers' => ['IE' => TRUE, '!IE' => TRUE],
           'basename' => 'css_input_with_bom_and_charset.css',
         ],
         '.byte-order-mark-charset-test{content:"☃";}' . "\n",
@@ -197,7 +203,6 @@ class CssOptimizerUnitTest extends UnitTestCase {
           'media' => 'all',
           'preprocess' => TRUE,
           'data' => $path . 'css_input_with_utf16_bom.css',
-          'browsers' => ['IE' => TRUE, '!IE' => TRUE],
           'basename' => 'css_input_with_utf16_bom.css',
         ],
         '.utf16-byte-order-mark-test{content:"☃";}' . "\n",
@@ -210,7 +215,6 @@ class CssOptimizerUnitTest extends UnitTestCase {
           'media' => 'all',
           'preprocess' => TRUE,
           'data' => $path . 'quotes.css',
-          'browsers' => ['IE' => TRUE, '!IE' => TRUE],
           'basename' => 'quotes.css',
         ],
         file_get_contents($absolute_path . 'quotes.css.optimized.css'),
@@ -253,7 +257,6 @@ class CssOptimizerUnitTest extends UnitTestCase {
       // Preprocessing disabled.
       'preprocess' => FALSE,
       'data' => 'tests/Drupal/Tests/Core/Asset/foo.css',
-      'browsers' => ['IE' => TRUE, '!IE' => TRUE],
       'basename' => 'foo.css',
     ];
     $this->optimizer->optimize($css_asset);
@@ -274,7 +277,6 @@ class CssOptimizerUnitTest extends UnitTestCase {
       'media' => 'all',
       'preprocess' => TRUE,
       'data' => 'http://example.com/foo.js',
-      'browsers' => ['IE' => TRUE, '!IE' => TRUE],
     ];
     $this->optimizer->optimize($css_asset);
   }
