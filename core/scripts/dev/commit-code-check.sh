@@ -222,7 +222,7 @@ printf "\n"
 # DrupalCI runs.
 # The new baseline will be available in the Jenkins test run artifacts under
 # the artifacts/phpstan directory. The DrupalCI test run will be interrupted.
-PHPSTAN_GENERATE_BASELINE=1
+PHPSTAN_GENERATE_BASELINE=0
 
 if [[ "$DRUPALCI" == "1" ]] && [[ $PHPSTAN_GENERATE_BASELINE == "1" ]]; then
   printf "\nGenerating PHPStan baseline.\n"
