@@ -217,26 +217,7 @@ printf "\n"
 
 # Run PHPStan on all files on DrupalCI or when phpstan files are changed.
 # APCu is disabled to ensure that the composer classmap is not corrupted.
-
-# Set *manually* this variable to '1' to (re)generate the PHPStan baseline in
-# DrupalCI runs.
-# The new baseline will be available in the Jenkins test run artifacts under
-# the artifacts/phpstan directory. The DrupalCI test run will be interrupted.
-PHPSTAN_GENERATE_BASELINE=0
-
-if [[ "$DRUPALCI" == "1" ]] && [[ $PHPSTAN_GENERATE_BASELINE == "1" ]]; then
-  printf "\nGenerating PHPStan baseline.\n"
-  printf "\n"
-  printf "Upon success, replace core/phpstan-baseline.neon with the file that\n"
-  printf "can be found in the test result artifacts.\n"
-  printf "\n"
-  cd core
-  php -d apc.enabled=0 -d apc.enable_cli=0 ../vendor/bin/phpstan analyze --generate-baseline --no-progress --configuration="$TOP_LEVEL/core/phpstan.neon.dist"
-  mkdir /var/lib/drupalci/artifacts/phpstan
-  cp phpstan-baseline.neon /var/lib/drupalci/artifacts/phpstan
-  cd ..
-  FINAL_STATUS=1
-elif [[ $PHPSTAN_DIST_FILE_CHANGED == "1" ]] || [[ "$DRUPALCI" == "1" ]]; then
+if [[ $PHPSTAN_DIST_FILE_CHANGED == "1" ]] || [[ "$DRUPALCI" == "1" ]]; then
   printf "\nRunning PHPStan on *all* files.\n"
   php -d apc.enabled=0 -d apc.enable_cli=0 vendor/bin/phpstan analyze --no-progress --configuration="$TOP_LEVEL/core/phpstan.neon.dist"
 else
