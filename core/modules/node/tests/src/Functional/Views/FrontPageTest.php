@@ -90,7 +90,7 @@ class FrontPageTest extends ViewTestBase {
       $values['promote'] = TRUE;
       $values['status'] = TRUE;
       // Test descending sort order.
-      $values['created'] = REQUEST_TIME - $i;
+      $values['created'] = $this->testRequestTime - $i;
       // Test the sticky order.
       if ($i == 5) {
         $values['sticky'] = TRUE;

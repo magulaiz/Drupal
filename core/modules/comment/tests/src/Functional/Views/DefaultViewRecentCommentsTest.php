@@ -97,7 +97,7 @@ class DefaultViewRecentCommentsTest extends ViewTestBase {
       $comment->comment_body->format = 'full_html';
 
       // Ensure comments are sorted in ascending order.
-      $time = REQUEST_TIME + ($this->defaultDisplayResults - $i);
+      $time = $this->testRequestTime + ($this->defaultDisplayResults - $i);
       $comment->setCreatedTime($time);
       $comment->changed->value = $time;
 

@@ -86,7 +86,7 @@ class UserPictureTest extends BrowserTestBase {
     // would set the timestamp.
     Database::getConnection()->update('file_managed')
       ->fields([
-        'changed' => REQUEST_TIME - ($this->config('system.file')->get('temporary_maximum_age') + 1),
+        'changed' => $this->testRequestTime - ($this->config('system.file')->get('temporary_maximum_age') + 1),
       ])
       ->condition('fid', $file->id())
       ->execute();

@@ -59,6 +59,11 @@ trait FunctionalTestSetupTrait {
   protected $apcuEnsureUniquePrefix = FALSE;
 
   /**
+   * The test request time.
+   */
+  protected int $testRequestTime;
+
+  /**
    * Prepares site settings and services before installation.
    */
   protected function prepareSettings() {
@@ -271,9 +276,6 @@ trait FunctionalTestSetupTrait {
     $server = array_merge($server, $override_server_vars);
 
     $request = Request::create($request_path, 'GET', [], [], [], $server);
-    // Ensure the request time is REQUEST_TIME to ensure that API calls
-    // in the test use the right timestamp.
-    $request->server->set('REQUEST_TIME', REQUEST_TIME);
     $this->container->get('request_stack')->push($request);
 
     // The request context is normally set by the router_listener from within
@@ -627,6 +629,7 @@ trait FunctionalTestSetupTrait {
     // Bootstrap Drupal so we can use Drupal's built in functions.
     $this->classLoader = require __DIR__ . '/../../../../../autoload.php';
     $request = Request::createFromGlobals();
+    $this->testRequestTime = $request->server->all()['REQUEST_TIME'];
     $kernel = TestRunnerKernel::createFromRequest($request, $this->classLoader);
     // TestRunnerKernel expects the working directory to be DRUPAL_ROOT.
     chdir(DRUPAL_ROOT);

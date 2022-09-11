@@ -166,9 +166,9 @@ class StatisticsAdminTest extends BrowserTestBase {
     $this->assertSession()->pageTextContains('1 view');
 
     // statistics_cron() will subtract
-    // statistics.settings:accesslog.max_lifetime config from REQUEST_TIME in
-    // the delete query, so wait two secs here to make sure the access log will
-    // be flushed for the node just hit.
+    // statistics.settings:accesslog.max_lifetime config from
+    // $this->testRequestTime in the delete query, so wait two secs here to make
+    // sure the access log will be flushed for the node just hit.
     sleep(2);
     $this->cronRun();
 

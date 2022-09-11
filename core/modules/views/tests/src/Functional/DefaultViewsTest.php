@@ -87,7 +87,7 @@ class DefaultViewsTest extends ViewTestBase {
     $this->createEntityReferenceField('node', 'page', $field_name, NULL, 'taxonomy_term', 'default', $handler_settings, FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED);
 
     // Create a time in the past for the archive.
-    $time = REQUEST_TIME - 3600;
+    $time = $this->testRequestTime - 3600;
 
     $this->addDefaultCommentField('node', 'page');
 
@@ -208,7 +208,7 @@ class DefaultViewsTest extends ViewTestBase {
     $columns = ['nid', 'created_year_month', 'num_records'];
     $column_map = array_combine($columns, $columns);
     // Create time of additional nodes created in the setup method.
-    $created_year_month = date('Ym', REQUEST_TIME - 3600);
+    $created_year_month = date('Ym', $this->testRequestTime - 3600);
     $expected_result = [
       [
         'nid' => 1,

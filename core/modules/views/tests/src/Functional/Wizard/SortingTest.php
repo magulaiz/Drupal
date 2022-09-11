@@ -27,9 +27,9 @@ class SortingTest extends WizardTestBase {
     // Create nodes, each with a different creation time so that we can do a
     // meaningful sort.
     $this->drupalCreateContentType(['type' => 'page']);
-    $node1 = $this->drupalCreateNode(['created' => REQUEST_TIME]);
-    $node2 = $this->drupalCreateNode(['created' => REQUEST_TIME + 1]);
-    $node3 = $this->drupalCreateNode(['created' => REQUEST_TIME + 2]);
+    $node1 = $this->drupalCreateNode(['created' => $this->testRequestTime]);
+    $node2 = $this->drupalCreateNode(['created' => $this->testRequestTime + 1]);
+    $node3 = $this->drupalCreateNode(['created' => $this->testRequestTime + 2]);
 
     // Create a view that sorts oldest first.
     $view1 = [];
