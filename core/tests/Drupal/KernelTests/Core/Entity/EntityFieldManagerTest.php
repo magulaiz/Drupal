@@ -24,7 +24,7 @@ class EntityFieldManagerTest extends EntityKernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $this->bundleFieldMap = $this->container->get('keyvalue')
