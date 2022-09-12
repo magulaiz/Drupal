@@ -13,7 +13,6 @@ use Drupal\KernelTests\KernelTestBase;
  * applied.
  *
  * @group Asset
- * @group legacy
  */
 class ResolvedLibraryDefinitionsFilesMatchTest extends KernelTestBase {
 
