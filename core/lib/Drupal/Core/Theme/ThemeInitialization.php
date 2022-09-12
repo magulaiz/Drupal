@@ -96,7 +96,6 @@ class ThemeInitialization implements ThemeInitializationInterface {
     // only assert the original theme output of modules (unless a test manually
     // installs a specific theme).
     if (empty($themes) || !$theme_name || !isset($themes[$theme_name])) {
-      $theme_name = 'core';
       // /core/core.info.yml does not actually exist, but is required because
       // Extension expects a pathname.
       $active_theme = $this->getActiveTheme(new Extension($this->root, 'theme', 'core/core.info.yml'));
