@@ -14,9 +14,6 @@ use Drupal\KernelTests\KernelTestBase;
  *
  * @group Asset
  * @group legacy
- *
- * @todo Remove this test from the `legacy` group when Stable has been removed
- *   from core.
  */
 class ResolvedLibraryDefinitionsFilesMatchTest extends KernelTestBase {
 
