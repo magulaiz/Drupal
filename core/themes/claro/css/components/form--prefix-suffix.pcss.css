@@ -55,7 +55,7 @@
 .form-item--error .form-item__affix {
   color: var(--color-maximumred);
   border-color: var(--color-maximumred);
-  background: var(--color-minimumred);
+  background: var(--color-red-050);
 }
 
 .form-item__wrapper--with-affix {

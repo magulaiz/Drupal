@@ -64,7 +64,7 @@
 .form-item--error .form-item__affix {
   color: #dc2323;
   border-color: #dc2323;
-  background: var(--color-minimumred);
+  background: #fce9e9;
 }
 
 .form-item__wrapper--with-affix {
