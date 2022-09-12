@@ -83,14 +83,6 @@
   z-index: 1;
 }
 
-/* These full width pseudo elements are used for enforcing consistent wrapping. */
-
-.form-item__wrapper--with-affix::after,
-.form-item__wrapper--with-affix::before {
-  width: 100%;
-  content: "";
-}
-
 /**
  * Remove border radii and other styling for elements that are adjacent to a
  * prefix and/or suffix.
