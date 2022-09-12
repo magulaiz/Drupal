@@ -16,6 +16,20 @@ class DbLogEntryStorageTest extends KernelTestBase {
   use FakeLogEntries;
 
   /**
+   * The dblog storage.
+   *
+   * @var \Drupal\dblog\DblogEntryStorageInterface
+   */
+  protected $storage;
+
+  /**
+   * The dblog formatter service.
+   *
+   * @var \Drupal\dblog\DblogFormatterInterface
+   */
+  protected $dblogFormatter;
+
+  /**
    * {@inheritdoc}
    */
   protected static $modules = ['dblog', 'system', 'user'];
