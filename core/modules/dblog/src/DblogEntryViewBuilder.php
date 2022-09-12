@@ -159,6 +159,7 @@ class DblogEntryViewBuilder extends EntityViewBuilder {
    */
   public function getCacheTags() {
     // Intentionally empty.
+    return [];
   }
 
   /**

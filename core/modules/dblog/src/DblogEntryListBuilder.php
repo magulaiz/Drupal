@@ -51,6 +51,13 @@ class DblogEntryListBuilder extends EntityListBuilder {
   protected $dblogFormatter;
 
   /**
+   * The user storage.
+   *
+   * @var \Drupal\user\UserStorageInterface
+   */
+  protected $userStorage;
+
+  /**
    * Constructs a new DblogEntryListBuilder object.
    *
    * @param \Drupal\Core\Entity\EntityTypeInterface $entity_type
