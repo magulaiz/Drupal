@@ -162,11 +162,6 @@ class SettingsTrayBlockFormTest extends SettingsTrayTestBase {
 
   /**
    * Creates tests for ::testBlocks().
-   *
-   * @group legacy
-   *
-   * @todo Remove this from the `legacy` group once Stable is removed from
-   *   core.
    */
   public function getBlockTests() {
     $blocks = [];
@@ -274,11 +269,6 @@ class SettingsTrayBlockFormTest extends SettingsTrayTestBase {
 
   /**
    * Tests that validation errors appear in the off-canvas dialog.
-   *
-   * @group legacy
-   *
-   * @todo Remove this from the `legacy` group once Stable is removed from
-   *   core.
    */
   public function testValidationMessages() {
     $page = $this->getSession()->getPage();
