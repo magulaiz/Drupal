@@ -314,7 +314,6 @@
 
 /**
  * Active has to be here for Firefox.
- * Merges standard collapse-processed selectors.
  */
 [open] > .claro-details__summary--accordion:not(:focus, :active)::after,
 [open] > .claro-details__summary--accordion-item:not(:focus, :active)::after,
@@ -433,27 +432,6 @@
 }
 .claro-details__description.is-disabled {
   color: var(--input--disabled-fg-color);
-}
-
-/* Accordion item modifiers for the focus box. */
-
-.vertical-tabs__item > .claro-details__summary--vertical-tabs-item .details-title::after {
-  border-radius: 0;
-}
-
-.vertical-tabs__item--first > .claro-details__summary--vertical-tabs-item .details-title::after {
-  border-top-left-radius: var(--details-border-size-radius);
-  border-top-right-radius: var(--details-border-size-radius);
-}
-
-.vertical-tabs__item--last > .claro-details__summary--vertical-tabs-item .details-title::after {
-  border-bottom-right-radius: var(--details-border-size-radius);
-  border-bottom-left-radius: var(--details-border-size-radius);
-}
-
-.vertical-tabs__item[open] > .claro-details__summary--vertical-tabs-item .details-title::after {
-  border-bottom-right-radius: 0;
-  border-bottom-left-radius: 0;
 }
 
 .claro-details__summary-summary {
