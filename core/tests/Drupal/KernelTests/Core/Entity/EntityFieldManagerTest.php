@@ -65,6 +65,8 @@ class EntityFieldManagerTest extends EntityKernelTestBase {
 
     $original_map_data = $this->bundleFieldMap->getAll();
     $this->bundleFieldMap->deleteAll();
+    // Simulate corrupt data by adding a nonexistent entity type.
+    $this->bundleFieldMap->set('nonexistent', $original_map_data['user']);
 
     $this->container->get('entity_field.manager')->rebuildBundleFieldMap();
 
