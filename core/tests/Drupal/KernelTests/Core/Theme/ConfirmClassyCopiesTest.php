@@ -13,6 +13,7 @@ use Drupal\KernelTests\KernelTestBase;
  * location.
  *
  * @group Theme
+ * @group legacy
  */
 class ConfirmClassyCopiesTest extends KernelTestBase {
 
@@ -179,7 +180,6 @@ class ConfirmClassyCopiesTest extends KernelTestBase {
             'file-managed-file.html.twig',
             'text-format-wrapper.html.twig',
             'filter-caption.html.twig',
-            'rdf-metadata.html.twig',
             'help-section.html.twig',
             'progress-bar.html.twig',
             'form-element-label.html.twig',

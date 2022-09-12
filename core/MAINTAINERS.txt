@@ -99,6 +99,7 @@ Block
 
 Block Content
 - Lee Rowlands 'larowlan' https://www.drupal.org/u/larowlan
+- Stephen Mustgrave 'smustgrave' https://www.drupal.org/u/smustgrave
 
 Book
 - Peter Wolanin 'pwolanin' https://www.drupal.org/u/pwolanin
@@ -533,6 +534,10 @@ Decoupled Menus Initiative
 
 Media Initiative
 - Janez Urevc 'slashrsm' https://www.drupal.org/u/slashrsm
+
+Project Browser Initiative
+- Leslie Glynn 'leslieg' https://www.drupal.org/u/leslieg
+- Chris Wells 'chrisfromredfin' https://www.drupal.org/u/chrisfromredfin
 
 
 Core mentoring coordinators
