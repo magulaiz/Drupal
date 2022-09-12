@@ -229,11 +229,6 @@ class SettingsTrayBlockFormTest extends SettingsTrayTestBase {
 
   /**
    * Tests enabling and disabling Edit Mode.
-   *
-   * @group legacy
-   *
-   * @todo Remove this from the `legacy` group once Stable is removed from
-   *   core.
    */
   public function testEditModeEnableDisable() {
     foreach ($this->getTestThemes() as $theme) {
