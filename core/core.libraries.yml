@@ -469,10 +469,9 @@ drupal.collapse:
   js:
     misc/details-summarized-content.js: {}
     misc/details-aria.js: {}
-    misc/collapse.js: {}
+    misc/details.js: {}
   dependencies:
     - core/jquery
-    - core/modernizr
     - core/drupal
     - core/drupal.form
     - core/once
@@ -827,7 +826,6 @@ normalize:
   css:
     base:
       assets/vendor/normalize-css/normalize.css: { weight: -20 }
-      misc/normalize-fixes.css: { weight: -19 }
 
 once:
   remote: https://git.drupalcode.org/project/once
