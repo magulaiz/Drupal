@@ -5,6 +5,7 @@ namespace Drupal\Tests\field\Functional\EntityReference\Views;
 use Drupal\Component\Serialization\Json;
 use Drupal\Component\Utility\Crypt;
 use Drupal\Component\Utility\Html;
+use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Site\Settings;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\field\Traits\EntityReferenceFieldCreationTrait;
@@ -54,6 +55,12 @@ class SelectionTest extends BrowserTestBase {
   protected function setUp(): void {
     parent::setUp();
 
+    $web_user = $this->drupalCreateUser([
+      'view test entity',
+      'administer entity_test content',
+    ]);
+    $this->drupalLogin($web_user);
+
     // Create content types and nodes.
     $type1 = $this->drupalCreateContentType()->id();
     $type2 = $this->drupalCreateContentType()->id();
@@ -78,7 +85,16 @@ class SelectionTest extends BrowserTestBase {
       ],
     ];
     $this->handlerSettings = $handler_settings;
-    $this->createEntityReferenceField('entity_test', 'test_bundle', 'test_field', $this->randomString(), 'node', 'views', $handler_settings);
+    $this->createEntityReferenceField('entity_test', 'entity_test', 'test_field', 'Reference', 'node', 'views', $handler_settings, FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED);
+
+    /** @var \Drupal\Core\Entity\EntityDisplayRepositoryInterface $display_repository */
+    $display_repository = \Drupal::service('entity_display.repository');
+    $display_repository->getFormDisplay('entity_test', 'entity_test')
+      ->setComponent('test_field', [
+        'type' => 'entity_reference_autocomplete_tags',
+        'weight' => -4,
+      ])
+      ->save();
   }
 
   /**
@@ -123,6 +139,23 @@ class SelectionTest extends BrowserTestBase {
       ],
     ];
     $this->assertEquals($expected, $result, 'The autocomplete result of the Views entity reference selection handler contains the proper output.');
+
+    // Test that the Views output is used for the default value.
+    $this->drupalGet('entity_test/add');
+    $edit = [
+      'test_field[target_id]' => 'node (1)',
+    ];
+    $this->submitForm($edit, 'Save');
+    $expected_label = $this->nodes[1]->bundle() . ': ' . $this->nodes[1]->label() . ' (1)';
+    $this->assertEquals($expected_label, $this->getSession()->getPage()->findField('test_field[target_id]')->getValue());
+    // Test that this also works with multiple entities selected.
+    $this->drupalGet('entity_test/add');
+    $edit = [
+      'test_field[target_id]' => 'node (1), node (2)',
+    ];
+    $this->submitForm($edit, 'Save');
+    $expected_label = $this->nodes[1]->bundle() . ': ' . $this->nodes[1]->label() . ' (1), ' . $this->nodes[2]->bundle() . ': ' . $this->nodes[2]->label() . ' (2)';
+    $this->assertEquals($expected_label, $this->getSession()->getPage()->findField('test_field[target_id]')->getValue());
   }
 
 }
