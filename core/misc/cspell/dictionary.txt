@@ -417,7 +417,6 @@ fakepath
 falsey
 falsish
 fapi
-farbtastic
 fatals
 favourite
 favstar
