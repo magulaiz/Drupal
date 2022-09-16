@@ -164,8 +164,28 @@
        <include-pattern>*/Plugin/*</include-pattern>
     </rule>
   </rule>
+  <rule ref="DrupalPractice.Commenting.AuthorTag"/>
   <rule ref="DrupalPractice.Commenting.ExpectedException"/>
+  <rule ref="DrupalPractice.FunctionCalls.CheckPlain"/>
+  <rule ref="DrupalPractice.FunctionCalls.CurlSslVerifier"/>
+  <rule ref="DrupalPractice.FunctionCalls.DbQuery"/>
+  <rule ref="DrupalPractice.FunctionCalls.DbSelectBraces"/>
+  <rule ref="DrupalPractice.FunctionCalls.DefaultValueSanitize"/>
+  <rule ref="DrupalPractice.FunctionCalls.FormErrorT"/>
+  <rule ref="DrupalPractice.FunctionCalls.LCheckPlain"/>
+  <rule ref="DrupalPractice.FunctionCalls.MessageT"/>
+  <rule ref="DrupalPractice.FunctionCalls.TCheckPlain"/>
+  <rule ref="DrupalPractice.FunctionCalls.VariableSetSanitize"/>
+  <rule ref="DrupalPractice.FunctionDefinitions.AccessHookMenu"/>
+  <rule ref="DrupalPractice.FunctionDefinitions.FormAlterDoc"/>
+  <rule ref="DrupalPractice.FunctionDefinitions.HookInitCss"/>
+  <rule ref="DrupalPractice.FunctionDefinitions.InstallT"/>
+  <rule ref="DrupalPractice.General.AccessAdminPages"/>
+  <rule ref="DrupalPractice.General.ClassName"/>
   <rule ref="DrupalPractice.General.ExceptionT"/>
+  <rule ref="DrupalPractice.General.FormStateInput"/>
+  <rule ref="DrupalPractice.General.LanguageNone"/>
+  <rule ref="DrupalPractice.General.VariableName"/>
   <rule ref="DrupalPractice.InfoFiles.NamespacedDependency"/>
 
   <!-- Generic sniffs -->
