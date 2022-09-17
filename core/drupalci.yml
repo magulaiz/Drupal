@@ -4,6 +4,9 @@
 build:
   assessment:
     validate_codebase:
+      container_command:
+        commands:
+          - "cd core && sudo -u www-data /var/www/html/vendor/bin/phpcs -s --report-full=/var/lib/drupalci/workdir/phpcs/codesniffer_results_full.txt --report-source=/var/lib/drupalci/workdir/phpcs/codesniffer_source.txt /var/www/html/core"
       phpcs:
         sniff-all-files: true
     testing:
