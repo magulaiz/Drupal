@@ -3,5 +3,8 @@
 # https://www.drupal.org/drupalorg/docs/drupal-ci/customizing-drupalci-testing
 build:
   assessment:
+    validate_codebase:
+      phpcs:
+        sniff-all-files: true
     testing:
       # TEMP remove all phpunit tests, for efficiency and to save resources.
