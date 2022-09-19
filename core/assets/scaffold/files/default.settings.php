@@ -306,6 +306,18 @@ $settings['update_free_access'] = FALSE;
 # $settings['update_fetch_with_http_fallback'] = TRUE;
 
 /**
+ * Outgoing HTTP request timeout in seconds.
+ *
+ * If you have outgoing HTTP requests for oEmbed resources, some custom
+ * providers may require a longer timeout than the default 5 seconds.
+ * - $settings['http_client_config']['timeout'] = 10; Would increase this to
+ *   10 seconds.
+ * You could conditionally set this to higher for CLI commands by checking
+ * if PHP_SAPI === 'cli'.
+ */
+# $settings['http_client_config']['timeout'] = 10;
+
+/**
  * External access proxy settings:
  *
  * If your site must access the Internet via a web proxy then you can enter the
