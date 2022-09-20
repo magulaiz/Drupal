@@ -402,7 +402,7 @@ final class LinksetControllerTest extends BrowserTestBase {
    *   The response on which to assert cacheability.
    */
   protected function assertDrupalResponseCacheability($expect_cache, CacheableDependencyInterface $expected_metadata, Response $response) {
-    assert(in_array($expect_cache, ['HIT', 'MISS', FALSE], TRUE));
+    $this->assertTrue(in_array($expect_cache, ['HIT', 'MISS', FALSE], TRUE), 'Cache is HIT, MISS, FALSE.');
     $this->assertSame($expected_metadata->getCacheContexts(), explode(' ', $response->getHeaderLine('X-Drupal-Cache-Contexts')));
     $this->assertSame($expected_metadata->getCacheTags(), explode(' ', $response->getHeaderLine('X-Drupal-Cache-Tags')));
     $max_age_message = $expected_metadata->getCacheMaxAge();
