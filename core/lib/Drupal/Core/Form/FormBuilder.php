@@ -561,6 +561,23 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
     $unprocessed_form = $form;
     $form = $this->doBuildForm($form_id, $form, $form_state);
 
+    // Allow an ajax callback while the form is operating in GET mode.
+    // For example when using HOOK_form_views_exposed_form_alter.
+    if ($form_state->isMethodType('get')) {
+      $triggered = $this->requestStack->getCurrentRequest()->request->get('_triggering_element_name');
+      if ($triggered && isset($form[$triggered]) && isset($form[$triggered]['#ajax'])) {
+        $form_state->setTriggeringElement($form[$triggered]);
+        throw new FormAjaxException($form, $form_state);
+      }
+      //Allow an ajax callback on Page views.
+      if (isset($form['secondary'])) {
+        if ($triggered && isset($form['secondary'][$triggered]) && isset($form['secondary'][$triggered]['#ajax'])) {
+          $form_state->setTriggeringElement($form['secondary'][$triggered]);
+          throw new FormAjaxException($form, $form_state);
+        }
+      }
+    }
+    
     // Only process the input if we have a correct form submission.
     if ($form_state->isProcessingInput()) {
       // Form values for programmed form submissions typically do not include a
