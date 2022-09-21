@@ -331,6 +331,11 @@ abstract class StylePluginBase extends PluginBase {
             '#options' => $this->getLabelElements(),
             '#default_value' => $grouping['grouping_label_element'],
             '#description' => $this->t('You may specify a heading level by which to group the records.'),
+            '#states' => [
+              'invisible' => [
+                ':input[name="style_options[grouping][' . $i . '][field]"]' => ['value' => ''],
+              ],
+            ],
           ];
 
           $form['grouping'][$i]['rendered'] = [
