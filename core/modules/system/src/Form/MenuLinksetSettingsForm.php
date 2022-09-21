@@ -4,11 +4,39 @@ namespace Drupal\system\Form;
 
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Routing\RouteBuilderInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Configure System settings for this site.
  */
 class MenuLinksetSettingsForm extends ConfigFormBase {
+
+  /**
+   * The router builder service.
+   *
+   * @var \Drupal\Core\Routing\RouteBuilderInterface
+   */
+  protected $routerBuilder;
+
+  /**
+   * Constructs the routerBuilder service.
+   *
+   * @param \Drupal\Core\Routing\RouteBuilderInterface $router_builder
+   *   The router builder service.
+   */
+  public function __construct(RouteBuilderInterface $router_builder) {
+    $this->routerBuilder = $router_builder;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container) {
+    return new static(
+      $container->get('router.builder')
+    );
+  }
 
   /**
    * {@inheritdoc}
@@ -46,7 +74,7 @@ class MenuLinksetSettingsForm extends ConfigFormBase {
     $this->config('system.linkset')
       ->set('enable_endpoint', $form_state->getValue('enable_endpoint'))
       ->save();
-    \Drupal::service('router.builder')->setRebuildNeeded();
+    $this->routerBuilder->setRebuildNeeded();
     parent::submitForm($form, $form_state);
   }
 
