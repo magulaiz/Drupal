@@ -353,15 +353,15 @@ class ThemeSettingsForm extends ConfigFormBase {
       '#open' => TRUE,
       '#description' => $this->t('Enable theme debug mode. This option will turn Twig debug mode on, and set Null cache backend for page, dynamic_page, and render cache bins. You may need to clear cache after changing this setting.'),
     ];
-    // Do not allow change this setting from UI when it is overriden in
+    // Do not allow change this setting from UI when it is overridden in
     // settings.php file
-    $theme_debug_overriden = $this->settings->get('theme_debug');
+    $theme_debug_overridden = $this->settings->get('theme_debug');
     $form['development']['theme_debug'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Theme debug mode'),
-      '#default_value' => $theme_debug_overriden ?? $this->state->get('theme_debug', FALSE),
-      '#disabled' => $theme_debug_overriden !== NULL,
-      '#description' => $theme_debug_overriden !== NULL ? $this->t('Overriden in settings file.') : '',
+      '#default_value' => $theme_debug_overridden ?? $this->state->get('theme_debug', FALSE),
+      '#disabled' => $theme_debug_overridden !== NULL,
+      '#description' => $theme_debug_overridden !== NULL ? $this->t('Overriden in settings file.') : '',
     ];
 
     if ($theme) {
@@ -546,7 +546,7 @@ class ThemeSettingsForm extends ConfigFormBase {
 
     theme_settings_convert_to_config($values, $config)->save();
 
-    // Save the theme debug value to state, if not overriden in settings file.
+    // Save the theme debug value to state, if not overridden in settings file.
     if ($this->settings->get('theme_debug') === NULL) {
       $theme_debug = $this->state->get('theme_debug', FALSE);
 
