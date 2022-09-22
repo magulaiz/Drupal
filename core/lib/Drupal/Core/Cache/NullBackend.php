@@ -23,7 +23,7 @@ class NullBackend implements CacheBackendInterface {
    * @param string $bin
    *   The cache bin for which the object is created.
    */
-  public function __construct($bin) {}
+  public function __construct(string $bin = '') {}
 
   /**
    * {@inheritdoc}

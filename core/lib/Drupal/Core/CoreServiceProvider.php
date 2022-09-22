@@ -54,19 +54,22 @@ class CoreServiceProvider implements ServiceProviderInterface, ServiceModifierIn
         ->addTag('stream_wrapper', ['scheme' => 'private']);
     }
 
+    // Enable theme debug mode if set in settings or in UI.
     // @todo should this actually live in DrupalKernel?
-    if (Settings::get('theme_debug')) {
+    if (Settings::get('theme_debug') || $container->get('state')->get('theme_debug')) {
+      // Enable Twig debug mode.
       // @todo after #3278887, include `development.services.yml` instead?
       // We'd need to do that in DrupalKernel itself, I think.
-      $container->register('cache.backend.null', 'Drupal\Core\Cache\NullBackend');
       $twig_config = $container->getParameter('twig.config');
       $twig_config['debug'] = TRUE;
       $container->setParameter('twig.config', $twig_config);
 
+      // Set NullBackend for page, dynamic page cache and render bins.
       // @note we cannot use the $settings['cache']['bin'] trick, because the
       // settings file is a singleton. However, we can set the default backend
       // which overrides the global default.
       $cache_bins = ['page', 'dynamic_page_cache', 'render'];
+      $container->register('cache.backend.null', 'Drupal\Core\Cache\NullBackendFactory');
       foreach ($cache_bins as $cache_bin) {
         if ($container->has("cache.$cache_bin")) {
           $container->getDefinition("cache.$cache_bin")

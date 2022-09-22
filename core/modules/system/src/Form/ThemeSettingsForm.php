@@ -7,6 +7,7 @@ use Drupal\Core\File\Exception\FileException;
 use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element;
+use Drupal\Core\State\StateInterface;
 use Drupal\Core\StreamWrapper\PublicStream;
 use Drupal\Core\StreamWrapper\StreamWrapperManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -14,6 +15,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Form\ConfigFormBase;
+use Drupal\Core\Site\Settings;
 use Drupal\Core\Theme\ThemeManagerInterface;
 
 // cspell:ignore apng
@@ -68,6 +70,20 @@ class ThemeSettingsForm extends ConfigFormBase {
   protected $fileSystem;
 
   /**
+   * The state.
+   *
+   * @var \Drupal\Core\State\StateInterface
+   */
+  protected $state;
+
+  /**
+   * The settings.
+   *
+   * @var \Drupal\Core\Site\Settings
+   */
+  protected $settings;
+
+  /**
    * Constructs a ThemeSettingsForm object.
    *
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
@@ -82,8 +98,12 @@ class ThemeSettingsForm extends ConfigFormBase {
    *   The theme manager.
    * @param \Drupal\Core\File\FileSystemInterface $file_system
    *   The file system.
+   * @param \Drupal\Core\State\StateInterface $state
+   *   The state.
+   * @param \Drupal\Core\Site\Settings $settings
+   *   The settings.
    */
-  public function __construct(ConfigFactoryInterface $config_factory, ModuleHandlerInterface $module_handler, ThemeHandlerInterface $theme_handler, $mime_type_guesser, ThemeManagerInterface $theme_manager, FileSystemInterface $file_system) {
+  public function __construct(ConfigFactoryInterface $config_factory, ModuleHandlerInterface $module_handler, ThemeHandlerInterface $theme_handler, $mime_type_guesser, ThemeManagerInterface $theme_manager, FileSystemInterface $file_system, StateInterface $state, Settings $settings) {
     parent::__construct($config_factory);
 
     $this->moduleHandler = $module_handler;
@@ -91,6 +111,8 @@ class ThemeSettingsForm extends ConfigFormBase {
     $this->mimeTypeGuesser = $mime_type_guesser;
     $this->themeManager = $theme_manager;
     $this->fileSystem = $file_system;
+    $this->state = $state;
+    $this->settings = $settings;
   }
 
   /**
@@ -103,7 +125,9 @@ class ThemeSettingsForm extends ConfigFormBase {
       $container->get('theme_handler'),
       $container->get('file.mime_type.guesser'),
       $container->get('theme.manager'),
-      $container->get('file_system')
+      $container->get('file_system'),
+      $container->get('state'),
+      $container->get('settings')
     );
   }
 
@@ -322,6 +346,24 @@ class ThemeSettingsForm extends ConfigFormBase {
       }
     }
 
+    // Theme development mode.
+    $form['development'] = [
+      '#type' => 'details',
+      '#title' => $this->t('Development'),
+      '#open' => TRUE,
+      '#description' => $this->t('Enable theme debug mode. This option will turn Twig debug mode on, and set Null cache backend for page, dynamic_page, and render cache bins. You may need to clear cache after changing this setting.'),
+    ];
+    // Do not allow change this setting from UI when it is overriden in
+    // settings.php file
+    $theme_debug_overriden = $this->settings->get('theme_debug');
+    $form['development']['theme_debug'] = [
+      '#type' => 'checkbox',
+      '#title' => $this->t('Theme debug mode'),
+      '#default_value' => $theme_debug_overriden ?? $this->state->get('theme_debug', FALSE),
+      '#disabled' => $theme_debug_overriden !== NULL,
+      '#description' => $theme_debug_overriden !== NULL ? $this->t('Overriden in settings file.') : '',
+    ];
+
     if ($theme) {
       // Call engine-specific settings.
       $function = $themes[$theme]->prefix . '_engine_settings';
@@ -503,6 +545,17 @@ class ThemeSettingsForm extends ConfigFormBase {
     }
 
     theme_settings_convert_to_config($values, $config)->save();
+
+    // Save the theme debug value to state, if not overriden in settings file.
+    if ($this->settings->get('theme_debug') === NULL) {
+      $theme_debug = $this->state->get('theme_debug', FALSE);
+
+      // Save and rebuild caches if value has actually changed.
+      if ($theme_debug !== $values['theme_debug']) {
+        $this->state->set('theme_debug', $values['theme_debug']);
+        drupal_flush_all_caches();
+      }
+    }
   }
 
   /**
