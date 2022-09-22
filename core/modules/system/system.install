@@ -1445,8 +1445,8 @@ function system_requirements($phase) {
       'title' => t('Theme debug mode'),
       'value' => t('Debug mode for theme is enabled. Go to @link to disable it.', [
         '@link' => Link::createFromRoute(
-          'appearance settings page',
-          'system.theme_settings',
+          'performance settings page',
+          'system.performance_settings',
         )->toString(),
       ]),
       'severity' => REQUIREMENT_WARNING,
