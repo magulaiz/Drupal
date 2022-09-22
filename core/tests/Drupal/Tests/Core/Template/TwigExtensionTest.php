@@ -426,22 +426,22 @@ class TwigExtensionTest extends UnitTestCase {
   }
 
   /**
-   * Tests Twig 'as' filter.
+   * Tests Twig 'add_suggestion' filter.
    *
    * @covers ::suggestThemeHook
-   * @dataProvider providerTestTwigAsFilter
+   * @dataProvider providerTestTwigAddSuggestionFilter
    */
-  public function testTwigAsFilter($original_render_array, $suggestion, $expected_render_array) {
+  public function testTwigAddSuggestionFilter($original_render_array, $suggestion, $expected_render_array) {
     $processed_render_array = $this->systemUnderTest->suggestThemeHook($original_render_array, $suggestion);
     $this->assertEquals($expected_render_array, $processed_render_array);
   }
 
   /**
-   * A data provider for ::testTwigAsFilter().
+   * A data provider for ::testTwigAddSuggestionFilter().
    *
    * @return \Iterator
    */
-  public function providerTestTwigAsFilter(): \Iterator {
+  public function providerTestTwigAddSuggestionFilter(): \Iterator {
     yield 'suggestion should be added' => [
       [
         '#theme' => 'kitten',

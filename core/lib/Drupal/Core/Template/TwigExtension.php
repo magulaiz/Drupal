@@ -144,7 +144,7 @@ class TwigExtension extends AbstractExtension {
       new TwigFilter('render', [$this, 'renderVar']),
       new TwigFilter('format_date', [$this->dateFormatter, 'format']),
       // Add new theme hook suggestions directly from a Twig template.
-      new TwigFilter('as', [$this, 'suggestThemeHook']),
+      new TwigFilter('add_suggestion', [$this, 'suggestThemeHook']),
     ];
   }
 
@@ -675,7 +675,7 @@ class TwigExtension extends AbstractExtension {
         '#cache' => TRUE,
         '#weight' => TRUE,
         '#attached' => TRUE,
-      ]) === [], 'Invalid target for the "|as" Twig filter; element does not have a "#theme" key.');
+      ]) === [], 'Invalid target for the "|add_suggestion" Twig filter; element does not have a "#theme" key.');
       return $element;
     }
 
