@@ -361,7 +361,7 @@ class ThemeSettingsForm extends ConfigFormBase {
       '#title' => $this->t('Theme debug mode'),
       '#default_value' => $theme_debug_overridden ?? $this->state->get('theme_debug', FALSE),
       '#disabled' => $theme_debug_overridden !== NULL,
-      '#description' => $theme_debug_overridden !== NULL ? $this->t('Overriden in settings file.') : '',
+      '#description' => $theme_debug_overridden !== NULL ? $this->t('Overridden in settings file.') : '',
     ];
 
     if ($theme) {
