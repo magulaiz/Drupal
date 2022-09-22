@@ -82,6 +82,28 @@ class DisplayTest extends WebDriverTestBase {
   }
 
   /**
+   * Tests setting the administrative title.
+   */
+  public function testRenameDisplayAdminName() {
+    $titles = ['New admin title', '</title><script>alert("alert!")</script>'];
+    foreach ($titles as $new_title) {
+      $this->drupalGet('admin/structure/views/view/test_content_ajax');
+      $page = $this->getSession()->getPage();
+
+      $page->findLink('Edit view name/description')->click();
+      $this->getSession()->executeScript("document.title = 'Initial title | " . \Drupal::config('system.site')->get('name') . "'");
+
+      $admin_name_field = $this->assertSession()
+        ->waitForField('Administrative name');
+      $dialog_buttons = $page->find('css', '.ui-dialog-buttonset');
+      $admin_name_field->setValue($new_title);
+
+      $dialog_buttons->pressButton('Apply');
+      $this->assertJsCondition("document.title === '" . $new_title . " (Content) | " . \Drupal::config('system.site')->get('name') . "'");
+    }
+  }
+
+  /**
    * Tests contextual links on Views page displays.
    */
   public function testPageContextualLinks() {
@@ -131,31 +153,6 @@ class DisplayTest extends WebDriverTestBase {
     // Hovering over the element itself with should be enough, but does not
     // work. Manually remove the visually-hidden class.
     $this->getSession()->executeScript("jQuery('{$selector} .contextual .trigger').toggleClass('visually-hidden');");
-  }
-
-  /**
-   * Confirms that form_alter is triggered after ajax rebuilds.
-   */
-  public function testAjaxRebuild() {
-    \Drupal::service('theme_installer')->install(['views_test_classy_subtheme']);
-
-    $this->config('system.theme')
-      ->set('default', 'views_test_classy_subtheme')
-      ->save();
-
-    $page = $this->getSession()->getPage();
-    $assert_session = $this->assertSession();
-
-    $this->drupalGet('admin/structure/views/view/content');
-    $assert_session->pageTextContains('This is text added to the display tabs at the top');
-    $assert_session->pageTextContains('This is text added to the display edit form');
-    $page->clickLink('Content: Title (Title)');
-    $assert_session->waitForElementVisible('css', '.views-ui-dialog');
-    $page->fillField('Label', 'New Title');
-    $page->find('css', '.ui-dialog-buttonset button:contains("Apply")')->press();
-    $assert_session->waitForElementRemoved('css', '.views-ui-dialog');
-    $assert_session->pageTextContains('This is text added to the display tabs at the top');
-    $assert_session->pageTextContains('This is text added to the display edit form');
   }
 
   /**

@@ -3,6 +3,7 @@
 namespace Drupal\Core\Command;
 
 use Composer\Autoload\ClassLoader;
+use Composer\Semver\VersionParser;
 use Drupal\Component\Serialization\Yaml;
 use Drupal\Core\Extension\Extension;
 use Drupal\Core\Extension\ExtensionDiscovery;
@@ -14,7 +15,9 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Question\ConfirmationQuestion;
 use Symfony\Component\Console\Style\SymfonyStyle;
+use Symfony\Component\Process\Process;
 use Twig\Util\TemplateDirIterator;
 
 /**
@@ -94,6 +97,13 @@ class GenerateTheme extends Command {
     $tmp_dir = $this->getUniqueTmpDirPath();
     $this->copyRecursive($source, $tmp_dir);
 
+    // Readme is specific to Starterkit, so remove it from the generated theme.
+    $readme_file = "$tmp_dir/README.md";
+    if (!file_put_contents($readme_file, "$destination_theme theme, generated from $source_theme_name. Additional information on generating themes can be found in the [Starterkit documentation](https://www.drupal.org/docs/core-modules-and-themes/core-themes/starterkit-theme).")) {
+      $io->getErrorStyle()->error("The readme could not be rewritten.");
+      return 1;
+    }
+
     // Rename files based on the theme machine name.
     $file_pattern = "/$source_theme_name\.(theme|[^.]+\.yml)/";
     if ($files = @scandir($tmp_dir)) {
@@ -127,6 +137,43 @@ class GenerateTheme extends Command {
     $info['name'] = $input->getOption('name') ?: $destination_theme;
 
     $info['core_version_requirement'] = '^' . $this->getVersion();
+
+    if (!array_key_exists('version', $info)) {
+      $confirm_versionless_source_theme = new ConfirmationQuestion(sprintf('The source theme %s does not have a version specified. This makes tracking changes in the source theme difficult. Are you sure you want to continue?', $source_theme->getName()));
+      if (!$io->askQuestion($confirm_versionless_source_theme)) {
+        return 0;
+      }
+    }
+
+    $source_version = $info['version'] ?? 'unknown-version';
+    if ($source_version === 'VERSION') {
+      $source_version = \Drupal::VERSION;
+    }
+    // A version in the generator string like "9.4.0-dev" is not very helpful.
+    // When this occurs, generate a version string that points to a commit.
+    if (VersionParser::parseStability($source_version) === 'dev') {
+      $git_check = Process::fromShellCommandline('git --help');
+      $git_check->run();
+      if ($git_check->getExitCode()) {
+        $io->error(sprintf('The source theme %s has a development version number (%s). Determining a specific commit is not possible because git is not installed. Either install git or use a tagged release to generate a theme.', $source_theme->getName(), $source_version));
+        return 1;
+      }
+
+      // Get the git commit for the source theme.
+      $git_get_commit = Process::fromShellCommandline("git rev-list --max-count=1 --abbrev-commit HEAD -C $source");
+      $git_get_commit->run();
+      if ($git_get_commit->getOutput() === '') {
+        $confirm_packaged_dev_release = new ConfirmationQuestion(sprintf('The source theme %s has a development version number (%s). Because it is not a git checkout, a specific commit could not be identified. This makes tracking changes in the source theme difficult. Are you sure you want to continue?', $source_theme->getName(), $source_version));
+        if (!$io->askQuestion($confirm_packaged_dev_release)) {
+          return 0;
+        }
+        $source_version .= '#unknown-commit';
+      }
+      else {
+        $source_version .= '#' . trim($git_get_commit->getOutput());
+      }
+    }
+    $info['generator'] = "$source_theme_name:$source_version";
 
     if ($description = $input->getOption('description')) {
       $info['description'] = $description;
@@ -212,14 +259,33 @@ class GenerateTheme extends Command {
       }
     }
 
-    if (!rename($tmp_dir, $destination)) {
-      $io->getErrorStyle()->error("The theme could not be moved to the destination: $destination.");
-      return 1;
+    if (!@rename($tmp_dir, $destination)) {
+      // If rename fails, copy the files to the destination directory. This is
+      // expected to happen when the tmp directory is on a different file
+      // system.
+      $this->copyRecursive($tmp_dir, $destination);
+
+      // Renaming would not have left anything behind. Ensure that is still the
+      // case.
+      $this->rmRecursive($tmp_dir);
     }
 
     $output->writeln(sprintf('Theme generated successfully to %s', $destination));
 
     return 0;
+  }
+
+  /**
+   * Removes a directory recursively.
+   *
+   * @param string $dir
+   *   A directory to be removed.
+   */
+  private function rmRecursive(string $dir): void {
+    $files = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($dir, \RecursiveDirectoryIterator::SKIP_DOTS), \RecursiveIteratorIterator::CHILD_FIRST);
+    foreach ($files as $file) {
+      is_dir($file) ? rmdir($file) : unlink($file);
+    }
   }
 
   /**

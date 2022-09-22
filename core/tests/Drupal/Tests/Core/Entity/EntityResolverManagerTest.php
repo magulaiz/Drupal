@@ -444,14 +444,14 @@ class EntityResolverManagerTest extends UnitTestCase {
     $definition = $this->createMock('Drupal\Core\Entity\EntityTypeInterface');
     $definition->expects($this->any())
       ->method('getClass')
-      ->will($this->returnValue('Drupal\Tests\Core\Entity\SimpleTestEntity'));
+      ->will($this->returnValue('Drupal\Tests\Core\Entity\TestEntity'));
     $definition->expects($this->any())
       ->method('isRevisionable')
       ->willReturn(FALSE);
     $revisionable_definition = $this->createMock('Drupal\Core\Entity\EntityTypeInterface');
     $revisionable_definition->expects($this->any())
       ->method('getClass')
-      ->will($this->returnValue('Drupal\Tests\Core\Entity\SimpleTestEntity'));
+      ->will($this->returnValue('Drupal\Tests\Core\Entity\TestEntity'));
     $revisionable_definition->expects($this->any())
       ->method('isRevisionable')
       ->willReturn(TRUE);
@@ -500,7 +500,7 @@ class BasicControllerClass {
 /**
  * A concrete entity.
  */
-class SimpleTestEntity extends EntityBase {
+class TestEntity extends EntityBase {
 
 }
 
@@ -515,12 +515,14 @@ class BasicForm extends FormBase {
    * {@inheritdoc}
    */
   public function getFormId() {
+    return '';
   }
 
   /**
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state, EntityInterface $entity_test = NULL) {
+    return [];
   }
 
   /**
@@ -540,12 +542,14 @@ class BasicFormNoUpcasting extends FormBase {
    * {@inheritdoc}
    */
   public function getFormId() {
+    return '';
   }
 
   /**
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state, $entity_test = NULL) {
+    return [];
   }
 
   /**
@@ -562,12 +566,14 @@ class BasicFormNoContainerInjectionInterface implements FormInterface {
    * {@inheritdoc}
    */
   public function getFormId() {
+    return '';
   }
 
   /**
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state, EntityInterface $entity_test = NULL) {
+    return [];
   }
 
   /**

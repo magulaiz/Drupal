@@ -30,9 +30,11 @@ class LanguageSwitchingTest extends BrowserTestBase {
   ];
 
   /**
-   * {@inheritdoc}
+   * The theme to install as the default for testing.
+   *
+   * @var string
    */
-  protected $defaultTheme = 'classy';
+  protected $defaultTheme = 'starterkit_theme';
 
   protected function setUp(): void {
     parent::setUp();
@@ -96,10 +98,8 @@ class LanguageSwitchingTest extends BrowserTestBase {
     $anchors = [];
     $labels = [];
     foreach ($language_switchers as $list_item) {
-      $classes = explode(" ", $list_item->getAttribute('class'));
-      [$langcode] = array_intersect($classes, ['en', 'fr']);
       $list_items[] = [
-        'langcode_class' => $langcode,
+        'hreflang' => $list_item->getAttribute('hreflang'),
         'data-drupal-link-system-path' => $list_item->getAttribute('data-drupal-link-system-path'),
       ];
 
@@ -111,8 +111,8 @@ class LanguageSwitchingTest extends BrowserTestBase {
       $labels[] = $link->getText();
     }
     $expected_list_items = [
-      0 => ['langcode_class' => 'en', 'data-drupal-link-system-path' => 'user/2'],
-      1 => ['langcode_class' => 'fr', 'data-drupal-link-system-path' => 'user/2'],
+      0 => ['hreflang' => 'en', 'data-drupal-link-system-path' => 'user/2'],
+      1 => ['hreflang' => 'fr', 'data-drupal-link-system-path' => 'user/2'],
     ];
     $this->assertSame($expected_list_items, $list_items, 'The list items have the correct attributes that will allow the drupal.active-link library to mark them as active.');
     $expected_anchors = [
@@ -155,9 +155,8 @@ class LanguageSwitchingTest extends BrowserTestBase {
     ];
     $labels = [];
     foreach ($language_switchers as $list_item) {
-      $classes = explode(" ", $list_item->getAttribute('class'));
-      [$langcode] = array_intersect($classes, ['en', 'fr']);
-      if (in_array('is-active', $classes)) {
+      $langcode = $list_item->getAttribute('hreflang');
+      if ($list_item->hasClass('is-active')) {
         $links['active'][] = $langcode;
       }
       else {
@@ -207,7 +206,7 @@ class LanguageSwitchingTest extends BrowserTestBase {
     ];
     $this->drupalGet('admin/config/regional/language/detection/url');
     $this->submitForm($edit, 'Save configuration');
-    $this->assertSession()->pageTextContains('The domain may not be left blank for English');
+    $this->assertSession()->statusMessageContains('The domain may not be left blank for English', 'error');
 
     // Change the domain for the Italian language.
     $edit = [
@@ -217,7 +216,7 @@ class LanguageSwitchingTest extends BrowserTestBase {
     ];
     $this->drupalGet('admin/config/regional/language/detection/url');
     $this->submitForm($edit, 'Save configuration');
-    $this->assertSession()->pageTextContains('The configuration options have been saved');
+    $this->assertSession()->statusMessageContains('The configuration options have been saved', 'status');
 
     // Enable the language switcher block.
     $this->drupalPlaceBlock('language_block:' . LanguageInterface::TYPE_INTERFACE, ['id' => 'test_language_block']);

@@ -96,7 +96,7 @@ class UpdateRegistry implements EventSubscriberInterface {
    *   A list of post-update functions that have been removed.
    */
   public function getRemovedPostUpdates($extension) {
-    $this->scanExtensionsAndLoadUpdateFiles();
+    $this->scanExtensionsAndLoadUpdateFiles($extension);
     $function = "{$extension}_removed_post_updates";
     if (function_exists($function)) {
       return $function();
@@ -246,7 +246,7 @@ class UpdateRegistry implements EventSubscriberInterface {
    *   A list of update functions.
    */
   public function getUpdateFunctions($extension_name) {
-    $this->scanExtensionsAndLoadUpdateFiles();
+    $this->scanExtensionsAndLoadUpdateFiles($extension_name);
     $all_functions = $this->getAvailableUpdateFunctions();
 
     return array_filter($all_functions, function ($function_name) use ($extension_name) {
@@ -256,34 +256,24 @@ class UpdateRegistry implements EventSubscriberInterface {
   }
 
   /**
-   * Returns all available updates for a given module.
-   *
-   * @param string $module_name
-   *   The module name.
-   *
-   * @return callable[]
-   *   A list of update functions.
-   *
-   * @deprecated in drupal:9.4.0 and is removed from drupal:10.0.0. Use
-   *   \Drupal\Core\Update\UpdateRegistry::getUpdateFunctions() instead.
-   *
-   * @see https://www.drupal.org/node/3260162
-   */
-  public function getModuleUpdateFunctions($module_name) {
-    @trigger_error(__CLASS__ . '\getModuleUpdateFunctions() is deprecated in drupal:9.4.0 and is removed from drupal:10.0.0. Use \Drupal\Core\Update\UpdateRegistry::getUpdateFunctions() instead. See https://www.drupal.org/node/3260162', E_USER_DEPRECATED);
-    return $this->getUpdateFunctions($module_name);
-  }
-
-  /**
    * Scans all module, theme, and profile extensions and load the update files.
+   *
+   * @param string|null $extension
+   *   (optional) Limits the extension update files loaded to the provided
+   *   extension.
    */
-  protected function scanExtensionsAndLoadUpdateFiles() {
+  protected function scanExtensionsAndLoadUpdateFiles(string $extension = NULL) {
     // Scan for extensions.
-    $extension_discovery = new ExtensionDiscovery($this->root, FALSE, [], $this->sitePath);
+    $extension_discovery = new ExtensionDiscovery($this->root, TRUE, [], $this->sitePath);
     $module_extensions = $extension_discovery->scan('module');
     $theme_extensions = $this->includeThemes() ? $extension_discovery->scan('theme') : [];
     $profile_extensions = $extension_discovery->scan('profile');
     $extensions = array_merge($module_extensions, $theme_extensions, $profile_extensions);
+
+    // Limit to a single extension.
+    if ($extension) {
+      $extensions = array_intersect_key($extensions, [$extension => TRUE]);
+    }
 
     $this->loadUpdateFiles($extensions);
   }
@@ -305,23 +295,6 @@ class UpdateRegistry implements EventSubscriberInterface {
   }
 
   /**
-   * Filters out already executed update functions by module.
-   *
-   * @param string $module
-   *   The module name.
-   *
-   * @deprecated in drupal:9.4.0 and is removed from drupal:10.0.0. Use
-   *   \Drupal\Core\Update\UpdateRegistry::filterOutInvokedUpdatesByExtension()
-   *   instead.
-   *
-   * @see https://www.drupal.org/node/3260162
-   */
-  public function filterOutInvokedUpdatesByModule($module) {
-    @trigger_error(__CLASS__ . '\filterOutInvokedUpdatesByModule() is deprecated in drupal:9.4.0 and is removed from drupal:10.0.0. Use \Drupal\Core\Update\UpdateRegistry::filterOutInvokedUpdatesByExtension() instead. See https://www.drupal.org/node/3260162', E_USER_DEPRECATED);
-    $this->filterOutInvokedUpdatesByExtension($module);
-  }
-
-  /**
    * @return bool
    */
   protected function includeThemes(): bool {
@@ -337,16 +310,23 @@ class UpdateRegistry implements EventSubscriberInterface {
   public function onConfigSave(ConfigCrudEvent $event) {
     $config = $event->getConfig();
     if ($config->getName() === 'core.extension') {
+      // Build the old extension configuration list from configuration rather
+      // than using $this->enabledExtensions. This ensures that if the
+      // UpdateRegistry is constructed after _drupal_maintenance_theme() has
+      // added a theme to the theme handler it will not be considered as already
+      // installed.
+      $old_extension_list = array_keys($config->getOriginal('module') ?? []);
       $new_extension_list = array_keys($config->get('module'));
       if ($this->includeThemes()) {
         $new_extension_list = array_merge($new_extension_list, array_keys($config->get('theme')));
+        $old_extension_list = array_merge($old_extension_list, array_keys($config->getOriginal('theme') ?? []));
       }
 
       // The list of extensions installed or uninstalled. In regular operation
       // only one of the lists will have a single value. This is because Drupal
       // can only install one extension at a time.
-      $uninstalled_extensions = array_diff($this->enabledExtensions, $new_extension_list);
-      $installed_extensions = array_diff($new_extension_list, $this->enabledExtensions);
+      $uninstalled_extensions = array_diff($old_extension_list, $new_extension_list);
+      $installed_extensions = array_diff($new_extension_list, $old_extension_list);
 
       // Set the list of enabled extensions correctly so update function
       // discovery works as expected.

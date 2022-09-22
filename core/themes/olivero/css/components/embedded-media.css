@@ -46,12 +46,12 @@ figure {
 figcaption {
   padding-top: var(--sp0-5);
   padding-bottom: var(--sp0-5);
-  color: var(--color--gray-20);
+  color: var(--color-text-neutral-medium);
   background: var(--color--gray-100);
   font-family: var(--font-serif);
   font-size: 0.875rem;
   font-style: italic;
-  line-height: var(--sp)
+  line-height: var(--sp);
 }
 
 @media (min-width: 31.25rem) {
@@ -74,7 +74,7 @@ figcaption {
 
 figcaption {
     padding-top: var(--sp);
-    padding-bottom: var(--sp)
+    padding-bottom: var(--sp);
 }
   }
 
@@ -98,7 +98,7 @@ figcaption {
   float: none; /* Override core's align.module.css. */
   max-width: 100%;
   margin-top: var(--sp3);
-  margin-bottom: var(--sp3)
+  margin-bottom: var(--sp3);
 }
 
 @media (min-width: 43.75rem) {
@@ -130,27 +130,24 @@ figcaption {
 .align-right {
     max-width: 50%;
     margin-top: var(--sp);
-    margin-bottom: var(--sp)
+    margin-bottom: var(--sp);
 }
   }
 
 /* Pull out of grid if nested in content narrow layout. */
 
-.layout--content-narrow .align-right,
-.layout--pass--content-narrow > * .align-right {
-  /* @todo this can be simplified. */
-}
+/* @todo this can be simplified. */
 
 @media (min-width: 43.75rem) {
 
 [dir="ltr"] .layout--content-narrow .align-right,[dir="ltr"] 
 .layout--pass--content-narrow > * .align-right {
-    margin-right: calc(var(--grid-col-width)*-1 + var(--grid-gap)*-1);
+    margin-right: calc(-1 * ((var(--grid-col-width) + var(--grid-gap))));
   }
 
 [dir="rtl"] .layout--content-narrow .align-right,[dir="rtl"] 
 .layout--pass--content-narrow > * .align-right {
-    margin-left: calc(var(--grid-col-width)*-1 + var(--grid-gap)*-1);
+    margin-left: calc(-1 * ((var(--grid-col-width) + var(--grid-gap))));
   }
   }
 
@@ -158,12 +155,12 @@ figcaption {
 
 [dir="ltr"] .layout--content-narrow .align-right,[dir="ltr"] 
 .layout--pass--content-narrow > * .align-right {
-    margin-right: calc(var(--grid-col-width)*-2 + var(--grid-gap)*-2);
+    margin-right: calc(-2 * ((var(--grid-col-width) + var(--grid-gap))));
   }
 
 [dir="rtl"] .layout--content-narrow .align-right,[dir="rtl"] 
 .layout--pass--content-narrow > * .align-right {
-    margin-left: calc(var(--grid-col-width)*-2 + var(--grid-gap)*-2);
+    margin-left: calc(-2 * ((var(--grid-col-width) + var(--grid-gap))));
   }
   }
 
@@ -171,12 +168,12 @@ figcaption {
 
 [dir="ltr"] .layout--content-narrow .align-right,[dir="ltr"] 
 .layout--pass--content-narrow > * .align-right {
-    margin-right: calc(var(--grid-col-width)*-3 + var(--grid-gap)*-3);
+    margin-right: calc(-3 * ((var(--grid-col-width) + var(--grid-gap))));
   }
 
 [dir="rtl"] .layout--content-narrow .align-right,[dir="rtl"] 
 .layout--pass--content-narrow > * .align-right {
-    margin-left: calc(var(--grid-col-width)*-3 + var(--grid-gap)*-3);
+    margin-left: calc(-3 * ((var(--grid-col-width) + var(--grid-gap))));
   }
   }
 
@@ -184,12 +181,12 @@ figcaption {
 
 [dir="ltr"] .layout--content-narrow .align-right,[dir="ltr"] 
 .layout--pass--content-narrow > * .align-right {
-    margin-right: calc(var(--grid-col-width)*-3 + var(--grid-gap)*-3);
+    margin-right: calc(-3 * ((var(--grid-col-width) + var(--grid-gap))));
   }
 
 [dir="rtl"] .layout--content-narrow .align-right,[dir="rtl"] 
 .layout--pass--content-narrow > * .align-right {
-    margin-left: calc(var(--grid-col-width)*-3 + var(--grid-gap)*-3);
+    margin-left: calc(-3 * ((var(--grid-col-width) + var(--grid-gap))));
   }
   }
 
@@ -213,7 +210,7 @@ figcaption {
   float: none; /* Override core's align.module.css. */
   max-width: 100%;
   margin-top: var(--sp3);
-  margin-bottom: var(--sp3)
+  margin-bottom: var(--sp3);
 }
 
 @media (min-width: 43.75rem) {
@@ -245,7 +242,7 @@ figcaption {
 .align-left {
     max-width: 50%;
     margin-top: var(--sp);
-    margin-bottom: var(--sp) /* Extra right margins in case of aligning next to lists. */
+    margin-bottom: var(--sp); /* Extra right margins in case of aligning next to lists. */
 }
   }
 
@@ -255,12 +252,12 @@ figcaption {
 
 [dir="ltr"] .layout--content-narrow .align-left,[dir="ltr"] 
 .layout--pass--content-narrow > * .align-left {
-    margin-left: calc(var(--grid-col-width)*-1 + var(--grid-gap)*-1);
+    margin-left: calc(-1 * ((var(--grid-col-width) + var(--grid-gap))));
   }
 
 [dir="rtl"] .layout--content-narrow .align-left,[dir="rtl"] 
 .layout--pass--content-narrow > * .align-left {
-    margin-right: calc(var(--grid-col-width)*-1 + var(--grid-gap)*-1);
+    margin-right: calc(-1 * ((var(--grid-col-width) + var(--grid-gap))));
   }
   }
 

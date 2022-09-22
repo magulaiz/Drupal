@@ -33,7 +33,7 @@ class FileFieldWidgetTest extends FileFieldTestBase {
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'classy';
+  protected $defaultTheme = 'stark';
 
   /**
    * {@inheritdoc}
@@ -139,7 +139,7 @@ class FileFieldWidgetTest extends FileFieldTestBase {
     // Visit the node creation form, and upload 3 files for each field. Since
     // the field has cardinality of 3, ensure the "Upload" button is displayed
     // until after the 3rd file, and after that, isn't displayed. Because
-    // SimpleTest triggers the last button with a given name, so upload to the
+    // the last button with a given name is triggered by default, upload to the
     // second field first.
     $this->drupalGet("node/add/$type_name");
     foreach ([$field_name2, $field_name] as $each_field_name) {
@@ -395,7 +395,7 @@ class FileFieldWidgetTest extends FileFieldTestBase {
     $html_name = str_replace('_', '-', $field_name);
     $this->createFileField($field_name, 'node', 'article', ['cardinality' => FieldStorageConfig::CARDINALITY_UNLIMITED]);
     $file = $this->getTestFile('text');
-    $xpath = "//details[@data-drupal-selector='edit-$html_name']/div[@class='details-wrapper']/table";
+    $xpath = "//details[@data-drupal-selector='edit-$html_name']/table";
 
     $this->drupalGet('node/add/article');
 

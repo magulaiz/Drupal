@@ -201,7 +201,7 @@ function _drupal_exception_handler_additional($exception, $exception2) {
 }
 
 /**
- * Returns the test prefix if this is an internal request from SimpleTest.
+ * Returns the test prefix if this is an internal request from a test.
  *
  * @param string $new_prefix
  *   Internal use only. A new prefix to be stored.
@@ -224,9 +224,8 @@ function drupal_valid_test_ua($new_prefix = NULL) {
   // a test environment.
   $test_prefix = FALSE;
 
-  // A valid Simpletest request will contain a hashed and salted authentication
-  // code. Check if this code is present in a cookie or custom user agent
-  // string.
+  // A valid test request will contain a hashed and salted authentication code.
+  // Check if this code is present in a cookie or custom user agent string.
   $http_user_agent = $_SERVER['HTTP_USER_AGENT'] ?? NULL;
   $user_agent = $_COOKIE['SIMPLETEST_USER_AGENT'] ?? $http_user_agent;
   if (isset($user_agent) && preg_match("/^simple(\w+\d+):(.+):(.+):(.+)$/", $user_agent, $matches)) {
@@ -252,7 +251,7 @@ function drupal_valid_test_ua($new_prefix = NULL) {
     }
     // The file properties add more entropy not easily accessible to others.
     $key = $private_key . filectime(__FILE__) . fileinode(__FILE__);
-    $time_diff = REQUEST_TIME - $time;
+    $time_diff = time() - $time;
     $test_hmac = Crypt::hmacBase64($check_string, $key);
     // Since we are making a local request a 600 second time window is allowed,
     // and the HMAC must match.
@@ -268,7 +267,7 @@ function drupal_valid_test_ua($new_prefix = NULL) {
 }
 
 /**
- * Generates a user agent string with a HMAC and timestamp for simpletest.
+ * Generates a user agent string with a HMAC and timestamp for tests.
  */
 function drupal_generate_test_ua($prefix) {
   static $key, $last_prefix;

@@ -24,8 +24,6 @@ class SessionTest extends BrowserTestBase {
    */
   protected $defaultTheme = 'stark';
 
-  protected $dumpHeaders = TRUE;
-
   /**
    * Tests for \Drupal\Core\Session\WriteSafeSessionHandler::setSessionWritable()
    * ::isSessionWritable and \Drupal\Core\Session\SessionManager::regenerate().
@@ -371,7 +369,7 @@ class SessionTest extends BrowserTestBase {
   }
 
   /**
-   * Assert whether the SimpleTest browser sent a session cookie.
+   * Assert whether the test browser sent a session cookie.
    *
    * @internal
    */

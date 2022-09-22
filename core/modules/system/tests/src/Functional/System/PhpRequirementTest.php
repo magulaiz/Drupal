@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\system\Functional\System;
 
+use Drupal\Core\Utility\PhpRequirements;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\RequirementsPageTrait;
 
@@ -47,6 +48,7 @@ class PhpRequirementTest extends BrowserTestBase {
    * Tests status report messages regarding the PHP version.
    */
   public function testStatusPage() {
+    $minimum_php_version = PhpRequirements::getMinimumSupportedPhp();
     // Go to Administration.
     $this->drupalGet('admin/reports/status');
     $this->assertSession()->statusCodeEquals(200);
@@ -57,20 +59,30 @@ class PhpRequirementTest extends BrowserTestBase {
 
     // Verify that an error is displayed about the PHP version if it is below
     // the minimum supported PHP.
-    if (version_compare($phpversion, \Drupal::MINIMUM_SUPPORTED_PHP) < 0) {
+    if (version_compare($phpversion, $minimum_php_version) < 0) {
       $this->assertErrorSummaries(['PHP']);
-      $this->assertSession()->pageTextContains('Your PHP installation is too old. Drupal requires at least PHP ' . \Drupal::MINIMUM_SUPPORTED_PHP);
+      $this->assertSession()->pageTextContains('Your PHP installation is too old. Drupal requires at least PHP ' . $minimum_php_version);
     }
     // Otherwise, there should be no error.
     else {
-      $this->assertSession()->pageTextNotContains('Your PHP installation is too old. Drupal requires at least PHP ' . \Drupal::MINIMUM_SUPPORTED_PHP);
+      $this->assertSession()->pageTextNotContains('Your PHP installation is too old. Drupal requires at least PHP ' . $minimum_php_version);
       $this->assertSession()->pageTextNotContains('Errors found');
     }
 
     // There should be an informational message if the PHP version is below the
     // recommended version.
     if (version_compare($phpversion, \Drupal::RECOMMENDED_PHP) < 0) {
-      $this->assertSession()->pageTextContains('It is recommended to upgrade to PHP version ' . \Drupal::RECOMMENDED_PHP . ' or higher');
+      // If it's possible to run Drupal on PHP 8.1.0 to 8.1.5, warn about a
+      // bug in OPcache.
+      // @todo Remove this when \Drupal::MINIMUM_PHP is at least 8.1.6 in
+      //   https://www.drupal.org/i/3305726.
+      if (version_compare(\Drupal::MINIMUM_PHP, '8.1.6') < 0) {
+        $this->assertSession()->pageTextContains("PHP $phpversion has an OPcache bug that can cause fatal errors with class autoloading. This can be fixed by upgrading to PHP 8.1.6 or later.");
+        $this->assertSession()->linkExists('an OPcache bug that can cause fatal errors with class autoloading');
+      }
+      else {
+        $this->assertSession()->pageTextContains('It is recommended to upgrade to PHP version ' . \Drupal::RECOMMENDED_PHP . ' or higher');
+      }
     }
     // Otherwise, the message should not be there.
     else {

@@ -77,34 +77,7 @@ const assetsFolder = `${coreFolder}/assets/vendor`;
     {
       pack: 'backbone',
       library: 'internal.backbone',
-      files: ['backbone.js', 'backbone-min.js', 'backbone-min.map'],
-    },
-    {
-      pack: 'css.escape',
-      folder: 'css-escape',
-      library: 'css.escape',
-      files: ['css.escape.js'],
-    },
-    {
-      pack: 'es6-promise',
-      files: [
-        { from: 'dist/es6-promise.auto.min.js', to: 'es6-promise.auto.min.js' },
-        {
-          from: 'dist/es6-promise.auto.min.map',
-          to: 'es6-promise.auto.min.map',
-        },
-      ],
-    },
-    {
-      pack: 'farbtastic',
-      library: 'jquery.farbtastic',
-      files: [
-        'marker.png',
-        'mask.png',
-        'wheel.png',
-        'farbtastic.css',
-        { from: 'farbtastic.min.js', to: 'farbtastic.js' },
-      ],
+      files: ['backbone.js', 'backbone-min.js', 'backbone-min.js.map'],
     },
     {
       pack: 'jquery',
@@ -116,7 +89,7 @@ const assetsFolder = `${coreFolder}/assets/vendor`;
     },
     {
       pack: 'jquery-form',
-      library: 'jquery.form',
+      library: 'internal.jquery.form',
       files: [
         { from: 'dist/jquery.form.min.js', to: 'jquery.form.min.js' },
         { from: 'dist/jquery.form.min.js.map', to: 'jquery.form.min.js.map' },
@@ -143,20 +116,9 @@ const assetsFolder = `${coreFolder}/assets/vendor`;
       ],
     },
     {
-      pack: 'picturefill',
-      files: [{ from: 'dist/picturefill.min.js', to: 'picturefill.min.js' }],
-    },
-    {
-      pack: '@popperjs/core',
-      folder: 'popperjs',
-      files: [
-        { from: 'dist/umd/popper.min.js', to: 'popper.min.js' },
-        { from: 'dist/umd/popper.min.js.map', to: 'popper.min.js.map' },
-      ],
-    },
-    {
       pack: 'shepherd.js',
       folder: 'shepherd',
+      library: 'internal.shepherd',
       files: [
         { from: 'dist/js/shepherd.min.js', to: 'shepherd.min.js' },
         { from: 'dist/js/shepherd.min.js.map', to: 'shepherd.min.js.map' },
@@ -215,11 +177,9 @@ const assetsFolder = `${coreFolder}/assets/vendor`;
         'ui/keycode.js',
         'ui/labels.js',
         'ui/plugin.js',
-        'ui/position.js',
         'ui/safe-active-element.js',
         'ui/safe-blur.js',
         'ui/scroll-parent.js',
-        'ui/tabbable.js',
         'ui/unique-id.js',
         'ui/version.js',
         'ui/widget.js',
@@ -306,12 +266,6 @@ const assetsFolder = `${coreFolder}/assets/vendor`;
         // There is no callback simply copy the file.
         console.log(`Copy ${sourceFolder}/${file.from} to ${destFolder}/${file.to}`);
         await copyFile(sourceFile, destFile);
-      }
-
-      // This file comes from a zip file that hasn't been updated in years
-      // hardcode the permission fix to pass the commit checks.
-      if (['marker.png'].includes(file.to)) {
-        await chmod(destFile, 0o644);
       }
     }
   }

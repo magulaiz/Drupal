@@ -34,7 +34,7 @@ class FilterDateTest extends ViewTestBase {
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'classy';
+  protected $defaultTheme = 'starterkit_theme';
 
   /**
    * The date formatter.
@@ -42,6 +42,16 @@ class FilterDateTest extends ViewTestBase {
    * @var \Drupal\Core\Datetime\DateFormatterInterface
    */
   public $dateFormatter;
+
+  /**
+   * @var array
+   */
+  protected array $nodes;
+
+  /**
+   * @var array
+   */
+  protected array $map;
 
   protected function setUp($import_test_views = TRUE, $modules = ['views_test_config']): void {
     parent::setUp($import_test_views, $modules);
