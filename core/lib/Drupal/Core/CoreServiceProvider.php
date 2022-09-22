@@ -53,31 +53,6 @@ class CoreServiceProvider implements ServiceProviderInterface, ServiceModifierIn
         ->addTag('stream_wrapper', ['scheme' => 'private']);
     }
 
-    // Enable theme debug mode if set in settings or in UI.
-    // @todo should this actually live in DrupalKernel?
-    if (Settings::get('theme_debug') || $container->get('state')->get('theme_debug')) {
-      // Enable Twig debug mode.
-      // @todo after #3278887, include `development.services.yml` instead?
-      // We'd need to do that in DrupalKernel itself, I think.
-      $twig_config = $container->getParameter('twig.config');
-      $twig_config['debug'] = TRUE;
-      $container->setParameter('twig.config', $twig_config);
-
-      // Set NullBackend for page, dynamic page cache and render bins.
-      // @note we cannot use the $settings['cache']['bin'] trick, because the
-      // settings file is a singleton. However, we can set the default backend
-      // which overrides the global default.
-      $cache_bins = ['page', 'dynamic_page_cache', 'render'];
-      $container->register('cache.backend.null', 'Drupal\Core\Cache\NullBackendFactory');
-      foreach ($cache_bins as $cache_bin) {
-        if ($container->has("cache.$cache_bin")) {
-          $container->getDefinition("cache.$cache_bin")
-            ->clearTag('cache.bin')
-            ->addTag('cache.bin', ['default_backend' => 'cache.backend.null']);
-        }
-      }
-    }
-
     // Add the compiler pass that lets service providers modify existing
     // service definitions. This pass must come first so that later
     // list-building passes are operating on the post-alter services list.
@@ -137,6 +112,30 @@ class CoreServiceProvider implements ServiceProviderInterface, ServiceModifierIn
     // Try to use the COM implementation for Windows users.
     elseif (function_exists('com_create_guid')) {
       $uuid_service->setClass('Drupal\Component\Uuid\Com');
+    }
+
+    // Enable theme debug mode if set in settings or in UI.
+    if (Settings::get('theme_debug') || $container->get('state')->get('theme_debug')) {
+      // Enable Twig debug mode.
+      $twig_config = $container->getParameter('twig.config');
+      $twig_config['debug'] = TRUE;
+      $twig_config['auto_reload'] = TRUE;
+      $twig_config['cache'] = FALSE;
+      $container->setParameter('twig.config', $twig_config);
+
+      // Set NullBackend for page, dynamic page cache and render bins.
+      // @note we cannot use the $settings['cache']['bin'] trick, because the
+      // settings file is a singleton. However, we can set the default backend
+      // which overrides the global default.
+      $cache_bins = ['page', 'dynamic_page_cache', 'render'];
+      $container->register('cache.backend.null', 'Drupal\Core\Cache\NullBackendFactory');
+      foreach ($cache_bins as $cache_bin) {
+        if ($container->has("cache.$cache_bin")) {
+          $container->getDefinition("cache.$cache_bin")
+            ->clearTag('cache.bin')
+            ->addTag('cache.bin', ['default_backend' => 'cache.backend.null']);
+        }
+      }
     }
   }
 
