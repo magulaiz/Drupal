@@ -15,25 +15,14 @@ use Symfony\Component\DependencyInjection\Reference;
  */
 class ThemeDebugTest extends KernelTestBase {
 
-  public function testPageCacheBackend(): void {
-    $this->assertCacheBinFactory('page', MemoryBackendFactory::class);
-    $this->toggleThemeDebug();
-    $this->assertCacheBinFactory('page', NullBackendFactory::class);
-    $this->toggleThemeDebug();
-  }
-
-  public function testDynamicPageCacheBackend(): void {
+  public function testCacheBackend(): void {
     $this->assertCacheBinFactory('dynamic_page_cache', MemoryBackendFactory::class);
-    $this->toggleThemeDebug();
-    $this->assertCacheBinFactory('dynamic_page_cache', NullBackendFactory::class);
-    $this->toggleThemeDebug();
-  }
-
-  public function testRenderCacheBackend(): void {
+    $this->assertCacheBinFactory('page', MemoryBackendFactory::class);
     $this->assertCacheBinFactory('render', MemoryBackendFactory::class);
     $this->toggleThemeDebug();
+    $this->assertCacheBinFactory('dynamic_page_cache', NullBackendFactory::class);
+    $this->assertCacheBinFactory('page', NullBackendFactory::class);
     $this->assertCacheBinFactory('render', NullBackendFactory::class);
-    $this->toggleThemeDebug();
   }
 
   private function toggleThemeDebug(): void {
