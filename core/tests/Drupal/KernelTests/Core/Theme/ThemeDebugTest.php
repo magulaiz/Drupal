@@ -4,9 +4,8 @@ namespace Drupal\KernelTests\Core\Theme;
 
 use Drupal\Core\Cache\MemoryBackendFactory;
 use Drupal\Core\Cache\NullBackendFactory;
-use Drupal\Core\Site\Settings;
+use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\KernelTests\KernelTestBase;
-use Symfony\Component\DependencyInjection\Reference;
 
 /**
  * Tests theme_debug functionality.
@@ -15,18 +14,31 @@ use Symfony\Component\DependencyInjection\Reference;
  */
 class ThemeDebugTest extends KernelTestBase {
 
+  /**
+   * {@inheritdoc}
+   */
+  public function register(ContainerBuilder $container) {
+    parent::register($container);
+    $container->register('cache.dynamic_page_cache', 'Drupal\Core\Cache\MemoryBackendFactory')
+      ->addTag('persist');
+    $container->register('cache.page', 'Drupal\Core\Cache\MemoryBackendFactory')
+      ->addTag('persist');
+    $container->register('cache.render', 'Drupal\Core\Cache\MemoryBackendFactory')
+      ->addTag('persist');
+  }
+
   public function testCacheBackend(): void {
     $this->assertCacheBinFactory('dynamic_page_cache', MemoryBackendFactory::class);
     $this->assertCacheBinFactory('page', MemoryBackendFactory::class);
     $this->assertCacheBinFactory('render', MemoryBackendFactory::class);
-    $this->toggleThemeDebug();
+    $this->enableThemeDebug();
     $this->assertCacheBinFactory('dynamic_page_cache', NullBackendFactory::class);
     $this->assertCacheBinFactory('page', NullBackendFactory::class);
     $this->assertCacheBinFactory('render', NullBackendFactory::class);
   }
 
-  private function toggleThemeDebug(): void {
-    $this->setSetting('theme_debug', !Settings::get('theme_debug', FALSE));
+  private function enableThemeDebug(): void {
+    $this->setSetting('theme_debug', TRUE);
     $this->container->get('kernel')->rebuildContainer();
   }
 
@@ -35,14 +47,8 @@ class ThemeDebugTest extends KernelTestBase {
    */
   private function assertCacheBinFactory(string $bin, string $expected): void {
     self::assertTrue($this->container->hasDefinition("cache.$bin"));
-    $factory = $this->container->getDefinition("cache.$bin")->getFactory();
-    self::assertIsArray($factory);
-    $reference = $factory[0];
-    self::assertInstanceOf(Reference::class, $reference);
-    self::assertInstanceOf(
-      $expected,
-      $this->container->get($reference)
-    );
+    $class = $this->container->getDefinition("cache.$bin")->getClass();
+    self::assertEquals($expected, $class);
   }
 
 }
