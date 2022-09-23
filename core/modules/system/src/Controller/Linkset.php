@@ -30,7 +30,7 @@ final class Linkset extends ControllerBase {
    *   The menu tree loader service. This is used to load a menu's link
    *   elements so that they can be serialized into a linkset response.
    */
-  public function __construct(private readonly MenuLinkTreeInterface $menuTree) {
+  public function __construct(protected readonly MenuLinkTreeInterface $menuTree) {
   }
 
   /**
