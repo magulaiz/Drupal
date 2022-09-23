@@ -24,19 +24,13 @@ use Symfony\Component\HttpFoundation\Request;
 final class Linkset extends ControllerBase {
 
   /**
-   * @var \Drupal\Core\Menu\MenuLinkTreeInterface
-   */
-  private $menuTree;
-
-  /**
    * Linkset constructor.
    *
-   * @param \Drupal\Core\Menu\MenuLinkTreeInterface $menu_tree_loader
+   * @param \Drupal\Core\Menu\MenuLinkTreeInterface $menuTree
    *   The menu tree loader service. This is used to load a menu's link
    *   elements so that they can be serialized into a linkset response.
    */
-  public function __construct(MenuLinkTreeInterface $menu_tree_loader) {
-    $this->menuTree = $menu_tree_loader;
+  public function __construct(private readonly MenuLinkTreeInterface $menuTree) {
   }
 
   /**
@@ -224,14 +218,15 @@ final class Linkset extends ControllerBase {
    *   Attributes available for the link.
    */
   private function processCustomLinkAttributes(array &$link, array $attributes = []) {
+    $attribute_keys_to_ignore = [
+      'hreflang',
+      'media',
+      'type',
+      'title',
+      'title*',
+    ];
+
     foreach ($attributes as $key => $value) {
-      $attribute_keys_to_ignore = [
-        'hreflang',
-        'media',
-        'type',
-        'title',
-        'title*',
-      ];
       if (in_array($key, $attribute_keys_to_ignore, TRUE)) {
         continue;
       }
@@ -280,8 +275,7 @@ final class Linkset extends ControllerBase {
       ['callable' => 'menu.default_tree_manipulators:checkAccess'],
       ['callable' => 'menu.default_tree_manipulators:generateIndexAndSort'],
     ];
-    $tree = $this->menuTree->transform($tree, $manipulators);
-    return $tree;
+    return $this->menuTree->transform($tree, $manipulators);
   }
 
 }

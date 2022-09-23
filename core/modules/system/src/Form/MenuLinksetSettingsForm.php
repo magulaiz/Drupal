@@ -11,22 +11,13 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * Configure System settings for this site.
  */
 class MenuLinksetSettingsForm extends ConfigFormBase {
-
-  /**
-   * The router builder service.
-   *
-   * @var \Drupal\Core\Routing\RouteBuilderInterface
-   */
-  protected $routerBuilder;
-
   /**
    * Constructs the routerBuilder service.
    *
-   * @param \Drupal\Core\Routing\RouteBuilderInterface $router_builder
+   * @param \Drupal\Core\Routing\RouteBuilderInterface $routerBuilder
    *   The router builder service.
    */
-  public function __construct(RouteBuilderInterface $router_builder) {
-    $this->routerBuilder = $router_builder;
+  public function __construct(protected readonly RouteBuilderInterface $routerBuilder) {
   }
 
   /**
@@ -49,7 +40,7 @@ class MenuLinksetSettingsForm extends ConfigFormBase {
    * {@inheritdoc}
    */
   protected function getEditableConfigNames() {
-    return ['system.linkset'];
+    return ['system.feature_flags'];
   }
 
   /**
@@ -62,7 +53,7 @@ class MenuLinksetSettingsForm extends ConfigFormBase {
       '#description' => $this->t('See the <a href="@docs-link">decoupled menus documentation</a> for more information.', [
           '@docs-link' => 'https://www.drupal.org/docs/develop/decoupled-drupal/decoupled-menus',
     ]),
-      '#default_value' => $this->config('system.linkset')->get('enable_endpoint'),
+      '#default_value' => $this->config('system.feature_flags')->get('linkset_endpoint'),
     ];
     return parent::buildForm($form, $form_state);
   }
@@ -71,10 +62,9 @@ class MenuLinksetSettingsForm extends ConfigFormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    $this->config('system.linkset')
-      ->set('enable_endpoint', $form_state->getValue('enable_endpoint'))
+    $this->config('system.feature_flags')
+      ->set('linkset_endpoint', $form_state->getValue('enable_endpoint'))
       ->save();
-    $this->routerBuilder->setRebuildNeeded();
     parent::submitForm($form, $form_state);
   }
 

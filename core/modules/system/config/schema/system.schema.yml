@@ -351,10 +351,10 @@ condition.plugin.request_path:
     pages:
       type: string
 
-system.linkset:
+system.feature_flags:
   type: config_object
-  label: 'Menu Linkset Settings'
+  label: 'System Feature Flags'
   mapping:
-    enable_endpoint:
+    linkset_endpoint:
       type: boolean
       label: 'Enable the menu linkset endpoint'
