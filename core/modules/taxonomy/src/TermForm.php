@@ -60,7 +60,7 @@ class TermForm extends ContentEntityForm {
 
       foreach ($tree as $item) {
         if (!in_array($item->tid, $exclude)) {
-          $options[$item->tid] = str_repeat('-', $item->depth) . $item->name;
+          $options[$item->tid] = str_repeat("\u{B7}\u{2003}", $item->depth) . $item->name;
         }
       }
     }

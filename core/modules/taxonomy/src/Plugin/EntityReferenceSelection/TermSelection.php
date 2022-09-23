@@ -70,7 +70,7 @@ class TermSelection extends DefaultSelection {
               $unpublished_terms[] = $term->id();
               continue;
             }
-            $options[$vocabulary->id()][$term->id()] = str_repeat('-', $term->depth) . Html::escape($this->entityRepository->getTranslationFromContext($term)->label());
+            $options[$vocabulary->id()][$term->id()] = str_repeat("\u{B7}\u{2003}", $term->depth) . Html::escape($this->entityRepository->getTranslationFromContext($term)->label());
           }
         }
       }

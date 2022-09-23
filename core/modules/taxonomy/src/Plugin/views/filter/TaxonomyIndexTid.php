@@ -205,7 +205,7 @@ class TaxonomyIndexTid extends ManyToOne {
               continue;
             }
             $choice = new \stdClass();
-            $choice->option = [$term->id() => str_repeat('-', $term->depth) . \Drupal::service('entity.repository')->getTranslationFromContext($term)->label()];
+            $choice->option = [$term->id() => str_repeat("\u{B7}\u{2003}", $term->depth) . \Drupal::service('entity.repository')->getTranslationFromContext($term)->label()];
             $options[] = $choice;
           }
         }

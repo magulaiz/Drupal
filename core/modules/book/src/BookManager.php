@@ -462,8 +462,8 @@ class BookManager implements BookManagerInterface {
    * @param array $tree
    *   The data structure of the book's outline tree. Includes hidden links.
    * @param string $indent
-   *   A string appended to each node title. Increments by '--' per depth
-   *   level.
+   *   A string appended to each node title. Increments by a dot and a wide
+   *   space per depth level.
    * @param array $toc
    *   Reference to the table of contents array. This is modified in place, so
    *   the function does not have a return value.
@@ -498,7 +498,7 @@ class BookManager implements BookManagerInterface {
       }
       $toc[$nid] = $indent . ' ' . Unicode::truncate($nodes[$nid]->label(), 30, TRUE, TRUE);
       if ($data['below']) {
-        $this->recurseTableOfContents($data['below'], $indent . '--', $toc, $exclude, $depth_limit);
+        $this->recurseTableOfContents($data['below'], $indent . "\u{B7}\u{2003}", $toc, $exclude, $depth_limit);
       }
     }
   }

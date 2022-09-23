@@ -180,14 +180,14 @@ class DisplayPathTest extends UITestBase {
 
     $this->assertEquals([
       '<User account menu>',
-      '-- My account',
-      '-- Log out',
+      "\u{B7}\u{2003}" . 'My account',
+      "\u{B7}\u{2003}" . 'Log out',
       '<Administration>',
       '<Footer>',
       '<Main navigation>',
       '<Tools>',
-      '-- Compose tips (disabled)',
-      '-- Test menu link',
+      "\u{B7}\u{2003}" . 'Compose tips (disabled)',
+      "\u{B7}\u{2003}" . 'Test menu link',
     ], $menu_options);
 
     // The cache contexts associated with the (in)accessible menu links are

@@ -68,7 +68,7 @@ class MenuParentFormSelector implements MenuParentFormSelectorInterface {
         ['callable' => 'menu.default_tree_manipulators:generateIndexAndSort'],
       ];
       $tree = $this->menuLinkTree->transform($tree, $manipulators);
-      $this->parentSelectOptionsTreeWalk($tree, $menu_name, '--', $options, $id, $depth_limit, $cacheability);
+      $this->parentSelectOptionsTreeWalk($tree, $menu_name, "\u{B7}\u{2003}", $options, $id, $depth_limit, $cacheability);
     }
     return $options;
   }
@@ -160,13 +160,13 @@ class MenuParentFormSelector implements MenuParentFormSelectorInterface {
 
       $link = $element->link;
       if ($link->getPluginId() != $exclude) {
-        $title = $indent . ' ' . Unicode::truncate($link->getTitle(), 30, TRUE, FALSE);
+        $title = $indent . Unicode::truncate($link->getTitle(), 30, TRUE, FALSE);
         if (!$link->isEnabled()) {
           $title .= ' (' . $this->t('disabled') . ')';
         }
         $options[$menu_name . ':' . $link->getPluginId()] = $title;
         if (!empty($element->subtree)) {
-          $this->parentSelectOptionsTreeWalk($element->subtree, $menu_name, $indent . '--', $options, $exclude, $depth_limit, $cacheability);
+          $this->parentSelectOptionsTreeWalk($element->subtree, $menu_name, $indent . "\u{B7}\u{2003}", $options, $exclude, $depth_limit, $cacheability);
         }
       }
     }
