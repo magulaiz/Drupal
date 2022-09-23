@@ -52,7 +52,7 @@
           const $checkbox = $(this);
           const stateChanged = $checkbox.prop('checked') !== state;
 
-          $checkbox.attr(
+          $checkbox[0].setAttribute(
             'title',
             state ? strings.selectNone : strings.selectAll,
           );
@@ -66,10 +66,13 @@
         });
     };
 
+    const $tableCheckbox = $(Drupal.theme('checkbox'));
+    $tableCheckbox[0].setAttribute('title', strings.selectAll);
+
     // Find all <th> with class select-all, and insert the check all checkbox.
     $table
       .find('th.select-all')
-      .prepend($(Drupal.theme('checkbox')).attr('title', strings.selectAll))
+      .prepend($tableCheckbox)
       .on('click', (event) => {
         if ($(event.target).is('input[type="checkbox"]')) {
           // Loop through all checkboxes and set their state to the select all

@@ -115,7 +115,7 @@
           return;
         }
         // Figure out the maximum length for the machine name.
-        options.maxlength = $target.attr('maxlength');
+        options.maxlength = $target[0].getAttribute('maxlength');
         // Hide the form item container of the machine name form element.
         $wrapper.addClass('visually-hidden');
         // Initial machine name from the target field default value.
