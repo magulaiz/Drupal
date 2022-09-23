@@ -207,6 +207,13 @@ class OEmbedFormatter extends FormatterBase {
         if ($domain) {
           $url->setOption('base_url', $domain);
         }
+        else{
+          $absolute_url = $this->config->get('absolute_url');
+          if ($absolute_url) {
+            $site_url = 'http://' .$_SERVER['HTTP_HOST'];
+            $url->setOption('base_url', $site_url);
+          }
+        }
 
         // Render videos and rich content in an iframe for security reasons.
         // @see: https://oembed.com/#section3
