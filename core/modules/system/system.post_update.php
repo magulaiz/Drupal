@@ -48,6 +48,6 @@ function system_removed_post_updates() {
  * Add new menu linkset endpoint setting.
  */
 function system_post_update_linkset_settings() {
-  $config = \Drupal::configFactory()->getEditable('system.linkset');
-  $config->set('enable_endpoint', FALSE)->save();
+  $config = \Drupal::configFactory()->getEditable('system.feature_flags');
+  $config->set('linkset_endpoint', FALSE)->save();
 }
