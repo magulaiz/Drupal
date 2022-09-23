@@ -857,7 +857,7 @@ class MenuTreeStorage implements MenuTreeStorageInterface {
     }
     else {
       $links = $this->loadLinks($menu_name, $parameters);
-      $data['tree'] = $this->doBuildTreeData($links, $parameters->activeTrail, $parameters->minDepth);
+      $data['tree'] = $this->doBuildTreeData($links, $parameters);
       $data['definitions'] = [];
       $data['route_names'] = $this->collectRoutesAndDefinitions($data['tree'], $data['definitions']);
       $this->menuCacheBackend->set($tree_cid, $data, Cache::PERMANENT, ['config:system.menu.' . $menu_name]);
@@ -1095,10 +1095,10 @@ class MenuTreeStorage implements MenuTreeStorageInterface {
   /**
    * Prepares the data for calling $this->treeDataRecursive().
    */
-  protected function doBuildTreeData(array $links, array $parents = [], $depth = 1) {
+  protected function doBuildTreeData(array $links, MenuTreeParameters $parameters) {
     // Reverse the array so we can use the more efficient array_pop() function.
     $links = array_reverse($links);
-    return $this->treeDataRecursive($links, $parents, $depth);
+    return $this->treeDataRecursive($links, $parameters, $parameters->minDepth);
   }
 
   /**
@@ -1112,26 +1112,31 @@ class MenuTreeStorage implements MenuTreeStorageInterface {
    *   is an associative array of information about the menu link, containing
    *   the fields from the $this->table. This array must be ordered
    *   depth-first. MenuTreeStorage::loadTreeData() includes a sample query.
-   * @param array $parents
-   *   An array of the menu link ID values that are in the path from the current
-   *   page to the root of the menu tree.
+   * @param \Drupal\Core\Menu\MenuTreeParameters $parameters
+   *   The parameters to determine which menu links to be loaded into a tree.
    * @param int $depth
    *   The minimum depth to include in the returned menu tree.
+   * @param array|null $tree_parent
+   *   The parent link definition that recursively called this method or NULL if
+   *   link definition is at root level.
    *
    * @return array
    *   The fully built tree.
    *
    * @see \Drupal\Core\Menu\MenuTreeStorage::loadTreeData()
    */
-  protected function treeDataRecursive(array &$links, array $parents, $depth) {
+  protected function treeDataRecursive(array &$links, MenuTreeParameters $parameters, $depth, $tree_parent = NULL) {
     $tree = [];
     while ($tree_link_definition = array_pop($links)) {
+      if ($this->shouldSkipMenuLinkFromTree($parameters, $tree_link_definition, $tree_parent)) {
+        continue;
+      }
       $tree[$tree_link_definition['id']] = [
         'definition' => $this->prepareLink($tree_link_definition, TRUE),
         'has_children' => $tree_link_definition['has_children'],
         // We need to determine if we're on the path to root so we can later
         // build the correct active trail.
-        'in_active_trail' => in_array($tree_link_definition['id'], $parents),
+        'in_active_trail' => in_array($tree_link_definition['id'], $parameters->activeTrail),
         'subtree' => [],
         'depth' => $tree_link_definition['depth'],
       ];
@@ -1140,9 +1145,9 @@ class MenuTreeStorage implements MenuTreeStorageInterface {
       // sub-tree.
       $next = end($links);
       // Check whether the next link is the first in a new sub-tree.
-      if ($next && $next['depth'] > $depth) {
+      if ($next && $next['depth'] > $depth && $next['parent'] === $tree_link_definition['id']) {
         // Recursively call doBuildTreeData to build the sub-tree.
-        $tree[$tree_link_definition['id']]['subtree'] = $this->treeDataRecursive($links, $parents, $next['depth']);
+        $tree[$tree_link_definition['id']]['subtree'] = $this->treeDataRecursive($links, $parameters, $next['depth'], $tree_link_definition);
         // Fetch next link after filling the sub-tree.
         $next = end($links);
       }
@@ -1152,6 +1157,45 @@ class MenuTreeStorage implements MenuTreeStorageInterface {
       }
     }
     return $tree;
+  }
+
+  /**
+   * Determines whether given link definition should render in menu tree or not.
+   *
+   * @param \Drupal\Core\Menu\MenuTreeParameters $parameters
+   *   The parameters to determine which menu links to be loaded into a tree.
+   * @param array $link
+   *   The tree link definition loaded.
+   * @param array|null $parent_link
+   *   The parent link definition that recursively called this method or NULL if
+   *   link definition is at root level.
+   *
+   * @return bool
+   *   TRUE if link should not be added to tree, FALSE otherwise.
+   */
+  private function shouldSkipMenuLinkFromTree(MenuTreeParameters $parameters, array $link, $parent_link = NULL) {
+    // When "enabled" is flagged, partial results will be available which could
+    // lead to a scenario where root parent link is disabled while children are
+    // enabled and so get rendered to the root level of the menu.
+    return !empty($parameters->conditions['enabled']) &&
+      // It is possible to request only subtree of an item. In this scenario we
+      // should grant display to links whose parent might not be in the tree.
+      empty($parameters->root) &&
+      // Skip links that have a depth greater than the minDepth set in query.
+      $parameters->minDepth < $link['depth'] &&
+      // Given conditions above, if a link belongs to another link subtree, then
+      // we should make sure that the item gets rendered if one of the following
+      // two conditions is TRUE.
+      !empty($link['parent']) &&
+      (
+        // When $parent_link is not null it means that recursive logic kicked in
+        // to build the subtree of a link. Here we make sure that we're going to
+        // render below our right parent.
+        (!empty($parent_link) && $parent_link['id'] !== $link['parent']) ||
+        // We're still at first level of the tree ($parent_link=NULL). Render
+        // only links that has empty parent definition.
+        (empty($parent_link) && !empty($link['parent']))
+      );
   }
 
   /**
