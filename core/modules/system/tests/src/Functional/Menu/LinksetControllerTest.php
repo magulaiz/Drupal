@@ -18,7 +18,6 @@ use Drupal\Tests\user\Traits\UserCreationTrait;
 use Drupal\user\UserInterface;
 use GuzzleHttp\Psr7\Response;
 use GuzzleHttp\RequestOptions;
-use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Tests the behavior of the linkset controller.
@@ -186,10 +185,10 @@ final class LinksetControllerTest extends BrowserTestBase {
   public function testBasicFunctions() {
     $this->enableEndpoint(TRUE);
     $expected_linkset = Json::decode(file_get_contents(__DIR__ . '/fixtures/linkset-menu-main.json'));
-    $response = $this->doRequest(Request::create('/system/menu/main/linkset'));
+    $response = $this->doRequest('GET', Url::fromUri('base:/system/menu/main/linkset'));
     $this->assertSame('application/linkset+json', $response->getHeaderLine('content-type'));
     $this->assertSame($expected_linkset, Json::decode((string) $response->getBody()));
-    $this->doRequest(Request::create('/system/menu/missing/linkset'), 404);
+    $this->doRequest('GET', Url::fromUri('base:/system/menu/missing/linkset'), 404);
   }
 
   /**
@@ -215,9 +214,9 @@ final class LinksetControllerTest extends BrowserTestBase {
       'node:2',
       'node:3',
     ]);
-    $response = $this->doRequest(Request::create('/system/menu/main/linkset'));
+    $response = $this->doRequest('GET', Url::fromUri('base:/system/menu/main/linkset'));
     $this->assertDrupalResponseCacheability('MISS', $expected_cacheability, $response);
-    $response = $this->doRequest(Request::create('/system/menu/main/linkset'));
+    $response = $this->doRequest('GET', Url::fromUri('base:/system/menu/main/linkset'));
     $this->assertDrupalResponseCacheability('HIT', $expected_cacheability, $response);
     // Create a new menu item to invalidate the cache.
     $duplicate_title = 'About us (duplicate)';
@@ -228,7 +227,7 @@ final class LinksetControllerTest extends BrowserTestBase {
       'menu_name' => 'main',
     ]);
     // Redo the request.
-    $response = $this->doRequest(Request::create('/system/menu/main/linkset'));
+    $response = $this->doRequest('GET', Url::fromUri('base:/system/menu/main/linkset'));
     // Assert that the cache has been invalidated.
     $this->assertDrupalResponseCacheability('MISS', $expected_cacheability, $response);
     // Then ensure that the new menu link is in the response.
@@ -258,8 +257,8 @@ final class LinksetControllerTest extends BrowserTestBase {
       'node:3',
     ]);
     // Warm the cache, then get a response and ensure it was warmed.
-    $this->doRequest(Request::create('/system/menu/main/linkset'));
-    $response = $this->doRequest(Request::create('/system/menu/main/linkset'));
+    $this->doRequest('GET', Url::fromUri('base:/system/menu/main/linkset'));
+    $response = $this->doRequest('GET', Url::fromUri('base:/system/menu/main/linkset'));
     $this->assertDrupalResponseCacheability('HIT', $expected_cacheability, $response);
     // Ensure the "Our name" menu link is visible.
     $link_items = Json::decode((string) $response->getBody())['linkset'][0]['item'];
@@ -270,7 +269,7 @@ final class LinksetControllerTest extends BrowserTestBase {
     assert($our_name_page instanceof NodeInterface);
     $our_name_page->setUnpublished()->save();
     // Redo the request.
-    $response = $this->doRequest(Request::create('/system/menu/main/linkset'));
+    $response = $this->doRequest('GET', Url::fromUri('base:/system/menu/main/linkset'));
     // Assert that the cache was invalidated.
     $this->assertDrupalResponseCacheability('MISS', $expected_cacheability, $response);
     // Ensure the "Our name" menu link is no longer visible.
@@ -278,7 +277,7 @@ final class LinksetControllerTest extends BrowserTestBase {
     $titles = array_column($link_items, 'title');
     $this->assertNotContains('Our name', $titles);
     // Redo the request, but authenticate as the unpublished page's author.
-    $response = $this->doRequest(Request::create('/system/menu/main/linkset'), 200, $this->authorAccount);
+    $response = $this->doRequest('GET', Url::fromUri('base:/system/menu/main/linkset'), 200, $this->authorAccount);
     $expected_cacheability = new CacheableMetadata();
     $expected_cacheability->addCacheContexts(['user']);
     $expected_cacheability->addCacheTags([
@@ -314,7 +313,7 @@ final class LinksetControllerTest extends BrowserTestBase {
       'config:user.role.anonymous',
       'http_response',
     ]);
-    $response = $this->doRequest(Request::create('/system/menu/account/linkset'));
+    $response = $this->doRequest('GET', Url::fromUri('base:/system/menu/account/linkset'));
     $this->assertDrupalResponseCacheability('MISS', $expected_cacheability, $response);
     $link_items = Json::decode((string) $response->getBody())['linkset'][0]['item'];
     $titles = array_column($link_items, 'title');
@@ -322,7 +321,7 @@ final class LinksetControllerTest extends BrowserTestBase {
     $this->assertNotContains('Log out', $titles);
     $this->assertNotContains('My account', $titles);
     // Redo the request, but with an authenticated user.
-    $response = $this->doRequest(Request::create('/system/menu/account/linkset'), 200, $this->authorAccount);
+    $response = $this->doRequest('GET', Url::fromUri('base:/system/menu/account/linkset'), 200, $this->authorAccount);
     // The expected cache tags must be updated.
     $expected_cacheability->setCacheTags([
       'config:system.menu.account',
@@ -344,7 +343,7 @@ final class LinksetControllerTest extends BrowserTestBase {
   public function testCustomLinkRelation() {
     $this->enableEndpoint(TRUE);
     $this->assertTrue($this->container->get('module_installer')->install(['decoupled_menus_test'], TRUE), 'Installed modules.');
-    $response = $this->doRequest(Request::create('/system/menu/account/linkset'), 200, $this->authorAccount);
+    $response = $this->doRequest('GET', Url::fromUri('base:/system/menu/account/linkset'), 200, $this->authorAccount);
     $link_context_object = Json::decode((string) $response->getBody())['linkset'][0];
     $this->assertContains('authenticated-as', array_keys($link_context_object));
     $my_account_link = $link_context_object['authenticated-as'][0];
@@ -355,7 +354,7 @@ final class LinksetControllerTest extends BrowserTestBase {
    * Test that api route does not exist if the config option is disabled.
    */
   public function testDisabledEndpoint() {
-    $this->doRequest(Request::create('/system/menu/main/linkset'), 404);
+    $this->doRequest('GET', Url::fromUri('base:/system/menu/main/linkset'), 404);
   }
 
   /**
@@ -363,8 +362,10 @@ final class LinksetControllerTest extends BrowserTestBase {
    *
    * Only to be used when the expected response is a linkset response.
    *
-   * @param \Symfony\Component\HttpFoundation\Request $request
-   *   The request to send.
+   * @param string $method
+   *   HTTP method.
+   * @param \Drupal\Core\Url $url
+   *   URL to request.
    * @param int $expected_status
    *   The expected status code.
    * @param \Drupal\user\UserInterface $account
@@ -374,7 +375,7 @@ final class LinksetControllerTest extends BrowserTestBase {
    * @return \GuzzleHttp\Psr7\Response
    *   The response object.
    */
-  protected function doRequest(Request $request, $expected_status = 200, UserInterface $account = NULL): Response {
+  protected function doRequest(string $method, Url $url, $expected_status = 200, UserInterface $account = NULL): Response {
     $this->refreshVariables();
     $request_options[RequestOptions::HTTP_ERRORS] = FALSE;
     $request_options[RequestOptions::ALLOW_REDIRECTS] = FALSE;
@@ -385,7 +386,7 @@ final class LinksetControllerTest extends BrowserTestBase {
       ];
     }
     $client = $this->getSession()->getDriver()->getClient()->getClient();
-    $response = $client->request($request->getMethod(), Url::fromUri($request->getUri())->setAbsolute(TRUE)->toString(), $request_options);
+    $response = $client->request($method, $url->setAbsolute()->toString(), $request_options);
     $this->assertSame($expected_status, $response->getStatusCode(), (string) $response->getBody());
     return $response;
   }
