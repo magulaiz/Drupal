@@ -207,7 +207,7 @@ class OEmbedFormatter extends FormatterBase {
         if ($domain) {
           $url->setOption('base_url', $domain);
         }
-        else{
+        else {
           $absolute_url = $this->config->get('absolute_url');
           if ($absolute_url) {
             $site_url = 'http://' .$_SERVER['HTTP_HOST'];
