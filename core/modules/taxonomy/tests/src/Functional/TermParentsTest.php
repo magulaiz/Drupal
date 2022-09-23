@@ -89,14 +89,14 @@ class TermParentsTest extends BrowserTestBase {
     $this->assertEquals($expected, $term_4->get('parent')->getValue());
 
     // Create a term with term 3 as parent.
-    $page->selectFieldOption('Parent terms', '-Test term 3');
+    $page->selectFieldOption('Parent terms', "\u{B7}\u{2003}Test term 3");
     $term_5 = $this->submitAddTermForm('Test term 5');
     $expected = [['target_id' => $term_3->id()]];
     $this->assertEquals($expected, $term_5->get('parent')->getValue());
 
     // Create a term with multiple parents.
-    $page->selectFieldOption('Parent terms', '--Test term 5');
-    $page->selectFieldOption('Parent terms', '-Test term 4', TRUE);
+    $page->selectFieldOption('Parent terms', "\u{B7}\u{2003}\u{B7}\u{2003}Test term 5");
+    $page->selectFieldOption('Parent terms', "\u{B7}\u{2003}Test term 4", TRUE);
     $term_6 = $this->submitAddTermForm('Test term 6');
     $expected = [
       ['target_id' => $term_5->id()],
@@ -148,10 +148,10 @@ class TermParentsTest extends BrowserTestBase {
     $this->drupalGet($term_6->toUrl('edit-form'));
     $this->assertParentOption('<root>');
     $this->assertParentOption('Test term 1');
-    $this->assertParentOption('-Test term 3');
-    $this->assertParentOption('--Test term 5', TRUE);
+    $this->assertParentOption("\u{B7}\u{2003}Test term 3");
+    $this->assertParentOption("\u{B7}\u{2003}\u{B7}\u{2003}Test term 5", TRUE);
     $this->assertParentOption('Test term 2');
-    $this->assertParentOption('-Test term 4', TRUE);
+    $this->assertParentOption("\u{B7}\u{2003}Test term 4", TRUE);
     $this->submitForm([], 'Save');
     $this->assertParentsUnchanged($term_6);
   }
@@ -179,10 +179,10 @@ class TermParentsTest extends BrowserTestBase {
     $this->drupalGet($term_6->toUrl('edit-form'));
     $this->assertParentOption('<root>');
     $this->assertParentOption('Test term 1');
-    $this->assertParentOption('-Test term 3');
-    $this->assertParentOption('--Test term 5', TRUE);
+    $this->assertParentOption("\u{B7}\u{2003}Test term 3");
+    $this->assertParentOption("\u{B7}\u{2003}\u{B7}\u{2003}Test term 5", TRUE);
     $this->assertParentOption('Test term 2');
-    $this->assertParentOption('-Test term 4', TRUE);
+    $this->assertParentOption("\u{B7}\u{2003}Test term 4", TRUE);
     $this->submitForm([], 'Save');
     $this->assertParentsUnchanged($term_6);
   }
@@ -227,7 +227,7 @@ class TermParentsTest extends BrowserTestBase {
     $this->drupalGet($term_4->toUrl('edit-form'));
     $this->assertParentOption('<root>');
     $this->assertParentOption('Test term 1');
-    $this->assertParentOption('-Test term 3');
+    $this->assertParentOption("\u{B7}\u{2003}Test term 3");
     $this->assertParentOption('Test term 2', TRUE);
     $this->submitForm([], 'Save');
     $this->assertParentsUnchanged($term_4);
@@ -238,9 +238,9 @@ class TermParentsTest extends BrowserTestBase {
     $this->drupalGet($term_5->toUrl('edit-form'));
     $this->assertParentOption('<root>');
     $this->assertParentOption('Test term 1');
-    $this->assertParentOption('-Test term 3', TRUE);
+    $this->assertParentOption("\u{B7}\u{2003}Test term 3", TRUE);
     $this->assertParentOption('Test term 2');
-    $this->assertParentOption('-Test term 4');
+    $this->assertParentOption("\u{B7}\u{2003}Test term 4");
     $this->submitForm([], 'Save');
     $this->assertParentsUnchanged($term_5);
     $terms[] = $term_5;
