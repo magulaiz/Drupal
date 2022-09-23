@@ -13,6 +13,7 @@ use Drupal\menu_link_content\MenuLinkContentInterface;
 use Drupal\node\Entity\Node;
 use Drupal\node\Entity\NodeType;
 use Drupal\node\NodeInterface;
+use Drupal\Tests\ApiRequestTrait;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\user\Traits\UserCreationTrait;
 use Drupal\user\UserInterface;
@@ -30,7 +31,7 @@ use GuzzleHttp\RequestOptions;
  * @see https://tools.ietf.org/html/draft-ietf-httpapi-linkset-00
  */
 final class LinksetControllerTest extends BrowserTestBase {
-
+  use ApiRequestTrait;
   use UserCreationTrait;
 
   /**
@@ -376,17 +377,14 @@ final class LinksetControllerTest extends BrowserTestBase {
    *   The response object.
    */
   protected function doRequest(string $method, Url $url, $expected_status = 200, UserInterface $account = NULL): Response {
-    $this->refreshVariables();
-    $request_options[RequestOptions::HTTP_ERRORS] = FALSE;
-    $request_options[RequestOptions::ALLOW_REDIRECTS] = FALSE;
+    $request_options = [];
     if (!is_null($account)) {
       $credentials = $account->name->value . ':' . $account->passRaw;
       $request_options[RequestOptions::HEADERS] = [
         'Authorization' => 'Basic ' . base64_encode($credentials),
       ];
     }
-    $client = $this->getSession()->getDriver()->getClient()->getClient();
-    $response = $client->request($method, $url->setAbsolute()->toString(), $request_options);
+    $response = $this->makeApiRequest($method, $url, $request_options);
     $this->assertSame($expected_status, $response->getStatusCode(), (string) $response->getBody());
     return $response;
   }
