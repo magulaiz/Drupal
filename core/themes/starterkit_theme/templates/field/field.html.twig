@@ -43,7 +43,7 @@
     'field--name-' ~ field_name|clean_class,
     'field--type-' ~ field_type|clean_class,
     'field--label-' ~ label_display,
-    multiple ? 'field--has-multiple-items' : 'field--has-single-item',
+    multiple ? 'field--multiple' : 'field--single',
     label_display == 'inline' ? 'clearfix',
   ]
 %}
