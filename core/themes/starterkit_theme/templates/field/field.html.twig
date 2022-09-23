@@ -43,6 +43,7 @@
     'field--name-' ~ field_name|clean_class,
     'field--type-' ~ field_type|clean_class,
     'field--label-' ~ label_display,
+    multiple ? 'field--has-multiple-items' : 'field--has-single-item',
     label_display == 'inline' ? 'clearfix',
   ]
 %}
@@ -53,29 +54,13 @@
   ]
 %}
 
-{% if label_hidden %}
-  {% if multiple %}
-    <div{{ attributes.addClass(classes, 'field__items') }}>
-      {% for item in items %}
-        <div{{ item.attributes.addClass('field__item') }}>{{ item.content }}</div>
-      {% endfor %}
-    </div>
-  {% else %}
-    {% for item in items %}
-      <div{{ attributes.addClass(classes, 'field__item') }}>{{ item.content }}</div>
-    {% endfor %}
-  {% endif %}
-{% else %}
-  <div{{ attributes.addClass(classes) }}>
+<div{{ attributes.addClass(classes) }}>
+  {% if not label_hidden %}
     <div{{ title_attributes.addClass(title_classes) }}>{{ label }}</div>
-    {% if multiple %}
-      <div class="field__items">
-    {% endif %}
+  {% endif %}
+  <div class="field__items">
     {% for item in items %}
       <div{{ item.attributes.addClass('field__item') }}>{{ item.content }}</div>
     {% endfor %}
-    {% if multiple %}
-      </div>
-    {% endif %}
   </div>
-{% endif %}
+</div>
