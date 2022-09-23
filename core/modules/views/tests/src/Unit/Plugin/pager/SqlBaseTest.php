@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\views\Unit\Plugin\pager\SqlBaseTest.
- */
-
 namespace Drupal\Tests\views\Unit\Plugin\pager;
 
 use Drupal\Core\DependencyInjection\ContainerBuilder;
@@ -81,7 +76,6 @@ class SqlBaseTest extends UnitTestCase {
     $this->pager->init($this->view, $this->display, $options);
     $this->pager->query();
     $this->assertSame(10, $this->pager->options['items_per_page']);
-
 
     $options = [
       'expose' => [
