@@ -186,6 +186,12 @@ final class LinksetControllerTest extends BrowserTestBase {
   public function testBasicFunctions() {
     $this->enableEndpoint(TRUE);
     $expected_linkset = Json::decode(file_get_contents(__DIR__ . '/fixtures/linkset-menu-main.json'));
+    // Ensure that the URLs are correct if Drupal is being served from a
+    // subdirectory.
+    $expected_linkset['linkset'][0]['anchor'] = Url::fromUri('base:' . $expected_linkset['linkset'][0]['anchor'])->toString();
+    foreach ($expected_linkset['linkset'][0]['item'] as &$item) {
+      $item['href'] = Url::fromUri('base:' . $item['href'])->toString();
+    }
     $response = $this->doRequest('GET', Url::fromUri('base:/system/menu/main/linkset'));
     $this->assertSame('application/linkset+json', $response->getHeaderLine('content-type'));
     $this->assertSame($expected_linkset, Json::decode((string) $response->getBody()));
