@@ -100,7 +100,6 @@ class LayoutBuilderTest extends WebDriverTestBase {
    * Tests the Layout Builder UI.
    */
   public function testLayoutBuilderUi() {
-    $this->markTestSkipped();
     $layout_url = 'node/1/layout';
     $node_url = 'node/1';
 
@@ -161,9 +160,11 @@ class LayoutBuilderTest extends WebDriverTestBase {
 
     $assert_session->linkExists('Add section');
     $this->clickLink('Add section');
+    $this->waitForOffCanvasArea();
     $this->assertNotEmpty($assert_session->waitForElementVisible('named', ['link', 'Two column']));
 
     $this->clickLink('Two column');
+    $this->waitForOffCanvasArea();
     $assert_session->waitForElementVisible('named', ['button', 'Add section']);
     $page->pressButton('Add section');
     $assert_session->assertWaitOnAjaxRequest();
@@ -473,6 +474,7 @@ class LayoutBuilderTest extends WebDriverTestBase {
     $assert_session = $this->assertSession();
     $assert_session->linkExists('Add block');
     $this->clickLink('Add block');
+    $this->waitForOffCanvasArea();
     $assert_session->assertWaitOnAjaxRequest();
     $this->assertNotEmpty($assert_session->waitForElementVisible('named', ['link', $block_title]));
     $this->clickLink($block_title);
