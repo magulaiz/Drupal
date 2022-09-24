@@ -29,7 +29,8 @@ class DownloadTest extends FileManagedTestBase {
 
     // This test currently frequently causes the SQLite database to lock, so
     // skip the test on SQLite until the issue can be resolved.
-    // @todo https://www.drupal.org/project/drupal/issues/3311476
+    // @todo Fix root cause and re-enable in
+    //   https://www.drupal.org/project/drupal/issues/3311587
     if (Database::getConnection()->driver() === 'sqlite') {
       $this->markTestSkipped('Test frequently causes a locked database on SQLite');
     }
