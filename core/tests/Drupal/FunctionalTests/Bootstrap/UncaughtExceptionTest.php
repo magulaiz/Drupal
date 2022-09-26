@@ -105,8 +105,8 @@ class UncaughtExceptionTest extends BrowserTestBase {
     $this->assertSession()->responseContains((string) $message);
     $this->assertSession()->responseContains('<pre class="backtrace">');
     // Ensure we are escaping but not double escaping.
-    $this->assertSession()->responseContains('&#039;');
-    $this->assertSession()->responseNotContains('&amp;#039;');
+    $this->assertSession()->responseContains('&gt;');
+    $this->assertSession()->responseNotContains('&amp;gt;');
   }
 
   /**
@@ -265,8 +265,8 @@ class UncaughtExceptionTest extends BrowserTestBase {
     $this->assertStringContainsString('Failed to log error', $errors[0], 'The error handling logs when an error could not be logged to the logger.');
 
     $expected_path = \Drupal::root() . '/core/modules/system/tests/modules/error_service_test/src/MonkeysInTheControlRoom.php';
-    $expected_line = 62;
-    $expected_entry = "Failed to log error: Exception: Deforestation in Drupal\\error_service_test\\MonkeysInTheControlRoom->handle() (line ${expected_line} of ${expected_path})";
+    $expected_line = 67;
+    $expected_entry = "Failed to log error: Exception: Deforestation in Drupal\\error_service_test\\MonkeysInTheControlRoom->handle() (line {$expected_line} of {$expected_path})";
     $this->assertStringContainsString($expected_entry, $errors[0], 'Original error logged to the PHP error log when an exception is thrown by a logger');
 
     // The exception is expected. Do not interpret it as a test failure. Not

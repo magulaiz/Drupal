@@ -21,6 +21,7 @@ parameters:
       max-age: 0
       contexts: ['session', 'user']
       tags: []
+    debug: false
   factory.keyvalue:
     default: keyvalue.database
   http.response.debug_cacheability_headers: false
@@ -1286,6 +1287,7 @@ services:
     class: Drupal\Core\EventSubscriber\ConfigImportSubscriber
     tags:
       - { name: event_subscriber }
+      - { name: service_collector, tag: 'module_install.uninstall_validator', call: addUninstallValidator }
     arguments: ['@theme_handler', '@extension.list.module']
   config_snapshot_subscriber:
     class: Drupal\Core\EventSubscriber\ConfigSnapshotSubscriber
@@ -1330,11 +1332,7 @@ services:
     class: Drupal\Core\EventSubscriber\Fast404ExceptionHtmlSubscriber
     tags:
       - { name: event_subscriber }
-    arguments: ['@config.factory', '@http_kernel']
-  exception.test_site:
-    class: Drupal\Core\EventSubscriber\ExceptionTestSiteSubscriber
-    tags:
-      - { name: event_subscriber }
+    arguments: ['@config.factory', '@cache_tags.invalidator']
   exception.enforced_form_response:
     class: Drupal\Core\EventSubscriber\EnforcedFormResponseSubscriber
     tags:
@@ -1547,7 +1545,7 @@ services:
     arguments: ['%app.root%', '@theme_handler', '@cache.bootstrap', '@module_handler']
   theme.registry:
     class: Drupal\Core\Theme\Registry
-    arguments: ['%app.root%', '@cache.default', '@lock', '@module_handler', '@theme_handler', '@theme.initialization', null, '@cache.bootstrap', '@extension.list.module']
+    arguments: ['%app.root%', '@cache.default', '@lock', '@module_handler', '@theme_handler', '@theme.initialization', '@cache.bootstrap', '@extension.list.module']
     tags:
       - { name: needs_destruction }
     calls:
@@ -1671,12 +1669,18 @@ services:
     arguments: ['@renderer', '@url_generator', '@theme.manager', '@date.formatter', '@file_url_generator']
     tags:
       - { name: twig.extension, priority: 100 }
-  # @todo Figure out what to do about debugging functions.
-  # @see https://www.drupal.org/node/1804998
   twig.extension.debug:
     class: Twig\Extension\DebugExtension
     tags:
-      - { name: twig.extension }
+      - { name: twig.extension, priority: 50 }
+  twig.extension.varDumper:
+    class: Drupal\Core\Template\DebugExtension
+    tags:
+      # This extension is loaded after the Twig Debug Extension because for Twig
+      # Extensions, last extension loaded takes precedent. This allows this
+      # extension to override the default Twig Debug Extension conditionally
+      # when Symfony VarDumper is available.
+      - { name: twig.extension, priority: 25 }
   twig.loader:
     class: Twig\Loader\ChainLoader
     public: false

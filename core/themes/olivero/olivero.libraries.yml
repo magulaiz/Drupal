@@ -3,7 +3,6 @@ global-styling:
   css:
     base:
       css/base/fonts.css: {}
-      css/base/variables.css: {}
       css/base/base.css: {}
       css/base/utility.css: {}
     layout:
@@ -118,6 +117,13 @@ drupal.dialog:
   css:
     theme:
       css/components/ui-dialog.css: {}
+
+drupal.message:
+  version: VERSION
+  js:
+    js/message.theme.js: {}
+  dependencies:
+    - olivero/messages
 
 drupal.node.preview:
   version: VERSION
