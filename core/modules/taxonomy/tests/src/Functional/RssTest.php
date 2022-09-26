@@ -98,7 +98,7 @@ class RssTest extends TaxonomyTestBase {
     ]);
     $rss_display->save();
 
-    // Creae an article.
+    // Create an article.
     $node = $this->drupalCreateNode([
       'type' => 'article',
       $this->fieldName => $term1->id(),
