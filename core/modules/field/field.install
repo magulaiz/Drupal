@@ -5,6 +5,8 @@
  * Install, update and uninstall functions for the field module.
  */
 
+use Drupal\Component\Plugin\Exception\PluginNotFoundException;
+use Drupal\Core\Database\SchemaObjectDoesNotExistException;
 use Drupal\Core\Entity\Sql\SqlContentEntityStorage;
 
 /**
@@ -37,7 +39,7 @@ function field_update_8501(&$sandbox) {
     try {
       $entityStorage = $entityTypeManager->getStorage($entityType);
     }
-    catch (\Drupal\Component\Plugin\Exception\PluginNotFoundException $e) {
+    catch (PluginNotFoundException $e) {
       continue;
     }
     // Skipping entities that have no SQL storage.
@@ -85,19 +87,25 @@ function field_update_8501(&$sandbox) {
       $fieldDefinitionSchema = $fieldDefinition->getSchema();
       $referenceFieldSize = $fieldDefinitionSchema['columns']['target_id']['size'] ?? NULL;
 
-      // Skipping if target entity id field have no custom size value, or default (normal)
+      // Skipping if target entity id field have no custom size value, or
+      // default (normal). We've included `NULL` here because many current
+      // fields has no excplicitly declared field size, so we keep this.
       if ($targetFieldSize == NULL || $targetFieldSize == 'normal') {
         continue;
       }
 
       $fieldSqlTables = $entityStorage->getTableMapping()->getAllFieldTableNames($fieldName);
       foreach ($fieldSqlTables as $fieldSqlTable) {
+        // Skipping the update procedure if we already has the same field size.
+        if ($targetFieldSize === $referenceFieldSize) {
+          continue;
+        }
         $isSameTable = ($fieldDefinition->getCardinality() == 1);
         $fieldSqlColumn = $isSameTable ? $fieldName : $fieldName . '_target_id';
         try {
           $dbSchema->changeField($fieldSqlTable, $fieldSqlColumn, $fieldSqlColumn, $fieldDefinitionSchema['columns']['target_id']);
         }
-        catch (\Drupal\Core\Database\SchemaObjectDoesNotExistException $e) {
+        catch (SchemaObjectDoesNotExistException $e) {
           // Skipping tables that doesn't exist.
         }
 
