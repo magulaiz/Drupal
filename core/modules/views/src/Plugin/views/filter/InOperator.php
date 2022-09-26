@@ -270,6 +270,9 @@ class InOperator extends FilterPluginBase {
     foreach ($input as $id => $option) {
       if (is_array($option)) {
         $options[$id] = $this->reduceValueOptions($option);
+        if (empty($options[$id])) {
+          unset($options[$id]);
+        }
         continue;
       }
       elseif (is_object($option) && !$option instanceof MarkupInterface) {
