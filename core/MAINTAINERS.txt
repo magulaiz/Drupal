@@ -93,6 +93,7 @@ Block
 
 Block Content
 - Lee Rowlands 'larowlan' https://www.drupal.org/u/larowlan
+- Stephen Mustgrave 'smustgrave' https://www.drupal.org/u/smustgrave
 
 Book
 - Peter Wolanin 'pwolanin' https://www.drupal.org/u/pwolanin
@@ -107,11 +108,6 @@ Breakpoint
 Cache
 - Nathaniel Catchpole 'catch' https://www.drupal.org/u/catch
 
-CKEditor
-- Henrik Danielsson 'TwoD' https://www.drupal.org/u/TwoD
-- Wim Leers 'Wim Leers' https://www.drupal.org/u/wim-leers
-- Marek 'mlewand' Lewandowski https://www.drupal.org/u/mlewand
-
 CKEditor 5
 - Lauri Eskola 'lauriii' https://www.drupal.org/u/lauriii
 - Wim Leers 'Wim Leers' https://www.drupal.org/u/wim-leers
@@ -122,9 +118,6 @@ Claro
 - Sascha Eggenberger 'saschaeggi' https://www.drupal.org/u/saschaeggi
 - Lauri Eskola 'lauriii' https://www.drupal.org/u/lauriii
 - Ben Mullins 'bnjmnm' https://www.drupal.org/u/bnjmnm
-
-Classy
-- David Hernandez 'davidhernandez' https://www.drupal.org/u/davidhernandez
 
 Comment
 - Lee Rowlands 'larowlan' https://www.drupal.org/u/larowlan
@@ -165,6 +158,7 @@ Cron
 
 CSS
 - John Albin Wilkins 'JohnAlbin' https://www.drupal.org/u/johnalbin
+- Mike Herchel 'mherchel' https://www.drupal.org/u/mherchel
 
 Database API
 - ?
@@ -378,9 +372,6 @@ Settings Tray
 Shortcut
 - Tobias Zimmermann 'tstoeckler' https://www.drupal.org/u/tstoeckler
 - Jibran Ijaz 'jibran' https://www.drupal.org/u/jibran
-
-Stable
-- ?
 
 Stark
 - John Albin Wilkins 'JohnAlbin' https://www.drupal.org/u/johnalbin

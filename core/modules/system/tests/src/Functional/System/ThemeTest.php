@@ -74,8 +74,8 @@ class ThemeTest extends BrowserTestBase {
     $this->drupalGet('admin/appearance/settings/' . $this->randomMachineName());
     $this->assertSession()->statusCodeEquals(404);
     // Ensure a hidden theme settings form URL returns 404.
-    $this->assertTrue(\Drupal::service('theme_installer')->install(['stable']));
-    $this->drupalGet('admin/appearance/settings/stable');
+    $this->assertTrue(\Drupal::service('theme_installer')->install(['stable9']));
+    $this->drupalGet('admin/appearance/settings/stable9');
     $this->assertSession()->statusCodeEquals(404);
 
     // Specify a filesystem path to be used for the logo.
@@ -210,15 +210,15 @@ class ThemeTest extends BrowserTestBase {
     $theme_handler = \Drupal::service('theme_handler');
     $this->assertSession()->linkExists($theme_handler->getName('starterkit_theme'));
     $this->assertSession()->linkExists($theme_handler->getName('olivero'));
-    $this->assertSession()->linkNotExists($theme_handler->getName('stable'));
+    $this->assertSession()->linkNotExists($theme_handler->getName('stable9'));
 
     // If a hidden theme is an admin theme it should be viewable.
-    \Drupal::configFactory()->getEditable('system.theme')->set('admin', 'stable')->save();
+    \Drupal::configFactory()->getEditable('system.theme')->set('admin', 'stable9')->save();
     \Drupal::service('router.builder')->rebuildIfNeeded();
-    $this->drupalPlaceBlock('local_tasks_block', ['region' => 'header', 'theme' => 'stable']);
+    $this->drupalPlaceBlock('local_tasks_block', ['region' => 'header', 'theme' => 'stable9']);
     $this->drupalGet('admin/appearance/settings');
-    $this->assertSession()->linkExists($theme_handler->getName('stable'));
-    $this->drupalGet('admin/appearance/settings/stable');
+    $this->assertSession()->linkExists($theme_handler->getName('stable9'));
+    $this->drupalGet('admin/appearance/settings/stable9');
     $this->assertSession()->statusCodeEquals(200);
 
     // Ensure default logo and favicons are not triggering custom path
@@ -438,9 +438,6 @@ class ThemeTest extends BrowserTestBase {
     $this->assertSession()->responseNotContains('Uninstall claro theme');
     // Check that olivero cannot be uninstalled as it is the default theme.
     $this->assertSession()->responseNotContains('Uninstall Olivero theme');
-    // Check that the classy theme cannot be uninstalled as it is a base theme
-    // of claro and olivero.
-    $this->assertSession()->responseNotContains('Uninstall Classy theme');
 
     // Install Stark and set it as the default theme.
     \Drupal::service('theme_installer')->install(['stark']);
@@ -454,9 +451,6 @@ class ThemeTest extends BrowserTestBase {
 
     // Check that claro can be uninstalled now.
     $this->assertSession()->responseContains('Uninstall claro theme');
-    // Check that the classy theme still cannot be uninstalled as it is a
-    // base theme of olivero.
-    $this->assertSession()->responseNotContains('Uninstall Classy theme');
 
     // Change the default theme to stark, stark is second in the list.
     $this->clickLink('Set as default', 1);
@@ -464,18 +458,11 @@ class ThemeTest extends BrowserTestBase {
     // Check that olivero can be uninstalled now.
     $this->assertSession()->responseContains('Uninstall Olivero theme');
 
-    // Check that the classy theme still can't be uninstalled as neither of its
-    // base themes have been.
-    $this->assertSession()->responseNotContains('Uninstall Classy theme');
-
     // Uninstall each of the two themes starting with Olivero.
     $this->cssSelect('a[title="Uninstall Olivero theme"]')[0]->click();
     $this->assertSession()->responseContains('The <em class="placeholder">Olivero</em> theme has been uninstalled');
     $this->cssSelect('a[title="Uninstall Claro theme"]')[0]->click();
     $this->assertSession()->responseContains('The <em class="placeholder">Claro</em> theme has been uninstalled');
-
-    // Check that the classy theme still can't be uninstalled as it is hidden.
-    $this->assertSession()->responseNotContains('Uninstall Classy theme');
   }
 
   /**

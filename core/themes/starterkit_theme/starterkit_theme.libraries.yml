@@ -10,8 +10,6 @@ base:
         weight: -10
       css/components/button.css:
         weight: -10
-      css/components/collapse-processed.css:
-        weight: -10
       css/components/container-inline.css:
         weight: -10
       css/components/details.css:
