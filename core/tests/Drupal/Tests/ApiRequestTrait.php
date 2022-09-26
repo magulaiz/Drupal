@@ -14,7 +14,7 @@ use GuzzleHttp\RequestOptions;
 trait ApiRequestTrait {
 
   /**
-   * Performs a HTTP request. Wraps the Guzzle HTTP client.
+   * Performs an HTTP request. Wraps the Guzzle HTTP client.
    *
    * Why wrap the Guzzle HTTP client? Because we want to keep the actual test
    * code as simple as possible, and hence not require them to specify the
