@@ -89,7 +89,7 @@ function field_update_8501(&$sandbox) {
 
       // Skipping if target entity id field have no custom size value, or
       // default (normal). We've included `NULL` here because many current
-      // fields has no excplicitly declared field size, so we keep this.
+      // fields has no explicitly declared field size, so we keep this.
       if ($targetFieldSize == NULL || $targetFieldSize == 'normal') {
         continue;
       }
