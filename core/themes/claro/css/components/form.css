@@ -89,7 +89,7 @@ tr .form-item,
 
 .form-item__label.is-disabled {
   cursor: default; /* @todo ...or auto? */
-  color: var(--color-gray-700);
+  color: #75767b;
 }
 
 .form-item__label.form-required::after,
@@ -117,7 +117,7 @@ tr .form-item,
 /* Description states. */
 
 .form-item__description.is-disabled {
-  color: var(--color-gray-700);
+  color: #75767b;
 }
 
 /**
@@ -135,7 +135,7 @@ tr .form-item,
 
 .form-item__prefix.is-disabled,
 .form-item__suffix.is-disabled {
-  color: var(--color-gray-700);
+  color: #75767b;
 }
 
 /* Add some spacing so that the focus ring and suffix don't overlap. */

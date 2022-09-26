@@ -246,7 +246,7 @@ td > .ajax-new-content > .form-item > .form-element {
 /* Win over table-file-multiple-widget. */
 
 th.is-disabled.is-disabled {
-  color: #828388;
+  color: #75767b;
 }
 
 /* Force browsers to calculate the width of a 'select all' <th> element. */
