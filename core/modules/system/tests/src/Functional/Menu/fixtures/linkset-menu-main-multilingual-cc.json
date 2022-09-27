@@ -1,0 +1,21 @@
+{
+  "linkset": [
+    {
+      "anchor": "/cc/system/menu/main/linkset",
+      "item": [
+        {
+          "href": "/cc",
+          "title": "Home",
+          "hierarchy": ["0"],
+          "machine-name": ["main"]
+        },
+        {
+          "href": "/cc/node/1",
+          "title": "cc|A multi-lingual-node",
+          "hierarchy": ["1"],
+          "machine-name": ["main"]
+        }
+      ]
+    }
+  ]
+}

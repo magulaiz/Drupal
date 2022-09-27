@@ -1,0 +1,21 @@
+{
+  "linkset": [
+    {
+      "anchor": "/dd/system/menu/main/linkset",
+      "item": [
+        {
+          "href": "/dd",
+          "title": "Home",
+          "hierarchy": ["0"],
+          "machine-name": ["main"]
+        },
+        {
+          "href": "/dd/multi-lingual-node",
+          "title": "A multi-lingual-node",
+          "hierarchy": ["1"],
+          "machine-name": ["main"]
+        }
+      ]
+    }
+  ]
+}

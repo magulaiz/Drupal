@@ -1,0 +1,21 @@
+{
+  "linkset": [
+    {
+      "anchor": "/aa/system/menu/main/linkset",
+      "item": [
+        {
+          "href": "/aa",
+          "title": "Home",
+          "hierarchy": ["0"],
+          "machine-name": ["main"]
+        },
+        {
+          "href": "/aa/node/1",
+          "title": "aa|A multi-lingual-node",
+          "hierarchy": ["1"],
+          "machine-name": ["main"]
+        }
+      ]
+    }
+  ]
+}
