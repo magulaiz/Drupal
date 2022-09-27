@@ -8,6 +8,7 @@ use Drupal\Core\Cache\CacheableResponseInterface;
 use Drupal\Core\PageCache\RequestPolicyInterface;
 use Drupal\Core\PageCache\ResponsePolicyInterface;
 use Drupal\Core\Render\RenderCacheInterface;
+use Drupal\Core\Session\AccountInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\ResponseEvent;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
@@ -68,6 +69,13 @@ class DynamicPageCacheSubscriber implements EventSubscriberInterface {
   protected $rendererConfig;
 
   /**
+   * The current user.
+   *
+   * @var \Drupal\Core\Session\AccountInterface
+   */
+  protected $currentUser;
+
+  /**
    * Dynamic Page Cache's redirect render array.
    *
    * @var array
@@ -107,12 +115,15 @@ class DynamicPageCacheSubscriber implements EventSubscriberInterface {
    *   The render cache.
    * @param array $renderer_config
    *   The renderer configuration array.
+   * @param \Drupal\Core\Session\AccountInterface $current_user
+   *   The current user.
    */
-  public function __construct(RequestPolicyInterface $request_policy, ResponsePolicyInterface $response_policy, RenderCacheInterface $render_cache, array $renderer_config) {
+  public function __construct(RequestPolicyInterface $request_policy, ResponsePolicyInterface $response_policy, RenderCacheInterface $render_cache, array $renderer_config, AccountInterface $current_user) {
     $this->requestPolicy = $request_policy;
     $this->responsePolicy = $response_policy;
     $this->renderCache = $render_cache;
     $this->rendererConfig = $renderer_config;
+    $this->currentUser = $current_user;
     $this->requestPolicyResults = new \SplObjectStorage();
   }
 
@@ -165,7 +176,7 @@ class DynamicPageCacheSubscriber implements EventSubscriberInterface {
     }
 
     // There's no work left to be done if this is an uncacheable response.
-    if (!$this->shouldCacheResponse($response)) {
+    if (!$this->currentUser->isAnonymous() && !$this->shouldCacheResponse($response)) {
       // The response is uncacheable, mark it as such.
       $response->headers->set(self::HEADER, 'UNCACHEABLE');
       return;
