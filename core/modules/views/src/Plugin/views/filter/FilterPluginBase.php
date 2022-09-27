@@ -1363,7 +1363,7 @@ abstract class FilterPluginBase extends HandlerBase implements CacheableDependen
    */
   public function exposedInfo() {
     if (empty($this->options['exposed'])) {
-      return;
+      return NULL;
     }
 
     if ($this->isAGroup()) {

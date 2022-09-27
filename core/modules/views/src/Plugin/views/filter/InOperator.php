@@ -338,7 +338,7 @@ class InOperator extends FilterPluginBase {
     $flat_options = OptGroup::flattenOptions($this->valueOptions);
 
     if (!is_array($this->value)) {
-      return;
+      return NULL;
     }
 
     $operator = $info[$this->operator]['short'];

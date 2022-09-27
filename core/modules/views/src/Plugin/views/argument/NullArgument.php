@@ -43,7 +43,7 @@ class NullArgument extends ArgumentPluginBase {
       if (in_array($which, ['ignore', 'not found', 'empty', 'default'])) {
         return parent::defaultActions($which);
       }
-      return;
+      return NULL;
     }
     $actions = parent::defaultActions();
     unset($actions['summary asc']);

@@ -72,7 +72,7 @@ function node_test_node_grants(AccountInterface $account, $operation) {
 function node_test_node_access_records(NodeInterface $node) {
   // Return nothing when testing for empty responses.
   if (!empty($node->disable_node_access)) {
-    return;
+    return NULL;
   }
   $grants = [];
   if ($node->getType() == 'article') {

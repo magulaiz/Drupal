@@ -45,7 +45,7 @@ class FormSubmitter implements FormSubmitterInterface {
    */
   public function doSubmitForm(&$form, FormStateInterface &$form_state) {
     if (!$form_state->isSubmitted()) {
-      return;
+      return NULL;
     }
 
     // Execute form submit handlers.

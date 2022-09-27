@@ -622,7 +622,7 @@ class Sql extends QueryPluginBase {
 
     // If it can't be fetched, this won't work.
     if (empty($join)) {
-      return;
+      return NULL;
     }
 
     // Adjust this join for the relationship, which will ensure that the 'base'

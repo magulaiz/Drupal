@@ -171,7 +171,7 @@ class TestSiteInstallCommand extends Command {
    */
   protected function getSetupClass($file) {
     if ($file === NULL) {
-      return;
+      return NULL;
     }
     if (!file_exists($file)) {
       throw new \InvalidArgumentException("The file $file does not exist.");

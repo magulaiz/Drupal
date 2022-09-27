@@ -1210,7 +1210,7 @@ class ViewExecutable {
    */
   public function build($display_id = NULL) {
     if (!empty($this->built)) {
-      return;
+      return NULL;
     }
 
     if (empty($this->current_display) || $display_id) {
@@ -1470,10 +1470,10 @@ class ViewExecutable {
 
     // Check to see if the build failed.
     if (!empty($this->build_info['fail'])) {
-      return;
+      return NULL;
     }
     if (!empty($this->build_info['denied'])) {
-      return;
+      return NULL;
     }
 
     /** @var \Drupal\views\Plugin\views\exposed_form\ExposedFormPluginInterface $exposed_form */
