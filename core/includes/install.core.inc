@@ -633,7 +633,7 @@ function install_run_task($task, &$install_state) {
       if (empty($batches)) {
         // If the task did some processing and decided no batch was necessary,
         // there is nothing more to do here.
-        return;
+        return NULL;
       }
       // Create a one item list of batches if only one batch was provided.
       if (isset($batches['operations'])) {
@@ -690,7 +690,7 @@ function install_run_task($task, &$install_state) {
       if ($output === FALSE) {
         // Return nothing so the next task will run in the same request.
         \Drupal::state()->delete('install_current_batch');
-        return;
+        return NULL;
       }
       else {
         // We need to force the page request to end if the task is not
@@ -1370,7 +1370,7 @@ function install_select_language(&$install_state) {
     $langcode = $install_state['parameters']['langcode'];
     if ($langcode == 'en' || isset($files[$langcode]) || isset($standard_languages[$langcode])) {
       $install_state['parameters']['langcode'] = $langcode;
-      return;
+      return NULL;
     }
   }
 
@@ -1389,7 +1389,7 @@ function install_select_language(&$install_state) {
     else {
       if (count($files) == 1) {
         $install_state['parameters']['langcode'] = current(array_keys($files));
-        return;
+        return NULL;
       }
       else {
         throw new InstallerException('You must select a language to continue the installation.');

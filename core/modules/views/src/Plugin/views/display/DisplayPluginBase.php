@@ -811,7 +811,7 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
 
     // Return now if no options have been loaded.
     if (empty($options) || !isset($options['type'])) {
-      return;
+      return NULL;
     }
 
     // Query plugins allow specifying a specific query class per base table.
@@ -2640,7 +2640,7 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
     // Avoid interfering with the admin forms.
     $route_name = \Drupal::routeMatch()->getRouteName();
     if (str_starts_with($route_name, 'views_ui.')) {
-      return;
+      return NULL;
     }
     $this->view->initHandlers();
 
@@ -2649,6 +2649,8 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
       $exposed_form = $this->getPlugin('exposed_form');
       return $exposed_form->renderExposedForm(TRUE);
     }
+
+    return NULL;
   }
 
   /**

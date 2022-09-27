@@ -729,7 +729,7 @@ function views_embed_view($name, $display_id = 'default') {
 
   $view = Views::getView($name);
   if (!$view || !$view->access($display_id)) {
-    return;
+    return NULL;
   }
 
   return [

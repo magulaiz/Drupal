@@ -202,7 +202,7 @@ abstract class ListItemBase extends FieldItemBase implements OptionsProviderInte
         $generated_keys = TRUE;
       }
       else {
-        return;
+        return NULL;
       }
 
       $values[$key] = $value;
@@ -210,7 +210,7 @@ abstract class ListItemBase extends FieldItemBase implements OptionsProviderInte
 
     // We generate keys only if the list contains no explicit key at all.
     if ($explicit_keys && $generated_keys) {
-      return;
+      return NULL;
     }
 
     return $values;

@@ -358,7 +358,7 @@ class FilterHtml extends FilterBase {
     global $base_url;
 
     if (!($allowed_html = $this->settings['allowed_html'])) {
-      return;
+      return NULL;
     }
     $output = $this->t('Allowed HTML tags: @tags', ['@tags' => $allowed_html]);
     if (!$long) {
