@@ -21,7 +21,7 @@
 
 .no-touchevents .form-element--extrasmall,
 .no-touchevents .form-element[name$="][_weight]"] {
-  min-height: calc(((var(--input--extrasmall-padding-vertical) + var(--input-border-size)) * 2) + var(--input--extrasmall-line-height)); /* iOS. */
+  min-height: var(--input-min-height); /* iOS. */
   padding: var(--input--extrasmall-padding-vertical) var(--input--extrasmall-padding-horizontal);
   font-size: var(--input--extrasmall-font-size);
   line-height: var(--input--extrasmall-line-height);
@@ -135,7 +135,8 @@ _:-ms-fullscreen,
     margin-left: 0;
   }
   .form-element:first-child,
-  .form-item__label + .form-element {
+  .form-item__label + .form-element,
+  .form-item__label + .form-item__wrapper .form-element {
     margin-top: 0;
   }
 }

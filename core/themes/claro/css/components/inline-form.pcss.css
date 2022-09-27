@@ -1,0 +1,40 @@
+/**
+ * @file
+ * Visual styles for inline forms.
+ */
+
+@import "../base/variables.pcss.css";
+
+.form--inline .form-item {
+  float: left; /* LTR */
+  margin-right: 0.5em; /* LTR */
+}
+[dir="rtl"] .form--inline .form-item {
+  float: right;
+  margin-right: 0;
+  margin-left: 0.5em;
+}
+/* This is required to win over specificity of [dir="rtl"] .form--inline .form-item */
+[dir="rtl"] .views-filterable-options-controls .form-item {
+  margin-right: 2%;
+}
+.form--inline .form-item--separator,
+.form-inline-separator {
+  float: left; /* LTR */
+  margin-top: calc(var(--space-l) + (18rem / 16) + var(--space-xs)); /* Form item margin-top + label line-height + label top/bottom margin. */
+  white-space: nowrap;
+  line-height: var(--input-min-height);
+}
+[dir="rtl"] .form--inline .form-item-separator {
+  float: right;
+}
+.form-item--no-label ~ .form-inline-separator {
+  margin-top: var(--space-l);
+}
+
+.form--inline .form-actions {
+  clear: left; /* LTR */
+}
+[dir="rtl"] .form--inline .form-actions {
+  clear: right;
+}
