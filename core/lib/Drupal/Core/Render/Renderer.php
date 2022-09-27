@@ -247,7 +247,7 @@ class Renderer implements RendererInterface {
       $context->update($elements);
       // #printed, so rendering is finished, all necessary info collected!
       $context->bubble();
-      return $elements['#markup'];
+      return $elements['#markup'] ?? '';
     }
 
     // Set the bubbleable rendering metadata that has configurable defaults, if:
@@ -386,7 +386,7 @@ class Renderer implements RendererInterface {
       $context->update($elements);
       // #printed, so rendering is finished, all necessary info collected!
       $context->bubble();
-      return $elements['#markup'];
+      return $elements['#markup'] ?? '';
     }
 
     // Add any JavaScript state information associated with the element.
