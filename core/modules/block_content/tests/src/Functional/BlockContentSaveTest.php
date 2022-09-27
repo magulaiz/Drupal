@@ -70,7 +70,7 @@ class BlockContentSaveTest extends BlockContentTestBase {
   public function testDeterminingChanges() {
     // Initial creation.
     $block = $this->createBlockContent('test_changes');
-    $this->assertEquals($this->testRequestTime, $block->getChangedTime(), 'Creating a block sets default "changed" timestamp.');
+    $this->assertEquals(\Drupal::time()->getRequestTime(), $block->getChangedTime(), 'Creating a block sets default "changed" timestamp.');
 
     // Update the block without applying changes.
     $block->save();

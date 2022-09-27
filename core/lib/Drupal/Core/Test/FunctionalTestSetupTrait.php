@@ -59,11 +59,6 @@ trait FunctionalTestSetupTrait {
   protected $apcuEnsureUniquePrefix = FALSE;
 
   /**
-   * The test request time.
-   */
-  protected int $testRequestTime;
-
-  /**
    * Prepares site settings and services before installation.
    */
   protected function prepareSettings() {
@@ -629,7 +624,6 @@ trait FunctionalTestSetupTrait {
     // Bootstrap Drupal so we can use Drupal's built in functions.
     $this->classLoader = require __DIR__ . '/../../../../../autoload.php';
     $request = Request::createFromGlobals();
-    $this->testRequestTime = $request->server->get('REQUEST_TIME');
     $kernel = TestRunnerKernel::createFromRequest($request, $this->classLoader);
     // TestRunnerKernel expects the working directory to be DRUPAL_ROOT.
     chdir(DRUPAL_ROOT);

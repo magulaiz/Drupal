@@ -97,7 +97,7 @@ class DefaultViewRecentCommentsTest extends ViewTestBase {
       $comment->comment_body->format = 'full_html';
 
       // Ensure comments are sorted in ascending order.
-      $time = $this->testRequestTime + ($this->defaultDisplayResults - $i);
+      $time = \Drupal::time()->getRequestTime() + ($this->defaultDisplayResults - $i);
       $comment->setCreatedTime($time);
       $comment->changed->value = $time;
 
