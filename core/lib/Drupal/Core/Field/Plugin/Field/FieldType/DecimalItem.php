@@ -66,21 +66,21 @@ class DecimalItem extends NumericItemBase {
 
     $element['precision'] = [
       '#type' => 'number',
-      '#title' => t('Precision'),
+      '#title' => $this->t('Precision'),
       '#min' => 10,
       '#max' => 32,
       '#default_value' => $settings['precision'],
-      '#description' => t('The total number of digits to store in the database, including those to the right of the decimal.'),
+      '#description' => $this->t('The total number of digits to store in the database, including those to the right of the decimal.'),
       '#disabled' => $has_data,
     ];
 
     $element['scale'] = [
       '#type' => 'number',
-      '#title' => t('Scale', [], ['context' => 'decimal places']),
+      '#title' => $this->t('Scale', [], ['context' => 'decimal places']),
       '#min' => 0,
       '#max' => 10,
       '#default_value' => $settings['scale'],
-      '#description' => t('The number of digits to the right of the decimal.'),
+      '#description' => $this->t('The number of digits to the right of the decimal.'),
       '#disabled' => $has_data,
     ];
 
