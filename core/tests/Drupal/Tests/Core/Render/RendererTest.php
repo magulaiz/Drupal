@@ -655,7 +655,7 @@ class RendererTest extends RendererTestBase {
     $this->assertTrue($build['#printed']);
 
     // We don't want to reprint already printed render arrays.
-    $this->assertEquals('', $this->renderer->renderRoot($build));
+    $this->assertEquals($build['#markup'], $this->renderer->renderRoot($build));
   }
 
   /**
@@ -677,6 +677,17 @@ class RendererTest extends RendererTestBase {
         [
           'child' => [
             '#markup' => 'kittens',
+            '#cache' => [
+              'tags' => ['kittens-147'],
+            ],
+          ],
+        ],
+      ],
+      [
+        [
+          'child_printed' => [
+            '#markup' => 'kittens',
+            '#printed' => TRUE,
             '#cache' => [
               'tags' => ['kittens-147'],
             ],

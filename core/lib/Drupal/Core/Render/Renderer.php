@@ -234,16 +234,21 @@ class Renderer implements RendererInterface {
       }
     }
 
-    // Do not print elements twice.
-    if (!empty($elements['#printed'])) {
-      return '';
-    }
-
     $context = $this->getCurrentRenderContext();
     if (!isset($context)) {
       throw new \LogicException("Render context is empty, because render() was called outside of a renderRoot() or renderPlain() call. Use renderPlain()/renderRoot() or #lazy_builder/#pre_render instead.");
     }
     $context->push(new BubbleableMetadata());
+
+    // Do not print elements twice.
+    if (!empty($elements['#printed'])) {
+      // The #printed element contains all the bubbleable rendering metadata for
+      // the subtree.
+      $context->update($elements);
+      // #printed, so rendering is finished, all necessary info collected!
+      $context->bubble();
+      return $elements['#markup'];
+    }
 
     // Set the bubbleable rendering metadata that has configurable defaults, if:
     // - this is the root call, to ensure that the final render array definitely
@@ -381,7 +386,7 @@ class Renderer implements RendererInterface {
       $context->update($elements);
       // #printed, so rendering is finished, all necessary info collected!
       $context->bubble();
-      return '';
+      return $elements['#markup'];
     }
 
     // Add any JavaScript state information associated with the element.
