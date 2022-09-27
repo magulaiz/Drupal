@@ -26,6 +26,8 @@ function mysql_requirements($phase) {
       // The database variable "tx_isolation" has been removed in MySQL v8.0 and
       // has been replaced by "transaction_isolation".
       // @see https://dev.mysql.com/doc/refman/5.7/en/server-system-variables.html#sysvar_tx_isolation
+      // "tx_transaction" was removed in MySQL 8.0.3.
+      // @see https://dev.mysql.com/doc/refman/8.0/en/added-deprecated-removed.html
       if (!$connection->isMariaDb() && version_compare($connection->version(), '8.0.2-AnyName', '>')) {
         $query = 'SELECT @@SESSION.transaction_isolation';
       }
