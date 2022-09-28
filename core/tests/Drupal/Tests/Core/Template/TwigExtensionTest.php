@@ -2,6 +2,8 @@
 
 namespace Drupal\Tests\Core\Template;
 
+// cspell:ignore mila
+
 use Drupal\Core\File\FileUrlGeneratorInterface;
 use Drupal\Core\GeneratedLink;
 use Drupal\Core\Render\RenderableInterface;
