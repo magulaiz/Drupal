@@ -3,8 +3,8 @@
 namespace Drupal\toolbar\Element;
 
 use Drupal\Component\Utility\Html;
-use Drupal\Core\Render\Element\RenderElement;
 use Drupal\Core\Render\Element;
+use Drupal\Core\Render\Element\RenderElement;
 
 /**
  * Provides a render element for the default Drupal toolbar.
@@ -18,10 +18,27 @@ class Toolbar extends RenderElement {
    */
   public function getInfo() {
     $class = static::class;
+
+    $pre_render = [];
+    $post_render = [];
+
+    $module_handler = static::moduleHandler();
+    if ($module_handler->moduleExists('language')) {
+      $pre_render[] = [
+        '\Drupal\language\ConfigurableLanguageManager',
+        'switchToUserAdminLanguage',
+      ];
+      $post_render[] = [
+        '\Drupal\language\ConfigurableLanguageManager',
+        'restoreLanguage',
+      ];
+    }
+
+    $pre_render[] = [$class, 'preRenderToolbar'];
+
     return [
-      '#pre_render' => [
-        [$class, 'preRenderToolbar'],
-      ],
+      '#pre_render' => $pre_render,
+      '#post_render' => $post_render,
       '#theme' => 'toolbar',
       '#attached' => [
         'library' => [

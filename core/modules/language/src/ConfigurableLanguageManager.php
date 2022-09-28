@@ -8,6 +8,7 @@ use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Language\Language;
 use Drupal\Core\Language\LanguageDefault;
 use Drupal\Core\Language\LanguageManager;
+use Drupal\Core\Security\TrustedCallbackInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Url;
 use Drupal\language\Config\LanguageConfigFactoryOverrideInterface;
@@ -17,7 +18,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
 /**
  * Overrides default LanguageManager to provide configured languages.
  */
-class ConfigurableLanguageManager extends LanguageManager implements ConfigurableLanguageManagerInterface {
+class ConfigurableLanguageManager extends LanguageManager implements ConfigurableLanguageManagerInterface, TrustedCallbackInterface {
 
   /**
    * The configuration storage service.
@@ -233,6 +234,72 @@ class ConfigurableLanguageManager extends LanguageManager implements Configurabl
     }
 
     return $this->negotiatedLanguages[$type];
+  }
+
+  /**
+   * Sets current language.
+   *
+   * @param \Drupal\Core\Language\LanguageInterface $language
+   *   Language interface.
+   * @param string $type
+   *   Type interface.
+   */
+  public function setCurrentLanguage(LanguageInterface $language, $type = LanguageInterface::TYPE_INTERFACE) {
+    $this->negotiatedLanguages[$type] = $language;
+  }
+
+  /**
+   * Sets admin language.
+   *
+   * @param array $element
+   *   A renderable array.
+   *
+   * @return array
+   *   A renderable array.
+   */
+  public static function switchToUserAdminLanguage(array $element) {
+    $user = \Drupal::currentUser();
+    $userAdminLangcode = $user->getPreferredAdminLangcode(FALSE);
+
+    if ($userAdminLangcode && ($user->hasPermission('access administration pages') || $user->hasPermission('view the administration theme'))) {
+      $languageManager = \Drupal::languageManager();
+      $translationManager = \Drupal::translation();
+
+      $element['#original_langcode'] = $languageManager->getCurrentLanguage()->getId();
+
+      $languageManager->setCurrentLanguage($languageManager->getLanguage($userAdminLangcode));
+      $translationManager->setDefaultLangcode($userAdminLangcode);
+      $languageManager->setConfigOverrideLanguage($languageManager->getLanguage($userAdminLangcode));
+    }
+
+    return $element;
+  }
+
+  /**
+   * Restore original language.
+   *
+   * @param \Drupal\Core\Render\Markup $content
+   *   Rendered markup.
+   * @param array $element
+   *   A renderable array.
+   *
+   * @return \Drupal\Core\Render\Markup
+   *   Rendered markup.
+   */
+  public static function restoreLanguage($content, $element) {
+    if (isset($element['#original_langcode'])) {
+      $langcode = $element['#original_langcode'];
+
+      $languageManager = \Drupal::languageManager();
+      $translationManager = \Drupal::translation();
+
+      $language = $languageManager->getLanguage($langcode);
+      $languageManager->setCurrentLanguage($language);
+      $translationManager->setDefaultLangcode($langcode);
+      $languageManager->setConfigOverrideLanguage($language);
+    }
+
+    return $content;
   }
 
   /**
@@ -483,6 +550,13 @@ class ConfigurableLanguageManager extends LanguageManager implements Configurabl
     if (isset($this->negotiatedLanguages[$type]) && isset($this->negotiatedMethods[$type])) {
       return $this->negotiatedMethods[$type];
     }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function trustedCallbacks() {
+    return ['switchToUserAdminLanguage', 'restoreLanguage'];
   }
 
 }

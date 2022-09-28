@@ -2,6 +2,7 @@
 
 namespace Drupal\user;
 
+use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Security\TrustedCallbackInterface;
 use Drupal\Core\Session\AccountProxyInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
@@ -22,13 +23,23 @@ class ToolbarLinkBuilder implements TrustedCallbackInterface {
   protected $account;
 
   /**
+   * The module handler.
+   *
+   * @var \Drupal\Core\Extension\ModuleHandlerInterface
+   */
+  protected $moduleHandler;
+
+  /**
    * ToolbarHandler constructor.
    *
    * @param \Drupal\Core\Session\AccountProxyInterface $account
    *   The current user.
+   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
+   *   The module handler.
    */
-  public function __construct(AccountProxyInterface $account) {
+  public function __construct(AccountProxyInterface $account, ModuleHandlerInterface $module_handler) {
     $this->account = $account;
+    $this->moduleHandler = $module_handler;
   }
 
   /**
@@ -68,6 +79,18 @@ class ToolbarLinkBuilder implements TrustedCallbackInterface {
         'contexts' => ['user'],
       ],
     ];
+
+    if ($this->moduleHandler->moduleExists('language')) {
+      $build['#pre_render'] = [
+        [
+          '\Drupal\language\ConfigurableLanguageManager',
+          'switchToUserAdminLanguage',
+        ],
+      ];
+      $build['#post_render'] = [
+        ['\Drupal\language\ConfigurableLanguageManager', 'restoreLanguage'],
+      ];
+    }
 
     return $build;
   }

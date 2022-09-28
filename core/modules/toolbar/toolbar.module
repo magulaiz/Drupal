@@ -59,7 +59,10 @@ function toolbar_page_top(array &$page_top) {
     '#access' => \Drupal::currentUser()->hasPermission('access toolbar'),
     '#cache' => [
       'keys' => ['toolbar'],
-      'contexts' => ['user.permissions'],
+      'contexts' => [
+        'user.admin_language',
+        'user.permissions',
+      ],
     ],
   ];
 }

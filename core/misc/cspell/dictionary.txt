@@ -474,6 +474,7 @@ enim
 enoki
 enregistrer
 entit
+entitynodedelete
 entitynodeedit
 entitytype
 entityviewedit
