@@ -91,26 +91,26 @@ final class LinksetControllerMultiLingualTest extends LinksetControllerTestBase 
       'edit own page content',
     ]);
     $this->drupalLogin($admin_user);
+
     // Enable URL language detection and selection.
     $edit = ['language_interface[enabled][language-url]' => '1'];
     $this->drupalGet('admin/config/regional/language/detection');
     $this->submitForm($edit, 'Save settings');
 
-    // Check if we can change the default language.
-    $this->drupalGet('admin/config/regional/language');
     // Change the default language to a custom one.
+    $this->drupalGet('admin/config/regional/language');
     $edit = [
       'site_default_language' => 'dd',
     ];
     $this->submitForm($edit, 'Save configuration');
     $this->rebuildContainer();
 
-    // Set default language code for content type page to 'bb'.
+    // Set default language code for content type page to 'dd'.
     ContentLanguageSettings::loadByEntityTypeBundle('node', 'page')
       ->setDefaultLangcode('dd')
       ->setLanguageAlterable(TRUE)
       ->save();
-    // Set default language code to for menu_link_content 'bb'.
+    // Set default language code to for menu_link_content 'dd'.
     ContentLanguageSettings::loadByEntityTypeBundle('menu_link_content', 'menu_link_content')
       ->setDefaultLangcode('dd')
       ->setLanguageAlterable(TRUE)
