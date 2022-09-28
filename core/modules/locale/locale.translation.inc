@@ -176,7 +176,7 @@ function locale_translation_source_check_file($source) {
     $filename = '/' . preg_quote($source_file->filename) . '$/';
 
     if (is_dir($directory)) {
-      if ($files = \Drupal::service('file_system')->scanDirectory($directory, $filename, ['key' => 'name', 'recurse' => FALSE])) {
+      if ($files = \Drupal::service('file_system')->scanDirectory($directory, $filename, ['key' => 'name'])) {
         $file = current($files);
         $source_file->uri = $file->uri;
         $source_file->timestamp = filemtime($file->uri);
