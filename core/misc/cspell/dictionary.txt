@@ -967,6 +967,7 @@ nothere
 notnull
 notsimpletest
 nourriture
+nowdoc
 nplurals
 ntfs
 nyan
