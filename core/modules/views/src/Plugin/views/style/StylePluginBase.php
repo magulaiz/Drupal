@@ -317,7 +317,8 @@ abstract class StylePluginBase extends PluginBase {
         // Add a form for every grouping, plus one.
         for ($i = 0; $i <= $c; $i++) {
           $grouping = !empty($this->options['grouping'][$i]) ? $this->options['grouping'][$i] : [];
-          $grouping += ['field' => '', 'rendered' => TRUE, 'rendered_strip' => FALSE];
+          $grouping += ['field' => '', 'rendered' => TRUE, 'rendered_strip' => FALSE, 'grouping_label_element' => ''];
+
           $form['grouping'][$i]['field'] = [
             '#type' => 'select',
             '#title' => $this->t('Grouping field Nr.@number', ['@number' => $i + 1]),
