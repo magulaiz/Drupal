@@ -119,7 +119,8 @@
         $target = $target.find('.cke_contents');
       }
 
-      $target.css('position', 'relative').find('.ckeditor-dialog-loading').remove();
+      $target[0].style.position = 'relative';
+      $target.find('.ckeditor-dialog-loading').remove();
       var classes = dialogSettings.dialogClass ? dialogSettings.dialogClass.split(' ') : [];
       classes.push('ui-dialog--narrow');
       dialogSettings.dialogClass = classes.join(' ');
@@ -149,7 +150,9 @@
     }
   };
   $(window).on('dialogcreate', function (e, dialog, $element, settings) {
-    $('.ui-dialog--narrow').css('zIndex', CKEDITOR.config.baseFloatZIndex + 1);
+    [].forEach.call($('.ui-dialog--narrow'), function (el) {
+      el.style.zIndex = CKEDITOR.config.baseFloatZIndex + 1;
+    });
   });
   $(window).on('dialog:beforecreate', function (e, dialog, $element, settings) {
     $('.ckeditor-dialog-loading').animate({

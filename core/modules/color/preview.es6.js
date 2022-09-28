@@ -30,26 +30,24 @@
       let accum;
       let delta;
       // Solid background.
-      form
-        .find('.color-preview')
-        .css(
-          'backgroundColor',
-          form.find('.color-palette input[name="palette[base]"]').val(),
-        );
+      [].forEach.call(form.find('.color-preview'), (el) => {
+        el.style.backgroundColor = form
+          .find('.color-palette input[name="palette[base]"]')
+          .val();
+      });
 
       // Text preview.
-      form
-        .find('#text')
-        .css(
-          'color',
-          form.find('.color-palette input[name="palette[text]"]').val(),
-        );
-      form
-        .find('#text a, #text h2')
-        .css(
-          'color',
-          form.find('.color-palette input[name="palette[link]"]').val(),
-        );
+      [].forEach.call(form.find('#text'), (el) => {
+        el.style.color = form
+          .find('.color-palette input[name="palette[text]"]')
+          .val();
+      });
+
+      [].forEach.call(form.find('#text a, #text h2'), (el) => {
+        el.style.color = form
+          .find('.color-palette input[name="palette[link]"]')
+          .val();
+      });
 
       function gradientLineColor(i, element) {
         Object.keys(accum || {}).forEach((k) => {

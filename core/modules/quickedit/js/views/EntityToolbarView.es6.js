@@ -71,7 +71,9 @@
           'drupalViewportOffsetChange.quickedit',
           (event, offsets) => {
             if (that.$fence) {
-              that.$fence.css(offsets);
+              Object.entries(offsets).forEach(([property, value]) => {
+                that.$fence[0].style[property] = value;
+              });
             }
           },
         );
@@ -103,9 +105,11 @@
           // The fence will define an area on the screen that the entity toolbar
           // will be positioned within.
           if ($body.children('#quickedit-toolbar-fence').length === 0) {
-            this.$fence = $(Drupal.theme('quickeditEntityToolbarFence'))
-              .css(Drupal.displace())
-              .appendTo($body);
+            this.$fence = $(Drupal.theme('quickeditEntityToolbarFence'));
+            Object.entries(Drupal.displace()).forEach(([property, value]) => {
+              this.$fence[0].style[property] = value;
+            });
+            this.$fence.appendTo($body);
           }
           // Adds the entity title to the toolbar.
           this.label();
@@ -359,23 +363,20 @@
             }
           }
 
-          that.$el
-            // Resize the toolbar to match the dimensions of the field, up to a
-            // maximum width that is equal to 90% of the field's width.
-            .css({
-              'max-width':
-                document.documentElement.clientWidth < 450
-                  ? document.documentElement.clientWidth
-                  : 450,
-              // Set a minimum width of 240px for the entity toolbar, or the width
-              // of the client if it is less than 240px, so that the toolbar
-              // never folds up into a squashed and jumbled mess.
-              'min-width':
-                document.documentElement.clientWidth < 240
-                  ? document.documentElement.clientWidth
-                  : 240,
-              width: '100%',
-            });
+          // Resize the toolbar to match the dimensions of the field, up to a
+          // maximum width that is equal to 90% of the field's width.
+          that.$el[0].style.maxWidth =
+            document.documentElement.clientWidth < 450
+              ? document.documentElement.clientWidth
+              : 450;
+          // Set a minimum width of 240px for the entity toolbar, or the width
+          // of the client if it is less than 240px, so that the toolbar
+          // never folds up into a squashed and jumbled mess.
+          that.$el[0].style.minWidth =
+            document.documentElement.clientWidth < 240
+              ? document.documentElement.clientWidth
+              : 240;
+          that.$el[0].style.width = '100%';
         }
 
         // Uses the jQuery.ui.position() method. Use a timeout to move the toolbar
@@ -465,10 +466,8 @@
 
         // Give the toolbar a sensible starting position so that it doesn't
         // animate on to the screen from a far off corner.
-        $toolbar.css({
-          left: this.$entity.offset().left,
-          top: this.$entity.offset().top,
-        });
+        $toolbar[0].style.left = this.$entity.offset().left;
+        $toolbar[0].style.top = this.$entity.offset().top;
 
         return $toolbar;
       },

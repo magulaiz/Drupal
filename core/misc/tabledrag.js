@@ -37,7 +37,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
     this.oldY = null;
     this.changed = false;
     this.maxDepth = 0;
-    this.rtl = $(this.table).css('direction') === 'rtl' ? -1 : 1;
+    this.rtl = window.getComputedStyle(this.table).direction === 'rtl' ? -1 : 1;
     this.striping = $(this.table).data('striping') === 1;
     this.scrollSettings = {
       amount: 4,
@@ -178,8 +178,12 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
 
   Drupal.tableDrag.prototype.hideColumns = function () {
     var $tables = $(once.filter('tabledrag', 'table'));
-    $tables.find('.tabledrag-hide').css('display', 'none');
-    $tables.find('.tabledrag-handle').css('display', '');
+    [].forEach.call($tables.find('.tabledrag-hide'), function (el) {
+      el.style.display = 'none';
+    });
+    [].forEach.call($tables.find('.tabledrag-handle'), function (el) {
+      el.style.display = '';
+    });
     $tables.find('.tabledrag-has-colspan').each(function () {
       this.colSpan -= 1;
     });
@@ -187,8 +191,12 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
 
   Drupal.tableDrag.prototype.showColumns = function () {
     var $tables = $(once.filter('tabledrag', 'table'));
-    $tables.find('.tabledrag-hide').css('display', '');
-    $tables.find('.tabledrag-handle').css('display', 'none');
+    [].forEach.call($tables.find('.tabledrag-hide'), function (el) {
+      el.style.display = '';
+    });
+    [].forEach.call($tables.find('.tabledrag-handle'), function (el) {
+      el.style.display = 'none';
+    });
     $tables.find('.tabledrag-has-colspan').each(function () {
       this.colSpan += 1;
     });

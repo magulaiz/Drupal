@@ -140,23 +140,23 @@
 
       if (this.$el[0].style.width === '') {
         this._widthAttributeIsEmpty = true;
-        this.$el.addClass('quickedit-animate-disable-width').css('width', this.$el.width());
+        this.$el.addClass('quickedit-animate-disable-width');
+        this.$el[0].style.width = this.$el.width();
       }
 
       var posProp = this._getPositionProperties(this.$el);
 
       setTimeout(function () {
         self.$el.removeClass('quickedit-animate-disable-width');
-        self.$el.css({
-          position: 'relative',
-          top: "".concat(posProp.top - 5, "px"),
-          left: "".concat(posProp.left - 5, "px"),
-          'padding-top': "".concat(posProp['padding-top'] + 5, "px"),
-          'padding-left': "".concat(posProp['padding-left'] + 5, "px"),
-          'padding-right': "".concat(posProp['padding-right'] + 5, "px"),
-          'padding-bottom': "".concat(posProp['padding-bottom'] + 5, "px"),
-          'margin-bottom': "".concat(posProp['margin-bottom'] - 10, "px")
-        }).data('quickedit-padded', true);
+        self.$el[0].style.position = 'relative';
+        self.$el[0].style.top = "".concat(posProp.top - 5, "px");
+        self.$el[0].style.left = "".concat(posProp.left - 5, "px");
+        self.$el[0].style.paddingTop = "".concat(posProp['padding-top'] + 5, "px");
+        self.$el[0].style.paddingLeft = "".concat(posProp['padding-left'] + 5, "px");
+        self.$el[0].style.paddingRight = "".concat(posProp['padding-right'] + 5, "px");
+        self.$el[0].style.paddingBottom = "".concat(posProp['padding-bottom'] + 5, "px");
+        self.$el[0].style.marginBottom = "".concat(posProp['margin-bottom'] - 10, "px");
+        self.$el.data('quickedit-padded', true);
       }, 0);
     },
     _unpad: function _unpad() {
@@ -167,23 +167,22 @@
       var self = this;
 
       if (this._widthAttributeIsEmpty) {
-        this.$el.addClass('quickedit-animate-disable-width').css('width', '');
+        this.$el.addClass('quickedit-animate-disable-width');
+        this.$el[0].style.width = '';
       }
 
       var posProp = this._getPositionProperties(this.$el);
 
       setTimeout(function () {
         self.$el.removeClass('quickedit-animate-disable-width');
-        self.$el.css({
-          position: 'relative',
-          top: "".concat(posProp.top + 5, "px"),
-          left: "".concat(posProp.left + 5, "px"),
-          'padding-top': "".concat(posProp['padding-top'] - 5, "px"),
-          'padding-left': "".concat(posProp['padding-left'] - 5, "px"),
-          'padding-right': "".concat(posProp['padding-right'] - 5, "px"),
-          'padding-bottom': "".concat(posProp['padding-bottom'] - 5, "px"),
-          'margin-bottom': "".concat(posProp['margin-bottom'] + 10, "px")
-        });
+        self.$el[0].style.position = 'relative';
+        self.$el[0].style.top = "".concat(posProp.top + 5, "px");
+        self.$el[0].style.left = "".concat(posProp.left + 5, "px");
+        self.$el[0].style.paddingTop = "".concat(posProp['padding-top'] - 5, "px");
+        self.$el[0].style.paddingLeft = "".concat(posProp['padding-left'] - 5, "px");
+        self.$el[0].style.paddingRight = "".concat(posProp['padding-right'] - 5, "px");
+        self.$el[0].style.paddingBottom = "".concat(posProp['padding-bottom'] - 5, "px");
+        self.$el[0].style.marginBottom = "".concat(posProp['margin-bottom'] + 10, "px");
       }, 0);
       this.$el.removeData('quickedit-padded');
     },
@@ -195,7 +194,7 @@
 
       for (var i = 0; i < propCount; i++) {
         p = props[i];
-        r[p] = parseInt(this._replaceBlankPosition($e.css(p)), 10);
+        r[p] = parseInt(this._replaceBlankPosition(window.getComputedStyle($e[0])[p]), 10);
       }
 
       return r;

@@ -65,7 +65,8 @@
         '.form-actions input[type=submit], .form-actions a.button',
       );
       $buttons.each(function () {
-        const $originalButton = $(this).css({ display: 'none' });
+        const $originalButton = $(this);
+        this.style.display = 'none';
         buttons.push({
           text: $originalButton.html() || $originalButton.attr('value'),
           class: $originalButton.attr('class'),

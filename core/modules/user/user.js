@@ -106,19 +106,16 @@
               password.$strengthBar.removeClass(passwordStrengthBarClassesToRemove);
             }
 
-            password.$strengthBar.css('width', "".concat(result.strength, "%")).addClass(result.indicatorClass);
+            password.$strengthBar[0].style.width = "".concat(result.strength, "%");
+            password.$strengthBar.addClass(result.indicatorClass);
             password.$strengthTextWrapper.html(result.indicatorText);
           }
 
           if ($confirmInput.val()) {
             passwordCheckMatch($confirmInput.val());
-            $passwordConfirmMessage.css({
-              visibility: 'visible'
-            });
+            $passwordConfirmMessage[0].style.visibility = 'visible';
           } else {
-            $passwordConfirmMessage.css({
-              visibility: 'hidden'
-            });
+            $passwordConfirmMessage[0].style.visibility = 'hidden';
           }
 
           if (widgetClassesToRemove) {

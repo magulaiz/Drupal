@@ -15,9 +15,9 @@
 
     if ($scroll.length) {
       $modal.closest('.views-ui-dialog').addClass('views-ui-dialog-scroll');
-      $scroll.css({
-        overflow: 'visible',
-        height: 'auto'
+      [].forEach.call($scroll, function (el) {
+        el.style.overflow = 'visible';
+        el.style.height = 'auto';
       });
       modalHeight = $modal.height();
       $viewsOverride.each(function () {
@@ -25,8 +25,12 @@
       });
       var scrollOffset = $scroll.outerHeight() - $scroll.height();
       $scroll.height(modalHeight - offset - scrollOffset);
-      $modal.css('overflow', 'hidden');
-      $scroll.css('overflow', 'auto');
+      [].forEach.call($modal, function (el) {
+        el.style.overflow = 'hidden';
+      });
+      [].forEach.call($scroll, function (el) {
+        el.style.overflow = 'auto';
+      });
     }
   }
 

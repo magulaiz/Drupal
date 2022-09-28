@@ -32,13 +32,10 @@
     updateToolbarHeight: function updateToolbarHeight() {
       var toolbarTabOuterHeight = $('#toolbar-bar').find('.toolbar-tab').outerHeight() || 0;
       var toolbarTrayHorizontalOuterHeight = $('.is-active.toolbar-tray-horizontal').outerHeight() || 0;
-      this.model.set('height', toolbarTabOuterHeight + toolbarTrayHorizontalOuterHeight);
-      $('body').css({
-        'padding-top': this.model.get('height')
-      });
-      $('html').css({
-        'scroll-padding-top': this.model.get('height')
-      });
+      var height = toolbarTabOuterHeight + toolbarTrayHorizontalOuterHeight;
+      this.model.set('height', height);
+      document.querySelector('body').style.paddingTop = "".concat(height, "px");
+      document.querySelector('html').style.scrollPaddingTop = "".concat(height, "px");
       this.triggerDisplace();
     },
     triggerDisplace: function triggerDisplace() {

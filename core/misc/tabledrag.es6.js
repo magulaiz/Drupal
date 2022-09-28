@@ -129,7 +129,7 @@
      *
      * @type {number}
      */
-    this.rtl = $(this.table).css('direction') === 'rtl' ? -1 : 1;
+    this.rtl = window.getComputedStyle(this.table).direction === 'rtl' ? -1 : 1;
 
     /**
      *
@@ -401,9 +401,15 @@
   Drupal.tableDrag.prototype.hideColumns = function () {
     const $tables = $(once.filter('tabledrag', 'table'));
     // Hide weight/parent cells and headers.
-    $tables.find('.tabledrag-hide').css('display', 'none');
+    [].forEach.call($tables.find('.tabledrag-hide'), (el) => {
+      el.style.display = 'none';
+    });
+
     // Show TableDrag handles.
-    $tables.find('.tabledrag-handle').css('display', '');
+    [].forEach.call($tables.find('.tabledrag-handle'), (el) => {
+      el.style.display = '';
+    });
+
     // Reduce the colspan of any effected multi-span columns.
     $tables.find('.tabledrag-has-colspan').each(function () {
       this.colSpan -= 1;
@@ -418,9 +424,13 @@
   Drupal.tableDrag.prototype.showColumns = function () {
     const $tables = $(once.filter('tabledrag', 'table'));
     // Show weight/parent cells and headers.
-    $tables.find('.tabledrag-hide').css('display', '');
+    [].forEach.call($tables.find('.tabledrag-hide'), (el) => {
+      el.style.display = '';
+    });
     // Hide TableDrag handles.
-    $tables.find('.tabledrag-handle').css('display', 'none');
+    [].forEach.call($tables.find('.tabledrag-handle'), (el) => {
+      el.style.display = 'none';
+    });
     // Increase the colspan for any columns where it was previously reduced.
     $tables.find('.tabledrag-has-colspan').each(function () {
       this.colSpan += 1;

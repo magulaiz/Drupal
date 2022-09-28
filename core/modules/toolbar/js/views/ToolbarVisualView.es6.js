@@ -78,17 +78,11 @@
           $('#toolbar-bar').find('.toolbar-tab').outerHeight() || 0;
         const toolbarTrayHorizontalOuterHeight =
           $('.is-active.toolbar-tray-horizontal').outerHeight() || 0;
-        this.model.set(
-          'height',
-          toolbarTabOuterHeight + toolbarTrayHorizontalOuterHeight,
-        );
+        const height = toolbarTabOuterHeight + toolbarTrayHorizontalOuterHeight;
+        this.model.set('height', height);
 
-        $('body').css({
-          'padding-top': this.model.get('height'),
-        });
-        $('html').css({
-          'scroll-padding-top': this.model.get('height'),
-        });
+        document.querySelector('body').style.paddingTop = `${height}px`;
+        document.querySelector('html').style.scrollPaddingTop = `${height}px`;
 
         this.triggerDisplace();
       },

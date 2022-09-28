@@ -133,10 +133,9 @@
       function callback(input, color, propagate, colorScheme) {
         let matched;
         // Set background/foreground colors.
-        $(input).css({
-          backgroundColor: color,
-          color: farb.RGBToHSL(farb.unpack(color))[2] > 0.5 ? '#000' : '#fff',
-        });
+        input.style.backgroundColor = color;
+        input.color =
+          farb.RGBToHSL(farb.unpack(color))[2] > 0.5 ? '#000' : '#fff';
 
         // Change input value.
         if ($(input).val() && $(input).val() !== color) {
@@ -187,9 +186,13 @@
         );
         const gradient = $(`.color-preview #gradient-${i}`);
         // Add height of current gradient to the list (divided by 10).
-        height.push(parseInt(gradient.css('height'), 10) / 10);
+        height.push(
+          parseInt(window.getComputedStyle(gradient[0]).height, 10) / 10,
+        );
         // Add width of current gradient to the list (divided by 10).
-        width.push(parseInt(gradient.css('width'), 10) / 10);
+        width.push(
+          parseInt(window.getComputedStyle(gradient[0]).width, 10) / 10,
+        );
         // Add rows (or columns for horizontal gradients).
         // Each gradient line should have a height (or width for horizontal
         // gradients) of 10px (because we divided the height/width by 10

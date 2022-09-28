@@ -87,20 +87,21 @@
 
         $(window).on({
           'dialog:aftercreate': function dialogAftercreate(event, dialog, $element, settings) {
-            var $toolbar = $('#toolbar-bar');
-            $toolbar.css('margin-top', '0');
+            var toolbarBar = document.getElementById('toolbar-bar');
+            toolbarBar.style.marginTop = '0';
 
             if (settings.drupalOffCanvasPosition === 'top') {
               var height = Drupal.offCanvas.getContainer($element).outerHeight();
-              $toolbar.css('margin-top', "".concat(height, "px"));
+              toolbarBar.style.marginTop = "".concat(height, "px");
               $element.on('dialogContentResize.off-canvas', function () {
                 var newHeight = Drupal.offCanvas.getContainer($element).outerHeight();
-                $toolbar.css('margin-top', "".concat(newHeight, "px"));
+                toolbarBar.style.marginTop = "".concat(newHeight, "px");
               });
             }
           },
           'dialog:beforeclose': function dialogBeforeclose() {
-            $('#toolbar-bar').css('margin-top', '0');
+            var toolbarBar = document.getElementById('toolbar-bar');
+            toolbarBar.style.marginTop = '0';
           }
         });
       });

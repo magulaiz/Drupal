@@ -1931,10 +1931,9 @@ module.exports = {
       function () {
         const $ = jQuery;
         const toReturn = {};
-        const $elx = $('#elx').css({
-          marginTop: 6,
-          marginLeft: 4,
-        });
+        const $elx = $('#elx');
+        $elx[0].style.marginTop = '6px';
+        $elx[0].style.marginLeft = '4px';
         $elx.position({
           my: 'left top',
           at: 'right bottom',
@@ -1983,10 +1982,9 @@ module.exports = {
       function () {
         const $ = jQuery;
         const toReturn = {};
-        const $elx = $('#elx').css({
-          marginTop: 6,
-          marginLeft: 4,
-        });
+        const $elx = $('#elx');
+        $elx[0].style.marginTop = '6px';
+        $elx[0].style.marginLeft = '4px';
         $elx.position({
           my: 'left top',
           at: 'right bottom',
@@ -2182,12 +2180,11 @@ module.exports = {
         const toReturn = {};
 
         const $scrollX = $('#scrollX');
-        $scrollX.css({
-          width: 100,
-          height: 100,
-          left: 0,
-          top: 0,
-        });
+
+        $scrollX[0].style.width = '100px';
+        $scrollX[0].style.height = '100px';
+        $scrollX[0].style.left = '0';
+        $scrollX[0].style.top = '0';
 
         const $elx = $('#elx').position({
           my: 'left top',
@@ -2225,9 +2222,7 @@ module.exports = {
           },
         };
 
-        $scrollX.css({
-          overflow: 'auto',
-        });
+        $scrollX[0].style.overflow = 'auto';
 
         toReturn['auto, no scroll"'] = {
           actual: $elx.offset(),
@@ -2237,11 +2232,8 @@ module.exports = {
           },
         };
 
-        $scrollX
-          .css({
-            overflow: 'auto',
-          })
-          .append($('<div>').height(300).width(300));
+        $scrollX[0].style.overflow = 'auto';
+        $scrollX.append($('<div>').height(300).width(300));
 
         $elx.position({
           of: '#scrollX',

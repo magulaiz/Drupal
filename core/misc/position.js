@@ -21,7 +21,7 @@
   }
 
   function parseCss(element, property) {
-    return parseInt($.css(element, property), 10) || 0;
+    return parseInt(window.getComputedStyle(element)[property], 10) || 0;
   }
 
   function getDimensions(elem) {
@@ -214,7 +214,7 @@
       var innerDiv = div.children()[0];
       $('body').append(div);
       var w1 = innerDiv.offsetWidth;
-      div.css('overflow', 'scroll');
+      div[0].style.overflow = 'scroll';
       var w2 = innerDiv.offsetWidth;
 
       if (w1 === w2) {
@@ -226,8 +226,8 @@
       return cachedScrollbarWidth;
     },
     getScrollInfo: function getScrollInfo(within) {
-      var overflowX = within.isWindow || within.isDocument ? '' : within.element.css('overflow-x');
-      var overflowY = within.isWindow || within.isDocument ? '' : within.element.css('overflow-y');
+      var overflowX = within.isWindow || within.isDocument ? '' : window.getComputedStyle(within.element[0])['overflow-x'];
+      var overflowY = within.isWindow || within.isDocument ? '' : window.getComputedStyle(within.element[0])['overflow-y'];
       var hasOverflowX = overflowX === 'scroll' || overflowX === 'auto' && within.width < within.element[0].scrollWidth;
       var hasOverflowY = overflowY === 'scroll' || overflowY === 'auto' && within.height < within.element[0].scrollHeight;
       return {
