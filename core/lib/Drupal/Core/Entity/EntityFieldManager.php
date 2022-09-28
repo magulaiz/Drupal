@@ -347,6 +347,7 @@ class EntityFieldManager implements EntityFieldManagerInterface {
       }
       else {
         // Rebuild the definitions and put it into the cache.
+        $this->languageManager->setConfigOverrideLanguage($this->languageManager->getCurrentLanguage());
         $bundle_field_definitions = $this->buildBundleFieldDefinitions($entity_type_id, $bundle, $base_field_definitions);
         $this->cacheSet($cid, $bundle_field_definitions, Cache::PERMANENT, ['entity_types', 'entity_field_info']);
       }
