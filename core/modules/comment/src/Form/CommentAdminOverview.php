@@ -196,6 +196,16 @@ class CommentAdminOverview extends FormBase {
         $attributes += ['title' => Unicode::truncate($body, 128)];
         $comment_permalink->setOption('attributes', $attributes);
       }
+      $posted_in = $commented_entity->hasLinkTemplate('canonical') ?
+        [
+          '#type' => 'link',
+          '#title' => $commented_entity->label(),
+          '#access' => $commented_entity->access('view'),
+          '#url' => $commented_entity->toUrl(),
+        ] :
+        [
+          '#markup' => $commented_entity->label(),
+        ];
       $options[$comment->id()] = [
         'title' => ['data' => ['#title' => $comment->getSubject() ?: $comment->id()]],
         'subject' => [
@@ -212,12 +222,7 @@ class CommentAdminOverview extends FormBase {
           ],
         ],
         'posted_in' => [
-          'data' => [
-            '#type' => 'link',
-            '#title' => $commented_entity->label(),
-            '#access' => $commented_entity->access('view'),
-            '#url' => $commented_entity->toUrl(),
-          ],
+          'data' => $posted_in,
         ],
         'changed' => $this->dateFormatter->format($comment->getChangedTimeAcrossTranslations(), 'short'),
       ];
