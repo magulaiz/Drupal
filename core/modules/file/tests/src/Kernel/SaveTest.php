@@ -74,7 +74,7 @@ class SaveTest extends FileManagedUnitTestBase {
     file_put_contents($uppercase_file_duplicate->getFileUri(), 'hello world');
     $violations = $uppercase_file_duplicate->validate();
     $this->assertCount(1, $violations);
-    $this->assertEquals(t('The file %value already exists. Enter a unique file URI.', ['%value' => $uppercase_file_duplicate->getFileUri()]), $violations[0]->getMessage());
+    $this->assertEquals("The file <em class=\"placeholder\">{$uppercase_file_duplicate->getFileUri()}</em> already exists. Enter a unique file URI.", $violations[0]->getMessage());
     // Ensure that file URI entity queries are case sensitive.
     $fids = \Drupal::entityQuery('file')
       ->accessCheck(FALSE)

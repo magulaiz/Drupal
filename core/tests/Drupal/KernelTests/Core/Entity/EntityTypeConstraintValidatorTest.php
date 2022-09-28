@@ -53,7 +53,7 @@ class EntityTypeConstraintValidatorTest extends EntityKernelTestBase {
 
     // Make sure the information provided by a violation is correct.
     $violation = $violations[0];
-    $this->assertEquals(t('The entity must be of type %type.', ['%type' => $entity_type]), $violation->getMessage(), 'The message for invalid value is correct.');
+    $this->assertEquals("The entity must be of type <em class=\"placeholder\">$entity_type</em>.", $violation->getMessage(), 'The message for invalid value is correct.');
     $this->assertEquals($typed_data, $violation->getRoot(), 'Violation root is correct.');
     $this->assertEquals($account, $violation->getInvalidValue(), 'The invalid value is set correctly in the violation.');
   }

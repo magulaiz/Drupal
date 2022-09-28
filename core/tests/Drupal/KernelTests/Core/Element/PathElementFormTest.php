@@ -171,7 +171,7 @@ class PathElementFormTest extends KernelTestBase implements FormInterface {
     $errors = $form_state->getErrors();
     // Should be missing 'required_validate' field.
     $this->assertCount(1, $errors);
-    $this->assertEquals(['required_validate' => t('@name field is required.', ['@name' => 'required_validate'])], $errors);
+    $this->assertEquals(['required_validate' => 'required_validate field is required.'], $errors);
 
     // Test invalid parameters.
     $form_state = (new FormState())
@@ -187,7 +187,7 @@ class PathElementFormTest extends KernelTestBase implements FormInterface {
     // Valid form state.
     $errors = $form_state->getErrors();
     $this->assertCount(3, $errors);
-    $this->assertEquals(['required_validate' => t('This path does not exist or you do not have permission to link to %path.', ['%path' => 'user/74']), 'required_validate_route' => t('This path does not exist or you do not have permission to link to %path.', ['%path' => 'user/74']), 'required_validate_url' => t('This path does not exist or you do not have permission to link to %path.', ['%path' => 'user/74'])], $errors);
+    $this->assertEquals(['required_validate' => 'This path does not exist or you do not have permission to link to <em class="placeholder">user/74</em>.', 'required_validate_route' => 'This path does not exist or you do not have permission to link to <em class="placeholder">user/74</em>.', 'required_validate_url' => 'This path does not exist or you do not have permission to link to <em class="placeholder">user/74</em>.'], $errors);
   }
 
 }

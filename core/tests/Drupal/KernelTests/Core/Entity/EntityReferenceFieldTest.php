@@ -104,7 +104,7 @@ class EntityReferenceFieldTest extends EntityKernelTestBase {
     $entity->{$this->fieldName}->target_id = 9999;
     $violations = $entity->{$this->fieldName}->validate();
     $this->assertEquals(1, $violations->count(), 'Validation throws a violation.');
-    $this->assertEquals(t('The referenced entity (%type: %id) does not exist.', ['%type' => $this->referencedEntityType, '%id' => 9999]), $violations[0]->getMessage());
+    $this->assertEquals("The referenced entity (<em class=\"placeholder\">$this->referencedEntityType</em>: <em class=\"placeholder\">9999</em>) does not exist.", $violations[0]->getMessage());
 
     // Test a non-referenceable bundle.
     entity_test_create_bundle('non_referenceable', NULL, $this->referencedEntityType);
@@ -115,7 +115,7 @@ class EntityReferenceFieldTest extends EntityKernelTestBase {
     $entity->{$this->fieldName}->target_id = $referenced_entity->id();
     $violations = $entity->{$this->fieldName}->validate();
     $this->assertEquals(1, $violations->count(), 'Validation throws a violation.');
-    $this->assertEquals(t('This entity (%type: %id) cannot be referenced.', ['%type' => $this->referencedEntityType, '%id' => $referenced_entity->id()]), $violations[0]->getMessage());
+    $this->assertEquals("This entity (<em class=\"placeholder\">$this->referencedEntityType</em>: <em class=\"placeholder\">{$referenced_entity->id()}</em>) cannot be referenced.", $violations[0]->getMessage());
   }
 
   /**
