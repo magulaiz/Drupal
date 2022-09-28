@@ -57,12 +57,15 @@ class EntityContentComplete extends EntityContentBase {
     $revision_id = $old_destination_id_values
       ? $old_destination_id_values[1]
       : $row->getDestinationProperty($this->getKey('revision'));
+    $entity_id = $old_destination_id_values
+      ? $old_destination_id_values[0]
+      : $row->getDestinationProperty($this->getKey('id'));
     // If we are re-running a migration with set revision IDs and the
     // destination revision ID already exists then do not create a new revision.
-    if (!empty($revision_id) && ($entity = $this->storage->loadRevision($revision_id))) {
+    if (!empty($revision_id) && ($entity = $this->storage->loadRevision($revision_id)) && ($entity_id === $entity->id())) {
       $entity->setNewRevision(FALSE);
     }
-    elseif (($entity_id = $row->getDestinationProperty($this->getKey('id'))) && ($entity = $this->storage->load($entity_id))) {
+    elseif (isset($entity_id) && ($entity = $this->storage->load($entity_id))) {
       // We want to create a new entity. Set enforceIsNew() FALSE is  necessary
       // to properly save a new entity while setting the ID. Without it, the
       // system would see that the ID is already set and assume it is an update.
@@ -97,8 +100,12 @@ class EntityContentComplete extends EntityContentBase {
         // If we updated an untranslated field, then set the changed time for
         // for all translations to match the current row that we are saving.
         // In this context, getChangedTime() should return the value we just
-        // set in the updateEntity() call above.
-        if ($entity->getTranslation($langcode)->hasTranslationChanges()) {
+        // set in the updateEntity() call above. If the translation does not
+        // exist, then there is most-likely a data conflict between the source
+        // and destination databases. An exception is not thrown here because
+        // any data conflict will be handled later.
+        $translation = $entity->getTranslation($langcode);
+        if (isset($translation) && $translation->hasTranslationChanges()) {
           $entity->getTranslation($langcode)->setChangedTime($entity->getChangedTime());
         }
       }
