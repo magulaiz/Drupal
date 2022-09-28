@@ -3,6 +3,8 @@
 namespace Drupal\Tests\node\Functional;
 
 use Drupal\Core\Database\Database;
+use Drupal\Core\Url;
+use Drupal\Tests\system\Functional\Menu\AssertBreadcrumbTrait;
 use Drupal\user\RoleInterface;
 
 /**
@@ -11,6 +13,8 @@ use Drupal\user\RoleInterface;
  * @group node
  */
 class NodeAdminTest extends NodeTestBase {
+
+  use AssertBreadcrumbTrait;
 
   /**
    * {@inheritdoc}
@@ -50,7 +54,7 @@ class NodeAdminTest extends NodeTestBase {
    *
    * @var array
    */
-  protected static $modules = ['views'];
+  protected static $modules = ['views', 'block', 'node_test_views'];
 
   protected function setUp(): void {
     parent::setUp();
@@ -224,6 +228,30 @@ class NodeAdminTest extends NodeTestBase {
       $this->assertSession()->linkByHrefExists('node/' . $node->id() . '/edit');
       $this->assertSession()->linkByHrefExists('node/' . $node->id() . '/delete');
     }
+  }
+
+  /**
+   * Tests breadcrumbs on node creation page.
+   */
+  public function testNodeAddPageBreadcrumb() {
+    $this->config('node.settings')->set('use_admin_theme', '1')->save();
+    $this->config('system.site')->set('page', ['front' => '/node'])->save();
+    $this->drupalPlaceBlock('system_breadcrumb_block');
+    $this->drupalLogin($this->adminUser);
+    drupal_flush_all_caches();
+
+    $front_page_path = Url::fromRoute('<front>')->toString();
+    $this->assertBreadcrumb('node/add', [
+      $front_page_path => 'Home',
+      'admin' => 'Administration',
+      'admin/content' => 'Content',
+    ]);
+    $this->assertBreadcrumb('node/add/page', [
+      $front_page_path => 'Home',
+      'admin' => 'Administration',
+      'admin/content' => 'Content',
+      'node/add' => 'Add Content',
+    ]);
   }
 
 }
