@@ -444,6 +444,7 @@ dublincorerendererentry
 dublincorerendererfeed
 défaut
 détruire
+eacute
 easyrdf
 editables
 editdrupalimage
@@ -523,6 +524,7 @@ fielditem
 fieldlayout
 fieldlinks
 fieldnames
+fieldnid
 fieldsets
 filecount
 filefields
