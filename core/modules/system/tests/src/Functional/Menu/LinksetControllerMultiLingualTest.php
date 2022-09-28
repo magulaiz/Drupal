@@ -169,7 +169,7 @@ final class LinksetControllerMultiLingualTest extends LinksetControllerTestBase 
    */
   public function testBasicMultilingualFunctions() {
     foreach (['aa', 'bb', 'cc', 'dd'] as $language_code) {
-      $expected_linkset = Json::decode(file_get_contents(__DIR__ . '/fixtures/linkset-menu-main-multilingual-' . $language_code . '.json'));
+      $expected_linkset = $this->getReferenceLinksetDataFromFile(__DIR__ . '/fixtures/linkset-menu-main-multilingual-' . $language_code . '.json');
       $response = $this->doRequest('GET', Url::fromUri('base:/' . $language_code . '/system/menu/main/linkset'));
       $this->assertSame($expected_linkset, Json::decode((string) $response->getBody()));
     }
@@ -181,7 +181,7 @@ final class LinksetControllerMultiLingualTest extends LinksetControllerTestBase 
    * @throws \Exception
    */
   public function testDefaultMultilingualFunctions() {
-    $expected_linkset = Json::decode(file_get_contents(__DIR__ . '/fixtures/linkset-menu-main-multilingual-default.json'));
+    $expected_linkset = $this->getReferenceLinksetDataFromFile(__DIR__ . '/fixtures/linkset-menu-main-multilingual-default.json');
     $response = $this->doRequest('GET', Url::fromUri('base:/system/menu/main/linkset'));
     $this->assertSame($expected_linkset, Json::decode((string) $response->getBody()));
   }

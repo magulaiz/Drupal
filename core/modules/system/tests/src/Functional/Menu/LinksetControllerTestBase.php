@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\system\Functional\Menu;
 
+use Drupal\Component\Serialization\Json;
 use Drupal\Core\Cache\CacheableDependencyInterface;
 use Drupal\Core\Url;
 use Drupal\menu_link_content\Entity\MenuLinkContent;
@@ -131,6 +132,26 @@ abstract class LinksetControllerTestBase extends BrowserTestBase {
     // Using rebuildIfNeeded here to implicitly test that router is only rebuilt
     // when necessary.
     \Drupal::service('router.builder')->rebuildIfNeeded();
+  }
+
+  /**
+   * Retrieve reference linkset controller output adjusted for proper base url.
+   *
+   * @param string $filename
+   *   Name of the file to read.
+   *
+   * @return mixed
+   *   The Json representation of the reference data in the file.
+   */
+  protected function getReferenceLinksetDataFromFile(string $filename) {
+    $data = Json::decode(file_get_contents($filename));
+    // Ensure that the URLs are correct if Drupal is being served from a
+    // subdirectory.
+    $data['linkset'][0]['anchor'] = Url::fromUri('base:' . $data['linkset'][0]['anchor'])->toString();
+    foreach ($data['linkset'][0]['item'] as &$item) {
+      $item['href'] = Url::fromUri('base:' . $item['href'])->toString();
+    }
+    return $data;
   }
 
 }
