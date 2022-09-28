@@ -5,20 +5,11 @@ declare(strict_types=1);
 namespace Drupal\Tests\system\Functional\Menu;
 
 use Drupal\Component\Serialization\Json;
-use Drupal\Core\Cache\CacheableDependencyInterface;
 use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Url;
-use Drupal\menu_link_content\Entity\MenuLinkContent;
-use Drupal\menu_link_content\MenuLinkContentInterface;
 use Drupal\node\Entity\Node;
 use Drupal\node\Entity\NodeType;
 use Drupal\node\NodeInterface;
-use Drupal\Tests\ApiRequestTrait;
-use Drupal\Tests\BrowserTestBase;
-use Drupal\Tests\user\Traits\UserCreationTrait;
-use Drupal\user\UserInterface;
-use GuzzleHttp\Psr7\Response;
-use GuzzleHttp\RequestOptions;
 
 /**
  * Tests the behavior of the linkset controller.
@@ -30,9 +21,7 @@ use GuzzleHttp\RequestOptions;
  *
  * @see https://tools.ietf.org/html/draft-ietf-httpapi-linkset-00
  */
-final class LinksetControllerTest extends BrowserTestBase {
-  use ApiRequestTrait;
-  use UserCreationTrait;
+final class LinksetControllerTest extends LinksetControllerTestBase {
 
   /**
    * {@inheritdoc}
@@ -362,105 +351,6 @@ final class LinksetControllerTest extends BrowserTestBase {
    */
   public function testDisabledEndpoint() {
     $this->doRequest('GET', Url::fromUri('base:/system/menu/main/linkset'), 404);
-  }
-
-  /**
-   * Sends a request to the kernel and makes basic response assertions.
-   *
-   * Only to be used when the expected response is a linkset response.
-   *
-   * @param string $method
-   *   HTTP method.
-   * @param \Drupal\Core\Url $url
-   *   URL to request.
-   * @param int $expected_status
-   *   The expected status code.
-   * @param \Drupal\user\UserInterface $account
-   *   A user account whose credentials should be used to authenticate the
-   *   request.
-   *
-   * @return \GuzzleHttp\Psr7\Response
-   *   The response object.
-   */
-  protected function doRequest(string $method, Url $url, $expected_status = 200, UserInterface $account = NULL): Response {
-    $request_options = [];
-    if (!is_null($account)) {
-      $credentials = $account->name->value . ':' . $account->passRaw;
-      $request_options[RequestOptions::HEADERS] = [
-        'Authorization' => 'Basic ' . base64_encode($credentials),
-      ];
-    }
-    $response = $this->makeApiRequest($method, $url, $request_options);
-    $this->assertSame($expected_status, $response->getStatusCode(), (string) $response->getBody());
-    return $response;
-  }
-
-  /**
-   * Helper to assert a cacheable value matches an expectation.
-   *
-   * @param string|false $expect_cache
-   *   'HIT', 'MISS', or FALSE. Asserts the value of the X-Drupal-Cache header.
-   *   FALSE if the page cache is not applicable.
-   * @param \Drupal\Core\Cache\CacheableDependencyInterface $expected_metadata
-   *   The expected cacheability metadata.
-   * @param \GuzzleHttp\Psr7\Response $response
-   *   The response on which to assert cacheability.
-   */
-  protected function assertDrupalResponseCacheability($expect_cache, CacheableDependencyInterface $expected_metadata, Response $response) {
-    $this->assertTrue(in_array($expect_cache, ['HIT', 'MISS', FALSE], TRUE), 'Cache is HIT, MISS, FALSE.');
-    $this->assertSame($expected_metadata->getCacheContexts(), explode(' ', $response->getHeaderLine('X-Drupal-Cache-Contexts')));
-    $this->assertSame($expected_metadata->getCacheTags(), explode(' ', $response->getHeaderLine('X-Drupal-Cache-Tags')));
-    $max_age_message = $expected_metadata->getCacheMaxAge();
-    if ($max_age_message === 0) {
-      $max_age_message = '0 (Uncacheable)';
-    }
-    elseif ($max_age_message === -1) {
-      $max_age_message = '-1 (Permanent)';
-    }
-    $this->assertSame($max_age_message, $response->getHeaderLine('X-Drupal-Cache-Max-Age'));
-    if ($expect_cache) {
-      $this->assertSame($expect_cache, $response->getHeaderLine('X-Drupal-Cache'));
-    }
-  }
-
-  /**
-   * Creates, saves, and returns a new menu link content entity.
-   *
-   * @param array $values
-   *   Menu field values.
-   * @param array $options
-   *   Menu options.
-   *
-   * @return \Drupal\menu_link_content\MenuLinkContentInterface
-   *   The newly created menu link content entity.
-   *
-   * @throws \Drupal\Core\Entity\EntityStorageException
-   *
-   * @see \Drupal\menu_link_content\MenuLinkContentInterface::create()
-   */
-  protected function createMenuItem(array $values, array $options = []): MenuLinkContentInterface {
-    if (!empty($options)) {
-      $values['link'] = ['uri' => $values['link'], 'options' => $options];
-    }
-    $link_content = MenuLinkContent::create($values);
-    assert($link_content instanceof MenuLinkContentInterface);
-    $link_content->save();
-    return $link_content;
-  }
-
-  /**
-   * Enables or disables the menu linkset endpoint.
-   *
-   * @param bool $enabled
-   *   Whether the endpoint should be enabled.
-   */
-  protected function enableEndpoint(bool $enabled) {
-    $this->config('system.feature_flags')
-      ->set('linkset_endpoint', $enabled)
-      ->save(TRUE);
-    // Using rebuildIfNeeded here to implicitly test that router is only rebuilt
-    // when necessary.
-    \Drupal::service('router.builder')->rebuildIfNeeded();
   }
 
 }

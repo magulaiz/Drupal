@@ -8,14 +8,6 @@ use Drupal\Component\Serialization\Json;
 use Drupal\Core\Url;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\language\Entity\ContentLanguageSettings;
-use Drupal\menu_link_content\Entity\MenuLinkContent;
-use Drupal\menu_link_content\MenuLinkContentInterface;
-use Drupal\Tests\ApiRequestTrait;
-use Drupal\Tests\BrowserTestBase;
-use Drupal\Tests\user\Traits\UserCreationTrait;
-use Drupal\user\UserInterface;
-use GuzzleHttp\Psr7\Response;
-use GuzzleHttp\RequestOptions;
 
 /**
  * Tests the behavior of the linkset controller in multilingual setup.
@@ -24,9 +16,7 @@ use GuzzleHttp\RequestOptions;
  *
  * @see https://tools.ietf.org/html/draft-ietf-httpapi-linkset-00
  */
-final class LinksetControllerMultiLingualTest extends BrowserTestBase {
-  use ApiRequestTrait;
-  use UserCreationTrait;
+final class LinksetControllerMultiLingualTest extends LinksetControllerTestBase {
 
   /**
    * {@inheritdoc}
@@ -101,26 +91,26 @@ final class LinksetControllerMultiLingualTest extends BrowserTestBase {
       'edit own page content',
     ]);
     $this->drupalLogin($admin_user);
+
     // Enable URL language detection and selection.
     $edit = ['language_interface[enabled][language-url]' => '1'];
     $this->drupalGet('admin/config/regional/language/detection');
     $this->submitForm($edit, 'Save settings');
 
-    // Check if we can change the default language.
-    $this->drupalGet('admin/config/regional/language');
     // Change the default language to a custom one.
+    $this->drupalGet('admin/config/regional/language');
     $edit = [
       'site_default_language' => 'dd',
     ];
     $this->submitForm($edit, 'Save configuration');
     $this->rebuildContainer();
 
-    // Set default language code for content type page to 'bb'.
+    // Set default language code for content type page to 'dd'.
     ContentLanguageSettings::loadByEntityTypeBundle('node', 'page')
       ->setDefaultLangcode('dd')
       ->setLanguageAlterable(TRUE)
       ->save();
-    // Set default language code to for menu_link_content 'bb'.
+    // Set default language code to for menu_link_content 'dd'.
     ContentLanguageSettings::loadByEntityTypeBundle('menu_link_content', 'menu_link_content')
       ->setDefaultLangcode('dd')
       ->setLanguageAlterable(TRUE)
@@ -194,62 +184,6 @@ final class LinksetControllerMultiLingualTest extends BrowserTestBase {
     $expected_linkset = Json::decode(file_get_contents(__DIR__ . '/fixtures/linkset-menu-main-multilingual-default.json'));
     $response = $this->doRequest('GET', Url::fromUri('base:/system/menu/main/linkset'));
     $this->assertSame($expected_linkset, Json::decode((string) $response->getBody()));
-  }
-
-  /**
-   * Sends a request to the kernel and makes basic response assertions.
-   *
-   * Only to be used when the expected response is a linkset response.
-   *
-   * @param string $method
-   *   HTTP method.
-   * @param \Drupal\Core\Url $url
-   *   URL to request.
-   * @param int $expected_status
-   *   The expected status code.
-   * @param \Drupal\user\UserInterface $account
-   *   A user account whose credentials should be used to authenticate the
-   *   request.
-   *
-   * @return \GuzzleHttp\Psr7\Response
-   *   The response object.
-   */
-  protected function doRequest(string $method, Url $url, $expected_status = 200, UserInterface $account = NULL): Response {
-    $request_options = [];
-    if (!is_null($account)) {
-      $credentials = $account->name->value . ':' . $account->passRaw;
-      $request_options[RequestOptions::HEADERS] = [
-        'Authorization' => 'Basic ' . base64_encode($credentials),
-      ];
-    }
-    $response = $this->makeApiRequest($method, $url, $request_options);
-    $this->assertSame($expected_status, $response->getStatusCode(), (string) $response->getBody());
-    return $response;
-  }
-
-  /**
-   * Creates, saves, and returns a new menu link content entity.
-   *
-   * @param array $values
-   *   Menu field values.
-   * @param array $options
-   *   Menu options.
-   *
-   * @return \Drupal\menu_link_content\MenuLinkContentInterface
-   *   The newly created menu link content entity.
-   *
-   * @throws \Drupal\Core\Entity\EntityStorageException
-   *
-   * @see \Drupal\menu_link_content\MenuLinkContentInterface::create()
-   */
-  protected function createMenuItem(array $values, array $options = []): MenuLinkContentInterface {
-    if (!empty($options)) {
-      $values['link'] = ['uri' => $values['link'], 'options' => $options];
-    }
-    $link_content = MenuLinkContent::create($values);
-    assert($link_content instanceof MenuLinkContentInterface);
-    $link_content->save();
-    return $link_content;
   }
 
 }
