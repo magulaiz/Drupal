@@ -52,7 +52,7 @@ class DbLogEntryStorageTest extends KernelTestBase {
    */
   public function testCreateInstance() {
     $this->assertEquals('dblog', $this->storage->getEntityTypeId());
-    $this->assertEquals('Dblog Entry', $this->storage->getEntityType()->getLabel());
+    $this->assertEquals('Dblog entry', $this->storage->getEntityType()->getLabel());
   }
 
   /**

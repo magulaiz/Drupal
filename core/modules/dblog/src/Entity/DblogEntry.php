@@ -12,17 +12,17 @@ use Drupal\Component\Render\MarkupInterface;
 /**
  * Defines the dblog entity class.
  *
- * Dblog Entries should be considered read only entities. Drupal support for
+ * Dblog entries should be considered read only entities. Drupal support for
  * read only entities is limited at this point, therefore this entity type
  * is set as internal. This will disable integration for jsonapi, rest and hal
  * modules, which assume all entities can be saved.
  *
  * @ContentEntityType(
  *   id = "dblog",
- *   label = @Translation("Dblog Entry"),
- *   label_collection = @Translation("Dblog Entries"),
- *   label_singular = @Translation("Dblog Entry"),
- *   label_plural = @Translation("Dblog Entries"),
+ *   label = @Translation("Dblog entry"),
+ *   label_collection = @Translation("Dblog entries"),
+ *   label_singular = @Translation("Dblog entry"),
+ *   label_plural = @Translation("Dblog entries"),
  *   label_count = @PluralTranslation(
  *     singular = "@count Dblog entry",
  *     plural = "@count Dblog entries",

@@ -130,7 +130,7 @@ function dblog_update_10101() {
     $entity_type = new ContentEntityType([
       'id' => 'dblog',
       'class' => DblogEntry::class,
-      'label' => new TranslatableMarkup('Dblog Entry'),
+      'label' => new TranslatableMarkup('Dblog entry'),
       'translatable' => FALSE,
       'handlers' => [
         'storage' => DblogEntryStorage::class,
@@ -143,7 +143,7 @@ function dblog_update_10101() {
     $field_storage_definitions = DblogEntry::baseFieldDefinitions($entity_type);
     $entity_definition_update_manager->installFieldableEntityType($entity_type, $field_storage_definitions);
 
-    return t('The "dblog entry" entity type has been installed.');
+    return t('The "Dblog entry" entity type has been installed.');
   }
 }
 
