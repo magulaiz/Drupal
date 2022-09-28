@@ -113,6 +113,11 @@ interface QueryInterface extends AlterableInterface {
   public function condition($field, $value = NULL, $operator = NULL, $langcode = NULL);
 
   /**
+   * Returns the current conditions.
+   */
+  public function getConditions();
+
+  /**
    * Queries for a non-empty value on a field.
    *
    * @param string $field
