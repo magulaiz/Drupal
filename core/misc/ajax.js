@@ -17,7 +17,7 @@ function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToAr
 
 function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
 
-(function ($, window, Drupal, drupalSettings, _ref) {
+(function ($, window, Drupal, drupalSettings, loadjs, _ref) {
   var isFocusable = _ref.isFocusable,
       tabbable = _ref.tabbable;
   Drupal.behaviors.AJAX = {
@@ -669,6 +669,38 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
       }
 
       messages.add(response.message, response.messageOptions);
+    },
+    add_js: function add_js(ajax, response, status) {
+      var deferred = $.Deferred();
+      var parentEl = document.querySelector(response.selector || 'body');
+      var settings = ajax.settings || drupalSettings;
+      var allUniqueBundleIDs = response.data.map(function (script) {
+        var uniqueBundleID = script.src + ajax.instanceIndex;
+        loadjs(script.src, uniqueBundleID, {
+          async: false,
+          before: function before(path, scriptEl) {
+            Object.keys(script).forEach(function (attributeKey) {
+              scriptEl.setAttribute(attributeKey, script[attributeKey]);
+            });
+            parentEl.appendChild(scriptEl);
+            return false;
+          }
+        });
+        return uniqueBundleID;
+      });
+      loadjs.ready(allUniqueBundleIDs, {
+        success: function success() {
+          Drupal.attachBehaviors(parentEl, settings);
+          deferred.resolve();
+        },
+        error: function error(depsNotFound) {
+          var message = Drupal.t("The following files could not be loaded: @deps", {
+            '@deps': depsNotFound.join(', ')
+          });
+          deferred.reject(message);
+        }
+      });
+      return deferred.promise();
     }
   };
-})(jQuery, window, Drupal, drupalSettings, window.tabbable);
+})(jQuery, window, Drupal, drupalSettings, loadjs, window.tabbable);

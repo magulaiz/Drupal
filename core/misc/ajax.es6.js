@@ -11,7 +11,14 @@
  * included to provide Ajax capabilities.
  */
 
-(function ($, window, Drupal, drupalSettings, { isFocusable, tabbable }) {
+(function (
+  $,
+  window,
+  Drupal,
+  drupalSettings,
+  loadjs,
+  { isFocusable, tabbable },
+) {
   /**
    * Attaches the Ajax behavior to each Ajax form element.
    *
@@ -1616,5 +1623,71 @@
       }
       messages.add(response.message, response.messageOptions);
     },
+
+    /**
+     * Command to add JS.
+     *
+     * @param {Drupal.Ajax} [ajax]
+     *   {@link Drupal.Ajax} object created by {@link Drupal.ajax}.
+     * @param {object} response
+     *   The response from the Ajax request.
+     * @param {Array} response.data
+     *   A string that contains the JS files to be added.
+     * @param {number} [status]
+     *   The XMLHttpRequest status.
+     */
+    add_js(ajax, response, status) {
+      const deferred = $.Deferred();
+      const parentEl = document.querySelector(response.selector || 'body');
+      const settings = ajax.settings || drupalSettings;
+      const allUniqueBundleIDs = response.data.map((script) => {
+        // loadjs requires a unique ID, AJAX instances' `instanceIndex` are
+        // guaranteed to be unique.
+        // @see Drupal.behaviors.AJAX.detach
+        const uniqueBundleID = script.src + ajax.instanceIndex;
+        loadjs(script.src, uniqueBundleID, {
+          // By default, dynamically added scripts are marked as async. Only
+          // explicitly marked async scripts should be loaded async.
+          async: false,
+          before(path, scriptEl) {
+            // This allows all attributes to be added, like defer, async and
+            // crossorigin.
+            Object.keys(script).forEach((attributeKey) => {
+              scriptEl.setAttribute(attributeKey, script[attributeKey]);
+            });
+
+            // By default, loadjs appends the script to the head. However, we
+            // want to add the script to the parent specified. This is just for
+            // consistency, because it doesn't actually matter for the script
+            // where it is added. Developers however expect library assets to
+            // show up where they declared them, so this makes things consistent
+            // with the assets that are not loaded with ajax.
+            parentEl.appendChild(scriptEl);
+            // Return `false` to bypass loadjs' default DOM insertion mechanism.
+            return false;
+          },
+        });
+        return uniqueBundleID;
+      });
+      loadjs.ready(allUniqueBundleIDs, {
+        success() {
+          Drupal.attachBehaviors(parentEl, settings);
+          // All JS files were loaded and new and old behaviors have
+          // been attached, resolve the promise and let the rest of the commands
+          // execute.
+          deferred.resolve();
+        },
+        error(depsNotFound) {
+          const message = Drupal.t(
+            `The following files could not be loaded: @deps`,
+            { '@deps': depsNotFound.join(', ') },
+          );
+          deferred.reject(message);
+        },
+      });
+      // Returns the promise so that the next AJAX command waits on the completion
+      // of this one to execute, ensuring the JS is loaded before executing.
+      return deferred.promise();
+    },
   };
-})(jQuery, window, Drupal, drupalSettings, window.tabbable);
+})(jQuery, window, Drupal, drupalSettings, loadjs, window.tabbable);
