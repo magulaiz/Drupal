@@ -594,6 +594,13 @@ trait FunctionalTestSetupTrait {
       );
     }
 
+    $valid_url_schemes = ['http', 'https'];
+    if (!in_array(strtolower($parsed_url['scheme']), $valid_url_schemes, TRUE)) {
+      throw new \Exception(
+        'You must provide valid scheme for the SIMPLETEST_BASE_URL environment variable. Valid schema are: http, https.'
+      );
+    }
+
     $this->baseUrl = $base_url;
 
     // If the passed URL schema is 'https' then setup the $_SERVER variables
