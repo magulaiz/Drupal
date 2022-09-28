@@ -27,6 +27,7 @@
   {{ link }}
   {% if is_active and level == 'primary' %}
     <button class="reset-appearance tabs__trigger" aria-label="{{ 'Tabs display toggle'|t }}" data-drupal-nav-tabs-trigger>
-      {{ source(app.request.attributes.get('_route') ~ '/images/src/hamburger-menu.svg') }}
+      {{ source(directory ~ '/images/src/hamburger-menu.svg') }}
+    </button>
   {% endif %}
 </li>
