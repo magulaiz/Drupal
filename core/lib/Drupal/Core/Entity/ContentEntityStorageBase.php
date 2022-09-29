@@ -120,11 +120,12 @@ abstract class ContentEntityStorageBase extends EntityStorageBase implements Con
    * {@inheritdoc}
    */
   protected function doCreate(array $values) {
-    $bundle = $this->getBundleFromValues($values);
-    if ($this->bundleKey && !$bundle) {
+    $bundle_key = $this->getBundleFromValues($values);
+    if ($this->bundleKey && !$bundle_key) {
       throw new EntityStorageException('Missing bundle for entity type ' . $this->entityTypeId);
     }
-    $entity_class = $this->getEntityClass($bundle);
+    $entity_class = $this->getEntityClass($bundle_key);
+    $bundle = $bundle_key ?? FALSE;
     $entity = new $entity_class([], $this->entityTypeId, $bundle);
     $this->initFieldValues($entity, $values);
     return $entity;
