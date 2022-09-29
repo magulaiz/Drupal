@@ -19,6 +19,8 @@ use Drupal\editor\Entity\Editor;
 use Drupal\Core\Validation\DrupalTranslator;
 use Drupal\file\Entity\File;
 use Drupal\file\FileInterface;
+use Drupal\media\Entity\Media;
+use Drupal\media\Entity\MediaType;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -195,6 +197,17 @@ class CKEditor5ImageController extends ControllerBase {
     }
 
     $file->save();
+
+    // When the Media module is enabled and the "image" media type exists, also
+    // save this uploaded image into the Media Library.
+    // @see core/profiles/standard/config/optional/media.type.image.yml
+    if (class_exists(MediaType::class) && MediaType::load('image')) {
+      Media::create([
+        'bundle' => 'image',
+        'name' => $file->getFilename(),
+        'field_media_image' => $file->id(),
+      ])->save();
+    }
 
     $this->lock->release($lock_id);
 
