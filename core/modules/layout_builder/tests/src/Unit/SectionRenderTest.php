@@ -82,7 +82,7 @@ class SectionRenderTest extends UnitTestCase {
     $this->eventDispatcher->addSubscriber($subscriber);
 
     $layout = $this->prophesize(LayoutInterface::class);
-    $layout->getPluginDefinition()->willReturn(new LayoutDefinition([]));
+    $layout->getPluginDefinition()->willReturn(new LayoutDefinition(['regions' => ['content' => ['label' => 'Content']]]));
     $layout->build(Argument::type('array'))->willReturnArgument(0);
     $layout_plugin_manager->createInstance('layout_onecol', [])->willReturn($layout->reveal());
 
