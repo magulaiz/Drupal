@@ -49,6 +49,9 @@ class ViewsLocalTaskTest extends UnitTestCase {
    */
   protected $localTaskDerivative;
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     $this->routeProvider = $this->createMock('Drupal\Core\Routing\RouteProviderInterface');
     $this->state = $this->createMock('Drupal\Core\State\StateInterface');
@@ -368,6 +371,8 @@ class ViewsLocalTaskTest extends UnitTestCase {
  * Replaces the applicable views call for easier testability.
  */
 class TestViewsLocalTask extends ViewsLocalTask {
+
+  protected $result;
 
   /**
    * Sets applicable views result.

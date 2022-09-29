@@ -10,6 +10,7 @@ use Drupal\KernelTests\KernelTestBase;
  * Tests Stable's template overrides.
  *
  * @group Theme
+ * @group legacy
  */
 class StableTemplateOverrideTest extends KernelTestBase {
 
@@ -24,6 +25,10 @@ class StableTemplateOverrideTest extends KernelTestBase {
    * @var string[]
    */
   protected $templatesToSkip = [
+    // This is an internal template. See the file docblock.
+    'ckeditor5-settings-toolbar',
+    // Registered as a template in the views_theme() function in views.module
+    // but an actual template does not exist.
     'views-form-views-form',
   ];
 

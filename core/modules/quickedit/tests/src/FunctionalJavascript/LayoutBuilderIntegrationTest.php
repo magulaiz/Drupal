@@ -13,6 +13,7 @@ use Drupal\Tests\field\Traits\EntityReferenceTestTrait;
 
 /**
  * @group quickedit
+ * @group legacy
  */
 class LayoutBuilderIntegrationTest extends QuickEditJavascriptTestBase {
 
@@ -34,7 +35,7 @@ class LayoutBuilderIntegrationTest extends QuickEditJavascriptTestBase {
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'classy';
+  protected $defaultTheme = 'starterkit_theme';
 
   /**
    * A user with permissions to edit Articles and use Quick Edit.

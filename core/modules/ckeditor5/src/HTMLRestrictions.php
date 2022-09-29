@@ -9,6 +9,7 @@ use Drupal\Component\Utility\DiffArray;
 use Drupal\filter\FilterFormatInterface;
 use Drupal\filter\Plugin\Filter\FilterHtml;
 use Drupal\filter\Plugin\FilterInterface;
+use Masterminds\HTML5\Elements;
 
 /**
  * Represents a set of HTML restrictions.
@@ -36,9 +37,6 @@ use Drupal\filter\Plugin\FilterInterface;
  * attributes or attribute values on. For example: alignment.
  *
  * @see ::WILDCARD_ELEMENT_METHODS
- *
- * NOTE: Currently only supports the 'allowed' portion.
- * @todo Add support for "forbidden" tags in https://www.drupal.org/project/drupal/issues/3231336
  *
  * @internal
  */
@@ -69,6 +67,7 @@ final class HTMLRestrictions {
    * @var string[]
    */
   private const WILDCARD_ELEMENT_METHODS = [
+    '$any-html5-element' => 'getHtml5ElementList',
     '$text-container' => 'getTextContainerElementList',
   ];
 
@@ -306,7 +305,6 @@ final class HTMLRestrictions {
    * @return \Drupal\ckeditor5\HTMLRestrictions
    */
   private static function unrestricted(): self {
-    // @todo Refine in https://www.drupal.org/project/drupal/issues/3231336, including adding support for all operations.
     $restrictions = HTMLRestrictions::emptySet();
     $restrictions->unrestricted = TRUE;
     return $restrictions;
@@ -335,19 +333,19 @@ final class HTMLRestrictions {
       throw new \InvalidArgumentException();
     }
 
-    if ($object->getHtmlRestrictions() === FALSE) {
-      // @todo Refine in https://www.drupal.org/project/drupal/issues/3231336
+    $restrictions = $object->getHTMLRestrictions();
+    if ($restrictions === FALSE || $restrictions === []) {
       return self::unrestricted();
     }
 
-    $restrictions = $object->getHTMLRestrictions();
-    if (!isset($restrictions['allowed'])) {
-      // @todo Handle HTML restrictor filters that only set forbidden_tags
-      //   https://www.drupal.org/project/ckeditor5/issues/3231336.
-      throw new \DomainException('text formats with only filters that forbid tags rather than allowing tags are not yet supported.');
-    }
-
+    // When allowing all tags on an attribute, transform FilterHtml output from
+    // ['tag' => ['*'=> TRUE]] to ['tag' => TRUE]
     $allowed = $restrictions['allowed'];
+    foreach ($allowed as $element => $attributes) {
+      if (is_array($attributes) && isset($attributes['*']) && $attributes['*'] === TRUE) {
+        $allowed[$element] = TRUE;
+      }
+    }
 
     return new self($allowed);
   }
@@ -396,6 +394,14 @@ final class HTMLRestrictions {
       if (isset($allowed_elements[$processed])) {
         $allowed_elements[$original] = $allowed_elements[$processed];
         unset($allowed_elements[$processed]);
+      }
+    }
+
+    // When allowing all tags on an attribute, transform FilterHtml output from
+    // ['tag' => ['*'=> TRUE]] to ['tag' => TRUE]
+    foreach ($allowed_elements as $element => $attributes) {
+      if (is_array($attributes) && isset($attributes['*']) && $attributes['*'] === TRUE) {
+        $allowed_elements[$element] = TRUE;
       }
     }
 
@@ -750,8 +756,11 @@ final class HTMLRestrictions {
     }
     // Make sure the order of the union array matches the order of the keys in
     // the arrays provided.
-    $keys_order = array_merge($array1_keys, $array2_keys);
-    return array_merge(array_flip($keys_order), $union);
+    $ordered = [];
+    foreach (array_merge($array1_keys, $array2_keys) as $key) {
+      $ordered[$key] = $union[$key];
+    }
+    return $ordered;
   }
 
   /**
@@ -1179,6 +1188,16 @@ final class HTMLRestrictions {
     return [
       'div', 'p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'pre',
     ];
+  }
+
+  /**
+   * Gets a list of all known HTML5 elements.
+   *
+   * @return string[]
+   *   An array of HTML5 element tags.
+   */
+  private static function getHtml5ElementList(): array {
+    return array_keys(Elements::$html5);
   }
 
   /**

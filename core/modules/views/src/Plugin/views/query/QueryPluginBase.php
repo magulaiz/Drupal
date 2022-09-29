@@ -48,6 +48,13 @@ abstract class QueryPluginBase extends PluginBase implements CacheableDependency
   protected $limit;
 
   /**
+   * Controls how the WHERE and HAVING groups are put together.
+   *
+   * @var string
+   */
+  protected $groupOperator;
+
+  /**
    * Generate a query and a countquery from all of the information supplied
    * to the object.
    *
@@ -160,7 +167,7 @@ abstract class QueryPluginBase extends PluginBase implements CacheableDependency
    * @param $where
    *   'where' or 'having'.
    *
-   * @return
+   * @return int|string
    *   The group ID generated.
    */
   public function setWhereGroup($type = 'AND', $group = NULL, $where = 'where') {
