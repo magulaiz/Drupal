@@ -2,6 +2,7 @@
 
 namespace Drupal\Core\Entity\Plugin\Validation\Constraint;
 
+use Drupal\Core\Entity\RevisionableInterface;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 
@@ -29,11 +30,20 @@ class ReferenceAccessConstraintValidator extends ConstraintValidator {
       $entity = $value->getEntity();
       $check_permission = TRUE;
       if (!$entity->isNew()) {
-        $existing_entity = \Drupal::entityTypeManager()->getStorage($entity->getEntityTypeId())->loadUnchanged($entity->id());
+        $storage = \Drupal::entityTypeManager()->getStorage($entity->getEntityTypeId());
+        $storage->resetCache([$entity->id()]);
+
+        if ($entity instanceof RevisionableInterface) {
+          $existing_entity = $storage->loadRevision($entity->getRevisionId());
+        }
+        else {
+          $existing_entity = $storage->load($entity->id());
+        }
+
         $referenced_entities = $existing_entity->{$value->getFieldDefinition()->getName()}->referencedEntities();
         // Check permission if we are not already referencing the entity.
         foreach ($referenced_entities as $ref) {
-          if (isset($referenced_entities[$ref->id()])) {
+          if ($referenced_entity->id() == $ref->id()) {
             $check_permission = FALSE;
             break;
           }
