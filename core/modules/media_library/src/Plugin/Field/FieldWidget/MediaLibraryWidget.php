@@ -429,7 +429,6 @@ class MediaLibraryWidget extends WidgetBase implements TrustedCallbackInterface 
           // Prevent errors in other widgets from preventing removal.
           '#limit_validation_errors' => $limit_validation_errors,
         ],
-        // @todo Make the view mode configurable in https://www.drupal.org/project/drupal/issues/2971209
         'rendered_entity' => $view_builder->view($media_item, 'media_library'),
         'target_id' => [
           '#type' => 'hidden',
