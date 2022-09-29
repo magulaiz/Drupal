@@ -136,7 +136,10 @@ class User extends ContentEntityBase implements UserInterface {
       if ($this->status->value != $this->original->status->value) {
         // The user's status is changing; conditionally send notification email.
         $op = $this->status->value == 1 ? 'status_activated' : 'status_blocked';
-        _user_mail_notify($op, $this);
+        // Send email only if user account has an email.
+        if ($this->getEmail()) {
+          _user_mail_notify($op, $this);
+        }  
       }
     }
   }
