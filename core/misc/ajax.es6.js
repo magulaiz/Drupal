@@ -290,26 +290,33 @@
     once('ajax', '.use-ajax', element).forEach((ajaxLink) => {
       const $linkElement = $(ajaxLink);
 
-      const elementSettings = {
-        // Clicked links look better with the throbber than the progress bar.
-        progress: { type: 'throbber' },
-        dialogType: $linkElement.data('dialog-type'),
-        dialog: $linkElement.data('dialog-options'),
-        dialogRenderer: $linkElement.data('dialog-renderer'),
-        base: $linkElement.attr('id'),
-        element: ajaxLink,
-      };
-      const href = $linkElement.attr('href');
-      /**
-       * For anchor tags, these will go to the target of the anchor rather than
-       * the usual location.
-       */
-      if (href) {
-        elementSettings.url = href;
-        elementSettings.event = 'click';
-      }
-      Drupal.ajax(elementSettings);
-    });
+        const progress =
+          typeof $linkElement.data('ajax-progress') !== 'undefined'
+            ? $linkElement.data('ajax-progress')
+            : 'throbber';
+
+        const elementSettings = {
+          wrapper: $linkElement.data('ajax-wrapper') || null,
+          method: $linkElement.data('ajax-method') || 'replaceWith',
+          progress: { type: progress },
+          dialogType: $linkElement.data('dialog-type'),
+          dialog: $linkElement.data('dialog-options'),
+          dialogRenderer: $linkElement.data('dialog-renderer'),
+          base: $linkElement.attr('id'),
+          element: ajaxLink,
+          focus: $linkElement.data('ajax-focus') || null,
+        };
+        const href = $linkElement.attr('href');
+        /**
+         * For anchor tags, these will go to the target of the anchor rather
+         * than the usual location.
+         */
+        if (href) {
+          elementSettings.url = href;
+          elementSettings.event = 'click';
+        }
+        Drupal.ajax(elementSettings);
+      });
   };
 
   /**
@@ -344,6 +351,8 @@
    *   Extra data to be sent with the Ajax request.
    * @prop {bool} [submit.js=true]
    *   Allows the PHP side to know this comes from an Ajax request.
+   * @prop {?string} focus
+   *   jQuery selector targeting the element that should receive focus.
    * @prop {object} [dialog]
    *   Options for {@link Drupal.dialog}.
    * @prop {string} [dialogType]
@@ -387,6 +396,7 @@
       submit: {
         js: true,
       },
+      focus: null,
     };
 
     $.extend(this, defaults, elementSettings);
@@ -1003,9 +1013,10 @@
       }
     });
 
-    // If the focus hasn't be changed by the ajax commands, try to refocus the
-    // triggering element or one of its parents if that element does not exist
-    // anymore.
+    // If the focus hasn't been changed by the AJAX commands, check if the
+    // triggering element has a 'data-ajax-focus' attribute that specifies a
+    // selector which should get focus. If not, try to refocus the triggering
+    // element or one of its parents if that element does not exist anymore.
     if (
       !focusChanged &&
       this.element &&
@@ -1013,12 +1024,16 @@
     ) {
       let target = false;
 
-      for (let n = elementParents.length - 1; !target && n >= 0; n--) {
-        target = document.querySelector(
-          `[data-drupal-selector="${elementParents[n].getAttribute(
-            'data-drupal-selector',
-          )}"]`,
-        );
+      if (this.focus) {
+        target = document.querySelector(this.focus);
+      } else {
+        for (let n = elementParents.length - 1; !target && n >= 0; n--) {
+          target = document.querySelector(
+            `[data-drupal-selector="${elementParents[n].getAttribute(
+              'data-drupal-selector',
+            )}"]`,
+          );
+        }
       }
 
       if (target) {

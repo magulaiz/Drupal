@@ -141,15 +141,19 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
   Drupal.ajax.bindAjaxLinks = function (element) {
     once('ajax', '.use-ajax', element).forEach(function (ajaxLink) {
       var $linkElement = $(ajaxLink);
+      var progress = typeof $linkElement.data('ajax-progress') !== 'undefined' ? $linkElement.data('ajax-progress') : 'throbber';
       var elementSettings = {
+        wrapper: $linkElement.data('ajax-wrapper') || null,
+        method: $linkElement.data('ajax-method') || 'replaceWith',
         progress: {
-          type: 'throbber'
+          type: progress
         },
         dialogType: $linkElement.data('dialog-type'),
         dialog: $linkElement.data('dialog-options'),
         dialogRenderer: $linkElement.data('dialog-renderer'),
         base: $linkElement.attr('id'),
-        element: ajaxLink
+        element: ajaxLink,
+        focus: $linkElement.data('ajax-focus') || null
       };
       var href = $linkElement.attr('href');
 
@@ -176,7 +180,8 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
       },
       submit: {
         js: true
-      }
+      },
+      focus: null
     };
     $.extend(this, defaults, elementSettings);
     this.commands = new Drupal.AjaxCommands();
@@ -454,8 +459,12 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
     if (!focusChanged && this.element && !$(this.element).data('disable-refocus')) {
       var target = false;
 
-      for (var n = elementParents.length - 1; !target && n >= 0; n--) {
-        target = document.querySelector("[data-drupal-selector=\"".concat(elementParents[n].getAttribute('data-drupal-selector'), "\"]"));
+      if (this.focus) {
+        target = document.querySelector(this.focus);
+      } else {
+        for (var n = elementParents.length - 1; !target && n >= 0; n--) {
+          target = document.querySelector("[data-drupal-selector=\"".concat(elementParents[n].getAttribute('data-drupal-selector'), "\"]"));
+        }
       }
 
       if (target) {
