@@ -304,6 +304,14 @@ abstract class EntityStorageBase extends EntityHandlerBase implements EntityStor
     $entities = [];
     $preloaded_entities = [];
 
+    if ($ids) {
+      if ($invalid_ids = array_filter($ids, function ($id) {
+        return (!is_int($id) && !is_string($id));
+      })) {
+        throw new \InvalidArgumentException("Array of IDs passed to loadMultiple() must contain only strings or integers, found " . print_r($invalid_ids, TRUE));
+      }
+    }
+
     // Create a new variable which is either a prepared version of the $ids
     // array for later comparison with the entity cache, or FALSE if no $ids
     // were passed. The $ids array is reduced as items are loaded from cache,
