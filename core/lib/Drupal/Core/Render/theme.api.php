@@ -25,14 +25,14 @@
  * arrays and rendering.
  *
  * @section sec_twig_theme Twig Templating Engine
- * Drupal 8 uses the templating engine Twig. Twig offers developers a fast,
- * secure, and flexible method for building templates for Drupal 8 sites. Twig
+ * Drupal uses the templating engine Twig. Twig offers developers a fast,
+ * secure, and flexible method for building templates for Drupal sites. Twig
  * also offers substantial usability improvements over PHPTemplate, and does
  * not require front-end developers to know PHP to build and manipulate Drupal
- * 8 themes.
+ * themes.
  *
- * For further information on theming in Drupal 8 see
- * https://www.drupal.org/docs/8/theming
+ * For further information on theming in Drupal see
+ * https://www.drupal.org/docs/theming-drupal
  *
  * For further Twig documentation see
  * https://twig.symfony.com/doc/1.x/templates.html
@@ -73,8 +73,7 @@
  * Note that while Twig templates will auto-escape variables, theme functions
  * must explicitly escape any variables by using theme_render_and_autoescape().
  * Failure to do so is likely to result in security vulnerabilities. Theme
- * functions are deprecated in Drupal 8.0.x and will be removed before
- * Drupal 9.0.x. Use Twig templates instead.
+ * functions are deprecated, use Twig templates instead.
  *
  * @section sec_overriding_theme_hooks Overriding Theme Hooks
  * Themes may register new theme hooks within a hook_theme() implementation, but
@@ -99,8 +98,7 @@
  * default function is again a good starting point for overriding its behavior.
  * Again, note that theme functions (unlike templates) must explicitly escape
  * variables using theme_render_and_autoescape() or risk security
- * vulnerabilities. Theme functions are deprecated in Drupal 8.0.x and will be
- * removed before Drupal 9.0.x. Use Twig templates instead.
+ * vulnerabilities. Theme functions are deprecated, use Twig templates instead.
  *
  * @section sec_preprocess_templates Preprocessing for Template Files
  * If the theme implementation is a template file, several functions are called
@@ -233,8 +231,8 @@
  * same, which gives users fewer user interface patterns to learn.
  *
  * For further information on the Theme and Render APIs, see:
- * - https://www.drupal.org/docs/8/theming
- * - https://www.drupal.org/developing/api/8/render
+ * - https://www.drupal.org/docs/theming-drupal
+ * - https://www.drupal.org/docs/drupal-apis/render-api
  * - @link themeable Theme system overview @endlink.
  *
  * @section arrays Render arrays
@@ -443,7 +441,7 @@
  * @section render_pipeline The render pipeline
  * The term "render pipeline" refers to the process Drupal uses to take
  * information provided by modules and render it into a response. See
- * https://www.drupal.org/developing/api/8/render for more details on this
+ * https://www.drupal.org/docs/drupal-apis/render-api for more details on this
  * process. For background on routing concepts, see
  * @link routing Routing API. @endlink
  *
@@ -1174,7 +1172,7 @@ function hook_page_bottom(array &$page_bottom) {
  *     specified, a default template name will be assumed. For example, if a
  *     module registers the 'search_result' theme hook, 'search-result' will be
  *     assigned as its template name.
- *   - function: (deprecated in Drupal 8.0.x, will be removed in Drupal 9.0.x)
+ *   - function: (deprecated in Drupal 8, was removed in Drupal 9)
  *     If specified, this will be the function name to invoke for this
  *     implementation. If neither 'template' nor 'function' are specified, a
  *     default template name will be assumed. See above for more details.
