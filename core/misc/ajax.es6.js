@@ -292,7 +292,7 @@
 
       const elementSettings = {
         // Clicked links look better with the throbber than the progress bar.
-        progress: { type: 'throbber' },
+        progress: { type: $linkElement.data('progress-type') || 'throbber' },
         dialogType: $linkElement.data('dialog-type'),
         dialog: $linkElement.data('dialog-options'),
         dialogRenderer: $linkElement.data('dialog-renderer'),
