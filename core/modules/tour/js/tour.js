@@ -56,8 +56,6 @@
     },
     toggleTour: function toggleTour() {
       if (this.model.get('isActive')) {
-        this._removeIrrelevantTourItems(this._getTour());
-
         var tourItems = this.model.get('tour');
         var that = this;
 
@@ -129,30 +127,6 @@
     },
     _getTour: function _getTour() {
       return this.model.get('tour');
-    },
-    _removeIrrelevantTourItems: function _removeIrrelevantTourItems(tourItems) {
-      var tips = /tips=([^&]+)/.exec(queryString);
-      var filteredTour = tourItems.filter(function (tourItem) {
-        if (tips && tourItem.hasOwnProperty('classes') && tourItem.classes.indexOf(tips[1]) === -1) {
-          return false;
-        }
-
-        return !(tourItem.selector && !document.querySelector(tourItem.selector));
-      });
-
-      if (tourItems.length !== filteredTour.length) {
-        filteredTour.forEach(function (filteredTourItem, filteredTourItemId) {
-          filteredTour[filteredTourItemId].counter = Drupal.t('!tour_item of !total', {
-            '!tour_item': filteredTourItemId + 1,
-            '!total': filteredTour.length
-          });
-
-          if (filteredTourItemId === filteredTour.length - 1) {
-            filteredTour[filteredTourItemId].cancelText = Drupal.t('End tour');
-          }
-        });
-        this.model.set('tour', filteredTour);
-      }
     }
   });
 
