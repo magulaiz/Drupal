@@ -14,6 +14,12 @@
           "title": "A multi-lingual-node",
           "hierarchy": ["1"],
           "machine-name": ["main"]
+        },
+        {
+          "href": "/dd/multi-lingual-node-two",
+          "title": "Second multi-lingual-node",
+          "hierarchy": ["2"],
+          "machine-name": ["main"]
         }
       ]
     }

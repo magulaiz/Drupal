@@ -14,6 +14,12 @@
           "title": "cc|A multi-lingual-node",
           "hierarchy": ["1"],
           "machine-name": ["main"]
+        },
+        {
+          "href": "/cc/node/2",
+          "title": "aa|Second multi-lingual-node",
+          "hierarchy": ["2"],
+          "machine-name": ["main"]
         }
       ]
     }

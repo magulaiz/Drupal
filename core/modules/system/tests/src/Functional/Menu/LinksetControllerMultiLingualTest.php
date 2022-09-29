@@ -159,6 +159,25 @@ final class LinksetControllerMultiLingualTest extends LinksetControllerTestBase 
       ]);
       $multi_lingual_menu_item->save();
     }
+    // Multilingual Menu item with missing language.
+    $multi_lingual_node = $this->createNode([
+      'nid' => 2,
+      'title' => 'A multi-lingual-node',
+      'type' => 'page',
+      'path' => '/multi-lingual-node-two',
+    ]);
+    $multi_lingual_menu_item = $this->createMenuItem([
+      'title' => 'Second multi-lingual-node',
+      'link' => 'entity:node/' . (int) $multi_lingual_node->id(),
+      'menu_name' => 'main',
+      'weight' => $home_page_link->getWeight() + 2,
+    ]);
+    foreach (['aa', 'bb'] as $language_code) {
+      $multi_lingual_menu_item->addTranslation($language_code, [
+        'title' => $language_code . '|' . 'Second multi-lingual-node',
+      ]);
+      $multi_lingual_menu_item->save();
+    }
     $this->httpKernel = $this->container->get('http_kernel');
   }
 

@@ -14,6 +14,12 @@
           "title": "bb|A multi-lingual-node",
           "hierarchy": ["1"],
           "machine-name": ["main"]
+        },
+        {
+          "href": "/bb/node/2",
+          "title": "bb|Second multi-lingual-node",
+          "hierarchy": ["2"],
+          "machine-name": ["main"]
         }
       ]
     }
