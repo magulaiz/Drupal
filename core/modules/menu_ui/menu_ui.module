@@ -368,7 +368,7 @@ function menu_ui_form_node_type_form_alter(&$form, FormStateInterface $form_stat
   $form['menu']['menu_options'] = [
     '#type' => 'checkboxes',
     '#title' => t('Available menus'),
-    '#default_value' => $type->getThirdPartySetting('menu_ui', 'available_menus', ['main']),
+    '#default_value' => $type->isNew() ? ['main'] : $type->getThirdPartySetting('menu_ui', 'available_menus', []),
     '#options' => $menu_options,
     '#description' => t('The menus available to place links in for this content type.'),
   ];
@@ -382,7 +382,7 @@ function menu_ui_form_node_type_form_alter(&$form, FormStateInterface $form_stat
   $form['menu']['menu_parent'] = [
     '#type' => 'select',
     '#title' => t('Default parent link'),
-    '#default_value' => $type->getThirdPartySetting('menu_ui', 'parent', 'main:'),
+    '#default_value' => $type->isNew() ? 'main:' : $type->getThirdPartySetting('menu_ui', 'parent', ''),
     '#options' => $options,
     '#description' => t('Choose the menu link to be the default parent for a new link in the content authoring form.'),
     '#attributes' => ['class' => ['menu-title-select']],
@@ -419,8 +419,21 @@ function menu_ui_form_node_type_form_validate(&$form, FormStateInterface $form_s
  * @see menu_ui_form_node_type_form_alter()
  */
 function menu_ui_form_node_type_form_builder($entity_type, NodeTypeInterface $type, &$form, FormStateInterface $form_state) {
-  $type->setThirdPartySetting('menu_ui', 'available_menus', array_values(array_filter($form_state->getValue('menu_options'))));
-  $type->setThirdPartySetting('menu_ui', 'parent', $form_state->getValue('menu_parent'));
+  $available_menus = array_values(array_filter($form_state->getValue('menu_options')));
+  if ($available_menus) {
+    $type->setThirdPartySetting('menu_ui', 'available_menus', $available_menus);
+  }
+  else {
+    $type->unsetThirdPartySetting('menu_ui', 'available_menus');
+  }
+
+  $parent = $form_state->getValue('menu_parent');
+  if ($parent) {
+    $type->setThirdPartySetting('menu_ui', 'parent', $parent);
+  }
+  else {
+    $type->unsetThirdPartySetting('menu_ui', 'parent');
+  }
 }
 
 /**
