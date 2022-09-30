@@ -31,13 +31,11 @@ class ReferenceAccessConstraintValidator extends ConstraintValidator {
       $check_permission = TRUE;
       if (!$entity->isNew()) {
         $storage = \Drupal::entityTypeManager()->getStorage($entity->getEntityTypeId());
-        $storage->resetCache([$entity->id()]);
-
-        if ($entity instanceof RevisionableInterface) {
+        if ($entity instanceof RevisionableInterface && !$entity->isDefaultRevision()) {
           $existing_entity = $storage->loadRevision($entity->getRevisionId());
         }
         else {
-          $existing_entity = $storage->load($entity->id());
+          $existing_entity = $storage->loadUnchanged($entity->id());
         }
 
         $referenced_entities = $existing_entity->{$value->getFieldDefinition()->getName()}->referencedEntities();
