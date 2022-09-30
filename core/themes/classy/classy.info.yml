@@ -3,7 +3,7 @@ type: theme
 base theme: stable
 lifecycle: deprecated
 lifecycle_link: https://drupal.org/node/3223395#s-classy
-description: 'A base theme with sensible default CSS classes added. Learn how to use Classy as a base theme in the <a href="https://www.drupal.org/docs/theming-drupal">Drupal 8 Theming Guide</a>.'
+description: 'A base theme with sensible default CSS classes added. Learn how to use Classy as a base theme in the <a href="https://www.drupal.org/docs/theming-drupal">Theming Drupal</a>.'
 package: Core
 version: VERSION
 hidden: true
