@@ -49,7 +49,8 @@ trait TestFileCreationTrait {
    *   filter the returned list by size.
    *
    * @return object[]
-   *   List of files in public:// that match the filter(s).
+   *   List of files in public:// that match the filter(s). Each file is an
+   *   object with 'uri', 'filename', and 'name' properties.
    */
   protected function getTestFiles($type, $size = NULL) {
     /** @var \Drupal\Core\File\FileSystemInterface $file_system */
