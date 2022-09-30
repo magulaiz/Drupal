@@ -64,4 +64,4 @@ filters:
         image: image
         remote_video: remote_video
         video: video
-      default_view_mode_9301: responsive_3x2
+      default_view_mode_9501: responsive_3x2

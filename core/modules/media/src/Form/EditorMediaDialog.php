@@ -289,7 +289,10 @@ class EditorMediaDialog extends FormBase {
       return NULL;
     }
 
-    $filter_default_view_mode = $media_embed_filter->settings['default_view_mode_9301'];
+    // We use default_view_mode_9501 here instead of default_view_mode to avoid
+    // broken displays when the default_view_mode has changed and the view mode
+    // attribute is missing.
+    $filter_default_view_mode = $media_embed_filter->settings['default_view_mode_9501'];
 
     // If the current media embed ($media_embed_element) has a set view mode,
     // we want to use that as the default in the select form element,

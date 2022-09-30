@@ -8,10 +8,10 @@ use Drupal\filter\Entity\FilterFormat;
 use Drupal\FunctionalTests\Update\UpdatePathTestBase;
 
 /**
- * Tests media_update_9301() upgrade path.
+ * Tests media_update_9501() upgrade path.
  *
  * @group media
- * @see media_update_9301()
+ * @see media_update_9501()
  */
 class MediaEmbedViewModeUpdateTest extends UpdatePathTestBase {
 
@@ -33,7 +33,7 @@ class MediaEmbedViewModeUpdateTest extends UpdatePathTestBase {
   }
 
   /**
-   * Tests media_update_9301() upgrade path.
+   * Tests media_update_9501() upgrade path.
    */
   public function testMediaEmbedViewModeUpdate() {
     FilterFormat::create([
@@ -93,7 +93,7 @@ class MediaEmbedViewModeUpdateTest extends UpdatePathTestBase {
 
     $filter_format = FilterFormat::load('test_format');
     $settings = $filter_format->get('filters')['media_embed']['settings'];
-    $this->assertEquals($settings['default_view_mode_9301'], 'view_mode_1');
+    $this->assertEquals($settings['default_view_mode_9501'], 'view_mode_1');
   }
 
 }
