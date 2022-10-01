@@ -182,7 +182,7 @@ abstract class PluginBase extends ComponentPluginBase implements ContainerFactor
         $this->setOptionDefaults($storage[$option], $definition['contains']);
       }
       else {
-        $storage[$option] = $definition['default'];
+        $storage[$option] = $definition['default'] ?? '';
       }
     }
   }
