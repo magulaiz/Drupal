@@ -30,16 +30,16 @@ trait XdebugRequestTrait {
       $cookies['XDEBUG_SESSION'][] = $cookie_params->get('XDEBUG_SESSION');
     }
     // For CLI requests, the information is stored in $_SERVER.
-    $server = $request->server;
-    if ($server->has('XDEBUG_CONFIG')) {
-      // $_SERVER['XDEBUG_CONFIG'] has the form "key1=value1 key2=value2 ...".
-      $pairs = explode(' ', $server->get('XDEBUG_CONFIG'));
-      foreach ($pairs as $pair) {
-        [$key, $value] = explode('=', $pair);
-        // Account for key-value pairs being separated by multiple spaces.
-        if (trim($key, ' ') == 'idekey') {
-          $cookies['XDEBUG_SESSION'][] = trim($value, ' ');
-        }
+    // $_SERVER['XDEBUG_CONFIG'] has the form "key1=value1 key2=value2 ...".
+    $pairs = array_filter(explode(' ', $request->server->get('XDEBUG_CONFIG', '')));
+    foreach ($pairs as $pair) {
+      if (strpos($pair, '=') === FALSE) {
+        continue;
+      }
+      [$key, $value] = explode('=', $pair, 2);
+      // Account for key-value pairs being separated by multiple spaces.
+      if (trim($key, ' ') == 'idekey') {
+        $cookies['XDEBUG_SESSION'][] = trim($value, ' ');
       }
     }
     return $cookies;
