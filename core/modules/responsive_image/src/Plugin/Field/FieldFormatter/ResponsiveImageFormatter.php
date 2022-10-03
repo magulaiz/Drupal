@@ -246,7 +246,7 @@ class ResponsiveImageFormatter extends ImageFormatterBase {
         '#responsive_image_style_id' => $responsive_image_style ? $responsive_image_style->id() : '',
         '#url' => $url,
         '#cache' => [
-          'tags' => $cache_tags,
+          'tags' => Cache::mergeTags($cache_tags, $file->getCacheTags()),
         ],
       ];
     }
