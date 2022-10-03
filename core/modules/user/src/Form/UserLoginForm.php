@@ -75,7 +75,7 @@ class UserLoginForm extends FormBase {
       $user_flood_control = \Drupal::service('user.flood_control');
     }
     if (!$bare_html_renderer instanceof BareHtmlPageRendererInterface) {
-      @trigger_error('Calling UserLoginForm::__construct() without the $bare_html_renderer argument is deprecated in drupal:9.4.0 and will be required before drupal:10.0.0. See https://www.drupal.org/node/3251987.', E_USER_DEPRECATED);
+      @trigger_error('Calling UserLoginForm::__construct() without the $bare_html_renderer argument is deprecated in drupal:9.4.0 and will be required before drupal:10.0.0. See https://www.drupal.org/node/3251987', E_USER_DEPRECATED);
       $bare_html_renderer = \Drupal::service('bare_html_page_renderer');
     }
     $this->userFloodControl = $user_flood_control;

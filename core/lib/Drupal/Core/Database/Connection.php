@@ -232,7 +232,7 @@ abstract class Connection {
    */
   public function __construct(\PDO $connection, array $connection_options) {
     if ($this->identifierQuotes === NULL) {
-      @trigger_error('In drupal:10.0.0 not setting the $identifierQuotes property in the concrete Connection class will result in an RuntimeException. See https://www.drupal.org/node/2986894', E_USER_DEPRECATED);
+      @trigger_error('Not setting the $identifierQuotes property in the concrete Connection class is deprecated in drupal:9.0.0 and will result in a RuntimeException in drupal:10.0.0. See https://www.drupal.org/node/2986894', E_USER_DEPRECATED);
       $this->identifierQuotes = ['', ''];
     }
 
@@ -240,7 +240,7 @@ abstract class Connection {
 
     // The 'transactions' option is deprecated.
     if (isset($connection_options['transactions'])) {
-      @trigger_error('Passing a \'transactions\' connection option to ' . __METHOD__ . ' is deprecated in drupal:9.1.0 and is removed in drupal:10.0.0. All database drivers must support transactions. See https://www.drupal.org/node/2278745', E_USER_DEPRECATED);
+      @trigger_error('Passing a \'transactions\' connection option to ' . __METHOD__ . '() is deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. All database drivers must support transactions. See https://www.drupal.org/node/2278745', E_USER_DEPRECATED);
       unset($connection_options['transactions']);
     }
 
@@ -1017,7 +1017,7 @@ abstract class Connection {
    * @see https://www.drupal.org/node/3187222
    */
   protected function handleQueryException(\PDOException $e, $query, array $args = [], $options = []) {
-    @trigger_error('Connection::handleQueryException() is deprecated in drupal:9.2.0 and is removed in drupal:10.0.0. Get a handler through $this->exceptionHandler() instead, and use one of its methods. See https://www.drupal.org/node/3187222', E_USER_DEPRECATED);
+    @trigger_error('Connection::handleQueryException() is deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. Get a handler through $this->exceptionHandler() instead, and use one of its methods. See https://www.drupal.org/node/3187222', E_USER_DEPRECATED);
     if ($options['throw_exception'] ?? TRUE) {
       // Wrap the exception in another exception, because PHP does not allow
       // overriding Exception::getMessage(). Its message is the extra database
@@ -1863,7 +1863,7 @@ abstract class Connection {
    * @see https://www.drupal.org/node/2278745
    */
   public function supportsTransactions() {
-    @trigger_error(__METHOD__ . ' is deprecated in drupal:9.1.0 and is removed in drupal:10.0.0. All database drivers must support transactions. See https://www.drupal.org/node/2278745', E_USER_DEPRECATED);
+    @trigger_error(__METHOD__ . '() is deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. All database drivers must support transactions. See https://www.drupal.org/node/2278745', E_USER_DEPRECATED);
     return TRUE;
   }
 

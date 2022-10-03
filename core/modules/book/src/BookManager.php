@@ -129,12 +129,12 @@ class BookManager implements BookManagerInterface {
     $this->bookOutlineStorage = $book_outline_storage;
     $this->renderer = $renderer;
     if (!$language_manager) {
-      @trigger_error('The language_manager service must be passed to ' . __NAMESPACE__ . '\BookManager::__construct(). It was added in drupal:9.2.0 and will be required before drupal:10.0.0.', E_USER_DEPRECATED);
+      @trigger_error('Calling ' . __NAMESPACE__ . '\BookManager::__construct() without the language_manager service is deprecated in drupal:9.2.0 and will be required in drupal:10.0.0. See https://www.drupal.org/node/2470896', E_USER_DEPRECATED);
       $language_manager = \Drupal::service('language_manager');
     }
     $this->languageManager = $language_manager;
     if (!$entity_repository) {
-      @trigger_error('The entity.repository service must be passed to ' . __NAMESPACE__ . '\BookManager::__construct(). It was added in drupal:9.2.0 and will be required before drupal:10.0.0.', E_USER_DEPRECATED);
+      @trigger_error('Calling ' . __NAMESPACE__ . '\BookManager::__construct() without the entity.repository service is deprecated in drupal:9.2.0 and will be required in drupal:10.0.0. See https://www.drupal.org/node/2470896', E_USER_DEPRECATED);
       $entity_repository = \Drupal::service('entity.repository');
     }
     $this->entityRepository = $entity_repository;

@@ -35,7 +35,7 @@ class CssCollectionRenderer implements AssetCollectionRendererInterface {
   public function __construct(StateInterface $state, FileUrlGeneratorInterface $file_url_generator = NULL) {
     $this->state = $state;
     if (!$file_url_generator) {
-      @trigger_error('Calling CssCollectionRenderer::__construct() without the $file_url_generator argument is deprecated in drupal:9.3.0 and will be required before drupal:10.0.0. See https://www.drupal.org/node/2549139.', E_USER_DEPRECATED);
+      @trigger_error('Calling CssCollectionRenderer::__construct() without the $file_url_generator argument is deprecated in drupal:9.3.0 and will be required before drupal:10.0.0. See https://www.drupal.org/node/2549139', E_USER_DEPRECATED);
       $file_url_generator = \Drupal::service('file_url_generator');
     }
     $this->fileUrlGenerator = $file_url_generator;

@@ -47,7 +47,7 @@ class BookNavigationCacheContext implements CacheContextInterface, ContainerAwar
    */
   public function __construct($route_match) {
     if (!$route_match instanceof RouteMatchInterface) {
-      @trigger_error('Passing the request_stack service to ' . __METHOD__ . '() is deprecated in drupal:9.2.0 and will be removed before drupal:10.0.0. The parameter should be an instance of \Drupal\Core\Routing\RouteMatchInterface instead.', E_USER_DEPRECATED);
+      @trigger_error('Passing the request_stack service to ' . __METHOD__ . '() is deprecated in drupal:9.2.0 and will be removed before drupal:10.0.0. The parameter should be an instance of \Drupal\Core\Routing\RouteMatchInterface instead. See https://www.drupal.org/node/2575827', E_USER_DEPRECATED);
       $route_match = \Drupal::routeMatch();
     }
     $this->routeMatch = $route_match;

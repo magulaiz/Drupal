@@ -22,8 +22,8 @@ class ProviderRepositoryTest extends KernelTestBase {
   public function testDeprecations(): void {
     // Passing a cache backend in the key-value store's place, and the max age
     // in the logger factory's place, should raise deprecation notices.
-    $this->expectDeprecation('The keyvalue service should be passed to Drupal\media\OEmbed\ProviderRepository::__construct() since drupal:9.3.0 and is required in drupal:10.0.0. See https://www.drupal.org/node/3186186');
-    $this->expectDeprecation('The logger.factory service should be passed to Drupal\media\OEmbed\ProviderRepository::__construct() since drupal:9.3.0 and is required in drupal:10.0.0. See https://www.drupal.org/node/3186186');
+    $this->expectDeprecation('Calling Drupal\media\OEmbed\ProviderRepository::__construct() without the keyvalue service is deprecated in drupal:9.3.0 and it is required in drupal:10.0.0. See https://www.drupal.org/node/3186186');
+    $this->expectDeprecation('Calling Drupal\media\OEmbed\ProviderRepository::__construct() without the logger.factory service is deprecated in drupal:9.3.0 and it is required in drupal:10.0.0. See https://www.drupal.org/node/3186186');
     $providers = new ProviderRepository(
       $this->container->get('http_client'),
       $this->container->get('config.factory'),

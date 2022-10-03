@@ -93,7 +93,7 @@ final class ModuleVersion {
    *   The extra version string.
    */
   private function __construct($major_version, $version_extra) {
-    @trigger_error(__CLASS__ . ' is deprecated in drupal:9.2.0 and will be removed before drupal:10.0.0. Use The \Drupal\Core\Extension\ExtensionVersion instead. As an internal class, ExtensionVersion may also be removed in a minor release.', E_USER_DEPRECATED);
+    @trigger_error(__CLASS__ . ' is deprecated in drupal:9.2.0 and will be removed before drupal:10.0.0. Use the \Drupal\Core\Extension\ExtensionVersion instead. As an internal class, ExtensionVersion may also be removed in a minor release. See https://www.drupal.org/node/3041885', E_USER_DEPRECATED);
     $this->majorVersion = $major_version;
     $this->versionExtra = $version_extra;
   }

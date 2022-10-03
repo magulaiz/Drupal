@@ -89,7 +89,7 @@ class ModulesUninstallForm extends FormBase {
     $this->moduleInstaller = $module_installer;
     $this->keyValueExpirable = $key_value_expirable;
     if ($versioning_update_registry === NULL) {
-      @trigger_error('The update.update_hook_registry service must be passed to ' . __NAMESPACE__ . '\ModulesUninstallForm::__construct(). It was added in drupal:9.3.0 and will be required before drupal:10.0.0.', E_USER_DEPRECATED);
+      @trigger_error('Calling ' . __NAMESPACE__ . '\ModulesUninstallForm::__construct() without the update.update_hook_registry service is deprecated in drupal:9.3.0 and it will be required in drupal:10.0.0. See https://www.drupal.org/node/2124069', E_USER_DEPRECATED);
       $versioning_update_registry = \Drupal::service('update.update_hook_registry');
     }
     $this->updateRegistry = $versioning_update_registry;

@@ -81,7 +81,7 @@ class LinkCollectionNormalizer extends NormalizerBase {
    */
   public function __construct(AccountInterface $current_user = NULL) {
     if (is_null($current_user)) {
-      @trigger_error('Calling ' . __METHOD__ . '() without the $current_user argument is deprecated in drupal:9.2.0 and will be required in drupal:10.0.0.', E_USER_DEPRECATED);
+      @trigger_error('Calling ' . __METHOD__ . '() without the $current_user argument is deprecated in drupal:9.2.0 and will be required in drupal:10.0.0. See https://www.drupal.org/node/3055889', E_USER_DEPRECATED);
       $current_user = \Drupal::currentUser();
     }
     $this->currentUser = $current_user;
