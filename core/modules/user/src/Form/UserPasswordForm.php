@@ -147,7 +147,10 @@ class UserPasswordForm extends FormBase {
         '#markup' => $this->t('Password reset instructions will be sent to your registered email address.'),
         '#suffix' => '</p>',
       ];
-      $form['name']['#default_value'] = $this->getRequest()->query->get('name');
+      $default_value = $this->getRequest()->query->get('name');
+      if (is_string($default_value)) {
+        $form['name']['#default_value'] = $default_value;
+      }
     }
     $form['actions'] = ['#type' => 'actions'];
     $form['actions']['submit'] = ['#type' => 'submit', '#value' => $this->t('Submit')];
