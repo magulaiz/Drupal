@@ -160,7 +160,7 @@ services:
       - [setLatestRevisionCheck, ['@?access_check.latest_revision']] # This is only injected when the service is available.
   access_check.jsonapi.relationship_route_access:
     class: Drupal\jsonapi\Access\RelationshipRouteAccessCheck
-    arguments: ['@jsonapi.entity_access_checker']
+    arguments: ['@jsonapi.entity_access_checker', '@language_manager']
     tags:
       - { name: access_check, applies_to: _jsonapi_relationship_route_access }
 

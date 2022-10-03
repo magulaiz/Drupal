@@ -5,6 +5,8 @@ namespace Drupal\jsonapi\Access;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Access\AccessResultReasonInterface;
 use Drupal\Core\Entity\FieldableEntityInterface;
+use Drupal\Core\Entity\TranslatableInterface;
+use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\Routing\Access\AccessInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Session\AccountInterface;
@@ -38,13 +40,19 @@ final class RelationshipRouteAccessCheck implements AccessInterface {
   protected $entityAccessChecker;
 
   /**
+   * @var \Drupal\Core\Language\LanguageManagerInterface
+   */
+  private $languageManager;
+
+  /**
    * RelationshipRouteAccessCheck constructor.
    *
    * @param \Drupal\jsonapi\Access\EntityAccessChecker $entity_access_checker
    *   The JSON:API entity access checker.
    */
-  public function __construct(EntityAccessChecker $entity_access_checker) {
+  public function __construct(EntityAccessChecker $entity_access_checker, LanguageManagerInterface $languageManager) {
     $this->entityAccessChecker = $entity_access_checker;
+    $this->languageManager = $languageManager;
   }
 
   /**
@@ -67,6 +75,12 @@ final class RelationshipRouteAccessCheck implements AccessInterface {
     if ($resource_type = $route_match->getParameter(Routes::RESOURCE_TYPE_KEY)) {
       assert($resource_type instanceof ResourceType);
       $entity = $route_match->getParameter('entity');
+
+      $langcode = $this->languageManager->getCurrentLanguage()->getId();
+      if ($entity instanceof TranslatableInterface && $entity->hasTranslation($langcode)) {
+        $entity = $entity->getTranslation($langcode);
+      }
+
       $internal_name = $resource_type->getInternalName($relationship_field_name);
       if ($entity instanceof FieldableEntityInterface && $entity->hasField($internal_name)) {
         $entity_access = $this->entityAccessChecker->checkEntityAccess($entity, $entity_operation, $account);
