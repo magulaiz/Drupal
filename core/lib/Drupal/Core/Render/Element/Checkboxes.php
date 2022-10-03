@@ -81,7 +81,12 @@ class Checkboxes extends FormElement {
 
         // Only enabled checkboxes receive their values from the form
         // submission, the disabled checkboxes use their default value.
-        $default_value = NULL;
+        if ($is_ajax = \Drupal::request()->isXmlHttpRequest()) {
+          $default_value = (is_array($element['#default_value']) && in_array($key, $element['#default_value'])) ? $key : NULL;
+        }
+        else {
+          $default_value = isset($value[$key]) ? $key : NULL;
+        }
         if (isset($value[$key]) || (!empty($element[$key]['#disabled']) && in_array($key, $element['#default_value'], TRUE))) {
           $default_value = $key;
         }
@@ -107,7 +112,7 @@ class Checkboxes extends FormElement {
    * {@inheritdoc}
    */
   public static function valueCallback(&$element, $input, FormStateInterface $form_state) {
-    if ($input === FALSE) {
+    if ($input === FALSE  || (\Drupal::request()->isXmlHttpRequest() && is_null($input))) {
       $value = [];
       $element += ['#default_value' => []];
       foreach ($element['#default_value'] as $key) {

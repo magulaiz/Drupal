@@ -52,7 +52,7 @@ class Checkbox extends FormElement {
    * {@inheritdoc}
    */
   public static function valueCallback(&$element, $input, FormStateInterface $form_state) {
-    if ($input === FALSE) {
+    if ($input === FALSE  || (\Drupal::request()->isXmlHttpRequest() && is_null($input))) {
       // Use #default_value as the default value of a checkbox, except change
       // NULL to 0, because FormBuilder::handleInputElement() would otherwise
       // replace NULL with empty string, but an empty string is a potentially
