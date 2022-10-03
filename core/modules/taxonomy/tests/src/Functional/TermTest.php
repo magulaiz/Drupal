@@ -686,6 +686,23 @@ class TermTest extends TaxonomyTestBase {
     ];
     $this->assertBreadcrumb('taxonomy/term/' . $term->id() . '/delete', $trail);
     $this->assertSession()->assertEscaped($term->label());
+
+    // Edit the term and verify that breadcrumb is updated on term edit and
+    // delete pages.
+    $edit = [
+      'name[0][value]' => $this->randomMachineName(14),
+      'description[0][value]' => $this->randomMachineName(100),
+      'parent[]' => [0],
+    ];
+    $this->drupalGet('taxonomy/term/' . $term->id() . '/edit');
+    $this->submitForm($edit, t('Save'));
+    $this->drupalGet('taxonomy/term/' . $term->id() . '/edit');
+    $breadcrumbs = $this->getSession()->getPage()->findAll('css', 'nav.breadcrumb ol li a');
+    $this->assertSame($breadcrumbs[1]->getText(), $edit['name[0][value]'], 'Edited breadcrumb text is updated on term edit page.');
+
+    $this->drupalGet('taxonomy/term/' . $term->id() . '/delete');
+    $breadcrumbs = $this->getSession()->getPage()->findAll('css', 'nav.breadcrumb ol li a');
+    $this->assertSame($breadcrumbs[1]->getText(), $edit['name[0][value]'], 'Edited breadcrumb text is updated on term edit page.');
   }
 
 }

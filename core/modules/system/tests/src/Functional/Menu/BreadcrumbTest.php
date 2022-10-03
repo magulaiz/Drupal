@@ -366,6 +366,20 @@ class BreadcrumbTest extends BrowserTestBase {
     ];
     $this->assertBreadcrumb('user/' . $this->webUser->id() . '/edit', $trail, $this->webUser->getAccountName());
 
+    // Change own username and verify correct breadcrumb after account edit.
+    $newUsername = $this->randomMachineName();
+    $edit = [];
+    $edit['name'] = $newUsername;
+    $this->drupalPostForm('user/' . $this->webUser->id() . '/edit', $edit, t('Save'));
+
+    // Verify correct breadcrumb and page title when viewing own user account.
+    $trail = $home;
+    $this->assertBreadcrumb('user/' . $this->webUser->id(), $trail, $newUsername);
+    $trail += [
+      'user/' . $this->webUser->id() => $newUsername,
+    ];
+    $this->assertBreadcrumb('user/' . $this->webUser->id() . '/edit', $trail, $newUsername);
+
     // Create an only slightly privileged user being able to access site reports
     // but not administration pages.
     $this->webUser = $this->drupalCreateUser([
@@ -443,6 +457,36 @@ class BreadcrumbTest extends BrowserTestBase {
     catch (ExpectationFailedException $e) {
       $this->assertTrue(TRUE, $message);
     }
+  }
+
+  /**
+   * Tests breadcrumb cacheability.
+   */
+  public function testBreadcrumbCacheability() {
+    // Create an article.
+    $node = $this->drupalCreateNode([
+      'type' => 'article',
+      'title' => 'Article Foo',
+    ]);
+
+    // Edit the article's title and create a new revision.
+    $node->setTitle('Article Bar');
+    $node->setNewRevision(TRUE);
+    $node->save();
+
+    // Open the Revisions tab so the breadcrumb is cached.
+    $this->drupalGet('node/' . $node->id() . '/revisions');
+    $this->assertText('Article Bar');
+
+    // Edit the article's title again and create a new revision.
+    $node->setTitle('Article Baz');
+    $node->setNewRevision(TRUE);
+    $node->save();
+
+    // Open the Revisions tab and check the breadcrumb.
+    $this->drupalGet('node/' . $node->id() . '/revisions');
+    $this->assertNoText('Article Bar');
+    $this->assertText('Article Baz');
   }
 
 }
