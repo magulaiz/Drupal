@@ -3,6 +3,8 @@
 namespace Drupal\KernelTests\Core\Url;
 
 use Drupal\Component\Render\MarkupInterface;
+use Drupal\Core\Cache\Cache;
+use Drupal\Core\Cache\RefinableCacheableDependencyInterface;
 use Drupal\Core\Render\RenderContext;
 use Drupal\Core\Url;
 use Drupal\KernelTests\KernelTestBase;
@@ -31,6 +33,13 @@ class LinkGenerationTest extends KernelTestBase {
     // Ensure the content of the link is not escaped.
     $this->assertRaw('<em>link with markup</em>');
 
+    // Check cacheable metadata with no hook_link_alter() alteration.
+    // @see link_generation_test_link_alter()
+    $this->assertInstanceOf(RefinableCacheableDependencyInterface::class, $link);
+    $this->assertEmpty($link->getCacheContexts());
+    $this->assertEmpty($link->getCacheTags());
+    $this->assertSame(Cache::PERMANENT, $link->getCacheMaxAge());
+
     // Test just adding text to an already safe string.
     \Drupal::state()->set('link_generation_test_link_alter', TRUE);
     $link = $renderer->executeInRenderContext(new RenderContext(), function () use ($url) {
@@ -40,6 +49,13 @@ class LinkGenerationTest extends KernelTestBase {
     $this->assertInstanceOf(MarkupInterface::class, $link);
     // Ensure the content of the link is escaped.
     $this->assertEscaped('<em>link with markup</em> <strong>Test!</strong>');
+
+    // Check that cacheable metadata has been altered by hook_link_alter().
+    // @see link_generation_test_link_alter()
+    $this->assertInstanceOf(RefinableCacheableDependencyInterface::class, $link);
+    $this->assertSame(['url', 'languages'], $link->getCacheContexts());
+    $this->assertSame(['foo', 'bar'], $link->getCacheTags());
+    $this->assertSame(3600, $link->getCacheMaxAge());
 
     // Test passing a safe string to t().
     \Drupal::state()->set('link_generation_test_link_alter_safe', TRUE);

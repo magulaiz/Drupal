@@ -479,6 +479,14 @@ function hook_system_breadcrumb_alter(\Drupal\Core\Breadcrumb\Breadcrumb &$bread
  *       must be a string; other elements are more flexible, as they just need
  *       to work as an argument for the constructor of the class
  *       Drupal\Core\Template\Attribute($options['attributes']).
+ *   - cacheable_dependency: Hook implementations are able to assign a cacheable
+ *     dependency object, such as \Drupal\Core\Cache\CacheableMetadata, to this
+ *     variable, whose cacheable metadata to be merged into the link. Multiple
+ *     hook implementations might need to add such dependencies, thus it's
+ *     important that an implementation will perform a prior check for the
+ *     existence of this variable. If a previous cacheable dependency was
+ *     already set, the hook implementation should merge its cacheable metadata
+ *     into the existing object, rather than creating a new one.
  *
  * @see \Drupal\Core\Utility\UnroutedUrlAssembler::assemble()
  * @see \Drupal\Core\Routing\UrlGenerator::generateFromRoute()
@@ -489,6 +497,17 @@ function hook_link_alter(&$variables) {
   $url = $variables['url'];
   if ($url->isRouted() && strpos($url->getRouteName(), 'admin') !== FALSE) {
     $variables['text'] = t('@text (Warning!)', ['@text' => $variables['text']]);
+  }
+
+  if ($url->isRouted() && $url->getRouteName() === 'some.route.name') {
+    // Add cacheable metadata to this link.
+    if (!isset($variables['cacheable_dependency'])) {
+      $variables['cacheable_dependency'] = new \Drupal\Core\Cache\CacheableMetadata();
+    }
+    $variables['cacheable_dependency']
+      ->addCacheContexts(['url', 'languages'])
+      ->addCacheTags(['foo'])
+      ->mergeCacheMaxAge(3600);
   }
 }
 

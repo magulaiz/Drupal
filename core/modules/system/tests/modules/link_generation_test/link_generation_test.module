@@ -5,6 +5,8 @@
  * Helper module for the link generation tests.
  */
 
+use Drupal\Core\Cache\CacheableMetadata;
+
 /**
  * Implements hook_link_alter().
  */
@@ -17,5 +19,11 @@ function link_generation_test_link_alter(&$variables) {
     else {
       $variables['text'] .= ' <strong>Test!</strong>';
     }
+
+    // Add cacheable metadata.
+    $variables['cacheable_dependency'] = (new CacheableMetadata())
+      ->addCacheContexts(['url', 'languages'])
+      ->addCacheTags(['foo', 'bar'])
+      ->mergeCacheMaxAge(3600);
   }
 }
