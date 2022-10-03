@@ -114,12 +114,12 @@ class EntityAutocompleteTest extends EntityKernelTestBase {
   public function testSelectionSettingsHandling() {
     $entity_reference_controller = EntityAutocompleteController::create($this->container);
     $request = Request::create('entity_reference_autocomplete/' . $this->entityType . '/default');
-    $request->query->set('q', $this->randomString());
+    $request->query->set('q', $this->randomMachineName());
 
     try {
       // Pass an invalid selection settings key (i.e. one that does not exist
       // in the key/value store).
-      $selection_settings_key = $this->randomString();
+      $selection_settings_key = $this->randomMachineName();
       $entity_reference_controller->handleAutocomplete($request, $this->entityType, 'default', $selection_settings_key);
 
       $this->fail('Non-existent selection settings key throws an exception.');
@@ -133,7 +133,7 @@ class EntityAutocompleteTest extends EntityKernelTestBase {
       $selection_settings = [];
       $selection_settings_key = Crypt::hmacBase64(serialize($selection_settings) . $this->entityType . 'default', Settings::getHashSalt());
 
-      $selection_settings[$this->randomMachineName()] = $this->randomString();
+      $selection_settings[$this->randomMachineName()] = $this->randomMachineName();
       \Drupal::keyValue('entity_autocomplete')->set($selection_settings_key, $selection_settings);
 
       $entity_reference_controller->handleAutocomplete($request, $this->entityType, 'default', $selection_settings_key);
