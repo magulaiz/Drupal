@@ -78,6 +78,13 @@ trait QueryConditionTrait {
   /**
    * {@inheritdoc}
    */
+  public function getConjunction() {
+    return $this->conjunction;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function arguments() {
     return $this->condition->arguments();
   }

@@ -119,6 +119,13 @@ class SelectExtender implements SelectInterface {
   /**
    * {@inheritdoc}
    */
+  public function getConjunction() {
+    return $this->conjunction;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function arguments() {
     return $this->query->arguments();
   }

@@ -58,6 +58,7 @@ class ConditionTest extends UnitTestCase {
     $condition->compile($connection, $query_placeholder);
 
     $this->assertEquals($expected, $condition->__toString());
+    $this->assertEquals('AND', $condition->getConjunction());
     $this->assertEquals([':db_condition_placeholder_0' => 'value'], $condition->arguments());
   }
 
