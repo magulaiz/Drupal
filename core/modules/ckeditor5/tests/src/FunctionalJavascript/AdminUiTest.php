@@ -285,4 +285,28 @@ JS;
     $assert_session->elementNotExists('css', '[data-drupal-selector="edit-editor-settings-plugins-ckeditor5-language"]');
   }
 
+  public function testAddingConfigFormWhileValidationTriggered() {
+    $page = $this->getSession()->getPage();
+    $assert_session = $this->assertSession();
+
+    $this->createNewTextFormat($page, $assert_session);
+    $assert_session->assertWaitOnAjaxRequest();
+
+    // Enable an incompatible filter which will trigger a validation error via
+    // AJAX.
+    $this->assertTrue($page->hasUncheckedField('filters[filter_html_escape][status]'));
+    $page->checkField('filters[filter_html_escape][status]');
+    $assert_session->assertWaitOnAjaxRequest();
+    $assert_session->waitForText('CKEditor 5 needs at least the <p> and <br> tags to be allowed to be able to function. They are not allowed by the "Display any HTML as plain text" (filter_html_escape) filter.');
+
+    // Add the Source Editing plugin and confirm the config for is present. This
+    // can be necessary as enabling + configuring Source Editing is sometimes
+    // the way to resolve a validation error.
+    $this->assertNotEmpty($assert_session->elementExists('css', '.ckeditor5-toolbar-item-sourceEditing'));
+    $this->triggerKeyUp('.ckeditor5-toolbar-item-sourceEditing', 'ArrowDown');
+    $assert_session->assertWaitOnAjaxRequest();
+    // The Source Editing plugin settings form should now be present.
+    $this->assertNotNull($page->findLink('Source editing'));
+  }
+
 }
