@@ -2,6 +2,7 @@
 
 namespace Drupal\filter\Plugin\Filter;
 
+use Drupal\Component\Render\HtmlEscapedText;
 use Drupal\Component\Utility\Xss;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Component\Utility\Html;
@@ -50,6 +51,7 @@ class FilterHtml extends FilterBase {
           'filter/drupal.filter.filter_html.admin',
         ],
       ],
+      '#element_validate' => [[$this, 'validateNoWildcardTag']],
     ];
     $form['filter_html_help'] = [
       '#type' => 'checkbox',
@@ -62,6 +64,26 @@ class FilterHtml extends FilterBase {
       '#default_value' => $this->settings['filter_html_nofollow'],
     ];
     return $form;
+  }
+
+  /**
+   * Validation callback for allowed_html: no wildcard tags allowed.
+   *
+   * @param array $element
+   *   The form element whose value is being validated.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The current state of the form.
+   */
+  public function validateNoWildcardTag(array $element, FormStateInterface $form_state) : void {
+    $allowed_html_value = $form_state->getValue($element['#parents']);
+    $matches = [];
+    if (preg_match_all('/<[^\s>]*\*[^\s>]*>/', $allowed_html_value, $matches)) {
+      $form_state->setError($element, $this->formatPlural(
+        count($matches[0]),
+        $this->t('The wildcard tag <code>@allowed_tag_name</code> is not supported.', ['@allowed_tag_name' => new HtmlEscapedText(reset($matches[0]))]),
+        $this->t('The wildcard tags <code>@allowed_tag_names</code> are not supported.', ['@allowed_tag_names' => new HtmlEscapedText(implode(' ', $matches[0]))])
+      ));
+    }
   }
 
   /**
@@ -266,6 +288,12 @@ class FilterHtml extends FilterBase {
         continue;
       }
       $tag = $node->tagName;
+      // Skip wildcard tags: those are not allowed. Config cannot be trusted to
+      // have been validated.
+      // @see ::validateNoWildcardTag()
+      if (strpos($tag, $star_protector) !== FALSE) {
+        continue;
+      }
       if ($node->hasAttributes()) {
         // This tag has a notation like "<foo *>", to indicate all attributes
         // are allowed.

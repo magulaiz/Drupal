@@ -93,4 +93,114 @@ class FilterHtmlTest extends UnitTestCase {
     $this->assertSame('<a> <br> <p>', $filter->getConfiguration()['settings']['allowed_html']);
   }
 
+  /**
+   * @covers ::getHTMLRestrictions
+   * @dataProvider providerGetHtmlRestrictions
+   */
+  public function testGetHtmlRestrictions(string $allowed_html, array $expected_html_restrictions) {
+    $filter = new FilterHtml(['settings' => ['allowed_html' => $allowed_html]], 'filter_html', ['provider' => 'test']);
+    $this->assertSame($expected_html_restrictions, $filter->getHTMLRestrictions());
+  }
+
+  /**
+   * @return \Generator
+   */
+  public function providerGetHtmlRestrictions() {
+    $hardcoded_asterisk_restrictions = [
+      'style' => FALSE,
+      'on*' => FALSE,
+      'lang' => TRUE,
+      'dir' => [
+        'ltr' => TRUE,
+        'rtl' => TRUE,
+      ],
+    ];
+
+    yield 'no allowed tags' => [
+      '',
+      [
+        'allowed' => [
+          '*' => $hardcoded_asterisk_restrictions,
+        ],
+      ],
+    ];
+
+    yield '<p> <br>' => [
+      '<p> <br>',
+      [
+        'allowed' => [
+          'p' => FALSE,
+          'br' => FALSE,
+          '*' => $hardcoded_asterisk_restrictions,
+        ],
+      ],
+    ];
+
+    yield '<p class> <br>' => [
+      '<p class> <br>',
+      [
+        'allowed' => [
+          'p' => [
+            'class' => TRUE,
+          ],
+          'br' => FALSE,
+          '*' => $hardcoded_asterisk_restrictions,
+        ],
+      ],
+    ];
+
+    yield '<p class="foo bar"> <br>' => [
+      '<p class="foo bar"> <br>',
+      [
+        'allowed' => [
+          'p' => [
+            'class' => [
+              'foo' => TRUE,
+              'bar' => TRUE,
+            ],
+          ],
+          'br' => FALSE,
+          '*' => $hardcoded_asterisk_restrictions,
+        ],
+      ],
+    ];
+
+    yield '<p class="foo bar" data-*> <br>' => [
+      '<p class="foo bar" data-*> <br>',
+      [
+        'allowed' => [
+          'p' => [
+            'class' => [
+              'foo' => TRUE,
+              'bar' => TRUE,
+            ],
+            'data-*' => TRUE,
+          ],
+          'br' => FALSE,
+          '*' => $hardcoded_asterisk_restrictions,
+        ],
+      ],
+    ];
+
+    yield '<* class="foo bar"> <br>' => [
+      '<* class="foo bar"> <br>',
+      [
+        'allowed' => [
+          'br' => FALSE,
+          '*' => $hardcoded_asterisk_restrictions,
+        ],
+      ],
+    ];
+
+    yield '<h* class="foo bar"> <br>' => [
+      '<h* class="foo bar"> <br>',
+      [
+        'allowed' => [
+          'br' => FALSE,
+          '*' => $hardcoded_asterisk_restrictions,
+        ],
+      ],
+    ];
+  }
+
 }
