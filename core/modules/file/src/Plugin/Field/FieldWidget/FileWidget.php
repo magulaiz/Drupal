@@ -256,7 +256,8 @@ class FileWidget extends WidgetBase {
     if (!isset($items[$delta]->fids) && isset($items[$delta]->target_id)) {
       $items[$delta]->fids = [$items[$delta]->target_id];
     }
-    $element['#default_value'] = $items[$delta]->getValue() + $defaults;
+    $value = $items[$delta]->isEmpty() ? [] : $items[$delta]->getValue();
+    $element['#default_value'] = $value + $defaults;
 
     $default_fids = $element['#extended'] ? $element['#default_value']['fids'] : $element['#default_value'];
     if (empty($default_fids)) {

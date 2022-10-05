@@ -52,14 +52,11 @@ class Map extends TypedData implements \IteratorAggregate, ComplexDataInterface 
    */
   public function getValue() {
     // Update the values and return them.
-    foreach ($this->properties as $name => $property) {
-      $definition = $property->getDataDefinition();
-      if (!$definition->isComputed()) {
-        $value = $property->getValue();
-        // Only write NULL values if the whole map is not NULL.
-        if (isset($this->values) || isset($value)) {
-          $this->values[$name] = $value;
-        }
+    foreach ($this->getProperties() as $name => $property) {
+      $value = $property->getValue();
+      // Only write NULL values if the whole map is not NULL.
+      if (isset($this->values) || isset($value)) {
+        $this->values[$name] = $value;
       }
     }
     return $this->values;
@@ -190,7 +187,7 @@ class Map extends TypedData implements \IteratorAggregate, ComplexDataInterface 
    * {@inheritdoc}
    */
   public function isEmpty() {
-    foreach ($this->properties as $property) {
+    foreach ($this->getProperties() as $property) {
       $definition = $property->getDataDefinition();
       if (!$definition->isComputed() && $property->getValue() !== NULL) {
         return FALSE;
@@ -210,7 +207,7 @@ class Map extends TypedData implements \IteratorAggregate, ComplexDataInterface 
    * Magic method: Implements a deep clone.
    */
   public function __clone() {
-    foreach ($this->properties as $name => $property) {
+    foreach ($this->getProperties() as $name => $property) {
       $this->properties[$name] = clone $property;
       $this->properties[$name]->setContext($name, $this);
     }
