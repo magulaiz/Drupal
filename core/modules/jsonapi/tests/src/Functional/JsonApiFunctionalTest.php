@@ -30,6 +30,7 @@ class JsonApiFunctionalTest extends JsonApiFunctionalTestBase {
 
   /**
    * Tests the GET method.
+   * @group jsonapi
    */
   public function testRead() {
     $this->createDefaultContent(61, 5, TRUE, TRUE, static::IS_NOT_MULTILINGUAL, FALSE);
@@ -513,6 +514,61 @@ class JsonApiFunctionalTest extends JsonApiFunctionalTestBase {
     ]));
     $this->assertSession()->statusCodeEquals(200);
     $this->assertCount(0, $collection_output['data']);
+
+    // 6: Test filtering on 2 fields.
+    // This should return 6 results, since field_sort1 increments every record
+    // and field_sort2 increments every 5.
+    $filter = [
+      'or_group' => ['group' => ['conjunction' => 'OR']],
+      'filter_field_1' => [
+        'condition' => [
+          'path' => 'field_sort1',
+          'value' => '0',
+          'memberOf' => 'or_group',
+        ],
+      ],
+      'filter_tags_2' => [
+        'condition' => [
+          'path' => 'field_sort2',
+          'value' => '2',
+          'memberOf' => 'or_group',
+        ],
+      ],
+    ];
+    $single_output = Json::decode($this->drupalGet('/jsonapi/node/article', [
+      'query' => ['filter' => $filter] + $default_sort,
+    ]));
+    $this->assertSession()->statusCodeEquals(200);
+    $this->assertEquals(6, count($single_output['data']));
+
+    // 7: Test filtering on 2 reference fields by uuid in OR group.
+    // This should return 2 items since we have 2 nodes that
+    $this->createDefaultContent(1, 5, TRUE, TRUE, static::IS_NOT_MULTILINGUAL, FALSE, TRUE);
+    $node_with_heroless = end($this->nodes);
+    $node_with_image = reset($this->nodes);
+
+    $filter = [
+      'or_group' => ['group' => ['conjunction' => 'OR']],
+      'filter_image_1' => [
+        'condition' => [
+          'path' => 'field_image.id',
+          'value' => $node_with_image->get('field_image')->entity->uuid(),
+          'memberOf' => 'or_group',
+        ],
+      ],
+      'filter_image_2' => [
+        'condition' => [
+          'path' => 'field_heroless.id',
+          'value' => $node_with_heroless->get('field_heroless')->entity->uuid(),
+          'memberOf' => 'or_group',
+        ],
+      ],
+    ];
+    $single_output = Json::decode($this->drupalGet('/jsonapi/node/article', [
+      'query' => ['filter' => $filter],
+    ]));
+    $this->assertSession()->statusCodeEquals(200);
+    $this->assertEquals(2, count($single_output['data']));
   }
 
   /**
