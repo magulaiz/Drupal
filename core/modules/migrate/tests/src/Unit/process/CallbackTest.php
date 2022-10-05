@@ -81,15 +81,13 @@ class CallbackTest extends MigrateProcessTestCase {
    *   The expected exception message.
    * @param array $configuration
    *   The plugin configuration being tested.
-   * @param string $class
-   *   (optional) The expected exception class.
    * @param mixed $args
    *   (optional) Arguments to pass to the transform() method.
    *
    * @dataProvider providerCallbackExceptions
    */
-  public function testCallbackExceptions($message, array $configuration, $class = 'InvalidArgumentException', $args = NULL) {
-    $this->expectException($class);
+  public function testCallbackExceptions($message, array $configuration, $args = NULL) {
+    $this->expectException(MigrateException::class);
     $this->expectExceptionMessage($message);
     $this->plugin = new Callback($configuration, 'map', []);
     $this->plugin->transform($args, $this->migrateExecutable, $this->row, 'destination_property');
@@ -111,7 +109,6 @@ class CallbackTest extends MigrateProcessTestCase {
       'array required' => [
         'message' => "When 'unpack_source' is set, the source must be an array. Instead it was of type 'string'",
         'configuration' => ['callable' => 'count', 'unpack_source' => TRUE],
-        'class' => MigrateException::class,
         'args' => 'This string is not an array.',
       ],
     ];
