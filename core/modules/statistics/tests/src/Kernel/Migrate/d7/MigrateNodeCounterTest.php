@@ -17,6 +17,7 @@ class MigrateNodeCounterTest extends MigrateDrupal7TestBase {
   protected static $modules = [
     'content_translation',
     'language',
+    'filter',
     'menu_ui',
     'node',
     'statistics',

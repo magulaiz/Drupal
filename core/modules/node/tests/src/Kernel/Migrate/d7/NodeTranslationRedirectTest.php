@@ -21,6 +21,7 @@ class NodeTranslationRedirectTest extends MigrateDrupal7TestBase {
    */
   protected static $modules = [
     'content_translation',
+    'filter',
     'language',
     'menu_ui',
     'node',
