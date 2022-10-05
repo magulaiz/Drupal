@@ -21,6 +21,7 @@ class Serialized extends FieldPluginBase {
     $options = parent::defineOptions();
     $options['format'] = ['default' => 'unserialized'];
     $options['key'] = ['default' => ''];
+    $options['custom_template'] = ['default' => ''];
     return $options;
   }
 
@@ -38,6 +39,7 @@ class Serialized extends FieldPluginBase {
         'unserialized' => $this->t('Full data (unserialized)'),
         'serialized' => $this->t('Full data (serialized)'),
         'key' => $this->t('A certain key'),
+        'custom_template' => $this->t('A custom twig template'),
       ],
       '#default_value' => $this->options['format'],
     ];
@@ -48,6 +50,17 @@ class Serialized extends FieldPluginBase {
       '#states' => [
         'visible' => [
           ':input[name="options[format]"]' => ['value' => 'key'],
+        ],
+      ],
+    ];
+    $form['custom_template'] = [
+      '#type' => 'textarea',
+      '#title' => $this->t('Custom template'),
+      '#description' => $this->t('A custom twig template to display the unserialized field'),
+      '#default_value' => $this->options['custom_template'],
+      '#states' => [
+        'visible' => [
+          ':input[name="options[format]"]' => ['value' => 'custom_template'],
         ],
       ],
     ];
@@ -75,6 +88,16 @@ class Serialized extends FieldPluginBase {
     elseif ($this->options['format'] == 'key' && !empty($this->options['key'])) {
       $value = (array) unserialize($value);
       return $this->sanitizeValue($value[$this->options['key']]);
+    }
+    elseif ($this->options['format'] == 'custom_template' && !empty($this->options['custom_template'])) {
+      $value = unserialize($value);
+      return [
+        '#type' => 'inline_template',
+        '#template' => $this->options['custom_template'],
+        '#context' => [
+          'item' => $value,
+        ],
+      ];
     }
 
     return $value;

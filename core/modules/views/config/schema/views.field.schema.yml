@@ -147,6 +147,9 @@ views.field.serialized:
     key:
       type: string
       label: 'Which key should be displayed'
+    custom_template:
+      type: string
+      label: 'Custom twig template'
 
 views.field.standard:
   type: views_field
