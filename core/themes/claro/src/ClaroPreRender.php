@@ -17,7 +17,6 @@ class ClaroPreRender implements TrustedCallbackInterface {
    */
   public static function managedFile($element) {
     if (!empty($element['remove_button']) && is_array($element['remove_button'])) {
-      $element['remove_button']['#attributes']['class'][] = 'button--extrasmall';
       $element['remove_button']['#attributes']['class'][] = 'remove-button';
     }
 
@@ -117,7 +116,7 @@ class ClaroPreRender implements TrustedCallbackInterface {
    */
   public static function operations($element) {
     if (empty($element['#dropbutton_type'])) {
-      $element['#dropbutton_type'] = 'extrasmall';
+      $element['#dropbutton_type'] = 'small';
     }
     return $element;
   }
@@ -158,7 +157,7 @@ class ClaroPreRender implements TrustedCallbackInterface {
     $element['format']['#attributes']['class'][] = 'clearfix';
     // Hide format select label visually.
     $element['format']['format']['#wrapper_attributes']['class'][] = 'form-item--editor-format';
-    $element['format']['format']['#attributes']['class'][] = 'form-element--extrasmall';
+    $element['format']['format']['#attributes']['class'][] = 'form-element--small';
     $element['format']['format']['#attributes']['class'][] = 'form-element--editor-format';
 
     // Fix JS inconsistencies of the 'text_textarea_with_summary' widgets.
