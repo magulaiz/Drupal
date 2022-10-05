@@ -3,6 +3,7 @@
 namespace Drupal\editor\Plugin\Filter;
 
 use Drupal\Component\Utility\Html;
+use Drupal\Core\DependencyInjection\DeprecatedServicePropertyTrait;
 use Drupal\Core\Entity\EntityRepositoryInterface;
 use Drupal\Core\Image\ImageFactory;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
@@ -25,19 +26,18 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  */
 class EditorFileReference extends FilterBase implements ContainerFactoryPluginInterface {
 
+  use DeprecatedServicePropertyTrait;
+
   /**
    * The entity repository.
    *
    * @var \Drupal\Core\Entity\EntityRepositoryInterface
    */
-  protected $entityRepository;
 
   /**
-   * The image factory.
-   *
-   * @var \Drupal\Core\Image\ImageFactory
+   * {@inheritdoc}
    */
-  protected $imageFactory;
+  protected $deprecatedProperties = ['imageFactory' => 'image.factory'];
 
   /**
    * Constructs a \Drupal\editor\Plugin\Filter\EditorFileReference object.
@@ -53,11 +53,6 @@ class EditorFileReference extends FilterBase implements ContainerFactoryPluginIn
    */
   public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityRepositoryInterface $entity_repository) {
     $this->entityRepository = $entity_repository;
-    $parameters = func_get_args();
-    if (array_key_exists(4, $parameters) && $parameters[4] instanceof ImageFactory) {
-      @trigger_error('Calling ' . __METHOD__ . '() with the $image_factory argument is deprecated in drupal:10.1.0 and is removed in drupal:11.0.0. See https://www.drupal.org/node/3173719', E_USER_DEPRECATED);
-      $this->imageFactory = $parameters[4];
-    }
     parent::__construct($configuration, $plugin_id, $plugin_definition);
   }
 

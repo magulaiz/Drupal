@@ -27,20 +27,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 final class EditorImageLazyLoad extends FilterBase implements ContainerFactoryPluginInterface {
 
   /**
-   * The entity repository.
-   *
-   * @var \Drupal\Core\Entity\EntityRepositoryInterface
-   */
-  protected $entityRepository;
-
-  /**
-   * The image factory.
-   *
-   * @var \Drupal\Core\Image\ImageFactory
-   */
-  protected $imageFactory;
-
-  /**
    * Constructs a EditorImageLazyLoad object.
    *
    * @param array $configuration
@@ -49,14 +35,12 @@ final class EditorImageLazyLoad extends FilterBase implements ContainerFactoryPl
    *   The plugin ID for the plugin instance.
    * @param mixed $plugin_definition
    *   The plugin implementation definition.
-   * @param \Drupal\Core\Entity\EntityRepositoryInterface $entity_repository
+   * @param \Drupal\Core\Entity\EntityRepositoryInterface $entityRepository
    *   The entity repository.
-   * @param \Drupal\Core\Image\ImageFactory $image_factory
+   * @param \Drupal\Core\Image\ImageFactory $imageFactory
    *   The image factory.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityRepositoryInterface $entity_repository, ImageFactory $image_factory) {
-    $this->entityRepository = $entity_repository;
-    $this->imageFactory = $image_factory;
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, protected EntityRepositoryInterface $entityRepository, protected ImageFactory $imageFactory) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
   }
 
@@ -99,8 +83,9 @@ final class EditorImageLazyLoad extends FilterBase implements ContainerFactoryPl
   private function transformImages(string $text): string {
     $dom = Html::load($text);
     $xpath = new \DOMXPath($dom);
-    // Only set loading="lazy" if no existing loading attribute is specified.
-    foreach ($xpath->query('//img[not(@loading) and @data-entity-type="file" and @data-entity-uuid]') as $element) {
+    // Search for files to add dimensions. Only add lazy load to images with
+    // dimensions to avoid Cumulative Layout Shift (CLS).
+    foreach ($xpath->query('//img[@data-entity-type="file" and @data-entity-uuid]') as $element) {
       assert($element instanceof \DOMElement);
       $uuid = $element->getAttribute('data-entity-uuid');
       $file = $this->entityRepository->loadEntityByUuid('file', $uuid);
@@ -116,11 +101,12 @@ final class EditorImageLazyLoad extends FilterBase implements ContainerFactoryPl
         if ($height !== NULL && !$element->hasAttribute('height')) {
           $element->setAttribute('height', (string) $height);
         }
-        // If dimensions are specified, then set lazy loading.
-        if ($element->hasAttribute('width') && $element->hasAttribute('height')) {
-          $element->setAttribute('loading', 'lazy');
-        }
       }
+    }
+    // If dimensions exist and loading isn't already set, then lazy load.
+    foreach ($xpath->query('//img[not(@loading) and @width and @height]') as $element) {
+      assert($element instanceof \DOMElement);
+      $element->setAttribute('loading', 'lazy');
     }
     return Html::serialize($dom);
   }
