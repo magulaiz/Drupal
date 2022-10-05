@@ -31,8 +31,13 @@ class ReferenceAccessConstraintValidator extends ConstraintValidator {
       $check_permission = TRUE;
       if (!$entity->isNew()) {
         $storage = \Drupal::entityTypeManager()->getStorage($entity->getEntityTypeId());
-        if ($entity instanceof RevisionableInterface && $entity->getRevisionId()) {
-          $existing_entity = $storage->loadRevision($entity->getRevisionId());
+        /** @var \Drupal\Core\Entity\RevisionableStorageInterface $storage */
+        $revision_id = $entity instanceof RevisionableInterface ? $storage->getLatestRevisionId($entity->id()) : NULL;
+
+        // If the entity supports revisions we want to load the latest revision
+        // instead of the default revision.
+        if ($revision_id) {
+          $existing_entity = $storage->loadRevision($revision_id);
         }
         else {
           $existing_entity = $storage->loadUnchanged($entity->id());
