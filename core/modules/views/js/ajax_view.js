@@ -66,7 +66,7 @@
       }
     };
     this.settings = settings;
-    this.$exposed_form = $("form#views-exposed-form-".concat(settings.view_name.replace(/_/g, '-'), "-").concat(settings.view_display_id.replace(/_/g, '-')));
+    this.$exposed_form = $("form.views-exposed-form[data-drupal-target-view=\"".concat(settings.view_dom_id, "\"], form.views-exposed-form[data-drupal-target-view=\"").concat(settings.view_name, "-").concat(settings.view_display_id, "\"]"));
     once('exposed-form', this.$exposed_form).forEach($.proxy(this.attachExposedFormAjax, this));
     once('ajax-pager', this.$view.filter($.proxy(this.filterNestedViews, this))).forEach($.proxy(this.attachPagerAjax, this));
     var selfSettings = $.extend({}, this.element_settings, {
@@ -80,10 +80,10 @@
   Drupal.views.ajaxView.prototype.attachExposedFormAjax = function () {
     var that = this;
     this.exposedFormAjax = [];
-    $('input[type=submit], button[type=submit], input[type=image]', this.$exposed_form).not('[data-drupal-selector=edit-reset]').each(function (index) {
+    once('attach-ajax', $('input[type=submit], button[type=submit], input[type=image]', this.$exposed_form).not('[data-drupal-selector=edit-reset]')).forEach(function (button, index) {
       var selfSettings = $.extend({}, that.element_settings, {
         base: $(this).attr('id'),
-        element: this
+        element: button
       });
       that.exposedFormAjax[index] = Drupal.ajax(selfSettings);
     });

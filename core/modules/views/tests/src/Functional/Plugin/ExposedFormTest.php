@@ -271,13 +271,14 @@ class ExposedFormTest extends ViewTestBase {
       'page' => ['page'],
     ];
     foreach ($arguments as $argument => $bundles) {
-      $elements[0]->find('css', 'select')->selectOption($argument);
-      $elements[0]->findButton('Apply')->click();
+      $exposed_form = $this->xpath('//form[@class="views-exposed-form"]')[0];
+      $exposed_form->find('css', 'select')->selectOption($argument);
+      $exposed_form->findButton('Apply')->click();
       $this->assertCacheContext('url');
       $this->assertTrue($this->assertSession()->optionExists('Content: Type', $argument)->isSelected());
       $this->assertNodesExist($bundles);
     }
-    $elements[0]->findButton('Reset')->click();
+    $exposed_form->findButton('Reset')->click();
     $this->assertNodesExist($arguments['All']);
   }
 
@@ -437,7 +438,7 @@ class ExposedFormTest extends ViewTestBase {
    *   The form ID.
    */
   protected function getExpectedExposedFormId(ViewExecutable $view) {
-    return Html::cleanCssIdentifier('views-exposed-form-' . $view->storage->id() . '-' . $view->current_display);
+    return Html::getId('views-exposed-form-' . $view->storage->id() . '-' . $view->current_display);
   }
 
   /**
