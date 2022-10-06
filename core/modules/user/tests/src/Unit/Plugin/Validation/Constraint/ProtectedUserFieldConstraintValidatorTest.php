@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\user\Unit\Plugin\Validation\Constraint;
 
+use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Tests\UnitTestCase;
 use Drupal\user\Entity\User;
 use Drupal\user\Plugin\Validation\Constraint\ProtectedUserFieldConstraint;
@@ -23,6 +24,11 @@ class ProtectedUserFieldConstraintValidatorTest extends UnitTestCase {
     $unchanged_field->expects($this->any())
       ->method('getValue')
       ->willReturn('unchanged-value');
+    $unchanged_field->expects($this->any())
+      ->method('equals')
+      ->willReturnCallback(function (FieldItemListInterface $other) {
+        return $other->getValue() === 'unchanged-value';
+      });
 
     $unchanged_account = $this->createMock('Drupal\user\UserInterface');
     $unchanged_account->expects($this->any())
