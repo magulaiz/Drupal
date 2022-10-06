@@ -141,8 +141,9 @@ class MigrationPluginManager extends DefaultPluginManager implements MigrationPl
    */
   public function expandPluginIds(array $migration_ids) {
     $plugin_ids = [];
+    $all_ids = array_keys($this->getDefinitions());
     foreach ($migration_ids as $id) {
-      $plugin_ids += preg_grep('/^' . preg_quote($id, '/') . PluginBase::DERIVATIVE_SEPARATOR . '/', array_keys($this->getDefinitions()));
+      $plugin_ids += preg_grep('/^' . preg_quote($id, '/') . PluginBase::DERIVATIVE_SEPARATOR . '/', $all_ids);
       if ($this->hasDefinition($id)) {
         $plugin_ids[] = $id;
       }
