@@ -94,6 +94,18 @@ class BookOutlineForm extends ContentEntityForm {
   /**
    * {@inheritdoc}
    */
+  protected function getEditedFieldNames(FormStateInterface $form_state) {
+    // None of the regular node fields will be directly edited by this form, so
+    // allow field violations to be filtered out from the form validations.
+    // Please note that violations flagged by BookOutlineConstraint aren't
+    // affected by this and will still be flagged as normal since "book" isn't
+    // a real Drupal field.
+    return [];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   protected function actions(array $form, FormStateInterface $form_state) {
     $actions = parent::actions($form, $form_state);
     $actions['submit']['#value'] = $this->entity->book['original_bid'] ? $this->t('Update book outline') : $this->t('Add to book outline');
