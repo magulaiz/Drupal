@@ -228,9 +228,16 @@
     while ($(scrollTarget).scrollTop() === 0 && $(scrollTarget).parent()) {
       scrollTarget = $(scrollTarget).parent();
     }
+    let scrollOffset = offset.top;
+
+    // Detecting if the scrollTarget element has a fixed position.
+    if (scrollTarget.length > 0 && scrollTarget.offset().top > 0) {
+      scrollOffset =
+        scrollOffset + $(scrollTarget).scrollTop() - scrollTarget.offset().top;
+    }
     // Only scroll upward.
-    if (offset.top - 10 < $(scrollTarget).scrollTop()) {
-      $(scrollTarget).animate({ scrollTop: offset.top - 10 }, 500);
+    if (scrollOffset - 10 < $(scrollTarget).scrollTop()) {
+      $(scrollTarget).animate({ scrollTop: scrollOffset - 10 }, 500);
     }
   };
 })(jQuery, Drupal, drupalSettings);
