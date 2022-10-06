@@ -178,6 +178,7 @@ class StyleTableTest extends ViewTestBase {
       'field' => 'job',
       'rendered' => TRUE,
       'rendered_strip' => FALSE,
+      'grouping_element_label' => 'h3',
     ];
     // Clear the caption text, the rendered job field will be used as a caption.
     $display['display_options']['style']['options']['caption'] = '';
