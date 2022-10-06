@@ -8,7 +8,6 @@ use Drupal\Core\Plugin\PluginBase;
 use Drupal\migrate\Exception\RequirementsException;
 use Drupal\migrate\MigrateException;
 use Drupal\migrate\MigrateSkipRowException;
-use Drupal\Component\Plugin\PluginManagerTrait;
 use Drupal\Component\Utility\NestedArray;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -98,8 +97,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  */
 #[\AllowDynamicProperties]
 class Migration extends PluginBase implements MigrationInterface, RequirementsInterface, ContainerFactoryPluginInterface {
-
-  use PluginManagerTrait;
 
   /**
    * The migration ID (machine name).
@@ -732,9 +729,7 @@ class Migration extends PluginBase implements MigrationInterface, RequirementsIn
 
     $this->migration_dependencies['optional'] = array_unique(array_merge($this->migration_dependencies['optional'], $this->findMigrationDependencies($this->process)));
     $this->migration_dependencies = array_map(
-      function (array $migration_ids) {
-        return $this->addDerivatives($migration_ids, $this->migrationPluginManager);
-      },
+      [$this->migrationPluginManager, 'expandPluginIds'],
       $this->migration_dependencies
     );
     return $this->migration_dependencies;

@@ -3,7 +3,7 @@
 namespace Drupal\migrate\Plugin;
 
 use Drupal\Component\Graph\Graph;
-use Drupal\Component\Plugin\PluginManagerTrait;
+use Drupal\Component\Plugin\PluginBase;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
@@ -18,8 +18,6 @@ use Drupal\migrate\MigrateBuildDependencyInterface;
  * Plugin manager for migration plugins.
  */
 class MigrationPluginManager extends DefaultPluginManager implements MigrationPluginManagerInterface, MigrateBuildDependencyInterface {
-
-  use PluginManagerTrait;
 
   /**
    * Provides default values for migrations.
@@ -139,16 +137,17 @@ class MigrationPluginManager extends DefaultPluginManager implements MigrationPl
   }
 
   /**
-   * Expand derivative migration dependencies.
-   *
-   * @param string[] $migration_ids
-   *   A list of plugin IDs.
-   *
-   * @return array
-   *   An array of expanded plugin ids.
+   * {@inheritdoc}
    */
-  protected function expandPluginIds(array $migration_ids) {
-    return $this->addDerivatives($migration_ids, $this);
+  public function expandPluginIds(array $migration_ids) {
+    $plugin_ids = [];
+    foreach ($migration_ids as $id) {
+      $plugin_ids += preg_grep('/^' . preg_quote($id, '/') . PluginBase::DERIVATIVE_SEPARATOR . '/', array_keys($this->getDefinitions()));
+      if ($this->hasDefinition($id)) {
+        $plugin_ids[] = $id;
+      }
+    }
+    return $plugin_ids;
   }
 
   /**

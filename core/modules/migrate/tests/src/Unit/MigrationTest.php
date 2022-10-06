@@ -174,12 +174,9 @@ class MigrationTest extends UnitTestCase {
     // Set the plugin manager to support getExpandedDependencies().
     $plugin_manager = $this->createMock('Drupal\migrate\Plugin\MigrationPluginManagerInterface');
     $migration->setMigrationPluginManager($plugin_manager);
-    $plugin_manager->expects($this->any())
-      ->method('getDefinitions')
-      ->willReturn([]);
-    $plugin_manager->expects($this->any())
-      ->method('hasDefinition')
-      ->willReturn(TRUE);
+    $plugin_manager->expects($this->exactly(2))
+      ->method('expandPluginIds')
+      ->willReturnArgument(0);
 
     if (!is_null($source)) {
       $migration->set('migration_dependencies', $source);
