@@ -108,6 +108,12 @@ abstract class Query implements PlaceholderInterface {
    *
    * @return \Drupal\Core\Database\StatementInterface|null
    *   A prepared statement, or NULL if the query is not valid.
+   *
+   * @deprecated in drupal:9.3.0 and is removed from drupal:10.0.0.
+   *  No replacement is provided. Child classes should continue to implement the
+   *  ::execute() method providing their own PHPDoc.
+   *
+   * @see https://www.drupal.org/node/3247516
    */
   abstract protected function execute();
 

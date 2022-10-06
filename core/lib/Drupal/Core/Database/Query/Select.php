@@ -499,7 +499,11 @@ class Select extends Query implements SelectInterface {
   }
 
   /**
-   * {@inheritdoc}
+   * Executes the select database query.
+   *
+   * @return \Drupal\Core\Database\StatementInterface|int|string|null
+   *   If validation fails, return NULL, otherwise returns string or int
+   *   according to query's result.
    */
   public function execute() {
     // If validation fails, simply return NULL.

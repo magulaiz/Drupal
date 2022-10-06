@@ -90,9 +90,10 @@ abstract class Upsert extends Query implements \Countable {
   /**
    * Executes the UPSERT operation.
    *
-   * @return int
-   *   An integer indicating the number of rows affected by the operation. Do
-   *   not rely on this value as a precise indication of the actual rows
+   * @return int|null
+   *   If validation fails, return NULL. Otherwise, returns an integer
+   *   indicating the number of rows affected by the operation. Do not
+   *   rely on this value as a precise indication of the actual rows
    *   affected: different database engines return different values.
    */
   public function execute() {

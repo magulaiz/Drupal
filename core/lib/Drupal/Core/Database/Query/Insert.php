@@ -55,7 +55,7 @@ class Insert extends Query implements \Countable {
   /**
    * Executes the insert query.
    *
-   * @return
+   * @return int|null
    *   The last insert ID of the query, if one exists. If the query was given
    *   multiple sets of values to insert, the return value is undefined. If no
    *   fields are specified, this method will do nothing and return NULL. That

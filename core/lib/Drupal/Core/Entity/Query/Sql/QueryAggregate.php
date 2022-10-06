@@ -18,7 +18,10 @@ class QueryAggregate extends Query implements QueryAggregateInterface {
   protected $sqlExpressions = [];
 
   /**
-   * {@inheritdoc}
+   * Do all the steps to aggregate query and returns the result.
+   *
+   * @return int|array
+   *   Returns the aggregated query result as entity IDs.
    */
   public function execute() {
     return $this
