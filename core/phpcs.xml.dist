@@ -174,8 +174,6 @@
   <rule ref="DrupalPractice.FunctionCalls.FormErrorT"/>
   <rule ref="DrupalPractice.FunctionCalls.LCheckPlain"/>
   <rule ref="DrupalPractice.FunctionCalls.MessageT"/>
-  <rule ref="DrupalPractice.FunctionCalls.TCheckPlain"/>
-  <rule ref="DrupalPractice.FunctionCalls.VariableSetSanitize"/>
   <rule ref="DrupalPractice.FunctionDefinitions.AccessHookMenu"/>
   <rule ref="DrupalPractice.FunctionDefinitions.FormAlterDoc"/>
   <rule ref="DrupalPractice.FunctionDefinitions.HookInitCss"/>
