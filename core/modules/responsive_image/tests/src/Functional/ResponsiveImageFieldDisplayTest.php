@@ -462,7 +462,7 @@ class ResponsiveImageFieldDisplayTest extends ImageFieldTestBase {
       ])
       ->addImageStyleMapping('responsive_image_test_module.empty', '2x', [
         'image_mapping_type' => 'image_style',
-          'image_mapping' => $large_style->id(),
+        'image_mapping' => $large_style->id(),
       ])
       ->save();
     $node_storage = $this->container->get('entity_type.manager')->getStorage('node');
