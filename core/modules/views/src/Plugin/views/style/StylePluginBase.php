@@ -628,7 +628,6 @@ abstract class StylePluginBase extends PluginBase {
         // While iterating, parent groups, that do not exist yet, are added.
         $set = &$sets;
         foreach ($groupings as $level => $info) {
-          $info['grouping_label_element'] = '';
           $field = $info['field'];
           $rendered = $info['rendered'] ?? $group_rendered;
           $rendered_strip = $info['rendered_strip'] ?? FALSE;
