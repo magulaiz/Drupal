@@ -286,6 +286,8 @@ class ContentEntityTest extends KernelTestBase {
     $migration = $this->migrationPluginManager
       ->createStubMigration($this->migrationDefinition('content_entity:node', $configuration));
     $node_source = $migration->getSourcePlugin();
+    // Ensure `count()` returns the actual number of nodes.
+    $this->assertSame($configuration['include_translations'] ? 2 : 1, $node_source->count());
     $this->assertSame('content items', $node_source->__toString());
     $this->assertIds($node_source, $configuration);
     $fields = $node_source->fields();

@@ -11,7 +11,6 @@ use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\migrate\EntityFieldDefinitionTrait;
 use Drupal\migrate\Plugin\migrate\source\SourcePluginBase;
-use Drupal\migrate\Plugin\MigrateSourceInterface;
 use Drupal\migrate\Plugin\MigrationInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -248,16 +247,17 @@ class ContentEntity extends SourcePluginBase implements ContainerFactoryPluginIn
     if (!$this->configuration['include_translations']) {
       return parent::count($refresh);
     }
-    // @TODO: Determine a better way to retrieve a valid count for translations.
-    // https://www.drupal.org/project/drupal/issues/2937166
-    return MigrateSourceInterface::NOT_COUNTABLE;
+    // @todo Determine a better way to retrieve a valid count for translations.
+    // https://www.drupal.org/node/2942948
+    // We have to "consume" the generator, so need a separate, local instance.
+    return iterator_count($this->initializeIterator());
   }
 
   /**
    * {@inheritdoc}
    */
   protected function doCount() {
-    return $this->query()->count()->execute();
+    return (int) $this->query()->count()->execute();
   }
 
   /**
