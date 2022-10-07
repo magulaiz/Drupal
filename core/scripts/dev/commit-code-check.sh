@@ -188,7 +188,7 @@ if ! [[ -f "$DRUPAL_ROOT/vendor/bin/phpcs" ]]; then
   DEPENDENCIES_NEED_INSTALLING=1;
 fi
 
-cd "$TOP_LEVEL/core"
+cd "$DRUPAL_ROOT/core"
 
 # Ensure JavaScript development dependencies are installed.
 yarn check -s 2>/dev/null
