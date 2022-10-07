@@ -166,7 +166,7 @@ class ViewsConfigUpdater implements ContainerInjectionInterface {
       && $handler['plugin_id'] === 'field'
       && $handler['type'] === 'responsive_image'
       && !isset($handler['settings']['image_loading'])) {
-      $handler['settings']['image_loading'] = ['attribute' => 'lazy'];
+      $handler['settings']['image_loading'] = ['attribute' => 'eager'];
       $changed = TRUE;
     }
 

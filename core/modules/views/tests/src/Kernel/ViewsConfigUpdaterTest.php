@@ -7,6 +7,8 @@ use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\responsive_image\Entity\ResponsiveImageStyle;
 use Drupal\Tests\responsive_image\Functional\ViewsIntegrationTest;
+use Drupal\views\Entity\View;
+use Drupal\views\ViewEntityInterface;
 use Drupal\views\ViewsConfigUpdater;
 
 /**
@@ -35,9 +37,10 @@ class ViewsConfigUpdaterTest extends ViewsKernelTestBase {
    * @covers ::needsResponsiveImageLazyLoadFieldUpdate
    */
   public function testNeedsResponsiveImageLazyLoadFieldUpdate(): void {
-    $configUpdater = $this->container
+    $config_updater = $this->container
       ->get('class_resolver')
       ->getInstanceFromDefinition(ViewsConfigUpdater::class);
+    assert($config_updater instanceof ViewsConfigUpdater);
 
     FieldStorageConfig::create([
       'field_name' => 'user_picture',
@@ -70,8 +73,12 @@ class ViewsConfigUpdaterTest extends ViewsKernelTestBase {
     ])->save();
 
     $test_view = $this->loadTestView('views.view.test_responsive_images');
-    $needs_update = $configUpdater->needsResponsiveImageLazyLoadFieldUpdate($test_view);
+    $needs_update = $config_updater->needsResponsiveImageLazyLoadFieldUpdate($test_view);
+    $test_view->save();
     $this->assertTrue($needs_update);
+
+    $default_display = $test_view->getDisplay('default');
+    self::assertEquals('eager', $default_display['display_options']['fields']['bar']['settings']['image_loading']['attribute']);
   }
 
   /**
