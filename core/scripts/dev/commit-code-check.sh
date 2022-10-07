@@ -183,7 +183,7 @@ DEPENDENCIES_NEED_INSTALLING=0
 #  determine if dependencies in the lock file match the installed versions.
 #  Using composer install --dry-run is not valid because it would depend on
 #  user-facing strings in Composer.
-if ! [[ -f 'vendor/bin/phpcs' ]]; then
+if ! [[ -f "$DRUPAL_ROOT/vendor/bin/phpcs" ]]; then
   printf "Drupal's PHP development dependencies are not installed. Run 'composer install' from the root directory.\n"
   DEPENDENCIES_NEED_INSTALLING=1;
 fi
