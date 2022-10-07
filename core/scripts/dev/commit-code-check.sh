@@ -107,6 +107,8 @@ fi
 
 TOP_LEVEL=$(git rev-parse --show-toplevel)
 
+DRUPAL_ROOT=${DRUPAL_ROOT:="$TOP_LEVEL"}
+
 # This variable will be set to one when the file core/phpcs.xml.dist is changed.
 PHPCS_XML_DIST_FILE_CHANGED=0
 
