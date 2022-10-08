@@ -337,7 +337,7 @@ class Table extends FormElement {
    * @see drupal_attach_tabledrag()
    */
   public static function preRenderTable($element) {
-    foreach (Element::children($element) as $first) {
+    foreach (Element::getVisibleChildren($element) as $first) {
       $row = ['data' => []];
       // Apply attributes of first-level elements as table row attributes.
       if (isset($element[$first]['#attributes'])) {
