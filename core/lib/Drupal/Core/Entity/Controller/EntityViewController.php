@@ -6,7 +6,6 @@ use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Entity\FieldableEntityInterface;
-use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Security\TrustedCallbackInterface;
 use Drupal\Core\Render\RendererInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -124,22 +123,17 @@ class EntityViewController implements ContainerInjectionInterface, TrustedCallba
    * @param string $view_mode
    *   (optional) The view mode that should be used to display the entity.
    *   Defaults to 'full'.
-   * @param bool $add_title
-   *   (optional) Whether to add the buildTitle pre_render callback.
-   *   Defaults to TRUE.
    *
    * @return array
    *   A render array as expected by
    *   \Drupal\Core\Render\RendererInterface::render().
    */
-  public function view(EntityInterface $_entity, $view_mode = 'full', $add_title = TRUE) {
+  public function view(EntityInterface $_entity, $view_mode = 'full') {
     $page = $this->entityTypeManager
       ->getViewBuilder($_entity->getEntityTypeId())
       ->view($_entity, $view_mode);
 
-    if ($add_title) {
-      $page['#pre_render'][] = [$this, 'buildTitle'];
-    }
+    $page['#pre_render'][] = [$this, 'buildTitle'];
     $page['#entity_type'] = $_entity->getEntityTypeId();
     $page['#' . $page['#entity_type']] = $_entity;
 
@@ -187,16 +181,16 @@ class EntityViewController implements ContainerInjectionInterface, TrustedCallba
    * @param string $view_mode
    *   (optional) The view mode that should be used to display the entity.
    *   Defaults to 'full'.
-   * @param \Drupal\Core\Routing\RouteMatchInterface|null $routeMatch
-   *   The current route match, or NULL.
    *
    * @return array
    *   A render array.
+   *
+   * @deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use
+   *   \Drupal\Core\Entity\Controller\EntityRevisionViewController instead.
    */
-  public function viewRevision(EntityInterface $_entity_revision, $view_mode = 'full', RouteMatchInterface $routeMatch = NULL) {
-    // Only add the title pre_render if the route doesn't have a title callback.
-    $add_title = !(isset($routeMatch) && ($route = $routeMatch->getRouteObject()) && $route->getDefault('_title_callback'));
-    return $this->view($_entity_revision, $view_mode, $add_title);
+  public function viewRevision(EntityInterface $_entity_revision, $view_mode = 'full') {
+    @trigger_error(__METHOD__ . ' is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use \Drupal\Core\Entity\Controller\EntityRevisionViewController instead. See https://www.drupal.org/node/3314346.', E_USER_DEPRECATED);
+    return $this->view($_entity_revision, $view_mode);
   }
 
 }

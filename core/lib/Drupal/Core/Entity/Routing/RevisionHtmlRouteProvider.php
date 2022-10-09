@@ -3,7 +3,7 @@
 namespace Drupal\Core\Entity\Routing;
 
 use Drupal\Core\Entity\Controller\EntityController;
-use Drupal\Core\Entity\Controller\EntityViewController;
+use Drupal\Core\Entity\Controller\EntityRevisionViewController;
 use Drupal\Core\Entity\Controller\VersionHistoryController;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Symfony\Component\Routing\Route;
@@ -89,8 +89,8 @@ class RevisionHtmlRouteProvider implements EntityRouteProviderInterface {
     $revisionParameterName = $entityTypeId . '_revision';
     return (new Route($entityType->getLinkTemplate('revision')))
       ->addDefaults([
-        '_controller' => EntityViewController::class . '::viewRevision',
-        '_title_callback' => EntityController::class . '::revisionTitle',
+        '_controller' => EntityRevisionViewController::class,
+        '_title_callback' => EntityRevisionViewController::class . '::title',
       ])
       ->setRequirement('_entity_access', $revisionParameterName . '.view revision')
       ->setOption('parameters', [
