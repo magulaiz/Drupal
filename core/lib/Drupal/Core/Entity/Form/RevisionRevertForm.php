@@ -10,7 +10,7 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Entity\RevisionableInterface;
-use Drupal\Core\Entity\TranslatableRevisionableInterface;
+use Drupal\Core\Entity\RevisionableStorageInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Form\ConfirmFormBase;
 use Drupal\Core\Form\FormStateInterface;
@@ -189,7 +189,7 @@ class RevisionRevertForm extends ConfirmFormBase implements EntityFormInterface 
       $originalRevisionTimestamp = $this->revision->getRevisionCreationTime();
     }
 
-    $this->prepareRevision($this->revision, $form_state);
+    $this->revision = $this->prepareRevision($this->revision, $form_state);
 
     if ($this->revision instanceof RevisionLogInterface) {
       $date = $this->dateFormatter->format($originalRevisionTimestamp);
@@ -228,28 +228,39 @@ class RevisionRevertForm extends ConfirmFormBase implements EntityFormInterface 
   /**
    * Prepares a revision to be reverted.
    *
-   * @param \Drupal\Core\Entity\RevisionableInterface $revision
+   * @param T $revision
    *   The revision to be reverted.
    * @param \Drupal\Core\Form\FormStateInterface $formState
    *   The current state of the form.
+   *
+   * @return T
+   *   The new revision.
+   *
+   * @template T of \Drupal\Core\Entity\RevisionableInterface
    */
-  protected function prepareRevision(RevisionableInterface $revision, FormStateInterface $formState): void {
-    $revision->setNewRevision();
-    $revision->isDefaultRevision(TRUE);
-    assert($revision instanceof TranslatableRevisionableInterface);
-    // Apply the same behavior in the node revisions.
-    $revision->setRevisionTranslationAffected(TRUE);
+  protected function prepareRevision(RevisionableInterface $revision, FormStateInterface $formState): RevisionableInterface {
+    $storage = $this->entityTypeManager->getStorage($revision->getEntityTypeId());
+    if (!$storage instanceof RevisionableStorageInterface) {
+      throw new \LogicException('Revisionable entities are expected to implement RevisionableStorageInterface');
+    }
+
+    $revision = $storage->createRevision($revision);
+
     $time = $this->time->getRequestTime();
     if ($revision instanceof EntityChangedInterface) {
       $revision->setChangedTime($time);
     }
+
     if ($revision instanceof RevisionLogInterface) {
       $originalRevisionTimestamp = $revision->getRevisionCreationTime();
       $date = $this->dateFormatter->format($originalRevisionTimestamp);
-      $revision->setRevisionLogMessage($this->t('Copy of the revision from %date.', ['%date' => $date]));
-      $revision->setRevisionCreationTime($time);
-      $revision->setRevisionUserId($this->currentUser()->id());
+      $revision
+        ->setRevisionLogMessage($this->t('Copy of the revision from %date.', ['%date' => $date]))
+        ->setRevisionCreationTime($time)
+        ->setRevisionUserId($this->currentUser()->id());
     }
+
+    return $revision;
   }
 
   /**
