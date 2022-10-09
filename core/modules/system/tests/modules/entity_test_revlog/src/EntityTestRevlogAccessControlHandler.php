@@ -36,9 +36,8 @@ class EntityTestRevlogAccessControlHandler extends EntityAccessControlHandler {
       return AccessResult::allowedIf(!$entity->isDefaultRevision() && !$entity->isLatestRevision() && in_array('revert', $labels, TRUE));
     }
     elseif ($operation === 'delete revision') {
-      // Disallow reverting to latest (a pointless exercise).
+      // Disallow reverting to latest.
       return AccessResult::allowedIf(!$entity->isLatestRevision() && in_array('delete revision', $labels, TRUE));
-
     }
 
     // No opinion.

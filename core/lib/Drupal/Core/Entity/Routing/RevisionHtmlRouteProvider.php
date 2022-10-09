@@ -2,7 +2,6 @@
 
 namespace Drupal\Core\Entity\Routing;
 
-use Drupal\Core\Entity\Controller\EntityController;
 use Drupal\Core\Entity\Controller\EntityRevisionViewController;
 use Drupal\Core\Entity\Controller\VersionHistoryController;
 use Drupal\Core\Entity\EntityTypeInterface;
@@ -58,7 +57,7 @@ class RevisionHtmlRouteProvider implements EntityRouteProviderInterface {
     $entityTypeId = $entityType->id();
     return (new Route($entityType->getLinkTemplate('version-history')))
       ->addDefaults([
-        '_controller' => VersionHistoryController::class . '::versionHistory',
+        '_controller' => VersionHistoryController::class,
         '_title' => 'Revisions',
       ])
       ->setRequirement('_entity_access', $entityTypeId . '.view all revisions')

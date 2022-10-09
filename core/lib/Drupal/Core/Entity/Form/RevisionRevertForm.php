@@ -32,56 +32,28 @@ class RevisionRevertForm extends ConfirmFormBase implements EntityFormInterface 
    *
    * @var string
    */
-  protected $operation;
+  protected string $operation;
 
   /**
    * The entity revision.
    *
    * @var \Drupal\Core\Entity\RevisionableInterface
    */
-  protected $revision;
-
-  /**
-   * The date formatter.
-   *
-   * @var \Drupal\Core\Datetime\DateFormatterInterface
-   */
-  protected $dateFormatter;
-
-  /**
-   * The entity bundle information.
-   *
-   * @var \Drupal\Core\Entity\EntityTypeBundleInfoInterface
-   */
-  protected $bundleInformation;
+  protected RevisionableInterface $revision;
 
   /**
    * The module handler.
    *
    * @var \Drupal\Core\Extension\ModuleHandlerInterface
    */
-  protected $moduleHandler;
+  protected ModuleHandlerInterface $moduleHandler;
 
   /**
    * The entity type manager.
    *
    * @var \Drupal\Core\Entity\EntityTypeManagerInterface
    */
-  protected $entityTypeManager;
-
-  /**
-   * The time service.
-   *
-   * @var \Drupal\Component\Datetime\TimeInterface
-   */
-  protected $time;
-
-  /**
-   * The current user.
-   *
-   * @var \Drupal\Core\Session\AccountInterface
-   */
-  protected $currentUser;
+  protected EntityTypeManagerInterface $entityTypeManager;
 
   /**
    * Creates a new RevisionRevertForm instance.
@@ -97,12 +69,14 @@ class RevisionRevertForm extends ConfirmFormBase implements EntityFormInterface 
    * @param \Drupal\Core\Session\AccountInterface $currentUser
    *   The current user.
    */
-  public function __construct(DateFormatterInterface $dateFormatter, EntityTypeBundleInfoInterface $bundleInformation, MessengerInterface $messenger, TimeInterface $time, AccountInterface $currentUser) {
-    $this->dateFormatter = $dateFormatter;
-    $this->bundleInformation = $bundleInformation;
+  public function __construct(
+    protected DateFormatterInterface $dateFormatter,
+    protected EntityTypeBundleInfoInterface $bundleInformation,
+    MessengerInterface $messenger,
+    protected TimeInterface $time,
+    protected AccountInterface $currentUser,
+  ) {
     $this->messenger = $messenger;
-    $this->time = $time;
-    $this->currentUser = $currentUser;
   }
 
   /**
@@ -114,7 +88,7 @@ class RevisionRevertForm extends ConfirmFormBase implements EntityFormInterface 
       $container->get('entity_type.bundle.info'),
       $container->get('messenger'),
       $container->get('datetime.time'),
-      $container->get('current_user')
+      $container->get('current_user'),
     );
   }
 
@@ -228,15 +202,13 @@ class RevisionRevertForm extends ConfirmFormBase implements EntityFormInterface 
   /**
    * Prepares a revision to be reverted.
    *
-   * @param T $revision
+   * @param \Drupal\Core\Entity\RevisionableInterface $revision
    *   The revision to be reverted.
    * @param \Drupal\Core\Form\FormStateInterface $formState
    *   The current state of the form.
    *
-   * @return T
-   *   The new revision.
-   *
-   * @template T of \Drupal\Core\Entity\RevisionableInterface
+   * @return \Drupal\Core\Entity\RevisionableInterface
+   *   The new revision, the same type as passed to $revision.
    */
   protected function prepareRevision(RevisionableInterface $revision, FormStateInterface $formState): RevisionableInterface {
     $storage = $this->entityTypeManager->getStorage($revision->getEntityTypeId());

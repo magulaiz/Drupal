@@ -187,6 +187,8 @@ class EntityViewController implements ContainerInjectionInterface, TrustedCallba
    *
    * @deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use
    *   \Drupal\Core\Entity\Controller\EntityRevisionViewController instead.
+   *
+   * @see https://www.drupal.org/node/3314346
    */
   public function viewRevision(EntityInterface $_entity_revision, $view_mode = 'full') {
     @trigger_error(__METHOD__ . ' is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use \Drupal\Core\Entity\Controller\EntityRevisionViewController instead. See https://www.drupal.org/node/3314346.', E_USER_DEPRECATED);
