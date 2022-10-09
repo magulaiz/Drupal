@@ -208,7 +208,7 @@ class VersionHistoryController extends ControllerBase {
    * @param \Drupal\Core\Entity\RevisionableInterface $entity
    *   The entity.
    *
-   * @return \Generator<\Drupal\Core\Entity\RevisionableInterface>
+   * @return \Generator|\Drupal\Core\Entity\RevisionableInterface
    *   Generates revisions.
    */
   protected function loadRevisions(RevisionableInterface $entity) {
