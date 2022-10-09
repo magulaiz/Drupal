@@ -189,8 +189,8 @@ class VersionHistoryController extends ControllerBase {
       'data' => [
         '#type' => 'inline_template',
         '#template' => isset($context['username'])
-        ? '{% trans %} {{ revision }} by {{ username }}{% endtrans %}{% if message %}<p class="revision-log">{{ message }}</p>{% endif %}'
-        : '{% trans %} {{ revision }} {% endtrans %}{% if message %}<p class="revision-log">{{ message }}</p>{% endif %}',
+          ? '{% trans %} {{ revision }} by {{ username }}{% endtrans %}{% if message %}<p class="revision-log">{{ message }}</p>{% endif %}'
+          : '{% trans %} {{ revision }} {% endtrans %}{% if message %}<p class="revision-log">{{ message }}</p>{% endif %}',
         '#context' => $context,
       ],
     ];

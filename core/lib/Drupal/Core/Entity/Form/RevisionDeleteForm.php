@@ -263,6 +263,7 @@ class RevisionDeleteForm extends ConfirmFormBase implements EntityFormInterface 
   public function setEntity(EntityInterface $entity) {
     assert($entity instanceof RevisionableInterface);
     $this->revision = $entity;
+    return $this;
   }
 
   /**
@@ -287,7 +288,9 @@ class RevisionDeleteForm extends ConfirmFormBase implements EntityFormInterface 
    *
    * Confirmation forms should override submitForm() instead for their logic.
    */
-  public function save(array $form, FormStateInterface $form_state) {}
+  public function save(array $form, FormStateInterface $form_state) {
+    throw new \LogicException('The save() method is not used in RevisionDeleteForm');
+  }
 
   /**
    * {@inheritdoc}
