@@ -107,8 +107,8 @@ class RevisionDeleteForm extends ConfirmFormBase implements EntityFormInterface 
   public function getQuestion() {
     return ($this->getEntity() instanceof RevisionLogInterface)
       ? $this->t('Are you sure you want to delete the revision from %revision-date?', [
-          '%revision-date' => $this->dateFormatter->format($this->getEntity()->getRevisionCreationTime()),
-        ])
+        '%revision-date' => $this->dateFormatter->format($this->getEntity()->getRevisionCreationTime()),
+      ])
       : $this->t('Are you sure you want to delete the revision?');
   }
 
