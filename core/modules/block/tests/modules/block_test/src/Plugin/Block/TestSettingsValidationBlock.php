@@ -31,7 +31,7 @@ class TestSettingsValidationBlock extends BlockBase {
       $form_state->setErrorByName('digits', $this->t('Only digits are allowed'));
     }
   }
-  
+
   /**
    * {@inheritdoc}
    */
