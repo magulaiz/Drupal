@@ -319,7 +319,7 @@ class RevisionRevertFormTest extends BrowserTestBase {
    *   Number of revisions for an entity type.
    */
   protected function countRevisions(string $entityTypeId): int {
-    return (string) \Drupal::entityTypeManager()->getStorage($entityTypeId)
+    return (int) \Drupal::entityTypeManager()->getStorage($entityTypeId)
       ->getQuery()
       ->accessCheck(FALSE)
       ->allRevisions()
