@@ -11,7 +11,7 @@ use Drupal\Tests\BrowserTestBase;
  * Tests revision view page.
  *
  * @group Entity
- * @coversDefaultClass \Drupal\Core\Entity\Controller\EntityViewController
+ * @coversDefaultClass \Drupal\Core\Entity\Controller\EntityRevisionViewController
  */
 class RevisionViewTest extends BrowserTestBase {
 
@@ -45,6 +45,8 @@ class RevisionViewTest extends BrowserTestBase {
    *   Entity type to test.
    * @param string $expectedPageTitle
    *   Expected page title.
+   *
+   * @covers ::__invoke
    *
    * @dataProvider providerRevisionPage
    */
