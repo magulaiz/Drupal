@@ -23,8 +23,8 @@ function responsive_image_removed_post_updates() {
  * Re-order mappings by breakpoint ID and descending numeric multiplier order.
  */
 function responsive_image_post_update_order_multiplier_numerically(array &$sandbox = NULL): void {
+  /** @var \Drupal\responsive_image\ResponsiveImageConfigUpdater $responsive_image_config_updater */
   $responsive_image_config_updater = \Drupal::classResolver(ResponsiveImageConfigUpdater::class);
-  assert($responsive_image_config_updater instanceof ResponsiveImageConfigUpdater);
   $responsive_image_config_updater->setDeprecationsEnabled(FALSE);
   \Drupal::classResolver(ConfigEntityUpdater::class)->update($sandbox, 'responsive_image_style', function (ResponsiveImageStyleInterface $responsive_image_style) use ($responsive_image_config_updater): bool {
     return $responsive_image_config_updater->orderMultipliersNumerically($responsive_image_style);

@@ -7,8 +7,6 @@ use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\responsive_image\Entity\ResponsiveImageStyle;
 use Drupal\Tests\responsive_image\Functional\ViewsIntegrationTest;
-use Drupal\views\Entity\View;
-use Drupal\views\ViewEntityInterface;
 use Drupal\views\ViewsConfigUpdater;
 
 /**

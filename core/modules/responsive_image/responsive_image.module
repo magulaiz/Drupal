@@ -37,7 +37,7 @@ function responsive_image_help($route_name, RouteMatchInterface $route_match) {
       $output .= '<dt>' . t('Breakpoint settings: sizes vs image styles') . '</dt>';
       $output .= '<dd>' . t('While you have the option to provide only one image style per breakpoint, the sizes attribute allows you to provide more options to browsers as to which image file it can display. If using sizes field and art direction, all selected image styles should use the same aspect ratio to avoid content shifting. Breakpoints are defined in the configuration files of the theme.') . '</dd>';
       $output .= '<dt>' . t('Sizes field') . '</dt>';
-      $output .= '<dd>' . t('The sizes attribute paired with the srcset attribute provides information on how much space these images take up within the viewport at different browser breakpoints, but the aspect ratios should remain the same across those breakpoints. Once the sizes option is selected, you can let the browser know the size of this image in relation to the site layout, using the Sizes field. For a hero image that always fills the entire screen, you could simply enter 100vw, which means 100% of the viewport width. For an image that fills 90% of the screen for small viewports, but only fills 40% of the screen when the viewport is larger than 40em (typically 640px), you could enter "(min-width: 40em) 40vw, 90vw" in the Sizes field. The last item in the comma-separated list is the smallest viewport size: other items in the comma-separated list should have a media condition paired with an image width. Media conditions are similar to a media query, often a min-width paired with a viewport width using em or px units: e.g. (min-width: 640px) or (min-width: 40em). This is paired with the image width at that viewport size using px, em or vw units. The vw unit is viewport width and is used instead of a percentage because the percentage always refers to the width of the entire viewport.') . '</dd>';
+      $output .= '<dd>' . t('The sizes attribute paired with the srcset attribute provides information on how much space these images take up within the viewport at different browser breakpoints, but the aspect ratios should remain the same across those breakpoints. Once the sizes option is selected, you can let the browser know the size of this image in relation to the site layout, using the <em>Sizes</em> field. For a hero image that always fills the entire screen, you could simply enter 100vw, which means 100% of the viewport width. For an image that fills 90% of the screen for small viewports, but only fills 40% of the screen when the viewport is larger than 40em (typically 640px), you could enter "(min-width: 40em) 40vw, 90vw" in the Sizes field. The last item in the comma-separated list is the smallest viewport size: other items in the comma-separated list should have a media condition paired with an image width. <em>Media conditions</em> are similar to a media query, often a min-width paired with a viewport width using em or px units: e.g. (min-width: 640px) or (min-width: 40em). This is paired with the <em>image width</em> at that viewport size using px, em or vw units. The vw unit is viewport width and is used instead of a percentage because the percentage always refers to the width of the entire viewport.') . '</dd>';
       $output .= '<dt>' . t('Image styles for sizes') . '</dt>';
       $output .= '<dd>' . t('Below the Sizes field you can choose multiple image styles so the browser can choose the best image file size to fill the space defined in the Sizes field. Typically you will want to use image styles that resize your image to have options that range from the smallest px width possible for the space the image will appear in to the largest px width possible, with a variety of widths in between. You may want to provide image styles with widths that are 1.5x to 2x the space available in the layout to account for high resolution screens. Image styles can be defined on the <a href=":image_styles">Image styles page</a> that is provided by the <a href=":image_help">Image module</a>.', [':image_styles' => Url::fromRoute('entity.image_style.collection')->toString(), ':image_help' => Url::fromRoute('help.page', ['name' => 'image'])->toString()]) . '</dd>';
       $output .= '</dl></dd>';
@@ -218,7 +218,12 @@ function template_preprocess_responsive_image(&$variables) {
   // to img tag so browser can do aspect ratio calculation and prevent
   // recalculation of layout on image load.
   if (isset($variables['width'], $variables['height'])) {
-    $dimensions = responsive_image_get_image_dimensions($responsive_image_style->getFallbackImageStyle(), ['width' => $variables['width'], 'height' => $variables['height']], $variables['uri']);
+    $dimensions = responsive_image_get_image_dimensions($responsive_image_style->getFallbackImageStyle(), [
+      'width' => $variables['width'],
+      'height' => $variables['height']
+    ],
+      $variables['uri']
+    );
     // Unset current image attributes, so the new ones that are set will work.
     unset($variables['img_element']['#attributes']['width']);
     unset($variables['img_element']['#attributes']['height']);
@@ -424,9 +429,8 @@ function _responsive_image_build_source_attributes(array $variables, BreakpointI
   }
   // Sort the srcset from small to large image width or multiplier.
   ksort($srcset);
-  $srcset = array_unique($srcset);
   $source_attributes = new Attribute([
-    'srcset' => implode(', ', $srcset),
+    'srcset' => implode(', ', array_unique($srcset)),
   ]);
   $media_query = trim($breakpoint->getMediaQuery());
   if (!empty($media_query)) {
@@ -548,7 +552,7 @@ function responsive_image_library_info_alter(array &$libraries, $module) {
  * Implements hook_ENTITY_TYPE_presave() for entity_view_display.
  */
 function responsive_image_entity_view_display_presave(EntityViewDisplayInterface $view_display): void {
+  /** @var \Drupal\responsive_image\ResponsiveImageConfigUpdater $config_updater */
   $config_updater = \Drupal::classResolver(ResponsiveImageConfigUpdater::class);
-  assert($config_updater instanceof ResponsiveImageConfigUpdater);
   $config_updater->processResponsiveImageField($view_display);
 }
