@@ -220,7 +220,7 @@ function template_preprocess_responsive_image(&$variables) {
   if (isset($variables['width'], $variables['height'])) {
     $dimensions = responsive_image_get_image_dimensions($responsive_image_style->getFallbackImageStyle(), [
       'width' => $variables['width'],
-      'height' => $variables['height']
+      'height' => $variables['height'],
     ],
       $variables['uri']
     );
