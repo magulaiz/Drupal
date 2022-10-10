@@ -30,56 +30,21 @@ class RevisionDeleteForm extends ConfirmFormBase implements EntityFormInterface 
    *
    * @var string
    */
-  protected $operation;
+  protected string $operation;
 
   /**
    * The entity revision.
    *
    * @var \Drupal\Core\Entity\RevisionableInterface
    */
-  protected $revision;
-
-  /**
-   * The date formatter.
-   *
-   * @var \Drupal\Core\Datetime\DateFormatterInterface
-   */
-  protected $dateFormatter;
-
-  /**
-   * The entity bundle information.
-   *
-   * @var \Drupal\Core\Entity\EntityTypeBundleInfoInterface
-   */
-  protected $bundleInformation;
+  protected RevisionableInterface $revision;
 
   /**
    * The module handler.
    *
    * @var \Drupal\Core\Extension\ModuleHandlerInterface
    */
-  protected $moduleHandler;
-
-  /**
-   * The entity type manager.
-   *
-   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
-   */
-  protected $entityTypeManager;
-
-  /**
-   * The time service.
-   *
-   * @var \Drupal\Component\Datetime\TimeInterface
-   */
-  protected $time;
-
-  /**
-   * The current user.
-   *
-   * @var \Drupal\Core\Session\AccountInterface
-   */
-  protected $currentUser;
+  protected ModuleHandlerInterface $moduleHandler;
 
   /**
    * Creates a new RevisionDeleteForm instance.
@@ -97,13 +62,15 @@ class RevisionDeleteForm extends ConfirmFormBase implements EntityFormInterface 
    * @param \Drupal\Core\Session\AccountInterface $currentUser
    *   The current user.
    */
-  public function __construct(DateFormatterInterface $dateFormatter, EntityTypeManagerInterface $entityTypeManager, EntityTypeBundleInfoInterface $bundleInformation, MessengerInterface $messenger, TimeInterface $time, AccountInterface $currentUser) {
-    $this->dateFormatter = $dateFormatter;
-    $this->entityTypeManager = $entityTypeManager;
-    $this->bundleInformation = $bundleInformation;
+  public function __construct(
+    protected DateFormatterInterface $dateFormatter,
+    protected EntityTypeManagerInterface $entityTypeManager,
+    protected EntityTypeBundleInfoInterface $bundleInformation,
+    MessengerInterface $messenger,
+    protected TimeInterface $time,
+    protected AccountInterface $currentUser,
+  ) {
     $this->messenger = $messenger;
-    $this->time = $time;
-    $this->currentUser = $currentUser;
   }
 
   /**
@@ -180,7 +147,7 @@ class RevisionDeleteForm extends ConfirmFormBase implements EntityFormInterface 
 
     $bundleLabel = $this->getBundleLabel($this->revision);
     $messengerArgs = [
-      '@type' => $bundleLabel ? $bundleLabel : $this->revision->getEntityType()->getLabel(),
+      '@type' => $bundleLabel ?: $this->revision->getEntityType()->getLabel(),
       '%title' => $this->revision->label(),
     ];
     if ($this->revision instanceof RevisionLogInterface) {
@@ -263,6 +230,7 @@ class RevisionDeleteForm extends ConfirmFormBase implements EntityFormInterface 
   public function setEntity(EntityInterface $entity) {
     assert($entity instanceof RevisionableInterface);
     $this->revision = $entity;
+    return $this;
   }
 
   /**
@@ -287,7 +255,9 @@ class RevisionDeleteForm extends ConfirmFormBase implements EntityFormInterface 
    *
    * Confirmation forms should override submitForm() instead for their logic.
    */
-  public function save(array $form, FormStateInterface $form_state) {}
+  public function save(array $form, FormStateInterface $form_state) {
+    throw new \LogicException('The save() method is not used in RevisionDeleteForm');
+  }
 
   /**
    * {@inheritdoc}

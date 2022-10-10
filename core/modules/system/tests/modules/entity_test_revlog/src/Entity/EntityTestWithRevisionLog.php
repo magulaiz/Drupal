@@ -15,13 +15,13 @@ use Drupal\Core\Field\BaseFieldDefinition;
  *   handlers = {
  *     "access" = "Drupal\entity_test_revlog\EntityTestRevlogAccessControlHandler",
  *     "form" = {
- *       "default" = "Drupal\Core\Entity\ContentEntityForm",
- *       "revision-delete" = "Drupal\Core\Entity\Form\RevisionDeleteForm",
- *       "revision-revert" = "Drupal\Core\Entity\Form\RevisionRevertForm",
+ *       "default" = \Drupal\Core\Entity\ContentEntityForm::class,
+ *       "revision-delete" = \Drupal\Core\Entity\Form\RevisionDeleteForm::class,
+ *       "revision-revert" = \Drupal\Core\Entity\Form\RevisionRevertForm::class,
  *     },
  *     "route_provider" = {
- *       "html" = "Drupal\Core\Entity\Routing\DefaultHtmlRouteProvider",
- *       "revision" = "Drupal\Core\Entity\Routing\RevisionHtmlRouteProvider",
+ *       "html" = \Drupal\Core\Entity\Routing\DefaultHtmlRouteProvider::class,
+ *       "revision" = \Drupal\Core\Entity\Routing\RevisionHtmlRouteProvider::class,
  *     },
  *   },
  *   base_table = "entity_test_revlog",
@@ -86,7 +86,7 @@ class EntityTestWithRevisionLog extends RevisionableContentEntityBase {
    *
    * @return $this
    */
-  public function setName($name) {
+  public function setName(string $name) {
     $this->set('name', $name);
     return $this;
   }

@@ -25,20 +25,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class VersionHistoryController extends ControllerBase {
 
   /**
-   * The date formatter service.
-   *
-   * @var \Drupal\Core\Datetime\DateFormatterInterface
-   */
-  protected $dateFormatter;
-
-  /**
-   * The renderer.
-   *
-   * @var \Drupal\Core\Render\RendererInterface
-   */
-  protected $renderer;
-
-  /**
    * Constructs a new VersionHistoryController.
    *
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
@@ -50,11 +36,14 @@ class VersionHistoryController extends ControllerBase {
    * @param \Drupal\Core\Render\RendererInterface $renderer
    *   The renderer.
    */
-  public function __construct(EntityTypeManagerInterface $entityTypeManager, LanguageManagerInterface $languageManager, DateFormatterInterface $dateFormatter, RendererInterface $renderer) {
+  public function __construct(
+    EntityTypeManagerInterface $entityTypeManager,
+    LanguageManagerInterface $languageManager,
+    protected DateFormatterInterface $dateFormatter,
+    protected RendererInterface $renderer,
+  ) {
     $this->entityTypeManager = $entityTypeManager;
     $this->languageManager = $languageManager;
-    $this->dateFormatter = $dateFormatter;
-    $this->renderer = $renderer;
   }
 
   /**
@@ -65,7 +54,7 @@ class VersionHistoryController extends ControllerBase {
       $container->get('entity_type.manager'),
       $container->get('language_manager'),
       $container->get('date.formatter'),
-      $container->get('renderer')
+      $container->get('renderer'),
     );
   }
 
@@ -78,7 +67,7 @@ class VersionHistoryController extends ControllerBase {
    * @return array
    *   A render array.
    */
-  public function versionHistory(RouteMatchInterface $routeMatch): array {
+  public function __invoke(RouteMatchInterface $routeMatch): array {
     $entityTypeId = $routeMatch->getRouteObject()->getOption('entity_type_id');
     $entity = $routeMatch->getParameter($entityTypeId);
     return $this->revisionOverview($entity);
@@ -106,11 +95,6 @@ class VersionHistoryController extends ControllerBase {
       return NULL;
     }
 
-    // Disallow reverting to the latest revision.
-    if ($revision->isLatestRevision()) {
-      return NULL;
-    }
-
     return [
       'title' => $this->t('Revert'),
       'url' => $url,
@@ -135,11 +119,6 @@ class VersionHistoryController extends ControllerBase {
     // Merge in cacheability after
     // https://www.drupal.org/project/drupal/issues/2473873.
     if (!$url->access()) {
-      return NULL;
-    }
-
-    // Disallow deleting the default revision.
-    if ($revision->isDefaultRevision()) {
       return NULL;
     }
 
@@ -189,8 +168,8 @@ class VersionHistoryController extends ControllerBase {
       'data' => [
         '#type' => 'inline_template',
         '#template' => isset($context['username'])
-        ? '{% trans %} {{ revision }} by {{ username }}{% endtrans %}{% if message %}<p class="revision-log">{{ message }}</p>{% endif %}'
-        : '{% trans %} {{ revision }} {% endtrans %}{% if message %}<p class="revision-log">{{ message }}</p>{% endif %}',
+          ? '{% trans %} {{ revision }} by {{ username }}{% endtrans %}{% if message %}<p class="revision-log">{{ message }}</p>{% endif %}'
+          : '{% trans %} {{ revision }} {% endtrans %}{% if message %}<p class="revision-log">{{ message }}</p>{% endif %}',
         '#context' => $context,
       ],
     ];
@@ -264,12 +243,9 @@ class VersionHistoryController extends ControllerBase {
         'operations' => ['data' => $this->t('Operations')],
       ],
     ];
+
     foreach ($this->loadRevisions($entity) as $revision) {
-      $row = $this->buildRow($revision);
-      if (empty($row)) {
-        continue;
-      }
-      $build['entity_revisions_table']['#rows'][$revision->getRevisionId()] = $row;
+      $build['entity_revisions_table']['#rows'][$revision->getRevisionId()] = $this->buildRow($revision);
     }
 
     (new CacheableMetadata())

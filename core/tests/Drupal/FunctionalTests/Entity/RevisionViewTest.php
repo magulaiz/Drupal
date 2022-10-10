@@ -11,14 +11,14 @@ use Drupal\Tests\BrowserTestBase;
  * Tests revision view page.
  *
  * @group Entity
- * @coversDefaultClass \Drupal\Core\Entity\Controller\EntityViewController
+ * @coversDefaultClass \Drupal\Core\Entity\Controller\EntityRevisionViewController
  */
 class RevisionViewTest extends BrowserTestBase {
 
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'classy';
+  protected $defaultTheme = 'stark';
 
   /**
    * {@inheritdoc}
@@ -45,6 +45,8 @@ class RevisionViewTest extends BrowserTestBase {
    *   Entity type to test.
    * @param string $expectedPageTitle
    *   Expected page title.
+   *
+   * @covers ::__invoke
    *
    * @dataProvider providerRevisionPage
    */
@@ -103,7 +105,7 @@ class RevisionViewTest extends BrowserTestBase {
   /**
    * Data provider for testRevisionPage.
    */
-  public function providerRevisionPage() {
+  public function providerRevisionPage(): array {
     return [
       ['entity_test_rev', 'Revision of revision 1, view revision'],
       ['entity_test_revlog', 'Revision of revision 1, view revision from Sun, 01/11/2009 - 16:00'],

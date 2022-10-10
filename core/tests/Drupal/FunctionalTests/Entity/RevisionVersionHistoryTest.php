@@ -17,7 +17,7 @@ class RevisionVersionHistoryTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'classy';
+  protected $defaultTheme = 'stark';
 
   /**
    * {@inheritdoc}
@@ -226,10 +226,12 @@ class RevisionVersionHistoryTest extends BrowserTestBase {
     $entity->save();
 
     $this->drupalGet($entity->toUrl('version-history'));
+    $this->assertSession()->elementsCount('css', 'table tbody tr', 3);
 
     // Latest revision does not have revert revision operation: reverting latest
     // revision is not permitted.
     $row1 = $this->assertSession()->elementExists('css', 'table tbody tr:nth-child(1)');
+    $this->assertSession()->elementTextContains('css', 'table tbody tr:nth-child(1)', 'Current revision');
     $this->assertSession()->elementNotExists('named', ['link', 'Revert'], $row1);
 
     // Revision 2 has revert revision operation: granted access.
@@ -239,6 +241,18 @@ class RevisionVersionHistoryTest extends BrowserTestBase {
     // Revision 3 does not have revert revision operation: no access.
     $row3 = $this->assertSession()->elementExists('css', 'table tbody tr:nth-child(3)');
     $this->assertSession()->elementNotExists('named', ['link', 'Revert'], $row3);
+
+    // Reverting latest is allowed if entity access permits it.
+    $entity->setName('view all revisions, revert, force allow revert');
+    $entity->setNewRevision();
+    $entity->save();
+
+    $this->drupalGet($entity->toUrl('version-history'));
+    $this->assertSession()->elementsCount('css', 'table tbody tr', 4);
+
+    $row1 = $this->assertSession()->elementExists('css', 'table tbody tr:nth-child(1)');
+    $this->assertSession()->elementTextContains('css', 'table tbody tr:nth-child(1)', 'Current revision');
+    $this->assertSession()->elementExists('named', ['link', 'Revert'], $row1);
   }
 
   /**
@@ -261,10 +275,12 @@ class RevisionVersionHistoryTest extends BrowserTestBase {
     $entity->save();
 
     $this->drupalGet($entity->toUrl('version-history'));
+    $this->assertSession()->elementsCount('css', 'table tbody tr', 3);
 
     // Latest revision does not have delete revision operation: deleting latest
     // revision is not permitted.
     $row1 = $this->assertSession()->elementExists('css', 'table tbody tr:nth-child(1)');
+    $this->assertSession()->elementTextContains('css', 'table tbody tr:nth-child(1)', 'Current revision');
     $this->assertSession()->elementNotExists('named', ['link', 'Delete'], $row1);
 
     // Revision 2 has delete revision operation: granted access.
@@ -274,6 +290,18 @@ class RevisionVersionHistoryTest extends BrowserTestBase {
     // Revision 3 does not have delete revision operation: no access.
     $row3 = $this->assertSession()->elementExists('css', 'table tbody tr:nth-child(3)');
     $this->assertSession()->elementNotExists('named', ['link', 'Delete'], $row3);
+
+    // Deleting latest is allowed if entity access permits it.
+    $entity->setName('view all revisions, delete revision, force allow delete revision');
+    $entity->setNewRevision();
+    $entity->save();
+
+    $this->drupalGet($entity->toUrl('version-history'));
+    $this->assertSession()->elementsCount('css', 'table tbody tr', 4);
+
+    $row1 = $this->assertSession()->elementExists('css', 'table tbody tr:nth-child(1)');
+    $this->assertSession()->elementTextContains('css', 'table tbody tr:nth-child(1)', 'Current revision');
+    $this->assertSession()->elementExists('named', ['link', 'Delete'], $row1);
   }
 
 }
