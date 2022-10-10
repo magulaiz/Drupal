@@ -95,11 +95,6 @@ class VersionHistoryController extends ControllerBase {
       return NULL;
     }
 
-    // Disallow reverting to the latest revision.
-    if ($revision->isLatestRevision()) {
-      return NULL;
-    }
-
     return [
       'title' => $this->t('Revert'),
       'url' => $url,
@@ -124,11 +119,6 @@ class VersionHistoryController extends ControllerBase {
     // Merge in cacheability after
     // https://www.drupal.org/project/drupal/issues/2473873.
     if (!$url->access()) {
-      return NULL;
-    }
-
-    // Disallow deleting the default revision.
-    if ($revision->isDefaultRevision()) {
       return NULL;
     }
 
