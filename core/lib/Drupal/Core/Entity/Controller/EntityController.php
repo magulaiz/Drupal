@@ -102,7 +102,7 @@ class EntityController implements ContainerInjectionInterface {
       $container->get('entity.repository'),
       $container->get('renderer'),
       $container->get('string_translation'),
-      $container->get('url_generator')
+      $container->get('url_generator'),
     );
   }
 
