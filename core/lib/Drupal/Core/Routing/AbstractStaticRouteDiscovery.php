@@ -5,9 +5,16 @@ namespace Drupal\Core\Routing;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Routing\Route;
 
+/**
+ * Provides functionality for a class subscribed to RoutingEvents::STATIC.
+ *
+ * @see \Drupal\Core\Routing\RoutingEvents::STATIC
+ */
 abstract class AbstractStaticRouteDiscovery implements EventSubscriberInterface {
 
   /**
+   * Creates a collection of routes to add to the route builder.
+   *
    * @return iterable<int, \Symfony\Component\Routing\RouteCollection>
    */
   abstract protected function collectRoutes(): iterable;
@@ -16,9 +23,16 @@ abstract class AbstractStaticRouteDiscovery implements EventSubscriberInterface 
    * Determines the priority of the route build event listener.
    *
    * @return int
+   *   The priority of the route builder event.
    */
   abstract protected static function getPriority(): int;
 
+  /**
+   * Gets an array of default values for a route.
+   *
+   * @return array
+   *   An array of default values for a route.
+   */
   protected function resetGlobals(): array {
     return [
       'path' => NULL,
@@ -36,6 +50,29 @@ abstract class AbstractStaticRouteDiscovery implements EventSubscriberInterface 
     ];
   }
 
+  /**
+   * Creates a route.
+   *
+   * @param string $path
+   *   The path pattern to match.
+   * @param array $defaults
+   *   An array of default parameter values.
+   * @param array $requirements
+   *   An array of requirements for parameters (regexes).
+   * @param array $options
+   *   An array of options.
+   * @param string|null $host
+   *   The host pattern to match.
+   * @param array $schemes
+   *   An array of URI schemes.
+   * @param array $methods
+   *   An array of required HTTP methods.
+   * @param string|null $condition
+   *   A condition that should evaluate to true for the route to match.
+   *
+   * @return \Symfony\Component\Routing\Route
+   *   The route.
+   */
   protected function createRoute(string $path, array $defaults, array $requirements, array $options, ?string $host, array $schemes, array $methods, ?string $condition): Route {
     // Ensure routes default to using Drupal's route compiler instead of
     // Symfony's.

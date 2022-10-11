@@ -7,8 +7,17 @@ use Drupal\Core\Discovery\YamlDiscovery;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Symfony\Component\Routing\RouteCollection;
 
+/**
+ * Reads routing.yml files provided by modules and creates route collections.
+ */
 class YamlRouteDiscovery extends AbstractStaticRouteDiscovery {
 
+  /**
+   * @param \Drupal\Core\Extension\ModuleHandlerInterface $moduleHandler
+   *   The module handler.
+   * @param \Drupal\Core\Controller\ControllerResolverInterface $controllerResolver
+   *   The controller resolver.
+   */
   public function __construct(protected ModuleHandlerInterface $moduleHandler, protected ControllerResolverInterface $controllerResolver) {
   }
 

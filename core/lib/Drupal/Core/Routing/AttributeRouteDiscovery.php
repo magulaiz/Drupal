@@ -9,12 +9,12 @@ use Symfony\Component\Routing\RouteCollection;
 class AttributeRouteDiscovery extends AbstractStaticRouteDiscovery {
 
   /**
-   * @var int
+   * The default route index used when creating default route names.
    */
   protected int $defaultRouteIndex = 0;
 
   /**
-   * @var string
+   * The PHP attribute class.
    */
   protected string $routeAnnotationClass = RouteAnnotation::class;
 
@@ -23,18 +23,23 @@ class AttributeRouteDiscovery extends AbstractStaticRouteDiscovery {
    */
   protected ?string $env = NULL;
 
-  public function __construct(protected \ArrayObject $namespaces) {
+  /**
+   * @param \Traversable $namespaces
+   *   An object that implements \Traversable which contains the root paths
+   *   keyed by the corresponding namespace to look for plugin implementations.
+   */
+  public function __construct(protected \Traversable $namespaces) {
   }
 
   /**
-   * @inheritDoc
+   * {@inheritdoc}
    */
   protected static function getPriority(): int {
     return 0;
   }
 
   /**
-   * @return iterable<int, \Symfony\Component\Routing\RouteCollection>
+   * {@inheritdoc}
    */
   protected function collectRoutes(): iterable {
     foreach ($this->namespaces as $namespace => $directory) {
@@ -49,14 +54,23 @@ class AttributeRouteDiscovery extends AbstractStaticRouteDiscovery {
             $sub_path = $iterator->getSubIterator()->getSubPath();
             $sub_path = $sub_path ? str_replace(DIRECTORY_SEPARATOR, '\\', $sub_path) . '\\' : '';
             $class = $namespace . '\\' . $sub_path . $fileinfo->getBasename('.php');
-            yield $this->load($class);
+            yield $this->createRouteCollection($class);
           }
         }
       }
     }
   }
 
-  private function load(string $class): RouteCollection {
+  /**
+   * Creates a route collection from a class's attributed methods.
+   *
+   * @param string $class
+   *   The class to generate a route collection for.
+   *
+   * @return \Symfony\Component\Routing\RouteCollection
+   *   The route collection.
+   */
+  private function createRouteCollection(string $class): RouteCollection {
     $collection = new RouteCollection();
 
     if (!class_exists($class)) {
@@ -94,6 +108,18 @@ class AttributeRouteDiscovery extends AbstractStaticRouteDiscovery {
     return $collection;
   }
 
+  /**
+   * Creates the default route settings for a class.
+   *
+   * A class can use the route attribute on the class to set defaults for all
+   * attributed methods on the class.
+   *
+   * @param \ReflectionClass $class
+   *   The class to create global settings for.
+   *
+   * @return array
+   *   An array of route defaults.
+   */
   private function getGlobals(\ReflectionClass $class) {
     $globals = $this->resetGlobals();
 
@@ -154,6 +180,18 @@ class AttributeRouteDiscovery extends AbstractStaticRouteDiscovery {
     return $globals;
   }
 
+  /**
+   * @param \Symfony\Component\Routing\RouteCollection $collection
+   *   The route collection to add the route to.
+   * @param object $annot
+   *   The attribute object that describes the route.
+   * @param array $globals
+   *   The defaults for the class.
+   * @param \ReflectionClass $class
+   *   The class.
+   * @param \ReflectionMethod $method
+   *   The attributed method.
+   */
   private function addRoute(RouteCollection $collection, object $annot, array $globals, \ReflectionClass $class, \ReflectionMethod $method) {
     if ($annot->getEnv() && $annot->getEnv() !== $this->env) {
       return;
@@ -241,6 +279,14 @@ class AttributeRouteDiscovery extends AbstractStaticRouteDiscovery {
 
   /**
    * Gets the default route name for a class method.
+   *
+   * @param \ReflectionClass $class
+   *   The class.
+   * @param \ReflectionMethod $method
+   *   The method.
+   *
+   * @return string
+   *   The default route name for a class method.
    */
   private function getDefaultRouteName(\ReflectionClass $class, \ReflectionMethod $method): string {
     $name = str_replace('\\', '_', $class->name) . '_' . $method->name;
@@ -269,6 +315,15 @@ class AttributeRouteDiscovery extends AbstractStaticRouteDiscovery {
 
   /**
    * Configures the _controller default parameter of a given Route instance.
+   *
+   * @param \Symfony\Component\Routing\Route $route
+   *   The route to configure.
+   * @param \ReflectionClass $class
+   *   The class.
+   * @param \ReflectionMethod $method
+   *   The method.
+   * @param object $annot
+   *   The PHP attribute.
    */
   private function configureRoute(Route $route, \ReflectionClass $class, \ReflectionMethod $method, object $annot) {
     if ('__invoke' === $method->getName()) {
