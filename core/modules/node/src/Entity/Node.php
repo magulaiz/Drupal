@@ -34,10 +34,13 @@ use Drupal\user\EntityOwnerTrait;
  *       "default" = "Drupal\node\NodeForm",
  *       "delete" = "Drupal\node\Form\NodeDeleteForm",
  *       "edit" = "Drupal\node\NodeForm",
+ *       "revision-delete" = "Drupal\Core\Entity\Form\RevisionDeleteForm",
+ *       "revision-revert" = "Drupal\Core\Entity\Form\RevisionRevertForm",
  *       "delete-multiple-confirm" = "Drupal\node\Form\DeleteMultiple"
  *     },
  *     "route_provider" = {
  *       "html" = "Drupal\node\Entity\NodeRouteProvider",
+ *       "revision" = "Drupal\node\Entity\NodeRevisionRouteProvider",
  *     },
  *     "list_builder" = "Drupal\node\NodeListBuilder",
  *     "translation" = "Drupal\node\NodeTranslationHandler"
@@ -78,6 +81,8 @@ use Drupal\user\EntityOwnerTrait;
  *     "edit-form" = "/node/{node}/edit",
  *     "version-history" = "/node/{node}/revisions",
  *     "revision" = "/node/{node}/revisions/{node_revision}/view",
+ *     "revision-delete-form" = "/node/{node}/revisions/{node_revision}/delete",
+ *     "revision-revert-form" = "/node/{node}/revisions/{node_revision}/revert",
  *     "create" = "/node",
  *   }
  * )
