@@ -2,6 +2,8 @@
 
 namespace Drupal\Core\Installer;
 
+@trigger_error('@todo', E_USER_DEPRECATED);
+
 use Drupal\Core\Routing\RouteBuilder;
 
 /**
