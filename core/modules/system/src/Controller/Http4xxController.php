@@ -28,7 +28,12 @@ class Http4xxController extends ControllerBase {
    * @return array
    *   A render array containing the message to display for 401 pages.
    */
-  #[Route('/system/401', 'system.401', ['_access' => 'TRUE'], [], ['_title' => 'Unauthorized'])]
+  #[Route(
+    path: '/system/401',
+    name: 'system.401',
+    requirements: ['_access' => 'TRUE'],
+    defaults: ['_title' => 'Unauthorized']
+  )]
   public function on401() {
     return [
       '#markup' => $this->t('Log in to access this page.'),
