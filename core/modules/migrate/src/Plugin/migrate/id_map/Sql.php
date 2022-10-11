@@ -209,7 +209,7 @@ class Sql extends PluginBase implements MigrateIdMapInterface, ContainerFactoryP
     // However, the Migration process plugin doesn't currently have a way to get
     // the source key so we presume the values have been passed through in the
     // correct order.
-    if (!isset($source_id_values[0])) {
+    if (!array_key_exists(0, $source_id_values)) {
       $source_id_values_keyed = [];
       foreach ($this->sourceIdFields() as $field_name => $source_id) {
         $source_id_values_keyed[] = $source_id_values[$field_name];
@@ -592,7 +592,7 @@ class Sql extends PluginBase implements MigrateIdMapInterface, ContainerFactoryP
     }
 
     // Canonicalize the keys into a hash of DB-field => value.
-    $is_associative = !isset($source_id_values[0]);
+    $is_associative = !array_key_exists(0, $source_id_values);
     $conditions = [];
     foreach ($this->sourceIdFields() as $field_name => $db_field) {
       if ($is_associative) {

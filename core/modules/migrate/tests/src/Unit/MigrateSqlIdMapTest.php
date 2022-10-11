@@ -482,6 +482,7 @@ class MigrateSqlIdMapTest extends MigrateTestCase {
     $this->assertEquals([[101]], $id_map->lookupDestinationIds([1]));
     $this->assertEquals([[102]], $id_map->lookupDestinationIds([2]));
     $this->assertEquals([], $id_map->lookupDestinationIds([99]));
+    $this->assertEquals([], $id_map->lookupDestinationIds([NULL]));
     // Lookup by complete associative list.
     $this->assertEquals([[101]], $id_map->lookupDestinationIds(['nid' => 1]));
     $this->assertEquals([[102]], $id_map->lookupDestinationIds(['nid' => 2]));
@@ -503,6 +504,7 @@ class MigrateSqlIdMapTest extends MigrateTestCase {
     $this->assertEquals([[102, 'en']], $id_map->lookupDestinationIds([2, 'en']));
     $this->assertEquals([], $id_map->lookupDestinationIds([2, 'fr']));
     $this->assertEquals([], $id_map->lookupDestinationIds([99, 'en']));
+    $this->assertEquals([], $id_map->lookupDestinationIds([NULL, 'en']));
     // Lookup by complete associative list.
     $this->assertEquals([[101, 'en']], $id_map->lookupDestinationIds(['nid' => 1, 'language' => 'en']));
     $this->assertEquals([[101, 'fr']], $id_map->lookupDestinationIds(['nid' => 1, 'language' => 'fr']));
