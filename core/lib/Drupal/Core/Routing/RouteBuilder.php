@@ -130,7 +130,7 @@ class RouteBuilder implements RouteBuilderInterface, DestructableInterface {
     $this->building = TRUE;
     $collection = new RouteCollection();
 
-    // DYNAMIC is supposed to be used to add new routes based upon all the
+    // STATIC is supposed to be used to add new routes based upon all the
     // static defined ones.
     $this->dispatcher->dispatch(new RouteBuildEvent($collection), RoutingEvents::STATIC);
 
