@@ -185,7 +185,7 @@ class DateTimeFieldTest extends DateTestBase {
       // has the same interval.  Since the database always stores UTC, and the
       // interval will use this, force the test date to use UTC and not the local
       // or user timezone.
-      $timestamp = REQUEST_TIME - 87654321;
+      $timestamp = $this->testRequestTime - 87654321;
       $entity = EntityTest::load($id);
       $field_name = $this->fieldStorage->getName();
       $date = DrupalDateTime::createFromTimestamp($timestamp, 'UTC');
@@ -215,7 +215,7 @@ class DateTimeFieldTest extends DateTestBase {
       // has the same interval.  Since the database always stores UTC, and the
       // interval will use this, force the test date to use UTC and not the local
       // or user timezone.
-      $timestamp = REQUEST_TIME + 87654321;
+      $timestamp = $this->testRequestTime + 87654321;
       $entity = EntityTest::load($id);
       $field_name = $this->fieldStorage->getName();
       $date = DrupalDateTime::createFromTimestamp($timestamp, 'UTC');
@@ -342,7 +342,7 @@ class DateTimeFieldTest extends DateTestBase {
     // has the same interval.  Since the database always stores UTC, and the
     // interval will use this, force the test date to use UTC and not the local
     // or user timezone.
-    $timestamp = REQUEST_TIME - 87654321;
+    $timestamp = $this->testRequestTime - 87654321;
     $entity = EntityTest::load($id);
     $field_name = $this->fieldStorage->getName();
     $date = DrupalDateTime::createFromTimestamp($timestamp, 'UTC');
@@ -369,7 +369,7 @@ class DateTimeFieldTest extends DateTestBase {
     // has the same interval.  Since the database always stores UTC, and the
     // interval will use this, force the test date to use UTC and not the local
     // or user timezone.
-    $timestamp = REQUEST_TIME + 87654321;
+    $timestamp = $this->testRequestTime + 87654321;
     $entity = EntityTest::load($id);
     $field_name = $this->fieldStorage->getName();
     $date = DrupalDateTime::createFromTimestamp($timestamp, 'UTC');

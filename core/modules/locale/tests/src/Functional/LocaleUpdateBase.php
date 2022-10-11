@@ -56,10 +56,10 @@ abstract class LocaleUpdateBase extends BrowserTestBase {
     parent::setUp();
 
     // Setup timestamps to identify old and new translation sources.
-    $this->timestampOld = REQUEST_TIME - 300;
-    $this->timestampMedium = REQUEST_TIME - 200;
-    $this->timestampNew = REQUEST_TIME - 100;
-    $this->timestampNow = REQUEST_TIME;
+    $this->timestampOld = $this->testRequestTime - 300;
+    $this->timestampMedium = $this->testRequestTime - 200;
+    $this->timestampNew = $this->testRequestTime - 100;
+    $this->timestampNow = $this->testRequestTime;
 
     // Enable import of translations. By default this is disabled for automated
     // tests.
@@ -110,7 +110,7 @@ abstract class LocaleUpdateBase extends BrowserTestBase {
    *   in source and translations strings.
    */
   protected function makePoFile($path, $filename, $timestamp = NULL, array $translations = []) {
-    $timestamp = $timestamp ? $timestamp : REQUEST_TIME;
+    $timestamp = $timestamp ? $timestamp : $this->testRequestTime;
     $path = 'public://' . $path;
     $text = '';
     $po_header = <<<EOF

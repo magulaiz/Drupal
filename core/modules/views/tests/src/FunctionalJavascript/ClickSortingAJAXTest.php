@@ -39,8 +39,8 @@ class ClickSortingAJAXTest extends WebDriverTestBase {
 
     // Create a Content type and two test nodes.
     $this->createContentType(['type' => 'page']);
-    $this->createNode(['title' => 'Page A', 'changed' => REQUEST_TIME]);
-    $this->createNode(['title' => 'Page B', 'changed' => REQUEST_TIME + 1000]);
+    $this->createNode(['title' => 'Page A', 'changed' => $this->testRequestTime]);
+    $this->createNode(['title' => 'Page B', 'changed' => $this->testRequestTime + 1000]);
 
     // Create a user privileged enough to view content.
     $user = $this->drupalCreateUser([

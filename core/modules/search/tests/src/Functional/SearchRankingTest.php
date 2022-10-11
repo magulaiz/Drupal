@@ -78,7 +78,7 @@ class SearchRankingTest extends BrowserTestBase {
         'title' => 'Drupal rocks',
         'body' => [['value' => "Drupal's search rocks"]],
         // Node is one day old.
-        'created' => REQUEST_TIME - 24 * 3600,
+        'created' => $this->testRequestTime - 24 * 3600,
         'sticky' => 0,
         'promote' => 0,
       ];
@@ -96,7 +96,7 @@ class SearchRankingTest extends BrowserTestBase {
 
             case 'recent':
               // Node is 1 hour hold.
-              $settings['created'] = REQUEST_TIME - 3600;
+              $settings['created'] = $this->testRequestTime - 3600;
               break;
 
             case 'comments':
@@ -124,7 +124,7 @@ class SearchRankingTest extends BrowserTestBase {
     // counter for this node.
     $nid = $nodes['views'][1]->id();
     Database::getConnection()->insert('node_counter')
-      ->fields(['totalcount' => 5, 'daycount' => 5, 'timestamp' => REQUEST_TIME, 'nid' => $nid])
+      ->fields(['totalcount' => 5, 'daycount' => 5, 'timestamp' => $this->testRequestTime, 'nid' => $nid])
       ->execute();
 
     // Run cron to update the search index and comment/statistics totals.
