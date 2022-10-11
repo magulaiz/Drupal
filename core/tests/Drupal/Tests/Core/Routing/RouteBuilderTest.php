@@ -110,7 +110,7 @@ class RouteBuilderTest extends UnitTestCase implements EventSubscriberInterface 
 
     $this->dispatcher->addSubscriber($this);
     $this->dispatcher->addSubscriber($yamlRouteDiscovery);
-    $this->routeBuilder = new RouteBuilder($this->dumper, $this->lock, $this->dispatcher, $this->moduleHandler, $this->controllerResolver, $this->checkProvider);
+    $this->routeBuilder = new RouteBuilder($this->dumper, $this->lock, $this->dispatcher, $this->checkProvider);
   }
 
   /**
@@ -334,6 +334,14 @@ class RouteBuilderTest extends UnitTestCase implements EventSubscriberInterface 
     $this->assertTrue($this->routeBuilder->rebuild());
     $this->assertTrue($this->dynamicFired);
     $this->assertTrue($this->alterFired);
+  }
+
+  /**
+   * @group legacy
+   */
+  public function testDeprecatedConstructorArgs() {
+    $this->expectDeprecation('@todo');
+    new RouteBuilder($this->dumper, $this->lock, $this->dispatcher, $this->moduleHandler, $this->controllerResolver, $this->checkProvider);
   }
 
   public function onRouteDynamic(RouteBuildEvent $event) {
