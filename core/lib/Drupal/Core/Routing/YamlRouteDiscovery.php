@@ -24,8 +24,8 @@ class YamlRouteDiscovery extends AbstractStaticRouteDiscovery {
    * {@inheritdoc}
    */
   protected function collectRoutes(): iterable {
-    $collection = new RouteCollection();
     foreach ($this->getRouteDefinitions() as $routes) {
+      $collection = new RouteCollection();
       // The top-level 'routes_callback' is a list of methods in controller
       // syntax, see \Drupal\Core\Controller\ControllerResolver. These methods
       // should return a set of \Symfony\Component\Routing\Route objects, either
@@ -39,7 +39,7 @@ class YamlRouteDiscovery extends AbstractStaticRouteDiscovery {
           if ($callback_routes = call_user_func($callback)) {
             // If a RouteCollection is returned, add the whole collection.
             if ($callback_routes instanceof RouteCollection) {
-              $collection->addCollection($callback_routes);
+              yield $callback_routes;
             }
             // Otherwise, add each Route object individually.
             else {
@@ -57,8 +57,8 @@ class YamlRouteDiscovery extends AbstractStaticRouteDiscovery {
         $route = $this->createRoute($route_info['path'], $route_info['defaults'], $route_info['requirements'], $route_info['options'], $route_info['host'], $route_info['schemes'], $route_info['methods'], $route_info['condition']);
         $collection->add($name, $route);
       }
+      yield $collection;
     }
-    yield $collection;
   }
 
   /**
