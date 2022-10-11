@@ -175,22 +175,9 @@ class RouteBuilder implements RouteBuilderInterface, DestructableInterface {
         unset($routes['route_callbacks']);
       }
       foreach ($routes as $name => $route_info) {
-        $route_info += [
-          'defaults' => [],
-          'requirements' => [],
-          'options' => [],
-          'host' => NULL,
-          'schemes' => [],
-          'methods' => [],
-          'condition' => '',
-        ];
-        // Ensure routes default to using Drupal's route compiler instead of
-        // Symfony's.
-        $route_info['options'] += [
-          'compiler_class' => RouteCompiler::class,
-        ];
+        $route_info += $this->resetGlobals();
 
-        $route = new Route($route_info['path'], $route_info['defaults'], $route_info['requirements'], $route_info['options'], $route_info['host'], $route_info['schemes'], $route_info['methods'], $route_info['condition']);
+        $route = $this->createRoute($route_info['path'], $route_info['defaults'], $route_info['requirements'], $route_info['options'], $route_info['host'], $route_info['schemes'], $route_info['methods'], $route_info['condition']);
         $collection->add($name, $route);
       }
     }
@@ -499,6 +486,11 @@ class RouteBuilder implements RouteBuilderInterface, DestructableInterface {
   }
 
   private function createRoute(string $path, array $defaults, array $requirements, array $options, ?string $host, array $schemes, array $methods, ?string $condition): Route {
+    // Ensure routes default to using Drupal's route compiler instead of
+    // Symfony's.
+    $options += [
+      'compiler_class' => RouteCompiler::class,
+    ];
     return new Route($path, $defaults, $requirements, $options, $host, $schemes, $methods, $condition);
   }
 
