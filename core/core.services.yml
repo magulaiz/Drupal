@@ -1087,6 +1087,16 @@ services:
     tags:
       - { name: needs_destruction }
   Drupal\Core\Routing\RouteBuilderInterface: '@router.builder'
+  router.builder.attributes:
+    class: Drupal\Core\Routing\AttributeRouteDiscovery
+    arguments: ['@container.namespaces']
+    tags:
+      - { name: event_subscriber }
+  router.builder.yaml:
+    class: Drupal\Core\Routing\YamlRouteDiscovery
+    arguments: ['@module_handler', '@controller_resolver']
+    tags:
+      - { name: event_subscriber }
   menu.rebuild_subscriber:
     class: Drupal\Core\EventSubscriber\MenuRouterRebuildSubscriber
     arguments: ['@lock', '@plugin.manager.menu.link', '@database', '@database.replica_kill_switch', '@logger.channel.menu']

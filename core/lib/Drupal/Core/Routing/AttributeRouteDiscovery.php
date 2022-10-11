@@ -6,7 +6,8 @@ use Symfony\Component\Routing\Annotation\Route as RouteAnnotation;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 
-class AttributeRouteDiscovery extends AbstractRouteDiscovery {
+class AttributeRouteDiscovery extends AbstractStaticRouteDiscovery {
+
   /**
    * @var int
    */
@@ -22,11 +23,21 @@ class AttributeRouteDiscovery extends AbstractRouteDiscovery {
    */
   protected ?string $env = NULL;
 
+  public function __construct(protected \ArrayObject $namespaces) {
+  }
+
+  /**
+   * @inheritDoc
+   */
+  protected static function getPriority(): int {
+    return 0;
+  }
+
   /**
    * @return iterable<int, \Symfony\Component\Routing\RouteCollection>
    */
-  public function collectRoutes(): iterable {
-    foreach (\Drupal::getContainer()->getParameter('container.namespaces') as $namespace => $directory) {
+  protected function collectRoutes(): iterable {
+    foreach ($this->namespaces as $namespace => $directory) {
       $directory .= '/Controller';
       $namespace .= '\\Controller';
       if (is_dir($directory)) {

@@ -2,15 +2,28 @@
 
 namespace Drupal\Core\Routing;
 
+use Drupal\Core\Controller\ControllerResolverInterface;
 use Drupal\Core\Discovery\YamlDiscovery;
+use Drupal\Core\Extension\ModuleHandlerInterface;
 use Symfony\Component\Routing\RouteCollection;
 
-class YamlRouteDiscovery extends AbstractRouteDiscovery {
+class YamlRouteDiscovery extends AbstractStaticRouteDiscovery {
+
+  public function __construct(protected ModuleHandlerInterface $moduleHandler, protected ControllerResolverInterface $controllerResolver) {
+  }
 
   /**
-   * {@inheritDoc}
+   * {@inheritdoc}
    */
-  public function collectRoutes(): iterable {
+  protected static function getPriority(): int {
+    // Runs before PHP Attribute discovery.
+    return 100;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function collectRoutes(): iterable {
     $collection = new RouteCollection();
     foreach ($this->getRouteDefinitions() as $routes) {
       // The top-level 'routes_callback' is a list of methods in controller
@@ -22,7 +35,7 @@ class YamlRouteDiscovery extends AbstractRouteDiscovery {
       // to the collection.
       if (isset($routes['route_callbacks'])) {
         foreach ($routes['route_callbacks'] as $route_callback) {
-          $callback = \Drupal::service('controller_resolver')->getControllerFromDefinition($route_callback);
+          $callback = $this->controllerResolver->getControllerFromDefinition($route_callback);
           if ($callback_routes = call_user_func($callback)) {
             // If a RouteCollection is returned, add the whole collection.
             if ($callback_routes instanceof RouteCollection) {
@@ -57,7 +70,7 @@ class YamlRouteDiscovery extends AbstractRouteDiscovery {
   protected function getRouteDefinitions() {
     // Always instantiate a new YamlDiscovery object so that we always search on
     // the up-to-date list of modules.
-    $discovery = new YamlDiscovery('routing', \Drupal::moduleHandler()->getModuleDirectories());
+    $discovery = new YamlDiscovery('routing', $this->moduleHandler->getModuleDirectories());
     return $discovery->findAll();
   }
 
