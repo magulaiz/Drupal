@@ -3,7 +3,7 @@
 namespace Drupal\Core\Routing;
 
 use Drupal\Core\Access\CheckProviderInterface;
-use Drupal\Core\Controller\ControllerResolverInterface;
+use Drupal\Core\DependencyInjection\DeprecatedServicePropertyTrait;
 use Drupal\Core\Discovery\YamlDiscovery;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Lock\LockBackendInterface;
@@ -16,6 +16,7 @@ use Symfony\Component\Routing\RouteCollection;
  * Managing class for rebuilding the router table.
  */
 class RouteBuilder implements RouteBuilderInterface, DestructableInterface {
+  use DeprecatedServicePropertyTrait;
 
   /**
    * The dumper to which we should send collected routes.
@@ -37,20 +38,6 @@ class RouteBuilder implements RouteBuilderInterface, DestructableInterface {
    * @var \Symfony\Contracts\EventDispatcher\EventDispatcherInterface
    */
   protected $dispatcher;
-
-  /**
-   * The module handler.
-   *
-   * @var \Drupal\Core\Extension\ModuleHandlerInterface
-   */
-  protected $moduleHandler;
-
-  /**
-   * The controller resolver.
-   *
-   * @var \Drupal\Core\Controller\ControllerResolverInterface
-   */
-  protected $controllerResolver;
 
   /**
    * The route collection during the rebuild.
@@ -81,6 +68,16 @@ class RouteBuilder implements RouteBuilderInterface, DestructableInterface {
   protected $checkProvider;
 
   /**
+   * Deprecated service properties.
+   *
+   * @var string[]
+   */
+  protected array $deprecatedProperties = [
+    'controllerResolver' => 'controller_resolver',
+    'moduleHandler' => 'module_handler',
+  ];
+
+  /**
    * Constructs the RouteBuilder using the passed MatcherDumperInterface.
    *
    * @param \Drupal\Core\Routing\MatcherDumperInterface $dumper
@@ -89,19 +86,21 @@ class RouteBuilder implements RouteBuilderInterface, DestructableInterface {
    *   The lock backend.
    * @param \Symfony\Contracts\EventDispatcher\EventDispatcherInterface $dispatcher
    *   The event dispatcher to notify of routes.
-   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
-   *   The module handler.
-   * @param \Drupal\Core\Controller\ControllerResolverInterface $controller_resolver
-   *   The controller resolver.
-   * @param \Drupal\Core\Access\CheckProviderInterface $check_provider
-   *   The check provider.
+   * @param \Drupal\Core\Access\CheckProviderInterface|\Drupal\Core\Extension\ModuleHandlerInterface $check_provider
+   *   The check provider. Passing in a ModuleHandlerInterface object is
+   *   deprecated.
    */
-  public function __construct(MatcherDumperInterface $dumper, LockBackendInterface $lock, EventDispatcherInterface $dispatcher, ModuleHandlerInterface $module_handler, ControllerResolverInterface $controller_resolver, CheckProviderInterface $check_provider) {
+  public function __construct(MatcherDumperInterface $dumper, LockBackendInterface $lock, EventDispatcherInterface $dispatcher, CheckProviderInterface|ModuleHandlerInterface $check_provider) {
     $this->dumper = $dumper;
     $this->lock = $lock;
     $this->dispatcher = $dispatcher;
-    $this->moduleHandler = $module_handler;
-    $this->controllerResolver = $controller_resolver;
+    if ($check_provider instanceof ModuleHandlerInterface && count(func_get_args()) === 6) {
+      $check_provider = func_get_arg(5);
+      @trigger_error('@todo', E_USER_DEPRECATED);
+    }
+    if (!$check_provider instanceof CheckProviderInterface) {
+      throw new \InvalidArgumentException();
+    }
     $this->checkProvider = $check_provider;
   }
 
