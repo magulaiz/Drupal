@@ -897,13 +897,19 @@ class FilterKernelTest extends KernelTestBase {
     $this->assertSame($expected, $result, 'Complex HTML document was correctly processed.');
 
     $pcre_backtrack_limit = ini_get('pcre.backtrack_limit');
-    // If a PCRE error occurs, we expect to get the same text.
-    $input = $expected = '<p>No url</p>';
-    // Setting the limit to the smallest possible value so that it will break.
+    // Setting this limit to the smallest possible value should cause PCRE
+    // errors and break the various preg_* functions used by _filter_url().
     ini_set('pcre.backtrack_limit', 1);
-    // Make sure we got the same text back without any errors.
+
+    // If PCRE errors occur, _filter_url() should return the exact same text.
+    // Case of a small and simple HTML document.
+    $input = $expected = '<p>No URL</p>';
     $result = _filter_url($input, $filter);
-    $this->assertSame($expected, $result, 'Complex HTML document was correctly processed.');
+    $this->assertSame($expected, $result, 'Simple HTML document was left intact when PCRE errors occured.');
+    // Case of a complex HTML document.
+    $input = $expected = file_get_contents($path . '/filter.url-input.txt');
+    $result = _filter_url($input, $filter);
+    $this->assertSame($expected, $result, 'Complex HTML document was left intact when PCRE errors occured.');
 
     // Setting limit back to default.
     ini_set('pcre.backtrack_limit', $pcre_backtrack_limit);
