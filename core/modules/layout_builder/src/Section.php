@@ -2,6 +2,8 @@
 
 namespace Drupal\layout_builder;
 
+use Drupal\Component\Plugin\Exception\ContextException;
+use Drupal\Component\Plugin\Exception\MissingValueContextException;
 use Drupal\Core\Config\Entity\ThirdPartySettingsInterface;
 use Drupal\Core\Plugin\PreviewAwarePluginInterface;
 
@@ -17,7 +19,7 @@ use Drupal\Core\Plugin\PreviewAwarePluginInterface;
  * @see \Drupal\Core\Layout\LayoutDefinition
  * @see \Drupal\layout_builder\SectionComponent
  */
-class Section implements ThirdPartySettingsInterface {
+class Section implements ThirdPartySettingsInterface, \JsonSerializable {
 
   /**
    * The layout plugin ID.
@@ -36,7 +38,7 @@ class Section implements ThirdPartySettingsInterface {
   /**
    * An array of components, keyed by UUID.
    *
-   * @var \Drupal\layout_builder\SectionComponent[]
+   * @var SectionComponent[]
    */
   protected $components = [];
 
@@ -56,7 +58,7 @@ class Section implements ThirdPartySettingsInterface {
    *   The layout plugin ID.
    * @param array $layout_settings
    *   (optional) The layout plugin settings.
-   * @param \Drupal\layout_builder\SectionComponent[] $components
+   * @param SectionComponent[] $components
    *   (optional) The components.
    * @param array[] $third_party_settings
    *   (optional) Any third party settings.
@@ -80,6 +82,8 @@ class Section implements ThirdPartySettingsInterface {
    *
    * @return array
    *   A renderable array representing the content of the section.
+   *
+   * @throws \Drupal\Component\Plugin\Exception\PluginException
    */
   public function toRenderArray(array $contexts = [], $in_preview = FALSE) {
     $regions = [];
@@ -105,11 +109,21 @@ class Section implements ThirdPartySettingsInterface {
    *
    * @return \Drupal\Core\Layout\LayoutInterface
    *   The layout plugin.
+   *
+   * @throws \Drupal\Component\Plugin\Exception\PluginException
    */
   public function getLayout(array $contexts = []) {
     $layout = $this->layoutPluginManager()->createInstance($this->getLayoutId(), $this->layoutSettings);
     if ($contexts) {
-      $this->contextHandler()->applyContextMapping($layout, $contexts);
+      try {
+        $this->contextHandler()->applyContextMapping($layout, $contexts);
+      }
+      catch (MissingValueContextException $e) {
+
+      }
+      catch (ContextException $e) {
+
+      }
     }
     return $layout;
   }
@@ -158,6 +172,8 @@ class Section implements ThirdPartySettingsInterface {
    *
    * @return string
    *   The machine-readable name of the default region.
+   *
+   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    */
   public function getDefaultRegion() {
     return $this->layoutPluginManager()->getDefinition($this->getLayoutId())->getDefaultRegion();
@@ -179,7 +195,7 @@ class Section implements ThirdPartySettingsInterface {
    * @param string $uuid
    *   The UUID of the component to retrieve.
    *
-   * @return \Drupal\layout_builder\SectionComponent
+   * @return SectionComponent
    *   The component.
    *
    * @throws \InvalidArgumentException
@@ -196,7 +212,7 @@ class Section implements ThirdPartySettingsInterface {
   /**
    * Helper method to set a component.
    *
-   * @param \Drupal\layout_builder\SectionComponent $component
+   * @param SectionComponent $component
    *   The component.
    *
    * @return $this
@@ -222,7 +238,7 @@ class Section implements ThirdPartySettingsInterface {
   /**
    * Appends a component to the end of a region.
    *
-   * @param \Drupal\layout_builder\SectionComponent $component
+   * @param SectionComponent $component
    *   The component being appended.
    *
    * @return $this
@@ -256,7 +272,7 @@ class Section implements ThirdPartySettingsInterface {
    * @param string $region
    *   The region name.
    *
-   * @return \Drupal\layout_builder\SectionComponent[]
+   * @return SectionComponent[]
    *   An array of components in the specified region, sorted by weight.
    */
   public function getComponentsByRegion($region) {
@@ -274,7 +290,7 @@ class Section implements ThirdPartySettingsInterface {
    *
    * @param string $preceding_uuid
    *   The UUID of the existing component to insert after.
-   * @param \Drupal\layout_builder\SectionComponent $component
+   * @param SectionComponent $component
    *   The component being inserted.
    *
    * @return $this
@@ -297,7 +313,7 @@ class Section implements ThirdPartySettingsInterface {
    *
    * @param int $delta
    *   The zero-based delta in which to insert the component.
-   * @param \Drupal\layout_builder\SectionComponent $new_component
+   * @param SectionComponent $new_component
    *   The component being inserted.
    *
    * @return $this
@@ -350,9 +366,9 @@ class Section implements ThirdPartySettingsInterface {
     return [
       'layout_id' => $this->getLayoutId(),
       'layout_settings' => $this->getLayoutSettings(),
-      'components' => array_map(function (SectionComponent $component) {
+      'components' => array_values(array_map(function (SectionComponent $component) {
         return $component->toArray();
-      }, $this->getComponents()),
+      }, $this->getComponents())),
       'third_party_settings' => $this->thirdPartySettings,
     ];
   }
@@ -443,6 +459,17 @@ class Section implements ThirdPartySettingsInterface {
    */
   protected function contextHandler() {
     return \Drupal::service('context.handler');
+  }
+
+  /**
+   * Returns a representation of the section for use in JSON serialization.
+   *
+   * @return array
+   *   return array for JSON serialization.
+   */
+  #[\ReturnTypeWillChange]
+  public function jsonSerialize() {
+    return $this->toArray();
   }
 
 }

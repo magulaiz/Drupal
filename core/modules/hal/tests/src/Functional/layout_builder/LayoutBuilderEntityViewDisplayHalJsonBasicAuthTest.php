@@ -2,14 +2,16 @@
 
 namespace Drupal\Tests\hal\Functional\layout_builder;
 
-use Drupal\Tests\hal\Functional\Core\EntityViewDisplayHalJsonAnonTest;
+use Drupal\Tests\layout_builder\Functional\Rest\LayoutBuilderEntityViewDisplayResourceTestBase;
 use Drupal\Tests\rest\Functional\BasicAuthResourceTestTrait;
 
 /**
+ * Layout Builder Entity View Display Class.
+ *
  * @group hal
  * @group legacy
  */
-class LayoutBuilderEntityViewDisplayHalJsonBasicAuthTest extends EntityViewDisplayHalJsonAnonTest {
+class LayoutBuilderEntityViewDisplayHalJsonBasicAuthTest extends LayoutBuilderEntityViewDisplayResourceTestBase {
 
   use BasicAuthResourceTestTrait;
 
@@ -22,5 +24,10 @@ class LayoutBuilderEntityViewDisplayHalJsonBasicAuthTest extends EntityViewDispl
    * {@inheritdoc}
    */
   protected static $auth = 'basic_auth';
+
+  /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
 
 }
