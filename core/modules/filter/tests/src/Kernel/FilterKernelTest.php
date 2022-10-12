@@ -903,7 +903,7 @@ class FilterKernelTest extends KernelTestBase {
 
     // If PCRE errors occur, _filter_url() should return the exact same text.
     // Case of a small and simple HTML document.
-    $input = $expected = '<p>No URL</p>';
+    $input = $expected = '<p>www.test.com</p>';
     $result = _filter_url($input, $filter);
     $this->assertSame($expected, $result, 'Simple HTML document was left intact when PCRE errors occured.');
     // Case of a complex HTML document.
