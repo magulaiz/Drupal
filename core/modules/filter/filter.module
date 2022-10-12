@@ -530,7 +530,7 @@ function _filter_url($text, $filter) {
 
     // Calling preg_split() resulted in a failure.
     if ($chunks !== FALSE) {
-    
+
       // PHP ensures that the array consists of alternating delimiters and
       // literals, and begins and ends with a literal (inserting NULL as
       // required). Therefore, the first chunk is always text:
