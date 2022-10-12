@@ -879,6 +879,7 @@ class FilterKernelTest extends KernelTestBase {
    *   comments.
    * - Empty HTML tags (BR, IMG).
    * - Mix of absolute and partial URLs, and email addresses in one content.
+   * - Input that exceeds PCRE backtracking limit.
    */
   public function testUrlFilterContent() {
     // Get FilterUrl object.
@@ -894,6 +895,18 @@ class FilterKernelTest extends KernelTestBase {
     $expected = file_get_contents($path . '/filter.url-output.txt');
     $result = _filter_url($input, $filter);
     $this->assertSame($expected, $result, 'Complex HTML document was correctly processed.');
+
+    $pcre_backtrack_limit = ini_get('pcre.backtrack_limit');
+    // If a PCRE error occurs, we expect to get the same text.
+    $input = $expected = '<p>No url</p>';
+    // Setting the limit to the smallest possible value so that it will break.
+    ini_set('pcre.backtrack_limit', 1);
+    // Make sure we got the same text back without any errors.
+    $result = _filter_url($input, $filter);
+    $this->assertSame($expected, $result, 'Complex HTML document was correctly processed.');
+
+    // Setting limit back to default.
+    ini_set('pcre.backtrack_limit', $pcre_backtrack_limit);
   }
 
   /**
