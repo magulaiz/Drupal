@@ -20,7 +20,7 @@ final class EditorImageLazyLoadTest extends UnitTestCase {
   /**
    * @var \Drupal\editor\Plugin\Filter\EditorImageLazyLoad
    */
-  protected $filter;
+  protected EditorImageLazyLoad $filter;
 
   /**
    * {@inheritdoc}

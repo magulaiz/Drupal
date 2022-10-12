@@ -19,7 +19,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * @Filter(
  *   id = "editor_image_lazy_load",
  *   title = @Translation("Lazy load tracked images uploaded via a Text Editor"),
- *   description = @Translation("Instruct browsers to lazy load images, unless overridden by <code>&lt;img loading=&quot;eager&quot;&gt;</code>."),
+ *   description = @Translation("Instruct browsers to lazy load images, unless overridden by <code>&lt;img loading=&quot;eager&quot;&gt;</code>, adds width and height attributes to all images that don't have them specified."),
  *   type = Drupal\filter\Plugin\FilterInterface::TYPE_TRANSFORM_REVERSIBLE,
  *   weight = 15
  * )
@@ -87,6 +87,9 @@ final class EditorImageLazyLoad extends FilterBase implements ContainerFactoryPl
     // dimensions to avoid Cumulative Layout Shift (CLS).
     foreach ($xpath->query('//img[@data-entity-type="file" and @data-entity-uuid]') as $element) {
       assert($element instanceof \DOMElement);
+      if ($element->hasAttribute('width') || $element->hasAttribute('height')) {
+        continue;
+      }
       $uuid = $element->getAttribute('data-entity-uuid');
       $file = $this->entityRepository->loadEntityByUuid('file', $uuid);
       if ($file instanceof FileInterface) {
@@ -95,10 +98,10 @@ final class EditorImageLazyLoad extends FilterBase implements ContainerFactoryPl
         $height = $image->getHeight();
         // Set dimensions to avoid content layout shift (CLS).
         // @see https://web.dev/cls/
-        if ($width !== NULL && !$element->hasAttribute('width')) {
+        if ($width !== NULL) {
           $element->setAttribute('width', (string) $width);
         }
-        if ($height !== NULL && !$element->hasAttribute('height')) {
+        if ($height !== NULL) {
           $element->setAttribute('height', (string) $height);
         }
       }
