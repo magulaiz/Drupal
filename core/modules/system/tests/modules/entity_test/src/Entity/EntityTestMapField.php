@@ -19,6 +19,7 @@ use Drupal\Core\Field\BaseFieldDefinition;
  *     "langcode" = "langcode",
  *   },
  *   admin_permission = "administer entity_test content",
+ *   storage_schema_version = 2,
  * )
  */
 class EntityTestMapField extends EntityTest {

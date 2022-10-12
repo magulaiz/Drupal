@@ -45,6 +45,7 @@ use Drupal\Core\Field\BaseFieldDefinition;
  *     "delete-form" = "/entity_test_with_bundle/{entity_test_with_bundle}/delete",
  *     "create" = "/entity_test_with_bundle",
  *   },
+ *   storage_schema_version = 2,
  * )
  */
 class EntityTestWithBundle extends ContentEntityBase {

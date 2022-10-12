@@ -23,7 +23,8 @@ use Drupal\Core\Field\BaseFieldDefinition;
  *     "uuid" = "uuid",
  *     "bundle" = "type",
  *     "label" = "name"
- *   }
+ *   },
+ *   storage_schema_version = 2,
  * )
  */
 class EntityTestConstraintViolation extends EntityTest {

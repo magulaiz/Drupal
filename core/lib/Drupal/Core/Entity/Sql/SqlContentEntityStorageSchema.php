@@ -1457,9 +1457,6 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
    *   A partial schema array for the base table.
    */
   protected function processDataTable(ContentEntityTypeInterface $entity_type, array &$schema) {
-    // Marking the respective fields as NOT NULL makes the indexes more
-    // performant.
-    $schema['fields'][$entity_type->getKey('default_langcode')]['not null'] = TRUE;
   }
 
   /**
@@ -1474,9 +1471,6 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
    *   A partial schema array for the base table.
    */
   protected function processRevisionDataTable(ContentEntityTypeInterface $entity_type, array &$schema) {
-    // Marking the respective fields as NOT NULL makes the indexes more
-    // performant.
-    $schema['fields'][$entity_type->getKey('default_langcode')]['not null'] = TRUE;
   }
 
   /**
@@ -2062,6 +2056,7 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
     $field_name = $storage_definition->getName();
     $base_table = $this->storage->getBaseTable();
     $revision_table = $this->storage->getRevisionTable();
+    $properties = $storage_definition->getPropertyDefinitions();
 
     // Define the initial values, if any.
     $initial_value = $initial_value_from_field = [];
@@ -2093,31 +2088,37 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
       }
     }
 
-    // A shared table contains rows for entities where the field is empty
-    // (since other fields stored in the same table might not be empty), thus
-    // the only columns that can be 'not null' are those for required
-    // properties of required fields. For now, we only hardcode 'not null' to a
-    // few "entity keys", in order to keep their indexes optimized.
-    // @todo Fix this in https://www.drupal.org/node/2841291.
-    $not_null_keys = $this->entityType->getKeys();
-    // Label and the 'revision_translation_affected' fields are not necessarily
-    // required.
-    unset($not_null_keys['label'], $not_null_keys['revision_translation_affected']);
+    $schema_version = $this->entityType->get('storage_schema_version') ?: 1;
+    if ($schema_version >= 2) {
+      // A shared table contains rows for entities where the field is empty
+      // (since other fields stored in the same table might not be empty), thus
+      // the only columns that can be 'not null' are those for required
+      // properties of required fields.
+      $field_storage_is_required = $storage_definition->isStorageRequired();
+    }
+    else {
+      // The legacy behavior is that only entity keys are 'not null'.
+      $not_null_keys = $this->entityType->getKeys();
+      // Label and the 'revision_translation_affected' fields are not
+      // necessarily required.
+      unset($not_null_keys['label'], $not_null_keys['revision_translation_affected']);
+      $field_storage_is_required = in_array($field_name, $not_null_keys);
+    }
     // Because entity ID and revision ID are both serial fields in the base and
     // revision table respectively, the revision ID is not known yet, when
     // inserting data into the base table. Instead the revision ID in the base
     // table is updated after the data has been inserted into the revision
     // table. For this reason the revision ID field cannot be marked as NOT
     // NULL.
-    if ($table_name == $base_table) {
-      unset($not_null_keys['revision']);
+    if ($table_name == $this->storage->getBaseTable() && $field_name === $this->entityType->getKey('revision')) {
+      $field_storage_is_required = FALSE;
     }
 
     foreach ($column_mapping as $field_column_name => $schema_field_name) {
       $column_schema = $field_schema['columns'][$field_column_name];
 
       $schema['fields'][$schema_field_name] = $column_schema;
-      $schema['fields'][$schema_field_name]['not null'] = in_array($field_name, $not_null_keys);
+      $schema['fields'][$schema_field_name]['not null'] = $field_storage_is_required && $properties[$field_column_name]->isRequired();
 
       // Use the initial value of the field storage, if available.
       if ($initial_value && isset($initial_value[$field_column_name])) {

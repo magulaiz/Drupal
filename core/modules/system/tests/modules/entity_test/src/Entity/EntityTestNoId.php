@@ -19,6 +19,7 @@ namespace Drupal\entity_test\Entity;
  *   links = {
  *     "add-form" = "/entity_test_no_id/add",
  *   },
+ *   storage_schema_version = 2,
  * )
  */
 class EntityTestNoId extends EntityTest {
