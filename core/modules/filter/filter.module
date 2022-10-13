@@ -447,6 +447,9 @@ function template_preprocess_filter_tips(&$variables) {
  * expression that could possibly match all of the cases in one pass.
  */
 function _filter_url($text, $filter) {
+  // Store the current text in case any of the preg_* functions fail.
+  $saved_text = $text;
+
   // Tags to skip and not recurse into.
   $ignore_tags = 'a|script|style|code|pre';
 
@@ -523,8 +526,7 @@ function _filter_url($text, $filter) {
     // markup, especially a '>'. Therefore, remove all comment contents and add
     // them back later.
     _filter_url_escape_comments('', TRUE);
-    // Default to the current text in case preg_replace_callback fails.
-    $text = preg_replace_callback('`<!--(.*?)-->`s', '_filter_url_escape_comments', $text) ?: $text;
+    $text = preg_replace_callback('`<!--(.*?)-->`s', '_filter_url_escape_comments', $text);
 
     // Split at all tags; ensures that no tags or attributes are processed.
     $chunks = preg_split('/(<.+?>)/is', $text, -1, PREG_SPLIT_DELIM_CAPTURE);
@@ -575,9 +577,11 @@ function _filter_url($text, $filter) {
 
     // Revert to the original comment contents
     _filter_url_escape_comments('', FALSE);
-    // Default to the current text in case preg_replace_callback fails.
-    $text = preg_replace_callback('`<!--(.*?)-->`', '_filter_url_escape_comments', $text) ?: $text;
+    $text = preg_replace_callback('`<!--(.*?)-->`', '_filter_url_escape_comments', $text);
   }
+
+  // If there is no text at this point revert to the previous text.
+  $text = strlen((string) $text) > 0 ? $text : $saved_text;
 
   return $text;
 }
