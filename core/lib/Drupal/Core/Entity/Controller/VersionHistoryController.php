@@ -89,7 +89,7 @@ class VersionHistoryController extends ControllerBase {
     }
 
     $url = $revision->toUrl('revision-revert-form');
-    // Merge in cacheability after
+    // @todo Merge in cacheability after
     // https://www.drupal.org/project/drupal/issues/2473873.
     if (!$url->access()) {
       return NULL;
@@ -116,7 +116,7 @@ class VersionHistoryController extends ControllerBase {
     }
 
     $url = $revision->toUrl('revision-delete-form');
-    // Merge in cacheability after
+    // @todo Merge in cacheability after
     // https://www.drupal.org/project/drupal/issues/2473873.
     if (!$url->access()) {
       return NULL;
