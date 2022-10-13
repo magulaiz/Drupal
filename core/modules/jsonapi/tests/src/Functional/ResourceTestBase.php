@@ -931,8 +931,38 @@ abstract class ResourceTestBase extends BrowserTestBase {
     if (!static::$anonymousUsersCanViewLabels) {
       $expected_403_cacheability = $this->getExpectedUnauthorizedAccessCacheability();
       $reason = $this->getExpectedUnauthorizedAccessMessage('GET');
-      $message = trim("The current user is not allowed to GET the selected resource. $reason");
-      $this->assertResourceErrorResponse(403, $message, $url, $response, '/data', $expected_403_cacheability->getCacheTags(), $expected_403_cacheability->getCacheContexts(), FALSE, 'MISS');
+      $expected_document = [
+        'jsonapi' => static::$jsonApiMember,
+        'errors' => [
+          [
+            'title' => 'Forbidden',
+            'status' => '403',
+            'detail' => trim("The current user is not allowed to GET the selected resource. $reason"),
+            'links' => [
+              'info' => ['href' => HttpExceptionNormalizer::getInfoUrl(403)],
+              'via' => [
+                'href' => $url->setAbsolute()->toString(),
+                'meta' => [
+                  'resourceId' => $this->entity->uuid(),
+                  'resourceVersion' => $this->entity instanceof RevisionableInterface ? $this->entity->getRevisionId() : NULL,
+                ],
+              ],
+            ],
+            'source' => [
+              'pointer' => '/data',
+            ],
+          ],
+        ],
+      ];
+      $this->assertResourceResponse(
+        403,
+        $expected_document,
+        $response,
+        $expected_403_cacheability->getCacheTags(),
+        $expected_403_cacheability->getCacheContexts(),
+        FALSE,
+        'MISS'
+      );
       $this->assertArrayNotHasKey('Link', $response->getHeaders());
     }
     else {
@@ -1063,12 +1093,44 @@ abstract class ResourceTestBase extends BrowserTestBase {
     $message_url = clone $url;
     $path = str_replace($random_uuid, '{entity}', $message_url->setAbsolute()->setOptions(['base_url' => '', 'query' => []])->toString());
     $message = 'The "entity" parameter was not converted for the path "' . $path . '" (route name: "jsonapi.' . static::$resourceTypeName . '.individual")';
-    $this->assertResourceErrorResponse(404, $message, $url, $response, FALSE, ['4xx-response', 'http_response'], ['url.site'], FALSE, 'UNCACHEABLE');
+    $expected_document = [
+      'jsonapi' => static::$jsonApiMember,
+      'errors' => [
+        [
+          'title' => Response::$statusTexts[Response::HTTP_NOT_FOUND],
+          'status' => (string) Response::HTTP_NOT_FOUND,
+          'detail' => $message,
+          'links' => [
+            'info' => ['href' => HttpExceptionNormalizer::getInfoUrl(Response::HTTP_NOT_FOUND)],
+            'via' => [
+              'href' => $url->setAbsolute()->toString(),
+            ],
+          ],
+        ],
+      ],
+    ];
+    $this->assertResourceResponse(
+      Response::HTTP_NOT_FOUND,
+      $expected_document,
+      $response,
+      ['4xx-response', 'http_response'],
+      ['url.site'],
+      FALSE,
+      'UNCACHEABLE'
+    );
 
     // DX: when Accept request header is missing, still 404, same response.
     unset($request_options[RequestOptions::HEADERS]['Accept']);
     $response = $this->request('GET', $url, $request_options);
-    $this->assertResourceErrorResponse(404, $message, $url, $response, FALSE, ['4xx-response', 'http_response'], ['url.site'], FALSE, 'UNCACHEABLE');
+    $this->assertResourceResponse(
+      Response::HTTP_NOT_FOUND,
+      $expected_document,
+      $response,
+      ['4xx-response', 'http_response'],
+      ['url.site'],
+      FALSE,
+      'UNCACHEABLE'
+    );
   }
 
   /**
@@ -2260,13 +2322,59 @@ abstract class ResourceTestBase extends BrowserTestBase {
 
     // DX: 403 when entity contains field without 'edit' access.
     $response = $this->request('PATCH', $url, $request_options);
-    $this->assertResourceErrorResponse(403, "The current user is not allowed to PATCH the selected field (field_rest_test).", $url, $response, '/data/attributes/field_rest_test');
+    $expected_document = [
+      'jsonapi' => static::$jsonApiMember,
+      'errors' => [
+        [
+          'title' => 'Forbidden',
+          'status' => '403',
+          'detail' => 'The current user is not allowed to PATCH the selected field (field_rest_test).',
+          'links' => [
+            'info' => ['href' => HttpExceptionNormalizer::getInfoUrl(403)],
+            'via' => [
+              'href' => $url->setAbsolute()->toString(),
+              'meta' => [
+                'resourceId' => $this->entity->uuid(),
+                'resourceVersion' => $this->entity instanceof RevisionableInterface ? $this->entity->getRevisionId() : NULL,
+              ],
+            ],
+          ],
+          'source' => [
+            'pointer' => '/data/attributes/field_rest_test',
+          ],
+        ],
+      ],
+    ];
+    $this->assertResourceResponse(403, $expected_document, $response);
 
     // DX: 403 when entity trying to update an entity's ID field.
     $request_options[RequestOptions::BODY] = Json::encode($this->makeNormalizationInvalid($this->getPatchDocument(), 'id'));
     $response = $this->request('PATCH', $url, $request_options);
     $id_field_name = $this->entity->getEntityType()->getKey('id');
-    $this->assertResourceErrorResponse(403, "The current user is not allowed to PATCH the selected field ($id_field_name). The entity ID cannot be changed.", $url, $response, "/data/attributes/$id_field_name");
+    $expected_document = [
+      'jsonapi' => static::$jsonApiMember,
+      'errors' => [
+        [
+          'title' => 'Forbidden',
+          'status' => '403',
+          'detail' => "The current user is not allowed to PATCH the selected field ($id_field_name). The entity ID cannot be changed.",
+          'links' => [
+            'info' => ['href' => HttpExceptionNormalizer::getInfoUrl(403)],
+            'via' => [
+              'href' => $url->setAbsolute()->toString(),
+              'meta' => [
+                'resourceId' => $this->entity->uuid(),
+                'resourceVersion' => $this->entity instanceof RevisionableInterface ? $this->entity->getRevisionId() : NULL,
+              ],
+            ],
+          ],
+          'source' => [
+            'pointer' => "/data/attributes/$id_field_name",
+          ],
+        ],
+      ],
+    ];
+    $this->assertResourceResponse(403, $expected_document, $response);
 
     if ($this->entity->getEntityType()->hasKey('uuid')) {
       // DX: 400 when entity trying to update an entity's UUID field.
@@ -2281,7 +2389,30 @@ abstract class ResourceTestBase extends BrowserTestBase {
     // when the value for that field matches the current value. This is allowed
     // in principle, but leads to information disclosure.
     $response = $this->request('PATCH', $url, $request_options);
-    $this->assertResourceErrorResponse(403, "The current user is not allowed to PATCH the selected field (field_rest_test).", $url, $response, '/data/attributes/field_rest_test');
+    $expected_document = [
+      'jsonapi' => static::$jsonApiMember,
+      'errors' => [
+        [
+          'title' => 'Forbidden',
+          'status' => '403',
+          'detail' => 'The current user is not allowed to PATCH the selected field (field_rest_test).',
+          'links' => [
+            'info' => ['href' => HttpExceptionNormalizer::getInfoUrl(403)],
+            'via' => [
+              'href' => $url->setAbsolute()->toString(),
+              'meta' => [
+                'resourceId' => $this->entity->uuid(),
+                'resourceVersion' => $this->entity instanceof RevisionableInterface ? $this->entity->getRevisionId() : NULL,
+              ],
+            ],
+          ],
+          'source' => [
+            'pointer' => '/data/attributes/field_rest_test',
+          ],
+        ],
+      ],
+    ];
+    $this->assertResourceResponse(403, $expected_document, $response);
 
     // DX: 403 when sending PATCH request with updated read-only fields.
     [$modified_entity, $original_values] = static::getModifiedEntityForPatchTesting($this->entity);
@@ -2291,7 +2422,30 @@ abstract class ResourceTestBase extends BrowserTestBase {
     foreach (static::$patchProtectedFieldNames as $patch_protected_field_name => $reason) {
       $request_options[RequestOptions::BODY] = Json::encode($this->normalize($modified_entity, $url));
       $response = $this->request('PATCH', $url, $request_options);
-      $this->assertResourceErrorResponse(403, "The current user is not allowed to PATCH the selected field (" . $patch_protected_field_name . ")." . ($reason !== NULL ? ' ' . $reason : ''), $url->setAbsolute(), $response, '/data/attributes/' . $patch_protected_field_name);
+      $expected_document = [
+        'jsonapi' => static::$jsonApiMember,
+        'errors' => [
+          [
+            'title' => 'Forbidden',
+            'status' => '403',
+            'detail' => trim("The current user is not allowed to PATCH the selected field ($patch_protected_field_name). $reason"),
+            'links' => [
+              'info' => ['href' => HttpExceptionNormalizer::getInfoUrl(403)],
+              'via' => [
+                'href' => $url->setAbsolute()->toString(),
+                'meta' => [
+                  'resourceId' => $this->entity->uuid(),
+                  'resourceVersion' => $this->entity instanceof RevisionableInterface ? $this->entity->getRevisionId() : NULL,
+                ],
+              ],
+            ],
+            'source' => [
+              'pointer' => "/data/attributes/$patch_protected_field_name",
+            ],
+          ],
+        ],
+      ];
+      $this->assertResourceResponse(403, $expected_document, $response);
       $modified_entity->get($patch_protected_field_name)->setValue($original_values[$patch_protected_field_name]);
     }
 
@@ -2745,7 +2899,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
       }
     }
 
-    foreach ($field_sets as $type => $included_paths) {
+    foreach ($field_sets as $included_paths) {
       $this->grantIncludedPermissions($included_paths);
       $query = ['include' => implode(',', $included_paths)];
       $url->setOption('query', $query);
@@ -2889,7 +3043,38 @@ abstract class ResourceTestBase extends BrowserTestBase {
     if ($result instanceof AccessResultReasonInterface && ($reason = $result->getReason()) && !empty($reason)) {
       $detail .= ' ' . $reason;
     }
-    $this->assertResourceErrorResponse(403, $detail, $url, $actual_response, '/data', $expected_cacheability->getCacheTags(), $expected_cacheability->getCacheContexts(), FALSE, 'MISS');
+    $expected_document_403 = [
+      'jsonapi' => static::$jsonApiMember,
+      'errors' => [
+        [
+          'title' => 'Forbidden',
+          'status' => '403',
+          'detail' => $detail,
+          'links' => [
+            'info' => ['href' => HttpExceptionNormalizer::getInfoUrl(403)],
+            'via' => [
+              'href' => $url->setAbsolute()->toString(),
+              'meta' => [
+                'resourceId' => $this->entity->uuid(),
+                'resourceVersion' => (string) $latest_revision_id,
+              ],
+            ],
+          ],
+          'source' => [
+            'pointer' => '/data',
+          ],
+        ],
+      ],
+    ];
+    $this->assertResourceResponse(
+      403,
+      $expected_document_403,
+      $actual_response,
+      $expected_cacheability->getCacheTags(),
+      $expected_cacheability->getCacheContexts(),
+      FALSE,
+      'MISS'
+    );
 
     // Ensure that targeting a revision does not bypass access.
     $actual_response = $this->request('GET', $original_revision_id_url, $request_options);
@@ -2898,7 +3083,38 @@ abstract class ResourceTestBase extends BrowserTestBase {
     if ($result instanceof AccessResultReasonInterface && ($reason = $result->getReason()) && !empty($reason)) {
       $detail .= ' ' . $reason;
     }
-    $this->assertResourceErrorResponse(403, $detail, $url, $actual_response, '/data', $expected_cacheability->getCacheTags(), $expected_cacheability->getCacheContexts(), FALSE, 'MISS');
+    $expected_document_403 = [
+      'jsonapi' => static::$jsonApiMember,
+      'errors' => [
+        [
+          'title' => 'Forbidden',
+          'status' => '403',
+          'detail' => $detail,
+          'links' => [
+            'info' => ['href' => HttpExceptionNormalizer::getInfoUrl(403)],
+            'via' => [
+              'href' => $url->setAbsolute()->toString(),
+              'meta' => [
+                'resourceId' => $this->entity->uuid(),
+                'resourceVersion' => $this->entity instanceof RevisionableInterface ? $this->entity->getRevisionId() : NULL,
+              ],
+            ],
+          ],
+          'source' => [
+            'pointer' => '/data',
+          ],
+        ],
+      ],
+    ];
+    $this->assertResourceResponse(
+      403,
+      $expected_document_403,
+      $actual_response,
+      $expected_cacheability->getCacheTags(),
+      $expected_cacheability->getCacheContexts(),
+      FALSE,
+      'MISS'
+    );
 
     $this->setUpRevisionAuthorization('GET');
 
@@ -3082,7 +3298,38 @@ abstract class ResourceTestBase extends BrowserTestBase {
       $expected_cache_contexts = $expected_cacheability->getCacheContexts();
       $detail = 'The current user is not allowed to GET the selected resource. The user does not have access to the requested version.';
       $message = $result instanceof AccessResultReasonInterface ? trim($detail . ' ' . $result->getReason()) : $detail;
-      $this->assertResourceErrorResponse(403, $message, $url, $actual_response, '/data', $expected_cache_tags, $expected_cache_contexts, FALSE, 'MISS');
+      $expected_document_403 = [
+        'jsonapi' => static::$jsonApiMember,
+        'errors' => [
+          [
+            'title' => 'Forbidden',
+            'status' => '403',
+            'detail' => $message,
+            'links' => [
+              'info' => ['href' => HttpExceptionNormalizer::getInfoUrl(403)],
+              'via' => [
+                'href' => $url->setAbsolute()->toString(),
+                'meta' => [
+                  'resourceId' => $this->entity->uuid(),
+                  'resourceVersion' => (string) $forward_revision_id,
+                ],
+              ],
+            ],
+            'source' => [
+              'pointer' => '/data',
+            ],
+          ],
+        ],
+      ];
+      $this->assertResourceResponse(
+        403,
+        $expected_document_403,
+        $actual_response,
+        $expected_cache_tags,
+        $expected_cache_contexts,
+        FALSE,
+        'MISS'
+      );
       // On the collection URL, we should expect to see the draft omitted from
       // the collection.
       $actual_response = $this->request('GET', $rel_working_copy_collection_url, $request_options);

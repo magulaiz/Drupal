@@ -8,6 +8,7 @@ use Drupal\Core\Cache\Cache;
 use Drupal\Core\Url;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
+use Drupal\jsonapi\Normalizer\HttpExceptionNormalizer;
 use Drupal\node\Entity\Node;
 use Drupal\user\Entity\User;
 use Drupal\user\UserInterface;
@@ -296,7 +297,30 @@ class UserTest extends ResourceTestBase {
 
     // DX: 403 when modifying username without required permission.
     $response = $this->request('PATCH', $url, $request_options);
-    $this->assertResourceErrorResponse(403, 'The current user is not allowed to PATCH the selected field (name).', $url, $response, '/data/attributes/name');
+    $expected_document = [
+      'jsonapi' => static::$jsonApiMember,
+      'errors' => [
+        [
+          'title' => 'Forbidden',
+          'status' => '403',
+          'detail' => 'The current user is not allowed to PATCH the selected field (name).',
+          'links' => [
+            'info' => ['href' => HttpExceptionNormalizer::getInfoUrl(403)],
+            'via' => [
+              'href' => $url->setAbsolute()->toString(),
+              'meta' => [
+                'resourceId' => $this->account->uuid(),
+                'resourceVersion' => NULL,
+              ],
+            ],
+          ],
+          'source' => [
+            'pointer' => '/data/attributes/name',
+          ],
+        ],
+      ],
+    ];
+    $this->assertResourceResponse(403, $expected_document, $response);
 
     $this->grantPermissionsToTestedRole(['change own username']);
 
@@ -369,7 +393,30 @@ class UserTest extends ResourceTestBase {
     $response = $this->request('PATCH', $url, $request_options);
     // Ensure the email address has not changed.
     $this->assertEquals('admin@example.com', $this->entityStorage->loadUnchanged(1)->getEmail());
-    $this->assertResourceErrorResponse(403, 'The current user is not allowed to PATCH the selected field (uid). The entity ID cannot be changed.', $url, $response, '/data/attributes/uid');
+    $expected_document = [
+      'jsonapi' => static::$jsonApiMember,
+      'errors' => [
+        [
+          'title' => 'Forbidden',
+          'status' => '403',
+          'detail' => 'The current user is not allowed to PATCH the selected field (uid). The entity ID cannot be changed.',
+          'links' => [
+            'info' => ['href' => HttpExceptionNormalizer::getInfoUrl(403)],
+            'via' => [
+              'href' => $url->setAbsolute()->toString(),
+              'meta' => [
+                'resourceId' => $this->account->uuid(),
+                'resourceVersion' => NULL,
+              ],
+            ],
+          ],
+          'source' => [
+            'pointer' => '/data/attributes/uid',
+          ],
+        ],
+      ],
+    ];
+    $this->assertResourceResponse(403, $expected_document, $response);
   }
 
   /**

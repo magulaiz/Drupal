@@ -298,7 +298,30 @@ class NodeTest extends ResourceTestBase {
 
     // PATCH request: 403 when creating URL aliases unauthorized.
     $response = $this->request('PATCH', $url, $request_options);
-    $this->assertResourceErrorResponse(403, "The current user is not allowed to PATCH the selected field (path). The following permissions are required: 'create url aliases' OR 'administer url aliases'.", $url, $response, '/data/attributes/path');
+    $expected_document = [
+      'jsonapi' => static::$jsonApiMember,
+      'errors' => [
+        [
+          'title' => 'Forbidden',
+          'status' => '403',
+          'detail' => "The current user is not allowed to PATCH the selected field (path). The following permissions are required: 'create url aliases' OR 'administer url aliases'.",
+          'links' => [
+            'info' => ['href' => HttpExceptionNormalizer::getInfoUrl(403)],
+            'via' => [
+              'href' => $url->setAbsolute()->toString(),
+              'meta' => [
+                'resourceId' => $this->entity->uuid(),
+                'resourceVersion' => $this->entity->getRevisionId(),
+              ],
+            ],
+          ],
+          'source' => [
+            'pointer' => '/data/attributes/path',
+          ],
+        ],
+      ],
+    ];
+    $this->assertResourceResponse(403, $expected_document, $response);
 
     // Grant permission to create URL aliases.
     $this->grantPermissionsToTestedRole(['create url aliases']);
@@ -337,7 +360,13 @@ class NodeTest extends ResourceTestBase {
           'detail' => 'The current user is not allowed to GET the selected resource.',
           'links' => [
             'info' => ['href' => HttpExceptionNormalizer::getInfoUrl(403)],
-            'via' => ['href' => $url->setAbsolute()->toString()],
+            'via' => [
+              'href' => $url->setAbsolute()->toString(),
+              'meta' => [
+                'resourceId' => $this->entity->uuid(),
+                'resourceVersion' => $this->entity->getRevisionId(),
+              ],
+            ],
           ],
           'source' => [
             'pointer' => '/data',
@@ -379,7 +408,7 @@ class NodeTest extends ResourceTestBase {
     $uuid = $this->entity->uuid();
     $cache = \Drupal::service('render_cache')->get([
       '#cache' => [
-        'keys' => ['node--camelids', $uuid],
+        'keys' => ['node--camelids', $uuid, 'id:' . $this->entity->getRevisionId()],
         'bin' => 'jsonapi_normalizations',
       ],
     ]);
@@ -415,7 +444,7 @@ class NodeTest extends ResourceTestBase {
   protected function assertNormalizedFieldsAreCached(array $field_names): void {
     $cache = \Drupal::service('render_cache')->get([
       '#cache' => [
-        'keys' => ['node--camelids', $this->entity->uuid()],
+        'keys' => ['node--camelids', $this->entity->uuid(), 'id:' . $this->entity->getRevisionId()],
         'bin' => 'jsonapi_normalizations',
       ],
     ]);
@@ -522,6 +551,107 @@ class NodeTest extends ResourceTestBase {
     $this->rebuildAll();
     $response = $this->request('GET', $collection_filter_url, $request_options);
     $this->assertContains('user.node_grants:view', explode(' ', $response->getHeader('X-Drupal-Cache-Contexts')[0]));
+  }
+
+  /**
+   * Tests normalizations' cache of multiple revisions of the same entity.
+   */
+  public function testSameEntityRevisionsNormalizationCache(): void {
+    static::assertTrue(
+      $this->container
+        ->get('module_installer')
+        ->install(['jsonapi_test_entity_revisions_normalization_cache']),
+    );
+
+    $revision_ids = [];
+    $clones = [];
+
+    // Produce revisions.
+    foreach (range(1, 3) as $i) {
+      $title = sprintf('Clone #%d: "%s"', $i, $this->entity->getTitle());
+      $clone = clone $this->entity;
+      $clone->isDefaultRevision(FALSE);
+      $clone->setNewRevision(TRUE);
+      $clone->setPublished();
+      $clone->setTitle($title);
+      $clone->save();
+      $revision_ids[] = (int) $clone->getRevisionId();
+      $clones[] = [
+        // Normalizers will cast these to numbers.
+        'drupal_internal__nid' => (int) $clone->id(),
+        'drupal_internal__vid' => (int) $clone->getRevisionId(),
+        'title' => $title,
+      ];
+    }
+
+    $url_jsonapi = Url::fromRoute(sprintf('jsonapi.%s.collection', static::$resourceTypeName));
+    $url_custom = Url::fromRoute('jsonapi_test_entity_revisions_normalization_cache', [
+      'entity_type_id' => $this->entity->getEntityTypeId(),
+      'entity_ids' => implode('-', $revision_ids),
+      'type' => 'revisions',
+    ]);
+
+    $this->drupalLogin($this->account);
+
+    $get_normalization = function (Url $url): array {
+      $response = $this->request('GET', $url, []);
+      return Json::decode((string) $response->getBody());
+    };
+
+    $assert_omissions = static function (array $normalization, array $expected): void {
+      static::assertSame($expected, array_values(array_filter($normalization['meta']['omitted']['links'], static function (string $key): bool {
+        return preg_match('/^item--[a-zA-Z0-9]{7}$/', $key) === 1;
+      }, ARRAY_FILTER_USE_KEY)));
+    };
+
+    $assert_attributes = static function (array $normalization, array $expected): void {
+      // This also assert ordering.
+      static::assertSame($expected, array_map(static function (array $item) {
+        return [
+          'drupal_internal__nid' => $item['attributes']['drupal_internal__nid'],
+          'drupal_internal__vid' => $item['attributes']['drupal_internal__vid'],
+          'title' => $item['attributes']['title'],
+        ];
+      }, $normalization['data']));
+    };
+
+    $this->grantPermissionsToTestedRole(['access content']);
+
+    // Build the cache by visiting the default collection.
+    $assert_attributes($get_normalization($url_jsonapi), [
+      [
+        'drupal_internal__nid' => (int) $this->entity->id(),
+        'drupal_internal__vid' => (int) $this->entity->getRevisionId(),
+        'title' => $this->entity->getTitle(),
+      ],
+    ]);
+
+    // Missing access to the versions history results in omissions. Produce an
+    // expected array of omissions with as many items as we have clones.
+    $assert_omissions($get_normalization($url_custom), array_map(function (int $revision_id): array {
+      return [
+        'href' => sprintf(
+          '%s/jsonapi/%s/%s/%s',
+          $this->baseUrl,
+          $this->entity->getEntityTypeId(),
+          $this->entity->bundle(),
+          $this->entity->uuid(),
+        ),
+        'meta' => [
+          'rel' => 'item',
+          'detail' => 'The current user is not allowed to GET the selected resource. The user does not have access to the requested version.',
+          /** @see \Drupal\jsonapi\Normalizer\EntityAccessDeniedHttpExceptionNormalizer::buildErrorObjects() */
+          /** @see \Drupal\jsonapi\Normalizer\JsonApiDocumentTopLevelNormalizer::normalizeOmissionsLinks() */
+          'resourceId' => $this->entity->uuid(),
+          'resourceVersion' => (string) $revision_id,
+        ],
+      ];
+    }, $revision_ids));
+
+    // Granting permission to access version history.
+    $this->grantPermissionsToTestedRole([sprintf('view %s revisions', $this->entity->bundle())]);
+
+    $assert_attributes($get_normalization($url_custom), $clones);
   }
 
 }

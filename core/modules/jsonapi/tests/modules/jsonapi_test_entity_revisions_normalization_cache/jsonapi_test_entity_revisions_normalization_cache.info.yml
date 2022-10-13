@@ -1,0 +1,8 @@
+name: jsonapi_test_entity_revisions_normalization_cache
+type: module
+description: 'Provides extended `jsonapi.entity_resource` for programmatic use.'
+package: Testing
+
+dependencies:
+  - drupal:jsonapi
+  - drupal:node

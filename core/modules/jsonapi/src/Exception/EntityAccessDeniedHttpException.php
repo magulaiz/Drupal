@@ -7,6 +7,7 @@ use Drupal\Core\Access\AccessResultReasonInterface;
 use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\DependencyInjection\DependencySerializationTrait;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\RevisionableInterface;
 use Drupal\Core\Http\Exception\CacheableAccessDeniedHttpException;
 use Drupal\jsonapi\JsonApiResource\ResourceIdentifier;
 use Drupal\jsonapi\JsonApiResource\ResourceIdentifierInterface;
@@ -66,9 +67,13 @@ class EntityAccessDeniedHttpException extends CacheableAccessDeniedHttpException
       'pointer' => $pointer,
       'reason' => NULL,
       'relationship_field' => $relationship_field,
+      'revision_id' => NULL,
     ];
     if ($entity_access instanceof AccessResultReasonInterface) {
       $error['reason'] = $entity_access->getReason();
+    }
+    if ($entity instanceof RevisionableInterface) {
+      $error['revision_id'] = $entity->getRevisionId();
     }
     $this->error = $error;
     // @todo: remove this ternary operation in https://www.drupal.org/project/drupal/issues/2997594.

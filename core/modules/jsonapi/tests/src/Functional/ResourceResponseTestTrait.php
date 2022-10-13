@@ -120,8 +120,7 @@ trait ResourceResponseTestTrait {
    * @see \GuzzleHttp\ClientInterface::request()
    */
   protected function getExpectedIncludedResourceResponse(array $include_paths, array $request_options) {
-    $resource_type = $this->resourceType;
-    $resource_data = array_reduce($include_paths, function ($data, $path) use ($request_options, $resource_type) {
+    $resource_data = array_reduce($include_paths, function ($data, $path) use ($request_options) {
       $field_names = explode('.', $path);
       /** @var \Drupal\Core\Entity\EntityInterface $entity */
       $entity = $this->entity;
@@ -517,6 +516,11 @@ trait ResourceResponseTestTrait {
     }
     if ($via_link) {
       $error['links']['via']['href'] = $via_link->setAbsolute()->toString();
+
+      if (!$relationship_field_name) {
+        $error['links']['via']['meta']['resourceId'] = $entity->uuid();
+        $error['links']['via']['meta']['resourceVersion'] = $entity instanceof RevisionableInterface ? $entity->getRevisionId() : NULL;
+      }
     }
 
     return (new CacheableResourceResponse([
@@ -594,12 +598,19 @@ trait ResourceResponseTestTrait {
       ],
     ];
     foreach ($errors as $error) {
-      $omitted['links']['item--' . substr(Crypt::hashBase64($error['links']['via']['href']), 0, 7)] = [
-        'href' => $error['links']['via']['href'],
-        'meta' => [
-          'detail' => $error['detail'],
-          'rel' => 'item',
-        ],
+      $link_via = $error['links']['via'];
+      $meta = [
+        'rel' => 'item',
+        'detail' => $error['detail'],
+      ];
+
+      if (isset($link_via['meta'])) {
+        $meta += $link_via['meta'];
+      }
+
+      $omitted['links']['item--' . substr(Crypt::hashBase64($link_via['meta']['resourceVersion'] ?? $link_via['href']), 0, 7)] = [
+        'href' => $link_via['href'],
+        'meta' => $meta,
       ];
     }
     return $omitted;

@@ -97,9 +97,7 @@ class ResourceObjectNormalizationCacher implements EventSubscriberInterface {
         static::RESOURCE_CACHE_SUBSET_FIELDS,
       ]
     );
-    $resource_type = $object->getResourceType();
-    $key = $resource_type->getTypeName() . ':' . $object->getId();
-    $this->toCache[$key] = [$object, $normalization_parts];
+    $this->toCache[] = [$object, $normalization_parts];
   }
 
   /**
@@ -110,8 +108,7 @@ class ResourceObjectNormalizationCacher implements EventSubscriberInterface {
    */
   public function onTerminate(TerminateEvent $event) {
     foreach ($this->toCache as $value) {
-      [$object, $normalization_parts] = $value;
-      $this->set($object, $normalization_parts);
+      $this->set(...$value);
     }
   }
 
@@ -162,9 +159,16 @@ class ResourceObjectNormalizationCacher implements EventSubscriberInterface {
    * @see \Drupal\dynamic_page_cache\EventSubscriber\DynamicPageCacheSubscriber::$dynamicPageCacheRedirectRenderArray
    */
   protected static function generateLookupRenderArray(ResourceObject $object) {
+    $resource_type = $object->getResourceType();
+    $keys = [$resource_type->getTypeName(), $object->getId()];
+
+    if ($resource_type->isVersionable()) {
+      $keys[] = $object->getVersionIdentifier();
+    }
+
     return [
       '#cache' => [
-        'keys' => [$object->getResourceType()->getTypeName(), $object->getId()],
+        'keys' => $keys,
         'bin' => 'jsonapi_normalizations',
       ],
     ];
