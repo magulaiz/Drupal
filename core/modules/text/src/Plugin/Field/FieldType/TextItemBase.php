@@ -28,6 +28,7 @@ abstract class TextItemBase extends FieldItemBase {
       ->setLabel(t('Processed text'))
       ->setDescription(t('The text with the text format applied.'))
       ->setComputed(TRUE)
+      ->setReadOnly(TRUE)
       ->setClass('\Drupal\text\TextProcessed')
       ->setSetting('text source', 'value')
       ->setInternal(FALSE);
@@ -60,7 +61,8 @@ abstract class TextItemBase extends FieldItemBase {
     foreach ($this->definition->getPropertyDefinitions() as $property => $definition) {
       if ($definition->getClass() == '\Drupal\text\TextProcessed') {
         if ($property_name == 'format' || ($definition->getSetting('text source') == $property_name)) {
-          $this->writePropertyValue($property, NULL);
+          // @todo figure out another way; this need support from Field/Typed Data APIs.
+          // $this->writePropertyValue($property, NULL);
         }
       }
     }

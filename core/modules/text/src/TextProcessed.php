@@ -69,11 +69,7 @@ class TextProcessed extends TypedData implements CacheableDependencyInterface {
    * {@inheritdoc}
    */
   public function setValue($value, $notify = TRUE) {
-    $this->processed = $value;
-    // Notify the parent of any changes.
-    if ($notify && isset($this->parent)) {
-      $this->parent->onChange($this->name);
-    }
+    // Disabled in https://www.drupal.org/i/2972988
   }
 
   /**
