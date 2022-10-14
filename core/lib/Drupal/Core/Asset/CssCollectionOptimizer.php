@@ -136,6 +136,8 @@ REGEXP;
               $uri = $this->dumper->dump($data, 'css');
               // Set the URI for this group's aggregate file.
               $css_assets[$order]['data'] = $uri;
+              // Implement SRI.
+              $this->addSriAttributes($css_assets[$order], $data);
               // Persist the URI for this aggregate file.
               $map[$key] = $uri;
               $this->state->set('drupal_css_cache_files', $map);
@@ -143,6 +145,7 @@ REGEXP;
             else {
               // Use the persisted URI for the optimized CSS file.
               $css_assets[$order]['data'] = $uri;
+              $this->addSriAttributes($css_assets[$order], file_get_contents($uri));
             }
             $css_assets[$order]['preprocessed'] = TRUE;
           }
@@ -158,6 +161,28 @@ REGEXP;
     }
 
     return $css_assets;
+  }
+
+  /**
+   * Implement SRI for a given group of CSS assets.
+   *
+   * @param array $css_assets
+   *   A group of CSS assets.
+   * @param string $data
+   *   Content of the asset file.
+   */
+  protected function addSriAttributes(array &$css_assets, string $data): void {
+    if (!isset($css_assets['attributes']['integrity'])) {
+      $hash = base64_encode(hash('sha384', $data, TRUE));
+      $attributes = [
+        'integrity' => 'sha384-' . $hash,
+        'crossorigin' => 'anonymous',
+      ];
+      if (!isset($css_assets['attributes'])) {
+        $css_assets['attributes'] = [];
+      }
+      $css_assets['attributes'] = array_merge($attributes, $css_assets['attributes']);
+    }
   }
 
   /**
