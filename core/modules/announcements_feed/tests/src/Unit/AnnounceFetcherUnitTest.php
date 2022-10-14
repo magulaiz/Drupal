@@ -23,11 +23,11 @@ class AnnounceFetcherUnitTest extends UnitTestCase {
    * {@inheritdoc}
    */
   public function setUp():void {
-    $this->httpClient = $this->createMock('GuzzleHttp\ClientInterface');
-    $this->config = $this->createMock('Drupal\Core\Config\ConfigFactoryInterface');
-    $this->tempStore = $this->createMock('Drupal\Core\KeyValueStore\KeyValueExpirableFactory');
-    $this->logger = $this->createMock('Psr\Log\LoggerInterface');
-    $this->fetcher = new AnnounceFetcher($this->httpClient, $this->config, $this->tempStore, $this->logger, 'https://www.drupal.org/announcements.json');
+    $httpClient = $this->createMock('GuzzleHttp\ClientInterface');
+    $config = $this->createMock('Drupal\Core\Config\ConfigFactoryInterface');
+    $tempStore = $this->createMock('Drupal\Core\KeyValueStore\KeyValueExpirableFactory');
+    $logger = $this->createMock('Psr\Log\LoggerInterface');
+    $this->fetcher = new AnnounceFetcher($httpClient, $config, $tempStore, $logger, 'https://www.drupal.org/announcements.json');
   }
 
   /**

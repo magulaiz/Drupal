@@ -32,8 +32,8 @@ class AccessAnnouncementTest extends OffCanvasTestBase {
    */
   public function setUp():void {
     parent::setUp();
-    $this->response_json = $this->buildUrl('/announce-feed-json/community-feeds');
-    AnnounceTestHttpClient::setAnnounceTestEndpoint($this->response_json);
+    $response_json = $this->buildUrl('/announce-feed-json/community-feeds');
+    AnnounceTestHttpClient::setAnnounceTestEndpoint($response_json);
   }
 
   /**
