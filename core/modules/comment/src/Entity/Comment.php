@@ -330,7 +330,8 @@ class Comment extends EditorialContentEntityBase implements CommentInterface {
       ->setSetting('is_ascii', TRUE)
       ->setSetting('max_length', FieldStorageConfig::NAME_MAX_LENGTH);
 
-    // Hide the revision log message field by default.
+    // @todo Keep this field hidden until we have a revision UI for comments.
+    // @see https://www.drupal.org/project/drupal/issues/2350939
     $fields['revision_log_message']->setDisplayOptions('form', [
       'region' => 'hidden',
     ]);
