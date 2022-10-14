@@ -905,11 +905,11 @@ class FilterKernelTest extends KernelTestBase {
     // Case of a small and simple HTML document.
     $input = $expected = '<p>www.test.com</p>';
     $result = _filter_url($input, $filter);
-    $this->assertSame($expected, $result, 'Simple HTML document was left intact when PCRE errors occured.');
+    $this->assertSame($expected, $result, 'Simple HTML document was left intact when PCRE errors occurred.');
     // Case of a complex HTML document.
     $input = $expected = file_get_contents($path . '/filter.url-input.txt');
     $result = _filter_url($input, $filter);
-    $this->assertSame($expected, $result, 'Complex HTML document was left intact when PCRE errors occured.');
+    $this->assertSame($expected, $result, 'Complex HTML document was left intact when PCRE errors occurred.');
 
     // Setting limit back to default.
     ini_set('pcre.backtrack_limit', $pcre_backtrack_limit);
