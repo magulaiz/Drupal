@@ -113,3 +113,29 @@ function comment_post_update_make_comment_revisionable(&$sandbox) {
 
   return t('Comments have been converted to be revisionable.');
 }
+
+/**
+ * Set initial values for new revision fields.
+ */
+function comment_post_update_set_initial_revision_field_values(&$sandbox) {
+  $connection = \Drupal::database();
+  $fields = [
+    'revision_created' => 'created',
+    'revision_user' => 'uid',
+  ];
+
+  $definition = \Drupal::entityTypeManager()->getDefinition('comment');
+  $dataTable = $definition->getDataTable();
+  $revisionTable = $definition->getRevisionTable();
+
+  foreach ($fields as $newFieldName => $existingFieldName) {
+    $subQuery = $connection->select($dataTable, 'cfd')
+      ->fields('cfd', [$existingFieldName])
+      ->where("$revisionTable.cid = cfd.cid AND $revisionTable.revision_id = cfd.revision_id AND $revisionTable.langcode = cfd.langcode");
+
+    $connection->update($revisionTable)
+      ->expression($newFieldName, $subQuery)
+      ->isNull($newFieldName)
+      ->execute();
+  }
+}
