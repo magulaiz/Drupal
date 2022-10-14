@@ -12,6 +12,7 @@ use Drupal\Core\Entity\EntityConstraintViolationListInterface;
 use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Entity\EntityRepositoryInterface;
 use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
+use Drupal\Core\Entity\Exception\UndefinedLinkTemplateException;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Link;
 use Drupal\Core\Render\RendererInterface;
@@ -373,7 +374,18 @@ class CommentForm extends ContentEntityForm {
     $comment = $this->entity;
     $entity = $comment->getCommentedEntity();
     $field_name = $comment->getFieldName();
-    $uri = $entity->toUrl();
+
+    // @todo https://www.drupal.org/project/drupal/issues/3186448
+    try{
+      $uri = $entity->toUrl();
+    } catch (UndefinedLinkTemplateException $e){
+      $request = \Drupal::request();
+      $referer = $request->headers->get('referer');
+      $host = \Drupal::request()->getSchemeAndHttpHost();
+      $alias = substr($referer, strlen($host));
+      $uri = Url::fromUri("internal:" . $alias);
+    }
+
     $logger = $this->logger('comment');
 
     if ($this->currentUser->hasPermission('post comments') && ($this->currentUser->hasPermission('administer comments') || $entity->{$field_name}->status == CommentItemInterface::OPEN)) {
