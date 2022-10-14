@@ -21,6 +21,8 @@ class CommandLineOrUnsafeMethod implements RequestPolicyInterface {
     if ($this->isCli() || !$request->isMethodCacheable()) {
       return static::DENY;
     }
+
+    return NULL;
   }
 
   /**

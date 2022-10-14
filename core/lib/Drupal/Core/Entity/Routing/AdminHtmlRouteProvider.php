@@ -22,6 +22,8 @@ class AdminHtmlRouteProvider extends DefaultHtmlRouteProvider {
       $route->setOption('_admin_route', TRUE);
       return $route;
     }
+
+    return NULL;
   }
 
   /**
@@ -32,6 +34,8 @@ class AdminHtmlRouteProvider extends DefaultHtmlRouteProvider {
       $route->setOption('_admin_route', TRUE);
       return $route;
     }
+
+    return NULL;
   }
 
   /**
@@ -42,6 +46,8 @@ class AdminHtmlRouteProvider extends DefaultHtmlRouteProvider {
       $route->setOption('_admin_route', TRUE);
       return $route;
     }
+
+    return NULL;
   }
 
   /**
@@ -52,6 +58,8 @@ class AdminHtmlRouteProvider extends DefaultHtmlRouteProvider {
       $route->setOption('_admin_route', TRUE);
       return $route;
     }
+
+    return NULL;
   }
 
   /**
@@ -62,6 +70,8 @@ class AdminHtmlRouteProvider extends DefaultHtmlRouteProvider {
       $route->setOption('_admin_route', TRUE);
       return $route;
     }
+
+    return NULL;
   }
 
 }

@@ -432,6 +432,8 @@ function _batch_next_set() {
     }
     return TRUE;
   }
+
+  return NULL;
 }
 
 /**
