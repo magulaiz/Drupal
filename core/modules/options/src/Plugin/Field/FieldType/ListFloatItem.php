@@ -84,9 +84,9 @@ class ListFloatItem extends ListItemBase {
    * {@inheritdoc}
    */
   protected static function validateAllowedValue($option) {
-    if (!is_numeric($option)) {
-      return new TranslatableMarkup('Allowed values list: each key must be a valid integer or decimal.');
-    }
+    return !is_numeric($option) ?
+      new TranslatableMarkup('Allowed values list: each key must be a valid integer or decimal.')
+      : NULL;
   }
 
   /**

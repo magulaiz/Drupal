@@ -400,9 +400,7 @@ class ForumManager implements ForumManagerInterface {
         ->fetchAllAssoc('tid');
     }
 
-    if (!empty($this->forumStatistics[$tid])) {
-      return $this->forumStatistics[$tid];
-    }
+    return $this->forumStatistics[$tid] ?? NULL;
   }
 
   /**

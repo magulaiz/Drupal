@@ -24,9 +24,13 @@ class FieldUI {
    */
   public static function getOverviewRouteInfo($entity_type_id, $bundle) {
     $entity_type = \Drupal::entityTypeManager()->getDefinition($entity_type_id);
-    if ($entity_type->get('field_ui_base_route')) {
-      return new Url("entity.{$entity_type_id}.field_ui_fields", static::getRouteBundleParameter($entity_type, $bundle));
-    }
+
+    return $entity_type->get('field_ui_base_route') ?
+      new Url(
+        "entity.{$entity_type_id}.field_ui_fields",
+        static::getRouteBundleParameter($entity_type, $bundle)
+      )
+      : NULL;
   }
 
   /**

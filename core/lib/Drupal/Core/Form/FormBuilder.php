@@ -644,6 +644,8 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
     if (!$form_state->isRebuilding() && $form_state->isCached()) {
       $this->setCache($form['#build_id'], $unprocessed_form, $form_state);
     }
+
+    return NULL;
   }
 
   /**

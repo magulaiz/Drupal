@@ -458,13 +458,10 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
     }
 
     if ($section) {
-      if (!empty($sections[$section])) {
-        return $sections[$section];
-      }
+      return $sections[$section] ?? [];
     }
-    else {
-      return $sections;
-    }
+
+    return $sections;
   }
 
   protected function defineOptions() {
@@ -727,11 +724,11 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
           return $display_id;
         }
       }
+
+      return NULL;
     }
-    else {
-      return $display_id;
-    }
-    // Fall-through returns NULL.
+
+    return $display_id;
   }
 
   /**
@@ -746,6 +743,8 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
     if ($display_id && $this->view->displayHandlers->has($display_id) && is_object($this->view->displayHandlers->get($display_id))) {
       return $this->view->displayHandlers->get($display_id)->getPath();
     }
+
+    return NULL;
   }
 
   /**
@@ -793,6 +792,8 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
     if (\array_key_exists($option, $this->options)) {
       return $this->options[$option];
     }
+
+    return NULL;
   }
 
   /**
@@ -2124,6 +2125,8 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
         '#view' => $this->view,
       ];
     }
+
+    return NULL;
   }
 
   /**

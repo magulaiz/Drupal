@@ -25,6 +25,8 @@ class DurationIso8601 extends StringData implements DurationInterface {
       // constructor.
       return new \DateInterval($this->value);
     }
+
+    return NULL;
   }
 
   /**

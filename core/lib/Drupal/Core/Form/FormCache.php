@@ -136,6 +136,8 @@ class FormCache implements FormCacheInterface {
         return $form;
       }
     }
+
+    return NULL;
   }
 
   /**

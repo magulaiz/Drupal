@@ -499,6 +499,8 @@ class ConfigurableLanguageManager extends LanguageManager implements Configurabl
     if (isset($this->negotiatedLanguages[$type]) && isset($this->negotiatedMethods[$type])) {
       return $this->negotiatedMethods[$type];
     }
+
+    return NULL;
   }
 
 }

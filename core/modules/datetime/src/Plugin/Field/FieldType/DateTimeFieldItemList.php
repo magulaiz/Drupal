@@ -58,6 +58,8 @@ class DateTimeFieldItemList extends FieldItemList {
 
       return $element;
     }
+
+    return [];
   }
 
   /**

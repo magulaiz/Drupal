@@ -647,6 +647,10 @@ function _filter_url_parse_partial_links($match) {
  *   (optional) A Boolean indicating whether to escape (TRUE) or unescape
  *   comments (FALSE). Defaults to NULL, indicating neither. If TRUE, statically
  *   cached $comments are reset.
+ *
+ * @return null|string
+ *   Returns NULL if the $escape parameter was not NULL,
+ *   otherwise returns the first group from $match as HTML comment string.
  */
 function _filter_url_escape_comments($match, $escape = NULL) {
   static $mode, $comments = [];
@@ -656,7 +660,7 @@ function _filter_url_escape_comments($match, $escape = NULL) {
     if ($escape) {
       $comments = [];
     }
-    return;
+    return NULL;
   }
 
   // Replace all HTML comments with a '<!-- [hash] -->' placeholder.

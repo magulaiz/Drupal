@@ -974,6 +974,8 @@ function batch_process($redirect = NULL, Url $url = NULL, $redirect_callback = N
       _batch_process();
     }
   }
+
+  return NULL;
 }
 
 /**
@@ -1049,6 +1051,8 @@ function _batch_queue($batch_set) {
     }
     return $queues[$class][$name];
   }
+
+  return NULL;
 }
 
 /**
