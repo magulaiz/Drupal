@@ -591,6 +591,8 @@ abstract class ArgumentPluginBase extends HandlerBase implements CacheableDepend
       if (!empty($defaults[$which])) {
         return $defaults[$which];
       }
+
+      return NULL;
     }
     else {
       return $defaults;
@@ -849,10 +851,9 @@ abstract class ArgumentPluginBase extends HandlerBase implements CacheableDepend
    * Get a default argument, if available.
    */
   public function getDefaultArgument() {
-    $plugin = $this->getPlugin('argument_default');
-    if ($plugin) {
-      return $plugin->getArgument();
-    }
+    return $this
+      ->getPlugin('argument_default')
+      ?->getArgument();
   }
 
   /**

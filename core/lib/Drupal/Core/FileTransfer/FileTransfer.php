@@ -108,7 +108,7 @@ abstract class FileTransfer {
    * @param string $name
    *   The name of the variable to return.
    *
-   * @return string|bool
+   * @return null|string|bool
    *   The variable specified in $name.
    */
   public function __get($name) {
@@ -121,6 +121,8 @@ abstract class FileTransfer {
       $this->setChroot();
       return $this->chrootPath;
     }
+
+    return NULL;
   }
 
   /**

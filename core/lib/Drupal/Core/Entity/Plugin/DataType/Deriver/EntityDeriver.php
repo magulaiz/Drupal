@@ -78,9 +78,8 @@ class EntityDeriver implements ContainerDeriverInterface {
       return $this->derivatives[$derivative_id];
     }
     $this->getDerivativeDefinitions($base_plugin_definition);
-    if (isset($this->derivatives[$derivative_id])) {
-      return $this->derivatives[$derivative_id];
-    }
+
+    return $this->derivatives[$derivative_id] ?? NULL;
   }
 
   /**

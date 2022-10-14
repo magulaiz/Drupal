@@ -40,6 +40,8 @@ class DenyAdminRoutes implements ResponsePolicyInterface {
     if (($route = $this->routeMatch->getRouteObject()) && $route->getOption('_admin_route')) {
       return static::DENY;
     }
+
+    return NULL;
   }
 
 }

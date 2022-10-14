@@ -441,6 +441,8 @@ function comment_node_search_result(EntityInterface $node) {
   if ($comments > 0 || $open) {
     return ['comment' => \Drupal::translation()->formatPlural($comments, '1 comment', '@count comments')];
   }
+
+  return NULL;
 }
 
 /**

@@ -423,9 +423,9 @@ class EntityResource extends ResourceBase implements DependentPluginInterface {
    * {@inheritdoc}
    */
   public function calculateDependencies() {
-    if (isset($this->entityType)) {
-      return ['module' => [$this->entityType->getProvider()]];
-    }
+    return isset($this->entityType) ?
+      ['module' => [$this->entityType->getProvider()]]
+      : [];
   }
 
   /**

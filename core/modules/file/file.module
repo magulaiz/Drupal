@@ -392,7 +392,7 @@ function file_file_download($uri) {
   $file_repository = \Drupal::service('file.repository');
   $file = $file_repository->loadByUri($uri);
   if (!$file) {
-    return;
+    return NULL;
   }
 
   // Find out if a temporary file is still used in the system.
@@ -418,7 +418,7 @@ function file_file_download($uri) {
   // an image preview on a node/add form) in which case, allow download by the
   // file's owner.
   if (empty($references) && ($file->isPermanent() || $file->getOwnerId() != \Drupal::currentUser()->id())) {
-    return;
+    return NULL;
   }
 
   if (!$file->access('download')) {

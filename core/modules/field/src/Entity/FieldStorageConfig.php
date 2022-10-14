@@ -671,6 +671,7 @@ class FieldStorageConfig extends ConfigEntityBase implements FieldStorageConfigI
     }
     // @todo: Allow setting custom options provider, see
     // https://www.drupal.org/node/2002138.
+    return NULL;
   }
 
   /**
@@ -749,9 +750,8 @@ class FieldStorageConfig extends ConfigEntityBase implements FieldStorageConfigI
     if (!isset($this->propertyDefinitions)) {
       $this->getPropertyDefinitions();
     }
-    if (isset($this->propertyDefinitions[$name])) {
-      return $this->propertyDefinitions[$name];
-    }
+
+    return $this->propertyDefinitions[$name] ?? NULL;
   }
 
   /**

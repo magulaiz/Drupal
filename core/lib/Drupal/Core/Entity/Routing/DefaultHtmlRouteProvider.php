@@ -127,6 +127,8 @@ class DefaultHtmlRouteProvider implements EntityRouteProviderInterface, EntityHa
 
       return $route;
     }
+
+    return NULL;
   }
 
   /**
@@ -203,6 +205,8 @@ class DefaultHtmlRouteProvider implements EntityRouteProviderInterface, EntityHa
 
       return $route;
     }
+
+    return NULL;
   }
 
   /**
@@ -235,6 +239,8 @@ class DefaultHtmlRouteProvider implements EntityRouteProviderInterface, EntityHa
       }
       return $route;
     }
+
+    return NULL;
   }
 
   /**
@@ -272,6 +278,8 @@ class DefaultHtmlRouteProvider implements EntityRouteProviderInterface, EntityHa
       }
       return $route;
     }
+
+    return NULL;
   }
 
   /**
@@ -304,6 +312,8 @@ class DefaultHtmlRouteProvider implements EntityRouteProviderInterface, EntityHa
       }
       return $route;
     }
+
+    return NULL;
   }
 
   /**
@@ -334,6 +344,8 @@ class DefaultHtmlRouteProvider implements EntityRouteProviderInterface, EntityHa
 
       return $route;
     }
+
+    return NULL;
   }
 
   /**
@@ -372,6 +384,8 @@ class DefaultHtmlRouteProvider implements EntityRouteProviderInterface, EntityHa
       $route->setRequirement('_entity_delete_multiple_access', $entity_type->id());
       return $route;
     }
+
+    return NULL;
   }
 
 }

@@ -66,9 +66,9 @@ class ListStringItem extends ListItemBase {
    * {@inheritdoc}
    */
   protected static function validateAllowedValue($option) {
-    if (mb_strlen($option) > 255) {
-      return new TranslatableMarkup('Allowed values list: each key must be a string at most 255 characters long.');
-    }
+    return mb_strlen($option) > 255 ?
+      new TranslatableMarkup('Allowed values list: each key must be a string at most 255 characters long.')
+      : NULL;
   }
 
   /**

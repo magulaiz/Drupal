@@ -283,6 +283,8 @@ function content_translation_entity_base_field_info(EntityTypeInterface $entity_
       return $definitions;
     }
   }
+
+  return [];
 }
 
 /**
