@@ -381,7 +381,7 @@ class CommentForm extends ContentEntityForm {
     } catch (UndefinedLinkTemplateException $e){
       $request = \Drupal::request();
       $referer = $request->headers->get('referer');
-      $host = \Drupal::request()->getSchemeAndHttpHost();
+      $host = $request->getSchemeAndHttpHost();
       $alias = substr($referer, strlen($host));
       $uri = Url::fromUri("internal:" . $alias);
     }
