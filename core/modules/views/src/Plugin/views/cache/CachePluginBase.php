@@ -153,6 +153,8 @@ abstract class CachePluginBase extends PluginBase {
         }
         return FALSE;
     }
+
+    return FALSE;
   }
 
   /**

@@ -36,6 +36,8 @@ function action_help($route_name, RouteMatchInterface $route_match) {
     case 'entity.action.edit_form':
       return '<p>' . t('An advanced action offers additional configuration options which may be filled out below. Changing the <em>Label</em> field is recommended in order to better identify the precise action taking place.') . '</p>';
   }
+
+  return '';
 }
 
 /**
