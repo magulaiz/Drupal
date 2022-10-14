@@ -12,6 +12,7 @@
 
 use Drupal\comment\CommentInterface;
 use Drupal\comment\Entity\CommentType;
+use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
 use Drupal\Core\Entity\Entity\EntityViewMode;
@@ -770,4 +771,27 @@ function comment_entity_view_display_presave(EntityViewDisplayInterface $display
       $view_display->save();
     }
   }
+}
+
+/**
+ * Implements hook_entity_base_field_info_alter().
+ */
+function comment_entity_base_field_info_alter(&$fields, EntityTypeInterface $entity_type) {
+  // Provide a better default value for the moderation state field if the
+  // content moderation is enabled for comments.
+  if (\Drupal::moduleHandler()->moduleExists('content_moderation') && \Drupal::service('content_moderation.moderation_information')->canModerateEntitiesOfEntityType($entity_type) && isset($fields['moderation_state'])) {
+    $fields['moderation_state']->setDefaultValueCallback('comment_get_default_moderation_state');
+  }
+}
+
+/**
+ * Default value callback for the 'moderation_state' base field definition.
+ *
+ * @return array
+ *   An array of default values.
+ */
+function comment_get_default_moderation_state() {
+  $default_moderation_state = \Drupal::currentUser()->hasPermission('skip comment approval') ? 'published' : 'draft';
+
+  return [$default_moderation_state];
 }
