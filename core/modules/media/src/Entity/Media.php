@@ -79,6 +79,7 @@ use Drupal\user\EntityOwnerTrait;
  *     "delete-form" = "/media/{media}/delete",
  *     "delete-multiple-form" = "/media/delete",
  *     "edit-form" = "/media/{media}/edit",
+ *     "permission-form" = "/admin/structure/media/manage/{media_type}/permissions",
  *     "revision" = "/media/{media}/revisions/{media_revision}/view",
  *   }
  * )

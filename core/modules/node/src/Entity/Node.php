@@ -75,6 +75,7 @@ use Drupal\user\EntityOwnerTrait;
  *     "delete-form" = "/node/{node}/delete",
  *     "delete-multiple-form" = "/admin/content/node/delete",
  *     "edit-form" = "/node/{node}/edit",
+ *     "permission-form" = "/admin/structure/types/manage/{node_type}/permissions",
  *     "version-history" = "/node/{node}/revisions",
  *     "revision" = "/node/{node}/revisions/{node_revision}/view",
  *     "create" = "/node",

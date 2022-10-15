@@ -48,6 +48,7 @@ use Drupal\user\UserInterface;
  *     "canonical" = "/block/{block_content}",
  *     "delete-form" = "/block/{block_content}/delete",
  *     "edit-form" = "/block/{block_content}",
+ *     "permission-form" = "/admin/structure/block/block-content/manage/{block_content_type}/permissions",
  *     "collection" = "/admin/structure/block/block-content",
  *     "create" = "/block",
  *   },
