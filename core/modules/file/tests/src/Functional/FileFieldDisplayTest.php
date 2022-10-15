@@ -228,7 +228,8 @@ class FileFieldDisplayTest extends FileFieldTestBase {
 
     // Test default formatter.
     $this->drupalGet('node/' . $nid);
-    $this->assertSession()->elementTextContains('xpath', '//a[@href="' . $node->{$field_name}->entity->createFileUrl() . '"]', $description);
+    $link = $this->assertSession()->linkByHrefExists($node->{$field_name}->entity->createFileUrl());
+    $this->assertSame($description, $link->getText());
 
     // Change formatter to "Table of files".
     $display = \Drupal::entityTypeManager()->getStorage('entity_view_display')->load('node.' . $type_name . '.default');
@@ -238,7 +239,8 @@ class FileFieldDisplayTest extends FileFieldTestBase {
     ])->save();
 
     $this->drupalGet('node/' . $nid);
-    $this->assertSession()->elementTextContains('xpath', '//a[@href="' . $node->{$field_name}->entity->createFileUrl() . '"]', $description);
+    $link = $this->assertSession()->linkByHrefExists($node->{$field_name}->entity->createFileUrl());
+    $this->assertSame($description, $link->getText());
   }
 
 }

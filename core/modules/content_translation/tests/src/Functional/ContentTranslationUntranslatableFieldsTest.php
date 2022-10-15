@@ -141,9 +141,8 @@ class ContentTranslationUntranslatableFieldsTest extends ContentTranslationPendi
     // Verify a warning is displayed.
     $this->assertSession()->pageTextContains('Fields that apply to all languages are hidden to avoid conflicting changes.');
     $edit_path = $entity->toUrl('edit-form')->toString();
-    $link_xpath = '//a[@href=:edit_path and text()="Edit them on the original language form"]';
-    $elements = $this->xpath($link_xpath, [':edit_path' => $edit_path]);
-    $this->assertNotEmpty($elements);
+    $link = $this->assertSession()->linkByHrefExists($edit_path);
+    $this->assertSame('Edit them on the original language form', $link->getText());
 
     // Configure untranslatable field widgets to be displayed on non-default
     // language edit forms.
@@ -168,8 +167,8 @@ class ContentTranslationUntranslatableFieldsTest extends ContentTranslationPendi
 
     // Verify a warning is displayed.
     $this->assertSession()->pageTextContains('Fields that apply to all languages are hidden to avoid conflicting changes.');
-    $elements = $this->xpath($link_xpath, [':edit_path' => $edit_path]);
-    $this->assertNotEmpty($elements);
+    $link = $this->assertSession()->linkByHrefExists($edit_path);
+    $this->assertSame('Edit them on the original language form', $link->getText());
 
     // Verify that checkboxes on the language content settings page are checked
     // and disabled for moderated bundles.
