@@ -3,6 +3,8 @@
 namespace Drupal\Core\Database\Driver\mysql;
 
 use Drupal\Core\Database\DatabaseAccessDeniedException;
+use Drupal\Core\Database\DatabaseConnectionErrorException;
+use Drupal\Core\Database\DatabaseGoneAwayException;
 use Drupal\Core\Database\IntegrityConstraintViolationException;
 use Drupal\Core\Database\DatabaseExceptionWrapper;
 use Drupal\Core\Database\StatementInterface;
@@ -32,6 +34,16 @@ class Connection extends DatabaseConnection {
    * Error code for "Access denied" error.
    */
   const ACCESS_DENIED = 1045;
+
+  /**
+   * MySQL error code for generic connection failed error.
+   */
+  const CONNECTION_FAILED = 2002;
+
+  /**
+   * MySQL error code for generic server connection dropped error.
+   */
+  const SERVER_GONE_AWAY = 2006;
 
   /**
    * Error code for "Can't initialize character set" error.
@@ -196,6 +208,13 @@ class Connection extends DatabaseConnection {
       if ($e->getCode() == static::ACCESS_DENIED) {
         throw new DatabaseAccessDeniedException($e->getMessage(), $e->getCode(), $e);
       }
+      if ($e->getCode() == static::CONNECTION_FAILED) {
+        throw new DatabaseConnectionErrorException($e->getMessage(), $e->getCode(), $e);
+      }
+      if ($e->getCode() == static::SERVER_GONE_AWAY) {
+        throw new DatabaseGoneAwayException($e->getMessage(), $e->getCode(), $e);
+      }
+
       throw $e;
     }
 
