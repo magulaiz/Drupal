@@ -126,11 +126,6 @@ parameters:
 			path: lib/Drupal/Core/Cache/ApcuBackend.php
 
 		-
-			message: "#^Access to an undefined property Drupal\\\\Core\\\\Cache\\\\Context\\\\CacheContextsManager\\:\\:\\$validContextTokens\\.$#"
-			count: 1
-			path: lib/Drupal/Core/Cache/Context/CacheContextsManager.php
-
-		-
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 4
 			path: lib/Drupal/Core/Cache/DatabaseBackend.php
@@ -139,11 +134,6 @@ parameters:
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 1
 			path: lib/Drupal/Core/Cache/MemoryBackend.php
-
-		-
-			message: "#^Access to an undefined property Drupal\\\\Core\\\\Cache\\\\PhpBackend\\:\\:\\$storage\\.$#"
-			count: 1
-			path: lib/Drupal/Core/Cache/PhpBackend.php
 
 		-
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
@@ -161,16 +151,6 @@ parameters:
 			path: lib/Drupal/Core/Condition/ConditionManager.php
 
 		-
-			message: "#^Access to an undefined property Drupal\\\\Core\\\\Config\\\\Entity\\\\Query\\\\QueryFactory\\:\\:\\$configManager\\.$#"
-			count: 5
-			path: lib/Drupal/Core/Config/Entity/Query/QueryFactory.php
-
-		-
-			message: "#^Access to an undefined property Drupal\\\\Core\\\\Config\\\\Entity\\\\Query\\\\QueryFactory\\:\\:\\$keyValueFactory\\.$#"
-			count: 3
-			path: lib/Drupal/Core/Config/Entity/Query/QueryFactory.php
-
-		-
 			message: "#^Method Drupal\\\\Core\\\\Config\\\\TypedConfigManager\\:\\:replaceVariable\\(\\) should return string but return statement is missing\\.$#"
 			count: 1
 			path: lib/Drupal/Core/Config/TypedConfigManager.php
@@ -184,11 +164,6 @@ parameters:
 			message: "#^Method Drupal\\\\Core\\\\Database\\\\Query\\\\Merge\\:\\:__toString\\(\\) should return string but return statement is missing\\.$#"
 			count: 1
 			path: lib/Drupal/Core/Database/Query/Merge.php
-
-		-
-			message: "#^Access to an undefined property Drupal\\\\Core\\\\Database\\\\Query\\\\Truncate\\:\\:\\$condition\\.$#"
-			count: 2
-			path: lib/Drupal/Core/Database/Query/Truncate.php
 
 		-
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
@@ -221,11 +196,6 @@ parameters:
 			path: lib/Drupal/Core/Entity/ContentEntityNullStorage.php
 
 		-
-			message: "#^Access to an undefined property Drupal\\\\Core\\\\Entity\\\\Controller\\\\EntityController\\:\\:\\$urlGenerator\\.$#"
-			count: 1
-			path: lib/Drupal/Core/Entity/Controller/EntityController.php
-
-		-
 			message: "#^Method Drupal\\\\Core\\\\Entity\\\\Controller\\\\EntityController\\:\\:deleteTitle\\(\\) should return string but return statement is missing\\.$#"
 			count: 1
 			path: lib/Drupal/Core/Entity/Controller/EntityController.php
@@ -246,11 +216,6 @@ parameters:
 			path: lib/Drupal/Core/Entity/EntityDisplayBase.php
 
 		-
-			message: "#^Access to an undefined property Drupal\\\\Core\\\\Entity\\\\EntityResolverManager\\:\\:\\$entityTypes\\.$#"
-			count: 1
-			path: lib/Drupal/Core/Entity/EntityResolverManager.php
-
-		-
 			message: "#^Method Drupal\\\\Core\\\\Entity\\\\KeyValueStore\\\\KeyValueContentEntityStorage\\:\\:createTranslation\\(\\) should return Drupal\\\\Core\\\\Entity\\\\ContentEntityInterface but return statement is missing\\.$#"
 			count: 1
 			path: lib/Drupal/Core/Entity/KeyValueStore/KeyValueContentEntityStorage.php
@@ -266,19 +231,9 @@ parameters:
 			path: lib/Drupal/Core/Entity/Plugin/DataType/Deriver/EntityDeriver.php
 
 		-
-			message: "#^Access to an undefined property Drupal\\\\Core\\\\Entity\\\\Query\\\\QueryBase\\:\\:\\$conjunction\\.$#"
-			count: 1
-			path: lib/Drupal/Core/Entity/Query/QueryBase.php
-
-		-
 			message: "#^Method Drupal\\\\Core\\\\Entity\\\\Query\\\\QueryBase\\:\\:getClass\\(\\) should return string but return statement is missing\\.$#"
 			count: 1
 			path: lib/Drupal/Core/Entity/Query/QueryBase.php
-
-		-
-			message: "#^Access to an undefined property Drupal\\\\Core\\\\Entity\\\\Query\\\\Sql\\\\Query\\:\\:\\$conjunction\\.$#"
-			count: 1
-			path: lib/Drupal/Core/Entity/Query/Sql/Query.php
 
 		-
 			message: "#^Method Drupal\\\\Core\\\\Entity\\\\Sql\\\\SqlContentEntityStorageSchema\\:\\:processDataTable\\(\\) should return array but return statement is missing\\.$#"
@@ -291,19 +246,9 @@ parameters:
 			path: lib/Drupal/Core/Entity/Sql/SqlContentEntityStorageSchema.php
 
 		-
-			message: "#^Access to an undefined property Drupal\\\\Core\\\\EventSubscriber\\\\FinishResponseSubscriber\\:\\:\\$cacheContextsManager\\.$#"
-			count: 2
-			path: lib/Drupal/Core/EventSubscriber/FinishResponseSubscriber.php
-
-		-
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 2
 			path: lib/Drupal/Core/EventSubscriber/FinishResponseSubscriber.php
-
-		-
-			message: "#^Access to an undefined property Drupal\\\\Core\\\\EventSubscriber\\\\RedirectResponseSubscriber\\:\\:\\$requestContext\\.$#"
-			count: 2
-			path: lib/Drupal/Core/EventSubscriber/RedirectResponseSubscriber.php
 
 		-
 			message: "#^Method Drupal\\\\Core\\\\Field\\\\FieldItemBase\\:\\:generateSampleValue\\(\\) should return array but return statement is missing\\.$#"
@@ -356,56 +301,6 @@ parameters:
 			path: lib/Drupal/Core/Field/Plugin/Field/FieldType/EntityReferenceItem.php
 
 		-
-			message: "#^Access to an undefined property Drupal\\\\Core\\\\Field\\\\Plugin\\\\Field\\\\FieldWidget\\\\OptionsButtonsWidget\\:\\:\\$multiple\\.$#"
-			count: 2
-			path: lib/Drupal/Core/Field/Plugin/Field/FieldWidget/OptionsButtonsWidget.php
-
-		-
-			message: "#^Access to an undefined property Drupal\\\\Core\\\\Field\\\\Plugin\\\\Field\\\\FieldWidget\\\\OptionsButtonsWidget\\:\\:\\$required\\.$#"
-			count: 2
-			path: lib/Drupal/Core/Field/Plugin/Field/FieldWidget/OptionsButtonsWidget.php
-
-		-
-			message: "#^Access to an undefined property Drupal\\\\Core\\\\Field\\\\Plugin\\\\Field\\\\FieldWidget\\\\OptionsSelectWidget\\:\\:\\$has_value\\.$#"
-			count: 1
-			path: lib/Drupal/Core/Field/Plugin/Field/FieldWidget/OptionsSelectWidget.php
-
-		-
-			message: "#^Access to an undefined property Drupal\\\\Core\\\\Field\\\\Plugin\\\\Field\\\\FieldWidget\\\\OptionsSelectWidget\\:\\:\\$multiple\\.$#"
-			count: 2
-			path: lib/Drupal/Core/Field/Plugin/Field/FieldWidget/OptionsSelectWidget.php
-
-		-
-			message: "#^Access to an undefined property Drupal\\\\Core\\\\Field\\\\Plugin\\\\Field\\\\FieldWidget\\\\OptionsSelectWidget\\:\\:\\$options\\.$#"
-			count: 1
-			path: lib/Drupal/Core/Field/Plugin/Field/FieldWidget/OptionsSelectWidget.php
-
-		-
-			message: "#^Access to an undefined property Drupal\\\\Core\\\\Field\\\\Plugin\\\\Field\\\\FieldWidget\\\\OptionsSelectWidget\\:\\:\\$required\\.$#"
-			count: 2
-			path: lib/Drupal/Core/Field/Plugin/Field/FieldWidget/OptionsSelectWidget.php
-
-		-
-			message: "#^Access to an undefined property Drupal\\\\Core\\\\Field\\\\Plugin\\\\Field\\\\FieldWidget\\\\OptionsWidgetBase\\:\\:\\$has_value\\.$#"
-			count: 1
-			path: lib/Drupal/Core/Field/Plugin/Field/FieldWidget/OptionsWidgetBase.php
-
-		-
-			message: "#^Access to an undefined property Drupal\\\\Core\\\\Field\\\\Plugin\\\\Field\\\\FieldWidget\\\\OptionsWidgetBase\\:\\:\\$multiple\\.$#"
-			count: 1
-			path: lib/Drupal/Core/Field/Plugin/Field/FieldWidget/OptionsWidgetBase.php
-
-		-
-			message: "#^Access to an undefined property Drupal\\\\Core\\\\Field\\\\Plugin\\\\Field\\\\FieldWidget\\\\OptionsWidgetBase\\:\\:\\$options\\.$#"
-			count: 1
-			path: lib/Drupal/Core/Field/Plugin/Field/FieldWidget/OptionsWidgetBase.php
-
-		-
-			message: "#^Access to an undefined property Drupal\\\\Core\\\\Field\\\\Plugin\\\\Field\\\\FieldWidget\\\\OptionsWidgetBase\\:\\:\\$required\\.$#"
-			count: 1
-			path: lib/Drupal/Core/Field/Plugin/Field/FieldWidget/OptionsWidgetBase.php
-
-		-
 			message: "#^Method Drupal\\\\Core\\\\FileTransfer\\\\FileTransfer\\:\\:__get\\(\\) should return bool\\|string but return statement is missing\\.$#"
 			count: 1
 			path: lib/Drupal/Core/FileTransfer/FileTransfer.php
@@ -446,11 +341,6 @@ parameters:
 			path: lib/Drupal/Core/KeyValueStore/NullStorageExpirable.php
 
 		-
-			message: "#^Access to an undefined property Drupal\\\\Core\\\\Language\\\\LanguageManager\\:\\:\\$definedLanguageTypesInfo\\.$#"
-			count: 1
-			path: lib/Drupal/Core/Language/LanguageManager.php
-
-		-
 			message: "#^Method Drupal\\\\Core\\\\Lock\\\\NullLockBackend\\:\\:wait\\(\\) should return bool but return statement is missing\\.$#"
 			count: 1
 			path: lib/Drupal/Core/Lock/NullLockBackend.php
@@ -481,19 +371,9 @@ parameters:
 			path: lib/Drupal/Core/Template/AttributeValueBase.php
 
 		-
-			message: "#^Access to an undefined property Drupal\\\\Core\\\\Template\\\\TwigNodeVisitor\\:\\:\\$skipRenderVarFunction\\.$#"
-			count: 1
-			path: lib/Drupal/Core/Template/TwigNodeVisitor.php
-
-		-
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 1
 			path: lib/Drupal/Core/Template/TwigPhpStorageCache.php
-
-		-
-			message: "#^Access to an undefined property Drupal\\\\Core\\\\Test\\\\PerformanceTestRecorder\\:\\:\\$state\\.$#"
-			count: 3
-			path: lib/Drupal/Core/Test/PerformanceTestRecorder.php
 
 		-
 			message: "#^Method Drupal\\\\Core\\\\Test\\\\TestRunnerKernel\\:\\:boot\\(\\) should return \\$this\\(Drupal\\\\Core\\\\Test\\\\TestRunnerKernel\\) but return statement is missing\\.$#"
@@ -521,46 +401,15 @@ parameters:
 			path: lib/Drupal/Core/TypedData/TypedData.php
 
 		-
-			message: "#^Access to an undefined property Drupal\\\\Core\\\\TypedData\\\\Validation\\\\RecursiveContextualValidator\\:\\:\\$typedDataManager\\.$#"
-			count: 2
-			path: lib/Drupal/Core/TypedData/Validation/RecursiveContextualValidator.php
-
-		-
 			message: "#^Method Drupal\\\\Core\\\\Update\\\\UpdateKernel\\:\\:discoverServiceProviders\\(\\) should return array but return statement is missing\\.$#"
 			count: 1
 			path: lib/Drupal/Core/Update/UpdateKernel.php
-
-		-
-			message: "#^Access to an undefined property Drupal\\\\Core\\\\Updater\\\\Module\\:\\:\\$name\\.$#"
-			count: 6
-			path: lib/Drupal/Core/Updater/Module.php
 
 		-
 			message: "#^Method Drupal\\\\Core\\\\Updater\\\\Module\\:\\:postUpdateTasks\\(\\) should return array but return statement is missing\\.$#"
 			count: 1
 			path: lib/Drupal/Core/Updater/Module.php
 
-		-
-			message: "#^Access to an undefined property Drupal\\\\Core\\\\Updater\\\\Theme\\:\\:\\$name\\.$#"
-			count: 2
-			path: lib/Drupal/Core/Updater/Theme.php
-
-		-
-			message: "#^Access to an undefined property Drupal\\\\Core\\\\Updater\\\\Updater\\:\\:\\$name\\.$#"
-			count: 3
-			path: lib/Drupal/Core/Updater/Updater.php
-
-		-
-			message: "#^Access to an undefined property Drupal\\\\Core\\\\Updater\\\\Updater\\:\\:\\$title\\.$#"
-			count: 1
-			path: lib/Drupal/Core/Updater/Updater.php
-
-		-
-			message: "#^Access to an undefined property Drupal\\\\Core\\\\Validation\\\\ConstraintValidatorFactory\\:\\:\\$classResolver\\.$#"
-			count: 2
-			path: lib/Drupal/Core/Validation/ConstraintValidatorFactory.php
-
-		-
 			message: "#^Method Drupal\\\\action\\\\Form\\\\ActionFormBase\\:\\:save\\(\\) should return int but return statement is missing\\.$#"
 			count: 1
 			path: modules/action/src/Form/ActionFormBase.php
@@ -579,16 +428,6 @@ parameters:
 			message: "#^\\#pre_render callback 'current_time' at key '0' is not callable\\.$#"
 			count: 1
 			path: modules/big_pipe/tests/modules/big_pipe_test/src/BigPipePlaceholderTestCases.php
-
-		-
-			message: "#^Access to an undefined property Drupal\\\\block\\\\Plugin\\\\migrate\\\\process\\\\BlockTheme\\:\\:\\$themes\\.$#"
-			count: 1
-			path: modules/block/src/Plugin/migrate/process/BlockTheme.php
-
-		-
-			message: "#^Access to an undefined property Drupal\\\\block_test\\\\Plugin\\\\Block\\\\TestAccessBlock\\:\\:\\$state\\.$#"
-			count: 2
-			path: modules/block/tests/modules/block_test/src/Plugin/Block/TestAccessBlock.php
 
 		-
 			message: "#^Method Drupal\\\\block_content\\\\BlockContentForm\\:\\:save\\(\\) should return int but return statement is missing\\.$#"
@@ -674,46 +513,6 @@ parameters:
 			message: "#^Method Drupal\\\\comment\\\\Plugin\\\\views\\\\field\\\\NodeNewComments\\:\\:render\\(\\) should return Drupal\\\\Component\\\\Render\\\\MarkupInterface\\|string but return statement is missing\\.$#"
 			count: 1
 			path: modules/comment/src/Plugin/views/field/NodeNewComments.php
-
-		-
-			message: "#^Access to an undefined property Drupal\\\\comment\\\\Plugin\\\\views\\\\field\\\\StatisticsLastCommentName\\:\\:\\$user_field\\.$#"
-			count: 1
-			path: modules/comment/src/Plugin/views/field/StatisticsLastCommentName.php
-
-		-
-			message: "#^Access to an undefined property Drupal\\\\comment\\\\Plugin\\\\views\\\\field\\\\StatisticsLastCommentName\\:\\:\\$user_table\\.$#"
-			count: 1
-			path: modules/comment/src/Plugin/views/field/StatisticsLastCommentName.php
-
-		-
-			message: "#^Access to an undefined property Drupal\\\\comment\\\\Plugin\\\\views\\\\field\\\\StatisticsLastUpdated\\:\\:\\$node_table\\.$#"
-			count: 1
-			path: modules/comment/src/Plugin/views/field/StatisticsLastUpdated.php
-
-		-
-			message: "#^Access to an undefined property Drupal\\\\comment\\\\Plugin\\\\views\\\\filter\\\\StatisticsLastUpdated\\:\\:\\$node_table\\.$#"
-			count: 1
-			path: modules/comment/src/Plugin/views/filter/StatisticsLastUpdated.php
-
-		-
-			message: "#^Access to an undefined property Drupal\\\\comment\\\\Plugin\\\\views\\\\sort\\\\StatisticsLastCommentName\\:\\:\\$user_field\\.$#"
-			count: 1
-			path: modules/comment/src/Plugin/views/sort/StatisticsLastCommentName.php
-
-		-
-			message: "#^Access to an undefined property Drupal\\\\comment\\\\Plugin\\\\views\\\\sort\\\\StatisticsLastCommentName\\:\\:\\$user_table\\.$#"
-			count: 1
-			path: modules/comment/src/Plugin/views/sort/StatisticsLastCommentName.php
-
-		-
-			message: "#^Access to an undefined property Drupal\\\\comment\\\\Plugin\\\\views\\\\sort\\\\StatisticsLastUpdated\\:\\:\\$field_alias\\.$#"
-			count: 1
-			path: modules/comment/src/Plugin/views/sort/StatisticsLastUpdated.php
-
-		-
-			message: "#^Access to an undefined property Drupal\\\\comment\\\\Plugin\\\\views\\\\sort\\\\StatisticsLastUpdated\\:\\:\\$node_table\\.$#"
-			count: 1
-			path: modules/comment/src/Plugin/views/sort/StatisticsLastUpdated.php
 
 		-
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
@@ -851,11 +650,6 @@ parameters:
 			path: modules/field_ui/src/Form/FieldStorageConfigEditForm.php
 
 		-
-			message: "#^Access to an undefined property Drupal\\\\field_ui\\\\Plugin\\\\Derivative\\\\FieldUiLocalAction\\:\\:\\$routeProvider\\.$#"
-			count: 1
-			path: modules/field_ui/src/Plugin/Derivative/FieldUiLocalAction.php
-
-		-
 			message: "#^Method Drupal\\\\file\\\\Plugin\\\\Field\\\\FieldType\\\\FileFieldItemList\\:\\:defaultValuesForm\\(\\) should return array but return statement is missing\\.$#"
 			count: 1
 			path: modules/file/src/Plugin/Field/FieldType/FileFieldItemList.php
@@ -864,16 +658,6 @@ parameters:
 			message: "#^Method Drupal\\\\file\\\\Plugin\\\\Field\\\\FieldType\\\\FileFieldItemList\\:\\:postSave\\(\\) should return bool but return statement is missing\\.$#"
 			count: 1
 			path: modules/file/src/Plugin/Field/FieldType/FileFieldItemList.php
-
-		-
-			message: "#^Access to an undefined property Drupal\\\\file\\\\Plugin\\\\Field\\\\FieldWidget\\\\FileWidget\\:\\:\\$elementInfo\\.$#"
-			count: 2
-			path: modules/file/src/Plugin/Field/FieldWidget/FileWidget.php
-
-		-
-			message: "#^Access to an undefined property Drupal\\\\file\\\\Plugin\\\\migrate\\\\process\\\\d6\\\\FieldFile\\:\\:\\$migration\\.$#"
-			count: 1
-			path: modules/file/src/Plugin/migrate/process/d6/FieldFile.php
 
 		-
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
@@ -896,19 +680,9 @@ parameters:
 			path: modules/file/tests/src/Kernel/UsageTest.php
 
 		-
-			message: "#^Access to an undefined property Drupal\\\\filter\\\\Plugin\\\\migrate\\\\process\\\\d6\\\\FilterFormatPermission\\:\\:\\$migration\\.$#"
-			count: 1
-			path: modules/filter/src/Plugin/migrate/process/d6/FilterFormatPermission.php
-
-		-
 			message: "#^Method Drupal\\\\forum\\\\ForumManager\\:\\:getTopicOrder\\(\\) should return array but return statement is missing\\.$#"
 			count: 1
 			path: modules/forum/src/ForumManager.php
-
-		-
-			message: "#^Access to an undefined property Drupal\\\\help_topics\\\\Plugin\\\\HelpSection\\\\HelpTopicSection\\:\\:\\$translationManager\\.$#"
-			count: 3
-			path: modules/help_topics/src/Plugin/HelpSection/HelpTopicSection.php
 
 		-
 			message: "#^Method Drupal\\\\history\\\\Plugin\\\\views\\\\field\\\\HistoryUserTimestamp\\:\\:render\\(\\) should return Drupal\\\\Component\\\\Render\\\\MarkupInterface\\|string but return statement is missing\\.$#"
@@ -946,11 +720,6 @@ parameters:
 			path: modules/jsonapi/src/Revisions/VersionNegotiator.php
 
 		-
-			message: "#^Access to an undefined property Drupal\\\\Tests\\\\jsonapi\\\\Functional\\\\RestJsonApiUnsupported\\:\\:\\$httpClient\\.$#"
-			count: 1
-			path: modules/jsonapi/tests/src/Functional/RestJsonApiUnsupported.php
-
-		-
 			message: "#^Method Drupal\\\\language\\\\Form\\\\LanguageAddForm\\:\\:save\\(\\) should return int but return statement is missing\\.$#"
 			count: 1
 			path: modules/language/src/Form/LanguageAddForm.php
@@ -959,11 +728,6 @@ parameters:
 			message: "#^Method Drupal\\\\language\\\\Form\\\\LanguageEditForm\\:\\:save\\(\\) should return int but return statement is missing\\.$#"
 			count: 1
 			path: modules/language/src/Form/LanguageEditForm.php
-
-		-
-			message: "#^Access to an undefined property Drupal\\\\language\\\\LanguageNegotiationMethodManager\\:\\:\\$cacheKeyPrefix\\.$#"
-			count: 1
-			path: modules/language/src/LanguageNegotiationMethodManager.php
 
 		-
 			message: "#^Function locale_config_batch_update_components\\(\\) should return array but return statement is missing\\.$#"
@@ -984,11 +748,6 @@ parameters:
 			message: "#^Method Drupal\\\\locale\\\\LocaleDefaultConfigStorage\\:\\:read\\(\\) should return array but return statement is missing\\.$#"
 			count: 1
 			path: modules/locale/src/LocaleDefaultConfigStorage.php
-
-		-
-			message: "#^Access to an undefined property Drupal\\\\locale\\\\LocaleEvent\\:\\:\\$lids\\.$#"
-			count: 2
-			path: modules/locale/src/LocaleEvent.php
 
 		-
 			message: "#^Method Drupal\\\\locale\\\\LocaleProjectStorage\\:\\:deleteAll\\(\\) should return array but return statement is missing\\.$#"
@@ -1061,11 +820,6 @@ parameters:
 			path: modules/migrate/src/Plugin/migrate/destination/Config.php
 
 		-
-			message: "#^Access to an undefined property Drupal\\\\migrate\\\\Plugin\\\\migrate\\\\destination\\\\Entity\\:\\:\\$entityFieldManager\\.$#"
-			count: 1
-			path: modules/migrate/src/Plugin/migrate/destination/Entity.php
-
-		-
 			message: "#^Method Drupal\\\\migrate\\\\Plugin\\\\migrate\\\\destination\\\\Entity\\:\\:fields\\(\\) should return array but return statement is missing\\.$#"
 			count: 1
 			path: modules/migrate/src/Plugin/migrate/destination/Entity.php
@@ -1076,19 +830,9 @@ parameters:
 			path: modules/migrate/src/Plugin/migrate/destination/NullDestination.php
 
 		-
-			message: "#^Access to an undefined property Drupal\\\\migrate\\\\Plugin\\\\migrate\\\\process\\\\Route\\:\\:\\$migration\\.$#"
-			count: 1
-			path: modules/migrate/src/Plugin/migrate/process/Route.php
-
-		-
 			message: "#^Call to an undefined static method static\\(Drupal\\\\Tests\\\\migrate\\\\Kernel\\\\MigrateTestBase\\)\\:\\:migrateDumpAlter\\(\\)\\.$#"
 			count: 1
 			path: modules/migrate/tests/src/Kernel/MigrateTestBase.php
-
-		-
-			message: "#^Cannot unset offset 'menu_ui' on array\\{system\\: \"finished\\:\\\\n  6\\:\\\\n   …\", menu_link_content\\: \"finished\\:\\\\n  6\\:\\\\n   …\", menu\\: \"finished\\:\\\\n  6\\:\\\\n   …\"\\}\\.$#"
-			count: 1
-			path: modules/migrate_drupal/tests/src/Unit/MigrationStateUnitTest.php
 
 		-
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
@@ -1321,11 +1065,6 @@ parameters:
 			path: modules/system/src/Form/ModulesListNonStableConfirmForm.php
 
 		-
-			message: "#^Access to an undefined property Drupal\\\\accept_header_routing_test\\\\AcceptHeaderMiddleware\\:\\:\\$app\\.$#"
-			count: 2
-			path: modules/system/tests/modules/accept_header_routing_test/src/AcceptHeaderMiddleware.php
-
-		-
 			message: "#^Class Drupal\\\\advisory_feed_test\\\\AdvisoriesTestHttpClient extends @final class GuzzleHttp\\\\Client\\.$#"
 			count: 1
 			path: modules/system/tests/modules/advisory_feed_test/src/AdvisoriesTestHttpClient.php
@@ -1349,21 +1088,6 @@ parameters:
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 1
 			path: modules/system/tests/modules/entity_test/src/Plugin/Field/FieldType/ChangedTestItem.php
-
-		-
-			message: "#^Access to an undefined property Drupal\\\\error_service_test\\\\Controller\\\\LonelyMonkeyController\\:\\:\\$class\\.$#"
-			count: 1
-			path: modules/system/tests/modules/error_service_test/src/Controller/LonelyMonkeyController.php
-
-		-
-			message: "#^Access to an undefined property Drupal\\\\error_service_test\\\\LonelyMonkeyClass\\:\\:\\$connection\\.$#"
-			count: 1
-			path: modules/system/tests/modules/error_service_test/src/LonelyMonkeyClass.php
-
-		-
-			message: "#^Access to an undefined property Drupal\\\\error_service_test\\\\MonkeysInTheControlRoom\\:\\:\\$settings\\.$#"
-			count: 2
-			path: modules/system/tests/modules/error_service_test/src/MonkeysInTheControlRoom.php
 
 		-
 			message: "#^Result of function usleep \\(void\\) is used\\.$#"
@@ -1471,11 +1195,6 @@ parameters:
 			path: modules/tour/src/TipPluginBase.php
 
 		-
-			message: "#^Access to an undefined property Drupal\\\\update\\\\UpdateProcessor\\:\\:\\$fetchTasks\\.$#"
-			count: 2
-			path: modules/update/src/UpdateProcessor.php
-
-		-
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 4
 			path: modules/update/src/UpdateProcessor.php
@@ -1494,11 +1213,6 @@ parameters:
 			message: "#^Method Drupal\\\\user\\\\Plugin\\\\views\\\\field\\\\UserData\\:\\:render\\(\\) should return Drupal\\\\Component\\\\Render\\\\MarkupInterface\\|string but return statement is missing\\.$#"
 			count: 1
 			path: modules/user/src/Plugin/views/field/UserData.php
-
-		-
-			message: "#^Access to an undefined property Drupal\\\\user\\\\Plugin\\\\views\\\\filter\\\\Name\\:\\:\\$validated_exposed_input\\.$#"
-			count: 1
-			path: modules/user/src/Plugin/views/filter/Name.php
 
 		-
 			message: "#^Method Drupal\\\\user\\\\ProfileForm\\:\\:save\\(\\) should return int but return statement is missing\\.$#"
@@ -1586,11 +1300,6 @@ parameters:
 			path: modules/views/src/Plugin/views/cache/Time.php
 
 		-
-			message: "#^Cannot unset offset 'items_per_page' on array\\{access\\: array\\{'access'\\}, cache\\: array\\{'cache'\\}, title\\: array\\{'title'\\}, css_class\\: array\\{'css_class'\\}, use_ajax\\: array\\{'use_ajax'\\}, hide_attachment_summary\\: array\\{'hide_attachment…'\\}, show_admin_links\\: array\\{'show_admin_links'\\}, group_by\\: array\\{'group_by'\\}, \\.\\.\\.\\}\\.$#"
-			count: 1
-			path: modules/views/src/Plugin/views/display/DisplayPluginBase.php
-
-		-
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 2
 			path: modules/views/src/Plugin/views/field/Date.php
@@ -1621,19 +1330,9 @@ parameters:
 			path: modules/views/src/Plugin/views/field/PrerenderList.php
 
 		-
-			message: "#^Access to an undefined property Drupal\\\\views\\\\Plugin\\\\views\\\\query\\\\QueryPluginBase\\:\\:\\$groupOperator\\.$#"
-			count: 1
-			path: modules/views/src/Plugin/views/query/QueryPluginBase.php
-
-		-
 			message: "#^Undefined variable\\: \\$def$#"
 			count: 2
 			path: modules/views/src/Plugin/views/relationship/EntityReverse.php
-
-		-
-			message: "#^Access to an undefined property Drupal\\\\views\\\\Plugin\\\\views\\\\sort\\\\GroupByNumeric\\:\\:\\$handler\\.$#"
-			count: 1
-			path: modules/views/src/Plugin/views/sort/GroupByNumeric.php
 
 		-
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
@@ -1716,16 +1415,6 @@ parameters:
 			path: modules/views_ui/src/ViewEditForm.php
 
 		-
-			message: "#^Access to an undefined property Drupal\\\\views_ui\\\\ViewUI\\:\\:\\$ajax\\.$#"
-			count: 1
-			path: modules/views_ui/src/ViewUI.php
-
-		-
-			message: "#^Access to an undefined property Drupal\\\\views_ui\\\\ViewUI\\:\\:\\$entityType\\.$#"
-			count: 1
-			path: modules/views_ui/src/ViewUI.php
-
-		-
 			message: "#^Method Drupal\\\\views_ui\\\\ViewUI\\:\\:getTypedData\\(\\) should return Drupal\\\\Core\\\\TypedData\\\\ComplexDataInterface but return statement is missing\\.$#"
 			count: 1
 			path: modules/views_ui/src/ViewUI.php
@@ -1786,11 +1475,6 @@ parameters:
 			path: modules/workspaces/src/WorkspacePublisher.php
 
 		-
-			message: "#^Access to an undefined property Drupal\\\\demo_umami_content\\\\InstallHelper\\:\\:\\$module_path\\.$#"
-			count: 5
-			path: profiles/demo_umami/modules/demo_umami_content/src/InstallHelper.php
-
-		-
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 12
 			path: tests/Drupal/KernelTests/Core/Cache/GenericCacheBackendUnitTestBase.php
@@ -1841,11 +1525,6 @@ parameters:
 			path: tests/Drupal/KernelTests/Core/TypedData/TypedDataTest.php
 
 		-
-			message: "#^Parameter \\$template of method Drupal\\\\KernelTests\\\\KernelTestBase\\:\\:prepareTemplate\\(\\) has invalid type Text_Template\\.$#"
-			count: 1
-			path: tests/Drupal/KernelTests/KernelTestBase.php
-
-		-
 			message: "#^Instantiated class Drupal\\\\KernelTests\\\\KernelMissingDependentModuleMethodTest not found\\.$#"
 			count: 1
 			path: tests/Drupal/KernelTests/KernelTestBaseTest.php
@@ -1854,36 +1533,6 @@ parameters:
 			message: "#^Instantiated class Drupal\\\\KernelTests\\\\KernelMissingDependentModuleTest not found\\.$#"
 			count: 1
 			path: tests/Drupal/KernelTests/KernelTestBaseTest.php
-
-		-
-			message: "#^Access to an undefined property Drupal\\\\KernelTests\\\\RouteProvider\\:\\:\\$service\\.$#"
-			count: 1
-			path: tests/Drupal/KernelTests/RouteProvider.php
-
-		-
-			message: "#^Access to an undefined property Drupal\\\\TestSite\\\\Commands\\\\TestSiteInstallCommand\\:\\:\\$baseUrl\\.$#"
-			count: 1
-			path: tests/Drupal/TestSite/Commands/TestSiteInstallCommand.php
-
-		-
-			message: "#^Access to an undefined property Drupal\\\\TestSite\\\\Commands\\\\TestSiteInstallCommand\\:\\:\\$configImporter\\.$#"
-			count: 1
-			path: tests/Drupal/TestSite/Commands/TestSiteInstallCommand.php
-
-		-
-			message: "#^Access to an undefined property Drupal\\\\TestSite\\\\Commands\\\\TestSiteInstallCommand\\:\\:\\$defaultTheme\\.$#"
-			count: 2
-			path: tests/Drupal/TestSite/Commands/TestSiteInstallCommand.php
-
-		-
-			message: "#^Access to an undefined property Drupal\\\\TestSite\\\\Commands\\\\TestSiteInstallCommand\\:\\:\\$originalShutdownCallbacks\\.$#"
-			count: 1
-			path: tests/Drupal/TestSite/Commands/TestSiteInstallCommand.php
-
-		-
-			message: "#^Access to an undefined property Drupal\\\\TestSite\\\\Commands\\\\TestSiteInstallCommand\\:\\:\\$translationFilesDirectory\\.$#"
-			count: 1
-			path: tests/Drupal/TestSite/Commands/TestSiteInstallCommand.php
 
 		-
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
@@ -1906,26 +1555,6 @@ parameters:
 			path: tests/Drupal/Tests/Component/Annotation/Doctrine/DocParserTest.php
 
 		-
-			message: "#^Cannot unset offset int on array\\<string, mixed\\>\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Component/PhpStorage/FileStorageReadOnlyTest.php
-
-		-
-			message: "#^Cannot unset offset int on array\\<string, mixed\\>\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Component/PhpStorage/FileStorageTest.php
-
-		-
-			message: "#^Access to an undefined property Drupal\\\\Tests\\\\Component\\\\PhpStorage\\\\MTimeProtectedFileStorageBase\\:\\:\\$expected\\.$#"
-			count: 3
-			path: tests/Drupal/Tests/Component/PhpStorage/MTimeProtectedFileStorageBase.php
-
-		-
-			message: "#^Cannot unset offset int on array\\<string, mixed\\>\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Component/PhpStorage/PhpStorageTestBase.php
-
-		-
 			message: "#^Result of static method Drupal\\\\Composer\\\\Composer\\:\\:ensureComposerVersion\\(\\) \\(void\\) is used\\.$#"
 			count: 1
 			path: tests/Drupal/Tests/Composer/ComposerTest.php
@@ -1939,11 +1568,6 @@ parameters:
 			message: "#^Class Drupal\\\\Driver\\\\Database\\\\fake\\\\Install\\\\Tasks not found\\.$#"
 			count: 1
 			path: tests/Drupal/Tests/Core/Database/InstallerObjectTest.php
-
-		-
-			message: "#^Cannot unset offset 'data\\-drupal\\-link…' on array\\{data\\-drupal\\-link\\-system\\-path\\: '\\<front\\>'\\}\\.$#"
-			count: 2
-			path: tests/Drupal/Tests/Core/EventSubscriber/ActiveLinkResponseFilterTest.php
 
 		-
 			message: "#^Call to method getDefinitions\\(\\) on an unknown class Drupal\\\\Core\\\\Plugin\\\\CategorizingPluginManagerTrait\\.$#"
@@ -1974,8 +1598,3 @@ parameters:
 			message: "#^\\#pre_render callback '\\\\\\\\Drupal\\\\\\\\Tests\\\\\\\\Core…' at key '0' is not trusted\\.$#"
 			count: 1
 			path: tests/Drupal/Tests/Core/Render/RendererCallbackTest.php
-
-		-
-			message: "#^Cannot unset offset '\\#cache' on array\\{\\#lazy_builder\\: array\\{'Drupal\\\\\\\\Tests\\\\\\\\Core…', array\\{mixed\\}\\}\\}\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Core/Render/RendererPlaceholdersTest.php

@@ -158,9 +158,10 @@ Cron
 
 CSS
 - John Albin Wilkins 'JohnAlbin' https://www.drupal.org/u/johnalbin
+- Mike Herchel 'mherchel' https://www.drupal.org/u/mherchel
 
 Database API
-- ?
+- David Bekker 'daffie' https://www.drupal.org/u/daffie
 
   MySQL DB driver
   - David Strauss 'David Strauss' https://www.drupal.org/u/david-strauss
@@ -371,9 +372,6 @@ Settings Tray
 Shortcut
 - Tobias Zimmermann 'tstoeckler' https://www.drupal.org/u/tstoeckler
 - Jibran Ijaz 'jibran' https://www.drupal.org/u/jibran
-
-Stable
-- ?
 
 Stark
 - John Albin Wilkins 'JohnAlbin' https://www.drupal.org/u/johnalbin
