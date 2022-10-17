@@ -410,6 +410,7 @@ parameters:
 			count: 1
 			path: lib/Drupal/Core/Updater/Module.php
 
+		-
 			message: "#^Method Drupal\\\\action\\\\Form\\\\ActionFormBase\\:\\:save\\(\\) should return int but return statement is missing\\.$#"
 			count: 1
 			path: modules/action/src/Form/ActionFormBase.php
