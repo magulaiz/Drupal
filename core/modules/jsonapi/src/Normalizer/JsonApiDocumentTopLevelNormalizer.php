@@ -265,25 +265,30 @@ class JsonApiDocumentTopLevelNormalizer extends NormalizerBase implements Denorm
         ],
       ],
     ];
-    $link_hash_salt = Crypt::randomBytesBase64();
     foreach ($normalized_omissions as $omission) {
       $cacheability->addCacheableDependency($omission);
       // Add the errors to the pre-existing errors.
       foreach ($omission->getNormalization() as $error) {
+        $via = $error['links']['via'];
         // JSON:API links cannot be arrays and the spec generally favors link
         // relation types as keys. 'item' is the right link relation type, but
-        // we need multiple values. To do that, we generate a meaningless,
-        // random value to use as a unique key. That value is a hash of a
-        // random salt and the link href. This ensures that the key is non-
-        // deterministic while letting use deduplicate the links by their
-        // href. The salt is *not* used for any cryptographic reason.
-        $link_key = 'item--' . static::getLinkHash($link_hash_salt, $error['links']['via']['href']);
+        // we need multiple values.
+        // Use the revision ID as salt to ensure all the links are shown.
+        // This covers a case when a user opens a page with multiple
+        // revisions of the same entity when the `$via['href']` is the same
+        // for all of them (the `jsonapi.$resource_type_name.individual`
+        // route). The version may be `null` if the entity is non-revisionable
+        // In that case, use a random string.
+        assert($via['meta'][JsonApiSpec::VERSION_QUERY_PARAMETER] === NULL || is_numeric($via['meta'][JsonApiSpec::VERSION_QUERY_PARAMETER]));
+        $link_key = 'item--' . static::getLinkHash($via['meta'][JsonApiSpec::VERSION_QUERY_PARAMETER] ?? random_bytes(8), $via['href']);
+        // Ensure we're not overriding.
+        assert(!isset($omission_links['links'][$link_key]));
         $omission_links['links'][$link_key] = [
-          'href' => $error['links']['via']['href'],
+          'href' => $via['href'],
           'meta' => [
             'rel' => 'item',
             'detail' => $error['detail'],
-          ],
+          ] + $via['meta'],
         ];
       }
     }

@@ -33,6 +33,7 @@ use Drupal\jsonapi\JsonApiResource\NullIncludedData;
 use Drupal\jsonapi\JsonApiResource\Link;
 use Drupal\jsonapi\JsonApiResource\ResourceObject;
 use Drupal\jsonapi\JsonApiResource\ResourceObjectData;
+use Drupal\jsonapi\JsonApiSpec;
 use Drupal\jsonapi\Normalizer\HttpExceptionNormalizer;
 use Drupal\jsonapi\JsonApiResource\JsonApiDocumentTopLevel;
 use Drupal\jsonapi\ResourceResponse;
@@ -809,8 +810,9 @@ abstract class ResourceTestBase extends BrowserTestBase {
    *   The expected response status.
    * @param string $expected_message
    *   The expected error message.
-   * @param \Drupal\Core\Url|null $via_link
-   *   The source URL for the errors of the response. NULL if the error occurs
+   * @param \Drupal\Core\Url|array|null $via_link
+   *   The source URL for the errors of the response. Array if you want to
+   *   define the full structure of the via link. NULL if the error occurs
    *   for example during entity creation.
    * @param \Psr\Http\Message\ResponseInterface $response
    *   The error response to assert.
@@ -834,16 +836,20 @@ abstract class ResourceTestBase extends BrowserTestBase {
    *   Defaults to FALSE.
    */
   protected function assertResourceErrorResponse($expected_status_code, $expected_message, $via_link, ResponseInterface $response, $pointer = FALSE, $expected_cache_tags = FALSE, $expected_cache_contexts = FALSE, $expected_page_cache_header_value = FALSE, $expected_dynamic_page_cache_header_value = FALSE) {
-    assert(is_null($via_link) || $via_link instanceof Url);
+    assert($via_link === NULL || is_array($via_link) || $via_link instanceof Url);
     $expected_error = [];
     if (!empty(Response::$statusTexts[$expected_status_code])) {
       $expected_error['title'] = Response::$statusTexts[$expected_status_code];
     }
     $expected_error['status'] = (string) $expected_status_code;
     $expected_error['detail'] = $expected_message;
-    if ($via_link) {
+    if ($via_link instanceof Url) {
       $expected_error['links']['via']['href'] = $via_link->setAbsolute()->toString();
     }
+    elseif (is_array($via_link)) {
+      $expected_error['links']['via'] = $via_link;
+    }
+
     if ($info_url = HttpExceptionNormalizer::getInfoUrl($expected_status_code)) {
       $expected_error['links']['info']['href'] = $info_url;
     }
@@ -931,8 +937,9 @@ abstract class ResourceTestBase extends BrowserTestBase {
     if (!static::$anonymousUsersCanViewLabels) {
       $expected_403_cacheability = $this->getExpectedUnauthorizedAccessCacheability();
       $reason = $this->getExpectedUnauthorizedAccessMessage('GET');
+      $via_link = $this->getViaLinkArrayWithMeta($url, $this->entity);
       $message = trim("The current user is not allowed to GET the selected resource. $reason");
-      $this->assertResourceErrorResponse(403, $message, $url, $response, '/data', $expected_403_cacheability->getCacheTags(), $expected_403_cacheability->getCacheContexts(), FALSE, 'MISS');
+      $this->assertResourceErrorResponse(403, $message, $via_link, $response, '/data', $expected_403_cacheability->getCacheTags(), $expected_403_cacheability->getCacheContexts(), FALSE, 'MISS');
       $this->assertArrayNotHasKey('Link', $response->getHeaders());
     }
     else {
@@ -2260,13 +2267,15 @@ abstract class ResourceTestBase extends BrowserTestBase {
 
     // DX: 403 when entity contains field without 'edit' access.
     $response = $this->request('PATCH', $url, $request_options);
-    $this->assertResourceErrorResponse(403, "The current user is not allowed to PATCH the selected field (field_rest_test).", $url, $response, '/data/attributes/field_rest_test');
+    $link_via = $this->getViaLinkArrayWithMeta($url, $this->entity);
+    $this->assertResourceErrorResponse(403, "The current user is not allowed to PATCH the selected field (field_rest_test).", $link_via, $response, '/data/attributes/field_rest_test');
 
     // DX: 403 when entity trying to update an entity's ID field.
     $request_options[RequestOptions::BODY] = Json::encode($this->makeNormalizationInvalid($this->getPatchDocument(), 'id'));
     $response = $this->request('PATCH', $url, $request_options);
     $id_field_name = $this->entity->getEntityType()->getKey('id');
-    $this->assertResourceErrorResponse(403, "The current user is not allowed to PATCH the selected field ($id_field_name). The entity ID cannot be changed.", $url, $response, "/data/attributes/$id_field_name");
+    $link_via = $this->getViaLinkArrayWithMeta($url, $this->entity);
+    $this->assertResourceErrorResponse(403, "The current user is not allowed to PATCH the selected field ($id_field_name). The entity ID cannot be changed.", $link_via, $response, "/data/attributes/$id_field_name");
 
     if ($this->entity->getEntityType()->hasKey('uuid')) {
       // DX: 400 when entity trying to update an entity's UUID field.
@@ -2281,7 +2290,8 @@ abstract class ResourceTestBase extends BrowserTestBase {
     // when the value for that field matches the current value. This is allowed
     // in principle, but leads to information disclosure.
     $response = $this->request('PATCH', $url, $request_options);
-    $this->assertResourceErrorResponse(403, "The current user is not allowed to PATCH the selected field (field_rest_test).", $url, $response, '/data/attributes/field_rest_test');
+    $link_via = $this->getViaLinkArrayWithMeta($url, $this->entity);
+    $this->assertResourceErrorResponse(403, "The current user is not allowed to PATCH the selected field (field_rest_test).", $link_via, $response, '/data/attributes/field_rest_test');
 
     // DX: 403 when sending PATCH request with updated read-only fields.
     [$modified_entity, $original_values] = static::getModifiedEntityForPatchTesting($this->entity);
@@ -2291,7 +2301,8 @@ abstract class ResourceTestBase extends BrowserTestBase {
     foreach (static::$patchProtectedFieldNames as $patch_protected_field_name => $reason) {
       $request_options[RequestOptions::BODY] = Json::encode($this->normalize($modified_entity, $url));
       $response = $this->request('PATCH', $url, $request_options);
-      $this->assertResourceErrorResponse(403, "The current user is not allowed to PATCH the selected field (" . $patch_protected_field_name . ")." . ($reason !== NULL ? ' ' . $reason : ''), $url->setAbsolute(), $response, '/data/attributes/' . $patch_protected_field_name);
+      $via_link = $this->getViaLinkArrayWithMeta($url, $this->entity);
+      $this->assertResourceErrorResponse(403, "The current user is not allowed to PATCH the selected field (" . $patch_protected_field_name . ")." . ($reason !== NULL ? ' ' . $reason : ''), $via_link, $response, '/data/attributes/' . $patch_protected_field_name);
       $modified_entity->get($patch_protected_field_name)->setValue($original_values[$patch_protected_field_name]);
     }
 
@@ -2745,7 +2756,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
       }
     }
 
-    foreach ($field_sets as $type => $included_paths) {
+    foreach ($field_sets as $included_paths) {
       $this->grantIncludedPermissions($included_paths);
       $query = ['include' => implode(',', $included_paths)];
       $url->setOption('query', $query);
@@ -2889,7 +2900,8 @@ abstract class ResourceTestBase extends BrowserTestBase {
     if ($result instanceof AccessResultReasonInterface && ($reason = $result->getReason()) && !empty($reason)) {
       $detail .= ' ' . $reason;
     }
-    $this->assertResourceErrorResponse(403, $detail, $url, $actual_response, '/data', $expected_cacheability->getCacheTags(), $expected_cacheability->getCacheContexts(), FALSE, 'MISS');
+    $via_link = $this->getViaLinkArrayWithMeta($url, $this->entity, (string) $latest_revision_id);
+    $this->assertResourceErrorResponse(403, $detail, $via_link, $actual_response, '/data', $expected_cacheability->getCacheTags(), $expected_cacheability->getCacheContexts(), FALSE, 'MISS');
 
     // Ensure that targeting a revision does not bypass access.
     $actual_response = $this->request('GET', $original_revision_id_url, $request_options);
@@ -2898,7 +2910,8 @@ abstract class ResourceTestBase extends BrowserTestBase {
     if ($result instanceof AccessResultReasonInterface && ($reason = $result->getReason()) && !empty($reason)) {
       $detail .= ' ' . $reason;
     }
-    $this->assertResourceErrorResponse(403, $detail, $url, $actual_response, '/data', $expected_cacheability->getCacheTags(), $expected_cacheability->getCacheContexts(), FALSE, 'MISS');
+    $via_link = $this->getViaLinkArrayWithMeta($url, $this->entity);
+    $this->assertResourceErrorResponse(403, $detail, $via_link, $actual_response, '/data', $expected_cacheability->getCacheTags(), $expected_cacheability->getCacheContexts(), FALSE, 'MISS');
 
     $this->setUpRevisionAuthorization('GET');
 
@@ -3082,7 +3095,9 @@ abstract class ResourceTestBase extends BrowserTestBase {
       $expected_cache_contexts = $expected_cacheability->getCacheContexts();
       $detail = 'The current user is not allowed to GET the selected resource. The user does not have access to the requested version.';
       $message = $result instanceof AccessResultReasonInterface ? trim($detail . ' ' . $result->getReason()) : $detail;
-      $this->assertResourceErrorResponse(403, $message, $url, $actual_response, '/data', $expected_cache_tags, $expected_cache_contexts, FALSE, 'MISS');
+      $via_link = $this->getViaLinkArrayWithMeta($url, $this->entity, (string) $forward_revision_id);
+      $this->assertResourceErrorResponse(403, $message, $via_link, $actual_response, '/data', $expected_cache_tags, $expected_cache_contexts, FALSE, 'MISS');
+
       // On the collection URL, we should expect to see the draft omitted from
       // the collection.
       $actual_response = $this->request('GET', $rel_working_copy_collection_url, $request_options);
@@ -3090,7 +3105,8 @@ abstract class ResourceTestBase extends BrowserTestBase {
       $expected_collection_document = $expected_response->getResponseData();
       $expected_collection_document['data'] = [];
       $expected_cacheability = $expected_response->getCacheableMetadata();
-      $access_denied_response = static::getAccessDeniedResponse($entity, $result, $url, NULL, $detail)->getResponseData();
+      $via_link = $this->getViaLinkArrayWithMeta($url, $entity);
+      $access_denied_response = static::getAccessDeniedResponse($entity, $result, $via_link, NULL, $detail)->getResponseData();
       static::addOmittedObject($expected_collection_document, static::errorsToOmittedObject($access_denied_response['errors']));
       $this->assertResourceResponse(200, $expected_collection_document, $actual_response, $expected_cacheability->getCacheTags(), $expected_cacheability->getCacheContexts(), FALSE, 'MISS');
     }
@@ -3510,6 +3526,39 @@ abstract class ResourceTestBase extends BrowserTestBase {
   protected function entityLoadUnchanged($id) {
     $this->entityStorage->resetCache();
     return $this->entityStorage->loadUnchanged($id);
+  }
+
+  /**
+   * Returns the `via` link structure.
+   *
+   * @param \Drupal\Core\Url $url
+   *   The URL for the `href`.
+   * @param \Drupal\Core\Entity\EntityInterface $entity
+   *   The entity this link refers to.
+   * @param string|null $revision_id
+   *   The expected revision ID.
+   *
+   * @return array
+   *   The `via` link structure.
+   */
+  protected function getViaLinkArrayWithMeta(Url $url, EntityInterface $entity, string $revision_id = NULL): array {
+    // Avoid mutation that may affect the context.
+    $url_local = clone $url;
+    $revision_id = $revision_id ?? ($entity instanceof RevisionableInterface ? $entity->getRevisionId() : NULL);
+
+    if ($revision_id !== NULL && $this->resourceType->isVersionable()) {
+      $query = $url_local->getOption('query') ?: [];
+      $query[JsonApiSpec::VERSION_QUERY_PARAMETER] = 'id:' . $revision_id;
+      $url_local->setOption('query', $query);
+    }
+
+    return [
+      'href' => $url_local->setAbsolute()->toString(),
+      'meta' => [
+        'resourceId' => $entity->uuid(),
+        JsonApiSpec::VERSION_QUERY_PARAMETER => $revision_id,
+      ],
+    ];
   }
 
 }

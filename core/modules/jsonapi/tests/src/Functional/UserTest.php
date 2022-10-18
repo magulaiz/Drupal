@@ -296,7 +296,8 @@ class UserTest extends ResourceTestBase {
 
     // DX: 403 when modifying username without required permission.
     $response = $this->request('PATCH', $url, $request_options);
-    $this->assertResourceErrorResponse(403, 'The current user is not allowed to PATCH the selected field (name).', $url, $response, '/data/attributes/name');
+    $via_link = $this->getViaLinkArrayWithMeta($url, $this->account);
+    $this->assertResourceErrorResponse(403, 'The current user is not allowed to PATCH the selected field (name).', $via_link, $response, '/data/attributes/name');
 
     $this->grantPermissionsToTestedRole(['change own username']);
 
@@ -369,7 +370,8 @@ class UserTest extends ResourceTestBase {
     $response = $this->request('PATCH', $url, $request_options);
     // Ensure the email address has not changed.
     $this->assertEquals('admin@example.com', $this->entityStorage->loadUnchanged(1)->getEmail());
-    $this->assertResourceErrorResponse(403, 'The current user is not allowed to PATCH the selected field (uid). The entity ID cannot be changed.', $url, $response, '/data/attributes/uid');
+    $via_link = $this->getViaLinkArrayWithMeta($url, $this->account);
+    $this->assertResourceErrorResponse(403, 'The current user is not allowed to PATCH the selected field (uid). The entity ID cannot be changed.', $via_link, $response, '/data/attributes/uid');
   }
 
   /**
