@@ -555,8 +555,6 @@ class FilterHtml extends FilterBase {
    *
    * @param array $restrictions
    *   A restrictions array in the format returned by getHtmlRestrictions().
-   *
-   * @return void
    */
   private function addSummaryDelimiterToRestrictions(&$restrictions) {
     // FALSE means "no attributes allowed"
