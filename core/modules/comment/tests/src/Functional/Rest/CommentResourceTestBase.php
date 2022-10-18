@@ -206,7 +206,7 @@ abstract class CommentResourceTestBase extends EntityResourceTestBase {
         ],
       ],
       'revision_created' => [
-        $this->formatExpectedTimestampItemValues((int) $this->entity->getRevisionCreationTime()),
+        (new \DateTime())->setTimestamp((int) $this->entity->getRevisionCreationTime())->setTimezone(new \DateTimeZone("UTC"))->format(\DateTime::RFC3339),
       ],
       'revision_user' => [],
       'revision_log_message' => [],
