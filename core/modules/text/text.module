@@ -67,7 +67,6 @@ function text_summary($text, $format = NULL, $size = NULL) {
     $size = \Drupal::config('text.settings')->get('default_summary_length');
   }
 
-  // Find where the delimiter is in the body.
   // Find where the summary marker is in the body.
   $summary_marker = \Drupal::config('text.settings')->get('summary_marker');
   $summary_marker_position = strpos($text, $summary_marker);
