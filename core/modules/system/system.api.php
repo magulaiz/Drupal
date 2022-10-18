@@ -34,5 +34,15 @@ function hook_system_themes_page_alter(&$theme_groups) {
 }
 
 /**
+ * Alters requirements data.
+ *
+ * @param array $requirements
+ *   The requirements data.
+ */
+function hook_requirements_alter(array &$requirements) {
+  unset($requirements['update status']);
+}
+
+/**
  * @} End of "addtogroup hooks".
  */
