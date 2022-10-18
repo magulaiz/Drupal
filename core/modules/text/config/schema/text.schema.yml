@@ -7,6 +7,9 @@ text.settings:
     default_summary_length:
       type: integer
       label: 'Default summary length'
+    summary_marker:
+      type: string
+      label: 'Summary marker'
 
 field.storage_settings.text:
   type: mapping
