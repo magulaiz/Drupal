@@ -57,7 +57,7 @@ class AnnounceFetcherTest extends KernelTestBase {
     $this->assertCount(1, $feeds);
     $this->assertSame('https://www.drupal.org/project/announce', $feeds[0]['link']);
     $this->assertSame('Drupal security update Test', $feeds[0]['title']);
-    $this->assertSame('^9', $feeds[0]['version']);
+    $this->assertSame('^10', $feeds[0]['version']);
     $this->assertCount(1, $this->history);
   }
 
@@ -70,7 +70,7 @@ class AnnounceFetcherTest extends KernelTestBase {
       'teaser' => 'Test teaser 1',
       'link' => 'https://www.drupal.org/project/announce',
       'sticky' => 1,
-      'version' => '^9',
+      'version' => '^10',
       'updated' => "2021-09-02T15:09:42+00:00",
     ];
     $this->setFeedItems([$feed_item_1]);
@@ -93,7 +93,7 @@ class AnnounceFetcherTest extends KernelTestBase {
           'id' => 1001,
           'teaser' => 'Test teaser 1',
           'sticky' => 1,
-          'version' => '^9',
+          'version' => '^10',
           'updated' => "2021-09-02T15:09:42+00:00",
         ],
       ],
@@ -102,7 +102,7 @@ class AnnounceFetcherTest extends KernelTestBase {
           'id' => 1002,
           'teaser' => 'Test teaser 2',
           'sticky' => 1,
-          'version' => '^9',
+          'version' => '^10',
           'updated' => "2021-09-02T15:09:42+00:00",
         ],
       ],
@@ -111,7 +111,7 @@ class AnnounceFetcherTest extends KernelTestBase {
           'id' => 1003,
           'teaser' => 'Test teaser 3',
           'sticky' => 1,
-          'version' => '^9',
+          'version' => '^10',
           'updated' => "2021-09-02T15:09:42+00:00",
         ],
       ],
@@ -120,7 +120,7 @@ class AnnounceFetcherTest extends KernelTestBase {
           'id' => 1004,
           'teaser' => 'Test teaser 4',
           'sticky' => 1,
-          'version' => '^9',
+          'version' => '^10',
           'updated' => "2021-09-02T15:09:42+00:00",
         ],
       ],
