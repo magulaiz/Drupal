@@ -161,7 +161,7 @@ class AlertsJsonFeedTest extends OffCanvasTestBase {
     $page = $this->getSession()->getPage();
     $unread_status = $page->find('css', '.announcement__unread-status');
     $this->assertNotEmpty($unread_status);
-    $this->assertStringContainsString('Only 9 - Drupal 106 is available and this feed is Updated', $unread_status->getParent()->getText());
+    $this->assertStringContainsString('Only 10 - Drupal 106 is available and this feed is Updated', $unread_status->getParent()->getText());
 
     // Access the alert icon again.
     $this->drupalLogout();
@@ -201,7 +201,7 @@ class AlertsJsonFeedTest extends OffCanvasTestBase {
     $page = $this->getSession()->getPage();
     $unread_status = $page->find('css', '.announcement__unread-status');
     $this->assertNotEmpty($unread_status);
-    $this->assertStringContainsString('Only 9 - Drupal 106 is available and this feed is Updated', $unread_status->getParent()->getText());
+    $this->assertStringContainsString('Only 10 - Drupal 106 is available and this feed is Updated', $unread_status->getParent()->getText());
 
     // Checking updated title.
     $new_page_html = $page->getHtml();
@@ -226,7 +226,7 @@ class AlertsJsonFeedTest extends OffCanvasTestBase {
     $this->assertSession()->elementNotExists('css', '.announcement__unread-status');
     $page = $this->getSession()->getPage();
     $new_page_html = $page->getHtml();
-    $this->assertStringNotContainsString('Only 9 - Drupal 106 is available and this feed is Updated', $new_page_html);
+    $this->assertStringNotContainsString('Only 10 - Drupal 106 is available and this feed is Updated', $new_page_html);
 
     // Change the feed url to updated json file.
     // For resetting temp storage.
@@ -241,7 +241,7 @@ class AlertsJsonFeedTest extends OffCanvasTestBase {
     $page = $this->getSession()->getPage();
     $unread_status = $page->find('css', '.announcement__unread-status');
     $this->assertNotEmpty($unread_status);
-    $this->assertStringContainsString('Only 9 - Drupal 106 is available and this feed is Updated', $unread_status->getParent()->getText());
+    $this->assertStringContainsString('Only 10 - Drupal 106 is available and this feed is Updated', $unread_status->getParent()->getText());
     $this->drupalLogout();
 
     // Change the feed url to removed feeds json file.
@@ -261,7 +261,7 @@ class AlertsJsonFeedTest extends OffCanvasTestBase {
     $this->assertSession()->elementNotExists('css', '.announcement__unread-status');
     $page = $this->getSession()->getPage();
     $new_page_html = $page->getHtml();
-    $this->assertStringNotContainsString('Only 9 - Drupal 106 is available and this feed is Updated', $new_page_html);
+    $this->assertStringNotContainsString('Only 10 - Drupal 106 is available and this feed is Updated', $new_page_html);
 
   }
 
