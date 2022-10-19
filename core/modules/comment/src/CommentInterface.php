@@ -67,7 +67,7 @@ interface CommentInterface extends ContentEntityInterface, EntityChangedInterfac
    * Returns the url of entity to which the comment is attached.
    *
    * @param \Drupal\Core\Entity\EntityInterface $entity
-   *
+   *   The entity to which the comment is attached.
    * @param string $rel
    *   The link relationship type, for example: canonical or edit-form.
    * @param array $options
