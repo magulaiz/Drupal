@@ -60,15 +60,15 @@ class AnnounceFetcher {
    *   The tempstore factory service.
    * @param \Psr\Log\LoggerInterface $logger
    *   The logger service.
-   * @param string $feedUrl
+   * @param string $feed_url
    *   The feed url path.
    */
-  public function __construct(ClientInterface $http_client, ConfigFactoryInterface $config, KeyValueExpirableFactory $temp_store, LoggerInterface $logger, string $feedUrl) {
+  public function __construct(ClientInterface $http_client, ConfigFactoryInterface $config, KeyValueExpirableFactory $temp_store, LoggerInterface $logger, string $feed_url) {
     $this->httpClient = $http_client;
     $this->config = $config->get('announcements_feed.settings');
     $this->tempStore = $temp_store->get('announcements_feed');
     $this->logger = $logger;
-    $this->feedUrl = $feedUrl;
+    $this->feedUrl = $feed_url;
   }
 
   /**
