@@ -222,7 +222,7 @@ printf "\n"
 # DrupalCI runs.
 # The new baseline will be available in the Jenkins test run artifacts under
 # the artifacts/phpstan directory. The DrupalCI test run will be interrupted.
-PHPSTAN_GENERATE_BASELINE=0
+PHPSTAN_GENERATE_BASELINE=1
 
 if [[ "$DRUPALCI" == "1" ]] && [[ $PHPSTAN_GENERATE_BASELINE == "1" ]]; then
   printf "\nGenerating PHPStan baseline.\n"
@@ -403,14 +403,15 @@ for FILE in $FILES; do
   ### JAVASCRIPT FILES
   ############################################################################
   if [[ -f "$TOP_LEVEL/$FILE" ]] && [[ $FILE =~ \.js$ ]]; then
+    cd "$TOP_LEVEL/core"
     # Check the coding standards.
-    if [[ -f ".eslintrc.passing.json" ]]; then
-      node ./node_modules/eslint/bin/eslint.js --quiet --config=.eslintrc.passing.json "$TOP_LEVEL/$FILE"
-      CORRECTJS=$?
-      if [ "$CORRECTJS" -ne "0" ]; then
-        # No need to write any output the node command will do this for us.
-        STATUS=1
-      fi
+    node ./node_modules/eslint/bin/eslint.js --quiet --config=.eslintrc.passing.json "$TOP_LEVEL/$FILE"
+    JSLINT=$?
+    if [ "$JSLINT" -ne "0" ]; then
+      # No need to write any output the node command will do this for us.
+      STATUS=1
+    else
+      printf "ESLint: $FILE ${green}passed${reset}\n"
     fi
     cd $TOP_LEVEL
   fi

@@ -26,7 +26,7 @@
         "phpunit/phpunit": "^9.5",
         "phpspec/prophecy-phpunit": "^2",
         "phpstan/extension-installer": "^1.1",
-        "phpstan/phpstan": "^1.8.5",
+        "phpstan/phpstan": "^1.8.10",
         "symfony/css-selector": "^6.1",
         "symfony/phpunit-bridge": "^6.1.2",
         "symfony/var-dumper": "^6.1",
@@ -40,7 +40,10 @@
     },
     "replace": {
         "symfony/polyfill-php72": "*",
-        "symfony/polyfill-php73": "*"
+        "symfony/polyfill-php73": "*",
+        "symfony/polyfill-php74": "*",
+        "symfony/polyfill-php80": "*",
+        "symfony/polyfill-php81": "*"
     },
     "minimum-stability": "dev",
     "prefer-stable": true,
