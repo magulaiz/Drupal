@@ -79,8 +79,7 @@ class AnnounceFetcher {
    */
   public function fetchIds(): array {
     $announcements = $this->fetch();
-    $ids = array_column($announcements, 'id');
-    return $ids;
+    return array_column($announcements, 'id');
   }
 
   /**
@@ -94,13 +93,12 @@ class AnnounceFetcher {
    */
   protected function isRelevantItem(array $announcement): bool {
     try {
-      $relevant_content = Semver::satisfies(\Drupal::VERSION, $announcement['version']);
+      return Semver::satisfies(\Drupal::VERSION, $announcement['version']);
     }
     catch (\Exception $e) {
       $this->logger->error($e->getMessage());
-      $relevant_content = FALSE;
     }
-    return $relevant_content;
+    return FALSE;
   }
 
   /**
@@ -113,17 +111,11 @@ class AnnounceFetcher {
    *   Return True if $announcement['link'] is controlled by the D.O.
    */
   public function validateUrl(array $announcement): bool {
-    if ($announcement['link']) {
-      $host = parse_url($announcement['link'], PHP_URL_HOST);
-      if ($host) {
-        // First character can only be a letter or a digit.
-        // @see https://www.rfc-editor.org/rfc/rfc1123#page-13
-        if (preg_match('/^([a-zA-Z0-9][a-zA-Z0-9\-_]*\.)?drupal\.org$/', $host)) {
-          return TRUE;
-        }
-      }
+    if (!$announcement['link']) {
+      return FALSE;
     }
-    return FALSE;
+    $host = parse_url($announcement['link'], PHP_URL_HOST);
+    return $host && preg_match('/(^|\.)drupal\.org$/', $host);
   }
 
   /**
