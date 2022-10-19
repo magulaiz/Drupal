@@ -15,18 +15,18 @@ use Drupal\Component\Serialization\Json;
 class AnnounceFetcher {
 
   /**
-   * The ConfigFactory service.
-   *
-   * @var \Drupal\Core\Config\ConfigFactoryInterface
-   */
-  protected $config;
-
-  /**
    * The Http Client.
    *
    * @var \GuzzleHttp\Client
    */
   protected $httpClient;
+
+  /**
+   * The ConfigFactory service.
+   *
+   * @var \Drupal\Core\Config\ConfigFactoryInterface
+   */
+  protected $config;
 
   /**
    * The tempstore service.
@@ -64,9 +64,9 @@ class AnnounceFetcher {
    *   The feed url path.
    */
   public function __construct(ClientInterface $http_client, ConfigFactoryInterface $config, KeyValueExpirableFactory $temp_store, LoggerInterface $logger, string $feedUrl) {
-    $this->tempStore = $temp_store->get('announcements_feed');
-    $this->config = $config->get('announcements_feed.settings');
     $this->httpClient = $http_client;
+    $this->config = $config->get('announcements_feed.settings');
+    $this->tempStore = $temp_store->get('announcements_feed');
     $this->logger = $logger;
     $this->feedUrl = $feedUrl;
   }
