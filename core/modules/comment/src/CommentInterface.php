@@ -6,6 +6,7 @@ use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityPublishedInterface;
 use Drupal\user\EntityOwnerInterface;
 use Drupal\Core\Entity\EntityChangedInterface;
+use Drupal\Core\Entity\EntityInterface;
 
 /**
  * Provides an interface defining a comment entity.
@@ -61,6 +62,23 @@ interface CommentInterface extends ContentEntityInterface, EntityChangedInterfac
    *   orphan.
    */
   public function getCommentedEntity();
+
+  /**
+   * Returns the url of entity to which the comment is attached.
+   *
+   * @param \Drupal\Core\Entity\EntityInterface $entity
+   *
+   * @param string $rel
+   *   The link relationship type, for example: canonical or edit-form.
+   * @param array $options
+   *   See \Drupal\Core\Routing\UrlGeneratorInterface::generateFromRoute() for
+   *   the available options.
+   *
+   * @return \Drupal\Core\Url
+   *   The URL object.
+   */
+  public static function getCommentedEntityUrl(EntityInterface $entity, $rel = 'canonical', array $options = []);
+
 
   /**
    * Returns the ID of the entity to which the comment is attached.
