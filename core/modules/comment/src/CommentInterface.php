@@ -79,7 +79,6 @@ interface CommentInterface extends ContentEntityInterface, EntityChangedInterfac
    */
   public static function getCommentedEntityUrl(EntityInterface $entity, $rel = 'canonical', array $options = []);
 
-
   /**
    * Returns the ID of the entity to which the comment is attached.
    *

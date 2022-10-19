@@ -173,7 +173,7 @@ class CommentManager implements CommentManagerInterface {
         $destination = ['destination' => Url::fromRoute('comment.reply', $comment_reply_parameters, ['fragment' => 'comment-form'])->toString()];
       }
       else {
-        $uri = Comment::getCommentedEntityUrl($entity,'canonical', ['fragment' => 'comment-form']);
+        $uri = Comment::getCommentedEntityUrl($entity, 'canonical', ['fragment' => 'comment-form']);
         $destination = ['destination' => $uri->toString()];
       }
 
