@@ -133,7 +133,7 @@ class AnnounceFetcher {
    * @return array
    *   An array of announcements from the feed relevant to the Drupal version.
    *   The array is empty if there were no matching announcements. If an error
-   *   occurred while fetching/decoding the feed its thrown as an exception.
+   *   occurred while fetching/decoding the feed, it is thrown as an exception.
    *
    * @throws \Exception
    */
