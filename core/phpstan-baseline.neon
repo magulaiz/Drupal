@@ -1,6 +1,6 @@
 parameters:
 	ignoreErrors:
 		-
-			message: "#^Variable \\$data_path in empty\\(\\) always exists and is not falsy\\.$#"
+			message: "#^Function install_download_translation\\(\\) should return string but return statement is missing\\.$#"
 			count: 1
-			path: ../composer/Plugin/Scaffold/Operations/AppendOp.php
+			path: includes/install.core.inc
