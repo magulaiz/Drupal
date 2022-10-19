@@ -374,12 +374,7 @@ class CommentForm extends ContentEntityForm {
     $entity = $comment->getCommentedEntity();
     $field_name = $comment->getFieldName();
 
-    if ($entity->hasLinkTemplate('canonical')) {
-      $uri = $entity->toUrl();
-    }
-    else {
-      $uri = Url::fromRoute('<nolink>');
-    }
+    $uri = $comment->getCommentedEntityUrl($entity);
 
     $logger = $this->logger('comment');
 

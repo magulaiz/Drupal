@@ -141,13 +141,8 @@ class CommentController extends ControllerBase {
 
       // Find the current display page for this comment.
       $page = $this->entityTypeManager()->getStorage('comment')->getDisplayOrdinal($comment, $field_definition->getSetting('default_mode'), $field_definition->getSetting('per_page'));
-      // @todo: Cleaner sub request handling.
-      if ($entity->hasLinkTemplate('canonical')) {
-        $uri = $entity->toUrl();
-      }
-      else {
-        $uri = Url::fromRoute('<nolink>');
-      }
+
+      $uri = $comment->getCommentedEntityUrl($entity);
       $subrequest_url = $uri->setOption('query', ['page' => $page])->toString(TRUE);
       $redirect_request = Request::create($subrequest_url->getGeneratedUrl(), 'GET', $request->query->all(), $request->cookies->all(), [], $request->server->all());
       // Carry over the session to the subrequest.

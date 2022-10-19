@@ -11,6 +11,7 @@ use Drupal\Core\Entity\EntityPublishedTrait;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
+use Drupal\Core\Url;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\user\Entity\User;
 use Drupal\user\EntityOwnerTrait;
@@ -354,6 +355,18 @@ class Comment extends ContentEntityBase implements CommentInterface {
    */
   public function getCommentedEntity() {
     return $this->get('entity_id')->entity;
+  }
+
+  /**
+   *
+   * {@inheritdoc}
+   */
+  public static function getCommentedEntityUrl($entity = null, $rel = 'canonical', array $options = []) {
+    if (!$entity || $entity->hasLinkTemplate('canonical')) {
+      return Url::fromRoute('<nolink>');
+    }
+
+    return $entity->toUrl($rel,$options);
   }
 
   /**

@@ -2,6 +2,7 @@
 
 namespace Drupal\comment;
 
+use Drupal\comment\Entity\Comment;
 use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Entity\EntityDisplayRepositoryInterface;
@@ -172,7 +173,8 @@ class CommentManager implements CommentManagerInterface {
         $destination = ['destination' => Url::fromRoute('comment.reply', $comment_reply_parameters, ['fragment' => 'comment-form'])->toString()];
       }
       else {
-        $destination = ['destination' => $entity->toUrl('canonical', ['fragment' => 'comment-form'])->toString()];
+        $uri = Comment::getCommentedEntityUrl($entity,'canonical', ['fragment' => 'comment-form']);
+        $destination = ['destination' => $uri->toString()];
       }
 
       if ($this->userConfig->get('register') != UserInterface::REGISTER_ADMINISTRATORS_ONLY) {
