@@ -8,6 +8,7 @@ use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Link;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
+use Drupal\Core\Url;
 
 /**
  * Class to define the comment breadcrumb builder.
@@ -48,7 +49,14 @@ class CommentBreadcrumbBuilder implements BreadcrumbBuilderInterface {
     $breadcrumb->addLink(Link::createFromRoute($this->t('Home'), '<front>'));
 
     $entity = $route_match->getParameter('entity');
-    $breadcrumb->addLink(new Link($entity->label(), $entity->toUrl()));
+    if ($entity->hasLinkTemplate('canonical')) {
+      $uri = $entity->toUrl();
+    }
+    else {
+      $uri = Url::fromRoute('<nolink>');
+    }
+
+    $breadcrumb->addLink(new Link($entity->label(), $uri));
     $breadcrumb->addCacheableDependency($entity);
 
     if (($pid = $route_match->getParameter('pid')) && ($comment = $this->entityTypeManager->getStorage('comment')->load($pid))) {
