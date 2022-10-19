@@ -362,7 +362,7 @@ class Comment extends ContentEntityBase implements CommentInterface {
    * {@inheritdoc}
    */
   public static function getCommentedEntityUrl($entity = null, $rel = 'canonical', array $options = []) {
-    if (!$entity || $entity->hasLinkTemplate('canonical')) {
+    if (!$entity || !$entity->hasLinkTemplate('canonical')) {
       return Url::fromRoute('<nolink>');
     }
 
