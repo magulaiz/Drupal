@@ -105,6 +105,7 @@ class ImageUrlTest extends ImageTestBase {
     $this->pressEditorButton('Insert image');
     $panel = $page->find('css', '.ck-dropdown__panel.ck-image-insert__panel');
     $src_input = $panel->find('css', 'input[type=text]');
+    $src_input->focus();
     $src_input->setValue($src);
     $panel->find('xpath', "//button[span[text()='Insert']]")->click();
 
