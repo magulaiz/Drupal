@@ -44,7 +44,7 @@ class RedirectResponseSubscriber implements EventSubscriberInterface {
     protected \Closure $loggerClosure,
   ) {
     if ($this->app instanceof RequestContext) {
-      @trigger_error('Passing instance of RequestContext class instead of an App object as an app argument to ' . __METHOD__ . ' is deprecated in drupal:9.4.0 and is removed in drupal:10.0.0. Pass the "app" service dependency instead. See https://www.drupal.org/node/3279668', E_USER_DEPRECATED);
+      @trigger_error('Passing instance of RequestContext class instead of an App object as an app argument to ' . __METHOD__ . ' is deprecated in drupal:10.1.0 and is removed in drupal:11.0.0. Pass the "app" service dependency instead. See https://www.drupal.org/node/3279668', E_USER_DEPRECATED);
       $this->app = \Drupal::service('app');
     }
   }

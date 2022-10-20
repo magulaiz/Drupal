@@ -25,7 +25,7 @@ trait LocalAwareRedirectResponseTrait {
    *
    * @var string
    */
-  protected $baseUrl;
+  protected string $baseUrl;
 
   /**
    * Determines whether a path is local.
@@ -47,7 +47,7 @@ trait LocalAwareRedirectResponseTrait {
    * @return string
    *   The base URL.
    */
-  protected function getBaseUrl() {
+  protected function getBaseUrl(): string {
     if (!isset($this->baseUrl)) {
       $this->baseUrl = \Drupal::app()->getBaseUrl();
     }
@@ -62,7 +62,7 @@ trait LocalAwareRedirectResponseTrait {
    *
    * @return $this
    */
-  public function setBaseUrl($base_url) {
+  public function setBaseUrl(string $base_url): static {
     $this->baseUrl = $base_url;
 
     return $this;

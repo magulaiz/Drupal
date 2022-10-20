@@ -45,7 +45,7 @@ class RequestContext extends SymfonyRequestContext {
    * {@inheritdoc}
    */
   public function fromRequest(Request $request): static {
-    @trigger_error(__METHOD__ . ' is deprecated in drupal:10.1.0 and is removed from drupal:10.0.0. Use Symfony\Component\Routing\RequestContext instance instead. See https://www.drupal.org/node/3279668', E_USER_DEPRECATED);
+    @trigger_error(__METHOD__ . ' is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use Symfony\Component\Routing\RequestContext instance instead. See https://www.drupal.org/node/3279668', E_USER_DEPRECATED);
     // @todo Extract the code in DrupalKernel::initializeRequestGlobals.
     //   See https://www.drupal.org/node/2404601
     if (isset($GLOBALS['base_url'])) {
@@ -66,7 +66,7 @@ class RequestContext extends SymfonyRequestContext {
    * @see https://www.drupal.org/node/3279668
    */
   public function getCompleteBaseUrl() {
-    @trigger_error(__METHOD__ . ' is deprecated in drupal:9.4.0 and is removed from drupal:10.0.0. Use \Drupal::service("app")->getBaseUrl() instead. See https://www.drupal.org/node/3279668', E_USER_DEPRECATED);
+    @trigger_error(__METHOD__ . ' is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use \Drupal::service("app")->getBaseUrl() instead. See https://www.drupal.org/node/3279668', E_USER_DEPRECATED);
     return $this->completeBaseUrl;
   }
 
