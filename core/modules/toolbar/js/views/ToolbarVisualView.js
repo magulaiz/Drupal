@@ -25,7 +25,7 @@
       this.listenTo(this.model, 'change:activeTab change:orientation change:isOriented change:isTrayToggleVisible', this.render);
       this.listenTo(this.model, 'change:mqMatches', this.onMediaQueryChange);
       this.listenTo(this.model, 'change:offsets', this.adjustPlacement);
-      this.listenTo(this.model, 'change:activeTab change:orientation change:isOriented', this.updateToolbarHeight);
+      this.listenTo(this.model, 'change:activeTab change:orientation change:isOriented change:isPageLoaded', this.updateToolbarHeight);
       this.$el.find('.toolbar-tray .toolbar-lining').append(Drupal.theme('toolbarOrientationToggle'));
       this.model.trigger('change:activeTab');
     },

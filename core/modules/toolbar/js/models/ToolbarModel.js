@@ -23,7 +23,8 @@
         right: 0,
         bottom: 0,
         left: 0
-      }
+      },
+      isPageLoaded: false
     },
     validate: function validate(attributes, options) {
       if (attributes.orientation === 'horizontal' && this.get('locked') && !options.override) {

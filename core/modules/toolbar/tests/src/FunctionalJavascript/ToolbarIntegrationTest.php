@@ -14,7 +14,7 @@ class ToolbarIntegrationTest extends WebDriverTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['toolbar', 'node'];
+  protected static $modules = ['toolbar', 'node', 'big_pipe'];
 
   /**
    * {@inheritdoc}
@@ -56,6 +56,41 @@ class ToolbarIntegrationTest extends WebDriverTestBase {
 
     $page->pressButton('Horizontal orientation');
     $this->assertTrue($tray->hasClass('toolbar-tray-horizontal'), 'After toggling the orientation a second time the toolbar tray is displayed horizontally again.');
+  }
+
+  /**
+   * Tests that toolbar works properly when Big Pipe is enabled.
+   */
+  public function testToolbarWithBigPipe() {
+    $admin_user = $this->drupalCreateUser([
+      'access toolbar',
+      'administer site configuration',
+      'access content overview',
+      'administer modules',
+    ]);
+    $this->drupalLogin($admin_user);
+
+    $session = $this->getSession();
+    $page = $session->getPage();
+
+    // Verifying BigPipe assets are present.
+    $this->assertFalse(empty($this->getDrupalSettings()), 'drupalSettings present.');
+    $this->assertContains('big_pipe/big_pipe', explode(',', $this->getDrupalSettings()['ajaxPageState']['libraries']), 'BigPipe asset library is present.');
+
+    $page->clickLink($admin_user->label());
+    $page->clickLink('Edit profile');
+    $this->assertNotEmpty($this->assertSession()->waitForElement('css', 'nav#toolbar-bar'));
+    $this->assertNotEmpty($this->assertSession()->waitForElement('css', 'div#toolbar-item-user-tray .toolbar-menu'));
+    $this->assertNotEmpty($this->assertSession()->waitForElementVisible('css', 'div#toolbar-item-user-tray .toolbar-menu'));
+
+    // Get the padding-top value of the body element when Big Page is enabled.
+    $bp_body_padding_top = (int) $session->evaluateScript("parseInt(getComputedStyle(document.querySelector('body'))['padding-top'])");
+    // Get the height of the toolbar components when Big Page is enabled.
+    $bp_toolbar_tab_height = (int) $session->evaluateScript("parseInt(getComputedStyle(document.querySelector('nav#toolbar-bar'))['height'])");
+    $bp_toolbar_tray_height = (int) $session->evaluateScript("parseInt(getComputedStyle(document.querySelector('div#toolbar-item-user-tray'))['height'])");
+
+    // The toolbar should not overlap the body element.
+    $this->assertEquals($bp_body_padding_top, $bp_toolbar_tab_height + $bp_toolbar_tray_height);
   }
 
 }
