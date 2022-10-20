@@ -69,6 +69,19 @@ class HtmlList extends StylePluginBase {
       '#size' => '30',
       '#default_value' => $this->options['class'],
     ];
+    // Add support for selecting an HTML label to use for the grouping
+    $c = count($this->options['grouping']);
+    // Add a form for every grouping, plus one.
+    for ($i = 0; $i <= $c; $i++) {
+      $grouping = !empty($this->options['grouping'][$i]) ? $this->options['grouping'][$i] : [];
+      $form['grouping'][$i]['grouping_label_element'] = [
+        '#type' => 'select',
+        '#title' => $this->t('Grouping Label Tag', ['@number' => $i + 1]),
+        '#options' => $this->getLabelElements(),
+        '#default_value' => $grouping['grouping_label_element'],
+        '#description' => $this->t('You may specify a heading level by which to group the records.'),
+    ];
+    }
   }
 
 }

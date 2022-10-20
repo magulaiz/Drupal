@@ -326,19 +326,6 @@ abstract class StylePluginBase extends PluginBase {
             '#default_value' => $grouping['field'],
             '#description' => $this->t('You may optionally specify a field by which to group the records. Leave blank to not group.'),
           ];
-          $form['grouping'][$i]['grouping_label_element'] = [
-            '#type' => 'select',
-            '#title' => $this->t('Grouping Label Tag', ['@number' => $i + 1]),
-            '#options' => $this->getLabelElements(),
-            '#default_value' => $grouping['grouping_label_element'],
-            '#description' => $this->t('You may specify an HTML element for formatting the grouping label.'),
-            '#states' => [
-              'invisible' => [
-                ':input[name="style_options[grouping][' . $i . '][field]"]' => ['value' => ''],
-              ],
-            ],
-          ];
-
           $form['grouping'][$i]['rendered'] = [
             '#type' => 'checkbox',
             '#title' => $this->t('Use rendered output to group rows'),
@@ -617,7 +604,7 @@ abstract class StylePluginBase extends PluginBase {
       $rendered = $group_rendered === NULL ? TRUE : $group_rendered;
       $groupings = [['field' => $groupings, 'rendered' => $rendered]];
     }
-    
+
     // Make sure fields are rendered
     $this->renderFields($this->view->result);
     $sets = [];
