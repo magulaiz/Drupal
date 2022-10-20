@@ -7,10 +7,9 @@ namespace Drupal\Tests\Core\Routing;
 use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Cache\CacheableRedirectResponse;
 use Drupal\Core\Cache\CacheableResponseInterface;
-use Drupal\Core\Routing\RequestContext;
 use Drupal\Core\Routing\TrustedRedirectResponse;
 use Drupal\Tests\UnitTestCase;
-use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
 /**
@@ -33,10 +32,15 @@ class TrustedRedirectResponseTest extends UnitTestCase {
    * @covers ::setTargetUrl
    */
   public function testSetTargetUrlWithUntrustedUrl(): void {
-    $request_context = new RequestContext();
-    $request_context->setCompleteBaseUrl('https://www.drupal.org');
-    $container = new ContainerBuilder();
-    $container->set('router.request_context', $request_context);
+    $app = $this->getMockBuilder('Drupal\Core\App')
+      ->disableOriginalConstructor()
+      ->getMock();
+    $app->expects($this->any())
+      ->method('getBaseUrl')
+      ->willReturn('http://example.com/drupal');
+
+    $container = new Container();
+    $container->set('app', $app);
     \Drupal::setContainer($container);
 
     $redirect_response = new TrustedRedirectResponse('/example');

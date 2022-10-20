@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\views\Unit\Plugin\field;
 
+use Drupal\Core\App;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\GeneratedUrl;
 use Drupal\Core\Language\Language;
@@ -130,6 +131,10 @@ class FieldPluginBaseTest extends UnitTestCase {
   protected function setUp(): void {
     parent::setUp();
 
+    $app = $this->getMockBuilder(App::class)
+      ->setConstructorArgs([$this->root])
+      ->getMock();
+
     $this->executable = $this->getMockBuilder('Drupal\views\ViewExecutable')
       ->disableOriginalConstructor()
       ->getMock();
@@ -158,6 +163,7 @@ class FieldPluginBaseTest extends UnitTestCase {
     $this->renderer = $this->createMock('Drupal\Core\Render\RendererInterface');
 
     $container_builder = new ContainerBuilder();
+    $container_builder->set('app', $app);
     $container_builder->set('url_generator', $this->urlGenerator);
     $container_builder->set('path.validator', $this->pathValidator);
     $container_builder->set('unrouted_url_assembler', $this->unroutedUrlAssembler);

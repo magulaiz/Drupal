@@ -124,7 +124,7 @@ const JS_THEME = 100;
  * - http://example.com/drupal/folder returns "/drupal/folder/".
  */
 function base_path() {
-  return $GLOBALS['base_path'];
+  return \Drupal::app()->getBasePath() . '/';
 }
 
 /**

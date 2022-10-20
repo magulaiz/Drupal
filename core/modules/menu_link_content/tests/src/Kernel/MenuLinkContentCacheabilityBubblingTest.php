@@ -61,7 +61,7 @@ class MenuLinkContentCacheabilityBubblingTest extends KernelTestBase {
   public function testOutboundPathAndRouteProcessing(): void {
     $request_stack = \Drupal::requestStack();
     /** @var \Symfony\Component\Routing\RequestContext $request_context */
-    $request_context = \Drupal::service('router.request_context');
+    $request_context = \Drupal::service('router.symfony_request_context');
 
     $request = Request::create('/');
     $request->attributes->set(RouteObjectInterface::ROUTE_NAME, '<front>');

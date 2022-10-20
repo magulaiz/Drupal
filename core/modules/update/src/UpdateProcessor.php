@@ -4,6 +4,7 @@ namespace Drupal\update;
 
 use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Component\Utility\Crypt;
+use Drupal\Core\App;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\KeyValueStore\KeyValueFactoryInterface;
 use Drupal\Core\KeyValueStore\KeyValueExpirableFactoryInterface;
@@ -80,6 +81,13 @@ class UpdateProcessor implements UpdateProcessorInterface {
   protected $privateKey;
 
   /**
+   * The application object.
+   *
+   * @var \Drupal\Core\App
+   */
+  protected App $app;
+
+  /**
    * The queue for fetching release history data.
    */
   protected array $fetchTasks;
@@ -103,6 +111,8 @@ class UpdateProcessor implements UpdateProcessorInterface {
    *   The expirable key/value factory.
    * @param \Drupal\Component\Datetime\TimeInterface $time
    *   The time service.
+   * @param \Drupal\Core\App $app
+   *   The application object.
    */
   public function __construct(
     ConfigFactoryInterface $config_factory,
@@ -113,6 +123,7 @@ class UpdateProcessor implements UpdateProcessorInterface {
     KeyValueFactoryInterface $key_value_factory,
     KeyValueExpirableFactoryInterface $key_value_expirable_factory,
     protected TimeInterface $time,
+    App $app,
   ) {
     $this->updateFetcher = $update_fetcher;
     $this->updateSettings = $config_factory->get('update.settings');
@@ -122,6 +133,7 @@ class UpdateProcessor implements UpdateProcessorInterface {
     $this->availableReleasesTempStore = $key_value_expirable_factory->get('update_available_releases');
     $this->stateStore = $state_store;
     $this->privateKey = $private_key;
+    $this->app = $app;
     $this->fetchTasks = [];
     $this->failed = [];
   }
@@ -160,8 +172,6 @@ class UpdateProcessor implements UpdateProcessorInterface {
    * {@inheritdoc}
    */
   public function processFetchTask($project) {
-    global $base_url;
-
     // This can be in the middle of a long-running batch.
     $request_time_difference = $this->time->getCurrentTime() - $this->time->getRequestTime();
     if (empty($this->failed)) {
@@ -174,7 +184,7 @@ class UpdateProcessor implements UpdateProcessorInterface {
 
     $success = FALSE;
     $available = [];
-    $site_key = Crypt::hmacBase64($base_url, $this->privateKey->get());
+    $site_key = Crypt::hmacBase64($this->app->getBaseUrl(), $this->privateKey->get());
     $fetch_url_base = $this->updateFetcher->getFetchBaseUrl($project);
     $project_name = $project['name'];
 

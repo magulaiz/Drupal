@@ -296,7 +296,7 @@ trait FunctionalTestSetupTrait {
     // its KernelEvents::REQUEST listener. In the parent site this event is not
     // fired, therefore it is necessary to update the request context manually
     // here.
-    $this->container->get('router.request_context')->fromRequest($request);
+    $this->container->get('router.symfony_request_context')->fromRequest($request);
 
     return $request;
   }

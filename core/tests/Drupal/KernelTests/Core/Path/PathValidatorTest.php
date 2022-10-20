@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace Drupal\KernelTests\Core\Path;
 
-use Drupal\Core\Routing\RequestContext;
 use Drupal\Core\Url;
 use Drupal\entity_test\Entity\EntityTest;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\Tests\user\Traits\UserCreationTrait;
+use Symfony\Component\Routing\RequestContext;
 
 /**
  * Tests the path validator.
@@ -36,7 +36,7 @@ class PathValidatorTest extends KernelTestBase {
   }
 
   public function testGetUrlIfValidWithoutAccessCheck(): void {
-    $requestContext = \Drupal::service('router.request_context');
+    $requestContext = \Drupal::service('router.symfony_request_context');
     $pathValidator = \Drupal::service('path.validator');
 
     $entity = EntityTest::create([
@@ -64,7 +64,7 @@ class PathValidatorTest extends KernelTestBase {
         while ($request_stack->getCurrentRequest()) {
           $request = $request_stack->pop();
         }
-        $this->container->set('router.request_context', new RequestContext());
+        $this->container->set('router.symfony_request_context', new RequestContext());
       }
       else {
         $requestContext->setMethod($method);

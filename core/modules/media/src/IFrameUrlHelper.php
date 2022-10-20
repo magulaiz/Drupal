@@ -2,9 +2,9 @@
 
 namespace Drupal\media;
 
+use Drupal\Core\App;
 use Drupal\Component\Utility\Crypt;
 use Drupal\Core\PrivateKey;
-use Drupal\Core\Routing\RequestContext;
 use Drupal\Core\Site\Settings;
 
 /**
@@ -17,11 +17,11 @@ use Drupal\Core\Site\Settings;
 class IFrameUrlHelper {
 
   /**
-   * The request context service.
+   * The application object.
    *
-   * @var \Drupal\Core\Routing\RequestContext
+   * @var \Drupal\Core\App
    */
-  protected $requestContext;
+  protected App $app;
 
   /**
    * The private key service.
@@ -33,13 +33,13 @@ class IFrameUrlHelper {
   /**
    * IFrameUrlHelper constructor.
    *
-   * @param \Drupal\Core\Routing\RequestContext $request_context
-   *   The request context service.
+   * @param \Drupal\Core\App $app
+   *   The application object.
    * @param \Drupal\Core\PrivateKey $private_key
    *   The private key service.
    */
-  public function __construct(RequestContext $request_context, PrivateKey $private_key) {
-    $this->requestContext = $request_context;
+  public function __construct(App $app, PrivateKey $private_key) {
+    $this->app = $app;
     $this->privateKey = $private_key;
   }
 
@@ -74,7 +74,7 @@ class IFrameUrlHelper {
       return FALSE;
     }
     $url_host = parse_url($url, PHP_URL_HOST);
-    $system_host = parse_url($this->requestContext->getCompleteBaseUrl(), PHP_URL_HOST);
+    $system_host = parse_url($this->app->getBaseUrl(), PHP_URL_HOST);
 
     // The URL is secure if its domain is not the same as the domain of the base
     // URL of the current request.

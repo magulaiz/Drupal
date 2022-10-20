@@ -20,10 +20,10 @@ class AlreadyInstalledException extends InstallerException {
 
     $title = $this->t('Drupal already installed');
     $replacements = [
-      ':base-url' => $GLOBALS['base_url'],
+      ':base-url' => \Drupal::app()->getBaseUrl(),
       // We cannot use the route system.db_update here because we are too early
       // in the execution stack.
-      ':update-url' => $GLOBALS['base_path'] . 'update.php',
+      ':update-url' => \Drupal::app()->getBasePath() . 'update.php',
     ];
     $message = $this->t('<ul>
 <li>To start over, you must empty your existing database and copy <em>default.settings.php</em> over <em>settings.php</em>.</li>

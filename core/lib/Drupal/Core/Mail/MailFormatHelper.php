@@ -324,21 +324,18 @@ class MailFormatHelper {
    * \Drupal\Core\Mail\MailFormatHelper::htmlToText().
    */
   protected static function htmlToMailUrls($match = NULL, $reset = FALSE) {
-    // @todo Use request context instead.
-    global $base_url, $base_path;
-
     if ($reset) {
       // Reset internal URL list.
       static::$urls = [];
     }
     else {
       if (empty(static::$regexp)) {
-        static::$regexp = '@^' . preg_quote($base_path, '@') . '@';
+        static::$regexp = '@^' . preg_quote(\Drupal::app()->getBasePath() . '/', '@') . '@';
       }
       if ($match) {
         [, , $url, $label] = $match;
         // Ensure all URLs are absolute.
-        static::$urls[] = strpos($url, '://') ? $url : preg_replace(static::$regexp, $base_url . '/', $url);
+        static::$urls[] = strpos($url, '://') ? $url : preg_replace(static::$regexp, \Drupal::app()->getBaseUrl() . '/', $url);
         return $label . ' [' . count(static::$urls) . ']';
       }
     }

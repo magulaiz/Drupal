@@ -1020,8 +1020,7 @@ function install_redirect_url($install_state) {
  * @see install_redirect_url()
  */
 function install_full_redirect_url($install_state) {
-  global $base_url;
-  return $base_url . '/' . install_redirect_url($install_state);
+  return \Drupal::app()->getBaseUrl() . '/' . install_redirect_url($install_state);
 }
 
 /**

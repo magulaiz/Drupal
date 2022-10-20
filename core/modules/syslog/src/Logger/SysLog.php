@@ -2,6 +2,7 @@
 
 namespace Drupal\syslog\Logger;
 
+use Drupal\Core\App;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Logger\LogMessageParserInterface;
 use Drupal\Core\Logger\RfcLoggerTrait;
@@ -30,6 +31,13 @@ class SysLog implements LoggerInterface {
   protected $parser;
 
   /**
+   * The application object.
+   *
+   * @var \Drupal\Core\App
+   */
+  protected App $app;
+
+  /**
    * Stores whether there is a system logger connection opened or not.
    *
    * @var bool
@@ -43,10 +51,13 @@ class SysLog implements LoggerInterface {
    *   The configuration factory object.
    * @param \Drupal\Core\Logger\LogMessageParserInterface $parser
    *   The parser to use when extracting message variables.
+   * @param \Drupal\Core\App $app
+   *   The application object.
    */
-  public function __construct(ConfigFactoryInterface $config_factory, LogMessageParserInterface $parser) {
+  public function __construct(ConfigFactoryInterface $config_factory, LogMessageParserInterface $parser, App $app) {
     $this->config = $config_factory->get('syslog.settings');
     $this->parser = $parser;
+    $this->app = $app;
   }
 
   /**
@@ -68,8 +79,6 @@ class SysLog implements LoggerInterface {
    * {@inheritdoc}
    */
   public function log($level, string|\Stringable $message, array $context = []): void {
-    global $base_url;
-
     $format = $this->config->get('format');
     // If no format is configured then a message will not be written to syslog
     // so return early. This occurs during installation of the syslog module
@@ -89,7 +98,7 @@ class SysLog implements LoggerInterface {
     $message = empty($message_placeholders) ? $message : strtr($message, $message_placeholders);
 
     $entry = strtr($format, [
-      '!base_url' => $base_url,
+      '!base_url' => $this->app->getBaseUrl(),
       '!timestamp' => $context['timestamp'],
       '!type' => $context['channel'],
       '!ip' => $context['ip'],
