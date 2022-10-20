@@ -87,8 +87,11 @@ abstract class ImageTestBase extends CKEditor5TestBase {
     $this->pressEditorButton('Insert image');
     $panel = $page->find('css', '.ck-dropdown__panel.ck-image-insert__panel');
     $src_input = $panel->find('css', 'input[type=text]');
-    $src_input->focus();
-    $src_input->setValue($src);
+    $this->getSession()->executeScript('
+      const input = document.querySelector(".ck-dropdown__panel.ck-image-insert__panel input[type=text]");
+      input.value = "' . $src . '";
+      input.dispatchEvent(new Event("input", {bubbles:true}));
+    ');
     $panel->find('xpath', "//button[span[text()='Insert']]")->click();
   }
 
