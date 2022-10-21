@@ -15,6 +15,7 @@ use Drupal\views\Views;
  */
 class GlossaryTest extends ViewTestBase {
 
+  use AssertPageCacheContextsAndTagsTrait;
   use AssertViewsCacheTagsTrait;
   use AssertPageCacheContextsAndTagsTrait;
 
