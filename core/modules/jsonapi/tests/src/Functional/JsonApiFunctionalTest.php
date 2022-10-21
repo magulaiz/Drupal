@@ -553,10 +553,10 @@ class JsonApiFunctionalTest extends JsonApiFunctionalTestBase {
   /**
    * Tests adding metadata to a resource.
    */
-  public function testMetaEvent() {
+  public function testMetaEvent(): void {
     $this->createDefaultContent(3, 5, FALSE, FALSE, static::IS_NOT_MULTILINGUAL);
 
-    // Test resource meta is added
+    // Tests resource meta is added.
     $this->container->get('module_installer')->install(['jsonapi_test_meta_events']);
     $node = $this->nodes[0];
     \Drupal::state()->set('jsonapi_test_meta_events.object_meta', [
@@ -565,7 +565,7 @@ class JsonApiFunctionalTest extends JsonApiFunctionalTestBase {
       'fields' => ['title'],
     ]);
 
-    // Test if relationship has correct metadata when loading a single resource
+    // Tests if relationship has correct metadata when loading a single resource.
     $result = Json::decode($this->drupalGet('jsonapi/node/article/' . $node->uuid()));
     $this->assertEquals(['resource_meta_title' => $node->getTitle()], $result['data']['meta']);
     // Test if the cache tags bubbled up

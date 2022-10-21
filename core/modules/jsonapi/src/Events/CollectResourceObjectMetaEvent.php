@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace Drupal\jsonapi\Events;
 
 use Drupal\Component\Utility\NestedArray;
@@ -21,21 +23,21 @@ final class CollectResourceObjectMetaEvent extends Event implements RefinableCac
    *
    * @var \Drupal\jsonapi\JsonApiResource\ResourceObject
    */
-  private $resourceObject;
+  private ResourceObject $resourceObject;
 
   /**
    * The context options from the normalizer.
    *
    * @var array
    */
-  private $context = [];
+  private array $context = [];
 
   /**
    * The metadata.
    *
    * @var array
    */
-  private $meta = [];
+  private array $meta = [];
 
   /**
    * Constructs a new CollectResourceObjectMetaEvent object.
@@ -46,6 +48,8 @@ final class CollectResourceObjectMetaEvent extends Event implements RefinableCac
    *   The context options for the normalizer.
    */
   public function __construct(ResourceObject $resource_object, array $context) {
+    assert(!empty($context['resource_object']) && $context['resource_object'] instanceof ResourceObject);
+
     $this->resourceObject = $resource_object;
     $this->context = $context;
   }
@@ -90,7 +94,7 @@ final class CollectResourceObjectMetaEvent extends Event implements RefinableCac
    *
    * @return $this
    */
-  public function setMeta($property, $value): CollectResourceObjectMetaEvent {
+  public function setMeta($property, $value): self {
     NestedArray::setValue($this->meta, (array) $property, $value, TRUE);
     return $this;
   }

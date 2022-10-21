@@ -159,7 +159,7 @@ class EntityResource {
    *
    * @var \Symfony\Component\EventDispatcher\EventDispatcherInterface
    */
-  protected $eventDispatcher;
+  protected EventDispatcherInterface $eventDispatcher;
 
   /**
    * Instantiates an EntityResource object.

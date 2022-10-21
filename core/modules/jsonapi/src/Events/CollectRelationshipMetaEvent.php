@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace Drupal\jsonapi\Events;
 
 use Drupal\Component\Utility\NestedArray;
@@ -22,21 +24,21 @@ final class CollectRelationshipMetaEvent extends Event implements RefinableCache
    *
    * @var \Drupal\jsonapi\JsonApiResource\ResourceObject
    */
-  private $resourceObject;
+  private ResourceObject $resourceObject;
 
   /**
    * The relationship field.
    *
    * @var \Drupal\Core\Field\EntityReferenceFieldItemListInterface
    */
-  private $relationshipField;
+  private EntityReferenceFieldItemListInterface $relationshipField;
 
   /**
    * The metadata.
    *
    * @var array
    */
-  private $meta = [];
+  private array $meta = [];
 
   /**
    * Constructs a new CollectRelationshipMetaEvent object.

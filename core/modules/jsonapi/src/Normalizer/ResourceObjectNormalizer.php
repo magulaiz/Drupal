@@ -38,7 +38,7 @@ class ResourceObjectNormalizer extends NormalizerBase {
    *
    * @var \Symfony\Component\EventDispatcher\EventDispatcherInterface
    */
-  protected $eventDispatcher;
+  protected EventDispatcherInterface $eventDispatcher;
 
   /**
    * Constructs a ResourceObjectNormalizer object.
