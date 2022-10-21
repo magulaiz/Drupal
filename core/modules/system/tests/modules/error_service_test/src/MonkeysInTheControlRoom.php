@@ -22,6 +22,11 @@ class MonkeysInTheControlRoom implements HttpKernelInterface {
   protected $app;
 
   /**
+   * The settings.
+   */
+  protected Settings $settings;
+
+  /**
    * MonkeysInTheControlRoom constructor.
    *
    * @param \Symfony\Component\HttpKernel\HttpKernelInterface $app
@@ -37,7 +42,7 @@ class MonkeysInTheControlRoom implements HttpKernelInterface {
   /**
    * {@inheritdoc}
    */
-  public function handle(Request $request, $type = self::MASTER_REQUEST, $catch = TRUE): Response {
+  public function handle(Request $request, $type = self::MAIN_REQUEST, $catch = TRUE): Response {
     if (\Drupal::state()->get('error_service_test.break_bare_html_renderer')) {
       // Let the bedlam begin.
       // 1) Force a container rebuild.

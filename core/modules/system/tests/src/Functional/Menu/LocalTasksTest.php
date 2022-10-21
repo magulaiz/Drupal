@@ -23,7 +23,7 @@ class LocalTasksTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'classy';
+  protected $defaultTheme = 'starterkit_theme';
 
   /**
    * The local tasks block under testing.
@@ -93,10 +93,7 @@ class LocalTasksTest extends BrowserTestBase {
    * @internal
    */
   protected function assertNoLocalTasks(int $level = 0): void {
-    $elements = $this->xpath('//*[contains(@class, :class)]//a', [
-      ':class' => $level == 0 ? 'tabs primary' : 'tabs secondary',
-    ]);
-    $this->assertEmpty($elements, 'Local tasks not found.');
+    $this->assertSession()->elementNotExists('xpath', '//*[contains(@class, "' . ($level == 0 ? 'tabs primary' : 'tabs secondary') . '")]//a');
   }
 
   /**
@@ -177,7 +174,7 @@ class LocalTasksTest extends BrowserTestBase {
     $this->assertEquals('menu_test', $definitions['menu_test.local_task_test_tasks_settings_sub2']['provider']);
     $this->assertEquals('menu_test', $definitions['menu_test.local_task_test_tasks_settings_sub3']['provider']);
 
-    // Test that we we correctly apply the active class to tabs where one of the
+    // Test that we correctly apply the active class to tabs where one of the
     // request attributes is upcast to an entity object.
     $entity = \Drupal::entityTypeManager()->getStorage('entity_test')->create(['bundle' => 'test']);
     $entity->save();
@@ -191,9 +188,8 @@ class LocalTasksTest extends BrowserTestBase {
 
     $this->assertLocalTasks($tasks, 0);
 
-    $result = $this->xpath('//ul[contains(@class, "tabs")]//li[contains(@class, "active")]');
-    $this->assertCount(1, $result, 'There is one active tab.');
-    $this->assertEquals('upcasting sub1(active tab)', $result[0]->getText(), 'The "upcasting sub1" tab is active.');
+    $this->assertSession()->elementsCount('xpath', '//ul[contains(@class, "tabs")]//li[contains(@class, "active")]', 1);
+    $this->assertSession()->elementTextEquals('xpath', '//ul[contains(@class, "tabs")]//li[contains(@class, "active")]', 'upcasting sub1(active tab)');
 
     $this->drupalGet(Url::fromRoute('menu_test.local_task_test_upcasting_sub2', ['entity_test' => '1']));
 
@@ -203,9 +199,8 @@ class LocalTasksTest extends BrowserTestBase {
     ];
     $this->assertLocalTasks($tasks, 0);
 
-    $result = $this->xpath('//ul[contains(@class, "tabs")]//li[contains(@class, "active")]');
-    $this->assertCount(1, $result, 'There is one active tab.');
-    $this->assertEquals('upcasting sub2(active tab)', $result[0]->getText(), 'The "upcasting sub2" tab is active.');
+    $this->assertSession()->elementsCount('xpath', '//ul[contains(@class, "tabs")]//li[contains(@class, "active")]', 1);
+    $this->assertSession()->elementTextEquals('xpath', '//ul[contains(@class, "tabs")]//li[contains(@class, "active")]', 'upcasting sub2(active tab)');
   }
 
   /**
@@ -272,7 +267,7 @@ class LocalTasksTest extends BrowserTestBase {
     $this->drupalGet('/admin/structure/types/manage/page');
     $this->assertLocalTasks([
       ['entity.node_type.edit_form', ['node_type' => 'page']],
-      ['entity.node_type.permission_form', ['node_type' => 'page']],
+      ['entity.node_type.entity_permissions_form', ['node_type' => 'page']],
     ]);
 
     // Field UI adds the usual Manage fields etc tabs.
@@ -283,7 +278,7 @@ class LocalTasksTest extends BrowserTestBase {
       ['entity.node.field_ui_fields', ['node_type' => 'page']],
       ['entity.entity_form_display.node.default', ['node_type' => 'page']],
       ['entity.entity_view_display.node.default', ['node_type' => 'page']],
-      ['entity.node_type.permission_form', ['node_type' => 'page']],
+      ['entity.node_type.entity_permissions_form', ['node_type' => 'page']],
     ]);
   }
 

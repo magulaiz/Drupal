@@ -33,6 +33,9 @@ class UserPermissionsTest extends BrowserTestBase {
    */
   protected $defaultTheme = 'stark';
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
 
@@ -137,11 +140,11 @@ class UserPermissionsTest extends BrowserTestBase {
     \Drupal::entityTypeManager()->getStorage('user_role')->resetCache();
     $this->assertTrue(Role::load($this->rid)->isAdmin());
 
-    // Enable aggregator module and ensure the 'administer news feeds'
+    // Enable block module and ensure the 'administer news feeds'
     // permission is assigned by default.
-    \Drupal::service('module_installer')->install(['aggregator']);
+    \Drupal::service('module_installer')->install(['block']);
 
-    $this->assertTrue($this->adminUser->hasPermission('administer news feeds'), 'The permission was automatically assigned to the administrator role');
+    $this->assertTrue($this->adminUser->hasPermission('administer blocks'), 'The permission was automatically assigned to the administrator role');
 
     // Ensure that selecting '- None -' removes the admin role.
     $edit = [];
@@ -253,16 +256,18 @@ class UserPermissionsTest extends BrowserTestBase {
   public function testAccessBundlePermission() {
     $this->drupalLogin($this->adminUser);
 
-    \Drupal::service('module_installer')->install(['block_content', 'taxonomy']);
-    $this->grantPermissions(Role::load($this->rid), ['administer blocks', 'administer taxonomy']);
+    \Drupal::service('module_installer')->install(['contact', 'taxonomy']);
+    $this->grantPermissions(Role::load($this->rid), ['administer contact forms', 'administer taxonomy']);
 
     // Bundles that do not have permissions have no permissions pages.
     $edit = [];
-    $edit['label'] = 'Test block type';
-    $edit['id'] = 'test_block_type';
-    $this->drupalGet('admin/structure/block/block-content/types/add');
+    $edit['label'] = 'Test contact type';
+    $edit['id'] = 'test_contact_type';
+    $edit['recipients'] = 'webmaster@example.com';
+    $this->drupalGet('admin/structure/contact/add');
     $this->submitForm($edit, 'Save');
-    $this->drupalGet('admin/structure/block/block-content/manage/test_block_type/permissions');
+    $this->assertSession()->pageTextContains('Contact form ' . $edit['label'] . ' has been added.');
+    $this->drupalGet('admin/structure/contact/manage/test_contact_type/permissions');
     $this->assertSession()->statusCodeEquals(403);
 
     // Permissions can be changed using the bundle-specific pages.
@@ -287,7 +292,7 @@ class UserPermissionsTest extends BrowserTestBase {
     $this->drupalLogout();
     $this->drupalGet('admin/structure/taxonomy/manage/test_vocabulary/overview/permissions');
     $this->assertSession()->statusCodeEquals(403);
-    $this->drupalGet('admin/structure/block/block-content/manage/test_block_type/permissions');
+    $this->drupalGet('admin/structure/contact/manage/test_contact_type/permissions');
     $this->assertSession()->statusCodeEquals(403);
   }
 

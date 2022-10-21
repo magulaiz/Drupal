@@ -121,7 +121,7 @@ class WorkspaceListBuilder extends EntityListBuilder {
           '#url' => $entity->toUrl(),
         ],
       ],
-      'owner' => $entity->getOwner()->getDisplayname(),
+      'owner' => $entity->getOwner()->getDisplayName(),
     ];
     $row['data'] = $row['data'] + parent::buildRow($entity);
 
@@ -308,7 +308,7 @@ class WorkspaceListBuilder extends EntityListBuilder {
             ['query' => ['destination' => $active_workspace->toUrl('collection')->toString()]]
           ),
           '#attributes' => [
-            'class' => ['button', 'active-workspace__button'],
+            'class' => ['button', 'button--primary', 'active-workspace__button'],
           ],
         ];
       }
@@ -326,7 +326,7 @@ class WorkspaceListBuilder extends EntityListBuilder {
             ]
           ),
           '#attributes' => [
-            'class' => ['button', 'active-workspace__button'],
+            'class' => ['button', 'button--primary', 'active-workspace__button'],
           ],
         ];
       }

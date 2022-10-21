@@ -94,9 +94,7 @@ class UncaughtExceptionTest extends BrowserTestBase {
   public function testUncaughtFatalError() {
     $fatal_error = [
       '%type' => 'TypeError',
-      '@message' => PHP_VERSION_ID >= 80000 ?
-        'Drupal\error_test\Controller\ErrorTestController::Drupal\error_test\Controller\{closure}(): Argument #1 ($test) must be of type array, string given, called in ' . \Drupal::root() . '/core/modules/system/tests/modules/error_test/src/Controller/ErrorTestController.php on line 65' :
-        'Argument 1 passed to Drupal\error_test\Controller\ErrorTestController::Drupal\error_test\Controller\{closure}() must be of the type array, string given, called in ' . \Drupal::root() . '/core/modules/system/tests/modules/error_test/src/Controller/ErrorTestController.php on line 65',
+      '@message' => 'Drupal\error_test\Controller\ErrorTestController::Drupal\error_test\Controller\{closure}(): Argument #1 ($test) must be of type array, string given, called in ' . \Drupal::root() . '/core/modules/system/tests/modules/error_test/src/Controller/ErrorTestController.php on line 65',
       '%function' => 'Drupal\error_test\Controller\ErrorTestController->Drupal\error_test\Controller\{closure}()',
     ];
     $this->drupalGet('error-test/generate-fatals');
@@ -105,8 +103,8 @@ class UncaughtExceptionTest extends BrowserTestBase {
     $this->assertSession()->responseContains((string) $message);
     $this->assertSession()->responseContains('<pre class="backtrace">');
     // Ensure we are escaping but not double escaping.
-    $this->assertSession()->responseContains('&#039;');
-    $this->assertSession()->responseNotContains('&amp;#039;');
+    $this->assertSession()->responseContains('&gt;');
+    $this->assertSession()->responseNotContains('&amp;gt;');
   }
 
   /**
@@ -178,9 +176,7 @@ class UncaughtExceptionTest extends BrowserTestBase {
     $this->writeSettings($settings);
     \Drupal::service('kernel')->invalidateContainer();
 
-    $this->expectedExceptionMessage = PHP_VERSION_ID >= 80000 ?
-      'Drupal\FunctionalTests\Bootstrap\ErrorContainer::Drupal\FunctionalTests\Bootstrap\{closure}(): Argument #1 ($container) must be of type Drupal\FunctionalTests\Bootstrap\ErrorContainer' :
-      'Argument 1 passed to Drupal\FunctionalTests\Bootstrap\ErrorContainer::Drupal\FunctionalTests\Bootstrap\{closur';
+    $this->expectedExceptionMessage = 'Drupal\FunctionalTests\Bootstrap\ErrorContainer::Drupal\FunctionalTests\Bootstrap\{closure}(): Argument #1 ($container) must be of type Drupal\FunctionalTests\Bootstrap\ErrorContainer';
     $this->drupalGet('');
     $this->assertSession()->statusCodeEquals(500);
 
@@ -265,8 +261,8 @@ class UncaughtExceptionTest extends BrowserTestBase {
     $this->assertStringContainsString('Failed to log error', $errors[0], 'The error handling logs when an error could not be logged to the logger.');
 
     $expected_path = \Drupal::root() . '/core/modules/system/tests/modules/error_service_test/src/MonkeysInTheControlRoom.php';
-    $expected_line = 62;
-    $expected_entry = "Failed to log error: Exception: Deforestation in Drupal\\error_service_test\\MonkeysInTheControlRoom->handle() (line ${expected_line} of ${expected_path})";
+    $expected_line = 67;
+    $expected_entry = "Failed to log error: Exception: Deforestation in Drupal\\error_service_test\\MonkeysInTheControlRoom->handle() (line {$expected_line} of {$expected_path})";
     $this->assertStringContainsString($expected_entry, $errors[0], 'Original error logged to the PHP error log when an exception is thrown by a logger');
 
     // The exception is expected. Do not interpret it as a test failure. Not
@@ -280,7 +276,7 @@ class UncaughtExceptionTest extends BrowserTestBase {
    * @param string $error_message
    *   The expected error message.
    *
-   * @see \Drupal\simpletest\TestBase::prepareEnvironment()
+   * @see \Drupal\Core\Test\FunctionalTestSetupTrait::prepareEnvironment()
    * @see \Drupal\Core\DrupalKernel::bootConfiguration()
    *
    * @internal
@@ -310,7 +306,7 @@ class UncaughtExceptionTest extends BrowserTestBase {
   /**
    * Asserts that no errors have been logged to the PHP error.log thus far.
    *
-   * @see \Drupal\simpletest\TestBase::prepareEnvironment()
+   * @see \Drupal\Core\Test\FunctionalTestSetupTrait::prepareEnvironment()
    * @see \Drupal\Core\DrupalKernel::bootConfiguration()
    *
    * @internal

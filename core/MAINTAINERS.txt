@@ -58,9 +58,6 @@ maintainer. Current subsystem maintainers:
 Actions
 - ?
 
-Aggregator
-- ?
-
 Ajax
 - Alex Bronstein 'effulgentsia' https://www.drupal.org/u/effulgentsia
 - Tim Plunkett 'tim.plunkett' https://www.drupal.org/u/tim.plunkett
@@ -76,9 +73,6 @@ Automated Cron
 
 Ban
 - ?
-
-Bartik
-- Emma Maria Karayiannis 'emma.maria' https://www.drupal.org/u/emma.maria
 
 Base system
 - ?
@@ -99,6 +93,7 @@ Block
 
 Block Content
 - Lee Rowlands 'larowlan' https://www.drupal.org/u/larowlan
+- Stephen Mustgrave 'smustgrave' https://www.drupal.org/u/smustgrave
 
 Book
 - Peter Wolanin 'pwolanin' https://www.drupal.org/u/pwolanin
@@ -108,27 +103,21 @@ Bootstrap
 
 Breakpoint
 - Peter Droogmans 'attiks' https://www.drupal.org/u/attiks
-- Marc Drummond 'mdrummond' https://www.drupal.org/u/mdrummond
+- Heather Brooke Drummond 'RainbowArray' https://www.drupal.org/u/rainbowarray
 
 Cache
 - Nathaniel Catchpole 'catch' https://www.drupal.org/u/catch
 
-CKEditor
-- Henrik Danielsson 'TwoD' https://www.drupal.org/u/TwoD
+CKEditor 5
+- Lauri Eskola 'lauriii' https://www.drupal.org/u/lauriii
 - Wim Leers 'Wim Leers' https://www.drupal.org/u/wim-leers
-- Marek 'mlewand' Lewandowski https://www.drupal.org/u/mlewand
+- Ben Mullins 'bnjmnm' https://www.drupal.org/u/bnjmnm
 
 Claro
 - Cristina Chumillas 'ckrina' https://www.drupal.org/u/ckrina
 - Sascha Eggenberger 'saschaeggi' https://www.drupal.org/u/saschaeggi
 - Lauri Eskola 'lauriii' https://www.drupal.org/u/lauriii
 - Ben Mullins 'bnjmnm' https://www.drupal.org/u/bnjmnm
-
-Classy
-- David Hernandez 'davidhernandez' https://www.drupal.org/u/davidhernandez
-
-Color
-- ?
 
 Comment
 - Lee Rowlands 'larowlan' https://www.drupal.org/u/larowlan
@@ -162,16 +151,17 @@ Content Translation
 - ?
 
 Contextual
-- ?
+- Lee Rowlands 'larowlan' https://www.drupal.org/u/larowlan
 
 Cron
 - ?
 
 CSS
 - John Albin Wilkins 'JohnAlbin' https://www.drupal.org/u/johnalbin
+- Mike Herchel 'mherchel' https://www.drupal.org/u/mherchel
 
 Database API
-- ?
+- David Bekker 'daffie' https://www.drupal.org/u/daffie
 
   MySQL DB driver
   - David Strauss 'David Strauss' https://www.drupal.org/u/david-strauss
@@ -235,9 +225,6 @@ Form API
 
 History
 - Andrey Postnikov 'andypost' https://www.drupal.org/u/andypost
-
-Hypertext Application Language (HAL)
-- ?
 
 Help
 - ?
@@ -355,9 +342,6 @@ Quick Edit
 - Wim Leers 'Wim Leers' https://www.drupal.org/u/wim-leers
 - Théodore Biadala 'nod_' https://www.drupal.org/u/nod_
 
-RDF
-- ?
-
 Render API
 - Alex Bronstein 'effulgentsia' https://www.drupal.org/u/effulgentsia
 - Moshe Weitzman 'moshe weitzman' https://www.drupal.org/u/moshe-weitzman
@@ -370,7 +354,7 @@ REST
 
 Responsive Image
 - Peter Droogmans 'attiks' https://www.drupal.org/u/attiks
-- Marc Drummond 'mdrummond' https://www.drupal.org/u/mdrummond
+- Heather Brooke Drummond 'RainbowArray' https://www.drupal.org/u/rainbowarray
 - Jelle Sebreghts 'Jelle_S' https://www.drupal.org/u/jelle_s
 
 Routing
@@ -385,15 +369,9 @@ Serialization
 Settings Tray
 - Ted Bowman 'tedbow' https://www.drupal.org/u/tedbow
 
-Seven
-- ?
-
 Shortcut
 - Tobias Zimmermann 'tstoeckler' https://www.drupal.org/u/tstoeckler
 - Jibran Ijaz 'jibran' https://www.drupal.org/u/jibran
-
-Stable
-- ?
 
 Stark
 - John Albin Wilkins 'JohnAlbin' https://www.drupal.org/u/johnalbin
@@ -529,6 +507,10 @@ Decoupled Menus Initiative
 Media Initiative
 - Janez Urevc 'slashrsm' https://www.drupal.org/u/slashrsm
 
+Project Browser Initiative
+- Leslie Glynn 'leslieg' https://www.drupal.org/u/leslieg
+- Chris Wells 'chrisfromredfin' https://www.drupal.org/u/chrisfromredfin
+
 
 Core mentoring coordinators
 ---------------------------
@@ -541,13 +523,13 @@ tools, documentation, and processes to make it easier for new contributors to
 get involved. They organize communications and logistics, and actively
 participate in mentoring.
 
+- Chris Darke 'chrisdarke' https://www.drupal.org/u/chrisdarke
 - Mauricio Dinarte 'dinarcon' https://www.drupal.org/u/dinarcon
+- Brian Gilbert 'realityloop' https://www.drupal.org/u/realityloop
 - Lucas Hedding 'heddn' https://www.drupal.org/u/heddn
+- AmyJune Hineline 'volkswagenchick' https://www.drupal.org/u/volkswagenchick
 - Tara King 'sparklingrobots' https://www.drupal.org/u/sparklingrobots
 - Rachel Lawson 'rachel_norfolk' https://www.drupal.org/u/rachel_norfolk
 - Elli Ludwigson 'ekl1773' https://www.drupal.org/u/ekl1773
 - Jess Myrbo 'xjm' https://www.drupal.org/u/xjm
 - Matthew Radcliffe 'mradcliffe' https://www.drupal.org/u/mradcliffe
-- (provisional) Chris Darke 'chrisdarke' https://www.drupal.org/u/chrisdarke
-- (provisional) Brian Gilbert 'realityloop' https://www.drupal.org/u/realityloop
-- (provisional) AmyJune Hineline 'volkswagenchick' https://www.drupal.org/u/volkswagenchick

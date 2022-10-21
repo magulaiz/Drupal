@@ -18,6 +18,7 @@ use Drupal\Core\Field\WidgetBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Security\TrustedCallbackInterface;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Url;
 use Drupal\field_ui\FieldUI;
 use Drupal\media\Entity\Media;
@@ -205,7 +206,7 @@ class MediaLibraryWidget extends WidgetBase implements TrustedCallbackInterface 
         'label' => ['#markup' => $label],
         'weight' => [
           '#type' => 'weight',
-          '#title' => t('Weight for @title', ['@title' => $label]),
+          '#title' => $this->t('Weight for @title', ['@title' => $label]),
           '#title_display' => 'invisible',
           '#default_value' => $weight,
           '#attributes' => ['class' => ['weight']],
@@ -267,7 +268,7 @@ class MediaLibraryWidget extends WidgetBase implements TrustedCallbackInterface 
       foreach ($media_types as $media_type) {
         $media_type_labels[] = $media_type->label();
       }
-      $summary[] = t('Tab order: @order', ['@order' => implode(', ', $media_type_labels)]);
+      $summary[] = $this->t('Tab order: @order', ['@order' => implode(', ', $media_type_labels)]);
     }
     return $summary;
   }
@@ -289,6 +290,22 @@ class MediaLibraryWidget extends WidgetBase implements TrustedCallbackInterface 
   /**
    * {@inheritdoc}
    */
+  public function extractFormValues(FieldItemListInterface $items, array $form, FormStateInterface $form_state) {
+    parent::extractFormValues($items, $form, $form_state);
+
+    // Update reference to 'items' stored during add or remove to take into
+    // account changes to values like 'weight' etc.
+    // @see Drupal\media_library\Plugin\Field\FieldWidget\MediaLibraryWidget::addItems
+    // @see Drupal\media_library\Plugin\Field\FieldWidget\MediaLibraryWidget::removeItem
+    $field_name = $this->fieldDefinition->getName();
+    $field_state = static::getWidgetState($form['#parents'], $field_name, $form_state);
+    $field_state['items'] = $items->getValue();
+    static::setWidgetState($form['#parents'], $field_name, $form_state, $field_state);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function formElement(FieldItemListInterface $items, $delta, array $element, array &$form, FormStateInterface $form_state) {
     /** @var \Drupal\Core\Field\EntityReferenceFieldItemListInterface $items */
     $referenced_entities = $items->referencedEntities();
@@ -305,7 +322,8 @@ class MediaLibraryWidget extends WidgetBase implements TrustedCallbackInterface 
     $element += [
       '#type' => 'fieldset',
       '#cardinality' => $this->fieldDefinition->getFieldStorageDefinition()->getCardinality(),
-      '#target_bundles' => $settings['target_bundles'] ?? FALSE,
+      // If no target bundles are specified, all target bundles are allowed.
+      '#target_bundles' => $settings['target_bundles'] ?? [],
       '#attributes' => [
         'id' => $wrapper_id,
         'class' => ['js-media-library-widget'],
@@ -344,9 +362,7 @@ class MediaLibraryWidget extends WidgetBase implements TrustedCallbackInterface 
       ];
     }
     else {
-      // @todo Use a <button> link here, and delete
-      // seven_preprocess_fieldset__media_library_widget(), when
-      // https://www.drupal.org/project/drupal/issues/2999549 lands.
+      // @todo Use a <button> link here.
       $multiple_items = count($referenced_entities) > 1;
       $element['#field_prefix']['weight_toggle'] = [
         '#type' => 'html_tag',
@@ -682,7 +698,7 @@ class MediaLibraryWidget extends WidgetBase implements TrustedCallbackInterface 
 
     // Announce the updated content to screen readers.
     if ($is_remove_button) {
-      $announcement = t('@label has been removed.', [
+      $announcement = new TranslatableMarkup('@label has been removed.', [
         '@label' => Media::load($field_state['removed_item_id'])->label(),
       ]);
     }
@@ -743,7 +759,15 @@ class MediaLibraryWidget extends WidgetBase implements TrustedCallbackInterface 
    *   The form state.
    */
   public static function removeItem(array $form, FormStateInterface $form_state) {
+    // During the form rebuild, formElement() will create field item widget
+    // elements using re-indexed deltas, so clear out FormState::$input to
+    // avoid a mismatch between old and new deltas. The rebuilt elements will
+    // have #default_value set appropriately for the current state of the field,
+    // so nothing is lost in doing this.
+    // @see Drupal\media_library\Plugin\Field\FieldWidget\MediaLibraryWidget::extractFormValues
     $triggering_element = $form_state->getTriggeringElement();
+    $parents = array_slice($triggering_element['#parents'], 0, -2);
+    NestedArray::setValue($form_state->getUserInput(), $parents, NULL);
 
     // Get the parents required to find the top-level widget element.
     if (count($triggering_element['#array_parents']) < 4) {
@@ -826,7 +850,7 @@ class MediaLibraryWidget extends WidgetBase implements TrustedCallbackInterface 
     }, $element['#target_bundles']);
     foreach ($media as $media_item) {
       if ($element['#target_bundles'] && !in_array($media_item->bundle(), $element['#target_bundles'], TRUE)) {
-        $form_state->setError($element, t('The media item "@label" is not of an accepted type. Allowed types: @types', [
+        $form_state->setError($element, new TranslatableMarkup('The media item "@label" is not of an accepted type. Allowed types: @types', [
           '@label' => $media_item->label(),
           '@types' => implode(', ', $bundle_labels),
         ]));
@@ -843,7 +867,17 @@ class MediaLibraryWidget extends WidgetBase implements TrustedCallbackInterface 
    *   The form state.
    */
   public static function addItems(array $form, FormStateInterface $form_state) {
+    // During the form rebuild, formElement() will create field item widget
+    // elements using re-indexed deltas, so clear out FormState::$input to
+    // avoid a mismatch between old and new deltas. The rebuilt elements will
+    // have #default_value set appropriately for the current state of the field,
+    // so nothing is lost in doing this.
+    // @see Drupal\media_library\Plugin\Field\FieldWidget\MediaLibraryWidget::extractFormValues
     $button = $form_state->getTriggeringElement();
+    $parents = array_slice($button['#parents'], 0, -1);
+    $parents[] = 'selection';
+    NestedArray::setValue($form_state->getUserInput(), $parents, NULL);
+
     $element = NestedArray::getValue($form, array_slice($button['#array_parents'], 0, -1));
 
     $field_state = static::getFieldState($element, $form_state);
@@ -965,7 +999,7 @@ class MediaLibraryWidget extends WidgetBase implements TrustedCallbackInterface 
     // the Form API's default validation would also catch this, the validation
     // error message is too vague, so a more precise one is provided here.
     if (count($field_state['items']) === 0) {
-      $form_state->setError($element, t('@name field is required.', ['@name' => $element['#title']]));
+      $form_state->setError($element, new TranslatableMarkup('@name field is required.', ['@name' => $element['#title']]));
     }
   }
 

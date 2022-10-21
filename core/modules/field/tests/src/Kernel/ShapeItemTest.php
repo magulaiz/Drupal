@@ -29,6 +29,9 @@ class ShapeItemTest extends FieldKernelTestBase {
    */
   protected $fieldName = 'field_shape';
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
 
@@ -46,7 +49,7 @@ class ShapeItemTest extends FieldKernelTestBase {
   }
 
   /**
-   * Tests using entity fields of the field field type.
+   * Tests using entity fields of the shape field type.
    */
   public function testShapeItem() {
     // Verify entity creation.

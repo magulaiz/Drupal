@@ -2,8 +2,6 @@
  * Generic elements.
  */
 
-@import "./variables.pcss.css";
-
 html {
   font-family: var(--font-family);
   font-size: 100%;
@@ -109,7 +107,28 @@ dl dl {
   margin-right: 20px;
 }
 blockquote {
-  margin: 1em 40px;
+  position: relative;
+  margin: var(--space-l);
+  margin-left: 2.5rem; /* LTR */
+  font-size: var(--font-size-h6);
+}
+[dir="rtl"] blockquote {
+  margin-right: 2.5rem;
+}
+blockquote::before {
+  position: absolute;
+  left: -2.5rem; /* LTR */
+  content: open-quote;
+  color: var(--color-absolutezero);
+  font-family: var(--font-family-serif);
+  font-size: var(--space-xl);
+  line-height: 1em;
+}
+[dir="rtl"] blockquote::before {
+  right: -2.5rem;
+}
+blockquote::after {
+  content: no-close-quote;
 }
 address {
   font-style: italic;
@@ -202,9 +221,6 @@ img {
  *
  * This is applied globally to all interactive elements except Toolbar and
  * Settings Tray since they have their own styles.
- *
- * @todo https://www.drupal.org/project/claro/issues/3048785 :focus selector is
- *   active for non-interactive elements in Internet Explorer 11.
  */
 .page-wrapper *:focus,
 .ui-dialog *:focus {

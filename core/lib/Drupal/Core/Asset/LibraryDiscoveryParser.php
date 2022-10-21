@@ -77,20 +77,12 @@ class LibraryDiscoveryParser {
    * @param \Drupal\Core\Extension\ExtensionPathResolver $extension_path_resolver
    *   The extension path resolver.
    */
-  public function __construct($root, ModuleHandlerInterface $module_handler, ThemeManagerInterface $theme_manager, StreamWrapperManagerInterface $stream_wrapper_manager, LibrariesDirectoryFileFinder $libraries_directory_file_finder = NULL, ExtensionPathResolver $extension_path_resolver = NULL) {
+  public function __construct($root, ModuleHandlerInterface $module_handler, ThemeManagerInterface $theme_manager, StreamWrapperManagerInterface $stream_wrapper_manager, LibrariesDirectoryFileFinder $libraries_directory_file_finder, ExtensionPathResolver $extension_path_resolver) {
     $this->root = $root;
     $this->moduleHandler = $module_handler;
     $this->themeManager = $theme_manager;
     $this->streamWrapperManager = $stream_wrapper_manager;
-    if (!$libraries_directory_file_finder) {
-      @trigger_error('Calling LibraryDiscoveryParser::__construct() without the $libraries_directory_file_finder argument is deprecated in drupal:8.9.0. The $libraries_directory_file_finder argument will be required in drupal:10.0.0. See https://www.drupal.org/node/3099614', E_USER_DEPRECATED);
-      $libraries_directory_file_finder = \Drupal::service('library.libraries_directory_file_finder');
-    }
     $this->librariesDirectoryFileFinder = $libraries_directory_file_finder;
-    if (!$extension_path_resolver) {
-      @trigger_error('Calling LibraryDiscoveryParser::__construct() without the $extension_path_resolver argument is deprecated in drupal:9.3.0 and is required in drupal:10.0.0. See https://www.drupal.org/node/2940438', E_USER_DEPRECATED);
-      $extension_path_resolver = \Drupal::service('extension.path.resolver');
-    }
     $this->extensionPathResolver = $extension_path_resolver;
   }
 
@@ -366,7 +358,7 @@ class LibraryDiscoveryParser {
 
     // Allow modules to add dynamic library definitions.
     $hook = 'library_info_build';
-    if ($this->moduleHandler->implementsHook($extension, $hook)) {
+    if ($this->moduleHandler->hasImplementations($hook, $extension)) {
       $libraries = NestedArray::mergeDeep($libraries, $this->moduleHandler->invoke($extension, $hook));
     }
 
@@ -444,19 +436,6 @@ class LibraryDiscoveryParser {
     }
 
     return $libraries;
-  }
-
-  /**
-   * Wraps drupal_get_path().
-   *
-   * @deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Use
-   *   \Drupal\Core\Extension\ExtensionList::getPath() instead.
-   *
-   * @see https://www.drupal.org/node/2940438
-   */
-  protected function drupalGetPath($type, $name) {
-    @trigger_error(__METHOD__ . ' is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Use \Drupal\Core\Extension\ExtensionPathResolver::getPath() instead. See https://www.drupal.org/node/2940438', E_USER_DEPRECATED);
-    return $this->extensionPathResolver->getPath($type, $name);
   }
 
   /**
@@ -544,7 +523,7 @@ class LibraryDiscoveryParser {
         return 2;
       }
       $categories[] = $category;
-      foreach ($files as $source => $options) {
+      foreach ($files as $options) {
         if (!is_array($options)) {
           return 1;
         }

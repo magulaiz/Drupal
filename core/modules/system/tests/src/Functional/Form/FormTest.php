@@ -31,8 +31,11 @@ class FormTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'classy';
+  protected $defaultTheme = 'starterkit_theme';
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
 
@@ -147,7 +150,7 @@ class FormTest extends BrowserTestBase {
             else {
               // Make sure there is *no* form error for this element. We're
               // not using assertEmpty() because the array key might not exist.
-              $this->assertTrue(empty($errors[$element]), "Optional '$type' field '$element' has no errors with empty input");
+              $this->assertArrayNotHasKey($element, $errors, "Optional '$type' field '$element' should have no errors with empty input.");
             }
           }
         }
@@ -416,27 +419,27 @@ class FormTest extends BrowserTestBase {
     // Posting without any values should throw validation errors.
     $this->submitForm([], 'Submit');
     $no_errors = [
-        'select',
-        'select_required',
-        'select_optional',
-        'empty_value',
-        'empty_value_one',
-        'no_default_optional',
-        'no_default_empty_option_optional',
-        'no_default_empty_value_optional',
-        'multiple',
-        'multiple_no_default',
+      'select',
+      'select_required',
+      'select_optional',
+      'empty_value',
+      'empty_value_one',
+      'no_default_optional',
+      'no_default_empty_option_optional',
+      'no_default_empty_value_optional',
+      'multiple',
+      'multiple_no_default',
     ];
     foreach ($no_errors as $key) {
       $this->assertSession()->pageTextNotContains($form[$key]['#title'] . ' field is required.');
     }
 
     $expected_errors = [
-        'no_default',
-        'no_default_empty_option',
-        'no_default_empty_value',
-        'no_default_empty_value_one',
-        'multiple_no_default_required',
+      'no_default',
+      'no_default_empty_option',
+      'no_default_empty_value',
+      'no_default_empty_value_one',
+      'multiple_no_default_required',
     ];
     foreach ($expected_errors as $key) {
       $this->assertSession()->pageTextContains($form[$key]['#title'] . ' field is required.');
@@ -769,7 +772,7 @@ class FormTest extends BrowserTestBase {
     // All the elements should be marked as disabled, including the ones below
     // the disabled container.
     $actual_count = count($disabled_elements);
-    $expected_count = 42;
+    $expected_count = 44;
     $this->assertEquals($expected_count, $actual_count, new FormattableMarkup('Found @actual elements with disabled property (expected @expected).', ['@actual' => count($disabled_elements), '@expected' => $expected_count]));
 
     // Mink does not "see" hidden elements, so we need to set the value of the
@@ -803,7 +806,7 @@ class FormTest extends BrowserTestBase {
           $expected_value = $form[$key]['#default_value'];
         }
 
-        if ($key == 'checkboxes_multiple') {
+        if (in_array($key, ['checkboxes_multiple', 'checkboxes_single_select', 'checkboxes_single_unselect'], TRUE)) {
           // Checkboxes values are not filtered out.
           $values[$key] = array_filter($values[$key]);
         }
@@ -859,12 +862,11 @@ class FormTest extends BrowserTestBase {
       }
       $path = strtr($path, ['!type' => $type]);
       // Verify that the element exists.
-      $element = $this->xpath($path, [
+      $this->assertSession()->elementExists('xpath', $this->assertSession()->buildXPathQuery($path, [
         ':name' => Html::escape($name),
         ':div-class' => $class,
         ':value' => $item['#value'] ?? '',
-      ]);
-      $this->assertTrue(isset($element[0]), new FormattableMarkup('Disabled form element class found for #type %type.', ['%type' => $item['#type']]));
+      ]));
     }
 
     // Verify special element #type text-format.

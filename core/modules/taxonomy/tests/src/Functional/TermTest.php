@@ -6,6 +6,7 @@ use Drupal\Component\Utility\Tags;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\taxonomy\Entity\Term;
+use Drupal\Tests\system\Functional\Menu\AssertBreadcrumbTrait;
 
 /**
  * Tests load, save and delete for taxonomy terms.
@@ -13,6 +14,8 @@ use Drupal\taxonomy\Entity\Term;
  * @group taxonomy
  */
 class TermTest extends TaxonomyTestBase {
+
+  use AssertBreadcrumbTrait;
 
   /**
    * Vocabulary for testing.
@@ -38,7 +41,7 @@ class TermTest extends TaxonomyTestBase {
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'classy';
+  protected $defaultTheme = 'stark';
 
   /**
    * {@inheritdoc}
@@ -275,7 +278,7 @@ class TermTest extends TaxonomyTestBase {
       $this->assertSession()->pageTextContains($term);
     }
     $tree = $this->container->get('entity_type.manager')->getStorage('taxonomy_term')->loadTree($this->vocabulary->id());
-    $this->assertTrue(empty($tree), 'The terms are not created on preview.');
+    $this->assertEmpty($tree, 'The terms are not created on preview.');
 
     // Save, creating the terms.
     $this->drupalGet('node/add/article');
@@ -354,7 +357,7 @@ class TermTest extends TaxonomyTestBase {
     // Submitting a term takes us to the add page; we need the List page.
     $this->drupalGet('admin/structure/taxonomy/manage/' . $this->vocabulary->id() . '/overview');
 
-    $this->clickLink('Edit');
+    $this->clickLink('Edit', 1);
 
     // Verify that the randomly generated term is present.
     $this->assertSession()->pageTextContains($edit['name[0][value]']);
@@ -384,12 +387,12 @@ class TermTest extends TaxonomyTestBase {
     $this->assertSession()->pageTextContains($edit['description[0][value]']);
 
     // Did this page request display a 'term-listing-heading'?
-    $this->assertSession()->elementExists('xpath', '//div[contains(@class, "field--name-description")]');
+    $this->assertSession()->elementExists('xpath', '//div[@class="views-element-container"]/div/header/div/div/p');
     // Check that it does NOT show a description when description is blank.
     $term->setDescription(NULL);
     $term->save();
     $this->drupalGet('taxonomy/term/' . $term->id());
-    $this->assertSession()->elementNotExists('xpath', '//div[contains(@class, "field--entity-taxonomy-term--description")]');
+    $this->assertSession()->elementNotExists('xpath', '//div[@class="views-element-container"]/div/header/div/div/p');
 
     // Check that the description value is processed.
     $value = $this->randomMachineName();
@@ -427,6 +430,31 @@ class TermTest extends TaxonomyTestBase {
     // parameter is present.
     $this->drupalGet('admin/structure/taxonomy/manage/' . $this->vocabulary->id() . '/add', ['query' => ['destination' => 'node/add']]);
     $this->assertSession()->pageTextNotContains('Save and go to list');
+  }
+
+  /**
+   * Test UI with override_selector TRUE.
+   */
+  public function testTermSaveOverrideSelector() {
+    $this->config('taxonomy.settings')->set('override_selector', TRUE)->save();
+
+    // Create a Term.
+    $edit = [
+      'name[0][value]' => $this->randomMachineName(12),
+      'description[0][value]' => $this->randomMachineName(100),
+    ];
+    // Create the term to edit.
+    $this->drupalGet('admin/structure/taxonomy/manage/' . $this->vocabulary->id() . '/add');
+    $this->submitForm($edit, 'Save');
+    $terms = \Drupal::entityTypeManager()->getStorage('taxonomy_term')->loadByProperties([
+      'name' => $edit['name[0][value]'],
+    ]);
+    $term = reset($terms);
+    $this->assertNotNull($term, 'Term found in database.');
+
+    // The term appears on the vocab list page.
+    $this->drupalGet('admin/structure/taxonomy/manage/' . $this->vocabulary->id() . '/overview');
+    $this->assertSession()->pageTextContains($term->getName());
   }
 
   /**
@@ -530,70 +558,6 @@ class TermTest extends TaxonomyTestBase {
   }
 
   /**
-   * Tests taxonomy_term_load_multiple_by_name().
-   *
-   * @group legacy
-   */
-  public function testTaxonomyGetTermByName() {
-    $term = $this->createTerm($this->vocabulary);
-
-    $this->expectDeprecation('taxonomy_term_load_multiple_by_name() is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Use \Drupal::entityTypeManager()->getStorage("taxonomy_vocabulary")->loadByProperties(["name" => $name, "vid" => $vid]) instead, to get a list of taxonomy term entities having the same name and keyed by their term ID. See https://www.drupal.org/node/3039041');
-
-    // Load the term with the exact name.
-    $terms = taxonomy_term_load_multiple_by_name($term->getName());
-    $this->assertTrue(isset($terms[$term->id()]), 'Term loaded using exact name.');
-
-    // Load the term with space concatenated.
-    $terms = taxonomy_term_load_multiple_by_name('  ' . $term->getName() . '   ');
-    $this->assertTrue(isset($terms[$term->id()]), 'Term loaded with extra whitespace.');
-
-    // Load the term with name uppercased.
-    $terms = taxonomy_term_load_multiple_by_name(strtoupper($term->getName()));
-    $this->assertTrue(isset($terms[$term->id()]), 'Term loaded with uppercased name.');
-
-    // Load the term with name lowercased.
-    $terms = taxonomy_term_load_multiple_by_name(strtolower($term->getName()));
-    $this->assertTrue(isset($terms[$term->id()]), 'Term loaded with lowercased name.');
-
-    // Try to load an invalid term name.
-    $terms = taxonomy_term_load_multiple_by_name('Banana');
-    $this->assertEmpty($terms, 'No term loaded with an invalid name.');
-
-    // Try to load the term using a substring of the name.
-    $terms = taxonomy_term_load_multiple_by_name(mb_substr($term->getName(), 2), 'No term loaded with a substring of the name.');
-    $this->assertEmpty($terms);
-
-    // Create a new term in a different vocabulary with the same name.
-    $new_vocabulary = $this->createVocabulary();
-    $new_term = Term::create([
-      'name' => $term->getName(),
-      'vid' => $new_vocabulary->id(),
-    ]);
-    $new_term->save();
-
-    // Load multiple terms with the same name.
-    $terms = taxonomy_term_load_multiple_by_name($term->getName());
-    $this->assertCount(2, $terms, 'Two terms loaded with the same name.');
-
-    // Load single term when restricted to one vocabulary.
-    $terms = taxonomy_term_load_multiple_by_name($term->getName(), $this->vocabulary->id());
-    $this->assertCount(1, $terms, 'One term loaded when restricted by vocabulary.');
-    $this->assertTrue(isset($terms[$term->id()]), 'Term loaded using exact name and vocabulary machine name.');
-
-    // Create a new term with another name.
-    $term2 = $this->createTerm($this->vocabulary);
-
-    // Try to load a term by name that doesn't exist in this vocabulary but
-    // exists in another vocabulary.
-    $terms = taxonomy_term_load_multiple_by_name($term2->getName(), $new_vocabulary->id());
-    $this->assertEmpty($terms, 'Invalid term name restricted by vocabulary machine name not loaded.');
-
-    // Try to load terms filtering by a non-existing vocabulary.
-    $terms = taxonomy_term_load_multiple_by_name($term2->getName(), 'non_existing_vocabulary');
-    $this->assertCount(0, $terms, 'No terms loaded when restricted by a non-existing vocabulary.');
-  }
-
-  /**
    * Tests that editing and saving a node with no changes works correctly.
    */
   public function testReSavingTags() {
@@ -644,20 +608,20 @@ class TermTest extends TaxonomyTestBase {
     $this->assertNotNull($term, 'Term found in database.');
 
     // Check the breadcrumb on the term edit page.
-    $this->drupalGet('taxonomy/term/' . $term->id() . '/edit');
-    $breadcrumbs = $this->getSession()->getPage()->findAll('css', 'nav.breadcrumb ol li a');
-    $this->assertCount(2, $breadcrumbs, 'The breadcrumbs are present on the page.');
-    $this->assertSame('Home', $breadcrumbs[0]->getText(), 'First breadcrumb text is Home');
-    $this->assertSame($term->label(), $breadcrumbs[1]->getText(), 'Second breadcrumb text is term name on term edit page.');
-    $this->assertSession()->assertEscaped($breadcrumbs[1]->getText());
+    $trail = [
+      '' => 'Home',
+      'taxonomy/term/' . $term->id() => $term->label(),
+    ];
+    $this->assertBreadcrumb('taxonomy/term/' . $term->id() . '/edit', $trail);
+    $this->assertSession()->assertEscaped($term->label());
 
     // Check the breadcrumb on the term delete page.
-    $this->drupalGet('taxonomy/term/' . $term->id() . '/delete');
-    $breadcrumbs = $this->getSession()->getPage()->findAll('css', 'nav.breadcrumb ol li a');
-    $this->assertCount(2, $breadcrumbs, 'The breadcrumbs are present on the page.');
-    $this->assertSame('Home', $breadcrumbs[0]->getText(), 'First breadcrumb text is Home');
-    $this->assertSame($term->label(), $breadcrumbs[1]->getText(), 'Second breadcrumb text is term name on term delete page.');
-    $this->assertSession()->assertEscaped($breadcrumbs[1]->getText());
+    $trail = [
+      '' => 'Home',
+      'taxonomy/term/' . $term->id() => $term->label(),
+    ];
+    $this->assertBreadcrumb('taxonomy/term/' . $term->id() . '/delete', $trail);
+    $this->assertSession()->assertEscaped($term->label());
   }
 
 }

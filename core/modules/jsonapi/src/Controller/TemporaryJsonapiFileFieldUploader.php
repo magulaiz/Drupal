@@ -26,7 +26,6 @@ use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\HttpException;
-use Symfony\Component\Mime\MimeTypeGuesserInterface;
 use Symfony\Component\Validator\ConstraintViolation;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
@@ -193,13 +192,7 @@ class TemporaryJsonapiFileFieldUploader {
     $file = File::create([]);
     $file->setOwnerId($owner->id());
     $file->setFilename($prepared_filename);
-    if ($this->mimeTypeGuesser instanceof MimeTypeGuesserInterface) {
-      $file->setMimeType($this->mimeTypeGuesser->guessMimeType($prepared_filename));
-    }
-    else {
-      @trigger_error('\Symfony\Component\HttpFoundation\File\MimeType\MimeTypeGuesserInterface is deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. Implement \Symfony\Component\Mime\MimeTypeGuesserInterface instead. See https://www.drupal.org/node/3133341', E_USER_DEPRECATED);
-      $file->setMimeType($this->mimeTypeGuesser->guess($prepared_filename));
-    }
+    $file->setMimeType($this->mimeTypeGuesser->guessMimeType($prepared_filename));
     $file->setFileUri($temp_file_path);
     // Set the size. This is done in File::preSave() but we validate the file
     // before it is saved.
@@ -207,7 +200,7 @@ class TemporaryJsonapiFileFieldUploader {
 
     // Validate the file against field-level validators first while the file is
     // still a temporary file. Validation is split up in 2 steps to be the same
-    // as in _file_save_upload_single().
+    // as in \Drupal\file\Upload\FileUploadHandler::handleFileUpload().
     // For backwards compatibility this part is copied from ::validate() to
     // leave that method behavior unchanged.
     // @todo Improve this with a file uploader service in
@@ -310,13 +303,17 @@ class TemporaryJsonapiFileFieldUploader {
    * @param \Drupal\Core\Entity\EntityInterface $entity
    *   (optional) The entity to which the file is to be uploaded, if it exists.
    *   If the entity does not exist and it is not given, create access to the
-   *   file will be checked.
+   *   entity the file is attached to will be checked.
    *
    * @return \Drupal\Core\Access\AccessResultInterface
    *   The file upload access result.
    */
   public static function checkFileUploadAccess(AccountInterface $account, FieldDefinitionInterface $field_definition, EntityInterface $entity = NULL) {
-    assert(is_null($entity) || $field_definition->getTargetEntityTypeId() === $entity->getEntityTypeId() && $field_definition->getTargetBundle() === $entity->bundle());
+    assert(is_null($entity) ||
+      $field_definition->getTargetEntityTypeId() === $entity->getEntityTypeId() &&
+      // Base fields do not have target bundles.
+      (is_null($field_definition->getTargetBundle()) || $field_definition->getTargetBundle() === $entity->bundle())
+    );
     $entity_type_manager = \Drupal::entityTypeManager();
     $entity_access_control_handler = $entity_type_manager->getAccessControlHandler($field_definition->getTargetEntityTypeId());
     $bundle = $entity_type_manager->getDefinition($field_definition->getTargetEntityTypeId())->hasKey('bundle') ? $field_definition->getTargetBundle() : NULL;

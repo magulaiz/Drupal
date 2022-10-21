@@ -83,7 +83,7 @@ abstract class EntityStorageBase extends EntityHandlerBase implements EntityStor
   protected $memoryCache;
 
   /**
-   * The memory cache cache tag.
+   * The memory cache tag.
    *
    * @var string
    */
@@ -113,40 +113,6 @@ abstract class EntityStorageBase extends EntityHandlerBase implements EntityStor
    */
   public function getEntityClass(?string $bundle = NULL): string {
     return $this->baseEntityClass;
-  }
-
-  /**
-   * Warns subclasses not to directly access the deprecated entityClass property.
-   *
-   * @param string $name
-   *   The name of the property to get.
-   *
-   * @todo Remove this in Drupal 10.
-   * @see https://www.drupal.org/project/drupal/issues/3244802
-   */
-  public function __get($name) {
-    if ($name === 'entityClass') {
-      @trigger_error('Accessing the entityClass property directly is deprecated in drupal:9.3.0. Use ::getEntityClass() instead. See https://www.drupal.org/node/3191609', E_USER_DEPRECATED);
-      return $this->getEntityClass();
-    }
-  }
-
-  /**
-   * Warns subclasses not to directly set the deprecated entityClass property.
-   *
-   * @param string $name
-   *   The name of the property to set.
-   * @param mixed $value
-   *   The value to use.
-   *
-   * @todo Remove this in Drupal 10.
-   * @see https://www.drupal.org/project/drupal/issues/3244802
-   */
-  public function __set(string $name, $value): void {
-    if ($name === 'entityClass') {
-      @trigger_error('Setting the entityClass property directly is deprecated in drupal:9.3.0 and has no effect in drupal:10.0.0. See https://www.drupal.org/node/3191609', E_USER_DEPRECATED);
-      $this->baseEntityClass = $value;
-    }
   }
 
   /**
@@ -229,7 +195,7 @@ abstract class EntityStorageBase extends EntityHandlerBase implements EntityStor
    */
   protected function setStaticCache(array $entities) {
     if ($this->entityType->isStaticallyCacheable()) {
-      foreach ($entities as $id => $entity) {
+      foreach ($entities as $entity) {
         $this->memoryCache->set($this->buildCacheId($entity->id()), $entity, MemoryCacheInterface::CACHE_PERMANENT, [$this->memoryCacheTag]);
       }
     }
@@ -427,16 +393,12 @@ abstract class EntityStorageBase extends EntityHandlerBase implements EntityStor
         $entity_class::postLoad($this, $items);
       }
     }
-    // Call hook_entity_load().
-    foreach ($this->moduleHandler()->getImplementations('entity_load') as $module) {
-      $function = $module . '_entity_load';
-      $function($entities, $this->entityTypeId);
-    }
-    // Call hook_TYPE_load().
-    foreach ($this->moduleHandler()->getImplementations($this->entityTypeId . '_load') as $module) {
-      $function = $module . '_' . $this->entityTypeId . '_load';
-      $function($entities);
-    }
+    $this->moduleHandler()->invokeAllWith('entity_load', function (callable $hook, string $module) use (&$entities) {
+      $hook($entities, $this->entityTypeId);
+    });
+    $this->moduleHandler()->invokeAllWith($this->entityTypeId . '_load', function (callable $hook, string $module) use (&$entities) {
+      $hook($entities);
+    });
   }
 
   /**

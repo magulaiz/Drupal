@@ -15,28 +15,34 @@ use Drupal\user\Entity\Role;
 function user_removed_post_updates() {
   return [
     'user_post_update_enforce_order_of_permissions' => '9.0.0',
+    'user_post_update_update_roles' => '10.0.0',
   ];
 }
 
 /**
- * Calculate role dependencies and remove non-existent permissions.
+ * Remove non-existent permissions created by migrations.
  */
-function user_post_update_update_roles(&$sandbox = NULL) {
+function user_post_update_update_migrated_roles_followup(&$sandbox = NULL) {
   $cleaned_roles = [];
-  $existing_permissions = array_keys(\Drupal::service('user.permissions')->getPermissions());
-  \Drupal::classResolver(ConfigEntityUpdater::class)->update($sandbox, 'user_role', function (Role $role) use ($existing_permissions, &$cleaned_roles) {
-    $removed_permissions = array_diff($role->getPermissions(), $existing_permissions);
-    if (!empty($removed_permissions)) {
-      $cleaned_roles[] = $role->label();
-      \Drupal::logger('update')->notice(
-        'The role %role has had the following non-existent permission(s) removed: %permissions.',
-        ['%role' => $role->label(), '%permissions' => implode(', ', $removed_permissions)]
-      );
-    }
-    $permissions = array_intersect($role->getPermissions(), $existing_permissions);
-    $role->set('permissions', $permissions);
-    return TRUE;
-  });
+  $existing_permissions = array_keys(\Drupal::service('user.permissions')
+    ->getPermissions());
+  \Drupal::classResolver(ConfigEntityUpdater::class)
+    ->update($sandbox, 'user_role', function (Role $role) use ($existing_permissions, &$cleaned_roles) {
+      $removed_permissions = array_diff($role->getPermissions(), $existing_permissions);
+      if (!empty($removed_permissions)) {
+        $cleaned_roles[] = $role->label();
+        \Drupal::logger('update')->notice(
+          'The role %role has had the following non-existent permission(s) removed: %permissions.',
+          [
+            '%role' => $role->label(),
+            '%permissions' => implode(', ', $removed_permissions),
+          ]
+        );
+        $permissions = array_intersect($role->getPermissions(), $existing_permissions);
+        $role->set('permissions', $permissions);
+        return TRUE;
+      }
+    });
 
   if (!empty($cleaned_roles)) {
     return new PluralTranslatableMarkup(
@@ -46,4 +52,5 @@ function user_post_update_update_roles(&$sandbox = NULL) {
       ['%role_list' => implode(', ', $cleaned_roles)]
     );
   }
+
 }

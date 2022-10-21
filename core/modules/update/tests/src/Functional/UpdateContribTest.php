@@ -41,6 +41,9 @@ class UpdateContribTest extends UpdateTestBase {
    */
   protected $defaultTheme = 'stark';
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
     $admin_user = $this->drupalCreateUser(['administer site configuration']);
@@ -63,7 +66,6 @@ class UpdateContribTest extends UpdateTestBase {
     ];
     $this->config('update_test.settings')->set('system_info', $system_info)->save();
     $this->refreshUpdateStatus(['drupal' => '0.0', 'aaa_update_test' => 'no-releases']);
-    $this->drupalGet('admin/reports/updates');
     // Cannot use $this->standardTests() because we need to check for the
     // 'No available releases found' string.
     $this->assertSession()->responseContains('<h3>Drupal core</h3>');
@@ -277,9 +279,6 @@ class UpdateContribTest extends UpdateTestBase {
           'aaa_update_test' => str_replace('.', '_', $version) . $extra_version,
         ]);
         $this->standardTests();
-        $this->drupalGet('admin/reports/updates');
-        $this->clickLink('Check manually');
-        $this->checkForMetaRefresh();
         $assert_session->pageTextNotContains('Security update required!');
         // The XML test fixtures for this method all contain the '8.x-3.0'
         // release but because '8.x-3.0' is not in a supported branch it will
@@ -422,7 +421,7 @@ class UpdateContribTest extends UpdateTestBase {
    * Tests updates with a hidden base theme.
    */
   public function testUpdateHiddenBaseTheme() {
-    module_load_include('compare.inc', 'update');
+    \Drupal::moduleHandler()->loadInclude('update', 'inc', 'update.compare');
 
     // Install the subtheme.
     \Drupal::service('theme_installer')->install(['update_test_subtheme']);
@@ -446,7 +445,7 @@ class UpdateContribTest extends UpdateTestBase {
     $project_info = new ProjectInfo();
     $project_info->processInfoList($projects, $theme_data, 'theme', TRUE);
 
-    $this->assertTrue(!empty($projects['update_test_basetheme']), 'Valid base theme (update_test_basetheme) was found.');
+    $this->assertNotEmpty($projects['update_test_basetheme'], 'Valid base theme (update_test_basetheme) was found.');
   }
 
   /**
@@ -550,7 +549,6 @@ class UpdateContribTest extends UpdateTestBase {
         'aaa_update_test' => '1_0',
       ]
     );
-    $this->drupalGet('admin/reports/updates');
     $this->assertSession()->responseContains('<h3>Modules</h3>');
     $this->assertSession()->pageTextContains('Security update required!');
     $this->assertSession()->linkExists('AAA Update test');
@@ -881,25 +879,18 @@ class UpdateContribTest extends UpdateTestBase {
     $this->assertStringContainsString("Requires Drupal core: $expected_range", $compatibility_details->getText());
     $details_summary_element = $compatibility_details->find('css', 'summary');
     if ($is_compatible) {
-      $download_version = str_replace('.', '-', $version);
       // If an update is compatible with the installed version of Drupal core,
-      // it should have a download link and the details element should be closed
-      // by default.
+      // the details element should be closed by default.
       $this->assertFalse($compatibility_details->hasAttribute('open'));
       $this->assertSame('Compatible', $details_summary_element->getText());
-      $this->assertEquals(
-        "http://example.com/{$this->updateProject}-$download_version.tar.gz",
-        $update_element->findLink('Download')->getAttribute('href')
-      );
     }
     else {
       // If an update is not compatible with the installed version of Drupal
-      // core, it should not have a download link and the details element should
-      // be open by default.
+      // core, the details element should be open by default.
       $this->assertTrue($compatibility_details->hasAttribute('open'));
       $this->assertSame('Not compatible', $details_summary_element->getText());
-      $this->assertFalse($update_element->hasLink('Download'));
     }
+    $this->assertFalse($update_element->hasLink('Download'));
   }
 
 }

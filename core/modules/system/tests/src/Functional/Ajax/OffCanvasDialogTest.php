@@ -38,7 +38,6 @@ class OffCanvasDialogTest extends BrowserTestBase {
     // Set up variables for this test.
     $dialog_renderable = AjaxTestController::dialogContents();
     $dialog_contents = \Drupal::service('renderer')->renderRoot($dialog_renderable);
-
     $off_canvas_expected_response = [
       'command' => 'openDialog',
       'selector' => '#drupal-off-canvas',
@@ -55,6 +54,7 @@ class OffCanvasDialogTest extends BrowserTestBase {
           'drupalOffCanvasPosition' => $position ?: 'side',
           'buttons' => [],
           'dialogClass' => 'ui-dialog-off-canvas ui-dialog-position-' . ($position ?: 'side'),
+          'classes' => ['ui-dialog-content' => 'drupal-off-canvas-reset'],
           'width' => 300,
         ],
       'effect' => 'fade',
@@ -65,7 +65,7 @@ class OffCanvasDialogTest extends BrowserTestBase {
     $wrapper_format = $position && ($position !== 'side') ? 'drupal_dialog.off_canvas_' . $position : 'drupal_dialog.off_canvas';
     $ajax_result = $this->drupalGet('ajax-test/dialog-contents', ['query' => [MainContentViewSubscriber::WRAPPER_FORMAT => $wrapper_format]]);
     $ajax_result = Json::decode($ajax_result);
-    $this->assertEquals($off_canvas_expected_response, $ajax_result[3], 'off-canvas dialog JSON response matches.');
+    $this->assertEquals($off_canvas_expected_response, $ajax_result[4], 'off-canvas dialog JSON response matches.');
   }
 
   /**

@@ -22,6 +22,9 @@ class FilterAPITest extends EntityKernelTestBase {
 
   protected static $modules = ['system', 'filter', 'filter_test', 'user'];
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
 
@@ -137,8 +140,11 @@ class FilterAPITest extends EntityKernelTestBase {
     $stupid_filtered_html_format->save();
     $this->assertSame(
       $stupid_filtered_html_format->getHtmlRestrictions(),
-      // No tag is allowed.
-      ['allowed' => []],
+      [
+        'allowed' => [
+          '*' => ['style' => FALSE, 'on*' => FALSE, 'lang' => TRUE, 'dir' => ['ltr' => TRUE, 'rtl' => TRUE]],
+        ],
+      ],
       'FilterFormatInterface::getHtmlRestrictions() works as expected for the stupid_filtered_html format.'
     );
     $this->assertSame(
@@ -203,7 +209,7 @@ class FilterAPITest extends EntityKernelTestBase {
         'filter_html' => [
           'status' => 1,
           'settings' => [
-            'allowed_html' => '<a> <b class> <c class="*"> <d class="foo bar-* *">',
+            'allowed_html' => '<a> <b class> <c class="*"> <d class="foo bar-* *"> <e *>',
           ],
         ],
       ],
@@ -217,6 +223,7 @@ class FilterAPITest extends EntityKernelTestBase {
           'b' => ['class' => TRUE],
           'c' => ['class' => TRUE],
           'd' => ['class' => ['foo' => TRUE, 'bar-*' => TRUE]],
+          'e' => ['*' => TRUE],
           '*' => ['style' => FALSE, 'on*' => FALSE, 'lang' => TRUE, 'dir' => ['ltr' => TRUE, 'rtl' => TRUE]],
         ],
       ],

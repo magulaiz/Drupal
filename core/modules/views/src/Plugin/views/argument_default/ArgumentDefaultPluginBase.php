@@ -38,6 +38,11 @@ abstract class ArgumentDefaultPluginBase extends PluginBase {
   protected $argument;
 
   /**
+   * The option name.
+   */
+  public string $option_name;
+
+  /**
    * Return the default argument.
    *
    * This needs to be overridden by every default argument handler to properly do what is needed.
@@ -67,12 +72,12 @@ abstract class ArgumentDefaultPluginBase extends PluginBase {
   public function buildOptionsForm(&$form, FormStateInterface $form_state) {}
 
   /**
-   * Provide the default form form for validating options.
+   * Provide the default form for validating options.
    */
   public function validateOptionsForm(&$form, FormStateInterface $form_state) {}
 
   /**
-   * Provide the default form form for submitting options.
+   * Provide the default form for submitting options.
    */
   public function submitOptionsForm(&$form, FormStateInterface $form_state, &$options = []) {}
 
