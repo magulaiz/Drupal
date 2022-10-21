@@ -33,13 +33,13 @@ final class CollectRelationshipMetaEvent extends Event implements RefinableCache
 
   /**
    * The metadata.
-   *
+   *Get the resource
    * @var array
    */
   private $meta = [];
 
   /**
-   * Constructs a new CollectResourceObjectMetaEvent object.
+   * Constructs a new CollectRelationshipMetaEvent object.
    *
    * @param \Drupal\jsonapi\JsonApiResource\ResourceObject $resource_object
    *   The resource object.
@@ -52,7 +52,7 @@ final class CollectRelationshipMetaEvent extends Event implements RefinableCache
   }
 
   /**
-   * Get the resource object.
+   * Gets the resource object.
    *
    * @return \Drupal\jsonapi\JsonApiResource\ResourceObject
    *   The resource object.
@@ -62,7 +62,7 @@ final class CollectRelationshipMetaEvent extends Event implements RefinableCache
   }
 
   /**
-   * Get the relationship field.
+   * Gets the relationship field.
    *
    * @return \Drupal\Core\Field\EntityReferenceFieldItemListInterface
    *   The relationship field.
@@ -75,7 +75,7 @@ final class CollectRelationshipMetaEvent extends Event implements RefinableCache
    * Gets the meta values.
    *
    * @return array
-   *   The meta
+   *   The meta.
    */
   public function getMeta(): array {
     return $this->meta;

@@ -155,6 +155,8 @@ class EntityResource {
   protected $user;
 
   /**
+   * The event dispatcher.
+   *
    * @var \Symfony\Component\EventDispatcher\EventDispatcherInterface
    */
   protected $eventDispatcher;
