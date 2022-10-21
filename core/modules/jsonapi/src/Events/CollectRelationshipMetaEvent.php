@@ -33,7 +33,7 @@ final class CollectRelationshipMetaEvent extends Event implements RefinableCache
 
   /**
    * The metadata.
-   *Get the resource
+   *
    * @var array
    */
   private $meta = [];
@@ -82,7 +82,7 @@ final class CollectRelationshipMetaEvent extends Event implements RefinableCache
   }
 
   /**
-   * Sets a value value.
+   * Sets a meta value.
    *
    * @param $property
    *   The key.
@@ -91,7 +91,7 @@ final class CollectRelationshipMetaEvent extends Event implements RefinableCache
    *
    * @return $this
    */
-  public function setMeta($property, $value): CollectRelationshipMetaEvent {
+  public function setMetaValue($property, $value): self {
     NestedArray::setValue($this->meta, (array) $property, $value, TRUE);
     return $this;
   }

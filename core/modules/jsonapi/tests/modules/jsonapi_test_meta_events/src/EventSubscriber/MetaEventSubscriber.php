@@ -82,7 +82,7 @@ class MetaEventSubscriber implements EventSubscriberInterface {
         $referencedEntityIds[] = $entity->uuid();
       }
 
-      $event->setMeta('relationship_meta_' . $event->getRelationshipField()->getName(), $referencedEntityIds);
+      $event->setMetaValue('relationship_meta_' . $event->getRelationshipField()->getName(), $referencedEntityIds);
       return;
     }
 
@@ -93,7 +93,7 @@ class MetaEventSubscriber implements EventSubscriberInterface {
       foreach ($referencedEntities as $entity) {
         $fieldValues[] = $entity->get($field_name)->value;
       }
-      $event->setMeta('relationship_meta_' . $field_name, $fieldValues);
+      $event->setMetaValue('relationship_meta_' . $field_name, $fieldValues);
     }
 
   }
