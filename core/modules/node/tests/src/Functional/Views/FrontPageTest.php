@@ -21,7 +21,6 @@ class FrontPageTest extends ViewTestBase {
 
   use AssertPageCacheContextsAndTagsTrait;
   use AssertViewsCacheTagsTrait;
-  use AssertPageCacheContextsAndTagsTrait;
 
   /**
    * {@inheritdoc}

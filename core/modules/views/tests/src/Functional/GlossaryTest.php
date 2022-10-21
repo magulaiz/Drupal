@@ -17,7 +17,6 @@ class GlossaryTest extends ViewTestBase {
 
   use AssertPageCacheContextsAndTagsTrait;
   use AssertViewsCacheTagsTrait;
-  use AssertPageCacheContextsAndTagsTrait;
 
   /**
    * Modules to enable.

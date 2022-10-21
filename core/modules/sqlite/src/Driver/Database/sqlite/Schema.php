@@ -46,7 +46,7 @@ class Schema extends DatabaseSchema {
   /**
    * {@inheritdoc}
    */
-  protected function createTableSql($name, $table) {
+  public function createTableSql($name, $table) {
     if (!empty($table['primary key']) && is_array($table['primary key'])) {
       $this->ensureNotNullPrimaryKey($table['primary key'], $table['fields']);
     }
