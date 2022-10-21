@@ -4,19 +4,19 @@
       "anchor": "/system/menu/main/linkset",
       "item": [
         {
-          "href": "/dd",
+          "href": "/",
           "title": "Home",
           "hierarchy": ["0"],
           "machine-name": ["main"]
         },
         {
-          "href": "/dd/multi-lingual-node",
+          "href": "/node/1",
           "title": "A multi-lingual-node",
           "hierarchy": ["1"],
           "machine-name": ["main"]
         },
         {
-          "href": "/dd/multi-lingual-node-two",
+          "href": "/node/2",
           "title": "Second multi-lingual-node",
           "hierarchy": ["2"],
           "machine-name": ["main"]

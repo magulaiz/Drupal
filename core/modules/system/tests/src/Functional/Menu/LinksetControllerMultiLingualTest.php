@@ -75,10 +75,11 @@ final class LinksetControllerMultiLingualTest extends LinksetControllerTestBase 
     // Create Basic page node type.
     $this->drupalCreateContentType(['type' => 'page', 'name' => 'Basic page']);
     // Add some custom languages.
-    foreach (['aa', 'bb', 'cc', 'dd'] as $language_code) {
+    foreach (['aa', 'bb', 'cc', 'dd'] as $index => $language_code) {
       ConfigurableLanguage::create([
         'id' => $language_code,
         'label' => $this->randomMachineName(),
+        'weight' => $index,
       ])->save();
     }
     // Setting up an admin user to configure multi-lingual settings.
@@ -91,19 +92,24 @@ final class LinksetControllerMultiLingualTest extends LinksetControllerTestBase 
       'edit own page content',
     ]);
     $this->drupalLogin($admin_user);
-
     // Enable URL language detection and selection.
-    $edit = ['language_interface[enabled][language-url]' => '1'];
-    $this->drupalGet('admin/config/regional/language/detection');
-    $this->submitForm($edit, 'Save settings');
+    $this->drupalGet('/admin/config/regional/language/detection');
+    $this->submitForm([
+      'language_interface[enabled][language-url]' => TRUE,
+      'language_interface[enabled][language-selected]' => TRUE,
+    ], 'Save settings');
 
-    // Change the default language to a custom one.
-    $this->drupalGet('admin/config/regional/language');
-    $edit = [
-      'site_default_language' => 'dd',
-    ];
-    $this->submitForm($edit, 'Save configuration');
-    $this->rebuildContainer();
+    // Set prefixes to aa, bb, and cc.
+    $this->drupalGet('/admin/config/regional/language/detection/url');
+    $this->submitForm([
+      'prefix[aa]' => 'aa',
+      'prefix[bb]' => 'bb',
+      'prefix[cc]' => 'cc',
+      'prefix[dd]' => '',
+    ], 'Save configuration');
+
+    $this->drupalGet('/admin/config/regional/language/detection/selected');
+    $this->submitForm(['edit-selected-langcode' => 'dd'], 'Save configuration');
 
     // Set default language code for content type page to 'dd'.
     ContentLanguageSettings::loadByEntityTypeBundle('node', 'page')
