@@ -1053,7 +1053,7 @@ services:
       - { name: persist }
     calls:
       - [fromRequestStack, ['@request_stack']]
-    deprecated: The "%service_id%" service is deprecated in drupal:9.4.0 and is removed from drupal:10.0.0. Use Symfony\Component\Routing\RequestContext or "router.symfony_request_context" service instead. See https://www.drupal.org/node/3279668
+    deprecated: The "%service_id%" service is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use Symfony\Component\Routing\RequestContext or "router.symfony_request_context" service instead. See https://www.drupal.org/node/3279668
   Drupal\Core\Routing\RequestContext: '@router.request_context'
   router.admin_context:
     class: Drupal\Core\Routing\AdminContext
