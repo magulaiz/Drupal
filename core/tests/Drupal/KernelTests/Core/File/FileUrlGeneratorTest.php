@@ -95,7 +95,7 @@ class FileUrlGeneratorTest extends FileTestBase {
     $this->assertEquals(base_path() . $filepath, $url, 'Correctly generated a root-relative URL for a shipped file.');
     $filepath = 'core/misc/favicon.ico';
     $url = $this->fileUrlGenerator->generateAbsoluteString($filepath);
-    $this->assertEqual(base_path() . $filepath, $url, 'Correctly generated a root-relative URL for a shipped file.');
+    $this->assertEquals(base_path() . $filepath, $url, 'Correctly generated a root-relative URL for a shipped file.');
 
     // Test alteration of file URLs to use protocol-relative URLs.
     \Drupal::state()->set('file_test.hook_file_url_alter', 'protocol-relative');
