@@ -28,13 +28,6 @@ class AlertsJsonFeedTest extends OffCanvasTestBase {
   protected $defaultTheme = 'stark';
 
   /**
-   * The key/value store.
-   *
-   * @var \Drupal\Core\KeyValueStore\KeyValueStoreExpirableInterface
-   */
-  protected $tempStore;
-
-  /**
    * A test endpoint which contains the community feeds.
    *
    * @var string
@@ -113,7 +106,6 @@ class AlertsJsonFeedTest extends OffCanvasTestBase {
       ]
     );
     AnnounceTestHttpClient::setAnnounceTestEndpoint($this->responseJson);
-    $this->tempStore = $this->container->get('keyvalue.expirable')->get('announce');
   }
 
   /**
