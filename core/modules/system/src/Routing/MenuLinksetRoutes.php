@@ -99,7 +99,7 @@ class MenuLinksetRoutes extends RouteSubscriberBase implements ContainerInjectio
       $routes['system.menu.linkset'] = new Route(
         '/system/menu/{menu}/linkset',
         [
-          '_controller' => 'Drupal\system\Controller\Linkset::process',
+          '_controller' => 'Drupal\system\Controller\LinksetController::process',
         ],
         [
           '_access' => 'TRUE',

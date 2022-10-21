@@ -21,7 +21,7 @@ use Symfony\Component\HttpFoundation\Request;
  * @internal
  *   This class's API is internal and it is not intended for extension.
  */
-final class Linkset extends ControllerBase {
+final class LinksetController extends ControllerBase {
 
   /**
    * Linkset constructor.
