@@ -66,6 +66,18 @@ function update_requirements($phase) {
       $requirements['update_core']['reason'] = UpdateFetcherInterface::UNKNOWN;
       $requirements['update_core']['description'] = _update_no_data();
     }
+
+    // Report configuration error.
+    $frequency = \Drupal::config('update.settings')->get('check.interval_days');
+    if ($frequency < 1) {
+      $requirements['update_core'] = [
+        'title' => t('Update misconfigured'),
+        'description' => t('Update module is set to check for updates more frequently than once per day. This results in a check every cron run, which is wasteful. <a href=":freq_config">Modify update frequency</a>.', [
+          ':freq_config' => Url::fromRoute('update.settings')->toString(),
+        ]),
+        'severity' => REQUIREMENT_WARNING,
+      ];
+    }
   }
   return $requirements;
 }

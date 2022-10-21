@@ -67,10 +67,18 @@ class UpdateSettingsForm extends ConfigFormBase implements ContainerInjectionInt
   public function buildForm(array $form, FormStateInterface $form_state) {
     $config = $this->config('update.settings');
 
+    // Adjust existing value to fit our set of choices.
+    $frequency = $config->get('check.interval_days');
+    if ($frequency < 1) {
+      $frequency = 1;
+    }
+    if ($frequency > 1) {
+      $frequency = 7;
+    }
     $form['update_check_frequency'] = [
       '#type' => 'radios',
       '#title' => $this->t('Check for updates'),
-      '#default_value' => $config->get('check.interval_days'),
+      '#default_value' => $frequency,
       '#options' => [
         '1' => $this->t('Daily'),
         '7' => $this->t('Weekly'),
