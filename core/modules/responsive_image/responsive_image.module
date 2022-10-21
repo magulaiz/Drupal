@@ -201,8 +201,12 @@ function template_preprocess_responsive_image(&$variables) {
       $variables['uri']
     );
     // Unset current image attributes, so the new ones that are set will work.
-    unset($variables['img_element']['#attributes']['width']);
-    unset($variables['img_element']['#attributes']['height']);
+    if (isset($variables['img_element']['#attributes']['width'])) {
+      unset($variables['img_element']['#attributes']['width']);
+    }
+    if (isset($variables['img_element']['#attributes']['height'])) {
+      unset($variables['img_element']['#attributes']['height']);
+    }
     $variables['img_element']['#width'] = $dimensions['width'];
     $variables['img_element']['#height'] = $dimensions['height'];
   }
