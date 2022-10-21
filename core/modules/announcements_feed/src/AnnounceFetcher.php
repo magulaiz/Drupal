@@ -115,7 +115,9 @@ class AnnounceFetcher {
       return FALSE;
     }
     $host = parse_url($announcement['link'], PHP_URL_HOST);
-    return $host && preg_match('/(^|\.)drupal\.org$/', $host);
+    // First character can only be a letter or a digit.
+    // @see https://www.rfc-editor.org/rfc/rfc1123#page-13
+    return $host && preg_match('/^([a-zA-Z0-9][a-zA-Z0-9\-_]*\.)?drupal\.org$/', $host);
   }
 
   /**
