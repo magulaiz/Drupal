@@ -152,14 +152,14 @@ class AnnounceFetcher {
         $this->logger->error($e->getMessage());
         throw $e;
       }
-      // Ensure that announcements reference drupal.org.
-      $announcements = array_filter($announcements, [static::class, 'validateUrl']);
+      // Ensure that announcements reference drupal.org and are applicable to
+      // the current Drupal version.
+      $announcements = array_filter($announcements, function (array $announcement) {
+        return static::validateUrl($announcement) && static::isRelevantItem($announcement);
+      });
       $this->tempStore->setWithExpire('announcements', $announcements,
         $this->config->get('max_age'));
     }
-
-    // Filter to announcements applicable to the current Drupal version.
-    $announcements = array_filter($announcements, [static::class, 'isRelevantItem']);
 
     $sticky_announcements = [];
     $non_sticky = [];
