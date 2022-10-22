@@ -92,13 +92,8 @@ class AnnounceFetcher {
    *   Return True if $announcement['version'] matches Drupal version.
    */
   protected function isRelevantItem(array $announcement): bool {
-    try {
-      return Semver::satisfies(\Drupal::VERSION, $announcement['version']);
-    }
-    catch (\Exception $e) {
-      $this->logger->error($e->getMessage());
-    }
-    return FALSE;
+    return isset($announcement['version'])
+      && Semver::satisfies(\Drupal::VERSION, $announcement['version']);
   }
 
   /**
