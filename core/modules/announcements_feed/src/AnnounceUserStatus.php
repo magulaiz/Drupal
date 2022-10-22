@@ -84,10 +84,10 @@ class AnnounceUserStatus {
     $announcements = $this->fetcher->fetch();
     // Get the new/unread items for the user.
     $new_announcements = $this->getNewAnnouncements();
-    foreach ($announcements as $key => $announcement) {
+    foreach ($announcements as &$announcement) {
       // Add an attribute 'new' to the announcements to identify new items.
-      $announcements[$key]['new'] = in_array($announcement['id'],
-        $new_announcements) ? $announcement['id'] : '';
+      $announcement['new'] = in_array($announcement['id'], $new_announcements)
+        ? $announcement['id'] : '';
     }
     if (!empty($new_announcements)) {
       // Store the ids of announcements for the user to mark it as read items.
