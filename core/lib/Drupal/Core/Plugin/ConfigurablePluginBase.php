@@ -9,7 +9,7 @@ use Drupal\Component\Plugin\ConfigurableTrait;
  * Base class for plugins that are configurable.
  *
  * Configurable plugins may extend this base class, or implement
- * Drupal\Component\Plugin\ConfigurableTrait directly.  If they implement the
+ * \Drupal\Component\Plugin\ConfigurableTrait directly. If they implement the
  * trait directly, they are responsible for setting the configuration manually
  * in their constructor.
  */
