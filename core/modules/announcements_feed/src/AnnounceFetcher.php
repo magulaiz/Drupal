@@ -91,7 +91,7 @@ class AnnounceFetcher {
    * @return bool
    *   Return True if $announcement['version'] matches Drupal version.
    */
-  protected function isRelevantItem(array $announcement): bool {
+  protected static function isRelevantItem(array $announcement): bool {
     return isset($announcement['version'])
       && Semver::satisfies(\Drupal::VERSION, $announcement['version']);
   }
@@ -105,7 +105,7 @@ class AnnounceFetcher {
    * @return bool
    *   Return True if $announcement['link'] is controlled by the D.O.
    */
-  public function validateUrl(array $announcement): bool {
+  public static function validateUrl(array $announcement): bool {
     if (!$announcement['link']) {
       return FALSE;
     }
@@ -153,13 +153,13 @@ class AnnounceFetcher {
         throw $e;
       }
       // Ensure that announcements reference drupal.org.
-      $announcements = array_filter($announcements, [$this, 'validateUrl']);
+      $announcements = array_filter($announcements, [static::class, 'validateUrl']);
       $this->tempStore->setWithExpire('announcements', $announcements,
         $this->config->get('max_age'));
     }
 
     // Filter to announcements applicable to the current Drupal version.
-    $announcements = array_filter($announcements, [$this, 'isRelevantItem']);
+    $announcements = array_filter($announcements, [static::class, 'isRelevantItem']);
 
     $sticky_announcements = [];
     $non_sticky = [];
