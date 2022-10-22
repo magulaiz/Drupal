@@ -105,13 +105,12 @@ class AnnounceUserStatus {
    *   announcement data stored for the user.
    */
   protected function getAnnouncementStatus(): array {
-    $user_announcements = $this->userData->get('announcements_feed',
-      $this->currentUser->id(), 'announcements');
-    if ($user_announcements == NULL) {
-      // No ids stored for the user.
-      return [];
-    }
-    return $user_announcements;
+    $user_announcements = $this->userData->get(
+      'announcements_feed',
+      $this->currentUser->id(),
+      'announcements'
+    );
+    return $user_announcements ?? [];
   }
 
   /**
@@ -121,8 +120,12 @@ class AnnounceUserStatus {
    *  IDs of announcements to store against the current user.
    */
   public function setAnnouncementStatus(array $announcements): void {
-    $this->userData->set('announcements_feed', $this->currentUser->id(),
-      'announcements', $announcements);
+    $this->userData->set(
+      'announcements_feed',
+      $this->currentUser->id(),
+      'announcements',
+      $announcements
+    );
   }
 
 }
