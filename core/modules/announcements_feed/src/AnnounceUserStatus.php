@@ -59,15 +59,15 @@ class AnnounceUserStatus {
    */
   public function getNewAnnouncements(): array {
     // Get the announcements viewed by the user.
-    $user_announcements = $this->getAnnouncementStatus();
+    $old_announcement_ids = $this->getAnnouncementStatus();
     // Fetch the announcements from the feed.
-    $announcements = $this->fetcher->fetchIds();
-    $new_announcements = array_diff($announcements, $user_announcements);
+    $announcement_ids = $this->fetcher->fetchIds();
+    $new_announcement_ids = array_diff($announcement_ids, $old_announcement_ids);
     // Invalidate cache if there are new announcements for the user.
-    if (!empty($new_announcements)) {
+    if (!empty($new_announcement_ids)) {
       Cache::invalidateTags(['announcements_feed:feed:' . $this->currentUser->id()]);
     }
-    return $new_announcements;
+    return $new_announcement_ids;
   }
 
   /**
