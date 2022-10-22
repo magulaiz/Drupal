@@ -152,32 +152,25 @@ class AnnounceFetcher {
         $this->logger->error($e->getMessage());
         throw $e;
       }
+
       // Ensure that announcements reference drupal.org and are applicable to
       // the current Drupal version.
       $announcements = array_filter($announcements, function (array $announcement) {
         return static::validateUrl($announcement) && static::isRelevantItem($announcement);
       });
+
       $this->tempStore->setWithExpire('announcements', $announcements,
         $this->config->get('max_age'));
     }
 
-    $sticky_announcements = [];
-    $non_sticky = [];
+    // Put all the sticky announcements before the rest.
+    $prioritized = [[], []];
     foreach ($announcements as $announcement) {
-      if ($announcement['sticky']) {
-        $sticky_announcements[] = $announcement;
-      }
-      else {
-        $non_sticky[] = $announcement;
-      }
+      $prioritized[$announcement['sticky'] ? 0 : 1][] = $announcement;
     }
+    $announcements = array_merge($prioritized[0], $prioritized[1]);
 
-    if (count($sticky_announcements) >= 10) {
-      return array_slice($sticky_announcements, 0, 10);
-    }
-    else {
-      return array_slice(array_merge($sticky_announcements, $non_sticky), 0, 10);
-    }
+    return array_slice($announcements, 0, 10);
   }
 
 }
