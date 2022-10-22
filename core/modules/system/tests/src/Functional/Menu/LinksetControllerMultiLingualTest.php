@@ -165,7 +165,7 @@ final class LinksetControllerMultiLingualTest extends LinksetControllerTestBase 
       ]);
       $multi_lingual_menu_item->save();
     }
-    // Multilingual Menu item with missing language.
+    // Multilingual Menu item with missing language using `entity:` route.
     $multi_lingual_node = $this->createNode([
       'nid' => 2,
       'title' => 'A multi-lingual-node',
@@ -181,6 +181,25 @@ final class LinksetControllerMultiLingualTest extends LinksetControllerTestBase 
     foreach (['aa', 'bb'] as $language_code) {
       $multi_lingual_menu_item->addTranslation($language_code, [
         'title' => $language_code . '|' . 'Second multi-lingual-node',
+      ]);
+      $multi_lingual_menu_item->save();
+    }
+    // Multilingual Menu item with missing language using `internal` route.
+    $multi_lingual_node = $this->createNode([
+      'nid' => 3,
+      'title' => 'A multi-lingual-node',
+      'type' => 'page',
+      'path' => '/multi-lingual-node-three',
+    ]);
+    $multi_lingual_menu_item = $this->createMenuItem([
+      'title' => 'Third multi-lingual-node',
+      'link' => 'internal:/node/' . (int) $multi_lingual_node->id(),
+      'menu_name' => 'main',
+      'weight' => $home_page_link->getWeight() + 3,
+    ]);
+    foreach (['aa', 'bb'] as $language_code) {
+      $multi_lingual_menu_item->addTranslation($language_code, [
+        'title' => $language_code . '|' . 'Third multi-lingual-node',
       ]);
       $multi_lingual_menu_item->save();
     }

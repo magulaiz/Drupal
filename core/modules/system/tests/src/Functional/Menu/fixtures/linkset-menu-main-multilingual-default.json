@@ -20,6 +20,12 @@
           "title": "Second multi-lingual-node",
           "hierarchy": ["2"],
           "machine-name": ["main"]
+        },
+        {
+          "href": "/node/3",
+          "title": "Third multi-lingual-node",
+          "hierarchy": ["3"],
+          "machine-name": ["main"]
         }
       ]
     }
