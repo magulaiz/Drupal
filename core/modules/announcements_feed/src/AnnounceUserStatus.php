@@ -2,9 +2,9 @@
 
 namespace Drupal\announcements_feed;
 
-use Drupal\user\UserData;
-use Drupal\Core\Session\AccountProxy;
 use Drupal\Core\Cache\Cache;
+use Drupal\Core\Session\AccountProxy;
+use Drupal\user\UserData;
 
 /**
  * Service to manage announcements for the user.

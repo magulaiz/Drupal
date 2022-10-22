@@ -2,12 +2,12 @@
 
 namespace Drupal\announcements_feed;
 
+use Composer\Semver\Semver;
+use Drupal\Component\Serialization\Json;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\KeyValueStore\KeyValueExpirableFactory;
 use GuzzleHttp\ClientInterface;
-use Composer\Semver\Semver;
 use Psr\Log\LoggerInterface;
-use Drupal\Component\Serialization\Json;
 
 /**
  * Service to fetch announcements from the external feed.
