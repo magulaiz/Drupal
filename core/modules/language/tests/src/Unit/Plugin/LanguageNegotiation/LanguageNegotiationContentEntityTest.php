@@ -25,7 +25,7 @@ class LanguageNegotiationContentEntityTest extends UnitTestCase {
   use LanguageNegotiationFactoryTrait;
 
   /**
-   * The language negotiation method plugin clas.
+   * The language negotiation method plugin class.
    */
   const PLUGIN_CLASS = LanguageNegotiationContentEntity::class;
 

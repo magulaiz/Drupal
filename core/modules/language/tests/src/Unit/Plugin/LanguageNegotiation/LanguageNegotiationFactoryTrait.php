@@ -10,7 +10,7 @@ use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 trait LanguageNegotiationFactoryTrait {
 
   /**
-   * Creates a @LanguageNegotiaton plugin using the factory ::create method.
+   * Creates a @LanguageNegotiation plugin using the factory ::create method.
    *
    * @return \Drupal\language\LanguageNegotiationMethodInterface
    */
