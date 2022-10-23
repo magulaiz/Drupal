@@ -12,7 +12,6 @@ use Drupal\language\ConfigurableLanguageManagerInterface;
 use Drupal\Tests\UnitTestCase;
 use Drupal\language\Plugin\LanguageNegotiation\LanguageNegotiationContentEntity;
 use Symfony\Component\HttpFoundation\ParameterBag;
-use Throwable;
 
 /**
  * Tests the LanguageNegotiationContentEntity plugin class.
@@ -29,7 +28,7 @@ class LanguageNegotiationContentEntityTest extends UnitTestCase {
    * The language negotiation method plugin clas.
    */
   const PLUGIN_CLASS = LanguageNegotiationContentEntity::class;
-  
+
   /**
    * A mock LanguageManager object.
    *
@@ -62,7 +61,6 @@ class LanguageNegotiationContentEntityTest extends UnitTestCase {
       'de' => $language_de,
       'en' => $language_en,
     ];
-    $this->languages = $languages;
 
     $language_manager = $this->getMockBuilder(ConfigurableLanguageManagerInterface::class)
       ->getMock();
@@ -86,7 +84,7 @@ class LanguageNegotiationContentEntityTest extends UnitTestCase {
       ->disableOriginalConstructor()
       ->getMock();
     $container->set('entity_type.manager', $entityTypeManager);
-    
+
     \Drupal::setContainer($container);
   }
 
@@ -103,7 +101,7 @@ class LanguageNegotiationContentEntityTest extends UnitTestCase {
     try {
       $languageNegotiationContentEntity->getLangcode();
     }
-    catch (Throwable $t) {
+    catch (\Throwable $t) {
       $this->assertEquals('Attempt to read property "query" on null', $t->getMessage());
     }
 
@@ -117,7 +115,7 @@ class LanguageNegotiationContentEntityTest extends UnitTestCase {
     try {
       $languageNegotiationContentEntity->getLangcode($request);
     }
-    catch (Throwable $t) {
+    catch (\Throwable $t) {
       $this->assertEquals("Call to a member function getLanguages() on null", $t->getMessage());
     }
 
