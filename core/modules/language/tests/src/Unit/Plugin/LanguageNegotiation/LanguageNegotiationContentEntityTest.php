@@ -23,6 +23,13 @@ use Throwable;
  */
 class LanguageNegotiationContentEntityTest extends UnitTestCase {
 
+  use LanguageNegotiationFactoryTrait;
+
+  /**
+   * The language negotiation method plugin clas.
+   */
+  const PLUGIN_CLASS = LanguageNegotiationContentEntity::class;
+  
   /**
    * A mock LanguageManager object.
    *
@@ -67,12 +74,19 @@ class LanguageNegotiationContentEntityTest extends UnitTestCase {
     $this->user = $this->getMockBuilder(AccountInterface::class)
       ->getMock();
 
+    $container = new ContainerBuilder();
+
     $cache_contexts_manager = $this->getMockBuilder(CacheContextsManager::class)
       ->disableOriginalConstructor()
       ->getMock();
     $cache_contexts_manager->method('assertValidTokens')->willReturn(TRUE);
-    $container = new ContainerBuilder();
     $container->set('cache_contexts_manager', $cache_contexts_manager);
+
+    $entityTypeManager = $this->getMockBuilder(EntityTypeManager::class)
+      ->disableOriginalConstructor()
+      ->getMock();
+    $container->set('entity_type.manager', $entityTypeManager);
+    
     \Drupal::setContainer($container);
   }
 
@@ -81,11 +95,7 @@ class LanguageNegotiationContentEntityTest extends UnitTestCase {
    */
   public function testGetLangcode() {
 
-    $entityTypeManagerMock = $this->getMockBuilder(EntityTypeManager::class)
-      ->disableOriginalConstructor()
-      ->getMock();
-
-    $languageNegotiationContentEntity = new LanguageNegotiationContentEntity($entityTypeManagerMock);
+    $languageNegotiationContentEntity = $this->createLanguageNegotiationPlugin();
 
     // Case 1: Empty request.
     // TODO: Once [#3130751] is committed, the following can be modified to
@@ -94,7 +104,7 @@ class LanguageNegotiationContentEntityTest extends UnitTestCase {
       $languageNegotiationContentEntity->getLangcode();
     }
     catch (Throwable $t) {
-      $this->assertEquals("Trying to get property of non-object", str_replace("'query' ", '', $t->getMessage()));
+      $this->assertEquals('Attempt to read property "query" on null', $t->getMessage());
     }
 
     // Case 2: A request is available, but the languageManager is not set.
