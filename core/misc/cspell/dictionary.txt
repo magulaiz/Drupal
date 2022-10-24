@@ -1121,6 +1121,7 @@ starterkit
 starzzzz
 statuscode
 stdclass
+stickied
 stitle
 streamwrapper
 streamwrappers
