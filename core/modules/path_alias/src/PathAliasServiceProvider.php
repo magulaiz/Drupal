@@ -16,7 +16,7 @@ class PathAliasServiceProvider implements ServiceModifierInterface {
    */
   public function alter(ContainerBuilder $container) {
     $container->getDefinition('path.matcher')
-      ->setClass(class: AliasPathMatcher::class)
+      ->setClass(AliasPathMatcher::class)
       ->addArgument(new Reference('path_alias.manager'));
   }
 
