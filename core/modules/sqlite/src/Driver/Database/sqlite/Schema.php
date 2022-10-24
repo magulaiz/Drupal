@@ -44,15 +44,7 @@ class Schema extends DatabaseSchema {
   }
 
   /**
-   * Generate SQL to create a new table from a Drupal schema definition.
-   *
-   * @param $name
-   *   The name of the table to create.
-   * @param $table
-   *   A Schema API table definition array.
-   *
-   * @return
-   *   An array of SQL statements to create the table.
+   * {@inheritdoc}
    */
   public function createTableSql($name, $table) {
     if (!empty($table['primary key']) && is_array($table['primary key'])) {
@@ -475,7 +467,7 @@ class Schema extends DatabaseSchema {
    * @param $table
    *   Name of the table.
    *
-   * @return
+   * @return array
    *   An array representing the schema.
    *
    * @throws \Exception

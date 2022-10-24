@@ -122,8 +122,9 @@ class ViewUI implements ViewEntityInterface {
   ];
 
   /**
-   * Whether the config is being created, updated or deleted through the
-   * import process.
+   * Whether the config is being synced through the import process.
+   *
+   * This is the case with create, update or delete.
    *
    * @var bool
    */
@@ -678,9 +679,9 @@ class ViewUI implements ViewEntityInterface {
                 [
                   'data' => [
                     '#prefix' => '<pre>',
-                     'queries' => $queries,
-                     '#suffix' => '</pre>',
-                    ],
+                    'queries' => $queries,
+                    '#suffix' => '</pre>',
+                  ],
                 ],
               ];
             }
@@ -835,7 +836,7 @@ class ViewUI implements ViewEntityInterface {
   /**
    * Get the user's current progress through the form stack.
    *
-   * @return
+   * @return array|bool
    *   FALSE if the user is not currently in a multiple-form stack. Otherwise,
    *   an associative array with the following keys:
    *   - current: The number of the current form on the stack.

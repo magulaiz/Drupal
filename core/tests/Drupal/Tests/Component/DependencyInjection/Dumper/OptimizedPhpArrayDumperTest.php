@@ -8,8 +8,8 @@
 namespace Drupal\Tests\Component\DependencyInjection\Dumper {
 
   use Drupal\Component\Utility\Crypt;
-  use Drupal\Tests\PhpUnitCompatibilityTrait;
   use PHPUnit\Framework\TestCase;
+  use Prophecy\PhpUnit\ProphecyTrait;
   use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
   use Symfony\Component\DependencyInjection\Definition;
   use Symfony\Component\DependencyInjection\Reference;
@@ -26,8 +26,8 @@ namespace Drupal\Tests\Component\DependencyInjection\Dumper {
    */
   class OptimizedPhpArrayDumperTest extends TestCase {
 
-    use PhpUnitCompatibilityTrait;
     use ExpectDeprecationTrait;
+    use ProphecyTrait;
 
     /**
      * The container builder instance.
@@ -347,8 +347,8 @@ namespace Drupal\Tests\Component\DependencyInjection\Dumper {
       ] + $base_service_definition;
 
       $service_definitions[] = [
-          'shared' => FALSE,
-        ] + $base_service_definition;
+        'shared' => FALSE,
+      ] + $base_service_definition;
 
       // Test factory.
       $service_definitions[] = [
@@ -499,11 +499,11 @@ namespace Drupal\Tests\Component\DependencyInjection\Dumper {
         $service_definition = $this->getPrivateServiceCall('bar', $bar_definition_php_array, TRUE);
       }
       $data = [
-         'class' => '\stdClass',
-         'arguments' => $this->getCollection([
-           $service_definition,
-         ]),
-         'arguments_count' => 1,
+        'class' => '\stdClass',
+        'arguments' => $this->getCollection([
+          $service_definition,
+        ]),
+        'arguments_count' => 1,
       ];
       $this->assertEquals($this->serializeDefinition($data), $dump['services']['foo'], 'Expected definition matches dump.');
     }

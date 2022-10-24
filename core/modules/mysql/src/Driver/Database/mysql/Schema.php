@@ -44,7 +44,7 @@ class Schema extends DatabaseSchema {
   /**
    * Get information about the table and database name from the prefix.
    *
-   * @return
+   * @return array
    *   A keyed array with information about the database, table name and prefix.
    */
   protected function getPrefixInfo($table = 'default', $add_prefix = TRUE) {
@@ -81,15 +81,7 @@ class Schema extends DatabaseSchema {
   }
 
   /**
-   * Generate SQL to create a new table from a Drupal schema definition.
-   *
-   * @param $name
-   *   The name of the table to create.
-   * @param $table
-   *   A Schema API table definition array.
-   *
-   * @return
-   *   An array of SQL statements to create the table.
+   * {@inheritdoc}
    */
   protected function createTableSql($name, $table) {
     $info = $this->connection->getConnectionOptions();

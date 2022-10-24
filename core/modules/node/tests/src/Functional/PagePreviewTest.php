@@ -65,6 +65,9 @@ class PagePreviewTest extends NodeTestBase {
    */
   protected Term $term;
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
     $this->addDefaultCommentField('node', 'page');
@@ -219,8 +222,7 @@ class PagePreviewTest extends NodeTestBase {
     $this->assertSession()->linkExists('Back to content editing');
 
     // Check that we see the class of the node type on the body element.
-    $body_class_element = $this->xpath("//body[contains(@class, 'page-node-type-page')]");
-    $this->assertNotEmpty($body_class_element, 'Node type body class found.');
+    $this->assertSession()->elementExists('xpath', "//body[contains(@class, 'page-node-type-page')]");
 
     // Get the UUID.
     $url = parse_url($this->getUrl());

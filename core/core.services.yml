@@ -15,6 +15,12 @@ parameters:
     debug: false
     auto_reload: null
     cache: true
+    allowed_file_extensions:
+      - css
+      - html
+      - js
+      - svg
+      - twig
   renderer.config:
     required_cache_contexts: ['languages:language_interface', 'theme', 'user.permissions']
     auto_placeholder_conditions:
@@ -718,8 +724,8 @@ services:
     tags:
       - { name: persist }
   current_route_match:
-     class: Drupal\Core\Routing\CurrentRouteMatch
-     arguments: ['@request_stack']
+    class: Drupal\Core\Routing\CurrentRouteMatch
+    arguments: ['@request_stack']
   event_dispatcher:
     class: Drupal\Component\EventDispatcher\ContainerAwareEventDispatcher
     arguments: ['@service_container']
@@ -781,10 +787,10 @@ services:
     calls:
       - [setContainer, ['@service_container']]
   http_middleware.cors:
-     class: Asm89\Stack\Cors
-     arguments: ['%cors.config%']
-     tags:
-       - { name: http_middleware, priority: 250 }
+    class: Asm89\Stack\Cors
+    arguments: ['%cors.config%']
+    tags:
+      - { name: http_middleware, priority: 250 }
   psr7.http_foundation_factory:
     class: Symfony\Bridge\PsrHttpMessage\Factory\HttpFoundationFactory
   psr17.server_request_factory:
@@ -953,12 +959,12 @@ services:
     class: Drupal\Core\Path\PathValidator
     arguments: ['@router', '@router.no_access_checks', '@current_user', '@path_processor_manager']
 
-# The argument to the hashing service defined in services.yml, to the
-# constructor of PhpassHashedPassword is the log2 number of iterations for
-# password stretching.
-# @todo increase by 1 every Drupal version in order to counteract increases in
-# the speed and power of computers available to crack the hashes. The current
-# password hashing method was introduced in Drupal 7 with a log2 count of 15.
+  # The argument to the hashing service defined in services.yml, to the
+  # constructor of PhpassHashedPassword is the log2 number of iterations for
+  # password stretching.
+  # @todo increase by 1 every Drupal version in order to counteract increases in
+  # the speed and power of computers available to crack the hashes. The current
+  # password hashing method was introduced in Drupal 7 with a log2 count of 15.
   password:
     class: Drupal\Core\Password\PhpassHashedPassword
     arguments: [16]
@@ -1559,7 +1565,7 @@ services:
     # We use '.' instead of '%app.root%' as the path for non-namespaced template
     # files so that they match the relative paths of templates loaded via the
     # theme registry or via Twig namespaces.
-    arguments: ['.', '@module_handler', '@theme_handler']
+    arguments: ['.', '@module_handler', '@theme_handler', '%twig.config%']
     tags:
       - { name: twig.loader, priority: 100 }
   twig.loader.theme_registry:
