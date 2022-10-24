@@ -1134,7 +1134,7 @@ function claro_preprocess_field_ui_table(&$variables) {
  */
 function claro_preprocess_views_view_table(&$variables) {
   if (!empty($variables['header'])) {
-    foreach ($variables['header'] as $key => &$header_cell) {
+    foreach ($variables['header'] as &$header_cell) {
       if (!empty($header_cell['url'])) {
         $parsed_url = UrlHelper::parse($header_cell['url']);
         $query = !empty($parsed_url['query']) ? $parsed_url['query'] : [];
