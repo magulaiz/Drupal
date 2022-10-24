@@ -36,7 +36,7 @@ tr.selected td {
   z-index: calc(var(--dropbutton-widget-z-index) + 1);
   bottom: 0;
   left: 0;
-  animation: fadeInBottom 320ms 1 forwards;
+  animation: fade-in-bottom 320ms 1 forwards;
   border-bottom-right-radius: 0;
   border-bottom-left-radius: 0;
 }
@@ -47,7 +47,7 @@ tr.selected td {
   }
 }
 
-@keyframes fadeInBottom {
+@keyframes fade-in-bottom {
   0% {
     transform: translateY(100%);
   }
@@ -88,8 +88,8 @@ tr.selected td {
 }
 
 .views-bulk-actions__item .form-element:hover {
-  box-shadow: none;
   border: var(--input-border-size) solid var(--input-border-color);
+  box-shadow: none;
 }
 
 .views-bulk-actions__item .button--primary {

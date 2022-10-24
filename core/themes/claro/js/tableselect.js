@@ -359,7 +359,11 @@
 
   Drupal.behaviors.claroTableSelect = {
     attach(context) {
-      const bulkActions = once('ClaroBulkActions', '[data-drupal-views-bulk-actions]', context);
+      const bulkActions = once(
+        'ClaroBulkActions',
+        '[data-drupal-views-bulk-actions]',
+        context,
+      );
       bulkActions.map(
         (bulkActionForm) =>
           /* eslint-disable-next-line no-new */
