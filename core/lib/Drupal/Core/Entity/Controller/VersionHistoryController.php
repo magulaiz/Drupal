@@ -193,7 +193,7 @@ class VersionHistoryController extends ControllerBase {
   }
 
   /**
-   * Generates revisions of an entity relevant to the current user.
+   * Generates revisions of an entity relevant to the current language.
    *
    * @param \Drupal\Core\Entity\RevisionableInterface $entity
    *   The entity.

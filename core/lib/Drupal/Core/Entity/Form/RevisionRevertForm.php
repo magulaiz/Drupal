@@ -121,7 +121,7 @@ class RevisionRevertForm extends ConfirmFormBase implements EntityFormInterface 
    * {@inheritdoc}
    */
   public function getCancelUrl() {
-    return $this->getEntity()->getEntityType()->hasLinkTemplate('version-history')
+    return $this->getEntity()->getEntityType()->hasLinkTemplate('version-history') && $this->getEntity()->toUrl('version-history')->access($this->currentUser)
       ? $this->getEntity()->toUrl('version-history')
       : $this->getEntity()->toUrl();
   }

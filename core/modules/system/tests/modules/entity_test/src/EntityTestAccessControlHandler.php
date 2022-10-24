@@ -65,8 +65,8 @@ class EntityTestAccessControlHandler extends EntityAccessControlHandler {
       return $access;
     }
 
-    // Revision access checks use label instead of permission so access can
-    // vary by individual revisions, since 'name' field can vary by revision.
+    // Access to revisions is based on labels, so access can vary by individual
+    // revisions, since the 'name' field can vary by revision.
     $labels = explode(',', $entity->label());
     $labels = array_map('trim', $labels);
     if (in_array($operation, [
