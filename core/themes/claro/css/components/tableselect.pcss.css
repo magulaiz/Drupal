@@ -87,6 +87,26 @@ tr.selected td {
   margin-bottom: 0;
 }
 
+.views-bulk-actions__item .form-element:hover {
+  box-shadow: none;
+  border: var(--input-border-size) solid var(--input-border-color);
+}
+
+.views-bulk-actions__item .button--primary {
+  background: var(--color-blue-400);
+  &:hover {
+    background: var(--color-blue-500);
+  }
+}
+
+.views-bulk-actions__item .form-item__label {
+  display: inline;
+  padding-inline-end: var(--space-xs);
+}
+.views-bulk-actions__item .form-item__label:after {
+  content: ":";
+}
+
 .views-bulk-actions__item .form-element--type-select {
   min-height: 2rem;
   padding: calc(0.5rem - 1px) calc(2.25rem - 1px) calc(0.5rem - 1px) calc(1rem - 1px);
