@@ -126,6 +126,7 @@ class RevisionHtmlRouteProvider implements EntityRouteProviderInterface {
         '_title' => 'Revert revision',
       ])
       ->setRequirement('_entity_access', $revisionParameterName . '.revert')
+      ->setOption('_admin_route', TRUE)
       ->setOption('parameters', [
         $entityTypeId => [
           'type' => 'entity:' . $entityTypeId,
@@ -159,6 +160,7 @@ class RevisionHtmlRouteProvider implements EntityRouteProviderInterface {
         '_title' => 'Delete revision',
       ])
       ->setRequirement('_entity_access', $revisionParameterName . '.delete revision')
+      ->setOption('_admin_route', TRUE)
       ->setOption('parameters', [
         $entityTypeId => [
           'type' => 'entity:' . $entityTypeId,
