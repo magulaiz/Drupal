@@ -223,9 +223,6 @@ class MigrateBlockTest extends MigrateDrupal6TestBase {
       'provider' => 'forum',
       'label_display' => '0',
       'block_count' => 3,
-      'properties' => [
-        'administrative' => '1',
-      ],
     ];
     $this->assertEntity('forum', [], 'sidebar_first', 'bartik', -8, $settings);
 
@@ -235,9 +232,6 @@ class MigrateBlockTest extends MigrateDrupal6TestBase {
       'provider' => 'forum',
       'label_display' => '0',
       'block_count' => 4,
-      'properties' => [
-        'administrative' => '1',
-      ],
     ];
     $this->assertEntity('forum_1', [], 'sidebar_first', 'bartik', -9, $settings);
 
