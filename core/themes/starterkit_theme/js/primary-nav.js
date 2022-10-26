@@ -45,7 +45,7 @@
       secondLevelToggleButtonSelector,
     );
     const secondLevelMenuSelector =
-      '[data-drupal-selector="main-nav-menu--level-2"]';
+      '[data-drupal-selector="primary-nav-menu--level-2"]';
     const state =
       toState !== undefined
         ? toState
@@ -89,7 +89,7 @@
 
     setTimeout(() => {
       const menuParentItem = e.target.closest(
-        '[data-drupal-selector="main-nav-menu-item-has-children"]',
+        '[data-drupal-selector="primary-nav-menu-item-has-children"]',
       );
       if (!menuParentItem.contains(document.activeElement)) {
         toggleSubNav(menuParentItem, false);
@@ -228,13 +228,13 @@
   function init(el) {
     primaryNavigationRegion = el;
     mobileNavigationButton = document.querySelector(
-      '[data-drupal-selector="main-nav__mobile-button"]',
+      '[data-drupal-selector="primary-nav__mobile-button"]',
     );
     secondLevelNavMenus = primaryNavigationRegion.querySelectorAll(
-      '[data-drupal-selector="main-nav-menu-item-has-children"]',
+      '[data-drupal-selector="primary-nav-menu-item-has-children"]',
     );
     secondLevelToggleButtonSelector =
-      '[data-drupal-selector="main-nav-submenu-toggle-button"], button[data-drupal-selector="main-nav-menu-link-has-children"]';
+      '[data-drupal-selector="primary-nav-submenu-toggle-button"], button[data-drupal-selector="primary-nav-menu-link-has-children"]';
 
     initSecondLevelNav(secondLevelNavMenus);
 
@@ -258,7 +258,7 @@
 
     // Close overlay on click.
     document
-      .querySelector('[data-drupal-selector="main-nav-overlay"]')
+      .querySelector('[data-drupal-selector="primary-nav-overlay"]')
       .addEventListener('click', () => {
         toggleMobileNav(false);
       });
@@ -285,7 +285,7 @@
       'touchstart',
       (e) => {
         if (
-          !e.target.matches('[data-drupal-selector="main-nav-menu--level-1"] *')
+          !e.target.matches('[data-drupal-selector="primary-nav-menu--level-1"] *')
         ) {
           closeAllSubNav();
         }
@@ -314,10 +314,10 @@
    * @prop {Drupal~behaviorAttach} attach
    *   Attach context and settings for navigation.
    */
-  Drupal.behaviors.mainNav = {
+  Drupal.behaviors.primaryNav = {
     attach(context) {
       once(
-        'main-nav',
+        'primary-nav',
         '[data-drupal-selector="region-primary-navigation"]',
         context,
       ).forEach(init);

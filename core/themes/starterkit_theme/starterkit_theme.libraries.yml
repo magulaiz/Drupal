@@ -105,15 +105,15 @@ user:
     component:
       css/components/user.css:
         weight: -10
-main-menu:
+primary-nav:
   version: VERSION
   css:
     component:
-      css/components/navigation/main-narrow.css: {  }
-      css/components/navigation/main-wide.css: {  }
+      css/components/navigation/primary-narrow.css: {  }
+      css/components/navigation/primary-wide.css: {  }
       css/components/navigation/mobile-button.css: {  }
   js:
-    js/main-menu.js: {  }
+    js/primary-nav.js: {  }
   dependencies:
     - core/drupal
     - core/once

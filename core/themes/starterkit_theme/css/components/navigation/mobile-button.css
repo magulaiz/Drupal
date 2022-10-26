@@ -1,4 +1,4 @@
-.main-nav__mobile-button {
+.primary-nav__mobile-button {
   position: absolute;
   z-index: 10; /* Appear above the expanded mobile menu. */
   overflow: hidden;
@@ -12,7 +12,7 @@
   appearance: none;
 }
 
-/* .main-nav__mobile-button[aria-expanded="true"] {
+/* .primary-nav__mobile-button[aria-expanded="true"] {
   inset-inline-end: calc(100% - var(--drupal-displace-offset-left, 0px));
 } */
 
@@ -49,16 +49,16 @@
   border-bottom: solid var(--line-width) currentColor;
 }
 
-.main-nav__mobile-button[aria-expanded="true"] .mobile-nav-button__icon {
+.primary-nav__mobile-button[aria-expanded="true"] .mobile-nav-button__icon {
   border-top-color: transparent;
 }
 
-.main-nav__mobile-button[aria-expanded="true"] .mobile-nav-button__icon:before {
+.primary-nav__mobile-button[aria-expanded="true"] .mobile-nav-button__icon:before {
   top: calc(50% - var(--line-width) / 2);
   transform: rotate(-45deg);
 }
 
-.main-nav__mobile-button[aria-expanded="true"] .mobile-nav-button__icon:after {
+.primary-nav__mobile-button[aria-expanded="true"] .mobile-nav-button__icon:after {
   top: calc(50% - var(--line-width) / 2);
   transform: rotate(45deg);
 }

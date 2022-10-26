@@ -1,28 +1,28 @@
 /**
  * @file
- * Styling for the main menu at wide widths.
+ * Styling for the primary menu at wide widths.
  */
 
 @media (min-width: 1000px) {
-  .main-nav__mobile-button,
-  .main-nav-overlay {
+  .primary-nav__mobile-button,
+  .primary-nav-overlay {
     display: none; /* Hide the mobile button and overlay. */
   }
 
   /* All menu <ul> elements. */
-  .main-nav__menu {
+  .primary-nav__menu {
     margin: 0;
     padding: 0;
     list-style: none;
   }
 
   /* Top level <ul> menu element. */
-  .main-nav__menu--level-1 {
+  .primary-nav__menu--level-1 {
     display: flex;
   }
 
   /* Second level <ul> menu element. */
-  .main-nav__menu--level-2 {
+  .primary-nav__menu--level-2 {
     position: absolute;
     z-index: 1;
     top: 100%;
@@ -37,32 +37,32 @@
     inset-inline-start: 0;
   }
 
-  .main-nav__menu--level-2.is-active-menu-parent,
-  html:not(.js) .main-nav__menu-item--level-1:is(:hover, :focus-within) .main-nav__menu--level-2 {
+  .primary-nav__menu--level-2.is-active-menu-parent,
+  html:not(.js) .primary-nav__menu-item--level-1:is(:hover, :focus-within) .primary-nav__menu--level-2 {
     visibility: visible;
     opacity: 1;
   }
 
   /* Menu item <li>. */
-  .main-nav__menu-item {
+  .primary-nav__menu-item {
     --padding-x: 1rem;
     --padding-y: 0.5rem;
 
     display: flex;
   }
 
-  .main-nav__menu-item--has-children {
+  .primary-nav__menu-item--has-children {
     position: relative; /* Anchor child menus. */
   }
 
   /* Link component (can be <a>, <button>, or <span>). */
-  .main-nav__menu-link {
+  .primary-nav__menu-link {
     display: block;
     padding: var(--padding-y) var(--padding-x);
   }
 
   /* <button> element that is generated when top-level <a> link components have submenus. */
-  .main-nav__button-toggle {
+  .primary-nav__button-toggle {
     display: flex;
     align-items: center;
     align-self: stretch;
@@ -74,7 +74,7 @@
   }
 
   /* Menu links that are <button> elements. */
-  .main-nav__menu-link--button {
+  .primary-nav__menu-link--button {
     display: flex;
     align-items: center;
     appearance: none;
@@ -82,16 +82,16 @@
     background: transparent;
   }
 
-  .main-nav__menu-link--button.main-nav__menu-link--has-children {
+  .primary-nav__menu-link--button.primary-nav__menu-link--has-children {
     padding-inline-end: calc(var(--padding-x) / 2);
   }
 
   /* Chevron icon. */
-  .main-nav__button-icon {
+  .primary-nav__button-icon {
     margin-inline-start: calc(var(--padding-x) / 2);
   }
 
-  .main-nav__button-icon {
+  .primary-nav__button-icon {
     --icon-size: 8px;
 
     position: relative;
@@ -102,7 +102,7 @@
   }
 
   /* Down chevron icon. */
-  .main-nav__button-icon:after {
+  .primary-nav__button-icon:after {
     display: block;
     width: 100%;
     height: 100%;
