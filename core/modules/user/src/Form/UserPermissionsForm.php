@@ -117,7 +117,7 @@ class UserPermissionsForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, FormStateInterface $form_state) {
+  public function buildForm(array $form, FormStateInterface $form_state, array $modules = []) {
     $role_names = [];
     $role_permissions = [];
     $admin_roles = [];
@@ -127,6 +127,17 @@ class UserPermissionsForm extends FormBase {
       // Fetch permissions for the roles.
       $role_permissions[$role_name] = $role->getPermissions();
       $admin_roles[$role_name] = $role->isAdmin();
+    }
+
+    // Add list of links for module specific permissions.
+    if (!empty($modules) && count($modules) > 1) {
+      $form['module_links'] = [
+        '#type' => 'inline_template',
+        '#template' => '<div class="module-links"><p><strong>Showing modules: </strong>{% for key,module in modules %}{% if key > 0 %}, {% endif %}<a href="#module-{{ module }}">{{ module }}</a>{% endfor %}</p></div>',
+        '#context' => [
+          'modules' => $modules,
+        ],
+      ];
     }
 
     // Store $role_names for use when saving the data.

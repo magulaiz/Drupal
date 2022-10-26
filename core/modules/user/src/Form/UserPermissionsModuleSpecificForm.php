@@ -44,7 +44,7 @@ class UserPermissionsModuleSpecificForm extends UserPermissionsForm {
    */
   public function buildForm(array $form, FormStateInterface $form_state, $modules = ''): array {
     $this->moduleList = explode(',', $modules);
-    return parent::buildForm($form, $form_state);
+    return parent::buildForm($form, $form_state, $this->moduleList);
   }
 
   /**
