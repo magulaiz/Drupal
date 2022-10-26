@@ -545,7 +545,11 @@ function simpletest_script_init() {
   if (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on') {
     // Ensure that any and all environment variables are changed to https://.
     foreach ($_SERVER as $key => $value) {
-      $_SERVER[$key] = str_replace('http://', 'https://', $_SERVER[$key]);
+      // Some values are NULL. Non-NULL values which are falsy will not contain
+      // text to replace.
+      if ($value) {
+        $_SERVER[$key] = str_replace('http://', 'https://', $value);
+      }
     }
   }
 
@@ -984,11 +988,12 @@ function simpletest_script_get_test_list() {
         simpletest_script_print_alternatives($first_group, $all_groups);
         exit(SIMPLETEST_SCRIPT_EXIT_FAILURE);
       }
-      // Ensure our list of tests contains only one entry for each test.
+      // Merge the tests from the groups together.
       foreach ($args['test_names'] as $group_name) {
-        $test_list = array_merge($test_list, array_flip(array_keys($groups[$group_name])));
+        $test_list = array_merge($test_list, array_keys($groups[$group_name]));
       }
-      $test_list = array_flip($test_list);
+      // Ensure our list of tests contains only one entry for each test.
+      $test_list = array_unique($test_list);
     }
   }
 
