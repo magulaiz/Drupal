@@ -34,13 +34,13 @@ use Drupal\user\EntityOwnerTrait;
  *       "default" = "Drupal\node\NodeForm",
  *       "delete" = "Drupal\node\Form\NodeDeleteForm",
  *       "edit" = "Drupal\node\NodeForm",
- *       "revision-delete" = "Drupal\Core\Entity\Form\RevisionDeleteForm",
- *       "revision-revert" = "Drupal\Core\Entity\Form\RevisionRevertForm",
+ *       "revision-delete" = \Drupal\Core\Entity\Form\RevisionDeleteForm::class,
+ *       "revision-revert" = \Drupal\Core\Entity\Form\RevisionRevertForm::class,
  *       "delete-multiple-confirm" = "Drupal\node\Form\DeleteMultiple"
  *     },
  *     "route_provider" = {
  *       "html" = "Drupal\node\Entity\NodeRouteProvider",
- *       "revision" = "Drupal\node\Entity\NodeRevisionRouteProvider",
+ *       "revision" = \Drupal\node\Entity\NodeRevisionRouteProvider::class,
  *     },
  *     "list_builder" = "Drupal\node\NodeListBuilder",
  *     "translation" = "Drupal\node\NodeTranslationHandler"
