@@ -28,8 +28,10 @@
 
 @media all and (max-width: 48em) { /* 768px */
   .ui-dialog:not(.ui-dialog-off-canvas) {
+    right: 0;
     min-width: 92%;
     max-width: 92%;
+    margin: auto;
   }
 }
 
