@@ -1,6 +1,5 @@
 const $ = jQuery;
 
-
 /**
  * Override jQuery UI _renderItem function to output HTML by default.
  *
@@ -15,10 +14,16 @@ const $ = jQuery;
 function renderItem(ul, item) {
   var $line = $('<li>').addClass('linkit-result-line');
   var $wrapper = $('<div>').addClass('linkit-result-line-wrapper');
-  $wrapper.append($('<span>').html(item.label).addClass('linkit-result-line--title'));
+  $wrapper.append(
+    $('<span>').html(item.label).addClass('linkit-result-line--title'),
+  );
 
   if (item.hasOwnProperty('description')) {
-    $wrapper.append($('<span>').html(item.description).addClass('linkit-result-line--description'));
+    $wrapper.append(
+      $('<span>')
+        .html(item.description)
+        .addClass('linkit-result-line--description'),
+    );
   }
   return $line.append($wrapper).appendTo(ul);
 }
@@ -45,7 +50,11 @@ function renderMenu(ul, items) {
 
   $.each(grouped_items, function (group, items) {
     if (group.length) {
-      ul.append('<li class="linkit-result-line--group ui-menu-divider">' + group + '</li>');
+      ul.append(
+        '<li class="linkit-result-line--group ui-menu-divider">' +
+          group +
+          '</li>',
+      );
     }
 
     $.each(items, function (index, item) {
@@ -55,7 +64,8 @@ function renderMenu(ul, items) {
 }
 
 export default function initializeAutocomplete(element, settings) {
-  const { autocompleteUrl, selectHandler, closeHandler, openHandler } = settings;
+  const { autocompleteUrl, selectHandler, closeHandler, openHandler } =
+    settings;
   const autocomplete = {
     cache: {},
     ajax: {
@@ -91,11 +101,10 @@ export default function initializeAutocomplete(element, settings) {
     // Check if the term is already cached.
     if (cache.hasOwnProperty(term)) {
       response(cache[term]);
-    }
-    else {
+    } else {
       $.ajax(autocompleteUrl, {
         success: sourceCallbackHandler,
-        data: {q: term},
+        data: { q: term },
         ...autocomplete.ajax,
       });
     }
@@ -111,15 +120,16 @@ export default function initializeAutocomplete(element, settings) {
     open: openHandler,
     minLength: 1,
     isComposing: false,
-  }
+  };
   const $auto = $(element).autocomplete(options);
 
   // Override a few things.
   const instance = $auto.data('ui-autocomplete');
-  instance.widget().menu('option', 'items', '> :not(.linkit-result-line--group)');
+  instance
+    .widget()
+    .menu('option', 'items', '> :not(.linkit-result-line--group)');
   instance._renderMenu = renderMenu;
   instance._renderItem = renderItem;
-
 
   $auto.autocomplete('widget').addClass('linkit-ui-autocomplete');
 
