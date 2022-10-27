@@ -3,7 +3,7 @@
 namespace Drupal\Core\Entity\Query\Sql;
 
 use Drupal\Core\Database\Query\SelectInterface;
-use Drupal\Core\Entity\EntityType;
+use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\Query\QueryException;
 use Drupal\Core\Entity\Sql\SqlEntityStorageInterface;
 use Drupal\Core\Entity\Sql\TableMappingInterface;
@@ -483,7 +483,7 @@ class Tables implements TablesInterface {
    *
    * this adds the users table.
    *
-   * @param \Drupal\Core\Entity\EntityType $entity_type
+   * @param \Drupal\Core\Entity\EntityTypeInterface $entity_type
    *   The entity type being joined, in the above example, User.
    * @param string $table
    *   This is the table being joined, in the above example, {users}.
@@ -495,7 +495,7 @@ class Tables implements TablesInterface {
    * @return string
    *   The alias of the next entity table joined in.
    */
-  protected function addNextBaseTable(EntityType $entity_type, $table, $sql_column, FieldStorageDefinitionInterface $field_storage) {
+  protected function addNextBaseTable(EntityTypeInterface $entity_type, $table, $sql_column, FieldStorageDefinitionInterface $field_storage) {
     $join_condition = '[%alias].[' . $entity_type->getKey('id') . "] = [$table].[$sql_column]";
     return $this->sqlQuery->leftJoin($entity_type->getBaseTable(), NULL, $join_condition);
   }
