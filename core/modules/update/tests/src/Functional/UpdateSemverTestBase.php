@@ -144,6 +144,19 @@ abstract class UpdateSemverTestBase extends UpdateTestBase {
   }
 
   /**
+   * Tests a minor release that has no additional patch releases.
+   */
+  public function testMinorWithNoPatches(): void {
+    $this->setProjectInstalledVersion('8.0.0');
+    $this->refreshUpdateStatus([$this->updateProject => 'minor-with-no-patches']);
+    $this->standardTests();
+    // Asserts that a non-stable release in the next minor will not be
+    // recommended.
+    $this->assertVersionUpdateLinks('Recommended version:', '8.1.0');
+    $this->assertVersionUpdateLinks('Latest version:', '8.2.0-alpha1');
+  }
+
+  /**
    * Tests the Update Manager module when a major update is available.
    */
   public function testMajorUpdateAvailable() {
