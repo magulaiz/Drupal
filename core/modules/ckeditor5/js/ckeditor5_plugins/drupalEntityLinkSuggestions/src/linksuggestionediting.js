@@ -1,3 +1,4 @@
+/* eslint-disable import/no-extraneous-dependencies, no-restricted-syntax */
 import { Plugin } from 'ckeditor5/src/core';
 import { findAttributeRange } from 'ckeditor5/src/typing';
 

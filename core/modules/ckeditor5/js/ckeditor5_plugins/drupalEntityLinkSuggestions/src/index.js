@@ -1,3 +1,4 @@
+/* eslint-disable import/no-extraneous-dependencies, no-throw-literal, prefer-template */
 // cspell:ignore linksuggestionediting
 
 import { Plugin } from 'ckeditor5/src/core';
