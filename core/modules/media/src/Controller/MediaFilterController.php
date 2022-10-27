@@ -94,7 +94,7 @@ class MediaFilterController implements ContainerInjectionInterface {
    *
    * @see \Drupal\editor\EditorController::getUntransformedText
    */
-  public function preview(Request $request, FilterFormatInterface $filter_format) {
+  public function __invoke(Request $request, FilterFormatInterface $filter_format) {
     self::checkCsrf($request, \Drupal::currentUser());
 
     $text = $request->query->get('text');
@@ -127,6 +127,17 @@ class MediaFilterController implements ContainerInjectionInterface {
       ->setPrivate()
       // Allow the end user to cache it for up to 5 minutes.
       ->setMaxAge(300);
+  }
+
+  /**
+   * Returns a HTML response containing a preview of the text after filtering.
+   *
+   * @deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use
+   *   \Drupal\media\Controller\MediaFilterController instead.
+   */
+  public function preview(Request $request, FilterFormatInterface $filter_format) {
+    @trigger_error(__METHOD__ . ' is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use ' . __CLASS__ . ' instead. See https://www.drupal.org/node/123456.', E_USER_DEPRECATED);
+    return $this($request, $filter_format);
   }
 
   /**
