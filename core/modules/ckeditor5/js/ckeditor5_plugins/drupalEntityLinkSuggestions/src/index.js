@@ -1,19 +1,18 @@
 import { Plugin } from 'ckeditor5/src/core';
-import LinkitEditing from './linkitediting';
+import DrupalEntityLinkSuggestionsEditing from './linksuggestionediting';
 import initializeAutocomplete from './autocomplete';
 
-class Linkit extends Plugin {
+class DrupalEntityLinkSuggestions extends Plugin {
   /**
    * @inheritdoc
    */
   static get requires() {
-    return [LinkitEditing];
+    return [DrupalEntityLinkSuggestionsEditing];
   }
 
   init() {
     this._state = {};
     const editor = this.editor;
-    const options = editor.config.get('linkit');
     this._enableLinkAutocomplete();
     this._handleExtraFormFieldSubmit();
     this._handleDataLoadingIntoExtraFormField();
@@ -21,7 +20,8 @@ class Linkit extends Plugin {
 
   _enableLinkAutocomplete() {
     const editor = this.editor;
-    const options = editor.config.get('linkit');
+    const hostEntityTypeId = editor.sourceElement.getAttribute('data-ckeditor5-host-entity-type');
+    const hostEntityLangcode = editor.sourceElement.getAttribute('data-ckeditor5-host-entity-langcode');
     const linkFormView = editor.plugins.get( 'LinkUI' ).formView;
     let wasAutocompleteAdded = false;
 
@@ -46,25 +46,23 @@ class Linkit extends Plugin {
       initializeAutocomplete(
         linkFormView.urlInputView.fieldView.element,
         {
-          ...options,
+          autocompleteUrl: Drupal.url(`ckeditor5/entity-link-suggestions/${hostEntityTypeId}/${hostEntityLangcode}`),
           selectHandler: (event, { item }) => {
             if (!item.path) {
               throw 'Missing path param.' + JSON.stringify(item);
             }
 
-            if (item.entity_type_id || item.entity_uuid || item.substitution_id) {
-              if (!item.entity_type_id || !item.entity_uuid || !item.substitution_id) {
+            if (item.entity_type_id || item.entity_uuid) {
+              if (!item.entity_type_id || !item.entity_uuid) {
                 throw 'Missing path param.' + JSON.stringify(item);
               }
 
               this.set('entityType', item.entity_type_id);
               this.set('entityUuid', item.entity_uuid);
-              this.set('entitySubstitution', item.substitution_id);
             }
             else {
               this.set('entityType', null);
               this.set('entityUuid', null);
-              this.set('entitySubstitution', null);
             }
 
             event.target.value = item.path;
@@ -78,7 +76,6 @@ class Linkit extends Plugin {
             if (!selected) {
               this.set('entityType', null);
               this.set('entityUuid', null);
-              this.set('entitySubstitution', null);
             }
             selected = false;
           },
@@ -98,7 +95,6 @@ class Linkit extends Plugin {
       const values = {
         'data-entity-type': this.entityType,
         'data-entity-uuid': this.entityUuid,
-        'data-entity-substitution': this.entitySubstitution,
       }
       // Stop the execution of the link command caused by closing the form.
       // Inject the extra attribute value. The highest priority listener here
@@ -126,17 +122,16 @@ class Linkit extends Plugin {
 
     this.bind('entityType').to(linkCommand, 'data-entity-type');
     this.bind('entityUuid').to(linkCommand, 'data-entity-uuid');
-    this.bind('entitySubstitution').to(linkCommand, 'data-entity-substitution');
   }
 
   /**
    * @inheritdoc
    */
   static get pluginName() {
-    return 'Linkit';
+    return 'DrupalEntityLinkSuggestions';
   }
 }
 
 export default {
-  Linkit,
+  DrupalEntityLinkSuggestions,
 };
