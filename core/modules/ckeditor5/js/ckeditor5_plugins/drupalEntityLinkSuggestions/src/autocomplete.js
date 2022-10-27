@@ -1,3 +1,5 @@
+// cspell:ignore linkit
+
 const $ = jQuery;
 
 /**
