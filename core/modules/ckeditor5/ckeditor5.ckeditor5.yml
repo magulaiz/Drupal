@@ -350,9 +350,9 @@ ckeditor5_link_entity_suggestions:
     elements:
       - <a data-entity-type data-entity-uuid>
     conditions:
+      filter: entity_links
       plugins:
         - ckeditor5_link
-      # @todo require the filter
 
 ckeditor5_linkImage:
   ckeditor5:
