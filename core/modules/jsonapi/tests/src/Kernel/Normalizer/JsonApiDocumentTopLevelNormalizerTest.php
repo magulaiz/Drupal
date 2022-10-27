@@ -258,9 +258,9 @@ class JsonApiDocumentTopLevelNormalizerTest extends JsonapiKernelTestBase {
       );
     $normalized = $jsonapi_doc_object->getNormalization();
 
-    // @see http://jsonapi.org/format/#document-jsonapi-object
+    // @see https://jsonapi.org/format/#document-jsonapi-object
     $this->assertEquals('1.0', $normalized['jsonapi']['version']);
-    $this->assertEquals('http://jsonapi.org/format/1.0/', $normalized['jsonapi']['meta']['links']['self']['href']);
+    $this->assertEquals('https://jsonapi.org/format/1.0/', $normalized['jsonapi']['meta']['links']['self']['href']);
 
     $this->assertSame($normalized['data']['attributes']['title'], 'dummy_title');
     $this->assertEquals($normalized['data']['id'], $this->node->uuid());
@@ -425,9 +425,9 @@ class JsonApiDocumentTopLevelNormalizerTest extends JsonapiKernelTestBase {
     $this->assertEquals('Lorem', $normalized['errors'][0]['detail']);
     $this->assertEquals([
       'info' => [
-        'href' => 'http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.1',
+        'href' => 'https://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.1',
       ],
-      'via' => ['href' => 'http://localhost/'],
+      'via' => ['href' => 'https://localhost/'],
     ], $normalized['errors'][0]['links']);
   }
 

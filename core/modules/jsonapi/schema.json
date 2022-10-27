@@ -1,7 +1,7 @@
 {
-  "$schema": "http://json-schema.org/draft-06/schema#",
+  "$schema": "https://json-schema.org/draft-06/schema#",
   "title": "JSON:API Schema",
-  "description": "This is a schema for responses in the JSON:API format. For more, see http://jsonapi.org",
+  "description": "This is a schema for responses in the JSON:API format. For more, see https://jsonapi.org",
   "oneOf": [
     {
       "$ref": "#/definitions/success"
