@@ -20,33 +20,39 @@ class DrupalEntityLinkSuggestions extends Plugin {
 
   _enableLinkAutocomplete() {
     const editor = this.editor;
-    const hostEntityTypeId = editor.sourceElement.getAttribute('data-ckeditor5-host-entity-type');
-    const hostEntityLangcode = editor.sourceElement.getAttribute('data-ckeditor5-host-entity-langcode');
-    const linkFormView = editor.plugins.get( 'LinkUI' ).formView;
+    const hostEntityTypeId = editor.sourceElement.getAttribute(
+      'data-ckeditor5-host-entity-type',
+    );
+    const hostEntityLangcode = editor.sourceElement.getAttribute(
+      'data-ckeditor5-host-entity-langcode',
+    );
+    const linkFormView = editor.plugins.get('LinkUI').formView;
     let wasAutocompleteAdded = false;
 
-    linkFormView.extendTemplate( {
+    linkFormView.extendTemplate({
       attributes: {
-        class: ['ck-vertical-form', 'ck-link-form_layout-vertical']
-      }
-    } );
+        class: ['ck-vertical-form', 'ck-link-form_layout-vertical'],
+      },
+    });
 
-    editor.plugins.get( 'ContextualBalloon' )._rotatorView.content.on('add', ( evt, view ) => {
-      if ( view !== linkFormView || wasAutocompleteAdded ) {
-        return;
-      }
+    editor.plugins
+      .get('ContextualBalloon')
+      ._rotatorView.content.on('add', (evt, view) => {
+        if (view !== linkFormView || wasAutocompleteAdded) {
+          return;
+        }
 
-      /**
-       * Used to know if a selection was made from the autocomplete results.
-       *
-       * @type {boolean}
-       */
-      let selected;
+        /**
+         * Used to know if a selection was made from the autocomplete results.
+         *
+         * @type {boolean}
+         */
+        let selected;
 
-      initializeAutocomplete(
-        linkFormView.urlInputView.fieldView.element,
-        {
-          autocompleteUrl: Drupal.url(`ckeditor5/entity-link-suggestions/${hostEntityTypeId}/${hostEntityLangcode}`),
+        initializeAutocomplete(linkFormView.urlInputView.fieldView.element, {
+          autocompleteUrl: Drupal.url(
+            `ckeditor5/entity-link-suggestions/${hostEntityTypeId}/${hostEntityLangcode}`,
+          ),
           selectHandler: (event, { item }) => {
             if (!item.path) {
               throw 'Missing path param.' + JSON.stringify(item);
@@ -59,8 +65,7 @@ class DrupalEntityLinkSuggestions extends Plugin {
 
               this.set('entityType', item.entity_type_id);
               this.set('entityUuid', item.entity_uuid);
-            }
-            else {
+            } else {
               this.set('entityType', null);
               this.set('entityUuid', null);
             }
@@ -79,11 +84,10 @@ class DrupalEntityLinkSuggestions extends Plugin {
             }
             selected = false;
           },
-        },
-      );
+        });
 
-      wasAutocompleteAdded = true;
-    });
+        wasAutocompleteAdded = true;
+      });
   }
 
   _handleExtraFormFieldSubmit() {
@@ -91,29 +95,38 @@ class DrupalEntityLinkSuggestions extends Plugin {
     const linkFormView = editor.plugins.get('LinkUI').formView;
     const linkCommand = editor.commands.get('link');
 
-    this.listenTo(linkFormView, 'submit', () => {
-      const values = {
-        'data-entity-type': this.entityType,
-        'data-entity-uuid': this.entityUuid,
-      }
-      // Stop the execution of the link command caused by closing the form.
-      // Inject the extra attribute value. The highest priority listener here
-      // injects the argument (here below 👇).
-      // - The high priority listener in
-      //   _addExtraAttributeOnLinkCommandExecute() gets that argument and sets
-      //   the extra attribute.
-      // - The normal (default) priority listener in ckeditor5-link sets
-      //   (creates) the actual link.
-      linkCommand.once('execute', (evt, args) => {
-        if (args.length < 3) {
-          args.push(values);
-        } else if (args.length === 3) {
-          Object.assign(args[2], values);
-        } else {
-          throw Error('The link command has more than 3 arguments.')
-        }
-      }, { priority: 'highest' });
-    }, { priority: 'high' });
+    this.listenTo(
+      linkFormView,
+      'submit',
+      () => {
+        const values = {
+          'data-entity-type': this.entityType,
+          'data-entity-uuid': this.entityUuid,
+        };
+        // Stop the execution of the link command caused by closing the form.
+        // Inject the extra attribute value. The highest priority listener here
+        // injects the argument (here below 👇).
+        // - The high priority listener in
+        //   _addExtraAttributeOnLinkCommandExecute() gets that argument and sets
+        //   the extra attribute.
+        // - The normal (default) priority listener in ckeditor5-link sets
+        //   (creates) the actual link.
+        linkCommand.once(
+          'execute',
+          (evt, args) => {
+            if (args.length < 3) {
+              args.push(values);
+            } else if (args.length === 3) {
+              Object.assign(args[2], values);
+            } else {
+              throw Error('The link command has more than 3 arguments.');
+            }
+          },
+          { priority: 'highest' },
+        );
+      },
+      { priority: 'high' },
+    );
   }
 
   _handleDataLoadingIntoExtraFormField() {
