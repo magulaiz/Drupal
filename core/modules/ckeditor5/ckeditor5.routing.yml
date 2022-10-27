@@ -25,3 +25,19 @@ ckeditor5.media_entity_metadata:
     parameters:
       editor:
         type: entity:editor
+
+ckeditor5.entity_link_suggestions:
+  path: '/ckeditor5/entity-link-suggestions/{host_entity_type_id}/{host_entity_langcode}'
+  defaults:
+    _controller: '\Drupal\ckeditor5\Controller\EntityLinkSuggestionsController::suggestions'
+  methods: [GET]
+  requirements:
+    # The returned information relies entirely on entity access.
+    # Note that this specifically does not use a Text Editor permission check
+    # to allow the browser to rely on its private cache for cross-editor reuse
+    # of entity link suggestions.
+    _access: 'TRUE'
+    # @todo `_csrf_token` check like for the other routes; that does not impede cacheability
+  options:
+    no_cache: TRUE
+    _theme: ajax_base_page

@@ -17,6 +17,7 @@ use Drupal\Core\Ajax\PrependCommand;
 use Drupal\Core\Ajax\ReplaceCommand;
 use Drupal\Core\Ajax\RemoveCommand;
 use Drupal\Core\Asset\AttachedAssetsInterface;
+use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Render\Element;
@@ -74,6 +75,23 @@ function ckeditor5_help($route_name, RouteMatchInterface $route_match) {
       $output .= '</dl>';
 
       return $output;
+  }
+}
+
+/**
+ * Implements hook_field_widget_single_element_form_alter().
+ */
+function ckeditor5_field_widget_single_element_form_alter(&$element, FormStateInterface $form_state, $context) {
+  // Add an attribute so that CKEditor 5 plugins can vary their behavior based
+  // on host entity type, host entity bundle and host entity language.
+  // @see
+  if (!empty($element['#type']) && $element['#type'] == 'text_format') {
+    $items = $context['items'];
+    assert($items instanceof FieldItemListInterface);
+    $host_entity = $items->getEntity();
+    $element['#attributes']['data-ckeditor5-host-entity-type'] = $host_entity->getEntityTypeId();
+    $element['#attributes']['data-ckeditor5-host-entity-bundle'] = $host_entity->bundle();
+    $element['#attributes']['data-ckeditor5-host-entity-langcode'] = $host_entity->language()->getId();
   }
 }
 
