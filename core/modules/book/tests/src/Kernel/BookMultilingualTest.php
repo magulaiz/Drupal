@@ -219,7 +219,7 @@ class BookMultilingualTest extends KernelTestBase {
     $links = $bbb->build($route_match)->getLinks();
     $link = array_shift($links);
     $rendered_link = Link::fromTextAndUrl($link->getText(), $link->getUrl())->toString();
-    $this->assertStringContainsString("http://$langcode.book.test.domain/", $rendered_link);
+    $this->assertStringContainsString("https://$langcode.book.test.domain/", $rendered_link);
     $link = array_shift($links);
     $this->assertNodeLinkIsCorrectlyTranslated(1, $link->getText(), $link->getUrl(), $langcode);
     $link = array_shift($links);
@@ -272,7 +272,7 @@ class BookMultilingualTest extends KernelTestBase {
    *   is used instead of the content language.
    */
   protected function setCurrentLanguage(string $langcode): void {
-    \Drupal::requestStack()->push(Request::create("http://$langcode.book.test.domain/"));
+    \Drupal::requestStack()->push(Request::create("https://$langcode.book.test.domain/"));
     $language_manager = $this->container->get('language_manager');
     $language_manager->reset();
     $current_user = \Drupal::currentUser();
@@ -314,7 +314,7 @@ class BookMultilingualTest extends KernelTestBase {
     $node = Node::load($nid);
     $this->assertSame($node->getTranslation($langcode)->label(), $title);
     $rendered_link = Link::fromTextAndUrl($title, $url)->toString();
-    $this->assertStringContainsString("http://$langcode.book.test.domain/node/$nid", $rendered_link);
+    $this->assertStringContainsString("https://$langcode.book.test.domain/node/$nid", $rendered_link);
   }
 
   /**
