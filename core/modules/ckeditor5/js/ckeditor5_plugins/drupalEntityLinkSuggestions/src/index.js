@@ -1,3 +1,5 @@
+// cspell:ignore linksuggestionediting
+
 import { Plugin } from 'ckeditor5/src/core';
 import DrupalEntityLinkSuggestionsEditing from './linksuggestionediting';
 import initializeAutocomplete from './autocomplete';
