@@ -53,6 +53,9 @@ class EntityLinkSuggestionsTest extends WebDriverTestBase {
             'allowed_html' => '<p> <br> <a href data-entity-type data-entity-uuid>',
           ],
         ],
+        'entity_links' => [
+          'status' => TRUE,
+        ],
       ],
     ])->save();
     Editor::create([
