@@ -4,6 +4,8 @@ declare(strict_types = 1);
 
 namespace Drupal\Tests\ckeditor5\FunctionalJavascript;
 
+// cspell:ignore linkit
+
 use Drupal\ckeditor5\Plugin\Editor\CKEditor5;
 use Drupal\editor\Entity\Editor;
 use Drupal\filter\Entity\FilterFormat;
