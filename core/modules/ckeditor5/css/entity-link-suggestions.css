@@ -5,14 +5,16 @@
  * @todo Refactor classes to not mention "linkit"
  */
 
+/* cspell:ignore linkit */
+
 /* Override the default jQuery UI theme */
 .linkit-ui-autocomplete {
-  max-height: calc((100vh - 80px)/2);
   overflow: auto;
+  max-height: calc((100vh - 80px)/2);
 }
 
 .linkit-ui-autocomplete.ui-widget {
-  font-size: .9em;
+  font-size: 0.9em;
 }
 
 .linkit-ui-autocomplete.ui-menu .linkit-result-line-wrapper {
@@ -22,10 +24,10 @@
 
 .linkit-ui-autocomplete.ui-menu .linkit-result-line-wrapper.ui-state-focus,
 .linkit-ui-autocomplete.ui-menu .linkit-result-line-wrapper.ui-state-active {
+  color: #fff;
   border: 0;
   border-bottom: 1px solid #bfbfbf;
   background: #0075ba;
-  color: #fff;
 }
 
 .linkit-result-line:not(:last-of-type) {
@@ -33,16 +35,16 @@
 }
 
 .ui-menu .linkit-result-line--group.ui-menu-divider {
-  margin: 0;
   height: auto;
-  line-height: inherit;
+  margin: 0;
   padding: 3px;
-  background-color: #e7e7e7;
-  border-bottom: 1px solid #bfbfbf;
   text-align: center;
+  color: #555;
+  border-bottom: 1px solid #bfbfbf;
+  background-color: #e7e7e7;
   font-size: 0.9em;
   font-weight: 600;
-  color: #555;
+  line-height: inherit;
 }
 
 .linkit-result-line--title {
