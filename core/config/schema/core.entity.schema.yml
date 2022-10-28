@@ -207,6 +207,14 @@ field.widget.settings.boolean_checkbox:
       type: boolean
       label: 'Display label'
 
+field.widget.settings.options_dynamic:
+  type: mapping
+  label: 'Dynamic options display format settings'
+  mapping:
+    select_threshold:
+      type: integer
+      label: 'Autocomplete threshold'
+
 field.widget.settings.hidden:
   type: mapping
   label: '- Hidden - format settings'

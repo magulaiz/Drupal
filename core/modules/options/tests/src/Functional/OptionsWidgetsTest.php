@@ -596,4 +596,152 @@ class OptionsWidgetsTest extends FieldTestBase {
     $this->assertSame('- None -', $option->getText());
   }
 
+  public function testDynamicOptionsRadioButtons() {
+    // Create an instance of the 'single value' field.
+    $field = FieldConfig::create([
+      'field_storage' => $this->card1,
+      'bundle' => 'entity_test',
+    ]);
+    $field->save();
+    \Drupal::service('entity_display.repository')
+      ->getFormDisplay('entity_test', 'entity_test')
+      ->setComponent($this->card1->getName(), [
+        'type' => 'options_dynamic',
+        'settings' => [
+          'select_threshold' => 7,
+        ]
+      ])
+      ->save();
+
+    // Create an entity.
+    $entity = EntityTest::create([
+      'user_id' => 1,
+      'name' => $this->randomMachineName(),
+    ]);
+    $entity->save();
+    $entity_init = clone $entity;
+
+    // With no field data, no buttons are checked.
+    $this->drupalGet('entity_test/manage/' . $entity->id() . '/edit');
+    $this->assertSession()->checkboxNotChecked('edit-card-1-0');
+    $this->assertSession()->checkboxNotChecked('edit-card-1-1');
+    $this->assertSession()->checkboxNotChecked('edit-card-1-2');
+    $this->assertSession()->responseContains('Some dangerous &amp; unescaped markup');
+    $this->assertSession()->responseContains('Some HTML encoded markup with &lt; &amp; &gt;');
+
+    // Select first option.
+    $edit = ['card_1' => 0];
+    $this->submitForm($edit, 'Save');
+    $this->assertFieldValues($entity_init, 'card_1', [0]);
+
+    // Check that the selected button is checked.
+    $this->drupalGet('entity_test/manage/' . $entity->id() . '/edit');
+    $this->assertSession()->checkboxChecked('edit-card-1-0');
+    $this->assertSession()->checkboxNotChecked('edit-card-1-1');
+    $this->assertSession()->checkboxNotChecked('edit-card-1-2');
+
+    // Unselect option.
+    $edit = ['card_1' => '_none'];
+    $this->submitForm($edit, 'Save');
+    $this->assertFieldValues($entity_init, 'card_1', []);
+
+    // Check that required radios with one option is auto-selected.
+    $this->card1->setSetting('allowed_values', [99 => 'Only allowed value']);
+    $this->card1->save();
+    $field->setRequired(TRUE);
+    $field->save();
+    $this->drupalGet('entity_test/manage/' . $entity->id() . '/edit');
+    $this->assertSession()->checkboxChecked('edit-card-1-99');
+  }
+
+  public function testDynamicOptionsCheckBoxes() {
+    // Create an instance of the 'multiple values' field.
+    $field = FieldConfig::create([
+      'field_storage' => $this->card2,
+      'bundle' => 'entity_test',
+    ]);
+    $field->save();
+    \Drupal::service('entity_display.repository')
+      ->getFormDisplay('entity_test', 'entity_test')
+      ->setComponent($this->card2->getName(), [
+        'type' => 'options_dynamic',
+        'settings' => [
+          'select_threshold' => 7,
+        ]
+      ])
+      ->save();
+
+    // Create an entity.
+    $entity = EntityTest::create([
+      'user_id' => 1,
+      'name' => $this->randomMachineName(),
+    ]);
+    $entity->save();
+    $entity_init = clone $entity;
+
+    // Display form: with no field data, nothing is checked.
+    $this->drupalGet('entity_test/manage/' . $entity->id() . '/edit');
+    $this->assertSession()->checkboxNotChecked('edit-card-2-0');
+    $this->assertSession()->checkboxNotChecked('edit-card-2-1');
+    $this->assertSession()->checkboxNotChecked('edit-card-2-2');
+    $this->assertSession()->responseContains('Some dangerous &amp; unescaped <strong>markup</strong>');
+
+    // Submit form: select first and third options.
+    $edit = [
+      'card_2[0]' => TRUE,
+      'card_2[1]' => FALSE,
+      'card_2[2]' => TRUE,
+    ];
+    $this->submitForm($edit, 'Save');
+    $this->assertFieldValues($entity_init, 'card_2', [0, 2]);
+
+    // Display form: check that the right options are selected.
+    $this->drupalGet('entity_test/manage/' . $entity->id() . '/edit');
+    $this->assertSession()->checkboxChecked('edit-card-2-0');
+    $this->assertSession()->checkboxNotChecked('edit-card-2-1');
+    $this->assertSession()->checkboxChecked('edit-card-2-2');
+
+    // Submit form: select only first option.
+    $edit = [
+      'card_2[0]' => TRUE,
+      'card_2[1]' => FALSE,
+      'card_2[2]' => FALSE,
+    ];
+    $this->submitForm($edit, 'Save');
+    $this->assertFieldValues($entity_init, 'card_2', [0]);
+
+    // Display form: check that the right options are selected.
+    $this->drupalGet('entity_test/manage/' . $entity->id() . '/edit');
+    $this->assertSession()->checkboxChecked('edit-card-2-0');
+    $this->assertSession()->checkboxNotChecked('edit-card-2-1');
+    $this->assertSession()->checkboxNotChecked('edit-card-2-2');
+
+    // Submit form: select the three options while the field accepts only 2.
+    $edit = [
+      'card_2[0]' => TRUE,
+      'card_2[1]' => TRUE,
+      'card_2[2]' => TRUE,
+    ];
+    $this->submitForm($edit, 'Save');
+    $this->assertSession()->pageTextContains('this field cannot hold more than 2 values');
+
+    // Submit form: uncheck all options.
+    $edit = [
+      'card_2[0]' => FALSE,
+      'card_2[1]' => FALSE,
+      'card_2[2]' => FALSE,
+    ];
+    $this->submitForm($edit, 'Save');
+    // Check that the value was saved.
+    $this->assertFieldValues($entity_init, 'card_2', []);
+
+    // Required checkbox with one option is auto-selected.
+    $this->card2->setSetting('allowed_values', [99 => 'Only allowed value']);
+    $this->card2->save();
+    $field->setRequired(TRUE);
+    $field->save();
+    $this->drupalGet('entity_test/manage/' . $entity->id() . '/edit');
+    $this->assertSession()->checkboxChecked('edit-card-2-99');
+  }
+
 }

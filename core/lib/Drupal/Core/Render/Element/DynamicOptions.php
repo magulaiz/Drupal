@@ -159,4 +159,23 @@ class DynamicOptions extends FormElement {
     return $element;
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public static function valueCallback(&$element, $input, FormStateInterface $form_state) {
+    /** @var \Drupal\Core\Render\ElementInfoManagerInterface $manager */
+    $manager = \Drupal::service('plugin.manager.element_info');
+
+    $type = $element['#multiple'] ? 'checkboxes' : 'radios';
+    if (count($element['#options']) > $element['#select_threshold']) {
+      $type = 'select';
+    }
+    $info = $manager->getInfo($type);
+
+    if (isset($info['#value_callback'])) {
+      return call_user_func_array($info['#value_callback'], [&$element, $input, &$form_state]);
+    }
+
+  }
+
 }
