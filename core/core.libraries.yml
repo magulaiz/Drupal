@@ -477,6 +477,11 @@ drupal.customevent:
   js:
     misc/polyfills/customevent.js: { weight: -20 }
 
+drupal.customevent:
+  version: VERSION
+  js:
+    misc/polyfills/customevent.js: { weight: -20 }
+
 drupal.date:
   version: VERSION
   js:
