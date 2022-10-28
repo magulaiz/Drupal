@@ -209,7 +209,7 @@ EOF
       ->willReturn(array_flip($modules));
 
     $this->permissionHandler = new PermissionHandler($this->entityTypeManager->reveal(), $this->moduleHandler, $this->stringTranslation, $this->controllerResolver);
-    $actual_permissions = $permissionHandler->getPermissions();
+    $actual_permissions = $this->permissionHandler->getPermissions();
     $this->assertEquals(['access_module_a4', 'access_module_a1', 'access_module_a2', 'access_module_a3'],
       array_keys($actual_permissions));
   }

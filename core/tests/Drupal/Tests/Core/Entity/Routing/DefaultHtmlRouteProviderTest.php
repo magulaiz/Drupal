@@ -344,14 +344,14 @@ class DefaultHtmlRouteProviderTest extends UnitTestCase {
     $entity_type->entityClassImplements(FieldableEntityInterface::class)->willReturn(FALSE);
     $entity_type->entityClassImplements(EntityOwnerInterface::class)->willReturn(FALSE);
     $route = (new Route('/the/collection/link/template'))
-    ->setDefaults([
-      '_entity_list' => 'the_entity_type_id',
-      '_title' => 'Test entities',
-      '_title_arguments' => [],
-      '_title_context' => '',
-    ])
+      ->setDefaults([
+        '_entity_list' => 'the_entity_type_id',
+        '_title' => 'Test entities',
+        '_title_arguments' => [],
+        '_title_context' => '',
+      ])
       ->setRequirements([
-        '_permission' => 'administer the_entity_type_id + access the_entity_type_id overview',
+        '_permission' => 'administer the_entity_type_id+access the_entity_type_id overview',
       ]);
     $data['collection_route'] = [clone $route, $entity_type->reveal()];
 
