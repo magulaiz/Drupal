@@ -51,7 +51,7 @@ services:
     arguments: ['@entity_type.manager', '@password']
   user.permissions:
     class: Drupal\user\PermissionHandler
-    arguments: ['@module_handler', '@string_translation', '@controller_resolver']
+    arguments: ['@entity_type.manager', '@module_handler', '@string_translation', '@controller_resolver']
   user.current_user_context:
     class: Drupal\user\ContextProvider\CurrentUserContext
     arguments: ['@current_user', '@entity_type.manager']

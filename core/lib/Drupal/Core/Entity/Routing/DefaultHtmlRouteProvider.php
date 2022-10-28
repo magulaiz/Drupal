@@ -318,10 +318,14 @@ class DefaultHtmlRouteProvider implements EntityRouteProviderInterface, EntityHa
   protected function getCollectionRoute(EntityTypeInterface $entity_type) {
     // If the entity type does not provide an admin permission, there is no way
     // to control access, so we cannot provide a route in a sensible way.
-    if ($entity_type->hasLinkTemplate('collection') && $entity_type->hasListBuilderClass() && ($admin_permission = $entity_type->getAdminPermission())) {
-      /** @var \Drupal\Core\StringTranslation\TranslatableMarkup $label */
-      $label = $entity_type->getCollectionLabel();
-
+    if ($entity_type->hasLinkTemplate('collection') && $entity_type->hasListBuilderClass()) {
+      $permission_provider = $this->entityTypeManager->getPermissionProvider($entity_type->id());
+      $admin_permission = $permission_provider->getAdminPermission();
+      $collection_permission = $permission_provider->getCollectionPermission();
+      if ($admin_permission || $collection_permission) {
+        $permission = trim(implode('', [$admin_permission, $collection_permission]), '');
+        /** @var \Drupal\Core\StringTranslation\TranslatableMarkup $label */
+        $label = $entity_type->getCollectionLabel();
       $route = new Route($entity_type->getLinkTemplate('collection'));
       $route
         ->addDefaults([

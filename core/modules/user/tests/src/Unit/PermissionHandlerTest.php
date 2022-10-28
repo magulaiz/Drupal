@@ -7,6 +7,10 @@
 
 namespace Drupal\Tests\user\Unit;
 
+use Drupal\Component\Plugin\Exception\PluginNotFoundException;
+use Drupal\Core\Controller\ControllerResolverInterface;
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Extension\Extension;
 use Drupal\Core\StringTranslation\PluralTranslatableMarkup;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
@@ -16,6 +20,7 @@ use Drupal\user\PermissionHandler;
 use org\bovigo\vfs\vfsStream;
 use org\bovigo\vfs\vfsStreamDirectory;
 use org\bovigo\vfs\vfsStreamWrapper;
+use Prophecy\Argument;
 
 /**
  * Tests the permission handler.
@@ -32,6 +37,13 @@ class PermissionHandlerTest extends UnitTestCase {
    * @var \Drupal\user\PermissionHandler
    */
   protected $permissionHandler;
+
+  /**
+   * The entity type manager.
+   *
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface|\Prophecy\Prophecy\ProphecyInterface
+   */
+  protected $entityTypeManager;
 
   /**
    * The mocked module handler.
@@ -61,7 +73,9 @@ class PermissionHandlerTest extends UnitTestCase {
     parent::setUp();
 
     $this->stringTranslation = new TestTranslationManager();
-    $this->controllerResolver = $this->createMock('Drupal\Core\Controller\ControllerResolverInterface');
+    $this->controllerResolver = $this->createMock(ControllerResolverInterface::class);
+    $this->entityTypeManager = $this->prophesize(EntityTypeManagerInterface::class);
+    $this->setUpEntityTypeDefinitions();
   }
 
   /**
@@ -133,7 +147,7 @@ EOF
     $this->controllerResolver->expects($this->never())
       ->method('getControllerFromDefinition');
 
-    $this->permissionHandler = new PermissionHandler($this->moduleHandler, $this->stringTranslation, $this->controllerResolver);
+    $this->permissionHandler = new PermissionHandler($this->entityTypeManager->reveal(), $this->moduleHandler, $this->stringTranslation, $this->controllerResolver);
 
     $actual_permissions = $this->permissionHandler->getPermissions();
     $this->assertPermissions($actual_permissions);
@@ -194,7 +208,7 @@ EOF
       ->method('getModuleList')
       ->willReturn(array_flip($modules));
 
-    $permissionHandler = new PermissionHandler($this->moduleHandler, $this->stringTranslation, $this->controllerResolver);
+    $this->permissionHandler = new PermissionHandler($this->entityTypeManager->reveal(), $this->moduleHandler, $this->stringTranslation, $this->controllerResolver);
     $actual_permissions = $permissionHandler->getPermissions();
     $this->assertEquals(['access_module_a4', 'access_module_a1', 'access_module_a2', 'access_module_a3'],
       array_keys($actual_permissions));
@@ -257,7 +271,7 @@ EOF
         ['Drupal\\user\\Tests\\TestPermissionCallbacks::titleDescriptionRestrictAccess', [new TestPermissionCallbacks(), 'titleDescriptionRestrictAccess']],
       ]);
 
-    $this->permissionHandler = new PermissionHandler($this->moduleHandler, $this->stringTranslation, $this->controllerResolver);
+    $this->this->permissionHandler = new PermissionHandler($this->entityTypeManager->reveal(), $this->moduleHandler, $this->stringTranslation, $this->controllerResolver);
 
     $actual_permissions = $this->permissionHandler->getPermissions();
     $this->assertPermissions($actual_permissions);
@@ -300,7 +314,7 @@ EOF
       ->with('Drupal\\user\\Tests\\TestPermissionCallbacks::titleDescription')
       ->willReturn([new TestPermissionCallbacks(), 'titleDescription']);
 
-    $this->permissionHandler = new PermissionHandler($this->moduleHandler, $this->stringTranslation, $this->controllerResolver);
+    $this->this->permissionHandler = new PermissionHandler($this->entityTypeManager->reveal(), $this->moduleHandler, $this->stringTranslation, $this->controllerResolver);
 
     $actual_permissions = $this->permissionHandler->getPermissions();
 
@@ -334,6 +348,43 @@ EOF
   }
 
 }
+
+  /**
+   * Sets up the entity type manager to be tested.
+   *
+   * @param \Drupal\Core\Entity\EntityTypeInterface[] $definitions
+   *   (optional) An array of entity type definitions.
+   */
+  protected function setUpEntityTypeDefinitions($definitions = []) {
+    $class = $this->getMockClass(EntityInterface::class);
+    foreach ($definitions as $key => $entity_type) {
+      // \Drupal\Core\Entity\EntityTypeInterface::getLinkTemplates() is called
+      // by \Drupal\Core\Entity\EntityManager::processDefinition() so it must
+      // always be mocked.
+      $entity_type->getLinkTemplates()->willReturn([]);
+
+      // Give the entity type a legitimate class to return.
+      $entity_type->getClass()->willReturn($class);
+
+      $definitions[$key] = $entity_type->reveal();
+    }
+
+    $this->entityTypeManager->getDefinition(Argument::cetera())
+      ->will(function ($args) use ($definitions) {
+        $entity_type_id = $args[0];
+        $exception_on_invalid = $args[1];
+        if (isset($definitions[$entity_type_id])) {
+          return $definitions[$entity_type_id];
+        }
+        elseif (!$exception_on_invalid) {
+          return NULL;
+        }
+        else {
+          throw new PluginNotFoundException($entity_type_id);
+        }
+      });
+    $this->entityTypeManager->getDefinitions()->willReturn($definitions);
+  }
 
 class TestPermissionCallbacks {
 
