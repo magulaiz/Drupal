@@ -323,20 +323,21 @@ class DefaultHtmlRouteProvider implements EntityRouteProviderInterface, EntityHa
       $admin_permission = $permission_provider->getAdminPermission();
       $collection_permission = $permission_provider->getCollectionPermission();
       if ($admin_permission || $collection_permission) {
-        $permission = trim(implode('', [$admin_permission, $collection_permission]), '');
+        $permission = trim(implode('', [$admin_permission, $collection_permission]), '+');
         /** @var \Drupal\Core\StringTranslation\TranslatableMarkup $label */
         $label = $entity_type->getCollectionLabel();
-      $route = new Route($entity_type->getLinkTemplate('collection'));
-      $route
-        ->addDefaults([
-          '_entity_list' => $entity_type->id(),
-          '_title' => $label->getUntranslatedString(),
-          '_title_arguments' => $label->getArguments(),
-          '_title_context' => $label->getOption('context'),
-        ])
-        ->setRequirement('_permission', $admin_permission);
+        $route = new Route($entity_type->getLinkTemplate('collection'));
+        $route
+          ->addDefaults([
+            '_entity_list' => $entity_type->id(),
+            '_title' => $label->getUntranslatedString(),
+            '_title_arguments' => $label->getArguments(),
+            '_title_context' => $label->getOption('context'),
+          ])
+          ->setRequirement('_permission', $permission);
 
-      return $route;
+        return $route;
+      }
     }
   }
 

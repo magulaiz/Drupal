@@ -8,7 +8,7 @@
 namespace Drupal\Tests\Core\Entity\Routing;
 
 use Drupal\Core\Config\Entity\ConfigEntityTypeInterface;
-use useDrupal\Core\Entity\DefaultEntityPermissionProvider;
+use Drupal\Core\Entity\DefaultEntityPermissionProvider;
 use Drupal\Core\Entity\EditorialEntityPermissionProvider;
 use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
@@ -57,7 +57,7 @@ class DefaultHtmlRouteProviderTest extends UnitTestCase {
    */
   protected function setUp(): void {
     parent::setUp();
-
+    $this->entityTypeManager = $this->prophesize(EntityTypeManagerInterface::class);
     $this->entityTypeManager->getPermissionProvider('the_entity_type_id')->willReturn($this->prophesize(EntityPermissionProviderInterface::class));
     $this->entityFieldManager = $this->prophesize(EntityFieldManagerInterface::class);
 
@@ -269,7 +269,7 @@ class DefaultHtmlRouteProviderTest extends UnitTestCase {
     $entity_type_manager = $this->prophesize(EntityTypeManagerInterface::class);
     $entity_type_manager->getPermissionProvider('the_entity_type_id')->willReturn(new DefaultEntityPermissionProvider($entity_type));
     $route_provider = new TestDefaultHtmlRouteProvider($entity_type_manager->reveal(), $this->entityFieldManager->reveal());
-    $route = $this->routeProvider->getCollectionRoute($entity_type);
+    $route = $route_provider->getCollectionRoute($entity_type);
     $this->assertEquals($expected, $route);
   }
 
@@ -351,7 +351,7 @@ class DefaultHtmlRouteProviderTest extends UnitTestCase {
       '_title_context' => '',
     ])
       ->setRequirements([
-        '_permission' => 'administer the_entity_type_idaccess the_entity_type_id overview',
+        '_permission' => 'administer the_entity_type_id + access the_entity_type_id overview',
       ]);
     $data['collection_route'] = [clone $route, $entity_type->reveal()];
 

@@ -271,7 +271,7 @@ EOF
         ['Drupal\\user\\Tests\\TestPermissionCallbacks::titleDescriptionRestrictAccess', [new TestPermissionCallbacks(), 'titleDescriptionRestrictAccess']],
       ]);
 
-    $this->this->permissionHandler = new PermissionHandler($this->entityTypeManager->reveal(), $this->moduleHandler, $this->stringTranslation, $this->controllerResolver);
+    $this->permissionHandler = new PermissionHandler($this->entityTypeManager->reveal(), $this->moduleHandler, $this->stringTranslation, $this->controllerResolver);
 
     $actual_permissions = $this->permissionHandler->getPermissions();
     $this->assertPermissions($actual_permissions);
@@ -314,7 +314,7 @@ EOF
       ->with('Drupal\\user\\Tests\\TestPermissionCallbacks::titleDescription')
       ->willReturn([new TestPermissionCallbacks(), 'titleDescription']);
 
-    $this->this->permissionHandler = new PermissionHandler($this->entityTypeManager->reveal(), $this->moduleHandler, $this->stringTranslation, $this->controllerResolver);
+    $this->permissionHandler = new PermissionHandler($this->entityTypeManager->reveal(), $this->moduleHandler, $this->stringTranslation, $this->controllerResolver);
 
     $actual_permissions = $this->permissionHandler->getPermissions();
 
@@ -345,9 +345,8 @@ EOF
     $this->assertEquals('module_c', $actual_permissions['access_module_c']['provider']);
     $this->assertTrue($actual_permissions['access_module_c']['restrict access']);
     $this->assertEquals('module_a', $actual_permissions['access module a via module b']['provider']);
+    $this->assertEquals($actual_permissions['access module a via module b']['provider'], 'module_a');
   }
-
-}
 
   /**
    * Sets up the entity type manager to be tested.
@@ -385,6 +384,7 @@ EOF
       });
     $this->entityTypeManager->getDefinitions()->willReturn($definitions);
   }
+}
 
 class TestPermissionCallbacks {
 
