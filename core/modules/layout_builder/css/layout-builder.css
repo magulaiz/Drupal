@@ -128,6 +128,38 @@
   padding-top: 0.55em;
 }
 
+.layout_builder__region-mapping__toggle-wrapper {
+  text-align: right;
+}
+[dir="rtl"] .layout_builder__region-mapping__toggle-wrapper {
+  text-align: left;
+}
+
+.layout-builder__region-mapping {
+  margin-top: 10px;
+}
+
+.layout-builder__region-mapping__region {
+  margin-bottom: 1.5em;
+  padding-bottom: 1.5em;
+  text-align: center;
+  outline: 2px dashed #979797;
+}
+
+.layout-builder__region-mapping__region-label {
+  margin-bottom: 0.5em;
+}
+
+.layout-builder__region-mapping__block {
+  margin: 0.5em;
+  padding: 0.5em;
+  cursor: move;
+  border: 2px solid #333;
+  font-size: 1.5em;
+}
+
+/* END */
+
 #drupal-off-canvas .inline-block-create-button {
   display: block;
   padding: 24px;

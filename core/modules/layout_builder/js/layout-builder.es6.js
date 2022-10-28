@@ -171,6 +171,67 @@
     },
   };
 
+  behaviors.layoutBuilderMapSectionRegions = {
+    attach(context) {
+      const regionMapperSelector = '.js-layout-builder-region-mapping';
+      Array.prototype.forEach.call(
+        context.querySelectorAll(regionMapperSelector),
+        (regionMapper) => {
+          const $valuesElement = $(
+            '[data-drupal-selector="edit-region-mapping-values"]',
+            regionMapper,
+          ).hide();
+          const $visualElement = $(
+            '[data-drupal-selector="edit-region-mapping-visual"]',
+            regionMapper,
+          );
+
+          const $toggleWrapper = $(
+            Drupal.theme('layoutBuilderMapSectionRegionsToggle'),
+          );
+          const $toggleButton = $toggleWrapper.find(
+            '[data-drupal-selector="layout-builder-region-mapping-toggle"]',
+          );
+          $toggleButton.get(0).textContent = Drupal.t(
+            'Toggle visual region mapper',
+          );
+
+          let visual = true;
+          $toggleButton.click(function (evt) {
+            visual = !visual;
+            $visualElement.toggle(visual);
+            $valuesElement.toggle(!visual);
+          });
+
+          $toggleWrapper.insertAfter($(regionMapper).find('legend'));
+
+          const regionSelector = '.js-layout-builder-region-mapping-region';
+          Array.prototype.forEach.call(
+            regionMapper.querySelectorAll(regionSelector),
+            (region) => {
+              Sortable.create(region, {
+                draggable: '.js-layout-builder-region-mapping-block',
+                ghostClass: 'ui-state-drop',
+                group: 'builder-region-mapping',
+                onEnd: (event) => {
+                  const oldRegion = event.item.getAttribute('data-old-region');
+                  const newRegion = event.to.getAttribute('data-new-region');
+                  $(`select[data-region="${oldRegion}"]`).get(0).value =
+                    newRegion;
+                },
+              });
+            },
+          );
+        },
+      );
+    },
+  };
+
+  Drupal.theme.layoutBuilderMapSectionRegionsToggle = () =>
+    `<div class="layout_builder__region-mapping__toggle-wrapper" data-drupal-selector="layout-builder-region-mapping-toggle-wrapper">
+      <button type="button" class="link layout_builder__region-mapping__toggle" data-drupal-selector="layout-builder-region-mapping-toggle"></button>
+    </div>`;
+
   /**
    * Disables interactive elements in previewed blocks.
    *
