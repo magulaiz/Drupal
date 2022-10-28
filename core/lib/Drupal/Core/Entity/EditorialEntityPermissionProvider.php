@@ -325,18 +325,18 @@ class EditorialEntityPermissionProvider extends DefaultEntityPermissionProvider 
       case 'view any published':
         $info = [
           'title' => $this->t('%bundle_name: View any @type', [
-              '%bundle_name' => $bundle_info['label'],
-              '@type' => $plural_label,
-            ]),
+            '%bundle_name' => $bundle_info['label'],
+            '@type' => $plural_label,
+          ]),
         ];
         break;
 
       case 'view own published':
         $info = [
           'title' => $this->t('%bundle_name: View own @type', [
-              '%bundle_name' => $bundle_info['label'],
-              '@type' => $plural_label,
-            ]),
+            '%bundle_name' => $bundle_info['label'],
+            '@type' => $plural_label,
+          ]),
         ];
         break;
 
@@ -352,36 +352,36 @@ class EditorialEntityPermissionProvider extends DefaultEntityPermissionProvider 
       case 'edit any':
         $info = [
           'title' => $this->t('%bundle_name: Edit any @type', [
-              '%bundle_name' => $bundle_info['label'],
-              '@type' => $singular_label,
-            ]),
+            '%bundle_name' => $bundle_info['label'],
+            '@type' => $singular_label,
+          ]),
         ];
         break;
 
       case 'edit own':
         $info = [
           'title' => $this->t('%bundle_name: Edit own @type', [
-              '%bundle_name' => $bundle_info['label'],
-              '@type' => $plural_label,
-            ]),
+            '%bundle_name' => $bundle_info['label'],
+            '@type' => $plural_label,
+          ]),
         ];
         break;
 
       case 'delete any':
         $info = [
           'title' => $this->t('%bundle_name: Delete any @type', [
-              '%bundle_name' => $bundle_info['label'],
-              '@type' => $singular_label,
-            ]),
+            '%bundle_name' => $bundle_info['label'],
+            '@type' => $singular_label,
+          ]),
         ];
         break;
 
       case 'delete own':
         $info = [
           'title' => $this->t('%bundle_name: Delete own @type', [
-              '%bundle_name' => $bundle_info['label'],
-              '@type' => $plural_label,
-            ]),
+            '%bundle_name' => $bundle_info['label'],
+            '@type' => $plural_label,
+          ]),
         ];
         break;
 
@@ -470,6 +470,7 @@ class EditorialEntityPermissionProvider extends DefaultEntityPermissionProvider 
    *   The name of the bundle.
    *
    * @return string
+   *   The bundle-specific permission
    */
   protected function getPermissionNameForBundle($permission_name, $bundle_name) {
     assert($bundle_name !== NULL);
