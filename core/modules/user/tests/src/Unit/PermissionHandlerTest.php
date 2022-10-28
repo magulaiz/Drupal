@@ -383,7 +383,9 @@ EOF
         }
       });
     $this->entityTypeManager->getDefinitions()->willReturn($definitions);
+
   }
+
 }
 
 class TestPermissionCallbacks {
