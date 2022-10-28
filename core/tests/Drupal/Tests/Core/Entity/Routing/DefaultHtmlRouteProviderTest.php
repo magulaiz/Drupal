@@ -356,6 +356,7 @@ class DefaultHtmlRouteProviderTest extends UnitTestCase {
     $data['collection_route'] = [clone $route, $entity_type->reveal()];
 
     return $data;
+  }
 
   /**
    * @covers ::getEntityTypeIdKeyType
