@@ -91,7 +91,7 @@ class OptionsDynamicWidget extends OptionsWidgetBase {
       }
 
       if (!$this->multiple) {
-        $selected  = $selected ? reset($selected) : NULL;
+        $selected = $selected ? reset($selected) : NULL;
       }
     }
 
