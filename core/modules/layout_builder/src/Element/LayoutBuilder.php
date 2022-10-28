@@ -375,6 +375,24 @@ class LayoutBuilder extends RenderElement implements ContainerFactoryPluginInter
           'data-dialog-renderer' => 'off_canvas',
         ],
       ],
+      'change_layout' => [
+        '#type' => 'link',
+        '#title' => $this->t('Change layout<span class="visually-hidden"> for @section</span>', ['@section' => $section_label]),
+        '#url' => Url::fromRoute('layout_builder.change_section_layout', [
+          'section_storage_type' => $storage_type,
+          'section_storage' => $storage_id,
+          'delta' => $delta,
+        ]),
+        '#attributes' => [
+          'class' => [
+            'use-ajax',
+            'layout-builder__link',
+            'layout-builder__link--change-layout',
+          ],
+          'data-dialog-type' => 'dialog',
+          'data-dialog-renderer' => 'off_canvas',
+        ],
+      ],
       'layout-builder__section' => $build,
     ];
   }

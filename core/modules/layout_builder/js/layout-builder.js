@@ -176,6 +176,47 @@
   };
 
   /**
+   * Allows to map section regions when editing section layout.
+   *
+   * @type {Drupal~behavior}
+   *
+   * @prop {Drupal~behaviorAttach} attach
+   *   Attach mapping sections behavior to the Layout Builder UI.
+   */
+  behaviors.layoutBuilderMapSectionRegions = {
+    attach(context) {
+      const regionMapperSelector = '.js-layout-builder-region-mapping';
+      Array.prototype.forEach.call(context.querySelectorAll(regionMapperSelector), function (regionMapper) {
+        const $valuesElement = $('[data-drupal-selector="edit-region-mapping-values"]', regionMapper).hide();
+        const $visualElement = $('[data-drupal-selector="edit-region-mapping-visual"]', regionMapper);
+        const $toggleWrapper = $(Drupal.theme('layoutBuilderMapSectionRegionsToggle'));
+        const $toggleButton = $toggleWrapper.find('[data-drupal-selector="layout-builder-region-mapping-toggle"]');
+        $toggleButton.get(0).textContent = Drupal.t('Toggle visual region mapper');
+        let visual = true;
+        $toggleButton.click(function (evt) {
+          visual = !visual;
+          $visualElement.toggle(visual);
+          $valuesElement.toggle(!visual);
+        });
+        $toggleWrapper.insertAfter($(regionMapper).find('legend'));
+        const regionSelector = '.js-layout-builder-region-mapping-region';
+        Array.prototype.forEach.call(regionMapper.querySelectorAll(regionSelector), function (region) {
+          Sortable.create(region, {
+            draggable: '.js-layout-builder-region-mapping-block',
+            ghostClass: 'ui-state-drop',
+            group: 'builder-region-mapping',
+            onEnd: function onEnd(event) {
+              const oldRegion = event.item.getAttribute('data-old-region');
+              const newRegion = event.to.getAttribute('data-new-region');
+              $("select[data-region=\"".concat(oldRegion, "\"]")).get(0).value = newRegion;
+            }
+          });
+        });
+      });
+    }
+  };
+
+  /**
    * Disables interactive elements in previewed blocks.
    *
    * @type {Drupal~behavior}
@@ -456,4 +497,10 @@
 
     return `<div class="layout-builder-block__content-preview-placeholder-label js-layout-builder-content-preview-placeholder-label">${contentPreviewPlaceholderText}</div>`;
   };
+  Drupal.theme.layoutBuilderMapSectionRegionsToggle = () => {
+    return `<div class="layout_builder__region-mapping__toggle-wrapper" data-drupal-selector="layout-builder-region-mapping-toggle-wrapper">
+                <button type="button" class="link layout_builder__region-mapping__toggle" data-drupal-selector="layout-builder-region-mapping-toggle"></button>
+            </div>`;
+  };
+
 })(jQuery, Drupal, Sortable);
