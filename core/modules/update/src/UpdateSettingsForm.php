@@ -67,14 +67,12 @@ class UpdateSettingsForm extends ConfigFormBase implements ContainerInjectionInt
   public function buildForm(array $form, FormStateInterface $form_state) {
     $config = $this->config('update.settings');
 
-    // Adjust existing value to fit our set of choices.
+    // Adjust the frequency so it's never 0.
     $frequency = $config->get('check.interval_days');
     if ($frequency < 1) {
       $frequency = 1;
     }
-    if ($frequency > 1) {
-      $frequency = 7;
-    }
+    // Use the radio buttons if frequency is daily or weekly.
     $form['update_check_frequency'] = [
       '#type' => 'radios',
       '#title' => $this->t('Check for updates'),
@@ -85,6 +83,13 @@ class UpdateSettingsForm extends ConfigFormBase implements ContainerInjectionInt
       ],
       '#description' => $this->t('Select how frequently you want to automatically check for new releases of your currently installed modules and themes.'),
     ];
+    // If the frequency isn't daily or weekly, allow the form to validate
+    // against an arbitrary number with a numeric field.
+    if ($frequency !==1 && $frequency !== 7) {
+      unset($form['update_check_frequency']['#options']);
+      $form['update_check_frequency']['#type'] = 'number';
+      $form['update_check_frequency']['#min'] = 1;
+    }
 
     $form['update_check_disabled'] = [
       '#type' => 'checkbox',
