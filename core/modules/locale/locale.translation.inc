@@ -320,7 +320,7 @@ function locale_translation_build_server_pattern($project, $template) {
     '%core' => $project->core,
     '%language' => $project->langcode ?? '%language',
   ];
-  return strtr($template, $variables);
+  return strtr($template ?? '', $variables);
 }
 
 /**
