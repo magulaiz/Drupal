@@ -48,6 +48,8 @@ class Llama extends PluginBase implements CKEditorPluginInterface, ContainerFact
     return $instance;
   }
 
+  use StringTranslationTrait;
+
   /**
    * {@inheritdoc}
    */
