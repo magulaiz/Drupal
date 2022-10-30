@@ -85,7 +85,7 @@ class UpdateSettingsForm extends ConfigFormBase implements ContainerInjectionInt
     ];
     // If the frequency isn't daily or weekly, allow the form to validate
     // against an arbitrary number with a numeric field.
-    if ($frequency !==1 && $frequency !== 7) {
+    if ($frequency !== 1 && $frequency !== 7) {
       unset($form['update_check_frequency']['#options']);
       $form['update_check_frequency']['#type'] = 'number';
       $form['update_check_frequency']['#min'] = 1;
