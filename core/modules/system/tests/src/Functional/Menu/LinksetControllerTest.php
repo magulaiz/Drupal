@@ -174,7 +174,7 @@ final class LinksetControllerTest extends LinksetControllerTestBase {
    */
   public function testBasicFunctions() {
     $this->enableEndpoint(TRUE);
-    $expected_linkset = $this->getReferenceLinksetDataFromFile(__DIR__ . '/fixtures/linkset-menu-main.json');
+    $expected_linkset = $this->getReferenceLinksetDataFromFile(__DIR__ . '/../../../fixtures/linkset/linkset-menu-main.json');
     $response = $this->doRequest('GET', Url::fromUri('base:/system/menu/main/linkset'));
     $this->assertSame('application/linkset+json', $response->getHeaderLine('content-type'));
     $this->assertSame($expected_linkset, Json::decode((string) $response->getBody()));
