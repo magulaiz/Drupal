@@ -276,7 +276,7 @@ abstract class StylePluginBase extends PluginBase {
     if (!isset($labelElements)) {
       $labelElements = [
         'h3' => $this
-          ->t('- Use default -'),
+          ->t('- Use default (h3) -'),
         '' => $this
           ->t('- None (No wrapping HTML) -'),
       ];
