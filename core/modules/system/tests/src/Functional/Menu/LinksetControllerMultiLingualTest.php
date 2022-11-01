@@ -8,6 +8,9 @@ use Drupal\Component\Serialization\Json;
 use Drupal\Core\Url;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\language\Entity\ContentLanguageSettings;
+use Drupal\Core\Language\LanguageInterface;
+use Drupal\language\Plugin\LanguageNegotiation\LanguageNegotiationSelected;
+use Drupal\language\Plugin\LanguageNegotiation\LanguageNegotiationUrl;
 
 /**
  * Tests the behavior of the linkset controller in multilingual setup.
@@ -82,7 +85,7 @@ final class LinksetControllerMultiLingualTest extends LinksetControllerTestBase 
         'weight' => $index,
       ])->save();
     }
-    // Setting up an admin user to configure multi-lingual settings.
+    // Set up an admin user with appropriate permissions.
     $admin_user = $this->drupalCreateUser([
       'view own unpublished content',
       'administer languages',
@@ -92,24 +95,21 @@ final class LinksetControllerMultiLingualTest extends LinksetControllerTestBase 
       'edit own page content',
     ]);
     $this->drupalLogin($admin_user);
-    // Enable URL language detection and selection.
-    $this->drupalGet('/admin/config/regional/language/detection');
-    $this->submitForm([
-      'language_interface[enabled][language-url]' => TRUE,
-      'language_interface[enabled][language-selected]' => TRUE,
-    ], 'Save settings');
 
-    // Set prefixes to aa, bb, and cc.
-    $this->drupalGet('/admin/config/regional/language/detection/url');
-    $this->submitForm([
-      'prefix[aa]' => 'aa',
-      'prefix[bb]' => 'bb',
-      'prefix[cc]' => 'cc',
-      'prefix[dd]' => '',
-    ], 'Save configuration');
+    $config = $this->config('language.types');
+    $config->set('configurable', [LanguageInterface::TYPE_INTERFACE]);
+    $config->set('negotiation.language_content.enabled', [
+      LanguageNegotiationUrl::METHOD_ID => 1,
+      LanguageNegotiationSelected::METHOD_ID => 1,
+    ]);
+    $config->save();
 
-    $this->drupalGet('/admin/config/regional/language/detection/selected');
-    $this->submitForm(['edit-selected-langcode' => 'dd'], 'Save configuration');
+    \Drupal::configFactory()->getEditable('language.negotiation')
+      ->set('url.prefixes.aa', 'aa')
+      ->set('url.prefixes.bb', 'bb')
+      ->set('url.prefixes.cc', 'cc')
+      ->set('selected_langcode', 'dd')
+      ->save();
 
     // Set default language code for content type page to 'dd'.
     ContentLanguageSettings::loadByEntityTypeBundle('node', 'page')
