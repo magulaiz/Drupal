@@ -51,7 +51,11 @@
   %}
 {% endif %}
 {% if title %}
-  <h3>{{ title }}</h3>
+  {% if grouping_label_element is empty %}
+    {{ title }}
+  {% else %}
+    <{{ grouping_label_element }}>{{ title }}</{{ grouping_label_element }}>
+  {% endif %}
 {% endif %}
 <div{{ attributes.addClass(classes) }}>
   {% if options.alignment == 'horizontal' %}
