@@ -548,12 +548,6 @@ abstract class StylePluginBase extends PluginBase {
       else {
         $single_output['#grouping_label_element'] = '';
       }
-      if ($this->options['grouping']) {
-        $single_output['#grouping_label_element'] = $this->options['grouping'][$level]['grouping_label_element'];
-      }
-      else {
-        $single_output['#grouping_label_element'] = '';
-      }
       $single_output['#title'] = $set['group'];
       $output[] = $single_output;
     }
@@ -607,7 +601,7 @@ abstract class StylePluginBase extends PluginBase {
     // This is for backward compatibility, when $groupings was a string
     // containing the ID of a single field.
     if (is_string($groupings)) {
-      $rendered = $group_rendered === NULL ? TRUE : $group_rendered;
+      $rendered = $group_rendered ?? TRUE;
       $groupings = [['field' => $groupings, 'rendered' => $rendered]];
     }
 
