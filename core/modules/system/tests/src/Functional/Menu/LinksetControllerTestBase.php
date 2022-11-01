@@ -36,6 +36,22 @@ abstract class LinksetControllerTestBase extends BrowserTestBase {
   use UserCreationTrait;
 
   /**
+   * {@inheritdoc}
+   */
+  protected static $modules = [
+    'system',
+    'basic_auth',
+    'link',
+    'path_alias',
+    'path',
+    'user',
+    'menu_link_content',
+    'node',
+    'page_cache',
+    'dynamic_page_cache',
+  ];
+
+  /**
    * Sends a request to the kernel and makes basic response assertions.
    *
    * Only to be used when the expected response is a linkset response.
@@ -152,6 +168,15 @@ abstract class LinksetControllerTestBase extends BrowserTestBase {
       $item['href'] = Url::fromUri('base:' . $item['href'])->toString();
     }
     return $data;
+  }
+
+  /**
+   * Rebuild the router only if needed.
+   */
+  public function rebuildIfNeeded() {
+    /** @var \Drupal\Core\Routing\RouteBuilderInterface $router_builder */
+    $router_builder = $this->container->get('router.builder');
+    $router_builder->rebuildIfNeeded();
   }
 
 }

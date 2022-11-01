@@ -35,16 +35,6 @@ final class LinksetControllerMultiLingualTest extends LinksetControllerTestBase 
    * {@inheritdoc}
    */
   protected static $modules = [
-    'system',
-    'basic_auth',
-    'link',
-    'path_alias',
-    'path',
-    'user',
-    'menu_link_content',
-    'node',
-    'page_cache',
-    'dynamic_page_cache',
     'language',
   ];
 
@@ -126,7 +116,7 @@ final class LinksetControllerMultiLingualTest extends LinksetControllerTestBase 
       ->save(TRUE);
     // Using rebuildIfNeeded here to implicitly test that router is only rebuilt
     // when necessary.
-    \Drupal::service('router.builder')->rebuildIfNeeded();
+    $this->rebuildIfNeeded();
     $this->drupalLogout();
 
     $permissions = [

@@ -34,22 +34,6 @@ final class LinksetControllerTest extends LinksetControllerTestBase {
   protected $profile = 'minimal';
 
   /**
-   * {@inheritdoc}
-   */
-  protected static $modules = [
-    'system',
-    'basic_auth',
-    'link',
-    'path_alias',
-    'path',
-    'user',
-    'menu_link_content',
-    'node',
-    'page_cache',
-    'dynamic_page_cache',
-  ];
-
-  /**
    * An HTTP kernel.
    *
    * Used to send a test request to the controller under test and validate its
