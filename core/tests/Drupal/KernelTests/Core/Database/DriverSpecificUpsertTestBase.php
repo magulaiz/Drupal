@@ -16,7 +16,7 @@ abstract class DriverSpecificUpsertTestBase extends DriverSpecificDatabaseTestBa
    *
    * @see https://www.sqlite.org/limits.html#max_variable_number
    */
-  public function testLargeUpsert() {
+  public function testLargeUpsert(): void {
     $num_records_before = $this->connection->query('SELECT COUNT(*) FROM {test_people}')->fetchField();
 
     $upsert = $this->connection->upsert('test_people')

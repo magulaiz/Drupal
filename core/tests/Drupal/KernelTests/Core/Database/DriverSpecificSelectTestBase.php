@@ -2,8 +2,6 @@
 
 namespace Drupal\KernelTests\Core\Database;
 
-use Drupal\Core\Database\Database;
-
 /**
  * Tests the Select query builder.
  */
@@ -17,7 +15,7 @@ abstract class DriverSpecificSelectTestBase extends DriverSpecificDatabaseTestBa
    *
    * @see https://www.sqlite.org/limits.html#max_variable_number
    */
-  public function testLargeInCondition():void {
+  public function testLargeInCondition(): void {
     $names = [];
     $names[] = 'John';
     for ($i = 1; $i < 500; $i++) {
