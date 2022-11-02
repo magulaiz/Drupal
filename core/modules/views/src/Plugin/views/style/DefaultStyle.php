@@ -34,7 +34,7 @@ class DefaultStyle extends StylePluginBase {
   protected $usesRowClass = TRUE;
 
   /**
-   *
+   * {@inheritdoc}
    */
   public function buildOptionsForm(&$form, FormStateInterface $form_state) {
     parent::buildOptionsForm($form, $form_state);
