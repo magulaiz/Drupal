@@ -1056,11 +1056,6 @@ parameters:
 			path: modules/system/tests/modules/entity_test/src/Plugin/Field/FieldType/ChangedTestItem.php
 
 		-
-			message: "#^Result of function usleep \\(void\\) is used\\.$#"
-			count: 1
-			path: modules/system/tests/modules/hold_test/src/EventSubscriber/HoldTestSubscriber.php
-
-		-
 			message: "#^Configuration entity must define a `config_export` key\\. See https\\://www\\.drupal\\.org/node/2481909$#"
 			count: 1
 			path: modules/system/tests/modules/module_installer_config_test/src/Entity/TestConfigType.php
@@ -1329,11 +1324,6 @@ parameters:
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 2
 			path: modules/views/tests/src/Kernel/RenderCacheIntegrationTest.php
-
-		-
-			message: "#^Cannot unset offset mixed on array\\.$#"
-			count: 1
-			path: modules/views/views.theme.inc
 
 		-
 			message: "#^Cannot unset offset '\\#title' on array\\{\\#theme_wrappers\\: array\\{'container'\\}, \\#attributes\\: array\\{class\\: array\\{'scroll'\\}, data\\-drupal\\-views\\-scroll\\: true\\}\\}\\.$#"
