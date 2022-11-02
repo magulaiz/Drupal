@@ -20,7 +20,6 @@ function starterkit_theme_preprocess_image_widget(array &$variables) {
   }
 }
 
-
 /**
  * Implements hook_preprocess_HOOK() for block.html.twig.
  */
