@@ -51,7 +51,6 @@ class Grid extends StylePluginBase {
     for ($i = 0; $i <= $c; $i++) {
       $grouping = !empty($this->options['grouping'][$i]) ? $this->options['grouping'][$i] : [];
       $grouping += ['field' => '', 'rendered' => TRUE, 'rendered_strip' => FALSE, 'grouping_label_element' => ''];
-
       $form['grouping'][$i]['grouping_label_element'] = [
         '#type' => 'select',
         '#title' => $this->t('Grouping Label Tag', ['@number' => $i + 1]),
@@ -60,7 +59,6 @@ class Grid extends StylePluginBase {
         '#description' => $this->t('You may specify a wrapper tag by which to group the records.'),
       ];
     }
-
     $form['columns'] = [
       '#type' => 'number',
       '#title' => $this->t('Number of columns'),
