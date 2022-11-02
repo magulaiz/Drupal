@@ -33,15 +33,18 @@ class DefaultStyle extends StylePluginBase {
    */
   protected $usesRowClass = TRUE;
 
+  /**
+   *
+   */
   public function buildOptionsForm(&$form, FormStateInterface $form_state) {
     parent::buildOptionsForm($form, $form_state);
-    // Add support for selecting an HTML label to use for the grouping
+    // Add support for selecting an HTML label to use for the grouping.
     $c = count($this->options['grouping']);
     // Add a form for every grouping, plus one.
     for ($i = 0; $i <= $c; $i++) {
       $grouping = !empty($this->options['grouping'][$i]) ? $this->options['grouping'][$i] : [];
       $grouping += ['field' => '', 'rendered' => TRUE, 'rendered_strip' => FALSE, 'grouping_label_element' => ''];
-      
+
       $form['grouping'][$i]['grouping_label_element'] = [
         '#type' => 'select',
         '#title' => $this->t('Grouping Label Tag', ['@number' => $i + 1]),
