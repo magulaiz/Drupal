@@ -285,7 +285,9 @@
       'touchstart',
       (e) => {
         if (
-          !e.target.matches('[data-drupal-selector="primary-nav-menu--level-1"] *')
+          !e.target.matches(
+            '[data-drupal-selector="primary-nav-menu--level-1"] *',
+          )
         ) {
           closeAllSubNav();
         }
