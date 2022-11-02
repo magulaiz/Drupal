@@ -44,7 +44,6 @@ class DefaultStyle extends StylePluginBase {
     for ($i = 0; $i <= $c; $i++) {
       $grouping = !empty($this->options['grouping'][$i]) ? $this->options['grouping'][$i] : [];
       $grouping += ['field' => '', 'rendered' => TRUE, 'rendered_strip' => FALSE, 'grouping_label_element' => ''];
-
       $form['grouping'][$i]['grouping_label_element'] = [
         '#type' => 'select',
         '#title' => $this->t('Grouping Label Tag', ['@number' => $i + 1]),
