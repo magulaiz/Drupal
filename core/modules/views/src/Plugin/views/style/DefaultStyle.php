@@ -3,9 +3,7 @@
 namespace Drupal\views\Plugin\views\style;
 
 /**
- * Unformatted style plugin to render rows.
- *
- * Row are rendered one after another with no decorations.
+ * Style plugin to render unformatted rows with no styling.
  *
  * @ingroup views_style_plugins
  *
