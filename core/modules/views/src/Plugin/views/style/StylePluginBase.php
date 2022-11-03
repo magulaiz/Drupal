@@ -71,6 +71,13 @@ abstract class StylePluginBase extends PluginBase {
   protected $usesGrouping = TRUE;
 
   /**
+   * Should grouping fields use a wrapping element tag.
+   *
+   * @var bool
+   */
+  protected $usesGroupingLabelElement = FALSE;
+
+  /**
    * Does the style plugin for itself support to add fields to its output.
    *
    * This option only makes sense on style plugins without row plugins, like
@@ -165,6 +172,15 @@ abstract class StylePluginBase extends PluginBase {
    */
   public function usesGrouping() {
     return $this->usesGrouping;
+  }
+
+  /**
+   * Returns the usesGroupingLabelElement property.
+   *
+   * @return bool
+   */
+  public function usesGroupingLabelElement() {
+    return $this->usesGroupingLabelElement;
   }
 
   /**
@@ -346,6 +362,15 @@ abstract class StylePluginBase extends PluginBase {
               ],
             ],
           ];
+          if ($this->usesGroupingLabelElement()) {
+            $form['grouping'][$i]['grouping_label_element'] = [
+              '#type' => 'select',
+              '#title' => $this->t('Grouping Label Tag', ['@number' => $i + 1]),
+              '#options' => $this->getLabelElements(),
+              '#default_value' => $grouping['grouping_label_element'],
+              '#description' => $this->t('You may specify a wrapper tag by which to group the records.'),
+            ];
+          }
         }
       }
     }
@@ -594,7 +619,7 @@ abstract class StylePluginBase extends PluginBase {
           $rendered = $info['rendered'] ?? $group_rendered;
           $rendered_strip = $info['rendered_strip'] ?? FALSE;
           $grouping = '';
-          $grouping_label_element = $info['grouping_label_element'];
+          $grouping_label_element = $info['grouping_label_element'] ?? '';
           $group_content = '';
           // Group on the rendered version of the field, not the raw.  That way,
           // we can control any special formatting of the grouping field through
