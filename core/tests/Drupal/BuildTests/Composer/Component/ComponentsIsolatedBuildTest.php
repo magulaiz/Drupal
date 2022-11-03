@@ -56,11 +56,6 @@ class ComponentsIsolatedBuildTest extends ComposerBuildTestBase {
     // We add path repositories so we can wire internal dependencies together.
     $this->addExpectedRepositories($working_dir);
 
-    // Temporarily allow beta stability. Remove when Drupal requires a stable
-    // release of Symfony 6.2.
-    $this->executeCommand("composer config minimum-stability beta --working-dir=$working_dir");
-    $this->assertCommandSuccessful();
-
     // Perform the installation.
     $this->executeCommand("composer install --working-dir=$working_dir --no-interaction --no-progress");
     $this->assertCommandSuccessful();

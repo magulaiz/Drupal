@@ -29,5 +29,6 @@
         "_readme": [
             "This file was partially generated automatically. See: https://www.drupal.org/node/3293830"
         ]
-    }
+    },
+    "minimum-stability": "beta"
 }
