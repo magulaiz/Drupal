@@ -591,7 +591,7 @@ abstract class BuildTestBase extends TestCase {
       ->notPath('#^vendor#')
       ->notPath('#^sites/default/settings\..*php#')
       ->ignoreDotFiles(FALSE)
-      ->ignoreVCS(TRUE);
+      ->ignoreVCS(FALSE);
     return $finder;
   }
 
