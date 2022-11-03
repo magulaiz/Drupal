@@ -22,7 +22,13 @@ class ContentTypeHeaderMatcher implements FilterInterface {
       return $collection;
     }
 
-    $format = $request->getContentType();
+    if (method_exists($request, 'getContentTypeFormat')) {
+      $format = $request->getContentTypeFormat();
+    }
+    else {
+      // @todo Get rid of it https://www.drupal.org/i/3306983 for Symfony 6.2.
+      $format = $request->getContentType();
+    }
 
     foreach ($collection as $name => $route) {
       $supported_formats = array_filter(explode('|', $route->getRequirement('_content_type_format') ?? ''));
