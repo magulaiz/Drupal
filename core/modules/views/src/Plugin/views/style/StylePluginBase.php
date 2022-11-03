@@ -619,12 +619,16 @@ abstract class StylePluginBase extends PluginBase {
           $rendered = $info['rendered'] ?? $group_rendered;
           $rendered_strip = $info['rendered_strip'] ?? FALSE;
           $grouping = '';
+<<<<<<< HEAD
           if ($this->usesGroupingLabelElement()) {
             $grouping_label_element = $info['grouping_label_element'];
           }
           else {
             $grouping_label_element = '';
           }
+=======
+          $grouping_label_element = $info['grouping_label_element'] ?? '';
+>>>>>>> 49573688fd (add wrapping elm array back, add usesGroupingLabel bool)
           $group_content = '';
           // Group on the rendered version of the field, not the raw.  That way,
           // we can control any special formatting of the grouping field through
