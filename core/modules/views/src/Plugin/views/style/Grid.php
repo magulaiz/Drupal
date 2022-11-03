@@ -26,6 +26,13 @@ class Grid extends StylePluginBase {
   protected $usesRowPlugin = TRUE;
 
   /**
+   * Should field labels be enabled by default.
+   *
+   * @var bool
+   */
+  protected $usesGroupingLabelElement = TRUE;
+
+  /**
    * {@inheritdoc}
    */
   protected function defineOptions() {
@@ -47,18 +54,6 @@ class Grid extends StylePluginBase {
     parent::buildOptionsForm($form, $form_state);
     // Add support for selecting an HTML label to use for the grouping.
     $c = count($this->options['grouping']);
-    // Add a form for every grouping, plus one.
-    for ($i = 0; $i <= $c; $i++) {
-      $grouping = !empty($this->options['grouping'][$i]) ? $this->options['grouping'][$i] : [];
-      $grouping += ['field' => '', 'rendered' => TRUE, 'rendered_strip' => FALSE, 'grouping_label_element' => ''];
-      $form['grouping'][$i]['grouping_label_element'] = [
-        '#type' => 'select',
-        '#title' => $this->t('Grouping Label Tag', ['@number' => $i + 1]),
-        '#options' => $this->getLabelElements(),
-        '#default_value' => $grouping['grouping_label_element'],
-        '#description' => $this->t('You may specify a wrapper tag by which to group the records.'),
-      ];
-    }
     $form['columns'] = [
       '#type' => 'number',
       '#title' => $this->t('Number of columns'),
@@ -75,7 +70,10 @@ class Grid extends StylePluginBase {
     $form['alignment'] = [
       '#type' => 'radios',
       '#title' => $this->t('Alignment'),
-      '#options' => ['horizontal' => $this->t('Horizontal'), 'vertical' => $this->t('Vertical')],
+      '#options' => [
+        'horizontal' => $this->t('Horizontal'),
+        'vertical' => $this->t('Vertical'),
+      ],
       '#default_value' => $this->options['alignment'],
       '#description' => $this->t('Horizontal alignment will place items starting in the upper left and moving right. Vertical alignment will place items starting in the upper left and moving down.'),
     ];
