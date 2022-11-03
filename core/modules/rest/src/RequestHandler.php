@@ -158,13 +158,7 @@ class RequestHandler implements ContainerInjectionInterface {
     $unserialized = NULL;
     if (!empty($received)) {
       $method = static::getNormalizedRequestMethod($route_match);
-      if (method_exists($request, 'getContentTypeFormat')) {
-        $format = $request->getContentTypeFormat();
-      }
-      else {
-        // @todo Get rid of it https://www.drupal.org/i/3306983 for Symfony 6.2.
-        $format = $request->getContentType();
-      }
+      $format = $request->getContentTypeFormat();
 
       $definition = $resource->getPluginDefinition();
 

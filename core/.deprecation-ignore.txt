@@ -21,6 +21,3 @@
 %"PHPUnit\\Framework\\TestListenerDefaultImplementation".*is deprecated%
 %"PHPUnit\\Framework\\TestSuite".*is considered internal%
 %"PHPUnit\\TextUI\\DefaultResultPrinter".*is considered internal%
-
-# Symfony 6.2
-% The "Symfony\Component\HttpFoundation\Request::getContentType()" method is deprecated, use "getContentTypeFormat()" instead.%
