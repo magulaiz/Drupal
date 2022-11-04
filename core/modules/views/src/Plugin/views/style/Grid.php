@@ -52,8 +52,6 @@ class Grid extends StylePluginBase {
    */
   public function buildOptionsForm(&$form, FormStateInterface $form_state) {
     parent::buildOptionsForm($form, $form_state);
-    // Add support for selecting an HTML label to use for the grouping.
-    $c = count($this->options['grouping']);
     $form['columns'] = [
       '#type' => 'number',
       '#title' => $this->t('Number of columns'),
