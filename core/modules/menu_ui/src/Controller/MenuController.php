@@ -48,7 +48,7 @@ class MenuController extends ControllerBase {
    * @return \Symfony\Component\HttpFoundation\JsonResponse
    *   The available menu and menu items.
    */
-  public function getParentOptions(Request $request) {
+  public function __invoke(Request $request) {
     $available_menus = [];
     if ($menus = $request->request->all('menus')) {
       foreach ($menus as $menu) {

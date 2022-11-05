@@ -122,7 +122,7 @@ class OEmbedIframeController implements ContainerInjectionInterface {
    *   - the iframe_domain is set in media.settings and does not match the host
    *     in the request.
    */
-  public function render(Request $request) {
+  public function __invoke(Request $request) {
     // @todo Move domain check logic to a separate method.
     $allowed_domain = \Drupal::config('media.settings')->get('iframe_domain');
     if ($allowed_domain) {

@@ -29,7 +29,7 @@ class EditorController extends ControllerBase {
    *
    * @see editor_filter_xss()
    */
-  public function filterXss(Request $request, FilterFormatInterface $filter_format) {
+  public function __invoke(Request $request, FilterFormatInterface $filter_format) {
     $value = $request->request->get('value');
     if (!isset($value)) {
       throw new NotFoundHttpException();

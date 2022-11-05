@@ -93,13 +93,13 @@ class MachineNameControllerTest extends UnitTestCase {
    * @param $expected_content
    *   The expected content of the JSONresponse.
    *
-   * @see \Drupal\system\MachineNameController::transliterate()
+   * @see \Drupal\system\MachineNameController::__invoke()
    *
    * @dataProvider providerTestMachineNameController
    */
   public function testMachineNameController(array $request_params, $expected_content) {
     $request = Request::create('', 'GET', $request_params);
-    $json = $this->machineNameController->transliterate($request);
+    $json = ($this->machineNameController)($request);
     $this->assertEquals($expected_content, $json->getContent());
   }
 
@@ -111,7 +111,7 @@ class MachineNameControllerTest extends UnitTestCase {
 
     $this->expectException(AccessDeniedHttpException::class);
     $this->expectExceptionMessage("Invalid 'replace_token' query parameter.");
-    $this->machineNameController->transliterate($request);
+    ($this->machineNameController)($request);
   }
 
   /**
@@ -122,7 +122,7 @@ class MachineNameControllerTest extends UnitTestCase {
 
     $this->expectException(AccessDeniedHttpException::class);
     $this->expectExceptionMessage("Missing 'replace_token' query parameter.");
-    $this->machineNameController->transliterate($request);
+    ($this->machineNameController)($request);
   }
 
 }

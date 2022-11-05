@@ -1,7 +1,7 @@
 ckeditor5.upload_image:
   path: '/ckeditor5/upload-image/{editor}'
   defaults:
-    _controller: '\Drupal\ckeditor5\Controller\CKEditor5ImageController::upload'
+    _controller: '\Drupal\ckeditor5\Controller\CKEditor5ImageController'
   methods: [POST]
   requirements:
     _entity_access: 'editor.use'
@@ -15,7 +15,7 @@ ckeditor5.upload_image:
 ckeditor5.media_entity_metadata:
   path: '/ckeditor5/{editor}/media-entity-metadata'
   defaults:
-    _controller: '\Drupal\ckeditor5\Controller\CKEditor5MediaController::mediaEntityMetadata'
+    _controller: '\Drupal\ckeditor5\Controller\CKEditor5MediaController'
   methods: [GET]
   requirements:
     _entity_access: 'editor.use'

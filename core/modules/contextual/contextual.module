@@ -105,7 +105,7 @@ function contextual_help($route_name, RouteMatchInterface $route_match) {
  *
  * @see \Drupal\contextual\Element\ContextualLinksPlaceholder
  * @see contextual_page_attachments()
- * @see \Drupal\contextual\ContextualController::render()
+ * @see \Drupal\contextual\ContextualController::__invoke()
  */
 function contextual_preprocess(&$variables, $hook, $info) {
   // Determine the primary theme function argument.
@@ -193,7 +193,7 @@ function _contextual_links_to_id($contextual_links) {
  * Note that $id is user input. Before calling this method the ID should be
  * checked against the token stored in the 'data-contextual-token' attribute
  * which is passed via the 'tokens' request parameter to
- * \Drupal\contextual\ContextualController::render().
+ * \Drupal\contextual\ContextualController::__invoke().
  *
  * @param string $id
  *   A serialized representation of a #contextual_links property value array.
@@ -202,7 +202,7 @@ function _contextual_links_to_id($contextual_links) {
  *   The value for a #contextual_links property.
  *
  * @see _contextual_links_to_id()
- * @see \Drupal\contextual\ContextualController::render()
+ * @see \Drupal\contextual\ContextualController::__invoke()
  */
 function _contextual_id_to_links($id) {
   $contextual_links = [];

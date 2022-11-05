@@ -1,7 +1,7 @@
 filter.tips_all:
   path: '/filter/tips'
   defaults:
-    _controller: '\Drupal\filter\Controller\FilterController::filterTips'
+    _controller: '\Drupal\filter\Controller\FilterController'
     _title: 'Compose tips'
   requirements:
     _access: 'TRUE'
@@ -9,7 +9,7 @@ filter.tips_all:
 filter.tips:
   path: '/filter/tips/{filter_format}'
   defaults:
-    _controller: '\Drupal\filter\Controller\FilterController::filterTips'
+    _controller: '\Drupal\filter\Controller\FilterController'
     _title: 'Compose tips'
   requirements:
     _entity_access: 'filter_format.use'

@@ -31,7 +31,7 @@ class ConfigHandlerExtra extends ViewsFormBase {
   /**
    * {@inheritdoc}
    */
-  public function getForm(ViewEntityInterface $view, $display_id, $js, $type = NULL, $id = NULL) {
+  public function __invoke(ViewEntityInterface $view, $display_id, $js, $type = NULL, $id = NULL) {
     $this->setType($type);
     $this->setID($id);
     return parent::getForm($view, $display_id, $js);

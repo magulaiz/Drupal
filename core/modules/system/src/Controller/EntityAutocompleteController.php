@@ -75,7 +75,7 @@ class EntityAutocompleteController extends ControllerBase {
    *   Thrown if the selection settings key is not found in the key/value store
    *   or if it does not match the stored data.
    */
-  public function handleAutocomplete(Request $request, $target_type, $selection_handler, $selection_settings_key) {
+  public function __invoke(Request $request, $target_type, $selection_handler, $selection_settings_key) {
     $matches = [];
     // Get the typed string from the URL, if it exists.
     if ($input = $request->query->get('q')) {

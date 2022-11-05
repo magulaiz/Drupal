@@ -120,7 +120,7 @@ class ViewAjaxControllerTest extends UnitTestCase {
   public function testMissingViewName() {
     $request = new Request();
     $this->expectException(NotFoundHttpException::class);
-    $this->viewAjaxController->ajaxView($request);
+    ($this->viewAjaxController)($request);
   }
 
   /**
@@ -137,7 +137,7 @@ class ViewAjaxControllerTest extends UnitTestCase {
       ->willReturn(FALSE);
 
     $this->expectException(NotFoundHttpException::class);
-    $this->viewAjaxController->ajaxView($request);
+    ($this->viewAjaxController)($request);
   }
 
   /**
@@ -170,7 +170,7 @@ class ViewAjaxControllerTest extends UnitTestCase {
       ->willReturn($executable);
 
     $this->expectException(AccessDeniedHttpException::class);
-    $this->viewAjaxController->ajaxView($request);
+    ($this->viewAjaxController)($request);
   }
 
   /**
@@ -194,7 +194,7 @@ class ViewAjaxControllerTest extends UnitTestCase {
       ->method('setPath')
       ->with('/test-page', $request);
 
-    $response = $this->viewAjaxController->ajaxView($request);
+    $response = ($this->viewAjaxController)($request);
     $this->assertTrue($response instanceof ViewAjaxResponse);
 
     $this->assertSame($response->getView(), $executable);
@@ -223,7 +223,7 @@ class ViewAjaxControllerTest extends UnitTestCase {
       ->method('setPath')
       ->with('/test-page');
 
-    $response = $this->viewAjaxController->ajaxView($request);
+    $response = ($this->viewAjaxController)($request);
     $this->assertInstanceOf(ViewAjaxResponse::class, $response);
 
     $this->assertSame($response->getView(), $executable);
@@ -246,7 +246,7 @@ class ViewAjaxControllerTest extends UnitTestCase {
     $this->setupValidMocks(static::USE_NO_AJAX);
 
     $this->expectException(AccessDeniedHttpException::class);
-    $this->viewAjaxController->ajaxView($request);
+    ($this->viewAjaxController)($request);
   }
 
   /**
@@ -263,7 +263,7 @@ class ViewAjaxControllerTest extends UnitTestCase {
       ->method('preview')
       ->with('page_1', ['arg1', 'arg2']);
 
-    $response = $this->viewAjaxController->ajaxView($request);
+    $response = ($this->viewAjaxController)($request);
     $this->assertInstanceOf(ViewAjaxResponse::class, $response);
 
     $this->assertViewResultCommand($response);
@@ -284,7 +284,7 @@ class ViewAjaxControllerTest extends UnitTestCase {
       ->method('preview')
       ->with('page_1', $this->identicalTo(['arg1', NULL]));
 
-    $response = $this->viewAjaxController->ajaxView($request);
+    $response = ($this->viewAjaxController)($request);
     $this->assertInstanceOf(ViewAjaxResponse::class, $response);
 
     $this->assertViewResultCommand($response);
@@ -304,7 +304,7 @@ class ViewAjaxControllerTest extends UnitTestCase {
       ->method('preview')
       ->with('page_1', ['arg1 & arg2', 'arg3']);
 
-    $response = $this->viewAjaxController->ajaxView($request);
+    $response = ($this->viewAjaxController)($request);
     $this->assertInstanceOf(ViewAjaxResponse::class, $response);
 
     $this->assertViewResultCommand($response);
@@ -339,7 +339,7 @@ class ViewAjaxControllerTest extends UnitTestCase {
       ->willReturn($display_handler);
     $executable->displayHandlers = $display_collection;
 
-    $response = $this->viewAjaxController->ajaxView($request);
+    $response = ($this->viewAjaxController)($request);
     $this->assertInstanceOf(ViewAjaxResponse::class, $response);
 
     $commands = $this->getCommands($response);

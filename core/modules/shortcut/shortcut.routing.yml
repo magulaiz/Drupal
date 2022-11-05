@@ -33,7 +33,7 @@ entity.shortcut_set.edit_form:
 shortcut.link_add_inline:
   path: '/admin/config/user-interface/shortcut/manage/{shortcut_set}/add-link-inline'
   defaults:
-    _controller: '\Drupal\shortcut\Controller\ShortcutSetController::addShortcutLinkInline'
+    _controller: '\Drupal\shortcut\Controller\ShortcutSetController'
   requirements:
     _entity_access: 'shortcut_set.update'
     _csrf_token: 'TRUE'

@@ -17,7 +17,7 @@ class ModeratedContentController extends ControllerBase {
    *   A render array as expected by
    *   \Drupal\Core\Render\RendererInterface::render().
    */
-  public function nodeListing() {
+  public function __invoke() {
     $entity_type = $this->entityTypeManager()->getDefinition('node');
 
     return $this->entityTypeManager()->createHandlerInstance(ModeratedNodeListBuilder::class, $entity_type)->render();

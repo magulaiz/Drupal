@@ -88,7 +88,7 @@ class BlockLibraryController extends ControllerBase {
    * @return array
    *   A render array as expected by the renderer.
    */
-  public function listBlocks(Request $request, $theme) {
+  public function __invoke(Request $request, $theme) {
     // Since modals do not render any other part of the page, we need to render
     // them manually as part of this listing.
     if ($request->query->get(MainContentViewSubscriber::WRAPPER_FORMAT) === 'drupal_modal') {

@@ -15,7 +15,7 @@ class RouteSubscriber extends RouteSubscriberBase {
    */
   public function alterRoutes(RouteCollection $collection) {
     if ($route = $collection->get('media.filter.preview')) {
-      $route->setDefault('_controller', '\Drupal\media_test_embed\Controller\TestMediaFilterController::preview');
+      $route->setDefault('_controller', \Drupal\media_test_embed\Controller\TestMediaFilterController::class);
     }
   }
 

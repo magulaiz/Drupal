@@ -146,7 +146,7 @@ system.admin_compact_page:
 system.machine_name_transliterate:
   path: '/machine_name/transliterate'
   defaults:
-    _controller: '\Drupal\system\MachineNameController::transliterate'
+    _controller: '\Drupal\system\MachineNameController'
   requirements:
     _permission: 'access content'
 
@@ -327,7 +327,7 @@ system.php:
 system.admin_index:
   path: '/admin/index'
   defaults:
-    _controller: '\Drupal\system\Controller\AdminController::index'
+    _controller: '\Drupal\system\Controller\AdminController'
     _title: 'Administration'
   requirements:
     _permission: 'access administration pages'
@@ -335,7 +335,7 @@ system.admin_index:
 system.files:
   path: '/system/files/{scheme}'
   defaults:
-    _controller: '\Drupal\system\FileDownloadController::download'
+    _controller: '\Drupal\system\FileDownloadController'
     scheme: private
   requirements:
     _access: 'TRUE'
@@ -343,7 +343,7 @@ system.files:
 system.private_file_download:
   path: '/system/files/{filepath}'
   defaults:
-    _controller: '\Drupal\system\FileDownloadController::download'
+    _controller: '\Drupal\system\FileDownloadController'
   requirements:
     # Permissive regex to allow slashes in filepath see
     # http://symfony.com/doc/current/cookbook/routing/slash_in_parameter.html
@@ -353,7 +353,7 @@ system.private_file_download:
 system.temporary:
   path: '/system/temporary'
   defaults:
-    _controller: '\Drupal\system\FileDownloadController::download'
+    _controller: '\Drupal\system\FileDownloadControllerdownload'
     scheme: temporary
   requirements:
     _access: 'TRUE'
@@ -449,7 +449,7 @@ system.prepare_modules_entity_uninstall:
 system.timezone:
   path: '/system/timezone/{abbreviation}/{offset}/{is_daylight_saving_time}'
   defaults:
-    _controller: '\Drupal\system\Controller\TimezoneController::getTimezone'
+    _controller: '\Drupal\system\Controller\TimezoneController'
     abbreviation: ''
     offset: -1
     is_daylight_saving_time: NULL
@@ -468,7 +468,7 @@ system.admin_config:
 system.batch_page.html:
   path: '/batch'
   defaults:
-    _controller: '\Drupal\system\Controller\BatchController::batchPage'
+    _controller: '\Drupal\system\Controller\BatchController'
     _title_callback: '\Drupal\system\Controller\BatchController::batchPageTitle'
   requirements:
     _access: 'TRUE'
@@ -479,7 +479,7 @@ system.batch_page.html:
 system.batch_page.json:
   path: '/batch'
   defaults:
-    _controller: '\Drupal\system\Controller\BatchController::batchPage'
+    _controller: '\Drupal\system\Controller\BatchController'
   requirements:
     _access: 'TRUE'
     _format: 'json'
@@ -510,14 +510,14 @@ system.admin_content:
 system.entity_autocomplete:
   path: '/entity_reference_autocomplete/{target_type}/{selection_handler}/{selection_settings_key}'
   defaults:
-    _controller: '\Drupal\system\Controller\EntityAutocompleteController::handleAutocomplete'
+    _controller: '\Drupal\system\Controller\EntityAutocompleteController'
   requirements:
     _access: 'TRUE'
 
 system.csrftoken:
   path: '/session/token'
   defaults:
-    _controller: '\Drupal\system\Controller\CsrfTokenController::csrfToken'
+    _controller: '\Drupal\system\Controller\CsrfTokenController'
   requirements:
     _access: 'TRUE'
 

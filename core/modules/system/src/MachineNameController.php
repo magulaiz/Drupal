@@ -62,7 +62,7 @@ class MachineNameController implements ContainerInjectionInterface {
    * @return \Symfony\Component\HttpFoundation\JsonResponse
    *   The transliterated string.
    */
-  public function transliterate(Request $request) {
+  public function __invoke(Request $request) {
     $text = $request->query->get('text');
     $langcode = $request->query->get('langcode');
     $replace_pattern = $request->query->get('replace_pattern');

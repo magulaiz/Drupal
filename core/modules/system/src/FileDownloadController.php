@@ -66,7 +66,7 @@ class FileDownloadController extends ControllerBase {
    * @throws \Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException
    *   Thrown when the user does not have access to the file.
    */
-  public function download(Request $request, $scheme = 'private') {
+  public function __invoke(Request $request, $scheme = 'private') {
     $target = $request->query->get('file');
     // Merge remaining path arguments into relative file path.
     $uri = $scheme . '://' . $target;

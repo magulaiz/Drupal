@@ -45,7 +45,7 @@ class ConfigTranslationMapperList extends ControllerBase {
    * @return array
    *   Renderable array with config translation mappers.
    */
-  public function render() {
+  public function __invoke() {
     $build = [
       '#type' => 'table',
       '#header' => $this->buildHeader(),

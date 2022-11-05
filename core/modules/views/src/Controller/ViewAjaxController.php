@@ -110,7 +110,7 @@ class ViewAjaxController implements ContainerInjectionInterface {
    * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
    *   Thrown when the view was not found.
    */
-  public function ajaxView(Request $request) {
+  public function __invoke(Request $request) {
     $name = $request->request->get('view_name');
     $display_id = $request->request->get('view_display_id');
     if (isset($name) && isset($display_id)) {

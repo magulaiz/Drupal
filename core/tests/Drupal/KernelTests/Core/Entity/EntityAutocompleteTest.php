@@ -120,7 +120,7 @@ class EntityAutocompleteTest extends EntityKernelTestBase {
       // Pass an invalid selection settings key (i.e. one that does not exist
       // in the key/value store).
       $selection_settings_key = $this->randomString();
-      $entity_reference_controller->handleAutocomplete($request, $this->entityType, 'default', $selection_settings_key);
+      $entity_reference_controller($request, $this->entityType, 'default', $selection_settings_key);
 
       $this->fail('Non-existent selection settings key throws an exception.');
     }
@@ -136,7 +136,7 @@ class EntityAutocompleteTest extends EntityKernelTestBase {
       $selection_settings[$this->randomMachineName()] = $this->randomString();
       \Drupal::keyValue('entity_autocomplete')->set($selection_settings_key, $selection_settings);
 
-      $entity_reference_controller->handleAutocomplete($request, $this->entityType, 'default', $selection_settings_key);
+      $entity_reference_controller($request, $this->entityType, 'default', $selection_settings_key);
     }
     catch (AccessDeniedHttpException $e) {
       $this->assertSame('Invalid selection settings key.', $e->getMessage());
@@ -162,7 +162,7 @@ class EntityAutocompleteTest extends EntityKernelTestBase {
     \Drupal::keyValue('entity_autocomplete')->set($selection_settings_key, $selection_settings);
 
     $entity_reference_controller = EntityAutocompleteController::create($this->container);
-    $result = $entity_reference_controller->handleAutocomplete($request, $this->entityType, 'default', $selection_settings_key)->getContent();
+    $result = $entity_reference_controller($request, $this->entityType, 'default', $selection_settings_key)->getContent();
 
     return Json::decode($result);
   }

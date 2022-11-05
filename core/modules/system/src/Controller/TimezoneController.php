@@ -27,7 +27,7 @@ class TimezoneController {
    * @return \Symfony\Component\HttpFoundation\JsonResponse
    *   The timezone name in JsonResponse object.
    */
-  public function getTimezone($abbreviation = '', $offset = -1, $is_daylight_saving_time = NULL) {
+  public function __invoke($abbreviation = '', $offset = -1, $is_daylight_saving_time = NULL) {
     // An abbreviation of "0" passed in the callback arguments should be
     // interpreted as the empty string.
     $abbreviation = $abbreviation ? $abbreviation : '';

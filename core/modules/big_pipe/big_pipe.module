@@ -30,7 +30,7 @@ function big_pipe_help($route_name, RouteMatchInterface $route_match) {
 /**
  * Implements hook_page_attachments().
  *
- * @see \Drupal\big_pipe\Controller\BigPipeController::setNoJsCookie()
+ * @see \Drupal\big_pipe\Controller\BigPipeController::__invoke()
  */
 function big_pipe_page_attachments(array &$page) {
   // Routes that don't use BigPipe also don't need no-JS detection.

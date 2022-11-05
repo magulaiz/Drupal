@@ -67,7 +67,7 @@ class HelpTopicPluginController extends ControllerBase {
    * @return array
    *   A render array with the contents of a help topic page.
    */
-  public function viewHelpTopic($id) {
+  public function __invoke($id) {
     $build = [];
 
     if (!$this->helpTopicPluginManager->hasDefinition($id)) {

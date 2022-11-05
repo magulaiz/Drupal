@@ -49,7 +49,7 @@ entity.image_style.collection:
 image.style_private:
   path: '/system/files/styles/{image_style}/{scheme}'
   defaults:
-    _controller:  '\Drupal\image\Controller\ImageStyleDownloadController::deliver'
+    _controller:  '\Drupal\image\Controller\ImageStyleDownloadController'
   requirements:
     _access: 'TRUE'
 

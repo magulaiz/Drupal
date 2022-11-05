@@ -18,7 +18,7 @@ class FileWidgetAjaxController {
    * @return \Symfony\Component\HttpFoundation\JsonResponse
    *   A JsonResponse object.
    */
-  public function progress($key) {
+  public function __invoke($key) {
     $progress = [
       'message' => t('Starting upload...'),
       'percentage' => -1,

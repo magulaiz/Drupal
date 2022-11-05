@@ -94,7 +94,7 @@ class MediaFilterController implements ContainerInjectionInterface {
    *
    * @see \Drupal\editor\EditorController::getUntransformedText
    */
-  public function preview(Request $request, FilterFormatInterface $filter_format) {
+  public function __invoke(Request $request, FilterFormatInterface $filter_format) {
     self::checkCsrf($request, \Drupal::currentUser());
 
     $text = $request->query->get('text');

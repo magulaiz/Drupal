@@ -9,7 +9,7 @@ entity.menu.collection:
 menu_ui.parent_options_js:
   path: '/admin/structure/menu/parents'
   defaults:
-    _controller: '\Drupal\menu_ui\Controller\MenuController::getParentOptions'
+    _controller: '\Drupal\menu_ui\Controller\MenuController'
   requirements:
     _permission: 'administer menu'
 
