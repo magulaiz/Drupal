@@ -4,6 +4,7 @@ namespace Drupal\user\Entity;
 
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\Routing\EntityRouteProviderInterface;
+use Drupal\user\Controller\UserController;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 
@@ -20,7 +21,7 @@ class UserRouteProvider implements EntityRouteProviderInterface {
     $route = (new Route('/user/{user}'))
       ->setDefaults([
         '_entity_view' => 'user.full',
-        '_title_callback' => 'Drupal\user\Controller\UserController::userTitle',
+        '_title_callback' => UserController::class . '::userTitle',
       ])
       ->setRequirement('user', '\d+')
       ->setRequirement('_entity_access', 'user.view');
@@ -29,7 +30,7 @@ class UserRouteProvider implements EntityRouteProviderInterface {
     $route = (new Route('/user/{user}/edit'))
       ->setDefaults([
         '_entity_form' => 'user.default',
-        '_title_callback' => 'Drupal\user\Controller\UserController::userTitle',
+        '_title_callback' => UserController::class . '::userTitle',
       ])
       ->setOption('_admin_route', TRUE)
       ->setRequirement('user', '\d+')

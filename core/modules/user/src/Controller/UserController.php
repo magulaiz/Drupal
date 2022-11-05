@@ -2,20 +2,18 @@
 
 namespace Drupal\user\Controller;
 
-use Drupal\Component\Utility\Crypt;
 use Drupal\Component\Utility\Xss;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Datetime\DateFormatterInterface;
 use Drupal\Core\Flood\FloodInterface;
 use Drupal\Core\Url;
-use Drupal\user\Form\UserPasswordResetForm;
 use Drupal\user\UserDataInterface;
 use Drupal\user\UserInterface;
 use Drupal\user\UserStorageInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
+use Symfony\Component\HttpKernel\HttpKernelInterface;
 
 /**
  * Controller routines for user routes.
@@ -111,51 +109,16 @@ class UserController extends ControllerBase {
    *   The redirect response.
    */
   public function resetPass(Request $request, $uid, $timestamp, $hash) {
-    $account = $this->currentUser();
-    // When processing the one-time login link, we have to make sure that a user
-    // isn't already logged in.
-    if ($account->isAuthenticated()) {
-      // The current user is already logged in.
-      if ($account->id() == $uid) {
-        user_logout();
-        // We need to begin the redirect process again because logging out will
-        // destroy the session.
-        return $this->redirect(
-          'user.reset',
-          [
-            'uid' => $uid,
-            'timestamp' => $timestamp,
-            'hash' => $hash,
-          ]
-        );
-      }
-      // A different user is already logged in on the computer.
-      else {
-        /** @var \Drupal\user\UserInterface $reset_link_user */
-        if ($reset_link_user = $this->userStorage->load($uid)) {
-          $this->messenger()
-            ->addWarning($this->t('Another user (%other_user) is already logged into the site on this computer, but you tried to use a one-time link for user %resetting_user. Please <a href=":logout">log out</a> and try using the link again.',
-              [
-                '%other_user' => $account->getAccountName(),
-                '%resetting_user' => $reset_link_user->getAccountName(),
-                ':logout' => Url::fromRoute('user.logout')->toString(),
-              ]));
-        }
-        else {
-          // Invalid one-time link specifies an unknown user.
-          $this->messenger()->addError($this->t('The one-time login link you clicked is invalid.'));
-        }
-        return $this->redirect('<front>');
-      }
-    }
+    /** @var \Symfony\Component\HttpKernel\HttpKernelInterface $httpKernel */
+    $httpKernel = \Drupal::service('http_kernel');
 
-    $session = $request->getSession();
-    $session->set('pass_reset_hash', $hash);
-    $session->set('pass_reset_timeout', $timestamp);
-    return $this->redirect(
-      'user.reset.form',
-      ['uid' => $uid]
-    );
+    $url = Url::fromRoute('user.reset', [
+      'uid' => $uid,
+      'timestamp' => $timestamp,
+      'hash' => $hash,
+    ])->toString(TRUE);
+    $subRequest = Request::create($url->getGeneratedUrl(), 'GET', $request->query->all(), $request->cookies->all(), [], $request->server->all());
+    return $httpKernel->handle($subRequest, HttpKernelInterface::SUB_REQUEST);
   }
 
   /**
@@ -174,31 +137,14 @@ class UserController extends ControllerBase {
    *   session. Or if $uid is for a blocked user or invalid user ID.
    */
   public function getResetPassForm(Request $request, $uid) {
-    $session = $request->getSession();
-    $timestamp = $session->get('pass_reset_timeout');
-    $hash = $session->get('pass_reset_hash');
-    // As soon as the session variables are used they are removed to prevent the
-    // hash and timestamp from being leaked unexpectedly. This could occur if
-    // the user does not click on the log in button on the form.
-    $session->remove('pass_reset_timeout');
-    $session->remove('pass_reset_hash');
-    if (!$hash || !$timestamp) {
-      throw new AccessDeniedHttpException();
-    }
+    /** @var \Symfony\Component\HttpKernel\HttpKernelInterface $httpKernel */
+    $httpKernel = \Drupal::service('http_kernel');
 
-    /** @var \Drupal\user\UserInterface $user */
-    $user = $this->userStorage->load($uid);
-    if ($user === NULL || !$user->isActive()) {
-      // Blocked or invalid user ID, so deny access. The parameters will be in
-      // the watchdog's URL for the administrator to check.
-      throw new AccessDeniedHttpException();
-    }
-
-    // Time out, in seconds, until login URL expires.
-    $timeout = $this->config('user.settings')->get('password_reset_timeout');
-
-    $expiration_date = $user->getLastLoginTime() ? $this->dateFormatter->format($timestamp + $timeout) : NULL;
-    return $this->formBuilder()->getForm(UserPasswordResetForm::class, $user, $expiration_date, $timestamp, $hash);
+    $url = Url::fromRoute('user.reset.form', [
+      'uid' => $uid,
+    ])->toString(TRUE);
+    $subRequest = Request::create($url->getGeneratedUrl(), 'GET', $request->query->all(), $request->cookies->all(), [], $request->server->all());
+    return $httpKernel->handle($subRequest, HttpKernelInterface::SUB_REQUEST);
   }
 
   /**
@@ -222,47 +168,16 @@ class UserController extends ControllerBase {
    *   If $uid is for a blocked user or invalid user ID.
    */
   public function resetPassLogin($uid, $timestamp, $hash, Request $request) {
-    // The current user is not logged in, so check the parameters.
-    $current = REQUEST_TIME;
-    /** @var \Drupal\user\UserInterface $user */
-    $user = $this->userStorage->load($uid);
+    /** @var \Symfony\Component\HttpKernel\HttpKernelInterface $httpKernel */
+    $httpKernel = \Drupal::service('http_kernel');
 
-    // Verify that the user exists and is active.
-    if ($user === NULL || !$user->isActive()) {
-      // Blocked or invalid user ID, so deny access. The parameters will be in
-      // the watchdog's URL for the administrator to check.
-      throw new AccessDeniedHttpException();
-    }
-
-    // Time out, in seconds, until login URL expires.
-    $timeout = $this->config('user.settings')->get('password_reset_timeout');
-    // No time out for first time login.
-    if ($user->getLastLoginTime() && $current - $timestamp > $timeout) {
-      $this->messenger()->addError($this->t('You have tried to use a one-time login link that has expired. Please request a new one using the form below.'));
-      return $this->redirect('user.pass');
-    }
-    elseif ($user->isAuthenticated() && ($timestamp >= $user->getLastLoginTime()) && ($timestamp <= $current) && hash_equals($hash, user_pass_rehash($user, $timestamp))) {
-      user_login_finalize($user);
-      $this->logger->notice('User %name used one-time login link at time %timestamp.', ['%name' => $user->getDisplayName(), '%timestamp' => $timestamp]);
-      $this->messenger()->addStatus($this->t('You have just used your one-time login link. It is no longer necessary to use this link to log in. Please set your password.'));
-      // Let the user's password be changed without the current password
-      // check.
-      $token = Crypt::randomBytesBase64(55);
-      $request->getSession()->set('pass_reset_' . $user->id(), $token);
-      // Clear any flood events for this user.
-      $this->flood->clear('user.password_request_user', $uid);
-      return $this->redirect(
-        'entity.user.edit_form',
-        ['user' => $user->id()],
-        [
-          'query' => ['pass-reset-token' => $token],
-          'absolute' => TRUE,
-        ]
-      );
-    }
-
-    $this->messenger()->addError($this->t('You have tried to use a one-time login link that has either been used or is no longer valid. Please request a new one using the form below.'));
-    return $this->redirect('user.pass');
+    $url = Url::fromRoute('user.reset.login', [
+      'uid' => $uid,
+      'timestamp' => $timestamp,
+      'hash' => $hash,
+    ])->toString(TRUE);
+    $subRequest = Request::create($url->getGeneratedUrl(), 'GET', $request->query->all(), $request->cookies->all(), [], $request->server->all());
+    return $httpKernel->handle($subRequest, HttpKernelInterface::SUB_REQUEST);
   }
 
   /**
@@ -276,7 +191,12 @@ class UserController extends ControllerBase {
    *   Returns a redirect to the profile of the currently logged in user.
    */
   public function userPage() {
-    return $this->redirect('entity.user.canonical', ['user' => $this->currentUser()->id()]);
+    /** @var \Symfony\Component\HttpKernel\HttpKernelInterface $httpKernel */
+    $httpKernel = \Drupal::service('http_kernel');
+    $url = Url::fromRoute('user.page')->toString(TRUE);
+    $request = \Drupal::request();
+    $subRequest = Request::create($url->getGeneratedUrl(), 'GET', $request->query->all(), $request->cookies->all(), [], $request->server->all());
+    return $httpKernel->handle($subRequest, HttpKernelInterface::SUB_REQUEST);
   }
 
   /**
@@ -290,7 +210,12 @@ class UserController extends ControllerBase {
    *   user.
    */
   public function userEditPage() {
-    return $this->redirect('entity.user.edit_form', ['user' => $this->currentUser()->id()], [], 301);
+    /** @var \Symfony\Component\HttpKernel\HttpKernelInterface $httpKernel */
+    $httpKernel = \Drupal::service('http_kernel');
+    $url = Url::fromRoute('user.edit')->toString(TRUE);
+    $request = \Drupal::request();
+    $subRequest = Request::create($url->getGeneratedUrl(), 'GET', $request->query->all(), $request->cookies->all(), [], $request->server->all());
+    return $httpKernel->handle($subRequest, HttpKernelInterface::SUB_REQUEST);
   }
 
   /**
@@ -314,10 +239,12 @@ class UserController extends ControllerBase {
    *   A redirection to home page.
    */
   public function logout() {
-    if ($this->currentUser()->isAuthenticated()) {
-      user_logout();
-    }
-    return $this->redirect('<front>');
+    /** @var \Symfony\Component\HttpKernel\HttpKernelInterface $httpKernel */
+    $httpKernel = \Drupal::service('http_kernel');
+    $url = Url::fromRoute('user.logout')->toString(TRUE);
+    $request = \Drupal::request();
+    $subRequest = Request::create($url->getGeneratedUrl(), 'GET', $request->query->all(), $request->cookies->all(), [], $request->server->all());
+    return $httpKernel->handle($subRequest, HttpKernelInterface::SUB_REQUEST);
   }
 
   /**
@@ -334,30 +261,16 @@ class UserController extends ControllerBase {
    *   A redirect response.
    */
   public function confirmCancel(UserInterface $user, $timestamp = 0, $hashed_pass = '') {
-    // Time out in seconds until cancel URL expires; 24 hours = 86400 seconds.
-    $timeout = 86400;
-    $current = REQUEST_TIME;
-
-    // Basic validation of arguments.
-    $account_data = $this->userData->get('user', $user->id());
-    if (isset($account_data['cancel_method']) && !empty($timestamp) && !empty($hashed_pass)) {
-      // Validate expiration and hashed password/login.
-      if ($timestamp <= $current && $current - $timestamp < $timeout && $user->id() && $timestamp >= $user->getLastLoginTime() && hash_equals($hashed_pass, user_pass_rehash($user, $timestamp))) {
-        $edit = [
-          'user_cancel_notify' => $account_data['cancel_notify'] ?? $this->config('user.settings')->get('notify.status_canceled'),
-        ];
-        user_cancel($edit, $user->id(), $account_data['cancel_method']);
-        // Since user_cancel() is not invoked via Form API, batch processing
-        // needs to be invoked manually and should redirect to the front page
-        // after completion.
-        return batch_process('<front>');
-      }
-      else {
-        $this->messenger()->addError($this->t('You have tried to use an account cancellation link that has expired. Please request a new one using the form below.'));
-        return $this->redirect('entity.user.cancel_form', ['user' => $user->id()], ['absolute' => TRUE]);
-      }
-    }
-    throw new AccessDeniedHttpException();
+    /** @var \Symfony\Component\HttpKernel\HttpKernelInterface $httpKernel */
+    $httpKernel = \Drupal::service('http_kernel');
+    $url = Url::fromRoute('user.cancel_confirm', [
+      'user' => $user->id(),
+      'timestamp' => $timestamp,
+      'hashed_pass' => $hashed_pass,
+    ])->toString(TRUE);
+    $request = \Drupal::request();
+    $subRequest = Request::create($url->getGeneratedUrl(), 'GET', $request->query->all(), $request->cookies->all(), [], $request->server->all());
+    return $httpKernel->handle($subRequest, HttpKernelInterface::SUB_REQUEST);
   }
 
 }
