@@ -48,7 +48,12 @@ abstract class MigrateDrupal7TestBase extends MigrateDrupalTestBase {
    *   (optional) If TRUE, migrates user pictures. Defaults to TRUE.
    */
   protected function migrateUsers($include_pictures = TRUE) {
-    $migrations = ['d7_user_role', 'd7_user'];
+    $migrations = [
+      'user_timestamp:access:d7',
+      'user_timestamp:login:d7',
+      'd7_user_role',
+      'd7_user',
+    ];
 
     if ($include_pictures) {
       // Prepare to migrate user pictures as well.

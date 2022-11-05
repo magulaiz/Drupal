@@ -42,26 +42,16 @@ class UserStorage extends SqlContentEntityStorage implements UserStorageInterfac
    * {@inheritdoc}
    */
   public function updateLastLoginTimestamp(UserInterface $account) {
-    $this->database->update($this->getDataTable())
-      ->fields(['login' => $account->getLastLoginTime()])
-      ->condition('uid', $account->id())
-      ->execute();
-    // Ensure that the entity cache is cleared.
-    $this->resetCache([$account->id()]);
+    @trigger_error(__METHOD__ . "() is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Instead, use the 'user.timestamp' service with the ::setLastLoginTime() method. See https://www.drupal.org/node/3300476", E_USER_DEPRECATED);
+    \Drupal::service('user.timestamp')->setLastLoginTime($account);
   }
 
   /**
    * {@inheritdoc}
    */
   public function updateLastAccessTimestamp(AccountInterface $account, $timestamp) {
-    $this->database->update($this->getDataTable())
-      ->fields([
-        'access' => $timestamp,
-      ])
-      ->condition('uid', $account->id())
-      ->execute();
-    // Ensure that the entity cache is cleared.
-    $this->resetCache([$account->id()]);
+    @trigger_error(__METHOD__ . "() is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Instead, use the 'user.timestamp' service with the ::setLastAccessTime() method. See https://www.drupal.org/node/3300476", E_USER_DEPRECATED);
+    \Drupal::service('user.timestamp')->setLastAccessTime($account);
   }
 
   /**

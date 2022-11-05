@@ -58,6 +58,8 @@ abstract class MigrateDrupal6TestBase extends MigrateDrupalTestBase {
       $this->executeMigrations([
         'd6_file',
         'd6_user_picture_file',
+        'user_timestamp:access:d6',
+        'user_timestamp:login:d6',
         'user_picture_field',
         'user_picture_field_instance',
         'user_picture_entity_display',

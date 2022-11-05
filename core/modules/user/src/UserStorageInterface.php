@@ -15,6 +15,11 @@ interface UserStorageInterface extends ContentEntityStorageInterface {
    *
    * @param \Drupal\user\UserInterface $account
    *   The user account.
+   *
+   * @deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Instead,
+   *   use the 'user.timestamp' service with the ::setLastLoginTime() method.
+   *
+   * @see https://www.drupal.org/node/3300476
    */
   public function updateLastLoginTimestamp(UserInterface $account);
 
@@ -25,6 +30,11 @@ interface UserStorageInterface extends ContentEntityStorageInterface {
    *   The user object.
    * @param int $timestamp
    *   The last access timestamp.
+   *
+   * @deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Instead,
+   *   use the 'user.timestamp' service with the ::setLastAccessTime() method.
+   *
+   * @see https://www.drupal.org/node/3300476
    */
   public function updateLastAccessTimestamp(AccountInterface $account, $timestamp);
 

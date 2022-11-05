@@ -97,3 +97,46 @@ function user_install() {
 function user_update_last_removed() {
   return 9301;
 }
+
+/**
+ * Update user 'login' and 'access' fields.
+ */
+function user_update_10100(array &$sandbox): string {
+  $fields = ['access', 'login'];
+  $storage = \Drupal::entityTypeManager()->getStorage('user');
+
+  if (!isset($sandbox['uids'])) {
+    $sandbox['uids'] = array_values(
+      $storage->getQuery()
+        ->condition('uid', 0, '>')
+        ->sort('uid')
+        ->accessCheck(FALSE)
+        ->execute()
+    );
+    $sandbox['processed'] = 0;
+    $sandbox['total'] = count($sandbox['uids']);
+  }
+
+  $uids = array_splice($sandbox['uids'], 0, 50);
+  foreach ($storage->loadMultiple($uids) as $uid => $account) {
+    foreach ($fields as $field) {
+      \Drupal::keyValue("user.timestamp.$field")->set($uid, $account->get($field)->value);
+    }
+  }
+  $sandbox['processed'] += count($uids);
+
+  $sandbox['#finished'] = $sandbox['processed'] / $sandbox['total'];
+  if ($sandbox['#finished']) {
+    // Uninstall field storages.
+    $manager = \Drupal::entityDefinitionUpdateManager();
+    foreach ($fields as $field) {
+      $definition = $manager->getFieldStorageDefinition($field, 'user');
+      $manager->uninstallFieldStorageDefinition($definition);
+    }
+  }
+
+  return t('Processed @current out of @total users', [
+    '@current' => $sandbox['processed'],
+    '@total' => $sandbox['total'],
+  ]);
+}

@@ -145,6 +145,11 @@ function hook_user_format_name_alter(&$name, AccountInterface $account) {
  *
  * @param \Drupal\user\UserInterface $account
  *   The user object on which the operation was just performed.
+ *
+ * @deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. In order to
+ *   act on user login, subscribe to Drupal\user\Event\UserLoginEvent event.
+ *
+ * @see https://www.drupal.org/node/3300476
  */
 function hook_user_login(UserInterface $account) {
   $config = \Drupal::config('system.date');

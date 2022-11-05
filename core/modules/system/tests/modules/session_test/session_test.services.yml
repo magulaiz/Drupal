@@ -18,3 +18,7 @@ services:
     class: Drupal\session_test\Session\TestSessionBag
     tags:
       - { name: session_bag }
+  session_test.user.login:
+    class: Drupal\session_test\EventSubscriber\SessionTestUserLoginSubscriber
+    tags:
+      - { name: event_subscriber }

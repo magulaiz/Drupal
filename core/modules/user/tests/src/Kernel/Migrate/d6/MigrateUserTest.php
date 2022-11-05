@@ -101,8 +101,13 @@ class MigrateUserTest extends MigrateDrupal6TestBase {
       $this->assertSame($source->name, $user->label());
       $this->assertSame($source->mail, $user->getEmail());
       $this->assertSame($source->created, $user->getCreatedTime());
-      $this->assertSame($source->access, $user->getLastAccessedTime());
-      $this->assertSame($source->login, $user->getLastLoginTime());
+      $this->assertEquals($source->access, $user->getLastAccessedTime());
+      $this->assertEquals($source->login, $user->getLastLoginTime());
+      // For user timestamps perform an additional storage check.
+      $user_timestamp = $this->container->get('user.timestamp');
+      $this->assertEquals($source->access, $user_timestamp->getLastAccessTime($user));
+      $this->assertEquals($source->login, $user_timestamp->getLastLoginTime($user));
+
       $is_blocked = $source->status == 0;
       $this->assertSame($is_blocked, $user->isBlocked());
       $expected_timezone_name = $source->timezone_name ?: $this->config('system.date')->get('timezone.default');

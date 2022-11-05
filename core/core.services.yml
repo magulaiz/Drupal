@@ -466,6 +466,8 @@ services:
     class: Drupal\Component\Serialization\PhpSerialize
   serialization.yaml:
     class: Drupal\Component\Serialization\Yaml
+  serialization.string:
+    class: Drupal\Component\Serialization\StringSerialize
 
   settings:
     class: Drupal\Core\Site\Settings

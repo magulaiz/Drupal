@@ -1,0 +1,14 @@
+<?php
+
+/**
+ * @file
+ * Support module for testing user deprecated hooks .
+ */
+
+use Drupal\user\UserInterface;
+
+/**
+ * Implements hook_user_login().
+ */
+function user_deprecated_hooks_test_user_login(UserInterface $account): void {
+}

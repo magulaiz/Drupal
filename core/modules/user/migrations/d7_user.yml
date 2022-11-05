@@ -15,8 +15,6 @@ process:
   pass: pass
   mail: mail
   created: created
-  access: access
-  login: login
   status: status
   timezone: timezone
   langcode:

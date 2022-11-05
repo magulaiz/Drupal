@@ -2,12 +2,61 @@
 
 namespace Drupal\user;
 
+use Drupal\Core\Entity\EntityFieldManagerInterface;
+use Drupal\Core\Entity\EntityTypeInterface;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Entity\Sql\SqlEntityStorageInterface;
+use Drupal\Core\Extension\ModuleHandlerInterface;
+use Drupal\Core\StringTranslation\TranslationInterface;
 use Drupal\views\EntityViewsData;
+use Symfony\Component\DependencyInjection\ContainerAwareInterface;
+use Symfony\Component\DependencyInjection\ContainerAwareTrait;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Provides the views data for the user entity type.
  */
-class UserViewsData extends EntityViewsData {
+class UserViewsData extends EntityViewsData implements ContainerAwareInterface {
+
+  use ContainerAwareTrait;
+
+  /**
+   * Constructs a new user views data instance.
+   *
+   * @param \Drupal\Core\Entity\EntityTypeInterface $entity_type
+   *   The entity type to provide views integration for.
+   * @param \Drupal\Core\Entity\Sql\SqlEntityStorageInterface $storage_controller
+   *   The storage handler used for this entity type.
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   *   The entity type manager.
+   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
+   *   The module handler.
+   * @param \Drupal\Core\StringTranslation\TranslationInterface $translation_manager
+   *   The translation manager.
+   * @param \Drupal\Core\Entity\EntityFieldManagerInterface $entity_field_manager
+   *   The entity field manager.
+   * @param \Symfony\Component\DependencyInjection\ContainerInterface $container
+   *   The container.
+   */
+  public function __construct(EntityTypeInterface $entity_type, SqlEntityStorageInterface $storage_controller, EntityTypeManagerInterface $entity_type_manager, ModuleHandlerInterface $module_handler, TranslationInterface $translation_manager, EntityFieldManagerInterface $entity_field_manager, ContainerInterface $container) {
+    parent::__construct($entity_type, $storage_controller, $entity_type_manager, $module_handler, $translation_manager, $entity_field_manager);
+    $this->setContainer($container);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function createInstance(ContainerInterface $container, EntityTypeInterface $entity_type): self {
+    return new static(
+      $entity_type,
+      $container->get('entity_type.manager')->getStorage($entity_type->id()),
+      $container->get('entity_type.manager'),
+      $container->get('module_handler'),
+      $container->get('string_translation'),
+      $container->get('entity_field.manager'),
+      $container,
+    );
+  }
 
   /**
    * {@inheritdoc}
@@ -253,7 +302,86 @@ class UserViewsData extends EntityViewsData {
     // entity type allows editing the password, but not viewing it.
     unset($data['users_field_data']['pass']);
 
+    foreach ($this->getUserTimestampFields() as $field => $info) {
+      // Only provide user timestamps Views support if the values are stored in
+      // the database key/value store.
+      if (!$this->usesUserDatabaseKeyValueStore($field)) {
+        continue;
+      }
+
+      $data['users'][$field]['relationship'] = [
+        'title' => $info['title'],
+        'label' => $info['title'],
+        'help' => $info['help'],
+        'id' => 'standard',
+        'base' => 'key_value',
+        'real field' => 'uid',
+        'base field' => 'name',
+        'extra' => [
+          [
+            'field' => 'collection',
+            'value' => "user.timestamp.$field",
+          ],
+        ],
+      ];
+
+      if (!isset($data['key_value'])) {
+        $data['key_value'] = [
+          'table' => [
+            'group' => $this->t('User timestamps'),
+            'provider' => 'user',
+          ],
+        ];
+      }
+
+      $data['key_value'][$field] = [
+        'title' => $info['title'],
+        'help' => $info['help'],
+        'real field' => 'value',
+        'field' => ['id' => 'date'],
+        'filter' => ['id' => 'date'],
+        'sort' => ['id' => 'date'],
+        'argument' => ['id' => 'date'],
+      ];
+    }
+
     return $data;
+  }
+
+  /**
+   * Returns a list of user timestamp fields for which to provide Views support.
+   *
+   * @return array[]
+   *   Associative array keyed by field name and having an associative array
+   *   containing the field's title/label and help translated strings.
+   */
+  protected function getUserTimestampFields(): array {
+    return [
+      'access' => [
+        'title' => $this->t('User last access'),
+        'help' => $this->t('The time that the user last accessed the site.'),
+      ],
+      'login' => [
+        'title' => $this->t('User last login'),
+        'help' => $this->t('The time that the user last login.'),
+      ],
+    ];
+  }
+
+  /**
+   * Checks whether the standards database key/value factory is used.
+   *
+   * @param string $type
+   *   The key/value collection suffix. Either 'access' or 'login'.
+   *
+   * @return bool
+   *   Whether the standards database key/value factory is used.
+   */
+  protected function usesUserDatabaseKeyValueStore(string $type): bool {
+    assert(in_array($type, ['access', 'login'], TRUE));
+    $factory_keyvalue = $this->container->getParameter('factory.keyvalue');
+    $keyvalue_store = $factory_keyvalue["user.timestamp.$type"] ?? NULL;
+    return $keyvalue_store === 'user.keyvalue.database';
   }
 
 }
