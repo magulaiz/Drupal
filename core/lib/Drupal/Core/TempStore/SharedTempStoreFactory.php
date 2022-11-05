@@ -89,11 +89,13 @@ class SharedTempStoreFactory {
    *   (optional) The owner of this SharedTempStore. By default, the
    *   SharedTempStore is owned by the currently authenticated user, or by the
    *   active anonymous session if no user is logged in.
+   * @param int $expire
+   *   The time to live in items, in seconds.
    *
    * @return \Drupal\Core\TempStore\SharedTempStore
    *   An instance of the key/value store.
    */
-  public function get($collection, $owner = NULL) {
+  public function get($collection, $owner = NULL, $expire = NULL) {
     // Use the currently authenticated user ID or the active user ID unless
     // the owner is overridden.
     if (!isset($owner)) {
@@ -107,10 +109,14 @@ class SharedTempStoreFactory {
         }
       }
     }
+    // Allow expire to be set per collection, use default if not provided.
+    if (!isset($expire)) {
+      $expire = $this->expire;
+    }
 
     // Store the data for this collection in the database.
     $storage = $this->storageFactory->get("tempstore.shared.$collection");
-    return new SharedTempStore($storage, $this->lockBackend, $owner, $this->requestStack, $this->currentUser, $this->expire);
+    return new SharedTempStore($storage, $this->lockBackend, $owner, $this->requestStack, $expire);
   }
 
 }
