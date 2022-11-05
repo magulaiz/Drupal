@@ -32,7 +32,7 @@ class InstallerExistingConfigNoSystemSiteTest extends InstallerExistingConfigTes
     $this->htmlOutput(NULL);
     $this->assertSession()->titleEquals('Configuration validation | Drupal');
     $this->assertSession()->pageTextContains('The configuration synchronization failed validation.');
-    $this->assertSession()->pageTextContains('This import does not contain system.site configuration, so has been rejected.');
+    $this->assertSession()->pageTextContains('The import must contain system.site configuration.');
 
     // Ensure there is no continuation button.
     $this->assertSession()->pageTextNotContains('Save and continue');
