@@ -79,6 +79,8 @@ class BatchController implements ContainerInjectionInterface {
 
       return $page;
     }
+
+    throw new AccessDeniedHttpException();
   }
 
   /**
