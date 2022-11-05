@@ -106,7 +106,7 @@ class ImageStyleDownloadController extends FileDownloadController {
    * @throws \Symfony\Component\HttpKernel\Exception\ServiceUnavailableHttpException
    *   Thrown when the file is still being generated.
    */
-  public function __invoke(Request $request, $scheme, ImageStyleInterface $image_style) {
+  public function __invoke(Request $request, $scheme = 'private', ImageStyleInterface $image_style = NULL) {
     $target = $request->query->get('file');
     $image_uri = $scheme . '://' . $target;
 

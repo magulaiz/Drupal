@@ -50,7 +50,7 @@ class BatchController implements ContainerInjectionInterface {
    *
    * @throws \Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException
    */
-  public function __invoke(Request $request) {
+  public function __invoke(Request $request): Response|array {
     require_once $this->root . '/core/includes/batch.inc';
     $output = _batch_page($request);
 
