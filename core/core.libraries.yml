@@ -30,6 +30,16 @@ internal.backbone:
   dependencies:
     - core/internal.underscore
 
+cash:
+  remote: https://github.com/fabiospampinato/cash
+  version: "8.1.1"
+  license:
+    name: MIT
+    url: https://raw.githubusercontent.com/fabiospampinato/cash/8.1.1/LICENSE.md
+    gpl-compatible: true
+  js:
+    assets/vendor/cash/cash.min.js: { minified: true, weight: -20 }
+
 ckeditor:
   deprecated: The "%library_id%" asset library is deprecated in drupal:9.5.0 and is removed from drupal:10.0.0. There is no replacement. See https://www.drupal.org/node/3304481
   remote: https://github.com/ckeditor/ckeditor4
@@ -606,7 +616,7 @@ drupal.displace:
   js:
     misc/displace.js: {}
   dependencies:
-    - core/jquery
+    - core/cash
     - core/drupal
     - core/drupal.debounce
 
@@ -735,7 +745,7 @@ drupal.tableheader:
   js:
     misc/tableheader.js: {}
   dependencies:
-    - core/jquery
+    - core/cash
     - core/drupal
     - core/drupalSettings
     - core/once

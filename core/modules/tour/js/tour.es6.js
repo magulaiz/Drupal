@@ -122,6 +122,16 @@
       initialize() {
         this.listenTo(this.model, 'change:tour change:isActive', this.render);
         this.listenTo(this.model, 'change:isActive', this.toggleTour);
+
+        // Reposition the active tour within the viewport changes.
+        $(document).on('drupalViewportOffsetChange.tours', () => {
+          if (
+            this.model.get('isActive') &&
+            this.model.get('activeTour').currentStep
+          ) {
+            this.model.get('activeTour').currentStep.tooltip.update();
+          }
+        });
       },
 
       /**
@@ -411,4 +421,4 @@
    */
   Drupal.theme.tourItemContent = (tourStepConfig) =>
     `${tourStepConfig.body}<div class="tour-progress">${tourStepConfig.counter}</div>`;
-})(jQuery, Backbone, Drupal, drupalSettings, document, window.Shepherd);
+})(cash, Backbone, Drupal, drupalSettings, document, window.Shepherd);

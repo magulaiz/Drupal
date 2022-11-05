@@ -35,7 +35,7 @@
     /**
      * @type {jQuery}
      */
-    this.$originalHeaderCells = this.$originalHeader.find('> tr > th');
+    this.$originalHeaderCells = this.$originalHeader.find('tr > th');
 
     /**
      * @type {null|bool}
@@ -220,7 +220,7 @@
           .append($stickyHeader)
           .insertBefore(this.$originalTable);
 
-        this.$stickyHeaderCells = $stickyHeader.find('> tr > th');
+        this.$stickyHeaderCells = $stickyHeader.find('tr > th');
 
         // Initialize all computations.
         this.recalculateSticky();
@@ -332,4 +332,4 @@
 
   // Expose constructor in the public space.
   Drupal.TableHeader = TableHeader;
-})(jQuery, Drupal, window.Drupal.displace);
+})(cash, Drupal, window.Drupal.displace);

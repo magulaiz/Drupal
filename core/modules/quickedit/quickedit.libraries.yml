@@ -27,6 +27,7 @@ quickedit:
       css/quickedit.theme.css: {}
       css/quickedit.icons.theme.css: {}
   dependencies:
+    - core/cash
     - core/jquery
     - core/once
     - core/jquery.once.bc
