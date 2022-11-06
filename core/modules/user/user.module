@@ -555,7 +555,7 @@ function user_cancel_url(UserInterface $account, $options = []) {
  * contains the time stamp, the user's last login time, the numeric user ID,
  * and the user's email address.
  * For a usage example, see user_cancel_url() and
- * \Drupal\user\Controller\UserConfirmCancelController()
+ * \Drupal\user\Controller\UserConfirmCancelController().
  *
  * @param \Drupal\user\UserInterface $account
  *   An object containing the user account.

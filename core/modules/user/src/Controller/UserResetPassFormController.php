@@ -10,6 +10,7 @@ use Drupal\user\Form\UserPasswordResetForm;
 use Drupal\user\UserStorageInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
 /**
@@ -77,7 +78,7 @@ class UserResetPassFormController extends ControllerBase {
    *   If the pass_reset_timeout or pass_reset_hash are not available in the
    *   session. Or if $uid is for a blocked user or invalid user ID.
    */
-  public function __invoke(Request $request, $uid) {
+  public function __invoke(Request $request, $uid): Response|array {
     $session = $request->getSession();
     $timestamp = $session->get('pass_reset_timeout');
     $hash = $session->get('pass_reset_hash');

@@ -5,6 +5,7 @@ namespace Drupal\user\Controller;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Session\AccountInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Redirects users to their profile edit page.
@@ -40,8 +41,8 @@ class CurrentUserEditPageController extends ControllerBase {
    *   Returns a redirect to the profile edit form of the currently logged in
    *   user.
    */
-  public function __invoke() {
-    return $this->redirect('entity.user.edit_form', ['user' => $this->currentUser->id()], [], 301);
+  public function __invoke(): Response|array {
+    return $this->redirect('entity.user.edit_form', ['user' => $this->currentUser->id()], status: 301);
   }
 
 }

@@ -9,6 +9,7 @@ use Drupal\Core\Url;
 use Drupal\user\UserStorageInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Redirects to the user password reset form.
@@ -67,7 +68,7 @@ class UserResetPassController extends ControllerBase {
    * @return \Symfony\Component\HttpFoundation\RedirectResponse
    *   The redirect response.
    */
-  public function __invoke(Request $request, $uid, $timestamp, $hash) {
+  public function __invoke(Request $request, $uid, $timestamp, $hash): Response|array {
     // When processing the one-time login link, we have to make sure that a user
     // isn't already logged in.
     if ($this->currentUser->isAuthenticated()) {

@@ -14,6 +14,7 @@ use Drupal\user\UserStorageInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
 /**
@@ -114,7 +115,7 @@ class UserResetPassLoginController extends ControllerBase {
    * @throws \Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException
    *   If $uid is for a blocked user or invalid user ID.
    */
-  public function __invoke($uid, $timestamp, $hash, Request $request) {
+  public function __invoke($uid, $timestamp, $hash, Request $request): Response|array {
     // The current user is not logged in, so check the parameters.
     $current = $this->time->getRequestTime();
     /** @var \Drupal\user\UserInterface|null $user */

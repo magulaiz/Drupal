@@ -109,6 +109,7 @@ class UserController extends ControllerBase {
    *   The redirect response.
    */
   public function resetPass(Request $request, $uid, $timestamp, $hash) {
+    @trigger_error(__METHOD__ . '() is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use \Drupal\user\Controller\UserResetPassController instead. See https://www.drupal.org/node/123456789', E_USER_DEPRECATED);
     /** @var \Symfony\Component\HttpKernel\HttpKernelInterface $httpKernel */
     $httpKernel = \Drupal::service('http_kernel');
 
@@ -137,6 +138,7 @@ class UserController extends ControllerBase {
    *   session. Or if $uid is for a blocked user or invalid user ID.
    */
   public function getResetPassForm(Request $request, $uid) {
+    @trigger_error(__METHOD__ . '() is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use \Drupal\user\Controller\UserResetPassFormController instead. See https://www.drupal.org/node/123456789', E_USER_DEPRECATED);
     /** @var \Symfony\Component\HttpKernel\HttpKernelInterface $httpKernel */
     $httpKernel = \Drupal::service('http_kernel');
 
@@ -168,6 +170,7 @@ class UserController extends ControllerBase {
    *   If $uid is for a blocked user or invalid user ID.
    */
   public function resetPassLogin($uid, $timestamp, $hash, Request $request) {
+    @trigger_error(__METHOD__ . '() is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use \Drupal\user\Controller\UserResetPassLoginController instead. See https://www.drupal.org/node/123456789', E_USER_DEPRECATED);
     /** @var \Symfony\Component\HttpKernel\HttpKernelInterface $httpKernel */
     $httpKernel = \Drupal::service('http_kernel');
 
@@ -191,6 +194,7 @@ class UserController extends ControllerBase {
    *   Returns a redirect to the profile of the currently logged in user.
    */
   public function userPage() {
+    @trigger_error(__METHOD__ . '() is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use \Drupal\user\Controller\CurrentUserPageController instead. See https://www.drupal.org/node/123456789', E_USER_DEPRECATED);
     /** @var \Symfony\Component\HttpKernel\HttpKernelInterface $httpKernel */
     $httpKernel = \Drupal::service('http_kernel');
     $url = Url::fromRoute('user.page')->toString(TRUE);
@@ -210,6 +214,7 @@ class UserController extends ControllerBase {
    *   user.
    */
   public function userEditPage() {
+    @trigger_error(__METHOD__ . '() is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use \Drupal\user\Controller\CurrentUserEditPageController instead. See https://www.drupal.org/node/123456789', E_USER_DEPRECATED);
     /** @var \Symfony\Component\HttpKernel\HttpKernelInterface $httpKernel */
     $httpKernel = \Drupal::service('http_kernel');
     $url = Url::fromRoute('user.edit')->toString(TRUE);
@@ -239,6 +244,7 @@ class UserController extends ControllerBase {
    *   A redirection to home page.
    */
   public function logout() {
+    @trigger_error(__METHOD__ . '() is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use \Drupal\user\Controller\UserLogoutController instead. See https://www.drupal.org/node/123456789', E_USER_DEPRECATED);
     /** @var \Symfony\Component\HttpKernel\HttpKernelInterface $httpKernel */
     $httpKernel = \Drupal::service('http_kernel');
     $url = Url::fromRoute('user.logout')->toString(TRUE);
@@ -261,6 +267,7 @@ class UserController extends ControllerBase {
    *   A redirect response.
    */
   public function confirmCancel(UserInterface $user, $timestamp = 0, $hashed_pass = '') {
+    @trigger_error(__METHOD__ . '() is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use \Drupal\user\Controller\UserConfirmCancelController instead. See https://www.drupal.org/node/123456789', E_USER_DEPRECATED);
     /** @var \Symfony\Component\HttpKernel\HttpKernelInterface $httpKernel */
     $httpKernel = \Drupal::service('http_kernel');
     $url = Url::fromRoute('user.cancel_confirm', [

@@ -11,6 +11,7 @@ use Drupal\Core\StringTranslation\TranslationInterface;
 use Drupal\user\UserDataInterface;
 use Drupal\user\UserInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
 /**
@@ -82,7 +83,7 @@ class UserConfirmCancelController extends ControllerBase {
    * @return \Symfony\Component\HttpFoundation\RedirectResponse
    *   A redirect response.
    */
-  public function __invoke(UserInterface $user, $timestamp = 0, $hashed_pass = '') {
+  public function __invoke(UserInterface $user, $timestamp = 0, $hashed_pass = ''): Response|array {
     // Time out in seconds until cancel URL expires; 24 hours = 86400 seconds.
     $timeout = 86400;
     $current = $this->time->getRequestTime();

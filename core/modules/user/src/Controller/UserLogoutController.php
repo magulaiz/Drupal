@@ -5,6 +5,7 @@ namespace Drupal\user\Controller;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Session\AccountInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Logs the current user out.
@@ -36,7 +37,7 @@ class UserLogoutController extends ControllerBase {
    * @return \Symfony\Component\HttpFoundation\RedirectResponse
    *   A redirection to home page.
    */
-  public function __invoke() {
+  public function __invoke(): Response|array {
     if ($this->currentUser->isAuthenticated()) {
       user_logout();
     }

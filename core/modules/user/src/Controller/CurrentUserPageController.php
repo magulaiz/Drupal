@@ -5,6 +5,7 @@ namespace Drupal\user\Controller;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Session\AccountInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Redirects users to their profile page.
@@ -40,7 +41,7 @@ class CurrentUserPageController extends ControllerBase {
    * @return \Symfony\Component\HttpFoundation\RedirectResponse
    *   Returns a redirect to the profile of the currently logged in user.
    */
-  public function __invoke() {
+  public function __invoke(): Response|array {
     return $this->redirect('entity.user.canonical', ['user' => $this->currentUser->id()]);
   }
 
