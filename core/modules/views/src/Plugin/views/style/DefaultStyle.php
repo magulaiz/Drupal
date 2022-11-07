@@ -30,6 +30,8 @@ class DefaultStyle extends StylePluginBase {
   protected $usesRowClass = TRUE;
 
   /**
+   * {@inheritdoc}
+   *
    * Should field labels be enabled by default.
    *
    * @var bool
