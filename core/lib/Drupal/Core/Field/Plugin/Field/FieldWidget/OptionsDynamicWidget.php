@@ -11,7 +11,7 @@ use Drupal\Core\Form\FormStateInterface;
  *
  * @FieldWidget(
  *   id = "options_dynamic",
- *   label = @Translation("Dynamic options"),
+ *   label = @Translation("Checkbox/radios or select"),
  *   field_types = {
  *     "boolean",
  *     "entity_reference",
@@ -40,11 +40,12 @@ class OptionsDynamicWidget extends OptionsWidgetBase {
     $element = [];
     $element['select_threshold'] = [
       '#type' => 'number',
-      '#title' => $this->t('Select threshold'),
-      '#description' => $this->t('Number of available options after which the select is used.'),
+      '#title' => $this->t('Switch to Select at'),
+      '#description' => $this->t('Use checkboxes or radio buttons up to this many options.'),
       '#default_value' => $this->getSetting('select_threshold'),
       '#min' => 2,
       '#required' => TRUE,
+      '#field_suffix' => $this->t('options')
     ];
 
     return $element;
