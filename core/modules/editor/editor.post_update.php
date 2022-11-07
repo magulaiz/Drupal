@@ -32,7 +32,7 @@ function editor_post_update_image_lazy_load(): void {
         $collection->addInstanceId('editor_image_lazy_load');
         $configuration['editor_image_lazy_load'] = [
           'id' => 'editor_image_lazy_load',
-          'provider' => 'filter',
+          'provider' => 'editor',
           'status' => TRUE,
           // Place lazy loading after editor file reference.
           'weight' => $configuration['editor_file_reference']['weight'] + 1,
