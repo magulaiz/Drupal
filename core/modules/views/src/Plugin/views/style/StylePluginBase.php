@@ -548,6 +548,12 @@ abstract class StylePluginBase extends PluginBase {
       else {
         $single_output['#grouping_label_element'] = '';
       }
+      if ($this->options['grouping']) {
+        $single_output['#grouping_label_element'] = $this->options['grouping'][$level]['grouping_label_element'];
+      }
+      else {
+        $single_output['#grouping_label_element'] = '';
+      }
       $single_output['#title'] = $set['group'];
       $output[] = $single_output;
     }
