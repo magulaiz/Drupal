@@ -14,11 +14,11 @@ use Drupal\filter\Plugin\FilterBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Provides a filter to lazy load tracked images.
+ * Provides a filter to lazy load images.
  *
  * @Filter(
  *   id = "editor_image_lazy_load",
- *   title = @Translation("Lazy load tracked images uploaded via a Text Editor"),
+ *   title = @Translation("Lazy load images added via a Text Editor"),
  *   description = @Translation("Instruct browsers to lazy load images, unless overridden by <code>&lt;img loading=&quot;eager&quot;&gt;</code>, adds width and height attributes to all images that don't have them specified."),
  *   type = Drupal\filter\Plugin\FilterInterface::TYPE_TRANSFORM_REVERSIBLE,
  *   weight = 15
