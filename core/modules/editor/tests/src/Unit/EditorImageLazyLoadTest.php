@@ -13,7 +13,7 @@ use Drupal\Tests\UnitTestCase;
 
 /**
  * @coversDefaultClass \Drupal\editor\Plugin\Filter\EditorImageLazyLoad
- * @group filter
+ * @group editor
  */
 final class EditorImageLazyLoadTest extends UnitTestCase {
 
@@ -61,8 +61,14 @@ final class EditorImageLazyLoadTest extends UnitTestCase {
    */
   public function providerHtml(): array {
     return [
-      'lazy loading attribute already added' => ['<p><img src="foo.png" loading="lazy"></p>', '<p><img src="foo.png" loading="lazy" /></p>'],
-      'eager loading attribute already added' => ['<p><img src="foo.png" loading="eager"/></p>', '<p><img src="foo.png" loading="eager" /></p>'],
+      'lazy loading attribute already added' => [
+        'input' => '<p><img src="foo.png" loading="lazy"></p>',
+        'output' => '<p><img src="foo.png" loading="lazy" /></p>',
+      ],
+      'eager loading attribute already added' => [
+        'input' => '<p><img src="foo.png" loading="eager"/></p>',
+        'output' => '<p><img src="foo.png" loading="eager" /></p>',
+      ],
       'image dimensions already provided' => ['<p><img src="foo.png" width="200" height="200"/></p>', '<p><img src="foo.png" width="200" height="200" loading="lazy" /></p>'],
       'no image tag' => ['<p>Lorem ipsum...</p>', '<p>Lorem ipsum...</p>'],
       'no loading attribute nor uuid' => ['<p><img src="foo.png"></p>', '<p><img src="foo.png" /></p>'],

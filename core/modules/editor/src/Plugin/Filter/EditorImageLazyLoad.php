@@ -72,13 +72,13 @@ final class EditorImageLazyLoad extends FilterBase implements ContainerFactoryPl
   }
 
   /**
-   * Transform markup of images to include loading="lazy".
+   * Transforms markup of images to include loading="lazy" unless dimensionless or overridden.
    *
    * @param string $text
    *   The markup to transform.
    *
    * @return string
-   *   The transformed text with loading attribute added.
+   *   The transformed text with loading attribute added (and potentially width and height too).
    */
   private function transformImages(string $text): string {
     $dom = Html::load($text);

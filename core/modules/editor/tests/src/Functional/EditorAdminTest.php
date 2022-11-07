@@ -157,9 +157,9 @@ class EditorAdminTest extends BrowserTestBase {
   }
 
   /**
-   * Tests lazy load must go after file reference filter.
+   * Tests validation logic for filter order.
    */
-  public function testLazyAfterReferenceFilter(): void {
+  public function testLazyAfterReferenceFilterValidation(): void {
     $this->drupalLogin($this->adminUser);
     $this->drupalGet('admin/config/content/formats/manage/filtered_html');
 

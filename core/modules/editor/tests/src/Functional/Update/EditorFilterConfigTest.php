@@ -7,7 +7,7 @@ namespace Drupal\Tests\editor\Functional\Update;
 use Drupal\FunctionalTests\Update\UpdatePathTestBase;
 
 /**
- * Tests updating editor module's filter configuration.
+ * Tests automatically adding editor_image_lazy_load filter to text formats using editor_file_reference.
  *
  * @group Update
  */
