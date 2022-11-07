@@ -7,11 +7,12 @@ namespace Drupal\Tests\editor\Functional\Update;
 use Drupal\FunctionalTests\Update\UpdatePathTestBase;
 
 /**
- * Tests automatically adding editor_image_lazy_load filter to text formats using editor_file_reference.
+ * Tests automatically adding editor_image_lazy_load filter to text formats
+ * using editor_file_reference.
  *
  * @group Update
  */
-class EditorFilterConfigTest extends UpdatePathTestBase {
+class EditorAddLazyLoadImageFilterUpdateTest extends UpdatePathTestBase {
 
   /**
    * {@inheritdoc}

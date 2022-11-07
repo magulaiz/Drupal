@@ -69,11 +69,30 @@ final class EditorImageLazyLoadTest extends UnitTestCase {
         'input' => '<p><img src="foo.png" loading="eager"/></p>',
         'output' => '<p><img src="foo.png" loading="eager" /></p>',
       ],
-      'image dimensions already provided' => ['<p><img src="foo.png" width="200" height="200"/></p>', '<p><img src="foo.png" width="200" height="200" loading="lazy" /></p>'],
-      'no image tag' => ['<p>Lorem ipsum...</p>', '<p>Lorem ipsum...</p>'],
-      'no loading attribute nor uuid' => ['<p><img src="foo.png"></p>', '<p><img src="foo.png" /></p>'],
-      'no loading attribute with uuid' => ['<p><img src="foo.png" data-entity-type="file" data-entity-uuid="a6d88b01-3b5e-4c02-bf26-24a0c48d61cd"></p>', '<p><img src="foo.png" data-entity-type="file" data-entity-uuid="a6d88b01-3b5e-4c02-bf26-24a0c48d61cd" width="100" height="100" loading="lazy" /></p>'],
-      'eager loading attribute with uuid' => ['<p><img src="foo.png" data-entity-type="file" data-entity-uuid="a6d88b01-3b5e-4c02-bf26-24a0c48d61cd" loading="eager"></p>', '<p><img src="foo.png" data-entity-type="file" data-entity-uuid="a6d88b01-3b5e-4c02-bf26-24a0c48d61cd" loading="eager" width="100" height="100" /></p>'],
+      'image dimensions already provided' => [
+        'input' => '<p><img src="foo.png" width="200" height="200"/></p>',
+        '<p><img src="foo.png" width="200" height="200" loading="lazy" /></p>'
+      ],
+      'no image tag' => [
+        'input' => '<p>Lorem ipsum...</p>',
+        'output' => '<p>Lorem ipsum...</p>',
+      ],
+      'no loading attribute nor uuid' => [
+        'input' => '<p><img src="foo.png"></p>',
+        'output' => '<p><img src="foo.png" /></p>',
+      ],
+      'no loading attribute with uuid' => [
+        'input' => '<p><img src="foo.png" data-entity-type="file" data-entity-uuid="a6d88b01-3b5e-4c02-bf26-24a0c48d61cd"></p>',
+        'output' => '<p><img src="foo.png" data-entity-type="file" data-entity-uuid="a6d88b01-3b5e-4c02-bf26-24a0c48d61cd" width="100" height="100" loading="lazy" /></p>',
+      ],
+      'eager loading attribute with uuid' => [
+        'input' => '<p><img src="foo.png" data-entity-type="file" data-entity-uuid="a6d88b01-3b5e-4c02-bf26-24a0c48d61cd" loading="eager"></p>',
+        'output' => '<p><img src="foo.png" data-entity-type="file" data-entity-uuid="a6d88b01-3b5e-4c02-bf26-24a0c48d61cd" loading="eager" width="100" height="100" /></p>',
+      ],
+      'invalid loading attribute with uuid' => [
+        'input' => '<p><img src="foo.png" data-entity-type="file" data-entity-uuid="a6d88b01-3b5e-4c02-bf26-24a0c48d61cd" loading="foo"></p>',
+        'output' => '<p><img src="foo.png" data-entity-type="file" data-entity-uuid="a6d88b01-3b5e-4c02-bf26-24a0c48d61cd" loading="lazy" width="100" height="100" /></p>',
+      ],
     ];
   }
 

@@ -72,19 +72,22 @@ final class EditorImageLazyLoad extends FilterBase implements ContainerFactoryPl
   }
 
   /**
-   * Transforms markup of images to include loading="lazy" unless dimensionless or overridden.
+   * Transforms markup of images to include loading="lazy" unless dimensionless
+   * or overridden.
    *
    * @param string $text
    *   The markup to transform.
    *
    * @return string
-   *   The transformed text with loading attribute added (and potentially width and height too).
+   *   The transformed text with loading attribute added
+   *   (and potentially width and height too).
    */
   private function transformImages(string $text): string {
     $dom = Html::load($text);
     $xpath = new \DOMXPath($dom);
     // Search for files to add dimensions. Only add lazy load to images with
     // dimensions to avoid Cumulative Layout Shift (CLS).
+    // @see https://web.dev/cls/
     foreach ($xpath->query('//img[@data-entity-type="file" and @data-entity-uuid]') as $element) {
       assert($element instanceof \DOMElement);
       if ($element->hasAttribute('width') || $element->hasAttribute('height')) {
@@ -96,8 +99,7 @@ final class EditorImageLazyLoad extends FilterBase implements ContainerFactoryPl
         $image = $this->imageFactory->get($file->getFileUri());
         $width = $image->getWidth();
         $height = $image->getHeight();
-        // Set dimensions to avoid content layout shift (CLS).
-        // @see https://web.dev/cls/
+
         if ($width !== NULL) {
           $element->setAttribute('width', (string) $width);
         }
@@ -107,7 +109,7 @@ final class EditorImageLazyLoad extends FilterBase implements ContainerFactoryPl
       }
     }
     // If dimensions exist and loading isn't already set, then lazy load.
-    foreach ($xpath->query('//img[not(@loading) and @width and @height]') as $element) {
+    foreach ($xpath->query('//img[not(@loading="eager") and @width and @height]') as $element) {
       assert($element instanceof \DOMElement);
       $element->setAttribute('loading', 'lazy');
     }
