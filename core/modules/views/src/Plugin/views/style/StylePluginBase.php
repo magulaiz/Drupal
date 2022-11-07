@@ -310,7 +310,7 @@ abstract class StylePluginBase extends PluginBase {
     // Only fields-based views can handle grouping.  Style plugins can also exclude
     // themselves from being groupable by setting their "usesGrouping" property
     // to FALSE.
-    // @TODO: Document "usesGrouping" in docs.php when docs.php is written.
+    // @todo Document "usesGrouping" in docs.php when docs.php is written.
     if ($this->usesFields() && $this->usesGrouping()) {
       $options = ['' => $this->t('- None -')];
       $field_labels = $this->displayHandler->getFieldLabels(TRUE);
@@ -611,7 +611,7 @@ abstract class StylePluginBase extends PluginBase {
       $groupings = [['field' => $groupings, 'rendered' => $rendered]];
     }
 
-    // Make sure fields are rendered
+    // Make sure fields are rendered.
     $this->renderFields($this->view->result);
     $sets = [];
     if ($groupings) {
@@ -677,7 +677,7 @@ abstract class StylePluginBase extends PluginBase {
 
     // If this parameter isn't explicitly set, modify the output to be fully
     // backward compatible to code before Views 7.x-3.0-rc2.
-    // @TODO Remove this as soon as possible e.g. October 2020
+    // @todo Remove this as soon as possible e.g. October 2020
     if ($group_rendered === NULL) {
       $old_style_sets = [];
       foreach ($sets as $group) {
@@ -693,7 +693,7 @@ abstract class StylePluginBase extends PluginBase {
    * Renders all of the fields for a given style and store them on the object.
    *
    * @param array $result
-   *   The result array from $view->result
+   *   The result array from $view->result.
    */
   protected function renderFields(array $result) {
     if (!$this->usesFields()) {
@@ -746,7 +746,7 @@ abstract class StylePluginBase extends PluginBase {
           // - HTML views are rendered inside a render context: then we want to
           //   use ::render(), so that attachments and cacheability are bubbled.
           // - non-HTML views are rendered outside a render context: then we
-          //   want to use ::renderPlain(), so that no bubbling happens
+          //   want to use ::renderPlain(), so that no bubbling happens.
           if ($renderer->hasRenderContext()) {
             $renderer->render($data);
           }
@@ -801,7 +801,7 @@ abstract class StylePluginBase extends PluginBase {
    * @see self::render()
    *
    * @param array $data
-   *   The element to #pre_render
+   *   The element to #pre_render.
    *
    * @return array
    *   The processed element.
