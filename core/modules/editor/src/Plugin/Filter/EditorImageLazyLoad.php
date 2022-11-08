@@ -18,8 +18,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *
  * @Filter(
  *   id = "editor_image_lazy_load",
- *   title = @Translation("Lazy load images added via a Text Editor"),
- *   description = @Translation("Instruct browsers to lazy load images, unless overridden by <code>&lt;img loading=&quot;eager&quot;&gt;</code>, adds width and height attributes to all images that don't have them specified."),
+ *   title = @Translation("Lazy load images"),
+ *   description = @Translation("Instruct browsers to lazy load images if width and height is specified or can be calculated from the source image (width and height attributes will be added in such a case). Can be overridden by <code>&lt;img loading=&quot;eager&quot;&gt;</code>."),
  *   type = Drupal\filter\Plugin\FilterInterface::TYPE_TRANSFORM_REVERSIBLE,
  *   weight = 15
  * )
