@@ -60,13 +60,4 @@ abstract class DataReferenceBase extends TypedData implements DataReferenceInter
     return (string) $this->getType() . ':' . $this->getTargetIdentifier();
   }
 
-  /**
-   * Gets the type.
-   *
-   * This method should be implemented in extending classes.
-   */
-  private function getType(): string {
-    throw new \RuntimeException(__METHOD__ . '() not implemented.');
-  }
-
 }
