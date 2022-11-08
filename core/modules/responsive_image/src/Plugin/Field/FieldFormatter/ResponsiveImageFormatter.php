@@ -155,7 +155,9 @@ class ResponsiveImageFormatter extends ImageFormatterBase {
       '#type' => 'details',
       '#title' => $this->t('Image loading'),
       '#weight' => 10,
-      '#description' => $this->t('Modern browsers will lazily load images with the <em>loading="lazy"</em> attribute (default). Choose "eager" to force browsers to download an image as soon as possible.'),
+      '#description' => $this->t('Lazy render images with native image loading attribute (<em>loading="lazy"</em>). This improves performance by allowing browsers to lazily load images. See <a href="@url">Lazy loading</a>.', [
+        '@url' => 'https://developer.mozilla.org/en-US/docs/Web/Performance/Lazy_loading#images_and_iframes',
+      ]),
     ];
     $loading_attribute_options = [
       'lazy' => $this->t('Lazy'),
