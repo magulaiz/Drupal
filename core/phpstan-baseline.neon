@@ -1701,11 +1701,6 @@ parameters:
 			path: modules/history/tests/src/Kernel/Views/HistoryTimestampTest.php
 
 		-
-			message: "#^Variable \\$image_style in empty\\(\\) always exists and is not falsy\\.$#"
-			count: 1
-			path: modules/image/src/Controller/ImageStyleDownloadController.php
-
-		-
 			message: "#^Variable \\$lock_name might not be defined\\.$#"
 			count: 1
 			path: modules/image/src/Controller/ImageStyleDownloadController.php
