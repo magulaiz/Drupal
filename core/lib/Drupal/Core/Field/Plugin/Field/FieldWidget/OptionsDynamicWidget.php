@@ -45,7 +45,7 @@ class OptionsDynamicWidget extends OptionsWidgetBase {
       '#default_value' => $this->getSetting('select_threshold'),
       '#min' => 2,
       '#required' => TRUE,
-      '#field_suffix' => $this->t('options')
+      '#field_suffix' => $this->t('options'),
     ];
 
     return $element;
