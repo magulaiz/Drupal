@@ -353,7 +353,7 @@ system.private_file_download:
 system.temporary:
   path: '/system/temporary'
   defaults:
-    _controller: '\Drupal\system\FileDownloadControllerdownload'
+    _controller: '\Drupal\system\FileDownloadController'
     scheme: temporary
   requirements:
     _access: 'TRUE'
