@@ -631,9 +631,6 @@ abstract class StylePluginBase extends PluginBase {
           else {
             $grouping_label_element = '';
           }
-          if ($this->usesGroupingLabelElement()) {
-            $grouping_label_element = $info['grouping_label_element'];
-          }
           $group_content = '';
           // Group on the rendered version of the field, not the raw.  That way,
           // we can control any special formatting of the grouping field through
