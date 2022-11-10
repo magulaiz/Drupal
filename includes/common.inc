@@ -5332,7 +5332,7 @@ function drupal_build_js_cache($files) {
   file_prepare_directory($jspath, FILE_CREATE_DIRECTORY);
 
   // Remove JS source and source mapping urls or these may cause 404 errors.
-  $contents = preg_replace('/\/\/(#|@)\s(sourceURL|sourceMappingURL)=\s*(\S*?)\s*$/m', '', $contents);
+  $data = preg_replace('/\/\/(#|@)\s(sourceURL|sourceMappingURL)=\s*(\S*?)\s*$/m', '', $data);
   // Prefix filename to prevent blocking by firewalls which reject files
   // starting with "ad*", and create the javascript file.
   $filename = 'js_' . drupal_hash_base64($data) . '.js';
