@@ -69,9 +69,13 @@ JS;
    * @see \Behat\Mink\Element\ElementInterface::findAll()
    */
   public function waitForElement($selector, $locator, $timeout = 10000) {
-    return $this->waitForHelper($timeout, function (Element $page) use ($selector, $locator) {
+    $element = $this->waitForHelper($timeout, function (Element $page) use ($selector, $locator) {
       return $page->find($selector, $locator);
     });
+    if (empty($element)) {
+      @trigger_error('Allowing ' . __METHOD__ . '() to time out is deprecated in drupal:9.3.0 and removed in drupal:10.0.0. This will cause the test to fail in Drupal 10.', E_USER_DEPRECATED);
+    }
+    return $element;
   }
 
   /**
@@ -91,9 +95,13 @@ JS;
    * @see \Behat\Mink\Element\ElementInterface::findAll()
    */
   public function waitForElementRemoved($selector, $locator, $timeout = 10000) {
-    return (bool) $this->waitForHelper($timeout, function (Element $page) use ($selector, $locator) {
+    $not_found = (bool) $this->waitForHelper($timeout, function (Element $page) use ($selector, $locator) {
       return !$page->find($selector, $locator);
     });
+    if (empty($not_found)) {
+      @trigger_error('Allowing ' . __METHOD__ . '() to time out is deprecated in drupal:9.3.0 and removed in drupal:10.0.0. This will cause the test to fail in Drupal 10; use JsWebAssert::assertNoElementAfterWait() instead.', E_USER_DEPRECATED);
+    }
+    return $not_found;
   }
 
   /**
@@ -113,13 +121,17 @@ JS;
    * @see \Behat\Mink\Element\ElementInterface::findAll()
    */
   public function waitForElementVisible($selector, $locator, $timeout = 10000) {
-    return $this->waitForHelper($timeout, function (Element $page) use ($selector, $locator) {
+    $element = $this->waitForHelper($timeout, function (Element $page) use ($selector, $locator) {
       $element = $page->find($selector, $locator);
       if (!empty($element) && $element->isVisible()) {
         return $element;
       }
       return NULL;
     });
+    if (empty($element)) {
+      @trigger_error('Allowing ' . __METHOD__ . '() to time out is deprecated in drupal:9.3.0 and removed in drupal:10.0.0. This will cause the test to fail in Drupal 10.', E_USER_DEPRECATED);
+    }
+    return $element;
   }
 
   /**
@@ -134,11 +146,15 @@ JS;
    *   TRUE if not found, FALSE if found.
    */
   public function waitForText($text, $timeout = 10000) {
-    return (bool) $this->waitForHelper($timeout, function (Element $page) use ($text) {
+    $text_exists = (bool) $this->waitForHelper($timeout, function (Element $page) use ($text) {
       $actual = preg_replace('/\s+/u', ' ', $page->getText());
       $regex = '/' . preg_quote($text, '/') . '/ui';
       return (bool) preg_match($regex, $actual);
     });
+    if (empty($text_exists)) {
+      @trigger_error('Allowing ' . __METHOD__ . '() to time out is deprecated in drupal:9.3.0 and removed in drupal:10.0.0. This will cause the test to fail in Drupal 10.', E_USER_DEPRECATED);
+    }
+    return $text_exists;
   }
 
   /**

@@ -127,7 +127,7 @@ class MessageCommandTest extends WebDriverTestBase {
    */
   protected function assertAnnounceNotContains(string $expected_message): void {
     $assert_session = $this->assertSession();
-    $this->assertEmpty($assert_session->waitForElement('css', "#drupal-live-announce:contains('$expected_message')", 1000));
+    $assert_session->assertNoElementAfterWait('css', "#drupal-live-announce:contains('$expected_message')", 1000);
   }
 
 }
