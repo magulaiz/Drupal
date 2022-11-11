@@ -259,7 +259,7 @@ class JsonApiDocumentTopLevelNormalizerTest extends JsonapiKernelTestBase {
    * @covers ::normalize
    */
   public function testNormalize() {
-    [, $resource_type] = $this->generateProphecies('node', 'article');
+    $resource_type = $this->container->get('jsonapi.resource_type.repository')->get('node', 'article');
 
     $resource_object = ResourceObject::createFromEntity($resource_type, $this->node);
     $includes = $this->includeResolver->resolve($resource_object, 'uid,field_tags,field_image');
@@ -450,7 +450,7 @@ class JsonApiDocumentTopLevelNormalizerTest extends JsonapiKernelTestBase {
     $this->assertSame('user_roles', $this->resourceTypeRepository->getByTypeName('user--user')->getPublicName('roles'));
 
     // Create the request to fetch the articles and fetch included user.
-    [, $resource_type] = $this->generateProphecies('node', 'article');
+    $resource_type = $this->container->get('jsonapi.resource_type.repository')->get('node', 'article');
     $user = User::load($this->node->getOwnerId());
 
     $resource_object = ResourceObject::createFromEntity($resource_type, $this->node);
@@ -767,7 +767,7 @@ class JsonApiDocumentTopLevelNormalizerTest extends JsonapiKernelTestBase {
    * @dataProvider testCacheableMetadataProvider
    */
   public function testCacheableMetadata(CacheableMetadata $expected_metadata) {
-    [, $resource_type] = $this->generateProphecies('node', 'article');
+    $resource_type = $this->container->get('jsonapi.resource_type.repository')->get('node', 'article');
     $resource_object = ResourceObject::createFromEntity($resource_type, $this->node);
     $context = [
       'resource_type' => $resource_type,
