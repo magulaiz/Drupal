@@ -32,10 +32,9 @@ tr.selected td {
 }
 
 .views-bulk-actions[data-drupal-sticky-vbo="true"] {
-  position: fixed;
+  position: sticky;
   z-index: calc(var(--dropbutton-widget-z-index) + 1);
-  bottom: 0;
-  left: 0;
+  bottom: var(--drupal-displace-offset-bottom, 0);
   animation: fade-in-bottom 320ms 1 forwards;
   border-bottom-right-radius: 0;
   border-bottom-left-radius: 0;
@@ -61,44 +60,32 @@ tr.selected td {
 
 .views-bulk-actions__item {
   align-self: center;
-  margin: 0 var(--space-l) var(--space-s) 0; /* LTR */
+  margin-block: 0 var(--space-s);
+  margin-inline: var(--space-l) 0;
 }
 .views-bulk-actions__item:last-of-type {
-  margin-right: 0; /* LTR */
+  margin-inline-end: 0;
 }
-[dir="rtl"] .views-bulk-actions__item {
-  margin-right: 0;
-  margin-left: var(--space-l);
-}
-[dir="rtl"] .views-bulk-actions__item:last-of-type {
-  margin-left: 0;
-}
-
 .views-bulk-actions__item--status {
   width: 100%;
   white-space: nowrap;
   font-size: var(--font-size-xs);
   font-weight: bold;
 }
-
 .views-bulk-actions__item input,
 .views-bulk-actions__item .button {
-  margin-top: 0;
-  margin-bottom: 0;
+  margin-block: 0;
 }
-
 .views-bulk-actions__item .form-element:hover {
   border: var(--input-border-size) solid var(--input-border-color);
   box-shadow: none;
 }
-
 .views-bulk-actions__item .button--primary {
   background: var(--color-blue-400);
   &:hover {
     background: var(--color-blue-500);
   }
 }
-
 .views-bulk-actions__item .form-item__label {
   display: inline;
   padding-inline-end: var(--space-xs);
@@ -106,7 +93,6 @@ tr.selected td {
 .views-bulk-actions__item .form-item__label:after {
   content: ":";
 }
-
 .views-bulk-actions__item .form-element--type-select {
   min-height: 2rem;
   padding: calc(0.5rem - 1px) calc(2.25rem - 1px) calc(0.5rem - 1px) calc(1rem - 1px);

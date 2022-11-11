@@ -40,10 +40,9 @@ tr.selected td {
 }
 
 .views-bulk-actions[data-drupal-sticky-vbo="true"] {
-  position: fixed;
+  position: sticky;
   z-index: calc(var(--dropbutton-widget-z-index) + 1);
-  bottom: 0;
-  left: 0;
+  bottom: var(--drupal-displace-offset-bottom, 0);
   animation: fade-in-bottom 320ms 1 forwards;
   border-bottom-right-radius: 0;
   border-bottom-left-radius: 0;
@@ -70,20 +69,12 @@ tr.selected td {
 
 .views-bulk-actions__item {
   align-self: center;
-  margin: 0 var(--space-l) var(--space-s) 0; /* LTR */
+  margin-block: 0 var(--space-s);
+  margin-inline: var(--space-l) 0;
 }
 
 .views-bulk-actions__item:last-of-type {
-  margin-right: 0; /* LTR */
-}
-
-[dir="rtl"] .views-bulk-actions__item {
-  margin-right: 0;
-  margin-left: var(--space-l);
-}
-
-[dir="rtl"] .views-bulk-actions__item:last-of-type {
-  margin-left: 0;
+  margin-inline-end: 0;
 }
 
 .views-bulk-actions__item--status {
@@ -95,8 +86,7 @@ tr.selected td {
 
 .views-bulk-actions__item input,
 .views-bulk-actions__item .button {
-  margin-top: 0;
-  margin-bottom: 0;
+  margin-block: 0;
 }
 
 .views-bulk-actions__item .form-element:hover {
