@@ -61,7 +61,7 @@ tr.selected td {
 .views-bulk-actions__item {
   align-self: center;
   margin-block: 0 var(--space-s);
-  margin-inline: var(--space-l) 0;
+  margin-inline: 0 var(--space-l);
 }
 .views-bulk-actions__item:last-of-type {
   margin-inline-end: 0;
