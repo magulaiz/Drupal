@@ -95,11 +95,11 @@ tr.selected td {
 }
 
 .views-bulk-actions__item .button--primary {
-  background: var(--color-blue-400);
+  background: var(--color-blue-500);
 }
 
 .views-bulk-actions__item .button--primary:hover {
-  background: var(--color-blue-500);
+  background: var(--color-blue-600);
 }
 
 .views-bulk-actions__item .form-item__label {
