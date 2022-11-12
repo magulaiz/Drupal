@@ -24,6 +24,7 @@
     attach(context) {
       const $categories = $('.js-layout-builder-categories', context);
       const $filterLinks = $categories.find('.js-layout-builder-block-link');
+      const $filterListItems = $filterLinks.parent();
 
       /**
        * Filters the block list.
@@ -42,10 +43,11 @@
          * @param {HTMLElement} link
          *   The link to add the block.
          */
-        const toggleBlockEntry = (index, link) => {
-          const $link = $(link);
-          const textMatch = $link.text().toLowerCase().indexOf(query) !== -1;
-          $link.toggle(textMatch);
+        const toggleBlockEntry = (index, li) => {
+          const $li = $(li);
+          const textMatch =
+            $li.find('a').text().toLowerCase().indexOf(query) !== -1;
+          $li.toggle(textMatch);
         };
 
         // Filter if the length of the query is at least 2 characters.
@@ -58,13 +60,11 @@
           // Open all categories so every block is available to filtering.
           $categories.find('.js-layout-builder-category').attr('open', '');
           // Toggle visibility of links based on query.
-          $filterLinks.each(toggleBlockEntry);
+          $filterListItems.each(toggleBlockEntry);
 
           // Only display categories containing visible links.
           $categories
-            .find(
-              '.js-layout-builder-category:not(:has(.js-layout-builder-block-link:visible))',
-            )
+            .find('.js-layout-builder-category:not(:has(li:visible))')
             .hide();
 
           announce(
@@ -83,7 +83,7 @@
             .removeAttr('open')
             .removeAttr('remember-closed');
           $categories.find('.js-layout-builder-category').show();
-          $filterLinks.show();
+          $filterListItems.show();
           announce(Drupal.t('All available blocks are listed.'));
         }
       };

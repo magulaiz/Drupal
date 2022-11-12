@@ -16,28 +16,29 @@
     attach: function attach(context) {
       var $categories = $('.js-layout-builder-categories', context);
       var $filterLinks = $categories.find('.js-layout-builder-block-link');
+      var $filterListItems = $filterLinks.parent();
 
       var filterBlockList = function filterBlockList(e) {
         var query = $(e.target).val().toLowerCase();
 
-        var toggleBlockEntry = function toggleBlockEntry(index, link) {
-          var $link = $(link);
-          var textMatch = $link.text().toLowerCase().indexOf(query) !== -1;
-          $link.toggle(textMatch);
+        var toggleBlockEntry = function toggleBlockEntry(index, li) {
+          var $li = $(li);
+          var textMatch = $li.find('a').text().toLowerCase().indexOf(query) !== -1;
+          $li.toggle(textMatch);
         };
 
         if (query.length >= 2) {
           $categories.find('.js-layout-builder-category:not([open])').attr('remember-closed', '');
           $categories.find('.js-layout-builder-category').attr('open', '');
-          $filterLinks.each(toggleBlockEntry);
-          $categories.find('.js-layout-builder-category:not(:has(.js-layout-builder-block-link:visible))').hide();
+          $filterListItems.each(toggleBlockEntry);
+          $categories.find('.js-layout-builder-category:not(:has(li:visible))').hide();
           announce(formatPlural($categories.find('.js-layout-builder-block-link:visible').length, '1 block is available in the modified list.', '@count blocks are available in the modified list.'));
           layoutBuilderBlocksFiltered = true;
         } else if (layoutBuilderBlocksFiltered) {
           layoutBuilderBlocksFiltered = false;
           $categories.find('.js-layout-builder-category[remember-closed]').removeAttr('open').removeAttr('remember-closed');
           $categories.find('.js-layout-builder-category').show();
-          $filterLinks.show();
+          $filterListItems.show();
           announce(Drupal.t('All available blocks are listed.'));
         }
       };
