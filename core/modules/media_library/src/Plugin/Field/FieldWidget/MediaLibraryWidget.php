@@ -426,8 +426,9 @@ class MediaLibraryWidget extends WidgetBase implements TrustedCallbackInterface 
             ],
           ],
           '#submit' => [[static::class, 'removeItem']],
-          // Prevent errors in other widgets from preventing removal.
-          '#limit_validation_errors' => $limit_validation_errors,
+          // Prevent errors in any widgets from preventing removal. Keep the
+          // weight to be able to shift focus to another item.
+          '#limit_validation_errors' => [array_merge($limit_validation_errors[0], ['selection', $delta, 'weight'])],
         ],
         // @todo Make the view mode configurable in https://www.drupal.org/project/drupal/issues/2971209
         'rendered_entity' => $view_builder->view($media_item, 'media_library'),
@@ -653,7 +654,7 @@ class MediaLibraryWidget extends WidgetBase implements TrustedCallbackInterface 
    * {@inheritdoc}
    */
   public function errorElement(array $element, ConstraintViolationInterface $error, array $form, FormStateInterface $form_state) {
-    return $element['target_id'] ?? FALSE;
+    return $element;
   }
 
   /**
