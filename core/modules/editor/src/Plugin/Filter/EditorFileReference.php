@@ -19,7 +19,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * @Filter(
  *   id = "editor_file_reference",
  *   title = @Translation("Track images uploaded via a Text Editor"),
- *   description = @Translation("Ensures that the latest versions of images uploaded via a Text Editor are displayed."),
+ *   description = @Translation("Ensures that the latest versions of images uploaded via a Text Editor are displayed, along with their dimensions."),
  *   type = Drupal\filter\Plugin\FilterInterface::TYPE_TRANSFORM_REVERSIBLE
  * )
  */

@@ -4,25 +4,25 @@ declare(strict_types = 1);
 
 namespace Drupal\Tests\filter\Unit;
 
-use Drupal\filter\Plugin\Filter\ImageLazyLoad;
+use Drupal\filter\Plugin\Filter\FilterImageLazyLoad;
 use Drupal\Tests\UnitTestCase;
 
 /**
- * @coversDefaultClass \Drupal\filter\Plugin\Filter\ImageLazyLoad
+ * @coversDefaultClass \Drupal\filter\Plugin\Filter\FilterImageLazyLoad
  * @group editor
  */
-final class ImageLazyLoadTest extends UnitTestCase {
+final class FilterImageLazyLoadTest extends UnitTestCase {
 
   /**
-   * @var \Drupal\filter\Plugin\Filter\ImageLazyLoad
+   * @var \Drupal\filter\Plugin\Filter\FilterImageLazyLoad
    */
-  protected ImageLazyLoad $filter;
+  protected FilterImageLazyLoad $filter;
 
   /**
    * {@inheritdoc}
    */
   protected function setUp(): void {
-    $this->filter = new ImageLazyLoad([], 'filter_image_lazy_load', ['provider' => 'test']);
+    $this->filter = new FilterImageLazyLoad([], 'filter_image_lazy_load', ['provider' => 'test']);
     parent::setUp();
   }
 
@@ -60,6 +60,10 @@ final class ImageLazyLoadTest extends UnitTestCase {
         'input' => '<p><img src="foo.png" width="200" height="200"/></p>',
         '<p><img src="foo.png" width="200" height="200" loading="lazy" /></p>',
       ],
+      'invalid loading attribute' => [
+        'input' => '<p><img src="foo.png" width="200" height="200" loading="foo"></p>',
+        'output' => '<p><img src="foo.png" width="200" height="200" loading="lazy" /></p>',
+      ],
       'no image tag' => [
         'input' => '<p>Lorem ipsum...</p>',
         'output' => '<p>Lorem ipsum...</p>',
@@ -75,10 +79,6 @@ final class ImageLazyLoadTest extends UnitTestCase {
       'eager loading attribute with uuid' => [
         'input' => '<p><img src="foo.png" data-entity-type="file" data-entity-uuid="a6d88b01-3b5e-4c02-bf26-24a0c48d61cd" loading="eager"></p>',
         'output' => '<p><img src="foo.png" data-entity-type="file" data-entity-uuid="a6d88b01-3b5e-4c02-bf26-24a0c48d61cd" loading="eager" /></p>',
-      ],
-      'invalid loading attribute with uuid' => [
-        'input' => '<p><img src="foo.png" data-entity-type="file" data-entity-uuid="a6d88b01-3b5e-4c02-bf26-24a0c48d61cd" loading="foo"></p>',
-        'output' => '<p><img src="foo.png" data-entity-type="file" data-entity-uuid="a6d88b01-3b5e-4c02-bf26-24a0c48d61cd" loading="foo" /></p>',
       ],
     ];
   }

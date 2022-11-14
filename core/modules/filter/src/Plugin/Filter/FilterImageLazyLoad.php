@@ -14,12 +14,12 @@ use Drupal\filter\Plugin\FilterBase;
  * @Filter(
  *   id = "filter_image_lazy_load",
  *   title = @Translation("Lazy load images"),
- *   description = @Translation("Instruct browsers to lazy load images if width and height is specified. Can be overridden by <code>&lt;img loading=&quot;eager&quot;&gt;</code>."),
+ *   description = @Translation("Instruct browsers to lazy load images if dimensions are specified. Use in conjunction with and place after the 'Track images uploaded via a Text Editor' filter, to automatically add dimensions for uploaded images. Results be overridden by <code>&lt;img loading=&quot;eager&quot;&gt;</code>."),
  *   type = Drupal\filter\Plugin\FilterInterface::TYPE_TRANSFORM_REVERSIBLE,
  *   weight = 15
  * )
  */
-final class ImageLazyLoad extends FilterBase {
+final class FilterImageLazyLoad extends FilterBase {
 
   /**
    * {@inheritdoc}
