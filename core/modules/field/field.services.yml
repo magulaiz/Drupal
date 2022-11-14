@@ -5,3 +5,11 @@ services:
       - { name: module_install.uninstall_validator }
     arguments: ['@entity_type.manager', '@string_translation', '@plugin.manager.field.field_type']
     lazy: true
+
+  field.config_import_display_rebuild_subscriber:
+    class: Drupal\field\EventSubscriber\ConfigImportDisplayRebuildSubscriber
+    arguments:
+      - '@class_resolver'
+      - '@entity_type.manager'
+    tags:
+      - { name: event_subscriber }
