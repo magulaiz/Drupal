@@ -19,7 +19,7 @@ function editor_removed_post_updates() {
 }
 
 /**
- * Enable editor_image_lazy_load if editor_file_reference is enabled.
+ * Enable filter_image_lazy_load if editor_file_reference is enabled.
  */
 function editor_post_update_image_lazy_load(): void {
   if (\Drupal::service('plugin.manager.filter')->hasDefinition('editor_file_reference')) {
@@ -29,9 +29,9 @@ function editor_post_update_image_lazy_load(): void {
       $configuration = $collection->getConfiguration();
       assert($collection instanceof FilterPluginCollection);
       if (array_key_exists('editor_file_reference', $configuration)) {
-        $collection->addInstanceId('editor_image_lazy_load');
-        $configuration['editor_image_lazy_load'] = [
-          'id' => 'editor_image_lazy_load',
+        $collection->addInstanceId('filter_image_lazy_load');
+        $configuration['filter_image_lazy_load'] = [
+          'id' => 'filter_image_lazy_load',
           'provider' => 'editor',
           'status' => TRUE,
           // Place lazy loading after editor file reference.

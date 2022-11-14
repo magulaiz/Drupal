@@ -35,14 +35,14 @@ class EditorAddLazyLoadImageFilterUpdateTest extends UpdatePathTestBase {
    */
   public function testUpdateLazyImageLoad(): void {
     $config = $this->config('filter.format.full_html');
-    $this->assertArrayNotHasKey('editor_image_lazy_load', $config->get('filters'));
+    $this->assertArrayNotHasKey('filter_image_lazy_load', $config->get('filters'));
 
     $this->runUpdates();
 
     $config = $this->config('filter.format.full_html');
     $filters = $config->get('filters');
-    $this->assertArrayHasKey('editor_image_lazy_load', $filters);
-    $this->assertEquals($filters['editor_file_reference']['weight'] + 1, $filters['editor_image_lazy_load']['weight']);
+    $this->assertArrayHasKey('filter_image_lazy_load', $filters);
+    $this->assertEquals($filters['editor_file_reference']['weight'] + 1, $filters['filter_image_lazy_load']['weight']);
   }
 
 }

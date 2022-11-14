@@ -2,40 +2,27 @@
 
 declare(strict_types = 1);
 
-namespace Drupal\Tests\editor\Unit;
+namespace Drupal\Tests\filter\Unit;
 
-use Drupal\Core\Entity\EntityRepositoryInterface;
-use Drupal\Core\Image\Image;
-use Drupal\Core\Image\ImageFactory;
-use Drupal\file\FileInterface;
-use Drupal\editor\Plugin\Filter\EditorImageLazyLoad;
+use Drupal\filter\Plugin\Filter\ImageLazyLoad;
 use Drupal\Tests\UnitTestCase;
 
 /**
- * @coversDefaultClass \Drupal\editor\Plugin\Filter\EditorImageLazyLoad
+ * @coversDefaultClass \Drupal\filter\Plugin\Filter\ImageLazyLoad
  * @group editor
  */
-final class EditorImageLazyLoadTest extends UnitTestCase {
+final class ImageLazyLoadTest extends UnitTestCase {
 
   /**
-   * @var \Drupal\editor\Plugin\Filter\EditorImageLazyLoad
+   * @var \Drupal\filter\Plugin\Filter\ImageLazyLoad
    */
-  protected EditorImageLazyLoad $filter;
+  protected ImageLazyLoad $filter;
 
   /**
    * {@inheritdoc}
    */
   protected function setUp(): void {
-    $file = $this->prophesize(FileInterface::class);
-    $file->getFileUri()->willReturn('foo.png');
-    $entity_repository = $this->prophesize(EntityRepositoryInterface::class);
-    $entity_repository->loadEntityByUuid('file', 'a6d88b01-3b5e-4c02-bf26-24a0c48d61cd')->willReturn($file->reveal());
-    $image = $this->prophesize(Image::class);
-    $image->getHeight()->willReturn(100);
-    $image->getWidth()->willReturn(100);
-    $image_factory = $this->prophesize(ImageFactory::class);
-    $image_factory->get('foo.png')->willReturn($image->reveal());
-    $this->filter = new EditorImageLazyLoad([], 'editor_image_lazy_load', ['provider' => 'test'], $entity_repository->reveal(), $image_factory->reveal());
+    $this->filter = new ImageLazyLoad([], 'filter_image_lazy_load', ['provider' => 'test']);
     parent::setUp();
   }
 
@@ -71,7 +58,7 @@ final class EditorImageLazyLoadTest extends UnitTestCase {
       ],
       'image dimensions already provided' => [
         'input' => '<p><img src="foo.png" width="200" height="200"/></p>',
-        '<p><img src="foo.png" width="200" height="200" loading="lazy" /></p>'
+        '<p><img src="foo.png" width="200" height="200" loading="lazy" /></p>',
       ],
       'no image tag' => [
         'input' => '<p>Lorem ipsum...</p>',
@@ -83,15 +70,15 @@ final class EditorImageLazyLoadTest extends UnitTestCase {
       ],
       'no loading attribute with uuid' => [
         'input' => '<p><img src="foo.png" data-entity-type="file" data-entity-uuid="a6d88b01-3b5e-4c02-bf26-24a0c48d61cd"></p>',
-        'output' => '<p><img src="foo.png" data-entity-type="file" data-entity-uuid="a6d88b01-3b5e-4c02-bf26-24a0c48d61cd" width="100" height="100" loading="lazy" /></p>',
+        'output' => '<p><img src="foo.png" data-entity-type="file" data-entity-uuid="a6d88b01-3b5e-4c02-bf26-24a0c48d61cd" /></p>',
       ],
       'eager loading attribute with uuid' => [
         'input' => '<p><img src="foo.png" data-entity-type="file" data-entity-uuid="a6d88b01-3b5e-4c02-bf26-24a0c48d61cd" loading="eager"></p>',
-        'output' => '<p><img src="foo.png" data-entity-type="file" data-entity-uuid="a6d88b01-3b5e-4c02-bf26-24a0c48d61cd" loading="eager" width="100" height="100" /></p>',
+        'output' => '<p><img src="foo.png" data-entity-type="file" data-entity-uuid="a6d88b01-3b5e-4c02-bf26-24a0c48d61cd" loading="eager" /></p>',
       ],
       'invalid loading attribute with uuid' => [
         'input' => '<p><img src="foo.png" data-entity-type="file" data-entity-uuid="a6d88b01-3b5e-4c02-bf26-24a0c48d61cd" loading="foo"></p>',
-        'output' => '<p><img src="foo.png" data-entity-type="file" data-entity-uuid="a6d88b01-3b5e-4c02-bf26-24a0c48d61cd" loading="lazy" width="100" height="100" /></p>',
+        'output' => '<p><img src="foo.png" data-entity-type="file" data-entity-uuid="a6d88b01-3b5e-4c02-bf26-24a0c48d61cd" loading="foo" /></p>',
       ],
     ];
   }
