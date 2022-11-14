@@ -296,6 +296,7 @@ class EntityReferenceSelectionAccessTest extends KernelTestBase {
         ],
         'result' => [
           'user' => [
+            $users['anonymous']->id() => $user_labels['anonymous'],
             $users['admin']->id() => $user_labels['admin'],
             $users['non_admin']->id() => $user_labels['non_admin'],
           ],
@@ -326,6 +327,26 @@ class EntityReferenceSelectionAccessTest extends KernelTestBase {
       ],
     ];
     $this->assertReferenceable($selection_options, $referenceable_tests, 'User handler');
+    // Check that the 'Anonymous' user is not returned for non-admin users if
+    // the 'include_anonymous' setting is disabled.
+    $selection_options['handler_settings']['include_anonymous'] = FALSE;
+    $referenceable_tests = [
+      [
+        'arguments' => [
+          [NULL, 'CONTAINS'],
+        ],
+        'result' => [
+          'user' => [
+            $users['admin']->id() => $user_labels['admin'],
+            $users['non_admin']->id() => $user_labels['non_admin'],
+          ],
+        ],
+      ],
+    ];
+    $this->assertReferenceable($selection_options, $referenceable_tests, 'User handler');
+
+    // Reset the 'include_anonymous' option to its initial value.
+    $selection_options['handler_settings']['include_anonymous'] = TRUE;
 
     $this->setCurrentUser($users['admin']);
     $referenceable_tests = [

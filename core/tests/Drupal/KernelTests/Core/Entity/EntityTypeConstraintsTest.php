@@ -2,6 +2,8 @@
 
 namespace Drupal\KernelTests\Core\Entity;
 
+use Drupal\user\Entity\User;
+
 /**
  * Tests entity level validation constraints.
  *
@@ -15,6 +17,12 @@ class EntityTypeConstraintsTest extends EntityKernelTestBase {
   protected function setUp(): void {
     parent::setUp();
     $this->installEntitySchema('entity_test_constraints');
+
+    // Insert the anonymous user into the database.
+    User::create([
+      'uid' => 0,
+      'name' => '',
+    ])->save();
   }
 
   /**

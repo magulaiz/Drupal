@@ -5,6 +5,7 @@ namespace Drupal\Tests\forum\Kernel;
 use Drupal\KernelTests\Core\Entity\EntityKernelTestBase;
 use Drupal\node\Entity\Node;
 use Drupal\taxonomy\Entity\Term;
+use Drupal\user\Entity\User;
 
 /**
  * Tests forum validation constraints.
@@ -25,6 +26,19 @@ class ForumValidationTest extends EntityKernelTestBase {
     'taxonomy',
     'forum',
   ];
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function setUp() {
+    parent::setUp();
+
+    // Insert the anonymous user into the database.
+    User::create([
+      'uid' => 0,
+      'name' => '',
+    ])->save();
+  }
 
   /**
    * Tests the forum validation constraints.

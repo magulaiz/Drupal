@@ -6,6 +6,7 @@ use Drupal\KernelTests\KernelTestBase;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\node\Entity\Node;
 use Drupal\node\Entity\NodeType;
+use Drupal\user\Entity\User;
 use Drupal\Tests\content_moderation\Traits\ContentModerationTestTrait;
 use Drupal\Tests\user\Traits\UserCreationTrait;
 
@@ -50,6 +51,11 @@ class EntityStateChangeValidationTest extends KernelTestBase {
     $this->installEntitySchema('content_moderation_state');
     $this->installConfig('content_moderation');
     $this->installSchema('system', ['sequences']);
+    // Insert the anonymous user into the database.
+    User::create([
+      'uid' => 0,
+      'name' => '',
+    ])->save();
 
     $this->adminUser = $this->createUser(array_keys($this->container->get('user.permissions')->getPermissions()));
   }
