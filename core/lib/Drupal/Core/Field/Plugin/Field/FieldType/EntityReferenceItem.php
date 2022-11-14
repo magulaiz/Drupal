@@ -123,8 +123,8 @@ class EntityReferenceItem extends FieldItemBase implements OptionsProviderInterf
   public static function schema(FieldStorageDefinitionInterface $field_definition) {
     $target_type = $field_definition->getSetting('target_type');
     try {
-            $target_type_info = \Drupal::entityTypeManager()->getDefinition($target_type);
-      }
+      $target_type_info = \Drupal::entityTypeManager()->getDefinition($target_type);
+    }
     catch (PluginNotFoundException $e) {
       throw new FieldException(sprintf("Field '%s' on entity type '%s' references a target entity type '%s' which does not exist.",
         $field_definition->getName(),
