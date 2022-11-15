@@ -184,7 +184,7 @@ class FieldStorageAddForm extends FormBase {
       '#size' => 15,
     ];
 
-    $field_prefix = $this->config('field_ui.settings')->get('field_prefix');
+    $field_prefix = $this->config('field_ui.settings')->get('field_prefix')  ?? '';
     $form['new_storage_wrapper']['field_name'] = [
       '#type' => 'machine_name',
       '#field_prefix' => $field_prefix,
@@ -192,7 +192,7 @@ class FieldStorageAddForm extends FormBase {
       '#description' => $this->t('A unique machine-readable name containing letters, numbers, and underscores.'),
       // Calculate characters depending on the length of the field prefix
       // setting. Maximum length is 32.
-      '#maxlength' => FieldStorageConfig::NAME_MAX_LENGTH - strlen($field_prefix ?? ''),
+      '#maxlength' => FieldStorageConfig::NAME_MAX_LENGTH - strlen($field_prefix),
       '#machine_name' => [
         'source' => ['new_storage_wrapper', 'label'],
         'exists' => [$this, 'fieldNameExists'],
