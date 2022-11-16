@@ -36,7 +36,8 @@
         "symfony/finder": "^6.2@beta",
         "symfony/lock": "^6.2@beta",
         "symfony/browser-kit": "^6.2@beta",
-        "symfony/dom-crawler": "^6.2@beta"
+        "symfony/dom-crawler": "^6.2@beta",
+        "colinodell/psr-testlogger": "^1"
     },
     "replace": {
         "symfony/polyfill-php72": "*",

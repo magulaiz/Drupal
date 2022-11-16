@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "ef033ef4a1da6243f950b37a7e6b7267",
+    "content-hash": "94d17e88e13b0ca3650310b8a2a68024",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -4230,6 +4230,84 @@
                 "source": "https://github.com/minkphp/MinkSelenium2Driver/tree/v1.6.0"
             },
             "time": "2022-03-28T14:55:17+00:00"
+        },
+        {
+            "name": "colinodell/psr-testlogger",
+            "version": "v1.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/colinodell/psr-testlogger.git",
+                "reference": "e5c5486695527658eb7b12dd3dafea001bc42834"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/colinodell/psr-testlogger/zipball/e5c5486695527658eb7b12dd3dafea001bc42834",
+                "reference": "e5c5486695527658eb7b12dd3dafea001bc42834",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^7.4 || ^8.0",
+                "psr/log": "^1.0 || ^2.0 || ^3.0"
+            },
+            "provide": {
+                "psr/log-implementation": "1.0.0 || 2.0.0 || 3.0.0"
+            },
+            "require-dev": {
+                "phpstan/phpstan": "^0.12.88 || ^1.0.0",
+                "phpunit/phpunit": "^9.5.5",
+                "unleashedtech/php-coding-standard": "^3.1",
+                "vimeo/psalm": "^4.7.3"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "ColinODell\\PsrTestLogger\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Colin O'Dell",
+                    "email": "colinodell@gmail.com",
+                    "homepage": "https://www.colinodell.com",
+                    "role": "Lead Developer"
+                }
+            ],
+            "description": "PSR-3 compliant test logger based on psr/log v1's",
+            "homepage": "https://github.com/colinodell/psr-testlogger",
+            "keywords": [
+                "log",
+                "logger",
+                "logging",
+                "mock",
+                "phpunit",
+                "psr",
+                "test",
+                "unit"
+            ],
+            "support": {
+                "issues": "https://github.com/colinodell/psr-testlogger/issues",
+                "rss": "https://github.com/colinodell/psr-testlogger/releases.atom",
+                "source": "https://github.com/colinodell/psr-testlogger"
+            },
+            "funding": [
+                {
+                    "url": "https://www.colinodell.com/sponsor",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://www.paypal.me/colinpodell/10.00",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://github.com/colinodell",
+                    "type": "github"
+                }
+            ],
+            "time": "2022-04-27T18:03:50+00:00"
         },
         {
             "name": "composer/ca-bundle",
