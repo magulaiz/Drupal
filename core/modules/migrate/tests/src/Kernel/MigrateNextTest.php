@@ -24,7 +24,7 @@ class MigrateNextTest extends MigrateTestBase {
    */
   public function testNext() {
     // Create a migration that will generate an exception. Here the second
-    // row will cause the flatten process to plugin to throw a MigrateException.
+    // row will cause the flatten process plugin to throw a MigrateException.
     $ids = ['id' => ['type' => 'integer']];
     $definition = [
       'id' => 'vocabularies',
@@ -48,7 +48,7 @@ class MigrateNextTest extends MigrateTestBase {
       'destination' => ['plugin' => 'entity:taxonomy_vocabulary'],
     ];
 
-    // Create the migration an execute.
+    // Create the migration and execute it.
     $migration = \Drupal::service('plugin.manager.migration')
       ->createStubMigration($definition);
     // Import and validate vocabulary config entities were created.
