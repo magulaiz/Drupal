@@ -448,8 +448,6 @@ class EntityResource {
       // Drop the last result.
       array_pop($results);
     }
-    // Each item of the collection data contains an array with 'entity' and
-    // 'access' elements.
     $collection_data = $this->loadEntitiesWithAccess($storage, $results, $request->get(ResourceVersionRouteEnhancer::WORKING_COPIES_REQUESTED, FALSE));
     $primary_data = new ResourceObjectData($collection_data);
     $primary_data->setHasNextPage($has_next_page);
