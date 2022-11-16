@@ -23,6 +23,13 @@ use Symfony\Component\HttpFoundation\ParameterBag;
 class LanguageNegotiationContentEntityTest extends UnitTestCase {
 
   /**
+   * An array of mock LanguageInterface objects.
+   *
+   * @var \Drupal\Core\Language\LanguageInterface
+   */
+  protected array $languages;
+
+  /**
    * A mock LanguageManager object.
    *
    * @var \Drupal\language\ConfigurableLanguageManagerInterface
