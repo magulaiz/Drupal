@@ -92,16 +92,16 @@ class LanguageNegotiationContentEntityTest extends UnitTestCase {
     $languageNegotiationContentEntity = new LanguageNegotiationContentEntity($entityTypeManagerMock);
 
     // Case 1: NULL request argument.
-    $expectedLangcode = NULL;
-    $this->assertEquals($expectedLangcode, $languageNegotiationContentEntity->getLangcode());
+    $expectedLangcode = FALSE;
+    $this->assertSame($expectedLangcode, $languageNegotiationContentEntity->getLangcode());
 
     // Case 2: A request object is available, but the languageManager is not set.
     // static::QUERY_PARAMETER is
     // not provided as a named parameter.
     $request = Request::create('/de/foo', 'GET');
     $request->query = new ParameterBag();
-    $expectedLangcode = NULL;
-    $this->assertEquals($expectedLangcode, $languageNegotiationContentEntity->getLangcode($request));
+    $expectedLangcode = FALSE;
+    $this->assertSame($expectedLangcode, $languageNegotiationContentEntity->getLangcode($request));
   }
 
 }
