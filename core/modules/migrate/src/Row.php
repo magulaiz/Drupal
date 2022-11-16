@@ -399,7 +399,10 @@ class Row {
    *   called, this always returns FALSE.
    */
   public function changed() {
-    return $this->idMap['original_hash'] != $this->idMap['hash'];
+    $original_hash = $this->idMap['original_hash'] ?? NULL;
+    $current_hash = $this->idMap['hash'] ?? NULL;
+
+    return $original_hash != $current_hash;
   }
 
   /**
