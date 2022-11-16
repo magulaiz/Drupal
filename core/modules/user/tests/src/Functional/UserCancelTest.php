@@ -5,7 +5,9 @@ namespace Drupal\Tests\user\Functional;
 use Drupal\comment\CommentInterface;
 use Drupal\comment\Entity\Comment;
 use Drupal\comment\Tests\CommentTestTrait;
+use Drupal\Core\State\StateInterface;
 use Drupal\language\Entity\ConfigurableLanguage;
+use Drupal\Core\Test\AssertMailTrait;
 use Drupal\node\Entity\Node;
 use Drupal\node\Entity\NodeType;
 use Drupal\Tests\BrowserTestBase;
@@ -19,6 +21,7 @@ use Drupal\user\Entity\User;
 class UserCancelTest extends BrowserTestBase {
 
   use CommentTestTrait;
+  use AssertMailTrait;
 
   /**
    * Modules to enable.
@@ -289,7 +292,7 @@ class UserCancelTest extends BrowserTestBase {
   public function testUserBlockUnpublishNodeAccess() {
     \Drupal::service('module_installer')->install(['node_access_test', 'user_form_test']);
 
-    // Setup node access
+    // Setup node access.
     node_access_rebuild();
     node_access_test_add_field(NodeType::load('page'));
     \Drupal::state()->set('node_access_test.private', TRUE);
@@ -641,6 +644,66 @@ class UserCancelTest extends BrowserTestBase {
     $user_storage->resetCache([1]);
     $user1 = $user_storage->load(1);
     $this->assertTrue($user1->isActive(), 'User #1 still exists and is not blocked.');
+  }
+
+  /**
+   * Tests cancel confirmation functionality.
+   */
+  public function testMassUserCancelConfirmByAdmin() {
+    \Drupal::service('module_installer')->install(['views']);
+    \Drupal::service('router.builder')->rebuild();
+    $this->config('user.settings')->set('cancel_method', 'user_cancel_reassign')->save();
+    /** @var \Drupal\user\UserStorageInterface $user_storage */
+    $user_storage = $this->container->get('entity_type.manager')->getStorage('user');
+    // Enable account cancellation notification.
+    $this->config('user.settings')->set('notify.status_canceled', TRUE)->save();
+    $get_all_cancel_confirm_emails = static function (StateInterface $state): array {
+      // Make sure the cache is cold because this function can be called
+      // multiple times.
+      $state->resetCache();
+      return array_filter($state->get('system.test_mail_collector', []), static function (array $item) {
+        return $item['key'] === 'cancel_confirm';
+      });
+    };
+
+    // Create administrative user.
+    $admin_user = $this->drupalCreateUser(['administer users']);
+    $this->drupalLogin($admin_user);
+
+    // Create some users.
+    $users = [];
+    $number_of_users_to_create = 3;
+    for ($i = 0; $i < $number_of_users_to_create; $i++) {
+      $account = $this->drupalCreateUser([]);
+      $users[$account->id()] = $account;
+    }
+
+    $this->assertCount(0, $get_all_cancel_confirm_emails($this->container->get('state')), 'No cancel confirm email has been sent yet.');
+
+    $edit = [];
+    $edit['action'] = 'user_cancel_user_action';
+    // Skip cancelling the admin user accounts.
+    for ($i = 2; $i <= 4; $i++) {
+      $edit['user_bulk_form[' . $i . ']'] = TRUE;
+    }
+    $this->drupalGet('admin/people');
+    $this->submitForm($edit, 'Apply');
+
+    $edit = [];
+    // We want to send the user confirmation email to the users.
+    $edit['user_cancel_confirm'] = 1;
+    $edit['user_cancel_method'] = 'user_cancel_delete';
+    $this->submitForm($edit, 'Confirm');
+
+    // Ensure the confirmation email has been sent...
+    $this->assertCount($number_of_users_to_create, $get_all_cancel_confirm_emails($this->container->get('state')), 'All cancelled user accounts got a confirmation e-mail.');
+    // and accounts are still active.
+    foreach (array_keys($users) as $uid) {
+      /** @var \Drupal\user\UserInterface $user */
+      $user = $user_storage->loadUnchanged($uid);
+      $this->assertNotNull($user, 'User account was not deleted.');
+      $this->assertTrue($user->isActive(), 'User account is still active.');
+    }
   }
 
   /**

@@ -220,6 +220,17 @@ class UserMultipleCancelConfirm extends ConfirmFormBase {
           $admin_form->buildForm($admin_form_mock, $admin_form_state);
           $admin_form->submitForm($admin_form_mock, $admin_form_state);
         }
+        elseif (!$form_state->isValueEmpty('user_cancel_confirm')) {
+          $cancelled_user = $this->userStorage->load($uid);
+          // Store cancelling method and whether to notify the user in
+          // $this->entity for
+          // \Drupal\user\Controller\UserController::confirmCancel().
+          $cancelled_user->user_cancel_method = $form_state->getValue('user_cancel_method');
+          $cancelled_user->user_cancel_notify = $form_state->getValue('user_cancel_notify');
+          $cancelled_user->save();
+          _user_mail_notify('cancel_confirm', $cancelled_user);
+          $this->logger('user')->notice('Sent account cancellation request to %name %email.', ['%name' => $cancelled_user->label(), '%email' => '<' . $cancelled_user->getEmail() . '>']);
+        }
         else {
           user_cancel($form_state->getValues(), $uid, $form_state->getValue('user_cancel_method'));
         }
