@@ -67,7 +67,8 @@ class PluginEventSubscriberTest extends UnitTestCase {
     $module_handler->invokeAllDeprecated(static::DEPRECATION_MESSAGE, 'migrate_prepare_row', [$row, $source, $migration])
       ->willReturn([FALSE, TRUE])
       ->shouldBeCalled();
-    $this->setExpectedException(MigrateSkipRowException::class, 'The hook migrate_prepare_row has skipped this row.');
+    $this->expectException(MigrateSkipRowException::class);
+    $this->expectExceptionMessage('The hook migrate_prepare_row has skipped this row.');
 
     $event = new MigratePreRowSaveEvent($migration, new MigrateMessage(), $row);
     $event_subscriber = new PluginEventSubscriber($module_handler->reveal());
@@ -95,7 +96,8 @@ class PluginEventSubscriberTest extends UnitTestCase {
       ->shouldBeCalled();
     $module_handler->invokeAllDeprecated(static::DEPRECATION_MESSAGE, 'migrate_' . $migration->id() . '_prepare_row', [$row, $source, $migration])
       ->willReturn([FALSE, TRUE]);
-    $this->setExpectedException(MigrateSkipRowException::class, 'The hook migrate_foo_prepare_row has skipped this row.');
+    $this->expectException(MigrateSkipRowException::class);
+    $this->expectExceptionMessage('The hook migrate_foo_prepare_row has skipped this row.');
 
     $event = new MigratePreRowSaveEvent($migration, new MigrateMessage(), $row);
     $event_subscriber = new PluginEventSubscriber($module_handler->reveal());
