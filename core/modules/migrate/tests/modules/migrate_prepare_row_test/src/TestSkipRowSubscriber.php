@@ -15,7 +15,7 @@ class TestSkipRowSubscriber implements EventSubscriberInterface {
   /**
    * {@inheritdoc}
    */
-  public static function getSubscribedEvents() {
+  public static function getSubscribedEvents(): array {
     return [MigrateEvents::PREPARE_ROW => 'skipRow3'];
   }
 
@@ -28,11 +28,10 @@ class TestSkipRowSubscriber implements EventSubscriberInterface {
    * @throws \Drupal\migrate\MigrateSkipRowException
    *   When row ID is 3.
    */
-  public function skipRow3(MigratePreRowSaveEvent $event) {
-    if (in_array('prepare_row test', $event->getMigration()->getMigrationTags())) {
-      if ($event->getRow()->getSourceProperty('id') == 3) {
-        throw new MigrateSkipRowException('skipped row 3', TRUE);
-      }
+  public function skipRow3(MigratePreRowSaveEvent $event): void {
+    if ($event->getRow()->getSourceProperty('id') === 3 &&
+      in_array('prepare_row test', $event->getMigration()->getMigrationTags(), TRUE)) {
+      throw new MigrateSkipRowException('skipped row 3', TRUE);
     }
   }
 

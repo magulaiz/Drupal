@@ -198,7 +198,7 @@ class MigrateEventsTest extends KernelTestBase {
    * @param string $name
    *   The event name.
    */
-  public function prepareRowEventRecorder(MigratePreRowSaveEvent $event, $name) {
+  public function prepareRowEventRecorder(MigratePreRowSaveEvent $event, string $name): void {
     $this->state->set('migrate_events_test.prepare_row_event', [
       'event_name' => $name,
       'row' => $event->getRow(),

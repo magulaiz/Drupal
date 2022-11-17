@@ -36,7 +36,6 @@ class MigrateSkipRowTest extends KernelTestBase {
           ['id' => '1', 'data' => 'skip_and_record'],
           ['id' => '2', 'data' => 'skip_and_do_not_record'],
           ['id' => '3', 'data' => 'skip_via_event_subscriber'],
-
         ],
         'ids' => [
           'id' => ['type' => 'string'],

@@ -405,11 +405,10 @@ class MigrateSourceTest extends MigrateTestCase {
     return new MigrateExecutable($migration, $message, $event_dispatcher);
   }
 
-
   /**
    * Sets the 'event_dispatcher' service in container.
    */
-  protected function setEventDispatcher() {
+  protected function setEventDispatcher(): void {
     $container = new ContainerBuilder();
     $event_dispatcher = $this->getMockBuilder(EventDispatcherInterface::class)
       ->getMock();

@@ -93,7 +93,7 @@ final class MigrateEvents {
    *
    * @var string
    */
-  const PREPARE_ROW = 'migrate.prepare_row';
+  public const PREPARE_ROW = 'migrate.prepare_row';
 
   /**
    * Name of the event fired when about to import a single item.

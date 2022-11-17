@@ -153,7 +153,7 @@ use Drupal\migrate\Row;
  *
  * @ingroup migration
  *
- * @deprecated in Drupal 8.7.0 and will be removed before Drupal 9.0.0. Replace
+ * @deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Replace
  *   hook implementations with \Drupal\migrate\Event\MigrateEvents::PREPARE_ROW
  *   event subscribers. In order to skip the row being prepared, throw
  *   \Drupal\migrate\MigrateSkipRowException in the event subscriber.
@@ -184,7 +184,7 @@ function hook_migrate_prepare_row(Row $row, MigrateSourceInterface $source, Migr
  *
  * @ingroup migration
  *
- * @deprecated in Drupal 8.7.0 and will be removed before Drupal 9.0.0. Replace
+ * @deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Replace
  *   hook implementations with \Drupal\migrate\Event\MigrateEvents::PREPARE_ROW
  *   event subscribers. In order to skip the row being prepared, throw
  *   \Drupal\migrate\MigrateSkipRowException in the event subscriber.

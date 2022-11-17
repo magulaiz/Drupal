@@ -15,6 +15,7 @@ use Drupal\migrate\MigrateSkipRowException;
 use Drupal\migrate\Plugin\MigrateIdMapInterface;
 use Drupal\migrate\Plugin\MigrateSourceInterface;
 use Drupal\migrate\Row;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
  * The base class for source plugins.
@@ -236,7 +237,7 @@ abstract class SourcePluginBase extends PluginBase implements MigrateSourceInter
    *
    * @var \Symfony\Component\EventDispatcher\EventDispatcherInterface
    */
-  protected $eventDispatcher;
+  protected EventDispatcherInterface $eventDispatcher;
 
   /**
    * {@inheritdoc}
@@ -625,10 +626,10 @@ abstract class SourcePluginBase extends PluginBase implements MigrateSourceInter
    * @return \Symfony\Component\EventDispatcher\EventDispatcherInterface
    *   The event dispatcher service.
    *
-   * @todo Properly inject this service in Drupal 9.x.
+   * @todo Properly inject this service in Drupal 11.x.
    * https://www.drupal.org/project/drupal/issues/2791041
    */
-  protected function getEventDispatcher() {
+  protected function getEventDispatcher(): EventDispatcherInterface {
     if (!isset($this->eventDispatcher)) {
       $this->eventDispatcher = \Drupal::service('event_dispatcher');
     }
