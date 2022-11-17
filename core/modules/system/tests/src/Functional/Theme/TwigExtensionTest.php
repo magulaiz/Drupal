@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\system\Functional\Theme;
 
+use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\twig_extension_test\TwigExtension\TestExtension;
 
@@ -124,6 +125,16 @@ class TwigExtensionTest extends BrowserTestBase {
     $this->assertStringContainsString('💩', $dumps[2]->getText());
     $this->assertStringContainsString('☄️', $dumps[3]->getText());
 
+  }
+
+  /**
+   * Tests output of MarkupInterface of TwigExtension->renderVar().
+   */
+  public function testRenderMarkup() {
+    /** @var \Drupal\Core\Template\TwigExtension $extension */
+    $extension = \Drupal::service('twig.extension');
+    $markup = new FormattableMarkup('<span>This is a @markup</span>', ['@markup' => 'MarkupInterface']);
+    $this->assertIdentical($extension->renderVar($markup), '<span>This is a MarkupInterface</span>', 'TwigExtension::renderVar() returns MarkupInterface correctly.');
   }
 
 }

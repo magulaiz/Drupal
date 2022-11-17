@@ -83,3 +83,10 @@ twig_theme_test_dump:
     _controller: '\Drupal\twig_theme_test\TwigThemeTestController::dump'
   requirements:
     _access: 'TRUE'
+
+twig_theme_test_render_array:
+  path: '/twig-theme-test/render-array'
+  defaults:
+    _controller: '\Drupal\twig_theme_test\TwigThemeTestController::transRenderArray'
+  requirements:
+    _access: 'TRUE'
