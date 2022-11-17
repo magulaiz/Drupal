@@ -4,8 +4,11 @@ namespace Drupal\migrate\Plugin\migrate\source;
 
 use Drupal\Component\Serialization\Json;
 use Drupal\Core\Plugin\PluginBase;
+use Drupal\migrate\Event\MigrateEvents;
+use Drupal\migrate\Event\MigratePreRowSaveEvent;
 use Drupal\migrate\Event\MigrateRollbackEvent;
 use Drupal\migrate\Event\RollbackAwareInterface;
+use Drupal\migrate\MigrateMessage;
 use Drupal\migrate\Plugin\MigrationInterface;
 use Drupal\migrate\MigrateException;
 use Drupal\migrate\MigrateSkipRowException;
@@ -115,13 +118,6 @@ use Drupal\migrate\Row;
  * @ingroup migration
  */
 abstract class SourcePluginBase extends PluginBase implements MigrateSourceInterface, RollbackAwareInterface {
-
-  /**
-   * The module handler service.
-   *
-   * @var \Drupal\Core\Extension\ModuleHandlerInterface
-   */
-  protected $moduleHandler;
 
   /**
    * The entity migration object.
@@ -236,6 +232,13 @@ abstract class SourcePluginBase extends PluginBase implements MigrateSourceInter
   protected $iterator;
 
   /**
+   * The event dispatcher service.
+   *
+   * @var \Symfony\Component\EventDispatcher\EventDispatcherInterface
+   */
+  protected $eventDispatcher;
+
+  /**
    * {@inheritdoc}
    */
   public function __construct(array $configuration, $plugin_id, $plugin_definition, MigrationInterface $migration) {
@@ -274,40 +277,19 @@ abstract class SourcePluginBase extends PluginBase implements MigrateSourceInter
   abstract protected function initializeIterator();
 
   /**
-   * Gets the module handler.
-   *
-   * @return \Drupal\Core\Extension\ModuleHandlerInterface
-   *   The module handler.
-   */
-  protected function getModuleHandler() {
-    if (!isset($this->moduleHandler)) {
-      $this->moduleHandler = \Drupal::moduleHandler();
-    }
-    return $this->moduleHandler;
-  }
-
-  /**
    * {@inheritdoc}
    */
   public function prepareRow(Row $row) {
     $result = TRUE;
     try {
-      $result_hook = $this->getModuleHandler()->invokeAll('migrate_prepare_row', [$row, $this, $this->migration]);
-      $result_named_hook = $this->getModuleHandler()->invokeAll('migrate_' . $this->migration->id() . '_prepare_row', [$row, $this, $this->migration]);
-      // We will skip if any hook returned FALSE.
-      $skip = ($result_hook && in_array(FALSE, $result_hook)) || ($result_named_hook && in_array(FALSE, $result_named_hook));
-      $save_to_map = TRUE;
+      $this->getEventDispatcher()->dispatch(new MigratePreRowSaveEvent($this->migration, new MigrateMessage(), $row), MigrateEvents::PREPARE_ROW);
     }
+    // We're explicitly skipping this row - keep track in the map table.
     catch (MigrateSkipRowException $e) {
-      $skip = TRUE;
       $save_to_map = $e->getSaveToMap();
       if ($message = trim($e->getMessage())) {
         $this->idMap->saveMessage($row->getSourceIdValues(), $message, MigrationInterface::MESSAGE_INFORMATIONAL);
       }
-    }
-
-    // We're explicitly skipping this row - keep track in the map table.
-    if ($skip) {
       // Make sure we replace any previous messages for this item with any
       // new ones.
       if ($save_to_map) {
@@ -317,7 +299,7 @@ abstract class SourcePluginBase extends PluginBase implements MigrateSourceInter
       }
       $result = FALSE;
     }
-    elseif ($this->trackChanges) {
+    if ($this->trackChanges) {
       // When tracking changed data, We want to quietly skip (rather than
       // "ignore") rows with changes. The caller needs to make that decision,
       // so we need to provide them with the necessary information (before and
@@ -635,6 +617,22 @@ abstract class SourcePluginBase extends PluginBase implements MigrateSourceInter
       return $this->pluginDefinition['source_module'];
     }
     return NULL;
+  }
+
+  /**
+   * Returns the event dispatcher service.
+   *
+   * @return \Symfony\Component\EventDispatcher\EventDispatcherInterface
+   *   The event dispatcher service.
+   *
+   * @todo Properly inject this service in Drupal 9.x.
+   * https://www.drupal.org/project/drupal/issues/2791041
+   */
+  protected function getEventDispatcher() {
+    if (!isset($this->eventDispatcher)) {
+      $this->eventDispatcher = \Drupal::service('event_dispatcher');
+    }
+    return $this->eventDispatcher;
   }
 
 }

@@ -79,6 +79,23 @@ final class MigrateEvents {
   const POST_IMPORT = 'migrate.post_import';
 
   /**
+   * Name of the event fired when preparing a source data row.
+   *
+   * This event allows modules to perform an action whenever the source plugin
+   * has read the initial source data into a Row object. Typically, this would
+   * be used to add data to the row, manipulate the data into a canonical form,
+   * or signal by exception that the row should be skipped. The event listener
+   * method receives a \Drupal\migrate\Event\MigratePreRowSaveEvent instance.
+   *
+   * @Event
+   *
+   * @see \Drupal\migrate\Event\MigratePreRowSaveEvent
+   *
+   * @var string
+   */
+  const PREPARE_ROW = 'migrate.prepare_row';
+
+  /**
    * Name of the event fired when about to import a single item.
    *
    * This event allows modules to perform an action whenever a specific item

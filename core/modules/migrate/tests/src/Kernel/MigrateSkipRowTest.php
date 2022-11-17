@@ -11,6 +11,7 @@ use Drupal\migrate\Plugin\MigrateIdMapInterface;
  * Tests row skips triggered during hook_migrate_prepare_row().
  *
  * @group migrate
+ * @group legacy
  */
 class MigrateSkipRowTest extends KernelTestBase {
 
@@ -34,6 +35,8 @@ class MigrateSkipRowTest extends KernelTestBase {
         'data_rows' => [
           ['id' => '1', 'data' => 'skip_and_record'],
           ['id' => '2', 'data' => 'skip_and_do_not_record'],
+          ['id' => '3', 'data' => 'skip_via_event_subscriber'],
+
         ],
         'ids' => [
           'id' => ['type' => 'string'],
@@ -72,6 +75,16 @@ class MigrateSkipRowTest extends KernelTestBase {
     $this->assertEquals('skip_and_do_not_record message', $message->message);
     $this->assertEquals(MigrationInterface::MESSAGE_INFORMATIONAL, $message->level);
 
+    // The third row is recorded in the map.
+    $map_row = $id_map_plugin->getRowBySource(['id' => 3]);
+    $this->assertEquals(MigrateIdMapInterface::STATUS_IGNORED, $map_row['source_row_status']);
+    // Check that the correct message has been logged for the 3rd roe.
+    $messages = $id_map_plugin->getMessages(['id' => 3])->fetchAll();
+    $this->assertCount(1, $messages);
+    $message = reset($messages);
+    $this->assertEquals('skipped row 3', $message->message);
+    $this->assertEquals(MigrationInterface::MESSAGE_INFORMATIONAL, $message->level);
+
     // Insert a custom processor in the process flow.
     $definition['process']['value'] = [
       'source' => 'data',
@@ -81,6 +94,7 @@ class MigrateSkipRowTest extends KernelTestBase {
     $definition['source']['data_rows'] = [
       ['id' => '1', 'data' => 'skip_and_record (use plugin)'],
       ['id' => '2', 'data' => 'skip_and_do_not_record (use plugin)'],
+      ['id' => '3', 'data' => 'skip_via_event_subscriber (use plugin)'],
     ];
     $migration = \Drupal::service('plugin.manager.migration')->createStubMigration($definition);
 
@@ -96,6 +110,9 @@ class MigrateSkipRowTest extends KernelTestBase {
     // The second row is not recorded in the map.
     $map_row = $id_map_plugin->getRowBySource(['id' => 2]);
     $this->assertFalse($map_row);
+    // The third row is not recorded in the map.
+    $map_row = $id_map_plugin->getRowBySource(['id' => 3]);
+    $this->assertEquals(MigrateIdMapInterface::STATUS_IGNORED, $map_row['source_row_status']);
   }
 
 }

@@ -2,17 +2,37 @@
 
 namespace Drupal\migrate\Plugin;
 
+use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\migrate\Event\ImportAwareInterface;
 use Drupal\migrate\Event\MigrateEvents;
 use Drupal\migrate\Event\MigrateImportEvent;
+use Drupal\migrate\Event\MigratePreRowSaveEvent;
 use Drupal\migrate\Event\MigrateRollbackEvent;
 use Drupal\migrate\Event\RollbackAwareInterface;
+use Drupal\migrate\MigrateSkipRowException;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
  * Event subscriber to forward Migrate events to source and destination plugins.
  */
 class PluginEventSubscriber implements EventSubscriberInterface {
+
+  /**
+   * The module handler.
+   *
+   * @var \Drupal\Core\Extension\ModuleHandlerInterface
+   */
+  protected $moduleHandler;
+
+  /**
+   * PluginEventSubscriber constructor.
+   *
+   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
+   *   The module handler.
+   */
+  public function __construct(ModuleHandlerInterface $module_handler) {
+    $this->moduleHandler = $module_handler;
+  }
 
   /**
    * Tries to invoke event handling methods on source and destination plugins.
@@ -79,6 +99,33 @@ class PluginEventSubscriber implements EventSubscriberInterface {
   }
 
   /**
+   * Runs deprecated prepare row hook implementations.
+   *
+   * @param \Drupal\migrate\Event\MigratePreRowSaveEvent $event
+   *
+   * @deprecated in Drupal 8.7.0 and will be removed before Drupal 9.0.0.
+   *
+   * @see https://www.drupal.org/node/2952459
+   */
+  public function hookPrepareRow(MigratePreRowSaveEvent $event) {
+    $deprecation_message = 'Replace hook implementations with \Drupal\migrate\Event\MigrateEvents::PREPARE_ROW event subscribers. In order to skip the row, throw \Drupal\migrate\MigrateSkipRowException in the event subscriber. See https://www.drupal.org/node/2952459';
+    $result_hook = $this->moduleHandler->invokeAllDeprecated($deprecation_message, 'migrate_prepare_row', [$event->getRow(), $event->getMigration()->getSourcePlugin(), $event->getMigration()]);
+    // We will skip if migrate_prepare_row hook returned FALSE.
+    $skip = $result_hook && in_array(FALSE, $result_hook);
+    if ($skip) {
+      throw new MigrateSkipRowException('The hook migrate_prepare_row has skipped this row.');
+    }
+    $hook = 'migrate_' . $event->getMigration()->id() . '_prepare_row';
+    $result_named_hook = $this->moduleHandler->invokeAllDeprecated($deprecation_message, $hook, [$event->getRow(), $event->getMigration()->getSourcePlugin(), $event->getMigration()]);
+    // We will skip if migrate_MIGRATION_ID_prepare_row hook returned FALSE.
+    $skip = $result_named_hook && in_array(FALSE, $result_named_hook);
+    if ($skip) {
+      throw new MigrateSkipRowException(sprintf('The hook %s has skipped this row.', $hook));
+    }
+
+  }
+
+  /**
    * {@inheritdoc}
    */
   public static function getSubscribedEvents(): array {
@@ -87,6 +134,7 @@ class PluginEventSubscriber implements EventSubscriberInterface {
     $events[MigrateEvents::POST_IMPORT][] = ['postImport'];
     $events[MigrateEvents::PRE_ROLLBACK][] = ['preRollback'];
     $events[MigrateEvents::POST_ROLLBACK][] = ['postRollback'];
+    $events[MigrateEvents::PREPARE_ROW][] = ['hookPrepareRow'];
 
     return $events;
   }

@@ -46,6 +46,8 @@ class MigrateEventsTest extends KernelTestBase {
       [$this, 'preImportEventRecorder']);
     \Drupal::service('event_dispatcher')->addListener(MigrateEvents::POST_IMPORT,
       [$this, 'postImportEventRecorder']);
+    \Drupal::service('event_dispatcher')->addListener(MigrateEvents::PREPARE_ROW,
+      [$this, 'prepareRowEventRecorder']);
     \Drupal::service('event_dispatcher')->addListener(MigrateEvents::PRE_ROW_SAVE,
       [$this, 'preRowSaveEventRecorder']);
     \Drupal::service('event_dispatcher')->addListener(MigrateEvents::POST_ROW_SAVE,
@@ -98,6 +100,13 @@ class MigrateEventsTest extends KernelTestBase {
 
     $event = $this->state->get('migrate_events_test.map_delete_event', []);
     $this->assertSame([], $event);
+
+    $event = $this->state->get('migrate_events_test.prepare_row_event', []);
+    $this->assertEquals(MigrateEvents::PREPARE_ROW, $event['event_name']);
+    // Validating the last row processed.
+    $this->assertEquals('dummy value', $event['row']->getSourceProperty('data'));
+    $this->assertEquals('embedded_data', $event['source']->getPluginId());
+    $this->assertEquals($migration->id(), $event['migration']->id());
 
     $event = $this->state->get('migrate_events_test.pre_row_save_event', []);
     $this->assertSame(MigrateEvents::PRE_ROW_SAVE, $event['event_name']);
@@ -177,6 +186,23 @@ class MigrateEventsTest extends KernelTestBase {
   public function postImportEventRecorder(MigrateImportEvent $event, $name) {
     $this->state->set('migrate_events_test.post_import_event', [
       'event_name' => $name,
+      'migration' => $event->getMigration(),
+    ]);
+  }
+
+  /**
+   * Reacts to prepare-row event.
+   *
+   * @param \Drupal\Migrate\Event\MigratePreRowSaveEvent $event
+   *   The migration event.
+   * @param string $name
+   *   The event name.
+   */
+  public function prepareRowEventRecorder(MigratePreRowSaveEvent $event, $name) {
+    $this->state->set('migrate_events_test.prepare_row_event', [
+      'event_name' => $name,
+      'row' => $event->getRow(),
+      'source' => $event->getMigration()->getSourcePlugin(),
       'migration' => $event->getMigration(),
     ]);
   }

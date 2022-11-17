@@ -152,6 +152,13 @@ use Drupal\migrate\Row;
  *   The current migration.
  *
  * @ingroup migration
+ *
+ * @deprecated in Drupal 8.7.0 and will be removed before Drupal 9.0.0. Replace
+ *   hook implementations with \Drupal\migrate\Event\MigrateEvents::PREPARE_ROW
+ *   event subscribers. In order to skip the row being prepared, throw
+ *   \Drupal\migrate\MigrateSkipRowException in the event subscriber.
+ *
+ * @see https://www.drupal.org/node/2952459
  */
 function hook_migrate_prepare_row(Row $row, MigrateSourceInterface $source, MigrationInterface $migration) {
   if ($migration->id() == 'd6_filter_formats') {
@@ -176,6 +183,13 @@ function hook_migrate_prepare_row(Row $row, MigrateSourceInterface $source, Migr
  *   The current migration.
  *
  * @ingroup migration
+ *
+ * @deprecated in Drupal 8.7.0 and will be removed before Drupal 9.0.0. Replace
+ *   hook implementations with \Drupal\migrate\Event\MigrateEvents::PREPARE_ROW
+ *   event subscribers. In order to skip the row being prepared, throw
+ *   \Drupal\migrate\MigrateSkipRowException in the event subscriber.
+ *
+ * @see https://www.drupal.org/node/2952459
  */
 function hook_migrate_MIGRATION_ID_prepare_row(Row $row, MigrateSourceInterface $source, MigrationInterface $migration) {
   $value = $source->getDatabase()->query('SELECT [value] FROM {variable} WHERE [name] = :name', [':name' => 'mymodule_filter_foo_' . $row->getSourceProperty('format')])->fetchField();

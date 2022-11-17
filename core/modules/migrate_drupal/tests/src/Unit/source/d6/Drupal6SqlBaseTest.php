@@ -133,7 +133,6 @@ class Drupal6SqlBaseTest extends MigrateTestCase {
 namespace Drupal\Tests\migrate_drupal\Unit\source\d6;
 
 use Drupal\Core\Database\Connection;
-use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
 
 /**
@@ -179,18 +178,6 @@ class TestDrupal6SqlBase extends DrupalSqlBase {
    */
   public function setDatabase(Connection $database) {
     $this->database = $database;
-  }
-
-  /**
-   * Tweaks Drupal6SqlBase to set a new module handler for tests.
-   *
-   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
-   *   The new module handler to use.
-   *
-   * @see \Drupal\Tests\migrate\Unit\MigrateSqlTestCase
-   */
-  public function setModuleHandler(ModuleHandlerInterface $module_handler) {
-    $this->moduleHandler = $module_handler;
   }
 
   /**

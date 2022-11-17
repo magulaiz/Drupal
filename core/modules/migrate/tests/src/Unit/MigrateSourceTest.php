@@ -9,9 +9,10 @@ namespace Drupal\Tests\migrate\Unit;
 
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
-use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\KeyValueStore\KeyValueFactoryInterface;
 use Drupal\Core\KeyValueStore\KeyValueStoreInterface;
+use Drupal\migrate\Event\MigrateEvents;
+use Drupal\migrate\Event\MigratePreRowSaveEvent;
 use Drupal\migrate\MigrateException;
 use Drupal\migrate\MigrateExecutable;
 use Drupal\migrate\MigrateSkipRowException;
@@ -19,6 +20,8 @@ use Drupal\migrate\Plugin\migrate\source\SourcePluginBase;
 use Drupal\migrate\Plugin\MigrateIdMapInterface;
 use Drupal\migrate\Plugin\MigrateSourceInterface;
 use Drupal\migrate\Row;
+use Prophecy\Argument;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
  * @coversDefaultClass \Drupal\migrate\Plugin\migrate\source\SourcePluginBase
@@ -110,7 +113,7 @@ class MigrateSourceTest extends MigrateTestCase {
       ->willReturn($id_map_array);
 
     $constructor_args = [$configuration, 'd6_action', [], $this->migration];
-    $methods = ['getModuleHandler', 'fields', 'getIds', '__toString', 'prepareRow', 'initializeIterator'];
+    $methods = ['fields', 'getIds', '__toString', 'prepareRow', 'initializeIterator'];
     $source_plugin = $this->getMockBuilder(SourcePluginBase::class)
       ->onlyMethods($methods)
       ->setConstructorArgs($constructor_args)
@@ -141,11 +144,6 @@ class MigrateSourceTest extends MigrateTestCase {
     $source_plugin
       ->method('initializeIterator')
       ->willReturn($iterator);
-
-    $module_handler = $this->createMock(ModuleHandlerInterface::class);
-    $source_plugin
-      ->method('getModuleHandler')
-      ->willReturn($module_handler);
 
     $this->migration
       ->method('getSourcePlugin')
@@ -288,6 +286,7 @@ class MigrateSourceTest extends MigrateTestCase {
    * @covers ::prepareRow
    */
   public function testPrepareRow() {
+    $this->setEventDispatcher();
     $this->migrationConfiguration['id'] = 'test_migration';
 
     // Get a new migration with an id.
@@ -295,14 +294,14 @@ class MigrateSourceTest extends MigrateTestCase {
     $source = new StubSourcePlugin([], '', [], $migration);
     $row = new Row();
 
-    $module_handler = $this->prophesize(ModuleHandlerInterface::class);
-    $module_handler->invokeAll('migrate_prepare_row', [$row, $source, $migration])
-      ->willReturn([TRUE, TRUE])
+    /** @var \Prophecy\Prophecy\ObjectProphecy|\Drupal\migrate\Plugin\migrate\source\SourcePluginBase $mock_event_dispatcher */
+    $mock_event_dispatcher = $this->prophesize(EventDispatcherInterface::class);
+    $mock_event_dispatcher->dispatch(MigrateEvents::PREPARE_ROW, Argument::type(MigratePreRowSaveEvent::class))
       ->shouldBeCalled();
-    $module_handler->invokeAll('migrate_' . $migration->id() . '_prepare_row', [$row, $source, $migration])
-      ->willReturn([TRUE, TRUE])
-      ->shouldBeCalled();
-    $source->setModuleHandler($module_handler->reveal());
+    $reflection = new \ReflectionClass($source);
+    $reflection_property = $reflection->getProperty('eventDispatcher');
+    $reflection_property->setAccessible(TRUE);
+    $reflection_property->setValue($source, $mock_event_dispatcher->reveal());
 
     // Ensure we don't log this to the mapping table.
     $this->idMap->expects($this->never())
@@ -313,110 +312,64 @@ class MigrateSourceTest extends MigrateTestCase {
     // Track_changes...
     $source = new StubSourcePlugin(['track_changes' => TRUE], '', [], $migration);
     $row2 = $this->prophesize(Row::class);
-    $row2->rehash()
-      ->shouldBeCalled();
-    $module_handler->invokeAll('migrate_prepare_row', [$row2, $source, $migration])
-      ->willReturn([TRUE, TRUE])
-      ->shouldBeCalled();
-    $module_handler->invokeAll('migrate_' . $migration->id() . '_prepare_row', [$row2, $source, $migration])
-      ->willReturn([TRUE, TRUE])
-      ->shouldBeCalled();
-    $source->setModuleHandler($module_handler->reveal());
+    $row2->rehash();
     $this->assertTrue($source->prepareRow($row2->reveal()));
-  }
-
-  /**
-   * Tests that global prepare hooks can skip rows.
-   *
-   * @covers ::prepareRow
-   */
-  public function testPrepareRowGlobalPrepareSkip() {
-    $this->migrationConfiguration['id'] = 'test_migration';
-
-    $migration = $this->getMigration();
-    $source = new StubSourcePlugin([], '', [], $migration);
-    $row = new Row();
-
-    $module_handler = $this->prophesize(ModuleHandlerInterface::class);
-    // Return a failure from a prepare row hook.
-    $module_handler->invokeAll('migrate_prepare_row', [$row, $source, $migration])
-      ->willReturn([TRUE, FALSE, TRUE])
-      ->shouldBeCalled();
-    $module_handler->invokeAll('migrate_' . $migration->id() . '_prepare_row', [$row, $source, $migration])
-      ->willReturn([TRUE, TRUE])
-      ->shouldBeCalled();
-    $source->setModuleHandler($module_handler->reveal());
-
-    $this->idMap->expects($this->once())
-      ->method('saveIdMapping')
-      ->with($row, [], MigrateIdMapInterface::STATUS_IGNORED);
-
-    $this->assertFalse($source->prepareRow($row));
   }
 
   /**
    * Tests that migrate specific prepare hooks can skip rows.
    *
    * @covers ::prepareRow
+   *
+   * @legacy
    */
   public function testPrepareRowMigratePrepareSkip() {
+    $this->setEventDispatcher();
     $this->migrationConfiguration['id'] = 'test_migration';
 
     $migration = $this->getMigration();
     $source = new StubSourcePlugin([], '', [], $migration);
     $row = new Row();
 
-    $module_handler = $this->prophesize(ModuleHandlerInterface::class);
-    // Return a failure from a prepare row hook.
-    $module_handler->invokeAll('migrate_prepare_row', [$row, $source, $migration])
-      ->willReturn([TRUE, TRUE])
-      ->shouldBeCalled();
-    $module_handler->invokeAll('migrate_' . $migration->id() . '_prepare_row', [$row, $source, $migration])
-      ->willReturn([TRUE, FALSE, TRUE])
-      ->shouldBeCalled();
-    $source->setModuleHandler($module_handler->reveal());
+    /** @var \Prophecy\Prophecy\ObjectProphecy|\Drupal\migrate\Plugin\migrate\source\SourcePluginBase $mock_event_dispatcher */
+    $mock_event_dispatcher = $this->prophesize(EventDispatcherInterface::class);
+    $mock_event_dispatcher->dispatch(MigrateEvents::PREPARE_ROW, Argument::type(MigratePreRowSaveEvent::class))
+      ->willThrow(new MigrateSkipRowException('Error occured', TRUE));
+    $reflection = new \ReflectionClass($source);
+    $reflection_property = $reflection->getProperty('eventDispatcher');
+    $reflection_property->setAccessible(TRUE);
+    $reflection_property->setValue($source, $mock_event_dispatcher->reveal());
 
+    // Ensure we log this to the mapping table and save a mapping.
     $this->idMap->expects($this->once())
-      ->method('saveIdMapping')
-      ->with($row, [], MigrateIdMapInterface::STATUS_IGNORED);
+      ->method('saveMessage');
+    $this->idMap->expects($this->once())
+      ->method('saveIdMapping');
 
     $this->assertFalse($source->prepareRow($row));
   }
 
   /**
-   * Tests that a skip exception during prepare hooks correctly skips.
+   * Test that a skip exception can save id map and message.
    *
    * @covers ::prepareRow
    */
-  public function testPrepareRowPrepareException() {
+  public function testPrepareRowPrepareSaveMapMessage() {
+    $this->setEventDispatcher();
     $this->migrationConfiguration['id'] = 'test_migration';
 
     $migration = $this->getMigration();
     $source = new StubSourcePlugin([], '', [], $migration);
     $row = new Row();
 
-    $module_handler = $this->prophesize(ModuleHandlerInterface::class);
-    // Return a failure from a prepare row hook.
-    $module_handler->invokeAll('migrate_prepare_row', [$row, $source, $migration])
-      ->willReturn([TRUE, TRUE])
-      ->shouldBeCalled();
-    $module_handler->invokeAll('migrate_' . $migration->id() . '_prepare_row', [$row, $source, $migration])
-      ->willThrow(new MigrateSkipRowException())
-      ->shouldBeCalled();
-    $source->setModuleHandler($module_handler->reveal());
-
-    // This will only be called on the first prepare because the second
-    // explicitly avoids it.
-    $this->idMap->expects($this->once())
-      ->method('saveIdMapping')
-      ->with($row, [], MigrateIdMapInterface::STATUS_IGNORED);
-    $this->assertFalse($source->prepareRow($row));
-
-    // Throw an exception the second time that avoids mapping.
-    $e = new MigrateSkipRowException('', FALSE);
-    $module_handler->invokeAll('migrate_' . $migration->id() . '_prepare_row', [$row, $source, $migration])
-      ->willThrow($e)
-      ->shouldBeCalled();
+    /** @var \Prophecy\Prophecy\ObjectProphecy|\Drupal\migrate\Plugin\migrate\source\SourcePluginBase $mock_event_dispatcher */
+    $mock_event_dispatcher = $this->prophesize(EventDispatcherInterface::class);
+    $mock_event_dispatcher->dispatch(MigrateEvents::PREPARE_ROW, Argument::type(MigratePreRowSaveEvent::class))
+      ->willThrow(new MigrateSkipRowException('', FALSE));
+    $reflection = new \ReflectionClass($source);
+    $reflection_property = $reflection->getProperty('eventDispatcher');
+    $reflection_property->setAccessible(TRUE);
+    $reflection_property->setValue($source, $mock_event_dispatcher->reveal());
     $this->assertFalse($source->prepareRow($row));
   }
 
@@ -452,22 +405,24 @@ class MigrateSourceTest extends MigrateTestCase {
     return new MigrateExecutable($migration, $message, $event_dispatcher);
   }
 
+
+  /**
+   * Sets the 'event_dispatcher' service in container.
+   */
+  protected function setEventDispatcher() {
+    $container = new ContainerBuilder();
+    $event_dispatcher = $this->getMockBuilder(EventDispatcherInterface::class)
+      ->getMock();
+    $container->set('event_dispatcher', $event_dispatcher);
+    \Drupal::setContainer($container);
+  }
+
 }
 
 /**
  * Stubbed source plugin for testing base class implementations.
  */
 class StubSourcePlugin extends SourcePluginBase {
-
-  /**
-   * Helper for setting internal module handler implementation.
-   *
-   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
-   *   The module handler.
-   */
-  public function setModuleHandler(ModuleHandlerInterface $module_handler) {
-    $this->moduleHandler = $module_handler;
-  }
 
   /**
    * {@inheritdoc}
