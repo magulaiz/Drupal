@@ -184,7 +184,7 @@ class AreaTest extends ViewTestBase {
 
     // Test the list of available tokens.
     $available = $empty_handler->getAvailableGlobalTokens();
-    foreach (['site', 'view'] as $type) {
+    foreach (['site', 'entity:view'] as $type) {
       $this->assertNotEmpty($available[$type]);
       $this->assertIsArray($available[$type]);
 

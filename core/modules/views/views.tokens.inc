@@ -11,55 +11,65 @@ use Drupal\Core\Render\BubbleableMetadata;
  * Implements hook_token_info().
  */
 function views_token_info() {
-  $info['types']['view'] = [
+  $info['types']['entity:view'] = [
     'name' => t('View', [], ['context' => 'View entity type']),
     'description' => t('Tokens related to views.'),
-    'needs-data' => 'view',
+    'needs-data' => 'entity:view',
   ];
-  $info['tokens']['view']['label'] = [
+  $info['tokens']['entity:view']['label'] = [
     'name' => t('Label'),
     'description' => t('The label of the view.'),
+    'type' => 'string',
   ];
-  $info['tokens']['view']['description'] = [
+  $info['tokens']['entity:view']['description'] = [
     'name' => t('Description'),
     'description' => t('The description of the view.'),
+    'type' => 'string',
   ];
-  $info['tokens']['view']['id'] = [
+  $info['tokens']['entity:view']['id'] = [
     'name' => t('ID'),
     'description' => t('The machine-readable ID of the view.'),
+    'type' => 'string',
   ];
-  $info['tokens']['view']['title'] = [
+  $info['tokens']['entity:view']['title'] = [
     'name' => t('Title'),
     'description' => t('The title of current display of the view.'),
+    'type' => 'string',
   ];
-  $info['tokens']['view']['url'] = [
+  $info['tokens']['entity:view']['url'] = [
     'name' => t('URL'),
     'description' => t('The URL of the view.'),
-    'type' => 'url',
+    'type' => 'uri',
   ];
-  $info['tokens']['view']['base-table'] = [
+  $info['tokens']['entity:view']['base-table'] = [
     'name' => t('Base table'),
     'description' => t('The base table used for this view.'),
+    'type' => 'string',
   ];
-  $info['tokens']['view']['base-field'] = [
+  $info['tokens']['entity:view']['base-field'] = [
     'name' => t('Base field'),
     'description' => t('The base field used for this view.'),
+    'type' => 'string',
   ];
-  $info['tokens']['view']['total-rows'] = [
+  $info['tokens']['entity:view']['total-rows'] = [
     'name' => t('Total rows'),
     'description' => t('The total amount of results returned from the view. The current display will be used.'),
+    'type' => 'integer',
   ];
-  $info['tokens']['view']['items-per-page'] = [
+  $info['tokens']['entity:view']['items-per-page'] = [
     'name' => t('Items per page'),
     'description' => t('The number of items per page.'),
+    'type' => 'integer',
   ];
-  $info['tokens']['view']['current-page'] = [
+  $info['tokens']['entity:view']['current-page'] = [
     'name' => t('Current page'),
     'description' => t('The current page of results the view is on.'),
+    'type' => 'integer',
   ];
-  $info['tokens']['view']['page-count'] = [
+  $info['tokens']['entity:view']['page-count'] = [
     'name' => t('Page count'),
     'description' => t('The total page count.'),
+    'type' => 'integer',
   ];
 
   return $info;
