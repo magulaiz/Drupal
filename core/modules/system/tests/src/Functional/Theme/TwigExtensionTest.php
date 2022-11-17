@@ -134,7 +134,7 @@ class TwigExtensionTest extends BrowserTestBase {
     /** @var \Drupal\Core\Template\TwigExtension $extension */
     $extension = \Drupal::service('twig.extension');
     $markup = new FormattableMarkup('<span>This is a @markup</span>', ['@markup' => 'MarkupInterface']);
-    $this->assertIdentical($extension->renderVar($markup), '<span>This is a MarkupInterface</span>', 'TwigExtension::renderVar() returns MarkupInterface correctly.');
+    $this->assertSame($extension->renderVar($markup), '<span>This is a MarkupInterface</span>', 'TwigExtension::renderVar() returns MarkupInterface correctly.');
   }
 
 }
