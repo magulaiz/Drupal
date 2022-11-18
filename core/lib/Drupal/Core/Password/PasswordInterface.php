@@ -39,15 +39,19 @@ interface PasswordInterface {
   /**
    * Check whether a hashed password needs to be replaced with a new hash.
    *
-   * This is typically called during the login process when the plain text
-   * password is available. A new hash is needed when the desired iteration
-   * count has changed by a modification of the password-service in the
-   * dependency injection container or if the user's password hash was
-   * generated in an update like user_update_7000() (see the Drupal 7
-   * documentation).
+   * This is typically called during the login process in order to trigger the
+   * rehashing of the password, as in that stage, the plain text password is
+   * available.
+   *
+   * This method returns TRUE in one of the next cases:
+   * - The parameters of hashing service were changed. For instance, the hashing
+   *   cost parameter 'password_hash_cost' was changed in core.services.yml.
+   * - The password hash was hashed in Drupal < 8.3.0.
+   * - The hash was migrated from a system that uses MD5 hashes, like Drupal 6,
+   *   or from Drupal 7.
    *
    * @param string $hash
-   *   The existing hash to be checked.
+   *   The hash to be checked.
    *
    * @return bool
    *   TRUE if the hash is outdated and needs rehash.

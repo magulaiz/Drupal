@@ -137,39 +137,117 @@ class UserLoginTest extends BrowserTestBase {
   }
 
   /**
-   * Tests user password is re-hashed upon login after changing $count_log2.
+   * Tests that user password is re-hashed upon login, after changing the cost.
    */
-  public function testPasswordRehashOnLogin() {
-    // Determine default log2 for phpass hashing algorithm.
-    $default_count_log2 = 16;
-
-    // Retrieve instance of password hashing algorithm.
-    $password_hasher = $this->container->get('password');
+  public function testPasswordRehashOnLoginAfterChangingCost() {
+    /** @var \Drupal\Core\Password\PasswordInterface $hashing_service */
+    $hashing_service = $this->container->get('password');
 
     // Create a new user and authenticate.
-    $account = $this->drupalCreateUser([]);
-    $password = $account->passRaw;
+    $account = $this->drupalCreateUser();
+    $plain_password = $account->pass_raw;
+    $old_hash = $account->getPassword();
+
+    // Check that the stored password doesn't need rehash.
+    $this->assertFalse($hashing_service->needsRehash($old_hash));
+
+    // The current hashing cost is set to 10 in the container. Increase cost by
+    // one, by enabling a module containing the necessary container changes.
+    \Drupal::service('module_installer')->install(['user_custom_pass_hash_params_test']);
+    $this->resetAll();
+    // Reload the hashing service after container changes.
+    $hashing_service = $this->container->get('password');
+
+    // Check that the stored password needs rehash.
+    $this->assertTrue($hashing_service->needsRehash($old_hash));
+
+    // User first login after the password hashing cost was changed.
     $this->drupalLogin($account);
     $this->drupalLogout();
-    // Load the stored user. The password hash should reflect $default_count_log2.
-    $user_storage = $this->container->get('entity_type.manager')->getStorage('user');
-    $account = User::load($account->id());
-    $this->assertSame($default_count_log2, $password_hasher->getCountLog2($account->getPassword()));
+    // Check that after login the password has been rehashed and is valid.
+    $new_hash = User::load($account->id())->getPassword();
+    $this->assertNotEquals($new_hash, $old_hash);
+    $this->assertTrue($hashing_service->check($plain_password, $new_hash));
+    $this->assertFalse($hashing_service->needsRehash($new_hash));
+  }
 
-    // Change the required number of iterations by loading a test-module
-    // containing the necessary container builder code and then verify that the
-    // users password gets rehashed during the login.
-    $overridden_count_log2 = 19;
-    \Drupal::service('module_installer')->install(['user_custom_phpass_params_test']);
-    $this->resetAll();
+  /**
+   * Tests rehashing of Drupal 6 (md5) passwords migrated to Drupal 8.
+   */
+  public function testDrupal6MigratedPasswordRehashing() {
+    /** @var \Drupal\Core\Password\PasswordInterface $main_hashing_service */
+    $main_hashing_service = $this->container->get('password');
 
-    $account->passRaw = $password;
+    $account = $this->drupalCreateUser();
+    $plain_password = $account->pass_raw;
+    $md5_pass = md5($plain_password);
+
+    /** @var \Drupal\Core\Password\PasswordInterface[] $migration_cases */
+    $migration_cases = [
+      // Drupal 6 (md5) passwords migrated to Drupal < 8.3.0 used the legacy
+      // password hashing engine, inherited from Drupal 7.
+      $this->container->get('legacy_password'),
+      // Drupal 6 (md5) passwords migrated to Drupal >= 8.3.0 are using the
+      // current hashing password engine, based PHP >=5.5.0 password hashing.
+      $main_hashing_service,
+    ];
+
+    foreach ($migration_cases as $hashing_service) {
+      // The user has been migrate from Drupal 6. The Drupal 6 md5 hashed
+      // password was rehashed with 'password' or 'legacy_password' password
+      // hashing service and prefixed with 'U'.
+      $old_hash = 'U' . $hashing_service->hash($md5_pass);
+      // Store the hashed password, but prevent rehashing.
+      $account->setPassword($old_hash);
+      $account->get('pass')->pre_hashed = TRUE;
+      $account->save();
+
+      // Check that the migrated password needs rehash.
+      $this->assertTrue($hashing_service->needsRehash($old_hash));
+
+      // User first login after migration.
+      $this->drupalLogin($account);
+      $this->drupalLogout();
+
+      // Check that after login the password has been rehashed and is valid.
+      $new_hash = User::load($account->id())->getPassword();
+      $this->assertNotEquals($new_hash, $old_hash);
+      $this->assertTrue($main_hashing_service->check($plain_password, $new_hash));
+      $this->assertFalse($main_hashing_service->needsRehash($new_hash));
+    }
+  }
+
+  /**
+   * Tests rehashing of Drupal 7 and < 8.3.0 passwords.
+   */
+  public function testPasswordRehashing() {
+    /** @var \Drupal\Core\Password\PasswordInterface $hashing_service */
+    $hashing_service = $this->container->get('password');
+    /** @var \Drupal\Core\Password\PasswordInterface $legacy_hashing_service */
+    $legacy_hashing_service = $this->container->get('legacy_password');
+
+    $account = $this->drupalCreateUser();
+    $plain = $account->pass_raw;
+
+    // User has Drupal < 8.3.0 hashed password or migrated from Drupal 7.
+    $old_hash = $legacy_hashing_service->hash($plain);
+    // Store the password but prevent rehashing.
+    $account->setPassword($old_hash);
+    $account->get('pass')->pre_hashed = TRUE;
+    $account->save();
+
+    // Check that the migrated password needs rehashing with the new service.
+    $this->assertTrue($hashing_service->needsRehash($old_hash));
+
+    // User first login after changing the hashing service.
     $this->drupalLogin($account);
-    // Load the stored user, which should have a different password hash now.
-    $user_storage->resetCache([$account->id()]);
-    $account = $user_storage->load($account->id());
-    $this->assertSame($overridden_count_log2, $password_hasher->getCountLog2($account->getPassword()));
-    $this->assertTrue($password_hasher->check($password, $account->getPassword()));
+    $this->drupalLogout();
+
+    // Check that after login the password has been rehashed and is valid.
+    $new_hash = User::load($account->id())->getPassword();
+    $this->assertNotEquals($new_hash, $old_hash);
+    $this->assertTrue($hashing_service->check($plain, $new_hash));
+    $this->assertFalse($hashing_service->needsRehash($new_hash));
   }
 
   /**
