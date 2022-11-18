@@ -58,6 +58,7 @@ class MenuLinkTest extends ViewTestBase {
       'administer menu',
     ]);
     $this->drupalPlaceBlock('system_menu_block:main');
+    $this->drupalPlaceBlock('local_tasks_block');
     $this->drupalCreateContentType(['type' => 'page']);
   }
 
@@ -109,6 +110,10 @@ class MenuLinkTest extends ViewTestBase {
     $this->drupalGet($node->toUrl());
     $this->assertSession()->pageTextContains('Primary level node');
     $this->assertSession()->pageTextContains('Secondary level view page');
+
+    // Test that local task menu items with arguments work.
+    $this->drupalGet('node/' . $node->id() . '/local');
+    $this->assertSession()->statusCodeEquals(200);
   }
 
 }
