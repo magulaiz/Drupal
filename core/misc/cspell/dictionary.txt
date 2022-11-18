@@ -1210,6 +1210,8 @@ revlog
 revpub
 ribisi
 ritchie
+rkey
+rmouse
 robloach
 robo
 rolename

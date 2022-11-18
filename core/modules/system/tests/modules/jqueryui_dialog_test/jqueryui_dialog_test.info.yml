@@ -1,0 +1,7 @@
+name: 'jQuery UI Dialog Test'
+type: module
+description: 'Module for testing jQuery UI dialog functionality'
+package: Testing
+version: VERSION
+dependencies:
+  - drupal:jquery_simulate

@@ -1,0 +1,9 @@
+jquery.simulate:
+  remote: https://github.com/jquery/jquery-simulate
+  version: "1.0.0"
+  license:
+    name: MIT
+    url: https://raw.githubusercontent.com/jquery/jquery-simulate/1.0.0/LICENSE.txt
+    gpl-compatible: true
+  js:
+    js/jquery.simulate.js: { }
