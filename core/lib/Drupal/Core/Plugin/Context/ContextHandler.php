@@ -7,11 +7,13 @@ use Drupal\Component\Plugin\Exception\ContextException;
 use Drupal\Component\Plugin\Exception\MissingValueContextException;
 use Drupal\Core\Cache\CacheableDependencyInterface;
 use Drupal\Core\Plugin\ContextAwarePluginInterface;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 
 /**
  * Provides methods to handle sets of contexts.
  */
 class ContextHandler implements ContextHandlerInterface {
+  use StringTranslationTrait;
 
   /**
    * {@inheritdoc}
@@ -149,6 +151,44 @@ class ContextHandler implements ContextHandlerInterface {
     if ($missing_value) {
       throw new MissingValueContextException($missing_value);
     }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getContextAssignmentElement(ContextAwarePluginInterface $plugin, array $contexts) {
+    $element = [];
+    foreach ($plugin->getContextDefinitions() as $context_slot => $definition) {
+      $valid_contexts = $this->getMatchingContexts($contexts, $definition);
+      $options = [];
+      foreach ($valid_contexts as $context_id => $context) {
+        $element['#tree'] = TRUE;
+        $options[$context_id] = $context->getContextDefinition()->getLabel();
+        $element[$context_slot] = [
+          '#type' => 'value',
+          '#value' => $context_id,
+        ];
+      }
+
+      // Show the context selector only if there is more than 1 option to choose
+      // from. Also, show if there is a single option but the plugin does not
+      // require a context.
+      if (count($options) > 1 || (count($options) == 1 && !$definition->isRequired())) {
+        $assignments = $plugin->getContextMapping();
+        $element[$context_slot] = [
+          '#title' => $definition->getLabel() ?: $this->t('Select a @context value:', ['@context' => $context_slot]),
+          '#type' => 'select',
+          '#options' => $options,
+          '#required' => $definition->isRequired(),
+          '#default_value' => !empty($assignments[$context_slot]) ? $assignments[$context_slot] : '',
+          '#description' => $definition->getDescription(),
+        ];
+        if (!$definition->isRequired()) {
+          $element[$context_slot]['#empty_value'] = '';
+        }
+      }
+    }
+    return $element;
   }
 
 }
