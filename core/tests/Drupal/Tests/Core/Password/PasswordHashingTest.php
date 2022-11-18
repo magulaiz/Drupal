@@ -125,7 +125,7 @@ class PasswordHashingTest extends UnitTestCase {
    * Tests that plain-text password is verifying against all its hashes.
    *
    * @covers \Drupal\Core\Password\PhpPassword::check
-   * @covers \Drupal\Core\Password\LegacyPassword::check
+   * @covers \Drupal\Core\Password\PhpassHashedPassword::check
    */
   public function testPasswordHashing() {
     // Check that text hashed with current service is different than the others.
@@ -214,8 +214,8 @@ class PasswordHashingTest extends UnitTestCase {
    */
   public function testWithinBounds() {
     $legacy_service = new FakeLegacyPassword();
-    $this->assertEquals(PhpassHashedPassword ::MIN_HASH_COUNT, $legacy_service->enforceLog2Boundaries(1));
-    $this->assertEquals(PhpassHashedPassword ::MAX_HASH_COUNT, $legacy_service->enforceLog2Boundaries(100));
+    $this->assertEquals(PhpassHashedPassword::MIN_HASH_COUNT, $legacy_service->enforceLog2Boundaries(1));
+    $this->assertEquals(PhpassHashedPassword::MAX_HASH_COUNT, $legacy_service->enforceLog2Boundaries(100));
   }
 
 }
@@ -223,7 +223,7 @@ class PasswordHashingTest extends UnitTestCase {
 /**
  * A fake legacy hashing class service for tests.
  */
-class FakeLegacyPassword extends PhpassHashedPassword  {
+class FakeLegacyPassword extends PhpassHashedPassword {
 
   public function __construct() {
     // Noop.
