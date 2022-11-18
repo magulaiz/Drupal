@@ -960,6 +960,16 @@ class WebAssert extends MinkWebAssert {
   /**
    * {@inheritdoc}
    */
+  public function elementAttributeNotExists($selectorType, $selector, $attribute) {
+    if (func_num_args() > 3) {
+      @trigger_error('Calling ' . __METHOD__ . ' with more than three arguments is deprecated in drupal:9.1.0 and will throw an \InvalidArgumentException in drupal:10.0.0. See https://www.drupal.org/node/3162537', E_USER_DEPRECATED);
+    }
+    return parent::elementAttributeNotExists($selectorType, $selector, $attribute);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function elementAttributeContains($selectorType, $selector, $attribute, $text) {
     assert(func_num_args() === 4);
     return parent::elementAttributeContains($selectorType, $selector, $attribute, $text);

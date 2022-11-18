@@ -472,6 +472,17 @@ class WebAssertArgumentsTest extends UnitTestCase {
   }
 
   /**
+   * @covers ::elementAttributeNotExists
+   */
+  public function testElementAttributeNotExists(): void {
+    $this->expectDeprecation('Calling Drupal\Tests\WebAssert::elementAttributeNotExists with more than three arguments is deprecated in drupal:9.1.0 and will throw an \InvalidArgumentException in drupal:10.0.0. See https://www.drupal.org/node/3162537');
+    $element = $this->prophesize(NodeElement::class);
+    $element->hasAttribute('bar')->willReturn(FALSE);
+    $this->page->find(Argument::any(), Argument::any())->willReturn($element->reveal());
+    $this->webAssert->elementAttributeNotExists('xpath', '//foo', 'bar', 'Extra argument');
+  }
+
+  /**
    * @covers ::elementAttributeContains
    */
   public function testElementAttributeContains(): void {
