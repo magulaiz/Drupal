@@ -63,14 +63,19 @@ class LibraryDependencyResolver implements LibraryDependencyResolverInterface {
    */
   protected function doGetDependencies(array $libraries_with_unresolved_dependencies, array $final_libraries = []) {
     foreach ($libraries_with_unresolved_dependencies as $library) {
-      if (!isset($final_libraries[$library])) {
-        [$extension, $name] = explode('/', $library, 2);
-        $definition = $this->libraryDiscovery->getLibraryByName($extension, $name);
-        if (!empty($definition['dependencies'])) {
-          $final_libraries = $this->doGetDependencies($definition['dependencies'], $final_libraries);
-        }
-        $final_libraries[$library] = $library;
+      if (isset($final_libraries[$library])) {
+        continue;
       }
+      $parts = explode('/', $library, 2);
+      if (count($parts) !== 2) {
+        continue;
+      }
+      [$extension, $name] = $parts;
+      $definition = $this->libraryDiscovery->getLibraryByName($extension, $name);
+      if (!empty($definition['dependencies'])) {
+        $final_libraries = $this->doGetDependencies($definition['dependencies'], $final_libraries);
+      }
+      $final_libraries[$library] = $library;
     }
     return $final_libraries;
   }
