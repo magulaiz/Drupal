@@ -74,7 +74,7 @@ class FieldFile extends ProcessPluginBase implements ContainerFactoryPluginInter
     // some reason -- file migration is notoriously brittle -- and we do NOT
     // want to send invalid file references into the field system (it causes
     // fatals), so return an empty item instead.
-    $lookup_result = $this->migrateLookup->lookup('d6_file', [$value['fid']]);
+    $lookup_result = $this->migrateLookup->lookup('upgrade_d6_file', [$value['fid']]);
     if ($lookup_result) {
       return [
         'target_id' => $lookup_result[0]['fid'],
