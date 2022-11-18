@@ -3,7 +3,7 @@
 namespace Drupal\Core\Password;
 
 /**
- * Secure password hashing functions based on PHP >=5.5.0 password hashing.
+ * Secure password hashing functions based on PHP >= 5.5.0 password hashing.
  *
  * @see http://php.net/manual/en/book.password.php
  */
