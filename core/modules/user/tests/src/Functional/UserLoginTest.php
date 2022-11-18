@@ -139,7 +139,7 @@ class UserLoginTest extends BrowserTestBase {
   /**
    * Tests that user password is re-hashed upon login, after changing the cost.
    */
-  public function testPasswordRehashOnLoginAfterChangingCost() {
+  public function testPasswordRehashOnLoginAfterChangingCost(): void {
     /** @var \Drupal\Core\Password\PasswordInterface $hashing_service */
     $hashing_service = $this->container->get('password');
 
@@ -164,6 +164,7 @@ class UserLoginTest extends BrowserTestBase {
     // User first login after the password hashing cost was changed.
     $this->drupalLogin($account);
     $this->drupalLogout();
+
     // Check that after login the password has been rehashed and is valid.
     $new_hash = User::load($account->id())->getPassword();
     $this->assertNotEquals($new_hash, $old_hash);
@@ -174,7 +175,7 @@ class UserLoginTest extends BrowserTestBase {
   /**
    * Tests rehashing of Drupal 6 (md5) passwords migrated to Drupal 8+.
    */
-  public function testDrupal6MigratedPasswordRehashing() {
+  public function testDrupal6MigratedPasswordRehashing(): void {
     /** @var \Drupal\Core\Password\PasswordInterface $main_hashing_service */
     $main_hashing_service = $this->container->get('password');
 
@@ -193,7 +194,7 @@ class UserLoginTest extends BrowserTestBase {
     ];
 
     foreach ($migration_cases as $hashing_service) {
-      // The user has been migrate from Drupal 6. The Drupal 6 md5 hashed
+      // The user has been migrated from Drupal 6. The Drupal 6 md5 hashed
       // password was rehashed with 'password' or 'legacy_password' password
       // hashing service and prefixed with 'U'.
       $old_hash = 'U' . $hashing_service->hash($md5_pass);
@@ -220,7 +221,7 @@ class UserLoginTest extends BrowserTestBase {
   /**
    * Tests rehashing of Drupal 7 and < 10.1.0 passwords.
    */
-  public function testPasswordRehashing() {
+  public function testPasswordRehashing(): void {
     /** @var \Drupal\Core\Password\PasswordInterface $hashing_service */
     $hashing_service = $this->container->get('password');
     /** @var \Drupal\Core\Password\PasswordInterface $legacy_hashing_service */
@@ -350,7 +351,7 @@ class UserLoginTest extends BrowserTestBase {
    * @param string $flood_trigger
    *   (optional) Whether or not to expect that the flood control mechanism
    *    will be triggered. Defaults to NULL.
-   *   - Set to 'user' to expect a 'too many failed logins error.
+   *   - Set to 'user' to expect a 'too many failed logins' error.
    *   - Set to any value to expect an error for too many failed logins per IP.
    *   - Set to NULL to expect a failed login.
    *
