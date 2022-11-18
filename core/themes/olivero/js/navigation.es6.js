@@ -110,8 +110,11 @@
         props.body.classList.remove('is-fixed');
       }
 
-      // Ensure that all sub-navigation menus close when the browser is resized.
-      Drupal.olivero.closeAllSubNav();
+      // Ensure that all sub-navigation menus close when the browser is
+      // resized only if the navigation changes between mobile and desktop.
+      if (props.isDesktopNav !== props.olivero.isDesktopNav()) {
+        Drupal.olivero.closeAllSubNav();
+      }
     });
 
     // If hyperlink links to an anchor in the current page, close the
@@ -140,6 +143,7 @@
       const headerId = 'header';
       const header = once('navigation', `#${headerId}`, context).shift();
       const navWrapperId = 'header-nav';
+      const isDesktopNav = Drupal.olivero.isDesktopNav();
 
       if (header) {
         const navWrapper = header.querySelector(`#${navWrapperId}`);
@@ -155,6 +159,7 @@
         init({
           olivero,
           header,
+          isDesktopNav,
           navWrapperId,
           navWrapper,
           navButton,

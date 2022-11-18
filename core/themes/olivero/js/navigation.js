@@ -71,7 +71,9 @@
         props.body.classList.remove('is-fixed');
       }
 
-      Drupal.olivero.closeAllSubNav();
+      if (props.isDesktopNav !== props.olivero.isDesktopNav()) {
+        Drupal.olivero.closeAllSubNav();
+      }
     });
     props.navWrapper.addEventListener('click', function (e) {
       if (e.target.matches("[href*=\"".concat(window.location.pathname, "#\"], [href*=\"").concat(window.location.pathname, "#\"] *, [href^=\"#\"], [href^=\"#\"] *"))) {
@@ -85,6 +87,7 @@
       var headerId = 'header';
       var header = once('navigation', "#".concat(headerId), context).shift();
       var navWrapperId = 'header-nav';
+      var isDesktopNav = Drupal.olivero.isDesktopNav();
 
       if (header) {
         var navWrapper = header.querySelector("#".concat(navWrapperId));
@@ -95,6 +98,7 @@
         init({
           olivero: olivero,
           header: header,
+          isDesktopNav: isDesktopNav,
           navWrapperId: navWrapperId,
           navWrapper: navWrapper,
           navButton: navButton,
