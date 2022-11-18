@@ -37,10 +37,10 @@ class MenuUiMenuTreeManipulators {
    * @see \Drupal\menu_ui\MenuForm
    */
   public function checkAccess(array $tree): array {
-    foreach ($tree as $key => $element) {
-      $tree[$key]->access = AccessResult::allowed();
-      if ($tree[$key]->subtree) {
-        $tree[$key]->subtree = $this->checkAccess($tree[$key]->subtree);
+    foreach ($tree as $element) {
+      $element->access = AccessResult::allowed();
+      if ($element->subtree) {
+        $element->subtree = $this->checkAccess($element->subtree);
       }
     }
     return $tree;
