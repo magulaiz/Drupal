@@ -56,7 +56,7 @@ final class FilterImageLazyLoadTest extends UnitTestCase {
         'input' => '<p><img src="foo.png" loading="eager"/></p>',
         'output' => '<p><img src="foo.png" loading="eager" /></p>',
       ],
-      'image dimensions already provided' => [
+      'image dimensions provided' => [
         'input' => '<p><img src="foo.png" width="200" height="200"/></p>',
         '<p><img src="foo.png" width="200" height="200" loading="lazy" /></p>',
       ],
@@ -68,7 +68,7 @@ final class FilterImageLazyLoadTest extends UnitTestCase {
         'input' => '<p>Lorem ipsum...</p>',
         'output' => '<p>Lorem ipsum...</p>',
       ],
-      'no loading attribute nor uuid' => [
+      'no image dimensions provided' => [
         'input' => '<p><img src="foo.png"></p>',
         'output' => '<p><img src="foo.png" /></p>',
       ],
