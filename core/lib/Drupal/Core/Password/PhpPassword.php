@@ -25,7 +25,7 @@ class PhpPassword implements PasswordInterface {
   /**
    * The legacy password hashing service.
    *
-   * This password hashing service was used in Drupal 7 and Drupal < 8.3.0.
+   * This password hashing service was used in Drupal 7 and Drupal < 10.1.0.
    *
    * @var \Drupal\Core\Password\PasswordInterface
    */
@@ -60,18 +60,18 @@ class PhpPassword implements PasswordInterface {
    * {@inheritdoc}
    */
   public function check($password, $hash) {
-    // Drupal >= 8.3.x hashed password.
+    // Drupal >= 10.1.x hashed password.
     if (substr($hash, 0, 4) === '$2y$') {
       $stored_hash = $hash;
     }
-    // Drupal 6 (or any md5) hashed password migrated to Drupal >= 8.3.x.
+    // Drupal 6 (or any md5) hashed password migrated to Drupal >= 10.1.x.
     elseif (substr($hash, 0, 5) === 'U$2y$') {
       $stored_hash = substr($hash, 1);
       $password = md5($password);
     }
     // Possible legacy hash. This may be:
-    // - Either a Drupal 7, < 8.3.0 hash,
-    // - Or a Drupal 6 (or md5) hash migrated to Drupal < 8.3.0.
+    // - Either a Drupal 7, < 10.1.0 hash,
+    // - Or a Drupal 6 (or md5) hash migrated to Drupal < 10.1.0.
     else {
       return $this->legacyPassword->check($password, $hash);
     }

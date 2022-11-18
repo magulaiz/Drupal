@@ -30,7 +30,7 @@ class PasswordHashingTest extends UnitTestCase {
   /**
    * The legacy hashing service.
    *
-   * This service was used in Drupal 7 and Drupal < 8.3.0.
+   * This service was used in Drupal 7 and Drupal < 10.1.0.
    *
    * @var \Drupal\Core\Password\PasswordInterface
    */
@@ -47,9 +47,9 @@ class PasswordHashingTest extends UnitTestCase {
    * A Drupal 6 (md5) hash migrated with legacy hashing service.
    *
    * This is a string migrated from Drupal 6 (or any system with md5 hashing)
-   * either to Drupal 7 or to Drupal < 8.3.0. Such a string is build by hashing
+   * either to Drupal 7 or to Drupal < 10.1.0. Such a string is build by hashing
    * an already md5 hashed password with the legacy service (used in Drupal 7,
-   * < 8.3.0) and prefixed with 'U'.
+   * < 10.1.0) and prefixed with 'U'.
    *
    * @var string
    */
@@ -59,8 +59,8 @@ class PasswordHashingTest extends UnitTestCase {
    * A Drupal 6 (md5) hash migrated with current hashing service.
    *
    * This is a string migrated from Drupal 6 (or any system with md5 hashing) to
-   * Drupal >= 8.3.0. Such a string is build by hashing an already md5 hashed
-   * password with the current service (used in Drupal >= 8.3.0) password and
+   * Drupal >= 10.1.0. Such a string is build by hashing an already md5 hashed
+   * password with the current service (used in Drupal >= 10.1.0) password and
    * prefixed with 'U'.
    *
    * @var string
@@ -71,7 +71,7 @@ class PasswordHashingTest extends UnitTestCase {
    * A plain password hashed with the legacy service.
    *
    * This is a plain-text password hashed with the legacy hashing service, used
-   * in Drupal 7 and Drupal < 8.3.0.
+   * in Drupal 7 and Drupal < 10.1.0.
    *
    * @var string
    */
@@ -81,7 +81,7 @@ class PasswordHashingTest extends UnitTestCase {
    * A plain password hashed with the current service.
    *
    * This is a plain-text password hashed with the current hashing service, used
-   * Drupal >= 8.3.0.
+   * Drupal >= 10.1.0.
    *
    * @var string
    */

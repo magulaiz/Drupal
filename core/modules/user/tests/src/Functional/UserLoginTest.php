@@ -172,7 +172,7 @@ class UserLoginTest extends BrowserTestBase {
   }
 
   /**
-   * Tests rehashing of Drupal 6 (md5) passwords migrated to Drupal 8.
+   * Tests rehashing of Drupal 6 (md5) passwords migrated to Drupal 8+.
    */
   public function testDrupal6MigratedPasswordRehashing() {
     /** @var \Drupal\Core\Password\PasswordInterface $main_hashing_service */
@@ -184,11 +184,11 @@ class UserLoginTest extends BrowserTestBase {
 
     /** @var \Drupal\Core\Password\PasswordInterface[] $migration_cases */
     $migration_cases = [
-      // Drupal 6 (md5) passwords migrated to Drupal < 8.3.0 used the legacy
+      // Drupal 6 (md5) passwords migrated to Drupal < 10.1.0 used the legacy
       // password hashing engine, inherited from Drupal 7.
       $this->container->get('legacy_password'),
-      // Drupal 6 (md5) passwords migrated to Drupal >= 8.3.0 are using the
-      // current hashing password engine, based PHP >=5.5.0 password hashing.
+      // Drupal 6 (md5) passwords migrated to Drupal >= 10.1.0 are using the
+      // current hashing password engine, based PHP >= 5.5.0 password hashing.
       $main_hashing_service,
     ];
 
@@ -218,7 +218,7 @@ class UserLoginTest extends BrowserTestBase {
   }
 
   /**
-   * Tests rehashing of Drupal 7 and < 8.3.0 passwords.
+   * Tests rehashing of Drupal 7 and < 10.1.0 passwords.
    */
   public function testPasswordRehashing() {
     /** @var \Drupal\Core\Password\PasswordInterface $hashing_service */
@@ -229,7 +229,7 @@ class UserLoginTest extends BrowserTestBase {
     $account = $this->drupalCreateUser();
     $plain = $account->pass_raw;
 
-    // User has Drupal < 8.3.0 hashed password or migrated from Drupal 7.
+    // User has Drupal < 10.1.0 hashed password or migrated from Drupal 7.
     $old_hash = $legacy_hashing_service->hash($plain);
     // Store the password but prevent rehashing.
     $account->setPassword($old_hash);

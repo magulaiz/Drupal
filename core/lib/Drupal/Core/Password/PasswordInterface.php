@@ -46,7 +46,7 @@ interface PasswordInterface {
    * This method returns TRUE in one of the next cases:
    * - The parameters of hashing service were changed. For instance, the hashing
    *   cost parameter 'password_hash_cost' was changed in core.services.yml.
-   * - The password hash was hashed in Drupal < 8.3.0.
+   * - The password hash was hashed in Drupal < 10.1.0.
    * - The hash was migrated from a system that uses MD5 hashes, like Drupal 6,
    *   or from Drupal 7.
    *
