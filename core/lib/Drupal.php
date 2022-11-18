@@ -1,4 +1,4 @@
-<?php
+ <?php
 
 use Drupal\Core\DependencyInjection\ContainerNotInitializedException;
 use Symfony\Component\DependencyInjection\ContainerInterface;
