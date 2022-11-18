@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\Core\Password\PasswordTest.
- */
-
 namespace Drupal\Tests\Core\Password;
 
 use Drupal\Core\Password\PhpassHashedPassword;
