@@ -55,6 +55,11 @@ libraries-override:
     js:
       misc/vertical-tabs.js: js/vertical-tabs.js
 
+  core/jquery.ui:
+    css:
+      theme:
+        assets/vendor/jquery.ui/themes/base/theme.css: false
+
   core/drupal.autocomplete:
     css:
       theme:
@@ -64,6 +69,11 @@ libraries-override:
     css:
       theme:
         assets/vendor/jquery.ui/themes/base/theme.css: false
+
+  core/jquery.ui.dialog:
+    css:
+      component:
+        assets/vendor/jquery.ui/themes/base/dialog.css: false
 
   core/drupal.dialog:
     css:
@@ -138,6 +148,8 @@ libraries-extend:
     - claro/claro.tabledrag
   core/drupal.vertical-tabs:
     - claro/vertical-tabs
+  core/jquery.ui:
+    - claro/claro.jquery.ui
   file/drupal.file:
     - claro/file
   filter/drupal.filter.admin:

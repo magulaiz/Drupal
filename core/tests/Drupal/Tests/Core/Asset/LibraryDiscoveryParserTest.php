@@ -663,53 +663,6 @@ class LibraryDiscoveryParserTest extends UnitTestCase {
   }
 
   /**
-   * Tests deprecated library with an override.
-   *
-   * @covers ::applyLibrariesOverride
-   *
-   * @group legacy
-   */
-  public function testLibraryOverrideDeprecated() {
-    $this->expectDeprecation('Theme "deprecated" is overriding a deprecated library. The "deprecated/deprecated" asset library is deprecated in drupal:X.0.0 and is removed from drupal:Y.0.0. Use another library instead. See https://www.example.com');
-    $mock_theme_path = 'mocked_themes/kittens';
-    $this->themeManager = $this->createMock(ThemeManagerInterface::class);
-    $this->activeTheme = $this->getMockBuilder(ActiveTheme::class)
-      ->disableOriginalConstructor()
-      ->getMock();
-    $this->activeTheme->expects($this->atLeastOnce())
-      ->method('getLibrariesOverride')
-      ->willReturn([
-        $mock_theme_path => [
-          'deprecated/deprecated' => [
-            'css' => [
-              'theme' => [
-                'css/example.css' => 'css/overridden.css',
-              ],
-            ],
-          ],
-        ],
-      ]);
-    $this->themeManager->expects($this->any())
-      ->method('getActiveTheme')
-      ->willReturn($this->activeTheme);
-
-    $path = __DIR__ . '/library_test_files';
-    $path = substr($path, strlen($this->root) + 1);
-    $this->extensionPathResolver->expects($this->atLeastOnce())
-      ->method('getPath')
-      ->with('module', 'deprecated')
-      ->willReturn($path);
-    $this->libraryDiscoveryParser = new TestLibraryDiscoveryParser($this->root, $this->moduleHandler, $this->themeManager, $this->streamWrapperManager, $this->librariesDirectoryFileFinder, $this->extensionPathResolver);
-
-    $this->moduleHandler->expects($this->atLeastOnce())
-      ->method('moduleExists')
-      ->with('deprecated')
-      ->will($this->returnValue(TRUE));
-
-    $this->libraryDiscoveryParser->buildByExtension('deprecated');
-  }
-
-  /**
    * Verifies assertions catch invalid CSS declarations.
    *
    * @dataProvider providerTestCssAssert
