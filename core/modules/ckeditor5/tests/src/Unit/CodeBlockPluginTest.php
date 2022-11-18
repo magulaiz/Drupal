@@ -22,7 +22,7 @@ class CodeBlockPluginTest extends UnitTestCase {
   public function providerGetDynamicPluginConfig(): array {
     // Uses static configuration from the ckeditor5.ckeditor5.yml file.
     $static_plugin_config = $this->getStaticPluginConfig();
-    $all_languages = $static_plugin_config['languages'];
+    $all_languages = $static_plugin_config['codeBlock']['languages'];
     $all_language_ids = array_column($all_languages, 'language');
     $default_language_ids = CodeBlock::DEFAULT_CONFIGURATION['enabled_languages'];
     // Remove the plaintext option because that is always set.
@@ -120,7 +120,7 @@ class CodeBlockPluginTest extends UnitTestCase {
    */
   private function getStaticPluginConfig(): array {
     $ckeditor5_plugin_definitions = Yaml::parseFile(__DIR__ . '/../../../ckeditor5.ckeditor5.yml');
-    return $ckeditor5_plugin_definitions['ckeditor5_codeBlock']['ckeditor5']['config']['codeBlock'];
+    return $ckeditor5_plugin_definitions['ckeditor5_codeBlock']['ckeditor5']['config'];
   }
 
 }
