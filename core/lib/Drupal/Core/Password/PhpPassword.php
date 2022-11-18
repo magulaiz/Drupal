@@ -10,39 +10,18 @@ namespace Drupal\Core\Password;
 class PhpPassword implements PasswordInterface {
 
   /**
-   * The algorithmic cost that should be used.
-   *
-   * This is the same 'cost' option as is used by the PHP (>= 5.5.0)
-   * password_hash() function.
-   *
-   * @var int
-   *
-   * @see password_hash().
-   * @see http://php.net/manual/en/ref.password.php
-   */
-  protected $cost;
-
-  /**
-   * The legacy password hashing service.
-   *
-   * This password hashing service was used in Drupal 7 and Drupal < 10.1.0.
-   *
-   * @var \Drupal\Core\Password\PasswordInterface
-   */
-  protected $legacyPassword;
-
-  /**
    * Constructs a new password hashing instance.
    *
    * @param int $cost
-   *   The algorithmic cost that should be used.
-   * @param \Drupal\Core\Password\PasswordInterface $legacy_password
+   *   The algorithmic cost that should be used. This is the same 'cost'
+   *   option as is used by the password_hash() function.
+   * @param \Drupal\Core\Password\PasswordInterface $legacyPassword
    *   The legacy password hashing service.
    */
-  public function __construct($cost, PasswordInterface $legacy_password) {
-    $this->cost = $cost;
-    $this->legacyPassword = $legacy_password;
-  }
+  public function __construct(
+    protected int $cost,
+    protected PasswordInterface $legacyPassword
+  ) {}
 
   /**
    * {@inheritdoc}
@@ -61,11 +40,11 @@ class PhpPassword implements PasswordInterface {
    */
   public function check($password, $hash) {
     // Drupal >= 10.1.x hashed password.
-    if (substr($hash, 0, 4) === '$2y$') {
+    if (str_starts_with($hash, '$2y$')) {
       $stored_hash = $hash;
     }
     // Drupal 6 (or any md5) hashed password migrated to Drupal >= 10.1.x.
-    elseif (substr($hash, 0, 5) === 'U$2y$') {
+    elseif (str_starts_with($hash, 'U$2y$')) {
       $stored_hash = substr($hash, 1);
       $password = md5($password);
     }

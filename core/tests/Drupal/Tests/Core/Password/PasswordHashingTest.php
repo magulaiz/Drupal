@@ -2,8 +2,8 @@
 
 namespace Drupal\Tests\Core\Password;
 
-use Drupal\Core\Password\PhpassHashedPassword;
 use Drupal\Core\Password\PasswordInterface;
+use Drupal\Core\Password\PhpassHashedPassword;
 use Drupal\Core\Password\PhpPassword;
 use Drupal\Tests\UnitTestCase;
 
@@ -16,11 +16,11 @@ use Drupal\Tests\UnitTestCase;
 class PasswordHashingTest extends UnitTestCase {
 
   /**
-   * The current password hashing service.
+   * The current ?password hashing service.
    *
    * @var \Drupal\Core\Password\PasswordInterface
    */
-  protected $hashingService;
+  protected PasswordInterface $hashingService;
 
   /**
    * The legacy hashing service.
@@ -29,14 +29,14 @@ class PasswordHashingTest extends UnitTestCase {
    *
    * @var \Drupal\Core\Password\PasswordInterface
    */
-  protected $legacyHashingService;
+  protected PasswordInterface $legacyHashingService;
 
   /**
    * The plain-text password.
    *
    * @var string
    */
-  protected $plainPassword;
+  protected string $plainPassword;
 
   /**
    * A Drupal 6 (md5) hash migrated with legacy hashing service.
@@ -48,7 +48,7 @@ class PasswordHashingTest extends UnitTestCase {
    *
    * @var string
    */
-  protected $md5ToLegacyHashedPassword;
+  protected string $md5ToLegacyHashedPassword;
 
   /**
    * A Drupal 6 (md5) hash migrated with current hashing service.
@@ -60,7 +60,7 @@ class PasswordHashingTest extends UnitTestCase {
    *
    * @var string
    */
-  protected $md5HashedPassword;
+  protected string $md5HashedPassword;
 
   /**
    * A plain password hashed with the legacy service.
@@ -70,7 +70,7 @@ class PasswordHashingTest extends UnitTestCase {
    *
    * @var string
    */
-  protected $legacyHashedPassword;
+  protected string $legacyHashedPassword;
 
   /**
    * A plain password hashed with the current service.
@@ -80,7 +80,7 @@ class PasswordHashingTest extends UnitTestCase {
    *
    * @var string
    */
-  protected $hashedPassword;
+  protected string $hashedPassword;
 
   /**
    * {@inheritdoc}
@@ -105,7 +105,7 @@ class PasswordHashingTest extends UnitTestCase {
    *
    * @covers \Drupal\Core\Password\PhpPassword::needsRehash
    */
-  public function testPasswordNeedsRehashing() {
+  public function testPasswordNeedsRehashing(): void {
     // Check that outdated hashes need rehashing.
     $this->assertTrue($this->hashingService->needsRehash($this->md5ToLegacyHashedPassword));
     $this->assertTrue($this->hashingService->needsRehash($this->md5HashedPassword));
@@ -117,13 +117,14 @@ class PasswordHashingTest extends UnitTestCase {
 
   /**
    * Tests password hashing.
+   *
    * Tests that plain-text password is verifying against all its hashes.
    *
    * @covers \Drupal\Core\Password\PhpPassword::check
    * @covers \Drupal\Core\Password\PhpassHashedPassword::check
    */
-  public function testPasswordHashing() {
-    // Check that text hashed with current service is different than the others.
+  public function testPasswordHashing(): void {
+    // Check that text hashed with current service is different from the others.
     $this->assertNotEquals($this->hashedPassword, $this->md5ToLegacyHashedPassword);
     $this->assertNotEquals($this->hashedPassword, $this->md5HashedPassword);
     $this->assertNotEquals($this->hashedPassword, $this->legacyHashedPassword);
@@ -143,7 +144,7 @@ class PasswordHashingTest extends UnitTestCase {
    * @covers \Drupal\Core\Password\PhpPassword::check
    * @covers \Drupal\Core\Password\PhpPassword::needsRehash
    */
-  public function testPasswordNeedsRehashingOnCostChange() {
+  public function testPasswordNeedsRehashingOnCostChange(): void {
     // Increment the cost from 4 to 5.
     $this->hashingService = new PhpPassword(5, $this->legacyHashingService);
 
@@ -166,7 +167,7 @@ class PasswordHashingTest extends UnitTestCase {
    *
    * @dataProvider providerLongPasswords
    */
-  public function testLongPassword($password, $allowed) {
+  public function testLongPassword($password, $allowed): void {
     $hashed_password = $this->hashingService->hash($password);
     if ($allowed) {
       $this->assertNotFalse($hashed_password);
@@ -181,11 +182,17 @@ class PasswordHashingTest extends UnitTestCase {
    *
    * @see ::testLongPassword()
    */
-  public function providerLongPasswords() {
+  public function providerLongPasswords(): array {
     // '512 byte long password is allowed.'
-    $passwords['allowed'] = [str_repeat('x', PasswordInterface::PASSWORD_MAX_LENGTH), TRUE];
+    $passwords['allowed'] = [
+      str_repeat('x', PasswordInterface::PASSWORD_MAX_LENGTH),
+      TRUE,
+    ];
     // 513 byte long password is not allowed.
-    $passwords['too_long'] = [str_repeat('x', PasswordInterface::PASSWORD_MAX_LENGTH + 1), FALSE];
+    $passwords['too_long'] = [
+      str_repeat('x', PasswordInterface::PASSWORD_MAX_LENGTH + 1),
+      FALSE,
+    ];
 
     // Check a string of 3-byte UTF-8 characters, 510 byte long password is
     // allowed.
@@ -193,7 +200,10 @@ class PasswordHashingTest extends UnitTestCase {
     $diff = PasswordInterface::PASSWORD_MAX_LENGTH % 3;
     $passwords['utf8'] = [str_repeat('€', $len), TRUE];
     // 512 byte long password is allowed.
-    $passwords['ut8_extended'] = [$passwords['utf8'][0] . str_repeat('x', $diff), TRUE];
+    $passwords['ut8_extended'] = [
+      $passwords['utf8'][0] . str_repeat('x', $diff),
+      TRUE,
+    ];
 
     // Check a string of 3-byte UTF-8 characters, 513 byte long password is
     // allowed.
@@ -207,7 +217,7 @@ class PasswordHashingTest extends UnitTestCase {
    *
    * @covers \Drupal\Core\Password\PhpassHashedPassword::enforceLog2Boundaries
    */
-  public function testWithinBounds() {
+  public function testWithinBounds(): void {
     $legacy_service = new FakeLegacyPassword();
     $this->assertEquals(PhpassHashedPassword::MIN_HASH_COUNT, $legacy_service->enforceLog2Boundaries(1));
     $this->assertEquals(PhpassHashedPassword::MAX_HASH_COUNT, $legacy_service->enforceLog2Boundaries(100));
