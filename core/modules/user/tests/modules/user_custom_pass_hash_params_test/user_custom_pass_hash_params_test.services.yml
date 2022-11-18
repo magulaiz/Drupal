@@ -3,5 +3,5 @@ services:
     class: Drupal\Core\Password\PhpPassword
     arguments: [11, '@legacy_password']
   legacy_password:
-    class: Drupal\Core\Password\LegacyPassword
+    class: Drupal\Core\Password\PhpassHashedPassword
     arguments: [16]
