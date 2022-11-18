@@ -3,11 +3,14 @@
 namespace Drupal\Tests\Core\Route;
 
 use Drupal\Core\Access\AccessResult;
+use Drupal\Core\Access\AccessResultReasonInterface;
 use Drupal\Core\Cache\Context\CacheContextsManager;
 use Drupal\Core\DependencyInjection\Container;
+use Drupal\Core\Session\AnonymousUserSession;
 use Drupal\Core\Session\UserSession;
 use Drupal\Tests\UnitTestCase;
 use Drupal\user\Access\RoleAccessCheck;
+use Drupal\user\RoleInterface;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 
@@ -76,6 +79,23 @@ class RoleAccessCheckTest extends UnitTestCase {
         '_role' => 'role_test_1 + role_test_2',
       ]
     ));
+    // More than two joined roles.
+    $route_collection->add('role_test_7', new Route('/role_test_7',
+      [
+        '_controller' => '\Drupal\router_test\TestControllers::test1',
+      ],
+      [
+        '_role' => 'role_test_1,role_test_2,role_test_3',
+      ]
+    ));
+    $route_collection->add('role_test_8', new Route('/role_test_8',
+      [
+        '_controller' => '\Drupal\router_test\TestControllers::test1',
+      ],
+      [
+        '_role' => 'role_test_1+role_test_2+role_test_3',
+      ]
+    ));
 
     return $route_collection;
   }
@@ -89,6 +109,7 @@ class RoleAccessCheckTest extends UnitTestCase {
     // Setup two different roles used in the test.
     $rid_1 = 'role_test_1';
     $rid_2 = 'role_test_2';
+    $rid_3 = 'role_test_3';
 
     // Setup one user with the first role, one with the second, one with both
     // and one final without any of these two roles.
@@ -103,24 +124,68 @@ class RoleAccessCheckTest extends UnitTestCase {
       'roles' => [$rid_2],
     ]);
 
-    $account_12 = new UserSession([
+    $account_123 = new UserSession([
       'uid' => 3,
-      'roles' => [$rid_1, $rid_2],
+      'roles' => [$rid_1, $rid_2, $rid_3],
     ]);
 
-    $account_none = new UserSession([
+    $account_no_roles = new UserSession([
       'uid' => 1,
-      'roles' => [],
+      'roles' => [RoleInterface::AUTHENTICATED_ID],
     ]);
+
+    $account_anonymous = new AnonymousUserSession();
 
     // Setup expected values; specify which paths can be accessed by which user.
     return [
-      ['role_test_1', [$account_1, $account_12], [$account_2, $account_none]],
-      ['role_test_2', [$account_2, $account_12], [$account_1, $account_none]],
-      ['role_test_3', [$account_12], [$account_1, $account_2, $account_none]],
-      ['role_test_4', [$account_12], [$account_1, $account_2, $account_none]],
-      ['role_test_5', [$account_1, $account_2, $account_12], []],
-      ['role_test_6', [$account_1, $account_2, $account_12], []],
+      [
+        'role_test_1',
+        [$account_1, $account_123],
+        [$account_2, $account_no_roles, $account_anonymous],
+        'The role_test_1 role is required',
+      ],
+      [
+        'role_test_2',
+        [$account_2, $account_123],
+        [$account_1, $account_no_roles, $account_anonymous],
+        'The role_test_2 role is required',
+      ],
+      [
+        'role_test_3',
+        [$account_123],
+        [$account_1, $account_2, $account_no_roles, $account_anonymous],
+        'All of the role_test_1 and role_test_2 roles are required',
+      ],
+      [
+        'role_test_4',
+        [$account_123],
+        [$account_1, $account_2, $account_no_roles, $account_anonymous],
+        'All of the role_test_1 and role_test_2 roles are required',
+      ],
+      [
+        'role_test_5',
+        [$account_1, $account_2, $account_123],
+        [$account_no_roles, $account_anonymous],
+        'One of the role_test_1 or role_test_2 roles are required',
+      ],
+      [
+        'role_test_6',
+        [$account_1, $account_2, $account_123],
+        [$account_no_roles, $account_anonymous],
+        'One of the role_test_1 or role_test_2 roles are required',
+      ],
+      [
+        'role_test_7',
+        [$account_123],
+        [$account_1, $account_2, $account_no_roles, $account_anonymous],
+        'All of the role_test_1, role_test_2 and role_test_3 roles are required',
+      ],
+      [
+        'role_test_8',
+        [$account_1, $account_2, $account_123],
+        [$account_no_roles, $account_anonymous],
+        'One of the role_test_1, role_test_2 or role_test_3 roles are required',
+      ],
     ];
   }
 
@@ -133,13 +198,15 @@ class RoleAccessCheckTest extends UnitTestCase {
    *   A list of accounts which should have access to the given path.
    * @param array $deny_accounts
    *   A list of accounts which should not have access to the given path.
+   * @param string $expected_reason
+   *   Expected reason.
    *
    * @see \Drupal\Tests\Core\Route\RouterRoleTest::getTestRouteCollection
    * @see \Drupal\Tests\Core\Route\RouterRoleTest::roleAccessProvider
    *
    * @dataProvider roleAccessProvider
    */
-  public function testRoleAccess($path, $grant_accounts, $deny_accounts) {
+  public function testRoleAccess($path, $grant_accounts, $deny_accounts, string $expected_reason) {
     $cache_contexts_manager = $this->prophesize(CacheContextsManager::class);
     $cache_contexts_manager->assertValidTokens()->willReturn(TRUE);
     $cache_contexts_manager->reveal();
@@ -159,7 +226,9 @@ class RoleAccessCheckTest extends UnitTestCase {
     foreach ($deny_accounts as $account) {
       $message = sprintf('Access denied for user %s with the roles %s on path: %s', $account->id(), implode(', ', $account->getRoles()), $path);
       $has_access = $role_access_check->access($collection->get($path), $account);
-      $this->assertEquals(AccessResult::neutral()->addCacheContexts(['user.roles']), $has_access, $message);
+      $this->assertInstanceOf(AccessResultReasonInterface::class, $has_access);
+      $this->assertEquals($expected_reason, $has_access->getReason());
+      $this->assertEquals(AccessResult::neutral($expected_reason)->addCacheContexts(['user.roles']), $has_access, $message);
     }
   }
 
