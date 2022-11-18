@@ -17,14 +17,12 @@ class ViewsBulkFormActionsOrderUpdate extends UpdatePathTestBase {
    */
   protected function setDatabaseDumpFiles(): void {
     $this->databaseDumpFiles = [
-      __DIR__ . '/../../../../../system/tests/fixtures/update/drupal-9.0.0.bare.standard.php.gz',
+      __DIR__ . '/../../../../../system/tests/fixtures/update/drupal-9.4.0.bare.standard.php.gz',
     ];
   }
 
   /**
-   * Tests views_post_update_bulk_form_action_order().
-   *
-   * @see views_post_update_bulk_form_action_order()
+   * @covers  \views_post_update_bulk_form_action_order
    */
   public function testBulkFormActionsOrderPostUpdate(): void {
     $config_factory = \Drupal::configFactory();
