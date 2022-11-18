@@ -15,9 +15,9 @@ class NoServerError implements ResponsePolicyInterface {
    * {@inheritdoc}
    */
   public function check(Response $response, Request $request) {
-    if ($response->isServerError()) {
-      return static::DENY;
-    }
+    return $response->isServerError() ?
+      static::DENY
+      : NULL;
   }
 
 }

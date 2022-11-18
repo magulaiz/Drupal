@@ -22,9 +22,7 @@ class KillSwitch implements ResponsePolicyInterface {
    * {@inheritdoc}
    */
   public function check(Response $response, Request $request) {
-    if ($this->kill) {
-      return static::DENY;
-    }
+    return $this->kill ? static::DENY : NULL;
   }
 
   /**

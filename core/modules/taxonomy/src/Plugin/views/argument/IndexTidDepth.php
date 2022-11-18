@@ -100,7 +100,7 @@ class IndexTidDepth extends ArgumentPluginBase implements ContainerFactoryPlugin
     if (!empty($this->options['break_phrase'])) {
       $break = static::breakString($this->argument);
       if ($break->value === [-1]) {
-        return FALSE;
+        return;
       }
       $tids = $break->value;
     }

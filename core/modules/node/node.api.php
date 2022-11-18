@@ -183,6 +183,8 @@ function hook_node_access_records(\Drupal\node\NodeInterface $node) {
 
     return $grants;
   }
+
+  return NULL;
 }
 
 /**
@@ -349,7 +351,7 @@ function hook_node_update_index(\Drupal\node\NodeInterface $node) {
  * and then the weighted scores from all ranking mechanisms are added, which
  * brings about the same result as a weighted average.
  *
- * @return array
+ * @return null|array
  *   An associative array of ranking data. The keys should be strings,
  *   corresponding to the internal name of the ranking mechanism, such as
  *   'recent', or 'comments'. The values should be arrays themselves, with the
@@ -393,6 +395,8 @@ function hook_ranking() {
       ],
     ];
   }
+
+  return NULL;
 }
 
 /**

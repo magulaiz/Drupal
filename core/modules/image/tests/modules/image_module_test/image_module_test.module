@@ -12,6 +12,8 @@ function image_module_test_file_download($uri) {
   if ($default_uri == $uri) {
     return ['X-Image-Owned-By' => 'image_module_test'];
   }
+
+  return NULL;
 }
 
 /**

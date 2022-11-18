@@ -223,9 +223,10 @@ class NodeNewComments extends NumericField {
     if (!empty($value)) {
       return $this->renderLink(parent::render($values), $values);
     }
-    else {
-      $this->options['alter']['make_link'] = FALSE;
-    }
+
+    $this->options['alter']['make_link'] = FALSE;
+
+    return NULL;
   }
 
 }

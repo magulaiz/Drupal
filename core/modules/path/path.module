@@ -41,6 +41,8 @@ function path_help($route_name, RouteMatchInterface $route_match) {
     case 'entity.path_alias.add_form':
       return '<p>' . t('Enter the path you wish to create the alias for, followed by the name of the new alias.') . '</p>';
   }
+
+  return NULL;
 }
 
 /**
@@ -98,6 +100,7 @@ function path_entity_base_field_info_alter(&$fields, EntityTypeInterface $entity
  * Implements hook_entity_base_field_info().
  */
 function path_entity_base_field_info(EntityTypeInterface $entity_type) {
+  $fields = [];
   if (in_array($entity_type->id(), ['taxonomy_term', 'node', 'media'], TRUE)) {
     $fields['path'] = BaseFieldDefinition::create('path')
       ->setLabel(t('URL alias'))
@@ -108,9 +111,9 @@ function path_entity_base_field_info(EntityTypeInterface $entity_type) {
       ])
       ->setDisplayConfigurable('form', TRUE)
       ->setComputed(TRUE);
-
-    return $fields;
   }
+
+  return $fields;
 }
 
 /**

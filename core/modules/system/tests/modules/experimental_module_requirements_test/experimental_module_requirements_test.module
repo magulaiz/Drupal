@@ -15,4 +15,6 @@ function experimental_module_requirements_test_help($route_name) {
       // \Drupal\system\Tests\Module\InstallUninstallTest::assertHelp().
       return t('The Experimental Requirements Test module is not done yet. It may eat your data, but you can read the <a href=":url">online documentation for the Experimental Requirements Test module</a>.', [':url' => 'http://www.example.com']);
   }
+
+  return NULL;
 }

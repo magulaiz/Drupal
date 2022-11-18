@@ -66,7 +66,7 @@ interface ModerationInformationInterface {
    * @param int $entity_id
    *   The entity ID.
    *
-   * @return int
+   * @return null|int
    *   The revision ID of the default revision, or NULL if the entity was
    *   not found.
    */

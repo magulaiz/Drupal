@@ -35,6 +35,8 @@ function language_test_language_types_info() {
       ],
     ];
   }
+
+  return [];
 }
 
 /**

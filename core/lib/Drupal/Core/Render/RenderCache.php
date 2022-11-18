@@ -277,6 +277,8 @@ class RenderCache implements RenderCacheInterface {
       }
     }
     $cache->set($cid, $data, $this->maxAgeToExpire($elements['#cache']['max-age']), Cache::mergeTags($data['#cache']['tags'], ['rendered']));
+
+    return NULL;
   }
 
   /**

@@ -79,6 +79,8 @@ function forum_help($route_name, RouteMatchInterface $route_match) {
     case 'forum.settings':
       return '<p>' . t('Adjust the display of your forum topics. Organize the forums on the <a href=":forum-structure">forum structure page</a>.', [':forum-structure' => Url::fromRoute('forum.overview')->toString()]) . '</p>';
   }
+
+  return NULL;
 }
 
 /**

@@ -283,9 +283,8 @@ class ResponsiveImageStyle extends ConfigEntityBase implements ResponsiveImageSt
    */
   public function getImageStyleMapping($breakpoint_id, $multiplier) {
     $map = $this->getKeyedImageStyleMappings();
-    if (isset($map[$breakpoint_id][$multiplier])) {
-      return $map[$breakpoint_id][$multiplier];
-    }
+
+    return $map[$breakpoint_id][$multiplier] ?? NULL;
   }
 
   /**
