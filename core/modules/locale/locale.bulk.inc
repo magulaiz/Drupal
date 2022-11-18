@@ -542,7 +542,7 @@ function locale_translate_delete_translation_files(array $projects = [], array $
  *   Determines whether default configuration langcodes should be updated. This
  *   Should only happen during site and extension install.
  *
- * @return array
+ * @return null|array
  *   The batch definition.
  */
 function locale_config_batch_update_components(array $options, array $langcodes = [], array $components = [], bool $update_default_config_langcodes = FALSE) {
@@ -552,6 +552,8 @@ function locale_config_batch_update_components(array $options, array $langcodes 
     // in the default collection is using the site's default langcode.
     return locale_config_batch_build($names, $langcodes, $options, $update_default_config_langcodes);
   }
+
+  return NULL;
 }
 
 /**

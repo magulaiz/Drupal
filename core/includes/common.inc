@@ -171,9 +171,9 @@ function format_size($size, $langcode = NULL) {
     case 'ZB':
       return new TranslatableMarkup('@size ZB', $args, $options);
 
-    case 'YB':
-      return new TranslatableMarkup('@size YB', $args, $options);
   }
+
+  return new TranslatableMarkup('@size YB', $args, $options);
 }
 
 /**

@@ -987,6 +987,8 @@ function install_get_form($form_id, array &$install_state) {
       throw new InstallerException(implode("\n", $errors));
     }
   }
+
+  return NULL;
 }
 
 /**
@@ -1139,13 +1141,14 @@ function install_verify_completed_task() {
   // Do not trigger an error if the database query fails, since the database
   // might not be set up yet.
   catch (\Exception $e) {
+    $task = NULL;
   }
-  if (isset($task)) {
-    if ($task == 'done') {
-      throw new AlreadyInstalledException(\Drupal::service('string_translation'));
-    }
-    return $task;
+
+  if ($task == 'done') {
+    throw new AlreadyInstalledException(\Drupal::service('string_translation'));
   }
+
+  return $task;
 }
 
 /**
@@ -1253,6 +1256,8 @@ function install_select_profile(&$install_state) {
       return install_get_form('Drupal\Core\Installer\Form\SelectProfileForm', $install_state);
     }
   }
+
+  return NULL;
 }
 
 /**
@@ -1312,6 +1317,8 @@ function _install_select_profile(&$install_state) {
   if (count($visible_profiles) == 1) {
     return (key($visible_profiles));
   }
+
+  return NULL;
 }
 
 /**
@@ -1370,32 +1377,30 @@ function install_select_language(&$install_state) {
     $langcode = $install_state['parameters']['langcode'];
     if ($langcode == 'en' || isset($files[$langcode]) || isset($standard_languages[$langcode])) {
       $install_state['parameters']['langcode'] = $langcode;
-      return NULL;
     }
+
+    return NULL;
   }
 
-  if (empty($install_state['parameters']['langcode'])) {
-    // If we are performing an interactive installation, we display a form to
-    // select a right language. If no translation files were found in the
-    // translations directory, the form shows a list of standard languages. If
-    // translation files were found the form shows a select list of the
-    // corresponding languages to choose from.
-    if ($install_state['interactive']) {
-      return install_get_form('Drupal\Core\Installer\Form\SelectLanguageForm', $install_state);
-    }
-    // If we are performing a non-interactive installation. If only one language
-    // (English) is available, assume the user is correct. Otherwise throw an
-    // error.
-    else {
-      if (count($files) == 1) {
-        $install_state['parameters']['langcode'] = current(array_keys($files));
-        return NULL;
-      }
-      else {
-        throw new InstallerException('You must select a language to continue the installation.');
-      }
-    }
+  // If we are performing an interactive installation, we display a form to
+  // select a right language. If no translation files were found in the
+  // translations directory, the form shows a list of standard languages. If
+  // translation files were found the form shows a select list of the
+  // corresponding languages to choose from.
+  if ($install_state['interactive']) {
+    return install_get_form('Drupal\Core\Installer\Form\SelectLanguageForm', $install_state);
   }
+
+  // If we are performing a non-interactive installation. If only one language
+  // (English) is available, assume the user is correct. Otherwise throw an
+  // error.
+  if (count($files) == 1) {
+    $install_state['parameters']['langcode'] = current(array_keys($files));
+
+    return NULL;
+  }
+
+  throw new InstallerException('You must select a language to continue the installation.');
 }
 
 /**
@@ -1404,7 +1409,7 @@ function install_select_language(&$install_state) {
  * @param array $install_state
  *   An array of information about the current installation state.
  *
- * @return string
+ * @return null|array
  *   A themed status report, or an exception if there are requirement errors.
  *   Upon successful download the page is reloaded and no output is returned.
  */
@@ -1422,6 +1427,8 @@ function install_download_translation(&$install_state) {
   if ($install_state['interactive']) {
     install_goto(install_redirect_url($install_state));
   }
+
+  return NULL;
 }
 
 /**
@@ -1769,6 +1776,8 @@ function install_import_translations(&$install_state) {
       ->setFinishCallback('locale_translation_batch_fetch_finished');
     return $batch_builder->toArray();
   }
+
+  return NULL;
 }
 
 /**
@@ -2329,12 +2338,18 @@ function install_display_requirements($install_state, $requirements) {
       }
     }
   }
+
+  return NULL;
 }
 
 /**
  * Creates a batch for the config importer to process.
  *
+ * @return null|array
+ *   The array representation of the batch definition.
+ *
  * @see install_tasks()
+ * @see \Drupal\Core\Batch\BatchBuilder::toArray
  */
 function install_config_import_batch() {
   // We need to manually trigger the installation of core-provided entity types,
@@ -2398,6 +2413,8 @@ function install_config_import_batch() {
     }
     install_display_output(['#title' => t('Configuration validation')], $install_state);
   }
+
+  return NULL;
 }
 
 /**
@@ -2406,7 +2423,7 @@ function install_config_import_batch() {
  * @param array $install_state
  *   An array of information about the current installation state.
  *
- * @return string
+ * @return null|string
  *   A themed status report, or an exception if there are requirement errors.
  *   Upon successful download the page is reloaded and no output is returned.
  *
@@ -2417,6 +2434,8 @@ function install_config_download_translations(&$install_state) {
   if ($needs_download) {
     return install_download_translation($install_state);
   }
+
+  return NULL;
 }
 
 /**

@@ -34,6 +34,8 @@ function breakpoint_help($route_name, RouteMatchInterface $route_match) {
       $output .= '</dl>';
       return $output;
   }
+
+  return NULL;
 }
 
 /**

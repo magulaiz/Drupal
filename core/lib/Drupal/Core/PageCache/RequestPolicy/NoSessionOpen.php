@@ -37,9 +37,9 @@ class NoSessionOpen implements RequestPolicyInterface {
    * {@inheritdoc}
    */
   public function check(Request $request) {
-    if (!$this->sessionConfiguration->hasSession($request)) {
-      return static::ALLOW;
-    }
+    return !$this->sessionConfiguration->hasSession($request) ?
+      static::ALLOW
+      : NULL;
   }
 
 }

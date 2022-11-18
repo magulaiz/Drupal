@@ -33,7 +33,9 @@ trait BasicAuthResourceTestTrait {
    */
   protected function assertResponseWhenMissingAuthentication($method, ResponseInterface $response) {
     if ($method !== 'GET') {
-      return $this->assertResourceErrorResponse(401, 'No authentication credentials provided.', $response);
+      $this->assertResourceErrorResponse(401, 'No authentication credentials provided.', $response);
+
+      return;
     }
 
     $expected_page_cache_header_value = $method === 'GET' ? 'MISS' : FALSE;

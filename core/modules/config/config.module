@@ -58,6 +58,8 @@ function config_help($route_name, RouteMatchInterface $route_match) {
       $output .= '<p>' . t('Import a single configuration item by pasting its YAML structure into the text field.') . '</p>';
       return $output;
   }
+
+  return NULL;
 }
 
 /**

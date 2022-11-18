@@ -38,10 +38,9 @@ class Score extends NumericField {
    * {@inheritdoc}
    */
   public function render(ResultRow $values) {
-    // Only render if we exist.
-    if (isset($this->tableAlias)) {
-      return parent::render($values);
-    }
+    return isset($this->tableAlias) ?
+      parent::render($values)
+      : NULL;
   }
 
 }

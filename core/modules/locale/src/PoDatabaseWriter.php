@@ -210,7 +210,7 @@ class PoDatabaseWriter implements PoWriterInterface {
    * @param \Drupal\Component\Gettext\PoItem $item
    *   The item being imported.
    *
-   * @return int
+   * @return null|int
    *   The string ID of the existing string modified or the new string added.
    */
   private function importString(PoItem $item) {
@@ -284,6 +284,8 @@ class PoDatabaseWriter implements PoWriterInterface {
       $this->report['strings'][] = $string->lid;
       return $string->lid;
     }
+
+    return NULL;
   }
 
 }

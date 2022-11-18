@@ -281,6 +281,8 @@ function hook_menu_links_discovered_alter(&$links) {
       'parent' => 'system.admin_reports',
     ];
   }
+
+  return NULL;
 }
 
 /**

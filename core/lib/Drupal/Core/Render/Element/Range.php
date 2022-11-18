@@ -79,6 +79,8 @@ class Range extends Number {
 
       return $element['#min'] + $offset;
     }
+
+    return NULL;
   }
 
 }

@@ -42,6 +42,8 @@ function help_help($route_name, RouteMatchInterface $route_match) {
       $output .= '</dl>';
       return ['#markup' => $output];
   }
+
+  return NULL;
 }
 
 /**

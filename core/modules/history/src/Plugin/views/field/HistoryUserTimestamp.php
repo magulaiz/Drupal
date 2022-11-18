@@ -107,6 +107,8 @@ class HistoryUserTimestamp extends Node {
       ];
       return $this->renderLink(\Drupal::service('renderer')->render($build), $values);
     }
+
+    return NULL;
   }
 
 }

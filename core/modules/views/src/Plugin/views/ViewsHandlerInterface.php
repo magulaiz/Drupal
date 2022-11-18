@@ -139,6 +139,9 @@ interface ViewsHandlerInterface extends ViewsPluginInterface {
 
   /**
    * Provide text for the administrative summary.
+   *
+   * @return null|string|\Drupal\Core\StringTranslation\TranslatableMarkup
+   *   Administrative summary.
    */
   public function adminSummary();
 
