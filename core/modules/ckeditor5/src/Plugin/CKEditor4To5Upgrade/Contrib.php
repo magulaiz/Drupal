@@ -20,7 +20,6 @@ use Drupal\filter\FilterFormatInterface;
  *   cke4_plugin_settings = {
  *   },
  *   cke5_plugin_elements_subset_configuration = {
- *    "ckeditor5_codeBlock",
  *   }
  * )
  *
@@ -54,14 +53,7 @@ class Contrib extends PluginBase implements CKEditor4To5UpgradePluginInterface {
    * {@inheritdoc}
    */
   public function computeCKEditor5PluginSubsetConfiguration(string $cke5_plugin_id, FilterFormatInterface $text_format): ?array {
-    switch ($cke5_plugin_id) {
-      // We always start from default settings.
-      case 'ckeditor5_codeBlock':
-        return NULL;
-
-      default:
-        throw new \OutOfBoundsException();
-    }
+    throw new \OutOfBoundsException();
   }
 
 }
