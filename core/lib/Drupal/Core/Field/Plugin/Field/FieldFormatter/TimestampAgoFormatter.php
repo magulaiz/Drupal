@@ -94,8 +94,8 @@ class TimestampAgoFormatter extends FormatterBase {
    */
   public static function defaultSettings() {
     return [
-      'future_format' => '@interval hence',
-      'past_format' => '@interval ago',
+      'future_format' => t('@interval hence'),
+      'past_format' => t('@interval ago'),
       'granularity' => 2,
     ] + parent::defaultSettings();
   }
