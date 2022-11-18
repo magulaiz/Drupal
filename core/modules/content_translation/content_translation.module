@@ -439,6 +439,12 @@ function content_translation_language_fallback_candidates_entity_view_alter(&$ca
     /** @var \Drupal\content_translation\ContentTranslationHandlerInterface $handler */
     $handler = \Drupal::entityTypeManager()->getHandler($entity->getEntityTypeId(), 'translation');
     foreach ($entity->getTranslationLanguages() as $langcode => $language) {
+      if (!isset($candidates[$langcode])) {
+        // Avoid unnecessary checks in case the candidate has already been
+        // removed by other hook implementations.
+        continue;
+      }
+
       $metadata = $manager->getTranslationMetadata($entity->getTranslation($langcode));
       if (!$metadata->isPublished()) {
         $access = $handler->getTranslationAccess($entity, 'update');
