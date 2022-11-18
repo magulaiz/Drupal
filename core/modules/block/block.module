@@ -72,6 +72,8 @@ function block_page_top(array &$page_top) {
       '#title' => t('Exit block region demonstration'),
       '#options' => ['attributes' => ['class' => ['block-demo-backlink']]],
       '#weight' => -10,
+      '#prefix' => '<div class="exit-block-demo-backlink-wrapper">',
+      '#suffix' => '</div>',
     ];
     if (\Drupal::config('system.theme')->get('default') == $theme) {
       $page_top['backlink']['#url'] = Url::fromRoute('block.admin_display');
