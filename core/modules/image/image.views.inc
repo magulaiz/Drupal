@@ -49,7 +49,7 @@ function image_field_views_data_views_data_alter(array &$data, FieldStorageConfi
 
   $data['file_managed'][$pseudo_field_name]['relationship'] = [
     'title' => t('@entity using @field', ['@entity' => $entity_type->getLabel(), '@field' => $label]),
-    'label' => t('@field_name', ['@field_name' => $field_name]),
+    'label' => $field_name,
     'help' => t('Relate each @entity with a @field set to the image.', ['@entity' => $entity_type->getLabel(), '@field' => $label]),
     'group' => $entity_type->getLabel(),
     'id' => 'entity_reverse',

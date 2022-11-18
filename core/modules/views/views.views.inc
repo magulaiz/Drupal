@@ -819,7 +819,7 @@ function core_field_views_data(FieldStorageConfigInterface $field_storage) {
       $pseudo_field_name = 'reverse__' . $entity_type_id . '__' . $field_name;
       $data[$target_base_table][$pseudo_field_name]['relationship'] = [
         'title' => t('@entity using @field_name', $args),
-        'label' => t('@field_name', ['@field_name' => $field_name]),
+        'label' => $field_name,
         'group' => $target_entity_type->getLabel(),
         'help' => t('Relate each @entity with a @field_name set to the @label.', $args),
         'id' => 'entity_reverse',

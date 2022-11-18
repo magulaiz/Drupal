@@ -140,7 +140,7 @@ function template_preprocess_system_modules_details(&$variables) {
     foreach ($theme->info['dependencies'] as $dependency) {
       if (isset($form[$dependency])) {
         // Add themes to the module's required by list.
-        $form[$dependency]['#required_by'][] = $theme->status ? t('@theme', ['@theme (theme)' => $theme->info['name']]) : t('@theme (theme) (<span class="admin-disabled">disabled</span>)', ['@theme' => $theme->info['name']]);
+        $form[$dependency]['#required_by'][] = $theme->status ? t('@theme (theme)', ['@theme' => $theme->info['name']]) : t('@theme (theme) (<span class="admin-disabled">disabled</span>)', ['@theme' => $theme->info['name']]);
       }
     }
   }

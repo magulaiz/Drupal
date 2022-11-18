@@ -101,4 +101,13 @@ class TranslatableMarkupTest extends UnitTestCase {
     new TranslatableMarkup($formattable_string);
   }
 
+  /**
+   * @covers ::__construct
+   * @group legacy
+   */
+  public function testPlaceholderOnlyAssertion() {
+    $this->expectDeprecation('Passing only placeholder strings in t(), is deprecated in drupal:9.3.x and will throw an error in drupal:10.0.0.');
+    new TranslatableMarkup('@foo', ['@foo' => 'foo']);
+  }
+
 }

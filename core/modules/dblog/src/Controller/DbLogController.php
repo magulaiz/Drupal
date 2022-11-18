@@ -387,7 +387,12 @@ class DbLogController extends ControllerBase {
             '<pre class="backtrace">@backtrace_string</pre>', $variables
           );
         }
-        $message = $this->t(Xss::filterAdmin($row->message), $variables);
+        if (count($variables) == 1 && isset($variables[$row->message])) {
+          $message = Xss::filterAdmin($variables[$row->message]);
+        }
+        else {
+          $message = $this->t(Xss::filterAdmin($row->message), $variables);
+        }
       }
     }
     else {

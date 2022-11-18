@@ -131,6 +131,9 @@ class TranslatableMarkup extends FormattableMarkup {
       $message = $string instanceof TranslatableMarkup ? '$string ("' . $string->getUntranslatedString() . '") must be a string.' : '$string ("' . (string) $string . '") must be a string.';
       throw new \InvalidArgumentException($message);
     }
+    if (count($arguments) == 1 && array_keys($arguments)[0] === $string) {
+      @trigger_error('Passing only placeholder strings in t(), is deprecated in drupal:9.3.x and will throw an error in drupal:10.0.0.', E_USER_DEPRECATED);
+    }
     parent::__construct($string, $arguments);
     $this->options = $options;
     $this->stringTranslation = $string_translation;
