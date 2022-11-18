@@ -7,7 +7,7 @@
 
 namespace Drupal\Tests\Core\Password;
 
-use Drupal\Core\Password\LegacyPassword;
+use Drupal\Core\Password\PhpassHashedPassword;
 use Drupal\Core\Password\PasswordInterface;
 use Drupal\Core\Password\PhpPassword;
 use Drupal\Tests\UnitTestCase;
@@ -93,7 +93,7 @@ class PasswordHashingTest extends UnitTestCase {
   protected function setUp(): void {
     parent::setUp();
 
-    $this->legacyHashingService = new LegacyPassword(1);
+    $this->legacyHashingService = new PhpassHashedPassword(1);
     $this->hashingService = new PhpPassword(4, $this->legacyHashingService);
 
     $this->plainPassword = $this->randomMachineName();
@@ -210,12 +210,12 @@ class PasswordHashingTest extends UnitTestCase {
   /**
    * Tests if legacy service hash count boundaries are enforced.
    *
-   * @covers \Drupal\Core\Password\LegacyPassword::enforceLog2Boundaries
+   * @covers \Drupal\Core\Password\PhpassHashedPassword::enforceLog2Boundaries
    */
   public function testWithinBounds() {
     $legacy_service = new FakeLegacyPassword();
-    $this->assertEquals(LegacyPassword::MIN_HASH_COUNT, $legacy_service->enforceLog2Boundaries(1));
-    $this->assertEquals(LegacyPassword::MAX_HASH_COUNT, $legacy_service->enforceLog2Boundaries(100));
+    $this->assertEquals(PhpassHashedPassword ::MIN_HASH_COUNT, $legacy_service->enforceLog2Boundaries(1));
+    $this->assertEquals(PhpassHashedPassword ::MAX_HASH_COUNT, $legacy_service->enforceLog2Boundaries(100));
   }
 
 }
@@ -223,7 +223,7 @@ class PasswordHashingTest extends UnitTestCase {
 /**
  * A fake legacy hashing class service for tests.
  */
-class FakeLegacyPassword extends LegacyPassword {
+class FakeLegacyPassword extends PhpassHashedPassword  {
 
   public function __construct() {
     // Noop.

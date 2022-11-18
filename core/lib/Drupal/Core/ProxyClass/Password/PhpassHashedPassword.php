@@ -1,18 +1,18 @@
 <?php
-// @codingStandardsIgnoreFile
+// phpcs:ignoreFile
 
 /**
- * This file was generated via php core/scripts/generate-proxy-class.php 'Drupal\Core\Password\LegacyPassword' "core/lib/Drupal/Core".
+ * This file was generated via php core/scripts/generate-proxy-class.php 'Drupal\Core\Password\PhpassHashedPassword' "core/lib/Drupal/Core".
  */
 
 namespace Drupal\Core\ProxyClass\Password {
 
     /**
-     * Provides a proxy class for \Drupal\Core\Password\LegacyPassword.
+     * Provides a proxy class for \Drupal\Core\Password\PhpassHashedPassword.
      *
      * @see \Drupal\Component\ProxyBuilder
      */
-    class LegacyPassword implements \Drupal\Core\Password\PasswordInterface
+    class PhpassHashedPassword implements \Drupal\Core\Password\PasswordInterface
     {
 
         use \Drupal\Core\DependencyInjection\DependencySerializationTrait;
@@ -27,7 +27,7 @@ namespace Drupal\Core\ProxyClass\Password {
         /**
          * The real proxied service, after it was lazy loaded.
          *
-         * @var \Drupal\Core\Password\LegacyPassword
+         * @var \Drupal\Core\Password\PhpassHashedPassword
          */
         protected $service;
 
