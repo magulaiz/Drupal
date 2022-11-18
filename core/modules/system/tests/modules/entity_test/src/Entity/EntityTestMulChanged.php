@@ -54,7 +54,7 @@ class EntityTestMulChanged extends EntityTestMul implements EntityChangedInterfa
   public static function baseFieldDefinitions(EntityTypeInterface $entity_type) {
     $fields = parent::baseFieldDefinitions($entity_type);
 
-    $fields['changed'] = BaseFieldDefinition::create('changed_test')
+    $fields['changed'] = BaseFieldDefinition::create('changed')
       ->setLabel(t('Changed'))
       ->setDescription(t('The time that the entity was last edited.'))
       ->setTranslatable(TRUE);
@@ -64,15 +64,6 @@ class EntityTestMulChanged extends EntityTestMul implements EntityChangedInterfa
       ->setDescription(t('A non-translatable string field'));
 
     return $fields;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function save() {
-    // Ensure a new timestamp.
-    sleep(1);
-    parent::save();
   }
 
 }
