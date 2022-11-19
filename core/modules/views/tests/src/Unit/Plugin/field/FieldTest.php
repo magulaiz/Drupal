@@ -464,7 +464,7 @@ class FieldTest extends UnitTestCase {
     $this->setupLanguageRenderer($handler, $definition);
 
     $field_storage = $this->getBaseFieldStorage();
-    $this->entityFieldManager
+    $this->entityFieldManager->expects($this->any())
       ->method('getFieldStorageDefinitions')
       ->with('test_entity')
       ->willReturn([
@@ -473,14 +473,15 @@ class FieldTest extends UnitTestCase {
 
     $table_mapping = $this->createMock('Drupal\Core\Entity\Sql\TableMappingInterface');
     $table_mapping
+      ->expects($this->any())
       ->method('getFieldColumnName')
       ->with($field_storage, 'value')
       ->willReturn('title');
     $entity_storage = $this->createMock('Drupal\Core\Entity\Sql\SqlEntityStorageInterface');
-    $entity_storage
+    $entity_storage->expects($this->any())
       ->method('getTableMapping')
       ->willReturn($table_mapping);
-    $this->entityTypeManager
+    $this->entityTypeManager->expects($this->any())
       ->method('getStorage')
       ->with('test_entity')
       ->willReturn($entity_storage);
@@ -651,7 +652,7 @@ class FieldTest extends UnitTestCase {
     $this->setupLanguageRenderer($handler, $definition);
 
     $field_storage = $this->getConfigFieldStorage();
-    $this->entityFieldManager->expects($this->any())
+    $this->entityFieldManager
       ->method('getFieldStorageDefinitions')
       ->with('test_entity')
       ->willReturn([
@@ -660,15 +661,14 @@ class FieldTest extends UnitTestCase {
 
     $table_mapping = $this->createMock('Drupal\Core\Entity\Sql\TableMappingInterface');
     $table_mapping
-      ->expects($this->any())
       ->method('getFieldColumnName')
       ->with($field_storage, 'value')
       ->willReturn('body_value');
     $entity_storage = $this->createMock('Drupal\Core\Entity\Sql\SqlEntityStorageInterface');
-    $entity_storage->expects($this->any())
+    $entity_storage
       ->method('getTableMapping')
       ->willReturn($table_mapping);
-    $this->entityTypeManager->expects($this->any())
+    $this->entityTypeManager
       ->method('getStorage')
       ->with('test_entity')
       ->willReturn($entity_storage);
@@ -683,13 +683,13 @@ class FieldTest extends UnitTestCase {
     $query = $this->getMockBuilder('Drupal\views\Plugin\views\query\Sql')
       ->disableOriginalConstructor()
       ->getMock();
-    $query->expects($this->any())
+    $query
       ->method('ensureTable')
       ->with('test_entity__body', NULL)
       ->willReturn('test_entity__body');
     // Ensure that we add the title field to the query, if we group by some
     // other field in the view.
-    $query->expects($this->any())
+    $query
       ->method('addField')
       ->with('test_entity__body', 'body_value');
 
