@@ -276,7 +276,7 @@ class ViewsConfigUpdater implements ContainerInjectionInterface {
    * @return bool
    *   Whether the view was updated.
    */
-  public function needsFixForEmptyGroupColumn(ViewEntityInterface $view) {
+  public function needsFixForEmptyGroupColumn(ViewEntityInterface $view): bool {
     return $this->processDisplayHandlers($view, TRUE, function (&$handler, $handler_type, $key, $display_id) use ($view) {
       return $this->processEmptyGroupColumn($handler, $handler_type, $key, $display_id, $view);
     });
@@ -299,7 +299,7 @@ class ViewsConfigUpdater implements ContainerInjectionInterface {
    * @param \Drupal\views\ViewEntityInterface $view
    *   The view being updated.
    */
-  public function processEmptyGroupColumn(&$handler, string $handler_type, $key, $display_id, ViewEntityInterface $view): bool {
+  public function processEmptyGroupColumn(array &$handler, string $handler_type, string $key, string $display_id, ViewEntityInterface $view): bool {
     if ($handler_type !== 'field') {
       return FALSE;
     }
@@ -338,7 +338,7 @@ class ViewsConfigUpdater implements ContainerInjectionInterface {
     $deprecations_triggered = &$this->triggeredDeprecations['2815881'][$view->id()];
     if ($this->deprecationsEnabled && $changed && !$deprecations_triggered) {
       $deprecations_triggered = TRUE;
-      @trigger_error(sprintf('The field "%s" has its "group_column" set to an empty value for the "%s" view. This is deprecated in drupal:9.4.0 and is disallowed in drupal:10.0.0. Module-provided Views configuration should be updated to accommodate the changes described at https://www.drupal.org/node/3255641.', $handler['field'], $view->id()), E_USER_DEPRECATED);
+      @trigger_error(sprintf('The field "%s" has its "group_column" set to an empty value for the "%s" view. This is deprecated in drupal:9.4.0 and is disallowed in drupal:10.0.0. Module-provided Views configuration should be updated to accommodate the changes. See https://www.drupal.org/node/3255641', $handler['field'], $view->id()), E_USER_DEPRECATED);
     }
 
     return $changed;
