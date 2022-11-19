@@ -61,7 +61,7 @@ class FieldUITest extends UITestBase {
     $this->assertSession()->elementNotExists('xpath', '//details[@id="edit-options-more"]');
 
     // Ensure that dialog titles are not escaped.
-    $edit_groupby_url = 'admin/structure/views/nojs/handler/test_view/default/field/name';
+    $edit_groupby_url = '/admin/structure/views/nojs/handler/test_view/default/field/name';
     $this->assertSession()->linkByHrefNotExists($edit_groupby_url, 0, 'No aggregation link found.');
 
     // Enable aggregation on the view.

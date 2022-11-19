@@ -76,7 +76,7 @@ class UnsavedPreviewTest extends UITestBase {
 
     $this->submitForm([], 'Update preview');
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertSession()->linkByHrefExists('foobarbaz');
+    $this->assertSession()->linkByHrefExists('/foobarbaz');
   }
 
 }

@@ -54,8 +54,8 @@ class MenuAccessTest extends BrowserTestBase {
     // Check for access to a restricted local task from a default local task.
     $this->drupalGet('foo/asdf');
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertSession()->linkByHrefExists('foo/asdf');
-    $this->assertSession()->linkByHrefExists('foo/asdf/b');
+    $this->assertSession()->linkByHrefExists('/foo/asdf');
+    $this->assertSession()->linkByHrefExists('/foo/asdf/b');
     $this->assertSession()->linkByHrefNotExists('foo/asdf/c');
 
     // Attempt to access a restricted local task.

@@ -158,7 +158,7 @@ class ViewEditTest extends UITestBase {
     foreach ($test_views as $view_name => $display) {
       $this->drupalGet('admin/structure/views/view/' . $view_name);
       $this->assertSession()->statusCodeEquals(200);
-      $langcode_url = 'admin/structure/views/nojs/display/' . $view_name . '/' . $display . '/rendering_language';
+      $langcode_url = '/admin/structure/views/nojs/display/' . $view_name . '/' . $display . '/rendering_language';
       if ($view_name == 'test_view') {
         $this->assertSession()->linkByHrefNotExists($langcode_url);
         $assert_session->linkNotExistsExact('Content language selected for page');

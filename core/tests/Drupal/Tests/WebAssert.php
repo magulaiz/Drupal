@@ -388,7 +388,8 @@ class WebAssert extends MinkWebAssert {
    *   Thrown when element doesn't exist, or the link label is a different one.
    */
   public function linkByHrefExists($href, $index = 0, $message = '') {
-    $xpath = $this->buildXPathQuery('//a[contains(@href, :href)]', [':href' => $href]);
+    // This is an XPath 1.0 implementation of the ends-with() function.
+    $xpath = $this->buildXPathQuery('//a[:href = substring(@href, string-length(@href) - ' . (strlen($href) + 1) . ')]', [':href' => $href]);
     $message = ($message ? $message : strtr('Link containing href %href found.', ['%href' => $href]));
     $links = $this->session->getPage()->findAll('xpath', $xpath);
     $this->assert(!empty($links[$index]), $message);
@@ -409,7 +410,8 @@ class WebAssert extends MinkWebAssert {
    *   Thrown when element doesn't exist, or the link label is a different one.
    */
   public function linkByHrefNotExists($href, $message = '') {
-    $xpath = $this->buildXPathQuery('//a[contains(@href, :href)]', [':href' => $href]);
+    // This is an XPath 1.0 implementation of the ends-with() function.
+    $xpath = $this->buildXPathQuery('//a[:href = substring(@href, string-length(@href) - ' . (strlen($href) + 1) . ')]', [':href' => $href]);
     $message = ($message ? $message : strtr('No link containing href %href found.', ['%href' => $href]));
     $links = $this->session->getPage()->findAll('xpath', $xpath);
     $this->assert(empty($links), $message);

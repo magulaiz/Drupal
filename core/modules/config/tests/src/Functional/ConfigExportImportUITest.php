@@ -286,17 +286,17 @@ class ConfigExportImportUITest extends BrowserTestBase {
     $this->assertSession()->pageTextContains('collection.test1 configuration collection');
     $this->assertSession()->pageTextContains('collection.test2 configuration collection');
     $this->assertSession()->pageTextContains('config_test.create');
-    $this->assertSession()->linkByHrefExists('admin/config/development/configuration/sync/diff_collection/collection.test1/config_test.create');
+    $this->assertSession()->linkByHrefExists('/admin/config/development/configuration/sync/diff_collection/collection.test1/config_test.create');
     $this->assertSession()->pageTextContains('config_test.update');
-    $this->assertSession()->linkByHrefExists('admin/config/development/configuration/sync/diff_collection/collection.test1/config_test.update');
+    $this->assertSession()->linkByHrefExists('/admin/config/development/configuration/sync/diff_collection/collection.test1/config_test.update');
     $this->assertSession()->pageTextContains('config_test.delete');
-    $this->assertSession()->linkByHrefExists('admin/config/development/configuration/sync/diff_collection/collection.test1/config_test.delete');
+    $this->assertSession()->linkByHrefExists('/admin/config/development/configuration/sync/diff_collection/collection.test1/config_test.delete');
     $this->assertSession()->pageTextContains('config_test.another_create');
-    $this->assertSession()->linkByHrefExists('admin/config/development/configuration/sync/diff_collection/collection.test2/config_test.another_create');
+    $this->assertSession()->linkByHrefExists('/admin/config/development/configuration/sync/diff_collection/collection.test2/config_test.another_create');
     $this->assertSession()->pageTextContains('config_test.another_update');
-    $this->assertSession()->linkByHrefExists('admin/config/development/configuration/sync/diff_collection/collection.test2/config_test.another_update');
+    $this->assertSession()->linkByHrefExists('/admin/config/development/configuration/sync/diff_collection/collection.test2/config_test.another_update');
     $this->assertSession()->pageTextContains('config_test.another_delete');
-    $this->assertSession()->linkByHrefExists('admin/config/development/configuration/sync/diff_collection/collection.test2/config_test.another_delete');
+    $this->assertSession()->linkByHrefExists('/admin/config/development/configuration/sync/diff_collection/collection.test2/config_test.another_delete');
 
     $this->submitForm([], 'Import all');
     $this->assertSession()->pageTextContains('The staged configuration is identical to the active configuration.');

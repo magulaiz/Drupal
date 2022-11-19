@@ -31,7 +31,7 @@ class DisplayExtenderUITest extends UITestBase {
 
     $view = Views::getView('test_view');
     $view_edit_url = "admin/structure/views/view/{$view->storage->id()}/edit";
-    $display_option_url = 'admin/structure/views/nojs/display/test_view/default/test_extender_test_option';
+    $display_option_url = '/admin/structure/views/nojs/display/test_view/default/test_extender_test_option';
 
     $this->drupalGet($view_edit_url);
     $this->assertSession()->linkByHrefExists($display_option_url, 0, 'Make sure the option defined by the test display extender appears in the UI.');

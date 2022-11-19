@@ -98,7 +98,7 @@ class HandlerTest extends UITestBase {
     $handler_types = ViewExecutable::getHandlerTypes();
     foreach ($handler_types as $type => $type_info) {
       // Test adding handlers.
-      $add_handler_url = "admin/structure/views/nojs/add-handler/test_view_empty/default/$type";
+      $add_handler_url = "/admin/structure/views/nojs/add-handler/test_view_empty/default/$type";
 
       // Area handler types need to use a different handler.
       if (in_array($type, ['header', 'footer', 'empty'])) {
@@ -107,7 +107,7 @@ class HandlerTest extends UITestBase {
           'name[views.area]' => TRUE,
         ], 'Add and configure ' . $type_info['ltitle']);
         $id = 'area';
-        $edit_handler_url = "admin/structure/views/nojs/handler/test_view_empty/default/$type/$id";
+        $edit_handler_url = "/admin/structure/views/nojs/handler/test_view_empty/default/$type/$id";
       }
       elseif ($type == 'relationship') {
         $this->drupalGet($add_handler_url);
@@ -115,7 +115,7 @@ class HandlerTest extends UITestBase {
           'name[views_test_data.uid]' => TRUE,
         ], 'Add and configure ' . $type_info['ltitle']);
         $id = 'uid';
-        $edit_handler_url = "admin/structure/views/nojs/handler/test_view_empty/default/$type/$id";
+        $edit_handler_url = "/admin/structure/views/nojs/handler/test_view_empty/default/$type/$id";
       }
       else {
         $this->drupalGet($add_handler_url);
@@ -123,7 +123,7 @@ class HandlerTest extends UITestBase {
           'name[views_test_data.job]' => TRUE,
         ], 'Add and configure ' . $type_info['ltitle']);
         $id = 'job';
-        $edit_handler_url = "admin/structure/views/nojs/handler/test_view_empty/default/$type/$id";
+        $edit_handler_url = "/admin/structure/views/nojs/handler/test_view_empty/default/$type/$id";
       }
 
       // Verify that the user got redirected to the handler edit form.

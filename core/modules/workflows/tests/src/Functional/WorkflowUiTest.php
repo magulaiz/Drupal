@@ -120,7 +120,7 @@ class WorkflowUiTest extends BrowserTestBase {
     /** @var \Drupal\workflows\WorkflowInterface $workflow */
     $this->drupalLogin($this->createUser(['access administration pages', 'administer workflows']));
     $this->drupalGet('admin/config/workflow');
-    $this->assertSession()->linkByHrefExists('admin/config/workflow/workflows');
+    $this->assertSession()->linkByHrefExists('/admin/config/workflow/workflows');
     $this->clickLink('Workflows');
     $this->assertSession()->pageTextContains('Workflows');
     $this->assertSession()->pageTextContains('There are no workflows yet.');

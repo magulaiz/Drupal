@@ -50,7 +50,7 @@ class BlockHookOperationTest extends BrowserTestBase {
     // Get the Block listing.
     $this->drupalGet('admin/structure/block');
 
-    $test_operation_link = 'admin/structure/block/manage/' . $block_id . '/test_operation';
+    $test_operation_link = '/admin/structure/block/manage/' . $block_id . '/test_operation';
     // Test if the test_operation link is on the page.
     $this->assertSession()->linkByHrefExists($test_operation_link);
   }

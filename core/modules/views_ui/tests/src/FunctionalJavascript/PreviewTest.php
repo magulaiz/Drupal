@@ -235,7 +235,7 @@ class PreviewTest extends WebDriverTestBase {
     $element = $this->assertSession()->elementExists('xpath', '//th[contains(@class, "views-field views-field-name")]/a');
 
     // Verify link.
-    $this->assertSession()->linkByHrefExists('preview/page_1?_wrapper_format=drupal_ajax&order=name&sort=desc', 0, 'The output URL is as expected.');
+    $this->assertSession()->linkByHrefExists('/preview/page_1?_wrapper_format=drupal_ajax&order=name&sort=desc', 0, 'The output URL is as expected.');
 
     // Click link to sort.
     $element->click();
@@ -244,7 +244,7 @@ class PreviewTest extends WebDriverTestBase {
     $this->assertNotEmpty($sort_link);
 
     // Verify link.
-    $this->assertSession()->linkByHrefExists('preview/page_1?_wrapper_format=drupal_ajax&order=name&sort=asc', 0, 'The output URL is as expected.');
+    $this->assertSession()->linkByHrefExists('/preview/page_1?_wrapper_format=drupal_ajax&order=name&sort=asc', 0, 'The output URL is as expected.');
   }
 
   /**

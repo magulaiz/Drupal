@@ -209,7 +209,7 @@ class ConfigEntityListTest extends BrowserTestBase {
     $this->assertSession()->elementExists('xpath', '//td[text() = "antelope"]');
 
     // Edit the entity using the operations link.
-    $this->assertSession()->linkByHrefExists('admin/structure/config_test/manage/antelope');
+    $this->assertSession()->linkByHrefExists('/admin/structure/config_test/manage/antelope');
     $this->clickLink('Edit', 1);
     $this->assertSession()->statusCodeEquals(200);
     $this->assertSession()->titleEquals('Edit Antelope | Drupal');
@@ -223,7 +223,7 @@ class ConfigEntityListTest extends BrowserTestBase {
     $this->assertSession()->elementExists('xpath', '//td[text() = "albatross"]');
 
     // Delete the added entity using the operations link.
-    $this->assertSession()->linkByHrefExists('admin/structure/config_test/manage/albatross/delete');
+    $this->assertSession()->linkByHrefExists('/admin/structure/config_test/manage/albatross/delete');
     $this->clickLink('Delete', 1);
     $this->assertSession()->statusCodeEquals(200);
     $this->assertSession()->titleEquals('Are you sure you want to delete the test configuration Albatross? | Drupal');
