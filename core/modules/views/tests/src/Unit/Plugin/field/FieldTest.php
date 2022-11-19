@@ -514,7 +514,7 @@ class FieldTest extends UnitTestCase {
   /**
    * @covers ::query
    */
-  public function testQueryWithGroupByForBaseFieldFailure() {
+  public function testQueryWithGroupByForBaseFieldFailure(): void {
     $definition = [
       'entity_type' => 'test_entity',
       'field_name' => 'title',
@@ -641,7 +641,7 @@ class FieldTest extends UnitTestCase {
   /**
    * @covers ::query
    */
-  public function testQueryWithGroupByForConfigFieldFailure() {
+  public function testQueryWithGroupByForConfigFieldFailure(): void {
     $definition = [
       'entity_type' => 'test_entity',
       'field_name' => 'body',
@@ -874,7 +874,7 @@ class FieldTest extends UnitTestCase {
   /**
    * @covers ::add_field_table
    */
-  public function testAddAdditionalFieldTable() {
+  public function testAddAdditionalFieldTable(): void {
     $definition = [
       'entity_type' => 'test_entity',
       'field_name' => 'body',

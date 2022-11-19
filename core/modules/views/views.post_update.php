@@ -54,18 +54,6 @@ function views_post_update_oembed_eager_load(?array &$sandbox = NULL): void {
 }
 
 /**
- * Fix views containing entity fields with an empty group column value set.
- */
-function views_post_update_empty_entity_field_group_column(?array &$sandbox = NULL) {
-  /** @var \Drupal\views\ViewsConfigUpdater $view_config_updater */
-  $view_config_updater = \Drupal::classResolver(ViewsConfigUpdater::class);
-  $view_config_updater->setDeprecationsEnabled(FALSE);
-  \Drupal::classResolver(ConfigEntityUpdater::class)->update($sandbox, 'view', function ($view) use ($view_config_updater) {
-    return $view_config_updater->needsFixForEmptyGroupColumn($view);
-  });
-}
-
-/**
  * Add lazy load options to all responsive image type field configurations.
  */
 function views_post_update_responsive_image_lazy_load(?array &$sandbox = NULL): void {
@@ -73,5 +61,17 @@ function views_post_update_responsive_image_lazy_load(?array &$sandbox = NULL): 
   $view_config_updater = \Drupal::classResolver(ViewsConfigUpdater::class);
   \Drupal::classResolver(ConfigEntityUpdater::class)->update($sandbox, 'view', function (ViewEntityInterface $view) use ($view_config_updater): bool {
     return $view_config_updater->needsResponsiveImageLazyLoadFieldUpdate($view);
+  });
+}
+
+/**
+ * Fix views containing entity fields with an empty group column value set.
+ */
+function views_post_update_empty_entity_field_group_column(?array &$sandbox = NULL): void {
+  /** @var \Drupal\views\ViewsConfigUpdater $view_config_updater */
+  $view_config_updater = \Drupal::classResolver(ViewsConfigUpdater::class);
+  $view_config_updater->setDeprecationsEnabled(FALSE);
+  \Drupal::classResolver(ConfigEntityUpdater::class)->update($sandbox, 'view', function ($view) use ($view_config_updater) {
+    return $view_config_updater->needsFixForEmptyGroupColumn($view);
   });
 }
