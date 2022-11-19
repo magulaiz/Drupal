@@ -1083,7 +1083,7 @@ services:
   Drupal\Core\Path\PathValidatorInterface: '@path.validator'
 
   # The first argument of the hashing service (constructor of PhpPassword) is
-  # the 'cost' option of password_hash(). In Drupal 8 the 'cost' has the default
+  # the 'cost' option of password_hash(). In Drupal 10 the 'cost' has the default
   # value used by password_hash() which is 10. Future versions of Drupal may
   # increase this value in order to counteract increases in the speed and power
   # of computers available to crack the hashes. Note that an increase of 1 will
