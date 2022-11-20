@@ -90,7 +90,6 @@ class MigrateTaxonomyTermTest extends MigrateDrupal6TestBase {
       $term = $terms[$tid];
       $language = isset($values['language']) ? $values['language'] . ' - ' : '';
       $this->assertSame("{$language}term {$tid} of vocabulary {$values['source_vid']}", $term->name->value);
-      $this->assertSame("{$language}description of term {$tid} of vocabulary {$values['source_vid']}", $term->description->value);
       $this->assertSame($values['vid'], $term->vid->target_id);
       $this->assertSame((string) $values['weight'], $term->weight->value);
       if ($values['parent'] === [0]) {

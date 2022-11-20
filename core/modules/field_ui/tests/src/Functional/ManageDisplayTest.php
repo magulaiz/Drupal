@@ -205,15 +205,10 @@ class ManageDisplayTest extends BrowserTestBase {
   /**
    * Tests view mode management screens.
    */
-  public function testViewModeUi(): void {
-    // Tests table headers on "Manage form" and "Manage display" screens.
-    $this->drupalGet('admin/structure/taxonomy/manage/' . $this->vocabulary . '/overview/form-display');
-    $this->assertTableHeaderExistsByLabel('field-display-overview', 'Machine name');
+  public function testSingleViewMode() {
+    // Create a test field.
+    $this->fieldUIAddNewField('admin/structure/taxonomy/manage/' . $this->vocabulary . '/overview', 'test', 'test');
     $this->drupalGet('admin/structure/taxonomy/manage/' . $this->vocabulary . '/overview/display');
-    $this->assertTableHeaderExistsByLabel('field-display-overview', 'Machine name');
-
-    // Tests hiding the view modes fieldset when there's only one available.
-    $this->drupalGet('admin/structure/taxonomy/manage/' . $this->vocabulary . '/display');
     $this->assertSession()->pageTextNotContains('Use custom display settings for the following view modes');
 
     // This may not trigger a notice when 'view_modes_custom' isn't available.
