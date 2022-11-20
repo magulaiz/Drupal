@@ -118,13 +118,15 @@ class SharedTempStore {
    * @param string $key
    *   The key of the data to retrieve.
    *
-   * @return mixed
+   * @return null|mixed
    *   The data associated with the key, or NULL if the key does not exist.
    */
   public function get($key) {
     if ($object = $this->storage->get($key)) {
       return $object->data;
     }
+
+    return NULL;
   }
 
   /**
@@ -135,13 +137,15 @@ class SharedTempStore {
    * @param string $key
    *   The key of the data to retrieve.
    *
-   * @return mixed
+   * @return null|mixed
    *   The data associated with the key, or NULL if the key does not exist.
    */
   public function getIfOwner($key) {
     if (($object = $this->storage->get($key)) && ($object->owner == $this->owner)) {
       return $object->data;
     }
+
+    return NULL;
   }
 
   /**
@@ -244,6 +248,8 @@ class SharedTempStore {
       unset($object->data);
       return new Lock($object->owner, $object->updated);
     }
+
+    return NULL;
   }
 
   /**

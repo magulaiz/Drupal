@@ -53,9 +53,7 @@ abstract class TipPluginBase extends PluginBase implements TipPluginInterface {
    * {@inheritdoc}
    */
   public function get($key) {
-    if (!empty($this->configuration[$key])) {
-      return $this->configuration[$key];
-    }
+    return $this->configuration[$key] ?? NULL;
   }
 
   /**

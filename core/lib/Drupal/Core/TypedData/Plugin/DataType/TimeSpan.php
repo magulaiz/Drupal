@@ -26,11 +26,11 @@ class TimeSpan extends IntegerData implements DurationInterface {
    * {@inheritdoc}
    */
   public function getDuration() {
-    if ($this->value) {
-      // Keep the duration in seconds as there is generally no valid way to
-      // convert it to days, months or years.
-      return new \DateInterval('PT' . $this->value . 'S');
-    }
+    // Keep the duration in seconds as there is generally no valid way to
+    // convert it to days, months or years.
+    return $this->value ?
+      new \DateInterval('PT' . $this->value . 'S')
+      : NULL;
   }
 
   /**

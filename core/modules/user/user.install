@@ -135,4 +135,6 @@ function user_update_10000() {
       ['%role_list' => implode(', ', $cleaned_roles)]
     );
   }
+
+  return NULL;
 }

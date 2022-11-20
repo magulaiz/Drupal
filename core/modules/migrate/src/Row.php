@@ -151,9 +151,8 @@ class Row {
    */
   public function getSourceProperty($property) {
     $return = NestedArray::getValue($this->source, explode(static::PROPERTY_SEPARATOR, $property), $key_exists);
-    if ($key_exists) {
-      return $return;
-    }
+
+    return $key_exists ? $return : NULL;
   }
 
   /**

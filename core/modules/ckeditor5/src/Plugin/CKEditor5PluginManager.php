@@ -445,6 +445,8 @@ class CKEditor5PluginManager extends DefaultPluginManager implements CKEditor5Pl
       if ($definition->$has_method()) {
         return $definition->$get_method();
       }
+
+      return NULL;
     }, $definitions));
     return array_reduce($per_plugin, function (array $result, $current): array {
       return is_array($current) && is_array(reset($current))

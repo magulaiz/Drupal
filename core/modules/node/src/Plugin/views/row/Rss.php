@@ -73,7 +73,7 @@ class Rss extends RssPluginBase {
 
     $nid = $row->{$this->field_alias};
     if (!is_numeric($nid)) {
-      return;
+      return NULL;
     }
 
     $display_mode = $this->options['view_mode'];
@@ -85,7 +85,7 @@ class Rss extends RssPluginBase {
     /** @var \Drupal\node\NodeInterface $node */
     $node = $this->nodes[$nid];
     if (empty($node)) {
-      return;
+      return NULL;
     }
 
     $node->rss_namespaces = [];

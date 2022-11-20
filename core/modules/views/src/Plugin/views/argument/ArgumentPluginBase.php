@@ -588,15 +588,10 @@ abstract class ArgumentPluginBase extends HandlerBase implements CacheableDepend
     }
 
     if ($which) {
-      if (!empty($defaults[$which])) {
-        return $defaults[$which];
-      }
+      return $defaults[$which] ?? NULL;
+    }
 
-      return NULL;
-    }
-    else {
-      return $defaults;
-    }
+    return $defaults;
   }
 
   /**
