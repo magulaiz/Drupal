@@ -44,7 +44,11 @@ class FileFieldValidateTest extends FileFieldTestBase {
 
     // Create a new node with the uploaded file.
     $nid = $this->uploadNodeFile($test_file, $field_name, $type_name);
-    $this->assertNotFalse($nid, new FormattableMarkup('uploadNodeFile(@test_file, @field_name, @type_name) succeeded', ['@test_file' => $test_file->getFileUri(), '@field_name' => $field_name, '@type_name' => $type_name]));
+    $this->assertNotFalse($nid, new FormattableMarkup('uploadNodeFile(@test_file, @field_name, @type_name) succeeded', [
+      '@test_file' => $test_file->getFileUri(),
+      '@field_name' => $field_name,
+      '@type_name' => $type_name,
+    ]));
 
     $node_storage->resetCache([$nid]);
     $node = $node_storage->load($nid);
@@ -105,16 +109,16 @@ class FileFieldValidateTest extends FileFieldTestBase {
       $node_file = File::load($node->{$field_name}->target_id);
       $this->assertFileExists($node_file->getFileUri());
       $this->assertFileEntryExists($node_file, new FormattableMarkup('File entry exists after uploading a file (%filesize) under the max limit (%maxsize).', [
-          '%filesize' => ByteSizeMarkup::create($small_file->getSize()),
-          '%maxsize' => $max_filesize,
-        ]));
+        '%filesize' => ByteSizeMarkup::create($small_file->getSize()),
+        '%maxsize' => $max_filesize,
+      ]));
 
       // Check that uploading the large file fails (1M limit).
       $this->uploadNodeFile($large_file, $field_name, $type_name);
       $error_message = t('The file is %filesize exceeding the maximum file size of %maxsize.', [
-          '%filesize' => ByteSizeMarkup::create($large_file->getSize()),
-          '%maxsize' => ByteSizeMarkup::create($file_limit),
-        ]);
+        '%filesize' => ByteSizeMarkup::create($large_file->getSize()),
+        '%maxsize' => ByteSizeMarkup::create($file_limit),
+      ]);
       $this->assertSession()->responseContains($error_message);
     }
 
@@ -128,7 +132,7 @@ class FileFieldValidateTest extends FileFieldTestBase {
     $node_file = File::load($node->{$field_name}->target_id);
     $this->assertFileExists($node_file->getFileUri());
     $this->assertFileEntryExists($node_file, new FormattableMarkup('File entry exists after uploading a file (%filesize) with no max limit.', [
-        '%filesize' => ByteSizeMarkup::create($large_file->getSize()),
+      '%filesize' => ByteSizeMarkup::create($large_file->getSize()),
     ]));
   }
 

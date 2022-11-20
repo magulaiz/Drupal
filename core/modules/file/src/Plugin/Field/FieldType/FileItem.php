@@ -192,7 +192,7 @@ class FileItem extends EntityReferenceItem {
       '#description' => t('Enter a value like "512" (bytes), "80 KB" (kilobytes) or "50 MB" (megabytes) in order to restrict the allowed file size. If left empty the file sizes will be limited only by PHP\'s maximum post and file upload sizes (current limit <strong>%limit</strong>).', [
           '%limit' => ByteSizeMarkup::create(Environment::getUploadMaxSize()),
       ]),
-
+    ];
     $element['description_field'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Enable <em>Description</em> field'),
