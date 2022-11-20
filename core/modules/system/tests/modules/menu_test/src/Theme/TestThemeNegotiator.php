@@ -29,17 +29,21 @@ class TestThemeNegotiator implements ThemeNegotiatorInterface {
     if ($argument == 'use-admin-theme') {
       return \Drupal::config('system.theme')->get('admin');
     }
+
     // Test using a theme that exists, but may or may not be installed.
-    elseif ($argument == 'use-test-theme') {
+    if ($argument == 'use-test-theme') {
       return 'test_theme';
     }
+
     // Test using a theme that does not exist.
-    elseif ($argument == 'use-fake-theme') {
+    if ($argument == 'use-fake-theme') {
       return 'fake_theme';
     }
+
     // For any other value of the URL argument, do not return anything. This
     // allows us to test that returning nothing from a theme negotiation
     // causes the page to correctly fall back on using the main site theme.
+    return NULL;
   }
 
 }

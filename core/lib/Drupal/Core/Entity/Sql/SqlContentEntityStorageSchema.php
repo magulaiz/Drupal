@@ -1455,9 +1455,6 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
    *   The entity type.
    * @param array $schema
    *   The table schema, passed by reference.
-   *
-   * @return array
-   *   A partial schema array for the base table.
    */
   protected function processDataTable(ContentEntityTypeInterface $entity_type, array &$schema) {
     // Marking the respective fields as NOT NULL makes the indexes more
@@ -1472,9 +1469,6 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
    *   The entity type.
    * @param array $schema
    *   The table schema, passed by reference.
-   *
-   * @return array
-   *   A partial schema array for the base table.
    */
   protected function processRevisionDataTable(ContentEntityTypeInterface $entity_type, array &$schema) {
     // Marking the respective fields as NOT NULL makes the indexes more

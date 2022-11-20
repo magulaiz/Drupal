@@ -71,6 +71,8 @@ class ThemeNegotiator implements ThemeNegotiatorInterface {
         }
       }
     }
+
+    return NULL;
   }
 
 }

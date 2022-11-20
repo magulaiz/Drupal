@@ -75,6 +75,8 @@ class UserUid extends ArgumentPluginBase {
     if ($which != 'summary asc' && $which != 'summary desc') {
       return parent::defaultActions($which);
     }
+
+    return NULL;
   }
 
   public function query($group_by = FALSE) {

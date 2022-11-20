@@ -16,6 +16,7 @@ use Drupal\Core\Session\AccountInterface;
  * Implements hook_entity_bundle_field_info().
  */
 function views_entity_test_entity_base_field_info(EntityTypeInterface $entity_type) {
+  $definitions = [];
   if ($entity_type->id() == 'entity_test') {
     $definitions['test_text_access'] = BaseFieldDefinition::create('string')
       ->setLabel(t('Test access'))
@@ -25,8 +26,9 @@ function views_entity_test_entity_base_field_info(EntityTypeInterface $entity_ty
         'type' => 'string_textfield',
         'weight' => 10,
       ]);
-    return $definitions;
   }
+
+  return $definitions;
 }
 
 /**

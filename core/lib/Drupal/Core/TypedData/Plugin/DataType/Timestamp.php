@@ -26,9 +26,9 @@ class Timestamp extends IntegerData implements DateTimeInterface {
    * {@inheritdoc}
    */
   public function getDateTime() {
-    if (isset($this->value)) {
-      return DrupalDateTime::createFromTimestamp($this->value);
-    }
+    return isset($this->value) ?
+      DrupalDateTime::createFromTimestamp($this->value)
+      : NULL;
   }
 
   /**

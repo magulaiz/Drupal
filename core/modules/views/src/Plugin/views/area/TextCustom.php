@@ -57,9 +57,9 @@ class TextCustom extends TokenizeAreaPluginBase {
    * Render a text area with \Drupal\Component\Utility\Xss::filterAdmin().
    */
   public function renderTextarea($value) {
-    if ($value) {
-      return $this->sanitizeValue($this->tokenizeValue($value), 'xss_admin');
-    }
+    return $value ?
+      $this->sanitizeValue($this->tokenizeValue($value), 'xss_admin')
+      : NULL;
   }
 
 }

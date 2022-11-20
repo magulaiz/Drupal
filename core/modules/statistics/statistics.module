@@ -32,6 +32,8 @@ function statistics_help($route_name, RouteMatchInterface $route_match) {
     case 'statistics.settings':
       return '<p>' . t('Settings for the statistical information that Drupal will keep about the site.') . '</p>';
   }
+
+  return NULL;
 }
 
 /**
@@ -110,6 +112,8 @@ function statistics_ranking() {
       ],
     ];
   }
+
+  return NULL;
 }
 
 /**

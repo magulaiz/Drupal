@@ -608,7 +608,7 @@ class Sql extends QueryPluginBase {
     }
 
     if (!array_key_exists($relationship, $this->relationships)) {
-      return FALSE;
+      return NULL;
     }
 
     if ($table == $this->relationships[$relationship]['base']) {
@@ -663,6 +663,8 @@ class Sql extends QueryPluginBase {
 
       return $this->queueTable($table, $relationship, $join);
     }
+
+    return NULL;
   }
 
   /**
@@ -806,6 +808,8 @@ class Sql extends QueryPluginBase {
         return $this->tableQueue[$alias];
       }
     }
+
+    return NULL;
   }
 
   /**

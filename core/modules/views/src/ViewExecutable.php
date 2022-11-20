@@ -97,21 +97,21 @@ class ViewExecutable {
   /**
    * The current page. If the view uses pagination.
    *
-   * @var int
+   * @var null|int
    */
   protected $current_page = NULL;
 
   /**
    * The number of items per page.
    *
-   * @var int
+   * @var null|int
    */
   protected $items_per_page = NULL;
 
   /**
    * The pager offset.
    *
-   * @var int
+   * @var null|int
    */
   protected $offset = NULL;
 
@@ -204,7 +204,7 @@ class ViewExecutable {
   /**
    * The used pager plugin used by the current executed view.
    *
-   * @var \Drupal\views\Plugin\views\pager\PagerPluginBase
+   * @var null|\Drupal\views\Plugin\views\pager\PagerPluginBase
    */
   public $pager = NULL;
 
@@ -543,42 +543,34 @@ class ViewExecutable {
 
     // If the pager is already initialized, pass it through to the pager.
     if (!empty($this->pager)) {
-      return $this->pager->setCurrentPage($page);
+      $this->pager->setCurrentPage($page);
     }
   }
 
   /**
    * Gets the current page from the pager.
    *
-   * @return int
+   * @return null|int
    *   The current page.
    */
   public function getCurrentPage() {
     // If the pager is already initialized, pass it through to the pager.
-    if (!empty($this->pager)) {
-      return $this->pager->getCurrentPage();
-    }
-
-    if (isset($this->current_page)) {
-      return $this->current_page;
-    }
+    return $this->pager ?
+      $this->pager->getCurrentPage()
+      : $this->current_page;
   }
 
   /**
    * Gets the items per page from the pager.
    *
-   * @return int
+   * @return null|int
    *   The items per page.
    */
   public function getItemsPerPage() {
     // If the pager is already initialized, pass it through to the pager.
-    if (!empty($this->pager)) {
-      return $this->pager->getItemsPerPage();
-    }
-
-    if (isset($this->items_per_page)) {
-      return $this->items_per_page;
-    }
+    return $this->pager ?
+      $this->pager->getItemsPerPage()
+      : $this->items_per_page;
   }
 
   /**
@@ -604,18 +596,14 @@ class ViewExecutable {
   /**
    * Gets the pager offset from the pager.
    *
-   * @return int
+   * @return null|int
    *   The pager offset.
    */
   public function getOffset() {
     // If the pager is already initialized, pass it through to the pager.
-    if (!empty($this->pager)) {
-      return $this->pager->getOffset();
-    }
-
-    if (isset($this->offset)) {
-      return $this->offset;
-    }
+    return $this->pager ?
+      $this->pager->getOffset()
+      : $this->offset;
   }
 
   /**
@@ -646,9 +634,7 @@ class ViewExecutable {
    *   TRUE if the view uses a pager, FALSE otherwise.
    */
   public function usePager() {
-    if (!empty($this->pager)) {
-      return $this->pager->usePager();
-    }
+    return $this->pager && $this->pager->usePager();
   }
 
   /**

@@ -59,11 +59,14 @@ class StringDatabaseStorage implements StringStorageInterface {
       ->execute()
       ->fetchAssoc();
 
-    if (!empty($values)) {
-      $string = new SourceString($values);
-      $string->setStorage($this);
-      return $string;
+    if (!$values) {
+      return NULL;
     }
+
+    $string = new SourceString($values);
+    $string->setStorage($this);
+
+    return $string;
   }
 
   /**
@@ -74,12 +77,15 @@ class StringDatabaseStorage implements StringStorageInterface {
       ->execute()
       ->fetchAssoc();
 
-    if (!empty($values)) {
-      $string = new TranslationString($values);
-      $this->checkVersion($string, \Drupal::VERSION);
-      $string->setStorage($this);
-      return $string;
+    if (!$values) {
+      return NULL;
     }
+
+    $string = new TranslationString($values);
+    $this->checkVersion($string, \Drupal::VERSION);
+    $string->setStorage($this);
+
+    return $string;
   }
 
   /**

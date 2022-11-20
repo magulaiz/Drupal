@@ -473,6 +473,8 @@ class LinkGeneratorTest extends UnitTestCase {
               return (new GeneratedUrl())->setGeneratedUrl('/test-route-4/1');
             }
         }
+
+        return NULL;
       });
 
     $this->urlGenerator->expects($this->exactly(4))

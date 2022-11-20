@@ -27,7 +27,7 @@
  * @param \Drupal\Core\Session\AccountInterface $account
  *   The user account whose default shortcut set is being requested.
  *
- * @return string
+ * @return null|string
  *   The name of the shortcut set that this module recommends for that user, if
  *   there is one.
  */
@@ -38,6 +38,8 @@ function hook_shortcut_default_set(\Drupal\Core\Session\AccountInterface $accoun
   if ($user_admin_roles) {
     return 'admin-shortcuts';
   }
+
+  return NULL;
 }
 
 /**

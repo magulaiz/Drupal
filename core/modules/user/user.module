@@ -74,6 +74,8 @@ function user_help($route_name, RouteMatchInterface $route_match) {
     case 'entity.entity_view_display.user.default':
       return '<p>' . t('This form lets administrators configure how fields should be displayed when rendering a user profile page.') . '</p>';
   }
+
+  return NULL;
 }
 
 /**
@@ -213,9 +215,10 @@ function user_validate_name($name) {
   $data = \Drupal::typedDataManager()->create($definition);
   $data->setValue($name);
   $violations = $data->validate();
-  if (count($violations) > 0) {
-    return $violations[0]->getMessage();
-  }
+
+  return $violations->count() ?
+    $violations[0]->getMessage()
+    : NULL;
 }
 
 /**
