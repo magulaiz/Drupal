@@ -119,7 +119,7 @@ class BlockSystemBrandingTest extends BlockTestBase {
     $this->assertEmpty($site_name_element, 'The branding block site name was disabled.');
     $this->assertEmpty($site_slogan_element, 'The branding block slogan was disabled.');
     $this->assertSession()->responseHeaderContains('X-Drupal-Cache-Tags', 'config:system.site');
-     
+
     // Set a valid slogan in order to test with Olivero.
     $this->config('system.site')
       ->set('slogan', 'Community carpentry')
