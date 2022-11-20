@@ -87,7 +87,9 @@ class PhpMail implements MailInterface {
     $headers = new Headers();
     foreach ($message['headers'] as $name => $value) {
       if (in_array(strtolower($name), self::MAILBOX_LIST_HEADERS, TRUE)) {
-        $value = explode(',', $value);
+        // Split values by comma, but ignore commas encapsulated in double
+        // quotes.
+        $value = str_getcsv($value, ',');
       }
       $headers->addHeader($name, $value);
     }
@@ -106,9 +108,6 @@ class PhpMail implements MailInterface {
 
     $request = \Drupal::request();
 
-    // We suppress warnings and notices from mail() because of issues on some
-    // hosts. The return value of this method will still indicate whether mail
-    // was sent successfully.
     if (!$request->server->has('WINDIR') && strpos($request->server->get('SERVER_SOFTWARE'), 'Win32') === FALSE) {
       // On most non-Windows systems, the "-f" option to the sendmail command
       // is used to set the Return-Path. There is no space between -f and
@@ -117,7 +116,7 @@ class PhpMail implements MailInterface {
       // we assume to be safe.
       $site_mail = $this->configFactory->get('system.site')->get('mail');
       $additional_headers = isset($message['Return-Path']) && ($site_mail === $message['Return-Path'] || static::_isShellSafe($message['Return-Path'])) ? '-f' . $message['Return-Path'] : '';
-      $mail_result = @mail(
+      $mail_result = $this->doMail(
         $message['to'],
         $mail_subject,
         $mail_body,
@@ -130,7 +129,7 @@ class PhpMail implements MailInterface {
       // Return-Path header.
       $old_from = ini_get('sendmail_from');
       ini_set('sendmail_from', $message['Return-Path']);
-      $mail_result = @mail(
+      $mail_result = $this->doMail(
         $message['to'],
         $mail_subject,
         $mail_body,
@@ -140,6 +139,36 @@ class PhpMail implements MailInterface {
     }
 
     return $mail_result;
+  }
+
+  /**
+   * Wrapper around PHP's mail() function.
+   *
+   * We suppress warnings and notices from mail() because of issues on some
+   * hosts. The return value of this method will still indicate whether mail was
+   * sent successfully.
+   *
+   * @param string $to
+   *   Receiver, or receivers of the mail.
+   * @param string $subject
+   *   Subject of the email to be sent.
+   * @param string $message
+   *   Message to be sent.
+   * @param array|string $additional_headers
+   *   (optional) String or array to be inserted at the end of the email header.
+   * @param string $additional_params
+   *   (optional) Can be used to pass additional flags as command line options.
+   *
+   * @see mail()
+   */
+  protected function doMail(string $to, string $subject, string $message, array|string $additional_headers = [], string $additional_params = ''): bool {
+    return @mail(
+      $to,
+      $subject,
+      $message,
+      $additional_headers,
+      $additional_params
+    );
   }
 
   /**
