@@ -418,10 +418,10 @@ class BlockUiTest extends BrowserTestBase {
    */
   public function testBlockDeleteDestination() {
     // Install all themes.
-    \Drupal::service('theme_handler')->install(['bartik', 'seven', 'stark']);
+    \Drupal::service('theme_handler')->install(['classy', 'stable', 'stark']);
     // Set the default theme.
     $theme_settings = $this->config('system.theme');
-    $theme_settings->set('default', 'bartik')->save();
+    $theme_settings->set('default', 'classy')->save();
 
     // Make sure we're back in the list of blocks for the right theme.
     // Test 'admin/structure/block'.
@@ -432,8 +432,8 @@ class BlockUiTest extends BrowserTestBase {
     $this->assertSession()->responseContains('The block %name has been removed.', ['%name' => $this->blocks[1]->label()]);
     $this->assertSession()->addressEquals($block_layout_url);
 
-    // Test 'admin/structure/block/list/seven'.
-    $block_layout_url = Url::fromRoute('block.admin_display_theme', ['theme' => 'seven'], ['absolute' => TRUE]);
+    // Test 'admin/structure/block/list/stable'.
+    $block_layout_url = Url::fromRoute('block.admin_display_theme', ['theme' => 'stable'], ['absolute' => TRUE]);
     $this->drupalGet($block_layout_url);
     $this->clickLink('Remove');
     $this->submitForm([], 'Remove');
@@ -454,8 +454,8 @@ class BlockUiTest extends BrowserTestBase {
     $this->assertSession()->responseContains('The block %name has been removed.', ['%name' => $this->blocks[0]->label()]);
     $this->assertSession()->addressEquals('admin');
 
-    // Test 'admin/structure/block/list/seven?destination=/admin'.
-    $this->drupalGet(Url::fromRoute('block.admin_display_theme', ['theme' => 'seven'], $options));
+    // Test 'admin/structure/block/list/stable?destination=/admin'.
+    $this->drupalGet(Url::fromRoute('block.admin_display_theme', ['theme' => 'stable'], $options));
     $this->clickLink('Remove');
     $this->submitForm([], 'Remove');
     $this->assertSession()->responseContains('The block %name has been removed.', ['%name' => $this->blocks[0]->label()]);
