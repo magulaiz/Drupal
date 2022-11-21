@@ -60,6 +60,14 @@ final class FilterImageLazyLoadTest extends UnitTestCase {
         'input' => '<p><img src="foo.png" width="200" height="200"/></p>',
         '<p><img src="foo.png" width="200" height="200" loading="lazy" /></p>',
       ],
+      'width image dimensions provided' => [
+        'input' => '<p><img src="foo.png" width="200"/></p>',
+        '<p><img src="foo.png" width="200" /></p>',
+      ],
+      'height image dimensions provided' => [
+        'input' => '<p><img src="foo.png" height="200"/></p>',
+        '<p><img src="foo.png" height="200" /></p>',
+      ],
       'invalid loading attribute' => [
         'input' => '<p><img src="foo.png" width="200" height="200" loading="foo"></p>',
         'output' => '<p><img src="foo.png" width="200" height="200" loading="lazy" /></p>',
@@ -71,14 +79,6 @@ final class FilterImageLazyLoadTest extends UnitTestCase {
       'no image dimensions provided' => [
         'input' => '<p><img src="foo.png"></p>',
         'output' => '<p><img src="foo.png" /></p>',
-      ],
-      'no loading attribute with uuid' => [
-        'input' => '<p><img src="foo.png" data-entity-type="file" data-entity-uuid="a6d88b01-3b5e-4c02-bf26-24a0c48d61cd"></p>',
-        'output' => '<p><img src="foo.png" data-entity-type="file" data-entity-uuid="a6d88b01-3b5e-4c02-bf26-24a0c48d61cd" /></p>',
-      ],
-      'eager loading attribute with uuid' => [
-        'input' => '<p><img src="foo.png" data-entity-type="file" data-entity-uuid="a6d88b01-3b5e-4c02-bf26-24a0c48d61cd" loading="eager"></p>',
-        'output' => '<p><img src="foo.png" data-entity-type="file" data-entity-uuid="a6d88b01-3b5e-4c02-bf26-24a0c48d61cd" loading="eager" /></p>',
       ],
     ];
   }
