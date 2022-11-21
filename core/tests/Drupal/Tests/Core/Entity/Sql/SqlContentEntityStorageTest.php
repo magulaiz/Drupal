@@ -8,7 +8,6 @@
 namespace Drupal\Tests\Core\Entity\Sql;
 
 use Drupal\Component\Uuid\UuidInterface;
-use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Cache\MemoryCache\MemoryCache;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\Entity\EntityFieldManager;
