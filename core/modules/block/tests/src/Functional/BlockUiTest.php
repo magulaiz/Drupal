@@ -3,6 +3,7 @@
 namespace Drupal\Tests\block\Functional;
 
 use Drupal\Component\Utility\Html;
+use Drupal\Core\Url;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\language\Plugin\LanguageNegotiation\LanguageNegotiationUrl;
 use Drupal\Tests\BrowserTestBase;
@@ -410,6 +411,55 @@ class BlockUiTest extends BrowserTestBase {
     $assert_session->statusCodeEquals(200);
     // Check that this user cannot view the Broken Block message.
     $assert_session->pageTextNotContains('This block is broken or missing. You may be missing content or you might need to enable the original module.');
+  }
+
+  /**
+   * Tests that the redirect destination is correct after deleting a block.
+   */
+  public function testBlockDeleteDestination() {
+    // Install all themes.
+    \Drupal::service('theme_handler')->install(['bartik', 'seven', 'stark']);
+    // Set the default theme.
+    $theme_settings = $this->config('system.theme');
+    $theme_settings->set('default', 'bartik')->save();
+
+    // Make sure we're back in the list of blocks for the right theme.
+    // Test 'admin/structure/block'.
+    $block_layout_url = Url::fromRoute('block.admin_display', [], ['absolute' => TRUE]);
+    $this->drupalGet($block_layout_url);
+    $this->clickLink('Remove');
+    $this->submitForm([], 'Remove');
+    $this->assertSession()->responseContains('The block %name has been removed.', ['%name' => $this->blocks[1]->label()]);
+    $this->assertSession()->addressEquals($block_layout_url);
+
+    // Test 'admin/structure/block/list/seven'.
+    $block_layout_url = Url::fromRoute('block.admin_display_theme', ['theme' => 'seven'], ['absolute' => TRUE]);
+    $this->drupalGet($block_layout_url);
+    $this->clickLink('Remove');
+    $this->submitForm([], 'Remove');
+    $this->assertSession()->responseContains('The block %name has been removed.', ['%name' => $this->blocks[1]->label()]);
+    $this->assertSession()->addressEquals($block_layout_url);
+
+    // Make sure that the destination string is respected.
+    $options = [
+      'query' => [
+        'destination' => '/admin',
+      ],
+    ];
+
+    // Test 'admin/structure/block?destination=/admin'.
+    $this->drupalGet(Url::fromRoute('block.admin_display', [], $options));
+    $this->clickLink('Remove');
+    $this->submitForm([], 'Remove');
+    $this->assertSession()->responseContains('The block %name has been removed.', ['%name' => $this->blocks[0]->label()]);
+    $this->assertSession()->addressEquals('admin');
+
+    // Test 'admin/structure/block/list/seven?destination=/admin'.
+    $this->drupalGet(Url::fromRoute('block.admin_display_theme', ['theme' => 'seven'], $options));
+    $this->clickLink('Remove');
+    $this->submitForm([], 'Remove');
+    $this->assertSession()->responseContains('The block %name has been removed.', ['%name' => $this->blocks[0]->label()]);
+    $this->assertSession()->addressEquals('admin');
   }
 
 }
