@@ -380,7 +380,6 @@ endapply
 endautoescape
 endcode
 endembed
-endfor
 endlink
 endmacro
 endofheader
@@ -643,6 +642,7 @@ linkback
 linkgenerator
 linkification
 linksby
+linkset
 linktext
 lisu
 litererally
@@ -892,6 +892,7 @@ pathnames
 pcre
 pcss
 pdma
+peast
 percona
 permissionless
 persistable
