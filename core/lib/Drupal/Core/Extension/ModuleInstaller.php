@@ -359,13 +359,19 @@ class ModuleInstaller implements ModuleInstallerInterface {
         // @see https://www.drupal.org/node/2208429
         \Drupal::service('theme_handler')->refreshInfo();
 
-        // Modules may provide single directory components which are added to
-        // the core library definitions rather than the module itself, this
-        // requires the library discovery cache to be rebuilt.
-        \Drupal::service('library.discovery')->clear();
-
-        // Allow the module to perform install tasks.
-        $this->invoke($module, 'install', [$sync_status]);
+        try {
+          // Allow the module to perform install tasks.
+          $this->moduleHandler->invoke($module, 'install');
+        }
+        catch (\Exception $e) {
+          // In the rare case there is an exception, log this to watchdog
+          // instead of just dumping the error...
+          // @todo Update after https://www.drupal.org/i/2932518 is fixed.
+          watchdog_exception('system', $e, 'Exception thrown by %module during hook_install', ['%module' => $module], E_ERROR);
+          // ...and then throw it again so that the user knows and the
+          // exception is not compounded with other modules installing.
+          throw $e;
+        }
 
         // Record the fact that it was installed.
         \Drupal::logger('system')->info('%module module installed.', ['%module' => $module]);
