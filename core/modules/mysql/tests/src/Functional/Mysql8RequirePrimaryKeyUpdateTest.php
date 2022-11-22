@@ -58,7 +58,7 @@ class Mysql8RequirePrimaryKeyUpdateTest extends UpdatePathTestBase {
 
     // Ensure that after updating a user can be created and do a basic test that
     // the site is available by logging in.
-    $this->drupalLogin($this->createUser(['administer site configuration']));
+    $this->drupalLogin($this->createUser());
     $this->assertSession()->statusCodeEquals(200);
   }
 
