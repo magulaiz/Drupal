@@ -11,7 +11,6 @@ use Drupal\Core\Session\AccountInterface;
 use Drupal\language\ConfigurableLanguageManagerInterface;
 use Drupal\Tests\UnitTestCase;
 use Drupal\language\Plugin\LanguageNegotiation\LanguageNegotiationContentEntity;
-use Symfony\Component\HttpFoundation\ParameterBag;
 
 /**
  * Tests the LanguageNegotiationContentEntity plugin class.
