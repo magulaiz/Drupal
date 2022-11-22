@@ -7,6 +7,15 @@ use Drupal\Core\Session\AccountInterface;
 
 /**
  * Defines an interface for shortcut_set entity storage classes.
+ *
+ * @method ShortcutSetInterface create(array $values = [])
+ * @method null|ShortcutSetInterface load($id)
+ * @method null|ShortcutSetInterface loadRevision($revision_id)
+ * @method null|ShortcutSetInterface loadUnchanged($id)
+ * @method ShortcutSetInterface[] loadMultiple(array $ids = NULL)
+ * @method ShortcutSetInterface[] loadByProperties(array $values = [])
+ * @method null|int save(ShortcutSetInterface $entity)
+ * @method void restore(ShortcutSetInterface $entity)
  */
 interface ShortcutSetStorageInterface extends ConfigEntityStorageInterface {
 

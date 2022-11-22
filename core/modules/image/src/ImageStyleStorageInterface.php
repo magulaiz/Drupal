@@ -6,6 +6,15 @@ use Drupal\Core\Config\Entity\ConfigEntityStorageInterface;
 
 /**
  * Interface for storage controller for "image style" configuration entities.
+ *
+ * @method \Drupal\image\ImageStyleInterface create(array $values = [])
+ * @method null|\Drupal\image\ImageStyleInterface load($id)
+ * @method null|\Drupal\image\ImageStyleInterface loadRevision($revision_id)
+ * @method null|\Drupal\image\ImageStyleInterface loadUnchanged($id)
+ * @method \Drupal\image\ImageStyleInterface[] loadMultiple(array $ids = NULL)
+ * @method \Drupal\image\ImageStyleInterface[] loadByProperties(array $values = [])
+ * @method null|int save(\Drupal\image\ImageStyleInterface $entity)
+ * @method void restore(\Drupal\image\ImageStyleInterface $entity)
  */
 interface ImageStyleStorageInterface extends ConfigEntityStorageInterface {
 

@@ -8,6 +8,15 @@ use Drupal\Core\Session\AccountInterface;
 
 /**
  * Defines an interface for node entity storage classes.
+ *
+ * @method \Drupal\node\NodeInterface create(array $values = [])
+ * @method null|\Drupal\node\NodeInterface load($id)
+ * @method null|\Drupal\node\NodeInterface loadRevision($revision_id)
+ * @method null|\Drupal\node\NodeInterface loadUnchanged($id)
+ * @method \Drupal\node\NodeInterface[] loadMultiple(array $ids = NULL)
+ * @method \Drupal\node\NodeInterface[] loadByProperties(array $values = [])
+ * @method null|int save(\Drupal\node\NodeInterface $entity)
+ * @method void restore(\Drupal\node\NodeInterface $entity)
  */
 interface NodeStorageInterface extends ContentEntityStorageInterface {
 

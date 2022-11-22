@@ -7,6 +7,15 @@ use Drupal\Core\Session\AccountInterface;
 
 /**
  * Defines an interface for user entity storage classes.
+ *
+ * @method \Drupal\user\UserInterface create(array $values = [])
+ * @method null|\Drupal\user\UserInterface load($id)
+ * @method null|\Drupal\user\UserInterface loadRevision($revision_id)
+ * @method null|\Drupal\user\UserInterface loadUnchanged($id)
+ * @method \Drupal\user\UserInterface[] loadMultiple(array $ids = NULL)
+ * @method \Drupal\user\UserInterface[] loadByProperties(array $values = [])
+ * @method null|int save(\Drupal\user\UserInterface $entity)
+ * @method void restore(\Drupal\user\UserInterface $entity)
  */
 interface UserStorageInterface extends ContentEntityStorageInterface {
 

@@ -6,6 +6,15 @@ use Drupal\Core\Entity\ContentEntityStorageInterface;
 
 /**
  * Defines an interface for file entity storage classes.
+ *
+ * @method \Drupal\file\FileInterface create(array $values = [])
+ * @method null|\Drupal\file\FileInterface load($id)
+ * @method null|\Drupal\file\FileInterface loadRevision($revision_id)
+ * @method null|\Drupal\file\FileInterface loadUnchanged($id)
+ * @method \Drupal\file\FileInterface[] loadMultiple(array $ids = NULL)
+ * @method \Drupal\file\FileInterface[] loadByProperties(array $values = [])
+ * @method null|int save(\Drupal\file\FileInterface $entity)
+ * @method void restore(\Drupal\file\FileInterface $entity)
  */
 interface FileStorageInterface extends ContentEntityStorageInterface {
 

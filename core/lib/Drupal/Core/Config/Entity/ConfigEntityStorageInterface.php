@@ -6,6 +6,15 @@ use Drupal\Core\Entity\EntityStorageInterface;
 
 /**
  * Provides an interface for configuration entity storage.
+ *
+ * @method \Drupal\Core\Config\Entity\ConfigEntityInterface create(array $values = [])
+ * @method null|\Drupal\Core\Config\Entity\ConfigEntityInterface load($id)
+ * @method null|\Drupal\Core\Config\Entity\ConfigEntityInterface loadRevision($revision_id)
+ * @method null|\Drupal\Core\Config\Entity\ConfigEntityInterface loadUnchanged($id)
+ * @method \Drupal\Core\Config\Entity\ConfigEntityInterface[] loadMultiple(array $ids = NULL)
+ * @method \Drupal\Core\Config\Entity\ConfigEntityInterface[] loadByProperties(array $values = [])
+ * @method null|int save(\Drupal\Core\Config\Entity\ConfigEntityInterface $entity)
+ * @method void restore(\Drupal\Core\Config\Entity\ConfigEntityInterface $entity)
  */
 interface ConfigEntityStorageInterface extends EntityStorageInterface {
 
@@ -65,7 +74,7 @@ interface ConfigEntityStorageInterface extends EntityStorageInterface {
    * @param mixed $id
    *   The ID of the entity to load.
    *
-   * @return \Drupal\Core\Entity\EntityInterface|null
+   * @return null|ConfigEntityInterface
    *   An entity object. NULL if no matching entity is found.
    */
   public function loadOverrideFree($id);
@@ -76,7 +85,7 @@ interface ConfigEntityStorageInterface extends EntityStorageInterface {
    * @param $ids
    *   An array of entity IDs, or NULL to load all entities.
    *
-   * @return \Drupal\Core\Entity\EntityInterface[]
+   * @return ConfigEntityInterface[]
    *   An array of entity objects indexed by their IDs. Returns an empty array
    *   if no matching entities are found.
    */

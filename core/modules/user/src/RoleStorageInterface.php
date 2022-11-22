@@ -6,6 +6,15 @@ use Drupal\Core\Config\Entity\ConfigEntityStorageInterface;
 
 /**
  * Defines an interface for role entity storage classes.
+ *
+ * @method RoleInterface create(array $values = [])
+ * @method null|RoleInterface load($id)
+ * @method null|RoleInterface loadRevision($revision_id)
+ * @method null|RoleInterface loadUnchanged($id)
+ * @method RoleInterface[] loadMultiple(array $ids = NULL)
+ * @method RoleInterface[] loadByProperties(array $values = [])
+ * @method null|int save(RoleInterface $entity)
+ * @method void restore(RoleInterface $entity)
  */
 interface RoleStorageInterface extends ConfigEntityStorageInterface {
 
