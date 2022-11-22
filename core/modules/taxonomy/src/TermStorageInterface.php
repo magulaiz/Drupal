@@ -7,6 +7,15 @@ use Drupal\Core\Entity\ContentEntityStorageInterface;
 
 /**
  * Defines an interface for taxonomy_term entity storage classes.
+ *
+ * @method \Drupal\taxonomy\TermInterface create(array $values = [])
+ * @method null|\Drupal\taxonomy\TermInterface load($id)
+ * @method null|\Drupal\taxonomy\TermInterface loadRevision($revision_id)
+ * @method null|\Drupal\taxonomy\TermInterface loadUnchanged($id)
+ * @method \Drupal\taxonomy\TermInterface[] loadMultiple(array $ids = NULL)
+ * @method \Drupal\taxonomy\TermInterface[] loadByProperties(array $values = [])
+ * @method null|int save(\Drupal\taxonomy\TermInterface $entity)
+ * @method void restore(\Drupal\taxonomy\TermInterface $entity)
  */
 interface TermStorageInterface extends ContentEntityStorageInterface {
 
