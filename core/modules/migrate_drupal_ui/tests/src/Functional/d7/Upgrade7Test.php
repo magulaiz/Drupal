@@ -125,6 +125,7 @@ class Upgrade7Test extends MigrateUpgradeExecuteTestBase {
     $counts['node'] = 8;
     $counts['taxonomy_term'] = 26;
     $counts['user'] = 5;
+    $counts['view'] = 14;
     return $counts;
   }
 

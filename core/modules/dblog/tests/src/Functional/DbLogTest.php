@@ -35,6 +35,7 @@ class DbLogTest extends BrowserTestBase {
     'forum',
     'help',
     'block',
+    'views',
   ];
 
   /**
@@ -767,7 +768,7 @@ class DbLogTest extends BrowserTestBase {
    *   The return value of a xpath search.
    */
   protected function getLogsEntriesTable() {
-    return $this->xpath('.//table[@id="admin-dblog"]/tbody/tr');
+    return $this->xpath('.//table/tbody/tr');
   }
 
   /**

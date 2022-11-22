@@ -34,6 +34,7 @@ class MigrateNodeTest extends MigrateDrupal7TestBase {
     'taxonomy',
     'telephone',
     'text',
+    'views',
   ];
 
   /**

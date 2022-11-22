@@ -29,7 +29,7 @@ class NodeAccessPagerTest extends BrowserTestBase {
    *
    * @var array
    */
-  protected static $modules = ['node_access_test', 'comment', 'forum'];
+  protected static $modules = ['node_access_test', 'comment', 'forum', 'views'];
 
   /**
    * {@inheritdoc}

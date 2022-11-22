@@ -19,7 +19,7 @@ class ForumBlockTest extends BrowserTestBase {
    *
    * @var array
    */
-  protected static $modules = ['forum', 'block'];
+  protected static $modules = ['forum', 'block', 'views'];
 
   /**
    * {@inheritdoc}
@@ -55,7 +55,7 @@ class ForumBlockTest extends BrowserTestBase {
     $this->drupalLogin($this->adminUser);
 
     // Enable the new forum topics block.
-    $block = $this->drupalPlaceBlock('forum_new_block');
+    $block = $this->drupalPlaceBlock('views_block:forum_topic_lists-block_2');
     $this->drupalGet('');
 
     // Create 5 forum topics.
@@ -67,22 +67,6 @@ class ForumBlockTest extends BrowserTestBase {
     // We expect all 5 forum topics to appear in the "New forum topics" block.
     foreach ($topics as $topic) {
       $this->assertSession()->linkExists($topic, 0, new FormattableMarkup('Forum topic @topic found in the "New forum topics" block.', ['@topic' => $topic]));
-    }
-
-    // Configure the new forum topics block to only show 2 topics.
-    $block->getPlugin()->setConfigurationValue('block_count', 2);
-    $block->save();
-
-    $this->drupalGet('');
-    // We expect only the 2 most recent forum topics to appear in the "New forum
-    // topics" block.
-    for ($index = 0; $index < 5; $index++) {
-      if (in_array($index, [3, 4])) {
-        $this->assertSession()->linkExists($topics[$index], 0, new FormattableMarkup('Forum topic @topic found in the "New forum topics" block.', ['@topic' => $topics[$index]]));
-      }
-      else {
-        $this->assertSession()->pageTextNotContains($topics[$index]);
-      }
     }
   }
 
@@ -114,7 +98,7 @@ class ForumBlockTest extends BrowserTestBase {
     }
 
     // Enable the block.
-    $block = $this->drupalPlaceBlock('forum_active_block');
+    $block = $this->drupalPlaceBlock('views_block:forum_topic_lists-block_1');
     $this->drupalGet('');
     $this->assertSession()->linkExists('More', 0, 'Active forum topics block has a "more"-link.');
     $this->assertSession()->linkByHrefExists('forum', 0, 'Active forum topics block has a "more"-link.');
@@ -125,23 +109,6 @@ class ForumBlockTest extends BrowserTestBase {
     for ($index = 0; $index < 10; $index++) {
       if ($index < 5) {
         $this->assertSession()->linkExists($topics[$index], 0, new FormattableMarkup('Forum topic @topic found in the "Active forum topics" block.', ['@topic' => $topics[$index]]));
-      }
-      else {
-        $this->assertSession()->pageTextNotContains($topics[$index]);
-      }
-    }
-
-    // Configure the active forum block to only show 2 topics.
-    $block->getPlugin()->setConfigurationValue('block_count', 2);
-    $block->save();
-
-    $this->drupalGet('');
-
-    // We expect only the 2 forum topics with most recent comments to appear in
-    // the "Active forum topics" block.
-    for ($index = 0; $index < 10; $index++) {
-      if (in_array($index, [3, 4])) {
-        $this->assertSession()->linkExists($topics[$index], 0, 'Forum topic found in the "Active forum topics" block.');
       }
       else {
         $this->assertSession()->pageTextNotContains($topics[$index]);

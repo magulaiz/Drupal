@@ -26,6 +26,7 @@ class MigrateForumSettingsTest extends MigrateDrupal7TestBase {
     'node',
     'taxonomy',
     'forum',
+    'views',
   ];
 
   /**

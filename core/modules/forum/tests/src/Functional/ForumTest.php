@@ -34,6 +34,7 @@ class ForumTest extends BrowserTestBase {
     'block',
     'menu_ui',
     'help',
+    'views',
   ];
 
   /**
