@@ -9,6 +9,7 @@ use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Cache\RefinableCacheableDependencyInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
+use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\Plugin\DefaultPluginManager;
 use Drupal\Core\Plugin\Discovery\ContainerDerivativeDiscoveryDecorator;
@@ -17,6 +18,8 @@ use Drupal\Core\Plugin\Factory\ContainerFactory;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Routing\RouteProviderInterface;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
+use Drupal\Core\StringTranslation\TranslationInterface;
 use Drupal\Core\Url;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\Controller\ArgumentResolverInterface;
@@ -25,6 +28,8 @@ use Symfony\Component\HttpKernel\Controller\ArgumentResolverInterface;
  * Provides the default local task manager using YML as primary definition.
  */
 class LocalTaskManager extends DefaultPluginManager implements LocalTaskManagerInterface {
+
+  use StringTranslationTrait;
 
   /**
    * {@inheritdoc}
@@ -107,6 +112,13 @@ class LocalTaskManager extends DefaultPluginManager implements LocalTaskManagerI
   protected $account;
 
   /**
+   * Indicates wether the user-admin-language negotiation method is enabled.
+   *
+   * @var bool
+   */
+  protected $adminLanguageLanguageNegotiationEnabled;
+
+  /**
    * Constructs a \Drupal\Core\Menu\LocalTaskManager object.
    *
    * @param \Symfony\Component\HttpKernel\Controller\ArgumentResolverInterface $argument_resolver
@@ -127,8 +139,10 @@ class LocalTaskManager extends DefaultPluginManager implements LocalTaskManagerI
    *   The access manager.
    * @param \Drupal\Core\Session\AccountInterface $account
    *   The current user.
+   * @param \Drupal\Core\StringTranslation\TranslationInterface $string_translation
+   *   The string translation service.
    */
-  public function __construct(ArgumentResolverInterface $argument_resolver, RequestStack $request_stack, RouteMatchInterface $route_match, RouteProviderInterface $route_provider, ModuleHandlerInterface $module_handler, CacheBackendInterface $cache, LanguageManagerInterface $language_manager, AccessManagerInterface $access_manager, AccountInterface $account) {
+  public function __construct(ArgumentResolverInterface $argument_resolver, RequestStack $request_stack, RouteMatchInterface $route_match, RouteProviderInterface $route_provider, ModuleHandlerInterface $module_handler, CacheBackendInterface $cache, LanguageManagerInterface $language_manager, AccessManagerInterface $access_manager, AccountInterface $account, TranslationInterface $string_translation = NULL) {
     $this->factory = new ContainerFactory($this, '\Drupal\Core\Menu\LocalTaskInterface');
     $this->argumentResolver = $argument_resolver;
     $this->requestStack = $request_stack;
@@ -137,6 +151,18 @@ class LocalTaskManager extends DefaultPluginManager implements LocalTaskManagerI
     $this->accessManager = $access_manager;
     $this->account = $account;
     $this->moduleHandler = $module_handler;
+    $this->stringTranslation = $string_translation;
+
+    if ($string_translation === NULL) {
+      @trigger_error('The string_translation service must be passed to ' . __NAMESPACE__ . '\LocalTaskManager::__construct. It was added in Drupal 9.3.0 and will be required before Drupal 10.0.0.', E_USER_DEPRECATED);
+      $string_translation = \Drupal::service('string_translation');
+    }
+
+    if ($module_handler->moduleExists('language')) {
+      $this->adminLanguageLanguageNegotiationEnabled = \Drupal::service('language_negotiator')->isNegotiationMethodEnabled('language-user-admin');
+    }
+
+    $this->stringTranslation = $string_translation;
     $this->alterInfo('local_tasks');
     $this->setCacheBackend($cache, 'local_task_plugins:' . $language_manager->getCurrentLanguage()->getId(), ['local_task']);
   }
@@ -171,7 +197,18 @@ class LocalTaskManager extends DefaultPluginManager implements LocalTaskManagerI
     $controller = [$local_task, 'getTitle'];
     $request = $this->requestStack->getCurrentRequest();
     $arguments = $this->argumentResolver->getArguments($request, $controller);
-    return call_user_func_array($controller, $arguments);
+
+    $userAdminLangcode = $this->account->getPreferredAdminLangcode(FALSE);
+    if ($this->adminLanguageLanguageNegotiationEnabled && !empty($userAdminLangcode)) {
+      $originalLangcode = $this->stringTranslation->setDefaultLangcode($userAdminLangcode);
+      $title = call_user_func_array($controller, $arguments);
+      $this->stringTranslation->setDefaultLangcode($originalLangcode);
+    }
+    else {
+      $title = call_user_func_array($controller, $arguments);
+    }
+
+    return $title;
   }
 
   /**
@@ -332,7 +369,9 @@ class LocalTaskManager extends DefaultPluginManager implements LocalTaskManagerI
           '#weight' => $child->getWeight(),
           '#access' => $access,
         ];
-        $cacheability->addCacheableDependency($access)->addCacheableDependency($child);
+        $cacheability->addCacheableDependency($access)
+          ->addCacheableDependency($child)
+          ->addCacheContexts(['languages:' . LanguageInterface::TYPE_INTERFACE]);
       }
     }
 
