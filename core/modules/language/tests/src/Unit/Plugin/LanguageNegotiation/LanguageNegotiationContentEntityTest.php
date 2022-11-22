@@ -90,18 +90,28 @@ class LanguageNegotiationContentEntityTest extends UnitTestCase {
       ->disableOriginalConstructor()
       ->getMock();
     $languageNegotiationContentEntity = new LanguageNegotiationContentEntity($entityTypeManagerMock);
+    $languageNegotiationContentEntity->setLanguageManager($this->languageManager);
 
-    // Case 1: NULL request argument.
-    $expectedLangcode = FALSE;
-    $this->assertSame($expectedLangcode, $languageNegotiationContentEntity->getLangcode());
+    // Case 1: NULL request object argument.
+    $this->assertSame(FALSE, $languageNegotiationContentEntity->getLangcode());
 
-    // Case 2: A request object is available, but the languageManager is not set.
-    // static::QUERY_PARAMETER is
-    // not provided as a named parameter.
-    $request = Request::create('/de/foo', 'GET');
-    $request->query = new ParameterBag();
-    $expectedLangcode = FALSE;
-    $this->assertSame($expectedLangcode, $languageNegotiationContentEntity->getLangcode($request));
+    // Case 2: A request object is available, but the languageManager is not
+    // set.
+    $request = Request::create('/foo', 'GET');
+    $this->assertSame(FALSE, $languageNegotiationContentEntity->getLangcode($request));
+
+    // Case 3: A request object is available, but static::QUERY_PARAMETER is
+    // set to a non-enabled language.
+    $request = Request::create('/foo', 'GET',
+      [LanguageNegotiationContentEntity::QUERY_PARAMETER => 'it']);
+    $this->assertSame(FALSE, $languageNegotiationContentEntity->getLangcode($request));
+
+    // Case 4: A request object is available and static::QUERY_PARAMETER is
+    // set to an enabled language.
+    $request = Request::create('/foo', 'GET',
+      [LanguageNegotiationContentEntity::QUERY_PARAMETER => 'de']);
+    $this->assertSame('de', $languageNegotiationContentEntity->getLangcode($request));
+
   }
 
 }
