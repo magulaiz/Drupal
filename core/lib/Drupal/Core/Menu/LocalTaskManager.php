@@ -154,7 +154,7 @@ class LocalTaskManager extends DefaultPluginManager implements LocalTaskManagerI
     $this->stringTranslation = $string_translation;
 
     if ($string_translation === NULL) {
-      @trigger_error('The string_translation service must be passed to ' . __NAMESPACE__ . '\LocalTaskManager::__construct. It was added in Drupal 9.3.0 and will be required before Drupal 10.0.0.', E_USER_DEPRECATED);
+      @trigger_error('The string_translation service must be passed to ' . __NAMESPACE__ . '\LocalTaskManager::__construct. It was added in Drupal 10.1.0 and is required in Drupal 11.0.0.', E_USER_DEPRECATED);
       $string_translation = \Drupal::service('string_translation');
     }
 
