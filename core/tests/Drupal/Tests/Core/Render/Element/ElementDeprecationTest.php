@@ -33,7 +33,7 @@ class ElementDeprecationTest extends UnitTestCase {
    * Tests deprecation of hide() function.
    */
   public function testHideDeprecation() {
-    $this->expectDeprecation('hide() function is deprecated in drupal:10.0.0 and is removed from drupal:11.0.0. Use \Drupal\Core\Render\Element::hide() instead. See https://www.drupal.org/node/3261271');
+    $this->expectDeprecation('hide() function is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use \Drupal\Core\Render\Element::hide() instead. See https://www.drupal.org/node/3261271');
     $element = [];
     hide($element);
   }
