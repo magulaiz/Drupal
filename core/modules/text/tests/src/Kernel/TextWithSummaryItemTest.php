@@ -37,6 +37,9 @@ class TextWithSummaryItemTest extends FieldKernelTestBase {
    */
   protected $field;
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
 
@@ -46,6 +49,7 @@ class TextWithSummaryItemTest extends FieldKernelTestBase {
     $this->installConfig(['filter']);
     FilterFormat::create([
       'format' => 'no_filters',
+      'name' => 'No filters',
       'filters' => [],
     ])->save();
   }

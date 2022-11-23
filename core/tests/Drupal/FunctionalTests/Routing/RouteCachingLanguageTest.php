@@ -40,6 +40,9 @@ class RouteCachingLanguageTest extends BrowserTestBase {
    */
   protected $webUser;
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
 
@@ -172,7 +175,7 @@ class RouteCachingLanguageTest extends BrowserTestBase {
 
     $this->drupalGet('link-page', $source_url_options);
     $this->clickLink('Translate');
-    $this->clickLink(t('Add'));
+    $this->clickLink('Add');
 
     // Do not change the link field.
     $edit = [

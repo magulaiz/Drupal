@@ -16,8 +16,11 @@ class DisplayPathTest extends UITestBase {
 
   use AssertPageCacheContextsAndTagsTrait;
 
-  protected function setUp($import_test_views = TRUE): void {
-    parent::setUp($import_test_views);
+  /**
+   * {@inheritdoc}
+   */
+  protected function setUp($import_test_views = TRUE, $modules = ['views_test_config']): void {
+    parent::setUp($import_test_views, $modules);
 
     $this->placeBlock('page_title_block');
   }
@@ -63,9 +66,7 @@ class DisplayPathTest extends UITestBase {
     $this->drupalGet('admin/structure/views/nojs/display/test_view/page_1/path');
     $this->submitForm(['path' => $random_path], 'Apply');
     $this->assertSession()->pageTextContains('/' . $random_path);
-    $display_link_text = t('View @display', ['@display' => 'Page']);
-    $this->assertSession()->linkExists($display_link_text, 0, 'view page link found on the page.');
-    $this->clickLink($display_link_text);
+    $this->clickLink('View Page');
     $this->assertSession()->addressEquals($random_path);
   }
 
@@ -91,8 +92,8 @@ class DisplayPathTest extends UITestBase {
     $this->assertSession()->assertEscaped('/<script>alert("hello");</script>');
     $this->assertSession()->assertEscaped('/<script>alert("hello I have placeholders %");</script>');
     // Links should be url-encoded.
-    $this->assertRaw('/%3Cobject%3Emalformed_path%3C/object%3E');
-    $this->assertRaw('/%3Cscript%3Ealert%28%22hello%22%29%3B%3C/script%3E');
+    $this->assertSession()->responseContains('/%3Cobject%3Emalformed_path%3C/object%3E');
+    $this->assertSession()->responseContains('/%3Cscript%3Ealert%28%22hello%22%29%3B%3C/script%3E');
   }
 
   /**
@@ -120,7 +121,7 @@ class DisplayPathTest extends UITestBase {
     $this->submitForm([], 'Add Page');
     $this->submitForm([], 'Delete Page');
     $this->submitForm([], 'Save');
-    $this->assertRaw(t('The view %view has been saved.', ['%view' => 'Test view']));
+    $this->assertSession()->pageTextContains("The view Test view has been saved.");
   }
 
   /**
@@ -249,7 +250,7 @@ class DisplayPathTest extends UITestBase {
     $plugin_definition = end($result)->link->getPluginDefinition();
     $this->assertEquals('view.' . $view_id . '.page_1', $plugin_definition['route_name']);
 
-    $this->clickLink(t('No menu'));
+    $this->clickLink('No menu');
 
     $this->submitForm([
       'menu[type]' => 'default tab',
@@ -264,7 +265,7 @@ class DisplayPathTest extends UITestBase {
     ], 'Apply');
 
     // Open the menu options again.
-    $this->clickLink(t('Tab: Menu title'));
+    $this->clickLink('Tab: Menu title');
 
     // Assert a menu can be selected as a parent.
     $this->assertSession()->optionExists('menu[parent]', 'admin:');

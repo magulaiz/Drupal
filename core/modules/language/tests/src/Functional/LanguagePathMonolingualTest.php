@@ -23,6 +23,9 @@ class LanguagePathMonolingualTest extends BrowserTestBase {
    */
   protected $defaultTheme = 'stark';
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
 
@@ -78,7 +81,7 @@ class LanguagePathMonolingualTest extends BrowserTestBase {
     $this->assertSession()->linkByHrefNotExists('/fr/', 'Links do not contain language prefix');
 
     // Verify that links in this page can be followed and work.
-    $this->clickLink(t('Languages'));
+    $this->clickLink('Languages');
     $this->assertSession()->statusCodeEquals(200);
     $this->assertSession()->pageTextContains('Add language');
   }

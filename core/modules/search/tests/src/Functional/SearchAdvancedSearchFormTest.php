@@ -28,6 +28,9 @@ class SearchAdvancedSearchFormTest extends BrowserTestBase {
    */
   protected $node;
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
 
@@ -61,7 +64,7 @@ class SearchAdvancedSearchFormTest extends BrowserTestBase {
 
     // Search for the dummy title with a GET query.
     $this->drupalGet('search/node', ['query' => ['keys' => $dummy_title]]);
-    $this->assertNoText($this->node->label());
+    $this->assertSession()->pageTextNotContains($this->node->label());
 
     // Search for the title of the node with a GET query.
     $this->drupalGet('search/node', ['query' => ['keys' => $this->node->label()]]);

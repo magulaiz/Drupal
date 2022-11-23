@@ -71,6 +71,9 @@ class FieldSqlStorageTest extends EntityKernelTestBase {
    */
   protected $tableMapping;
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
 
@@ -437,7 +440,7 @@ class FieldSqlStorageTest extends EntityKernelTestBase {
 
     // Verify that the tables were not dropped in the process.
     $entity = $this->container->get('entity_type.manager')->getStorage($entity_type)->load(1);
-    $this->assertEquals('field data', $entity->{$field_name}->value, t("Index changes performed without dropping the tables"));
+    $this->assertEquals('field data', $entity->{$field_name}->value);
   }
 
   /**

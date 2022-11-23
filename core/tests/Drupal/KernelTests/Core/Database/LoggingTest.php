@@ -158,12 +158,12 @@ class LoggingTest extends DatabaseTestBase {
   public function testContribDriverLog($driver_namespace, $stack, array $expected_entry) {
     $mock_builder = $this->getMockBuilder(Log::class);
     $log = $mock_builder
-      ->setMethods(['getDebugBacktrace'])
+      ->onlyMethods(['getDebugBacktrace'])
       ->setConstructorArgs(['test'])
       ->getMock();
     $log->expects($this->once())
       ->method('getDebugBacktrace')
-      ->will($this->returnValue($stack));
+      ->willReturn($stack);
     Database::addConnectionInfo('test', 'default', ['driver' => 'mysql', 'namespace' => $driver_namespace]);
 
     $result = $log->findCaller($stack);

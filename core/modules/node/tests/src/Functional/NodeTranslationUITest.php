@@ -61,6 +61,9 @@ class NodeTranslationUITest extends ContentTranslationUITestBase {
    */
   protected $profile = 'standard';
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     $this->entityTypeId = 'node';
     $this->bundle = 'article';
@@ -252,16 +255,16 @@ class NodeTranslationUITest extends ContentTranslationUITestBase {
     $this->drupalLogin($this->administrator);
     $article = $this->drupalCreateNode(['type' => 'article', 'langcode' => $this->langcodes[0]]);
 
-    // Set up Seven as the admin theme and use it for node editing.
-    $this->container->get('theme_installer')->install(['seven']);
+    // Set up the default admin theme and use it for node editing.
+    $this->container->get('theme_installer')->install(['claro']);
     $edit = [];
-    $edit['admin_theme'] = 'seven';
+    $edit['admin_theme'] = 'claro';
     $edit['use_admin_theme'] = TRUE;
     $this->drupalGet('admin/appearance');
     $this->submitForm($edit, 'Save configuration');
     $this->drupalGet('node/' . $article->id() . '/translations');
     // Verify that translation uses the admin theme if edit is admin.
-    $this->assertRaw('core/themes/seven/css/base/elements.css');
+    $this->assertSession()->responseContains('core/themes/claro/css/base/elements.css');
 
     // Turn off admin theme for editing, assert inheritance to translations.
     $edit['use_admin_theme'] = FALSE;
@@ -269,7 +272,7 @@ class NodeTranslationUITest extends ContentTranslationUITestBase {
     $this->submitForm($edit, 'Save configuration');
     $this->drupalGet('node/' . $article->id() . '/translations');
     // Verify that translation uses the frontend theme if edit is frontend.
-    $this->assertNoRaw('core/themes/seven/css/base/elements.css');
+    $this->assertSession()->responseNotContains('core/themes/claro/css/base/elements.css');
 
     // Assert presence of translation page itself (vs. DisabledBundle below).
     $this->assertSession()->statusCodeEquals(200);
@@ -456,7 +459,7 @@ class NodeTranslationUITest extends ContentTranslationUITestBase {
     if (!$entity->isNew() && $entity->isTranslatable()) {
       $translations = $entity->getTranslationLanguages();
       if ((count($translations) > 1 || !isset($translations[$langcode])) && ($field = $entity->getFieldDefinition('status'))) {
-        return ' ' . ($field->isTranslatable() ? t('(this translation)') : t('(all translations)'));
+        return ' ' . ($field->isTranslatable() ? '(this translation)' : '(all translations)');
       }
     }
     return '';
@@ -494,13 +497,7 @@ class NodeTranslationUITest extends ContentTranslationUITestBase {
         $options = ['language' => $languages[$langcode]];
         $url = $entity->toUrl('edit-form', $options);
         $this->drupalGet($url);
-
-        $title = t('<em>Edit @type</em> @title [%language translation]', [
-          '@type' => $type_name,
-          '@title' => $entity->getTranslation($langcode)->label(),
-          '%language' => $languages[$langcode]->getName(),
-        ]);
-        $this->assertRaw($title);
+        $this->assertSession()->pageTextContains("Edit {$type_name} {$entity->getTranslation($langcode)->label()} [{$languages[$langcode]->getName()} translation]");
       }
     }
   }
@@ -538,7 +535,7 @@ class NodeTranslationUITest extends ContentTranslationUITestBase {
 
     // Contents should be in English, of correct revision.
     $this->assertSession()->pageTextContains('First rev en title');
-    $this->assertNoText('First rev fr title');
+    $this->assertSession()->pageTextNotContains('First rev fr title');
 
     // Get a French view.
     $url_fr = $original_revision->getTranslation('fr')->toUrl('revision')->toString();
@@ -551,7 +548,7 @@ class NodeTranslationUITest extends ContentTranslationUITestBase {
 
     // Contents should be in French, of correct revision.
     $this->assertSession()->pageTextContains('First rev fr title');
-    $this->assertNoText('First rev en title');
+    $this->assertSession()->pageTextNotContains('First rev en title');
   }
 
   /**

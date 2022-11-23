@@ -6,6 +6,7 @@ use Composer\Composer as ComposerApp;
 use Composer\Script\Event;
 use Composer\Semver\Comparator;
 use Composer\Semver\VersionParser;
+use Drupal\Composer\Generator\ComponentGenerator;
 use Drupal\Composer\Generator\PackageGenerator;
 use Symfony\Component\Finder\Finder;
 
@@ -31,15 +32,23 @@ class Composer {
   }
 
   /**
+   * Update component packages whenever composer.lock is updated.
+   *
+   * @param \Composer\Script\Event $event
+   *   The Composer event.
+   */
+  public static function generateComponentPackages(Event $event): void {
+    $generator = new ComponentGenerator();
+    $generator->generate($event, getcwd());
+  }
+
+  /**
    * Set the version of Drupal; used in release process and by the test suite.
    *
    * @param string $root
    *   Path to root of drupal/drupal repository.
    * @param string $version
    *   Semver version to set Drupal's version to.
-   *
-   * @return string
-   *   Stability level of the provided version (stable, RC, alpha, etc.)
    *
    * @throws \UnexpectedValueException
    */
@@ -66,12 +75,16 @@ class Composer {
    *   Path to root of drupal/drupal repository.
    * @param string $version
    *   Semver version that Drupal was set to.
-   *
-   * @return string
-   *   Stability level of the provided version (stable, RC, alpha, etc.)
    */
   protected static function setTemplateProjectStability(string $root, string $version): void {
     $stability = VersionParser::parseStability($version);
+
+    // Drupal 10.0.0-RC1 is being released before Symfony 6.2.0-RC1, so
+    // temporarily set the stability to beta instead of RC.
+    // @todo Remove this after Symfony 6.2.0-RC1 is released.
+    if (str_starts_with($version, '10.0.0-') && ($stability === 'RC')) {
+      $stability = 'beta';
+    }
 
     $templateProjectPaths = static::composerSubprojectPaths($root, 'Template');
     foreach ($templateProjectPaths as $path) {
@@ -85,13 +98,14 @@ class Composer {
 
   /**
    * Ensure that the minimum required version of Composer is running.
+   *
    * Throw an exception if Composer is too old.
    */
   public static function ensureComposerVersion(): void {
     $composerVersion = method_exists(ComposerApp::class, 'getVersion') ?
       ComposerApp::getVersion() : ComposerApp::VERSION;
-    if (Comparator::lessThan($composerVersion, '1.9.0')) {
-      throw new \RuntimeException("Drupal core development requires Composer 1.9.0, but Composer $composerVersion is installed. Please run 'composer self-update'.");
+    if (Comparator::lessThan($composerVersion, '2.3.6')) {
+      throw new \RuntimeException("Drupal core development requires Composer 2.3.6, but Composer $composerVersion is installed. Please run 'composer self-update'.");
     }
   }
 

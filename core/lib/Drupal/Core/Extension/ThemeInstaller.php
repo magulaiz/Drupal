@@ -101,7 +101,7 @@ class ThemeInstaller implements ThemeInstallerInterface {
    * @param \Drupal\Core\Extension\ModuleExtensionList $module_extension_list
    *   The module extension list.
    */
-  public function __construct(ThemeHandlerInterface $theme_handler, ConfigFactoryInterface $config_factory, ConfigInstallerInterface $config_installer, ModuleHandlerInterface $module_handler, ConfigManagerInterface $config_manager, AssetCollectionOptimizerInterface $css_collection_optimizer, RouteBuilderInterface $route_builder, LoggerInterface $logger, StateInterface $state, ModuleExtensionList $module_extension_list = NULL) {
+  public function __construct(ThemeHandlerInterface $theme_handler, ConfigFactoryInterface $config_factory, ConfigInstallerInterface $config_installer, ModuleHandlerInterface $module_handler, ConfigManagerInterface $config_manager, AssetCollectionOptimizerInterface $css_collection_optimizer, RouteBuilderInterface $route_builder, LoggerInterface $logger, StateInterface $state, ModuleExtensionList $module_extension_list) {
     $this->themeHandler = $theme_handler;
     $this->configFactory = $config_factory;
     $this->configInstaller = $config_installer;
@@ -111,10 +111,6 @@ class ThemeInstaller implements ThemeInstallerInterface {
     $this->routeBuilder = $route_builder;
     $this->logger = $logger;
     $this->state = $state;
-    if ($module_extension_list === NULL) {
-      @trigger_error('The extension.list.module service must be passed to ' . __NAMESPACE__ . '\ThemeInstaller::__construct(). It was added in drupal:8.9.0 and will be required before drupal:10.0.0.', E_USER_DEPRECATED);
-      $module_extension_list = \Drupal::service('extension.list.module');
-    }
     $this->moduleExtensionList = $module_extension_list;
   }
 
@@ -146,15 +142,19 @@ class ThemeInstaller implements ThemeInstallerInterface {
       foreach ($theme_list as $theme => $value) {
         $module_dependencies = $theme_data[$theme]->module_dependencies;
         // $theme_data[$theme]->requires contains both theme and module
-        // dependencies keyed by the extension machine names and
-        // $theme_data[$theme]->module_dependencies contains only modules keyed
-        // by the module extension machine name. Therefore we can find the theme
-        // dependencies by finding array keys for 'requires' that are not in
-        // $module_dependencies.
+        // dependencies keyed by the extension machine names.
+        // $theme_data[$theme]->module_dependencies contains only the module
+        // dependencies keyed by the module extension machine name. Therefore,
+        // we can find the theme dependencies by finding array keys for
+        // 'requires' that are not in $module_dependencies.
         $theme_dependencies = array_diff_key($theme_data[$theme]->requires, $module_dependencies);
         // We can find the unmet module dependencies by finding the module
         // machine names keys that are not in $installed_modules keys.
         $unmet_module_dependencies = array_diff_key($module_dependencies, $installed_modules);
+
+        if ($theme_data[$theme]->info[ExtensionLifecycle::LIFECYCLE_IDENTIFIER] === ExtensionLifecycle::DEPRECATED) {
+          @trigger_error("The theme '$theme' is deprecated. See " . $theme_data[$theme]->info['lifecycle_link'], E_USER_DEPRECATED);
+        }
 
         // Prevent themes with unmet module dependencies from being installed.
         if (!empty($unmet_module_dependencies)) {
@@ -232,7 +232,6 @@ class ThemeInstaller implements ThemeInstallerInterface {
       }
 
       $themes_installed[] = $key;
-
       // Record the fact that it was installed.
       $this->logger->info('%theme theme installed.', ['%theme' => $key]);
     }
@@ -285,7 +284,6 @@ class ThemeInstaller implements ThemeInstallerInterface {
 
       // Remove all configuration belonging to the theme.
       $this->configManager->uninstall('theme', $key);
-
     }
     // Don't check schema when uninstalling a theme since we are only clearing
     // keys.

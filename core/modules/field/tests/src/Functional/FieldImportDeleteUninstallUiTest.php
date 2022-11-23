@@ -35,6 +35,9 @@ class FieldImportDeleteUninstallUiTest extends FieldTestBase {
    */
   protected $defaultTheme = 'stark';
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
 
@@ -117,7 +120,7 @@ class FieldImportDeleteUninstallUiTest extends FieldTestBase {
     // This will purge all the data, delete the field and uninstall the
     // Telephone and Text modules.
     $this->submitForm([], 'Import all');
-    $this->assertNoText('Field data will be deleted by this synchronization.');
+    $this->assertSession()->pageTextNotContains('Field data will be deleted by this synchronization.');
     $this->rebuildContainer();
     $this->assertFalse(\Drupal::moduleHandler()->moduleExists('telephone'));
     $this->assertNull(\Drupal::service('entity.repository')->loadEntityByUuid('field_storage_config', $field_storage->uuid()), 'The telephone field has been deleted by the configuration synchronization');

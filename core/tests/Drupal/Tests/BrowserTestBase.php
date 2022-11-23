@@ -3,7 +3,6 @@
 namespace Drupal\Tests;
 
 use Behat\Mink\Driver\BrowserKitDriver;
-use Behat\Mink\Driver\GoutteDriver;
 use Behat\Mink\Element\Element;
 use Behat\Mink\Mink;
 use Behat\Mink\Selector\SelectorsHandler;
@@ -14,7 +13,6 @@ use Drupal\Core\Test\FunctionalTestSetupTrait;
 use Drupal\Core\Test\TestSetupTrait;
 use Drupal\Core\Url;
 use Drupal\Core\Utility\Error;
-use Drupal\FunctionalTests\AssertLegacyTrait;
 use Drupal\Tests\block\Traits\BlockCreationTrait;
 use Drupal\Tests\node\Traits\ContentTypeCreationTrait;
 use Drupal\Tests\node\Traits\NodeCreationTrait;
@@ -55,7 +53,6 @@ abstract class BrowserTestBase extends TestCase {
   use BlockCreationTrait {
     placeBlock as drupalPlaceBlock;
   }
-  use AssertLegacyTrait;
   use RandomGeneratorTrait;
   use NodeCreationTrait {
     getNodeByTitle as drupalGetNodeByTitle;
@@ -74,13 +71,7 @@ abstract class BrowserTestBase extends TestCase {
   use PhpUnitWarnings;
   use PhpUnitCompatibilityTrait;
   use ExpectDeprecationTrait;
-
-  /**
-   * The database prefix of this test run.
-   *
-   * @var string
-   */
-  protected $databasePrefix;
+  use ExtensionListTestTrait;
 
   /**
    * Time limit in seconds for the test.
@@ -204,13 +195,6 @@ abstract class BrowserTestBase extends TestCase {
   protected $originalShutdownCallbacks = [];
 
   /**
-   * The app root.
-   *
-   * @var string
-   */
-  protected $root;
-
-  /**
    * The original container.
    *
    * Move this to \Drupal\Core\Test\FunctionalTestSetupTrait once TestBase no
@@ -223,7 +207,7 @@ abstract class BrowserTestBase extends TestCase {
   /**
    * {@inheritdoc}
    */
-  public static function setUpBeforeClass() {
+  public static function setUpBeforeClass(): void {
     parent::setUpBeforeClass();
     VarDumper::setHandler(TestVarDumper::class . '::cliHandler');
   }
@@ -233,9 +217,6 @@ abstract class BrowserTestBase extends TestCase {
    */
   protected function initMink() {
     $driver = $this->getDefaultDriverInstance();
-    if ($driver instanceof GoutteDriver) {
-      @trigger_error('Using \Behat\Mink\Driver\GoutteDriver is deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. The dependencies behat/mink-goutte-driver and fabpot/goutte will be removed. See https://www.drupal.org/node/3177235', E_USER_DEPRECATED);
-    }
 
     if ($driver instanceof BrowserKitDriver) {
       // Turn off curl timeout. Having a timeout is not a problem in a normal
@@ -366,7 +347,7 @@ abstract class BrowserTestBase extends TestCase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $this->setUpAppRoot();
@@ -422,14 +403,14 @@ abstract class BrowserTestBase extends TestCase {
   }
 
   /**
-   * Clean up the Simpletest environment.
+   * Clean up the test environment.
    */
   protected function cleanupEnvironment() {
     // Remove all prefixed tables.
     $original_connection_info = Database::getConnectionInfo('simpletest_original_default');
-    $original_prefix = $original_connection_info['default']['prefix']['default'];
+    $original_prefix = $original_connection_info['default']['prefix'];
     $test_connection_info = Database::getConnectionInfo('default');
-    $test_prefix = $test_connection_info['default']['prefix']['default'];
+    $test_prefix = $test_connection_info['default']['prefix'];
     if ($original_prefix != $test_prefix) {
       $tables = Database::getConnection()->schema()->findTables('%');
       foreach ($tables as $table) {
@@ -446,7 +427,7 @@ abstract class BrowserTestBase extends TestCase {
   /**
    * {@inheritdoc}
    */
-  protected function tearDown() {
+  protected function tearDown(): void {
     parent::tearDown();
 
     // Destroy the testing kernel.
@@ -549,7 +530,7 @@ abstract class BrowserTestBase extends TestCase {
   }
 
   /**
-   * Installs Drupal into the Simpletest site.
+   * Installs Drupal into the test site.
    */
   public function installDrupal() {
     $this->initUserSession();
@@ -628,29 +609,6 @@ abstract class BrowserTestBase extends TestCase {
   }
 
   /**
-   * Gets the value of an HTTP response header.
-   *
-   * If multiple requests were required to retrieve the page, only the headers
-   * from the last request will be checked by default.
-   *
-   * @param string $name
-   *   The name of the header to retrieve. Names are case-insensitive (see RFC
-   *   2616 section 4.2).
-   *
-   * @return string|null
-   *   The HTTP header value or NULL if not found.
-   *
-   * @deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. Use
-   *   $this->getSession()->getResponseHeader() instead.
-   *
-   * @see https://www.drupal.org/node/3168383
-   */
-  protected function drupalGetHeader($name) {
-    @trigger_error('BrowserTestBase::drupalGetHeader() is deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. Use $this->getSession()->getResponseHeader() instead. See https://www.drupal.org/node/3168383', E_USER_DEPRECATED);
-    return $this->getSession()->getResponseHeader($name);
-  }
-
-  /**
    * Gets the JavaScript drupalSettings variable for the currently-loaded page.
    *
    * @return array
@@ -721,7 +679,7 @@ abstract class BrowserTestBase extends TestCase {
     // string and convert the resulting key/value pairs back into a flat array.
     $query = http_build_query($values);
     foreach (explode('&', $query) as $item) {
-      list($key, $value) = explode('=', $item);
+      [$key, $value] = explode('=', $item);
       $edit[urldecode($key)] = urldecode($value);
     }
     return $edit;

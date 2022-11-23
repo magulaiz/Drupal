@@ -11,5 +11,6 @@
 function user_removed_post_updates() {
   return [
     'user_post_update_enforce_order_of_permissions' => '9.0.0',
+    'user_post_update_update_roles' => '10.0.0',
   ];
 }

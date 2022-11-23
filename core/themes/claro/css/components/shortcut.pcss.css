@@ -1,16 +1,13 @@
-
 /**
  * @file
  * Styling for the shortcut module.
  */
 
-@import "../base/variables.pcss.css";
-
 :root {
   /**
   * Shortcut action.
   */
-  --shortcut-bg-color: var(--color-davysgray);
+  --shortcut-bg-color: var(--color-gray-800);
   --shortcut-border-radius-size: var(--base-border-radius);
   --shortcut-padding-size: calc(0.5 * var(--space-xs)) var(--space-m);
   --shortcut-icon-size: var(--space-l);

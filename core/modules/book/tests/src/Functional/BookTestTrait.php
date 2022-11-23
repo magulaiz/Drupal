@@ -92,7 +92,6 @@ trait BookTestTrait {
     // since it uniquely identifies each call to checkBookNode().
     static $number = 0;
     $this->drupalGet('node/' . $node->id());
-
     // Check outline structure.
     if ($nodes !== NULL) {
       $this->assertSession()->responseMatches($this->generateOutlinePattern($nodes));
@@ -104,14 +103,14 @@ trait BookTestTrait {
       $url = $previous->toUrl();
       $url->setOptions(['attributes' => ['rel' => ['prev'], 'title' => t('Go to previous page')]]);
       $text = new FormattableMarkup('<b>‹</b> @label', ['@label' => $previous->label()]);
-      $this->assertRaw(Link::fromTextAndUrl($text, $url)->toString());
+      $this->assertSession()->responseContains(Link::fromTextAndUrl($text, $url)->toString());
     }
 
     if ($up) {
       /** @var \Drupal\Core\Url $url */
       $url = $up->toUrl();
       $url->setOptions(['attributes' => ['title' => t('Go to parent page')]]);
-      $this->assertRaw(Link::fromTextAndUrl('Up', $url)->toString());
+      $this->assertSession()->responseContains(Link::fromTextAndUrl('Up', $url)->toString());
     }
 
     if ($next) {
@@ -119,7 +118,7 @@ trait BookTestTrait {
       $url = $next->toUrl();
       $url->setOptions(['attributes' => ['rel' => ['next'], 'title' => t('Go to next page')]]);
       $text = new FormattableMarkup('@label <b>›</b>', ['@label' => $next->label()]);
-      $this->assertRaw(Link::fromTextAndUrl($text, $url)->toString());
+      $this->assertSession()->responseContains(Link::fromTextAndUrl($text, $url)->toString());
     }
 
     // Compute the expected breadcrumb.
@@ -130,7 +129,7 @@ trait BookTestTrait {
     }
 
     // Fetch links in the current breadcrumb.
-    $links = $this->xpath('//nav[@class="breadcrumb"]/ol/li/a');
+    $links = $this->xpath('//nav[@aria-labelledby="system-breadcrumb"]/ol/li/a');
     $got_breadcrumb = [];
     foreach ($links as $link) {
       $got_breadcrumb[] = $link->getAttribute('href');
@@ -142,7 +141,7 @@ trait BookTestTrait {
     // Check printer friendly version.
     $this->drupalGet('book/export/html/' . $node->id());
     $this->assertSession()->pageTextContains($node->label());
-    $this->assertRaw($node->body->processed);
+    $this->assertSession()->responseContains($node->body->processed);
 
     $number++;
   }
@@ -161,8 +160,7 @@ trait BookTestTrait {
     foreach ($nodes as $node) {
       $outline .= '(node\/' . $node->id() . ')(.*?)(' . $node->label() . ')(.*?)';
     }
-
-    return '/<nav id="book-navigation-' . $this->book->id() . '"(.*?)<ul(.*?)' . $outline . '<\/ul>/s';
+    return '/<nav role="navigation" aria-labelledby="book-label-' . $this->book->id() . '"(.*?)<ul(.*?)' . $outline . '<\/ul>/s';
   }
 
   /**
@@ -186,8 +184,8 @@ trait BookTestTrait {
     // Used to ensure that when sorted nodes stay in same order.
     static $number = 0;
 
-    $edit['title[0][value]'] = str_pad($number, 2, '0', STR_PAD_LEFT) . ' - SimpleTest test node ' . $this->randomMachineName(10);
-    $edit['body[0][value]'] = 'SimpleTest test body ' . $this->randomMachineName(32) . ' ' . $this->randomMachineName(32);
+    $edit['title[0][value]'] = str_pad($number, 2, '0', STR_PAD_LEFT) . ' - test node ' . $this->randomMachineName(10);
+    $edit['body[0][value]'] = 'test body ' . $this->randomMachineName(32) . ' ' . $this->randomMachineName(32);
     $edit['book[bid]'] = $book_nid;
 
     if ($parent !== NULL) {
@@ -198,7 +196,7 @@ trait BookTestTrait {
       $this->submitForm($edit, 'Save');
       // Make sure the parent was flagged as having children.
       $parent_node = \Drupal::entityTypeManager()->getStorage('node')->loadUnchanged($parent);
-      $this->assertFalse(empty($parent_node->book['has_children']), 'Parent node is marked as having children');
+      $this->assertNotEmpty($parent_node->book['has_children'], 'Parent node is marked as having children');
     }
     else {
       $this->drupalGet('node/add/book');

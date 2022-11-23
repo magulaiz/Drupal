@@ -92,7 +92,7 @@ class SessionHttpsTest extends BrowserTestBase {
 
     // Verify that user is not logged in on non-secure URL.
     $this->drupalGet($this->httpUrl('admin/config'));
-    $this->assertNoText('Configuration');
+    $this->assertSession()->pageTextNotContains('Configuration');
     $this->assertSession()->statusCodeEquals(403);
 
     // Verify that empty SID cannot be used on the non-secure site.
@@ -254,12 +254,14 @@ class SessionHttpsTest extends BrowserTestBase {
   /**
    * Tests that there exists a session with two specific session IDs.
    *
-   * @param $sid
+   * @param string $sid
    *   The insecure session ID to search for.
-   * @param $assertion_text
+   * @param string $assertion_text
    *   The text to display when we perform the assertion.
+   *
+   * @internal
    */
-  protected function assertSessionIds($sid, $assertion_text) {
+  protected function assertSessionIds(string $sid, string $assertion_text): void {
     $this->assertNotEmpty(\Drupal::database()->select('sessions', 's')->fields('s', ['timestamp'])->condition('sid', Crypt::hashBase64($sid))->execute()->fetchField(), $assertion_text);
   }
 
@@ -269,7 +271,7 @@ class SessionHttpsTest extends BrowserTestBase {
    * @param $url
    *   A Drupal path such as 'user/login'.
    *
-   * @return
+   * @return string
    *   URL prepared for the https.php mock front controller.
    */
   protected function httpsUrl($url) {
@@ -282,7 +284,7 @@ class SessionHttpsTest extends BrowserTestBase {
    * @param $url
    *   A Drupal path such as 'user/login'.
    *
-   * @return
+   * @return string
    *   URL prepared for the http.php mock front controller.
    */
   protected function httpUrl($url) {

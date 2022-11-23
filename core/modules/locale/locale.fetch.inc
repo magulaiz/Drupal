@@ -29,14 +29,14 @@ require_once __DIR__ . '/locale.translation.inc';
  *   Batch definition array.
  */
 function locale_translation_batch_update_build($projects = [], $langcodes = [], $options = []) {
-  module_load_include('compare.inc', 'locale');
+  \Drupal::moduleHandler()->loadInclude('locale', 'inc', 'locale.compare');
   $projects = $projects ? $projects : array_keys(locale_translation_get_projects());
   $langcodes = $langcodes ? $langcodes : array_keys(locale_translatable_language_list());
   $status_options = $options;
   $status_options['finish_feedback'] = FALSE;
 
   $batch_builder = (new BatchBuilder())
-    ->setFile(drupal_get_path('module', 'locale') . '/locale.batch.inc')
+    ->setFile(\Drupal::service('extension.list.module')->getPath('locale') . '/locale.batch.inc')
     ->setTitle(t('Updating translations'))
     ->setErrorMessage(t('Error importing translation files'))
     ->setFinishCallback('locale_translation_batch_fetch_finished');
@@ -72,7 +72,7 @@ function locale_translation_batch_fetch_build($projects = [], $langcodes = [], $
   $batch_builder = (new BatchBuilder())
     ->setTitle(t('Updating translations.'))
     ->setErrorMessage(t('Error importing translation files'))
-    ->setFile(drupal_get_path('module', 'locale') . '/locale.batch.inc')
+    ->setFile(\Drupal::service('extension.list.module')->getPath('locale') . '/locale.batch.inc')
     ->setFinishCallback('locale_translation_batch_fetch_finished');
   $operations = _locale_translation_fetch_operations($projects, $langcodes, $options);
   array_walk($operations, function ($operation) use ($batch_builder) {

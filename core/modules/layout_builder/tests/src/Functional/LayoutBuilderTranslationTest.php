@@ -125,15 +125,6 @@ class LayoutBuilderTranslationTest extends ContentTranslationTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function getAdministratorPermissions() {
-    $permissions = parent::getAdministratorPermissions();
-    $permissions[] = 'administer entity_test_mul display';
-    return $permissions;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   protected function getTranslatorPermissions() {
     $permissions = parent::getTranslatorPermissions();
     $permissions[] = 'view test entity translations';
@@ -148,13 +139,6 @@ class LayoutBuilderTranslationTest extends ContentTranslationTestBase {
   protected function setUpEntities() {
     $this->drupalLogin($this->administrator);
 
-    $field_ui_prefix = 'entity_test_mul/structure/entity_test_mul';
-    // Allow overrides for the layout.
-    $this->drupalGet("{$field_ui_prefix}/display/default");
-    $this->submitForm(['layout[enabled]' => TRUE], 'Save');
-    $this->drupalGet("{$field_ui_prefix}/display/default");
-    $this->submitForm(['layout[allow_custom]' => TRUE], 'Save');
-
     // @todo The Layout Builder UI relies on local tasks; fix in
     //   https://www.drupal.org/project/drupal/issues/2917777.
     $this->drupalPlaceBlock('local_tasks_block');
@@ -162,6 +146,7 @@ class LayoutBuilderTranslationTest extends ContentTranslationTestBase {
     // Create a test entity.
     $id = $this->createEntity([
       $this->fieldName => [['value' => 'The untranslated field value']],
+      'name' => 'Test entity',
     ], $this->langcodes[0]);
     $storage = $this->container->get('entity_type.manager')
       ->getStorage($this->entityTypeId);
@@ -178,7 +163,11 @@ class LayoutBuilderTranslationTest extends ContentTranslationTestBase {
       'bundle' => $this->bundle,
       'mode' => 'default',
       'status' => TRUE,
-    ])->setComponent($this->fieldName, ['type' => 'string'])->save();
+    ])
+      ->setComponent($this->fieldName, ['type' => 'string'])
+      ->enableLayoutBuilder()
+      ->setOverridable()
+      ->save();
   }
 
   /**

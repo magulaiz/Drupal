@@ -168,8 +168,8 @@ class ExtensionDiscovery {
     // expected extension type specific directory names only.
     $searchdirs[static::ORIGIN_ROOT] = '';
 
-    // Simpletest uses the regular built-in multi-site functionality of Drupal
-    // for running web tests. As a consequence, extensions of the parent site
+    // Tests use the regular built-in multi-site functionality of Drupal for
+    // running web tests. As a consequence, extensions of the parent site
     // located in a different site-specific directory are not discovered in a
     // test site environment, because the site directories are not the same.
     // Therefore, add the site directory of the parent site to the search paths,
@@ -229,7 +229,7 @@ class ExtensionDiscovery {
   public function setProfileDirectoriesFromSettings() {
     $this->profileDirectories = [];
     if ($profile = \Drupal::installProfile()) {
-      $this->profileDirectories[] = drupal_get_path('profile', $profile);
+      $this->profileDirectories[] = \Drupal::service('extension.list.profile')->getPath($profile);
     }
     return $this;
   }
@@ -279,7 +279,7 @@ class ExtensionDiscovery {
         return TRUE;
       }
 
-      foreach ($this->profileDirectories as $weight => $profile_path) {
+      foreach ($this->profileDirectories as $profile_path) {
         if (strpos($file->getPath(), $profile_path) === 0) {
           // Parent profile found.
           return TRUE;
@@ -444,7 +444,7 @@ class ExtensionDiscovery {
         $type = FALSE;
         $file = $fileinfo->openFile('r');
         while (!$type && !$file->eof()) {
-          preg_match('@^type:\s*(\'|")?(\w+)\1?\s*$@', $file->fgets(), $matches);
+          preg_match('@^type:\s*(\'|")?(\w+)\1?\s*(?:\#.*)?$@', $file->fgets(), $matches);
           if (isset($matches[2])) {
             $type = $matches[2];
           }

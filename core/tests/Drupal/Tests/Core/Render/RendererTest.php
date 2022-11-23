@@ -218,10 +218,11 @@ class RendererTest extends RendererTestBase {
     $data[] = [
       [
         '#markup' => 'foo',
-        '#pre_render' => [function ($elements) {
-          $elements['#markup'] .= '<script>alert("bar");</script>';
-          return $elements;
-        },
+        '#pre_render' => [
+          function ($elements) {
+            $elements['#markup'] .= '<script>alert("bar");</script>';
+            return $elements;
+          },
         ],
       ],
       'fooalert("bar");',
@@ -231,10 +232,11 @@ class RendererTest extends RendererTestBase {
       [
         '#markup' => 'foo',
         '#allowed_tags' => ['script'],
-        '#pre_render' => [function ($elements) {
-          $elements['#markup'] .= '<script>alert("bar");</script>';
-          return $elements;
-        },
+        '#pre_render' => [
+          function ($elements) {
+            $elements['#markup'] .= '<script>alert("bar");</script>';
+            return $elements;
+          },
         ],
       ],
       'foo<script>alert("bar");</script>',
@@ -244,10 +246,11 @@ class RendererTest extends RendererTestBase {
     $data[] = [
       [
         '#plain_text' => 'foo',
-        '#pre_render' => [function ($elements) {
-          $elements['#plain_text'] .= '<script>alert("bar");</script>';
-          return $elements;
-        },
+        '#pre_render' => [
+          function ($elements) {
+            $elements['#plain_text'] .= '<script>alert("bar");</script>';
+            return $elements;
+          },
         ],
       ],
       'foo&lt;script&gt;alert(&quot;bar&quot;);&lt;/script&gt;',
@@ -298,7 +301,7 @@ class RendererTest extends RendererTestBase {
           if ($theme == 'container') {
             return '<div' . (string) (new Attribute($vars['#attributes'])) . '>' . $vars['#children'] . "</div>\n";
           }
-          $attributes = new Attribute(['href' => $vars['#url']] + (isset($vars['#attributes']) ? $vars['#attributes'] : []));
+          $attributes = new Attribute(['href' => $vars['#url']] + ($vars['#attributes'] ?? []));
           return '<a' . (string) $attributes . '>' . $vars['#title'] . '</a>';
         });
     };
@@ -507,8 +510,9 @@ class RendererTest extends RendererTestBase {
     $this->assertTrue($elements['#sorted'], "'#sorted' => TRUE was added to the array");
 
     // Pass $elements through \Drupal\Core\Render\Element::children() and
-    // ensure it remains sorted in the correct order. drupal_render() will
-    // return an empty string if used on the same array in the same request.
+    // ensure it remains sorted in the correct order.
+    // \Drupal::service('renderer')->render() will return an empty string if
+    // used on the same array in the same request.
     $children = Element::children($elements);
     $this->assertSame('first', array_shift($children), 'Child found in the correct order.');
     $this->assertSame('second', array_shift($children), 'Child found in the correct order.');
@@ -632,7 +636,7 @@ class RendererTest extends RendererTestBase {
 
     $this->renderer->renderPlain($build);
 
-    $this->assertEquals(['languages:language_interface', 'theme', 'user'], $build['#cache']['contexts']);
+    $this->assertEqualsCanonicalizing(['languages:language_interface', 'theme', 'user'], $build['#cache']['contexts']);
   }
 
   /**
@@ -730,10 +734,12 @@ class RendererTest extends RendererTestBase {
    *
    * @param array $build
    *   A render array with either #access or #access_callback.
-   * @param bool $access
+   * @param \Drupal\Core\Access\AccessResultInterface|bool $access
    *   Whether the render array is accessible or not.
+   *
+   * @internal
    */
-  protected function assertAccess($build, $access) {
+  protected function assertAccess(array $build, $access): void {
     $sensitive_content = $this->randomContextValue();
     $build['#markup'] = $sensitive_content;
     if (($access instanceof AccessResultInterface && $access->isAllowed()) || $access === TRUE) {

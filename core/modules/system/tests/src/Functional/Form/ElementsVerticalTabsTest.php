@@ -39,6 +39,9 @@ class ElementsVerticalTabsTest extends BrowserTestBase {
    */
   protected $webUser;
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
 
@@ -47,21 +50,6 @@ class ElementsVerticalTabsTest extends BrowserTestBase {
     ]);
     $this->webUser = $this->drupalCreateUser();
     $this->drupalLogin($this->adminUser);
-  }
-
-  /**
-   * Ensures that vertical-tabs.js is included before collapse.js.
-   *
-   * Otherwise, collapse.js adds "SHOW" or "HIDE" labels to the tabs.
-   */
-  public function testJavaScriptOrdering() {
-    $this->drupalGet('form_test/vertical-tabs');
-    $content = $this->getSession()->getPage()->getContent();
-    $position1 = strpos($content, 'core/misc/vertical-tabs.js');
-    $position2 = strpos($content, 'core/misc/collapse.js');
-    $this->assertNotFalse($position1);
-    $this->assertNotFalse($position2);
-    $this->assertGreaterThan($position1, $position2, 'vertical-tabs.js is included before collapse.js');
   }
 
   /**
@@ -83,12 +71,7 @@ class ElementsVerticalTabsTest extends BrowserTestBase {
    */
   public function testDefaultTab() {
     $this->drupalGet('form_test/vertical-tabs');
-
-    $value = $this->assertSession()
-      ->elementExists('css', 'input[name="vertical_tabs__active_tab"]')
-      ->getValue();
-
-    $this->assertSame('edit-tab3', $value, t('The default vertical tab is correctly selected.'));
+    $this->assertSession()->elementAttributeContains('css', 'input[name="vertical_tabs__active_tab"]', 'value', 'edit-tab3');
   }
 
   /**

@@ -21,6 +21,9 @@ class ModuleRouteSubscriberTest extends UnitTestCase {
    */
   protected $moduleHandler;
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     $this->moduleHandler = $this->createMock('Drupal\Core\Extension\ModuleHandlerInterface');
 
@@ -31,7 +34,7 @@ class ModuleRouteSubscriberTest extends UnitTestCase {
 
     $this->moduleHandler->expects($this->any())
       ->method('moduleExists')
-      ->will($this->returnValueMap($value_map));
+      ->willReturnMap($value_map);
   }
 
   /**

@@ -8,10 +8,26 @@ use Drupal\Core\FileTransfer\FileTransfer;
  * Mock FileTransfer object for test case.
  */
 class TestFileTransfer extends FileTransfer {
-  protected $host = NULL;
-  protected $username = NULL;
-  protected $password = NULL;
-  protected $port = NULL;
+
+  /**
+   * {@inheritdoc}
+   */
+  protected $host = '';
+
+  /**
+   * {@inheritdoc}
+   */
+  protected $username = '';
+
+  /**
+   * {@inheritdoc}
+   */
+  protected $password = '';
+
+  /**
+   * {@inheritdoc}
+   */
+  protected $port = 0;
 
   /**
    * This is for testing the CopyRecursive logic.
@@ -29,8 +45,9 @@ class TestFileTransfer extends FileTransfer {
   }
 
   public function connect() {
-    $this->connection = new MockTestConnection();
-    $this->connection->connectionString = 'test://' . urlencode($this->username) . ':' . urlencode($this->password) . "@$this->host:$this->port/";
+    $connection = new MockTestConnection();
+    $connection->connectionString = 'test://' . urlencode($this->username) . ':' . urlencode($this->password) . "@$this->host:$this->port/";
+    $this->connection = $connection;
   }
 
   public function copyFileJailed($source, $destination) {

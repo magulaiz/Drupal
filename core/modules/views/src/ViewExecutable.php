@@ -24,6 +24,7 @@ use Symfony\Component\Routing\Exception\RouteNotFoundException;
  * @see https://www.drupal.org/node/2849674
  * @see https://bugs.php.net/bug.php?id=66052
  */
+#[\AllowDynamicProperties]
 class ViewExecutable {
 
   /**
@@ -71,6 +72,16 @@ class ViewExecutable {
    * @var bool
    */
   protected $ajaxEnabled = FALSE;
+
+  /**
+   * The plugin name.
+   */
+  public ?string $plugin_name;
+
+  /**
+   * The build execution time.
+   */
+  public string|float $build_time;
 
   /**
    * Where the results of a query will go.
@@ -340,9 +351,12 @@ class ViewExecutable {
   public $inited;
 
   /**
-   * The rendered output of the exposed form.
+   * The render array for the exposed form.
    *
-   * @var string
+   * In cases that the exposed form is rendered as a block this will be an
+   * empty array.
+   *
+   * @var array
    */
   public $exposed_widgets;
 
@@ -1082,7 +1096,7 @@ class ViewExecutable {
 
       $argument->setRelationship();
 
-      $arg = isset($this->args[$position]) ? $this->args[$position] : NULL;
+      $arg = $this->args[$position] ?? NULL;
       $argument->position = $position;
 
       if (isset($arg) || $argument->hasDefaultArgument()) {
@@ -1703,7 +1717,7 @@ class ViewExecutable {
       $old_view = array_pop($this->old_view);
     }
 
-    views_set_current_view(isset($old_view) ? $old_view : FALSE);
+    views_set_current_view($old_view ?? FALSE);
   }
 
   /**
@@ -2291,7 +2305,7 @@ class ViewExecutable {
     // Get the existing configuration
     $fields = $this->displayHandlers->get($display_id)->getOption($types[$type]['plural']);
 
-    return isset($fields[$id]) ? $fields[$id] : NULL;
+    return $fields[$id] ?? NULL;
   }
 
   /**
@@ -2450,9 +2464,11 @@ class ViewExecutable {
    *   FALSE otherwise.
    */
   public function hasFormElements() {
-    foreach ($this->field as $field) {
-      if (property_exists($field, 'views_form_callback') || method_exists($field, 'viewsForm')) {
-        return TRUE;
+    if ($this->getDisplay()->usesFields()) {
+      foreach ($this->field as $field) {
+        if (method_exists($field, 'viewsForm')) {
+          return TRUE;
+        }
       }
     }
     $area_handlers = array_merge(array_values($this->header), array_values($this->footer));
@@ -2490,8 +2506,6 @@ class ViewExecutable {
     // state during unserialization.
     $this->serializationData = [
       'storage' => $this->storage->id(),
-      'views_data' => $this->viewsData->_serviceId,
-      'route_provider' => $this->routeProvider->_serviceId,
       'current_display' => $this->current_display,
       'args' => $this->args,
       'current_page' => $this->current_page,
@@ -2518,8 +2532,8 @@ class ViewExecutable {
 
       // Attach all necessary services.
       $this->user = \Drupal::currentUser();
-      $this->viewsData = \Drupal::service($this->serializationData['views_data']);
-      $this->routeProvider = \Drupal::service($this->serializationData['route_provider']);
+      $this->viewsData = \Drupal::service('views.views_data');
+      $this->routeProvider = \Drupal::service('router.route_provider');
 
       // Restore the state of this executable.
       if ($request = \Drupal::request()) {

@@ -2,11 +2,8 @@
 
 namespace Drupal\KernelTests\Core\Database;
 
-use Drupal\Core\Database\Connection;
 use Drupal\Core\Database\Database;
-use Drupal\Core\Database\DatabaseExceptionWrapper;
 use Drupal\Core\Database\Query\Condition;
-use Drupal\Core\Database\StatementWrapper;
 
 /**
  * Tests of the core database system.
@@ -120,64 +117,32 @@ class ConnectionTest extends DatabaseTestBase {
   }
 
   /**
-   * Tests the deprecation of the 'transactions' connection option.
-   *
-   * @group legacy
+   * Tests per-table prefix connection option.
    */
-  public function testTransactionsOptionDeprecation() {
-    $this->expectDeprecation('Passing a \'transactions\' connection option to Drupal\Core\Database\Connection::__construct is deprecated in drupal:9.1.0 and is removed in drupal:10.0.0. All database drivers must support transactions. See https://www.drupal.org/node/2278745');
-    $this->expectDeprecation('Drupal\Core\Database\Connection::supportsTransactions is deprecated in drupal:9.1.0 and is removed in drupal:10.0.0. All database drivers must support transactions. See https://www.drupal.org/node/2278745');
+  public function testPerTablePrefixOption() {
     $connection_info = Database::getConnectionInfo('default');
-    $connection_info['default']['transactions'] = FALSE;
-    Database::addConnectionInfo('default', 'foo', $connection_info['default']);
+    $new_connection_info = $connection_info['default'];
+    $new_connection_info['prefix'] = [
+      'default' => $connection_info['default']['prefix'],
+      'test_table' => $connection_info['default']['prefix'] . '_bar',
+    ];
+    Database::addConnectionInfo('default', 'foo', $new_connection_info);
+    $this->expectError();
     $foo_connection = Database::getConnection('foo', 'default');
-    $this->assertInstanceOf(Connection::class, $foo_connection);
-    $this->assertTrue($foo_connection->supportsTransactions());
   }
 
   /**
-   * Tests the deprecation of passing a statement object to ::query.
-   *
-   * @group legacy
+   * Tests the prefix connection option in array form.
    */
-  public function testStatementQueryDeprecation(): void {
-    $this->expectDeprecation('Passing a StatementInterface object as a $query argument to Drupal\Core\Database\Connection::query is deprecated in drupal:9.2.0 and is removed in drupal:10.0.0. Call the execute method from the StatementInterface object directly instead. See https://www.drupal.org/node/3154439');
-    $db = Database::getConnection();
-    $stmt = $db->prepareStatement('SELECT * FROM {test}', []);
-    $this->assertNotNull($db->query($stmt));
-  }
-
-  /**
-   * Tests the deprecation of passing a PDOStatement object to ::query.
-   *
-   * @group legacy
-   */
-  public function testPDOStatementQueryDeprecation(): void {
-    $db = Database::getConnection();
-    $stmt = $db->prepareStatement('SELECT * FROM {test}', []);
-    if (!$stmt instanceof StatementWrapper) {
-      $this->markTestSkipped("This test only runs for db drivers using StatementWrapper.");
-    }
-    if (!$stmt->getClientStatement() instanceof \PDOStatement) {
-      $this->markTestSkipped("This test only runs for PDO-based db drivers.");
-    }
-    $this->expectDeprecation('Passing a \\PDOStatement object as a $query argument to Drupal\Core\Database\Connection::query is deprecated in drupal:9.2.0 and is removed in drupal:10.0.0. Call the execute method from the StatementInterface object directly instead. See https://www.drupal.org/node/3154439');
-    $this->assertNotNull($db->query($stmt->getClientStatement()));
-  }
-
-  /**
-   * Ensure that you cannot execute multiple statements on MySQL.
-   */
-  public function testMultipleStatementsForNewPhp() {
-    // This just tests mysql, as other PDO integrations don't allow disabling
-    // multiple statements.
-    if (Database::getConnection()->databaseType() !== 'mysql') {
-      $this->markTestSkipped("This test only runs for MySQL");
-    }
-
-    // Disable the protection at the PHP level.
-    $this->expectException(DatabaseExceptionWrapper::class);
-    Database::getConnection('default', 'default')->query('SELECT * FROM {test}; SELECT * FROM {test_people}', [], ['allow_delimiter_in_query' => TRUE]);
+  public function testPrefixArrayOption() {
+    $connection_info = Database::getConnectionInfo('default');
+    $new_connection_info = $connection_info['default'];
+    $new_connection_info['prefix'] = [
+      'default' => $connection_info['default']['prefix'],
+    ];
+    Database::addConnectionInfo('default', 'foo', $new_connection_info);
+    $this->expectError();
+    $foo_connection = Database::getConnection('foo', 'default');
   }
 
   /**
@@ -207,6 +172,33 @@ class ConnectionTest extends DatabaseTestBase {
     }
     $condition = $connection->condition('AND');
     $this->assertSame($namespace, get_class($condition));
+  }
+
+  /**
+   * Tests deprecation of ::getUnprefixedTablesMap().
+   *
+   * @group legacy
+   */
+  public function testDeprecatedGetUnprefixedTablesMap() {
+    $this->expectDeprecation('Drupal\Core\Database\Connection::getUnprefixedTablesMap() is deprecated in drupal:10.0.0 and is removed from drupal:11.0.0. There is no replacement. See https://www.drupal.org/node/3257198');
+    $this->assertIsArray($this->connection->getUnprefixedTablesMap());
+  }
+
+  /**
+   * Tests that the method ::hasJson() returns TRUE.
+   */
+  public function testHasJson() {
+    $this->assertTrue($this->connection->hasJson());
+  }
+
+  /**
+   * Tests deprecation of ::tablePrefix().
+   *
+   * @group legacy
+   */
+  public function testDeprecatedTablePrefix(): void {
+    $this->expectDeprecation('Drupal\Core\Database\Connection::tablePrefix() is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Instead, you should just use Connection::getPrefix(). See https://www.drupal.org/node/3260849');
+    $this->assertIsString($this->connection->tablePrefix());
   }
 
 }

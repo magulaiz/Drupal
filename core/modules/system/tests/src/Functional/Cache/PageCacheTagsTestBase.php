@@ -12,15 +12,8 @@ abstract class PageCacheTagsTestBase extends BrowserTestBase {
 
   /**
    * {@inheritdoc}
-   *
-   * Always enable header dumping in page cache tags tests, this aids debugging.
    */
-  protected $dumpHeaders = TRUE;
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     // Enable page caching.

@@ -23,13 +23,16 @@ class BlockLanguageTest extends BrowserTestBase {
    *
    * @var array
    */
-  protected static $modules = ['language', 'block', 'content_translation'];
+  protected static $modules = ['language', 'block', 'content_translation', 'node'];
 
   /**
    * {@inheritdoc}
    */
   protected $defaultTheme = 'stark';
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
 
@@ -48,6 +51,18 @@ class BlockLanguageTest extends BrowserTestBase {
 
     // Verify that language was added successfully.
     $this->assertSession()->pageTextContains('French');
+
+    // Set path prefixes for both languages.
+    $this->config('language.negotiation')->set('url', [
+      'source' => 'path_prefix',
+      'prefixes' => [
+        'en' => 'en',
+        'fr' => 'fr',
+      ],
+    ])->save();
+
+    $this->drupalCreateContentType(['type' => 'page']);
+    $this->drupalCreateNode();
   }
 
   /**
@@ -80,11 +95,13 @@ class BlockLanguageTest extends BrowserTestBase {
 
     // Check that a page has a block.
     $this->drupalGet('en');
+    $this->assertSession()->statusCodeEquals(200);
     $this->assertSession()->pageTextContains('Powered by Drupal');
 
     // Check that a page doesn't has a block for the current language anymore.
     $this->drupalGet('fr');
-    $this->assertNoText('Powered by Drupal');
+    $this->assertSession()->statusCodeEquals(200);
+    $this->assertSession()->pageTextNotContains('Powered by Drupal');
   }
 
   /**
@@ -116,13 +133,12 @@ class BlockLanguageTest extends BrowserTestBase {
     // it is deleted.
     $block = Block::load($block->id());
     $visibility = $block->getVisibility();
-    $this->assertTrue(empty($visibility['language']['langcodes']['fr']), 'Language is no longer not set in the block configuration after deleting the block.');
+    $this->assertArrayNotHasKey('language', $visibility, 'Language is no longer not set in the block configuration after deleting the block.');
 
     // Ensure that the block visibility for language is gone from the UI.
     $this->drupalGet('admin/structure/block');
     $this->clickLink('Configure');
-    $elements = $this->xpath('//details[@id="edit-visibility-language"]');
-    $this->assertTrue(empty($elements));
+    $this->assertSession()->elementNotExists('xpath', '//details[@id="edit-visibility-language"]');
   }
 
   /**
@@ -161,9 +177,10 @@ class BlockLanguageTest extends BrowserTestBase {
     $this->submitForm($edit, 'Save block');
 
     // Interface negotiation depends on request arguments.
-    $this->drupalGet('node', ['query' => ['language' => 'en']]);
-    $this->assertNoText('Powered by Drupal');
-    $this->drupalGet('node', ['query' => ['language' => 'fr']]);
+    $this->drupalGet('node/1', ['query' => ['language' => 'en']]);
+    $this->assertSession()->statusCodeEquals(200);
+    $this->assertSession()->pageTextNotContains('Powered by Drupal');
+    $this->drupalGet('node/1', ['query' => ['language' => 'fr']]);
     $this->assertSession()->pageTextContains('Powered by Drupal');
 
     // Log in again in order to clear the interface language stored in the
@@ -174,9 +191,11 @@ class BlockLanguageTest extends BrowserTestBase {
     // Content language does not depend on session/request arguments.
     // It will fall back on English (site default) and not display the block.
     $this->drupalGet('en');
-    $this->assertNoText('Powered by Drupal');
+    $this->assertSession()->statusCodeEquals(200);
+    $this->assertSession()->pageTextNotContains('Powered by Drupal');
     $this->drupalGet('fr');
-    $this->assertNoText('Powered by Drupal');
+    $this->assertSession()->statusCodeEquals(200);
+    $this->assertSession()->pageTextNotContains('Powered by Drupal');
 
     // Change visibility to now depend on content language for this block.
     $edit = [
@@ -187,14 +206,16 @@ class BlockLanguageTest extends BrowserTestBase {
 
     // Content language negotiation does not depend on request arguments.
     // It will fall back on English (site default) and not display the block.
-    $this->drupalGet('node', ['query' => ['language' => 'en']]);
-    $this->assertNoText('Powered by Drupal');
-    $this->drupalGet('node', ['query' => ['language' => 'fr']]);
-    $this->assertNoText('Powered by Drupal');
+    $this->drupalGet('node/1', ['query' => ['language' => 'en']]);
+    $this->assertSession()->statusCodeEquals(200);
+    $this->assertSession()->pageTextNotContains('Powered by Drupal');
+    $this->drupalGet('node/1', ['query' => ['language' => 'fr']]);
+    $this->assertSession()->statusCodeEquals(200);
+    $this->assertSession()->pageTextNotContains('Powered by Drupal');
 
     // Content language negotiation depends on path prefix.
     $this->drupalGet('en');
-    $this->assertNoText('Powered by Drupal');
+    $this->assertSession()->pageTextNotContains('Powered by Drupal');
     $this->drupalGet('fr');
     $this->assertSession()->pageTextContains('Powered by Drupal');
   }

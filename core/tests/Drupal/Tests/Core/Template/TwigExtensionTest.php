@@ -2,6 +2,9 @@
 
 namespace Drupal\Tests\Core\Template;
 
+// cspell:ignore mila
+
+use Drupal\Core\File\FileUrlGeneratorInterface;
 use Drupal\Core\GeneratedLink;
 use Drupal\Core\Render\RenderableInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
@@ -61,17 +64,25 @@ class TwigExtensionTest extends UnitTestCase {
   protected $systemUnderTest;
 
   /**
+   * The file URL generator mock.
+   *
+   * @var \Drupal\Core\File\FileUrlGeneratorInterface|\PHPUnit_Framework_MockObject_MockObject
+   */
+  protected $fileUrlGenerator;
+
+  /**
    * {@inheritdoc}
    */
-  public function setUp(): void {
+  protected function setUp(): void {
     parent::setUp();
 
     $this->renderer = $this->createMock('\Drupal\Core\Render\RendererInterface');
     $this->urlGenerator = $this->createMock('\Drupal\Core\Routing\UrlGeneratorInterface');
     $this->themeManager = $this->createMock('\Drupal\Core\Theme\ThemeManagerInterface');
     $this->dateFormatter = $this->createMock('\Drupal\Core\Datetime\DateFormatterInterface');
+    $this->fileUrlGenerator = $this->createMock(FileUrlGeneratorInterface::class);
 
-    $this->systemUnderTest = new TwigExtension($this->renderer, $this->urlGenerator, $this->themeManager, $this->dateFormatter);
+    $this->systemUnderTest = new TwigExtension($this->renderer, $this->urlGenerator, $this->themeManager, $this->dateFormatter, $this->fileUrlGenerator);
   }
 
   /**
@@ -155,9 +166,9 @@ class TwigExtensionTest extends UnitTestCase {
   public function testFormatDate() {
     $this->dateFormatter->expects($this->exactly(1))
       ->method('format')
-      ->will($this->returnCallback(function ($timestamp) {
+      ->willReturnCallback(function ($timestamp) {
         return date('Y-m-d', $timestamp);
-      }));
+      });
 
     $loader = new StringLoader();
     $twig = new Environment($loader);
@@ -165,6 +176,22 @@ class TwigExtensionTest extends UnitTestCase {
     $timestamp = strtotime('1978-11-19');
     $result = $twig->render('{{ time|format_date("html_date") }}', ['time' => $timestamp]);
     $this->assertEquals('1978-11-19', $result);
+  }
+
+  /**
+   * Tests the file_url filter.
+   */
+  public function testFileUrl() {
+    $this->fileUrlGenerator->expects($this->once())
+      ->method('generateString')
+      ->with('public://picture.jpg')
+      ->willReturn('sites/default/files/picture.jpg');
+
+    $loader = new StringLoader();
+    $twig = new Environment($loader);
+    $twig->addExtension($this->systemUnderTest);
+    $result = $twig->render('{{ file_url(file) }}', ['file' => 'public://picture.jpg']);
+    $this->assertEquals('sites/default/files/picture.jpg', $result);
   }
 
   /**
@@ -282,12 +309,11 @@ class TwigExtensionTest extends UnitTestCase {
   public function testEscapeWithGeneratedLink() {
     $loader = new FilesystemLoader();
     $twig = new Environment($loader, [
-        'debug' => TRUE,
-        'cache' => FALSE,
-        'autoescape' => 'html',
-        'optimizations' => 0,
-      ]
-    );
+      'debug' => TRUE,
+      'cache' => FALSE,
+      'autoescape' => 'html',
+      'optimizations' => 0,
+    ]);
 
     $twig->addExtension($this->systemUnderTest);
     $link = new GeneratedLink();
@@ -334,6 +360,33 @@ class TwigExtensionTest extends UnitTestCase {
   }
 
   /**
+   * @covers ::renderVar
+   * @dataProvider providerTestRenderVarEarlyReturn
+   */
+  public function testRenderVarEarlyReturn($expected, $input) {
+    $result = $this->systemUnderTest->renderVar($input);
+    $this->assertSame($expected, $result);
+  }
+
+  /**
+   * Data provider for ::testRenderVarEarlyReturn().
+   */
+  public function providerTestRenderVarEarlyReturn() {
+    return [
+      'null' => ['', NULL],
+      'empty array' => ['', []],
+      'float zero' => [0, 0.0],
+      'float non-zero' => [10.0, 10.0],
+      'int zero' => [0, 0],
+      'int non-zero' => [10, 10],
+      'empty string' => ['', ''],
+      'string' => ['test', 'test'],
+      'FALSE' => ['', FALSE],
+      'TRUE' => [TRUE, TRUE],
+    ];
+  }
+
+  /**
    * Tests creating attributes within a Twig template.
    *
    * @covers ::createAttribute
@@ -371,6 +424,122 @@ class TwigExtensionTest extends UnitTestCase {
     $build = $this->systemUnderTest->getLink('test', $url, ['class' => ['bar']]);
 
     $this->assertEquals(['foo', 'bar'], $build['#url']->getOption('attributes')['class']);
+  }
+
+  /**
+   * Tests Twig 'add_suggestion' filter.
+   *
+   * @covers ::suggestThemeHook
+   * @dataProvider providerTestTwigAddSuggestionFilter
+   */
+  public function testTwigAddSuggestionFilter($original_render_array, $suggestion, $expected_render_array) {
+    $processed_render_array = $this->systemUnderTest->suggestThemeHook($original_render_array, $suggestion);
+    $this->assertEquals($expected_render_array, $processed_render_array);
+  }
+
+  /**
+   * A data provider for ::testTwigAddSuggestionFilter().
+   *
+   * @return \Iterator
+   */
+  public function providerTestTwigAddSuggestionFilter(): \Iterator {
+    yield 'suggestion should be added' => [
+      [
+        '#theme' => 'kitten',
+        '#name' => 'Mila',
+      ],
+      'cute',
+      [
+        '#theme' => [
+          'kitten__cute',
+          'kitten',
+        ],
+        '#name' => 'Mila',
+      ],
+    ];
+
+    yield 'suggestion should extend existing suggestions' => [
+      [
+        '#theme' => 'kitten__stripy',
+        '#name' => 'Mila',
+      ],
+      'cute',
+      [
+        '#theme' => [
+          'kitten__stripy__cute',
+          'kitten__stripy',
+        ],
+        '#name' => 'Mila',
+      ],
+    ];
+
+    yield 'suggestion should have highest priority' => [
+      [
+        '#theme' => [
+          'kitten__stripy',
+          'kitten',
+        ],
+        '#name' => 'Mila',
+      ],
+      'cute',
+      [
+        '#theme' => [
+          'kitten__stripy__cute',
+          'kitten__cute',
+          'kitten__stripy',
+          'kitten',
+        ],
+        '#name' => 'Mila',
+      ],
+    ];
+
+    yield '#printed should be removed after suggestion was added' => [
+      [
+        '#theme' => 'kitten',
+        '#name' => 'Mila',
+        '#printed' => TRUE,
+      ],
+      'cute',
+      [
+        '#theme' => [
+          'kitten__cute',
+          'kitten',
+        ],
+        '#name' => 'Mila',
+      ],
+    ];
+
+    yield 'cache key should be added' => [
+      [
+        '#theme' => 'kitten',
+        '#name' => 'Mila',
+        '#cache' => [
+          'keys' => [
+            'kitten',
+          ],
+        ],
+      ],
+      'cute',
+      [
+        '#theme' => [
+          'kitten__cute',
+          'kitten',
+        ],
+        '#name' => 'Mila',
+        '#cache' => [
+          'keys' => [
+            'kitten',
+            'cute',
+          ],
+        ],
+      ],
+    ];
+
+    yield 'null/missing content should be ignored' => [
+      NULL,
+      'cute',
+      NULL,
+    ];
   }
 
 }

@@ -23,7 +23,10 @@ abstract class StatisticsTestBase extends BrowserTestBase {
    */
   protected $blockingUser;
 
-  protected function setUp() {
+  /**
+   * {@inheritdoc}
+   */
+  protected function setUp(): void {
     parent::setUp();
 
     // Create Basic page node type.

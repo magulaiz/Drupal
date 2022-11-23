@@ -18,8 +18,11 @@ class CommentAdminTest extends CommentTestBase {
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'classy';
+  protected $defaultTheme = 'stark';
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
 
@@ -116,7 +119,7 @@ class CommentAdminTest extends CommentTestBase {
     $this->assertSession()->pageTextContains(Html::escape($this->node->label()));
     $this->node->setUnpublished()->save();
     $this->drupalGet('admin/content/comment');
-    $this->assertNoText(Html::escape($this->node->label()));
+    $this->assertSession()->pageTextNotContains(Html::escape($this->node->label()));
   }
 
   /**
@@ -167,7 +170,7 @@ class CommentAdminTest extends CommentTestBase {
     $this->drupalGet('comment/1/edit');
     $this->assertSession()->checkboxChecked('edit-status-0');
     $this->drupalGet('node/' . $this->node->id());
-    $this->clickLink(t('Approve'));
+    $this->clickLink('Approve');
     $this->drupalLogout();
 
     $this->drupalGet('node/' . $this->node->id());
@@ -279,8 +282,8 @@ class CommentAdminTest extends CommentTestBase {
     ];
     $this->drupalGet('admin/content/comment');
     $this->submitForm($edit, 'Update');
-    $this->assertRaw(new FormattableMarkup('@label (Original translation) - <em>The following comment translations will be deleted:</em>', ['@label' => $comment1->label()]));
-    $this->assertRaw(new FormattableMarkup('@label (Original translation) - <em>The following comment translations will be deleted:</em>', ['@label' => $comment2->label()]));
+    $this->assertSession()->responseContains(new FormattableMarkup('@label (Original translation) - <em>The following comment translations will be deleted:</em>', ['@label' => $comment1->label()]));
+    $this->assertSession()->responseContains(new FormattableMarkup('@label (Original translation) - <em>The following comment translations will be deleted:</em>', ['@label' => $comment2->label()]));
     $this->assertSession()->pageTextContains('English');
     $this->assertSession()->pageTextContains('Urdu');
     $this->submitForm([], 'Delete');

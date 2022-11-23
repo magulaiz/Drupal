@@ -16,6 +16,9 @@ class PageEditTest extends BlockContentTestBase {
    */
   protected $defaultTheme = 'stark';
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
 
@@ -72,7 +75,7 @@ class PageEditTest extends BlockContentTestBase {
 
     // Test deleting the block.
     $this->drupalGet("block/" . $revised_block->id());
-    $this->clickLink(t('Delete'));
+    $this->clickLink('Delete');
     $this->assertSession()->pageTextContains('Are you sure you want to delete the custom block ' . $revised_block->label() . '?');
   }
 

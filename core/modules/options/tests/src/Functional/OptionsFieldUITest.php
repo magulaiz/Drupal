@@ -59,6 +59,9 @@ class OptionsFieldUITest extends FieldTestBase {
    */
   protected $adminPath;
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
 
@@ -306,21 +309,23 @@ class OptionsFieldUITest extends FieldTestBase {
   /**
    * Tests a string input for the 'allowed values' form element.
    *
-   * @param $input_string
+   * @param string $input_string
    *   The input string, in the pipe-linefeed format expected by the form
    *   element.
-   * @param $result
+   * @param array|string $result
    *   Either an expected resulting array in
    *   $field->getSetting('allowed_values'), or an expected error message.
-   * @param $message
+   * @param string $message
    *   Message to display.
+   *
+   * @internal
    */
-  public function assertAllowedValuesInput($input_string, $result, $message) {
+  public function assertAllowedValuesInput(string $input_string, $result, string $message): void {
     $edit = ['settings[allowed_values]' => $input_string];
     $this->drupalGet($this->adminPath);
     $this->submitForm($edit, 'Save field settings');
     // Verify that the page does not have double escaped HTML tags.
-    $this->assertNoRaw('&amp;lt;');
+    $this->assertSession()->responseNotContains('&amp;lt;');
 
     if (is_string($result)) {
       $this->assertSession()->pageTextContains($result);
@@ -342,9 +347,7 @@ class OptionsFieldUITest extends FieldTestBase {
     $on = $this->randomMachineName();
     $off = $this->randomMachineName();
     $edit = [
-      'settings[allowed_values]' =>
-        "1|$on
-        0|$off",
+      'settings[allowed_values]' => "1|$on" . PHP_EOL . "0|$off",
     ];
 
     $this->drupalGet($this->adminPath);

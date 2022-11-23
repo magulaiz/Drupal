@@ -69,7 +69,7 @@ function locale_translation_build_projects() {
     // For every project store information.
     $data += [
       'name' => $name,
-      'version' => isset($data['info']['version']) ? $data['info']['version'] : '',
+      'version' => $data['info']['version'] ?? '',
       'core' => 'all',
       // A project can provide the path and filename pattern to download the
       // gettext file. Use the default if not.
@@ -191,7 +191,7 @@ function locale_translation_check_projects($projects = [], $langcodes = []) {
   else {
     // Retrieve and save the status of local translations only.
     locale_translation_check_projects_local($projects, $langcodes);
-    \Drupal::state()->set('locale.translation_last_checked', REQUEST_TIME);
+    \Drupal::state()->set('locale.translation_last_checked', \Drupal::time()->getRequestTime());
   }
 }
 
@@ -240,7 +240,7 @@ function locale_translation_batch_status_build($projects = [], $langcodes = []) 
   $operations = _locale_translation_batch_status_operations($projects, $langcodes, $options);
 
   $batch_builder = (new BatchBuilder())
-    ->setFile(drupal_get_path('module', 'locale') . '/locale.batch.inc')
+    ->setFile(\Drupal::service('extension.list.module')->getPath('locale') . '/locale.batch.inc')
     ->setTitle(t('Checking translations'))
     ->setErrorMessage(t('Error checking translation updates.'))
     ->setFinishCallback('locale_translation_batch_status_finished');

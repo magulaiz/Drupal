@@ -34,6 +34,9 @@ class DateTimeTest extends BrowserTestBase {
    */
   protected $defaultTheme = 'stark';
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
 
@@ -98,7 +101,7 @@ class DateTimeTest extends BrowserTestBase {
     $this->drupalGet('admin/config/regional/date-time');
 
     // Add custom date format.
-    $this->clickLink(t('Add format'));
+    $this->clickLink('Add format');
     $date_format_id = strtolower($this->randomMachineName(8));
     $name = ucwords($date_format_id);
     $date_format = 'd.m.Y - H:i';
@@ -120,7 +123,7 @@ class DateTimeTest extends BrowserTestBase {
 
     // Edit the custom date format and re-save without editing the format.
     $this->drupalGet('admin/config/regional/date-time');
-    $this->clickLink(t('Edit'));
+    $this->clickLink('Edit');
     $this->submitForm([], 'Save format');
     // Verify that the user is redirected to the correct page.
     $this->assertSession()->addressEquals(Url::fromRoute('entity.date_format.collection'));
@@ -128,7 +131,7 @@ class DateTimeTest extends BrowserTestBase {
 
     // Edit custom date format.
     $this->drupalGet('admin/config/regional/date-time');
-    $this->clickLink(t('Edit'));
+    $this->clickLink('Edit');
     $edit = [
       'date_format_pattern' => 'Y m',
     ];
@@ -139,12 +142,12 @@ class DateTimeTest extends BrowserTestBase {
     $this->assertSession()->pageTextContains('Custom date format updated.');
 
     // Delete custom date format.
-    $this->clickLink(t('Delete'));
+    $this->clickLink('Delete');
     $this->drupalGet('admin/config/regional/date-time/formats/manage/' . $date_format_id . '/delete');
     $this->submitForm([], 'Delete');
     // Verify that the user is redirected to the correct page.
     $this->assertSession()->addressEquals(Url::fromRoute('entity.date_format.collection'));
-    $this->assertRaw(t('The date format %format has been deleted.', ['%format' => $name]));
+    $this->assertSession()->pageTextContains("The date format {$name} has been deleted.");
 
     // Make sure the date does not exist in config.
     $date_format = DateFormat::load($date_format_id);
@@ -173,7 +176,7 @@ class DateTimeTest extends BrowserTestBase {
       'id' => 'xss_short',
       'label' => 'XSS format',
       'pattern' => '\<\s\c\r\i\p\t\>\a\l\e\r\t\(\'\X\S\S\'\)\;\<\/\s\c\r\i\p\t\>',
-      ]);
+    ]);
     $date_format->save();
 
     $this->drupalGet(Url::fromRoute('entity.date_format.collection'));
@@ -263,7 +266,7 @@ class DateTimeTest extends BrowserTestBase {
     $edit['field_dt[0][value][day]'] = '29';
     $this->drupalGet('node/add/page_with_date');
     $this->submitForm($edit, 'Save');
-    $this->assertNoText('Selected combination of day and month is not valid.');
+    $this->assertSession()->pageTextNotContains('Selected combination of day and month is not valid.');
 
     $this->drupalGet('node/1');
     $this->assertSession()->pageTextContains('Mon, 02/29/2016 - 01:30');

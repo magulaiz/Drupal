@@ -38,6 +38,9 @@ class AdminTest extends BrowserTestBase {
    */
   protected $defaultTheme = 'stark';
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     // testAdminPages() requires Locale module.
     parent::setUp();
@@ -96,7 +99,7 @@ class AdminTest extends BrowserTestBase {
       // On admin/index only, the administrator should also see a "Configure
       // permissions" link for the Locale module.
       if ($page == 'admin/index') {
-        $this->assertSession()->linkByHrefExists("admin/people/permissions#module-locale");
+        $this->assertSession()->linkByHrefExists("admin/people/permissions/module/locale");
       }
 
       // For a less privileged user, verify that there are no links to Locale's

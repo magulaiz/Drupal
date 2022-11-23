@@ -31,6 +31,9 @@ class ForumBlockTest extends BrowserTestBase {
    */
   protected $adminUser;
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
 
@@ -78,7 +81,7 @@ class ForumBlockTest extends BrowserTestBase {
         $this->assertSession()->linkExists($topics[$index], 0, new FormattableMarkup('Forum topic @topic found in the "New forum topics" block.', ['@topic' => $topics[$index]]));
       }
       else {
-        $this->assertNoText($topics[$index]);
+        $this->assertSession()->pageTextNotContains($topics[$index]);
       }
     }
   }
@@ -124,7 +127,7 @@ class ForumBlockTest extends BrowserTestBase {
         $this->assertSession()->linkExists($topics[$index], 0, new FormattableMarkup('Forum topic @topic found in the "Active forum topics" block.', ['@topic' => $topics[$index]]));
       }
       else {
-        $this->assertNoText($topics[$index]);
+        $this->assertSession()->pageTextNotContains($topics[$index]);
       }
     }
 
@@ -141,7 +144,7 @@ class ForumBlockTest extends BrowserTestBase {
         $this->assertSession()->linkExists($topics[$index], 0, 'Forum topic found in the "Active forum topics" block.');
       }
       else {
-        $this->assertNoText($topics[$index]);
+        $this->assertSession()->pageTextNotContains($topics[$index]);
       }
     }
   }

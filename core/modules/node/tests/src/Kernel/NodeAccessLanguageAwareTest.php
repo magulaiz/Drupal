@@ -45,6 +45,9 @@ class NodeAccessLanguageAwareTest extends NodeAccessTestBase {
    */
   protected $webUser;
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
 
@@ -247,7 +250,7 @@ class NodeAccessLanguageAwareTest extends NodeAccessTestBase {
     $nids = $select->execute()->fetchAllAssoc('nid');
 
     // There are no nodes with German translations, so no results are returned.
-    $this->assertTrue(empty($nids), 'Query returns an empty result when the de langcode is specified.');
+    $this->assertEmpty($nids, 'Query returns an empty result when the de langcode is specified.');
 
     // Query the nodes table as admin user (full access) with the node access
     // tag and no specific langcode.

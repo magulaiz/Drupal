@@ -50,7 +50,7 @@ abstract class EntityCacheTagsTestBase extends PageCacheTagsTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     // Give anonymous users permission to view test entities, so that we can
@@ -91,30 +91,10 @@ abstract class EntityCacheTagsTestBase extends PageCacheTagsTestBase {
     }
 
     // Create a referencing and a non-referencing entity.
-    list(
+    [
       $this->referencingEntity,
       $this->nonReferencingEntity,
-    ) = $this->createReferenceTestEntities($this->entity);
-  }
-
-  /**
-   * Generates standardized entity cache tags test info.
-   *
-   * @param string $entity_type_label
-   *   The label of the entity type whose cache tags to test.
-   * @param string $group
-   *   The test group.
-   *
-   * @return array
-   *
-   * @see \Drupal\simpletest\TestBase::getInfo()
-   */
-  protected static function generateStandardizedInfo($entity_type_label, $group) {
-    return [
-      'name' => "$entity_type_label entity cache tags",
-      'description' => "Test the $entity_type_label entity's cache tags.",
-      'group' => $group,
-    ];
+    ] = $this->createReferenceTestEntities($this->entity);
   }
 
   /**
@@ -427,7 +407,7 @@ abstract class EntityCacheTagsTestBase extends PageCacheTagsTestBase {
     $this->verifyPageCache($empty_entity_listing_url, 'HIT', $empty_entity_listing_cache_tags);
     // Verify the entity type's list cache contexts are present.
     $contexts_in_header = $this->getSession()->getResponseHeader('X-Drupal-Cache-Contexts');
-    $this->assertEquals(Cache::mergeContexts($page_cache_contexts, $this->getAdditionalCacheContextsForEntityListing()), empty($contexts_in_header) ? [] : explode(' ', $contexts_in_header));
+    $this->assertEqualsCanonicalizing(Cache::mergeContexts($page_cache_contexts, $this->getAdditionalCacheContextsForEntityListing()), empty($contexts_in_header) ? [] : explode(' ', $contexts_in_header));
 
     // Prime the page cache for the listing containing the referenced entity.
     $this->verifyPageCache($nonempty_entity_listing_url, 'MISS', $nonempty_entity_listing_cache_tags);
@@ -435,7 +415,7 @@ abstract class EntityCacheTagsTestBase extends PageCacheTagsTestBase {
     $this->verifyPageCache($nonempty_entity_listing_url, 'HIT', $nonempty_entity_listing_cache_tags);
     // Verify the entity type's list cache contexts are present.
     $contexts_in_header = $this->getSession()->getResponseHeader('X-Drupal-Cache-Contexts');
-    $this->assertEquals(Cache::mergeContexts($page_cache_contexts, $this->getAdditionalCacheContextsForEntityListing()), empty($contexts_in_header) ? [] : explode(' ', $contexts_in_header));
+    $this->assertEqualsCanonicalizing(Cache::mergeContexts($page_cache_contexts, $this->getAdditionalCacheContextsForEntityListing()), empty($contexts_in_header) ? [] : explode(' ', $contexts_in_header));
 
     // Verify that after modifying the referenced entity, there is a cache miss
     // for every route except the one for the non-referencing entity.

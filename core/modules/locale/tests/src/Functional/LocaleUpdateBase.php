@@ -52,7 +52,7 @@ abstract class LocaleUpdateBase extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     // Setup timestamps to identify old and new translation sources.
@@ -139,8 +139,8 @@ EOF;
       'uri' => $path . '/' . $filename,
       'filemime' => 'text/x-gettext-translation',
       'timestamp' => $timestamp,
-      'status' => FILE_STATUS_PERMANENT,
     ]);
+    $file->setPermanent();
     file_put_contents($file->getFileUri(), $po_header . $text);
     touch(\Drupal::service('file_system')->realpath($file->getFileUri()), $timestamp);
     $file->save();

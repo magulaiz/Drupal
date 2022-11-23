@@ -20,6 +20,7 @@ use Drupal\menu_link_content\Entity\MenuLinkContent;
 use Drupal\node\NodeTypeInterface;
 use Drupal\system\Entity\Menu;
 use Drupal\node\NodeInterface;
+use Drupal\system\MenuInterface;
 
 /**
  * Implements hook_help().
@@ -113,7 +114,7 @@ function _menu_ui_node_save(NodeInterface $node, array $values) {
   $entity->description->value = trim($values['description']);
   $entity->menu_name->value = $values['menu_name'];
   $entity->parent->value = $values['parent'];
-  $entity->weight->value = isset($values['weight']) ? $values['weight'] : 0;
+  $entity->weight->value = $values['weight'] ?? 0;
   $entity->isDefaultRevision($node->isDefaultRevision());
   $entity->save();
 }
@@ -330,7 +331,7 @@ function menu_ui_form_node_form_submit($form, FormStateInterface $form_state) {
       // Decompose the selected menu parent option into 'menu_name' and 'parent',
       // if the form used the default parent selection widget.
       if (!empty($values['menu_parent'])) {
-        list($menu_name, $parent) = explode(':', $values['menu_parent'], 2);
+        [$menu_name, $parent] = explode(':', $values['menu_parent'], 2);
         $values['menu_name'] = $menu_name;
         $values['parent'] = $parent;
       }
@@ -345,12 +346,15 @@ function menu_ui_form_node_form_submit($form, FormStateInterface $form_state) {
  * Adds menu options to the node type form.
  *
  * @see NodeTypeForm::form()
- * @see menu_ui_form_node_type_form_submit()
+ * @see menu_ui_form_node_type_form_builder()
  */
 function menu_ui_form_node_type_form_alter(&$form, FormStateInterface $form_state) {
   /** @var \Drupal\Core\Menu\MenuParentFormSelectorInterface $menu_parent_selector */
   $menu_parent_selector = \Drupal::service('menu.parent_form_selector');
-  $menu_options = menu_ui_get_menus();
+  $menu_options = array_map(function (MenuInterface $menu) {
+    return $menu->label();
+  }, Menu::loadMultiple());
+  asort($menu_options);
   /** @var \Drupal\node\NodeTypeInterface $type */
   $type = $form_state->getFormObject()->getEntity();
   $form['menu'] = [
@@ -417,30 +421,6 @@ function menu_ui_form_node_type_form_validate(&$form, FormStateInterface $form_s
 function menu_ui_form_node_type_form_builder($entity_type, NodeTypeInterface $type, &$form, FormStateInterface $form_state) {
   $type->setThirdPartySetting('menu_ui', 'available_menus', array_values(array_filter($form_state->getValue('menu_options'))));
   $type->setThirdPartySetting('menu_ui', 'parent', $form_state->getValue('menu_parent'));
-}
-
-/**
- * Return an associative array of the custom menus names.
- *
- * @param bool $all
- *   (optional) If FALSE return only user-added menus, or if TRUE also include
- *   the menus defined by the system. Defaults to TRUE.
- *
- * @return array
- *   An array with the machine-readable names as the keys, and human-readable
- *   titles as the values.
- */
-function menu_ui_get_menus($all = TRUE) {
-  if ($custom_menus = Menu::loadMultiple()) {
-    if (!$all) {
-      $custom_menus = array_diff_key($custom_menus, menu_list_system_menus());
-    }
-    foreach ($custom_menus as $menu_name => $menu) {
-      $custom_menus[$menu_name] = $menu->label();
-    }
-    asort($custom_menus);
-  }
-  return $custom_menus;
 }
 
 /**

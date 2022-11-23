@@ -78,8 +78,9 @@ class ContentTranslationHandler implements ContentTranslationHandlerInterface, E
   protected $currentUser;
 
   /**
-   * The array of installed field storage definitions for the entity type, keyed
-   * by field name.
+   * Installed field storage definitions for the entity type.
+   *
+   * Keyed by field name.
    *
    * @var \Drupal\Core\Field\FieldStorageDefinitionInterface[]
    */
@@ -764,7 +765,7 @@ class ContentTranslationHandler implements ContentTranslationHandlerInterface, E
     $form_object = $form_state->getFormObject();
     $entity = $form_object->getEntity();
     if (count($entity->getTranslationLanguages()) > 1) {
-      $this->messenger->addWarning(t('This will delete all the translations of %label.', ['%label' => $entity->label()]));
+      $this->messenger->addWarning(t('This will delete all the translations of %label.', ['%label' => $entity->label() ?? $entity->id()]));
     }
   }
 

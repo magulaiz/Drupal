@@ -127,6 +127,11 @@ class EntityField extends FieldPluginBase implements CacheableDependencyInterfac
   protected $entityFieldRenderer;
 
   /**
+   * The fields that we are actually grouping on.
+   */
+  public array $group_fields;
+
+  /**
    * Constructs a \Drupal\field\Plugin\views\field\Field object.
    *
    * @param array $configuration
@@ -320,8 +325,12 @@ class EntityField extends FieldPluginBase implements CacheableDependencyInterfac
     $field_storage_definition = $this->getFieldStorageDefinition();
     $column = $this->getTableMapping()->getFieldColumnName($field_storage_definition, $this->options['click_sort_column']);
     if (!isset($this->aliases[$column])) {
-      // Column is not in query; add a sort on it (without adding the column).
+      // Column is not in query; add a sort on it.
       $this->aliases[$column] = $this->tableAlias . '.' . $column;
+      // If the query uses DISTINCT we need to add the column too.
+      if (!empty($this->view->getQuery()->options['distinct'])) {
+        $this->query->addField($this->tableAlias, $column);
+      }
     }
     $this->query->addOrderBy(NULL, NULL, $order, $this->aliases[$column]);
   }
@@ -390,7 +399,7 @@ class EntityField extends FieldPluginBase implements CacheableDependencyInterfac
     }
 
     $options['settings'] = [
-      'default' => isset($this->definition['default_formatter_settings']) ? $this->definition['default_formatter_settings'] : [],
+      'default' => $this->definition['default_formatter_settings'] ?? [],
     ];
     $options['group_column'] = [
       'default' => $default_column,
@@ -451,7 +460,7 @@ class EntityField extends FieldPluginBase implements CacheableDependencyInterfac
     if (count($field->getColumns()) == 1) {
       $form['click_sort_column'] = [
         '#type' => 'value',
-        '#value' => isset($column_names[0]) ? $column_names[0] : '',
+        '#value' => $column_names[0] ?? '',
       ];
     }
     else {
@@ -537,7 +546,7 @@ class EntityField extends FieldPluginBase implements CacheableDependencyInterfac
 
     // Make the string translatable by keeping it as a whole rather than
     // translating prefix and suffix separately.
-    list($prefix, $suffix) = explode('@count', $this->t('Display @count value(s)'));
+    [$prefix, $suffix] = explode('@count', $this->t('Display @count value(s)'));
 
     if ($field->getCardinality() == FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED) {
       $type = 'textfield';
@@ -596,7 +605,7 @@ class EntityField extends FieldPluginBase implements CacheableDependencyInterfac
       '#fieldset' => 'multiple_field_settings',
     ];
 
-    list($prefix, $suffix) = explode('@count', $this->t('starting from @count'));
+    [$prefix, $suffix] = explode('@count', $this->t('starting from @count'));
     $form['delta_offset'] = [
       '#type' => 'textfield',
       '#size' => 5,
@@ -856,7 +865,7 @@ class EntityField extends FieldPluginBase implements CacheableDependencyInterfac
     }
 
     if ($this->options['field_api_classes']) {
-      return [['rendered' => $this->renderer->render($build_list)]];
+      return [['rendered' => $build_list]];
     }
 
     // Render using the formatted data itself.
@@ -891,7 +900,7 @@ class EntityField extends FieldPluginBase implements CacheableDependencyInterfac
    */
   protected function createEntityForGroupBy(EntityInterface $entity, ResultRow $row) {
     // Retrieve the correct translation object.
-    $processed_entity = clone $this->getEntityFieldRenderer()->getEntityTranslation($entity, $row);
+    $processed_entity = clone $this->getEntityFieldRenderer()->getEntityTranslationByRelationship($entity, $row);
 
     // Copy our group fields into the cloned entity. It is possible this will
     // cause some weirdness, but there is only so much we can hope to do.
@@ -927,7 +936,7 @@ class EntityField extends FieldPluginBase implements CacheableDependencyInterfac
   }
 
   public function render_item($count, $item) {
-    return render($item['rendered']);
+    return $this->renderer->render($item['rendered']);
   }
 
   protected function documentSelfTokens(&$tokens) {
@@ -1069,12 +1078,12 @@ class EntityField extends FieldPluginBase implements CacheableDependencyInterfac
     }
 
     // Retrieve the translated object.
-    $translated_entity = $this->getEntityFieldRenderer()->getEntityTranslation($entity, $values);
+    $translated_entity = $this->getEntityFieldRenderer()->getEntityTranslationByRelationship($entity, $values);
 
     // Some bundles might not have a specific field, in which case the entity
     // (potentially a fake one) doesn't have it either.
     /** @var \Drupal\Core\Field\FieldItemListInterface $field_item_list */
-    $field_item_list = isset($translated_entity->{$this->definition['field_name']}) ? $translated_entity->{$this->definition['field_name']} : NULL;
+    $field_item_list = $translated_entity->{$this->definition['field_name']} ?? NULL;
 
     if (!isset($field_item_list)) {
       // There isn't anything we can do without a valid field.

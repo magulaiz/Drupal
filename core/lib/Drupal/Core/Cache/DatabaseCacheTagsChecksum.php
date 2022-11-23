@@ -47,7 +47,7 @@ class DatabaseCacheTagsChecksum implements CacheTagsChecksumInterface, CacheTags
       // core install where cache tags are invalidated before the table is
       // created.
       if (!$this->ensureTableExists()) {
-        $this->catchException($e);
+        throw $e;
       }
     }
   }
@@ -63,7 +63,7 @@ class DatabaseCacheTagsChecksum implements CacheTagsChecksumInterface, CacheTags
     catch (\Exception $e) {
       // If the table does not exist yet, create.
       if (!$this->ensureTableExists()) {
-        $this->catchException($e);
+        throw $e;
       }
     }
     return [];
@@ -75,21 +75,18 @@ class DatabaseCacheTagsChecksum implements CacheTagsChecksumInterface, CacheTags
   protected function ensureTableExists() {
     try {
       $database_schema = $this->connection->schema();
-      // Create the cache tags table if it does not exist.
-      if (!$database_schema->tableExists('cachetags')) {
-        $schema_definition = $this->schemaDefinition();
-        $database_schema->createTable('cachetags', $schema_definition);
-
-        return TRUE;
-      }
+      $schema_definition = $this->schemaDefinition();
+      $database_schema->createTable('cachetags', $schema_definition);
     }
     // If another process has already created the cachetags table, attempting to
     // recreate it will throw an exception. In this case just catch the
     // exception and do nothing.
     catch (DatabaseException $e) {
-      return TRUE;
     }
-    return FALSE;
+    catch (\Exception $e) {
+      return FALSE;
+    }
+    return TRUE;
   }
 
   /**
@@ -118,24 +115,6 @@ class DatabaseCacheTagsChecksum implements CacheTagsChecksumInterface, CacheTags
       'primary key' => ['tag'],
     ];
     return $schema;
-  }
-
-  /**
-   * Act on an exception when cache might be stale.
-   *
-   * If the {cachetags} table does not yet exist, that's fine but if the table
-   * exists and yet the query failed, then the cache is stale and the
-   * exception needs to propagate.
-   *
-   * @param \Exception $e
-   *   The exception.
-   *
-   * @throws \Exception
-   */
-  protected function catchException(\Exception $e) {
-    if ($this->connection->schema()->tableExists('cachetags')) {
-      throw $e;
-    }
   }
 
   /**

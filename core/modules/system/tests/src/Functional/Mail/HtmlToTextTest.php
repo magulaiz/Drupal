@@ -25,7 +25,7 @@ class HtmlToTextTest extends BrowserTestBase {
    * @param $text
    *   The text string to convert.
    *
-   * @return
+   * @return string
    *   An HTML representation of the text string that, when displayed in a
    *   browser, represents the PHP source code equivalent of $text.
    */
@@ -41,18 +41,20 @@ class HtmlToTextTest extends BrowserTestBase {
   /**
    * Helper function to test \Drupal\Core\Mail\MailFormatHelper::htmlToText().
    *
-   * @param $html
+   * @param string $html
    *   The source HTML string to be converted.
-   * @param $text
+   * @param string $text
    *   The expected result of converting $html to text.
-   * @param $message
+   * @param string $message
    *   A text message to display in the assertion message.
-   * @param $allowed_tags
+   * @param array|null $allowed_tags
    *   (optional) An array of allowed tags, or NULL to default to the full
    *   set of tags supported by
    *   \Drupal\Core\Mail\MailFormatHelper::htmlToText().
+   *
+   * @internal
    */
-  protected function assertHtmlToText($html, $text, $message, $allowed_tags = NULL) {
+  protected function assertHtmlToText(string $html, string $text, string $message, ?array $allowed_tags = NULL): void {
     preg_match_all('/<([a-z0-6]+)/', mb_strtolower($html), $matches);
     $tested_tags = implode(', ', array_unique($matches[1]));
     $message .= ' (' . $tested_tags . ')';
@@ -302,9 +304,9 @@ EOT;
   public function testDrupalHtmlToTextParagraphs() {
     $tests = [];
     $tests[] = [
-        'html' => "<p>line 1<br />\nline 2<br />line 3\n<br />line 4</p><p>paragraph</p>",
+      'html' => "<p>line 1<br />\nline 2<br />line 3\n<br />line 4</p><p>paragraph</p>",
         // @todo Trailing line breaks should be trimmed.
-        'text' => "line 1\nline 2\nline 3\nline 4\n\nparagraph\n\n",
+      'text' => "line 1\nline 2\nline 3\nline 4\n\nparagraph\n\n",
     ];
     $tests[] = [
       'html' => "<p>line 1<br /> line 2</p> <p>line 4<br /> line 5</p> <p>0</p>",

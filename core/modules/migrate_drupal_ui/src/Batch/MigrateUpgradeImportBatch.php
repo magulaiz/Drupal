@@ -17,6 +17,8 @@ use Drupal\migrate\Event\MigrateRowDeleteEvent;
 use Drupal\migrate\MigrateExecutable;
 use Drupal\migrate_drupal\Plugin\MigrationWithFollowUpInterface;
 
+// cspell:ignore idmap
+
 /**
  * Runs a single migration batch.
  */
@@ -230,10 +232,10 @@ class MigrateUpgradeImportBatch {
         $migration = \Drupal::service('plugin.manager.migration')->createInstance($migration_id);
         $migration_name = $migration->label() ? $migration->label() : $migration_id;
         $context['message'] = (string) new TranslatableMarkup('Currently upgrading @migration (@current of @max total tasks)', [
-            '@migration' => $migration_name,
-            '@current' => $context['sandbox']['current'],
-            '@max' => $context['sandbox']['max'],
-          ]) . "<br />\n" . $context['message'];
+          '@migration' => $migration_name,
+          '@current' => $context['sandbox']['current'],
+          '@max' => $context['sandbox']['max'],
+        ]) . "<br />\n" . $context['message'];
       }
     }
     else {

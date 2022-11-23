@@ -5,7 +5,6 @@ namespace Drupal\Core\Controller;
 use Drupal\Core\DependencyInjection\ClassResolverInterface;
 use Symfony\Bridge\PsrHttpMessage\HttpMessageFactoryInterface;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\Controller\ControllerResolver as BaseControllerResolver;
 
 /**
  * ControllerResolver to enhance controllers beyond Symfony's basic handling.
@@ -22,7 +21,7 @@ use Symfony\Component\HttpKernel\Controller\ControllerResolver as BaseController
  *    controller by using a service:method notation (Symfony uses the same
  *    convention).
  */
-class ControllerResolver extends BaseControllerResolver implements ControllerResolverInterface {
+class ControllerResolver implements ControllerResolverInterface {
 
   /**
    * The class resolver.
@@ -78,7 +77,7 @@ class ControllerResolver extends BaseControllerResolver implements ControllerRes
   /**
    * {@inheritdoc}
    */
-  public function getController(Request $request) {
+  public function getController(Request $request): callable|FALSE {
     if (!$controller = $request->attributes->get('_controller')) {
       return FALSE;
     }
@@ -104,11 +103,11 @@ class ControllerResolver extends BaseControllerResolver implements ControllerRes
     // Controller in the service:method notation.
     $count = substr_count($controller, ':');
     if ($count == 1) {
-      list($class_or_service, $method) = explode(':', $controller, 2);
+      [$class_or_service, $method] = explode(':', $controller, 2);
     }
     // Controller in the class::method notation.
     elseif (strpos($controller, '::') !== FALSE) {
-      list($class_or_service, $method) = explode('::', $controller, 2);
+      [$class_or_service, $method] = explode('::', $controller, 2);
     }
     else {
       throw new \LogicException(sprintf('Unable to parse the controller name "%s".', $controller));

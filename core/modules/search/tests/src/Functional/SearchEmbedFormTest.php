@@ -35,6 +35,9 @@ class SearchEmbedFormTest extends BrowserTestBase {
    */
   protected $submitCount = 0;
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
 
@@ -82,7 +85,7 @@ class SearchEmbedFormTest extends BrowserTestBase {
     // our form being submitted.
     $this->drupalGet('search');
     $this->submitForm(['keys' => 'foo'], 'Search');
-    $this->assertNoText('Test form was submitted');
+    $this->assertSession()->pageTextNotContains('Test form was submitted');
     $count = \Drupal::state()->get('search_embedded_form.submit_count');
     $this->assertEquals($this->submitCount, $count, 'Form submission count is correct');
     $this->submitCount = $count;

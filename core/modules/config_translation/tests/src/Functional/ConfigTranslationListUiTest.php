@@ -53,6 +53,9 @@ class ConfigTranslationListUiTest extends BrowserTestBase {
    */
   protected $adminUser;
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
 
@@ -374,7 +377,7 @@ class ConfigTranslationListUiTest extends BrowserTestBase {
 
     $this->drupalGet('admin/config/media/responsive-image-style/add');
     $this->submitForm($edit, 'Save');
-    $this->assertRaw(t('Responsive image style %label saved.', ['%label' => $edit['label']]));
+    $this->assertSession()->pageTextContains("Responsive image style {$edit['label']} saved.");
 
     // Get the responsive image style listing.
     $this->drupalGet('admin/config/media/responsive-image-style');
