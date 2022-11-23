@@ -8,6 +8,7 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Field\FieldTypePluginManagerInterface;
+use Drupal\Core\Entity\RevisionableStorageInterface;
 use Drupal\Core\Session\AccountSwitcherInterface;
 use Drupal\Core\TypedData\TranslatableInterface;
 use Drupal\Core\TypedData\TypedDataInterface;
@@ -20,6 +21,7 @@ use Drupal\migrate\Plugin\MigrateIdMapInterface;
 use Drupal\migrate\Row;
 use Drupal\user\EntityOwnerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Drupal\Core\Entity\RevisionableInterface;
 
 // cspell:ignore validatable
 
@@ -326,6 +328,15 @@ class EntityContentBase extends Entity implements HighestIdInterface, MigrateVal
     }
     foreach ($empty_destinations as $field_name) {
       $entity->$field_name = NULL;
+    }
+
+    if (!empty($this->configuration['new_revision']) && $entity instanceof RevisionableInterface && $this->storage instanceof RevisionableStorageInterface) {
+      $id_map = $row->getIdMap();
+      // Create a revision when "track_changes" is not enabled or when the source data has changed.
+      if (!array_key_exists('original_hash', $id_map) || $id_map['hash'] !== $id_map['original_hash']) {
+        $entity->setRevisionCreationTime(\Drupal::time()->getRequestTime());
+        $entity = $this->storage->createRevision($entity);
+      }
     }
 
     $this->setRollbackAction($row->getIdMap(), $rollback_action);
