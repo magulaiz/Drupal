@@ -78,7 +78,7 @@ class WorkflowStateEditForm extends EntityForm {
     $state = $workflow->getTypePlugin()->getState($this->stateId);
 
     $form['label'] = [
-      '#type' => 'textfield',
+      '#type' => 'text',
       '#title' => $this->t('State label'),
       '#maxlength' => 255,
       '#default_value' => $state->label(),

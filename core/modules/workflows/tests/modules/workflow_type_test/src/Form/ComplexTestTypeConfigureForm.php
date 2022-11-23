@@ -18,7 +18,7 @@ class ComplexTestTypeConfigureForm extends WorkflowTypeConfigureFormBase {
   public function buildConfigurationForm(array $form, FormStateInterface $form_state) {
     $type_configuration = $this->workflowType->getConfiguration();
     $form['example_setting'] = [
-      '#type' => 'textfield',
+      '#type' => 'text',
       '#title' => $this->t('Example global workflow setting'),
       '#description' => $this->t('Extra information added to the workflow'),
       '#default_value' => $type_configuration['example_setting'],

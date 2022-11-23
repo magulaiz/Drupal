@@ -86,13 +86,13 @@ class SystemBrandingOffCanvasForm extends PluginFormBase implements ContainerInj
       '#access' => $this->currentUser->hasPermission('administer site configuration') && !$site_config_immutable->hasOverrides('name') && !$site_config_immutable->hasOverrides('slogan'),
     ];
     $form['site_information']['site_name'] = [
-      '#type' => 'textfield',
+      '#type' => 'text',
       '#title' => $this->t('Site name'),
       '#default_value' => $site_config->get('name'),
       '#required' => TRUE,
     ];
     $form['site_information']['site_slogan'] = [
-      '#type' => 'textfield',
+      '#type' => 'text',
       '#title' => $this->t('Slogan'),
       '#default_value' => $site_config->get('slogan'),
       '#description' => $this->t("How this is used depends on your site's theme."),

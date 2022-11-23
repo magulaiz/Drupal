@@ -81,7 +81,7 @@ class Boolean extends FieldPluginBase {
       '#default_value' => $this->options['type'],
     ];
     $form['type_custom_true'] = [
-      '#type' => 'textfield',
+      '#type' => 'text',
       '#title' => $this->t('Custom output for TRUE'),
       '#default_value' => $this->options['type_custom_true'],
       '#states' => [
@@ -91,7 +91,7 @@ class Boolean extends FieldPluginBase {
       ],
     ];
     $form['type_custom_false'] = [
-      '#type' => 'textfield',
+      '#type' => 'text',
       '#title' => $this->t('Custom output for FALSE'),
       '#default_value' => $this->options['type_custom_false'],
       '#states' => [

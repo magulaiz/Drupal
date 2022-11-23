@@ -51,7 +51,7 @@ abstract class ActionFormBase extends EntityForm {
    */
   public function form(array $form, FormStateInterface $form_state) {
     $form['label'] = [
-      '#type' => 'textfield',
+      '#type' => 'text',
       '#title' => $this->t('Label'),
       '#default_value' => $this->entity->label(),
       '#maxlength' => '255',

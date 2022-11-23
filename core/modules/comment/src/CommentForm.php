@@ -179,7 +179,7 @@ class CommentForm extends ContentEntityForm {
     // when a user with the permission 'administer comments' is editing an
     // existing comment from an anonymous user.
     $form['author']['name'] = [
-      '#type' => 'textfield',
+      '#type' => 'text',
       '#title' => $is_admin ? $this->t('Name for @anonymous', ['@anonymous' => $config->get('anonymous')]) : $this->t('Your name'),
       '#default_value' => $author,
       '#required' => ($this->currentUser->isAnonymous() && $anonymous_contact == CommentInterface::ANONYMOUS_MUST_CONTACT),

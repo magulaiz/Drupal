@@ -301,7 +301,7 @@ abstract class RenderElement extends PluginBase implements ElementInterface {
           break;
 
         case 'password':
-        case 'textfield':
+        case 'text':
         case 'number':
         case 'tel':
         case 'textarea':

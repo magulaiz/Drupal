@@ -63,7 +63,7 @@ class ActionAjaxTest extends ConfigurableActionBase {
 
     if ($having_a_party) {
       $form['container']['party_time'] = [
-        '#type' => 'textfield',
+        '#type' => 'text',
         '#title' => $this->t('Party time'),
         '#default_value' => $this->configuration['party_time'],
       ];

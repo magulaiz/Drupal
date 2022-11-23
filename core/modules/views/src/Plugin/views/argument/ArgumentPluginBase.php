@@ -239,7 +239,7 @@ abstract class ArgumentPluginBase extends HandlerBase implements CacheableDepend
       '#fieldset' => 'no_argument',
     ];
     $form['exception']['value'] = [
-      '#type' => 'textfield',
+      '#type' => 'text',
       '#title' => $this->t('Exception value'),
       '#size' => 20,
       '#default_value' => $this->options['exception']['value'],
@@ -251,7 +251,7 @@ abstract class ArgumentPluginBase extends HandlerBase implements CacheableDepend
       '#default_value' => $this->options['exception']['title_enable'],
     ];
     $form['exception']['title'] = [
-      '#type' => 'textfield',
+      '#type' => 'text',
       '#title' => $this->t('Override title'),
       '#title_display' => 'invisible',
       '#size' => 20,
@@ -290,7 +290,7 @@ abstract class ArgumentPluginBase extends HandlerBase implements CacheableDepend
       '#fieldset' => 'argument_present',
     ];
     $form['title'] = [
-      '#type' => 'textfield',
+      '#type' => 'text',
       '#title' => $this->t('Provide title'),
       '#title_display' => 'invisible',
       '#default_value' => $this->options['title'],

@@ -51,7 +51,7 @@ class EditorLinkDialog extends FormBase {
     // generated link tag's attributes.
     $form['attributes']['href'] = [
       '#title' => $this->t('URL'),
-      '#type' => 'textfield',
+      '#type' => 'text',
       '#default_value' => $input['href'] ?? '',
       '#maxlength' => 2048,
     ];

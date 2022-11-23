@@ -241,7 +241,7 @@
  * following properties defined:
  * - #type: Specifies that the array contains data and options for a particular
  *   type of "render element" (for example, 'form', for an HTML form;
- *   'textfield', 'submit', for HTML form element types; 'table', for a table
+ *   'text', 'submit', for HTML form element types; 'table', for a table
  *   with rows, columns, and headers). See @ref elements below for more on
  *   render element types.
  * - #theme: Specifies that the array contains data to be themed by a particular
@@ -797,8 +797,8 @@ function hook_render_template($template_file, $variables) {
  */
 function hook_element_info_alter(array &$info) {
   // Decrease the default size of textfields.
-  if (isset($info['textfield']['#size'])) {
-    $info['textfield']['#size'] = 40;
+  if (isset($info['text']['#size'])) {
+    $info['text']['#size'] = 40;
   }
 }
 

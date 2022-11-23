@@ -158,7 +158,7 @@ class ValidationTest extends BrowserTestBase {
 
     // Invalid textfield, valid tel.
     $edit = [
-      'textfield' => 'invalid',
+      'text' => 'invalid',
       'tel' => 'valid',
     ];
     $this->drupalGet('form-test/pattern');
@@ -169,7 +169,7 @@ class ValidationTest extends BrowserTestBase {
 
     // Valid textfield, invalid tel, valid password.
     $edit = [
-      'textfield' => '7seven',
+      'text' => '7seven',
       'tel' => '818937',
       'password' => '0100110',
     ];
@@ -181,7 +181,7 @@ class ValidationTest extends BrowserTestBase {
 
     // Non required fields are not validated if empty.
     $edit = [
-      'textfield' => '',
+      'text' => '',
       'tel' => '',
     ];
     $this->drupalGet('form-test/pattern');
@@ -203,7 +203,7 @@ class ValidationTest extends BrowserTestBase {
     // The pattern attribute overrides #pattern and is not validated on the
     // server side.
     $edit = [
-      'textfield' => '',
+      'text' => '',
       'tel' => '',
       'url' => 'http://www.example.com/',
     ];
@@ -239,7 +239,7 @@ class ValidationTest extends BrowserTestBase {
 
     // Verify that no custom validation error appears with valid values.
     $edit = [
-      'textfield' => $this->randomString(),
+      'text' => $this->randomString(),
       'checkboxes[foo]' => TRUE,
       'select' => 'foo',
     ];

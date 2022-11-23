@@ -4,7 +4,7 @@ const inputTypes = [
   {
     selector: '#edit-form-textfield-test-title-and-required',
     type: 'text',
-    api: 'textfield',
+    api: 'text',
   },
   {
     selector: '#edit-form-email-title-no-xss',

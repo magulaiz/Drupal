@@ -435,14 +435,14 @@ class ImageItem extends FileItem {
       '#upload_validators' => $this->getUploadValidators(),
     ];
     $element['default_image']['alt'] = [
-      '#type' => 'textfield',
+      '#type' => 'text',
       '#title' => $this->t('Alternative text'),
       '#description' => $this->t('Short description of the image used by screen readers and displayed when the image is not loaded. This is important for accessibility.'),
       '#default_value' => $settings['default_image']['alt'],
       '#maxlength' => 512,
     ];
     $element['default_image']['title'] = [
-      '#type' => 'textfield',
+      '#type' => 'text',
       '#title' => $this->t('Title'),
       '#description' => $this->t('The title attribute is used as a tooltip when the mouse hovers over the image.'),
       '#default_value' => $settings['default_image']['title'],

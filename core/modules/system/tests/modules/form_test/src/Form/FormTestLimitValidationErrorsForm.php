@@ -24,14 +24,14 @@ class FormTestLimitValidationErrorsForm extends FormBase {
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
     $form['title'] = [
-      '#type' => 'textfield',
+      '#type' => 'text',
       '#title' => 'Title',
       '#required' => TRUE,
     ];
 
     $form['test'] = [
       '#title' => 'Test',
-      '#type' => 'textfield',
+      '#type' => 'text',
       '#element_validate' => ['::elementValidateLimitValidationErrors'],
     ];
     $form['test_numeric_index'] = [
@@ -39,7 +39,7 @@ class FormTestLimitValidationErrorsForm extends FormBase {
     ];
     $form['test_numeric_index'][0] = [
       '#title' => 'Test (numeric index)',
-      '#type' => 'textfield',
+      '#type' => 'text',
       '#element_validate' => ['::elementValidateLimitValidationErrors'],
     ];
 
@@ -48,12 +48,12 @@ class FormTestLimitValidationErrorsForm extends FormBase {
     ];
     $form['test_substring']['foo'] = [
       '#title' => 'Test (substring) foo',
-      '#type' => 'textfield',
+      '#type' => 'text',
       '#element_validate' => ['::elementValidateLimitValidationErrors'],
     ];
     $form['test_substring']['foobar'] = [
       '#title' => 'Test (substring) foobar',
-      '#type' => 'textfield',
+      '#type' => 'text',
       '#element_validate' => ['::elementValidateLimitValidationErrors'],
     ];
 

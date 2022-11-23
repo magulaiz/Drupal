@@ -86,7 +86,7 @@ class BooleanFormatter extends FormatterBase {
       '#options' => $formats,
     ];
     $form['format_custom_true'] = [
-      '#type' => 'textfield',
+      '#type' => 'text',
       '#title' => $this->t('Custom output for TRUE'),
       '#default_value' => $this->getSetting('format_custom_true'),
       '#states' => [
@@ -96,7 +96,7 @@ class BooleanFormatter extends FormatterBase {
       ],
     ];
     $form['format_custom_false'] = [
-      '#type' => 'textfield',
+      '#type' => 'text',
       '#title' => $this->t('Custom output for FALSE'),
       '#default_value' => $this->getSetting('format_custom_false'),
       '#states' => [

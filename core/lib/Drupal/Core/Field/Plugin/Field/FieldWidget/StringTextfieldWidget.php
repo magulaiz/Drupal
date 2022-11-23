@@ -41,7 +41,7 @@ class StringTextfieldWidget extends WidgetBase {
       '#min' => 1,
     ];
     $element['placeholder'] = [
-      '#type' => 'textfield',
+      '#type' => 'text',
       '#title' => $this->t('Placeholder'),
       '#default_value' => $this->getSetting('placeholder'),
       '#description' => $this->t('Text that will be shown inside the field until a value is entered. This hint is usually a sample value or a brief description of the expected format.'),
@@ -69,7 +69,7 @@ class StringTextfieldWidget extends WidgetBase {
    */
   public function formElement(FieldItemListInterface $items, $delta, array $element, array &$form, FormStateInterface $form_state) {
     $element['value'] = $element + [
-      '#type' => 'textfield',
+      '#type' => 'text',
       '#default_value' => $items[$delta]->value ?? NULL,
       '#size' => $this->getSetting('size'),
       '#placeholder' => $this->getSetting('placeholder'),

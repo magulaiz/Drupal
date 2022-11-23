@@ -23,7 +23,7 @@ class MockFileTransfer {
   public function getSettingsForm() {
     $form = [];
     $form['system_test_username'] = [
-      '#type' => 'textfield',
+      '#type' => 'text',
       '#title' => t('System Test Username'),
     ];
     return $form;

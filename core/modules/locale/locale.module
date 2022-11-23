@@ -740,7 +740,7 @@ function locale_is_translatable($langcode) {
  */
 function locale_form_system_file_system_settings_alter(&$form, FormStateInterface $form_state) {
   $form['translation_path'] = [
-    '#type' => 'textfield',
+    '#type' => 'text',
     '#title' => t('Interface translations directory'),
     '#default_value' => \Drupal::configFactory()->getEditable('locale.settings')->get('translation.path'),
     '#maxlength' => 255,

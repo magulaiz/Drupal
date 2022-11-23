@@ -51,7 +51,7 @@ abstract class ImageStyleFormBase extends EntityForm {
   public function form(array $form, FormStateInterface $form_state) {
 
     $form['label'] = [
-      '#type' => 'textfield',
+      '#type' => 'text',
       '#title' => $this->t('Image style name'),
       '#default_value' => $this->entity->label(),
       '#required' => TRUE,

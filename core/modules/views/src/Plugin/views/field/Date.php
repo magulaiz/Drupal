@@ -104,7 +104,7 @@ class Date extends FieldPluginBase {
       '#default_value' => $this->options['date_format'] ?? 'small',
     ];
     $form['custom_date_format'] = [
-      '#type' => 'textfield',
+      '#type' => 'text',
       '#title' => $this->t('Custom date format'),
       '#description' => $this->t('If "Custom", see <a href="https://www.php.net/manual/datetime.format.php#refsect1-datetime.format-parameters" target="_blank">the PHP docs</a> for date formats. Otherwise, enter the number of different time units to display, which defaults to 2.'),
       '#default_value' => $this->options['custom_date_format'] ?? '',

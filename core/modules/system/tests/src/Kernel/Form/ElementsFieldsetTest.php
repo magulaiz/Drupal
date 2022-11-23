@@ -41,7 +41,7 @@ class ElementsFieldsetTest extends KernelTestBase implements FormInterface {
       '#group' => 'fieldset_default',
     ];
     $form['meta_default']['element'] = [
-      '#type' => 'textfield',
+      '#type' => 'text',
       '#title' => 'Nested text field inside meta_default element',
     ];
 
@@ -57,7 +57,7 @@ class ElementsFieldsetTest extends KernelTestBase implements FormInterface {
       '#group' => 'fieldset_before',
     ];
     $form['meta_before']['element'] = [
-      '#type' => 'textfield',
+      '#type' => 'text',
       '#title' => 'Nested text field inside meta_before element',
     ];
 
@@ -73,7 +73,7 @@ class ElementsFieldsetTest extends KernelTestBase implements FormInterface {
       '#group' => 'fieldset_after',
     ];
     $form['meta_after']['element'] = [
-      '#type' => 'textfield',
+      '#type' => 'text',
       '#title' => 'Nested text field inside meta_after element',
     ];
 
@@ -89,7 +89,7 @@ class ElementsFieldsetTest extends KernelTestBase implements FormInterface {
       '#group' => 'fieldset_invisible',
     ];
     $form['meta_invisible']['element'] = [
-      '#type' => 'textfield',
+      '#type' => 'text',
       '#title' => 'Nested text field inside meta_invisible element',
     ];
 

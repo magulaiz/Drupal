@@ -73,7 +73,7 @@ abstract class SearchPageFormBase extends EntityForm {
    */
   public function form(array $form, FormStateInterface $form_state) {
     $form['label'] = [
-      '#type' => 'textfield',
+      '#type' => 'text',
       '#title' => $this->t('Label'),
       '#description' => $this->t('The label for this search page.'),
       '#default_value' => $this->entity->label(),
@@ -90,7 +90,7 @@ abstract class SearchPageFormBase extends EntityForm {
       ],
     ];
     $form['path'] = [
-      '#type' => 'textfield',
+      '#type' => 'text',
       '#title' => $this->t('Path'),
       '#field_prefix' => 'search/',
       '#default_value' => $this->entity->getPath(),

@@ -99,13 +99,13 @@ class SiteInformationForm extends ConfigFormBase {
       '#open' => TRUE,
     ];
     $form['site_information']['site_name'] = [
-      '#type' => 'textfield',
+      '#type' => 'text',
       '#title' => $this->t('Site name'),
       '#default_value' => $site_config->get('name'),
       '#required' => TRUE,
     ];
     $form['site_information']['site_slogan'] = [
-      '#type' => 'textfield',
+      '#type' => 'text',
       '#title' => $this->t('Slogan'),
       '#default_value' => $site_config->get('slogan'),
       '#description' => $this->t("How this is used depends on your site's theme."),
@@ -125,7 +125,7 @@ class SiteInformationForm extends ConfigFormBase {
     ];
     $front_page = $site_config->get('page.front') != '/user/login' ? $this->aliasManager->getAliasByPath($site_config->get('page.front')) : '';
     $form['front_page']['site_frontpage'] = [
-      '#type' => 'textfield',
+      '#type' => 'text',
       '#title' => $this->t('Default front page'),
       '#default_value' => $front_page,
       '#size' => 40,
@@ -138,14 +138,14 @@ class SiteInformationForm extends ConfigFormBase {
       '#open' => TRUE,
     ];
     $form['error_page']['site_403'] = [
-      '#type' => 'textfield',
+      '#type' => 'text',
       '#title' => $this->t('Default 403 (access denied) page'),
       '#default_value' => $site_config->get('page.403'),
       '#size' => 40,
       '#description' => $this->t('This page is displayed when the requested document is denied to the current user. Leave blank to display a generic "access denied" page.'),
     ];
     $form['error_page']['site_404'] = [
-      '#type' => 'textfield',
+      '#type' => 'text',
       '#title' => $this->t('Default 404 (not found) page'),
       '#default_value' => $site_config->get('page.404'),
       '#size' => 40,

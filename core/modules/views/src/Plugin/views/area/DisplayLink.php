@@ -75,7 +75,7 @@ class DisplayLink extends AreaPluginBase {
       $form['label'] = [
         '#title' => $this->t('Label'),
         '#description' => $this->t('The text of the link.'),
-        '#type' => 'textfield',
+        '#type' => 'text',
         '#default_value' => $this->options['label'],
         '#required' => TRUE,
       ];

@@ -62,7 +62,7 @@ class ViewAddForm extends ViewFormBase {
     ];
 
     $form['name']['label'] = [
-      '#type' => 'textfield',
+      '#type' => 'text',
       '#title' => $this->t('View name'),
       '#required' => TRUE,
       '#size' => 32,
@@ -84,7 +84,7 @@ class ViewAddForm extends ViewFormBase {
       '#title' => $this->t('Description'),
     ];
     $form['name']['description'] = [
-      '#type' => 'textfield',
+      '#type' => 'text',
       '#title' => $this->t('Provide description'),
       '#title_display' => 'invisible',
       '#size' => 64,

@@ -17,8 +17,8 @@ function test_theme_preprocess_twig_theme_test_php_variables(&$variables) {
  */
 function test_theme_element_info_alter(&$info) {
   // Decrease the default size of textfields.
-  if (isset($info['textfield']['#size'])) {
-    $info['textfield']['#size'] = 40;
+  if (isset($info['text']['#size'])) {
+    $info['text']['#size'] = 40;
   }
 }
 

@@ -40,7 +40,7 @@ class FormTestLabelForm extends FormBase {
     'select',
     'tel',
     'textarea',
-    'textfield',
+    'text',
     'text_format',
     'url',
     'weight',
@@ -85,19 +85,19 @@ class FormTestLabelForm extends FormBase {
       '#title' => t('Checkbox test'),
     ];
     $form['form_textfield_test_title_and_required'] = [
-      '#type' => 'textfield',
+      '#type' => 'text',
       '#title' => t('Textfield test for required with title'),
       '#required' => TRUE,
     ];
     $form['form_textfield_test_no_title_required'] = [
-      '#type' => 'textfield',
+      '#type' => 'text',
       // We use an empty title, since not setting #title suppresses the label
       // and required marker.
       '#title' => '',
       '#required' => TRUE,
     ];
     $form['form_textfield_test_title'] = [
-      '#type' => 'textfield',
+      '#type' => 'text',
       '#title' => t('Textfield test for title only'),
       // Not required.
       // Test #prefix and #suffix placement.
@@ -105,18 +105,18 @@ class FormTestLabelForm extends FormBase {
       '#suffix' => '<div id="form-test-textfield-title-suffix">' . t('Textfield #suffix element') . '</div>',
     ];
     $form['form_textfield_test_title_after'] = [
-      '#type' => 'textfield',
+      '#type' => 'text',
       '#title' => t('Textfield test for title after element'),
       '#title_display' => 'after',
     ];
     $form['form_textfield_test_title_invisible'] = [
-      '#type' => 'textfield',
+      '#type' => 'text',
       '#title' => t('Textfield test for invisible title'),
       '#title_display' => 'invisible',
     ];
     // Textfield test for title set not to display.
     $form['form_textfield_test_title_no_show'] = [
-      '#type' => 'textfield',
+      '#type' => 'text',
     ];
     // Checkboxes & radios with title as attribute.
     $form['form_checkboxes_title_attribute'] = [

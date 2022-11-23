@@ -269,12 +269,12 @@ class FieldAttachOtherTest extends FieldKernelTestBase {
     $this->assertEquals($this->fieldTestData->field->getLabel(), $form[$this->fieldTestData->field_name]['widget']['#title'], "First field's form title is {$this->fieldTestData->field->getLabel()}");
     $this->assertEquals($this->fieldTestData->field_2->getLabel(), $form[$this->fieldTestData->field_name_2]['widget']['#title'], "Second field's form title is {$this->fieldTestData->field_2->getLabel()}");
     for ($delta = 0; $delta < $this->fieldTestData->field_storage->getCardinality(); $delta++) {
-      // field_test_widget uses 'textfield'
-      $this->assertEquals('textfield', $form[$this->fieldTestData->field_name]['widget'][$delta]['value']['#type'], "First field's form delta {$delta} widget is textfield");
+      // field_test_widget uses 'text'
+      $this->assertEquals('text', $form[$this->fieldTestData->field_name]['widget'][$delta]['value']['#type'], "First field's form delta {$delta} widget is textfield");
     }
     for ($delta = 0; $delta < $this->fieldTestData->field_storage_2->getCardinality(); $delta++) {
-      // field_test_widget uses 'textfield'
-      $this->assertEquals('textfield', $form[$this->fieldTestData->field_name_2]['widget'][$delta]['value']['#type'], "Second field's form delta {$delta} widget is textfield");
+      // field_test_widget uses 'text'
+      $this->assertEquals('text', $form[$this->fieldTestData->field_name_2]['widget'][$delta]['value']['#type'], "Second field's form delta {$delta} widget is textfield");
     }
 
     // Test generating widgets for all fields.
@@ -291,8 +291,8 @@ class FieldAttachOtherTest extends FieldKernelTestBase {
     $this->assertFalse(isset($form[$this->fieldTestData->field_name]), 'The first field does not exist in the form');
     $this->assertEquals($this->fieldTestData->field_2->getLabel(), $form[$this->fieldTestData->field_name_2]['widget']['#title'], "Second field's form title is {$this->fieldTestData->field_2->getLabel()}");
     for ($delta = 0; $delta < $this->fieldTestData->field_storage_2->getCardinality(); $delta++) {
-      // field_test_widget uses 'textfield'
-      $this->assertEquals('textfield', $form[$this->fieldTestData->field_name_2]['widget'][$delta]['value']['#type'], "Second field's form delta {$delta} widget is textfield");
+      // field_test_widget uses 'text'
+      $this->assertEquals('text', $form[$this->fieldTestData->field_name_2]['widget'][$delta]['value']['#type'], "Second field's form delta {$delta} widget is textfield");
     }
   }
 

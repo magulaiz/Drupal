@@ -19,7 +19,7 @@ class TestSettingsValidationBlock extends BlockBase {
    * {@inheritdoc}
    */
   public function blockForm($form, FormStateInterface $form_state) {
-    return ['digits' => ['#type' => 'textfield']] + $form;
+    return ['digits' => ['#type' => 'text']] + $form;
   }
 
   /**

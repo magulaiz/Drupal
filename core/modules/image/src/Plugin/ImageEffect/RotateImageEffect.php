@@ -89,7 +89,7 @@ class RotateImageEffect extends ConfigurableImageEffectBase {
       '#required' => TRUE,
     ];
     $form['bgcolor'] = [
-      '#type' => 'textfield',
+      '#type' => 'text',
       '#default_value' => $this->configuration['bgcolor'],
       '#title' => $this->t('Background color'),
       '#description' => $this->t('The background color to use for exposed areas of the image. Use web-style hex colors (#FFFFFF for white, #000000 for black). Leave blank for transparency on image types that support it.'),

@@ -78,13 +78,13 @@ class FileTestSaveUploadFromForm extends FormBase {
       '#default_value' => FileSystemInterface::EXISTS_RENAME,
     ];
     $form['file_subdir'] = [
-      '#type' => 'textfield',
+      '#type' => 'text',
       '#title' => $this->t('Subdirectory for test file'),
       '#default_value' => '',
     ];
 
     $form['extensions'] = [
-      '#type' => 'textfield',
+      '#type' => 'text',
       '#title' => $this->t('Allowed extensions.'),
       '#default_value' => '',
     ];
@@ -107,7 +107,7 @@ class FileTestSaveUploadFromForm extends FormBase {
     ];
 
     $form['error_message'] = [
-      '#type' => 'textfield',
+      '#type' => 'text',
       '#title' => $this->t('Custom error message.'),
       '#default_value' => '',
     ];

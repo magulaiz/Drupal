@@ -31,7 +31,7 @@ class FormElementsRenderTest extends KernelTestBase {
     $this->assertRenderedElement($element, '//input[@type=:type]', [':type' => 'submit']);
 
     $element = [
-      '#type' => 'textfield',
+      '#type' => 'text',
       '#title' => $this->randomMachineName(),
       '#value' => $this->randomMachineName(),
     ];

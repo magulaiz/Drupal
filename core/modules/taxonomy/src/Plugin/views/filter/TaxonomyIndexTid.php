@@ -112,7 +112,7 @@ class TaxonomyIndexTid extends ManyToOne {
   protected function defineOptions() {
     $options = parent::defineOptions();
 
-    $options['type'] = ['default' => 'textfield'];
+    $options['type'] = ['default' => 'text'];
     $options['limit'] = ['default' => TRUE];
     $options['vid'] = ['default' => ''];
     $options['hierarchy'] = ['default' => FALSE];
@@ -149,7 +149,7 @@ class TaxonomyIndexTid extends ManyToOne {
     $form['type'] = [
       '#type' => 'radios',
       '#title' => $this->t('Selection type'),
-      '#options' => ['select' => $this->t('Dropdown'), 'textfield' => $this->t('Autocomplete')],
+      '#options' => ['select' => $this->t('Dropdown'), 'text' => $this->t('Autocomplete')],
       '#default_value' => $this->options['type'],
     ];
 
@@ -174,11 +174,11 @@ class TaxonomyIndexTid extends ManyToOne {
       return;
     }
 
-    if ($this->options['type'] == 'textfield') {
+    if ($this->options['type'] == 'text') {
       $terms = $this->value ? Term::loadMultiple(($this->value)) : [];
       $form['value'] = [
         '#title' => $this->options['limit'] ? $this->t('Select terms from vocabulary @voc', ['@voc' => $vocabulary->label()]) : $this->t('Select terms'),
-        '#type' => 'textfield',
+        '#type' => 'text',
         '#default_value' => EntityAutocomplete::getEntityLabels($terms),
       ];
 
@@ -286,7 +286,7 @@ class TaxonomyIndexTid extends ManyToOne {
 
   protected function valueValidate($form, FormStateInterface $form_state) {
     // We only validate if they've chosen the text field style.
-    if ($this->options['type'] != 'textfield') {
+    if ($this->options['type'] != 'text') {
       return;
     }
 
@@ -352,7 +352,7 @@ class TaxonomyIndexTid extends ManyToOne {
     }
 
     // We only validate if they've chosen the text field style.
-    if ($this->options['type'] != 'textfield') {
+    if ($this->options['type'] != 'text') {
       if ($form_state->getValue($identifier) != 'All') {
         $this->validated_exposed_input = (array) $form_state->getValue($identifier);
       }

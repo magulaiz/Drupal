@@ -29,7 +29,7 @@ class FormElementInlineErrorTest extends KernelTestBase {
       '#array_parents' => [],
     ];
     $form['test'] = [
-      '#type' => 'textfield',
+      '#type' => 'text',
       '#title' => 'Test',
       '#parents' => ['test'],
       '#id' => 'edit-test',

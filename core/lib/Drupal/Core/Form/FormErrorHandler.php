@@ -60,7 +60,7 @@ class FormErrorHandler implements FormErrorHandlerInterface {
    *
    * @code
    * $form['street'] = [
-   *   '#type' => 'textfield',
+   *   '#type' => 'text',
    *   '#title' => $this->t('Street'),
    *   '#group' => 'address',
    *   '#required' => TRUE,

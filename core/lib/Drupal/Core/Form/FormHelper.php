@@ -143,7 +143,7 @@ class FormHelper {
    *   '#title' => t('Tick this box to type'),
    * ];
    * $form['settings'] = [
-   *   '#type' => 'textfield',
+   *   '#type' => 'text',
    *   '#states' => [
    *     // Only show this field when the 'toggle_me' checkbox is enabled.
    *     'visible' => [

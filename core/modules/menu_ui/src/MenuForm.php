@@ -104,7 +104,7 @@ class MenuForm extends EntityForm {
     }
 
     $form['label'] = [
-      '#type' => 'textfield',
+      '#type' => 'text',
       '#title' => $this->t('Title'),
       '#default_value' => $menu->label(),
       '#required' => TRUE,
@@ -125,7 +125,7 @@ class MenuForm extends EntityForm {
       '#disabled' => !$menu->isNew() || $menu->isLocked(),
     ];
     $form['description'] = [
-      '#type' => 'textfield',
+      '#type' => 'text',
       '#title' => $this->t('Administrative summary'),
       '#maxlength' => 512,
       '#default_value' => $menu->getDescription(),

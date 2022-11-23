@@ -51,7 +51,7 @@ class StyleTest extends StylePluginBase {
 
     $form['test_option'] = [
       '#title' => $this->t('Test option'),
-      '#type' => 'textfield',
+      '#type' => 'text',
       '#description' => $this->t('This is a textfield for test_option.'),
       '#default_value' => $this->options['test_option'],
     ];

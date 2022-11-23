@@ -542,14 +542,14 @@ abstract class FilterPluginBase extends HandlerBase implements CacheableDependen
       ];
     }
     $form['expose']['label'] = [
-      '#type' => 'textfield',
+      '#type' => 'text',
       '#default_value' => $this->options['expose']['label'],
       '#title' => $this->t('Label'),
       '#size' => 40,
     ];
 
     $form['expose']['description'] = [
-      '#type' => 'textfield',
+      '#type' => 'text',
       '#default_value' => $this->options['expose']['description'],
       '#title' => $this->t('Description'),
       '#size' => 60,
@@ -599,7 +599,7 @@ abstract class FilterPluginBase extends HandlerBase implements CacheableDependen
       }
 
       $form['expose']['operator_id'] = [
-        '#type' => 'textfield',
+        '#type' => 'text',
         '#default_value' => $this->options['expose']['operator_id'],
         '#title' => $this->t('Operator identifier'),
         '#size' => 40,
@@ -648,7 +648,7 @@ abstract class FilterPluginBase extends HandlerBase implements CacheableDependen
     ];
 
     $form['expose']['identifier'] = [
-      '#type' => 'textfield',
+      '#type' => 'text',
       '#default_value' => $this->options['expose']['identifier'],
       '#title' => $this->t('Filter identifier'),
       '#size' => 40,
@@ -1015,20 +1015,20 @@ abstract class FilterPluginBase extends HandlerBase implements CacheableDependen
       $identifier = 'group_' . $this->options['expose']['identifier'];
     }
     $form['group_info']['identifier'] = [
-      '#type' => 'textfield',
+      '#type' => 'text',
       '#default_value' => $identifier,
       '#title' => $this->t('Filter identifier'),
       '#size' => 40,
       '#description' => $this->t('This will appear in the URL after the ? to identify this filter. Cannot be blank. Only letters, digits and the dot ("."), hyphen ("-"), underscore ("_"), and tilde ("~") characters are allowed.'),
     ];
     $form['group_info']['label'] = [
-      '#type' => 'textfield',
+      '#type' => 'text',
       '#default_value' => $this->options['group_info']['label'],
       '#title' => $this->t('Label'),
       '#size' => 40,
     ];
     $form['group_info']['description'] = [
-      '#type' => 'textfield',
+      '#type' => 'text',
       '#default_value' => $this->options['group_info']['description'],
       '#title' => $this->t('Description'),
       '#size' => 60,
@@ -1069,14 +1069,14 @@ abstract class FilterPluginBase extends HandlerBase implements CacheableDependen
       $identifier = 'group_' . $this->options['expose']['identifier'];
     }
     $form['group_info']['identifier'] = [
-      '#type' => 'textfield',
+      '#type' => 'text',
       '#default_value' => $identifier,
       '#title' => $this->t('Filter identifier'),
       '#size' => 40,
       '#description' => $this->t('This will appear in the URL after the ? to identify this filter. Cannot be blank. Only letters, digits and the dot ("."), hyphen ("-"), underscore ("_"), and tilde ("~") characters are allowed.'),
     ];
     $form['group_info']['label'] = [
-      '#type' => 'textfield',
+      '#type' => 'text',
       '#default_value' => $this->options['group_info']['label'],
       '#title' => $this->t('Label'),
       '#size' => 40,
@@ -1181,7 +1181,7 @@ abstract class FilterPluginBase extends HandlerBase implements CacheableDependen
         'title' => [
           '#title' => $this->t('Label'),
           '#title_display' => 'invisible',
-          '#type' => 'textfield',
+          '#type' => 'text',
           '#size' => 20,
           '#default_value' => $default_title,
         ],

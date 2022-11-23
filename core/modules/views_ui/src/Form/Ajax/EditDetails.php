@@ -40,7 +40,7 @@ class EditDetails extends ViewsFormBase {
       '#attributes' => ['class' => ['scroll'], 'data-drupal-views-scroll' => TRUE],
     ];
     $form['details']['label'] = [
-      '#type' => 'textfield',
+      '#type' => 'text',
       '#title' => $this->t('Administrative name'),
       '#default_value' => $view->label(),
     ];
@@ -51,12 +51,12 @@ class EditDetails extends ViewsFormBase {
       '#default_value' => $view->get('langcode'),
     ];
     $form['details']['description'] = [
-      '#type' => 'textfield',
+      '#type' => 'text',
       '#title' => $this->t('Administrative description'),
       '#default_value' => $view->get('description'),
     ];
     $form['details']['tag'] = [
-      '#type' => 'textfield',
+      '#type' => 'text',
       '#title' => $this->t('Administrative tags'),
       '#description' => $this->t('Enter a comma-separated list of words to describe your view.'),
       '#default_value' => $view->get('tag'),

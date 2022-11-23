@@ -213,7 +213,7 @@ class KernelTestBaseTest extends KernelTestBase {
     $this->enableModules(['system']);
 
     $build = [
-      '#type' => 'textfield',
+      '#type' => 'text',
       '#name' => 'test',
     ];
     $expected = '/' . preg_quote('<input type="text" name="test"', '/') . '/';

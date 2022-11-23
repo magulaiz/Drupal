@@ -33,7 +33,7 @@ class FormTestObject extends ConfigFormBase {
     $form['element'] = ['#markup' => 'The FormTestObject::buildForm() method was used for this form.'];
 
     $form['bananas'] = [
-      '#type' => 'textfield',
+      '#type' => 'text',
       '#title' => $this->t('Bananas'),
     ];
     $form['strawberry'] = [

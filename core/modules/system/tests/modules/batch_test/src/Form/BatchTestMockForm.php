@@ -25,7 +25,7 @@ class BatchTestMockForm extends FormBase {
   public function buildForm(array $form, FormStateInterface $form_state) {
     $form['test_value'] = [
       '#title' => t('Test value'),
-      '#type' => 'textfield',
+      '#type' => 'text',
     ];
     $form['submit'] = [
       '#type' => 'submit',

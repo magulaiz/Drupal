@@ -24,7 +24,7 @@ class FormTestStoragePageCacheForm extends FormBase {
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
     $form['title'] = [
-      '#type' => 'textfield',
+      '#type' => 'text',
       '#title' => 'Title',
       '#required' => TRUE,
     ];
