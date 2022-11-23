@@ -305,7 +305,7 @@ class FieldDiscoveryTest extends MigrateDrupal7TestBase {
                 'date' => 'datetime_default',
                 'datetime' => 'datetime_default',
                 'datestamp' => 'datetime_timestamp',
-                'email_textfield' => 'email_default',
+                'email_text' => 'email_default',
                 'phone' => 'phone_default',
               ],
             ],

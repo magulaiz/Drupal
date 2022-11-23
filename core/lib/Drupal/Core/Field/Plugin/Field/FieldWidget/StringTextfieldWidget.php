@@ -7,10 +7,10 @@ use Drupal\Core\Field\WidgetBase;
 use Drupal\Core\Form\FormStateInterface;
 
 /**
- * Plugin implementation of the 'string_textfield' widget.
+ * Plugin implementation of the 'string_text' widget.
  *
  * @FieldWidget(
- *   id = "string_textfield",
+ *   id = "string_text",
  *   label = @Translation("Textfield"),
  *   field_types = {
  *     "string"
@@ -35,13 +35,13 @@ class StringTextfieldWidget extends WidgetBase {
   public function settingsForm(array $form, FormStateInterface $form_state) {
     $element['size'] = [
       '#type' => 'number',
-      '#title' => $this->t('Size of textfield'),
+      '#title' => $this->t('Size of text'),
       '#default_value' => $this->getSetting('size'),
       '#required' => TRUE,
       '#min' => 1,
     ];
     $element['placeholder'] = [
-      '#type' => 'textfield',
+      '#type' => 'text',
       '#title' => $this->t('Placeholder'),
       '#default_value' => $this->getSetting('placeholder'),
       '#description' => $this->t('Text that will be shown inside the field until a value is entered. This hint is usually a sample value or a brief description of the expected format.'),
@@ -69,7 +69,7 @@ class StringTextfieldWidget extends WidgetBase {
    */
   public function formElement(FieldItemListInterface $items, $delta, array $element, array &$form, FormStateInterface $form_state) {
     $element['value'] = $element + [
-      '#type' => 'textfield',
+      '#type' => 'text',
       '#default_value' => $items[$delta]->value ?? NULL,
       '#size' => $this->getSetting('size'),
       '#placeholder' => $this->getSetting('placeholder'),

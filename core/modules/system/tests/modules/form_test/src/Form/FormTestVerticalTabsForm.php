@@ -40,7 +40,7 @@ class FormTestVerticalTabsForm extends FormBase {
       ];
       $form['tab' . $i]['field' . $i] = [
         '#title' => t('Field @num', ['@num' => $i]),
-        '#type' => 'textfield',
+        '#type' => 'text',
 
       ];
     }

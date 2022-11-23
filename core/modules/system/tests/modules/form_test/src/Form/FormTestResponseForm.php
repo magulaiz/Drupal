@@ -25,11 +25,11 @@ class FormTestResponseForm extends FormBase {
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
     $form['content'] = [
-      '#type' => 'textfield',
+      '#type' => 'text',
       '#title' => 'Content',
     ];
     $form['status'] = [
-      '#type' => 'textfield',
+      '#type' => 'text',
       '#title' => 'Status',
       '#default_value' => 200,
     ];

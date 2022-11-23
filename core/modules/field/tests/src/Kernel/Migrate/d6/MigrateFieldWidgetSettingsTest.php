@@ -38,7 +38,7 @@ class MigrateFieldWidgetSettingsTest extends MigrateDrupal6TestBase {
     // Text field.
     $component = $form_display->getComponent('field_test');
     $expected = [
-      'type' => 'text_textfield',
+      'type' => 'text_text',
       'weight' => 1,
       'region' => 'content',
       'settings' => [

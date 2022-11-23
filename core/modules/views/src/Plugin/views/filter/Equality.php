@@ -31,11 +31,11 @@ class Equality extends FilterPluginBase {
   }
 
   /**
-   * Provide a simple textfield for equality.
+   * Provide a simple text for equality.
    */
   protected function valueForm(&$form, FormStateInterface $form_state) {
     $form['value'] = [
-      '#type' => 'textfield',
+      '#type' => 'text',
       '#title' => $this->t('Value'),
       '#size' => 30,
       '#default_value' => $this->value,

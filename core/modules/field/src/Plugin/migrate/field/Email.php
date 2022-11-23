@@ -27,7 +27,7 @@ class Email extends FieldPluginBase {
    */
   public function getFieldWidgetMap() {
     return [
-      'email_textfield' => 'email_default',
+      'email_text' => 'email_default',
     ];
   }
 

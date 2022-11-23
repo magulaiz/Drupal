@@ -297,7 +297,7 @@ abstract class FormTestBase extends UnitTestCase {
     $types['radios'] = [
       '#input' => TRUE,
     ];
-    $types['textfield'] = [
+    $types['text'] = [
       '#input' => TRUE,
     ];
     $types['submit'] = [

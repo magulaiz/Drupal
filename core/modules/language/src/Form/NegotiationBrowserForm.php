@@ -99,7 +99,7 @@ class NegotiationBrowserForm extends ConfigFormBase {
         'browser_langcode' => [
           '#title' => $this->t('Browser language code'),
           '#title_display' => 'invisible',
-          '#type' => 'textfield',
+          '#type' => 'text',
           '#default_value' => $browser_langcode,
           '#size' => 20,
           '#required' => TRUE,
@@ -131,7 +131,7 @@ class NegotiationBrowserForm extends ConfigFormBase {
       '#tree' => TRUE,
     ];
     $form['new_mapping']['browser_langcode'] = [
-      '#type' => 'textfield',
+      '#type' => 'text',
       '#title' => $this->t('Browser language code'),
       '#description' => $this->t('Use language codes as <a href=":w3ctags">defined by the W3C</a> for interoperability. <em>Examples: "en", "en-gb" and "zh-hant".</em>', [':w3ctags' => 'http://www.w3.org/International/articles/language-tags/']),
       '#size' => 20,

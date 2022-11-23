@@ -60,7 +60,7 @@ class FormErrorHandler implements FormErrorHandlerInterface {
    *
    * @code
    * $form['street'] = [
-   *   '#type' => 'textfield',
+   *   '#type' => 'text',
    *   '#title' => $this->t('Street'),
    *   '#group' => 'address',
    *   '#required' => TRUE,
@@ -74,7 +74,7 @@ class FormErrorHandler implements FormErrorHandlerInterface {
    * When submitting an empty street field, the generated error is available to
    * the different render elements like so:
    * @code
-   * // The street textfield element.
+   * // The street text element.
    * $element = [
    *   '#errors' => {Drupal\Core\StringTranslation\TranslatableMarkup},
    *   '#children_errors' => [],

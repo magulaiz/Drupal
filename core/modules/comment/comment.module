@@ -91,7 +91,7 @@ function comment_entity_extra_field_info() {
       'form' => [
         'author' => [
           'label' => t('Author'),
-          'description' => t('Author textfield'),
+          'description' => t('Author text'),
           'weight' => -2,
         ],
       ],

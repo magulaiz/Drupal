@@ -65,14 +65,14 @@ class FormErrorHandlerTest extends UnitTestCase {
       '#array_parents' => [],
     ];
     $this->testForm['test1'] = [
-      '#type' => 'textfield',
+      '#type' => 'text',
       '#title' => 'Test 1',
       '#parents' => ['test1'],
       '#array_parents' => ['test1'],
       '#id' => 'edit-test1',
     ];
     $this->testForm['test2'] = [
-      '#type' => 'textfield',
+      '#type' => 'text',
       '#title' => 'Test 2 & a half',
       '#parents' => ['test2'],
       '#array_parents' => ['test2'],
@@ -82,7 +82,7 @@ class FormErrorHandlerTest extends UnitTestCase {
       '#parents' => ['fieldset'],
       '#array_parents' => ['fieldset'],
       'test3' => [
-        '#type' => 'textfield',
+        '#type' => 'text',
         '#title' => 'Test 3',
         '#parents' => ['fieldset', 'test3'],
         '#array_parents' => ['fieldset', 'test3'],
@@ -90,7 +90,7 @@ class FormErrorHandlerTest extends UnitTestCase {
       ],
     ];
     $this->testForm['test4'] = [
-      '#type' => 'textfield',
+      '#type' => 'text',
       '#title' => 'Test 4',
       '#parents' => ['test4'],
       '#array_parents' => ['test4'],
@@ -98,7 +98,7 @@ class FormErrorHandlerTest extends UnitTestCase {
       '#error_no_message' => TRUE,
     ];
     $this->testForm['test5'] = [
-      '#type' => 'textfield',
+      '#type' => 'text',
       '#parents' => ['test5'],
       '#array_parents' => ['test5'],
       '#id' => 'edit-test5',

@@ -236,7 +236,7 @@ class BookAdminEditForm extends FormBase {
 
       $form[$id]['title'] = [
         '#prefix' => !empty($indentation) ? \Drupal::service('renderer')->render($indentation) : '',
-        '#type' => 'textfield',
+        '#type' => 'text',
         '#default_value' => $data['link']['title'],
         '#maxlength' => 255,
         '#size' => 40,

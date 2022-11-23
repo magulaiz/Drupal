@@ -36,7 +36,7 @@ use Drupal\Component\Utility\Html as HtmlUtility;
  * for ($i = 1; $i <= 4; $i++) {
  *   $form['contacts'][$i]['#attributes'] = array('class' => array('foo', 'baz'));
  *   $form['contacts'][$i]['name'] = array(
- *     '#type' => 'textfield',
+ *     '#type' => 'text',
  *     '#title' => $this->t('Name'),
  *     '#title_display' => 'invisible',
  *   );
@@ -299,14 +299,14 @@ class Table extends FormElement {
    *   $form['table'][$row]['#weight'] = $thing['weight'];
    *
    *   $form['table'][$row]['title'] = array(
-   *     '#type' => 'textfield',
+   *     '#type' => 'text',
    *     '#default_value' => $thing['title'],
    *   );
    *
    *   // Optionally, to add tableDrag support:
    *   $form['table'][$row]['#attributes']['class'][] = 'draggable';
    *   $form['table'][$row]['weight'] = array(
-   *     '#type' => 'textfield',
+   *     '#type' => 'text',
    *     '#title' => $this->t('Weight for @title', array('@title' => $thing['title'])),
    *     '#title_display' => 'invisible',
    *     '#size' => 4,

@@ -33,7 +33,7 @@ class FormTestGroupContainerForm extends FormBase {
       '#group' => 'container',
     ];
     $form['meta']['element'] = [
-      '#type' => 'textfield',
+      '#type' => 'text',
       '#title' => 'Nest in details element',
     ];
     return $form;

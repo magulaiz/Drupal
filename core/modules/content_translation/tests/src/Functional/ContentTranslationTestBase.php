@@ -196,7 +196,7 @@ abstract class ContentTranslationTestBase extends BrowserTestBase {
     $display_repository = \Drupal::service('entity_display.repository');
     $display_repository->getFormDisplay($this->entityTypeId, $this->bundle, 'default')
       ->setComponent($this->fieldName, [
-        'type' => 'string_textfield',
+        'type' => 'string_text',
         'weight' => 0,
       ])
       ->save();

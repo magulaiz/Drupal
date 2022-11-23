@@ -45,8 +45,8 @@ class RowTest extends RowPluginBase {
 
     $form['test_option'] = [
       '#title' => $this->t('Test option'),
-      '#type' => 'textfield',
-      '#description' => $this->t('This is a textfield for test_option.'),
+      '#type' => 'text',
+      '#description' => $this->t('This is a text for test_option.'),
       '#default_value' => $this->options['test_option'],
     ];
   }

@@ -39,7 +39,7 @@ class TestFieldWidget extends WidgetBase {
    */
   public function settingsForm(array $form, FormStateInterface $form_state) {
     $element['test_widget_setting'] = [
-      '#type' => 'textfield',
+      '#type' => 'text',
       '#title' => $this->t('Field test field widget setting'),
       '#description' => $this->t('A dummy form element to simulate field widget setting.'),
       '#default_value' => $this->getSetting('test_widget_setting'),
@@ -62,7 +62,7 @@ class TestFieldWidget extends WidgetBase {
    */
   public function formElement(FieldItemListInterface $items, $delta, array $element, array &$form, FormStateInterface $form_state) {
     $element += [
-      '#type' => 'textfield',
+      '#type' => 'text',
       '#default_value' => $items[$delta]->value ?? '',
     ];
     return ['value' => $element];

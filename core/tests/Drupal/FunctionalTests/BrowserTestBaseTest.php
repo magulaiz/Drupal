@@ -300,7 +300,7 @@ class BrowserTestBaseTest extends BrowserTestBase {
   }
 
   /**
-   * Tests field asserts using textfields.
+   * Tests field asserts using texts.
    */
   public function testFieldAssertsForTextfields() {
     $this->drupalGet('test-field-xpath');

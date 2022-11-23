@@ -129,7 +129,7 @@ abstract class LinkBase extends FieldPluginBase {
    */
   public function buildOptionsForm(&$form, FormStateInterface $form_state) {
     $form['text'] = [
-      '#type' => 'textfield',
+      '#type' => 'text',
       '#title' => $this->t('Text to display'),
       '#default_value' => $this->options['text'],
     ];

@@ -32,11 +32,11 @@ class MigrateUserProfileEntityFormDisplayTest extends MigrateDrupal6TestBase {
 
     // Test a text field.
     $component = $display->getComponent('profile_color');
-    $this->assertSame('text_textfield', $component['type']);
+    $this->assertSame('text_text', $component['type']);
 
     // Test a list field.
     $component = $display->getComponent('profile_bands');
-    $this->assertSame('text_textfield', $component['type']);
+    $this->assertSame('text_text', $component['type']);
 
     // Test a date field.
     $component = $display->getComponent('profile_birthdate');

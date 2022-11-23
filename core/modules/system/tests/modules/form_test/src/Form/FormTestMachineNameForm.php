@@ -25,7 +25,7 @@ class FormTestMachineNameForm extends FormBase {
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
     $form['machine_name_1_label'] = [
-      '#type' => 'textfield',
+      '#type' => 'text',
       '#title' => 'Machine name 1 label',
     ];
     $form['machine_name_1'] = [
@@ -37,7 +37,7 @@ class FormTestMachineNameForm extends FormBase {
       ],
     ];
     $form['machine_name_2_label'] = [
-      '#type' => 'textfield',
+      '#type' => 'text',
       '#title' => 'Machine name 2 label',
     ];
     $form['machine_name_2'] = [
@@ -49,7 +49,7 @@ class FormTestMachineNameForm extends FormBase {
       ],
     ];
     $form['machine_name_3_label'] = [
-      '#type' => 'textfield',
+      '#type' => 'text',
       '#title' => 'Machine name 3 label',
       '#default_value' => 'Yet another machine name',
     ];

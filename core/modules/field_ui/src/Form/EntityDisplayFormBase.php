@@ -316,7 +316,7 @@ abstract class EntityDisplayFormBase extends EntityForm {
         '#plain_text' => $label,
       ],
       'weight' => [
-        '#type' => 'textfield',
+        '#type' => 'text',
         '#title' => $this->t('Weight for @title', ['@title' => $label]),
         '#title_display' => 'invisible',
         '#default_value' => $display_options ? $display_options['weight'] : '0',
@@ -489,7 +489,7 @@ abstract class EntityDisplayFormBase extends EntityForm {
         '#markup' => $extra_field['label'],
       ],
       'weight' => [
-        '#type' => 'textfield',
+        '#type' => 'text',
         '#title' => $this->t('Weight for @title', ['@title' => $extra_field['label']]),
         '#title_display' => 'invisible',
         '#default_value' => $display_options ? $display_options['weight'] : 0,

@@ -203,7 +203,7 @@ abstract class SortPluginBase extends HandlerBase implements CacheableDependency
     $form['expose']['#flatten'] = TRUE;
 
     $form['expose']['label'] = [
-      '#type' => 'textfield',
+      '#type' => 'text',
       '#default_value' => $this->options['expose']['label'],
       '#title' => $this->t('Label'),
       '#required' => TRUE,
@@ -212,7 +212,7 @@ abstract class SortPluginBase extends HandlerBase implements CacheableDependency
     ];
 
     $form['expose']['field_identifier'] = [
-      '#type' => 'textfield',
+      '#type' => 'text',
       '#default_value' => $this->options['expose']['field_identifier'],
       '#title' => $this->t('Sort field identifier'),
       '#required' => TRUE,

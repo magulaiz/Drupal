@@ -22,7 +22,7 @@ class ViewsTestDataErrorForm implements FormInterface {
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
     $form['text'] = [
-      '#type' => 'textfield',
+      '#type' => 'text',
     ];
     $form['submit'] = [
       '#type' => 'submit',

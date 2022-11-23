@@ -23,7 +23,7 @@ class FormTestRequiredAttributeForm extends FormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
-    foreach (['textfield', 'textarea', 'password'] as $type) {
+    foreach (['text', 'textarea', 'password'] as $type) {
       $form[$type] = [
         '#type' => $type,
         '#required' => TRUE,

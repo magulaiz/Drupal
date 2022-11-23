@@ -29,7 +29,7 @@ use Drupal\Core\Render\Element;
  * );
  *
  * $form['author']['name'] = array(
- *   '#type' => 'textfield',
+ *   '#type' => 'text',
  *   '#title' => $this->t('Name'),
  * );
  *
@@ -40,7 +40,7 @@ use Drupal\Core\Render\Element;
  * );
  *
  * $form['publication']['publisher'] = array(
- *   '#type' => 'textfield',
+ *   '#type' => 'text',
  *   '#title' => $this->t('Publisher'),
  * );
  * @endcode

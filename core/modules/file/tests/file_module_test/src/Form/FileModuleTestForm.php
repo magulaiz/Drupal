@@ -52,8 +52,8 @@ class FileModuleTestForm extends FormBase {
       $form['nested']['file']['#default_value'] = $extended ? ['fids' => $default_fids] : $default_fids;
     }
 
-    $form['textfield'] = [
-      '#type' => 'textfield',
+    $form['text'] = [
+      '#type' => 'text',
       '#title' => $this->t('Type a value and ensure it stays'),
     ];
 

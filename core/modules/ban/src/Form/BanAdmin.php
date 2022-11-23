@@ -81,7 +81,7 @@ class BanAdmin extends FormBase {
 
     $form['ip'] = [
       '#title' => $this->t('IP address'),
-      '#type' => 'textfield',
+      '#type' => 'text',
       '#size' => 48,
       '#maxlength' => 40,
       '#default_value' => $default_ip,

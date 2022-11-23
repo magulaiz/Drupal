@@ -64,14 +64,14 @@ class FormErrorHandlerTest extends UnitTestCase {
       '#array_parents' => [],
     ];
     $form['test1'] = [
-      '#type' => 'textfield',
+      '#type' => 'text',
       '#title' => 'Test 1',
       '#parents' => ['test1'],
       '#array_parents' => ['test1'],
       '#id' => 'edit-test1',
     ];
     $form['test2'] = [
-      '#type' => 'textfield',
+      '#type' => 'text',
       '#title' => 'Test 2 & a half',
       '#parents' => ['test2'],
       '#array_parents' => ['test2'],
@@ -81,7 +81,7 @@ class FormErrorHandlerTest extends UnitTestCase {
       '#parents' => ['fieldset'],
       '#array_parents' => ['fieldset'],
       'test3' => [
-        '#type' => 'textfield',
+        '#type' => 'text',
         '#title' => 'Test 3',
         '#parents' => ['fieldset', 'test3'],
         '#array_parents' => ['fieldset', 'test3'],
@@ -89,7 +89,7 @@ class FormErrorHandlerTest extends UnitTestCase {
       ],
     ];
     $form['test5'] = [
-      '#type' => 'textfield',
+      '#type' => 'text',
       '#parents' => ['test5'],
       '#array_parents' => ['test5'],
       '#id' => 'edit-test5',
@@ -122,7 +122,7 @@ class FormErrorHandlerTest extends UnitTestCase {
       '#array_parents' => [],
     ];
     $form['test'] = [
-      '#type' => 'textfield',
+      '#type' => 'text',
       '#title' => 'Test',
       '#parents' => ['test'],
       '#array_parents' => ['test'],
@@ -136,7 +136,7 @@ class FormErrorHandlerTest extends UnitTestCase {
       '#id' => 'edit-details',
     ];
     $form['grouping_test'] = [
-      '#type' => 'textfield',
+      '#type' => 'text',
       '#title' => 'Grouping test',
       '#parents' => ['grouping_test'],
       '#array_parents' => ['grouping_test'],
@@ -144,7 +144,7 @@ class FormErrorHandlerTest extends UnitTestCase {
       '#group' => 'details',
     ];
     $form['grouping_test2'] = [
-      '#type' => 'textfield',
+      '#type' => 'text',
       '#title' => 'Grouping test 2',
       '#parents' => ['grouping_test2'],
       '#array_parents' => ['grouping_test2'],
@@ -159,7 +159,7 @@ class FormErrorHandlerTest extends UnitTestCase {
       '#id' => 'edit-details2',
     ];
     $form['grouping_test3'] = [
-      '#type' => 'textfield',
+      '#type' => 'text',
       '#title' => 'Grouping test 3',
       '#parents' => ['grouping_test3'],
       '#array_parents' => ['grouping_test3'],
@@ -172,14 +172,14 @@ class FormErrorHandlerTest extends UnitTestCase {
       '#array_parents' => ['fieldset'],
       '#id' => 'edit-fieldset',
       'nested_test' => [
-        '#type' => 'textfield',
+        '#type' => 'text',
         '#title' => 'Nested test',
         '#parents' => ['fieldset', 'nested_test'],
         '#array_parents' => ['fieldset', 'nested_test'],
         '#id' => 'edit-nested_test',
       ],
       'nested_test2' => [
-        '#type' => 'textfield',
+        '#type' => 'text',
         '#title' => 'Nested test2',
         '#parents' => ['fieldset', 'nested_test2'],
         '#array_parents' => ['fieldset', 'nested_test2'],

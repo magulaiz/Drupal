@@ -41,7 +41,7 @@ class DateRangeDefaultFormatter extends DateTimeDefaultFormatter {
     $form = parent::settingsForm($form, $form_state);
 
     $form['separator'] = [
-      '#type' => 'textfield',
+      '#type' => 'text',
       '#title' => $this->t('Date separator'),
       '#description' => $this->t('The string to separate the start and end dates'),
       '#default_value' => $this->getSetting('separator'),

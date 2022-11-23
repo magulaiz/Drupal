@@ -296,7 +296,7 @@ class MenuLinkContent extends EditorialContentEntityBase implements MenuLinkCont
         'weight' => -5,
       ])
       ->setDisplayOptions('form', [
-        'type' => 'string_textfield',
+        'type' => 'string_text',
         'weight' => -5,
       ])
       ->setDisplayConfigurable('form', TRUE);
@@ -313,7 +313,7 @@ class MenuLinkContent extends EditorialContentEntityBase implements MenuLinkCont
         'weight' => 0,
       ])
       ->setDisplayOptions('form', [
-        'type' => 'string_textfield',
+        'type' => 'string_text',
         'weight' => 0,
       ]);
 

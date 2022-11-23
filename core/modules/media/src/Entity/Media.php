@@ -434,7 +434,7 @@ class Media extends EditorialContentEntityBase implements MediaInterface {
       ->setDefaultValue('')
       ->setSetting('max_length', 255)
       ->setDisplayOptions('form', [
-        'type' => 'string_textfield',
+        'type' => 'string_text',
         'weight' => -5,
       ])
       ->setDisplayConfigurable('form', TRUE)

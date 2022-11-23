@@ -45,7 +45,7 @@ class FormTestVerticalTabsAccessForm extends FormBase {
     ];
     $form['tab2']['field2'] = [
       '#title' => t('Field 2'),
-      '#type' => 'textfield',
+      '#type' => 'text',
       '#default_value' => 'field2',
     ];
 
@@ -110,7 +110,7 @@ class FormTestVerticalTabsAccessForm extends FormBase {
       $form_state->setErrorByName('tab1][field1', t('This checkbox inside a vertical tab does not have its default value.'));
     }
     if ($values['field2'] != 'field2') {
-      $form_state->setErrorByName('tab2][field2', t('This textfield inside a vertical tab does not have its default value.'));
+      $form_state->setErrorByName('tab2][field2', t('This text inside a vertical tab does not have its default value.'));
     }
     if (empty($values['field3'])) {
       $form_state->setErrorByName('fieldset][field3', t('This checkbox inside a fieldset does not have its default value.'));

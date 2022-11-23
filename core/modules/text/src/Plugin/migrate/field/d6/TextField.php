@@ -28,7 +28,7 @@ class TextField extends FieldPluginBase {
    */
   public function getFieldWidgetMap() {
     return [
-      'text_textfield' => 'text_textfield',
+      'text_text' => 'text_text',
     ];
   }
 
@@ -108,7 +108,7 @@ class TextField extends FieldPluginBase {
     $widget_type = $row->getSourceProperty('widget_type');
     $settings = $row->getSourceProperty('global_settings');
 
-    if ($widget_type == 'text_textfield') {
+    if ($widget_type == 'text_text') {
       $field_type = $settings['text_processing'] ? 'text' : 'string';
       if (empty($settings['max_length']) || $settings['max_length'] > 255) {
         $field_type .= '_long';

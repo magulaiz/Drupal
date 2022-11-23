@@ -23,7 +23,7 @@ class FieldInstanceDefaults extends ProcessPluginBase {
 
     // In Drupal 7, the default value for email fields is stored in the key
     // 'email' while in Drupal 8 it is stored in the key 'value'.
-    if ($widget_type == 'email_textfield' && $default_value) {
+    if ($widget_type == 'email_text' && $default_value) {
       $default_value[0]['value'] = $default_value[0]['email'];
       unset($default_value[0]['email']);
     }

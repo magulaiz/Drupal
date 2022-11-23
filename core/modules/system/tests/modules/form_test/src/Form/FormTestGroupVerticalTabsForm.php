@@ -32,7 +32,7 @@ class FormTestGroupVerticalTabsForm extends FormBase {
       '#group' => 'vertical_tabs',
     ];
     $form['meta']['element'] = [
-      '#type' => 'textfield',
+      '#type' => 'text',
       '#title' => 'First nested element in details element',
     ];
     $form['meta_2'] = [
@@ -41,7 +41,7 @@ class FormTestGroupVerticalTabsForm extends FormBase {
       '#group' => 'vertical_tabs',
     ];
     $form['meta_2']['element_2'] = [
-      '#type' => 'textfield',
+      '#type' => 'text',
       '#title' => 'Second nested element in details element',
     ];
     return $form;

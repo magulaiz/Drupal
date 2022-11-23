@@ -31,7 +31,7 @@ class TestFileTransferWithSettingsForm extends Local {
   public function getSettingsForm() {
     $form = [];
     $form['update_test_username'] = [
-      '#type' => 'textfield',
+      '#type' => 'text',
       '#title' => t('Update Test Username'),
     ];
     return $form;

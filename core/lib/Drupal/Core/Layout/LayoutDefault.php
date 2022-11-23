@@ -105,7 +105,7 @@ class LayoutDefault extends PluginBase implements LayoutInterface, PluginFormInt
    */
   public function buildConfigurationForm(array $form, FormStateInterface $form_state) {
     $form['label'] = [
-      '#type' => 'textfield',
+      '#type' => 'text',
       '#title' => $this->t('Administrative label'),
       '#default_value' => $this->configuration['label'],
     ];

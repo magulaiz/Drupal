@@ -493,7 +493,7 @@ class OverviewTerms extends FormBase {
   /**
    * Form submission handler.
    *
-   * Rather than using a textfield or weight field, this form depends entirely
+   * Rather than using a text or weight field, this form depends entirely
    * upon the order of form elements on the page to determine new weights.
    *
    * Because there might be hundreds or thousands of taxonomy terms that need to

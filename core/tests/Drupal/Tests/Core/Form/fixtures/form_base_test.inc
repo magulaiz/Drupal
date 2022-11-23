@@ -13,7 +13,7 @@
  */
 function test_form_id() {
   $form['test'] = [
-    '#type' => 'textfield',
+    '#type' => 'text',
     '#title' => 'Test',
   ];
   $form['options'] = [

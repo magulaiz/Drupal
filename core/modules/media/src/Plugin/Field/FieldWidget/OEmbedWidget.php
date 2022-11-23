@@ -10,14 +10,14 @@ use Drupal\media\Entity\MediaType;
 use Drupal\media\Plugin\media\Source\OEmbedInterface;
 
 /**
- * Plugin implementation of the 'oembed_textfield' widget.
+ * Plugin implementation of the 'oembed_text' widget.
  *
  * @internal
  *   This is an internal part of the oEmbed system and should only be used by
  *   oEmbed-related code in Drupal core.
  *
  * @FieldWidget(
- *   id = "oembed_textfield",
+ *   id = "oembed_text",
  *   label = @Translation("oEmbed URL"),
  *   field_types = {
  *     "string",

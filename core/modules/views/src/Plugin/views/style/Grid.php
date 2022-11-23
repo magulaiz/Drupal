@@ -74,7 +74,7 @@ class Grid extends StylePluginBase {
     $form['col_class_custom'] = [
       '#title' => $this->t('Custom column class'),
       '#description' => $this->t('Additional classes to provide on each column. Separated by a space.'),
-      '#type' => 'textfield',
+      '#type' => 'text',
       '#default_value' => $this->options['col_class_custom'],
     ];
     if ($this->usesFields()) {
@@ -89,7 +89,7 @@ class Grid extends StylePluginBase {
     $form['row_class_custom'] = [
       '#title' => $this->t('Custom row class'),
       '#description' => $this->t('Additional classes to provide on each row. Separated by a space.'),
-      '#type' => 'textfield',
+      '#type' => 'text',
       '#default_value' => $this->options['row_class_custom'],
     ];
     if ($this->usesFields()) {

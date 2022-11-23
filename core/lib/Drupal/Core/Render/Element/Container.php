@@ -36,7 +36,7 @@ use Drupal\Core\Render\Element;
  * ];
  *
  * $form['accommodation']['diet'] = [
- *   '#type' => 'textfield',
+ *   '#type' => 'text',
  *   '#title' => $this->t('Dietary Restrictions'),
  * ];
  * @endcode

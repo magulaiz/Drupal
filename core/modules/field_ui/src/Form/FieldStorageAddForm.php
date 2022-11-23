@@ -179,7 +179,7 @@ class FieldStorageAddForm extends FormBase {
       ],
     ];
     $form['new_storage_wrapper']['label'] = [
-      '#type' => 'textfield',
+      '#type' => 'text',
       '#title' => $this->t('Label'),
       '#size' => 15,
     ];
@@ -205,7 +205,7 @@ class FieldStorageAddForm extends FormBase {
     // are displayed inline.
     if ($existing_field_storage_options) {
       $form['existing_storage_label'] = [
-        '#type' => 'textfield',
+        '#type' => 'text',
         '#title' => $this->t('Label'),
         '#size' => 15,
         '#states' => [

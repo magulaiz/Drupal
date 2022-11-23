@@ -59,7 +59,7 @@ abstract class LanguageFormBase extends EntityForm {
     }
     else {
       $form['langcode'] = [
-        '#type' => 'textfield',
+        '#type' => 'text',
         '#title' => $this->t('Language code'),
         '#maxlength' => 12,
         '#required' => TRUE,
@@ -69,7 +69,7 @@ abstract class LanguageFormBase extends EntityForm {
       ];
     }
     $form['label'] = [
-      '#type' => 'textfield',
+      '#type' => 'text',
       '#title' => $this->t('Language name'),
       '#maxlength' => 64,
       '#default_value' => $language->label(),

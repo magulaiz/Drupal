@@ -13,7 +13,7 @@ use Drupal\Core\Form\FormStateInterface;
  *   label = @Translation("Text (formatted)"),
  *   description = @Translation("This field stores a text with a text format."),
  *   category = @Translation("Text"),
- *   default_widget = "text_textfield",
+ *   default_widget = "text_text",
  *   default_formatter = "text_default"
  * )
  */

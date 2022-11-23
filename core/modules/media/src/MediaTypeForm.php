@@ -95,7 +95,7 @@ class MediaTypeForm extends EntityForm {
 
     $form['label'] = [
       '#title' => $this->t('Name'),
-      '#type' => 'textfield',
+      '#type' => 'text',
       '#default_value' => $this->entity->label(),
       '#description' => $this->t('The human-readable name of this media type.'),
       '#required' => TRUE,

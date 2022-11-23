@@ -22,7 +22,7 @@ use Drupal\entity_test\TypedData\ComputedString;
  *   label = @Translation("Single Internal Property (test)"),
  *   description = @Translation("A field containing one string, from which one internal string is computed."),
  *   category = @Translation("Test"),
- *   default_widget = "string_textfield",
+ *   default_widget = "string_text",
  *   default_formatter = "string"
  * )
  */

@@ -51,7 +51,7 @@ abstract class NormalizerTestBase extends KernelTestBase {
       'bundle' => 'entity_test_mulrev',
       'label' => 'Test text-field',
       'widget' => [
-        'type' => 'text_textfield',
+        'type' => 'text_text',
         'weight' => 0,
       ],
     ])->save();

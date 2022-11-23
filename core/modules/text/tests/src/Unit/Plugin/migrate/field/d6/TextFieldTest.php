@@ -51,7 +51,7 @@ class TextFieldTest extends UnitTestCase {
    */
   public function testProcessFilteredTextFieldValues($method = 'defineValueProcessPipeline') {
     $field_info = [
-      'widget_type' => 'text_textfield',
+      'widget_type' => 'text_text',
     ];
     $this->plugin->$method($this->migration, 'body', $field_info);
 
@@ -124,24 +124,24 @@ class TextFieldTest extends UnitTestCase {
    */
   public function getFieldTypeProvider() {
     return [
-      ['string_long', 'text_textfield', ['text_processing' => FALSE]],
-      ['string', 'text_textfield', [
+      ['string_long', 'text_text', ['text_processing' => FALSE]],
+      ['string', 'text_text', [
         'text_processing' => FALSE,
         'max_length' => 128,
       ],
       ],
-      ['string_long', 'text_textfield', [
+      ['string_long', 'text_text', [
         'text_processing' => FALSE,
         'max_length' => 4096,
       ],
       ],
-      ['text_long', 'text_textfield', ['text_processing' => TRUE]],
-      ['text', 'text_textfield', [
+      ['text_long', 'text_text', ['text_processing' => TRUE]],
+      ['text', 'text_text', [
         'text_processing' => TRUE,
         'max_length' => 128,
       ],
       ],
-      ['text_long', 'text_textfield', [
+      ['text_long', 'text_text', [
         'text_processing' => TRUE,
         'max_length' => 4096,
       ],

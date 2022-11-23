@@ -28,7 +28,7 @@ class ElementTest extends BrowserTestBase {
    */
   public function testPlaceHolderText() {
     $this->drupalGet('form-test/placeholder-text');
-    foreach (['textfield', 'tel', 'url', 'password', 'email', 'number', 'textarea'] as $type) {
+    foreach (['text', 'tel', 'url', 'password', 'email', 'number', 'textarea'] as $type) {
       $field = $this->assertSession()->fieldExists("edit-$type");
       $this->assertSame('placeholder-text', $field->getAttribute('placeholder'));
     }

@@ -48,7 +48,7 @@ class ArbitraryRebuildTest extends BrowserTestBase {
     \Drupal::service('entity_display.repository')
       ->getFormDisplay('user', 'user', 'register')
       ->setComponent('test_multiple', [
-        'type' => 'text_textfield',
+        'type' => 'text_text',
         'weight' => 0,
       ])
       ->save();

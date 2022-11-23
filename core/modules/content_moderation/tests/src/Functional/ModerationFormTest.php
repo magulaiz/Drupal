@@ -492,7 +492,7 @@ class ModerationFormTest extends ModerationStateTestBase {
   public function testAlternativeModerationStateWidget() {
     $entity_form_display = EntityFormDisplay::load('node.moderated_content.default');
     $entity_form_display->setComponent('moderation_state', [
-      'type' => 'string_textfield',
+      'type' => 'string_text',
       'region' => 'content',
     ]);
     $entity_form_display->save();

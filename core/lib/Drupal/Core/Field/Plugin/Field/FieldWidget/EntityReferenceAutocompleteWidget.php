@@ -54,13 +54,13 @@ class EntityReferenceAutocompleteWidget extends WidgetBase {
     ];
     $element['size'] = [
       '#type' => 'number',
-      '#title' => $this->t('Size of textfield'),
+      '#title' => $this->t('Size of text'),
       '#default_value' => $this->getSetting('size'),
       '#min' => 1,
       '#required' => TRUE,
     ];
     $element['placeholder'] = [
-      '#type' => 'textfield',
+      '#type' => 'text',
       '#title' => $this->t('Placeholder'),
       '#default_value' => $this->getSetting('placeholder'),
       '#description' => $this->t('Text that will be shown inside the field until a value is entered. This hint is usually a sample value or a brief description of the expected format.'),

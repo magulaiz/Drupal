@@ -137,18 +137,18 @@ class EntityFormDisplayTest extends KernelTestBase {
     ]);
 
     // Check that default options are correctly filled in.
-    $formatter_settings = \Drupal::service('plugin.manager.field.widget')->getDefaultSettings('text_textfield');
+    $formatter_settings = \Drupal::service('plugin.manager.field.widget')->getDefaultSettings('text_text');
     $expected = [
       'test_no_display' => NULL,
       'test_display_configurable' => [
-        'type' => 'text_textfield',
+        'type' => 'text_text',
         'settings' => $formatter_settings,
         'third_party_settings' => [],
         'weight' => 10,
         'region' => 'content',
       ],
       'test_display_non_configurable' => [
-        'type' => 'text_textfield',
+        'type' => 'text_text',
         'settings' => $formatter_settings,
         'third_party_settings' => [],
         'weight' => 11,
@@ -274,7 +274,7 @@ class EntityFormDisplayTest extends KernelTestBase {
     // the default widget for test fields.
     \Drupal::service('config.manager')->uninstall('module', 'field_plugins_test');
     $display = $display_repository->getFormDisplay('entity_test', 'entity_test');
-    $this->assertEquals('text_textfield', $display->getComponent($field_name)['type']);
+    $this->assertEquals('text_text', $display->getComponent($field_name)['type']);
 
     // Removing the text module should remove the field from the form display.
     \Drupal::service('config.manager')->uninstall('module', 'text');

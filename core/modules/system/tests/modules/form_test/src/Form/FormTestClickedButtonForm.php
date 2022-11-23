@@ -30,7 +30,7 @@ class FormTestClickedButtonForm extends FormBase {
     // first button were clicked.
     $form['text'] = [
       '#title' => 'Text',
-      '#type' => 'textfield',
+      '#type' => 'text',
     ];
 
     // Loop through each path argument, adding buttons based on the information

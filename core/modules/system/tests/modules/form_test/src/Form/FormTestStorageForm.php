@@ -55,13 +55,13 @@ class FormTestStorageForm extends FormBase {
     $this->messenger()->addStatus("Form constructions: " . $counter);
 
     $form['title'] = [
-      '#type' => 'textfield',
+      '#type' => 'text',
       '#title' => 'Title',
       '#default_value' => $storage['thing']['title'],
       '#required' => TRUE,
     ];
     $form['value'] = [
-      '#type' => 'textfield',
+      '#type' => 'text',
       '#title' => 'Value',
       '#default_value' => $storage['thing']['value'],
       '#element_validate' => ['::elementValidateValueCached'],

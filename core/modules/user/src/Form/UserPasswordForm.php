@@ -110,7 +110,7 @@ class UserPasswordForm extends FormBase {
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
     $form['name'] = [
-      '#type' => 'textfield',
+      '#type' => 'text',
       '#title' => $this->t('Username or email address'),
       '#size' => 60,
       '#maxlength' => max(UserInterface::USERNAME_MAX_LENGTH, Email::EMAIL_MAX_LENGTH),

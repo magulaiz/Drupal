@@ -34,7 +34,7 @@ class FormElementLabelTest extends KernelTestBase {
 
     // Add label attributes to a form element.
     $render_array = [
-      '#type' => 'textfield',
+      '#type' => 'text',
       '#label_attributes' => ['class' => ['meow']],
       '#title' => 'Kitten sounds',
     ];

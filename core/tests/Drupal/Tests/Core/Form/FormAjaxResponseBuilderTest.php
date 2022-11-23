@@ -90,7 +90,7 @@ class FormAjaxResponseBuilderTest extends UnitTestCase {
     $request = new Request();
     $form = [
       'test' => [
-        '#type' => 'textfield',
+        '#type' => 'text',
       ],
     ];
     $form_state = new FormState();
@@ -146,7 +146,7 @@ class FormAjaxResponseBuilderTest extends UnitTestCase {
     $request = new Request();
     $form = [
       'test' => [
-        '#type' => 'textfield',
+        '#type' => 'text',
       ],
     ];
     $form_state = new FormState();
@@ -181,7 +181,7 @@ class FormAjaxResponseBuilderTest extends UnitTestCase {
       '#build_id' => 'the_build_id',
       '#build_id_old' => 'a_new_build_id',
       'test' => [
-        '#type' => 'textfield',
+        '#type' => 'text',
       ],
     ];
     $form_state = new FormState();

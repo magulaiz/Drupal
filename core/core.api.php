@@ -2266,7 +2266,7 @@ function hook_config_import_steps_alter(&$sync_steps, \Drupal\Core\Config\Config
 function hook_config_schema_info_alter(&$definitions) {
   // Enhance the text and date type definitions with classes to generate proper
   // form elements in ConfigTranslationFormBase. Other translatable types will
-  // appear as a one line textfield.
+  // appear as a one line text.
   $definitions['text']['form_element_class'] = '\Drupal\config_translation\FormElement\Textarea';
   $definitions['date_format']['form_element_class'] = '\Drupal\config_translation\FormElement\DateFormat';
 }

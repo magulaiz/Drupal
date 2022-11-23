@@ -24,7 +24,7 @@ class FavoriteAnimalTestForm extends FormBase {
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
     $form['favorite_animal'] = [
-      '#type' => 'textfield',
+      '#type' => 'text',
       '#title' => $this->t('Your favorite animal.'),
     ];
 

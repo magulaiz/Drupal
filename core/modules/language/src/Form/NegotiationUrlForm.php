@@ -114,14 +114,14 @@ class NegotiationUrlForm extends ConfigFormBase {
     foreach ($languages as $langcode => $language) {
       $t_args = ['%language' => $language->getName(), '%langcode' => $language->getId()];
       $form['prefix'][$langcode] = [
-        '#type' => 'textfield',
+        '#type' => 'text',
         '#title' => $language->isDefault() ? $this->t('%language (%langcode) path prefix (Default language)', $t_args) : $this->t('%language (%langcode) path prefix', $t_args),
         '#maxlength' => 64,
         '#default_value' => $prefixes[$langcode] ?? '',
         '#field_prefix' => $base_url . '/',
       ];
       $form['domain'][$langcode] = [
-        '#type' => 'textfield',
+        '#type' => 'text',
         '#title' => $this->t('%language (%langcode) domain', ['%language' => $language->getName(), '%langcode' => $language->getId()]),
         '#maxlength' => 128,
         '#default_value' => $domains[$langcode] ?? '',

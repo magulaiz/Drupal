@@ -131,7 +131,7 @@ class Shortcut extends ContentEntityBase implements ShortcutInterface {
       ->setTranslatable(TRUE)
       ->setSetting('max_length', 255)
       ->setDisplayOptions('form', [
-        'type' => 'string_textfield',
+        'type' => 'string_text',
         'weight' => -10,
         'settings' => [
           'size' => 40,

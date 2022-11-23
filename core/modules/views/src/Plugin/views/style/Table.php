@@ -221,7 +221,7 @@ class Table extends StylePluginBase implements CacheableDependencyInterface {
     ];
 
     $form['caption'] = [
-      '#type' => 'textfield',
+      '#type' => 'text',
       '#title' => $this->t('Caption for the table'),
       '#description' => $this->t('A title semantically associated with your table for increased accessibility.'),
       '#default_value' => $this->options['caption'],
@@ -235,7 +235,7 @@ class Table extends StylePluginBase implements CacheableDependencyInterface {
 
     $form['summary'] = [
       '#title' => $this->t('Summary title'),
-      '#type' => 'textfield',
+      '#type' => 'text',
       '#default_value' => $this->options['summary'],
       '#fieldset' => 'accessibility_details',
     ];
@@ -346,7 +346,7 @@ class Table extends StylePluginBase implements CacheableDependencyInterface {
       $form['info'][$field]['separator'] = [
         '#title' => $this->t('Separator for @field', ['@field' => $field]),
         '#title_display' => 'invisible',
-        '#type' => 'textfield',
+        '#type' => 'text',
         '#size' => 10,
         '#default_value' => $this->options['info'][$field]['separator'] ?? '',
         '#states' => [

@@ -30,7 +30,7 @@ class PathWidget extends WidgetBase {
       '#element_validate' => [[static::class, 'validateFormElement']],
     ];
     $element['alias'] = [
-      '#type' => 'textfield',
+      '#type' => 'text',
       '#title' => $element['#title'],
       '#default_value' => $items[$delta]->alias,
       '#required' => $element['#required'],

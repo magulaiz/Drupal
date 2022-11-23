@@ -227,7 +227,7 @@ class ThemeSettingsForm extends ConfigFormBase {
         ],
       ];
       $form['logo']['settings']['logo_path'] = [
-        '#type' => 'textfield',
+        '#type' => 'text',
         '#title' => $this->t('Path to custom logo'),
         '#default_value' => theme_get_setting('logo.path', $theme),
       ];
@@ -270,7 +270,7 @@ class ThemeSettingsForm extends ConfigFormBase {
         ],
       ];
       $form['favicon']['settings']['favicon_path'] = [
-        '#type' => 'textfield',
+        '#type' => 'text',
         '#title' => $this->t('Path to custom icon'),
         '#default_value' => theme_get_setting('favicon.path', $theme),
       ];

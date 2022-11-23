@@ -105,7 +105,7 @@ class UserLoginForm extends FormBase {
 
     // Display login form:
     $form['name'] = [
-      '#type' => 'textfield',
+      '#type' => 'text',
       '#title' => $this->t('Username'),
       '#size' => 60,
       '#maxlength' => UserInterface::USERNAME_MAX_LENGTH,

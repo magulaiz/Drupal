@@ -58,7 +58,7 @@ class WorkflowEditForm extends EntityForm {
     $form['#title'] = $this->t('Edit %label workflow', ['%label' => $workflow->label()]);
 
     $form['label'] = [
-      '#type' => 'textfield',
+      '#type' => 'text',
       '#title' => $this->t('Label'),
       '#maxlength' => 255,
       '#default_value' => $workflow->label(),

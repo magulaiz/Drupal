@@ -82,7 +82,7 @@ class FieldItemSerializationTest extends NormalizerTestBase {
         ],
       ],
       'widget' => [
-        'type' => 'text_textfield',
+        'type' => 'text_text',
         'weight' => 0,
       ],
     ])->save();

@@ -76,7 +76,7 @@ class TestItem extends FieldItemBase {
    */
   public function storageSettingsForm(array &$form, FormStateInterface $form_state, $has_data) {
     $form['test_field_storage_setting'] = [
-      '#type' => 'textfield',
+      '#type' => 'text',
       '#title' => $this->t('Field test field storage setting'),
       '#default_value' => $this->getSetting('test_field_storage_setting'),
       '#required' => FALSE,
@@ -91,7 +91,7 @@ class TestItem extends FieldItemBase {
    */
   public function fieldSettingsForm(array $form, FormStateInterface $form_state) {
     $form['test_field_setting'] = [
-      '#type' => 'textfield',
+      '#type' => 'text',
       '#title' => $this->t('Field test field setting'),
       '#default_value' => $this->getSetting('test_field_setting'),
       '#required' => FALSE,

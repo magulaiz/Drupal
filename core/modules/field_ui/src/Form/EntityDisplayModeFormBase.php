@@ -30,7 +30,7 @@ abstract class EntityDisplayModeFormBase extends EntityForm {
    */
   public function form(array $form, FormStateInterface $form_state) {
     $form['label'] = [
-      '#type' => 'textfield',
+      '#type' => 'text',
       '#title' => $this->t('Name'),
       '#maxlength' => 100,
       '#default_value' => $this->entity->label(),

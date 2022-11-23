@@ -25,7 +25,7 @@ class SessionTestForm extends FormBase {
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
     $form['input'] = [
-      '#type' => 'textfield',
+      '#type' => 'text',
       '#title' => 'Input',
       '#required' => TRUE,
     ];

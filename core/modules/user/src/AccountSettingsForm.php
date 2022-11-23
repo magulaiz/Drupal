@@ -94,7 +94,7 @@ class AccountSettingsForm extends ConfigFormBase {
       '#open' => TRUE,
     ];
     $form['anonymous_settings']['anonymous'] = [
-      '#type' => 'textfield',
+      '#type' => 'text',
       '#title' => $this->t('Name'),
       '#default_value' => $config->get('anonymous'),
       '#description' => $this->t('The name used to indicate anonymous users.'),
@@ -181,7 +181,7 @@ class AccountSettingsForm extends ConfigFormBase {
       '#group' => 'email',
     ];
     $form['email_admin_created']['user_mail_register_admin_created_subject'] = [
-      '#type' => 'textfield',
+      '#type' => 'text',
       '#title' => $this->t('Subject'),
       '#default_value' => $mail_config->get('register_admin_created.subject'),
       '#maxlength' => 180,
@@ -201,7 +201,7 @@ class AccountSettingsForm extends ConfigFormBase {
       '#group' => 'email',
     ];
     $form['email_pending_approval']['user_mail_register_pending_approval_subject'] = [
-      '#type' => 'textfield',
+      '#type' => 'text',
       '#title' => $this->t('Subject'),
       '#default_value' => $mail_config->get('register_pending_approval.subject'),
       '#maxlength' => 180,
@@ -221,7 +221,7 @@ class AccountSettingsForm extends ConfigFormBase {
       '#group' => 'email',
     ];
     $form['email_pending_approval_admin']['register_pending_approval_admin_subject'] = [
-      '#type' => 'textfield',
+      '#type' => 'text',
       '#title' => $this->t('Subject'),
       '#default_value' => $mail_config->get('register_pending_approval_admin.subject'),
       '#maxlength' => 180,
@@ -241,7 +241,7 @@ class AccountSettingsForm extends ConfigFormBase {
       '#group' => 'email',
     ];
     $form['email_no_approval_required']['user_mail_register_no_approval_required_subject'] = [
-      '#type' => 'textfield',
+      '#type' => 'text',
       '#title' => $this->t('Subject'),
       '#default_value' => $mail_config->get('register_no_approval_required.subject'),
       '#maxlength' => 180,
@@ -261,7 +261,7 @@ class AccountSettingsForm extends ConfigFormBase {
       '#weight' => 10,
     ];
     $form['email_password_reset']['user_mail_password_reset_subject'] = [
-      '#type' => 'textfield',
+      '#type' => 'text',
       '#title' => $this->t('Subject'),
       '#default_value' => $mail_config->get('password_reset.subject'),
       '#maxlength' => 180,
@@ -294,7 +294,7 @@ class AccountSettingsForm extends ConfigFormBase {
       ],
     ];
     $form['email_activated']['settings']['user_mail_status_activated_subject'] = [
-      '#type' => 'textfield',
+      '#type' => 'text',
       '#title' => $this->t('Subject'),
       '#default_value' => $mail_config->get('status_activated.subject'),
       '#maxlength' => 180,
@@ -327,7 +327,7 @@ class AccountSettingsForm extends ConfigFormBase {
       ],
     ];
     $form['email_blocked']['settings']['user_mail_status_blocked_subject'] = [
-      '#type' => 'textfield',
+      '#type' => 'text',
       '#title' => $this->t('Subject'),
       '#default_value' => $mail_config->get('status_blocked.subject'),
       '#maxlength' => 180,
@@ -346,7 +346,7 @@ class AccountSettingsForm extends ConfigFormBase {
       '#group' => 'email',
     ];
     $form['email_cancel_confirm']['user_mail_cancel_confirm_subject'] = [
-      '#type' => 'textfield',
+      '#type' => 'text',
       '#title' => $this->t('Subject'),
       '#default_value' => $mail_config->get('cancel_confirm.subject'),
       '#maxlength' => 180,
@@ -379,7 +379,7 @@ class AccountSettingsForm extends ConfigFormBase {
       ],
     ];
     $form['email_canceled']['settings']['user_mail_status_canceled_subject'] = [
-      '#type' => 'textfield',
+      '#type' => 'text',
       '#title' => $this->t('Subject'),
       '#default_value' => $mail_config->get('status_canceled.subject'),
       '#maxlength' => 180,

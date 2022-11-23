@@ -2659,7 +2659,7 @@ $connection->insert('field_config_instance')
   'field_name' => 'title_field',
   'entity_type' => 'node',
   'bundle' => 'test_content_type',
-  'data' => 'a:6:{s:5:"label";s:5:"Title";s:11:"description";s:0:"";s:8:"required";b:1;s:8:"settings";a:4:{s:15:"text_processing";i:0;s:10:"hide_label";a:2:{s:4:"page";b:0;s:6:"entity";b:0;}s:18:"user_register_form";b:0;s:23:"entity_translation_sync";b:0;}s:6:"widget";a:4:{s:6:"weight";i:-5;s:4:"type";s:14:"text_textfield";s:8:"settings";a:1:{s:4:"size";i:60;}s:6:"module";s:4:"text";}s:7:"display";a:1:{s:7:"default";a:4:{s:4:"type";s:6:"hidden";s:5:"label";s:5:"above";s:8:"settings";a:0:{}s:6:"weight";i:20;}}}',
+  'data' => 'a:6:{s:5:"label";s:5:"Title";s:11:"description";s:0:"";s:8:"required";b:1;s:8:"settings";a:4:{s:15:"text_processing";i:0;s:10:"hide_label";a:2:{s:4:"page";b:0;s:6:"entity";b:0;}s:18:"user_register_form";b:0;s:23:"entity_translation_sync";b:0;}s:6:"widget";a:4:{s:6:"weight";i:-5;s:4:"type";s:14:"text_text";s:8:"settings";a:1:{s:4:"size";i:60;}s:6:"module";s:4:"text";}s:7:"display";a:1:{s:7:"default";a:4:{s:4:"type";s:6:"hidden";s:5:"label";s:5:"above";s:8:"settings";a:0:{}s:6:"weight";i:20;}}}',
   'deleted' => '0',
 ))
 ->values(array(
@@ -2668,7 +2668,7 @@ $connection->insert('field_config_instance')
   'field_name' => 'subject_field',
   'entity_type' => 'comment',
   'bundle' => 'comment_node_article',
-  'data' => 'a:6:{s:5:"label";s:7:"Subject";s:11:"description";s:0:"";s:8:"required";b:1;s:8:"settings";a:4:{s:15:"text_processing";i:0;s:10:"hide_label";a:2:{s:4:"page";b:0;s:6:"entity";b:0;}s:18:"user_register_form";b:0;s:23:"entity_translation_sync";b:0;}s:6:"widget";a:4:{s:6:"weight";i:-5;s:4:"type";s:14:"text_textfield";s:8:"settings";a:1:{s:4:"size";i:60;}s:6:"module";s:4:"text";}s:7:"display";a:1:{s:7:"default";a:4:{s:4:"type";s:6:"hidden";s:5:"label";s:5:"above";s:8:"settings";a:0:{}s:6:"weight";i:1;}}}',
+  'data' => 'a:6:{s:5:"label";s:7:"Subject";s:11:"description";s:0:"";s:8:"required";b:1;s:8:"settings";a:4:{s:15:"text_processing";i:0;s:10:"hide_label";a:2:{s:4:"page";b:0;s:6:"entity";b:0;}s:18:"user_register_form";b:0;s:23:"entity_translation_sync";b:0;}s:6:"widget";a:4:{s:6:"weight";i:-5;s:4:"type";s:14:"text_text";s:8:"settings";a:1:{s:4:"size";i:60;}s:6:"module";s:4:"text";}s:7:"display";a:1:{s:7:"default";a:4:{s:4:"type";s:6:"hidden";s:5:"label";s:5:"above";s:8:"settings";a:0:{}s:6:"weight";i:1;}}}',
   'deleted' => '0',
 ))
 ->values(array(
@@ -2677,7 +2677,7 @@ $connection->insert('field_config_instance')
   'field_name' => 'subject_field',
   'entity_type' => 'comment',
   'bundle' => 'comment_node_test_content_type',
-  'data' => 'a:6:{s:5:"label";s:7:"Subject";s:11:"description";s:0:"";s:8:"required";b:1;s:8:"settings";a:4:{s:15:"text_processing";i:0;s:10:"hide_label";a:2:{s:4:"page";b:0;s:6:"entity";b:0;}s:18:"user_register_form";b:0;s:23:"entity_translation_sync";b:0;}s:6:"widget";a:4:{s:6:"weight";i:-5;s:4:"type";s:14:"text_textfield";s:8:"settings";a:1:{s:4:"size";i:60;}s:6:"module";s:4:"text";}s:7:"display";a:1:{s:7:"default";a:4:{s:4:"type";s:6:"hidden";s:5:"label";s:5:"above";s:8:"settings";a:0:{}s:6:"weight";i:1;}}}',
+  'data' => 'a:6:{s:5:"label";s:7:"Subject";s:11:"description";s:0:"";s:8:"required";b:1;s:8:"settings";a:4:{s:15:"text_processing";i:0;s:10:"hide_label";a:2:{s:4:"page";b:0;s:6:"entity";b:0;}s:18:"user_register_form";b:0;s:23:"entity_translation_sync";b:0;}s:6:"widget";a:4:{s:6:"weight";i:-5;s:4:"type";s:14:"text_text";s:8:"settings";a:1:{s:4:"size";i:60;}s:6:"module";s:4:"text";}s:7:"display";a:1:{s:7:"default";a:4:{s:4:"type";s:6:"hidden";s:5:"label";s:5:"above";s:8:"settings";a:0:{}s:6:"weight";i:1;}}}',
   'deleted' => '0',
 ))
 ->values(array(
@@ -28146,7 +28146,7 @@ $connection->insert('variable')
 ))
 ->values(array(
   'name' => 'file_description_type',
-  'value' => 's:9:"textfield";',
+  'value' => 's:9:"text";',
 ))
 ->values(array(
   'name' => 'file_directory_path',

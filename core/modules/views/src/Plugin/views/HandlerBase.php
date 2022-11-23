@@ -279,7 +279,7 @@ abstract class HandlerBase extends PluginBase implements ViewsHandlerInterface {
       '#weight' => 150,
     ];
     $form['admin_label']['admin_label'] = [
-      '#type' => 'textfield',
+      '#type' => 'text',
       '#title' => $this->t('Administrative title'),
       '#description' => $this->t('This title will be displayed on the views edit page instead of the default one. This might be useful if you have the same item twice.'),
       '#default_value' => $this->options['admin_label'],

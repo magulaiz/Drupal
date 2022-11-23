@@ -35,7 +35,7 @@ use Drupal\Component\Annotation\Plugin;
  *   is_xss_safe = FALSE,
  *   supported_element_types = {
  *     "textarea",
- *     "textfield",
+ *     "text",
  *   }
  * )
  * @endcode

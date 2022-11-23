@@ -26,7 +26,7 @@ class TriggeringElementTest extends WebDriverTestBase {
    *
    * Test the determination of the triggering element when no button
    * information is included in the POST data, as is sometimes the case when
-   * the ENTER key is pressed in a textfield in Internet Explorer.
+   * the ENTER key is pressed in a text in Internet Explorer.
    */
   public function testNoButtonInfoInPost() {
     $path = '/form-test/clicked-button';
