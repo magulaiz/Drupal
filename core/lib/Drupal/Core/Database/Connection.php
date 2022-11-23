@@ -16,10 +16,10 @@ use Drupal\Core\Pager\PagerManagerInterface;
 /**
  * Base Database API class.
  *
- * This class provides a Drupal-specific extension of the PDO database
- * abstraction class in PHP. Every database driver implementation must provide a
- * concrete implementation of it to support special handling required by that
- * database.
+ * This class provides a Drupal extension for a client database connection.
+ * Every database driver implementation must provide a concrete implementation
+ * of it to support special handling required by that database.
+ * The most common database abstraction layer in PHP is PDO.
  *
  * @see http://php.net/manual/book.pdo.php
  */
@@ -87,9 +87,9 @@ abstract class Connection {
   protected $transactionalDDLSupport = FALSE;
 
   /**
-   * The actual PDO connection.
+   * The actual client connection.
    *
-   * @var \PDO
+   * @var object
    */
   protected $connection;
 
@@ -219,15 +219,15 @@ abstract class Connection {
   /**
    * Constructs a Connection object.
    *
-   * @param \PDO $connection
-   *   An object of the PDO class representing a database connection.
+   * @param object $connection
+   *   An object of the client class representing a database connection.
    * @param array $connection_options
    *   An array of options for the connection. May include the following:
    *   - prefix
    *   - namespace
    *   - Other driver-specific options.
    */
-  public function __construct(\PDO $connection, array $connection_options) {
+  public function __construct(object $connection, array $connection_options) {
     assert(count($this->identifierQuotes) === 2 && Inspector::assertAllStrings($this->identifierQuotes), '\Drupal\Core\Database\Connection::$identifierQuotes must contain 2 string values');
 
     // Manage the table prefix.
@@ -246,18 +246,18 @@ abstract class Connection {
   }
 
   /**
-   * Opens a PDO connection.
+   * Opens a client connection.
    *
    * @param array $connection_options
    *   The database connection settings array.
    *
-   * @return \PDO
-   *   A \PDO object.
+   * @return object
+   *   A client connection object.
    */
-  public static function open(array &$connection_options = []) {}
+  abstract public static function open(array &$connection_options = []);
 
   /**
-   * Ensures that the PDO connection can be garbage collected.
+   * Ensures that the client connection can be garbage collected.
    */
   public function __destruct() {
     // Ensure that the circular reference caused by Connection::__construct()
@@ -272,8 +272,8 @@ abstract class Connection {
    * A given query can be customized with a number of option flags in an
    * associative array:
    * - fetch: This element controls how rows from a result set will be
-   *   returned. Legal values include PDO::FETCH_ASSOC, PDO::FETCH_BOTH,
-   *   PDO::FETCH_OBJ, PDO::FETCH_NUM, or a string representing the name of a
+   *   returned. Legal values include \PDO::FETCH_ASSOC, \PDO::FETCH_BOTH,
+   *   \PDO::FETCH_OBJ, \PDO::FETCH_NUM, or a string representing the name of a
    *   class. If a string is specified, each record will be fetched into a new
    *   object of that class. The behavior of all other values is defined by PDO.
    *   See http://php.net/manual/pdostatement.fetch.php
@@ -307,11 +307,11 @@ abstract class Connection {
    *   database type. In rare cases, such as creating an SQL function, []
    *   characters might be needed and can be allowed by changing this option to
    *   TRUE.
-   * - pdo: By default, queries will execute with the PDO options set on the
-   *   connection. In particular cases, it could be necessary to override the
-   *   PDO driver options on the statement level. In such case, pass the
-   *   required setting as an array here, and they will be passed to the
-   *   prepared statement. See https://www.php.net/manual/en/pdo.prepare.php.
+   * - pdo: By default, queries will execute with the client connection options
+   *   set on the connection. In particular cases, it could be necessary to
+   *   override the driver options on the statement level. In such case, pass
+   *   the required setting as an array here, and they will be passed to the
+   *   prepared statement.
    *
    * @return array
    *   An array of default query options.
@@ -361,6 +361,15 @@ abstract class Connection {
    * @internal
    */
   public function attachDatabase(string $database): void {
+  }
+
+  /**
+   * Returns the prefix of the tables.
+   *
+   * @return string $prefix
+   */
+  public function getPrefix(): string {
+    return $this->prefix;
   }
 
   /**
@@ -428,8 +437,14 @@ abstract class Connection {
    *
    * @param string $table
    *   (optional) The table to find the prefix for.
+   *
+   * @deprecated in drupal:10.1.0 and is removed from drupal:11.0.0.
+   * Instead, you should just use Connection::getPrefix().
+   *
+   * @see https://www.drupal.org/node/3260849
    */
   public function tablePrefix($table = 'default') {
+    @trigger_error(__METHOD__ . '() is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Instead, you should just use Connection::getPrefix(). See https://www.drupal.org/node/3260849', E_USER_DEPRECATED);
     return $this->prefix;
   }
 
@@ -460,7 +475,7 @@ abstract class Connection {
    */
   public function getFullQualifiedTableName($table) {
     $options = $this->getConnectionOptions();
-    $prefix = $this->tablePrefix($table);
+    $prefix = $this->getPrefix();
     return $options['database'] . '.' . $prefix . $table;
   }
 
@@ -483,7 +498,7 @@ abstract class Connection {
    *   object. Defaults to FALSE.
    *
    * @return \Drupal\Core\Database\StatementInterface
-   *   A PDO prepared statement ready for its execute() method.
+   *   A prepared statement ready for its execute() method.
    *
    * @throws \InvalidArgumentException
    *   If multiple statements are included in the string, and delimiters are
@@ -712,8 +727,7 @@ abstract class Connection {
    * Executes a query string against the database.
    *
    * This method provides a central handler for the actual execution of every
-   * query. All queries executed by Drupal are executed as PDO prepared
-   * statements.
+   * query. All queries executed by Drupal are executed as prepared statements.
    *
    * @param string $query
    *   The query to execute. This is a string containing an SQL query with
@@ -766,6 +780,9 @@ abstract class Connection {
       // Depending on the type of query we may need to return a different value.
       // See DatabaseConnection::defaultOptions() for a description of each
       // value.
+      // @todo the block below is deprecated and as of Drupal 11 will be
+      //   removed, query() will only return a StatementInterface object.
+      // @see https://www.drupal.org/project/drupal/issues/3256524
       switch ($options['return'] ?? Database::RETURN_STATEMENT) {
         case Database::RETURN_STATEMENT:
           return $stmt;
@@ -779,7 +796,7 @@ abstract class Connection {
 
         case Database::RETURN_INSERT_ID:
           $sequence_name = $options['sequence_name'] ?? NULL;
-          return $this->connection->lastInsertId($sequence_name);
+          return $this->lastInsertId($sequence_name);
 
         case Database::RETURN_NULL:
           return NULL;
@@ -1008,10 +1025,6 @@ abstract class Connection {
    *
    * @throws \Drupal\Core\Database\DatabaseExceptionWrapper
    *   In case of failure.
-   *
-   * @see \PDO::lastInsertId
-   *
-   * @internal
    */
   public function lastInsertId(?string $name = NULL): string {
     if (($last_insert_id = $this->connection->lastInsertId($name)) === FALSE) {
@@ -1535,6 +1548,11 @@ abstract class Connection {
 
   /**
    * Returns the version of the database server.
+   *
+   * Assumes the client connection is \PDO. Non-PDO based drivers need to
+   * override this method.
+   *
+   * @return string
    */
   public function version() {
     return $this->connection->getAttribute(\PDO::ATTR_SERVER_VERSION);
@@ -1542,6 +1560,11 @@ abstract class Connection {
 
   /**
    * Returns the version of the database client.
+   *
+   * Assumes the client connection is \PDO. Non-PDO based drivers need to
+   * override this method.
+   *
+   * @return string
    */
   public function clientVersion() {
     return $this->connection->getAttribute(\PDO::ATTR_CLIENT_VERSION);
@@ -1561,7 +1584,9 @@ abstract class Connection {
   }
 
   /**
-   * Returns the name of the PDO driver for this connection.
+   * Returns the name of the database engine accessed by this driver.
+   *
+   * @return string
    */
   abstract public function databaseType();
 
@@ -1587,7 +1612,7 @@ abstract class Connection {
    * @param string $operator
    *   The condition operator, such as "IN", "BETWEEN", etc. Case-sensitive.
    *
-   * @return
+   * @return array|null
    *   The extra handling directives for the specified operator, or NULL.
    *
    * @see \Drupal\Core\Database\Query\Condition::compile()
@@ -1600,7 +1625,7 @@ abstract class Connection {
    * We do not want to allow users to commit transactions at any time, only
    * by destroying the transaction object or allowing it to go out of scope.
    * A direct commit bypasses all of the safety checks we've built on top of
-   * PDO's transaction routines.
+   * the database client's transaction routines.
    *
    * @throws \Drupal\Core\Database\TransactionExplicitCommitNotAllowedException
    *
@@ -1623,7 +1648,7 @@ abstract class Connection {
    *   is behind, so by passing in the maximum existing ID, it can be assured
    *   that we never issue the same ID.
    *
-   * @return
+   * @return int|string
    *   An integer number larger than any number returned by earlier calls and
    *   also larger than the $existing_id if one was passed in.
    */
@@ -1649,7 +1674,7 @@ abstract class Connection {
   }
 
   /**
-   * Extracts the SQLSTATE error from the PDOException.
+   * Extracts the SQLSTATE error from a PDOException.
    *
    * @param \Exception $e
    *   The exception

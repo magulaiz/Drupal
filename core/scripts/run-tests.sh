@@ -170,8 +170,8 @@ simpletest_script_reporter_timer_stop();
 
 // Ensure all test locks are released once finished. If tests are run with a
 // concurrency of 1 the each test will clean up its own lock. Test locks are
-// not released if using a higher concurrency to ensure each test method has
-// unique fixtures.
+// not released if using a higher concurrency to ensure each test has unique
+// fixtures.
 TestDatabase::releaseAllTestLocks();
 
 // Display results before database is cleared.
@@ -273,9 +273,6 @@ All arguments are long options.
               (e.g., 'node')
 
   --class     Run tests identified by specific class names, instead of group names.
-              A specific test method can be added, for example,
-              'Drupal\book\Tests\BookTest::testBookExport'. This argument must
-              be last on the command line.
 
   --file      Run tests identified by specific file names, instead of group names.
               Specify the path and the extension
@@ -545,7 +542,11 @@ function simpletest_script_init() {
   if (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on') {
     // Ensure that any and all environment variables are changed to https://.
     foreach ($_SERVER as $key => $value) {
-      $_SERVER[$key] = str_replace('http://', 'https://', $_SERVER[$key]);
+      // Some values are NULL. Non-NULL values which are falsy will not contain
+      // text to replace.
+      if ($value) {
+        $_SERVER[$key] = str_replace('http://', 'https://', $value);
+      }
     }
   }
 
@@ -572,8 +573,8 @@ function simpletest_script_init() {
  * parameters were passed).
  *
  * Otherwise, there are three database connections of concern:
- * - --sqlite: The test runner connection, providing access to Simpletest
- *   database tables for recording test IDs and assertion results.
+ * - --sqlite: The test runner connection, providing access to database tables
+ *   for recording test IDs and assertion results.
  * - --dburl: A database connection that is used as base connection info for all
  *   tests; i.e., every test will spawn from this connection. In case this
  *   connection uses e.g. SQLite, then all tests will run against SQLite. This
@@ -604,7 +605,7 @@ function simpletest_script_setup_database($new = FALSE) {
     // Remove a possibly existing default connection (from settings.php).
     Database::removeConnection('default');
     try {
-      $databases['default']['default'] = Database::convertDbUrlToConnectionInfo($args['dburl'], DRUPAL_ROOT);
+      $databases['default']['default'] = Database::convertDbUrlToConnectionInfo($args['dburl'], DRUPAL_ROOT, TRUE);
     }
     catch (\InvalidArgumentException $e) {
       simpletest_script_print_error('Invalid --dburl. Reason: ' . $e->getMessage());
@@ -654,7 +655,7 @@ function simpletest_script_setup_database($new = FALSE) {
   // Add the test runner database connection.
   Database::addConnectionInfo('test-runner', 'default', $databases['test-runner']['default']);
 
-  // Create the Simpletest schema.
+  // Create the test result schema.
   try {
     $connection = Database::getConnection('default', 'test-runner');
     $schema = $connection->schema();
@@ -770,7 +771,7 @@ function simpletest_script_execute_batch($test_classes) {
             $db_prefix = TestDatabase::lastTestGet($child['test_id'])['last_prefix'];
             $test_db = new TestDatabase($db_prefix);
             $test_directory = $test_db->getTestSitePath();
-            echo 'Simpletest database and files kept and test exited immediately on fail so should be reproducible if you change settings.php to use the database prefix ' . $db_prefix . ' and config directories in ' . $test_directory . "\n";
+            echo 'Test database and files kept and test exited immediately on fail so should be reproducible if you change settings.php to use the database prefix ' . $db_prefix . ' and config directories in ' . $test_directory . "\n";
             $args['keep-results'] = TRUE;
             // Exit repeat loop immediately.
             $args['repeat'] = -1;
@@ -984,11 +985,12 @@ function simpletest_script_get_test_list() {
         simpletest_script_print_alternatives($first_group, $all_groups);
         exit(SIMPLETEST_SCRIPT_EXIT_FAILURE);
       }
-      // Ensure our list of tests contains only one entry for each test.
+      // Merge the tests from the groups together.
       foreach ($args['test_names'] as $group_name) {
-        $test_list = array_merge($test_list, array_flip(array_keys($groups[$group_name])));
+        $test_list = array_merge($test_list, array_keys($groups[$group_name]));
       }
-      $test_list = array_flip($test_list);
+      // Ensure our list of tests contains only one entry for each test.
+      $test_list = array_unique($test_list);
     }
   }
 
@@ -1316,7 +1318,7 @@ function simpletest_script_print_alternatives($string, $array, $degree = 4) {
 }
 
 /**
- * Loads the simpletest messages from the database.
+ * Loads test result messages from the database.
  *
  * Messages are ordered by test class and message id.
  *
@@ -1324,7 +1326,7 @@ function simpletest_script_print_alternatives($string, $array, $degree = 4) {
  *   Array of test IDs of the messages to be loaded.
  *
  * @return array
- *   Array of simpletest messages from the database.
+ *   Array of test result messages from the database.
  */
 function simpletest_script_load_messages_by_test_id($test_ids) {
   global $args;

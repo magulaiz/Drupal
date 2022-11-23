@@ -15,7 +15,7 @@
   --color-gray-050-o-40: rgba(243, 244, 249, 0.4);
   /* Secondary. */
   --color-gray-200-o-80: rgba(212, 212, 218, 0.8);
-  --color-maximumred: #d72222;
+  --color-maximumred: var(--color-red-500);
   --color-sunglow: #ffd23f;
   --color-sunglow-shaded: #977405;
   --color-lightninggreen: #26a769;
@@ -23,12 +23,12 @@
   /* Variations. */
   --color-absolutezero-hover: var(--color-blue-650); /* 5% darker than base. */
   --color-absolutezero-active: var(--color-blue-700); /* 10% darker than base. */
-  --color-maximumred-hover: #c11f1f; /* 5% darker than base. */
-  --color-maximumred-active: #ab1b1b; /* 10% darker than base. */
+  --color-maximumred-hover: var(--color-red-550); /* 5% darker than base. */
+  --color-maximumred-active: var(--color-red-600); /* 10% darker than base. */
   --color-bgblue-hover: var(--color-blue-020); /* 2% darker than base. */
   --color-bgblue-active: var(--color-blue-050); /* 5% darker than base. */
-  --color-bgred-hover: #fdf5f5; /* 5% darker than base. */
-  --color-bgred-active: #fceded; /* 10% darker than base. */
+  --color-bgred-hover: var(--color-red-020); /* 5% darker than base. */
+  --color-bgred-active: var(--color-red-050); /* 10% darker than base. */
   /* Gray variations. */
   --color-gray: #232429;
   --color-gray-900: #393a3f;
@@ -57,6 +57,21 @@
   --color-blue-070: #f3f4f9;
   --color-blue-050: #e5edff;
   --color-blue-020: #f5f8ff;
+  /* Red variations. */
+  --color-red: var(--color-red-500);
+  --color-red-900: #2c0707;
+  --color-red-800: #580e0e;
+  --color-red-700: #841515;
+  --color-red-600: #b01c1c;
+  --color-red-550: #c61f1f;
+  --color-red-500: #dc2323;
+  --color-red-400: #e34f4f;
+  --color-red-300: #ea7b7b;
+  --color-red-200: #f1a7a7;
+  --color-red-100: #f8d3d3;
+  --color-red-070: #fae0e0;
+  --color-red-050: #fce9e9;
+  --color-red-020: #fdf5f5;
   /*
    * Base.
    */
@@ -73,8 +88,9 @@
   --font-family-serif: "Times New Roman", times, serif;
   --line-height: 1.5;
   --line-height-heading: 1.3;
-  --line-height-form-label: 1.125rem; /* 18px */
+  --line-height-form-label: calc(18rem / 16); /* 18px */
   --font-size-base: 1rem; /* 1rem = 16px if font root is 100% ands browser defaults are used. */
+  --font-size-xl: 2.25rem; /* ~36px */
   --font-size-h1: 2.027rem; /* ~32px */
   --font-size-h2: 1.802rem; /* ~29px */
   --font-size-h3: 1.602rem; /* ~26px */
@@ -133,7 +149,7 @@
   --input-padding-horizontal: calc(var(--space-m) - var(--input-border-size));
   --input-font-size: var(--font-size-base);
   --input-line-height: var(--space-l);
-  --input-padding-vertical--small: calc(var(--space-xs) - var(--input-border-size)*2);
+  --input-padding-vertical--small: calc(var(--space-xs) - (var(--input-border-size) * 2));
   --input-padding-horizontal--small: calc(var(--space-m) - var(--input-border-size));
   --input-font-size--small: var(--font-size-xs);
   --input-line-height--small: 1.3125rem;
@@ -197,12 +213,12 @@
   --jui-dialog-title-color: var(--color-white);
   --jui-dialog-title-bg-color: var(--color-text);
   --jui-dialog-title-font-size: var(--font-size-h4);
-  --jui-dialog-close-button-size: calc(var(--space-m)*2);
+  --jui-dialog-close-button-size: calc(var(--space-m) * 2);
   --jui-dialog-close-button-border-radius: 50%;
-  --jui-dialog-close-button-reserved-space: calc(var(--space-m)*4);
-  --jui-dialog-off-canvas-close-button-reserved-space: calc(var(--space-m)*3);
+  --jui-dialog-close-button-reserved-space: calc(var(--space-m) * 4);
+  --jui-dialog-off-canvas-close-button-reserved-space: calc(var(--space-m) * 3);
   --jui-dialog-border-radius: 0.25rem;
-  --jui-dialog-box-shadow: 0 0 var(--space-m) calc(var(--space-m)/-4) var(--color-text);
+  --jui-dialog-box-shadow: 0 0 var(--space-m) calc(var(--space-m) / -4) var(--color-text);
   --jui-dialog--focus-outline: 2px dotted transparent;
   --jui-dialog--focus-box-shadow: 0 0 0 0.1875rem var(--color-focus);
   --jui-dialog-z-index: 1260;
@@ -211,7 +227,7 @@
    * Progress bar.
    */
   --progress-bar-border-size: 1px;
-  --progress-bar-small-size: calc(var(--space-xs) - var(--progress-bar-border-size)*2);
+  --progress-bar-small-size: calc(var(--space-xs) - (2 * var(--progress-bar-border-size)));
   --progress-bar-small-size-radius: var(--space-xs);
   --progress-bar-spacing-size: var(--space-xs);
   --progress-bar-transition: width 0.5s ease-out;
@@ -223,7 +239,7 @@
   /**
    * Tabledrag icon size.
    */
-  --tabledrag-handle-icon-size: 1.0625rem; /* 17px */
+  --tabledrag-handle-icon-size: calc(17rem / 16); /* 17px */
   /**
    * Ajax progress.
    */
@@ -242,10 +258,10 @@
   --vertical-tabs-border-size: 1px;
   --vertical-tabs-border: var(--vertical-tabs-border-size) solid var(--vertical-tabs-border-color);
   --vertical-tabs-menu-item-shadow-extraspace: 0.5rem;
-  --vertical-tabs-menu-item--top-margin: calc(var(--vertical-tabs-menu-item-shadow-extraspace)*-2);
-  --vertical-tabs-menu-item--right-margin: calc(var(--vertical-tabs-border-size)*-1);
-  --vertical-tabs-menu-item--bottom-margin: calc(var(--vertical-tabs-menu-item-shadow-extraspace)*-1);
-  --vertical-tabs-menu-item--left-margin: calc(var(--vertical-tabs-menu-item-shadow-extraspace)*-1);
+  --vertical-tabs-menu-item--top-margin: calc(var(--vertical-tabs-menu-item-shadow-extraspace) * -2);
+  --vertical-tabs-menu-item--right-margin: calc(var(--vertical-tabs-border-size) * -1);
+  --vertical-tabs-menu-item--bottom-margin: calc(var(--vertical-tabs-menu-item-shadow-extraspace) * -1);
+  --vertical-tabs-menu-item--left-margin: calc(var(--vertical-tabs-menu-item-shadow-extraspace) * -1);
   --vertical-tabs-menu-separator-color: var(--color-gray-200);
   --vertical-tabs-menu-separator-size: 1px;
   --vertical-tabs-menu-width: 20em;

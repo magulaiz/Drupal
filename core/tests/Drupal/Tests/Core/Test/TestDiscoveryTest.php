@@ -88,14 +88,14 @@ class TestDiscoveryTest extends UnitTestCase {
     $tests[] = [
       // Expected result.
       [
-        'name' => 'Drupal\Tests\ExampleSimpleTest',
+        'name' => 'Drupal\Tests\ExampleTest',
         'group' => 'test',
         'groups' => ['test'],
         'description' => 'Example test.',
         'type' => 'PHPUnit-Unit',
       ],
       // Classname.
-      'Drupal\Tests\ExampleSimpleTest',
+      'Drupal\Tests\ExampleTest',
       // Doc block.
       "/**
    * Example test.
@@ -110,14 +110,14 @@ class TestDiscoveryTest extends UnitTestCase {
     $tests[] = [
       // Expected result.
       [
-        'name' => 'Drupal\Tests\ExampleSimpleTest',
+        'name' => 'Drupal\Tests\ExampleTest',
         'group' => 'test',
         'groups' => ['test'],
         'description' => 'Example test. * @',
         'type' => 'PHPUnit-Unit',
       ],
       // Classname.
-      'Drupal\Tests\ExampleSimpleTest',
+      'Drupal\Tests\ExampleTest',
       // Doc block.
       "/**
    * Example test. * @
@@ -131,14 +131,14 @@ class TestDiscoveryTest extends UnitTestCase {
     $tests[] = [
       // Expected result.
       [
-        'name' => 'Drupal\Tests\ExampleSimpleTest',
+        'name' => 'Drupal\Tests\ExampleTest',
         'group' => 'test1',
         'groups' => ['test1', 'test2'],
         'description' => 'Example test.',
         'type' => 'PHPUnit-Unit',
       ],
       // Classname.
-      'Drupal\Tests\ExampleSimpleTest',
+      'Drupal\Tests\ExampleTest',
       // Doc block.
       "/**
  * Example test.
@@ -153,14 +153,14 @@ class TestDiscoveryTest extends UnitTestCase {
     $tests['many-group-annotations'] = [
       // Expected result.
       [
-        'name' => 'Drupal\Tests\ExampleSimpleTest',
+        'name' => 'Drupal\Tests\ExampleTest',
         'group' => 'test1',
         'groups' => ['test1', 'test2', 'another', 'more', 'many', 'enough', 'whoa'],
         'description' => 'Example test.',
         'type' => 'PHPUnit-Unit',
       ],
       // Classname.
-      'Drupal\Tests\ExampleSimpleTest',
+      'Drupal\Tests\ExampleTest',
       // Doc block.
       "/**
  * Example test.
@@ -180,14 +180,14 @@ class TestDiscoveryTest extends UnitTestCase {
     $tests[] = [
       // Expected result.
       [
-        'name' => 'Drupal\Tests\ExampleSimpleTest',
+        'name' => 'Drupal\Tests\ExampleTest',
         'description' => 'Example test. And the summary line continues and there is no gap to the annotation.',
         'type' => 'PHPUnit-Unit',
         'group' => 'test',
         'groups' => ['test'],
       ],
       // Classname.
-      'Drupal\Tests\ExampleSimpleTest',
+      'Drupal\Tests\ExampleTest',
       // Doc block.
       "/**
  * Example test. And the summary line continues and there is no gap to the
@@ -414,14 +414,13 @@ EOF;
   public function testGetTestsInProfiles() {
     $this->setupVfsWithTestClasses();
     $class_loader = $this->prophesize(ClassLoader::class);
-    $module_handler = $this->prophesize(ModuleHandlerInterface::class);
 
     $container = new Container();
     $container->set('kernel', new DrupalKernel('prod', new ClassLoader()));
     $container->setParameter('site.path', 'sites/default');
     \Drupal::setContainer($container);
 
-    $test_discovery = new TestDiscovery('vfs://drupal', $class_loader->reveal(), $module_handler->reveal());
+    $test_discovery = new TestDiscovery('vfs://drupal', $class_loader->reveal());
 
     $result = $test_discovery->getTestClasses('test_profile_module', ['PHPUnit-Kernel']);
     $expected = [
@@ -476,7 +475,7 @@ EOF;
     // analysis and already have an empty docblock. getTestInfo() will throw
     // MissingGroupException because the annotation is empty.
     $this->expectException(MissingGroupException::class);
-    TestDiscovery::getTestInfo('Drupal\Tests\simpletest\ThisTestDoesNotExistTest', '');
+    TestDiscovery::getTestInfo('Drupal\Tests\ThisTestDoesNotExistTest', '');
   }
 
   /**

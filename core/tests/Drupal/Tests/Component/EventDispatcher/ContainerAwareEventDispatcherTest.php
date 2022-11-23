@@ -40,11 +40,17 @@ class ContainerAwareEventDispatcherTest extends TestCase {
   private $dispatcher;
   private $listener;
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     $this->dispatcher = $this->createEventDispatcher();
     $this->listener = new TestEventListener();
   }
 
+  /**
+   * {@inheritdoc}
+   */
   protected function tearDown(): void {
     $this->dispatcher = NULL;
     $this->listener = NULL;
@@ -553,6 +559,7 @@ class CallableClass {
 
 class TestEventListener {
 
+  public $name;
   public $preFooInvoked = FALSE;
   public $postFooInvoked = FALSE;
 

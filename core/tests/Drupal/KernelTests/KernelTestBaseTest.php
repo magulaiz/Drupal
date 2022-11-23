@@ -88,13 +88,6 @@ class KernelTestBaseTest extends KernelTestBase {
     ]);
     $this->assertTrue($database->schema()->tableExists('foo'));
 
-    // Ensure that the database tasks have been run during set up. Neither MySQL
-    // nor SQLite make changes that are testable.
-    if ($database->driver() == 'pgsql') {
-      $this->assertEquals('on', $database->query("SHOW standard_conforming_strings")->fetchField());
-      $this->assertEquals('escape', $database->query("SHOW bytea_output")->fetchField());
-    }
-
     $this->assertNotNull(FileCacheFactory::getPrefix());
   }
 
@@ -316,10 +309,11 @@ class KernelTestBaseTest extends KernelTestBase {
     if ($connection->databaseType() === 'sqlite') {
       $result = $connection->query("SELECT name FROM " . $this->databasePrefix .
         ".sqlite_master WHERE type = :type AND name LIKE :table_name AND name NOT LIKE :pattern", [
-        ':type' => 'table',
-        ':table_name' => '%',
-        ':pattern' => 'sqlite_%',
-      ])->fetchAllKeyed(0, 0);
+          ':type' => 'table',
+          ':table_name' => '%',
+          ':pattern' => 'sqlite_%',
+        ]
+      )->fetchAllKeyed(0, 0);
       $this->assertEmpty($result, 'All test tables have been removed.');
     }
     else {
@@ -337,18 +331,6 @@ class KernelTestBaseTest extends KernelTestBase {
       'core/profiles/demo_umami/modules/demo_umami_content/demo_umami_content.info.yml',
       \Drupal::service('extension.list.module')->getPathname('demo_umami_content')
     );
-  }
-
-  /**
-   * Tests the deprecation of ::installSchema with the tables key_value(_expire).
-   *
-   * @group legacy
-   */
-  public function testKernelTestBaseInstallSchema() {
-    $this->expectDeprecation('Installing the tables key_value and key_value_expire with the method KernelTestBase::installSchema() is deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. The tables are now lazy loaded and therefore will be installed automatically when used. See https://www.drupal.org/node/3143286');
-    $this->enableModules(['system']);
-    $this->installSchema('system', ['key_value', 'key_value_expire']);
-    $this->assertFalse(Database::getConnection()->schema()->tableExists('key_value'));
   }
 
   /**

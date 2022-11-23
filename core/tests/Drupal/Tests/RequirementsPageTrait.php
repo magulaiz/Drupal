@@ -2,6 +2,8 @@
 
 namespace Drupal\Tests;
 
+use Drupal\Core\Utility\PhpRequirements;
+
 /**
  * Provides helper methods for the requirements page.
  */
@@ -13,7 +15,9 @@ trait RequirementsPageTrait {
   protected function updateRequirementsProblem() {
     // Assert a warning is shown on older test environments.
     $links = $this->getSession()->getPage()->findAll('named', ['link', 'try again']);
-    if ($links && version_compare(phpversion(), \Drupal::MINIMUM_SUPPORTED_PHP) < 0) {
+
+    // Get the default Drupal core PHP requirements.
+    if ($links && version_compare(phpversion(), PhpRequirements::getMinimumSupportedPhp()) < 0) {
       $this->assertSession()->pageTextNotContains('Errors found');
       $this->assertWarningSummaries(['PHP']);
       $this->clickLink('try again');
@@ -79,7 +83,7 @@ trait RequirementsPageTrait {
    *   The type of requirement, either 'warning' or 'error'.
    */
   protected function assertRequirementSummaries(array $summaries, string $type) {
-    // The selectors are different for Seven and Claro.
+    // The selectors are different for Claro.
     $is_claro = stripos($this->getSession()->getPage()->getContent(), 'claro/css/theme/maintenance-page.css') !== FALSE;
 
     $selectors = [];

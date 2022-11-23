@@ -63,15 +63,19 @@ class TermForm extends ContentEntityForm {
           $options[$item->tid] = str_repeat('-', $item->depth) . $item->name;
         }
       }
-
-      $form['relations']['parent'] = [
-        '#type' => 'select',
-        '#title' => $this->t('Parent terms'),
-        '#options' => $options,
-        '#default_value' => $parent,
-        '#multiple' => TRUE,
-      ];
     }
+    else {
+      $options = ['<' . $this->t('root') . '>'];
+      $parent = [0];
+    }
+
+    $form['relations']['parent'] = [
+      '#type' => 'select',
+      '#title' => $this->t('Parent terms'),
+      '#options' => $options,
+      '#default_value' => $parent,
+      '#multiple' => TRUE,
+    ];
 
     $form['relations']['weight'] = [
       '#type' => 'textfield',
@@ -197,6 +201,7 @@ class TermForm extends ContentEntityForm {
       case SAVED_UPDATED:
         $this->messenger()->addStatus($this->t('Updated term %term.', ['%term' => $view_link]));
         $this->logger('taxonomy')->notice('Updated term %term.', ['%term' => $term->getName(), 'link' => $edit_link]);
+        $form_state->setRedirect('entity.taxonomy_term.canonical', ['taxonomy_term' => $term->id()]);
         break;
     }
 

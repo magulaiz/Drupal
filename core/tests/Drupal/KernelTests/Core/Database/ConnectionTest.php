@@ -3,7 +3,6 @@
 namespace Drupal\KernelTests\Core\Database;
 
 use Drupal\Core\Database\Database;
-use Drupal\Core\Database\DatabaseExceptionWrapper;
 use Drupal\Core\Database\Query\Condition;
 
 /**
@@ -147,21 +146,6 @@ class ConnectionTest extends DatabaseTestBase {
   }
 
   /**
-   * Ensure that you cannot execute multiple statements on MySQL.
-   */
-  public function testMultipleStatementsForNewPhp() {
-    // This just tests mysql, as other PDO integrations don't allow disabling
-    // multiple statements.
-    if (Database::getConnection()->databaseType() !== 'mysql') {
-      $this->markTestSkipped("This test only runs for MySQL");
-    }
-
-    // Disable the protection at the PHP level.
-    $this->expectException(DatabaseExceptionWrapper::class);
-    Database::getConnection('default', 'default')->query('SELECT * FROM {test}; SELECT * FROM {test_people}', [], ['allow_delimiter_in_query' => TRUE]);
-  }
-
-  /**
    * Ensure that you cannot execute multiple statements in a query.
    */
   public function testMultipleStatementsQuery() {
@@ -205,6 +189,16 @@ class ConnectionTest extends DatabaseTestBase {
    */
   public function testHasJson() {
     $this->assertTrue($this->connection->hasJson());
+  }
+
+  /**
+   * Tests deprecation of ::tablePrefix().
+   *
+   * @group legacy
+   */
+  public function testDeprecatedTablePrefix(): void {
+    $this->expectDeprecation('Drupal\Core\Database\Connection::tablePrefix() is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Instead, you should just use Connection::getPrefix(). See https://www.drupal.org/node/3260849');
+    $this->assertIsString($this->connection->tablePrefix());
   }
 
 }

@@ -32,6 +32,13 @@ class ResponsiveImageFieldUiTest extends WebDriverTestBase {
   ];
 
   /**
+   * The content type id.
+   *
+   * @var string
+   */
+  protected string $type;
+
+  /**
    * {@inheritdoc}
    */
   protected function setUp(): void {
@@ -95,7 +102,7 @@ class ResponsiveImageFieldUiTest extends WebDriverTestBase {
     $field_image_type->setValue('responsive_image');
 
     $summary_text = $assert_session->waitForElement('xpath', $this->cssSelectToXpath('#field-image .ajax-new-content .field-plugin-summary'));
-    $this->assertEquals('Select a responsive image style.', $summary_text->getText());
+    $this->assertEquals('Select a responsive image style. Loading attribute: lazy', $summary_text->getText());
 
     $page->pressButton('Save');
     $assert_session->responseContains("Select a responsive image style.");

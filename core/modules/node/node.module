@@ -178,6 +178,17 @@ function node_title_list(StatementInterface $result, $title = NULL) {
 }
 
 /**
+ * Implements hook_local_tasks_alter().
+ */
+function node_local_tasks_alter(&$local_tasks): void {
+  // Removes 'Revisions' local task added by deriver. Local task
+  // 'entity.node.version_history' will be replaced by
+  // 'entity.version_history:node.version_history' after
+  // https://www.drupal.org/project/drupal/issues/3153559.
+  unset($local_tasks['entity.version_history:node.version_history']);
+}
+
+/**
  * Determines the type of marker to be displayed for a given node.
  *
  * @param int $nid
@@ -330,7 +341,7 @@ function node_entity_extra_field_info() {
  * @param string $new_id
  *   The new node type of the nodes.
  *
- * @return
+ * @return int
  *   The number of nodes whose node type field was modified.
  */
 function node_type_update_nodes($old_id, $new_id) {
@@ -545,7 +556,6 @@ function template_preprocess_node(&$variables) {
     //   Eventually delete this code and matching template lines. Using a field
     //   formatter is more flexible and consistent.
     $node_type = $node->type->entity;
-    // Used by RDF to add attributes around the author and date submitted.
     $variables['author_attributes'] = new Attribute();
     $variables['display_submitted'] = $node_type->displaySubmitted();
     if ($variables['display_submitted']) {
@@ -814,9 +824,6 @@ function node_form_system_themes_admin_form_submit($form, FormStateInterface $fo
  * Note also that access to create nodes is handled by
  * hook_ENTITY_TYPE_create_access().
  *
- * To see how to write a node access module of your own, see
- * node_access_example.module.
- *
  * @see \Drupal\node\NodeAccessControlHandler
  */
 
@@ -894,7 +901,7 @@ function node_access_grants($op, AccountInterface $account) {
  *   (optional) The user object for the user whose access is being checked. If
  *   omitted, the current user is used. Defaults to NULL.
  *
- * @return
+ * @return bool
  *   TRUE if 'view' access to all nodes is granted, FALSE otherwise.
  *
  * @see hook_node_grants()
