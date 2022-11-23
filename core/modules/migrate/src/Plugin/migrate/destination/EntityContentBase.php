@@ -331,7 +331,12 @@ class EntityContentBase extends Entity implements HighestIdInterface, MigrateVal
     }
 
     if (!empty($this->configuration['new_revision']) && $entity instanceof RevisionableInterface && $this->storage instanceof RevisionableStorageInterface) {
-      $entity = $this->storage->createRevision($entity);
+      $id_map = $row->getIdMap();
+      // Create a revision when "track_changes" is not enabled or when the source data has changed.
+      if (!array_key_exists('original_hash', $id_map) || $id_map['hash'] !== $id_map['original_hash']) {
+        $entity->setRevisionCreationTime(\Drupal::time()->getRequestTime());
+        $entity = $this->storage->createRevision($entity);
+      }
     }
 
     $this->setRollbackAction($row->getIdMap(), $rollback_action);
