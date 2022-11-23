@@ -28,6 +28,7 @@
 
 .entity-moderation-form {
   flex-direction: column;
+  max-width: 100%;
   border: 1px solid #e7edf1;
   background-color: #f7f9fa
 }
