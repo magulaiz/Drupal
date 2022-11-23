@@ -95,7 +95,7 @@ class LocalTasksBlock extends BlockBase implements ContainerFactoryPluginInterfa
     if ($negotiation_method_enabled && !empty($userAdminLangcode)) {
       $language = \Drupal::languageManager()->getLanguage($userAdminLangcode);
       $primary_attributes = ['dir' => $language->getDirection(), 'lang' => $language->getId()];
-      $secondary_attributes = ['dir' => $language->getDirection(), 'lang' => $language->getId()];
+      $secondary_attributes = $primary_attributes;
     }
 
     $tabs = [
