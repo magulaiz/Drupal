@@ -4,7 +4,6 @@ namespace Drupal\Tests\datetime\Kernel;
 
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\FieldItemInterface;
-use Drupal\datetime\Plugin\Field\FieldType\DateTimeItem;
 use Drupal\datetime\Plugin\Field\FieldType\DateTimeItemInterface;
 use Drupal\entity_test\Entity\EntityTest;
 use Drupal\field\Entity\FieldConfig;
@@ -51,7 +50,7 @@ class DateTimeItemTest extends FieldKernelTestBase {
       'field_name' => 'field_datetime',
       'type' => 'datetime',
       'entity_type' => 'entity_test',
-      'settings' => ['datetime_type' => DateTimeItem::DATETIME_TYPE_DATETIME],
+      'settings' => ['datetime_type' => DateTimeItemInterface::DATETIME_TYPE_DATETIME],
     ]);
     $this->fieldStorage->save();
     $this->field = FieldConfig::create([
@@ -68,7 +67,7 @@ class DateTimeItemTest extends FieldKernelTestBase {
    * Tests using entity fields of the datetime field type.
    */
   public function testDateTime() {
-    $this->fieldStorage->setSetting('datetime_type', DateTimeItem::DATETIME_TYPE_DATETIME);
+    $this->fieldStorage->setSetting('datetime_type', DateTimeItemInterface::DATETIME_TYPE_DATETIME);
     $this->fieldStorage->save();
 
     // Verify entity creation.
@@ -112,7 +111,7 @@ class DateTimeItemTest extends FieldKernelTestBase {
    * Tests using entity fields of the date field type.
    */
   public function testDateOnly() {
-    $this->fieldStorage->setSetting('datetime_type', DateTimeItem::DATETIME_TYPE_DATE);
+    $this->fieldStorage->setSetting('datetime_type', DateTimeItemInterface::DATETIME_TYPE_DATE);
     $this->fieldStorage->save();
 
     // Verify entity creation.
@@ -166,7 +165,7 @@ class DateTimeItemTest extends FieldKernelTestBase {
    */
   public function testSetValue() {
     // Test a date+time field.
-    $this->fieldStorage->setSetting('datetime_type', DateTimeItem::DATETIME_TYPE_DATETIME);
+    $this->fieldStorage->setSetting('datetime_type', DateTimeItemInterface::DATETIME_TYPE_DATETIME);
     $this->fieldStorage->save();
 
     // Test DateTimeItem::setValue() using string.
@@ -192,7 +191,7 @@ class DateTimeItemTest extends FieldKernelTestBase {
     $this->assertEquals(DateTimeItemInterface::STORAGE_TIMEZONE, $entity->field_datetime->date->getTimeZone()->getName());
 
     // Test a date-only field.
-    $this->fieldStorage->setSetting('datetime_type', DateTimeItem::DATETIME_TYPE_DATE);
+    $this->fieldStorage->setSetting('datetime_type', DateTimeItemInterface::DATETIME_TYPE_DATE);
     $this->fieldStorage->save();
 
     // Test DateTimeItem::setValue() using string.
@@ -224,7 +223,7 @@ class DateTimeItemTest extends FieldKernelTestBase {
   public function testSetValueProperty() {
     // Test Date::setValue() with a date+time field.
     // Test a date+time field.
-    $this->fieldStorage->setSetting('datetime_type', DateTimeItem::DATETIME_TYPE_DATETIME);
+    $this->fieldStorage->setSetting('datetime_type', DateTimeItemInterface::DATETIME_TYPE_DATETIME);
     $this->fieldStorage->save();
     $entity = EntityTest::create();
     $value = '2014-01-01T20:00:00';
@@ -239,7 +238,7 @@ class DateTimeItemTest extends FieldKernelTestBase {
 
     // Test Date::setValue() with a date-only field.
     // Test a date+time field.
-    $this->fieldStorage->setSetting('datetime_type', DateTimeItem::DATETIME_TYPE_DATE);
+    $this->fieldStorage->setSetting('datetime_type', DateTimeItemInterface::DATETIME_TYPE_DATE);
     $this->fieldStorage->save();
     $entity = EntityTest::create();
     $value = '2014-01-01';
@@ -261,7 +260,7 @@ class DateTimeItemTest extends FieldKernelTestBase {
   public function testDatetimeValidation($value) {
     $this->expectException(AssertionFailedError::class);
 
-    $this->fieldStorage->setSetting('datetime_type', DateTimeItem::DATETIME_TYPE_DATETIME);
+    $this->fieldStorage->setSetting('datetime_type', DateTimeItemInterface::DATETIME_TYPE_DATETIME);
     $this->fieldStorage->save();
     $entity = EntityTest::create();
 
@@ -321,7 +320,7 @@ class DateTimeItemTest extends FieldKernelTestBase {
   public function testDateonlyValidation($value) {
     $this->expectException(AssertionFailedError::class);
 
-    $this->fieldStorage->setSetting('datetime_type', DateTimeItem::DATETIME_TYPE_DATE);
+    $this->fieldStorage->setSetting('datetime_type', DateTimeItemInterface::DATETIME_TYPE_DATE);
     $this->fieldStorage->save();
     $entity = EntityTest::create();
 

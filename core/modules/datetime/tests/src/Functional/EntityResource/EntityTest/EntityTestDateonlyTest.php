@@ -4,7 +4,7 @@ namespace Drupal\Tests\datetime\Functional\EntityResource\EntityTest;
 
 use Drupal\Core\Url;
 use Drupal\entity_test\Entity\EntityTest;
-use Drupal\datetime\Plugin\Field\FieldType\DateTimeItem;
+use Drupal\datetime\Plugin\Field\FieldType\DateTimeItemInterface;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\Tests\entity_test\Functional\Rest\EntityTestResourceTestBase;
@@ -55,7 +55,7 @@ class EntityTestDateonlyTest extends EntityTestResourceTestBase {
       'field_name' => static::$fieldName,
       'type' => 'datetime',
       'entity_type' => static::$entityTypeId,
-      'settings' => ['datetime_type' => DateTimeItem::DATETIME_TYPE_DATE],
+      'settings' => ['datetime_type' => DateTimeItemInterface::DATETIME_TYPE_DATE],
     ])
       ->save();
 

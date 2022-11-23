@@ -34,16 +34,6 @@ class DateTimeItem extends FieldItemBase implements DateTimeItemInterface {
   }
 
   /**
-   * Value for the 'datetime_type' setting: store only a date.
-   */
-  const DATETIME_TYPE_DATE = 'date';
-
-  /**
-   * Value for the 'datetime_type' setting: store a date and time.
-   */
-  const DATETIME_TYPE_DATETIME = 'datetime';
-
-  /**
    * {@inheritdoc}
    */
   public static function propertyDefinitions(FieldStorageDefinitionInterface $field_definition) {
@@ -109,7 +99,7 @@ class DateTimeItem extends FieldItemBase implements DateTimeItemInterface {
     // Just pick a date in the past year. No guidance is provided by this Field
     // type.
     $timestamp = REQUEST_TIME - mt_rand(0, 86400 * 365);
-    if ($type == DateTimeItem::DATETIME_TYPE_DATE) {
+    if ($type == static::DATETIME_TYPE_DATE) {
       $values['value'] = gmdate(static::DATE_STORAGE_FORMAT, $timestamp);
     }
     else {

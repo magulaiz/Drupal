@@ -2,7 +2,7 @@
 
 namespace Drupal\Tests\datetime\Kernel\Views;
 
-use Drupal\datetime\Plugin\Field\FieldType\DateTimeItem;
+use Drupal\datetime\Plugin\Field\FieldType\DateTimeItemInterface;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\node\Entity\Node;
 use Drupal\views\Views;
@@ -51,7 +51,7 @@ class FilterDateTest extends DateTimeHandlerTestBase {
 
     // Change field storage to date-only.
     $storage = FieldStorageConfig::load('node.' . static::$field_name);
-    $storage->setSetting('datetime_type', DateTimeItem::DATETIME_TYPE_DATE);
+    $storage->setSetting('datetime_type', DateTimeItemInterface::DATETIME_TYPE_DATE);
     $storage->save();
 
     // Retrieve tomorrow, today and yesterday dates just to create the nodes.
