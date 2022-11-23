@@ -364,7 +364,7 @@ function drupal_attach_tabledrag(&$element, array $options) {
  * @return array
  *   The element.
  *
-  * @deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use
+ * @deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use
  *   \Drupal\Core\Render\Element::hide() instead.
  *
  * @see https://www.drupal.org/node/3261271
