@@ -87,7 +87,7 @@ class StringFilter extends FilterPluginBase {
   public function buildExposeForm(&$form, FormStateInterface $form_state) {
     parent::buildExposeForm($form, $form_state);
     $form['expose']['placeholder'] = [
-      '#type' => 'text',
+      '#type' => 'textfield',
       '#default_value' => $this->options['expose']['placeholder'],
       '#title' => $this->t('Placeholder'),
       '#size' => 40,
@@ -270,7 +270,7 @@ class StringFilter extends FilterPluginBase {
 
     if ($which == 'all' || $which == 'value') {
       $form['value'] = [
-        '#type' => 'text',
+        '#type' => 'textfield',
         '#title' => $this->t('Value'),
         '#size' => 30,
         '#default_value' => $this->value,

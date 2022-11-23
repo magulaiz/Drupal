@@ -1,5 +1,5 @@
 description:
-  type: 'text'
+  type: 'textfield'
   length: 128
 icon:
   directory: 'core/modules/file/icons'

@@ -19,7 +19,7 @@ class Item extends FormElement {
   public function getInfo() {
     return [
       // Forms that show author fields to both anonymous and authenticated users
-      // need to dynamically switch between #type 'text' and #type 'item'
+      // need to dynamically switch between #type 'textfield' and #type 'item'
       // to automatically take over the authenticated user's information.
       // Therefore, we allow #type 'item' to receive input, which is internally
       // assigned by Form API based on the #default_value or #value properties.

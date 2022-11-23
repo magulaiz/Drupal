@@ -48,7 +48,7 @@ class FormTestControllerObject extends ConfigFormBase {
     $form['request_attribute']['#markup'] = $request->attributes->get('request_attribute');
 
     $form['bananas'] = [
-      '#type' => 'text',
+      '#type' => 'textfield',
       '#title' => $this->t('Bananas'),
     ];
 

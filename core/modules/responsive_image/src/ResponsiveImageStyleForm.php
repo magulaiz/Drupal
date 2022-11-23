@@ -64,7 +64,7 @@ class ResponsiveImageStyleForm extends EntityForm {
     /** @var \Drupal\responsive_image\ResponsiveImageStyleInterface $responsive_image_style */
     $responsive_image_style = $this->entity;
     $form['label'] = [
-      '#type' => 'text',
+      '#type' => 'textfield',
       '#title' => $this->t('Label'),
       '#maxlength' => 255,
       '#default_value' => $responsive_image_style->label(),

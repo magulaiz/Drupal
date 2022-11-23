@@ -98,7 +98,7 @@ class EditorLoadingTest extends BrowserTestBase {
     FieldConfig::create([
       'field_name' => 'field_text',
       'entity_type' => 'node',
-      'label' => 'Text',
+      'label' => 'Textfield',
       'bundle' => 'page',
     ])->save();
 

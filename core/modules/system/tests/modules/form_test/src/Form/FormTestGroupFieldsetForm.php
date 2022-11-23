@@ -34,7 +34,7 @@ class FormTestGroupFieldsetForm extends FormBase {
       '#group' => 'fieldset',
     ];
     $form['meta']['element'] = [
-      '#type' => 'text',
+      '#type' => 'textfield',
       '#title' => 'Nest in container element',
     ];
     $form['fieldset_zero'] = [

@@ -85,7 +85,7 @@ class UserData extends FieldPluginBase {
 
     $form['data_name'] = [
       '#title' => $this->t('Name'),
-      '#type' => 'text',
+      '#type' => 'textfield',
       '#description' => $this->t('The name of the data key.'),
       '#default_value' => $this->options['data_name'],
     ];

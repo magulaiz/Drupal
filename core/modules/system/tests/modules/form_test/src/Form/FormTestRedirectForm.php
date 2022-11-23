@@ -29,7 +29,7 @@ class FormTestRedirectForm extends FormBase {
       '#title' => t('Use redirection'),
     ];
     $form['destination'] = [
-      '#type' => 'text',
+      '#type' => 'textfield',
       '#title' => t('Redirect destination'),
       '#states' => [
         'visible' => [

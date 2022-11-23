@@ -43,7 +43,7 @@ class MachineNameTest extends KernelTestBase implements FormInterface {
     $complete_form = [
       'test_machine_name' => $element,
       'test_source' => [
-        '#type' => 'text',
+        '#type' => 'textfield',
       ],
     ];
     return $complete_form;

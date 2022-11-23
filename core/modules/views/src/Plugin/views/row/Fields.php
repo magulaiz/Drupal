@@ -72,7 +72,7 @@ class Fields extends RowPluginBase {
 
     $form['separator'] = [
       '#title' => $this->t('Separator'),
-      '#type' => 'text',
+      '#type' => 'textfield',
       '#size' => 10,
       '#default_value' => $this->options['separator'] ?? '',
       '#description' => $this->t('The separator may be placed between inline fields to keep them from squishing up next to each other. You can use HTML in this field.'),

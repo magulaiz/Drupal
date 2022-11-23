@@ -271,14 +271,14 @@ function menu_ui_form_node_form_alter(&$form, FormStateInterface $form_state) {
   }
 
   $form['menu']['link']['title'] = [
-    '#type' => 'text',
+    '#type' => 'textfield',
     '#title' => t('Menu link title'),
     '#default_value' => $defaults['title'],
     '#maxlength' => $defaults['title_max_length'],
   ];
 
   $form['menu']['link']['description'] = [
-    '#type' => 'text',
+    '#type' => 'textfield',
     '#title' => t('Description'),
     '#default_value' => $defaults['description'],
     '#description' => t('Shown when hovering over the menu link.'),

@@ -23,21 +23,21 @@ class TabbingManagerTestController extends ControllerBase {
           'id' => 'tabbingmanager-test-container',
         ],
         'first' => [
-          '#type' => 'text',
+          '#type' => 'textfield',
           '#title' => $this->t('First'),
           '#attributes' => [
             'id' => 'first',
           ],
         ],
         'second' => [
-          '#type' => 'text',
+          '#type' => 'textfield',
           '#title' => $this->t('Second'),
           '#attributes' => [
             'id' => 'second',
           ],
         ],
         'third' => [
-          '#type' => 'text',
+          '#type' => 'textfield',
           '#title' => $this->t('Third'),
           '#attributes' => [
             'id' => 'third',
@@ -50,21 +50,21 @@ class TabbingManagerTestController extends ControllerBase {
           'id' => 'tabbingmanager-test-another-container',
         ],
         'fourth' => [
-          '#type' => 'text',
+          '#type' => 'textfield',
           '#title' => $this->t('Fourth'),
           '#attributes' => [
             'id' => 'fourth',
           ],
         ],
         'fifth' => [
-          '#type' => 'text',
+          '#type' => 'textfield',
           '#title' => $this->t('Fifth'),
           '#attributes' => [
             'id' => 'fifth',
           ],
         ],
         'sixth' => [
-          '#type' => 'text',
+          '#type' => 'textfield',
           '#title' => $this->t('Sixth'),
           '#attributes' => [
             'id' => 'sixth',

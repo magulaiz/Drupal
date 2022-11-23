@@ -42,7 +42,7 @@ class ViewPreviewForm extends ViewFormBase {
 
     // Add the arguments textfield.
     $form['controls']['view_args'] = [
-      '#type' => 'text',
+      '#type' => 'textfield',
       '#title' => $this->t('Preview with contextual filters:'),
       '#description' => $this->t('Separate contextual filter values with a "/". For example, %example.', ['%example' => '40/12/10']),
       '#id' => 'preview-args',

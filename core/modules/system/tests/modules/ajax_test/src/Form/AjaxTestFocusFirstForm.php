@@ -26,10 +26,10 @@ class AjaxTestFocusFirstForm implements FormInterface {
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
     $form['first_input'] = [
-      '#type' => 'text',
+      '#type' => 'textfield',
     ];
     $form['second_input'] = [
-      '#type' => 'text',
+      '#type' => 'textfield',
     ];
     $form['a_container'] = [
       '#type' => 'container',
@@ -38,10 +38,10 @@ class AjaxTestFocusFirstForm implements FormInterface {
       ],
     ];
     $form['a_container']['first_container_input'] = [
-      '#type' => 'text',
+      '#type' => 'textfield',
     ];
     $form['a_container']['second_container_input'] = [
-      '#type' => 'text',
+      '#type' => 'textfield',
     ];
     $form['focusable_container_without_tabbable_children'] = [
       '#type' => 'container',
@@ -61,7 +61,7 @@ class AjaxTestFocusFirstForm implements FormInterface {
     ];
 
     $form['multiple_of_same_selector_1']['inside_same_selector_container_1'] = [
-      '#type' => 'text',
+      '#type' => 'textfield',
     ];
 
     $form['multiple_of_same_selector_2'] = [
@@ -73,7 +73,7 @@ class AjaxTestFocusFirstForm implements FormInterface {
     ];
 
     $form['multiple_of_same_selector_2']['inside_same_selector_container_2'] = [
-      '#type' => 'text',
+      '#type' => 'textfield',
     ];
 
     $form['nothing_tabbable'] = [

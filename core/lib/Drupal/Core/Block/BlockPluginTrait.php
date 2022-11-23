@@ -171,7 +171,7 @@ trait BlockPluginTrait {
       '#plain_text' => $definition['admin_label'],
     ];
     $form['label'] = [
-      '#type' => 'text',
+      '#type' => 'textfield',
       '#title' => $this->t('Title'),
       '#maxlength' => 255,
       '#default_value' => $this->label(),

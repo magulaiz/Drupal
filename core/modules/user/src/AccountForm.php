@@ -103,7 +103,7 @@ abstract class AccountForm extends ContentEntityForm implements TrustedCallbackI
 
     // Only show name field on registration form or user can change own username.
     $form['account']['name'] = [
-      '#type' => 'text',
+      '#type' => 'textfield',
       '#title' => $this->t('Username'),
       '#maxlength' => UserInterface::USERNAME_MAX_LENGTH,
       '#description' => $this->t("Several special characters are allowed, including space, period (.), hyphen (-), apostrophe ('), underscore (_), and the @ sign."),

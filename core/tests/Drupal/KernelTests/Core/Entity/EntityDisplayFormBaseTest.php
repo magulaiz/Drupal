@@ -33,7 +33,7 @@ class EntityDisplayFormBaseTest extends KernelTestBase {
     $entity->getComponent('new_field_mismatch_type_visible')->willReturn([]);
     $field_values['new_field_mismatch_type_visible'] = [
       'weight' => 0,
-      'type' => 'text',
+      'type' => 'textfield',
       'region' => 'hidden',
     ];
     $entity->removeComponent('new_field_mismatch_type_visible')
@@ -47,18 +47,18 @@ class EntityDisplayFormBaseTest extends KernelTestBase {
     $entity->getComponent('field_visible_no_changes')
       ->willReturn([
         'weight' => 0,
-        'type' => 'text',
+        'type' => 'textfield',
         'region' => 'content',
       ]);
     $field_values['field_visible_no_changes'] = [
       'weight' => 0,
-      'type' => 'text',
+      'type' => 'textfield',
       'region' => 'content',
     ];
     $entity
       ->setComponent('field_visible_no_changes', [
         'weight' => 0,
-        'type' => 'text',
+        'type' => 'textfield',
         'region' => 'content',
       ])
       ->shouldBeCalled();
@@ -67,12 +67,12 @@ class EntityDisplayFormBaseTest extends KernelTestBase {
     $entity->getComponent('field_start_visible_change_region')
       ->willReturn([
         'weight' => 0,
-        'type' => 'text',
+        'type' => 'textfield',
         'region' => 'content',
       ]);
     $field_values['field_start_visible_change_region'] = [
       'weight' => 0,
-      'type' => 'text',
+      'type' => 'textfield',
       'region' => 'hidden',
     ];
     $entity->removeComponent('field_start_visible_change_region')
@@ -86,12 +86,12 @@ class EntityDisplayFormBaseTest extends KernelTestBase {
     $entity->getComponent('field_plugin_settings_update')
       ->willReturn([
         'weight' => 0,
-        'type' => 'text',
+        'type' => 'textfield',
         'region' => 'content',
       ]);
     $field_values['field_plugin_settings_update'] = [
       'weight' => 0,
-      'type' => 'text',
+      'type' => 'textfield',
       'region' => 'content',
       'settings_edit_form' => [
         'third_party_settings' => [
@@ -102,7 +102,7 @@ class EntityDisplayFormBaseTest extends KernelTestBase {
     $entity
       ->setComponent('field_plugin_settings_update', [
         'weight' => 0,
-        'type' => 'text',
+        'type' => 'textfield',
         'region' => 'content',
       ])
       ->will(function ($args) {

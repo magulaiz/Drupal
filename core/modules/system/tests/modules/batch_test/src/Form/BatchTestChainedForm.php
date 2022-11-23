@@ -26,7 +26,7 @@ class BatchTestChainedForm extends FormBase {
     // This value is used to test that $form_state persists through batched
     // submit handlers.
     $form['value'] = [
-      '#type' => 'text',
+      '#type' => 'textfield',
       '#title' => 'Value',
       '#default_value' => 1,
     ];

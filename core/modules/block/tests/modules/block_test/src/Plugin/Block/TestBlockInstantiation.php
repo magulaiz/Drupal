@@ -38,7 +38,7 @@ class TestBlockInstantiation extends BlockBase {
    */
   public function blockForm($form, FormStateInterface $form_state) {
     $form['display_message'] = [
-      '#type' => 'text',
+      '#type' => 'textfield',
       '#title' => $this->t('Display message'),
       '#default_value' => $this->configuration['display_message'],
     ];

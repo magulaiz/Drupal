@@ -29,7 +29,7 @@ class Title extends AreaPluginBase {
     parent::buildOptionsForm($form, $form_state);
 
     $form['title'] = [
-      '#type' => 'text',
+      '#type' => 'textfield',
       '#title' => $this->t('Overridden title'),
       '#default_value' => $this->options['title'],
       '#description' => $this->t('Override the title of this view when it is empty. The available global tokens below can be used here.'),

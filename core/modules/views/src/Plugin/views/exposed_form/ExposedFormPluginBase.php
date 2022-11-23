@@ -41,7 +41,7 @@ abstract class ExposedFormPluginBase extends PluginBase implements CacheableDepe
   public function buildOptionsForm(&$form, FormStateInterface $form_state) {
     parent::buildOptionsForm($form, $form_state);
     $form['submit_button'] = [
-      '#type' => 'text',
+      '#type' => 'textfield',
       '#title' => $this->t('Submit button text'),
       '#default_value' => $this->options['submit_button'],
       '#required' => TRUE,
@@ -54,7 +54,7 @@ abstract class ExposedFormPluginBase extends PluginBase implements CacheableDepe
     ];
 
     $form['reset_button_label'] = [
-      '#type' => 'text',
+      '#type' => 'textfield',
       '#title' => $this->t('Reset button label'),
       '#description' => $this->t('Text to display in the reset button of the exposed form.'),
       '#default_value' => $this->options['reset_button_label'],
@@ -67,7 +67,7 @@ abstract class ExposedFormPluginBase extends PluginBase implements CacheableDepe
     ];
 
     $form['exposed_sorts_label'] = [
-      '#type' => 'text',
+      '#type' => 'textfield',
       '#title' => $this->t('Exposed sorts label'),
       '#default_value' => $this->options['exposed_sorts_label'],
       '#required' => TRUE,
@@ -81,7 +81,7 @@ abstract class ExposedFormPluginBase extends PluginBase implements CacheableDepe
     ];
 
     $form['sort_asc_label'] = [
-      '#type' => 'text',
+      '#type' => 'textfield',
       '#title' => $this->t('Label for ascending sort'),
       '#default_value' => $this->options['sort_asc_label'],
       '#required' => TRUE,
@@ -93,7 +93,7 @@ abstract class ExposedFormPluginBase extends PluginBase implements CacheableDepe
     ];
 
     $form['sort_desc_label'] = [
-      '#type' => 'text',
+      '#type' => 'textfield',
       '#title' => $this->t('Label for descending sort'),
       '#default_value' => $this->options['sort_desc_label'],
       '#required' => TRUE,

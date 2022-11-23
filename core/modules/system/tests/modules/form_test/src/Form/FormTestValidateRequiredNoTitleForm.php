@@ -23,8 +23,8 @@ class FormTestValidateRequiredNoTitleForm extends FormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
-    $form['text'] = [
-      '#type' => 'text',
+    $form['textfield'] = [
+      '#type' => 'textfield',
       '#required' => TRUE,
     ];
     $form['actions'] = ['#type' => 'actions'];

@@ -78,7 +78,7 @@ class TestFormApiFormBlock extends BlockBase implements ContainerFactoryPluginIn
   public function buildForm(array $form, FormStateInterface $form_state) {
     $form['keywords'] = [
       '#title' => $this->t('Keywords'),
-      '#type' => 'text',
+      '#type' => 'textfield',
       '#attributes' => [
         'placeholder' => $this->t('Keywords'),
       ],

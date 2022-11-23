@@ -56,7 +56,7 @@ abstract class PrerenderList extends FieldPluginBase implements MultiItemsFieldH
     ];
 
     $form['separator'] = [
-      '#type' => 'text',
+      '#type' => 'textfield',
       '#title' => $this->t('Separator'),
       '#default_value' => $this->options['separator'],
       '#states' => [

@@ -42,14 +42,14 @@ abstract class NumericItemBase extends FieldItemBase {
       '#description' => $this->t('The maximum value that should be allowed in this field. Leave blank for no maximum.'),
     ];
     $element['prefix'] = [
-      '#type' => 'text',
+      '#type' => 'textfield',
       '#title' => $this->t('Prefix'),
       '#default_value' => $settings['prefix'],
       '#size' => 60,
       '#description' => $this->t("Define a string that should be prefixed to the value, like '$ ' or '&euro; '. Leave blank for none. Separate singular and plural values with a pipe ('pound|pounds')."),
     ];
     $element['suffix'] = [
-      '#type' => 'text',
+      '#type' => 'textfield',
       '#title' => $this->t('Suffix'),
       '#default_value' => $settings['suffix'],
       '#size' => 60,

@@ -281,7 +281,7 @@ class Page extends PathPluginBase {
         $form['menu']['title'] = [
           '#prefix' => '<div class="views-left-50">',
           '#title' => $this->t('Menu link title'),
-          '#type' => 'text',
+          '#type' => 'textfield',
           '#default_value' => $menu['title'],
           '#states' => [
             'visible' => [
@@ -299,7 +299,7 @@ class Page extends PathPluginBase {
         ];
         $form['menu']['description'] = [
           '#title' => $this->t('Description'),
-          '#type' => 'text',
+          '#type' => 'textfield',
           '#default_value' => $menu['description'],
           '#description' => $this->t("Shown when hovering over the menu link."),
           '#states' => [
@@ -343,7 +343,7 @@ class Page extends PathPluginBase {
         ];
         $form['menu']['weight'] = [
           '#title' => $this->t('Weight'),
-          '#type' => 'text',
+          '#type' => 'textfield',
           '#default_value' => $menu['weight'] ?? 0,
           '#description' => $this->t('In the menu, the heavier links will sink and the lighter links will be positioned nearer the top.'),
           '#states' => [
@@ -401,7 +401,7 @@ class Page extends PathPluginBase {
         $form['tab_options']['title'] = [
           '#prefix' => '<div class="views-left-75">',
           '#title' => $this->t('Title'),
-          '#type' => 'text',
+          '#type' => 'textfield',
           '#default_value' => $tab_options['title'],
           '#description' => $this->t('If creating a parent menu link, enter the title of the link.'),
           '#states' => [
@@ -417,7 +417,7 @@ class Page extends PathPluginBase {
         ];
         $form['tab_options']['description'] = [
           '#title' => $this->t('Description'),
-          '#type' => 'text',
+          '#type' => 'textfield',
           '#default_value' => $tab_options['description'],
           '#description' => $this->t('If creating a parent menu link, enter the description of the link.'),
           '#states' => [
@@ -434,7 +434,7 @@ class Page extends PathPluginBase {
         $form['tab_options']['weight'] = [
           '#suffix' => '</div>',
           '#title' => $this->t('Tab weight'),
-          '#type' => 'text',
+          '#type' => 'textfield',
           '#default_value' => $tab_options['weight'],
           '#size' => 5,
           '#description' => $this->t('If the parent menu link is a tab, enter the weight of the tab. Heavier tabs will sink and the lighter tabs will be positioned nearer to the first menu link.'),

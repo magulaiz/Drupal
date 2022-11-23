@@ -27,25 +27,25 @@ class FormValidationMessageOrderTest extends KernelTestBase implements FormInter
   public function buildForm(array $form, FormStateInterface $form_state) {
     // Prepare fields with weights specified.
     $form['one'] = [
-      '#type' => 'text',
+      '#type' => 'textfield',
       '#title' => 'One',
       '#required' => TRUE,
       '#weight' => 40,
     ];
     $form['two'] = [
-      '#type' => 'text',
+      '#type' => 'textfield',
       '#title' => 'Two',
       '#required' => TRUE,
       '#weight' => 30,
     ];
     $form['three'] = [
-      '#type' => 'text',
+      '#type' => 'textfield',
       '#title' => 'Three',
       '#required' => TRUE,
       '#weight' => 10,
     ];
     $form['four'] = [
-      '#type' => 'text',
+      '#type' => 'textfield',
       '#title' => 'Four',
       '#required' => TRUE,
       '#weight' => 20,

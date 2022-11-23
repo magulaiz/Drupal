@@ -75,7 +75,7 @@ class CommentTypeForm extends EntityForm {
     $comment_type = $this->entity;
 
     $form['label'] = [
-      '#type' => 'text',
+      '#type' => 'textfield',
       '#title' => $this->t('Label'),
       '#maxlength' => 255,
       '#default_value' => $comment_type->label(),

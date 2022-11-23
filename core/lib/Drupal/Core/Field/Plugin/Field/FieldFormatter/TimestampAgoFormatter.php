@@ -107,14 +107,14 @@ class TimestampAgoFormatter extends FormatterBase {
     $form = parent::settingsForm($form, $form_state);
 
     $form['future_format'] = [
-      '#type' => 'text',
+      '#type' => 'textfield',
       '#title' => $this->t('Future format'),
       '#default_value' => $this->getSetting('future_format'),
       '#description' => $this->t('Use <em>@interval</em> where you want the formatted interval text to appear.'),
     ];
 
     $form['past_format'] = [
-      '#type' => 'text',
+      '#type' => 'textfield',
       '#title' => $this->t('Past format'),
       '#default_value' => $this->getSetting('past_format'),
       '#description' => $this->t('Use <em>@interval</em> where you want the formatted interval text to appear.'),

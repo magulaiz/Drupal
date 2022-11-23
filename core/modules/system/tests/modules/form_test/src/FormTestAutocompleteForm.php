@@ -24,12 +24,12 @@ class FormTestAutocompleteForm extends FormBase {
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
     $form['autocomplete_1'] = [
-      '#type' => 'text',
+      '#type' => 'textfield',
       '#title' => 'Autocomplete 1',
       '#autocomplete_route_name' => 'form_test.autocomplete_1',
     ];
     $form['autocomplete_2'] = [
-      '#type' => 'text',
+      '#type' => 'textfield',
       '#title' => 'Autocomplete 2',
       '#autocomplete_route_name' => 'form_test.autocomplete_2',
       '#autocomplete_route_parameters' => ['param' => 'value'],
@@ -42,7 +42,7 @@ class FormTestAutocompleteForm extends FormBase {
         ],
       ],
       'autocomplete_3' => [
-        '#type' => 'text',
+        '#type' => 'textfield',
         '#title' => 'Autocomplete 3',
         '#autocomplete_route_name' => 'form_test.autocomplete_1',
       ],

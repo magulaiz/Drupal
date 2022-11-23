@@ -23,9 +23,9 @@ class FormTestProgrammaticForm extends FormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
-    $form['text'] = [
-      '#title' => 'Text',
-      '#type' => 'text',
+    $form['textfield'] = [
+      '#title' => 'Textfield',
+      '#type' => 'textfield',
     ];
 
     $form['checkboxes'] = [
@@ -46,14 +46,14 @@ class FormTestProgrammaticForm extends FormBase {
       '#description' => 'If the form is submitted by clicking the "Submit with limited validation" button, then validation can be limited based on the value of this radio button.',
       '#options' => [
         'all' => 'Validate all fields',
-        'text' => 'Validate the "Textfield" field',
+        'textfield' => 'Validate the "Textfield" field',
         'field_to_validate' => 'Validate the "Field to validate" field',
       ],
       '#default_value' => 'all',
     ];
 
     $form['field_restricted'] = [
-      '#type' => 'text',
+      '#type' => 'textfield',
       '#title' => 'Textfield (no access)',
       '#access' => FALSE,
     ];
@@ -87,8 +87,8 @@ class FormTestProgrammaticForm extends FormBase {
    * {@inheritdoc}
    */
   public function validateForm(array &$form, FormStateInterface $form_state) {
-    if ($form_state->isValueEmpty('text')) {
-      $form_state->setErrorByName('text', t('Textfield is required.'));
+    if ($form_state->isValueEmpty('textfield')) {
+      $form_state->setErrorByName('textfield', t('Textfield is required.'));
     }
   }
 

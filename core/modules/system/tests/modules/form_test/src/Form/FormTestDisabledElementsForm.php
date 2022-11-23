@@ -26,7 +26,7 @@ class FormTestDisabledElementsForm extends FormBase {
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
     // Elements that take a simple default value.
-    foreach (['text', 'textarea', 'search', 'tel', 'hidden'] as $type) {
+    foreach (['textfield', 'textarea', 'search', 'tel', 'hidden'] as $type) {
       $form[$type] = [
         '#type' => $type,
         '#title' => $type,
@@ -142,7 +142,7 @@ class FormTestDisabledElementsForm extends FormBase {
     $form['disabled_container'] = [
       '#disabled' => TRUE,
     ];
-    foreach (['text', 'textarea', 'hidden', 'tel', 'url'] as $type) {
+    foreach (['textfield', 'textarea', 'hidden', 'tel', 'url'] as $type) {
       $form['disabled_container']['disabled_container_' . $type] = [
         '#type' => $type,
         '#title' => $type,

@@ -50,14 +50,14 @@ class NumericFilter extends FilterPluginBase {
     parent::buildExposeForm($form, $form_state);
 
     $form['expose']['min_placeholder'] = [
-      '#type' => 'text',
+      '#type' => 'textfield',
       '#default_value' => $this->options['expose']['min_placeholder'],
       '#title' => $this->t('Min placeholder'),
       '#size' => 40,
       '#description' => $this->t('Hint text that appears inside the Min field when empty.'),
     ];
     $form['expose']['max_placeholder'] = [
-      '#type' => 'text',
+      '#type' => 'textfield',
       '#default_value' => $this->options['expose']['max_placeholder'],
       '#title' => $this->t('Max placeholder'),
       '#size' => 40,
@@ -74,7 +74,7 @@ class NumericFilter extends FilterPluginBase {
     $form['expose']['max_placeholder']['#states']['visible'] = $states;
 
     $form['expose']['placeholder'] = [
-      '#type' => 'text',
+      '#type' => 'textfield',
       '#default_value' => $this->options['expose']['placeholder'],
       '#title' => $this->t('Placeholder'),
       '#size' => 40,
@@ -221,7 +221,7 @@ class NumericFilter extends FilterPluginBase {
     $user_input = $form_state->getUserInput();
     if ($which == 'all') {
       $form['value']['value'] = [
-        '#type' => 'text',
+        '#type' => 'textfield',
         '#title' => !$exposed ? $this->t('Value') : '',
         '#size' => 30,
         '#default_value' => $this->value['value'],
@@ -244,7 +244,7 @@ class NumericFilter extends FilterPluginBase {
       // When exposed we drop the value-value and just do value if
       // the operator is locked.
       $form['value'] = [
-        '#type' => 'text',
+        '#type' => 'textfield',
         '#title' => !$exposed ? $this->t('Value') : '',
         '#size' => 30,
         '#default_value' => $this->value['value'],
@@ -276,7 +276,7 @@ class NumericFilter extends FilterPluginBase {
 
     if ($two_value_operators_available) {
       $form['value']['min'] = [
-        '#type' => 'text',
+        '#type' => 'textfield',
         '#title' => $this->t('Min'),
         '#size' => 30,
         '#default_value' => $this->value['min'],
@@ -285,7 +285,7 @@ class NumericFilter extends FilterPluginBase {
         $form['value']['min']['#attributes']['placeholder'] = $this->options['expose']['min_placeholder'];
       }
       $form['value']['max'] = [
-        '#type' => 'text',
+        '#type' => 'textfield',
         '#title' => $this->t('Max'),
         '#size' => 30,
         '#default_value' => $this->value['max'],

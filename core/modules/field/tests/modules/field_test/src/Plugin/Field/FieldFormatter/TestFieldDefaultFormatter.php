@@ -37,7 +37,7 @@ class TestFieldDefaultFormatter extends FormatterBase {
   public function settingsForm(array $form, FormStateInterface $form_state) {
     $element['test_formatter_setting'] = [
       '#title' => $this->t('Setting'),
-      '#type' => 'text',
+      '#type' => 'textfield',
       '#size' => 20,
       '#default_value' => $this->getSetting('test_formatter_setting'),
       '#required' => TRUE,

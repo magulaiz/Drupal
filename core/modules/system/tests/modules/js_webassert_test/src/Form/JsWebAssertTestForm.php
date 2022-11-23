@@ -161,7 +161,7 @@ class JsWebAssertTestForm extends FormBase {
    */
   public static function addField(array $form, FormStateInterface $form_state) {
     $form['added_field'] = [
-      '#type' => 'text',
+      '#type' => 'textfield',
       '#title' => 'Added textfield',
       '#name' => 'added_field',
     ];
@@ -189,7 +189,7 @@ class JsWebAssertTestForm extends FormBase {
     $form['#attached']['library'][] = 'js_webassert_test/wait_for_ajax_request';
 
     $form['test_assert_wait_on_ajax_input'] = [
-      '#type' => 'text',
+      '#type' => 'textfield',
       '#name' => 'test_assert_wait_on_ajax_input',
     ];
 

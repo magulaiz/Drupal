@@ -20,7 +20,7 @@ use Drupal\Core\Render\Element;
  * Usage example:
  * @code
  * $form['title'] = array(
- *   '#type' => 'text',
+ *   '#type' => 'textfield',
  *   '#title' => $this->t('Subject'),
  *   '#default_value' => $node->title,
  *   '#size' => 60,
@@ -85,7 +85,7 @@ class Textfield extends FormElement {
   }
 
   /**
-   * Prepares a #type 'text' render element for input.html.twig.
+   * Prepares a #type 'textfield' render element for input.html.twig.
    *
    * @param array $element
    *   An associative array containing the properties of the element.

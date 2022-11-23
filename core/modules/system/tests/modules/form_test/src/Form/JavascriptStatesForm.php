@@ -28,7 +28,7 @@ class JavascriptStatesForm extends FormBase {
       '#title' => 'Checkbox trigger',
     ];
     $form['textfield_trigger'] = [
-      '#type' => 'text',
+      '#type' => 'textfield',
       '#title' => 'Textfield trigger',
     ];
     $form['radios_trigger'] = [
@@ -64,7 +64,7 @@ class JavascriptStatesForm extends FormBase {
     // Tested fields.
     // Checkbox trigger.
     $form['textfield_invisible_when_checkbox_trigger_checked'] = [
-      '#type' => 'text',
+      '#type' => 'textfield',
       '#title' => 'Textfield invisible when checkbox trigger checked',
       '#states' => [
         'invisible' => [
@@ -73,7 +73,7 @@ class JavascriptStatesForm extends FormBase {
       ],
     ];
     $form['textfield_required_when_checkbox_trigger_checked'] = [
-      '#type' => 'text',
+      '#type' => 'textfield',
       '#title' => 'Textfield required when checkbox trigger checked',
       '#states' => [
         'required' => [
@@ -91,7 +91,7 @@ class JavascriptStatesForm extends FormBase {
       ],
     ];
     $form['details_expanded_when_checkbox_trigger_checked']['textfield_in_details'] = [
-      '#type' => 'text',
+      '#type' => 'textfield',
       '#title' => 'Textfield in details',
     ];
     $form['checkbox_checked_when_checkbox_trigger_checked'] = [
@@ -133,7 +133,7 @@ class JavascriptStatesForm extends FormBase {
 
     // Checkboxes trigger.
     $form['textfield_visible_when_checkboxes_trigger_value2_checked'] = [
-      '#type' => 'text',
+      '#type' => 'textfield',
       '#title' => 'Textfield visible when checkboxes trigger value2 checked',
       '#states' => [
         'visible' => [
@@ -142,7 +142,7 @@ class JavascriptStatesForm extends FormBase {
       ],
     ];
     $form['textfield_visible_when_checkboxes_trigger_value3_checked'] = [
-      '#type' => 'text',
+      '#type' => 'textfield',
       '#title' => 'Textfield visible when checkboxes trigger value3 checked',
       '#states' => [
         'visible' => [
@@ -162,11 +162,11 @@ class JavascriptStatesForm extends FormBase {
       ],
     ];
     $form['fieldset_visible_when_radios_trigger_has_value2']['textfield_in_fieldset'] = [
-      '#type' => 'text',
+      '#type' => 'textfield',
       '#title' => 'Textfield in fieldset',
     ];
     $form['textfield_invisible_when_radios_trigger_has_value2'] = [
-      '#type' => 'text',
+      '#type' => 'textfield',
       '#title' => 'Textfield invisible when radio trigger has value2',
       '#states' => [
         'invisible' => [
@@ -216,7 +216,7 @@ class JavascriptStatesForm extends FormBase {
       ],
     ];
     $form['details_expanded_when_radios_trigger_has_value3']['textfield_in_details'] = [
-      '#type' => 'text',
+      '#type' => 'textfield',
       '#title' => 'Textfield in details',
     ];
 
@@ -231,7 +231,7 @@ class JavascriptStatesForm extends FormBase {
       ],
     ];
     $form['textfield_visible_when_select_trigger_has_value3'] = [
-      '#type' => 'text',
+      '#type' => 'textfield',
       '#title' => 'Textfield visible when select trigger has value3',
       '#states' => [
         'visible' => [
@@ -240,7 +240,7 @@ class JavascriptStatesForm extends FormBase {
       ],
     ];
     $form['textfield_visible_when_select_trigger_has_value2_or_value3'] = [
-      '#type' => 'text',
+      '#type' => 'textfield',
       '#title' => 'Textfield visible when select trigger has value2 or value3',
       '#states' => [
         'visible' => [
@@ -294,7 +294,7 @@ class JavascriptStatesForm extends FormBase {
       ],
     ];
     $form['textfield_required_when_textfield_trigger_filled'] = [
-      '#type' => 'text',
+      '#type' => 'textfield',
       '#title' => 'Textfield required  when textfield trigger filled',
       '#states' => [
         'required' => [
@@ -312,7 +312,7 @@ class JavascriptStatesForm extends FormBase {
       ],
     ];
     $form['details_expanded_when_textfield_trigger_filled']['textfield_in_details'] = [
-      '#type' => 'text',
+      '#type' => 'textfield',
       '#title' => 'Textfield in details',
     ];
 
@@ -337,9 +337,9 @@ class JavascriptStatesForm extends FormBase {
       '#type' => 'number',
       '#title' => 'enter 1',
     ];
-    $form['text'] = [
-      '#type' => 'text',
-      '#title' => 'text',
+    $form['textfield'] = [
+      '#type' => 'textfield',
+      '#title' => 'textfield',
       '#states' => [
         'visible' => [
           [':input[name="select"]' => ['value' => '1']],

@@ -153,7 +153,7 @@ class FileItem extends EntityReferenceItem {
     $settings = $this->getSettings();
 
     $element['file_directory'] = [
-      '#type' => 'text',
+      '#type' => 'textfield',
       '#title' => $this->t('File directory'),
       '#default_value' => $settings['file_directory'],
       '#description' => $this->t('Optional subdirectory within the upload destination where files will be stored. Do not include preceding or trailing slashes.'),
@@ -164,7 +164,7 @@ class FileItem extends EntityReferenceItem {
     // Make the extension list a little more human-friendly by comma-separation.
     $extensions = str_replace(' ', ', ', $settings['file_extensions']);
     $element['file_extensions'] = [
-      '#type' => 'text',
+      '#type' => 'textfield',
       '#title' => $this->t('Allowed file extensions'),
       '#default_value' => $extensions,
       '#description' => $this->t("Separate extensions with a comma or space. Each extension can contain alphanumeric characters, '.', and '_', and should start and end with an alphanumeric character."),
@@ -177,7 +177,7 @@ class FileItem extends EntityReferenceItem {
     ];
 
     $element['max_filesize'] = [
-      '#type' => 'text',
+      '#type' => 'textfield',
       '#title' => $this->t('Maximum upload size'),
       '#default_value' => $settings['max_filesize'],
       '#description' => $this->t('Enter a value like "512" (bytes), "80 KB" (kilobytes) or "50 MB" (megabytes) in order to restrict the allowed file size. If left empty the file sizes could be limited only by PHP\'s maximum post and file upload sizes (current limit <strong>%limit</strong>).', ['%limit' => format_size(Environment::getUploadMaxSize())]),

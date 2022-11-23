@@ -35,7 +35,7 @@ class Equality extends FilterPluginBase {
    */
   protected function valueForm(&$form, FormStateInterface $form_state) {
     $form['value'] = [
-      '#type' => 'text',
+      '#type' => 'textfield',
       '#title' => $this->t('Value'),
       '#size' => 30,
       '#default_value' => $this->value,

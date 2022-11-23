@@ -526,7 +526,7 @@ class ContentTranslationHandler implements ContentTranslationHandlerInterface, E
 
       $date = $new_translation ? REQUEST_TIME : $metadata->getCreatedTime();
       $form['content_translation']['created'] = [
-        '#type' => 'text',
+        '#type' => 'textfield',
         '#title' => t('Authored on'),
         '#maxlength' => 25,
         '#description' => t('Format: %time. The date format is YYYY-MM-DD and %timezone is the time zone offset from UTC. Leave blank to use the time of form submission.', [
@@ -640,7 +640,7 @@ class ContentTranslationHandler implements ContentTranslationHandlerInterface, E
     // Elements which can have a #title attribute according to FAPI Reference.
     if (!isset($suffix)) {
       $suffix = ' <span class="translation-entity-all-languages">(' . t('all languages') . ')</span>';
-      $fapi_title_elements = array_flip(['checkbox', 'checkboxes', 'date', 'details', 'fieldset', 'file', 'item', 'password', 'password_confirm', 'radio', 'radios', 'select', 'text_format', 'textarea', 'text', 'weight']);
+      $fapi_title_elements = array_flip(['checkbox', 'checkboxes', 'date', 'details', 'fieldset', 'file', 'item', 'password', 'password_confirm', 'radio', 'radios', 'select', 'text_format', 'textarea', 'textfield', 'weight']);
     }
 
     // Update #title attribute for all elements that are allowed to have a

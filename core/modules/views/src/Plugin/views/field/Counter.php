@@ -37,7 +37,7 @@ class Counter extends FieldPluginBase {
    */
   public function buildOptionsForm(&$form, FormStateInterface $form_state) {
     $form['counter_start'] = [
-      '#type' => 'text',
+      '#type' => 'textfield',
       '#title' => $this->t('Starting value'),
       '#default_value' => $this->options['counter_start'],
       '#description' => $this->t('Specify the number the counter should start at.'),

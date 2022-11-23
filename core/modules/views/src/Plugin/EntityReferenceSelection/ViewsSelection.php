@@ -162,7 +162,7 @@ class ViewsSelection extends SelectionPluginBase implements ContainerFactoryPlug
 
       $default = !empty($view_settings['arguments']) ? implode(', ', $view_settings['arguments']) : '';
       $form['view']['arguments'] = [
-        '#type' => 'text',
+        '#type' => 'textfield',
         '#title' => $this->t('View arguments'),
         '#default_value' => $default,
         '#required' => FALSE,

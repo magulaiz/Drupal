@@ -103,7 +103,7 @@ function olivero_form_system_theme_settings_alter(&$form, FormStateInterface $fo
 
   foreach ($color_config['colors'] as $key => $title) {
     $form['olivero_settings']['olivero_utilities']['olivero_color_scheme'][$key] = [
-      '#type' => 'text',
+      '#type' => 'textfield',
       '#maxlength' => 7,
       '#size' => 10,
       '#title' => t($title),

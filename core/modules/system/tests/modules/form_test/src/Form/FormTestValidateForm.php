@@ -36,7 +36,7 @@ class FormTestValidateForm extends FormBase {
     $object = new Callbacks();
 
     $form['name'] = [
-      '#type' => 'text',
+      '#type' => 'textfield',
       '#title' => 'Name',
       '#default_value' => '',
       '#element_validate' => [[$object, 'validateName']],

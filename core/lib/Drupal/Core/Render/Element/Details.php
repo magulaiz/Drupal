@@ -26,7 +26,7 @@ use Drupal\Core\Render\Element;
  * );
  *
  * $form['author']['name'] = array(
- *   '#type' => 'text',
+ *   '#type' => 'textfield',
  *   '#title' => $this->t('Name'),
  * );
  * @endcode

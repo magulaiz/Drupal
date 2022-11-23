@@ -34,7 +34,7 @@ class TelephoneLinkFormatter extends FormatterBase {
    */
   public function settingsForm(array $form, FormStateInterface $form_state) {
     $elements['title'] = [
-      '#type' => 'text',
+      '#type' => 'textfield',
       '#title' => $this->t('Title to replace basic numeric telephone number display'),
       '#default_value' => $this->getSetting('title'),
     ];

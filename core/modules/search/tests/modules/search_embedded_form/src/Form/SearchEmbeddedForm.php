@@ -26,7 +26,7 @@ class SearchEmbeddedForm extends FormBase {
     $count = \Drupal::state()->get('search_embedded_form.submit_count', 0);
 
     $form['name'] = [
-      '#type' => 'text',
+      '#type' => 'textfield',
       '#title' => $this->t('Your name'),
       '#maxlength' => 255,
       '#default_value' => '',

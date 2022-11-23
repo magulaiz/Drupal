@@ -19,7 +19,7 @@ class DateFormat extends FormElementBase {
     $format = $this->t('Displayed as %date_format', ['%date_format' => $date_formatter->format(REQUEST_TIME, 'custom', $translation_config)]);
 
     return [
-      '#type' => 'text',
+      '#type' => 'textfield',
       '#description' => $description,
       '#field_suffix' => ' <small data-drupal-date-formatter="preview">' . $format . '</small>',
       '#attributes' => [

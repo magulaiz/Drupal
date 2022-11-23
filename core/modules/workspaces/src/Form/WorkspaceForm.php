@@ -70,7 +70,7 @@ class WorkspaceForm extends ContentEntityForm implements WorkspaceFormInterface 
       $form['#title'] = $this->t('Edit workspace %label', ['%label' => $workspace->label()]);
     }
     $form['label'] = [
-      '#type' => 'text',
+      '#type' => 'textfield',
       '#title' => $this->t('Label'),
       '#maxlength' => 255,
       '#default_value' => $workspace->label(),

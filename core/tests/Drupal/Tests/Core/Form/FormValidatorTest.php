@@ -301,7 +301,7 @@ class FormValidatorTest extends UnitTestCase {
 
     $form = [];
     $form['test'] = $element + [
-      '#type' => 'text',
+      '#type' => 'textfield',
       '#value' => '',
       '#needs_validation' => TRUE,
       '#required' => TRUE,
@@ -355,7 +355,7 @@ class FormValidatorTest extends UnitTestCase {
 
     $form = [];
     $form['test'] = [
-      '#type' => 'text',
+      '#type' => 'textfield',
       '#title' => 'Test',
       '#parents' => ['test'],
       '#element_validate' => [[$mock, 'element_validate']],
@@ -455,7 +455,7 @@ class FormValidatorTest extends UnitTestCase {
       ],
       [
         [
-          '#type' => 'text',
+          '#type' => 'textfield',
           '#maxlength' => 7,
           '#value' => $this->randomMachineName(8),
         ],

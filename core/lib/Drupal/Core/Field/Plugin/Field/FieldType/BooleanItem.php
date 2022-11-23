@@ -66,13 +66,13 @@ class BooleanItem extends FieldItemBase implements OptionsProviderInterface {
     $element = [];
 
     $element['on_label'] = [
-      '#type' => 'text',
+      '#type' => 'textfield',
       '#title' => $this->t('"On" label'),
       '#default_value' => $this->getSetting('on_label'),
       '#required' => TRUE,
     ];
     $element['off_label'] = [
-      '#type' => 'text',
+      '#type' => 'textfield',
       '#title' => $this->t('"Off" label'),
       '#default_value' => $this->getSetting('off_label'),
       '#required' => TRUE,

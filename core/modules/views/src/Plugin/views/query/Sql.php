@@ -313,13 +313,13 @@ class Sql extends QueryPluginBase {
       '#default_value' => !empty($this->options['replica']),
     ];
     $form['query_comment'] = [
-      '#type' => 'text',
+      '#type' => 'textfield',
       '#title' => $this->t('Query Comment'),
       '#description' => $this->t('If set, this comment will be embedded in the query and passed to the SQL server. This can be helpful for logging or debugging.'),
       '#default_value' => $this->options['query_comment'],
     ];
     $form['query_tags'] = [
-      '#type' => 'text',
+      '#type' => 'textfield',
       '#title' => $this->t('Query Tags'),
       '#description' => $this->t('If set, these tags will be appended to the query and can be used to identify the query in a module. This can be helpful for altering queries.'),
       '#default_value' => implode(', ', $this->options['query_tags']),

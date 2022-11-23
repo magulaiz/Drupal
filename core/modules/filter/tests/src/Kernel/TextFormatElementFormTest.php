@@ -93,7 +93,7 @@ class TextFormatElementFormTest extends KernelTestBase implements FormInterface 
       '#type' => 'text_format',
       '#required' => TRUE,
       '#title' => 'Text',
-      '#base_type' => 'text',
+      '#base_type' => 'textfield',
       '#format' => NULL,
       '#default_value' => 'test value',
     ];

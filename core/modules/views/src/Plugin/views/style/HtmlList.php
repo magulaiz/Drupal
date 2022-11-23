@@ -58,14 +58,14 @@ class HtmlList extends StylePluginBase {
     $form['wrapper_class'] = [
       '#title' => $this->t('Wrapper class'),
       '#description' => $this->t('The class to provide on the wrapper, outside the list.'),
-      '#type' => 'text',
+      '#type' => 'textfield',
       '#size' => '30',
       '#default_value' => $this->options['wrapper_class'],
     ];
     $form['class'] = [
       '#title' => $this->t('List class'),
       '#description' => $this->t('The class to provide on the list element itself.'),
-      '#type' => 'text',
+      '#type' => 'textfield',
       '#size' => '30',
       '#default_value' => $this->options['class'],
     ];

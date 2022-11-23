@@ -37,13 +37,13 @@ class FileTestForm implements FormInterface {
       '#default_value' => FileSystemInterface::EXISTS_RENAME,
     ];
     $form['file_subdir'] = [
-      '#type' => 'text',
+      '#type' => 'textfield',
       '#title' => t('Subdirectory for test file'),
       '#default_value' => '',
     ];
 
     $form['extensions'] = [
-      '#type' => 'text',
+      '#type' => 'textfield',
       '#title' => t('Allowed extensions.'),
       '#default_value' => '',
     ];

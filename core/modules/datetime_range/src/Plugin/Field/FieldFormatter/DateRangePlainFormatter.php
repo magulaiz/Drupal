@@ -78,7 +78,7 @@ class DateRangePlainFormatter extends DateTimePlainFormatter {
     $form = parent::settingsForm($form, $form_state);
 
     $form['separator'] = [
-      '#type' => 'text',
+      '#type' => 'textfield',
       '#title' => $this->t('Date separator'),
       '#description' => $this->t('The string to separate the start and end dates'),
       '#default_value' => $this->getSetting('separator'),

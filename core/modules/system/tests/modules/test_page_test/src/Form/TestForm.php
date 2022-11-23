@@ -32,7 +32,7 @@ class TestForm extends FormBase {
     ];
 
     $form['name'] = [
-      '#type' => 'text',
+      '#type' => 'textfield',
       '#title' => 'Name',
       '#default_value' => 'Test name',
     ];
@@ -50,7 +50,7 @@ class TestForm extends FormBase {
     ];
 
     $form['description'] = [
-      '#type' => 'text',
+      '#type' => 'textfield',
       '#title' => 'Description',
       '#default_value' => '',
     ];

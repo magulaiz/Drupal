@@ -37,7 +37,7 @@ class FormTestRebuildPreserveValuesForm extends FormBase {
         '#default_value' => TRUE,
       ],
       'text_1' => [
-        '#type' => 'text',
+        '#type' => 'textfield',
         '#title' => t('This textfield has a non-empty default value.'),
         '#default_value' => 'DEFAULT 1',
       ],
@@ -66,7 +66,7 @@ class FormTestRebuildPreserveValuesForm extends FormBase {
           '#default_value' => TRUE,
         ],
         'text_2' => [
-          '#type' => 'text',
+          '#type' => 'textfield',
           '#title' => t('This textfield has a non-empty default value.'),
           '#default_value' => 'DEFAULT 2',
         ],

@@ -50,14 +50,14 @@ class Full extends SqlBase {
     ];
 
     $form['tags']['first'] = [
-      '#type' => 'text',
+      '#type' => 'textfield',
       '#title' => $this->t('First page link text'),
       '#default_value' => $this->options['tags']['first'],
       '#weight' => -10,
     ];
 
     $form['tags']['last'] = [
-      '#type' => 'text',
+      '#type' => 'textfield',
       '#title' => $this->t('Last page link text'),
       '#default_value' => $this->options['tags']['last'],
       '#weight' => 10,

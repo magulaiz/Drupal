@@ -59,7 +59,7 @@ class PluralVariants extends FormElementBase {
     ];
     for ($i = 0; $i < $plurals; $i++) {
       $element[$i] = [
-        '#type' => 'text',
+        '#type' => 'textfield',
         // @todo Should use better labels https://www.drupal.org/node/2499639
         '#title' => $i == 0 ? $this->t('Singular form') : $this->formatPlural($i, 'First plural form', '@count. plural form'),
         '#default_value' => $values[$i] ?? '',

@@ -26,7 +26,7 @@ class AjaxFormsTestValidationForm extends FormBase {
     $form['drivertext'] = [
       '#title' => $this->t('AJAX-enabled textfield.'),
       '#description' => $this->t("When this one AJAX-triggers and the spare required field is empty, you should not get an error."),
-      '#type' => 'text',
+      '#type' => 'textfield',
       '#default_value' => $form_state->getValue('drivertext', ''),
       '#ajax' => [
         'callback' => 'ajax_forms_test_validation_form_callback',
@@ -51,7 +51,7 @@ class AjaxFormsTestValidationForm extends FormBase {
 
     $form['spare_required_field'] = [
       '#title' => $this->t("Spare Required Field"),
-      '#type' => 'text',
+      '#type' => 'textfield',
       '#required' => TRUE,
     ];
 

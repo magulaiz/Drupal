@@ -136,13 +136,13 @@ abstract class SqlBase extends PagerPluginBase implements CacheableDependencyInt
     ];
 
     $form['tags']['previous'] = [
-      '#type' => 'text',
+      '#type' => 'textfield',
       '#title' => $this->t('Previous page link text'),
       '#default_value' => $this->options['tags']['previous'],
     ];
 
     $form['tags']['next'] = [
-      '#type' => 'text',
+      '#type' => 'textfield',
       '#title' => $this->t('Next page link text'),
       '#default_value' => $this->options['tags']['next'],
     ];
@@ -163,7 +163,7 @@ abstract class SqlBase extends PagerPluginBase implements CacheableDependencyInt
     ];
 
     $form['expose']['items_per_page_label'] = [
-      '#type' => 'text',
+      '#type' => 'textfield',
       '#title' => $this->t('Items per page label'),
       '#required' => TRUE,
       '#default_value' => $this->options['expose']['items_per_page_label'],
@@ -175,7 +175,7 @@ abstract class SqlBase extends PagerPluginBase implements CacheableDependencyInt
     ];
 
     $form['expose']['items_per_page_options'] = [
-      '#type' => 'text',
+      '#type' => 'textfield',
       '#title' => $this->t('Exposed items per page options'),
       '#required' => TRUE,
       '#description' => $this->t('Set between which values the user can choose when determining the items per page. Separated by comma.'),
@@ -194,7 +194,7 @@ abstract class SqlBase extends PagerPluginBase implements CacheableDependencyInt
     ];
 
     $form['expose']['items_per_page_options_all_label'] = [
-      '#type' => 'text',
+      '#type' => 'textfield',
       '#title' => $this->t('All items label'),
       '#default_value' => $this->options['expose']['items_per_page_options_all_label'],
       '#states' => [
@@ -211,7 +211,7 @@ abstract class SqlBase extends PagerPluginBase implements CacheableDependencyInt
     ];
 
     $form['expose']['offset_label'] = [
-      '#type' => 'text',
+      '#type' => 'textfield',
       '#title' => $this->t('Offset label'),
       '#required' => TRUE,
       '#default_value' => $this->options['expose']['offset_label'],
@@ -372,7 +372,7 @@ abstract class SqlBase extends PagerPluginBase implements CacheableDependencyInt
 
     if ($this->isOffsetExposed()) {
       $form['offset'] = [
-        '#type' => 'text',
+        '#type' => 'textfield',
         '#size' => 10,
         '#maxlength' => 10,
         '#title' => $this->options['expose']['offset_label'],

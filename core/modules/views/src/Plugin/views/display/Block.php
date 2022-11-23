@@ -195,7 +195,7 @@ class Block extends DisplayPluginBase {
       case 'block_description':
         $form['#title'] .= $this->t('Block admin description');
         $form['block_description'] = [
-          '#type' => 'text',
+          '#type' => 'textfield',
           '#description' => $this->t('This will appear as the name of this block in administer >> structure >> blocks.'),
           '#default_value' => $this->getOption('block_description'),
         ];
@@ -204,7 +204,7 @@ class Block extends DisplayPluginBase {
       case 'block_category':
         $form['#title'] .= $this->t('Block category');
         $form['block_category'] = [
-          '#type' => 'text',
+          '#type' => 'textfield',
           '#autocomplete_route_name' => 'block.category_autocomplete',
           '#description' => $this->t('The category this block will appear under on the <a href=":href">blocks placement page</a>.', [':href' => Url::fromRoute('block.admin_display')->toString()]),
           '#default_value' => $this->getOption('block_category'),

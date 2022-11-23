@@ -19,7 +19,7 @@ class ComplexTestTypeTransitionForm extends WorkflowTypeTransitionFormBase {
     $transition = $form_state->get('transition');
     $configuration = $this->workflowType->getConfiguration();
     $form['extra'] = [
-      '#type' => 'text',
+      '#type' => 'textfield',
       '#title' => $this->t('Extra'),
       '#description' => $this->t('Extra information added to transition'),
       '#default_value' => $transition && isset($configuration['transitions'][$transition->id()]['extra']) ? $configuration['transitions'][$transition->id()]['extra'] : '',

@@ -38,7 +38,7 @@ class DefaultSummary extends StylePluginBase {
 
   public function buildOptionsForm(&$form, FormStateInterface $form_state) {
     $form['base_path'] = [
-      '#type' => 'text',
+      '#type' => 'textfield',
       '#title' => $this->t('Base path'),
       '#default_value' => $this->options['base_path'],
       '#description' => $this->t('Define the base path for links in this summary
@@ -59,7 +59,7 @@ class DefaultSummary extends StylePluginBase {
     ];
 
     $form['items_per_page'] = [
-      '#type' => 'text',
+      '#type' => 'textfield',
       '#title' => $this->t('Items to display'),
       '#default_value' => $this->options['items_per_page'],
       '#states' => [

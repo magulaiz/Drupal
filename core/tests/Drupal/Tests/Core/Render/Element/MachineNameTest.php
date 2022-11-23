@@ -68,7 +68,7 @@ class MachineNameTest extends UnitTestCase {
 
     $complete_form = [
       'test_source' => [
-        '#type' => 'text',
+        '#type' => 'textfield',
         '#id' => 'source',
       ],
       'test_machine_name' => $element,

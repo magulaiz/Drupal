@@ -547,7 +547,7 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
       '#weight' => -103,
     ];
     $form['label'] = [
-      '#type' => 'text',
+      '#type' => 'textfield',
       '#title' => $this->t('Label'),
       '#default_value' => $label,
       '#states' => [
@@ -617,7 +617,7 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
     $form['element_class'] = [
       '#title' => $this->t('CSS class'),
       '#description' => $this->t('You may use token substitutions from the rewriting section in this class.'),
-      '#type' => 'text',
+      '#type' => 'textfield',
       '#default_value' => $this->options['element_class'],
       '#states' => [
         'visible' => [
@@ -661,7 +661,7 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
     $form['element_label_class'] = [
       '#title' => $this->t('CSS class'),
       '#description' => $this->t('You may use token substitutions from the rewriting section in this class.'),
-      '#type' => 'text',
+      '#type' => 'textfield',
       '#default_value' => $this->options['element_label_class'],
       '#states' => [
         'visible' => [
@@ -706,7 +706,7 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
     $form['element_wrapper_class'] = [
       '#title' => $this->t('CSS class'),
       '#description' => $this->t('You may use token substitutions from the rewriting section in this class.'),
-      '#type' => 'text',
+      '#type' => 'textfield',
       '#default_value' => $this->options['element_wrapper_class'],
       '#states' => [
         'visible' => [
@@ -762,7 +762,7 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
       ];
       $form['alter']['path'] = [
         '#title' => $this->t('Link path'),
-        '#type' => 'text',
+        '#type' => 'textfield',
         '#default_value' => $this->options['alter']['path'],
         '#description' => $this->t('The Drupal path or absolute URL for this link. You may enter data from this view as per the "Replacement patterns" below.'),
         '#states' => [
@@ -823,7 +823,7 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
       ];
       $form['alter']['link_class'] = [
         '#title' => $this->t('Link class'),
-        '#type' => 'text',
+        '#type' => 'textfield',
         '#default_value' => $this->options['alter']['link_class'],
         '#description' => $this->t('The CSS class to apply to the link.'),
         '#states' => [
@@ -834,7 +834,7 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
       ];
       $form['alter']['alt'] = [
         '#title' => $this->t('Title text'),
-        '#type' => 'text',
+        '#type' => 'textfield',
         '#default_value' => $this->options['alter']['alt'],
         '#description' => $this->t('Text to place as "title" text which most browsers display as a tooltip when hovering over the link.'),
         '#states' => [
@@ -845,7 +845,7 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
       ];
       $form['alter']['rel'] = [
         '#title' => $this->t('Rel Text'),
-        '#type' => 'text',
+        '#type' => 'textfield',
         '#default_value' => $this->options['alter']['rel'],
         '#description' => $this->t('Include Rel attribute for use in lightbox2 or other javascript utility.'),
         '#states' => [
@@ -856,7 +856,7 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
       ];
       $form['alter']['prefix'] = [
         '#title' => $this->t('Prefix text'),
-        '#type' => 'text',
+        '#type' => 'textfield',
         '#default_value' => $this->options['alter']['prefix'],
         '#description' => $this->t('Any text to display before this link. You may include HTML.'),
         '#states' => [
@@ -867,7 +867,7 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
       ];
       $form['alter']['suffix'] = [
         '#title' => $this->t('Suffix text'),
-        '#type' => 'text',
+        '#type' => 'textfield',
         '#default_value' => $this->options['alter']['suffix'],
         '#description' => $this->t('Any text to display after this link. You may include HTML.'),
         '#states' => [
@@ -878,7 +878,7 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
       ];
       $form['alter']['target'] = [
         '#title' => $this->t('Target'),
-        '#type' => 'text',
+        '#type' => 'textfield',
         '#default_value' => $this->options['alter']['target'],
         '#description' => $this->t("Target of the link, such as _blank, _parent or an iframe's name. This field is rarely used."),
         '#states' => [
@@ -963,7 +963,7 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
 
       $form['alter']['max_length'] = [
         '#title' => $this->t('Maximum number of characters'),
-        '#type' => 'text',
+        '#type' => 'textfield',
         '#default_value' => $this->options['alter']['max_length'],
         '#states' => [
           'visible' => [
@@ -1007,7 +1007,7 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
       ];
 
       $form['alter']['more_link_text'] = [
-        '#type' => 'text',
+        '#type' => 'textfield',
         '#title' => $this->t('More link label'),
         '#default_value' => $this->options['alter']['more_link_text'],
         '#description' => $this->t('You may use the "Replacement patterns" above.'),
@@ -1019,7 +1019,7 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
         ],
       ];
       $form['alter']['more_link_path'] = [
-        '#type' => 'text',
+        '#type' => 'textfield',
         '#title' => $this->t('More link path'),
         '#default_value' => $this->options['alter']['more_link_path'],
         '#description' => $this->t('This can be an internal Drupal path such as node/add or an external URL such as "https://www.drupal.org". You may use the "Replacement patterns" above.'),
@@ -1050,7 +1050,7 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
       ];
 
       $form['alter']['preserve_tags'] = [
-        '#type' => 'text',
+        '#type' => 'textfield',
         '#title' => $this->t('Preserve certain tags'),
         '#description' => $this->t('List the tags that need to be preserved during the stripping process. example &quot;&lt;p&gt; &lt;br&gt;&quot; which will preserve all p and br elements'),
         '#default_value' => $this->options['alter']['preserve_tags'],

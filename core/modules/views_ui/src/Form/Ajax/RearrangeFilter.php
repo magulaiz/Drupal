@@ -168,7 +168,7 @@ class RearrangeFilter extends ViewsFormBase {
       $form['filters'][$id]['weight'] = [
         '#title' => $this->t('Weight for @id', ['@id' => $id]),
         '#title_display' => 'invisible',
-        '#type' => 'text',
+        '#type' => 'textfield',
         '#default_value' => ++$count,
         '#size' => 8,
       ];

@@ -154,7 +154,7 @@ abstract class ViewsBlockBase extends BlockBase implements ContainerFactoryPlugi
 
     $form['views_label'] = [
       '#title' => $this->t('Title'),
-      '#type' => 'text',
+      '#type' => 'textfield',
       '#default_value' => $this->configuration['views_label'] ?: $this->view->getTitle(),
       '#states' => [
         'visible' => [

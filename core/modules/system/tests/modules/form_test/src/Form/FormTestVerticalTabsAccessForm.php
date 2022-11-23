@@ -45,7 +45,7 @@ class FormTestVerticalTabsAccessForm extends FormBase {
     ];
     $form['tab2']['field2'] = [
       '#title' => t('Field 2'),
-      '#type' => 'text',
+      '#type' => 'textfield',
       '#default_value' => 'field2',
     ];
 

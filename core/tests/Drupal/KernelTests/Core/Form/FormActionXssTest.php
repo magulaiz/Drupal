@@ -34,7 +34,7 @@ class FormActionXssTest extends KernelTestBase implements FormInterface {
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
     $form['something'] = [
-      '#type' => 'text',
+      '#type' => 'textfield',
       '#title' => 'What do you think?',
     ];
     return $form;

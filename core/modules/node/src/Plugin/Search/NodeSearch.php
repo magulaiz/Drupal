@@ -600,7 +600,7 @@ class NodeSearch extends ConfigurableSearchPluginBase implements AccessibleInter
     ];
 
     $form['advanced']['keywords-fieldset']['keywords']['or'] = [
-      '#type' => 'text',
+      '#type' => 'textfield',
       '#title' => $this->t('Containing any of the words'),
       '#size' => 30,
       '#maxlength' => 255,
@@ -608,7 +608,7 @@ class NodeSearch extends ConfigurableSearchPluginBase implements AccessibleInter
     ];
 
     $form['advanced']['keywords-fieldset']['keywords']['phrase'] = [
-      '#type' => 'text',
+      '#type' => 'textfield',
       '#title' => $this->t('Containing the phrase'),
       '#size' => 30,
       '#maxlength' => 255,
@@ -616,7 +616,7 @@ class NodeSearch extends ConfigurableSearchPluginBase implements AccessibleInter
     ];
 
     $form['advanced']['keywords-fieldset']['keywords']['negative'] = [
-      '#type' => 'text',
+      '#type' => 'textfield',
       '#title' => $this->t('Containing none of the words'),
       '#size' => 30,
       '#maxlength' => 255,

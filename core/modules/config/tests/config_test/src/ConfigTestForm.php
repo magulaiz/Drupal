@@ -22,7 +22,7 @@ class ConfigTestForm extends EntityForm {
 
     $entity = $this->entity;
     $form['label'] = [
-      '#type' => 'text',
+      '#type' => 'textfield',
       '#title' => 'Label',
       '#default_value' => $entity->label(),
       '#required' => TRUE,

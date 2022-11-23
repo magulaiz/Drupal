@@ -26,7 +26,7 @@ class FormTestMachineNameValidationForm extends FormBase {
     $form['#attributes']['novalidate'] = 'novalidate';
 
     $form['name'] = [
-      '#type' => 'text',
+      '#type' => 'textfield',
       '#default_value' => $form_state->getValue('name'),
       '#maxlength' => 50,
       '#required' => TRUE,

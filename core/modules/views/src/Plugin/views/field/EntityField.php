@@ -549,7 +549,7 @@ class EntityField extends FieldPluginBase implements CacheableDependencyInterfac
     [$prefix, $suffix] = explode('@count', $this->t('Display @count value(s)'));
 
     if ($field->getCardinality() == FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED) {
-      $type = 'text';
+      $type = 'textfield';
       $options = NULL;
       $size = 5;
     }
@@ -577,7 +577,7 @@ class EntityField extends FieldPluginBase implements CacheableDependencyInterfac
     ];
 
     $form['separator'] = [
-      '#type' => 'text',
+      '#type' => 'textfield',
       '#title' => $this->t('Separator'),
       '#default_value' => $this->options['separator'],
       '#states' => [
@@ -607,7 +607,7 @@ class EntityField extends FieldPluginBase implements CacheableDependencyInterfac
 
     [$prefix, $suffix] = explode('@count', $this->t('starting from @count'));
     $form['delta_offset'] = [
-      '#type' => 'text',
+      '#type' => 'textfield',
       '#size' => 5,
       '#field_prefix' => $prefix,
       '#field_suffix' => $suffix,

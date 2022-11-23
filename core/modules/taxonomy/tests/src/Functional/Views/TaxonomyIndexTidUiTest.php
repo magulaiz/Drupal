@@ -118,11 +118,11 @@ class TaxonomyIndexTidUiTest extends UITestBase {
       }
     }
 
-    // Ensure the autocomplete input element appears when using the 'text'
+    // Ensure the autocomplete input element appears when using the 'textfield'
     // type.
     $view = View::load('test_filter_taxonomy_index_tid');
     $display =& $view->getDisplay('default');
-    $display['display_options']['filters']['tid']['type'] = 'text';
+    $display['display_options']['filters']['tid']['type'] = 'textfield';
     $view->save();
     $this->drupalGet('admin/structure/views/nojs/handler/test_filter_taxonomy_index_tid/default/filter/tid');
     $this->assertSession()->fieldExists('edit-options-value');

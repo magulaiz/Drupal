@@ -74,7 +74,7 @@ class ContactFormEditForm extends EntityForm implements ContainerInjectionInterf
     $default_form = $this->config('contact.settings')->get('default_form');
 
     $form['label'] = [
-      '#type' => 'text',
+      '#type' => 'textfield',
       '#title' => $this->t('Label'),
       '#maxlength' => 255,
       '#default_value' => $contact_form->label(),

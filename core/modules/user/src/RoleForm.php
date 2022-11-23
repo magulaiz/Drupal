@@ -18,7 +18,7 @@ class RoleForm extends EntityForm {
   public function form(array $form, FormStateInterface $form_state) {
     $entity = $this->entity;
     $form['label'] = [
-      '#type' => 'text',
+      '#type' => 'textfield',
       '#title' => $this->t('Role name'),
       '#default_value' => $entity->label(),
       '#size' => 30,

@@ -256,7 +256,7 @@ class ConfigSingleImportForm extends ConfirmFormBase {
     $form['config_name'] = [
       '#title' => $this->t('Configuration name'),
       '#description' => $this->t('Enter the name of the configuration file without the <em>.yml</em> extension. (e.g. <em>system.site</em>)'),
-      '#type' => 'text',
+      '#type' => 'textfield',
       '#states' => [
         'required' => [
           ':input[name="config_type"]' => ['value' => 'system.simple'],
@@ -278,7 +278,7 @@ class ConfigSingleImportForm extends ConfirmFormBase {
     ];
     $form['advanced']['custom_entity_id'] = [
       '#title' => $this->t('Custom Entity ID'),
-      '#type' => 'text',
+      '#type' => 'textfield',
       '#description' => $this->t('Specify a custom entity ID. This will override the entity ID in the configuration above.'),
     ];
     $form['actions'] = ['#type' => 'actions'];

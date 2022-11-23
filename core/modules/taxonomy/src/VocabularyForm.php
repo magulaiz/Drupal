@@ -55,7 +55,7 @@ class VocabularyForm extends BundleEntityFormBase {
     }
 
     $form['name'] = [
-      '#type' => 'text',
+      '#type' => 'textfield',
       '#title' => $this->t('Name'),
       '#default_value' => $vocabulary->label(),
       '#maxlength' => 255,
@@ -71,7 +71,7 @@ class VocabularyForm extends BundleEntityFormBase {
       ],
     ];
     $form['description'] = [
-      '#type' => 'text',
+      '#type' => 'textfield',
       '#title' => $this->t('Description'),
       '#default_value' => $vocabulary->getDescription(),
     ];

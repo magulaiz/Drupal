@@ -27,7 +27,7 @@ class MigrateFileConfigsTest extends MigrateDrupal7TestBase {
    */
   public function testFileSettings() {
     $config = $this->config('file.settings');
-    $this->assertSame('text', $config->get('description.type'));
+    $this->assertSame('textfield', $config->get('description.type'));
     $this->assertSame(256, $config->get('description.length'));
     $this->assertSame('sites/default/files/icons', $config->get('icon.directory'));
     $this->assertConfigSchema(\Drupal::service('config.typed'), 'file.settings', $config->get());

@@ -38,7 +38,7 @@ class LayoutTestPlugin extends LayoutDefault implements PluginFormInterface {
    */
   public function buildConfigurationForm(array $form, FormStateInterface $form_state) {
     $form['setting_1'] = [
-      '#type' => 'text',
+      '#type' => 'textfield',
       '#title' => 'Blah',
       '#default_value' => $this->configuration['setting_1'],
     ];

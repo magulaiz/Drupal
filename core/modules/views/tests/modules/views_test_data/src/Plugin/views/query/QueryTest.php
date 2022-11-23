@@ -41,7 +41,7 @@ class QueryTest extends QueryPluginBase {
 
     $form['test_setting'] = [
       '#title' => $this->t('Test setting'),
-      '#type' => 'text',
+      '#type' => 'textfield',
       '#default_value' => $this->options['test_setting'],
     ];
   }

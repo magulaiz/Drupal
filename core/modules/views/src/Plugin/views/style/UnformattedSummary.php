@@ -34,7 +34,7 @@ class UnformattedSummary extends DefaultSummary {
       '#title' => $this->t('Display items inline'),
     ];
     $form['separator'] = [
-      '#type' => 'text',
+      '#type' => 'textfield',
       '#title' => $this->t('Separator'),
       '#default_value' => $this->options['separator'],
     ];

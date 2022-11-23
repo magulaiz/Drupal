@@ -39,7 +39,7 @@ class TestFieldWidgetMultiple extends WidgetBase {
    */
   public function settingsForm(array $form, FormStateInterface $form_state) {
     $element['test_widget_setting_multiple'] = [
-      '#type' => 'text',
+      '#type' => 'textfield',
       '#title' => $this->t('Field test field widget setting'),
       '#description' => $this->t('A dummy form element to simulate field widget setting.'),
       '#default_value' => $this->getSetting('test_widget_setting_multiple'),
@@ -66,7 +66,7 @@ class TestFieldWidgetMultiple extends WidgetBase {
       $values[] = $item->value;
     }
     $element += [
-      '#type' => 'text',
+      '#type' => 'textfield',
       '#default_value' => implode(', ', $values),
       '#element_validate' => [[static::class, 'multipleValidate']],
     ];

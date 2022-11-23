@@ -50,7 +50,7 @@ class NumericField extends FieldPluginBase {
         '#default_value' => $this->options['set_precision'],
       ];
       $form['precision'] = [
-        '#type' => 'text',
+        '#type' => 'textfield',
         '#title' => $this->t('Precision'),
         '#default_value' => $this->options['precision'],
         '#description' => $this->t('Specify how many digits to print after the decimal point.'),
@@ -62,7 +62,7 @@ class NumericField extends FieldPluginBase {
         '#size' => 2,
       ];
       $form['decimal'] = [
-        '#type' => 'text',
+        '#type' => 'textfield',
         '#title' => $this->t('Decimal point'),
         '#default_value' => $this->options['decimal'],
         '#description' => $this->t('What single character to use as a decimal point.'),
@@ -98,7 +98,7 @@ class NumericField extends FieldPluginBase {
     $plurals = $this->getNumberOfPlurals($this->view->storage->get('langcode'));
     for ($i = 0; $i < $plurals; $i++) {
       $form['format_plural_values'][$i] = [
-        '#type' => 'text',
+        '#type' => 'textfield',
         // @todo Should use better labels https://www.drupal.org/node/2499639
         '#title' => ($i == 0 ? $this->t('Singular form') : $this->formatPlural($i, 'First plural form', '@count. plural form')),
         '#default_value' => $plural_array[$i] ?? '',
@@ -118,13 +118,13 @@ class NumericField extends FieldPluginBase {
     }
 
     $form['prefix'] = [
-      '#type' => 'text',
+      '#type' => 'textfield',
       '#title' => $this->t('Prefix'),
       '#default_value' => $this->options['prefix'],
       '#description' => $this->t('Text to put before the number, such as currency symbol.'),
     ];
     $form['suffix'] = [
-      '#type' => 'text',
+      '#type' => 'textfield',
       '#title' => $this->t('Suffix'),
       '#default_value' => $this->options['suffix'],
       '#description' => $this->t('Text to put after the number, such as currency symbol.'),

@@ -245,7 +245,7 @@ class LinkWidget extends WidgetBase {
     }
 
     $element['title'] = [
-      '#type' => 'text',
+      '#type' => 'textfield',
       '#title' => $this->t('Link text'),
       '#placeholder' => $this->getSetting('placeholder_title'),
       '#default_value' => $items[$delta]->title ?? NULL,
@@ -366,13 +366,13 @@ class LinkWidget extends WidgetBase {
     $elements = parent::settingsForm($form, $form_state);
 
     $elements['placeholder_url'] = [
-      '#type' => 'text',
+      '#type' => 'textfield',
       '#title' => $this->t('Placeholder for URL'),
       '#default_value' => $this->getSetting('placeholder_url'),
       '#description' => $this->t('Text that will be shown inside the field until a value is entered. This hint is usually a sample value or a brief description of the expected format.'),
     ];
     $elements['placeholder_title'] = [
-      '#type' => 'text',
+      '#type' => 'textfield',
       '#title' => $this->t('Placeholder for link text'),
       '#default_value' => $this->getSetting('placeholder_title'),
       '#description' => $this->t('Text that will be shown inside the field until a value is entered. This hint is usually a sample value or a brief description of the expected format.'),

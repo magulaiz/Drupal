@@ -36,13 +36,13 @@ class QueryParameter extends ArgumentDefaultPluginBase implements CacheableDepen
   public function buildOptionsForm(&$form, FormStateInterface $form_state) {
     parent::buildOptionsForm($form, $form_state);
     $form['query_param'] = [
-      '#type' => 'text',
+      '#type' => 'textfield',
       '#title' => $this->t('Query parameter'),
       '#description' => $this->t('The query parameter to use.'),
       '#default_value' => $this->options['query_param'],
     ];
     $form['fallback'] = [
-      '#type' => 'text',
+      '#type' => 'textfield',
       '#title' => $this->t('Fallback value'),
       '#description' => $this->t('The fallback value to use when the above query parameter is not present.'),
       '#default_value' => $this->options['fallback'],

@@ -70,7 +70,7 @@ function editor_image_upload_settings_form(Editor $editor) {
   }
 
   $form['directory'] = [
-    '#type' => 'text',
+    '#type' => 'textfield',
     '#default_value' => $image_upload['directory'],
     '#title' => t('Upload directory'),
     '#description' => t("A directory relative to Drupal's files directory where uploaded images will be stored."),
@@ -79,7 +79,7 @@ function editor_image_upload_settings_form(Editor $editor) {
 
   $default_max_size = format_size(Environment::getUploadMaxSize());
   $form['max_size'] = [
-    '#type' => 'text',
+    '#type' => 'textfield',
     '#default_value' => $image_upload['max_size'],
     '#title' => t('Maximum file size'),
     '#description' => t('If this is left empty, then the file size will be limited by the PHP maximum upload size of @size.', ['@size' => $default_max_size]),

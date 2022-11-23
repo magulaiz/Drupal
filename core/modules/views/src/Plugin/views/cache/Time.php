@@ -86,7 +86,7 @@ class Time extends CachePluginBase {
       '#default_value' => $this->options['results_lifespan'],
     ];
     $form['results_lifespan_custom'] = [
-      '#type' => 'text',
+      '#type' => 'textfield',
       '#title' => $this->t('Seconds'),
       '#size' => '25',
       '#maxlength' => '30',
@@ -106,7 +106,7 @@ class Time extends CachePluginBase {
       '#default_value' => $this->options['output_lifespan'],
     ];
     $form['output_lifespan_custom'] = [
-      '#type' => 'text',
+      '#type' => 'textfield',
       '#title' => $this->t('Seconds'),
       '#size' => '25',
       '#maxlength' => '30',

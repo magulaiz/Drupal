@@ -208,7 +208,7 @@ class BulkForm extends FieldPluginBase implements CacheableDependencyInterface {
    */
   public function buildOptionsForm(&$form, FormStateInterface $form_state) {
     $form['action_title'] = [
-      '#type' => 'text',
+      '#type' => 'textfield',
       '#title' => $this->t('Action title'),
       '#default_value' => $this->options['action_title'],
       '#description' => $this->t('The title shown above the actions dropdown.'),

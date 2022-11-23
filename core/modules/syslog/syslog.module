@@ -37,7 +37,7 @@ function syslog_form_system_logging_settings_alter(&$form, FormStateInterface $f
   $config = \Drupal::configFactory()->getEditable('syslog.settings');
   $help = \Drupal::moduleHandler()->moduleExists('help') ? ' ' . Link::fromTextAndUrl(t('More information'), Url::fromRoute('help.page', ['name' => 'syslog']))->toString() . '.' : NULL;
   $form['syslog_identity'] = [
-    '#type'          => 'text',
+    '#type'          => 'textfield',
     '#title'         => t('Syslog identity'),
     '#default_value' => $config->get('identity'),
     '#description'   => t('A string that will be prepended to every message logged to Syslog. If you have multiple sites logging to the same Syslog log file, a unique identity per site makes it easy to tell the log entries apart.') . $help,

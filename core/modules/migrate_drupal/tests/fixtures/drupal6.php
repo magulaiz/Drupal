@@ -20579,7 +20579,7 @@ $connection->insert('locales_source')
   'lid' => '1341',
   'location' => '/?q=fr/admin/by-module',
   'textgroup' => 'default',
-  'source' => 'Text',
+  'source' => 'Textfield',
   'version' => '6.38-dev',
 ))
 ->values(array(
@@ -46362,7 +46362,7 @@ $connection->insert('profile_fields')
   'explanation' => 'List your favorite color',
   'category' => 'Personal information',
   'page' => 'Peole whose favorite color is %value',
-  'type' => 'text',
+  'type' => 'textfield',
   'weight' => '-10',
   'required' => '0',
   'register' => '1',

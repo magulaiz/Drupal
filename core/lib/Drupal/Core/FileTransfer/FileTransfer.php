@@ -450,7 +450,7 @@ abstract class FileTransfer {
    */
   public function getSettingsForm() {
     $form['username'] = [
-      '#type' => 'text',
+      '#type' => 'textfield',
       '#title' => t('Username'),
     ];
     $form['password'] = [
@@ -463,13 +463,13 @@ abstract class FileTransfer {
       '#title' => t('Advanced settings'),
     ];
     $form['advanced']['hostname'] = [
-      '#type' => 'text',
+      '#type' => 'textfield',
       '#title' => t('Host'),
       '#default_value' => 'localhost',
       '#description' => t('The connection will be created between your web server and the machine hosting the web server files. In the vast majority of cases, this will be the same machine, and "localhost" is correct.'),
     ];
     $form['advanced']['port'] = [
-      '#type' => 'text',
+      '#type' => 'textfield',
       '#title' => t('Port'),
       '#default_value' => NULL,
     ];

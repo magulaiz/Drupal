@@ -67,7 +67,7 @@ class NodeTypeForm extends BundleEntityFormBase {
 
     $form['name'] = [
       '#title' => $this->t('Name'),
-      '#type' => 'text',
+      '#type' => 'textfield',
       '#default_value' => $type->label(),
       '#description' => $this->t('The human-readable name of this content type. This text will be displayed as part of the list on the <em>Add content</em> page. This name must be unique.'),
       '#required' => TRUE,
@@ -110,7 +110,7 @@ class NodeTypeForm extends BundleEntityFormBase {
     ];
     $form['submission']['title_label'] = [
       '#title' => $this->t('Title field label'),
-      '#type' => 'text',
+      '#type' => 'textfield',
       '#default_value' => $fields['title']->getLabel(),
       '#required' => TRUE,
     ];

@@ -32,16 +32,16 @@ class ProgrammaticTest extends KernelTestBase {
     // Test that a programmatic form submission is rejected when a required
     // textfield is omitted and correctly processed when it is provided.
     $this->doSubmitForm([], FALSE);
-    $this->doSubmitForm(['text' => 'test 1'], TRUE);
+    $this->doSubmitForm(['textfield' => 'test 1'], TRUE);
     $this->doSubmitForm([], FALSE);
-    $this->doSubmitForm(['text' => 'test 2'], TRUE);
+    $this->doSubmitForm(['textfield' => 'test 2'], TRUE);
 
     // Test that a programmatic form submission can turn on and off checkboxes
     // which are, by default, checked.
-    $this->doSubmitForm(['text' => 'dummy value', 'checkboxes' => [1 => 1, 2 => 2]], TRUE);
-    $this->doSubmitForm(['text' => 'dummy value', 'checkboxes' => [1 => 1, 2 => NULL]], TRUE);
-    $this->doSubmitForm(['text' => 'dummy value', 'checkboxes' => [1 => NULL, 2 => 2]], TRUE);
-    $this->doSubmitForm(['text' => 'dummy value', 'checkboxes' => [1 => NULL, 2 => NULL]], TRUE);
+    $this->doSubmitForm(['textfield' => 'dummy value', 'checkboxes' => [1 => 1, 2 => 2]], TRUE);
+    $this->doSubmitForm(['textfield' => 'dummy value', 'checkboxes' => [1 => 1, 2 => NULL]], TRUE);
+    $this->doSubmitForm(['textfield' => 'dummy value', 'checkboxes' => [1 => NULL, 2 => 2]], TRUE);
+    $this->doSubmitForm(['textfield' => 'dummy value', 'checkboxes' => [1 => NULL, 2 => NULL]], TRUE);
 
     // Test that a programmatic form submission can correctly click a button
     // that limits validation errors based on user input. Since we do not
@@ -49,7 +49,7 @@ class ProgrammaticTest extends KernelTestBase {
     // only expect form validation to pass when validation is limited to a
     // different field.
     $this->doSubmitForm(['op' => 'Submit with limited validation', 'field_to_validate' => 'all'], FALSE);
-    $this->doSubmitForm(['op' => 'Submit with limited validation', 'field_to_validate' => 'text'], FALSE);
+    $this->doSubmitForm(['op' => 'Submit with limited validation', 'field_to_validate' => 'textfield'], FALSE);
     $this->doSubmitForm(['op' => 'Submit with limited validation', 'field_to_validate' => 'field_to_validate'], TRUE);
 
     // Restore the current batch status.
@@ -95,7 +95,7 @@ class ProgrammaticTest extends KernelTestBase {
    */
   public function testProgrammaticAccessBypass() {
     $form_state = (new FormState())->setValues([
-      'text' => 'dummy value',
+      'textfield' => 'dummy value',
       'field_restricted' => 'dummy value',
     ]);
 

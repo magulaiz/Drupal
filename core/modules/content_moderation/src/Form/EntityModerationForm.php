@@ -117,7 +117,7 @@ class EntityModerationForm extends FormBase {
     ];
 
     $form['revision_log'] = [
-      '#type' => 'text',
+      '#type' => 'textfield',
       '#title' => $this->t('Log message'),
       '#size' => 30,
     ];

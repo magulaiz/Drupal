@@ -51,7 +51,7 @@ class WorkflowAddForm extends EntityForm {
     /** @var \Drupal\workflows\WorkflowInterface $workflow */
     $workflow = $this->entity;
     $form['label'] = [
-      '#type' => 'text',
+      '#type' => 'textfield',
       '#title' => $this->t('Label'),
       '#maxlength' => 255,
       '#default_value' => $workflow->label(),
