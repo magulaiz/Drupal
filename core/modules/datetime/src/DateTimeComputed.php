@@ -2,7 +2,6 @@
 
 namespace Drupal\datetime;
 
-use Drupal\datetime\Plugin\Field\FieldType\DateTimeItem;
 use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\Core\TypedData\DataDefinitionInterface;
 use Drupal\Core\TypedData\TypedDataInterface;
@@ -52,7 +51,7 @@ class DateTimeComputed extends TypedData {
     }
 
     $datetime_type = $item->getFieldDefinition()->getSetting('datetime_type');
-    $storage_format = $datetime_type === DateTimeItem::DATETIME_TYPE_DATE ? DateTimeItemInterface::DATE_STORAGE_FORMAT : DateTimeItemInterface::DATETIME_STORAGE_FORMAT;
+    $storage_format = $datetime_type === DateTimeItemInterface::DATETIME_TYPE_DATE ? DateTimeItemInterface::DATE_STORAGE_FORMAT : DateTimeItemInterface::DATETIME_STORAGE_FORMAT;
     try {
       $date = DrupalDateTime::createFromFormat($storage_format, $value, DateTimeItemInterface::STORAGE_TIMEZONE);
       if ($date instanceof DrupalDateTime && !$date->hasErrors()) {
@@ -64,7 +63,7 @@ class DateTimeComputed extends TypedData {
         // zones.
         // @see \Drupal\Component\Datetime\DateTimePlus::setDefaultDateTime()
         // @see http://php.net/manual/datetime.createfromformat.php
-        if ($datetime_type === DateTimeItem::DATETIME_TYPE_DATE) {
+        if ($datetime_type === DateTimeItemInterface::DATETIME_TYPE_DATE) {
           $this->date->setDefaultDateTime();
         }
       }
