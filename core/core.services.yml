@@ -231,6 +231,7 @@ services:
       - { name: cache.bin, default_backend: cache.backend.memory }
     factory: ['@cache_factory', 'get']
     arguments: [static]
+
   cache.bootstrap:
     class: Drupal\Core\Cache\CacheBackendInterface
     tags:
@@ -347,6 +348,7 @@ services:
     class: Drupal\Core\Config\ExportStorageManager
     arguments: ['@config.storage', '@database', '@event_dispatcher', '@lock']
     public: false
+
   config.storage.sync:
     class: Drupal\Core\Config\FileStorage
     factory: Drupal\Core\Config\FileStorageFactory::getSync
@@ -459,14 +461,12 @@ services:
     arguments: ['security']
   logger.log_message_parser:
     class: Drupal\Core\Logger\LogMessageParser
-
   serialization.json:
     class: Drupal\Component\Serialization\Json
   serialization.phpserialize:
     class: Drupal\Component\Serialization\PhpSerialize
   serialization.yaml:
     class: Drupal\Component\Serialization\Yaml
-
   settings:
     class: Drupal\Core\Site\Settings
     factory: Drupal\Core\Site\Settings::getInstance
@@ -583,6 +583,7 @@ services:
   theme_installer:
     class: Drupal\Core\Extension\ThemeInstaller
     arguments: ['@theme_handler', '@config.factory', '@config.installer', '@module_handler', '@config.manager', '@asset.css.collection_optimizer', '@router.builder', '@logger.channel.default', '@state', '@extension.list.module']
+
   entity.memory_cache:
     class: Drupal\Core\Cache\MemoryCache\MemoryCache
   entity_type.manager:
@@ -970,6 +971,7 @@ services:
     arguments: [16]
   password_generator:
     class: Drupal\Core\Password\DefaultPasswordGenerator
+
   request_format_route_filter:
     class: Drupal\Core\Routing\RequestFormatRouteFilter
     tags:
@@ -1078,7 +1080,6 @@ services:
     arguments: ['@psr7.http_foundation_factory']
     tags:
       - { name: event_subscriber }
-
   # Main content view subscriber plus the renderers it uses.
   main_content_view_subscriber:
     class: Drupal\Core\EventSubscriber\MainContentViewSubscriber
@@ -1120,6 +1121,7 @@ services:
     arguments: ['@title_resolver', '@renderer']
     tags:
       - { name: render.main_content_renderer, format: drupal_modal }
+
   controller.form:
     class: Drupal\Core\Controller\HtmlFormController
     arguments: ['@http_kernel.controller.argument_resolver', '@form_builder', '@class_resolver']
@@ -1409,6 +1411,7 @@ services:
   date.formatter:
     class: Drupal\Core\Datetime\DateFormatter
     arguments: ['@entity_type.manager', '@language_manager', '@string_translation', '@config.factory', '@request_stack']
+  
   theme.manager:
     class: Drupal\Core\Theme\ThemeManager
     arguments: ['%app.root%', '@theme.negotiator', '@theme.initialization', '@module_handler']
@@ -1555,6 +1558,7 @@ services:
       # extension to override the default Twig Debug Extension conditionally
       # when Symfony VarDumper is available.
       - { name: twig.extension, priority: 25 }
+
   twig.loader:
     class: Twig\Loader\ChainLoader
     public: false
@@ -1601,6 +1605,7 @@ services:
   render_placeholder_generator:
     class: Drupal\Core\Render\PlaceholderGenerator
     arguments: ['%renderer.config%']
+
   render_cache:
     class: Drupal\Core\Render\PlaceholderingRenderCache
     arguments: ['@request_stack', '@cache_factory', '@cache_contexts_manager', '@render_placeholder_generator']
@@ -1626,6 +1631,7 @@ services:
     class: Drupal\Core\Render\Placeholder\SingleFlushStrategy
     tags:
       - { name: placeholder_strategy, priority: -1000 }
+
   email.validator:
     class: Drupal\Component\Utility\EmailValidator
   update.update_hook_registry:
