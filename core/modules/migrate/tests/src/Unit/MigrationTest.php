@@ -163,7 +163,7 @@ class MigrationTest extends UnitTestCase {
    * @param array $expected_value
    *   The migration dependencies configuration array expected.
    *
-   * @covers ::getExpandedDependencies
+   * @covers ::getMigrationDependencies
    * @dataProvider getValidMigrationDependenciesProvider
    *
    * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
@@ -171,7 +171,7 @@ class MigrationTest extends UnitTestCase {
   public function testMigrationDependenciesWithValidConfig($source, array $expected_value) {
     $migration = new TestMigration();
 
-    // Set the plugin manager to support getExpandedDependencies().
+    // Set the plugin manager to support getMigrationDependencies(TRUE).
     $plugin_manager = $this->createMock('Drupal\migrate\Plugin\MigrationPluginManagerInterface');
     $migration->setMigrationPluginManager($plugin_manager);
     $plugin_manager->expects($this->exactly(2))
@@ -181,7 +181,7 @@ class MigrationTest extends UnitTestCase {
     if (!is_null($source)) {
       $migration->set('migration_dependencies', $source);
     }
-    $this->assertSame($migration->getExpandedDependencies(), $expected_value);
+    $this->assertSame($migration->getMigrationDependencies(TRUE), $expected_value);
   }
 
   /**
@@ -190,7 +190,7 @@ class MigrationTest extends UnitTestCase {
    * @param array $dependencies
    *   An array of migration dependencies.
    *
-   * @covers ::getExpandedDependencies
+   * @covers ::getMigrationDependencies
    *
    * @dataProvider getInvalidMigrationDependenciesProvider
    *
@@ -209,7 +209,7 @@ class MigrationTest extends UnitTestCase {
 
     $this->expectException(InvalidPluginDefinitionException::class);
     $this->expectExceptionMessage("Invalid migration dependencies configuration for migration {$plugin_id}");
-    $migration->getExpandedDependencies();
+    $migration->getMigrationDependencies(TRUE);
   }
 
   /**
@@ -273,13 +273,13 @@ class MigrationTest extends UnitTestCase {
   }
 
   /**
-   * Tests deprecation of getMigrationDependencies().
+   * Tests deprecation of getMigrationDependencies(FALSE).
    *
    * @group legacy
    */
   public function testGetMigrationDependencies() {
     $migration = new TestMigration();
-    $this->expectDeprecation('Migration::getMigrationDependencies() is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. In most cases, use getExpandedDependencies(). See https://www.drupal.org/node/3266691');
+    $this->expectDeprecation('Calling Migration::getMigrationDependencies() without expanding the plugin IDs is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. In most cases, use getMigrationDependencies(TRUE). See https://www.drupal.org/node/3266691');
     $migration->getMigrationDependencies();
   }
 

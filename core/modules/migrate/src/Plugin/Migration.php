@@ -704,34 +704,30 @@ class Migration extends PluginBase implements MigrationInterface, RequirementsIn
   }
 
   /**
-   * {@inheritdoc}
+   * Get the dependencies for this migration.
+   *
+   * @param bool $expand
+   *   Will issue a deprecation in Drupal 10 if set to FALSE. See
+   *   https://www.drupal.org/node/3266691.
+   *
+   * @return array
+   *   The dependencies for this migrations.
    */
-  public function getMigrationDependencies() {
-    @trigger_error('Migration::getMigrationDependencies() is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. In most cases, use getExpandedDependencies(). See https://www.drupal.org/node/3266691', E_USER_DEPRECATED);
+  public function getMigrationDependencies(bool $expand = FALSE) {
+    if (!$expand) {
+      @trigger_error('Calling Migration::getMigrationDependencies() without expanding the plugin IDs is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. In most cases, use getMigrationDependencies(TRUE). See https://www.drupal.org/node/3266691', E_USER_DEPRECATED);
+    }
     $this->migration_dependencies = ($this->migration_dependencies ?: []) + ['required' => [], 'optional' => []];
     if (count($this->migration_dependencies) !== 2 || !is_array($this->migration_dependencies['required']) || !is_array($this->migration_dependencies['optional'])) {
       throw new InvalidPluginDefinitionException($this->id(), "Invalid migration dependencies configuration for migration {$this->id()}");
     }
     $this->migration_dependencies['optional'] = array_unique(array_merge($this->migration_dependencies['optional'], $this->findMigrationDependencies($this->process)));
-    return $this->migration_dependencies;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getExpandedDependencies() {
-    // @todo Before Drupal 11.0.0, remove ::set() and these checks.
-    // @see https://www.drupal.org/project/drupal/issues/3262395
-    $this->migration_dependencies = ($this->migration_dependencies ?: []) + ['required' => [], 'optional' => []];
-    if (count($this->migration_dependencies) !== 2 || !is_array($this->migration_dependencies['required']) || !is_array($this->migration_dependencies['optional'])) {
-      throw new InvalidPluginDefinitionException($this->id(), "Invalid migration dependencies configuration for migration {$this->id()}");
+    if ($expand) {
+      return array_map(
+        [$this->migrationPluginManager, 'expandPluginIds'],
+        $this->migration_dependencies
+      );
     }
-
-    $this->migration_dependencies['optional'] = array_unique(array_merge($this->migration_dependencies['optional'], $this->findMigrationDependencies($this->process)));
-    $this->migration_dependencies = array_map(
-      [$this->migrationPluginManager, 'expandPluginIds'],
-      $this->migration_dependencies
-    );
     return $this->migration_dependencies;
   }
 

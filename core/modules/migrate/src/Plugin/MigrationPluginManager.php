@@ -118,8 +118,10 @@ class MigrationPluginManager extends DefaultPluginManager implements MigrationPl
       $instances[$plugin_id] = $factory->createInstance($plugin_id, $configuration[$plugin_id] ?? []);
     }
 
+    // @todo Remove loop when the ability to call ::getMigrationDependencies()
+    //   without expanding plugins is removed.
     foreach ($instances as $migration) {
-      $migration->set('migration_dependencies', $migration->getExpandedDependencies());
+      $migration->set('migration_dependencies', $migration->getMigrationDependencies(TRUE));
     }
 
     // Sort the migrations based on their dependencies.
@@ -167,7 +169,7 @@ class MigrationPluginManager extends DefaultPluginManager implements MigrationPl
       $id = $migration->id();
       $requirements[$id] = [];
       $dependency_graph[$id]['edges'] = [];
-      $migration_dependencies = $migration->getExpandedDependencies();
+      $migration_dependencies = $migration->getMigrationDependencies(TRUE);
 
       if (isset($migration_dependencies['required'])) {
         foreach ($migration_dependencies['required'] as $dependency) {

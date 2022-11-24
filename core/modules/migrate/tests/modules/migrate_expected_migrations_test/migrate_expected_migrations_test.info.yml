@@ -1,6 +1,6 @@
 name: 'Migration Expected Migrations Test'
 type: module
-description: 'Provides test migrations to test getExpandedDependencies.'
+description: 'Provides test migrations to test getMigrationDependencies.'
 package: Testing
 version: VERSION
 dependencies:

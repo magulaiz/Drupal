@@ -77,7 +77,7 @@ abstract class MigrateTestCase extends UnitTestCase {
         $this->migrationStatus = $status;
       });
 
-    $migration->method('getExpandedDependencies')
+    $migration->method('getMigrationDependencies')
       ->willReturn([
         'required' => [],
         'optional' => [],

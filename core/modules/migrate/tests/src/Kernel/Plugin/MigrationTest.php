@@ -101,11 +101,11 @@ class MigrationTest extends KernelTestBase {
   }
 
   /**
-   * Tests Migration::getExpandedDependencies()
+   * Tests Migration::getMigrationDependencies()
    *
-   * @covers ::getExpandedDependencies
+   * @covers ::getMigrationDependencies
    */
-  public function testGetExpandedDependencies() {
+  public function testGetExpandedMigrationDependencies() {
     $plugin_manager = \Drupal::service('plugin.manager.migration');
     $plugin_definition = [
       'id' => 'foo',
@@ -154,7 +154,7 @@ class MigrationTest extends KernelTestBase {
       ],
     ];
     $migration = $plugin_manager->createStubMigration($plugin_definition);
-    $this->assertSame(['required' => [], 'optional' => ['m1', 'm2', 'm3', 'm4', 'm5']], $migration->getExpandedDependencies());
+    $this->assertSame(['required' => [], 'optional' => ['m1', 'm2', 'm3', 'm4', 'm5']], $migration->getMigrationDependencies(TRUE));
   }
 
   /**
