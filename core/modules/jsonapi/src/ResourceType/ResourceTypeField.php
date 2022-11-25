@@ -111,7 +111,7 @@ abstract class ResourceTypeField {
    * @return static
    *   A new instance of the field that is enabled.
    */
-  public function enabled() {
+  public function enabled(): static {
     return new static($this->internalName, $this->publicName, TRUE, $this->hasOne);
   }
 
