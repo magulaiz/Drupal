@@ -507,7 +507,7 @@ class ConfigEntityBaseUnitTest extends UnitTestCase {
       ->disableOriginalConstructor()
       ->getMock();
     $entityTypeManager->expects($this->once())
-      ->method('getstorage')
+      ->method('getStorage')
       ->willReturn($storage);
 
     $container = new ContainerBuilder();
