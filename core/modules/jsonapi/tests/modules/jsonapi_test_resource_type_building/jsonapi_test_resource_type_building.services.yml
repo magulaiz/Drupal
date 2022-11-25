@@ -8,4 +8,4 @@ services:
   jsonapi_test_resource_type_building.late_build_subscriber:
     class: Drupal\jsonapi_test_resource_type_building\EventSubscriber\LateResourceTypeBuildEventSubscriber
     tags:
-      - { name: event_subscriber, priority: 999  }
+      - { name: event_subscriber, priority: 999 }
