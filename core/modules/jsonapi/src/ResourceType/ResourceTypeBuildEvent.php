@@ -152,7 +152,7 @@ class ResourceTypeBuildEvent extends Event {
   }
 
   /**
-   * Disables the given field on the resource type to be built.
+   * Enables the given field on the resource type to be built.
    *
    * @param \Drupal\jsonapi\ResourceType\ResourceTypeField $field
    *   The field for which to set a public name.
