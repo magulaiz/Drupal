@@ -3,7 +3,12 @@
 
 /**
  * @file
- * A command line application to generate proxy classes.
+ * A script to generate proxy classes for lazy services.
+ *
+ * For help, type this command from the root directory of an installed Drupal
+ * site: php core/scripts/generate-proxy-class.php -h generate-proxy-class
+ *
+ * @ingroup container
  */
 
 use Drupal\Core\Command\GenerateProxyClassApplication;
