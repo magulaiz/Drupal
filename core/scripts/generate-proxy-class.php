@@ -9,6 +9,8 @@
  * site: php core/scripts/generate-proxy-class.php -h generate-proxy-class
  *
  * @ingroup container
+ *
+ * @see lazy_services
  */
 
 use Drupal\Core\Command\GenerateProxyClassApplication;
