@@ -10,3 +10,9 @@ drupal.taxonomy:
     - core/drupal
     - core/drupalSettings
     - core/drupal.tabledrag
+
+drupal.taxonomy.admin:
+  version: VERSION
+  css:
+    theme:
+      css/taxonomy.admin.css: {}

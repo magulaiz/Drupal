@@ -40,6 +40,7 @@ use Drupal\user\StatusItem;
  *   data_table = "taxonomy_term_field_data",
  *   revision_table = "taxonomy_term_revision",
  *   revision_data_table = "taxonomy_term_field_revision",
+ *   show_revision_ui = TRUE,
  *   translatable = TRUE,
  *   entity_keys = {
  *     "id" = "tid",
@@ -63,6 +64,7 @@ use Drupal\user\StatusItem;
  *     "delete-form" = "/taxonomy/term/{taxonomy_term}/delete",
  *     "edit-form" = "/taxonomy/term/{taxonomy_term}/edit",
  *     "create" = "/taxonomy/term",
+ *     "revision" = "/taxonomy/term/{taxonomy_term}/revision/{taxonomy_term_revision}/view",
  *   },
  *   permission_granularity = "bundle",
  *   constraints = {

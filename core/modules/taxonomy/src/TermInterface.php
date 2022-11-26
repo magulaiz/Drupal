@@ -84,4 +84,22 @@ interface TermInterface extends ContentEntityInterface, EntityChangedInterface, 
    */
   public function setWeight($weight);
 
+    /**
+   * Gets the node revision creation timestamp.
+   *
+   * @return int
+   *   The UNIX timestamp of when this revision was created.
+   */
+  public function getRevisionCreationTime();
+
+  /**
+   * Sets the node revision creation timestamp.
+   *
+   * @param int $timestamp
+   *   The UNIX timestamp of when this revision was created.
+   *
+   * @return $this
+   *   The called node entity.
+   */
+  public function setRevisionCreationTime($timestamp);
 }
