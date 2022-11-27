@@ -377,7 +377,10 @@ class BaseFieldDefinition extends ListDataDefinition implements FieldDefinitionI
    * @return static
    *   The object itself for chaining.
    */
-  public function setDisplayOptions($display_context, array $options) {
+  public function setDisplayOptions($display_context, array $options = []) {
+    if (empty($options)) {
+      $options = ['weight' => 0];
+    }
     $this->definition['display'][$display_context]['options'] = $options;
     return $this;
   }
