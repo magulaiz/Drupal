@@ -42,7 +42,7 @@ class FieldLink extends ProcessPluginBase {
   /**
    * {@inheritdoc}
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, MigrationInterface $migration) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition) {
     $configuration += ['uri_scheme' => 'http://'];
     parent::__construct($configuration, $plugin_id, $plugin_definition);
   }

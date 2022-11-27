@@ -725,9 +725,6 @@ namespace Symfony\Component\ExpressionLanguage {
      */
     class Expression {
 
-      public function __construct($expression) {
-      }
-
       /**
        * Gets the string representation of the expression.
        */
