@@ -42,8 +42,6 @@ class ConfigEntityValidationTest extends KernelTestBase {
 
     // Adding additional supported dependency types should be allowed. For the
     // purposes of this test, these dependencies don't need to actually exist.
-    $data['dependencies']['theme'][] = 'stark';
-    $data['dependencies']['module'][] = 'system';
     $data['dependencies']['config'][] = 'user.settings';
     $data['dependencies']['content'][] = 'node:some-random-uuid';
     $this->assertCount(0, $typed_config->createFromNameAndData($name, $data)->validate());
@@ -53,21 +51,58 @@ class ConfigEntityValidationTest extends KernelTestBase {
     $violations = $typed_config->createFromNameAndData($name, $data)->validate();
     $this->assertCount(1, $violations);
     $this->assertSame("'fun_stuff' is not a supported key.", (string) $violations->get(0)->getMessage());
-
-    // Adding a dependency on non-existent config should raise an error.
     unset($data['dependencies']['fun_stuff']);
-    $data['dependencies']['config'][] = 'node.settings';
-    $violations = $typed_config->createFromNameAndData($name, $data)->validate();
-    $this->assertCount(1, $violations);
-    $this->assertSame("The 'node.settings' config does not exist.", (string) $violations->get(0)->getMessage());
 
-    // Trying to put an empty string in config dependencies should also raise an
+    // Trying to add an empty string in config dependencies should raise an
     // error.
-    array_splice($data['dependencies']['config'], -1, NULL, ['']);
+    $data['dependencies']['config'][] = '';
     $violations = $typed_config->createFromNameAndData($name, $data)->validate();
     $this->assertCount(2, $violations);
     $this->assertSame('This value should not be blank.', (string) $violations->get(0)->getMessage());
     $this->assertSame("The '' config does not exist.", (string) $violations->get(1)->getMessage());
+    array_pop($data['dependencies']['config']);
+
+    // Adding a dependency on non-existent config should raise an error.
+    $data['dependencies']['config'][] = 'node.settings';
+    $violations = $typed_config->createFromNameAndData($name, $data)->validate();
+    $this->assertCount(1, $violations);
+    $this->assertSame("The 'node.settings' config does not exist.", (string) $violations->get(0)->getMessage());
+    array_pop($data['dependencies']['config']);
+
+    // Trying to add an empty string in module dependencies should raise an
+    // error.
+    $data['dependencies']['module'][] = '';
+    $violations = $typed_config->createFromNameAndData($name, $data)->validate();
+    $this->assertCount(2, $violations);
+    $this->assertSame('This value should not be blank.', (string) $violations->get(0)->getMessage());
+    $this->assertSame("Module '' is not installed.", (string) $violations->get(1)->getMessage());
+    array_pop($data['dependencies']['module']);
+
+    // Adding a dependency on a non-installed module should raise an error.
+    $data['dependencies']['module'][] = 'node';
+    $violations = $typed_config->createFromNameAndData($name, $data)->validate();
+    $this->assertCount(1, $violations);
+    $this->assertSame("Module 'node' is not installed.", (string) $violations->get(0)->getMessage());
+    array_pop($data['dependencies']['module']);
+
+    // Trying to add an empty string in theme dependencies should raise an
+    // error.
+    $data['dependencies']['theme'][] = '';
+    $violations = $typed_config->createFromNameAndData($name, $data)->validate();
+    $this->assertCount(2, $violations);
+    $this->assertSame('This value should not be blank.', (string) $violations->get(0)->getMessage());
+    $this->assertSame("Theme '' is not installed.", (string) $violations->get(1)->getMessage());
+    array_pop($data['dependencies']['theme']);
+
+    // Adding a dependency on a non-installed theme should raise an error.
+    $data['dependencies']['theme'][] = 'stark';
+    $violations = $typed_config->createFromNameAndData($name, $data)->validate();
+    $this->assertCount(1, $violations);
+    $this->assertSame("Theme 'stark' is not installed.", (string) $violations->get(0)->getMessage());
+    array_pop($data['dependencies']['theme']);
+
+    $violations = $typed_config->createFromNameAndData($name, $data)->validate();
+    $this->assertCount(0, $violations);
   }
 
 }

@@ -253,11 +253,17 @@ config_dependencies_base:
       label: 'Module dependencies'
       sequence:
         type: string
+        constraints:
+          NotBlank: []
+          ExtensionExists: module
     theme:
       type: sequence
       label: 'Theme dependencies'
       sequence:
         type: string
+        constraints:
+          NotBlank: []
+          ExtensionExists: theme
   constraints:
     ValidKeys: ['config', 'content', 'module', 'theme']
 
