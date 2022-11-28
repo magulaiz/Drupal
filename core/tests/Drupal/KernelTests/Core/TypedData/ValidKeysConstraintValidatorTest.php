@@ -10,6 +10,9 @@ use Symfony\Component\Validator\Exception\UnexpectedTypeException;
  * Tests ValidKeys validation constraint with both valid and invalid values.
  *
  * @group Validation
+ *
+ * @covers \Drupal\Core\Validation\Plugin\Validation\Constraint\ValidKeysConstraint
+ * @covers \Drupal\Core\Validation\Plugin\Validation\Constraint\ValidKeysConstraintValidator
  */
 class ValidKeysConstraintValidatorTest extends KernelTestBase {
 
