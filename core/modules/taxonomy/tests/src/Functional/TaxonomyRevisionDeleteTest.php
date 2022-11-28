@@ -74,7 +74,7 @@ class TaxonomyRevisionDeleteTest extends BrowserTestBase {
     $entity->save();
 
     // Reload the entity.
-    $revision = \Drupal::entityTypeManager()->getStorage('block_content')
+    $revision = \Drupal::entityTypeManager()->getStorage('taxonomy_term')
       ->loadRevision($revisionId);
     $this->drupalGet($revision->toUrl('revision-delete-form'));
     $this->assertSession()->pageTextContains('Are you sure you want to delete the revision from Sun, 01/11/2009 - 16:00?');
@@ -82,7 +82,7 @@ class TaxonomyRevisionDeleteTest extends BrowserTestBase {
     $this->assertSession()->linkExists('Cancel');
 
     $countRevisions = static function (): int {
-      return (int) \Drupal::entityTypeManager()->getStorage('block_content')
+      return (int) \Drupal::entityTypeManager()->getStorage('taxonomy_term')
         ->getQuery()
         ->accessCheck(FALSE)
         ->allRevisions()
@@ -94,7 +94,7 @@ class TaxonomyRevisionDeleteTest extends BrowserTestBase {
     $this->submitForm([], 'Delete');
     $this->assertEquals($count - 1, $countRevisions());
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertSession()->addressEquals(sprintf('block/%s/revisions', $entity->id()));
+    $this->assertSession()->addressEquals(sprintf('taxonomy/term/%s/revisions', $entity->id()));
     $this->assertSession()->pageTextContains(sprintf('Revision from Sun, 01/11/2009 - 16:00 of basic %s has been deleted.', $entity->label()));
     $this->assertSession()->elementsCount('css', 'table tbody tr', 1);
   }

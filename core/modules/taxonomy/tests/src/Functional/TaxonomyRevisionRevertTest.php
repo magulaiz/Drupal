@@ -14,7 +14,7 @@ use Drupal\Tests\taxonomy\Traits\TaxonomyTestTrait;
  * @group taxonomy
  * @coversDefaultClass \Drupal\Core\Entity\Form\RevisionRevertForm
  */
-class BlockContentRevisionRevertTest extends BrowserTestBase {
+class TaxonomyContentRevisionRevertTest extends BrowserTestBase {
 
   use TaxonomyTestTrait;
 
