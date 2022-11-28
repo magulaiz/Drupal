@@ -28,7 +28,8 @@ class TestRunnerKernel extends DrupalKernel {
     // Force $allow_dumping to FALSE, because the test runner kernel should
     // always have to rebuild its container, and potentially avoid isolation
     // issues against the tests.
-    parent::__construct($environment, $class_loader, FALSE, $app_root);
+    $allow_dumping = FALSE;
+    parent::__construct($environment, $class_loader, $allow_dumping, $app_root);
 
     // Prime the module list and corresponding Extension objects.
     // @todo Remove System module. Needed because

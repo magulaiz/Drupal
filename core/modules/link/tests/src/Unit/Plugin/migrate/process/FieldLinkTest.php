@@ -4,7 +4,6 @@ namespace Drupal\Tests\link\Unit\Plugin\migrate\process;
 
 use Drupal\link\Plugin\migrate\process\FieldLink;
 use Drupal\migrate\MigrateExecutableInterface;
-use Drupal\migrate\Plugin\MigrationInterface;
 use Drupal\migrate\Row;
 use Drupal\Tests\UnitTestCase;
 
@@ -19,7 +18,7 @@ class FieldLinkTest extends UnitTestCase {
    * @dataProvider canonicalizeUriDataProvider
    */
   public function testCanonicalizeUri($url, $expected, $configuration = []) {
-    $link_plugin = new FieldLink($configuration, '', [], $this->createMock(MigrationInterface::class));
+    $link_plugin = new FieldLink($configuration, '', []);
     $transformed = $link_plugin->transform([
       'url' => $url,
       'title' => '',
@@ -109,7 +108,7 @@ class FieldLinkTest extends UnitTestCase {
    * Tests the attributes that are deeply serialized are discarded.
    */
   public function testCanonicalizeUriSerialized() {
-    $link_plugin = new FieldLink([], '', [], $this->createMock(MigrationInterface::class));
+    $link_plugin = new FieldLink([], '', []);
     $migrate_executable = $this->createMock(MigrateExecutableInterface::class);
     $row = new Row();
 
