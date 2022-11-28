@@ -255,6 +255,8 @@ config_dependencies_base:
       label: 'Theme dependencies'
       sequence:
         type: string
+  constraints:
+    ValidKeys: ['config', 'content', 'module', 'theme']
 
 config_dependencies:
   type: config_dependencies_base
