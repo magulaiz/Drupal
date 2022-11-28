@@ -540,7 +540,7 @@ namespace Drupal\Tests\Component\DependencyInjection\Dumper {
      * @covers ::dumpValue
      */
     public function testGetServiceDefinitionForExpression() {
-      $expression = new Expression('');
+      $expression = new Expression();
 
       $bar_definition = new Definition('\stdClass');
       $bar_definition->setPublic(TRUE);

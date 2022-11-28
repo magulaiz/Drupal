@@ -151,7 +151,8 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
    *   The plugin implementation definition.
    */
   public function __construct(array $configuration, $plugin_id, $plugin_definition) {
-    parent::__construct([], $plugin_id, $plugin_definition);
+    $configuration = [];
+    parent::__construct($configuration, $plugin_id, $plugin_definition);
   }
 
   /**

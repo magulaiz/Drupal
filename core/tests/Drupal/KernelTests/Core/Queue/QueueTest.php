@@ -32,9 +32,9 @@ class QueueTest extends KernelTestBase {
    */
   public function testMemoryQueue() {
     // Create two queues.
-    $queue1 = new Memory($this->randomMachineName());
+    $queue1 = new Memory();
     $queue1->createQueue();
-    $queue2 = new Memory($this->randomMachineName());
+    $queue2 = new Memory();
     $queue2->createQueue();
 
     $this->runQueueTest($queue1, $queue2);

@@ -159,7 +159,9 @@ class StubReflectionFactory extends ReflectionFactory {
  */
 class ArgumentsPluginId {
 
-  public function __construct($plugin_id) {
+  public function __construct(
+    protected $plugin_id
+  ) {
     // No-op.
   }
 
@@ -172,7 +174,13 @@ class ArgumentsPluginId {
  */
 class ArgumentsMany {
 
-  public function __construct($configuration, $plugin_definition, $plugin_id, $foo = 'default_value', $what_am_i_doing_here = 'what_default') {
+  public function __construct(
+    protected $configuration,
+    protected $plugin_definition,
+    protected $plugin_id,
+    protected $foo = 'default_value',
+    protected $what_am_i_doing_here = 'what_default'
+  ) {
     // No-op.
   }
 
@@ -185,7 +193,9 @@ class ArgumentsMany {
  */
 class ArgumentsConfigArrayKey {
 
-  public function __construct($config_name) {
+  public function __construct(
+    protected $config_name
+  ) {
     // No-op.
   }
 
@@ -198,7 +208,12 @@ class ArgumentsConfigArrayKey {
  */
 class ArgumentsAllNull {
 
-  public function __construct($charismatic, $demure, $delightful, $electrostatic) {
+  public function __construct(
+    protected $charismatic,
+    protected $demure,
+    protected $delightful,
+    protected $electrostatic
+  ) {
     // No-op.
   }
 

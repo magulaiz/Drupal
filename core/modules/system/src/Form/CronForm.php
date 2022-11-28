@@ -25,7 +25,7 @@ class CronForm extends FormBase {
   /**
    * Constructs a CronForm object.
    *
-   * @param \Drupal\Core\Config\ConfigFactoryInterface $configFactory
+   * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   The factory for configuration objects.
    * @param \Drupal\Core\State\StateInterface $state
    *   The state key value store.
@@ -37,12 +37,13 @@ class CronForm extends FormBase {
    *   The module handler service.
    */
   public function __construct(
-    protected ConfigFactoryInterface $configFactory,
+    ConfigFactoryInterface $config_factory,
     protected StateInterface $state,
     protected CronInterface $cron,
     protected DateFormatterInterface $dateFormatter,
     protected ModuleHandlerInterface $moduleHandler
   ) {
+    $this->configFactory = $config_factory;
   }
 
   /**
