@@ -31,6 +31,8 @@ class MenuLinkContentForm extends ContentEntityForm {
    *
    * @param \Drupal\Core\Entity\EntityRepositoryInterface $entity_repository
    *   The entity repository.
+   * @param \Drupal\Core\Menu\MenuParentFormSelectorInterface $menuParentSelector
+   *   The menu parent form selector service.
    * @param \Drupal\Core\Language\LanguageManagerInterface $languageManager
    *   The language manager.
    * @param \Drupal\Core\Path\PathValidatorInterface $pathValidator

@@ -2,7 +2,6 @@
 
 namespace Drupal\link\Plugin\migrate\process;
 
-use Drupal\migrate\Plugin\MigrationInterface;
 use Drupal\migrate\MigrateExecutableInterface;
 use Drupal\migrate\ProcessPluginBase;
 use Drupal\migrate\Row;
