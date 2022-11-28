@@ -6,12 +6,10 @@ access taxonomy overview:
   description: 'Get an overview of all taxonomy vocabularies.'
 
 revert all taxonomy revisions:
-  title: 'Revert all taxonomy revisions'
-  description: 'To revert a revision, you also need permission to edit the taxonomy item.'
+  title: 'Revert all terms revisions'
 
 delete all taxonomy revisions:
-  title: 'Delete all taxonomy revisions'
-  description: 'To delete a revision, you also need permission to delete the taxonomy item.'
+  title: 'Delete all terms revisions'
 
 permission_callbacks:
   - Drupal\taxonomy\TaxonomyPermissions::permissions

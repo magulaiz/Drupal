@@ -56,7 +56,7 @@ class TermAccessControlHandler extends EntityAccessControlHandler {
         if ($entity->isDefaultRevision() || $entity->isLatestRevision()) {
           return AccessResult::forbidden()->setReason("Revert or delete revision is not allowed on latest or default revision.");
         }
-        elseif ($account->hasPermission("revert terms revisions in {$entity->bundle()}") || $account->hasPermission("revert all taxonomy revisions")) {
+        elseif (($account->hasPermission("revert terms revisions in {$entity->bundle()}") && $account->hasPermission("edit terms in {$entity->bundle()}")) || $account->hasPermission("revert all taxonomy revisions")) {
           return AccessResult::allowed()->cachePerPermissions();
         }
         return AccessResult::neutral()->setReason("The following permissions are required: 'revert terms revisions in {$entity->bundle()}' OR 'revert all taxonomy revisions'.");
@@ -65,7 +65,7 @@ class TermAccessControlHandler extends EntityAccessControlHandler {
         if ($entity->isDefaultRevision() || $entity->isLatestRevision()) {
           return AccessResult::forbidden()->setReason("Revert or delete revision is not allowed on latest or default revision.");
         }
-        elseif ($account->hasPermission("delete terms revisions in {$entity->bundle()}") || $account->hasPermission("delete all taxonomy revisions")) {
+        elseif (($account->hasPermission("delete terms revisions in {$entity->bundle()}") && $account->hasPermission("delete terms in {$entity->bundle()}")) || $account->hasPermission("delete all taxonomy revisions")) {
           return AccessResult::allowed()->cachePerPermissions();
         }
         return AccessResult::neutral()->setReason("The following permissions are required: 'delete terms revisions in {$entity->bundle()}' OR 'delete all taxonomy revisions'.");

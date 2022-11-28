@@ -70,8 +70,14 @@ class TaxonomyPermissions implements ContainerInjectionInterface {
       "delete terms in $id" => ['title' => $this->t('%vocabulary: Delete terms', $args)],
       "edit terms in $id" => ['title' => $this->t('%vocabulary: Edit terms', $args)],
       "view terms revisions in $id" => ['title' => $this->t('%vocabulary: View terms revisions', $args)],
-      "revert terms revisions in $id" => ['title' => $this->t('%vocabulary: Revert terms revisions', $args)],
-      "delete terms revisions in $id" => ['title' => $this->t('%vocabulary: Delete terms revisions', $args)],
+      "revert terms revisions in $id" => [
+        'title' => $this->t('%vocabulary: Revert terms revisions', $args),
+        'description' => $this->t('To revert a revision you also need permission to edit the taxonomy term.'),
+      ],
+      "delete terms revisions in $id" => [
+        'title' => $this->t('%vocabulary: Delete terms revisions', $args),
+        'description' => $this->t('To delete a revision you also need permission to delete the taxonomy term.'),
+      ],
     ];
   }
 
