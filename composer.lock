@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "ef033ef4a1da6243f950b37a7e6b7267",
+    "content-hash": "7ecdff98c0adf69296f3300a9cad8ef3",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -589,6 +589,48 @@
                 "GPL-2.0-or-later"
             ],
             "description": "Drupal is an open source content management platform powering millions of websites and applications.",
+            "transport-options": {
+                "relative": true
+            }
+        },
+        {
+            "name": "drupal/core-composer-scaffold",
+            "version": "10.1.x-dev",
+            "dist": {
+                "type": "path",
+                "url": "composer/Plugin/Scaffold",
+                "reference": "ede8fa67a9abaf6fb3ee327a1aed2e97a1d113cb"
+            },
+            "require": {
+                "composer-plugin-api": "^2",
+                "php": ">=7.3.0"
+            },
+            "conflict": {
+                "drupal-composer/drupal-scaffold": "*"
+            },
+            "require-dev": {
+                "composer/composer": "^1.8@stable"
+            },
+            "type": "composer-plugin",
+            "extra": {
+                "class": "Drupal\\Composer\\Plugin\\Scaffold\\Plugin",
+                "branch-alias": {
+                    "dev-master": "1.0.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Drupal\\Composer\\Plugin\\Scaffold\\": ""
+                }
+            },
+            "license": [
+                "GPL-2.0-or-later"
+            ],
+            "description": "A flexible Composer project scaffold builder.",
+            "homepage": "https://www.drupal.org/project/drupal",
+            "keywords": [
+                "drupal"
+            ],
             "transport-options": {
                 "relative": true
             }
@@ -8433,6 +8475,7 @@
         "drupal/core": 20,
         "drupal/core-project-message": 20,
         "drupal/core-vendor-hardening": 20,
+        "drupal/core-composer-scaffold": 20,
         "symfony/css-selector": 10,
         "symfony/phpunit-bridge": 10,
         "symfony/var-dumper": 10,
