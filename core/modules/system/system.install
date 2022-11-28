@@ -309,7 +309,7 @@ function system_requirements($phase) {
     }
     // Otherwise, the message should be an error at runtime, and a warning
     // during installation or update.
-    $requirements['php']['severity'] = ($phase === 'runtime') ? REQUIREMENT_ERROR : REQUIREMENT_WARNING;
+    $requirements['php']['severity'] = ($phase === 'runtime' && !Settings::get('supported_php_warning', FALSE)) ? REQUIREMENT_ERROR : REQUIREMENT_WARNING;
   }
   // @todo Remove this when \Drupal::MINIMUM_PHP is at least 8.1.6 in
   //   https://www.drupal.org/i/3305726.
