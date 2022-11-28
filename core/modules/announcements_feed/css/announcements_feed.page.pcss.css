@@ -1,0 +1,8 @@
+/* How do I view featured annoucements? */
+.featured-announcements-wrapper {
+  margin-bottom: 48px;
+}
+
+.announcement:not(.announcement:last-child) {
+  margin-bottom: 16px;
+}

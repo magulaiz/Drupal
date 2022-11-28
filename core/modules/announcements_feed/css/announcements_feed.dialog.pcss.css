@@ -1,0 +1,36 @@
+/**
+ * @file
+ *
+ * Styles for the announcements feed within the off-canvas dialog.
+ */
+
+#drupal-off-canvas-wrapper {
+  & .announcements {
+    padding-block-start: var(--off-canvas-padding);
+  }
+
+  & .announcement {
+    font-size: 14px;
+  }
+
+  & .announcement--featured {
+    position: relative;
+    margin-inline: calc(-1 * var(--off-canvas-padding));
+    padding: 0 var(--off-canvas-padding) var(--off-canvas-padding);
+    border-bottom: 1px solid var(--off-canvas-border-color);
+  }
+
+  & .announcement__title {
+    font-size: 16px;
+  }
+
+  & .announcement__new {
+    position: absolute;
+    inset-inline-end: var(--off-canvas-padding);
+    color: red; /* @todo - this is not accessible. */
+  }
+
+  & .no_alerts {
+    margin-block-start: var(--off-canvas-padding));
+  }
+}
