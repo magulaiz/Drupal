@@ -2,11 +2,12 @@
  * Ends the browser session and logs the console log if there were any errors.
  * See globals.js.
  *
- * @param {Object}
+ * @param root0
+ * @param root0.onlyOnError
  *   (optional) Settings object
  *   @param onlyOnError
  *     (optional) Only writes out the console log file if the test failed.
- * @param {function} callback
+ * @param {Function} callback
  *   A callback which will be called.
  * @return {object}
  *   The 'browser' object.

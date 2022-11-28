@@ -5,7 +5,7 @@
  *
  * @param {string} pathname
  *   The relative path to append to DRUPAL_TEST_BASE_URL
- * @param {function} callback
+ * @param {Function} callback
  *   A callback which will be called.
  * @return {object}
  *   The 'browser' object.

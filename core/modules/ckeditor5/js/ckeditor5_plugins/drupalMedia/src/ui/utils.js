@@ -9,7 +9,7 @@ import { getClosestSelectedDrupalMediaWidget } from '../utils';
  *
  * @param {module:core/editor/editor~Editor} editor
  *   The editor instance.
- * @return {Object}
+ * @return {object}
  *   The options.
  *
  * @private

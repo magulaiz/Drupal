@@ -1,4 +1,8 @@
 /**
+ * @param root0
+ * @param root0.deprecationError
+ * @param root0.deprecatedProperty
+ * @param root0.behaviors
  * @file
  *  Testing tools for deprecating JavaScript functions and class properties.
  */

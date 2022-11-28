@@ -1,4 +1,6 @@
 /**
+ * @param $
+ * @param Drupal
  * @file
  * Responsive navigation tabs.
  *
@@ -6,6 +8,10 @@
  * added to the main element, and a target element is included.
  */
 (($, Drupal) => {
+  /**
+   *
+   * @param tab
+   */
   function init(tab) {
     const $tab = $(tab);
     const $target = $tab.find('[data-drupal-nav-tabs-target]');

@@ -1,4 +1,6 @@
 /**
+ * @param $
+ * @param Drupal
  * @file
  * Testing behaviors for tabledrag library.
  */

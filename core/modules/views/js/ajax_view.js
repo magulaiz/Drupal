@@ -46,14 +46,14 @@
   Drupal.views = {};
 
   /**
-   * @type {object.<string, Drupal.views.ajaxView>}
+   * @type {Object<string, Drupal.views.ajaxView>}
    */
   Drupal.views.instances = {};
 
   /**
    * JavaScript object for a certain view.
    *
-   * @constructor
+   * @class
    *
    * @param {object} settings
    *   Settings object for the ajax view.
@@ -133,7 +133,7 @@
   };
 
   /**
-   * @method
+   * @function
    */
   Drupal.views.ajaxView.prototype.attachExposedFormAjax = function () {
     const that = this;

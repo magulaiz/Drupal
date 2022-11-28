@@ -21,6 +21,7 @@
        *
        * Addressing this issue requires changing the structure of a tabledrag
        * cell's first row.
+       *
        * @example
        *   <!-- Default tabledrag structure, which has the wrapping problem. -->
        *   <tr class="draggable">

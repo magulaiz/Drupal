@@ -3,11 +3,11 @@
  *
  * @param {object} settings
  *   Settings object
- * @param {array} settings.permissions
+ * @param {Array} settings.permissions
  *   The list of roles granted for the user.
  * @param {string} [settings.name=null]
  *   The role name.
- * @param {function} callback
+ * @param {Function} callback
  *   A callback which will be called, when creating the role is finished.
  * @return {object}
  *   The drupalCreateRole command.

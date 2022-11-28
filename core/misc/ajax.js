@@ -34,6 +34,10 @@
    */
   Drupal.behaviors.AJAX = {
     attach(context, settings) {
+      /**
+       *
+       * @param base
+       */
       function loadAjaxBehavior(base) {
         const elementSettings = settings.ajax[base];
         if (typeof elementSettings.selector === 'undefined') {
@@ -89,9 +93,9 @@
   /**
    * Extends Error to provide handling for Errors in Ajax.
    *
-   * @constructor
+   * @class
    *
-   * @augments Error
+   * @extends Error
    *
    * @param {XMLHttpRequest} xmlhttp
    *   XMLHttpRequest object used for the failed request.
@@ -367,7 +371,7 @@
    * `#ajax['wrapper']` properties. If set, this file will automatically be
    * included to provide Ajax capabilities.
    *
-   * @constructor
+   * @class
    *
    * @param {string} [base]
    *   Base parameter of {@link Drupal.Ajax} constructor
@@ -482,19 +486,19 @@
      *   Ajax URL to be called.
      * @prop {object} data
      *   Ajax payload.
-     * @prop {function} beforeSerialize
+     * @prop {Function} beforeSerialize
      *   Implement jQuery beforeSerialize function to call
      *   {@link Drupal.Ajax#beforeSerialize}.
-     * @prop {function} beforeSubmit
+     * @prop {Function} beforeSubmit
      *   Implement jQuery beforeSubmit function to call
      *   {@link Drupal.Ajax#beforeSubmit}.
-     * @prop {function} beforeSend
+     * @prop {Function} beforeSend
      *   Implement jQuery beforeSend function to call
      *   {@link Drupal.Ajax#beforeSend}.
-     * @prop {function} success
+     * @prop {Function} success
      *   Implement jQuery success function to call
      *   {@link Drupal.Ajax#success}.
-     * @prop {function} complete
+     * @prop {Function} complete
      *   Implement jQuery success function to clean up ajax state and trigger an
      *   error if needed.
      * @prop {string} dataType='json'
@@ -1235,7 +1239,7 @@
   /**
    * Provide a series of commands that the client will perform.
    *
-   * @constructor
+   * @class
    */
   Drupal.AjaxCommands = function () {};
   Drupal.AjaxCommands.prototype = {

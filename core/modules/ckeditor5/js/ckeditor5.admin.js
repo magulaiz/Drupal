@@ -142,7 +142,7 @@
    *   The currently selected buttons.
    * @param {Element} element
    *   The element which is being added.
-   * @param {function} announceChange
+   * @param {Function} announceChange
    *   Function to call to announce the change.
    */
   const addToSelectedButtons = (selection, element, announceChange) => {
@@ -164,7 +164,7 @@
    *   The currently selected buttons.
    * @param {Element} element
    *   The element which is being removed.
-   * @param {function} announceChange
+   * @param {Function} announceChange
    *   Function to call to announce the change.
    */
   const removeFromSelectedButtons = (selection, element, announceChange) => {
@@ -191,7 +191,7 @@
    *   The currently selected buttons.
    * @param {Element} element
    *   The element being moved.
-   * @param {Number} dir
+   * @param {number} dir
    *   The direction which the element is being moved.
    */
   const moveWithinSelectedButtons = (selection, element, dir) => {
@@ -857,7 +857,7 @@
   /**
    * Theme function for CKEditor 5 selected buttons.
    *
-   * @param {Object} options
+   * @param {object} options
    *   An object containing options.
    * @param {Array} options.buttons
    *   An array of selected buttons.
@@ -881,7 +881,7 @@
   /**
    * Theme function for CKEditor 5 divider buttons.
    *
-   * @param {Object} options
+   * @param {object} options
    *   An object containing options.
    * @param {Array} options.buttons
    *   An array of divider buttons.
@@ -905,7 +905,7 @@
   /**
    * Theme function for CKEditor 5 available buttons.
    *
-   * @param {Object} options
+   * @param {object} options
    *   An object containing options.
    * @param {Array} options.buttons
    *   An array of available buttons.
@@ -929,15 +929,15 @@
   /**
    * Theme function for CKEditor 5 buttons.
    *
-   * @param {Object} options
+   * @param {object} options
    *  An object containing options.
-   * @param {Object} options.button
+   * @param {object} options.button
    *   An object containing button options.
-   * @param {String} options.button.label
+   * @param {string} options.button.label
    *   Button label.
-   * @param {String} options.button.id
+   * @param {string} options.button.id
    *   Button id.
-   * @param {String} options.listType
+   * @param {string} options.listType
    *   The type of the list.
    * @return {string}
    *   The CKEditor 5 buttons markup.
@@ -975,13 +975,13 @@
   /**
    * Theme function for CKEditor 5 admin UI.
    *
-   * @param {Object} options
+   * @param {object} options
    *   An object containing options.
-   * @param {String} options.availableButtons
+   * @param {string} options.availableButtons
    *   Markup for available buttons.
-   * @param {String} options.dividerButtons
+   * @param {string} options.dividerButtons
    *   Markup for divider buttons.
-   * @param {String} options.activeToolbar
+   * @param {string} options.activeToolbar
    *   Markup for active toolbar.
    * @param {Array} options.helpMessage
    *   An array of help messages.

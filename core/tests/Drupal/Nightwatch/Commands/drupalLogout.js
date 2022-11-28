@@ -8,7 +8,7 @@ const { URL } = require('url');
  *   The settings object.
  * @param {boolean} [settings.silent=false]
  *   If the command should be run silently.
- * @param {function} callback
+ * @param {Function} callback
  *   A callback which will be called, when the logout is finished.
  * @return {object}
  *   The drupalLogout command.

@@ -14,7 +14,7 @@
  * function can be written in such a way that it is only invoked under specific
  * conditions.
  *
- * @param {function} func
+ * @param {Function} func
  *   The function to be invoked.
  * @param {number} wait
  *   The time period within which the callback function should only be
@@ -23,7 +23,7 @@
  * @param {boolean} immediate
  *   Whether we wait at the beginning or end to execute the function.
  *
- * @return {function}
+ * @return {Function}
  *   The debounced function.
  */
 Drupal.debounce = function (func, wait, immediate) {

@@ -71,7 +71,7 @@
     /**
      * The parsed, user-entered tag list of $allowedHTMLFormItem
      *
-     * @var {Object.<string, Drupal.FilterHTMLRule>}
+     * @member {Object<string, Drupal.FilterHTMLRule>}
      */
     userTags: {},
 
@@ -293,7 +293,7 @@
      *   The string representation of the setting. For example:
      *     <p class="callout"> <br> <a href hreflang>
      *
-     * @return {Object.<string, Drupal.FilterHTMLRule>}
+     * @return {Object<string, Drupal.FilterHTMLRule>}
      *   The corresponding text filter HTML rule objects, one per tag, keyed by
      *   tag name.
      */
@@ -345,7 +345,7 @@
     /**
      * Generates the value of this.$allowedHTMLFormItem.
      *
-     * @param {Object.<string, Drupal.FilterHTMLRule>} tags
+     * @param {Object<string, Drupal.FilterHTMLRule>} tags
      *   The parsed representation of the setting.
      *
      * @return {Array}

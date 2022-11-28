@@ -23,6 +23,10 @@
       const $details = $(details);
       const $summaries = $details.find('> summary');
 
+      /**
+       *
+       * @param matches
+       */
       function detailsToggle(matches) {
         if (matches) {
           $details.attr('open', true);
@@ -39,6 +43,10 @@
         }
       }
 
+      /**
+       *
+       * @param event
+       */
       function handleDetailsMQ(event) {
         detailsToggle(event.matches);
       }

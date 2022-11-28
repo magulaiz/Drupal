@@ -17,6 +17,10 @@
       const $configForm = $('#language-negotiation-configure-form');
       const inputSelector = 'input[name$="[configurable]"]';
       // Given a customization checkbox derive the language type being changed.
+      /**
+       *
+       * @param checkbox
+       */
       function toggleTable(checkbox) {
         const $checkbox = $(checkbox);
         // Get the language detection type such as Interface text language

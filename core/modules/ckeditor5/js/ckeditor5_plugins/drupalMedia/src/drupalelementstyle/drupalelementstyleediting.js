@@ -83,6 +83,9 @@ function modelToViewStyleAttribute(styles) {
  * either CSS class or an attribute.
  *
  * Note that more than one style can be applied to each modelElement.
+ *
+ * @param styles
+ * @param modelAttribute
  */
 function viewToModelStyleAttribute(styles, modelAttribute) {
   // Convert only non–default styles.
@@ -210,7 +213,7 @@ export default class DrupalElementStyleEditing extends Plugin {
     /**
      * The Drupal Element Style definitions.
      *
-     * @typedef {Object} Drupal.CKEditor5~DrupalElementStyleDefinition
+     * @typedef {object} Drupal.CKEditor5~DrupalElementStyleDefinition
      *   Object that contains an array of DrupalElementStyle objects for each
      *   group.
      *

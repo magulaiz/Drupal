@@ -97,7 +97,7 @@ export default class DrupalLinkMediaUI extends Plugin {
    * Returns true if a linked media is the only selected element in the model.
    *
    * @param {module:engine/model/selection~Selection} selection
-   * @return {Boolean}
+   * @return {boolean}
    */
   // eslint-disable-next-line class-methods-use-this
   _isSelectedLinkedMedia(selection) {

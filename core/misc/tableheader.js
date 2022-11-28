@@ -10,7 +10,7 @@
    * TableHeader will make the current table header stick to the top of the page
    * if the table is very long.
    *
-   * @constructor Drupal.TableHeader
+   * @class Drupal.TableHeader
    *
    * @param {HTMLElement} table
    *   DOM object for the table to add a sticky header to.
@@ -66,6 +66,11 @@
   }
 
   // Helper method to loop through tables and execute a method.
+  /**
+   *
+   * @param method
+   * @param arg
+   */
   function forTables(method, arg) {
     const tables = TableHeader.tables;
     const il = tables.length;
@@ -75,6 +80,10 @@
   }
 
   // Select and initialize sticky table headers.
+  /**
+   *
+   * @param e
+   */
   function tableHeaderInitHandler(e) {
     once('tableheader', $(e.data.context).find('table.sticky-enabled')).forEach(
       (table) => {
@@ -102,18 +111,35 @@
     },
   };
 
+  /**
+   *
+   * @param position
+   */
   function scrollValue(position) {
     return document.documentElement[position] || document.body[position];
   }
 
+  /**
+   *
+   * @param e
+   */
   function tableHeaderResizeHandler(e) {
     forTables('recalculateSticky');
   }
 
+  /**
+   *
+   * @param e
+   */
   function tableHeaderOnScrollHandler(e) {
     forTables('onScroll');
   }
 
+  /**
+   *
+   * @param e
+   * @param offsets
+   */
   function tableHeaderOffsetChangeHandler(e, offsets) {
     forTables('stickyPosition', offsets.top);
   }

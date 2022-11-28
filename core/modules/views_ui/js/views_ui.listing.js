@@ -25,9 +25,18 @@
       const $table = $(input.getAttribute('data-table'));
       let $rows;
 
+      /**
+       *
+       * @param e
+       */
       function filterViewList(e) {
         const query = e.target.value.toLowerCase();
 
+        /**
+         *
+         * @param index
+         * @param row
+         */
         function showViewRow(index, row) {
           const sources = row.querySelectorAll(
             '[data-drupal-selector="views-table-filter-text-source"]',

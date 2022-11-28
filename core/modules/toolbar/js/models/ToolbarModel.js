@@ -7,9 +7,9 @@
   /**
    * Backbone model for the toolbar.
    *
-   * @constructor
+   * @class
    *
-   * @augments Backbone.Model
+   * @extends Backbone.Model
    */
   Drupal.toolbar.ToolbarModel = Backbone.Model.extend(
     /** @lends Drupal.toolbar.ToolbarModel# */ {

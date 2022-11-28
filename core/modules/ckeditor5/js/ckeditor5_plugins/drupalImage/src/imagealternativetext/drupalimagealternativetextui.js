@@ -279,7 +279,7 @@ export default class DrupalImageAlternativeTextUi extends Plugin {
   /**
    * Removes the form from the balloon.
    *
-   * @param {Boolean} [focusEditable=false]
+   * @param {boolean} [focusEditable=false]
    *   Controls whether the editing view is focused afterwards.
    *
    * @private
@@ -306,7 +306,7 @@ export default class DrupalImageAlternativeTextUi extends Plugin {
   /**
    * Returns `true` when the form is the visible view in the balloon.
    *
-   * @type {Boolean}
+   * @type {boolean}
    *
    * @private
    */
@@ -317,7 +317,7 @@ export default class DrupalImageAlternativeTextUi extends Plugin {
   /**
    * Returns `true` when the form is in the balloon.
    *
-   * @type {Boolean}
+   * @type {boolean}
    *
    * @private
    */

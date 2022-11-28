@@ -1,4 +1,6 @@
 /**
+ * @param Drupal
+ * @param once
  * @file
  * This script watches the desktop version of the primary navigation. If it
  * wraps to two lines, it will automatically transition to a mobile navigation

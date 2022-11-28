@@ -201,7 +201,7 @@ function editingDowncastMediaLink() {
  *
  * @param {module:link/link~LinkDecoratorDefinition} decorator
  *   The link decorator.
- * @return {function}
+ * @return {Function}
  *   Function attaching event listener to dispatcher.
  *
  * @private
@@ -270,7 +270,7 @@ function downcastMediaLinkManualDecorator(decorator) {
  *   The editor.
  * @param {module:link/link~LinkDecoratorDefinition} decorator
  *   The link decorator.
- * @return {function}
+ * @return {Function}
  *   Function attaching event listener to dispatcher.
  *
  * @private

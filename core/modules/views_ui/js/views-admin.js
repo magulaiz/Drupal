@@ -107,7 +107,7 @@
    *
    * Prepopulates a form field based on the view name.
    *
-   * @constructor
+   * @class
    *
    * @param {jQuery} $target
    *   A jQuery object representing the form field or fields to prepopulate.
@@ -276,7 +276,7 @@
   /**
    * Constructs a new AddItemForm.
    *
-   * @constructor
+   * @class
    *
    * @param {jQuery} $form
    *   The form element used.
@@ -462,7 +462,7 @@
    * to the user's search term. Typing in "taxonomy" will show only those
    * options containing "taxonomy" in their label.
    *
-   * @constructor
+   * @class
    *
    * @param {jQuery} $form
    *   The form element.
@@ -560,6 +560,10 @@
 
         // Search through the search texts in the form for matching text.
         this.options.forEach((option) => {
+          /**
+           *
+           * @param word
+           */
           function hasWord(word) {
             return option.searchText.indexOf(word) !== -1;
           }
@@ -629,7 +633,7 @@
   /**
    * Improve the UI of the rearrange filters dialog box.
    *
-   * @constructor
+   * @class
    *
    * @param {jQuery} $table
    *   The table in the filter form.
@@ -896,7 +900,7 @@
       },
 
       /**
-       * @method
+       * @function
        */
       modifyTableDrag() {
         const tableDrag = Drupal.tableDrag['views-rearrange-filters'];
@@ -1164,6 +1168,10 @@
     attach(context) {
       const $context = $(context);
 
+      /**
+       *
+       * @param event
+       */
       function changeDefaultWidget(event) {
         if ($(event.target).prop('checked')) {
           $context.find('input.default-radios').parent().hide();
@@ -1188,7 +1196,7 @@
   /**
    * Attaches expose filter button to a checkbox that triggers its click event.
    *
-   * @constructor
+   * @class
    *
    * @param {Element} button
    *   The DOM object representing the button to be checkboxified.

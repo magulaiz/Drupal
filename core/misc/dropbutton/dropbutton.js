@@ -10,7 +10,7 @@
    * All secondary actions beyond the first in the list are presented in a
    * dropdown list accessible through a toggle arrow associated with the button.
    *
-   * @constructor Drupal.DropButton
+   * @class Drupal.DropButton
    *
    * @param {HTMLElement} dropbutton
    *   A DOM element.
@@ -162,7 +162,7 @@
       },
 
       /**
-       * @method
+       * @function
        */
       hoverIn() {
         // Clear any previous timer we were using.
@@ -172,7 +172,7 @@
       },
 
       /**
-       * @method
+       * @function
        */
       hoverOut() {
         // Wait half a second before closing.
@@ -180,14 +180,14 @@
       },
 
       /**
-       * @method
+       * @function
        */
       open() {
         this.toggle(true);
       },
 
       /**
-       * @method
+       * @function
        */
       close() {
         this.toggle(false);

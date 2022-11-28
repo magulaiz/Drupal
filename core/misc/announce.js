@@ -97,7 +97,7 @@
    *   A string to indicate the priority of the message. Can be either
    *   'polite' or 'assertive'.
    *
-   * @return {function}
+   * @return {Function}
    *   The return of the call to debounce.
    *
    * @see http://www.w3.org/WAI/PF/aria-practices/#liveprops

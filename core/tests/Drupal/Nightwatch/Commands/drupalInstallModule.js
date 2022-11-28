@@ -3,7 +3,7 @@
  *
  * @param {string} module
  *   The module machine name to enable.
- * @param {function} callback
+ * @param {Function} callback
  *   A callback which will be called, when the module has been enabled.
  * @return {object}
  *   The drupalInstallModule command.

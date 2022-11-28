@@ -1,4 +1,6 @@
 /**
+ * @param $
+ * @param Drupal
  * @file media_library.view.js
  */
 (($, Drupal) => {

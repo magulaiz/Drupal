@@ -16,14 +16,14 @@
     /**
      * Storage for position information about the tray.
      *
-     * @type {?String}
+     * @type {?string}
      */
     position: null,
 
     /**
      * The minimum height of the tray when opened at the top of the page.
      *
-     * @type {Number}
+     * @type {number}
      */
     minimumHeight: 30,
 
@@ -31,7 +31,7 @@
      * The minimum width to use body displace needs to match the width at which
      * the tray will be 100% width. @see core/misc/dialog/off-canvas.css
      *
-     * @type {Number}
+     * @type {number}
      */
     minDisplaceWidth: 768,
 
@@ -70,9 +70,11 @@
     /**
      * Handler fired before an off-canvas dialog has been opened.
      *
-     * @param {Object} settings
+     * @param settings.settings
+     * @param {object} settings
      *   Settings related to the composition of the dialog.
      *
+     * @param settings.$element
      * @return {undefined}
      */
     beforeCreate({ settings, $element }) {
@@ -89,6 +91,7 @@
 
       /**
        * Applies initial height and with to dialog based depending on position.
+       *
        * @see http://api.jqueryui.com/dialog for all dialog options.
        */
       const position = settings.drupalOffCanvasPosition;
@@ -101,6 +104,8 @@
     /**
      * Handler fired after an off-canvas dialog has been closed.
      *
+     * @param root0
+     * @param root0.$element
      * @return {undefined}
      */
     beforeClose({ $element }) {
@@ -115,7 +120,7 @@
      *
      * @param {jQuery} $element
      *   The off-canvas dialog element.
-     * @param {Object} settings
+     * @param {object} settings
      *   Settings related to the composition of the dialog.
      *
      * @return {undefined}
@@ -152,7 +157,8 @@
      * Toggle classes based on title existence.
      * Called with Drupal.offCanvas.afterCreate.
      *
-     * @param {Object} settings
+     * @param settings.settings
+     * @param {object} settings
      *   Settings related to the composition of the dialog.
      *
      * @return {undefined}
@@ -292,6 +298,7 @@
 
     /**
      * The HTML element that surrounds the dialog.
+     *
      * @param {HTMLElement} $element
      *   The dialog element.
      *

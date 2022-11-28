@@ -1,4 +1,8 @@
 (() => {
+  /**
+   *
+   * @param steps
+   */
   function findActiveStep(steps) {
     for (let i = 0; i < steps.length; i++) {
       if (steps[i].className === 'is-active') {
@@ -12,6 +16,9 @@
     return 0;
   }
 
+  /**
+   *
+   */
   function installStepsSetup() {
     const steps = document.querySelectorAll('.task-list li');
     if (steps.length) {

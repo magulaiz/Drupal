@@ -15,7 +15,7 @@ import { getClosestSelectedDrupalMediaWidget, isObject } from './utils';
  * The registration process should be handled by the plugin which handles the UI
  * of a particular feature.
  *
- * @param {Array.<string|Object>} config
+ * @param {Array.<string | object>} config
  *   The drupalMedia.toolbar configuration.
  *
  * @return {string[]}

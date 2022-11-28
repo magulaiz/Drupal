@@ -1,4 +1,7 @@
 /**
+ * @param $
+ * @param Drupal
+ * @param window
  * @file
  * Media Library overrides for Claro
  */

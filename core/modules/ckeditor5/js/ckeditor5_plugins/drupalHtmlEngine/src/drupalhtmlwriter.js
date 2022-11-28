@@ -19,7 +19,7 @@ export default class DrupalHtmlWriter {
    * Returns an HTML string created from the document fragment.
    *
    * @param {DocumentFragment} fragment
-   * @return {String}
+   * @return {string}
    */
   // eslint-disable-next-line class-methods-use-this
   getHtml(fragment) {

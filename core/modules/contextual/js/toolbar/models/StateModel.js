@@ -55,7 +55,7 @@
        *
        * @constructs
        *
-       * @augments Backbone.Model
+       * @extends Backbone.Model
        *
        * @param {object} attrs
        *   Attributes for the backbone model.

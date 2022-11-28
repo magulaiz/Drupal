@@ -199,15 +199,15 @@ export default class ImageAlternativeTextFormView extends View {
   /**
    * Creates the button view.
    *
-   * @param {String} label
+   * @param {string} label
    *   The button label
-   * @param {String} icon
+   * @param {string} icon
    *   The button's icon.
-   * @param {String} className
+   * @param {string} className
    *   The additional button CSS class name.
-   * @param {String} [eventName]
+   * @param {string} [eventName]
    *   The event name that the ButtonView#execute event will be delegated to.
-   * @returns {module:ui/button/buttonview~ButtonView}
+   * @return {module:ui/button/buttonview~ButtonView}
    *   The button view instance.
    *
    * @private
@@ -237,7 +237,7 @@ export default class ImageAlternativeTextFormView extends View {
   /**
    * Creates an input with a label.
    *
-   * @returns {module:ui/labeledfield/labeledfieldview~LabeledFieldView}
+   * @return {module:ui/labeledfield/labeledfieldview~LabeledFieldView}
    *   Labeled field view instance.
    *
    * @private

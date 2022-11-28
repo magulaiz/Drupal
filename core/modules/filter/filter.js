@@ -14,6 +14,10 @@
    */
   Drupal.behaviors.filterGuidelines = {
     attach(context) {
+      /**
+       *
+       * @param event
+       */
       function updateFilterGuidelines(event) {
         const $this = $(event.target);
         const { value } = event.target;

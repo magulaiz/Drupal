@@ -26,7 +26,7 @@
  *
  * @global
  *
- * @var {object} drupalTranslations
+ * @member {object} drupalTranslations
  */
 
 /**
@@ -108,7 +108,7 @@ window.Drupal = { behaviors: {}, locale: {} };
    *
    * @namespace Drupal.behaviors
    *
-   * @type {Object.<string, Drupal~behavior>}
+   * @type {Object<string, Drupal~behavior>}
    */
 
   /**
@@ -352,7 +352,7 @@ window.Drupal = { behaviors: {}, locale: {} };
    *
    * @param {string} str
    *   A string containing the English text to translate.
-   * @param {Object.<string, string>} [args]
+   * @param {Object<string, string>} [args]
    *   An object of replacements pairs to make after translation. Incidences
    *   of any key in this array are replaced with the corresponding value.
    *   See {@link Drupal.formatString}.
@@ -554,7 +554,7 @@ window.Drupal = { behaviors: {}, locale: {} };
    * Deprecation errors are only triggered if deprecation errors haven't
    * been suppressed.
    *
-   * @param {Object} deprecation
+   * @param {object} deprecation
    *   The deprecation options.
    * @param {string} deprecation.message
    *   The deprecation message.
@@ -574,15 +574,15 @@ window.Drupal = { behaviors: {}, locale: {} };
   /**
    * Triggers deprecation error when object property is being used.
    *
-   * @param {Object} deprecation
+   * @param {object} deprecation
    *   The deprecation options.
-   * @param {Object} deprecation.target
+   * @param {object} deprecation.target
    *   The targeted object.
    * @param {string} deprecation.deprecatedProperty
    *   A key of the deprecated property.
    * @param {string} deprecation.message
    *   The deprecation message.
-   * @returns {Object}
+   * @return {object}
    *
    * @see https://www.drupal.org/core/deprecation#javascript
    */
@@ -616,9 +616,10 @@ window.Drupal = { behaviors: {}, locale: {} };
    * displayed as a placeholder inside a sentence.</caption>
    * Drupal.theme('placeholder', text);
    *
+   * @param {...any} args
    * @namespace
    *
-   * @param {function} func
+   * @param {Function} func
    *   The name of the theme function to call.
    * @param {...args}
    *   Additional arguments to pass along to the theme function.

@@ -201,7 +201,7 @@ export default class MediaImageTextAlternativeUi extends Plugin {
   /**
    * Removes the {@link #_form} from the {@link #_balloon}.
    *
-   * @param {Boolean} [focusEditable=false] Controls whether the editing view is focused afterwards.
+   * @param {boolean} [focusEditable=false] Controls whether the editing view is focused afterwards.
    * @private
    */
   _hideForm(focusEditable) {
@@ -225,7 +225,7 @@ export default class MediaImageTextAlternativeUi extends Plugin {
   /**
    * Returns `true` when the form is the visible view in the balloon.
    *
-   * @type {Boolean}
+   * @type {boolean}
    */
   get _isVisible() {
     return this._balloon.visibleView === this._form;
@@ -234,7 +234,7 @@ export default class MediaImageTextAlternativeUi extends Plugin {
   /**
    * Returns `true` when the form is in the balloon.
    *
-   * @type {Boolean}
+   * @type {boolean}
    */
   get _isInBalloon() {
     return this._balloon.hasView(this._form);

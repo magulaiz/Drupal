@@ -30,7 +30,7 @@
    *   drupalSettings.editor.formats.
    * @param {string} originalFormatID
    *   The text format ID of the original text format.
-   * @param {function} callback
+   * @param {Function} callback
    *   A callback to be called (with no parameters) after the field's value has
    *   been XSS filtered.
    */

@@ -23,6 +23,10 @@
       const $context = $(context);
       let elements;
 
+      /**
+       *
+       * @param selector
+       */
       function initFileValidation(selector) {
         $(once('fileValidate', $context.find(selector))).on(
           'change.fileValidate',
@@ -40,6 +44,10 @@
       const $context = $(context);
       let elements;
 
+      /**
+       *
+       * @param selector
+       */
       function removeFileValidation(selector) {
         $(once.remove('fileValidate', $context.find(selector))).off(
           'change.fileValidate',

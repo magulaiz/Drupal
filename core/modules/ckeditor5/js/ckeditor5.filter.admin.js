@@ -1,4 +1,6 @@
 /**
+ * @param Drupal
+ * @param once
  * @file
  * Provides Text Editor UI improvements specific to CKEditor 5.
  */
@@ -40,6 +42,8 @@
    * response. It is overridden here to provide additional logic to prevent
    * specific CKEditor 5-related events from triggering that AJAX response
    * unless certain criteria are met.
+   *
+   * @param {...any} args
    */
   Drupal.Ajax.prototype.eventResponse = function ckeditor5AjaxEventResponse(
     ...args

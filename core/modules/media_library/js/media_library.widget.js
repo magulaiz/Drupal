@@ -1,4 +1,7 @@
 /**
+ * @param $
+ * @param Drupal
+ * @param Sortable
  * @file media_library.widget.js
  */
 (($, Drupal, Sortable) => {

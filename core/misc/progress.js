@@ -35,15 +35,15 @@
    * pb = new Drupal.ProgressBar('myProgressBar');
    * some_element.appendChild(pb.element);
    *
-   * @constructor
+   * @class
    *
    * @param {string} id
    *   The id for the progressbar.
-   * @param {function} updateCallback
+   * @param {Function} updateCallback
    *   Callback to run on update.
    * @param {string} method
    *   HTTP method to use.
-   * @param {function} errorCallback
+   * @param {Function} errorCallback
    *   Callback to call on error.
    */
   Drupal.ProgressBar = function (id, updateCallback, method, errorCallback) {

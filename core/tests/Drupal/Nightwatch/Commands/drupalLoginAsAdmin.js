@@ -5,7 +5,7 @@ const { commandAsWebserver } = require('../globals');
 /**
  * Logs in as the admin user.
  *
- * @param {function} callback
+ * @param {Function} callback
  *   A callback which will allow running commands as an administrator.
  * @return {object}
  *   The drupalLoginAsAdmin command.

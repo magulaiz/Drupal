@@ -12,7 +12,7 @@ import { Plugin } from 'ckeditor5/src/core';
  *
  * @param {string} url
  *   The URL used for retrieving the metadata.
- * @return {Promise<Object>}
+ * @return {Promise<object>}
  *   Promise containing response content.
  *
  * @private
@@ -43,7 +43,7 @@ export default class DrupalMediaMetadataRepository extends Plugin {
    * @param {module:engine/model/element~Element} modelElement
    *   The model element from which metadata should be retrieved.
    *
-   * @return {Promise<Object>}
+   * @return {Promise<object>}
    */
   getMetadata(modelElement) {
     // If metadata was retrieved earlier for the model element, return the

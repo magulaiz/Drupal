@@ -4,7 +4,7 @@ const { commandAsWebserver } = require('../globals');
 /**
  * Uninstalls a test Drupal site.
  *
- * @param {function} callback
+ * @param {Function} callback
  *   A callback which will be called, when the uninstallation is finished.
  * @return {object}
  *   The 'browser' object.
