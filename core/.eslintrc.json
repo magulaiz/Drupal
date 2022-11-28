@@ -77,7 +77,10 @@
     "jsdoc": {
       "tagNamePreference": {
         "property": "prop",
-        "returns": "return"
+        "returns": "return",
+        "constant": "const",
+        "member": "member",
+        "augments": "extends"
       }
     }
   }
