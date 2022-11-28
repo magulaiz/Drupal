@@ -380,7 +380,6 @@ endapply
 endautoescape
 endcode
 endembed
-endfor
 endlink
 endmacro
 endofheader
@@ -643,6 +642,7 @@ linkback
 linkgenerator
 linkification
 linksby
+linkset
 linktext
 lisu
 litererally
@@ -749,7 +749,6 @@ msgctxt
 msgid
 msgstr
 msword
-mtimes
 mucho
 mulrev
 mulrevpub
@@ -892,6 +891,7 @@ pathnames
 pcre
 pcss
 pdma
+peast
 percona
 permissionless
 persistable
@@ -1018,6 +1018,8 @@ regexes
 reindex
 reindexing
 reinject
+relname
+relpersistence
 renderable
 renderables
 renderered
@@ -1441,7 +1443,6 @@ wcprops
 webassert
 webcal
 webflo
-webfonts
 webheads
 webhosting
 webmention
