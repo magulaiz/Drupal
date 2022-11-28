@@ -4,7 +4,6 @@ namespace Drupal\KernelTests\Core\TypedData;
 
 use Drupal\Core\TypedData\DataDefinition;
 use Drupal\KernelTests\KernelTestBase;
-use Symfony\Component\Validator\Exception\UnexpectedTypeException;
 
 /**
  * Tests the ConfigExists constraint validator.
