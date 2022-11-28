@@ -12,7 +12,8 @@
         "composer/installers": "^2.0",
         "drupal/core": "self.version",
         "drupal/core-project-message": "self.version",
-        "drupal/core-vendor-hardening": "self.version"
+        "drupal/core-vendor-hardening": "self.version",
+        "drupal/core-composer-scaffold": "self.version"
     },
     "require-dev": {
         "behat/mink": "^1.10",
@@ -57,7 +58,8 @@
             "drupal/core-project-message": true,
             "drupal/core-vendor-hardening": true,
             "phpstan/extension-installer": true,
-            "dealerdirect/phpcodesniffer-composer-installer": true
+            "dealerdirect/phpcodesniffer-composer-installer": true,
+            "drupal/core-composer-scaffold": true
         }
     },
     "extra": {
@@ -124,6 +126,10 @@
         {
             "type": "path",
             "url": "composer/Plugin/ProjectMessage"
+        },
+        {
+            "type": "path",
+            "url": "composer/Plugin/Scaffold"
         },
         {
             "type": "path",
