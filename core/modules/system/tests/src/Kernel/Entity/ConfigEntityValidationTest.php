@@ -7,6 +7,8 @@ use Drupal\KernelTests\KernelTestBase;
 
 /**
  * Tests Symfony validation of config entities.
+ *
+ * @group Entity
  */
 class ConfigEntityValidationTest extends KernelTestBase {
 
