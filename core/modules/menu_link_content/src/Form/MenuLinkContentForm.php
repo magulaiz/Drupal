@@ -27,39 +27,28 @@ class MenuLinkContentForm extends ContentEntityForm {
   protected $entity;
 
   /**
-   * The parent form selector service.
-   *
-   * @var \Drupal\Core\Menu\MenuParentFormSelectorInterface
-   */
-  protected $menuParentSelector;
-
-  /**
-   * The path validator.
-   *
-   * @var \Drupal\Core\Path\PathValidatorInterface
-   */
-  protected $pathValidator;
-
-  /**
    * Constructs a MenuLinkContentForm object.
    *
    * @param \Drupal\Core\Entity\EntityRepositoryInterface $entity_repository
    *   The entity repository.
-   * @param \Drupal\Core\Menu\MenuParentFormSelectorInterface $menu_parent_selector
-   *   The menu parent form selector service.
-   * @param \Drupal\Core\Language\LanguageManagerInterface $language_manager
+   * @param \Drupal\Core\Language\LanguageManagerInterface $languageManager
    *   The language manager.
-   * @param \Drupal\Core\Path\PathValidatorInterface $path_validator
+   * @param \Drupal\Core\Path\PathValidatorInterface $pathValidator
    *   The path validator.
    * @param \Drupal\Core\Entity\EntityTypeBundleInfoInterface $entity_type_bundle_info
    *   The entity type bundle service.
    * @param \Drupal\Component\Datetime\TimeInterface $time
    *   The time service.
    */
-  public function __construct(EntityRepositoryInterface $entity_repository, MenuParentFormSelectorInterface $menu_parent_selector, LanguageManagerInterface $language_manager, PathValidatorInterface $path_validator, EntityTypeBundleInfoInterface $entity_type_bundle_info = NULL, TimeInterface $time = NULL) {
+  public function __construct(
+    EntityRepositoryInterface $entity_repository,
+    protected MenuParentFormSelectorInterface $menuParentSelector,
+    protected LanguageManagerInterface $languageManager,
+    protected PathValidatorInterface $pathValidator,
+    EntityTypeBundleInfoInterface $entity_type_bundle_info = NULL,
+    TimeInterface $time = NULL
+  ) {
     parent::__construct($entity_repository, $entity_type_bundle_info, $time);
-    $this->menuParentSelector = $menu_parent_selector;
-    $this->pathValidator = $path_validator;
   }
 
   /**
