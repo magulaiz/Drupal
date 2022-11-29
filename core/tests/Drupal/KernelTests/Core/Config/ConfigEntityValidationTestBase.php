@@ -1,23 +1,39 @@
 <?php
 
-namespace Drupal\Tests\system\Kernel\Entity;
+namespace Drupal\KernelTests\Core\Config;
 
 use Drupal\Component\Utility\NestedArray;
-use Drupal\Core\Entity\Entity\EntityViewMode;
+use Drupal\Core\Config\Entity\ConfigEntityInterface;
 use Drupal\KernelTests\KernelTestBase;
+use Symfony\Component\Validator\ConstraintViolationListInterface;
 
 /**
- * Tests Symfony validation of config entities.
+ * Base class for testing validation of config entities.
  *
- * @group Entity
+ * @group config
  * @group Validation
  */
-class ConfigEntityValidationTest extends KernelTestBase {
+abstract class ConfigEntityValidationTestBase extends KernelTestBase {
 
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['system', 'user'];
+  protected static $modules = ['system'];
+
+  /**
+   * The config entity being tested.
+   *
+   * @var \Drupal\Core\Config\Entity\ConfigEntityInterface
+   */
+  protected ConfigEntityInterface $entity;
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function setUp(): void {
+    parent::setUp();
+    $this->installConfig('system');
+  }
 
   /**
    * Data provider for ::testConfigDependenciesValidation().
@@ -29,7 +45,7 @@ class ConfigEntityValidationTest extends KernelTestBase {
     return [
       'additional valid dependency types' => [
         [
-          'config' => ['user.settings'],
+          'config' => ['system.site'],
           'content' => ['node:some-random-uuid'],
         ],
         [],
@@ -53,10 +69,10 @@ class ConfigEntityValidationTest extends KernelTestBase {
       ],
       'non-existent config dependency' => [
         [
-          'config' => ['node.settings'],
+          'config' => ['fake_settings'],
         ],
         [
-          "The 'node.settings' config does not exist.",
+          "The 'fake_settings' config does not exist.",
         ],
       ],
       'empty string in module dependencies' => [
@@ -107,32 +123,30 @@ class ConfigEntityValidationTest extends KernelTestBase {
    * @dataProvider providerConfigDependenciesValidation
    */
   public function testConfigDependenciesValidation(array $dependencies, array $expected_messages): void {
-    $this->installConfig(['system', 'user']);
-
-    /** @var \Drupal\Core\Entity\EntityViewModeInterface $entity */
-    $entity = EntityViewMode::create([
-      'id' => 'user.test',
-      'label' => 'Test',
-      'targetEntityType' => 'user',
-    ]);
-    $entity->save();
-
-    $name = $entity->getConfigDependencyName();
-    $data = $entity->toArray();
-
-    /** @var \Drupal\Core\Config\TypedConfigManagerInterface $typed_config */
-    $typed_config = $this->container->get('config.typed');
+    $this->assertInstanceOf(ConfigEntityInterface::class, $this->entity);
 
     // The entity should have valid data to begin with.
-    $this->assertCount(0, $typed_config->createFromNameAndData($name, $data)->validate());
+    $this->assertCount(0, $this->validateEntity());
 
-    $data['dependencies'] = NestedArray::mergeDeep($data['dependencies'], $dependencies);
-    $violations = $typed_config->createFromNameAndData($name, $data)->validate();
+    $this->entity->set('dependencies', NestedArray::mergeDeep($this->entity->getDependencies(), $dependencies));
+    $violations = $this->validateEntity();
 
     $this->assertSame(count($expected_messages), count($violations));
     foreach ($expected_messages as $i => $message) {
       $this->assertSame($message, (string) $violations->get($i)->getMessage());
     }
+  }
+
+  /**
+   * Validates the entity under test.
+   *
+   * @return \Symfony\Component\Validator\ConstraintViolationListInterface
+   *   A list of validation errors.
+   */
+  protected function validateEntity(): ConstraintViolationListInterface {
+    return $this->container->get('config.typed')
+      ->createFromNameAndData($this->entity->getConfigDependencyName(), $this->entity->toArray())
+      ->validate();
   }
 
 }
