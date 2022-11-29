@@ -86,10 +86,10 @@ abstract class ConfigEntityValidationTestBase extends KernelTestBase {
       ],
       'non-installed module dependency' => [
         [
-          'module' => ['node'],
+          'module' => ['bad_judgment'],
         ],
         [
-          "Module 'node' is not installed.",
+          "Module 'bad_judgment' is not installed.",
         ],
       ],
       'empty string in theme dependencies' => [
@@ -103,10 +103,10 @@ abstract class ConfigEntityValidationTestBase extends KernelTestBase {
       ],
       'non-installed theme dependency' => [
         [
-          'theme' => ['stark'],
+          'theme' => ['ugly_theme'],
         ],
         [
-          "Theme 'stark' is not installed.",
+          "Theme 'ugly_theme' is not installed.",
         ],
       ],
     ];
