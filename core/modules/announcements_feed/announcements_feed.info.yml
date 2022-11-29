@@ -1,5 +1,6 @@
 name: Announcements Feed
-description: Notifies site users about latest announcements from the Drupal community.
-package: Core
-version: VERSION
 type: module
+description: Notifies site users about latest announcements from the Drupal community.
+version: VERSION
+package: Core (Experimental)
+lifecycle: experimental
