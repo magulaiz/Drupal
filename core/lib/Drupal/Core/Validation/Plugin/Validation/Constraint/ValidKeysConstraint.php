@@ -7,11 +7,11 @@ namespace Drupal\Core\Validation\Plugin\Validation\Constraint;
 use Symfony\Component\Validator\Constraint;
 
 /**
- * Checks that all the keys of an array are known.
+ * Checks that all the keys of a mapping are known.
  *
  * @Constraint(
  *   id = "ValidKeys",
- *   label = @Translation("Valid array keys", context = "Validation")
+ *   label = @Translation("Valid mapping keys", context = "Validation")
  * )
  */
 class ValidKeysConstraint extends Constraint {
