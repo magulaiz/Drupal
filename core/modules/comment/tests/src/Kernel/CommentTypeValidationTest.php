@@ -7,6 +7,8 @@ use Drupal\KernelTests\Core\Config\ConfigEntityValidationTestBase;
 
 /**
  * Tests validation of comment_type entities.
+ * 
+ * @group comment
  */
 class CommentTypeValidationTest extends ConfigEntityValidationTestBase {
 
