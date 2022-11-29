@@ -62,4 +62,6 @@ field.field.*.*.*:
       mapping:
         config:
           constraints:
+            Count:
+              min: 1
             ContainsRegexMatch: '/^field\.storage\.\w+\.\w+$/'

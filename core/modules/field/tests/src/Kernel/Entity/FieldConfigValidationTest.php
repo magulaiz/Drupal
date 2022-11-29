@@ -30,18 +30,16 @@ class FieldConfigValidationTest extends FieldStorageConfigValidationTest {
   /**
    * Tests that validation fails if field storage is not in the dependencies.
    */
-  public function testNoFieldStorageInDependencies(): void {
-    // Remove the field storage from the config dependencies, using
-    // array_splice() to force a re-key.
+  public function testNoConfigDependencies(): void {
+    // Remove the config dependencies from the field entity.
     $dependencies = $this->entity->getDependencies();
-    $index = array_search('field.storage.user.test', $dependencies['config']);
-    $this->assertIsInt($index);
-    array_splice($dependencies['config'], $index, 1);
+    $dependencies['config'] = [];
     $this->entity->set('dependencies', $dependencies);
 
     $violations = $this->validateEntity();
-    $this->assertCount(1, $violations);
-    $this->assertSame('Does not contain a value matching "/^field\.storage\.\w+\.\w+$/".', (string) $violations->get(0)->getMessage());
+    $this->assertCount(2, $violations);
+    $this->assertSame('This collection should contain <em class="placeholder">1</em> element or more.', (string) $violations->get(0)->getMessage());
+    $this->assertSame('Does not contain a value matching "/^field\.storage\.\w+\.\w+$/".', (string) $violations->get(1)->getMessage());
   }
 
 }

@@ -23,6 +23,7 @@ class ContainsRegexMatchConstraint extends Constraint {
 
   /**
    * The error message if no matching values are found.
+   *
    * @var string
    */
   public string $message = 'Does not contain a value matching "@pattern".';
