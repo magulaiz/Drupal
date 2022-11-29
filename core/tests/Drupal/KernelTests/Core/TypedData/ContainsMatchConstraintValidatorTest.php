@@ -21,7 +21,8 @@ class ContainsMatchConstraintValidatorTest extends KernelTestBase {
    * Tests the ContainsMatch validation constraint validator.
    */
   public function testValidation(): void {
-    // Create a data definition that specifies certain allowed keys.
+    // Create a data definition that requires a particular regular expression to
+    // be matched.
     $definition = DataDefinition::create('any')
       ->addConstraint('ContainsMatch', '/^Hello/');
 
