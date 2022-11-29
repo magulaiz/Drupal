@@ -11,6 +11,9 @@ use Drupal\KernelTests\KernelTestBase;
  *
  * @group Entity
  * @group Validation
+ *
+ * @covers \Drupal\Core\Entity\Plugin\Validation\Constraint\ConfigDependenciesConstraint
+ * @covers \Drupal\Core\Entity\Plugin\Validation\Constraint\ConfigDependenciesConstraintValidator
  */
 class ConfigEntityValidationTest extends KernelTestBase {
 
@@ -42,15 +45,6 @@ class ConfigEntityValidationTest extends KernelTestBase {
           "'fun_stuff' is not a supported key.",
         ],
       ],
-      'empty string in config dependencies' => [
-        [
-          'config' => [''],
-        ],
-        [
-          'This value should not be blank.',
-          "The '' config does not exist.",
-        ],
-      ],
       'non-existent config dependency' => [
         [
           'config' => ['node.settings'],
@@ -59,30 +53,12 @@ class ConfigEntityValidationTest extends KernelTestBase {
           "The 'node.settings' config does not exist.",
         ],
       ],
-      'empty string in module dependencies' => [
-        [
-          'module' => [''],
-        ],
-        [
-          'This value should not be blank.',
-          "Module '' is not installed.",
-        ],
-      ],
       'non-installed module dependency' => [
         [
           'module' => ['node'],
         ],
         [
           "Module 'node' is not installed.",
-        ],
-      ],
-      'empty string in theme dependencies' => [
-        [
-          'theme' => [''],
-        ],
-        [
-          'This value should not be blank.',
-          "Theme '' is not installed.",
         ],
       ],
       'non-installed theme dependency' => [
