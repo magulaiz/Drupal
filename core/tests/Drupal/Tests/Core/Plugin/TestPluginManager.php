@@ -15,16 +15,25 @@ class TestPluginManager extends DefaultPluginManager {
   /**
    * Constructs a TestPluginManager object.
    *
+   * @param \Traversable $namespaces
+   *   An object that implements \Traversable which contains the root paths
+   *   keyed by the corresponding namespace to look for plugin implementations.
    * @param array $definitions
    *   An array of static definitions.
-   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
+   * @param \Drupal\Core\Extension\ModuleHandlerInterface $moduleHandler
    *   (optional) The module handler to invoke the alter hook with.
    * @param string $alter_hook
    *   (optional) Name of the alter hook.
    * @param string $interface
    *   (optional) The interface required for the plugins.
    */
-  public function __construct(array $definitions, ModuleHandlerInterface $module_handler = NULL, $alter_hook = NULL, $interface = NULL) {
+  public function __construct(
+    protected \Traversable $namespaces,
+    array $definitions,
+    protected ?ModuleHandlerInterface $moduleHandler = NULL,
+    ?string $alter_hook = NULL,
+    ?string $interface = NULL
+  ) {
     // Create the object that can be used to return definitions for all the
     // plugins available for this type. Most real plugin managers use a richer
     // discovery implementation, but StaticDiscovery lets us add some simple
@@ -36,8 +45,6 @@ class TestPluginManager extends DefaultPluginManager {
     foreach ($definitions as $key => $definition) {
       $this->discovery->setDefinition($key, $definition);
     }
-
-    $this->moduleHandler = $module_handler;
 
     if ($alter_hook) {
       $this->alterInfo($alter_hook);

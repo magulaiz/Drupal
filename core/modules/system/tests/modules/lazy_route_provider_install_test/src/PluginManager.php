@@ -19,10 +19,16 @@ class PluginManager extends DefaultPluginManager {
    * @param \Traversable $namespaces
    *   An object that implements \Traversable which contains the root paths
    *   keyed by the corresponding namespace to look for plugin implementations.
+   * @param \Drupal\Core\Cache\CacheBackendInterface $cacheBackend
+   *   A cache backend.
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
    *   The module handler.
    */
-  public function __construct(\Traversable $namespaces, ModuleHandlerInterface $module_handler) {
+  public function __construct(
+    \Traversable $namespaces,
+    protected CacheBackendInterface $cacheBackend,
+    ModuleHandlerInterface $module_handler
+  ) {
     // Generate a URL during construction to prove that URL generation works. If
     // the route was missing an exception would be thrown. This also forces the
     // route provider to be initialized very early during a module install.
