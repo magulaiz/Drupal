@@ -279,7 +279,7 @@ function actions_synchronize($delete_orphans = FALSE) {
   foreach ($actions_in_code as $callback => $array) {
     // Ignore configurable actions since their instances get put in when the
     // user adds the action.
-    if (!$array['configurable']) {
+    if (empty($array['configurable'])) {
       // If we already have an action ID for this action, no need to assign aid.
       if (isset($actions_in_db[$callback])) {
         unset($actions_in_db[$callback]);
