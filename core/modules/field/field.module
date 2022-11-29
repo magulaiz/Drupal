@@ -387,6 +387,15 @@ function field_field_storage_config_update(FieldStorageConfigInterface $field_st
 }
 
 /**
+ * Implements hook_config_schema_info_alter().
+ */
+function field_config_schema_info_alter(array &$definitions): void {
+  // This allows field config entities to have additional, specialized
+  // constraints on their config dependencies.
+  $definitions['field_config_base']['mapping']['dependencies'] = $definitions['config_dependencies_base'];
+}
+
+/**
  * Implements hook_ENTITY_TYPE_presave() for 'field_config'.
  *
  * Determine the selection handler plugin ID for an entity reference field.

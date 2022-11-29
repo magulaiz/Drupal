@@ -57,3 +57,9 @@ field.storage.*.*:
 field.field.*.*.*:
   type: field_config_base
   label: 'Field'
+  mapping:
+    dependencies:
+      mapping:
+        config:
+          constraints:
+            ContainsRegexMatch: '/^field\.storage\.\w+\.\w+$/'
