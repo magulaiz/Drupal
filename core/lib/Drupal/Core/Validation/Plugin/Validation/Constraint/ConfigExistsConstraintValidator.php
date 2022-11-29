@@ -1,0 +1,49 @@
+<?php
+
+namespace Drupal\Core\Validation\Plugin\Validation\Constraint;
+
+use Drupal\Core\Config\ConfigFactoryInterface;
+use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\Validator\Constraint;
+use Symfony\Component\Validator\ConstraintValidator;
+
+/**
+ * Validates that a given config object exists.
+ */
+class ConfigExistsConstraintValidator extends ConstraintValidator implements ContainerInjectionInterface {
+
+  /**
+   * The config factory service.
+   *
+   * @var \Drupal\Core\Config\ConfigFactoryInterface
+   */
+  protected ConfigFactoryInterface $configFactory;
+
+  /**
+   * Constructs a ConfigExistsConstraintValidator object.
+   *
+   * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
+   *   The config factory service.
+   */
+  public function __construct(ConfigFactoryInterface $config_factory) {
+    $this->configFactory = $config_factory;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container) {
+    return new static($container->get('config.factory'));
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function validate(mixed $value, Constraint $constraint) {
+    if ($this->configFactory->get($value)->isNew()) {
+      $this->context->addViolation($constraint->message, ['@name' => $value]);
+    }
+  }
+
+}
