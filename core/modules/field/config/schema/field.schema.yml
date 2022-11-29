@@ -64,4 +64,4 @@ field.field.*.*.*:
           constraints:
             Count:
               min: 1
-            ContainsRegexMatch: '/^field\.storage\.\w+\.\w+$/'
+            ContainsMatch: '/^field\.storage\.\w+\.\w+$/'

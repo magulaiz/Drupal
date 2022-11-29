@@ -10,11 +10,11 @@ use Symfony\Component\Validator\Constraint;
  * Checks that an array contains a value that matches a regular expression.
  *
  * @Constraint(
- *   id = "ContainsRegexMatch",
- *   label = @Translation("Contains value matching expression", context = "Validation")
+ *   id = "ContainsMatch",
+ *   label = @Translation("Contains matching value", context = "Validation")
  * )
  */
-class ContainsRegexMatchConstraint extends Constraint {
+class ContainsMatchConstraint extends Constraint {
 
   /**
    * The regular expression to find matching values.

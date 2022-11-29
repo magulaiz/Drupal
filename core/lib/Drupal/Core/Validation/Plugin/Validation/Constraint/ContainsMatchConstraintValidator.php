@@ -12,7 +12,7 @@ use Symfony\Component\Validator\Exception\UnexpectedTypeException;
 /**
  * Validates the ContainsRegexMatch constraint.
  */
-class ContainsRegexMatchConstraintValidator extends ConstraintValidator {
+class ContainsMatchConstraintValidator extends ConstraintValidator {
 
   /**
    * {@inheritdoc}

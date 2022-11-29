@@ -12,18 +12,18 @@ use Symfony\Component\Validator\Exception\UnexpectedTypeException;
  *
  * @group Validation
  *
- * @covers \Drupal\Core\Validation\Plugin\Validation\Constraint\ContainsRegexMatchConstraint
- * @covers \Drupal\Core\Validation\Plugin\Validation\Constraint\ContainsRegexMatchConstraintValidator
+ * @covers \Drupal\Core\Validation\Plugin\Validation\Constraint\ContainsMatchConstraint
+ * @covers \Drupal\Core\Validation\Plugin\Validation\Constraint\ContainsMatchConstraintValidator
  */
-class ContainsRegexMatchConstraintValidatorTest extends KernelTestBase {
+class ContainsMatchConstraintValidatorTest extends KernelTestBase {
 
   /**
-   * Tests the ContainsRegexMatch validation constraint validator.
+   * Tests the ContainsMatch validation constraint validator.
    */
   public function testValidation(): void {
     // Create a data definition that specifies certain allowed keys.
     $definition = DataDefinition::create('any')
-      ->addConstraint('ContainsRegexMatch', '/^Hello/');
+      ->addConstraint('ContainsMatch', '/^Hello/');
 
     /** @var \Drupal\Core\TypedData\TypedDataManagerInterface $typed_data */
     $typed_data = $this->container->get('typed_data_manager');
@@ -58,7 +58,7 @@ class ContainsRegexMatchConstraintValidatorTest extends KernelTestBase {
     $this->expectWarning();
     try {
       $definition = DataDefinition::create('any')
-        ->addConstraint('ContainsRegexMatch', '/^Hello');
+        ->addConstraint('ContainsMatch', '/^Hello');
 
       $typed_data->create($definition, $values)->validate();
       $this->fail('Expected an exception but none was raised.');
