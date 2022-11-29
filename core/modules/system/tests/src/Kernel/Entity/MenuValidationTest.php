@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\Tests\system\Kernel;
+namespace Drupal\Tests\system\Kernel\Entity;
 
 use Drupal\KernelTests\Core\Config\ConfigEntityValidationTestBase;
 use Drupal\system\Entity\Menu;
