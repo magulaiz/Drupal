@@ -49,7 +49,7 @@ class ConfigEntityValidationTest extends KernelTestBase {
         [
           'This value should not be blank.',
           "The '' config does not exist.",
-        ]
+        ],
       ],
       'non-existent config dependency' => [
         [
