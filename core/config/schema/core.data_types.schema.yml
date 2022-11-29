@@ -414,48 +414,109 @@ base_entity_reference_field_settings:
 field_config_base:
   type: config_entity
   mapping:
+    constraints:
+      FieldStorageExistsOnFieldableContentEntityType:
+        entityType: entity_type
+        fieldName: field_name
     id:
       type: string
       label: 'ID'
+      constraints:
+        NotNull: []
+        StringParts:
+          separator: .
+          parts:
+            - entity_type
+            - bundle
+            - field_name
     field_name:
       type: string
       label: 'Field name'
+      constraints:
+        NotNull: []
+        MachineName: []
+        UniqueField: []
+        ImmutableAfterCreation: []
     entity_type:
       type: string
       label: 'Entity type'
+      constraints:
+        NotNull: []
+        PluginExists:
+          pluginType: content_entity_type
+          pluginClassImplementsInterface: \Drupal\Core\Entity\FieldableEntityInterface
+        ImmutableAfterCreation: []
     bundle:
       type: string
       label: 'Bundle'
+      constraints:
+        NotNull: []
+        BundleExists: []
+        ImmutableAfterCreation: []
     label:
       type: label
       label: 'Label'
+      constraints:
+        NotNull: []
     description:
       type: text
       label: 'Help text'
+      constraints:
+        # Optional, so at minimum must be set to the empty string.
+        NotNull: []
     required:
       type: boolean
       label: 'Required field'
+      constraints:
+        NotNull: []
     translatable:
       type: boolean
       label: 'Translatable'
+      constraints:
+        NotNull: []
     default_value:
       type: sequence
       label: 'Default values'
+      constraints:
+        # Optional, so at minimum must be set to the empty array.
+        NotNull: []
       sequence:
         type: field.value.[%parent.%parent.field_type]
         label: 'Default value'
+        constraint:
+          # TBD, looks like \Symfony\Component\Validator\Constraints\ValidValidator *could* work here…
+          Valid: []
     default_value_callback:
       type: string
       label: 'Default value callback'
+      # @todo Constraints — validate that this callback A) returns an entity, B) a *valid* entity?
     settings:
       type: field.field_settings.[%parent.field_type]
+      # @todo Constraints on each of the field type-specific settings config schemas BUT extra special challenge: until Drupal 11, at best only core field types will have validation constraints set!
     field_type:
       type: string
       label: 'Field type'
+      constraints:
+        NotNull: []
+        Matches:
+          # This field_storage_config entity must exist.
+          config:
+            type: field_storage_config
+            id:
+              - entity_type
+              - field_name
+          # The value found at this place in that config entity must match.
+          selector:
+            - type
+        ImmutableAfterCreation: []
 
 core.base_field_override.*.*.*:
   type: field_config_base
   label: 'Base field bundle override'
+  constraints:
+    FieldIsBaseField:
+      entityType: entity_type
+      fieldName: field_name
 
 core.date_format.*:
   type: config_entity

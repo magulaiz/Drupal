@@ -12,35 +12,77 @@ field.storage.*.*:
   type: config_entity
   label: 'Field'
   mapping:
+    constraints:
+      IsUnchanged:
+        selector: locked
+      IsFalse:
+        selector: locked
     id:
       type: string
       label: 'ID'
+      constraints:
+        NotNull: []
+        StringParts:
+          separator: .
+          parts:
+            - entity_type
+            - field_name
     field_name:
       type: string
       label: 'Field name'
+      constraints:
+        NotNull: []
+        # Note: typically but optionally, this would use `field_ui.settings`' `field_prefix` value as the first part.
+        MachineName: []
+        UniqueField: []
+        ImmutableAfterCreation: []
     entity_type:
       type: string
       label: 'Entity type'
+      constraints:
+        NotNull: []
+        PluginExists:
+          pluginType: content_entity_type
+          pluginClassImplementsInterface: \Drupal\Core\Entity\FieldableEntityInterface
+        ImmutableAfterCreation: []
     type:
       type: string
       label: 'Type'
+      constraints:
+        NotNull: []
+        # @todo In principle, we should validate that this plugin was indeed provided by `module`.
+        PluginExists:
+          pluginType: field_type
+        ImmutableAfterCreation: []
     settings:
       type: field.storage_settings.[%parent.type]
     module:
       type: string
       label: 'Module'
+      constraints:
+        NotNull: []
+        ModuleExists: []
+        ImmutableAfterCreation: []
     locked:
       type: boolean
       label: 'Locked'
+      constraints:
+        NotNull: []
     cardinality:
       type: integer
       label: 'Maximum number of values users can enter'
+      constraints:
+        NotNull: []
+        NoEntitiesExistYetWithHigherCardinality: []
     translatable:
       type: boolean
       label: 'Translatable'
+      constraints:
+        NotNull: []
     indexes:
       type: sequence
       label: 'Indexes'
+      # @todo Constraints — but shockingly this A) uses `type: ignore`, B) has zero validation logic in core?!
       sequence:
         type: sequence
         label: 'Indexes'
@@ -50,10 +92,19 @@ field.storage.*.*:
     persist_with_no_fields:
       type: boolean
       label: 'Persist field storage with no fields'
+      constraints:
+        NotNull: []
     custom_storage:
       type: boolean
       label: 'Enable custom storage'
+      constraints:
+        NotNull: []
+        ImmutableAfterCreation: []
 
 field.field.*.*.*:
   type: field_config_base
   label: 'Field'
+  constraints:
+    FieldIsConfigurableField:
+      entityType: entity_type
+      fieldName: field_name
