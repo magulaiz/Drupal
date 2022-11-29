@@ -18,6 +18,7 @@ use Drupal\Core\Ajax\ReplaceCommand;
 use Drupal\Core\Ajax\RemoveCommand;
 use Drupal\Core\Asset\AttachedAssetsInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Url;
@@ -366,7 +367,7 @@ function _update_ckeditor5_html_filter(array $form, FormStateInterface $form_sta
 /**
  * Returns a list of language codes supported by CKEditor 5.
  *
- * @param $lang
+ * @param string|bool $lang
  *   The Drupal langcode to match.
  *
  * @return array|mixed|string
@@ -411,7 +412,6 @@ function _ckeditor5_get_langcode_mapping($lang = FALSE) {
       unset($langcodes[$langcode]);
     }
   }
-
   if ($lang) {
     return $langcodes[$lang] ?? 'en';
   }
@@ -423,7 +423,6 @@ function _ckeditor5_get_langcode_mapping($lang = FALSE) {
  */
 function ckeditor5_library_info_alter(&$libraries, $extension) {
   if ($extension === 'filter') {
-    $libraries['drupal.filter.admin']['dependencies'][] = 'ckeditor5/internal.ie11.filter.warnings';
     $libraries['drupal.filter.admin']['dependencies'][] = 'ckeditor5/internal.drupal.ckeditor5.filter.admin';
   }
 
@@ -536,7 +535,7 @@ function ckeditor5_library_info_alter(&$libraries, $extension) {
 /**
  * Implements hook_js_alter().
  */
-function ckeditor5_js_alter(&$javascript, AttachedAssetsInterface $assets) {
+function ckeditor5_js_alter(&$javascript, AttachedAssetsInterface $assets, LanguageInterface $language) {
   // This file means CKEditor 5 translations are in use on the page.
   // @see locale_js_alter()
   $placeholder_file = 'core/assets/vendor/ckeditor5/translation.js';
@@ -558,8 +557,7 @@ function ckeditor5_js_alter(&$javascript, AttachedAssetsInterface $assets) {
       return;
     }
 
-    $language_interface = \Drupal::languageManager()->getCurrentLanguage()->getId();
-    $ckeditor5_language = _ckeditor5_get_langcode_mapping($language_interface);
+    $ckeditor5_language = _ckeditor5_get_langcode_mapping($language->getId());
 
     // Remove all CKEditor 5 translations files that are not in the current
     // language.

@@ -5,14 +5,19 @@ dependencies:
     - search
     - system
   theme:
-    - seven
+    - claro
   enforced:
     config:
       - search.page.help_search
+<<<<<<<< HEAD:core/themes/seven/config/optional/block.block.seven_help_search.yml
     module:
       - help_topics
 id: seven_help_search
 theme: seven
+========
+id: claro_help_search
+theme: claro
+>>>>>>>> 10.1.x:core/modules/help_topics/config/optional/block.block.claro_help_search.yml
 region: help
 weight: -4
 provider: null

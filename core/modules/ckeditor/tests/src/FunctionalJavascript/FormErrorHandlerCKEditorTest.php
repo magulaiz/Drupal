@@ -9,29 +9,37 @@ use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\filter\Entity\FilterFormat;
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 use Drupal\node\Entity\NodeType;
+use Drupal\user\RoleInterface;
 
 /**
- * Tests the inline errors fragment link to a CKEditor-enabled textarea.
+ * Tests the inline errors fragment link to a CKEditor5-enabled textarea.
  *
+<<<<<<<< HEAD:core/modules/ckeditor/tests/src/FunctionalJavascript/FormErrorHandlerCKEditorTest.php
  * @group ckeditor
  * @group legacy
+========
+ * @group ckeditor5
+>>>>>>>> 10.1.x:core/modules/inline_form_errors/tests/src/FunctionalJavascript/FormErrorHandlerCKEditor5Test.php
  */
-class FormErrorHandlerCKEditorTest extends WebDriverTestBase {
+class FormErrorHandlerCKEditor5Test extends WebDriverTestBase {
 
   /**
    * {@inheritdoc}
    */
   protected static $modules = [
     'node',
-    'ckeditor',
+    'ckeditor5',
     'inline_form_errors',
-    'filter',
   ];
 
   /**
    * {@inheritdoc}
    */
+<<<<<<<< HEAD:core/modules/ckeditor/tests/src/FunctionalJavascript/FormErrorHandlerCKEditorTest.php
   protected $defaultTheme = 'starterkit_theme';
+========
+  protected $defaultTheme = 'stark';
+>>>>>>>> 10.1.x:core/modules/inline_form_errors/tests/src/FunctionalJavascript/FormErrorHandlerCKEditor5Test.php
 
   /**
    * {@inheritdoc}
@@ -39,17 +47,15 @@ class FormErrorHandlerCKEditorTest extends WebDriverTestBase {
   protected function setUp(): void {
     parent::setUp();
 
-    // Create a text format and associate CKEditor.
-    $filtered_html_format = FilterFormat::create([
-      'format' => 'filtered_html',
-      'name' => 'Filtered HTML',
-      'weight' => 0,
-    ]);
-    $filtered_html_format->save();
-
+    // Create a text format and associate CKEditor 5.
+    FilterFormat::create([
+      'format' => 'ckeditor5',
+      'name' => 'CKEditor 5 with image upload',
+      'roles' => [RoleInterface::AUTHENTICATED_ID],
+    ])->save();
     Editor::create([
-      'format' => 'filtered_html',
-      'editor' => 'ckeditor',
+      'format' => 'ckeditor5',
+      'editor' => 'ckeditor5',
     ])->save();
 
     // Create a node type for testing.
@@ -78,23 +84,23 @@ class FormErrorHandlerCKEditorTest extends WebDriverTestBase {
     $account = $this->drupalCreateUser([
       'administer nodes',
       'create page content',
-      'use text format filtered_html',
     ]);
     $this->drupalLogin($account);
   }
 
   /**
-   * Tests if the fragment link to a textarea works with CKEditor enabled.
+   * Tests if the fragment link to a textarea works with CKEditor 5 enabled.
    */
   public function testFragmentLink() {
     $session = $this->getSession();
     $web_assert = $this->assertSession();
+    $ckeditor_class = '.ck-editor';
     $ckeditor_id = '#cke_edit-body-0-value';
 
     $this->drupalGet('node/add/page');
 
     // Only enter a title in the node add form and leave the body field empty.
-    $edit = ['edit-title-0-value' => 'Test inline form error with CKEditor'];
+    $edit = ['edit-title-0-value' => 'Test inline form error with CKEditor 5'];
 
     $this->submitForm($edit, 'Save');
 
@@ -103,19 +109,21 @@ class FormErrorHandlerCKEditorTest extends WebDriverTestBase {
     // visible.
     $session->executeScript("document.getElementById('edit-title-0-value').style.marginBottom = window.innerHeight*2 + 'px';");
 
-    // Check that the CKEditor-enabled body field is currently not visible in
+    // Check that the CKEditor5-enabled body field is currently not visible in
     // the viewport.
-    $web_assert->assertNotVisibleInViewport('css', $ckeditor_id, 'topLeft', 'CKEditor-enabled body field is not visible.');
+    $web_assert->assertNotVisibleInViewport('css', $ckeditor_class, 'topLeft', 'CKEditor5-enabled body field is not visible.');
 
     // Check if we can find the error fragment link within the errors summary
     // message.
-    $errors_link = $this->assertSession()->waitForElementVisible('css', '.messages--error a[href="#edit-body-0-value"]');
+
+    $errors_link = $this->assertSession()->waitForElementVisible('css', 'a[href$="#edit-body-0-value"]');
     $this->assertNotEmpty($errors_link, 'Error fragment link is visible.');
 
     $errors_link->click();
 
-    // Check that the CKEditor-enabled body field is visible in the viewport.
-    $web_assert->assertVisibleInViewport('css', $ckeditor_id, 'topLeft', 'CKEditor-enabled body field is visible.');
+    // Check that the CKEditor5-enabled body field is visible in the viewport.
+    // The hash change adds an ID to the CKEditor 5 instance so check its visibility using the ID now.
+    $web_assert->assertVisibleInViewport('css', $ckeditor_id, 'topLeft', 'CKEditor5-enabled body field is visible.');
   }
 
 }

@@ -2,20 +2,21 @@
 
 namespace Drupal\Tests\hal\Functional\user;
 
+use Drupal\Core\Cache\CacheableMetadata;
+use Drupal\Core\Test\AssertMailTrait;
 use Drupal\Core\Url;
 use Drupal\Tests\rest\Functional\CookieResourceTestTrait;
 use Drupal\Tests\rest\Functional\ResourceTestBase;
-use Drupal\Core\Test\AssertMailTrait;
 use Drupal\user\UserInterface;
 use GuzzleHttp\RequestOptions;
 
 /**
- * Tests user registration via REST resource.
+ * Tests registration of user using REST.
  *
  * @group hal
  * @group legacy
  */
-class RestRegisterUserTest extends ResourceTestBase {
+class UserRegistrationRestTest extends ResourceTestBase {
 
   use CookieResourceTestTrait;
 
@@ -31,16 +32,6 @@ class RestRegisterUserTest extends ResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $format = 'hal_json';
-
-  /**
-   * {@inheritdoc}
-   */
-  protected static $mimeType = 'application/hal+json';
-
-  /**
-   * {@inheritdoc}
-   */
   protected static $auth = 'cookie';
 
   /**
@@ -51,7 +42,14 @@ class RestRegisterUserTest extends ResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['hal', 'user'];
+  protected static $modules = ['user', 'rest'];
+
+  /**
+   * Entity type ID for this storage.
+   *
+   * @var string
+   */
+  protected static string $entityTypeId;
 
   const USER_EMAIL_DOMAIN = '@example.com';
 
@@ -95,7 +93,7 @@ class RestRegisterUserTest extends ResourceTestBase {
     $config->set('register', UserInterface::REGISTER_VISITORS);
     $config->set('verify_mail', 1);
     $config->save();
-    $response = $this->registerRequest('Estraven', TRUE);
+    $response = $this->registerRequest('Estraven');
     $this->assertResourceErrorResponse(422, 'A Password cannot be specified. It will be generated on login.', $response);
 
     // Allow visitors to register with email verification.
@@ -158,9 +156,7 @@ class RestRegisterUserTest extends ResourceTestBase {
    *   Return the request body.
    */
   protected function createRequestBody($name, $include_password = TRUE, $include_email = TRUE) {
-    global $base_url;
     $request_body = [
-      '_links' => ['type' => ["href" => $base_url . "/rest/type/user/user"]],
       'langcode' => [['value' => 'en']],
       'name' => [['value' => $name]],
     ];
@@ -229,7 +225,6 @@ class RestRegisterUserTest extends ResourceTestBase {
    *   Return the Response.
    */
   protected function registerRequest($name, $include_password = TRUE, $include_email = TRUE) {
-
     $user_register_url = Url::fromRoute('user.register')
       ->setRouteParameter('_format', static::$format);
     $request_body = $this->createRequestBody($name, $include_password, $include_email);
@@ -262,11 +257,15 @@ class RestRegisterUserTest extends ResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function getExpectedUnauthorizedAccessMessage($method) {}
+  protected function getExpectedUnauthorizedAccessMessage($method) {
+    return '';
+  }
 
   /**
    * {@inheritdoc}
    */
-  protected function getExpectedUnauthorizedAccessCacheability() {}
+  protected function getExpectedUnauthorizedAccessCacheability() {
+    return new CacheableMetadata();
+  }
 
 }
