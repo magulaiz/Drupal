@@ -3,14 +3,14 @@
 namespace Drupal\Tests\system\Kernel;
 
 use Drupal\KernelTests\Core\Config\ConfigEntityValidationTestBase;
-use Drupal\system\Entity\Action;
+use Drupal\system\Entity\Menu;
 
 /**
- * Tests validation of action entities.
+ * Tests validation of menu entities.
  *
  * @group system
  */
-class ActionValidationTest extends ConfigEntityValidationTestBase {
+class MenuValidationTest extends ConfigEntityValidationTestBase {
 
   /**
    * {@inheritdoc}
@@ -18,11 +18,9 @@ class ActionValidationTest extends ConfigEntityValidationTestBase {
   protected function setUp(): void {
     parent::setUp();
 
-    $this->entity = Action::create([
+    $this->entity = Menu::create([
       'id' => 'test',
       'label' => 'Test',
-      'type' => 'test',
-      'plugin' => 'action_goto_action',
     ]);
     $this->entity->save();
   }
