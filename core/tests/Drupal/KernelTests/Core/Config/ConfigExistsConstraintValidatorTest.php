@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\KernelTests\Core\TypedData;
+namespace Drupal\KernelTests\Core\Config;
 
 use Drupal\Core\TypedData\DataDefinition;
 use Drupal\KernelTests\KernelTestBase;
@@ -8,10 +8,11 @@ use Drupal\KernelTests\KernelTestBase;
 /**
  * Tests the ConfigExists constraint validator.
  *
+ * @group config
  * @group Validation
  *
- * @covers \Drupal\Core\Validation\Plugin\Validation\Constraint\ConfigExistsConstraint
- * @covers \Drupal\Core\Validation\Plugin\Validation\Constraint\ConfigExistsConstraintValidator
+ * @covers \Drupal\Core\Config\Plugin\Validation\Constraint\ConfigExistsConstraint
+ * @covers \Drupal\Core\Config\Plugin\Validation\Constraint\ConfigExistsConstraintValidator
  */
 class ConfigExistsConstraintValidatorTest extends KernelTestBase {
 
