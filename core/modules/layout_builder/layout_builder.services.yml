@@ -14,16 +14,12 @@ services:
     class: Drupal\layout_builder\Routing\LayoutBuilderRoutes
     arguments: ['@plugin.manager.layout_builder.section_storage']
     tags:
-<<<<<<< HEAD
-     - { name: event_subscriber }
-=======
       - { name: event_subscriber }
   layout_builder.tempstore.route_enhancer:
     class: Drupal\layout_builder\Routing\LayoutTempstoreRouteEnhancer
     arguments: ['@layout_builder.tempstore_repository']
     tags:
       - { name: route_enhancer }
->>>>>>> 5c1863a060215433744f3202d7d1d807ab1f7124
   layout_builder.param_converter:
     class: Drupal\layout_builder\Routing\LayoutSectionStorageParamConverter
     arguments: ['@layout_builder.tempstore_repository', '@plugin.manager.layout_builder.section_storage']
