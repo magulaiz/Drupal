@@ -1,17 +1,17 @@
 <?php
 
-namespace Drupal\KernelTests\Core\TypedData;
+namespace Drupal\KernelTests\Core\Extension;
 
 use Drupal\Core\TypedData\DataDefinition;
 use Drupal\KernelTests\KernelTestBase;
 
 /**
- * Tests the ConfigExists constraint validator.
+ * Tests the ExtensionExists constraint validator.
  *
  * @group Validation
  *
- * @covers \Drupal\Core\Validation\Plugin\Validation\Constraint\ExtensionExistsConstraint
- * @covers \Drupal\Core\Validation\Plugin\Validation\Constraint\ExtensionExistsConstraintValidator
+ * @covers \Drupal\Core\Extension\Plugin\Validation\Constraint\ExtensionExistsConstraint
+ * @covers \Drupal\Core\Extension\Plugin\Validation\Constraint\ExtensionExistsConstraintValidator
  */
 class ExtensionExistsConstraintValidatorTest extends KernelTestBase {
 
