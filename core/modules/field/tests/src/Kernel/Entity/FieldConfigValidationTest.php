@@ -27,4 +27,16 @@ class FieldConfigValidationTest extends FieldStorageConfigValidationTest {
     $this->entity->save();
   }
 
+  public function testNoFieldStorageInDependencies(): void {
+    $storage_id = $this->entity->getFieldStorageDefinition()
+      ->getConfigDependencyName();
+
+    $dependencies = $this->entity->getDependencies();
+    $dependencies['config'] = array_values(array_diff($dependencies['config'], [$storage_id]));
+    $this->entity->set('dependencies', $dependencies);
+
+    $violations = $this->validateEntity();
+    $this->assertCount(1, $violations);
+  }
+
 }
