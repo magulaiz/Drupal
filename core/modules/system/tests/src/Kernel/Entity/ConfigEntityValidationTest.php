@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\system\Kernel\Entity;
 
+use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Entity\Entity\EntityViewMode;
 use Drupal\KernelTests\KernelTestBase;
 
@@ -19,9 +20,93 @@ class ConfigEntityValidationTest extends KernelTestBase {
   protected static $modules = ['system', 'user'];
 
   /**
-   * Tests validation of config dependencies.
+   * Data provider for ::testConfigDependenciesValidation().
+   *
+   * @return array[]
+   *   The test cases.
    */
-  public function testConfigDependenciesValidation(): void {
+  public function providerConfigDependenciesValidation(): array {
+    return [
+      'additional valid dependency types' => [
+        [
+          'config' => ['user.settings'],
+          'content' => ['node:some-random-uuid'],
+        ],
+        [],
+      ],
+      'unknown dependency type' => [
+        [
+          'fun_stuff' => ['star-trek.deep-space-nine'],
+        ],
+        [
+          "'fun_stuff' is not a supported key.",
+        ],
+      ],
+      'empty string in config dependencies' => [
+        [
+          'config' => [''],
+        ],
+        [
+          'This value should not be blank.',
+          "The '' config does not exist.",
+        ]
+      ],
+      'non-existent config dependency' => [
+        [
+          'config' => ['node.settings'],
+        ],
+        [
+          "The 'node.settings' config does not exist.",
+        ],
+      ],
+      'empty string in module dependencies' => [
+        [
+          'module' => [''],
+        ],
+        [
+          'This value should not be blank.',
+          "Module '' is not installed.",
+        ],
+      ],
+      'non-installed module dependency' => [
+        [
+          'module' => ['node'],
+        ],
+        [
+          "Module 'node' is not installed.",
+        ],
+      ],
+      'empty string in theme dependencies' => [
+        [
+          'theme' => [''],
+        ],
+        [
+          'This value should not be blank.',
+          "Theme '' is not installed.",
+        ],
+      ],
+      'non-installed theme dependency' => [
+        [
+          'theme' => ['stark'],
+        ],
+        [
+          "Theme 'stark' is not installed.",
+        ],
+      ],
+    ];
+  }
+
+  /**
+   * Tests validation of config dependencies.
+   *
+   * @param array[] $dependencies
+   *   The dependencies that should be added to the config entity under test.
+   * @param string[] $expected_messages
+   *   The expected constraint violation messages.
+   *
+   * @dataProvider providerConfigDependenciesValidation
+   */
+  public function testConfigDependenciesValidation(array $dependencies, array $expected_messages): void {
     $this->installConfig(['system', 'user']);
 
     /** @var \Drupal\Core\Entity\EntityViewModeInterface $entity */
@@ -41,69 +126,13 @@ class ConfigEntityValidationTest extends KernelTestBase {
     // The entity should have valid data to begin with.
     $this->assertCount(0, $typed_config->createFromNameAndData($name, $data)->validate());
 
-    // Adding additional supported dependency types should be allowed. For the
-    // purposes of this test, these dependencies don't need to actually exist.
-    $data['dependencies']['config'][] = 'user.settings';
-    $data['dependencies']['content'][] = 'node:some-random-uuid';
-    $this->assertCount(0, $typed_config->createFromNameAndData($name, $data)->validate());
-
-    // Adding an unrecognized dependency type should raise an error.
-    $data['dependencies']['fun_stuff'][] = 'star-trek.deep-space-nine';
+    $data['dependencies'] = NestedArray::mergeDeep($data['dependencies'], $dependencies);
     $violations = $typed_config->createFromNameAndData($name, $data)->validate();
-    $this->assertCount(1, $violations);
-    $this->assertSame("'fun_stuff' is not a supported key.", (string) $violations->get(0)->getMessage());
-    unset($data['dependencies']['fun_stuff']);
 
-    // Trying to add an empty string in config dependencies should raise an
-    // error.
-    $data['dependencies']['config'][] = '';
-    $violations = $typed_config->createFromNameAndData($name, $data)->validate();
-    $this->assertCount(2, $violations);
-    $this->assertSame('This value should not be blank.', (string) $violations->get(0)->getMessage());
-    $this->assertSame("The '' config does not exist.", (string) $violations->get(1)->getMessage());
-    array_pop($data['dependencies']['config']);
-
-    // Adding a dependency on non-existent config should raise an error.
-    $data['dependencies']['config'][] = 'node.settings';
-    $violations = $typed_config->createFromNameAndData($name, $data)->validate();
-    $this->assertCount(1, $violations);
-    $this->assertSame("The 'node.settings' config does not exist.", (string) $violations->get(0)->getMessage());
-    array_pop($data['dependencies']['config']);
-
-    // Trying to add an empty string in module dependencies should raise an
-    // error.
-    $data['dependencies']['module'][] = '';
-    $violations = $typed_config->createFromNameAndData($name, $data)->validate();
-    $this->assertCount(2, $violations);
-    $this->assertSame('This value should not be blank.', (string) $violations->get(0)->getMessage());
-    $this->assertSame("Module '' is not installed.", (string) $violations->get(1)->getMessage());
-    array_pop($data['dependencies']['module']);
-
-    // Adding a dependency on a non-installed module should raise an error.
-    $data['dependencies']['module'][] = 'node';
-    $violations = $typed_config->createFromNameAndData($name, $data)->validate();
-    $this->assertCount(1, $violations);
-    $this->assertSame("Module 'node' is not installed.", (string) $violations->get(0)->getMessage());
-    array_pop($data['dependencies']['module']);
-
-    // Trying to add an empty string in theme dependencies should raise an
-    // error.
-    $data['dependencies']['theme'][] = '';
-    $violations = $typed_config->createFromNameAndData($name, $data)->validate();
-    $this->assertCount(2, $violations);
-    $this->assertSame('This value should not be blank.', (string) $violations->get(0)->getMessage());
-    $this->assertSame("Theme '' is not installed.", (string) $violations->get(1)->getMessage());
-    array_pop($data['dependencies']['theme']);
-
-    // Adding a dependency on a non-installed theme should raise an error.
-    $data['dependencies']['theme'][] = 'stark';
-    $violations = $typed_config->createFromNameAndData($name, $data)->validate();
-    $this->assertCount(1, $violations);
-    $this->assertSame("Theme 'stark' is not installed.", (string) $violations->get(0)->getMessage());
-    array_pop($data['dependencies']['theme']);
-
-    $violations = $typed_config->createFromNameAndData($name, $data)->validate();
-    $this->assertCount(0, $violations);
+    $this->assertSame(count($expected_messages), count($violations));
+    foreach ($expected_messages as $i => $message) {
+      $this->assertSame($message, (string) $violations->get($i)->getMessage());
+    }
   }
 
 }
