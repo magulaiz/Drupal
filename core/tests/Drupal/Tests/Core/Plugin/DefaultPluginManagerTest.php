@@ -77,7 +77,7 @@ class DefaultPluginManagerTest extends UnitTestCase {
     ];
 
     $module_handler = $this->createMock('Drupal\Core\Extension\ModuleHandlerInterface');
-    $plugin_manager = new TestPluginManager($this->namespaces, $definitions, $module_handler, 'test_alter_hook');
+    $plugin_manager = new TestPluginManager($this->namespaces, $definitions, $module_handler, 'test_alter_hook', '\Drupal\plugin_test\Plugin\plugin_test\fruit\FruitInterface');
     $plugin_manager->getDefinition('plugin_test', FALSE);
     $this->assertTrue(TRUE, 'No PHP fatal error occurred when retrieving the definitions of a module with plugins that depend on a non-installed module class should not cause a PHP fatal.');
   }
@@ -102,7 +102,7 @@ class DefaultPluginManagerTest extends UnitTestCase {
       ->with('disabled_module')
       ->willReturn(FALSE);
 
-    $plugin_manager = new TestPluginManager($this->namespaces, $definitions, $module_handler, 'test_alter_hook');
+    $plugin_manager = new TestPluginManager($this->namespaces, $definitions, $module_handler, 'test_alter_hook', '\Drupal\plugin_test\Plugin\plugin_test\fruit\FruitInterface');
 
     $this->assertEmpty($plugin_manager->getDefinition('cherry', FALSE), 'Plugin information of a disabled module is not available');
   }
@@ -127,7 +127,7 @@ class DefaultPluginManagerTest extends UnitTestCase {
       ->with('disabled_module')
       ->willReturn(FALSE);
 
-    $plugin_manager = new TestPluginManager($this->namespaces, $definitions, $module_handler, 'test_alter_hook');
+    $plugin_manager = new TestPluginManager($this->namespaces, $definitions, $module_handler, 'test_alter_hook', '\Drupal\plugin_test\Plugin\plugin_test\fruit\FruitInterface');
 
     $this->assertEmpty($plugin_manager->getDefinition('cherry', FALSE), 'Plugin information is available');
   }
@@ -166,7 +166,7 @@ class DefaultPluginManagerTest extends UnitTestCase {
       ->method('alter')
       ->with($this->equalTo($alter_hook_name), $this->equalTo($this->expectedDefinitions));
 
-    $plugin_manager = new TestPluginManager($this->namespaces, $this->expectedDefinitions, $module_handler, $alter_hook_name);
+    $plugin_manager = new TestPluginManager($this->namespaces, $this->expectedDefinitions, $module_handler, $alter_hook_name, '\Drupal\plugin_test\Plugin\plugin_test\fruit\FruitInterface');
 
     $this->assertEquals($this->expectedDefinitions, $plugin_manager->getDefinitions());
     $this->assertEquals($this->expectedDefinitions['banana'], $plugin_manager->getDefinition('banana'));
@@ -332,7 +332,7 @@ class DefaultPluginManagerTest extends UnitTestCase {
     $this->expectedDefinitions['apple']['provider'] = 'plugin_test';
     $this->expectedDefinitions['banana']['provider'] = 'plugin_test';
 
-    $plugin_manager = new TestPluginManager($this->namespaces, $this->expectedDefinitions, $module_handler, NULL);
+    $plugin_manager = new TestPluginManager($this->namespaces, $this->expectedDefinitions, $module_handler, NULL, '\Drupal\plugin_test\Plugin\plugin_test\fruit\FruitInterface');
     $this->assertIsArray($plugin_manager->getDefinitions());
   }
 
@@ -341,7 +341,7 @@ class DefaultPluginManagerTest extends UnitTestCase {
    */
   public function testGetCacheContexts() {
     $module_handler = $this->prophesize(ModuleHandlerInterface::class);
-    $plugin_manager = new TestPluginManager($this->namespaces, $this->expectedDefinitions, $module_handler->reveal(), NULL);
+    $plugin_manager = new TestPluginManager($this->namespaces, $this->expectedDefinitions, $module_handler->reveal(), NULL, '\Drupal\plugin_test\Plugin\plugin_test\fruit\FruitInterface');
     $cache_contexts = $plugin_manager->getCacheContexts();
     $this->assertIsArray($cache_contexts);
     array_map(function ($cache_context) {
@@ -354,7 +354,7 @@ class DefaultPluginManagerTest extends UnitTestCase {
    */
   public function testGetCacheTags() {
     $module_handler = $this->prophesize(ModuleHandlerInterface::class);
-    $plugin_manager = new TestPluginManager($this->namespaces, $this->expectedDefinitions, $module_handler->reveal(), NULL);
+    $plugin_manager = new TestPluginManager($this->namespaces, $this->expectedDefinitions, $module_handler->reveal(), NULL, '\Drupal\plugin_test\Plugin\plugin_test\fruit\FruitInterface');
     $cache_tags = $plugin_manager->getCacheTags();
     $this->assertIsArray($cache_tags);
     array_map(function ($cache_tag) {
@@ -367,7 +367,7 @@ class DefaultPluginManagerTest extends UnitTestCase {
    */
   public function testGetCacheMaxAge() {
     $module_handler = $this->prophesize(ModuleHandlerInterface::class);
-    $plugin_manager = new TestPluginManager($this->namespaces, $this->expectedDefinitions, $module_handler->reveal(), NULL);
+    $plugin_manager = new TestPluginManager($this->namespaces, $this->expectedDefinitions, $module_handler->reveal(), NULL , '\Drupal\plugin_test\Plugin\plugin_test\fruit\FruitInterface');
     $cache_max_age = $plugin_manager->getCacheMaxAge();
     $this->assertIsInt($cache_max_age);
   }
@@ -404,7 +404,7 @@ class DefaultPluginManagerTest extends UnitTestCase {
    */
   public function testProcessDefinition($definition, $expected) {
     $module_handler = $this->prophesize(ModuleHandlerInterface::class);
-    $plugin_manager = new TestPluginManagerWithDefaults($this->namespaces, $this->expectedDefinitions, $module_handler->reveal(), NULL);
+    $plugin_manager = new TestPluginManagerWithDefaults($this->namespaces, $this->expectedDefinitions, $module_handler->reveal(), NULL, '\Drupal\plugin_test\Plugin\plugin_test\fruit\FruitInterface');
 
     $plugin_manager->processDefinition($definition, 'the_plugin_id');
     $this->assertEquals($expected, $definition);
