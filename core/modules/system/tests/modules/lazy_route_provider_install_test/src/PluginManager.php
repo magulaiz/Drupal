@@ -3,6 +3,7 @@
 namespace Drupal\lazy_route_provider_install_test;
 
 use Drupal\Component\Annotation\PluginID;
+use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Plugin\DefaultPluginManager;
 use Drupal\Core\Url;
@@ -19,21 +20,18 @@ class PluginManager extends DefaultPluginManager {
    * @param \Traversable $namespaces
    *   An object that implements \Traversable which contains the root paths
    *   keyed by the corresponding namespace to look for plugin implementations.
-   * @param \Drupal\Core\Cache\CacheBackendInterface $cacheBackend
+   * @param \Drupal\Core\Cache\CacheBackendInterface $cache_backend
    *   A cache backend.
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
    *   The module handler.
    */
-  public function __construct(
-    \Traversable $namespaces,
-    protected CacheBackendInterface $cacheBackend,
-    ModuleHandlerInterface $module_handler
-  ) {
+  public function __construct(\Traversable $namespaces, CacheBackendInterface $cache_backend, ModuleHandlerInterface $module_handler) {
     // Generate a URL during construction to prove that URL generation works. If
     // the route was missing an exception would be thrown. This also forces the
     // route provider to be initialized very early during a module install.
     \Drupal::state()->set(__CLASS__, Url::fromRoute('system.admin')->toString());
     parent::__construct('Plugin/LazyRouteProviderInstallTest', $namespaces, $module_handler, NULL, PluginID::class);
+    $this->cacheBackend = $cache_backend;
   }
 
 }
