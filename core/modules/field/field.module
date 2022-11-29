@@ -5,6 +5,7 @@
  * Attach custom data fields to Drupal entities.
  */
 
+use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Config\ConfigImporter;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\DynamicallyFieldableEntityStorageInterface;
@@ -390,9 +391,28 @@ function field_field_storage_config_update(FieldStorageConfigInterface $field_st
  * Implements hook_config_schema_info_alter().
  */
 function field_config_schema_info_alter(array &$definitions): void {
-  // This allows field config entities to have additional, specialized
-  // constraints on their config dependencies.
-  $definitions['field_config_base']['mapping']['dependencies'] = $definitions['config_dependencies_base'];
+  $type = 'field.field.*.*.*';
+
+  // Add additional, specialized constraints to fields' config dependencies.
+  if (array_key_exists($type, $definitions)) {
+    $definitions[$type]['mapping']['dependencies'] = NestedArray::mergeDeep(
+      $definitions['config_dependencies_base'],
+      $definitions['config_dependencies'],
+      [
+        'type' => 'mapping',
+        'mapping' => [
+          'config' => [
+            'constraints' => [
+              'Count' => [
+                'min' => 1,
+              ],
+              'ContainsMatch' => '/^field\.storage\.\w+\.\w+$/',
+            ],
+          ],
+        ],
+      ],
+    );
+  }
 }
 
 /**
