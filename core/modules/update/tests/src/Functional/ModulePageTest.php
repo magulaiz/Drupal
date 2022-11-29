@@ -70,6 +70,7 @@ class ModulePageTest extends UpdateTestBase {
     $this->drupalLogin($this->drupalCreateUser([
       'administer site configuration',
       'administer modules',
+      'view update notifications',
     ]));
     // Instead of using refreshUpdateStatus(), set these manually.
     $this->config('update.settings')
@@ -98,6 +99,7 @@ class ModulePageTest extends UpdateTestBase {
       'administer site configuration',
       'administer modules',
       'administer themes',
+      'view update notifications',
     ]));
     // Instead of using refreshUpdateStatus(), set these manually.
     $this->config('update.settings')
