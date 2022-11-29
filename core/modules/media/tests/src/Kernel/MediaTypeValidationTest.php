@@ -3,7 +3,6 @@
 namespace Drupal\Tests\media\Kernel;
 
 use Drupal\KernelTests\Core\Config\ConfigEntityValidationTestBase;
-use Drupal\media\Entity\MediaType;
 use Drupal\Tests\media\Traits\MediaTypeCreationTrait;
 
 /**
