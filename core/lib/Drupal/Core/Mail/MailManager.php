@@ -101,7 +101,7 @@ class MailManager extends DefaultPluginManager implements MailManagerInterface {
    * by one module, set the plugin ID as the value for the key corresponding to
    * the module name. To specify a plugin for a particular message sent by one
    * module, set the plugin ID as the value for the array key that is the
-   * message ID, which is "${module}_${key}".
+   * message ID, which is "{$module}_{$key}".
    *
    * For example to debug all mail sent by the user module by logging it to a
    * file, you might set the variable as something like:
@@ -309,10 +309,10 @@ class MailManager extends DefaultPluginManager implements MailManagerInterface {
         if (!$message['result']) {
           $this->loggerFactory->get('mail')
             ->error('Error sending email (from %from to %to with reply-to %reply).', [
-            '%from' => $message['from'],
-            '%to' => $message['to'],
-            '%reply' => $message['reply-to'] ? $message['reply-to'] : $this->t('not set'),
-          ]);
+              '%from' => $message['from'],
+              '%to' => $message['to'],
+              '%reply' => $message['reply-to'] ? $message['reply-to'] : $this->t('not set'),
+            ]);
           $error_message = $params['_error_message'] ?? $this->t('Unable to send email. Contact the site administrator if the problem persists.');
           if ($error_message) {
             $this->messenger()->addError($error_message);

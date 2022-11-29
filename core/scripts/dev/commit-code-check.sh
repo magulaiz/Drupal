@@ -208,7 +208,7 @@ printf "\n"
 # When the file core/phpcs.xml.dist has been changed, then PHPCS must check all files.
 if [[ $PHPCS_XML_DIST_FILE_CHANGED == "1" ]]; then
   # Test all files with phpcs rules.
-  vendor/bin/phpcs -ps --runtime-set installed_paths "$TOP_LEVEL/vendor/drupal/coder/coder_sniffer" --standard="$TOP_LEVEL/core/phpcs.xml.dist"
+  vendor/bin/phpcs -ps --parallel=$(nproc) --standard="$TOP_LEVEL/core/phpcs.xml.dist"
   PHPCS=$?
   if [ "$PHPCS" -ne "0" ]; then
     # If there are failures set the status to a number other than 0.
@@ -319,7 +319,7 @@ for FILE in $FILES; do
   ############################################################################
   if [[ -f "$TOP_LEVEL/$FILE" ]] && [[ $FILE =~ \.(inc|install|module|php|profile|test|theme|yml)$ ]] && [[ $PHPCS_XML_DIST_FILE_CHANGED == "0" ]]; then
     # Test files with phpcs rules.
-    vendor/bin/phpcs "$TOP_LEVEL/$FILE" --runtime-set installed_paths "$TOP_LEVEL/vendor/drupal/coder/coder_sniffer" --standard="$TOP_LEVEL/core/phpcs.xml.dist"
+    vendor/bin/phpcs "$TOP_LEVEL/$FILE" --standard="$TOP_LEVEL/core/phpcs.xml.dist"
     PHPCS=$?
     if [ "$PHPCS" -ne "0" ]; then
       # If there are failures set the status to a number other than 0.
@@ -390,7 +390,7 @@ for FILE in $FILES; do
     else
       # If there is no .es6.js file then there should be unless the .js is
       # not really Drupal's.
-      if ! [[ "$FILE" =~ ^core/assets/vendor ]] && ! [[ "$FILE" =~ ^core/modules/ckeditor5/js/build ]] && ! [[ "$FILE" =~ ^core/scripts/js ]] && ! [[ "$FILE" =~ ^core/scripts/css ]] && ! [[ "$FILE" =~ core/postcss.config.js ]] && ! [[ "$FILE" =~ webpack.config.js$ ]] && ! [[ -f "$TOP_LEVEL/$BASENAME.es6.js" ]] && ! [[ "$FILE" =~ core/modules/ckeditor5/tests/modules/ckeditor5_test/js/build/layercake.js ]]; then
+      if ! [[ "$FILE" =~ ^core/assets/vendor ]] && ! [[ "$FILE" =~ ^core/modules/ckeditor5/js/build ]] && ! [[ "$FILE" =~ ^core/scripts/js ]] && ! [[ "$FILE" =~ ^core/scripts/css ]] && ! [[ "$FILE" =~ webpack.config.js$ ]] && ! [[ -f "$TOP_LEVEL/$BASENAME.es6.js" ]] && ! [[ "$FILE" =~ core/modules/ckeditor5/tests/modules/ckeditor5_test/js/build/layercake.js ]]; then
         printf "${red}FAILURE${reset} $FILE does not have a corresponding $BASENAME.es6.js\n"
         STATUS=1
       fi

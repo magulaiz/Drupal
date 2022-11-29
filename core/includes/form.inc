@@ -156,7 +156,7 @@ function form_select_options($element, $choices = NULL) {
  * @param $key
  *   The key to look for.
  *
- * @return
+ * @return array|bool
  *   An array of indexes that match the given $key. Array will be
  *   empty if no elements were found. FALSE if optgroups were found.
  */
@@ -397,6 +397,7 @@ function template_preprocess_textarea(&$variables) {
 
 /**
  * Returns HTML for a form element.
+ *
  * Prepares variables for form element templates.
  *
  * Default template: form-element.html.twig.
@@ -1010,7 +1011,7 @@ function _batch_populate_queue(&$batch, $set_id) {
  * @param $batch_set
  *   The batch set.
  *
- * @return
+ * @return \Drupal\Core\Queue\QueueInterface|null
  *   The queue object.
  */
 function _batch_queue($batch_set) {

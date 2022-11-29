@@ -43,9 +43,10 @@ const DRUPAL_MINIMUM_PHP = \Drupal::MINIMUM_PHP;
  * - An error is shown in the status report that the PHP version is too old.
  *
  * @deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. Use
- *   \Drupal::MINIMUM_SUPPORTED_PHP instead.
+ *   \Drupal\Core\Utility\PhpRequirements::getMinimumSupportedPhp() instead.
  *
  * @see https://www.drupal.org/node/2909361
+ * @see https://www.drupal.org/node/3261451
  */
 const DRUPAL_MINIMUM_SUPPORTED_PHP = \Drupal::MINIMUM_SUPPORTED_PHP;
 
@@ -112,7 +113,7 @@ const DRUPAL_EXTENSION_NAME_MAX_LENGTH = 50;
  * @see http://php.net/manual/reserved.variables.server.php
  * @see http://php.net/manual/function.time.php
  *
- * @deprecated in drupal:8.3.0 and is removed from drupal:10.0.0.
+ * @deprecated in drupal:8.3.0 and is removed from drupal:11.0.0.
  *   Use \Drupal::time()->getRequestTime();
  *
  * @see https://www.drupal.org/node/2785211

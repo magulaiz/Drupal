@@ -21,7 +21,7 @@
         "composer/composer": "^2.2.12",
         "drupal/coder": "^8.3.10",
         "instaclick/php-webdriver": "^1.4.1",
-        "mikey179/vfsstream": "^1.6.8",
+        "mikey179/vfsstream": "^1.6.11",
         "phpunit/phpunit": "^8.5.14 || ^9",
         "phpspec/prophecy": "^1.12",
         "symfony/css-selector": "^4.4",
@@ -51,7 +51,9 @@
         "allow-plugins": {
             "composer/installers": true,
             "drupal/core-project-message": true,
-            "drupal/core-vendor-hardening": true
+            "drupal/core-vendor-hardening": true,
+            "dealerdirect/phpcodesniffer-composer-installer": true,
+            "phpstan/extension-installer": true
         }
     },
     "extra": {
@@ -101,10 +103,11 @@
             "@composer require phpspec/prophecy-phpunit:^2 --no-progress"
         ],
         "post-update-cmd": [
-            "Drupal\\Composer\\Composer::generateMetapackages"
+            "Drupal\\Composer\\Composer::generateMetapackages",
+            "Drupal\\Composer\\Composer::generateComponentPackages"
         ],
-        "phpcs": "phpcs --standard=core/phpcs.xml.dist --runtime-set installed_paths $($COMPOSER_BINARY config vendor-dir)/drupal/coder/coder_sniffer --",
-        "phpcbf": "phpcbf --standard=core/phpcs.xml.dist --runtime-set installed_paths $($COMPOSER_BINARY config vendor-dir)/drupal/coder/coder_sniffer --"
+        "phpcs": "phpcs --standard=core/phpcs.xml.dist --parallel=$(nproc) --",
+        "phpcbf": "phpcbf --standard=core/phpcs.xml.dist --parallel=$(nproc) --"
     },
     "repositories": [
         {
