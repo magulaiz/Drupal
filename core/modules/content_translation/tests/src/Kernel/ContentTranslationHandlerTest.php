@@ -166,7 +166,7 @@ class ContentTranslationHandlerTest extends KernelTestBase {
     ];
 
     $element = [
-      '#type' => 'textfield',
+      '#type' => 'text',
     ];
     $tests['no-children'] = $tests['empty'];
     $tests['no-children']['element'] = $element;
@@ -174,7 +174,7 @@ class ContentTranslationHandlerTest extends KernelTestBase {
 
     $element = [
       'test' => [
-        '#type' => 'textfield',
+        '#type' => 'text',
         '#multilingual' => TRUE,
       ],
     ];
@@ -224,7 +224,7 @@ class ContentTranslationHandlerTest extends KernelTestBase {
 
     $element = [
       'name' => [
-        '#type' => 'textfield',
+        '#type' => 'text',
       ],
     ];
     $expected = $element;

@@ -130,7 +130,7 @@ class EntityFormDisplayTest extends ConfigEntityResourceTestBase {
               'third_party_settings' => [],
             ],
             'title' => [
-              'type' => 'string_textfield',
+              'type' => 'string_text',
               'weight' => -5,
               'region' => 'content',
               'settings' => [

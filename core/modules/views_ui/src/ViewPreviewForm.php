@@ -40,9 +40,9 @@ class ViewPreviewForm extends ViewFormBase {
       '#default_value' => \Drupal::config('views.settings')->get('ui.always_live_preview'),
     ];
 
-    // Add the arguments textfield.
+    // Add the arguments text.
     $form['controls']['view_args'] = [
-      '#type' => 'textfield',
+      '#type' => 'text',
       '#title' => $this->t('Preview with contextual filters:'),
       '#description' => $this->t('Separate contextual filter values with a "/". For example, %example.', ['%example' => '40/12/10']),
       '#id' => 'preview-args',

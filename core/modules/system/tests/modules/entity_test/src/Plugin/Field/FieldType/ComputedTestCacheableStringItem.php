@@ -16,7 +16,7 @@ use Drupal\Core\TypedData\DataDefinition;
  *   description = @Translation("A test field containing a plain string value and cacheability metadata."),
  *   category = @Translation("Text"),
  *   no_ui = TRUE,
- *   default_widget = "string_textfield",
+ *   default_widget = "string_text",
  *   default_formatter = "string"
  * )
  */

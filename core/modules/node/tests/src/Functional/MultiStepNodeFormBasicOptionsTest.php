@@ -54,7 +54,7 @@ class MultiStepNodeFormBasicOptionsTest extends NodeTestBase {
     \Drupal::service('entity_display.repository')
       ->getFormDisplay('node', 'page')
       ->setComponent($this->fieldName, [
-        'type' => 'text_textfield',
+        'type' => 'text_text',
       ])
       ->save();
 

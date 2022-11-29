@@ -90,7 +90,7 @@ class ContentTranslationContextualLinksTest extends BrowserTestBase {
     $this->container->get('entity_display.repository')
       ->getFormDisplay('node', $this->bundle)
       ->setComponent('field_test_text', [
-        'type' => 'text_textfield',
+        'type' => 'text_text',
         'weight' => 0,
       ])
       ->save();

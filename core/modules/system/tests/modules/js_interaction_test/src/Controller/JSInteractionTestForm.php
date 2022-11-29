@@ -65,7 +65,7 @@ class JSInteractionTestForm extends FormBase {
         ],
       ],
       'target_field' => [
-        '#type' => 'textfield',
+        '#type' => 'text',
         '#maxlength' => 20,
         '#disabled' => TRUE,
       ],

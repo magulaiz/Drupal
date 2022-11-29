@@ -34,7 +34,7 @@ class Fixed extends ArgumentDefaultPluginBase implements CacheableDependencyInte
   public function buildOptionsForm(&$form, FormStateInterface $form_state) {
     parent::buildOptionsForm($form, $form_state);
     $form['argument'] = [
-      '#type' => 'textfield',
+      '#type' => 'text',
       '#title' => $this->t('Fixed value'),
       '#default_value' => $this->options['argument'],
     ];

@@ -257,7 +257,7 @@ abstract class Tasks {
     $driver = array_pop($dir_parts);
 
     $form['database'] = [
-      '#type' => 'textfield',
+      '#type' => 'text',
       '#title' => t('Database name'),
       '#default_value' => empty($database['database']) ? '' : $database['database'],
       '#size' => 45,
@@ -270,7 +270,7 @@ abstract class Tasks {
     ];
 
     $form['username'] = [
-      '#type' => 'textfield',
+      '#type' => 'text',
       '#title' => t('Database username'),
       '#default_value' => empty($database['username']) ? '' : $database['username'],
       '#size' => 45,
@@ -300,7 +300,7 @@ abstract class Tasks {
     $profile = $install_state['parameters']['profile'] ?? NULL;
     $db_prefix = ($profile == 'standard') ? 'drupal_' : $profile . '_';
     $form['advanced_options']['prefix'] = [
-      '#type' => 'textfield',
+      '#type' => 'text',
       '#title' => t('Table name prefix'),
       '#default_value' => empty($database['prefix']) ? '' : $database['prefix'],
       '#size' => 45,
@@ -309,7 +309,7 @@ abstract class Tasks {
     ];
 
     $form['advanced_options']['host'] = [
-      '#type' => 'textfield',
+      '#type' => 'text',
       '#title' => t('Host'),
       '#default_value' => empty($database['host']) ? 'localhost' : $database['host'],
       '#size' => 45,

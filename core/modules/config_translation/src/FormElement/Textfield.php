@@ -5,7 +5,7 @@ namespace Drupal\config_translation\FormElement;
 use Drupal\Core\Language\LanguageInterface;
 
 /**
- * Defines the textfield element for the configuration translation interface.
+ * Defines the text element for the configuration translation interface.
  */
 class Textfield extends FormElementBase {
 
@@ -14,7 +14,7 @@ class Textfield extends FormElementBase {
    */
   public function getTranslationElement(LanguageInterface $translation_language, $source_config, $translation_config) {
     return [
-      '#type' => 'textfield',
+      '#type' => 'text',
     ] + parent::getTranslationElement($translation_language, $source_config, $translation_config);
   }
 

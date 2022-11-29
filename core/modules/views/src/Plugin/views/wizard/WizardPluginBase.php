@@ -261,12 +261,12 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
 
     $form['displays']['page']['options']['title'] = [
       '#title' => $this->t('Page title'),
-      '#type' => 'textfield',
+      '#type' => 'text',
       '#maxlength' => 255,
     ];
     $form['displays']['page']['options']['path'] = [
       '#title' => $this->t('Path'),
-      '#type' => 'textfield',
+      '#type' => 'text',
       '#field_prefix' => $path_prefix,
       // Account for the leading backslash.
       '#maxlength' => 254,
@@ -322,7 +322,7 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
     ];
     $form['displays']['page']['options']['link_properties']['title'] = [
       '#title' => $this->t('Link text'),
-      '#type' => 'textfield',
+      '#type' => 'text',
     ];
     // Only offer a feed if we have at least one available feed row style.
     if ($feed_row_options) {
@@ -343,7 +343,7 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
       ];
       $form['displays']['page']['options']['feed_properties']['path'] = [
         '#title' => $this->t('Feed path'),
-        '#type' => 'textfield',
+        '#type' => 'text',
         '#field_prefix' => $path_prefix,
         // Account for the leading backslash.
         '#maxlength' => 254,
@@ -398,7 +398,7 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
 
       $form['displays']['block']['options']['title'] = [
         '#title' => $this->t('Block title'),
-        '#type' => 'textfield',
+        '#type' => 'text',
         '#maxlength' => 255,
       ];
       $form['displays']['block']['options']['style'] = [
@@ -466,7 +466,7 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
 
       $form['displays']['rest_export']['options']['path'] = [
         '#title' => $this->t('REST export path'),
-        '#type' => 'textfield',
+        '#type' => 'text',
         '#field_prefix' => $path_prefix,
         // Account for the leading backslash.
         '#maxlength' => 254,

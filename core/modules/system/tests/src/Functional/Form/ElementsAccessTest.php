@@ -30,7 +30,7 @@ class ElementsAccessTest extends BrowserTestBase {
     $this->drupalGet('form_test/vertical-tabs-access');
     $this->submitForm([], 'Submit');
     $this->assertSession()->pageTextNotContains('This checkbox inside a vertical tab does not have its default value.');
-    $this->assertSession()->pageTextNotContains('This textfield inside a vertical tab does not have its default value.');
+    $this->assertSession()->pageTextNotContains('This text inside a vertical tab does not have its default value.');
     $this->assertSession()->pageTextNotContains('This checkbox inside a fieldset does not have its default value.');
     $this->assertSession()->pageTextNotContains('This checkbox inside a container does not have its default value.');
     $this->assertSession()->pageTextNotContains('This checkbox inside a nested container does not have its default value.');

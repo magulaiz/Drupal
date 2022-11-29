@@ -7,7 +7,7 @@ use Drupal\Core\Form\FormStateInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Basic textfield filter to handle string filtering commands
+ * Basic text filter to handle string filtering commands
  * including equality, like, not like, etc.
  *
  * @ingroup views_filter_handlers
@@ -87,7 +87,7 @@ class StringFilter extends FilterPluginBase {
   public function buildExposeForm(&$form, FormStateInterface $form_state) {
     parent::buildExposeForm($form, $form_state);
     $form['expose']['placeholder'] = [
-      '#type' => 'textfield',
+      '#type' => 'text',
       '#default_value' => $this->options['expose']['placeholder'],
       '#title' => $this->t('Placeholder'),
       '#size' => 40,
@@ -245,7 +245,7 @@ class StringFilter extends FilterPluginBase {
   }
 
   /**
-   * Provide a simple textfield for equality.
+   * Provide a simple text for equality.
    */
   protected function valueForm(&$form, FormStateInterface $form_state) {
     // We have to make some choices when creating this as an exposed
@@ -270,7 +270,7 @@ class StringFilter extends FilterPluginBase {
 
     if ($which == 'all' || $which == 'value') {
       $form['value'] = [
-        '#type' => 'textfield',
+        '#type' => 'text',
         '#title' => $this->t('Value'),
         '#size' => 30,
         '#default_value' => $this->value,

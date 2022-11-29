@@ -22,7 +22,7 @@ abstract class FilterFormatFormBase extends EntityForm {
     $form['#attached']['library'][] = 'filter/drupal.filter.admin';
 
     $form['name'] = [
-      '#type' => 'textfield',
+      '#type' => 'text',
       '#title' => $this->t('Name'),
       '#default_value' => $format->label(),
       '#required' => TRUE,

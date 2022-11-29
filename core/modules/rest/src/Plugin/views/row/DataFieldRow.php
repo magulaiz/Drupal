@@ -93,7 +93,7 @@ class DataFieldRow extends RowPluginBase {
         $form['field_options'][$id]['alias'] = [
           '#title' => $this->t('Alias for @id', ['@id' => $id]),
           '#title_display' => 'invisible',
-          '#type' => 'textfield',
+          '#type' => 'text',
           '#default_value' => $options[$id]['alias'] ?? '',
           '#element_validate' => [[$this, 'validateAliasName']],
         ];

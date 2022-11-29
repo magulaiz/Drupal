@@ -90,7 +90,7 @@ class ResponsiveImageAdminUITest extends BrowserTestBase {
       $this->assertSession()->fieldExists('keyed_styles[responsive_image_test_module.' . $case[0] . '][' . $case[1] . '][image_mapping_type]');
       // Check if the image style dropdowns are present.
       $this->assertSession()->fieldExists('keyed_styles[responsive_image_test_module.' . $case[0] . '][' . $case[1] . '][image_style]');
-      // Check if the sizes textfields are present.
+      // Check if the sizes texts are present.
       $this->assertSession()->fieldExists('keyed_styles[responsive_image_test_module.' . $case[0] . '][' . $case[1] . '][sizes]');
 
       foreach ($image_styles as $image_style_name) {

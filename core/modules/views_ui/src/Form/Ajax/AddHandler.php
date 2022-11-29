@@ -90,7 +90,7 @@ class AddHandler extends ViewsFormBase {
         '#attributes' => ['class' => ['form--inline', 'views-filterable-options-controls']],
       ];
       $form['override']['controls']['options_search'] = [
-        '#type' => 'textfield',
+        '#type' => 'text',
         '#title' => $this->t('Search'),
       ];
 

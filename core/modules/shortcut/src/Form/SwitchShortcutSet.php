@@ -88,7 +88,7 @@ class SwitchShortcutSet extends FormBase {
       ];
 
       $form['label'] = [
-        '#type' => 'textfield',
+        '#type' => 'text',
         '#title' => $this->t('Label'),
         '#description' => $this->t('The new set is created by copying links from your default shortcut set.'),
         '#access' => $add_access,

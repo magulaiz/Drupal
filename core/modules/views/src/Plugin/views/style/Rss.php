@@ -73,7 +73,7 @@ class Rss extends StylePluginBase {
     parent::buildOptionsForm($form, $form_state);
 
     $form['description'] = [
-      '#type' => 'textfield',
+      '#type' => 'text',
       '#title' => $this->t('RSS description'),
       '#default_value' => $this->options['description'],
       '#description' => $this->t('This will appear in the RSS feed itself.'),

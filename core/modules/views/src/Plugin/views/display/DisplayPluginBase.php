@@ -1406,7 +1406,7 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
       case 'display_id':
         $form['#title'] .= $this->t('The machine name of this display');
         $form['display_id'] = [
-          '#type' => 'textfield',
+          '#type' => 'text',
           '#title' => $this->t('Machine name of the display'),
           '#default_value' => !empty($this->display['new_id']) ? $this->display['new_id'] : $this->display['id'],
           '#required' => TRUE,
@@ -1418,12 +1418,12 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
         $form['#title'] .= $this->t('The name and the description of this display');
         $form['display_title'] = [
           '#title' => $this->t('Administrative name'),
-          '#type' => 'textfield',
+          '#type' => 'text',
           '#default_value' => $this->display['display_title'],
         ];
         $form['display_description'] = [
           '#title' => $this->t('Administrative description'),
-          '#type' => 'textfield',
+          '#type' => 'text',
           '#default_value' => $this->getOption('display_description'),
         ];
         break;
@@ -1442,7 +1442,7 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
         $form['#title'] .= $this->t('The title of this view');
         $form['title'] = [
           '#title' => $this->t('Title'),
-          '#type' => 'textfield',
+          '#type' => 'text',
           '#description' => $this->t('This title will be displayed with the view, wherever titles are normally displayed; i.e, as the page title, block title, etc.'),
           '#default_value' => $this->getOption('title'),
           '#maxlength' => 255,
@@ -1452,7 +1452,7 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
       case 'css_class':
         $form['#title'] .= $this->t('CSS class');
         $form['css_class'] = [
-          '#type' => 'textfield',
+          '#type' => 'text',
           '#title' => $this->t('CSS class name(s)'),
           '#description' => $this->t('Separate multiple classes by spaces.'),
           '#default_value' => $this->getOption('css_class'),
@@ -1507,7 +1507,7 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
           ],
         ];
         $form['use_more_text'] = [
-          '#type' => 'textfield',
+          '#type' => 'text',
           '#title' => $this->t('More link text'),
           '#description' => $this->t('The text to display for the more link.'),
           '#default_value' => $this->getOption('use_more_text'),
@@ -1774,7 +1774,7 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
         }
 
         $form['link_url'] = [
-          '#type' => 'textfield',
+          '#type' => 'text',
           '#title' => $this->t('Custom URL'),
           '#default_value' => $this->getOption('link_url'),
           '#description' => $description,

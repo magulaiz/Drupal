@@ -35,7 +35,7 @@ class TestFieldEmptySettingFormatter extends FormatterBase {
   public function settingsForm(array $form, FormStateInterface $form_state) {
     $element['field_empty_setting'] = [
       '#title' => $this->t('Setting'),
-      '#type' => 'textfield',
+      '#type' => 'text',
       '#size' => 20,
       '#default_value' => $this->getSetting('field_empty_setting'),
       '#required' => TRUE,

@@ -95,7 +95,7 @@ class MachineName extends Textfield {
       '#pre_render' => [
         [$class, 'preRenderTextfield'],
       ],
-      '#theme' => 'input__textfield',
+      '#theme' => 'input__text',
       '#theme_wrappers' => ['form_element'],
     ];
   }

@@ -122,7 +122,7 @@ class ConfigExportImportUITest extends BrowserTestBase {
     // import.
     $display_repository->getFormDisplay('node', $this->contentType->id(), 'default')
       ->setComponent($this->fieldName, [
-        'type' => 'text_textfield',
+        'type' => 'text_text',
       ])
       ->save();
     $display_repository->getViewDisplay('node', $this->contentType->id(), 'full')

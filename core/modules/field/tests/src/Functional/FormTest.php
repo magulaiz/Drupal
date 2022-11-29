@@ -677,7 +677,7 @@ class FormTest extends FieldTestBase {
       'targetEntityType' => 'entity_test_base_field_display',
       'bundle' => 'bar',
       'mode' => 'default',
-    ])->setComponent('foo', ['type' => 'text_textfield'])->enable()->save();
+    ])->setComponent('foo', ['type' => 'text_text'])->enable()->save();
 
     $entity = EntityTestBaseFieldDisplay::create(['type' => 'bar']);
     $entity->save();

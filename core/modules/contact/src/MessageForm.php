@@ -113,7 +113,7 @@ class MessageForm extends ContentEntityForm {
     }
 
     $form['name'] = [
-      '#type' => 'textfield',
+      '#type' => 'text',
       '#title' => $this->t('Your name'),
       '#maxlength' => 255,
       '#required' => TRUE,

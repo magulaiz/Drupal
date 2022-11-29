@@ -25,9 +25,9 @@ class FieldInstanceDefaults extends ProcessPluginBase {
     $default = [];
 
     switch ($widget_type) {
-      case 'text_textfield':
+      case 'text_text':
       case 'number':
-      case 'phone_textfield':
+      case 'phone_text':
         if (!empty($widget_settings['default_value'][0]['value'])) {
           $default['value'] = $widget_settings['default_value'][0]['value'];
         }
@@ -45,7 +45,7 @@ class FieldInstanceDefaults extends ProcessPluginBase {
         }
         break;
 
-      case 'email_textfield':
+      case 'email_text':
         if (!empty($widget_settings['default_value'][0]['email'])) {
           $default['value'] = $widget_settings['default_value'][0]['email'];
         }

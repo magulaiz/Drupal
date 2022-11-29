@@ -69,7 +69,7 @@ class StringArgument extends ArgumentPluginBase {
     ];
 
     $form['limit'] = [
-      '#type' => 'textfield',
+      '#type' => 'text',
       '#title' => $this->t('Character limit'),
       '#description' => $this->t('How many characters of the filter value to filter against. If set to 1, all fields starting with the first letter in the filter value would be matched.'),
       '#default_value' => $this->options['limit'],

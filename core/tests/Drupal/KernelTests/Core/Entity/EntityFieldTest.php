@@ -472,10 +472,10 @@ class EntityFieldTest extends EntityKernelTestBase {
     $this->assertEquals('integer', $userref_properties['target_id']->getDataType(), $entity_type . ': Entity id property of the user found.');
     $this->assertEquals('entity_reference', $userref_properties['entity']->getDataType(), $entity_type . ': Entity reference property of the user found.');
 
-    $textfield_properties = $entity->field_test_text->getFieldDefinition()->getFieldStorageDefinition()->getPropertyDefinitions();
-    $this->assertEquals('string', $textfield_properties['value']->getDataType(), $entity_type . ': String value property of the test-text field found.');
-    $this->assertEquals('filter_format', $textfield_properties['format']->getDataType(), $entity_type . ': String format field of the test-text field found.');
-    $this->assertEquals('string', $textfield_properties['processed']->getDataType(), $entity_type . ': String processed property of the test-text field found.');
+    $text_properties = $entity->field_test_text->getFieldDefinition()->getFieldStorageDefinition()->getPropertyDefinitions();
+    $this->assertEquals('string', $text_properties['value']->getDataType(), $entity_type . ': String value property of the test-text field found.');
+    $this->assertEquals('filter_format', $text_properties['format']->getDataType(), $entity_type . ': String format field of the test-text field found.');
+    $this->assertEquals('string', $text_properties['processed']->getDataType(), $entity_type . ': String processed property of the test-text field found.');
 
     // Make sure provided contextual information is right.
     $entity_adapter = $entity->getTypedData();

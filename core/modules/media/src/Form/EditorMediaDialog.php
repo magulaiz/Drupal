@@ -136,7 +136,7 @@ class EditorMediaDialog extends FormBase {
       $settings = $media->{$image_field_name}->getItemDefinition()->getSettings();
       $alt = $media_embed_element['alt'] ?? NULL;
       $form['alt'] = [
-        '#type' => 'textfield',
+        '#type' => 'text',
         '#title' => $this->t('Alternate text'),
         '#default_value' => $alt,
         '#description' => $this->t('Short description of the image used by screen readers and displayed when the image is not loaded. This is important for accessibility.'),

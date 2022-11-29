@@ -45,7 +45,7 @@ class ProfileFieldValuesTest extends MigrateSqlSourceTestBase {
         'explanation' => 'List your favorite color',
         'category' => 'Personal information',
         'page' => 'People whose favorite color is %value',
-        'type' => 'textfield',
+        'type' => 'text',
         'weight' => '-10',
         'required' => '0',
         'register' => '1',

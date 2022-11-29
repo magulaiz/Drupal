@@ -30,7 +30,7 @@ class ViewsMenuLinkForm extends MenuLinkDefaultForm {
 
     // Put the title field first.
     $form['title'] = [
-      '#type' => 'textfield',
+      '#type' => 'text',
       '#title' => $this->t('Title'),
       // @todo Ensure that the view is not loaded with a localized title.
       //   https://www.drupal.org/node/2309507
@@ -39,7 +39,7 @@ class ViewsMenuLinkForm extends MenuLinkDefaultForm {
     ];
 
     $form['description'] = [
-      '#type' => 'textfield',
+      '#type' => 'text',
       '#title' => $this->t('Description'),
       '#description' => $this->t('Shown when hovering over the menu link.'),
       // @todo Ensure that the view is not loaded with a localized description.

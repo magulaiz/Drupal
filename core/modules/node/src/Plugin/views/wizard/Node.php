@@ -301,7 +301,7 @@ class Node extends WizardPluginBase {
       else {
         $tag_field_name = key($tag_fields);
       }
-      // Add the autocomplete textfield to the wizard.
+      // Add the autocomplete text to the wizard.
       $form['displays']['show']['tagged_with'] = [
         '#type' => 'entity_autocomplete',
         '#title' => $this->t('tagged with'),

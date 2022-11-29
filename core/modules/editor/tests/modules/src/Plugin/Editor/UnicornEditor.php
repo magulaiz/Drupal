@@ -17,7 +17,7 @@ use Drupal\editor\Plugin\EditorBase;
  *   is_xss_safe = FALSE,
  *   supported_element_types = {
  *     "textarea",
- *     "textfield",
+ *     "text",
  *   }
  * )
  */

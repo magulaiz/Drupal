@@ -64,8 +64,8 @@ class FormTest extends BrowserTestBase {
     $empty_arrays = ['array()' => []];
     $empty_checkbox = [NULL];
 
-    $elements['textfield']['element'] = ['#title' => $this->randomMachineName(), '#type' => 'textfield'];
-    $elements['textfield']['empty_values'] = $empty_strings;
+    $elements['text']['element'] = ['#title' => $this->randomMachineName(), '#type' => 'text'];
+    $elements['text']['empty_values'] = $empty_strings;
 
     $elements['telephone']['element'] = ['#title' => $this->randomMachineName(), '#type' => 'tel'];
     $elements['telephone']['empty_values'] = $empty_strings;
@@ -180,7 +180,7 @@ class FormTest extends BrowserTestBase {
     // The only error messages that should appear are the relevant 'required'
     // messages for each field.
     $expected = [];
-    foreach (['textfield', 'checkboxes', 'select', 'radios'] as $key) {
+    foreach (['text', 'checkboxes', 'select', 'radios'] as $key) {
       if (isset($form[$key]['#required_error'])) {
         $expected[] = $form[$key]['#required_error'];
       }
@@ -212,7 +212,7 @@ class FormTest extends BrowserTestBase {
     }
 
     // Verify that input elements are still empty.
-    $this->assertSession()->fieldValueEquals('textfield', '');
+    $this->assertSession()->fieldValueEquals('text', '');
     $this->assertSession()->checkboxNotChecked('edit-checkboxes-foo');
     $this->assertSession()->checkboxNotChecked('edit-checkboxes-bar');
     $this->assertTrue($this->assertSession()->optionExists('edit-select', '')->isSelected());
@@ -226,7 +226,7 @@ class FormTest extends BrowserTestBase {
     // Submit again with required fields set and verify that there are no
     // error messages.
     $edit = [
-      'textfield' => $this->randomString(),
+      'text' => $this->randomString(),
       'checkboxes[foo]' => TRUE,
       'select' => 'foo',
       'radios' => 'bar',
@@ -255,7 +255,7 @@ class FormTest extends BrowserTestBase {
       ->setValue('invalid token');
     $random_string = $this->randomString();
     $edit = [
-      'textfield' => $random_string,
+      'text' => $random_string,
       'checkboxes[bar]' => TRUE,
       'select' => 'bar',
       'radios' => 'foo',
@@ -266,12 +266,12 @@ class FormTest extends BrowserTestBase {
     $this->assertSession()->elementExists('xpath', '//div[contains(@class, "error")]');
 
     $assert = $this->assertSession();
-    $element = $assert->fieldExists('textfield');
+    $element = $assert->fieldExists('text');
     $this->assertEmpty($element->getValue());
     $assert->responseNotContains($random_string);
     $this->assertSession()->pageTextContains('The form has become outdated.');
     // Ensure that we don't use the posted values.
-    $this->assertSession()->fieldValueEquals('textfield', '');
+    $this->assertSession()->fieldValueEquals('text', '');
     $this->assertSession()->checkboxNotChecked('edit-checkboxes-foo');
     $this->assertSession()->checkboxNotChecked('edit-checkboxes-bar');
     $this->assertTrue($this->assertSession()->optionExists('edit-select', '')->isSelected());
@@ -283,7 +283,7 @@ class FormTest extends BrowserTestBase {
       ->elementExists('css', 'input[name="form_token"]')
       ->setValue('invalid token');
     $edit = [
-      'textfield' => $this->randomString(),
+      'text' => $this->randomString(),
       'textarea' => $this->randomString() . "\n",
     ];
     $this->submitForm($edit, 'Submit');
@@ -291,7 +291,7 @@ class FormTest extends BrowserTestBase {
     // required fields are filled.
     $this->assertSession()->elementExists('xpath', '//div[contains(@class, "error")]');
     $this->assertSession()->pageTextContains('The form has become outdated.');
-    $this->assertSession()->fieldValueEquals('textfield', '');
+    $this->assertSession()->fieldValueEquals('text', '');
     $this->assertSession()->fieldValueEquals('textarea', '');
 
     // Check another form that has a number input.
@@ -340,9 +340,9 @@ class FormTest extends BrowserTestBase {
   }
 
   /**
-   * Tests validation for required textfield element without title.
+   * Tests validation for required text element without title.
    *
-   * Submits a test form containing a textfield form element without title.
+   * Submits a test form containing a text form element without title.
    * The form is submitted twice, first without value for the required field
    * and then with value. Each submission is checked for relevant error
    * messages.
@@ -356,16 +356,16 @@ class FormTest extends BrowserTestBase {
     $this->submitForm($edit, 'Submit');
     $this->assertSession()->pageTextNotContains("The form_test_validate_required_form_no_title form was submitted successfully.");
 
-    // Check the page for the error class on the textfield.
+    // Check the page for the error class on the text.
     $this->assertSession()->elementExists('xpath', '//input[contains(@class, "error")]');
 
-    // Check the page for the aria-invalid attribute on the textfield.
+    // Check the page for the aria-invalid attribute on the text.
     $this->assertSession()->elementExists('xpath', '//input[contains(@aria-invalid, "true")]');
 
     // Submit again with required fields set and verify that there are no
     // error messages.
     $edit = [
-      'textfield' => $this->randomString(),
+      'text' => $this->randomString(),
     ];
     $this->submitForm($edit, 'Submit');
     // Verify that no error input form element class is present.
@@ -893,7 +893,7 @@ class FormTest extends BrowserTestBase {
    */
   public function testRequiredAttribute() {
     $this->drupalGet('form-test/required-attribute');
-    foreach (['textfield', 'password', 'textarea'] as $type) {
+    foreach (['text', 'password', 'textarea'] as $type) {
       $field = $this->assertSession()->fieldExists("edit-$type");
       $this->assertSame('required', $field->getAttribute('required'), "The $type has the proper required attribute.");
     }

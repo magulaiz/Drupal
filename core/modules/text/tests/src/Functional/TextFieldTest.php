@@ -145,7 +145,7 @@ class TextFieldTest extends StringFieldTest {
    * Tests widgets.
    */
   public function testTextfieldWidgets() {
-    $this->_testTextfieldWidgets('text', 'text_textfield');
+    $this->_testTextfieldWidgets('text', 'text_text');
     $this->_testTextfieldWidgets('text_long', 'text_textarea');
   }
 
@@ -153,7 +153,7 @@ class TextFieldTest extends StringFieldTest {
    * Tests widgets + 'formatted_text' setting.
    */
   public function testTextfieldWidgetsFormatted() {
-    $this->_testTextfieldWidgetsFormatted('text', 'text_textfield');
+    $this->_testTextfieldWidgetsFormatted('text', 'text_text');
     $this->_testTextfieldWidgetsFormatted('text_long', 'text_textarea');
   }
 

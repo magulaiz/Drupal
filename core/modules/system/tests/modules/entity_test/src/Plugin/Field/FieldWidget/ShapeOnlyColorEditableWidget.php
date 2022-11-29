@@ -29,7 +29,7 @@ class ShapeOnlyColorEditableWidget extends WidgetBase {
     ];
 
     $element['color'] = [
-      '#type' => 'textfield',
+      '#type' => 'text',
       '#default_value' => $items[$delta]->color ?? NULL,
       '#size' => 255,
     ];

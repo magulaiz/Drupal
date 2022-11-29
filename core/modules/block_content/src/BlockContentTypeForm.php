@@ -31,7 +31,7 @@ class BlockContentTypeForm extends BundleEntityFormBase {
     }
 
     $form['label'] = [
-      '#type' => 'textfield',
+      '#type' => 'text',
       '#title' => $this->t('Label'),
       '#maxlength' => 255,
       '#default_value' => $block_type->label(),

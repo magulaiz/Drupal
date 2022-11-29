@@ -114,7 +114,7 @@ class GroupwiseMax extends RelationshipPluginBase {
     ];
 
     $form['subquery_namespace'] = [
-      '#type' => 'textfield',
+      '#type' => 'text',
       '#title' => $this->t('Subquery namespace'),
       '#description' => $this->t('Advanced. Enter a namespace for the subquery used by this relationship.'),
       '#default_value' => $this->options['subquery_namespace'],

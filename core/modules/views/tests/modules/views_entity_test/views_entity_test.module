@@ -22,7 +22,7 @@ function views_entity_test_entity_base_field_info(EntityTypeInterface $entity_ty
       ->setTranslatable(FALSE)
       ->setSetting('max_length', 64)
       ->setDisplayOptions('form', [
-        'type' => 'string_textfield',
+        'type' => 'string_text',
         'weight' => 10,
       ]);
     return $definitions;

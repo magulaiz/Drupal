@@ -204,7 +204,7 @@ class BlockContent extends EditorialContentEntityBase implements BlockContentInt
       ->setTranslatable(TRUE)
       ->setRequired(TRUE)
       ->setDisplayOptions('form', [
-        'type' => 'string_textfield',
+        'type' => 'string_text',
         'weight' => -5,
       ])
       ->setDisplayConfigurable('form', TRUE)

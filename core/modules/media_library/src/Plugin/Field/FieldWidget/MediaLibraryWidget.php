@@ -691,7 +691,7 @@ class MediaLibraryWidget extends WidgetBase implements TrustedCallbackInterface 
     $parents = array_slice($triggering_element['#array_parents'], 0, $length);
     $element = NestedArray::getValue($form, $parents);
 
-    // Always clear the textfield selection to prevent duplicate additions.
+    // Always clear the text selection to prevent duplicate additions.
     $element['media_library_selection']['#value'] = '';
 
     $field_state = static::getFieldState($element, $form_state);

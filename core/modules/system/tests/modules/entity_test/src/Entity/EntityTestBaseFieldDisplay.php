@@ -58,7 +58,7 @@ class EntityTestBaseFieldDisplay extends EntityTest {
       ])
       ->setDisplayConfigurable('view', TRUE)
       ->setDisplayOptions('form', [
-        'type' => 'text_textfield',
+        'type' => 'text_text',
         'weight' => 10,
       ])
       ->setDisplayConfigurable('form', TRUE);
@@ -70,7 +70,7 @@ class EntityTestBaseFieldDisplay extends EntityTest {
         'weight' => 11,
       ])
       ->setDisplayOptions('form', [
-        'type' => 'text_textfield',
+        'type' => 'text_text',
         'weight' => 11,
       ]);
 
@@ -82,7 +82,7 @@ class EntityTestBaseFieldDisplay extends EntityTest {
         'weight' => 12,
       ])
       ->setDisplayOptions('form', [
-        'type' => 'text_textfield',
+        'type' => 'text_text',
         'weight' => 12,
       ]);
 

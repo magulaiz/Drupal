@@ -77,7 +77,7 @@ class Test extends MediaSourceBase {
     $form = parent::buildConfigurationForm($form, $form_state);
 
     $form['test_config_value'] = [
-      '#type' => 'textfield',
+      '#type' => 'text',
       '#title' => $this->t('Test config value'),
       '#default_value' => $this->configuration['test_config_value'],
     ];

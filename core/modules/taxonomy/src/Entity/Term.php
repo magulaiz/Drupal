@@ -161,7 +161,7 @@ class Term extends EditorialContentEntityBase implements TermInterface {
         'weight' => -5,
       ])
       ->setDisplayOptions('form', [
-        'type' => 'string_textfield',
+        'type' => 'string_text',
         'weight' => -5,
       ])
       ->setDisplayConfigurable('form', TRUE);
@@ -177,7 +177,7 @@ class Term extends EditorialContentEntityBase implements TermInterface {
       ])
       ->setDisplayConfigurable('view', TRUE)
       ->setDisplayOptions('form', [
-        'type' => 'text_textfield',
+        'type' => 'text_text',
         'weight' => 0,
       ])
       ->setDisplayConfigurable('form', TRUE);

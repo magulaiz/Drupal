@@ -24,7 +24,7 @@ class FormTestStatePersistForm extends FormBase {
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
     $form['title'] = [
-      '#type' => 'textfield',
+      '#type' => 'text',
       '#title' => 'title',
       '#default_value' => 'DEFAULT',
       '#required' => TRUE,

@@ -44,7 +44,7 @@ class FieldInstanceWidgetSettings extends ProcessPluginBase {
     $rows = $widget_settings['rows'] ?? 5;
 
     $settings = [
-      'text_textfield' => [
+      'text_text' => [
         'size' => $size,
         'placeholder' => '',
       ],
@@ -55,7 +55,7 @@ class FieldInstanceWidgetSettings extends ProcessPluginBase {
       'number' => [
         'placeholder' => '',
       ],
-      'email_textfield' => [
+      'email_text' => [
         'placeholder' => '',
       ],
       'link' => [
@@ -72,7 +72,7 @@ class FieldInstanceWidgetSettings extends ProcessPluginBase {
       'optionwidgets_onoff' => [
         'display_label' => FALSE,
       ],
-      'phone_textfield' => [
+      'phone_text' => [
         'placeholder' => '',
       ],
     ];

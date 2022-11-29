@@ -254,7 +254,7 @@ class NodeCreationTest extends NodeTestBase {
   }
 
   /**
-   * Tests the author autocompletion textfield.
+   * Tests the author autocompletion text.
    */
   public function testAuthorAutocomplete() {
     $admin_user = $this->drupalCreateUser([

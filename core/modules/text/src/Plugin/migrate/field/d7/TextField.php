@@ -50,7 +50,7 @@ class TextField extends FieldPluginBase {
 
     switch ($field_type) {
       case 'string':
-        $widget_type = str_replace('text_textfield', 'string_textfield', $widget_type);
+        $widget_type = str_replace('text_text', 'string_text', $widget_type);
         break;
 
       case 'string_long':

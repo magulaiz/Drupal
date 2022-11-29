@@ -251,7 +251,7 @@ class Datelist extends DateElementBase {
 
       $element['#attributes']['title'] = $title;
       $element[$part] = [
-        '#type' => in_array($part, $text_parts) ? 'textfield' : 'select',
+        '#type' => in_array($part, $text_parts) ? 'text' : 'select',
         '#title' => $title,
         '#title_display' => 'invisible',
         '#value' => $value,

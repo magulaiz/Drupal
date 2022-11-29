@@ -1102,7 +1102,7 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
       // a response header.
       $element['#attached']['drupalSettings']['ajaxTrustedUrl'][$element['#action']] = TRUE;
 
-      // If a form contains a single textfield, and the ENTER key is pressed
+      // If a form contains a single text, and the ENTER key is pressed
       // within it, Internet Explorer submits the form with no POST data
       // identifying any submit button. Other browsers submit POST data as
       // though the user clicked the first button. Therefore, to be as
@@ -1361,7 +1361,7 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
    * This does not detect button clicks processed by Ajax (that is done in
    * self::elementTriggeredScriptedSubmission()) and it does not detect form
    * submissions from Internet Explorer in response to an ENTER key pressed in a
-   * textfield (self::doBuildForm() has extra code for that).
+   * text (self::doBuildForm() has extra code for that).
    *
    * Because this function contains only part of the logic needed to determine
    * $form_state->getTriggeringElement(), it should not be called from anywhere

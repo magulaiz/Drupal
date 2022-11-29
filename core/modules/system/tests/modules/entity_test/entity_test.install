@@ -30,7 +30,7 @@ function entity_test_install() {
 
     \Drupal::service('entity_display.repository')
       ->getFormDisplay($entity_type, $entity_type)
-      ->setComponent('field_test_text', ['type' => 'text_textfield'])
+      ->setComponent('field_test_text', ['type' => 'text_text'])
       ->save();
   }
 }

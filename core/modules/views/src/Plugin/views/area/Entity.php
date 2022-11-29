@@ -141,7 +141,7 @@ class Entity extends TokenizeAreaPluginBase {
     }
     $form['target'] = [
       '#title' => $this->t('@entity_type_label ID', ['@entity_type_label' => $label]),
-      '#type' => 'textfield',
+      '#type' => 'text',
       '#default_value' => $target,
     ];
 

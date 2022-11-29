@@ -79,7 +79,7 @@ class WorkflowTransitionEditForm extends EntityForm {
     $transition = $workflow->getTypePlugin()->getTransition($this->transitionId);
 
     $form['label'] = [
-      '#type' => 'textfield',
+      '#type' => 'text',
       '#title' => $this->t('Transition label'),
       '#maxlength' => 255,
       '#default_value' => $transition->label(),

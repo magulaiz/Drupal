@@ -26,8 +26,8 @@ class FormTestValidateRequiredForm extends FormBase {
     $options = ['foo' => 'foo', 'bar' => 'bar'];
     $validate = ['::elementValidateRequired'];
 
-    $form['textfield'] = [
-      '#type' => 'textfield',
+    $form['text'] = [
+      '#type' => 'text',
       '#title' => 'Name',
       '#required' => TRUE,
       '#required_error' => t('Please enter a name.'),

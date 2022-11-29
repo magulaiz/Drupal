@@ -42,7 +42,7 @@ class Serialized extends FieldPluginBase {
       '#default_value' => $this->options['format'],
     ];
     $form['key'] = [
-      '#type' => 'textfield',
+      '#type' => 'text',
       '#title' => $this->t('Which key should be displayed'),
       '#default_value' => $this->options['key'],
       '#states' => [

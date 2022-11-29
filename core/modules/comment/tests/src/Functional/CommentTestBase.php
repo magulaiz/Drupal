@@ -247,7 +247,7 @@ abstract class CommentTestBase extends BrowserTestBase {
 
     if ($enabled) {
       $form_display->setComponent('subject', [
-        'type' => 'string_textfield',
+        'type' => 'string_text',
       ]);
     }
     else {

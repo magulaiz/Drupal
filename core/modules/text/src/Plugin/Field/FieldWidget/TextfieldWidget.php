@@ -8,10 +8,10 @@ use Drupal\Core\Form\FormStateInterface;
 use Symfony\Component\Validator\ConstraintViolationInterface;
 
 /**
- * Plugin implementation of the 'text_textfield' widget.
+ * Plugin implementation of the 'text_text' widget.
  *
  * @FieldWidget(
- *   id = "text_textfield",
+ *   id = "text_text",
  *   label = @Translation("Text field"),
  *   field_types = {
  *     "text"

@@ -273,7 +273,7 @@ class EditorLoadingTest extends BrowserTestBase {
       ],
     ]);
 
-    // Assert the unicorn editor works with textfields.
+    // Assert the unicorn editor works with texts.
     $this->drupalLogin($this->privilegedUser);
     $this->drupalGet('node/1/edit');
     [, $editor_settings_present, $editor_js_present, $field] = $this->getThingsToCheck('field-text', 'input');

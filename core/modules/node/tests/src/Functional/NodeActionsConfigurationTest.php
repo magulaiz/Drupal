@@ -116,7 +116,7 @@ class NodeActionsConfigurationTest extends BrowserTestBase {
     $this->drupalGet('admin/config/system/actions');
     $this->submitForm(['action' => 'node_assign_owner_action'], 'Create');
 
-    // Get the autocomplete URL of the owner_uid textfield.
+    // Get the autocomplete URL of the owner_uid text.
     $autocomplete_field = $this->getSession()->getPage()->findField('owner_uid');
     $autocomplete_url = $this->getAbsoluteUrl($autocomplete_field->getAttribute('data-autocomplete-path'));
 

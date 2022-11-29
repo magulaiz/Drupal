@@ -141,7 +141,7 @@ class SiteConfigureForm extends ConfigFormBase {
       '#access' => empty($install_state['config_install_path']),
     ];
     $form['site_information']['site_name'] = [
-      '#type' => 'textfield',
+      '#type' => 'text',
       '#title' => $this->t('Site name'),
       '#required' => TRUE,
       '#weight' => -20,
@@ -165,7 +165,7 @@ class SiteConfigureForm extends ConfigFormBase {
       '#title' => $this->t('Site maintenance account'),
     ];
     $form['admin_account']['account']['name'] = [
-      '#type' => 'textfield',
+      '#type' => 'text',
       '#title' => $this->t('Username'),
       '#maxlength' => UserInterface::USERNAME_MAX_LENGTH,
       '#description' => $this->t("Several special characters are allowed, including space, period (.), hyphen (-), apostrophe ('), underscore (_), and the @ sign."),

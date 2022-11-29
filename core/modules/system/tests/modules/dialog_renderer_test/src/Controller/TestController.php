@@ -37,7 +37,7 @@ class TestController {
         '#markup' => 'Look at me in a modal!<br><a href="#">And a link!</a>',
       ],
       'input' => [
-        '#type' => 'textfield',
+        '#type' => 'text',
         '#size' => 60,
       ],
     ];
@@ -57,7 +57,7 @@ class TestController {
         '#markup' => 'Look at me in a modal!<br><a href="#">And a link!</a>',
       ],
       'input' => [
-        '#type' => 'textfield',
+        '#type' => 'text',
         '#size' => 60,
         '#attributes' => [
           'autofocus' => TRUE,

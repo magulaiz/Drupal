@@ -76,7 +76,7 @@ class LayoutBuilderFormModeTest extends BrowserTestBase {
       'status' => TRUE,
     ])
       ->setComponent('foo', [
-        'type' => 'string_textfield',
+        'type' => 'string_text',
       ])
       ->save();
 

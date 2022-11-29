@@ -258,7 +258,7 @@ class ImageWidget extends FileWidget {
     // Add the additional alt and title fields.
     $element['alt'] = [
       '#title' => new TranslatableMarkup('Alternative text'),
-      '#type' => 'textfield',
+      '#type' => 'text',
       '#default_value' => $item['alt'] ?? '',
       '#description' => new TranslatableMarkup('Short description of the image used by screen readers and displayed when the image is not loaded. This is important for accessibility.'),
       // @see https://www.drupal.org/node/465106#alt-text
@@ -269,7 +269,7 @@ class ImageWidget extends FileWidget {
       '#element_validate' => $element['#alt_field_required'] == 1 ? [[static::class, 'validateRequiredFields']] : [],
     ];
     $element['title'] = [
-      '#type' => 'textfield',
+      '#type' => 'text',
       '#title' => new TranslatableMarkup('Title'),
       '#default_value' => $item['title'] ?? '',
       '#description' => new TranslatableMarkup('The title is used as a tool tip when the user hovers the mouse over the image.'),

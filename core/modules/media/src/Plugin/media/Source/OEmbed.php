@@ -323,7 +323,7 @@ class OEmbed extends MediaSourceBase implements OEmbedInterface {
     }
 
     $form['thumbnails_directory'] = [
-      '#type' => 'textfield',
+      '#type' => 'text',
       '#title' => $this->t('Thumbnails location'),
       '#default_value' => $this->configuration['thumbnails_directory'],
       '#description' => $this->t('Thumbnails will be fetched from the provider for local usage. This is the URI of the directory where they will be placed.'),
@@ -518,7 +518,7 @@ class OEmbed extends MediaSourceBase implements OEmbedInterface {
     $source_field = $this->getSourceFieldDefinition($type)->getName();
 
     $display->setComponent($source_field, [
-      'type' => 'oembed_textfield',
+      'type' => 'oembed_text',
       'weight' => $display->getComponent($source_field)['weight'],
     ]);
     $display->removeComponent('name');

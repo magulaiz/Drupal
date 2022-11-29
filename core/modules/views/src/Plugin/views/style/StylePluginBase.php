@@ -336,7 +336,7 @@ abstract class StylePluginBase extends PluginBase {
       $form['row_class'] = [
         '#title' => $this->t('Row class'),
         '#description' => $this->t('The class to provide on each row.'),
-        '#type' => 'textfield',
+        '#type' => 'text',
         '#default_value' => $this->options['row_class'],
       ];
 

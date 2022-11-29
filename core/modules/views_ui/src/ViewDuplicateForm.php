@@ -27,7 +27,7 @@ class ViewDuplicateForm extends ViewFormBase {
     $form['#title'] = $this->t('Duplicate of @label', ['@label' => $this->entity->label()]);
 
     $form['label'] = [
-      '#type' => 'textfield',
+      '#type' => 'text',
       '#title' => $this->t('View name'),
       '#required' => TRUE,
       '#size' => 32,

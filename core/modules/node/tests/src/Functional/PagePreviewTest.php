@@ -179,7 +179,7 @@ class PagePreviewTest extends NodeTestBase {
 
     $display_repository->getFormDisplay('node', 'page')
       ->setComponent('field_test_multi', [
-        'type' => 'text_textfield',
+        'type' => 'text_text',
       ])
       ->save();
 

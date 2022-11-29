@@ -162,14 +162,14 @@ class EmailAction extends ConfigurableActionBase implements ContainerFactoryPlug
    */
   public function buildConfigurationForm(array $form, FormStateInterface $form_state) {
     $form['recipient'] = [
-      '#type' => 'textfield',
+      '#type' => 'text',
       '#title' => $this->t('Recipient email address'),
       '#default_value' => $this->configuration['recipient'],
       '#maxlength' => '254',
       '#description' => $this->t('You may also use tokens: [node:author:mail], [comment:author:mail], etc. Separate recipients with a comma.'),
     ];
     $form['subject'] = [
-      '#type' => 'textfield',
+      '#type' => 'text',
       '#title' => $this->t('Subject'),
       '#default_value' => $this->configuration['subject'],
       '#maxlength' => '254',

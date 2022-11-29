@@ -82,7 +82,7 @@ class TermForm extends ContentEntityForm {
     ];
 
     $form['relations']['weight'] = [
-      '#type' => 'textfield',
+      '#type' => 'text',
       '#title' => $this->t('Weight'),
       '#size' => 6,
       '#default_value' => $term->getWeight(),

@@ -410,7 +410,7 @@ function _media_library_configure_form_display(MediaTypeInterface $type) {
   // Expose the name field when it is not mapped.
   if (!in_array('name', $type->getFieldMap(), TRUE)) {
     $display->setComponent('name', [
-      'type' => 'string_textfield',
+      'type' => 'string_text',
       'settings' => [
         'size' => 60,
       ],

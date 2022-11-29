@@ -54,7 +54,7 @@ class StringFieldTest extends BrowserTestBase {
    * Tests widgets.
    */
   public function testTextfieldWidgets() {
-    $this->_testTextfieldWidgets('string', 'string_textfield');
+    $this->_testTextfieldWidgets('string', 'string_text');
     $this->_testTextfieldWidgets('string_long', 'string_textarea');
   }
 

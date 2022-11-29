@@ -191,7 +191,7 @@ function config_translation_config_schema_info_alter(&$definitions) {
 
   // Enhance the text and date type definitions with classes to generate proper
   // form elements in ConfigTranslationFormBase. Other translatable types will
-  // appear as a one line textfield.
+  // appear as a one line text.
   foreach ($definitions as $type => &$definition) {
     if (isset($map[$type]) && !isset($definition['form_element_class'])) {
       $definition['form_element_class'] = $map[$type];

@@ -65,10 +65,10 @@ class ContactSitewideTest extends BrowserTestBase {
     ]));
     $this->drupalGet('contact');
 
-    // Ensure that there is no textfield for name.
+    // Ensure that there is no text for name.
     $this->assertSession()->fieldNotExists('name');
 
-    // Ensure that there is no textfield for email.
+    // Ensure that there is no text for email.
     $this->assertSession()->fieldNotExists('mail');
 
     // Logout and retrieve the page as an anonymous user
@@ -76,10 +76,10 @@ class ContactSitewideTest extends BrowserTestBase {
     user_role_grant_permissions('anonymous', ['access site-wide contact form']);
     $this->drupalGet('contact');
 
-    // Ensure that there is textfield for name.
+    // Ensure that there is text for name.
     $this->assertSession()->fieldExists('name');
 
-    // Ensure that there is textfield for email.
+    // Ensure that there is text for email.
     $this->assertSession()->fieldExists('mail');
 
     // Create and log in administrative user.
@@ -313,7 +313,7 @@ class ContactSitewideTest extends BrowserTestBase {
     $this->clickLink('Add field');
     $this->assertSession()->statusCodeEquals(200);
 
-    // Create a simple textfield.
+    // Create a simple text.
     $field_name = mb_strtolower($this->randomMachineName());
     $field_label = $this->randomMachineName();
     $this->fieldUIAddNewField(NULL, $field_name, $field_label, 'text');

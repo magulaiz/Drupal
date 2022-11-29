@@ -74,7 +74,7 @@ abstract class DateFormatFormBase extends EntityForm {
    */
   public function form(array $form, FormStateInterface $form_state) {
     $form['label'] = [
-      '#type' => 'textfield',
+      '#type' => 'text',
       '#title' => 'Name',
       '#maxlength' => 100,
       '#description' => $this->t('Name of the date format'),
@@ -93,7 +93,7 @@ abstract class DateFormatFormBase extends EntityForm {
       ],
     ];
     $form['date_format_pattern'] = [
-      '#type' => 'textfield',
+      '#type' => 'text',
       '#title' => $this->t('Format string'),
       '#maxlength' => 100,
       '#description' => $this->t('A user-defined date format. See the <a href="https://www.php.net/manual/datetime.format.php#refsect1-datetime.format-parameters">PHP manual</a> for available options.'),

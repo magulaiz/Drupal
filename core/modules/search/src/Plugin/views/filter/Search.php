@@ -91,7 +91,7 @@ class Search extends FilterPluginBase {
    */
   protected function valueForm(&$form, FormStateInterface $form_state) {
     $form['value'] = [
-      '#type' => 'textfield',
+      '#type' => 'text',
       '#size' => 15,
       '#default_value' => $this->value,
       '#attributes' => ['title' => $this->t('Search keywords')],

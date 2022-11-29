@@ -27,8 +27,8 @@ class JavascriptStatesForm extends FormBase {
       '#type' => 'checkbox',
       '#title' => 'Checkbox trigger',
     ];
-    $form['textfield_trigger'] = [
-      '#type' => 'textfield',
+    $form['text_trigger'] = [
+      '#type' => 'text',
       '#title' => 'Textfield trigger',
     ];
     $form['radios_trigger'] = [
@@ -63,8 +63,8 @@ class JavascriptStatesForm extends FormBase {
 
     // Tested fields.
     // Checkbox trigger.
-    $form['textfield_invisible_when_checkbox_trigger_checked'] = [
-      '#type' => 'textfield',
+    $form['text_invisible_when_checkbox_trigger_checked'] = [
+      '#type' => 'text',
       '#title' => 'Textfield invisible when checkbox trigger checked',
       '#states' => [
         'invisible' => [
@@ -72,8 +72,8 @@ class JavascriptStatesForm extends FormBase {
         ],
       ],
     ];
-    $form['textfield_required_when_checkbox_trigger_checked'] = [
-      '#type' => 'textfield',
+    $form['text_required_when_checkbox_trigger_checked'] = [
+      '#type' => 'text',
       '#title' => 'Textfield required when checkbox trigger checked',
       '#states' => [
         'required' => [
@@ -90,8 +90,8 @@ class JavascriptStatesForm extends FormBase {
         ],
       ],
     ];
-    $form['details_expanded_when_checkbox_trigger_checked']['textfield_in_details'] = [
-      '#type' => 'textfield',
+    $form['details_expanded_when_checkbox_trigger_checked']['text_in_details'] = [
+      '#type' => 'text',
       '#title' => 'Textfield in details',
     ];
     $form['checkbox_checked_when_checkbox_trigger_checked'] = [
@@ -132,8 +132,8 @@ class JavascriptStatesForm extends FormBase {
     ];
 
     // Checkboxes trigger.
-    $form['textfield_visible_when_checkboxes_trigger_value2_checked'] = [
-      '#type' => 'textfield',
+    $form['text_visible_when_checkboxes_trigger_value2_checked'] = [
+      '#type' => 'text',
       '#title' => 'Textfield visible when checkboxes trigger value2 checked',
       '#states' => [
         'visible' => [
@@ -141,8 +141,8 @@ class JavascriptStatesForm extends FormBase {
         ],
       ],
     ];
-    $form['textfield_visible_when_checkboxes_trigger_value3_checked'] = [
-      '#type' => 'textfield',
+    $form['text_visible_when_checkboxes_trigger_value3_checked'] = [
+      '#type' => 'text',
       '#title' => 'Textfield visible when checkboxes trigger value3 checked',
       '#states' => [
         'visible' => [
@@ -161,12 +161,12 @@ class JavascriptStatesForm extends FormBase {
         ],
       ],
     ];
-    $form['fieldset_visible_when_radios_trigger_has_value2']['textfield_in_fieldset'] = [
-      '#type' => 'textfield',
+    $form['fieldset_visible_when_radios_trigger_has_value2']['text_in_fieldset'] = [
+      '#type' => 'text',
       '#title' => 'Textfield in fieldset',
     ];
-    $form['textfield_invisible_when_radios_trigger_has_value2'] = [
-      '#type' => 'textfield',
+    $form['text_invisible_when_radios_trigger_has_value2'] = [
+      '#type' => 'text',
       '#title' => 'Textfield invisible when radio trigger has value2',
       '#states' => [
         'invisible' => [
@@ -215,8 +215,8 @@ class JavascriptStatesForm extends FormBase {
         ],
       ],
     ];
-    $form['details_expanded_when_radios_trigger_has_value3']['textfield_in_details'] = [
-      '#type' => 'textfield',
+    $form['details_expanded_when_radios_trigger_has_value3']['text_in_details'] = [
+      '#type' => 'text',
       '#title' => 'Textfield in details',
     ];
 
@@ -230,8 +230,8 @@ class JavascriptStatesForm extends FormBase {
         ],
       ],
     ];
-    $form['textfield_visible_when_select_trigger_has_value3'] = [
-      '#type' => 'textfield',
+    $form['text_visible_when_select_trigger_has_value3'] = [
+      '#type' => 'text',
       '#title' => 'Textfield visible when select trigger has value3',
       '#states' => [
         'visible' => [
@@ -239,8 +239,8 @@ class JavascriptStatesForm extends FormBase {
         ],
       ],
     ];
-    $form['textfield_visible_when_select_trigger_has_value2_or_value3'] = [
-      '#type' => 'textfield',
+    $form['text_visible_when_select_trigger_has_value2_or_value3'] = [
+      '#type' => 'text',
       '#title' => 'Textfield visible when select trigger has value2 or value3',
       '#states' => [
         'visible' => [
@@ -253,77 +253,77 @@ class JavascriptStatesForm extends FormBase {
     ];
 
     // Textfield trigger.
-    $form['checkbox_checked_when_textfield_trigger_filled'] = [
+    $form['checkbox_checked_when_text_trigger_filled'] = [
       '#type' => 'checkbox',
-      '#title' => 'Checkbox checked when textfield trigger filled',
+      '#title' => 'Checkbox checked when text trigger filled',
       '#default_value' => '0',
       '#states' => [
         'checked' => [
-          ':input[name="textfield_trigger"]' => ['filled' => TRUE],
+          ':input[name="text_trigger"]' => ['filled' => TRUE],
         ],
       ],
     ];
-    $form['checkbox_unchecked_when_textfield_trigger_filled'] = [
+    $form['checkbox_unchecked_when_text_trigger_filled'] = [
       '#type' => 'checkbox',
-      '#title' => 'Checkbox unchecked when textfield trigger filled',
+      '#title' => 'Checkbox unchecked when text trigger filled',
       '#default_value' => '1',
       '#states' => [
         'unchecked' => [
-          ':input[name="textfield_trigger"]' => ['filled' => TRUE],
+          ':input[name="text_trigger"]' => ['filled' => TRUE],
         ],
       ],
     ];
-    $form['select_invisible_when_textfield_trigger_filled'] = [
+    $form['select_invisible_when_text_trigger_filled'] = [
       '#type' => 'select',
-      '#title' => 'Select invisible when textfield trigger filled',
+      '#title' => 'Select invisible when text trigger filled',
       '#options' => [0 => 0, 1 => 1, 2 => 2],
       '#states' => [
         'invisible' => [
-          ':input[name="textfield_trigger"]' => ['filled' => TRUE],
+          ':input[name="text_trigger"]' => ['filled' => TRUE],
         ],
       ],
     ];
-    $form['select_visible_when_textfield_trigger_filled'] = [
+    $form['select_visible_when_text_trigger_filled'] = [
       '#type' => 'select',
-      '#title' => 'Select visible when textfield trigger filled',
+      '#title' => 'Select visible when text trigger filled',
       '#options' => [0 => 0, 1 => 1, 2 => 2],
       '#states' => [
         'visible' => [
-          ':input[name="textfield_trigger"]' => ['filled' => TRUE],
+          ':input[name="text_trigger"]' => ['filled' => TRUE],
         ],
       ],
     ];
-    $form['textfield_required_when_textfield_trigger_filled'] = [
-      '#type' => 'textfield',
-      '#title' => 'Textfield required  when textfield trigger filled',
+    $form['text_required_when_text_trigger_filled'] = [
+      '#type' => 'text',
+      '#title' => 'Textfield required  when text trigger filled',
       '#states' => [
         'required' => [
-          ':input[name="textfield_trigger"]' => ['filled' => TRUE],
+          ':input[name="text_trigger"]' => ['filled' => TRUE],
         ],
       ],
     ];
-    $form['details_expanded_when_textfield_trigger_filled'] = [
+    $form['details_expanded_when_text_trigger_filled'] = [
       '#type' => 'details',
-      '#title' => 'Details expanded when textfield trigger filled',
+      '#title' => 'Details expanded when text trigger filled',
       '#states' => [
         'expanded' => [
-          ':input[name="textfield_trigger"]' => ['filled' => TRUE],
+          ':input[name="text_trigger"]' => ['filled' => TRUE],
         ],
       ],
     ];
-    $form['details_expanded_when_textfield_trigger_filled']['textfield_in_details'] = [
-      '#type' => 'textfield',
+    $form['details_expanded_when_text_trigger_filled']['text_in_details'] = [
+      '#type' => 'text',
       '#title' => 'Textfield in details',
     ];
 
     // Multiple triggers.
-    $form['item_visible_when_select_trigger_has_value2_and_textfield_trigger_filled'] = [
+    $form['item_visible_when_select_trigger_has_value2_and_text_trigger_filled'] = [
       '#type' => 'item',
-      '#title' => 'Item visible when select trigger has value2 and textfield trigger filled',
+      '#title' => 'Item visible when select trigger has value2 and text trigger filled',
       '#states' => [
         'visible' => [
           ':input[name="select_trigger"]' => ['value' => 'value2'],
-          ':input[name="textfield_trigger"]' => ['filled' => TRUE],
+          ':input[name="text_trigger"]' => ['filled' => TRUE],
         ],
       ],
     ];
@@ -337,9 +337,9 @@ class JavascriptStatesForm extends FormBase {
       '#type' => 'number',
       '#title' => 'enter 1',
     ];
-    $form['textfield'] = [
-      '#type' => 'textfield',
-      '#title' => 'textfield',
+    $form['text'] = [
+      '#type' => 'text',
+      '#title' => 'text',
       '#states' => [
         'visible' => [
           [':input[name="select"]' => ['value' => '1']],

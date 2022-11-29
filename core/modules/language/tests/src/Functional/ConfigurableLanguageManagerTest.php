@@ -245,7 +245,7 @@ class ConfigurableLanguageManagerTest extends BrowserTestBase {
       'status' => TRUE,
     ])
       ->setComponent($field_name, [
-        'type' => 'string_textfield',
+        'type' => 'string_text',
       ])
       ->save();
 

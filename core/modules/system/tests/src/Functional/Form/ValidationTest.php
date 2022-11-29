@@ -152,41 +152,41 @@ class ValidationTest extends BrowserTestBase {
    * Tests #pattern validation.
    */
   public function testPatternValidation() {
-    $textfield_error = 'One digit followed by lowercase letters field is not in the right format.';
+    $text_error = 'One digit followed by lowercase letters field is not in the right format.';
     $tel_error = 'Everything except numbers field is not in the right format.';
     $password_error = 'Password field is not in the right format.';
 
-    // Invalid textfield, valid tel.
+    // Invalid text, valid tel.
     $edit = [
-      'textfield' => 'invalid',
+      'text' => 'invalid',
       'tel' => 'valid',
     ];
     $this->drupalGet('form-test/pattern');
     $this->submitForm($edit, 'Submit');
-    $this->assertSession()->pageTextContains($textfield_error);
+    $this->assertSession()->pageTextContains($text_error);
     $this->assertSession()->pageTextNotContains($tel_error);
     $this->assertSession()->pageTextNotContains($password_error);
 
-    // Valid textfield, invalid tel, valid password.
+    // Valid text, invalid tel, valid password.
     $edit = [
-      'textfield' => '7seven',
+      'text' => '7seven',
       'tel' => '818937',
       'password' => '0100110',
     ];
     $this->drupalGet('form-test/pattern');
     $this->submitForm($edit, 'Submit');
-    $this->assertSession()->pageTextNotContains($textfield_error);
+    $this->assertSession()->pageTextNotContains($text_error);
     $this->assertSession()->pageTextContains($tel_error);
     $this->assertSession()->pageTextNotContains($password_error);
 
     // Non required fields are not validated if empty.
     $edit = [
-      'textfield' => '',
+      'text' => '',
       'tel' => '',
     ];
     $this->drupalGet('form-test/pattern');
     $this->submitForm($edit, 'Submit');
-    $this->assertSession()->pageTextNotContains($textfield_error);
+    $this->assertSession()->pageTextNotContains($text_error);
     $this->assertSession()->pageTextNotContains($tel_error);
     $this->assertSession()->pageTextNotContains($password_error);
 
@@ -196,14 +196,14 @@ class ValidationTest extends BrowserTestBase {
     ];
     $this->drupalGet('form-test/pattern');
     $this->submitForm($edit, 'Submit');
-    $this->assertSession()->pageTextNotContains($textfield_error);
+    $this->assertSession()->pageTextNotContains($text_error);
     $this->assertSession()->pageTextNotContains($tel_error);
     $this->assertSession()->pageTextContains($password_error);
 
     // The pattern attribute overrides #pattern and is not validated on the
     // server side.
     $edit = [
-      'textfield' => '',
+      'text' => '',
       'tel' => '',
       'url' => 'http://www.example.com/',
     ];
@@ -239,7 +239,7 @@ class ValidationTest extends BrowserTestBase {
 
     // Verify that no custom validation error appears with valid values.
     $edit = [
-      'textfield' => $this->randomString(),
+      'text' => $this->randomString(),
       'checkboxes[foo]' => TRUE,
       'select' => 'foo',
     ];
