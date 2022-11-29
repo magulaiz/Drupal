@@ -19,8 +19,9 @@ class ValidKeysConstraintValidator extends ConstraintValidator {
       throw new UnexpectedTypeException($value, 'array');
     }
 
-    // Indexed arrays are invalid by definition.
-    if (array_is_list($value)) {
+    // Indexed arrays are invalid by definition. array_is_list() returns TRUE
+    // for empty arrays, so only do this check if $value is not empty.
+    if ($value && array_is_list($value)) {
       $this->context->addViolation($constraint->indexedArrayMessage);
       return;
     }

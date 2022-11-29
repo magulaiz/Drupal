@@ -36,6 +36,9 @@ class ValidKeysConstraintValidatorTest extends KernelTestBase {
       $this->assertSame('Expected argument of type "array", "int" given', $e->getMessage());
     }
 
+    // Empty arrays are valid.
+    $this->assertCount(0, $typed_data->create($definition, [])->validate());
+
     // Indexed arrays are never valid.
     $violations = $typed_data->create($definition, ['north', 'south'])->validate();
     $this->assertCount(1, $violations);
