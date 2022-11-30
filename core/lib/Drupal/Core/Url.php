@@ -2,35 +2,12 @@
 
 namespace Drupal\Core;
 
-use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Session\AccountInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 class Url extends UrlBase {
 
   protected bool $unparsed = FALSE;
-  protected RouteMatchInterface $routeMatch;
-
-  public static function fromRouteMatch(RouteMatchInterface $route_match) {
-    $instance = parent::fromRouteMatch($route_match);
-    $instance->routeMatch = $route_match;
-    return $instance;
-  }
-
-  public static function fromUserInput($user_input, $options = []) {
-    if (str_starts_with($user_input, '/')) {
-      // Use unparsed url for now.
-      $path = substr($user_input, 1);
-      $instance = parent::fromUri('base:' . $path, $options);
-      $instance->unparsed = TRUE;
-      return $instance;
-    }
-    else {
-      // Pass on user input starting with '#' and '?'.
-      // @todo Consider optimizing this case.
-      return parent::fromUserInput($user_input, $options);
-    }
-  }
 
   public static function fromUri($uri, $options = []) {
     // Use unparsed url for now if possible.
