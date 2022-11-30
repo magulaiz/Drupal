@@ -53,14 +53,7 @@ trait TreeAwareConstraintTrait {
       throw new \OutOfRangeException();
     }
 
-    // If it does, and there are no more parts of the property path, we're done.
-    if (empty($parts)) {
-      return $elements[$name];
-    }
-    // Otherwise, recurse.
-    else {
-      return self::findPropertyForPath($elements[$name], $parts);
-    }
+    return self::findPropertyForPath($elements[$name], $property_path);
   }
 
 }
