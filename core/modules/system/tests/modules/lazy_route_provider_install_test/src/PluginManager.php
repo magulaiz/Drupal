@@ -26,12 +26,14 @@ class PluginManager extends DefaultPluginManager {
    *   The module handler.
    */
   public function __construct(\Traversable $namespaces, CacheBackendInterface $cache_backend, ModuleHandlerInterface $module_handler) {
+    // We enforce the plugin manager not to use a cache backend.
+    $cache_backend = NULL;
+    $this->cacheBackend = $cache_backend;
     // Generate a URL during construction to prove that URL generation works. If
     // the route was missing an exception would be thrown. This also forces the
     // route provider to be initialized very early during a module install.
     \Drupal::state()->set(__CLASS__, Url::fromRoute('system.admin')->toString());
     parent::__construct('Plugin/LazyRouteProviderInstallTest', $namespaces, $module_handler, NULL, PluginID::class);
-    $this->cacheBackend = $cache_backend;
   }
 
 }
