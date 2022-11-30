@@ -17,11 +17,6 @@ use Symfony\Component\Validator\Exception\UnexpectedTypeException;
 class ValidKeysConstraintValidatorTest extends KernelTestBase {
 
   /**
-   * {@inheritdoc}
-   */
-  protected static $modules = ['system'];
-
-  /**
    * Tests the ValidKeys constraint validator.
    */
   public function testValidation(): void {
@@ -74,6 +69,9 @@ class ValidKeysConstraintValidatorTest extends KernelTestBase {
    * Tests that valid keys can be inferred from the data definition.
    */
   public function testValidKeyInference(): void {
+    // Install the System module and its config so that we can test that the
+    // validator infers the allowed keys from a defined schema.
+    $this->enableModules(['system']);
     $this->installConfig('system');
 
     $config = $this->container->get('config.typed')
@@ -87,6 +85,13 @@ class ValidKeysConstraintValidatorTest extends KernelTestBase {
     $violations = $config->validate();
     $this->assertCount(1, $violations);
     $this->assertSame("'invalid-key' is not a supported key.", (string) $violations->get(0)->getMessage());
+
+    // Ensure that ValidKeys will freak out if the option is not exactly
+    // `<infer>`.
+    $config->getDataDefinition()
+      ->addConstraint('ValidKeys', 'infer');
+    $this->expectExceptionMessage("'infer' is not a valid set of allowed keys.");
+    $config->validate();
   }
 
 }
