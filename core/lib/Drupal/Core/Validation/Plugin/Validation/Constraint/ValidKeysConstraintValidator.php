@@ -15,6 +15,8 @@ class ValidKeysConstraintValidator extends ConstraintValidator {
    * {@inheritdoc}
    */
   public function validate(mixed $value, Constraint $constraint) {
+    assert($constraint instanceof ValidKeysConstraint);
+
     if (!is_array($value)) {
       throw new UnexpectedTypeException($value, 'array');
     }
@@ -26,10 +28,11 @@ class ValidKeysConstraintValidator extends ConstraintValidator {
       return;
     }
 
-    foreach (array_keys($value) as $key) {
-      if (in_array($key, $constraint->allowedKeys, TRUE)) {
-        continue;
-      }
+    $invalid_keys = array_diff(
+      array_keys($value),
+      $constraint->getAllowedKeys($this->context)
+    );
+    foreach ($invalid_keys as $key) {
       $this->context->addViolation($constraint->invalidKeyMessage, ['@key' => $key]);
     }
   }

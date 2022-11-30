@@ -70,7 +70,7 @@ field_config_dependencies:
     enforced:
       type: field_config_dependencies_base
   constraints:
-    ValidKeys: ['enforced', 'config', 'content', 'module', 'theme']
+    ValidKeys: '<infer>'
 
 field_config_dependencies_base:
   type: config_dependencies_base

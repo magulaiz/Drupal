@@ -53,7 +53,7 @@ editor_dependencies:
     enforced:
       type: editor_dependencies_base
   constraints:
-    ValidKeys: ['enforced', 'config', 'content', 'module', 'theme']
+    ValidKeys: '<infer>'
 
 editor_dependencies_base:
   type: config_dependencies_base

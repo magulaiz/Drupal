@@ -267,7 +267,7 @@ config_dependencies_base:
           ExtensionName: []
           ExtensionExists: theme
   constraints:
-    ValidKeys: ['config', 'content', 'module', 'theme']
+    ValidKeys: '<infer>'
 
 config_dependencies:
   type: config_dependencies_base
@@ -277,7 +277,7 @@ config_dependencies:
       type: config_dependencies_base
       label: 'Enforced configuration dependencies'
   constraints:
-    ValidKeys: ['enforced', 'config', 'content', 'module', 'theme']
+    ValidKeys: '<infer>'
 
 config_entity:
   type: mapping
