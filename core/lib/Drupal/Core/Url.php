@@ -3,14 +3,11 @@
 namespace Drupal\Core;
 
 use Drupal\Core\Routing\RouteMatchInterface;
-use Drupal\Core\Routing\UrlGeneratorInterface;
 use Drupal\Core\Session\AccountInterface;
-use Drupal\Core\Url;
 use Symfony\Component\HttpFoundation\Request;
 
 class Url extends UrlBase {
 
-  // @todo Consider a state where only the internal path is parsed.
   protected bool $unparsed = FALSE;
   protected RouteMatchInterface $routeMatch;
 
@@ -21,9 +18,9 @@ class Url extends UrlBase {
   }
 
   public static function fromUserInput($user_input, $options = []) {
-    if (substr($user_input, 0, 1) === '/') {
+    if (str_starts_with($user_input, '/')) {
       // Use unparsed url for now.
-      $path = substr($user_input,  1);
+      $path = substr($user_input, 1);
       $instance = parent::fromUri('base:' . $path, $options);
       $instance->unparsed = TRUE;
       return $instance;
@@ -37,7 +34,7 @@ class Url extends UrlBase {
 
   public static function fromUri($uri, $options = []) {
     // Use unparsed url for now if possible.
-    $tryUnparsed = substr($uri, 0, 10) === 'internal:/';
+    $tryUnparsed = str_starts_with($uri, 'internal:/');
     if ($tryUnparsed) {
       $uri = 'base:' . substr($uri, 10);
     }
@@ -54,7 +51,7 @@ class Url extends UrlBase {
   protected function ensureParsed() {
     if ($this->unparsed) {
       $uri = $this->uri;
-      assert(substr($uri, 0, 5) === 'base:');
+      assert(str_starts_with($uri, 'base:'));
       $path = substr($uri, 5);
       $path = ltrim($path, '/');
 
@@ -68,7 +65,6 @@ class Url extends UrlBase {
   }
 
   public function getInternalPath() {
-    // @todo An internal path parsed url would be enough.
     if ($this->unparsed) {
       $uri = $this->uri;
       assert(substr($uri, 0, 5) === 'base:');
