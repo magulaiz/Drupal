@@ -37,8 +37,12 @@
           });
 
         $('.announce-dialog .announce-close').on('click', function () {
-          $('[data-drupal-announce-trigger]').trigger('click');
           dialog.open = false;
+        });
+
+        $(window).on('dialog:afterclose', function (event, dialog) {
+          $('[data-drupal-announce-trigger]').trigger('click');
+          $(this).off('dialog:afterclose');
         });
       }
     },

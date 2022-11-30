@@ -10,7 +10,7 @@
   background-image: url("../images/announcement-bell.svg");
 
   @media (forced-colors: active) {
-    background: linkText;
+    background: linktext;
     mask-image: url("../images/announcement-bell.svg");
     mask-repeat: no-repeat;
     mask-position: center;
