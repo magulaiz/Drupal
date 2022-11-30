@@ -275,7 +275,7 @@ config_dependencies:
       type: config_dependencies_base
       label: 'Enforced configuration dependencies'
   constraints:
-    ValidKeys: ['enforced']
+    ValidKeys: ['enforced', 'config', 'content', 'module', 'theme']
 
 config_entity:
   type: mapping
