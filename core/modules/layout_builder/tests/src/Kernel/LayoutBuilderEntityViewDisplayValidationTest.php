@@ -24,12 +24,11 @@ class LayoutBuilderEntityViewDisplayValidationTest extends ConfigEntityValidatio
   protected function setUp(): void {
     parent::setUp();
 
-    $mode = EntityViewMode::create([
+    EntityViewMode::create([
       'id' => 'user.layout',
       'label' => 'Layout',
       'targetEntityType' => 'user',
-    ]);
-    $mode->save();
+    ])->save();
 
     $this->entity = LayoutBuilderEntityViewDisplay::create([
       'mode' => 'layout',
