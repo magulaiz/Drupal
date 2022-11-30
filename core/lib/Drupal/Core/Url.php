@@ -7,33 +7,40 @@ use Symfony\Component\HttpFoundation\Request;
 
 class Url extends UrlBase {
 
-  protected bool $unparsed = FALSE;
+  protected bool $routeChecked = TRUE;
 
-  public static function fromUri($uri, $options = []) {
-    // Use unparsed url for now if possible.
-    $tryUnparsed = str_starts_with($uri, 'internal:/');
-    if ($tryUnparsed) {
-      $uri = 'base:' . substr($uri, 10);
+  protected static function fromInternalUri(array $uri_parts, array $options) {
+    // Defer route checking, use 'base:' schema.
+    // @see \Drupal\Core\UrlBase::fromUri
+    $path = $uri_parts['path'];
+    // Workaround a bug like in parent class.
+    // @see \Drupal\Core\UrlBase::fromUri
+    if (preg_match('|^\d|', $path)) {
+      $path = "/$path";
     }
-    $instance = parent::fromUri($uri, $options);
-    $instance->unparsed = $tryUnparsed;
-    return $instance;
+    $uri = "base:$path";
+    $url = new static($uri, [], $options);
+    $url->routeChecked = FALSE;
+    return $url;
   }
 
-  public static function createFromRequest(Request $request) {
-    // @todo Consider optimizing this case.
-    return parent::createFromRequest($request);
-  }
-
-  protected function ensureParsed() {
-    if ($this->unparsed) {
+  public function ensureRouteChecked() {
+    // Do deferred route checking once requested.
+    if (!$this->routeChecked) {
       $uri = $this->uri;
       assert(str_starts_with($uri, 'base:'));
       $path = substr($uri, 5);
       $path = ltrim($path, '/');
 
       $url = UrlBase::fromUri("internal:/$path");
-      $this->routeName = $url->getRouteName();
+      if ($url->isRouted()) {
+        $this->routeName = $url->getRouteName();
+      }
+      else {
+        // An internal: URL can still result in a base: URL if no route.
+        $this->routeName = $url->getUri();
+      }
+
       $this->routeParameters = $url->getRouteParameters();
       $this->options = $url->getOptions();
 
@@ -42,12 +49,20 @@ class Url extends UrlBase {
       $this->uri = $this->unrouted ? $url->getUri() : NULL;
       $this->internalPath = NULL;
 
-      $this->unparsed = FALSE;
+      $this->routeChecked = TRUE;
     }
   }
 
+  /**
+   * @return bool
+   */
+  public function isRouteChecked() {
+    return $this->routeChecked;
+  }
+
+
   public function getInternalPath() {
-    if ($this->unparsed) {
+    if ($this->routeChecked) {
       $uri = $this->uri;
       assert(substr($uri, 0, 5) === 'base:');
       $path = substr($uri, 5);
@@ -60,42 +75,42 @@ class Url extends UrlBase {
   }
 
   public function toUriString() {
-    $this->ensureParsed();
+    $this->ensureRouteChecked();
     return parent::toUriString();
   }
 
   public function isRouted() {
-    $this->ensureParsed();
+    $this->ensureRouteChecked();
     return parent::isRouted();
   }
 
   public function getRouteName() {
-    $this->ensureParsed();
+    $this->ensureRouteChecked();
     return parent::getRouteName();
   }
 
   public function getRouteParameters() {
-    $this->ensureParsed();
+    $this->ensureRouteChecked();
     return parent::getRouteParameters();
   }
 
   public function setRouteParameters($parameters) {
-    $this->ensureParsed();
+    $this->ensureRouteChecked();
     return parent::setRouteParameters($parameters);
   }
 
   public function setRouteParameter($key, $value) {
-    $this->ensureParsed();
+    $this->ensureRouteChecked();
     return parent::setRouteParameter($key, $value);
   }
 
   public function getUri() {
-    $this->ensureParsed();
+    $this->ensureRouteChecked();
     return parent::getUri();
   }
 
   public function access(AccountInterface $account = NULL, $return_as_object = FALSE) {
-    $this->ensureParsed();
+    $this->ensureRouteChecked();
     return parent::access($account, $return_as_object);
   }
 
