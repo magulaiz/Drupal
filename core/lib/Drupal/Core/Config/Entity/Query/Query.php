@@ -200,7 +200,7 @@ class Query extends QueryBase implements QueryInterface {
         case 'STARTS_WITH':
           $filter = static function ($name) use ($value, $prefix_length) {
             $id = substr($name, $prefix_length);
-            return strpos($id, $value) === 0;
+            return str_starts_with($id, $value);
           };
           break;
 

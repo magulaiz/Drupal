@@ -200,7 +200,7 @@ class Condition extends ConditionBase {
           return array_search($value, $condition['value']) === FALSE;
 
         case 'STARTS_WITH':
-          return strpos($value, $condition['value']) === 0;
+          return str_starts_with($value, $condition['value']);
 
         case 'CONTAINS':
           return str_contains($value, $condition['value']);
