@@ -122,7 +122,7 @@ class PhpSelection extends DefaultSelection {
         return str_contains($label, $match);
 
       case 'ENDS_WITH':
-        return mb_substr($label, -mb_strlen($match)) === (string) $match;
+        return str_ends_with($label, $match);
 
       case 'IS NOT NULL':
         return TRUE;
