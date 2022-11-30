@@ -32,10 +32,15 @@ class Url extends UrlBase {
       $path = substr($uri, 5);
       $path = ltrim($path, '/');
 
-      $url = Url::fromUri("internal:/$path");
+      $url = UrlBase::fromUri("internal:/$path");
       $this->routeName = $url->getRouteName();
       $this->routeParameters = $url->getRouteParameters();
       $this->options = $url->getOptions();
+
+      $this->external = $url->isExternal();
+      $this->unrouted = !$url->isRouted();
+      $this->uri = $this->unrouted ? $url->getUri() : NULL;
+      $this->internalPath = NULL;
 
       $this->unparsed = FALSE;
     }
