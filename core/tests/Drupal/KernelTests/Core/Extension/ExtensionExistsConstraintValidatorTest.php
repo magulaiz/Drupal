@@ -55,6 +55,11 @@ class ExtensionExistsConstraintValidatorTest extends KernelTestBase {
       ->get('typed_data_manager')
       ->create($definition, 'stark');
     $this->assertCount(0, $data->validate());
+
+    // Anything but a module or theme should raise an exception.
+    $definition->setConstraints(['ExtensionExists' => 'profile']);
+    $this->expectExceptionMessage("Unknown extension type: 'profile'");
+    $data->validate();
   }
 
 }
