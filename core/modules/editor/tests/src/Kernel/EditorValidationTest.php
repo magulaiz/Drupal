@@ -37,4 +37,33 @@ class EditorValidationTest extends ConfigEntityValidationTestBase {
     $this->entity->save();
   }
 
+  /**
+   * Tests that validation fails if config dependencies are invalid.
+   */
+  public function testInvalidDependencies(): void {
+    // Remove the config dependencies from the editor entity.
+    $dependencies = $this->entity->getDependencies();
+    $dependencies['config'] = [];
+    $this->entity->set('dependencies', $dependencies);
+
+    $this->assertValidationErrors([
+      'This collection should contain <em class="placeholder">1</em> element or more.',
+      'Does not contain a value matching "/^filter\.format\.\w+$/".',
+    ]);
+
+    // Things look sort-of like `filter.format.*` should fail validation.
+    $dependencies['config'] = [
+      'filter.format',
+      'filter.format.',
+    ];
+    $this->entity->set('dependencies', $dependencies);
+    $this->assertValidationErrors([
+      'Does not contain a value matching "/^filter\.format\.\w+$/".',
+      // Each of the items in the config dependencies list should be flagged as
+      // non-existent config.
+      "The 'filter.format' config does not exist.",
+      "The 'filter.format.' config does not exist.",
+    ]);
+  }
+
 }
