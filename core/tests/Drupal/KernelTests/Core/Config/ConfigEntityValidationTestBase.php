@@ -5,7 +5,6 @@ namespace Drupal\KernelTests\Core\Config;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Config\Entity\ConfigEntityInterface;
 use Drupal\KernelTests\KernelTestBase;
-use Symfony\Component\Validator\ConstraintViolationListInterface;
 
 /**
  * Base class for testing validation of config entities.
@@ -33,6 +32,11 @@ abstract class ConfigEntityValidationTestBase extends KernelTestBase {
   protected function setUp(): void {
     parent::setUp();
     $this->installConfig('system');
+
+    // Install Stark so we can add a legitimately installed theme to config
+    // dependencies.
+    $this->container->get('theme_installer')->install(['stark']);
+    $this->container = $this->container->get('kernel')->getContainer();
   }
 
   /**
@@ -43,10 +47,12 @@ abstract class ConfigEntityValidationTestBase extends KernelTestBase {
    */
   public function providerConfigDependenciesValidation(): array {
     return [
-      'additional valid dependency types' => [
+      'valid dependency types' => [
         [
           'config' => ['system.site'],
           'content' => ['node:some-random-uuid'],
+          'module' => ['system'],
+          'theme' => ['stark'],
         ],
         [],
       ],
@@ -126,27 +132,28 @@ abstract class ConfigEntityValidationTestBase extends KernelTestBase {
     $this->assertInstanceOf(ConfigEntityInterface::class, $this->entity);
 
     // The entity should have valid data to begin with.
-    $this->assertCount(0, $this->validateEntity());
+    $this->assertValidationErrors([]);
 
     $this->entity->set('dependencies', NestedArray::mergeDeep($this->entity->getDependencies(), $dependencies));
-    $violations = $this->validateEntity();
-
-    $this->assertSame(count($expected_messages), count($violations));
-    foreach ($expected_messages as $i => $message) {
-      $this->assertSame($message, (string) $violations->get($i)->getMessage());
-    }
+    $this->assertValidationErrors($expected_messages);
   }
 
   /**
-   * Validates the entity under test.
+   * Asserts a set of validation errors is raised when the entity is validated.
    *
-   * @return \Symfony\Component\Validator\ConstraintViolationListInterface
-   *   A list of validation errors.
+   * @param string[] $expected_messages
+   *   The expected validation error messages.
    */
-  protected function validateEntity(): ConstraintViolationListInterface {
-    return $this->container->get('config.typed')
+  protected function assertValidationErrors(array $expected_messages): void {
+    $violations = $this->container->get('config.typed')
       ->createFromNameAndData($this->entity->getConfigDependencyName(), $this->entity->toArray())
       ->validate();
+
+    $actual_messages = [];
+    foreach ($violations as $violation) {
+      $actual_messages[] = (string) $violation->getMessage();
+    }
+    $this->assertSame($expected_messages, $actual_messages);
   }
 
 }

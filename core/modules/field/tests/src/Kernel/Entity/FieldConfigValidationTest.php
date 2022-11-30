@@ -36,10 +36,10 @@ class FieldConfigValidationTest extends FieldStorageConfigValidationTest {
     $dependencies['config'] = [];
     $this->entity->set('dependencies', $dependencies);
 
-    $violations = $this->validateEntity();
-    $this->assertCount(2, $violations);
-    $this->assertSame('This collection should contain <em class="placeholder">1</em> element or more.', (string) $violations->get(0)->getMessage());
-    $this->assertSame('Does not contain a value matching "/^field\.storage\.\w+\.\w+$/".', (string) $violations->get(1)->getMessage());
+    $this->assertValidationErrors([
+      'This collection should contain <em class="placeholder">1</em> element or more.',
+      'Does not contain a value matching "/^field\.storage\.\w+\.\w+$/".',
+    ]);
 
     // Things look sort-of like `field.storage.*.*` should fail validation.
     $dependencies['config'] = [
@@ -48,15 +48,14 @@ class FieldConfigValidationTest extends FieldStorageConfigValidationTest {
       'field.storage.user.',
     ];
     $this->entity->set('dependencies', $dependencies);
-    $violations = $this->validateEntity();
-    $this->assertCount(4, $violations);
-    $this->assertSame('Does not contain a value matching "/^field\.storage\.\w+\.\w+$/".', (string) $violations->get(0)->getMessage());
-    // Each of the items in the config dependencies list should be flagged as
-    // non-existent config.
-    for ($i = 0; $i < 3; $i++) {
-      $message = sprintf("The '%s' config does not exist.", $dependencies['config'][$i]);
-      $this->assertSame($message, (string) $violations->get($i + 1)->getMessage());
-    }
+    $this->assertValidationErrors([
+      'Does not contain a value matching "/^field\.storage\.\w+\.\w+$/".',
+      // Each of the items in the config dependencies list should be flagged as
+      // non-existent config.
+      "The 'field.storage.fake' config does not exist.",
+      "The 'field.storage.' config does not exist.",
+      "The 'field.storage.user.' config does not exist.",
+    ]);
   }
 
 }
