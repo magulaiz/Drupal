@@ -1,7 +1,7 @@
 # Schema for the configuration files of the Editor module.
 
 editor.editor.*:
-  type: config_entity
+  type: editor
   label: 'Text editor'
   mapping:
     format:
@@ -40,3 +40,26 @@ editor.editor.*:
               type: integer
               nullable: true
               label: 'Maximum height'
+
+editor:
+  type: config_entity
+  mapping:
+    dependencies:
+      type: editor_dependencies
+
+editor_dependencies:
+  type: editor_dependencies_base
+  mapping:
+    enforced:
+      type: editor_dependencies_base
+  constraints:
+    ValidKeys: ['enforced', 'config', 'content', 'module', 'theme']
+
+editor_dependencies_base:
+  type: config_dependencies_base
+  mapping:
+    config:
+      constraints:
+        Count:
+          min: 1
+        ContainsMatch: '/^filter\.format\.\w+$/'
