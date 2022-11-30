@@ -15,7 +15,7 @@ class Url extends UrlBase {
     if ($tryUnparsed) {
       $uri = 'base:' . substr($uri, 10);
     }
-    $instance = parent::fromUserInput($uri, $options);
+    $instance = parent::fromUri($uri, $options);
     $instance->unparsed = $tryUnparsed;
     return $instance;
   }
