@@ -274,6 +274,8 @@ config_dependencies:
     enforced:
       type: config_dependencies_base
       label: 'Enforced configuration dependencies'
+  constraints:
+    ValidKeys: ['enforced']
 
 config_entity:
   type: mapping

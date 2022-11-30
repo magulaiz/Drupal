@@ -134,7 +134,17 @@ abstract class ConfigEntityValidationTestBase extends KernelTestBase {
     // The entity should have valid data to begin with.
     $this->assertValidationErrors([]);
 
-    $this->entity->set('dependencies', NestedArray::mergeDeep($this->entity->getDependencies(), $dependencies));
+    // Add the dependencies we were given to the dependencies that may already
+    // exist in the entity.
+    $dependencies = NestedArray::mergeDeep($this->entity->getDependencies(), $dependencies);
+
+    $this->entity->set('dependencies', $dependencies);
+    $this->assertValidationErrors($expected_messages);
+
+    // Enforce these dependencies, and ensure we get the same results.
+    $this->entity->set('dependencies', [
+      'enforced' => $dependencies,
+    ]);
     $this->assertValidationErrors($expected_messages);
   }
 
