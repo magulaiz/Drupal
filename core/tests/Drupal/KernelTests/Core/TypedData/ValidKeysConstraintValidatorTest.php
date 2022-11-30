@@ -7,7 +7,7 @@ use Drupal\KernelTests\KernelTestBase;
 use Symfony\Component\Validator\Exception\UnexpectedTypeException;
 
 /**
- * Tests ValidKeys validation constraint with both valid and invalid values.
+ * Tests the ValidKeys validation constraint.
  *
  * @group Validation
  *
@@ -17,7 +17,12 @@ use Symfony\Component\Validator\Exception\UnexpectedTypeException;
 class ValidKeysConstraintValidatorTest extends KernelTestBase {
 
   /**
-   * Tests the ValidKeys validation constraint validator.
+   * {@inheritdoc}
+   */
+  protected static $modules = ['system'];
+
+  /**
+   * Tests the ValidKeys constraint validator.
    */
   public function testValidation(): void {
     // Create a data definition that specifies certain allowed keys.
@@ -63,6 +68,25 @@ class ValidKeysConstraintValidatorTest extends KernelTestBase {
     ];
     $violations = $typed_data->create($definition, $value)->validate();
     $this->assertCount(0, $violations);
+  }
+
+  /**
+   * Tests that valid keys can be inferred from the data definition.
+   */
+  public function testValidKeyInference(): void {
+    $this->installConfig('system');
+
+    $config = $this->container->get('config.typed')
+      ->get('system.site');
+    $config->getDataDefinition()
+      ->addConstraint('ValidKeys', '<infer>');
+
+    $data = $config->getValue();
+    $data['invalid-key'] = "There's a snake in my boots.";
+    $config->setValue($data);
+    $violations = $config->validate();
+    $this->assertCount(1, $violations);
+    $this->assertSame("'invalid-key' is not a supported key.", (string) $violations->get(0)->getMessage());
   }
 
 }

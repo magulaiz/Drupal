@@ -16,7 +16,6 @@ use Symfony\Component\Validator\Exception\InvalidArgumentException;
  * @Constraint(
  *   id = "ValidKeys",
  *   label = @Translation("Valid mapping keys", context = "Validation"),
- *   type = { "mapping" }
  * )
  */
 class ValidKeysConstraint extends Constraint {
