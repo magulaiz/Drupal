@@ -90,6 +90,15 @@ abstract class ConfigEntityValidationTestBase extends KernelTestBase {
           "Module '' is not installed.",
         ],
       ],
+      'invalid module dependency' => [
+        [
+          'module' => ['invalid-module-name'],
+        ],
+        [
+          'This value is not valid.',
+          "Module 'invalid-module-name' is not installed.",
+        ],
+      ],
       'non-installed module dependency' => [
         [
           'module' => ['bad_judgment'],
@@ -105,6 +114,15 @@ abstract class ConfigEntityValidationTestBase extends KernelTestBase {
         [
           'This value should not be blank.',
           "Theme '' is not installed.",
+        ],
+      ],
+      'invalid theme dependency' => [
+        [
+          'theme' => ['invalid-theme-name'],
+        ],
+        [
+          'This value is not valid.',
+          "Theme 'invalid-theme-name' is not installed.",
         ],
       ],
       'non-installed theme dependency' => [

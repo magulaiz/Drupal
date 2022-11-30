@@ -255,6 +255,7 @@ config_dependencies_base:
         type: string
         constraints:
           NotBlank: []
+          ExtensionName: []
           ExtensionExists: module
     theme:
       type: sequence
@@ -263,6 +264,7 @@ config_dependencies_base:
         type: string
         constraints:
           NotBlank: []
+          ExtensionName: []
           ExtensionExists: theme
   constraints:
     ValidKeys: ['config', 'content', 'module', 'theme']
