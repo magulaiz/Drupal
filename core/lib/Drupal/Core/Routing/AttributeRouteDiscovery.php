@@ -2,7 +2,7 @@
 
 namespace Drupal\Core\Routing;
 
-use Symfony\Component\Routing\Annotation\Route as RouteAnnotation;
+use Symfony\Component\Routing\Annotation\Route as RouteAttribute;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 
@@ -21,7 +21,7 @@ class AttributeRouteDiscovery extends AbstractStaticRouteDiscovery {
   /**
    * The PHP attribute class.
    */
-  protected string $routeAnnotationClass = RouteAnnotation::class;
+  protected string $routeAttributeClass = RouteAttribute::class;
 
   /**
    * @param \Traversable $namespaces
@@ -89,15 +89,15 @@ class AttributeRouteDiscovery extends AbstractStaticRouteDiscovery {
 
     foreach ($class->getMethods() as $method) {
       $this->defaultRouteIndex = 0;
-      foreach ($this->getAttributes($method) as $annot) {
-        $this->addRoute($collection, $annot, $globals, $class, $method);
+      foreach ($this->getAttributes($method) as $attribute) {
+        $this->addRoute($collection, $attribute, $globals, $class, $method);
       }
     }
 
     if (0 === $collection->count() && $class->hasMethod('__invoke')) {
       $globals = $this->resetGlobals();
-      foreach ($this->getAttributes($class) as $annot) {
-        $this->addRoute($collection, $annot, $globals, $class, $class->getMethod('__invoke'));
+      foreach ($this->getAttributes($class) as $attribute) {
+        $this->addRoute($collection, $attribute, $globals, $class, $class->getMethod('__invoke'));
       }
     }
 
@@ -119,51 +119,47 @@ class AttributeRouteDiscovery extends AbstractStaticRouteDiscovery {
   private function getGlobals(\ReflectionClass $class) {
     $globals = $this->resetGlobals();
 
-    $annot = NULL;
-    if ($attribute = $class->getAttributes($this->routeAnnotationClass, \ReflectionAttribute::IS_INSTANCEOF)[0] ?? NULL) {
-      $annot = $attribute->newInstance();
-    }
-
-    if ($annot) {
-      if (NULL !== $annot->getName()) {
-        $globals['name'] = $annot->getName();
+    $attribute = ($class->getAttributes($this->routeAttributeClass, \ReflectionAttribute::IS_INSTANCEOF)[0] ?? NULL)?->newInstance();
+    if ($attribute) {
+      if (NULL !== $attribute->getName()) {
+        $globals['name'] = $attribute->getName();
       }
 
-      if (NULL !== $annot->getPath()) {
-        $globals['path'] = $annot->getPath();
+      if (NULL !== $attribute->getPath()) {
+        $globals['path'] = $attribute->getPath();
       }
 
-      $globals['localized_paths'] = $annot->getLocalizedPaths();
+      $globals['localized_paths'] = $attribute->getLocalizedPaths();
 
-      if (NULL !== $annot->getRequirements()) {
-        $globals['requirements'] = $annot->getRequirements();
+      if (NULL !== $attribute->getRequirements()) {
+        $globals['requirements'] = $attribute->getRequirements();
       }
 
-      if (NULL !== $annot->getOptions()) {
-        $globals['options'] = $annot->getOptions();
+      if (NULL !== $attribute->getOptions()) {
+        $globals['options'] = $attribute->getOptions();
       }
 
-      if (NULL !== $annot->getDefaults()) {
-        $globals['defaults'] = $annot->getDefaults();
+      if (NULL !== $attribute->getDefaults()) {
+        $globals['defaults'] = $attribute->getDefaults();
       }
 
-      if (NULL !== $annot->getSchemes()) {
-        $globals['schemes'] = $annot->getSchemes();
+      if (NULL !== $attribute->getSchemes()) {
+        $globals['schemes'] = $attribute->getSchemes();
       }
 
-      if (NULL !== $annot->getMethods()) {
-        $globals['methods'] = $annot->getMethods();
+      if (NULL !== $attribute->getMethods()) {
+        $globals['methods'] = $attribute->getMethods();
       }
 
-      if (NULL !== $annot->getHost()) {
-        $globals['host'] = $annot->getHost();
+      if (NULL !== $attribute->getHost()) {
+        $globals['host'] = $attribute->getHost();
       }
 
-      if (NULL !== $annot->getCondition()) {
-        $globals['condition'] = $annot->getCondition();
+      if (NULL !== $attribute->getCondition()) {
+        $globals['condition'] = $attribute->getCondition();
       }
 
-      $globals['priority'] = $annot->getPriority() ?? 0;
+      $globals['priority'] = $attribute->getPriority() ?? 0;
 
       foreach ($globals['requirements'] as $placeholder => $requirement) {
         if (\is_int($placeholder)) {
@@ -180,7 +176,7 @@ class AttributeRouteDiscovery extends AbstractStaticRouteDiscovery {
    *
    * @param \Symfony\Component\Routing\RouteCollection $collection
    *   The route collection to add the route to.
-   * @param object $annot
+   * @param \Symfony\Component\Routing\Annotation\Route $attribute
    *   The attribute object that describes the route.
    * @param array $globals
    *   The defaults for the class.
@@ -189,11 +185,11 @@ class AttributeRouteDiscovery extends AbstractStaticRouteDiscovery {
    * @param \ReflectionMethod $method
    *   The attributed method.
    */
-  private function addRoute(RouteCollection $collection, object $annot, array $globals, \ReflectionClass $class, \ReflectionMethod $method) {
-    $name = $annot->getName() ?? $this->getDefaultRouteName($class, $method);
+  private function addRoute(RouteCollection $collection, RouteAttribute $attribute, array $globals, \ReflectionClass $class, \ReflectionMethod $method) {
+    $name = $attribute->getName() ?? $this->getDefaultRouteName($class, $method);
     $name = $globals['name'] . $name;
 
-    $requirements = $annot->getRequirements();
+    $requirements = $attribute->getRequirements();
 
     foreach ($requirements as $placeholder => $requirement) {
       if (\is_int($placeholder)) {
@@ -201,17 +197,17 @@ class AttributeRouteDiscovery extends AbstractStaticRouteDiscovery {
       }
     }
 
-    $defaults = array_replace($globals['defaults'], $annot->getDefaults());
+    $defaults = array_replace($globals['defaults'], $attribute->getDefaults());
     $requirements = array_replace($globals['requirements'], $requirements);
-    $options = array_replace($globals['options'], $annot->getOptions());
-    $schemes = array_merge($globals['schemes'], $annot->getSchemes());
-    $methods = array_merge($globals['methods'], $annot->getMethods());
+    $options = array_replace($globals['options'], $attribute->getOptions());
+    $schemes = array_merge($globals['schemes'], $attribute->getSchemes());
+    $methods = array_merge($globals['methods'], $attribute->getMethods());
 
-    $host = $annot->getHost() ?? $globals['host'];
-    $condition = $annot->getCondition() ?? $globals['condition'];
-    $priority = $annot->getPriority() ?? $globals['priority'];
+    $host = $attribute->getHost() ?? $globals['host'];
+    $condition = $attribute->getCondition() ?? $globals['condition'];
+    $priority = $attribute->getPriority() ?? $globals['priority'];
 
-    $path = $annot->getLocalizedPaths() ?: $annot->getPath();
+    $path = $attribute->getLocalizedPaths() ?: $attribute->getPath();
     $prefix = $globals['localized_paths'] ?: $globals['path'];
     $paths = [];
 
@@ -257,7 +253,7 @@ class AttributeRouteDiscovery extends AbstractStaticRouteDiscovery {
 
     foreach ($paths as $locale => $path) {
       $route = $this->createRoute($path, $defaults, $requirements, $options, $host, $schemes, $methods, $condition);
-      $this->configureRoute($route, $class, $method, $annot);
+      $this->configureRoute($route, $class, $method);
       if (0 !== $locale) {
         $route->setDefault('_locale', $locale);
         $route->setRequirement('_locale', preg_quote($locale));
@@ -298,10 +294,10 @@ class AttributeRouteDiscovery extends AbstractStaticRouteDiscovery {
    * @param \ReflectionClass|\ReflectionMethod $reflection
    *   The reflected class or method.
    *
-   * @return iterable<int, RouteAnnotation>
+   * @return iterable<int, RouteAttribute>
    */
   private function getAttributes(object $reflection): iterable {
-    foreach ($reflection->getAttributes($this->routeAnnotationClass, \ReflectionAttribute::IS_INSTANCEOF) as $attribute) {
+    foreach ($reflection->getAttributes($this->routeAttributeClass, \ReflectionAttribute::IS_INSTANCEOF) as $attribute) {
       yield $attribute->newInstance();
     }
   }
@@ -315,10 +311,8 @@ class AttributeRouteDiscovery extends AbstractStaticRouteDiscovery {
    *   The class.
    * @param \ReflectionMethod $method
    *   The method.
-   * @param object $annot
-   *   The PHP attribute.
    */
-  private function configureRoute(Route $route, \ReflectionClass $class, \ReflectionMethod $method, object $annot) {
+  private function configureRoute(Route $route, \ReflectionClass $class, \ReflectionMethod $method) {
     if ('__invoke' === $method->getName()) {
       $route->setDefault('_controller', $class->getName());
     }
