@@ -46,21 +46,17 @@ class EditorValidationTest extends ConfigEntityValidationTestBase {
     $dependencies['config'] = [];
     $this->entity->set('dependencies', $dependencies);
 
-    $this->assertValidationErrors([
-      'This collection should contain <em class="placeholder">1</em> element or more.',
-      'Does not contain a value matching "/^filter\.format\.\w+$/".',
-    ]);
+    $this->assertValidationErrors(['This text editor requires a text format.']);
 
-    // Things look sort-of like `filter.format.*` should fail validation.
+    // Things look sort-of like `filter.format.*` should fail validation
+    // because they don't exist.
     $dependencies['config'] = [
       'filter.format',
       'filter.format.',
     ];
     $this->entity->set('dependencies', $dependencies);
     $this->assertValidationErrors([
-      'Does not contain a value matching "/^filter\.format\.\w+$/".',
-      // Each of the items in the config dependencies list should be flagged as
-      // non-existent config.
+      'This text editor requires a text format.',
       "The 'filter.format' config does not exist.",
       "The 'filter.format.' config does not exist.",
     ]);

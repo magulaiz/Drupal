@@ -173,9 +173,10 @@ abstract class ConfigEntityValidationTestBase extends KernelTestBase {
    *   The expected validation error messages.
    */
   protected function assertValidationErrors(array $expected_messages): void {
-    $violations = $this->container->get('config.typed')
-      ->createFromNameAndData($this->entity->getConfigDependencyName(), $this->entity->toArray())
-      ->validate();
+    /** @var \Drupal\Core\TypedData\TypedDataManagerInterface $typed_data */
+    $typed_data = $this->container->get('typed_data_manager');
+    $definition = $typed_data->createDataDefinition('entity:' . $this->entity->getEntityTypeId());
+    $violations = $typed_data->create($definition, $this->entity)->validate();
 
     $actual_messages = [];
     foreach ($violations as $violation) {

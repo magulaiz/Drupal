@@ -55,28 +55,5 @@ field.storage.*.*:
       label: 'Enable custom storage'
 
 field.field.*.*.*:
-  type: field_config
-  label: 'Field'
-
-field_config:
   type: field_config_base
-  mapping:
-    dependencies:
-      type: field_config_dependencies
-
-field_config_dependencies:
-  type: field_config_dependencies_base
-  mapping:
-    enforced:
-      type: field_config_dependencies_base
-  constraints:
-    ValidKeys: '<infer>'
-
-field_config_dependencies_base:
-  type: config_dependencies_base
-  mapping:
-    config:
-      constraints:
-        Count:
-          min: 1
-        ContainsMatch: '/^field\.storage\.\w+\.\w+$/'
+  label: 'Field'
