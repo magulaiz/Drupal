@@ -134,8 +134,8 @@ class RouteBuilder implements RouteBuilderInterface, DestructableInterface {
     $this->building = TRUE;
     $collection = new RouteCollection();
 
-    // STATIC is supposed to be used to add new routes based upon all the
-    // static defined ones.
+    // STATIC is supposed to be used to add new routes based static information
+    // like routing.yml files or PHP attributes.
     $this->dispatcher->dispatch(new RouteBuildEvent($collection), RoutingEvents::STATIC);
 
     // DYNAMIC is supposed to be used to add new routes based upon all the
@@ -143,8 +143,8 @@ class RouteBuilder implements RouteBuilderInterface, DestructableInterface {
     $this->dispatcher->dispatch(new RouteBuildEvent($collection), RoutingEvents::DYNAMIC);
 
     // ALTER is the final step to alter all the existing routes. We cannot stop
-    // people from adding new routes here, but we define two separate steps to
-    // make it clear.
+    // people from adding new routes here, but we define it as a separate step
+    // to make it clear.
     $this->dispatcher->dispatch(new RouteBuildEvent($collection), RoutingEvents::ALTER);
 
     $this->checkProvider->setChecks($collection);
