@@ -48,14 +48,15 @@ class RequiredConfigDependenciesConstraintValidator extends ConstraintValidator 
   /**
    * {@inheritdoc}
    */
-  public function validate(mixed $value, Constraint $constraint) {
+  public function validate(mixed $entity, Constraint $constraint) {
     assert($constraint instanceof RequiredConfigDependenciesConstraint);
 
-    if (!$value instanceof ConfigEntityInterface) {
-      throw new UnexpectedTypeException($value, ConfigEntityInterface::class);
+    // Only config entities can have config dependencies.
+    if (!$entity instanceof ConfigEntityInterface) {
+      throw new UnexpectedTypeException($entity, ConfigEntityInterface::class);
     }
 
-    $config_dependencies = $value->getDependencies()['config'] ?? [];
+    $config_dependencies = $entity->getDependencies()['config'] ?? [];
 
     foreach ($constraint->entityTypes as $entity_type_id) {
       $entity_type = $this->entityTypeManager->getDefinition($entity_type_id);
@@ -64,10 +65,12 @@ class RequiredConfigDependenciesConstraintValidator extends ConstraintValidator 
         throw new LogicException("'$entity_type_id' is not a config entity type.");
       }
 
+      // Ensure the current entity type's config prefix is found in the config
+      // dependencies of the entity being validated.
       $pattern = sprintf('/^%s\\.\\w+/', $entity_type->getConfigPrefix());
       if (!preg_grep($pattern, $config_dependencies)) {
         $this->context->addViolation($constraint->message, [
-          '@entity_type' => $value->getEntityType()->getSingularLabel(),
+          '@entity_type' => $entity->getEntityType()->getSingularLabel(),
           '@dependency_type' => $entity_type->getSingularLabel(),
         ]);
       }

@@ -56,18 +56,18 @@ class ExtensionExistsConstraintValidator extends ConstraintValidator implements 
   /**
    * {@inheritdoc}
    */
-  public function validate(mixed $value, Constraint $constraint) {
-    $variables = ['@name' => $value];
+  public function validate(mixed $extension_name, Constraint $constraint) {
+    $variables = ['@name' => $extension_name];
 
     switch ($constraint->type) {
       case 'module':
-        if (!$this->moduleHandler->moduleExists($value)) {
+        if (!$this->moduleHandler->moduleExists($extension_name)) {
           $this->context->addViolation($constraint->moduleMessage, $variables);
         }
         break;
 
       case 'theme':
-        if (!$this->themeHandler->themeExists($value)) {
+        if (!$this->themeHandler->themeExists($extension_name)) {
           $this->context->addViolation($constraint->themeMessage, $variables);
         }
         break;

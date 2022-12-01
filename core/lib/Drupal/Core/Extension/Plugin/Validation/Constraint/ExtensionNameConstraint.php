@@ -20,14 +20,16 @@ class ExtensionNameConstraint extends RegexConstraint {
   /**
    * Constructs an ExtensionNameConstraint object.
    *
+   * @param string|array|null $pattern
+   *   The regular expression to test for.
    * @param mixed ...$arguments
    *   Arguments to pass to the parent constructor.
    */
-  public function __construct(...$arguments) {
+  public function __construct(string|array|null $pattern, ...$arguments) {
     // Always use the regular expression that ExtensionDiscovery uses to find
     // valid extensions.
-    array_splice($arguments, 0, 1, ExtensionDiscovery::PHP_FUNCTION_PATTERN);
-    parent::__construct(...$arguments);
+    $pattern = ExtensionDiscovery::PHP_FUNCTION_PATTERN;
+    parent::__construct($pattern, ...$arguments);
   }
 
 }
