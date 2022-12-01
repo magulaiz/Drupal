@@ -11,6 +11,7 @@ use Drupal\filter\Entity\FilterFormat;
 use Drupal\filter\Plugin\DataType\FilterFormat as FilterFormatDataType;
 use Drupal\filter\Plugin\FilterInterface;
 use Drupal\KernelTests\Core\Entity\EntityKernelTestBase;
+use phpDocumentor\Reflection\PseudoTypes\False_;
 use Symfony\Component\Validator\ConstraintViolationListInterface;
 
 /**
@@ -329,8 +330,8 @@ class FilterAPITest extends EntityKernelTestBase {
 
     $this->assertInstanceOf(OptionsProviderInterface::class, $data);
 
-    $filtered_html_user = $this->createUser(['uid' => 2], [
-      FilterFormat::load('filtered_html')->getPermissionName(),
+    $filtered_html_user = $this->createUser([FilterFormat::load('filtered_html')->getPermissionName()], NULL, FALSE,
+    ['uid' => 2,
     ]);
 
     // Test with anonymous user.

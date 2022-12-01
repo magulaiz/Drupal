@@ -12,6 +12,7 @@ use Drupal\entity_test\Entity\EntityTestStringId;
 use Drupal\KernelTests\Core\Entity\EntityKernelTestBase;
 use Drupal\user\Entity\Role;
 use Drupal\user\Entity\User;
+use phpDocumentor\Reflection\Types\Null_;
 
 /**
  * Tests the EntityAutocomplete Form API element.
@@ -338,7 +339,7 @@ class EntityAutocompleteElementFormTest extends EntityKernelTestBase implements 
     $this->assertEquals($expected, $form['tags_access']['#value']);
 
     // Set up a non-admin user that is *not* allowed to view test entities.
-    \Drupal::currentUser()->setAccount($this->createUser([], []));
+    \Drupal::currentUser()->setAccount($this->createUser([], NULL, FALSE, []));
 
     // Rebuild the form.
     $form = $form_builder->getForm($this);
