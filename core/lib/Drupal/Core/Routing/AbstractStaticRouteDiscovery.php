@@ -46,7 +46,6 @@ abstract class AbstractStaticRouteDiscovery implements EventSubscriberInterface 
       'condition' => '',
       'name' => '',
       'priority' => 0,
-      'env' => NULL,
     ];
   }
 

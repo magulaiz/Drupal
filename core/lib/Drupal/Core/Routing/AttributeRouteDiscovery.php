@@ -24,11 +24,6 @@ class AttributeRouteDiscovery extends AbstractStaticRouteDiscovery {
   protected string $routeAnnotationClass = RouteAnnotation::class;
 
   /**
-   * @var string|null
-   */
-  protected ?string $env = NULL;
-
-  /**
    * @param \Traversable $namespaces
    *   An object that implements \Traversable which contains the root paths
    *   keyed by the corresponding namespace to look for plugin implementations.
@@ -91,10 +86,6 @@ class AttributeRouteDiscovery extends AbstractStaticRouteDiscovery {
     }
 
     $globals = $this->getGlobals($class);
-
-    if ($globals['env'] && $this->env !== $globals['env']) {
-      return $collection;
-    }
 
     foreach ($class->getMethods() as $method) {
       $this->defaultRouteIndex = 0;
@@ -173,7 +164,6 @@ class AttributeRouteDiscovery extends AbstractStaticRouteDiscovery {
       }
 
       $globals['priority'] = $annot->getPriority() ?? 0;
-      $globals['env'] = $annot->getEnv();
 
       foreach ($globals['requirements'] as $placeholder => $requirement) {
         if (\is_int($placeholder)) {
@@ -200,10 +190,6 @@ class AttributeRouteDiscovery extends AbstractStaticRouteDiscovery {
    *   The attributed method.
    */
   private function addRoute(RouteCollection $collection, object $annot, array $globals, \ReflectionClass $class, \ReflectionMethod $method) {
-    if ($annot->getEnv() && $annot->getEnv() !== $this->env) {
-      return;
-    }
-
     $name = $annot->getName() ?? $this->getDefaultRouteName($class, $method);
     $name = $globals['name'] . $name;
 
