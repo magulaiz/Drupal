@@ -60,7 +60,7 @@ class Url extends UrlBase {
   }
 
   public function getInternalPath() {
-    if ($this->routeChecked) {
+    if (!$this->routeChecked) {
       $uri = $this->uri;
       assert(substr($uri, 0, 5) === 'base:');
       $path = substr($uri, 5);
