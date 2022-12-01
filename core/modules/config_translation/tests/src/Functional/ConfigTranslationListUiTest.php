@@ -53,6 +53,9 @@ class ConfigTranslationListUiTest extends BrowserTestBase {
    */
   protected $adminUser;
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
 
@@ -411,7 +414,10 @@ class ConfigTranslationListUiTest extends BrowserTestBase {
       'field_storage' => FieldStorageConfig::loadByName('block_content', 'body'),
       'bundle' => $block_content_type->id(),
       'label' => 'Body',
-      'settings' => ['display_summary' => FALSE],
+      'settings' => [
+        'display_summary' => FALSE,
+        'allowed_formats' => [],
+      ],
     ]);
     $field->save();
 

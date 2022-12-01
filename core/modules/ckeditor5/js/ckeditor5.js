@@ -4,13 +4,6 @@
  */
 
 ((Drupal, debounce, CKEditor5, $, once) => {
-  // CKEditor 5 is incompatible with IE11. When IE11 is detected, the CKEditor 5
-  // variable is null. In those instances, exit early since CKEditor 5 is not
-  // loaded.
-  if (!CKEditor5) {
-    return;
-  }
-
   /**
    * The CKEditor 5 instances.
    *
@@ -426,6 +419,10 @@
           }
         })
         .catch((error) => {
+          // eslint-disable-next-line no-console
+          console.info(
+            'Debugging can be done with an unminified version of CKEditor by installing from the source file. Consult documentation at https://www.drupal.org/node/3258901',
+          );
           // eslint-disable-next-line no-console
           console.error(error);
         });

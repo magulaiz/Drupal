@@ -380,7 +380,6 @@ endapply
 endautoescape
 endcode
 endembed
-endfor
 endlink
 endmacro
 endofheader
@@ -417,7 +416,6 @@ fakepath
 falsey
 falsish
 fapi
-farbtastic
 fatals
 favourite
 favstar
@@ -644,6 +642,7 @@ linkback
 linkgenerator
 linkification
 linksby
+linkset
 linktext
 lisu
 litererally
@@ -690,7 +689,6 @@ marz
 marzo
 matchout
 mathematica
-mattfarina
 maxage
 maxdepth
 maximumred
@@ -751,7 +749,6 @@ msgctxt
 msgid
 msgstr
 msword
-mtimes
 mucho
 mulrev
 mulrevpub
@@ -894,6 +891,7 @@ pathnames
 pcre
 pcss
 pdma
+peast
 percona
 permissionless
 persistable
@@ -1020,6 +1018,8 @@ regexes
 reindex
 reindexing
 reinject
+relname
+relpersistence
 renderable
 renderables
 renderered
@@ -1046,7 +1046,6 @@ revlog
 revpub
 ribisi
 ritchie
-robloach
 rolename
 roly
 routable
@@ -1444,7 +1443,6 @@ wcprops
 webassert
 webcal
 webflo
-webfonts
 webheads
 webhosting
 webmention

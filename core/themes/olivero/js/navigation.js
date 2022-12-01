@@ -28,16 +28,9 @@
   function toggleNav(props, state) {
     const value = !!state;
     props.navButton.setAttribute('aria-expanded', value);
-
-    if (value) {
-      props.body.classList.add('is-overlay-active');
-      props.body.classList.add('is-fixed');
-      props.navWrapper.classList.add('is-active');
-    } else {
-      props.body.classList.remove('is-overlay-active');
-      props.body.classList.remove('is-fixed');
-      props.navWrapper.classList.remove('is-active');
-    }
+    props.body.classList.toggle('is-overlay-active', value);
+    props.body.classList.toggle('is-fixed', value);
+    props.navWrapper.classList.toggle('is-active', value);
   }
 
   /**
@@ -147,7 +140,7 @@
         const navButton = context.querySelector(
           '[data-drupal-selector="mobile-nav-button"]',
         );
-        const body = context.querySelector('body');
+        const body = document.body;
         const overlay = context.querySelector(
           '[data-drupal-selector="header-nav-overlay"]',
         );

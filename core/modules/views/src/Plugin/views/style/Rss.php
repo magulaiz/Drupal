@@ -84,7 +84,7 @@ class Rss extends StylePluginBase {
   /**
    * Return an array of additional XHTML elements to add to the channel.
    *
-   * @return
+   * @return array
    *   A render array.
    */
   protected function getChannelElements() {
@@ -107,10 +107,6 @@ class Rss extends StylePluginBase {
   }
 
   public function render() {
-    if (empty($this->view->rowPlugin)) {
-      trigger_error('Drupal\views\Plugin\views\style\Rss: Missing row plugin', E_WARNING);
-      return [];
-    }
     $rows = [];
 
     // This will be filled in by the row plugin and is used later on in the

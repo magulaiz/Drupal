@@ -444,11 +444,6 @@ abstract class StylePluginBase extends PluginBase {
    * Render the display in this style.
    */
   public function render() {
-    if ($this->usesRowPlugin() && empty($this->view->rowPlugin)) {
-      trigger_error('Drupal\views\Plugin\views\style\StylePluginBase: Missing row plugin', E_WARNING);
-      return [];
-    }
-
     // Group the rows according to the grouping instructions, if specified.
     $sets = $this->renderGrouping(
       $this->view->result,
@@ -526,7 +521,7 @@ abstract class StylePluginBase extends PluginBase {
    *   $groupings is an old-style string or if the rendered option is missing
    *   for a grouping instruction.
    *
-   * @return
+   * @return array
    *   The grouped record set.
    *   A nested set structure is generated if multiple grouping fields are used.
    *

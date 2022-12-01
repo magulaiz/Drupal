@@ -27,6 +27,9 @@ class ConfigImporterTest extends KernelTestBase {
    */
   protected static $modules = ['config_test', 'system', 'config_import_test'];
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
 
@@ -819,7 +822,7 @@ class ConfigImporterTest extends KernelTestBase {
   public function testCustomStep() {
     $this->assertFalse(\Drupal::isConfigSyncing(), 'Before an import \Drupal::isConfigSyncing() returns FALSE');
     $context = [];
-    $this->configImporter()->doSyncStep([self::class, 'customStep'], $context);
+    $this->configImporter()->doSyncStep(self::customStep(...), $context);
     $this->assertTrue($context['is_syncing'], 'Inside a custom step \Drupal::isConfigSyncing() returns TRUE');
     $this->assertFalse(\Drupal::isConfigSyncing(), 'After an valid custom step \Drupal::isConfigSyncing() returns FALSE');
   }
