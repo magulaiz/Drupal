@@ -662,6 +662,9 @@ abstract class StylePluginBase extends PluginBase {
             if ($this->usesGroupingLabelElement()) {
               $set[$grouping]['grouping_label_element'] = $grouping_label_element;
             }
+            else {
+              $set[$grouping]['grouping_label_element'] = '';
+            }
           }
 
           // Move the set reference into the row set of the group we just determined.
