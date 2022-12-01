@@ -542,7 +542,7 @@ abstract class StylePluginBase extends PluginBase {
       }
 
       $single_output['#grouping_level'] = $level;
-      if ($this->options['grouping']) {
+      if ($this->usesGroupingLabelElement()) {
         $single_output['#grouping_label_element'] = $this->options['grouping'][$level]['grouping_label_element'];
       }
       else {
