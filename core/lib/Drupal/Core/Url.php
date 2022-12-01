@@ -35,13 +35,14 @@ class Url extends UrlBase {
       $url = UrlBase::fromUri("internal:/$path");
       if ($url->isRouted()) {
         $this->routeName = $url->getRouteName();
+        $this->routeParameters = $url->getRouteParameters();
       }
       else {
         // An internal: URL can still result in a base: URL if no route.
         $this->routeName = $url->getUri();
+        $this->routeParameters = [];
       }
 
-      $this->routeParameters = $url->getRouteParameters();
       $this->options = $url->getOptions();
 
       $this->external = $url->isExternal();
