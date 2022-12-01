@@ -27,7 +27,7 @@ class Url extends UrlBase {
     // Do deferred route checking once requested.
     if (!$this->routeChecked) {
       $uri = $this->uri;
-      assert(str_starts_with($uri, 'base:'));
+      assert(str_starts_with($uri, 'base:'), $uri);
       $path = substr($uri, 5);
       $path = ltrim($path, '/');
 
