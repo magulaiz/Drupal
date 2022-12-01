@@ -205,6 +205,86 @@ function forum_update_10100(&$sandbox = NULL) {
     ];
     $connection->schema()->changeField('forum_index', 'last_comment_timestamp', 'last_comment_timestamp', $new);
   }
+
+  /**
+   * Add cid field and index on tid to forum_index table.
+   */
+  function forum_update_10101() {
+    $schema = Database::getConnection()->schema();
+    $spec = [
+      'description' => 'Maintains denormalized information about node/term relationships.',
+      'fields' => [
+        'nid' => [
+          'description' => 'The {node}.nid this record tracks.',
+          'type' => 'int',
+          'unsigned' => TRUE,
+          'not null' => TRUE,
+          'default' => 0,
+        ],
+        'title' => [
+          'description' => 'The node title.',
+          'type' => 'varchar',
+          'length' => 255,
+          'not null' => TRUE,
+          'default' => '',
+        ],
+        'tid' => [
+          'description' => 'The term ID.',
+          'type' => 'int',
+          'unsigned' => TRUE,
+          'not null' => TRUE,
+          'default' => 0,
+        ],
+        'sticky' => [
+          'description' => 'Boolean indicating whether the node is sticky.',
+          'type' => 'int',
+          'not null' => FALSE,
+          'default' => 0,
+          'size' => 'tiny',
+        ],
+        'created' => [
+          'description' => 'The Unix timestamp when the node was created.',
+          'type' => 'int',
+          'unsigned' => TRUE,
+          'not null' => TRUE,
+          'default' => 0,
+        ],
+        'last_comment_timestamp' => [
+          'type' => 'int',
+          'not null' => TRUE,
+          'default' => 0,
+          'description' => 'The Unix timestamp of the last comment that was posted within this node, from {comment}.timestamp.',
+        ],
+        'comment_count' => [
+          'type' => 'int',
+          'unsigned' => TRUE,
+          'not null' => TRUE,
+          'default' => 0,
+          'description' => 'The total number of comments on this node.',
+        ],
+      ],
+      'indexes' => [
+        'forum_topics' => ['nid', 'tid', 'sticky', 'last_comment_timestamp'],
+        'created' => ['created'],
+        'last_comment_timestamp' => ['last_comment_timestamp'],
+        'tid' => ['tid'],
+      ],
+      'foreign keys' => [
+        'tracked_node' => [
+          'table' => 'node',
+          'columns' => ['nid' => 'nid'],
+        ],
+        'term' => [
+          'table' => 'taxonomy_term_data',
+          'columns' => [
+            'tid' => 'tid',
+          ],
+        ],
+      ],
+    ];
+    $schema->addIndex('forum_index', 'tid', ['tid'], $spec);
+  }
+
 }
 
 /**
