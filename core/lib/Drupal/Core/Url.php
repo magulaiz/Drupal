@@ -3,7 +3,6 @@
 namespace Drupal\Core;
 
 use Drupal\Core\Session\AccountInterface;
-use Symfony\Component\HttpFoundation\Request;
 
 class Url extends UrlBase {
 
@@ -59,7 +58,6 @@ class Url extends UrlBase {
   public function isRouteChecked() {
     return $this->routeChecked;
   }
-
 
   public function getInternalPath() {
     if ($this->routeChecked) {
