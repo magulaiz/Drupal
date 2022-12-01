@@ -70,13 +70,23 @@ class ValidKeysConstraint extends Constraint {
       return $this->allowedKeys;
     }
     // The only other value we'll accept is the string `<infer>`.
-    elseif ($this->allowedKeys !== '<infer>') {
-      throw new InvalidArgumentException("'$this->allowedKeys' is not a valid set of allowed keys.");
+    elseif ($this->allowedKeys === '<infer>') {
+      return static::inferKeys($context->getObject());
     }
+    throw new InvalidArgumentException("'$this->allowedKeys' is not a valid set of allowed keys.");
+  }
 
-    $data = $context->getObject();
-    assert($data instanceof Mapping);
-    $definition = $data->getDataDefinition();
+  /**
+   * Tries to auto-detect the schema-defined keys in a mapping.
+   *
+   * @param \Drupal\Core\Config\Schema\Mapping $mapping
+   *   The mapping to inspect.
+   *
+   * @return string[]
+   *   The keys defined in the mapping's schema.
+   */
+  protected static function inferKeys(Mapping $mapping): array {
+    $definition = $mapping->getDataDefinition();
     assert($definition instanceof MapDataDefinition);
 
     $definition = $definition->toArray();
