@@ -93,14 +93,14 @@ class AttributeRouteDiscovery extends AbstractStaticRouteDiscovery {
 
     foreach ($class->getMethods() as $method) {
       $this->defaultRouteIndex = 0;
-      foreach ($this->getAnnotations($method) as $annot) {
+      foreach ($this->getAttributes($method) as $annot) {
         $this->addRoute($collection, $annot, $globals, $class, $method);
       }
     }
 
     if (0 === $collection->count() && $class->hasMethod('__invoke')) {
       $globals = $this->resetGlobals();
-      foreach ($this->getAnnotations($class) as $annot) {
+      foreach ($this->getAttributes($class) as $annot) {
         $this->addRoute($collection, $annot, $globals, $class, $class->getMethod('__invoke'));
       }
     }
@@ -307,7 +307,7 @@ class AttributeRouteDiscovery extends AbstractStaticRouteDiscovery {
    *
    * @return iterable<int, RouteAnnotation>
    */
-  private function getAnnotations(object $reflection): iterable {
+  private function getAttributes(object $reflection): iterable {
     foreach ($reflection->getAttributes($this->routeAnnotationClass, \ReflectionAttribute::IS_INSTANCEOF) as $attribute) {
       yield $attribute->newInstance();
     }
