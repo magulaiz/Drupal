@@ -345,4 +345,17 @@ class RouterTest extends BrowserTestBase {
     $this->assertSession()->addressEquals($request->getUriForPath('/router_test/test1') . '?qs=test');
   }
 
+  /**
+   * Tests routes defined using PHP attributes.
+   */
+  public function testAttributeDiscovery(): void {
+    $this->drupalGet('/test_class_attribute');
+    $this->assertSession()->statusCodeEquals(200);
+    $this->assertSession()->pageTextContains('Testing __invoke() with a Route attribute on the class');
+
+    $this->drupalGet('/test_method_attribute');
+    $this->assertSession()->statusCodeEquals(200);
+    $this->assertSession()->pageTextContains('Testing method with a Route attribute');
+  }
+
 }
