@@ -186,9 +186,14 @@ class RouteBuilder implements RouteBuilderInterface, DestructableInterface {
    *
    * @return array
    *   The defined routes, keyed by provider.
+   *
+   * @deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. This code
+   *   has moved to \Drupal\Core\Routing\YamlRouteDiscovery.
+   *
+   * @see https://www.drupal.org/node/3324758
    */
   protected function getRouteDefinitions() {
-    @trigger_error('@todo', E_USER_DEPRECATED);
+    @trigger_error(__METHOD__ . ' is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. This code has moved to \Drupal\Core\Routing\YamlRouteDiscovery. See https://www.drupal.org/node/3324758', E_USER_DEPRECATED);
     // Always instantiate a new YamlDiscovery object so that we always search on
     // the up-to-date list of modules.
     $discovery = new YamlDiscovery('routing', $this->moduleHandler->getModuleDirectories());
