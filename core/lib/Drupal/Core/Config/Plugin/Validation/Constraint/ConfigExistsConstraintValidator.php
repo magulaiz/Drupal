@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace Drupal\Core\Config\Plugin\Validation\Constraint;
 
 use Drupal\Core\Config\ConfigFactoryInterface;
