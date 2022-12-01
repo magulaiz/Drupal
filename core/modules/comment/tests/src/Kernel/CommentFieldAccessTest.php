@@ -14,7 +14,6 @@ use Drupal\KernelTests\Core\Entity\EntityKernelTestBase;
 use Drupal\Tests\Traits\Core\GeneratePermutationsTrait;
 use Drupal\user\Entity\Role;
 use Drupal\user\RoleInterface;
-use phpDocumentor\Reflection\Types\Null_;
 
 /**
  * Tests comment field level access.
@@ -110,23 +109,33 @@ class CommentFieldAccessTest extends EntityKernelTestBase {
 
     // An administrator user. No user exists yet, ensure that the first user
     // does not have UID 1.
-    $comment_admin_user = $this->createUser(['administer comments', 'access comments'], NULL, FALSE, [
-      'uid' => 2,
-      'name' => 'admin',
-    ]);
+    $comment_admin_user = $this->createUser(['administer comments', 'access comments'],
+      NULL,
+      FALSE,
+      [
+        'uid' => 2,
+        'name' => 'admin',
+      ]);
 
     // Two comment enabled users, one with edit access.
-    $comment_enabled_user = $this->createUser(['post comments', 'skip comment approval', 'edit own comments', 'access comments'],
+    $comment_enabled_user = $this->createUser(['post comments', 'skip comment approval',
+      'edit own comments', 'access comments',
+    ],
       NULL, FALSE,
     ['name' => 'enabled',
     ]);
-    $comment_no_edit_user = $this->createUser(['post comments', 'skip comment approval', 'access comments'],
+    $comment_no_edit_user = $this->createUser(['post comments', 'skip comment approval',
+      'access comments',
+    ],
       NULL, FALSE,
     ['name' => 'no edit',
     ]);
 
     // An unprivileged user.
-    $comment_disabled_user = $this->createUser(['access content'], NULL, FALSE, ['name' => 'disabled']);
+    $comment_disabled_user = $this->createUser(['access content'], NULL, FALSE,
+    [
+      'name' => 'disabled',
+    ]);
 
     $role = Role::load(RoleInterface::ANONYMOUS_ID);
     $role->grantPermission('post comments')

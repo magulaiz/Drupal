@@ -11,7 +11,6 @@ use Drupal\filter\Entity\FilterFormat;
 use Drupal\filter\Plugin\DataType\FilterFormat as FilterFormatDataType;
 use Drupal\filter\Plugin\FilterInterface;
 use Drupal\KernelTests\Core\Entity\EntityKernelTestBase;
-use phpDocumentor\Reflection\PseudoTypes\False_;
 use Symfony\Component\Validator\ConstraintViolationListInterface;
 
 /**
