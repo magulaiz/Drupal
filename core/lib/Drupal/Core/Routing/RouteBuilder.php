@@ -14,6 +14,10 @@ use Symfony\Component\Routing\RouteCollection;
 
 /**
  * Managing class for rebuilding the router table.
+ *
+ * Deprecated service properties:
+ * @property \Drupal\Core\Controller\ControllerResolverInterface $controllerResolver
+ * @property \Drupal\Core\Extension\ModuleHandlerInterface $moduleHandler
  */
 class RouteBuilder implements RouteBuilderInterface, DestructableInterface {
   use DeprecatedServicePropertyTrait;
