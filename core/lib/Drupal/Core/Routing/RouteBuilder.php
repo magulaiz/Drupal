@@ -100,7 +100,7 @@ class RouteBuilder implements RouteBuilderInterface, DestructableInterface {
     $this->dispatcher = $dispatcher;
     if ($check_provider instanceof ModuleHandlerInterface && count(func_get_args()) === 6) {
       $check_provider = func_get_arg(5);
-      @trigger_error('@todo', E_USER_DEPRECATED);
+      @trigger_error('Calling ' . __METHOD__ . '() with the module handler and controller resolver services is deprecated in drupal:10.1.0 and will be removed in drupal:11.0.0. See https://www.drupal.org/node/3324751', E_USER_DEPRECATED);
     }
     if (!$check_provider instanceof CheckProviderInterface) {
       throw new \InvalidArgumentException();
