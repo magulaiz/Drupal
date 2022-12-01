@@ -285,4 +285,3 @@ function forum_update_10101() {
   ];
   $schema->addIndex('forum_index', 'tid', ['tid'], $spec);
 }
-
