@@ -6,6 +6,11 @@ use Symfony\Component\Routing\Annotation\Route as RouteAnnotation;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 
+/**
+ * Discovers routes using Symfony's Route attribute.
+ *
+ * @see \Symfony\Component\Routing\Annotation\Route
+ */
 class AttributeRouteDiscovery extends AbstractStaticRouteDiscovery {
 
   /**
@@ -181,6 +186,8 @@ class AttributeRouteDiscovery extends AbstractStaticRouteDiscovery {
   }
 
   /**
+   * Adds a route to the provided route collection.
+   *
    * @param \Symfony\Component\Routing\RouteCollection $collection
    *   The route collection to add the route to.
    * @param object $annot
