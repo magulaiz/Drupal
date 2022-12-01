@@ -81,6 +81,13 @@ class ForumManager implements ForumManagerInterface {
   protected $commentManager;
 
   /**
+   * The current user.
+   *
+   * @var \Drupal\Core\Session\AccountInterface
+   */
+  protected $currentUser;
+
+  /**
    * Array of last post information keyed by forum (term) id.
    *
    * @var array
@@ -130,14 +137,18 @@ class ForumManager implements ForumManagerInterface {
    *   The comment manager service.
    * @param \Drupal\Core\Entity\EntityFieldManagerInterface $entity_field_manager
    *   The entity field manager.
+   * @param \Drupal\Core\Session\AccountInterface $current_user
+   *   The current logged in user.
    */
-  public function __construct(ConfigFactoryInterface $config_factory, EntityTypeManagerInterface $entity_type_manager, Connection $connection, TranslationInterface $string_translation, CommentManagerInterface $comment_manager, EntityFieldManagerInterface $entity_field_manager) {
+  public function __construct(ConfigFactoryInterface $config_factory, EntityTypeManagerInterface $entity_type_manager, Connection $connection, TranslationInterface $string_translation, CommentManagerInterface $comment_manager, EntityFieldManagerInterface $entity_field_manager, AccountInterface $current_user) {
     $this->configFactory = $config_factory;
     $this->entityTypeManager = $entity_type_manager;
     $this->connection = $connection;
     $this->stringTranslation = $string_translation;
     $this->commentManager = $comment_manager;
     $this->entityFieldManager = $entity_field_manager;
+    $this->currentUser = $current_user;
+
   }
 
   /**
@@ -340,41 +351,77 @@ class ForumManager implements ForumManagerInterface {
    *
    * @return object
    *   The last post for the given forum.
+   *
+   * @deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use getLastPostData() instead.
+   *
+   * @see https://www.drupal.org/project/drupal/issues/145353
    */
   protected function getLastPost($tid) {
     if (!empty($this->lastPostData[$tid])) {
       return $this->lastPostData[$tid];
     }
-    // Query "Last Post" information for this forum.
-    $query = $this->connection->select('node_field_data', 'n');
-    $query->join('forum', 'f', '[n].[vid] = [f].[vid] AND [f].[tid] = :tid', [':tid' => $tid]);
-    $query->join('comment_entity_statistics', 'ces', "[n].[nid] = [ces].[entity_id] AND [ces].[field_name] = 'comment_forum' AND [ces].[entity_type] = 'node'");
-    $query->join('users_field_data', 'u', '[ces].[last_comment_uid] = [u].[uid] AND [u].[default_langcode] = 1');
-    $query->addExpression('CASE [ces].[last_comment_uid] WHEN 0 THEN [ces].[last_comment_name] ELSE [u].[name] END', 'last_comment_name');
+    $data = $this->getLastPostData([$tid]);
+    return reset($data);
+  }
 
-    $topic = $query
-      ->fields('ces', ['last_comment_timestamp', 'last_comment_uid'])
-      ->condition('n.status', 1)
-      ->orderBy('last_comment_timestamp', 'DESC')
-      ->range(0, 1)
-      ->addTag('node_access')
-      ->execute()
-      ->fetchObject();
+  /**
+   * Provides the last post information for the given forum tids.
+   *
+   * @param int[] $tids
+   *   The forum tids.
+   *
+   * @return \stdClass[]
+   *   The last post information for the given forums.
+   */
+  protected function getLastPostData(array $tids) {
+    // Check if all tids already have post info. We assume no duplicate tids.
+    $tids_as_keys = array_flip($tids);
+    $known_data = array_intersect_key($this->lastPostData, $tids_as_keys);
+    if (count($known_data) < count($tids)) {
+      $unknown_tids = array_diff($tids, array_keys($this->lastPostData));
 
-    // Build the last post information.
-    $last_post = new \stdClass();
-    if (!empty($topic->last_comment_timestamp)) {
-      $last_post->created = $topic->last_comment_timestamp;
-      $last_post->name = $topic->last_comment_name;
-      $last_post->uid = $topic->last_comment_uid;
+      // Query "Last Post" information. Only add the node table to the query if
+      // this is necessary for filtering access-restricted records.
+      if ($this->currentUserCanViewAllNodes()) {
+        $query = $this->connection->select('forum_index', 'f');
+      }
+      else {
+        $query = $this->connection->select('node', 'n')
+          ->addTag('node_access');
+        $query->join('forum_index', 'f', 'n.nid = f.nid');
+      }
+      $query->join('comment_entity_statistics', 'ces', "f.nid = ces.entity_id AND ces.field_name = 'comment_forum' AND ces.entity_type = 'node'");
+      $query->join('users_field_data', 'u', 'ces.last_comment_uid = u.uid AND u.default_langcode = 1');
+      $query->addField('f', 'tid');
+      $query->addExpression('COALESCE(ces.last_comment_name, u.name)', 'last_comment_name');
+
+      $topics = $query
+        ->fields('ces', ['last_comment_timestamp', 'last_comment_uid'])
+        ->condition('f.tid', $unknown_tids, 'IN')
+        ->orderBy('f.last_comment_timestamp', 'DESC')
+        ->range(0, 1)
+        ->execute()
+        ->fetchAllAssoc('tid');
+
+      // Build the last post information.
+      foreach ($unknown_tids as $tid) {
+        $this->lastPostData[$tid] = new \stdClass();
+        if (!empty($topics[$tid]->last_comment_timestamp)) {
+          $this->lastPostData[$tid]->created = $topics[$tid]->last_comment_timestamp;
+          $this->lastPostData[$tid]->name = $topics[$tid]->last_comment_name;
+          $this->lastPostData[$tid]->uid = $topics[$tid]->last_comment_uid;
+        }
+      }
+
+      $known_data = array_intersect_key($this->lastPostData, $tids_as_keys);
     }
-
-    $this->lastPostData[$tid] = $last_post;
-    return $last_post;
+    return $known_data;
   }
 
   /**
    * Provides statistics for a forum.
+   *
+   * This will prime statistics for all known forums, to minimize queries.
    *
    * @param int $tid
    *   The forum tid.
@@ -384,18 +431,22 @@ class ForumManager implements ForumManagerInterface {
    */
   protected function getForumStatistics($tid) {
     if (empty($this->forumStatistics)) {
-      // Prime the statistics.
-      $query = $this->connection->select('node_field_data', 'n');
-      $query->join('comment_entity_statistics', 'ces', "[n].[nid] = [ces].[entity_id] AND [ces].[field_name] = 'comment_forum' AND [ces].[entity_type] = 'node'");
-      $query->join('forum', 'f', '[n].[vid] = [f].[vid]');
-      $query->addExpression('COUNT([n].[nid])', 'topic_count');
-      $query->addExpression('SUM([ces].[comment_count])', 'comment_count');
+      // Prime the statistics. Only add the node table to the query if this is
+      // necessary for filtering access-restricted records.
+      if ($this->currentUserCanViewAllNodes()) {
+        $query = $this->connection->select('forum_index', 'f');
+      }
+      else {
+        $query = $this->connection->select('node', 'n')
+          ->addTag('node_access');
+        $query->join('forum_index', 'f', 'n.nid = f.nid');
+      }
+      $query->addExpression('COUNT(f.nid)', 'topic_count');
+      $query->addExpression('SUM(f.comment_count)', 'comment_count');
       $this->forumStatistics = $query
         ->fields('f', ['tid'])
-        ->condition('n.status', 1)
-        ->condition('n.default_langcode', 1)
         ->groupBy('tid')
-        ->addTag('node_access')
+        ->orderBy('NULL')
         ->execute()
         ->fetchAllAssoc('tid');
     }
@@ -403,6 +454,19 @@ class ForumManager implements ForumManagerInterface {
     if (!empty($this->forumStatistics[$tid])) {
       return $this->forumStatistics[$tid];
     }
+  }
+
+  /**
+   * Checks if the current user can view all nodes.
+   *
+   * This is a private method which will/may ONLY be used for modifying queries
+   * in a way that does not alter the returned results. (Under this condition it
+   * is not a huge problem that this method calls a global, non-injected
+   * function; there is no real 'injectable' alternative for it yet.)
+   */
+  private function currentUserCanViewAllNodes() {
+    $account = $this->currentUser;
+    return $account->hasPermission('bypass node access') || node_access_view_all_nodes($account);
   }
 
   /**
@@ -414,6 +478,13 @@ class ForumManager implements ForumManagerInterface {
     }
     $forums = [];
     $_forums = $this->entityTypeManager->getStorage('taxonomy_term')->loadTree($vid, $tid, NULL, TRUE);
+    // Prime last post details for the forums. Unlike getForumStatistics() we
+    // only query data for the forums we actually need.
+    $tids = [];
+    foreach ($_forums as $forum) {
+      $tids[] = $forum->id();
+    }
+    $last_post_data = $this->getLastPostData($tids);
     foreach ($_forums as $forum) {
       // Merge in the topic and post counters.
       if (($count = $this->getForumStatistics($forum->id()))) {
@@ -426,7 +497,7 @@ class ForumManager implements ForumManagerInterface {
       }
 
       // Merge in last post details.
-      $forum->last_post = $this->getLastPost($forum->id());
+      $forum->last_post = $last_post_data[$forum->id()];
       $forums[$forum->id()] = $forum;
     }
 
