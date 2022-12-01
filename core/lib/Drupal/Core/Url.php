@@ -20,6 +20,7 @@ class Url extends UrlBase {
     $uri = "base:$path";
     $url = new static($uri, [], $options);
     $url->routeChecked = FALSE;
+    $url->setUnrouted();
     return $url;
   }
 
