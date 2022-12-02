@@ -138,15 +138,22 @@ class ForumManager implements ForumManagerInterface {
    * @param \Drupal\Core\Entity\EntityFieldManagerInterface $entity_field_manager
    *   The entity field manager.
    * @param \Drupal\Core\Session\AccountInterface $current_user
-   *   The current logged in user.
+   *   The current logged in user. This parameter is required as of drupal:10.1.0 and
+   *   trigger a fatal error if not passed in drupal:11.0.0.
+   *
+   * @see https://www.drupal.org/node/145353
    */
-  public function __construct(ConfigFactoryInterface $config_factory, EntityTypeManagerInterface $entity_type_manager, Connection $connection, TranslationInterface $string_translation, CommentManagerInterface $comment_manager, EntityFieldManagerInterface $entity_field_manager, AccountInterface $current_user) {
+  public function __construct(ConfigFactoryInterface $config_factory, EntityTypeManagerInterface $entity_type_manager, Connection $connection, TranslationInterface $string_translation, CommentManagerInterface $comment_manager, EntityFieldManagerInterface $entity_field_manager, AccountInterface $current_user = NULL) {
     $this->configFactory = $config_factory;
     $this->entityTypeManager = $entity_type_manager;
     $this->connection = $connection;
     $this->stringTranslation = $string_translation;
     $this->commentManager = $comment_manager;
     $this->entityFieldManager = $entity_field_manager;
+    if ($current_user == NULL) {
+      @trigger_error('Calling ' . __METHOD__ . '() without the $current_user argument is deprecated in drupal:10.1.0 and will be required before drupal:11.0.0. See https://www.drupal.org/node/145353.', E_USER_DEPRECATED);
+      $current_user = \Drupal::currentUser();
+    }
     $this->currentUser = $current_user;
 
   }
