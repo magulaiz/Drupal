@@ -97,7 +97,11 @@ trait RevisionLogEntityTrait {
    * Implements \Drupal\Core\Entity\RevisionLogInterface::getRevisionUserId().
    */
   public function getRevisionUserId() {
-    return $this->{$this->getEntityType()->getRevisionMetadataKey('revision_user')}->target_id;
+    $value = $this->{$this->getEntityType()->getRevisionMetadataKey('revision_user')}->target_id;
+    if ($value === NULL) {
+      throw new \UnexpectedValueException('User ID is bad!' . $value);
+    }
+    return $value;
   }
 
   /**
@@ -112,7 +116,11 @@ trait RevisionLogEntityTrait {
    * Implements \Drupal\Core\Entity\RevisionLogInterface::getRevisionLogMessage().
    */
   public function getRevisionLogMessage() {
-    return $this->{$this->getEntityType()->getRevisionMetadataKey('revision_log_message')}->value;
+    $value = $this->{$this->getEntityType()->getRevisionMetadataKey('revision_log_message')}->value;
+    if ($value === NULL) {
+      throw new \UnexpectedValueException('Revision description is bad!' . $value);
+    }
+    return $value;
   }
 
   /**
