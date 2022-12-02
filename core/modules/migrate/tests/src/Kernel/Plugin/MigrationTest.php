@@ -105,7 +105,7 @@ class MigrationTest extends KernelTestBase {
    *
    * @covers ::getMigrationDependencies
    */
-  public function testGetExpandedMigrationDependencies() {
+  public function testGetMigrationDependencies() {
     $plugin_manager = \Drupal::service('plugin.manager.migration');
     $plugin_definition = [
       'id' => 'foo',
