@@ -47,10 +47,9 @@ field.storage.*.*:
       type: string
       label: 'Type'
       constraints:
-        NotNull: []
+        NotBlank: []
         # @todo In principle, we should validate that this plugin was indeed provided by `module`.
-        # PluginExists:
-          # pluginType: field_type
+        PluginExists: plugin.manager.field.field_type
     settings:
       type: field.storage_settings.[%parent.type]
     module:

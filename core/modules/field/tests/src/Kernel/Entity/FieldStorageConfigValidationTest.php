@@ -47,4 +47,23 @@ class FieldStorageConfigValidationTest extends ConfigEntityValidationTestBase {
     $this->assertSame("The 'custom_storage' property cannot be changed.", (string) $violations->get(4)->getMessage());
   }
 
+  /**
+   * Tests that the field type plugin is validated.
+   */
+  public function testFieldTypePlugin(): void {
+    /** @var \Drupal\field\FieldStorageConfigInterface $field_storage */
+    $field_storage = FieldStorageConfig::create([
+      'field_name' => 'test',
+      'entity_type' => 'entity_test',
+      'type' => 'non_existent',
+      'module' => 'core',
+    ]);
+
+    $typed_data = $this->container->get('typed_data_manager');
+    $definition = $typed_data->createDataDefinition('entity:field_storage_config');
+    $violations = $typed_data->create($definition, $field_storage)->validate();
+    $this->assertCount(1, $violations);
+    $this->assertSame("The 'non_existent' plugin does not exist.", (string) $violations->get(0)->getMessage());
+  }
+
 }

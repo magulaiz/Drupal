@@ -17,14 +17,30 @@ use Symfony\Component\Validator\Constraint;
  */
 class ImmutableFieldsConstraint extends Constraint {
 
+  /**
+   * The error message if an immutable property has been changed.
+   *
+   * @var string
+   */
   public string $message = "The '@name' property cannot be changed.";
 
+  /**
+   * The names of the immutable fields.
+   *
+   * @var string[]
+   */
   public array $fields = [];
 
+  /**
+   * {@inheritdoc}
+   */
   public function getDefaultOption() {
     return 'fields';
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function getRequiredOptions() {
     return ['fields'];
   }
