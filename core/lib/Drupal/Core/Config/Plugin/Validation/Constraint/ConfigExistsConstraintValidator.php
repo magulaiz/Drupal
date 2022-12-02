@@ -44,7 +44,7 @@ class ConfigExistsConstraintValidator extends ConstraintValidator implements Con
    */
   public function validate(mixed $name, Constraint $constraint) {
     if (!in_array($name, $this->configFactory->listAll(), TRUE)) {
-      $this->context->addViolation($constraint->message, ['@name' => $value]);
+      $this->context->addViolation($constraint->message, ['@name' => $name]);
     }
   }
 
