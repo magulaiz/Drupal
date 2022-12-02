@@ -93,20 +93,23 @@ class ResourceRoutes implements EventSubscriberInterface {
       /** @var \Symfony\Component\Routing\Route $route */
       // @todo: Are multiple methods possible here?
       $methods = $route->getMethods();
+      $supported_formats = [];
+      // Check that formats are defined.
+      if (($methods && ($method = $methods[0]))) {
+        $supported_formats = $rest_resource_config->getFormats($method);
+        if (empty($supported_formats)) {
+          $this->logger->error('At least one format must be defined for resource @id', ['@id' => $rest_resource_config->id()]);
+          continue;
+        }
+      }
       // Only expose routes that have an explicit method and allow >=1 format
       // for that method.
-      if (($methods && ($method = $methods[0]) && $rest_resource_config->getFormats($method))) {
+      if ($supported_formats) {
         $route->setRequirement('_csrf_request_header_token', 'TRUE');
 
         // Check that authentication providers are defined.
         if (empty($rest_resource_config->getAuthenticationProviders($method))) {
           $this->logger->error('At least one authentication provider must be defined for resource @id', ['@id' => $rest_resource_config->id()]);
-          continue;
-        }
-
-        // Check that formats are defined.
-        if (empty($rest_resource_config->getFormats($method))) {
-          $this->logger->error('At least one format must be defined for resource @id', ['@id' => $rest_resource_config->id()]);
           continue;
         }
 

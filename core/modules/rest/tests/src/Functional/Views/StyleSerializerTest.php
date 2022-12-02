@@ -646,7 +646,7 @@ class StyleSerializerTest extends ViewTestBase {
     $this->drupalLogin($this->adminUser);
     // Click the "Update preview button".
     $this->drupalGet('admin/structure/views/view/test_serializer_display_field/edit/rest_export_1');
-    $this->submitForm($edit = [], 'Update preview');
+    $this->submitForm([], 'Update preview');
     $this->assertSession()->statusCodeEquals(200);
     // Check if we receive the expected result.
     $result = $this->assertSession()->elementExists('xpath', '//div[@id="views-live-preview"]/pre');
