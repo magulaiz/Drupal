@@ -94,6 +94,7 @@ class ResourceRoutes implements EventSubscriberInterface {
       // @todo: Are multiple methods possible here?
       $methods = $route->getMethods();
       $supported_formats = [];
+      $method = FALSE;
       // Check that formats are defined.
       if (($methods && ($method = $methods[0]))) {
         $supported_formats = $rest_resource_config->getFormats($method);
@@ -104,7 +105,7 @@ class ResourceRoutes implements EventSubscriberInterface {
       }
       // Only expose routes that have an explicit method and allow >=1 format
       // for that method.
-      if ($supported_formats) {
+      if ($supported_formats && $method !== FALSE) {
         $route->setRequirement('_csrf_request_header_token', 'TRUE');
 
         // Check that authentication providers are defined.
