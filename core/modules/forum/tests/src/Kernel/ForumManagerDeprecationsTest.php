@@ -17,6 +17,19 @@ use Drupal\KernelTests\KernelTestBase;
 class ForumManagerDeprecationsTest extends KernelTestBase {
 
   /**
+   * Modules to install.
+   *
+   * @var array
+   */
+  protected static $modules = [
+    'node',
+    'options',
+    'comment',
+    'taxonomy',
+    'forum',
+  ];
+
+  /**
    * Tests that deprecations are raised for missing constructor arguments.
    *
    * @covers \Drupal\forum\ForumManager::__construct
