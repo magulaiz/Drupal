@@ -60,6 +60,10 @@ class ForumManagerTest extends UnitTestCase {
       ->disableOriginalConstructor()
       ->getMock();
 
+    $current_user = $this->getMockBuilder('\Drupal\Core\Session\AccountProxy')
+      ->disableOriginalConstructor()
+      ->getMock();
+
     $manager = $this->getMockBuilder('\Drupal\forum\ForumManager')
       ->onlyMethods(['getChildren'])
       ->setConstructorArgs([
@@ -69,6 +73,7 @@ class ForumManagerTest extends UnitTestCase {
         $translation_manager,
         $comment_manager,
         $entity_field_manager,
+        $current_user,
       ])
       ->getMock();
 
