@@ -12,6 +12,7 @@ class Url extends UrlBase {
     // Defer route checking, use 'base:' schema.
     // @see \Drupal\Core\UrlBase::fromUri
     $path = $uri_parts['path'];
+    $path = ltrim($path, '/');
     // Workaround a bug like in parent class.
     // @see \Drupal\Core\UrlBase::fromUri
     if (preg_match('|^\d|', $path)) {
@@ -27,12 +28,14 @@ class Url extends UrlBase {
   public function ensureRouteChecked() {
     // Do deferred route checking once requested.
     if (!$this->routeChecked) {
-      $uri = $this->uri;
-      assert(str_starts_with($uri, 'base:'), $uri);
-      $path = substr($uri, 5);
+      assert($this->unrouted === TRUE);
+      assert(str_starts_with($this->uri, 'base:'), $this->uri);
+      // Like ::toString, but without calling ::getUri
+      $path = $this->toString();
       $path = ltrim($path, '/');
 
-      $url = UrlBase::fromUri("internal:/$path");
+      // @fixme Add options
+      $url = UrlBase::fromUri("internal:$path");
       if ($url->isRouted()) {
         $this->routeName = $url->getRouteName();
         $this->routeParameters = $url->getRouteParameters();
@@ -73,6 +76,16 @@ class Url extends UrlBase {
       return parent::getInternalPath();
     }
   }
+
+  public function toString($collect_bubbleable_metadata = FALSE) {
+    if ($this->unrouted) {
+      // Copied from parent, but replace ::getUri() with ::uri
+      return $this->unroutedUrlAssembler()->assemble($this->uri, $this->getOptions(), $collect_bubbleable_metadata);
+    }
+
+    return $this->urlGenerator()->generateFromRoute($this->getRouteName(), $this->getRouteParameters(), $this->getOptions(), $collect_bubbleable_metadata);
+  }
+
 
   public function toUriString() {
     $this->ensureRouteChecked();
