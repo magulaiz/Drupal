@@ -364,7 +364,7 @@ class ForumManager implements ForumManagerInterface {
    * @see https://www.drupal.org/project/drupal/issues/145353
    */
   protected function getLastPost($tid) {
-    @trigger_error(__METHOD__ . 'getLastPost() is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use getLastPostData() instead. See https://www.drupal.org/node/145353.', E_USER_DEPRECATED);
+    @trigger_error(__METHOD__ . '() is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use getLastPostData() instead. See https://www.drupal.org/node/145353.', E_USER_DEPRECATED);
     if (!empty($this->lastPostData[$tid])) {
       return $this->lastPostData[$tid];
     }
