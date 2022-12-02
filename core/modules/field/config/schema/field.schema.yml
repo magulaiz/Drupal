@@ -56,8 +56,8 @@ field.storage.*.*:
       type: string
       label: 'Module'
       constraints:
-        NotNull: []
-        # ModuleExists: []
+        NotBlank: []
+        # ExtensionExists: 'module'
     locked:
       type: boolean
       label: 'Locked'
