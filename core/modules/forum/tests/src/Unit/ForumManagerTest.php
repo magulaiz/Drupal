@@ -2,11 +2,8 @@
 
 namespace Drupal\Tests\forum\Unit;
 
-use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
-use Drupal\Core\Session\AccountProxy;
-use Drupal\forum\ForumManager;
 use Drupal\Tests\UnitTestCase;
 
 /**
@@ -14,21 +11,6 @@ use Drupal\Tests\UnitTestCase;
  * @group forum
  */
 class ForumManagerTest extends UnitTestCase {
-
-  /**
-   * Tests that deprecations are raised for missing constructor arguments.
-   *
-   * @group legacy
-   */
-  public function testConstructorDeprecations(): void {
-
-    $container = new ContainerBuilder();
-    $container->set('current_user', $this->createMock(AccountProxy::class));
-    \Drupal::setContainer($container);
-
-    $this->expectDeprecation('Calling ' . ForumManager::class . '::__construct() without the $current_user argument is deprecated in drupal:10.1.0 and will be required before drupal:11.0.0. See https://www.drupal.org/node/145353.');
-
-  }
 
   /**
    * Tests ForumManager::getIndex().
