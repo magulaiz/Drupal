@@ -171,7 +171,7 @@ class MigrationTest extends UnitTestCase {
   public function testMigrationDependenciesWithValidConfig($source, array $expected_value) {
     $migration = new TestMigration();
 
-    // Set the plugin manager to support getMigrationDependencies(TRUE).
+    // Set the plugin manager to support getMigrationDependencies().
     $plugin_manager = $this->createMock('Drupal\migrate\Plugin\MigrationPluginManagerInterface');
     $migration->setMigrationPluginManager($plugin_manager);
     $plugin_manager->expects($this->exactly(2))
