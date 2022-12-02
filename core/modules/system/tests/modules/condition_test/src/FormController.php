@@ -8,6 +8,7 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Form\SubformState;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\node\Entity\Node;
+use function t;
 
 /**
  * Routing controller class for condition_test testing of condition forms.
@@ -91,6 +92,9 @@ class FormController implements FormInterface {
     $this->condition->setContextValue('node', $article);
     if ($this->condition->execute()) {
       \Drupal::messenger()->addStatus($this->t('Executed successfully.'));
+    }
+    if ($this->condition_current_theme->execute()) {
+      \Drupal::messenger()->addStatus($this->condition_current_theme->summary());
     }
     if ($this->condition_current_theme->execute()) {
       \Drupal::messenger()->addStatus($this->condition_current_theme->summary());
