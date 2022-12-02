@@ -35,9 +35,9 @@ class MachineNameConstraint extends RegexConstraint {
   /**
    * {@inheritdoc}
    */
-  public function __construct(array|string|null $pattern, string $message = NULL, string $htmlPattern = NULL, bool $match = NULL, callable $normalizer = NULL, array $groups = NULL, mixed $payload = NULL, array $options = []) {
-    parent::__construct(self::PATTERN, $message, $htmlPattern, $match, $normalizer, $groups, $payload, $options);
+  public function __construct(array|string|null $pattern, ...$arguments) {
+    $pattern = self::PATTERN;
+    parent::__construct($pattern, ...$arguments);
   }
-
 
 }

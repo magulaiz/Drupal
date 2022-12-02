@@ -22,11 +22,11 @@ field.storage.*.*:
       label: 'ID'
       constraints:
         NotNull: []
-#        StringParts:
-#          separator: .
-#          parts:
-#            - entity_type
-#            - field_name
+        # StringParts:
+          # separator: .
+          # parts:
+            # - entity_type
+            # - field_name
     field_name:
       type: string
       label: 'Field name'
@@ -34,23 +34,23 @@ field.storage.*.*:
         NotNull: []
         # Note: typically but optionally, this would use `field_ui.settings`' `field_prefix` value as the first part.
         MachineName: []
-#        UniqueField: []
+        # UniqueField: []
     entity_type:
       type: string
       label: 'Entity type'
       constraints:
         NotNull: []
-#        PluginExists:
-#          pluginType: content_entity_type
-#          pluginClassImplementsInterface: \Drupal\Core\Entity\FieldableEntityInterface
+        # PluginExists:
+          # pluginType: content_entity_type
+          # pluginClassImplementsInterface: \Drupal\Core\Entity\FieldableEntityInterface
     type:
       type: string
       label: 'Type'
       constraints:
         NotNull: []
         # @todo In principle, we should validate that this plugin was indeed provided by `module`.
-#        PluginExists:
-#          pluginType: field_type
+        # PluginExists:
+          # pluginType: field_type
     settings:
       type: field.storage_settings.[%parent.type]
     module:
@@ -58,7 +58,7 @@ field.storage.*.*:
       label: 'Module'
       constraints:
         NotNull: []
-#        ModuleExists: []
+        # ModuleExists: []
     locked:
       type: boolean
       label: 'Locked'
@@ -69,7 +69,7 @@ field.storage.*.*:
       label: 'Maximum number of values users can enter'
       constraints:
         NotNull: []
-#        NoEntitiesExistYetWithHigherCardinality: []
+        # NoEntitiesExistYetWithHigherCardinality: []
     translatable:
       type: boolean
       label: 'Translatable'
