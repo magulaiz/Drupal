@@ -40,9 +40,9 @@ field.storage.*.*:
       label: 'Entity type'
       constraints:
         NotNull: []
-        # PluginExists:
-          # pluginType: content_entity_type
-          # pluginClassImplementsInterface: \Drupal\Core\Entity\FieldableEntityInterface
+        PluginExists:
+          manager: entity_type.manager
+          interface: '\Drupal\Core\Entity\FieldableEntityInterface'
     type:
       type: string
       label: 'Type'

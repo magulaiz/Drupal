@@ -7,7 +7,7 @@ namespace Drupal\Core\Config\Plugin\Validation\Constraint;
 use Symfony\Component\Validator\Constraint;
 
 /**
- * Checks if a plugin exists.
+ * Checks if a plugin exists and optionally implements a particular interface.
  *
  * @Constraint(
  *   id = "PluginExists",
@@ -22,7 +22,14 @@ class PluginExistsConstraint extends Constraint {
    *
    * @var string
    */
-  public string $message = "The '@plugin_id' plugin does not exist.";
+  public string $unknownPluginMessage = "The '@plugin_id' plugin does not exist.";
+
+  /**
+   * The error message if a plugin does not implement the expected interface.
+   *
+   * @var string
+   */
+  public string $invalidInterfaceMessage = "The '@plugin_id' plugin must implement or extend @interface.";
 
   /**
    * The name of the plugin manager service.
@@ -30,6 +37,13 @@ class PluginExistsConstraint extends Constraint {
    * @var string
    */
   public string $manager;
+
+  /**
+   * Optional name of the interface that the plugin must implement.
+   *
+   * @var string|null
+   */
+  public ?string $interface = NULL;
 
   /**
    * {@inheritdoc}
