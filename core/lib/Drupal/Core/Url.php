@@ -35,7 +35,7 @@ class Url extends UrlBase {
       $path = ltrim($path, '/');
 
       // @fixme Add options
-      $url = UrlBase::fromUri("internal:$path");
+      $url = UrlBase::fromUri("internal:/$path");
       if ($url->isRouted()) {
         $this->routeName = $url->getRouteName();
         $this->routeParameters = $url->getRouteParameters();
@@ -69,7 +69,7 @@ class Url extends UrlBase {
       $uri = $this->uri;
       assert(substr($uri, 0, 5) === 'base:');
       $path = substr($uri, 5);
-      $path = ltrim($path, '/');
+      $path = ltrim((string) $path, '/');
       return $path;
     }
     else {
