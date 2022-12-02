@@ -724,13 +724,13 @@ class Migration extends PluginBase implements MigrationInterface, RequirementsIn
       throw new InvalidPluginDefinitionException($this->id(), "Invalid migration dependencies configuration for migration {$this->id()}");
     }
     $this->migration_dependencies['optional'] = array_unique(array_merge($this->migration_dependencies['optional'], $this->findMigrationDependencies($this->process)));
-    if ($expand) {
-      return array_map(
-        [$this->migrationPluginManager, 'expandPluginIds'],
-        $this->migration_dependencies
-      );
+    if (!$expand) {
+      return $this->migration_dependencies;
     }
-    return $this->migration_dependencies;
+    return array_map(
+      [$this->migrationPluginManager, 'expandPluginIds'],
+      $this->migration_dependencies
+    );
   }
 
   /**
