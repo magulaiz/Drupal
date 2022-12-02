@@ -86,7 +86,6 @@ class Url extends UrlBase {
     return $this->urlGenerator()->generateFromRoute($this->getRouteName(), $this->getRouteParameters(), $this->getOptions(), $collect_bubbleable_metadata);
   }
 
-
   public function toUriString() {
     $this->ensureRouteChecked();
     return parent::toUriString();
