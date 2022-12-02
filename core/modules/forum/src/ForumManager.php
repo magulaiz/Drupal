@@ -137,7 +137,7 @@ class ForumManager implements ForumManagerInterface {
    *   The comment manager service.
    * @param \Drupal\Core\Entity\EntityFieldManagerInterface $entity_field_manager
    *   The entity field manager.
-   * @param \Drupal\Core\Session\AccountInterface $current_user
+   * @param \Drupal\Core\Session\AccountInterface|null $current_user
    *   The current logged in user. This parameter is required as of drupal:10.1.0 and
    *   trigger a fatal error if not passed in drupal:11.0.0.
    *
@@ -364,6 +364,7 @@ class ForumManager implements ForumManagerInterface {
    * @see https://www.drupal.org/project/drupal/issues/145353
    */
   protected function getLastPost($tid) {
+    @trigger_error(__METHOD__ . 'getLastPost() is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use getLastPostData() instead. See https://www.drupal.org/node/145353.', E_USER_DEPRECATED);
     if (!empty($this->lastPostData[$tid])) {
       return $this->lastPostData[$tid];
     }
