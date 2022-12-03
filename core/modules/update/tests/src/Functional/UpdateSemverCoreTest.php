@@ -346,6 +346,7 @@ class UpdateSemverCoreTest extends UpdateSemverTestBase {
   public function testModulePageRegularUpdate() {
     $this->drupalLogin($this->drupalCreateUser([
       'administer site configuration',
+      'administer software updates',
       'administer modules',
     ]));
     $this->setProjectInstalledVersion('8.0.0');
@@ -364,6 +365,16 @@ class UpdateSemverCoreTest extends UpdateSemverTestBase {
     $this->drupalGet('admin/modules');
     $this->assertSession()->pageTextContains('There are updates available for your version of Drupal.');
     $this->assertSession()->pageTextNotContains('There is a security update available for your version of Drupal.');
+
+    // Ensure the update messages are not visible without "administer software updates" permission:
+    $this->drupalLogin($this->drupalCreateUser([
+      'administer site configuration',
+      'administer modules',
+      'administer themes',
+    ]));
+    $this->drupalGet('admin/modules');
+    $this->assertSession()->pageTextNotContains('There are updates available for your version of Drupal.');
+    $this->assertSession()->pageTextNotContains('There is a security update available for your version of Drupal.');
   }
 
   /**
@@ -372,6 +383,7 @@ class UpdateSemverCoreTest extends UpdateSemverTestBase {
   public function testModulePageSecurityUpdate() {
     $this->drupalLogin($this->drupalCreateUser([
       'administer site configuration',
+      'administer software updates',
       'administer modules',
       'administer themes',
     ]));
@@ -405,6 +417,16 @@ class UpdateSemverCoreTest extends UpdateSemverTestBase {
     $this->assertSession()->pageTextNotContains('There is a security update available for your version of Drupal.');
 
     $this->drupalGet('admin/reports/updates/settings');
+    $this->assertSession()->pageTextNotContains('There is a security update available for your version of Drupal.');
+
+    // Ensure the update messages are not visible without "administer software updates" permission:
+    $this->drupalLogin($this->drupalCreateUser([
+      'administer site configuration',
+      'administer modules',
+      'administer themes',
+    ]));
+    $this->drupalGet('admin/modules');
+    $this->assertSession()->pageTextNotContains('There are updates available for your version of Drupal.');
     $this->assertSession()->pageTextNotContains('There is a security update available for your version of Drupal.');
   }
 
@@ -492,6 +514,7 @@ class UpdateSemverCoreTest extends UpdateSemverTestBase {
   public function testBrokenThenFixedUpdates() {
     $this->drupalLogin($this->drupalCreateUser([
       'administer site configuration',
+      'administer software updates',
       'access administration pages',
     ]));
     $this->setProjectInstalledVersion('8.0.0');
