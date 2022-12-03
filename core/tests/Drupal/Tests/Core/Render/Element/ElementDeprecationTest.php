@@ -26,8 +26,9 @@ class ElementDeprecationTest extends UnitTestCase {
    */
   public function testShowDeprecation() {
     $this->expectDeprecation('show() function is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use \Drupal\Core\Render\Element::show() instead. See https://www.drupal.org/node/3261271');
-    $element = [];
-    $this->assertEquals(show($element), Element::show($element));
+    $element1 = [];
+    $element2 = [];
+    $this->assertEquals(show($element1), Element::show($element2));
   }
 
   /**
@@ -35,8 +36,9 @@ class ElementDeprecationTest extends UnitTestCase {
    */
   public function testHideDeprecation() {
     $this->expectDeprecation('hide() function is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use \Drupal\Core\Render\Element::hide() instead. See https://www.drupal.org/node/3261271');
-    $element = [];
-    $this->assertEquals(hide($element), Element::hide($element));
+    $element1 = [];
+    $element2 = [];
+    $this->assertEquals(hide($element1), Element::hide($element2));
   }
 
 }
