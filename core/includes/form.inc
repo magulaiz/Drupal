@@ -6,6 +6,8 @@
  */
 
 use Drupal\Component\Utility\UrlHelper;
+use Drupal\Core\Queue\Batch;
+use Drupal\Core\Queue\BatchMemory;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Render\Element\RenderElement;
 use Drupal\Core\Template\Attribute;
@@ -1013,6 +1015,8 @@ function _batch_populate_queue(&$batch, $set_id) {
  *
  * @return \Drupal\Core\Queue\QueueInterface|null
  *   The queue object.
+ *
+ * @see _batch_populate_queue()
  */
 function _batch_queue($batch_set) {
   static $queues;
@@ -1026,7 +1030,18 @@ function _batch_queue($batch_set) {
     $class = $batch_set['queue']['class'];
 
     if (!isset($queues[$class][$name])) {
-      $queues[$class][$name] = new $class($name, \Drupal::database(), \Drupal::time());
+      // @todo Improve in https://www.drupal.org/i/3325158.
+      if (is_subclass_of($class, BatchMemory::class)) {
+        $queue = new $class($name, \Drupal::time());
+      }
+      elseif (is_subclass_of($class, Batch::class)) {
+        $queue = new $class($name, \Drupal::database(), \Drupal::time());
+      }
+      else {
+        // Backward compatibility to catch other types on queues.
+        $queue = new $class($name, \Drupal::database());
+      }
+      $queues[$class][$name] = $queue;
     }
     return $queues[$class][$name];
   }
