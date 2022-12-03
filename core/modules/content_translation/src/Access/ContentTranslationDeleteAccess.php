@@ -90,6 +90,9 @@ class ContentTranslationDeleteAccess implements AccessInterface {
         $result->addCacheableDependency($workflow);
       }
     }
+    if (!$entity->access('delete')) {
+      return AccessResult::forbidden();
+    }
     if (!ContentTranslationManager::isPendingRevisionSupportEnabled($entity_type_id, $entity->bundle())) {
       return $result;
     }

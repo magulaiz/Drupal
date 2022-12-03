@@ -258,7 +258,9 @@ class ContentTranslationController extends ControllerBase {
               }
             }
             else {
-              $this->messenger()->addWarning($this->t('The "Delete translation" action is only available for published translations.'), FALSE);
+              if (!empty($entity->status) && $entity->status == FALSE) {
+                $this->messenger()->addWarning($this->t('The "Delete translation" action is only available for published translations.'), FALSE);
+              }
             }
           }
         }
