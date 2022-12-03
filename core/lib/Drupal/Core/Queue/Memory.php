@@ -3,6 +3,7 @@
 namespace Drupal\Core\Queue;
 
 use Drupal\Component\Datetime\TimeInterface;
+use Drupal\Core\Database\Connection;
 
 /**
  * Static queue implementation.
