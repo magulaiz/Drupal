@@ -65,7 +65,7 @@ use Drupal\Core\Site\Settings;
  *
  * @FormElement("entity_autocomplete")
  */
-class xEntityAutocomplete extends Textfield {
+class EntityAutocomplete extends Textfield {
 
   /**
    * {@inheritdoc}
