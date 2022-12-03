@@ -42,11 +42,12 @@ class Memory implements QueueInterface {
    *
    * @param string $name
    *   An arbitrary string. The name of the queue to work with.
+   * @param \Drupal\Core\Database\Connection $connection
    *   The Connection object containing the key-value tables.
-   * @param \Drupal\Component\Datetime\TimeInterface|null $time
+   * @param \Drupal\Component\Datetime\TimeInterface $time
    *   The time service.
    */
-  public function __construct($name, TimeInterface $time = NULL) {
+  public function __construct($name, Connection $connection = NULL, TimeInterface $time = NULL) {
     $this->queue = [];
     $this->idSequence = 0;
 
