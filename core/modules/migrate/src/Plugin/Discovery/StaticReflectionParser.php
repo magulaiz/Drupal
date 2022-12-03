@@ -35,6 +35,7 @@ class StaticReflectionParser extends BaseStaticReflectionParser {
     if ($parser->parentClassName) {
       return new static($parser->parentClassName, $finder, $parser->classAnnotationOptimize);
     }
+    return NULL;
   }
 
 }

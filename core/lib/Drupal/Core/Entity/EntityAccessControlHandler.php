@@ -189,6 +189,7 @@ class EntityAccessControlHandler extends EntityHandlerBase implements EntityAcce
     if (isset($this->accessCache[$account->id()][$cid][$langcode][$operation])) {
       return $this->accessCache[$account->id()][$cid][$langcode][$operation];
     }
+    return NULL;
   }
 
   /**

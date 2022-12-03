@@ -214,6 +214,7 @@ abstract class ConfigBase implements RefinableCacheableDependencyInterface {
         $this->validateKeys($value);
       }
     }
+    return NULL;
   }
 
   /**

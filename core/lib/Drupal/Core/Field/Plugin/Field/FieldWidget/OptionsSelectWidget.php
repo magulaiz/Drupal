@@ -76,6 +76,7 @@ class OptionsSelectWidget extends OptionsWidgetBase {
         return $this->t('- Select a value -');
       }
     }
+    return NULL;
   }
 
 }

@@ -74,6 +74,7 @@ class ContentEntityNullStorage extends ContentEntityStorageBase {
    * {@inheritdoc}
    */
   public function save(EntityInterface $entity) {
+    return NULL;
   }
 
   /**

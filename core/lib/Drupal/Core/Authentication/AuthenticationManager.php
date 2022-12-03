@@ -86,6 +86,7 @@ class AuthenticationManager implements AuthenticationProviderInterface, Authenti
       $provider = $this->authCollector->getProvider($provider_id);
       return $provider->challengeException($request, $previous);
     }
+    return NULL;
   }
 
   /**
@@ -104,6 +105,7 @@ class AuthenticationManager implements AuthenticationProviderInterface, Authenti
         return $provider_id;
       }
     }
+    return NULL;
   }
 
   /**
@@ -122,6 +124,7 @@ class AuthenticationManager implements AuthenticationProviderInterface, Authenti
         return $provider_id;
       }
     }
+    return NULL;
   }
 
   /**

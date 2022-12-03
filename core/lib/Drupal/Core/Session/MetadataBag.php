@@ -47,6 +47,7 @@ class MetadataBag extends SymfonyMetadataBag {
     if (isset($this->meta[static::CSRF_TOKEN_SEED])) {
       return $this->meta[static::CSRF_TOKEN_SEED];
     }
+    return NULL;
   }
 
   /**

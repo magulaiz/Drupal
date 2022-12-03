@@ -354,6 +354,7 @@ class EntityReferenceItem extends FieldItemBase implements OptionsProviderInterf
       }
       return array_rand($bundle_ids);
     }
+    return NULL;
   }
 
   /**

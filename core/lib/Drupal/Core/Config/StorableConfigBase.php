@@ -160,6 +160,7 @@ abstract class StorableConfigBase extends ConfigBase {
     elseif ($value !== NULL && !is_scalar($value)) {
       throw new UnsupportedDataTypeConfigException("Invalid data type for config element {$this->getName()}:$key");
     }
+    return NULL;
   }
 
   /**

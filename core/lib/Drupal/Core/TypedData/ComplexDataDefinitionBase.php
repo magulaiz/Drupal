@@ -27,6 +27,7 @@ abstract class ComplexDataDefinitionBase extends DataDefinition implements Compl
     if (isset($definitions[$name])) {
       return $definitions[$name];
     }
+    return NULL;
   }
 
   /**

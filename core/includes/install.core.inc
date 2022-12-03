@@ -681,7 +681,7 @@ function install_run_task($task, &$install_state) {
       if ($output === FALSE) {
         // Return nothing so the next task will run in the same request.
         \Drupal::state()->delete('install_current_batch');
-        return;
+        return NULL;
       }
       else {
         // We need to force the page request to end if the task is not
@@ -697,6 +697,7 @@ function install_run_task($task, &$install_state) {
     // For normal tasks, just return the function result, whatever it is.
     return $function($install_state);
   }
+  return NULL;
 }
 
 /**
@@ -969,6 +970,7 @@ function install_get_form($form_id, array &$install_state) {
       throw new InstallerException(implode("\n", $errors));
     }
   }
+  return NULL;
 }
 
 /**
@@ -1136,6 +1138,7 @@ function install_verify_completed_task() {
     }
     return $task;
   }
+  return NULL;
 }
 
 /**
@@ -1246,6 +1249,7 @@ function install_select_profile(&$install_state) {
       return install_get_form('Drupal\Core\Installer\Form\SelectProfileForm', $install_state);
     }
   }
+  return NULL;
 }
 
 /**
@@ -1305,6 +1309,7 @@ function _install_select_profile(&$install_state) {
   if (count($visible_profiles) == 1) {
     return (key($visible_profiles));
   }
+  return NULL;
 }
 
 /**
@@ -1363,7 +1368,7 @@ function install_select_language(&$install_state) {
     $langcode = $install_state['parameters']['langcode'];
     if ($langcode == 'en' || isset($files[$langcode]) || isset($standard_languages[$langcode])) {
       $install_state['parameters']['langcode'] = $langcode;
-      return;
+      return NULL;
     }
   }
 
@@ -1382,13 +1387,14 @@ function install_select_language(&$install_state) {
     else {
       if (count($files) == 1) {
         $install_state['parameters']['langcode'] = current(array_keys($files));
-        return;
+        return NULL;
       }
       else {
         throw new InstallerException('You must select a language to continue the installation.');
       }
     }
   }
+  return NULL;
 }
 
 /**
@@ -1763,6 +1769,7 @@ function install_import_translations(&$install_state) {
       ->setFinishCallback('locale_translation_batch_fetch_finished');
     return $batch_builder->toArray();
   }
+  return NULL;
 }
 
 /**
@@ -2323,6 +2330,7 @@ function install_display_requirements($install_state, $requirements) {
       }
     }
   }
+  return NULL;
 }
 
 /**

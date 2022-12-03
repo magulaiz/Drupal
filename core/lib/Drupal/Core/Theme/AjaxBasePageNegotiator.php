@@ -85,6 +85,7 @@ class AjaxBasePageNegotiator implements ThemeNegotiatorInterface {
     if ($theme === $this->configFactory->get('system.theme')->get('default') || $this->csrfGenerator->validate($token, $theme)) {
       return $theme;
     }
+    return NULL;
   }
 
 }

@@ -605,7 +605,7 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
 
       // Don't rebuild or cache form submissions invoked via self::submitForm().
       if ($form_state->isProgrammed()) {
-        return;
+        return NULL;
       }
 
       // If $form_state->isRebuilding() has been set and input has been
@@ -642,6 +642,7 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
     if (!$form_state->isRebuilding() && $form_state->isCached()) {
       $this->setCache($form['#build_id'], $unprocessed_form, $form_state);
     }
+    return NULL;
   }
 
   /**

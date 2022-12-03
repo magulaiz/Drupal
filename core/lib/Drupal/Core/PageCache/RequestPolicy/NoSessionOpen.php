@@ -34,7 +34,12 @@ class NoSessionOpen implements RequestPolicyInterface {
   }
 
   /**
-   * {@inheritdoc}
+   * Allows access if the a session identifier is on the request.
+   *
+   * @param \Symfony\Component\HttpFoundation\Request $request
+   *   The request.
+   *
+   * @return string|void
    */
   public function check(Request $request) {
     if (!$this->sessionConfiguration->hasSession($request)) {

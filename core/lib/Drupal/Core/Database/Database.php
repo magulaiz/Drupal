@@ -216,6 +216,7 @@ abstract class Database {
       self::$activeKey = $key;
       return $old_key;
     }
+    return NULL;
   }
 
   /**
@@ -336,6 +337,7 @@ abstract class Database {
     if (!empty(self::$databaseInfo[$key])) {
       return self::$databaseInfo[$key];
     }
+    return NULL;
   }
 
   /**

@@ -176,6 +176,7 @@ class ConfigEntityUpdater implements ContainerInjectionInterface {
         ]);
       }
     }
+    return NULL;
   }
 
   /**

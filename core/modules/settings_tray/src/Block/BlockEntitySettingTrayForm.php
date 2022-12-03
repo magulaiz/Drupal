@@ -170,6 +170,7 @@ class BlockEntitySettingTrayForm extends BlockForm {
     if ($this->getRequest()->query->has('destination') && $destination = $this->getRedirectDestination()->get()) {
       return Url::fromUserInput('/' . $destination);
     }
+    return NULL;
   }
 
 }

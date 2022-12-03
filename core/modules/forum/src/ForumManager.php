@@ -403,6 +403,7 @@ class ForumManager implements ForumManagerInterface {
     if (!empty($this->forumStatistics[$tid])) {
       return $this->forumStatistics[$tid];
     }
+    return NULL;
   }
 
   /**

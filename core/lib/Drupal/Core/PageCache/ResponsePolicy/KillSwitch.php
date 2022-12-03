@@ -25,6 +25,7 @@ class KillSwitch implements ResponsePolicyInterface {
     if ($this->kill) {
       return static::DENY;
     }
+    return NULL;
   }
 
   /**

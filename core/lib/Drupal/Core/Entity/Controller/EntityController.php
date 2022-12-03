@@ -254,6 +254,7 @@ class EntityController implements ContainerInjectionInterface {
     if ($entity = $this->doGetEntity($route_match, $_entity)) {
       return $entity->label();
     }
+    return NULL;
   }
 
   /**
@@ -271,6 +272,7 @@ class EntityController implements ContainerInjectionInterface {
     if ($entity = $this->doGetEntity($route_match, $_entity)) {
       return $this->t('Edit %label', ['%label' => $entity->label()]);
     }
+    return NULL;
   }
 
   /**
@@ -320,6 +322,7 @@ class EntityController implements ContainerInjectionInterface {
     if (isset($entity)) {
       return $this->entityRepository->getTranslationFromContext($entity);
     }
+    return NULL;
   }
 
   /**

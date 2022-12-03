@@ -264,6 +264,7 @@ class TypedConfigManager extends TypedDataManager implements TypedConfigManagerI
         return $this->getFallbackName($replaced);
       }
     }
+    return NULL;
   }
 
   /**

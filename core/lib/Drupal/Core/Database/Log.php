@@ -166,6 +166,7 @@ class Log {
         ];
       }
     }
+    return NULL;
   }
 
   /**

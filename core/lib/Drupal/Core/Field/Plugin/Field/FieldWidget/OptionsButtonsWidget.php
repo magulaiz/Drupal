@@ -66,6 +66,7 @@ class OptionsButtonsWidget extends OptionsWidgetBase {
     if (!$this->required && !$this->multiple) {
       return $this->t('N/A');
     }
+    return NULL;
   }
 
 }

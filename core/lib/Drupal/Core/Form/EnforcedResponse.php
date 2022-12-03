@@ -49,6 +49,7 @@ class EnforcedResponse extends Response {
 
       $e = $e->getPrevious();
     }
+    return NULL;
   }
 
   /**

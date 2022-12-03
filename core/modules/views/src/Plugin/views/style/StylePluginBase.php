@@ -776,6 +776,7 @@ abstract class StylePluginBase extends PluginBase {
     if (isset($this->rendered_fields[$index][$field])) {
       return $this->rendered_fields[$index][$field];
     }
+    return NULL;
   }
 
   /**

@@ -43,6 +43,7 @@ class ChainEntityResolver implements ChainEntityResolverInterface {
         return $resolved;
       }
     }
+    return NULL;
   }
 
 }

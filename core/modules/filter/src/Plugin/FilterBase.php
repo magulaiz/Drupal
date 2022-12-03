@@ -151,6 +151,7 @@ abstract class FilterBase extends PluginBase implements FilterInterface {
    * {@inheritdoc}
    */
   public function tips($long = FALSE) {
+    return NULL;
   }
 
 }

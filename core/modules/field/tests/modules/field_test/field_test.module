@@ -73,6 +73,7 @@ function field_test_memorize($key = NULL, $value = NULL) {
   if (is_array($memorize)) {
     $memorize[$key][] = $value;
   }
+  return NULL;
 }
 
 /**

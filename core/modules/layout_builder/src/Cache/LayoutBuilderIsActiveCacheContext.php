@@ -93,6 +93,7 @@ class LayoutBuilderIsActiveCacheContext implements CalculatedCacheContextInterfa
         }
       }
     }
+    return NULL;
   }
 
 }

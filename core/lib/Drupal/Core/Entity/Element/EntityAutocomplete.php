@@ -65,7 +65,7 @@ use Drupal\Core\Site\Settings;
  *
  * @FormElement("entity_autocomplete")
  */
-class EntityAutocomplete extends Textfield {
+class xEntityAutocomplete extends Textfield {
 
   /**
    * {@inheritdoc}
@@ -349,6 +349,7 @@ class EntityAutocomplete extends Textfield {
       // Take the one and only matching entity.
       return key($entities);
     }
+    return NULL;
   }
 
   /**

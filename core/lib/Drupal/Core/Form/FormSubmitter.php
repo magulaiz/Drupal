@@ -45,7 +45,7 @@ class FormSubmitter implements FormSubmitterInterface {
    */
   public function doSubmitForm(&$form, FormStateInterface &$form_state) {
     if (!$form_state->isSubmitted()) {
-      return;
+      return NULL;
     }
 
     // Execute form submit handlers.
@@ -85,6 +85,7 @@ class FormSubmitter implements FormSubmitterInterface {
     if (($response = $form_state->getResponse()) && $response instanceof Response) {
       return $response;
     }
+    return NULL;
   }
 
   /**
@@ -144,6 +145,7 @@ class FormSubmitter implements FormSubmitterInterface {
       // @see http://tools.ietf.org/html/rfc7231#section-6.4.4
       return new RedirectResponse($url, Response::HTTP_SEE_OTHER);
     }
+    return NULL;
   }
 
   /**

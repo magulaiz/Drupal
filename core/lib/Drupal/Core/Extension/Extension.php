@@ -131,6 +131,7 @@ class Extension {
     if ($this->filename) {
       return $this->getPath() . '/' . $this->filename;
     }
+    return NULL;
   }
 
   /**

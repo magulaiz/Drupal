@@ -741,7 +741,7 @@ abstract class Connection {
    *   Typically, $options['return'] will be set by a default or by a query
    *   builder, and should not be set by a user.
    *
-   * @return \Drupal\Core\Database\StatementInterface|int|string|null
+   * @return \Drupal\Core\Database\StatementInterface|int|string|null|void
    *   This method will return one of the following:
    *   - If either $options['return'] === self::RETURN_STATEMENT, or
    *     $options['return'] is not set (due to self::defaultOptions()),

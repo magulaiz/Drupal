@@ -327,6 +327,7 @@ class DefaultPluginManager extends PluginManagerBase implements PluginManagerInt
     if (isset($plugin_definition['provider'])) {
       return $plugin_definition['provider'];
     }
+    return NULL;
   }
 
   /**
