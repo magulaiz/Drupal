@@ -144,10 +144,8 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
 
   /**
    * The time service.
-   *
-   * @var \Drupal\Component\Datetime\TimeInterface
    */
-  protected $time;
+  protected TimeInterface $time;
 
   /**
    * {@inheritdoc}
@@ -195,9 +193,8 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
     $this->entityTypeManager = $entity_type_manager;
     $this->entityType = $this->entityTypeManager->getActiveDefinition($entity_type->id());
     $this->fieldStorageDefinitions = $this->entityFieldManager->getActiveFieldStorageDefinitions($entity_type->id());
-
     if (!$time) {
-      @trigger_error('The time service must be passed to ' . __NAMESPACE__ . '\SqlContentEntityStorage::__construct(). It was added in drupal:9.3.0 and will be required before drupal:10.0.0. See https://www.drupal.org/node/3161659', E_USER_DEPRECATED);
+      @trigger_error('Calling ' . __METHOD__ . '() without the $time argument is deprecated in drupal:10.1.0 and will be required in drupal:11.0.0. See https://www.drupal.org/node/3161659', E_USER_DEPRECATED);
       $time = \Drupal::time();
     }
     $this->time = $time;

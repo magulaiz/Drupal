@@ -7,7 +7,7 @@
 
 namespace Drupal\Tests\Core\Entity\Sql;
 
-use Drupal\Component\Datetime\Time;
+use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Core\Cache\MemoryCache\MemoryCache;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\Entity\EntityFieldManager;
@@ -114,7 +114,7 @@ class SqlContentEntityStorageTest extends UnitTestCase {
   /**
    * The time service used in this test.
    *
-   * @var \Drupal\Component\Datetime\Time|\PHPUnit\Framework\MockObject\MockObject
+   * @var \Drupal\Component\Datetime\TimeInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $time;
 
@@ -133,7 +133,7 @@ class SqlContentEntityStorageTest extends UnitTestCase {
     $this->entityTypeManager = $this->createMock(EntityTypeManager::class);
     $this->entityTypeBundleInfo = $this->createMock(EntityTypeBundleInfoInterface::class);
     $this->entityFieldManager = $this->createMock(EntityFieldManager::class);
-    $this->time = $this->createMock(Time::class);
+    $this->time = $this->createMock(TimeInterface::class);
     $this->moduleHandler = $this->createMock('Drupal\Core\Extension\ModuleHandlerInterface');
     $this->cache = $this->createMock('Drupal\Core\Cache\CacheBackendInterface');
     $this->languageManager = $this->createMock('Drupal\Core\Language\LanguageManagerInterface');

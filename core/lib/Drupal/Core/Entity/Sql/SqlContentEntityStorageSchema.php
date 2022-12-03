@@ -106,10 +106,8 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
 
   /**
    * The time service.
-   *
-   * @var \Drupal\Component\Datetime\TimeInterface
    */
-  protected $time;
+  protected TimeInterface $time;
 
   /**
    * Constructs a SqlContentEntityStorageSchema.
@@ -135,9 +133,8 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
 
     $this->entityType = $entity_type_manager->getActiveDefinition($entity_type->id());
     $this->fieldStorageDefinitions = $entity_field_manager->getActiveFieldStorageDefinitions($entity_type->id());
-
     if (!$time) {
-      @trigger_error('The time service must be passed to ' . __NAMESPACE__ . '\SqlContentEntityStorageSchema::__construct(). It was added in drupal:9.3.0 and will be required before drupal:10.0.0. See https://www.drupal.org/node/3161659', E_USER_DEPRECATED);
+      @trigger_error('Calling ' . __METHOD__ . '() without the $time argument is deprecated in drupal:10.1.0 and will be required in drupal:11.0.0. See https://www.drupal.org/node/3161659', E_USER_DEPRECATED);
       $time = \Drupal::time();
     }
     $this->time = $time;

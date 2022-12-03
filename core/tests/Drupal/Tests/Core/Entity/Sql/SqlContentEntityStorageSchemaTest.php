@@ -2,7 +2,7 @@
 
 namespace Drupal\Tests\Core\Entity\Sql;
 
-use Drupal\Component\Datetime\Time;
+use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Core\Entity\ContentEntityType;
 use Drupal\Core\Entity\ContentEntityTypeInterface;
 use Drupal\Core\Entity\EntityFieldManager;
@@ -77,7 +77,7 @@ class SqlContentEntityStorageSchemaTest extends UnitTestCase {
   /**
    * The time service used in this test.
    *
-   * @var \Drupal\Component\Datetime\Time|\PHPUnit\Framework\MockObject\MockObject
+   * @var \Drupal\Component\Datetime\TimeInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $time;
 
@@ -91,7 +91,7 @@ class SqlContentEntityStorageSchemaTest extends UnitTestCase {
     $this->storage = $this->getMockBuilder('Drupal\Core\Entity\Sql\SqlContentEntityStorage')
       ->disableOriginalConstructor()
       ->getMock();
-    $this->time = $this->createMock(Time::class);
+    $this->time = $this->createMock(TimeInterface::class);
 
     $this->storage->expects($this->any())
       ->method('getBaseTable')
