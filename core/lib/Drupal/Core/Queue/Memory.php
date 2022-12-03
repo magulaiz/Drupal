@@ -37,15 +37,17 @@ class Memory implements QueueInterface {
   /**
    * Constructs a Memory object.
    *
-   * @param string $name
-   *   An arbitrary string. The name of the queue to work with.
    * @param \Drupal\Component\Datetime\TimeInterface|null $time
    *   The time service.
    */
-  public function __construct($name, TimeInterface $time = NULL) {
+  public function __construct($time = NULL) {
     $this->queue = [];
     $this->idSequence = 0;
-    if (!$time) {
+    if (is_string($time)) {
+      @trigger_error('Calling ' . __METHOD__ . '() with the $name argument instead of $time argument is deprecated in drupal:10.1.0 and will be required in drupal:11.0.0. See https://www.drupal.org/node/3161659', E_USER_DEPRECATED);
+      $time = \Drupal::time();
+    }
+    elseif (!$time) {
       @trigger_error('Calling ' . __METHOD__ . '() without the $time argument is deprecated in drupal:10.1.0 and will be required in drupal:11.0.0. See https://www.drupal.org/node/3161659', E_USER_DEPRECATED);
       $time = \Drupal::time();
     }
