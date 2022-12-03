@@ -1031,10 +1031,10 @@ function _batch_queue($batch_set) {
 
     if (!isset($queues[$class][$name])) {
       // @todo Improve in https://www.drupal.org/i/3325158.
-      if (is_subclass_of($class, BatchMemory::class)) {
+      if ($class === BatchMemory::class) {
         $queue = new $class($name, \Drupal::time());
       }
-      elseif (is_subclass_of($class, Batch::class)) {
+      elseif ($class === Batch::class) {
         $queue = new $class($name, \Drupal::database(), \Drupal::time());
       }
       else {
