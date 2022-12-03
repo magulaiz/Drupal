@@ -31,6 +31,13 @@ class Memory implements QueueInterface {
   protected $idSequence;
 
   /**
+   * The database service.
+   *
+   * @var \Drupal\Core\Database\Connection
+   */
+  protected $connection;
+
+  /**
    * The time service.
    *
    * @var \Drupal\Component\Datetime\TimeInterface
@@ -42,14 +49,15 @@ class Memory implements QueueInterface {
    *
    * @param string $name
    *   An arbitrary string. The name of the queue to work with.
-   * @param \Drupal\Core\Database\Connection $connection
+   * @param \Drupal\Core\Database\Connection|null $connection
    *   The Connection object containing the key-value tables.
-   * @param \Drupal\Component\Datetime\TimeInterface $time
+   * @param \Drupal\Component\Datetime\TimeInterface|null $time
    *   The time service.
    */
   public function __construct($name, Connection $connection = NULL, TimeInterface $time = NULL) {
     $this->queue = [];
     $this->idSequence = 0;
+    $this->connection = $connection;
 
     if (!$time) {
       @trigger_error('The time service must be passed to ' . __NAMESPACE__ . '\Memory::__construct(). It was added in drupal:9.3.0 and will be required before drupal:10.0.0. See https://www.drupal.org/node/3161659', E_USER_DEPRECATED);
