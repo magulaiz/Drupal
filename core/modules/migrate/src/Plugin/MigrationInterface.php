@@ -239,7 +239,6 @@ interface MigrationInterface extends PluginInspectionInterface, DerivativeInspec
    *   The process pipeline configuration to be set for this property.
    *
    * @return $this
-   *   The migration entity.
    */
   public function setProcessOfProperty($property, $process_of_property);
 

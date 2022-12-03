@@ -171,7 +171,6 @@ interface SelectInterface extends ConditionInterface, AlterableInterface, Extend
    *   TRUE to flag this query DISTINCT, FALSE to disable it.
    *
    * @return $this
-   *   The called object.
    */
   public function distinct($distinct = TRUE);
 
@@ -215,7 +214,6 @@ interface SelectInterface extends ConditionInterface, AlterableInterface, Extend
    *   without any aliases.
    *
    * @return $this
-   *   The called object.
    */
   public function fields($table_alias, array $fields = []);
 
@@ -387,7 +385,6 @@ interface SelectInterface extends ConditionInterface, AlterableInterface, Extend
    *   will be converted to "ASC".
    *
    * @return $this
-   *   The called object.
    */
   public function orderBy($field, $direction = 'ASC');
 
@@ -409,7 +406,6 @@ interface SelectInterface extends ConditionInterface, AlterableInterface, Extend
    * for an example of such an alternate sorting mechanism.
    *
    * @return $this
-   *   The called object
    */
   public function orderRandom();
 
@@ -426,7 +422,6 @@ interface SelectInterface extends ConditionInterface, AlterableInterface, Extend
    *   The number of records to return from the result set.
    *
    * @return $this
-   *   The called object.
    */
   public function range($start = NULL, $length = NULL);
 
@@ -452,7 +447,6 @@ interface SelectInterface extends ConditionInterface, AlterableInterface, Extend
    *   UNION.
    *
    * @return $this
-   *   The called object.
    */
   public function union(SelectInterface $query, $type = '');
 
@@ -463,7 +457,6 @@ interface SelectInterface extends ConditionInterface, AlterableInterface, Extend
    *   The field on which to group. This should be the field as aliased.
    *
    * @return $this
-   *   The called object.
    */
   public function groupBy($field);
 

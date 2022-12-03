@@ -87,7 +87,6 @@ interface UserInterface extends ContentEntityInterface, EntityChangedInterface, 
    *   The new user name.
    *
    * @return $this
-   *   The called user entity.
    */
   public function setUsername($username);
 
@@ -106,7 +105,6 @@ interface UserInterface extends ContentEntityInterface, EntityChangedInterface, 
    *   The new unhashed password.
    *
    * @return $this
-   *   The called user entity.
    */
   public function setPassword($password);
 
@@ -117,7 +115,6 @@ interface UserInterface extends ContentEntityInterface, EntityChangedInterface, 
    *   The new email address of the user.
    *
    * @return $this
-   *   The called user entity.
    */
   public function setEmail($mail);
 
@@ -136,7 +133,6 @@ interface UserInterface extends ContentEntityInterface, EntityChangedInterface, 
    *   Timestamp of the last access.
    *
    * @return $this
-   *   The called user entity.
    */
   public function setLastAccessTime($timestamp);
 
@@ -155,7 +151,6 @@ interface UserInterface extends ContentEntityInterface, EntityChangedInterface, 
    *   Timestamp of the last login time.
    *
    * @return $this
-   *   The called user entity.
    */
   public function setLastLoginTime($timestamp);
 
@@ -179,7 +174,6 @@ interface UserInterface extends ContentEntityInterface, EntityChangedInterface, 
    * Activates the user.
    *
    * @return $this
-   *   The called user entity.
    */
   public function activate();
 
@@ -187,7 +181,6 @@ interface UserInterface extends ContentEntityInterface, EntityChangedInterface, 
    * Blocks the user.
    *
    * @return $this
-   *   The called user entity.
    */
   public function block();
 

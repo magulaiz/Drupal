@@ -78,7 +78,6 @@ abstract class ExecutablePluginBase extends PluginBase implements ExecutableInte
    * @todo This does not set a value in \Drupal::config(), so the name is confusing.
    *
    * @return $this
-   *   The executable object for chaining.
    *
    * @throws \Drupal\Component\Plugin\Exception\PluginException
    *   If the provided configuration value does not pass validation.

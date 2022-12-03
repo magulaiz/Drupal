@@ -69,7 +69,6 @@ class QueryAggregate extends Query implements QueryAggregateInterface {
    * Adds the aggregations to the query.
    *
    * @return $this
-   *   Returns the called object.
    */
   protected function addAggregate() {
     if ($this->aggregate) {
@@ -86,7 +85,6 @@ class QueryAggregate extends Query implements QueryAggregateInterface {
    * Builds the aggregation conditions part of the query.
    *
    * @return $this
-   *   Returns the called object.
    */
   protected function compileAggregate() {
     $this->conditionAggregate->compile($this->sqlQuery);
@@ -97,7 +95,6 @@ class QueryAggregate extends Query implements QueryAggregateInterface {
    * Adds the groupby values to the actual query.
    *
    * @return $this
-   *   Returns the called object.
    */
   protected function addGroupBy() {
     foreach ($this->groupBy as $group_by) {
@@ -115,7 +112,6 @@ class QueryAggregate extends Query implements QueryAggregateInterface {
    * Builds the aggregation sort part of the query.
    *
    * @return $this
-   *   Returns the called object.
    */
   protected function addSortAggregate() {
     if (!$this->count) {

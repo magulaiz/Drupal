@@ -33,7 +33,6 @@ class AjaxResponse extends JsonResponse implements AttachmentsInterface {
    *   before previously added commands. Defaults to FALSE.
    *
    * @return $this
-   *   The current AjaxResponse.
    */
   public function addCommand(CommandInterface $command, $prepend = FALSE) {
     if ($prepend) {

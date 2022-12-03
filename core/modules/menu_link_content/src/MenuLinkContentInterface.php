@@ -124,7 +124,6 @@ interface MenuLinkContentInterface extends ContentEntityInterface, EntityChanged
    *   Whether or not the link requires rediscovery.
    *
    * @return $this
-   *   The instance on which the method was called.
    *
    * @see \Drupal\menu_link_content\MenuLinkContentInterface::requiresRediscovery()
    */

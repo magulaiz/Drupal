@@ -177,7 +177,6 @@ interface WorkflowTypeInterface extends PluginWithFormsInterface, DerivativeInsp
    *   The state ID to delete.
    *
    * @return $this
-   *   The workflow type plugin.
    *
    * @throws \InvalidArgumentException
    *   Thrown if $state_id does not exist.

@@ -17,7 +17,6 @@ interface ShortcutSetInterface extends ConfigEntityInterface {
    * is called, it will force that link to display at the end of the list.
    *
    * @return $this
-   *   The shortcut set.
    */
   public function resetLinkWeights();
 

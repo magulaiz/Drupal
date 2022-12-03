@@ -102,7 +102,6 @@ interface StringStorageInterface {
    *   The string object.
    *
    * @return $this
-   *   The called object.
    *
    * @throws \Drupal\locale\StringStorageException
    *   In case of failures, an exception is thrown.
@@ -116,7 +115,6 @@ interface StringStorageInterface {
    *   The string object.
    *
    * @return $this
-   *   The called object.
    *
    * @throws \Drupal\locale\StringStorageException
    *   In case of failures, an exception is thrown.

@@ -20,7 +20,6 @@ interface AlterableInterface {
    *   The tag to add.
    *
    * @return $this
-   *   The called object.
    */
   public function addTag($tag);
 
@@ -77,7 +76,6 @@ interface AlterableInterface {
    *   The additional data to add to the query. May be any valid PHP variable.
    *
    * @return $this
-   *   The called object.
    */
   public function addMetaData($key, $object);
 

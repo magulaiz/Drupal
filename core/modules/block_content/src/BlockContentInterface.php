@@ -20,7 +20,6 @@ interface BlockContentInterface extends ContentEntityInterface, EntityChangedInt
    *   The block description.
    *
    * @return $this
-   *   The class instance that this method is called on.
    */
   public function setInfo($info);
 
@@ -57,7 +56,6 @@ interface BlockContentInterface extends ContentEntityInterface, EntityChangedInt
    *   The theme name.
    *
    * @return $this
-   *   The class instance that this method is called on.
    */
   public function setTheme($theme);
 

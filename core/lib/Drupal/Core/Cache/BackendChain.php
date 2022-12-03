@@ -36,7 +36,6 @@ class BackendChain implements CacheBackendInterface, CacheTagsInvalidatorInterfa
    *   The cache backend to be appended to the cache chain.
    *
    * @return $this
-   *   The called object.
    */
   public function appendBackend(CacheBackendInterface $backend) {
     $this->backends[] = $backend;
@@ -51,7 +50,6 @@ class BackendChain implements CacheBackendInterface, CacheTagsInvalidatorInterfa
    *   The backend to be prepended to the cache chain.
    *
    * @return $this
-   *   The called object.
    */
   public function prependBackend(CacheBackendInterface $backend) {
     array_unshift($this->backends, $backend);

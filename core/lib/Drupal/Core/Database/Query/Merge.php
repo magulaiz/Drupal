@@ -151,7 +151,6 @@ class Merge extends Query implements ConditionInterface {
    *   pass in a subquery.
    *
    * @return $this
-   *   The called object.
    */
   protected function conditionTable($table) {
     $this->conditionTable = $table;
@@ -166,7 +165,6 @@ class Merge extends Query implements ConditionInterface {
    *   are the field names and the values are the values to which to set them.
    *
    * @return $this
-   *   The called object.
    */
   public function updateFields(array $fields) {
     $this->updateFields = $fields;
@@ -191,7 +189,6 @@ class Merge extends Query implements ConditionInterface {
    *   corresponding to the expression.
    *
    * @return $this
-   *   The called object.
    */
   public function expression($field, $expression, array $arguments = NULL) {
     $this->expressionFields[$field] = [
@@ -216,7 +213,6 @@ class Merge extends Query implements ConditionInterface {
    *   specified in the same order as the $fields array.
    *
    * @return $this
-   *   The called object.
    */
   public function insertFields(array $fields, array $values = []) {
     if ($values) {
@@ -243,7 +239,6 @@ class Merge extends Query implements ConditionInterface {
    *   specified in the table definition.
    *
    * @return $this
-   *   The called object.
    */
   public function useDefaults(array $fields) {
     $this->defaultFields = $fields;
@@ -269,7 +264,6 @@ class Merge extends Query implements ConditionInterface {
    *   specified in the same order as the $fields array.
    *
    * @return $this
-   *   The called object.
    */
   public function fields(array $fields, array $values = []) {
     if ($values) {

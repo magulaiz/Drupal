@@ -78,7 +78,6 @@ class Update extends Query implements ConditionInterface {
    *   are the field names and the values are the values to which to set them.
    *
    * @return $this
-   *   The called object.
    */
   public function fields(array $fields) {
     $this->fields = $fields;
@@ -101,7 +100,6 @@ class Update extends Query implements ConditionInterface {
    *   corresponding to the expression.
    *
    * @return $this
-   *   The called object.
    */
   public function expression($field, $expression, array $arguments = NULL) {
     $this->expressionFields[$field] = [

@@ -119,7 +119,6 @@ class GDToolkit extends ImageToolkitBase {
    *   The GD image resource.
    *
    * @return $this
-   *   An instance of the current toolkit object.
    */
   public function setResource($resource) {
     if (!$resource instanceof \GdImage) {

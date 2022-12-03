@@ -24,7 +24,6 @@ interface ImageStyleInterface extends ConfigEntityInterface {
    *   The name of the image style.
    *
    * @return $this
-   *   The class instance this method is called on.
    */
   public function setName($name);
 

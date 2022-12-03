@@ -74,7 +74,6 @@ abstract class ConfigBase implements RefinableCacheableDependencyInterface {
    *   The name of the configuration object.
    *
    * @return $this
-   *   The configuration object.
    */
   public function setName($name) {
     $this->name = $name;
@@ -151,7 +150,6 @@ abstract class ConfigBase implements RefinableCacheableDependencyInterface {
    *   The new configuration data.
    *
    * @return $this
-   *   The configuration object.
    *
    * @throws \Drupal\Core\Config\ConfigValueException
    *   If any key in $data in any depth contains a dot.
@@ -172,7 +170,6 @@ abstract class ConfigBase implements RefinableCacheableDependencyInterface {
    *   Value to associate with identifier.
    *
    * @return $this
-   *   The configuration object.
    *
    * @throws \Drupal\Core\Config\ConfigValueException
    *   If $value is an array and any of its keys in any depth contains a dot.
@@ -223,7 +220,6 @@ abstract class ConfigBase implements RefinableCacheableDependencyInterface {
    *   Name of the key whose value should be unset.
    *
    * @return $this
-   *   The configuration object.
    */
   public function clear($key) {
     $parts = explode('.', $key);
@@ -243,7 +239,6 @@ abstract class ConfigBase implements RefinableCacheableDependencyInterface {
    *   An array containing data to merge.
    *
    * @return $this
-   *   The configuration object.
    */
   public function merge(array $data_to_merge) {
     // Preserve integer keys so that configuration keys are not changed.
