@@ -454,7 +454,7 @@ class ForumManager implements ForumManagerInterface {
       $this->forumStatistics = $query
         ->fields('f', ['tid'])
         ->groupBy('tid')
-        ->orderBy('NULL')
+        ->orderBy('f.last_comment_timestamp', 'DESC')
         ->execute()
         ->fetchAllAssoc('tid');
     }
