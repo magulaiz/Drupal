@@ -992,8 +992,10 @@ class LayoutBuilderTest extends BrowserTestBase {
     $display_path = 'admin/structure/types/manage/bundle_with_section_field/display/default';
 
     $this->drupalLogin($user1);
-    $this->drupalPostForm($display_path, ['layout[enabled]' => TRUE], 'Save');
-    $this->drupalPostForm($display_path, ['layout[allow_custom]' => TRUE], 'Save');
+    $this->drupalGet($display_path);
+    $this->submitForm(['layout[enabled]' => TRUE], 'Save');
+    $this->drupalGet($display_path);
+    $this->submitForm(['layout[allow_custom]' => TRUE], 'Save');
 
     // Test concurrent editing with defaults.
     $this->drupalGet("$display_path/layout");
