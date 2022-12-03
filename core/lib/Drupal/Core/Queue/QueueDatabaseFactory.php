@@ -19,10 +19,8 @@ class QueueDatabaseFactory {
 
   /**
    * The time service.
-   *
-   * @var \Drupal\Component\Datetime\TimeInterface
    */
-  protected $time;
+  protected TimeInterface $time;
 
   /**
    * Constructs this factory object.
@@ -34,9 +32,8 @@ class QueueDatabaseFactory {
    */
   public function __construct(Connection $connection, TimeInterface $time = NULL) {
     $this->connection = $connection;
-
     if (!$time) {
-      @trigger_error('The time service must be passed to ' . __NAMESPACE__ . '\DatabaseQueue::__construct(). It was added in drupal:9.3.0 and will be required before drupal:10.0.0. See https://www.drupal.org/node/3161659', E_USER_DEPRECATED);
+      @trigger_error('Calling ' . __METHOD__ . '() without the $time argument is deprecated in drupal:10.1.0 and will be required in drupal:11.0.0. See https://www.drupal.org/node/3161659', E_USER_DEPRECATED);
       $time = \Drupal::time();
     }
     $this->time = $time;

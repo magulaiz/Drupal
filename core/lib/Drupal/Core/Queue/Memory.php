@@ -3,7 +3,6 @@
 namespace Drupal\Core\Queue;
 
 use Drupal\Component\Datetime\TimeInterface;
-use Drupal\Core\Database\Connection;
 
 /**
  * Static queue implementation.
@@ -31,36 +30,23 @@ class Memory implements QueueInterface {
   protected $idSequence;
 
   /**
-   * The database service.
-   *
-   * @var \Drupal\Core\Database\Connection
-   */
-  protected $connection;
-
-  /**
    * The time service.
-   *
-   * @var \Drupal\Component\Datetime\TimeInterface
    */
-  protected $time;
+  protected TimeInterface $time;
 
   /**
    * Constructs a Memory object.
    *
    * @param string $name
    *   An arbitrary string. The name of the queue to work with.
-   * @param \Drupal\Core\Database\Connection|null $connection
-   *   The Connection object containing the key-value tables.
    * @param \Drupal\Component\Datetime\TimeInterface|null $time
    *   The time service.
    */
-  public function __construct($name, Connection $connection = NULL, TimeInterface $time = NULL) {
+  public function __construct($name, TimeInterface $time = NULL) {
     $this->queue = [];
     $this->idSequence = 0;
-    $this->connection = $connection;
-
     if (!$time) {
-      @trigger_error('The time service must be passed to ' . __NAMESPACE__ . '\Memory::__construct(). It was added in drupal:9.3.0 and will be required before drupal:10.0.0. See https://www.drupal.org/node/3161659', E_USER_DEPRECATED);
+      @trigger_error('Calling ' . __METHOD__ . '() without the $time argument is deprecated in drupal:10.1.0 and will be required in drupal:11.0.0. See https://www.drupal.org/node/3161659', E_USER_DEPRECATED);
       $time = \Drupal::time();
     }
     $this->time = $time;

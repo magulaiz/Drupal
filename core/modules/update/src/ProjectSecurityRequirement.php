@@ -51,10 +51,8 @@ final class ProjectSecurityRequirement {
 
   /**
    * The time service.
-   *
-   * @var \Drupal\Component\Datetime\TimeInterface
    */
-  protected $time;
+  protected TimeInterface $time;
 
   /**
    * Constructs a ProjectSecurityRequirement object.
@@ -77,9 +75,8 @@ final class ProjectSecurityRequirement {
     $this->securityCoverageInfo = $security_coverage_info;
     $this->existingMajorMinorVersion = $existing_major_minor_version;
     $this->nextMajorMinorVersion = $next_major_minor_version;
-
     if (!$time) {
-      @trigger_error('The time service must be passed to ' . __NAMESPACE__ . '\ProjectSecurityRequirement::__construct(). It was added in drupal:9.3.0 and will be required before drupal:10.0.0. See https://www.drupal.org/node/3161659', E_USER_DEPRECATED);
+      @trigger_error('Calling ' . __METHOD__ . '() without the $time argument is deprecated in drupal:10.1.0 and will be required in drupal:11.0.0. See https://www.drupal.org/node/3161659', E_USER_DEPRECATED);
       $time = \Drupal::time();
     }
     $this->time = $time;
@@ -101,6 +98,8 @@ final class ProjectSecurityRequirement {
    * @param array $security_coverage_info
    *   The security coverage information as returned by
    *   \Drupal\update\ProjectSecurityData::getCoverageInfo().
+   * @param \Drupal\Component\Datetime\TimeInterface $time
+   *   The time service.
    *
    * @return static
    *
@@ -108,17 +107,21 @@ final class ProjectSecurityRequirement {
    * @see \Drupal\update\ProjectSecurityData::getCoverageInfo()
    * @see update_process_project_info()
    */
-  public static function createFromProjectDataAndSecurityCoverageInfo(array $project_data, array $security_coverage_info) {
+  public static function createFromProjectDataAndSecurityCoverageInfo(array $project_data, array $security_coverage_info, TimeInterface $time = NULL) {
+    if (!$time) {
+      @trigger_error('Calling ' . __METHOD__ . '() without the $time argument is deprecated in drupal:10.1.0 and will be required in drupal:11.0.0. See https://www.drupal.org/node/3161659', E_USER_DEPRECATED);
+      $time = \Drupal::time();
+    }
     if ($project_data['project_type'] !== 'core' || $project_data['name'] !== 'drupal' || empty($security_coverage_info)) {
-      return new static(NULL, [], NULL, NULL, \Drupal::time());
+      return new static(NULL, [], NULL, NULL, $time);
     }
     if (isset($project_data['existing_version'])) {
       [$major, $minor] = explode('.', $project_data['existing_version']);
       $existing_version = "$major.$minor";
       $next_version = "$major." . ((int) $minor + 1);
-      return new static($project_data['title'], $security_coverage_info, $existing_version, $next_version, \Drupal::time());
+      return new static($project_data['title'], $security_coverage_info, $existing_version, $next_version, $time);
     }
-    return new static($project_data['title'], $security_coverage_info, NULL, NULL, \Drupal::time());
+    return new static($project_data['title'], $security_coverage_info, NULL, NULL, $time);
   }
 
   /**
