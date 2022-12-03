@@ -34,9 +34,9 @@ class QueueTest extends KernelTestBase {
   public function testMemoryQueue() {
     $time = \Drupal::time();
     // Create two queues.
-    $queue1 = new Memory($this->randomMachineName(), $time);
+    $queue1 = new Memory($time);
     $queue1->createQueue();
-    $queue2 = new Memory($this->randomMachineName(), $time);
+    $queue2 = new Memory($time);
     $queue2->createQueue();
 
     $this->runQueueTest($queue1, $queue2);
