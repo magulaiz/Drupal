@@ -124,3 +124,6 @@ filter_settings.media_embed:
       sequence:
         type: string
         label: 'Media type'
+    enable_captioning:
+      type: boolean
+      label: 'Enable captioning'

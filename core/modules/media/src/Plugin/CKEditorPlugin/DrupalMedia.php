@@ -98,8 +98,15 @@ class DrupalMedia extends PluginBase implements ContainerFactoryPluginInterface,
    * {@inheritdoc}
    */
   public function getConfig(Editor $editor) {
+    if ($editor->hasAssociatedFilterFormat()) {
+      $filters = $editor->getFilterFormat()->filters();
+      if ($filters->has('media_embed')) {
+        $filter_caption = $filters->get('media_embed')->settings->enable_captioning;
+      }
+    }
     return [
       'drupalMedia_previewCsrfToken' => \Drupal::csrfToken()->get('X-Drupal-MediaPreview-CSRF-Token'),
+      'DrupalMediaLibrary_enableCaptioning' => $filter_caption ?? 0,
     ];
   }
 

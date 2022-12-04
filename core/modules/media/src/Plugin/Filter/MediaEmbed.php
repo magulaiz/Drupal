@@ -33,6 +33,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *     "default_view_mode" = "default",
  *     "allowed_view_modes" = {},
  *     "allowed_media_types" = {},
+ *     "enable_captioning" = true,
  *   },
  *   weight = 100,
  * )
@@ -178,6 +179,12 @@ class MediaEmbed extends FilterBase implements ContainerFactoryPluginInterface, 
       '#default_value' => $this->settings['allowed_view_modes'],
       '#description' => $this->t("If two or more view modes are selected, users will be able to update the view mode that an embedded media item should be displayed in after it has been embedded.  If less than two view modes are selected, media will be embedded using the default view mode and no view mode options will appear after a media item has been embedded."),
       '#element_validate' => [[static::class, 'validateOptions']],
+    ];
+
+    $form['enable_captioning'] = [
+      '#title' => $this->t("Enable captioning"),
+      '#type' => 'checkbox',
+      '#default_value' => $this->settings['enable_captioning'],
     ];
 
     return $form;
