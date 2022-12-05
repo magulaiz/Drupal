@@ -6,6 +6,8 @@
  */
 
 use Drupal\Core\Entity\EntityTypeInterface;
+use Drupal\Core\Entity\Sql\SqlContentEntityStorage;
+use Drupal\Core\Entity\Sql\SqlContentEntityStorageSchema;
 use Drupal\workspaces\Entity\Workspace;
 
 /**
@@ -40,6 +42,16 @@ function workspaces_module_preinstall($module) {
   $entity_definition_update_manager = \Drupal::entityDefinitionUpdateManager();
   foreach ($entity_definition_update_manager->getEntityTypes() as $entity_type) {
     if ($workspace_manager->isEntityTypeSupported($entity_type)) {
+      // Update the property holding the required revision metadata keys,
+      // which is used by the BC layer for retrieving the revision metadata
+      // keys.
+      // @see \Drupal\Core\Entity\ContentEntityType::getRevisionMetadataKeys().
+      $required_revision_metadata_keys = $entity_type->get('requiredRevisionMetadataKeys');
+      $required_revision_metadata_keys['workspace'] = 'workspace';
+      $entity_type->set('requiredRevisionMetadataKeys', $required_revision_metadata_keys);
+
+      // Update the revision metadata keys to add the new revision metadata
+      // key "workspace".
       $entity_type->setRevisionMetadataKey('workspace', 'workspace');
       $entity_definition_update_manager->updateEntityType($entity_type);
     }
@@ -125,4 +137,38 @@ function workspaces_schema() {
  */
 function workspaces_update_last_removed() {
   return 8803;
+}
+
+/**
+ * Implements hook_update_dependencies().
+ */
+function workspaces_update_dependencies() {
+  $dependencies = [];
+  $dependencies['workspaces'][10101] = [
+    'system' => 10101,
+  ];
+  return $dependencies;
+}
+
+/**
+ * Make various workspace fields required at the storage level.
+ *
+ * The SQL content entity schema no longer uses entity keys to mark their
+ * corresponding fields as NOT NULL in the database, so we need to update the
+ * respective fields manually.
+ */
+function workspaces_update_10101() {
+  $entity_type_manager = \Drupal::entityTypeManager();
+
+  $entity_type_id = 'workspace';
+  $storage = $entity_type_manager->getStorage($entity_type_id);
+  if ($storage instanceof SqlContentEntityStorage) {
+    $ref_get_storage_schema = new \ReflectionMethod($storage, 'getStorageSchema');
+    $ref_get_storage_schema->setAccessible(TRUE);
+    /** @var \Drupal\Core\Entity\Sql\SqlContentEntityStorageSchema $storage_schema */
+    $storage_schema = $ref_get_storage_schema->invoke($storage);
+    if ($storage_schema instanceof SqlContentEntityStorageSchema) {
+      $storage_schema::updateToStorageSchemaV2($entity_type_id);
+    }
+  }
 }

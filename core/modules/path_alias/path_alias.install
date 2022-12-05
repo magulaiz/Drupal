@@ -13,8 +13,8 @@ use Drupal\Core\Entity\Sql\SqlContentEntityStorageSchema;
  */
 function path_alias_update_dependencies() {
   $dependencies = [];
-  $dependencies['path_alias'][10001] = [
-    'system' => 10001,
+  $dependencies['path_alias'][10101] = [
+    'system' => 10101,
   ];
   return $dependencies;
 }
@@ -26,7 +26,7 @@ function path_alias_update_dependencies() {
  * corresponding fields as NOT NULL in the database, so we need to update the
  * respective fields manually.
  */
-function path_alias_update_10001() {
+function path_alias_update_10101() {
   $entity_type_manager = \Drupal::entityTypeManager();
 
   $entity_type_id = 'path_alias';

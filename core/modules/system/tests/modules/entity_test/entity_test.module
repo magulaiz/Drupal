@@ -114,6 +114,14 @@ function entity_test_entity_type_alter(array &$entity_types) {
 
   // Allow tests to alter the permission granularity of entity_test_mul.
   $entity_types['entity_test_mul']->set('permission_granularity', \Drupal::state()->get('entity_test_mul.permission_granularity', 'entity_type'));
+
+  // Swap or set the storage schema handler class if requested.
+  foreach ($entity_types as $entity_type_id => $entity_type) {
+    if ($storage_schema = $state->get($entity_type_id . '.storage_schema')) {
+      $entity_type->setHandlerClass('storage_schema', $storage_schema);
+    }
+  }
+
 }
 
 /**
@@ -253,6 +261,18 @@ function entity_test_entity_bundle_info_alter(&$bundles) {
         }
       }
     }
+  }
+}
+
+/**
+ * Implements hook_entity_bundle_field_info().
+ */
+function entity_test_entity_bundle_field_info(EntityTypeInterface $entity_type, $bundle, array $base_field_definitions) {
+  /** @var \Drupal\Core\Field\BaseFieldDefinition[] $base_field_definitions */
+  if ($entity_type->id() === 'entity_test_with_bundle' && $bundle === 'bundle_non_required_field') {
+    $test_field = clone $base_field_definitions['test_field'];
+    $test_field->setRequired(FALSE);
+    return ['test_field' => $test_field];
   }
 }
 

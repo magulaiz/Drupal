@@ -28,6 +28,7 @@ use Drupal\entity_test\Plugin\Field\ComputedTestFieldItemList;
  *   links = {
  *     "canonical" = "/entity_test_computed_field/{entity_test_computed_field}",
  *   },
+ *   storage_schema_version = 2,
  * )
  */
 class EntityTestComputedField extends EntityTest {

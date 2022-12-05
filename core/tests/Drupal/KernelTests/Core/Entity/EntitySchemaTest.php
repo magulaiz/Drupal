@@ -162,6 +162,7 @@ class EntitySchemaTest extends EntityKernelTestBase {
         $field = BaseFieldDefinition::create('integer')
           ->setLabel('ID')
           ->setReadOnly(TRUE)
+          ->setStorageRequired(TRUE)
           ->setSetting('unsigned', TRUE);
         break;
 
@@ -169,12 +170,14 @@ class EntitySchemaTest extends EntityKernelTestBase {
         $field = BaseFieldDefinition::create('integer')
           ->setLabel('Revision ID')
           ->setReadOnly(TRUE)
+          ->setStorageRequired(TRUE)
           ->setSetting('unsigned', TRUE);
         break;
 
       case 'langcode':
         $field = BaseFieldDefinition::create('language')
-          ->setLabel('Language');
+          ->setLabel('Language')
+          ->setStorageRequired(TRUE);
         if ($entity_type->isRevisionable()) {
           $field->setRevisionable(TRUE);
         }
