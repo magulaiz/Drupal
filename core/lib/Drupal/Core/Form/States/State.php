@@ -12,7 +12,7 @@ class State implements StateInterface {
    *
    * @param string $state
    *   State name.
-   * @param \Drupal\Core\Form\States\WatcherInterface[] $watchers
+   * @param \Drupal\Core\Form\States\WatchableInterface[] $watchers
    *   Watcher instances storage.
    */
   public function __construct(
@@ -30,133 +30,133 @@ class State implements StateInterface {
   /**
    * {@inheritdoc}
    */
-  public function setChecked(WatcherInterface ...$watchers): static {
+  public function setChecked(WatchableInterface ...$watchers): static {
     return $this->setStateRaw(static::CHECKED, ...$watchers);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function setCollapsed(WatcherInterface ...$watchers): static {
+  public function setCollapsed(WatchableInterface ...$watchers): static {
     return $this->setStateRaw(static::COLLAPSED, ...$watchers);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function setDisabled(WatcherInterface ...$watchers): static {
+  public function setDisabled(WatchableInterface ...$watchers): static {
     return $this->setStateRaw(static::DISABLED, ...$watchers);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function setEnabled(WatcherInterface ...$watchers): static {
+  public function setEnabled(WatchableInterface ...$watchers): static {
     return $this->setStateRaw(static::ENABLED, ...$watchers);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function setExpanded(WatcherInterface ...$watchers): static {
+  public function setExpanded(WatchableInterface ...$watchers): static {
     return $this->setStateRaw(static::EXPANDED, ...$watchers);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function setInvalid(WatcherInterface ...$watchers): static {
+  public function setInvalid(WatchableInterface ...$watchers): static {
     return $this->setStateRaw(static::INVALID, ...$watchers);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function setInvisible(WatcherInterface ...$watchers): static {
+  public function setInvisible(WatchableInterface ...$watchers): static {
     return $this->setStateRaw(static::INVISIBLE, ...$watchers);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function setIrrelevant(WatcherInterface ...$watchers): static {
+  public function setIrrelevant(WatchableInterface ...$watchers): static {
     return $this->setStateRaw(static::IRRELEVANT, ...$watchers);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function setOptional(WatcherInterface ...$watchers): static {
+  public function setOptional(WatchableInterface ...$watchers): static {
     return $this->setStateRaw(static::OPTIONAL, ...$watchers);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function setReadonly(WatcherInterface ...$watchers): static {
+  public function setReadonly(WatchableInterface ...$watchers): static {
     return $this->setStateRaw(static::READONLY, ...$watchers);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function setReadwrite(WatcherInterface ...$watchers): static {
+  public function setReadwrite(WatchableInterface ...$watchers): static {
     return $this->setStateRaw(static::READWRITE, ...$watchers);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function setRelevant(WatcherInterface ...$watchers): static {
+  public function setRelevant(WatchableInterface ...$watchers): static {
     return $this->setStateRaw(static::RELEVANT, ...$watchers);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function setRequired(WatcherInterface ...$watchers): static {
+  public function setRequired(WatchableInterface ...$watchers): static {
     return $this->setStateRaw(static::REQUIRED, ...$watchers);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function setTouched(WatcherInterface ...$watchers): static {
+  public function setTouched(WatchableInterface ...$watchers): static {
     return $this->setStateRaw(static::TOUCHED, ...$watchers);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function setUnchecked(WatcherInterface ...$watchers): static {
+  public function setUnchecked(WatchableInterface ...$watchers): static {
     return $this->setStateRaw(static::UNCHECKED, ...$watchers);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function setUntouched(WatcherInterface ...$watchers): static {
+  public function setUntouched(WatchableInterface ...$watchers): static {
     return $this->setStateRaw(static::UNTOUCHED, ...$watchers);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function setValid(WatcherInterface ...$watchers): static {
+  public function setValid(WatchableInterface ...$watchers): static {
     return $this->setStateRaw(static::VALID, ...$watchers);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function setVisible(WatcherInterface ...$watchers): static {
+  public function setVisible(WatchableInterface ...$watchers): static {
     return $this->setStateRaw(static::VISIBLE, ...$watchers);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function setCustomState(string $state, WatcherInterface ...$watchers): static {
+  public function setCustomState(string $state, WatchableInterface ...$watchers): static {
     return $this->setStateRaw($state, ...$watchers);
   }
 
@@ -165,13 +165,13 @@ class State implements StateInterface {
    *
    * @param string $state
    *   State name.
-   * @param \Drupal\Core\Form\States\WatcherInterface ...$watchers
+   * @param \Drupal\Core\Form\States\WatchableInterface ...$watchers
    *   Watcher instances.
    *
    * @return $this
    *   State instance.
    */
-  protected function setStateRaw(string $state, WatcherInterface ...$watchers): static {
+  protected function setStateRaw(string $state, WatchableInterface ...$watchers): static {
     $this->state = $state;
     $this->watchers += $watchers;
     return $this;
@@ -182,9 +182,17 @@ class State implements StateInterface {
    */
   public function toArray(): array {
     $array = [];
-    foreach ($this->watchers as $watcher) {
-      $selector = $watcher->getSelector();
-      $array[$selector] = ($array[$selector] ?? []) + $watcher->toArray();
+    foreach ($this->watchers as $key => $watcher) {
+      if ($watcher instanceof WatcherConditionGroupInterface) {
+        if ($key !== 0) {
+          $array[] = $watcher->getConditionOperator();
+        }
+        $array[] = $watcher->toArray($key === 0);
+      }
+      if ($watcher instanceof WatcherInterface) {
+        $selector = $watcher->getSelector();
+        $array[$selector] = ($array[$selector] ?? []) + $watcher->toArray();
+      }
     }
     return $array;
   }

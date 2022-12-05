@@ -8,6 +8,13 @@ namespace Drupal\Core\Form\States;
 class Watcher implements WatcherInterface {
 
   /**
+   * Flags pointing for multiple condition.
+   *
+   * @var bool
+   */
+  protected bool $isMultiple = FALSE;
+
+  /**
    * Watcher constructor.
    *
    * @param string $selector
@@ -128,7 +135,7 @@ class Watcher implements WatcherInterface {
   /**
    * {@inheritdoc}
    */
-  public function valueEqualTo($value, bool $negate = FALSE): static {
+  public function valueEqualTo(mixed $value, bool $negate = FALSE): static {
     return $this->setWatcherRaw(static::VALUE, $value, $negate);
   }
 
@@ -143,7 +150,21 @@ class Watcher implements WatcherInterface {
    * Base Watcher setter method.
    */
   protected function setWatcherRaw(string $state, $condition, bool $negate = FALSE): static {
-    $this->conditionStates[$negate ? '!' . $state : $state] = $condition;
+    $state = $negate ? '!' . $state : $state;
+    if (!$this->isMultiple) {
+      if (empty($this->conditionStates[$state])) {
+        $this->conditionStates[$state] = $condition;
+        return $this;
+      }
+      $stored = $this->conditionStates;
+      $this->conditionStates = [];
+      foreach ($stored as $stored_state => $stored_condition) {
+        $this->conditionStates[] = [$stored_state => $stored_condition];
+      }
+      unset($stored);
+      $this->isMultiple = TRUE;
+    }
+    $this->conditionStates[] = [$state => $condition];
     return $this;
   }
 

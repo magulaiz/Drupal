@@ -11,21 +11,29 @@ use Drupal\Tests\UnitTestCase;
  * @coversDefaultClass \Drupal\Core\Form\States\StatesBuilder
  * @group Form
  */
-class StateBuildTest extends UnitTestCase {
+class StatesBuilderTest extends UnitTestCase {
 
   /**
+   * States builder.
+   *
    * @var \Drupal\Core\Form\States\StatesBuilder
    */
   protected StatesBuilder $builder;
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
-    $this->builder = StatesBuilder::create();
+    $this->builder = new StatesBuilder();
   }
 
+  /**
+   * Test remote conditions.
+   */
   public function testAllRemoteConditions(): void {
     $result = $this->builder->addStates(
-      $this->builder->state()->setChecked([
+      $this->builder->state()->setChecked(
         $this->builder->watch('.container')
           ->isReadwrite()
           ->isValid()
@@ -42,8 +50,8 @@ class StateBuildTest extends UnitTestCase {
           ->isIrrelevant()
           ->isCollapsed()
           ->isUnchecked()
-          ->isEmpty(),
-      ])
+          ->isEmpty()
+      )
     )->toArray();
     $expected = [
       StateInterface::CHECKED => [
@@ -71,10 +79,13 @@ class StateBuildTest extends UnitTestCase {
     $this->assertSame($expected, $result);
   }
 
+  /**
+   * Test documented states.
+   */
   public function testAllStates(): void {
-    $same_remote_conditions = [$this->builder
+    $same_remote_conditions = $this->builder
       ->watch('.container')
-      ->isReadwrite()];
+      ->isReadwrite();
     $result = $this->builder->addStates(
       $this->builder->state()->setChecked($same_remote_conditions),
       $this->builder->state()->setUnchecked($same_remote_conditions),
@@ -111,8 +122,76 @@ class StateBuildTest extends UnitTestCase {
     $this->assertSame($expected, $result);
   }
 
-  public function testConditions() {
+  /**
+   * Test multiple remote conditions.
+   */
+  public function testMultipleRemoteConditions() {
+    $result = $this->builder->addStates(
+      $this->builder->state()->setVisible(
+        $this->builder->watch(':input[name="select_trigger"]')
+          ->valueEqualTo('value2')
+          ->valueEqualTo('value3')
+      )
+    )->toArray();
+    $expected = [
+      'visible' => [
+        ':input[name="select_trigger"]' => [
+          ['value' => 'value2'],
+          ['value' => 'value3'],
+        ],
+      ],
+    ];
+    $this->assertSame($expected, $result);
+  }
 
+  /**
+   * Test condition groups.
+   */
+  public function testConditiongroups() {
+    $result = $this->builder->addStates(
+      $this->builder->state()->setVisible(
+        $this->builder->or(
+          $this->builder->watch(':input[name="select"]')->valueEqualTo('1')
+        ),
+        $this->builder->or(
+          $this->builder->watch(':input[name="number"]')->valueEqualTo('1')
+        )
+      ),
+      $this->builder->state()->setEnabled(
+        $this->builder->and(
+          $this->builder->watch(':input[name="select"]')->valueEqualTo('1'),
+        ),
+        $this->builder->and(
+          $this->builder->watch(':input[name="number"]')->valueEqualTo('1')
+        )
+      ),
+      $this->builder->state()->setValid(
+        $this->builder->xor(
+          $this->builder->watch(':input[name="select"]')->valueEqualTo('1'),
+        ),
+        $this->builder->xor(
+          $this->builder->watch(':input[name="number"]')->valueEqualTo('1')
+        )
+      )
+    )->toArray();
+    $expected = [
+      'visible' => [
+        [':input[name="select"]' => ['value' => '1']],
+        'or',
+        [':input[name="number"]' => ['value' => '1']],
+      ],
+      'enabled' => [
+        [':input[name="select"]' => ['value' => '1']],
+        'and',
+        [':input[name="number"]' => ['value' => '1']],
+      ],
+      'valid' => [
+        [':input[name="select"]' => ['value' => '1']],
+        'xor',
+        [':input[name="number"]' => ['value' => '1']],
+      ],
+    ];
+    $this->assertSame($expected, $result);
   }
 
 }

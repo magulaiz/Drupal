@@ -210,7 +210,9 @@ class FormHelper {
     // input element available, setting #attributes does not make sense, but a
     // wrapper is available, so setting #wrapper_attributes makes it work.
     $key = ($elements['#type'] == 'item') ? '#wrapper_attributes' : '#attributes';
-    $states = $elements['#states'] instanceof StatesBuilderInterface ? $elements['#states']->toArray() : $elements['#states'];
+    $states = $elements['#states'] instanceof StatesBuilderInterface ?
+      $elements['#states']->toArray() :
+      $elements['#states'];
     $elements[$key]['data-drupal-states'] = Json::encode($states);
   }
 

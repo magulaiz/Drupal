@@ -49,16 +49,40 @@ interface StatesBuilderInterface {
   public function addStates(StateInterface ...$states): static;
 
   /**
-   * Convert states to the array.
+   * Add AND condition group.
    *
-   * ```
-   * '#states' => $state->convertToArray(),
-   * ```
-   * If State was merged with another State instances then all states array
-   * would converted to the single states array.
-   * ```
-   * '#states' => $state->mergeWith([$state1, $state2])->convertToArray(),
-   * ```
+   * @param \Drupal\Core\Form\States\WatchableInterface ...$watchers
+   *   Watcher instances for AND condition group.
+   *
+   * @return $this
+   *   State builder instance.
+   */
+  public function and(WatchableInterface ...$watchers): static;
+
+  /**
+   * Add OR condition group.
+   *
+   * @param \Drupal\Core\Form\States\WatchableInterface ...$watchers
+   *   Watcher instances for AND condition group.
+   *
+   * @return $this
+   *   State builder instance.
+   */
+  public function or(WatchableInterface ...$watchers): static;
+
+  /**
+   * Add XOR condition group.
+   *
+   * @param \Drupal\Core\Form\States\WatchableInterface ...$watchers
+   *   Watcher instances for AND condition group.
+   *
+   * @return $this
+   *   State builder instance.
+   */
+  public function xor(WatchableInterface ...$watchers): static;
+
+  /**
+   * Convert states to the array.
    *
    * @return \Drupal\Core\Form\States\StateInterface[]
    *   Array that prepared for #states of form element.

@@ -21,10 +21,37 @@ class StatesBuilder implements StatesBuilderInterface {
     return new Watcher($selector, $conditions);
   }
 
-  public function state(string $state = '', WatcherInterface ...$watchers): StateInterface {
+  /**
+   * {@inheritdoc}
+   */
+  public function state(string $state = '', WatchableInterface ...$watchers): StateInterface {
     return new State($state, $watchers);
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function and(WatchableInterface ...$watchers): WatcherConditionGroupInterface {
+    return new WatcherConditionGroup('and', $watchers);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function or(WatchableInterface ...$watchers): WatcherConditionGroupInterface {
+    return new WatcherConditionGroup('or', $watchers);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function xor(WatcherInterface ...$watchers): WatcherConditionGroupInterface {
+    return new WatcherConditionGroup('xor', $watchers);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function addStates(StateInterface ...$states): static {
     foreach ($states as $state) {
       $this->states[] = $state;
