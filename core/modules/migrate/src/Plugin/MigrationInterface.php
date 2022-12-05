@@ -253,7 +253,6 @@ interface MigrationInterface extends PluginInspectionInterface, DerivativeInspec
    *   pipeline configuration.
    *
    * @return $this
-   *   The migration entity.
    */
   public function mergeProcessOfProperty($property, array $process_of_property);
 
