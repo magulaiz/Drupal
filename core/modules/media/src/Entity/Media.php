@@ -266,12 +266,13 @@ class Media extends EditorialContentEntityBase implements MediaInterface {
    * @param bool $from_queue
    *   Specifies whether the thumbnail is being fetched from the queue.
    *
-   * @return int
-   *   The width of the thumbnail of the media item.
+   * @return int|null
+   *   The width of the thumbnail of the media item or NULL if the media is new
+   *   and the thumbnails are set to be downloaded in a queue.
    *
    * @internal
    */
-  protected function getThumbnailWidth($from_queue) {
+  protected function getThumbnailWidth(bool $from_queue): ?int {
     $thumbnails_queued = $this->bundle->entity->thumbnailDownloadsAreQueued();
     if ($thumbnails_queued && $this->isNew()) {
       return NULL;
@@ -290,12 +291,13 @@ class Media extends EditorialContentEntityBase implements MediaInterface {
    * @param bool $from_queue
    *   Specifies whether the thumbnail is being fetched from the queue.
    *
-   * @return int
-   *   The height of the thumbnail of the media item.
+   * @return int|null
+   *   The height of the thumbnail of the media item or NULL if the media is new
+   *   and the thumbnails are set to be downloaded in a queue.
    *
    * @internal
    */
-  protected function getThumbnailHeight($from_queue) {
+  protected function getThumbnailHeight(bool $from_queue): ?int {
     $thumbnails_queued = $this->bundle->entity->thumbnailDownloadsAreQueued();
     if ($thumbnails_queued && $this->isNew()) {
       return NULL;
