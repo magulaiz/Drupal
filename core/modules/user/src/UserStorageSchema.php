@@ -36,9 +36,6 @@ class UserStorageSchema extends SqlContentEntityStorageSchema {
     if ($table_name == 'users_field_data') {
       switch ($field_name) {
         case 'name':
-          // Improves the performance of the user__name index defined
-          // in getEntitySchema().
-          $schema['fields'][$field_name]['not null'] = TRUE;
           // Make sure the field is no longer than 191 characters so we can
           // add a unique constraint in MySQL.
           $schema['fields'][$field_name]['length'] = UserInterface::USERNAME_MAX_LENGTH;
@@ -50,7 +47,7 @@ class UserStorageSchema extends SqlContentEntityStorageSchema {
 
         case 'access':
         case 'created':
-          $this->addSharedTableFieldIndex($storage_definition, $schema, TRUE);
+          $this->addSharedTableFieldIndex($storage_definition, $schema);
           break;
       }
     }

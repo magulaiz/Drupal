@@ -791,9 +791,7 @@ class BaseFieldDefinition extends ListDataDefinition implements FieldDefinitionI
     if (isset($this->definition['storage_required'])) {
       return (bool) $this->definition['storage_required'];
     }
-
-    // Default to the 'required' property of the base field.
-    return $this->isRequired();
+    return FALSE;
   }
 
   /**

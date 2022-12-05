@@ -20,7 +20,10 @@ use Drupal\Core\TypedData\ListInterface;
 use Drupal\Core\TypedData\Type\StringInterface;
 use Drupal\Core\TypedData\TypedDataInterface;
 use Drupal\entity_test\Entity\EntityTest;
+use Drupal\entity_test\Entity\EntityTestBundle;
 use Drupal\entity_test\Entity\EntityTestComputedField;
+use Drupal\entity_test\Entity\EntityTestWithBundle;
+use Drupal\entity_test\NotNullStorageRequiredStorageSchema;
 use Drupal\node\Entity\Node;
 use Drupal\node\Entity\NodeType;
 
@@ -77,7 +80,7 @@ class EntityFieldTest extends EntityKernelTestBase {
   /**
    * Creates a test entity.
    *
-   * @return \Drupal\Core\Entity\EntityInterface
+   * @return \Drupal\Core\Entity\ContentEntityInterface
    */
   protected function createTestEntity($entity_type) {
     $this->entityName = $this->randomMachineName();
@@ -952,6 +955,103 @@ class EntityFieldTest extends EntityKernelTestBase {
     $this->expectException(EntityStorageException::class);
     $entity->set('id', $entity_id + 1);
     $storage->save($entity);
+  }
+
+  /**
+   * Tests required fields.
+   */
+  public function testRequiredChangeOnBundleOverride() {
+    $entity_type_id = 'entity_test_with_bundle';
+    $test_field_name = 'test_field';
+
+    // Create a base field and make it required, but do not set a value for the
+    // "storage required" flag.
+    $this->state->set($entity_type_id . '.additional_base_field_definitions', [
+      $test_field_name => BaseFieldDefinition::create('string')
+        ->setRequired(TRUE),
+    ]);
+
+    // Create one bundle for which we'll not make any changes.
+    $bundle_required_field = 'bundle_required_field';
+    EntityTestBundle::create(['id' => $bundle_required_field])
+      ->save();
+    // Create another bundle, for which the required flag will be set to FALSE.
+    // @see entity_test_entity_bundle_field_info()
+    $bundle_not_required_field = 'bundle_non_required_field';
+    EntityTestBundle::create(['id' => $bundle_not_required_field])
+      ->save();
+
+    $this->installEntitySchema($entity_type_id);
+
+    /** @var \Drupal\Core\Entity\EntityFieldManager $field_manager */
+    $field_manager = $this->container->get('entity_field.manager');
+    /** @var \Drupal\Core\Field\BaseFieldDefinition[] $base_field_definitions */
+    $base_field_definitions = $field_manager->getBaseFieldDefinitions($entity_type_id);
+
+    // Ensure that the base field is required as it was defined.
+    $this->assertTrue($base_field_definitions[$test_field_name]->isRequired());
+    // Ensure that the storage_required flag isn't set explicitly.
+    $definition = $base_field_definitions[$test_field_name]->toArray();
+    $this->assertArrayNotHasKey('storage_required', $definition);
+
+    // Ensure that the overridden base field is required on the bundle for the
+    // required field.
+    $field_definitions = $field_manager->getFieldDefinitions($entity_type_id, $bundle_required_field);
+    $this->assertTrue($field_definitions[$test_field_name]->isRequired());
+    // Ensure that the storage_required flag isn't set explicitly.
+    $definition = $field_definitions[$test_field_name]->toArray();
+    $this->assertArrayNotHasKey('storage_required', $definition);
+
+    // Ensure that the overridden base field is not required on the bundle for
+    // the non-required field.
+    // @see entity_test_entity_bundle_field_info()
+    $field_definitions = $field_manager->getFieldDefinitions($entity_type_id, $bundle_not_required_field);
+    $this->assertFalse($field_definitions[$test_field_name]->isRequired());
+    // Ensure that the storage_required flag isn't set explicitly.
+    $definition = $field_definitions[$test_field_name]->toArray();
+    $this->assertArrayNotHasKey('storage_required', $definition);
+
+    // Test the creation of an entity for the bundle where the test field is not
+    // required by not providing a value for that field.
+    try {
+      EntityTestWithBundle::create([
+        'type' => $bundle_not_required_field,
+      ])->save();
+    }
+    catch (\Exception $e) {
+      $this->assertTrue(FALSE, "An entity for the bundle with a non-required test field has been successfully created.");
+    }
+
+    // Delete the existing entities and uninstall the entity type.
+    foreach (EntityTestWithBundle::loadMultiple() as $entity) {
+      $entity->delete();
+    }
+    $entity_type = $this->entityTypeManager->getDefinition($entity_type_id);
+    \Drupal::entityDefinitionUpdateManager()->uninstallEntityType($entity_type);
+
+    // Reinstall the entity type by using a customized storage schema, which
+    // will add a NOT NULL constraint for fields flagged as storage required.
+    // @see \Drupal\entity_test\NotNullStorageRequiredStorageSchema
+    // @see entity_test_entity_type_alter()
+    $this->state->set($entity_type_id . '.storage_schema', NotNullStorageRequiredStorageSchema::class);
+    $this->installEntitySchema($entity_type_id);
+    $installed_entity_type = \Drupal::entityDefinitionUpdateManager()->getEntityType($entity_type_id);
+    $this->assertEquals(NotNullStorageRequiredStorageSchema::class, $installed_entity_type->getHandlerClass('storage_schema'));
+
+    // Test the creation of an entity for the bundle where the test field is not
+    // required by not providing a value for that field. The difference now is
+    // that with the new storage schema fields which are storage required will
+    // be created with a NOT NULL constraint. However as we haven't explicitly
+    // flagged the test field as storage required we should still be able to
+    // create entities without providing a value for the test field.
+    try {
+      EntityTestWithBundle::create([
+        'type' => $bundle_not_required_field,
+      ])->save();
+    }
+    catch (\Exception $e) {
+      $this->assertTrue(FALSE, "An entity for the bundle with a non-required test field has been successfully created.");
+    }
   }
 
 }

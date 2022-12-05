@@ -21,7 +21,8 @@ use Drupal\Core\Entity\EntityTypeInterface;
  *     "bundle" = "type",
  *     "label" = "name",
  *     "langcode" = "langcode",
- *   }
+ *   },
+ *   storage_schema_version = 2,
  * )
  */
 class EntityTestMultiValueBasefield extends EntityTest {

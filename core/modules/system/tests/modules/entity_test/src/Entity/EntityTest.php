@@ -16,6 +16,7 @@ use Drupal\user\UserInterface;
  *   id = "entity_test",
  *   label = @Translation("Test entity"),
  *   handlers = {
+ *     "storage_schema" = "Drupal\entity_test\EntityTestStorageSchema",
  *     "list_builder" = "Drupal\entity_test\EntityTestListBuilder",
  *     "view_builder" = "Drupal\entity_test\EntityTestViewBuilder",
  *     "access" = "Drupal\entity_test\EntityTestAccessControlHandler",
@@ -46,6 +47,7 @@ use Drupal\user\UserInterface;
  *     "delete-form" = "/entity_test/delete/entity_test/{entity_test}",
  *   },
  *   field_ui_base_route = "entity.entity_test.admin_form",
+ *   storage_schema_version = 2,
  * )
  *
  * Note that this entity type annotation intentionally omits the "create" link

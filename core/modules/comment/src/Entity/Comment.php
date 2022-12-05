@@ -65,7 +65,8 @@ use Drupal\user\EntityOwnerTrait;
  *   field_ui_base_route  = "entity.comment_type.edit_form",
  *   constraints = {
  *     "CommentName" = {}
- *   }
+ *   },
+ *   storage_schema_version = 2,
  * )
  */
 class Comment extends ContentEntityBase implements CommentInterface {
@@ -294,7 +295,8 @@ class Comment extends ContentEntityBase implements CommentInterface {
     $fields['created'] = BaseFieldDefinition::create('created')
       ->setLabel(t('Created'))
       ->setDescription(t('The time that the comment was created.'))
-      ->setTranslatable(TRUE);
+      ->setTranslatable(TRUE)
+      ->setStorageRequired(TRUE);
 
     $fields['changed'] = BaseFieldDefinition::create('changed')
       ->setLabel(t('Changed'))
@@ -304,11 +306,13 @@ class Comment extends ContentEntityBase implements CommentInterface {
     $fields['thread'] = BaseFieldDefinition::create('string')
       ->setLabel(t('Thread place'))
       ->setDescription(t("The alphadecimal representation of the comment's place in a thread, consisting of a base 36 string prefixed by an integer indicating its length."))
+      ->setStorageRequired(TRUE)
       ->setSetting('max_length', 255);
 
     $fields['entity_type'] = BaseFieldDefinition::create('string')
       ->setLabel(t('Entity type'))
       ->setRequired(TRUE)
+      ->setStorageRequired(TRUE)
       ->setDescription(t('The entity type to which this comment is attached.'))
       ->setSetting('is_ascii', TRUE)
       ->setSetting('max_length', EntityTypeInterface::ID_MAX_LENGTH);
@@ -316,6 +320,7 @@ class Comment extends ContentEntityBase implements CommentInterface {
     $fields['field_name'] = BaseFieldDefinition::create('string')
       ->setLabel(t('Comment field name'))
       ->setRequired(TRUE)
+      ->setStorageRequired(TRUE)
       ->setDescription(t('The field name through which this comment was added.'))
       ->setSetting('is_ascii', TRUE)
       ->setSetting('max_length', FieldStorageConfig::NAME_MAX_LENGTH);

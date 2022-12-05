@@ -39,7 +39,8 @@ use Drupal\user\EntityOwnerTrait;
  *     "uid" = "uid",
  *     "owner" = "uid",
  *     "langcode" = "langcode",
- *   }
+ *   },
+ *   storage_schema_version = 2
  * )
  *
  * @internal

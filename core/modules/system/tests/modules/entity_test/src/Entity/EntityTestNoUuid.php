@@ -22,6 +22,7 @@ namespace Drupal\entity_test\Entity;
  *     "label" = "name",
  *     "langcode" = "langcode",
  *   },
+ *   storage_schema_version = 2,
  * )
  */
 class EntityTestNoUuid extends EntityTest {

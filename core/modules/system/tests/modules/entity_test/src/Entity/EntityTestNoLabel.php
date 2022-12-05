@@ -19,6 +19,7 @@ namespace Drupal\entity_test\Entity;
  *     "uuid" = "uuid",
  *     "bundle" = "type",
  *   },
+ *   storage_schema_version = 2,
  * )
  */
 class EntityTestNoLabel extends EntityTest {

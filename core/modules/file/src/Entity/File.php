@@ -40,7 +40,8 @@ use Drupal\user\EntityOwnerTrait;
  *     "langcode" = "langcode",
  *     "uuid" = "uuid",
  *     "owner" = "uid",
- *   }
+ *   },
+ *   storage_schema_version = 2,
  * )
  */
 class File extends ContentEntityBase implements FileInterface {
@@ -222,7 +223,9 @@ class File extends ContentEntityBase implements FileInterface {
       ->setDescription(t('The file language code.'));
 
     $fields['uid']
-      ->setDescription(t('The user ID of the file.'));
+      ->setDescription(t('The user ID of the file.'))
+      // For the file entity, NULL is a valid value for uid.
+      ->setStorageRequired(FALSE);
 
     $fields['filename'] = BaseFieldDefinition::create('string')
       ->setLabel(t('Filename'))
@@ -231,6 +234,7 @@ class File extends ContentEntityBase implements FileInterface {
     $fields['uri'] = BaseFieldDefinition::create('file_uri')
       ->setLabel(t('URI'))
       ->setDescription(t('The URI to access the file (either local or remote).'))
+      ->setStorageRequired(TRUE)
       ->setSetting('max_length', 255)
       ->setSetting('case_sensitive', TRUE)
       ->addConstraint('FileUriUnique');
@@ -249,6 +253,7 @@ class File extends ContentEntityBase implements FileInterface {
     $fields['status'] = BaseFieldDefinition::create('boolean')
       ->setLabel(t('Status'))
       ->setDescription(t('The status of the file, temporary (FALSE) and permanent (TRUE).'))
+      ->setStorageRequired(TRUE)
       ->setDefaultValue(FALSE);
 
     $fields['created'] = BaseFieldDefinition::create('created')
@@ -257,7 +262,8 @@ class File extends ContentEntityBase implements FileInterface {
 
     $fields['changed'] = BaseFieldDefinition::create('changed')
       ->setLabel(t('Changed'))
-      ->setDescription(t('The timestamp that the file was last changed.'));
+      ->setDescription(t('The timestamp that the file was last changed.'))
+      ->setStorageRequired(TRUE);
 
     return $fields;
   }

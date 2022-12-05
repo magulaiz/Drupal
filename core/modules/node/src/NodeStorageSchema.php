@@ -37,7 +37,7 @@ class NodeStorageSchema extends SqlContentEntityStorageSchema {
     if ($table_name == 'node_revision') {
       switch ($field_name) {
         case 'langcode':
-          $this->addSharedTableFieldIndex($storage_definition, $schema, TRUE);
+          $this->addSharedTableFieldIndex($storage_definition, $schema);
           break;
 
         case 'revision_uid':
@@ -48,20 +48,11 @@ class NodeStorageSchema extends SqlContentEntityStorageSchema {
 
     if ($table_name == 'node_field_data') {
       switch ($field_name) {
-        case 'promote':
-        case 'status':
-        case 'sticky':
-        case 'title':
-          // Improves the performance of the indexes defined
-          // in getEntitySchema().
-          $schema['fields'][$field_name]['not null'] = TRUE;
-          break;
-
         case 'changed':
         case 'created':
           // @todo Revisit index definitions:
           //   https://www.drupal.org/node/2015277.
-          $this->addSharedTableFieldIndex($storage_definition, $schema, TRUE);
+          $this->addSharedTableFieldIndex($storage_definition, $schema);
           break;
       }
     }

@@ -316,6 +316,11 @@ class BaseFieldDefinitionTest extends UnitTestCase {
     $this->assertTrue($definition->isStorageRequired());
     $definition->setStorageRequired(FALSE);
     $this->assertFalse($definition->isStorageRequired());
+
+    // A required field is not storage required automatically.
+    $definition = BaseFieldDefinition::create($this->fieldType)
+      ->setRequired(TRUE);
+    $this->assertFalse($definition->isStorageRequired());
   }
 
   /**

@@ -32,14 +32,17 @@ trait EntityOwnerTrait {
     if (!$entity_type->hasKey('owner')) {
       throw new UnsupportedEntityTypeDefinitionException('The entity type ' . $entity_type->id() . ' does not have an "owner" entity key.');
     }
-
-    return [
-      $entity_type->getKey('owner') => BaseFieldDefinition::create('entity_reference')
-        ->setLabel(new TranslatableMarkup('User ID'))
-        ->setSetting('target_type', 'user')
-        ->setTranslatable($entity_type->isTranslatable())
-        ->setDefaultValueCallback(static::class . '::getDefaultEntityOwner'),
-    ];
+    $field_definition = BaseFieldDefinition::create('entity_reference')
+      ->setLabel(new TranslatableMarkup('User ID'))
+      ->setSetting('target_type', 'user')
+      ->setTranslatable($entity_type->isTranslatable())
+      ->setDefaultValueCallback(static::class . '::getDefaultEntityOwner');
+    if ($entity_type->get('storage_schema_version') >= 2) {
+      // This cannot be marked required, because we support submitting an
+      // empty textfield which will set the owner to the anonymous user.
+      $field_definition->setStorageRequired(TRUE);
+    }
+    return [$entity_type->getKey('owner') => $field_definition];
   }
 
   /**

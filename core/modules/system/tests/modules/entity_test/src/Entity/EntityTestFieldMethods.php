@@ -34,6 +34,7 @@ use Drupal\Core\Field\BaseFieldDefinition;
  *     "label" = "name",
  *     "langcode" = "langcode",
  *   },
+ *   storage_schema_version = 2,
  * )
  */
 class EntityTestFieldMethods extends EntityTestMul {

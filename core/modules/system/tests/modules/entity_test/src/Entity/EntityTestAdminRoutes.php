@@ -36,6 +36,7 @@ namespace Drupal\entity_test\Entity;
  *     "edit-form" = "/entity_test_admin_routes/manage/{entity_test_admin_routes}/edit",
  *     "delete-form" = "/entity_test/delete/entity_test_admin_routes/{entity_test_admin_routes}",
  *   },
+ *   storage_schema_version = 2,
  * )
  */
 class EntityTestAdminRoutes extends EntityTest {

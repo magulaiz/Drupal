@@ -1384,4 +1384,207 @@ class EntityDefinitionUpdateTest extends EntityKernelTestBase {
     }
   }
 
+  /**
+   * Tests the automatic index creation on entity type update.
+   */
+  public function testAutomaticIndexCreation(string $entity_type_id = 'entity_test') {
+    $this->installEntitySchema($entity_type_id);
+    $entity_type = $this->entityDefinitionUpdateManager->getEntityType($entity_type_id);
+
+    $additional_indexes = [
+      $entity_type->getBaseTable() => [
+        'test_index' => [$entity_type->getKey('id'), [$entity_type->getKey('label'), 4]],
+      ],
+    ];
+
+    // Ensure that the indexes do not exist.
+    foreach ($additional_indexes as $table => $indexes) {
+      foreach (array_keys($indexes) as $index_name) {
+        $this->assertFalse($this->database->schema()->indexExists($table, $index_name));
+      }
+    }
+
+    // Let the entity type storage schema return the additional indexes.
+    // @see \Drupal\entity_test\EntityTestStorageSchema::getEntitySchema().
+    $this->state->set($entity_type_id . '.additional_indexes', $additional_indexes);
+
+    // Update the entity type and ensure that the indexes have been created.
+    $this->entityDefinitionUpdateManager->updateEntityType($entity_type);
+
+    // Check that the indexes have been created.
+    foreach ($additional_indexes as $table => $indexes) {
+      foreach (array_keys($indexes) as $index_name) {
+        $this->assertTrue($this->database->schema()->indexExists($table, $index_name));
+      }
+    }
+
+    $this->assertNoPendingSchemaUpdates();
+
+    return $additional_indexes;
+  }
+
+  /**
+   * Tests the automatic index deletion on entity type update.
+   */
+  public function testAutomaticIndexDeletion() {
+    $entity_type_id = 'entity_test';
+    $entity_type = $this->entityDefinitionUpdateManager->getEntityType($entity_type_id);
+
+    // Create and retrieve the additional indexes.
+    $additional_indexes = $this->testAutomaticIndexCreation($entity_type_id);
+
+    // Remove the additional indexes from the entity type storage schema.
+    // @see \Drupal\entity_test\EntityTestStorageSchema::getEntitySchema().
+    $this->state->set($entity_type_id . '.additional_indexes', []);
+
+    // Update the entity type and ensure that the indexes have been deleted.
+    $this->entityDefinitionUpdateManager->updateEntityType($entity_type);
+
+    // Check that the indexes have been removed.
+    foreach ($additional_indexes as $table => $indexes) {
+      foreach (array_keys($indexes) as $index_name) {
+        $this->assertFalse($this->database->schema()->indexExists($table, $index_name));
+      }
+    }
+
+    $this->assertNoPendingSchemaUpdates();
+  }
+
+  /**
+   * Tests the automatic index creation after installing a new field.
+   */
+  public function testAutomaticIndexCreationOnFieldInstall() {
+    $entity_type_id = 'entity_test';
+    $entity_type = $this->entityDefinitionUpdateManager->getEntityType($entity_type_id);
+
+    // Include the field name in the new index.
+    $additional_indexes = [
+      $entity_type->getBaseTable() => [
+        'test_index' => [$entity_type->getKey('id'), [$entity_type->getKey('label'), 4]],
+      ],
+    ];
+
+    // Ensure that the indexes do not exist.
+    foreach ($additional_indexes as $table => $indexes) {
+      foreach (array_keys($indexes) as $index_name) {
+        $this->assertFalse($this->database->schema()->indexExists($table, $index_name));
+      }
+    }
+
+    // Let the entity type storage schema return the additional indexes.
+    // @see \Drupal\entity_test\EntityTestStorageSchema::getEntitySchema().
+    $this->state->set($entity_type_id . '.additional_indexes', $additional_indexes);
+
+    // Install a field storage definition before updating the entity type.
+    $field_name = 'test_field';
+    $definitions = [$field_name => BaseFieldDefinition::create('string')];
+    $this->state->set($entity_type_id . '.additional_base_field_definitions', $definitions);
+    $this->entityDefinitionUpdateManager->installFieldStorageDefinition($field_name, $entity_type_id, 'entity_test', $definitions[$field_name]);
+
+    // Ensure that the indexes do not exist.
+    foreach ($additional_indexes as $table => $indexes) {
+      foreach (array_keys($indexes) as $index_name) {
+        $this->assertFalse($this->database->schema()->indexExists($table, $index_name));
+      }
+    }
+
+    // Update the entity type and ensure that the indexes have been created.
+    $this->entityDefinitionUpdateManager->updateEntityType($entity_type);
+
+    foreach ($additional_indexes as $table => $indexes) {
+      foreach (array_keys($indexes) as $index_name) {
+        $this->assertTrue($this->database->schema()->indexExists($table, $index_name));
+      }
+    }
+
+    $this->assertNoPendingSchemaUpdates();
+  }
+
+  /**
+   * Tests the automatic index deletion after installing a new field.
+   */
+  public function testAutomaticIndexDeletionOnFieldInstall() {
+    $entity_type_id = 'entity_test';
+    $entity_type = $this->entityDefinitionUpdateManager->getEntityType($entity_type_id);
+
+    // Create and retrieve the additional indexes.
+    $additional_indexes = $this->testAutomaticIndexCreation($entity_type_id);
+
+    // Remove the additional indexes from the entity type storage schema.
+    // @see \Drupal\entity_test\EntityTestStorageSchema::getEntitySchema().
+    $this->state->set($entity_type_id . '.additional_indexes', []);
+
+    // Install a field storage definition before updating the entity type.
+    $definitions['test_field'] = BaseFieldDefinition::create('string');
+    $this->state->set($entity_type_id . '.additional_base_field_definitions', $definitions);
+    $this->entityDefinitionUpdateManager->installFieldStorageDefinition('test_field', $entity_type_id, 'entity_test', $definitions['test_field']);
+
+    // Check that the indexes have not been deleted.
+    foreach ($additional_indexes as $table => $indexes) {
+      foreach (array_keys($indexes) as $index_name) {
+        $this->assertTrue($this->database->schema()->indexExists($table, $index_name));
+      }
+    }
+
+    // Update the entity type and ensure that the indexes have been deleted.
+    $this->entityDefinitionUpdateManager->updateEntityType($entity_type);
+
+    foreach ($additional_indexes as $table => $indexes) {
+      foreach (array_keys($indexes) as $index_name) {
+        $this->assertFalse($this->database->schema()->indexExists($table, $index_name));
+      }
+    }
+
+    $this->assertNoPendingSchemaUpdates();
+  }
+
+  /**
+   * Tests the automatic index creation after updating an existing field.
+   */
+  public function testAutomaticIndexCreationOnFieldStorageUpdate() {
+    $entity_type_id = 'entity_test';
+    $entity_type = $this->entityDefinitionUpdateManager->getEntityType($entity_type_id);
+
+    $additional_indexes = [
+      $entity_type->getBaseTable() => [
+        'test_index' => [$entity_type->getKey('id'), [$entity_type->getKey('label'), 4]],
+      ],
+    ];
+
+    // Let the entity type storage schema return the additional indexes.
+    // @see \Drupal\entity_test\EntityTestStorageSchema::getEntitySchema().
+    $this->state->set($entity_type_id . '.additional_indexes', $additional_indexes);
+
+    // Update an existing field storage definition.
+    $definition = $this->entityDefinitionUpdateManager->getFieldStorageDefinition($entity_type->getKey('label'), $entity_type_id);
+    $this->entityDefinitionUpdateManager->updateFieldStorageDefinition($definition);
+
+    // Check that during the field update the index which it is part of has been
+    // created.
+    $this->assertTrue($this->database->schema()->indexExists($entity_type->getBaseTable(), 'test_index'));
+
+    // The entity schema should be up-to-date without having to update the
+    // entity type.
+    $this->assertNoPendingSchemaUpdates();
+  }
+
+  /**
+   * Asserts that the entity schema is up-to-date.
+   */
+  protected function assertNoPendingSchemaUpdates() {
+    // Ensure that the entity schema is up-to-date.
+    $needs_updates = $this->entityDefinitionUpdateManager->needsUpdates();
+    if ($needs_updates) {
+      foreach ($this->entityDefinitionUpdateManager->getChangeSummary() as $entity_type_id => $summary) {
+        $entity_type_label = $this->entityTypeManager->getDefinition($entity_type_id)->getLabel();
+        foreach ($summary as $message) {
+          $this->fail("$entity_type_label: $message");
+        }
+      }
+      // The above calls to `fail()` should prevent this from ever being
+      // called, but it is here in case something goes really wrong.
+      $this->assertFalse($needs_updates, 'Entity schema is up to date.');
+    }
+  }
+
 }

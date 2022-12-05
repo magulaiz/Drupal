@@ -12,7 +12,8 @@ namespace Drupal\entity_test\Entity;
  *   entity_keys = {
  *     "id" = "id",
  *     "bundle" = "type"
- *   }
+ *   },
+ *   storage_schema_version = 2,
  * )
  */
 class EntityTestDefaultAccess extends EntityTest {

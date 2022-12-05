@@ -19,7 +19,8 @@ namespace Drupal\entity_test\Entity;
  *     "id" = "id",
  *     "uuid" = "uuid",
  *     "bundle" = "type"
- *   }
+ *   },
+ *   storage_schema_version = 2,
  * )
  */
 class EntityTestCache extends EntityTest {

@@ -77,23 +77,18 @@ class SqlContentEntityStorageSchemaTest extends EntityKernelTestBase {
     $actual = $this->installedStorageSchema->get('entity_test.field_schema_data.shape');
     $this->assertSame($expected, $actual);
 
-    // Make the field an entity key, so that it will get marked as NOT NULL.
-    $entity_type = $this->entityDefinitionUpdateManager->getEntityType('entity_test');
-    $original_keys = $entity_type->getKeys();
-    $entity_type->set('entity_keys', $original_keys + ['shape' => 'shape']);
-    $this->entityDefinitionUpdateManager->updateEntityType($entity_type);
-
-    // Update the field and make sure the schema got updated.
+    // Make the field storage required, so that its schema columns will get
+    // marked as NOT NULL.
+    $field->setStorageRequired(TRUE);
     $this->entityDefinitionUpdateManager->updateFieldStorageDefinition($field);
     $expected['entity_test']['fields']['shape__shape']['not null'] = TRUE;
     $expected['entity_test']['fields']['shape__color']['not null'] = TRUE;
     $actual = $this->installedStorageSchema->get('entity_test.field_schema_data.shape');
     $this->assertSame($expected, $actual);
 
-    // Remove the entity key again and check that the schema got reverted.
-    $entity_type->set('entity_keys', $original_keys);
-    $this->entityDefinitionUpdateManager->updateEntityType($entity_type);
-
+    // Make the field not storage required again and check that the schema got
+    // reverted.
+    $field->setStorageRequired(FALSE);
     $this->entityDefinitionUpdateManager->updateFieldStorageDefinition($field);
     $expected['entity_test']['fields']['shape__shape']['not null'] = FALSE;
     $expected['entity_test']['fields']['shape__color']['not null'] = FALSE;
@@ -109,17 +104,14 @@ class SqlContentEntityStorageSchemaTest extends EntityKernelTestBase {
       ],
     ])->save();
 
-    $entity_type->set('entity_keys', $original_keys + ['shape' => 'shape']);
-    $this->entityDefinitionUpdateManager->updateEntityType($entity_type);
-
+    $field->setStorageRequired(TRUE);
     $this->entityDefinitionUpdateManager->updateFieldStorageDefinition($field);
     $expected['entity_test']['fields']['shape__shape']['not null'] = TRUE;
     $expected['entity_test']['fields']['shape__color']['not null'] = TRUE;
     $actual = $this->installedStorageSchema->get('entity_test.field_schema_data.shape');
     $this->assertSame($expected, $actual);
 
-    $entity_type->set('entity_keys', $original_keys);
-    $this->entityDefinitionUpdateManager->updateEntityType($entity_type);
+    $field->setStorageRequired(FALSE);
     $this->entityDefinitionUpdateManager->updateFieldStorageDefinition($field);
     $expected['entity_test']['fields']['shape__shape']['not null'] = FALSE;
     $expected['entity_test']['fields']['shape__color']['not null'] = FALSE;

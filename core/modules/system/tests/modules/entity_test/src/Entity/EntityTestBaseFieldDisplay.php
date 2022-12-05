@@ -37,6 +37,7 @@ use Drupal\entity_test\FieldStorageDefinition;
  *     "delete-form" = "/entity_test/delete/entity_test_base_field_display/{entity_test_base_field_display}/edit",
  *   },
  *   field_ui_base_route = "entity.entity_test_base_field_display.admin_form",
+ *   storage_schema_version = 2,
  * )
  */
 class EntityTestBaseFieldDisplay extends EntityTest {

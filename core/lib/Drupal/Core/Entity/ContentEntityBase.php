@@ -1332,23 +1332,34 @@ abstract class ContentEntityBase extends EntityBase implements \IteratorAggregat
    * {@inheritdoc}
    */
   public static function baseFieldDefinitions(EntityTypeInterface $entity_type) {
+    /** @var \Drupal\Core\Field\BaseFieldDefinition[] $fields */
     $fields = [];
+    $storage_schema_version = $entity_type->get('storage_schema_version');
     if ($entity_type->hasKey('id')) {
       $fields[$entity_type->getKey('id')] = BaseFieldDefinition::create('integer')
         ->setLabel(new TranslatableMarkup('ID'))
         ->setReadOnly(TRUE)
         ->setSetting('unsigned', TRUE);
+      if ($storage_schema_version >= 2) {
+        $fields[$entity_type->getKey('id')]->setStorageRequired(TRUE);
+      }
     }
     if ($entity_type->hasKey('uuid')) {
       $fields[$entity_type->getKey('uuid')] = BaseFieldDefinition::create('uuid')
         ->setLabel(new TranslatableMarkup('UUID'))
         ->setReadOnly(TRUE);
+      if ($storage_schema_version >= 2) {
+        $fields[$entity_type->getKey('uuid')]->setStorageRequired(TRUE);
+      }
     }
     if ($entity_type->hasKey('revision')) {
       $fields[$entity_type->getKey('revision')] = BaseFieldDefinition::create('integer')
         ->setLabel(new TranslatableMarkup('Revision ID'))
         ->setReadOnly(TRUE)
         ->setSetting('unsigned', TRUE);
+      if ($storage_schema_version >= 2) {
+        $fields[$entity_type->getKey('revision')]->setStorageRequired(TRUE);
+      }
     }
     if ($entity_type->hasKey('langcode')) {
       $fields[$entity_type->getKey('langcode')] = BaseFieldDefinition::create('language')
@@ -1366,6 +1377,9 @@ abstract class ContentEntityBase extends EntityBase implements \IteratorAggregat
       if ($entity_type->isTranslatable()) {
         $fields[$entity_type->getKey('langcode')]->setTranslatable(TRUE);
       }
+      if ($storage_schema_version >= 2) {
+        $fields[$entity_type->getKey('langcode')]->setStorageRequired(TRUE);
+      }
     }
     if ($entity_type->hasKey('bundle')) {
       if ($bundle_entity_type_id = $entity_type->getBundleEntityType()) {
@@ -1380,6 +1394,9 @@ abstract class ContentEntityBase extends EntityBase implements \IteratorAggregat
           ->setLabel($entity_type->getBundleLabel())
           ->setRequired(TRUE)
           ->setReadOnly(TRUE);
+      }
+      if ($storage_schema_version >= 2) {
+        $fields[$entity_type->getKey('bundle')]->setStorageRequired(TRUE);
       }
     }
 

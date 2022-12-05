@@ -270,6 +270,13 @@ class EntityType extends PluginDefinition implements EntityTypeInterface {
   protected $constraints = [];
 
   /**
+   * The storage schema version.
+   *
+   * @var int
+   */
+  protected $storage_schema_version = 1;
+
+  /**
    * Any additional properties and values.
    *
    * @var array

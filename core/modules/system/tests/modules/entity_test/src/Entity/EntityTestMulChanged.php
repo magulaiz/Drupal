@@ -42,6 +42,7 @@ use Drupal\Core\Field\BaseFieldDefinition;
  *     "delete-form" = "/entity_test/delete/entity_test_mul_changed/{entity_test_mul_changed}",
  *   },
  *   field_ui_base_route = "entity.entity_test_mul_changed.admin_form",
+ *   storage_schema_version = 2,
  * )
  */
 class EntityTestMulChanged extends EntityTestMul implements EntityChangedInterface {

@@ -78,7 +78,8 @@ use Drupal\user\EntityOwnerTrait;
  *     "version-history" = "/node/{node}/revisions",
  *     "revision" = "/node/{node}/revisions/{node_revision}/view",
  *     "create" = "/node",
- *   }
+ *   },
+ *   storage_schema_version = 2,
  * )
  */
 class Node extends EditorialContentEntityBase implements NodeInterface {
@@ -265,6 +266,7 @@ class Node extends EditorialContentEntityBase implements NodeInterface {
     $fields['title'] = BaseFieldDefinition::create('string')
       ->setLabel(t('Title'))
       ->setRequired(TRUE)
+      ->setStorageRequired(TRUE)
       ->setTranslatable(TRUE)
       ->setRevisionable(TRUE)
       ->setSetting('max_length', 255)
@@ -300,6 +302,7 @@ class Node extends EditorialContentEntityBase implements NodeInterface {
       ->setDisplayConfigurable('form', TRUE);
 
     $fields['status']
+      ->setStorageRequired(TRUE)
       ->setDisplayOptions('form', [
         'type' => 'boolean_checkbox',
         'settings' => [
@@ -314,6 +317,7 @@ class Node extends EditorialContentEntityBase implements NodeInterface {
       ->setDescription(t('The time that the node was created.'))
       ->setRevisionable(TRUE)
       ->setTranslatable(TRUE)
+      ->setStorageRequired(TRUE)
       ->setDisplayOptions('view', [
         'label' => 'hidden',
         'type' => 'timestamp',
@@ -329,12 +333,14 @@ class Node extends EditorialContentEntityBase implements NodeInterface {
       ->setLabel(t('Changed'))
       ->setDescription(t('The time that the node was last edited.'))
       ->setRevisionable(TRUE)
-      ->setTranslatable(TRUE);
+      ->setTranslatable(TRUE)
+      ->setStorageRequired(TRUE);
 
     $fields['promote'] = BaseFieldDefinition::create('boolean')
       ->setLabel(t('Promoted to front page'))
       ->setRevisionable(TRUE)
       ->setTranslatable(TRUE)
+      ->setStorageRequired(TRUE)
       ->setDefaultValue(TRUE)
       ->setDisplayOptions('form', [
         'type' => 'boolean_checkbox',
@@ -349,6 +355,7 @@ class Node extends EditorialContentEntityBase implements NodeInterface {
       ->setLabel(t('Sticky at top of lists'))
       ->setRevisionable(TRUE)
       ->setTranslatable(TRUE)
+      ->setStorageRequired(TRUE)
       ->setDefaultValue(FALSE)
       ->setDisplayOptions('form', [
         'type' => 'boolean_checkbox',

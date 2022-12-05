@@ -17,7 +17,8 @@ use Drupal\Core\Field\BaseFieldDefinition;
  *     "uuid" = "uuid",
  *     "bundle" = "type",
  *     "langcode" = "langcode"
- *   }
+ *   },
+ *   storage_schema_version = 2,
  * )
  */
 class EntityTestDefaultValue extends EntityTest {

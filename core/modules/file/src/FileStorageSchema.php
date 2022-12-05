@@ -22,14 +22,19 @@ class FileStorageSchema extends SqlContentEntityStorageSchema {
         case 'status':
         case 'changed':
         case 'uri':
-          $this->addSharedTableFieldIndex($storage_definition, $schema, TRUE);
+          $this->addSharedTableFieldIndex($storage_definition, $schema);
           break;
       }
-    }
-    // Entity keys automatically have not null assigned to TRUE, but for the
-    // file entity, NULL is a valid value for uid.
-    if ($field_name === 'uid') {
-      $schema['fields']['uid']['not null'] = FALSE;
+      // Entity keys automatically have not null assigned to TRUE, but for the
+      // file entity, NULL is a valid value for uid.
+      // @todo remove in Drupal 9.2.x after the entity type has been updated to
+      // the new schema storage version. In order to ensure that we will remove
+      // the code only after the entity type has been updated, the Drupal
+      // version in which we are allowed to remove this code should not be
+      // allowed to be updated to from Drupal versions older than 8.9.0.
+      if ($field_name === 'uid') {
+        $schema['fields']['uid']['not null'] = FALSE;
+      }
     }
 
     return $schema;
