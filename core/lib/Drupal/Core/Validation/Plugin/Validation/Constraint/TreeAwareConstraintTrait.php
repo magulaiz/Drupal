@@ -4,21 +4,24 @@ declare(strict_types = 1);
 
 namespace Drupal\Core\Validation\Plugin\Validation\Constraint;
 
-use Drupal\Core\Config\Schema\ArrayElement;
-use Drupal\Core\Config\Schema\Element;
+use Drupal\Core\TypedData\ComplexDataInterface;
+use Drupal\Core\TypedData\TypedDataInterface;
 
 /**
  * Helper methods for tree-aware validation constraints.
+ *
+ * @todo Figure out whether to deal with TraversableTypedDataInterface, ComplexDataInterface, Mapping, or something else 😬
+ * @todo Similarly, figure out whether to return TypedDataInterface or \Drupal\Core\Config\Schema\Element 😬
  */
 trait TreeAwareConstraintTrait {
 
   /**
-   * Find the parent property.
+   * Finds the parent property.
    *
-   * @return \Drupal\Core\Config\Schema\Element
+   * @return \Drupal\Core\TypedData\TypedDataInterface
    *   The parent property.
    */
-  private function getParentProperty(): Element {
+  private function getParentProperty(): TypedDataInterface {
     $parent_property_path = array_slice(explode('.', $this->context->getPropertyPath()), 0, -1);
     return self::findPropertyForPath($this->context->getRoot(), $parent_property_path);
   }
@@ -28,18 +31,18 @@ trait TreeAwareConstraintTrait {
    *
    * @todo consider adopting Symfony's PropertyAccess component.
    *
-   * @param \Drupal\Core\Config\Schema\ArrayElement $tree
+   * @param \Drupal\Core\TypedData\ComplexDataInterface $tree
    *   A config schema (sub)tree.
    * @param string[] $property_path
    *   A property path, in array form.
    *
-   * @return \Drupal\Core\Config\Schema\Element
-   *   The element found at the specified property path.
+   * @return \Drupal\Core\TypedData\TypedDataInterface
+   *   The property found at the specified property path.
    *
    * @throws \OutOfRangeException
    *   When requesting a non-existent property path.
    */
-  private static function findPropertyForPath(ArrayElement $tree, array $property_path): Element {
+  private static function findPropertyForPath(ComplexDataInterface $tree, array $property_path): TypedDataInterface {
     // Edge case: root is requested.
     if (empty($property_path)) {
       return $tree;

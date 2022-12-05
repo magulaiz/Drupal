@@ -18,22 +18,39 @@ class FieldStorageConfigValidationTest extends ConfigEntityValidationTestBase {
   protected static $modules = ['field', 'entity_test'];
 
   /**
-   * Tests that immutable fields cannot be changed.
+   * {@inheritdoc}
    */
-  public function testImmutableFields(): void {
-    /** @var \Drupal\field\FieldStorageConfigInterface $field_storage */
-    $field_storage = FieldStorageConfig::create([
+  protected function setUp(): void {
+    parent::setUp();
+
+    $this->entity = FieldStorageConfig::create([
+      'type' => 'boolean',
       'field_name' => 'test',
       'entity_type' => 'entity_test',
-      'type' => 'boolean',
+      'custom_storage' => FALSE,
     ]);
-    $field_storage->save();
+    $this->entity->save();
+  }
 
-    $field_storage->set('field_name', 'broken');
-    $field_storage->set('entity_type', 'entity_test_mul');
-    $field_storage->set('type', 'email');
-    $field_storage->set('module', 'entity_test');
-    $field_storage->set('custom_storage', !$field_storage->hasCustomStorage());
+  public function providerImmutableFields(): array {
+    return [
+      'field_name' => [
+        ['field_name' => 'broken'],
+      ],
+      'entity_type' => [
+        ['entity_type' => 'entity_test_mul'],
+      ],
+      'type' => [
+        ['type' => 'email'],
+      ],
+      'module' => [
+        ['module' => 'entity_test'],
+      ],
+      'custom_storage' => [
+        ['custom_storage' => TRUE],
+      ],
+    ];
+  }
 
   /**
    * Tests that immutable fields cannot be changed.
@@ -57,47 +74,32 @@ class FieldStorageConfigValidationTest extends ConfigEntityValidationTestBase {
    * Tests that the field type plugin is validated.
    */
   public function testFieldTypePlugin(): void {
-    /** @var \Drupal\field\FieldStorageConfigInterface $field_storage */
-    $field_storage = FieldStorageConfig::create([
-      'field_name' => 'test',
-      'entity_type' => 'entity_test',
-      'type' => 'non_existent',
-      'module' => 'core',
+    $this->entity->set('type', 'non_existent');
+    $this->assertValidationErrors([
+      "The 'type' property cannot be changed.",
+      "The 'non_existent' plugin does not exist.",
     ]);
-
-    $typed_data = $this->container->get('typed_data_manager');
-    $definition = $typed_data->createDataDefinition('entity:field_storage_config');
-    $violations = $typed_data->create($definition, $field_storage)->validate();
-    $this->assertCount(1, $violations);
-    $this->assertSame("The 'non_existent' plugin does not exist.", (string) $violations->get(0)->getMessage());
   }
 
   /**
    * Tests that the target entity type is validated.
    */
   public function testEntityType(): void {
-    /** @var \Drupal\field\FieldStorageConfigInterface $field_storage */
-    $field_storage = FieldStorageConfig::create([
-      'field_name' => 'test',
-      'entity_type' => 'entity_test',
-      'type' => 'boolean',
-      'module' => 'core',
+    // Ensure the target entity type is valid to begin with.
+    $this->assertValidationErrors([]);
+
+    $this->entity->set('entity_type', 'strange_entity');
+    $this->assertValidationErrors([
+      "The 'entity_type' property cannot be changed.",
+      "The 'strange_entity' plugin does not exist.",
     ]);
 
-    $typed_data = $this->container->get('typed_data_manager');
-    $definition = $typed_data->createDataDefinition('entity:field_storage_config');
-    $violations = $typed_data->create($definition, $field_storage)->validate();
-    $this->assertCount(0, $violations);
-
-    $field_storage->set('entity_type', 'strange_entity');
-    $violations = $typed_data->create($definition, $field_storage)->validate();
-    $this->assertCount(1, $violations);
-    $this->assertSame("The 'strange_entity' plugin does not exist.", (string) $violations->get(0)->getMessage());
-
-    $field_storage->set('entity_type', 'field_config');
-    $violations = $typed_data->create($definition, $field_storage)->validate();
-    $this->assertCount(1, $violations);
-    $this->assertSame("The 'field_config' plugin must implement or extend \Drupal\Core\Entity\FieldableEntityInterface.", (string) $violations->get(0)->getMessage());
+    // A valid, but non-fieldable, entity type should raise an error.
+    $this->entity->set('entity_type', 'field_config');
+    $this->assertValidationErrors([
+      "The 'entity_type' property cannot be changed.",
+      "The 'field_config' plugin must implement or extend \Drupal\Core\Entity\FieldableEntityInterface.",
+    ]);
   }
 
 }
