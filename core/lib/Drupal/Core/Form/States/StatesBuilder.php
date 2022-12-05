@@ -45,7 +45,7 @@ class StatesBuilder implements StatesBuilderInterface {
   /**
    * {@inheritdoc}
    */
-  public function xor(WatcherInterface ...$watchers): WatcherConditionGroupInterface {
+  public function xor(WatchableInterface ...$watchers): WatcherConditionGroupInterface {
     return new WatcherConditionGroup('xor', $watchers);
   }
 

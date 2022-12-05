@@ -15,7 +15,7 @@ interface WatcherInterface extends BaseStateInterface, WatchableInterface {
   public const EMPTY = 'empty';
 
   /**
-   * Name of flled state of element.
+   * Name of filled state of element.
    */
   public const FILLED = 'filled';
 

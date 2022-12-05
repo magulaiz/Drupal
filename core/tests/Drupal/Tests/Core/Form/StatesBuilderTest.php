@@ -147,7 +147,7 @@ class StatesBuilderTest extends UnitTestCase {
   /**
    * Test condition groups.
    */
-  public function testConditiongroups() {
+  public function testConditionGroups() {
     $result = $this->builder->addStates(
       $this->builder->state()->setVisible(
         $this->builder->or(
