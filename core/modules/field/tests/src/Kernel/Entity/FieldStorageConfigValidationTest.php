@@ -35,16 +35,22 @@ class FieldStorageConfigValidationTest extends ConfigEntityValidationTestBase {
     $field_storage->set('module', 'entity_test');
     $field_storage->set('custom_storage', !$field_storage->hasCustomStorage());
 
-    $typed_data = $this->container->get('typed_data_manager');
-    $definition = $typed_data->createDataDefinition('entity:field_storage_config');
-    $violations = $typed_data->create($definition, $field_storage)->validate();
-    $this->assertCount(5, $violations);
-
-    $this->assertSame("The 'field_name' property cannot be changed.", (string) $violations->get(0)->getMessage());
-    $this->assertSame("The 'entity_type' property cannot be changed.", (string) $violations->get(1)->getMessage());
-    $this->assertSame("The 'type' property cannot be changed.", (string) $violations->get(2)->getMessage());
-    $this->assertSame("The 'module' property cannot be changed.", (string) $violations->get(3)->getMessage());
-    $this->assertSame("The 'custom_storage' property cannot be changed.", (string) $violations->get(4)->getMessage());
+  /**
+   * Tests that immutable fields cannot be changed.
+   *
+   * @param array $fields_to_change
+   *   An array of key-value pairs with field names as keys and the value to set
+   *   on the field as values.
+   *
+   * @dataProvider providerImmutableFields
+   */
+  public function testImmutableFields(array $fields_to_change): void {
+    $expected_messages = [];
+    foreach ($fields_to_change as $field_name => $new_value) {
+      $this->entity->set($field_name, $new_value);
+      $expected_messages[] = "The '$field_name' property cannot be changed.";
+    }
+    $this->assertValidationErrors($expected_messages);
   }
 
   /**
