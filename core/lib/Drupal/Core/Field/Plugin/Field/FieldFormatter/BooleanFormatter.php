@@ -85,25 +85,24 @@ class BooleanFormatter extends FormatterBase {
       '#default_value' => $this->getSetting('format'),
       '#options' => $formats,
     ];
+    $states = $this->getStatesBuilder();
+    $states->addStates(
+      $states->state()->setVisible(
+        $states->watch('select[name="fields[' . $field_name . '][settings_edit_form][settings][format]"]')
+          ->valueEqualTo('custom')
+      )
+    );
     $form['format_custom_true'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Custom output for TRUE'),
       '#default_value' => $this->getSetting('format_custom_true'),
-      '#states' => [
-        'visible' => [
-          'select[name="fields[' . $field_name . '][settings_edit_form][settings][format]"]' => ['value' => 'custom'],
-        ],
-      ],
+      '#states' => $states->toArray(),
     ];
     $form['format_custom_false'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Custom output for FALSE'),
       '#default_value' => $this->getSetting('format_custom_false'),
-      '#states' => [
-        'visible' => [
-          'select[name="fields[' . $field_name . '][settings_edit_form][settings][format]"]' => ['value' => 'custom'],
-        ],
-      ],
+      '#states' => $states->toArray(),
     ];
 
     return $form;

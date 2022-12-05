@@ -107,17 +107,20 @@ class FileTransferAuthorizeForm extends FormBase {
       '#weight' => 100,
     ];
 
+    $states_builder = $this->getStatesBuilder();
     // Build a container for each connection type.
     foreach ($available_backends as $name => $backend) {
       $form['connection_settings']['authorize_filetransfer_default']['#options'][$name] = $backend['title'];
       $form['connection_settings'][$name] = [
         '#type' => 'container',
         '#attributes' => ['class' => ["filetransfer-$name", 'filetransfer']],
-        '#states' => [
-          'visible' => [
-            'select[name="connection_settings[authorize_filetransfer_default]"]' => ['value' => $name],
-          ],
-        ],
+        '#states' => $states_builder->addStates(
+          $states_builder->state()->setVisible(
+            $states_builder->watch(
+              'select[name="connection_settings[authorize_filetransfer_default]"]'
+            )->valueEqualTo($name)
+          )
+        )->toArray(),
       ];
       // We can't use #prefix on the container itself since then the header won't
       // be hidden and shown when the containers are being manipulated via JS.
