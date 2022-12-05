@@ -57,7 +57,7 @@ interface StatesBuilderInterface {
    * @return $this
    *   State builder instance.
    */
-  public function and(WatchableInterface ...$watchers): static;
+  public function and(WatchableInterface ...$watchers): WatcherConditionGroupInterface;
 
   /**
    * Add OR condition group.
@@ -68,7 +68,7 @@ interface StatesBuilderInterface {
    * @return $this
    *   State builder instance.
    */
-  public function or(WatchableInterface ...$watchers): static;
+  public function or(WatchableInterface ...$watchers): WatcherConditionGroupInterface;
 
   /**
    * Add XOR condition group.
@@ -79,7 +79,7 @@ interface StatesBuilderInterface {
    * @return $this
    *   State builder instance.
    */
-  public function xor(WatchableInterface ...$watchers): static;
+  public function xor(WatchableInterface ...$watchers): WatcherConditionGroupInterface;
 
   /**
    * Convert states to the array.

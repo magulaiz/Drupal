@@ -3,6 +3,7 @@
 namespace Drupal\Core\Field;
 
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Form\FormStatesBuilderProviderInterface;
 use Drupal\Core\Form\States\StatesBuilder;
 use Drupal\Core\Form\States\StatesBuilderInterface;
 use Drupal\Core\Language\LanguageInterface;
@@ -15,7 +16,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *
  * @ingroup field_formatter
  */
-abstract class FormatterBase extends PluginSettingsBase implements FormatterInterface, ContainerFactoryPluginInterface, FormStatesBuilderProviderInterfaceInterface {
+abstract class FormatterBase extends PluginSettingsBase implements FormatterInterface, ContainerFactoryPluginInterface, FormStatesBuilderProviderInterface {
 
   /**
    * The field definition.
