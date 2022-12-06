@@ -121,7 +121,7 @@ class JavascriptStatesForm extends FormBase {
         $states->state()->setInvisible(
           $states->watch(':input[name="checkbox_trigger"]')->isChecked()
         )
-      ),
+      )->toArray(),
     ];
     $states = $this->getStatesBuilder();
     $form['textfield_required_when_checkbox_trigger_checked'] = [
@@ -131,7 +131,7 @@ class JavascriptStatesForm extends FormBase {
         $states->state()->setRequired(
           $states->watch(':input[name="checkbox_trigger"]')->isChecked()
         )
-      ),
+      )->toArray(),
     ];
     $states = $this->getStatesBuilder();
     $form['textfield_readonly_when_checkbox_trigger_checked'] = [
@@ -161,7 +161,7 @@ class JavascriptStatesForm extends FormBase {
         $states->state()->setExpanded(
           $states->watch(':input[name="checkbox_trigger"]')->isChecked()
         )
-      ),
+      )->toArray(),
     ];
     $form['details_expanded_when_checkbox_trigger_checked']['textfield_in_details'] = [
       '#type' => 'textfield',
@@ -175,7 +175,7 @@ class JavascriptStatesForm extends FormBase {
         $states->state()->setChecked(
           $states->watch(':input[name="checkbox_trigger"]')->isChecked()
         )
-      ),
+      )->toArray(),
     ];
     $states = $this->getStatesBuilder();
     $form['checkbox_unchecked_when_checkbox_trigger_checked'] = [
@@ -185,7 +185,7 @@ class JavascriptStatesForm extends FormBase {
         $states->state()->setUnchecked(
           $states->watch(':input[name="checkbox_trigger"]')->isChecked()
         )
-      ),
+      )->toArray(),
     ];
     $states = $this->getStatesBuilder();
     $form['checkbox_visible_when_checkbox_trigger_checked'] = [
@@ -195,7 +195,7 @@ class JavascriptStatesForm extends FormBase {
         $states->state()->setVisible(
           $states->watch(':input[name="checkbox_trigger"]')->isChecked()
         )
-      ),
+      )->toArray(),
     ];
     $states = $this->getStatesBuilder();
     $form['text_format_invisible_when_checkbox_trigger_checked'] = [
@@ -205,7 +205,7 @@ class JavascriptStatesForm extends FormBase {
         $states->state()->setInvisible(
           $states->watch(':input[name="checkbox_trigger"]')->isChecked()
         )
-      ),
+      )->toArray(),
     ];
     $states = $this->getStatesBuilder();
     $form['checkboxes_all_checked_when_checkbox_trigger_checked'] = [
@@ -341,7 +341,7 @@ class JavascriptStatesForm extends FormBase {
         $states->state()->setVisible(
           $states->watch(':input[name="checkboxes_trigger[value2]"]')->isChecked()
         )
-      ),
+      )->toArray(),
     ];
     $states = $this->getStatesBuilder();
     $form['textfield_visible_when_checkboxes_trigger_value3_checked'] = [
@@ -351,7 +351,7 @@ class JavascriptStatesForm extends FormBase {
         $states->state()->setVisible(
           $states->watch(':input[name="checkboxes_trigger[value3]"]')->isChecked()
         )
-      ),
+      )->toArray(),
     ];
 
     // Radios trigger.
@@ -363,7 +363,7 @@ class JavascriptStatesForm extends FormBase {
         $states->state()->setVisible(
           $states->watch(':input[name="radios_trigger"]')->valueEqualTo('value2')
         )
-      ),
+      )->toArray(),
     ];
     $form['fieldset_visible_when_radios_trigger_has_value2']['textfield_in_fieldset'] = [
       '#type' => 'textfield',
@@ -377,7 +377,7 @@ class JavascriptStatesForm extends FormBase {
         $states->state()->setInvisible(
           $states->watch(':input[name="radios_trigger"]')->valueEqualTo('value2')
         )
-      ),
+      )->toArray(),
     ];
     $states = $this->getStatesBuilder();
     $form['select_required_when_radios_trigger_has_value2'] = [
@@ -392,7 +392,7 @@ class JavascriptStatesForm extends FormBase {
         $states->state()->setRequired(
           $states->watch(':input[name="radios_trigger"]')->valueEqualTo('value2')
         )
-      ),
+      )->toArray(),
     ];
     $states = $this->getStatesBuilder();
     $form['checkbox_checked_when_radios_trigger_has_value3'] = [
@@ -402,7 +402,7 @@ class JavascriptStatesForm extends FormBase {
         $states->state()->setChecked(
           $states->watch(':input[name="radios_trigger"]')->valueEqualTo('value3')
         )
-      ),
+      )->toArray(),
     ];
     $states = $this->getStatesBuilder();
     $form['checkbox_unchecked_when_radios_trigger_has_value3'] = [
@@ -412,7 +412,7 @@ class JavascriptStatesForm extends FormBase {
         $states->state()->setUnchecked(
           $states->watch(':input[name="radios_trigger"]')->valueEqualTo('value3')
         )
-      ),
+      )->toArray(),
     ];
     $states = $this->getStatesBuilder();
     $form['details_expanded_when_radios_trigger_has_value3'] = [
@@ -422,7 +422,7 @@ class JavascriptStatesForm extends FormBase {
         $states->state()->setExpanded(
           $states->watch(':input[name="radios_trigger"]')->valueEqualTo('value3')
         )
-      ),
+      )->toArray(),
     ];
     $form['details_expanded_when_radios_trigger_has_value3']['textfield_in_details'] = [
       '#type' => 'textfield',
@@ -438,7 +438,7 @@ class JavascriptStatesForm extends FormBase {
         $states->state()->setVisible(
           $states->watch(':input[name="select_trigger"]')->valueEqualTo('value2')
         )
-      ),
+      )->toArray(),
     ];
     $states = $this->getStatesBuilder();
     $form['textfield_visible_when_select_trigger_has_value3'] = [
@@ -448,7 +448,7 @@ class JavascriptStatesForm extends FormBase {
         $states->state()->setVisible(
           $states->watch(':input[name="select_trigger"]')->valueEqualTo('value3')
         )
-      ),
+      )->toArray(),
     ];
     $states = $this->getStatesBuilder();
     $form['textfield_visible_when_select_trigger_has_value2_or_value3'] = [
@@ -460,7 +460,7 @@ class JavascriptStatesForm extends FormBase {
             ->valueEqualTo('value2')
             ->valueEqualTo('value3')
         )
-      ),
+      )->toArray(),
     ];
 
     // Textfield trigger.
@@ -473,7 +473,7 @@ class JavascriptStatesForm extends FormBase {
         $states->state()->setChecked(
           $states->watch(':input[name="textfield_trigger"]')->isFilled()
         )
-      ),
+      )->toArray(),
     ];
     $states = $this->getStatesBuilder();
     $form['checkbox_unchecked_when_textfield_trigger_filled'] = [
@@ -484,7 +484,7 @@ class JavascriptStatesForm extends FormBase {
         $states->state()->setUnchecked(
           $states->watch(':input[name="textfield_trigger"]')->isFilled()
         )
-      ),
+      )->toArray(),
     ];
     $states = $this->getStatesBuilder();
     $form['select_invisible_when_textfield_trigger_filled'] = [
@@ -495,7 +495,7 @@ class JavascriptStatesForm extends FormBase {
         $states->state()->setInvisible(
           $states->watch(':input[name="textfield_trigger"]')->isFilled()
         )
-      ),
+      )->toArray(),
     ];
     $states = $this->getStatesBuilder();
     $form['select_visible_when_textfield_trigger_filled'] = [
@@ -506,7 +506,7 @@ class JavascriptStatesForm extends FormBase {
         $states->state()->setVisible(
           $states->watch(':input[name="textfield_trigger"]')->isFilled()
         )
-      ),
+      )->toArray(),
     ];
     $states = $this->getStatesBuilder();
     $form['textfield_required_when_textfield_trigger_filled'] = [
@@ -516,7 +516,7 @@ class JavascriptStatesForm extends FormBase {
         $states->state()->setRequired(
           $states->watch(':input[name="textfield_trigger"]')->isFilled()
         )
-      ),
+      )->toArray(),
     ];
     $states = $this->getStatesBuilder();
     $form['details_expanded_when_textfield_trigger_filled'] = [
@@ -526,7 +526,7 @@ class JavascriptStatesForm extends FormBase {
         $states->state()->setExpanded(
           $states->watch(':input[name="textfield_trigger"]')->isFilled()
         )
-      ),
+      )->toArray(),
     ];
     $form['details_expanded_when_textfield_trigger_filled']['textfield_in_details'] = [
       '#type' => 'textfield',
@@ -543,7 +543,7 @@ class JavascriptStatesForm extends FormBase {
           $states->watch(':input[name="select_trigger"]')->valueEqualTo('value2'),
           $states->watch(':input[name="textfield_trigger"]')->isFilled(),
         )
-      ),
+      )->toArray(),
     ];
 
     // Number triggers.
@@ -579,7 +579,7 @@ class JavascriptStatesForm extends FormBase {
             $states->watch(':input[name="number"]')->valueEqualTo('1')
           )
         )
-      ),
+      )->toArray(),
     ];
     return $form;
   }
