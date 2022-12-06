@@ -284,9 +284,14 @@ class AccountSettingsForm extends ConfigFormBase {
       '#title' => $this->t('Notify user when account is activated'),
       '#default_value' => $config->get('notify.status_activated'),
     ];
+    $states = $this->getStatesBuilder();
     $form['email_activated']['settings'] = [
       '#type' => 'container',
-      '#states' => [
+      '#states' => $states->addStates(
+        $states->state()->setInvisible(
+          $states->watch('input[name="user_mail_status_activated_notify"]')->isUnchecked()
+        )
+      )->toArray(),[
         // Hide the additional settings when this email is disabled.
         'invisible' => [
           'input[name="user_mail_status_activated_notify"]' => ['checked' => FALSE],

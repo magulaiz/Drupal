@@ -106,16 +106,17 @@ class LinkFormatter extends FormatterBase {
       '#default_value' => $this->getSetting('url_only'),
       '#access' => $this->getPluginId() == 'link',
     ];
+    $states = $this->getStatesBuilder();
     $elements['url_plain'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Show URL as plain text'),
       '#default_value' => $this->getSetting('url_plain'),
       '#access' => $this->getPluginId() == 'link',
-      '#states' => [
-        'visible' => [
-          ':input[name*="url_only"]' => ['checked' => TRUE],
-        ],
-      ],
+      '#states' => $states->addStates(
+        $states->state()->setVisible(
+          $states->watch(':input[name*="url_only"]')->isChecked()
+        )
+      )->toArray(),
     ];
     $elements['rel'] = [
       '#type' => 'checkbox',

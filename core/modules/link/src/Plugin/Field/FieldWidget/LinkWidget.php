@@ -2,6 +2,7 @@
 
 namespace Drupal\link\Plugin\Field\FieldWidget;
 
+use Drupal\Core\Form\States\StatesBuilder;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Url;
 use Drupal\Core\Entity\Element\EntityAutocomplete;
@@ -371,16 +372,17 @@ class LinkWidget extends WidgetBase {
       '#default_value' => $this->getSetting('placeholder_url'),
       '#description' => $this->t('Text that will be shown inside the field until a value is entered. This hint is usually a sample value or a brief description of the expected format.'),
     ];
+    $states = new StatesBuilder();
     $elements['placeholder_title'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Placeholder for link text'),
       '#default_value' => $this->getSetting('placeholder_title'),
       '#description' => $this->t('Text that will be shown inside the field until a value is entered. This hint is usually a sample value or a brief description of the expected format.'),
-      '#states' => [
-        'invisible' => [
-          ':input[name="instance[settings][title]"]' => ['value' => DRUPAL_DISABLED],
-        ],
-      ],
+      '#states' => $states->addStates(
+        $states->state()->setInvisible(
+          $states->watch(':input[name="instance[settings][title]"]')->valueEqualTo(DRUPAL_DISABLED)
+        )
+      )->toArray(),
     ];
 
     return $elements;

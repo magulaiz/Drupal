@@ -11,6 +11,7 @@ use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Field\Plugin\Field\FieldType\EntityReferenceItem;
 use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Form\States\StatesBuilder;
 use Drupal\Core\StreamWrapper\StreamWrapperInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\TypedData\DataDefinition;
@@ -128,16 +129,17 @@ class FileItem extends EntityReferenceItem {
       '#default_value' => $this->getSetting('display_field'),
       '#description' => $this->t('The display option allows users to choose if a file should be shown when viewing the content.'),
     ];
+    $states = new StatesBuilder();
     $element['display_default'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Files displayed by default'),
       '#default_value' => $this->getSetting('display_default'),
       '#description' => $this->t('This setting only has an effect if the display option is enabled.'),
-      '#states' => [
-        'visible' => [
-          ':input[name="settings[display_field]"]' => ['checked' => TRUE],
-        ],
-      ],
+      '#states' => $states->addStates(
+        $states->state()->setVisible(
+          $states->watch(':input[name="settings[display_field]"]')->isChecked()
+        )
+      )->toArray(),
     ];
 
     $scheme_options = \Drupal::service('stream_wrapper_manager')->getNames(StreamWrapperInterface::WRITE_VISIBLE);

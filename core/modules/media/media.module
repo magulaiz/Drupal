@@ -10,6 +10,7 @@ use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Form\States\StatesBuilder;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Render\Element\RenderElement;
 use Drupal\Core\Routing\RouteMatchInterface;
@@ -209,14 +210,15 @@ function media_form_field_ui_field_storage_add_form_alter(&$form, FormStateInter
     'field_ui:entity_reference:media',
   ];
   foreach ($field_types as $field_name) {
+    $states = new StatesBuilder();
     $form['add']['description_wrapper']["description_{$field_name}"] = [
       '#type' => 'item',
       '#markup' => $description_text,
-      '#states' => [
-        'visible' => [
-          ':input[name="new_storage_type"]' => ['value' => $field_name],
-        ],
-      ],
+      '#states' => $states->addStates(
+        $states->state()->setVisible(
+          $states->watch(':input[name="new_storage_type"]')->valueEqualTo($field_name)
+        )
+      )->toArray(),
     ];
   }
   $form['add']['new_storage_type']['#weight'] = 0;
