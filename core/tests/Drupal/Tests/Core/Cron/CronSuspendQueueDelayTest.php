@@ -36,6 +36,20 @@ final class CronSuspendQueueDelayTest extends UnitTestCase {
   protected $cronConstructorArguments;
 
   /**
+   * A worker for testing.
+   *
+   * @var \Drupal\Core\Queue\QueueWorkerInterface|\PHPUnit\Framework\MockObject\MockObject
+   */
+  protected $workerA;
+
+  /**
+   * A worker for testing.
+   *
+   * @var \Drupal\Core\Queue\QueueWorkerInterface|\PHPUnit\Framework\MockObject\MockObject
+   */
+  protected $workerB;
+
+  /**
    * {@inheritdoc}
    */
   protected function setUp(): void {
@@ -62,6 +76,24 @@ final class CronSuspendQueueDelayTest extends UnitTestCase {
       ->method('get')
       ->with('cron')
       ->willReturn($this->createMock(LoggerInterface::class));
+
+    $this->workerA = $this->createMock(QueueWorkerInterface::class);
+    $this->workerA->expects($this->any())
+      ->method('getPluginDefinition')
+      ->willReturn([
+        'cron' => [
+          'time' => 300,
+        ],
+      ]);
+
+    $this->workerB = $this->createMock(QueueWorkerInterface::class);
+    $this->workerB->expects($this->any())
+      ->method('getPluginDefinition')
+      ->willReturn([
+        'cron' => [
+          'time' => 300,
+        ],
+      ]);
   }
 
   /**
@@ -105,11 +137,11 @@ final class CronSuspendQueueDelayTest extends UnitTestCase {
       ->willReturn([
         'test_worker_a' => [
           'id' => 'test_worker_a',
-          'cron' => 300,
+          'cron' => ['time' => 300],
         ],
         'test_worker_b' => [
           'id' => 'test_worker_b',
-          'cron' => 300,
+          'cron' => ['time' => 300],
         ],
       ]);
 
@@ -142,23 +174,21 @@ final class CronSuspendQueueDelayTest extends UnitTestCase {
         FALSE,
       );
 
-    $workerA = $this->createMock(QueueWorkerInterface::class);
-    $workerB = $this->createMock(QueueWorkerInterface::class);
     $queueManager->expects($this->any())
       ->method('createInstance')
       ->willReturnMap([
-        ['test_worker_a', [], $workerA],
-        ['test_worker_b', [], $workerB],
+        ['test_worker_a', [], $this->workerA],
+        ['test_worker_b', [], $this->workerB],
       ]);
 
-    $workerA->expects($this->exactly(2))
+    $this->workerA->expects($this->exactly(2))
       ->method('processItem')
       ->with($this->anything())
       ->willReturnOnConsecutiveCalls(
         $this->throwException(new SuspendQueueException('', 0, NULL, 2.0)),
         $this->throwException(new SuspendQueueException('', 0, NULL, 3.0))
       );
-    $workerB->expects($this->once())
+    $this->workerB->expects($this->once())
       ->method('processItem')
       ->with('test_data_b1');
 
@@ -224,13 +254,12 @@ final class CronSuspendQueueDelayTest extends UnitTestCase {
         FALSE,
       );
 
-    $worker = $this->createMock(QueueWorkerInterface::class);
     $queueManager->expects($this->exactly(1))
       ->method('createInstance')
       ->with('test_worker')
-      ->willReturn($worker);
+      ->willReturn($this->workerA);
 
-    $worker->expects($this->once())
+    $this->workerA->expects($this->once())
       ->method('processItem')
       ->with($this->anything())
       ->willReturnOnConsecutiveCalls(
@@ -286,19 +315,19 @@ final class CronSuspendQueueDelayTest extends UnitTestCase {
       ->willReturn([
         'test_worker_a' => [
           'id' => 'test_worker_a',
-          'cron' => 300,
+          'cron' => ['time' => 300],
         ],
         'test_worker_b' => [
           'id' => 'test_worker_b',
-          'cron' => 300,
+          'cron' => ['time' => 300],
         ],
         'test_worker_c' => [
           'id' => 'test_worker_c',
-          'cron' => 300,
+          'cron' => ['time' => 300],
         ],
         'test_worker_d' => [
           'id' => 'test_worker_d',
-          'cron' => 300,
+          'cron' => ['time' => 300],
         ],
       ]);
 
@@ -343,17 +372,16 @@ final class CronSuspendQueueDelayTest extends UnitTestCase {
       );
 
     // Recycle the same worker for all queues to test order sanely:
-    $worker = $this->createMock(QueueWorkerInterface::class);
     $queueManager->expects($this->any())
       ->method('createInstance')
       ->willReturnMap([
-        ['test_worker_a', [], $worker],
-        ['test_worker_b', [], $worker],
-        ['test_worker_c', [], $worker],
-        ['test_worker_d', [], $worker],
+        ['test_worker_a', [], $this->workerA],
+        ['test_worker_b', [], $this->workerA],
+        ['test_worker_c', [], $this->workerA],
+        ['test_worker_d', [], $this->workerA],
       ]);
 
-    $worker->expects($this->exactly(6))
+    $this->workerA->expects($this->exactly(6))
       ->method('processItem')
       ->withConsecutive(
         // All queues are executed in sequence of definition:
