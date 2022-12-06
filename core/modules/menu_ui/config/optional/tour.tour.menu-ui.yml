@@ -7,8 +7,7 @@ id: menu-ui
 label: 'Menu Listing Page'
 module: menu_ui
 routes:
-  -
-     route_name: entity.menu.collection
+  - route_name: entity.menu.collection
 tips:
   menu-listing:
     id: menu-listing
@@ -22,9 +21,11 @@ tips:
     label: 'Adding New Menus'
     body: 'Add a new top level Menu here, and specify the Menu''s title and, optionally, a description (Administrative Summary).'
     weight: 2
+    selector: '.button-action'
   menu-actions:
     id: menu-actions
     plugin: text
     label: 'Menu Actions'
     body: 'Edit a Menu to view or change the hierarchy of Links in the Menu. These drop-button controls also offer quick access to the commonly used Add Link form.'
     weight: 3
+    selector: '.dropbutton-widget'
