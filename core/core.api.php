@@ -2464,7 +2464,6 @@ function hook_validation_constraint_alter(array &$definitions) {
  *   ],
  * ],
  * @endcode
- *
  */
 
 /**
