@@ -175,7 +175,7 @@ function forum_node_update(EntityInterface $node) {
     // otherwise insert a new one.
     /** @var \Drupal\forum\ForumIndexStorageInterface $forum_index_storage */
     $forum_index_storage = \Drupal::service('forum.index_storage');
-    if ($node->getRevisionId() == $node->original->getRevisionId() && $forum_index_storage->getOriginalTermId($node)) {
+    if ($node->getRevisionId() == $node->getOriginalDefaultRevision()->getRevisionId() && $forum_index_storage->getOriginalTermId($node)) {
       if (!empty($node->forum_tid)) {
         $forum_index_storage->update($node);
       }

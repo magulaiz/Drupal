@@ -419,7 +419,7 @@ class ConfigEntityStorage extends EntityStorageBase implements ConfigEntityStora
     }
     $data = $this->mapFromStorageRecords([$values]);
     $entity = current($data);
-    $entity->original = clone $entity;
+    $entity->setOriginalDefaultRevision(clone $entity);
     $entity->setSyncing($is_syncing);
     $entity->enforceIsNew();
     $entity->postCreate($this);
@@ -435,7 +435,7 @@ class ConfigEntityStorage extends EntityStorageBase implements ConfigEntityStora
    * {@inheritdoc}
    */
   public function updateFromStorageRecord(ConfigEntityInterface $entity, array $values) {
-    $entity->original = clone $entity;
+    $entity->setOriginalDefaultRevision(clone $entity);
 
     $data = $this->mapFromStorageRecords([$values]);
     $updated_entity = current($data);

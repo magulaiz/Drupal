@@ -111,7 +111,7 @@ class WorkspacePublisher implements WorkspacePublisherInterface {
             $field_name = $entity->getEntityType()->getRevisionMetadataKey('workspace');
             $entity->{$field_name}->target_id = NULL;
 
-            $entity->original = $default_revisions[$entity->id()];
+            $entity->setOriginalDefaultRevision($default_revisions[$entity->id()]);
             $entity->save();
           }
         }

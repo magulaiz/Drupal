@@ -134,8 +134,8 @@ function node_test_node_presave(NodeInterface $node) {
     $node->changed = 979534800;
   }
   // Determine changes.
-  if (!empty($node->original) && $node->original->getTitle() == 'test_changes') {
-    if ($node->original->getTitle() != $node->getTitle()) {
+  if ($node->getOriginalDefaultRevision() && $node->getOriginalDefaultRevision()->getTitle() == 'test_changes') {
+    if ($node->getOriginalDefaultRevision()->getTitle() != $node->getTitle()) {
       $node->title->value .= '_presave';
     }
   }
@@ -146,8 +146,8 @@ function node_test_node_presave(NodeInterface $node) {
  */
 function node_test_node_update(NodeInterface $node) {
   // Determine changes on update.
-  if (!empty($node->original) && $node->original->getTitle() == 'test_changes') {
-    if ($node->original->getTitle() != $node->getTitle()) {
+  if ($node->getOriginalDefaultRevision() && $node->getOriginalDefaultRevision()->getTitle() == 'test_changes') {
+    if ($node->getOriginalDefaultRevision()->getTitle() != $node->getTitle()) {
       $node->title->value .= '_update';
     }
   }

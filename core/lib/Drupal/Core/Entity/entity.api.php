@@ -1096,8 +1096,8 @@ function hook_ENTITY_TYPE_storage_load(array $entities) {
 /**
  * Act on an entity before it is created or updated.
  *
- * You can get the original entity object from $entity->original when it is an
- * update of the entity.
+ * You can get the original entity object from
+ * $entity->getOriginalDefaultRevision() when it is an update of the entity.
  *
  * @param \Drupal\Core\Entity\EntityInterface $entity
  *   The entity object.
@@ -1115,8 +1115,8 @@ function hook_entity_presave(\Drupal\Core\Entity\EntityInterface $entity) {
 /**
  * Act on a specific type of entity before it is created or updated.
  *
- * You can get the original entity object from $entity->original when it is an
- * update of the entity.
+ * You can get the original entity object from
+ * $entity->getOriginalDefaultRevision() when it is an update of the entity.
  *
  * @param \Drupal\Core\Entity\EntityInterface $entity
  *   The entity object.

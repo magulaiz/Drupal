@@ -253,7 +253,7 @@ class EntityRevisionsTest extends EntityKernelTestBase {
     $it_revision->isDefaultRevision(FALSE);
     // @todo Remove this once the "original" property works with revisions. See
     //   https://www.drupal.org/project/drupal/issues/2859042.
-    $it_revision->original = $storage->loadRevision($it_revision->getLoadedRevisionId());
+    $it_revision->setOriginalDefaultRevision($storage->loadRevision($it_revision->getLoadedRevisionId()));
     $it_revision->save();
     $this->assertTrue($it_revision->isLatestRevision());
     $this->assertTrue($it_revision->isLatestTranslationAffectedRevision());

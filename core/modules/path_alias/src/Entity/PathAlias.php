@@ -109,7 +109,7 @@ class PathAlias extends ContentEntityBase implements PathAliasInterface {
     $alias_manager = \Drupal::service('path_alias.manager');
     $alias_manager->cacheClear($this->getPath());
     if ($update) {
-      $alias_manager->cacheClear($this->original->getPath());
+      $alias_manager->cacheClear($this->getOriginalDefaultRevision()->getPath());
     }
   }
 

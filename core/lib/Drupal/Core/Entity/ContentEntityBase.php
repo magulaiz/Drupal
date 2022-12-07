@@ -924,6 +924,7 @@ abstract class ContentEntityBase extends EntityBase implements \IteratorAggregat
     $translation->isDefaultRevision = &$this->isDefaultRevision;
     $translation->enforceRevisionTranslationAffected = &$this->enforceRevisionTranslationAffected;
     $translation->isSyncing = &$this->isSyncing;
+    $translation->original = &$this->original;
 
     return $translation;
   }
@@ -1221,6 +1222,11 @@ abstract class ContentEntityBase extends EntityBase implements \IteratorAggregat
     $original_revision_id = $this->loadedRevisionId;
     $this->loadedRevisionId = &$original_revision_id;
 
+    // Ensure the original property is actually cloned by overwriting the
+    // original reference with one pointing to a copy of it.
+    $original = $this->original;
+    $this->original = &$original;
+
     $fields = $this->fields;
     $this->fields = &$fields;
 
@@ -1415,11 +1421,11 @@ abstract class ContentEntityBase extends EntityBase implements \IteratorAggregat
       return TRUE;
     }
 
-    // $this->original only exists during save. See
+    // The original entity only exists during save. See
     // \Drupal\Core\Entity\EntityStorageBase::save(). If it exists we re-use it
     // here for performance reasons.
     /** @var \Drupal\Core\Entity\ContentEntityBase $original */
-    $original = $this->original ? $this->original : NULL;
+    $original = $this->getOriginalDefaultRevision();
 
     if (!$original) {
       $id = $this->getOriginalId() !== NULL ? $this->getOriginalId() : $this->id();

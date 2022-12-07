@@ -121,7 +121,7 @@ class BlockContent extends EditorialContentEntityBase implements BlockContentInt
    */
   public function postSave(EntityStorageInterface $storage, $update = TRUE) {
     parent::postSave($storage, $update);
-    if ($this->isReusable() || (isset($this->original) && $this->original->isReusable())) {
+    if ($this->isReusable() || ($this->getOriginalDefaultRevision() && $this->getOriginalDefaultRevision()->isReusable())) {
       static::invalidateBlockPluginCache();
     }
   }
@@ -168,11 +168,11 @@ class BlockContent extends EditorialContentEntityBase implements BlockContentInt
   public function preSaveRevision(EntityStorageInterface $storage, \stdClass $record) {
     parent::preSaveRevision($storage, $record);
 
-    if (!$this->isNewRevision() && isset($this->original) && (!isset($record->revision_log) || $record->revision_log === '')) {
+    if (!$this->isNewRevision() && $this->getOriginalDefaultRevision() && (!isset($record->revision_log) || $record->revision_log === '')) {
       // If we are updating an existing block_content without adding a new
       // revision and the user did not supply a revision log, keep the existing
       // one.
-      $record->revision_log = $this->original->getRevisionLogMessage();
+      $record->revision_log = $this->getOriginalDefaultRevision()->getRevisionLogMessage();
     }
   }
 
