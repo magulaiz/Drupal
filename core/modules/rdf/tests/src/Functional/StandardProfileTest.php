@@ -16,6 +16,7 @@ use Drupal\Tests\rdf\Traits\RdfParsingTrait;
  * Tests the RDF mappings and RDFa markup on top of the standard profile.
  *
  * @group rdf
+ * @group legacy
  */
 class StandardProfileTest extends BrowserTestBase {
 
@@ -24,7 +25,7 @@ class StandardProfileTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'classy';
+  protected $defaultTheme = 'starterkit_theme';
 
   /**
    * The profile used during tests.
@@ -497,8 +498,7 @@ class StandardProfileTest extends BrowserTestBase {
       'type' => 'literal',
       // There is an extra carriage return in the value when parsing comments as
       // output by Bartik, so it must be added to the expected value.
-      'value' => "$text
-",
+      'value' => "$text" . PHP_EOL,
       'lang' => 'en',
     ];
     $this->assertTrue($this->hasRdfProperty($this->getSession()->getPage()->getContent(), $this->baseUri, $this->articleCommentUri, 'http://schema.org/text', $expected_value), "Article comment body was found (schema:text).");

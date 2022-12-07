@@ -1814,11 +1814,6 @@ abstract class Connection {
    *
    * @return string
    *   The name of the temporary table.
-   *
-   * @deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. There is no
-   *   replacement.
-   *
-   * @see https://www.drupal.org/node/3211781
    */
   abstract public function queryTemporary($query, array $args = [], array $options = []);
 
@@ -1917,7 +1912,7 @@ abstract class Connection {
    * @param string $operator
    *   The condition operator, such as "IN", "BETWEEN", etc. Case-sensitive.
    *
-   * @return
+   * @return array|null
    *   The extra handling directives for the specified operator, or NULL.
    *
    * @see \Drupal\Core\Database\Query\Condition::compile()
@@ -1953,7 +1948,7 @@ abstract class Connection {
    *   is behind, so by passing in the maximum existing ID, it can be assured
    *   that we never issue the same ID.
    *
-   * @return
+   * @return int|string
    *   An integer number larger than any number returned by earlier calls and
    *   also larger than the $existing_id if one was passed in.
    */

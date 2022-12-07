@@ -15,7 +15,7 @@ class InstallerTranslationTest extends InstallerTestBase {
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'classy';
+  protected $defaultTheme = 'starterkit_theme';
 
   /**
    * Overrides the language code in which to install Drupal.
@@ -40,8 +40,7 @@ class InstallerTranslationTest extends InstallerTestBase {
     $this->translations['Save and continue'] = 'Save and continue de';
 
     // Check the language direction.
-    $direction = current($this->xpath('/@dir'))->getText();
-    $this->assertEquals('ltr', $direction);
+    $this->assertSession()->elementTextEquals('xpath', '/@dir', 'ltr');
   }
 
   /**
@@ -108,7 +107,7 @@ class InstallerTranslationTest extends InstallerTestBase {
     $this->drupalGet('admin/config/development/performance');
     $this->submitForm($edit, 'Save configuration');
     $this->drupalGet('<front>');
-    $this->assertSession()->responseContains('classy/css/components/action-links.css');
+    $this->assertSession()->responseContains('starterkit_theme/css/components/action-links.css');
 
     // Verify the strings from the translation files were imported.
     $test_samples = ['Save and continue', 'Anonymous'];

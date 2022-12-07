@@ -2,6 +2,8 @@
 
 namespace Drupal\Core\DependencyInjection;
 
+use Drupal\Component\DependencyInjection\ContainerInterface;
+use Drupal\Component\DependencyInjection\ServiceIdHashTrait;
 use Symfony\Component\DependencyInjection\Alias;
 use Symfony\Component\DependencyInjection\ContainerBuilder as SymfonyContainerBuilder;
 use Symfony\Component\DependencyInjection\Container as SymfonyContainer;
@@ -15,7 +17,9 @@ use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
  *
  * @ingroup container
  */
-class ContainerBuilder extends SymfonyContainerBuilder {
+class ContainerBuilder extends SymfonyContainerBuilder implements ContainerInterface {
+
+  use ServiceIdHashTrait;
 
   /**
    * {@inheritdoc}
@@ -37,24 +41,13 @@ class ContainerBuilder extends SymfonyContainerBuilder {
    *   services in a frozen builder.
    */
   public function set($id, $service) {
-    if (strtolower($id) !== $id) {
-      throw new \InvalidArgumentException("Service ID names must be lowercase: $id");
-    }
     SymfonyContainer::set($id, $service);
-
-    // Ensure that the _serviceId property is set on synthetic services as well.
-    if (isset($this->services[$id]) && is_object($this->services[$id]) && !isset($this->services[$id]->_serviceId)) {
-      $this->services[$id]->_serviceId = $id;
-    }
   }
 
   /**
    * {@inheritdoc}
    */
   public function register($id, $class = NULL): Definition {
-    if (strtolower($id) !== $id) {
-      throw new \InvalidArgumentException("Service ID names must be lowercase: $id");
-    }
     $definition = new Definition($class);
     // As of Symfony 5.2 all services are private by default, but in Drupal
     // services are still public by default.

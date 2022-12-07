@@ -252,19 +252,6 @@ class ValidatorsTest extends KernelTestBase {
       ],
     ];
 
-    $data['uploadImage toolbar item condition not met: image uploads must be enabled'] = [
-      'settings' => [
-        'toolbar' => [
-          'items' => [
-            'uploadImage',
-          ],
-        ],
-        'plugins' => [],
-      ],
-      'violations' => [
-        'settings.toolbar.items.0' => 'The <em class="placeholder">Image upload</em> toolbar item requires image uploads to be enabled.',
-      ],
-    ];
     $data['drupalMedia toolbar item condition not met: media filter enabled'] = [
       'settings' => [
         'toolbar' => [
@@ -1027,11 +1014,11 @@ class ValidatorsTest extends KernelTestBase {
       ],
     ];
 
-    $data['INVALID: uploadImage toolbar item condition NOT met: image uploads must be enabled'] = [
+    $data['INVALID: drupalInsertImage without required dependent plugin configuration'] = [
       'settings' => [
         'toolbar' => [
           'items' => [
-            'uploadImage',
+            'drupalInsertImage',
           ],
         ],
         'plugins' => [],
@@ -1041,14 +1028,14 @@ class ValidatorsTest extends KernelTestBase {
       ],
       'filters' => [],
       'violations' => [
-        'settings.toolbar.items.0' => 'The <em class="placeholder">Image upload</em> toolbar item requires image uploads to be enabled.',
+        'settings.plugins.ckeditor5_imageResize' => 'Configuration for the enabled plugin "<em class="placeholder">Image resize</em>" (<em class="placeholder">ckeditor5_imageResize</em>) is missing.',
       ],
     ];
-    $data['VALID: uploadImage toolbar item condition met: image uploads must be enabled'] = [
+    $data['VALID: drupalInsertImage toolbar item without image upload'] = [
       'settings' => [
         'toolbar' => [
           'items' => [
-            'uploadImage',
+            'drupalInsertImage',
           ],
         ],
         'plugins' => [
@@ -1058,6 +1045,25 @@ class ValidatorsTest extends KernelTestBase {
         ],
       ],
       'image_upload' => [
+        'status' => FALSE,
+      ],
+      'filters' => [],
+      'violations' => [],
+    ];
+    $data['VALID: drupalInsertImage image upload enabled'] = [
+      'settings' => [
+        'toolbar' => [
+          'items' => [
+            'drupalInsertImage',
+          ],
+        ],
+        'plugins' => [
+          'ckeditor5_imageResize' => [
+            'allow_resize' => FALSE,
+          ],
+        ],
+      ],
+      'image' => [
         'status' => TRUE,
       ],
       'filters' => [],
@@ -1187,6 +1193,7 @@ class ValidatorsTest extends KernelTestBase {
         ],
       ],
       'violations' => [
+        'filters.filter_html' => 'The current CKEditor 5 build requires the following elements and attributes: <br><code>&lt;br&gt; &lt;p onhover style&gt; &lt;* dir=&quot;ltr rtl&quot; lang&gt; &lt;img on*&gt; &lt;blockquote style&gt; &lt;marquee&gt; &lt;a onclick=&quot;javascript:*&quot;&gt; &lt;code style=&quot;foo: bar;&quot;&gt;</code><br>The following elements are missing: <br><code>&lt;p onhover style&gt; &lt;img on*&gt; &lt;blockquote style&gt; &lt;code style=&quot;foo: bar;&quot;&gt;</code>',
         'settings.plugins.ckeditor5_sourceEditing.allowed_tags.0' => 'The following tag in the Source Editing "Manually editable HTML tags" field is a security risk: <em class="placeholder">&lt;p onhover&gt;</em>.',
         'settings.plugins.ckeditor5_sourceEditing.allowed_tags.1' => 'The following tag in the Source Editing "Manually editable HTML tags" field is a security risk: <em class="placeholder">&lt;img on*&gt;</em>.',
         'settings.plugins.ckeditor5_sourceEditing.allowed_tags.2' => 'The following tag in the Source Editing "Manually editable HTML tags" field is a security risk: <em class="placeholder">&lt;blockquote style&gt;</em>.',

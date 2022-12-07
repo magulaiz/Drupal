@@ -22,7 +22,7 @@ class EntityViewControllerTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'classy';
+  protected $defaultTheme = 'starterkit_theme';
 
   /**
    * Array of test entities.
@@ -31,6 +31,9 @@ class EntityViewControllerTest extends BrowserTestBase {
    */
   protected $entities = [];
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
     // Create some dummy entity_test entities.
