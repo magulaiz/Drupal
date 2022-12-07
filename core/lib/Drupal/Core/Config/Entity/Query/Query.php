@@ -214,7 +214,7 @@ class Query extends QueryBase implements QueryInterface {
         case 'ENDS_WITH':
           $filter = static function ($name) use ($value, $prefix_length) {
             $id = substr($name, $prefix_length);
-            return strrpos($id, $value) === strlen($id) - strlen($value);
+            return str_ends_with($id, $value);
           };
           break;
       }
