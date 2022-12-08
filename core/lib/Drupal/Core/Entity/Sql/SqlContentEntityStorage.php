@@ -599,7 +599,14 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
           else {
             foreach ($columns as $property_name => $column_name) {
               $column_attributes = $definition_columns[$property_name];
-              $values[$id][$field_name][$langcode][$property_name] = (!empty($column_attributes['serialize'])) ? unserialize($row[$column_name]) : $row[$column_name];
+              $serialize = !empty($column_attributes['serialize']);
+              $empty_column = empty($row[$column_name]);
+              if ($serialize && !$empty_column) {
+                  $values[$id][$field_name][$langcode][$property_name] = unserialize($row[$column_name]);
+              }
+              else {
+                $values[$id][$field_name][$langcode][$property_name] = $row[$column_name];
+              }
             }
           }
         }
