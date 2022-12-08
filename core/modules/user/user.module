@@ -532,7 +532,7 @@ function user_pass_reset_url($account, $options = []) {
  *   account.
  *
  * @see user_mail_tokens()
- * @see \Drupal\user\Controller\UserController::confirmCancel()
+ * @see \Drupal\user\Controller\UserConfirmCancelController()
  */
 function user_cancel_url(UserInterface $account, $options = []) {
   $timestamp = \Drupal::time()->getRequestTime();
@@ -555,7 +555,7 @@ function user_cancel_url(UserInterface $account, $options = []) {
  * contains the time stamp, the user's last login time, the numeric user ID,
  * and the user's email address.
  * For a usage example, see user_cancel_url() and
- * \Drupal\user\Controller\UserController::confirmCancel().
+ * \Drupal\user\Controller\UserConfirmCancelController().
  *
  * @param \Drupal\user\UserInterface $account
  *   An object containing the user account.

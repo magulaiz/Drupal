@@ -5,25 +5,25 @@ namespace Drupal\Tests\user\Kernel\Controller;
 use Drupal\Core\Url;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\Tests\user\Traits\UserCreationTrait;
-use Drupal\user\Controller\UserController;
+use Drupal\user\Controller\CurrentUserEditPageController;
 
 /**
  * Tests for the User controller.
  *
  * @group user
  *
- * @coversDefaultClass \Drupal\user\Controller\UserController
+ * @coversDefaultClass \Drupal\user\Controller\CurrentUserEditPageController
  */
-class UserControllerTest extends KernelTestBase {
+class CurrentUserEditPageControllerTest extends KernelTestBase {
 
   use UserCreationTrait;
 
   /**
    * The user controller.
    *
-   * @var \Drupal\user\Controller\UserController
+   * @var \Drupal\user\Controller\CurrentUserEditPageController
    */
-  protected $userController;
+  protected $controller;
 
   /**
    * The logged in user.
@@ -43,14 +43,12 @@ class UserControllerTest extends KernelTestBase {
    * {@inheritDoc}
    */
   protected function setUp(): void {
-
     parent::setUp();
 
-    $this->userController = UserController::create(\Drupal::getContainer());
+    $this->controller = CurrentUserEditPageController::create(\Drupal::getContainer());
 
     // Create and log in a user.
     $this->user = $this->setUpCurrentUser();
-
   }
 
   /**
@@ -59,8 +57,7 @@ class UserControllerTest extends KernelTestBase {
    * @covers ::userEditPage
    */
   public function testUserEditPage() {
-
-    $response = $this->userController->userEditPage();
+    $response = ($this->controller)();
 
     // Ensure the response is directed to the correct user edit page.
     $edit_url = Url::fromRoute('entity.user.edit_form', [
@@ -70,7 +67,6 @@ class UserControllerTest extends KernelTestBase {
     $this->assertEquals($edit_url, $response->getTargetUrl());
 
     $this->assertEquals(301, $response->getStatusCode());
-
   }
 
 }
