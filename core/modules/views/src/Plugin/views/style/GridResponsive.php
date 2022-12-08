@@ -78,10 +78,7 @@ class GridResponsive extends StylePluginBase {
     $form['alignment'] = [
       '#type' => 'radios',
       '#title' => $this->t('Alignment'),
-      '#options' => [
-        'horizontal' => $this->t('Horizontal'),
-        'vertical' => $this->t('Vertical'),
-      ],
+      '#options' => ['horizontal' => $this->t('Horizontal'), 'vertical' => $this->t('Vertical')],
       '#default_value' => $this->options['alignment'],
       '#description' => $this->t('Horizontal alignment will place items starting in the upper left and moving right. Vertical alignment will place items starting in the upper left and moving down.'),
     ];
