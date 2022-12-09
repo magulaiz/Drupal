@@ -378,11 +378,13 @@ class ForumManager implements ForumManagerInterface {
    *
    * @param int $tid
    *   The forum tid.
+   * @param int $tid
+   *   The forum tid.
    *
    * @return object|null
    *   Statistics for the given forum if statistics exist, else NULL.
    */
-  protected function getForumStatistics($tid) {
+  protected function getForumStatistics($tid, $tids) {
     if (empty($this->forumStatistics)) {
       // Prime the statistics.
       $query = $this->connection->select('node_field_data', 'n');
@@ -393,6 +395,7 @@ class ForumManager implements ForumManagerInterface {
       $this->forumStatistics = $query
         ->fields('f', ['tid'])
         ->condition('n.status', 1)
+        ->condition('f.tid', $tids, 'IN')
         ->condition('n.default_langcode', 1)
         ->groupBy('tid')
         ->addTag('node_access')
@@ -414,9 +417,14 @@ class ForumManager implements ForumManagerInterface {
     }
     $forums = [];
     $_forums = $this->entityTypeManager->getStorage('taxonomy_term')->loadTree($vid, $tid, NULL, TRUE);
+
+    $tids = array_map(function($forum) {
+      return $forum->id();
+    }, $_forums);
+
     foreach ($_forums as $forum) {
       // Merge in the topic and post counters.
-      if (($count = $this->getForumStatistics($forum->id()))) {
+      if (($count = $this->getForumStatistics($forum->id(), $tids))) {
         $forum->num_topics = $count->topic_count;
         $forum->num_posts = $count->topic_count + $count->comment_count;
       }
