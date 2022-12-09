@@ -577,6 +577,7 @@ services:
   container.namespaces:
     class: ArrayObject
     arguments: [ '%container.namespaces%' ]
+  Traversable $namespaces: '@container.namespaces'
   container.trait:
     abstract: true
     calls:

@@ -1,4 +1,7 @@
 services:
+  _defaults:
+    autowire: true
+
   serializer:
     class: Symfony\Component\Serializer\Serializer
     arguments: [{  }, {  }]
@@ -6,17 +9,14 @@ services:
     class: Drupal\serialization\Normalizer\ConfigEntityNormalizer
     tags:
       - { name: normalizer }
-    arguments: ['@entity_type.manager', '@entity_type.repository', '@entity_field.manager']
   serializer.normalizer.content_entity:
     class: Drupal\serialization\Normalizer\ContentEntityNormalizer
     tags:
       - { name: normalizer }
-    arguments: ['@entity_type.manager', '@entity_type.repository', '@entity_field.manager']
   serializer.normalizer.entity:
     class: Drupal\serialization\Normalizer\EntityNormalizer
     tags:
       - { name: normalizer }
-    arguments: ['@entity_type.manager', '@entity_type.repository', '@entity_field.manager']
   serializer.normalizer.primitive_data:
     class: Drupal\serialization\Normalizer\PrimitiveDataNormalizer
     tags:
@@ -33,7 +33,6 @@ services:
       # this modules generic field item normalizer.
       # @todo Find a better way for this in https://www.drupal.org/node/2575761.
       - { name: normalizer, priority: 8 }
-    arguments: ['@entity.repository']
   serialization.normalizer.field_item:
     class: Drupal\serialization\Normalizer\FieldItemNormalizer
     tags:
@@ -97,7 +96,6 @@ services:
     class: Drupal\serialization\EntityResolver\UuidResolver
     tags:
       - { name: entity_resolver}
-    arguments: ['@entity.repository']
   serialization.entity_resolver.target_id:
     class: Drupal\serialization\EntityResolver\TargetIdResolver
     tags:
