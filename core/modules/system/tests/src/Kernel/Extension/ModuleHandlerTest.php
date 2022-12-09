@@ -250,7 +250,7 @@ class ModuleHandlerTest extends KernelTestBase {
     $this->installSchema('user', 'users_data');
     $entity_types = \Drupal::entityTypeManager()->getDefinitions();
     foreach ($entity_types as $entity_type) {
-      if ('entity_test' == $entity_type->getProvider()) {
+      if ($entity_type instanceof ContentEntityTypeInterface && 'entity_test' == $entity_type->getProvider()) {
         $this->installEntitySchema($entity_type->id());
       }
     }
