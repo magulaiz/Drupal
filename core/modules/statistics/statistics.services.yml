@@ -1,6 +1,6 @@
 services:
   statistics.storage.node:
     class: Drupal\statistics\NodeStatisticsDatabaseStorage
-    arguments: ['@database', '@state', '@request_stack']
+    autowire: true
     tags:
       - { name: backend_overridable }
