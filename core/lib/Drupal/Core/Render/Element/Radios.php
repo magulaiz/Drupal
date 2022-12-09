@@ -40,6 +40,31 @@ class Radios extends FormElement {
 
   /**
    * {@inheritdoc}
+   *
+   * Overwrite setAttributes to remove unnecessary attributes from the
+   * fieldset for radio groups. These are applied to the child radio
+   * elements instead.
+   */
+  public static function setAttributes(&$element, $class = []) {
+    if (!empty($class)) {
+      if (!isset($element['#attributes']['class'])) {
+        $element['#attributes']['class'] = [];
+      }
+      $element['#attributes']['class'] = array_merge($element['#attributes']['class'], $class);
+    }
+    // This function is invoked from form element theme functions, but the
+    // rendered form element may not necessarily have been processed by
+    // \Drupal::formBuilder()->doBuildForm().
+    if (!empty($element['#required'])) {
+      $element['#attributes']['class'][] = 'required';
+    }
+    if (isset($element['#parents']) && isset($element['#errors']) && !empty($element['#validated'])) {
+      $element['#attributes']['class'][] = 'error';
+    }
+  }
+
+  /**
+   * {@inheritdoc}
    */
   public function getInfo() {
     $class = static::class;
@@ -51,6 +76,7 @@ class Radios extends FormElement {
       '#theme_wrappers' => ['radios'],
       '#pre_render' => [
         [$class, 'preRenderCompositeFormElement'],
+        [$class, 'preRenderRadiosFormElement'],
       ],
     ];
   }
@@ -88,8 +114,22 @@ class Radios extends FormElement {
           '#error_no_message' => TRUE,
           '#weight' => $weight,
         ];
+
+        // Only add the required attribute to radio buttons.
+        // @see https://stackoverflow.com/questions/34300154
+        if (!empty($element['#required'])) {
+          $element[$key]['#attributes']['required'] = 'required';
+        }
       }
     }
+    return $element;
+  }
+
+  /**
+   * Adds role "radiogroup" to radios fieldset wrapper.
+   */
+  public static function preRenderRadiosFormElement($element) {
+    $element['#attributes']['role'] = 'radiogroup';
     return $element;
   }
 
