@@ -3,6 +3,7 @@
 namespace Drupal\Tests\system\Kernel\Extension;
 
 use Drupal\Component\Render\FormattableMarkup;
+use Drupal\Core\Entity\ContentEntityTypeInterface;
 use Drupal\Core\Extension\MissingDependencyException;
 use Drupal\Core\Extension\ModuleUninstallValidatorException;
 use Drupal\Core\Extension\ProfileExtensionList;
