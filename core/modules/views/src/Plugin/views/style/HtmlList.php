@@ -59,10 +59,7 @@ class HtmlList extends StylePluginBase {
     $form['type'] = [
       '#type' => 'radios',
       '#title' => $this->t('List type'),
-      '#options' => [
-        'ul' => $this->t('Unordered list'),
-        'ol' => $this->t('Ordered list'),
-      ],
+      '#options' => ['ul' => $this->t('Unordered list'), 'ol' => $this->t('Ordered list')],
       '#default_value' => $this->options['type'],
     ];
     $form['wrapper_class'] = [
