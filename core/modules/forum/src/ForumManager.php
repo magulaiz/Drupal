@@ -378,8 +378,8 @@ class ForumManager implements ForumManagerInterface {
    *
    * @param int $tid
    *   The forum tid.
-   * @param int $tid
-   *   The forum tid.
+   * @param int $tids
+   *   The list of all forum tid.
    *
    * @return object|null
    *   Statistics for the given forum if statistics exist, else NULL.
@@ -418,7 +418,7 @@ class ForumManager implements ForumManagerInterface {
     $forums = [];
     $_forums = $this->entityTypeManager->getStorage('taxonomy_term')->loadTree($vid, $tid, NULL, TRUE);
 
-    $tids = array_map(function($forum) {
+    $tids = array_map(function ($forum) {
       return $forum->id();
     }, $_forums);
 
