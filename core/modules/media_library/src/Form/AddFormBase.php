@@ -696,9 +696,10 @@ abstract class AddFormBase extends FormBase implements BaseFormIdInterface, Trus
       return $form;
     }
 
-    $media_ids = array_map(function (MediaInterface $media) {
-      return $media->id();
-    }, $this->getAddedMediaItems($form_state));
+    $media_ids = array_map(
+      fn (MediaInterface $media): int => $media->id(),
+      $this->getAddedMediaItems($form_state),
+    );
 
     $response = new AjaxResponse();
     $response->addCommand(new UpdateSelectionCommand($media_ids));
@@ -750,9 +751,10 @@ abstract class AddFormBase extends FormBase implements BaseFormIdInterface, Trus
     // The added media items get an ID when they are saved in ::submitForm().
     // For that reason the added media items are keyed by delta in the form
     // state and we have to do an array map to get each media ID.
-    $current_media_ids = array_map(function (MediaInterface $media) {
-      return $media->id();
-    }, $this->getCurrentMediaItems($form_state));
+    $current_media_ids = array_map(
+      fn (MediaInterface $media): int => (int) $media->id(),
+      $this->getCurrentMediaItems($form_state),
+    );
 
     // Allow the opener service to respond to the selection.
     $state = $this->getMediaLibraryState($form_state);
