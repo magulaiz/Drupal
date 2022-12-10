@@ -46,6 +46,7 @@ services:
       - { name: theme_negotiator, priority: -40 }
   user.auth:
     class: Drupal\user\UserAuth
+  Drupal\user\UserAuthInterface: '@user.auth'
   user.permissions:
     class: Drupal\user\PermissionHandler
   user.current_user_context:

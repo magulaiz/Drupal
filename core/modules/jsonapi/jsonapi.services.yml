@@ -87,8 +87,10 @@ services:
       - { name: route_enhancer }
   jsonapi.field_resolver:
     class: Drupal\jsonapi\Context\FieldResolver
+  Drupal\jsonapi\Context\FieldResolver: '@jsonapi.field_resolver'
   jsonapi.include_resolver:
     class: Drupal\jsonapi\IncludeResolver
+  Drupal\jsonapi\IncludeResolver: '@jsonapi.include_resolver'
   paramconverter.jsonapi.entity_uuid:
     parent: paramconverter.entity
     class: Drupal\jsonapi\ParamConverter\EntityUuidConverter

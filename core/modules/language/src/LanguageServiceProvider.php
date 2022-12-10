@@ -7,6 +7,7 @@ use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\DependencyInjection\ServiceProviderBase;
 use Drupal\Core\Language\LanguageInterface;
 use Symfony\Component\DependencyInjection\Reference;
+use Drupal\language\ConfigurableLanguageManagerInterface;
 
 /**
  * Overrides the language_manager service to point to language's module one.
@@ -53,7 +54,7 @@ class LanguageServiceProvider extends ServiceProviderBase {
     if ($default_language_values = $this->getDefaultLanguageValues()) {
       $container->setParameter('language.default_values', $default_language_values);
     }
-
+    $container->addAliases([ConfigurableLanguageManagerInterface::class => 'language_manager']);
   }
 
   /**

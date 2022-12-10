@@ -6,6 +6,7 @@ services:
     class: Drupal\file\FileUsage\DatabaseFileUsageBackend
     tags:
       - { name: backend_overridable }
+  Drupal\file\FileUsage\FileUsageInterface: '@file.usage'
   file.upload_handler:
     class: Drupal\file\Upload\FileUploadHandler
   Drupal\file\Upload\FileUploadHandler: '@file.upload_handler'
