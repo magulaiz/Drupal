@@ -15,6 +15,7 @@ services:
     class: Drupal\locale\StringDatabaseStorage
     tags:
       - { name: backend_overridable }
+  Drupal\locale\StringStorageInterface: '@locale.storage'
   locale.project:
     class: Drupal\locale\LocaleProjectStorage
   locale.plural.formula:
