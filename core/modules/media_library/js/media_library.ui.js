@@ -312,7 +312,7 @@
       // Update the selection array and the hidden form field when a media item
       // is selected.
       $(once('media-item-change', $mediaItems)).on('change', (e) => {
-        const id = parseInt(e.currentTarget.value);
+        const id = parseInt(e.currentTarget.value, 10);
 
         // Update the selection.
         const position = currentSelection.indexOf(id);
