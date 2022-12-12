@@ -74,7 +74,7 @@ class RouteCompiler extends SymfonyRouteCompiler implements RouteCompilerInterfa
    *   The path pattern outline.
    */
   public static function getPatternOutline($path) {
-    return preg_replace('#\{\w+\}#', '%', $path);
+    return preg_replace('#\{\w+\}#', '%', (string) $path);
   }
 
   /**
