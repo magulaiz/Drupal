@@ -26,18 +26,14 @@ function block_content_help($route_name, RouteMatchInterface $route_match) {
       $output .= '<h3>' . t('Uses') . '</h3>';
       $output .= '<dl>';
       $output .= '<dt>' . t('Creating and managing custom block types') . '</dt>';
-      $output .= '<dd>' . t('Users with the <em>Administer blocks</em> permission can create and edit custom block types with fields and display settings, from the <a href=":types">Block types</a> page in the Custom block library. For more information about managing fields and display settings, see the <a href=":field-ui">Field UI module help</a>.', [':types' => Url::fromRoute('entity.block_content_type.collection')->toString(), ':field-ui' => $field_ui]) . '</dd>';
+      $output .= '<dd>' . t('Users with the <em>Administer blocks</em> permission can create and edit custom block types with fields and display settings, from the <a href=":types">Block types</a> page under the Structure menu. For more information about managing fields and display settings, see the <a href=":field-ui">Field UI module help</a>.', [':types' => Url::fromRoute('entity.block_content_type.collection')->toString(), ':field-ui' => $field_ui]) . '</dd>';
       $output .= '<dt>' . t('Creating custom blocks') . '</dt>';
-      $output .= '<dd>' . t('Users with the <em>Administer blocks</em> permission can create, edit, and delete custom blocks of each defined custom block type, from the <a href=":block-library">Blocks</a> page in the Custom block library. After creating a block, place it in a region from the <a href=":blocks">Block layout</a> page; see the <a href=":block_help">Block module help</a> for more information about placing blocks.', [':blocks' => Url::fromRoute('block.admin_display')->toString(), ':block-library' => Url::fromRoute('entity.block_content.collection')->toString(), ':block_help' => Url::fromRoute('help.page', ['name' => 'block'])->toString()]) . '</dd>';
+      $output .= '<dd>' . t('Users with the <em>Administer blocks</em> permission can create, edit, and delete custom blocks of each defined custom block type, from the <a href=":block-library">Blocks</a> page in the Custom block library. After creating a block, place it in a region from the <a href=":block-library">Custom block library</a>.', [':blocks' => Url::fromRoute('block.admin_display')->toString(), ':block-library' => Url::fromRoute('entity.block_content.collection')->toString(), ':block_help' => Url::fromRoute('help.page', ['name' => 'block'])->toString()]) . '</dd>';
       $output .= '</dl>';
       return $output;
 
     case 'entity.block_content.collection':
       $output = '<p>' . t('Blocks in the block library belong to <a href=":types">Custom block types</a>, each with its own fields and display settings. After creating a block, place it in a region from the <a href=":blocks">Block layout</a> page.', [':types' => Url::fromRoute('entity.block_content_type.collection')->toString(), ':blocks' => Url::fromRoute('block.admin_display')->toString()]) . '</p>';
-      return $output;
-
-    case 'entity.block_content_type.collection':
-      $output = '<p>' . t('Each block type has its own fields and display settings. Create blocks of each type on the <a href=":block-library">Blocks</a> page in the custom block library.', [':block-library' => Url::fromRoute('entity.block_content.collection')->toString()]) . '</p>';
       return $output;
 
   }
