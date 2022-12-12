@@ -39,7 +39,7 @@ class SSH extends FileTransfer implements ChmodInterface {
     $password = empty($settings['password']) ? '' : $settings['password'];
     $hostname = empty($settings['advanced']['hostname']) ? 'localhost' : $settings['advanced']['hostname'];
     $port = empty($settings['advanced']['port']) ? 22 : $settings['advanced']['port'];
-    return new SSH($jail, $username, $password, $hostname, $port);
+    return new SSH($jail, $username,  #[\SensitiveParameter] $password, $hostname, $port);
   }
 
   /**

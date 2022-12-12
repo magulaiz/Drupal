@@ -22,7 +22,7 @@ trait BasicAuthTestTrait {
    * @return string
    *   The retrieved HTML string, also available as $this->getRawContent().
    */
-  protected function basicAuthGet($path, $username, $password, array $options = []) {
+  protected function basicAuthGet($path, $username,  #[\SensitiveParameter] $password, array $options = []) {
     return $this->drupalGet($path, $options, $this->getBasicAuthHeaders($username, $password));
   }
 
@@ -37,7 +37,7 @@ trait BasicAuthTestTrait {
    * @return array
    *   An array of raw request headers as used by curl_setopt().
    */
-  protected function getBasicAuthHeaders($username, $password) {
+  protected function getBasicAuthHeaders($username,  #[\SensitiveParameter] $password) {
     // Set up Curl to use basic authentication with the test user's credentials.
     return ['Authorization' => 'Basic ' . base64_encode("$username:$password")];
   }

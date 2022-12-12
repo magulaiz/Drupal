@@ -209,7 +209,7 @@ interface UserInterface extends ContentEntityInterface, EntityChangedInterface, 
    *
    * @return $this
    */
-  public function setExistingPassword($password);
+  public function setExistingPassword #[\SensitiveParameter] $password);
 
   /**
    * Checks the existing password if set.

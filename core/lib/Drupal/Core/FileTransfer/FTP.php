@@ -10,7 +10,7 @@ abstract class FTP extends FileTransfer {
   /**
    * {@inheritdoc}
    */
-  public function __construct($jail, $username, $password, $hostname, $port) {
+  public function __construct($jail, $username,  #[\SensitiveParameter] $password, $hostname, $port) {
     $this->username = $username;
     $this->password = $password;
     $this->hostname = $hostname;
@@ -34,7 +34,7 @@ abstract class FTP extends FileTransfer {
       throw new FileTransferException('No FTP backend available.');
     }
 
-    return new $class($jail, $username, $password, $hostname, $port);
+    return new $class($jail, $username,  #[\SensitiveParameter] $password, $hostname, $port);
   }
 
   /**

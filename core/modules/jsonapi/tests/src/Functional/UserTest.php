@@ -318,7 +318,7 @@ class UserTest extends ResourceTestBase {
    *
    * @internal
    */
-  protected function assertRpcLogin(string $username, string $password): void {
+  protected function assertRpcLogin(string $username,  #[\SensitiveParameter] string $password): void {
     $request_body = [
       'name' => $username,
       'pass' => $password,

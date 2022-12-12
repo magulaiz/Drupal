@@ -155,7 +155,7 @@ class PhpassHashedPassword implements PasswordInterface {
    *   A string containing the hashed password (and salt) or FALSE on failure.
    *   The return string will be truncated at HASH_LENGTH characters max.
    */
-  protected function crypt($algo, $password, $setting) {
+  protected function crypt($algo,  #[\SensitiveParameter] $password, $setting) {
     // Prevent DoS attacks by refusing to hash large passwords.
     if (strlen($password) > PasswordInterface::PASSWORD_MAX_LENGTH) {
       return FALSE;
@@ -183,9 +183,9 @@ class PhpassHashedPassword implements PasswordInterface {
     // Convert the base 2 logarithm into an integer.
     $count = 1 << $count_log2;
 
-    $hash = hash($algo, $salt . $password, TRUE);
+    $hash = hash($algo,  #[\SensitiveParameter] $salt . $password, TRUE);
     do {
-      $hash = hash($algo, $hash . $password, TRUE);
+      $hash = hash($algo,  #[\SensitiveParameter] $hash . $password, TRUE);
     } while (--$count);
 
     $len = strlen($hash);
@@ -213,14 +213,14 @@ class PhpassHashedPassword implements PasswordInterface {
   /**
    * {@inheritdoc}
    */
-  public function hash($password) {
+  public function hash( #[\SensitiveParameter] $password) {
     return $this->crypt('sha512', $password, $this->generateSalt());
   }
 
   /**
    * {@inheritdoc}
    */
-  public function check($password, $hash) {
+  public function check( #[\SensitiveParameter] $password, $hash) {
     if (substr($hash, 0, 2) == 'U$') {
       // This may be an updated password from user_update_7000(). Such hashes
       // have 'U' added as the first character and need an extra md5() (see the
@@ -258,7 +258,7 @@ class PhpassHashedPassword implements PasswordInterface {
   /**
    * {@inheritdoc}
    */
-  public function needsRehash($hash) {
+  public function needsRehash( #[\SensitiveParameter] $hash) {
     // Check whether this was an updated password.
     if ((substr($hash, 0, 3) != '$S$') || (strlen($hash) != static::HASH_LENGTH)) {
       return TRUE;
