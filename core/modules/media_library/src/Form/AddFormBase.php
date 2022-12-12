@@ -697,7 +697,7 @@ abstract class AddFormBase extends FormBase implements BaseFormIdInterface, Trus
     }
 
     $media_ids = array_map(
-      fn (MediaInterface $media): int => $media->id(),
+      fn (MediaInterface $media): int => (int) $media->id(),
       $this->getAddedMediaItems($form_state),
     );
 
