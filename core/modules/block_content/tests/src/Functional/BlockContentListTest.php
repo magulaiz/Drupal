@@ -35,7 +35,7 @@ class BlockContentListTest extends BlockContentTestBase {
       'administer blocks',
       'translate configuration',
     ]));
-    $this->drupalGet('admin/structure/block/block-content');
+    $this->drupalGet('admin/content/block-content');
 
     // Test for the page title.
     $this->assertSession()->titleEquals('Custom block library | Drupal');
@@ -104,7 +104,7 @@ class BlockContentListTest extends BlockContentTestBase {
     $this->assertSession()->elementTextNotContains('xpath', '//td', $new_label);
 
     // Confirm that the empty text is displayed.
-    $this->assertSession()->pageTextContains('There are no custom blocks yet.');
+    $this->assertSession()->pageTextContains('No custom blocks available.');
 
     $block_content = BlockContent::create([
       'info' => 'Non-reusable block',
@@ -113,9 +113,9 @@ class BlockContentListTest extends BlockContentTestBase {
     ]);
     $block_content->save();
 
-    $this->drupalGet('admin/structure/block/block-content');
+    $this->drupalGet('admin/content/block-content');
     // Confirm that the empty text is displayed.
-    $this->assertSession()->pageTextContains('There are no custom blocks yet.');
+    $this->assertSession()->pageTextContains('No custom blocks available.');
     // Confirm the non-reusable block is not on the page.
     $this->assertSession()->pageTextNotContains('Non-reusable block');
   }

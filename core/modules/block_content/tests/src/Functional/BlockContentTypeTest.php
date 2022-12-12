@@ -241,7 +241,7 @@ class BlockContentTypeTest extends BlockContentTestBase {
 
     // Test that adding a block from the 'custom blocks list' doesn't send you
     // to the block configure form.
-    $this->drupalGet('admin/structure/block/block-content');
+    $this->drupalGet('admin/content/block-content');
     $this->clickLink('Add custom block');
     $this->clickLink('foo');
     $edit = ['info[0][value]' => $this->randomMachineName(8)];

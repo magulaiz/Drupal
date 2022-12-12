@@ -2,6 +2,8 @@
 
 namespace Drupal\Tests\block_content\Unit\Menu;
 
+use Drupal\Core\Entity\EntityTypeInterface;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Tests\Core\Menu\LocalTaskIntegrationTestBase;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
@@ -18,6 +20,7 @@ class BlockContentLocalTasksTest extends LocalTaskIntegrationTestBase {
   protected function setUp(): void {
     $this->directoryList = [
       'block' => 'core/modules/block',
+      'system' => 'core/modules/system',
       'block_content' => 'core/modules/block_content',
     ];
     parent::setUp();
@@ -47,10 +50,36 @@ class BlockContentLocalTasksTest extends LocalTaskIntegrationTestBase {
       ->method('listInfo')
       ->willReturn($themes);
 
+    $fooEntityDefinition = $this->createMock(EntityTypeInterface::class);
+    $fooEntityDefinition
+      ->expects($this->once())
+      ->method('hasLinkTemplate')
+      ->with('version-history')
+      ->will($this->returnValue(TRUE));
+    $entityTypeManager = $this->createMock(EntityTypeManagerInterface::class);
+    $entityTypeManager->expects($this->any())
+      ->method('getDefinitions')
+      ->willReturn([
+        'foo' => $fooEntityDefinition,
+      ]);
+
     $container = new ContainerBuilder();
     $container->set('config.factory', $config_factory);
     $container->set('theme_handler', $theme_handler);
+    $container->set('entity_type.manager', $entityTypeManager);
     \Drupal::setContainer($container);
+  }
+
+  /**
+   * Checks block_content type listing local tasks.
+   */
+  public function testBlockContentTypeListLocalTasks() {
+    $this->assertLocalTasks('entity.block_content_type.collection', [
+      0 => [
+        'system.admin_content',
+        'entity.block_content_type.collection',
+      ],
+    ]);
   }
 
   /**
@@ -72,7 +101,7 @@ class BlockContentLocalTasksTest extends LocalTaskIntegrationTestBase {
    */
   public function getBlockContentListingRoutes() {
     return [
-      ['entity.block_content.collection'],
+      ['entity.block_content.collection', 'system.admin_content'],
     ];
   }
 
