@@ -506,8 +506,7 @@ class FilterHtml extends FilterBase {
   }
 
   /**
-   * Helper function to protect the summary delimiter from getting stripped
-   * by Xss::filter().
+   * Protect the summary delimiter from getting stripped by Xss::filter().
    *
    * Xss::filter() strips out all HTML comments. This helper function protects
    * the summary delimiter - which is expected to be an HTML comment - from
@@ -528,8 +527,7 @@ class FilterHtml extends FilterBase {
   }
 
   /**
-   * Helper function to unprotect the summary delimiter after processing
-   * by Xss::filter().
+   * Unprotect the summary delimiter after processing by Xss::filter().
    *
    * This is the counterpart to protectSummaryDelimiter(). This helper function
    * turns the summary delimiter pseudo HTML tag back into the original summary
@@ -550,8 +548,7 @@ class FilterHtml extends FilterBase {
   }
 
   /**
-   * Helper function that adds the summary delimiter pseudo HTML tag name
-   * to the list of allowed tags.
+   * Add the summary delimiter pseudo HTML tag name to the list of allowed tags.
    *
    * @param array $restrictions
    *   A restrictions array in the format returned by getHtmlRestrictions().
@@ -562,7 +559,7 @@ class FilterHtml extends FilterBase {
   }
 
   /**
-   * Helper function that returns the summary delimiter pseudo HTML tag.
+   * Return the summary delimiter pseudo HTML tag.
    *
    * @return string
    *   Returns summary delimiter pseudo HTML tag.
