@@ -292,7 +292,7 @@ class ConfigManager implements ConfigManagerInterface {
       $storage = $this->entityTypeManager->getStorage($entity_type_id);
       // Remove the keys since there are potential ID clashes from different
       // configuration entity types.
-      $entities_to_return[] = array_values($storage->loadMultiple($entities_to_load));
+      $entities_to_return[] = array_values($storage->loadMultipleOverrideFree($entities_to_load));
     }
     return array_merge(...$entities_to_return);
   }
