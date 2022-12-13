@@ -26,6 +26,21 @@ function image_field_views_data(FieldStorageConfigInterface $field_storage) {
       'base field' => 'fid',
       'label' => t('image from @field_name', ['@field_name' => $field_storage->getName()]),
     ];
+    // Add property fields.
+    $properties = [
+      'width' => 'numeric',
+      'height' => 'numeric',
+      'alt' => 'standard',
+      'title' => 'standard',
+    ];
+    foreach ($properties as $property => $type) {
+      $data[$table_name][$field_storage->getName() . '_' . $property]['field'] = [
+        'id' => $type,
+        'field_name' => $field_storage->getName(),
+        'entity_type' => $field_storage->getTargetEntityTypeId(),
+        'real field' => $field_storage->getName() . '_' . $property,
+      ];
+    }
   }
 
   return $data;
