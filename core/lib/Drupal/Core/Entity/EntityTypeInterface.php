@@ -673,10 +673,10 @@ interface EntityTypeInterface extends PluginDefinitionInterface {
    * the entity type.
    *
    * Drupal core defines two entity type groups:
-   *  - 'content': Entities which form the content of a site, whose data changes
+   *  - content: Entities which form the content of a site, whose data changes
    *    frequently, typically extensible with custom fields and stored in the
    *    database.
-   *  - 'config': Entities which define structural elements of a site, which are
+   *  - config: Entities which define structural elements of a site, which are
    *    managed as part of the site's configuration.
    *
    * @return string
