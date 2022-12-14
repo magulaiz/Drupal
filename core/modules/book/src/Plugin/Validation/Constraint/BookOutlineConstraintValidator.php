@@ -43,7 +43,12 @@ class BookOutlineConstraintValidator extends ConstraintValidator implements Cont
    * {@inheritdoc}
    */
   public function validate($entity, Constraint $constraint) {
-    if (isset($entity) && !$entity->isNew() && !$entity->isDefaultRevision()) {
+    // Validate the book structure when the user has access to manage book
+    // outlines. When the user can manage book outlines, the book variable will
+    // be populated even if the node is not part of the book. If the user cannot
+    // manage book outlines, the book variable will be empty and we can safely
+    // ignore the constraints as the outline cannot be changed by this user.
+    if (isset($entity) && !empty($entity->book) && !$entity->isNew() && !$entity->isDefaultRevision()) {
       /** @var \Drupal\Core\Entity\ContentEntityInterface $original */
       $original = $this->bookManager->loadBookLink($entity->id(), FALSE) ?: [
         'bid' => 0,
