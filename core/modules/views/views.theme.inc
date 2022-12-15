@@ -691,6 +691,7 @@ function template_preprocess_views_view_table(&$variables) {
     // This is needed to target tables constructed by this function.
     $variables['responsive'] = TRUE;
   }
+  $variables['row_header'] = $handler->options['row_header'];
 }
 
 /**

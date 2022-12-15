@@ -415,6 +415,10 @@ function template_preprocess_views_ui_style_plugin_table(&$variables) {
       'align' => 'center',
     ],
     [
+      'data' => t('Row header'),
+      'align' => 'center',
+    ],
+    [
       'data' => t('Hide empty column'),
       'align' => 'center',
     ],
@@ -450,6 +454,8 @@ function template_preprocess_views_ui_style_plugin_table(&$variables) {
       $row[] = '';
       $row[] = '';
     }
+    $row[]['data'] = $form['row_header'][$id];
+
     $row[] = [
       'data' => $form['info'][$id]['empty_column'],
       'align' => 'center',
@@ -462,13 +468,19 @@ function template_preprocess_views_ui_style_plugin_table(&$variables) {
   }
 
   // Add the special 'None' row.
-  $rows[] = [['data' => t('None'), 'colspan' => 6], ['align' => 'center', 'data' => $form['default'][-1]], ['colspan' => 2]];
-
+  $rows[] = [
+    ['data' => t('None'), 'colspan' => 2],
+    ['colspan' => 4],
+    ['align' => 'center', 'data' => $form['default'][-1]],
+    ['align' => 'center', 'data' => $form['row_header'][-1]],
+    ['colspan' => 2],
+  ];
   // Unset elements from the form array that are used to build the table so that
   // they are not rendered twice.
   unset($form['default']);
   unset($form['info']);
   unset($form['columns']);
+  unset($form['row_header']);
 
   $variables['table'] = [
     '#type' => 'table',

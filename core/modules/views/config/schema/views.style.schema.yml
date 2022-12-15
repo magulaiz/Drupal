@@ -124,6 +124,10 @@ views.style.table:
     description:
       type: text
       label: 'Table description'
+    row_header:
+      type: string
+      label: 'Field to use as row header'
+
 
 views.style.default_summary:
   type: views_style

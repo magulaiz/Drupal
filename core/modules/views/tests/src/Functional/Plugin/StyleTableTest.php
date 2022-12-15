@@ -224,6 +224,24 @@ class StyleTableTest extends ViewTestBase {
     }
   }
 
+ /**
+   * Test table row header field.
+   */
+  public function testRowHeaderField() {
+    $this->drupalGet('test-table');
+    $view = View::load('test_table');
+    $display = &$view->getDisplay('default');
+    $display['display_options']['style']['options']['row_header'] = 'name';
+    $view->save();
+
+    /**
+     * Verify row headers are marked as table headers,
+     * and scope is set to row.
+     */
+    $this->drupalGet('test-table');
+    $this->assertNotEmpty($this->cssSelect('tbody th[scope="row"]'));
+  }
+
   /**
    * Tests the cacheability of the table display.
    */
