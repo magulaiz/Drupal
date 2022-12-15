@@ -463,12 +463,13 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
    * {@inheritdoc}
    */
   protected function preUpdateEntityTypeSchema(EntityTypeInterface $entity_type, EntityTypeInterface $original, array $field_storage_definitions, array $original_field_storage_definitions, array &$sandbox = NULL) {
-    $temporary_prefix = static::getTemporaryTableMappingPrefix($entity_type, $field_storage_definitions);
+    $time = $this->time->getRequestTime();
+    $temporary_prefix = static::getTemporaryTableMappingPrefix($entity_type, $field_storage_definitions, 'tmp_', $time);
     $sandbox['temporary_table_mapping'] = $this->storage->getCustomTableMapping($entity_type, $field_storage_definitions, $temporary_prefix);
     $sandbox['new_table_mapping'] = $this->storage->getCustomTableMapping($entity_type, $field_storage_definitions);
     $sandbox['original_table_mapping'] = $this->storage->getCustomTableMapping($original, $original_field_storage_definitions);
 
-    $backup_prefix = static::getTemporaryTableMappingPrefix($original, $original_field_storage_definitions, 'old_');
+    $backup_prefix = static::getTemporaryTableMappingPrefix($original, $original_field_storage_definitions, 'old_', $time);
     $sandbox['backup_table_mapping'] = $this->storage->getCustomTableMapping($original, $original_field_storage_definitions, $backup_prefix);
     $sandbox['backup_prefix_key'] = substr($backup_prefix, 4);
     $sandbox['backup_request_time'] = $this->time->getRequestTime();
@@ -681,20 +682,25 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
    *   An array of field storage definitions.
    * @param string $first_prefix_part
    *   (optional) The first part of the prefix. Defaults to 'tmp_'.
+   * @param int|null $time
+   *   (optional) The request time as last part of prefix. Default to NULL.
    *
    * @return string
    *   A temporary table mapping prefix.
    *
    * @internal
    */
-  public static function getTemporaryTableMappingPrefix(EntityTypeInterface $entity_type, array $field_storage_definitions, $first_prefix_part = 'tmp_') {
+  public static function getTemporaryTableMappingPrefix(EntityTypeInterface $entity_type, array $field_storage_definitions, $first_prefix_part = 'tmp_', ?int $time) {
     // Construct a unique prefix based on the contents of the entity type and
     // field storage definitions.
     $prefix_parts[] = spl_object_hash($entity_type);
     foreach ($field_storage_definitions as $storage_definition) {
       $prefix_parts[] = spl_object_hash($storage_definition);
     }
-    $prefix_parts[] = \Drupal::time()->getRequestTime();
+    if (!isset($time)) {
+      $time = \Drupal::time()->getRequestTime();
+    }
+    $prefix_parts[] = $time;
     $hash = hash('sha256', implode('', $prefix_parts));
 
     return $first_prefix_part . substr($hash, 0, 6);
