@@ -1,3 +1,8 @@
+register_password_set:
+  body: "[user:name],\n\nThank you for registering at [site:name]. You may now log in and verify your account by clicking this link or copying and pasting it to your browser:\n\n[user:one-time-login-url]\n\nThis link can only be used once. You will be able to log in at [site:login-url] in the future using:\n\nusername: [user:name]\npassword: Your password\n\n--  [site:name] team"
+  subject: 'Account details for [user:name] at [site:name]'
+register_password_set_activation:
+  body: "[user:name],\n\nYour account at [site:name] has been activated.\n\nYou will be able to log in to [site:login-url] in the future using:\n\nusername: [user:name]\npassword: your password.\n\n--  [site:name] team"
 cancel_confirm:
   body: |-
     [user:display-name]
