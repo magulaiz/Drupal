@@ -31,19 +31,17 @@ class CronForm extends FormBase {
    *   The state key value store.
    * @param \Drupal\Core\CronInterface $cron
    *   The cron service.
-   * @param \Drupal\Core\Datetime\DateFormatterInterface $dateFormatter
+   * @param \Drupal\Core\Datetime\DateFormatterInterface $date_formatter
    *   The date formatter service.
-   * @param \Drupal\Core\Extension\ModuleHandlerInterface $moduleHandler
+   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
    *   The module handler service.
    */
-  public function __construct(
-    ConfigFactoryInterface $config_factory,
-    protected StateInterface $state,
-    protected CronInterface $cron,
-    protected DateFormatterInterface $dateFormatter,
-    protected ModuleHandlerInterface $moduleHandler
-  ) {
+  public function __construct(ConfigFactoryInterface $config_factory, StateInterface $state, CronInterface $cron, DateFormatterInterface $date_formatter, ModuleHandlerInterface $module_handler) {
     $this->configFactory = $config_factory;
+    $this->state = $state;
+    $this->cron = $cron;
+    $this->dateFormatter = $date_formatter;
+    $this->moduleHandler = $module_handler;
   }
 
   /**
