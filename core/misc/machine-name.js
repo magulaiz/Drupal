@@ -13,7 +13,7 @@
       var xhr = null;
       function clickEditHandler(e) {
         var data = e.data;
-        data.$wrapper.removeClass('visually-hidden');
+        data.$wrapper.removeClass('hidden');
         data.$target.trigger('focus');
         data.$suffix.hide();
         data.$source.off('.machineName');
@@ -55,7 +55,7 @@
           return;
         }
         options.maxlength = $target.attr('maxlength');
-        $wrapper.addClass('visually-hidden');
+        $wrapper.addClass('hidden');
         var machine = $target[0].value;
         var $preview = $("<span class=\"machine-name-value\">".concat(options.field_prefix).concat(Drupal.checkPlain(machine)).concat(options.field_suffix, "</span>"));
         $suffix.empty();
@@ -79,7 +79,7 @@
             self.showMachineName(machineName.substr(0, options.maxlength), eventData);
           });
         }
-        var $link = $("<span class=\"admin-link\"><button type=\"button\" class=\"link\">".concat(Drupal.t('Edit'), "</button></span>")).on('click', eventData, clickEditHandler);
+        var $link = $("<span class=\"admin-link\"><button type=\"button\" class=\"link\" aria-label=\"".concat(Drupal.t('Edit machine name'), "\">").concat(Drupal.t('Edit'), "</button></span>")).on('click', eventData, clickEditHandler);
         $suffix.append($link);
         if ($target[0].value === '') {
           $source.on('formUpdated.machineName', eventData, machineNameHandler).trigger('formUpdated.machineName');
