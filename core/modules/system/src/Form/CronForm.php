@@ -23,6 +23,34 @@ class CronForm extends FormBase {
   use ConfigFormBaseTrait;
 
   /**
+   * Stores the state storage service.
+   *
+   * @var \Drupal\Core\State\StateInterface
+   */
+  protected $state;
+
+  /**
+   * The cron service.
+   *
+   * @var \Drupal\Core\CronInterface
+   */
+  protected $cron;
+
+  /**
+   * The date formatter service.
+   *
+   * @var \Drupal\Core\Datetime\DateFormatterInterface
+   */
+  protected $dateFormatter;
+
+  /**
+   * The module handler service.
+   *
+   * @var \Drupal\Core\Extension\ModuleHandlerInterface
+   */
+  protected $moduleHandler;
+
+  /**
    * Constructs a CronForm object.
    *
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
