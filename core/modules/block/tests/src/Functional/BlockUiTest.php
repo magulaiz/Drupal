@@ -418,7 +418,7 @@ class BlockUiTest extends BrowserTestBase {
    */
   public function testBlockDeleteDestination() {
     // Install all themes.
-    \Drupal::service('theme_handler')->install(['classy', 'stable', 'stark']);
+    \Drupal::service('theme_installer')->install(['classy', 'stable', 'stark']);
     // Set the default theme.
     $theme_settings = $this->config('system.theme');
     $theme_settings->set('default', 'classy')->save();
