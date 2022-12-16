@@ -188,6 +188,7 @@ chien
 chiens
 childlist
 chocolatiers
+christoforou
 chromedriver
 chtext
 chumillas
@@ -1101,6 +1102,7 @@ someschema
 somethinggeneric
 sortablejs
 sourcedir
+souvlaki
 spacebar
 spagna
 specialchars
