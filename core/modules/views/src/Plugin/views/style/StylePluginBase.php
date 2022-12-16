@@ -620,7 +620,7 @@ abstract class StylePluginBase extends PluginBase {
           $rendered_strip = $info['rendered_strip'] ?? FALSE;
           $grouping = '';
           if ($this->usesGroupingLabelElement()) {
-            $grouping_label_element = $info['grouping_label_element'] ?? '';
+            $grouping_label_element = $info['grouping_label_element'] ?? 'h3';
           }
           else {
             $grouping_label_element = '';
