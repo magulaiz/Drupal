@@ -58,6 +58,7 @@ class MigrateCommentTypeTest extends MigrateDrupal7TestBase {
     $this->assertEntity('comment_forum', 'Forum topic comment');
     $this->assertEntity('comment_node_page', 'Basic page comment');
     $this->assertEntity('comment_node_test_content_type', 'Test content type comment');
+    $this->assertEntity('comment_node_a_thirty_two_char', 'Test long name comment');
   }
 
   /**
@@ -98,7 +99,7 @@ class MigrateCommentTypeTest extends MigrateDrupal7TestBase {
     ];
 
     foreach ($expected_messages as $type => $expected_messages_by_type) {
-      $this->assertEquals(count($expected_messages_by_type), count($actual_messages[$type]));
+      $this->assertSameSize($expected_messages_by_type, $actual_messages[$type]);
       // Cast the actual messages to string.
       $actual_messages_by_type = array_reduce($actual_messages[$type], function (array $carry, $actual_message) {
         $carry[] = (string) $actual_message;

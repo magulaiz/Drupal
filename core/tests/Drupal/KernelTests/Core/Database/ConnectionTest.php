@@ -30,7 +30,7 @@ class ConnectionTest extends DatabaseTestBase {
 
     $this->assertNotNull($db1, 'default connection is a real connection object.');
     $this->assertNotNull($db2, 'replica connection is a real connection object.');
-    $this->assertNotIdentical($db1, $db2, 'Each target refers to a different connection.');
+    $this->assertNotSame($db1, $db2, 'Each target refers to a different connection.');
 
     // Try to open those targets another time, that should return the same objects.
     $db1b = Database::getConnection('default', 'default');
@@ -79,7 +79,7 @@ class ConnectionTest extends DatabaseTestBase {
     $db2 = Database::getConnection('default', 'default');
 
     // Opening a connection after closing it should yield an object different than the original.
-    $this->assertNotIdentical($db1, $db2, 'Opening the default connection after it is closed returns a new object.');
+    $this->assertNotSame($db1, $db2, 'Opening the default connection after it is closed returns a new object.');
   }
 
   /**
@@ -94,8 +94,8 @@ class ConnectionTest extends DatabaseTestBase {
 
     // In the MySQL driver, the port can be different, so check individual
     // options.
-    $this->assertEqual($connection_info['default']['driver'], $connectionOptions['driver'], 'The default connection info driver matches the current connection options driver.');
-    $this->assertEqual($connection_info['default']['database'], $connectionOptions['database'], 'The default connection info database matches the current connection options database.');
+    $this->assertEquals($connection_info['default']['driver'], $connectionOptions['driver'], 'The default connection info driver matches the current connection options driver.');
+    $this->assertEquals($connection_info['default']['database'], $connectionOptions['database'], 'The default connection info database matches the current connection options database.');
 
     // Set up identical replica and confirm connection options are identical.
     Database::addConnectionInfo('default', 'replica', $connection_info['default']);
@@ -106,7 +106,7 @@ class ConnectionTest extends DatabaseTestBase {
 
     // Get a fresh copy of the default connection options.
     $connectionOptions = $db->getConnectionOptions();
-    $this->assertIdentical($connectionOptions, $connectionOptions2, 'The default and replica connection options are identical.');
+    $this->assertSame($connectionOptions2, $connectionOptions, 'The default and replica connection options are identical.');
 
     // Set up a new connection with different connection info.
     $test = $connection_info['default'];
@@ -116,7 +116,7 @@ class ConnectionTest extends DatabaseTestBase {
 
     // Get a fresh copy of the default connection options.
     $connectionOptions = $db->getConnectionOptions();
-    $this->assertNotEqual($connection_info['default']['database'], $connectionOptions['database'], 'The test connection info database does not match the current connection options database.');
+    $this->assertNotEquals($connection_info['default']['database'], $connectionOptions['database'], 'The test connection info database does not match the current connection options database.');
   }
 
   /**
@@ -181,15 +181,23 @@ class ConnectionTest extends DatabaseTestBase {
   }
 
   /**
-   * Ensure that you cannot execute multiple statements.
+   * Ensure that you cannot execute multiple statements in a query.
    */
-  public function testMultipleStatements() {
+  public function testMultipleStatementsQuery() {
     $this->expectException(\InvalidArgumentException::class);
     Database::getConnection('default', 'default')->query('SELECT * FROM {test}; SELECT * FROM {test_people}');
   }
 
   /**
-   * Test that the method ::condition() returns a Condition object.
+   * Ensure that you cannot prepare multiple statements.
+   */
+  public function testMultipleStatements() {
+    $this->expectException(\InvalidArgumentException::class);
+    Database::getConnection('default', 'default')->prepareStatement('SELECT * FROM {test}; SELECT * FROM {test_people}', []);
+  }
+
+  /**
+   * Tests that the method ::condition() returns a Condition object.
    */
   public function testCondition() {
     $connection = Database::getConnection('default', 'default');
