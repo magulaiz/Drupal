@@ -32,7 +32,7 @@ class DefaultStyle extends StylePluginBase {
   protected $usesRowClass = TRUE;
 
   /**
-   * Should field labels be enabled by default.
+   * Should grouping fields use a wrapping element tag.
    *
    * @var bool
    */
