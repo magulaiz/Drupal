@@ -26,6 +26,8 @@ services:
   # Event subscribers.
   rest.resource_response.subscriber:
     class: Drupal\rest\EventSubscriber\ResourceResponseSubscriber
+    arguments:
+      $serializer: '@serializer'
     tags:
       - { name: event_subscriber }
   rest.resource.entity.post_route.subscriber:
