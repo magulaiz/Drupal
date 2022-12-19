@@ -26,7 +26,6 @@ class GridResponsive extends StylePluginBase {
 
   /**
    * Should grouping fields use a wrapping element tag.
-   * 
    */
   protected $usesGroupingLabelElement = TRUE;
 
