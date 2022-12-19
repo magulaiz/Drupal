@@ -148,6 +148,8 @@ services:
   jsonapi.entity_access_checker:
     class: Drupal\jsonapi\Access\EntityAccessChecker
     public: false
+    arguments:
+      $router: '@router.no_access_checks'
     calls:
       # This is a temporary measure. JSON:API should not need to be aware of the Content Moderation module.
       - [setLatestRevisionCheck, ['@?access_check.latest_revision']] # This is only injected when the service is available.
@@ -167,6 +169,8 @@ services:
   # Controller.
   jsonapi.entity_resource:
     class: Drupal\jsonapi\Controller\EntityResource
+    arguments:
+      $serializer: '@jsonapi.serializer'
   jsonapi.file_upload:
     class: Drupal\jsonapi\Controller\FileUpload
 
@@ -177,6 +181,7 @@ services:
       - { name: event_subscriber }
   jsonapi.resource_response.subscriber:
     class: Drupal\jsonapi\EventSubscriber\ResourceResponseSubscriber
+    arguments: ['@jsonapi.serializer']
     tags:
       - { name: event_subscriber }
   jsonapi.resource_response_validator.subscriber:
@@ -225,3 +230,4 @@ services:
     public: false
     arguments:
       $logger: '@logger.channel.file'
+  Drupal\jsonapi\Controller\TemporaryJsonapiFileFieldUploader: '@jsonapi.file.uploader.field'
