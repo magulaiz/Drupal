@@ -114,7 +114,7 @@ class PhpMail implements MailInterface {
     $mail_headers = str_replace("\r\n", "\n", $headers->toString());
     $mail_subject = str_replace("\r\n", "\n", $mail_subject);
 
-    if (!$this->request->server->has('WINDIR') && !str_contains($this->request->server->get('SERVER_SOFTWARE'), 'Win32')) {
+    if (!$this->request->server->has('WINDIR') && !str_contains(strval($this->request->server->get('SERVER_SOFTWARE')), 'Win32')) {
       // On most non-Windows systems, the "-f" option to the sendmail command
       // is used to set the Return-Path. There is no space between -f and
       // the value of the return path.
