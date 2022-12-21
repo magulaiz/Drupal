@@ -62,7 +62,7 @@ class LazyContextRepository implements ContextRepositoryInterface {
       // format.
       // @todo Convert to an assert once https://www.drupal.org/node/2408013 is
       //   in.
-      if ($id[0] === '@' && strpos($id, ':') !== FALSE) {
+      if ($id[0] === '@' && str_contains($id, ':')) {
         [$service_id, $unqualified_context_id] = explode(':', $id, 2);
         // Remove the leading '@'.
         $service_id = substr($service_id, 1);

@@ -487,7 +487,7 @@ function hook_link_alter(&$variables) {
   // Add a warning to the end of route links to the admin section.
   /** @var \Drupal\Core\Url $url */
   $url = $variables['url'];
-  if ($url->isRouted() && strpos($url->getRouteName(), 'admin') !== FALSE) {
+  if ($url->isRouted() && str_contains($url->getRouteName(), 'admin')) {
     $variables['text'] = t('@text (Warning!)', ['@text' => $variables['text']]);
   }
 }

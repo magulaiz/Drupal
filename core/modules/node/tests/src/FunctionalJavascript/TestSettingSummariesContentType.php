@@ -47,7 +47,7 @@ class TestSettingSummariesContentType extends WebDriverTestBase {
     $locator = '[href="#edit-workflow"] .vertical-tabs__menu-item-summary';
     $page->waitFor(10, function () use ($page, $locator) {
       $summary = $page->find('css', $locator)->getText();
-      return strpos('Not published', $summary) !== FALSE;
+      return str_contains('Not published', $summary);
     });
     $summary = $page->find('css', $locator)->getText();
     $this->assertEquals('Not published, Promoted to front page, Sticky at top of lists, Create new revision', $summary);
