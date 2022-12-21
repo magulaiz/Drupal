@@ -590,7 +590,7 @@ class FileSystem implements FileSystemInterface {
     if (preg_last_error() !== PREG_NO_ERROR) {
       throw new FileException(sprintf("Invalid filename '%s'", $original));
     }
-    if (substr(PHP_OS, 0, 3) == 'WIN') {
+    if (str_starts_with(PHP_OS, 'WIN')) {
       // These characters are not allowed in Windows filenames.
       $basename = str_replace([':', '*', '?', '"', '<', '>', '|'], '_', $basename);
     }
