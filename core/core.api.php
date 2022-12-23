@@ -110,15 +110,14 @@
  * @section sec_rest Enabling REST for entities and the log
  * Here are the steps to take to use the REST operations provided by Drupal
  * Core:
- * - Enable the REST module, plus Basic Auth (or another authentication method)
- *   and HAL.
+ * - Enable the REST module, plus Basic Auth or another authentication method.
  * - Node entity support is configured by default. If you would like to support
  *   other types of entities, you can copy
- *   core/modules/rest/config/install/rest.settings.yml to your sync
- *   configuration directory, appropriately modified for other entity types,
- *   and import it. Support for GET on the log from the Database Logging module
- *   can also be enabled in this way; in this case, the 'entity:node' line
- *   in the configuration would be replaced by the appropriate plugin ID,
+ *   core/modules/rest/config/optional/rest.resource.entity.node.yml to your
+ *   sync configuration directory, appropriately modified for other entity
+ *   types, and import it. Support for GET on the log from the Database Logging
+ *   module can also be enabled in this way; in this case, the 'entity:node'
+ *   line in the configuration would be replaced by the appropriate plugin ID,
  *   'dblog'.
  * - Set up permissions to allow the desired REST operations for a role, and set
  *   up one or more user accounts to perform the operations.
@@ -163,9 +162,7 @@
  *     implements \GuzzleHttp\ClientInterface. See the
  *     @link container Services topic @endlink for more information on
  *     services. If you cannot use dependency injection to retrieve this
- *     service, the \Drupal::httpClient() method is available. A good example
- *     of how to use this service can be found in
- *     \Drupal\aggregator\Plugin\aggregator\fetcher\DefaultFetcher
+ *     service, the \Drupal::httpClient() method is available.
  *   - \Drupal\Component\Serialization\Json (JSON encoding and decoding).
  *   - PHP has functions and classes for parsing XML; see
  *     http://php.net/manual/refs.xml.php
@@ -191,7 +188,7 @@
  * // Find out when cron was last run; the key is 'system.cron_last'.
  * $time = $state->get('system.cron_last');
  * // Set the cron run time to the current request time.
- * $state->set('system.cron_last', REQUEST_TIME);
+ * $state->set('system.cron_last', \Drupal::time()->getRequestTime());
  * @endcode
  *
  * For more on the State API, see https://www.drupal.org/developing/api/8/state
@@ -587,9 +584,10 @@
  *
  * @section configuration Configuration
  *
- * By default cached data is stored in the database. This can be configured
- * though so that all cached data, or that of an individual cache bin, uses a
- * different cache backend, such as APCu or Memcache, for storage.
+ * By default, cached data is stored in the database. However, Drupal can be
+ * configured to use a different backend (specified in their service
+ * definition), e.g. APCu or Memcache. This configuration can nominate a
+ * different backend for all cached data or for specific cache bins.
  *
  * In a settings.php file, you can override the service used for a particular
  * cache bin. For example, if your service implementation of
@@ -734,18 +732,19 @@
  *
  * @section sec_overview Overview of container, injection, and services
  * The Services and Dependency Injection Container concepts have been adopted by
- * Drupal from the @link http://symfony.com/ Symfony framework. @endlink A
- * "service" (such as accessing the database, sending email, or translating user
- * interface text) is defined (given a name and an interface or at least a
- * class that defines the methods that may be called), and a default class is
- * designated to provide the service. These two steps must be done together, and
- * can be done by Drupal Core or a module. Other modules can then define
- * alternative classes to provide the same services, overriding the default
- * classes. Classes and functions that need to use the service should always
- * instantiate the class via the dependency injection container (also known
- * simply as the "container"), rather than instantiating a particular service
- * provider class directly, so that they get the correct class (default or
- * overridden).
+ * Drupal from the
+ * @link http://symfony.com/doc/current/components/dependency_injection.html
+ * Symfony DependencyInjection component. @endlink A "service" (such as
+ * accessing the database, sending email, or translating user interface text) is
+ * defined (given a name and an interface or at least a class that defines the
+ * methods that may be called), and a default class is designated to provide the
+ * service. These two steps must be done together, and can be done by Drupal
+ * Core or a module. Other modules can then define alternative classes to
+ * provide the same services, overriding the default classes. Classes and
+ * functions that need to use the service should always instantiate the class
+ * via the dependency injection container (also known simply as the
+ * "container"), rather than instantiating a particular service provider class
+ * directly, so that they get the correct class (default or overridden).
  *
  * See https://www.drupal.org/node/2133171 for more detailed information on
  * services and the dependency injection container.
@@ -886,6 +885,10 @@
  *   @endcode
  *   Note that $container here is an instance of
  *   \Drupal\Core\DependencyInjection\ContainerBuilder.
+ *
+ * @section lazy_services Lazy services
+ * Some services can be declared as lazy to improve performance. See @link
+ * lazy_services Lazy Services @endlink for details.
  *
  * @see https://www.drupal.org/node/2133171
  * @see core.services.yml
@@ -1833,14 +1836,13 @@
  * where a strict FIFO ordering will likely not be preserved. Another example
  * would be an in-memory queue backend which might lose items if it crashes.
  * However, such a backend would be able to deal with significantly more writes
- * than a reliable queue and for many tasks this is more important. See
- * aggregator_cron() for an example of how to effectively use a non-reliable
- * queue. Another example is doing Twitter statistics -- the small possibility
- * of losing a few items is insignificant next to power of the queue being able
- * to keep up with writes. As described in the processing section, regardless
- * of the queue being reliable or not, the processing code should be aware that
- * an item might be handed over for processing more than once (because the
- * processing code might time out before it finishes).
+ * than a reliable queue and for many tasks this is more important. Another
+ * example is doing Twitter statistics -- the small possibility of losing a
+ * few items is insignificant next to power of the queue being able to keep
+ * up with writes. As described in the processing section, regardless of the
+ * queue being reliable or not, the processing code should be aware that an
+ * might be handed over for processing more than once (because the processing
+ * code might time out before it finishes).
  * @}
  */
 
@@ -1922,25 +1924,26 @@ function hook_cron() {
   // Short-running operation example, not using a queue:
   // Delete all expired records since the last cron run.
   $expires = \Drupal::state()->get('mymodule.last_check', 0);
+  $request_time = \Drupal::time()->getRequestTime();
   \Drupal::database()->delete('mymodule_table')
     ->condition('expires', $expires, '>=')
     ->execute();
-  \Drupal::state()->set('mymodule.last_check', REQUEST_TIME);
+  \Drupal::state()->set('mymodule.last_check', $request_time);
 
   // Long-running operation example, leveraging a queue:
   // Queue news feeds for updates once their refresh interval has elapsed.
-  $queue = \Drupal::queue('aggregator_feeds');
-  $ids = \Drupal::entityTypeManager()->getStorage('aggregator_feed')->getFeedIdsToRefresh();
+  $queue = \Drupal::queue('mymodule.feeds');
+  $ids = \Drupal::entityTypeManager()->getStorage('mymodule_feed')->getFeedIdsToRefresh();
   foreach (Feed::loadMultiple($ids) as $feed) {
     if ($queue->createItem($feed)) {
       // Add timestamp to avoid queueing item more than once.
-      $feed->setQueuedTime(REQUEST_TIME);
+      $feed->setQueuedTime($request_time);
       $feed->save();
     }
   }
-  $ids = \Drupal::entityQuery('aggregator_feed')
+  $ids = \Drupal::entityQuery('mymodule_feed')
     ->accessCheck(FALSE)
-    ->condition('queued', REQUEST_TIME - (3600 * 6), '<')
+    ->condition('queued', $request_time - (3600 * 6), '<')
     ->execute();
   if ($ids) {
     $feeds = Feed::loadMultiple($ids);
@@ -1979,7 +1982,7 @@ function hook_data_type_info_alter(&$data_types) {
 function hook_queue_info_alter(&$queues) {
   // This site has many feeds so let's spend 90 seconds on each cron run
   // updating feeds instead of the default 60.
-  $queues['aggregator_feeds']['cron']['time'] = 90;
+  $queues['mymodule_feeds']['cron']['time'] = 90;
 }
 
 /**
@@ -2491,19 +2494,44 @@ function hook_validation_constraint_alter(array &$definitions) {
  */
 
 /**
+ * @defgroup lazy_services Lazy Services
+ * @{
+ * Lazy services overview
+ *
+ * A service can be declared as lazy in order to improve performance. Classes
+ * that inject a lazy service receive a proxy class instead, and when a method
+ * on the lazy service is called, the proxy class gets the service from the
+ * container and forwards the method call. This means that the lazy service is
+ * only instantiated when it is needed.
+ *
+ * This is useful because some classes may inject a service which is expensive
+ * to instantiate (because it has multiple dependencies of its own), but is only
+ * used in exceptional cases. This would make the class dependent on the
+ * expensive service and all of the expensive service's dependencies.
+ *
+ * Making the expensive service lazy means that the class is only dependent on
+ * the proxy service, and not on all the dependencies of the lazy service.
+ *
+ * To define a service as lazy, add @code lazy: true @endcode to the service
+ * definition, and use the @code core/scripts/generate-proxy.sh @endcode script
+ * to generate the proxy class.
+ *
+ * @see core/scripts/generate-proxy.sh
+ */
+
+/**
  * @defgroup events Events
  * @{
  * Overview of event dispatch and subscribing
  *
  * @section sec_intro Introduction and terminology
- * Events are part of the Symfony framework: they allow for different components
- * of the system to interact and communicate with each other. Each event has a
- * unique string name. One system component dispatches the event at an
- * appropriate time; many events are dispatched by Drupal core and the Symfony
- * framework in every request. Other system components can register as event
- * subscribers; when an event is dispatched, a method is called on each
- * registered subscriber, allowing each one to react. For more on the general
- * concept of events, see
+ * Events allow different components of the system to interact and communicate
+ * with each other. One system component dispatches the event at an appropriate
+ * time; many events are dispatched by Drupal core and the Symfony event system
+ * in every request. Other system components can register as event subscribers;
+ * when an event is dispatched, a method is called on each registered
+ * subscriber, allowing each one to react. For more on the general concept of
+ * events, see
  * http://symfony.com/doc/current/components/event_dispatcher/introduction.html
  *
  * @section sec_dispatch Dispatching events

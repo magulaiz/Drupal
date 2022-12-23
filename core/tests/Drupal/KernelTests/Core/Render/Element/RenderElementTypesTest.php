@@ -20,6 +20,9 @@ class RenderElementTypesTest extends KernelTestBase {
    */
   protected static $modules = ['system', 'router_test'];
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
     $this->installConfig(['system']);
@@ -34,8 +37,10 @@ class RenderElementTypesTest extends KernelTestBase {
    *   The expected markup.
    * @param string $message
    *   Assertion message.
+   *
+   * @internal
    */
-  protected function assertElements(array $elements, $expected_html, $message) {
+  protected function assertElements(array $elements, string $expected_html, string $message): void {
     $actual_html = (string) \Drupal::service('renderer')->renderRoot($elements);
     $this->assertSame($expected_html, $actual_html, Html::escape($message));
   }

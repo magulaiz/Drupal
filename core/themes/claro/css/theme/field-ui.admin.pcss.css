@@ -3,8 +3,6 @@
  * Replacement styles for Field UI admin.
  */
 
-@import "../base/variables.pcss.css";
-
 /* 'Manage fields' and 'Manage display' overviews */
 .field-ui-overview .region-title td {
   font-weight: bold;
@@ -53,7 +51,7 @@
 /* Settings editing subform. */
 .draggable.field-plugin-settings-editing,
 .draggable.drag-previous.field-plugin-settings-editing {
-  background: #d5e9f2;
+  background: var(--color-blue-050);
 }
 
 .field-plugin-settings-editing td {

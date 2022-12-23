@@ -6,6 +6,8 @@ use Drupal\Core\Site\Settings;
 use Drupal\Core\StackMiddleware\ReverseProxyMiddleware;
 use Drupal\Tests\UnitTestCase;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\HttpKernelInterface;
 
 /**
  * Unit test the reverse proxy stack middleware.
@@ -23,7 +25,10 @@ class ReverseProxyMiddlewareTest extends UnitTestCase {
    * {@inheritdoc}
    */
   protected function setUp(): void {
-    $this->mockHttpKernel = $this->createMock('Symfony\Component\HttpKernel\HttpKernelInterface');
+    $responseMock = $this->createMock(Response::class);
+    $this->mockHttpKernel = $this->createMock(HttpKernelInterface::class);
+    $this->mockHttpKernel->method('handle')
+      ->willReturn($responseMock);
   }
 
   /**

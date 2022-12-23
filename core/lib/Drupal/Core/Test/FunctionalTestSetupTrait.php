@@ -42,7 +42,7 @@ trait FunctionalTestSetupTrait {
   /**
    * The class loader to use for installation and initialization of setup.
    *
-   * @var \Symfony\Component\Classloader\Classloader
+   * @var \Composer\Autoload\ClassLoader
    */
   protected $classLoader;
 
@@ -277,9 +277,9 @@ trait FunctionalTestSetupTrait {
     $this->container->get('request_stack')->push($request);
 
     // The request context is normally set by the router_listener from within
-    // its KernelEvents::REQUEST listener. In the simpletest parent site this
-    // event is not fired, therefore it is necessary to updated the request
-    // context manually here.
+    // its KernelEvents::REQUEST listener. In the parent site this event is not
+    // fired, therefore it is necessary to update the request context manually
+    // here.
     $this->container->get('router.request_context')->fromRequest($request);
 
     return $request;
@@ -503,7 +503,7 @@ trait FunctionalTestSetupTrait {
   }
 
   /**
-   * Returns the parameters that will be used when Simpletest installs Drupal.
+   * Returns the parameters that will be used when the test installs Drupal.
    *
    * @see install_drupal()
    * @see install_state_defaults()
@@ -516,6 +516,7 @@ trait FunctionalTestSetupTrait {
     $driver = $connection_info['default']['driver'];
     unset($connection_info['default']['driver']);
     unset($connection_info['default']['namespace']);
+    unset($connection_info['default']['autoload']);
     unset($connection_info['default']['pdo']);
     unset($connection_info['default']['init_commands']);
     // Remove database connection info that is not used by SQLite.
@@ -543,12 +544,13 @@ trait FunctionalTestSetupTrait {
             'name' => $this->rootUser->name,
             'mail' => $this->rootUser->getEmail(),
             'pass' => [
-              'pass1' => isset($this->rootUser->pass_raw) ? $this->rootUser->pass_raw : $this->rootUser->passRaw,
-              'pass2' => isset($this->rootUser->pass_raw) ? $this->rootUser->pass_raw : $this->rootUser->passRaw,
+              'pass1' => $this->rootUser->pass_raw ?? $this->rootUser->passRaw,
+              'pass2' => $this->rootUser->pass_raw ?? $this->rootUser->passRaw,
             ],
           ],
-          // form_type_checkboxes_value() requires NULL instead of FALSE values
-          // for programmatic form submissions to disable a checkbox.
+          // \Drupal\Core\Render\Element\Checkboxes::valueCallback() requires
+          // NULL instead of FALSE values for programmatic form submissions to
+          // disable a checkbox.
           'enable_update_status_module' => NULL,
           'enable_update_status_emails' => NULL,
         ],
@@ -585,7 +587,7 @@ trait FunctionalTestSetupTrait {
     $parsed_url = parse_url($base_url);
     $host = $parsed_url['host'] . (isset($parsed_url['port']) ? ':' . $parsed_url['port'] : '');
     $path = isset($parsed_url['path']) ? rtrim(rtrim($parsed_url['path']), '/') : '';
-    $port = isset($parsed_url['port']) ? $parsed_url['port'] : 80;
+    $port = $parsed_url['port'] ?? 80;
 
     $valid_url_schemes = ['http', 'https'];
     if (!in_array(strtolower($parsed_url['scheme']), $valid_url_schemes, TRUE)) {
@@ -620,11 +622,6 @@ trait FunctionalTestSetupTrait {
    *
    * Also sets up new resources for the testing environment, such as the public
    * filesystem and configuration directories.
-   *
-   * This method is private as it must only be called once by
-   * BrowserTestBase::setUp() (multiple invocations for the same test would have
-   * unpredictable consequences) and it must not be callable or overridable by
-   * test classes.
    */
   protected function prepareEnvironment() {
     // Bootstrap Drupal so we can use Drupal's built in functions.

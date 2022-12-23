@@ -247,6 +247,7 @@ class ConfigEntityStorageTest extends UnitTestCase {
    * @covers ::doSave
    *
    * @param \Drupal\Core\Entity\EntityInterface $entity
+   *   The entity to test.
    *
    * @return \Drupal\Core\Entity\EntityInterface
    *
@@ -299,6 +300,7 @@ class ConfigEntityStorageTest extends UnitTestCase {
    * @covers ::doSave
    *
    * @param \Drupal\Core\Entity\EntityInterface $entity
+   *   The entity to test.
    *
    * @return \Drupal\Core\Entity\EntityInterface
    *
@@ -524,9 +526,6 @@ class ConfigEntityStorageTest extends UnitTestCase {
       ->willReturn($config_object->reveal());
     $this->configFactory->rename(Argument::cetera())->shouldNotBeCalled();
 
-    $this->moduleHandler->getImplementations('entity_load')->willReturn([]);
-    $this->moduleHandler->getImplementations('test_entity_type_load')->willReturn([]);
-
     $this->entityQuery->condition('uuid', 'baz')->willReturn($this->entityQuery);
     $this->entityQuery->execute()->willReturn(['foo']);
 
@@ -555,9 +554,6 @@ class ConfigEntityStorageTest extends UnitTestCase {
 
     $this->configFactory->loadMultiple(['the_provider.the_config_prefix.foo'])
       ->willReturn([$config_object->reveal()]);
-
-    $this->moduleHandler->getImplementations('entity_load')->willReturn([]);
-    $this->moduleHandler->getImplementations('test_entity_type_load')->willReturn([]);
 
     $entity = $this->entityStorage->load('foo');
     $this->assertInstanceOf(EntityInterface::class, $entity);
@@ -596,9 +592,6 @@ class ConfigEntityStorageTest extends UnitTestCase {
     $this->configFactory->loadMultiple(['the_provider.the_config_prefix.foo', 'the_provider.the_config_prefix.bar'])
       ->willReturn([$foo_config_object->reveal(), $bar_config_object->reveal()]);
 
-    $this->moduleHandler->getImplementations('entity_load')->willReturn([]);
-    $this->moduleHandler->getImplementations('test_entity_type_load')->willReturn([]);
-
     $entities = $this->entityStorage->loadMultiple();
     $expected['foo'] = 'foo';
     $expected['bar'] = 'bar';
@@ -627,9 +620,6 @@ class ConfigEntityStorageTest extends UnitTestCase {
     $this->configFactory->loadMultiple(['the_provider.the_config_prefix.foo'])
       ->willReturn([$config_object->reveal()]);
 
-    $this->moduleHandler->getImplementations('entity_load')->willReturn([]);
-    $this->moduleHandler->getImplementations('test_entity_type_load')->willReturn([]);
-
     $entities = $this->entityStorage->loadMultiple(['foo']);
     $this->assertContainsOnlyInstancesOf(EntityInterface::class, $entities);
     foreach ($entities as $id => $entity) {
@@ -639,15 +629,20 @@ class ConfigEntityStorageTest extends UnitTestCase {
 
   /**
    * @covers ::loadRevision
+   * @group legacy
    */
   public function testLoadRevision() {
+    $this->expectDeprecation('Drupal\Core\Config\Entity\ConfigEntityStorage::loadRevision() is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use \Drupal\Core\Entity\RevisionableStorageInterface::loadRevision instead. See https://www.drupal.org/node/3294237');
     $this->assertSame(NULL, $this->entityStorage->loadRevision(1));
   }
 
   /**
    * @covers ::deleteRevision
+   * @group legacy
    */
   public function testDeleteRevision() {
+    $this->expectDeprecation('Drupal\Core\Config\Entity\ConfigEntityStorage::deleteRevision() is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use \Drupal\Core\Entity\RevisionableStorageInterface::deleteRevision instead. See https://www.drupal.org/node/3294237');
+
     $this->cacheTagsInvalidator->invalidateTags(Argument::cetera())
       ->shouldNotBeCalled();
 
@@ -701,7 +696,6 @@ class ConfigEntityStorageTest extends UnitTestCase {
    * @covers ::doDelete
    */
   public function testDeleteNothing() {
-    $this->moduleHandler->getImplementations(Argument::cetera())->shouldNotBeCalled();
     $this->moduleHandler->invokeAll(Argument::cetera())->shouldNotBeCalled();
 
     $this->configFactory->get(Argument::cetera())->shouldNotBeCalled();

@@ -25,7 +25,7 @@ class BlockViewBuilderTest extends KernelTestBase {
   /**
    * The block being tested.
    *
-   * @var \Drupal\block\Entity\BlockInterface
+   * @var \Drupal\block\BlockInterface
    */
   protected $block;
 
@@ -288,8 +288,10 @@ class BlockViewBuilderTest extends KernelTestBase {
    *   The expected cache tags.
    * @param int $expected_max_age
    *   The expected max-age.
+   *
+   * @internal
    */
-  protected function assertBlockRenderedWithExpectedCacheability(array $expected_keys, array $expected_contexts, array $expected_tags, $expected_max_age) {
+  protected function assertBlockRenderedWithExpectedCacheability(array $expected_keys, array $expected_contexts, array $expected_tags, int $expected_max_age): void {
     $required_cache_contexts = ['languages:' . LanguageInterface::TYPE_INTERFACE, 'theme', 'user.permissions'];
 
     // Check that the expected cacheability metadata is present in:

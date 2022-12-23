@@ -312,7 +312,7 @@ abstract class ExtensionList {
     $extensions = $this->doScanExtensions();
 
     // Read info files for each extension.
-    foreach ($extensions as $extension_name => $extension) {
+    foreach ($extensions as $extension) {
       $extension->info = $this->createExtensionInfo($extension);
 
       // Invoke hook_system_info_alter() to give installed modules a chance to
@@ -555,7 +555,7 @@ abstract class ExtensionList {
 
     // Add the info file modification time, so it becomes available for
     // contributed extensions to use for ordering extension lists.
-    $info['mtime'] = $extension->getMTime();
+    $info['mtime'] = $extension->getFileInfo()->getMTime();
 
     // Merge extension type-specific defaults.
     $info += $this->defaults;

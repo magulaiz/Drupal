@@ -15,7 +15,6 @@ class RegisterForm extends AccountForm {
    * {@inheritdoc}
    */
   public function form(array $form, FormStateInterface $form_state) {
-    $user = $this->currentUser();
     /** @var \Drupal\user\UserInterface $account */
     $account = $this->entity;
 
@@ -51,7 +50,7 @@ class RegisterForm extends AccountForm {
     }
 
     // Start with the default user account fields.
-    $form = parent::form($form, $form_state, $account);
+    $form = parent::form($form, $form_state);
 
     return $form;
   }

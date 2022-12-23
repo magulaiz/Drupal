@@ -125,7 +125,7 @@ class MailFormatHelper {
     // 'See the Drupal site [1]' with the URL included as a footnote.
     static::htmlToMailUrls(NULL, TRUE);
     $pattern = '@(<a[^>]+?href="([^"]*)"[^>]*?>(.+?)</a>)@i';
-    $string = preg_replace_callback($pattern, 'static::htmlToMailUrls', $string);
+    $string = preg_replace_callback($pattern, [static::class, 'htmlToMailUrls'], $string);
     $urls = static::htmlToMailUrls();
     $footnotes = '';
     if (count($urls)) {
@@ -153,7 +153,7 @@ class MailFormatHelper {
 
       // Process HTML tags (but don't output any literally).
       if ($tag) {
-        list($tagname) = explode(' ', strtolower($value), 2);
+        [$tagname] = explode(' ', strtolower($value), 2);
         switch ($tagname) {
           // List counters.
           case 'ul':
@@ -334,7 +334,7 @@ class MailFormatHelper {
         static::$regexp = '@^' . preg_quote($base_path, '@') . '@';
       }
       if ($match) {
-        list(, , $url, $label) = $match;
+        [, , $url, $label] = $match;
         // Ensure all URLs are absolute.
         static::$urls[] = strpos($url, '://') ? $url : preg_replace(static::$regexp, $base_url . '/', $url);
         return $label . ' [' . count(static::$urls) . ']';

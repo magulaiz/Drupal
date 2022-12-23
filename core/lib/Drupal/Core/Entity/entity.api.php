@@ -10,7 +10,6 @@ use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\DynamicallyFieldableEntityStorageInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\Field\FieldDefinition;
-use Drupal\Core\Render\Element;
 use Drupal\language\Entity\ContentLanguageSettings;
 use Drupal\node\Entity\NodeType;
 
@@ -846,6 +845,11 @@ function hook_entity_view_mode_info_alter(&$view_modes) {
  *     the entity type and the bundle, the one for the bundle is used.
  *   - translatable: (optional) A boolean value specifying whether this bundle
  *     has translation support enabled. Defaults to FALSE.
+ *   - class: (optional) The fully qualified class name for this bundle. If
+ *     omitted, the class from the entity type definition will be used. Multiple
+ *     bundles must not use the same subclass. If a class is reused by multiple
+ *     bundles, an \Drupal\Core\Entity\Exception\AmbiguousBundleClassException
+ *     will be thrown.
  *
  * @see \Drupal\Core\Entity\EntityTypeBundleInfo::getBundleInfo()
  * @see hook_entity_bundle_info_alter()
@@ -866,6 +870,8 @@ function hook_entity_bundle_info() {
  */
 function hook_entity_bundle_info_alter(&$bundles) {
   $bundles['user']['user']['label'] = t('Full account');
+  // Override the bundle class for the "article" node type in a custom module.
+  $bundles['node']['article']['class'] = 'Drupal\mymodule\Entity\Article';
 }
 
 /**
@@ -1748,20 +1754,10 @@ function hook_entity_view_display_alter(\Drupal\Core\Entity\Display\EntityViewDi
  * @ingroup entity_crud
  */
 function hook_entity_display_build_alter(&$build, $context) {
-  // Append RDF term mappings on displayed taxonomy links.
-  foreach (Element::children($build) as $field_name) {
-    $element = &$build[$field_name];
-    if ($element['#field_type'] == 'entity_reference' && $element['#formatter'] == 'entity_reference_label') {
-      foreach ($element['#items'] as $delta => $item) {
-        $term = $item->entity;
-        if (!empty($term->rdf_mapping['rdftype'])) {
-          $element[$delta]['#options']['attributes']['typeof'] = $term->rdf_mapping['rdftype'];
-        }
-        if (!empty($term->rdf_mapping['name']['predicates'])) {
-          $element[$delta]['#options']['attributes']['property'] = $term->rdf_mapping['name']['predicates'];
-        }
-      }
-    }
+  /** @var \Drupal\Core\Entity\ContentEntityInterface $entity */
+  $entity = $context['entity'];
+  if ($entity->getEntityTypeId() === 'my_entity' && $entity->bundle() === 'display_build_alter_bundle') {
+    $build['entity_display_build_alter']['#markup'] = 'Content added in hook_entity_display_build_alter for entity id ' . $entity->id();
   }
 }
 

@@ -30,7 +30,10 @@ abstract class StorageTestBase extends KernelTestBase {
    */
   protected $factory = 'keyvalue';
 
-  protected function setUp() {
+  /**
+   * {@inheritdoc}
+   */
+  protected function setUp(): void {
     parent::setUp();
 
     // Define two data collections,
@@ -187,6 +190,19 @@ abstract class StorageTestBase extends KernelTestBase {
     $store->rename('old', 'new');
     $this->assertSame('thing', $store->get('new'));
     $this->assertNull($store->get('old'));
+  }
+
+  /**
+   * Tests the rename operation.
+   */
+  public function testRenameNoChange() {
+    $stores = $this->createStorage();
+    $store = $stores[0];
+
+    $store->set('old', 'thing');
+    $this->assertSame($store->get('old'), 'thing');
+    $store->rename('old', 'old');
+    $this->assertSame($store->get('old'), 'thing');
   }
 
   /**

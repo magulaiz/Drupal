@@ -65,7 +65,7 @@ class SelectTest extends DatabaseTestBase {
 
     $connection = Database::getConnection();
     foreach ($this->makeCommentsProvider() as $test_set) {
-      list($expected, $comments) = $test_set;
+      [$expected, $comments] = $test_set;
       $this->assertEquals($expected, $connection->makeComment($comments));
     }
   }
@@ -548,21 +548,6 @@ class SelectTest extends DatabaseTestBase {
     $alias1 = $query->addField('t', 'name', 'the_alias');
     $alias2 = $query->addField('t', 'age', 'the_alias');
     $this->assertNotSame($alias1, $alias2, 'Duplicate aliases are renamed.');
-  }
-
-  /**
-   * Tests deprecation of the 'throw_exception' option.
-   *
-   * @group legacy
-   */
-  public function testLegacyThrowExceptionOption(): void {
-    $this->expectDeprecation("Passing a 'throw_exception' option to %AExceptionHandler::handleExecutionException is deprecated in drupal:9.2.0 and is removed in drupal:10.0.0. Always catch exceptions. See https://www.drupal.org/node/3201187");
-    // This query will fail because the table does not exist.
-    $this->assertNull($this->connection->select('some_table_that_does_not_exist', 't', ['throw_exception' => FALSE])
-      ->fields('t')
-      ->countQuery()
-      ->execute()
-    );
   }
 
   /**

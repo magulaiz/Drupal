@@ -74,7 +74,7 @@ class ExceptionHandlingTest extends KernelTestBase {
 
     $this->assertEquals(Response::HTTP_NOT_FOUND, $response->getStatusCode());
     $this->assertEquals('application/json', $response->headers->get('Content-type'));
-    $this->assertEquals('{"message":"No route found for \\u0022GET \\/not-found\\u0022"}', $response->getContent());
+    $this->assertEquals('{"message":"No route found for \\u0022GET http:\/\/localhost\\/not-found\\u0022"}', $response->getContent());
   }
 
   /**
@@ -128,6 +128,7 @@ class ExceptionHandlingTest extends KernelTestBase {
    * Sets the given path to use as the 404 page and triggers a 404.
    *
    * @param string $path
+   *   The path to test.
    *
    * @return \Drupal\Core\Render\HtmlResponse
    *

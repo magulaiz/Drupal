@@ -67,7 +67,7 @@ class ContentEntityNormalizerTest extends UnitTestCase {
     $this->serializer->expects($this->any())
       ->method('normalize')
       ->with($this->containsOnlyInstancesOf('Drupal\Core\Field\FieldItemListInterface'), 'test_format', ['account' => NULL])
-      ->will($this->returnValue('test'));
+      ->willReturn('test');
 
     $definitions = [
       'field_accessible_external' => $this->createMockFieldListItem(TRUE, FALSE),
@@ -101,7 +101,7 @@ class ContentEntityNormalizerTest extends UnitTestCase {
     $this->serializer->expects($this->any())
       ->method('normalize')
       ->with($this->containsOnlyInstancesOf('Drupal\Core\Field\FieldItemListInterface'), 'test_format', $context)
-      ->will($this->returnValue('test'));
+      ->willReturn('test');
 
     // The mock account should get passed directly into the access() method on
     // field items from $context['account'].
@@ -122,6 +122,7 @@ class ContentEntityNormalizerTest extends UnitTestCase {
    * Creates a mock content entity.
    *
    * @param $definitions
+   *   The properties the will be returned.
    *
    * @return \PHPUnit\Framework\MockObject\MockObject
    */
@@ -136,7 +137,7 @@ class ContentEntityNormalizerTest extends UnitTestCase {
       ->shouldBeCalled();
     $content_entity_mock->expects($this->any())
       ->method('getTypedData')
-      ->will($this->returnValue($typed_data->reveal()));
+      ->willReturn($typed_data->reveal());
 
     return $content_entity_mock;
   }
@@ -145,8 +146,11 @@ class ContentEntityNormalizerTest extends UnitTestCase {
    * Creates a mock field list item.
    *
    * @param bool $access
+   *   The value that access() will return.
    * @param bool $internal
+   *   The value that isInternal() will return.
    * @param \Drupal\Core\Session\AccountInterface $user_context
+   *   The user context used for the access check.
    *
    * @return \Drupal\Core\Field\FieldItemListInterface|\PHPUnit\Framework\MockObject\MockObject
    */
@@ -155,7 +159,7 @@ class ContentEntityNormalizerTest extends UnitTestCase {
     $mock = $this->createMock('Drupal\Core\Field\FieldItemListInterface');
     $mock->expects($this->once())
       ->method('getDataDefinition')
-      ->will($this->returnValue($data_definition->reveal()));
+      ->willReturn($data_definition->reveal());
     $data_definition->isInternal()
       ->willReturn($internal)
       ->shouldBeCalled();
@@ -163,7 +167,7 @@ class ContentEntityNormalizerTest extends UnitTestCase {
       $mock->expects($this->once())
         ->method('access')
         ->with('view', $user_context)
-        ->will($this->returnValue($access));
+        ->willReturn($access);
     }
     return $mock;
   }

@@ -36,7 +36,7 @@ class ExposedFormTest extends ViewTestBase {
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'classy';
+  protected $defaultTheme = 'starterkit_theme';
 
   /**
    * Nodes to test.
@@ -45,8 +45,11 @@ class ExposedFormTest extends ViewTestBase {
    */
   protected $nodes = [];
 
-  protected function setUp($import_test_views = TRUE): void {
-    parent::setUp($import_test_views);
+  /**
+   * {@inheritdoc}
+   */
+  protected function setUp($import_test_views = TRUE, $modules = ['views_test_config']): void {
+    parent::setUp($import_test_views, $modules);
 
     $this->enableViewsTestModule();
 
@@ -248,9 +251,7 @@ class ExposedFormTest extends ViewTestBase {
     $this->assertSession()->pageTextMatchesCount(1, '/' . $view->getTitle() . '/');
 
     // Test there is an exposed form in a block.
-    $xpath = $this->assertSession()->buildXPathQuery('//div[@id=:id]/form/@id', [':id' => Html::getUniqueId('block-' . $block->id())]);
-    $result = $this->xpath($xpath);
-    $this->assertCount(1, $result);
+    $this->assertSession()->elementsCount('xpath', '//div[@id="' . Html::getUniqueId('block-' . $block->id()) . '"]/form/@id', 1);
 
     // Test there is not an exposed form in the view page content area.
     $xpath = $this->assertSession()->buildXPathQuery('//div[@class="view-content"]/form/@id', [
@@ -259,8 +260,9 @@ class ExposedFormTest extends ViewTestBase {
     $this->assertSession()->elementNotExists('xpath', $xpath);
 
     // Test there is only one views exposed form on the page.
-    $elements = $this->xpath('//form[@id=:id]', [':id' => $this->getExpectedExposedFormId($view)]);
-    $this->assertCount(1, $elements, 'One exposed form block found.');
+    $xpath = '//form[@id="' . $this->getExpectedExposedFormId($view) . '"]';
+    $this->assertSession()->elementsCount('xpath', $xpath, 1);
+    $element = $this->assertSession()->elementExists('xpath', $xpath);
 
     // Test that the correct option is selected after form submission.
     $this->assertCacheContext('url');
@@ -271,13 +273,13 @@ class ExposedFormTest extends ViewTestBase {
       'page' => ['page'],
     ];
     foreach ($arguments as $argument => $bundles) {
-      $elements[0]->find('css', 'select')->selectOption($argument);
-      $elements[0]->findButton('Apply')->click();
+      $element->find('css', 'select')->selectOption($argument);
+      $element->findButton('Apply')->click();
       $this->assertCacheContext('url');
       $this->assertTrue($this->assertSession()->optionExists('Content: Type', $argument)->isSelected());
       $this->assertNodesExist($bundles);
     }
-    $elements[0]->findButton('Reset')->click();
+    $element->findButton('Reset')->click();
     $this->assertNodesExist($arguments['All']);
   }
 
@@ -414,8 +416,10 @@ class ExposedFormTest extends ViewTestBase {
    *
    * @param int[] $ids
    *   The ids to check.
+   *
+   * @internal
    */
-  protected function assertIds(array $ids) {
+  protected function assertIds(array $ids): void {
     $elements = $this->cssSelect('div.view-test-exposed-form-sort-items-per-page div.views-row span.field-content');
     $actual_ids = [];
     foreach ($elements as $element) {
@@ -492,8 +496,10 @@ class ExposedFormTest extends ViewTestBase {
    *
    * @param array $bundles
    *   Bundles of nodes.
+   *
+   * @internal
    */
-  protected function assertNodesExist(array $bundles) {
+  protected function assertNodesExist(array $bundles): void {
     foreach ($this->nodes as $node) {
       if (in_array($node->bundle(), $bundles)) {
         $this->assertSession()->pageTextContains($node->label());

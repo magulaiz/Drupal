@@ -35,6 +35,11 @@ class EntityValidationTest extends EntityKernelTestBase {
   protected $entityFieldText;
 
   /**
+   * @var array
+   */
+  protected array $cachedDiscoveries;
+
+  /**
    * {@inheritdoc}
    */
   protected function setUp(): void {
@@ -52,7 +57,7 @@ class EntityValidationTest extends EntityKernelTestBase {
     $this->installEntitySchema('entity_test_mulrev_changed');
 
     // Create the test field.
-    module_load_install('entity_test');
+    $this->container->get('module_handler')->loadInclude('entity_test', 'install');
     entity_test_install();
 
     // Install required default configuration for filter module.
@@ -159,10 +164,10 @@ class EntityValidationTest extends EntityKernelTestBase {
     $this->assertEquals('This value should not be null.', $violations[0]->getMessage());
 
     $test_entity = clone $entity;
-    $test_entity->name->value = $this->randomString(33);
+    $test_entity->name->value = $this->randomString(65);
     $violations = $test_entity->validate();
     $this->assertEquals(1, $violations->count(), 'Validation failed.');
-    $this->assertEquals(t('%name: may not be longer than @max characters.', ['%name' => 'Name', '@max' => 32]), $violations[0]->getMessage());
+    $this->assertEquals(t('%name: may not be longer than @max characters.', ['%name' => 'Name', '@max' => 64]), $violations[0]->getMessage());
 
     // Make sure the information provided by a violation is correct.
     $violation = $violations[0];

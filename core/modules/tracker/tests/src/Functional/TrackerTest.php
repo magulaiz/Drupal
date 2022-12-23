@@ -17,6 +17,7 @@ use Drupal\Tests\system\Functional\Cache\AssertPageCacheContextsAndTagsTrait;
  * Create and delete nodes and check for their display in the tracker listings.
  *
  * @group tracker
+ * @group legacy
  */
 class TrackerTest extends BrowserTestBase {
 
@@ -55,6 +56,9 @@ class TrackerTest extends BrowserTestBase {
    */
   protected $otherUser;
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
 
@@ -393,6 +397,9 @@ class TrackerTest extends BrowserTestBase {
       'status' => 0,
     ]);
 
+    $this->drupalGet('activity');
+    $this->assertSession()->responseNotContains($unpublished->label());
+
     // Start indexing backwards from node 4.
     \Drupal::state()->set('tracker.index_nid', 4);
 
@@ -474,12 +481,14 @@ class TrackerTest extends BrowserTestBase {
    *   data-history-node-last-comment-timestamp attribute.
    * @param bool $library_is_present
    *   Whether the drupal.tracker-history library should be present or not.
+   *
+   * @internal
    */
-  public function assertHistoryMetadata($node_id, $node_timestamp, $node_last_comment_timestamp, $library_is_present = TRUE) {
+  public function assertHistoryMetadata(int $node_id, int $node_timestamp, int $node_last_comment_timestamp, bool $library_is_present = TRUE): void {
     $settings = $this->getDrupalSettings();
     $this->assertSame($library_is_present, isset($settings['ajaxPageState']) && in_array('tracker/history', explode(',', $settings['ajaxPageState']['libraries'])), 'drupal.tracker-history library is present.');
-    $this->assertCount(1, $this->xpath('//table/tbody/tr/td[@data-history-node-id="' . $node_id . '" and @data-history-node-timestamp="' . $node_timestamp . '"]'), 'Tracker table cell contains the data-history-node-id and data-history-node-timestamp attributes for the node.');
-    $this->assertCount(1, $this->xpath('//table/tbody/tr/td[@data-history-node-last-comment-timestamp="' . $node_last_comment_timestamp . '"]'), 'Tracker table cell contains the data-history-node-last-comment-timestamp attribute for the node.');
+    $this->assertSession()->elementsCount('xpath', '//table/tbody/tr/td[@data-history-node-id="' . $node_id . '" and @data-history-node-timestamp="' . $node_timestamp . '"]', 1);
+    $this->assertSession()->elementsCount('xpath', '//table/tbody/tr/td[@data-history-node-last-comment-timestamp="' . $node_last_comment_timestamp . '"]', 1);
   }
 
 }

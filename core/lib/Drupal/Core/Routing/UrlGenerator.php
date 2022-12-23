@@ -7,7 +7,6 @@ use Drupal\Core\Render\BubbleableMetadata;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\RequestContext as SymfonyRequestContext;
 use Symfony\Component\Routing\Route as SymfonyRoute;
-use Symfony\Component\Routing\Exception\RouteNotFoundException;
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\PathProcessor\OutboundPathProcessorInterface;
 use Drupal\Core\RouteProcessor\OutboundRouteProcessorInterface;
@@ -105,7 +104,7 @@ class UrlGenerator implements UrlGeneratorInterface {
   /**
    * {@inheritdoc}
    */
-  public function getContext() {
+  public function getContext(): SymfonyRequestContext {
     return $this->context;
   }
 
@@ -179,7 +178,7 @@ class UrlGenerator implements UrlGeneratorInterface {
 
     // all params must be given
     if ($diff = array_diff_key($variables, $mergedParams)) {
-      throw new MissingMandatoryParametersException(sprintf('Some mandatory parameters are missing ("%s") to generate a URL for route "%s".', implode('", "', array_keys($diff)), $name));
+      throw new MissingMandatoryParametersException($name, array_keys($diff));
     }
 
     $url = '';
@@ -254,7 +253,7 @@ class UrlGenerator implements UrlGeneratorInterface {
   /**
    * {@inheritdoc}
    */
-  public function generate($name, $parameters = [], $referenceType = self::ABSOLUTE_PATH) {
+  public function generate($name, $parameters = [], $referenceType = self::ABSOLUTE_PATH): string {
     $options['absolute'] = is_bool($referenceType) ? $referenceType : $referenceType === self::ABSOLUTE_URL;
     return $this->generateFromRoute($name, $parameters, $options);
   }
@@ -423,8 +422,8 @@ class UrlGenerator implements UrlGeneratorInterface {
     if ($name instanceof SymfonyRoute) {
       $route = $name;
     }
-    elseif (NULL === $route = clone $this->provider->getRouteByName($name)) {
-      throw new RouteNotFoundException(sprintf('Route "%s" does not exist.', $name));
+    else {
+      $route = clone $this->provider->getRouteByName($name);
     }
     return $route;
   }

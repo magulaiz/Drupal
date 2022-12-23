@@ -96,7 +96,6 @@ class EditorMediaDialog extends FormBase {
       $editor_object = $form_state->getUserInput()['editor_object'];
       // The data that the text editor sends to any dialog is in
       // the 'editor_object' key.
-      // @see core/modules/ckeditor/js/ckeditor.es6.js
       $media_embed_element = $editor_object['attributes'];
       $form_state->set('media_embed_element', $media_embed_element);
       $has_caption = $editor_object['hasCaption'];
@@ -135,7 +134,7 @@ class EditorMediaDialog extends FormBase {
         $media = $media->getTranslation($editor_object['hostEntityLangcode']);
       }
       $settings = $media->{$image_field_name}->getItemDefinition()->getSettings();
-      $alt = isset($media_embed_element['alt']) ? $media_embed_element['alt'] : NULL;
+      $alt = $media_embed_element['alt'] ?? NULL;
       $form['alt'] = [
         '#type' => 'textfield',
         '#title' => $this->t('Alternate text'),
