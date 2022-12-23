@@ -672,9 +672,8 @@ interface EntityTypeInterface extends PluginDefinitionInterface {
    * The entity type group is an annotation property of the entity type.
    *
    * Drupal core defines two entity type groups:
-   *  - content: Entities which form the content of a site, whose data changes
-   *    frequently, typically extensible with custom fields and stored in the
-   *    database.
+   *  - content: Entities which form the information on a site. Content entities
+   *    are typically customized with fields.
    *  - config: Entities which define structural elements of a site, which are
    *    managed as part of the site's configuration.
    *
