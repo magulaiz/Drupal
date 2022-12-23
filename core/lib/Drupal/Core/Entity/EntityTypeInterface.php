@@ -669,8 +669,7 @@ interface EntityTypeInterface extends PluginDefinitionInterface {
   /**
    * Gets the machine name of the entity type group.
    *
-   * The entity type group is defined as a property of the annotation class for
-   * the entity type.
+   * The entity type group is an annotation property of the entity type.
    *
    * Drupal core defines two entity type groups:
    *  - content: Entities which form the content of a site, whose data changes
