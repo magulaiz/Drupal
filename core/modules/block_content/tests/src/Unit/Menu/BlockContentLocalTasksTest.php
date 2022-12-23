@@ -71,18 +71,6 @@ class BlockContentLocalTasksTest extends LocalTaskIntegrationTestBase {
   }
 
   /**
-   * Checks block_content type listing local tasks.
-   */
-  public function testBlockContentTypeListLocalTasks() {
-    $this->assertLocalTasks('entity.block_content_type.collection', [
-      0 => [
-        'system.admin_content',
-        'entity.block_content_type.collection',
-      ],
-    ]);
-  }
-
-  /**
    * Checks block_content listing local tasks.
    *
    * @dataProvider getBlockContentListingRoutes
