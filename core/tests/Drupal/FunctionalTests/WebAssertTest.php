@@ -5,7 +5,6 @@ namespace Drupal\FunctionalTests;
 use Behat\Mink\Exception\ExpectationException;
 use Drupal\Core\Url;
 use Drupal\Tests\BrowserTestBase;
-use Behat\Mink\Exception\ResponseTextException;
 use PHPUnit\Framework\AssertionFailedError;
 
 /**
@@ -81,7 +80,7 @@ class WebAssertTest extends BrowserTestBase {
     $this->drupalGet('test-page');
     $this->assertSession()->pageTextContainsOnce('Test page text.');
 
-    $this->expectException(ResponseTextException::class);
+    $this->expectException(AssertionFailedError::class);
     $this->expectExceptionMessage("Failed asserting that the page matches the pattern '/does\\-not\\-exist/ui' 1 time(s), 0 found.");
     $this->assertSession()->pageTextContainsOnce('does-not-exist');
   }

@@ -4,6 +4,7 @@ namespace Drupal\Tests;
 
 use Behat\Mink\Driver\BrowserKitDriver;
 use Behat\Mink\Element\Element;
+use Behat\Mink\Exception\Exception as MinkException;
 use Behat\Mink\Mink;
 use Behat\Mink\Selector\SelectorsHandler;
 use Behat\Mink\Session;
@@ -21,7 +22,9 @@ use Drupal\Tests\user\Traits\UserCreationTrait;
 use Drupal\TestTools\Comparator\MarkupInterfaceComparator;
 use Drupal\TestTools\TestVarDumper;
 use GuzzleHttp\Cookie\CookieJar;
+use PHPUnit\Framework\AssertionFailedError;
 use PHPUnit\Framework\TestCase;
+use PHPUnit\Util\Filter;
 use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Component\VarDumper\VarDumper;
 
@@ -448,6 +451,19 @@ abstract class BrowserTestBase extends TestCase {
       $callbacks = &drupal_register_shutdown_function();
       $callbacks = $this->originalShutdownCallbacks;
     }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function onNotSuccessfulTest(\Throwable $t): void {
+    // Re-throw Mink exceptions as PHPUnit assertion failures.
+    if ($t instanceof MinkException) {
+        $message = $t->getMessage() . PHP_EOL . 'Caused by ' . get_class($t) . PHP_EOL;
+        $message .= Filter::getFilteredStacktrace($t) . PHP_EOL;
+        throw new AssertionFailedError($message, $t->getCode());
+    }
+    parent::onNotSuccessfulTest($t);
   }
 
   /**
