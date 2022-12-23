@@ -120,10 +120,13 @@ class ConfigManager implements ConfigManagerInterface {
    * {@inheritdoc}
    */
   public function getEntityTypeIdByName($name) {
-    $entities = array_filter($this->entityTypeManager->getDefinitions(), function (EntityTypeInterface $entity_type) use ($name) {
-      return ($entity_type instanceof ConfigEntityTypeInterface && $config_prefix = $entity_type->getConfigPrefix()) && strpos($name, $config_prefix . '.') === 0;
-    });
-    return key($entities);
+    foreach ($this->entityTypeManager->getDefinitions() as $key => $entity_type) {
+      if (($entity_type instanceof ConfigEntityTypeInterface && $config_prefix = $entity_type->getConfigPrefix()) && str_starts_with($name, $config_prefix . '.')) {
+        return $key;
+      }
+    }
+
+    return NULL;
   }
 
   /**
