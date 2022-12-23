@@ -7,7 +7,6 @@ use Drupal\Core\Config\Entity\ConfigDependencyManager;
 use Drupal\Core\Config\Entity\ConfigEntityInterface;
 use Drupal\Core\Config\Entity\ConfigEntityTypeInterface;
 use Drupal\Core\Entity\EntityRepositoryInterface;
-use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Extension\ExtensionPathResolver;
 use Drupal\Core\Serialization\Yaml;
