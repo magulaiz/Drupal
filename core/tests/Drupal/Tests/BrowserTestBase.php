@@ -459,9 +459,9 @@ abstract class BrowserTestBase extends TestCase {
   protected function onNotSuccessfulTest(\Throwable $t): void {
     // Re-throw Mink exceptions as PHPUnit assertion failures.
     if ($t instanceof MinkException) {
-        $message = $t->getMessage() . PHP_EOL . 'Caused by ' . get_class($t) . PHP_EOL;
-        $message .= Filter::getFilteredStacktrace($t) . PHP_EOL;
-        throw new AssertionFailedError($message, $t->getCode());
+      $message = $t->getMessage() . PHP_EOL . 'Caused by ' . get_class($t) . PHP_EOL;
+      $message .= Filter::getFilteredStacktrace($t) . PHP_EOL;
+      throw new AssertionFailedError($message, $t->getCode());
     }
     parent::onNotSuccessfulTest($t);
   }
