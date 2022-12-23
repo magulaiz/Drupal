@@ -46,7 +46,7 @@ interface FormBuilderInterface {
    *   The value must be one of the following:
    *   - The name of a class that implements \Drupal\Core\Form\FormInterface.
    *   - An instance of a class that implements \Drupal\Core\Form\FormInterface.
-   * @param mixed ...$additional
+   * @param mixed ...$args
    *   Any additional arguments are passed on to the functions called by
    *   \Drupal::formBuilder()->getForm(), including the unique form constructor
    *   function. For example, the node_edit form requires that a node object is
@@ -59,7 +59,7 @@ interface FormBuilderInterface {
    *
    * @see \Drupal\Core\Form\FormBuilderInterface::buildForm()
    */
-  public function getForm($form_arg, ...$additional);
+  public function getForm($form_arg, ...$args);
 
   /**
    * Builds and processes a form for a given form ID.
@@ -158,7 +158,7 @@ interface FormBuilderInterface {
    *   checkbox or other control that browsers submit by not having a
    *   \Drupal::request()->request entry, include the key, but set the value to
    *   NULL.
-   * @param mixed ...$additional
+   * @param mixed ...$args
    *   Any additional arguments are passed on to the functions called by
    *   self::submitForm(), including the unique form constructor function.
    *   For example, the node_edit form requires that a node object be passed
@@ -177,7 +177,7 @@ interface FormBuilderInterface {
    *   \Drupal::formBuilder()->submitForm('mymodule_form', $form_state);
    *   @endcode
    */
-  public function submitForm($form_arg, FormStateInterface &$form_state, ...$additional);
+  public function submitForm($form_arg, FormStateInterface &$form_state, ...$args);
 
   /**
    * Retrieves the structured array that defines a given form.
