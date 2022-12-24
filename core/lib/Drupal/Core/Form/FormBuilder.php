@@ -214,6 +214,16 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
   public function getForm($form_arg) {
     $form_state = new FormState();
 
+    // Notify $args parameter will be added.
+    $reflection = new \ReflectionMethod(__CLASS__, __FUNCTION__);
+    $arg_names = [];
+    foreach ($reflection->getParameters() as $parameter) {
+      $arg_names[] = $parameter->name;
+    }
+    if (!in_array('args', $arg_names)) {
+      @trigger_error(__METHOD__ . '() without $args as variable-length argument is deprecated from drupal:10.1.0 and it will be added in drupal:11.0.0', E_USER_DEPRECATED);
+    }
+
     $args = func_get_args();
     // Remove $form_arg from the arguments.
     unset($args[0]);
@@ -474,6 +484,16 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
   public function submitForm($form_arg, FormStateInterface &$form_state) {
     $build_info = $form_state->getBuildInfo();
     if (empty($build_info['args'])) {
+      // Notify $args parameter will be added.
+      $reflection = new \ReflectionMethod(__CLASS__, __FUNCTION__);
+      $arg_names = [];
+      foreach ($reflection->getParameters() as $parameter) {
+        $arg_names[] = $parameter->name;
+      }
+      if (!in_array('args', $arg_names)) {
+        @trigger_error(__METHOD__ . '() without $args as variable-length argument is deprecated from drupal:10.1.0 and it will be added in drupal:11.0.0', E_USER_DEPRECATED);
+      }
+
       $args = func_get_args();
       // Remove $form and $form_state from the arguments.
       unset($args[0], $args[1]);
