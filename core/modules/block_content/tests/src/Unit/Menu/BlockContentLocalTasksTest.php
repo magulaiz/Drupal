@@ -78,7 +78,7 @@ class BlockContentLocalTasksTest extends LocalTaskIntegrationTestBase {
   public function testBlockContentListLocalTasks($route) {
     $this->assertLocalTasks($route, [
       0 => [
-        'block.admin_display',
+        'system.admin_content',
         'entity.block_content.collection',
       ],
     ]);
