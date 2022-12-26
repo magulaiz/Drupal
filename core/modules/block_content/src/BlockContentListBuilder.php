@@ -44,16 +44,4 @@ class BlockContentListBuilder extends EntityListBuilder {
     return $query->execute();
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function render() {
-    $build = parent::render();
-    if (isset($build['table']['#empty'])) {
-      $build['table']['#empty'] = $this->t('No custom blocks available.');
-    }
-
-    return $build;
-  }
-
 }

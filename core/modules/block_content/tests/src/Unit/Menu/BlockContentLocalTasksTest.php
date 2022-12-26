@@ -49,18 +49,11 @@ class BlockContentLocalTasksTest extends LocalTaskIntegrationTestBase {
       ->method('listInfo')
       ->willReturn($themes);
 
-    $fooEntityDefinition = $this->createMock(EntityTypeInterface::class);
-    $fooEntityDefinition
-      ->expects($this->once())
-      ->method('hasLinkTemplate')
-      ->with('version-history')
-      ->will($this->returnValue(TRUE));
+    // Add services required for block local tasks.
     $entityTypeManager = $this->createMock(EntityTypeManagerInterface::class);
     $entityTypeManager->expects($this->any())
       ->method('getDefinitions')
-      ->willReturn([
-        'foo' => $fooEntityDefinition,
-      ]);
+      ->willReturn([]);
 
     $container = new ContainerBuilder();
     $container->set('config.factory', $config_factory);

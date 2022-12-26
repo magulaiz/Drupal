@@ -41,7 +41,7 @@ class BlockContentListViewsTest extends BlockContentTestBase {
     $this->drupalGet('admin/content/block-content');
 
     // Test for the page title.
-    $this->assertSession()->titleEquals('Custom block library | Drupal');
+    $this->assertSession()->titleEquals('Custom blocks | Drupal');
 
     // Test for the exposed filters.
     $this->assertSession()->fieldExists('info');

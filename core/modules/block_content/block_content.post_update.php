@@ -38,7 +38,7 @@ function block_content_post_update_move_custom_block_library() {
   $view_updated = FALSE;
 
   $display =& $view->getDisplay('page_1');
-  if (!empty($display) && $display['display_options']['path'] !== 'admin/content/block-content') {
+  if (!empty($display) && $display['display_options']['path'] === 'admin/structure/block/block-content') {
     $display['display_options']['path'] = 'admin/content/block-content';
     $menu =& $display['display_options']['menu'];
     $menu['description'] = 'Create and edit custom block content.';

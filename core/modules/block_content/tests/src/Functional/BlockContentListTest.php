@@ -38,7 +38,7 @@ class BlockContentListTest extends BlockContentTestBase {
     $this->drupalGet('admin/content/block-content');
 
     // Test for the page title.
-    $this->assertSession()->titleEquals('Custom block library | Drupal');
+    $this->assertSession()->titleEquals('Custom blocks | Drupal');
 
     // Test for the table.
     $this->assertSession()->elementExists('xpath', '//div[@class="layout-content"]//table');
