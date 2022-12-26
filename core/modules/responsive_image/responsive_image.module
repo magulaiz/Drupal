@@ -498,18 +498,24 @@ function responsive_image_get_image_dimensions($image_style_name, array $dimensi
  *   The MIME type of the image after the image style is applied.
  */
 function responsive_image_get_mime_type($image_style_name, $extension) {
-  if ($image_style_name == ResponsiveImageStyleInterface::EMPTY_IMAGE) {
-    return 'image/gif';
+  switch ($image_style_name) {
+    // The file extension for the empty image is 'gif'.
+    case ResponsiveImageStyleInterface::EMPTY_IMAGE:
+      $extension = 'gif';
+      break;
+
+    // If using the original image, the file extension is just passed on to the
+    // MIME type mapper.
+    case ResponsiveImageStyleInterface::ORIGINAL_IMAGE:
+      break;
+
+    // In all other cases, get the file extension of the derivative image from
+    // the image style configuration.
+    default:
+      $extension = ImageStyle::load($image_style_name)->getDerivativeExtension($extension);
+      break;
   }
-  // The MIME type guesser needs a full path, not just an extension, but the
-  // file doesn't have to exist.
-  if ($image_style_name === ResponsiveImageStyleInterface::ORIGINAL_IMAGE) {
-    $fake_path = 'responsive_image.' . $extension;
-  }
-  else {
-    $fake_path = 'responsive_image.' . ImageStyle::load($image_style_name)->getDerivativeExtension($extension);
-  }
-  return \Drupal::service('file.mime_type.guesser.extension')->guessMimeType($fake_path);
+  return \Drupal::service('file.mime_type.mapper')->getMimeTypeForExtension($extension);
 }
 
 /**
