@@ -113,7 +113,7 @@ class FileStorage implements PhpStorageInterface {
       // Only try to chmod() if the subdirectory could be created.
       if (is_dir($directory)) {
         // Avoid writing permissions if possible.
-        if (fileperms($directory) !== $mode) {
+        if ($this->standardizePermissionsString($mode) !== $this->standardizePermissionsString(fileperms($directory), TRUE)) {
           return chmod($directory, $mode);
         }
         return TRUE;
@@ -124,6 +124,61 @@ class FileStorage implements PhpStorageInterface {
       }
     }
     return FALSE;
+  }
+
+  /**
+   * Ensures we have sensible permission strings to compare.
+   *
+   * Decimal numbers are converted to octal. It is assumed that any non-zero
+   * number in the 5th position should not be there in octal form and is
+   * removed. This will make a result from fileperms() compatible with normal
+   * permissions because it adds 040000 (seen once converted to octal) to
+   * specify a directory which we don't want when doing comparisons of
+   * permissions strings.
+   *
+   * We allow the option to ignore special permissions bits which will all be in
+   * the 4th octal place because most of the time this is something an admin
+   * should be able to change without Drupal being aware.
+   *
+   * Once in octal form we make sure there are enough leading zeros for a
+   * string of 4 characters minimum but no more than one leading zero if it goes
+   * past 4 characters. A leading zero is necessary for PHP to know that it is
+   * an octal string.
+   *
+   * The final string should be either 4 or 5 characters long depending on
+   * whether special bits are set namely: sticky, SUID, SGID; unless we are
+   * ignoring them.
+   *
+   * This formatting is so that we can do a useful string comparison of
+   * permissions between default or user defined which will typically be like:
+   * 0775, 0755 and what fileperms() returns which will typically be 040775
+   * (in octal) for a directory but would be fine for a normal file.
+   *
+   * Note: We could have done a conversion to a number instead of string however
+   *       this format is what we are used to seeing when it comes to
+   *       permissions and so makes it a little easier to debug when necessary.
+   *
+   * @param int|string $num
+   *   Permissions either as a string or a number.
+   * @param bool $base10
+   *   Says whether the string is decimal or octal.
+   * @param bool $ignoreSpecialBits
+   *   Allows us to ignore bits in the 4th position of an octal string which
+   *   are all special permission bits.
+   *
+   * @return string
+   *   Our standarized octal string.
+   */
+  protected function standardizePermissionsString($num, bool $base10 = FALSE, bool $ignoreSpecialBits = TRUE): string {
+    if ($base10) {
+      $num = decoct($num);
+    }
+
+    return str_pad(
+      preg_replace('/^0*/m', '0', substr($num, -($ignoreSpecialBits ? 3 : 4))),
+      3,
+      '0',
+      STR_PAD_LEFT);
   }
 
   /**
