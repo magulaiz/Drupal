@@ -80,6 +80,8 @@ class MimeTypeTest extends FileTestBase {
       'foo.doc' => 'application/octet-stream',
       'test.ogg' => 'application/octet-stream',
     ];
+    $mime_type_mapper = $this->container->get('file.mime_type.mapper');
+    $mime_type_mapper->setMapping($mapping);
     $extension_guesser = $this->container->get('file.mime_type.guesser.extension');
     $extension_guesser->setMapping($mapping);
 
@@ -87,6 +89,26 @@ class MimeTypeTest extends FileTestBase {
       $output = $extension_guesser->guessMimeType($input);
       $this->assertSame($expected, $output);
     }
+  }
+
+  /**
+   * Test deprecation of ::setMapping.
+   *
+   * @group legacy
+   * @expectedDeprecation Drupal\Core\File\MimeType\ExtensionMimeTypeGuesser::setMapping() is deprecated in Drupal 10.1.0, and will be removed in drupal:11.0.0. Use \Drupal\Core\File\MimeType\MimeTypeMapper::setMapping() instead. See https://www.drupal.org/project/drupal/issues/2311679.
+   */
+  public function testSetMapping() {
+    $extension_guesser = $this->container->get('file.mime_type.guesser.extension');
+    $extension_guesser->setMapping([
+      'mimetypes' => [
+        0 => 'application/java-archive',
+        1 => 'image/jpeg',
+      ],
+      'extensions' => [
+        'jar' => 0,
+        'jpg' => 1,
+      ],
+    ]);
   }
 
 }
