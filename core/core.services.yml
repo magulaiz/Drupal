@@ -1762,10 +1762,14 @@ services:
     lazy: true
   file.mime_type.guesser.extension:
     class: Drupal\Core\File\MimeType\ExtensionMimeTypeGuesser
-    arguments: ['@module_handler']
+    arguments: ['@module_handler', '@file.mime_type.mapper']
     tags:
       - { name: mime_type_guesser }
     lazy: true
+  file.mime_type.mapper:
+    class: Drupal\Core\File\MimeType\MimeTypeMapper
+    calls:
+      - [alterMapping, ['@module_handler']]
   # Currently needs to be public as it is called by
   # \Drupal\Core\Render\Element\StatusMessages.
   # @todo Consider making this service private again after
