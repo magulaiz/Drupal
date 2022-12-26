@@ -8,8 +8,7 @@ use Drupal\views\Entity\View;
 /**
  * Tests update functions for the Block Content module.
  *
- * @group Update
- * @group legacy
+ * @group block_content
  */
 class BlockContentUpdateTest extends UpdatePathTestBase {
 
@@ -32,6 +31,8 @@ class BlockContentUpdateTest extends UpdatePathTestBase {
     $this->drupalLogin($user);
     $this->drupalGet('admin/structure/block/block-content');
     $this->assertSession()->statusCodeEquals(200);
+    $this->drupalGet('admin/content/block-content');
+    $this->assertSession()->statusCodeEquals(404);
 
     $this->runUpdates();
 
@@ -47,6 +48,8 @@ class BlockContentUpdateTest extends UpdatePathTestBase {
     // Check the new path is accessible.
     $user = $this->drupalCreateUser(['administer blocks']);
     $this->drupalLogin($user);
+    $this->drupalGet('admin/structure/block/block-content');
+    $this->assertSession()->statusCodeEquals(404);
     $this->drupalGet('admin/content/block-content');
     $this->assertSession()->statusCodeEquals(200);
   }
