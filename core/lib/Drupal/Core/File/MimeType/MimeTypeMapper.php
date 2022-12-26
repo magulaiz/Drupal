@@ -3,26 +3,23 @@
 namespace Drupal\Core\File\MimeType;
 
 use Drupal\Core\Extension\ModuleHandlerInterface;
-use Symfony\Component\Mime\MimeTypeGuesserInterface;
 
 /**
- * Makes possible to guess the MIME type of a file using its extension.
+ * Provides a sensible mapping between filename extensions and MIME types.
  */
-class ExtensionMimeTypeGuesser implements MimeTypeGuesserInterface {
+class MimeTypeMapper implements MimeTypeMapperInterface {
 
   /**
    * Default MIME extension mapping.
    *
    * @var array
-   *   Array of mimetypes correlated to the extensions that relate to them.
-   *
-   * @deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. No
-   *   replacement provided.
-   *
-   * @see https://www.drupal.org/project/drupal/issues/2311679
+   *   An array consisting of two arrays:
+   *     - mimetypes: MIME types, keyed by a unique number.
+   *     - extensions: an associative array with the MIME type key numbers as
+   *       values. The keys are file extensions, in lower case and without any
+   *       preceding dot.
    */
   protected $defaultMapping = [
-    // cspell:disable
     'mimetypes' => [
       0 => 'application/andrew-inset',
       1 => 'application/atom',
@@ -139,6 +136,7 @@ class ExtensionMimeTypeGuesser implements MimeTypeGuesserInterface {
       109 => 'application/x-dms',
       110 => 'application/x-doom',
       111 => 'application/x-dvi',
+      112 => 'application/x-flac',
       113 => 'application/x-font',
       114 => 'application/x-freemind',
       115 => 'application/x-futuresplash',
@@ -158,9 +156,7 @@ class ExtensionMimeTypeGuesser implements MimeTypeGuesserInterface {
       129 => 'application/x-iphone',
       130 => 'application/x-iso9660-image',
       131 => 'application/x-java-jnlp-file',
-      // Per RFC 9239, text/javascript is preferred over application/javascript.
-      // @see https://www.rfc-editor.org/rfc/rfc9239
-      132 => 'text/javascript',
+      132 => 'application/javascript',
       133 => 'application/x-jmol',
       134 => 'application/x-kchart',
       135 => 'application/x-killustrator',
@@ -216,9 +212,7 @@ class ExtensionMimeTypeGuesser implements MimeTypeGuesserInterface {
       183 => 'application/xhtml+xml',
       184 => 'application/xml',
       185 => 'application/zip',
-      360 => 'audio/aac',
       186 => 'audio/basic',
-      112 => 'audio/flac',
       187 => 'audio/midi',
       346 => 'audio/mp4',
       188 => 'audio/mpeg',
@@ -289,7 +283,6 @@ class ExtensionMimeTypeGuesser implements MimeTypeGuesserInterface {
       251 => 'chemical/x-vmd',
       252 => 'chemical/x-xtel',
       253 => 'chemical/x-xyz',
-      362 => 'image/avif',
       254 => 'image/gif',
       255 => 'image/ief',
       256 => 'image/jpeg',
@@ -388,7 +381,6 @@ class ExtensionMimeTypeGuesser implements MimeTypeGuesserInterface {
       343 => 'x-conference/x-cooltalk',
       344 => 'x-epoc/x-sisx-app',
       345 => 'x-world/x-vrml',
-      361 => 'application/json',
     ],
 
     // Extensions added to this list MUST be lower-case.
@@ -630,11 +622,11 @@ class ExtensionMimeTypeGuesser implements MimeTypeGuesserInterface {
       'kar' => 187,
       'mpega' => 188,
       'mpga' => 188,
+      'm4a' => 188,
       'mp3' => 188,
       'mp2' => 188,
       'ogg' => 189,
       'oga' => 189,
-      'opus' => 189,
       'spx' => 189,
       'sid' => 190,
       'aif' => 191,
@@ -856,7 +848,6 @@ class ExtensionMimeTypeGuesser implements MimeTypeGuesserInterface {
       'vrml' => 345,
       'f4a' => 346,
       'f4b' => 346,
-      'm4a' => 346,
       'flv' => 347,
       'm4v' => 348,
       'azw' => 349,
@@ -870,42 +861,21 @@ class ExtensionMimeTypeGuesser implements MimeTypeGuesserInterface {
       'webm' => 357,
       'vtt' => 358,
       'gz' => 359,
-      'mjs' => 132,
-      'aac' => 360,
-      'json' => 361,
-      'avif' => 362,
     ],
-    // cspell:enable
   ];
+
 
   /**
    * The MIME types mapping array after going through the module handler.
    *
    * @var array
-   *
-   * @deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. No
-   *   replacement provided.
-   *
-   * @see https://www.drupal.org/project/drupal/issues/2311679
    */
   protected $mapping;
-
-  /**
-   * The MIME types mapper service.
-   *
-   * @var \Drupal\Core\File\MimeType\MimeTypeMapperInterface
-   */
-  protected $mapper;
 
   /**
    * The module handler.
    *
    * @var \Drupal\Core\Extension\ModuleHandlerInterface
-   *
-   * @deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. No
-   *   replacement provided.
-   *
-   * @see https://www.drupal.org/project/drupal/issues/2311679
    */
   protected $moduleHandler;
 
@@ -914,27 +884,116 @@ class ExtensionMimeTypeGuesser implements MimeTypeGuesserInterface {
    *
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
    *   The module handler.
-   * @param \Drupal\Core\Extension\MimeTypeMapperInterface $mapper
-   *   The MIME types mapper service.
    */
-  public function __construct(
-    ModuleHandlerInterface $module_handler,
-    MimeTypeMapperInterface $mapper = NULL
-  ) {
-    if (!$mapper) {
-      @trigger_error(
-        'The file.mime_type.mapper service must be passed to ExtensionMimeTypeGuesser::__construct(), it is required before drupal:11.0.0.',
-        E_USER_DEPRECATED
-      );
-      $mapper = \Drupal::service('file.mime_type.mapper');
-    }
-    else {
-      $this->mapper = $mapper;
-    }
-    // @todo remove below lines in Drupal 11.0.0.
+  public function __construct(ModuleHandlerInterface $module_handler) {
     $this->moduleHandler = $module_handler;
-    $this->defaultMapping = $this->mapper->getDefaultMapping();
-    $this->mapping = $this->mapper->getMapping();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function alterMapping(ModuleHandlerInterface $module_handler) {
+    if (!$this->mapping) {
+      $this->mapping = static::$defaultMapping;
+      $module_handler->alterDeprecated('This hook is deprecated in Drupal 10.1.x and will be removed before Drupal 11.0.0. Implement hook_mimetype_alter() instead. See https://www.drupal.org/node/2311679.', 'file_mimetype_mapping', $this->mapping);
+      $module_handler->alter('mimetype', $this);
+    }
+    return $this;
+  }
+
+  /**
+   * Returns the mapping from file extensions to appropriate MIME types.
+   *
+   * @return array
+   *   Array of mimetypes correlated to the extensions that relate to them.
+   *
+   * @internal
+   *
+   * @todo supports BC for ExtensionMimeTypeGuesser. Change visibility to
+   *   protected in Drupal 11.0.0.
+   */
+  public function getMapping() {
+    return $this->mapping;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setMapping(array $mapping) {
+    $this->mapping = $mapping;
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function addMapping($mimetype, $extension) {
+    $extension = strtolower($extension);
+    if (!in_array($mimetype, $this->mapping['mimetypes'])) {
+      $this->mapping['mimetypes'][] = $mimetype;
+    }
+    $key = array_search($mimetype, $this->mapping['mimetypes']);
+    $this->mapping['extensions'][$extension] = $key;
+
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function removeMapping($extension) {
+    $extension = strtolower($extension);
+    if (isset($this->mapping['extensions'][$extension])) {
+      unset($this->mapping['extensions'][$extension]);
+      return TRUE;
+    }
+    return FALSE;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function removeMimeType($mimetype) {
+    if (!in_array($mimetype, $this->mapping['mimetypes'])) {
+      return FALSE;
+    }
+    foreach ($this->getExtensionsForMimeType($mimetype) as $extension) {
+      $this->removeMapping($extension);
+    }
+    $key = array_search($mimetype, $this->mapping['mimetypes']);
+    unset($this->mapping['mimetypes'][$key]);
+    return TRUE;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getMimeTypes() {
+    return array_values($this->getMapping()['mimetypes']);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getMimeTypeForExtension($extension) {
+    $mapping = $this->getMapping();
+    $extension = strtolower($extension);
+    $extensions = $mapping['extensions'];
+    return isset($extensions[$extension]) ? $mapping['mimetypes'][$extensions[$extension]] : NULL;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getExtensionsForMimeType($mimetype) {
+    $mapping = $this->getMapping();
+    if (!in_array($mimetype, $mapping['mimetypes'])) {
+      return [];
+    }
+    $key = array_search($mimetype, $mapping['mimetypes']);
+    $extensions = array_keys($mapping['extensions'], $key, TRUE);
+    sort($extensions);
+    return $extensions;
   }
 
   /**
@@ -966,22 +1025,7 @@ class ExtensionMimeTypeGuesser implements MimeTypeGuesserInterface {
       }
     }
 
-    return NULL;
-  }
-
-  /**
-   * Sets the mimetypes/extension mapping to use when guessing mimetype.
-   *
-   * @param array|null $mapping
-   *   Passing a NULL mapping will cause guess() to use self::$defaultMapping.
-   *
-   * @deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use
-   *   \Drupal\Core\File\MimeType\MimeTypeMapper::setMapping() instead.
-   *
-   * @see https://www.drupal.org/project/drupal/issues/2311679
-   */
-  public function setMapping(?array $mapping = NULL) {
-    $this->mapping = $mapping;
+    return 'application/octet-stream';
   }
 
   /**
