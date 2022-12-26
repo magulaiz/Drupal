@@ -19,7 +19,7 @@ class MimeTypeMapper implements MimeTypeMapperInterface {
    *       values. The keys are file extensions, in lower case and without any
    *       preceding dot.
    */
-  protected $defaultMapping = [
+  protected static $defaultMapping = [
     'mimetypes' => [
       0 => 'application/andrew-inset',
       1 => 'application/atom',
@@ -895,7 +895,7 @@ class MimeTypeMapper implements MimeTypeMapperInterface {
   public function alterMapping(ModuleHandlerInterface $module_handler) {
     if (!$this->mapping) {
       $this->mapping = static::$defaultMapping;
-      $module_handler->alterDeprecated('This hook is deprecated in Drupal 10.1.x and will be removed before Drupal 11.0.0. Implement hook_mimetype_alter() instead. See https://www.drupal.org/node/2311679.', 'file_mimetype_mapping', $this->mapping);
+      $module_handler->alterDeprecated('This hook is deprecated in Drupal 10.1.0 and will be removed before Drupal 11.0.0. Implement hook_mimetype_alter() instead. See https://www.drupal.org/node/2311679.', 'file_mimetype_mapping', $this->mapping);
       $module_handler->alter('mimetype', $this);
     }
     return $this;
@@ -1017,7 +1017,7 @@ class MimeTypeMapper implements MimeTypeMapperInterface {
     // For my.awesome.image.jpeg, we try:
     // - jpeg
     // - image.jpeg, and
-    // - awesome.image.jpeg
+    // - awesome.image.jpeg.
     while ($additional_part = array_pop($file_parts)) {
       $extension = strtolower($additional_part . ($extension ? '.' . $extension : ''));
       if (isset($this->mapping['extensions'][$extension])) {
