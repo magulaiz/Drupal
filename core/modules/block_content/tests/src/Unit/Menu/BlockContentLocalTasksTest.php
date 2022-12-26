@@ -19,7 +19,6 @@ class BlockContentLocalTasksTest extends LocalTaskIntegrationTestBase {
    */
   protected function setUp(): void {
     $this->directoryList = [
-      'block' => 'core/modules/block',
       'system' => 'core/modules/system',
       'block_content' => 'core/modules/block_content',
     ];
