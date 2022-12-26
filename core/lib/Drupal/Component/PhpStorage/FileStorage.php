@@ -167,7 +167,7 @@ class FileStorage implements PhpStorageInterface {
    *   are all special permission bits.
    *
    * @return string
-   *   Our standarized octal string.
+   *   Our standardized octal string.
    */
   protected function standardizePermissionsString($num, bool $base10 = FALSE, bool $ignoreSpecialBits = TRUE): string {
     if ($base10) {
