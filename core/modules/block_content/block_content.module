@@ -32,10 +32,6 @@ function block_content_help($route_name, RouteMatchInterface $route_match) {
       $output .= '</dl>';
       return $output;
 
-    case 'entity.block_content.collection':
-      $output = '<p>' . t('Blocks in the block library belong to <a href=":types">Custom block types</a>, each with its own fields and display settings. After creating a block, place it in a region from the <a href=":blocks">Block layout</a> page.', [':types' => Url::fromRoute('entity.block_content_type.collection')->toString(), ':blocks' => Url::fromRoute('block.admin_display')->toString()]) . '</p>';
-      return $output;
-
   }
 }
 
