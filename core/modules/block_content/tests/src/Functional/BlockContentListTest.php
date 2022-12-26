@@ -104,7 +104,7 @@ class BlockContentListTest extends BlockContentTestBase {
     $this->assertSession()->elementTextNotContains('xpath', '//td', $new_label);
 
     // Confirm that the empty text is displayed.
-    $this->assertSession()->pageTextContains('No custom blocks available.');
+    $this->assertSession()->pageTextContains('There are no custom blocks yet.');
 
     $block_content = BlockContent::create([
       'info' => 'Non-reusable block',
@@ -115,7 +115,7 @@ class BlockContentListTest extends BlockContentTestBase {
 
     $this->drupalGet('admin/content/block-content');
     // Confirm that the empty text is displayed.
-    $this->assertSession()->pageTextContains('No custom blocks available.');
+    $this->assertSession()->pageTextContains('There are no custom blocks yet.');
     // Confirm the non-reusable block is not on the page.
     $this->assertSession()->pageTextNotContains('Non-reusable block');
   }
