@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 use Drupal\Core\File\MimeType\MimeTypeMapperInterface;
 use Drupal\file\Entity\File;
+use Drupal\Core\File\MimeType\MimeTypeMapperInterface;
 
 const FILE_URL_TEST_CDN_1 = 'http://cdn1.example.com';
 const FILE_URL_TEST_CDN_2 = 'http://cdn2.example.com';

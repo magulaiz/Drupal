@@ -73,7 +73,7 @@ class MimeTypeGuesser implements MimeTypeGuesserInterface {
       }
     }
 
-    return 'application/octet-stream';
+    return NULL;
   }
 
   /**
