@@ -27,29 +27,27 @@ function block_content_post_update_entity_changed_constraint() {
  * Moves the custom block library to Content.
  */
 function block_content_post_update_move_custom_block_library() {
-  if (Drupal::service('module_handler')->moduleExists('views')) {
-    if ($view = View::load('block_content')) {
-      $view_updated = FALSE;
 
-      $display =& $view->getDisplay('page_1');
-      if (!empty($display) && $display['display_options']['path'] !== 'admin/content/block-content') {
-        $display['display_options']['path'] = 'admin/content/block-content';
-        $menu =& $display['display_options']['menu'];
-        $menu['description'] = 'Create and edit custom block content.';
-        $menu['expanded'] = FALSE;
-        $menu['parent'] = 'system.admin_content';
-        $view_updated = TRUE;
-      }
+  if (!\Drupal::service('module_handler')->moduleExists('views')) {
+    return;
+  }
+  if (!$view = View::load('block_content')) {
+    return;
+  }
 
-      $display =& $view->getDisplay('default');
-      if (!empty($display)) {
-        $display['display_options']['empty']['area_text_custom']['content'] = 'No custom blocks available.';
-        $view_updated = TRUE;
-      }
+  $view_updated = FALSE;
 
-      if ($view_updated) {
-        $view->save();
-      }
-    }
+  $display =& $view->getDisplay('page_1');
+  if (!empty($display) && $display['display_options']['path'] === 'admin/content/block-content') {
+    $display['display_options']['path'] = 'admin/content/block-content';
+    $menu =& $display['display_options']['menu'];
+    $menu['description'] = 'Create and edit custom block content.';
+    $menu['expanded'] = FALSE;
+    $menu['parent'] = 'system.admin_content';
+    $view_updated = TRUE;
+  }
+
+  if ($view_updated) {
+    $view->save();
   }
 }

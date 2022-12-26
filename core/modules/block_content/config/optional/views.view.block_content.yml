@@ -5,9 +5,9 @@ dependencies:
     - block_content
     - user
 id: block_content
-label: 'Custom block library'
+label: 'Custom blocks'
 module: views
-description: 'Create and edit custom block content.'
+description: 'Find and manage custom blocks.'
 tag: default
 base_table: block_content_field_data
 base_field: id
@@ -18,7 +18,7 @@ display:
     display_plugin: default
     position: 0
     display_options:
-      title: 'Custom block library'
+      title: 'Custom blocks'
       fields:
         info:
           id: info
@@ -523,7 +523,7 @@ display:
       path: admin/content/block-content
       menu:
         type: tab
-        title: 'Custom block library'
+        title: 'Custom blocks'
         description: 'Create and edit custom block content.'
         weight: 0
         menu_name: admin
