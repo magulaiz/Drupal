@@ -60,7 +60,7 @@ block_content.type_add:
 entity.block_content.collection:
   path: '/admin/content/block-content'
   defaults:
-    _title: 'Custom block library'
+    _title: 'Custom blocks'
     _entity_list: 'block_content'
   requirements:
     _permission: 'administer blocks'

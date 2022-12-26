@@ -5,7 +5,7 @@ entity.block_content_type.collection:
   route_name: entity.block_content_type.collection
 
 entity.block_content.collection:
-  title: 'Custom block library'
+  title: 'Custom blocks'
   route_name: entity.block_content.collection
   parent: system.admin_content
   description: 'Create and edit Custom block content.'
