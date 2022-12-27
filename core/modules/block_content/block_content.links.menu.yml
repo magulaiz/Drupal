@@ -3,9 +3,3 @@ entity.block_content_type.collection:
   parent: system.admin_structure
   description: 'Create and manage fields, forms, and display settings for your custom blocks.'
   route_name: entity.block_content_type.collection
-
-entity.block_content.collection:
-  title: 'Custom blocks'
-  route_name: entity.block_content.collection
-  parent: system.admin_content
-  description: 'Create and edit Custom block content.'

@@ -42,7 +42,7 @@ use Drupal\block_content\BlockContentTypeInterface;
  *     "delete-form" = "/admin/structure/block-content/manage/{block_content_type}/delete",
  *     "edit-form" = "/admin/structure/block-content/manage/{block_content_type}",
  *     "entity-permissions-form" = "/admin/structure/block-content/manage/{block_content_type}/permissions",
- *       "collection" = "/admin/structure/block-content",
+ *     "collection" = "/admin/structure/block-content",
  *   },
  *   config_export = {
  *     "id",
