@@ -124,7 +124,7 @@ tr.selected td {
   font-size: var(--font-size-xs);
 }
 
-@media screen and (min-width: 48em) {
+@media screen and (min-width: 61rem) {
   .views-bulk-actions {
     flex-wrap: nowrap;
   }
