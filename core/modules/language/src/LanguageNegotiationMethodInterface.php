@@ -39,13 +39,19 @@ interface LanguageNegotiationMethodInterface {
 
   /**
    * Performs language negotiation.
+   * 
+   * @todo Determine whether string|false or string|null should be the normalized
+   *   result across all implementations and update @result and its comment
+   *   accordingly.
+   * @see https://www.drupal.org/node/3329952
    *
    * @param \Symfony\Component\HttpFoundation\Request $request
    *   (optional) The current request. Defaults to NULL if it has not been
    *   initialized yet.
    *
-   * @return string
-   *   A valid language code or FALSE if the negotiation was unsuccessful.
+   * @return string|null|false
+   *   A valid language code if the negotiation was successful and either NULL or
+   *   FALSE otherwise.
    */
   public function getLangcode(Request $request = NULL);
 
