@@ -134,6 +134,10 @@ function contact_mail($key, &$message, $params) {
     $variables['@sender-url'] = $params['sender']->getEmail() ?? '';
   }
 
+  // Include the sender's IP address, to facilitate investigating spam
+  // and other abuse.
+  $message['headers']['X-Originating-IP'] = '[' . \Drupal::request()->getClientIp() . ']';
+
   $options = ['langcode' => $language->getId()];
 
   switch ($key) {

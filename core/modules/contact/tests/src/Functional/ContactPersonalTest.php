@@ -97,6 +97,7 @@ class ContactPersonalTest extends BrowserTestBase {
     $this->assertEquals('user_mail', $mail['key']);
     $subject = '[' . $this->config('system.site')->get('name') . '] ' . $message['subject[0][value]'];
     $this->assertEquals($subject, $mail['subject'], 'Subject is in sent message.');
+    $this->assertEquals('[127.0.0.1]', $mail['headers']['X-Originating-IP']);
     $this->assertStringContainsString('Hello ' . $this->contactUser->getDisplayName(), $mail['body'], 'Recipient name is in sent message.');
     $this->assertStringContainsString($this->webUser->getDisplayName(), $mail['body'], 'Sender name is in sent message.');
     $this->assertStringContainsString($message['message[0][value]'], $mail['body'], 'Message body is in sent message.');
