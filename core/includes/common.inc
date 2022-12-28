@@ -350,7 +350,8 @@ function drupal_attach_tabledrag(&$element, array $options) {
  * Hides an element from later rendering.
  *
   * Refer to Drupal\core\lib\Drupal\Core\Render\Element::hide()
-  * for additional documentation.
+ * Refer to Drupal\core\lib\Drupal\Core\Render\Element::hide()
+ * for additional documentation.
  *
  * @param $element
  *   The element to be hidden.
@@ -363,8 +364,8 @@ function drupal_attach_tabledrag(&$element, array $options) {
  *
  * @see https://www.drupal.org/node/3261271
  * @see \Drupal\Core\Render\RendererInterface
- *  @see Drupal\core\lib\Drupal\Core\Render\Element::hide()
- *  @see Drupal\core\lib\Drupal\Core\Render\Element::show()
+ * @see Drupal\core\lib\Drupal\Core\Render\Element::hide()
+ * @see Drupal\core\lib\Drupal\Core\Render\Element::show()
  */
 function hide(&$element) {
   @trigger_error('hide() function is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use \Drupal\Core\Render\Element::hide() instead. See https://www.drupal.org/node/3261271', E_USER_DEPRECATED);
@@ -374,8 +375,8 @@ function hide(&$element) {
 /**
  * Shows a hidden element for later rendering.
  *
-  * Refer to Drupal\core\lib\Drupal\Core\Render\Element::show()
-  * for additional documentation.
+ * Refer to Drupal\core\lib\Drupal\Core\Render\Element::show()
+ * for additional documentation.
  *
  * @param $element
  *   The element to be shown.
@@ -388,8 +389,8 @@ function hide(&$element) {
  *
  * @see https://www.drupal.org/node/3261271
  * @see \Drupal\Core\Render\RendererInterface
- *  @see Drupal\core\lib\Drupal\Core\Render\Element::hide()
- *  @see Drupal\core\lib\Drupal\Core\Render\Element::show()
+ * @see Drupal\core\lib\Drupal\Core\Render\Element::hide()
+ * @see Drupal\core\lib\Drupal\Core\Render\Element::show()
  */
 function show(&$element) {
   @trigger_error('show() function is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use \Drupal\Core\Render\Element::show() instead. See https://www.drupal.org/node/3261271', E_USER_DEPRECATED);
