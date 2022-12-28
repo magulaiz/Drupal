@@ -349,7 +349,7 @@ function drupal_attach_tabledrag(&$element, array $options) {
 /**
  * Hides an element from later rendering.
  *
-  * Refer to Drupal\core\lib\Drupal\Core\Render\Element::hide()
+ * Refer to Drupal\core\lib\Drupal\Core\Render\Element::hide()
  * Refer to Drupal\core\lib\Drupal\Core\Render\Element::hide()
  * for additional documentation.
  *
