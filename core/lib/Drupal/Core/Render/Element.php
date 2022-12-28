@@ -221,7 +221,7 @@ class Element {
    * @see \Drupal\Core\Render\RendererInterface
    * @see \Drupal\Core\Render\Element::show()
    */
-  public static function hide(&$element) {
+  public static function hide(array &$element): array {
     $element['#printed'] = TRUE;
     return $element;
   }
@@ -250,7 +250,7 @@ class Element {
    * @see \Drupal\Core\Render\RendererInterface
    * @see \Drupal\Core\Render\Element::hide()
    */
-  public static function show(&$element) {
+  public static function show(array &$element): array {
     $element['#printed'] = FALSE;
     return $element;
   }

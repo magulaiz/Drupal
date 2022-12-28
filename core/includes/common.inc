@@ -349,14 +349,8 @@ function drupal_attach_tabledrag(&$element, array $options) {
 /**
  * Hides an element from later rendering.
  *
- * The first time RenderInterface::render() is called on an element tree, as
- * each element in the tree is rendered, it is marked with a #printed flag and
- * the rendered children of the element are cached. Subsequent calls to
- * RenderInterface::render() will not traverse the child tree ofthis element
- * again: they will just use the cached children. So if you want to hide an
- * element, be sure to call Element::hide() on the element before its parent
- * tree is rendered for the first time, as it will have no effect on subsequent
- * renderings of the parent tree.
+  * Refer to Drupal\core\lib\Drupal\Core\Render\Element::hide()
+  * for additional documentation.
  *
  * @param $element
  *   The element to be hidden.
@@ -369,7 +363,8 @@ function drupal_attach_tabledrag(&$element, array $options) {
  *
  * @see https://www.drupal.org/node/3261271
  * @see \Drupal\Core\Render\RendererInterface
- * @see show()
+ *  @see Drupal\core\lib\Drupal\Core\Render\Element::hide()
+ *  @see Drupal\core\lib\Drupal\Core\Render\Element::show()
  */
 function hide(&$element) {
   @trigger_error('hide() function is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use \Drupal\Core\Render\Element::hide() instead. See https://www.drupal.org/node/3261271', E_USER_DEPRECATED);
@@ -379,17 +374,8 @@ function hide(&$element) {
 /**
  * Shows a hidden element for later rendering.
  *
- * You can also use render($element), which shows the element while rendering
- * it.
- *
- * The first time RenderInterface::render() is called on an element tree, as
- * each element in the tree is rendered, it is marked with a #printed flag and
- * the rendered children of the element are cached. Subsequent calls to this
- * RenderInterface::render() will not traverse the child tree of element again:
- * they will just use the cached children. So if you want to show an element, be
- * sure to call Element::show() on the element before its parent tree is
- * rendered for the first time, as it will have no effect on subsequent
- * renderings of the parent tree.
+  * Refer to Drupal\core\lib\Drupal\Core\Render\Element::show()
+  * for additional documentation.
  *
  * @param $element
  *   The element to be shown.
@@ -402,7 +388,8 @@ function hide(&$element) {
  *
  * @see https://www.drupal.org/node/3261271
  * @see \Drupal\Core\Render\RendererInterface
- * @see hide()
+ *  @see Drupal\core\lib\Drupal\Core\Render\Element::hide()
+ *  @see Drupal\core\lib\Drupal\Core\Render\Element::show()
  */
 function show(&$element) {
   @trigger_error('show() function is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use \Drupal\Core\Render\Element::show() instead. See https://www.drupal.org/node/3261271', E_USER_DEPRECATED);
