@@ -350,7 +350,6 @@ function drupal_attach_tabledrag(&$element, array $options) {
  * Hides an element from later rendering.
  *
  * Refer to Drupal\core\lib\Drupal\Core\Render\Element::hide()
- * Refer to Drupal\core\lib\Drupal\Core\Render\Element::hide()
  * for additional documentation.
  *
  * @param $element
@@ -368,7 +367,7 @@ function drupal_attach_tabledrag(&$element, array $options) {
  * @see Drupal\core\lib\Drupal\Core\Render\Element::show()
  */
 function hide(&$element) {
-  @trigger_error('hide() function is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use \Drupal\Core\Render\Element::hide() instead. See https://www.drupal.org/node/3261271', E_USER_DEPRECATED);
+  @trigger_error('The global hide() function is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use \Drupal\Core\Render\Element::hide() instead. See https://www.drupal.org/node/3261271', E_USER_DEPRECATED);
   return Element::hide($element);
 }
 
@@ -393,7 +392,7 @@ function hide(&$element) {
  * @see Drupal\core\lib\Drupal\Core\Render\Element::show()
  */
 function show(&$element) {
-  @trigger_error('show() function is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use \Drupal\Core\Render\Element::show() instead. See https://www.drupal.org/node/3261271', E_USER_DEPRECATED);
+  @trigger_error('The global show() function is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use \Drupal\Core\Render\Element::show() instead. See https://www.drupal.org/node/3261271', E_USER_DEPRECATED);
   return Element::show($element);
 }
 
