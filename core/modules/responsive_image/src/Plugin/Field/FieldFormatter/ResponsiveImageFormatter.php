@@ -116,6 +116,9 @@ class ResponsiveImageFormatter extends ImageFormatterBase {
       'responsive_image_style' => '',
       'image_link' => '',
       'image_preload' => FALSE,
+      'image_loading' => [
+        'attribute' => 'lazy',
+      ],
     ] + parent::defaultSettings();
   }
 
