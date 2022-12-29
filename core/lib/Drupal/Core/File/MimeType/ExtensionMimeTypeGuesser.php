@@ -980,8 +980,13 @@ class ExtensionMimeTypeGuesser implements MimeTypeGuesserInterface {
    *
    * @see https://www.drupal.org/project/drupal/issues/2311679
    */
+
   public function setMapping(?array $mapping = NULL) {
-    $this->mapping = $mapping;
+    @trigger_error(
+      __CLASS__ . '::setMapping() is deprecated in drupal:10.1.0, and will be removed in drupal:11.0.0. Use \Drupal\Core\File\MimeType\MimeTypeMapper::setMapping() instead. See https://www.drupal.org/project/drupal/issues/2311679.',
+      E_USER_DEPRECATED
+    );
+    $this->mapper->setMapping($mapping);
   }
 
   /**
