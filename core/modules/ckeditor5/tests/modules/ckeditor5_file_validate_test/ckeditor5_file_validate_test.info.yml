@@ -1,0 +1,6 @@
+name: CKEditor 5 File Validate Test
+type: module
+description: "A dummy passthrough implementation of hook_file_validate for asserting CKEditor 5's image upload validation."
+package: Testing
+dependencies:
+  - drupal:ckeditor5
