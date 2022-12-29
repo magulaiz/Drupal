@@ -151,6 +151,7 @@ class MediaThumbnailFormatter extends ImageFormatter {
         '#item_attributes' => [],
         '#image_style' => $this->getSetting('image_style'),
         '#url' => $this->getMediaThumbnailUrl($media, $items->getEntity()),
+        '#image_preload' => (bool) $this->getSetting('image_preload'),
       ];
 
       // Add cacheability of each item in the field.

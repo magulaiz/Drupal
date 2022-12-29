@@ -104,6 +104,7 @@ class ImageFormatter extends ImageFormatterBase {
     return [
       'image_style' => '',
       'image_link' => '',
+      'image_preload' => FALSE,
       'image_loading' => [
         'attribute' => 'lazy',
       ],
@@ -141,6 +142,13 @@ class ImageFormatter extends ImageFormatterBase {
       '#default_value' => $this->getSetting('image_link'),
       '#empty_option' => $this->t('Nothing'),
       '#options' => $link_types,
+    ];
+    $element['image_preload'] = [
+      '#type' => 'checkbox',
+      '#title' => $this->t('Preload'),
+      '#weight' => 9,
+      '#default_value' => $this->getSetting('image_preload') ?? FALSE,
+      '#description' => $this->t("Preload to optimize the loading of late-discovered resources. Normally large or hero images below the fold. By preloading a resource, you tell the browser to fetch it sooner than the browser would otherwise discover it before lazy loader kicks in. The browser caches preloaded resources so they are available immediately when needed. Nothing is loaded or executed at preloading stage. <br>Just a friendly heads up: do not overuse this option, because not everything are critical"),
     ];
 
     $image_loading = $this->getSetting('image_loading');
@@ -197,6 +205,11 @@ class ImageFormatter extends ImageFormatterBase {
     if (isset($link_types[$image_link_setting])) {
       $summary[] = $link_types[$image_link_setting];
     }
+
+    $image_preload = $this->getSetting('image_preload');
+    $summary[] = $this->t('Preload: @preload', [
+      '@preload' => $image_preload ? 'yes' : 'no',
+    ]);
 
     $image_loading = $this->getSetting('image_loading');
     $summary[] = $this->t('Image loading: @attribute', [
@@ -262,6 +275,7 @@ class ImageFormatter extends ImageFormatterBase {
         '#item_attributes' => $item_attributes,
         '#image_style' => $image_style_setting,
         '#url' => $url,
+        '#image_preload' => (bool) $this->getSetting('image_preload'),
         '#cache' => [
           'tags' => $cache_tags,
         ],

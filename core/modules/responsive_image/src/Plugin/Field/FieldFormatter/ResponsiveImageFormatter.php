@@ -115,9 +115,7 @@ class ResponsiveImageFormatter extends ImageFormatterBase {
     return [
       'responsive_image_style' => '',
       'image_link' => '',
-      'image_loading' => [
-        'attribute' => 'lazy',
-      ],
+      'image_preload' => FALSE,
     ] + parent::defaultSettings();
   }
 
@@ -148,6 +146,14 @@ class ResponsiveImageFormatter extends ImageFormatterBase {
         '#markup' => $this->linkGenerator->generate($this->t('Configure Responsive Image Styles'), new Url('entity.responsive_image_style.collection')),
         '#access' => $this->currentUser->hasPermission('administer responsive image styles'),
       ],
+    ];
+
+    $elements['image_preload'] = [
+      '#type'        => 'checkbox',
+      '#title'       => $this->t('Preload'),
+      '#weight'      => 9,
+      '#default_value' => $this->getSetting('image_preload') ?? FALSE,
+      '#description' => $this->t("Preload to optimize the loading of late-discovered resources. Normally large or hero images below the fold. By preloading a resource, you tell the browser to fetch it sooner than the browser would otherwise discover it before lazy loader kicks in. The browser caches preloaded resources so they are available immediately when needed. Nothing is loaded or executed at preloading stage. <br>Just a friendly heads up: do not overuse this option, because not everything are critical"),
     ];
 
     $image_loading = $this->getSetting('image_loading');
@@ -210,6 +216,11 @@ class ResponsiveImageFormatter extends ImageFormatterBase {
     else {
       $summary[] = $this->t('Select a responsive image style.');
     }
+
+    $image_preload = $this->getSetting('image_preload');
+    $summary[] = $this->t('Preload: @preload', [
+      '@preload' => $image_preload ? 'yes' : 'no',
+    ]);
 
     $image_loading = $this->getSetting('image_loading');
     $summary[] = $this->t('Loading attribute: @attribute', [
@@ -278,6 +289,7 @@ class ResponsiveImageFormatter extends ImageFormatterBase {
         '#item_attributes' => $item_attributes,
         '#responsive_image_style_id' => $responsive_image_style ? $responsive_image_style->id() : '',
         '#url' => $url,
+        '#image_preload' => (bool) $this->getSetting('image_preload'),
         '#cache' => [
           'tags' => $cache_tags,
         ],

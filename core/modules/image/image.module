@@ -89,6 +89,7 @@ function image_theme() {
         'alt' => '',
         'title' => NULL,
         'attributes' => [],
+        'image_preload' => FALSE,
       ],
     ],
 
@@ -123,7 +124,13 @@ function image_theme() {
       'file' => 'image.field.inc',
     ],
     'image_formatter' => [
-      'variables' => ['item' => NULL, 'item_attributes' => NULL, 'url' => NULL, 'image_style' => NULL],
+      'variables' => [
+        'item' => NULL,
+        'item_attributes' => NULL,
+        'url' => NULL,
+        'image_style' => NULL,
+        'image_preload' => FALSE,
+      ],
       'file' => 'image.field.inc',
     ],
   ];
@@ -248,6 +255,7 @@ function image_style_options($include_empty = TRUE) {
  *     popular browsers.
  *   - attributes: Associative array of additional attributes to be placed in
  *     the img tag.
+ *   - image_preload: Determine whether we need to add preload link.
  */
 function template_preprocess_image_style(&$variables) {
   $style = ImageStyle::load($variables['style_name']);
@@ -266,6 +274,7 @@ function template_preprocess_image_style(&$variables) {
     '#height' => $dimensions['height'],
     '#attributes' => $variables['attributes'],
     '#style_name' => $variables['style_name'],
+    '#image_preload' => $variables['image_preload'],
   ];
 
   // If the current image toolkit supports this file type, prepare the URI for
@@ -279,6 +288,7 @@ function template_preprocess_image_style(&$variables) {
     // Don't render the image by default, but allow other preprocess functions
     // to override that if they need to.
     $variables['image']['#access'] = FALSE;
+    $variables['image']['#image_preload'] = FALSE;
 
     // Inform the site builders why their image didn't work.
     \Drupal::logger('image')->warning('Could not apply @style image style to @uri because the style does not support it.', [

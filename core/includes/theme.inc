@@ -762,13 +762,15 @@ function template_preprocess_links(&$variables) {
  *   - srcset: Array of multiple URIs and sizes/multipliers.
  *   - sizes: The sizes attribute for viewport-based selection of images.
  *     - http://www.whatwg.org/specs/web-apps/current-work/multipage/embedded-content.html#introduction-3:viewport-based-selection-2
+ *   - image_preload: Determine whether we need to add preload link.
  */
 function template_preprocess_image(&$variables) {
   /** @var \Drupal\Core\File\FileUrlGeneratorInterface $file_url_generator */
   $file_url_generator = \Drupal::service('file_url_generator');
+  $image_src = '';
 
   if (!empty($variables['uri'])) {
-    $variables['attributes']['src'] = $file_url_generator->generateString($variables['uri']);
+    $variables['attributes']['src'] = $image_src = $file_url_generator->generateString($variables['uri']);
   }
   // Generate a srcset attribute conforming to the spec at
   // http://www.w3.org/html/wg/drafts/html/master/embedded-content.html#attr-img-srcset
@@ -804,6 +806,32 @@ function template_preprocess_image(&$variables) {
   // As a result, only mark images as lazy load that have dimensions.
   if (isset($variables['width'], $variables['height']) && !isset($variables['attributes']['loading'])) {
     $variables['attributes']['loading'] = 'lazy';
+  }
+
+  if ($image_src && $variables['image_preload']) {
+    // Prepare link attributes.
+    $attrs = [
+      'rel' => 'preload',
+      'as' => 'image',
+      'href' => $image_src,
+    ];
+
+    // Each field may have different mime types for each image just like URIs.
+    if ($mime = @mime_content_type('.' . preg_replace('/\?itok=.*$/', '', $image_src))) {
+      $attrs['type'] = $mime;
+    }
+
+    // Prepare a unique key to prevent the case when we have several preloaded
+    // images on the page and the IDs of the html_head attachments
+    // will conflict.
+    $key = hash('md5', serialize($image_src));
+
+    // Add HTML head link to preload the image.
+    $variables['#attached']['html_head'] = $variables['#attached']['html_head'] ?? [];
+    $variables['#attached']['html_head'][] = [
+      ['#tag' => 'link', '#attributes' => $attrs],
+      'image_preload_' . $key,
+    ];
   }
 }
 
@@ -1979,7 +2007,7 @@ function drupal_common_theme() {
       // - http://dev.w3.org/html5/spec/Overview.html#alt
       // The title attribute is optional in all cases, so it is omitted by
       // default.
-      'variables' => ['uri' => NULL, 'width' => NULL, 'height' => NULL, 'alt' => '', 'title' => NULL, 'attributes' => [], 'sizes' => NULL, 'srcset' => [], 'style_name' => NULL],
+      'variables' => ['uri' => NULL, 'width' => NULL, 'height' => NULL, 'alt' => '', 'title' => NULL, 'attributes' => [], 'sizes' => NULL, 'srcset' => [], 'style_name' => NULL, 'image_preload' => FALSE],
     ],
     'breadcrumb' => [
       'variables' => ['links' => []],
