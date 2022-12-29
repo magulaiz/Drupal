@@ -111,7 +111,7 @@ class CommentFieldAccessTest extends EntityKernelTestBase {
     // does not have UID 1.
     $comment_admin_user = $this->createUser([
       'administer comments',
-      'access comments'
+      'access comments',
     ],
       'admin',
       FALSE,
