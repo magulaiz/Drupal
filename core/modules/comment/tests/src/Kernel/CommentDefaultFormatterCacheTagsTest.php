@@ -56,7 +56,7 @@ class CommentDefaultFormatterCacheTagsTest extends EntityKernelTestBase {
     // user does not have access to the 'administer comments' permission, to
     // ensure only published comments are visible to the end user.
     $current_user = $this->container->get('current_user');
-    $current_user->setAccount($this->createUser(['access comments', 'post comments'], NULL, FALSE, []));
+    $current_user->setAccount($this->createUser(['access comments', 'post comments']));
 
     // Install tables and config needed to render comments.
     $this->installSchema('comment', ['comment_entity_statistics']);

@@ -36,7 +36,7 @@ class EntityReferenceSelectionSortTest extends EntityKernelTestBase {
     $article->save();
 
     // Test as a non-admin.
-    $normal_user = $this->createUser(['access content'], NULL, FALSE, []);
+    $normal_user = $this->createUser(['access content']);
     \Drupal::currentUser()->setAccount($normal_user);
   }
 

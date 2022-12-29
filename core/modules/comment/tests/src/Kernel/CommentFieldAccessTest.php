@@ -109,33 +109,33 @@ class CommentFieldAccessTest extends EntityKernelTestBase {
 
     // An administrator user. No user exists yet, ensure that the first user
     // does not have UID 1.
-    $comment_admin_user = $this->createUser(['administer comments', 'access comments'],
-      NULL,
+    $comment_admin_user = $this->createUser([
+      'administer comments',
+      'access comments'
+    ],
+      'admin',
       FALSE,
-      [
-        'uid' => 2,
-        'name' => 'admin',
-      ]);
+      ['uid' => 2]
+    );
 
     // Two comment enabled users, one with edit access.
-    $comment_enabled_user = $this->createUser(['post comments', 'skip comment approval',
-      'edit own comments', 'access comments',
-    ],
-      NULL, FALSE,
-    ['name' => 'enabled',
-    ]);
-    $comment_no_edit_user = $this->createUser(['post comments', 'skip comment approval',
+    $comment_enabled_user = $this->createUser([
+      'post comments',
+      'skip comment approval',
+      'edit own comments',
+      'access comments',
+    ], 'enabled');
+
+    $comment_no_edit_user = $this->createUser([
+      'post comments',
+      'skip comment approval',
       'access comments',
     ],
-      NULL, FALSE,
-    ['name' => 'no edit',
-    ]);
+      'no edit');
 
     // An unprivileged user.
-    $comment_disabled_user = $this->createUser(['access content'], NULL, FALSE,
-    [
-      'name' => 'disabled',
-    ]);
+    $comment_disabled_user = $this->createUser(['access content'],
+      'disabled');
 
     $role = Role::load(RoleInterface::ANONYMOUS_ID);
     $role->grantPermission('post comments')
