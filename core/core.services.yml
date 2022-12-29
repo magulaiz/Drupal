@@ -1779,6 +1779,7 @@ services:
     lazy: true
   file.mime_type.mapper:
     class: Drupal\Core\File\MimeType\MimeTypeMapper
+    arguments: ['@module_handler']
     calls:
       - [alterMapping, ['@module_handler']]
   Drupal\Core\File\MimeType\MimeTypeMapperInterface: '@file.mime_type.mapper'
