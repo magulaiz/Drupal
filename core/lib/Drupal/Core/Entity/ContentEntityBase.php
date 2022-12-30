@@ -465,11 +465,13 @@ abstract class ContentEntityBase extends EntityBase implements \IteratorAggregat
     // Update the status of all saved translations.
     $removed = [];
     foreach ($this->translations as $langcode => &$data) {
-      if ($data['status'] == static::TRANSLATION_REMOVED) {
-        $removed[$langcode] = TRUE;
-      }
-      else {
-        $data['status'] = static::TRANSLATION_EXISTING;
+      if (array_key_exists('status', $data)) {
+        if ($data['status'] == static::TRANSLATION_REMOVED) {
+          $removed[$langcode] = TRUE;
+        }
+        else {
+          $data['status'] = static::TRANSLATION_EXISTING;
+        }
       }
     }
     $this->translations = array_diff_key($this->translations, $removed);
