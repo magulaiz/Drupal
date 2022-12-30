@@ -1010,7 +1010,9 @@ abstract class ContentEntityBase extends EntityBase implements \IteratorAggregat
    */
   public function getTranslationLanguages($include_default = TRUE) {
     $translations = array_filter($this->translations, function ($translation) {
-      return $translation['status'];
+      if (array_key_exists('status', $translation)) {
+        return $translation['status'];
+      }
     });
     unset($translations[LanguageInterface::LANGCODE_DEFAULT]);
 
