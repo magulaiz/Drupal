@@ -16,9 +16,9 @@ parameters:
 			path: assets/scaffold/files/default.settings.php
 
 		-
-			message: "#^Variable \\$new_set_index might not be defined\\.$#"
+			message: "#^Variable \\$response might not be defined\\.$#"
 			count: 1
-			path: includes/form.inc
+			path: includes/batch.inc
 
 		-
 			message: "#^Function install_config_download_translations\\(\\) should return string but return statement is missing\\.$#"
@@ -214,6 +214,11 @@ parameters:
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 1
 			path: lib/Drupal/Core/Asset/JsCollectionRenderer.php
+
+		-
+			message: "#^Variable \\$new_set_index might not be defined\\.$#"
+			count: 1
+			path: lib/Drupal/Core/Batch/BatchProcessor.php
 
 		-
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
@@ -1911,11 +1916,6 @@ parameters:
 			path: modules/migrate_drupal_ui/src/Form/MigrateUpgradeFormBase.php
 
 		-
-			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
-			count: 1
-			path: modules/migrate_drupal_ui/src/Form/ReviewForm.php
-
-		-
 			message: "#^Call to an undefined method Drupal\\\\Tests\\\\migrate_drupal_ui\\\\Functional\\\\CredentialFormTest\\:\\:installEntitySchema\\(\\)\\.$#"
 			count: 8
 			path: modules/migrate_drupal_ui/tests/src/Functional/CredentialFormTest.php
@@ -2684,16 +2684,6 @@ parameters:
 			message: "#^Variable \\$result in isset\\(\\) always exists and is not nullable\\.$#"
 			count: 1
 			path: modules/user/tests/src/Unit/UserAccessControlHandlerTest.php
-
-		-
-			message: "#^Missing call to parent\\:\\:setUp\\(\\) method\\.$#"
-			count: 1
-			path: modules/user/tests/src/Unit/UserAuthTest.php
-
-		-
-			message: "#^Variable \\$batch in isset\\(\\) is never defined\\.$#"
-			count: 1
-			path: modules/views/src/Form/ViewsExposedForm.php
 
 		-
 			message: "#^Method Drupal\\\\views\\\\Form\\\\ViewsFormMainForm\\:\\:getFormId\\(\\) should return string but return statement is missing\\.$#"
