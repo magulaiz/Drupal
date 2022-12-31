@@ -51,7 +51,7 @@ class OEmbedIframeControllerTest extends MediaKernelTestBase {
     /** @var callable $controller */
     $controller = $this->container
       ->get('controller_resolver')
-      ->getControllerFromDefinition('\Drupal\media\Controller\OEmbedIframeController::render');
+      ->getControllerFromDefinition(OEmbedIframeController::class);
 
     $this->assertIsCallable($controller);
 

@@ -45,7 +45,7 @@ class CsrfTokenController implements ContainerInjectionInterface {
    * @return \Symfony\Component\HttpFoundation\Response
    *   The response object.
    */
-  public function csrfToken() {
+  public function __invoke() {
     return new Response($this->tokenGenerator->get(CsrfRequestHeaderAccessCheck::TOKEN_KEY), 200, ['Content-Type' => 'text/plain']);
   }
 

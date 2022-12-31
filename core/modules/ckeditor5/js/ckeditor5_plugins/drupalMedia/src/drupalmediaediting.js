@@ -463,7 +463,7 @@ export default class DrupalMediaEditing extends Plugin {
   }
 
   /**
-   * MediaFilterController::preview requires the saved element.
+   * MediaFilterController::__invoke requires the saved element.
    *
    * Not previewing data-caption since it does not get updated by new changes.
    *

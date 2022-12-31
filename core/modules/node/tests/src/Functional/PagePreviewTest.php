@@ -8,6 +8,7 @@ use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Url;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
+use Drupal\node\Controller\NodePreviewController;
 use Drupal\node\Entity\NodeType;
 use Drupal\taxonomy\Entity\Term;
 use Drupal\taxonomy\Entity\Vocabulary;
@@ -496,7 +497,7 @@ class PagePreviewTest extends NodeTestBase {
 
     /** @var \Drupal\Core\Controller\ControllerResolverInterface $controller_resolver */
     $controller_resolver = \Drupal::service('controller_resolver');
-    $node_preview_controller = $controller_resolver->getControllerFromDefinition('\Drupal\node\Controller\NodePreviewController::view');
+    $node_preview_controller = $controller_resolver->getControllerFromDefinition(NodePreviewController::class);
     $node_preview_controller($node, 'full');
   }
 

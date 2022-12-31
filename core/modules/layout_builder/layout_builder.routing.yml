@@ -1,7 +1,7 @@
 layout_builder.choose_section:
   path: '/layout_builder/choose/section/{section_storage_type}/{section_storage}/{delta}'
   defaults:
-    _controller: '\Drupal\layout_builder\Controller\ChooseSectionController::build'
+    _controller: '\Drupal\layout_builder\Controller\ChooseSectionController'
     _title: 'Choose a layout for this section'
   requirements:
     _layout_builder_access: 'view'
@@ -14,7 +14,7 @@ layout_builder.choose_section:
 layout_builder.add_section:
   path: '/layout_builder/add/section/{section_storage_type}/{section_storage}/{delta}/{plugin_id}'
   defaults:
-    _controller: '\Drupal\layout_builder\Controller\AddSectionController::build'
+    _controller: '\Drupal\layout_builder\Controller\AddSectionController'
   requirements:
     _layout_builder_access: 'view'
   options:
@@ -131,7 +131,7 @@ layout_builder.remove_block:
 layout_builder.move_block:
   path: '/layout_builder/move/block/{section_storage_type}/{section_storage}/{delta_from}/{delta_to}/{region_to}/{block_uuid}/{preceding_block_uuid}'
   defaults:
-    _controller: '\Drupal\layout_builder\Controller\MoveBlockController::build'
+    _controller: '\Drupal\layout_builder\Controller\MoveBlockController'
     delta_from: null
     delta_to: null
     region_from: null

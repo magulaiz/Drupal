@@ -19,7 +19,7 @@ class MigrateController extends ControllerBase {
    * @return \Symfony\Component\HttpFoundation\RedirectResponse
    *   A redirect response object that may be returned by the controller.
    */
-  public function showLog(Request $request) {
+  public function __invoke(Request $request) {
     // Sets both the session and the query parameter so that it works correctly
     // with both the watchdog view and the fallback.
     $request->getSession()->set('dblog_overview_filter', ['type' => ['migrate_drupal_ui' => 'migrate_drupal_ui']]);

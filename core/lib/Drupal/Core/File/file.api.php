@@ -29,7 +29,7 @@ use Drupal\Core\StreamWrapper\StreamWrapperManager;
  *   file is not controlled by the current module, the return value should be
  *   NULL.
  *
- * @see \Drupal\system\FileDownloadController::download()
+ * @see \Drupal\system\FileDownloadController::__invoke()
  */
 function hook_file_download($uri) {
   // Check to see if this is a config download.

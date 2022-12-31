@@ -19,7 +19,7 @@ class TestMediaFilterController extends MediaFilterController {
     if (\Drupal::state()->get('test_media_filter_controller_throw_error', FALSE)) {
       throw new NotFoundHttpException();
     }
-    return parent::preview($request, $filter_format);
+    return parent::__invoke($request, $filter_format);
   }
 
 }

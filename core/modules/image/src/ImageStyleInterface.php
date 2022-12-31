@@ -55,7 +55,7 @@ interface ImageStyleInterface extends ConfigEntityInterface {
    *   The absolute URL where a style image can be downloaded, suitable for use
    *   in an <img> tag. Requesting the URL will cause the image to be created.
    *
-   * @see \Drupal\image\Controller\ImageStyleDownloadController::deliver()
+   * @see \Drupal\image\Controller\ImageStyleDownloadController::__invoke()
    * @see \Drupal\Core\File\FileUrlGeneratorInterface::transformRelative()
    */
   public function buildUrl($path, $clean_urls = NULL);

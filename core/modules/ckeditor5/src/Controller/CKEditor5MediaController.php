@@ -90,7 +90,7 @@ class CKEditor5MediaController extends ControllerBase {
    * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
    *   Thrown when no media with the provided UUID exists.
    */
-  public function mediaEntityMetadata(Request $request) {
+  public function __invoke(Request $request) {
     $uuid = $request->query->get('uuid');
     if (!$uuid || !Uuid::isValid($uuid)) {
       throw new BadRequestHttpException();

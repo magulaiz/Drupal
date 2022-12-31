@@ -1316,11 +1316,6 @@ parameters:
 			path: modules/history/tests/src/Kernel/Views/HistoryTimestampTest.php
 
 		-
-			message: "#^Variable \\$image_style in empty\\(\\) always exists and is not falsy\\.$#"
-			count: 1
-			path: modules/image/src/Controller/ImageStyleDownloadController.php
-
-		-
 			message: "#^Variable \\$lock_name might not be defined\\.$#"
 			count: 1
 			path: modules/image/src/Controller/ImageStyleDownloadController.php
@@ -1994,11 +1989,6 @@ parameters:
 			message: "#^Variable \\$statement might not be defined\\.$#"
 			count: 1
 			path: modules/sqlite/src/Driver/Database/sqlite/Connection.php
-
-		-
-			message: "#^Method Drupal\\\\system\\\\Controller\\\\BatchController\\:\\:batchPage\\(\\) should return array\\|Symfony\\\\Component\\\\HttpFoundation\\\\Response but return statement is missing\\.$#"
-			count: 1
-			path: modules/system/src/Controller/BatchController.php
 
 		-
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"

@@ -20,7 +20,7 @@ class BlockAddController extends ControllerBase {
    * @return array
    *   The block instance edit form.
    */
-  public function blockAddConfigureForm($plugin_id, $theme) {
+  public function __invoke($plugin_id, $theme) {
     // Create a block entity.
     $entity = $this->entityTypeManager()->getStorage('block')->create(['plugin' => $plugin_id, 'theme' => $theme]);
 

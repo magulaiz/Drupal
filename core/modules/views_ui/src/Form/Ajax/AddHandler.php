@@ -31,7 +31,7 @@ class AddHandler extends ViewsFormBase {
   /**
    * {@inheritdoc}
    */
-  public function getForm(ViewEntityInterface $view, $display_id, $js, $type = NULL) {
+  public function __invoke(ViewEntityInterface $view, $display_id, $js, $type = NULL) {
     $this->setType($type);
     return parent::getForm($view, $display_id, $js);
   }

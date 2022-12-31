@@ -50,7 +50,7 @@ class NodePreviewController extends EntityViewController {
   /**
    * {@inheritdoc}
    */
-  public function view(EntityInterface $node_preview, $view_mode_id = 'full', $langcode = NULL) {
+  public function __invoke(EntityInterface $node_preview, $view_mode_id = 'full', $langcode = NULL) {
     $node_preview->preview_view_mode = $view_mode_id;
     $build = parent::view($node_preview, $view_mode_id);
 

@@ -122,7 +122,7 @@ class CKEditor5ImageController extends ControllerBase {
    * @throws \Drupal\Core\Entity\EntityStorageException
    *   Thrown when file entity could not be saved.
    */
-  public function upload(Request $request) {
+  public function __invoke(Request $request) {
     // Getting the UploadedFile directly from the request.
     $upload = $request->files->get('upload');
     $filename = $upload->getClientOriginalName();

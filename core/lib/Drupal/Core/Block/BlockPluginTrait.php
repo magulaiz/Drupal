@@ -249,7 +249,7 @@ trait BlockPluginTrait {
     $admin_label = $definition['admin_label'];
 
     // @todo This is basically the same as what is done in
-    //   \Drupal\system\MachineNameController::transliterate(), so it might make
+    //   \Drupal\system\MachineNameController::__invoke(), so it might make
     //   sense to provide a common service for the two.
     $transliterated = $this->transliteration()->transliterate($admin_label, LanguageInterface::LANGCODE_DEFAULT, '_');
     $transliterated = mb_strtolower($transliterated);

@@ -49,7 +49,7 @@ class CategoryAutocompleteController implements ContainerInjectionInterface {
    * @return \Symfony\Component\HttpFoundation\JsonResponse
    *   A JSON response containing autocomplete suggestions.
    */
-  public function autocomplete(Request $request) {
+  public function __invoke(Request $request) {
     $typed_category = $request->query->get('q');
     $matches = [];
     foreach ($this->blockManager->getCategories() as $category) {

@@ -128,7 +128,7 @@ class TrackerController extends ControllerBase {
    * @return array
    *   The render array.
    */
-  public function buildContent(UserInterface $user = NULL) {
+  public function __invoke(UserInterface $user = NULL) {
     if ($user) {
       $query = $this->database->select('tracker_user', 't')
         ->extend(PagerSelectExtender::class)

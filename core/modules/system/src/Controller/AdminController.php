@@ -43,7 +43,7 @@ class AdminController extends ControllerBase {
    * @return array
    *   A render array containing the listing.
    */
-  public function index() {
+  public function __invoke() {
     $extensions = array_intersect_key($this->moduleExtensionList->getList(), $this->moduleHandler()->getModuleList());
 
     uasort($extensions, [ModuleExtensionList::class, 'sortByName']);

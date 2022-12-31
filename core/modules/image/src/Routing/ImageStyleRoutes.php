@@ -4,6 +4,7 @@ namespace Drupal\image\Routing;
 
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\StreamWrapper\StreamWrapperManagerInterface;
+use Drupal\image\Controller\ImageStyleDownloadController;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Routing\Route;
 
@@ -55,7 +56,7 @@ class ImageStyleRoutes implements ContainerInjectionInterface {
     $routes['image.style_public'] = new Route(
       '/' . $directory_path . '/styles/{image_style}/{scheme}',
       [
-        '_controller' => 'Drupal\image\Controller\ImageStyleDownloadController::deliver',
+        '_controller' => ImageStyleDownloadController::class,
       ],
       [
         '_access' => 'TRUE',

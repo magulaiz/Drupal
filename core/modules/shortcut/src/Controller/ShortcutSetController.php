@@ -51,7 +51,7 @@ class ShortcutSetController extends ControllerBase {
    *
    * @throws \Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException
    */
-  public function addShortcutLinkInline(ShortcutSetInterface $shortcut_set, Request $request) {
+  public function __invoke(ShortcutSetInterface $shortcut_set, Request $request) {
     $link = $request->query->get('link');
     $name = $request->query->get('name');
     if (parse_url($link, PHP_URL_SCHEME) === NULL && $this->pathValidator->isValid($link)) {

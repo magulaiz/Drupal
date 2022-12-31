@@ -21,7 +21,7 @@ class TaxonomyController extends ControllerBase {
    * @return array
    *   The taxonomy term add form.
    */
-  public function addForm(VocabularyInterface $taxonomy_vocabulary) {
+  public function __invoke(VocabularyInterface $taxonomy_vocabulary) {
     $term = $this->entityTypeManager()->getStorage('taxonomy_term')->create(['vid' => $taxonomy_vocabulary->id()]);
     return $this->entityFormBuilder()->getForm($term);
   }

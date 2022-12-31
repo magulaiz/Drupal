@@ -173,6 +173,24 @@ abstract class ViewsFormBase extends FormBase implements ViewsFormInterface {
   }
 
   /**
+   * Returns the form.
+   *
+   * @param \Drupal\views\ViewEntityInterface $view
+   *   The view being edited.
+   * @param string|null $display_id
+   *   The display ID being edited, or NULL to load the first available display.
+   * @param string $js
+   *   If this is an AJAX form, it will be the string 'ajax'. Otherwise, it will
+   *   be 'nojs'. This determines the response.
+   *
+   * @return array|\Symfony\Component\HttpFoundation\Response
+   *   The response
+   */
+  public function __invoke(ViewEntityInterface $view, ?string $display_id, string $js) {
+    return $this->getForm($view, $display_id, $js);
+  }
+
+  /**
    * Wrapper for handling AJAX forms.
    *
    * Wrapper around \Drupal\Core\Form\FormBuilderInterface::buildForm() to
