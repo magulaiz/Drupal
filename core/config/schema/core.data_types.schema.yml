@@ -436,7 +436,6 @@ field_config_base:
         NotNull: []
         MachineName: []
         UniqueField: []
-        ImmutableAfterCreation: []
     entity_type:
       type: string
       label: 'Entity type'
@@ -445,14 +444,12 @@ field_config_base:
         PluginExists:
           pluginType: content_entity_type
           pluginClassImplementsInterface: \Drupal\Core\Entity\FieldableEntityInterface
-        ImmutableAfterCreation: []
     bundle:
       type: string
       label: 'Bundle'
       constraints:
         NotNull: []
         BundleExists: []
-        ImmutableAfterCreation: []
     label:
       type: label
       label: 'Label'
@@ -508,7 +505,6 @@ field_config_base:
           # The value found at this place in that config entity must match.
           selector:
             - type
-        ImmutableAfterCreation: []
 
 core.base_field_override.*.*.*:
   type: field_config_base
