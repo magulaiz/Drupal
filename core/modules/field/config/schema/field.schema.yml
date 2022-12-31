@@ -11,12 +11,12 @@ field.settings:
 field.storage.*.*:
   type: config_entity
   label: 'Field'
+  constraints:
+    IsUnchanged:
+      selector: locked
+    IsFalse:
+      selector: locked
   mapping:
-    constraints:
-      IsUnchanged:
-        selector: locked
-      IsFalse:
-        selector: locked
     id:
       type: string
       label: 'ID'
