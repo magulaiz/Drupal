@@ -413,11 +413,11 @@ base_entity_reference_field_settings:
 
 field_config_base:
   type: config_entity
+  constraints:
+    FieldStorageExistsOnFieldableContentEntityType:
+      entityType: entity_type
+      fieldName: field_name
   mapping:
-    constraints:
-      FieldStorageExistsOnFieldableContentEntityType:
-        entityType: entity_type
-        fieldName: field_name
     id:
       type: string
       label: 'ID'
