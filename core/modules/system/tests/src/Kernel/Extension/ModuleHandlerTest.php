@@ -301,9 +301,9 @@ class ModuleHandlerTest extends KernelTestBase {
     // Generate the list of available modules.
     $modules = $this->container->get('extension.list.module')->getList();
     // Check that the mtime field exists for the system module.
-    $this->assertNotEmpty($modules['system']->info['mtime'], 'The system.info.yml file modification time field is present.');
+    $this->assertNotEmpty($modules['system']->getMTime(), 'The system.info.yml file modification time field is present.');
     // Use 0 if mtime isn't present, to avoid an array index notice.
-    $test_mtime = !empty($modules['system']->info['mtime']) ? $modules['system']->info['mtime'] : 0;
+    $test_mtime = !empty($modules['system']->getMTime()) ? $modules['system']->getMTime() : 0;
     // Ensure the mtime field contains a number that is greater than zero.
     $this->assertIsNumeric($test_mtime);
     $this->assertGreaterThan(0, $test_mtime);
@@ -333,9 +333,9 @@ class ModuleHandlerTest extends KernelTestBase {
     // Generate the list of available themes.
     $themes = \Drupal::service('theme_handler')->rebuildThemeData();
     // Check that the mtime field exists for the olivero theme.
-    $this->assertNotEmpty($themes['olivero']->info['mtime'], 'The olivero.info.yml file modification time field is present.');
+    $this->assertNotEmpty($themes['olivero']->getMTime(), 'The olivero.info.yml file modification time field is present.');
     // Use 0 if mtime isn't present, to avoid an array index notice.
-    $test_mtime = !empty($themes['olivero']->info['mtime']) ? $themes['olivero']->info['mtime'] : 0;
+    $test_mtime = !empty($themes['olivero']->getMTime()) ? $themes['olivero']->getMTime() : 0;
     // Ensure the mtime field contains a number that is greater than zero.
     $this->assertIsNumeric($test_mtime);
     $this->assertGreaterThan(0, $test_mtime);

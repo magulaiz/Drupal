@@ -549,13 +549,23 @@ abstract class ExtensionList {
    *
    * @return array
    *   The extension info array.
+   *   - For full examples of an info array
+   *   @see \Drupal\Core\Extension\InfoParserInterface
+   *   - 'mtime' (deprecated)
+   *   The 'mtime' key exists for backwards compatibility and its value is
+   *   the timestamp of the last modification time of the info.yml file of the
+   *   extension.
+   *   The 'mtime' key is removed from Drupal 11.
+   *
+   * @see https://www.drupal.org/node/3322682
    */
   protected function createExtensionInfo(Extension $extension) {
     $info = $this->infoParser->parse($extension->getPathname());
 
     // Add the info file modification time, so it becomes available for
     // contributed extensions to use for ordering extension lists.
-    $info['mtime'] = $extension->getFileInfo()->getMTime();
+    // @todo https://www.drupal.org/node/3322684 Remove this in Drupal 11.0.
+    $info['mtime'] = $extension->getMTime();
 
     // Merge extension type-specific defaults.
     $info += $this->defaults;
