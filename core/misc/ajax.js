@@ -49,9 +49,7 @@
       }
 
       // Load all Ajax behaviors specified in the settings.
-      Object.keys(settings.ajax || {}).forEach((base) =>
-        loadAjaxBehavior(base),
-      );
+      Object.keys(settings.ajax || {}).forEach(loadAjaxBehavior);
 
       Drupal.ajax.bindAjaxLinks(document.body);
 
@@ -328,7 +326,7 @@
    *   Target of the Ajax request.
    * @prop {?string} [event]
    *   Event bound to settings.element which will trigger the Ajax request.
-   * @prop {bool} [keypress=true]
+   * @prop {boolean} [keypress=true]
    *   Triggers a request on keypress events.
    * @prop {?string} selector
    *   jQuery selector targeting the element to bind events to or used with
@@ -349,7 +347,7 @@
    *   Custom message to be used with the bar indicator.
    * @prop {object} [submit]
    *   Extra data to be sent with the Ajax request.
-   * @prop {bool} [submit.js=true]
+   * @prop {boolean} [submit.js=true]
    *   Allows the PHP side to know this comes from an Ajax request.
    * @prop {object} [dialog]
    *   Options for {@link Drupal.dialog}.
@@ -404,7 +402,7 @@
     this.commands = new Drupal.AjaxCommands();
 
     /**
-     * @type {bool|number}
+     * @type {boolean|number}
      */
     this.instanceIndex = false;
 
@@ -507,6 +505,9 @@
     ajax.options = {
       url: ajax.url,
       data: ajax.submit,
+      isInProgress() {
+        return ajax.ajaxing;
+      },
       beforeSerialize(elementSettings, options) {
         return ajax.beforeSerialize(elementSettings, options);
       },
@@ -554,6 +555,17 @@
             // finished executing.
             .then(() => {
               ajax.ajaxing = false;
+              // jQuery normally triggers the ajaxSuccess, ajaxComplete, and
+              // ajaxStop events after the "success" function passed to $.ajax()
+              // returns, but we prevented that via
+              // $.event.special[EVENT_NAME].trigger in order to wait for the
+              // commands to finish executing. Now that they have, re-trigger
+              // those events.
+              $(document).trigger('ajaxSuccess', [xmlhttprequest, this]);
+              $(document).trigger('ajaxComplete', [xmlhttprequest, this]);
+              if (--$.active === 0) {
+                $(document).trigger('ajaxStop');
+              }
             })
         );
       },
@@ -1219,7 +1231,7 @@
    * @prop {string} [selector]
    * @prop {string} [data]
    * @prop {object} [settings]
-   * @prop {bool} [asterisk]
+   * @prop {boolean} [asterisk]
    * @prop {string} [text]
    * @prop {string} [title]
    * @prop {string} [url]
@@ -1228,7 +1240,7 @@
    * @prop {string} [value]
    * @prop {string} [old]
    * @prop {string} [new]
-   * @prop {bool} [merge]
+   * @prop {boolean} [merge]
    * @prop {Array} [args]
    *
    * @see Drupal.AjaxCommands
@@ -1359,7 +1371,7 @@
      *   The JSON response object from the Ajax request.
      * @param {string} response.selector
      *   A jQuery selector string.
-     * @param {bool} [response.asterisk]
+     * @param {boolean} [response.asterisk]
      *   An optional CSS selector. If specified, an asterisk will be
      *   appended to the HTML inside the provided selector.
      * @param {number} [status]
@@ -1460,7 +1472,7 @@
      *   {@link Drupal.Ajax} object created by {@link Drupal.ajax}.
      * @param {object} response
      *   The response from the Ajax request.
-     * @param {bool} response.merge
+     * @param {boolean} response.merge
      *   Determines whether the additional settings should be merged to the
      *   global settings.
      * @param {object} response.settings
@@ -1657,7 +1669,7 @@
      *   The message text.
      * @param {string} response.messageOptions
      *   The options argument for Drupal.Message().add().
-     * @param {bool} response.clearPrevious
+     * @param {boolean} response.clearPrevious
      *   If true, clear previous messages.
      */
     message(ajax, response) {
@@ -1737,4 +1749,50 @@
       });
     },
   };
+
+  /**
+   * Delay jQuery's global completion events until after commands have executed.
+   *
+   * jQuery triggers the ajaxSuccess, ajaxComplete, and ajaxStop events after
+   * a successful response is returned and local success and complete events
+   * are triggered. However, Drupal Ajax responses contain commands that run
+   * asynchronously in a queue, so the following stops these events from getting
+   * triggered until after the Promise that executes the command queue is
+   * resolved.
+   */
+  const stopEvent = (xhr, settings) => {
+    return (
+      // Only interfere with Drupal's Ajax responses.
+      xhr.getResponseHeader('X-Drupal-Ajax-Token') === '1' &&
+      // The isInProgress() function might not be defined if the Ajax request
+      // was initiated without Drupal.ajax() or new Drupal.Ajax().
+      settings.isInProgress &&
+      // Until this is false, the Ajax request isn't completely done (the
+      // response's commands might still be running).
+      settings.isInProgress()
+    );
+  };
+  $.extend(true, $.event.special, {
+    ajaxSuccess: {
+      trigger(event, xhr, settings) {
+        if (stopEvent(xhr, settings)) {
+          return false;
+        }
+      },
+    },
+    ajaxComplete: {
+      trigger(event, xhr, settings) {
+        if (stopEvent(xhr, settings)) {
+          // jQuery decrements its internal active ajax counter even when we
+          // stop the ajaxComplete event, but we don't want that counter
+          // decremented, because for our purposes this request is still active
+          // while commands are executing. By incrementing it here, the net
+          // effect is that it remains unchanged. By remaining above 0, the
+          // ajaxStop event is also prevented.
+          $.active++;
+          return false;
+        }
+      },
+    },
+  });
 })(jQuery, window, Drupal, drupalSettings, loadjs, window.tabbable);
