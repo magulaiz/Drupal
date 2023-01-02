@@ -2,6 +2,7 @@
 
 namespace Drupal\forum;
 
+use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Database\Query\PagerSelectExtender;
@@ -474,7 +475,9 @@ class ForumManager implements ForumManagerInterface {
    */
   private function currentUserCanViewAllNodes() {
     $account = $this->currentUser;
-    return $account->hasPermission('bypass node access') || node_access_view_all_nodes($account);
+    if ($account->hasPermission('bypass node access') || node_access_view_all_nodes($account)) {
+      return AccessResult::allowed()->cachePerPermissions()->cachePerUser();
+    }
   }
 
   /**
