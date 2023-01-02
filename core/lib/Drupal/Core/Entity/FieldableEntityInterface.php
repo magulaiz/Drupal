@@ -110,7 +110,7 @@ interface FieldableEntityInterface extends EntityInterface {
    * @param string $name
    *   The name of the field.
    *
-   * @return \Drupal\Core\Field\FieldDefinitionInterface|null
+   * @return \Drupal\Core\Field\FieldDefinitionInterface|void
    *   The definition of the field or null if the field does not exist.
    */
   public function getFieldDefinition($name);

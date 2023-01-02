@@ -207,7 +207,7 @@ abstract class Database {
   /**
    * Sets the active connection to the specified key.
    *
-   * @return string|null
+   * @return string|void
    *   The previous database connection key.
    */
   final public static function setActiveConnection($key = 'default') {
@@ -216,7 +216,6 @@ abstract class Database {
       self::$activeKey = $key;
       return $old_key;
     }
-    return NULL;
   }
 
   /**
@@ -331,13 +330,12 @@ abstract class Database {
    * @param string $key
    *   (optional) The connection key for which to return information.
    *
-   * @return array|null
+   * @return array|void
    */
   final public static function getConnectionInfo($key = 'default') {
     if (!empty(self::$databaseInfo[$key])) {
       return self::$databaseInfo[$key];
     }
-    return NULL;
   }
 
   /**

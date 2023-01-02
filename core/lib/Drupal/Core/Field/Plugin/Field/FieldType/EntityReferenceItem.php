@@ -341,8 +341,8 @@ class EntityReferenceItem extends FieldItemBase implements OptionsProviderInterf
    * @param array $selection_settings
    *   An array of selection settings.
    *
-   * @return string|null
-   *   Either the bundle string, or NULL if there is no bundle.
+   * @return string|void
+   *   Either the bundle string, or nothing if there is no bundle.
    */
   protected static function getRandomBundle(EntityTypeInterface $entity_type, array $selection_settings) {
     if ($entity_type->getKey('bundle')) {
@@ -354,7 +354,6 @@ class EntityReferenceItem extends FieldItemBase implements OptionsProviderInterf
       }
       return array_rand($bundle_ids);
     }
-    return NULL;
   }
 
   /**

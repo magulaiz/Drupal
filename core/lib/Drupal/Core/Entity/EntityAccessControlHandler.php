@@ -180,8 +180,8 @@ class EntityAccessControlHandler extends EntityHandlerBase implements EntityAcce
    * @param \Drupal\Core\Session\AccountInterface $account
    *   The user for which to check access.
    *
-   * @return \Drupal\Core\Access\AccessResultInterface|null
-   *   The cached AccessResult, or NULL if there is no record for the given
+   * @return \Drupal\Core\Access\AccessResultInterface|void
+   *   The cached AccessResult, or nothing if there is no record for the given
    *   user, operation, langcode and entity in the cache.
    */
   protected function getCache($cid, $operation, $langcode, AccountInterface $account) {
@@ -189,7 +189,6 @@ class EntityAccessControlHandler extends EntityHandlerBase implements EntityAcce
     if (isset($this->accessCache[$account->id()][$cid][$langcode][$operation])) {
       return $this->accessCache[$account->id()][$cid][$langcode][$operation];
     }
-    return NULL;
   }
 
   /**

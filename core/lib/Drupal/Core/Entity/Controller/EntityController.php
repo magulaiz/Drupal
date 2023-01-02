@@ -247,14 +247,13 @@ class EntityController implements ContainerInjectionInterface {
    * @param \Drupal\Core\Entity\EntityInterface $_entity
    *   (optional) An entity, passed in directly from the request attributes.
    *
-   * @return string|null
+   * @return string|void
    *   The title for the entity view page, if an entity was found.
    */
   public function title(RouteMatchInterface $route_match, EntityInterface $_entity = NULL) {
     if ($entity = $this->doGetEntity($route_match, $_entity)) {
       return $entity->label();
     }
-    return NULL;
   }
 
   /**
@@ -265,14 +264,13 @@ class EntityController implements ContainerInjectionInterface {
    * @param \Drupal\Core\Entity\EntityInterface $_entity
    *   (optional) An entity, passed in directly from the request attributes.
    *
-   * @return string|null
+   * @return string|void
    *   The title for the entity edit page, if an entity was found.
    */
   public function editTitle(RouteMatchInterface $route_match, EntityInterface $_entity = NULL) {
     if ($entity = $this->doGetEntity($route_match, $_entity)) {
       return $this->t('Edit %label', ['%label' => $entity->label()]);
     }
-    return NULL;
   }
 
   /**
@@ -302,9 +300,9 @@ class EntityController implements ContainerInjectionInterface {
    *   (optional) The entity, set in
    *   \Drupal\Core\Entity\Enhancer\EntityRouteEnhancer.
    *
-   * @return \Drupal\Core\Entity\EntityInterface|null
+   * @return \Drupal\Core\Entity\EntityInterface|void
    *   The entity, if it is passed in directly or if the first parameter of the
-   *   active route is an entity; otherwise, NULL.
+   *   active route is an entity; otherwise, nothing.
    */
   protected function doGetEntity(RouteMatchInterface $route_match, EntityInterface $_entity = NULL) {
     if ($_entity) {
@@ -322,7 +320,6 @@ class EntityController implements ContainerInjectionInterface {
     if (isset($entity)) {
       return $this->entityRepository->getTranslationFromContext($entity);
     }
-    return NULL;
   }
 
   /**

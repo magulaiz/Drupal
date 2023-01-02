@@ -237,7 +237,7 @@ class PoStreamReader implements PoStreamInterface, PoReaderInterface {
    * indicated by MSGSTR or MSGSTR_ARR followed immediately by an MSGID or
    * MSGCTXT (when items closely follow each other).
    *
-   * @return bool|null
+   * @return bool|void
    *   FALSE if an error was logged, NULL otherwise. The errors are considered
    *   non-blocking, so reading can continue, while the errors are collected
    *   for later presentation.
@@ -286,14 +286,14 @@ class PoStreamReader implements PoStreamInterface, PoReaderInterface {
           $this->currentItem['#'][] = substr($line, 1);
 
           $this->context = 'COMMENT';
-          return NULL;
+          return;
         }
         else {
           // A comment following any other context is a syntax error.
           $this->errors[] = new FormattableMarkup('The translation stream %uri contains an error: "msgstr" was expected but not found on line %line.', $log_vars);
           return FALSE;
         }
-        return NULL;
+        return;
       }
       elseif (!strncmp('msgid_plural', $line, 12)) {
         // A plural form for the current source string.
@@ -324,7 +324,7 @@ class PoStreamReader implements PoStreamInterface, PoReaderInterface {
         $this->currentItem['msgid'][] = $quoted;
 
         $this->context = 'MSGID_PLURAL';
-        return NULL;
+        return;
       }
       elseif (!strncmp('msgid', $line, 5)) {
         // Starting a new message.
@@ -355,7 +355,7 @@ class PoStreamReader implements PoStreamInterface, PoReaderInterface {
 
         $this->currentItem['msgid'] = $quoted;
         $this->context = 'MSGID';
-        return NULL;
+        return;
       }
       elseif (!strncmp('msgctxt', $line, 7)) {
         // Starting a new context.
@@ -385,7 +385,7 @@ class PoStreamReader implements PoStreamInterface, PoReaderInterface {
         $this->currentItem['msgctxt'] = $quoted;
 
         $this->context = 'MSGCTXT';
-        return NULL;
+        return;
       }
       elseif (!strncmp('msgstr[', $line, 7)) {
         // A message string for a specific plurality.
@@ -427,7 +427,7 @@ class PoStreamReader implements PoStreamInterface, PoReaderInterface {
         $this->currentItem['msgstr'][$this->currentPluralIndex] = $quoted;
 
         $this->context = 'MSGSTR_ARR';
-        return NULL;
+        return;
       }
       elseif (!strncmp("msgstr", $line, 6)) {
         // A string pair for an msgid (with optional context).
@@ -452,7 +452,7 @@ class PoStreamReader implements PoStreamInterface, PoReaderInterface {
         $this->currentItem['msgstr'] = $quoted;
 
         $this->context = 'MSGSTR';
-        return NULL;
+        return;
       }
       elseif ($line != '') {
         // Anything that is not a token may be a continuation of a previous token.
@@ -493,7 +493,7 @@ class PoStreamReader implements PoStreamInterface, PoReaderInterface {
           $this->errors[] = new FormattableMarkup('The translation stream %uri contains an error: unexpected string on line %line.', $log_vars);
           return FALSE;
         }
-        return NULL;
+        return;
       }
     }
 
@@ -506,7 +506,6 @@ class PoStreamReader implements PoStreamInterface, PoReaderInterface {
       $this->errors[] = new FormattableMarkup('The translation stream %uri ended unexpectedly at line %line.', $log_vars);
       return FALSE;
     }
-    return NULL;
   }
 
   /**

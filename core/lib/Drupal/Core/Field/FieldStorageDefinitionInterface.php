@@ -136,8 +136,8 @@ interface FieldStorageDefinitionInterface extends CacheableDependencyInterface {
    * @param \Drupal\Core\Entity\FieldableEntityInterface $entity
    *   The entity for which the options should be provided.
    *
-   * @return \Drupal\Core\TypedData\OptionsProviderInterface|null
-   *   An options provider, or NULL if no options are defined.
+   * @return \Drupal\Core\TypedData\OptionsProviderInterface|void
+   *   An options provider, or nothing if no options are defined.
    */
   public function getOptionsProvider($property_name, FieldableEntityInterface $entity);
 
@@ -166,8 +166,8 @@ interface FieldStorageDefinitionInterface extends CacheableDependencyInterface {
    * @param string $name
    *   The name of property.
    *
-   * @return \Drupal\Core\TypedData\DataDefinitionInterface|null
-   *   The definition of the property or NULL if the property does not exist.
+   * @return \Drupal\Core\TypedData\DataDefinitionInterface|void
+   *   The definition of the property or nothing if the property does not exist.
    */
   public function getPropertyDefinition($name);
 

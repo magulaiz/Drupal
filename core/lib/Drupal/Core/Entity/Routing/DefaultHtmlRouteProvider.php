@@ -114,7 +114,7 @@ class DefaultHtmlRouteProvider implements EntityRouteProviderInterface, EntityHa
    * @param \Drupal\Core\Entity\EntityTypeInterface $entity_type
    *   The entity type.
    *
-   * @return \Symfony\Component\Routing\Route|null
+   * @return \Symfony\Component\Routing\Route|void
    *   The generated route, if available.
    */
   protected function getAddPageRoute(EntityTypeInterface $entity_type) {
@@ -127,7 +127,6 @@ class DefaultHtmlRouteProvider implements EntityRouteProviderInterface, EntityHa
 
       return $route;
     }
-    return NULL;
   }
 
   /**
@@ -136,7 +135,7 @@ class DefaultHtmlRouteProvider implements EntityRouteProviderInterface, EntityHa
    * @param \Drupal\Core\Entity\EntityTypeInterface $entity_type
    *   The entity type.
    *
-   * @return \Symfony\Component\Routing\Route|null
+   * @return \Symfony\Component\Routing\Route|void
    *   The generated route, if available.
    */
   protected function getAddFormRoute(EntityTypeInterface $entity_type) {
@@ -204,7 +203,6 @@ class DefaultHtmlRouteProvider implements EntityRouteProviderInterface, EntityHa
 
       return $route;
     }
-    return NULL;
   }
 
   /**
@@ -213,7 +211,7 @@ class DefaultHtmlRouteProvider implements EntityRouteProviderInterface, EntityHa
    * @param \Drupal\Core\Entity\EntityTypeInterface $entity_type
    *   The entity type.
    *
-   * @return \Symfony\Component\Routing\Route|null
+   * @return \Symfony\Component\Routing\Route|void
    *   The generated route, if available.
    */
   protected function getCanonicalRoute(EntityTypeInterface $entity_type) {
@@ -237,7 +235,6 @@ class DefaultHtmlRouteProvider implements EntityRouteProviderInterface, EntityHa
       }
       return $route;
     }
-    return NULL;
   }
 
   /**
@@ -246,7 +243,7 @@ class DefaultHtmlRouteProvider implements EntityRouteProviderInterface, EntityHa
    * @param \Drupal\Core\Entity\EntityTypeInterface $entity_type
    *   The entity type.
    *
-   * @return \Symfony\Component\Routing\Route|null
+   * @return \Symfony\Component\Routing\Route|void
    *   The generated route, if available.
    */
   protected function getEditFormRoute(EntityTypeInterface $entity_type) {
@@ -275,7 +272,6 @@ class DefaultHtmlRouteProvider implements EntityRouteProviderInterface, EntityHa
       }
       return $route;
     }
-    return NULL;
   }
 
   /**
@@ -284,7 +280,7 @@ class DefaultHtmlRouteProvider implements EntityRouteProviderInterface, EntityHa
    * @param \Drupal\Core\Entity\EntityTypeInterface $entity_type
    *   The entity type.
    *
-   * @return \Symfony\Component\Routing\Route|null
+   * @return \Symfony\Component\Routing\Route|void
    *   The generated route, if available.
    */
   protected function getDeleteFormRoute(EntityTypeInterface $entity_type) {
@@ -308,7 +304,6 @@ class DefaultHtmlRouteProvider implements EntityRouteProviderInterface, EntityHa
       }
       return $route;
     }
-    return NULL;
   }
 
   /**
@@ -317,7 +312,7 @@ class DefaultHtmlRouteProvider implements EntityRouteProviderInterface, EntityHa
    * @param \Drupal\Core\Entity\EntityTypeInterface $entity_type
    *   The entity type.
    *
-   * @return \Symfony\Component\Routing\Route|null
+   * @return \Symfony\Component\Routing\Route|void
    *   The generated route, if available.
    */
   protected function getCollectionRoute(EntityTypeInterface $entity_type) {
@@ -339,7 +334,6 @@ class DefaultHtmlRouteProvider implements EntityRouteProviderInterface, EntityHa
 
       return $route;
     }
-    return NULL;
   }
 
   /**
@@ -367,7 +361,7 @@ class DefaultHtmlRouteProvider implements EntityRouteProviderInterface, EntityHa
    * @param \Drupal\Core\Entity\EntityTypeInterface $entity_type
    *   The entity type.
    *
-   * @return \Symfony\Component\Routing\Route|null
+   * @return \Symfony\Component\Routing\Route|void
    *   The generated route, if available.
    */
   protected function getDeleteMultipleFormRoute(EntityTypeInterface $entity_type) {
@@ -378,7 +372,6 @@ class DefaultHtmlRouteProvider implements EntityRouteProviderInterface, EntityHa
       $route->setRequirement('_entity_delete_multiple_access', $entity_type->id());
       return $route;
     }
-    return NULL;
   }
 
 }

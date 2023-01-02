@@ -38,9 +38,9 @@ interface TablesInterface {
    * @param string $field_name
    *   The name of the field.
    *
-   * @return bool|null
-   *   TRUE if the field is case sensitive, FALSE if not. Returns NULL when the
-   *   field did not define if it is case sensitive or not.
+   * @return bool|void
+   *   TRUE if the field is case sensitive, FALSE if not. Returns nothing when
+   *   the field did not define if it is case sensitive or not.
    */
   public function isFieldCaseSensitive($field_name);
 

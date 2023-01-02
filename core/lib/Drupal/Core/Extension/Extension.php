@@ -125,13 +125,12 @@ class Extension {
   /**
    * Returns the relative path of the main extension file, if any.
    *
-   * @return string|null
+   * @return string|void
    */
   public function getExtensionPathname() {
     if ($this->filename) {
       return $this->getPath() . '/' . $this->filename;
     }
-    return NULL;
   }
 
   /**

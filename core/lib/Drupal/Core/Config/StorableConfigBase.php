@@ -145,8 +145,6 @@ abstract class StorableConfigBase extends ConfigBase {
    * @param mixed $value
    *   Value to associate with the key.
    *
-   * @return null
-   *
    * @throws \Drupal\Core\Config\UnsupportedDataTypeConfigException
    *   If the value is unsupported in configuration.
    */
@@ -160,7 +158,6 @@ abstract class StorableConfigBase extends ConfigBase {
     elseif ($value !== NULL && !is_scalar($value)) {
       throw new UnsupportedDataTypeConfigException("Invalid data type for config element {$this->getName()}:$key");
     }
-    return NULL;
   }
 
   /**

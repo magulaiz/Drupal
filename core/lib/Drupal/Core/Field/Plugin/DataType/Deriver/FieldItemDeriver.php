@@ -65,7 +65,6 @@ class FieldItemDeriver implements ContainerDeriverInterface {
     if (isset($this->derivatives[$derivative_id])) {
       return $this->derivatives[$derivative_id];
     }
-    return NULL;
   }
 
   /**

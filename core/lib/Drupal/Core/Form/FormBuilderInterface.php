@@ -210,7 +210,7 @@ interface FormBuilderInterface {
    *   when displaying a multi-step form. Additional information, like the
    *   sanitized \Drupal::request()->request data, is also accumulated here.
    *
-   * @return \Symfony\Component\HttpFoundation\RedirectResponse|null
+   * @return \Symfony\Component\HttpFoundation\RedirectResponse|void
    */
   public function processForm($form_id, &$form, FormStateInterface &$form_state);
 

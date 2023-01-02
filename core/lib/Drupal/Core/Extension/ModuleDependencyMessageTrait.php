@@ -21,8 +21,8 @@ trait ModuleDependencyMessageTrait {
    * @param \Drupal\Core\Extension\Dependency $dependency_object
    *   Dependency object used for comparing version requirement data.
    *
-   * @return string|null
-   *   NULL if compatible, otherwise a string describing the incompatibility.
+   * @return string|void
+   *   Nothing if compatible, otherwise a string describing the incompatibility.
    */
   public function checkDependencyMessage(array $modules, $dependency, Dependency $dependency_object) {
     if (!isset($modules[$dependency])) {
@@ -48,7 +48,6 @@ trait ModuleDependencyMessageTrait {
         ]);
       }
     }
-    return NULL;
   }
 
 }

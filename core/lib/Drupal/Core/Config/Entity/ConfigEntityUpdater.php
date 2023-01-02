@@ -95,7 +95,7 @@ class ConfigEntityUpdater implements ContainerInjectionInterface {
    *
    * @api
    *
-   * @return \Drupal\Core\StringTranslation\TranslatableMarkup|null
+   * @return \Drupal\Core\StringTranslation\TranslatableMarkup|void
    *   An error message if $continue_on_error is set to TRUE and an error has
    *   occurred.
    *
@@ -176,7 +176,6 @@ class ConfigEntityUpdater implements ContainerInjectionInterface {
         ]);
       }
     }
-    return NULL;
   }
 
   /**

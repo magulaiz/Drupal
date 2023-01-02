@@ -1140,7 +1140,6 @@ class FormState implements FormStateInterface {
         }
       }
     }
-    return NULL;
   }
 
   /**

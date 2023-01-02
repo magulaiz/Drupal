@@ -318,7 +318,6 @@ class Tables implements TablesInterface {
     if (isset($this->caseSensitiveFields[$field_name])) {
       return $this->caseSensitiveFields[$field_name];
     }
-    return NULL;
   }
 
   /**

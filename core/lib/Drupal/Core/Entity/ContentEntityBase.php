@@ -673,7 +673,6 @@ abstract class ContentEntityBase extends EntityBase implements \IteratorAggregat
     if (isset($this->fieldDefinitions[$name])) {
       return $this->fieldDefinitions[$name];
     }
-    return NULL;
   }
 
   /**
@@ -1266,7 +1265,6 @@ abstract class ContentEntityBase extends EntityBase implements \IteratorAggregat
     if ($this->getEntityType()->getKey('label')) {
       return $this->getEntityKey('label');
     }
-    return NULL;
   }
 
   /**

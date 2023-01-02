@@ -86,7 +86,6 @@ class AuthenticationManager implements AuthenticationProviderInterface, Authenti
       $provider = $this->authCollector->getProvider($provider_id);
       return $provider->challengeException($request, $previous);
     }
-    return NULL;
   }
 
   /**
@@ -95,7 +94,7 @@ class AuthenticationManager implements AuthenticationProviderInterface, Authenti
    * @param \Symfony\Component\HttpFoundation\Request $request
    *   The incoming request.
    *
-   * @return string|null
+   * @return string|void
    *   The id of the first authentication provider which applies to the request.
    *   If no application detects appropriate credentials, then NULL is returned.
    */
@@ -105,7 +104,6 @@ class AuthenticationManager implements AuthenticationProviderInterface, Authenti
         return $provider_id;
       }
     }
-    return NULL;
   }
 
   /**
@@ -114,7 +112,7 @@ class AuthenticationManager implements AuthenticationProviderInterface, Authenti
    * @param \Symfony\Component\HttpFoundation\Request $request
    *   The incoming request.
    *
-   * @return string|null
+   * @return string|void
    *   The ID of the first authentication provider which applies to the request.
    *   If no application detects appropriate credentials, then NULL is returned.
    */
@@ -124,7 +122,6 @@ class AuthenticationManager implements AuthenticationProviderInterface, Authenti
         return $provider_id;
       }
     }
-    return NULL;
   }
 
   /**
