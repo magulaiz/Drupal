@@ -3,12 +3,9 @@ status: true
 dependencies:
   config:
     - core.entity_view_mode.node.teaser
-    - node.type.article
-    - node.type.page
-    - node.type.recipe
   module:
     - node
-id: test_exposed_form_buttons_required
+id: test_remember_selected
 label: ''
 module: views
 description: ''
@@ -25,21 +22,14 @@ display:
       pager:
         type: full
       exposed_form:
-        type: input_required
+        type: basic
         options:
-          submit_button: Apply
           reset_button: true
-          reset_button_label: Reset
-          exposed_sorts_label: 'Sort by'
-          expose_sort_order: true
-          sort_asc_label: Asc
-          sort_desc_label: Desc
-          text_input_required: 'Select any filter and click on Apply to see results'
-          text_input_required_format: basic_html
       access:
         type: none
       cache:
-        type: tag
+        type: none
+        options: {  }
       filters:
         type:
           id: type
@@ -52,10 +42,7 @@ display:
           entity_field: type
           plugin_id: in_operator
           operator: in
-          value:
-            all: all
-            article: article
-            page: page
+          value: {  }
           group: 1
           exposed: true
           expose:
@@ -67,15 +54,14 @@ display:
             operator_limit_selection: false
             operator_list: {  }
             identifier: type
-            required: true
-            remember: false
+            required: false
+            remember: true
             multiple: false
             remember_roles:
+              anonymous: anonymous
               authenticated: authenticated
-              anonymous: '0'
+              content_editor: '0'
               administrator: '0'
-              author: '0'
-              editor: '0'
             reduce: false
           is_grouped: false
           group_info:
@@ -113,7 +99,7 @@ display:
     position: 0
     display_options:
       display_extenders: {  }
-      path: test_exposed_form_buttons_required
+      path: test_remember_selected
     cache_metadata:
       max-age: -1
       contexts:

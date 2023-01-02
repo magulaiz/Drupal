@@ -331,16 +331,6 @@ parameters:
 			path: lib/Drupal/Core/Database/Query/Upsert.php
 
 		-
-			message: "#^Variable \\$query_start might not be defined\\.$#"
-			count: 2
-			path: lib/Drupal/Core/Database/StatementPrefetch.php
-
-		-
-			message: "#^Variable \\$query_start might not be defined\\.$#"
-			count: 2
-			path: lib/Drupal/Core/Database/StatementWrapper.php
-
-		-
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 2
 			path: lib/Drupal/Core/Datetime/DateHelper.php
@@ -432,7 +422,7 @@ parameters:
 
 		-
 			message: "#^Variable \\$selected_bundles might not be defined\\.$#"
-			count: 3
+			count: 2
 			path: lib/Drupal/Core/Entity/Plugin/EntityReferenceSelection/DefaultSelection.php
 
 		-
@@ -661,16 +651,6 @@ parameters:
 			path: lib/Drupal/Core/Menu/MenuLinkManager.php
 
 		-
-			message: "#^Variable \\$fields might not be defined\\.$#"
-			count: 3
-			path: lib/Drupal/Core/Menu/MenuTreeStorage.php
-
-		-
-			message: "#^Variable \\$root might not be defined\\.$#"
-			count: 1
-			path: lib/Drupal/Core/Menu/MenuTreeStorage.php
-
-		-
 			message: "#^Variable \\$transaction in isset\\(\\) always exists and is not nullable\\.$#"
 			count: 1
 			path: lib/Drupal/Core/Menu/MenuTreeStorage.php
@@ -711,11 +691,6 @@ parameters:
 			path: lib/Drupal/Core/Render/Renderer.php
 
 		-
-			message: "#^Variable \\$render_start might not be defined\\.$#"
-			count: 1
-			path: lib/Drupal/Core/Render/Renderer.php
-
-		-
 			message: "#^Variable \\$transaction in isset\\(\\) always exists and is not nullable\\.$#"
 			count: 1
 			path: lib/Drupal/Core/Routing/MatcherDumper.php
@@ -727,11 +702,6 @@ parameters:
 
 		-
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
-			count: 1
-			path: lib/Drupal/Core/Session/SessionManager.php
-
-		-
-			message: "#^Variable \\$session_data might not be defined\\.$#"
 			count: 1
 			path: lib/Drupal/Core/Session/SessionManager.php
 
@@ -814,11 +784,6 @@ parameters:
 			message: "#^Method Drupal\\\\ban\\\\Plugin\\\\migrate\\\\destination\\\\BlockedIp\\:\\:import\\(\\) should return array\\|bool but return statement is missing\\.$#"
 			count: 1
 			path: modules/ban/src/Plugin/migrate/destination/BlockedIp.php
-
-		-
-			message: "#^Anonymous function has an unused use \\$session\\.$#"
-			count: 1
-			path: modules/basic_auth/tests/src/Functional/BasicAuthTest.php
 
 		-
 			message: "#^\\#lazy_builder callback 'hello_or_yarhar' at key '0' is not callable\\.$#"
@@ -1021,11 +986,6 @@ parameters:
 			path: modules/config/src/Form/ConfigSingleImportForm.php
 
 		-
-			message: "#^Anonymous function has an unused use \\$validation_reasons\\.$#"
-			count: 1
-			path: modules/config/tests/src/Functional/ConfigImportAllTest.php
-
-		-
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 1
 			path: modules/config_translation/src/FormElement/DateFormat.php
@@ -1104,11 +1064,6 @@ parameters:
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 1
 			path: modules/content_translation/tests/src/Functional/ContentTranslationUITestBase.php
-
-		-
-			message: "#^Anonymous function has an unused use \\$web_assert\\.$#"
-			count: 1
-			path: modules/contextual/tests/src/FunctionalJavascript/EditModeTest.php
 
 		-
 			message: "#^Variable \\$unrestricted_tab_count might not be defined\\.$#"
@@ -1481,11 +1436,6 @@ parameters:
 			path: modules/language/tests/src/Functional/LanguageBreadcrumbTest.php
 
 		-
-			message: "#^Call to an undefined method Drupal\\\\Tests\\\\layout_builder\\\\Unit\\\\DefaultsSectionStorageTest\\:\\:getThirdPartySetting\\(\\)\\.$#"
-			count: 1
-			path: modules/layout_builder/tests/src/Unit/DefaultsSectionStorageTest.php
-
-		-
 			message: "#^Constructor of class Drupal\\\\link\\\\Plugin\\\\migrate\\\\process\\\\FieldLink has an unused parameter \\$migration\\.$#"
 			count: 1
 			path: modules/link/src/Plugin/migrate/process/FieldLink.php
@@ -1657,11 +1607,6 @@ parameters:
 
 		-
 			message: "#^Variable \\$config might not be defined\\.$#"
-			count: 1
-			path: modules/migrate/src/Plugin/migrate/destination/EntityConfigBase.php
-
-		-
-			message: "#^Variable \\$id_keys might not be defined\\.$#"
 			count: 1
 			path: modules/migrate/src/Plugin/migrate/destination/EntityConfigBase.php
 
@@ -1966,11 +1911,6 @@ parameters:
 			path: modules/rest/src/Routing/ResourceRoutes.php
 
 		-
-			message: "#^Anonymous function has an unused use \\$link_relation_type_manager\\.$#"
-			count: 1
-			path: modules/rest/tests/src/Functional/EntityResource/EntityResourceTestBase.php
-
-		-
 			message: "#^Variable \\$created_entity might not be defined\\.$#"
 			count: 4
 			path: modules/rest/tests/src/Functional/EntityResource/EntityResourceTestBase.php
@@ -1979,11 +1919,6 @@ parameters:
 			message: "#^Variable \\$working_to might not be defined\\.$#"
 			count: 1
 			path: modules/search/search.module
-
-		-
-			message: "#^Variable \\$keys might not be defined\\.$#"
-			count: 1
-			path: modules/search/src/Controller/SearchController.php
 
 		-
 			message: "#^Method Drupal\\\\search\\\\Form\\\\SearchPageAddForm\\:\\:save\\(\\) should return int but return statement is missing\\.$#"
@@ -2066,11 +2001,6 @@ parameters:
 			path: modules/system/src/DateFormatListBuilder.php
 
 		-
-			message: "#^Constructor of class Drupal\\\\system\\\\Form\\\\CronForm has an unused parameter \\$config_factory\\.$#"
-			count: 1
-			path: modules/system/src/Form/CronForm.php
-
-		-
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 1
 			path: modules/system/src/Form/DateFormatDeleteForm.php
@@ -2093,11 +2023,6 @@ parameters:
 		-
 			message: "#^Variable \\$default_theme in isset\\(\\) always exists and is not nullable\\.$#"
 			count: 1
-			path: modules/system/src/Form/ThemeSettingsForm.php
-
-		-
-			message: "#^Variable \\$features might not be defined\\.$#"
-			count: 3
 			path: modules/system/src/Form/ThemeSettingsForm.php
 
 		-
@@ -2206,11 +2131,6 @@ parameters:
 			path: modules/system/tests/src/Functional/Theme/ThemeUiTest.php
 
 		-
-			message: "#^Anonymous function has an unused use \\$renderer\\.$#"
-			count: 1
-			path: modules/system/tests/src/Kernel/Common/UrlTest.php
-
-		-
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 1
 			path: modules/system/tests/src/Kernel/Token/TokenReplaceKernelTest.php
@@ -2294,11 +2214,6 @@ parameters:
 			message: "#^Variable \\$depth_count might not be defined\\.$#"
 			count: 4
 			path: modules/taxonomy/tests/src/Kernel/TermKernelTest.php
-
-		-
-			message: "#^Variable \\$filters might not be defined\\.$#"
-			count: 1
-			path: modules/text/text.module
 
 		-
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
@@ -2631,11 +2546,6 @@ parameters:
 			path: modules/views/src/Plugin/views/filter/InOperator.php
 
 		-
-			message: "#^Variable \\$identifier might not be defined\\.$#"
-			count: 4
-			path: modules/views/src/Plugin/views/filter/NumericFilter.php
-
-		-
 			message: "#^Variable \\$source might not be defined\\.$#"
 			count: 2
 			path: modules/views/src/Plugin/views/filter/NumericFilter.php
@@ -2791,14 +2701,24 @@ parameters:
 			path: modules/views/tests/src/Kernel/Handler/FieldFieldTest.php
 
 		-
+			message: "#^Variable \\$rand1 might not be defined\\.$#"
+			count: 2
+			path: modules/views/tests/src/Kernel/Plugin/StyleTest.php
+
+		-
+			message: "#^Variable \\$rand2 might not be defined\\.$#"
+			count: 2
+			path: modules/views/tests/src/Kernel/Plugin/StyleTest.php
+
+		-
+			message: "#^Variable \\$rand3 might not be defined\\.$#"
+			count: 2
+			path: modules/views/tests/src/Kernel/Plugin/StyleTest.php
+
+		-
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 2
 			path: modules/views/tests/src/Kernel/RenderCacheIntegrationTest.php
-
-		-
-			message: "#^Variable \\$entity_revision_data_table might not be defined\\.$#"
-			count: 1
-			path: modules/views/views.views.inc
 
 		-
 			message: "#^Variable \\$relationship_handler in empty\\(\\) always exists and is not falsy\\.$#"
@@ -2969,16 +2889,6 @@ parameters:
 			message: "#^Variable \\$previous_untranslatable_field_value in isset\\(\\) always exists and is not nullable\\.$#"
 			count: 2
 			path: tests/Drupal/KernelTests/Core/Entity/EntityDecoupledTranslationRevisionsTest.php
-
-		-
-			message: "#^Call to an undefined method Drupal\\\\KernelTests\\\\Core\\\\Entity\\\\EntityDisplayFormBaseTest\\:\\:getComponent\\(\\)\\.$#"
-			count: 3
-			path: tests/Drupal/KernelTests/Core/Entity/EntityDisplayFormBaseTest.php
-
-		-
-			message: "#^Call to an undefined method Drupal\\\\KernelTests\\\\Core\\\\Entity\\\\EntityDisplayFormBaseTest\\:\\:setComponent\\(\\)\\.$#"
-			count: 1
-			path: tests/Drupal/KernelTests/Core/Entity/EntityDisplayFormBaseTest.php
 
 		-
 			message: "#^Method Drupal\\\\KernelTests\\\\Core\\\\Entity\\\\EntityKernelTestBase\\:\\:createUser\\(\\) invoked with 4 parameters, 0\\-2 required\\.$#"
@@ -3171,16 +3081,6 @@ parameters:
 			path: tests/Drupal/Tests/Core/Database/InstallerObjectTest.php
 
 		-
-			message: "#^Call to an undefined method Drupal\\\\Tests\\\\Core\\\\Entity\\\\EntityFieldManagerTest\\:\\:get\\(\\)\\.$#"
-			count: 3
-			path: tests/Drupal/Tests/Core/Entity/EntityFieldManagerTest.php
-
-		-
-			message: "#^Call to an undefined method Drupal\\\\Tests\\\\Core\\\\Entity\\\\EntityTypeBundleInfoTest\\:\\:get\\(\\)\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Core/Entity/EntityTypeBundleInfoTest.php
-
-		-
 			message: "#^Call to method getDefinitions\\(\\) on an unknown class Drupal\\\\Core\\\\Plugin\\\\CategorizingPluginManagerTrait\\.$#"
 			count: 3
 			path: tests/Drupal/Tests/Core/Plugin/CategorizingPluginManagerTraitTest.php
@@ -3201,11 +3101,6 @@ parameters:
 			path: tests/Drupal/Tests/Core/Plugin/TestPluginManager.php
 
 		-
-			message: "#^Anonymous function has an unused use \\$self\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Core/Render/MetadataBubblingUrlGeneratorTest.php
-
-		-
 			message: "#^\\#access_callback callback class '\\$this\\(Drupal\\\\Tests\\\\Core\\\\Render\\\\RendererCallbackTest\\)' at key '0' does not implement Drupal\\\\Core\\\\Security\\\\TrustedCallbackInterface\\.$#"
 			count: 1
 			path: tests/Drupal/Tests/Core/Render/RendererCallbackTest.php
@@ -3224,21 +3119,6 @@ parameters:
 			message: "#^\\#pre_render callback '\\\\\\\\Drupal\\\\\\\\Tests\\\\\\\\Core…' at key '0' is not trusted\\.$#"
 			count: 1
 			path: tests/Drupal/Tests/Core/Render/RendererCallbackTest.php
-
-		-
-			message: "#^Anonymous function has an unused use \\$complex_child_template\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Core/Render/RendererRecursionTest.php
-
-		-
-			message: "#^Anonymous function has an unused use \\$parent_markup\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Core/Render/RendererRecursionTest.php
-
-		-
-			message: "#^Anonymous function has an unused use \\$renderer\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Core/Render/RendererRecursionTest.php
 
 		-
 			message: "#^Variable \\$value in isset\\(\\) always exists and is not nullable\\.$#"
