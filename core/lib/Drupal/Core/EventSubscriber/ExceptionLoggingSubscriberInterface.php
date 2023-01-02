@@ -16,6 +16,6 @@ interface ExceptionLoggingSubscriberInterface extends EventSubscriberInterface {
    * @param \Symfony\Component\HttpKernel\Event\ExceptionEvent $event
    *   The event to process.
    */
-  public function onException(ExceptionEvent $event);
+  public function onException(ExceptionEvent $event): void;
 
 }

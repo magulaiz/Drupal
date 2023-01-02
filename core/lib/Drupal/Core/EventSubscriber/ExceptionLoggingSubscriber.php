@@ -88,7 +88,7 @@ class ExceptionLoggingSubscriber implements ExceptionLoggingSubscriberInterface 
    * @param \Symfony\Component\HttpKernel\Event\ExceptionEvent $event
    *   The event to process.
    */
-  public function onException(ExceptionEvent $event) {
+  public function onException(ExceptionEvent $event): void {
     $exception = $event->getThrowable();
 
     $method = 'onError';
