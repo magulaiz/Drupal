@@ -921,9 +921,9 @@ class ExtensionMimeTypeGuesser implements MimeTypeGuesserInterface {
     ModuleHandlerInterface $module_handler,
     MimeTypeMapperInterface $mapper = NULL
   ) {
-    if (!$mapper) {
+    if ($mapper === NULL) {
       @trigger_error(
-        'The file.mime_type.mapper service must be passed to ExtensionMimeTypeGuesser::__construct(), it is required before drupal:11.0.0.',
+        'Calling ' . __METHOD__ . '() without the $mapper argument is deprecated in drupal:10.1.0 and will be required before drupal:11.0.0. See https://www.drupal.org/node/2311679.',
         E_USER_DEPRECATED
       );
       $mapper = \Drupal::service('file.mime_type.mapper');
