@@ -337,7 +337,7 @@ class DbDumpCommand extends DbCommandBase {
    * @param string $type
    *   The MySQL field type.
    *
-   * @return string|null
+   * @return string|void
    *   The Drupal schema field size.
    */
   protected function fieldSizeMap(Connection $connection, $type) {
@@ -356,7 +356,6 @@ class DbDumpCommand extends DbCommandBase {
       // The MySql map contains type:size. Remove the type part.
       return explode(':', $map[$type])[1];
     }
-    return NULL;
   }
 
   /**

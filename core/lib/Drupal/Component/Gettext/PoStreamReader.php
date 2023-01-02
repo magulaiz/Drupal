@@ -238,9 +238,9 @@ class PoStreamReader implements PoStreamInterface, PoReaderInterface {
    * MSGCTXT (when items closely follow each other).
    *
    * @return bool|void
-   *   FALSE if an error was logged, NULL otherwise. The errors are considered
-   *   non-blocking, so reading can continue, while the errors are collected
-   *   for later presentation.
+   *   FALSE if an error was logged, nothing otherwise. The errors are
+   *   considered non-blocking, so reading can continue, while the errors are
+   *   collected for later presentation.
    */
   private function readLine() {
     // Read a line and set the stream finished indicator if it was not
