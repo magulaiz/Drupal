@@ -2,6 +2,7 @@
 
 namespace Drupal\migrate_drupal_ui\Form;
 
+use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Core\Batch\BatchBuilder;
 use Drupal\Core\Batch\BatchProcessorInterface;
 use Drupal\Core\Config\ConfigFactoryInterface;
@@ -70,6 +71,13 @@ class ReviewForm extends MigrateUpgradeFormBase {
   protected BatchProcessorInterface $batchProcessor;
 
   /**
+   * Time component instance.
+   *
+   * @var \Drupal\Component\Datetime\TimeInterface
+   */
+  protected TimeInterface $time;
+
+  /**
    * ReviewForm constructor.
    *
    * @param \Drupal\Core\State\StateInterface $state
@@ -84,15 +92,18 @@ class ReviewForm extends MigrateUpgradeFormBase {
    *   The config factory service.
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
    *   The module handler service.
+   * @param \Drupal\Component\Datetime\TimeInterface $time
+   *   Time component instance.
    * @param \Drupal\Core\Batch\BatchProcessorInterface|null $batch_processor
    *   Batch processor.
    *
    * @see https://www.drupal.org/node/3229844
    */
-  public function __construct(StateInterface $state, MigrationPluginManagerInterface $migration_plugin_manager, PrivateTempStoreFactory $tempstore_private, MigrationState $migrationState, ConfigFactoryInterface $config_factory, ModuleHandlerInterface $module_handler = NULL, BatchProcessorInterface $batch_processor = NULL) {
+  public function __construct(StateInterface $state, MigrationPluginManagerInterface $migration_plugin_manager, PrivateTempStoreFactory $tempstore_private, MigrationState $migrationState, ConfigFactoryInterface $config_factory, ModuleHandlerInterface $module_handler, TimeInterface $time = NULL, BatchProcessorInterface $batch_processor = NULL) {
     parent::__construct($config_factory, $migration_plugin_manager, $state, $tempstore_private);
     $this->migrationState = $migrationState;
     $this->moduleHandler = $module_handler;
+    $this->time = $time;
     if ($batch_processor === NULL) {
       @trigger_error('Calling ' . __METHOD__ . ' without the $batch_processor argument is deprecated in drupal:10.1.0 and it will be required in drupal:11.0.0. See https://www.drupal.org/node/3229844', E_USER_DEPRECATED);
       $batch_processor = \Drupal::service('batch.processor');
@@ -267,7 +278,7 @@ class ReviewForm extends MigrateUpgradeFormBase {
     $this->batchProcessor->queue($batch_builder->toArray());
     $form_state->setRedirect('<front>');
     $this->store->set('step', 'overview');
-    $this->state->set('migrate_drupal_ui.performed', REQUEST_TIME);
+    $this->state->set('migrate_drupal_ui.performed', $this->time->getRequestTime());
   }
 
   /**
