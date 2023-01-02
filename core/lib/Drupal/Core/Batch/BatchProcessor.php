@@ -42,6 +42,13 @@ class BatchProcessor implements BatchProcessorInterface {
   protected array $queues = [];
 
   /**
+   * Checks whether the batch information needs to be updated in the storage.
+   *
+   * @var bool
+   */
+  protected bool $needsUpdate = FALSE;
+
+  /**
    * Creates a new BatchProcessor.
    *
    * @param string $root
@@ -76,7 +83,7 @@ class BatchProcessor implements BatchProcessorInterface {
     protected ?FormSubmitterInterface $formSubmitter = NULL,
     protected ?PathValidatorInterface $pathValidator = NULL,
     protected ?BatchStorageInterface $batchStorage = NULL,
-  ) { }
+  ) {}
 
   /**
    * Getter for the path validator service.
@@ -636,9 +643,20 @@ class BatchProcessor implements BatchProcessorInterface {
    * {@inheritdoc}
    */
   public function shutdown(): void {
-    if (($this->batch) && _batch_needs_update()) {
+    if (($this->batch) && $this->needsUpdate()) {
       $this->getBatchStorage()?->update($this->batch);
     }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function needsUpdate(bool $new_value = NULL): bool {
+    if (isset($new_value)) {
+      $this->needsUpdate = $new_value;
+    }
+
+    return $this->needsUpdate;
   }
 
 }

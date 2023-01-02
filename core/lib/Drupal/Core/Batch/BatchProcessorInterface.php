@@ -183,7 +183,21 @@ interface BatchProcessorInterface {
    *
    * @see _batch_page()
    * @see drupal_register_shutdown_function()
+   * @internal
    */
   public function shutdown(): void;
+
+  /**
+   * Checks whether the batch information needs to be updated in the storage.
+   *
+   * @param bool $new_value
+   *   (optional) A new value to set.
+   *
+   * @return bool
+   *   TRUE if the batch information needs to be updated; FALSE otherwise.
+   *
+   * @internal
+   */
+  public function needsUpdate(bool $new_value = NULL): bool;
 
 }

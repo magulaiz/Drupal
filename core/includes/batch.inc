@@ -61,7 +61,7 @@ function _batch_page(Request $request) {
   // @see \Drupal\Core\Batch\BatchProcessorInterface::shutdown()
   // @see \Symfony\Component\HttpFoundation\Response::send()
   drupal_register_shutdown_function([$batch_processor, 'shutdown']);
-  _batch_needs_update(TRUE);
+  $batch_processor->needsUpdate(TRUE);
 
   $build = [];
 
@@ -101,7 +101,7 @@ function _batch_page(Request $request) {
   if ($batch) {
     \Drupal::service('batch.storage')->update($batch);
   }
-  _batch_needs_update(FALSE);
+  $batch_processor->needsUpdate(FALSE);
 
   return $response;
 }
@@ -114,15 +114,17 @@ function _batch_page(Request $request) {
  *
  * @return bool
  *   TRUE if the batch information needs to be updated; FALSE otherwise.
+ *
+ * @deprecated in drupal:10.1.0 and is removed from drupal:11.0.0.
+ *   Use \Drupal\Core\Batch\BatchProcessorInterface::needsUpdate() instead.
+ *
+ * @see https://www.drupal.org/node/3229844
  */
 function _batch_needs_update($new_value = NULL) {
-  $needs_update = &drupal_static(__FUNCTION__, FALSE);
-
-  if (isset($new_value)) {
-    $needs_update = $new_value;
-  }
-
-  return $needs_update;
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use \Drupal\Core\Batch\BatchProcessorInterface::needsUpdate() instead. See https://www.drupal.org/node/3229844', E_USER_DEPRECATED);
+  /** @var \Drupal\Core\Batch\BatchProcessorInterface $batch_processor */
+  $batch_processor = \Drupal::service('batch.processor');
+  return $batch_processor->needsUpdate($new_value);
 }
 
 /**
