@@ -2,6 +2,7 @@
 
 namespace Drupal\Core\Session;
 
+use Drupal\Core\Site\Settings;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -66,13 +67,14 @@ class SessionConfiguration implements SessionConfigurationInterface {
    *   The name of the session cookie.
    */
   protected function getName(Request $request) {
+    $prefix = Settings::get('session_cookie_prefix', '');
     // To prevent session cookies from being hijacked, a user can configure the
     // SSL version of their website to only transfer session cookies via SSL by
     // using PHP's session.cookie_secure setting. The browser will then use two
     // separate session cookies for the HTTPS and HTTP versions of the site. So
     // we must use different session identifiers for HTTPS and HTTP to prevent a
     // cookie collision.
-    $prefix = $request->isSecure() ? 'SSESS' : 'SESS';
+    $prefix .= $request->isSecure() ? 'SSESS' : 'SESS';
     return $prefix . $this->getUnprefixedName($request);
   }
 
