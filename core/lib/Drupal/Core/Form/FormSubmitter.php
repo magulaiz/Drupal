@@ -108,13 +108,13 @@ class FormSubmitter implements FormSubmitterInterface {
     if (!$handlers && !empty($form['#submit'])) {
       $handlers = $form['#submit'];
     }
-
+    $batch_processor = $this->batchProcessor();
     foreach ($handlers as $callback) {
       // Check if a previous _submit handler has set a batch, but make sure we
       // do not react to a batch that is already being processed (for instance
       // if a batch operation performs a
       // \Drupal\Core\Form\FormBuilderInterface::submitForm()).
-      if (($batch = &$this->batchProcessor()->getCurrentBatch()) && !isset($batch['id'])) {
+      if ($batch_processor && ($batch = &$batch_processor->getCurrentBatch()) && !isset($batch['id'])) {
         // Some previous submit handler has set a batch. To ensure correct
         // execution order, store the call in a special 'control' batch set.
         // See _batch_next_set().
@@ -162,9 +162,10 @@ class FormSubmitter implements FormSubmitterInterface {
    *
    * Defined to avoid circular dependency issue.
    *
-   * @return \Drupal\Core\Batch\BatchProcessorInterface
+   * @return \Drupal\Core\Batch\BatchProcessorInterface|null
+   *   Batch processor instance.
    */
-  protected function batchProcessor() {
+  public function batchProcessor(): ?BatchProcessorInterface {
     if ($this->batchProcessor === NULL) {
       $this->batchProcessor = \Drupal::service('batch.processor');
     }
