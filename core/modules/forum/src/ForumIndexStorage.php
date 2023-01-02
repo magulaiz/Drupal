@@ -92,7 +92,7 @@ class ForumIndexStorage implements ForumIndexStorageInterface {
    */
   public function updateIndex(NodeInterface $node) {
     $nid = $node->id();
-    $count = $this->database->query("SELECT COUNT([c].[cid]) FROM {comment_field_data} [c] INNER JOIN {forum_index} [i] ON [c].[entity_id] = [i].[nid] WHERE [c].[entity_id] = :nid AND [c].[field_name] = 'comment_forum' AND [c].[entity_type] = 'node' AND [c].[status] = :status AND [c].[default_langcode] = 1", [
+    $count = $this->database->query("SELECT COUNT([cid]) FROM {comment_field_data} [c] INNER JOIN {forum_index} [i] ON [c].[entity_id] = [i].[nid] WHERE [c].[entity_id] = :nid AND [c].[field_name] = 'comment_forum' AND [c].[entity_type] = 'node' AND [c].[status] = :status AND [c].[default_langcode] = 1", [
       ':nid' => $nid,
       ':status' => CommentInterface::PUBLISHED,
     ])->fetchField();
