@@ -591,7 +591,7 @@ function install_run_tasks(&$install_state, callable $callback = NULL) {
     // installation, also stop if we have some output to send to the browser,
     // the URL parameters have changed, or an end to the page request was
     // specifically called for.
-    $finished = empty($tasks_to_perform) || ($install_state['interactive'] && (isset($output) || $install_state['parameters_changed'] || $install_state['stop_page_request']));
+    $finished = empty($tasks_to_perform) || ($install_state['interactive']   || $install_state['parameters_changed'] || $install_state['stop_page_request']));
   } while (!$finished);
   return $output;
 }
@@ -934,8 +934,8 @@ function install_tasks_to_display($install_state) {
  *   The current state of the installation.
  *
  * @return array|void
- *   A render array containing the form to render, or NULL in case the form was
- *   successfully submitted.
+ *   A render array containing the form to render, or nothing in case the form
+ *   was successfully submitted.
  *
  * @throws \Drupal\Core\Installer\Exception\InstallerException
  */
@@ -1272,8 +1272,8 @@ function install_select_profile(&$install_state) {
  *   associative array of profiles with the machine-readable names as keys.
  *
  * @return string|void
- *   The machine-readable name of the selected profile or NULL if no profile was
- *   selected.
+ *   The machine-readable name of the selected profile or nothing if no profile
+ *   was selected.
  *
  *  @see install_select_profile()
  */

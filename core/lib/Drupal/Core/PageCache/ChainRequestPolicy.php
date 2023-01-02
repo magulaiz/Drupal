@@ -41,7 +41,7 @@ class ChainRequestPolicy implements ChainRequestPolicyInterface {
       elseif ($result === static::ALLOW) {
         $final_result = $result;
       }
-      elseif (isset($result)) {
+      else {
         throw new \UnexpectedValueException('Return value of RequestPolicyInterface::check() must be one of RequestPolicyInterface::ALLOW, RequestPolicyInterface::DENY or NULL');
       }
     }
