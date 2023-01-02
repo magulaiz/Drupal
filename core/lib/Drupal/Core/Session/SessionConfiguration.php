@@ -104,6 +104,10 @@ class SessionConfiguration implements SessionConfigurationInterface {
       $session_name = preg_replace('#/core$#', '', $session_name);
     }
 
+    // Add hash salt to prevent sites on shared domains with separate databases
+    // from overwriting each other's cookies.
+    $session_name .= Settings::get('hash_salt', '');
+
     return substr(hash('sha256', $session_name), 0, 32);
   }
 
