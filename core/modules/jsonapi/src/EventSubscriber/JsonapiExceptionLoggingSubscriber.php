@@ -65,10 +65,7 @@ final class JsonapiExceptionLoggingSubscriber implements ExceptionLoggingSubscri
   }
 
   /**
-   * Log all exceptions.
-   *
-   * @param \Symfony\Component\HttpKernel\Event\ExceptionEvent $event
-   *   The event to process.
+   * {@inheritDoc}
    */
   public function onException(ExceptionEvent $event): void {
     if ($event->getThrowable() instanceof UnprocessableHttpEntityException) {
