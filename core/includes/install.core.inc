@@ -591,7 +591,7 @@ function install_run_tasks(&$install_state, callable $callback = NULL) {
     // installation, also stop if we have some output to send to the browser,
     // the URL parameters have changed, or an end to the page request was
     // specifically called for.
-    $finished = empty($tasks_to_perform) || ($install_state['interactive']   || $install_state['parameters_changed'] || $install_state['stop_page_request']));
+    $finished = empty($tasks_to_perform) || ($install_state['interactive'] && ($install_state['parameters_changed'] || $install_state['stop_page_request']));
   } while (!$finished);
   return $output;
 }
