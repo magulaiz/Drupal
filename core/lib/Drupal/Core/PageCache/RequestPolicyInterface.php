@@ -40,8 +40,8 @@ interface RequestPolicyInterface {
    *   The incoming request object.
    *
    * @return string|void
-   *   One of static::ALLOW, static::DENY or NULL. Calling code may attempt to
-   *   deliver a cached page if static::ALLOW is returned. Returns nothing if
+   *   One of static::ALLOW, static::DENY or nothinh. Calling code may attempt
+   *   to deliver a cached page if static::ALLOW is returned. Returns nothing if
    *   the policy is not specified for the given request.
    */
   public function check(Request $request);
