@@ -466,21 +466,6 @@ class ForumManager implements ForumManagerInterface {
   }
 
   /**
-   * Checks if the current user can view all nodes.
-   *
-   * This is a private method which will/may ONLY be used for modifying queries
-   * in a way that does not alter the returned results. (Under this condition it
-   * is not a huge problem that this method calls a global, non-injected
-   * function; there is no real 'injectable' alternative for it yet.)
-   */
-  private function currentUserCanViewAllNodes() {
-    $account = $this->currentUser;
-    if ($account->hasPermission('bypass node access') || node_access_view_all_nodes($account)) {
-      return AccessResult::allowed()->cachePerPermissions()->cachePerUser();
-    }
-  }
-
-  /**
    * {@inheritdoc}
    */
   public function getChildren($vid, $tid) {
