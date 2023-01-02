@@ -28,76 +28,6 @@ class BatchProcessor implements BatchProcessorInterface {
   use StringTranslationTrait;
 
   /**
-   * The app root.
-   *
-   * @var string
-   */
-  protected string $root;
-
-  /**
-   * The batch storage service.
-   *
-   * @var \Drupal\Core\Batch\BatchStorageInterface|null
-   */
-  protected ?BatchStorageInterface $batchStorage = NULL;
-
-  /**
-   * The date formatter used to calculate the needed time for the batch.
-   *
-   * @var \Drupal\Core\Datetime\DateFormatterInterface
-   */
-  protected DateFormatterInterface $dateFormatter;
-
-  /**
-   * The form submitter used to redirect at the end of the batch.
-   *
-   * @var \Drupal\Core\Form\FormSubmitterInterface
-   */
-  protected FormSubmitterInterface $formSubmitter;
-
-  /**
-   * The request stack.
-   *
-   * @var \Symfony\Component\HttpFoundation\RequestStack
-   */
-  protected RequestStack $requestStack;
-
-  /**
-   * Path validator service.
-   *
-   * @var \Drupal\Core\Path\PathValidatorInterface|null
-   */
-  protected ?PathValidatorInterface $pathValidator = NULL;
-
-  /**
-   * Database connection.
-   *
-   * @var \Drupal\Core\Database\Connection|null
-   */
-  protected ?Connection $connection = NULL;
-
-  /**
-   * Module handler.
-   *
-   * @var \Drupal\Core\Extension\ModuleHandlerInterface
-   */
-  protected ModuleHandlerInterface $moduleHandler;
-
-  /**
-   * Theme manager.
-   *
-   * @var \Drupal\Core\Theme\ThemeManagerInterface
-   */
-  protected ThemeManagerInterface $themeManager;
-
-  /**
-   * Route match.
-   *
-   * @var \Drupal\Core\Routing\RouteMatchInterface
-   */
-  protected RouteMatchInterface $routeMatch;
-
-  /**
    * In memory batch cache.
    *
    * @var array|null
@@ -116,28 +46,37 @@ class BatchProcessor implements BatchProcessorInterface {
    *
    * @param string $root
    *   The app root.
-   * @param \Drupal\Core\Datetime\DateFormatterInterface $date_formatter
+   * @param \Drupal\Core\Datetime\DateFormatterInterface $dateFormatter
    *   The date formatter used to calculate the needed time for the batch.
-   * @param \Drupal\Core\Form\FormSubmitterInterface $form_submitter
-   *   The form submitter used to redirect at the end of the batch.
-   * @param \Symfony\Component\HttpFoundation\RequestStack $request_stack
+   * @param \Symfony\Component\HttpFoundation\RequestStack $requestStack
    *   The request stack.
-   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
+   * @param \Drupal\Core\Extension\ModuleHandlerInterface $moduleHandler
    *   The module handler service.
-   * @param \Drupal\Core\Theme\ThemeManagerInterface $theme_manager
+   * @param \Drupal\Core\Theme\ThemeManagerInterface $themeManager
    *   The theme manager service.
-   * @param \Drupal\Core\Routing\RouteMatchInterface $route_match
+   * @param \Drupal\Core\Routing\RouteMatchInterface $routeMatch
    *   The route match service.
+   * @param \Drupal\Core\Database\Connection|null $connection
+   *   Database connection.
+   * @param \Drupal\Core\Form\FormSubmitterInterface|null $formSubmitter
+   *   The form submitter used to redirect at the end of the batch.
+   * @param \Drupal\Core\Path\PathValidatorInterface|null $pathValidator
+   *   Path validator service.
+   * @param \Drupal\Core\Batch\BatchStorageInterface|null $batchStorage
+   *   The batch storage service.
    */
-  public function __construct(string $root, DateFormatterInterface $date_formatter, FormSubmitterInterface $form_submitter, RequestStack $request_stack, ModuleHandlerInterface $module_handler, ThemeManagerInterface $theme_manager, RouteMatchInterface $route_match) {
-    $this->root = $root;
-    $this->dateFormatter = $date_formatter;
-    $this->formSubmitter = $form_submitter;
-    $this->requestStack = $request_stack;
-    $this->moduleHandler = $module_handler;
-    $this->themeManager = $theme_manager;
-    $this->routeMatch = $route_match;
-  }
+  public function __construct(
+    protected string $root,
+    protected DateFormatterInterface $dateFormatter,
+    protected RequestStack $requestStack,
+    protected ModuleHandlerInterface $moduleHandler,
+    protected ThemeManagerInterface $themeManager,
+    protected RouteMatchInterface $routeMatch,
+    protected ?Connection $connection = NULL,
+    protected ?FormSubmitterInterface $formSubmitter = NULL,
+    protected ?PathValidatorInterface $pathValidator = NULL,
+    protected ?BatchStorageInterface $batchStorage = NULL,
+  ) { }
 
   /**
    * Getter for the path validator service.
@@ -145,7 +84,7 @@ class BatchProcessor implements BatchProcessorInterface {
    * @return \Drupal\Core\Path\PathValidatorInterface|null
    *   The path validator service.
    */
-  protected function getPathValidator() {
+  protected function getPathValidator(): ?PathValidatorInterface {
     if (!$this->pathValidator) {
       $this->pathValidator = \Drupal::service('path.validator');
     }
@@ -158,7 +97,7 @@ class BatchProcessor implements BatchProcessorInterface {
    * @return \Drupal\Core\Batch\BatchStorageInterface|null
    *   The batch storage.
    */
-  protected function getBatchStorage() {
+  protected function getBatchStorage(): ?BatchStorageInterface {
     if (!$this->batchStorage) {
       $this->batchStorage = \Drupal::service('batch.storage');
     }
@@ -168,14 +107,24 @@ class BatchProcessor implements BatchProcessorInterface {
   /**
    * Getter for the connection to the database.
    *
-   * @return \Drupal\Core\Database\Connection
+   * @return \Drupal\Core\Database\Connection|null
    *   The connection to the database.
    */
-  protected function getConnection() {
+  protected function getConnection(): ?Connection {
     if (!$this->connection) {
       $this->connection = Database::getConnection();
     }
     return $this->connection;
+  }
+
+  /**
+   * @return \Drupal\Core\Form\FormSubmitterInterface|null
+   */
+  protected function getFormSubmitter(): ?FormSubmitterInterface {
+    if ($this->formSubmitter === NULL) {
+      $this->formSubmitter = \Drupal::service('form_submitter');
+    }
+    return $this->formSubmitter;
   }
 
   /**
@@ -291,9 +240,9 @@ class BatchProcessor implements BatchProcessorInterface {
       ];
 
       $queue = $this->getQueue($batch_set);
-      $queue->createQueue();
+      $queue?->createQueue();
       foreach ($batch_set['operations'] as $operation) {
-        $queue->createItem($operation);
+        $queue?->createItem($operation);
       }
 
       unset($batch_set['operations']);
@@ -340,7 +289,7 @@ class BatchProcessor implements BatchProcessorInterface {
 
       // Assign an arbitrary id: don't rely on a serial column in the 'batch'
       // table, since non-progressive batches skip database storage completely.
-      $this->batch['id'] = $this->getConnection()->nextId();
+      $this->batch['id'] = $this->getConnection()?->nextId();
 
       // Move operations to a job queue. Non-progressive batches will use a
       // memory-based queue.
@@ -444,7 +393,7 @@ class BatchProcessor implements BatchProcessorInterface {
       // default.
       $finished = 1;
 
-      if ($item = $queue->claimItem()) {
+      if ($item = $queue?->claimItem()) {
         [$callback, $args] = $item->data;
 
         // Build the 'context' array and execute the function call.
@@ -460,7 +409,7 @@ class BatchProcessor implements BatchProcessorInterface {
           // Make sure this step is not counted twice when computing $current.
           $finished = 0;
           // Remove the processed operation and clear the sandbox.
-          $queue->deleteItem($item);
+          $queue?->deleteItem($item);
           $current_set['count']--;
           $current_set['sandbox'] = [];
         }
@@ -579,7 +528,7 @@ class BatchProcessor implements BatchProcessorInterface {
         }
         if (is_callable($batch_set['finished'])) {
           $queue = $this->getQueue($batch_set);
-          $operations = $queue->getAllItems();
+          $operations = $queue?->getAllItems();
           $batch_set_result = call_user_func_array($batch_set['finished'], [
             $batch_set['success'],
             $batch_set['results'],
@@ -602,7 +551,7 @@ class BatchProcessor implements BatchProcessorInterface {
       $this->getBatchStorage()?->delete($this->batch['id']);
       foreach ($this->batch['sets'] as $batch_set) {
         if ($queue = $this->getQueue($batch_set)) {
-          $queue->deleteQueue();
+          $queue?->deleteQueue();
         }
       }
       // Clean-up the session. Not needed for CLI updates.
@@ -652,7 +601,7 @@ class BatchProcessor implements BatchProcessorInterface {
 
       // Use \Drupal\Core\Form\FormSubmitterInterface::redirectForm() to handle
       // the redirection logic.
-      $redirect = $this->formSubmitter->redirectForm($_batch['form_state']);
+      $redirect = $this->getFormSubmitter()?->redirectForm($_batch['form_state']);
       if (is_object($redirect)) {
         return $redirect;
       }
@@ -688,7 +637,7 @@ class BatchProcessor implements BatchProcessorInterface {
    */
   public function shutdown(): void {
     if (($this->batch) && _batch_needs_update()) {
-      $this->getBatchStorage()->update($this->batch);
+      $this->getBatchStorage()?->update($this->batch);
     }
   }
 
