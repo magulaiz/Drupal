@@ -84,6 +84,8 @@ interface FieldItemInterface extends ComplexDataInterface {
    *     stored in SQL. Also, the possible usage is limited, as you cannot
    *     specify another field as related, only existing SQL tables,
    *     such as {taxonomy_term_data}.
+   *
+   * @throws \Exception
    */
   public static function schema(FieldStorageDefinitionInterface $field_definition);
 
