@@ -116,12 +116,6 @@ abstract class EntityKernelTestBase extends KernelTestBase {
    *
    * @return \Drupal\user\Entity\User
    *   The created user entity.
-   *
-   * @deprecated in drupal:10.1.0 and will be removed from drupal:11.0.0. Use
-   *   createUser(array $permissions = [], $name = NULL, $admin = FALSE, array $values = [])
-   *   instead.
-   *
-   * @see https://www.drupal.org/node/3330762
    */
   protected function createUser(array $permissions = [], $name = NULL, $admin = FALSE, array $values = []) {
     // Allow for the old signature of this method:
