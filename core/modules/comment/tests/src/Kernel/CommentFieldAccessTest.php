@@ -112,11 +112,7 @@ class CommentFieldAccessTest extends EntityKernelTestBase {
     $comment_admin_user = $this->createUser([
       'administer comments',
       'access comments',
-    ],
-      'admin',
-      FALSE,
-      ['uid' => 2]
-    );
+    ], 'admin', FALSE, ['uid' => 2]);
 
     // Two comment enabled users, one with edit access.
     $comment_enabled_user = $this->createUser([
@@ -130,12 +126,10 @@ class CommentFieldAccessTest extends EntityKernelTestBase {
       'post comments',
       'skip comment approval',
       'access comments',
-    ],
-      'no edit');
+    ], 'no edit');
 
     // An unprivileged user.
-    $comment_disabled_user = $this->createUser(['access content'],
-      'disabled');
+    $comment_disabled_user = $this->createUser(['access content'], 'disabled');
 
     $role = Role::load(RoleInterface::ANONYMOUS_ID);
     $role->grantPermission('post comments')
