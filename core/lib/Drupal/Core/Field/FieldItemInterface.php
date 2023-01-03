@@ -86,7 +86,7 @@ interface FieldItemInterface extends ComplexDataInterface {
    *     such as {taxonomy_term_data}.
    *
    * @throws \Exception
-   *  Throws an exception when a reference field can't find the target entity type.
+   *   Throws an exception when a reference field can't find the target entity type.
    */
   public static function schema(FieldStorageDefinitionInterface $field_definition);
 
