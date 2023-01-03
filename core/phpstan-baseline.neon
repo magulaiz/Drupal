@@ -796,7 +796,7 @@ parameters:
 			path: lib/Drupal/Core/Utility/PhpRequirements.php
 
 		-
-			message: "#^Variable \\$aliased_token_name might not be defined\\.$#"
+			message: "#^Variable \\$alias_tokens_mapping might not be defined\\.$#"
 			count: 1
 			path: lib/Drupal/Core/Utility/Token.php
 
