@@ -103,6 +103,9 @@ class ReviewForm extends MigrateUpgradeFormBase {
     parent::__construct($config_factory, $migration_plugin_manager, $state, $tempstore_private);
     $this->migrationState = $migrationState;
     $this->moduleHandler = $module_handler;
+    if ($time === NULL) {
+      $time = \Drupal::service('time');
+    }
     $this->time = $time;
     if ($batch_processor === NULL) {
       @trigger_error('Calling ' . __METHOD__ . ' without the $batch_processor argument is deprecated in drupal:10.1.0 and it will be required in drupal:11.0.0. See https://www.drupal.org/node/3229844', E_USER_DEPRECATED);
