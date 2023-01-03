@@ -149,6 +149,130 @@ class TokenTest extends UnitTestCase {
   /**
    * @covers ::replace
    */
+  public function testReplaceWithAliasedTokens() {
+
+    $this->moduleHandler->expects($this->any())
+      ->method('invokeAll')
+      ->will($this->onConsecutiveCalls(
+        ['[node:title]' => 'Giraffe'],
+        ['[node:title]' => 'Elephant']
+      ));
+
+    $bubbleable_metadata = new BubbleableMetadata();
+
+    $firstNode = $this->prophesize('Drupal\node\NodeInterface');
+    $firstNode->getCacheTags()->willReturn(['node:1']);
+    $firstNode->getCacheContexts()->willReturn([]);
+    $firstNode->getCacheMaxAge()->willReturn(10);
+    $firstNode = $firstNode->reveal();
+
+    $secondNode = $this->prophesize('Drupal\node\NodeInterface');
+    $secondNode->getCacheTags()->willReturn(['node:2']);
+    $secondNode->getCacheContexts()->willReturn([]);
+    $secondNode->getCacheMaxAge()->willReturn(10);
+    $secondNode = $secondNode->reveal();
+
+    $result = $this->token->replace('[node{firstNode}:title] and [node{secondNode}:title]', ['node{firstNode}' => $firstNode, 'node{secondNode}' => $secondNode], [], $bubbleable_metadata);
+    $this->assertEquals('Giraffe and Elephant', $result);
+  }
+
+  /**
+   * @covers ::replace
+   */
+  public function testReplaceWithMultipleAliasedTokens() {
+
+    $this->moduleHandler->expects($this->any())
+      ->method('invokeAll')
+      ->will($this->onConsecutiveCalls(
+        ['[node:oneField]' => 'filled', '[node:anotherField]' => 'red'],
+        ['[node:oneField]' => 'unfilled', '[node:anotherField]' => 'brown'],
+        ['[term:termField]' => 'square'],
+        ['[term:termField]' => 'circle']
+      ));
+
+    $bubbleable_metadata = new BubbleableMetadata();
+
+    $firstNode = $this->prophesize('Drupal\node\NodeInterface');
+    $firstNode->getCacheTags()->willReturn(['node:1']);
+    $firstNode->getCacheContexts()->willReturn([]);
+    $firstNode->getCacheMaxAge()->willReturn(10);
+    $firstNode = $firstNode->reveal();
+
+    $secondNode = $this->prophesize('Drupal\node\NodeInterface');
+    $secondNode->getCacheTags()->willReturn(['node:2']);
+    $secondNode->getCacheContexts()->willReturn([]);
+    $secondNode->getCacheMaxAge()->willReturn(10);
+    $secondNode = $secondNode->reveal();
+
+    $firstTerm = $this->prophesize('Drupal\taxonomy\TermInterface');
+    $firstTerm->getCacheTags()->willReturn(['term:1']);
+    $firstTerm->getCacheContexts()->willReturn([]);
+    $firstTerm->getCacheMaxAge()->willReturn(10);
+
+    $secondTerm = $this->prophesize('Drupal\taxonomy\TermInterface');
+    $secondTerm->getCacheTags()->willReturn(['term:2']);
+    $secondTerm->getCacheContexts()->willReturn([]);
+    $secondTerm->getCacheMaxAge()->willReturn(10);
+
+    $text_to_replace = "[node{firstNode}:oneField] [node{firstNode}:anotherField] [term{firstTerm}:termField] and [node{secondNode}:oneField] [node{secondNode}:anotherField] [term{secondTerm}:termField]";
+    $token_data = [
+      'node{firstNode}' => $firstNode,
+      'node{secondNode}' => $secondNode,
+      'term{firstTerm}' => $firstTerm,
+      'term{secondTerm}' => $secondTerm,
+    ];
+
+    $result = $this->token->replace($text_to_replace, $token_data, [], $bubbleable_metadata);
+    $this->assertEquals('filled red square and unfilled brown circle', $result);
+  }
+
+  /**
+   * @covers ::replace
+   */
+  public function testReplaceMixingAliasedAndUnaliasedTokens() {
+
+    $this->moduleHandler->expects($this->any())
+      ->method('invokeAll')
+      ->will($this->onConsecutiveCalls(
+        ['[term:termField]' => 'square'],
+        ['[node:oneField]' => 'filled', '[node:anotherField]' => 'red'],
+        ['[node:oneField]' => 'unfilled', '[node:anotherField]' => 'brown']
+      ));
+
+    $bubbleable_metadata = new BubbleableMetadata();
+
+    $firstNode = $this->prophesize('Drupal\node\NodeInterface');
+    $firstNode->getCacheTags()->willReturn(['node:1']);
+    $firstNode->getCacheContexts()->willReturn([]);
+    $firstNode->getCacheMaxAge()->willReturn(10);
+    $firstNode = $firstNode->reveal();
+
+    $secondNode = $this->prophesize('Drupal\node\NodeInterface');
+    $secondNode->getCacheTags()->willReturn(['node:2']);
+    $secondNode->getCacheContexts()->willReturn([]);
+    $secondNode->getCacheMaxAge()->willReturn(10);
+    $secondNode = $secondNode->reveal();
+
+    $term = $this->prophesize('Drupal\taxonomy\TermInterface');
+    $term->getCacheTags()->willReturn(['term:1']);
+    $term->getCacheContexts()->willReturn([]);
+    $term->getCacheMaxAge()->willReturn(10);
+
+    $text_to_replace = "[node{firstNode}:oneField] [node{firstNode}:anotherField] [term:termField] and [node{secondNode}:oneField] [node{secondNode}:anotherField] triangle";
+    $token_data = [
+      'node{firstNode}' => $firstNode,
+      'node{secondNode}' => $secondNode,
+      'term' => $term,
+    ];
+
+    $result = $this->token->replace($text_to_replace, $token_data, [], $bubbleable_metadata);
+    $this->assertEquals('filled red square and unfilled brown triangle', $result);
+  }
+
+  /**
+   *
+   * @covers ::replace
+   */
   public function testReplaceWithBubbleableMetadataObject() {
     $this->moduleHandler->expects($this->any())
       ->method('invokeAll')
@@ -212,7 +336,6 @@ class TokenTest extends UnitTestCase {
 
   /**
    * @covers ::replace
-   * @covers ::replace
    */
   public function testReplaceWithHookTokensAlterWithBubbleableMetadata() {
     $this->moduleHandler->expects($this->any())
@@ -267,23 +390,30 @@ class TokenTest extends UnitTestCase {
     $this->moduleHandler->expects($this->any())
       ->method('invokeAll')
       ->willReturnCallback(function ($type, $args) {
-        return $args[2]['tokens'];
+        return $args[2];
       });
 
-    $result = $this->token->replace($string, ['tokens' => $tokens]);
+    $result = $this->token->replace($string, $tokens);
     $this->assertIsString($result);
+
     $this->assertEquals($expected, $result);
   }
 
+  /**
+   * Provides Test Data for replace.
+   */
   public function providerTestReplaceEscaping() {
     $data = [];
 
     // No tokens. The first argument to Token::replace() should not be escaped.
     $data['no-tokens'] = ['muh', [], 'muh'];
     $data['html-in-string'] = ['<h1>Giraffe</h1>', [], '<h1>Giraffe</h1>'];
+
     $data['html-in-string-quote'] = ['<h1>Giraffe"</h1>', [], '<h1>Giraffe"</h1>'];
 
-    $data['simple-placeholder-with-plain-text'] = ['<h1>[token:meh]</h1>', ['[token:meh]' => 'Giraffe"'], '<h1>' . Html::escape('Giraffe"') . '</h1>'];
+    $data['simple-placeholder-with-plain-text'] = ['<h1>[node:nodeField]</h1>', ['[node:nodeField]' => 'Giraffe"'], '<h1>' . Html::escape('Giraffe"') . '</h1>'];
+
+    $data['simple-placeholder-with-plain-text'] = ['<h1>[node:nodeField] - [node:nodeField2]</h1>', ['[node:nodeField]' => 'Giraffe"', '[node:nodeField2]' => 'Giraffe2'], '<h1>' . Html::escape('Giraffe" - Giraffe2') . '</h1>'];
 
     $data['simple-placeholder-with-safe-html'] = [
       '<h1>[token:meh]</h1>',

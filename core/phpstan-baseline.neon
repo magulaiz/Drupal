@@ -796,6 +796,11 @@ parameters:
 			path: lib/Drupal/Core/Utility/PhpRequirements.php
 
 		-
+			message: "#^Variable \\$aliased_token_name might not be defined\\.$#"
+			count: 1
+			path: lib/Drupal/Core/Utility/Token.php
+
+		-
 			message: "#^Relying on entity queries to check access by default is deprecated in drupal\\:9\\.2\\.0 and an error will be thrown from drupal\\:10\\.0\\.0\\. Call \\\\Drupal\\\\Core\\\\Entity\\\\Query\\\\QueryInterface\\:\\:accessCheck\\(\\) with TRUE or FALSE to specify whether access should be checked\\.$#"
 			count: 1
 			path: lib/Drupal/Core/Validation/Plugin/Validation/Constraint/UniqueFieldValueValidator.php
