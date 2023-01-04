@@ -610,11 +610,6 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
         $this->assertEquals(str_replace($this->baseUrl, '', $style_url), $test_head->getAttribute('href'));
       }
     }
-//    $this->assertPageHead('link', [
-//      'rel' => 'preload',
-//      'as' => 'image',
-//      'href' => str_replace($this->baseUrl, '', $style_url),
-//    ], (int) $preload);
   }
 
   /**
