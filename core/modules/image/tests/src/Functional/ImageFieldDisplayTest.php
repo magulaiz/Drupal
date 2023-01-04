@@ -8,6 +8,7 @@ use Drupal\Core\Url;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\image\Entity\ImageStyle;
 use Drupal\Tests\system\Functional\Cache\AssertPageCacheContextsAndTagsTrait;
+use Drupal\Tests\system\Functional\Render\AssertPageHeadTrait;
 use Drupal\Tests\TestFileCreationTrait;
 use Drupal\user\RoleInterface;
 
@@ -18,6 +19,7 @@ use Drupal\user\RoleInterface;
  */
 class ImageFieldDisplayTest extends ImageFieldTestBase {
 
+  use AssertPageHeadTrait;
   use AssertPageCacheContextsAndTagsTrait;
   use TestFileCreationTrait {
     getTestFiles as drupalGetTestFiles;
@@ -113,6 +115,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
       '#width' => 40,
       '#height' => 20,
       '#alt' => $alt,
+      '#image_preload' => FALSE,
       '#attributes' => ['loading' => 'lazy'],
     ];
     $default_output = str_replace("\n", '', $renderer->renderRoot($image));
@@ -134,6 +137,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
       '#width' => 40,
       '#height' => 20,
       '#alt' => $alt,
+      '#image_preload' => FALSE,
       '#attributes' => ['loading' => 'lazy'],
     ];
     $default_output = '<a href="' . $file->createFileUrl() . '">' . $renderer->renderRoot($image) . '</a>';
@@ -193,6 +197,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
       '#height' => 20,
       '#style_name' => 'thumbnail',
       '#alt' => $alt,
+      '#image_preload' => FALSE,
       '#attributes' => ['loading' => 'lazy'],
     ];
     $default_output = $renderer->renderRoot($image_style);
@@ -304,6 +309,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
       '#title' => $this->randomMachineName(),
       '#width' => 40,
       '#height' => 20,
+      '#image_preload' => FALSE,
       '#attributes' => ['loading' => 'lazy'],
     ];
     $edit = [
@@ -418,6 +424,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
       '#width' => 40,
       '#height' => 20,
       '#alt' => $alt,
+      '#image_preload' => FALSE,
       '#attributes' => ['loading' => 'lazy'],
     ];
     $default_output = str_replace("\n", '', $renderer->renderRoot($image));
@@ -429,6 +436,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
       'settings' => [
         'image_link' => '',
         'image_style' => '',
+        'image_preload' => FALSE,
         'image_loading' => ['attribute' => 'eager'],
       ],
     ];
@@ -443,6 +451,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
       '#width' => 40,
       '#height' => 20,
       '#alt' => $alt,
+      '#image_preload' => FALSE,
       '#attributes' => ['loading' => 'eager'],
     ];
     $default_output = $renderer->renderRoot($image);
@@ -464,11 +473,134 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
       '#height' => 20,
       '#style_name' => 'thumbnail',
       '#alt' => $alt,
+      '#image_preload' => FALSE,
       '#attributes' => ['loading' => 'eager'],
     ];
     $default_output = $renderer->renderRoot($image_style);
     $this->drupalGet('node/' . $nid);
     $this->assertSession()->responseContains($default_output);
+  }
+
+  /**
+   * Tests for image preload settings.
+   *
+   * @dataProvider provideImagePreload
+   */
+  public function testImageFieldPreload($preload) {
+    /** @var \Drupal\Core\Render\RendererInterface $renderer */
+    $renderer = $this->container->get('renderer');
+    $node_storage = $this->container->get('entity_type.manager')->getStorage('node');
+    $field_name = strtolower($this->randomMachineName());
+    $field_settings = ['alt_field_required' => 0];
+    $instance = $this->createImageField($field_name, 'article', [], $field_settings);
+
+    // Go to manage display page.
+    $this->drupalGet("admin/structure/types/manage/article/display");
+
+    // Test for existence of link to image styles configuration.
+    $this->submitForm([], "{$field_name}_settings_edit");
+    $this->assertSession()->linkByHrefExists(Url::fromRoute('entity.image_style.collection')->toString(), 0, 'Link to image styles configuration is found');
+
+    // Remove 'administer image styles' permission from testing admin user.
+    $admin_user_roles = $this->adminUser->getRoles(TRUE);
+    user_role_change_permissions(reset($admin_user_roles), ['administer image styles' => FALSE]);
+
+    // Go to manage display page again.
+    $this->drupalGet("admin/structure/types/manage/article/display");
+
+    // Test for absence of link to image styles configuration.
+    $this->submitForm([], "{$field_name}_settings_edit");
+    $this->assertSession()->linkByHrefNotExists(Url::fromRoute('entity.image_style.collection')->toString(), 'Link to image styles configuration is absent when permissions are insufficient');
+
+    // Restore 'administer image styles' permission to testing admin user.
+    user_role_change_permissions(reset($admin_user_roles), ['administer image styles' => TRUE]);
+
+    // Create a new node with an image attached.
+    $test_image = current($this->drupalGetTestFiles('image'));
+
+    // Ensure that preview works.
+    $this->previewNodeImage($test_image, $field_name, 'article');
+
+    // After previewing, make the alt field required. It cannot be required
+    // during preview because the form validation will fail.
+    $instance->setSetting('alt_field_required', 1);
+    $instance->save();
+
+    // Create alt text for the image.
+    $alt = $this->randomMachineName();
+
+    // Save node.
+    $nid = $this->uploadNodeImage($test_image, $field_name, 'article', $alt);
+    $node_storage->resetCache([$nid]);
+    $node = $node_storage->load($nid);
+
+    // Test that the preload link added to the page head.
+    /** @var \Drupal\file\FileInterface $file */
+    $file = $node->{$field_name}->entity;
+    $image_uri = $file->getFileUri();
+    $display_options = [
+      'type' => 'image',
+      'settings' => [
+        'image_link' => '',
+        'image_style' => '',
+        'image_preload' => $preload,
+        'image_loading' => ['attribute' => 'lazy'],
+      ],
+    ];
+    $display = \Drupal::service('entity_display.repository')
+      ->getViewDisplay('node', $node->getType());
+    $display->setComponent($field_name, $display_options)
+      ->save();
+
+    $image = [
+      '#theme' => 'image',
+      '#uri' => $image_uri,
+      '#width' => 40,
+      '#height' => 20,
+      '#alt' => $alt,
+      '#image_preload' => $preload,
+      '#attributes' => ['loading' => 'lazy'],
+    ];
+    $default_output = $renderer->renderRoot($image);
+    $this->drupalGet('node/' . $nid);
+    // Regardless of image_preload, the image must be on the page.
+    $this->assertSession()->responseContains($default_output);
+    // Check preload head link tag.
+    $this->assertPageHead('link', [
+      'rel' => 'preload',
+      'as' => 'image',
+      'href' => $file->createFileUrl(),
+    ], (int) $preload);
+
+    // Test the image preload works together with "image_style".
+    $display_options['settings']['image_style'] = 'thumbnail';
+    $display->setComponent($field_name, $display_options)
+      ->save();
+
+    // Ensure the derivative image is generated so we do not have to deal with
+    // image style callback paths.
+    $style_url = ImageStyle::load('thumbnail')->buildUrl($image_uri);
+    $this->drupalGet($style_url);
+    $image_style = [
+      '#theme' => 'image_style',
+      '#uri' => $image_uri,
+      '#width' => 40,
+      '#height' => 20,
+      '#style_name' => 'thumbnail',
+      '#alt' => $alt,
+      '#image_preload' => $preload,
+      '#attributes' => ['loading' => 'lazy'],
+    ];
+    $default_output = $renderer->renderRoot($image_style);
+    $this->drupalGet('node/' . $nid);
+    // Regardless of image_preload, the image must be on the page.
+    $this->assertSession()->responseContains($default_output);
+    // Check preload head link tag.
+    $this->assertPageHead('link', [
+      'rel' => 'preload',
+      'as' => 'image',
+      'href' => str_replace($this->baseUrl, '', $style_url),
+    ], (int) $preload);
   }
 
   /**
@@ -518,6 +650,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
       '#title' => $title,
       '#width' => 40,
       '#height' => 20,
+      '#image_preload' => FALSE,
       '#attributes' => ['loading' => 'lazy'],
     ];
     $default_output = str_replace("\n", '', $renderer->renderRoot($image));
@@ -544,6 +677,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
       '#width' => 40,
       '#height' => 20,
       '#alt' => $alt,
+      '#image_preload' => FALSE,
       '#attributes' => ['loading' => 'lazy'],
     ];
     $image_output = str_replace("\n", '', $renderer->renderRoot($image));
@@ -599,6 +733,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
       '#title' => $title,
       '#width' => 40,
       '#height' => 20,
+      '#image_preload' => FALSE,
       '#attributes' => ['loading' => 'lazy'],
     ];
     $default_output = str_replace("\n", '', $renderer->renderRoot($image));
@@ -609,6 +744,19 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
     // Default private image should be displayed when no user supplied image
     // is present.
     $this->assertSession()->responseContains($default_output);
+  }
+
+  /**
+   * Provide image preload test cases.
+   *
+   * @return array
+   *   Test data.
+   */
+  public function provideImagePreload(): array {
+    return [
+      ['preload' => TRUE],
+      ['preload' => FALSE],
+    ];
   }
 
 }
