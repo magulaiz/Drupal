@@ -34,7 +34,6 @@ global-styling:
       css/components/fieldset.css: {}
       css/components/form.css: {}
       css/components/form--checkbox-radio.css: {}
-      css/components/form--checkbox-radio--ie.css: {}
       css/components/form--field-multiple.css: {}
       css/components/form--managed-file.css: {}
       css/components/form--text.css: {}
@@ -247,7 +246,7 @@ vertical-tabs:
     component:
       css/components/vertical-tabs.css: {}
   js:
-     js/vertical-tabs.js: {}
+    js/vertical-tabs.js: {}
   dependencies:
     - claro/global-styling
 
@@ -287,6 +286,18 @@ filter:
   css:
     component:
       css/theme/filter.theme.css: {}
+
+tableselect:
+  version: VERSION
+  js:
+    js/tableselect.js: {}
+  dependencies:
+    - core/jquery
+    - core/drupal
+    - core/drupal.announce
+    - core/drupal.debounce
+    - core/tabbable
+    - core/once
 
 classy.book-navigation:
   version: VERSION

@@ -166,7 +166,7 @@ abstract class Schema implements PlaceholderInterface {
    * @param $table
    *   The name of the table in drupal (no prefixing).
    *
-   * @return
+   * @return bool
    *   TRUE if the given table exists, otherwise FALSE.
    */
   public function tableExists($table) {
@@ -244,7 +244,7 @@ abstract class Schema implements PlaceholderInterface {
    * @param string $column
    *   The name of the column.
    *
-   * @return
+   * @return bool
    *   TRUE if the given column exists, otherwise FALSE.
    */
   public function fieldExists($table, $column) {
@@ -292,7 +292,7 @@ abstract class Schema implements PlaceholderInterface {
    * @param $table
    *   The table to be dropped.
    *
-   * @return
+   * @return bool
    *   TRUE if the table was successfully dropped, FALSE if there was no table
    *   by that name to begin with.
    */
@@ -338,7 +338,7 @@ abstract class Schema implements PlaceholderInterface {
    * @param $field
    *   The field to be dropped.
    *
-   * @return
+   * @return bool
    *   TRUE if the field was successfully dropped, FALSE if there was no field
    *   by that name to begin with.
    */
@@ -352,7 +352,7 @@ abstract class Schema implements PlaceholderInterface {
    * @param $name
    *   The name of the index in drupal (no prefixing).
    *
-   * @return
+   * @return bool
    *   TRUE if the given index exists, otherwise FALSE.
    */
   abstract public function indexExists($table, $name);
@@ -416,7 +416,7 @@ abstract class Schema implements PlaceholderInterface {
    * @param $table
    *   The table to be altered.
    *
-   * @return
+   * @return bool
    *   TRUE if the primary key was successfully dropped, FALSE if there was no
    *   primary key on this table to begin with.
    */
@@ -490,7 +490,7 @@ abstract class Schema implements PlaceholderInterface {
    * @param $name
    *   The name of the key.
    *
-   * @return
+   * @return bool
    *   TRUE if the key was successfully dropped, FALSE if there was no key by
    *   that name to begin with.
    */
@@ -566,7 +566,7 @@ abstract class Schema implements PlaceholderInterface {
    * @param $name
    *   The name of the index.
    *
-   * @return
+   * @return bool
    *   TRUE if the index was successfully dropped, FALSE if there was no index
    *   by that name to begin with.
    */
@@ -676,6 +676,8 @@ abstract class Schema implements PlaceholderInterface {
    *   If the specified table already exists.
    * @throws \Drupal\Core\Database\SchemaException
    *   If the table definition fails validation.
+   * @throws \BadMethodCallException
+   *   When ::createTableSql() is not implemented in the concrete driver class.
    */
   public function createTable($name, $table) {
     if ($this->tableExists($name)) {
@@ -688,6 +690,32 @@ abstract class Schema implements PlaceholderInterface {
   }
 
   /**
+   * Generate SQL to create a new table from a Drupal schema definition.
+   *
+   * This method should be implemented in extending classes.
+   *
+   * @param string $name
+   *   The name of the table to create.
+   * @param array $table
+   *   A Schema API table definition array.
+   *
+   * @return array
+   *   An array of SQL statements to create the table.
+   *
+   * @throws \BadMethodCallException
+   *   If the method is not implemented in the concrete driver class.
+   *
+   * @todo This method is called by Schema::createTable on the abstract class, and
+   *   therefore should be defined as well on the abstract class to prevent static
+   *   analysis errors. In D11, consider changing it to an abstract method, or to
+   *   make it private for each driver, and ::createTable actually an abstract
+   *   method here for implementation in each driver.
+   */
+  protected function createTableSql($name, $table) {
+    throw new \BadMethodCallException(get_class($this) . '::createTableSql() not implemented.');
+  }
+
+  /**
    * Return an array of field names from an array of key/index column specifiers.
    *
    * This is usually an identity function but if a key/index uses a column prefix
@@ -696,7 +724,7 @@ abstract class Schema implements PlaceholderInterface {
    * @param $fields
    *   An array of key/index column specifiers.
    *
-   * @return
+   * @return array
    *   An array of field names.
    */
   public function fieldNames($fields) {
@@ -720,7 +748,7 @@ abstract class Schema implements PlaceholderInterface {
    * @param $length
    *   Optional upper limit on the returned string length.
    *
-   * @return
+   * @return string
    *   The prepared comment.
    */
   public function prepareComment($comment, $length = NULL) {

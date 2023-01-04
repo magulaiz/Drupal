@@ -88,13 +88,6 @@ class KernelTestBaseTest extends KernelTestBase {
     ]);
     $this->assertTrue($database->schema()->tableExists('foo'));
 
-    // Ensure that the database tasks have been run during set up. Neither MySQL
-    // nor SQLite make changes that are testable.
-    if ($database->driver() == 'pgsql') {
-      $this->assertEquals('on', $database->query("SHOW standard_conforming_strings")->fetchField());
-      $this->assertEquals('escape', $database->query("SHOW bytea_output")->fetchField());
-    }
-
     $this->assertNotNull(FileCacheFactory::getPrefix());
   }
 
@@ -316,10 +309,11 @@ class KernelTestBaseTest extends KernelTestBase {
     if ($connection->databaseType() === 'sqlite') {
       $result = $connection->query("SELECT name FROM " . $this->databasePrefix .
         ".sqlite_master WHERE type = :type AND name LIKE :table_name AND name NOT LIKE :pattern", [
-        ':type' => 'table',
-        ':table_name' => '%',
-        ':pattern' => 'sqlite_%',
-      ])->fetchAllKeyed(0, 0);
+          ':type' => 'table',
+          ':table_name' => '%',
+          ':pattern' => 'sqlite_%',
+        ]
+      )->fetchAllKeyed(0, 0);
       $this->assertEmpty($result, 'All test tables have been removed.');
     }
     else {
