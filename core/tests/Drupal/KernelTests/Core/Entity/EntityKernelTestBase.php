@@ -117,7 +117,7 @@ abstract class EntityKernelTestBase extends KernelTestBase {
    * @return \Drupal\user\Entity\User
    *   The created user entity.
    */
-  protected function createUser(array $permissions = [], $name = NULL, $admin = FALSE, array $values = []) {
+  protected function createUser(array $permissions = [], $name = NULL, bool $admin = FALSE, array $values = []) {
     // Allow for the old signature of this method:
     // createUser($values = [], $permissions = [])
     if (!array_is_list($permissions)) {
