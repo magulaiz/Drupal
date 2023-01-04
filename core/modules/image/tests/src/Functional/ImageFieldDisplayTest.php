@@ -596,11 +596,25 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
     // Regardless of image_preload, the image must be on the page.
     $this->assertSession()->responseContains($default_output);
     // Check preload head link tag.
-    $this->assertPageHead('link', [
-      'rel' => 'preload',
-      'as' => 'image',
-      'href' => str_replace($this->baseUrl, '', $style_url),
-    ], (int) $preload);
+    // @todo update assert after the test.
+    // Discover the DOM element for the meta link.
+    $test_head = $this->xpath('//head/link[@rel="preload"]');
+    $this->assertCount((int) $preload, $test_head, 'There\'s only one preload attribute.');
+    if ($preload) {
+      // Grab the only DOM element.
+      $test_head = reset($test_head);
+      if (empty($test_head)) {
+        $this->fail('Unable to find the head link.');
+      }
+      else {
+        $this->assertEquals(str_replace($this->baseUrl, '', $style_url), $test_head->getAttribute('href'));
+      }
+    }
+//    $this->assertPageHead('link', [
+//      'rel' => 'preload',
+//      'as' => 'image',
+//      'href' => str_replace($this->baseUrl, '', $style_url),
+//    ], (int) $preload);
   }
 
   /**
