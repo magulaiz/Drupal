@@ -126,6 +126,8 @@ class MediaThumbnailFormatterTest extends MediaFunctionalTestBase {
    *
    * @param string $type
    *   Image link type.
+   * @param bool $preload
+   *   Preload option.
    */
   private function changeMediaReferenceFieldLinkType(string $type, bool $preload): void {
     // Change the display to use the media thumbnail formatter with image link.
