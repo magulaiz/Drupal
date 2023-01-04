@@ -279,7 +279,7 @@ class EntityAutocompleteElementFormTest extends EntityKernelTestBase implements 
   public function testInvalidEntityAutocompleteElement() {
     $form_builder = $this->container->get('form_builder');
 
-    // Test 'single' with an entity label that doesn't exist.
+    // Test 'single' with an entity label that doesn't exist
     $form_state = (new FormState())
       ->setValues([
         'single' => 'single - non-existent label',
