@@ -32,6 +32,7 @@ content:
     settings:
       image_style: medium
       image_link: content
+      image_preload: false
       image_loading:
         attribute: lazy
     third_party_settings: {  }

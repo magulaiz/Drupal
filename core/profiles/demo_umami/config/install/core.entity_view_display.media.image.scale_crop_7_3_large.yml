@@ -24,6 +24,7 @@ content:
     settings:
       image_style: scale_crop_7_3_large
       image_link: ''
+      image_preload: false
       image_loading:
         attribute: lazy
     third_party_settings: {  }

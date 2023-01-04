@@ -41,6 +41,7 @@ content:
     settings:
       image_style: wide
       image_link: ''
+      image_preload: false
       image_loading:
         attribute: lazy
     third_party_settings: {  }
