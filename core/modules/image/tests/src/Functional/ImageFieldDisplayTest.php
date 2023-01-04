@@ -595,21 +595,17 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
     $this->drupalGet('node/' . $nid);
     // Regardless of image_preload, the image must be on the page.
     $this->assertSession()->responseContains($default_output);
+    // Prepare expected image URL.
+    // @see template_preprocess_image()
+    /** @var \Drupal\Core\File\FileUrlGeneratorInterface $file_url_generator */
+    $file_url_generator = \Drupal::service('file_url_generator');
+    $style_url = $file_url_generator->generateString($style_url);
     // Check preload head link tag.
-    // @todo update assert after the test.
-    // Discover the DOM element for the meta link.
-    $test_head = $this->xpath('//head/link[@rel="preload"]');
-    $this->assertCount((int) $preload, $test_head, 'There\'s only one preload attribute.');
-    if ($preload) {
-      // Grab the only DOM element.
-      $test_head = reset($test_head);
-      if (empty($test_head)) {
-        $this->fail('Unable to find the head link.');
-      }
-      else {
-        $this->assertEquals(str_replace($this->baseUrl, '', $style_url), $test_head->getAttribute('href'));
-      }
-    }
+    $this->assertPageHead('link', [
+      'rel' => 'preload',
+      'as' => 'image',
+      'href' => $style_url,
+    ], (int) $preload);
   }
 
   /**
