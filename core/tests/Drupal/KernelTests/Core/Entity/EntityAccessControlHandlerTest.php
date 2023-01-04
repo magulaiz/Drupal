@@ -305,7 +305,7 @@ class EntityAccessControlHandlerTest extends EntityLanguageTestBase {
   public function testFieldAccess($entity_class, array $entity_create_values, $expected_id_create_access) {
     // Set up a non-admin user that is allowed to create and update test
     // entities.
-    \Drupal::currentUser()->setAccount($this->createUser(['administer entity_test content'], FALSE, NULL, ['uid' => 2]));
+    \Drupal::currentUser()->setAccount($this->createUser(['administer entity_test content'], NULL, FALSE, ['uid' => 2]));
 
     // Create the entity to test field access with.
     $entity = $entity_class::create($entity_create_values);
