@@ -531,6 +531,9 @@
         ajax.ajaxing = true;
         return ajax.beforeSend(xmlhttprequest, options);
       },
+      uploadProgress(event, position, total, percentComplete) {
+        return ajax.uploadProgress(event, position, total, percentComplete);
+      },
       success(response, status, xmlhttprequest) {
         // Sanity check for browser support (object expected).
         // When using iFrame uploads, responses must be returned as a string.
@@ -938,6 +941,34 @@
    */
   Drupal.theme.ajaxProgressMessage = (message) =>
     `<div class="message">${message}</div>`;
+/**
+   * Processes file upload progress if needed.
+   * @param event
+   * @param position
+   * @param total
+   * @param percentComplete
+   */
+  function bytesToSize(bytes, separator = '') {
+    const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
+    if (bytes === 0) return '0 Bytes';
+    const i = parseInt(Math.floor(Math.log(bytes) / Math.log(1024)), 10);
+    if (i === 0) return `${bytes}${separator}${sizes[i]}`;
+    return `${(bytes / 1024 ** i).toFixed(1)}${separator}${sizes[i]}`;
+  }
+  Drupal.Ajax.prototype.uploadProgress = function (
+    event,
+    position,
+    total,
+    percentComplete,
+  ) {
+    if (this.progress.type === 'bar') {
+      const message = Drupal.t('Uploading... (@current of @total)', {
+        '@current': bytesToSize(position),
+        '@total': bytesToSize(total),
+      });
+      this.progress.object.setProgress(percentComplete, message);
+    }
+  };
 
   /**
    * Provide a wrapper for the AJAX progress bar element.

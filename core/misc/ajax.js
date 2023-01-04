@@ -193,6 +193,9 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
         ajax.ajaxing = true;
         return ajax.beforeSend(xmlhttprequest, options);
       },
+      uploadProgress: function uploadProgress(event, position, total, percentComplete) {
+        return ajax.uploadProgress(event, position, total, percentComplete);
+      },
       success: function success(response, status, xmlhttprequest) {
         var _this = this;
         if (typeof response === 'string') {
@@ -344,6 +347,21 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
   Drupal.theme.ajaxProgressBar = function ($element) {
     return $('<div class="ajax-progress ajax-progress-bar"></div>').append($element);
   };
+
+  function bytesToSize(bytes, separator = '') {
+    var sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
+    if (bytes === 0) return '0 Bytes';
+    var i = parseInt(Math.floor(Math.log(bytes) / Math.log(1024)), 10);
+    if (i === 0) return `${bytes}${separator}${sizes[i]}`;
+    return `${(bytes / 1024 ** i).toFixed(1)}${separator}${sizes[i]}`;
+  }
+  Drupal.Ajax.prototype.uploadProgress = function (event, position, total, percentComplete) {
+    if (this.progress.type === 'bar') {
+      var message = Drupal.t('Uploading... (@current of @total)', {'@current': bytesToSize(position), '@total': bytesToSize(total)});
+      this.progress.object.setProgress(percentComplete, message);
+    }
+  };
+
   Drupal.Ajax.prototype.setProgressIndicatorBar = function () {
     var progressBar = new Drupal.ProgressBar("ajax-progress-".concat(this.element.id), $.noop, this.progress.method, $.noop);
     if (this.progress.message) {
