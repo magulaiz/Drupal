@@ -5,9 +5,22 @@
  * Install, update and uninstall functions for the block_content module.
  */
 
+use Drupal\block_content\BlockContentStorageSchema;
+use Drupal\Core\Field\BaseFieldDefinition;
+
 /**
  * Implements hook_update_last_removed().
  */
 function block_content_update_last_removed() {
   return 8600;
+}
+
+/**
+ * Apply index to reusable column.
+ */
+function block_content_update_10100() {
+  $manager = \Drupal::entityDefinitionUpdateManager();
+  $entity_type = $manager->getEntityType('block_content')->setHandlerClass('storage_schema', BlockContentStorageSchema::class);
+  $manager->updateEntityType($entity_type);
+  $manager->updateFieldStorageDefinition(\Drupal::service('entity_field.manager')->getBaseFieldDefinitions('block_content')['reusable']);
 }

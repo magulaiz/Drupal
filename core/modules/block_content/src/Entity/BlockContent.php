@@ -26,6 +26,7 @@ use Drupal\user\UserInterface;
  *   bundle_label = @Translation("Custom block type"),
  *   handlers = {
  *     "storage" = "Drupal\Core\Entity\Sql\SqlContentEntityStorage",
+ *     "storage_schema" = "Drupal\block_content\BlockContentStorageSchema",
  *     "access" = "Drupal\block_content\BlockContentAccessControlHandler",
  *     "list_builder" = "Drupal\block_content\BlockContentListBuilder",
  *     "view_builder" = "Drupal\block_content\BlockContentViewBuilder",
