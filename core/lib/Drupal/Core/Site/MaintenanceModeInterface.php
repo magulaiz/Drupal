@@ -69,26 +69,25 @@ interface MaintenanceModeInterface {
    *
    * Used for site installs, updates and when the site is in maintenance mode.
    * It also applies when the database is unavailable or bootstrap was not
-   * complete. Seven is always used for the initial install and update
-   * operations. In other cases, Bartik is used, but this can be overridden by
-   * setting a "maintenance_theme" key in the $settings variable in
-   * settings.php.
+   * complete. Claro is always used for the initial install and update
+   * operations, but this can be overridden by setting a "maintenance_theme" key
+   * in the $settings variable in settings.php.
    */
-  public function setTheme();
+  public function setTheme(): static;
 
   /**
    * Set flags that maintenance mode is enabled.
    *
    * @return self
    */
-  public function enable();
+  public function enable(): static;
 
   /**
    * Set flags that maintenance mode is disabled.
    *
    * @return self
    */
-  public function disable();
+  public function disable(): static;
 
   /**
    * Set the maintenance mode state.
@@ -96,14 +95,14 @@ interface MaintenanceModeInterface {
    * The mode state is empty by the default. But for specific cases it can be
    * set for 'install' or 'update' mode state.
    *
-   * @param null|string $mode
+   * @param string $mode
    *   Mode value.
    *
    * @throws \Exception
    *
    * @see \Drupal\Core\Site\MaintenanceMode::MODE
    */
-  public static function setMode($mode = self::MODE['offline']);
+  public static function setMode(string $mode = self::MODE['offline']): void;
 
   /**
    * Returns the maintenance mode state.
@@ -111,14 +110,14 @@ interface MaintenanceModeInterface {
    * The mode state is empty by the default. But for specific cases it can be
    * set for 'install' or 'update' mode state.
    *
-   * @return string|null
+   * @return string
    *   Current stored mode state.
    *
    * @throws \Exception
    *
    * @see \Drupal\Core\Site\MaintenanceMode::MODE
    */
-  public static function getMode();
+  public static function getMode(): string;
 
   /**
    * Returns state of the maintenance.
@@ -128,6 +127,6 @@ interface MaintenanceModeInterface {
    *   - TRUE if maintenance mode enabled and site is offline;
    *   - FALSE if maintenance mode disabled and site is online;
    */
-  public function isEnabled();
+  public function isEnabled(): bool;
 
 }

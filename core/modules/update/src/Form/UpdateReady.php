@@ -48,13 +48,6 @@ class UpdateReady extends FormBase {
   protected $sitePath;
 
   /**
-   * The maintenance mode service.
-   *
-   * @var \Drupal\Core\Site\MaintenanceModeInterface
-   */
-  protected $maintenanceMode;
-
-  /**
    * Constructs a new UpdateReady object.
    *
    * @param string $root
@@ -65,18 +58,18 @@ class UpdateReady extends FormBase {
    *   The state key value store.
    * @param string $site_path
    *   The site path.
-   * @param \Drupal\Core\Site\MaintenanceModeInterface $maintenance_mode
-   *   Maintenance mode instance.
+   * @param \Drupal\Core\Site\MaintenanceModeInterface|null $maintenanceMode
+   *   The maintenance mode service.
    */
-  public function __construct($root, ModuleHandlerInterface $module_handler, StateInterface $state, $site_path, MaintenanceModeInterface $maintenance_mode = NULL) {
+  public function __construct($root, ModuleHandlerInterface $module_handler, StateInterface $state, $site_path, protected ?MaintenanceModeInterface $maintenanceMode = NULL) {
     $this->root = $root;
     $this->moduleHandler = $module_handler;
     $this->state = $state;
     $this->sitePath = $site_path;
-    if ($maintenance_mode === NULL) {
-      $maintenance_mode = \Drupal::service('maintenance_mode');
+    if ($this->maintenanceMode === NULL) {
+      @trigger_error('Calling ' . __METHOD__ . '() without the $maintenanceMode argument is deprecated in drupal:10.1.0 and will be required in drupal:11.0.0', E_USER_DEPRECATED);
+      $this->maintenanceMode = \Drupal::service('maintenance_mode');
     }
-    $this->maintenanceMode = $maintenance_mode;
   }
 
   /**

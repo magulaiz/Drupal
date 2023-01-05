@@ -33,13 +33,6 @@ class SiteMaintenanceModeForm extends ConfigFormBase {
   protected $permissionHandler;
 
   /**
-   * The maintenance mode service.
-   *
-   * @var \Drupal\Core\Site\MaintenanceModeInterface
-   */
-  protected $maintenanceMode;
-
-  /**
    * Constructs a new SiteMaintenanceModeForm.
    *
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
@@ -48,18 +41,18 @@ class SiteMaintenanceModeForm extends ConfigFormBase {
    *   The state keyvalue collection to use.
    * @param \Drupal\user\PermissionHandlerInterface $permission_handler
    *   The permission handler.
-   * @param \Drupal\Core\Site\MaintenanceModeInterface $maintenance_mode
+   * @param \Drupal\Core\Site\MaintenanceModeInterface|null $maintenanceMode
    *   Maintenance mode instance.
    */
-  public function __construct(ConfigFactoryInterface $config_factory, StateInterface $state, PermissionHandlerInterface $permission_handler, MaintenanceModeInterface $maintenance_mode = NULL) {
+  public function __construct(ConfigFactoryInterface $config_factory, StateInterface $state, PermissionHandlerInterface $permission_handler, protected ?MaintenanceModeInterface $maintenanceMode = NULL) {
     parent::__construct($config_factory);
-    // @ToDo: Remove state service injection before drupal:10.0.0.
+    // @ToDo: Remove state service injection before drupal:11.0.0.
     $this->state = $state;
     $this->permissionHandler = $permission_handler;
-    if ($maintenance_mode === NULL) {
-      $maintenance_mode = \Drupal::service('maintenance_mode');
+    if ($this->maintenanceMode === NULL) {
+      @trigger_error('Calling ' . __METHOD__ . '() without the $maintenanceMode argument is deprecated in drupal:10.1.0 and will be required in drupal:11.0.0', E_USER_DEPRECATED);
+      $this->maintenanceMode = \Drupal::service('maintenance_mode');
     }
-    $this->maintenanceMode = $maintenance_mode;
   }
 
   /**

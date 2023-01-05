@@ -22,51 +22,6 @@ use Symfony\Component\HttpFoundation\RequestStack;
 class MaintenanceMode implements MaintenanceModeInterface {
 
   /**
-   * Gets the app root from the kernel.
-   *
-   * @var string
-   */
-  protected $root;
-
-  /**
-   * Default theme handler.
-   *
-   * Default theme handler using the config system to store installation
-   * statuses.
-   *
-   * @var \Drupal\Core\Extension\ThemeHandlerInterface
-   */
-  protected $themeHandler;
-
-  /**
-   * Provides a high level access to the active theme and methods to use it.
-   *
-   * @var \Drupal\Core\Theme\ThemeManagerInterface
-   */
-  protected $themeManager;
-
-  /**
-   * Provides the theme initialization logic.
-   *
-   * @var \Drupal\Core\Theme\ThemeInitializationInterface
-   */
-  protected $themeInit;
-
-  /**
-   * Provides a list of available themes.
-   *
-   * @var \Drupal\Core\Extension\ExtensionList
-   */
-  protected $themeExtensionList;
-
-  /**
-   * The state.
-   *
-   * @var \Drupal\Core\State\StateInterface
-   */
-  protected $state;
-
-  /**
    * The configuration factory.
    *
    * @var \Drupal\Core\Config\ConfigFactoryInterface
@@ -74,16 +29,25 @@ class MaintenanceMode implements MaintenanceModeInterface {
   protected $config;
 
   /**
+   * Current request.
+   *
    * @var \Symfony\Component\HttpFoundation\Request
    */
-  protected $request;
+  protected Request $request;
+
+  /**
+   * Default theme name.
+   *
+   * @var string
+   */
+  protected static string $themeName = 'claro';
 
   /**
    * Static maintenance mode storage.
    *
-   * @var null|string
+   * @var string
    */
-  protected static $mode = self::MODE['offline'];
+  protected static string $mode = self::MODE['offline'];
 
   /**
    * Constructs a new maintenance mode service.
@@ -92,30 +56,56 @@ class MaintenanceMode implements MaintenanceModeInterface {
    *   The state.
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   The config factory.
-   * @param \Drupal\Core\Extension\ThemeHandlerInterface $theme_handler
+   * @param \Drupal\Core\Extension\ThemeHandlerInterface|null $themeHandler
    *   Default theme handler using the config system to store installation
    *   statuses.
-   * @param \Drupal\Core\Theme\ThemeInitializationInterface $theme_initialization
+   * @param \Drupal\Core\Theme\ThemeInitializationInterface|null $themeInitialization
    *   Provides the theme initialization logic.
-   * @param \Drupal\Core\Theme\ThemeManagerInterface $theme_manager
-   *   Theme manager.
-   * @param \Drupal\Core\Extension\ThemeExtensionList $theme_extension_list
+   * @param \Drupal\Core\Theme\ThemeManagerInterface|null $themeManager
+   *   Provides the high level access to the active theme and methods to use it.
+   * @param \Drupal\Core\Extension\ThemeExtensionList|null $themeExtensionList
    *   Provides a list of available themes.
-   * @param \Drupal\Core\Http\RequestStack $request
+   * @param \Drupal\Core\Http\RequestStack|null $requestStack
    *   Request stack instance.
-   * @param string $root
+   * @param string|null $root
    *   Gets the app root from the kernel.
    */
-  public function __construct(StateInterface $state, ConfigFactoryInterface $config_factory, ThemeHandlerInterface $theme_handler, ThemeInitializationInterface $theme_initialization, ThemeManagerInterface $theme_manager, ThemeExtensionList $theme_extension_list, RequestStack $request, string $root) {
-    $this->state = $state;
+  public function __construct(
+    protected StateInterface                $state,
+    ConfigFactoryInterface                  $config_factory,
+    protected ?ThemeHandlerInterface        $themeHandler = NULL,
+    protected ?ThemeInitializationInterface $themeInitialization = NULL,
+    protected ?ThemeManagerInterface        $themeManager = NULL,
+    protected ?ThemeExtensionList           $themeExtensionList = NULL,
+    protected ?RequestStack                 $requestStack = NULL,
+    protected ?string                       $root = NULL
+  ) {
     $this->config = $config_factory;
-    // $this->root required only for including legacy files.
-    $this->root = $root;
-    $this->themeHandler = $theme_handler;
-    $this->themeManager = $theme_manager;
-    $this->themeInit = $theme_initialization;
-    $this->themeExtensionList = $theme_extension_list;
-    $this->request = $request->getCurrentRequest() ?? Request::createFromGlobals();
+    if ($this->themeHandler === NULL) {
+      @trigger_error('Calling ' . __METHOD__ . '() without the $themeHandler argument is deprecated in drupal:10.1.0 and will be required in drupal:11.0.0', E_USER_DEPRECATED);
+      $this->themeHandler = \Drupal::service('theme_handler');
+    }
+    if ($this->themeInitialization === NULL) {
+      @trigger_error('Calling ' . __METHOD__ . '() without the $themeInitialization argument is deprecated in drupal:10.1.0 and will be required in drupal:11.0.0', E_USER_DEPRECATED);
+      $this->themeInitialization = \Drupal::service('theme.initialization');
+    }
+    if ($this->themeManager === NULL) {
+      @trigger_error('Calling ' . __METHOD__ . '() without the $themeManager argument is deprecated in drupal:10.1.0 and will be required in drupal:11.0.0', E_USER_DEPRECATED);
+      $this->themeManager = \Drupal::service('theme.manager');
+    }
+    if ($this->themeExtensionList === NULL) {
+      @trigger_error('Calling ' . __METHOD__ . '() without the $themeExtensionList argument is deprecated in drupal:10.1.0 and will be required in drupal:11.0.0', E_USER_DEPRECATED);
+      $this->themeExtensionList = \Drupal::service('extension.list.theme');
+    }
+    if ($this->requestStack === NULL) {
+      @trigger_error('Calling ' . __METHOD__ . '() without the $requestStack argument is deprecated in drupal:10.1.0 and will be required in drupal:11.0.0', E_USER_DEPRECATED);
+      $this->requestStack = \Drupal::service('request_stack');
+    }
+    if ($this->root === NULL) {
+      @trigger_error('Calling ' . __METHOD__ . '() without the $root argument is deprecated in drupal:10.1.0 and will be required in drupal:11.0.0', E_USER_DEPRECATED);
+      $this->root = \Drupal::root();
+    }
+    $this->request = $this->requestStack->getCurrentRequest() ?? Request::createFromGlobals();
   }
 
   /**
@@ -154,16 +144,16 @@ class MaintenanceMode implements MaintenanceModeInterface {
   /**
    * {@inheritdoc}
    */
-  public function setTheme() {
+  public function setTheme(): static {
     // If the theme is already set, assume the others are set too, and do
     // nothing.
     if ($this->themeManager->hasActiveTheme()) {
-      return;
+      return $this;
     }
 
+    // $this->root required only for including legacy files.
     require_once $this->root . '/core/includes/theme.inc';
     require_once $this->root . '/core/includes/common.inc';
-    require_once $this->root . '/core/includes/file.inc';
     require_once $this->root . '/core/includes/module.inc';
 
     // Install and update pages are treated differently to prevent theming
@@ -173,7 +163,7 @@ class MaintenanceMode implements MaintenanceModeInterface {
         $custom_theme = $GLOBALS['install_state']['theme'];
       }
       else {
-        $custom_theme = Settings::get(self::THEME_KEY, 'seven');
+        $custom_theme = Settings::get(self::THEME_KEY, static::$themeName);
       }
     }
     else {
@@ -192,9 +182,9 @@ class MaintenanceMode implements MaintenanceModeInterface {
       }
       if (!$custom_theme) {
         // We have been unable to identify the configured theme, so fall back to
-        // a safe default. Bartik is reasonably user friendly and fairly
+        // a safe default. Claro is reasonably user-friendly and fairly
         // generic.
-        $custom_theme = 'bartik';
+        $custom_theme = static::$themeName;
       }
     }
 
@@ -230,15 +220,16 @@ class MaintenanceMode implements MaintenanceModeInterface {
         $this->themeHandler->addTheme($themes[$ancestor]);
       }
     }
-    $this->themeManager->setActiveTheme($this->themeInit->getActiveTheme($themes[$custom_theme], $base_themes));
+    $this->themeManager->setActiveTheme($this->themeInitialization->getActiveTheme($themes[$custom_theme], $base_themes));
     // Prime the theme registry.
     \Drupal::service('theme.registry');
+    return $this;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function enable() {
+  public function enable(): static {
     if ($this->request->hasSession()) {
       $this->request->getSession()->set(self::SESSION_KEY, TRUE);
     }
@@ -249,7 +240,7 @@ class MaintenanceMode implements MaintenanceModeInterface {
   /**
    * {@inheritdoc}
    */
-  public function disable() {
+  public function disable(): static {
     if ($this->request->hasSession()) {
       $this->request->getSession()->remove(self::SESSION_KEY);
     }
@@ -260,7 +251,7 @@ class MaintenanceMode implements MaintenanceModeInterface {
   /**
    * {@inheritdoc}
    */
-  public static function setMode($mode = self::MODE['offline']) {
+  public static function setMode(string $mode = self::MODE['offline']): void {
     if (!in_array($mode, self::MODE, TRUE)) {
       throw new \RuntimeException(new TranslatableMarkup('Maintenance transferred into unexpected mode "@mode"', ['@mode' => $mode]));
     }
@@ -270,9 +261,9 @@ class MaintenanceMode implements MaintenanceModeInterface {
   /**
    * {@inheritdoc}
    */
-  public static function getMode() {
+  public static function getMode(): string {
     if (defined('MAINTENANCE_MODE')) {
-      @trigger_error('MAINTENANCE_MODE is deprecated in drupal:9.1.0 and removed in drupal:10.0.0. Use \Drupal\Core\Site\Maintenance::getMode() and \Drupal\Core\Site\Maintenance::setMode() instead. See https://www.drupal.org/node/3058979', E_USER_DEPRECATED);
+      @trigger_error('MAINTENANCE_MODE is deprecated in drupal:10.1.0 and removed in drupal:11.0.0. Use \Drupal\Core\Site\Maintenance::getMode() and \Drupal\Core\Site\Maintenance::setMode() instead. See https://www.drupal.org/node/3058979', E_USER_DEPRECATED);
       self::setMode(MAINTENANCE_MODE);
     }
     return self::$mode;
@@ -281,11 +272,11 @@ class MaintenanceMode implements MaintenanceModeInterface {
   /**
    * {@inheritdoc}
    */
-  public function isEnabled() {
+  public function isEnabled(): bool {
     $default = InstallerKernel::installationAttempted();
     $state = (bool) $this->state->get(self::STATE_KEY, $default);
     if ($this->request->hasSession()) {
-      return $state && (bool) $this->request->getSession()->get(self::SESSION_KEY, $default);
+      return $state && $this->request->getSession()->get(self::SESSION_KEY, $default);
     }
     return $state;
   }

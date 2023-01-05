@@ -81,13 +81,6 @@ class DbUpdateController extends ControllerBase {
   protected $postUpdateRegistry;
 
   /**
-   * The maintenance mode service.
-   *
-   * @var \Drupal\Core\Site\MaintenanceModeInterface
-   */
-  protected $maintenanceMode;
-
-  /**
    * Constructs a new UpdateController.
    *
    * @param string $root
@@ -108,10 +101,10 @@ class DbUpdateController extends ControllerBase {
    *   The post update registry.
    * @param \Drupal\Core\Asset\AssetQueryStringInterface $assetQueryString
    *   The asset query string.
-   * @param \Drupal\Core\Site\MaintenanceModeInterface $maintenance_mode
+   * @param \Drupal\Core\Site\MaintenanceModeInterface|null $maintenanceMode
    *   Maintenance mode instance.
    */
-  public function __construct($root, KeyValueExpirableFactoryInterface $key_value_expirable_factory, CacheBackendInterface $cache, StateInterface $state, ModuleHandlerInterface $module_handler, AccountInterface $account, BareHtmlPageRendererInterface $bare_html_page_renderer, UpdateRegistry $post_update_registry, protected ?AssetQueryStringInterface $assetQueryString = NULL, MaintenanceModeInterface $maintenance_mode) {
+  public function __construct($root, KeyValueExpirableFactoryInterface $key_value_expirable_factory, CacheBackendInterface $cache, StateInterface $state, ModuleHandlerInterface $module_handler, AccountInterface $account, BareHtmlPageRendererInterface $bare_html_page_renderer, UpdateRegistry $post_update_registry, protected ?AssetQueryStringInterface $assetQueryString = NULL, protected ?MaintenanceModeInterface $maintenanceMode = NULL) {
     $this->root = $root;
     $this->keyValueExpirableFactory = $key_value_expirable_factory;
     $this->cache = $cache;
@@ -125,10 +118,10 @@ class DbUpdateController extends ControllerBase {
       $this->assetQueryString = \Drupal::service('asset.query_string');
       @trigger_error('Calling' . __METHOD__ . '() without the $assetQueryString argument is deprecated in drupal:10.2.0 and is required in drupal:11.0.0. See https://www.drupal.org/node/3358337', E_USER_DEPRECATED);
     }
-    if ($maintenance_mode === NULL) {
-      $maintenance_mode = \Drupal::service('maintenance_mode');
+    if ($this->maintenanceMode === NULL) {
+      @trigger_error('Calling ' . __METHOD__ . '() without the $maintenanceMode argument is deprecated in drupal:10.2.0 and will be required in drupal:11.0.0', E_USER_DEPRECATED);
+      $this->maintenanceMode = \Drupal::service('maintenance_mode');
     }
-    $this->maintenanceMode = $maintenance_mode;
   }
 
   /**

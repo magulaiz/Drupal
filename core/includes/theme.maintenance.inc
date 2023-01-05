@@ -5,7 +5,7 @@
  * Theming for maintenance pages.
  */
 
-@trigger_error("theme.maintenance.inc file is deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. Use appropriate services from the core instead. See https://www.drupal.org/node/3058979", E_USER_DEPRECATED);
+@trigger_error("theme.maintenance.inc file is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use appropriate services from the core instead. See https://www.drupal.org/node/3058979", E_USER_DEPRECATED);
 
 /**
  * Sets up the theming system for maintenance page.
@@ -22,6 +22,6 @@
  * @see https://www.drupal.org/node/3058979
  */
 function _drupal_maintenance_theme() {
-  @trigger_error("_drupal_maintenance_theme() is deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. Use \Drupal::service('maintenance_mode')->setTheme() instead. See https://www.drupal.org/node/3058979", E_USER_DEPRECATED);
+  @trigger_error("_drupal_maintenance_theme() is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use \Drupal::service('maintenance_mode')->setTheme() instead. See https://www.drupal.org/node/3058979", E_USER_DEPRECATED);
   \Drupal::service('maintenance_mode')->setTheme();
 }

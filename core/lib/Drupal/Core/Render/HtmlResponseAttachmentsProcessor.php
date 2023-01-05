@@ -115,7 +115,7 @@ class HtmlResponseAttachmentsProcessor implements AttachmentsResponseProcessorIn
       @trigger_error('Calling ' . __METHOD__ . '() without the $languageManager argument is deprecated in drupal:10.1.0 and will be required in drupal:11.0.0', E_USER_DEPRECATED);
       $this->languageManager = \Drupal::languageManager();
     }
-    if ($maintenanceMode === NULL) {
+    if ($this->maintenanceMode === NULL) {
       @trigger_error('Calling ' . __METHOD__ . '() without the $maintenanceMode argument is deprecated in drupal:10.1.0 and will be required in drupal:11.0.0', E_USER_DEPRECATED);
       $this->maintenanceMode = \Drupal::service('maintenance_mode');
     }

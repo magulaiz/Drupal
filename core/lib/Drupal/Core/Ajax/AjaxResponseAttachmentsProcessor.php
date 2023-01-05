@@ -73,13 +73,6 @@ class AjaxResponseAttachmentsProcessor implements AttachmentsResponseProcessorIn
   protected $moduleHandler;
 
   /**
-   * The maintenance mode service.
-   *
-   * @var \Drupal\Core\Site\MaintenanceModeInterface
-   */
-  protected $maintenanceMode;
-
-  /**
    * Constructs an AjaxResponseAttachmentsProcessor object.
    *
    * @param \Drupal\Core\Asset\AssetResolverInterface $asset_resolver
@@ -98,10 +91,10 @@ class AjaxResponseAttachmentsProcessor implements AttachmentsResponseProcessorIn
    *   The module handler.
    * @param \Drupal\Core\Language\LanguageManagerInterface|null $languageManager
    *   The language manager.
-   * @param \Drupal\Core\Site\MaintenanceModeInterface $maintenance_mode
+   * @param \Drupal\Core\Site\MaintenanceModeInterface|null $maintenanceMode
    *   The maintenance mode service.
    */
-  public function __construct(AssetResolverInterface $asset_resolver, ConfigFactoryInterface $config_factory, AssetCollectionRendererInterface $css_collection_renderer, AssetCollectionRendererInterface $js_collection_renderer, RequestStack $request_stack, RendererInterface $renderer, ModuleHandlerInterface $module_handler, protected ?LanguageManagerInterface $languageManager = NULL, protected ?MaintenanceModeInterface $maintenance_mode = NULL) {
+  public function __construct(AssetResolverInterface $asset_resolver, ConfigFactoryInterface $config_factory, AssetCollectionRendererInterface $css_collection_renderer, AssetCollectionRendererInterface $js_collection_renderer, RequestStack $request_stack, RendererInterface $renderer, ModuleHandlerInterface $module_handler, protected ?LanguageManagerInterface $languageManager = NULL, protected ?MaintenanceModeInterface $maintenanceMode = NULL) {
     $this->assetResolver = $asset_resolver;
     $this->config = $config_factory->get('system.performance');
     $this->cssCollectionRenderer = $css_collection_renderer;
@@ -113,10 +106,10 @@ class AjaxResponseAttachmentsProcessor implements AttachmentsResponseProcessorIn
       @trigger_error('Calling ' . __METHOD__ . '() without the $language_manager argument is deprecated in drupal:10.1.0 and will be required in drupal:11.0.0', E_USER_DEPRECATED);
       $this->languageManager = \Drupal::languageManager();
     }
-    if ($maintenance_mode === NULL) {
-      $maintenance_mode = \Drupal::service('maintenance_mode');
+    if ($maintenanceMode === NULL) {
+      @trigger_error('Calling ' . __METHOD__ . '() without the $maintenanceMode argument is deprecated in drupal:10.1.0 and will be required in drupal:11.0.0', E_USER_DEPRECATED);
+      $this->maintenanceMode = \Drupal::service('maintenance_mode');
     }
-    $this->maintenanceMode = $maintenance_mode;
   }
 
   /**
