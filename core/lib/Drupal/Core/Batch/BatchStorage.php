@@ -2,6 +2,7 @@
 
 namespace Drupal\Core\Batch;
 
+use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Database\DatabaseException;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
@@ -36,6 +37,13 @@ class BatchStorage implements BatchStorageInterface {
   protected $csrfToken;
 
   /**
+   * Time component instance.
+   *
+   * @var \Drupal\Component\Datetime\TimeInterface
+   */
+  protected TimeInterface $time;
+
+  /**
    * Constructs the database batch storage service.
    *
    * @param \Drupal\Core\Database\Connection $connection
@@ -44,11 +52,18 @@ class BatchStorage implements BatchStorageInterface {
    *   The session.
    * @param \Drupal\Core\Access\CsrfTokenGenerator $csrf_token
    *   The CSRF token generator.
+   * @param \Drupal\Component\Datetime\TimeInterface $time
+   *   Time component instance.
    */
-  public function __construct(Connection $connection, SessionInterface $session, CsrfTokenGenerator $csrf_token) {
+  public function __construct(Connection $connection, SessionInterface $session, CsrfTokenGenerator $csrf_token, TimeInterface $time = NULL) {
     $this->connection = $connection;
     $this->session = $session;
     $this->csrfToken = $csrf_token;
+    if ($time === NULL) {
+      @trigger_error('Calling ' . __METHOD__ . ' without the $time argument is deprecated in drupal:10.1.0 and it will be required in drupal:11.0.0. See https://www.drupal.org/node/2959723', E_USER_DEPRECATED);
+      $time = \Drupal::service('datetime.time');
+    }
+    $this->time = $time;
   }
 
   /**
@@ -109,7 +124,7 @@ class BatchStorage implements BatchStorageInterface {
     try {
       // Cleanup the batch table and the queue for failed batches.
       $this->connection->delete('batch')
-        ->condition('timestamp', REQUEST_TIME - 864000, '<')
+        ->condition('timestamp', $this->time->getRequestTime() - 864000, '<')
         ->execute();
     }
     catch (\Exception $e) {
@@ -152,7 +167,7 @@ class BatchStorage implements BatchStorageInterface {
     $this->connection->insert('batch')
       ->fields([
         'bid' => $batch['id'],
-        'timestamp' => REQUEST_TIME,
+        'timestamp' => $this->time->getRequestTime(),
         'token' => $this->csrfToken->get($batch['id']),
         'batch' => serialize($batch),
       ])
