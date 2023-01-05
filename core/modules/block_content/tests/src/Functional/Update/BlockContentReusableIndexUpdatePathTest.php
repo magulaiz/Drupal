@@ -17,7 +17,7 @@ class BlockContentReusableIndexUpdatePathTest extends UpdatePathTestBase {
    */
   protected function setDatabaseDumpFiles() {
     $this->databaseDumpFiles = [
-      __DIR__ . '/../../../../../system/tests/fixtures/update/drupal-9.0.0.bare.standard.php.gz',
+      __DIR__ . '/../../../../../system/tests/fixtures/update/drupal-9.4.0.bare.standard.php.gz',
     ];
   }
 
@@ -26,11 +26,8 @@ class BlockContentReusableIndexUpdatePathTest extends UpdatePathTestBase {
    */
   public function testRunUpdates() {
     $connection = Database::getConnection();
-
     $this->assertFalse($connection->schema()->indexExists('block_content_field_data', 'block_content__reusable'), 'Block Content reusable index not yet added.');
-
     $this->runUpdates();
-
     $this->assertTrue($connection->schema()->indexExists('block_content_field_data', 'block_content__reusable'), 'Block Content reusable index has been added.');
   }
 
