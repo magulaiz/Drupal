@@ -2,6 +2,7 @@
 
 namespace Drupal\locale\Form;
 
+use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Core\Batch\BatchProcessorInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Form\FormBase;
@@ -32,6 +33,13 @@ class TranslationStatusForm extends FormBase {
   protected $state;
 
   /**
+   * Time component instance.
+   *
+   * @var \Drupal\Component\Datetime\TimeInterface
+   */
+  protected TimeInterface $time;
+
+  /**
    * Batch processor.
    *
    * @var \Drupal\Core\Batch\BatchProcessorInterface
@@ -45,6 +53,7 @@ class TranslationStatusForm extends FormBase {
     return new static(
       $container->get('module_handler'),
       $container->get('state'),
+      $container->get('datetime.time'),
       $container->get('batch.processor')
     );
   }
@@ -56,14 +65,21 @@ class TranslationStatusForm extends FormBase {
    *   A module handler.
    * @param \Drupal\Core\State\StateInterface $state
    *   The state service.
+   * @param \Drupal\Component\Datetime\TimeInterface $time
+   *   Time component instance.
    * @param \Drupal\Core\Batch\BatchProcessorInterface|null $batch_processor
    *   Batch processor.
    *
    * @see https://www.drupal.org/node/3229844
    */
-  public function __construct(ModuleHandlerInterface $module_handler, StateInterface $state, BatchProcessorInterface $batch_processor = NULL) {
+  public function __construct(ModuleHandlerInterface $module_handler, StateInterface $state, TimeInterface $time = NULL, BatchProcessorInterface $batch_processor = NULL) {
     $this->moduleHandler = $module_handler;
     $this->state = $state;
+    if ($time === NULL) {
+      @trigger_error('Calling ' . __METHOD__ . ' without the $time argument is deprecated in drupal:10.1.0 and it will be required in drupal:11.0.0. See https://www.drupal.org/node/2959723', E_USER_DEPRECATED);
+      $time = \Drupal::service('datetime.time');
+    }
+    $this->time = $time;
     if ($batch_processor === NULL) {
       @trigger_error('Calling ' . __METHOD__ . ' without the $batch_processor argument is deprecated in drupal:10.1.0 and it will be required in drupal:11.0.0. See https://www.drupal.org/node/3229844', E_USER_DEPRECATED);
       $batch_processor = \Drupal::service('batch.processor');
@@ -298,7 +314,7 @@ class TranslationStatusForm extends FormBase {
     // translation updates. If the status is expired we clear it and run a batch
     // to update the status and then fetch the translation updates.
     $last_checked = $this->state->get('locale.translation_last_checked');
-    if ($last_checked < REQUEST_TIME - LOCALE_TRANSLATION_STATUS_TTL) {
+    if ($last_checked < $this->time->getRequestTime() - LOCALE_TRANSLATION_STATUS_TTL) {
       locale_translation_clear_status();
       $batch = locale_translation_batch_update_build([], $langcodes, $options);
       $this->batchProcessor->queue($batch);

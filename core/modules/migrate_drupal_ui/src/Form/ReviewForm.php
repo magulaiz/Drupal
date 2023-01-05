@@ -103,7 +103,11 @@ class ReviewForm extends MigrateUpgradeFormBase {
     parent::__construct($config_factory, $migration_plugin_manager, $state, $tempstore_private);
     $this->migrationState = $migrationState;
     $this->moduleHandler = $module_handler;
-    $this->time = $time ?: \Drupal::service('datetime.time');
+    if ($time === NULL) {
+      @trigger_error('Calling ' . __METHOD__ . ' without the $time argument is deprecated in drupal:10.1.0 and it will be required in drupal:11.0.0. See https://www.drupal.org/node/2959723', E_USER_DEPRECATED);
+      $time = \Drupal::service('datetime.time');
+    }
+    $this->time = $time;
     if ($batch_processor === NULL) {
       @trigger_error('Calling ' . __METHOD__ . ' without the $batch_processor argument is deprecated in drupal:10.1.0 and it will be required in drupal:11.0.0. See https://www.drupal.org/node/3229844', E_USER_DEPRECATED);
       $batch_processor = \Drupal::service('batch.processor');
@@ -122,6 +126,7 @@ class ReviewForm extends MigrateUpgradeFormBase {
       $container->get('migrate_drupal.migration_state'),
       $container->get('config.factory'),
       $container->get('module_handler'),
+      $container->get('datetime.time'),
       $container->get('batch.processor')
     );
   }
