@@ -71,14 +71,14 @@ class MaintenanceMode implements MaintenanceModeInterface {
    *   Gets the app root from the kernel.
    */
   public function __construct(
-    protected StateInterface                $state,
-    ConfigFactoryInterface                  $config_factory,
-    protected ?ThemeHandlerInterface        $themeHandler = NULL,
+    protected StateInterface $state,
+    ConfigFactoryInterface $config_factory,
+    protected ?ThemeHandlerInterface $themeHandler = NULL,
     protected ?ThemeInitializationInterface $themeInitialization = NULL,
-    protected ?ThemeManagerInterface        $themeManager = NULL,
-    protected ?ThemeExtensionList           $themeExtensionList = NULL,
-    protected ?RequestStack                 $requestStack = NULL,
-    protected ?string                       $root = NULL
+    protected ?ThemeManagerInterface $themeManager = NULL,
+    protected ?ThemeExtensionList $themeExtensionList = NULL,
+    protected ?RequestStack $requestStack = NULL,
+    protected ?string $root = NULL
   ) {
     $this->config = $config_factory;
     if ($this->themeHandler === NULL) {
