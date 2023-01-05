@@ -10,7 +10,7 @@
         "drupal/core": "10.1.x-dev",
         "asm89/stack-cors": "~v2.1.1",
         "composer/semver": "~3.3.2",
-        "doctrine/annotations": "~1.13.3",
+        "doctrine/annotations": "~1.14.2",
         "doctrine/lexer": "~1.2.3",
         "egulias/email-validator": "~3.2.1",
         "guzzlehttp/guzzle": "~7.5.0",
@@ -32,10 +32,10 @@
         "ralouphie/getallheaders": "~3.0.3",
         "symfony/console": "~v6.2.2",
         "symfony/dependency-injection": "~v6.2.2",
-        "symfony/deprecation-contracts": "~v3.1.1",
+        "symfony/deprecation-contracts": "~v3.2.0",
         "symfony/error-handler": "~v6.2.2",
         "symfony/event-dispatcher": "~v6.2.2",
-        "symfony/event-dispatcher-contracts": "~v3.1.1",
+        "symfony/event-dispatcher-contracts": "~v3.2.0",
         "symfony/http-foundation": "~v6.2.2",
         "symfony/http-kernel": "~v6.2.2",
         "symfony/mime": "~v6.2.2",
@@ -49,13 +49,13 @@
         "symfony/psr-http-message-bridge": "~v2.1.4",
         "symfony/routing": "~v6.2.0",
         "symfony/serializer": "~v6.2.2",
-        "symfony/service-contracts": "~v3.1.1",
+        "symfony/service-contracts": "~v3.2.0",
         "symfony/string": "~v6.2.2",
-        "symfony/translation-contracts": "~v3.1.1",
+        "symfony/translation-contracts": "~v3.2.0",
         "symfony/validator": "~v6.2.2",
         "symfony/var-dumper": "~v6.2.2",
         "symfony/var-exporter": "~v6.2.2",
         "symfony/yaml": "~v6.2.2",
-        "twig/twig": "~v3.4.3"
+        "twig/twig": "~v3.5.0"
     }
 }
