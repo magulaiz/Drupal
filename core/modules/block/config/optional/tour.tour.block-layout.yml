@@ -40,6 +40,6 @@ tips:
   custom-block-library:
     id: custom-block-library
     plugin: text
-    label: 'Custom Block Library'
+    label: 'Block Library'
     weight: 5
-    body: 'The block management screen also has an another tab on the top which is used to add Custom blocks. The name of the tab is "Custom block library". This tab ultimately provides a link to add custom blocks.'
+    body: 'The block management screen also has an another tab on the top which is used to add Custom blocks. The name of the tab is "Block library". This tab ultimately provides a link to add custom blocks.'
