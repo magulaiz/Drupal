@@ -6,6 +6,7 @@
  */
 
 use Drupal\Core\Cache\CacheableMetadata;
+use Drupal\Core\Link;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Render\RenderContext;
 use Drupal\Core\Routing\RouteMatchInterface;
@@ -218,7 +219,7 @@ function toolbar_toolbar() {
       'content' => [
         '#theme' => 'item_list',
         '#items' => [
-          \Drupal\Core\Link::fromTextAndUrl('&nbsp;', new Url('<front>', [], []))
+          Link::fromTextAndUrl('&nbsp;', new Url('<front>', [], [])),
         ],
         '#attributes' => [
           'class' => ['toolbar-menu'],
@@ -286,11 +287,11 @@ function toolbar_preprocess_html(&$variables) {
 
   // Remove left margin for closed Vertical mode.
   $activeTab = \Drupal::request()->cookies->get('toolbarActiveTab');
-  if(!empty($activeTab)) {
+  if (!empty($activeTab)) {
     $variables['attributes']['class'][] = 'toolbar-tray-open';
   }
   $toolbarFixed = \Drupal::request()->cookies->get('isToolbarFixed');
-  if(!empty($toolbarFixed)) {
+  if (!empty($toolbarFixed)) {
     $variables['attributes']['class'][] = 'toolbar-fixed';
   }
 }
