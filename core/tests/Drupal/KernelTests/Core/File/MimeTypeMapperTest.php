@@ -16,7 +16,7 @@ class MimeTypeMapperTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['system', 'file_test'];
+  protected static $modules = ['system', 'file_test'];
 
   /**
    * The MIME type mapper service.
