@@ -184,6 +184,12 @@ body.toolbar-tray-open.toolbar-fixed.toolbar-vertical .toolbar-oriented {
 .toolbar .toolbar-tray-vertical > .toolbar-lining {
   min-height: 100%;
 }
+
+/* From toolbar anti-flicker */
+.toolbar .toolbar-tray-vertical > .toolbar-lining:before {
+  width: 100%;
+}
+
 /* Layer the links just above the toolbar-tray. */
 .toolbar .toolbar-bar .toolbar-tab > .toolbar-icon {
   position: relative;
@@ -277,4 +283,26 @@ body.toolbar-tray-open.toolbar-vertical.toolbar-fixed {
 }
 .path-admin .toolbar-bar .home-toolbar-tab {
   display: block;
+}
+
+/* Flickering fix */
+body.toolbar-tray-open.toolbar-fixed.toolbar-vertical #toolbar-administration {
+  margin-inline-start: -15rem;
+}
+
+.toolbar-oriented .toolbar-tray-vertical > .toolbar-lining:before {
+  position: fixed;
+  z-index: -1;
+  top: 0;
+  bottom: 0;
+  display: block;
+  width: 15rem;
+  content: "";
+  inset-inline-start: 0;
+}
+#toolbar-item-anti-flicker {
+  visibility: hidden;
+  width: 1px;
+  padding-right: 0;
+  padding-left: 0;
 }

@@ -3,7 +3,7 @@
  * Defines the behavior of the Drupal administration toolbar.
  */
 
-(function ($, Drupal, drupalSettings) {
+(function ($, Drupal, drupalSettings, once, Cookies) {
   // Merge run-time settings with the defaults.
   const options = $.extend(
     {
@@ -114,7 +114,7 @@
         // asynchronously.
         Drupal.toolbar.setSubtrees.done((subtrees) => {
           menuModel.set('subtrees', subtrees);
-          const theme = drupalSettings.ajaxPageState.theme;
+          const { theme } = drupalSettings.ajaxPageState;
           localStorage.setItem(
             `Drupal.toolbar.subtrees.${theme}`,
             JSON.stringify(subtrees),
@@ -140,15 +140,27 @@
 
         // Broadcast model changes to other modules.
         model
+          // eslint-disable-next-line no-shadow
           .on('change:orientation', (model, orientation) => {
             $(document).trigger('drupalToolbarOrientationChange', orientation);
           })
+          // eslint-disable-next-line no-shadow
           .on('change:activeTab', (model, tab) => {
             $(document).trigger('drupalToolbarTabChange', tab);
           })
+          // eslint-disable-next-line no-shadow
           .on('change:activeTray', (model, tray) => {
             $(document).trigger('drupalToolbarTrayChange', tray);
           });
+
+        // Avoid flickering.
+        Cookies.set(
+          'toolbar',
+          Drupal.toolbar.models.toolbarModel.get('orientation'),
+          {
+            path: '/',
+          },
+        );
 
         // If the toolbar's orientation is horizontal and no active tab is
         // defined then show the tray of the first toolbar tab by default (but
@@ -190,6 +202,51 @@
           },
         });
       });
+    },
+  };
+
+  Drupal.behaviors.toolbarAntiFlicker = {
+    attach: function attach(context) {
+      if (
+        once('toolbarAntiFlicker', '#toolbar-administration', context).length
+      ) {
+        // Remove placeholder
+        $('#toolbar-tray-anti-flicker').parent('.toolbar-tab').remove();
+
+        // Vertical fixes.
+        const ChildView = Drupal.toolbar.ToolbarVisualView.extend({
+          initialize() {
+            const { model } = Drupal.toolbar.views.toolbarVisualView;
+            this.listenTo(
+              model,
+              'change:activeTab change:orientation change:isOriented change:isTrayToggleVisible',
+              // eslint-disable-next-line func-names
+              function () {
+                // Avoid flickering.
+                Cookies.set(
+                  'toolbar',
+                  Drupal.toolbar.models.toolbarModel.get('orientation'),
+                  {
+                    path: '/',
+                  },
+                );
+
+                let isToolbarActiveTab = 0;
+                if ($(model.get('activeTab')).length > 0) {
+                  isToolbarActiveTab = 1;
+                }
+
+                Cookies.set('toolbarActiveTab', isToolbarActiveTab, {
+                  path: '/',
+                });
+              },
+            );
+          },
+        });
+
+        // eslint-disable-next-line no-new
+        new ChildView();
+      }
     },
   };
 
@@ -314,4 +371,4 @@
   ) {
     Drupal.toolbar.setSubtrees.resolve(response.subtrees);
   };
-})(jQuery, Drupal, drupalSettings);
+})(jQuery, Drupal, drupalSettings, once, Cookies);

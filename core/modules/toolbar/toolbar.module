@@ -202,6 +202,32 @@ function toolbar_toolbar() {
     ],
     '#weight' => -15,
   ];
+
+  $items['anti-flicker'] = [
+    '#type' => 'toolbar_item',
+    'tab' => [
+      '#type' => 'link',
+      '#title' => t('&nbsp;'),
+      '#url' => Url::fromRoute('<front>'),
+    ],
+    'tray' => [
+      '#heading' => t('&nbsp;'),
+      '#wrapper_attributes' => [
+        'id' => 'toolbar-tray-anti-flicker',
+      ],
+      'content' => [
+        '#theme' => 'item_list',
+        '#items' => [
+          \Drupal\Core\Link::fromTextAndUrl('&nbsp;', new Url('<front>', [], []))
+        ],
+        '#attributes' => [
+          'class' => ['toolbar-menu'],
+        ],
+      ],
+    ],
+    '#weight' => 1000,
+  ];
+
   $hash_cacheability->applyTo($items['administration']);
 
   return $items;
@@ -252,10 +278,21 @@ function toolbar_preprocess_html(&$variables) {
   if (!\Drupal::currentUser()->hasPermission('access toolbar')) {
     return;
   }
-  $variables['attributes']['class'][] = 'toolbar-tray-open';
-  $variables['attributes']['class'][] = 'toolbar-horizontal';
-  $variables['attributes']['class'][] = 'toolbar-fixed';
+
   $variables['attributes']['class'][] = 'toolbar-loading';
+  $orientation = \Drupal::request()->cookies->get('toolbar');
+
+  $variables['attributes']['class'][] = "toolbar-$orientation";
+
+  // Remove left margin for closed Vertical mode.
+  $activeTab = \Drupal::request()->cookies->get('toolbarActiveTab');
+  if(!empty($activeTab)) {
+    $variables['attributes']['class'][] = 'toolbar-tray-open';
+  }
+  $toolbarFixed = \Drupal::request()->cookies->get('isToolbarFixed');
+  if(!empty($toolbarFixed)) {
+    $variables['attributes']['class'][] = 'toolbar-fixed';
+  }
 }
 
 /**
