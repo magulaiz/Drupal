@@ -19,8 +19,7 @@ function standard_install() {
   // Assign user 1 the "administrator" role.
   /** @var \Drupal\user\Entity\User $user */
   $user = User::load(1);
-  $user->addRole('administrator');
-  $user->save();
+  $user->addRole('administrator')->save();
 
   // Populate the default shortcut set.
   $shortcut = Shortcut::create([

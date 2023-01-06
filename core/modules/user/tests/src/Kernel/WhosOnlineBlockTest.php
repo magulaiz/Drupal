@@ -78,10 +78,10 @@ class WhosOnlineBlockTest extends KernelTestBase {
       'name' => 'user1',
       'mail' => 'user1@example.com',
     ]);
-    $user1->addRole('administrator');
-    $user1->activate();
-    $user1->setLastAccessTime($request_time);
-    $user1->save();
+    $user1->addRole('administrator')
+      ->activate()
+      ->setLastAccessTime($request_time)
+      ->save();
 
     $user2 = User::create([
       'name' => 'user2',
