@@ -24,7 +24,7 @@ class MimeTypeLegacyTest extends KernelTestBase {
    */
   public function testHookFileMimetypeMappingAlter() {
 
-    $this->expectDeprecation('hook hook_file_mimetype_mapping_alter() is deprecated in drupal:10.1.0 and will be required before drupal:11.0.0. Use hook_mimetype_alter() instead. See https://www.drupal.org/node/2311679.');
+    $this->expectDeprecation('The deprecated alter hook hook_file_mimetype_mapping_alter() is implemented in these functions: file_deprecated_test_file_mimetype_mapping_alter. This hook is deprecated in drupal:10.1.0 and will be removed before drupal:11.0.0. Implement hook_mimetype_alter() instead. See https://www.drupal.org/node/2311679.');
 
     $mapper = $this->container->get('file.mime_type.mapper');
     $this->assertEquals(['file_test_2', 'file_test_3'], $mapper->getExtensionsForMimeType('madeup/file_test_2'));

@@ -110,7 +110,7 @@ function hook_file_url_alter(&$uri) {
  * Alter MIME type mappings used to determine MIME type from a file extension.
  *
  * @deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use
- *   hook_mimetype_alter() instead.
+ *   hook_mimetype_alter() instead. This exists solely for BC.
  *
  * @see https://www.drupal.org/node/2311679
  *
