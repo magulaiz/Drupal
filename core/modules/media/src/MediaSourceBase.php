@@ -297,8 +297,8 @@ abstract class MediaSourceBase extends PluginBase implements MediaSourceInterfac
    * Determine the name of the source field.
    *
    * @return string
-   *   The source field name. If one is already stored in configuration, it is
-   *   returned. Otherwise, a new, unused one is generated.
+   *   The source field name. If one is already stored in configuration,
+   *   it is returned. Otherwise, a new unused one is generated.
    */
   protected function getSourceFieldName() {
     // Some media sources are using a deriver, so their plugin IDs may contain
