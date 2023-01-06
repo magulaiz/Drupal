@@ -95,9 +95,11 @@ class MimeTypeTest extends FileTestBase {
    * Test deprecation of ::setMapping.
    *
    * @group legacy
-   * @expectedDeprecation Drupal\Core\File\MimeType\ExtensionMimeTypeGuesser::setMapping() is deprecated in Drupal 10.1.0, and will be removed in drupal:11.0.0. Use \Drupal\Core\File\MimeType\MimeTypeMapper::setMapping() instead. See https://www.drupal.org/project/drupal/issues/2311679.
    */
   public function testSetMapping() {
+
+    $this->expectDeprecation('Drupal\Core\File\MimeType\ExtensionMimeTypeGuesser::setMapping() is deprecated in drupal:10.1.0, and will be removed in drupal:11.0.0. Use \Drupal\Core\File\MimeType\MimeTypeMapper::setMapping() instead. See https://www.drupal.org/project/drupal/issues/2311679.');
+
     $extension_guesser = $this->container->get('file.mime_type.guesser.extension');
     $extension_guesser->setMapping([
       'mimetypes' => [
