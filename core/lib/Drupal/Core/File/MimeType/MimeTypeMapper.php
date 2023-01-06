@@ -889,7 +889,7 @@ class MimeTypeMapper implements MimeTypeMapperInterface {
   public function alterMapping(ModuleHandlerInterface $module_handler) {
     if (!$this->mapping) {
       $this->mapping = static::$defaultMapping;
-      $module_handler->alterDeprecated('This hook is deprecated in Drupal 10.1.0 and will be removed before Drupal 11.0.0. Implement hook_mimetype_alter() instead. See https://www.drupal.org/node/2311679.', 'file_mimetype_mapping', $this->mapping);
+      $module_handler->alterDeprecated('This hook is deprecated in drupal:10.1.0 and will be removed before drupal:11.0.0. Implement hook_mimetype_alter() instead. See https://www.drupal.org/node/2311679.', 'file_mimetype_mapping', $this->mapping);
       $module_handler->alter('mimetype', $this);
     }
     return $this;

@@ -1770,6 +1770,7 @@ services:
     class: Drupal\Core\File\MimeType\MimeTypeMapper
     calls:
       - [alterMapping, ['@module_handler']]
+  Drupal\Core\File\MimeType\MimeTypeMapperInterface: '@file.mime_type.mapper'
   # Currently needs to be public as it is called by
   # \Drupal\Core\Render\Element\StatusMessages.
   # @todo Consider making this service private again after
