@@ -207,6 +207,12 @@ function menu_ui_get_menu_link_defaults(NodeInterface $node) {
  * @see menu_ui_form_node_form_submit()
  */
 function menu_ui_form_node_form_alter(&$form, FormStateInterface $form_state) {
+  // Prevent checking available menus in a case when
+  // a current user hasn't access to manage the menu settings.
+  if (!\Drupal::currentUser()->hasPermission('administer menu')) {
+    return;
+  }
+
   // Generate a list of possible parents (not including this link or descendants).
   // @todo This must be handled in a #process handler.
   $node = $form_state->getFormObject()->getEntity();
@@ -240,7 +246,7 @@ function menu_ui_form_node_form_alter(&$form, FormStateInterface $form_state) {
   $form['menu'] = [
     '#type' => 'details',
     '#title' => t('Menu settings'),
-    '#access' => \Drupal::currentUser()->hasPermission('administer menu'),
+    '#access' => TRUE,
     '#open' => (bool) $defaults['id'],
     '#group' => 'advanced',
     '#attached' => [
