@@ -12,6 +12,7 @@ use Drupal\Core\Extension\Exception\ObsoleteExtensionException;
 use Drupal\Core\Installer\InstallerKernel;
 use Drupal\Core\Serialization\Yaml;
 use Drupal\Core\Update\UpdateHookRegistry;
+use Drupal\Core\Utility\Error;
 
 /**
  * Default implementation of the module installer.
@@ -302,7 +303,9 @@ class ModuleInstaller implements ModuleInstallerInterface {
                   $update_manager->installFieldStorageDefinition($storage_definition->getName(), $entity_type->id(), $module, $storage_definition);
                 }
                 catch (EntityStorageException $e) {
-                  watchdog_exception('system', $e, 'An error occurred while notifying the creation of the @name field storage definition: "@message" in %function (line %line of %file).', ['@name' => $storage_definition->getName()]);
+                  $variables = Error::decodeException($e);
+                  $variables['@name'] = $storage_definition->getName();
+                  \Drupal::logger('system')->error('An error occurred while notifying the creation of the @name field storage definition: "!message" in %function (line %line of %file).', $variables);
                 }
               }
             }

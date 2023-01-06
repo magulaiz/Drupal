@@ -76,6 +76,25 @@ class Error {
   }
 
   /**
+   * Decodes an exception and retrieves the correct caller with a message.
+   *
+   * @param \Exception|\Throwable $exception
+   *   The exception object that was thrown.
+   * @param string $message
+   *   A custom error message.
+   *
+   * @return array
+   *   An error in the format expected by Drupal::logger()->error().
+   */
+  public static function decodeExceptionWithMessage($exception, $message = Error::DEFAULT_ERROR_MESSAGE) {
+    $decode = static::decodeException($exception);
+    return [
+      $message,
+      $decode,
+    ];
+  }
+
+  /**
    * Renders an exception error message without further exceptions.
    *
    * @param \Exception|\Throwable $exception

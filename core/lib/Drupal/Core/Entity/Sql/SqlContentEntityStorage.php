@@ -24,6 +24,7 @@ use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
+use Drupal\Core\Utility\Error;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -757,7 +758,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
       if (isset($transaction)) {
         $transaction->rollBack();
       }
-      watchdog_exception($this->entityTypeId, $e);
+      \Drupal::logger($this->entityTypeId)->error(...Error::decodeExceptionWithMessage($e));
       throw new EntityStorageException($e->getMessage(), $e->getCode(), $e);
     }
   }
@@ -811,7 +812,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
       if (isset($transaction)) {
         $transaction->rollBack();
       }
-      watchdog_exception($this->entityTypeId, $e);
+      \Drupal::logger($this->entityTypeId)->error(...Error::decodeExceptionWithMessage($e));
       throw new EntityStorageException($e->getMessage(), $e->getCode(), $e);
     }
   }
@@ -860,7 +861,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
       if (isset($transaction)) {
         $transaction->rollBack();
       }
-      watchdog_exception($this->entityTypeId, $e);
+      \Drupal::logger($this->entityTypeId)->error(...Error::decodeExceptionWithMessage($e));
       throw new EntityStorageException($e->getMessage(), $e->getCode(), $e);
     }
   }

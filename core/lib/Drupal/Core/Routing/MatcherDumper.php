@@ -4,6 +4,7 @@ namespace Drupal\Core\Routing;
 
 use Drupal\Core\Database\DatabaseException;
 use Drupal\Core\State\StateInterface;
+use Drupal\Core\Utility\Error;
 use Symfony\Component\Routing\RouteCollection;
 
 use Drupal\Core\Database\Connection;
@@ -152,7 +153,7 @@ class MatcherDumper implements MatcherDumperInterface {
       if (isset($transaction)) {
         $transaction->rollBack();
       }
-      watchdog_exception('Routing', $e);
+      \Drupal::logger('Routing')->error(...Error::decodeExceptionWithMessage($e));
       throw $e;
     }
     // Sort the masks so they are in order of descending fit.

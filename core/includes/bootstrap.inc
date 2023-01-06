@@ -124,8 +124,14 @@ function t($string, array $args = [], array $options = []) {
  *   A link to associate with the message.
  *
  * @see \Drupal\Core\Utility\Error::decodeException()
+ *
+ * @deprecated in drupal:10.0.0 and is removed from drupal:11.0.0. Use
+ *   \Drupal::logger() and pass the exception as a variable instead.
+ *
+ * @see https://www.drupal.org/node/2932520
  */
 function watchdog_exception($type, Exception $exception, $message = NULL, $variables = [], $severity = RfcLogLevel::ERROR, $link = NULL) {
+  @trigger_error('watchdog_exception() is deprecated in drupal:10.0.0 and is removed from drupal:11.0.0. Use \Drupal::logger() and pass the exception as a variable instead. See https://www.drupal.org/node/2932520', E_USER_DEPRECATED);
 
   // Use a default value if $message is not set.
   if (empty($message)) {

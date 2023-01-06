@@ -5,6 +5,7 @@ namespace Drupal\update;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\DependencyInjection\DependencySerializationTrait;
 use Drupal\Core\Site\Settings;
+use Drupal\Core\Utility\Error;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\TransferException;
 
@@ -97,7 +98,7 @@ class UpdateFetcher implements UpdateFetcherInterface {
         ->getBody();
     }
     catch (TransferException $exception) {
-      watchdog_exception('update', $exception);
+      \Drupal::logger('update')->error(...Error::decodeExceptionWithMessage($exception));
       if ($with_http_fallback && strpos($url, "http://") === FALSE) {
         $url = str_replace('https://', 'http://', $url);
         return $this->doRequest($url, $options, FALSE);
