@@ -472,7 +472,7 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
     $backup_prefix = static::getTemporaryTableMappingPrefix($original, $original_field_storage_definitions, $time, 'old_');
     $sandbox['backup_table_mapping'] = $this->storage->getCustomTableMapping($original, $original_field_storage_definitions, $backup_prefix);
     $sandbox['backup_prefix_key'] = substr($backup_prefix, 4);
-    $sandbox['backup_request_time'] = $this->time->getRequestTime();
+    $sandbox['backup_request_time'] = $time;
 
     // Create temporary tables based on the new entity type and field storage
     // definitions.
@@ -680,8 +680,8 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
    *   An entity type definition.
    * @param \Drupal\Core\Field\FieldStorageDefinitionInterface[] $field_storage_definitions
    *   An array of field storage definitions.
-   * @param int|null $time
-   *   (optional) The request time as last part of prefix. Defaults to NULL.
+   * @param int $time
+   *   The request time as last part of prefix. Defaults to NULL.
    * @param string $first_prefix_part
    *   (optional) The first part of the prefix. Defaults to 'tmp_'.
    *
@@ -690,14 +690,14 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
    *
    * @internal
    */
-  public static function getTemporaryTableMappingPrefix(EntityTypeInterface $entity_type, array $field_storage_definitions, $time, $first_prefix_part = 'tmp_') {
+  public static function getTemporaryTableMappingPrefix(EntityTypeInterface $entity_type, array $field_storage_definitions, int|string|null $time = NULL, string $first_prefix_part = 'tmp_'): string {
     // Construct a unique prefix based on the contents of the entity type and
     // field storage definitions.
     $prefix_parts[] = spl_object_hash($entity_type);
     foreach ($field_storage_definitions as $storage_definition) {
       $prefix_parts[] = spl_object_hash($storage_definition);
     }
-    if (is_string($time)) {
+    if (is_string($time) || $time === NULL) {
       // Old parameter sequence.
       @trigger_error('Calling ' . __METHOD__ . '() without the $time argument is deprecated in drupal:10.1.0 and will be required in drupal:11.0.0. See https://www.drupal.org/node/3161659', E_USER_DEPRECATED);
       $first_prefix_part = $time;
