@@ -34,7 +34,7 @@ class ContextualLinks extends FieldPluginBase {
    * @param mixed $plugin_definition
    *   The plugin implementation definition.
    * @param \Drupal\Core\Render\RendererInterface|null $renderer
-   *   The file URL generator.
+   *   The renderer service.
    */
   public function __construct(array $configuration, $plugin_id, $plugin_definition, RendererInterface $renderer = NULL) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
