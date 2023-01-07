@@ -12,7 +12,7 @@ use Drupal\KernelTests\KernelTestBase;
 class FileWidgetDeprecationTest extends KernelTestBase {
 
   /**
-   * Tests deprecation of constructing a FileWidget without the renderer argument.
+   * Tests deprecation of constructing a FileWidget object without the renderer argument.
    *
    * @covers ::__construct
    */

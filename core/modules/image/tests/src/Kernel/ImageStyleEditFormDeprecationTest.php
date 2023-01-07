@@ -17,7 +17,7 @@ class ImageStyleEditFormDeprecationTest extends KernelTestBase {
   protected static $modules = ['image'];
 
   /**
-   * Tests deprecation of constructing a ImageStyleEditForm without the renderer argument.
+   * Tests deprecation of constructing an ImageStyleEditForm object without the renderer argument.
    *
    * @covers ::__construct
    */

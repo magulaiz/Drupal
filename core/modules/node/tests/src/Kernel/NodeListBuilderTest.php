@@ -42,8 +42,7 @@ class NodeListBuilderTest extends KernelTestBase {
 
     $this->assertEqualsCanonicalizing(['languages:' . LanguageInterface::TYPE_INTERFACE, 'theme', 'url.query_args.pagers:0', 'user.node_grants:view', 'user.permissions'], $build['#cache']['contexts']);
   }
-
-
+  
   /**
    * Tests deprecation of constructing a NodeListBuilderTest object without the renderer argument.
    *

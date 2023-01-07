@@ -17,7 +17,7 @@ class BookAdminEditFormDeprecationTest extends KernelTestBase {
   protected static $modules = ['book', 'node'];
 
   /**
-   * Tests deprecation of constructing a BookAdminEditForm without the renderer argument.
+   * Tests deprecation of constructing a BookAdminEditForm object without the renderer argument.
    *
    * @covers ::__construct
    */

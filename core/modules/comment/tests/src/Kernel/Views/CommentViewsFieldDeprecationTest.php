@@ -17,7 +17,7 @@ class CommentViewsFieldDeprecationTest extends KernelTestBase {
   protected static $modules = ['comment'];
 
   /**
-   * Tests deprecation of constructing a EntityLink object without the renderer argument.
+   * Tests deprecation of constructing an EntityLink object without the renderer argument.
    *
    * @covers \Drupal\comment\Plugin\views\field\EntityLink::__construct
    */

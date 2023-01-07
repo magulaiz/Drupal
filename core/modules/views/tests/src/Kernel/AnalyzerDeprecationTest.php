@@ -18,7 +18,7 @@ class AnalyzerDeprecationTest extends KernelTestBase {
   protected static $modules = ['views'];
 
   /**
-   * Tests deprecation of constructing a Analyzer object without the renderer argument.
+   * Tests deprecation of constructing an Analyzer object without the renderer argument.
    *
    * @covers ::__construct
    */

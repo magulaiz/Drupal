@@ -17,7 +17,7 @@ class BreakLockFormDeprecationTest extends KernelTestBase {
   protected static $modules = ['views_ui'];
 
   /**
-   * Tests deprecation of constructing a BreakLockForm without the renderer argument.
+   * Tests deprecation of constructing a BreakLockForm object without the renderer argument.
    *
    * @covers ::__construct
    */
