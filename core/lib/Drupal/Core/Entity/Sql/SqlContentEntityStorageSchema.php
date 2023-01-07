@@ -680,7 +680,7 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
    *   An entity type definition.
    * @param \Drupal\Core\Field\FieldStorageDefinitionInterface[] $field_storage_definitions
    *   An array of field storage definitions.
-   * @param int $time
+   * @param int|string|null $time
    *   The request time as last part of prefix. Defaults to NULL.
    * @param string $first_prefix_part
    *   (optional) The first part of the prefix. Defaults to 'tmp_'.
