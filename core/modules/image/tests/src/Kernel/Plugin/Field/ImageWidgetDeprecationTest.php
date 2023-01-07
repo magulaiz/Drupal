@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\Tests\image\Kernel\Plugin;
+namespace Drupal\Tests\image\Kernel\Plugin\Field;
 
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Render\ElementInfoManager;
