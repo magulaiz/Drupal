@@ -7,6 +7,7 @@ use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Image\ImageFactory;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\ElementInfoManagerInterface;
+use Drupal\Core\Render\RendererInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\file\Entity\File;
 use Drupal\file\Plugin\Field\FieldWidget\FileWidget;
@@ -47,11 +48,17 @@ class ImageWidget extends FileWidget {
    *   Any third party settings.
    * @param \Drupal\Core\Render\ElementInfoManagerInterface $element_info
    *   The element info manager service.
+   * @param \Drupal\Core\Render\RendererInterface|null $renderer
+   *   The renderer service.
    * @param \Drupal\Core\Image\ImageFactory $image_factory
    *   The image factory service.
    */
-  public function __construct($plugin_id, $plugin_definition, FieldDefinitionInterface $field_definition, array $settings, array $third_party_settings, ElementInfoManagerInterface $element_info, ImageFactory $image_factory = NULL) {
-    parent::__construct($plugin_id, $plugin_definition, $field_definition, $settings, $third_party_settings, $element_info);
+  public function __construct($plugin_id, $plugin_definition, FieldDefinitionInterface $field_definition, array $settings, array $third_party_settings, ElementInfoManagerInterface $element_info, RendererInterface $renderer = NULL, ImageFactory $image_factory = NULL) {
+    if (!$renderer) {
+      @trigger_error('Calling ' . __METHOD__ . '() without the $renderer argument is deprecated in drupal:10.1.0 and will be required in drupal:11.0.0. See https://www.drupal.org/node/2876656', E_USER_DEPRECATED);
+      $renderer = \Drupal::service('renderer');
+    }
+    parent::__construct($plugin_id, $plugin_definition, $field_definition, $settings, $third_party_settings, $element_info, $renderer);
     $this->imageFactory = $image_factory ?: \Drupal::service('image.factory');
   }
 

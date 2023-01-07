@@ -1,5 +1,7 @@
 <?php
 
+namespace Drupal\Tests\file\Kernel\Plugin;
+
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Render\ElementInfoManager;
 use Drupal\file\Plugin\Field\FieldWidget\FileWidget;
