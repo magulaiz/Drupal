@@ -102,8 +102,10 @@ class MimeTypeTest extends FileTestBase {
 
     foreach ($test_case2 as $input => $expected) {
       $output = $mime_type_mapper->getMimeTypeForExtension($input);
-      $this->assertSame($expected, $output);
+      $this->assertSame($expected, $output, sprintf("Mimetype (using custom mappings) for '%s' is '%s' (expected: '%s').", $input, $output, $expected));
+
     }
+
   }
 
   /**
