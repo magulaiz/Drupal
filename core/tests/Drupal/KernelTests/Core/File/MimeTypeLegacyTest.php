@@ -28,7 +28,8 @@ class MimeTypeLegacyTest extends KernelTestBase {
     );
 
     $mapper = $this->container->get('file.mime_type.mapper');
-    $this->assertEquals(['file_test_2', 'file_test_3'], $mapper->getExtensionsForMimeType('madeup/file_test_2'));
+    $this->assertEquals(['file_test_2', 'file_test_3'],
+      $mapper->getExtensionsForMimeType('made_up/file_test_2'));
   }
 
 }

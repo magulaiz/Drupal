@@ -62,32 +62,52 @@ class MimeTypeTest extends FileTestBase {
       'extensions' => [
         'jar' => 0,
         'jpg' => 1,
+        'doc' => 2,
+        'pcf.z' => 3,
+        'oda' => 4,
+        'ogg' => 5,
+        'pdf' => 6,
+        'jpeg' => 1,
+        'file_test_1' => 3,
+        'file_test_2' => 3,
+        'text' => 6,
+        'jar.jpg' => 1,
+        'jpg.jar' => 0,
       ],
     ];
 
-    $test_case = [
-      'test.jar' => 'application/java-archive',
-      'test.jpeg' => NULL,
-      'test.jpg' => 'image/jpeg',
-      'test.jar.jpg' => 'image/jpeg',
-      'test.jpg.jar' => 'application/java-archive',
-      'test.pcf.z' => NULL,
-      'pcf.z' => NULL,
-      'jar' => NULL,
-      'some.junk' => NULL,
-      'foo.file_test_1' => NULL,
-      'foo.file_test_2' => NULL,
-      'foo.doc' => NULL,
-      'test.ogg' => NULL,
+    $test_case2 = [
+      'jar' => 'application/java-archive',
+      'jpeg' => 'image/jpeg',
+      'jpg' => 'image/jpeg',
+      'jar.jpg' => 'image/jpeg',
+      'jpg.jar' => 'application/java-archive',
+      'pcf.z' => 'application/octet-stream',
+      'junk' => NULL,
+      'file_test_1' => 'application/octet-stream',
+      'file_test_2' => 'application/octet-stream',
+      'doc' => 'application/msword',
+      'ogg' => 'application/ogg',
+      'pdf' => 'application/pdf',
+      'text' => 'application/pdf',
     ];
+
     $mime_type_mapper = $this->container->get('file.mime_type.mapper');
     $mime_type_mapper->setMapping($mapping);
-    $extension_guesser = $this->container->get('file.mime_type.guesser.extension');
-    $extension_guesser->setMapping($mapping);
 
-    foreach ($test_case as $input => $expected) {
-      $output = $extension_guesser->guessMimeType($input);
-      $this->assertSame($expected, $output);
+    foreach ($test_case2 as $input => $expected) {
+      $output = $mime_type_mapper->getMimeTypeForExtension($input);
+      $this->assertSame(
+        $expected,
+        $output,
+        sprintf(
+          "Mimetype (using custom mappings) for '%s' is '%s' (expected: '%s').",
+          $input,
+          $output,
+          $expected
+        )
+      );
+
     }
   }
 
@@ -96,9 +116,10 @@ class MimeTypeTest extends FileTestBase {
    *
    * @group legacy
    */
-  public function testSetMapping() {
+  public function testSetMappingDeprecation() {
 
     $this->expectDeprecation('Drupal\Core\File\MimeType\ExtensionMimeTypeGuesser::setMapping() is deprecated in drupal:10.1.0, and will be removed in drupal:11.0.0. Use \Drupal\Core\File\MimeType\MimeTypeMapper::setMapping() instead. See https://www.drupal.org/project/drupal/issues/2311679.');
+
     $extension_guesser = $this->container->get('file.mime_type.guesser.extension');
     $extension_guesser->setMapping([
       'mimetypes' => [
