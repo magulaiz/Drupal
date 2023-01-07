@@ -7,6 +7,8 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityListBuilder;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
+use Drupal\Core\Render\RenderableInterface;
+use Drupal\Core\Render\RendererInterface;
 use Drupal\Core\Routing\RedirectDestinationInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -25,6 +27,11 @@ class NodeListBuilder extends EntityListBuilder {
   protected $dateFormatter;
 
   /**
+   * The renderer service.
+   */
+  protected RendererInterface $renderer;
+
+  /**
    * Constructs a new NodeListBuilder object.
    *
    * @param \Drupal\Core\Entity\EntityTypeInterface $entity_type
@@ -35,12 +42,19 @@ class NodeListBuilder extends EntityListBuilder {
    *   The date formatter service.
    * @param \Drupal\Core\Routing\RedirectDestinationInterface $redirect_destination
    *   The redirect destination service.
+   * @param \Drupal\Core\Render\RendererInterface|null $renderer
+   *   The renderer service.
    */
-  public function __construct(EntityTypeInterface $entity_type, EntityStorageInterface $storage, DateFormatterInterface $date_formatter, RedirectDestinationInterface $redirect_destination) {
+  public function __construct(EntityTypeInterface $entity_type, EntityStorageInterface $storage, DateFormatterInterface $date_formatter, RedirectDestinationInterface $redirect_destination, RendererInterface $renderer = NULL) {
     parent::__construct($entity_type, $storage);
 
     $this->dateFormatter = $date_formatter;
     $this->redirectDestination = $redirect_destination;
+    if (!$renderer) {
+      @trigger_error('Calling ' . __METHOD__ . '() without the $renderer argument is deprecated in drupal:10.1.0 and will be required in drupal:11.0.0. See https://www.drupal.org/node/2876656', E_USER_DEPRECATED);
+      $renderer = \Drupal::service('renderer');
+    }
+    $this->renderer = $renderer;
   }
 
   /**
@@ -51,7 +65,8 @@ class NodeListBuilder extends EntityListBuilder {
       $entity_type,
       $container->get('entity_type.manager')->getStorage($entity_type->id()),
       $container->get('date.formatter'),
-      $container->get('redirect.destination')
+      $container->get('redirect.destination'),
+      $container->get('renderer')
     );
   }
 
@@ -97,7 +112,7 @@ class NodeListBuilder extends EntityListBuilder {
     $row['title']['data'] = [
       '#type' => 'link',
       '#title' => $entity->label(),
-      '#suffix' => ' ' . \Drupal::service('renderer')->render($mark),
+      '#suffix' => ' ' . $this->renderer->render($mark),
       '#url' => $entity->toUrl(),
     ];
     $row['type'] = node_get_type_label($entity);

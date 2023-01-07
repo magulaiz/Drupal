@@ -5,6 +5,7 @@ namespace Drupal\image\Form;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Render\RendererInterface;
 use Drupal\Core\Url;
 use Drupal\image\ConfigurableImageEffectInterface;
 use Drupal\image\ImageEffectManager;
@@ -25,16 +26,28 @@ class ImageStyleEditForm extends ImageStyleFormBase {
   protected $imageEffectManager;
 
   /**
+   * The renderer service.
+   */
+  protected RendererInterface $renderer;
+
+  /**
    * Constructs an ImageStyleEditForm object.
    *
    * @param \Drupal\Core\Entity\EntityStorageInterface $image_style_storage
    *   The storage.
    * @param \Drupal\image\ImageEffectManager $image_effect_manager
    *   The image effect manager service.
+   * @param \Drupal\Core\Render\RendererInterface|null $renderer
+   *   The renderer service.
    */
-  public function __construct(EntityStorageInterface $image_style_storage, ImageEffectManager $image_effect_manager) {
+  public function __construct(EntityStorageInterface $image_style_storage, ImageEffectManager $image_effect_manager, RendererInterface $renderer = NULL) {
     parent::__construct($image_style_storage);
     $this->imageEffectManager = $image_effect_manager;
+    if (!$renderer) {
+      @trigger_error('Calling ' . __METHOD__ . '() without the $renderer argument is deprecated in drupal:10.1.0 and will be required in drupal:11.0.0. See https://www.drupal.org/node/2876656', E_USER_DEPRECATED);
+      $renderer = \Drupal::service('renderer');
+    }
+    $this->renderer = $renderer;
   }
 
   /**
@@ -43,7 +56,8 @@ class ImageStyleEditForm extends ImageStyleFormBase {
   public static function create(ContainerInterface $container) {
     return new static(
       $container->get('entity_type.manager')->getStorage('image_style'),
-      $container->get('plugin.manager.image.effect')
+      $container->get('plugin.manager.image.effect'),
+      $container->get('renderer')
     );
   }
 
@@ -61,7 +75,7 @@ class ImageStyleEditForm extends ImageStyleFormBase {
     $form['preview'] = [
       '#type' => 'item',
       '#title' => $this->t('Preview'),
-      '#markup' => \Drupal::service('renderer')->render($preview_arguments),
+      '#markup' => $this->renderer->render($preview_arguments),
       // Render preview above parent elements.
       '#weight' => -5,
     ];

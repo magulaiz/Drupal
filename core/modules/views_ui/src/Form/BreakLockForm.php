@@ -5,6 +5,7 @@ namespace Drupal\views_ui\Form;
 use Drupal\Core\Entity\EntityConfirmFormBase;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Render\RendererInterface;
 use Drupal\Core\TempStore\SharedTempStoreFactory;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -30,16 +31,28 @@ class BreakLockForm extends EntityConfirmFormBase {
   protected $tempStore;
 
   /**
+   * The renderer service.
+   */
+  protected RendererInterface $renderer;
+
+  /**
    * Constructs a \Drupal\views_ui\Form\BreakLockForm object.
    *
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    *   The entity type manager.
    * @param \Drupal\Core\TempStore\SharedTempStoreFactory $temp_store_factory
    *   The factory for the temp store object.
+   * @param \Drupal\Core\Render\RendererInterface|null $renderer
+   *   The renderer service.
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager, SharedTempStoreFactory $temp_store_factory) {
+  public function __construct(EntityTypeManagerInterface $entity_type_manager, SharedTempStoreFactory $temp_store_factory, RendererInterface $renderer = NULL) {
     $this->entityTypeManager = $entity_type_manager;
     $this->tempStore = $temp_store_factory->get('views');
+    if (!$renderer) {
+      @trigger_error('Calling ' . __METHOD__ . '() without the $renderer argument is deprecated in drupal:10.1.0 and will be required in drupal:11.0.0. See https://www.drupal.org/node/2876656', E_USER_DEPRECATED);
+      $renderer = \Drupal::service('renderer');
+    }
+    $this->renderer = $renderer;
   }
 
   /**
@@ -48,7 +61,8 @@ class BreakLockForm extends EntityConfirmFormBase {
   public static function create(ContainerInterface $container) {
     return new static(
       $container->get('entity_type.manager'),
-      $container->get('tempstore.shared')
+      $container->get('tempstore.shared'),
+      $container->get('renderer')
     );
   }
 
@@ -76,7 +90,7 @@ class BreakLockForm extends EntityConfirmFormBase {
       '#theme' => 'username',
       '#account' => $account,
     ];
-    return $this->t('By breaking this lock, any unsaved changes made by @user will be lost.', ['@user' => \Drupal::service('renderer')->render($username)]);
+    return $this->t('By breaking this lock, any unsaved changes made by @user will be lost.', ['@user' => $this->renderer->render($username)]);
   }
 
   /**

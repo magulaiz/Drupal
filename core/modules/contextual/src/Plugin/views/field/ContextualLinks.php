@@ -6,10 +6,12 @@ use Drupal\Component\Serialization\Json;
 use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Render\RendererInterface;
 use Drupal\Core\Routing\RedirectDestinationTrait;
 use Drupal\Core\Url;
 use Drupal\views\Plugin\views\field\FieldPluginBase;
 use Drupal\views\ResultRow;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Provides a handler that adds contextual links.
@@ -21,6 +23,34 @@ use Drupal\views\ResultRow;
 class ContextualLinks extends FieldPluginBase {
 
   use RedirectDestinationTrait;
+
+  /**
+   * Constructs an ContextualLinks object.
+   *
+   * @param array $configuration
+   *   A configuration array containing information about the plugin instance.
+   * @param string $plugin_id
+   *   The plugin_id for the plugin instance.
+   * @param mixed $plugin_definition
+   *   The plugin implementation definition.
+   * @param \Drupal\Core\Render\RendererInterface|null $renderer
+   *   The file URL generator.
+   */
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, RendererInterface $renderer = NULL) {
+    parent::__construct($configuration, $plugin_id, $plugin_definition);
+    if (!$renderer) {
+      @trigger_error('Calling ' . __METHOD__ . '() without the $renderer argument is deprecated in drupal:10.1.0 and will be required in drupal:11.0.0. See https://www.drupal.org/node/2876656', E_USER_DEPRECATED);
+      $renderer = \Drupal::service('renderer');
+    }
+    $this->renderer = $renderer;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
+    return new static($configuration, $plugin_id, $plugin_definition, $container->get('renderer'));
+  }
 
   /**
    * {@inheritdoc}
@@ -138,7 +168,7 @@ class ContextualLinks extends FieldPluginBase {
         '#type' => 'contextual_links_placeholder',
         '#id' => _contextual_links_to_id($contextual_links),
       ];
-      return \Drupal::service('renderer')->render($element);
+      return $this->renderer->render($element);
     }
     else {
       return '';

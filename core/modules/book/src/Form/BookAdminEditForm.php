@@ -10,6 +10,7 @@ use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element;
+use Drupal\Core\Render\RendererInterface;
 use Drupal\Core\Url;
 use Drupal\node\NodeInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -43,6 +44,11 @@ class BookAdminEditForm extends FormBase {
   protected $entityRepository;
 
   /**
+   * The renderer service.
+   */
+  protected RendererInterface $renderer;
+
+  /**
    * Constructs a new BookAdminEditForm.
    *
    * @param \Drupal\Core\Entity\EntityStorageInterface $node_storage
@@ -51,11 +57,18 @@ class BookAdminEditForm extends FormBase {
    *   The book manager.
    * @param \Drupal\Core\Entity\EntityRepositoryInterface $entity_repository
    *   The entity repository service.
+   * @param \Drupal\Core\Render\RendererInterface|null $renderer
+   *   The renderer service.
    */
-  public function __construct(EntityStorageInterface $node_storage, BookManagerInterface $book_manager, EntityRepositoryInterface $entity_repository) {
+  public function __construct(EntityStorageInterface $node_storage, BookManagerInterface $book_manager, EntityRepositoryInterface $entity_repository, RendererInterface $renderer = NULL) {
     $this->nodeStorage = $node_storage;
     $this->bookManager = $book_manager;
     $this->entityRepository = $entity_repository;
+    if (!$renderer) {
+      @trigger_error('Calling ' . __METHOD__ . '() without the $renderer argument is deprecated in drupal:10.1.0 and will be required in drupal:11.0.0. See https://www.drupal.org/node/2876656', E_USER_DEPRECATED);
+      $renderer = \Drupal::service('renderer');
+    }
+    $this->renderer = $renderer;
   }
 
   /**
@@ -66,7 +79,8 @@ class BookAdminEditForm extends FormBase {
     return new static(
       $entity_type_manager->getStorage('node'),
       $container->get('book.manager'),
-      $container->get('entity.repository')
+      $container->get('entity.repository'),
+      $container->get('renderer')
     );
   }
 
@@ -235,7 +249,7 @@ class BookAdminEditForm extends FormBase {
       }
 
       $form[$id]['title'] = [
-        '#prefix' => !empty($indentation) ? \Drupal::service('renderer')->render($indentation) : '',
+        '#prefix' => !empty($indentation) ? $this->renderer->render($indentation) : '',
         '#type' => 'textfield',
         '#default_value' => $data['link']['title'],
         '#maxlength' => 255,

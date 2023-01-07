@@ -3,6 +3,7 @@
 namespace Drupal\views;
 
 use Drupal\Core\Extension\ModuleHandlerInterface;
+use Drupal\Core\Render\RendererInterface;
 
 /**
  * View analyzer plugin manager.
@@ -24,13 +25,25 @@ class Analyzer {
   protected $moduleHandler;
 
   /**
+   * The renderer service.
+   */
+  protected RendererInterface $renderer;
+
+  /**
    * Constructs an Analyzer object.
    *
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
    *   The module handler that invokes the 'views_analyze' hook.
+   * @param \Drupal\Core\Render\RendererInterface|null $renderer
+   *   The renderer service.
    */
-  public function __construct(ModuleHandlerInterface $module_handler) {
+  public function __construct(ModuleHandlerInterface $module_handler, RendererInterface $renderer = NULL) {
     $this->moduleHandler = $module_handler;
+    if (!$renderer) {
+      @trigger_error('Calling ' . __METHOD__ . '() without the $renderer argument is deprecated in drupal:10.1.0 and will be required in drupal:11.0.0. See https://www.drupal.org/node/2876656', E_USER_DEPRECATED);
+      $renderer = \Drupal::service('renderer');
+    }
+    $this->renderer = $renderer;
   }
 
   /**
@@ -79,7 +92,7 @@ class Analyzer {
           '#theme' => 'item_list',
           '#items' => $messages,
         ];
-        $message = \Drupal::service('renderer')->render($item_list);
+        $message = $this->renderer->render($item_list);
       }
       elseif ($messages) {
         $message = array_shift($messages);

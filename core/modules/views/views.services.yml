@@ -67,7 +67,7 @@ services:
     arguments: ['@current_user', '@request_stack', '@views.views_data', '@router.route_provider']
   views.analyzer:
     class: Drupal\views\Analyzer
-    arguments: ['@module_handler']
+    arguments: ['@module_handler', '@renderer']
   views.route_subscriber:
     class: Drupal\views\EventSubscriber\RouteSubscriber
     arguments: ['@entity_type.manager', '@state']
