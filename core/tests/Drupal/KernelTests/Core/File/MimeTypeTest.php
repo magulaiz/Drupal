@@ -107,7 +107,6 @@ class MimeTypeTest extends FileTestBase {
           $expected
         )
       );
-
     }
   }
 
