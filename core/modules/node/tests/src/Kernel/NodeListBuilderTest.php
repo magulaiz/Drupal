@@ -47,6 +47,7 @@ class NodeListBuilderTest extends KernelTestBase {
    * Tests deprecation of constructing a NodeListBuilderTest object without the renderer argument.
    *
    * @covers ::__construct
+   *
    * @group legacy
    */
   public function testNodeListBuilderDeprecation(): void {
