@@ -4,6 +4,7 @@ namespace Drupal\filter\Plugin\Filter;
 
 use Drupal\Component\Utility\Html;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+use Drupal\Core\Render\RendererInterface;
 use Drupal\filter\FilterPluginManager;
 use Drupal\filter\FilterProcessResult;
 use Drupal\filter\Plugin\FilterBase;
@@ -32,6 +33,11 @@ class FilterCaption extends FilterBase implements ContainerFactoryPluginInterfac
   protected $filterManager;
 
   /**
+   * The renderer service.
+   */
+  protected RendererInterface $renderer;
+
+  /**
    * Constructs a new FilterCaption.
    *
    * @param array $configuration
@@ -42,10 +48,22 @@ class FilterCaption extends FilterBase implements ContainerFactoryPluginInterfac
    *   Definition.
    * @param \Drupal\filter\FilterPluginManager $filter_manager
    *   Filter plugin manager.
+   * @param \Drupal\Core\Render\RendererInterface $renderer
+   *   The renderer service.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, FilterPluginManager $filter_manager = NULL) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, FilterPluginManager $filter_manager = NULL, RendererInterface $renderer = NULL) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
-    $this->filterManager = $filter_manager ?: \Drupal::service('plugin.manager.filter');
+    $this->filterManager = $filter_manager;
+    if (!$filter_manager) {
+      @trigger_error('Calling ' . __METHOD__ . '() without the $filter_manager argument is deprecated in drupal:10.1.0 and will be required in drupal:11.0.0. See https://www.drupal.org/node/2876656', E_USER_DEPRECATED);
+      $filter_manager = \Drupal::service('plugin.manager.filter');
+    }
+    $this->filterManager = $filter_manager;
+    if (!$renderer) {
+      @trigger_error('Calling ' . __METHOD__ . '() without the $renderer argument is deprecated in drupal:10.1.0 and will be required in drupal:11.0.0. See https://www.drupal.org/node/2876656', E_USER_DEPRECATED);
+      $renderer = \Drupal::service('renderer');
+    }
+    $this->renderer = $renderer;
   }
 
   /**
