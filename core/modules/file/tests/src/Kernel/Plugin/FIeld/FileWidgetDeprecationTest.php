@@ -23,7 +23,8 @@ class FileWidgetDeprecationTest extends KernelTestBase {
     $element_info_manager = $this->prophesize(ElementInfoManager::class)->reveal();
     $this->expectDeprecation('Calling Drupal\file\Plugin\Field\FieldWidget\FileWidget::__construct() without the $renderer argument is deprecated in drupal:10.1.0 and will be required in drupal:11.0.0. See https://www.drupal.org/node/2876656');
     new FileWidget(
-      '', '',
+      '', 
+      '',
       $field_definition_manager,
       [],
       [],
