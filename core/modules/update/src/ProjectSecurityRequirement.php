@@ -52,7 +52,7 @@ final class ProjectSecurityRequirement {
   /**
    * The time service.
    */
-  protected TimeInterface $time;
+  protected readonly TimeInterface $time;
 
   /**
    * Constructs a ProjectSecurityRequirement object.

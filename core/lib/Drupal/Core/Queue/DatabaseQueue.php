@@ -38,7 +38,7 @@ class DatabaseQueue implements ReliableQueueInterface, QueueGarbageCollectionInt
   /**
    * The time service.
    */
-  protected TimeInterface $time;
+  protected readonly TimeInterface $time;
 
   /**
    * Constructs a \Drupal\Core\Queue\DatabaseQueue object.

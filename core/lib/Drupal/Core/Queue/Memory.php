@@ -32,12 +32,12 @@ class Memory implements QueueInterface {
   /**
    * The time service.
    */
-  protected TimeInterface $time;
+  protected readonly TimeInterface $time;
 
   /**
    * Constructs a Memory object.
    *
-   * @param \Drupal\Component\Datetime\TimeInterface|null $time
+   * @param \Drupal\Component\Datetime\TimeInterface $time
    *   The time service.
    */
   public function __construct($time = NULL) {
