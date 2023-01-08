@@ -58,6 +58,7 @@ class ImageWidget extends FileWidget {
       @trigger_error('Calling ' . __METHOD__ . '() without the $renderer argument is deprecated in drupal:10.1.0 and will be required in drupal:11.0.0. See https://www.drupal.org/node/2876656', E_USER_DEPRECATED);
       $renderer = \Drupal::service('renderer');
     }
+    $this->renderer = $renderer;
     parent::__construct($plugin_id, $plugin_definition, $field_definition, $settings, $third_party_settings, $element_info, $renderer);
     if (!$image_factory) {
       @trigger_error('Calling ' . __METHOD__ . '() without the $image_factory argument is deprecated in drupal:10.1.0 and will be required in drupal:11.0.0. See https://www.drupal.org/node/2876656', E_USER_DEPRECATED);

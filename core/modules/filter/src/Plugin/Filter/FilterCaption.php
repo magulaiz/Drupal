@@ -53,7 +53,6 @@ class FilterCaption extends FilterBase implements ContainerFactoryPluginInterfac
    */
   public function __construct(array $configuration, $plugin_id, $plugin_definition, FilterPluginManager $filter_manager = NULL, RendererInterface $renderer = NULL) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
-    $this->filterManager = $filter_manager;
     if (!$filter_manager) {
       @trigger_error('Calling ' . __METHOD__ . '() without the $filter_manager argument is deprecated in drupal:10.1.0 and will be required in drupal:11.0.0. See https://www.drupal.org/node/2876656', E_USER_DEPRECATED);
       $filter_manager = \Drupal::service('plugin.manager.filter');

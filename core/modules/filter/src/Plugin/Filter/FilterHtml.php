@@ -5,6 +5,7 @@ namespace Drupal\filter\Plugin\Filter;
 use Drupal\Component\Utility\Xss;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Component\Utility\Html;
+use Drupal\Core\Render\RendererInterface;
 use Drupal\filter\FilterProcessResult;
 use Drupal\filter\Plugin\FilterBase;
 
@@ -35,6 +36,32 @@ class FilterHtml extends FilterBase {
    * @var array
    */
   protected $restrictions;
+
+  /**
+   * The renderer service.
+   */
+  protected RendererInterface $renderer;
+
+  /**
+   * Constructs a new FilterCaption.
+   *
+   * @param array $configuration
+   *   Configuration.
+   * @param string $plugin_id
+   *   Plugin ID.
+   * @param mixed $plugin_definition
+   *   Definition.
+   * @param \Drupal\Core\Render\RendererInterface $renderer
+   *   The renderer service.
+   */
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, RendererInterface $renderer = NULL) {
+    parent::__construct($configuration, $plugin_id, $plugin_definition);
+    if (!$renderer) {
+      @trigger_error('Calling ' . __METHOD__ . '() without the $renderer argument is deprecated in drupal:10.1.0 and will be required in drupal:11.0.0. See https://www.drupal.org/node/2876656', E_USER_DEPRECATED);
+      $renderer = \Drupal::service('renderer');
+    }
+    $this->renderer = $renderer;
+  }
 
   /**
    * {@inheritdoc}
@@ -443,7 +470,7 @@ class FilterHtml extends FilterBase {
       '#header' => $header,
       '#rows' => $rows,
     ];
-    $output .= \Drupal::service('renderer')->render($table);
+    $output .= $this->renderer->render($table);
 
     $output .= '<p>' . $this->t('Most unusual characters can be directly entered without any problems.') . '</p>';
     $output .= '<p>' . $this->t('If you do encounter problems, try using HTML character entities. A common example looks like &amp;amp; for an ampersand &amp; character. For a full list of entities see HTML\'s <a href=":html-entities">entities</a> page. Some of the available characters include:', [':html-entities' => 'http://www.w3.org/TR/html4/sgml/entities.html']) . '</p>';
@@ -482,7 +509,7 @@ class FilterHtml extends FilterBase {
       '#header' => $header,
       '#rows' => $rows,
     ];
-    $output .= \Drupal::service('renderer')->render($table);
+    $output .= $this->renderer->render($table);
     return $output;
   }
 
