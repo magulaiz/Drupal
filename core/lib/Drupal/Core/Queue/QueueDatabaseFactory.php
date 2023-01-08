@@ -48,7 +48,7 @@ class QueueDatabaseFactory {
    * @return \Drupal\Core\Queue\DatabaseQueue
    *   A key/value store implementation for the given $collection.
    */
-  public function get(string $name): DatabaseQueue {
+  public function get(string $name) {
     return new DatabaseQueue($name, $this->connection, $this->time);
   }
 
