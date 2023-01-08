@@ -37,7 +37,7 @@ class ImageStyleEditForm extends ImageStyleFormBase {
    *   The storage.
    * @param \Drupal\image\ImageEffectManager $image_effect_manager
    *   The image effect manager service.
-   * @param \Drupal\Core\Render\RendererInterface|null $renderer
+   * @param \Drupal\Core\Render\RendererInterface $renderer
    *   The renderer service.
    */
   public function __construct(EntityStorageInterface $image_style_storage, ImageEffectManager $image_effect_manager, RendererInterface $renderer = NULL) {

@@ -41,7 +41,7 @@ class NodeListBuilder extends EntityListBuilder {
    *   The date formatter service.
    * @param \Drupal\Core\Routing\RedirectDestinationInterface $redirect_destination
    *   The redirect destination service.
-   * @param \Drupal\Core\Render\RendererInterface|null $renderer
+   * @param \Drupal\Core\Render\RendererInterface $renderer
    *   The renderer service.
    */
   public function __construct(EntityTypeInterface $entity_type, EntityStorageInterface $storage, DateFormatterInterface $date_formatter, RedirectDestinationInterface $redirect_destination, RendererInterface $renderer = NULL) {

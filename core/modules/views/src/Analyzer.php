@@ -34,7 +34,7 @@ class Analyzer {
    *
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
    *   The module handler that invokes the 'views_analyze' hook.
-   * @param \Drupal\Core\Render\RendererInterface|null $renderer
+   * @param \Drupal\Core\Render\RendererInterface $renderer
    *   The renderer service.
    */
   public function __construct(ModuleHandlerInterface $module_handler, RendererInterface $renderer = NULL) {

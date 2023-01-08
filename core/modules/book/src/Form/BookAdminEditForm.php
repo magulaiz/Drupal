@@ -57,7 +57,7 @@ class BookAdminEditForm extends FormBase {
    *   The book manager.
    * @param \Drupal\Core\Entity\EntityRepositoryInterface $entity_repository
    *   The entity repository service.
-   * @param \Drupal\Core\Render\RendererInterface|null $renderer
+   * @param \Drupal\Core\Render\RendererInterface $renderer
    *   The renderer service.
    */
   public function __construct(EntityStorageInterface $node_storage, BookManagerInterface $book_manager, EntityRepositoryInterface $entity_repository, RendererInterface $renderer = NULL) {

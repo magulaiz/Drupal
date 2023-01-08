@@ -48,7 +48,7 @@ class ImageWidget extends FileWidget {
    *   Any third party settings.
    * @param \Drupal\Core\Render\ElementInfoManagerInterface $element_info
    *   The element info manager service.
-   * @param \Drupal\Core\Render\RendererInterface|null $renderer
+   * @param \Drupal\Core\Render\RendererInterface $renderer
    *   The renderer service.
    * @param \Drupal\Core\Image\ImageFactory $image_factory
    *   The image factory service.
