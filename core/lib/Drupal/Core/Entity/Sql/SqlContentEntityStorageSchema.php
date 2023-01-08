@@ -107,7 +107,7 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
   /**
    * The time service.
    */
-  protected TimeInterface $time;
+  protected readonly TimeInterface $time;
 
   /**
    * Constructs a SqlContentEntityStorageSchema.

@@ -145,7 +145,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
   /**
    * The time service.
    */
-  protected TimeInterface $time;
+  protected readonly TimeInterface $time;
 
   /**
    * {@inheritdoc}
