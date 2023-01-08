@@ -3,12 +3,16 @@
 namespace Drupal\Tests\Core\Entity\Sql;
 
 use Drupal\Component\Datetime\TimeInterface;
+use Drupal\Core\Cache\MemoryCache\MemoryCache;
+use Drupal\Core\Database\Connection;
+use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\Entity\ContentEntityType;
 use Drupal\Core\Entity\ContentEntityTypeInterface;
 use Drupal\Core\Entity\EntityFieldManager;
 use Drupal\Core\Entity\EntityLastInstalledSchemaRepositoryInterface;
 use Drupal\Core\Entity\EntityTypeManager;
 use Drupal\Core\Entity\Sql\DefaultTableMapping;
+use Drupal\Core\Entity\Sql\SqlContentEntityStorage;
 use Drupal\Core\Entity\Sql\SqlContentEntityStorageSchema;
 use Drupal\Tests\UnitTestCase;
 
@@ -106,6 +110,11 @@ class SqlContentEntityStorageSchemaTest extends UnitTestCase {
         ],
       ],
     ]);
+
+    $this->container = new ContainerBuilder();
+    \Drupal::setContainer($this->container);
+
+    $this->container->set('datetime.time', $this->time);
   }
 
   /**
@@ -1685,6 +1694,24 @@ class SqlContentEntityStorageSchemaTest extends UnitTestCase {
       ],
     ];
     return $cases;
+  }
+
+  /**
+   * Tests deprecation of constructing a SqlContentEntityStorageSchema object
+   * without the renderer argument.
+   *
+   * @covers ::__construct
+   * @group legacy
+   */
+  public function testSqlContentEntityStorageSchemaConstructorDeprecation(): void {
+    $this->expectDeprecation('Calling Drupal\Core\Entity\Sql\SqlContentEntityStorageSchema::__construct() without the $time argument is deprecated in drupal:10.1.0 and will be required in drupal:11.0.0. See https://www.drupal.org/node/3161659');
+    new SqlContentEntityStorageSchema(
+      $this->entityTypeManager,
+      $this->prophesize(ContentEntityTypeInterface::class)->reveal(),
+      $this->storage,
+      $this->prophesize(Connection::class)->reveal(),
+      $this->entityFieldManager
+    );
   }
 
 }
