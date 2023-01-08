@@ -41,7 +41,8 @@ use Drupal\path_alias\PathAliasInterface;
  *   list_cache_tags = { "route_match" },
  *   constraints = {
  *     "UniquePathAlias" = {}
- *   }
+ *   },
+ *   storage_schema_version = 2,
  * )
  */
 class PathAlias extends ContentEntityBase implements PathAliasInterface {

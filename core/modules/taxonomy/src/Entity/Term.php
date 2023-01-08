@@ -67,7 +67,8 @@ use Drupal\user\StatusItem;
  *   permission_granularity = "bundle",
  *   constraints = {
  *     "TaxonomyHierarchy" = {}
- *   }
+ *   },
+ *   storage_schema_version = 2,
  * )
  */
 class Term extends EditorialContentEntityBase implements TermInterface {
@@ -154,6 +155,7 @@ class Term extends EditorialContentEntityBase implements TermInterface {
       ->setTranslatable(TRUE)
       ->setRevisionable(TRUE)
       ->setRequired(TRUE)
+      ->setStorageRequired(TRUE)
       ->setSetting('max_length', 255)
       ->setDisplayOptions('view', [
         'label' => 'hidden',
@@ -185,7 +187,8 @@ class Term extends EditorialContentEntityBase implements TermInterface {
     $fields['weight'] = BaseFieldDefinition::create('integer')
       ->setLabel(t('Weight'))
       ->setDescription(t('The weight of this term in relation to other terms.'))
-      ->setDefaultValue(0);
+      ->setDefaultValue(0)
+      ->setStorageRequired(TRUE);
 
     $fields['parent'] = BaseFieldDefinition::create('entity_reference')
       ->setLabel(t('Term Parents'))

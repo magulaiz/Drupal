@@ -80,7 +80,8 @@ use Drupal\user\EntityOwnerTrait;
  *     "delete-multiple-form" = "/media/delete",
  *     "edit-form" = "/media/{media}/edit",
  *     "revision" = "/media/{media}/revisions/{media_revision}/view",
- *   }
+ *   },
+ *   storage_schema_version = 2,
  * )
  */
 class Media extends EditorialContentEntityBase implements MediaInterface {

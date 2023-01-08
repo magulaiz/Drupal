@@ -62,6 +62,7 @@ use Drupal\workspaces\WorkspaceInterface;
  *     "activate-form" = "/admin/config/workflow/workspaces/manage/{workspace}/activate",
  *     "collection" = "/admin/config/workflow/workspaces",
  *   },
+ *   storage_schema_version = 2,
  * )
  */
 class Workspace extends ContentEntityBase implements WorkspaceInterface {
@@ -75,6 +76,7 @@ class Workspace extends ContentEntityBase implements WorkspaceInterface {
   public static function baseFieldDefinitions(EntityTypeInterface $entity_type) {
     $fields = parent::baseFieldDefinitions($entity_type);
     $fields += static::ownerBaseFieldDefinitions($entity_type);
+    $storage_schema_version = $entity_type->get('storage_schema_version');
 
     $fields['id'] = BaseFieldDefinition::create('string')
       ->setLabel(new TranslatableMarkup('Workspace ID'))
@@ -84,6 +86,9 @@ class Workspace extends ContentEntityBase implements WorkspaceInterface {
       ->addConstraint('UniqueField')
       ->addConstraint('DeletedWorkspace')
       ->addPropertyConstraints('value', ['Regex' => ['pattern' => '/^[a-z0-9_]+$/']]);
+    if ($storage_schema_version >= 2) {
+      $fields['id']->setStorageRequired(TRUE);
+    }
 
     $fields['label'] = BaseFieldDefinition::create('string')
       ->setLabel(new TranslatableMarkup('Workspace name'))
@@ -100,6 +105,9 @@ class Workspace extends ContentEntityBase implements WorkspaceInterface {
         'weight' => 5,
       ])
       ->setDisplayConfigurable('form', TRUE);
+    if ($storage_schema_version >= 2) {
+      $fields['uid']->setStorageRequired(TRUE);
+    }
 
     $fields['parent'] = BaseFieldDefinition::create('entity_reference')
       ->setLabel(new TranslatableMarkup('Parent'))

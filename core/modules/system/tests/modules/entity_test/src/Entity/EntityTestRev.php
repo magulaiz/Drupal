@@ -49,7 +49,8 @@ use Drupal\Core\Field\BaseFieldDefinition;
  *     "revision-delete-form" = "/entity_test_rev/{entity_test_rev}/revision/{entity_test_rev_revision}/delete",
  *     "revision-revert-form" = "/entity_test_rev/{entity_test_rev}/revision/{entity_test_rev_revision}/revert",
  *     "version-history" = "/entity_test_rev/{entity_test_rev}/revisions",
- *   }
+ *   },
+ *   storage_schema_version = 2,
  * )
  */
 class EntityTestRev extends EntityTest {

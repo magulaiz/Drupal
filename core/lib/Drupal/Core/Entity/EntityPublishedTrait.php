@@ -32,13 +32,15 @@ trait EntityPublishedTrait {
       throw new UnsupportedEntityTypeDefinitionException('The entity type ' . $entity_type->id() . ' does not have a "published" entity key.');
     }
 
-    return [
-      $entity_type->getKey('published') => BaseFieldDefinition::create('boolean')
-        ->setLabel(new TranslatableMarkup('Published'))
-        ->setRevisionable(TRUE)
-        ->setTranslatable(TRUE)
-        ->setDefaultValue(TRUE),
-    ];
+    $field_definitions = BaseFieldDefinition::create('boolean')
+      ->setLabel(new TranslatableMarkup('Published'))
+      ->setRevisionable(TRUE)
+      ->setTranslatable(TRUE)
+      ->setDefaultValue(TRUE);
+    if ($entity_type->get('storage_schema_version') >= 2) {
+      $field_definitions->setStorageRequired(TRUE);
+    }
+    return [$entity_type->getKey('published') => $field_definitions];
   }
 
   /**

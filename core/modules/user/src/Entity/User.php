@@ -61,7 +61,8 @@ use Drupal\user\UserInterface;
  *     "collection" = "/admin/people",
  *   },
  *   field_ui_base_route = "entity.user.admin_form",
- *   common_reference_target = TRUE
+ *   common_reference_target = TRUE,
+ *   storage_schema_version = 2,
  * )
  */
 class User extends ContentEntityBase implements UserInterface {
@@ -484,6 +485,7 @@ class User extends ContentEntityBase implements UserInterface {
       ->setLabel(t('Name'))
       ->setDescription(t('The name of this user.'))
       ->setRequired(TRUE)
+      ->setStorageRequired(TRUE)
       ->setConstraints([
         // No Length constraint here because the UserName constraint also covers
         // that.
@@ -524,7 +526,8 @@ class User extends ContentEntityBase implements UserInterface {
 
     $fields['created'] = BaseFieldDefinition::create('created')
       ->setLabel(t('Created'))
-      ->setDescription(t('The time that the user was created.'));
+      ->setDescription(t('The time that the user was created.'))
+      ->setStorageRequired(TRUE);
 
     $fields['changed'] = BaseFieldDefinition::create('changed')
       ->setLabel(t('Changed'))
@@ -534,6 +537,7 @@ class User extends ContentEntityBase implements UserInterface {
     $fields['access'] = BaseFieldDefinition::create('timestamp')
       ->setLabel(t('Last access'))
       ->setDescription(t('The time that the user last accessed the site.'))
+      ->setStorageRequired(TRUE)
       ->setDefaultValue(0);
 
     $fields['login'] = BaseFieldDefinition::create('timestamp')

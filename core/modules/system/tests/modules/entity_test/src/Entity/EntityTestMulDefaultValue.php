@@ -36,6 +36,7 @@ use Drupal\Core\Field\BaseFieldDefinition;
  *     "delete-form" = "/entity_test/delete/entity_test_mul_default_value/{entity_test_mul_default_value}",
  *   },
  *   field_ui_base_route = "entity.entity_test_mul.admin_form",
+ *   storage_schema_version = 2,
  * )
  */
 class EntityTestMulDefaultValue extends EntityTestMul {

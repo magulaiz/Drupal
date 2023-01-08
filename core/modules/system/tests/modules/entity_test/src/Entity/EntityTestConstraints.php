@@ -23,7 +23,8 @@ use Drupal\Core\Field\BaseFieldDefinition;
  *   persistent_cache = FALSE,
  *   constraints = {
  *     "NotNull" = {}
- *   }
+ *   },
+ *   storage_schema_version = 2,
  * )
  */
 class EntityTestConstraints extends EntityTest implements EntityChangedInterface {

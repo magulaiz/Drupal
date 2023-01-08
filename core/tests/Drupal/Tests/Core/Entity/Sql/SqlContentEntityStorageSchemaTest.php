@@ -94,6 +94,7 @@ class SqlContentEntityStorageSchemaTest extends UnitTestCase {
       'columns' => [
         'value' => [
           'type' => 'int',
+          'not null' => TRUE,
         ],
       ],
     ]);
@@ -653,6 +654,7 @@ class SqlContentEntityStorageSchemaTest extends UnitTestCase {
       'columns' => [
         'value' => [
           'type' => 'int',
+          'not null' => TRUE,
         ],
       ],
     ]);
@@ -660,6 +662,7 @@ class SqlContentEntityStorageSchemaTest extends UnitTestCase {
       'columns' => [
         'value' => [
           'type' => 'varchar',
+          'not null' => TRUE,
         ],
       ],
     ]);
@@ -668,6 +671,7 @@ class SqlContentEntityStorageSchemaTest extends UnitTestCase {
         'value' => [
           'type' => 'int',
           'size' => 'tiny',
+          'not null' => TRUE,
         ],
       ],
     ]);
@@ -1455,6 +1459,9 @@ class SqlContentEntityStorageSchemaTest extends UnitTestCase {
     $this->storageDefinitions[$field_name]->expects($this->any())
       ->method('getColumns')
       ->willReturn($schema['columns']);
+    $this->storageDefinitions[$field_name]->expects($this->any())
+      ->method('isStorageRequired')
+      ->will($this->returnValue(TRUE));
     // Add property definitions.
     if (!empty($schema['columns'])) {
       $property_definitions = [];

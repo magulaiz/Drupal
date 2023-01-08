@@ -42,7 +42,8 @@ use Drupal\Core\Field\BaseFieldDefinition;
  *     "delete-form" = "/entity_test/delete/entity_test_mulrev_changed/{entity_test_mulrev_changed}",
  *     "edit-form" = "/entity_test_mulrev_changed/manage/{entity_test_mulrev_changed}/edit",
  *     "revision" = "/entity_test_mulrev_changed/{entity_test_mulrev_changed}/revision/{entity_test_mulrev_changed_revision}/view",
- *   }
+ *   },
+ *   storage_schema_version = 2,
  * )
  */
 class EntityTestMulRevChanged extends EntityTestMulChanged {
@@ -57,6 +58,7 @@ class EntityTestMulRevChanged extends EntityTestMulChanged {
       ->setLabel(t('Revision ID'))
       ->setDescription(t('The version id of the test entity.'))
       ->setReadOnly(TRUE)
+      ->setStorageRequired(TRUE)
       ->setSetting('unsigned', TRUE);
 
     $fields['revision_translation_affected'] = BaseFieldDefinition::create('boolean')

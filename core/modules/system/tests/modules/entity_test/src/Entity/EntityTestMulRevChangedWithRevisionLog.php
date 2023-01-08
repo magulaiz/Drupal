@@ -27,6 +27,7 @@ use Drupal\Core\Entity\RevisionLogInterface;
  *     "revision_created" = "revision_created",
  *     "revision_log_message" = "revision_log_message"
  *   },
+ *   storage_schema_version = 2,
  * )
  */
 class EntityTestMulRevChangedWithRevisionLog extends EntityTestMulRevChanged implements RevisionLogInterface {

@@ -51,7 +51,8 @@ use Drupal\shortcut\ShortcutInterface;
  *     "edit-form" = "/admin/config/user-interface/shortcut/link/{shortcut}",
  *   },
  *   list_cache_tags = { "config:shortcut_set_list" },
- *   bundle_entity_type = "shortcut_set"
+ *   bundle_entity_type = "shortcut_set",
+ *   storage_schema_version = 2,
  * )
  */
 class Shortcut extends ContentEntityBase implements ShortcutInterface {

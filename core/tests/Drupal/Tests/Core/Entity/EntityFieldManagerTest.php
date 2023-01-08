@@ -353,6 +353,8 @@ class EntityFieldManagerTest extends UnitTestCase {
 
     $this->entityType->isTranslatable()->willReturn(TRUE);
 
+    $this->entityType->get('storage_schema_version')->willReturn(NULL);
+
     $definitions = $this->entityFieldManager->getBaseFieldDefinitions('test_entity_type');
 
     $this->assertTrue(isset($definitions[$default_langcode_key]));
@@ -396,6 +398,7 @@ class EntityFieldManagerTest extends UnitTestCase {
 
     $this->entityType->isTranslatable()->willReturn(TRUE);
     $this->entityType->getLabel()->willReturn('Test');
+    $this->entityType->get('storage_schema_version')->willReturn(NULL);
 
     $this->expectException(\LogicException::class);
     $this->expectExceptionMessage('The Test entity type cannot be translatable as it does not define a translatable "langcode" field.');
@@ -534,6 +537,7 @@ class EntityFieldManagerTest extends UnitTestCase {
 
     $this->entityType->isTranslatable()->willReturn(TRUE);
     $this->entityType->getLabel()->willReturn('the_label');
+    $this->entityType->get('storage_schema_version')->willReturn(NULL);
 
     $this->expectException(\LogicException::class);
     $this->entityFieldManager->getBaseFieldDefinitions('test_entity_type');

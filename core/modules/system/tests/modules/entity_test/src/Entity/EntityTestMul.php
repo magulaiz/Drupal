@@ -41,6 +41,7 @@ use Drupal\Core\Entity\EntityTypeInterface;
  *     "delete-form" = "/entity_test/delete/entity_test_mul/{entity_test_mul}",
  *   },
  *   field_ui_base_route = "entity.entity_test_mul.admin_form",
+ *   storage_schema_version = 2,
  * )
  */
 class EntityTestMul extends EntityTest {

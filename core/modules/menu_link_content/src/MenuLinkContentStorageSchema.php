@@ -20,7 +20,7 @@ class MenuLinkContentStorageSchema extends SqlContentEntityStorageSchema {
     if ($table_name == $this->storage->getBaseTable()) {
       switch ($field_name) {
         case 'rediscover':
-          $this->addSharedTableFieldIndex($storage_definition, $schema, TRUE);
+          $this->addSharedTableFieldIndex($storage_definition, $schema);
           break;
       }
     }

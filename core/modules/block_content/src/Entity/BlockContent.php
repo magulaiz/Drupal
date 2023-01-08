@@ -68,7 +68,8 @@ use Drupal\user\UserInterface;
  *   },
  *   bundle_entity_type = "block_content_type",
  *   field_ui_base_route = "entity.block_content_type.edit_form",
- *   render_cache = FALSE,
+ *   render_cache = FALSE,*
+ *   storage_schema_version = 2,
  * )
  *
  * Note that render caching of block_content entities is disabled because they

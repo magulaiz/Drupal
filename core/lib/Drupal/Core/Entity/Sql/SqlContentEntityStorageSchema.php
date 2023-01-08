@@ -1635,11 +1635,21 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
     if (!$only_save) {
       // Make sure any entity index involving this field is re-created if
       // needed.
-      $entity_schema = $this->getEntitySchema($this->entityType);
-      $this->createEntitySchemaIndexes($entity_schema, $storage_definition);
+      $current_entity_schema = $this->getEntitySchema($this->entityType);
+      $installed_entity_schema = $this->loadEntitySchemaData($this->entityType);
+      $created_indexes = $this->createEntitySchemaIndexes($current_entity_schema, $storage_definition);
+
+      // Update the installed schema with the new or updated indexes.
+      foreach ($created_indexes as $table_name => $index_data) {
+        foreach ($index_data as $index_type => $info) {
+          foreach ($info as $index_name => $specifier) {
+            $installed_entity_schema[$table_name][$index_type][$index_name] = $specifier;
+          }
+        }
+      }
 
       // Store the updated entity schema.
-      $this->saveEntitySchemaData($this->entityType, $entity_schema);
+      $this->saveEntitySchemaData($this->entityType, $installed_entity_schema);
     }
   }
 
@@ -1920,8 +1930,12 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
    *   (optional) If a field storage definition is specified, only indexes and
    *   keys involving its columns will be processed. Otherwise all defined
    *   entity indexes and keys will be processed.
+   *
+   * @return array
+   *   The created or updated indexes in a structure matching the entity schema.
    */
   protected function createEntitySchemaIndexes(array $entity_schema, FieldStorageDefinitionInterface $storage_definition = NULL) {
+    $created_indexes = [];
     $schema_handler = $this->database->schema();
 
     if ($storage_definition) {
@@ -1963,11 +1977,13 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
             }
             if ($create) {
               $this->{$add_method}($table_name, $name, $specifier, $schema);
+              $created_indexes[$table_name][$key][$name] = $specifier;
             }
           }
         }
       }
     }
+    return $created_indexes;
   }
 
   /**
@@ -2067,6 +2083,7 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
     }
 
     $field_name = $storage_definition->getName();
+    $properties = $storage_definition->getPropertyDefinitions();
     $base_table = $this->storage->getBaseTable();
     $revision_table = $this->storage->getRevisionTable();
 
@@ -2100,31 +2117,37 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
       }
     }
 
-    // A shared table contains rows for entities where the field is empty
-    // (since other fields stored in the same table might not be empty), thus
-    // the only columns that can be 'not null' are those for required
-    // properties of required fields. For now, we only hardcode 'not null' to a
-    // few "entity keys", in order to keep their indexes optimized.
-    // @todo Fix this in https://www.drupal.org/node/2841291.
-    $not_null_keys = $this->entityType->getKeys();
-    // Label and the 'revision_translation_affected' fields are not necessarily
-    // required.
-    unset($not_null_keys['label'], $not_null_keys['revision_translation_affected']);
+    $schema_version = $this->entityType->get('storage_schema_version') ?: 1;
+    if ($schema_version >= 2) {
+      // A shared table contains rows for entities where the field is empty
+      // (since other fields stored in the same table might not be empty), thus
+      // the only columns that can be 'not null' are those for required
+      // properties of required fields.
+      $field_storage_is_required = $storage_definition->isStorageRequired();
+    }
+    else {
+      // The legacy behavior is that only entity keys are 'not null'.
+      $not_null_keys = $this->entityType->getKeys();
+      // Label and the 'revision_translation_affected' fields are not
+      // necessarily required.
+      unset($not_null_keys['label'], $not_null_keys['revision_translation_affected']);
+      $field_storage_is_required = in_array($field_name, $not_null_keys);
+    }
     // Because entity ID and revision ID are both serial fields in the base and
     // revision table respectively, the revision ID is not known yet, when
     // inserting data into the base table. Instead the revision ID in the base
     // table is updated after the data has been inserted into the revision
     // table. For this reason the revision ID field cannot be marked as NOT
     // NULL.
-    if ($table_name == $base_table) {
-      unset($not_null_keys['revision']);
+    if ($table_name == $this->storage->getBaseTable() && $field_name === $this->entityType->getKey('revision')) {
+      $field_storage_is_required = FALSE;
     }
 
     foreach ($column_mapping as $field_column_name => $schema_field_name) {
       $column_schema = $field_schema['columns'][$field_column_name];
 
       $schema['fields'][$schema_field_name] = $column_schema;
-      $schema['fields'][$schema_field_name]['not null'] = in_array($field_name, $not_null_keys);
+      $schema['fields'][$schema_field_name]['not null'] = $field_storage_is_required && $properties[$field_column_name]->isRequired();
 
       // Use the initial value of the field storage, if available.
       if ($initial_value && isset($initial_value[$field_column_name])) {
@@ -2153,6 +2176,12 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
       ($table_name === $revision_table && $field_name === $this->entityType->getKey('revision'))) {
       $this->processIdentifierSchema($schema, $field_name);
     }
+    // Process the 'id' and 'revision' entity keys for the base and revision
+    // tables.
+    if (($table_name === $base_table && $field_name === $this->entityType->getKey('id')) ||
+       ($table_name === $revision_table && $field_name === $this->entityType->getKey('revision'))) {
+      $this->processIdentifierSchema($schema, $field_name);
+    }
 
     return $schema;
   }
@@ -2170,12 +2199,16 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
    *   in case the field needs to support NULL values.
    * @param int $size
    *   (optional) The index size. Defaults to no limit.
+   *
+   * @deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Instead, you should set \Drupal\Core\Field\BaseFieldDefinition::setStorageRequired() on the respective field.
+   * @see https://www.drupal.org/node/2858195
    */
   protected function addSharedTableFieldIndex(FieldStorageDefinitionInterface $storage_definition, &$schema, $not_null = FALSE, $size = NULL) {
     $name = $storage_definition->getName();
     $real_key = $this->getFieldSchemaIdentifierName($storage_definition->getTargetEntityTypeId(), $name);
     $schema['indexes'][$real_key] = [$size ? [$name, $size] : $name];
     if ($not_null) {
+      @trigger_error('The $not_null parameter of SqlContentEntityStorageSchema::addSharedTableFieldIndex() is deprecated in drupal 10.1.0 and will be removed before drupal 11.0.0. Instead, you should set \Drupal\Core\Field\BaseFieldDefinition::setStorageRequired() on the respective field. See https://www.drupal.org/node/2858195.', E_USER_DEPRECATED);
       $schema['fields'][$name]['not null'] = TRUE;
     }
   }
@@ -2580,6 +2613,72 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
     }
 
     return $value;
+  }
+
+  /**
+   * Updates the given entity type to storage schema version 2.
+   *
+   * Before running this update the storage schema version should be defined on
+   * the entity type annotation with "storage_schema_version=2" and the
+   * additional not null base fields should be flagged as storage required
+   * through the base field method "::setStorageRequired(TRUE)".
+   *
+   * @param string $entity_type_id
+   *   The entity type to update.
+   * @param array $additional_not_null_fields
+   *   The additional not null base fields next to the default entity keys.
+   *
+   * @see \Drupal\Core\Field\BaseFieldDefinition::setStorageRequired()
+   */
+  public static function updateToStorageSchemaV2(string $entity_type_id, array $additional_not_null_fields = []) {
+    $definition_update_manager = \Drupal::entityDefinitionUpdateManager();
+    /** @var \Drupal\Core\Entity\EntityFieldManagerInterface $entity_field_manager */
+    $entity_field_manager = \Drupal::service('entity_field.manager');
+    /** @var \Drupal\Core\Entity\ContentEntityTypeInterface $entity_type */
+    $entity_type = $definition_update_manager->getEntityType($entity_type_id);
+
+    // Update the entity type and its field.
+    $entity_type->set('storage_schema_version', 2);
+    $definition_update_manager->updateEntityType($entity_type);
+
+    // Default not null fields.
+    $not_null_fields = array_filter($entity_type->getKeys());
+    // Label and the 'revision_translation_affected' fields are not required.
+    // @see \Drupal\Core\Entity\Sql\SqlContentEntityStorageSchema::getSharedTableFieldSchema().
+    unset($not_null_fields['label'], $not_null_fields['revision_translation_affected']);
+
+    // We need to update the field storage definition and thus the saved field
+    // schema data both for fields that were already flagged as storage required
+    // before the update (for example the revision_default field) and fields
+    // that are being flagged as storage required as part of this update.
+    // Therefore we need to retrieve the current base field definitions based on
+    // the updated entity type.
+    $entity_field_manager->useCaches(FALSE);
+    $current_base_field_definition = $entity_field_manager->getBaseFieldDefinitions($entity_type_id);
+    foreach ($current_base_field_definition as $field_name => $current_base_field_definition) {
+      if ($current_base_field_definition->isStorageRequired()) {
+        $not_null_fields[] = $field_name;
+      }
+    }
+
+    $not_null_fields = array_unique(array_merge($not_null_fields, $additional_not_null_fields));
+    foreach ($not_null_fields as $not_null_field) {
+      $base_field_definition = $definition_update_manager->getFieldStorageDefinition($not_null_field, $entity_type_id);
+      // Not all entity keys are present as fields. For example the
+      // default_langcode is returned as an entity key even for non-translatable
+      // entity types.
+      if ($base_field_definition) {
+        // Read the storage required setting from the live base field
+        // definitions as it is possible to cancel the NOT NULL constraint for
+        // an entity key through it by setting it to FALSE. We need to update
+        // the field storage definition even if it is flagged as not storage
+        // required in order for the live and the active field storage
+        // definitions to be consistent.
+        $current_base_field_definition = $entity_field_manager->getBaseFieldDefinitions($entity_type_id)[$not_null_field];
+        $base_field_definition->setStorageRequired($current_base_field_definition->isStorageRequired());
+        $definition_update_manager->updateFieldStorageDefinition($base_field_definition);
+      }
+    }
   }
 
 }

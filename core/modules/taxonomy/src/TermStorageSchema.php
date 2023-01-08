@@ -93,14 +93,8 @@ class TermStorageSchema extends SqlContentEntityStorageSchema {
       unset($schema['indexes']['taxonomy_term_field__description__format']);
 
       switch ($field_name) {
-        case 'weight':
-          // Improves the performance of the taxonomy_term__tree index defined
-          // in getEntitySchema().
-          $schema['fields'][$field_name]['not null'] = TRUE;
-          break;
-
         case 'name':
-          $this->addSharedTableFieldIndex($storage_definition, $schema, TRUE);
+          $this->addSharedTableFieldIndex($storage_definition, $schema);
           break;
       }
     }

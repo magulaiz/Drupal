@@ -26,7 +26,8 @@ use Drupal\Core\Entity\EntityTypeInterface;
  *   constraints = {
  *     "EntityTestComposite" = {},
  *     "EntityTestEntityLevel" = {},
- *   }
+ *   },
+ *   storage_schema_version = 2,
  * )
  */
 class EntityTestCompositeConstraint extends EntityTest {

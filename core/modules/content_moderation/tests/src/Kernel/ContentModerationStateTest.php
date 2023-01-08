@@ -561,7 +561,12 @@ class ContentModerationStateTest extends KernelTestBase {
     $entity_type->set('entity_keys', $keys);
     \Drupal::state()->set($this->revEntityTypeId . '.entity_type', $entity_type);
 
-    // Update the entity type in order to remove the 'langcode' field.
+    // Update the entity type in order to remove the 'langcode' field, while
+    // ensuring that the field manager will return the field storage definitions
+    // for the updated entity type. For that we clear the cache of the entity
+    // type manager, so that the entity type is newly retrieved and exchanged by
+    // entity_test_entity_type_alter() with the one that we've put in the state.
+    \Drupal::service('entity_type.manager')->clearCachedDefinitions();
     \Drupal::entityDefinitionUpdateManager()->updateFieldableEntityType($entity_type, \Drupal::service('entity_field.manager')->getFieldStorageDefinitions($entity_type->id()));
 
     $workflow = $this->createEditorialWorkflow();

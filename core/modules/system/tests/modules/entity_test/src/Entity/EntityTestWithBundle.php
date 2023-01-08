@@ -2,7 +2,6 @@
 
 namespace Drupal\entity_test\Entity;
 
-use Drupal\Core\Entity\ContentEntityBase;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
 
@@ -45,9 +44,10 @@ use Drupal\Core\Field\BaseFieldDefinition;
  *     "delete-form" = "/entity_test_with_bundle/{entity_test_with_bundle}/delete",
  *     "create" = "/entity_test_with_bundle",
  *   },
+ *   storage_schema_version = 2,
  * )
  */
-class EntityTestWithBundle extends ContentEntityBase {
+class EntityTestWithBundle extends EntityTest {
 
   /**
    * {@inheritdoc}

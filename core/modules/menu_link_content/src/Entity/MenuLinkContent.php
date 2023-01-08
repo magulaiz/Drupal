@@ -62,6 +62,7 @@ use Drupal\menu_link_content\MenuLinkContentInterface;
  *   constraints = {
  *     "MenuTreeHierarchy" = {}
  *   },
+ *   storage_schema_version = 2,
  * )
  */
 class MenuLinkContent extends EditorialContentEntityBase implements MenuLinkContentInterface {
@@ -345,6 +346,7 @@ class MenuLinkContent extends EditorialContentEntityBase implements MenuLinkCont
 
     $fields['rediscover'] = BaseFieldDefinition::create('boolean')
       ->setLabel(t('Indicates whether the menu link should be rediscovered'))
+      ->setStorageRequired(TRUE)
       ->setDefaultValue(FALSE);
 
     $fields['weight'] = BaseFieldDefinition::create('integer')
