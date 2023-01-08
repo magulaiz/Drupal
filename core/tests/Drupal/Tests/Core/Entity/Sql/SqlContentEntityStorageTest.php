@@ -146,6 +146,7 @@ class SqlContentEntityStorageTest extends UnitTestCase {
 
     $this->container->set('entity_type.manager', $this->entityTypeManager);
     $this->container->set('entity_field.manager', $this->entityFieldManager);
+    $this->container->set('datetime.time', $this->time);
   }
 
   /**
@@ -1464,6 +1465,27 @@ class SqlContentEntityStorageTest extends UnitTestCase {
       ]);
 
     $this->container->set('module_handler', $this->moduleHandler);
+  }
+
+  /**
+   * Tests deprecation of constructing a SqlContentEntityStorage object
+   * without the renderer argument.
+   *
+   * @covers ::__construct
+   * @group legacy
+   */
+  public function testSqlContentEntityStorageConstructorDeprecation(): void {
+    $this->expectDeprecation('Calling Drupal\Core\Entity\Sql\SqlContentEntityStorage::__construct() without the $renderer argument is deprecated in drupal:10.1.0 and will be required in drupal:11.0.0. See https://www.drupal.org/node/2876656');
+    new SqlContentEntityStorage(
+      $this->entityType,
+      $this->connection,
+      $this->entityFieldManager,
+      $this->cache,
+      $this->languageManager,
+      new MemoryCache(),
+      $this->entityTypeBundleInfo,
+      $this->entityTypeManager
+    );
   }
 
 }
