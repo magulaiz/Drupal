@@ -59,7 +59,11 @@ class ImageWidget extends FileWidget {
       $renderer = \Drupal::service('renderer');
     }
     parent::__construct($plugin_id, $plugin_definition, $field_definition, $settings, $third_party_settings, $element_info, $renderer);
-    $this->imageFactory = $image_factory ?: \Drupal::service('image.factory');
+    if (!$image_factory) {
+      @trigger_error('Calling ' . __METHOD__ . '() without the $image_factory argument is deprecated in drupal:10.1.0 and will be required in drupal:11.0.0. See https://www.drupal.org/node/2876656', E_USER_DEPRECATED);
+      $image_factory = \Drupal::service('image.factory');
+    }
+    $this->imageFactory = $image_factory;
   }
 
   /**
