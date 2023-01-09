@@ -1092,6 +1092,7 @@ services:
     class: Drupal\Core\Password\PhpPassword
     arguments: ['%password_hash_cost%', '@legacy_password']
     lazy: true
+  Drupal\Core\Password\PasswordInterface: '@password'
   legacy_password:
     class: Drupal\Core\Password\PhpassHashedPassword
     arguments: [16]
