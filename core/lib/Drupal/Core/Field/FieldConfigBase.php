@@ -196,6 +196,16 @@ abstract class FieldConfigBase extends ConfigEntityBase implements FieldConfigIn
   /**
    * {@inheritdoc}
    */
+  public function __construct(array $values, $entity_type) {
+    parent::__construct($values, $entity_type);
+    // Changes to this entity should invalidate cached field info.
+    // @see \Drupal\Core\Entity\EntityFieldManager::getFieldDefinitions()
+    $this->addCacheTags(['entity_field_info']);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function id() {
     return $this->entity_type . '.' . $this->bundle . '.' . $this->field_name;
   }
