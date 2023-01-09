@@ -350,10 +350,14 @@ $settings['update_free_access'] = FALSE;
  * In order for this setting to be used you must specify every possible
  * reverse proxy IP address in $settings['reverse_proxy_addresses'].
  * If a complete list of reverse proxies is not available in your
- * environment (for example, if you use a CDN) you may set the
- * $_SERVER['REMOTE_ADDR'] variable directly in settings.php.
- * Be aware, however, that it is likely that this would allow IP
- * address spoofing unless more advanced precautions are taken.
+ * environment (for example, if you use a CDN) then an alternative
+ * implementation must be used depending on your CDN header configuration.
+ *
+ * Be aware that misconfiguration of this setting could allow for IP address
+ * spoofing.
+ *
+ * See https://www.drupal.org/project/drupal/issues/3223280 for more information
+ * and examples.
  */
 # $settings['reverse_proxy'] = TRUE;
 
