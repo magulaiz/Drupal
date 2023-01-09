@@ -3,7 +3,6 @@
 namespace Drupal\Tests\Core\Entity\Sql;
 
 use Drupal\Component\Datetime\TimeInterface;
-use Drupal\Core\Cache\MemoryCache\MemoryCache;
 use Drupal\Core\Database\Connection;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\Entity\ContentEntityType;
@@ -12,7 +11,6 @@ use Drupal\Core\Entity\EntityFieldManager;
 use Drupal\Core\Entity\EntityLastInstalledSchemaRepositoryInterface;
 use Drupal\Core\Entity\EntityTypeManager;
 use Drupal\Core\Entity\Sql\DefaultTableMapping;
-use Drupal\Core\Entity\Sql\SqlContentEntityStorage;
 use Drupal\Core\Entity\Sql\SqlContentEntityStorageSchema;
 use Drupal\Tests\UnitTestCase;
 
@@ -77,6 +75,13 @@ class SqlContentEntityStorageSchemaTest extends UnitTestCase {
    * @var \Drupal\Core\Entity\Sql\SqlContentEntityStorageSchema|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $storageSchema;
+
+  /**
+   * The dependency injection container.
+   *
+   * @var \Symfony\Component\DependencyInjection\ContainerBuilder
+   */
+  protected $container;
 
   /**
    * The time service used in this test.
