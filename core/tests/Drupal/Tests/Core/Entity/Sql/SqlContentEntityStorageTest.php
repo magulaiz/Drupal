@@ -1475,7 +1475,8 @@ class SqlContentEntityStorageTest extends UnitTestCase {
    * @group legacy
    */
   public function testSqlContentEntityStorageConstructorDeprecation(): void {
-    $this->expectDeprecation('Calling Drupal\Core\Entity\Sql\SqlContentEntityStorage::__construct() without the $renderer argument is deprecated in drupal:10.1.0 and will be required in drupal:11.0.0. See https://www.drupal.org/node/2876656');
+    $this->setUpEntityStorage();
+    $this->expectDeprecation('Calling Drupal\Core\Entity\Sql\SqlContentEntityStorage::__construct() without the $time argument is deprecated in drupal:10.1.0 and will be required in drupal:11.0.0. See https://www.drupal.org/node/3161659');
     new SqlContentEntityStorage(
       $this->entityType,
       $this->connection,
