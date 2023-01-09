@@ -1,0 +1,21 @@
+
+<?php
+
+/**
+ * @file
+ * Functions to support testing Media Library.
+ */
+
+/**
+ * Implements hook_preprocess_field().
+ */
+function media_library_test_helper_preprocess_field(&$variables) {
+  $variables['attributes']['data-test-field-name'] = $variables['element']['#field_name'] ?? 'none';
+  $variables['attributes']['data-test-field-type'] = $variables['element']['#field_type'] ?? 'none';
+  if ($variables['multiple']) {
+    $variables['attributes']['data-test-field-multiple'] = TRUE;
+    foreach ($variables['items'] as &$item) {
+      $item['attributes']->setAttribute('data-test-field-item', TRUE);
+    }
+  }
+}
