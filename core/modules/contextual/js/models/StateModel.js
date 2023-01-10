@@ -7,9 +7,9 @@
   /**
    * Models the state of a contextual link's trigger, list & region.
    *
-   * @constructor
+   * @class
    *
-   * @augments Backbone.Model
+   * @extends Backbone.Model
    *
    * @deprecated in drupal:9.4.0 and is removed from drupal:10.0.0. There is no
    *  replacement.

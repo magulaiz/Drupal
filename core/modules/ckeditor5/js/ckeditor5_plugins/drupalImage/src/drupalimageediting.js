@@ -4,7 +4,7 @@ import { Plugin } from 'ckeditor5/src/core';
 import { setViewAttributes } from '@ckeditor/ckeditor5-html-support/src/conversionutils';
 
 /**
- * @typedef {function} converterHandler
+ * @typedef {Function} converterHandler
  *
  * Callback for a CKEditor 5 event.
  *
@@ -52,7 +52,7 @@ function isNumberString(value) {
  * Generates a callback that saves the entity UUID to an attribute on data
  * downcast.
  *
- * @return {function}
+ * @return {Function}
  *  Callback that binds an event to its parameter.
  *
  * @private
@@ -122,7 +122,7 @@ const alignmentMapping = [
  * @param {module:core/editor/editor~Editor} editor
  *  The editor instance to use.
  *
- * @return {function}
+ * @return {Function}
  *  Callback that binds an event to its parameter.
  *
  * @private
@@ -216,7 +216,7 @@ function viewCaptionToCaptionAttribute(editor) {
  * Generates a callback that saves the entity type value to an attribute on
  * data downcast.
  *
- * @return {function}
+ * @return {Function}
  *  Callback that binds an event to it's parameter.
  *
  * @private
@@ -258,7 +258,7 @@ function modelEntityTypeToDataAttribute() {
  * Generates a callback that saves the align value to an attribute on
  * data downcast.
  *
- * @return {function}
+ * @return {Function}
  *  Callback that binds an event to its parameter.
  *
  * @private
@@ -305,7 +305,7 @@ function modelImageStyleToDataAttribute() {
  * Generates a callback that saves the width value to an attribute on
  * data downcast.
  *
- * @return {function}
+ * @return {Function}
  *  Callback that binds an event to its parameter.
  *
  * @private
@@ -352,7 +352,7 @@ function modelImageWidthToAttribute() {
  * Generates a callback that saves the height value to an attribute on
  * data downcast.
  *
- * @return {function}
+ * @return {Function}
  *  Callback that binds an event to its parameter.
  *
  * @private
@@ -398,7 +398,8 @@ function modelImageHeightToAttribute() {
 /**
  * Generates a callback that handles the data downcast for the img element.
  *
- * @return {function}
+ * @param editor
+ * @return {Function}
  *  Callback that binds an event to its parameter.
  *
  * @private
@@ -541,7 +542,7 @@ function viewImageToModelImage(editor) {
 /**
  * Modified alternative implementation of linkimageediting.js' downcastImageLink.
  *
- * @return {function}
+ * @return {Function}
  *  Callback that binds an event to its parameter.
  *
  * @private

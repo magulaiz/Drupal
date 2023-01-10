@@ -202,21 +202,21 @@
     /**
      * A hash of View instances.
      *
-     * @type {object.<string, Backbone.View>}
+     * @type {Object<string, Backbone.View>}
      */
     views: {},
 
     /**
      * A hash of Model instances.
      *
-     * @type {object.<string, Backbone.Model>}
+     * @type {Object<string, Backbone.Model>}
      */
     models: {},
 
     /**
      * A hash of MediaQueryList objects tracked by the toolbar.
      *
-     * @type {object.<string, object>}
+     * @type {Object<string, object>}
      */
     mql: {},
 

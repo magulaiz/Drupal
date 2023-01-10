@@ -124,7 +124,7 @@
   /**
    * The vertical tab object represents a single tab within a tab group.
    *
-   * @constructor
+   * @class
    *
    * @param {object} settings
    *   Settings object.

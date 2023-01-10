@@ -35,6 +35,11 @@
    */
   Drupal.behaviors.tableDrag = {
     attach(context, settings) {
+      /**
+       *
+       * @param table
+       * @param base
+       */
       function initTableDrag(table, base) {
         if (table.length) {
           // Create the new tableDrag instance. Save in the Drupal variable
@@ -55,7 +60,7 @@
   /**
    * Provides table and field manipulation.
    *
-   * @constructor
+   * @class
    *
    * @param {HTMLElement} table
    *   DOM object for the table to be made draggable.
@@ -319,7 +324,7 @@
    * @param {number} columnIndex
    *   The column index to add colspan class to.
    *
-   * @return {function}
+   * @return {Function}
    *   Function to add colspan class.
    */
   Drupal.tableDrag.prototype.addColspanClass = function (columnIndex) {
@@ -1352,6 +1357,11 @@
     const rows = [];
     let child = 0;
 
+    /**
+     *
+     * @param indentNum
+     * @param el
+     */
     function rowIndentation(indentNum, el) {
       const self = $(el);
       if (child === 1 && indentNum === parentIndentation) {

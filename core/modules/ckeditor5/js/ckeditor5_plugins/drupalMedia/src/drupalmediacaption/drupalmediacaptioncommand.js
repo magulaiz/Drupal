@@ -9,7 +9,7 @@ import { getMediaCaptionFromModelSelection } from './utils';
  *
  * @param {module:engine/model/element~Element} drupalMediaModelElement
  *   The model element from which caption should be retrieved.
- * @returns {module:engine/model/element~Element|null}
+ * @return {module:engine/model/element~Element|null}
  *   The caption element or `null` if the selection has no child caption
  *   element.
  */
@@ -77,9 +77,9 @@ export default class ToggleDrupalMediaCaptionCommand extends Command {
    * @example
    *   editor.execute('toggleMediaCaption');
    *
-   * @param {Object} [options]
+   * @param {object} [options]
    *   Options for the executed command.
-   * @param {String} [options.focusCaptionOnShow]
+   * @param {string} [options.focusCaptionOnShow]
    *   When true and the caption shows up, the selection will be moved into it
    *    When true: If a caption is present, the selection will be moved to that
    *    caption immediately.

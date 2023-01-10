@@ -15,7 +15,7 @@
    * @prop {string} [dialogClass='']
    * @prop {string} [buttonClass='button']
    * @prop {string} [buttonPrimaryClass='button--primary']
-   * @prop {function} close
+   * @prop {Function} close
    */
   drupalSettings.dialog = {
     autoOpen: true,
@@ -40,11 +40,11 @@
    *   Is the dialog open or not.
    * @prop {*} returnValue
    *   Return value of the dialog.
-   * @prop {function} show
+   * @prop {Function} show
    *   Method to display the dialog on the page.
-   * @prop {function} showModal
+   * @prop {Function} showModal
    *   Method to display the dialog as a modal on the page.
-   * @prop {function} close
+   * @prop {Function} close
    *   Method to hide the dialog from the page.
    */
 
@@ -67,6 +67,10 @@
       returnValue: undef,
     };
 
+    /**
+     *
+     * @param settings
+     */
     function openDialog(settings) {
       settings = $.extend({}, drupalSettings.dialog, options, settings);
       // Trigger a global event to allow scripts to bind events to the dialog.
@@ -76,6 +80,10 @@
       $(window).trigger('dialog:aftercreate', [dialog, $element, settings]);
     }
 
+    /**
+     *
+     * @param value
+     */
     function closeDialog(value) {
       $(window).trigger('dialog:beforeclose', [dialog, $element]);
       $element.dialog('close');

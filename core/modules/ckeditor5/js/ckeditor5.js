@@ -33,7 +33,7 @@
    * @param {string} name
    *  The path to access in the scope object.
    *
-   * @return {null|function}
+   * @return {null | Function}
    *  The corresponding function from the scope object.
    */
   function findFunc(scope, name) {
@@ -55,7 +55,7 @@
    * @param {object} config
    *  The plugin configuration object.
    *
-   * @return {null|function|*}
+   * @return {null | Function | *}
    *  Resulting configuration value.
    */
   function buildFunc(config) {
@@ -72,7 +72,7 @@
   /**
    * Converts a string representing regexp to a RegExp object.
    *
-   * @param {Object} config
+   * @param {object} config
    *   An object containing configuration.
    * @param {string} config.pattern
    *   The regexp pattern that is used to create the RegExp object.
@@ -92,9 +92,9 @@
   /**
    * Casts configuration items to correct types.
    *
-   * @param {Object} config
+   * @param {object} config
    *   The config object.
-   * @return {Object}
+   * @return {object}
    *   The config object with items transformed to correct type.
    */
   function processConfig(config) {
@@ -522,7 +522,7 @@
      *
      * @param {HTMLElement} element
      *   The element where the change occurred.
-     * @param {function} callback
+     * @param {Function} callback
      *   Callback called with the value of the editor.
      */
     onChange(element, callback) {
@@ -586,7 +586,7 @@
     /**
      * Variable storing the current dialog's save callback.
      *
-     * @type {?function}
+     * @type {?Function}
      */
     saveCallback: null,
 
@@ -598,7 +598,7 @@
      *
      * @param {string} url
      *   The URL that contains the contents of the dialog.
-     * @param {function} saveCallback
+     * @param {Function} saveCallback
      *   A function to be called upon saving the dialog.
      * @param {object} dialogSettings
      *   An object containing settings to be passed to the jQuery UI.
@@ -632,6 +632,9 @@
   };
 
   // Redirect on hash change when the original hash has an associated CKEditor 5.
+  /**
+   *
+   */
   function redirectTextareaFragmentToCKEditor5Instance() {
     const hash = window.location.hash.substr(1);
     const element = document.getElementById(hash);

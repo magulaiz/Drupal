@@ -74,7 +74,7 @@ export default class DrupalElementStyleCommand extends Command {
    * @param {module:engine/model/element~Element} element
    *   The element.
    *
-   * @return {Object}
+   * @return {object}
    *   The groups and values in the form of an object.
    */
   getValue(element) {
@@ -103,7 +103,7 @@ export default class DrupalElementStyleCommand extends Command {
    * @example
    *    editor.execute('drupalElementStyle', { value: 'left', group: 'align'});
    *
-   * @param {Object} options
+   * @param {object} options
    *   The command options.
    * @param {string} options.value
    *   The name of the style as configured in the Drupal Element style

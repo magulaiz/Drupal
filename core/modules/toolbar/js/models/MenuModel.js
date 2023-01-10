@@ -7,9 +7,9 @@
   /**
    * Backbone Model for collapsible menus.
    *
-   * @constructor
+   * @class
    *
-   * @augments Backbone.Model
+   * @extends Backbone.Model
    */
   Drupal.toolbar.MenuModel = Backbone.Model.extend(
     /** @lends Drupal.toolbar.MenuModel# */ {

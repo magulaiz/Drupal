@@ -34,7 +34,7 @@
        *
        * @constructs
        *
-       * @augments Backbone.View
+       * @extends Backbone.View
        */
       initialize() {
         /**

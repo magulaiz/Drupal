@@ -7,9 +7,9 @@
  *   The user name.
  * @param {string} settings.password
  *   The user password.
- * @param {array} [settings.permissions=[]]
+ * @param {Array} [settings.permissions=[]]
  *   The list of permissions granted for the user.
- * @param {function} callback
+ * @param {Function} callback
  *   A callback which will be called when creating the user is finished.
  * @return {object}
  *   The drupalCreateUser command.

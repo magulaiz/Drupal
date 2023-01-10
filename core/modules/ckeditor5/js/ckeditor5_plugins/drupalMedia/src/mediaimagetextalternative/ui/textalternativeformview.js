@@ -140,13 +140,13 @@ export default class TextAlternativeFormView extends View {
   /**
    * Creates the button view.
    *
-   * @param {String} label
+   * @param {string} label
    *   The button label
-   * @param {String} icon
+   * @param {string} icon
    *   The button's icon.
-   * @param {String} className
+   * @param {string} className
    *   The additional button CSS class name.
-   * @param {String} [eventName]
+   * @param {string} [eventName]
    *   The event name that the ButtonView#execute event will be delegated to.
    * @return {module:ui/view~View}
    *   The button view instance.

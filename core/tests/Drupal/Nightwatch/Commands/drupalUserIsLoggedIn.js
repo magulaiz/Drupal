@@ -1,7 +1,7 @@
 /**
  * Checks if a user is logged in.
  *
- * @param {function} callback
+ * @param {Function} callback
  *   A callback which will be called, when the login status has been checked.
  * @return {object}
  *   The drupalUserIsLoggedIn command.

@@ -118,7 +118,7 @@
   /**
    * Object representing an element that depends on other elements.
    *
-   * @constructor Drupal.states.Dependent
+   * @class Drupal.states.Dependent
    *
    * @param {object} args
    *   Object with the following keys (all of which are required)
@@ -147,9 +147,9 @@
    *
    * @name Drupal.states.Dependent.comparisons
    *
-   * @prop {function} RegExp
-   * @prop {function} Function
-   * @prop {function} Number
+   * @prop {Function} RegExp
+   * @prop {Function} Function
+   * @prop {Function} Number
    */
   states.Dependent.comparisons = {
     RegExp(reference, value) {
@@ -424,7 +424,7 @@
   };
 
   /**
-   * @constructor Drupal.states.Trigger
+   * @class Drupal.states.Trigger
    *
    * @param {object} args
    *   Trigger arguments.
@@ -468,7 +468,7 @@
      *
      * @param {jQuery.Event} event
      *   The event triggered.
-     * @param {function} valueFn
+     * @param {Function} valueFn
      *   The function to call.
      */
     defaultTrigger(event, valueFn) {
@@ -577,7 +577,7 @@
   /**
    * A state object is used for describing the state and performing aliasing.
    *
-   * @constructor Drupal.states.State
+   * @class Drupal.states.State
    *
    * @param {string} state
    *   The name of the state.

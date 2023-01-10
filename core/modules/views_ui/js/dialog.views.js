@@ -4,6 +4,10 @@
  */
 
 (function ($, Drupal, drupalSettings) {
+  /**
+   *
+   * @param e
+   */
   function handleDialogResize(e) {
     const $modal = $(e.currentTarget);
     const $viewsOverride = $modal.find('[data-drupal-views-offset]');

@@ -18,6 +18,11 @@
       const options = drupalSettings.contentTranslationDependentOptions;
       let $fields;
 
+      /**
+       *
+       * @param $fields
+       * @param dependentColumns
+       */
       function fieldsChangeHandler($fields, dependentColumns) {
         return function (e) {
           Drupal.behaviors.contentTranslationDependentOptions.check(
@@ -48,6 +53,11 @@
       let $element = $changed;
       let column;
 
+      /**
+       *
+       * @param index
+       * @param field
+       */
       function filterFieldsList(index, field) {
         return field.value === column;
       }

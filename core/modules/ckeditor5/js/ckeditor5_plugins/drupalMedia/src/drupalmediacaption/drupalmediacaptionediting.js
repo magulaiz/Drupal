@@ -15,7 +15,7 @@ import ToggleDrupalMediaCaptionCommand from './drupalmediacaptioncommand';
  *
  * @param {module:core/editor/editor~Editor} editor
  *   Editor on which this converter will be used.
- * @return {function}
+ * @return {Function}
  *   A function that attaches converter to the dispatcher.
  */
 function viewToModelCaption(editor) {
@@ -58,7 +58,7 @@ function viewToModelCaption(editor) {
  *
  * @param {module:engine/view/view~View} editingView
  *   The editing view.
- * @return {function}
+ * @return {Function}
  *   A mapper callback that moves `<figcaption>` element after the Drupal Media
  *   preview.
  */
@@ -87,7 +87,7 @@ function mapModelPositionToView(editingView) {
  *
  * @param {module:core/editor/editor~Editor} editor
  *   Editor on which this converter will be used.
- * @return {function}
+ * @return {Function}
  *   A function that attaches converter to the dispatcher.
  */
 function modelCaptionToCaptionAttribute(editor) {
@@ -193,7 +193,7 @@ export default class DrupalMediaCaptionEditing extends Plugin {
     /**
      * A map of saved Drupal Media captions and related model elements.
      *
-     * @member {WeakMap.<module:engine/model/element~Element,Object>}
+     * @member {WeakMap.<module:engine/model/element~Element, object>}
      *
      * @see _saveCaption
      */

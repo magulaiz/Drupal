@@ -29,7 +29,7 @@
      *
      * @param {Array} nodeIDs
      *   An array of node IDs.
-     * @param {function} callback
+     * @param {Function} callback
      *   A callback that is called after the requested timestamps were fetched.
      */
     fetchTimestamps(nodeIDs, callback) {

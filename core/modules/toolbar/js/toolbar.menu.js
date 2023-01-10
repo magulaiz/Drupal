@@ -26,7 +26,7 @@
      * @param {jQuery} $item
      *   The li item to be toggled.
      *
-     * @param {Boolean} switcher
+     * @param {boolean} switcher
      *   A flag that forces toggleClass to add or a remove a class, rather than
      *   simply toggling its presence.
      */
@@ -50,7 +50,7 @@
     /**
      * Handle clicks from the disclosure button on an item with sub-items.
      *
-     * @param {Object} event
+     * @param {object} event
      *   A jQuery Event object.
      */
     function toggleClickHandler(event) {
@@ -66,7 +66,7 @@
     /**
      * Handle clicks from a menu item link.
      *
-     * @param {Object} event
+     * @param {object} event
      *   A jQuery Event object.
      */
     function linkClickHandler(event) {

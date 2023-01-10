@@ -101,6 +101,7 @@ export default class DrupalElementStyleUi extends Plugin {
      * One dropdown definition can only contain items from one group.
      *
      * List dropdown display configuration.
+     *
      * @example
      *    config:
      *       drupalMedia:
@@ -136,7 +137,7 @@ export default class DrupalElementStyleUi extends Plugin {
      *          - 'drupalElementStyle:align:center'
      *          - 'drupalElementStyle:align:right'
      *
-     * @typedef {Object} Drupal.CKEditor5~drupalElementStyleDropdownDefinition
+     * @typedef {object} Drupal.CKEditor5~drupalElementStyleDropdownDefinition
      *
      * These properties are needed for a list or split button dropdown
      * configuration. Buttons directly on the toolbar without a dropdown can be

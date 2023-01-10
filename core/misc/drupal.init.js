@@ -12,7 +12,7 @@ document.documentElement.className += ' js';
   /**
    * Calls callback when document ready.
    *
-   * @param {function} callback
+   * @param {Function} callback
    *   The function to be called on document ready.
    */
   const domReady = (callback) => {

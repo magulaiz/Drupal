@@ -33,7 +33,7 @@
        *
        * @constructs
        *
-       * @augments Backbone.View
+       * @extends Backbone.View
        *
        * @param {object} options
        *   Options for the view object.
@@ -72,7 +72,7 @@
        *
        * @constructs
        *
-       * @augments Backbone.View
+       * @extends Backbone.View
        */
       updateToolbarHeight() {
         const toolbarTabOuterHeight =

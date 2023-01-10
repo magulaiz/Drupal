@@ -94,7 +94,7 @@
    *
    * @param {object} request
    *   The request object.
-   * @param {function} response
+   * @param {Function} response
    *   The function to call with the response.
    */
   function sourceData(request, response) {

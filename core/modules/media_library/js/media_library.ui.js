@@ -1,4 +1,9 @@
 /**
+ * @param $
+ * @param Drupal
+ * @param window
+ * @param root0
+ * @param root0.tabbable
  * @file media_library.ui.js
  */
 (($, Drupal, window, { tabbable }) => {

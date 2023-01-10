@@ -122,6 +122,10 @@
       '[data-drupal-selector="site-header-fixable"], [data-drupal-selector="social-bar-inner"]',
     );
 
+    /**
+     *
+     * @param entries
+     */
     function toggleDesktopNavVisibility(entries) {
       if (!isDesktopNav()) return;
 

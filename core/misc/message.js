@@ -1,4 +1,5 @@
 /**
+ * @param Drupal
  * @file
  * Message API.
  */
@@ -52,7 +53,7 @@
     /**
      * Provide an object containing the available message types.
      *
-     * @return {Object}
+     * @return {object}
      *   An object containing message type strings.
      */
     static getMessageTypeLabels() {

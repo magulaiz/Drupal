@@ -292,7 +292,7 @@
    *
    * This handler is used for both fields and 'extra fields' rows.
    *
-   * @constructor
+   * @class
    *
    * @param {HTMLTableRowElement} row
    *   The row DOM element.

@@ -1,4 +1,5 @@
 /**
+ * @param Drupal
  * @file
  *  Support code for testing JavaScript error handling in functional tests.
  */

@@ -7,6 +7,11 @@ import { groupNameToModelAttributeKey } from './utils';
  * @module drupalMedia/insertdrupalmediacommand
  */
 
+/**
+ *
+ * @param writer
+ * @param attributes
+ */
 function createDrupalMedia(writer, attributes) {
   const drupalMedia = writer.createElement('drupalMedia', attributes);
   return drupalMedia;

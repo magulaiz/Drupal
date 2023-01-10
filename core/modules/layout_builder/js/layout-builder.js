@@ -104,7 +104,7 @@
    * @param {HTMLElement} to
    *   The HTML element representing the current parent of item
    *
-   * @internal This method is a callback for layoutBuilderBlockDrag and is used
+   * @internal
    *  in FunctionalJavascript tests. It may be renamed if the test changes.
    *  @see https://www.drupal.org/node/3084730
    */

@@ -870,7 +870,7 @@ module.exports = {
            *
            * @param {jQuery} tip
            *  The element being positioned.
-           * @param {Object} options
+           * @param {object} options
            *  The position options.
            * @param {string} attachToType
            *  A string representing the data type used for the value of the `of`

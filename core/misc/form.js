@@ -37,7 +37,7 @@
   /**
    * Sets the summary for all matched elements.
    *
-   * @param {function} callback
+   * @param {Function} callback
    *   Either a function that will be called each time the summary is
    *   retrieved or a string (which is returned each time).
    *
@@ -116,6 +116,10 @@
    */
   Drupal.behaviors.formSingleSubmit = {
     attach() {
+      /**
+       *
+       * @param e
+       */
       function onFormSubmit(e) {
         const $form = $(e.currentTarget);
         const formValues = $form.serialize();

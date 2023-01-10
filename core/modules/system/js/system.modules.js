@@ -28,17 +28,31 @@
       let $details;
       let searching = false;
 
+      /**
+       *
+       * @param index
+       * @param element
+       */
       function hidePackageDetails(index, element) {
         const $packDetails = $(element);
         const $visibleRows = $packDetails.find('tbody tr:visible');
         $packDetails.toggle($visibleRows.length > 0);
       }
 
+      /**
+       *
+       * @param e
+       */
       function filterModuleList(e) {
         const query = e.target.value;
         // Case insensitive expression to find query at the beginning of a word.
         const re = new RegExp(`\\b${query}`, 'i');
 
+        /**
+         *
+         * @param index
+         * @param row
+         */
         function showModuleRow(index, row) {
           const sources = row.querySelectorAll(
             '.table-filter-text-source, .module-name, .module-description',
@@ -87,6 +101,10 @@
         }
       }
 
+      /**
+       *
+       * @param event
+       */
       function preventEnterKey(event) {
         if (event.which === 13) {
           event.preventDefault();

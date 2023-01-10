@@ -13,7 +13,7 @@ const { commandAsWebserver } = require('../globals');
  *   The install profile to use.
  * @param {string} [settings.langcode='']
  *   The language to install the site in.
- * @param {function} callback
+ * @param {Function} callback
  *   A callback which will be called, when the installation is finished.
  * @return {object}
  *   The 'browser' object.

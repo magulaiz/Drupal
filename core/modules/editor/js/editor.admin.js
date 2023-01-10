@@ -697,14 +697,14 @@
    * styles: ['color', 'text-decoration']
    * classes: ['external', 'internal']
    *
-   * @constructor
+   * @class
    *
    * @see Drupal.EditorFeature
    */
   Drupal.EditorFeatureHTMLRule = function () {
     /**
      *
-     * @type {Object}
+     * @type {object}
      *
      * @prop {Array} tags
      * @prop {Array} attributes
@@ -720,7 +720,7 @@
 
     /**
      *
-     * @type {Object}
+     * @type {object}
      *
      * @prop {Array} tags
      * @prop {Array} attributes
@@ -760,7 +760,7 @@
    * HTML rules must be added with the `addHTMLRule()` method. A feature that
    * has zero HTML rules does not create or modify HTML.
    *
-   * @constructor
+   * @class
    *
    * @param {string} name
    *   The name of the feature.
@@ -798,7 +798,7 @@
    * HTML rules must be added with the `addHTMLRule()` method. A filter that has
    * zero HTML rules does not disallow any HTML.
    *
-   * @constructor
+   * @class
    *
    * @param {string} name
    *   The name of the feature.
@@ -955,7 +955,7 @@
     /**
      * Drupal.FilterStatus objects, keyed by filter ID.
      *
-     * @type {Object.<string, Drupal.FilterStatus>}
+     * @type {Object<string, Drupal.FilterStatus>}
      */
     statuses: {},
 

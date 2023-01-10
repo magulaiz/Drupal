@@ -38,7 +38,7 @@
        *
        * @constructs
        *
-       * @augments Backbone.View
+       * @extends Backbone.View
        */
       initialize() {
         this.listenTo(this.model, 'change', this.render);

@@ -21,6 +21,9 @@
  * This is used to position fixed element on the page during page resize and
  * Toolbar toggling.
  *
+ * @param $
+ * @param Drupal
+ * @param debounce
  * @event drupalViewportOffsetChange
  */
 (function ($, Drupal, debounce) {

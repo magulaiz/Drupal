@@ -1,4 +1,6 @@
 /**
+ * @param $
+ * @param Drupal
  * @file
  * Adds a summary of a details element's contents to its summary element.
  */
@@ -6,7 +8,7 @@
   /**
    * The DetailsSummarizedContent object represents a single details element.
    *
-   * @constructor Drupal.DetailsSummarizedContent
+   * @class Drupal.DetailsSummarizedContent
    *
    * @param {HTMLElement} node
    *   A details element, the summary of which may have supplemental text.

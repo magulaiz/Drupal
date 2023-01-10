@@ -10,7 +10,7 @@ import { setViewAttributes } from '@ckeditor/ckeditor5-html-support/src/conversi
  * @param {module:html-support/datafilter~DataFilter} dataFilter
  *   The General HTML support data filter.
  *
- * @return {function}
+ * @return {Function}
  *   Function that adds an event listener to upcastDispatcher.
  */
 function viewToModelDrupalMediaAttributeConverter(dataFilter) {
@@ -18,6 +18,11 @@ function viewToModelDrupalMediaAttributeConverter(dataFilter) {
     dispatcher.on(
       'element:drupal-media',
       (evt, data, conversionApi) => {
+        /**
+         *
+         * @param viewElement
+         * @param attributeName
+         */
         function preserveElementAttributes(viewElement, attributeName) {
           const viewAttributes = dataFilter.processViewAttributes(
             viewElement,
@@ -32,6 +37,10 @@ function viewToModelDrupalMediaAttributeConverter(dataFilter) {
             );
           }
         }
+        /**
+         *
+         * @param linkElement
+         */
         function preserveLinkAttributes(linkElement) {
           preserveElementAttributes(linkElement, 'htmlLinkAttributes');
         }
@@ -78,7 +87,7 @@ function getDescendantElement(writer, containerElement, elementName) {
  *
  * @param {module:utils/eventinfo~EventInfo} evt
  *   An object containing information about the fired event.
- * @param {Object} data
+ * @param {object} data
  *   Additional information about the change.
  * @param {module:engine/conversion/downcastdispatcher~DowncastDispatcher} conversionApi
  *   Conversion interface to be used by the callback.
@@ -96,7 +105,7 @@ function modelToDataAttributeConverter(evt, data, conversionApi) {
 /**
  * Model to editing view attribute converter.
  *
- * @return {function}
+ * @return {Function}
  *   A function that adds an event listener to downcastDispatcher.
  */
 function modelToEditingViewAttributeConverter() {
@@ -134,7 +143,7 @@ function modelToEditingViewAttributeConverter() {
 /**
  * Model to data view attribute converter.
  *
- * @return {function}
+ * @return {Function}
  *   Function that adds an event listener to downcastDispatcher.
  */
 function modelToDataViewAttributeConverter() {

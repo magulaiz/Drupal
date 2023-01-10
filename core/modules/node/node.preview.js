@@ -19,6 +19,10 @@
    */
   Drupal.behaviors.nodePreviewDestroyLinks = {
     attach(context) {
+      /**
+       *
+       * @param event
+       */
       function clickPreviewModal(event) {
         // Only confirm leaving previews when left-clicking and user is not
         // pressing the ALT, CTRL, META (Command key on the Macintosh keyboard)

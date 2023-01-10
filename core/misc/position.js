@@ -21,6 +21,8 @@
  * `position()` function can be called by any jQuery object. Additional details
  * on using `position()` are provided in this file in the docblock for
  * $.fn.position.
+ *
+ * @param $
  */
 (($) => {
   let cachedScrollbarWidth = null;
@@ -32,6 +34,12 @@
   const regexPercent = /%$/;
   const _position = $.fn.position;
 
+  /**
+   *
+   * @param offsets
+   * @param width
+   * @param height
+   */
   function getOffsets(offsets, width, height) {
     return [
       parseFloat(offsets[0]) *
@@ -41,10 +49,19 @@
     ];
   }
 
+  /**
+   *
+   * @param element
+   * @param property
+   */
   function parseCss(element, property) {
     return parseInt($.css(element, property), 10) || 0;
   }
 
+  /**
+   *
+   * @param elem
+   */
   function getDimensions(elem) {
     const raw = elem[0];
     if (raw.nodeType === 9) {
@@ -369,7 +386,7 @@
    * The following documentation is originally from
    * {@link https://api.jqueryui.com/position/}.
    *
-   * @param {Object} options - the options object.
+   * @param {object} options - the options object.
    * @param {string} options.my - Defines which position on the element being
    *   positioned to align with the target element: "horizontal vertical"
    *   alignment. A single value such as "right" will be normalized to "right
@@ -402,7 +419,7 @@
    *     logic is applied to ensure as much of the element is visible as
    *     possible.
    *     "none": Does not apply any collision detection.
-   * @param {function|null} options.using - When specified, the actual property
+   * @param {Function | null} options.using - When specified, the actual property
    *   setting is delegated to this callback. Receives two parameters: The first
    *   is a hash of top and left values for the position that should be set and
    *   can be forwarded to .css() or .animate().The second provides feedback

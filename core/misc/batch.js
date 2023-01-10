@@ -16,6 +16,12 @@
       let progressBar;
 
       // Success: redirect to the summary.
+      /**
+       *
+       * @param progress
+       * @param status
+       * @param pb
+       */
       function updateCallback(progress, status, pb) {
         if (progress === '100') {
           pb.stopMonitoring();
@@ -23,6 +29,10 @@
         }
       }
 
+      /**
+       *
+       * @param pb
+       */
       function errorCallback(pb) {
         $progress.prepend($('<p class="error"></p>').html(batch.errorMessage));
         $('#wait').hide();

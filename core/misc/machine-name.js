@@ -44,6 +44,10 @@
       let timeout = null;
       let xhr = null;
 
+      /**
+       *
+       * @param e
+       */
       function clickEditHandler(e) {
         const data = e.data;
         data.$wrapper.removeClass('visually-hidden');
@@ -52,6 +56,10 @@
         data.$source.off('.machineName');
       }
 
+      /**
+       *
+       * @param e
+       */
       function machineNameHandler(e) {
         const data = e.data;
         const options = data.options;

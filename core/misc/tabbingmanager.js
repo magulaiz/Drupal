@@ -31,7 +31,7 @@
   /**
    * Provides an API for managing page tabbing order modifications.
    *
-   * @constructor Drupal~TabbingManager
+   * @class Drupal~TabbingManager
    */
   function TabbingManager() {
     /**
@@ -51,7 +51,7 @@
    *
    * This constraint can be removed with the release() method.
    *
-   * @constructor Drupal~TabbingContext
+   * @class Drupal~TabbingContext
    *
    * @param {object} options
    *   A set of initiating values

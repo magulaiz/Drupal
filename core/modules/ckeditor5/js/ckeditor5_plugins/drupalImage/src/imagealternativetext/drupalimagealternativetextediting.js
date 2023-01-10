@@ -84,7 +84,7 @@ export default class DrupalImageTextAlternativeEditing extends Plugin {
    * @param {string} eventName
    *   The name of the event the converter should be attached to.
    *
-   * @return {function}
+   * @return {Function}
    *   A function that attaches downcast converter to the conversion dispatcher.
    *
    * @private

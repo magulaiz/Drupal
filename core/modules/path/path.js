@@ -1,4 +1,6 @@
 /**
+ * @param $
+ * @param Drupal
  * @file
  * Attaches behaviors for the Path module.
  */

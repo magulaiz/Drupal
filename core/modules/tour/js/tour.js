@@ -71,9 +71,9 @@
   /**
    * Backbone Model for tours.
    *
-   * @constructor
+   * @class
    *
-   * @augments Backbone.Model
+   * @extends Backbone.Model
    */
   Drupal.tour.models.StateModel = Backbone.Model.extend(
     /** @lends Drupal.tour.models.StateModel# */ {
@@ -117,7 +117,7 @@
        *
        * @constructs
        *
-       * @augments Backbone.View
+       * @extends Backbone.View
        */
       initialize() {
         this.listenTo(this.model, 'change:tour change:isActive', this.render);
@@ -265,7 +265,7 @@
       /**
        * Gets the tour.
        *
-       * @return {array}
+       * @return {Array}
        *   An array of Shepherd tour item objects.
        */
       _getTour() {
@@ -282,7 +282,7 @@
        * page element or don't have the "bar" class.</caption>
        * http://example.com/foo?tips=bar
        *
-       * @param {Object[]} tourItems
+       * @param {object[]} tourItems
        *   An array containing tour Step config objects.
        *   The object properties relevant to this function:
        *   - classes {string}: A string of classes to be added to the tour step
@@ -342,7 +342,7 @@
    *
    * @param {Tour} shepherdTour
    *  A class representing a Shepherd site tour.
-   * @param {Object} tourStepConfig
+   * @param {object} tourStepConfig
    *   An object generated in TourViewBuilder used for creating the options
    *   passed to `Tour.addStep(options)`.
    *   Contains the following properties:
@@ -384,7 +384,7 @@
   /**
    * Theme function for tour item content.
    *
-   * @param {Object} tourStepConfig
+   * @param {object} tourStepConfig
    *   An object generated in TourViewBuilder used for creating the options
    *   passed to `Tour.addStep(options)`.
    *   Contains the following properties:

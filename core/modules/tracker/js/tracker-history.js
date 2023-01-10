@@ -2,8 +2,16 @@
  * Attaches behaviors for the Tracker module's History module integration.
  *
  * May only be loaded for authenticated users, with the History module enabled.
+ *
+ * @param $
+ * @param Drupal
+ * @param window
  */
 (function ($, Drupal, window) {
+  /**
+   *
+   * @param placeholders
+   */
   function processNodeNewIndicators(placeholders) {
     const newNodeString = Drupal.t('new');
     const updatedNodeString = Drupal.t('updated');
@@ -24,6 +32,10 @@
     });
   }
 
+  /**
+   *
+   * @param placeholders
+   */
   function processNewRepliesIndicators(placeholders) {
     // Figure out which placeholders need the "x new" replies links.
     const placeholdersToUpdate = {};
