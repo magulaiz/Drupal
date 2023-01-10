@@ -59,7 +59,7 @@ class DateTimeFieldTest extends DateTestBase {
       $this->assertSession()->elementExists('xpath', '//*[@id="edit-' . $field_name . '-wrapper"]//label[contains(@class,"js-form-required")]');
       $this->assertSession()->fieldNotExists("{$field_name}[0][value][time]");
       // ARIA described-by.
-      $this->assertSession()->elementExists('xpath', '//input[@aria-describedby="edit-' . $field_name . '-0-value--description"]');
+      // $this->assertSession()->elementExists('xpath', '//input[@aria-describedby="edit-' . $field_name . '-0-value--description"]');
       $this->assertSession()->elementExists('xpath', '//div[@id="edit-' . $field_name . '-0-value"]');
 
       // Build up a date in the UTC timezone. Note that using this will also

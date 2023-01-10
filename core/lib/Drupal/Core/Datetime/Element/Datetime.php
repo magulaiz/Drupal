@@ -223,6 +223,7 @@ class Datetime extends DateElementBase {
    */
   public static function processDatetime(&$element, FormStateInterface $form_state, &$complete_form) {
     $format_settings = [];
+    $property_keys = [];
     // The value callback has populated the #value array.
     $date = !empty($element['#value']['object']) ? $element['#value']['object'] : NULL;
 
