@@ -3,8 +3,8 @@
 namespace Drupal\datetime\Plugin\Field\FieldWidget;
 
 use Drupal\Core\Entity\EntityStorageInterface;
-use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
+use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\datetime\Plugin\Field\FieldType\DateTimeItem;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -58,15 +58,10 @@ class DateTimeDefaultWidget extends DateTimeWidgetBase {
   public function formElement(FieldItemListInterface $items, $delta, array $element, array &$form, FormStateInterface $form_state) {
     $element = parent::formElement($items, $delta, $element, $form, $form_state);
 
-    // If the field is date-only, make sure the title is displayed. Otherwise,
-    // wrap everything in a fieldset, and the title will be shown in the legend.
-    if ($this->getFieldSetting('datetime_type') === DateTimeItem::DATETIME_TYPE_DATE) {
-      $element['value']['#title'] = $this->fieldDefinition->getLabel();
-      $element['value']['#description'] = $this->fieldDefinition->getDescription();
-    }
-    else {
-      $element['#theme_wrappers'][] = 'fieldset';
-    }
+    // Pass the label and description (if any) to the datetime (value) element.
+    // It handles wrapping this in a fieldset with a legend if needed.
+    $element['value']['#title'] = $this->fieldDefinition->getLabel();
+    $element['value']['#description'] = $this->fieldDefinition->getDescription();
 
     // Identify the type of date and time elements to use.
     switch ($this->getFieldSetting('datetime_type')) {
