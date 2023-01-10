@@ -68,7 +68,7 @@ class UpdateSettingsForm extends ConfigFormBase implements ContainerInjectionInt
     $config = $this->config('update.settings');
 
     // Adjust the frequency so it's never 0.
-    $frequency = $config->get('check.interval_days');
+    $frequency = intval($config->get('check.interval_days'));
     if ($frequency < 1) {
       $frequency = 1;
     }
@@ -97,7 +97,8 @@ class UpdateSettingsForm extends ConfigFormBase implements ContainerInjectionInt
       '#default_value' => $config->get('check.disabled_extensions'),
     ];
 
-    $notification_emails = $config->get('notification.emails');
+    // Empty config is returned as string, not sequence.
+    $notification_emails = $config->get('notification.emails') ?? [];
     $form['update_notify_emails'] = [
       '#type' => 'textarea',
       '#title' => $this->t('Email addresses to notify when updates are available'),
