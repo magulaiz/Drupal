@@ -42,7 +42,9 @@ class MenuValidationTest extends ConfigEntityValidationTestBase {
 
     $max_length = MenuStorage::MAX_ID_LENGTH;
     $this->entity->set('id', mb_strtolower($this->randomMachineName($max_length + 2)));
-    $this->assertValidationErrors(['This value is too long. It should have <em class="placeholder">' . $max_length . '</em> characters or less.']);
+    $this->assertValidationErrors([
+      'This value is too long. It should have <em class="placeholder">' . $max_length . '</em> characters or less.',
+    ]);
   }
 
 }
