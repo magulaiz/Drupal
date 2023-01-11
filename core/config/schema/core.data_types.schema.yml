@@ -94,6 +94,15 @@ color_hex:
   type: string
   label: 'Color'
 
+# Machine-readable identifier that can only contain certain characters.
+machine_name:
+  type: string
+  label: 'Machine name'
+  constraints:
+    Regex: '/^[a-z0-9_]+$/'
+    Length:
+      max: 64
+
 # Complex extended data types:
 
 # Root of a configuration object.

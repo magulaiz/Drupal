@@ -229,7 +229,7 @@ system.action.*:
   label: 'System action'
   mapping:
     id:
-      type: string
+      type: machine_name
       label: 'ID'
     label:
       type: label
