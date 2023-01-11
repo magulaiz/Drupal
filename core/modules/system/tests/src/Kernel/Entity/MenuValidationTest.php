@@ -4,6 +4,7 @@ namespace Drupal\Tests\system\Kernel\Entity;
 
 use Drupal\KernelTests\Core\Config\ConfigEntityValidationTestBase;
 use Drupal\system\Entity\Menu;
+use Drupal\system\MenuStorage;
 
 /**
  * Tests validation of menu entities.
@@ -19,23 +20,43 @@ class MenuValidationTest extends ConfigEntityValidationTestBase {
     parent::setUp();
 
     $this->entity = Menu::create([
-      'id' => 'test',
+      'id' => 'test-menu',
       'label' => 'Test',
     ]);
     $this->entity->save();
   }
 
   /**
-   * Tests that the menu entity's ID is validated as a machine name.
+   * Data provider for ::testMachineName().
+   *
+   * @return array[]
+   *   The test cases.
    */
-  public function testMachineName(): void {
+  public function providerMachineName(): array {
+    return [
+      ['invalid name'],
+      ['invalid_name'],
+      ['Invalid-Name'],
+    ];
+  }
+
+  /**
+   * Tests that the menu entity's ID is validated as a machine name.
+   *
+   * @param string $invalid_id
+   *   An invalid machine name that should raise a validation error.
+   *
+   * @dataProvider providerMachineName
+   */
+  public function testMachineName(string $invalid_id): void {
     // The entity should be valid to begin with.
     $this->assertValidationErrors([]);
 
-    $this->entity->set('id', 'invalid_name');
+    $this->entity->set('id', $invalid_id);
     $this->assertValidationErrors(['This value is not valid.']);
 
-    $this->entity->set('id', mb_strtolower($this->randomMachineName(34)));
+    $length = MenuStorage::MAX_ID_LENGTH + 2;
+    $this->entity->set('id', mb_strtolower($this->randomMachineName($length)));
     $this->assertValidationErrors(['This value is too long. It should have <em class="placeholder">32</em> characters or less.']);
   }
 
