@@ -40,6 +40,14 @@ abstract class ConfigEntityValidationTestBase extends KernelTestBase {
   }
 
   /**
+   * Ensures that the entity created in ::setUp() has no validation errors.
+   */
+  public function testEntityIsValid(): void {
+    $this->assertInstanceOf(ConfigEntityInterface::class, $this->entity);
+    $this->assertValidationErrors([]);
+  }
+
+  /**
    * Data provider for ::testConfigDependenciesValidation().
    *
    * @return array[]
@@ -147,11 +155,6 @@ abstract class ConfigEntityValidationTestBase extends KernelTestBase {
    * @dataProvider providerConfigDependenciesValidation
    */
   public function testConfigDependenciesValidation(array $dependencies, array $expected_messages): void {
-    $this->assertInstanceOf(ConfigEntityInterface::class, $this->entity);
-
-    // The entity should have valid data to begin with.
-    $this->assertValidationErrors([]);
-
     // Add the dependencies we were given to the dependencies that may already
     // exist in the entity.
     $dependencies = NestedArray::mergeDeep($this->entity->getDependencies(), $dependencies);

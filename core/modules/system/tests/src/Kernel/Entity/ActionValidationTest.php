@@ -28,31 +28,16 @@ class ActionValidationTest extends ConfigEntityValidationTestBase {
   }
 
   /**
-   * Data provider for ::testMachineName().
-   *
-   * @return array[]
-   *   The test cases.
-   */
-  public function providerMachineName(): array {
-    return [
-      ['invalid name'],
-      ['invalid-name'],
-      ['Invalid_Name'],
-    ];
-  }
-
-  /**
    * Tests that the action entity's ID is validated as a machine name.
    *
    * @param string $invalid_id
    *   An invalid machine name that should raise a validation error.
    *
-   * @dataProvider providerMachineName
+   * @testWith ["invalid name"]
+   *  ["invalid-name"]
+   *  ["Invalid_Name"]
    */
   public function testMachineName(string $invalid_id): void {
-    // The entity should be valid to begin with.
-    $this->assertValidationErrors([]);
-
     $this->entity->set('id', $invalid_id);
     $this->assertValidationErrors(['This value is not valid.']);
 
