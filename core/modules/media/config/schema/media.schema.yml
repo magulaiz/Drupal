@@ -20,8 +20,11 @@ media.type.*:
   label: 'Media type'
   mapping:
     id:
-      type: string
+      type: machine_name
       label: 'Machine name'
+      constraints:
+        Length:
+          max: 32
     label:
       type: label
       label: 'Name'

@@ -31,7 +31,7 @@ class ImageStyleValidationTest extends ConfigEntityValidationTestBase {
   }
 
   /**
-   * Tests that the action entity's ID is validated as a machine name.
+   * Tests that the image style entity's ID is validated as a machine name.
    *
    * @param string $invalid_id
    *   An invalid machine name that should raise a validation error.
