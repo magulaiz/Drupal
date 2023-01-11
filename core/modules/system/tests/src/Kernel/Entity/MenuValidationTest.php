@@ -25,4 +25,18 @@ class MenuValidationTest extends ConfigEntityValidationTestBase {
     $this->entity->save();
   }
 
+  /**
+   * Tests that the menu entity's ID is validated as a machine name.
+   */
+  public function testMachineName(): void {
+    // The entity should be valid to begin with.
+    $this->assertValidationErrors([]);
+
+    $this->entity->set('id', 'invalid_name');
+    $this->assertValidationErrors(['This value is not valid.']);
+
+    $this->entity->set('id', mb_strtolower($this->randomMachineName(34)));
+    $this->assertValidationErrors(['This value is too long. It should have <em class="placeholder">32</em> characters or less.']);
+  }
+
 }
