@@ -34,6 +34,7 @@ class TaxonomyTermReorderTest extends TaxonomyTestBase {
    * Change order of terms & update a term using the user interface.
    */
   public function testTermReorderAndUpdate() {
+    $assert = $this->assertSession();
     $this->createTerm($this->vocabulary, ['name' => 'Alpha']);
     $this->createTerm($this->vocabulary, ['name' => 'Beta']);
     $this->createTerm($this->vocabulary, ['name' => 'Charlie']);
@@ -78,11 +79,11 @@ class TaxonomyTermReorderTest extends TaxonomyTestBase {
     $page->pressButton(t('Save'));
 
     // Asserts the order & hierarchy has been saved & show new order in the UI.
-    $this->assertSession()->fieldValueEquals('terms[tid:4:0][weight]', 1);
-    $this->assertSession()->fieldValueEquals('terms[tid:2:0][weight]', 2);
-    $this->assertSession()->fieldValueEquals('terms[tid:3:0][weight]', 0);
-    $this->assertSession()->fieldValueEquals('terms[tid:3:0][term][parent]', 2);
-    $this->assertSession()->fieldValueEquals('terms[tid:1:0][weight]', 3);
+    $assert->fieldValueEquals('terms[tid:4:0][weight]', '1');
+    $assert->fieldValueEquals('terms[tid:2:0][weight]', '2');
+    $assert->fieldValueEquals('terms[tid:3:0][weight]', '0');
+    $assert->hiddenFieldValueEquals('terms[tid:3:0][term][parent]', 2);
+    $assert->fieldValueEquals('terms[tid:1:0][weight]', 3);
 
     // Reload terms to prevent usage of cached loaded terms.
     $taxonomy_storage->resetCache();
@@ -98,10 +99,9 @@ class TaxonomyTermReorderTest extends TaxonomyTestBase {
     $this->drupalGet('admin/structure/taxonomy/manage/' . $this->vocabulary->id() . '/overview');
     $this->submitForm([], t('Reset to alphabetical'));
     // Submit confirmation form.
-    $this->drupalGet(NULL);
     $this->submitForm([], t('Reset to alphabetical'));
     // Ensure form redirected back to overview.
-    $this->assertSession()->addressEquals('admin/structure/taxonomy/manage/' . $this->vocabulary->id() . '/overview');
+    $assert->addressEquals('admin/structure/taxonomy/manage/' . $this->vocabulary->id() . '/overview');
 
     // Updating the Term2 (Beta) should not alter the order.
     // By updating the Term2 we asserts the previous "Reset to alphabetical"
@@ -114,11 +114,11 @@ class TaxonomyTermReorderTest extends TaxonomyTestBase {
     $page = $this->getSession()->getPage();
 
     // Asserts the new weight are set to 0 on the UI & order stay unchanged.
-    $this->assertSession()->fieldValueEquals('terms[tid:2:0][weight]', 0);
-    $this->assertSession()->fieldValueEquals('terms[tid:3:0][weight]', 0);
-    $this->assertSession()->fieldValueEquals('terms[tid:3:0][term][parent]', 2);
-    $this->assertSession()->fieldValueEquals('terms[tid:4:0][weight]', 0);
-    $this->assertSession()->fieldValueEquals('terms[tid:1:0][weight]', 0);
+    $assert->fieldValueEquals('terms[tid:2:0][weight]', 0);
+    $assert->fieldValueEquals('terms[tid:3:0][weight]', 0);
+    $assert->hiddenFieldValueEquals('terms[tid:3:0][term][parent]', 2);
+    $assert->fieldValueEquals('terms[tid:4:0][weight]', 0);
+    $assert->fieldValueEquals('terms[tid:1:0][weight]', 0);
 
     // Reload terms to prevent usage of cached loaded terms.
     $taxonomy_storage->resetCache();
