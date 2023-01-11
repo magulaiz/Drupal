@@ -442,8 +442,8 @@ field_config_base:
       constraints:
         NotNull: []
         PluginExists:
-          pluginType: content_entity_type
-          pluginClassImplementsInterface: \Drupal\Core\Entity\FieldableEntityInterface
+          manager: dentity_type.manager
+          interface: \Drupal\Core\Entity\FieldableEntityInterface
     bundle:
       type: string
       label: 'Bundle'
