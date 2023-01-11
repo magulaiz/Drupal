@@ -49,7 +49,7 @@ class StringPartsConstraintValidator extends ConstraintValidator {
     foreach ($constraint->parts as $part) {
       $part_value = $properties[$part]->getValue();
       if (!is_string($part_value)) {
-        throw new \LogicException();
+        throw new \LogicException(sprintf('The "%s" property does not contain a string, but a %s: "%s".', $part, gettype($part_value), (string) $part_value));
       }
       $expected_string_parts[] = $part_value;
     }
