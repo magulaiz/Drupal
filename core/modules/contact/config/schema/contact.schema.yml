@@ -5,8 +5,11 @@ contact.form.*:
   label: 'Contact form'
   mapping:
     id:
-      type: string
+      type: machine_name
       label: 'ID'
+      constraints:
+        Length:
+          max: 32
     label:
       type: label
       label: 'Label'
