@@ -27,4 +27,18 @@ class ActionValidationTest extends ConfigEntityValidationTestBase {
     $this->entity->save();
   }
 
+  /**
+   * Tests that the action entity's ID is validated as a machine name.
+   */
+  public function testMachineName(): void {
+    // The entity should be valid to begin with.
+    $this->assertValidationErrors([]);
+
+    $this->entity->set('id', 'invalid name');
+    $this->assertValidationErrors(['This value is not valid.']);
+
+    $this->entity->set('id', mb_strtolower($this->randomMachineName(68)));
+    $this->assertValidationErrors(['This value is too long. It should have <em class="placeholder">64</em> characters or less.']);
+  }
+
 }
