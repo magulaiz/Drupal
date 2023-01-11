@@ -33,13 +33,15 @@ class UniqueFieldValueValidator extends ConstraintValidator {
     }
 
     $value = is_array($items_or_value) ? $items_or_value->first()->value : $items_or_value;
-    $value_taken = (bool) $query
+    $matching_entity_ids = $query
       ->condition($field_name, $value)
-      ->range(0, 1)
-      ->count()
       ->execute();
 
-    if ($value_taken) {
+    if (empty($matching_entity_ids)) {
+      return;
+    }
+
+    if ($entity->isNew()) {
       $this->context->addViolation($constraint->message, [
         '%value' => $value,
         '@entity_type' => $entity->getEntityType()->getSingularLabel(),
@@ -47,6 +49,18 @@ class UniqueFieldValueValidator extends ConstraintValidator {
           ? $items_or_value->getFieldDefinition()->getLabel()
           : $field_name,
       ]);
+    }
+    // If not new, the only match must be *this* entity.
+    else if ($entity_id != reset($matching_entity_ids)) {
+      // @todo decide how to handle this without breaking BC — I think logging? For now, just an exception to allow making it relaible.
+      throw new \Exception(sprintf(
+        'The existing %s entity (ID: %s) is being validated and it violates a uniqueness constraint: %s have the same value for the "%s" field: "%s".',
+        $entity_type_id,
+        $entity_id,
+        implode($matching_entity_ids),
+        $field_name,
+        (string) $value
+      ));
     }
   }
 
