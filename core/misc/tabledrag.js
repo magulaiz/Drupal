@@ -792,6 +792,7 @@
             self.rowObject.swap('before', currentRow, self);
             self.startDrag = false;
           }
+          $(currentRow).fadeIn();
           if (self.striping === true) {
             self.restripeTable();
           }
@@ -990,6 +991,7 @@
           $row = $row.prev('tr:first-of-type');
           row = $row.get(0);
         }
+        $row.hide();
         return row;
       }
     }
