@@ -105,6 +105,7 @@ function _menu_ui_node_save(NodeInterface $node, array $values) {
   else {
     // Create a new menu_link_content entity.
     $entity = MenuLinkContent::create([
+      'bundle' => $values['menu_name'],
       'link' => ['uri' => 'entity:node/' . $node->id()],
       'langcode' => $node->language()->getId(),
     ]);
