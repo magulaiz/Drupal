@@ -28,16 +28,21 @@ details.fieldset-no-legend {
   margin-right: 0;
   margin-bottom: 0;
 }
-[dir="rtl"] .views-ui-dialog input.form-submit,
-[dir="rtl"] .views-admin a.button,
-[dir="rtl"] .views-ui-dialog a.button {
-  margin-right: 1em;
-  margin-left: 0;
+[dir="rtl"] {
+  & .views-ui-dialog input.form-submit,
+  & .views-admin a.button,
+  & .views-ui-dialog a.button {
+    margin-right: 1em;
+    margin-left: 0;
+  }
 }
-[dir="rtl"] .views-ui-dialog input.form-submit:first-child,
-[dir="rtl"] .views-admin a.button:first-child,
-[dir="rtl"] .views-ui-dialog a.button:first-child {
-  margin-right: 0;
+
+[dir="rtl"] {
+  & .views-ui-dialog input.form-submit:first-child,
+  & .views-admin a.button:first-child,
+  & .views-ui-dialog a.button:first-child {
+    margin-right: 0;
+  }
 }
 
 .views-ui-dialog .form--flex {
@@ -60,9 +65,11 @@ details.fieldset-no-legend {
   margin: 0 0.25rem 0 0; /* LTR */
   transform: none;
 }
-[dir="rtl"] .views-ui-dialog .form-type--boolean .form-boolean {
-  margin-right: 0;
-  margin-left: 0.25rem;
+[dir="rtl"] {
+  & .views-ui-dialog .form-type--boolean .form-boolean {
+    margin-right: 0;
+    margin-left: 0.25rem;
+  }
 }
 
 .views-ui-dialog .form-boolean-group .form-type--boolean {
@@ -112,12 +119,14 @@ details.fieldset-no-legend {
 .form-item-options-expose-description {
   margin-left: 1.5em; /* LTR */
 }
-[dir="rtl"] .form-item-options-expose-required,
-[dir="rtl"] .form-item-options-expose-label,
-[dir="rtl"] .form-item-options-expose-field-identifier,
-[dir="rtl"] .form-item-options-expose-description {
-  margin-right: 1.5em;
-  margin-left: 0;
+[dir="rtl"] {
+  & .form-item-options-expose-required,
+  & .form-item-options-expose-label,
+  & .form-item-options-expose-field-identifier,
+  & .form-item-options-expose-description {
+    margin-right: 1.5em;
+    margin-left: 0;
+  }
 }
 
 .views-admin-dependent .form-item .form-item,
@@ -150,15 +159,21 @@ details.fieldset-no-legend {
 .views-admin .links li {
   padding-right: 0; /* LTR */
 }
-[dir="rtl"] .views-admin .links li {
-  padding-left: 0;
+
+[dir="rtl"] {
+  & .views-admin .links li {
+    padding-left: 0;
+  }
 }
 
 .views-admin .button .links li {
   padding-right: 12px; /* LTR */
 }
-[dir="rtl"] .views-admin .button .links li {
-  padding-left: 12px;
+
+[dir="rtl"] {
+  & .views-admin .button .links li {
+    padding-left: 12px;
+  }
 }
 
 .views-display-top__extra-actions-wrapper {
@@ -202,15 +217,37 @@ details.fieldset-no-legend {
   list-style: none;
   text-align: left; /* LTR */
   border-bottom: 0 none;
+
+  & .views-display-deleted-link {
+    text-decoration: line-through;
+  }
+
+  & li,
+  & li.is-active {
+    width: auto;
+    padding: 0;
+    border: 0;
+    background: transparent;
+  }
 }
-[dir="rtl"] .views-tabs {
-  margin-right: 0;
-  margin-left: var(--space-l);
-  text-align: right;
+
+[dir="rtl"] {
+  & .views-tabs {
+    margin-right: 0;
+    margin-left: var(--space-l);
+    text-align: right;
+
+    & li {
+      margin-right: 6px;
+      margin-left: 5px;
+
+      &:hover {
+        padding-right: 0;
+      }
+    }
+  }
 }
-.views-tabs .views-display-deleted-link {
-  text-decoration: line-through;
-}
+
 .views-tabs li,
 .views-tabs li.is-active {
   width: auto;
@@ -224,10 +261,7 @@ details.fieldset-no-legend {
 .views-tabs li {
   margin: 0 5px 5px 6px; /* LTR */
 }
-[dir="rtl"] .views-tabs li {
-  margin-right: 6px;
-  margin-left: 5px;
-}
+
 .views-tabs li + li {
   border-top: 0;
 }
@@ -235,9 +269,7 @@ details.fieldset-no-legend {
   padding-left: 0; /* LTR */
   border: 0;
 }
-[dir="rtl"] .views-tabs li:hover {
-  padding-right: 0;
-}
+
 .views-tabs a {
   display: inline-block;
   padding: 10px;
@@ -569,9 +601,11 @@ details.fieldset-no-legend {
   line-height: var(--font-size-h1);
 }
 
-[dir="rtl"] .views-config-group-region .views-group-box--value > .form-item::after {
-  right: calc(0 - var(--space-m));
-  left: auto;
-  padding-right: 0.4rem;
-  padding-left: 0.3rem;
+[dir="rtl"] {
+  & .views-config-group-region .views-group-box--value > .form-item::after {
+    right: calc(0 - var(--space-m));
+    left: auto;
+    padding-right: 0.4rem;
+    padding-left: 0.3rem;
+  }
 }
