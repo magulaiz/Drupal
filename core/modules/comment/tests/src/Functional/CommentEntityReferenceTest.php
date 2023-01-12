@@ -23,25 +23,46 @@ class CommentEntityReferenceTest extends CommentTestBase {
    * Tests that comments are correctly saved as entity references.
    */
   public function testCommentAsEntityReference() {
-    $this->drupalLogin($this->webUser);
-    $comment = $this->postComment($this->node, $this->randomMachineName(), $this->randomMachineName());
-    $this->assertInstanceOf(Comment::class, $comment);
-
     $this->createEntityReferenceField(
       'node',
       'article',
       'entity_reference_comment',
       'Entity Reference Comment',
-      'comment'
+      'comment',
+      'default',
+      ['target_bundles' => ['comment']]
     );
+    \Drupal::service('entity_display.repository')
+      ->getFormDisplay('node', 'article')
+      ->setComponent('entity_reference_comment', ['type' => 'entity_reference_autocomplete'])
+      ->save();
+
+    $administratorUser = $this->drupalCreateUser([
+      'skip comment approval',
+      'post comments',
+      'access comments',
+      'access content',
+      'administer nodes',
+      'administer comments',
+      'bypass node access',
+    ]);
+    $this->drupalLogin($administratorUser);
+
+    $comment = $this->postComment($this->node, $this->randomMachineName(), $this->randomMachineName());
+    $this->assertInstanceOf(Comment::class, $comment);
 
     $node = $this->drupalCreateNode([
       'title' => 'Baloney',
       'type' => 'article',
     ]);
-    $node->set('entity_reference_comment', $comment->id())->save();
-    $this->assertNotEmpty($node->get('entity_reference_comment'), 'Reference field is saved.');
-    $this->assertEquals($node->get('entity_reference_comment')->getValue()[0]['target_id'], $comment->id(), 'Reference field is saved.');
+
+    // Load the node and save it.
+    $edit = [
+      'entity_reference_comment[0][target_id]' => $comment->label() . ' (' . $comment->id() . ')',
+    ];
+    $this->drupalGet('node/' . $node->id() . '/edit');
+    $this->submitForm($edit, 'Save');
+    $this->assertSession()->statusCodeEquals(200);
   }
 
 }
