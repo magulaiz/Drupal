@@ -48,6 +48,30 @@ abstract class ConfigEntityValidationTestBase extends KernelTestBase {
   }
 
   /**
+   * Tests that the entity ID's length is validated if it is a machine name.
+   */
+  public function testMachineNameLength(): void {
+    $id_key = $this->entity->getEntityType()->getKey('id');
+    $this->assertNotEmpty($id_key, "The entity under test does not define an ID key.");
+
+    $data_definition = $this->entity->getTypedData()
+      ->get($id_key)
+      ->getDataDefinition();
+    if ($data_definition->getDataType() !== 'machine_name') {
+      $this->markTestSkipped("The entity's ID key does not use the machine_name data type.");
+    }
+
+    $max_length = $data_definition->getConstraints()['Length']['max'];
+    $this->assertIsInt($max_length);
+    $this->assertGreaterThan(0, $max_length);
+
+    $this->entity->set($id_key, mb_strtolower($this->randomMachineName($max_length + 2)));
+    $this->assertValidationErrors([
+      'This value is too long. It should have <em class="placeholder">' . $max_length . '</em> characters or less.'
+    ]);
+  }
+
+  /**
    * Data provider for ::testConfigDependenciesValidation().
    *
    * @return array[]

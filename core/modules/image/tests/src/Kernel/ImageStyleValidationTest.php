@@ -43,9 +43,6 @@ class ImageStyleValidationTest extends ConfigEntityValidationTestBase {
   public function testMachineName(string $invalid_id): void {
     $this->entity->set('name', $invalid_id);
     $this->assertValidationErrors(['This value is not valid.']);
-
-    $this->entity->set('name', mb_strtolower($this->randomMachineName(68)));
-    $this->assertValidationErrors(['This value is too long. It should have <em class="placeholder">64</em> characters or less.']);
   }
 
 }
