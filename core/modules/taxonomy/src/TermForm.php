@@ -214,7 +214,6 @@ class TermForm extends ContentEntityForm {
     $form_state->set('tid', $term->id());
   }
 
-
   /**
    * Returns term parent IDs, including the root.
    *
