@@ -52,7 +52,7 @@ class CommentEntityReferenceTest extends CommentTestBase {
     $this->assertInstanceOf(Comment::class, $comment);
 
     $node = $this->drupalCreateNode([
-      'title' => 'Baloney',
+      'title' => $this->randomMachineName(),
       'type' => 'article',
     ]);
 
