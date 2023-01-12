@@ -20,56 +20,56 @@
     clear: both;
     content: "";
   }
+}
 
-  &--small {
-    & .progress__track {
-      height: var(--progress-bar-small-size);
-    }
-
-    .progress__bar {
-      width: var(--progress-bar-small-size);
-      min-width: var(--progress-bar-small-size);
-      height: var(--progress-bar-small-size);
-    }
-
-    .progress__label {
-      font-size: var(--progress-bar-small-label-font-size);
-    }
+.progress--small {
+  & .progress__track {
+    height: var(--progress-bar-small-size);
   }
 
-  &__track {
-    height: var(--progress-bar-default-size);
-    margin-top: 0;
-    border: var(--progress-bar-border-size) var(--progress-track-border-color) solid;
-    border-radius: var(--progress-bar-default-size-radius);
-    background-color: var(--progress-track-bg-color);
+  & .progress__bar {
+    width: var(--progress-bar-small-size);
+    min-width: var(--progress-bar-small-size);
+    height: var(--progress-bar-small-size);
   }
 
-  &__bar {
-    width: var(--progress-bar-default-size);
-    min-width: var(--progress-bar-default-size);
-    height: var(--progress-bar-default-size);
-    margin-top: calc(var(--progress-bar-border-size) * -1);
-    margin-left: calc(var(--progress-bar-border-size) * -1); /* LTR */
-    transition: var(--progress-bar-transition);
-    border: var(--progress-bar-border-size) var(--progress-bar-border-color) solid;
-    border-radius: var(--progress-bar-default-size-radius);
-    background-color: var(--progress-bar-bg-color);
+  & .progress__label {
+    font-size: var(--progress-bar-small-label-font-size);
   }
+}
 
-  &__label {
-    margin-bottom: var(--progress-bar-spacing-size);
-    font-size: var(--progress-bar-label-font-size);
-    font-weight: bold;
-  }
+.progress__track {
+  height: var(--progress-bar-default-size);
+  margin-top: 0;
+  border: var(--progress-bar-border-size) var(--progress-track-border-color) solid;
+  border-radius: var(--progress-bar-default-size-radius);
+  background-color: var(--progress-track-bg-color);
+}
 
-  &__description,
-  &__percentage {
-    overflow: hidden;
-    margin-top: var(--progress-bar-spacing-size);
-    color: var(--progress-bar-description-color);
-    font-size: var(--progress-bar-description-font-size);
-  }
+.progress__bar {
+  width: var(--progress-bar-default-size);
+  min-width: var(--progress-bar-default-size);
+  height: var(--progress-bar-default-size);
+  margin-top: calc(var(--progress-bar-border-size) * -1);
+  margin-left: calc(var(--progress-bar-border-size) * -1); /* LTR */
+  transition: var(--progress-bar-transition);
+  border: var(--progress-bar-border-size) var(--progress-bar-border-color) solid;
+  border-radius: var(--progress-bar-default-size-radius);
+  background-color: var(--progress-bar-bg-color);
+}
+
+.progress__label {
+  margin-bottom: var(--progress-bar-spacing-size);
+  font-size: var(--progress-bar-label-font-size);
+  font-weight: bold;
+}
+
+.progress__description,
+.progress__percentage {
+  overflow: hidden;
+  margin-top: var(--progress-bar-spacing-size);
+  color: var(--progress-bar-description-color);
+  font-size: var(--progress-bar-description-font-size);
 }
 
 [dir="rtl"] {
