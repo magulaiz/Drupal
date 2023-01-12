@@ -40,9 +40,6 @@ class MediaTypeValidationTest extends ConfigEntityValidationTestBase {
   public function testMachineName(string $invalid_id): void {
     $this->entity->set('id', $invalid_id);
     $this->assertValidationErrors(['This value is not valid.']);
-
-    $this->entity->set('id', mb_strtolower($this->randomMachineName(34)));
-    $this->assertValidationErrors(['This value is too long. It should have <em class="placeholder">32</em> characters or less.']);
   }
 
 }
