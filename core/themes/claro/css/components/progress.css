@@ -75,11 +75,9 @@
   font-size: var(--progress-bar-description-font-size);
 }
 
-[dir="rtl"] {
-  .progress__bar {
-    margin-right: calc(var(--progress-bar-border-size) * -1);
-    margin-left: 0;
-  }
+[dir="rtl"] .progress__bar {
+  margin-right: calc(var(--progress-bar-border-size) * -1);
+  margin-left: 0;
 }
 
 @media (forced-colors: active) {
