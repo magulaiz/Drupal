@@ -35,9 +35,13 @@ class CommentEntityReferenceTest extends CommentTestBase {
       'comment'
     );
 
-    $this->node->set('entity_reference_comment', $comment->id())->save();
-    $this->assertNotEmpty($this->node->get('entity_reference_comment'), 'Reference field is saved.');
-    $this->assertEquals($this->node->get('entity_reference_comment')[0]['target_id'], $comment->id(), 'Reference field is saved.');
+    $node = $this->drupalCreateNode([
+      'title' => 'Baloney',
+      'type' => 'article',
+    ]);
+    $node->set('entity_reference_comment', $comment->id())->save();
+    $this->assertNotEmpty($node->get('entity_reference_comment'), 'Reference field is saved.');
+    $this->assertEquals($node->get('entity_reference_comment')->getValue()[0]['target_id'], $comment->id(), 'Reference field is saved.');
   }
 
 }
