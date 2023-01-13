@@ -12,6 +12,7 @@ use Drupal\views\Views;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\views\ViewExecutable;
 use Drupal\Core\Database\Database;
+use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\views\Plugin\views\query\Sql;
 use Drupal\views\Entity\View;
@@ -946,6 +947,13 @@ class ViewUI implements ViewEntityInterface {
    */
   public function bundle() {
     return $this->storage->bundle();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function bundleDefinitions(EntityTypeInterface $entity_type) {
+    return View::bundleDefinitions($entity_type);
   }
 
   /**
