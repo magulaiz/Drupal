@@ -657,6 +657,16 @@ drupal.string.includes:
   drupalSettings: {}
   deprecated: The %library_id% asset library is deprecated in Drupal 10.0.0 and will be removed in Drupal 11.0.0. See https://www.drupal.org/node/3280410
 
+drupal.submit_progress:
+  version: VERSION
+  js:
+    misc/submit-progress.js: {}
+  dependencies:
+    - core/drupal
+    - core/once
+    - core/drupal.ajax
+    - core/drupal.dialog
+
 drupal.tabbingmanager:
   version: VERSION
   js:

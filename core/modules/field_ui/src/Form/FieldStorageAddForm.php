@@ -230,6 +230,9 @@ class FieldStorageAddForm extends FormBase {
       '#type' => 'submit',
       '#value' => $this->t('Save and continue'),
       '#button_type' => 'primary',
+      '#progress' => [
+        'message' => 'Preparing Database',
+      ],
     ];
 
     $form['#attached']['library'][] = 'field_ui/drupal.field_ui';
