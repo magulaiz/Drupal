@@ -9,6 +9,12 @@
     padding-block-start: var(--off-canvas-padding);
   }
 
+  & .announcements ul {
+    margin: 0;
+    padding-left: 0;
+    list-style: none;
+  }
+
   & .announcement {
     font-size: 14px;
   }
@@ -20,6 +26,10 @@
     border-bottom: 1px solid var(--off-canvas-border-color);
   }
 
+  & .announcement--standard {
+    padding-top: var(--off-canvas-padding);
+  }
+
   & .announcement__title {
     font-size: 16px;
   }
@@ -27,7 +37,7 @@
   & .announcement__new {
     position: absolute;
     inset-inline-end: var(--off-canvas-padding);
-    color: red; /* @todo - this is not accessible. */
+    font-style: italic;
   }
 
   & .no_alerts {

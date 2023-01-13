@@ -58,9 +58,9 @@ class AccessAnnouncementTest extends OffCanvasTestBase {
     // having darker background and dot icon to indicate unread.
     $this->clickLink('Announcements');
     $this->waitForOffCanvasToOpen();
-    $this->assertSession()->elementExists('css', '.announcement__unread-status');
+    $this->assertSession()->elementExists('css', '.announcement__new');
     $title_count = count($this->getSession()->getPage()->findAll('css', '.announcement__title'));
-    $this->assertSession()->elementsCount('css', '.announcement__unread-status', $title_count);
+    $this->assertSession()->elementsCount('css', '.announcement__new', $title_count);
     $this->drupalLogout();
   }
 
@@ -90,7 +90,7 @@ class AccessAnnouncementTest extends OffCanvasTestBase {
     $this->drupalGet('<front>');
 
     // Alert Icon should not display a red dot over it.
-    $this->assertSession()->elementNotExists('css', '.announcement__unread-status');
+    $this->assertSession()->elementNotExists('css', '.announcement__new');
 
     // All alerts items should display as unread alerts,
     // having darker background and dot icon to indicate unread.
@@ -99,7 +99,7 @@ class AccessAnnouncementTest extends OffCanvasTestBase {
 
     // All alerts icons should display as read alerts,
     // having light background and no dot icon.
-    $this->assertSession()->elementNotExists('css', '.announcement__unread-status');
+    $this->assertSession()->elementNotExists('css', '.announcement__new');
     $this->drupalLogout();
 
     // Login with new user with announce permissions.
@@ -119,9 +119,9 @@ class AccessAnnouncementTest extends OffCanvasTestBase {
     // All should be shown as unread.
     $this->clickLink('Announcements');
     $this->waitForOffCanvasToOpen();
-    $this->assertSession()->elementExists('css', '.announcement__unread-status');
+    $this->assertSession()->elementExists('css', '.announcement__new');
     $title_count = count($this->getSession()->getPage()->findAll('css', '.announcement__title'));
-    $this->assertSession()->elementsCount('css', '.announcement__unread-status', $title_count);
+    $this->assertSession()->elementsCount('css', '.announcement__new', $title_count);
     $this->drupalLogout();
 
   }

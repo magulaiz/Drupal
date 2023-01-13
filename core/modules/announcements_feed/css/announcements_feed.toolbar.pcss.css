@@ -4,8 +4,6 @@
  * Styles for the announcements toolbar item.
  */
 
-/* These point to the same element. Why two selectors? */
-.toolbar .toolbar-icon.announce-default::before,
 .toolbar .toolbar-icon.announce-canvas-link::before {
   background-image: url("../images/announcement-bell.svg");
 

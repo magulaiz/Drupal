@@ -146,12 +146,12 @@ class AlertsJsonFeedTest extends OffCanvasTestBase {
     $this->clickLink('Announcements');
     $this->waitForOffCanvasToOpen();
 
-    $this->assertSession()->elementExists('css', '.announcement__unread-status');
+    $this->assertSession()->elementExists('css', '.announcement__new');
     $total_updated_records_count = 1;
     // Checking existence of the unread record.
-    $this->assertSession()->elementsCount('css', '.announcement__unread-status', $total_updated_records_count);
+    $this->assertSession()->elementsCount('css', '.announcement__new', $total_updated_records_count);
     $page = $this->getSession()->getPage();
-    $unread_status = $page->find('css', '.announcement__unread-status');
+    $unread_status = $page->find('css', '.announcement__new');
     $this->assertNotEmpty($unread_status);
     $this->assertStringContainsString('Only 10 - Drupal 106 is available and this feed is Updated', $unread_status->getParent()->getText());
 
@@ -168,7 +168,7 @@ class AlertsJsonFeedTest extends OffCanvasTestBase {
     // All items should show as read.
     $this->clickLink('Announcements');
     $this->waitForOffCanvasToOpen();
-    $this->assertSession()->elementNotExists('css', '.announcement__unread-status');
+    $this->assertSession()->elementNotExists('css', '.announcement__new');
     $this->drupalLogout();
 
     // Login as another user and access the alert icon.
@@ -182,16 +182,16 @@ class AlertsJsonFeedTest extends OffCanvasTestBase {
     // Old items should show as read.
     $this->clickLink('Announcements');
     $this->waitForOffCanvasToOpen();
-    $this->assertSession()->elementExists('css', '.announcement__unread-status');
+    $this->assertSession()->elementExists('css', '.announcement__new');
 
     $total_updated_records_count = 1;
 
     // Checking existence of the unread record.
-    $this->assertSession()->elementsCount('css', '.announcement__unread-status', $total_updated_records_count);
+    $this->assertSession()->elementsCount('css', '.announcement__new', $total_updated_records_count);
 
     // The new items for that user should be shown as unread.
     $page = $this->getSession()->getPage();
-    $unread_status = $page->find('css', '.announcement__unread-status');
+    $unread_status = $page->find('css', '.announcement__new');
     $this->assertNotEmpty($unread_status);
     $this->assertStringContainsString('Only 10 - Drupal 106 is available and this feed is Updated', $unread_status->getParent()->getText());
 
@@ -215,7 +215,7 @@ class AlertsJsonFeedTest extends OffCanvasTestBase {
     $this->drupalGet('<front>');
     $this->clickLink('Announcements');
     $this->waitForOffCanvasToOpen();
-    $this->assertSession()->elementNotExists('css', '.announcement__unread-status');
+    $this->assertSession()->elementNotExists('css', '.announcement__new');
     $page = $this->getSession()->getPage();
     $new_page_html = $page->getHtml();
     $this->assertStringNotContainsString('Only 10 - Drupal 106 is available and this feed is Updated', $new_page_html);
@@ -229,9 +229,9 @@ class AlertsJsonFeedTest extends OffCanvasTestBase {
     $this->assertSession()->elementExists('css', '.announce-new');
     $this->clickLink('Announcements');
     $this->waitForOffCanvasToOpen();
-    $this->assertSession()->elementsCount('css', '.announcement__unread-status', 1);
+    $this->assertSession()->elementsCount('css', '.announcement__new', 1);
     $page = $this->getSession()->getPage();
-    $unread_status = $page->find('css', '.announcement__unread-status');
+    $unread_status = $page->find('css', '.announcement__new');
     $this->assertNotEmpty($unread_status);
     $this->assertStringContainsString('Only 10 - Drupal 106 is available and this feed is Updated', $unread_status->getParent()->getText());
     $this->drupalLogout();
@@ -250,7 +250,7 @@ class AlertsJsonFeedTest extends OffCanvasTestBase {
     // Removed items should not display in the announcement model.
     $this->clickLink('Announcements');
     $this->waitForOffCanvasToOpen();
-    $this->assertSession()->elementNotExists('css', '.announcement__unread-status');
+    $this->assertSession()->elementNotExists('css', '.announcement__new');
     $page = $this->getSession()->getPage();
     $new_page_html = $page->getHtml();
     $this->assertStringNotContainsString('Only 10 - Drupal 106 is available and this feed is Updated', $new_page_html);
@@ -273,7 +273,7 @@ class AlertsJsonFeedTest extends OffCanvasTestBase {
     // Removed items should not display in the announcement model.
     $this->clickLink('Announcements');
     $this->waitForOffCanvasToOpen();
-    $this->assertSession()->elementNotExists('css', '.announcement__unread-status');
+    $this->assertSession()->elementNotExists('css', '.announcement__new');
     $page = $this->getSession()->getPage();
     $new_page_html = $page->getHtml();
     $this->assertStringContainsString('No announcements available', $new_page_html);

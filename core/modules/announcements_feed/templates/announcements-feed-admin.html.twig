@@ -30,40 +30,44 @@
 {{ attach_library('announcements_feed/drupal.announcements_feed.page') }}
 
 {% if count %}
-  <div class="announcements">
-    {% for announcement in featured %}
-      <div class="announcement announcement--featured" data-drupal-featured>
-        <div class="close-bar">
-          <button type="button" class="announcement__featured-close" data-drupal-featured-close>close</button>
-        </div>
-        <div class="announcement__title">
-          <h4>{{ announcement.title }}</h4>
-        </div>
-        <div class="announcement__teaser">
-          {{ announcement.teaser }}
-        </div>
-        {% if announcement.new %}
-          <div class="announcement__unread-status"></div>
-        {% endif %}
-        <div class="announcement__link">
-          {% if announcement.link %}
-            <a href="{{ announcement.link }}">{{ 'Learn More'|t }}</a>
-          {% endif %}
-        </div>
-      </div>
-    {% endfor %}
-    {% for announcement in standard %}
-      <div class="announcement announcement--standard">
-        <div class="announcement__title">
-          <a href="{{ announcement.link }}">{{ announcement.title }}</a>
-          {% if announcement.new %}
-            <div class="announcement__unread-status"></div>
-          {% endif %}
-          <div class="announcement__date">{{ announcement.timestamp | format_date('short') }}</div>
-        </div>
-      </div>
-    {% endfor %}
-  </div>
+  <nav class="announcements">
+    {% if featured|length %}
+      <ul>
+        {% for announcement in featured %}
+          <li class="announcement announcement--featured" data-drupal-featured>
+            <div class="announcement__title">
+              <h4>{{ announcement.title }}</h4>
+            </div>
+            <div class="announcement__teaser">
+              {{ announcement.teaser }}
+            </div>
+            <div class="announcement__link">
+              {% if announcement.link %}
+                <a href="{{ announcement.link }}">{{ 'Learn More'|t }}</a>
+              {% endif %}
+              {% if announcement.new %}
+                <span class="announcement__new">{{ 'New'|t }}</span>
+              {% endif %}
+            </div>
+          </li>
+        {% endfor %}
+      </ul>
+      <hr />
+    {% endif %}
+    <ul>
+      {% for announcement in standard %}
+        <li class="announcement announcement--standard">
+          <div class="announcement__title">
+            <a href="{{ announcement.link }}">{{ announcement.title }}</a>
+            {% if announcement.new %}
+              <span class="announcement__new">{{ 'New'|t }}</span>
+            {% endif %}
+            <div class="announcement__date">{{ announcement.timestamp | format_date('short') }}</div>
+          </div>
+        </li>
+      {% endfor %}
+    </li>
+  </nav>
 {% else %}
   <div class="announcements announcements--empty"><p> {{ 'No announcements available'|t }}</p></div>
 {% endif %}

@@ -1,8 +1,13 @@
-/* How do I view featured announcements? */
-.featured-announcements-wrapper {
-  margin-bottom: 48px;
+.announcements ul {
+  margin-left: 0;
+  list-style: none;
 }
 
 .announcement:not(.announcement:last-child) {
   margin-bottom: 16px;
+}
+
+.announcement .announcement__new {
+  font-style: italic;
+  padding-left: 10px;
 }

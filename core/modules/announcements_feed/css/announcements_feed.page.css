@@ -4,10 +4,17 @@
  * https://www.drupal.org/node/3084859
  * @preserve
  */
-/* How do I view featured announcements? */
-.featured-announcements-wrapper {
-  margin-bottom: 3rem;
+
+.announcements ul {
+  margin-left: 0;
+  list-style: none;
 }
+
 .announcement:not(.announcement:last-child) {
   margin-bottom: 1rem;
+}
+
+.announcement .announcement__new {
+  padding-left: 0.625rem;
+  font-style: italic;
 }
