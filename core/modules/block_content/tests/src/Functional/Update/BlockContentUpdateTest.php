@@ -48,8 +48,9 @@ class BlockContentUpdateTest extends UpdatePathTestBase {
     // Check the new path is accessible.
     $user = $this->drupalCreateUser(['administer blocks']);
     $this->drupalLogin($user);
+    // Old path is redirected to new path.
     $this->drupalGet('admin/structure/block/block-content');
-    $this->assertSession()->statusCodeEquals(404);
+    $this->assertSession()->statusCodeEquals(200);
     $this->drupalGet('admin/content/block-content');
     $this->assertSession()->statusCodeEquals(200);
   }
