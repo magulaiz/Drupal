@@ -11,6 +11,7 @@
             // the form from submitting.
             // If I open a modal dialog instead of modifying form contents, the
             // form will submit.
+            // eslint-disable-next-line no-unreachable
             button.disabled = true;
             const throbber = Drupal.theme(
               'ajaxProgressThrobber',
