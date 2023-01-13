@@ -5,6 +5,7 @@ namespace Drupal\Core\Entity;
 use Drupal\Core\Access\AccessibleInterface;
 use Drupal\Core\Cache\CacheableDependencyInterface;
 use Drupal\Core\Cache\RefinableCacheableDependencyInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Defines a common interface for all entity objects.
@@ -12,6 +13,25 @@ use Drupal\Core\Cache\RefinableCacheableDependencyInterface;
  * @ingroup entity_api
  */
 interface EntityInterface extends AccessibleInterface, CacheableDependencyInterface, RefinableCacheableDependencyInterface {
+
+  /**
+   * Creates an entity object based on its values.
+   *
+   * @param \Symfony\Component\DependencyInjection\ContainerInterface $container
+   *   The service container this object should use.
+   * @param array $values
+   *   An array of values to set, keyed by property name.
+   * @param string $entity_type
+   *   The type of the entity to create.
+   * @param string|false $bundle
+   *   The bundle of the entity.
+   * @param array $translations
+   *   The language codes of the available translations of the entity.
+   *
+   * @return \Drupal\Core\Entity\EntityInterface
+   *   An empty new entity object.
+   */
+  public static function createInstance(ContainerInterface $container, array $values, $entity_type, $bundle = FALSE, $translations = []);
 
   /**
    * Gets the entity UUID (Universally Unique Identifier).

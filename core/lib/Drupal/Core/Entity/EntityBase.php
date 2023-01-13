@@ -12,6 +12,7 @@ use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Link;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Url;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Routing\Exception\MissingMandatoryParametersException;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
 
@@ -62,6 +63,13 @@ abstract class EntityBase implements EntityInterface {
     foreach ($values as $key => $value) {
       $this->$key = $value;
     }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function createInstance(ContainerInterface $container, array $values, $entity_type, $bundle = FALSE, $translations = []) {
+    return new static($values, $entity_type, $bundle, $translations);
   }
 
   /**

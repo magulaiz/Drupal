@@ -31,11 +31,11 @@ abstract class ContentEntityBase extends EntityBase implements \IteratorAggregat
    * are keyed by language code, whereas LanguageInterface::LANGCODE_DEFAULT
    * is used for values in default language.
    *
-   * @todo: Add methods for getting original fields and for determining
-   * changes.
-   * @todo: Provide a better way for defining default values.
-   *
    * @var array
+   *
+   * @todo Add methods for getting original fields and for determining
+   * changes.
+   * @todo Provide a better way for defining default values.
    */
   protected $values = [];
 
@@ -193,16 +193,33 @@ abstract class ContentEntityBase extends EntityBase implements \IteratorAggregat
     $this->defaultLangcodeKey = $this->getEntityType()->getKey('default_langcode');
     $this->revisionTranslationAffectedKey = $this->getEntityType()->getKey('revision_translation_affected');
 
-    foreach ($values as $key => $value) {
-      // If the key matches an existing property set the value to the property
-      // to set properties like isDefaultRevision.
-      // @todo: Should this be converted somehow?
-      if (property_exists($this, $key) && isset($value[LanguageInterface::LANGCODE_DEFAULT])) {
-        $this->$key = $value[LanguageInterface::LANGCODE_DEFAULT];
-      }
+    // This is weird, any bright ideas anyone?
+    if (!empty($values['isDefaultRevision'])) {
+      $this->isDefaultRevision($values['isDefaultRevision'][Language::LANGCODE_DEFAULT]);
+      unset($values['isDefaultRevision']);
     }
 
-    $this->values = $values;
+    // Initialize language information of the entity.
+    $values_langcode = Language::LANGCODE_NOT_SPECIFIED;
+    if (!empty($values['langcode'])) {
+      if (is_array($values['langcode'])) {
+        if (isset($values['langcode'][0])) {
+          $values_langcode = $values['langcode'][0]['value'];
+        }
+        else {
+          $values_langcode = reset($values['langcode']);
+          if (!is_string($values_langcode)) {
+            throw new \RuntimeException("Unsupported data structure for language code");
+          }
+        }
+      }
+      else {
+        $values_langcode = $values['langcode'];
+      }
+    }
+    $this->language = $this->languages[$values_langcode] ?? new Language(['id' => $values_langcode]);
+    $this->defaultLangcode = $values_langcode;
+
     foreach ($this->getEntityType()->getKeys() as $key => $field_name) {
       if (isset($this->values[$field_name])) {
         if (is_array($this->values[$field_name])) {
@@ -260,6 +277,24 @@ abstract class ContentEntityBase extends EntityBase implements \IteratorAggregat
       // keep it safe from changes.
       $this->updateLoadedRevisionId();
     }
+
+    $this->getFieldDefinitions();
+
+    // Currently each stored value has its own internal language structure.
+    // Ensure the passed-in values meet the required structure and set them to
+    // the plain values array of the entity. The plain values array will be used
+    // whenever properties accessed.
+    // @todo Change the raw values array structure to hold field values per
+    // language instead languages per field.
+    foreach ($values as $field => $value) {
+      // If the value doesn't meet the required raw values structure and is a
+      // defined field, wrap it.
+      if ((!is_array($value) || !isset($value[Language::LANGCODE_DEFAULT])) && isset($this->fieldDefinitions[$field])) {
+        $value = [Language::LANGCODE_DEFAULT => $value];
+      }
+      $this->values[$field] = $value;
+    }
+
   }
 
   /**
@@ -588,7 +623,6 @@ abstract class ContentEntityBase extends EntityBase implements \IteratorAggregat
       }
       // Non-translatable fields are always stored with
       // LanguageInterface::LANGCODE_DEFAULT as key.
-
       $default = $langcode == LanguageInterface::LANGCODE_DEFAULT;
       if (!$default && !$definition->isTranslatable()) {
         if (!isset($this->fields[$name][LanguageInterface::LANGCODE_DEFAULT])) {
@@ -1042,7 +1076,7 @@ abstract class ContentEntityBase extends EntityBase implements \IteratorAggregat
   /**
    * Implements the magic method for getting object properties.
    *
-   * @todo: A lot of code still uses non-fields (e.g. $entity->content in view
+   * @todo A lot of code still uses non-fields (e.g. $entity->content in view
    *   builders) by reference. Clean that up.
    */
   public function &__get($name) {
@@ -1201,7 +1235,6 @@ abstract class ContentEntityBase extends EntityBase implements \IteratorAggregat
     // before cloning the fields. Otherwise calling
     // $items->getEntity()->isNew(), for example, would return the
     // $enforceIsNew value of the old entity.
-
     // Ensure the translations array is actually cloned by overwriting the
     // original reference with one pointing to a copy of the array.
     $translations = $this->translations;
@@ -1422,7 +1455,7 @@ abstract class ContentEntityBase extends EntityBase implements \IteratorAggregat
     $original = $this->original ? $this->original : NULL;
 
     if (!$original) {
-      $id = $this->getOriginalId() !== NULL ? $this->getOriginalId() : $this->id();
+      $id = $this->getOriginalId() ?? $this->id();
       $original = $this->entityTypeManager()->getStorage($this->getEntityTypeId())->loadUnchanged($id);
     }
 

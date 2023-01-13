@@ -497,7 +497,7 @@ class EntityCrudHookTest extends EntityKernelTestBase {
       'mail' => 'test@example.com',
       'created' => REQUEST_TIME,
       'status' => 1,
-      'language' => 'en',
+      'langcode' => 'en',
     ]);
 
     $this->assertHookMessageOrder([

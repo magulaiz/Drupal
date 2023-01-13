@@ -17,6 +17,7 @@ use Drupal\views\Plugin\views\query\Sql;
 use Drupal\views\Entity\View;
 use Drupal\views\ViewEntityInterface;
 use Drupal\Core\Routing\RouteObjectInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\InputBag;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -151,6 +152,16 @@ class ViewUI implements ViewEntityInterface {
   public function __construct(ViewEntityInterface $storage) {
     $this->entityType = 'view';
     $this->storage = $storage;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function createInstance(ContainerInterface $container, array $values, $entity_type, $bundle = FALSE, $translations = []) {
+    // This class shouldn't be used like an entity and thus shouldn't be
+    // instantiated using this helper function. Therefore we break with the
+    // interface and just throw an error.
+    throw new \Exception('ViewUI cannot be handled as entity. Use the normal constructor to create an instance instead.');
   }
 
   /**

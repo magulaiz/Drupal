@@ -281,4 +281,66 @@ class EntityTypeManager extends DefaultPluginManager implements EntityTypeManage
     return $handler;
   }
 
+  /**
+   * Instantiates an entity object based on its values.
+   *
+   * If you want to create a new entity, use
+   * \Drupal\Core\Entity\EntityTypeManager::create() instead.
+   *
+   * @see \Drupal\Core\Entity\EntityTypeManager::create()
+   *
+   * @param string $entity_type
+   *   The type of the entity.
+   * @param array $values
+   *   The values to create an entity instance with.
+   * @param string|false $bundle
+   *   The bundle of the entity.
+   * @param array $translations
+   *   The language codes of the available translations of the entity.
+   *
+   * @throws \InvalidArgumentException
+   *   If mandatory arguments are missing.
+   *
+   * @return \Drupal\Core\Entity\EntityInterface
+   *   An empty new entity object.
+   */
+  public function createInstance($entity_type, array $values = [], $bundle = FALSE, array $translations = []) {
+    $definition = $this->getDefinition($entity_type);
+    if (!$definition) {
+      throw new \InvalidArgumentException(sprintf('The %s entity type does not exist.', $entity_type));
+    }
+    // Check if this entity type has bundles and if so if a bundle is defined.
+    $bundle_key = $definition->getKey('bundle');
+    if ($bundle_key) {
+      if (empty($bundle)) {
+        throw new \InvalidArgumentException(sprintf('Missing bundle for entity type %s.', $entity_type));
+      }
+      // Make sure the bundle is part of the values too.
+      $values[$bundle_key] = $bundle;
+    }
+    $class = $definition->getClass();
+    return $class::createInstance(\Drupal::getContainer(), $values, $entity_type, $bundle, $translations);
+  }
+
+  /**
+   * Constructs an entity object for creating a new entity.
+   *
+   * Note that for the permanent creation of the new entity, the returned entity
+   * object needs to be saved first.
+   *
+   * @see \Drupal\Core\Entity\EntityTypeManager::createInstance()
+   *
+   * @param string $entity_type
+   *   The type of the entity.
+   * @param array $values
+   *   An array of values to set, keyed by property name. If the entity type has
+   *   bundles the bundle key has to be specified.
+   *
+   * @return \Drupal\Core\Entity\EntityInterface
+   *   A new entity object with default values applied.
+   */
+  public function createEntity($entity_type, array $values) {
+    return $this->getStorage($entity_type)->create($values);
+  }
+
 }
