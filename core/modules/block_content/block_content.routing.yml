@@ -64,3 +64,10 @@ entity.block_content.collection:
     _entity_list: 'block_content'
   requirements:
     _permission: 'administer blocks'
+
+entity.block_content.collection.bc:
+  path: '/admin/structure/block/block-content'
+  defaults:
+    _controller: '\Drupal\block_content\Controller\BlockContentController::redirectOldPath'
+  requirements:
+    _permission: 'administer blocks'

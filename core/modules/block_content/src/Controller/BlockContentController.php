@@ -128,4 +128,14 @@ class BlockContentController extends ControllerBase {
     return $this->t('Add %type custom block', ['%type' => $block_content_type->label()]);
   }
 
+  /**
+   * Redirect old Custom block library path to new path.
+   *
+   * @todo remove or update in
+   *   https://www.drupal.org/project/drupal/issues/3159210.
+   */
+  public function redirectOldPath() {
+    return $this->redirect('entity.block_content.collection');
+  }
+
 }
