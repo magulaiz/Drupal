@@ -9,6 +9,7 @@ use Drupal\views\Entity\View;
  * Tests update functions for the Block Content module.
  *
  * @group block_content
+ * @group legacy
  */
 class BlockContentUpdateTest extends UpdatePathTestBase {
 
@@ -49,6 +50,8 @@ class BlockContentUpdateTest extends UpdatePathTestBase {
     $user = $this->drupalCreateUser(['administer blocks']);
     $this->drupalLogin($user);
     // Old path is redirected to new path.
+
+    $this->expectDeprecation('The path /admin/structure/block/block-content is deprecated in drupal:10.1.0 and will be removed from a future version. Use /admin/content/block-content directly. See https://www.drupal.org/node/3320855.');
     $this->drupalGet('admin/structure/block/block-content');
     $this->assertSession()->statusCodeEquals(200);
     $this->drupalGet('admin/content/block-content');

@@ -134,8 +134,10 @@ class BlockContentController extends ControllerBase {
    * @todo remove or update in
    *   https://www.drupal.org/project/drupal/issues/3159210.
    */
-  public function redirectOldPath() {
-    return $this->redirect('entity.block_content.collection');
+  public function blockLibraryRedirect() {
+    @trigger_error('The path /admin/structure/block/block-content is deprecated in drupal:10.1.0 and will be removed from a future version. Use /admin/content/block-content directly. See https://www.drupal.org/node/3320855.', E_USER_DEPRECATED);
+    $this->getLogger('block_content')->warning('The page /admin/structure/block/block-content has been moved to /admin/content/block-content. Update links and shortcuts.');
+    return $this->redirect('entity.block_content.collection', [], [], 301);
   }
 
 }

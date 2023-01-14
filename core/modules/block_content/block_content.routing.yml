@@ -68,6 +68,6 @@ entity.block_content.collection:
 entity.block_content.collection.bc:
   path: '/admin/structure/block/block-content'
   defaults:
-    _controller: '\Drupal\block_content\Controller\BlockContentController::redirectOldPath'
+    _controller: '\Drupal\block_content\Controller\BlockContentController::blockLibraryRedirect'
   requirements:
     _permission: 'administer blocks'
