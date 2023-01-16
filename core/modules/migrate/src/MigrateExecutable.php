@@ -437,6 +437,9 @@ class MigrateExecutable implements MigrateExecutableInterface {
     MigrateInstrument::start('import.process_pipeline');
     /** @var \Drupal\migrate\Plugin\MigrateProcessInterface $plugin */
     foreach ($plugins as $plugin) {
+      // @todo Although here is a single point to start,
+      //   there are several points to stop. Try to write the workflow better
+      //   with only one exit point.
       MigrateInstrument::start('import.process_pipeline.' . $plugin->getPluginId());
       $definition = $plugin->getPluginDefinition();
       // Many plugins expect a scalar value but the current value of the
@@ -465,6 +468,7 @@ class MigrateExecutable implements MigrateExecutableInterface {
         }
         $value = $new_value;
         if ($break) {
+          MigrateInstrument::stop('import.process_pipeline.' . $plugin->getPluginId());
           break;
         }
       }
@@ -473,6 +477,7 @@ class MigrateExecutable implements MigrateExecutableInterface {
           $value = $plugin->transform($value, $this, $row, $destination);
         }
         catch (MigrateSkipProcessException $e) {
+          MigrateInstrument::stop('import.process_pipeline.' . $plugin->getPluginId());
           $value = NULL;
           break;
         }
