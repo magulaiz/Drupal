@@ -6,6 +6,7 @@ use Drupal\Component\Serialization\Json;
 use Drupal\Core\Plugin\PluginBase;
 use Drupal\migrate\Event\MigrateRollbackEvent;
 use Drupal\migrate\Event\RollbackAwareInterface;
+use Drupal\migrate\Instrument\MigrateInstrument;
 use Drupal\migrate\Plugin\MigrationInterface;
 use Drupal\migrate\MigrateException;
 use Drupal\migrate\MigrateSkipRowException;
@@ -291,6 +292,7 @@ abstract class SourcePluginBase extends PluginBase implements MigrateSourceInter
    */
   public function prepareRow(Row $row) {
     $result = TRUE;
+    MigrateInstrument::start('import.next.prepareRow');
     try {
       $result_hook = $this->getModuleHandler()->invokeAll('migrate_prepare_row', [$row, $this, $this->migration]);
       $result_named_hook = $this->getModuleHandler()->invokeAll('migrate_' . $this->migration->id() . '_prepare_row', [$row, $this, $this->migration]);
@@ -324,6 +326,7 @@ abstract class SourcePluginBase extends PluginBase implements MigrateSourceInter
       // after hashes).
       $row->rehash();
     }
+    MigrateInstrument::stop('import.next.prepareRow');
     return $result;
   }
 
