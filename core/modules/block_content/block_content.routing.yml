@@ -65,6 +65,8 @@ entity.block_content.collection:
   requirements:
     _permission: 'administer blocks'
 
+# @todo Deprecate this route when we figure out how to do that in
+#   https://www.drupal.org/project/drupal/issues/3159210.
 entity.block_content.collection.bc:
   path: '/admin/structure/block/block-content'
   defaults:

@@ -255,4 +255,16 @@ class BlockContentTypeTest extends BlockContentTestBase {
     }
   }
 
+  /**
+   * Tests the deprecation message from the old block library page.
+   *
+   * @group legacy
+   */
+  public function testBlockLibraryRedirect() {
+    $this->drupalLogin($this->adminUser);
+    $this->expectDeprecation('The path /admin/structure/block/block-content is deprecated in drupal:10.1.0 and will be removed from a future version. Use /admin/content/block-content directly. See https://www.drupal.org/node/3320855.');
+    $this->drupalGet('admin/structure/block/block-content');
+    $this->assertSession()->pageTextContains('The page /admin/structure/block/block-content has been moved to /admin/content/block-content. Update links and shortcuts.');
+  }
+
 }
