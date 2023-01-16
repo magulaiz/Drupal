@@ -992,6 +992,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
       ->condition('cid', '%[route]=jsonapi.%', 'LIKE')
       ->execute()
       ->fetchAll();
+    $this->assertLessThanOrEqual(4, count($cache_items));
     $found_cached_200_response = FALSE;
     $other_cached_responses_are_4xx = TRUE;
     foreach ($cache_items as $cache_item) {
