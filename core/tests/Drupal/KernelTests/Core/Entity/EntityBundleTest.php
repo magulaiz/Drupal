@@ -2,9 +2,6 @@
 
 namespace Drupal\KernelTests\Core\Entity;
 
-use Drupal\Core\Extension\ModuleHandlerInterface;
-use Prophecy\Argument;
-
 /**
  * Tests defining bundles on entities.
  *
