@@ -8,6 +8,9 @@
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Batch\BatchStorageInterface;
 use Drupal\Core\Database\IntegrityConstraintViolationException;
+use Drupal\Core\Queue\Batch;
+use Drupal\Core\Queue\BatchMemory;
+use Drupal\Core\Queue\BatchQueueInterface;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Render\Element\RenderElementBase;
 use Drupal\Core\Template\Attribute;
@@ -735,8 +738,8 @@ function template_preprocess_form_element_label(&$variables): void {
  *     optional). An array containing two elements:
  *     - name: Unique identifier for the queue.
  *     - class: The name of a class that implements
- *       \Drupal\Core\Queue\QueueInterface, including the full namespace but not
- *       starting with a backslash. It must have a constructor with two
+ *       \Drupal\Core\Queue\BatchQueueInterface, including the full namespace
+ *       but not starting with a backslash. It must have a constructor with two
  *       arguments: $name and a \Drupal\Core\Database\Connection object.
  *       Typically, the class will either be \Drupal\Core\Queue\Batch or
  *       \Drupal\Core\Queue\BatchMemory. Defaults to Batch if progressive is
@@ -1013,14 +1016,17 @@ function _batch_populate_queue(&$batch, $set_id) {
     $batch_set += [
       'queue' => [
         'name' => 'drupal_batch:' . $batch['id'] . ':' . $set_id,
-        'class' => $batch['progressive'] ? 'Drupal\Core\Queue\Batch' : 'Drupal\Core\Queue\BatchMemory',
+        'class' => $batch['progressive'] ? Batch::class : BatchMemory::class,
       ],
     ];
 
     $queue = _batch_queue($batch_set);
     $queue->createQueue();
-    foreach ($batch_set['operations'] as $operation) {
-      $queue->createItem($operation);
+    if ($queue = _batch_queue($batch_set)) {
+      $queue->createQueue();
+      foreach ($batch_set['operations'] as $operation) {
+        $queue->createItem($operation);
+      }
     }
 
     unset($batch_set['operations']);
@@ -1030,14 +1036,14 @@ function _batch_populate_queue(&$batch, $set_id) {
 /**
  * Returns a queue object for a batch set.
  *
- * @param $batch_set
+ * @param array $batch_set
  *   The batch set.
  *
- * @return \Drupal\Core\Queue\QueueInterface|null
- *   The queue object.
+ * @return \Drupal\Core\Queue\BatchQueueInterface|null
+ *   The queue object or NULL.
  */
-function _batch_queue($batch_set) {
-  static $queues;
+function _batch_queue(array $batch_set) {
+  static $queues = [];
 
   if (!isset($queues)) {
     $queues = [];
@@ -1047,11 +1053,22 @@ function _batch_queue($batch_set) {
     $name = $batch_set['queue']['name'];
     $class = $batch_set['queue']['class'];
 
-    if (!isset($queues[$class][$name])) {
-      $queues[$class][$name] = new $class($name, \Drupal::database());
+    if (is_subclass_of($class, BatchQueueInterface::class)) {
+      if (!isset($queues[$class][$name])) {
+        $queues[$class][$name] = new $class($name, \Drupal::database());
+      }
+
+      return $queues[$class][$name];
     }
-    return $queues[$class][$name];
+    else {
+      \Drupal::logger('batch_queue')->emergency(t('Batch queue "@class" is not implements "@interface" interface.', [
+        '@class' => $class,
+        '@interface' => BatchQueueInterface::class,
+      ]));
+    }
   }
+
+  return NULL;
 }
 
 /**

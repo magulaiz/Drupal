@@ -15,10 +15,10 @@ namespace Drupal\Core\Queue;
  *
  * @ingroup queue
  */
-class Batch extends DatabaseQueue {
+class Batch extends DatabaseQueue implements BatchQueueInterface {
 
   /**
-   * Overrides \Drupal\Core\Queue\DatabaseQueue::claimItem().
+   * {@inheritdoc}
    *
    * Unlike \Drupal\Core\Queue\DatabaseQueue::claimItem(), this method provides
    * a default lease time of 0 (no expiration) instead of 30. This allows the
@@ -26,7 +26,7 @@ class Batch extends DatabaseQueue {
    */
   public function claimItem($lease_time = 0) {
     try {
-      $item = $this->connection->queryRange('SELECT [data], [item_id] FROM {queue} q WHERE [name] = :name ORDER BY [item_id] ASC', 0, 1, [':name' => $this->name])->fetchObject();
+      $item = $this->connection->queryRange('SELECT [data], [item_id] FROM {' . static::TABLE_NAME . '} q WHERE [name] = :name ORDER BY [item_id] ASC', 0, 1, [':name' => $this->name])->fetchObject();
       if ($item) {
         $item->data = unserialize($item->data);
         return $item;
@@ -39,24 +39,12 @@ class Batch extends DatabaseQueue {
   }
 
   /**
-   * Retrieves all remaining items in the queue.
-   *
-   * This is specific to Batch API and is not part of the
-   * \Drupal\Core\Queue\QueueInterface.
-   *
-   * @return array
-   *   An array of queue items.
+   * {@inheritdoc}
    */
   public function getAllItems() {
     $result = [];
     try {
-      $items = $this->connection->select('queue', 'q')
-        ->fields('q', ['data'])
-        ->condition('name', $this->name)
-        ->orderBy('item_id', 'ASC')
-        ->execute()
-        ->fetchAll();
-
+      $items = $this->connection->query('SELECT [data] FROM {' . static::TABLE_NAME . '} q WHERE [name] = :name ORDER BY [item_id] ASC', [':name' => $this->name])->fetchAll();
       foreach ($items as $item) {
         $result[] = unserialize($item->data);
       }

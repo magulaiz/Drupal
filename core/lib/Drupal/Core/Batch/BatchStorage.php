@@ -64,7 +64,7 @@ class BatchStorage implements BatchStorageInterface {
    */
   public function delete($id) {
     try {
-      $this->connection->delete('batch')
+      $this->connection->delete(static::TABLE_NAME)
         ->condition('bid', $id)
         ->execute();
     }
@@ -78,7 +78,7 @@ class BatchStorage implements BatchStorageInterface {
    */
   public function update(array $batch) {
     try {
-      $this->connection->update('batch')
+      $this->connection->update(static::TABLE_NAME)
         ->fields(['batch' => serialize($batch)])
         ->condition('bid', $batch['id'])
         ->execute();
@@ -94,7 +94,7 @@ class BatchStorage implements BatchStorageInterface {
   public function cleanup() {
     try {
       // Cleanup the batch table and the queue for failed batches.
-      $this->connection->delete('batch')
+      $this->connection->delete(static::TABLE_NAME)
         ->condition('timestamp', $this->time->getRequestTime() - 864000, '<')
         ->execute();
     }
@@ -110,7 +110,7 @@ class BatchStorage implements BatchStorageInterface {
     // Ensure that a session is started before using the CSRF token generator,
     // and update the database record.
     $this->session->start();
-    $this->connection->update('batch')
+    $this->connection->update(static::TABLE_NAME)
       ->fields([
         'token' => $this->csrfToken->get($batch['id']),
         'batch' => serialize($batch),
@@ -152,7 +152,7 @@ class BatchStorage implements BatchStorageInterface {
    *   A batch id.
    */
   protected function doInsertBatchRecord(): int {
-    return $this->connection->insert('batch')
+    return $this->connection->insert(static::TABLE_NAME)
       ->fields([
         'timestamp' => $this->time->getRequestTime(),
         'token' => '',
