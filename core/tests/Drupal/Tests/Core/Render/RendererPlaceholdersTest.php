@@ -990,7 +990,7 @@ HTML;
     $this->assertSame($element['#attached']['drupalSettings'], $expected_js_settings, '#attached is modified; both the original JavaScript setting and the ones added by each placeholder #lazy_builder callback exist.');
 
     // GET request: validate cached data.
-    $cached_element = $this->memoryCache->get(['renderer', 'children_placeholders'], CacheableMetadata::createFromRenderArray($element))->data;
+    $cached_element = $this->memoryCache->get(['test', 'renderer', 'children_placeholders'], CacheableMetadata::createFromRenderArray($element))->data;
     $expected_element = [
       '#attached' => [
         'drupalSettings' => [
