@@ -334,7 +334,6 @@ dependees
 depenencies
 deprioritize
 derivedfrom
-derp
 desaturate
 desaturated
 desaturates
@@ -407,7 +406,6 @@ détruire
 editables
 editunblock
 eerste
-egroe
 egulias
 eins
 elbonia
@@ -467,8 +465,6 @@ fcgi
 fchk
 fdiv
 februar
-fetchmode
-fffffg
 fichiers
 fieldable
 fieldapi
@@ -487,9 +483,7 @@ filestorage
 filesystems
 filetransfer
 filevalidationerror
-filterprovider
 findwith
-firstcolumn
 fixnull
 flac
 flac
@@ -506,12 +500,10 @@ foobargorilla
 foobars
 foofoo
 foos
-formatless
 formattable
 formvalidation
 fouc
 fourcol
-fourthcolumn
 fozzie
 fqcn
 fraîche
@@ -532,19 +524,20 @@ futuresplash
 gabilondo
 gamess
 gato
+<<<<<<< HEAD
 genbank
 getcode
 getfile
+=======
+>>>>>>> 749ee8a8a7bf29d4dd60e01828500f27b8272b5e
 gethttpclient
 getlist
-getmachine
 getview
 gids
 giggabyte
 gloop
 gnumeric
 goldfinger
-gonner
 googleapis
 gotit
 grandgrandchild
@@ -569,7 +562,6 @@ hashmarks
 hateoas
 heke
 heroless
-herpderp
 herro
 heure
 heures
@@ -584,11 +576,9 @@ hola
 hookname
 hosters
 hostnames
-hreflangs
 hrefs
 htkey
 htmlcorrector
-htmlto
 httpheader
 httpkernel
 httponly
@@ -611,13 +601,11 @@ imagecache
 imagecreatefrom
 imagetest
 imagetextalternative
-inator
 indexname
 ingoa
 inited
 inno
 insidekeyword
-inspectable
 instaclick
 instantiator
 interactable
@@ -1178,9 +1166,12 @@ scrollbars
 sdfile
 searchdirs
 sebe
+<<<<<<< HEAD
 seccat
 secondcolumn
 seeme
+=======
+>>>>>>> 749ee8a8a7bf29d4dd60e01828500f27b8272b5e
 seld
 selectbox
 serviceform
@@ -1396,7 +1387,6 @@ themers
 themey
 theseer
 theseparator
-thirdcolumn
 threecol
 tids
 timecurrent
@@ -1546,6 +1536,7 @@ userspace
 ustar
 ustar
 usuario
+<<<<<<< HEAD
 vals
 vamas
 vampirize
@@ -1553,21 +1544,27 @@ varchar
 vcalendar
 vcard
 veeeery
+=======
+vampirize
+varchar
+>>>>>>> 749ee8a8a7bf29d4dd60e01828500f27b8272b5e
 veniam
-verison
 versionable
 versionless
 verygreatdrupalmodule
 vfsstream
-vibber
 viewmode
 viewports
+<<<<<<< HEAD
 viewsviewfiles
 visio
+=======
+>>>>>>> 749ee8a8a7bf29d4dd60e01828500f27b8272b5e
 vocabs
 volgende
 vorige
 vous
+<<<<<<< HEAD
 vrml
 vrml
 vrml
@@ -1576,6 +1573,8 @@ vxfbk
 wais
 wbxml
 wbxml
+=======
+>>>>>>> 749ee8a8a7bf29d4dd60e01828500f27b8272b5e
 wcprops
 weba
 webassert
