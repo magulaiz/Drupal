@@ -210,4 +210,17 @@ class SettingsTrayIntegrationTest extends SettingsTrayTestBase {
     return $bundle;
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  protected function pressToolbarEditButton() {
+    $this->assertSession()->waitForElement('css', '[data-contextual-id] .contextual-links a');
+    $edit_button = $this->getSession()
+      ->getPage()
+      ->find('css', static::TOOLBAR_EDIT_LINK_SELECTOR);
+    $this->getSession()->executeScript("jQuery('[data-quickedit-entity-id]').trigger('mouseleave')");
+    $edit_button->mouseOver();
+    $edit_button->press();
+  }
+
 }
