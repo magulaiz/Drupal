@@ -427,7 +427,7 @@ class VariationCacheTest extends UnitTestCase {
    * underlying cache quite annoying.
    *
    * @param string[] $cache_id_parts
-   *  The parts to add to the base cache ID, will be sorted.
+   *   The parts to add to the base cache ID, will be sorted.
    *
    * @return string
    *   The correct cache ID.
