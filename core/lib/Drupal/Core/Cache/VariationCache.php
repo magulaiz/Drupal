@@ -236,7 +236,7 @@ class VariationCache implements VariationCacheInterface {
    */
   protected function createCacheId(array $keys, CacheableMetadata &$cacheable_metadata) {
     if ($contexts = $cacheable_metadata->getCacheContexts()) {
-      $context_cache_keys = $this->cacheContextsManager->convertTokensToKeys($cacheable_metadata->getCacheContexts());
+      $context_cache_keys = $this->cacheContextsManager->convertTokensToKeys($contexts);
       $keys = array_merge($keys, $context_cache_keys->getKeys());
       $cacheable_metadata = $cacheable_metadata->merge($context_cache_keys);
     }
@@ -259,7 +259,7 @@ class VariationCache implements VariationCacheInterface {
    */
   protected function createCacheIdFast(array $keys, CacheableDependencyInterface $cacheability) {
     if ($contexts = $cacheability->getCacheContexts()) {
-      $context_cache_keys = $this->cacheContextsManager->convertTokensToKeys($cacheability->getCacheContexts());
+      $context_cache_keys = $this->cacheContextsManager->convertTokensToKeys($contexts);
       $keys = array_merge($keys, $context_cache_keys->getKeys());
     }
     return implode(':', $keys);

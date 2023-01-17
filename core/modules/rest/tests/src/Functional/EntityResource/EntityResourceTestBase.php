@@ -538,7 +538,6 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
       foreach ($cache_items as $cache_item) {
         $cached_response = unserialize($cache_item->data);
         if (!$cached_response instanceof CacheRedirect) {
-          $cached_response = $cached_data['#response'];
           if ($cached_response->getStatusCode() === 200) {
             $found_cached_200_response = TRUE;
           }
