@@ -316,7 +316,7 @@ class BlockViewBuilderTest extends KernelTestBase {
     // - the render cache item.
     $final_cache_contexts = Cache::mergeContexts($expected_contexts, $required_cache_contexts);
     $cache_item = $cache_bin->get($expected_keys, CacheableMetadata::createFromRenderArray($build));
-    $this->assertTrue($cache_item, 'The block render element has been cached with the expected cache keys.');
+    $this->assertNotEmpty($cache_item, 'The block render element has been cached with the expected cache keys.');
     $this->assertEqualsCanonicalizing(Cache::mergeTags($expected_tags, ['rendered']), $cache_item->tags);
     $this->assertEqualsCanonicalizing($final_cache_contexts, $cache_item->data['#cache']['contexts']);
     $this->assertEqualsCanonicalizing($expected_tags, $cache_item->data['#cache']['tags']);
