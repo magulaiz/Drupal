@@ -215,7 +215,7 @@ class VariationCache implements VariationCacheInterface {
    */
   protected function maxAgeToExpire($max_age) {
     if ($max_age !== Cache::PERMANENT) {
-      return (int) $this->requestStack->getMasterRequest()->server->get('REQUEST_TIME') + $max_age;
+      return (int) $this->requestStack->getMainRequest()->server->get('REQUEST_TIME') + $max_age;
     }
     return $max_age;
   }
