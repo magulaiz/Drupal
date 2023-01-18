@@ -185,9 +185,22 @@
   <rule ref="Generic.NamingConventions.UpperCaseConstantName"/>
   <rule ref="Generic.PHP.DeprecatedFunctions"/>
   <rule ref="Generic.PHP.DisallowShortOpenTag"/>
+  <rule ref="Generic.PHP.ForbiddenFunctions">
+    <properties>
+      <property name="error" value="false" />
+      <property name="forbiddenFunctions" type="array">
+        <element key="boolval" value="null"/>
+        <element key="doubleval" value="null"/>
+        <element key="floatval" value="null"/>
+        <element key="intval" value="null"/>
+        <element key="strval" value="null"/>
+      </property>
+    </properties>
+  </rule>
   <rule ref="Generic.PHP.LowerCaseKeyword"/>
   <rule ref="Generic.PHP.UpperCaseConstant"/>
   <rule ref="Generic.WhiteSpace.DisallowTabIndent"/>
+
 
   <!-- Internal sniffs -->
   <rule ref="Internal.NoCodeFound">

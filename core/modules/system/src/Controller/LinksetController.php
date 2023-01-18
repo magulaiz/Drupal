@@ -167,7 +167,7 @@ final class LinksetController extends ControllerBase {
         // to the link element parent's hierarchy value. See this method's
         // docblock for more context on why this value is the way it is.
         $hierarchy = $hierarchy_ancestors;
-        array_push($hierarchy, strval($index));
+        array_push($hierarchy, (string) $index);
         $link_options = $element->link->getOptions();
         $link_attributes = ($link_options['attributes'] ?? []);
         $link_rel = $link_attributes['rel'] ?? 'item';

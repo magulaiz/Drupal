@@ -122,7 +122,7 @@ class UserMultipleCancelConfirm extends ConfirmFormBase {
       $names[$uid] = $account->label();
       // Prevent user 1 from being canceled.
       if ($uid <= 1) {
-        $root = intval($uid) === 1 ? $account : $root;
+        $root = (int) $uid === 1 ? $account : $root;
         continue;
       }
       $form['accounts'][$uid] = [

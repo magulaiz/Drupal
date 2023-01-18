@@ -127,7 +127,7 @@ class ViewAjaxController implements ContainerInjectionInterface {
       $dom_id = $request->request->get('view_dom_id');
       $dom_id = isset($dom_id) ? preg_replace('/[^a-zA-Z0-9_-]+/', '-', $dom_id) : NULL;
       $pager_element = $request->request->get('pager_element');
-      $pager_element = isset($pager_element) ? intval($pager_element) : NULL;
+      $pager_element = isset($pager_element) ? (int) $pager_element : NULL;
 
       $response = new ViewAjaxResponse();
 

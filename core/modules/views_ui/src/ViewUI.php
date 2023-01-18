@@ -731,7 +731,7 @@ class ViewUI implements ViewEntityInterface {
                   '#template' => "<strong>{% trans 'Query build time' %}</strong>",
                 ],
               ],
-              t('@time ms', ['@time' => intval($executable->build_time * 100000) / 100]),
+              t('@time ms', ['@time' => (int) ($executable->build_time * 100000) / 100]),
             ];
 
             $rows['statistics'][] = [
@@ -741,7 +741,7 @@ class ViewUI implements ViewEntityInterface {
                   '#template' => "<strong>{% trans 'Query execute time' %}</strong>",
                 ],
               ],
-              t('@time ms', ['@time' => intval($executable->execute_time * 100000) / 100]),
+              t('@time ms', ['@time' => (int) ($executable->execute_time * 100000) / 100]),
             ];
 
             $rows['statistics'][] = [
@@ -751,7 +751,7 @@ class ViewUI implements ViewEntityInterface {
                   '#template' => "<strong>{% trans 'View render time' %}</strong>",
                 ],
               ],
-              t('@time ms', ['@time' => intval($this->render_time * 100) / 100]),
+              t('@time ms', ['@time' => (int) ($this->render_time * 100) / 100]),
             ];
           }
           \Drupal::moduleHandler()->alter('views_preview_info', $rows, $executable);

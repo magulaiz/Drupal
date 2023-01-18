@@ -717,7 +717,7 @@ function locale_form_language_admin_edit_form_alter(&$form, FormStateInterface $
  * Form submission handler for language_admin_edit_form().
  */
 function locale_form_language_admin_edit_form_alter_submit($form, FormStateInterface $form_state) {
-  \Drupal::configFactory()->getEditable('locale.settings')->set('translate_english', intval($form_state->getValue('locale_translate_english')))->save();
+  \Drupal::configFactory()->getEditable('locale.settings')->set('translate_english', (int) $form_state->getValue('locale_translate_english'))->save();
 }
 
 /**

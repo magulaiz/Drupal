@@ -160,7 +160,7 @@ $node_id = 0;
 $revision_id = 0;
 module_load_include('inc', 'node', 'node.pages');
 for ($i = 0; $i < 36; $i++) {
-  $uid = intval($i / 8) + 3;
+  $uid = (int) ($i / 8) + 3;
   $user = user_load($uid);
   $node = new stdClass();
   $node->uid = $uid;
@@ -183,7 +183,7 @@ for ($i = 0; $i < 36; $i++) {
   $node->body[$node->language][0]['value'] = $body_text;
   $node->body[$node->language][0]['summary'] = text_summary($body_text);
   $node->body[$node->language][0]['format'] = 'filtered_html';
-  $node->status = intval($i / 4) % 2;
+  $node->status = (int) ($i / 4) % 2;
   $node->revision = $i < 12;
   $node->promote = $i % 2;
   $node->created = $now + $i * 86400;
@@ -226,7 +226,7 @@ for ($i = 0; $i < 36; $i++) {
 
 // Create poll content
 for ($i = 0; $i < 12; $i++) {
-  $uid = intval($i / 4) + 3;
+  $uid = (int) ($i / 4) + 3;
   $user = user_load($uid);
   $node = new stdClass();
   $node->uid = $uid;
@@ -234,7 +234,7 @@ for ($i = 0; $i < 12; $i++) {
   $node->sticky = 0;
   $node->title = "poll title $i";
   $node->language = LANGUAGE_NONE;
-  $node->status = intval($i / 2) % 2;
+  $node->status = (int) ($i / 2) % 2;
   $node->revision = 1;
   $node->promote = $i % 2;
   $node->created = $_SERVER['REQUEST_TIME'] + $i * 43200;
