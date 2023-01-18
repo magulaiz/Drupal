@@ -2,10 +2,13 @@
 
 namespace Drupal\options\Plugin\Field\FieldType;
 
+use Drupal\Component\Utility\Html;
+use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Form\OptGroup;
+use Drupal\Core\Render\Element;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\TypedData\OptionsProviderInterface;
@@ -87,21 +90,92 @@ abstract class ListItemBase extends FieldItemBase implements OptionsProviderInte
     $allowed_values = $this->getSetting('allowed_values');
     $allowed_values_function = $this->getSetting('allowed_values_function');
 
+    if (!$form_state->get('items_count')) {
+      $form_state->set('items_count', max(count($allowed_values), 5));
+    }
+
     $element['allowed_values'] = [
-      '#type' => 'textarea',
-      '#title' => $this->t('Allowed values list'),
-      '#default_value' => $this->allowedValuesString($allowed_values),
-      '#rows' => 10,
-      '#access' => empty($allowed_values_function),
       '#element_validate' => [[static::class, 'validateAllowedValues']],
       '#field_has_data' => $has_data,
-      '#field_name' => $this->getFieldDefinition()->getName(),
-      '#entity_type' => $this->getEntity()->getEntityTypeId(),
       '#allowed_values' => $allowed_values,
       '#required' => TRUE,
     ];
+    $element['allowed_values']['table'] = [
+      '#type' => 'table',
+      '#header' => [
+        $this->t('Allowed values'),
+        $this->t('Weight'),
+      ],
+      '#attributes' => [
+        'id' => 'allowed-values-order',
+      ],
+      '#tabledrag' => [
+        [
+          'action' => 'order',
+          'relationship' => 'sibling',
+          'group' => 'weight',
+        ],
+      ],
+    ];
 
-    $element['allowed_values']['#description'] = $this->allowedValuesDescription();
+    $max = $form_state->get('items_count');
+    $current_keys = array_keys($allowed_values);
+    for ($delta = 0; $delta <= $max; $delta++) {
+      $element['allowed_values']['table'][$delta] = [
+        '#attributes' => [
+          'class' => ['draggable'],
+        ],
+        '#weight' => $delta,
+      ];
+      $element['allowed_values']['table'][$delta]['item'] = [
+        'label' => [
+          '#type' => 'textfield',
+          '#title' => $this->t('Name'),
+          '#weight' => -30,
+          '#default_value' => isset($current_keys[$delta]) ? $allowed_values[$current_keys[$delta]] : '',
+        ],
+        'key' => [
+          '#type' => 'machine_name',
+          '#required' => FALSE,
+          '#maxlength' => 255,
+          '#default_value' => $current_keys[$delta] ?? '',
+          '#machine_name' => [
+            // @todo is there a way to avoid specifying this?
+            'exists' => [static::class, 'exists'],
+            // @todo Is there a way to retrieve this to avoid hardcoding?
+            'source' => ['settings', 'allowed_values', 'table', $delta, 'item', 'label'],
+          ],
+          '#weight' => -20,
+        ],
+      ];
+      $element['allowed_values']['table'][$delta]['weight'] = [
+        '#type' => 'weight',
+        '#title' => $this->t('Weight for row @number', ['@number' => $delta + 1]),
+        '#title_display' => 'invisible',
+        '#delta' => 50,
+        '#default_value' => 0,
+        '#attributes' => ['class' => ['weight']],
+      ];
+    }
+    $element['allowed_values']['table']['#max_delta'] = $max;
+    $wrapper_id = Html::getUniqueId('allowed-values-wrapper');
+    $element['allowed_values']['#prefix'] = '<div id="' . $wrapper_id . '">';
+    $element['allowed_values']['#suffix'] = '</div>';
+
+    $element['allowed_values']['add_more_allowed_values'] = [
+      '#type' => 'submit',
+      '#name' => 'add_more_allowed_values',
+      '#value' => t('Add another item'),
+      '#attributes' => ['class' => ['field-add-more-submit']],
+      '#submit' => [[static::class, 'addMoreSubmit']],
+      '#ajax' => [
+        'callback' => [static::class, 'addMoreAjax'],
+        'wrapper' => $wrapper_id,
+        'effect' => 'fade',
+      ],
+    ];
+
+    $element['allowed_values']['help_text']['#markup'] = $this->allowedValuesDescription();
 
     $element['allowed_values_function'] = [
       '#type' => 'item',
@@ -113,6 +187,28 @@ abstract class ListItemBase extends FieldItemBase implements OptionsProviderInte
 
     return $element;
   }
+
+  public static function exists() {
+    return false;
+  }
+
+  public static function addMoreSubmit(array $form, FormStateInterface $form_state) {
+    $form_state->set('items_count', $form_state->get('items_count') + 1);
+    $form_state->setRebuild();
+  }
+
+  public static function addMoreAjax(array $form, FormStateInterface $form_state) {
+    $button = $form_state->getTriggeringElement();
+
+    // Go one level up in the form.
+    $element = NestedArray::getValue($form, array_slice($button['#array_parents'], 0, -1));
+    $delta = $element['table']['#max_delta'];
+    $element['table'][$delta]['item']['#prefix'] = '<div class="ajax-new-content">' . ($element['table'][$delta]['item']['#prefix'] ?? '');
+    $element['table'][$delta]['item']['#suffix'] = ($element['table'][$delta]['item']['#suffix'] ?? '') . '</div>';
+
+    return $element;
+  }
+
 
   /**
    * Provides the field type specific allowed values form element #description.
@@ -134,7 +230,21 @@ abstract class ListItemBase extends FieldItemBase implements OptionsProviderInte
    * @see \Drupal\Core\Render\Element\FormElement::processPattern()
    */
   public static function validateAllowedValues($element, FormStateInterface $form_state) {
-    $values = static::extractAllowedValues($element['#value'], $element['#field_has_data']);
+    $items = array_filter(array_map(function($item) use ($element) {
+      $current_element = $element['table'][$item];
+      if ($current_element['item']['key']['#value'] && $current_element['item']['label']['#value']) {
+        return $current_element['item']['key']['#value'] . '|' . $current_element['item']['label']['#value'];
+      } elseif ($current_element['item']['key']['#value']) {
+        return $current_element['item']['key']['#value'];
+      } elseif ($current_element['item']['label']['#value']) {
+        return $current_element['item']['label']['#value'];
+      }
+
+      return null;
+    }, Element::children($element['table'])), function($item) {
+      return $item;
+    });
+    $values = static::extractAllowedValues(implode("\n", $items), $element['#field_has_data']);
 
     if (!is_array($values)) {
       $form_state->setError($element, new TranslatableMarkup('Allowed values list: invalid input.'));
