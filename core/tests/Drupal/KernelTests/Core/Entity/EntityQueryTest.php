@@ -744,7 +744,7 @@ class EntityQueryTest extends EntityKernelTestBase {
       $expected = $expected[0];
     }
     foreach ($expected as $binary) {
-      $assert[$binary] = strval($binary);
+      $assert[$binary] = (string) $binary;
     }
     $this->assertSame($assert, $this->queryResults);
   }
@@ -755,7 +755,7 @@ class EntityQueryTest extends EntityKernelTestBase {
   protected function assertRevisionResult(array $keys, array $expected): void {
     $assert = [];
     foreach ($expected as $key => $binary) {
-      $assert[$keys[$key]] = strval($binary);
+      $assert[$keys[$key]] = (string) $binary;
     }
     $this->assertSame($assert, $this->queryResults);
   }

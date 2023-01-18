@@ -319,7 +319,7 @@ function template_preprocess_views_view_summary(&$variables) {
       $url = $view->getUrl($args)->setOptions($url_options);
     }
     $variables['rows'][$id]->url = $url->toString();
-    $variables['rows'][$id]->count = intval($row->{$argument->count_alias});
+    $variables['rows'][$id]->count = (int) $row->{$argument->count_alias};
     $variables['rows'][$id]->attributes = new Attribute($variables['rows'][$id]->attributes);
     $variables['rows'][$id]->active = isset($active_urls[$variables['rows'][$id]->url]);
   }
@@ -405,7 +405,7 @@ function template_preprocess_views_view_summary_unformatted(&$variables) {
       $url = $view->getUrl($args)->setOptions($url_options);
     }
     $variables['rows'][$id]->url = $url->toString();
-    $variables['rows'][$id]->count = intval($row->{$argument->count_alias});
+    $variables['rows'][$id]->count = (int) $row->{$argument->count_alias};
     $variables['rows'][$id]->active = isset($active_urls[$variables['rows'][$id]->url]);
     $variables['rows'][$id]->attributes = new Attribute($variables['rows'][$id]->attributes);
   }

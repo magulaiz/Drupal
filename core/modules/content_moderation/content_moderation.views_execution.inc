@@ -13,6 +13,6 @@ use Drupal\views\ViewExecutable;
 function content_moderation_views_query_substitutions(ViewExecutable $view) {
   $account = \Drupal::currentUser();
   return [
-    '***VIEW_ANY_UNPUBLISHED_NODES***' => intval($account->hasPermission('view any unpublished content')),
+    '***VIEW_ANY_UNPUBLISHED_NODES***' => (int) $account->hasPermission('view any unpublished content'),
   ];
 }

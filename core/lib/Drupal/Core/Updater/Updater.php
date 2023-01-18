@@ -345,7 +345,9 @@ abstract class Updater {
             $filetransfer->createDirectory($directory);
             $this->makeWorldReadable($filetransfer, $directory);
             // Put the permissions back.
+            // phpcs:disable Generic.PHP.ForbiddenFunctions
             $filetransfer->chmod($parent_dir, intval($old_perms, 8));
+            // phpcs:enable
           }
           catch (FileTransferException $e) {
             $message = t($e->getMessage(), $e->arguments);
@@ -373,7 +375,9 @@ abstract class Updater {
     if (!is_executable($path)) {
       // Set it to read + execute.
       $new_perms = substr(sprintf('%o', fileperms($path)), -4, -1) . "5";
+      // phpcs:disable Generic.PHP.ForbiddenFunctions
       $filetransfer->chmod($path, intval($new_perms, 8), $recursive);
+      // phpcs:enable
     }
   }
 

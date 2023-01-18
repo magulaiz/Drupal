@@ -166,8 +166,8 @@ class Date extends NumericFilter {
   }
 
   protected function opBetween($field) {
-    $a = intval(strtotime($this->value['min'], 0));
-    $b = intval(strtotime($this->value['max'], 0));
+    $a = (int) strtotime($this->value['min'], 0);
+    $b = (int) strtotime($this->value['max'], 0);
 
     if ($this->value['type'] == 'offset') {
       // Keep sign.
@@ -182,7 +182,7 @@ class Date extends NumericFilter {
   }
 
   protected function opSimple($field) {
-    $value = intval(strtotime($this->value['value'], 0));
+    $value = (int) strtotime($this->value['value'], 0);
     if (!empty($this->value['type']) && $this->value['type'] == 'offset') {
       // Keep sign.
       $value = '***CURRENT_TIME***' . sprintf('%+d', $value);

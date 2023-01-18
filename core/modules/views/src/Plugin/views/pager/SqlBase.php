@@ -233,7 +233,7 @@ abstract class SqlBase extends PagerPluginBase implements CacheableDependencyInt
     $options = explode(',', $exposed_options);
     if (!$error && is_array($options)) {
       foreach ($options as $option) {
-        if (!is_numeric($option) || intval($option) == 0) {
+        if (!is_numeric($option) || (int) $option == 0) {
           $error = TRUE;
         }
       }
@@ -305,7 +305,7 @@ abstract class SqlBase extends PagerPluginBase implements CacheableDependencyInt
   }
 
   public function getPagerTotal() {
-    if ($items_per_page = intval($this->getItemsPerPage())) {
+    if ($items_per_page = (int) $this->getItemsPerPage()) {
       return ceil($this->total_items / $items_per_page);
     }
     else {
@@ -356,7 +356,7 @@ abstract class SqlBase extends PagerPluginBase implements CacheableDependencyInt
       $sanitized_options = [];
       if (is_array($options)) {
         foreach ($options as $option) {
-          $sanitized_options[intval($option)] = intval($option);
+          $sanitized_options[(int) $option] = (int) $option;
         }
         if (!empty($this->options['expose']['items_per_page_options_all']) && !empty($this->options['expose']['items_per_page_options_all_label'])) {
           $sanitized_options['All'] = $this->options['expose']['items_per_page_options_all_label'];

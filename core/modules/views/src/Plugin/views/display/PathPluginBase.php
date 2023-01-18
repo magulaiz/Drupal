@@ -367,7 +367,7 @@ abstract class PathPluginBase extends DisplayPluginBase implements DisplayRouter
         $links[$menu_link_id]['expanded'] = $menu['expanded'];
 
         if (isset($menu['weight'])) {
-          $links[$menu_link_id]['weight'] = intval($menu['weight']);
+          $links[$menu_link_id]['weight'] = (int) $menu['weight'];
         }
 
         // Insert item into the proper menu.

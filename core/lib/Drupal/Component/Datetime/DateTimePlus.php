@@ -541,21 +541,21 @@ class DateTimePlus {
     $array = static::prepareArray($array, $force_valid_date);
     $input_time = '';
     if ($array['year'] !== '') {
-      $input_time = static::datePad(intval($array['year']), 4);
+      $input_time = static::datePad((int) $array['year'], 4);
       if ($force_valid_date || $array['month'] !== '') {
-        $input_time .= '-' . static::datePad(intval($array['month']));
+        $input_time .= '-' . static::datePad((int) $array['month']);
         if ($force_valid_date || $array['day'] !== '') {
-          $input_time .= '-' . static::datePad(intval($array['day']));
+          $input_time .= '-' . static::datePad((int) $array['day']);
         }
       }
     }
     if ($array['hour'] !== '') {
       $input_time .= $input_time ? 'T' : '';
-      $input_time .= static::datePad(intval($array['hour']));
+      $input_time .= static::datePad((int) $array['hour']);
       if ($force_valid_date || $array['minute'] !== '') {
-        $input_time .= ':' . static::datePad(intval($array['minute']));
+        $input_time .= ':' . static::datePad((int) $array['minute']);
         if ($force_valid_date || $array['second'] !== '') {
-          $input_time .= ':' . static::datePad(intval($array['second']));
+          $input_time .= ':' . static::datePad((int) $array['second']);
         }
       }
     }
