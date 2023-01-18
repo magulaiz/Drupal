@@ -18,6 +18,7 @@ use Twig\Error\LoaderError;
  *
  * @see \Drupal\Core\Template\TwigEnvironment
  * @group Twig
+ * @group legacy
  */
 class TwigEnvironmentTest extends KernelTestBase {
 
@@ -26,7 +27,7 @@ class TwigEnvironmentTest extends KernelTestBase {
    *
    * @var array
    */
-  protected static $modules = ['system'];
+  protected static $modules = ['system', 'theme_test'];
 
   /**
    * Tests inline templates.
@@ -286,6 +287,20 @@ TWIG;
     // This also applies to twig's file cache resulting in an unlimited growth
     // of the cache storage directory.
     $this->assertEquals(count(array_unique($cache_filenames)), 1);
+  }
+
+  /**
+   * Test deprecation errors are triggered when using deprecated variables.
+   */
+  public function testRenderArrayDeprecations() {
+    /** @var \Drupal\Core\Render\RendererInterface $renderer */
+    $renderer = $this->container->get('renderer');
+    $element = [
+      '#theme' => 'theme_test_deprecate',
+    ];
+    $this->expectDeprecation('foo is deprecated in drupal:X.0.0 and is removed from drupal:Y.0.0. Use "bar" instead. See https://www.example.com');
+    $rendered = $renderer->renderRoot($element);
+    $this->assertEquals('foobar', $rendered);
   }
 
 }
