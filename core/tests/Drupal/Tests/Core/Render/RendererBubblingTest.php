@@ -120,8 +120,7 @@ class RendererBubblingTest extends RendererTestBase {
     $this->assertRenderCacheItem(['parent'], [
       '#attached' => [],
       '#cache' => [
-        'keys' => ['parent'],
-        'contexts' => ['foo', 'bar'],
+        'contexts' => ['bar', 'foo'],
         'tags' => [],
         'max-age' => 3600,
       ],
