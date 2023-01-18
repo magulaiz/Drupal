@@ -30,7 +30,7 @@ class TwigEnvironmentTest extends KernelTestBase {
    *
    * @var array
    */
-  protected static $modules = ['system'];
+  protected static $modules = ['system', 'theme_test'];
 
   /**
    * Tests inline templates.
@@ -293,39 +293,17 @@ TWIG;
   }
 
   /**
-   * Test twig deprecated tag.
-   */
-  public function testDeprecatedTag() {
-    /** @var \Drupal\Core\Render\RendererInterface $renderer */
-    $renderer = $this->container->get('renderer');
-    $element['test'] = [
-      '#type' => 'inline_template',
-      '#template' => "{% deprecated 'Some deprecation message' %}foo",
-    ];
-    // @todo Exact deprecation message contains long string id, not sure how to test for this.
-    $this->addExpectedDeprecationMessage('Some deprecation message');
-    $rendered = $renderer->renderRoot($element);
-    $this->assertEqual($rendered, 'foo');
-  }
-
-  /**
    * Test deprecation errors are triggered when using deprecated variables.
    */
   public function testRenderArrayDeprecations() {
     /** @var \Drupal\Core\Render\RendererInterface $renderer */
     $renderer = $this->container->get('renderer');
-    $element['test'] = [
-      '#type' => 'inline_template',
-      '#template' => '{% if foo %}{% if bar != foo %}{{ foo }}{{ bar }}{% endif %}{% endif %}',
-      '#context' => [
-        'foo' => 'foo',
-        'bar' => 'bar',
-        'deprecations' => ['foo' => 'foo is deprecated'],
-        ],
+    $element = [
+      '#theme' => 'theme_test_deprecate',
     ];
-    $this->addExpectedDeprecationMessage('foo is deprecated');
+    $this->addExpectedDeprecationMessage('foo is deprecated in drupal:X.0.0 and is removed from drupal:Y.0.0. Use "bar" instead. See https://www.example.com');
     $rendered = $renderer->renderRoot($element);
-    $this->assertEqual($rendered, 'foobar');
+    $this->assertEquals('foobar', $rendered);
   }
 
 }
