@@ -45,6 +45,11 @@ class PhpassHashedPassword implements PasswordInterface {
   protected $countLog2;
 
   /**
+   * The preferred PHP password interface.
+   */
+  protected ?PasswordInterface $phpPassword;
+
+  /**
    * Constructs a new password hashing instance.
    *
    * @param int $countLog2
@@ -52,10 +57,17 @@ class PhpassHashedPassword implements PasswordInterface {
    *   hashing function will be applied when generating new password hashes.
    *   The number of times is calculated by raising 2 to the power of the given
    *   value.
+   * @param \Drupal\Core\Password\PasswordInterface|null $phpPassword
+   *   The preferred PHP password interface.
    */
-  public function __construct($countLog2) {
+  public function __construct($countLog2, ?PasswordInterface $phpPassword = NULL) {
     // Ensure that $countLog2 is within set bounds.
     $this->countLog2 = $this->enforceLog2Boundaries($countLog2);
+
+    if (!isset($phpPassword)) {
+      @trigger_error('Calling PhpassHashedPassword::__construct() without the $phpPassword argument is deprecated in drupal:10.1.0 and will be required in drupal:11.0.0. See https://www.drupal.org/node/3293709');
+    }
+    $this->phpPassword = $phpPassword;
   }
 
   /**
@@ -217,6 +229,10 @@ class PhpassHashedPassword implements PasswordInterface {
    * {@inheritdoc}
    */
   public function hash($password) {
+    if (isset($this->phpPassword)) {
+      return $this->phpPassword->hash($password);
+    }
+
     return $this->crypt('sha512', $password, $this->generateSalt());
   }
 
@@ -251,6 +267,10 @@ class PhpassHashedPassword implements PasswordInterface {
         break;
 
       default:
+        if (isset($this->phpPassword)) {
+          return $this->phpPassword->check($password, $stored_hash);
+        }
+
         return FALSE;
     }
 
@@ -262,6 +282,10 @@ class PhpassHashedPassword implements PasswordInterface {
    * {@inheritdoc}
    */
   public function needsRehash($hash) {
+    if (isset($this->phpPassword)) {
+      return $this->phpPassword->needsRehash($hash);
+    }
+
     // Check whether this was an updated password.
     if ((substr($hash, 0, 3) != '$S$') || (strlen($hash) != static::HASH_LENGTH)) {
       return TRUE;

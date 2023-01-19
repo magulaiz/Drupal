@@ -15,12 +15,9 @@ class PhpPassword implements PasswordInterface {
    * @param int $cost
    *   The algorithmic cost that should be used. This is the same 'cost'
    *   option as is used by the password_hash() function.
-   * @param \Drupal\Core\Password\PasswordInterface $legacyPassword
-   *   The legacy password hashing service.
    */
   public function __construct(
-    protected int $cost,
-    protected PasswordInterface $legacyPassword
+    protected int $cost
   ) {}
 
   /**
@@ -39,23 +36,7 @@ class PhpPassword implements PasswordInterface {
    * {@inheritdoc}
    */
   public function check($password, $hash) {
-    // Drupal >= 10.1.x hashed password.
-    if (str_starts_with($hash, '$2y$')) {
-      $stored_hash = $hash;
-    }
-    // Drupal 6 (or any md5) hashed password migrated to Drupal >= 10.1.x.
-    elseif (str_starts_with($hash, 'U$2y$')) {
-      $stored_hash = substr($hash, 1);
-      $password = md5($password);
-    }
-    // Possible legacy hash. This may be:
-    // - Either a Drupal 7, < 10.1.0 hash,
-    // - Or a Drupal 6 (or md5) hash migrated to Drupal < 10.1.0.
-    else {
-      return $this->legacyPassword->check($password, $hash);
-    }
-
-    return password_verify($password, $stored_hash);
+    return password_verify($password, $hash);
   }
 
   /**
