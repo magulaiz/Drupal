@@ -203,7 +203,7 @@ class VariationCache implements VariationCacheInterface {
    * Creates a cache ID based on cache keys and cacheable metadata.
    *
    * If cache contexts are optimized during the creating of the cache ID, then
-   * the effect of said optimizaztion on the cache contexts will be reflected in
+   * the effect of said optimization on the cache contexts will be reflected in
    * the provided cacheable metadata.
    *
    * @param string[] $keys
