@@ -7,7 +7,7 @@ namespace Drupal\Core\Form\States;
  *
  * @package Drupal\Core\Form.
  */
-interface StateInterface extends BaseStateInterface {
+interface FormElementStateInterface extends FormElementBaseStateInterface {
 
   /**
    * Name of enabled state of element.
@@ -70,200 +70,200 @@ interface StateInterface extends BaseStateInterface {
   /**
    * Set state to checked.
    *
-   * @param \Drupal\Core\Form\States\WatcherInterface ...$watchers
+   * @param \Drupal\Core\Form\States\FormElementWatcherInterface ...$watchers
    *   Watcher instances.
    *
    * @return $this
    *   State instance.
    */
-  public function setChecked(WatcherInterface ...$watchers): static;
+  public function setChecked(FormElementWatcherInterface ...$watchers): static;
 
   /**
    * Set collapsed state.
    *
-   * @param \Drupal\Core\Form\States\WatcherInterface ...$watchers
+   * @param \Drupal\Core\Form\States\FormElementWatcherInterface ...$watchers
    *   Watcher instances.
    *
    * @return $this
    *   State instance.
    */
-  public function setCollapsed(WatcherInterface ...$watchers): static;
+  public function setCollapsed(FormElementWatcherInterface ...$watchers): static;
 
   /**
    * Set disabled state.
    *
-   * @param \Drupal\Core\Form\States\WatcherInterface ...$watchers
+   * @param \Drupal\Core\Form\States\FormElementWatcherInterface ...$watchers
    *   Watcher instances.
    *
    * @return $this
    *   State instance.
    */
-  public function setDisabled(WatcherInterface ...$watchers): static;
+  public function setDisabled(FormElementWatcherInterface ...$watchers): static;
 
   /**
    * Set enabled state.
    *
-   * @param \Drupal\Core\Form\States\WatcherInterface ...$watchers
+   * @param \Drupal\Core\Form\States\FormElementWatcherInterface ...$watchers
    *   Watcher instances.
    *
    * @return $this
    *   State instance.
    */
-  public function setEnabled(WatcherInterface ...$watchers): static;
+  public function setEnabled(FormElementWatcherInterface ...$watchers): static;
 
   /**
    * Set expanded state.
    *
-   * @param \Drupal\Core\Form\States\WatcherInterface ...$watchers
+   * @param \Drupal\Core\Form\States\FormElementWatcherInterface ...$watchers
    *   Watcher instances.
    *
    * @return $this
    *   State instance.
    */
-  public function setExpanded(WatcherInterface ...$watchers): static;
+  public function setExpanded(FormElementWatcherInterface ...$watchers): static;
 
   /**
    * Set invalid state.
    *
-   * @param \Drupal\Core\Form\States\WatcherInterface ...$watchers
+   * @param \Drupal\Core\Form\States\FormElementWatcherInterface ...$watchers
    *   Watcher instances.
    *
    * @return $this
    *   State instance.
    */
-  public function setInvalid(WatcherInterface ...$watchers): static;
+  public function setInvalid(FormElementWatcherInterface ...$watchers): static;
 
   /**
    * Set invisible state.
    *
-   * @param \Drupal\Core\Form\States\WatcherInterface ...$watchers
+   * @param \Drupal\Core\Form\States\FormElementWatcherInterface ...$watchers
    *   Watcher instances.
    *
    * @return $this
    *   State instance.
    */
-  public function setInvisible(WatcherInterface ...$watchers): static;
+  public function setInvisible(FormElementWatcherInterface ...$watchers): static;
 
   /**
    * Set irrelevant state.
    *
-   * @param \Drupal\Core\Form\States\WatcherInterface ...$watchers
+   * @param \Drupal\Core\Form\States\FormElementWatcherInterface ...$watchers
    *   Watcher instances.
    *
    * @return $this
    *   State instance.
    */
-  public function setIrrelevant(WatcherInterface ...$watchers): static;
+  public function setIrrelevant(FormElementWatcherInterface ...$watchers): static;
 
   /**
    * Set optional state.
    *
-   * @param \Drupal\Core\Form\States\WatcherInterface ...$watchers
+   * @param \Drupal\Core\Form\States\FormElementWatcherInterface ...$watchers
    *   Watcher instances.
    *
    * @return $this
    *   State instance.
    */
-  public function setOptional(WatcherInterface ...$watchers): static;
+  public function setOptional(FormElementWatcherInterface ...$watchers): static;
 
   /**
    * Set readonly state.
    *
-   * @param \Drupal\Core\Form\States\WatcherInterface ...$watchers
+   * @param \Drupal\Core\Form\States\FormElementWatcherInterface ...$watchers
    *   Watcher instances.
    *
    * @return $this
    *   State instance.
    */
-  public function setReadonly(WatcherInterface ...$watchers): static;
+  public function setReadonly(FormElementWatcherInterface ...$watchers): static;
 
   /**
    * Set readwrite state.
    *
-   * @param \Drupal\Core\Form\States\WatcherInterface ...$watchers
+   * @param \Drupal\Core\Form\States\FormElementWatcherInterface ...$watchers
    *   Watcher instances.
    *
    * @return $this
    *   State instance.
    */
-  public function setReadwrite(WatcherInterface ...$watchers): static;
+  public function setReadwrite(FormElementWatcherInterface ...$watchers): static;
 
   /**
    * Set relevant state.
    *
-   * @param \Drupal\Core\Form\States\WatcherInterface ...$watchers
+   * @param \Drupal\Core\Form\States\FormElementWatcherInterface ...$watchers
    *   Watcher instances.
    *
    * @return $this
    *   State instance.
    */
-  public function setRelevant(WatcherInterface ...$watchers): static;
+  public function setRelevant(FormElementWatcherInterface ...$watchers): static;
 
   /**
    * Set required state.
    *
-   * @param \Drupal\Core\Form\States\WatcherInterface ...$watchers
+   * @param \Drupal\Core\Form\States\FormElementWatcherInterface ...$watchers
    *   Watcher instances.
    *
    * @return $this
    *   State instance.
    */
-  public function setRequired(WatcherInterface ...$watchers): static;
+  public function setRequired(FormElementWatcherInterface ...$watchers): static;
 
   /**
    * Set touched state.
    *
-   * @param \Drupal\Core\Form\States\WatcherInterface ...$watchers
+   * @param \Drupal\Core\Form\States\FormElementWatcherInterface ...$watchers
    *   Watcher instances.
    *
    * @return $this
    *   State instance.
    */
-  public function setTouched(WatcherInterface ...$watchers): static;
+  public function setTouched(FormElementWatcherInterface ...$watchers): static;
 
   /**
    * Set unchecked state.
    *
-   * @param \Drupal\Core\Form\States\WatcherInterface ...$watchers
+   * @param \Drupal\Core\Form\States\FormElementWatcherInterface ...$watchers
    *   Watcher instances.
    *
    * @return $this
    *   State instance.
    */
-  public function setUnchecked(WatcherInterface ...$watchers): static;
+  public function setUnchecked(FormElementWatcherInterface ...$watchers): static;
 
   /**
    * Set untouched state.
    *
-   * @param \Drupal\Core\Form\States\WatcherInterface ...$watchers
+   * @param \Drupal\Core\Form\States\FormElementWatcherInterface ...$watchers
    *   Watcher instances.
    *
    * @return $this
    *   State instance.
    */
-  public function setUntouched(WatcherInterface ...$watchers): static;
+  public function setUntouched(FormElementWatcherInterface ...$watchers): static;
 
   /**
    * Set valid state.
    *
-   * @param \Drupal\Core\Form\States\WatcherInterface ...$watchers
+   * @param \Drupal\Core\Form\States\FormElementWatcherInterface ...$watchers
    *   Watcher instances.
    *
    * @return $this
    *   State instance.
    */
-  public function setValid(WatcherInterface ...$watchers): static;
+  public function setValid(FormElementWatcherInterface ...$watchers): static;
 
   /**
    * Set visible state.
    *
-   * @param \Drupal\Core\Form\States\WatcherInterface ...$watchers
+   * @param \Drupal\Core\Form\States\FormElementWatcherInterface ...$watchers
    *   Watcher instances.
    *
    * @return $this
    *   State instance.
    */
-  public function setVisible(WatcherInterface ...$watchers): static;
+  public function setVisible(FormElementWatcherInterface ...$watchers): static;
 
   /**
    * Set custom state.
@@ -272,12 +272,12 @@ interface StateInterface extends BaseStateInterface {
    *
    * @param string $state
    *   Custom state name.
-   * @param \Drupal\Core\Form\States\WatcherInterface ...$watchers
+   * @param \Drupal\Core\Form\States\FormElementWatcherInterface ...$watchers
    *   Watcher instances.
    *
    * @return $this
    *   State instance.
    */
-  public function setCustomState(string $state, WatcherInterface ...$watchers): static;
+  public function setCustomState(string $state, FormElementWatcherInterface ...$watchers): static;
 
 }

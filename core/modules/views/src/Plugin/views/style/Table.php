@@ -6,7 +6,7 @@ use Drupal\Component\Utility\Html;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheableDependencyInterface;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Form\States\StatesBuilder;
+use Drupal\Core\Form\States\FormElementStatesBuilder;
 use Drupal\views\Plugin\views\wizard\WizardInterface;
 
 /**
@@ -243,7 +243,7 @@ class Table extends StylePluginBase implements CacheableDependencyInterface {
       '#fieldset' => 'accessibility_details',
     ];
 
-    $states = new StatesBuilder();
+    $states = new FormElementStatesBuilder();
     $form['description'] = [
       '#title' => $this->t('Table description'),
       '#type' => 'textarea',
@@ -287,7 +287,7 @@ class Table extends StylePluginBase implements CacheableDependencyInterface {
         '#default_value' => $column,
       ];
       if ($handlers[$field]->clickSortable()) {
-        $states = new StatesBuilder();
+        $states = new FormElementStatesBuilder();
         $form['info'][$field]['sortable'] = [
           '#title' => $this->t('Sortable for @field', ['@field' => $field]),
           '#title_display' => 'invisible',
@@ -299,7 +299,7 @@ class Table extends StylePluginBase implements CacheableDependencyInterface {
             )
           )->toArray(),
         ];
-        $states = new StatesBuilder();
+        $states = new FormElementStatesBuilder();
         $form['info'][$field]['default_sort_order'] = [
           '#title' => $this->t('Default sort order for @field', ['@field' => $field]),
           '#title_display' => 'invisible',
@@ -313,7 +313,7 @@ class Table extends StylePluginBase implements CacheableDependencyInterface {
             )
           )->toArray(),
         ];
-        $states = new StatesBuilder();
+        $states = new FormElementStatesBuilder();
         // Provide an ID so we can have such things.
         $radio_id = Html::getUniqueId('edit-default-' . $field);
         $form['default'][$field] = [

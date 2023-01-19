@@ -4,8 +4,8 @@ namespace Drupal\Core\Database\Install;
 
 use Drupal\Core\Database\Database;
 use Drupal\Core\Form\FormStatesBuilderProviderInterface;
-use Drupal\Core\Form\States\StatesBuilder;
-use Drupal\Core\Form\States\StatesBuilderInterface;
+use Drupal\Core\Form\States\FormElementStatesBuilder;
+use Drupal\Core\Form\States\FormElementStatesBuilderInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 
 /**
@@ -406,8 +406,8 @@ abstract class Tasks implements FormStatesBuilderProviderInterface {
   /**
    * {@inheritdoc}
    */
-  public function getStatesBuilder(): StatesBuilderInterface {
-    return new StatesBuilder();
+  public function getStatesBuilder(): FormElementStatesBuilderInterface {
+    return new FormElementStatesBuilder();
   }
 
 }

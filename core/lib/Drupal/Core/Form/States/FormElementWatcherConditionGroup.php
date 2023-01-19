@@ -5,14 +5,14 @@ namespace Drupal\Core\Form\States;
 /**
  * Watcher condition group.
  */
-class WatcherConditionGroup implements WatcherConditionGroupInterface {
+class FormElementWatcherConditionGroup implements FormElementWatcherConditionGroupInterface {
 
   /**
    * Watcher condition group.
    *
    * @param string $operator
    *   Condition for the group.
-   * @param \Drupal\Core\Form\States\WatchableInterface[] $watchers
+   * @param \Drupal\Core\Form\States\FormElementWatchableInterface[] $watchers
    *   Watcher storage.
    */
   public function __construct(
@@ -33,13 +33,13 @@ class WatcherConditionGroup implements WatcherConditionGroupInterface {
   public function toArray(): array {
     $array = [];
     foreach ($this->watchers as $key => $watcher) {
-      if ($watcher instanceof WatcherConditionGroupInterface) {
+      if ($watcher instanceof FormElementWatcherConditionGroupInterface) {
         if ($key !== 0) {
           $array[] = $watcher->getConditionOperator();
         }
         $array[] = $watcher->toArray($key === 0);
       }
-      if ($watcher instanceof WatcherInterface) {
+      if ($watcher instanceof FormElementWatcherInterface) {
         $selector = $watcher->getSelector();
         $array[$selector] = ($array[$selector] ?? []) + $watcher->toArray();
       }

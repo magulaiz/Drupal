@@ -5,7 +5,7 @@ namespace Drupal\Core\Form\States;
 /**
  * States builder interface.
  */
-interface StatesBuilderInterface {
+interface FormElementStatesBuilderInterface {
 
   /**
    * State instance getter.
@@ -14,13 +14,13 @@ interface StatesBuilderInterface {
    *
    * @param string $state
    *   State name.
-   * @param \Drupal\Core\Form\States\WatcherInterface ...$watchers
+   * @param \Drupal\Core\Form\States\FormElementWatcherInterface ...$watchers
    *   Watcher instances.
    *
-   * @return \Drupal\Core\Form\States\StateInterface
+   * @return \Drupal\Core\Form\States\FormElementStateInterface
    *   State instance.
    */
-  public function state(string $state = '', WatcherInterface ...$watchers): StateInterface;
+  public function state(string $state = '', FormElementWatcherInterface ...$watchers): FormElementStateInterface;
 
   /**
    * Watcher instance getter.
@@ -32,59 +32,59 @@ interface StatesBuilderInterface {
    * @param array $conditions
    *   Expected remote conditions for watched element.
    *
-   * @return \Drupal\Core\Form\States\WatcherInterface
+   * @return \Drupal\Core\Form\States\FormElementWatcherInterface
    *   Watcher instance.
    */
-  public function watch(string $selector, array $conditions = []): WatcherInterface;
+  public function watch(string $selector, array $conditions = []): FormElementWatcherInterface;
 
   /**
    * Add states to the state storage.
    *
-   * @param \Drupal\Core\Form\States\StateInterface ...$states
+   * @param \Drupal\Core\Form\States\FormElementStateInterface ...$states
    *   States defined to the element.
    *
    * @return $this
    *   States builder instance.
    */
-  public function addStates(StateInterface ...$states): static;
+  public function addStates(FormElementStateInterface ...$states): static;
 
   /**
    * Add AND condition group.
    *
-   * @param \Drupal\Core\Form\States\WatchableInterface ...$watchers
+   * @param \Drupal\Core\Form\States\FormElementWatchableInterface ...$watchers
    *   Watcher instances for AND condition group.
    *
    * @return $this
    *   State builder instance.
    */
-  public function and(WatchableInterface ...$watchers): WatcherConditionGroupInterface;
+  public function and(FormElementWatchableInterface ...$watchers): FormElementWatcherConditionGroupInterface;
 
   /**
    * Add OR condition group.
    *
-   * @param \Drupal\Core\Form\States\WatchableInterface ...$watchers
+   * @param \Drupal\Core\Form\States\FormElementWatchableInterface ...$watchers
    *   Watcher instances for AND condition group.
    *
    * @return $this
    *   State builder instance.
    */
-  public function or(WatchableInterface ...$watchers): WatcherConditionGroupInterface;
+  public function or(FormElementWatchableInterface ...$watchers): FormElementWatcherConditionGroupInterface;
 
   /**
    * Add XOR condition group.
    *
-   * @param \Drupal\Core\Form\States\WatchableInterface ...$watchers
+   * @param \Drupal\Core\Form\States\FormElementWatchableInterface ...$watchers
    *   Watcher instances for AND condition group.
    *
    * @return $this
    *   State builder instance.
    */
-  public function xor(WatchableInterface ...$watchers): WatcherConditionGroupInterface;
+  public function xor(FormElementWatchableInterface ...$watchers): FormElementWatcherConditionGroupInterface;
 
   /**
    * Convert states to the array.
    *
-   * @return \Drupal\Core\Form\States\StateInterface[]
+   * @return \Drupal\Core\Form\States\FormElementStateInterface[]
    *   Array that prepared for #states of form element.
    */
   public function toArray(): array;

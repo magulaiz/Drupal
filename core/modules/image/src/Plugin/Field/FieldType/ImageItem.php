@@ -9,7 +9,7 @@ use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\File\Exception\FileException;
 use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Form\States\StatesBuilder;
+use Drupal\Core\Form\States\FormElementStatesBuilder;
 use Drupal\Core\StreamWrapper\StreamWrapperInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\TypedData\DataDefinition;
@@ -271,7 +271,7 @@ class ImageItem extends FileItem {
       '#description' => $this->t('Short description of the image used by screen readers and displayed when the image is not loaded. Enabling this field is recommended.'),
       '#weight' => 9,
     ];
-    $states = new StatesBuilder();
+    $states = new FormElementStatesBuilder();
     $element['alt_field_required'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('<em>Alt</em> field required'),
@@ -291,7 +291,7 @@ class ImageItem extends FileItem {
       '#description' => $this->t('The title attribute is used as a tooltip when the mouse hovers over the image. Enabling this field is not recommended as it can cause problems with screen readers.'),
       '#weight' => 11,
     ];
-    $states = new StatesBuilder();
+    $states = new FormElementStatesBuilder();
     $element['title_field_required'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('<em>Title</em> field required'),

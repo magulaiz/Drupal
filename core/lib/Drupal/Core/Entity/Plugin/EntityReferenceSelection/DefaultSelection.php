@@ -15,7 +15,7 @@ use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Field\Plugin\Field\FieldType\EntityReferenceItem;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Form\States\StatesBuilder;
+use Drupal\Core\Form\States\FormElementStatesBuilder;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\user\EntityOwnerInterface;
@@ -253,7 +253,7 @@ class DefaultSelection extends SelectionPluginBase implements ContainerFactoryPl
         '#process' => [[EntityReferenceItem::class, 'formProcessMergeParent']],
       ];
 
-      $states = new StatesBuilder();
+      $states = new FormElementStatesBuilder();
       $form['sort']['settings']['direction'] = [
         '#type' => 'select',
         '#title' => $this->t('Sort direction'),
@@ -288,7 +288,7 @@ class DefaultSelection extends SelectionPluginBase implements ContainerFactoryPl
     ];
 
     if ($entity_type->hasKey('bundle')) {
-      $states = new StatesBuilder();
+      $states = new FormElementStatesBuilder();
       $form['auto_create_bundle'] = [
         '#type' => 'select',
         '#title' => $this->t('Store new items in'),

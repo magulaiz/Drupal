@@ -2,13 +2,13 @@
 
 namespace Drupal\Tests\Core\Form;
 
-use Drupal\Core\Form\States\StateInterface;
-use Drupal\Core\Form\States\WatcherInterface;
-use Drupal\Core\Form\States\StatesBuilder;
+use Drupal\Core\Form\States\FormElementStateInterface;
+use Drupal\Core\Form\States\FormElementWatcherInterface;
+use Drupal\Core\Form\States\FormElementStatesBuilder;
 use Drupal\Tests\UnitTestCase;
 
 /**
- * @coversDefaultClass \Drupal\Core\Form\States\StatesBuilder
+ * @coversDefaultClass \Drupal\Core\Form\States\FormElementStatesBuilder
  * @group Form
  */
 class StatesBuilderTest extends UnitTestCase {
@@ -16,16 +16,16 @@ class StatesBuilderTest extends UnitTestCase {
   /**
    * States builder.
    *
-   * @var \Drupal\Core\Form\States\StatesBuilder
+   * @var \Drupal\Core\Form\States\FormElementStatesBuilder
    */
-  protected StatesBuilder $builder;
+  protected FormElementStatesBuilder $builder;
 
   /**
    * {@inheritdoc}
    */
   protected function setUp(): void {
     parent::setUp();
-    $this->builder = new StatesBuilder();
+    $this->builder = new FormElementStatesBuilder();
   }
 
   /**
@@ -54,25 +54,25 @@ class StatesBuilderTest extends UnitTestCase {
       )
     )->toArray();
     $expected = [
-      StateInterface::CHECKED => [
+      FormElementStateInterface::CHECKED => [
         '.container' => [
-          WatcherInterface::READWRITE => TRUE,
-          WatcherInterface::VALID => TRUE,
-          WatcherInterface::TOUCHED => FALSE,
-          WatcherInterface::RELEVANT => TRUE,
-          WatcherInterface::EXPANDED => TRUE,
-          WatcherInterface::CHECKED => TRUE,
-          WatcherInterface::FILLED => TRUE,
-          WatcherInterface::VALUE => 'one',
+          FormElementWatcherInterface::READWRITE => TRUE,
+          FormElementWatcherInterface::VALID => TRUE,
+          FormElementWatcherInterface::TOUCHED => FALSE,
+          FormElementWatcherInterface::RELEVANT => TRUE,
+          FormElementWatcherInterface::EXPANDED => TRUE,
+          FormElementWatcherInterface::CHECKED => TRUE,
+          FormElementWatcherInterface::FILLED => TRUE,
+          FormElementWatcherInterface::VALUE => 'one',
         ],
         '.container-opposite' => [
-          WatcherInterface::READONLY => TRUE,
-          WatcherInterface::INVALID => TRUE,
-          WatcherInterface::UNTOUCHED => FALSE,
-          WatcherInterface::IRRELEVANT => TRUE,
-          WatcherInterface::COLLAPSED => TRUE,
-          WatcherInterface::UNCHECKED => TRUE,
-          WatcherInterface::EMPTY => TRUE,
+          FormElementWatcherInterface::READONLY => TRUE,
+          FormElementWatcherInterface::INVALID => TRUE,
+          FormElementWatcherInterface::UNTOUCHED => FALSE,
+          FormElementWatcherInterface::IRRELEVANT => TRUE,
+          FormElementWatcherInterface::COLLAPSED => TRUE,
+          FormElementWatcherInterface::UNCHECKED => TRUE,
+          FormElementWatcherInterface::EMPTY => TRUE,
         ],
       ],
     ];
@@ -102,21 +102,21 @@ class StatesBuilderTest extends UnitTestCase {
       $this->builder->state()->setCustomState('_impossible', $same_remote_conditions),
     )->toArray();
     $expected_remote_condition = [
-      '.container' => [WatcherInterface::READWRITE => TRUE],
+      '.container' => [FormElementWatcherInterface::READWRITE => TRUE],
     ];
     $expected = [
-      StateInterface::CHECKED => $expected_remote_condition,
-      StateInterface::UNCHECKED => $expected_remote_condition,
-      StateInterface::VALID => $expected_remote_condition,
-      StateInterface::INVALID => $expected_remote_condition,
-      StateInterface::RELEVANT => $expected_remote_condition,
-      StateInterface::IRRELEVANT => $expected_remote_condition,
-      StateInterface::ENABLED => $expected_remote_condition,
-      StateInterface::DISABLED => $expected_remote_condition,
-      StateInterface::TOUCHED => $expected_remote_condition,
-      StateInterface::UNTOUCHED => $expected_remote_condition,
-      StateInterface::VISIBLE => $expected_remote_condition,
-      StateInterface::INVISIBLE => $expected_remote_condition,
+      FormElementStateInterface::CHECKED => $expected_remote_condition,
+      FormElementStateInterface::UNCHECKED => $expected_remote_condition,
+      FormElementStateInterface::VALID => $expected_remote_condition,
+      FormElementStateInterface::INVALID => $expected_remote_condition,
+      FormElementStateInterface::RELEVANT => $expected_remote_condition,
+      FormElementStateInterface::IRRELEVANT => $expected_remote_condition,
+      FormElementStateInterface::ENABLED => $expected_remote_condition,
+      FormElementStateInterface::DISABLED => $expected_remote_condition,
+      FormElementStateInterface::TOUCHED => $expected_remote_condition,
+      FormElementStateInterface::UNTOUCHED => $expected_remote_condition,
+      FormElementStateInterface::VISIBLE => $expected_remote_condition,
+      FormElementStateInterface::INVISIBLE => $expected_remote_condition,
       '_impossible' => $expected_remote_condition,
     ];
     $this->assertSame($expected, $result);

@@ -2,7 +2,7 @@
 
 namespace Drupal\link\Plugin\Field\FieldWidget;
 
-use Drupal\Core\Form\States\StatesBuilder;
+use Drupal\Core\Form\States\FormElementStatesBuilder;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Url;
 use Drupal\Core\Entity\Element\EntityAutocomplete;
@@ -372,7 +372,7 @@ class LinkWidget extends WidgetBase {
       '#default_value' => $this->getSetting('placeholder_url'),
       '#description' => $this->t('Text that will be shown inside the field until a value is entered. This hint is usually a sample value or a brief description of the expected format.'),
     ];
-    $states = new StatesBuilder();
+    $states = new FormElementStatesBuilder();
     $elements['placeholder_title'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Placeholder for link text'),

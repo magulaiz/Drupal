@@ -7,7 +7,7 @@ namespace Drupal\Core\Form\States;
  *
  * @package Drupal\Core\Form.
  */
-interface BaseStateInterface {
+interface FormElementBaseStateInterface {
 
   /**
    * Name of relevant state.

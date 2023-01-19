@@ -5,8 +5,8 @@ namespace Drupal\Core\Form;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\DependencyInjection\DependencySerializationTrait;
-use Drupal\Core\Form\States\StatesBuilderInterface;
-use Drupal\Core\Form\States\StatesBuilder;
+use Drupal\Core\Form\States\FormElementStatesBuilderInterface;
+use Drupal\Core\Form\States\FormElementStatesBuilder;
 use Drupal\Core\Logger\LoggerChannelTrait;
 use Drupal\Core\Routing\RedirectDestinationTrait;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
@@ -250,8 +250,8 @@ abstract class FormBase implements FormInterface, ContainerInjectionInterface, F
   /**
    * {@inheritdoc}
    */
-  public function getStatesBuilder(): StatesBuilderInterface {
-    return new StatesBuilder();
+  public function getStatesBuilder(): FormElementStatesBuilderInterface {
+    return new FormElementStatesBuilder();
   }
 
 }

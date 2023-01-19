@@ -5,7 +5,7 @@ namespace Drupal\Core\Form\States;
 /**
  * Watcher condition group interface.
  */
-interface WatcherConditionGroupInterface extends WatchableInterface {
+interface FormElementWatcherConditionGroupInterface extends FormElementWatchableInterface {
 
   /**
    * AND condition operator.

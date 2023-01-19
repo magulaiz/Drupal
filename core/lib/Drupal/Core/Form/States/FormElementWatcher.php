@@ -5,7 +5,7 @@ namespace Drupal\Core\Form\States;
 /**
  * Watcher class. Helps to build remote condition for the state instance.
  */
-class Watcher implements WatcherInterface {
+class FormElementWatcher implements FormElementWatcherInterface {
 
   /**
    * Flags pointing for multiple condition.

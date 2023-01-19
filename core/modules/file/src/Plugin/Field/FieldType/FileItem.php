@@ -11,7 +11,7 @@ use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Field\Plugin\Field\FieldType\EntityReferenceItem;
 use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Form\States\StatesBuilder;
+use Drupal\Core\Form\States\FormElementStatesBuilder;
 use Drupal\Core\StreamWrapper\StreamWrapperInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\TypedData\DataDefinition;
@@ -129,7 +129,7 @@ class FileItem extends EntityReferenceItem {
       '#default_value' => $this->getSetting('display_field'),
       '#description' => $this->t('The display option allows users to choose if a file should be shown when viewing the content.'),
     ];
-    $states = new StatesBuilder();
+    $states = new FormElementStatesBuilder();
     $element['display_default'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Files displayed by default'),

@@ -7,7 +7,7 @@ namespace Drupal\Core\Form\States;
  *
  * @package Drupal\Core\Form.
  */
-interface WatcherInterface extends BaseStateInterface, WatchableInterface {
+interface FormElementWatcherInterface extends FormElementBaseStateInterface, FormElementWatchableInterface {
 
   /**
    * Name of empty state of element.
@@ -60,7 +60,7 @@ interface WatcherInterface extends BaseStateInterface, WatchableInterface {
    * @param bool $negate
    *   Flag to negate the condition. By default, condition set as it is.
    *
-   * @return \Drupal\Core\Form\States\WatcherInterface
+   * @return \Drupal\Core\Form\States\FormElementWatcherInterface
    *   Watcher instance.
    */
   public function isChecked(bool $condition = TRUE, bool $negate = FALSE): static;
@@ -73,7 +73,7 @@ interface WatcherInterface extends BaseStateInterface, WatchableInterface {
    * @param bool $negate
    *   Flag to negate the condition. By default, condition set as it is.
    *
-   * @return \Drupal\Core\Form\States\WatcherInterface
+   * @return \Drupal\Core\Form\States\FormElementWatcherInterface
    *   Watcher instance.
    */
   public function isCollapsed(bool $condition = TRUE, bool $negate = FALSE): static;
@@ -86,7 +86,7 @@ interface WatcherInterface extends BaseStateInterface, WatchableInterface {
    * @param bool $negate
    *   Flag to negate the condition. By default, condition set as it is.
    *
-   * @return \Drupal\Core\Form\States\WatcherInterface
+   * @return \Drupal\Core\Form\States\FormElementWatcherInterface
    *   Watcher instance.
    */
   public function isExpanded(bool $condition = TRUE, bool $negate = FALSE): static;
@@ -99,7 +99,7 @@ interface WatcherInterface extends BaseStateInterface, WatchableInterface {
    * @param bool $negate
    *   Flag to negate the condition. By default, condition set as it is.
    *
-   * @return \Drupal\Core\Form\States\WatcherInterface
+   * @return \Drupal\Core\Form\States\FormElementWatcherInterface
    *   Watcher instance.
    */
   public function isInvalid(bool $condition = TRUE, bool $negate = FALSE): static;
@@ -112,7 +112,7 @@ interface WatcherInterface extends BaseStateInterface, WatchableInterface {
    * @param bool $negate
    *   Flag to negate the condition. By default, condition set as it is.
    *
-   * @return \Drupal\Core\Form\States\WatcherInterface
+   * @return \Drupal\Core\Form\States\FormElementWatcherInterface
    *   Watcher instance.
    */
   public function isIrrelevant(bool $condition = TRUE, bool $negate = FALSE): static;
@@ -125,7 +125,7 @@ interface WatcherInterface extends BaseStateInterface, WatchableInterface {
    * @param bool $negate
    *   Flag to negate the condition. By default, condition set as it is.
    *
-   * @return \Drupal\Core\Form\States\WatcherInterface
+   * @return \Drupal\Core\Form\States\FormElementWatcherInterface
    *   Watcher instance.
    */
   public function isReadonly(bool $condition = TRUE, bool $negate = FALSE): static;
@@ -138,7 +138,7 @@ interface WatcherInterface extends BaseStateInterface, WatchableInterface {
    * @param bool $negate
    *   Flag to negate the condition. By default, condition set as it is.
    *
-   * @return \Drupal\Core\Form\States\WatcherInterface
+   * @return \Drupal\Core\Form\States\FormElementWatcherInterface
    *   Watcher instance.
    */
   public function isReadwrite(bool $condition = TRUE, bool $negate = FALSE): static;
@@ -151,7 +151,7 @@ interface WatcherInterface extends BaseStateInterface, WatchableInterface {
    * @param bool $negate
    *   Flag to negate the condition. By default, condition set as it is.
    *
-   * @return \Drupal\Core\Form\States\WatcherInterface
+   * @return \Drupal\Core\Form\States\FormElementWatcherInterface
    *   Watcher instance.
    */
   public function isRelevant(bool $condition = TRUE, bool $negate = FALSE): static;
@@ -164,7 +164,7 @@ interface WatcherInterface extends BaseStateInterface, WatchableInterface {
    * @param bool $negate
    *   Flag to negate the condition. By default, condition set as it is.
    *
-   * @return \Drupal\Core\Form\States\WatcherInterface
+   * @return \Drupal\Core\Form\States\FormElementWatcherInterface
    *   Watcher instance.
    */
   public function isTouched(bool $condition = TRUE, bool $negate = FALSE): static;
@@ -177,7 +177,7 @@ interface WatcherInterface extends BaseStateInterface, WatchableInterface {
    * @param bool $negate
    *   Flag to negate the condition. By default, condition set as it is.
    *
-   * @return \Drupal\Core\Form\States\WatcherInterface
+   * @return \Drupal\Core\Form\States\FormElementWatcherInterface
    *   Watcher instance.
    */
   public function isUnchecked(bool $condition = TRUE, bool $negate = FALSE): static;
@@ -190,7 +190,7 @@ interface WatcherInterface extends BaseStateInterface, WatchableInterface {
    * @param bool $negate
    *   Flag to negate the condition. By default, condition set as it is.
    *
-   * @return \Drupal\Core\Form\States\WatcherInterface
+   * @return \Drupal\Core\Form\States\FormElementWatcherInterface
    *   Watcher instance.
    */
   public function isUntouched(bool $condition = TRUE, bool $negate = FALSE): static;
@@ -203,7 +203,7 @@ interface WatcherInterface extends BaseStateInterface, WatchableInterface {
    * @param bool $negate
    *   Flag to negate the condition. By default, condition set as it is.
    *
-   * @return \Drupal\Core\Form\States\WatcherInterface
+   * @return \Drupal\Core\Form\States\FormElementWatcherInterface
    *   Watcher instance.
    */
   public function isValid(bool $condition = TRUE, bool $negate = FALSE): static;
@@ -216,7 +216,7 @@ interface WatcherInterface extends BaseStateInterface, WatchableInterface {
    * @param bool $negate
    *   Flag to negate the condition. By default, condition set as it is.
    *
-   * @return \Drupal\Core\Form\States\WatcherInterface
+   * @return \Drupal\Core\Form\States\FormElementWatcherInterface
    *   Watcher instance.
    */
   public function isEmpty(bool $condition = TRUE, bool $negate = FALSE): static;
@@ -229,7 +229,7 @@ interface WatcherInterface extends BaseStateInterface, WatchableInterface {
    * @param bool $negate
    *   Flag to negate the condition. By default, condition set as it is.
    *
-   * @return \Drupal\Core\Form\States\WatcherInterface
+   * @return \Drupal\Core\Form\States\FormElementWatcherInterface
    *   Watcher instance.
    */
   public function isFilled(bool $condition = TRUE, bool $negate = FALSE): static;
@@ -242,7 +242,7 @@ interface WatcherInterface extends BaseStateInterface, WatchableInterface {
    * @param bool $negate
    *   Flag to negate the condition. By default, condition set as it is.
    *
-   * @return \Drupal\Core\Form\States\WatcherInterface
+   * @return \Drupal\Core\Form\States\FormElementWatcherInterface
    *   Watcher instance.
    */
   public function valueEqualTo(mixed $value, bool $negate = FALSE): static;
@@ -255,7 +255,7 @@ interface WatcherInterface extends BaseStateInterface, WatchableInterface {
    * @param mixed $condition
    *   Condition of selected state.
    *
-   * @return \Drupal\Core\Form\States\WatcherInterface
+   * @return \Drupal\Core\Form\States\FormElementWatcherInterface
    *   Watcher instance.
    */
   public function setCustomCondition(string $state, mixed $condition): static;

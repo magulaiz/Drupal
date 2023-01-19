@@ -4,8 +4,8 @@ namespace Drupal\Core\Field;
 
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Form\FormStatesBuilderProviderInterface;
-use Drupal\Core\Form\States\StatesBuilder;
-use Drupal\Core\Form\States\StatesBuilderInterface;
+use Drupal\Core\Form\States\FormElementStatesBuilder;
+use Drupal\Core\Form\States\FormElementStatesBuilderInterface;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Render\Element;
@@ -174,8 +174,8 @@ abstract class FormatterBase extends PluginSettingsBase implements FormatterInte
   /**
    * {@inheritdoc}
    */
-  public function getStatesBuilder(): StatesBuilderInterface {
-    return new StatesBuilder();
+  public function getStatesBuilder(): FormElementStatesBuilderInterface {
+    return new FormElementStatesBuilder();
   }
 
 }
