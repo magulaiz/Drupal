@@ -405,7 +405,7 @@ class VariationCacheTest extends UnitTestCase {
     // something is wrong. There should always be at least one shared context at
     // the top level or else the cache cannot do its job.
     $this->expectException(\LogicException::class);
-    $this->expectExceptionMessage("The complete set of cache contexts for a variation cache item must contain all of the initial cache contexts.");
+    $this->expectExceptionMessage("The complete set of cache contexts for a variation cache item must contain all of the initial cache contexts, missing: garden.type.");
 
     $this->housingType = 'house';
     $house_cacheability = (new CacheableMetadata())

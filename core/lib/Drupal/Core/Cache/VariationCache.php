@@ -13,41 +13,20 @@ use Symfony\Component\HttpFoundation\RequestStack;
 class VariationCache implements VariationCacheInterface {
 
   /**
-   * The request stack.
-   *
-   * @var \Symfony\Component\HttpFoundation\RequestStack
-   */
-  protected $requestStack;
-
-  /**
-   * The cache backend to wrap.
-   *
-   * @var \Drupal\Core\Cache\CacheBackendInterface
-   */
-  protected $cacheBackend;
-
-  /**
-   * The cache contexts manager.
-   *
-   * @var \Drupal\Core\Cache\Context\CacheContextsManager
-   */
-  protected $cacheContextsManager;
-
-  /**
    * Constructs a new VariationCache object.
    *
-   * @param \Symfony\Component\HttpFoundation\RequestStack $request_stack
+   * @param \Symfony\Component\HttpFoundation\RequestStack $requestStack
    *   The request stack.
-   * @param \Drupal\Core\Cache\CacheBackendInterface $cache_backend
+   * @param \Drupal\Core\Cache\CacheBackendInterface $cacheBackend
    *   The cache backend to wrap.
-   * @param \Drupal\Core\Cache\Context\CacheContextsManager $cache_contexts_manager
+   * @param \Drupal\Core\Cache\Context\CacheContextsManager $cacheContextsManager
    *   The cache contexts manager.
    */
-  public function __construct(RequestStack $request_stack, CacheBackendInterface $cache_backend, CacheContextsManager $cache_contexts_manager) {
-    $this->requestStack = $request_stack;
-    $this->cacheBackend = $cache_backend;
-    $this->cacheContextsManager = $cache_contexts_manager;
-  }
+  public function __construct(
+    protected RequestStack $requestStack,
+    protected CacheBackendInterface $cacheBackend,
+    protected CacheContextsManager $cacheContextsManager
+  ) {}
 
   /**
    * {@inheritdoc}
@@ -60,12 +39,12 @@ class VariationCache implements VariationCacheInterface {
   /**
    * {@inheritdoc}
    */
-  public function set(array $keys, $data, CacheableDependencyInterface $cacheability, CacheableDependencyInterface $initial_cacheability) {
+  public function set(array $keys, $data, CacheableDependencyInterface $cacheability, CacheableDependencyInterface $initial_cacheability): void {
     $initial_contexts = $initial_cacheability->getCacheContexts();
     $contexts = $cacheability->getCacheContexts();
 
-    if (array_diff($initial_contexts, $contexts)) {
-      throw new \LogicException('The complete set of cache contexts for a variation cache item must contain all of the initial cache contexts.');
+    if ($missing_contexts = array_diff($initial_contexts, $contexts)) {
+      throw new \LogicException(sprintf('The complete set of cache contexts for a variation cache item must contain all of the initial cache contexts, missing: %s.', implode(', ', $missing_contexts)));
     }
 
     // Don't store uncacheable items.
@@ -73,9 +52,9 @@ class VariationCache implements VariationCacheInterface {
       return;
     }
 
-    // Track the potential effect of cache context folding on cache tags.
-    $folded_cacheability = CacheableMetadata::createFromObject($cacheability);
-    $cid = $this->createCacheId($keys, $folded_cacheability);
+    // Track the potential effect of cache context optimization on cache tags.
+    $optimized_cacheability = CacheableMetadata::createFromObject($cacheability);
+    $cid = $this->createCacheId($keys, $optimized_cacheability);
 
     // Check whether we had any cache redirects leading to the cache ID already.
     // If there are none, we know that there is no proper redirect path to the
@@ -152,13 +131,13 @@ class VariationCache implements VariationCacheInterface {
       $this->cacheBackend->set($chain_cid, new CacheRedirect($cacheability));
     }
 
-    $this->cacheBackend->set($cid, $data, $this->maxAgeToExpire($cacheability->getCacheMaxAge()), $folded_cacheability->getCacheTags());
+    $this->cacheBackend->set($cid, $data, $this->maxAgeToExpire($cacheability->getCacheMaxAge()), $optimized_cacheability->getCacheTags());
   }
 
   /**
    * {@inheritdoc}
    */
-  public function delete(array $keys, CacheableDependencyInterface $initial_cacheability) {
+  public function delete(array $keys, CacheableDependencyInterface $initial_cacheability): void {
     $chain = $this->getRedirectChain($keys, $initial_cacheability);
     end($chain);
     $this->cacheBackend->delete(key($chain));
@@ -167,7 +146,7 @@ class VariationCache implements VariationCacheInterface {
   /**
    * {@inheritdoc}
    */
-  public function invalidate(array $keys, CacheableDependencyInterface $initial_cacheability) {
+  public function invalidate(array $keys, CacheableDependencyInterface $initial_cacheability): void {
     $chain = $this->getRedirectChain($keys, $initial_cacheability);
     end($chain);
     $this->cacheBackend->invalidate(key($chain));
@@ -223,9 +202,9 @@ class VariationCache implements VariationCacheInterface {
   /**
    * Creates a cache ID based on cache keys and cacheable metadata.
    *
-   * If cache contexts are folded during the creating of the cache ID, then the
-   * effect of said folding on the cache contexts will be reflected in the
-   * provided cacheable metadata.
+   * If cache contexts are optimized during the creating of the cache ID, then
+   * the effect of said optimizaztion on the cache contexts will be reflected in
+   * the provided cacheable metadata.
    *
    * @param string[] $keys
    *   The cache keys of the data to store.
@@ -248,7 +227,7 @@ class VariationCache implements VariationCacheInterface {
    * Creates a cache ID based on cache keys and cacheable metadata.
    *
    * This is a simpler, faster version of ::createCacheID() to be used when you
-   * do not care about how cache context folding affects the cache tags.
+   * do not care about how cache context optimization affects the cache tags.
    *
    * @param string[] $keys
    *   The cache keys of the data to store.

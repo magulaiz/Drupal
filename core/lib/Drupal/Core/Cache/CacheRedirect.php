@@ -3,7 +3,7 @@
 namespace Drupal\Core\Cache;
 
 /**
- * Defines a value object to represent a cache redirect with.
+ * Defines a value object to represent a cache redirect.
  *
  * @see \Drupal\Core\Cache\VariationCache::get()
  * @see \Drupal\Core\Cache\VariationCache::set()

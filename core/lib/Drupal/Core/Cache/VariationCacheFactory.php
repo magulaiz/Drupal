@@ -20,41 +20,20 @@ class VariationCacheFactory implements VariationCacheFactoryInterface {
   protected $bins = [];
 
   /**
-   * The request stack.
-   *
-   * @var \Symfony\Component\HttpFoundation\RequestStack
-   */
-  protected $requestStack;
-
-  /**
-   * The cache factory.
-   *
-   * @var \Drupal\Core\Cache\CacheFactoryInterface
-   */
-  protected $cacheFactory;
-
-  /**
-   * The cache contexts manager.
-   *
-   * @var \Drupal\Core\Cache\Context\CacheContextsManager
-   */
-  protected $cacheContextsManager;
-
-  /**
    * Constructs a new VariationCacheFactory object.
    *
-   * @param \Symfony\Component\HttpFoundation\RequestStack $request_stack
+   * @param \Symfony\Component\HttpFoundation\RequestStack $requestStack
    *   The request stack.
-   * @param \Drupal\Core\Cache\CacheFactoryInterface $cache_factory
+   * @param \Drupal\Core\Cache\CacheFactoryInterface $cacheFactory
    *   The cache factory.
-   * @param \Drupal\Core\Cache\Context\CacheContextsManager $cache_contexts_manager
+   * @param \Drupal\Core\Cache\Context\CacheContextsManager $cacheContextsManager
    *   The cache contexts manager.
    */
-  public function __construct(RequestStack $request_stack, CacheFactoryInterface $cache_factory, CacheContextsManager $cache_contexts_manager) {
-    $this->requestStack = $request_stack;
-    $this->cacheFactory = $cache_factory;
-    $this->cacheContextsManager = $cache_contexts_manager;
-  }
+  public function __construct(
+    protected RequestStack $requestStack,
+    protected CacheFactoryInterface $cacheFactory,
+    protected CacheContextsManager $cacheContextsManager
+  ) {}
 
   /**
    * {@inheritdoc}

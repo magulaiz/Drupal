@@ -48,7 +48,7 @@ interface VariationCacheInterface {
    *   Thrown when cacheability is provided that does not contain a cache
    *   context or does not completely contain the initial cacheability.
    */
-  public function set(array $keys, $data, CacheableDependencyInterface $cacheability, CacheableDependencyInterface $initial_cacheability);
+  public function set(array $keys, $data, CacheableDependencyInterface $cacheability, CacheableDependencyInterface $initial_cacheability): void;
 
   /**
    * Deletes an item from the cache.
@@ -64,7 +64,7 @@ interface VariationCacheInterface {
    *
    * @see \Drupal\Core\Cache\CacheBackendInterface::delete()
    */
-  public function delete(array $keys, CacheableDependencyInterface $initial_cacheability);
+  public function delete(array $keys, CacheableDependencyInterface $initial_cacheability): void;
 
   /**
    * Marks a cache item as invalid.
@@ -80,6 +80,6 @@ interface VariationCacheInterface {
    *
    * @see \Drupal\Core\Cache\CacheBackendInterface::invalidate()
    */
-  public function invalidate(array $keys, CacheableDependencyInterface $initial_cacheability);
+  public function invalidate(array $keys, CacheableDependencyInterface $initial_cacheability): void;
 
 }
