@@ -4,9 +4,9 @@ services:
   # params test (In PHP 8, PASSWORD_DEFAULT equals PASSWORD_BCRYPT).
   #
   # The second argument of the hashing service (constructor of PhpPassword)
-  # specifies the options passed topassword_hash(). In PHP 8 the default 'cost'
-  # value is 10. For hash params test, the value needs to be choosen higher
-  # than the default.
+  # specifies the options passed to password_hash(). In PHP 8 the default 'cost'
+  # value is 10. For the hash parameter test, the value must be higher than the
+  # default value.
   #
   # Future versions of PHP may increase this value in order to counteract
   # increases in the speed and power of computers available to crack the hashes.
