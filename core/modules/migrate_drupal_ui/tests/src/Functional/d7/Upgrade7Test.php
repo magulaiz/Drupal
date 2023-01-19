@@ -27,6 +27,7 @@ class Upgrade7Test extends MigrateUpgradeExecuteTestBase {
     'datetime_range',
     'language',
     'migrate_drupal_ui',
+    'phpass',
     'statistics',
     'telephone',
   ];
