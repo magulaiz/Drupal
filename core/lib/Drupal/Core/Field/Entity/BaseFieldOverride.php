@@ -149,7 +149,7 @@ class BaseFieldOverride extends FieldConfigBase {
    * {@inheritdoc}
    */
   public function isInternal() {
-    return $this->getBaseFieldDefinition()?->isInternal();
+    return $this->getBaseFieldDefinition()->isInternal();
   }
 
   /**
