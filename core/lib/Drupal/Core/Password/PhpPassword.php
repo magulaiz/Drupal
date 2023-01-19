@@ -36,6 +36,11 @@ class PhpPassword implements PasswordInterface {
    * {@inheritdoc}
    */
   public function check($password, $hash) {
+    // Prevent DoS attacks by refusing to hash large passwords.
+    if (strlen($password) > static::PASSWORD_MAX_LENGTH) {
+      return FALSE;
+    }
+
     return password_verify($password, $hash);
   }
 
