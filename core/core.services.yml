@@ -1091,12 +1091,10 @@ services:
   password:
     class: Drupal\Core\Password\PhpPassword
     arguments: ['%password_hash_cost%', '@legacy_password']
-    lazy: true
   Drupal\Core\Password\PasswordInterface: '@password'
   legacy_password:
     class: Drupal\Core\Password\PhpassHashedPassword
     arguments: [16]
-    lazy: true
   password_generator:
     class: Drupal\Core\Password\DefaultPasswordGenerator
   Drupal\Core\Password\PasswordGeneratorInterface: '@password_generator'
