@@ -46,7 +46,7 @@ class PhpassHashedPassword implements PasswordInterface {
   /**
    * The preferred PHP password interface.
    */
-  protected ?PasswordInterface $phpPassword;
+  protected ?PasswordInterface $corePassword;
 
   /**
    * Constructs a new password hashing instance.
@@ -56,17 +56,17 @@ class PhpassHashedPassword implements PasswordInterface {
    *   hashing function will be applied when generating new password hashes.
    *   The number of times is calculated by raising 2 to the power of the given
    *   value.
-   * @param \Drupal\Core\Password\PasswordInterface|null $phpPassword
+   * @param \Drupal\Core\Password\PasswordInterface|null $corePassword
    *   The preferred PHP password interface.
    */
-  public function __construct($countLog2, ?PasswordInterface $phpPassword = NULL) {
+  public function __construct($countLog2, ?PasswordInterface $corePassword = NULL) {
     // Ensure that $countLog2 is within set bounds.
     $this->countLog2 = $this->enforceLog2Boundaries($countLog2);
 
-    if (!isset($phpPassword)) {
-      @trigger_error('Calling PhpassHashedPassword::__construct() without the $phpPassword argument is deprecated in drupal:10.1.0 and will be required in drupal:11.0.0. See https://www.drupal.org/node/3293709');
+    if (!isset($corePassword)) {
+      @trigger_error('Calling PhpassHashedPassword::__construct() without the $corePassword argument is deprecated in drupal:10.1.0 and will be required in drupal:11.0.0. See https://www.drupal.org/node/3322420');
     }
-    $this->phpPassword = $phpPassword;
+    $this->corePassword = $corePassword;
   }
 
   /**
@@ -228,8 +228,8 @@ class PhpassHashedPassword implements PasswordInterface {
    * {@inheritdoc}
    */
   public function hash($password) {
-    if (isset($this->phpPassword)) {
-      return $this->phpPassword->hash($password);
+    if (isset($this->corePassword)) {
+      return $this->corePassword->hash($password);
     }
 
     return $this->crypt('sha512', $password, $this->generateSalt());
@@ -266,8 +266,8 @@ class PhpassHashedPassword implements PasswordInterface {
         break;
 
       default:
-        if (isset($this->phpPassword)) {
-          return $this->phpPassword->check($password, $stored_hash);
+        if (isset($this->corePassword)) {
+          return $this->corePassword->check($password, $stored_hash);
         }
 
         return FALSE;
@@ -281,8 +281,8 @@ class PhpassHashedPassword implements PasswordInterface {
    * {@inheritdoc}
    */
   public function needsRehash($hash) {
-    if (isset($this->phpPassword)) {
-      return $this->phpPassword->needsRehash($hash);
+    if (isset($this->corePassword)) {
+      return $this->corePassword->needsRehash($hash);
     }
 
     // Check whether this was an updated password.
