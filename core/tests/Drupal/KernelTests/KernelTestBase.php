@@ -575,7 +575,7 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
     // Relax the password hashing cost in tests to avoid performance issues.
     if ($container->hasDefinition('password')) {
       $container->getDefinition('password')
-        ->setArgument(0, 4);
+        ->setArguments([PASSWORD_BCRYPT, ['cost' => 4]]);
       if ($container->hasDefinition('phpass.password')) {
         $container->getDefinition('phpass.password')
           ->setArgument(0, 1);

@@ -35,7 +35,7 @@ class PhpPasswordTest extends UnitTestCase {
   protected function setUp(): void {
     parent::setUp();
     $this->password = $this->randomMachineName();
-    $this->passwordHasher = new PhpPassword(5);
+    $this->passwordHasher = new PhpPassword(PASSWORD_BCRYPT, ['cost' => 5]);
     $this->passwordHash = $this->passwordHasher->hash($this->password);
   }
 
@@ -46,7 +46,7 @@ class PhpPasswordTest extends UnitTestCase {
    * @covers ::needsRehash
    */
   public function testPasswordNeedsUpdate() {
-    $weakHash = (new PhpPassword(4))->hash($this->password);
+    $weakHash = (new PhpPassword(PASSWORD_BCRYPT, ['cost' => 4]))->hash($this->password);
     $this->assertTrue($this->passwordHasher->needsRehash($weakHash), 'Password hash with weak cost settings needs a new hash.');
   }
 
@@ -70,8 +70,8 @@ class PhpPasswordTest extends UnitTestCase {
    */
   public function testPasswordRehashing() {
     // Increment the cost by one.
-    $strongHasher = new PhpPassword(6);
-    $this->assertTrue($strongHasher->needsRehash($this->passwordHash), 'Needs a new hash after incrementing the log2 count.');
+    $strongHasher = new PhpPassword(PASSWORD_BCRYPT, ['cost' => 6]);
+    $this->assertTrue($strongHasher->needsRehash($this->passwordHash), 'Needs a new hash after incrementing the cost option.');
     // Re-hash the password.
     $rehashedPassword = $strongHasher->hash($this->password);
     $this->assertNotEquals($rehashedPassword, $this->passwordHash, 'Password hash changed again.');

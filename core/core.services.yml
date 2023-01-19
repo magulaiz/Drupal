@@ -59,7 +59,6 @@ parameters:
   tempstore.expire: 604800
   queue.config:
     suspendMaximumWait: 30.0
-  password_hash_cost: 10
 services:
   # Simple cache contexts, directly derived from the request context.
   cache_context.ip:
@@ -1081,16 +1080,8 @@ services:
     class: Drupal\Core\Path\PathValidator
     arguments: ['@router', '@router.no_access_checks', '@current_user', '@path_processor_manager']
   Drupal\Core\Path\PathValidatorInterface: '@path.validator'
-
-  # The first argument of the hashing service (constructor of PhpPassword) is
-  # the 'cost' option of password_hash(). In Drupal 10 the 'cost' has the default
-  # value used by password_hash() which is 10. Future versions of Drupal may
-  # increase this value in order to counteract increases in the speed and power
-  # of computers available to crack the hashes. Note that an increase of 1 will
-  # double the time needed for password hashing.
   password:
     class: Drupal\Core\Password\PhpPassword
-    arguments: ['%password_hash_cost%']
   Drupal\Core\Password\PasswordInterface: '@password'
   password_generator:
     class: Drupal\Core\Password\DefaultPasswordGenerator

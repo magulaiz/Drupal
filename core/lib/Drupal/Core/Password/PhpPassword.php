@@ -5,20 +5,27 @@ namespace Drupal\Core\Password;
 /**
  * Secure password hashing functions based on PHP >= 5.5.0 password hashing.
  *
- * @see http://php.net/manual/en/book.password.php
+ * @see https://www.php.net/manual/en/book.password.php
  */
 class PhpPassword implements PasswordInterface {
 
   /**
    * Constructs a new password hashing instance.
    *
-   * @param int $cost
-   *   The algorithmic cost that should be used. This is the same 'cost'
-   *   option as is used by the password_hash() function.
+   * @param string $algorithm
+   *   The hashing algorithm to use. Defaults to php default.
+   * @param array $options
+   *   List of options. Refer to password_hash for available options.
+   *
+   * @see https://www.php.net/password_hash
    */
   public function __construct(
-    protected int $cost
-  ) {}
+    protected string $algorithm = PASSWORD_DEFAULT,
+    protected array $options = []
+  ) {
+    $this->algorithm = $algorithm;
+    $this->options = $options;
+  }
 
   /**
    * {@inheritdoc}
@@ -29,7 +36,7 @@ class PhpPassword implements PasswordInterface {
       return FALSE;
     }
 
-    return password_hash($password, PASSWORD_BCRYPT, $this->getOptions());
+    return password_hash($password, $this->algorithm, $this->options);
   }
 
   /**
@@ -48,17 +55,7 @@ class PhpPassword implements PasswordInterface {
    * {@inheritdoc}
    */
   public function needsRehash($hash) {
-    return password_needs_rehash($hash, PASSWORD_BCRYPT, $this->getOptions());
-  }
-
-  /**
-   * Returns password options.
-   *
-   * @return array
-   *   Associative array with password options.
-   */
-  protected function getOptions() {
-    return ['cost' => $this->cost];
+    return password_needs_rehash($hash, $this->algorithm, $this->options);
   }
 
 }
