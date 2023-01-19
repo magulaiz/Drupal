@@ -88,6 +88,8 @@ class MediaLibraryUiBuilder {
    *   The media library dialog options.
    */
   public static function dialogOptions() {
+    // The 'media-library-widget-modal' class is required for proper functioning
+    // of the media library.
     return [
       'dialogClass' => 'media-library-widget-modal',
       'title' => t('Add or select media'),

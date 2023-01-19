@@ -22,7 +22,6 @@ use Drupal\Core\Url;
 use Drupal\field_ui\FieldUI;
 use Drupal\media\Entity\Media;
 use Drupal\media_library\MediaLibraryState;
-use Drupal\media_library\MediaLibraryUiBuilder;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Validator\ConstraintViolationInterface;
 
@@ -810,8 +809,9 @@ class MediaLibraryWidget extends WidgetBase implements TrustedCallbackInterface 
    */
   public static function openMediaLibrary(array $form, FormStateInterface $form_state) {
     $triggering_element = $form_state->getTriggeringElement();
-    $library_ui = \Drupal::service('media_library.ui_builder')->buildUi($triggering_element['#media_library_state']);
-    $dialog_options = MediaLibraryUiBuilder::dialogOptions();
+    $ui_builder = \Drupal::service('media_library.ui_builder');
+    $library_ui = $ui_builder->buildUi($triggering_element['#media_library_state']);
+    $dialog_options = $ui_builder->dialogOptions();
     return (new AjaxResponse())
       ->addCommand(new OpenModalDialogCommand($dialog_options['title'], $library_ui, $dialog_options));
   }
