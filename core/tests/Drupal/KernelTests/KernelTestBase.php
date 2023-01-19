@@ -573,9 +573,13 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
     }
 
     // Relax the password hashing cost in tests to avoid performance issues.
-    if ($container->hasDefinition('password') && $container->hasDefinition('legacy_password')) {
-      $container->getDefinition('legacy_password')->setArguments([1, $container->getDefinition('password')]);
-      $container->getDefinition('password')->setArguments([4]);
+    if ($container->hasDefinition('password')) {
+      $container->getDefinition('password')
+        ->setArgument(0, 4);
+      if ($container->hasDefinition('legacy_password')) {
+        $container->getDefinition('legacy_password')
+          ->setArgument(0, 1);
+      }
     }
 
     // Add the on demand rebuild route provider service.
