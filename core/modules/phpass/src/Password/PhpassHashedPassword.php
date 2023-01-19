@@ -1,6 +1,8 @@
 <?php
 
-namespace Drupal\Core\Password;
+namespace Drupal\phpass\Password;
+
+use Drupal\Core\Password\PasswordInterface;
 
 /**
  * Legacy password hashing framework.

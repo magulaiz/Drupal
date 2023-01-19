@@ -1092,11 +1092,6 @@ services:
     class: Drupal\Core\Password\PhpPassword
     arguments: ['%password_hash_cost%']
   Drupal\Core\Password\PasswordInterface: '@password'
-  legacy_password:
-    public: false
-    class: Drupal\Core\Password\PhpassHashedPassword
-    decorates: password
-    arguments: [16, '@.inner']
   password_generator:
     class: Drupal\Core\Password\DefaultPasswordGenerator
   Drupal\Core\Password\PasswordGeneratorInterface: '@password_generator'

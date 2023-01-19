@@ -576,8 +576,8 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
     if ($container->hasDefinition('password')) {
       $container->getDefinition('password')
         ->setArgument(0, 4);
-      if ($container->hasDefinition('legacy_password')) {
-        $container->getDefinition('legacy_password')
+      if ($container->hasDefinition('phpass.password')) {
+        $container->getDefinition('phpass.password')
           ->setArgument(0, 1);
       }
     }

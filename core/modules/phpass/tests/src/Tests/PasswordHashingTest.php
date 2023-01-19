@@ -5,9 +5,9 @@
  * Contains \Drupal\Tests\Core\Password\PasswordHashingTest.
  */
 
-namespace Drupal\Tests\Core\Password;
+namespace Drupal\Tests\phpass\Password;
 
-use Drupal\Core\Password\PhpassHashedPassword;
+use Drupal\phpass\Password\PhpassHashedPassword;
 use Drupal\Core\Password\PasswordInterface;
 use Drupal\Tests\UnitTestCase;
 
