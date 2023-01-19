@@ -245,7 +245,7 @@ class DynamicPageCacheSubscriber implements EventSubscriberInterface {
       return FALSE;
     }
 
-    // Fold the contexts and let them affect the cache tags to mimic what
+    // Optimize the contexts and let them affect the cache tags to mimic what
     // happens to the cacheability in the variation cache.
     $cacheability->addCacheableDependency($this->cacheContextsManager->convertTokensToKeys($cacheability->getCacheContexts()));
     $cacheability->setCacheContexts($this->cacheContextsManager->optimizeTokens($cacheability->getCacheContexts()));

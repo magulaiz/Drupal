@@ -65,7 +65,7 @@ class PlaceholderGenerator implements PlaceholderGeneratorInterface {
       return TRUE;
     }
 
-    // Fold the contexts and let them affect the cache tags to mimic what
+    // Optimize the contexts and let them affect the cache tags to mimic what
     // happens to the cacheability in the variation cache (RenderCache backend).
     $cacheability->addCacheableDependency($this->cacheContextsManager->convertTokensToKeys($cacheability->getCacheContexts()));
     $cacheability->setCacheContexts($this->cacheContextsManager->optimizeTokens($cacheability->getCacheContexts()));
