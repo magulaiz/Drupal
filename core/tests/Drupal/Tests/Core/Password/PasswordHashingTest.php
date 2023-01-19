@@ -1,174 +1,143 @@
 <?php
 
+/**
+ * @file
+ * Contains \Drupal\Tests\Core\Password\PasswordHashingTest.
+ */
+
 namespace Drupal\Tests\Core\Password;
 
-use Drupal\Core\Password\PasswordInterface;
 use Drupal\Core\Password\PhpassHashedPassword;
-use Drupal\Core\Password\PhpPassword;
+use Drupal\Core\Password\PasswordInterface;
 use Drupal\Tests\UnitTestCase;
 
 /**
- * Tests password hashing services.
+ * Unit tests for password hashing API.
  *
- * @coversDefaultClass \Drupal\Core\Password\PhpPassword
+ * @coversDefaultClass \Drupal\Core\Password\PhpassHashedPassword
  * @group System
  */
 class PasswordHashingTest extends UnitTestCase {
 
   /**
-   * The current ?password hashing service.
+   * The user for testing.
    *
-   * @var \Drupal\Core\Password\PasswordInterface
+   * @var \PHPUnit\Framework\MockObject\MockObject|\Drupal\user\UserInterface
    */
-  protected PasswordInterface $hashingService;
+  protected $user;
 
   /**
-   * The legacy hashing service.
-   *
-   * This service was used in Drupal 7 and Drupal < 10.1.0.
-   *
-   * @var \Drupal\Core\Password\PasswordInterface
-   */
-  protected PasswordInterface $legacyHashingService;
-
-  /**
-   * The plain-text password.
+   * The raw password.
    *
    * @var string
    */
-  protected string $plainPassword;
+  protected $password;
 
   /**
-   * A Drupal 6 (md5) hash migrated with legacy hashing service.
-   *
-   * This is a string migrated from Drupal 6 (or any system with md5 hashing)
-   * either to Drupal 7 or to Drupal < 10.1.0. Such a string is build by hashing
-   * an already md5 hashed password with the legacy service (used in Drupal 7,
-   * < 10.1.0) and prefixed with 'U'.
+   * The md5 password.
    *
    * @var string
    */
-  protected string $md5ToLegacyHashedPassword;
+  protected $md5HashedPassword;
 
   /**
-   * A Drupal 6 (md5) hash migrated with current hashing service.
-   *
-   * This is a string migrated from Drupal 6 (or any system with md5 hashing) to
-   * Drupal >= 10.1.0. Such a string is build by hashing an already md5 hashed
-   * password with the current service (used in Drupal >= 10.1.0) password and
-   * prefixed with 'U'.
+   * The hashed password.
    *
    * @var string
    */
-  protected string $md5HashedPassword;
+  protected $hashedPassword;
 
   /**
-   * A plain password hashed with the legacy service.
+   * The password hasher under test.
    *
-   * This is a plain-text password hashed with the legacy hashing service, used
-   * in Drupal 7 and Drupal < 10.1.0.
-   *
-   * @var string
+   * @var \Drupal\Core\Password\PhpassHashedPassword
    */
-  protected string $legacyHashedPassword;
-
-  /**
-   * A plain password hashed with the current service.
-   *
-   * This is a plain-text password hashed with the current hashing service, used
-   * Drupal >= 10.1.0.
-   *
-   * @var string
-   */
-  protected string $hashedPassword;
+  protected $passwordHasher;
 
   /**
    * {@inheritdoc}
    */
   protected function setUp(): void {
     parent::setUp();
-
-    $this->legacyHashingService = new PhpassHashedPassword(1);
-    $this->hashingService = new PhpPassword(4, $this->legacyHashingService);
-
-    $this->plainPassword = $this->randomMachineName();
-    $md5_hash = md5($this->plainPassword);
-
-    $this->md5ToLegacyHashedPassword = 'U' . $this->legacyHashingService->hash($md5_hash);
-    $this->md5HashedPassword = 'U' . $this->hashingService->hash($md5_hash);
-    $this->legacyHashedPassword = $this->legacyHashingService->hash($this->plainPassword);
-    $this->hashedPassword = $this->hashingService->hash($this->plainPassword);
+    $this->password = $this->randomMachineName();
+    $this->passwordHasher = new PhpassHashedPassword(1);
+    $this->hashedPassword = $this->passwordHasher->hash($this->password);
+    $this->md5HashedPassword = 'U' . $this->passwordHasher->hash(md5($this->password));
   }
 
   /**
-   * Tests if a password needs rehashing.
+   * Tests the hash count boundaries are enforced.
    *
-   * @covers \Drupal\Core\Password\PhpPassword::needsRehash
+   * @covers ::enforceLog2Boundaries
    */
-  public function testPasswordNeedsRehashing(): void {
-    // Check that outdated hashes need rehashing.
-    $this->assertTrue($this->hashingService->needsRehash($this->md5ToLegacyHashedPassword));
-    $this->assertTrue($this->hashingService->needsRehash($this->md5HashedPassword));
-    $this->assertTrue($this->hashingService->needsRehash($this->legacyHashedPassword));
+  public function testWithinBounds() {
+    $hasher = new FakePhpassHashedPassword();
+    $this->assertEquals(PhpassHashedPassword::MIN_HASH_COUNT, $hasher->enforceLog2Boundaries(1), "Min hash count enforced");
+    $this->assertEquals(PhpassHashedPassword::MAX_HASH_COUNT, $hasher->enforceLog2Boundaries(100), "Max hash count enforced");
+  }
 
-    // Check that a text hashed with the current service doesn't need rehashing.
-    $this->assertFalse($this->hashingService->needsRehash($this->hashedPassword));
+  /**
+   * Tests a password needs update.
+   *
+   * @covers ::needsRehash
+   */
+  public function testPasswordNeedsUpdate() {
+    // The md5 password should be flagged as needing an update.
+    $this->assertTrue($this->passwordHasher->needsRehash($this->md5HashedPassword), 'Upgraded md5 password hash needs a new hash.');
   }
 
   /**
    * Tests password hashing.
    *
-   * Tests that plain-text password is verifying against all its hashes.
-   *
-   * @covers \Drupal\Core\Password\PhpPassword::check
-   * @covers \Drupal\Core\Password\PhpassHashedPassword::check
+   * @covers ::hash
+   * @covers ::getCountLog2
+   * @covers ::check
+   * @covers ::needsRehash
    */
-  public function testPasswordHashing(): void {
-    // Check that text hashed with current service is different from the others.
-    $this->assertNotEquals($this->hashedPassword, $this->md5ToLegacyHashedPassword);
-    $this->assertNotEquals($this->hashedPassword, $this->md5HashedPassword);
-    $this->assertNotEquals($this->hashedPassword, $this->legacyHashedPassword);
-
-    // Check that the plain-text password is verifying against all its hashes.
-    // This is important because migrated and legacy hashes should be checked
-    // with the user plain-text entered password on first login.
-    $this->assertTrue($this->hashingService->check($this->plainPassword, $this->md5ToLegacyHashedPassword));
-    $this->assertTrue($this->hashingService->check($this->plainPassword, $this->md5HashedPassword));
-    $this->assertTrue($this->hashingService->check($this->plainPassword, $this->legacyHashedPassword));
+  public function testPasswordHashing() {
+    $this->assertSame(PhpassHashedPassword::MIN_HASH_COUNT, $this->passwordHasher->getCountLog2($this->hashedPassword), 'Hashed password has the minimum number of log2 iterations.');
+    $this->assertNotEquals($this->hashedPassword, $this->md5HashedPassword, 'Password hashes not the same.');
+    $this->assertTrue($this->passwordHasher->check($this->password, $this->md5HashedPassword), 'Password check succeeds.');
+    $this->assertTrue($this->passwordHasher->check($this->password, $this->hashedPassword), 'Password check succeeds.');
+    // Since the log2 setting hasn't changed and the user has a valid password,
+    // userNeedsNewHash() should return FALSE.
+    $this->assertFalse($this->passwordHasher->needsRehash($this->hashedPassword), 'Does not need a new hash.');
   }
 
   /**
-   * Tests that password needs rehashing when the cost changes.
+   * Tests password rehashing.
    *
-   * @covers \Drupal\Core\Password\PhpPassword::hash
-   * @covers \Drupal\Core\Password\PhpPassword::check
-   * @covers \Drupal\Core\Password\PhpPassword::needsRehash
+   * @covers ::hash
+   * @covers ::getCountLog2
+   * @covers ::check
+   * @covers ::needsRehash
    */
-  public function testPasswordNeedsRehashingOnCostChange(): void {
-    // Increment the cost from 4 to 5.
-    $this->hashingService = new PhpPassword(5, $this->legacyHashingService);
-
-    // Check that the hash needs rehashing after cost changes.
-    $this->assertTrue($this->hashingService->needsRehash($this->hashedPassword));
-
+  public function testPasswordRehashing() {
+    // Increment the log2 iteration to MIN + 1.
+    $password_hasher = new PhpassHashedPassword(PhpassHashedPassword::MIN_HASH_COUNT + 1);
+    $this->assertTrue($password_hasher->needsRehash($this->hashedPassword), 'Needs a new hash after incrementing the log2 count.');
     // Re-hash the password.
-    $rehashed_password = $this->hashingService->hash($this->plainPassword);
-    $this->assertNotEquals($rehashed_password, $this->hashedPassword);
+    $rehashed_password = $password_hasher->hash($this->password);
+    $this->assertSame(PhpassHashedPassword::MIN_HASH_COUNT + 1, $password_hasher->getCountLog2($rehashed_password), 'Re-hashed password has the correct number of log2 iterations.');
+    $this->assertNotEquals($rehashed_password, $this->hashedPassword, 'Password hash changed again.');
 
-    // Check that the new hash is up-to-date.
-    $this->assertFalse($this->hashingService->needsRehash($rehashed_password));
-    $this->assertTrue($this->hashingService->check($this->plainPassword, $rehashed_password));
+    // Now the hash should be OK.
+    $this->assertFalse($password_hasher->needsRehash($rehashed_password), 'Re-hashed password does not need a new hash.');
+    $this->assertTrue($password_hasher->check($this->password, $rehashed_password), 'Password check succeeds with re-hashed password.');
+    $this->assertTrue($this->passwordHasher->check($this->password, $rehashed_password), 'Password check succeeds with re-hashed password with original hasher.');
   }
 
   /**
-   * Tests that passwords longer than 512 bytes are not hashed.
+   * Verifies that passwords longer than 512 bytes are not hashed.
    *
-   * @covers \Drupal\Core\Password\PhpPassword::hash
+   * @covers ::crypt
    *
    * @dataProvider providerLongPasswords
    */
-  public function testLongPassword($password, $allowed): void {
-    $hashed_password = $this->hashingService->hash($password);
+  public function testLongPassword($password, $allowed) {
+
+    $hashed_password = $this->passwordHasher->hash($password);
+
     if ($allowed) {
       $this->assertNotFalse($hashed_password);
     }
@@ -178,21 +147,13 @@ class PasswordHashingTest extends UnitTestCase {
   }
 
   /**
-   * Provides the test cases for testLongPassword().
-   *
-   * @see ::testLongPassword()
+   * Provides the test matrix for testLongPassword().
    */
-  public function providerLongPasswords(): array {
+  public function providerLongPasswords() {
     // '512 byte long password is allowed.'
-    $passwords['allowed'] = [
-      str_repeat('x', PasswordInterface::PASSWORD_MAX_LENGTH),
-      TRUE,
-    ];
+    $passwords['allowed'] = [str_repeat('x', PasswordInterface::PASSWORD_MAX_LENGTH), TRUE];
     // 513 byte long password is not allowed.
-    $passwords['too_long'] = [
-      str_repeat('x', PasswordInterface::PASSWORD_MAX_LENGTH + 1),
-      FALSE,
-    ];
+    $passwords['too_long'] = [str_repeat('x', PasswordInterface::PASSWORD_MAX_LENGTH + 1), FALSE];
 
     // Check a string of 3-byte UTF-8 characters, 510 byte long password is
     // allowed.
@@ -200,35 +161,20 @@ class PasswordHashingTest extends UnitTestCase {
     $diff = PasswordInterface::PASSWORD_MAX_LENGTH % 3;
     $passwords['utf8'] = [str_repeat('€', $len), TRUE];
     // 512 byte long password is allowed.
-    $passwords['ut8_extended'] = [
-      $passwords['utf8'][0] . str_repeat('x', $diff),
-      TRUE,
-    ];
+    $passwords['ut8_extended'] = [$passwords['utf8'][0] . str_repeat('x', $diff), TRUE];
 
     // Check a string of 3-byte UTF-8 characters, 513 byte long password is
     // allowed.
     $passwords['utf8_too_long'] = [str_repeat('€', $len + 1), FALSE];
-
     return $passwords;
-  }
-
-  /**
-   * Tests if legacy service hash count boundaries are enforced.
-   *
-   * @covers \Drupal\Core\Password\PhpassHashedPassword::enforceLog2Boundaries
-   */
-  public function testWithinBounds(): void {
-    $legacy_service = new FakeLegacyPassword();
-    $this->assertEquals(PhpassHashedPassword::MIN_HASH_COUNT, $legacy_service->enforceLog2Boundaries(1));
-    $this->assertEquals(PhpassHashedPassword::MAX_HASH_COUNT, $legacy_service->enforceLog2Boundaries(100));
   }
 
 }
 
 /**
- * A fake legacy hashing class service for tests.
+ * A fake class for tests.
  */
-class FakeLegacyPassword extends PhpassHashedPassword {
+class FakePhpassHashedPassword extends PhpassHashedPassword {
 
   public function __construct() {
     // Noop.
