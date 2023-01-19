@@ -288,15 +288,11 @@ class AccountSettingsForm extends ConfigFormBase {
     $form['email_activated']['settings'] = [
       '#type' => 'container',
       '#states' => $states->addStates(
-        $states->state()->setInvisible(
+      // Hide the additional settings when this email is disabled.
+      $states->state()->setInvisible(
           $states->watch('input[name="user_mail_status_activated_notify"]')->isUnchecked()
         )
-      )->toArray(),[
-        // Hide the additional settings when this email is disabled.
-        'invisible' => [
-          'input[name="user_mail_status_activated_notify"]' => ['checked' => FALSE],
-        ],
-      ],
+      )->toArray(),
     ];
     $form['email_activated']['settings']['user_mail_status_activated_subject'] = [
       '#type' => 'textfield',
