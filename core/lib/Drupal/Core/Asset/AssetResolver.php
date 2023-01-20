@@ -127,6 +127,7 @@ class AssetResolver implements AssetResolverInterface {
       'media' => 'all',
       'preprocess' => TRUE,
       'browsers' => [],
+      'attributes' => [],
     ];
 
     foreach ($libraries_to_load as $library) {

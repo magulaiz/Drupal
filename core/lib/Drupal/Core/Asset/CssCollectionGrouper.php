@@ -52,7 +52,7 @@ class CssCollectionGrouper implements AssetCollectionGrouperInterface {
           // Group file items if their 'preprocess' flag is TRUE.
           // Help ensure maximum reuse of aggregate files by only grouping
           // together items that share the same 'group' value.
-          $group_keys = $item['preprocess'] ? [$item['type'], $item['group'], $item['media'], $item['browsers']] : FALSE;
+          $group_keys = $item['preprocess'] ? [$item['type'], $item['group'], $item['media'], $item['browsers'], $item['attributes']] : FALSE;
           break;
 
         case 'external':
