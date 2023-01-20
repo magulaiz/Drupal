@@ -165,7 +165,7 @@ abstract class ListItemBase extends FieldItemBase implements OptionsProviderInte
     $element['allowed_values']['add_more_allowed_values'] = [
       '#type' => 'submit',
       '#name' => 'add_more_allowed_values',
-      '#value' => t('Add another item'),
+      '#value' => $this->t('Add another item'),
       '#attributes' => ['class' => ['field-add-more-submit']],
       '#submit' => [[static::class, 'addMoreSubmit']],
       '#ajax' => [
@@ -189,7 +189,7 @@ abstract class ListItemBase extends FieldItemBase implements OptionsProviderInte
   }
 
   public static function exists() {
-    return false;
+    return FALSE;
   }
 
   public static function addMoreSubmit(array $form, FormStateInterface $form_state) {
@@ -208,7 +208,6 @@ abstract class ListItemBase extends FieldItemBase implements OptionsProviderInte
 
     return $element;
   }
-
 
   /**
    * Provides the field type specific allowed values form element #description.
@@ -230,18 +229,20 @@ abstract class ListItemBase extends FieldItemBase implements OptionsProviderInte
    * @see \Drupal\Core\Render\Element\FormElement::processPattern()
    */
   public static function validateAllowedValues($element, FormStateInterface $form_state) {
-    $items = array_filter(array_map(function($item) use ($element) {
+    $items = array_filter(array_map(function ($item) use ($element) {
       $current_element = $element['table'][$item];
       if ($current_element['item']['key']['#value'] && $current_element['item']['label']['#value']) {
         return $current_element['item']['key']['#value'] . '|' . $current_element['item']['label']['#value'];
-      } elseif ($current_element['item']['key']['#value']) {
+      }
+      elseif ($current_element['item']['key']['#value']) {
         return $current_element['item']['key']['#value'];
-      } elseif ($current_element['item']['label']['#value']) {
+      }
+      elseif ($current_element['item']['label']['#value']) {
         return $current_element['item']['label']['#value'];
       }
 
-      return null;
-    }, Element::children($element['table'])), function($item) {
+      return NULL;
+    }, Element::children($element['table'])), function ($item) {
       return $item;
     });
     $values = static::extractAllowedValues(implode("\n", $items), $element['#field_has_data']);
