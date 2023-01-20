@@ -60,8 +60,8 @@ class ImageAdminUiTest extends ImageFieldTestBase {
     $effects = $style->get('effects');
     $this->assertNotEmpty($effects);
     $this->assertNotCount(1, $effects);
-    foreach ($effects as $ieid => $effect) {
-      $this->drupalGet($style->toUrl()->toString() . '/effects/' . $ieid);
+    foreach ($effects as $id => $effect) {
+      $this->drupalGet($style->toUrl()->toString() . '/effects/' . $id);
 
       $this->assertSession()->pageTextContains('Resizing will make images an exact set of dimensions. This may cause images to be stretched or shrunk disproportionately.');
     }
