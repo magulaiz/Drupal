@@ -3,4 +3,4 @@ services:
     public: false
     class: Drupal\phpass\Password\PhpassHashedPassword
     decorates: password
-    arguments: [16, '@.inner']
+    arguments: ['@.inner']

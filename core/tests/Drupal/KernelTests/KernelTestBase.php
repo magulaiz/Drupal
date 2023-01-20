@@ -576,10 +576,6 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
     if ($container->hasDefinition('password')) {
       $container->getDefinition('password')
         ->setArguments([PASSWORD_BCRYPT, ['cost' => 4]]);
-      if ($container->hasDefinition('phpass.password')) {
-        $container->getDefinition('phpass.password')
-          ->setArgument(0, 1);
-      }
     }
 
     // Add the on demand rebuild route provider service.
