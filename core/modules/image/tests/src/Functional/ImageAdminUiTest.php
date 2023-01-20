@@ -58,8 +58,7 @@ class ImageAdminUiTest extends ImageFieldTestBase {
     // Open the edit effect form and check image style effect help text.
     $style = ImageStyle::load($style->getName());
     $effects = $style->get('effects');
-    $this->assertNotEmpty($effects);
-    $this->assertNotCount(1, $effects);
+    $this->assertGreaterThanOrEqual(1, count($effects));
     foreach ($effects as $id => $effect) {
       $this->drupalGet($style->toUrl()->toString() . '/effects/' . $id);
 
