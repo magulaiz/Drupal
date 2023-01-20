@@ -93,6 +93,21 @@ abstract class ImageFieldTestBase extends BrowserTestBase {
   }
 
   /**
+   * Create a random style.
+   *
+   * @return object
+   *   A list containing the details of the generated image style.
+   */
+  public function createRandomStyle(): object {
+    $style_name = strtolower($this->randomMachineName());
+    $style_label = $this->randomString();
+    $values = ['name' => $style_name, 'label' => $style_label];
+    $style = \Drupal::entityTypeManager()->getStorage('image_style')->create($values);
+    $style->save();
+    return $style;
+  }
+
+  /**
    * Upload an image to a node.
    *
    * @param $image

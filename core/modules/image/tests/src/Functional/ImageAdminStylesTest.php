@@ -317,10 +317,7 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
    */
   public function testStyleReplacement() {
     // Create a new style.
-    $style_name = strtolower($this->randomMachineName(10));
-    $style_label = $this->randomString();
-    $style = ImageStyle::create(['name' => $style_name, 'label' => $style_label]);
-    $style->save();
+    $style = $this->createRandomStyle();
     $style_path = 'admin/config/media/image-styles/manage/';
 
     // Create an image field that uses the new style.
@@ -330,7 +327,7 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
       ->getViewDisplay('node', 'article')
       ->setComponent($field_name, [
         'type' => 'image',
-        'settings' => ['image_style' => $style_name],
+        'settings' => ['image_style' => $style->getName()],
       ])
       ->save();
 
@@ -357,7 +354,7 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
       'name' => $new_style_name,
       'label' => $new_style_label,
     ];
-    $this->drupalGet($style_path . $style_name);
+    $this->drupalGet($style_path . $style->getName());
     $this->submitForm($edit, 'Save');
     $this->assertSession()->statusMessageContains('Changes to the style have been saved.', 'status');
     $this->drupalGet('node/' . $nid);
@@ -441,9 +438,7 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
     $admin_path = 'admin/config/media/image-styles';
 
     // Create a new style.
-    $style_name = strtolower($this->randomMachineName(10));
-    $style = ImageStyle::create(['name' => $style_name, 'label' => $this->randomString()]);
-    $style->save();
+    $style = $this->createRandomStyle();
 
     // Create an image to make sure it gets flushed.
     $files = $this->drupalGetTestFiles('image');
@@ -455,7 +450,7 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
     // Go to image styles list page and check if the flush operation link
     // exists.
     $this->drupalGet($admin_path);
-    $flush_path = $admin_path . '/manage/' . $style_name . '/flush';
+    $flush_path = $style->toUrl()->toString() . '/flush';
     $this->assertSession()->linkByHrefExists($flush_path);
 
     // Flush the image style derivatives using the user interface.
@@ -471,10 +466,7 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
    */
   public function testConfigImport() {
     // Create a new style.
-    $style_name = strtolower($this->randomMachineName(10));
-    $style_label = $this->randomString();
-    $style = ImageStyle::create(['name' => $style_name, 'label' => $style_label]);
-    $style->save();
+    $style = $this->createRandomStyle();
 
     // Create an image field that uses the new style.
     $field_name = strtolower($this->randomMachineName(10));
@@ -483,7 +475,7 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
       ->getViewDisplay('node', 'article')
       ->setComponent($field_name, [
         'type' => 'image',
-        'settings' => ['image_style' => $style_name],
+        'settings' => ['image_style' => $style->getName()],
       ])
       ->save();
 
@@ -509,10 +501,10 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
       ->removeComponent($field_name)
       ->save();
     $this->copyConfig($active, $sync);
-    $sync->delete('image.style.' . $style_name);
+    $sync->delete('image.style.' . $style->getName());
     $this->configImporter()->import();
 
-    $this->assertNull(ImageStyle::load($style_name), 'Style deleted after config import.');
+    $this->assertNull(ImageStyle::load($style->getName()), 'Style deleted after config import.');
     $this->assertEquals(0, $this->getImageCount($style), 'Image style was flushed after being deleted by config import.');
   }
 
@@ -520,8 +512,7 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
    * Tests access for the image style listing.
    */
   public function testImageStyleAccess() {
-    $style = ImageStyle::create(['name' => 'style_foo', 'label' => $this->randomString()]);
-    $style->save();
+    $this->createRandomStyle();
 
     $this->drupalGet('admin/config/media/image-styles');
     $this->clickLink('Edit');
