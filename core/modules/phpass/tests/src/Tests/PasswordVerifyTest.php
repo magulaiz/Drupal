@@ -77,8 +77,11 @@ class PasswordVerifyTest extends UnitTestCase {
    */
   public function testPasswordCheckSupported() {
     $validPassword = 'valid password';
+
+    // cspell:disable
     $passwordHash = '$S$5TOxWPdvJRs0P/xZBdrrPlGgzViOS0drHu3jaIjitesfttrp18bk';
     $passwordLayered = 'U$S$5vNHDQyLqCTvsYBLWBUWXJWhA0m3DTpBh04acFEOGB.bKBclhKgo';
+    // cspell:enable
 
     $invalidPassword = 'invalid password';
 
@@ -117,7 +120,10 @@ class PasswordVerifyTest extends UnitTestCase {
    * @dataProvider providerLongPasswords
    */
   public function testLongPassword($password, $allowed) {
-    $passwordHash = '$S$5TOxWPdvJRs0P/xZBdrrPlGgzViOS0drHu3jaIjitesfttrp18bk';
+    // cspell:disable
+    $bogusHash = '$S$5TOxWPdvJRs0P/xZBdrrPlGgzViOS0drHu3jaIjitesfttrp18bk';
+    // cspell:enable
+
     $passwordService = new PhpassHashedPassword(new PhpPassword());
 
     if ($allowed) {
@@ -127,7 +133,7 @@ class PasswordVerifyTest extends UnitTestCase {
       $this->assertTrue($result);
     }
     else {
-      $result = $passwordService->check($password, $passwordHash);
+      $result = $passwordService->check($password, $bogusHash);
       $this->assertFalse($result);
     }
   }
