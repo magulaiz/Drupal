@@ -70,6 +70,9 @@ class UninstallTest extends BrowserTestBase {
     $this->drupalGet('admin/modules/uninstall');
     $this->assertSession()->titleEquals('Uninstall | Drupal');
 
+    // Make sure the module machine name is rendered in a filter text source.
+    $this->assertSession()->elementTextContains('css', 'tr[data-drupal-selector="edit-module-test"] .module-machine-name.table-filter-text-source', 'module_test');
+
     // Check that the experimental module link was rendered correctly.
     $this->assertSession()->elementExists('xpath', "//a[contains(@aria-label, 'View information on the Experimental status of the module Experimental Test')]");
     $this->assertSession()->elementExists('xpath', "//a[contains(@href, 'https://example.com/experimental')]");

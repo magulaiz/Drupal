@@ -12,6 +12,7 @@
  *   - checkbox_id: A unique identifier for interacting with the checkbox
  *     element.
  *   - name: The human-readable name of the module.
+ *   - machine_name: The module's machine name.   
  *   - description: The description of the module.
  *   - disabled_reasons: (optional) A list of reasons why this module cannot be
  *     uninstalled.
@@ -21,6 +22,7 @@
  * @ingroup themeable
  */
 #}
+{{ attach_library('core/drupal.tableresponsive') }}
 {{ form.filters }}
 
 <table class="responsive-enabled">
@@ -28,7 +30,8 @@
     <tr>
       <th>{{ 'Uninstall'|t }}</th>
       <th>{{ 'Name'|t }}</th>
-      <th>{{ 'Description'|t }}</th>
+      <th class="priority-low">{{ 'Machine name'|t }}</th>
+      <th class="priority-medium">{{ 'Description'|t }}</th>
     </tr>
   </thead>
   <tbody>
@@ -41,7 +44,10 @@
         <td>
           <label for="{{ module.checkbox_id }}" class="module-name table-filter-text-source">{{ module.name }}</label>
         </td>
-        <td class="description">
+        <td class="module-machine-name table-filter-text-source priority-medium">
+          {{ module.machine_name }}
+        </td>
+        <td class="description priority-low">
           <span class="text module-description">{{ module.description }}</span>
           {% if module.reasons_count > 0 %}
             <div class="admin-requirements">

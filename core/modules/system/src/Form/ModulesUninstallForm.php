@@ -204,6 +204,7 @@ class ModulesUninstallForm extends FormBase {
       }
     }
 
+    $form['#attached']['library'][] = 'core/drupal.tableresponsive';
     $form['#attached']['library'][] = 'system/drupal.system.modules';
     $form['actions'] = ['#type' => 'actions'];
     $form['actions']['submit'] = [
