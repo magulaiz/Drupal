@@ -9,6 +9,7 @@ use Drupal\Core\Database\Database;
 /**
  * Tests Drupal's extended prepared statement syntax..
  *
+ * @coversDefaultClass \Drupal\Core\Entity\Form\RevisionRevertForm
  * @group Database
  */
 class QueryTest extends DatabaseTestBase {
@@ -167,8 +168,8 @@ class QueryTest extends DatabaseTestBase {
   /**
    * Tests deprecation of the 'return' query option.
    *
-   * @covers ::query
-   * @covers ::prepareStatement
+   * @covers \Drupal\Core\Database\Connection::query
+   * @covers \Drupal\Core\Database\Connection::prepareStatement
    *
    * @group legacy
    */

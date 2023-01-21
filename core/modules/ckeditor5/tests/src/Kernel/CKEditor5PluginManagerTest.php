@@ -24,6 +24,7 @@ use Symfony\Component\Yaml\Yaml;
 /**
  * Tests different ways of enabling CKEditor 5 plugins.
  *
+ * @coversDefaultClass \Drupal\ckeditor5\Plugin\CKEditor5PluginDefinition
  * @group ckeditor5
  * @internal
  */
@@ -172,7 +173,7 @@ YAML,
   }
 
   /**
-   * @covers \Drupal\ckeditor5\Plugin\CKEditor5PluginManager::processDefinition()
+   * @covers ::processDefinition
    * @dataProvider providerTestInvalidPluginDefinitions
    */
   public function testInvalidPluginDefinitions(string $yaml, ?string $expected_message, array $additional_files = []): void {
@@ -1230,7 +1231,7 @@ PHP,
    *   The expected allowed tags and attributes as a string, typically used
    *   in the filter_html "Allowed tags" field.
    *
-   * @covers \Drupal\ckeditor5\Plugin\CKEditor5PluginManager::getProvidedElements
+   * @covers ::getProvidedElements
    * @dataProvider providerTestProvidedElements
    */
   public function testProvidedElements(array $plugins, array $text_editor_settings, array $expected_elements, string $expected_readable_string) {
@@ -1468,7 +1469,7 @@ PHP,
    * When multiple plugins support a given tag, this method decides which plugin
    * to return based on which provides the broadest attribute support.
    *
-   * @covers \Drupal\ckeditor5\Plugin\CKEditor5PluginManager::findPluginSupportingElement
+   * @covers ::findPluginSupportingElement
    *
    * @dataProvider providerTestPluginSupportingElement
    */
@@ -1523,7 +1524,7 @@ PHP,
   }
 
   /**
-   * @covers \Drupal\ckeditor5\Plugin\CKEditor5PluginDefinition::validateCKEditor5Aspects()
+   * @covers ::validateCKEditor5Aspects
    */
   public function testAutomaticLinkDecoratorsDisallowed(): void {
     $this->expectException(InvalidPluginDefinitionException::class);
@@ -1535,7 +1536,7 @@ PHP,
   }
 
   /**
-   * @covers \Drupal\ckeditor5\Plugin\CKEditor5PluginDefinition::validateCKEditor5Aspects()
+   * @covers ::validateCKEditor5Aspects
    */
   public function testExternalLinkAutomaticLinkDecoratorDisallowed(): void {
     $this->expectException(InvalidPluginDefinitionException::class);
@@ -1547,7 +1548,7 @@ PHP,
   }
 
   /**
-   * @covers ::getDiscovery
+   * @covers \Drupal\ckeditor5\Plugin\CKEditor5PluginManager::getDiscovery
    * @dataProvider providerTestDerivedPluginDefinitions
    */
   public function testDerivedPluginDefinitions(string $yaml, ?string $expected_message, array $additional_files = [], ?array $expected_derived_plugin_definitions = NULL): void {

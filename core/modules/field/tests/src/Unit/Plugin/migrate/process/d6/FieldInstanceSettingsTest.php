@@ -17,7 +17,7 @@ use Drupal\Tests\UnitTestCase;
 class FieldInstanceSettingsTest extends UnitTestCase {
 
   /**
-   * @covers ::getSettings
+   * @covers ::transform
    *
    * @dataProvider getSettingsProvider
    */
