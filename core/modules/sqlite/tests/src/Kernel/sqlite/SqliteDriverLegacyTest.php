@@ -22,7 +22,7 @@ use Drupal\Tests\Core\Database\Stub\StubPDO;
 class SqliteDriverLegacyTest extends DriverSpecificDatabaseTestBase {
 
   /**
-   * @covers Drupal\Core\Database\Driver\sqlite\Install\Tasks
+   * Tests the \Drupal\Core\Database\Driver\sqlite\Install\Tasks deprecation.
    */
   public function testDeprecationInstallTasks() {
     $this->expectDeprecation('\Drupal\Core\Database\Driver\sqlite\Install\Tasks is deprecated in drupal:9.4.0 and is removed from drupal:11.0.0. The SQLite database driver has been moved to the sqlite module. See https://www.drupal.org/node/3129492');
@@ -31,7 +31,7 @@ class SqliteDriverLegacyTest extends DriverSpecificDatabaseTestBase {
   }
 
   /**
-   * @covers Drupal\Core\Database\Driver\sqlite\Connection
+   * Tests the \Drupal\Core\Database\Driver\sqlite\Connection deprecation.
    */
   public function testDeprecationConnection() {
     $this->expectDeprecation('\Drupal\Core\Database\Driver\sqlite\Connection is deprecated in drupal:9.4.0 and is removed from drupal:11.0.0. The SQLite database driver has been moved to the sqlite module. See https://www.drupal.org/node/3129492');
@@ -40,7 +40,7 @@ class SqliteDriverLegacyTest extends DriverSpecificDatabaseTestBase {
   }
 
   /**
-   * @covers Drupal\Core\Database\Driver\sqlite\Insert
+   * Tests the \Drupal\Core\Database\Driver\sqlite\Insert deprecation.
    */
   public function testDeprecationInsert() {
     $this->expectDeprecation('\Drupal\Core\Database\Driver\sqlite\Insert is deprecated in drupal:9.4.0 and is removed from drupal:11.0.0. The SQLite database driver has been moved to the sqlite module. See https://www.drupal.org/node/3129492');
@@ -49,7 +49,7 @@ class SqliteDriverLegacyTest extends DriverSpecificDatabaseTestBase {
   }
 
   /**
-   * @covers Drupal\Core\Database\Driver\sqlite\Schema
+   * Tests the \Drupal\Core\Database\Driver\sqlite\Schema deprecation.
    */
   public function testDeprecationSchema() {
     $this->expectDeprecation('\Drupal\Core\Database\Driver\sqlite\Schema is deprecated in drupal:9.4.0 and is removed from drupal:11.0.0. The SQLite database driver has been moved to the sqlite module. See https://www.drupal.org/node/3129492');
@@ -58,7 +58,7 @@ class SqliteDriverLegacyTest extends DriverSpecificDatabaseTestBase {
   }
 
   /**
-   * @covers Drupal\Core\Database\Driver\sqlite\Select
+   * Tests the \Drupal\Core\Database\Driver\sqlite\Select deprecation.
    */
   public function testDeprecationSelect() {
     $this->expectDeprecation('\Drupal\Core\Database\Driver\sqlite\Select is deprecated in drupal:9.4.0 and is removed from drupal:11.0.0. The SQLite database driver has been moved to the sqlite module. See https://www.drupal.org/node/3129492');
@@ -67,7 +67,7 @@ class SqliteDriverLegacyTest extends DriverSpecificDatabaseTestBase {
   }
 
   /**
-   * @covers Drupal\Core\Database\Driver\sqlite\Statement
+   * Tests the \Drupal\Core\Database\Driver\sqlite\Statement deprecation.
    */
   public function testDeprecationStatement() {
     $this->expectDeprecation('\Drupal\Core\Database\Driver\sqlite\Statement is deprecated in drupal:9.4.0 and is removed from drupal:11.0.0. The SQLite database driver has been moved to the sqlite module. See https://www.drupal.org/node/3129492');
@@ -76,7 +76,7 @@ class SqliteDriverLegacyTest extends DriverSpecificDatabaseTestBase {
   }
 
   /**
-   * @covers Drupal\Core\Database\Driver\sqlite\Truncate
+   * Tests the \Drupal\Core\Database\Driver\sqlite\Truncate deprecation.
    */
   public function testDeprecationTruncate() {
     $this->expectDeprecation('\Drupal\Core\Database\Driver\sqlite\Truncate is deprecated in drupal:9.4.0 and is removed from drupal:11.0.0. The SQLite database driver has been moved to the sqlite module. See https://www.drupal.org/node/3129492');
@@ -85,7 +85,7 @@ class SqliteDriverLegacyTest extends DriverSpecificDatabaseTestBase {
   }
 
   /**
-   * @covers Drupal\Core\Database\Driver\sqlite\Upsert
+   * Tests the \Drupal\Core\Database\Driver\sqlite\Upsert deprecation.
    */
   public function testDeprecationUpsert() {
     $this->expectDeprecation('\Drupal\Core\Database\Driver\sqlite\Upsert is deprecated in drupal:9.4.0 and is removed from drupal:11.0.0. The SQLite database driver has been moved to the sqlite module. See https://www.drupal.org/node/3129492');

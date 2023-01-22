@@ -23,7 +23,7 @@ use Drupal\Tests\Core\Database\Stub\StubPDO;
 class PgsqlDriverLegacyTest extends DriverSpecificDatabaseTestBase {
 
   /**
-   * @covers Drupal\Core\Database\Driver\pgsql\Install\Tasks
+   * Tests the \Drupal\Core\Database\Driver\pgsql\Install\Tasks deprecation.
    */
   public function testDeprecationInstallTasks() {
     $this->expectDeprecation('\Drupal\Core\Database\Driver\pgsql\Install\Tasks is deprecated in drupal:9.4.0 and is removed from drupal:11.0.0. The PostgreSQL database driver has been moved to the pgsql module. See https://www.drupal.org/node/3129492');
@@ -32,7 +32,7 @@ class PgsqlDriverLegacyTest extends DriverSpecificDatabaseTestBase {
   }
 
   /**
-   * @covers Drupal\Core\Database\Driver\pgsql\Connection
+   * Tests the \Drupal\Core\Database\Driver\pgsql\Connection deprecation.
    */
   public function testDeprecationConnection() {
     $this->expectDeprecation('\Drupal\Core\Database\Driver\pgsql\Connection is deprecated in drupal:9.4.0 and is removed from drupal:11.0.0. The PostgreSQL database driver has been moved to the pgsql module. See https://www.drupal.org/node/3129492');
@@ -41,7 +41,7 @@ class PgsqlDriverLegacyTest extends DriverSpecificDatabaseTestBase {
   }
 
   /**
-   * @covers Drupal\Core\Database\Driver\pgsql\Delete
+   * Tests the \Drupal\Core\Database\Driver\pgsql\Delete deprecation.
    */
   public function testDeprecationDelete() {
     $this->expectDeprecation('\Drupal\Core\Database\Driver\pgsql\Delete is deprecated in drupal:9.4.0 and is removed from drupal:11.0.0. The PostgreSQL database driver has been moved to the pgsql module. See https://www.drupal.org/node/3129492');
@@ -50,7 +50,7 @@ class PgsqlDriverLegacyTest extends DriverSpecificDatabaseTestBase {
   }
 
   /**
-   * @covers Drupal\Core\Database\Driver\pgsql\Insert
+   * Tests the \Drupal\Core\Database\Driver\pgsql\Insert deprecation.
    */
   public function testDeprecationInsert() {
     $this->expectDeprecation('\Drupal\Core\Database\Driver\pgsql\Insert is deprecated in drupal:9.4.0 and is removed from drupal:11.0.0. The PostgreSQL database driver has been moved to the pgsql module. See https://www.drupal.org/node/3129492');
@@ -59,7 +59,7 @@ class PgsqlDriverLegacyTest extends DriverSpecificDatabaseTestBase {
   }
 
   /**
-   * @covers Drupal\Core\Database\Driver\pgsql\Schema
+   * Tests the \Drupal\Core\Database\Driver\pgsql\Schema deprecation.
    */
   public function testDeprecationSchema() {
     $this->expectDeprecation('\Drupal\Core\Database\Driver\pgsql\Schema is deprecated in drupal:9.4.0 and is removed from drupal:11.0.0. The PostgreSQL database driver has been moved to the pgsql module. See https://www.drupal.org/node/3129492');
@@ -68,7 +68,7 @@ class PgsqlDriverLegacyTest extends DriverSpecificDatabaseTestBase {
   }
 
   /**
-   * @covers Drupal\Core\Database\Driver\pgsql\Select
+   * Tests the \Drupal\Core\Database\Driver\pgsql\Select deprecation.
    */
   public function testDeprecationSelect() {
     $this->expectDeprecation('\Drupal\Core\Database\Driver\pgsql\Select is deprecated in drupal:9.4.0 and is removed from drupal:11.0.0. The PostgreSQL database driver has been moved to the pgsql module. See https://www.drupal.org/node/3129492');
@@ -77,7 +77,7 @@ class PgsqlDriverLegacyTest extends DriverSpecificDatabaseTestBase {
   }
 
   /**
-   * @covers Drupal\Core\Database\Driver\pgsql\Truncate
+   * Tests the \Drupal\Core\Database\Driver\pgsql\Truncate deprecation.
    */
   public function testDeprecationTruncate() {
     $this->expectDeprecation('\Drupal\Core\Database\Driver\pgsql\Truncate is deprecated in drupal:9.4.0 and is removed from drupal:11.0.0. The PostgreSQL database driver has been moved to the pgsql module. See https://www.drupal.org/node/3129492');
@@ -86,7 +86,7 @@ class PgsqlDriverLegacyTest extends DriverSpecificDatabaseTestBase {
   }
 
   /**
-   * @covers Drupal\Core\Database\Driver\pgsql\Update
+   * Tests the \Drupal\Core\Database\Driver\pgsql\Update deprecation.
    */
   public function testDeprecationUpdate() {
     $this->expectDeprecation('\Drupal\Core\Database\Driver\pgsql\Update is deprecated in drupal:9.4.0 and is removed from drupal:11.0.0. The PostgreSQL database driver has been moved to the pgsql module. See https://www.drupal.org/node/3129492');
@@ -95,7 +95,7 @@ class PgsqlDriverLegacyTest extends DriverSpecificDatabaseTestBase {
   }
 
   /**
-   * @covers Drupal\Core\Database\Driver\pgsql\Upsert
+   * Tests the \Drupal\Core\Database\Driver\pgsql\Upsert deprecation.
    */
   public function testDeprecationUpsert() {
     $this->expectDeprecation('\Drupal\Core\Database\Driver\pgsql\Upsert is deprecated in drupal:9.4.0 and is removed from drupal:11.0.0. The PostgreSQL database driver has been moved to the pgsql module. See https://www.drupal.org/node/3129492');
