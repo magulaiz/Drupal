@@ -173,7 +173,7 @@ YAML,
   }
 
   /**
-   * @covers ::processDefinition
+   * @covers \Drupal\ckeditor5\Plugin\CKEditor5PluginManager::processDefinition
    * @dataProvider providerTestInvalidPluginDefinitions
    */
   public function testInvalidPluginDefinitions(string $yaml, ?string $expected_message, array $additional_files = []): void {

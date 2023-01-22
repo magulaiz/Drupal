@@ -61,7 +61,7 @@ class TextItemBaseTest extends KernelTestBase {
   }
 
   /**
-   * @covers ::calculateDependencies
+   * @covers \Drupal\field\Entity\FieldConfig::calculateDependencies
    */
   public function testCalculateDependencies() {
     $format = FilterFormat::create([

@@ -572,7 +572,7 @@ abstract class DriverSpecificSchemaTestBase extends DriverSpecificKernelTestBase
    *
    * @dataProvider providerTestSchemaCreateTablePrimaryKey
    *
-   * @covers ::addField
+   * @covers \Drupal\Core\Database\Schema::addField
    * @covers ::changeField
    * @covers ::dropField
    * @covers ::findPrimaryKeyColumns

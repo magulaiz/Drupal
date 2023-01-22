@@ -154,8 +154,8 @@ class HTMLRestrictionsTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::allowsNothing()
-   * @covers ::getAllowedElements()
+   * @covers ::allowsNothing
+   * @covers ::getAllowedElements
    * @dataProvider providerCounting
    */
   public function testCounting(array $elements, bool $expected_is_empty, int $expected_concrete_only_count, int $expected_concrete_plus_wildcard_count): void {
