@@ -1469,7 +1469,7 @@ class ValidatorsTest extends KernelTestBase {
   /**
    * Tests that validation works with >1 enabled HTML restrictor filters.
    *
-   * @covers \Drupal\ckeditor5\Plugin\Validation\Constraint\FundamentalCompatibilityConstraintValidator::checkHtmlRestrictionsMatch()
+   * @covers \Drupal\ckeditor5\Plugin\Validation\Constraint\FundamentalCompatibilityConstraintValidator::checkHtmlRestrictionsMatch
    */
   public function testMultipleHtmlRestrictingFilters(): void {
     $this->container->get('module_installer')->install(['filter_test']);

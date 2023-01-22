@@ -1231,7 +1231,7 @@ PHP,
    *   The expected allowed tags and attributes as a string, typically used
    *   in the filter_html "Allowed tags" field.
    *
-   * @covers ::getProvidedElements
+   * @covers \Drupal\ckeditor5\Plugin\CKEditor5PluginManager::getProvidedElements
    * @dataProvider providerTestProvidedElements
    */
   public function testProvidedElements(array $plugins, array $text_editor_settings, array $expected_elements, string $expected_readable_string) {
@@ -1469,7 +1469,7 @@ PHP,
    * When multiple plugins support a given tag, this method decides which plugin
    * to return based on which provides the broadest attribute support.
    *
-   * @covers ::findPluginSupportingElement
+   * @covers \Drupal\ckeditor5\Plugin\CKEditor5PluginManager::findPluginSupportingElement
    *
    * @dataProvider providerTestPluginSupportingElement
    */
