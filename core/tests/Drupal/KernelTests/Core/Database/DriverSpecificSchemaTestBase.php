@@ -881,7 +881,7 @@ abstract class DriverSpecificSchemaTestBase extends DriverSpecificKernelTestBase
   }
 
   /**
-   * @covers ::findPrimaryKeyColumns
+   * @covers \Drupal\Core\Database\Schema::findPrimaryKeyColumns
    */
   public function testFindPrimaryKeyColumns(): void {
     $method = new \ReflectionMethod(get_class($this->schema), 'findPrimaryKeyColumns');
