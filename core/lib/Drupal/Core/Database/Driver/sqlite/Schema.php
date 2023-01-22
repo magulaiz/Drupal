@@ -15,10 +15,11 @@ use Drupal\sqlite\Driver\Database\sqlite\Schema as SqliteSchema;
 class Schema extends SqliteSchema {
 
   /**
-   * Constructs an Insert object.
+   * {@inheritdoc}
    */
-  public function __construct() {
+  public function __construct($connection) {
     @trigger_error('\Drupal\Core\Database\Driver\sqlite\Schema is deprecated in drupal:9.4.0 and is removed from drupal:11.0.0. The SQLite database driver has been moved to the sqlite module. See https://www.drupal.org/node/3129492', E_USER_DEPRECATED);
+    parent::__construct($connection);
   }
 
 }

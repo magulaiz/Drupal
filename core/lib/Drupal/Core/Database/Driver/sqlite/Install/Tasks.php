@@ -15,7 +15,7 @@ use Drupal\sqlite\Driver\Database\sqlite\Install\Tasks as SqliteTasks;
 class Tasks extends SqliteTasks {
 
   /**
-   * Constructs a Tasks object.
+   * {@inheritdoc}
    */
   public function __construct() {
     @trigger_error('\Drupal\Core\Database\Driver\sqlite\Install\Tasks is deprecated in drupal:9.4.0 and is removed from drupal:11.0.0. The SQLite database driver has been moved to the sqlite module. See https://www.drupal.org/node/3129492', E_USER_DEPRECATED);

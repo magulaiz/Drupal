@@ -2,6 +2,7 @@
 
 namespace Drupal\Core\Database\Driver\sqlite;
 
+use Drupal\Core\Database\Connection;
 use Drupal\sqlite\Driver\Database\sqlite\Statement as SqliteStatement;
 
 /**
@@ -15,10 +16,11 @@ use Drupal\sqlite\Driver\Database\sqlite\Statement as SqliteStatement;
 class Statement extends SqliteStatement {
 
   /**
-   * Constructs a Statement object.
+   * {@inheritdoc}
    */
-  public function __construct() {
+  public function __construct(\PDO $pdo_connection, Connection $connection, $query, array $driver_options = [], bool $row_count_enabled = FALSE) {
     @trigger_error('\Drupal\Core\Database\Driver\sqlite\Statement is deprecated in drupal:9.4.0 and is removed from drupal:11.0.0. The SQLite database driver has been moved to the sqlite module. See https://www.drupal.org/node/3129492', E_USER_DEPRECATED);
+    parent::__construct();
   }
 
 }

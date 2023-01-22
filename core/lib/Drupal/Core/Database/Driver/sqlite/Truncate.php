@@ -2,6 +2,7 @@
 
 namespace Drupal\Core\Database\Driver\sqlite;
 
+use Drupal\sqlite\Driver\Database\sqlite\Connection;
 use Drupal\sqlite\Driver\Database\sqlite\Truncate as SqliteTruncate;
 
 /**
@@ -15,10 +16,11 @@ use Drupal\sqlite\Driver\Database\sqlite\Truncate as SqliteTruncate;
 class Truncate extends SqliteTruncate {
 
   /**
-   * Constructs a Truncate object.
+   * {@inheritdoc}
    */
-  public function __construct() {
+  public function __construct(Connection $connection, string $table, array $options = []) {
     @trigger_error('\Drupal\Core\Database\Driver\sqlite\Truncate is deprecated in drupal:9.4.0 and is removed from drupal:11.0.0. The SQLite database driver has been moved to the sqlite module. See https://www.drupal.org/node/3129492', E_USER_DEPRECATED);
+    parent::__construct($connection, $table, $options);
   }
 
 }

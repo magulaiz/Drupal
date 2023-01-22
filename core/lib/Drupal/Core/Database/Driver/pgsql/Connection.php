@@ -15,10 +15,11 @@ use Drupal\pgsql\Driver\Database\pgsql\Connection as PgsqlConnection;
 class Connection extends PgsqlConnection {
 
   /**
-   * Constructs a Connection object.
+   * {@inheritdoc}
    */
-  public function __construct() {
+  public function __construct(\PDO $connection, array $connection_options) {
     @trigger_error('\Drupal\Core\Database\Driver\pgsql\Connection is deprecated in drupal:9.4.0 and is removed from drupal:11.0.0. The PostgreSQL database driver has been moved to the pgsql module. See https://www.drupal.org/node/3129492', E_USER_DEPRECATED);
+    parent::__construct($connection, $connection_options);
   }
 
 }
