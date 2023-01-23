@@ -20,7 +20,7 @@ class StatisticsLastUpdated extends Date {
 
   public function query() {
     $this->ensureMyTable();
-    $this->node_table = $this->query->ensureTable('node', $this->relationship);
+    $this->node_table = $this->query->ensureTable('node_field_data', $this->relationship);
 
     $field = "GREATEST(" . $this->node_table . ".changed, " . $this->tableAlias . ".last_comment_timestamp)";
 
