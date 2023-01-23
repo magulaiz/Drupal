@@ -158,16 +158,9 @@ class BookNavigationBlock extends BlockBase implements ContainerFactoryPluginInt
       }
     }
     elseif ($current_bid) {
-      // Only display this block when the user is browsing a book and do
-      // not show unpublished books.
-      $nid = \Drupal::entityQuery('node')
-        ->accessCheck(TRUE)
-        ->condition('nid', $node->book['bid'], '=')
-        ->condition('status', NodeInterface::PUBLISHED)
-        ->execute();
-
+      $parent_node = $this->nodeStorage->load($node->book['bid']);
       // Only show the block if the user has view access for the top-level node.
-      if ($nid) {
+      if($parent_node->access('view')) {
         $tree = $this->bookManager->bookTreeAllData($node->book['bid'], $node->book);
         // There should only be one element at the top level.
         $data = array_shift($tree);
