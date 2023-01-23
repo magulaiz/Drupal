@@ -312,6 +312,15 @@ class BookTest extends BrowserTestBase {
     $nodes[0]->setUnPublished();
     $nodes[0]->save();
 
+    // Verify the admin user can still access the unpublished node.
+    $this->assertTrue($nodes[0]->access('view', $this->adminUser));
+    $this->drupalGet($nodes[0]->toUrl());
+    $this->assertSession()->statusCodeEquals(200);
+    $this->drupalGet($this->book->toUrl());
+    $this->assertSession()->responseContains($nodes[0]->getTitle());
+    $this->assertSession()->responseContains($nodes[1]->getTitle());
+    $this->assertSession()->responseContains($nodes[2]->getTitle());
+
     // Verify the user does not have access to the unpublished node.
     $this->assertFalse($nodes[0]->access('view', $this->webUser));
 
