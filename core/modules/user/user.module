@@ -1178,10 +1178,11 @@ function user_toolbar() {
     ];
   }
   else {
-    $drupal_username =  \Drupal::request()->cookies->get('drupalUsername');
+    $drupal_username = \Drupal::request()->cookies->get('drupalUsername');
     if (!empty($drupal_username)) {
       $items['user']['tab']['#title'] = $drupal_username;
-    } else {
+    }
+    else {
       $items['user']['tab']['#title'] = [
         '#lazy_builder' => ['user.toolbar_link_builder:renderDisplayName', []],
         '#create_placeholder' => TRUE,

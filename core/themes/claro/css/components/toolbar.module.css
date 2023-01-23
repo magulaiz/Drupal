@@ -282,16 +282,13 @@ body.toolbar-tray-open.toolbar-vertical.toolbar-fixed {
 .path-admin .toolbar-bar .home-toolbar-tab {
   display: block;
 }
-
 /* Flickering fix */
 body.toolbar-tray-open.toolbar-fixed.toolbar-vertical #toolbar-administration {
   margin-inline-start: -15rem;
 }
-
 .toolbar .toolbar-tray-vertical > .toolbar-lining:before {
   width: 100%;
 }
-
 .toolbar-oriented .toolbar-tray-vertical > .toolbar-lining:before {
   position: fixed;
   z-index: -1;
@@ -308,22 +305,18 @@ body.toolbar-tray-open.toolbar-fixed.toolbar-vertical #toolbar-administration {
   padding-right: 0;
   padding-left: 0;
 }
-
 .toolbar-tab nav .toolbar-menu {
   transition: opacity 0.5s;
   opacity: 1;
 }
-
 .toolbar-loading .toolbar-tab nav .toolbar-menu,
 .toolbar-tab .toolbar-tray.init .toolbar-menu {
   opacity: 0;
 }
-
 .toolbar-loading.toolbar-horizontal.toolbar-tray-open .toolbar .toolbar-bar {
   background: rgb(0, 0, 0);
   background: linear-gradient(180deg, rgba(0, 0, 0, 1) 0%, rgba(25, 25, 25, 1) 82%, rgba(255, 255, 255, 0.1545211834733894) 100%);
 }
-
 .toolbar-loading.toolbar-horizontal .toolbar-tray,
 .toolbar-horizontal .toolbar-tray.init {
   border: none;

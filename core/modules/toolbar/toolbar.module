@@ -341,7 +341,7 @@ function _toolbar_get_subtrees_hash() {
 }
 
 function toolbar_user_login(UserInterface $account) {
-    if ($account->isAuthenticated()) {
-      setcookie('drupalUsername', $account->getDisplayName());
-    }
+  if ($account->isAuthenticated()) {
+    setcookie('drupalUsername', $account->getDisplayName());
+  }
 }
