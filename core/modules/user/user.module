@@ -1178,10 +1178,16 @@ function user_toolbar() {
     ];
   }
   else {
-    $items['user']['tab']['#title'] = [
-      '#lazy_builder' => ['user.toolbar_link_builder:renderDisplayName', []],
-      '#create_placeholder' => TRUE,
-    ];
+    $drupal_username =  \Drupal::request()->cookies->get('drupalUsername');
+    if (!empty($drupal_username)) {
+      $items['user']['tab']['#title'] = $drupal_username;
+    } else {
+      $items['user']['tab']['#title'] = [
+        '#lazy_builder' => ['user.toolbar_link_builder:renderDisplayName', []],
+        '#create_placeholder' => TRUE,
+      ];
+    }
+
     $items['user']['tray']['user_links'] = [
       '#lazy_builder' => ['user.toolbar_link_builder:renderToolbarLinks', []],
       '#create_placeholder' => TRUE,

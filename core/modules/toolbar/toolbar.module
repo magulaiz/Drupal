@@ -14,6 +14,7 @@ use Drupal\Core\Template\Attribute;
 use Drupal\Component\Utility\Crypt;
 use Drupal\Core\Url;
 use Drupal\toolbar\Controller\ToolbarController;
+use Drupal\user\UserInterface;
 
 /**
  * Implements hook_help().
@@ -104,6 +105,7 @@ function template_preprocess_toolbar(&$variables) {
         'links' => $element[$key]['tray'],
         'attributes' => new Attribute($attributes),
       ];
+
       if (array_key_exists('#heading', $element[$key]['tray'])) {
         $variables['trays'][$key]['label'] = $element[$key]['tray']['#heading'];
       }
@@ -290,6 +292,7 @@ function toolbar_preprocess_html(&$variables) {
   if (!empty($activeTab)) {
     $variables['attributes']['class'][] = 'toolbar-tray-open';
   }
+
   $toolbarFixed = \Drupal::request()->cookies->get('isToolbarFixed');
   if (!empty($toolbarFixed)) {
     $variables['attributes']['class'][] = 'toolbar-fixed';
@@ -335,4 +338,10 @@ function _toolbar_get_subtrees_hash() {
   [$subtrees, $cacheability] = toolbar_get_rendered_subtrees();
   $hash = Crypt::hashBase64(serialize($subtrees));
   return [$hash, $cacheability];
+}
+
+function toolbar_user_login(UserInterface $account) {
+    if ($account->isAuthenticated()) {
+      setcookie('drupalUsername', $account->getDisplayName());
+    }
 }

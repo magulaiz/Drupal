@@ -212,7 +212,6 @@
       ) {
         // Remove placeholder
         $('#toolbar-tray-anti-flicker').parent('.toolbar-tab').remove();
-
         // Vertical fixes.
         const ChildView = Drupal.toolbar.ToolbarVisualView.extend({
           initialize() {
@@ -239,6 +238,13 @@
                 Cookies.set('toolbarActiveTab', isToolbarActiveTab, {
                   path: '/',
                 });
+                Cookies.set(
+                  'toolbarActiveTabId',
+                  $(model.get('activeTab')).attr('id'),
+                  {
+                    path: '/',
+                  },
+                );
               },
             );
           },
