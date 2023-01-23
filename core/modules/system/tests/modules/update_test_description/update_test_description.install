@@ -11,11 +11,11 @@
 function update_test_description_update_8001() {
 }
 
-// @codingStandardsIgnoreStart
 /**
+ * @codingStandardsIgnoreStart
  * Update test with multiline description, the quick brown fox jumped over the
  * lazy dog.
+ * @codingStandardsIgnoreEnd
  */
-// @codingStandardsIgnoreEnd
 function update_test_description_update_8002() {
 }
