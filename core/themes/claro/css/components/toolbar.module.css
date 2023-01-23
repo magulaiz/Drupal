@@ -309,8 +309,8 @@ body.toolbar-tray-open.toolbar-fixed.toolbar-vertical #toolbar-administration {
   transition: opacity 0.5s;
   opacity: 1;
 }
-.toolbar-loading .toolbar-tab nav .toolbar-menu,
-.toolbar-tab .toolbar-tray.init .toolbar-menu {
+.toolbar-loading.toolbar-horizontal .toolbar-tab nav .toolbar-menu,
+.toolbar-horizontal .toolbar-tab .toolbar-tray.init .toolbar-menu {
   opacity: 0;
 }
 .toolbar-loading.toolbar-horizontal.toolbar-tray-open .toolbar .toolbar-bar {
