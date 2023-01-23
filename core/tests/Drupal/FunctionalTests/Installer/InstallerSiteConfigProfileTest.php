@@ -3,9 +3,7 @@
 namespace Drupal\FunctionalTests\Installer;
 
 /**
- * Verifies that installer defaults to existing site email address and timezone.
- *
- * If they were provided by the install profile.
+ * Verifies the installer uses the site configuration provided by the profile.
  *
  * @group Installer
  */

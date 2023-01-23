@@ -11,9 +11,6 @@ use Drupal\Tests\TestFileCreationTrait;
 /**
  * Tests the theme interface.
  *
- * Functionality such as enabling and switching themes, and changing settings
- * using the administration theme are tested.
- *
  * @group system
  */
 class ThemeTest extends BrowserTestBase {

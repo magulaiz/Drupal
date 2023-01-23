@@ -5,7 +5,7 @@ namespace Drupal\FunctionalTests;
 use Drupal\Tests\BrowserTestBase;
 
 /**
- * This test checks BrowserTestBase's treatment of hook_install during setUp.
+ * Tests BrowserTestBase's treatment of hook_install during setUp.
  *
  * Image module is used for test.
  *

@@ -11,7 +11,7 @@ use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\Tests\BrowserTestBase;
 
 /**
- * Tests config install in a web browser.
+ * Tests that a module profile can override configuration values.
  *
  * Tests installation and removal of configuration objects in install, disable
  * and uninstall functionality.

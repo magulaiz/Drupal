@@ -502,7 +502,8 @@ class StubSourcePlugin extends SourcePluginBase {
 /**
  * Stubbed source plugin with a generator as iterator.
  *
- * Also it overwrites the $skipCount, $cacheCounts and $trackChanges properties.
+ * This stub also overwrites the $skipCount, $cacheCounts and $trackChanges
+ * properties.
  */
 class StubSourceGeneratorPlugin extends StubSourcePlugin {
 

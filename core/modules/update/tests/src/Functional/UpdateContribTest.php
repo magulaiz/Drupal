@@ -6,10 +6,7 @@ use Drupal\Core\Utility\ProjectInfo;
 use Drupal\update\UpdateManagerInterface;
 
 /**
- * Update contrib test.
- *
- * Tests how the Update Manager module handles contributed modules and themes in
- * a series of functional tests using mock XML data.
+ * Tests how the Update Manager handles contributed modules and themes.
  *
  * @group update
  */

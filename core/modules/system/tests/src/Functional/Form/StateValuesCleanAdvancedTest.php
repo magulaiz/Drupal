@@ -8,9 +8,6 @@ use Drupal\Tests\TestFileCreationTrait;
 /**
  * Tests proper removal of submitted form values.
  *
- * Using \Drupal\Core\Form\FormState::cleanValues() when having forms with
- * elements containing buttons like "managed_file".
- *
  * @group Form
  */
 class StateValuesCleanAdvancedTest extends BrowserTestBase {

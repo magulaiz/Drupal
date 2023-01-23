@@ -13,7 +13,7 @@ use Drupal\taxonomy\Entity\Vocabulary;
 use Drupal\user\Entity\User;
 
 /**
- * Generates text using placeholders to check comment token replacement.
+ * Tests comment token replacement.
  *
  * @group comment
  */

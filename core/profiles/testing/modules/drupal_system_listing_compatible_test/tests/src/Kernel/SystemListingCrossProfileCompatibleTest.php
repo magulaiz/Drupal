@@ -7,8 +7,6 @@ use Drupal\KernelTests\KernelTestBase;
 /**
  * Verifies that tests in installation profile modules are found.
  *
- * May use another profile for running tests.
- *
  * @group drupal_system_listing_compatible_test
  */
 class SystemListingCrossProfileCompatibleTest extends KernelTestBase {

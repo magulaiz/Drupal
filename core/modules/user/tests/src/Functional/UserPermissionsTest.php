@@ -7,7 +7,7 @@ use Drupal\user\RoleInterface;
 use Drupal\user\Entity\Role;
 
 /**
- * Verify role permissions can be added and removed via the permissions page.
+ * Verifies role permissions can be added and removed via the permissions page.
  *
  * @group user
  */

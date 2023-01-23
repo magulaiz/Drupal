@@ -11,7 +11,7 @@ use Drupal\user\Entity\User;
 /**
  * Tests node_access and select queries with node_access tag functionality.
  *
- * Tests with multiple languages with a test node access module that is not
+ * The tests use multiple languages with a test node access module that is not
  * language-aware.
  *
  * @group node

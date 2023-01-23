@@ -5,7 +5,7 @@ namespace Drupal\Tests\block\Functional;
 use Drupal\Tests\BrowserTestBase;
 
 /**
- * Tests newly installed theme does not inherit blocks to its hidden regions.
+ * Tests that a theme does not inherit blocks to its hidden regions.
  *
  * @group block
  */

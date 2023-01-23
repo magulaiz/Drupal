@@ -6,10 +6,7 @@ use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\views\Views;
 
 /**
- * RSS test.
- *
- * Ensure that data added as terms appears in RSS feeds if "RSS Category" format
- * is selected.
+ * Tests the RSS display.
  *
  * @group taxonomy
  */

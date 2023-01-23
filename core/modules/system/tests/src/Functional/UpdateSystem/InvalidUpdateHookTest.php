@@ -9,9 +9,6 @@ use Drupal\Tests\RequirementsPageTrait;
 /**
  * Tests invalid update hook.
  *
- * Tests that a module implementing hook_update_8000() causes an error to be
- * displayed on update.
- *
  * @group Update
  */
 class InvalidUpdateHookTest extends BrowserTestBase {
