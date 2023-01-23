@@ -6,6 +6,8 @@ use Drupal\Core\Plugin\Discovery\AnnotatedClassDiscovery;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 
 /**
+ * CustomDirectoryAnnotatedClassDiscoveryTest.
+ *
  * Tests that plugins in a custom directory are correctly discovered using
  * annotated classes.
  *

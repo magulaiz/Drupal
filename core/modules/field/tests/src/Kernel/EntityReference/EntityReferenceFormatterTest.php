@@ -54,6 +54,8 @@ class EntityReferenceFormatterTest extends EntityKernelTestBase {
   protected $referencedEntity;
 
   /**
+   * The unsaved referenced entity.
+   *
    * The entity that is not yet saved to its persistent storage to be referenced
    * in this test.
    *

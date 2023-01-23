@@ -12,7 +12,9 @@ use Drupal\Core\Url;
 use Drupal\KernelTests\KernelTestBase;
 
 /**
- * Confirm that \Drupal\Core\Url,
+ * Confirm that the following work correctly with various input.
+ *
+ * \Drupal\Core\Url,
  * \Drupal\Component\Utility\UrlHelper::filterQueryParameters(),
  * \Drupal\Component\Utility\UrlHelper::buildQuery(), and
  * \Drupal\Core\Utility\LinkGeneratorInterface::generate()

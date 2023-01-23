@@ -133,6 +133,8 @@ class TimestampNormalizerTest extends UnitTestCase {
 }
 
 /**
+ * DrupalDateTime test class.
+ *
  * Note: Prophecy does not support magic methods. By subclassing and specifying
  * an explicit method, Prophecy works.
  * @see https://github.com/phpspec/prophecy/issues/338
