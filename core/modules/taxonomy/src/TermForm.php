@@ -220,8 +220,8 @@ class TermForm extends ContentEntityForm {
    * @param \Drupal\taxonomy\TermInterface $term
    *   The taxonomy term entity.
    *
-   * @return array
-   *   A list if parent term IDs.
+   * @return int[]
+   *   A list of parent term IDs.
    */
   protected function getParentIds(TermInterface $term): array {
     $parent = [];
