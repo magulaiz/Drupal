@@ -441,7 +441,8 @@ class MigrateExecutable implements MigrateExecutableInterface {
       // @todo Although here is a single point to start,
       //   there are several points to stop. Try to write the workflow better
       //   with only one exit point.
-      MigrateInstrument::start('import.process_pipeline.' . $plugin->getPluginId());
+      $pluginId = $plugin->getPluginId();
+      MigrateInstrument::start('import.process_pipeline.' . $pluginId);
       $definition = $plugin->getPluginDefinition();
       // Many plugins expect a scalar value but the current value of the
       // pipeline might be multiple scalars (this is set by the previous plugin)
@@ -450,7 +451,7 @@ class MigrateExecutable implements MigrateExecutableInterface {
       if ($multiple && !$definition['handle_multiples']) {
         $new_value = [];
         if (!is_array($value)) {
-          throw new MigrateException(sprintf('Pipeline failed at %s plugin for destination %s: %s received instead of an array,', $plugin->getPluginId(), $destination, $value));
+          throw new MigrateException(sprintf('Pipeline failed at %s plugin for destination %s: %s received instead of an array,', $pluginId, $destination, $value));
         }
         $break = FALSE;
         foreach ($value as $scalar_value) {
@@ -463,13 +464,13 @@ class MigrateExecutable implements MigrateExecutableInterface {
           }
           catch (MigrateException $e) {
             // Prepend the process plugin id to the message.
-            $message = sprintf("%s: %s", $plugin->getPluginId(), $e->getMessage());
+            $message = sprintf("%s: %s", $pluginId, $e->getMessage());
             throw new MigrateException($message);
           }
         }
         $value = $new_value;
         if ($break) {
-          MigrateInstrument::stop('import.process_pipeline.' . $plugin->getPluginId());
+          MigrateInstrument::stop('import.process_pipeline.' . $pluginId);
           break;
         }
       }
@@ -478,19 +479,19 @@ class MigrateExecutable implements MigrateExecutableInterface {
           $value = $plugin->transform($value, $this, $row, $destination);
         }
         catch (MigrateSkipProcessException $e) {
-          MigrateInstrument::stop('import.process_pipeline.' . $plugin->getPluginId());
+          MigrateInstrument::stop('import.process_pipeline.' . $pluginId);
           $value = NULL;
           break;
         }
         catch (MigrateException $e) {
           // Prepend the process plugin id to the message.
-          $message = sprintf("%s: %s", $plugin->getPluginId(), $e->getMessage());
+          $message = sprintf("%s: %s", $pluginId, $e->getMessage());
           throw new MigrateException($message);
         }
 
         $multiple = $plugin->multiple();
       }
-      MigrateInstrument::stop('import.process_pipeline.' . $plugin->getPluginId());
+      MigrateInstrument::stop('import.process_pipeline.' . $pluginId);
     }
     // Ensure all values, including nulls, are migrated.
     if ($plugins) {

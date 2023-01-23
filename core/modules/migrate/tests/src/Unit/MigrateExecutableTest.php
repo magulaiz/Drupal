@@ -357,6 +357,7 @@ class MigrateExecutableTest extends MigrateTestCase {
     foreach ($expected as $key => $value) {
       $plugin = $this->prophesize(MigrateProcessInterface::class);
       $plugin->getPluginDefinition()->willReturn([]);
+      $plugin->getPluginId()->willReturn('plugin_id');
       $plugin->transform(NULL, $this->executable, $row, $key)->willReturn($value);
       $plugin->multiple()->willReturn(TRUE);
       $plugins[$key][0] = $plugin->reveal();
