@@ -320,7 +320,7 @@ body.toolbar-tray-open.toolbar-fixed.toolbar-vertical #toolbar-administration {
 
 .toolbar-loading.toolbar-horizontal.toolbar-tray-open .toolbar .toolbar-bar {
   background: rgb(0, 0, 0);
-  background: linear-gradient(180deg, rgba(0, 0, 0, 1) 0%, rgba(25, 25, 25, 1) 82%, rgba(255, 255, 255, 0.1545211834733894) 100%);
+  background: linear-gradient(180deg, rgba(0, 0, 0, 1) 0%, rgba(25, 25, 25, 1) 82%, rgba(255, 255, 255, 0.15452) 100%);
 }
 
 .toolbar-loading.toolbar-horizontal .toolbar-tray,
