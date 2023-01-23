@@ -160,7 +160,7 @@ class BookNavigationBlock extends BlockBase implements ContainerFactoryPluginInt
     elseif ($current_bid) {
       $parent_node = $this->nodeStorage->load($node->book['bid']);
       // Only show the block if the user has view access for the top-level node.
-      if($parent_node->access('view')) {
+      if ($parent_node->access('view')) {
         $tree = $this->bookManager->bookTreeAllData($node->book['bid'], $node->book);
         // There should only be one element at the top level.
         $data = array_shift($tree);
