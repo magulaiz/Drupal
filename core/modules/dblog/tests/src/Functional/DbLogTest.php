@@ -15,7 +15,6 @@ use Drupal\Tests\system\Functional\Menu\AssertBreadcrumbTrait;
 
 /**
  * Verify log entries and user access based on permissions.
- * based on permissions.
  *
  * @group dblog
  */
