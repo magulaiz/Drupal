@@ -193,6 +193,9 @@ interface BookManagerInterface {
    *
    * @return array
    *   The book entry link information.
+   *
+   * @see \Drupal\book\BookManagerInterface::getLinkDefaults()
+   * @see \Drupal\book\BookOutlineStorageInterface::loadMultiple()
    */
   public function saveBookLink(array $link, $new);
 
