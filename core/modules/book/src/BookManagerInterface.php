@@ -192,7 +192,8 @@ interface BookManagerInterface {
    *   Whether this is a link to a new book entry.
    *
    * @return array
-   *   The book entry link information.
+   *   The book entry link information. This is $link with values added or
+   *   updated.
    *
    * @see \Drupal\book\BookManagerInterface::getLinkDefaults()
    * @see \Drupal\book\BookOutlineStorageInterface::loadMultiple()
