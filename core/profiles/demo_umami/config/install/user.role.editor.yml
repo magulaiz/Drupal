@@ -1,24 +1,6 @@
 langcode: en
 status: true
-dependencies:
-  config:
-    - node.type.article
-    - node.type.page
-    - node.type.recipe
-    - taxonomy.vocabulary.recipe_category
-    - taxonomy.vocabulary.tags
-    - workflows.workflow.editorial
-  module:
-    - content_moderation
-    - content_translation
-    - contextual
-    - file
-    - node
-    - path
-    - shortcut
-    - system
-    - taxonomy
-    - toolbar
+dependencies: {  }
 id: editor
 label: Editor
 weight: 4
@@ -28,11 +10,16 @@ permissions:
   - 'access content overview'
   - 'access contextual links'
   - 'access files overview'
+  - 'access in-place editing'
   - 'access taxonomy overview'
   - 'access toolbar'
   - 'administer shortcuts'
   - 'cancel account'
   - 'change own username'
+  - 'configure editable article node layout overrides'
+  - 'configure editable page node layout overrides'
+  - 'configure editable recipe node layout overrides'
+  - 'create and edit custom blocks'
   - 'create content translations'
   - 'create terms in recipe_category'
   - 'create terms in tags'
