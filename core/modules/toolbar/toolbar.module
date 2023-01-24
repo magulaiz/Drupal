@@ -5,6 +5,7 @@
  * Administration toolbar for quick access to top level administration items.
  */
 
+use Drupal\big_pipe\Render\Placeholder\BigPipeStrategy;
 use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Link;
 use Drupal\Core\Render\Element;
@@ -291,6 +292,23 @@ function toolbar_preprocess_html(&$variables) {
   $activeTab = \Drupal::request()->cookies->get('toolbarActiveTab');
   if (!empty($activeTab)) {
     $variables['attributes']['class'][] = 'toolbar-tray-open';
+    $activeTray = \Drupal::request()->cookies->get('toolbarActiveTray');
+
+$style = <<<STYLE
+      .toolbar-loading .toolbar-tray {display: none;}
+      .toolbar-loading .toolbar-tray[data-toolbar-tray="$activeTray"] {display: block}
+     .toolbar-loading .toolbar-item[data-toolbar-tray="$activeTray"] {background-image: linear-gradient(rgba(255, 255, 255, 0.25) 20%, transparent 200%);}
+     .toolbar-loading.toolbar-horizontal .toolbar-tray[data-toolbar-tray="$activeTray"] > nav > [data-big-pipe-placeholder-id] {}
+STYLE;
+    $variables['page']['#attached']['html_head'][] = [
+      [
+        '#tag' => 'style',
+        '#value' => $style,
+      ],
+      'toolbar_init',
+    ];
+    //<a href="/en/admin/config/user-interface/shortcut" title="Shortcuts" class="toolbar-icon toolbar-icon-shortcut trigger toolbar-item is-active" id="toolbar-item-shortcuts" data-toolbar-tray="toolbar-item-shortcuts-tray" role="button" aria-pressed="false">Shortcuts</a>
+    // id=toolbar-item-shortcuts-tray data-toolbar-tray= toolbar-item-shortcuts-tray
   }
 
   $toolbarFixed = \Drupal::request()->cookies->get('isToolbarFixed');

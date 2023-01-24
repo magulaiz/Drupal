@@ -238,6 +238,13 @@
                 Cookies.set('toolbarActiveTab', isToolbarActiveTab, {
                   path: '/',
                 });
+                Cookies.set(
+                  'toolbarActiveTray',
+                  $(model.get('activeTab')).attr('data-toolbar-tray'),
+                  {
+                    path: '/',
+                  },
+                );
               },
             );
           },
