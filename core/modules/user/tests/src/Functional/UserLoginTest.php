@@ -122,7 +122,7 @@ class UserLoginTest extends BrowserTestBase {
    */
   public function testPasswordRehashOnLogin() {
     // Determine default log2 for phpass hashing algorithm.
-    $default_count_log2 = 16;
+    $default_count_log2 = 17;
 
     // Retrieve instance of password hashing algorithm.
     $password_hasher = $this->container->get('password');
