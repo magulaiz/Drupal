@@ -45,31 +45,31 @@
         <td class="description expand priority-low">
           <details class="js-form-wrapper form-wrapper" id="{{ module.checkbox_id }}-description">
             <summary aria-controls="{{ module.checkbox_id }}-description" role="button" aria-expanded="false">
-          <span class="text module-description">{{ module.description }}</span>
+              <span class="text module-description">{{ module.description }}</span>
             </summary>
             <div class="details-wrapper">
               <div class="details-description">
                 <div class="requirements">
                   <div class="admin-requirements">{{ 'Machine name: <span dir="ltr" class="module-machine-name table-filter-text-source">@machine-name</span>'|t({'@machine-name': module.machine_name }) }}</div>
-          {% if module.reasons_count > 0 %}
-            <div class="admin-requirements">
-              {%- trans -%}
-                The following reason prevents {{ module.module_name }} from being uninstalled:
-              {%- plural module.reasons_count -%}
-                The following reasons prevent {{ module.module_name }} from being uninstalled:
-              {%- endtrans %}
-              <div class="item-list">
-                <ul>
-                  {%- for reason in module.validation_reasons -%}
-                    <li>{{ reason }}</li>
-                  {%- endfor -%}
-                  {%- if module.required_by -%}
-                    <li>{{ 'Required by: @module-list'|t({'@module-list': module.required_by|safe_join(', ') }) }}</li>
-                  {%- endif -%}
-                </ul>
-              </div>
-            </div>
-          {% endif %}
+                  {% if module.reasons_count > 0 %}
+                    <div class="admin-requirements">
+                      {%- trans -%}
+                        The following reason prevents {{ module.module_name }} from being uninstalled:
+                      {%- plural module.reasons_count -%}
+                        The following reasons prevent {{ module.module_name }} from being uninstalled:
+                      {%- endtrans %}
+                      <div class="item-list">
+                        <ul>
+                          {%- for reason in module.validation_reasons -%}
+                            <li>{{ reason }}</li>
+                          {%- endfor -%}
+                          {%- if module.required_by -%}
+                            <li>{{ 'Required by: @module-list'|t({'@module-list': module.required_by|safe_join(', ') }) }}</li>
+                          {%- endif -%}
+                        </ul>
+                      </div>
+                    </div>
+                  {% endif %}
                 </div>
               </div>
             </div>
