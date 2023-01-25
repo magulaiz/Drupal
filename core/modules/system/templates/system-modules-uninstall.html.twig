@@ -29,7 +29,6 @@
     <tr>
       <th>{{ 'Uninstall'|t }}</th>
       <th>{{ 'Name'|t }}</th>
-      <th class="priority-low">{{ 'Machine name'|t }}</th>
       <th class="priority-medium">{{ 'Description'|t }}</th>
     </tr>
   </thead>
@@ -43,11 +42,15 @@
         <td>
           <label for="{{ module.checkbox_id }}" class="module-name table-filter-text-source">{{ module.name }}</label>
         </td>
-        <td class="module-machine-name table-filter-text-source priority-medium">
-          {{ module.machine_name }}
-        </td>
-        <td class="description priority-low">
+        <td class="description expand priority-low">
+          <details class="js-form-wrapper form-wrapper" id="{{ module.checkbox_id }}-description">
+            <summary aria-controls="{{ module.checkbox_id }}-description" role="button" aria-expanded="false">
           <span class="text module-description">{{ module.description }}</span>
+            </summary>
+            <div class="details-wrapper">
+              <div class="details-description">
+                <div class="requirements">
+                  <div class="admin-requirements">{{ 'Machine name: <span dir="ltr" class="module-machine-name table-filter-text-source">@machine-name</span>'|t({'@machine-name': module.machine_name }) }}</div>
           {% if module.reasons_count > 0 %}
             <div class="admin-requirements">
               {%- trans -%}
@@ -67,6 +70,10 @@
               </div>
             </div>
           {% endif %}
+                </div>
+              </div>
+            </div>
+          </details>
         </td>
       </tr>
     {% else %}
