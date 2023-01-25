@@ -4,7 +4,6 @@ namespace Drupal\Core\Render;
 
 use Drupal\Core\Cache\CacheFactoryInterface;
 use Drupal\Core\Cache\Context\CacheContextsManager;
-use Drupal\Core\Cache\VariationCacheFactoryInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
