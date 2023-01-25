@@ -46,22 +46,21 @@ class LayoutDefault extends PluginBase implements LayoutInterface, PluginFormInt
    * {@inheritdoc}
    */
   public function build(array $regions) {
-    // Remove empty blocks from the list but retain their cache metadata.
     $cacheable_metadata = new CacheableMetadata();
-    foreach ($regions as $region => $blocks) {
-      foreach ($blocks as $uuid => $block) {
-        if (Element::isEmpty($block)) {
-          $cacheable_metadata->addCacheableDependency(CacheableMetadata::createFromRenderArray($block));
-          unset($regions[$region][$uuid]);
-        }
-      }
-    }
-
     // Ensure $build only contains defined regions and in the order defined.
     $build = [];
     foreach ($this->getPluginDefinition()->getRegionNames() as $region_name) {
-      if (!empty($regions[$region_name])) {
-        $build[$region_name] = $regions[$region_name];
+      if (array_key_exists($region_name, $regions)) {
+        foreach ($regions[$region_name] as $uuid => $block) {
+          // Remove empty blocks from the list but retain their cache metadata.
+          if (Element::isEmpty($block)) {
+            $cacheable_metadata->addCacheableDependency(CacheableMetadata::createFromRenderArray($block));
+            unset($regions[$region_name][$uuid]);
+          }
+        }
+        if (!empty($regions[$region_name])) {
+          $build[$region_name] = $regions[$region_name];
+        }
       }
     }
 
