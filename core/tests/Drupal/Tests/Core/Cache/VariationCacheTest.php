@@ -422,9 +422,8 @@ class VariationCacheTest extends UnitTestCase {
   /**
    * Creates the sorted cache ID from cache ID parts.
    *
-   * Core changed how the cache context manager folds cache contexts so that the
-   * returned keys are now always sorted alphabetically. This makes testing an
-   * underlying cache quite annoying.
+   * When core optimizes cache contexts it returns the keys alphabetically. To
+   * make testing easier, we replicate said sorting here.
    *
    * @param string[] $cache_id_parts
    *   The parts to add to the base cache ID, will be sorted.

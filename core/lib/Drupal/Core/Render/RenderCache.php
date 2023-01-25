@@ -3,6 +3,7 @@
 namespace Drupal\Core\Render;
 
 use Drupal\Core\Cache\CacheableMetadata;
+use Drupal\Core\Cache\CacheFactoryInterface;
 use Drupal\Core\Cache\Context\CacheContextsManager;
 use Drupal\Core\Cache\VariationCacheFactoryInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -45,7 +46,11 @@ class RenderCache implements RenderCacheInterface {
    * @param \Drupal\Core\Cache\Context\CacheContextsManager $cache_contexts_manager
    *   The cache contexts manager.
    */
-  public function __construct(RequestStack $request_stack, VariationCacheFactoryInterface $cache_factory, CacheContextsManager $cache_contexts_manager) {
+  public function __construct(RequestStack $request_stack, $cache_factory, CacheContextsManager $cache_contexts_manager) {
+    if ($cache_factory instanceof CacheFactoryInterface) {
+      @trigger_error('Injecting ' . __CLASS__ . ' with the "cache_factory" service is deprecated in drupal:10.1.0, use "variation_cache_factory" instead.', E_USER_DEPRECATED);
+      $cache_factory = \Drupal::service('variation_cache_factory');
+    }
     $this->requestStack = $request_stack;
     $this->cacheFactory = $cache_factory;
     $this->cacheContextsManager = $cache_contexts_manager;
