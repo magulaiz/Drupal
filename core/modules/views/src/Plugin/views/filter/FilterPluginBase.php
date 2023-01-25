@@ -1656,6 +1656,7 @@ abstract class FilterPluginBase extends HandlerBase implements CacheableDependen
     if (!empty($this->options['exposed']) && $error = $this->validateIdentifier($this->options['expose']['identifier'])) {
       return [$error];
     }
+    return NULL;
   }
 
   /**

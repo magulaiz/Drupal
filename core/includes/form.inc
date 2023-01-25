@@ -873,7 +873,7 @@ function _batch_append_set(&$batch, $batch_set) {
  *   (optional) Specify a function to be called to redirect to the progressive
  *   processing page.
  *
- * @return \Symfony\Component\HttpFoundation\RedirectResponse|null
+ * @return \Symfony\Component\HttpFoundation\RedirectResponse|void
  *   A redirect response if the batch is progressive. No return value otherwise.
  */
 function batch_process($redirect = NULL, Url $url = NULL, $redirect_callback = NULL) {
@@ -1011,7 +1011,7 @@ function _batch_populate_queue(&$batch, $set_id) {
  * @param $batch_set
  *   The batch set.
  *
- * @return \Drupal\Core\Queue\QueueInterface|null
+ * @return \Drupal\Core\Queue\QueueInterface|void
  *   The queue object.
  */
 function _batch_queue($batch_set) {

@@ -39,8 +39,8 @@ interface ThemeNegotiatorInterface {
    * @param \Drupal\Core\Routing\RouteMatchInterface $route_match
    *   The current route match object.
    *
-   * @return string|null
-   *   The name of the theme, or NULL if other negotiators, like the configured
+   * @return string|void
+   *   The name of the theme, or nothing if other negotiators, like the configured
    *   default one, should be used instead.
    */
   public function determineActiveTheme(RouteMatchInterface $route_match);

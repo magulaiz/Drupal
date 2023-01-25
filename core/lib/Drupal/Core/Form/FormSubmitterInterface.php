@@ -15,7 +15,7 @@ interface FormSubmitterInterface {
    * @param \Drupal\Core\Form\FormStateInterface $form_state
    *   The current state of the form.
    *
-   * @return null|\Symfony\Component\HttpFoundation\Response
+   * @return void|\Symfony\Component\HttpFoundation\Response
    *   If a response was set by a submit handler, or if the form needs to
    *   redirect, a Response object will be returned.
    */
@@ -68,7 +68,7 @@ interface FormSubmitterInterface {
    * @param \Drupal\Core\Form\FormStateInterface $form_state
    *   The current state of the form.
    *
-   * @return \Symfony\Component\HttpFoundation\RedirectResponse|null
+   * @return \Symfony\Component\HttpFoundation\RedirectResponse|void
    *
    * @see \Drupal\Core\Form\FormBuilderInterface::processForm()
    * @see \Drupal\Core\Form\FormBuilderInterface::buildForm()

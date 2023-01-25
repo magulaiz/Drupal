@@ -99,6 +99,7 @@ class EntityModerationRouteProvider implements EntityRouteProviderInterface, Ent
       }
       return $route;
     }
+    return NULL;
   }
 
   /**

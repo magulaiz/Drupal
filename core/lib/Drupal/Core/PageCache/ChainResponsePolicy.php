@@ -39,6 +39,7 @@ class ChainResponsePolicy implements ChainResponsePolicyInterface {
         throw new \UnexpectedValueException('Return value of ResponsePolicyInterface::check() must be one of ResponsePolicyInterface::DENY or NULL');
       }
     }
+    return NULL;
   }
 
   /**

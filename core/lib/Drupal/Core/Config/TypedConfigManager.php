@@ -222,9 +222,9 @@ class TypedConfigManager extends TypedDataManager implements TypedConfigManagerI
    * @param string $name
    *   Configuration name or key.
    *
-   * @return null|string
+   * @return void|string
    *   The resolved schema name for the given configuration name or key. Returns
-   *   null if there is no schema name to fallback to. For example,
+   *   nothing if there is no schema name to fall back to. For example,
    *   breakpoint.breakpoint.module.toolbar.narrow will check for definitions in
    *   the following order:
    *     breakpoint.breakpoint.module.toolbar.*

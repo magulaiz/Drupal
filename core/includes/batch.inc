@@ -412,7 +412,7 @@ function &_batch_current_set() {
  * process and execute its form submit handler (if defined), which may add
  * further sets to this batch.
  *
- * @return true|null
+ * @return true|void
  *   TRUE if a subsequent set was found in the batch; no value will be returned
  *   if no subsequent set was found.
  */

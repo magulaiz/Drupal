@@ -94,9 +94,10 @@ class AuthenticationManager implements AuthenticationProviderInterface, Authenti
    * @param \Symfony\Component\HttpFoundation\Request $request
    *   The incoming request.
    *
-   * @return string|null
+   * @return string|void
    *   The id of the first authentication provider which applies to the request.
-   *   If no application detects appropriate credentials, then NULL is returned.
+   *   If no application detects appropriate credentials, then nothing is
+   *   returned.
    */
   protected function getProvider(Request $request) {
     foreach ($this->authCollector->getSortedProviders() as $provider_id => $provider) {
@@ -112,9 +113,10 @@ class AuthenticationManager implements AuthenticationProviderInterface, Authenti
    * @param \Symfony\Component\HttpFoundation\Request $request
    *   The incoming request.
    *
-   * @return string|null
+   * @return string|void
    *   The ID of the first authentication provider which applies to the request.
-   *   If no application detects appropriate credentials, then NULL is returned.
+   *   If no application detects appropriate credentials, then nothing is
+   *   returned.
    */
   protected function getChallenger(Request $request) {
     foreach ($this->authCollector->getSortedProviders() as $provider_id => $provider) {

@@ -591,7 +591,7 @@ function install_run_tasks(&$install_state, callable $callback = NULL) {
     // installation, also stop if we have some output to send to the browser,
     // the URL parameters have changed, or an end to the page request was
     // specifically called for.
-    $finished = empty($tasks_to_perform) || ($install_state['interactive'] && (isset($output) || $install_state['parameters_changed'] || $install_state['stop_page_request']));
+    $finished = empty($tasks_to_perform) || ($install_state['interactive'] && ($install_state['parameters_changed'] || $install_state['stop_page_request']));
   } while (!$finished);
   return $output;
 }
@@ -606,7 +606,7 @@ function install_run_tasks(&$install_state, callable $callback = NULL) {
  *   An array of information about the current installation state. This is
  *   passed in by reference so that it can be modified by the task.
  *
- * @return array|null
+ * @return array|void
  *   The output of the task function, if there is any.
  */
 function install_run_task($task, &$install_state) {
@@ -933,9 +933,9 @@ function install_tasks_to_display($install_state) {
  * @param array $install_state
  *   The current state of the installation.
  *
- * @return array|null
- *   A render array containing the form to render, or NULL in case the form was
- *   successfully submitted.
+ * @return array|void
+ *   A render array containing the form to render, or nothing in case the form
+ *   was successfully submitted.
  *
  * @throws \Drupal\Core\Installer\Exception\InstallerException
  */
@@ -1110,7 +1110,7 @@ function install_base_system(&$install_state) {
 /**
  * Verifies and returns the last installation task that was completed.
  *
- * @return null|string
+ * @return void|string
  *   The last completed task, if there is one. An exception is thrown if Drupal
  *   is already installed.
  */
@@ -1214,7 +1214,7 @@ function install_database_errors($database, $settings_file) {
  *   profile will be added here, if it was not already selected previously, as
  *   will a list of all available profiles.
  *
- * @return array|null
+ * @return array|void
  *   For interactive installations, a form allowing the profile to be selected,
  *   if the user has a choice that needs to be made. Otherwise, an exception is
  *   thrown if a profile cannot be chosen automatically.
@@ -1263,9 +1263,9 @@ function install_select_profile(&$install_state) {
  *   The current installer state, containing a 'profiles' key, which is an
  *   associative array of profiles with the machine-readable names as keys.
  *
- * @return string|null
- *   The machine-readable name of the selected profile or NULL if no profile was
- *   selected.
+ * @return string|void
+ *   The machine-readable name of the selected profile or nothing if no profile
+ *   was selected.
  *
  *  @see install_select_profile()
  */
@@ -1333,7 +1333,7 @@ function install_find_translations() {
  *   langcode will be added here, if it was not already selected previously, as
  *   will a list of all available languages.
  *
- * @return array|null
+ * @return array|void
  *   For interactive installations, a form or other page output allowing the
  *   language to be selected or providing information about language selection,
  *   if a language has not been chosen. Otherwise, an exception is thrown if a
@@ -1710,7 +1710,7 @@ function install_download_additional_translations_operations(&$install_state) {
  * @param $install_state
  *   An array of information about the current installation state.
  *
- * @return array|null
+ * @return array|void
  *   The batch definition, if there are language files to import.
  */
 function install_import_translations(&$install_state) {
@@ -2259,7 +2259,7 @@ function install_check_requirements($install_state) {
  *   An array of requirements, in the same format as is returned by
  *   hook_requirements().
  *
- * @return array|null
+ * @return array|void
  *   A themed status report, or an exception if there are requirement errors.
  *   If there are only requirement warnings, a themed status report is shown
  *   initially, but the user is allowed to bypass it by providing 'continue=1'

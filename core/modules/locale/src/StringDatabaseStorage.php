@@ -64,6 +64,7 @@ class StringDatabaseStorage implements StringStorageInterface {
       $string->setStorage($this);
       return $string;
     }
+    return NULL;
   }
 
   /**
@@ -80,6 +81,7 @@ class StringDatabaseStorage implements StringStorageInterface {
       $string->setStorage($this);
       return $string;
     }
+    return NULL;
   }
 
   /**

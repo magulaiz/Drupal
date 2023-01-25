@@ -147,7 +147,7 @@ interface EntityStorageInterface {
    * @param \Drupal\Core\Entity\EntityInterface $entity
    *   The entity to save.
    *
-   * @return int|null
+   * @return int|void
    *   SAVED_NEW or SAVED_UPDATED is returned depending on the operation
    *   performed.
    *

@@ -532,8 +532,9 @@ interface FormStateInterface {
    * @param array $element
    *   The form element to check for errors.
    *
-   * @return string|null
-   *   Either the error message for this element or NULL if there are no errors.
+   * @return string|void
+   *   Either the error message for this element or nothing  if there are no
+   *   errors.
    */
   public function getError(array $element);
 

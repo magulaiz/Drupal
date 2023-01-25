@@ -18,6 +18,7 @@ class NoServerError implements ResponsePolicyInterface {
     if ($response->isServerError()) {
       return static::DENY;
     }
+    return NULL;
   }
 
 }

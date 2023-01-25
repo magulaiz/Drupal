@@ -488,6 +488,7 @@ class Comment extends ContentEntityBase implements CommentInterface {
     if (!empty($thread->value)) {
       return $thread->value;
     }
+    return NULL;
   }
 
   /**

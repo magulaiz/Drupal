@@ -168,6 +168,7 @@ class PrivateTempStore {
       unset($object->data);
       return new Lock($object->owner, $object->updated);
     }
+    return NULL;
   }
 
   /**

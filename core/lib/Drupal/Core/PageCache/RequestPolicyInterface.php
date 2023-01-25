@@ -40,9 +40,9 @@ interface RequestPolicyInterface {
    *   The incoming request object.
    *
    * @return string|null
-   *   One of static::ALLOW, static::DENY or NULL. Calling code may attempt to
-   *   deliver a cached page if static::ALLOW is returned. Returns NULL if the
-   *   policy is not specified for the given request.
+   *   One of static::ALLOW, static::DENY or NULL. Calling code may attempt
+   *   to deliver a cached page if static::ALLOW is returned. Returns NULL if
+   *   the policy is not specified for the given request.
    */
   public function check(Request $request);
 

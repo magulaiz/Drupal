@@ -39,6 +39,7 @@ class DenyPrivateImageStyleDownload implements ResponsePolicyInterface {
     if ($this->routeMatch->getRouteName() === 'image.style_private') {
       return static::DENY;
     }
+    return NULL;
   }
 
 }

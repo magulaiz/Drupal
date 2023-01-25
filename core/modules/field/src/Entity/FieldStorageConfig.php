@@ -669,6 +669,7 @@ class FieldStorageConfig extends ConfigEntityBase implements FieldStorageConfigI
       $items = $entity->get($this->getName());
       return \Drupal::service('plugin.manager.field.field_type')->createFieldItem($items, 0);
     }
+    return NULL;
     // @todo: Allow setting custom options provider, see
     // https://www.drupal.org/node/2002138.
   }
@@ -752,6 +753,7 @@ class FieldStorageConfig extends ConfigEntityBase implements FieldStorageConfigI
     if (isset($this->propertyDefinitions[$name])) {
       return $this->propertyDefinitions[$name];
     }
+    return NULL;
   }
 
   /**

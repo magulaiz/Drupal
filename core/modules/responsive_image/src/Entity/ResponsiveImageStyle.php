@@ -286,6 +286,7 @@ class ResponsiveImageStyle extends ConfigEntityBase implements ResponsiveImageSt
     if (isset($map[$breakpoint_id][$multiplier])) {
       return $map[$breakpoint_id][$multiplier];
     }
+    return NULL;
   }
 
   /**

@@ -216,6 +216,7 @@ function user_validate_name($name) {
   if (count($violations) > 0) {
     return $violations[0]->getMessage();
   }
+  return NULL;
 }
 
 /**

@@ -22,6 +22,7 @@ class AllowToolbarPath implements RequestPolicyInterface {
     if (preg_match('#/toolbar/subtrees/[^/]+(/[^/]+)?$#', $request->getPathInfo())) {
       return static::ALLOW;
     }
+    return NULL;
   }
 
 }

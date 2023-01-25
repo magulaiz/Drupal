@@ -209,6 +209,7 @@ class OverridesSectionStorage extends SectionStorageBase implements ContainerFac
     if ($entity instanceof FieldableEntityInterface && $entity->hasField(static::FIELD_NAME)) {
       return $entity;
     }
+    return NULL;
   }
 
   /**

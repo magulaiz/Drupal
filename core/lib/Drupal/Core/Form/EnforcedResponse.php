@@ -37,9 +37,9 @@ class EnforcedResponse extends Response {
    * @param \Throwable $e
    *   The exception where the enforced response is to be extracted from.
    *
-   * @return static|null
-   *   The enforced response or NULL if the exception chain does not contain a
-   *   \Drupal\Core\Form\EnforcedResponseException exception.
+   * @return static|void
+   *   The enforced response or nothing if the exception chain does not contain
+   *   a \Drupal\Core\Form\EnforcedResponseException exception.
    */
   public static function createFromException(\Throwable $e) {
     while ($e) {

@@ -31,6 +31,7 @@ class TimeSpan extends IntegerData implements DurationInterface {
       // convert it to days, months or years.
       return new \DateInterval('PT' . $this->value . 'S');
     }
+    return NULL;
   }
 
   /**

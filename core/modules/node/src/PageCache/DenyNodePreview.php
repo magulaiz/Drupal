@@ -39,6 +39,7 @@ class DenyNodePreview implements ResponsePolicyInterface {
     if ($this->routeMatch->getRouteName() === 'entity.node.preview') {
       return static::DENY;
     }
+    return NULL;
   }
 
 }

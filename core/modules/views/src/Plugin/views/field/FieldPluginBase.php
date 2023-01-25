@@ -426,6 +426,7 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
     elseif (isset($values->_relationship_entities[$relationship_id])) {
       return $values->_relationship_entities[$relationship_id];
     }
+    return NULL;
   }
 
   /**

@@ -212,8 +212,8 @@ abstract class OptionsWidgetBase extends WidgetBase {
   /**
    * Returns the empty option label to add to the list of options, if any.
    *
-   * @return string|null
-   *   Either a label of the empty option, or NULL.
+   * @return \Drupal\Core\StringTranslation\TranslatableMarkup|void
+   *   Either a label of the empty option, or nothing.
    */
   protected function getEmptyLabel() {}
 
