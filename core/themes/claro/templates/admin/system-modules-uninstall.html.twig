@@ -76,3 +76,5 @@
     {% endfor %}
   </tbody>
 </table>
+
+{{ form|without('filters', 'modules', 'uninstall') }}
