@@ -102,7 +102,9 @@ class LayoutTest extends KernelTestBase {
       [],
       [
         'content' => [
-          '#markup' => 'This is the content',
+          'block-uuid-first' => [
+            '#markup' => 'This is the content',
+          ],
         ],
       ],
       $html,
@@ -122,10 +124,14 @@ class LayoutTest extends KernelTestBase {
       [],
       [
         'top' => [
-          '#process' => [[static::class, 'processCallback']],
+          'block-uuid-first' => [
+            '#process' => [[static::class, 'processCallback']],
+          ],
         ],
         'bottom' => [
-          '#markup' => 'This is the bottom',
+          'block-uuid-second' => [
+            '#markup' => 'This is the bottom',
+          ],
         ],
       ],
       $html,
@@ -145,10 +151,14 @@ class LayoutTest extends KernelTestBase {
       [],
       [
         'top' => [
-          '#markup' => 'This is the top',
+          'block-uuid-first' => [
+            '#markup' => 'This is the top',
+          ],
         ],
         'bottom' => [
-          '#markup' => 'This is the bottom',
+          'block-uuid-second' => [
+            '#markup' => 'This is the bottom',
+          ],
         ],
       ],
       $html,
@@ -168,10 +178,14 @@ class LayoutTest extends KernelTestBase {
       [],
       [
         'top' => [
-          '#markup' => 'This is the top',
+          'block-uuid-first' => [
+            '#markup' => 'This is the top',
+          ],
         ],
         'bottom' => [
-          '#markup' => 'This is the bottom',
+          'block-uuid-second' => [
+            '#markup' => 'This is the bottom',
+          ],
         ],
       ],
       $html,
@@ -191,10 +205,14 @@ class LayoutTest extends KernelTestBase {
       [],
       [
         'left' => [
-          '#markup' => 'This is the left',
+          'block-uuid-first' => [
+            '#markup' => 'This is the left',
+          ],
         ],
         'right' => [
-          '#markup' => 'This is the right',
+          'block-uuid-second' => [
+            '#markup' => 'This is the right',
+          ],
         ],
       ],
       $html,
@@ -217,7 +235,9 @@ class LayoutTest extends KernelTestBase {
       ],
       [
         'main' => [
-          '#markup' => 'Main region',
+          'block-uuid-first' => [
+            '#markup' => 'Main region',
+          ],
         ],
       ],
       $html,

@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\field_layout\Unit;
 
+use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\field_layout\Display\EntityDisplayWithLayoutInterface;
@@ -143,16 +144,21 @@ class FieldLayoutBuilderTest extends UnitTestCase {
             '#markup' => 'Test1',
           ],
         ],
-        '#in_preview' => FALSE,
-        '#settings' => [
-          'label' => '',
-        ],
-        '#layout' => $this->pluginDefinition,
         '#theme' => 'layout__twocol',
         '#attached' => [
           'library' => [
             'field_layout/drupal.layout.twocol',
           ],
+        ],
+        '#in_preview' => FALSE,
+        '#settings' => [
+          'label' => '',
+        ],
+        '#layout' => $this->pluginDefinition,
+        '#cache' => [
+          'contexts' => [],
+          'tags' => [],
+          'max-age' => CacheBackendInterface::CACHE_PERMANENT,
         ],
       ],
     ];
@@ -244,16 +250,21 @@ class FieldLayoutBuilderTest extends UnitTestCase {
           '#process' => ['\Drupal\Core\Render\Element\RenderElement::processGroup'],
           '#pre_render' => ['\Drupal\Core\Render\Element\RenderElement::preRenderGroup'],
         ],
-        '#in_preview' => FALSE,
-        '#settings' => [
-          'label' => '',
-        ],
-        '#layout' => $this->pluginDefinition,
         '#theme' => 'layout__twocol',
         '#attached' => [
           'library' => [
             'field_layout/drupal.layout.twocol',
           ],
+        ],
+        '#in_preview' => FALSE,
+        '#settings' => [
+          'label' => '',
+        ],
+        '#layout' => $this->pluginDefinition,
+        '#cache' => [
+          'contexts' => [],
+          'tags' => [],
+          'max-age' => CacheBackendInterface::CACHE_PERMANENT,
         ],
       ],
     ];
