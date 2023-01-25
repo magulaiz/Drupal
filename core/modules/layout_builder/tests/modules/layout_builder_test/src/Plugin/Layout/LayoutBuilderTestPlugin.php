@@ -21,12 +21,11 @@ class LayoutBuilderTestPlugin extends LayoutDefault {
    * {@inheritdoc}
    */
   public function build(array $regions) {
-    $build = parent::build($regions);
-    $build['main']['#attributes']['class'][] = 'go-birds';
+    $regions['main']['#attributes']['class'][] = 'go-birds';
     if ($this->inPreview) {
-      $build['main']['#attributes']['class'][] = 'go-birds-preview';
+      $regions['main']['#attributes']['class'][] = 'go-birds-preview';
     }
-    return $build;
+    return parent::build($regions);
   }
 
 }
