@@ -162,7 +162,7 @@ class AnnounceFetcher {
 
       if (!isset($announcements['items'])) {
         $this->logger->error($this->t('The feed format is not valid.'));
-        throw new \Exception($this->t('Invalid format.'));
+        throw new \Exception('Invalid format');
       }
 
       $announcements = $announcements['items'] ?? [];
