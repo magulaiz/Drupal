@@ -137,6 +137,71 @@
   };
 
   /**
+   * Keep track of access check results to prevent hundreds of requests for the same combination of item, from and to.
+   *
+   * Used in {@link Drupal.layoutBuilderBlockUpdateAllowed}.
+   *
+   * @type {{}}
+   *
+   * @internal This property is a static cache for Drupal.layoutBuilderBlockUpdateAllowed.
+   */
+  Drupal.layoutBuilderBlockUpdateAccess = {};
+
+  /**
+   * Callback used in {@link Drupal.behaviors.layoutBuilderBlockDrag}.
+   *
+   * @param {HTMLElement} item
+   *   The HTML element representing the repositioned block.
+   * @param {HTMLElement} from
+   *   The HTML element representing the previous parent of item
+   * @param {HTMLElement} to
+   *   The HTML element representing the current parent of item
+   *
+   * @internal This method is a callback for layoutBuilderBlockDrag.
+   */
+  Drupal.layoutBuilderBlockUpdateAllowed = function (item, from, to) {
+    const $item = $(item);
+    const $to = $(to);
+    const itemRegion = $item.closest('.js-layout-builder-region');
+
+    // Find the source delta.
+    const deltaFrom = $item.closest('[data-layout-delta]').data('layout-delta');
+    // If the block didn't leave the original delta use the source.
+    const deltaTo = $to
+      ? $to.closest('[data-layout-delta]').data('layout-delta')
+      : deltaFrom;
+    const blockUuid = $item.data('layout-block-uuid');
+
+    // Check if we already know the access result.
+    const accessCheckId = blockUuid + '|' + deltaFrom + '|' + deltaTo;
+    if (accessCheckId in Drupal.layoutBuilderBlockUpdateAccess) {
+      return Drupal.layoutBuilderBlockUpdateAccess[accessCheckId];
+    }
+
+    let access = false;
+    // Because this request should be synchronous we use the default jQuery $.ajax() method instead of Drupal.ajax().
+    $.ajax({
+      url: [
+        $item.closest('[data-layout-update-allowed-url]').data('layout-update-allowed-url'),
+        deltaFrom,
+        deltaTo,
+        itemRegion.data('region'),
+        blockUuid,
+      ]
+        .filter((element) => element !== undefined)
+        .join('/'),
+      async: false,
+      success: data => access = data.access,
+      error: () => access = false,
+    });
+
+    // Persist the access check result to prevent multiple requests for the same check.
+    Drupal.layoutBuilderBlockUpdateAccess[accessCheckId] = access;
+
+    return access;
+  };
+
+  /**
    * Provides the ability to drag blocks to new positions in the layout.
    *
    * @type {Drupal~behavior}
@@ -156,6 +221,8 @@
             group: 'builder-region',
             onEnd: (event) =>
               Drupal.layoutBuilderBlockUpdate(event.item, event.from, event.to),
+            onMove: (event) =>
+              Drupal.layoutBuilderBlockUpdateAllowed(event.dragged, event.from, event.to),
           });
         },
       );
