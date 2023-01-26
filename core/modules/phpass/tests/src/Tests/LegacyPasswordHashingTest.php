@@ -18,7 +18,7 @@ use Drupal\Tests\UnitTestCase;
  * @group phpass
  * @group legacy
  */
-class PasswordHashingTest extends UnitTestCase {
+class LegacyPasswordHashingTest extends UnitTestCase {
 
   /**
    * The raw password.
@@ -53,7 +53,7 @@ class PasswordHashingTest extends UnitTestCase {
    */
   protected function setUp(): void {
     parent::setUp();
-    $this->expectDeprecation('Drupal\phpass\Password\PhpassHashedPassword::deprecatedConstructor() is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use PhpassHashedPassword::__construct() with $corePassword parameter set to an instance of Drupal\Core\Password\PhpPassword instead. See https://www.drupal.org/node/3322420');
+    $this->expectDeprecation('Calling Drupal\phpass\Password\PhpassHashedPassword::__construct() with numirec $countLog2 as the first parameter is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use PhpassHashedPassword::__construct() with $corePassword parameter set to an instance of Drupal\Core\Password\PhpPassword instead. See https://www.drupal.org/node/3322420');
     $this->password = $this->randomMachineName();
     $this->passwordHasher = new PhpassHashedPassword(1);
     $this->hashedPassword = $this->passwordHasher->hash($this->password);

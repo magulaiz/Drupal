@@ -3,7 +3,7 @@
 namespace Drupal\Core\Password;
 
 /**
- * Secure password hashing functions based on PHP >= 5.5.0 password hashing.
+ * Secure PHP password hashing functions.
  *
  * @see https://www.php.net/manual/en/book.password.php
  */
@@ -15,7 +15,7 @@ class PhpPassword implements PasswordInterface {
    * @param string $algorithm
    *   The hashing algorithm to use. Defaults to php default.
    * @param array $options
-   *   List of options. Refer to password_hash for available options.
+   *   List of options. Refer to password_hash() for available options.
    *
    * @see https://www.php.net/password_hash
    */
@@ -23,8 +23,6 @@ class PhpPassword implements PasswordInterface {
     protected string $algorithm = PASSWORD_DEFAULT,
     protected array $options = []
   ) {
-    $this->algorithm = $algorithm;
-    $this->options = $options;
   }
 
   /**

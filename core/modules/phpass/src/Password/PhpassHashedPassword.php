@@ -7,9 +7,10 @@ use Drupal\Core\Password\PasswordInterface;
 /**
  * Legacy password hashing framework.
  *
- * @see https://www.drupal.org/project/drupal/issues/3322420
+ * @see https://www.drupal.org/node/3322420
  */
 class PhpassHashedPassword implements PasswordInterface {
+
   /**
    * The minimum allowed log2 number of iterations for password stretching.
    */
@@ -56,50 +57,22 @@ class PhpassHashedPassword implements PasswordInterface {
    */
   public function __construct($corePassword) {
     if ($corePassword instanceof PasswordInterface) {
-      $this->futureConstructor($corePassword);
+      // Note: If $corePassword is set, $countLog2 isn't used anywhere in the
+      // code path of this class. Still, set it to the default value for BC
+      // reasons.
+      $this->countLog2 = 16;
+      $this->corePassword = $corePassword;
     }
     elseif (is_numeric($corePassword)) {
       $countLog2 = $corePassword;
-      $this->deprecatedConstructor($countLog2);
+      @trigger_error('Calling ' . __METHOD__ . '() with numirec $countLog2 as the first parameter is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use PhpassHashedPassword::__construct() with $corePassword parameter set to an instance of Drupal\Core\Password\PhpPassword instead. See https://www.drupal.org/node/3322420', E_USER_DEPRECATED);
+      // Ensure that $countLog2 is within set bounds.
+      $this->countLog2 = $this->enforceLog2Boundaries($countLog2);
+      $this->corePassword = NULL;
     }
     else {
       throw new \InvalidArgumentException("First argument of PhpassHashedPassword::__construct() must either be numeric or a PasswordInterface instance");
     }
-  }
-
-  /**
-   * Constructs a new password hashing instance.
-   *
-   * @param \Drupal\Core\Password\PasswordInterface $corePassword
-   *   The core PHP password interface.
-   */
-  protected function futureConstructor(PasswordInterface $corePassword) {
-    // Note: If $corePassword is set, $countLog2 isn't used anywhere in the
-    // code path of this class. Still, set it to the default value for BC
-    // reasons.
-    $this->countLog2 = 16;
-    $this->corePassword = $corePassword;
-  }
-
-  /**
-   * Constructs a new password hashing instance.
-   *
-   * @param int $countLog2
-   *   Password stretching iteration count. Specifies the number of times the
-   *   hashing function will be applied when generating new password hashes.
-   *   The number of times is calculated by raising 2 to the power of the given
-   *   value.
-   *
-   * @deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use
-   *   PhpassHashedPassword::__construct() with $corePassword parameter set to
-   *   an instance of Drupal\Core\Password\PhpPassword instead.
-   * @see https://www.drupal.org/node/3322420
-   */
-  protected function deprecatedConstructor($countLog2) {
-    @trigger_error(__METHOD__ . '() is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use PhpassHashedPassword::__construct() with $corePassword parameter set to an instance of Drupal\Core\Password\PhpPassword instead. See https://www.drupal.org/node/3322420', E_USER_DEPRECATED);
-    // Ensure that $countLog2 is within set bounds.
-    $this->countLog2 = $this->enforceLog2Boundaries($countLog2);
-    $this->corePassword = NULL;
   }
 
   /**

@@ -43,11 +43,8 @@ interface PasswordInterface {
    * rehashing of the password, as in that stage, the plain text password is
    * available.
    *
-   * This method returns TRUE in one of the next cases:
-   * - The default hash algorithm or default options were changed by a PHP
-   *   update.
-   * - The password hash was hashed in Drupal prior to 10.1.0.
-   * - The hash was migrated from a system that uses MD5 hashes, like Drupal 6.
+   * This method returns TRUE if the password was hashed with an older
+   * algorithm.
    *
    * @param string $hash
    *   The hash to be checked.
