@@ -1,0 +1,15 @@
+<?php
+
+/**
+ * @file
+ * Block content test deriver module file.
+ */
+
+use Drupal\Core\Database\Query\AlterableInterface;
+
+/**
+ * Implements hook_query_TAG_alter().
+ */
+function block_content_test_deriver_query_block_content_derivatives_alter(AlterableInterface $query) {
+  $query->condition('block_content_field_data.type', 'no_derivatives', '!=');
+}

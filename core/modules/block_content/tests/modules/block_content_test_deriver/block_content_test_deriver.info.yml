@@ -1,0 +1,7 @@
+name: 'Block Content test deriver'
+type: module
+description: 'Provides a query alter for testing derivative query altering.'
+package: Testing
+version: VERSION
+dependencies:
+  - drupal:block_content
