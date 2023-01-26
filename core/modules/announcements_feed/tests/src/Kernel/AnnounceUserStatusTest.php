@@ -123,39 +123,47 @@ class AnnounceUserStatusTest extends KernelTestBase {
       [
         'id' => 1001,
         'title' => 'Drupal security update Test',
-        'link' => 'https://www.drupal.org/project/announce',
-        'teaser' => 'Test teaser 1',
-        'sticky' => 1,
-        'version' => '^10',
-        'updated' => 1611041378,
+        'url' => 'https://www.drupal.org/project/announce',
+        'content_html' => 'Test teaser 1',
+        '_extra' => [
+          'featured' => 1,
+          'version' => '^10',
+        ],
+        'date_modified' => date('c', 1611041378),
       ],
       [
         'id' => 1002,
         'title' => 'Drupal security update Test',
-        'link' => 'https://www.drupal.org/project/announce',
-        'teaser' => 'Test teaser 2',
-        'sticky' => 1,
-        'version' => '^10',
-        'updated' => 1611041378,
+        'url' => 'https://www.drupal.org/project/announce',
+        'content_html' => 'Test teaser 2',
+        '_extra' => [
+          'featured' => 1,
+          'version' => '^10',
+        ],
+        'date_modified' => date('c', 1611041378),
       ],
       [
 
         'id' => 1003,
         'title' => 'Drupal security update Test',
-        'link' => 'https://www.drupal.org/project/announce',
-        'teaser' => 'Test teaser 3',
-        'sticky' => 1,
-        'version' => '^10',
-        'updated' => 1611041378,
+        'url' => 'https://www.drupal.org/project/announce',
+        'content_html' => 'Test teaser 3',
+        '_extra' => [
+          'featured' => 1,
+          'version' => '^10',
+        ],
+        'date_modified' => date('c', 1611041378),
       ],
       [
         'id' => 1004,
         'title' => 'Drupal security update Test',
-        'link' => 'https://www.drupal.org/project/announce',
-        'teaser' => 'Test teaser 4',
-        'sticky' => 1,
-        'version' => '^10',
-        'updated' => 1611041378,
+        'url' => 'https://www.drupal.org/project/announce',
+        'content_html' => 'Test teaser 4',
+        '_extra' => [
+          'featured' => 1,
+          'version' => '^10',
+        ],
+        'date_modified' => date('c', 1611041378),
       ],
     ];
   }
@@ -169,48 +177,58 @@ class AnnounceUserStatusTest extends KernelTestBase {
       [
         'id' => 1005,
         'title' => 'Drupal security update Test new',
-        'link' => 'https://www.drupal.org/project/announce',
-        'teaser' => 'Test teaser 1',
-        'sticky' => 1,
-        'version' => '^10',
-        'updated' => 1611041378,
+        'url' => 'https://www.drupal.org/project/announce',
+        'content_html' => 'Test teaser 1',
+        '_extra' => [
+          'featured' => 1,
+          'version' => '^10',
+        ],
+        'date_modified' => date('c', 1611041378),
       ],
       [
         'id' => 1001,
         'title' => 'Drupal security update Test',
-        'link' => 'https://www.drupal.org/project/announce',
-        'teaser' => 'Test teaser 1',
-        'sticky' => 1,
-        'version' => '^10',
-        'updated' => 1611041378,
+        'url' => 'https://www.drupal.org/project/announce',
+        'content_html' => 'Test teaser 1',
+        '_extra' => [
+          'featured' => 1,
+          'version' => '^10',
+        ],
+        'date_modified' => date('c', 1611041378),
       ],
       [
         'id' => 1002,
         'title' => 'Drupal security update Test',
-        'link' => 'https://www.drupal.org/project/announce',
-        'teaser' => 'Test teaser 2',
-        'sticky' => 1,
-        'version' => '^10',
-        'updated' => 1611041378,
+        'url' => 'https://www.drupal.org/project/announce',
+        'content_html' => 'Test teaser 2',
+        '_extra' => [
+          'featured' => 1,
+          'version' => '^10',
+        ],
+        'date_modified' => date('c', 1611041378),
       ],
       [
 
         'id' => 1003,
         'title' => 'Drupal security update Test',
-        'link' => 'https://www.drupal.org/project/announce',
-        'teaser' => 'Test teaser 3',
-        'sticky' => 1,
-        'version' => '^10',
-        'updated' => 1611041378,
+        'url' => 'https://www.drupal.org/project/announce',
+        'content_html' => 'Test teaser 3',
+        '_extra' => [
+          'featured' => 1,
+          'version' => '^10',
+        ],
+        'date_modified' => date('c', 1611041378),
       ],
       [
         'id' => 1004,
         'title' => 'Drupal security update Test',
-        'link' => 'https://www.drupal.org/project/announce',
-        'teaser' => 'Test teaser 4',
-        'sticky' => 1,
-        'version' => '^10',
-        'updated' => 1611041378,
+        'url' => 'https://www.drupal.org/project/announce',
+        'content_html' => 'Test teaser 4',
+        '_extra' => [
+          'featured' => 1,
+          'version' => '^10',
+        ],
+        'date_modified' => date('c', 1611041378),
       ],
     ];
   }
@@ -221,7 +239,7 @@ class AnnounceUserStatusTest extends KernelTestBase {
    * @param mixed[][] $feed_items
    *   The feeds items to test. Every time the http_client makes a request the
    *   next item in this array will be returned. For each feed item 'title' and
-   *   'link' are omitted because they do not need to vary between test cases.
+   *   'url' are omitted because they do not need to vary between test cases.
    */
   protected function setFeedItems(array $feed_items): void {
     $responses[] = new Response('200', [], json_encode($feed_items));

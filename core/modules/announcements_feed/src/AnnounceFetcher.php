@@ -92,8 +92,8 @@ class AnnounceFetcher {
    *   Return True if $announcement['version'] matches Drupal version.
    */
   protected static function isRelevantItem(array $announcement): bool {
-    return isset($announcement['version'])
-      && Semver::satisfies(\Drupal::VERSION, $announcement['version']);
+    return isset($announcement['_extra']['version'])
+      && Semver::satisfies(\Drupal::VERSION, $announcement['_extra']['version']);
   }
 
   /**
@@ -106,10 +106,11 @@ class AnnounceFetcher {
    *   Return True if $announcement['link'] is controlled by the D.O.
    */
   public static function validateUrl(array $announcement): bool {
-    if (!$announcement['link']) {
+    if (!$announcement['url']) {
       return FALSE;
     }
-    $host = parse_url($announcement['link'], PHP_URL_HOST);
+    $host = parse_url($announcement['url'], PHP_URL_HOST);
+
     // First character can only be a letter or a digit.
     // @see https://www.rfc-editor.org/rfc/rfc1123#page-13
     return $host && preg_match('/^([a-zA-Z0-9][a-zA-Z0-9\-_]*\.)?drupal\.org$/', $host);
@@ -118,14 +119,16 @@ class AnnounceFetcher {
   /**
    * Fetches the feed either from a local cache or fresh remotely.
    *
-   * The structure of an announcement in the feed is:
+   * The feed follows the jsonfeed format: https://www.jsonfeed.org/version/1.1/
+   *
+   * The structure of an announcement item in the feed is:
    *   - id: Id.
    *   - title: Title of the announcement.
-   *   - teaser: Announcement teaser.
-   *   - link: URL
-   *   - sticky: 1 if featured, 0 if not featured.
-   *   - version: Target version of Drupal as a Composer version constraint.
-   *   - updated: Last updated timestamp.
+   *   - content_html: Announcement teaser.
+   *   - url: URL
+   *   - date_modified: Last updated timestamp.
+   *   - _extra.featured: 1 if featured, 0 if not featured.
+   *   - _extra.version: Target version of Drupal as a Composer version constraint.
    *
    * @return array
    *   An array of announcements from the feed relevant to the Drupal version.
@@ -153,6 +156,7 @@ class AnnounceFetcher {
         throw $e;
       }
 
+      $announcements = $announcements['items'] ?? [];
       // Ensure that announcements reference drupal.org and are applicable to
       // the current Drupal version.
       $announcements = array_filter($announcements, function (array $announcement) {
@@ -166,7 +170,7 @@ class AnnounceFetcher {
     // Put all the sticky announcements before the rest.
     $prioritized = [[], []];
     foreach ($announcements as $announcement) {
-      $prioritized[$announcement['sticky'] ? 0 : 1][] = $announcement;
+      $prioritized[$announcement['_extra']['featured'] ? 0 : 1][] = $announcement;
     }
     $announcements = array_merge($prioritized[0], $prioritized[1]);
 

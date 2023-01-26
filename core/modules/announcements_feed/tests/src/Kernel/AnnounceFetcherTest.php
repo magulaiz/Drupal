@@ -67,20 +67,22 @@ class AnnounceFetcherTest extends KernelTestBase {
   public function testFeedFields(): void {
     $feed_item_1 = [
       'id' => 1001,
-      'teaser' => 'Test teaser 1',
-      'link' => 'https://www.drupal.org/project/announce',
-      'sticky' => 1,
-      'version' => '^10',
-      'updated' => "2021-09-02T15:09:42+00:00",
+      'content_html' => 'Test teaser 1',
+      'url' => 'https://www.drupal.org/project/announce',
+      '_extra' => [
+        'featured' => 1,
+        'version' => '^10',
+      ],
+      'date_modified' => "2021-09-02T15:09:42+00:00",
     ];
     $this->setFeedItems([$feed_item_1]);
     $feeds = $this->fetchFeedItems();
     $this->assertCount(1, $feeds);
     $this->assertSame($feed_item_1['id'], $feeds[0]['id']);
-    $this->assertSame($feed_item_1['teaser'], $feeds[0]['teaser']);
-    $this->assertSame($feed_item_1['sticky'], $feeds[0]['sticky']);
-    $this->assertSame($feed_item_1['updated'], $feeds[0]['updated']);
-    $this->assertSame($feed_item_1['version'], $feeds[0]['version']);
+    $this->assertSame($feed_item_1['content_html'], $feeds[0]['content_html']);
+    $this->assertSame($feed_item_1['_extra']['featured'], $feeds[0]['_extra']['featured']);
+    $this->assertSame($feed_item_1['date_modified'], $feeds[0]['date_modified']);
+    $this->assertSame($feed_item_1['_extra']['version'], $feeds[0]['_extra']['version']);
   }
 
   /**
@@ -91,37 +93,45 @@ class AnnounceFetcherTest extends KernelTestBase {
       '1' => [
         'feed_item' => [
           'id' => 1001,
-          'teaser' => 'Test teaser 1',
-          'sticky' => 1,
-          'version' => '^10',
-          'updated' => "2021-09-02T15:09:42+00:00",
+          'content_html' => 'Test teaser 1',
+          '_extra' => [
+            'featured' => 1,
+            'version' => '^10',
+          ],
+          'date_modified' => "2021-09-02T15:09:42+00:00",
         ],
       ],
       '2' => [
         'feed_item' => [
           'id' => 1002,
-          'teaser' => 'Test teaser 2',
-          'sticky' => 1,
-          'version' => '^10',
-          'updated' => "2021-09-02T15:09:42+00:00",
+          'content_html' => 'Test teaser 2',
+          '_extra' => [
+            'featured' => 1,
+            'version' => '^10',
+          ],
+          'date_modified' => "2021-09-02T15:09:42+00:00",
         ],
       ],
       '3' => [
         'feed_item' => [
           'id' => 1003,
-          'teaser' => 'Test teaser 3',
-          'sticky' => 1,
-          'version' => '^10',
-          'updated' => "2021-09-02T15:09:42+00:00",
+          'content_html' => 'Test teaser 3',
+          '_extra' => [
+            'featured' => 1,
+            'version' => '^10',
+          ],
+          'date_modified' => "2021-09-02T15:09:42+00:00",
         ],
       ],
       '4' => [
         'feed_item' => [
           'id' => 1004,
-          'teaser' => 'Test teaser 4',
-          'sticky' => 1,
-          'version' => '^10',
-          'updated' => "2021-09-02T15:09:42+00:00",
+          'content_html' => 'Test teaser 4',
+          '_extra' => [
+            'featured' => 1,
+            'version' => '^10',
+          ],
+          'date_modified' => "2021-09-02T15:09:42+00:00",
         ],
       ],
     ];
@@ -140,7 +150,7 @@ class AnnounceFetcherTest extends KernelTestBase {
     foreach ($feed_items as $feed_item) {
       $feed_item += [
         'title' => 'Drupal security update Test',
-        'link' => 'https://www.drupal.org/project/announce',
+        'url' => 'https://www.drupal.org/project/announce',
       ];
       $responses[] = new Response('200', [], json_encode([$feed_item]));
     }
