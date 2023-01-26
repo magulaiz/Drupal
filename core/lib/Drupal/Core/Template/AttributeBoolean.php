@@ -2,7 +2,9 @@
 
 namespace Drupal\Core\Template;
 
-use Drupal\Component\Utility\Html;
+use Drupal\Component\Attribute\AttributeBoolean as ComponentAttributeBoolean;
+
+@trigger_error('\Drupal\Core\Template\AttributeBoolean is deprecated in drupal:10.0.0 and is removed from drupal:11.0.0. Use \Drupal\Component\Attribute\AttributeBoolean instead. See https://www.drupal.org/node/3070485', E_USER_DEPRECATED);
 
 /**
  * A class that defines a type of boolean HTML attribute.
@@ -23,21 +25,11 @@ use Drupal\Component\Utility\Html;
  * @endcode
  *
  * @see \Drupal\Core\Template\Attribute
+ *
+ * @deprecated in drupal:10.0.0 and is removed from drupal:11.0.0. Use
+ *   \Drupal\Component\Attribute\AttributeBoolean instead.
+ *
+ * @see https://www.drupal.org/node/3070485
  */
-class AttributeBoolean extends AttributeValueBase {
-
-  /**
-   * {@inheritdoc}
-   */
-  public function render() {
-    return $this->__toString();
-  }
-
-  /**
-   * Implements the magic __toString() method.
-   */
-  public function __toString() {
-    return $this->value === FALSE ? '' : Html::escape($this->name);
-  }
-
+class AttributeBoolean extends ComponentAttributeBoolean {
 }

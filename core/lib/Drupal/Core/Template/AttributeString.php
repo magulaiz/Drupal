@@ -2,7 +2,9 @@
 
 namespace Drupal\Core\Template;
 
-use Drupal\Component\Utility\Html;
+use Drupal\Component\Attribute\AttributeString as ComponentAttributeString;
+
+@trigger_error('\Drupal\Core\Template\AttributeString is deprecated in drupal:10.0.0 and is removed from drupal:11.0.0. Use \Drupal\Component\Attribute\AttributeString instead. See https://www.drupal.org/node/3070485', E_USER_DEPRECATED);
 
 /**
  * A class that represents most standard HTML attributes.
@@ -18,14 +20,11 @@ use Drupal\Component\Utility\Html;
  * @endcode
  *
  * @see \Drupal\Core\Template\Attribute
+ *
+ * @deprecated in drupal:10.0.0 and is removed from drupal:11.0.0. Use
+ *   \Drupal\Component\Attribute\AttributeString instead.
+ *
+ * @see https://www.drupal.org/node/3070485
  */
-class AttributeString extends AttributeValueBase {
-
-  /**
-   * Implements the magic __toString() method.
-   */
-  public function __toString() {
-    return Html::escape((string) $this->value);
-  }
-
+class AttributeString extends ComponentAttributeString {
 }

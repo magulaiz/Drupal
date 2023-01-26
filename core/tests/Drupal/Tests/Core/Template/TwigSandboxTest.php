@@ -7,7 +7,8 @@
 
 namespace Drupal\Tests\Core\Template;
 
-use Drupal\Core\Template\Attribute;
+use Drupal\Component\Attribute\AttributeCollection;
+use Drupal\Core\Template\Attribute as CoreAttribute;
 use Drupal\Core\Template\TwigSandboxPolicy;
 use Drupal\Core\Template\Loader\StringLoader;
 use Drupal\Tests\UnitTestCase;
@@ -72,7 +73,7 @@ class TwigSandboxTest extends UnitTestCase {
    * Tests that white listed classes can be extended.
    */
   public function testExtendedClass() {
-    $this->assertEquals(' class=&quot;kitten&quot;', $this->twig->render('{{ attribute.addClass("kitten") }}', ['attribute' => new TestAttribute()]));
+    $this->assertEquals(' class=&quot;kitten&quot;', $this->twig->render('{{ attribute.addClass("kitten") }}', ['attribute' => new TestAttributeCollection()]));
   }
 
   /**
@@ -157,6 +158,24 @@ class TwigSandboxTest extends UnitTestCase {
     $this->assertEquals('http://kittens.cat/are/cute', $result, 'Sandbox policy allows toString() to be called.');
   }
 
+  /**
+   * Tests deprecation of Drupal\Core\Template\Attribute as an allowed class.
+   *
+   * @group legacy
+   */
+  public function testDeprecatedAllowedClass() {
+    $this->expectDeprecation('\Drupal\Core\Template\Attribute as an allowed class in $settings[\'twig_sandbox_allowed_classes\'] is deprecated in drupal:10.0.0 and is removed from drupal:11.0.0. Use \Drupal\Component\Attribute\AttributeCollection instead. See https://www.drupal.org/node/3070485');
+    $policy = $this->getMockBuilder(TwigSandboxPolicy::class)
+      ->onlyMethods(['getSettings'])
+      ->disableOriginalConstructor()
+      ->getMock();
+    $policy->expects($this->any())
+      ->method('getSettings')
+      ->willReturnOnConsecutiveCalls([CoreAttribute::class], [], []);
+    $this->expectException(SecurityError::class);
+    $policy->checkMethodAllowed($this, 'add');
+  }
+
 }
 
-class TestAttribute extends Attribute {}
+class TestAttributeCollection extends AttributeCollection {}
