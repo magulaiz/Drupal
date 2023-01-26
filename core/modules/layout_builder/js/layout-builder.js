@@ -53,6 +53,36 @@
       }).execute();
     }
   };
+  Drupal.layoutBuilderBlockUpdateAccess = {};
+  Drupal.layoutBuilderBlockUpdateAllowed = function (item, from, to) {
+    var $item = $(item);
+    var $to = $(to);
+    var itemRegion = $item.closest('.js-layout-builder-region');
+    var deltaFrom = $item.closest('[data-layout-delta]').data('layout-delta');
+    var deltaTo = $to ? $to.closest('[data-layout-delta]').data('layout-delta') : deltaFrom;
+    var blockUuid = $item.data('layout-block-uuid');
+    var accessCheckId = blockUuid + '|' + deltaFrom + '|' + deltaTo;
+
+    if (accessCheckId in Drupal.layoutBuilderBlockUpdateAccess) {
+      return Drupal.layoutBuilderBlockUpdateAccess[accessCheckId];
+    }
+
+    var access = false;
+    $.ajax({
+      url: [$item.closest('[data-layout-update-allowed-url]').data('layout-update-allowed-url'), deltaFrom, deltaTo, itemRegion.data('region'), blockUuid].filter(function (element) {
+        return element !== undefined;
+      }).join('/'),
+      async: false,
+      success: function success(data) {
+        return access = data.access;
+      },
+      error: function error() {
+        return access = false;
+      }
+    });
+    Drupal.layoutBuilderBlockUpdateAccess[accessCheckId] = access;
+    return access;
+  };
   behaviors.layoutBuilderBlockDrag = {
     attach: function attach(context) {
       var regionSelector = '.js-layout-builder-region';
@@ -63,6 +93,9 @@
           group: 'builder-region',
           onEnd: function onEnd(event) {
             return Drupal.layoutBuilderBlockUpdate(event.item, event.from, event.to);
+          },
+          onMove: function onMove(event) {
+            return Drupal.layoutBuilderBlockUpdateAllowed(event.dragged, event.from, event.to);
           }
         });
       });
