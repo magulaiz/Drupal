@@ -43,7 +43,8 @@
     var $item = $(item);
     var $from = $(from);
     var itemRegion = $item.closest('.js-layout-builder-region');
-    if (to === itemRegion[0]) {
+    var itemParent = $($item[0].parentNode);
+    if (to === itemParent[0]) {
       var deltaTo = $item.closest('[data-layout-delta]').data('layout-delta');
       var deltaFrom = $from ? $from.closest('[data-layout-delta]').data('layout-delta') : deltaTo;
       ajax({
@@ -57,6 +58,8 @@
     attach: function attach(context) {
       var regionSelector = '.js-layout-builder-region';
       Array.prototype.forEach.call(context.querySelectorAll(regionSelector), function (region) {
+        var block = region.querySelector('.js-layout-builder-block');
+        region = block ? block.parentNode : region;
         Sortable.create(region, {
           draggable: '.js-layout-builder-block',
           ghostClass: 'ui-state-drop',
