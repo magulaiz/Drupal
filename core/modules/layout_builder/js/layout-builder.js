@@ -114,7 +114,8 @@
 
     // Check if the region from the event and region for the item match.
     const itemRegion = $item.closest('.js-layout-builder-region');
-    if (to === itemRegion[0]) {
+    const itemParent = $($item[0].parentNode);
+    if (to === itemParent[0]) {
       // Find the destination delta.
       const deltaTo = $item.closest('[data-layout-delta]').data('layout-delta');
       // If the block didn't leave the original delta use the destination.
@@ -150,6 +151,8 @@
       Array.prototype.forEach.call(
         context.querySelectorAll(regionSelector),
         (region) => {
+          const block = region.querySelector('.js-layout-builder-block');
+          region = block ? block.parentNode : region;
           Sortable.create(region, {
             draggable: '.js-layout-builder-block',
             ghostClass: 'ui-state-drop',
