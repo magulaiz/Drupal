@@ -332,6 +332,10 @@ class LayoutBuilder extends RenderElement implements ContainerFactoryPluginInter
       'section_storage_type' => $storage_type,
       'section_storage' => $storage_id,
     ])->toString();
+    $build['#attributes']['data-layout-update-allowed-url'] = Url::fromRoute('layout_builder.move_block_allowed', [
+      'section_storage_type' => $storage_type,
+      'section_storage' => $storage_id,
+    ])->toString();
 
     $build['#attributes']['data-layout-delta'] = $delta;
     $build['#attributes']['class'][] = 'layout-builder__layout';
