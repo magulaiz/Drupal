@@ -119,7 +119,7 @@ class AnnounceFetcher {
   /**
    * Fetches the feed either from a local cache or fresh remotely.
    *
-   * The feed follows the "jsonfeed" format:
+   * The feed follows the "JSON Feed" format:
    * - https://www.jsonfeed.org/version/1.1/
    *
    * The structure of an announcement item in the feed is:
@@ -129,7 +129,7 @@ class AnnounceFetcher {
    *   - url: URL
    *   - date_modified: Last updated timestamp.
    *   - _extra.featured: 1 if featured, 0 if not featured.
-   *   - _extra.version: Target version of Drupal as a Composer version constraint.
+   *   - _extra.version: Target version of Drupal, as a Composer version.
    *
    * @return array
    *   An array of announcements from the feed relevant to the Drupal version.
