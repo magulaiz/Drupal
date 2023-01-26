@@ -546,7 +546,7 @@ class TwigExtensionTest extends UnitTestCase {
     ];
   }
 
-  /*
+  /**
    * Tests Twig calls to Attribute objects.
    *
    * @dataProvider providerTestAttributeClassHelpers
