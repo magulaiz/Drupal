@@ -46,7 +46,7 @@ class AnnounceFetcherTest extends KernelTestBase {
    * Tests announcement that should be displayed.
    *
    * @param mixed[] $feed_item
-   *   The feed item to test. 'title' and 'link' are omitted from this array
+   *   The feed item to test. 'title' and 'url' are omitted from this array
    *   because they do not need to vary between test cases.
    *
    * @dataProvider providerShowAnnouncements
@@ -55,9 +55,9 @@ class AnnounceFetcherTest extends KernelTestBase {
     $this->setFeedItems([$feed_item]);
     $feeds = $this->fetchFeedItems();
     $this->assertCount(1, $feeds);
-    $this->assertSame('https://www.drupal.org/project/announce', $feeds[0]['link']);
+    $this->assertSame('https://www.drupal.org/project/announce', $feeds[0]['url']);
     $this->assertSame('Drupal security update Test', $feeds[0]['title']);
-    $this->assertSame('^10', $feeds[0]['version']);
+    $this->assertSame('^10', $feeds[0]['_extra']['version']);
     $this->assertCount(1, $this->history);
   }
 
@@ -143,7 +143,7 @@ class AnnounceFetcherTest extends KernelTestBase {
    * @param mixed[][] $feed_items
    *   The feeds items to test. Every time the http_client makes a request the
    *   next item in this array will be returned. For each feed item 'title' and
-   *   'link' are omitted because they do not need to vary between test cases.
+   *   'url' are omitted because they do not need to vary between test cases.
    */
   protected function setFeedItems(array $feed_items): void {
     $responses = [];
