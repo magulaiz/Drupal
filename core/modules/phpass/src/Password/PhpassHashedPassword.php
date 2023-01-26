@@ -65,7 +65,7 @@ class PhpassHashedPassword implements PasswordInterface {
     }
     elseif (is_numeric($corePassword)) {
       $countLog2 = $corePassword;
-      @trigger_error('Calling ' . __METHOD__ . '() with numirec $countLog2 as the first parameter is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use PhpassHashedPassword::__construct() with $corePassword parameter set to an instance of Drupal\Core\Password\PhpPassword instead. See https://www.drupal.org/node/3322420', E_USER_DEPRECATED);
+      @trigger_error('Calling ' . __METHOD__ . '() with numeric $countLog2 as the first parameter is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use PhpassHashedPassword::__construct() with $corePassword parameter set to an instance of Drupal\Core\Password\PhpPassword instead. See https://www.drupal.org/node/3322420', E_USER_DEPRECATED);
       // Ensure that $countLog2 is within set bounds.
       $this->countLog2 = $this->enforceLog2Boundaries($countLog2);
       $this->corePassword = NULL;
