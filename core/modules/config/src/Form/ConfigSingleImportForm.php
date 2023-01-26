@@ -269,18 +269,21 @@ class ConfigSingleImportForm extends ConfirmFormBase {
       '#options' => $config_types,
       '#required' => TRUE,
     ];
+    $states = $this->getStatesBuilder();
     $form['config_name'] = [
       '#title' => $this->t('Configuration name'),
       '#description' => $this->t('Enter the name of the configuration file without the <em>.yml</em> extension. (e.g. <em>system.site</em>)'),
       '#type' => 'textfield',
-      '#states' => [
-        'required' => [
-          ':input[name="config_type"]' => ['value' => 'system.simple'],
-        ],
-        'visible' => [
-          ':input[name="config_type"]' => ['value' => 'system.simple'],
-        ],
-      ],
+      '#states' => $states->addStates(
+        $states->state()->setRequired(
+          $states->watch(':input[name="config_type"]')
+            ->valueEqualTo('system.simple')
+        ),
+        $states->state()->setVisible(
+          $states->watch(':input[name="config_type"]')
+            ->valueEqualTo('system.simple')
+        )
+      )->toArray(),
     ];
     $form['import'] = [
       '#title' => $this->t('Paste your configuration here'),

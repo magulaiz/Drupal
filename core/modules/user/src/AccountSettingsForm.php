@@ -318,14 +318,15 @@ class AccountSettingsForm extends ConfigFormBase {
       '#title' => $this->t('Notify user when account is blocked'),
       '#default_value' => $config->get('notify.status_blocked'),
     ];
+    $states = $this->getStatesBuilder();
     $form['email_blocked']['settings'] = [
       '#type' => 'container',
-      '#states' => [
+      '#states' => $states->addStates(
         // Hide the additional settings when the blocked email is disabled.
-        'invisible' => [
-          'input[name="user_mail_status_blocked_notify"]' => ['checked' => FALSE],
-        ],
-      ],
+        $states->state()->setInvisible(
+          $states->watch('input[name="user_mail_status_blocked_notify"]')->isUnchecked()
+        )
+      )->toArray(),
     ];
     $form['email_blocked']['settings']['user_mail_status_blocked_subject'] = [
       '#type' => 'textfield',
@@ -370,14 +371,16 @@ class AccountSettingsForm extends ConfigFormBase {
       '#title' => $this->t('Notify user when account is canceled'),
       '#default_value' => $config->get('notify.status_canceled'),
     ];
+    $states = $this->getStatesBuilder();
     $form['email_canceled']['settings'] = [
       '#type' => 'container',
-      '#states' => [
+      '#states' => $states->addStates(
         // Hide the settings when the cancel notify checkbox is disabled.
-        'invisible' => [
-          'input[name="user_mail_status_canceled_notify"]' => ['checked' => FALSE],
-        ],
-      ],
+        $states->state()->setInvisible(
+          $states->watch('input[name="user_mail_status_canceled_notify"]')
+            ->isUnchecked()
+        )
+      )->toArray(),
     ];
     $form['email_canceled']['settings']['user_mail_status_canceled_subject'] = [
       '#type' => 'textfield',

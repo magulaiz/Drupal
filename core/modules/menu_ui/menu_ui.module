@@ -8,6 +8,7 @@
  * used for navigation.
  */
 
+use Drupal\Core\Form\States\FormElementStatesBuilder;
 use Drupal\Core\Url;
 use Drupal\Core\Breadcrumb\Breadcrumb;
 use Drupal\Core\Cache\CacheableMetadata;
@@ -255,14 +256,15 @@ function menu_ui_form_node_form_alter(&$form, FormStateInterface $form_state) {
     '#title' => t('Provide a menu link'),
     '#default_value' => (int) (bool) $defaults['id'],
   ];
+  $states = new FormElementStatesBuilder();
   $form['menu']['link'] = [
     '#type' => 'container',
     '#parents' => ['menu'],
-    '#states' => [
-      'invisible' => [
-        'input[name="menu[enabled]"]' => ['checked' => FALSE],
-      ],
-    ],
+    '#states' => $states->addStates(
+      $states->state()->setInvisible(
+        $states->watch('input[name="menu[enabled]"]')->isChecked()
+      )
+    )->toArray(),
   ];
 
   // Populate the element with the link data.

@@ -5,6 +5,7 @@ namespace Drupal\user\Plugin\views\argument_validator;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Form\States\FormElementStatesBuilder;
 use Drupal\views\Plugin\views\argument\ArgumentPluginBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\views\Plugin\views\argument_validator\Entity;
@@ -58,17 +59,19 @@ class User extends Entity {
       '#default_value' => $this->options['restrict_roles'],
     ];
 
+    $states = new FormElementStatesBuilder();
     $form['roles'] = [
       '#type' => 'checkboxes',
       '#title' => $this->t('Restrict to the selected roles'),
       '#options' => array_map(['\Drupal\Component\Utility\Html', 'escape'], user_role_names(TRUE)),
       '#default_value' => $this->options['roles'],
       '#description' => $this->t('If no roles are selected, users from any role will be allowed.'),
-      '#states' => [
-        'visible' => [
-          ':input[name="options[validate][options][' . $sanitized_id . '][restrict_roles]"]' => ['checked' => TRUE],
-        ],
-      ],
+      '#states' => $states->addStates(
+        $states->state()->setVisible(
+          $states->watch(':input[name="options[validate][options][' . $sanitized_id . '][restrict_roles]"]')
+            ->isChecked()
+        )
+      )->toArray(),
     ];
   }
 
