@@ -152,7 +152,7 @@ class AnnounceFetcherTest extends KernelTestBase {
         'title' => 'Drupal security update Test',
         'url' => 'https://www.drupal.org/project/announce',
       ];
-      $responses[] = new Response('200', [], json_encode([$feed_item]));
+      $responses[] = new Response('200', [], json_encode(['items' => [$feed_item]]));
     }
     $this->setTestFeedResponses($responses);
   }

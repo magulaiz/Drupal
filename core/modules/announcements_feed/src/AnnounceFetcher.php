@@ -157,6 +157,11 @@ class AnnounceFetcher {
         throw $e;
       }
 
+      if (!isset($announcements['items'])) {
+        $this->logger->error($this->t('The feed format is not valid.'));
+        throw new \Exception($this->t('Invalid format.'));
+      }
+
       $announcements = $announcements['items'] ?? [];
       // Ensure that announcements reference drupal.org and are applicable to
       // the current Drupal version.
