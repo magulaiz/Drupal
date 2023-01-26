@@ -6,6 +6,7 @@ use Composer\Semver\Semver;
 use Drupal\Component\Serialization\Json;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\KeyValueStore\KeyValueExpirableFactory;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 use GuzzleHttp\ClientInterface;
 use Psr\Log\LoggerInterface;
 
@@ -13,6 +14,8 @@ use Psr\Log\LoggerInterface;
  * Service to fetch announcements from the external feed.
  */
 class AnnounceFetcher {
+
+  use StringTranslationTrait;
 
   /**
    * The Http Client.
