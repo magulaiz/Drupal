@@ -103,7 +103,7 @@ class AnnounceFetcher {
    *   Announcement feed item to check.
    *
    * @return bool
-   *   Return True if $announcement['link'] is controlled by the D.O.
+   *   Return True if $announcement['url'] is controlled by the D.O.
    */
   public static function validateUrl(array $announcement): bool {
     if (!$announcement['url']) {
@@ -119,7 +119,8 @@ class AnnounceFetcher {
   /**
    * Fetches the feed either from a local cache or fresh remotely.
    *
-   * The feed follows the jsonfeed format: https://www.jsonfeed.org/version/1.1/
+   * The feed follows the "jsonfeed" format:
+   * - https://www.jsonfeed.org/version/1.1/
    *
    * The structure of an announcement item in the feed is:
    *   - id: Id.
