@@ -686,8 +686,8 @@ function system_requirements($phase) {
     $requirements['configuration_files']['title'] = t('Configuration files');
   }
 
-  // Test the contents of the .htaccess files.
-  if ($phase == 'runtime') {
+  // For apache servers, test the contents of .htaccess files.
+  if ($phase == 'runtime' && (!isset($software) || strpos($software, 'Apache') === 0)) {
     // Try to write the .htaccess files first, to prevent false alarms in case
     // (for example) the /tmp directory was wiped.
     /** @var \Drupal\Core\File\HtaccessWriterInterface $htaccessWriter */
