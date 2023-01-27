@@ -1,7 +1,7 @@
 status: true
 dependencies:
   module:
-  - entity_test
+    - entity_test
 id: formatter_timestamp_as_time_diff
 label: "Timestamp as time difference formatter"
 module: views
