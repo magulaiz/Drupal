@@ -76,7 +76,11 @@ function system_post_update_timestamp_formatter(array &$sandbox = NULL): void {
         continue;
       }
 
-      if (!isset($component['settings']['tooltip']) || !isset($component['settings']['time_diff'])) {
+      // The 'tooltip' and 'time_diff' settings might have been set, with their
+      // default values, if this entity has been already saved in a previous
+      // (post)update, such as layout_builder_post_update_timestamp_formatter().
+      // Ensure that existing timestamp formatters doesn't show any tooltip.
+      if (!isset($component['settings']['tooltip']) || !isset($component['settings']['time_diff']) || $component['settings']['tooltip']['date_format'] !== '') {
         // Existing timestamp formatters don't have tooltip.
         $component['settings']['tooltip'] = [
           'date_format' => '',
