@@ -38,6 +38,10 @@ class TimestampFormatterWithTimeDiffViewsTest extends WebDriverTestBase {
 
     $data = $this->getRowData();
 
+    // PHPStan requires non-empty data. Without this check complains, later,
+    // that $delta and $time_diff might not be defined.
+    \assert(!empty($data));
+
     // Create the entities.
     foreach ($data as $delta => $row) {
       EntityTest::create([

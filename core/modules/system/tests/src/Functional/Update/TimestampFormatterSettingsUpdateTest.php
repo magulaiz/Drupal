@@ -41,7 +41,7 @@ class TimestampFormatterSettingsUpdateTest extends UpdatePathTestBase {
 
     $test_cases = [
       // Timestamp formatter in entity view display.
-     'content.field_foo.settings' => 'core.entity_view_display.node.page.default',
+      'content.field_foo.settings' => 'core.entity_view_display.node.page.default',
       // Timestamp formatter in view.
       'display.default.display_options.fields.changed.settings' => 'views.view.content',
       // Timestamp formatter in Layout Builder field block.
