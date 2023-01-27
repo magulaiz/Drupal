@@ -317,7 +317,7 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
    */
   public function testStyleReplacement() {
     // Create a new style.
-    $style = $this->createRandomStyle();
+    $style = $this->createStyle('style_to_delete', 'Style to delete');
     $style_path = 'admin/config/media/image-styles/manage/';
 
     // Create an image field that uses the new style.
@@ -438,7 +438,7 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
     $admin_path = 'admin/config/media/image-styles';
 
     // Create a new style.
-    $style = $this->createRandomStyle();
+    $style = $this->createStyle('new_style', 'New style');
 
     // Create an image to make sure it gets flushed.
     $files = $this->drupalGetTestFiles('image');
@@ -466,7 +466,7 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
    */
   public function testConfigImport() {
     // Create a new style.
-    $style = $this->createRandomStyle();
+    $style = $this->createStyle('style_to_delete', 'Style to delete');
 
     // Create an image field that uses the new style.
     $field_name = strtolower($this->randomMachineName(10));
@@ -512,7 +512,7 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
    * Tests access for the image style listing.
    */
   public function testImageStyleAccess() {
-    $this->createRandomStyle();
+    $this->createStyle('test_style', 'Test style');
 
     $this->drupalGet('admin/config/media/image-styles');
     $this->clickLink('Edit');

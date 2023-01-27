@@ -5,7 +5,7 @@ namespace Drupal\Tests\image\Functional;
 use Drupal\image\Entity\ImageStyle;
 
 /**
- * Tests the administrative user interface.
+ * Tests the image style administration UI.
  *
  * @group image
  */
@@ -24,10 +24,10 @@ class ImageAdminUiTest extends ImageFieldTestBase {
   protected $defaultTheme = 'stark';
 
   /**
-   * Test if the help text is available on the edit effect form.
+   * Tests that if the help text is available on the add effect form.
    */
   public function testAddEffectHelpText(): void {
-    $style = $this->createRandomStyle();
+    $style = $this->createStyle('test_style', 'Test style');
 
     // Add the help block to the page.
     $this->drupalPlaceBlock('help_block', ['region' => 'help', 'id' => 'block-help']);
@@ -39,11 +39,11 @@ class ImageAdminUiTest extends ImageFieldTestBase {
   }
 
   /**
-   * Test if the help text is available on the edit effect form.
+   * Tests that if the help text is available on the edit effect form.
    */
   public function testEditEffectHelpText(): void {
     // Create a random image style.
-    $style = $this->createRandomStyle();
+    $style = $this->createStyle('test_style', 'Test style');
 
     // Add the help block to the page.
     $this->drupalPlaceBlock('help_block', ['region' => 'help', 'id' => 'block-help']);
@@ -53,7 +53,7 @@ class ImageAdminUiTest extends ImageFieldTestBase {
     $edit['data[width]'] = 20;
     $edit['data[height]'] = 20;
     $this->drupalGet($style->toUrl()->toString() . '/add/image_resize');
-    $this->submitForm($edit, t('Add effect'));
+    $this->submitForm($edit, 'Add effect');
 
     // Open the edit effect form and check image style effect help text.
     $style = ImageStyle::load($style->getName());

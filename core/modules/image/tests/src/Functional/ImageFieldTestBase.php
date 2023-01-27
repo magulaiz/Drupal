@@ -2,8 +2,10 @@
 
 namespace Drupal\Tests\image\Functional;
 
+use Drupal\image\ImageStyleInterface;
 use Drupal\Tests\image\Kernel\ImageFieldCreationTrait;
 use Drupal\Tests\BrowserTestBase;
+use Symfony\Component\Console\Style\StyleInterface;
 
 /**
  * TODO: Test the following functions.
@@ -95,13 +97,18 @@ abstract class ImageFieldTestBase extends BrowserTestBase {
   /**
    * Create a random style.
    *
-   * @return object
+   * @param string $style_name
+   *   The name of the style to create.
+   * @param string $style_label
+   *   The label of the style to create.
+   *
+   * @return \Drupal\image\ImageStyleInterface
    *   A list containing the details of the generated image style.
    */
-  public function createRandomStyle(): object {
-    $style_name = strtolower($this->randomMachineName());
-    $style_label = $this->randomString();
+  public function createStyle(string $style_name, string $style_label): ImageStyleInterface {
     $values = ['name' => $style_name, 'label' => $style_label];
+
+    /** @var \Drupal\image\ImageStyleInterface $style */
     $style = \Drupal::entityTypeManager()->getStorage('image_style')->create($values);
     $style->save();
     return $style;
