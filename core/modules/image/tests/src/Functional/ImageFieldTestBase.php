@@ -5,7 +5,6 @@ namespace Drupal\Tests\image\Functional;
 use Drupal\image\ImageStyleInterface;
 use Drupal\Tests\image\Kernel\ImageFieldCreationTrait;
 use Drupal\Tests\BrowserTestBase;
-use Symfony\Component\Console\Style\StyleInterface;
 
 /**
  * TODO: Test the following functions.
