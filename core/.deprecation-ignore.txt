@@ -17,7 +17,7 @@
 %The "Twig\\Environment::getTemplateClass\(\)" method is considered internal\. It may change without further notice\. You should not extend it from "Drupal\\Core\\Template\\TwigEnvironment"\.%
 
 # Skip Drupal\Core\Template\Attribute deprecation while fixing up.
-%\\Drupal\\Core\\Template\\Attribute is deprecated in drupal:10\.0\.0 and is removed from drupal:11\.0\.0\. Use \\Drupal\\Component\\HtmlAttribute\\HtmlAttributeCollection instead\. See https:\/\/www\.drupal\.org\/node\/3070485%
+%\\Drupal\\Core\\Template\\Attribute.* is deprecated in drupal:10\.1\.0 and is removed from drupal:11\.0\.0\. Use \\Drupal\\Component\\HtmlAttribute\\HtmlAttributeCollection instead\. See https:\/\/www\.drupal\.org\/node\/3070485%
 
 # PHPUnit 9.
 %"PHPUnit\\Framework\\TestListener".*is deprecated%
