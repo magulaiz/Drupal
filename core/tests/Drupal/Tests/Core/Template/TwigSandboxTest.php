@@ -164,7 +164,7 @@ class TwigSandboxTest extends UnitTestCase {
    * @group legacy
    */
   public function testDeprecatedAllowedClass() {
-    $this->expectDeprecation('\Drupal\Core\Template\Attribute as an allowed class in $settings[\'twig_sandbox_allowed_classes\'] is deprecated in drupal:10.0.0 and is removed from drupal:11.0.0. Use \Drupal\Component\HtmlAttribute\HtmlAttributeCollection instead. See https://www.drupal.org/node/3070485');
+    $this->expectDeprecation('\Drupal\Core\Template\Attribute as an allowed class in $settings[\'twig_sandbox_allowed_classes\'] is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use \Drupal\Component\HtmlAttribute\HtmlAttributeCollection instead. See https://www.drupal.org/node/3070485');
     $policy = $this->getMockBuilder(TwigSandboxPolicy::class)
       ->onlyMethods(['getSettings'])
       ->disableOriginalConstructor()
