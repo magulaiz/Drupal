@@ -181,7 +181,7 @@ class HtmlAttributeCollection implements \ArrayAccess, \IteratorAggregate, Marku
       }
 
       // Merge if there are values, just add them otherwise.
-      if (isset($this->storage['class']) && $this->storage['class'] instanceof AttributeArray) {
+      if (isset($this->storage['class']) && $this->storage['class'] instanceof HtmlAttributeArray) {
         // Merge the values passed in from the class value array.
         $classes = array_merge($this->storage['class']->value(), $classes);
         $this->storage['class']->exchangeArray($classes);
@@ -258,7 +258,7 @@ class HtmlAttributeCollection implements \ArrayAccess, \IteratorAggregate, Marku
    */
   public function removeClass(): HtmlAttributeCollection {
     // With no class attribute, there is no need to remove.
-    if (isset($this->storage['class']) && $this->storage['class'] instanceof AttributeArray) {
+    if (isset($this->storage['class']) && $this->storage['class'] instanceof HtmlAttributeArray) {
       $args = func_get_args();
       $classes = [];
       foreach ($args as $arg) {
@@ -286,7 +286,7 @@ class HtmlAttributeCollection implements \ArrayAccess, \IteratorAggregate, Marku
    *
    * @see twig_get_attribute()
    */
-  public function getClass(): ?AttributeValueBase {
+  public function getClass(): ?HtmlAttributeValueBase {
     return $this->offsetGet('class');
   }
 
@@ -300,7 +300,7 @@ class HtmlAttributeCollection implements \ArrayAccess, \IteratorAggregate, Marku
    *   Returns TRUE if the class exists, or FALSE otherwise.
    */
   public function hasClass(string $class): bool {
-    if (isset($this->storage['class']) && $this->storage['class'] instanceof AttributeArray) {
+    if (isset($this->storage['class']) && $this->storage['class'] instanceof HtmlAttributeArray) {
       return in_array($class, $this->storage['class']->value());
     }
     else {
