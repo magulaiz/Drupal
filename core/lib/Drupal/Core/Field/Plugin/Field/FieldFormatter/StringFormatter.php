@@ -2,6 +2,8 @@
 
 namespace Drupal\Core\Field\Plugin\Field\FieldFormatter;
 
+use Drupal\Core\Access\AccessResultForbidden;
+use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
@@ -129,19 +131,22 @@ class StringFormatter extends FormatterBase {
       $url = $this->getEntityUrl($entity);
     }
 
+    $access = $url?->access(return_as_object: TRUE) ?? AccessResultForbidden::forbidden();
     foreach ($items as $delta => $item) {
       $view_value = $this->viewValue($item);
-      if ($url) {
-        $elements[$delta] = [
+      $elements[$delta] = $access->isAllowed()
+        ? [
           '#type' => 'link',
           '#title' => $view_value,
           '#url' => $url,
-        ];
-      }
-      else {
-        $elements[$delta] = $view_value;
-      }
+        ]
+        : $view_value;
     }
+
+    (new CacheableMetadata())
+      ->addCacheableDependency($access)
+      ->applyTo($elements);
+
     return $elements;
   }
 

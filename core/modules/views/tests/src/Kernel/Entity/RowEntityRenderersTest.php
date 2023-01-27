@@ -6,6 +6,7 @@ use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\node\Entity\NodeType;
+use Drupal\Tests\user\Traits\UserCreationTrait;
 use Drupal\Tests\views\Kernel\ViewsKernelTestBase;
 use Drupal\user\Entity\User;
 use Drupal\views\Tests\ViewTestData;
@@ -18,6 +19,8 @@ use Drupal\views\Views;
  * @see \Drupal\views\Entity\Render\RendererBase
  */
 class RowEntityRenderersTest extends ViewsKernelTestBase {
+
+  use UserCreationTrait;
 
   /**
    * Modules to enable.
@@ -92,6 +95,7 @@ class RowEntityRenderersTest extends ViewsKernelTestBase {
     $this->installEntitySchema('user');
     $this->installSchema('node', ['node_access']);
     $this->installConfig(['node', 'language']);
+    $this->setUpCurrentUser(['uid' => 0]);
 
     $this->langcodes = [\Drupal::languageManager()->getDefaultLanguage()->getId()];
     for ($i = 0; $i < 2; $i++) {
