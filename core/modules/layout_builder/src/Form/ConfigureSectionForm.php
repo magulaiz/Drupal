@@ -131,7 +131,7 @@ class ConfigureSectionForm extends FormBase {
     $section = $this->getCurrentSection();
 
     if ($this->isUpdate) {
-      if ($label = $section->getLayoutSettings()['label']) {
+      if ($label = $section->getLayoutSettings()['label'] ?? NULL) {
         $form['#title'] = $this->t('Configure @section', ['@section' => $label]);
       }
     }

@@ -1519,9 +1519,9 @@ class LayoutBuilderTest extends BrowserTestBase {
   }
 
   /**
-   * Tests removing section without layout label configuration.
+   * Tests removing and configuring section without layout label configuration.
    */
-  public function testRemovingSectionWithoutLayoutLabel() {
+  public function testSectionWithoutLayoutLabel() {
     $assert_session = $this->assertSession();
     $page = $this->getSession()->getPage();
 
@@ -1543,6 +1543,10 @@ class LayoutBuilderTest extends BrowserTestBase {
     $page->clickLink('Layout Without Label');
     $page->pressButton('Add section');
     $assert_session->elementsCount('css', '.layout', 2);
+
+    $assert_session->linkExists('Configure Section 1');
+    $this->clickLink('Configure Section 1');
+    $page->pressButton('Update');
 
     $assert_session->linkExists('Remove Section 1');
     $this->clickLink('Remove Section 1');

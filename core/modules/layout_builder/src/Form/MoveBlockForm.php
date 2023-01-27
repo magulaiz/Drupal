@@ -126,7 +126,7 @@ class MoveBlockForm extends FormBase {
     foreach ($sections as $section_delta => $section) {
       $layout = $section->getLayout($contexts);
       $layout_definition = $layout->getPluginDefinition();
-      if (!($section_label = $section->getLayoutSettings()['label'])) {
+      if (!($section_label = $section->getLayoutSettings()['label'] ?? NULL)) {
         $section_label = $this->t('Section: @delta', ['@delta' => $section_delta + 1])->render();
       }
       foreach ($layout_definition->getRegions() as $region_name => $region_info) {
