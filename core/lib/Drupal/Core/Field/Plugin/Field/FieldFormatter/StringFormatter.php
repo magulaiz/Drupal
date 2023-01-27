@@ -128,7 +128,7 @@ class StringFormatter extends FormatterBase {
     if ($this->getSetting('link_to_entity') && !$entity->isNew() && $entity_type->hasLinkTemplate('canonical')) {
       $url = $this->getEntityUrl($entity);
       if ($url->access() === FALSE) {
-        unset($url);
+        $url = NULL;
       }
     }
 
