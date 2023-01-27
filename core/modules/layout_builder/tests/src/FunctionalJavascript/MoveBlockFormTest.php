@@ -62,10 +62,12 @@ class MoveBlockFormTest extends WebDriverTestBase {
 
     // Remove the extra field provided by layout_builder_test module.
     // This reduces the clutter.
-    $this->drupalGet('admin/structure/types/manage/bundle_with_section_field/display/default');
+    $this->drupalGet('admin/structure/types/manage/bundle_with_section_field/display/default/layout');
     $this->clickContextualLink('.block-extra-field-blocknodebundle-with-section-fieldlayout-builder-test', 'Remove block');
     $assert_session->assertWaitOnAjaxRequest();
     $page->pressButton('Remove');
+    $assert_session->assertWaitOnAjaxRequest();
+    $page->pressButton('Save layout');
     $assert_session->assertWaitOnAjaxRequest();
 
     $this->drupalGet('node/1/layout');
