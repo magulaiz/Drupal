@@ -23,18 +23,18 @@ class TimestampFormatterSettingsUpdateTest extends UpdatePathTestBase {
    */
   protected function setDatabaseDumpFiles(): void {
     $this->databaseDumpFiles = [
-      __DIR__ . '/../../../../../system/tests/fixtures/update/drupal-9.3.0.bare.standard.php.gz',
+      __DIR__ . '/../../../../../system/tests/fixtures/update/drupal-9.4.0.bare.standard.php.gz',
       __DIR__ . '/../../../../../layout_builder/tests/fixtures/update/layout-builder.php',
-      __DIR__ . '/../../../../../system/tests/fixtures/update/drupal-9.timestamp-formatter-settings-2921810.php',
+      __DIR__ . '/../../../../../system/tests/fixtures/update/drupal.timestamp-formatter-settings-2921810.php',
     ];
   }
 
   /**
    * Tests the update of timestamp formatter settings.
    *
-   * @see system_post_update_timestamp_formatter()
-   * @see views_post_update_timestamp_formatter()
-   * @see layout_builder_post_update_timestamp_formatter()
+   * @covers \system_post_update_timestamp_formatter
+   * @covers \views_post_update_timestamp_formatter
+   * @covers \layout_builder_post_update_timestamp_formatter
    */
   public function testPostUpdateTimestampFormatter(): void {
     $config_factory = \Drupal::configFactory();
