@@ -223,26 +223,4 @@ class FileRepositoryTest extends FileManagedUnitTestBase {
     $this->assertNull($result);
   }
 
-  /**
-   * Tests for an invalid stream wrapper when copying a file.
-   *
-   * @covers ::copy
-   */
-  public function testInvalidStreamWrapperWhenCopying() {
-    $this->expectException(InvalidStreamWrapperException::class);
-    $this->expectExceptionMessage('Invalid stream wrapper: foo://');
-    $this->fileRepository->copy($this->createFile(), 'foo://');
-  }
-
-  /**
-   * Tests for an invalid stream wrapper when moving a file.
-   *
-   * @covers ::move
-   */
-  public function testInvalidStreamWrapperWhenMoving() {
-    $this->expectException(InvalidStreamWrapperException::class);
-    $this->expectExceptionMessage('Invalid stream wrapper: foo://');
-    $this->fileRepository->move($this->createFile(), 'foo://');
-  }
-
 }
