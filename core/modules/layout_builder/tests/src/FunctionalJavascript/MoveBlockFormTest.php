@@ -60,7 +60,6 @@ class MoveBlockFormTest extends WebDriverTestBase {
       'administer node fields',
     ]));
 
-
     // Remove the extra field provided by layout_builder_test module.
     // This reduces the clutter.
     $this->drupalGet('admin/structure/types/manage/bundle_with_section_field/display/default');
@@ -128,7 +127,7 @@ class MoveBlockFormTest extends WebDriverTestBase {
       '.block-field-blocknodebundle-with-section-fieldbody',
       '.block-extra-field-blocknodebundle-with-section-fieldlinks',
     ];
-    this->assertRegionBlocksOrder(2, 'content', $expected_block_order);
+    $this->assertRegionBlocksOrder(2, 'content', $expected_block_order);
     $page->pressButton('Save layout');
     $page->clickLink('Layout');
     $this->assertRegionBlocksOrder(2, 'content', $expected_block_order);
