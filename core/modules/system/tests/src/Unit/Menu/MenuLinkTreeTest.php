@@ -2,7 +2,7 @@
 
 namespace Drupal\Tests\system\Unit\Menu;
 
-use Drupal\Component\Attribute\AttributeCollection;
+use Drupal\Component\HtmlAttribute\HtmlAttributeCollection;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
@@ -138,7 +138,7 @@ class MenuLinkTreeTest extends UnitTestCase {
 
     $get_built_element = function (MenuLinkTreeElement $element) {
       $return = [
-        'attributes' => new AttributeCollection(),
+        'attributes' => new HtmlAttributeCollection(),
         'title' => $element->link->getTitle(),
         'url' => new Url($element->link->getRouteName(), $element->link->getRouteParameters(), ['set_active_class' => TRUE]),
         'below' => [],

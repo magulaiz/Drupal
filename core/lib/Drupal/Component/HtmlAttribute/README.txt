@@ -1,4 +1,4 @@
-The Drupal Attribute Component
+The Drupal HTML Attribute Component
 
 Thanks for using this Drupal component.
 

@@ -495,7 +495,6 @@
             "replace": {
                 "drupal/core-annotation": "self.version",
                 "drupal/core-assertion": "self.version",
-                "drupal/core-attribute": "self.version",
                 "drupal/core-class-finder": "self.version",
                 "drupal/core-datetime": "self.version",
                 "drupal/core-dependency-injection": "self.version",
@@ -508,6 +507,7 @@
                 "drupal/core-front-matter": "self.version",
                 "drupal/core-gettext": "self.version",
                 "drupal/core-graph": "self.version",
+                "drupal/core-html-attribute": "self.version",
                 "drupal/core-http-foundation": "self.version",
                 "drupal/core-php-storage": "self.version",
                 "drupal/core-plugin": "self.version",

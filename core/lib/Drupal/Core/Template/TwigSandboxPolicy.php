@@ -2,7 +2,7 @@
 
 namespace Drupal\Core\Template;
 
-use Drupal\Component\Attribute\AttributeCollection;
+use Drupal\Component\HtmlAttribute\HtmlAttributeCollection;
 use Drupal\Core\Site\Settings;
 use Twig\Sandbox\SecurityError;
 use Twig\Sandbox\SecurityPolicyInterface;
@@ -58,18 +58,18 @@ class TwigSandboxPolicy implements SecurityPolicyInterface {
    */
   protected function getAllowedClasses(): array {
     if ($this->allowed_classes === NULL) {
-      // Allow settings.php to override our default allowed classes, methods, and
-      // prefixes.
+      // Allow settings.php to override our default allowed classes, methods,
+      // and prefixes.
       $allowed_classes = $this->getSettings('twig_sandbox_allowed_classes', [
-        // Allow any operations on the AttributeCollection object as it is
+        // Allow any operations on the HtmlAttributeCollection object as it is
         // intended to be changed from a Twig template, for example calling
         // addClass().
-        AttributeCollection::class,
+        HtmlAttributeCollection::class,
       ]);
       // BC layer to support earlier Attribute class.
-      if (in_array('Drupal\Core\Template\Attribute', $allowed_classes) && !in_array(AttributeCollection::class, $allowed_classes)) {
-        @trigger_error('\Drupal\Core\Template\Attribute as an allowed class in $settings[\'twig_sandbox_allowed_classes\'] is deprecated in drupal:10.0.0 and is removed from drupal:11.0.0. Use \Drupal\Component\Attribute\AttributeCollection instead. See https://www.drupal.org/node/3070485', E_USER_DEPRECATED);
-        $allowed_classes[] = AttributeCollection::class;
+      if (in_array('Drupal\Core\Template\Attribute', $allowed_classes) && !in_array(HtmlAttributeCollection::class, $allowed_classes)) {
+        @trigger_error('\Drupal\Core\Template\Attribute as an allowed class in $settings[\'twig_sandbox_allowed_classes\'] is deprecated in drupal:10.0.0 and is removed from drupal:11.0.0. Use \Drupal\Component\HtmlAttribute\HtmlAttributeCollection instead. See https://www.drupal.org/node/3070485', E_USER_DEPRECATED);
+        $allowed_classes[] = HtmlAttributeCollection::class;
       }
       // Flip the array so we can check using isset().
       $this->allowed_classes = array_flip($allowed_classes);

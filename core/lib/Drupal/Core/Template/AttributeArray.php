@@ -2,9 +2,9 @@
 
 namespace Drupal\Core\Template;
 
-use Drupal\Component\Attribute\AttributeArray as ComponentAttributeArray;
+use Drupal\Component\HtmlAttribute\HtmlAttributeArray as ComponentAttributeArray;
 
-@trigger_error('\Drupal\Core\Template\AttributeArray is deprecated in drupal:10.0.0 and is removed from drupal:11.0.0. Use \Drupal\Component\Attribute\AttributeArray instead. See https://www.drupal.org/node/3070485', E_USER_DEPRECATED);
+@trigger_error('\Drupal\Core\Template\AttributeArray is deprecated in drupal:10.0.0 and is removed from drupal:11.0.0. Use \Drupal\Component\HtmlAttribute\HtmlAttributeArray instead. See https://www.drupal.org/node/3070485', E_USER_DEPRECATED);
 
 /**
  * A class that defines a type of Attribute that can be added to as an array.
@@ -25,7 +25,7 @@ use Drupal\Component\Attribute\AttributeArray as ComponentAttributeArray;
  * @see \Drupal\Core\Template\Attribute
  *
  * @deprecated in drupal:10.0.0 and is removed from drupal:11.0.0. Use
- *   \Drupal\Component\Attribute\AttributeArray instead.
+ *   \Drupal\Component\HtmlAttribute\HtmlAttributeArray instead.
  *
  * @see https://www.drupal.org/node/3070485
  */

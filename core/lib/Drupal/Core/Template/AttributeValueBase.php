@@ -2,9 +2,9 @@
 
 namespace Drupal\Core\Template;
 
-use Drupal\Component\Attribute\AttributeValueBase as ComponentAttributeValueBase;
+use Drupal\Component\HtmlAttribute\HtmlAttributeValueBase as ComponentAttributeValueBase;
 
-@trigger_error('\Drupal\Core\Template\AttributeValueBase is deprecated in drupal:10.0.0 and is removed from drupal:11.0.0. Use \Drupal\Component\Attribute\AttributeValueBase instead. See https://www.drupal.org/node/3070485', E_USER_DEPRECATED);
+@trigger_error('\Drupal\Core\Template\AttributeValueBase is deprecated in drupal:10.0.0 and is removed from drupal:11.0.0. Use \Drupal\Component\HtmlAttribute\HtmlAttributeValueBase instead. See https://www.drupal.org/node/3070485', E_USER_DEPRECATED);
 
 /**
  * Defines the base class for an attribute type.
@@ -12,7 +12,7 @@ use Drupal\Component\Attribute\AttributeValueBase as ComponentAttributeValueBase
  * @see \Drupal\Core\Template\Attribute
  *
  * @deprecated in drupal:10.0.0 and is removed from drupal:11.0.0. Use
- *   \Drupal\Component\Attribute\AttributeString instead.
+ *   \Drupal\Component\HtmlAttribute\HtmlAttributeString instead.
  *
  * @see https://www.drupal.org/node/3070485
  */

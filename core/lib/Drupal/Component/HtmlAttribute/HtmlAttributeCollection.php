@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\Component\Attribute;
+namespace Drupal\Component\HtmlAttribute;
 
 use Drupal\Component\Render\PlainTextOutput;
 use Drupal\Component\Render\MarkupInterface;
@@ -12,7 +12,7 @@ use Drupal\Component\Utility\NestedArray;
  * To use, optionally pass in an associative array of defined attributes, or
  * add attributes using array syntax. For example:
  * @code
- *  $attributes = new AttributeCollection(['id' => 'socks']);
+ *  $attributes = new HtmlAttributeCollection(['id' => 'socks']);
  *  $attributes['class'] = ['black-cat', 'white-cat'];
  *  $attributes['class'][] = 'black-white-cat';
  *  echo '<cat' . $attributes . '>';
@@ -21,7 +21,7 @@ use Drupal\Component\Utility\NestedArray;
  *
  * $attributes always prints out all the attributes. For example:
  * @code
- *  $attributes = new AttributeCollection(['id' => 'socks']);
+ *  $attributes = new HtmlAttributeCollection(['id' => 'socks']);
  *  $attributes['class'] = ['black-cat', 'white-cat'];
  *  $attributes['class'][] = 'black-white-cat';
  *  echo '<cat class="cat ' . $attributes['class'] . '"' . $attributes . '>';
@@ -47,7 +47,7 @@ use Drupal\Component\Utility\NestedArray;
  * @code
  *  $path = 'javascript:alert("xss");';
  *  $path = UrlHelper::stripDangerousProtocols($path);
- *  $attributes = new AttributeCollection(['href' => $path]);
+ *  $attributes = new HtmlAttributeCollection(['href' => $path]);
  *  echo '<a' . $attributes . '>';
  *  // Produces <a href="alert(&quot;xss&quot;);">
  * @endcode
@@ -57,7 +57,7 @@ use Drupal\Component\Utility\NestedArray;
  * PlainTextOutput::renderFromHtml() before being escaped. For example:
  * @code
  *   $value = t('Highlight the @tag tag', ['@tag' => '<em>']);
- *   $attributes = new AttributeCollection(['value' => $value]);
+ *   $attributes = new HtmlAttributeCollection(['value' => $value]);
  *   echo '<input' . $attributes . '>';
  *   // Produces <input value="Highlight the &lt;em&gt; tag">
  * @endcode
@@ -66,19 +66,19 @@ use Drupal\Component\Utility\NestedArray;
  * @see \Drupal\Component\Render\PlainTextOutput::renderFromHtml()
  * @see \Drupal\Component\Utility\UrlHelper::stripDangerousProtocols()
  */
-class AttributeCollection implements \ArrayAccess, \IteratorAggregate, MarkupInterface {
+class HtmlAttributeCollection implements \ArrayAccess, \IteratorAggregate, MarkupInterface {
 
   /**
    * Stores the attribute data.
    *
-   * @var \Drupal\Component\Attribute\AttributeValueBase[]
+   * @var \Drupal\Component\HtmlAttribute\HtmlAttributeValueBase[]
    */
   protected array $storage = [];
 
   /**
-   * Constructs a \Drupal\Component\Attribute\AttributeCollection object.
+   * Constructs a \Drupal\Component\HtmlAttribute\HtmlAttributeCollection object.
    *
-   * @param \Drupal\Component\Attribute\AttributeCollection|array $attributes
+   * @param \Drupal\Component\HtmlAttribute\HtmlAttributeCollection|array $attributes
    *   An associative array of key-value pairs to be converted to attributes.
    */
   public function __construct($attributes = []) {
@@ -109,13 +109,13 @@ class AttributeCollection implements \ArrayAccess, \IteratorAggregate, MarkupInt
    * @param mixed $value
    *   The attribute value.
    *
-   * @return \Drupal\Component\Attribute\AttributeValueBase
-   *   An AttributeValueBase representation of the attribute's value.
+   * @return \Drupal\Component\HtmlAttribute\HtmlAttributeValueBase
+   *   An HtmlAttributeValueBase representation of the attribute's value.
    */
-  protected function createAttributeValue(string $name, $value): AttributeValueBase {
-    // If the value is already an AttributeValueBase object,
+  protected function createAttributeValue(string $name, $value): HtmlAttributeValueBase {
+    // If the value is already an HtmlAttributeValueBase object,
     // return a new instance of the same class, but with the new name.
-    if ($value instanceof AttributeValueBase) {
+    if ($value instanceof HtmlAttributeValueBase) {
       $class = get_class($value);
       return new $class($name, $value->value());
     }
@@ -129,20 +129,20 @@ class AttributeCollection implements \ArrayAccess, \IteratorAggregate, MarkupInt
       // Cast the value to an array if the value was passed in as a string.
       // @todo Decide to fix all the broken instances of class as a string
       // in core or cast them.
-      $value = new AttributeArray($name, $value);
+      $value = new HtmlAttributeArray($name, $value);
     }
     elseif (is_bool($value)) {
-      $value = new AttributeBoolean($name, $value);
+      $value = new HtmlAttributeBoolean($name, $value);
     }
     // As a development aid, we allow the value to be a safe string object.
     elseif ($value instanceof MarkupInterface) {
       // Attributes are not supposed to display HTML markup, so we just convert
       // the value to plain text.
       $value = PlainTextOutput::renderFromHtml($value);
-      $value = new AttributeString($name, $value);
+      $value = new HtmlAttributeString($name, $value);
     }
     elseif (!is_object($value)) {
-      $value = new AttributeString($name, $value);
+      $value = new HtmlAttributeString($name, $value);
     }
     return $value;
   }
@@ -169,7 +169,7 @@ class AttributeCollection implements \ArrayAccess, \IteratorAggregate, MarkupInt
    *
    * @return $this
    */
-  public function addClass(): AttributeCollection {
+  public function addClass(): HtmlAttributeCollection {
     $args = func_get_args();
     if ($args) {
       $classes = [];
@@ -204,7 +204,7 @@ class AttributeCollection implements \ArrayAccess, \IteratorAggregate, MarkupInt
    *
    * @return $this
    */
-  public function setAttribute(string $attribute, $value): AttributeCollection {
+  public function setAttribute(string $attribute, $value): HtmlAttributeCollection {
     $this->offsetSet($attribute, $value);
 
     return $this;
@@ -231,7 +231,7 @@ class AttributeCollection implements \ArrayAccess, \IteratorAggregate, MarkupInt
    *
    * @return $this
    */
-  public function removeAttribute(): AttributeCollection {
+  public function removeAttribute(): HtmlAttributeCollection {
     $args = func_get_args();
     foreach ($args as $arg) {
       // Support arrays or multiple arguments.
@@ -256,7 +256,7 @@ class AttributeCollection implements \ArrayAccess, \IteratorAggregate, MarkupInt
    *
    * @return $this
    */
-  public function removeClass(): AttributeCollection {
+  public function removeClass(): HtmlAttributeCollection {
     // With no class attribute, there is no need to remove.
     if (isset($this->storage['class']) && $this->storage['class'] instanceof AttributeArray) {
       $args = func_get_args();
@@ -281,7 +281,7 @@ class AttributeCollection implements \ArrayAccess, \IteratorAggregate, MarkupInt
    *
    * This method is implemented to take precedence over hasClass() for Twig 2.0.
    *
-   * @return \Drupal\Component\Attribute\AttributeValueBase|null
+   * @return \Drupal\Component\HtmlAttribute\HtmlAttributeValueBase|null
    *   The class attribute value if set, NULL otherwise.
    *
    * @see twig_get_attribute()
@@ -373,12 +373,12 @@ class AttributeCollection implements \ArrayAccess, \IteratorAggregate, MarkupInt
   /**
    * Merges an Attribute object into the current storage.
    *
-   * @param \Drupal\Component\Attribute\AttributeCollection $collection
+   * @param \Drupal\Component\HtmlAttribute\HtmlAttributeCollection $collection
    *   The Attribute object to merge.
    *
    * @return $this
    */
-  public function merge(AttributeCollection $collection): AttributeCollection {
+  public function merge(HtmlAttributeCollection $collection): HtmlAttributeCollection {
     $merged_attributes = NestedArray::mergeDeep($this->toArray(), $collection->toArray());
     foreach ($merged_attributes as $name => $value) {
       $this->storage[$name] = $this->createAttributeValue($name, $value);

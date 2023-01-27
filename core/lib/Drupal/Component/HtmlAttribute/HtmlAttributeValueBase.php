@@ -1,20 +1,20 @@
 <?php
 
-namespace Drupal\Component\Attribute;
+namespace Drupal\Component\HtmlAttribute;
 
 use Drupal\Component\Utility\Html;
 
 /**
  * Defines the base class for an attribute type.
  *
- * @see \Drupal\Component\Attribute\AttributeCollection
+ * @see \Drupal\Component\HtmlAttribute\HtmlAttributeCollection
  */
-abstract class AttributeValueBase {
+abstract class HtmlAttributeValueBase {
 
   /**
    * Renders '$name=""' if $value is an empty string.
    *
-   * @see \Drupal\Component\Attribute\AttributeValueBase::render()
+   * @see \Drupal\Component\HtmlAttribute\HtmlAttributeValueBase::render()
    */
   const RENDER_EMPTY_ATTRIBUTE = TRUE;
 
@@ -33,7 +33,7 @@ abstract class AttributeValueBase {
   protected mixed $name;
 
   /**
-   * Constructs a \Drupal\Component\Attribute\AttributeValueBase object.
+   * Constructs a \Drupal\Component\HtmlAttribute\HtmlAttributeValueBase object.
    */
   public function __construct(mixed $name, mixed $value) {
     $this->name = $name;

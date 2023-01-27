@@ -1,25 +1,25 @@
 <?php
 
-namespace Drupal\Component\Attribute;
+namespace Drupal\Component\HtmlAttribute;
 
 use Drupal\Component\Utility\Html;
 
 /**
  * A class that represents most standard HTML attributes.
  *
- * To use with the AttributeCollection class, set the key to be the attribute
- * name and the value the attribute value.
+ * To use with the HtmlAttributeCollection class, set the key to be the
+ * attribute name and the value the attribute value.
  * @code
- *  $attributes = new AttributeCollection([]);
+ *  $attributes = new HtmlAttributeCollection([]);
  *  $attributes['id'] = 'socks';
  *  $attributes['style'] = 'background-color:white';
  *  echo '<cat ' . $attributes . '>';
  *  // Produces: <cat id="socks" style="background-color:white">.
  * @endcode
  *
- * @see \Drupal\Component\Attribute\AttributeCollection
+ * @see \Drupal\Component\HtmlAttribute\HtmlAttributeCollection
  */
-class AttributeString extends AttributeValueBase {
+class HtmlAttributeString extends HtmlAttributeValueBase {
 
   /**
    * Implements the magic __toString() method.

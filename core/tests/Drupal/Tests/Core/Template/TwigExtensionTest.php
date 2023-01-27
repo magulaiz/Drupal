@@ -4,7 +4,7 @@ namespace Drupal\Tests\Core\Template;
 
 // cspell:ignore mila
 
-use Drupal\Component\Attribute\AttributeCollection;
+use Drupal\Component\HtmlAttribute\HtmlAttributeCollection;
 use Drupal\Core\File\FileUrlGeneratorInterface;
 use Drupal\Core\GeneratedLink;
 use Drupal\Core\Render\RenderableInterface;
@@ -554,7 +554,7 @@ class TwigExtensionTest extends UnitTestCase {
   public function testTwigAddRemoveClasses($template, $expected, $seed_attributes = []) {
     $loader = new StringLoader();
     $twig = new Environment($loader);
-    $data = ['attributes' => new AttributeCollection($seed_attributes)];
+    $data = ['attributes' => new HtmlAttributeCollection($seed_attributes)];
     $result = $twig->createTemplate($template)->render($data);
     $this->assertEquals($expected, $result);
   }
