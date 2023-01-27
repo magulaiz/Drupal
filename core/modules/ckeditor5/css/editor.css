@@ -19,3 +19,9 @@
 .ck-editor__main > :is(.ck-editor__editable, .ck-source-editing-area) {
   min-height: var(--ck-min-height);
 }
+
+.ck.ck-content:not(.ck-comment__input *) {
+  height: var(--ck-min-height);
+  overflow-y: auto;
+  resize: vertical;
+}
