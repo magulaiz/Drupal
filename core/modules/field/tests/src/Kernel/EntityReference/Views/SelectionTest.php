@@ -11,6 +11,7 @@ use Drupal\KernelTests\KernelTestBase;
 use Drupal\node\Entity\NodeType;
 use Drupal\Tests\field\Traits\EntityReferenceFieldCreationTrait;
 use Drupal\Tests\node\Traits\NodeCreationTrait;
+use Drupal\Tests\user\Traits\UserCreationTrait;
 use Drupal\views\Views;
 
 /**
@@ -22,6 +23,7 @@ class SelectionTest extends KernelTestBase {
 
   use EntityReferenceFieldCreationTrait;
   use NodeCreationTrait;
+  use UserCreationTrait;
 
   /**
    * {@inheritdoc}
@@ -60,6 +62,7 @@ class SelectionTest extends KernelTestBase {
     $this->installConfig(['entity_reference_test', 'filter']);
     $this->installEntitySchema('user');
     $this->installEntitySchema('node');
+    $this->setUpCurrentUser(['uid' => 0]);
 
     // Create test nodes.
     $type = $this->randomMachineName();
