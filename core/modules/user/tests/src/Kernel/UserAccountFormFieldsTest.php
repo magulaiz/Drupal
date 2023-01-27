@@ -4,6 +4,7 @@ namespace Drupal\Tests\user\Kernel;
 
 use Drupal\Core\Form\FormState;
 use Drupal\KernelTests\KernelTestBase;
+use Drupal\user\Entity\User;
 
 /**
  * Verifies that the field order in user account forms is compatible with
@@ -72,6 +73,11 @@ class UserAccountFormFieldsTest extends KernelTestBase {
   public function testUserEditForm() {
     // Install default configuration; required for AccountFormController.
     $this->installConfig(['user']);
+    $this->installEntitySchema('user');
+
+    // Create an user to login.
+    $this->user = User::create(['name' => 'test']);
+    $this->user->save();
 
     $form = $this->buildAccountForm('default');
 
@@ -129,11 +135,14 @@ class UserAccountFormFieldsTest extends KernelTestBase {
     $entity_type = 'user';
     $fields = [];
     if ($operation != 'register') {
-      $fields['uid'] = 2;
+      $fields['uid'] = $this->user->id();
+      $entity = $this->user;
     }
-    $entity = $this->container->get('entity_type.manager')
-      ->getStorage($entity_type)
-      ->create($fields);
+    else {
+      $entity = $this->container->get('entity_type.manager')
+        ->getStorage($entity_type)
+        ->create($fields);
+    }
 
     // @see EntityFormBuilder::getForm()
     return $this->container->get('entity.form_builder')->getForm($entity, $operation);
