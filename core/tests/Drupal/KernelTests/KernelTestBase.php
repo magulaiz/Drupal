@@ -292,7 +292,7 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
    */
   protected function addFileScanDirectoryIgnoresSetting() {
     $settings = [];
-    $testing_setting_path = $this->root . '/sites/default/setting.testing.php';
+    $testing_setting_path = $this->root . '/sites/default/settings.testing.php';
     if (is_readable($testing_setting_path)) {
       require $testing_setting_path;
     }
