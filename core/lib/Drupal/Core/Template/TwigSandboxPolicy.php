@@ -160,7 +160,7 @@ class TwigSandboxPolicy implements SecurityPolicyInterface {
     // If the method name starts with an allowed prefix, allow it. Note:
     // strpos() is between 3x and 7x faster than preg_match() in this case.
     foreach ($this->getAllowedPrefixes() as $prefix) {
-      if (strpos($method, $prefix) === 0) {
+      if (str_starts_with($method, $prefix)) {
         return;
       }
     }
