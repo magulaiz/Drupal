@@ -17,10 +17,8 @@ class DblogClearLogConfirmForm extends ConfirmFormBase {
 
   /**
    * The dblog entry storage service.
-   *
-   * @var \Drupal\dblog\DblogEntryStorageInterface
    */
-  protected $dblogStorage;
+  protected \Drupal\dblog\DblogEntryStorageInterface $dblogStorage;
 
   /**
    * Constructs a new DblogClearLogConfirmForm.

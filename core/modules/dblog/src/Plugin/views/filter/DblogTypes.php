@@ -15,13 +15,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class DblogTypes extends InOperator {
 
   /**
-   * The dblog entry storage service.
-   *
-   * @var \Drupal\dblog\DblogEntryStorageInterface
-   */
-  protected $dblogStorage;
-
-  /**
    * Constructs a DblogTypes object.
    *
    * @param array $configuration
@@ -30,12 +23,11 @@ class DblogTypes extends InOperator {
    *   The plugin_id for the plugin instance.
    * @param mixed $plugin_definition
    *   The plugin implementation definition.
-   * @param \Drupal\dblog\DblogEntryStorageInterface $dblog_storage
-   *   The dblog entry storage.
+   * @param \Drupal\dblog\DblogEntryStorageInterface $dblogStorage
+   * The dblog entry storage service.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, DblogEntryStorageInterface $dblog_storage) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, protected DblogEntryStorageInterface $dblogStorage) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
-    $this->dblogStorage = $dblog_storage;
   }
 
   /**

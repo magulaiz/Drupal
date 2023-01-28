@@ -14,24 +14,18 @@ class TopDblogMessagesController extends ControllerBase {
 
   /**
    * The current request.
-   *
-   * @var \Symfony\Component\HttpFoundation\Request
    */
-  protected $currentRequest;
+  protected \Symfony\Component\HttpFoundation\Request $currentRequest;
 
   /**
    * The dblog entry storage.
-   *
-   * @var \Drupal\dblog\DblogEntryStorageInterface
    */
-  protected $dblogStorage;
+  protected \Drupal\dblog\DblogEntryStorageInterface $dblogStorage;
 
   /**
    * The dblog formatter service.
-   *
-   * @var \Drupal\dblog\DblogFormatterInterface
    */
-  protected $dblogFormatter;
+  protected \Drupal\dblog\DblogFormatterInterface $dblogFormatter;
 
   /**
    * {@inheritdoc}
