@@ -9,6 +9,7 @@ use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Field\FieldTypePluginManagerInterface;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Form\States\FormElementStatesBuilder;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\field_ui\FieldUI;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -147,14 +148,15 @@ class FieldStorageAddForm extends FormBase {
       '#empty_option' => $this->t('- Select a field type -'),
     ];
 
+    $states_builder = new FormElementStatesBuilder();
     // Field label and field_name.
     $form['new_storage_wrapper'] = [
       '#type' => 'container',
-      '#states' => [
-        '!visible' => [
-          ':input[name="new_storage_type"]' => ['value' => ''],
-        ],
-      ],
+      '#states' => $states_builder->addStates(
+        $states_builder->state()->setInvisible(
+          $states_builder->watch(':input[name="new_storage_type"]')->valueEqualTo(''),
+        )
+      )->toArray(),
     ];
     $form['new_storage_wrapper']['label'] = [
       '#type' => 'textfield',
