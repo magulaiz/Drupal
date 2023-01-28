@@ -2,7 +2,6 @@
 
 namespace Drupal\Tests\workspaces\Kernel;
 
-use Drupal\Core\Entity\EntityTypeManager;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\entity_test\Entity\EntityTest;
 use Drupal\entity_test\Entity\EntityTestMulRevPub;
@@ -28,13 +27,6 @@ class EntityReferenceSupportedNewEntitiesConstraintValidatorTest extends KernelT
     'entity_test',
     'path_alias',
   ];
-
-  /**
-   * The entity type manager.
-   *
-   * @var \Drupal\Core\Entity\EntityTypeManager
-   */
-  protected EntityTypeManager $entityTypeManager;
 
   /**
    * {@inheritdoc}

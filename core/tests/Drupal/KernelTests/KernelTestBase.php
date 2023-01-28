@@ -10,6 +10,7 @@ use Drupal\Core\Database\Database;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\DependencyInjection\ServiceProviderInterface;
 use Drupal\Core\DrupalKernel;
+use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\Sql\SqlEntityStorageInterface;
 use Drupal\Core\Extension\ExtensionDiscovery;
 use Drupal\Core\Language\Language;
@@ -183,6 +184,13 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
   protected static $modules = [];
 
   /**
+   * A list of generated identifiers.
+   *
+   * @var array
+   */
+  protected $generatedIds = [];
+
+  /**
    * The virtual filesystem root directory.
    *
    * @var \org\bovigo\vfs\vfsStreamDirectory
@@ -194,6 +202,13 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
    * @var \Drupal\Core\Config\ConfigImporter
    */
   protected $configImporter;
+
+  /**
+   * The entity type manager service.
+   *
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
+   */
+  protected $entityTypeManager;
 
   /**
    * The app root.
@@ -251,6 +266,8 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
     $this->initFileCache();
     $this->bootEnvironment();
     $this->bootKernel();
+
+    $this->entityTypeManager = $this->container->get('entity_type.manager');
   }
 
   /**
@@ -611,6 +628,42 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
     }
     // Filter out any duplicates.
     return array_unique($exceptions);
+  }
+
+  /**
+   * Reloads the given entity from the storage and returns it.
+   *
+   * @param \Drupal\Core\Entity\EntityInterface $entity
+   *   The entity to be reloaded.
+   *
+   * @return \Drupal\Core\Entity\EntityInterface
+   *   The reloaded entity.
+   */
+  protected function reloadEntity(EntityInterface $entity) {
+    $controller = $this->entityTypeManager->getStorage($entity->getEntityTypeId());
+    $controller->resetCache([$entity->id()]);
+    return $controller->load($entity->id());
+  }
+
+  /**
+   * Generates a random ID avoiding collisions.
+   *
+   * @param bool $string
+   *   (optional) Whether the id should have string type. Defaults to FALSE.
+   *
+   * @return int|string
+   *   The entity identifier.
+   */
+  protected function generateRandomEntityId($string = FALSE) {
+    srand(time());
+    do {
+      // 0x7FFFFFFF is the maximum allowed value for integers that works for all
+      // Drupal supported databases and is known to work for other databases
+      // like SQL Server 2014 and Oracle 10 too.
+      $id = $string ? $this->randomMachineName() : mt_rand(1, 0x7FFFFFFF);
+    } while (isset($this->generatedIds[$id]));
+    $this->generatedIds[$id] = $id;
+    return $id;
   }
 
   /**
