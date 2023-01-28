@@ -10,8 +10,10 @@ use Drupal\Core\Entity\EntityStorageException;
 use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Extension\Exception\ObsoleteExtensionException;
 use Drupal\Core\Installer\InstallerKernel;
+use Drupal\Core\Logger\LoggerChannelFactoryInterface;
 use Drupal\Core\Serialization\Yaml;
 use Drupal\Core\Update\UpdateHookRegistry;
+use Psr\Log\LoggerInterface;
 
 /**
  * Default implementation of the module installer.
@@ -69,6 +71,13 @@ class ModuleInstaller implements ModuleInstallerInterface {
   protected $uninstallValidators;
 
   /**
+   * The logger service.
+   *
+   * @var \Psr\Log\LoggerInterface
+   */
+  protected LoggerInterface $logger;
+
+  /**
    * Constructs a new ModuleInstaller instance.
    *
    * @param string $root
@@ -81,16 +90,27 @@ class ModuleInstaller implements ModuleInstallerInterface {
    *   The database connection.
    * @param \Drupal\Core\Update\UpdateHookRegistry $update_registry
    *   The update registry service.
+   * @param \Drupal\Core\Logger\LoggerChannelFactoryInterface|null $logger_factory
+   *   The logger factory.
+   *
+   * @see https://www.drupal.org/node/3160464
    *
    * @see \Drupal\Core\DrupalKernel
    * @see \Drupal\Core\CoreServiceProvider
    */
-  public function __construct($root, ModuleHandlerInterface $module_handler, DrupalKernelInterface $kernel, Connection $connection, UpdateHookRegistry $update_registry) {
+  public function __construct(string $root, ModuleHandlerInterface $module_handler, DrupalKernelInterface $kernel, Connection $connection, UpdateHookRegistry $update_registry, LoggerChannelFactoryInterface $logger_factory = NULL) {
     $this->root = $root;
     $this->moduleHandler = $module_handler;
     $this->kernel = $kernel;
     $this->connection = $connection;
     $this->updateRegistry = $update_registry;
+    if ($logger_factory === NULL) {
+      @trigger_error('Calling ' . __METHOD__ . ' without the $logger_factory argument is deprecated in drupal:10.1.0 and it will be required in drupal:11.0.0. See https://www.drupal.org/node/3160464', E_USER_DEPRECATED);
+      $this->logger = \Drupal::logger('system');
+    }
+    else {
+      $this->logger = $logger_factory->get('system');
+    }
   }
 
   /**
@@ -349,7 +369,7 @@ class ModuleInstaller implements ModuleInstallerInterface {
         $this->moduleHandler->invoke($module, 'install', [$sync_status]);
 
         // Record the fact that it was installed.
-        \Drupal::logger('system')->info('%module module installed.', ['%module' => $module]);
+        $this->logger->info('%module module installed.', ['%module' => $module]);
       }
     }
 
@@ -525,7 +545,7 @@ class ModuleInstaller implements ModuleInstallerInterface {
       // @see https://www.drupal.org/node/2208429
       \Drupal::service('theme_handler')->refreshInfo();
 
-      \Drupal::logger('system')->info('%module module uninstalled.', ['%module' => $module]);
+      $this->logger->info('%module module uninstalled.', ['%module' => $module]);
 
       /** @var \Drupal\Core\Update\UpdateHookRegistry $update_registry */
       $update_registry = \Drupal::service('update.update_hook_registry');
