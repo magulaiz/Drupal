@@ -108,13 +108,13 @@ class HtmlAttributeCollection implements \ArrayAccess, \IteratorAggregate, Marku
    *
    * @param string $name
    *   The attribute name.
-   * @param Drupal\Component\Render\MarkupInterface|string|int|bool|float|array|null $value
+   * @param \Drupal\Component\Render\MarkupInterface|\Drupal\Component\HtmlAttribute\HtmlAttributeValueBase|string|int|bool|float|array|null $value
    *   The attribute value.
    *
    * @return \Drupal\Component\HtmlAttribute\HtmlAttributeValueBase
    *   An HtmlAttributeValueBase representation of the attribute's value.
    */
-  protected function createAttributeValue(string $name, MarkupInterface|string|int|bool|float|array|NULL $value): HtmlAttributeValueBase {
+  protected function createAttributeValue(string $name, MarkupInterface|HtmlAttributeValueBase|string|int|bool|float|array|NULL $value): HtmlAttributeValueBase {
     // If the value is already an HtmlAttributeValueBase object,
     // return a new instance of the same class, but with the new name.
     if ($value instanceof HtmlAttributeValueBase) {
