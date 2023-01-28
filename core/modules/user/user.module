@@ -1178,10 +1178,6 @@ function user_toolbar() {
     ];
   }
   else {
-    $items['user']['tab']['#title'] = [
-      '#lazy_builder' => ['user.toolbar_link_builder:renderDisplayName', []],
-      '#create_placeholder' => TRUE,
-    ];
     $items['user']['tray']['user_links'] = [
       '#lazy_builder' => ['user.toolbar_link_builder:renderToolbarLinks', []],
       '#create_placeholder' => TRUE,
