@@ -8,6 +8,8 @@ use Drupal\KernelTests\KernelTestBase;
 
 /**
  * Test wrap feature for formatters number.
+ *
+ * @group field
  */
 class NumberItemFormatterTest extends KernelTestBase {
 
