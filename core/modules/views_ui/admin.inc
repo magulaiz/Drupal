@@ -267,7 +267,6 @@ function views_ui_standard_display_dropdown(&$form, FormStateInterface $form_sta
 }
 
 /**
-/**
  * Creates the menu path for a standard AJAX form given the form state.
  *
  * @return \Drupal\Core\Url
