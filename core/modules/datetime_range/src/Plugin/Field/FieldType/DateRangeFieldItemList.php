@@ -7,6 +7,7 @@ use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemList;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Form\States\FormElementStatesBuilder;
 use Drupal\datetime\Plugin\Field\FieldType\DateTimeFieldItemList;
 use Drupal\datetime\Plugin\Field\FieldType\DateTimeItemInterface;
 
@@ -39,16 +40,18 @@ class DateRangeFieldItemList extends DateTimeFieldItemList {
         '#empty_value' => '',
       ];
 
+      $states_builder = new FormElementStatesBuilder();
+
       $element['default_end_date'] = [
         '#type' => 'textfield',
         '#title' => $this->t('Relative default value'),
         '#description' => $this->t("Describe a time by reference to the current day, like '+90 days' (90 days from the day the field is created) or '+1 Saturday' (the next Saturday). See <a href=\"http://php.net/manual/function.strtotime.php\">strtotime</a> for more details."),
         '#default_value' => (isset($default_value[0]['default_end_date_type']) && $default_value[0]['default_end_date_type'] == static::DEFAULT_VALUE_CUSTOM) ? $default_value[0]['default_end_date'] : '',
-        '#states' => [
-          'visible' => [
-            ':input[id="edit-default-value-input-default-end-date-type"]' => ['value' => static::DEFAULT_VALUE_CUSTOM],
-          ],
-        ],
+        '#states' => $states_builder->addStates(
+          $states_builder->state()->setVisible(
+            $states_builder->watch(':input[id="edit-default-value-input-default-end-date-type"]')
+              ->valueEqualTo(static::DEFAULT_VALUE_CUSTOM)
+        ))->toArray(),
       ];
 
       return $element;
