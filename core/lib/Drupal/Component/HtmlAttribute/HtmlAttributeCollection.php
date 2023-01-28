@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Component\HtmlAttribute;
 
 use Drupal\Component\Render\PlainTextOutput;
@@ -81,7 +83,7 @@ class HtmlAttributeCollection implements \ArrayAccess, \IteratorAggregate, Marku
    * @param \Drupal\Component\HtmlAttribute\HtmlAttributeCollection|array $attributes
    *   An associative array of key-value pairs to be converted to attributes.
    */
-  public function __construct($attributes = []) {
+  public function __construct(HtmlAttributeCollection|array $attributes = []) {
     foreach ($attributes as $name => $value) {
       $this->offsetSet($name, $value);
     }
@@ -106,13 +108,13 @@ class HtmlAttributeCollection implements \ArrayAccess, \IteratorAggregate, Marku
    *
    * @param string $name
    *   The attribute name.
-   * @param mixed $value
+   * @param MarkupInterface|string|int|bool|float|array|NULL $value
    *   The attribute value.
    *
    * @return \Drupal\Component\HtmlAttribute\HtmlAttributeValueBase
    *   An HtmlAttributeValueBase representation of the attribute's value.
    */
-  protected function createAttributeValue(string $name, $value): HtmlAttributeValueBase {
+  protected function createAttributeValue(string $name, MarkupInterface|string|int|bool|float|array|NULL $value): HtmlAttributeValueBase {
     // If the value is already an HtmlAttributeValueBase object,
     // return a new instance of the same class, but with the new name.
     if ($value instanceof HtmlAttributeValueBase) {

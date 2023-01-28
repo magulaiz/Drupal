@@ -1,11 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Component\HtmlAttribute;
 
 use Drupal\Component\Utility\Html;
 
 /**
- * A class that defines a type of Attribute that can be added to as an array.
+ * A class defining a type of HtmlAttribute that can be added to as an array.
  *
  * To use with HtmlAttributeCollection, the array must be specified.
  * Correct:

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Component\HtmlAttribute;
 
 use Drupal\Component\Utility\Html;
@@ -19,25 +21,17 @@ abstract class HtmlAttributeValueBase {
   const RENDER_EMPTY_ATTRIBUTE = TRUE;
 
   /**
-   * The value itself.
-   *
-   * @var mixed
-   */
-  protected mixed $value;
-
-  /**
-   * The name of the value.
-   *
-   * @var mixed
-   */
-  protected mixed $name;
-
-  /**
    * Constructs a \Drupal\Component\HtmlAttribute\HtmlAttributeValueBase object.
+   *
+   * @param string $name
+   *   The name of the value.
+   * @param string|int|bool|float|array|NULL $value
+   *   The value itself.
    */
-  public function __construct(mixed $name, mixed $value) {
-    $this->name = $name;
-    $this->value = $value;
+  public function __construct(
+    protected string $name,
+    protected string|int|bool|float|array|NULL $value,
+  ) {
   }
 
   /**
@@ -60,7 +54,7 @@ abstract class HtmlAttributeValueBase {
   /**
    * Returns the raw value.
    */
-  public function value(): mixed {
+  public function value(): string|int|bool|float|array|NULL {
     return $this->value;
   }
 
