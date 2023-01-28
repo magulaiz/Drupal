@@ -23,6 +23,7 @@ class RemoveRoleUser extends ChangeUserRoleBase {
       // For efficiency manually save the original account before applying
       // any changes.
       $account->original = clone $account;
+      $account->save();
       $account->removeRole($rid)->save();
     }
   }
