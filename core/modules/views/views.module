@@ -255,9 +255,7 @@ function views_theme_suggestions_node_alter(array &$suggestions, array $variable
 }
 
 /**
- * A theme preprocess function.
- *
- * Used to automatically allow view-based node templates if called from a view.
+ * Allows view-based comment templates if called from a view.
  */
 function views_preprocess_comment(&$variables) {
   // The view data is added to the comment in
