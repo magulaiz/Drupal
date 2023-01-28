@@ -8,6 +8,7 @@ use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\FormatterBase;
+use Drupal\Core\Field\Plugin\Field\FieldFormatter\WrapperLabelFormatterTrait;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\datetime\Plugin\Field\FieldType\DateTimeItem;
 use Drupal\datetime\Plugin\Field\FieldType\DateTimeItemInterface;
@@ -17,6 +18,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * Base class for 'DateTime Field formatter' plugin implementations.
  */
 abstract class DateTimeFormatterBase extends FormatterBase {
+
+  use WrapperLabelFormatterTrait;
 
   /**
    * The date formatter service.
@@ -84,7 +87,8 @@ abstract class DateTimeFormatterBase extends FormatterBase {
   public static function defaultSettings() {
     return [
       'timezone_override' => '',
-    ] + parent::defaultSettings();
+    ] + parent::defaultSettings()
+      + self::wrapperLabelDefaultSettings();
   }
 
   /**
@@ -100,7 +104,7 @@ abstract class DateTimeFormatterBase extends FormatterBase {
       '#options' => system_time_zones(TRUE, TRUE),
       '#default_value' => $this->getSetting('timezone_override'),
     ];
-
+    $this->settingsFormWrapperOption($form);
     return $form;
   }
 

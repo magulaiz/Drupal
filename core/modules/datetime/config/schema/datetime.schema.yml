@@ -29,6 +29,9 @@ field.formatter.settings.datetime_base:
     timezone_override:
       type: string
       label: 'Time zone override'
+    wrap_label_tag:
+      type: string
+      label: 'Heading text.'
 
 field.formatter.settings.datetime_default:
   type: field.formatter.settings.datetime_base
@@ -37,10 +40,17 @@ field.formatter.settings.datetime_default:
     format_type:
       type: string
       label: 'Date format'
+    wrap_label_tag:
+      type: string
+      label: 'Heading text.'
 
 field.formatter.settings.datetime_plain:
   type: field.formatter.settings.datetime_base
   label: 'Datetime plain display format settings'
+  mapping:
+    wrap_label_tag:
+      type: string
+      label: 'Heading text.'
 
 field.formatter.settings.datetime_custom:
   type: field.formatter.settings.datetime_base
@@ -49,6 +59,9 @@ field.formatter.settings.datetime_custom:
     date_format:
       type: date_format
       label: 'Date/time format'
+    wrap_label_tag:
+      type: string
+      label: 'Heading text.'
 
 field.formatter.settings.datetime_time_ago:
   type: mapping
@@ -63,6 +76,9 @@ field.formatter.settings.datetime_time_ago:
     granularity:
       type: integer
       label: 'Granularity'
+    wrap_label_tag:
+      type: string
+      label: 'Heading text.'
 
 field.widget.settings.datetime_datelist:
   type: mapping
