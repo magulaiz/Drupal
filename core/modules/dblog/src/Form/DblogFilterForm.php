@@ -25,10 +25,11 @@ class DblogFilterForm extends FormBase {
   /**
    * Constructs a DblogFilterForm object.
    *
-   * @param \Drupal\dblog\DblogEntryStorageInterface
+   * @param \Drupal\dblog\DblogEntryStorageInterface $dblogStorage
    *   The dblog entry storage.
    */
-  public function __construct(protected DblogEntryStorageInterface $dblogStorage) {}
+  public function __construct(protected DblogEntryStorageInterface $dblogStorage) {
+  }
 
   /**
    * {@inheritdoc}

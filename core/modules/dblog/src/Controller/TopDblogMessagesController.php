@@ -3,6 +3,7 @@
 namespace Drupal\dblog\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
+use Drupal\dblog\DblogEntryStorageInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\dblog\DblogFormatterInterface;
@@ -13,19 +14,9 @@ use Drupal\dblog\DblogFormatterInterface;
 class TopDblogMessagesController extends ControllerBase {
 
   /**
-   * The current request.
-   */
-  protected \Symfony\Component\HttpFoundation\Request $currentRequest;
-
-  /**
    * The dblog entry storage.
    */
-  protected \Drupal\dblog\DblogEntryStorageInterface $dblogStorage;
-
-  /**
-   * The dblog formatter service.
-   */
-  protected \Drupal\dblog\DblogFormatterInterface $dblogFormatter;
+  protected DblogEntryStorageInterface $dblogStorage;
 
   /**
    * {@inheritdoc}
@@ -40,15 +31,13 @@ class TopDblogMessagesController extends ControllerBase {
   /**
    * Constructs a TopDblogMessagesController object.
    *
-   * @param \Symfony\Component\HttpFoundation\Request $current_request
+   * @param \Symfony\Component\HttpFoundation\Request $currentRequest
    *   The current request.
-   * @param \Drupal\dblog\DblogFormatterInterface $dblog_formatter
+   * @param \Drupal\dblog\DblogFormatterInterface $dblogFormatter
    *   The dblog formatter service.
    */
-  public function __construct(Request $current_request, DblogFormatterInterface $dblog_formatter) {
-    $this->currentRequest = $current_request;
+  public function __construct(protected Request $currentRequest, protected DblogFormatterInterface $dblogFormatter) {
     $this->dblogStorage = $this->entityTypeManager()->getStorage('dblog');
-    $this->dblogFormatter = $dblog_formatter;
   }
 
   /**
