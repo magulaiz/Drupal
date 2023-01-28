@@ -24,7 +24,7 @@ class DblogTypes extends InOperator {
    * @param mixed $plugin_definition
    *   The plugin implementation definition.
    * @param \Drupal\dblog\DblogEntryStorageInterface $dblogStorage
-   * The dblog entry storage service.
+   *   The dblog entry storage service.
    */
   public function __construct(array $configuration, $plugin_id, $plugin_definition, protected DblogEntryStorageInterface $dblogStorage) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);

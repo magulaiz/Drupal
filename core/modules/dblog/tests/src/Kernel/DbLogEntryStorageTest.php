@@ -191,10 +191,10 @@ class DbLogEntryStorageTest extends KernelTestBase {
   public function testAggregateCount() {
     $this->generateLogEntries(2);
 
-    $result = (int) $this->storage->getQuery()->accessCheck(FALSE)->count()->execute();
+    $result = (int) $this->storage->getQuery()->count()->accessCheck(FALSE)->execute();
     $this->assertEquals(2, $result);
 
-    $result = (int) $this->storage->getAggregateQuery()->accessCheck(FALSE)->count()->execute();
+    $result = (int) $this->storage->getAggregateQuery()->count()->accessCheck(FALSE)->execute();
     $this->assertEquals(2, $result);
   }
 

@@ -16,18 +16,12 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class DblogClearLogConfirmForm extends ConfirmFormBase {
 
   /**
-   * The dblog entry storage service.
-   */
-  protected \Drupal\dblog\DblogEntryStorageInterface $dblogStorage;
-
-  /**
    * Constructs a new DblogClearLogConfirmForm.
    *
-   * @param \Drupal\dblog\DblogEntryStorageInterface $storage
+   * @param \Drupal\dblog\DblogEntryStorageInterface $dblogStorage
    *   The dblog entry storage service.
    */
-  public function __construct(DblogEntryStorageInterface $storage) {
-    $this->dblogStorage = $storage;
+  public function __construct(protected DblogEntryStorageInterface $dblogStorage) {
   }
 
   /**

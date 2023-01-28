@@ -113,8 +113,8 @@ class DbLogController extends ControllerBase {
    *   A render array as expected by
    *   \Drupal\Core\Render\RendererInterface::render().
    *
-   * @see Drupal\dblog\Form\DblogClearLogConfirmForm
-   * @see Drupal\dblog\Controller\DbLogController::eventDetails()
+   * @see \Drupal\dblog\Form\DblogClearLogConfirmForm
+   * @see \Drupal\dblog\Controller\DbLogController::eventDetails()
    */
   public function overview(Request $request) {
 

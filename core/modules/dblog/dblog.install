@@ -166,11 +166,11 @@ function dblog_update_10102() {
   $replace = 'severity-{{ severity }}';
 
   // If the new pattern is already there, nothing else is required.
-  if (!empty($style) && strpos($style, $replace) !== FALSE) {
+  if (strpos($style, $replace) !== FALSE) {
     return;
   }
 
   $new_style = str_replace($search, $replace, $style);
-  $style = $view->set($key, $new_style);
+  $view->set($key, $new_style);
   $view->save();
 }
