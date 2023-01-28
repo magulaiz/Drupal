@@ -240,9 +240,12 @@ class LinkWidget extends WidgetBase {
         $selector = $root . '[' . implode('][', $parents) . ']';
       }
 
-      $element['uri']['#states']['required'] = [
-        ':input[name="' . $selector . '[' . $delta . '][title]"]' => ['filled' => TRUE],
-      ];
+      $states_builder = new FormElementStatesBuilder();
+      $element['uri']['#states'] = $states_builder->addStates(
+        $states_builder->state()->setRequired(
+          $states_builder->watch(':input[name="' . $selector . '[' . $delta . '][title]"]')->isFilled()
+        )
+      )->toArray();
     }
 
     $element['title'] = [
@@ -274,9 +277,12 @@ class LinkWidget extends WidgetBase {
           $selector = $root . '[' . implode('][', $parents) . ']';
         }
 
-        $element['title']['#states']['required'] = [
-          ':input[name="' . $selector . '[' . $delta . '][uri]"]' => ['filled' => TRUE],
-        ];
+        $states_builder = new FormElementStatesBuilder();
+        $element['title']['#states'] = $states_builder->addStates(
+          $states_builder->state()->setRequired(
+            $states_builder->watch(':input[name="' . $selector . '[' . $delta . '][uri]"]')->isFilled()
+          )
+        )->toArray();
       }
     }
 
