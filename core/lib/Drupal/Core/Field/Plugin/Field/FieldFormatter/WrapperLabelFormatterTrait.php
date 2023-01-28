@@ -37,7 +37,7 @@ trait WrapperLabelFormatterTrait {
    */
   public static function wrapperLabelDefaultSettings() {
     return [
-      'wrap_label_tag' => NULL
+      'wrap_label_tag' => NULL,
     ];
   }
 

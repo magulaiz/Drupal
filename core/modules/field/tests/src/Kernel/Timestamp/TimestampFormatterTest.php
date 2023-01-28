@@ -130,7 +130,7 @@ class TimestampFormatterTest extends KernelTestBase {
    * @param mixed $value
    *   The value to be set on fieldName.
    */
-  protected function createEntityWithValue($value = null) {
+  protected function createEntityWithValue($value = NULL) {
     if (empty($value)) {
       $value = \Drupal::time()->getRequestTime();
     }

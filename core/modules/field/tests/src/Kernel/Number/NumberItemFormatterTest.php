@@ -6,6 +6,9 @@ use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\KernelTests\KernelTestBase;
 
+/**
+ * Test formatter for numeric intes.
+ */
 class NumberItemFormatterTest extends KernelTestBase {
 
   /**
@@ -85,6 +88,27 @@ class NumberItemFormatterTest extends KernelTestBase {
     $this->display->save();
 
     $this->entityTypeManager = \Drupal::entityTypeManager();
+  }
+
+  /**
+   * Test formatter wrap label for integer formatter.
+   */
+  public function testIntegerFormatter() {
+    // @todo implement test.
+  }
+
+  /**
+   * Test formatter wrap label for decimal formatter.
+   */
+  public function testDecimalFormatter() {
+    // @todo implement test.
+  }
+
+  /**
+   * Test formatter wrap label for float formatter.
+   */
+  public function testFloatFormatter() {
+    // @todo implement test.
   }
 
 }
