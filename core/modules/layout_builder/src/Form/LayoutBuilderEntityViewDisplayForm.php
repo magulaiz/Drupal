@@ -5,6 +5,7 @@ namespace Drupal\layout_builder\Form;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Form\States\FormElementStatesBuilder;
 use Drupal\field_ui\Form\EntityViewDisplayEditForm;
 use Drupal\layout_builder\Entity\LayoutEntityDisplayInterface;
 use Drupal\layout_builder\Plugin\SectionStorage\OverridesSectionStorage;
@@ -85,20 +86,23 @@ class LayoutBuilderEntityViewDisplayForm extends EntityViewDisplayEditForm {
     //   https://www.drupal.org/node/2907413.
     if ($this->isCanonicalMode($this->entity->getMode())) {
       $entity_type = $this->entityTypeManager->getDefinition($this->entity->getTargetEntityTypeId());
+
+      $states_builder = new FormElementStatesBuilder();
+
       $form['layout']['allow_custom'] = [
         '#type' => 'checkbox',
         '#title' => $this->t('Allow each @entity to have its layout customized.', [
           '@entity' => $entity_type->getSingularLabel(),
         ]),
         '#default_value' => $this->entity->isOverridable(),
-        '#states' => [
-          'disabled' => [
-            ':input[name="layout[enabled]"]' => ['checked' => FALSE],
-          ],
-          'invisible' => [
-            ':input[name="layout[enabled]"]' => ['checked' => FALSE],
-          ],
-        ],
+        '#states' => $states_builder->addStates(
+          $states_builder->state()->setDisabled(
+            $states_builder->watch(':input[name="layout[enabled]"]')->isUnchecked()
+          ),
+          $states_builder->state()->setInvisible(
+            $states_builder->watch(':input[name="layout[enabled]"]')->isUnchecked()
+          )
+        )->toArray(),
       ];
       if (!$is_enabled) {
         $form['layout']['allow_custom']['#attributes']['disabled'] = 'disabled';
