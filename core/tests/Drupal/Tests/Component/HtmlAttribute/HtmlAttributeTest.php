@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\Tests\Component\Attribute;
+namespace Drupal\Tests\Component\HtmlAttribute;
 
 use Drupal\Component\HtmlAttribute\HtmlAttributeCollection;
 use Drupal\Component\HtmlAttribute\HtmlAttributeArray;
