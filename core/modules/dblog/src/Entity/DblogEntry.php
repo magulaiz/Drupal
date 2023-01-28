@@ -127,63 +127,63 @@ final class DblogEntry extends ContentEntityBase implements DblogEntryInterface 
   /**
    * {@inheritdoc}
    */
-  public function getHostname() : string {
+  public function getHostname(): string {
     return $this->get('hostname')->value;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getLink() : string {
+  public function getLink(): string {
     return $this->get('link')->getString();
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getLocation() : string {
+  public function getLocation(): string {
     return $this->get('location')->getString();
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getReferer() : string {
+  public function getReferer(): string {
     return $this->get('referer')->getString();
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getSeverity() : int {
+  public function getSeverity(): int {
     return $this->get('severity')->value;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getTimestamp() : int {
+  public function getTimestamp(): int {
     return $this->get('timestamp')->value;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getType() : string {
+  public function getType(): string {
     return $this->get('type')->getString();
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getUid() : int {
+  public function getUid(): int {
     return $this->get('uid')->target_id;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getFormattedMessage(DblogFormatterInterface $formatter) : MarkupInterface {
+  public function getFormattedMessage(DblogFormatterInterface $formatter): MarkupInterface {
     $message = $this->get('message')->getString();
     $variables = @unserialize($this->get('variables')->getString());
 

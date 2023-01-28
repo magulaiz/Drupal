@@ -17,7 +17,7 @@ interface DblogEntryInterface extends ContentEntityInterface {
    * @return string
    *   The hostname of the user who triggered the event.
    */
-  public function getHostname() : string;
+  public function getHostname(): string;
 
   /**
    * Link to view the result of the event.
@@ -28,7 +28,7 @@ interface DblogEntryInterface extends ContentEntityInterface {
    * @return string
    *   The link to the event information.
    */
-  public function getLink() : string;
+  public function getLink(): string;
 
   /**
    * URL of the origin of the event.
@@ -36,7 +36,7 @@ interface DblogEntryInterface extends ContentEntityInterface {
    * @return string
    *   The origin of the event.
    */
-  public function getLocation() : string;
+  public function getLocation(): string;
 
   /**
    * URL of referring page.
@@ -44,7 +44,7 @@ interface DblogEntryInterface extends ContentEntityInterface {
    * @return string
    *   The referer of the event.
    */
-  public function getReferer() : string;
+  public function getReferer(): string;
 
   /**
    * The severity level of the event.
@@ -54,7 +54,7 @@ interface DblogEntryInterface extends ContentEntityInterface {
    * @return int
    *   The severity of the event.
    */
-  public function getSeverity() : int;
+  public function getSeverity(): int;
 
   /**
    * Unix timestamp of when event occurred.
@@ -62,7 +62,7 @@ interface DblogEntryInterface extends ContentEntityInterface {
    * @return int
    *   The unix timestamp.
    */
-  public function getTimestamp() : int;
+  public function getTimestamp(): int;
 
   /**
    * Type of log message, for example "user" or "page not found".
@@ -70,7 +70,7 @@ interface DblogEntryInterface extends ContentEntityInterface {
    * @return string
    *   The type of the event.
    */
-  public function getType() : string;
+  public function getType(): string;
 
   /**
    * The id of the user who triggered the event.
@@ -78,7 +78,7 @@ interface DblogEntryInterface extends ContentEntityInterface {
    * @return int
    *   The user id.
    */
-  public function getUid() : int;
+  public function getUid(): int;
 
   /**
    * Returns the messages formatted with placeholders already replaced.
@@ -89,6 +89,6 @@ interface DblogEntryInterface extends ContentEntityInterface {
    * @return \Drupal\Component\Render\MarkupInterface
    *   The formatted message.
    */
-  public function getFormattedMessage(DblogFormatterInterface $formatter) : MarkupInterface;
+  public function getFormattedMessage(DblogFormatterInterface $formatter): MarkupInterface;
 
 }

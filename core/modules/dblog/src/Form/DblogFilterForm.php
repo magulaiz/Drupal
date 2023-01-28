@@ -16,13 +16,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class DblogFilterForm extends FormBase {
 
   /**
-   * The dblog entry storage.
-   *
-   * @var \Drupal\dblog\DblogEntryStorageInterface
-   */
-  protected $dblogStorage;
-
-  /**
    * {@inheritdoc}
    */
   public function getFormId() {
@@ -31,10 +24,11 @@ class DblogFilterForm extends FormBase {
 
   /**
    * Constructs a DblogFilterForm object.
+   *
+   * @param \Drupal\dblog\DblogEntryStorageInterface
+   *   The dblog entry storage.
    */
-  public function __construct(DblogEntryStorageInterface $dblog_storage) {
-    $this->dblogStorage = $dblog_storage;
-  }
+  public function __construct(protected DblogEntryStorageInterface $dblogStorage) {}
 
   /**
    * {@inheritdoc}
