@@ -10,7 +10,7 @@ namespace Drupal\Core\Cache;
  * based on the current content language then a cache context for that must be
  * added.
  */
-interface RefinableCacheableDependencyInterface extends CacheableDependencyInterface {
+interface RefinableCacheableDependencyInterface extends CacheableDependencyInterface, ObjectWithRefinableCacheabilityInterface {
 
   /**
    * Adds cache contexts.
@@ -47,19 +47,5 @@ interface RefinableCacheableDependencyInterface extends CacheableDependencyInter
    *   Thrown if a non-integer value is supplied.
    */
   public function mergeCacheMaxAge($max_age);
-
-  /**
-   * Adds a dependency on an object: merges its cacheability metadata.
-   *
-   * @param \Drupal\Core\Cache\CacheableDependencyInterface|object $other_object
-   *   The dependency. If the object implements CacheableDependencyInterface,
-   *   then its cacheability metadata will be used. Otherwise, the passed in
-   *   object must be assumed to be uncacheable, so max-age 0 is set.
-   *
-   * @return $this
-   *
-   * @see \Drupal\Core\Cache\CacheableMetadata::createFromObject()
-   */
-  public function addCacheableDependency($other_object);
 
 }
