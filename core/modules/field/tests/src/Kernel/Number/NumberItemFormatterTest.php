@@ -7,7 +7,7 @@ use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\KernelTests\KernelTestBase;
 
 /**
- * Test formatter for numeric intes.
+ * Test wrap feature for formatters number.
  */
 class NumberItemFormatterTest extends KernelTestBase {
 
