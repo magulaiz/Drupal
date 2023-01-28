@@ -41,10 +41,11 @@ ckeditor5.plugin.ckeditor5_language:
         # Configuring this does not make sense without the corresponding button.
         CKEditor5ToolbarItemDependencyConstraint:
           toolbarItem: textPartLanguage
-        # Only two possible values are accepted.
+        # Only three possible values are accepted.
         Choice:
           - un
           - all
+          - enabled
 
 # Plugin \Drupal\ckeditor5\Plugin\CKEditor5Plugin\Heading
 ckeditor5.plugin.ckeditor5_heading:
