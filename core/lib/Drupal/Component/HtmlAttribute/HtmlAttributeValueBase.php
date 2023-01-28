@@ -25,7 +25,7 @@ abstract class HtmlAttributeValueBase {
    *
    * @param string $name
    *   The name of the value.
-   * @param string|int|bool|float|array|NULL $value
+   * @param string|int|bool|float|array|null $value
    *   The value itself.
    */
   public function __construct(
@@ -53,6 +53,9 @@ abstract class HtmlAttributeValueBase {
 
   /**
    * Returns the raw value.
+   *
+   * @return string|int|bool|float|array|null
+   *   The raw value.
    */
   public function value(): string|int|bool|float|array|NULL {
     return $this->value;

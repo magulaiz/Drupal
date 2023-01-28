@@ -108,7 +108,7 @@ class HtmlAttributeCollection implements \ArrayAccess, \IteratorAggregate, Marku
    *
    * @param string $name
    *   The attribute name.
-   * @param MarkupInterface|string|int|bool|float|array|NULL $value
+   * @param Drupal\Component\Render\MarkupInterface|string|int|bool|float|array|null $value
    *   The attribute value.
    *
    * @return \Drupal\Component\HtmlAttribute\HtmlAttributeValueBase
