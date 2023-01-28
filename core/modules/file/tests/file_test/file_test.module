@@ -42,7 +42,7 @@ function file_test_reset() {
 }
 
 /**
- * Get arguments passed to invocation of given hook.
+ * Gets the arguments passed to a given hook invocation.
  *
  * Arguments are gathered since file_test_reset() was last called.
  *

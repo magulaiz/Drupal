@@ -2,10 +2,7 @@
 
 /**
  * @file
- * Test module.
- *
- * Used for testing the migration source plugin prepareRow() exception
- * handling.
+ * Module to test the migration source plugin prepareRow() exception.
  */
 
 use Drupal\migrate\Plugin\MigrationInterface;

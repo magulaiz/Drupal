@@ -219,9 +219,7 @@ function views_theme($existing, $type, $theme, $path) {
 }
 
 /**
- * A theme preprocess function.
- *
- * Used to automatically allow view-based node templates if called from a view.
+ * Allows view-based node templates if called from a view.
  *
  * The 'modules/node.views.inc' file is a better place for this, but
  * we haven't got a chance to load that file before Drupal builds the

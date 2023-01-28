@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Module for testing making taxonomy_term base fields' displays configurable.
+ * Module to test configurable displays for taxonomy_term base fields.
  */
 
 use Drupal\Core\Entity\EntityTypeInterface;
