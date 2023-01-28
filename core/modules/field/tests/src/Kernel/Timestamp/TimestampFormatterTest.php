@@ -49,11 +49,18 @@ class TimestampFormatterTest extends KernelTestBase {
   protected $display;
 
   /**
+   * The label defined to the field created.
+   *
+   * @var string
+   */
+  protected $fieldLabel;
+
+  /**
    * {@inheritdoc}
    */
   protected function setUp(): void {
     parent::setUp();
-
+    $this->fieldLabel = $this->randomMachineName();
     $this->installConfig(['system']);
     $this->installConfig(['field']);
     $this->installEntitySchema('entity_test');
@@ -72,7 +79,7 @@ class TimestampFormatterTest extends KernelTestBase {
     $instance = FieldConfig::create([
       'field_storage' => $field_storage,
       'bundle' => $this->bundle,
-      'label' => $this->randomMachineName(),
+      'label' => $this->fieldLabel,
     ]);
     $instance->save();
 
@@ -103,6 +110,36 @@ class TimestampFormatterTest extends KernelTestBase {
   }
 
   /**
+   * Helper function to update component formatter type and settings.
+   *
+   * @param string $type
+   *   The time of formatter.
+   * @param array $settings
+   *   Array of settings to be set.
+   */
+  protected function updateComponentSettings($type, $settings) {
+    $component = $this->display->getComponent($this->fieldName);
+    $component['type'] = $type;
+    $component['settings'] = array_merge($component['settings'], $settings);
+    $this->display->setComponent($this->fieldName, $component);
+  }
+
+  /**
+   * Helper function to create entity with value in fieldName.
+   *
+   * @param mixed $value
+   *   The value to be set on fieldName.
+   */
+  protected function createEntityWithValue($value = null) {
+    if (empty($value)) {
+      $value = \Drupal::time()->getRequestTime();
+    }
+    $entity = EntityTest::create([]);
+    $entity->{$this->fieldName}->value = $value;
+    return $entity;
+  }
+
+  /**
    * Tests TimestampFormatter.
    */
   public function testTimestampFormatter() {
@@ -123,17 +160,10 @@ class TimestampFormatterTest extends KernelTestBase {
       if (empty($timezone)) {
         $timezone = NULL;
       }
-
       $value = REQUEST_TIME - 87654321;
       $expected = \Drupal::service('date.formatter')->format($value, $date_format, $custom_date_format, $timezone);
-
-      $component = $this->display->getComponent($this->fieldName);
-      $component['type'] = 'timestamp';
-      $component['settings'] = $settings;
-      $this->display->setComponent($this->fieldName, $component);
-
-      $entity = EntityTest::create([]);
-      $entity->{$this->fieldName}->value = $value;
+      $this->updateComponentSettings('timestamp', $settings);
+      $entity = $this->createEntityWithValue($value);
 
       $this->renderEntityFields($entity, $this->display);
       $this->assertRaw($expected);
@@ -163,33 +193,47 @@ class TimestampFormatterTest extends KernelTestBase {
       // Test a timestamp in the past
       $value = $request_time - 87654321;
       $expected = new FormattableMarkup($past_format, ['@interval' => \Drupal::service('date.formatter')->formatTimeDiffSince($value, ['granularity' => $granularity])]);
-
-      $component = $this->display->getComponent($this->fieldName);
-      $component['type'] = 'timestamp_ago';
-      $component['settings'] = $settings;
-      $this->display->setComponent($this->fieldName, $component);
-
-      $entity = EntityTest::create([]);
-      $entity->{$this->fieldName}->value = $value;
-
+      $this->updateComponentSettings('timestamp_ago', $settings);
+      $entity = $this->createEntityWithValue($value);
       $this->renderEntityFields($entity, $this->display);
       $this->assertRaw($expected);
 
       // Test a timestamp in the future
       $value = $request_time + 87654321;
       $expected = new FormattableMarkup($future_format, ['@interval' => \Drupal::service('date.formatter')->formatTimeDiffUntil($value, ['granularity' => $granularity])]);
-
-      $component = $this->display->getComponent($this->fieldName);
-      $component['type'] = 'timestamp_ago';
-      $component['settings'] = $settings;
-      $this->display->setComponent($this->fieldName, $component);
-
-      $entity = EntityTest::create([]);
-      $entity->{$this->fieldName}->value = $value;
-
+      $this->updateComponentSettings('timestamp_ago', $settings);
+      $entity = $this->createEntityWithValue($value);
       $this->renderEntityFields($entity, $this->display);
       $this->assertRaw($expected);
     }
+  }
+
+  /**
+   * Test timestamp wrapper label.
+   */
+  public function testTimestampWrapperLabel() {
+    $wrap_label_tag = 'h3';
+    $this->updateComponentSettings('timestamp', [
+      'wrap_label_tag' => $wrap_label_tag,
+    ]);
+    $entity = $this->createEntityWithValue();
+    $content = $this->renderEntityFields($entity, $this->display);
+    $message = sprintf("Label of field %s was not wrapped by tag %s heading.", $this->fieldName, $wrap_label_tag);
+    $this->assertStringContainsString('<h3>' . $this->fieldLabel . '</h3>', $content, $message);
+  }
+
+  /**
+   * Test timestamp ago formatter wrapper label.
+   */
+  public function testTimestampAgoWrapperLabel() {
+    $wrap_label_tag = 'h3';
+    $this->updateComponentSettings('timestamp_ago', [
+      'wrap_label_tag' => $wrap_label_tag,
+    ]);
+    $entity = $this->createEntityWithValue();
+    $content = $this->renderEntityFields($entity, $this->display);
+    $message = sprintf("Label of field %s was not wrapped by tag %s heading.", $this->fieldName, $wrap_label_tag);
+    $this->assertStringContainsString('<h3>' . $this->fieldLabel . '</h3>', $content, $message);
   }
 
 }

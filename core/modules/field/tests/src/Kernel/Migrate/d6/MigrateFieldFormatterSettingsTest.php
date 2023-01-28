@@ -91,6 +91,7 @@ class MigrateFieldFormatterSettingsTest extends MigrateDrupal6TestBase {
     $expected['settings'] = [
       'thousand_separator' => ',',
       'prefix_suffix' => TRUE,
+      'wrap_label_tag' => NULL,
     ];
     $component = $display->getComponent('field_test_two');
     $this->assertSame($expected, $component);
@@ -101,6 +102,7 @@ class MigrateFieldFormatterSettingsTest extends MigrateDrupal6TestBase {
       'decimal_separator' => '.',
       'scale' => 2,
       'prefix_suffix' => TRUE,
+      'wrap_label_tag' => NULL,
     ];
     $component = $display->getComponent('field_test_three');
     $this->assertSame($expected, $component);
@@ -164,7 +166,9 @@ class MigrateFieldFormatterSettingsTest extends MigrateDrupal6TestBase {
     // Test phone field.
     $expected['weight'] = 13;
     $expected['type'] = 'basic_string';
-    $expected['settings'] = [];
+    $expected['settings'] = [
+      'wrap_label_tag' => NULL,
+    ];
     $component = $display->getComponent('field_test_phone');
     $this->assertSame($expected, $component);
 

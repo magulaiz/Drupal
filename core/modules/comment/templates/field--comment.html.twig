@@ -26,10 +26,13 @@
  * @see comment_preprocess_field()
  */
 #}
+{%
+  set label_wrapper = element['#label_wrapper'] ? element['#label_wrapper'] : 'h2'
+%}
 <section{{ attributes }}>
   {% if comments and not label_hidden %}
     {{ title_prefix }}
-    <h2{{ title_attributes }}>{{ label }}</h2>
+    <{{ label_wrapper }}{{ title_attributes }}>{{ label }}</{{ label_wrapper }}>
     {{ title_suffix }}
   {% endif %}
 

@@ -273,6 +273,9 @@ field.formatter.settings.boolean:
     format_custom_true:
       type: label
       label: 'Custom output for TRUE'
+    wrap_label_tag:
+      type: string
+      label: 'Heading text.'
 
 field.formatter.settings.string:
   type: mapping
@@ -280,6 +283,19 @@ field.formatter.settings.string:
     link_to_entity:
       type: boolean
       label: 'Link to the entity'
+    wrap_label_tag:
+      type: string
+      label: 'Heading text.'
+
+field.formatter.settings.basic_string:
+  type: mapping
+  mapping:
+    link_to_entity:
+      type: boolean
+      label: 'Link to the entity'
+    wrap_label_tag:
+      type: string
+      label: 'Heading text.'
 
 field.formatter.settings.language:
   type: field.formatter.settings.string
@@ -304,6 +320,9 @@ field.formatter.settings.number_decimal:
     prefix_suffix:
       type: boolean
       label: 'Display prefix and suffix.'
+    wrap_label_tag:
+      type: string
+      label: 'Heading text.'
 
 field.formatter.settings.number_integer:
   type: mapping
@@ -315,6 +334,9 @@ field.formatter.settings.number_integer:
     prefix_suffix:
       type: boolean
       label: 'Display prefix and suffix.'
+    wrap_label_tag:
+      type: string
+      label: 'Heading text.'
 
 field.formatter.settings.number_unformatted:
   type: mapping
@@ -337,6 +359,9 @@ field.formatter.settings.timestamp:
     timezone:
       type: string
       label: 'Time zone'
+    wrap_label_tag:
+      type: string
+      label: 'Heading text.'
 
 field.formatter.settings.timestamp_ago:
   type: mapping
@@ -351,6 +376,9 @@ field.formatter.settings.timestamp_ago:
     granularity:
       type: integer
       label: 'Granularity'
+    wrap_label_tag:
+      type: string
+      label: 'Heading text.'
 
 field.formatter.settings.entity_reference_entity_view:
   type: mapping
@@ -362,6 +390,9 @@ field.formatter.settings.entity_reference_entity_view:
     link:
       type: boolean
       label: 'Show links'
+    wrap_label_tag:
+      type: string
+      label: 'Heading text.'
 
 field.formatter.settings.entity_reference_entity_id:
   type: mapping
@@ -374,6 +405,9 @@ field.formatter.settings.entity_reference_label:
     link:
       type: boolean
       label: 'Link label to the referenced entity'
+    wrap_label_tag:
+      type: string
+      label: 'Heading text.'
 
 block.settings.field_block:*:*:*:
   type: block_settings

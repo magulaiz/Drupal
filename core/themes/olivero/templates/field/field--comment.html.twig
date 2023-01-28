@@ -28,17 +28,21 @@
  */
 #}
 
+{%
+  set label_wrapper = element['#label_wrapper'] ? element['#label_wrapper'] : 'h2'
+%}
+
 {{ attach_library('olivero/comments') }}
 <section{{ attributes.setAttribute('data-drupal-selector', 'comments').addClass('comments') }}>
 
   {% if not label_hidden %}
     {{ title_prefix }}
-    <h2{{ title_attributes.addClass('comments__title') }}>
+    <{{ label_wrapper }}{{ title_attributes.addClass('comments__title') }}>
       {{- label -}}
       {%- if comments -%}
         <span class="comments__count">{{ comment_count }}</span>
       {%- endif -%}
-    </h2>
+    </{{ label_wrapper }}>
     {{ title_suffix }}
   {% endif %}
 

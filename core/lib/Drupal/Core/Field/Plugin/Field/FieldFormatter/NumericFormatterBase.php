@@ -11,6 +11,15 @@ use Drupal\Core\Form\FormStateInterface;
  */
 abstract class NumericFormatterBase extends FormatterBase {
 
+  use WrapperLabelFormatterTrait;
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function defaultSettings() {
+    return parent::defaultSettings() + self::wrapperLabelDefaultSettings();
+  }
+
   /**
    * {@inheritdoc}
    */
@@ -38,6 +47,7 @@ abstract class NumericFormatterBase extends FormatterBase {
       '#weight' => 10,
     ];
 
+    $this->settingsFormWrapperOption($elements);
     return $elements;
   }
 

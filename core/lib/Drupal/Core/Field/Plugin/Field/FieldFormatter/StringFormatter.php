@@ -25,6 +25,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  */
 class StringFormatter extends FormatterBase {
 
+  use WrapperLabelFormatterTrait;
+
   /**
    * The entity type manager.
    *
@@ -81,7 +83,7 @@ class StringFormatter extends FormatterBase {
     $options = parent::defaultSettings();
 
     $options['link_to_entity'] = FALSE;
-    return $options;
+    return $options + self::wrapperLabelDefaultSettings();
   }
 
   /**
@@ -99,6 +101,7 @@ class StringFormatter extends FormatterBase {
       ];
     }
 
+    $this->settingsFormWrapperOption($form);
     return $form;
   }
 

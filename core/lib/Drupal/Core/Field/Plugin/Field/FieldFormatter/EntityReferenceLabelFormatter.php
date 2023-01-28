@@ -21,12 +21,15 @@ use Drupal\Core\Form\FormStateInterface;
  */
 class EntityReferenceLabelFormatter extends EntityReferenceFormatterBase {
 
+  use WrapperLabelFormatterTrait;
+
   /**
    * {@inheritdoc}
    */
   public static function defaultSettings() {
     return [
       'link' => TRUE,
+      'wrap_label_tag' => 'h2',
     ] + parent::defaultSettings();
   }
 
@@ -40,6 +43,7 @@ class EntityReferenceLabelFormatter extends EntityReferenceFormatterBase {
       '#default_value' => $this->getSetting('link'),
     ];
 
+    $this->settingsFormWrapperOption($elements);
     return $elements;
   }
 

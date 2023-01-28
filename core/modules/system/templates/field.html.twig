@@ -44,6 +44,9 @@
   ]
 %}
 
+{%
+  set label_wrapper = element['#label_wrapper'] ? element['#label_wrapper'] : 'div'
+%}
 {% if label_hidden %}
   {% if multiple %}
     <div{{ attributes }}>
@@ -58,7 +61,7 @@
   {% endif %}
 {% else %}
   <div{{ attributes }}>
-    <div{{ title_attributes.addClass(title_classes) }}>{{ label }}</div>
+    <{{ label_wrapper }}{{ title_attributes.addClass(title_classes) }}>{{ label }}</{{ label_wrapper }}>
     {% if multiple %}
       <div>
     {% endif %}

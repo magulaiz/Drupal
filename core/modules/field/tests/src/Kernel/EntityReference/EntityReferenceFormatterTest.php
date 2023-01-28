@@ -409,6 +409,21 @@ class EntityReferenceFormatterTest extends EntityKernelTestBase {
   }
 
   /**
+   * Test wrapper label.
+   */
+  public function testWrapperLabelFormatter() {
+    $formatter = 'entity_reference_label';
+    $build = $this->buildRenderArray(
+      [$this->referencedEntity, $this->unsavedReferencedEntity],
+      $formatter,
+      ['wrap_label_tag' => 'h4'],
+    );
+    $content = $this->container->get('renderer')->renderRoot($build);
+    $fieldLabel = FieldConfig::loadByName($this->entityType, $this->bundle, $this->fieldName);
+    $this->assertStringContainsString('<h4>' . $fieldLabel->label() . '</h4>', $content);
+  }
+
+  /**
    * Sets field values and returns a render array as built by
    * \Drupal\Core\Field\FieldItemListInterface::view().
    *
