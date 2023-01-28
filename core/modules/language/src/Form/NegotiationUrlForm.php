@@ -4,6 +4,7 @@ namespace Drupal\language\Form;
 
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Form\States\FormElementStatesBuilder;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\Config\ConfigFactoryInterface;
@@ -79,33 +80,36 @@ class NegotiationUrlForm extends ConfigFormBase {
       '#default_value' => $config->get('url.source'),
     ];
 
+    $states_builder = new FormElementStatesBuilder();
+
     $form['prefix'] = [
       '#type' => 'details',
       '#tree' => TRUE,
       '#title' => $this->t('Path prefix configuration'),
       '#open' => TRUE,
       '#description' => $this->t('Language codes or other custom text to use as a path prefix for URL language detection. For the selected fallback language, this value may be left blank. <strong>Modifying this value may break existing URLs. Use with caution in a production environment.</strong> Example: Specifying "deutsch" as the path prefix code for German results in URLs like "example.com/deutsch/contact".'),
-      '#states' => [
-        'visible' => [
-          ':input[name="language_negotiation_url_part"]' => [
-            'value' => (string) LanguageNegotiationUrl::CONFIG_PATH_PREFIX,
-          ],
-        ],
-      ],
+      '#states' => $states_builder->addStates(
+        $states_builder->state()->setVisible(
+          $states_builder->watch(':input[name="language_negotiation_url_part"]')
+            ->valueEqualTo((string) LanguageNegotiationUrl::CONFIG_PATH_PREFIX)
+        )
+      )->toArray(),
     ];
+
+    $states_builder = new FormElementStatesBuilder();
+
     $form['domain'] = [
       '#type' => 'details',
       '#tree' => TRUE,
       '#title' => $this->t('Domain configuration'),
       '#open' => TRUE,
       '#description' => $this->t('The domain names to use for these languages. <strong>Modifying this value may break existing URLs. Use with caution in a production environment.</strong> Example: Specifying "de.example.com" as language domain for German will result in a URL like "http://de.example.com/contact".'),
-      '#states' => [
-        'visible' => [
-          ':input[name="language_negotiation_url_part"]' => [
-            'value' => (string) LanguageNegotiationUrl::CONFIG_DOMAIN,
-          ],
-        ],
-      ],
+      '#states' => $states_builder->addStates(
+        $states_builder->state()->setVisible(
+          $states_builder->watch(':input[name="language_negotiation_url_part"]')
+            ->valueEqualTo((string) LanguageNegotiationUrl::CONFIG_DOMAIN)
+        )
+      )->toArray(),
     ];
 
     $languages = $this->languageManager->getLanguages();

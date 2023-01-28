@@ -4,6 +4,7 @@ namespace Drupal\language\Form;
 
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Form\States\FormElementStatesBuilder;
 use Drupal\Core\Language\LanguageManager;
 use Drupal\Core\Url;
 use Drupal\language\Entity\ConfigurableLanguage;
@@ -39,37 +40,39 @@ class LanguageAddForm extends LanguageFormBase {
       '#default_value' => $predefined_default,
       '#options' => $predefined_languages,
     ];
+
+    $states_builder = new FormElementStatesBuilder();
+
     $form['predefined_submit'] = [
       '#type' => 'submit',
       '#value' => $this->t('Add language'),
       '#name' => 'add_language',
       '#limit_validation_errors' => [['predefined_langcode'], ['predefined_submit']],
-      '#states' => [
-        'invisible' => [
-          'select#edit-predefined-langcode' => ['value' => 'custom'],
-        ],
-      ],
+      '#states' => $states_builder->addStates(
+        $states_builder->state()->setInvisible(
+          $states_builder->watch('select#edit-predefined-langcode')->valueEqualTo('custom')
+        )
+      )->toArray(),
       '#validate' => ['::validatePredefined'],
       '#submit' => ['::submitForm', '::save'],
       '#button_type' => 'primary',
     ];
 
-    $custom_language_states_conditions = [
-      'select#edit-predefined-langcode' => ['value' => 'custom'],
-    ];
+    $states_builder = new FormElementStatesBuilder();
+    $custom_language_states_conditions = $states_builder->watch('select#edit-predefined-langcode')
+      ->valueEqualTo('custom');
+
     $form['custom_language'] = [
       '#type' => 'container',
-      '#states' => [
-        'visible' => $custom_language_states_conditions,
-      ],
+      '#states' => $states_builder->addStates(
+        $states_builder->state()->setVisible($custom_language_states_conditions)
+      )->toArray(),
     ];
     $this->commonForm($form['custom_language']);
-    $form['custom_language']['langcode']['#states'] = [
-      'required' => $custom_language_states_conditions,
-    ];
-    $form['custom_language']['label']['#states'] = [
-      'required' => $custom_language_states_conditions,
-    ];
+    $form['custom_language']['langcode']['#states'] = $states_builder->addStates(
+      $states_builder->state()->setRequired($custom_language_states_conditions))->toArray();
+    $form['custom_language']['label']['#states'] = $states_builder->addStates(
+      $states_builder->state()->setRequired($custom_language_states_conditions))->toArray();
     $form['custom_language']['submit'] = [
       '#type' => 'submit',
       '#value' => $this->t('Add custom language'),
