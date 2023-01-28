@@ -57,7 +57,7 @@ if ($args['clover']) {
     mkdir($cov_directory, 0777, TRUE);
   }
   else {
-    // If we're not executing one test in a separate process, make sure the
+    // If we are not executing one test in a separate process, make sure the
     // directory is empty.
     if (!$args['execute-test']) {
       array_map('unlink', glob($cov_directory . '/*'));
