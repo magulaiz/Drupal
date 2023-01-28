@@ -7,6 +7,7 @@ use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemList;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Form\States\FormElementStatesBuilder;
 
 /**
  * Represents a configurable entity datetime field.
@@ -30,6 +31,8 @@ class DateTimeFieldItemList extends FieldItemList {
     if (empty($this->getFieldDefinition()->getDefaultValueCallback())) {
       $default_value = $this->getFieldDefinition()->getDefaultValueLiteral();
 
+      $states_builder = new FormElementStatesBuilder();
+
       $element = [
         '#parents' => ['default_value_input'],
         'default_date_type' => [
@@ -48,11 +51,11 @@ class DateTimeFieldItemList extends FieldItemList {
           '#title' => $this->t('Relative default value'),
           '#description' => $this->t("Describe a time by reference to the current day, like '+90 days' (90 days from the day the field is created) or '+1 Saturday' (the next Saturday). See <a href=\"http://php.net/manual/function.strtotime.php\">strtotime</a> for more details."),
           '#default_value' => (isset($default_value[0]['default_date_type']) && $default_value[0]['default_date_type'] == static::DEFAULT_VALUE_CUSTOM) ? $default_value[0]['default_date'] : '',
-          '#states' => [
-            'visible' => [
-              ':input[id="edit-default-value-input-default-date-type"]' => ['value' => static::DEFAULT_VALUE_CUSTOM],
-            ],
-          ],
+          '#states' => $states_builder->addStates(
+            $states_builder->state()->setVisible(
+              $states_builder->watch(':input[id="edit-default-value-input-default-date-type"]')
+                ->valueEqualTo(static::DEFAULT_VALUE_CUSTOM)
+          ))->toArray(),
         ],
       ];
 
