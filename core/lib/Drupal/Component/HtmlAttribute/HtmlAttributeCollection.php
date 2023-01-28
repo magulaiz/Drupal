@@ -121,12 +121,14 @@ class HtmlAttributeCollection implements \ArrayAccess, \IteratorAggregate, Marku
       $class = get_class($value);
       return new $class($name, $value->value());
     }
+
     // An array value or 'class' attribute name are forced to always be an
     // AttributeArray value for consistency.
     if ($name == 'class' && !is_array($value)) {
       // Cast the value to string in case it implements MarkupInterface.
       $value = [(string) $value];
     }
+
     if (is_array($value)) {
       // Cast the value to an array if the value was passed in as a string.
       // @todo Decide to fix all the broken instances of class as a string
@@ -143,7 +145,8 @@ class HtmlAttributeCollection implements \ArrayAccess, \IteratorAggregate, Marku
       $value = PlainTextOutput::renderFromHtml($value);
       $value = new HtmlAttributeString($name, $value);
     }
-    elseif (!is_object($value)) {
+    else {
+      // At this point, $value is float|int|string|null.
       $value = new HtmlAttributeString($name, $value);
     }
     return $value;
@@ -166,13 +169,12 @@ class HtmlAttributeCollection implements \ArrayAccess, \IteratorAggregate, Marku
   /**
    * Adds classes or merges them on to array of existing CSS classes.
    *
-   * @param string|array ...
+   * @param string|array|null ...$args
    *   CSS classes to add to the class attribute array.
    *
    * @return $this
    */
-  public function addClass(): HtmlAttributeCollection {
-    $args = func_get_args();
+  public function addClass(string|array|NULL ...$args): HtmlAttributeCollection {
     if ($args) {
       $classes = [];
       foreach ($args as $arg) {
@@ -192,7 +194,6 @@ class HtmlAttributeCollection implements \ArrayAccess, \IteratorAggregate, Marku
         $this->offsetSet('class', $classes);
       }
     }
-
     return $this;
   }
 
@@ -226,15 +227,14 @@ class HtmlAttributeCollection implements \ArrayAccess, \IteratorAggregate, Marku
   }
 
   /**
-   * Removes an attribute from an Attribute object.
+   * Removes an attribute from an HtmlAttribute object.
    *
-   * @param string|array ...
+   * @param string|array|null ...$args
    *   Attributes to remove from the attribute array.
    *
    * @return $this
    */
-  public function removeAttribute(): HtmlAttributeCollection {
-    $args = func_get_args();
+  public function removeAttribute(string|array|NULL ...$args): HtmlAttributeCollection {
     foreach ($args as $arg) {
       // Support arrays or multiple arguments.
       if (is_array($arg)) {
@@ -246,22 +246,20 @@ class HtmlAttributeCollection implements \ArrayAccess, \IteratorAggregate, Marku
         unset($this->storage[$arg]);
       }
     }
-
     return $this;
   }
 
   /**
    * Removes argument values from array of existing CSS classes.
    *
-   * @param string|array ...
+   * @param string|array|null ...$args
    *   CSS classes to remove from the class attribute array.
    *
    * @return $this
    */
-  public function removeClass(): HtmlAttributeCollection {
+  public function removeClass(string|array|NULL ...$args): HtmlAttributeCollection {
     // With no class attribute, there is no need to remove.
     if (isset($this->storage['class']) && $this->storage['class'] instanceof HtmlAttributeArray) {
-      $args = func_get_args();
       $classes = [];
       foreach ($args as $arg) {
         // Merge the values passed in from the classes array.
