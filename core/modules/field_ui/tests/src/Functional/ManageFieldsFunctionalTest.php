@@ -296,7 +296,7 @@ class ManageFieldsFunctionalTest extends BrowserTestBase {
 
     // Check that tabs displayed.
     $this->assertSession()->linkExists('Edit');
-    $this->assertSession()->linkByHrefExists('admin/structure/types/manage/article/fields/node.article.body');
+    $this->assertSession()->linkByHrefExists('/admin/structure/types/manage/article/fields/node.article.body');
     $this->assertSession()->linkExists('Field settings');
     $this->assertSession()->linkByHrefExists($field_edit_path);
 
@@ -820,7 +820,7 @@ class ManageFieldsFunctionalTest extends BrowserTestBase {
   public function fieldListAdminPage() {
     $this->drupalGet('admin/reports/fields');
     $this->assertSession()->pageTextContains($this->fieldName);
-    $this->assertSession()->linkByHrefExists('admin/structure/types/manage/' . $this->contentType . '/fields');
+    $this->assertSession()->linkByHrefExists('/admin/structure/types/manage/' . $this->contentType . '/fields');
   }
 
   /**

@@ -98,11 +98,11 @@ class MediaUiJavascriptTest extends MediaJavascriptTestBase {
     $this->testMediaType = $media_type_storage->load(strtolower($name));
 
     // Check if all action links exist.
-    $assert_session->linkByHrefExists('admin/structure/media/add');
-    $assert_session->linkByHrefExists('admin/structure/media/manage/' . $this->testMediaType->id());
-    $assert_session->linkByHrefExists('admin/structure/media/manage/' . $this->testMediaType->id() . '/fields');
-    $assert_session->linkByHrefExists('admin/structure/media/manage/' . $this->testMediaType->id() . '/form-display');
-    $assert_session->linkByHrefExists('admin/structure/media/manage/' . $this->testMediaType->id() . '/display');
+    $assert_session->linkByHrefExists('/admin/structure/media/add');
+    $assert_session->linkByHrefExists('/admin/structure/media/manage/' . $this->testMediaType->id());
+    $assert_session->linkByHrefExists('/admin/structure/media/manage/' . $this->testMediaType->id() . '/fields');
+    $assert_session->linkByHrefExists('/admin/structure/media/manage/' . $this->testMediaType->id() . '/form-display');
+    $assert_session->linkByHrefExists('/admin/structure/media/manage/' . $this->testMediaType->id() . '/display');
 
     // Assert that fields have expected values before editing.
     $page->clickLink('Edit');

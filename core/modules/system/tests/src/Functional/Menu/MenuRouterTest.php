@@ -183,9 +183,9 @@ class MenuRouterTest extends BrowserTestBase {
     $this->resetAll();
 
     $this->drupalGet('router_test/test2');
-    $this->assertSession()->linkByHrefExists('menu_no_title_callback');
-    $this->assertSession()->linkByHrefExists('menu-title-test/case1');
-    $this->assertSession()->linkByHrefExists('menu-title-test/case2');
+    $this->assertSession()->linkByHrefExists('/menu_no_title_callback');
+    $this->assertSession()->linkByHrefExists('/menu-title-test/case1');
+    $this->assertSession()->linkByHrefExists('/menu-title-test/case2');
     $this->assertSession()->linkByHrefExists('menu-title-test/case3');
   }
 

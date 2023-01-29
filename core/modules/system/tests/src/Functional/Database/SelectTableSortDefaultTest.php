@@ -89,7 +89,7 @@ class SelectTableSortDefaultTest extends DatabaseTestBase {
     $assert->pageTextContains('Username');
 
     // Verify that the header links are built properly.
-    $assert->linkByHrefExists('database_test/tablesort_default_sort');
+    $assert->linkByHrefExists('/database_test/tablesort_default_sort');
     $assert->responseMatches('/\<a.*title\=\"sort by Username\".*\>/');
   }
 

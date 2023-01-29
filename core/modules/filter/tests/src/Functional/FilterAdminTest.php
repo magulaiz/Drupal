@@ -162,7 +162,7 @@ class FilterAdminTest extends BrowserTestBase {
     $this->assertSession()->fieldValueEquals("formats[$format_id][weight]", 5);
 
     // Disable text format.
-    $this->assertSession()->linkByHrefExists('admin/config/content/formats/manage/' . $format_id . '/disable');
+    $this->assertSession()->linkByHrefExists('/admin/config/content/formats/manage/' . $format_id . '/disable');
     $this->drupalGet('admin/config/content/formats/manage/' . $format_id . '/disable');
     $this->submitForm([], 'Disable');
 

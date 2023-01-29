@@ -136,7 +136,7 @@ class ForumTest extends BrowserTestBase {
     $this->drupalGet('/forum');
     // Look for the "General discussion" default forum
     $this->assertSession()->linkExists('General discussion');
-    $this->assertSession()->linkByHrefExists('/forum/1');
+    $this->assertSession()->linkByHrefExists('//forum/1');
     // Check the presence of expected cache tags.
     $this->assertSession()->responseHeaderContains('X-Drupal-Cache-Tags', 'config:forum.settings');
 

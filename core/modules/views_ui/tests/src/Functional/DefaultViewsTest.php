@@ -40,7 +40,7 @@ class DefaultViewsTest extends UITestBase {
   public function testDefaultViews() {
     // Make sure the view starts off as disabled (does not appear on the listing
     // page).
-    $edit_href = 'admin/structure/views/view/glossary';
+    $edit_href = '/admin/structure/views/view/glossary';
     $this->drupalGet('admin/structure/views');
     // @todo Disabled default views do now appear on the front page. Test this
     // behavior with templates instead.
@@ -80,7 +80,7 @@ class DefaultViewsTest extends UITestBase {
     // Check there is an enable link. i.e. The view has not been enabled after
     // editing.
     $this->drupalGet('admin/structure/views');
-    $this->assertSession()->linkByHrefExists('admin/structure/views/view/archive/enable');
+    $this->assertSession()->linkByHrefExists('/admin/structure/views/view/archive/enable');
     // Enable it again so it can be tested for access permissions.
     $this->clickViewsOperationLink('Enable', '/archive/');
 
@@ -193,9 +193,9 @@ class DefaultViewsTest extends UITestBase {
     $this->drupalGet('admin/structure/views');
 
     // Check that links to views on default tabs are rendered correctly.
-    $this->assertSession()->linkByHrefExists('test_page_display_menu');
+    $this->assertSession()->linkByHrefExists('/test_page_display_menu');
     $this->assertSession()->linkByHrefNotExists('test_page_display_menu/default');
-    $this->assertSession()->linkByHrefExists('test_page_display_menu/local');
+    $this->assertSession()->linkByHrefExists('/test_page_display_menu/local');
 
     // Check that a dynamic path is shown as text.
     $this->assertSession()->responseContains('test_route_with_suffix/%/suffix');

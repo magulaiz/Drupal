@@ -40,7 +40,7 @@ class DisplayCRUDTest extends UITestBase {
     $settings['page[create]'] = FALSE;
     $view = $this->randomView($settings);
 
-    $path_prefix = 'admin/structure/views/view/' . $view['id'] . '/edit';
+    $path_prefix = '/admin/structure/views/view/' . $view['id'] . '/edit';
     $this->drupalGet($path_prefix);
 
     // Add a new display.
@@ -60,7 +60,7 @@ class DisplayCRUDTest extends UITestBase {
    */
   public function testRemoveDisplay() {
     $view = $this->randomView();
-    $path_prefix = 'admin/structure/views/view/' . $view['id'] . '/edit';
+    $path_prefix = '/admin/structure/views/view/' . $view['id'] . '/edit';
 
     // Make sure there is no delete button on the default display.
     $this->drupalGet($path_prefix . '/default');
@@ -92,7 +92,7 @@ class DisplayCRUDTest extends UITestBase {
     // Test deleting a display that has a modified machine name.
     $view = $this->randomView();
     $machine_name = 'new_machine_name';
-    $path_prefix = 'admin/structure/views/view/' . $view['id'] . '/edit';
+    $path_prefix = '/admin/structure/views/view/' . $view['id'] . '/edit';
     $this->drupalGet("admin/structure/views/nojs/display/{$view['id']}/page_1/display_id");
     $this->submitForm(['display_id' => $machine_name], 'Apply');
     $this->submitForm([], 'Delete Page');
@@ -114,7 +114,7 @@ class DisplayCRUDTest extends UITestBase {
    */
   public function testDuplicateDisplay() {
     $view = $this->randomView();
-    $path_prefix = 'admin/structure/views/view/' . $view['id'] . '/edit';
+    $path_prefix = '/admin/structure/views/view/' . $view['id'] . '/edit';
     $path = $view['page[path]'];
 
     $this->drupalGet($path_prefix);

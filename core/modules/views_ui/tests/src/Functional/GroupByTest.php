@@ -29,7 +29,7 @@ class GroupByTest extends UITestBase {
   public function testGroupBySave() {
     $this->drupalGet('admin/structure/views/view/test_views_groupby_save/edit');
 
-    $edit_groupby_url = 'admin/structure/views/nojs/handler-group/test_views_groupby_save/default/field/id';
+    $edit_groupby_url = '/admin/structure/views/nojs/handler-group/test_views_groupby_save/default/field/id';
     $this->assertSession()->linkByHrefNotExists($edit_groupby_url, 0, 'No aggregation link found.');
 
     // Enable aggregation on the view.

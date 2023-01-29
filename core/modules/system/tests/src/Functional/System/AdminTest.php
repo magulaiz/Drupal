@@ -89,13 +89,13 @@ class AdminTest extends BrowserTestBase {
       // pages.
       $this->drupalLogin($this->adminUser);
       $this->drupalGet($page);
-      $this->assertSession()->linkByHrefExists('admin/config');
-      $this->assertSession()->linkByHrefExists('admin/config/regional/settings');
-      $this->assertSession()->linkByHrefExists('admin/config/regional/date-time');
-      $this->assertSession()->linkByHrefExists('admin/config/regional/language');
+      $this->assertSession()->linkByHrefExists('/admin/config');
+      $this->assertSession()->linkByHrefExists('/admin/config/regional/settings');
+      $this->assertSession()->linkByHrefExists('/admin/config/regional/date-time');
+      $this->assertSession()->linkByHrefExists('/admin/config/regional/language');
       $this->assertSession()->linkByHrefNotExists('admin/config/regional/language/detection/session');
       $this->assertSession()->linkByHrefNotExists('admin/config/regional/language/detection/url');
-      $this->assertSession()->linkByHrefExists('admin/config/regional/translate');
+      $this->assertSession()->linkByHrefExists('/admin/config/regional/translate');
       // On admin/index only, the administrator should also see a "Configure
       // permissions" link for the Locale module.
       if ($page == 'admin/index') {
@@ -106,13 +106,13 @@ class AdminTest extends BrowserTestBase {
       // primary configuration pages, but a link to the translate page exists.
       $this->drupalLogin($this->webUser);
       $this->drupalGet($page);
-      $this->assertSession()->linkByHrefExists('admin/config');
+      $this->assertSession()->linkByHrefExists('/admin/config');
       $this->assertSession()->linkByHrefNotExists('admin/config/regional/settings');
       $this->assertSession()->linkByHrefNotExists('admin/config/regional/date-time');
       $this->assertSession()->linkByHrefNotExists('admin/config/regional/language');
       $this->assertSession()->linkByHrefNotExists('admin/config/regional/language/detection/session');
       $this->assertSession()->linkByHrefNotExists('admin/config/regional/language/detection/url');
-      $this->assertSession()->linkByHrefExists('admin/config/regional/translate');
+      $this->assertSession()->linkByHrefExists('/admin/config/regional/translate');
       // This user cannot configure permissions, so even on admin/index should
       // not see a "Configure permissions" link for the Locale module.
       if ($page == 'admin/index') {

@@ -39,8 +39,8 @@ class BlockDemoTest extends BrowserTestBase {
     $default_theme = $config->get('default');
     $this->drupalGet('admin/structure/block/demo/' . $default_theme);
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertSession()->linkByHrefExists('admin/structure/block');
-    $this->assertSession()->linkByHrefNotExists('admin/structure/block/list/' . $default_theme);
+    $this->assertSession()->linkByHrefExists('/admin/structure/block');
+    $this->assertSession()->linkByHrefNotExists('/admin/structure/block/list/' . $default_theme);
 
     // All available themes in core.
     $available_themes = [

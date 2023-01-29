@@ -375,7 +375,7 @@ class MenuUiTest extends BrowserTestBase {
 
     // Verify add link button.
     $this->drupalGet('admin/structure/menu');
-    $this->assertSession()->linkByHrefExists('admin/structure/menu/manage/' . $menu_name . '/add', 0, "The add menu link button URL is correct");
+    $this->assertSession()->linkByHrefExists('/admin/structure/menu/manage/' . $menu_name . '/add', 0, "The add menu link button URL is correct");
 
     // Verify form defaults.
     $this->doMenuLinkFormDefaultsTest();
@@ -566,7 +566,7 @@ class MenuUiTest extends BrowserTestBase {
     $this->addMenuLink('', '/user/logout', 'main');
     $assert = $this->assertSession();
     // Verify that any link with logout URL is displayed.
-    $assert->linkByHrefExists('user/logout');
+    $assert->linkByHrefExists('/user/logout');
 
     // Verify that any link with logout URL is not displayed.
     $this->drupalLogout();

@@ -313,8 +313,8 @@ class ConfigEntityTest extends BrowserTestBase {
     $this->submitForm($edit, 'Save');
     $this->assertSession()->statusCodeEquals(200);
     $this->assertSession()->pageTextContains('0 configuration has been created.');
-    $this->assertSession()->linkByHrefExists('admin/structure/config_test/manage/0');
-    $this->assertSession()->linkByHrefExists('admin/structure/config_test/manage/0/delete');
+    $this->assertSession()->linkByHrefExists('/admin/structure/config_test/manage/0');
+    $this->assertSession()->linkByHrefExists('/admin/structure/config_test/manage/0/delete');
     $this->drupalGet('admin/structure/config_test/manage/0/delete');
     $this->submitForm([], 'Delete');
     $storage = \Drupal::entityTypeManager()->getStorage('config_test');

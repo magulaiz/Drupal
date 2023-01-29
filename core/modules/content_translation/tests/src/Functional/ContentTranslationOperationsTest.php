@@ -85,7 +85,7 @@ class ContentTranslationOperationsTest extends NodeTestBase {
     // permissions.
     $this->drupalLogin($this->baseUser2);
     $this->drupalGet('admin/content');
-    $this->assertSession()->linkByHrefExists('node/' . $node->id() . '/translations');
+    $this->assertSession()->linkByHrefExists('/node/' . $node->id() . '/translations');
 
     // Ensure that an unintended misconfiguration of permissions does not open
     // access to the translation form, see https://www.drupal.org/node/2558905.
@@ -128,7 +128,7 @@ class ContentTranslationOperationsTest extends NodeTestBase {
     $this->drupalPlaceBlock('local_tasks_block');
     $this->drupalLogin($this->baseUser2);
     $this->drupalGet('node/' . $node->id());
-    $this->assertSession()->linkByHrefExists('node/' . $node->id() . '/translations');
+    $this->assertSession()->linkByHrefExists('/node/' . $node->id() . '/translations');
     $this->drupalGet('admin/config/regional/content-language');
     $this->submitForm(['settings[node][article][translatable]' => FALSE], 'Save configuration');
     $this->drupalGet('node/' . $node->id());

@@ -80,7 +80,7 @@ class PrepareUninstallTest extends BrowserTestBase {
     // Check that Taxonomy cannot be uninstalled yet.
     $this->drupalGet('admin/modules/uninstall');
     $this->assertSession()->pageTextContains('Remove content items');
-    $this->assertSession()->linkByHrefExists('admin/modules/uninstall/entity/taxonomy_term');
+    $this->assertSession()->linkByHrefExists('/admin/modules/uninstall/entity/taxonomy_term');
 
     // Delete Taxonomy term data.
     $this->drupalGet('admin/modules/uninstall/entity/taxonomy_term');
@@ -114,7 +114,7 @@ class PrepareUninstallTest extends BrowserTestBase {
     // Check Node cannot be uninstalled yet, there is content to be removed.
     $this->drupalGet('admin/modules/uninstall');
     $this->assertSession()->pageTextContains('Remove content items');
-    $this->assertSession()->linkByHrefExists('admin/modules/uninstall/entity/node');
+    $this->assertSession()->linkByHrefExists('/admin/modules/uninstall/entity/node');
 
     // Delete Node data.
     $this->drupalGet('admin/modules/uninstall/entity/node');
