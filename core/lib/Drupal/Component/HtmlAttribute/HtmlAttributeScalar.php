@@ -21,14 +21,38 @@ use Drupal\Component\Utility\Html;
  *
  * @see \Drupal\Component\HtmlAttribute\HtmlAttributeCollection
  */
-class HtmlAttributeString extends HtmlAttributeValueBase {
+class HtmlAttributeScalar extends HtmlAttributeValueBase {
+
+  /**
+   * Constructs an HtmlAttributeScalar object.
+   *
+   * @param string $name
+   *   The name of the value.
+   * @param string|int|float|NULL $scalarValue
+   *   The value itself.
+   */
+  public function __construct(
+    string $name,
+    private string|int|float|null $scalarValue,
+  ) {
+    parent::__construct($name);
+  }
+
+  /**
+   * Returns the raw value.
+   *
+   * @return string|int|float|null
+   *   The raw value.
+   */
+  protected function doGetValue(): string|int|float|NULL {
+    return $this->scalarValue;
+  }
 
   /**
    * Implements the magic __toString() method.
    */
   public function __toString(): string {
-    assert(is_scalar($this->value) || is_null($this->value));
-    return Html::escape((string) $this->value);
+    return Html::escape((string) $this->scalarValue);
   }
 
 }

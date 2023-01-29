@@ -38,6 +38,31 @@ class HtmlAttributeArray extends HtmlAttributeValueBase implements \ArrayAccess,
   const RENDER_EMPTY_ATTRIBUTE = FALSE;
 
   /**
+   * Constructs an HtmlAttributeArray object.
+   *
+   * @param string $name
+   *   The name of the value.
+   * @param array<scalar> $arrayValue
+   *   The value itself.
+   */
+  public function __construct(
+    string $name,
+    private array $arrayValue,
+  ) {
+    parent::__construct($name);
+  }
+
+  /**
+   * Returns the raw value.
+   *
+   * @return array<scalar>
+   *   The raw value.
+   */
+  protected function doGetValue(): array {
+    return $this->arrayValue;
+  }
+
+  /**
    * Returns the value at the specified index.
    *
    * @param string|int $key
@@ -45,8 +70,7 @@ class HtmlAttributeArray extends HtmlAttributeValueBase implements \ArrayAccess,
    * @return scalar
    */
   public function offsetGet(mixed $key): bool|float|int|string {
-    assert(is_array($this->value));
-    return $this->value[$key];
+    return $this->arrayValue[$key];
   }
 
   /**
@@ -56,12 +80,11 @@ class HtmlAttributeArray extends HtmlAttributeValueBase implements \ArrayAccess,
    * @param scalar $value
    */
   public function offsetSet(mixed $key, mixed $value): void {
-    assert(is_array($this->value));
     if (isset($key)) {
-      $this->value[$key] = $value;
+      $this->arrayValue[$key] = $value;
     }
     else {
-      $this->value[] = $value;
+      $this->arrayValue[] = $value;
     }
   }
 
@@ -71,7 +94,7 @@ class HtmlAttributeArray extends HtmlAttributeValueBase implements \ArrayAccess,
    * @param string|int $key
    */
   public function offsetUnset(mixed $key): void {
-    unset($this->value[$key]);
+    unset($this->arrayValue[$key]);
   }
 
   /**
@@ -80,17 +103,16 @@ class HtmlAttributeArray extends HtmlAttributeValueBase implements \ArrayAccess,
    * @param string|int $key
    */
   public function offsetExists(mixed $key): bool {
-    return isset($this->value[$key]);
+    return isset($this->arrayValue[$key]);
   }
 
   /**
    * Implements the magic __toString() method.
    */
   public function __toString(): string {
-    assert(is_array($this->value));
     // Filter out any empty values before printing.
-    $this->value = array_unique(array_filter($this->value));
-    return Html::escape(implode(' ', $this->value));
+    $this->arrayValue = array_unique(array_filter($this->arrayValue));
+    return Html::escape(implode(' ', $this->arrayValue));
   }
 
   /**
@@ -99,8 +121,7 @@ class HtmlAttributeArray extends HtmlAttributeValueBase implements \ArrayAccess,
    * @return \ArrayIterator<string|int, scalar>
    */
   public function getIterator(): \Traversable {
-    assert(is_array($this->value));
-    return new \ArrayIterator($this->value);
+    return new \ArrayIterator($this->arrayValue);
   }
 
   /**
@@ -115,9 +136,8 @@ class HtmlAttributeArray extends HtmlAttributeValueBase implements \ArrayAccess,
    *   The old array value.
    */
   public function exchangeArray(array $input): array {
-    assert(is_array($this->value));
-    $old = $this->value;
-    $this->value = $input;
+    $old = $this->arrayValue;
+    $this->arrayValue = $input;
     return $old;
   }
 

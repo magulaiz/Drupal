@@ -4,7 +4,7 @@ namespace Drupal\Tests\Component\HtmlAttribute;
 
 use Drupal\Component\HtmlAttribute\HtmlAttributeCollection;
 use Drupal\Component\HtmlAttribute\HtmlAttributeArray;
-use Drupal\Component\HtmlAttribute\HtmlAttributeString;
+use Drupal\Component\HtmlAttribute\HtmlAttributeScalar;
 use Drupal\Component\Render\MarkupInterface;
 use Drupal\Component\Render\MarkupTrait;
 use Drupal\Component\Utility\Html;
@@ -280,7 +280,7 @@ class HtmlAttributeTest extends TestCase {
       }
       if ($counter == 1) {
         $this->assertEquals('id', $key);
-        $this->assertEquals(new HtmlAttributeString('id', 'example-id'), $value);
+        $this->assertEquals(new HtmlAttributeScalar('id', 'example-id'), $value);
       }
       $counter++;
     }

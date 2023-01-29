@@ -71,7 +71,7 @@ use Drupal\Component\Utility\NestedArray;
  * @implements \ArrayAccess<string, HtmlAttributeValueBase>
  * @implements \IteratorAggregate<string, HtmlAttributeValueBase>
  */
-class HtmlAttributeCollection implements \ArrayAccess, \IteratorAggregate, MarkupInterface {
+class HtmlAttributeCollection implements \ArrayAccess, \IteratorAggregate, \Stringable, MarkupInterface {
 
   /**
    * Stores the attribute data.
@@ -153,11 +153,11 @@ class HtmlAttributeCollection implements \ArrayAccess, \IteratorAggregate, Marku
       // Attributes are not supposed to display HTML markup, so we just convert
       // the value to plain text.
       $value = PlainTextOutput::renderFromHtml($value);
-      $value = new HtmlAttributeString($name, $value);
+      $value = new HtmlAttributeScalar($name, $value);
     }
     else {
       // At this point, $value is float|int|string|null.
-      $value = new HtmlAttributeString($name, $value);
+      $value = new HtmlAttributeScalar($name, $value);
     }
 
     return $value;

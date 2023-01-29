@@ -4,7 +4,7 @@ namespace Drupal\Tests\Core\Template;
 
 use Drupal\Component\HtmlAttribute\HtmlAttributeArray;
 use Drupal\Component\HtmlAttribute\HtmlAttributeBoolean;
-use Drupal\Component\HtmlAttribute\HtmlAttributeString;
+use Drupal\Component\HtmlAttribute\HtmlAttributeScalar;
 use Drupal\Component\HtmlAttribute\HtmlAttributeValueBase;
 use Drupal\Core\Template\AttributeArray as CoreAttributeArray;
 use Drupal\Core\Template\AttributeBoolean as CoreAttributeBoolean;
@@ -26,10 +26,10 @@ class AttributeLegacyTest extends UnitTestCase {
   public function testCoreAttributeDeprecations(): void {
     $this->expectDeprecation('\Drupal\Core\Template\AttributeArray is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use \Drupal\Component\HtmlAttribute\HtmlAttributeArray instead. See https://www.drupal.org/node/3070485');
     $this->expectDeprecation('\Drupal\Core\Template\AttributeBoolean is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use \Drupal\Component\HtmlAttribute\HtmlAttributeBoolean instead. See https://www.drupal.org/node/3070485');
-    $this->expectDeprecation('\Drupal\Core\Template\AttributeString is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use \Drupal\Component\HtmlAttribute\HtmlAttributeString instead. See https://www.drupal.org/node/3070485');
+    $this->expectDeprecation('\Drupal\Core\Template\AttributeString is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use \Drupal\Component\HtmlAttribute\HtmlAttributeScalar instead. See https://www.drupal.org/node/3070485');
     $this->assertInstanceOf(HtmlAttributeArray::class, new CoreAttributeArray('a', ['test']));
     $this->assertInstanceOf(HtmlAttributeBoolean::class, new CoreAttributeBoolean('b', FALSE));
-    $this->assertInstanceOf(HtmlAttributeString::class, new CoreAttributeString('c', 'test'));
+    $this->assertInstanceOf(HtmlAttributeScalar::class, new CoreAttributeString('c', 'test'));
 
   }
 

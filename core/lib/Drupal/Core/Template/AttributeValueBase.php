@@ -12,7 +12,7 @@ use Drupal\Component\HtmlAttribute\HtmlAttributeValueBase as ComponentAttributeV
  * @see \Drupal\Core\Template\Attribute
  *
  * @deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use
- *   \Drupal\Component\HtmlAttribute\HtmlAttributeString instead.
+ *   \Drupal\Component\HtmlAttribute\HtmlAttributeScalar instead.
  *
  * @see https://www.drupal.org/node/3070485
  */

@@ -11,7 +11,7 @@ use Drupal\Component\Utility\Html;
  *
  * @see \Drupal\Component\HtmlAttribute\HtmlAttributeCollection
  */
-abstract class HtmlAttributeValueBase {
+abstract class HtmlAttributeValueBase implements \Stringable {
 
   /**
    * Renders '$name=""' if $value is an empty string.
@@ -25,12 +25,9 @@ abstract class HtmlAttributeValueBase {
    *
    * @param string $name
    *   The name of the value.
-   * @param scalar|array<scalar>|null $value
-   *   The value itself.
    */
   public function __construct(
     protected string $name,
-    protected string|int|bool|float|array|NULL $value,
   ) {
   }
 
@@ -45,7 +42,7 @@ abstract class HtmlAttributeValueBase {
    */
   public function render(): string {
     $value = (string) $this;
-    if (isset($this->value) && static::RENDER_EMPTY_ATTRIBUTE || !empty($value)) {
+    if (!is_null($this->doGetValue()) && static::RENDER_EMPTY_ATTRIBUTE || !empty($value)) {
       return Html::escape($this->name) . '="' . $value . '"';
     }
     return '';
@@ -58,8 +55,16 @@ abstract class HtmlAttributeValueBase {
    *   The raw value.
    */
   public function value(): string|int|bool|float|array|NULL {
-    return $this->value;
+    return $this->doGetValue();
   }
+
+  /**
+   * Returns the raw value, from the concrete class.
+   *
+   * @return scalar|array<scalar>|null
+   *   The raw value.
+   */
+  abstract protected function doGetValue(): string|int|bool|float|array|NULL;
 
   /**
    * Implements the magic __toString() method.
