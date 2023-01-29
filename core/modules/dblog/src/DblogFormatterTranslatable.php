@@ -17,7 +17,7 @@ class DblogFormatterTranslatable implements DblogFormatterInterface {
   /**
    * {@inheritdoc}
    */
-  public function format(string $message, ?array $variables, ?string $backtrace_string = NULL) : MarkupInterface {
+  public function format(string $message, ?array $variables, ?string $backtrace_string = NULL): MarkupInterface {
     if (empty($message) && empty($variables)) {
       return new FormattableMarkup('', []);
     }

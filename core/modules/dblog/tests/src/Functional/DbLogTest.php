@@ -278,7 +278,7 @@ class DbLogTest extends BrowserTestBase {
   }
 
   /**
-   * Test that twig errors are displayed correctly.
+   * Tests that twig errors are displayed correctly.
    */
   public function testMessageParsing(): void {
     $this->drupalLogin($this->adminUser);

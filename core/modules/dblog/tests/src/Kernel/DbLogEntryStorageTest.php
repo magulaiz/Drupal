@@ -48,7 +48,7 @@ class DbLogEntryStorageTest extends KernelTestBase {
   }
 
   /**
-   * Test createInstance method.
+   * Tests createInstance method.
    */
   public function testCreateInstance() {
     $this->assertEquals('dblog', $this->storage->getEntityTypeId());
@@ -56,7 +56,7 @@ class DbLogEntryStorageTest extends KernelTestBase {
   }
 
   /**
-   * Test deleteAll and hasData methods.
+   * Tests deleteAll and hasData methods.
    */
   public function testDeleteAll() {
     $this->generateLogEntries(5);
@@ -78,7 +78,7 @@ class DbLogEntryStorageTest extends KernelTestBase {
   }
 
   /**
-   * Test messageType method.
+   * Tests messageType method.
    */
   public function testMessageTypes() {
     $this->assertEquals([], $this->storage->messageTypes());
@@ -93,7 +93,7 @@ class DbLogEntryStorageTest extends KernelTestBase {
   }
 
   /**
-   * Test loadMultiple method.
+   * Tests loadMultiple method.
    */
   public function testLoadMultiple() {
     $this->assertEquals([], $this->storage->loadMultiple());
@@ -131,7 +131,7 @@ class DbLogEntryStorageTest extends KernelTestBase {
   }
 
   /**
-   * Test load and loadUnchanged methods.
+   * Tests load and loadUnchanged methods.
    */
   public function testLoad() {
     $this->generateLogEntries(3);
@@ -147,7 +147,7 @@ class DbLogEntryStorageTest extends KernelTestBase {
   }
 
   /**
-   * Test loadByProperties method.
+   * Tests loadByProperties method.
    */
   public function testLoadByProperties() {
     $logger = \Drupal::service('logger.factory')->get('dblog');
@@ -177,7 +177,7 @@ class DbLogEntryStorageTest extends KernelTestBase {
   }
 
   /**
-   * Test hasData method.
+   * Tests hasData method.
    */
   public function testHasData() {
     $this->assertFalse($this->storage->hasData());
@@ -186,7 +186,7 @@ class DbLogEntryStorageTest extends KernelTestBase {
   }
 
   /**
-   * Test aggregated query and get query methods.
+   * Tests aggregated query and get query methods.
    */
   public function testAggregateCount() {
     $this->generateLogEntries(2);
@@ -199,7 +199,7 @@ class DbLogEntryStorageTest extends KernelTestBase {
   }
 
   /**
-   * Test mostFrequentLogEntries method.
+   * Tests mostFrequentLogEntries method.
    */
   public function testMostFrequentLogs() {
     $logger = \Drupal::service('logger.factory')->get('dblog');
@@ -222,7 +222,7 @@ class DbLogEntryStorageTest extends KernelTestBase {
   }
 
   /**
-   * Test loadMostRecent method.
+   * Tests loadMostRecent method.
    */
   public function testLoadMostRecent() {
     $this->generateLogEntries(2, ['message' => 'First', 'channel' => 'node']);

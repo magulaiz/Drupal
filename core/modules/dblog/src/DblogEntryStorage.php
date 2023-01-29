@@ -15,7 +15,7 @@ class DblogEntryStorage extends SqlContentEntityStorage implements DblogEntrySto
   /**
    * {@inheritdoc}
    */
-  public function deleteAll(int $keep = 0) : void {
+  public function deleteAll(int $keep = 0): void {
     if ($keep < 0) {
       throw new \InvalidArgumentException('Value for $keep cannot be negative.');
     }
@@ -46,7 +46,7 @@ class DblogEntryStorage extends SqlContentEntityStorage implements DblogEntrySto
   /**
    * {@inheritdoc}
    */
-  public function messageTypes() : array {
+  public function messageTypes(): array {
     return $this->database->query('SELECT DISTINCT([type]) FROM {watchdog} ORDER BY [type]')
       ->fetchAllKeyed(0, 0);
   }
@@ -87,7 +87,7 @@ class DblogEntryStorage extends SqlContentEntityStorage implements DblogEntrySto
   /**
    * {@inheritdoc}
    */
-  public function mostFrequentLogEntries(string $type) : array {
+  public function mostFrequentLogEntries(string $type): array {
     $query = $this->database->select('watchdog', 'w');
     $query->addExpression('COUNT([wid])', 'count');
     $query = $query
@@ -122,7 +122,7 @@ class DblogEntryStorage extends SqlContentEntityStorage implements DblogEntrySto
   /**
    * {@inheritdoc}
    */
-  public function loadMostRecent(array $properties = []) : ?DblogEntryInterface {
+  public function loadMostRecent(array $properties = []): ?DblogEntryInterface {
     // Build a query to fetch the entity IDs.
     $query = $this->getQuery();
     $query->accessCheck(FALSE);
