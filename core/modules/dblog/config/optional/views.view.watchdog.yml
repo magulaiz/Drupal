@@ -26,7 +26,7 @@ display:
           field: nothing
           relationship: none
           group_type: group
-          admin_label: Icon
+          admin_label: 'Severity icon'
           plugin_id: custom
           label: ''
           exclude: false
@@ -58,7 +58,7 @@ display:
             preserve_tags: ''
             html: false
           element_type: ''
-          element_class: icon
+          element_class: severity-icon
           element_label_type: ''
           element_label_class: ''
           element_label_colon: false
