@@ -41,6 +41,31 @@ class AttributeLegacyTest extends UnitTestCase {
     $this->assertInstanceOf(HtmlAttributeValueBase::class, new class('a', ['test']) extends CoreAttributeValueBase {
 
       /**
+       * Constructs a test HtmlAttributeValue object.
+       *
+       * @param string $name
+       *   The name of the value.
+       * @param array $value
+       *   The value itself.
+       */
+      public function __construct(
+        string $name,
+        private array $value,
+      ) {
+        parent::__construct($name);
+      }
+
+      /**
+       * Returns the raw value.
+       *
+       * @return array
+       *   The raw value.
+       */
+      protected function doGetValue(): array {
+        return $this->value;
+      }
+
+      /**
        * Implements the magic __toString() method.
        */
       public function __toString(): string {
