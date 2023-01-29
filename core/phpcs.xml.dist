@@ -11,8 +11,6 @@
   <!-- Exclude third-party code maintained within core that does not follow our standards. -->
   <!-- @todo This rule may be removed when https://www.drupal.org/node/1848264 is resolved. -->
   <exclude-pattern>./core/lib/Drupal/Component/Diff/</exclude-pattern>
-  <!-- HtmlAttribute component is PHPStan level 9 compliant. -->
-  <exclude-pattern>./core/lib/Drupal/Component/HtmlAttribute/</exclude-pattern>
   <exclude-pattern>./core/tests/Drupal/Tests/Component/Annotation/Doctrine/</exclude-pattern>
 
   <!--Exclude test files that are intentionally empty, or intentionally violate coding standards.-->

@@ -26,14 +26,14 @@ class HtmlAttributeScalar extends HtmlAttributeValueBase {
   /**
    * Constructs an HtmlAttributeScalar object.
    *
-   * @param string $name
+   * @phpstan-param string $name
    *   The name of the value.
-   * @param string|int|float|NULL $scalarValue
+   * @phpstan-param string|int|float|null $scalarValue
    *   The value itself.
    */
   public function __construct(
     string $name,
-    private string|int|float|null $scalarValue,
+    private string|int|float|NULL $scalarValue,
   ) {
     parent::__construct($name);
   }
@@ -41,7 +41,7 @@ class HtmlAttributeScalar extends HtmlAttributeValueBase {
   /**
    * Returns the raw value.
    *
-   * @return string|int|float|null
+   * @phpstan-return string|int|float|null
    *   The raw value.
    */
   protected function doGetValue(): string|int|float|NULL {

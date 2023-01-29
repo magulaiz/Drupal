@@ -83,7 +83,7 @@ class HtmlAttributeCollection implements \ArrayAccess, \IteratorAggregate, \Stri
   /**
    * Constructs a \Drupal\Component\HtmlAttribute\HtmlAttributeCollection object.
    *
-   * @param HtmlAttributeCollection|array<scalar> $attributes
+   * @phpstan-param HtmlAttributeCollection|array<scalar> $attributes
    *   An associative array of key-value pairs to be converted to attributes.
    */
   public function __construct(HtmlAttributeCollection|array $attributes = []) {
@@ -95,9 +95,9 @@ class HtmlAttributeCollection implements \ArrayAccess, \IteratorAggregate, \Stri
   /**
    * Returns the value at the specified index.
    *
-   * @param string $key
+   * @phpstan-param string $key
    *
-   * @return HtmlAttributeValueBase|null
+   * @phpstan-return HtmlAttributeValueBase|null
    */
   public function offsetGet(mixed $key): ?HtmlAttributeValueBase {
     return $this->storage[$key] ?? NULL;
@@ -106,8 +106,8 @@ class HtmlAttributeCollection implements \ArrayAccess, \IteratorAggregate, \Stri
   /**
    * Sets the value at the specified index.
    *
-   * @param string $key
-   * @param MarkupInterface|HtmlAttributeValueBase|scalar|array<scalar>|null $value
+   * @phpstan-param string $key
+   * @phpstan-param MarkupInterface|HtmlAttributeValueBase|scalar|array<scalar>|null $value
    */
   public function offsetSet(mixed $key, mixed $value): void {
     $this->storage[$key] = $this->createAttributeValue($key, $value);
@@ -116,12 +116,12 @@ class HtmlAttributeCollection implements \ArrayAccess, \IteratorAggregate, \Stri
   /**
    * Creates the different types of attribute values.
    *
-   * @param string $name
+   * @phpstan-param string $name
    *   The attribute name.
-   * @param MarkupInterface|HtmlAttributeValueBase|scalar|array<scalar>|null $value
+   * @phpstan-param MarkupInterface|HtmlAttributeValueBase|scalar|array<scalar>|null $value
    *   The attribute value.
    *
-   * @return HtmlAttributeValueBase
+   * @phpstan-return HtmlAttributeValueBase
    *   An HtmlAttributeValueBase representation of the attribute's value.
    */
   protected function createAttributeValue(string $name, MarkupInterface|HtmlAttributeValueBase|string|int|bool|float|array|NULL $value): HtmlAttributeValueBase {
@@ -166,7 +166,7 @@ class HtmlAttributeCollection implements \ArrayAccess, \IteratorAggregate, \Stri
   /**
    * Unsets the value at the specified index.
    *
-   * @param string $key
+   * @phpstan-param string $key
    */
   public function offsetUnset(mixed $key): void {
     unset($this->storage[$key]);
@@ -175,7 +175,7 @@ class HtmlAttributeCollection implements \ArrayAccess, \IteratorAggregate, \Stri
   /**
    * Returns whether the requested index exists.
    *
-   * @param string $key
+   * @phpstan-param string $key
    */
   public function offsetExists(mixed $key): bool {
     return isset($this->storage[$key]);
@@ -184,10 +184,10 @@ class HtmlAttributeCollection implements \ArrayAccess, \IteratorAggregate, \Stri
   /**
    * Adds classes or merges them on to array of existing CSS classes.
    *
-   * @param string|string[]|null ...$args
+   * @phpstan-param string|string[]|null ...$args
    *   CSS classes to add to the class attribute array.
    *
-   * @return $this
+   * @phpstan-return $this
    */
   public function addClass(string|array|NULL ...$args): HtmlAttributeCollection {
     if ($args) {
@@ -217,12 +217,12 @@ class HtmlAttributeCollection implements \ArrayAccess, \IteratorAggregate, \Stri
   /**
    * Sets values for an attribute key.
    *
-   * @param string $attribute
+   * @phpstan-param string $attribute
    *   Name of the attribute.
-   * @param MarkupInterface|HtmlAttributeValueBase|scalar|array<scalar>|null $value
+   * @phpstan-param MarkupInterface|HtmlAttributeValueBase|scalar|array<scalar>|null $value
    *   Value(s) to set for the given attribute key.
    *
-   * @return $this
+   * @phpstan-return $this
    */
   public function setAttribute(string $attribute, MarkupInterface|HtmlAttributeValueBase|string|int|bool|float|array|NULL $value): HtmlAttributeCollection {
     $this->offsetSet($attribute, $value);
@@ -232,10 +232,10 @@ class HtmlAttributeCollection implements \ArrayAccess, \IteratorAggregate, \Stri
   /**
    * Checks if the storage has an attribute with the given name.
    *
-   * @param string $name
+   * @phpstan-param string $name
    *   The name of the attribute to check for.
    *
-   * @return bool
+   * @phpstan-return bool
    *   Returns TRUE if the attribute exists, or FALSE otherwise.
    */
   public function hasAttribute(string $name): bool {
@@ -245,10 +245,10 @@ class HtmlAttributeCollection implements \ArrayAccess, \IteratorAggregate, \Stri
   /**
    * Removes an attribute from an HtmlAttribute object.
    *
-   * @param string|string[] ...$args
+   * @phpstan-param string|string[] ...$args
    *   Attributes to remove from the attribute array.
    *
-   * @return $this
+   * @phpstan-return $this
    */
   public function removeAttribute(string|array ...$args): HtmlAttributeCollection {
     foreach ($args as $arg) {
@@ -268,10 +268,10 @@ class HtmlAttributeCollection implements \ArrayAccess, \IteratorAggregate, \Stri
   /**
    * Removes argument values from array of existing CSS classes.
    *
-   * @param string|string[] ...$args
+   * @phpstan-param string|string[] ...$args
    *   CSS classes to remove from the class attribute array.
    *
-   * @return $this
+   * @phpstan-return $this
    */
   public function removeClass(string|array ...$args): HtmlAttributeCollection {
     // With no class attribute, there is no need to remove.
@@ -299,7 +299,7 @@ class HtmlAttributeCollection implements \ArrayAccess, \IteratorAggregate, \Stri
    *
    * This method is implemented to take precedence over hasClass() for Twig 2.0.
    *
-   * @return \Drupal\Component\HtmlAttribute\HtmlAttributeValueBase|null
+   * @phpstan-return HtmlAttributeValueBase|null
    *   The class attribute value if set, NULL otherwise.
    *
    * @see twig_get_attribute()
@@ -311,10 +311,10 @@ class HtmlAttributeCollection implements \ArrayAccess, \IteratorAggregate, \Stri
   /**
    * Checks if the class array has the given CSS class.
    *
-   * @param string $class
+   * @phpstan-param string $class
    *   The CSS class to check for.
    *
-   * @return bool
+   * @phpstan-return bool
    *   Returns TRUE if the class exists, or FALSE otherwise.
    */
   public function hasClass(string $class): bool {
@@ -345,7 +345,7 @@ class HtmlAttributeCollection implements \ArrayAccess, \IteratorAggregate, \Stri
   /**
    * Returns all storage elements as an array.
    *
-   * @return array<string, scalar|array<scalar>|null>
+   * @phpstan-return array<string, scalar|array<scalar>|null>
    *   An associative array of attributes.
    */
   public function toArray(): array {
@@ -368,7 +368,7 @@ class HtmlAttributeCollection implements \ArrayAccess, \IteratorAggregate, \Stri
   /**
    * Retrieves an external iterator.
    *
-   * @return \ArrayIterator<string, HtmlAttributeValueBase>
+   * @phpstan-return \ArrayIterator<string, HtmlAttributeValueBase>
    */
   public function getIterator(): \Traversable {
     return new \ArrayIterator($this->storage);
@@ -377,7 +377,7 @@ class HtmlAttributeCollection implements \ArrayAccess, \IteratorAggregate, \Stri
   /**
    * Returns the whole array.
    *
-   * @return array<string, HtmlAttributeValueBase>
+   * @phpstan-return array<string, HtmlAttributeValueBase>
    */
   public function storage(): array {
     return $this->storage;
@@ -386,7 +386,7 @@ class HtmlAttributeCollection implements \ArrayAccess, \IteratorAggregate, \Stri
   /**
    * Returns a representation of the object for use in JSON serialization.
    *
-   * @return string
+   * @phpstan-return string
    *   The safe string content.
    */
   public function jsonSerialize(): string {
@@ -396,10 +396,10 @@ class HtmlAttributeCollection implements \ArrayAccess, \IteratorAggregate, \Stri
   /**
    * Merges an Attribute object into the current storage.
    *
-   * @param \Drupal\Component\HtmlAttribute\HtmlAttributeCollection $collection
+   * @phpstan-param \Drupal\Component\HtmlAttribute\HtmlAttributeCollection $collection
    *   The Attribute object to merge.
    *
-   * @return $this
+   * @phpstan-return $this
    */
   public function merge(HtmlAttributeCollection $collection): HtmlAttributeCollection {
     $merged_attributes = NestedArray::mergeDeep($this->toArray(), $collection->toArray());

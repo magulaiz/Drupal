@@ -37,7 +37,7 @@ abstract class HtmlAttributeValueBase implements \Stringable {
    * While __toString only returns the value in a string form, render()
    * contains the name of the attribute as well.
    *
-   * @return string
+   * @phpstan-return string
    *   The string representation of the attribute.
    */
   public function render(): string {
@@ -51,7 +51,7 @@ abstract class HtmlAttributeValueBase implements \Stringable {
   /**
    * Returns the raw value.
    *
-   * @return scalar|array<scalar>|null
+   * @phpstan-return scalar|array<scalar>|null
    *   The raw value.
    */
   public function value(): string|int|bool|float|array|NULL {
@@ -61,7 +61,7 @@ abstract class HtmlAttributeValueBase implements \Stringable {
   /**
    * Returns the raw value, from the concrete class.
    *
-   * @return scalar|array<scalar>|null
+   * @phpstan-return scalar|array<scalar>|null
    *   The raw value.
    */
   abstract protected function doGetValue(): string|int|bool|float|array|NULL;
