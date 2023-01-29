@@ -13,7 +13,7 @@ class PhpPassword implements PasswordInterface {
    * Constructs a new password hashing instance.
    *
    * @param string $algorithm
-   *   The hashing algorithm to use. Defaults to php default.
+   *   The hashing algorithm to use. Defaults to PHP default.
    * @param array $options
    *   List of options. Refer to password_hash() for available options.
    *
