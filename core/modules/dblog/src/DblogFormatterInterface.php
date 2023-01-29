@@ -23,6 +23,6 @@ interface DblogFormatterInterface {
    * @return \Drupal\Component\Render\MarkupInterface
    *   The markup of the rendered event.
    */
-  public function format(string $message, array $variables, ?string $backtrace_string = NULL) : MarkupInterface;
+  public function format(string $message, array $variables, ?string $backtrace_string = NULL): MarkupInterface;
 
 }

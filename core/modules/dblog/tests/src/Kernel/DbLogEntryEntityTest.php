@@ -34,7 +34,7 @@ class DbLogEntryEntityTest extends KernelTestBase {
   }
 
   /**
-   * Test creation of log entries.
+   * Tests creation of log entries.
    */
   public function testCreate() {
     $log = DblogEntry::create([
@@ -72,7 +72,7 @@ class DbLogEntryEntityTest extends KernelTestBase {
   }
 
   /**
-   * Test loading a log entry.
+   * Tests loading a log entry.
    */
   public function testLoad() {
     $this->generateLogEntries(1);
@@ -84,7 +84,7 @@ class DbLogEntryEntityTest extends KernelTestBase {
   }
 
   /**
-   * Test deletion of log entries.
+   * Tests deletion of log entries.
    */
   public function testDelete() {
     $this->generateLogEntries(1);
@@ -94,7 +94,7 @@ class DbLogEntryEntityTest extends KernelTestBase {
   }
 
   /**
-   * Test the log entries cannot be updated once created.
+   * Tests that the log entries cannot be updated once created.
    */
   public function testUpdate() {
     $this->generateLogEntries(1);
@@ -107,7 +107,7 @@ class DbLogEntryEntityTest extends KernelTestBase {
   }
 
   /**
-   * Test common dblog fields.
+   * Tests common dblog fields.
    */
   public function testHasField() {
     $fields = [
@@ -132,7 +132,7 @@ class DbLogEntryEntityTest extends KernelTestBase {
   }
 
   /**
-   * Test field definitions.
+   * Tests field definitions.
    */
   public function testFieldDefinition() {
     $fields = [
@@ -160,7 +160,7 @@ class DbLogEntryEntityTest extends KernelTestBase {
   }
 
   /**
-   * Test format message method.
+   * Tests format message method.
    */
   public function testFormatMessage() {
     $dblog_formatter = \Drupal::service('dblog.formatter');
@@ -185,7 +185,7 @@ class DbLogEntryEntityTest extends KernelTestBase {
   }
 
   /**
-   * Test validate methods.
+   * Tests validate methods.
    */
   public function testValidate() {
     $log = DblogEntry::create();
@@ -196,7 +196,7 @@ class DbLogEntryEntityTest extends KernelTestBase {
   }
 
   /**
-   * Test toArray method.
+   * Tests toArray method.
    */
   public function testToArray() {
     $this->generateLogEntries(1, ['timestamp' => 1632269259]);

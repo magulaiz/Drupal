@@ -20,7 +20,7 @@ class DbLogTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['dblog', 'system', 'user'];
+  protected static $modules = ['dblog', 'system'];
 
   /**
    * {@inheritdoc}
