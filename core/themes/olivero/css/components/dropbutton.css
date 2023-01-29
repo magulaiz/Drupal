@@ -31,9 +31,10 @@
   border-radius: 0.1875rem
 }
 
-@supports (width: max-content) {
+@supports ((width: -webkit-max-content) or (width: max-content)) {
 
 .dropbutton-widget {
+    width: -webkit-max-content;
     width: max-content
 }
   }
