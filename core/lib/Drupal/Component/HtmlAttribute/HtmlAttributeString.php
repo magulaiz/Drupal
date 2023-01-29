@@ -27,6 +27,7 @@ class HtmlAttributeString extends HtmlAttributeValueBase {
    * Implements the magic __toString() method.
    */
   public function __toString(): string {
+    assert(is_scalar($this->value) || is_null($this->value));
     return Html::escape((string) $this->value);
   }
 

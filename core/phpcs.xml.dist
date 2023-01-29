@@ -12,6 +12,9 @@
   <!-- @todo This rule may be removed when https://www.drupal.org/node/1848264 is resolved. -->
   <exclude-pattern>./core/lib/Drupal/Component/Diff/</exclude-pattern>
   <exclude-pattern>./core/tests/Drupal/Tests/Component/Annotation/Doctrine/</exclude-pattern>
+  <!-- Exclude component code that has PHPStan compliance levels higher than the rest of Drupal core. -->
+  <!-- HtmlAttribute component is PHPStan level 9 compliant. -->
+  <exclude-pattern>./core/lib/Drupal/Component/HtmlAttribute/</exclude-pattern>
 
   <!--Exclude test files that are intentionally empty, or intentionally violate coding standards.-->
   <exclude-pattern>./modules/system/tests/fixtures/HtaccessTest</exclude-pattern>

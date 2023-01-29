@@ -67,20 +67,23 @@ use Drupal\Component\Utility\NestedArray;
  * @see \Drupal\Component\Utility\Html::escape()
  * @see \Drupal\Component\Render\PlainTextOutput::renderFromHtml()
  * @see \Drupal\Component\Utility\UrlHelper::stripDangerousProtocols()
+ *
+ * @implements \ArrayAccess<string, HtmlAttributeValueBase>
+ * @implements \IteratorAggregate<string, HtmlAttributeValueBase>
  */
 class HtmlAttributeCollection implements \ArrayAccess, \IteratorAggregate, MarkupInterface {
 
   /**
    * Stores the attribute data.
    *
-   * @var \Drupal\Component\HtmlAttribute\HtmlAttributeValueBase[]
+   * @var array<string, HtmlAttributeValueBase>
    */
   protected array $storage = [];
 
   /**
    * Constructs a \Drupal\Component\HtmlAttribute\HtmlAttributeCollection object.
    *
-   * @param \Drupal\Component\HtmlAttribute\HtmlAttributeCollection|array $attributes
+   * @param HtmlAttributeCollection|array<scalar> $attributes
    *   An associative array of key-value pairs to be converted to attributes.
    */
   public function __construct(HtmlAttributeCollection|array $attributes = []) {
@@ -90,17 +93,24 @@ class HtmlAttributeCollection implements \ArrayAccess, \IteratorAggregate, Marku
   }
 
   /**
-   * {@inheritdoc}
+   * Returns the value at the specified index.
+   *
+   * @param string $key
+   *
+   * @return HtmlAttributeValueBase|null
    */
-  public function offsetGet(mixed $name): mixed {
-    return $this->storage[$name] ?? NULL;
+  public function offsetGet(mixed $key): ?HtmlAttributeValueBase {
+    return $this->storage[$key] ?? NULL;
   }
 
   /**
-   * {@inheritdoc}
+   * Sets the value at the specified index.
+   *
+   * @param string $key
+   * @param MarkupInterface|HtmlAttributeValueBase|scalar|array<scalar>|null $value
    */
-  public function offsetSet(mixed $name, mixed $value): void {
-    $this->storage[$name] = $this->createAttributeValue($name, $value);
+  public function offsetSet(mixed $key, mixed $value): void {
+    $this->storage[$key] = $this->createAttributeValue($key, $value);
   }
 
   /**
@@ -108,10 +118,10 @@ class HtmlAttributeCollection implements \ArrayAccess, \IteratorAggregate, Marku
    *
    * @param string $name
    *   The attribute name.
-   * @param \Drupal\Component\Render\MarkupInterface|\Drupal\Component\HtmlAttribute\HtmlAttributeValueBase|string|int|bool|float|array|null $value
+   * @param MarkupInterface|HtmlAttributeValueBase|scalar|array<scalar>|null $value
    *   The attribute value.
    *
-   * @return \Drupal\Component\HtmlAttribute\HtmlAttributeValueBase
+   * @return HtmlAttributeValueBase
    *   An HtmlAttributeValueBase representation of the attribute's value.
    */
   protected function createAttributeValue(string $name, MarkupInterface|HtmlAttributeValueBase|string|int|bool|float|array|NULL $value): HtmlAttributeValueBase {
@@ -149,27 +159,32 @@ class HtmlAttributeCollection implements \ArrayAccess, \IteratorAggregate, Marku
       // At this point, $value is float|int|string|null.
       $value = new HtmlAttributeString($name, $value);
     }
+
     return $value;
   }
 
   /**
-   * {@inheritdoc}
+   * Unsets the value at the specified index.
+   *
+   * @param string $key
    */
-  public function offsetUnset(mixed $name): void {
-    unset($this->storage[$name]);
+  public function offsetUnset(mixed $key): void {
+    unset($this->storage[$key]);
   }
 
   /**
-   * {@inheritdoc}
+   * Returns whether the requested index exists.
+   *
+   * @param string $key
    */
-  public function offsetExists(mixed $name): bool {
-    return isset($this->storage[$name]);
+  public function offsetExists(mixed $key): bool {
+    return isset($this->storage[$key]);
   }
 
   /**
    * Adds classes or merges them on to array of existing CSS classes.
    *
-   * @param string|array|null ...$args
+   * @param string|string[]|null ...$args
    *   CSS classes to add to the class attribute array.
    *
    * @return $this
@@ -187,7 +202,9 @@ class HtmlAttributeCollection implements \ArrayAccess, \IteratorAggregate, Marku
       // Merge if there are values, just add them otherwise.
       if (isset($this->storage['class']) && $this->storage['class'] instanceof HtmlAttributeArray) {
         // Merge the values passed in from the class value array.
-        $classes = array_merge($this->storage['class']->value(), $classes);
+        $storedValue = $this->storage['class']->value();
+        assert(is_array($storedValue));
+        $classes = array_merge($storedValue, $classes);
         $this->storage['class']->exchangeArray($classes);
       }
       else {
@@ -202,14 +219,13 @@ class HtmlAttributeCollection implements \ArrayAccess, \IteratorAggregate, Marku
    *
    * @param string $attribute
    *   Name of the attribute.
-   * @param mixed $value
+   * @param MarkupInterface|HtmlAttributeValueBase|scalar|array<scalar>|null $value
    *   Value(s) to set for the given attribute key.
    *
    * @return $this
    */
-  public function setAttribute(string $attribute, $value): HtmlAttributeCollection {
+  public function setAttribute(string $attribute, MarkupInterface|HtmlAttributeValueBase|string|int|bool|float|array|NULL $value): HtmlAttributeCollection {
     $this->offsetSet($attribute, $value);
-
     return $this;
   }
 
@@ -229,12 +245,12 @@ class HtmlAttributeCollection implements \ArrayAccess, \IteratorAggregate, Marku
   /**
    * Removes an attribute from an HtmlAttribute object.
    *
-   * @param string|array|null ...$args
+   * @param string|string[] ...$args
    *   Attributes to remove from the attribute array.
    *
    * @return $this
    */
-  public function removeAttribute(string|array|NULL ...$args): HtmlAttributeCollection {
+  public function removeAttribute(string|array ...$args): HtmlAttributeCollection {
     foreach ($args as $arg) {
       // Support arrays or multiple arguments.
       if (is_array($arg)) {
@@ -252,12 +268,12 @@ class HtmlAttributeCollection implements \ArrayAccess, \IteratorAggregate, Marku
   /**
    * Removes argument values from array of existing CSS classes.
    *
-   * @param string|array|null ...$args
+   * @param string|string[] ...$args
    *   CSS classes to remove from the class attribute array.
    *
    * @return $this
    */
-  public function removeClass(string|array|NULL ...$args): HtmlAttributeCollection {
+  public function removeClass(string|array ...$args): HtmlAttributeCollection {
     // With no class attribute, there is no need to remove.
     if (isset($this->storage['class']) && $this->storage['class'] instanceof HtmlAttributeArray) {
       $classes = [];
@@ -270,7 +286,9 @@ class HtmlAttributeCollection implements \ArrayAccess, \IteratorAggregate, Marku
 
       // Remove the values passed in from the value array. Use array_values() to
       // ensure that the array index remains sequential.
-      $classes = array_values(array_diff($this->storage['class']->value(), $classes));
+      $storedValue = $this->storage['class']->value();
+      assert(is_array($storedValue));
+      $classes = array_values(array_diff($storedValue, $classes));
       $this->storage['class']->exchangeArray($classes);
     }
     return $this;
@@ -301,7 +319,9 @@ class HtmlAttributeCollection implements \ArrayAccess, \IteratorAggregate, Marku
    */
   public function hasClass(string $class): bool {
     if (isset($this->storage['class']) && $this->storage['class'] instanceof HtmlAttributeArray) {
-      return in_array($class, $this->storage['class']->value());
+      $storedValue = $this->storage['class']->value();
+      assert(is_array($storedValue));
+      return in_array($class, $storedValue);
     }
     else {
       return FALSE;
@@ -325,7 +345,7 @@ class HtmlAttributeCollection implements \ArrayAccess, \IteratorAggregate, Marku
   /**
    * Returns all storage elements as an array.
    *
-   * @return array
+   * @return array<string, scalar|array<scalar>|null>
    *   An associative array of attributes.
    */
   public function toArray(): array {
@@ -333,7 +353,6 @@ class HtmlAttributeCollection implements \ArrayAccess, \IteratorAggregate, Marku
     foreach ($this->storage as $name => $value) {
       $return[$name] = $value->value();
     }
-
     return $return;
   }
 
@@ -347,7 +366,9 @@ class HtmlAttributeCollection implements \ArrayAccess, \IteratorAggregate, Marku
   }
 
   /**
-   * {@inheritdoc}
+   * Retrieves an external iterator.
+   *
+   * @return \ArrayIterator<string, HtmlAttributeValueBase>
    */
   public function getIterator(): \Traversable {
     return new \ArrayIterator($this->storage);
@@ -355,6 +376,8 @@ class HtmlAttributeCollection implements \ArrayAccess, \IteratorAggregate, Marku
 
   /**
    * Returns the whole array.
+   *
+   * @return array<string, HtmlAttributeValueBase>
    */
   public function storage(): array {
     return $this->storage;
