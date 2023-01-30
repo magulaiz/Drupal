@@ -80,4 +80,56 @@ class DbLogEntryTest extends KernelTestBase {
     $this->assertEquals('Log data is corrupted and cannot be unserialized: Sample message with placeholder: @placeholder', $formatted);
   }
 
+  /**
+   * Tests serializing and unserializing against the `variables` field.
+   */
+  public function testSerialization() {
+    $foo = new Foo();
+    $random = $this->randomMachineName();
+    \Drupal::logger('dblog_test')->info("$random @foo", [
+      '@foo' => $foo,
+    ]);
+    $query = \Drupal::database()->select('watchdog');
+    $query->addExpression('MAX([wid])');
+    $last_id = $query->execute()->fetchField();
+    $dblog = DblogEntry::load($last_id);
+    // Make sure it's the right entry being saved.
+    $this->assertEquals("$random @foo", $dblog->get('message')->value);
+    $null_byte = chr(0);
+    $variables = $dblog->get('variables')->value;
+    // Get `variables` from saved entry, and it should contains Null byte(s).
+    $this->assertNotFalse(strpos($variables, $null_byte));
+    $variables = unserialize($variables, ['allowed_classes' => TRUE]);
+    $this->assertEquals(3, $variables['@foo']->public);
+
+  }
+
+}
+
+/**
+ * A Foo class for testing.
+ */
+class Foo {
+
+  /**
+   * A private property.
+   *
+   * @var int
+   */
+  private $private = 1;
+
+  /**
+   * A protected property.
+   *
+   * @var int
+   */
+  protected $protected = 2;
+
+  /**
+   * A public property.
+   *
+   * @var int
+   */
+  public $public = 3;
+
 }

@@ -4,7 +4,6 @@ namespace Drupal\Tests\dblog\Kernel;
 
 use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Database\Database;
-use Drupal\dblog\Entity\DblogEntry;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\Tests\dblog\Functional\FakeLogEntries;
 
@@ -87,50 +86,5 @@ class DbLogTest extends KernelTestBase {
 
     return $current_id - $last_id;
   }
-
-  /**
-   * Tests serializing and unserializing against the `variables` field.
-   */
-  public function testSerialization() {
-    $foo = new Foo();
-    \Drupal::logger('dblog_test')->info('Foo %foo', [
-      '%foo' => $foo,
-    ]);
-    $query = \Drupal::database()->select('watchdog');
-    $query->addExpression('MAX([wid])');
-    $last_id = $query->execute()->fetchField();
-    $dblog = DblogEntry::load($last_id);
-    $variables = unserialize($dblog->get('variables')->value);
-    $this->assertEquals('Foo %foo', $dblog->get('message')->value);
-    $this->assertEquals(3, $variables['%foo']->public);
-  }
-
-}
-
-/**
- * A Foo class for testing.
- */
-class Foo {
-
-  /**
-   * A private property.
-   *
-   * @var int
-   */
-  private $private = 1;
-
-  /**
-   * A protected property.
-   *
-   * @var int
-   */
-  protected $protected = 2;
-
-  /**
-   * A public property.
-   *
-   * @var int
-   */
-  public $public = 3;
 
 }
