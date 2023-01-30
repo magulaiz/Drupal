@@ -152,7 +152,7 @@ class FormAjaxSubscriber implements EventSubscriberInterface {
    * @return string
    *   The formatted size.
    *
-   * @deprecated in drupal:9.4.0 and is removed from drupal:10.0.0. Use
+   * @deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use
    *   \Drupal\Core\StringTranslation\ByteSizeMarkup::create() instead.
    *
    * @see https://www.drupal.org/node/2999981

@@ -132,14 +132,14 @@ const JS_THEME = 100;
  * @return \Drupal\Core\StringTranslation\TranslatableMarkup
  *   A translated string representation of the size.
  *
- * @deprecated in drupal:9.4.0 and is removed from drupal:10.0.0. Use
+ * @deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use
  *   \Drupal\Core\StringTranslation\ByteSizeMarkup::create($size, $langcode)
  *   instead.
  *
  * @see https://www.drupal.org/node/2999981
  */
 function format_size($size, $langcode = NULL) {
-  @trigger_error('format_size() is deprecated in drupal:9.4.0 and is removed from drupal:10.0.0. Use \Drupal\Core\StringTranslation\ByteSizeMarkup::create($size, $langcode) instead. See https://www.drupal.org/node/2999981', E_USER_DEPRECATED);
+  @trigger_error('format_size() is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use \Drupal\Core\StringTranslation\ByteSizeMarkup::create($size, $langcode) instead. See https://www.drupal.org/node/2999981', E_USER_DEPRECATED);
   return ByteSizeMarkup::create($size, $langcode);
 }
 
