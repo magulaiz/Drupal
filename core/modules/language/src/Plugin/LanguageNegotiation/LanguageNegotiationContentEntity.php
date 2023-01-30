@@ -91,13 +91,13 @@ class LanguageNegotiationContentEntity extends LanguageNegotiationMethodBase imp
    */
   public function getLangcode(Request $request = NULL) {
     if ($request === NULL || $this->languageManager === NULL) {
-      return FALSE;
+      return NULL;
     }
 
     $langcode = $request->query->get(static::QUERY_PARAMETER);
 
     $language_enabled = array_key_exists($langcode, $this->languageManager->getLanguages());
-    return $language_enabled ? $langcode : FALSE;
+    return $language_enabled ? $langcode : NULL;
   }
 
   /**
