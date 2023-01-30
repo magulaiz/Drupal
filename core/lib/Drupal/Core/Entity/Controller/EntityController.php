@@ -68,6 +68,11 @@ class EntityController implements ContainerInjectionInterface {
   protected UrlGeneratorInterface $urlGenerator;
 
   /**
+   * The route match.
+   */
+  protected RouteMatchInterface $routeMatch;
+
+  /**
    * Constructs a new EntityController.
    *
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
@@ -82,14 +87,17 @@ class EntityController implements ContainerInjectionInterface {
    *   The string translation.
    * @param \Drupal\Core\Routing\UrlGeneratorInterface $url_generator
    *   The URL generator.
+   * @param \Drupal\Core\Routing\RouteMatchInterface $route_match
+   *   The route match.
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager, EntityTypeBundleInfoInterface $entity_type_bundle_info, EntityRepositoryInterface $entity_repository, RendererInterface $renderer, TranslationInterface $string_translation, UrlGeneratorInterface $url_generator) {
+  public function __construct(EntityTypeManagerInterface $entity_type_manager, EntityTypeBundleInfoInterface $entity_type_bundle_info, EntityRepositoryInterface $entity_repository, RendererInterface $renderer, TranslationInterface $string_translation, UrlGeneratorInterface $url_generator, RouteMatchInterface $route_match) {
     $this->entityTypeManager = $entity_type_manager;
     $this->entityTypeBundleInfo = $entity_type_bundle_info;
     $this->entityRepository = $entity_repository;
     $this->renderer = $renderer;
     $this->stringTranslation = $string_translation;
     $this->urlGenerator = $url_generator;
+    $this->routeMatch = $route_match;
   }
 
   /**
@@ -102,7 +110,8 @@ class EntityController implements ContainerInjectionInterface {
       $container->get('entity.repository'),
       $container->get('renderer'),
       $container->get('string_translation'),
-      $container->get('url_generator')
+      $container->get('url_generator'),
+      $container->get('current_route_match')
     );
   }
 
@@ -182,7 +191,9 @@ class EntityController implements ContainerInjectionInterface {
     if (count($bundles) == 1) {
       $bundle_names = array_keys($bundles);
       $bundle_name = reset($bundle_names);
-      return $this->redirect($form_route_name, [$bundle_argument => $bundle_name]);
+      $parameters = $this->routeMatch->getRawParameters()->all();
+      $parameters[$bundle_argument] = $bundle_name;
+      return $this->redirect($form_route_name, $parameters);
     }
     // Prepare the #bundles array for the template.
     foreach ($bundles as $bundle_name => $bundle_info) {
