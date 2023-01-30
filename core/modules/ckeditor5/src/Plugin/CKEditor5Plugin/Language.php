@@ -42,23 +42,23 @@ class Language extends CKEditor5PluginDefault implements CKEditor5PluginConfigur
    *   The plugin_id for the plugin instance.
    * @param \Drupal\ckeditor5\Plugin\CKEditor5PluginDefinition|null $plugin_definition
    *   The plugin implementation definition.
-   * @param \Drupal\Core\Language\LanguageManagerInterface $language_mananger
+   * @param \Drupal\Core\Language\LanguageManagerInterface $language_manager
    *   The language manager.
    */
-  public function __construct(array $configuration, string $plugin_id, ?CKEditor5PluginDefinition $plugin_definition, LanguageManagerInterface $language_mananger) {
+  public function __construct(array $configuration, string $plugin_id, ?CKEditor5PluginDefinition $plugin_definition, LanguageManagerInterface $language_manager) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
-    $this->languageManager = $language_mananger;
+    $this->languageManager = $language_manager;
   }
 
   /**
-   * {@inheritDoc}
+   * {@inheritdoc}
    */
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
     return new static(
       $configuration,
       $plugin_id,
       $plugin_definition,
-      $container->get('language_mananger'),
+      $container->get('language_manager'),
     );
   }
 
@@ -71,20 +71,20 @@ class Language extends CKEditor5PluginDefault implements CKEditor5PluginConfigur
         $predefined_languages = LanguageManager::getStandardLanguageList();
         break;
 
-    case 'enabled':
-          $enabled_languages = $this->languageManager->getLanguages();
-          $predefined_languages = [];
-          foreach ($enabled_languages as $language) {
-            $predefined_languages[$language->getId()] = [
-              $language->getName(),
-              $language->getDirection() === "rtl" ? LanguageInterface::DIRECTION_RTL : $language,
-            ];
-          }
-          break;
+      case 'enabled':
+        $enabled_languages = $this->languageManager->getLanguages();
+        $predefined_languages = [];
+        foreach ($enabled_languages as $language) {
+          $predefined_languages[$language->getId()] = [
+            $language->getName(),
+             $language->getDirection() === "rtl" ? LanguageInterface::DIRECTION_RTL : $language,
+          ];
+        }
+        break;
 
-        case 'un':
-        default:
-          $predefined_languages = LanguageManager::getUnitedNationsLanguageList();
+      case 'un':
+      default:
+        $predefined_languages = LanguageManager::getUnitedNationsLanguageList();
     }
 
     // Generate the language_list setting as expected by the CKEditor Language
