@@ -77,6 +77,8 @@ function template_preprocess_image_style_preview(&$variables) {
     $preview_image = $image_factory->get($preview_file);
   }
 
+  assert(isset($preview_image));
+
   $variables['derivative'] = [
     'url' => $file_url_generator->generateString($preview_file),
     'width' => $preview_image->getWidth(),

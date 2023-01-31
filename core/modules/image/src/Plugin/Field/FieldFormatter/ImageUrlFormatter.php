@@ -10,6 +10,7 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Link;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Url;
+use Drupal\image\ImageProcessor;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -40,6 +41,13 @@ class ImageUrlFormatter extends ImageFormatterBase {
   protected $currentUser;
 
   /**
+   * The image processor service.
+   *
+   * @var \Drupal\image\ImageProcessor
+   */
+  protected $imageProcessor;
+
+  /**
    * Constructs an ImageFormatter object.
    *
    * @param string $plugin_id
@@ -60,12 +68,15 @@ class ImageUrlFormatter extends ImageFormatterBase {
    *   The image style storage.
    * @param \Drupal\Core\Session\AccountInterface $current_user
    *   The current user.
+   * @param \Drupal\image\ImageProcessor $image_processor
+   *   The image processor service.
    */
-  public function __construct($plugin_id, $plugin_definition, FieldDefinitionInterface $field_definition, array $settings, $label, $view_mode, array $third_party_settings, EntityStorageInterface $image_style_storage, AccountInterface $current_user) {
+  public function __construct($plugin_id, $plugin_definition, FieldDefinitionInterface $field_definition, array $settings, $label, $view_mode, array $third_party_settings, EntityStorageInterface $image_style_storage, AccountInterface $current_user, ImageProcessor $image_processor = NULL) {
     parent::__construct($plugin_id, $plugin_definition, $field_definition, $settings, $label, $view_mode, $third_party_settings);
     $this->imageStyleStorage = $image_style_storage;
     $this->currentUser = $current_user;
-  }
+    $this->imageProcessor = $image_processor;
+   }
 
   /**
    * {@inheritdoc}
@@ -81,6 +92,7 @@ class ImageUrlFormatter extends ImageFormatterBase {
       $configuration['third_party_settings'],
       $container->get('entity_type.manager')->getStorage('image_style'),
       $container->get('current_user'),
+      $container->get('image.processor'),
     );
   }
 

@@ -402,10 +402,9 @@ class ImageDerivativeSubscriber implements EventSubscriberInterface {
     }
 
     $pipeline->setVariable('derivativeImageUrl', Url::fromUri($validated_uri, [
-        'absolute' => TRUE,
-        'query' => $token_query,
-      ])
-    );
+      'absolute' => TRUE,
+      'query' => $token_query,
+    ]));
   }
 
   /**
