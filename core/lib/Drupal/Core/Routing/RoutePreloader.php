@@ -6,8 +6,7 @@ use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\State\StateInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Symfony\Component\HttpKernel\Event\KernelEvent;
-use Symfony\Component\HttpKernel\KernelEvents;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Route;
 
 /**
@@ -66,12 +65,12 @@ class RoutePreloader implements EventSubscriberInterface {
   /**
    * Loads all non-admin routes right before the actual page is rendered.
    *
-   * @param \Symfony\Component\HttpKernel\Event\KernelEvent $event
-   *   The event to process.
+   * @param \Symfony\Component\HttpFoundation\Request $request
+   *   The request.
    */
-  public function onRequest(KernelEvent $event) {
+  public function preloadRoutes(Request $request) {
     // Only preload on normal HTML pages, as they will display menu links.
-    if ($this->routeProvider instanceof PreloadableRouteProviderInterface && $event->getRequest()->getRequestFormat() == 'html') {
+    if ($this->routeProvider instanceof PreloadableRouteProviderInterface && $request->getRequestFormat() == 'html') {
 
       // Ensure that the state query is cached to skip the database query, if
       // possible.
@@ -122,9 +121,6 @@ class RoutePreloader implements EventSubscriberInterface {
     // Set a really low priority to catch as many as possible routes.
     $events[RoutingEvents::ALTER] = ['onAlterRoutes', -1024];
     $events[RoutingEvents::FINISHED] = ['onFinishedRoutes'];
-    // Load the routes before the controller is executed (which happens after
-    // the kernel request event).
-    $events[KernelEvents::REQUEST][] = ['onRequest'];
     return $events;
   }
 

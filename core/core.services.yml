@@ -987,7 +987,7 @@ services:
       - { name: 'event_subscriber' }
   url_generator.non_bubbling:
     class: Drupal\Core\Routing\UrlGenerator
-    arguments: ['@router.route_provider', '@path_processor_manager', '@route_processor_manager', '@request_stack', '%filter_protocols%']
+    arguments: ['@router.route_provider', '@path_processor_manager', '@route_processor_manager', '@request_stack', '@router.route_preloader', '%filter_protocols%']
     public: false
     calls:
       - [setContext, ['@?router.request_context']]
