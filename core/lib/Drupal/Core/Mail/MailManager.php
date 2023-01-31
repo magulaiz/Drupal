@@ -48,10 +48,8 @@ class MailManager extends DefaultPluginManager implements MailManagerInterface {
 
   /**
    * The logger service.
-   *
-   * @var \Psr\Log\LoggerInterface
    */
-  protected $logger;
+  protected LoggerInterface $logger;
 
   /**
    * The renderer.

@@ -487,6 +487,9 @@ services:
   logger.channel.form:
     parent: logger.channel_base
     arguments: ['form']
+  logger.channel.mail:
+    parent: logger.channel_base
+    arguments: ['mail']
   logger.channel.security:
     parent: logger.channel_base
     arguments: ['security']
