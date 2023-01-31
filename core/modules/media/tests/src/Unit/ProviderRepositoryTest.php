@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\media\Unit;
 
+use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Core\KeyValueStore\KeyValueMemoryFactory;
 use Drupal\Core\Logger\LoggerChannelFactory;
 use Drupal\Core\Logger\RfcLogLevel;
@@ -76,8 +77,6 @@ class ProviderRepositoryTest extends UnitTestCase {
     $time->getCurrentTime()->willReturn($this->currentTime);
 
     $this->logger = $this->prophesize('\Psr\Log\LoggerInterface');
-    $logger_factory = new LoggerChannelFactory();
-    $logger_factory->addLogger($this->logger->reveal());
 
     $this->responses = new MockHandler();
     $client = new Client([
@@ -88,7 +87,28 @@ class ProviderRepositoryTest extends UnitTestCase {
       $config_factory,
       $time->reveal(),
       $key_value_factory,
-      $logger_factory
+      $this->logger->reveal()
+    );
+  }
+
+  /**
+   * @covers ::__construct
+   * @group legacy
+   */
+  public function testLegacyConstructor() {
+    $config_factory = $this->getConfigFactoryStub([
+      'media.settings' => [
+        'oembed_providers_url' => 'https://oembed.com/providers.json',
+      ],
+    ]);
+
+    $this->expectDeprecation('Calling Drupal\media\OEmbed\ProviderRepository::__construct() with a logger factory as the fifth argument is deprecated in drupal:10.1.0 and will trigger an error from drupal:11.0.0. Pass a logger channel instead. See https://www.drupal.org/node/1234567');
+    new ProviderRepository(
+      $this->prophesize(Client::class)->reveal(),
+      $config_factory,
+      $this->prophesize(TimeInterface::class)->reveal(),
+      new KeyValueMemoryFactory(),
+      new LoggerChannelFactory()
     );
   }
 
@@ -231,11 +251,7 @@ END;
     $this->responses->append($response);
 
     // The corrupt provider should cause a warning to be logged.
-    $this->logger->log(
-      RfcLogLevel::WARNING,
-      "Provider Uncle Rico's football videos does not define a valid external URL.",
-      Argument::type('array')
-    )->shouldBeCalled();
+    $this->logger->warning("Provider Uncle Rico's football videos does not define a valid external URL.")->shouldBeCalled();
 
     $youtube = $this->repository->get('YouTube');
     // The corrupt provider should not be stored.
