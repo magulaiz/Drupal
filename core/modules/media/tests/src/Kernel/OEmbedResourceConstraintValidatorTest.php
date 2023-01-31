@@ -37,6 +37,19 @@ class OEmbedResourceConstraintValidatorTest extends KernelTestBase {
   }
 
   /**
+   * @covers ::__construct
+   * @group legacy
+   */
+  public function testLegacyConstructor() {
+    $this->expectDeprecation('Calling Drupal\media\Plugin\Validation\Constraint\OEmbedResourceConstraintValidator::__construct() with a logger factory as the third argument is deprecated in drupal:10.1.0 and will trigger an error from drupal:11.0.0. Pass a logger channel instead. See https://www.drupal.org/node/1234567');
+    new OEmbedResourceConstraintValidator(
+      $this->container->get('media.oembed.url_resolver'),
+      $this->container->get('media.oembed.resource_fetcher'),
+      $this->container->get('logger.factory')
+    );
+  }
+
+  /**
    * @covers ::validate
    */
   public function testValidateEmptySource() {
@@ -57,7 +70,7 @@ class OEmbedResourceConstraintValidatorTest extends KernelTestBase {
     $validator = new OEmbedResourceConstraintValidator(
       $url_resolver->reveal(),
       $this->container->get('media.oembed.resource_fetcher'),
-      $this->container->get('logger.factory')
+      $this->container->get('logger.channel.media')
     );
     $validator->initialize($context->reveal());
     $validator->validate($this->getValue($media), $constraint);
@@ -86,7 +99,7 @@ class OEmbedResourceConstraintValidatorTest extends KernelTestBase {
     $validator = new OEmbedResourceConstraintValidator(
       $url_resolver->reveal(),
       $this->prophesize(ResourceFetcher::class)->reveal(),
-      $this->container->get('logger.factory')
+      $this->container->get('logger.channel.media')
     );
     $validator->initialize($context->reveal());
     $validator->validate($this->getValue($media), $constraint);

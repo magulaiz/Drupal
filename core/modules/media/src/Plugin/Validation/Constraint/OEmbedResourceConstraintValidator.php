@@ -9,6 +9,7 @@ use Drupal\media\OEmbed\ResourceException;
 use Drupal\media\OEmbed\ResourceFetcherInterface;
 use Drupal\media\OEmbed\UrlResolverInterface;
 use Drupal\media\Plugin\media\Source\OEmbedInterface;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
@@ -39,7 +40,7 @@ class OEmbedResourceConstraintValidator extends ConstraintValidator implements C
   /**
    * The logger service.
    *
-   * @var \Drupal\Core\Logger\LoggerChannelInterface
+   * @var \Psr\Log\LoggerInterface
    */
   protected $logger;
 
@@ -50,13 +51,17 @@ class OEmbedResourceConstraintValidator extends ConstraintValidator implements C
    *   The oEmbed URL resolver service.
    * @param \Drupal\media\OEmbed\ResourceFetcherInterface $resource_fetcher
    *   The resource fetcher service.
-   * @param \Drupal\Core\Logger\LoggerChannelFactoryInterface $logger_factory
+   * @param \Psr\Log\LoggerInterface $logger
    *   The logger service.
    */
-  public function __construct(UrlResolverInterface $url_resolver, ResourceFetcherInterface $resource_fetcher, LoggerChannelFactoryInterface $logger_factory) {
+  public function __construct(UrlResolverInterface $url_resolver, ResourceFetcherInterface $resource_fetcher, LoggerChannelFactoryInterface|LoggerInterface $logger) {
     $this->urlResolver = $url_resolver;
     $this->resourceFetcher = $resource_fetcher;
-    $this->logger = $logger_factory->get('media');
+    if ($logger instanceof LoggerChannelFactoryInterface) {
+      @trigger_error('Calling ' . __METHOD__ . '() with a logger factory as the third argument is deprecated in drupal:10.1.0 and will trigger an error from drupal:11.0.0. Pass a logger channel instead. See https://www.drupal.org/node/1234567', E_USER_DEPRECATED);
+      $logger = $logger->get('media');
+    }
+    $this->logger = $logger;
   }
 
   /**
@@ -66,7 +71,7 @@ class OEmbedResourceConstraintValidator extends ConstraintValidator implements C
     return new static(
       $container->get('media.oembed.url_resolver'),
       $container->get('media.oembed.resource_fetcher'),
-      $container->get('logger.factory')
+      $container->get('logger.channel.media')
     );
   }
 
