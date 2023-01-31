@@ -258,8 +258,13 @@ class EntityReferenceAdminTest extends WebDriverTestBase {
     // field is required.
     // The first 'Edit' link is for the Body field.
     $this->clickLink('Edit', 1);
-    $this->submitForm([], 'Save settings');
 
+    $submit_button = $this->assertSession()->waitForElementVisible('css', '.ui-dialog-buttonset .js-form-submit');
+    $this->assertSame('Save settings', $submit_button->getText());
+    // Submit by a button press action to ensure submitForm() does not target
+    // The other 'Save settings' on the page that, unlike this one, is in a
+    // <form>.
+    $submit_button->press();
     // Switch the target type to 'taxonomy_term' and check that the settings
     // specific to its selection handler are displayed.
     $field_name = 'node.' . $this->type . '.field_test';
