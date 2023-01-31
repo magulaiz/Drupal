@@ -7,7 +7,6 @@ use Drupal\Core\Cache\Context\CacheContextsManager;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\Entity\EntityTypeManager;
 use Drupal\Core\Language\LanguageInterface;
-use Drupal\Core\Session\AccountInterface;
 use Drupal\language\ConfigurableLanguageManagerInterface;
 use Drupal\Tests\UnitTestCase;
 use Drupal\language\Plugin\LanguageNegotiation\LanguageNegotiationContentEntity;
@@ -37,13 +36,6 @@ class LanguageNegotiationContentEntityTest extends UnitTestCase {
   protected $languageManager;
 
   /**
-   * A mock object implementing the AccountInterface.
-   *
-   * @var \Drupal\Core\Session\AccountInterface
-   */
-  protected $user;
-
-  /**
    * {@inheritdoc}
    */
   protected function setUp(): void {
@@ -68,9 +60,6 @@ class LanguageNegotiationContentEntityTest extends UnitTestCase {
       ->method('getLanguages')
       ->will($this->returnValue($languages));
     $this->languageManager = $language_manager;
-
-    $this->user = $this->getMockBuilder(AccountInterface::class)
-      ->getMock();
 
     $container = new ContainerBuilder();
 
