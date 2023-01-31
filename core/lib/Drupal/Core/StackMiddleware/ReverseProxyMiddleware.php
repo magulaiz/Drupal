@@ -20,31 +20,19 @@ class ReverseProxyMiddleware implements HttpKernelInterface {
   protected $httpKernel;
 
   /**
-   * The site settings.
-   *
-   * @var \Drupal\Core\Site\Settings
-   */
-  protected $settings;
-
-  /**
    * Constructs a ReverseProxyMiddleware object.
    *
    * @param \Symfony\Component\HttpKernel\HttpKernelInterface $http_kernel
    *   The decorated kernel.
-   * @param \Drupal\Core\Site\Settings $settings
-   *   The site settings.
    */
-  public function __construct(HttpKernelInterface $http_kernel, Settings $settings) {
+  public function __construct(HttpKernelInterface $http_kernel) {
     $this->httpKernel = $http_kernel;
-    $this->settings = $settings;
   }
 
   /**
    * {@inheritdoc}
    */
   public function handle(Request $request, $type = self::MAIN_REQUEST, $catch = TRUE): Response {
-    // Initialize proxy settings.
-    static::setSettingsOnRequest($request, $this->settings);
     return $this->httpKernel->handle($request, $type, $catch);
   }
 
@@ -53,13 +41,11 @@ class ReverseProxyMiddleware implements HttpKernelInterface {
    *
    * @param \Symfony\Component\HttpFoundation\Request $request
    *   A Request instance.
-   * @param \Drupal\Core\Site\Settings $settings
-   *   The site settings.
    */
-  public static function setSettingsOnRequest(Request $request, Settings $settings) {
+  public static function setSettingsOnRequest(Request $request) {
     // Initialize proxy settings.
-    if ($settings->get('reverse_proxy', FALSE)) {
-      $proxies = $settings->get('reverse_proxy_addresses', []);
+    if (Settings::get('reverse_proxy', FALSE)) {
+      $proxies = Settings::get('reverse_proxy_addresses', []);
       if (count($proxies) > 0) {
         // Set the default value. This is the most relaxed setting possible and
         // not recommended for production.
@@ -67,7 +53,7 @@ class ReverseProxyMiddleware implements HttpKernelInterface {
 
         $request::setTrustedProxies(
           $proxies,
-          $settings->get('reverse_proxy_trusted_headers', $trusted_header_set)
+          Settings::get('reverse_proxy_trusted_headers', $trusted_header_set)
         );
       }
     }

@@ -22,6 +22,7 @@ use Drupal\Core\Installer\InstallerRedirectTrait;
 use Drupal\Core\Language\Language;
 use Drupal\Core\Security\RequestSanitizer;
 use Drupal\Core\Site\Settings;
+use Drupal\Core\StackMiddleware\ReverseProxyMiddleware;
 use Drupal\Core\Test\TestDatabase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBag;
@@ -1073,6 +1074,9 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
     $site_path = static::findSitePath($request);
     $this->setSitePath($site_path);
     Settings::initialize($this->root, $site_path, $this->classLoader);
+
+    // Initialize proxy settings.
+    ReverseProxyMiddleware::setSettingsOnRequest($request);
 
     // Initialize our list of trusted HTTP Host headers to protect against
     // header attacks.
