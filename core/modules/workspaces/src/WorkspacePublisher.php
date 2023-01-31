@@ -6,6 +6,7 @@ use Drupal\Core\Access\AccessResultReasonInterface;
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
+use Drupal\Core\Utility\Error;
 
 /**
  * Default implementation of the workspace publisher.
@@ -121,7 +122,7 @@ class WorkspacePublisher implements WorkspacePublisherInterface {
       if (isset($transaction)) {
         $transaction->rollBack();
       }
-      watchdog_exception('workspaces', $e);
+      \Drupal::logger('workspaces')->error(...Error::decodeExceptionWithMessage($e));
       throw $e;
     }
 

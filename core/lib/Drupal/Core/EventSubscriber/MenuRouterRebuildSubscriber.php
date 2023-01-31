@@ -3,11 +3,12 @@
 namespace Drupal\Core\EventSubscriber;
 
 use Drupal\Core\Cache\Cache;
+use Drupal\Core\Database\Connection;
 use Drupal\Core\Database\ReplicaKillSwitch;
 use Drupal\Core\Lock\LockBackendInterface;
 use Drupal\Core\Menu\MenuLinkManagerInterface;
 use Drupal\Core\Routing\RoutingEvents;
-use Drupal\Core\Database\Connection;
+use Drupal\Core\Utility\Error;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
@@ -87,7 +88,7 @@ class MenuRouterRebuildSubscriber implements EventSubscriberInterface {
         if (isset($transaction)) {
           $transaction->rollBack();
         }
-        watchdog_exception('menu', $e);
+        \Drupal::logger('menu')->error(...Error::decodeExceptionWithMessage($e));
       }
 
       $this->lock->release(__FUNCTION__);

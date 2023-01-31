@@ -202,7 +202,7 @@ use Drupal\Core\Database\Query\SelectInterface;
  *     }
  *
  *     // Log the exception to watchdog.
- *     watchdog_exception('type', $e);
+ *     \Drupal::logger('type')->error(...Error::decodeExceptionWithMessage($e));
  *   }
  *
  *   // $transaction goes out of scope here. Unless the transaction was rolled

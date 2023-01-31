@@ -16,6 +16,7 @@ use Drupal\Core\Queue\SuspendQueueException;
 use Drupal\Core\Session\AccountSwitcherInterface;
 use Drupal\Core\Session\AnonymousUserSession;
 use Drupal\Core\State\StateInterface;
+use Drupal\Core\Utility\Error;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
 
@@ -204,7 +205,7 @@ class Cron implements CronInterface {
             // release the item and skip to the next queue.
             $queue->releaseItem($item);
 
-            watchdog_exception('cron', $e);
+            $this->logger->error(...Error::decodeExceptionWithMessage($e));
 
             // Skip to the next queue.
             continue 2;
@@ -212,7 +213,7 @@ class Cron implements CronInterface {
           catch (\Exception $e) {
             // In case of any other kind of exception, log it and leave the item
             // in the queue to be processed again later.
-            watchdog_exception('cron', $e);
+            $this->logger->error(...Error::decodeExceptionWithMessage($e));
           }
         }
       }
@@ -250,7 +251,7 @@ class Cron implements CronInterface {
         $hook();
       }
       catch (\Exception $e) {
-        watchdog_exception('cron', $e);
+        $this->logger->error(...Error::decodeExceptionWithMessage($e));
       }
 
       Timer::stop('cron_' . $module);

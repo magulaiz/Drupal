@@ -6,6 +6,7 @@ use Drupal\Core\Database\Connection;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Entity\RevisionableInterface;
 use Drupal\Core\Entity\Sql\SqlContentEntityStorage;
+use Drupal\Core\Utility\Error;
 
 /**
  * Provides a class for CRUD operations on workspace associations.
@@ -113,7 +114,7 @@ class WorkspaceAssociation implements WorkspaceAssociationInterface {
       if (isset($transaction)) {
         $transaction->rollBack();
       }
-      watchdog_exception('workspaces', $e);
+      \Drupal::logger('workspaces')->error(...Error::decodeExceptionWithMessage($e));
       throw $e;
     }
   }

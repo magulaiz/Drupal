@@ -5,6 +5,7 @@ namespace Drupal\workspaces;
 use Drupal\Core\Cache\CacheTagsInvalidatorInterface;
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Utility\Error;
 
 /**
  * Default implementation of the workspace merger.
@@ -116,7 +117,7 @@ class WorkspaceMerger implements WorkspaceMergerInterface {
       if (isset($transaction)) {
         $transaction->rollBack();
       }
-      watchdog_exception('workspaces', $e);
+      \Drupal::logger('workspaces')->error(...Error::decodeExceptionWithMessage($e));
       throw $e;
     }
   }
