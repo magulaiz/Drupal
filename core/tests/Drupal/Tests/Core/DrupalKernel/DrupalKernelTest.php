@@ -160,7 +160,7 @@ EOD;
    * @covers ::initializeRequestGlobals
    * @dataProvider initializeRequestGlobalsProvider
    */
-  public function testInitializeRequestGlobals($path, $url, $expected_base_url, $expected_base_path, $expected_base_root): void  {
+  public function testInitializeRequestGlobals($path, $url, $expected_base_url, $expected_base_path, $expected_base_root): void {
     global $base_url, $base_path, $base_root;
 
     $request = $this->prophesize(Request::class);
