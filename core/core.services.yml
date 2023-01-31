@@ -866,7 +866,6 @@ services:
       - { name: http_middleware, priority: 400 }
   http_middleware.reverse_proxy:
     class: Drupal\Core\StackMiddleware\ReverseProxyMiddleware
-    arguments: ['@settings']
     tags:
       - { name: http_middleware, priority: 300 }
   http_middleware.kernel_pre_handle:
