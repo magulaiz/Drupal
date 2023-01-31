@@ -76,7 +76,7 @@ class ImageUrlFormatter extends ImageFormatterBase {
     $this->imageStyleStorage = $image_style_storage;
     $this->currentUser = $current_user;
     $this->imageProcessor = $image_processor;
-   }
+  }
 
   /**
    * {@inheritdoc}
