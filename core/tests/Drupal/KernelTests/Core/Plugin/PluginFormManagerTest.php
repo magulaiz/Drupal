@@ -26,7 +26,7 @@ class PluginFormManagerTest extends KernelTestBase implements FormInterface, Plu
    * @covers ::buildForm
    * @covers ::getFormObject
    */
-  public function testBuildForm() {
+  public function testBuildForm(): void {
     $form_builder = $this->container->get('form_builder');
 
     $plugin_form = $this->prophesize(PluginInspectionInterface::class)->willImplement(PluginFormInterface::class);
@@ -34,25 +34,18 @@ class PluginFormManagerTest extends KernelTestBase implements FormInterface, Plu
     $plugin_form->buildConfigurationForm(Argument::cetera())->willReturn(['#markup' => 'plugin form']);
     $form = $form_builder->getForm($this, $plugin_form->reveal());
     $expected = [
-      'settings' => [
-        '#markup' => 'plugin form',
-        '#plugin_test_plugin_subform_alter' => TRUE,
-      ],
+      '#markup' => 'plugin form',
+      '#plugin_test_plugin_subform_alter' => TRUE,
     ];
-    $this->assertArraySubset($expected, $form);
+    $this->assertSame($expected, array_intersect_key($form['settings'], $expected));
 
     $plugin_with_forms = $this->prophesize(PluginWithFormsInterface::class);
     $plugin_with_forms->getPluginId()->willReturn('plugin_with_forms');
     $plugin_with_forms->hasFormClass('configure')->willReturn(TRUE);
     $plugin_with_forms->getFormClass('configure')->willReturn(static::class);
     $form = $form_builder->getForm($this, $plugin_with_forms->reveal());
-    $expected = [
-      'settings' => [
-        '#markup' => 'plugin with forms',
-        '#plugin_test_plugin_subform_alter' => TRUE,
-      ],
-    ];
-    $this->assertArraySubset($expected, $form);
+    $expected['#markup'] = 'plugin with forms';
+    $this->assertSame($expected, array_intersect_key($form['settings'], $expected));
 
     $plugin_form_with_forms = $this->prophesize(PluginWithFormsInterface::class)->willImplement(PluginFormInterface::class);
     $plugin_form_with_forms->getPluginId()->willReturn('plugin_form_with_forms');
@@ -60,17 +53,18 @@ class PluginFormManagerTest extends KernelTestBase implements FormInterface, Plu
     $plugin_form_with_forms->getFormClass('configure')->willReturn(static::class);
     $plugin_form_with_forms->buildConfigurationForm(Argument::cetera())->shouldNotBeCalled();
     $form = $form_builder->getForm($this, $plugin_form_with_forms->reveal());
-    $expected = [
-      'settings' => [
-        '#markup' => 'plugin with forms',
-        '#plugin_test_plugin_subform_alter' => TRUE,
-      ],
-    ];
-    $this->assertArraySubset($expected, $form);
+    $this->assertSame($expected, array_intersect_key($form['settings'], $expected));
+  }
 
+  /**
+   * @covers ::getFormObject
+   */
+  public function testBuildFormException(): void {
+    $form_builder = $this->container->get('form_builder');
     $foo_plugin = $this->prophesize(PluginInspectionInterface::class);
     $foo_plugin->getPluginId()->willReturn('foo');
-    $this->setExpectedException(\InvalidArgumentException::class, 'The "foo" plugin does not provide a "configure" form');
+    $this->expectException(\InvalidArgumentException::class);
+    $this->expectExceptionMessage('The "foo" plugin does not provide a "configure" form');
     $form_builder->getForm($this, $foo_plugin->reveal());
   }
 

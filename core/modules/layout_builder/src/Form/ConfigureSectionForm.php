@@ -7,8 +7,11 @@ use Drupal\Core\Ajax\AjaxFormHelperTrait;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Form\SubformState;
+use Drupal\Core\Layout\LayoutInterface;
 use Drupal\Core\Plugin\ContextAwarePluginInterface;
+use Drupal\Core\Plugin\PluginFormInterface;
 use Drupal\Core\Plugin\PluginFormManagerInterface;
+use Drupal\Core\Plugin\PluginWithFormsInterface;
 use Drupal\layout_builder\Context\LayoutBuilderContextTrait;
 use Drupal\layout_builder\Controller\LayoutRebuildTrait;
 use Drupal\layout_builder\LayoutBuilderHighlightTrait;
@@ -206,29 +209,6 @@ class ConfigureSectionForm extends FormBase {
    */
   protected function successfulAjaxSubmit(array $form, FormStateInterface $form_state) {
     return $this->rebuildAndClose($this->sectionStorage);
-  }
-
-  /**
-   * Retrieves the plugin form for a given layout.
-   *
-   * @param \Drupal\Core\Layout\LayoutInterface $layout
-   *   The layout plugin.
-   *
-   * @return \Drupal\Core\Plugin\PluginFormInterface
-   *   The plugin form for the layout.
-   *
-   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
-   */
-  protected function getPluginForm(LayoutInterface $layout) {
-    if ($layout instanceof PluginWithFormsInterface) {
-      return $this->pluginFormFactory->createInstance($layout, 'configure');
-    }
-
-    if ($layout instanceof PluginFormInterface) {
-      return $layout;
-    }
-
-    throw new \InvalidArgumentException(sprintf('The "%s" layout does not provide a configuration form', $layout->getPluginId()));
   }
 
   /**
