@@ -4,12 +4,11 @@ namespace Drupal\user\Plugin\views\argument_default;
 
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheableDependencyInterface;
-use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\views\Plugin\views\argument_default\ArgumentDefaultPluginBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\user\UserInterface;
-use Drupal\node\NodeInterface;
+use Drupal\user\EntityOwnerInterface;
 
 /**
  * Default argument plugin to extract a user from request.
@@ -61,40 +60,15 @@ class User extends ArgumentDefaultPluginBase implements CacheableDependencyInter
   /**
    * {@inheritdoc}
    */
-  protected function defineOptions() {
-    $options = parent::defineOptions();
-    $options['user'] = ['default' => ''];
-
-    return $options;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function buildOptionsForm(&$form, FormStateInterface $form_state) {
-    $form['user'] = [
-      '#type' => 'checkbox',
-      '#title' => $this->t('Also look for a node and use the node author'),
-      '#default_value' => $this->options['user'],
-    ];
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function getArgument() {
-
-    // If there is a user object in the current route.
-    if ($user = $this->routeMatch->getParameter('user')) {
-      if ($user instanceof UserInterface) {
-        return $user->id();
-      }
-    }
-
-    // If option to use node author; and node in current route.
-    if (!empty($this->options['user']) && $node = $this->routeMatch->getParameter('node')) {
-      if ($node instanceof NodeInterface) {
-        return $node->getOwnerId();
+    if ($parameters = $this->routeMatch->getParameters()) {
+      foreach ($parameters->all() as $entity) {
+        if ($entity instanceof UserInterface) {
+          return $entity->id();
+        }
+        elseif ($entity instanceof EntityOwnerInterface) {
+          return $entity->getOwnerId();
+        }
       }
     }
   }
