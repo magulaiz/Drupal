@@ -20,7 +20,7 @@ class DrupalKernelTest extends UnitTestCase {
   /**
    * Back up and restore any global variables that may be changed by tests.
    *
-   * @var bool
+   * @var ?bool
    */
   protected $backupGlobals = FALSE;
 
@@ -160,15 +160,14 @@ EOD;
    * @covers ::initializeRequestGlobals
    * @dataProvider initializeRequestGlobalsProvider
    */
-  public function testInitializeRequestGlobals($path, $url, $expected_base_url, $expected_base_path, $expected_base_root) {
-    global $base_url;
-    global $base_path, $base_root;
+  public function testInitializeRequestGlobals($path, $url, $expected_base_url, $expected_base_path, $expected_base_root): void  {
+    global $base_url, $base_path, $base_root;
 
     $request = $this->prophesize(Request::class);
     $request->getBasePath()->willReturn($path);
     $request->getSchemeAndHttpHost()->willReturn($url);
     $drupalKernel = new DrupalKernel('test', NULL);
-    $method = new \ReflectionMethod('Drupal\Core\DrupalKernel', 'initializeRequestGlobals');
+    $method = new \ReflectionMethod(DrupalKernel::class, 'initializeRequestGlobals');
     $method->setAccessible(TRUE);
     $method->invoke($drupalKernel, $request->reveal());
     $this->assertSame($expected_base_path, $base_path);
@@ -179,7 +178,7 @@ EOD;
   /**
    * Provides data for testInitializeRequestGlobals().
    */
-  public function initializeRequestGlobalsProvider() {
+  public function initializeRequestGlobalsProvider(): array {
     return [
       ['', 'http://localhost', 'http://localhost', '/', 'http://localhost'],
       ['/drupal',

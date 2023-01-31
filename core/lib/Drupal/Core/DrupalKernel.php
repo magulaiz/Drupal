@@ -1088,8 +1088,8 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
     // Requests to 'core/foo.php' bypass the front controller, causing
     // $request->getBasePath() to return a string ending with '/core'. In these
     // cases, remove '/core' to obtain the correct $base_path.
-    if (substr($base_path, -5) == '/core') {
-      $base_path = substr($base_path, 0, strlen($base_path) - 5);
+    if (str_ends_with($base_path, '/core')) {
+      $base_path = substr($base_path, 0, -5);
     }
     $base_path .= '/';
     $base_root = $request->getSchemeAndHttpHost();
