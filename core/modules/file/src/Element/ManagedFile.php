@@ -330,6 +330,21 @@ class ManagedFile extends FormElement {
     // file upload field.
     $element['#label_for'] = $element['upload']['#id'];
 
+    // Forward #required to file input if multiple values are not allowed.
+    // We don't do this for multiple value field as it is more complex and
+    // should get validated on server side.
+    if ((isset($element['#required']) && $element['#required'] === TRUE) && empty($element['#multiple'])) {
+      $element['upload']['#attributes']['aria-required'] = 'true';
+      $element['upload']['#attributes']['required'] = 'required';
+
+      // We have to use required_error here as we want to use the title from
+      // main field and not file input.
+      // If element title is not set, we will use generic message.
+      $element['upload']['#required_error'] = isset($element['#title']) ?
+        t('@title is required.', ['@title' => $element['#title']]) :
+        t('This field is required.');
+    }
+
     if (!empty($fids) && $element['#files']) {
       foreach ($element['#files'] as $delta => $file) {
         $file_link = [
