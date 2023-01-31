@@ -85,31 +85,18 @@ class LanguageNegotiationContentEntityTest extends UnitTestCase {
     $languageNegotiationContentEntity = $this->createLanguageNegotiationPlugin();
 
     // Case 1: Empty request.
-    // TODO: Once [#3130751] is committed, the following can be modified to
-    // check for NULL, instead of catching the exception.
-    try {
-      $languageNegotiationContentEntity->getLangcode();
-    }
-    catch (\Throwable $t) {
-      $this->assertEquals('Attempt to read property "query" on null', $t->getMessage());
-    }
+    $expectedLangcode = NULL;
+    $this->assertEquals($expectedLangcode, $languageNegotiationContentEntity->getLangcode());
 
-    // Case 2: A request is available, but the languageManager is not set.
-    // static::QUERY_PARAMETER is
-    // not provided as a named parameter.
-    // TODO: Once [#3130751] is committed, the following can be modified to
-    // check for NULL, instead of catching the exception.
+    // Case 2: A request is available, but the languageManager is not set and
+    // the static::QUERY_PARAMETER is not provided as a named parameter.
     $request = Request::create('/de/foo', 'GET');
     $request->query = new ParameterBag();
-    try {
-      $languageNegotiationContentEntity->getLangcode($request);
-    }
-    catch (\Throwable $t) {
-      $this->assertEquals("Call to a member function getLanguages() on null", $t->getMessage());
-    }
+    $expectedLangcode = NULL;
+    $this->assertEquals($expectedLangcode, $languageNegotiationContentEntity->getLangcode($request));
 
-    // Case 3: A request is available, the languageManager is set, but
-    // the static::QUERY_PARAMETER is not provided as a named parameter.
+    // Case 3: A request is available, the languageManager is set, but the
+    // static::QUERY_PARAMETER is not provided as a named parameter.
     $languageNegotiationContentEntity->setLanguageManager($this->languageManager);
     $expectedLangcode = NULL;
     $this->assertEquals($expectedLangcode, $languageNegotiationContentEntity->getLangcode($request));
