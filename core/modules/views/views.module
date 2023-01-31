@@ -811,12 +811,3 @@ function views_view_presave(ViewEntityInterface $view) {
   $config_updater = \Drupal::classResolver(ViewsConfigUpdater::class);
   $config_updater->updateAll($view);
 }
-
-/**
- * Implements hook_ENTITY_TYPE_presave().
- */
-function views_view_presave(ViewEntityInterface $view) {
-  /** @var \Drupal\views\ViewsConfigUpdater $config_updater */
-  $config_updater = \Drupal::classResolver(ViewsConfigUpdater::class);
-  $config_updater->updateAll($view);
-}
