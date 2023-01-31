@@ -124,7 +124,14 @@ class JsCollectionOptimizer implements AssetCollectionOptimizerInterface {
             if (empty($uri) || !file_exists($uri)) {
               // Concatenate each asset within the group.
               $data = '';
+              $current_license = FALSE;
               foreach ($js_group['items'] as $js_asset) {
+                // Ensure license information is available as a comment after
+                // optimization.
+                if ($js_asset['license'] !== $current_license) {
+                  $data .= "/* @license " . $js_asset['license']['name'] . " " . $js_asset['license']['url'] . " */\n";
+                }
+                $current_license = $js_asset['license'];
                 // Optimize this JS file, but only if it's not yet minified.
                 if (isset($js_asset['minified']) && $js_asset['minified']) {
                   $data .= file_get_contents($js_asset['data']);
@@ -197,7 +204,7 @@ class JsCollectionOptimizer implements AssetCollectionOptimizerInterface {
     $this->state->delete('system.js_cache_files');
     $delete_stale = function ($uri) {
       // Default stale file threshold is 30 days.
-      if (REQUEST_TIME - filemtime($uri) > \Drupal::config('system.performance')->get('stale_file_threshold')) {
+      if (\Drupal::time()->getRequestTime() - filemtime($uri) > \Drupal::config('system.performance')->get('stale_file_threshold')) {
         $this->fileSystem->delete($uri);
       }
     };

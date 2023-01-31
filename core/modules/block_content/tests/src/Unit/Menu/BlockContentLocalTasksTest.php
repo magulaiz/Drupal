@@ -12,6 +12,9 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
  */
 class BlockContentLocalTasksTest extends LocalTaskIntegrationTestBase {
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     $this->directoryList = [
       'block' => 'core/modules/block',
@@ -42,7 +45,7 @@ class BlockContentLocalTasksTest extends LocalTaskIntegrationTestBase {
     $theme_handler = $this->createMock('Drupal\Core\Extension\ThemeHandlerInterface');
     $theme_handler->expects($this->any())
       ->method('listInfo')
-      ->will($this->returnValue($themes));
+      ->willReturn($themes);
 
     $container = new ContainerBuilder();
     $container->set('config.factory', $config_factory);
@@ -61,10 +64,6 @@ class BlockContentLocalTasksTest extends LocalTaskIntegrationTestBase {
         'block.admin_display',
         'entity.block_content.collection',
       ],
-      1 => [
-        'block_content.list_sub',
-        'entity.block_content_type.collection',
-      ],
     ]);
   }
 
@@ -73,7 +72,7 @@ class BlockContentLocalTasksTest extends LocalTaskIntegrationTestBase {
    */
   public function getBlockContentListingRoutes() {
     return [
-      ['entity.block_content.collection', 'entity.block_content_type.collection'],
+      ['entity.block_content.collection'],
     ];
   }
 

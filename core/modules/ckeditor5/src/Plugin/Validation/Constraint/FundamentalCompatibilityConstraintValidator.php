@@ -119,12 +119,13 @@ class FundamentalCompatibilityConstraintValidator extends ConstraintValidator im
    *   The constraint to validate.
    */
   private function checkHtmlRestrictionsAreCompatible(FilterFormatInterface $text_format, FundamentalCompatibilityConstraint $constraint): void {
-    $fundamental = new HTMLRestrictions($this->pluginManager->getProvidedElements(self::FUNDAMENTAL_CKEDITOR5_PLUGINS));
-    $html_restrictions = $text_format->getHtmlRestrictions();
-    if (!isset($html_restrictions['allowed'])) {
+    $html_restrictions = HTMLRestrictions::fromTextFormat($text_format);
+    if ($html_restrictions->isUnrestricted()) {
       return;
     }
-    if (!$fundamental->diff(HTMLRestrictions::fromTextFormat($text_format))->allowsNothing()) {
+
+    $fundamental = new HTMLRestrictions($this->pluginManager->getProvidedElements(self::FUNDAMENTAL_CKEDITOR5_PLUGINS));
+    if (!$fundamental->diff($html_restrictions)->allowsNothing()) {
       $offending_filter = static::findHtmlRestrictorFilterNotAllowingTags($text_format, $fundamental);
       $this->context->buildViolation($constraint->nonAllowedElementsMessage)
         ->setParameter('%filter_label', (string) $offending_filter->getLabel())
@@ -148,11 +149,11 @@ class FundamentalCompatibilityConstraintValidator extends ConstraintValidator im
     );
 
     $enabled_plugins = array_keys($this->pluginManager->getEnabledDefinitions($text_editor));
-    $provided = $this->pluginManager->getProvidedElements($enabled_plugins, $text_editor);
+    $provided_elements = $this->pluginManager->getProvidedElements($enabled_plugins, $text_editor);
+    $provided = new HTMLRestrictions($provided_elements);
 
     foreach ($html_restrictor_filters as $filter_plugin_id => $filter) {
       $allowed = HTMLRestrictions::fromFilterPluginInstance($filter);
-      $provided = new HTMLRestrictions($provided);
       $diff_allowed = $allowed->diff($provided);
       $diff_elements = $provided->diff($allowed);
 
@@ -262,7 +263,7 @@ class FundamentalCompatibilityConstraintValidator extends ConstraintValidator im
     assert(in_array($filter_type, [
       FilterInterface::TYPE_MARKUP_LANGUAGE,
       FilterInterface::TYPE_HTML_RESTRICTOR,
-      FilterInterface::TYPE_TRANSFORM_IRREVERSIBLE,
+      FilterInterface::TYPE_TRANSFORM_REVERSIBLE,
       FilterInterface::TYPE_TRANSFORM_IRREVERSIBLE,
     ]));
     foreach ($text_format->filters() as $id => $filter) {

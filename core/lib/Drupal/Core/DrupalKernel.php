@@ -3,7 +3,6 @@
 namespace Drupal\Core;
 
 use Composer\Autoload\ClassLoader;
-use Drupal\Component\Assertion\Handle;
 use Drupal\Component\EventDispatcher\Event;
 use Drupal\Component\FileCache\FileCacheFactory;
 use Drupal\Component\Utility\UrlHelper;
@@ -11,6 +10,7 @@ use Drupal\Core\Cache\DatabaseBackend;
 use Drupal\Core\Config\BootstrapConfigStorageFactory;
 use Drupal\Core\Config\NullStorage;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
+use Drupal\Component\DependencyInjection\ReverseContainer;
 use Drupal\Core\DependencyInjection\ServiceModifierInterface;
 use Drupal\Core\DependencyInjection\ServiceProviderInterface;
 use Drupal\Core\DependencyInjection\YamlFileLoader;
@@ -100,7 +100,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
   /**
    * Holds the container instance.
    *
-   * @var \Symfony\Component\DependencyInjection\ContainerInterface
+   * @var \Drupal\Component\DependencyInjection\ContainerInterface
    */
   protected $container;
 
@@ -236,6 +236,16 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
    * @var string
    */
   protected $root;
+
+  /**
+   * A mapping from service classes to service IDs.
+   *
+   * @deprecated in drupal:9.5.1 and is removed from drupal:11.0.0. Use the
+   *   'Drupal\Component\DependencyInjection\ReverseContainer' service instead.
+   *
+   * @see https://www.drupal.org/node/3327942
+   */
+  protected $serviceIdMapping = [];
 
   /**
    * Create a DrupalKernel object from a request.
@@ -784,6 +794,39 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
   }
 
   /**
+   * Generate a unique hash for a service object.
+   *
+   * @param object $object
+   *   A service object.
+   *
+   * @return string
+   *   A unique hash value.
+   *
+   * @deprecated in drupal:9.5.1 and is removed from drupal:11.0.0. Use the
+   *   'Drupal\Component\DependencyInjection\ReverseContainer' service instead.
+   *
+   * @see https://www.drupal.org/node/3327942
+   */
+  public static function generateServiceIdHash($object) {
+    @trigger_error(__METHOD__ . "() is deprecated in drupal:9.5.1 and is removed from drupal:11.0.0. Use the 'Drupal\Component\DependencyInjection\ReverseContainer' service instead. See https://www.drupal.org/node/3327942", E_USER_DEPRECATED);
+    // Include class name as an additional namespace for the hash since
+    // spl_object_hash's return can be recycled. This still is not a 100%
+    // guarantee to be unique but makes collisions incredibly difficult and even
+    // then the interface would be preserved.
+    // @see https://php.net/spl_object_hash#refsect1-function.spl-object-hash-notes
+    return hash('sha256', get_class($object) . spl_object_hash($object));
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getServiceIdMapping() {
+    @trigger_error(__METHOD__ . "() is deprecated in drupal:9.5.1 and is removed from drupal:11.0.0. Use the 'Drupal\Component\DependencyInjection\ReverseContainer' service instead. See https://www.drupal.org/node/3327942", E_USER_DEPRECATED);
+    $this->collectServiceIdMapping();
+    return $this->serviceIdMapping;
+  }
+
+  /**
    * Returns the container cache key based on the environment.
    *
    * The 'environment' consists of:
@@ -828,6 +871,12 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
       if ($this->container->initialized('current_user')) {
         $current_user_id = $this->container->get('current_user')->id();
       }
+      // After rebuilding the container some objects will have stale services.
+      // Record a map of objects to service IDs prior to rebuilding the
+      // container in order to ensure
+      // \Drupal\Core\DependencyInjection\DependencySerializationTrait works as
+      // expected.
+      $this->container->get(ReverseContainer::class)->recordContainer();
 
       // If there is a session, close and save it.
       if ($this->container->initialized('session')) {
@@ -987,7 +1036,8 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
 
         // Web tests are to be conducted with runtime assertions active.
         assert_options(ASSERT_ACTIVE, TRUE);
-        Handle::register();
+        // Force assertion failures to be thrown as exceptions.
+        assert_options(ASSERT_EXCEPTION, TRUE);
 
         // Log fatal errors to the test site directory.
         ini_set('log_errors', 1);
@@ -1216,6 +1266,10 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
     $container->register('class_loader')->setSynthetic(TRUE);
     $container->register('kernel', 'Symfony\Component\HttpKernel\KernelInterface')->setSynthetic(TRUE);
     $container->register('service_container', 'Symfony\Component\DependencyInjection\ContainerInterface')->setSynthetic(TRUE);
+
+    // Register aliases of synthetic services for autowiring.
+    $container->setAlias(DrupalKernelInterface::class, 'kernel');
+    $container->setAlias(ContainerInterface::class, 'service_container');
 
     // Register application services.
     $yaml_loader = new YamlFileLoader($container);
@@ -1533,6 +1587,23 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
    */
   protected function addServiceFiles(array $service_yamls) {
     $this->serviceYamls['site'] = array_filter($service_yamls, 'file_exists');
+  }
+
+  /**
+   * Collect a mapping between service to ids.
+   *
+   * @deprecated in drupal:9.5.1 and is removed from drupal:11.0.0. Use the
+   *   'Drupal\Component\DependencyInjection\ReverseContainer' service instead.
+   *
+   * @see https://www.drupal.org/node/3327942
+   */
+  protected function collectServiceIdMapping() {
+    @trigger_error(__METHOD__ . "() is deprecated in drupal:9.5.1 and is removed from drupal:11.0.0. Use the 'Drupal\Component\DependencyInjection\ReverseContainer' service instead. See https://www.drupal.org/node/3327942", E_USER_DEPRECATED);
+    if (isset($this->container)) {
+      foreach ($this->container->getServiceIdMappings() as $hash => $service_id) {
+        $this->serviceIdMapping[$hash] = $service_id;
+      }
+    }
   }
 
   /**

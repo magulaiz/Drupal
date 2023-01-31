@@ -400,22 +400,93 @@ function claro_form_alter(array &$form, FormStateInterface $form_state, $form_id
     $form['override']['#prefix'] = str_replace('form--inline', 'form--flex', $form['override']['#prefix']);
   }
 
-  if ($form_object instanceof ViewsForm && strpos($form_object->getBaseFormId(), 'views_form_media_library') === 0) {
+  if ($form_object instanceof ViewsForm && str_starts_with($form_object->getBaseFormId(), 'views_form_media_library')) {
     if (isset($form['header'])) {
       $form['header']['#attributes']['class'][] = 'media-library-views-form__header';
       $form['header']['media_bulk_form']['#attributes']['class'][] = 'media-library-views-form__bulk_form';
     }
     $form['actions']['submit']['#attributes']['class'] = ['media-library-select'];
+    $form['#attributes']['class'][] = 'media-library-views-form';
+  }
 
-    // The conditional below exists because the media-library-views-form class is
-    // is currently added by Classy, but Claro will eventually not use Classy as
-    // a base theme.
-    // @todo remove conditional, keep class addition in
-    //   https://drupal.org/node/3110137
-    // @see https://www.drupal.org/node/3109287
-    // @see classy_form_alter()
-    if (!isset($form['#attributes']['class']) || !in_array('media-library-views-form', $form['#attributes']['class'])) {
-      $form['#attributes']['class'][] = 'media-library-views-form';
+  if ($form_object instanceof ViewsForm && !empty($form['header'])) {
+    $view = $form_state->getBuildInfo()['args'][0];
+    $view_title = $view->getTitle();
+
+    // Determine if the Views form includes a bulk operations form. If it does,
+    // move it to the bottom and remove the second bulk operations submit.
+    foreach (Element::children($form['header']) as $key) {
+      if (strpos($key, '_bulk_form') !== FALSE) {
+        // Move the bulk actions form from the header to its own container.
+        $form['bulk_actions_container'] = $form['header'][$key];
+        unset($form['header'][$key]);
+
+        // Remove the supplementary bulk operations submit button as it appears
+        // in the same location the form was moved to.
+        unset($form['actions']);
+
+        $form['bulk_actions_container']['#attributes']['data-drupal-views-bulk-actions'] = '';
+        $form['bulk_actions_container']['#attributes']['class'][] = 'views-bulk-actions';
+        $form['bulk_actions_container']['actions']['submit']['#button_type'] = 'primary';
+        $form['bulk_actions_container']['actions']['submit']['#attributes']['class'][] = 'button--small';
+        $label = t('Perform actions on the selected items in the %view_title view', ['%view_title' => $view_title]);
+        $label_id = $key . '_group_label';
+
+        // Group the bulk actions select and submit elements, and add a label
+        // that makes the purpose of these elements more clear to
+        // screenreaders.
+        $form['bulk_actions_container']['#attributes']['role'] = 'group';
+        $form['bulk_actions_container']['#attributes']['aria-labelledby'] = $label_id;
+        $form['bulk_actions_container']['group_label'] = [
+          '#type' => 'container',
+          '#markup' => $label,
+          '#attributes' => [
+            'id' => $label_id,
+            'class' => ['visually-hidden'],
+          ],
+          '#weight' => -1,
+        ];
+
+        // Add a status label for counting the number of items selected.
+        $form['bulk_actions_container']['status'] = [
+          '#type' => 'container',
+          '#markup' => t('No items selected'),
+          '#weight' => -1,
+          '#attributes' => [
+            'class' => [
+              'js-views-bulk-actions-status',
+              'views-bulk-actions__item',
+              'views-bulk-actions__item--status',
+              'js-show',
+            ],
+            'data-drupal-views-bulk-actions-status' => '',
+          ],
+        ];
+
+        // Loop through bulk actions items and add the needed CSS classes.
+        $bulk_action_item_keys = Element::children($form['bulk_actions_container'], TRUE);
+        $bulk_last_key = NULL;
+        $bulk_child_before_actions_key = NULL;
+        foreach ($bulk_action_item_keys as $bulk_action_item_key) {
+          if (!empty($form['bulk_actions_container'][$bulk_action_item_key]['#type'])) {
+            if ($form['bulk_actions_container'][$bulk_action_item_key]['#type'] === 'actions') {
+              // We need the key of the element that precedes the actions
+              // element.
+              $bulk_child_before_actions_key = $bulk_last_key;
+              $form['bulk_actions_container'][$bulk_action_item_key]['#attributes']['class'][] = 'views-bulk-actions__item';
+            }
+
+            if (!in_array($form['bulk_actions_container'][$bulk_action_item_key]['#type'], ['hidden', 'actions'])) {
+              $form['bulk_actions_container'][$bulk_action_item_key]['#wrapper_attributes']['class'][] = 'views-bulk-actions__item';
+              $bulk_last_key = $bulk_action_item_key;
+            }
+          }
+        }
+
+        if ($bulk_child_before_actions_key) {
+          $form['bulk_actions_container'][$bulk_child_before_actions_key]['#wrapper_attributes']['class'][] = 'views-bulk-actions__item--preceding-actions';
+        }
+      }
     }
   }
 }
@@ -437,9 +508,13 @@ function claro_preprocess_links(&$variables) {
             break;
 
           case 'system.theme_set_default':
-          case 'system.theme_install':
             $links_item['link'] = _claro_convert_link_to_action_link($links_item['link'], 'checkmark', 'small');
             break;
+
+          case 'system.theme_install':
+            $links_item['link'] = _claro_convert_link_to_action_link($links_item['link'], 'plus', 'small');
+            break;
+
         }
       }
     }
@@ -1482,7 +1557,7 @@ function claro_views_pre_render(ViewExecutable $view) {
         $add_classes($view->field['delete_media']->options['alter']['link_class'], ['icon-link']);
       }
     }
-    elseif (strpos($view->current_display, 'widget') === 0) {
+    elseif (str_starts_with($view->current_display, 'widget')) {
       if (array_key_exists('rendered_entity', $view->field)) {
         $add_classes($view->field['rendered_entity']->options['element_class'], ['media-library-item__content']);
       }
@@ -1513,16 +1588,7 @@ function claro_preprocess_links__media_library_menu(array &$variables) {
   foreach ($variables['links'] as &$link) {
     // Add a class to the Media Library menu items.
     $link['attributes']->addClass('media-library-menu__item');
-
-    // This conditional exists because the media-library-menu__link class is
-    // currently added by Classy, but Claro will eventually not use Classy as a
-    // base theme.
-    // @todo remove conditional, keep class addition in
-    //   https://drupal.org/node/3110137
-    // @see classy_preprocess_links__media_library_menu()
-    if (!isset($link['link']['#options']['attributes']['class']) || !in_array('media-library-menu__link', $link['link']['#options']['attributes']['class'])) {
-      $link['link']['#options']['attributes']['class'][] = 'media-library-menu__link';
-    }
+    $link['link']['#options']['attributes']['class'][] = 'media-library-menu__link';
   }
 }
 

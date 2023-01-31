@@ -144,27 +144,6 @@ class UncaughtExceptionTest extends BrowserTestBase {
   }
 
   /**
-   * Tests a missing dependency on a service with a custom error handler.
-   */
-  public function testMissingDependencyCustomErrorHandler() {
-    $settings_filename = $this->siteDirectory . '/settings.php';
-    chmod($settings_filename, 0777);
-    $settings_php = file_get_contents($settings_filename);
-    $settings_php .= "\n";
-    $settings_php .= "set_error_handler(function() {\n";
-    $settings_php .= "  header('HTTP/1.1 418 I\'m a teapot');\n";
-    $settings_php .= "  print('Oh oh, flying teapots');\n";
-    $settings_php .= "  exit();\n";
-    $settings_php .= "});\n";
-    $settings_php .= "\$settings['teapots'] = TRUE;\n";
-    file_put_contents($settings_filename, $settings_php);
-
-    $this->drupalGet('broken-service-class');
-    $this->assertSession()->statusCodeEquals(418);
-    $this->assertSession()->responseContains('Oh oh, flying teapots');
-  }
-
-  /**
    * Tests a container which has an error.
    */
   public function testErrorContainer() {
@@ -261,7 +240,7 @@ class UncaughtExceptionTest extends BrowserTestBase {
     $this->assertStringContainsString('Failed to log error', $errors[0], 'The error handling logs when an error could not be logged to the logger.');
 
     $expected_path = \Drupal::root() . '/core/modules/system/tests/modules/error_service_test/src/MonkeysInTheControlRoom.php';
-    $expected_line = 62;
+    $expected_line = 67;
     $expected_entry = "Failed to log error: Exception: Deforestation in Drupal\\error_service_test\\MonkeysInTheControlRoom->handle() (line {$expected_line} of {$expected_path})";
     $this->assertStringContainsString($expected_entry, $errors[0], 'Original error logged to the PHP error log when an exception is thrown by a logger');
 

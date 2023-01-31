@@ -77,7 +77,7 @@ function update_process_project_info(&$projects) {
  * @param array $available
  *   Data about available project releases.
  *
- * @return
+ * @return array
  *   An array of installed projects with current update status information.
  *
  * @see update_get_available()
@@ -291,7 +291,7 @@ function update_calculate_project_update_status(&$project_data, $available) {
 
   $is_in_supported_branch = function ($version) use ($supported_branches) {
     foreach ($supported_branches as $supported_branch) {
-      if (strpos($version, $supported_branch) === 0) {
+      if (str_starts_with($version, $supported_branch)) {
         return TRUE;
       }
     }

@@ -28,6 +28,30 @@ use Drupal\Core\Url;
 use GuzzleHttp\Exception\TransferException;
 use Symfony\Component\HttpFoundation\Request;
 
+// cspell:ignore quickedit
+
+/**
+ * An array of machine names of modules that were removed from Drupal core.
+ */
+const DRUPAL_CORE_REMOVED_MODULE_LIST = [
+  'aggregator' => 'Aggregator',
+  'ckeditor' => 'CKEditor',
+  'color' => 'Color',
+  'hal' => 'HAL',
+  'quickedit' => 'Quick Edit',
+  'rdf' => 'RDF',
+];
+
+/**
+ * An array of machine names of themes that were removed from Drupal core.
+ */
+const DRUPAL_CORE_REMOVED_THEME_LIST = [
+  'bartik' => 'Bartik',
+  'classy' => 'Classy',
+  'seven' => 'Seven',
+  'stable' => 'Stable',
+];
+
 /**
  * Implements hook_requirements().
  */
@@ -269,25 +293,16 @@ function system_requirements($phase) {
   // with an error or warning if the site is running older PHP versions for
   // which Drupal has already or will soon drop support.
   $phpversion = $phpversion_label = phpversion();
-  if (function_exists('phpinfo')) {
-    if ($phase === 'runtime') {
-      $phpversion_label = t('@phpversion (<a href=":url">more information</a>)', ['@phpversion' => $phpversion, ':url' => (new Url('system.php'))->toString()]);
-    }
-    $requirements['php'] = [
-      'title' => t('PHP'),
-      'value' => $phpversion_label,
-    ];
+  if ($phase === 'runtime') {
+    $phpversion_label = t('@phpversion (<a href=":url">more information</a>)', [
+      '@phpversion' => $phpversion,
+      ':url' => (new Url('system.php'))->toString(),
+    ]);
   }
-  else {
-    // @todo Revisit whether this description makes sense in
-    //   https://www.drupal.org/project/drupal/issues/2927318.
-    $requirements['php'] = [
-      'title' => t('PHP'),
-      'value' => $phpversion_label,
-      'description' => t('The phpinfo() function has been disabled for security reasons. To see your server\'s phpinfo() information, change your PHP settings or contact your server administrator. For more information, <a href=":phpinfo">Enabling and disabling phpinfo()</a> handbook page.', [':phpinfo' => 'https://www.drupal.org/node/243993']),
-      'severity' => REQUIREMENT_INFO,
-    ];
-  }
+  $requirements['php'] = [
+    'title' => t('PHP'),
+    'value' => $phpversion_label,
+  ];
 
   // Check if the PHP version is below what Drupal supports.
   if (version_compare($phpversion, $minimum_supported_php) < 0) {
@@ -316,6 +331,19 @@ function system_requirements($phase) {
   elseif ($phase === 'runtime' && version_compare($phpversion, \Drupal::RECOMMENDED_PHP) < 0) {
     $requirements['php']['description'] = t('It is recommended to upgrade to PHP version %recommended or higher for the best ongoing support.  See <a href="http://php.net/supported-versions.php">PHP\'s version support documentation</a> and the <a href=":php_requirements">Drupal PHP requirements</a> page for more information.', ['%recommended' => \Drupal::RECOMMENDED_PHP, ':php_requirements' => 'https://www.drupal.org/docs/system-requirements/php-requirements']);
     $requirements['php']['severity'] = REQUIREMENT_INFO;
+
+    // PHP 8.1.0 through 8.1.5 have a known OPcache bug that can cause fatal
+    // errors, so warn about that when running Drupal on those versions.
+    // @todo Remove this when \Drupal::MINIMUM_PHP is at least 8.1.6 in
+    //   https://www.drupal.org/i/3305726.
+    if (version_compare(\Drupal::MINIMUM_PHP, '8.1.6') < 0) {
+      $requirements['php']['description'] = t('PHP %version has <a href=":bug_url">an OPcache bug that can cause fatal errors with class autoloading</a>. This can be fixed by upgrading to PHP 8.1.6 or later. See <a href="http://php.net/supported-versions.php">PHP\'s version support documentation</a> and the <a href=":php_requirements">Drupal PHP requirements</a> page for more information.', [
+        '%version' => $phpversion,
+        ':bug_url' => 'https://github.com/php/php-src/issues/8164',
+        ':php_requirements' => 'https://www.drupal.org/docs/system-requirements/php-requirements',
+      ]);
+      $requirements['php']['severity'] = REQUIREMENT_WARNING;
+    }
   }
 
   // Test for PHP extensions.
@@ -388,15 +416,16 @@ function system_requirements($phase) {
 
   // Check to see if APCu is installed and configured correctly.
   if ($phase == 'runtime' && PHP_SAPI != 'cli') {
-    $requirements['php_apcu']['title'] = t('PHP APCu caching');
+    $requirements['php_apcu_enabled']['title'] = t('PHP APCu caching');
+    $requirements['php_apcu_available']['title'] = t('PHP APCu available caching');
     if (extension_loaded('apcu') && filter_var(ini_get('apc.enabled'), FILTER_VALIDATE_BOOLEAN)) {
       $memory_info = apcu_sma_info(TRUE);
       $apcu_actual_size = format_size($memory_info['seg_size']);
       $apcu_recommended_size = '32 MB';
-      $requirements['php_apcu']['value'] = t('Enabled (@size)', ['@size' => $apcu_actual_size]);
+      $requirements['php_apcu_enabled']['value'] = t('Enabled (@size)', ['@size' => $apcu_actual_size]);
       if (Bytes::toNumber($apcu_actual_size) < Bytes::toNumber($apcu_recommended_size)) {
-        $requirements['php_apcu']['severity'] = REQUIREMENT_WARNING;
-        $requirements['php_apcu']['description'] = t('Depending on your configuration, Drupal can run with a @apcu_size APCu limit. However, a @apcu_default_size APCu limit (the default) or above is recommended, especially if your site uses additional custom or contributed modules.', [
+        $requirements['php_apcu_enabled']['severity'] = REQUIREMENT_WARNING;
+        $requirements['php_apcu_enabled']['description'] = t('Depending on your configuration, Drupal can run with a @apcu_size APCu limit. However, a @apcu_default_size APCu limit (the default) or above is recommended, especially if your site uses additional custom or contributed modules.', [
           '@apcu_size' => $apcu_actual_size,
           '@apcu_default_size' => $apcu_recommended_size,
         ]);
@@ -404,21 +433,27 @@ function system_requirements($phase) {
       else {
         $memory_available = $memory_info['avail_mem'] / $memory_info['seg_size'];
         if ($memory_available < 0.1) {
-          $requirements['php_apcu']['severity'] = REQUIREMENT_ERROR;
+          $requirements['php_apcu_available']['severity'] = REQUIREMENT_ERROR;
+          $requirements['php_apcu_available']['description'] = t('APCu is using over 90% of its allotted memory (@apcu_actual_size). To improve APCu performance, consider increasing this limit.', [
+            '@apcu_actual_size' => $apcu_actual_size,
+          ]);
         }
         elseif ($memory_available < 0.25) {
-          $requirements['php_apcu']['severity'] = REQUIREMENT_WARNING;
+          $requirements['php_apcu_available']['severity'] = REQUIREMENT_WARNING;
+          $requirements['php_apcu_available']['description'] = t('APCu is using over 75% of its allotted memory (@apcu_actual_size). To improve APCu performance, consider increasing this limit.', [
+            '@apcu_actual_size' => $apcu_actual_size,
+          ]);
         }
         else {
-          $requirements['php_apcu']['severity'] = REQUIREMENT_OK;
+          $requirements['php_apcu_available']['severity'] = REQUIREMENT_OK;
         }
-        $requirements['php_apcu']['description'] = t('Memory available: @available.', [
+        $requirements['php_apcu_available']['value'] = t('Memory available: @available.', [
           '@available' => format_size($memory_info['avail_mem']),
         ]);
       }
     }
     else {
-      $requirements['php_apcu'] += [
+      $requirements['php_apcu_enabled'] += [
         'value' => t('Not enabled'),
         'severity' => REQUIREMENT_INFO,
         'description' => t('PHP APCu caching can improve your site\'s performance considerably. It is <strong>highly recommended</strong> to have <a href="https://www.php.net/manual/apcu.installation.php" target="_blank">APCu</a> installed on your server.'),
@@ -531,34 +566,6 @@ function system_requirements($phase) {
       ];
       $requirements['database_system_version']['severity'] = REQUIREMENT_ERROR;
       $requirements['database_system_version']['description'] = $error_message;
-    }
-  }
-
-  // Test with PostgreSQL databases for the status of the pg_trgm extension.
-  if ($phase === 'runtime' || $phase === 'update') {
-    if (Database::isActiveConnection()) {
-      $connection = Database::getConnection();
-
-      // Set the requirement just for postgres.
-      if ($connection->driver() == 'pgsql') {
-        $requirements['pgsql_extension_pg_trgm'] = [
-          'severity' => REQUIREMENT_OK,
-          'title' => t('PostgreSQL pg_trgm extension'),
-          'value' => t('Available'),
-          'description' => 'The pg_trgm PostgreSQL extension is present.',
-        ];
-
-        // If the extension is not available, set the requirement error.
-        if (!$connection->schema()->extensionExists('pg_trgm')) {
-          $requirements['pgsql_extension_pg_trgm']['severity'] = REQUIREMENT_ERROR;
-          $requirements['pgsql_extension_pg_trgm']['value'] = t('Not created');
-          $requirements['pgsql_extension_pg_trgm']['description'] = t('The <a href=":pg_trgm">pg_trgm</a> PostgreSQL extension is not present. The extension is required by Drupal 10 to improve performance when using PostgreSQL. See <a href=":requirements">Drupal database server requirements</a> for more information.', [
-            ':pg_trgm' => 'https://www.postgresql.org/docs/current/pgtrgm.html',
-            ':requirements' => 'https://www.drupal.org/docs/system-requirements/database-server-requirements',
-          ]);
-        }
-
-      }
     }
   }
 
@@ -748,7 +755,7 @@ function system_requirements($phase) {
           '#suffix' => ' ',
         ],
         [
-          '#markup' => t('For more information, see the online handbook entry for <a href=":cron-handbook">configuring cron jobs</a>.', [':cron-handbook' => 'https://www.drupal.org/cron']),
+          '#markup' => t('For more information, see the online handbook entry for <a href=":cron-handbook">configuring cron jobs</a>.', [':cron-handbook' => 'https://www.drupal.org/docs/administering-a-drupal-site/cron-automated-tasks/cron-automated-tasks-overview']),
           '#suffix' => ' ',
         ],
       ];
@@ -976,13 +983,16 @@ function system_requirements($phase) {
 
   // Display an error if a newly introduced dependency in a module is not resolved.
   if ($phase === 'update' || $phase === 'runtime') {
-    $create_extension_incompatibility_list = function ($extension_names, $description, $title) {
+    $create_extension_incompatibility_list = function (array $extension_names, PluralTranslatableMarkup $description, PluralTranslatableMarkup $title, TranslatableMarkup|string $message = '', TranslatableMarkup|string $additional_description = '') {
+      if ($message === '') {
+        $message = new TranslatableMarkup('Review the <a href=":url"> suggestions for resolving this incompatibility</a> to repair your installation, and then re-run update.php.', [':url' => 'https://www.drupal.org/docs/updating-drupal/troubleshooting-database-updates']);
+      }
       // Use an inline twig template to:
-      // - Concatenate two MarkupInterface objects and preserve safeness.
+      // - Concatenate MarkupInterface objects and preserve safeness.
       // - Use the item_list theme for the extension list.
       $template = [
         '#type' => 'inline_template',
-        '#template' => '{{ description }}{{ extensions }}',
+        '#template' => '{{ description }}{{ extensions }}{{ additional_description }}<br>',
         '#context' => [
           'extensions' => [
             '#theme' => 'item_list',
@@ -991,15 +1001,13 @@ function system_requirements($phase) {
       ];
       $template['#context']['extensions']['#items'] = $extension_names;
       $template['#context']['description'] = $description;
+      $template['#context']['additional_description'] = $additional_description;
       return [
         'title' => $title,
         'value' => [
           'list' => $template,
           'handbook_link' => [
-            '#markup' => t(
-              'Review the <a href=":url"> suggestions for resolving this incompatibility</a> to repair your installation, and then re-run update.php.',
-              [':url' => 'https://www.drupal.org/docs/8/update/troubleshooting-database-updates']
-            ),
+            '#markup' => $message,
           ],
         ],
         'severity' => REQUIREMENT_ERROR,
@@ -1121,13 +1129,89 @@ function system_requirements($phase) {
       );
     }
 
-    // Look for invalid modules.
     $extension_config = \Drupal::configFactory()->get('core.extension');
-    $is_missing_extension = function ($extension_name) use (&$module_extension_list) {
-      return !$module_extension_list->exists($extension_name);
-    };
 
-    $invalid_modules = array_filter(array_keys($extension_config->get('module')), $is_missing_extension);
+    // Look for removed core modules.
+    $is_removed_module = function ($extension_name) use ($module_extension_list) {
+      return !$module_extension_list->exists($extension_name)
+        && array_key_exists($extension_name, DRUPAL_CORE_REMOVED_MODULE_LIST);
+    };
+    $removed_modules = array_filter(array_keys($extension_config->get('module')), $is_removed_module);
+    if (!empty($removed_modules)) {
+      $list = [];
+      foreach ($removed_modules as $removed_module) {
+        $list[] = t('<a href=":url">@module</a>', [
+          ':url' => "https://www.drupal.org/project/$removed_module",
+          '@module' => DRUPAL_CORE_REMOVED_MODULE_LIST[$removed_module],
+        ]);
+      }
+      $requirements['removed_module'] = $create_extension_incompatibility_list(
+        $list,
+        new PluralTranslatableMarkup(
+          count($removed_modules),
+          'You must add the following contributed module and reload this page.',
+          'You must add the following contributed modules and reload this page.'
+        ),
+        new PluralTranslatableMarkup(
+          count($removed_modules),
+          'Removed core module',
+          'Removed core modules'
+        ),
+        new TranslatableMarkup(
+          'For more information read the <a href=":url">documentation on deprecated modules.</a>',
+          [':url' => 'https://www.drupal.org/node/3223395#s-recommendations-for-deprecated-modules']
+        ),
+        new PluralTranslatableMarkup(
+          count($removed_modules),
+          'This module is installed on your site but is no longer provided by Core.',
+          'These modules are installed on your site but are no longer provided by Core.'
+        ),
+      );
+    }
+
+    // Look for removed core themes.
+    $is_removed_theme = function ($extension_name) use ($theme_extension_list) {
+      return !$theme_extension_list->exists($extension_name)
+        && array_key_exists($extension_name, DRUPAL_CORE_REMOVED_THEME_LIST);
+    };
+    $removed_themes = array_filter(array_keys($extension_config->get('theme')), $is_removed_theme);
+    if (!empty($removed_themes)) {
+      $list = [];
+      foreach ($removed_themes as $removed_theme) {
+        $list[] = t('<a href=":url">@theme</a>', [
+          ':url' => "https://www.drupal.org/project/$removed_theme",
+          '@theme' => DRUPAL_CORE_REMOVED_THEME_LIST[$removed_theme],
+        ]);
+      }
+      $requirements['removed_theme'] = $create_extension_incompatibility_list(
+        $list,
+        new PluralTranslatableMarkup(
+          count($removed_themes),
+          'You must add the following contributed theme and reload this page.',
+          'You must add the following contributed themes and reload this page.'
+        ),
+        new PluralTranslatableMarkup(
+          count($removed_themes),
+          'Removed core theme',
+          'Removed core themes'
+        ),
+        new TranslatableMarkup(
+          'For more information read the <a href=":url">documentation on deprecated themes.</a>',
+          [':url' => 'https://www.drupal.org/node/3223395#s-recommendations-for-deprecated-themes']
+        ),
+        new PluralTranslatableMarkup(
+          count($removed_themes),
+          'This theme is installed on your site but is no longer provided by Core.',
+          'These themes are installed on your site but are no longer provided by Core.'
+        ),
+      );
+    }
+
+    // Look for missing modules.
+    $is_missing_module = function ($extension_name) use ($module_extension_list) {
+      return !$module_extension_list->exists($extension_name) && !in_array($extension_name, array_keys(DRUPAL_CORE_REMOVED_MODULE_LIST), TRUE);
+    };
+    $invalid_modules = array_filter(array_keys($extension_config->get('module')), $is_missing_module);
 
     if (!empty($invalid_modules)) {
       $requirements['invalid_module'] = $create_extension_incompatibility_list(
@@ -1147,7 +1231,7 @@ function system_requirements($phase) {
 
     // Look for invalid themes.
     $is_missing_theme = function ($extension_name) use (&$theme_extension_list) {
-      return !$theme_extension_list->exists($extension_name);
+      return !$theme_extension_list->exists($extension_name) && !in_array($extension_name, array_keys(DRUPAL_CORE_REMOVED_THEME_LIST), TRUE);
     };
     $invalid_themes = array_filter(array_keys($extension_config->get('theme')), $is_missing_theme);
     if (!empty($invalid_themes)) {
@@ -1189,10 +1273,6 @@ function system_requirements($phase) {
   switch ($failed_check) {
     case 'mb_strlen':
       $requirements['unicode']['description'] = t('Operations on Unicode strings are emulated on a best-effort basis. Install the <a href="http://php.net/mbstring">PHP mbstring extension</a> for improved Unicode support.');
-      break;
-
-    case 'mbstring.func_overload':
-      $requirements['unicode']['description'] = t('Multibyte string function overloading in PHP is active and must be disabled. Check the php.ini <em>mbstring.func_overload</em> setting. Please refer to the <a href="http://php.net/mbstring">PHP mbstring documentation</a> for more information.');
       break;
 
     case 'mbstring.encoding_translation':
@@ -1257,7 +1337,7 @@ function system_requirements($phase) {
     $provider = $connection->getProvider();
     if ($provider !== 'core' && !\Drupal::moduleHandler()->moduleExists($provider)) {
       $autoload = $connection->getConnectionOptions()['autoload'] ?? '';
-      if (($pos = strpos($autoload, 'src/Driver/Database/')) !== FALSE) {
+      if (strpos($autoload, 'src/Driver/Database/') !== FALSE) {
         $post_update_registry = \Drupal::service('update.post_update_registry');
         $pending_updates = $post_update_registry->getPendingUpdateInformation();
         if (!in_array('enable_provider_database_driver', array_keys($pending_updates['system']['pending'] ?? []), TRUE)) {
@@ -1463,7 +1543,7 @@ function system_schema() {
         'unsigned' => TRUE,
         'not null' => TRUE,
       ],
-     ],
+    ],
     'primary key' => ['value'],
   ];
 

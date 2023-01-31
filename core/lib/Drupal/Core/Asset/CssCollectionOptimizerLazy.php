@@ -102,18 +102,22 @@ class CssCollectionOptimizerLazy implements AssetCollectionGroupOptimizerInterfa
         $css_assets[$order]['data'] = $uri;
       }
     }
-    // Generate a URL for each group of assets, but do not process them inline,
-    // this is done using optimizeGroup() when the asset path is requested.
-    $ajax_page_state = $this->requestStack->getCurrentRequest()->get('ajax_page_state');
-    $already_loaded = isset($ajax_page_state) ? explode(',', $ajax_page_state['libraries']) : [];
+
+    // All asset group URLs will have exactly the same query arguments, except
+    // for the delta, so prepare them in advance.
     $query_args = [
       'language' => $this->languageManager->getCurrentLanguage()->getId(),
       'theme' => $this->themeManager->getActiveTheme()->getName(),
-      'include' => implode(',', $this->dependencyResolver->getMinimalRepresentativeSubset($libraries)),
+      'include' => UrlHelper::compressQueryParameter(implode(',', $this->dependencyResolver->getMinimalRepresentativeSubset($libraries))),
     ];
+    $ajax_page_state = $this->requestStack->getCurrentRequest()->get('ajax_page_state');
+    $already_loaded = isset($ajax_page_state) ? explode(',', $ajax_page_state['libraries']) : [];
     if ($already_loaded) {
-      $query_args['exclude'] = implode(',', $this->dependencyResolver->getMinimalRepresentativeSubset($already_loaded));
+      $query_args['exclude'] = UrlHelper::compressQueryParameter(implode(',', $this->dependencyResolver->getMinimalRepresentativeSubset($already_loaded)));
     }
+
+    // Generate a URL for each group of assets, but do not process them inline,
+    // this is done using optimizeGroup() when the asset path is requested.
     foreach ($css_assets as $order => $css_asset) {
       if (!empty($css_asset['preprocessed'])) {
         $query = ['delta' => "$order"] + $query_args;
@@ -160,7 +164,14 @@ class CssCollectionOptimizerLazy implements AssetCollectionGroupOptimizerInterfa
   public function optimizeGroup(array $group): string {
     // Optimize each asset within the group.
     $data = '';
+    $current_license = FALSE;
     foreach ($group['items'] as $css_asset) {
+      // Ensure license information is available as a comment after
+      // optimization.
+      if ($css_asset['license'] !== $current_license) {
+        $data .= "/* @license " . $css_asset['license']['name'] . " " . $css_asset['license']['url'] . " */\n";
+      }
+      $current_license = $css_asset['license'];
       $data .= $this->optimizer->optimize($css_asset);
     }
     // Per the W3C specification at
@@ -174,7 +185,7 @@ class CssCollectionOptimizerLazy implements AssetCollectionGroupOptimizerInterfa
 REGEXP;
     preg_match_all($regexp, $data, $matches);
     $data = preg_replace($regexp, '', $data);
-    return implode('', $matches[0]) . $data;
+    return implode('', $matches[0]) . (!empty($matches[0]) ? "\n" : '') . $data;
   }
 
 }

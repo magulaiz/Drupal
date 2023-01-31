@@ -6,6 +6,7 @@ use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Entity\ContentEntityStorageInterface;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Component\Plugin\Exception\PluginNotFoundException;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Entity\TypedData\EntityDataDefinition;
@@ -121,7 +122,16 @@ class EntityReferenceItem extends FieldItemBase implements OptionsProviderInterf
    */
   public static function schema(FieldStorageDefinitionInterface $field_definition) {
     $target_type = $field_definition->getSetting('target_type');
-    $target_type_info = \Drupal::entityTypeManager()->getDefinition($target_type);
+    try {
+      $target_type_info = \Drupal::entityTypeManager()->getDefinition($target_type);
+    }
+    catch (PluginNotFoundException $e) {
+      throw new FieldException(sprintf("Field '%s' on entity type '%s' references a target entity type '%s' which does not exist.",
+        $field_definition->getName(),
+        $field_definition->getTargetEntityTypeId(),
+        $target_type
+      ));
+    }
     $properties = static::propertyDefinitions($field_definition)['target_id'];
     if ($target_type_info->entityClassImplements(FieldableEntityInterface::class) && $properties->getDataType() === 'integer') {
       $columns = [
@@ -362,7 +372,7 @@ class EntityReferenceItem extends FieldItemBase implements OptionsProviderInterf
   public function storageSettingsForm(array &$form, FormStateInterface $form_state, $has_data) {
     $element['target_type'] = [
       '#type' => 'select',
-      '#title' => t('Type of item to reference'),
+      '#title' => $this->t('Type of item to reference'),
       '#default_value' => $this->getSetting('target_type'),
       '#required' => TRUE,
       '#disabled' => $has_data,
@@ -413,7 +423,7 @@ class EntityReferenceItem extends FieldItemBase implements OptionsProviderInterf
     ];
     $form['handler'] = [
       '#type' => 'details',
-      '#title' => t('Reference type'),
+      '#title' => $this->t('Reference type'),
       '#open' => TRUE,
       '#tree' => TRUE,
       '#process' => [[static::class, 'formProcessMergeParent']],
@@ -421,7 +431,7 @@ class EntityReferenceItem extends FieldItemBase implements OptionsProviderInterf
 
     $form['handler']['handler'] = [
       '#type' => 'select',
-      '#title' => t('Reference method'),
+      '#title' => $this->t('Reference method'),
       '#options' => $handlers_options,
       '#default_value' => $field->getSetting('handler'),
       '#required' => TRUE,
@@ -430,7 +440,7 @@ class EntityReferenceItem extends FieldItemBase implements OptionsProviderInterf
     ];
     $form['handler']['handler_submit'] = [
       '#type' => 'submit',
-      '#value' => t('Change handler'),
+      '#value' => $this->t('Change handler'),
       '#limit_validation_errors' => [],
       '#attributes' => [
         'class' => ['js-hide'],

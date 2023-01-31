@@ -9,6 +9,7 @@ use Drupal\Core\Database\Database;
 use Drupal\Core\Database\DatabaseNotFoundException;
 use Drupal\Core\Database\DatabaseException;
 use Drupal\Core\Database\Connection as DatabaseConnection;
+use Drupal\Core\Database\SupportsTemporaryTablesInterface;
 use Drupal\Core\Database\TransactionNoActiveException;
 
 /**
@@ -19,7 +20,7 @@ use Drupal\Core\Database\TransactionNoActiveException;
 /**
  * MySQL implementation of \Drupal\Core\Database\Connection.
  */
-class Connection extends DatabaseConnection {
+class Connection extends DatabaseConnection implements SupportsTemporaryTablesInterface {
 
   /**
    * Error code for "Unknown database" error.
@@ -96,15 +97,18 @@ class Connection extends DatabaseConnection {
     // @see https://dev.mysql.com/doc/refman/5.7/en/sql-mode.html#sqlmode_ansi_quotes
     $ansi_quotes_modes = ['ANSI_QUOTES', 'ANSI', 'DB2', 'MAXDB', 'MSSQL', 'ORACLE', 'POSTGRESQL'];
     $is_ansi_quotes_mode = FALSE;
-    foreach ($ansi_quotes_modes as $mode) {
-      // None of the modes in $ansi_quotes_modes are substrings of other modes
-      // that are not in $ansi_quotes_modes, so a simple stripos() does not
-      // return false positives.
-      if (stripos($connection_options['init_commands']['sql_mode'], $mode) !== FALSE) {
-        $is_ansi_quotes_mode = TRUE;
-        break;
+    if (isset($connection_options['init_commands']['sql_mode'])) {
+      foreach ($ansi_quotes_modes as $mode) {
+        // None of the modes in $ansi_quotes_modes are substrings of other modes
+        // that are not in $ansi_quotes_modes, so a simple stripos() does not
+        // return false positives.
+        if (stripos($connection_options['init_commands']['sql_mode'], $mode) !== FALSE) {
+          $is_ansi_quotes_mode = TRUE;
+          break;
+        }
       }
     }
+
     if ($this->identifierQuotes === ['"', '"'] && !$is_ansi_quotes_mode) {
       $this->identifierQuotes = ['`', '`'];
     }
@@ -220,6 +224,15 @@ class Connection extends DatabaseConnection {
 
   public function queryRange($query, $from, $count, array $args = [], array $options = []) {
     return $this->query($query . ' LIMIT ' . (int) $from . ', ' . (int) $count, $args, $options);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function queryTemporary($query, array $args = [], array $options = []) {
+    $tablename = 'db_temporary_' . uniqid();
+    $this->query('CREATE TEMPORARY TABLE {' . $tablename . '} Engine=MEMORY ' . $query, $args, $options);
+    return $tablename;
   }
 
   public function driver() {

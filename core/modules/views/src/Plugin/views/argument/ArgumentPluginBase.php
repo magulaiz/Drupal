@@ -71,9 +71,11 @@ abstract class ArgumentPluginBase extends HandlerBase implements CacheableDepend
   public string $name_table_alias;
 
   /**
-   * The field to use for the name to use in the summary, which is
-   * the displayed output. For example, for the node: nid argument,
-   * the argument itself is the nid, but node.title is displayed.
+   * The field to use for the name to display in the summary.
+   *
+   * For example, for the node: nid argument, the argument itself is the nid,
+   * but node.title is displayed.
+   *
    * @var string
    */
   public $name_field;
@@ -420,8 +422,8 @@ abstract class ArgumentPluginBase extends HandlerBase implements CacheableDepend
 
     foreach ($this->view->display_handler->getHandlers('argument') as $arg => $handler) {
       /** @var \Drupal\views\Plugin\views\argument\ArgumentPluginBase $handler */
-      $options[(string) t('Arguments')]["{{ arguments.$arg }}"] = $this->t('@argument title', ['@argument' => $handler->adminLabel()]);
-      $options[(string) t('Arguments')]["{{ raw_arguments.$arg }}"] = $this->t('@argument input', ['@argument' => $handler->adminLabel()]);
+      $options[(string) $this->t('Arguments')]["{{ arguments.$arg }}"] = $this->t('@argument title', ['@argument' => $handler->adminLabel()]);
+      $options[(string) $this->t('Arguments')]["{{ raw_arguments.$arg }}"] = $this->t('@argument input', ['@argument' => $handler->adminLabel()]);
     }
 
     // We have some options, so make a list.
@@ -531,6 +533,8 @@ abstract class ArgumentPluginBase extends HandlerBase implements CacheableDepend
   }
 
   /**
+   * Default actions.
+   *
    * Provide a list of default behaviors for this argument if the argument
    * is not present.
    *
@@ -741,7 +745,7 @@ abstract class ArgumentPluginBase extends HandlerBase implements CacheableDepend
    *
    * Override this method only with extreme care.
    *
-   * @return
+   * @return bool
    *   A boolean value; if TRUE, continue building this view. If FALSE,
    *   building the view will be aborted here.
    */
@@ -894,9 +898,6 @@ abstract class ArgumentPluginBase extends HandlerBase implements CacheableDepend
    * - addField: add a 'num_nodes' field for the count. Usually it will
    *   be a count on $view->base_field
    * - setCountField: Reset the count field so we get the right paging.
-   *
-   * @return
-   *   The alias used to get the number of records (count) for this entry.
    */
   protected function summaryQuery() {
     $this->ensureMyTable();
@@ -904,7 +905,7 @@ abstract class ArgumentPluginBase extends HandlerBase implements CacheableDepend
     $this->base_alias = $this->query->addField($this->tableAlias, $this->realField);
 
     $this->summaryNameField();
-    return $this->summaryBasics();
+    $this->summaryBasics();
   }
 
   /**
@@ -994,8 +995,8 @@ abstract class ArgumentPluginBase extends HandlerBase implements CacheableDepend
    *   The query results for the row.
    */
   public function summaryName($data) {
-    $value = $data->{$this->name_alias};
-    if (empty($value) && !empty($this->definition['empty field name'])) {
+    $value = (string) $data->{$this->name_alias};
+    if ($value === '' && isset($this->definition['empty field name'])) {
       $value = $this->definition['empty field name'];
     }
     return $value;

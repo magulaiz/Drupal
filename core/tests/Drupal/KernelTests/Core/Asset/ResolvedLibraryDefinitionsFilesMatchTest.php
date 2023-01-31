@@ -61,9 +61,8 @@ class ResolvedLibraryDefinitionsFilesMatchTest extends KernelTestBase {
    */
   protected $allThemes = [
     'claro',
-    'classy',
     'olivero',
-    'stable',
+    'stable9',
     'stark',
   ];
 

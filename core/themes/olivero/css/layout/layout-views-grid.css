@@ -14,19 +14,6 @@
  * they reach the --views-grid-item--min-width value.
  */
 
-/*
- * Media query breakpoints.
- * Processed by postcss/postcss-custom-media.
- */
-
-/* Navigation related breakpoints */
-
-/* Grid related breakpoints */
-
-/* Grid shifts from 6 to 14 columns. */
-
-/* Width of the entire grid maxes out. */
-
 .views-view-grid {
   --views-grid--layout-gap: var(--sp);
   --views-grid--column-count: 4; /* Will be overridden by an inline style. */
@@ -47,14 +34,14 @@
 }
 
 .views-view-grid--vertical {
-  margin-bottom: calc(-1 * var(--views-grid--layout-gap)); /* Offset the bottom row's padding. */
+  margin-block-end: calc(-1 * var(--views-grid--layout-gap)); /* Offset the bottom row's padding. */
   column-width: var(--views-grid-item--min-width);
   column-count: var(--views-grid--column-count);
-  grid-column-gap: var(--views-grid--layout-gap)
+  column-gap: var(--views-grid--layout-gap);
 }
 
 .views-view-grid--vertical .views-view-grid__item > * {
-      padding-bottom: var(--views-grid--layout-gap);
-      page-break-inside: avoid;
-      break-inside: avoid;
-    }
+  padding-block-end: var(--views-grid--layout-gap);
+  page-break-inside: avoid;
+  break-inside: avoid;
+}

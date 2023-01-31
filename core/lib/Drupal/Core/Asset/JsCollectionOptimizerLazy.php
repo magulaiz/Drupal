@@ -110,20 +110,23 @@ class JsCollectionOptimizerLazy implements AssetCollectionGroupOptimizerInterfac
       }
     }
     if ($libraries) {
-      // Generate a URL for the group, but do not process it inline, this is
-      // done by \Drupal\system\controller\JsAssetController.
-      $ajax_page_state = $this->requestStack->getCurrentRequest()
-        ->get('ajax_page_state');
-      $already_loaded = isset($ajax_page_state) ? explode(',', $ajax_page_state['libraries']) : [];
+      // All group URLs have the same query arguments apart from the delta and
+      // scope, so prepare them in advance.
       $language = $this->languageManager->getCurrentLanguage()->getId();
       $query_args = [
         'language' => $language,
         'theme' => $this->themeManager->getActiveTheme()->getName(),
-        'include' => implode(',', $this->dependencyResolver->getMinimalRepresentativeSubset($libraries)),
+        'include' => UrlHelper::compressQueryParameter(implode(',', $this->dependencyResolver->getMinimalRepresentativeSubset($libraries))),
       ];
+      $ajax_page_state = $this->requestStack->getCurrentRequest()
+        ->get('ajax_page_state');
+      $already_loaded = isset($ajax_page_state) ? explode(',', $ajax_page_state['libraries']) : [];
       if ($already_loaded) {
-        $query_args['exclude'] = implode(',', $this->dependencyResolver->getMinimalRepresentativeSubset($already_loaded));
+        $query_args['exclude'] = UrlHelper::compressQueryParameter(implode(',', $this->dependencyResolver->getMinimalRepresentativeSubset($already_loaded)));
       }
+
+      // Generate a URL for the group, but do not process it inline, this is
+      // done by \Drupal\system\controller\JsAssetController.
       foreach ($js_assets as $order => $js_asset) {
         if (!empty($js_asset['preprocessed'])) {
           $query = [
@@ -172,7 +175,14 @@ class JsCollectionOptimizerLazy implements AssetCollectionGroupOptimizerInterfac
    */
   public function optimizeGroup(array $group): string {
     $data = '';
+    $current_license = FALSE;
     foreach ($group['items'] as $js_asset) {
+      // Ensure license information is available as a comment after
+      // optimization.
+      if ($js_asset['license'] !== $current_license) {
+        $data .= "/* @license " . $js_asset['license']['name'] . " " . $js_asset['license']['url'] . " */\n";
+      }
+      $current_license = $js_asset['license'];
       // Optimize this JS file, but only if it's not yet minified.
       if (isset($js_asset['minified']) && $js_asset['minified']) {
         $data .= file_get_contents($js_asset['data']);

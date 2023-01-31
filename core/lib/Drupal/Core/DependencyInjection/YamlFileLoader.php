@@ -205,7 +205,7 @@ class YamlFileLoader
      */
     private function parseDefinition(string $id, $service, string $file, array $defaults)
     {
-        if (\is_string($service) && 0 === strpos($service, '@')) {
+        if (\is_string($service) && str_starts_with($service, '@')) {
             $this->container->setAlias($id, $alias = new Alias(substr($service, 1)));
             if (isset($defaults['public'])) {
                 $alias->setPublic($defaults['public']);
@@ -456,15 +456,15 @@ class YamlFileLoader
     {
         if (is_array($value)) {
             $value = array_map(array($this, 'resolveServices'), $value);
-        } elseif (is_string($value) &&  0 === strpos($value, '@=')) {
+        } elseif (is_string($value) && str_starts_with($value, '@=')) {
             // Not supported.
             //return new Expression(substr($value, 2));
             throw new InvalidArgumentException(sprintf("'%s' is an Expression, but expressions are not supported.", $value));
-        } elseif (is_string($value) &&  0 === strpos($value, '@')) {
-            if (0 === strpos($value, '@@')) {
+        } elseif (is_string($value) && str_starts_with($value, '@')) {
+            if (str_starts_with($value, '@@')) {
                 $value = substr($value, 1);
                 $invalidBehavior = null;
-            } elseif (0 === strpos($value, '@?')) {
+            } elseif (str_starts_with($value, '@?')) {
                 $value = substr($value, 2);
                 $invalidBehavior = ContainerInterface::IGNORE_ON_INVALID_REFERENCE;
             } else {
@@ -474,13 +474,10 @@ class YamlFileLoader
 
             if ('=' === substr($value, -1)) {
                 $value = substr($value, 0, -1);
-                $strict = false;
-            } else {
-                $strict = true;
             }
 
             if (null !== $invalidBehavior) {
-                $value = new Reference($value, $invalidBehavior, $strict);
+                $value = new Reference($value, $invalidBehavior);
             }
         }
 

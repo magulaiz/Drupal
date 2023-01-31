@@ -77,8 +77,7 @@ EOD;
   const STATUS_SINGLEBYTE = 0;
 
   /**
-   * Indicates that full unicode support with the PHP mbstring extension is
-   * being used.
+   * Indicates that full unicode support with PHP mbstring extension is used.
    */
   const STATUS_MULTIBYTE = 1;
 
@@ -132,9 +131,6 @@ EOD;
     }
 
     // Check mbstring configuration.
-    if (ini_get('mbstring.func_overload') != 0) {
-      return 'mbstring.func_overload';
-    }
     if (ini_get('mbstring.encoding_translation') != 0) {
       return 'mbstring.encoding_translation';
     }
@@ -143,7 +139,7 @@ EOD;
   }
 
   /**
-   * Decodes UTF byte-order mark (BOM) into the encoding's name.
+   * Decodes UTF byte-order mark (BOM) to the encoding name.
    *
    * @param string $data
    *   The data possibly containing a BOM. This can be the entire contents of
@@ -167,7 +163,7 @@ EOD;
     ];
 
     foreach ($bomMap as $bom => $encoding) {
-      if (strpos($data, $bom) === 0) {
+      if (str_starts_with($data, $bom)) {
         return $encoding;
       }
     }
