@@ -5,6 +5,7 @@ namespace Drupal\Tests\field\Kernel\EntityReference;
 use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheableMetadata;
+use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Field\Plugin\Field\FieldFormatter\EntityReferenceEntityFormatter;
 use Drupal\field\Entity\FieldConfig;
@@ -124,6 +125,26 @@ class EntityReferenceFormatterTest extends EntityKernelTestBase {
       'value' => '<p>Hello, unsaved world!</p>',
       'format' => 'full_html',
     ];
+  }
+
+  /**
+   * @covers ::__construct
+   * @group legacy
+   */
+  public function testLegacyConstructor() {
+    $this->expectDeprecation('Calling Drupal\Core\Field\Plugin\Field\FieldFormatter\EntityReferenceEntityFormatter::__construct() with a logger factory as the eighth argument is deprecated in drupal:10.1.0 and will trigger an error from drupal:11.0.0. Pass a logger channel instead. See https://www.drupal.org/node/1234567');
+    new EntityReferenceEntityFormatter(
+      'test',
+      [],
+      $this->createMock(FieldDefinitionInterface::class),
+      [],
+      '',
+      '',
+      [],
+      $this->container->get('logger.factory'),
+      $this->container->get('entity_type.manager'),
+      $this->container->get('entity_display.repository')
+    );
   }
 
   /**
