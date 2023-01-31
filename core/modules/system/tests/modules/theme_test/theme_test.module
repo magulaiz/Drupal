@@ -67,10 +67,11 @@ function theme_test_theme($existing, $type, $theme, $path) {
     'variables' => [
       'foo' => 'foo',
       'bar' => 'bar',
-      'gaz' => 'gaz',
-      'deprecations' => \Drupal::state()->get('theme_test_deprecate_deprecations'),
-    ],
+      'deprecations' => [
+        'foo' => 'foo is deprecated in drupal:X.0.0 and is removed from drupal:Y.0.0. Use "bar" instead. See https://www.example.com',
+      ],
   ];
+  $items['theme_test_deprecate_unused'] = $items['theme_test_deprecate];
   return $items;
 }
 
