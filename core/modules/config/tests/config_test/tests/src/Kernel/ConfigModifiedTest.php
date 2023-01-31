@@ -18,7 +18,7 @@ class ConfigModifiedTest extends KernelTestBase {
    *
    * @var array
    */
-  public static $modules = ['config_test', 'system'];
+  protected static $modules = ['config_test', 'system'];
 
   /**
    * Verify config is not modified, modify it. Verify shows up as modified.
