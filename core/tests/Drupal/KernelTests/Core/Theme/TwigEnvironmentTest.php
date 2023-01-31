@@ -310,7 +310,7 @@ TWIG;
     $gaz_message = 'gaz is deprecated in drupal:X.0.0 and is removed from drupal:Y.0.0. Use "bar" instead. See https://www.example.com';
     $state->set('theme_test_deprecate_deprecations', [
       'foo' => $foo_message,
-      'gaz' => $gaz_message
+      'gaz' => $gaz_message,
     ]);
     // gaz is not used in the theme_test_deprecate template,
     // but foo and bar are.
