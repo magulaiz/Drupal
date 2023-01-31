@@ -8,11 +8,13 @@
 namespace Drupal\Tests\Core\Mail;
 
 use Drupal\Core\DependencyInjection\ContainerBuilder;
+use Drupal\Core\Logger\LoggerChannelFactoryInterface;
 use Drupal\Core\Render\RenderContext;
 use Drupal\Core\Render\RendererInterface;
 use Drupal\Tests\UnitTestCase;
 use Drupal\Core\Mail\MailManager;
 use Drupal\Component\Plugin\Discovery\DiscoveryInterface;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
@@ -114,7 +116,7 @@ class MailManagerTest extends UnitTestCase {
   /**
    * Sets up the mail manager for testing.
    */
-  protected function setUpMailManager($interface = []) {
+  protected function setUpMailManager($interface = [], $logger = NULL) {
     // Use the provided config for system.mail.interface settings.
     $this->configFactory = $this->getConfigFactoryStub([
       'system.mail' => [
@@ -124,11 +126,13 @@ class MailManagerTest extends UnitTestCase {
         'mail' => 'test@example.com',
       ],
     ]);
-    $logger_factory = $this->createMock('\Drupal\Core\Logger\LoggerChannelFactoryInterface');
+    if ($logger == NULL) {
+      $logger = $this->createMock(LoggerInterface::class);
+    }
     $string_translation = $this->getStringTranslationStub();
     $this->renderer = $this->createMock(RendererInterface::class);
     // Construct the manager object and override its discovery.
-    $this->mailManager = new TestMailManager(new \ArrayObject(), $this->cache, $this->moduleHandler, $this->configFactory, $logger_factory, $string_translation, $this->renderer);
+    $this->mailManager = new TestMailManager(new \ArrayObject(), $this->cache, $this->moduleHandler, $this->configFactory, $logger, $string_translation, $this->renderer);
     $this->mailManager->setDiscovery($this->discovery);
 
     $this->request = new Request();
@@ -142,6 +146,19 @@ class MailManagerTest extends UnitTestCase {
     $container->set('config.factory', $this->configFactory);
     $container->set('request_stack', $this->requestStack->reveal());
     \Drupal::setContainer($container);
+  }
+
+  /**
+   * @covers ::__construct
+   * @group legacy
+   */
+  public function testLegacyConstructor() {
+    $this->expectDeprecation('Calling Drupal\Core\Mail\MailManager::__construct() with a logger factory as the fifth argument is deprecated in drupal:10.1.0 and will trigger an error from drupal:11.0.0. Pass a logger channel instead. See https://www.drupal.org/node/1234567');
+    $interface = [
+      'default' => 'php_mail',
+      'example_testkey' => 'test_mail_collector',
+    ];
+    $this->setUpMailManager($interface, $this->createMock(LoggerChannelFactoryInterface::class));
   }
 
   /**

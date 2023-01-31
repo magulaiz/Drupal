@@ -5,6 +5,7 @@ namespace Drupal\Core\Mail;
 use Drupal\Component\Render\MarkupInterface;
 use Drupal\Component\Render\PlainTextOutput;
 use Drupal\Component\Utility\Html;
+use Drupal\Core\DependencyInjection\DeprecatedServicePropertyTrait;
 use Drupal\Core\Logger\LoggerChannelFactoryInterface;
 use Drupal\Core\Messenger\MessengerTrait;
 use Drupal\Core\Plugin\DefaultPluginManager;
@@ -16,6 +17,7 @@ use Drupal\Core\Render\RenderContext;
 use Drupal\Core\Render\RendererInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\StringTranslation\TranslationInterface;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\Mime\Address;
 use Symfony\Component\Mime\Header\MailboxHeader;
 
@@ -28,8 +30,14 @@ use Symfony\Component\Mime\Header\MailboxHeader;
  */
 class MailManager extends DefaultPluginManager implements MailManagerInterface {
 
+  use DeprecatedServicePropertyTrait;
   use MessengerTrait;
   use StringTranslationTrait;
+
+  /**
+   * {@inheritdoc}
+   */
+  protected $deprecatedProperties = ['loggerFactory' => 'logger.factory'];
 
   /**
    * The config factory.
@@ -39,11 +47,11 @@ class MailManager extends DefaultPluginManager implements MailManagerInterface {
   protected $configFactory;
 
   /**
-   * The logger factory.
+   * The logger service.
    *
-   * @var \Drupal\Core\Logger\LoggerChannelFactoryInterface
+   * @var \Psr\Log\LoggerInterface
    */
-  protected $loggerFactory;
+  protected $logger;
 
   /**
    * The renderer.
@@ -71,19 +79,23 @@ class MailManager extends DefaultPluginManager implements MailManagerInterface {
    *   The module handler to invoke the alter hook with.
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   The configuration factory.
-   * @param \Drupal\Core\Logger\LoggerChannelFactoryInterface $logger_factory
-   *   The logger channel factory.
+   * @param \Psr\Log\LoggerInterface $logger
+   *   The logger service.
    * @param \Drupal\Core\StringTranslation\TranslationInterface $string_translation
    *   The string translation service.
    * @param \Drupal\Core\Render\RendererInterface $renderer
    *   The renderer.
    */
-  public function __construct(\Traversable $namespaces, CacheBackendInterface $cache_backend, ModuleHandlerInterface $module_handler, ConfigFactoryInterface $config_factory, LoggerChannelFactoryInterface $logger_factory, TranslationInterface $string_translation, RendererInterface $renderer) {
+  public function __construct(\Traversable $namespaces, CacheBackendInterface $cache_backend, ModuleHandlerInterface $module_handler, ConfigFactoryInterface $config_factory, LoggerChannelFactoryInterface|LoggerInterface $logger, TranslationInterface $string_translation, RendererInterface $renderer) {
     parent::__construct('Plugin/Mail', $namespaces, $module_handler, 'Drupal\Core\Mail\MailInterface', 'Drupal\Core\Annotation\Mail');
     $this->alterInfo('mail_backend_info');
     $this->setCacheBackend($cache_backend, 'mail_backend_plugins');
     $this->configFactory = $config_factory;
-    $this->loggerFactory = $logger_factory;
+    if ($logger instanceof LoggerChannelFactoryInterface) {
+      @trigger_error('Calling ' . __METHOD__ . '() with a logger factory as the fifth argument is deprecated in drupal:10.1.0 and will trigger an error from drupal:11.0.0. Pass a logger channel instead. See https://www.drupal.org/node/1234567', E_USER_DEPRECATED);
+      $logger = $logger->get('mail');
+    }
+    $this->logger = $logger;
     $this->stringTranslation = $string_translation;
     $this->renderer = $renderer;
   }
@@ -307,12 +319,11 @@ class MailManager extends DefaultPluginManager implements MailManagerInterface {
         $message['result'] = $system->mail($message);
         // Log errors.
         if (!$message['result']) {
-          $this->loggerFactory->get('mail')
-            ->error('Error sending email (from %from to %to with reply-to %reply).', [
-              '%from' => $message['from'],
-              '%to' => $message['to'],
-              '%reply' => $message['reply-to'] ? $message['reply-to'] : $this->t('not set'),
-            ]);
+          $this->logger->error('Error sending email (from %from to %to with reply-to %reply).', [
+            '%from' => $message['from'],
+            '%to' => $message['to'],
+            '%reply' => $message['reply-to'] ? $message['reply-to'] : $this->t('not set'),
+          ]);
           $error_message = $params['_error_message'] ?? $this->t('Unable to send email. Contact the site administrator if the problem persists.');
           if ($error_message) {
             $this->messenger()->addError($error_message);
