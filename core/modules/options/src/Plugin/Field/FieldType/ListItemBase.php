@@ -107,6 +107,7 @@ abstract class ListItemBase extends FieldItemBase implements OptionsProviderInte
       '#type' => 'table',
       '#header' => [
         $this->t('Allowed values'),
+        $this->t('Delete'),
         $this->t('Weight'),
       ],
       '#attributes' => [
@@ -149,6 +150,19 @@ abstract class ListItemBase extends FieldItemBase implements OptionsProviderInte
             'source' => ['settings', 'allowed_values', 'table', $delta, 'item', 'label'],
           ],
           '#weight' => -20,
+        ],
+      ];
+      $element['allowed_values']['table'][$delta]['delete'] = [
+        '#type' => 'submit',
+        '#value' => $this->t('Remove'),
+        '#name' => "remove_row_button__$delta",
+        '#delta' => $delta,
+        '#submit' => [[static::class, 'deleteSubmit']],
+        '#limit_validation_errors' => [],
+        '#ajax' => [
+          'callback' => [static::class, 'deleteAjax'],
+          'wrapper' => $wrapper_id,
+          'effect' => 'fade',
         ],
       ];
       $element['allowed_values']['table'][$delta]['weight'] = [
@@ -202,6 +216,21 @@ abstract class ListItemBase extends FieldItemBase implements OptionsProviderInte
 
     // Go one level up in the form.
     $element = NestedArray::getValue($form, array_slice($button['#array_parents'], 0, -1));
+    $delta = $element['table']['#max_delta'];
+    $element['table'][$delta]['item']['#prefix'] = '<div class="ajax-new-content">' . ($element['table'][$delta]['item']['#prefix'] ?? '');
+    $element['table'][$delta]['item']['#suffix'] = ($element['table'][$delta]['item']['#suffix'] ?? '') . '</div>';
+
+    return $element;
+  }
+
+  public static function deleteSubmit(array $form, FormStateInterface $form_state) {
+    $form_state->set('items_count', $form_state->get('items_count') + 1);
+    $form_state->setRebuild();
+  }
+  public static function deleteAjax(array $form, FormStateInterface $form_state) {
+    $button = $form_state->getTriggeringElement();
+
+    $element = NestedArray::getValue($form, array_slice($button['#array_parents'], 0, -3));
     $delta = $element['table']['#max_delta'];
     $element['table'][$delta]['item']['#prefix'] = '<div class="ajax-new-content">' . ($element['table'][$delta]['item']['#prefix'] ?? '');
     $element['table'][$delta]['item']['#suffix'] = ($element['table'][$delta]['item']['#suffix'] ?? '') . '</div>';
