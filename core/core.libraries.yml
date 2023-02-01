@@ -423,14 +423,14 @@ loadjs:
     url: https://raw.githubusercontent.com/muicss/loadjs/4.2.0/LICENSE.txt
     gpl-compatible: true
   js:
-    assets/vendor/loadjs/loadjs.min.js: { minified: true }
+    assets/vendor/loadjs/loadjs.min.js: { minified: true, weight: -1 }
 
 drupal.autocomplete:
   version: VERSION
   js:
     misc/autocomplete.js: { weight: -1 }
     # The remaining JavaScript assets previously came from core/jquery.ui, a
-    # deprecated library.
+    # deprecated library.3
     # All weights are based on the requirements defined within each file.
     # @todo replace with solution in https://drupal.org/node/3076171
     assets/vendor/jquery.ui/ui/widgets/autocomplete-min.js: { weight: -11.7, minified: true }
