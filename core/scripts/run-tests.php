@@ -23,6 +23,10 @@ use PHPUnit\Runner\Version;
 use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\HttpFoundation\Request;
 
+if (PHP_SAPI !== 'cli') {
+  return;
+}
+
 // Define some colors for display.
 // A nice calming green.
 const SIMPLETEST_SCRIPT_COLOR_PASS = 32;
