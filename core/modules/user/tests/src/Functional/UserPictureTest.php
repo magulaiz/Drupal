@@ -120,7 +120,7 @@ class UserPictureTest extends BrowserTestBase {
     $image_style_id = $this->config('core.entity_view_display.user.user.compact')->get('content.user_picture.settings.image_style');
     $pipeline = \Drupal::service('image.processor')->createInstance('derivative')
       ->setImageStyle(ImageStyle::load($image_style_id))
-      ->setSourceImageUri($file->getfileUri());
+      ->setSourceImageUri($file->getFileUri());
     $image_url = \Drupal::service('file_url_generator')->transformRelative($pipeline->getDerivativeImageUrl()->toString());
     $alt_text = 'Profile picture for user ' . $this->webUser->getAccountName();
 
