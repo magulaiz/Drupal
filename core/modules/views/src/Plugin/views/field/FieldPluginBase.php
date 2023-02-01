@@ -1236,6 +1236,13 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
     if ($value instanceof MarkupInterface) {
       $value = (string) $value;
     }
+
+    // If twig_debug is enabled we strip out the html comments before running the empty check.
+    if (\Drupal::service('twig')->isDebug()) {
+      $value = preg_replace('/<!--.*?-->/s', '', (string)$value);
+      $value = trim($value);
+    }
+
     if (!isset($value)) {
       $empty = TRUE;
     }
