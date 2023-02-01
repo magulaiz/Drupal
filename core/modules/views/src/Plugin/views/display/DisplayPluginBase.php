@@ -1449,6 +1449,7 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
           '#default_value' => $this->getOption('title'),
           '#maxlength' => 255,
         ];
+        $this->globalTokenForm($form, $form_state);
         break;
 
       case 'css_class':

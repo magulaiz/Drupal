@@ -346,6 +346,18 @@ class ViewExecutableTest extends ViewsKernelTestBase {
   }
 
   /**
+   * Tests the title with tokens.
+   */
+  public function testTitleWithTokens() {
+    $view = Views::getView('test_executable_displays');
+    $view->setDisplay();
+
+    // Test the title methods.
+    $view->setTitle('Page [view:current-page] out of [view:page-count]');
+    $this->assertEquals($view->getTitle(), 'Page 1 out of 1');
+  }
+
+  /**
    * Tests the deconstructor to be sure that necessary objects are removed.
    */
   public function testDestroy() {

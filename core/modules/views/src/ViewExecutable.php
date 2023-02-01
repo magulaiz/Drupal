@@ -1857,6 +1857,8 @@ class ViewExecutable {
     if ($this->initStyle()) {
       $title = $this->style_plugin->tokenizeValue($title, 0);
     }
+    // Allow global token substitutions.
+    $title = $this->display_handler->globalTokenReplace($title);
     return $title;
   }
 
