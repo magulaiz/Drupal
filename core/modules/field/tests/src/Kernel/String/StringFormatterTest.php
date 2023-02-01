@@ -198,6 +198,7 @@ class StringFormatterTest extends KernelTestBase {
    */
   public function testLinkToContentForEntitiesWithNoCanonicalPath() {
     $this->enableModules(['entity_test']);
+    $this->installEntitySchema('entity_test_label');
     $field_name = 'test_field_name';
     $entity_type = $bundle = 'entity_test_label';
 
