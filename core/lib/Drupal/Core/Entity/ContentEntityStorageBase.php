@@ -1017,6 +1017,13 @@ abstract class ContentEntityStorageBase extends EntityStorageBase implements Con
    *   An entity object being saved.
    */
   protected function populateAffectedRevisionTranslations(ContentEntityInterface $entity) {
+    // Skip changing affected flag if the entity is syncing and
+    // the existing revision is updated instead of creating a new one.
+    // Uses for the content import and migration, when we need to keep
+    // the field value for the old revisions.
+    if ($entity->isSyncing() && !$entity->isNewRevision()) {
+      return;
+    }
     if ($this->entityType->isTranslatable() && $this->entityType->isRevisionable()) {
       $languages = $entity->getTranslationLanguages();
       foreach ($languages as $langcode => $language) {
