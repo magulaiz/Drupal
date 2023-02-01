@@ -72,7 +72,7 @@ final class StringFormatterTest extends UnitTestCase {
     $items->current()->willReturn($item);
     $items->key()->willReturn(0);
 
-    $elements = $fieldFormatter->viewElements($items->reveal(), 'testlang');
+    $elements = $fieldFormatter->viewElements($items->reveal(), 'en');
     if ($expectIsLinkElement) {
       $this->assertEquals('link', $elements[0]['#type']);
       $this->assertEquals('FooText', $elements[0]['#title']['#context']['value']);
