@@ -140,11 +140,24 @@ class PhpUnitTestRunner implements ContainerInjectionInterface {
     }
     $phpunit_bin = $this->phpUnitCommand();
 
+    // Add phpdbg if we've collected .cov files.
+    $cov_directory = getenv('SIMPLETEST_COV_DIRECTORY');
+
+    if ($cov_directory !== FALSE) {
+      $phpunit_bin = 'phpdbg -qrr ' . $phpunit_bin;
+    }
+
     $command = [
       $phpunit_bin,
       '--log-junit',
       escapeshellarg($phpunit_file),
     ];
+
+    // Tell phpunit to make .cov files if it should.
+    if ($cov_directory !== FALSE) {
+      $command[] = '--coverage-php';
+      $command[] = escapeshellarg($cov_directory . '/' . basename($phpunit_file) . '.cov');
+    }
 
     // Optimized for running a single test.
     if (count($unescaped_test_classnames) == 1) {

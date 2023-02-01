@@ -36,7 +36,8 @@
         "symfony/finder": "^6.2",
         "symfony/lock": "^6.2",
         "symfony/browser-kit": "^6.2",
-        "symfony/dom-crawler": "^6.2"
+        "symfony/dom-crawler": "^6.2",
+        "phpunit/phpcov": "@stable"
     },
     "replace": {
         "symfony/polyfill-php72": "*",

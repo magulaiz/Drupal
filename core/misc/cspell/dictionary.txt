@@ -866,7 +866,10 @@ persistable
 phpass
 phpcbf
 phpcodesniffer
+phpconv
+phpcov
 phpcs
+phpdbg
 phpdocumentor
 phpfile
 phpserialize

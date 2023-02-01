@@ -48,6 +48,24 @@ if ($args['help'] || $count == 0) {
 
 simpletest_script_init();
 
+if ($args['clover']) {
+  $cov_directory = sys_get_temp_dir() . '/simpletest_phpunit_cov';
+  if (!$args['execute-test']) {
+    echo "\nCollecting coverage files in $cov_directory\n";
+  }
+  if (!file_exists($cov_directory)) {
+    mkdir($cov_directory, 0777, TRUE);
+  }
+  else {
+    // If we are not executing one test in a separate process, make sure the
+    // directory is empty.
+    if (!$args['execute-test']) {
+      array_map('unlink', glob($cov_directory . '/*'));
+    }
+  }
+  putenv("SIMPLETEST_COV_DIRECTORY=$cov_directory");
+}
+
 if (!class_exists(TestCase::class)) {
   echo "\nrun-tests.sh requires the PHPUnit testing framework. Please use 'composer install' to ensure that it is present.\n\n";
   exit(SIMPLETEST_SCRIPT_EXIT_FAILURE);
@@ -179,6 +197,10 @@ simpletest_script_reporter_display_results();
 
 if ($args['xml']) {
   simpletest_script_reporter_write_xml_results();
+}
+
+if (!empty($args['clover'])) {
+  simpletest_script_generate_clover($args['clover']);
 }
 
 // Clean up all test results.
@@ -389,6 +411,7 @@ function simpletest_script_parse_args() {
     'test-id' => 0,
     'execute-test' => '',
     'xml' => '',
+    'clover' => '',
     'non-html' => FALSE,
   ];
 
@@ -787,6 +810,24 @@ function simpletest_script_execute_batch($test_classes) {
 }
 
 /**
+ * Use phpdbg and phpconv to aggregate all the coverage information.
+ */
+function simpletest_script_generate_clover($clover_file) {
+  $runner = PhpUnitTestRunner::create(\Drupal::getContainer());
+  $phpcov = str_replace('phpunit/phpunit/phpunit', 'phpunit/phpcov/phpcov', $runner->phpUnitCommand());
+
+  $command = [
+    'phpdbg -qrr',
+    $phpcov,
+    'merge',
+    '--clover',
+    escapeshellarg($clover_file),
+    escapeshellarg(getenv('SIMPLETEST_COV_DIRECTORY')),
+  ];
+  passthru(implode(' ', $command));
+}
+
+/**
  * Run a PHPUnit-based test.
  */
 function simpletest_script_run_phpunit($test_id, $class) {
@@ -815,6 +856,10 @@ function simpletest_script_run_one_test($test_id, $test_class) {
   try {
     if ($args['suppress-deprecations']) {
       putenv('SYMFONY_DEPRECATIONS_HELPER=disabled');
+    }
+    if ($args['clover']) {
+      $cov_directory = sys_get_temp_dir() . '/simpletest_phpunit_cov';
+      putenv("SIMPLETEST_COV_DIRECTORY=$cov_directory");
     }
     $status = simpletest_script_run_phpunit($test_id, $test_class);
     exit($status);
@@ -848,6 +893,9 @@ function simpletest_script_command($test_id, $test_class) {
   }
   if (!empty($args['dburl'])) {
     $command .= ' --dburl ' . escapeshellarg($args['dburl']);
+  }
+  if (!empty($args['clover'])) {
+    $command .= ' --clover ' . escapeshellarg($args['clover']);
   }
   $command .= ' --php ' . escapeshellarg($php);
   $command .= " --test-id $test_id";
