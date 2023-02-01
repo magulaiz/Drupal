@@ -58,35 +58,76 @@ class MimeTypeTest extends FileTestBase {
       'mimetypes' => [
         0 => 'application/java-archive',
         1 => 'image/jpeg',
+        2 => 'application/msword',
+        3 => 'application/octet-stream',
+        4 => 'application/oda',
+        5 => 'application/ogg',
+        6 => 'application/pdf',
+      ],
+      'extensions' => [
+        'jar' => 0,
+        'jpg' => 1,
+        'doc' => 2,
+        'pcf.z' => 3,
+        'oda' => 4,
+        'ogg' => 5,
+        'pdf' => 6,
+        'jpeg' => 1,
+        'file_test_1' => 3,
+        'file_test_2' => 3,
+        'text' => 6,
+        'jar.jpg' => 1,
+        'jpg.jar' => 0,
+      ],
+    ];
+
+    $test_case2 = [
+      'jar' => 'application/java-archive',
+      'jpeg' => 'image/jpeg',
+      'jpg' => 'image/jpeg',
+      'jar.jpg' => 'image/jpeg',
+      'jpg.jar' => 'application/java-archive',
+      'pcf.z' => 'application/octet-stream',
+      'junk' => NULL,
+      'file_test_1' => 'application/octet-stream',
+      'file_test_2' => 'application/octet-stream',
+      'doc' => 'application/msword',
+      'ogg' => 'application/ogg',
+      'pdf' => 'application/pdf',
+      'text' => 'application/pdf',
+    ];
+
+    $mime_type_mapper = $this->container->get('file.mime_type.mapper');
+    $mime_type_mapper->setMapping($mapping);
+
+    foreach ($test_case2 as $input => $expected) {
+      $output = $mime_type_mapper->getMimeTypeForExtension($input);
+      $this->assertSame($expected, $output, sprintf("Mimetype (using custom mappings) for '%s' is '%s' (expected: '%s').", $input, $output, $expected));
+
+    }
+
+  }
+
+  /**
+   * Test deprecation of ::setMapping.
+   *
+   * @group legacy
+   */
+  public function testSetMappingDeprecation() {
+
+    $this->expectDeprecation('Drupal\Core\File\MimeType\ExtensionMimeTypeGuesser::setMapping() is deprecated in drupal:10.1.0, and will be removed in drupal:11.0.0. Use \Drupal\Core\File\MimeType\MimeTypeMapper::setMapping() instead. See https://www.drupal.org/project/drupal/issues/2311679.');
+
+    $extension_guesser = $this->container->get('file.mime_type.guesser.extension');
+    $extension_guesser->setMapping([
+      'mimetypes' => [
+        0 => 'application/java-archive',
+        1 => 'image/jpeg',
       ],
       'extensions' => [
         'jar' => 0,
         'jpg' => 1,
       ],
-    ];
-
-    $test_case = [
-      'test.jar' => 'application/java-archive',
-      'test.jpeg' => 'application/octet-stream',
-      'test.jpg' => 'image/jpeg',
-      'test.jar.jpg' => 'image/jpeg',
-      'test.jpg.jar' => 'application/java-archive',
-      'test.pcf.z' => 'application/octet-stream',
-      'pcf.z' => 'application/octet-stream',
-      'jar' => 'application/octet-stream',
-      'some.junk' => 'application/octet-stream',
-      'foo.file_test_1' => 'application/octet-stream',
-      'foo.file_test_2' => 'application/octet-stream',
-      'foo.doc' => 'application/octet-stream',
-      'test.ogg' => 'application/octet-stream',
-    ];
-    $extension_guesser = $this->container->get('file.mime_type.guesser.extension');
-    $extension_guesser->setMapping($mapping);
-
-    foreach ($test_case as $input => $expected) {
-      $output = $extension_guesser->guessMimeType($input);
-      $this->assertSame($expected, $output);
-    }
+    ]);
   }
 
 }

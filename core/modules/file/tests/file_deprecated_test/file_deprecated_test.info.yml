@@ -1,0 +1,6 @@
+name: 'File deprecation test'
+type: module
+description: 'Support module for testing deprecated file features.'
+package: Testing
+version: VERSION
+core_required_version: 10

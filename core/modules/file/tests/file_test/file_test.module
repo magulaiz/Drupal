@@ -9,6 +9,7 @@
  */
 
 use Drupal\file\Entity\File;
+use Drupal\Core\File\MimeType\MimeTypeMapperInterface;
 
 const FILE_URL_TEST_CDN_1 = 'http://cdn1.example.com';
 const FILE_URL_TEST_CDN_2 = 'http://cdn2.example.com';
@@ -292,18 +293,15 @@ function file_test_file_url_alter(&$uri) {
 }
 
 /**
- * Implements hook_file_mimetype_mapping_alter().
+ * Implements hook_mimetype_alter().
  */
-function file_test_file_mimetype_mapping_alter(&$mapping) {
+function file_test_mimetype_alter(MimeTypeMapperInterface $mime_type_mapper) {
   // Add new mappings.
-  $mapping['mimetypes']['file_test_mimetype_1'] = 'madeup/file_test_1';
-  $mapping['mimetypes']['file_test_mimetype_2'] = 'madeup/file_test_2';
-  $mapping['mimetypes']['file_test_mimetype_3'] = 'madeup/doc';
-  $mapping['extensions']['file_test_1'] = 'file_test_mimetype_1';
-  $mapping['extensions']['file_test_2'] = 'file_test_mimetype_2';
-  $mapping['extensions']['file_test_3'] = 'file_test_mimetype_2';
+  $mime_type_mapper->addMapping('madeup/file_test_1', 'file_test_1');
+  $mime_type_mapper->addMapping('madeup/file_test_2', 'file_test_2');
+  $mime_type_mapper->addMapping('madeup/file_test_2', 'file_test_3');
   // Override existing mapping.
-  $mapping['extensions']['doc'] = 'file_test_mimetype_3';
+  $mime_type_mapper->addMapping('madeup/doc', 'doc');
 }
 
 /**
