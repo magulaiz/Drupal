@@ -106,7 +106,6 @@ behaviour
 bergmann
 berne
 bgblue
-bggya
 bgred
 bigpipe
 bikeshed
@@ -275,7 +274,6 @@ daycount
 dblog
 dbtng
 dburl
-ddev
 dealerdirect
 deckard
 deconstructor
@@ -302,6 +300,7 @@ dependees
 depenencies
 deprioritize
 derivedfrom
+derp
 desaturate
 desaturated
 desaturates
@@ -450,7 +449,6 @@ fodt
 fooalert
 foobarbaz
 foobargorilla
-foobars
 foofoo
 foos
 formattable
@@ -462,7 +460,6 @@ fqcn
 fraîche
 frombracket
 frontpage
-fsdf
 fudgy
 fulldata
 fulldate
@@ -478,7 +475,6 @@ gethttpclient
 getlist
 getview
 gids
-giggabyte
 gloop
 gnumeric
 goldfinger
@@ -532,7 +528,6 @@ iconwrap
 idconflict
 idekey
 idempotency
-idempotently
 iframes
 iframeupload
 ignoretag
@@ -661,7 +656,6 @@ mainpage
 makealternatemessage
 makedefaultmessage
 makewarningmessage
-makz
 mame
 mank
 maryjane
@@ -1309,7 +1303,6 @@ unaliased
 unallowed
 unassigning
 unassigns
-unhides
 unban
 unbans
 unbundleable
@@ -1328,6 +1321,7 @@ ungenerated
 ungroup
 ungroupable
 unhashed
+unhides
 unindented
 unindexed
 uninstallation
@@ -1440,7 +1434,6 @@ xbap
 xbeg
 xbitmap
 xfbml
-xgbql
 xjkm
 xlen
 xlgp
