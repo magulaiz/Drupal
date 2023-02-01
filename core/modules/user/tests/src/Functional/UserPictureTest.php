@@ -7,6 +7,7 @@ use Drupal\Core\Entity\Entity\EntityViewDisplay;
 use Drupal\Core\StreamWrapper\StreamWrapperManager;
 use Drupal\file\Entity\File;
 use Drupal\image\Entity\ImageStyle;
+use Drupal\image\ImageProcessor;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\TestFileCreationTrait;
 
@@ -118,7 +119,7 @@ class UserPictureTest extends BrowserTestBase {
     $this->config('system.theme.global')->set('features.node_user_picture', TRUE)->save();
 
     $image_style_id = $this->config('core.entity_view_display.user.user.compact')->get('content.user_picture.settings.image_style');
-    $pipeline = \Drupal::service('image.processor')->createInstance('derivative')
+    $pipeline = \Drupal::service(ImageProcessor::class)->createInstance('derivative')
       ->setImageStyle(ImageStyle::load($image_style_id))
       ->setSourceImageUri($file->getfileUri());
     $image_url = \Drupal::service('file_url_generator')->transformRelative($pipeline->getDerivativeImageUrl()->toString());

@@ -4,14 +4,17 @@ services:
     arguments: ['@stream_wrapper_manager']
     tags:
       - { name: path_processor_inbound, priority: 300 }
-  image.processor:
-    class: Drupal\image\ImageProcessor
-    parent: default_plugin_manager
+  Drupal\image\ImageProcessor:
+    autowire: true
+    arguments:
+      $namespaces: '@container.namespaces'
+      $cacheDiscovery: '@cache.discovery'
     tags:
       - { name: plugin_manager_cache_clear }
-  image.pipeline.derivative.event_subscriber:
-    class:  Drupal\image\EventSubscriber\ImageDerivativeSubscriber
-    arguments: ['@image.factory', '@image.processor', '@stream_wrapper_manager', '@private_key', '@module_handler','@config.factory', '@request_stack', '@logger.channel.image', '@file_system', '@file_url_generator']
+  Drupal\image\EventSubscriber\ImageDerivativeSubscriber:
+    autowire: true
+    arguments:
+      $logger: '@logger.channel.image'
     tags:
       - { name: 'event_subscriber' }
   plugin.manager.image.effect:

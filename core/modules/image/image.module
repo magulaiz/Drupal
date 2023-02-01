@@ -16,6 +16,7 @@ use Drupal\file\FileInterface;
 use Drupal\image\Entity\ImageStyle;
 use Drupal\image\Event\ImageStyleEvent;
 use Drupal\image\Event\ImageStyleEvents;
+use Drupal\image\ImageProcessor;
 
 /**
  * The name of the query parameter for image derivative tokens.
@@ -256,7 +257,7 @@ function image_style_options($include_empty = TRUE) {
 function template_preprocess_image_style(&$variables) {
   $style = ImageStyle::load($variables['style_name']);
 
-  $pipeline = \Drupal::service('image.processor')->createInstance('derivative')
+  $pipeline = \Drupal::service(ImageProcessor::class)->createInstance('derivative')
     ->setImageStyle($style)
     ->setSourceImageUri($variables['uri'])
     ->setSourceImageDimensions($variables['width'], $variables['height']);

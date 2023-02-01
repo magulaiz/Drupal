@@ -9,6 +9,7 @@ use Drupal\entity_test\Entity\EntityTest;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\file\Entity\File;
 use Drupal\image\Entity\ImageStyle;
+use Drupal\image\ImageProcessor;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\Tests\TestFileCreationTrait;
@@ -98,7 +99,7 @@ class ImageThemeFunctionTest extends KernelTestBase {
     $style->save();
 
     // Create an image process pipeline.
-    $pipeline = \Drupal::service('image.processor')->createInstance('derivative')
+    $pipeline = \Drupal::service(ImageProcessor::class)->createInstance('derivative')
       ->setImageStyle($style)
       ->setSourceImageUri($original_uri);
     $url = \Drupal::service('file_url_generator')->transformRelative($pipeline->getDerivativeImageUrl()->toString());
@@ -165,7 +166,7 @@ class ImageThemeFunctionTest extends KernelTestBase {
     $style->save();
 
     // Create an image process pipeline.
-    $pipeline = \Drupal::service('image.processor')->createInstance('derivative')
+    $pipeline = \Drupal::service(ImageProcessor::class)->createInstance('derivative')
       ->setImageStyle($style)
       ->setSourceImageUri($original_uri);
     $url = \Drupal::service('file_url_generator')->transformRelative($pipeline->getDerivativeImageUrl()->toString());

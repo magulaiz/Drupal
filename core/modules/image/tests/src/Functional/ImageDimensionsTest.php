@@ -4,6 +4,7 @@ namespace Drupal\Tests\image\Functional;
 
 use Drupal\Core\File\FileSystemInterface;
 use Drupal\image\Entity\ImageStyle;
+use Drupal\image\ImageProcessor;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\TestFileCreationTrait;
 
@@ -314,7 +315,7 @@ class ImageDimensionsTest extends BrowserTestBase {
     $style = ImageStyle::create(['name' => 'test', 'label' => 'Test']);
     $style->save();
 
-    $pipeline = \Drupal::service('image.processor')->createInstance('derivative')
+    $pipeline = \Drupal::service(ImageProcessor::class)->createInstance('derivative')
       ->setImageStyle($style)
       ->setSourceImageUri($original_uri);
 
@@ -534,7 +535,7 @@ class ImageDimensionsTest extends BrowserTestBase {
       '#height' => 20,
     ];
     // PNG original image. Should be resized to 100x100.
-    $pipeline = \Drupal::service('image.processor')->createInstance('derivative')
+    $pipeline = \Drupal::service(ImageProcessor::class)->createInstance('derivative')
       ->setImageStyle($style)
       ->setSourceImageUri($original_uri);
     $generated_uri = 'public://styles/test_uri/public/' . $file_system->basename($original_uri);
@@ -551,7 +552,7 @@ class ImageDimensionsTest extends BrowserTestBase {
     // GIF original image. Should be resized to 50x50.
     $file = $files[1];
     $original_uri = $file_system->copy($file->uri, 'public://', FileSystemInterface::EXISTS_RENAME);
-    $pipeline = \Drupal::service('image.processor')->createInstance('derivative')
+    $pipeline = \Drupal::service(ImageProcessor::class)->createInstance('derivative')
       ->setImageStyle($style)
       ->setSourceImageUri($original_uri);
     $generated_uri = 'public://styles/test_uri/public/' . $file_system->basename($original_uri);

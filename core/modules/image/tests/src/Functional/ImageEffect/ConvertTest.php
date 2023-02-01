@@ -4,6 +4,7 @@ namespace Drupal\Tests\image\Functional\ImageEffect;
 
 use Drupal\Core\File\FileSystemInterface;
 use Drupal\image\Entity\ImageStyle;
+use Drupal\image\ImageProcessor;
 use Drupal\Tests\BrowserTestBase;
 
 /**
@@ -47,7 +48,7 @@ class ConvertTest extends BrowserTestBase {
     $this->assertFileExists($test_uri);
 
     // Execute the image style on the test image via a GET request.
-    $pipeline = \Drupal::service('image.processor')->createInstance('derivative')
+    $pipeline = \Drupal::service(ImageProcessor::class)->createInstance('derivative')
       ->setImageStyle($image_style)
       ->setSourceImageUri($test_uri);
     $derivative_uri = 'public://styles/image_effect_test/public/image-test-do.png.jpeg';

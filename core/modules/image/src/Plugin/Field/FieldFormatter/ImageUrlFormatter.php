@@ -92,7 +92,7 @@ class ImageUrlFormatter extends ImageFormatterBase {
       $configuration['third_party_settings'],
       $container->get('entity_type.manager')->getStorage('image_style'),
       $container->get('current_user'),
-      $container->get('image.processor'),
+      $container->get(ImageProcessor::class),
     );
   }
 

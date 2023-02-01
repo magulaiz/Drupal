@@ -4,6 +4,7 @@ namespace Drupal\Tests\image\Kernel;
 
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\image\Entity\ImageStyle;
+use Drupal\image\ImageProcessor;
 
 /**
  * @coversDefaultClass \Drupal\image\Plugin\ImageProcessPipeline\Derivative
@@ -37,7 +38,7 @@ class DerivativeImageProcessTest extends KernelTestBase {
   protected function setUp(): void {
     parent::setUp();
     $this->installConfig(['system', 'image']);
-    $this->imageProcessor = \Drupal::service('image.processor');
+    $this->imageProcessor = \Drupal::service(ImageProcessor::class);
     $this->imageStyle = ImageStyle::load('thumbnail');
     \Drupal::service('file_system')->copy('core/tests/fixtures/files/image-1.png', 'public://test.png');
   }

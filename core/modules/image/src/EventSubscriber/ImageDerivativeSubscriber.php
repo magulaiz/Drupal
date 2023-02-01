@@ -33,46 +33,11 @@ use Symfony\Component\HttpFoundation\RequestStack;
 class ImageDerivativeSubscriber implements EventSubscriberInterface {
 
   /**
-   * The image factory service.
-   *
-   * @var \Drupal\Core\Image\ImageFactory
-   */
-  protected $imageFactory;
-
-  /**
-   * The image processor service.
-   *
-   * @var \Drupal\image\ImageProcessor
-   */
-  protected $imageProcessor;
-
-  /**
-   * The stream wrapper manager service.
-   *
-   * @var \Drupal\Core\StreamWrapper\StreamWrapperManagerInterface
-   */
-  protected $streamWrapperManager;
-
-  /**
    * The Drupal private key.
    *
    * @var string
    */
   protected $privateKey;
-
-  /**
-   * The module handler service.
-   *
-   * @var \Drupal\Core\Extension\ModuleHandlerInterface
-   */
-  protected $moduleHandler;
-
-  /**
-   * The configuration factory.
-   *
-   * @var \Drupal\Core\Config\ConfigFactoryInterface
-   */
-  protected $configFactory;
 
   /**
    * The current request.
@@ -82,61 +47,43 @@ class ImageDerivativeSubscriber implements EventSubscriberInterface {
   protected $currentRequest;
 
   /**
-   * The logger service.
-   *
-   * @var \Psr\Log\LoggerInterface
-   */
-  protected $logger;
-
-  /**
-   * The file system service.
-   *
-   * @var \Drupal\Core\File\FileSystemInterface
-   */
-  protected $fileSystem;
-
-  /**
-   * The file URL generator.
-   *
-   * @var \Drupal\Core\File\FileUrlGeneratorInterface
-   */
-  protected $fileUrlGenerator;
-
-  /**
    * Constructs a new ImageDerivativeSubscriber.
    *
-   * @param \Drupal\Core\Image\ImageFactory $image_factory
+   * @param \Drupal\Core\Image\ImageFactory $imageFactory
    *   The image factory.
-   * @param \Drupal\image\ImageProcessor $image_processor
+   * @param \Drupal\image\ImageProcessor $imageProcessor
    *   The image processor service.
-   * @param \Drupal\Core\StreamWrapper\StreamWrapperManagerInterface $stream_wrapper_manager
+   * @param \Drupal\Core\StreamWrapper\StreamWrapperManagerInterface $streamWrapperManager
    *   The stream wrapper manager service.
-   * @param \Drupal\Core\PrivateKey $private_key
+   * @param \Drupal\Core\PrivateKey $privateKey
    *   The Drupal private key service.
-   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
+   * @param \Drupal\Core\Extension\ModuleHandlerInterface $moduleHandler
    *   The module handler service.
-   * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
+   * @param \Drupal\Core\Config\ConfigFactoryInterface $configFactory
    *   The config factory service.
-   * @param \Symfony\Component\HttpFoundation\RequestStack $request_stack
+   * @param \Symfony\Component\HttpFoundation\RequestStack $requestStack
    *   The request stack.
    * @param \Psr\Log\LoggerInterface $logger
    *   The logger service.
-   * @param \Drupal\Core\File\FileSystemInterface $file_system
+   * @param \Drupal\Core\File\FileSystemInterface $fileSystem
    *   The file system service.
-   * @param \Drupal\Core\File\FileUrlGeneratorInterface $file_url_generator
+   * @param \Drupal\Core\File\FileUrlGeneratorInterface $fileUrlGenerator
    *   The file URL generator.
    */
-  public function __construct(ImageFactory $image_factory, ImageProcessor $image_processor, StreamWrapperManagerInterface $stream_wrapper_manager, PrivateKey $private_key, ModuleHandlerInterface $module_handler, ConfigFactoryInterface $config_factory, RequestStack $request_stack, LoggerInterface $logger, FileSystemInterface $file_system, FileUrlGeneratorInterface $file_url_generator) {
-    $this->imageFactory = $image_factory;
-    $this->imageProcessor = $image_processor;
-    $this->streamWrapperManager = $stream_wrapper_manager;
-    $this->privateKey = $private_key->get();
-    $this->moduleHandler = $module_handler;
-    $this->configFactory = $config_factory;
-    $this->currentRequest = $request_stack->getCurrentRequest();
-    $this->logger = $logger;
-    $this->fileSystem = $file_system;
-    $this->fileUrlGenerator = $file_url_generator;
+  public function __construct(
+    protected readonly ImageFactory $imageFactory,
+    protected readonly ImageProcessor $imageProcessor,
+    protected readonly StreamWrapperManagerInterface $streamWrapperManager,
+    PrivateKey $privateKey,
+    protected readonly ModuleHandlerInterface $moduleHandler,
+    protected readonly ConfigFactoryInterface $configFactory,
+    RequestStack $requestStack,
+    protected readonly LoggerInterface $logger,
+    protected readonly FileSystemInterface $fileSystem,
+    protected readonly FileUrlGeneratorInterface $fileUrlGenerator,
+  ) {
+    $this->privateKey = $privateKey->get();
+    $this->currentRequest = $requestStack->getCurrentRequest();
   }
 
   /**

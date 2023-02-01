@@ -92,7 +92,7 @@ class ImageStyleDownloadController extends FileDownloadController {
       $container->get('image.factory'),
       $container->get('stream_wrapper_manager'),
       $container->get('file_system'),
-      $container->get('image.processor')
+      $container->get(ImageProcessor::class)
     );
   }
 

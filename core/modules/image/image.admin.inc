@@ -6,6 +6,7 @@
  */
 
 use Drupal\Core\Render\Element;
+use Drupal\image\ImageProcessor;
 
 /**
  * Prepares variables for image style preview templates.
@@ -52,7 +53,7 @@ function template_preprocess_image_style_preview(&$variables) {
   }
 
   // Set up derivative file pipeline.
-  $pipeline = \Drupal::service('image.processor')->createInstance('derivative')
+  $pipeline = \Drupal::service(ImageProcessor::class)->createInstance('derivative')
     ->setImageStyle($style)
     ->setSourceImageUri($original_path);
   $preview_file = $pipeline->getDerivativeImageUri();

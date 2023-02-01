@@ -105,7 +105,7 @@ class ImageFormatter extends ImageFormatterBase {
       $container->get('current_user'),
       $container->get('entity_type.manager')->getStorage('image_style'),
       $container->get('file_url_generator'),
-      $container->get('image.processor')
+      $container->get(ImageProcessor::class)
     );
   }
 

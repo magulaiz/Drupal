@@ -15,7 +15,7 @@ class ImageProcessor extends DefaultPluginManager {
   /**
    * {@inheritdoc}
    */
-  public function __construct(\Traversable $namespaces, CacheBackendInterface $cache_backend, ModuleHandlerInterface $module_handler) {
+  public function __construct(\Traversable $namespaces, CacheBackendInterface $cacheDiscovery, ModuleHandlerInterface $module_handler) {
     parent::__construct(
       'Plugin/ImageProcessPipeline',
       $namespaces,
@@ -24,7 +24,7 @@ class ImageProcessor extends DefaultPluginManager {
       ImageProcessPipeline::class
     );
     $this->alterInfo('image_process_pipeline_plugin_info');
-    $this->setCacheBackend($cache_backend, 'image_process_pipeline_plugins');
+    $this->setCacheBackend($cacheDiscovery, 'image_process_pipeline_plugins');
   }
 
 }

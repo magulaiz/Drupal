@@ -7,6 +7,7 @@ use Drupal\Core\Entity\Entity\EntityViewDisplay;
 use Drupal\Core\Url;
 use Drupal\file\Entity\File;
 use Drupal\image\Entity\ImageStyle;
+use Drupal\image\ImageProcessor;
 use Drupal\image\ImageStyleInterface;
 use Drupal\node\Entity\Node;
 use Drupal\Tests\TestFileCreationTrait;
@@ -42,7 +43,7 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
       $file_path = \Drupal::service('file_system')->copy($file->uri, 'public://');
     }
 
-    $pipeline = \Drupal::service('image.processor')->createInstance('derivative')
+    $pipeline = \Drupal::service(ImageProcessor::class)->createInstance('derivative')
       ->setImageStyle($style)
       ->setSourceImageUri($file_path);
     return $pipeline->getDerivativeImageUrl() ? $file_path : FALSE;
@@ -351,7 +352,7 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
     $file_url_generator = \Drupal::service('file_url_generator');
 
     $this->drupalGet('node/' . $nid);
-    $pipeline = \Drupal::service('image.processor')->createInstance('derivative')
+    $pipeline = \Drupal::service(ImageProcessor::class)->createInstance('derivative')
       ->setImageStyle($style)
       ->setSourceImageUri($original_uri);
     $this->assertSession()->responseContains($file_url_generator->transformRelative($pipeline->getDerivativeImageUrl()->toString()));
@@ -370,7 +371,7 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
 
     // Reload the image style using the new name.
     $style = ImageStyle::load($new_style_name);
-    $pipeline = \Drupal::service('image.processor')->createInstance('derivative')
+    $pipeline = \Drupal::service(ImageProcessor::class)->createInstance('derivative')
       ->setImageStyle($style)
       ->setSourceImageUri($original_uri);
     $this->assertSession()->responseContains($file_url_generator->transformRelative($pipeline->getDerivativeImageUrl()->toString()));
@@ -385,7 +386,7 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
 
     $replacement_style = ImageStyle::load('thumbnail');
     $this->drupalGet('node/' . $nid);
-    $pipeline = \Drupal::service('image.processor')->createInstance('derivative')
+    $pipeline = \Drupal::service(ImageProcessor::class)->createInstance('derivative')
       ->setImageStyle($replacement_style)
       ->setSourceImageUri($original_uri);
     $this->assertSession()->responseContains($file_url_generator->transformRelative($pipeline->getDerivativeImageUrl()->toString()));
@@ -460,7 +461,7 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
     // Create an image to make sure it gets flushed.
     $files = $this->drupalGetTestFiles('image');
     $image_uri = $files[0]->uri;
-    $pipeline = \Drupal::service('image.processor')->createInstance('derivative')
+    $pipeline = \Drupal::service(ImageProcessor::class)->createInstance('derivative')
       ->setImageStyle($style)
       ->setSourceImageUri($image_uri);
     $this->assertTrue($pipeline->buildDerivativeImage());
@@ -512,7 +513,7 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
 
     // Test that image is displayed using newly created style.
     $this->drupalGet('node/' . $nid);
-    $pipeline = \Drupal::service('image.processor')->createInstance('derivative')
+    $pipeline = \Drupal::service(ImageProcessor::class)->createInstance('derivative')
       ->setImageStyle($style)
       ->setSourceImageUri($original_uri);
     $this->assertSession()->responseContains(\Drupal::service('file_url_generator')->transformRelative($pipeline->getDerivativeImageUrl()->toString()));

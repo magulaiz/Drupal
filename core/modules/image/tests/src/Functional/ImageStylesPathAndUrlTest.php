@@ -5,6 +5,7 @@ namespace Drupal\Tests\image\Functional;
 use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\StreamWrapper\StreamWrapperManager;
 use Drupal\image\Entity\ImageStyle;
+use Drupal\image\ImageProcessor;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\TestFileCreationTrait;
@@ -377,13 +378,13 @@ class ImageStylesPathAndUrlTest extends BrowserTestBase {
   public function testImageStylePath() {
     $scheme = 'public';
 
-    $pipeline = \Drupal::service('image.processor')->createInstance('derivative')
+    $pipeline = \Drupal::service(ImageProcessor::class)->createInstance('derivative')
       ->setImageStyle($this->style)
       ->setSourceImageUri("$scheme://foo/bar.gif");
     // Got the path for a file URI.
     $this->assertSame("$scheme://styles/" . $this->style->id() . "/$scheme/foo/bar.gif", $pipeline->getDerivativeImageUri());
 
-    $pipeline = \Drupal::service('image.processor')->createInstance('derivative')
+    $pipeline = \Drupal::service(ImageProcessor::class)->createInstance('derivative')
       ->setImageStyle($this->style)
       ->setSourceImageUri('foo/bar.gif');
     // Got the path for a relative file path.
@@ -395,7 +396,7 @@ class ImageStylesPathAndUrlTest extends BrowserTestBase {
    */
   public function testImageStyleUrlForMissingSourceImage() {
     $non_existent_uri = 'public://foo.png';
-    $generated_url = \Drupal::service('image.processor')->createInstance('derivative')
+    $generated_url = \Drupal::service(ImageProcessor::class)->createInstance('derivative')
       ->setImageStyle($this->style)
       ->setSourceImageUri($non_existent_uri)
       ->getDerivativeImageUrl()
@@ -454,7 +455,7 @@ class ImageStylesPathAndUrlTest extends BrowserTestBase {
     $this->assertNotFalse($original_uri, 'Created the generated image file.');
 
     // Get the URL of a file that has not been generated and try to create it.
-    $pipeline = \Drupal::service('image.processor')->createInstance('derivative')
+    $pipeline = \Drupal::service(ImageProcessor::class)->createInstance('derivative')
       ->setImageStyle($this->style)
       ->setSourceImageUri($original_uri)
       ->setCleanUrl($clean_url);
@@ -475,7 +476,7 @@ class ImageStylesPathAndUrlTest extends BrowserTestBase {
       $modified_uri = str_replace('://', ':///', $original_uri);
       // Check that an extra slash was added to the generated file URI.
       $this->assertNotSame($original_uri, $modified_uri);
-      $pipeline = \Drupal::service('image.processor')->createInstance('derivative')
+      $pipeline = \Drupal::service(ImageProcessor::class)->createInstance('derivative')
         ->setImageStyle($this->style)
         ->setSourceImageUri($modified_uri)
         ->setCleanUrl($clean_url);
@@ -500,7 +501,7 @@ class ImageStylesPathAndUrlTest extends BrowserTestBase {
     // "temporary" scheme used throughout this test afterwards.
     $this->config('system.file')->set('default_scheme', $scheme)->save();
     $relative_path = StreamWrapperManager::getTarget($original_uri);
-    $pipeline = \Drupal::service('image.processor')->createInstance('derivative')
+    $pipeline = \Drupal::service(ImageProcessor::class)->createInstance('derivative')
       ->setImageStyle($this->style)
       ->setSourceImageUri($relative_path)
       ->setCleanUrl($clean_url);
@@ -552,7 +553,7 @@ class ImageStylesPathAndUrlTest extends BrowserTestBase {
       $original_uri_noaccess = $file_system->copy($file_noaccess->uri, $scheme . '://', FileSystemInterface::EXISTS_RENAME);
       $generated_uri_noaccess = $scheme . '://styles/' . $this->style->id() . '/' . $scheme . '/' . $file_system->basename($original_uri_noaccess);
       $this->assertFileDoesNotExist($generated_uri_noaccess);
-      $pipeline = \Drupal::service('image.processor')->createInstance('derivative')
+      $pipeline = \Drupal::service(ImageProcessor::class)->createInstance('derivative')
         ->setImageStyle($this->style)
         ->setSourceImageUri($original_uri_noaccess);
       $generate_url_noaccess = $pipeline->getDerivativeImageUrl()->toString();
@@ -598,7 +599,7 @@ class ImageStylesPathAndUrlTest extends BrowserTestBase {
     // has not been created and try to create it. Check that the security token
     // is not present in the URL but that the image is still accessible.
     $this->config('image.settings')->set('suppress_itok_output', TRUE)->save();
-    $pipeline = \Drupal::service('image.processor')->createInstance('derivative')
+    $pipeline = \Drupal::service(ImageProcessor::class)->createInstance('derivative')
       ->setImageStyle($this->style)
       ->setSourceImageUri($original_uri)
       ->setCleanUrl($clean_url);
@@ -615,7 +616,7 @@ class ImageStylesPathAndUrlTest extends BrowserTestBase {
     $this->assertTrue($this->config('image.settings')->get('allow_insecure_derivatives'));
     // Check that a security token is still required when generating a second
     // image derivative using the first one as a source.
-    $pipeline = \Drupal::service('image.processor')->createInstance('derivative')
+    $pipeline = \Drupal::service(ImageProcessor::class)->createInstance('derivative')
       ->setImageStyle($this->style)
       ->setSourceImageUri($generated_uri)
       ->setCleanUrl($clean_url);

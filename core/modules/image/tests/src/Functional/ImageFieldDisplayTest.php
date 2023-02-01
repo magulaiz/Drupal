@@ -7,6 +7,7 @@ use Drupal\Core\StreamWrapper\StreamWrapperManager;
 use Drupal\Core\Url;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\image\Entity\ImageStyle;
+use Drupal\image\ImageProcessor;
 use Drupal\Tests\system\Functional\Cache\AssertPageCacheContextsAndTagsTrait;
 use Drupal\Tests\TestFileCreationTrait;
 use Drupal\user\RoleInterface;
@@ -185,7 +186,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
 
     // Ensure the derivative image is generated so we do not have to deal with
     // image style callback paths.
-    $pipeline = \Drupal::service('image.processor')->createInstance('derivative')
+    $pipeline = \Drupal::service(ImageProcessor::class)->createInstance('derivative')
       ->setImageStyle(ImageStyle::load('thumbnail'))
       ->setSourceImageUri($image_uri);
     $this->drupalGet($pipeline->getDerivativeImageUrl()->toString());
@@ -295,7 +296,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
     $node = $node_storage->load($nid);
     $file = $node->{$field_name}->entity;
 
-    $pipeline = \Drupal::service('image.processor')->createInstance('derivative')
+    $pipeline = \Drupal::service(ImageProcessor::class)->createInstance('derivative')
       ->setImageStyle(ImageStyle::load('medium'))
       ->setSourceImageUri($file->getFileUri());
     $file_url_generator = \Drupal::service('file_url_generator');
@@ -462,7 +463,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
 
     // Ensure the derivative image is generated so we do not have to deal with
     // image style callback paths.
-    $pipeline = \Drupal::service('image.processor')->createInstance('derivative')
+    $pipeline = \Drupal::service(ImageProcessor::class)->createInstance('derivative')
       ->setImageStyle(ImageStyle::load('thumbnail'))
       ->setSourceImageUri($image_uri);
     $this->drupalGet($pipeline->getDerivativeImageUrl());

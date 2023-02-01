@@ -5,6 +5,7 @@ namespace Drupal\Tests\image\Functional;
 use Drupal\Core\File\FileSystemInterface;
 use Drupal\file\Entity\File;
 use Drupal\image\Entity\ImageStyle;
+use Drupal\image\ImageProcessor;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\TestFileCreationTrait;
 
@@ -92,7 +93,7 @@ class FileMoveTest extends BrowserTestBase {
     $styles = ImageStyle::loadMultiple();
     $style = reset($styles);
     $original_uri = $file->getFileUri();
-    $pipeline = \Drupal::service('image.processor')->createInstance('derivative')
+    $pipeline = \Drupal::service(ImageProcessor::class)->createInstance('derivative')
       ->setImageStyle($style)
       ->setSourceImageUri($original_uri);
     $derivative_uri = $pipeline->getDerivativeImageUri();

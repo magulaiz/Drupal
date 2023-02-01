@@ -12,6 +12,7 @@ use Drupal\image\Event\ImageStyleEvent;
 use Drupal\image\Event\ImageStyleEvents;
 use Drupal\image\ImageEffectPluginCollection;
 use Drupal\image\ImageEffectInterface;
+use Drupal\image\ImageProcessor;
 use Drupal\image\ImageStyleInterface;
 use Drupal\Core\Entity\Entity\EntityViewDisplay;
 
@@ -168,7 +169,7 @@ class ImageStyle extends ConfigEntityBase implements ImageStyleInterface, Entity
    */
   public function buildUri($uri) {
     @trigger_error('The ' . __METHOD__ . ' method is deprecated since version 9.x.x and will be removed in y.y.y.', E_USER_DEPRECATED);
-    return \Drupal::service('image.processor')->createInstance('derivative')
+    return \Drupal::service(ImageProcessor::class)->createInstance('derivative')
       ->setImageStyle($this)
       ->setSourceImageUri($uri)
       ->getDerivativeImageUri();
@@ -179,7 +180,7 @@ class ImageStyle extends ConfigEntityBase implements ImageStyleInterface, Entity
    */
   public function buildUrl($path, $clean_urls = NULL) {
     @trigger_error('The ' . __METHOD__ . ' method is deprecated since version 9.x.x and will be removed in y.y.y.', E_USER_DEPRECATED);
-    return \Drupal::service('image.processor')->createInstance('derivative')
+    return \Drupal::service(ImageProcessor::class)->createInstance('derivative')
       ->setImageStyle($this)
       ->setSourceImageUri($path)
       ->setCleanUrl($clean_urls)
@@ -193,7 +194,7 @@ class ImageStyle extends ConfigEntityBase implements ImageStyleInterface, Entity
   public function flush($path = NULL) {
     if (isset($path)) {
       // A specific image path has been provided. Flush only that derivative.
-      \Drupal::service('image.processor')->createInstance('derivative')
+      \Drupal::service(ImageProcessor::class)->createInstance('derivative')
         ->setImageStyle($this)
         ->setSourceImageUri($path)
         ->dispatch(ImageDerivativePipelineEvents::REMOVE_DERIVATIVE_IMAGE);
@@ -209,7 +210,7 @@ class ImageStyle extends ConfigEntityBase implements ImageStyleInterface, Entity
    */
   public function createDerivative($original_uri, $derivative_uri) {
     @trigger_error('The ' . __METHOD__ . ' method is deprecated since version 9.x.x and will be removed in y.y.y.', E_USER_DEPRECATED);
-    return \Drupal::service('image.processor')->createInstance('derivative')
+    return \Drupal::service(ImageProcessor::class)->createInstance('derivative')
       ->setImageStyle($this)
       ->setSourceImageUri($original_uri)
       ->setDerivativeImageUri($derivative_uri)
@@ -221,7 +222,7 @@ class ImageStyle extends ConfigEntityBase implements ImageStyleInterface, Entity
    */
   public function transformDimensions(array &$dimensions, $uri) {
     @trigger_error('The ' . __METHOD__ . ' method is deprecated since version 9.x.x and will be removed in y.y.y.', E_USER_DEPRECATED);
-    $pipeline = \Drupal::service('image.processor')->createInstance('derivative');
+    $pipeline = \Drupal::service(ImageProcessor::class)->createInstance('derivative');
     $pipeline
       ->setImageStyle($this)
       ->setSourceImageUri($uri)
@@ -236,7 +237,7 @@ class ImageStyle extends ConfigEntityBase implements ImageStyleInterface, Entity
    */
   public function getDerivativeExtension($extension) {
     @trigger_error('The ' . __METHOD__ . ' method is deprecated since version 9.x.x and will be removed in y.y.y.', E_USER_DEPRECATED);
-    return \Drupal::service('image.processor')->createInstance('derivative')
+    return \Drupal::service(ImageProcessor::class)->createInstance('derivative')
       ->setImageStyle($this)
       ->setSourceImageFileExtension($extension)
       ->getDerivativeImageFileExtension();
@@ -247,7 +248,7 @@ class ImageStyle extends ConfigEntityBase implements ImageStyleInterface, Entity
    */
   public function getPathToken($uri) {
     @trigger_error('The ' . __METHOD__ . ' method is deprecated since version 9.x.x and will be removed in y.y.y.', E_USER_DEPRECATED);
-    return \Drupal::service('image.processor')->createInstance('derivative')
+    return \Drupal::service(ImageProcessor::class)->createInstance('derivative')
       ->setImageStyle($this)
       ->setSourceImageUri($uri)
       ->getDerivativeImageUrlSecurityToken();
@@ -267,7 +268,7 @@ class ImageStyle extends ConfigEntityBase implements ImageStyleInterface, Entity
    */
   public function supportsUri($uri) {
     @trigger_error('The ' . __METHOD__ . ' method is deprecated since version 9.x.x and will be removed in y.y.y.', E_USER_DEPRECATED);
-    return \Drupal::service('image.processor')->createInstance('derivative')
+    return \Drupal::service(ImageProcessor::class)->createInstance('derivative')
       ->setImageStyle($this)
       ->setSourceImageUri($uri)
       ->isSourceImageProcessable();

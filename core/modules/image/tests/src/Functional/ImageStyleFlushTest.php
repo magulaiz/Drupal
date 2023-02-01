@@ -4,6 +4,7 @@ namespace Drupal\Tests\image\Functional;
 
 use Drupal\Component\Render\FormattableMarkup;
 use Drupal\image\Entity\ImageStyle;
+use Drupal\image\ImageProcessor;
 use Drupal\Tests\TestFileCreationTrait;
 
 /**
@@ -37,7 +38,7 @@ class ImageStyleFlushTest extends ImageFieldTestBase {
     // Make sure we have an image in our wrapper testing file directory.
     $source_uri = \Drupal::service('file_system')->copy($file->uri, $wrapper . '://');
     // Build the derivative image.
-    $pipeline = \Drupal::service('image.processor')->createInstance('derivative')
+    $pipeline = \Drupal::service(ImageProcessor::class)->createInstance('derivative')
       ->setImageStyle($style)
       ->setSourceImageUri($source_uri);
     $derivative_uri = $pipeline->getDerivativeImageUri();

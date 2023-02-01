@@ -10,6 +10,7 @@ use Drupal\file_test\StreamWrapper\DummyReadOnlyStreamWrapper;
 use Drupal\file_test\StreamWrapper\DummyRemoteReadOnlyStreamWrapper;
 use Drupal\file_test\StreamWrapper\DummyStreamWrapper;
 use Drupal\image\Entity\ImageStyle;
+use Drupal\image\ImageProcessor;
 use Drupal\KernelTests\KernelTestBase;
 
 /**
@@ -76,7 +77,7 @@ class ImageStyleCustomStreamWrappersTest extends KernelTestBase {
    */
   public function testCustomStreamWrappers($source_scheme, $expected_scheme) {
     // Create an image process pipeline.
-    $pipeline = \Drupal::service('image.processor')->createInstance('derivative')
+    $pipeline = \Drupal::service(ImageProcessor::class)->createInstance('derivative')
       ->setImageStyle($this->imageStyle)
       ->setSourceImageUri("$source_scheme://some/path/image.png");
     $derivative_uri = $pipeline->getDerivativeImageUri();
