@@ -430,7 +430,7 @@ drupal.autocomplete:
   js:
     misc/autocomplete.js: { weight: -1 }
     # The remaining JavaScript assets previously came from core/jquery.ui, a
-    # deprecated library.3
+    # deprecated library.
     # All weights are based on the requirements defined within each file.
     # @todo replace with solution in https://drupal.org/node/3076171
     assets/vendor/jquery.ui/ui/widgets/autocomplete-min.js: { weight: -11.7, minified: true }
