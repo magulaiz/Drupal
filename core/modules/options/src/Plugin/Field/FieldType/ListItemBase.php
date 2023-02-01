@@ -94,11 +94,14 @@ abstract class ListItemBase extends FieldItemBase implements OptionsProviderInte
       $form_state->set('items_count', max(count($allowed_values), 5));
     }
 
+    $wrapper_id = Html::getUniqueId('allowed-values-wrapper');
     $element['allowed_values'] = [
       '#element_validate' => [[static::class, 'validateAllowedValues']],
       '#field_has_data' => $has_data,
       '#allowed_values' => $allowed_values,
       '#required' => TRUE,
+      '#prefix' => '<div id="' . $wrapper_id . '">',
+      '#suffix' => '</div>',
     ];
     $element['allowed_values']['table'] = [
       '#type' => 'table',
@@ -158,9 +161,6 @@ abstract class ListItemBase extends FieldItemBase implements OptionsProviderInte
       ];
     }
     $element['allowed_values']['table']['#max_delta'] = $max;
-    $wrapper_id = Html::getUniqueId('allowed-values-wrapper');
-    $element['allowed_values']['#prefix'] = '<div id="' . $wrapper_id . '">';
-    $element['allowed_values']['#suffix'] = '</div>';
 
     $element['allowed_values']['add_more_allowed_values'] = [
       '#type' => 'submit',
