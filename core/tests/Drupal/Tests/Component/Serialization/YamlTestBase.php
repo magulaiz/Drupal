@@ -17,7 +17,7 @@ abstract class YamlTestBase extends TestCase {
    *   The class name of the serializer to test.
    */
   protected function assertYamlTags($serializer) {
-    /* @var \Drupal\Component\Serialization\TaggedSerializationInterface $serializer */
+    /** @var \Drupal\Component\Serialization\TaggedSerializationInterface $serializer */
 
     // Ensure the serializer supports the tagged interface.
     $this->assertTrue(is_subclass_of($serializer, TaggedSerializationInterface::class));

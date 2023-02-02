@@ -24,7 +24,7 @@ class YamlTest extends KernelTestBase {
     $yaml = 'label: !translate [ "Label with @arg", { "@arg": "value" }, { context: "Something" } ]';
     $data = Yaml::decode($yaml);
 
-    /* @var \Drupal\Core\StringTranslation\TranslatableMarkup $label */
+    /** @var \Drupal\Core\StringTranslation\TranslatableMarkup $label */
     $label = $data['label'];
 
     // Ensure the label is a TranslatableMarkup instance.
