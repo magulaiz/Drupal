@@ -52,6 +52,14 @@ class FormElementStatesBuilder implements FormElementStatesBuilderInterface {
   /**
    * {@inheritdoc}
    */
+  public function setStates(FormElementStateInterface ...$states): static {
+    $this->states = [];
+    return $this->addStates(...$states);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function addStates(FormElementStateInterface ...$states): static {
     foreach ($states as $state) {
       $this->states[] = $state;

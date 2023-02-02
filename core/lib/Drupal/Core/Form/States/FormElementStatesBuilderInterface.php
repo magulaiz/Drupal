@@ -49,6 +49,22 @@ interface FormElementStatesBuilderInterface {
   public function addStates(FormElementStateInterface ...$states): static;
 
   /**
+   * Set states for the state storage.
+   *
+   * Take into account, if storage already contains states they will be
+   * replaced.
+   *
+   * @param \Drupal\Core\Form\States\FormElementStateInterface ...$states
+   *   States defined to the element.
+   *
+   * @return $this
+   *   States builder instance.
+   *
+   * @see StatesFormElementStatesBuilderInterface::addStates()
+   */
+  public function setStates(FormElementStateInterface ...$states): static;
+
+  /**
    * Add AND condition group.
    *
    * @param \Drupal\Core\Form\States\FormElementWatchableInterface ...$watchers
