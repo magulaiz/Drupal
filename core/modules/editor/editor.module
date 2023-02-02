@@ -552,6 +552,8 @@ function editor_file_download($uri) {
 function _editor_get_file_uuids_by_field(EntityInterface $entity) {
   $uuids = [];
 
+  $field_type_manager = \Drupal::service('plugin.manager.field.field_type');
+
   $formatted_text_fields = _editor_get_formatted_text_fields($entity);
   foreach ($formatted_text_fields as $formatted_text_field) {
     $text = '';
@@ -560,6 +562,11 @@ function _editor_get_file_uuids_by_field(EntityInterface $entity) {
       $text .= $field_item->value;
       if ($field_item->getFieldDefinition()->getType() == 'text_with_summary') {
         $text .= $field_item->summary;
+      } else {
+        $plugin_class = $field_type_manager->getPluginClass($field_item->getFieldDefinition()->getType());
+        if (in_array(\Drupal\editor\EditorFieldItemInterface::class, class_implements($plugin_class))) {
+          $text.= $field_item->getFormattedText();
+        }
       }
     }
     $uuids[$formatted_text_field] = _editor_parse_file_uuids($text);
@@ -591,7 +598,7 @@ function _editor_get_formatted_text_fields(FieldableEntityInterface $entity) {
   return array_keys(array_filter($field_definitions, function (FieldDefinitionInterface $definition) use ($field_type_manager) {
     $type = $definition->getType();
     $plugin_class = $field_type_manager->getPluginClass($type);
-    return is_subclass_of($plugin_class, TextItemBase::class);
+    return is_subclass_of($plugin_class, TextItemBase::class) || (in_array(\Drupal\editor\EditorFieldItemInterface::class, class_implements($plugin_class)));
   }));
 }
 
