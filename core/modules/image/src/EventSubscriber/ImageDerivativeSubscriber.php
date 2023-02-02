@@ -18,8 +18,8 @@ use Drupal\Core\Url;
 use Drupal\image\Entity\ImageStyle;
 use Drupal\image\Event\ImageDerivativePipelineEvents;
 use Drupal\image\Event\ImageProcessEvent;
-use Drupal\image\Event\ImageStyleEvent;
-use Drupal\image\Event\ImageStyleEvents;
+use Drupal\image\Event\ImageStyle\FlushEvent;
+use Drupal\image\Event\FlushSourceImageEvent;
 use Drupal\image\ImageProcessException;
 use Drupal\image\ImageProcessor;
 use Psr\Log\LoggerInterface;
@@ -103,8 +103,8 @@ class ImageDerivativeSubscriber implements EventSubscriberInterface {
       ImageDerivativePipelineEvents::APPLY_IMAGE_STYLE => 'applyImageStyle',
       ImageDerivativePipelineEvents::APPLY_IMAGE_EFFECT => 'applyImageEffect',
       ImageDerivativePipelineEvents::SAVE_DERIVATIVE_IMAGE => 'saveDerivativeImage',
-      ImageStyleEvents::FLUSH => 'flushImageStyle',
-      ImageStyleEvents::FLUSH_FROM_SOURCE_IMAGE_URI => 'flushFromSourceImageUri',
+      FlushEvent::class => 'flushImageStyle',
+      FlushSourceImageEvent::class => 'flushFromSourceImageUri',
       ImageDerivativePipelineEvents::REMOVE_DERIVATIVE_IMAGE => 'removeDerivativeImage',
     ];
   }
@@ -469,10 +469,10 @@ class ImageDerivativeSubscriber implements EventSubscriberInterface {
   /**
    * Flushes all image derivatives for the specified image style.
    *
-   * @param \Drupal\image\Event\ImageStyleEvent $event
+   * @param \Drupal\image\Event\ImageStyle\FlushEvent $event
    *   The image style event.
    */
-  public function flushImageStyle(ImageStyleEvent $event): void {
+  public function flushImageStyle(FlushEvent $event): void {
     $image_style = $event->getImageStyle();
 
     // Delete the style directory in each registered wrapper.
@@ -495,14 +495,14 @@ class ImageDerivativeSubscriber implements EventSubscriberInterface {
   /**
    * Flushes all derivative versions of a specific file in all styles.
    *
-   * @param \Drupal\image\Event\ImageStyleEvent $event
+   * @param \Drupal\image\Event\FlushSourceImageEvent $event
    *   The image style event.
    */
-  public function flushFromSourceImageUri(ImageStyleEvent $event): void {
+  public function flushFromSourceImageUri(FlushSourceImageEvent $event): void {
     foreach (ImageStyle::loadMultiple() as $style) {
       $this->imageProcessor->createInstance('derivative')
         ->setImageStyle($style)
-        ->setSourceImageUri($event->getArgument('sourceImageUri'))
+        ->setSourceImageUri($event->uri)
         ->dispatch(ImageDerivativePipelineEvents::REMOVE_DERIVATIVE_IMAGE);
     }
   }

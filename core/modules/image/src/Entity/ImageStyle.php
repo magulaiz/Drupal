@@ -8,8 +8,7 @@ use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityWithPluginCollectionInterface;
 use Drupal\Core\Site\Settings;
 use Drupal\image\Event\ImageDerivativePipelineEvents;
-use Drupal\image\Event\ImageStyleEvent;
-use Drupal\image\Event\ImageStyleEvents;
+use Drupal\image\Event\ImageStyle\FlushEvent;
 use Drupal\image\ImageEffectPluginCollection;
 use Drupal\image\ImageEffectInterface;
 use Drupal\image\ImageProcessor;
@@ -200,7 +199,7 @@ class ImageStyle extends ConfigEntityBase implements ImageStyleInterface, Entity
         ->dispatch(ImageDerivativePipelineEvents::REMOVE_DERIVATIVE_IMAGE);
     }
     else {
-      \Drupal::service('event_dispatcher')->dispatch(new ImageStyleEvent($this), ImageStyleEvents::FLUSH);
+      \Drupal::service('event_dispatcher')->dispatch(new FlushEvent($this));
     }
     return $this;
   }

@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\image\Event;
+namespace Drupal\image\Event\ImageStyle;
 
 use Drupal\image\ImageStyleInterface;
 use Symfony\Component\EventDispatcher\GenericEvent;
@@ -8,7 +8,7 @@ use Symfony\Component\EventDispatcher\GenericEvent;
 /**
  * Provides a class for events related to image styles.
  */
-class ImageStyleEvent extends GenericEvent {
+abstract class BaseEvent extends GenericEvent {
 
   /**
    * Returns the Image Style object subject of the event.

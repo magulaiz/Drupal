@@ -14,8 +14,7 @@ use Drupal\field\FieldConfigInterface;
 use Drupal\field\FieldStorageConfigInterface;
 use Drupal\file\FileInterface;
 use Drupal\image\Entity\ImageStyle;
-use Drupal\image\Event\ImageStyleEvent;
-use Drupal\image\Event\ImageStyleEvents;
+use Drupal\image\Event\FlushSourceImageEvent;
 use Drupal\image\ImageProcessor;
 
 /**
@@ -195,12 +194,7 @@ function image_file_predelete(FileInterface $file) {
  *   The Drupal file path to the original image.
  */
 function image_path_flush($path) {
-  \Drupal::service('event_dispatcher')->dispatch(
-    new ImageStyleEvent(NULL, [
-      'sourceImageUri' => $path,
-    ]),
-    ImageStyleEvents::FLUSH_FROM_SOURCE_IMAGE_URI
-  );
+  \Drupal::service('event_dispatcher')->dispatch(new FlushSourceImageEvent($path));
 }
 
 /**
