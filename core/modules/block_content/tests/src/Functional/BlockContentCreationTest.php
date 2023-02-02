@@ -111,10 +111,7 @@ class BlockContentCreationTest extends BlockContentTestBase {
     $this->submitForm(['region' => 'content'], 'Save block');
 
     // Set test_view_mode as a custom display to be available on the list.
-    $this->drupalGet('admin/structure/block/block-content');
-    $this->drupalGet('admin/structure/block/block-content/types');
-    $this->clickLink('Manage display');
-    $this->drupalGet('admin/structure/block/block-content/manage/basic/display');
+    $this->drupalGet('admin/structure/block-content/manage/basic/display');
     $custom_view_mode = [
       'display_modes_custom[test_view_mode]' => 1,
     ];
@@ -172,7 +169,7 @@ class BlockContentCreationTest extends BlockContentTestBase {
     $edit = [];
     $edit['info[0][value]'] = $this->randomMachineName(8);
     $edit['body[0][value]'] = $this->randomMachineName(16);
-    // Don't pass the custom block type in the url so the default is forced.
+    // Don't pass the custom block type in the URL so the default is forced.
     $this->drupalGet('block/add');
     $this->submitForm($edit, 'Save');
 
