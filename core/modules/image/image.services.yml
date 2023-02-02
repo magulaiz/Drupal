@@ -11,7 +11,7 @@ services:
       $cacheDiscovery: '@cache.discovery'
     tags:
       - { name: plugin_manager_cache_clear }
-  Drupal\image\EventSubscriber\ImageDerivativeSubscriber:
+  Drupal\image\EventSubscriber\ImageEventSubscriber:
     autowire: true
     arguments:
       $logger: '@logger.channel.image'

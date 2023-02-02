@@ -12,7 +12,7 @@ final class ImageDerivativePipelineEvents {
    *
    * @Event
    *
-   * @see \Drupal\image\EventSubscriber\ImageDerivativeSubscriber::resolveSourceImageFormat()
+   * @see \Drupal\image\EventSubscriber\ImageEventSubscriber::resolveSourceImageFormat()
    *
    * @var string
    */
@@ -24,7 +24,7 @@ final class ImageDerivativePipelineEvents {
    * @Event
    *
    * @see \Drupal\image\Plugin\ImageProcessPipeline\Derivative::isSourceImageProcessable()
-   * @see \Drupal\image\EventSubscriber\ImageDerivativeSubscriber::resolveSourceImageProcessable()
+   * @see \Drupal\image\EventSubscriber\ImageEventSubscriber::resolveSourceImageProcessable()
    *
    * @var string
    */
@@ -36,7 +36,7 @@ final class ImageDerivativePipelineEvents {
    * @Event
    *
    * @see \Drupal\image\Plugin\ImageProcessPipeline\Derivative::getDerivativeImageFileExtension()
-   * @see \Drupal\image\EventSubscriber\ImageDerivativeSubscriber::resolveDerivativeImageFormat()
+   * @see \Drupal\image\EventSubscriber\ImageEventSubscriber::resolveDerivativeImageFormat()
    *
    * @var string
    */
@@ -49,7 +49,7 @@ final class ImageDerivativePipelineEvents {
    *
    * @see \Drupal\image\Plugin\ImageProcessPipeline\Derivative::getDerivativeImageWidth()
    * @see \Drupal\image\Plugin\ImageProcessPipeline\Derivative::getDerivativeImageHeight()
-   * @see \Drupal\image\EventSubscriber\ImageDerivativeSubscriber::resolveDerivativeImageDimensions()
+   * @see \Drupal\image\EventSubscriber\ImageEventSubscriber::resolveDerivativeImageDimensions()
    *
    * @var string
    */
@@ -61,7 +61,7 @@ final class ImageDerivativePipelineEvents {
    * @Event
    *
    * @see \Drupal\image\Plugin\ImageProcessPipeline\Derivative::getDerivativeImageUri()
-   * @see \Drupal\image\EventSubscriber\ImageDerivativeSubscriber::resolveDerivativeImageUri()
+   * @see \Drupal\image\EventSubscriber\ImageEventSubscriber::resolveDerivativeImageUri()
    *
    * @var string
    */
@@ -73,7 +73,7 @@ final class ImageDerivativePipelineEvents {
    * @Event
    *
    * @see \Drupal\image\Plugin\ImageProcessPipeline\Derivative::getDerivativeImageUrlSecurityToken()
-   * @see \Drupal\image\EventSubscriber\ImageDerivativeSubscriber::resolveDerivativeImageUrlProtection()
+   * @see \Drupal\image\EventSubscriber\ImageEventSubscriber::resolveDerivativeImageUrlProtection()
    *
    * @var string
    */
@@ -85,7 +85,7 @@ final class ImageDerivativePipelineEvents {
    * @Event
    *
    * @see \Drupal\image\Plugin\ImageProcessPipeline\Derivative::getDerivativeImageUrl()
-   * @see \Drupal\image\EventSubscriber\ImageDerivativeSubscriber::resolveDerivativeImageUrl()
+   * @see \Drupal\image\EventSubscriber\ImageEventSubscriber::resolveDerivativeImageUrl()
    *
    * @var string
    */
@@ -96,7 +96,7 @@ final class ImageDerivativePipelineEvents {
    *
    * @Event
    *
-   * @see \Drupal\image\EventSubscriber\ImageDerivativeSubscriber::loadSourceImage()
+   * @see \Drupal\image\EventSubscriber\ImageEventSubscriber::loadSourceImage()
    *
    * @var string
    */
@@ -108,7 +108,7 @@ final class ImageDerivativePipelineEvents {
    * @Event
    *
    * @see \Drupal\image\Plugin\ImageProcessPipeline\Derivative::buildDerivativeImage()
-   * @see \Drupal\image\EventSubscriber\ImageDerivativeSubscriber::buildDerivativeImage()
+   * @see \Drupal\image\EventSubscriber\ImageEventSubscriber::buildDerivativeImage()
    *
    * @var string
    */
@@ -119,7 +119,7 @@ final class ImageDerivativePipelineEvents {
    *
    * @Event
    *
-   * @see \Drupal\image\EventSubscriber\ImageDerivativeSubscriber::applyImageStyle()
+   * @see \Drupal\image\EventSubscriber\ImageEventSubscriber::applyImageStyle()
    *
    * @var string
    */
@@ -130,7 +130,7 @@ final class ImageDerivativePipelineEvents {
    *
    * @Event
    *
-   * @see \Drupal\image\EventSubscriber\ImageDerivativeSubscriber::applyImageEffect()
+   * @see \Drupal\image\EventSubscriber\ImageEventSubscriber::applyImageEffect()
    *
    * @var string
    */
@@ -141,7 +141,7 @@ final class ImageDerivativePipelineEvents {
    *
    * @Event
    *
-   * @see \Drupal\image\EventSubscriber\ImageDerivativeSubscriber::saveDerivativeImage()
+   * @see \Drupal\image\EventSubscriber\ImageEventSubscriber::saveDerivativeImage()
    *
    * @var string
    */
@@ -153,7 +153,7 @@ final class ImageDerivativePipelineEvents {
    * @Event
    *
    * @see \Drupal\image\Entity\ImageStyle::flush()
-   * @see \Drupal\image\EventSubscriber\ImageDerivativeSubscriber::removeDerivativeImage()
+   * @see \Drupal\image\EventSubscriber\ImageEventSubscriber::removeDerivativeImage()
    *
    * @var string
    */

@@ -28,9 +28,9 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
- * Defines a class for listening to image derivative processing requests.
+ * Defines a class for listening to events fired by the image module.
  */
-class ImageDerivativeSubscriber implements EventSubscriberInterface {
+class ImageEventSubscriber implements EventSubscriberInterface {
 
   /**
    * The Drupal private key.
