@@ -13,6 +13,13 @@ use Drupal\Component\Serialization\Yaml as ComponentYaml;
 class Yaml extends ComponentYaml {
 
   /**
+   * Translation Manager.
+   *
+   * @var \Drupal\Core\StringTranslation\TranslationInterface
+   */
+  protected static $translation;
+
+  /**
    * {@inheritdoc}
    */
   protected static function getSerializer() {
@@ -21,8 +28,48 @@ class Yaml extends ComponentYaml {
       $class = Settings::get('yaml_parser_class')) {
 
       static::$serializer = $class;
+
+      // Merge any tag callbacks from this proxy to the chosen serializer.
+      static::mergeTagCallbacks(static::$serializer);
     }
     return parent::getSerializer();
+  }
+
+  /**
+   * Retrieves the Translation Manager.
+   *
+   * @return \Drupal\Core\StringTranslation\TranslationInterface
+   *   The Translation Manager.
+   */
+  protected static function getTranslation() {
+    if (!isset(static::$translation)) {
+      static::$translation = \Drupal::translation();
+    }
+    return static::$translation;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function getDefaultTagCallbacks() {
+    return [
+      '!translate' => static::class . '::applyTranslateCallback',
+    ];
+  }
+
+  /**
+   * Callback for applying the !translate tag.
+   *
+   * @param string|string[] $value
+   *   The tag value.
+   * @param string $tag
+   *   The tag name.
+   *
+   * @return \Drupal\Core\StringTranslation\TranslatableMarkup
+   *   A new TranslatableMarkup object.
+   */
+  public static function applyTranslateCallback($value, $tag) {
+    return static::getTranslation()->translate(...(array) $value);
   }
 
 }

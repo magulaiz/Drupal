@@ -2,12 +2,62 @@
 
 namespace Drupal\Tests\Component\Serialization;
 
+use Drupal\Component\Serialization\TaggedSerializationInterface;
 use PHPUnit\Framework\TestCase;
 
 /**
  * Provides standard data to validate different YAML implementations.
  */
 abstract class YamlTestBase extends TestCase {
+
+  /**
+   * Asserts that a serializer can support YAML 1.2 tags.
+   *
+   * @param string $serializer
+   *   The class name of the serializer to test.
+   */
+  protected function assertYamlTags($serializer) {
+    /* @var \Drupal\Component\Serialization\TaggedSerializationInterface $serializer */
+
+    // Ensure the serializer supports the tagged interface.
+    $this->assertTrue(is_subclass_of($serializer, TaggedSerializationInterface::class));
+
+    // Ensure the component's default callbacks.
+    $this->assertEquals($serializer::getDefaultTagCallbacks(), $serializer::getTagCallbacks());
+
+    $yaml = 'value: !sum [1, 2, 3]';
+
+    // Ensure that without a callback, the tag is ignored.
+    $data = $serializer::decode($yaml);
+    $this->assertEquals($data['value'], [1, 2, 3]);
+
+    // Now, add the custom tag callback.
+    $sum = function ($value, $tag) {
+      return array_sum($value);
+    };
+    $serializer::addTagCallback('!sum', $sum);
+
+    // Ensure that with a tag callback, the value is converted.
+    $data = $serializer::decode($yaml);
+    $this->assertEquals($data['value'], 6);
+
+    // Remove the custom tag callback and ensure it returns original callback.
+    $callback = $serializer::removeTagCallback('!sum');
+    $this->assertEquals($sum, $callback);
+
+    // Ensure that without a callback, the tag is ignored.
+    $data = $serializer::decode($yaml);
+    $this->assertEquals($data['value'], [1, 2, 3]);
+
+    // Reset tag callbacks.
+    $serializer::setTagCallbacks();
+    $callbacks = new \ReflectionProperty($serializer, 'tagCallbacks');
+    $callbacks->setAccessible(TRUE);
+    $this->assertEquals(NULL, $callbacks->getValue($serializer));
+
+    // Ensure the component's default callbacks are restored.
+    $this->assertEquals($serializer::getDefaultTagCallbacks(), $serializer::getTagCallbacks());
+  }
 
   /**
    * Some data that should be able to be serialized.

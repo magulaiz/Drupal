@@ -93,4 +93,17 @@ foo:
     YamlPecl::decode('foo: [ads');
   }
 
+  /**
+   * Tests YAML 1.2 tag support (!tag).
+   *
+   * @covers ::addTagCallback
+   * @covers ::getDefaultTagCallbacks
+   * @covers ::getTagCallbacks
+   * @covers ::removeTagCallback
+   * @covers ::setTagCallbacks
+   */
+  public function testTagSupport() {
+    $this->assertYamlTags(YamlPecl::class);
+  }
+
 }

@@ -7,7 +7,9 @@ use Drupal\Component\Serialization\Exception\InvalidDataTypeException;
 /**
  * Provides default serialization for YAML using the PECL extension.
  */
-class YamlPecl implements SerializationInterface {
+class YamlPecl implements TaggedSerializationInterface {
+
+  use TaggedSerializationTrait;
 
   /**
    * {@inheritdoc}
@@ -50,11 +52,18 @@ class YamlPecl implements SerializationInterface {
     // @see http://php.net/manual/class.errorexception.php
     set_error_handler([__CLASS__, 'errorHandler']);
     $ndocs = 0;
-    $data = yaml_parse($raw, 0, $ndocs, [
-      YAML_BOOL_TAG => '\Drupal\Component\Serialization\YamlPecl::applyBooleanCallbacks',
-    ]);
+    $data = yaml_parse($raw, 0, $ndocs, static::getTagCallbacks());
     restore_error_handler();
     return $data;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function getDefaultTagCallbacks() {
+    return [
+      YAML_BOOL_TAG => 'Drupal\Component\Serialization\YamlPecl::applyBooleanCallbacks',
+    ];
   }
 
   /**
