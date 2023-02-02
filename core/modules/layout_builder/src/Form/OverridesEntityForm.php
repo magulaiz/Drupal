@@ -209,6 +209,12 @@ class OverridesEntityForm extends ContentEntityForm {
       '#submit' => ['::redirectOnSubmit'],
       '#redirect' => 'revert',
     ];
+    $actions['refresh'] = [
+      '#type' => 'submit',
+      '#value' => $this->t('Refresh layout defaults'),
+      '#submit' => ['::redirectOnSubmit'],
+      '#redirect' => 'refresh',
+    ];
     $actions['preview_toggle'] = $this->buildContentPreviewToggle();
     return $actions;
   }
