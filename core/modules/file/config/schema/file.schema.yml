@@ -83,6 +83,9 @@ file.formatter.media:
     loop:
       type: boolean
       label: 'Loop'
+    preload:
+      type: string
+      label: 'Preload'
     multiple_file_display_type:
       type: string
       label: 'Display of multiple files'
