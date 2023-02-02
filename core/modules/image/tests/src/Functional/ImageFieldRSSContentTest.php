@@ -43,7 +43,7 @@ class ImageFieldRSSContentTest extends ImageFieldTestBase {
     $edit = [
       "display_modes_custom[rss]" => '1',
     ];
-    $this->drupalPostForm(NULL, $edit, t('Save'));
+    $this->submitForm($edit, t('Save'));
 
     // Change the format to 'RSS enclosure'.
     $this->drupalGet("admin/structure/types/manage/$type_name/display/rss");
@@ -51,7 +51,7 @@ class ImageFieldRSSContentTest extends ImageFieldTestBase {
       "fields[$field_name][type]" => 'file_rss_enclosure',
       "fields[$field_name][region]" => 'content',
     ];
-    $this->drupalPostForm(NULL, $edit, t('Save'));
+    $this->submitForm($edit, t('Save'));
 
     $test_files = $this->drupalGetTestFiles('image');
 
@@ -70,7 +70,7 @@ class ImageFieldRSSContentTest extends ImageFieldTestBase {
     $this->drupalGet('rss.xml');
     $elements = $this->getSession()->getDriver()->find(sprintf(
       '//enclosure[@url="%s" and @length="%s" and @type="%s"]',
-      file_create_url($node_file->getFileUri()),
+      \Drupal::service('file_url_generator')->generateAbsoluteString($node_file->getFileUri()),
       $node_file->getSize(),
       $node_file->getMimeType(),
     ));
