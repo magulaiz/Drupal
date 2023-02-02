@@ -11,7 +11,7 @@ use Drupal\Tests\UnitTestCase;
  * @group Render
  * @group legacy
  */
-class ElementDeprecationTest extends UnitTestCase {
+class ProceduralApiDeprecationTest extends UnitTestCase {
 
   /**
    * {@inheritdoc}
