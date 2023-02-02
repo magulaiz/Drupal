@@ -4,15 +4,15 @@ namespace Drupal\Component\Serialization;
 
 /**
  * Trait TaggedSerializationTrait.
+ *
+ * Trait for tagged serialization elements.
  */
 trait TaggedSerializationTrait {
 
   /**
    * Associative array of tag callbacks, keyed by tag.
-   *
-   * @var array
    */
-  protected static $tagCallbacks;
+  protected static array $tagCallbacks;
 
   /**
    * Adds a tag callback.
@@ -22,7 +22,7 @@ trait TaggedSerializationTrait {
    * @param callable $callback
    *   The callback to perform on a following value when the tag is encountered.
    */
-  public static function addTagCallback($tag, callable $callback) {
+  public static function addTagCallback(string $tag, callable $callback): void {
     $callbacks = static::getTagCallbacks();
     $callbacks[$tag] = $callback;
     static::setTagCallbacks($callbacks);
@@ -39,7 +39,7 @@ trait TaggedSerializationTrait {
    * @return mixed
    *   Result from the callback or original $value if no callback exists.
    */
-  public static function executeTagCallback($value, $tag) {
+  public static function executeTagCallback(mixed $value, string $tag): mixed {
     $callbacks = static::getTagCallbacks();
 
     // Prepend tag with ! (in cases where it's stripped from the name).
@@ -62,7 +62,7 @@ trait TaggedSerializationTrait {
    *   An associative array where the key is the tag and the value is the
    *   callback.
    */
-  public static function getDefaultTagCallbacks() {
+  public static function getDefaultTagCallbacks(): array {
     return [];
   }
 
@@ -73,7 +73,7 @@ trait TaggedSerializationTrait {
    *   An associative array where the key is the tag and the value is the
    *   callback.
    */
-  public static function getTagCallbacks() {
+  public static function getTagCallbacks(): array {
     if (!isset(static::$tagCallbacks)) {
       static::$tagCallbacks = static::getDefaultTagCallbacks();
     }
@@ -83,10 +83,10 @@ trait TaggedSerializationTrait {
   /**
    * Merges tag callbacks from this serializer onto a target serializer.
    *
-   * @param string|\Drupal\Component\Serialization\TaggedSerializationInterface $serializer
+   * @param \Drupal\Component\Serialization\TaggedSerializationInterface|string $serializer
    *   The target serializer to merge tag callbacks onto.
    */
-  protected static function mergeTagCallbacks($serializer) {
+  protected static function mergeTagCallbacks(TaggedSerializationInterface|string $serializer): void {
     if ($serializer instanceof TaggedSerializationInterface || is_subclass_of($serializer, TaggedSerializationInterface::class)) {
       $serializer::setTagCallbacks(array_merge(
         $serializer::getTagCallbacks(),
@@ -104,7 +104,7 @@ trait TaggedSerializationTrait {
    * @return callable|null
    *   The callback that was assigned to $tag or NULL if $tag didn't exist.
    */
-  public static function removeTagCallback($tag) {
+  public static function removeTagCallback(string $tag): ?callable {
     $callback = NULL;
     if (isset(static::$tagCallbacks[$tag])) {
       $callback = static::$tagCallbacks[$tag];
@@ -116,11 +116,11 @@ trait TaggedSerializationTrait {
   /**
    * Sets a map of tag callbacks.
    *
-   * @param array $callbacks
+   * @param array|null $callbacks
    *   An associative array where the key is the tag and the value is the
    *   callback.
    */
-  public static function setTagCallbacks(array $callbacks = NULL) {
+  public static function setTagCallbacks(?array $callbacks = NULL): void {
     static::$tagCallbacks = $callbacks;
   }
 

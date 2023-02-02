@@ -4,6 +4,8 @@ namespace Drupal\Core\Serialization;
 
 use Drupal\Core\Site\Settings;
 use Drupal\Component\Serialization\Yaml as ComponentYaml;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\Core\StringTranslation\TranslationInterface;
 
 /**
  * Provides a YAML serialization implementation.
@@ -14,10 +16,8 @@ class Yaml extends ComponentYaml {
 
   /**
    * Translation Manager.
-   *
-   * @var \Drupal\Core\StringTranslation\TranslationInterface
    */
-  protected static $translation;
+  protected static TranslationInterface $translation;
 
   /**
    * {@inheritdoc}
@@ -41,7 +41,7 @@ class Yaml extends ComponentYaml {
    * @return \Drupal\Core\StringTranslation\TranslationInterface
    *   The Translation Manager.
    */
-  protected static function getTranslation() {
+  protected static function getTranslation(): TranslationInterface {
     if (!isset(static::$translation)) {
       static::$translation = \Drupal::translation();
     }
@@ -51,7 +51,7 @@ class Yaml extends ComponentYaml {
   /**
    * {@inheritdoc}
    */
-  public static function getDefaultTagCallbacks() {
+  public static function getDefaultTagCallbacks(): array {
     return [
       '!translate' => static::class . '::applyTranslateCallback',
     ];
@@ -68,7 +68,7 @@ class Yaml extends ComponentYaml {
    * @return \Drupal\Core\StringTranslation\TranslatableMarkup
    *   A new TranslatableMarkup object.
    */
-  public static function applyTranslateCallback($value, $tag) {
+  public static function applyTranslateCallback(array|string $value, string $tag): TranslatableMarkup {
     return static::getTranslation()->translate(...(array) $value);
   }
 

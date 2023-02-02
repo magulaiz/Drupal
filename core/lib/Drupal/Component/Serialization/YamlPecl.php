@@ -60,7 +60,7 @@ class YamlPecl implements TaggedSerializationInterface {
   /**
    * {@inheritdoc}
    */
-  public static function getDefaultTagCallbacks() {
+  public static function getDefaultTagCallbacks(): array {
     return [
       YAML_BOOL_TAG => 'Drupal\Component\Serialization\YamlPecl::applyBooleanCallbacks',
     ];
