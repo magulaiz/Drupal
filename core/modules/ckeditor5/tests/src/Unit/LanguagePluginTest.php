@@ -65,12 +65,12 @@ class LanguagePluginTest extends UnitTestCase {
           'language' => [
             'textPartLanguage' => [
               [
-                'title' => 'English',
-                'languageCode' => 'en',
+                'title' => 'German',
+                'languageCode' => 'de',
               ],
               [
-                'title' => 'French',
-                'languageCode' => 'fr',
+                'title' => 'Arabic',
+                'languageCode' => 'ar',
               ],
             ],
           ],
