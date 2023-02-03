@@ -10,69 +10,6 @@ use Drupal\Core\Logger\RfcLogLevel;
 use Drupal\Core\Test\TestDatabase;
 use Drupal\Core\Utility\Error;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
-use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
-
-/**
- * Minimum allowed version of PHP for Drupal to be bootstrapped.
- *
- * Below this version:
- * - The installer cannot be run.
- * - Updates cannot be run.
- * - Modules and themes cannot be enabled.
- * - If a site managed to bypass all of the above, then an error is shown in
- *   the status report and various fatal errors occur on various pages.
- *
- * @deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. Use
- *   \Drupal::MINIMUM_PHP instead.
- *
- * @see https://www.drupal.org/node/2909361
- * @see install.php
- */
-const DRUPAL_MINIMUM_PHP = \Drupal::MINIMUM_PHP;
-
-/**
- * Minimum supported version of PHP.
- *
- * Below this version:
- * - New sites cannot be installed, except from within tests.
- * - Updates from previous Drupal versions can be run, but users are warned
- *   that Drupal no longer supports that PHP version.
- * - An error is shown in the status report that the PHP version is too old.
- *
- * @deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. Use
- *   \Drupal::MINIMUM_SUPPORTED_PHP instead.
- *
- * @see https://www.drupal.org/node/2909361
- */
-const DRUPAL_MINIMUM_SUPPORTED_PHP = \Drupal::MINIMUM_SUPPORTED_PHP;
-
-/**
- * Minimum recommended version of PHP.
- *
- * Sites installing Drupal on PHP versions lower than this will see a warning
- * message, but Drupal can still be installed. Used for (e.g.) PHP versions
- * that have reached their EOL or will in the near future.
- *
- * @deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. Use
- *   \Drupal::RECOMMENDED_PHP instead.
- *
- * @see https://www.drupal.org/node/2909361
- */
-const DRUPAL_RECOMMENDED_PHP = \Drupal::RECOMMENDED_PHP;
-
-/**
- * Minimum recommended value of PHP memory_limit.
- *
- * 64M was chosen as a minimum requirement in order to allow for additional
- * contributed modules to be installed prior to hitting the limit. However,
- * 40M is the target for the Standard installation profile.
- *
- * @deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. Use
- *   \Drupal::MINIMUM_PHP_MEMORY_LIMIT instead.
- *
- * @see https://www.drupal.org/node/2909361
- */
-const DRUPAL_MINIMUM_PHP_MEMORY_LIMIT = \Drupal::MINIMUM_PHP_MEMORY_LIMIT;
 
 /**
  * Error reporting level: display no errors.
@@ -109,7 +46,7 @@ const DRUPAL_EXTENSION_NAME_MAX_LENGTH = 50;
  * @see http://php.net/manual/reserved.variables.server.php
  * @see http://php.net/manual/function.time.php
  *
- * @deprecated in drupal:8.3.0 and is removed from drupal:10.0.0.
+ * @deprecated in drupal:8.3.0 and is removed from drupal:11.0.0.
  *   Use \Drupal::time()->getRequestTime();
  *
  * @see https://www.drupal.org/node/2785211
@@ -122,97 +59,6 @@ define('REQUEST_TIME', (int) $_SERVER['REQUEST_TIME']);
  * This strips two levels of directories off the current directory.
  */
 define('DRUPAL_ROOT', dirname(__DIR__, 2));
-
-/**
- * Declare class aliases that will be added by the autoloader.
- */
-// @todo https://www.drupal.org/project/drupal/issues/3197482 Remove this class
-//   alias once Drupal is running Symfony 5.3 or higher.
-class_alias('Drupal\Core\Http\KernelEvent', 'Symfony\Component\HttpKernel\Event\KernelEvent', TRUE);
-
-/**
- * Returns and optionally sets the filename for a system resource.
- *
- * The filename, whether provided, cached, or retrieved from the database, is
- * only returned if the file exists.
- *
- * This function plays a key role in allowing Drupal's resources (modules
- * and themes) to be located in different places depending on a site's
- * configuration. For example, a module 'foo' may legally be located
- * in any of these three places:
- *
- * core/modules/foo/foo.info.yml
- * modules/foo/foo.info.yml
- * sites/example.com/modules/foo/foo.info.yml
- *
- * Calling drupal_get_filename('module', 'foo') will give you one of
- * the above, depending on where the module is located.
- *
- * @param $type
- *   The type of the item; one of 'core', 'profile', 'module', 'theme', or
- *   'theme_engine'.
- * @param $name
- *   The name of the item for which the filename is requested. Ignored for
- *   $type 'core'.
- * @param $filename
- *   The filename of the item if it is to be set explicitly rather
- *   than by consulting the database.
- *
- * @return string
- *   The filename of the requested item or NULL if the item is not found.
- */
-function drupal_get_filename($type, $name, $filename = NULL) {
-  // Type 'core' only exists to simplify application-level logic; it always maps
-  // to the /core directory, whereas $name is ignored. It is only requested via
-  // drupal_get_path(). /core/core.info.yml does not exist, but is required
-  // since drupal_get_path() returns the dirname() of the returned pathname.
-  if ($type === 'core') {
-    return 'core/core.info.yml';
-  }
-
-  try {
-    /** @var \Drupal\Core\Extension\ExtensionList $extension_list */
-    $extension_list = \Drupal::service("extension.list.$type");
-    if (isset($filename)) {
-      // Manually add the info file path of an extension.
-      $extension_list->setPathname($name, $filename);
-    }
-    return $extension_list->getPathname($name);
-  }
-  catch (ServiceNotFoundException $e) {
-    // Catch the exception. This will result in triggering an error.
-    // If the service is unknown, create a user-level error message.
-    trigger_error(
-      sprintf('Unknown type specified: "%s". Must be one of: "core", "profile", "module", "theme", or "theme_engine".', $type),
-      E_USER_WARNING
-    );
-  }
-  catch (\InvalidArgumentException $e) {
-    // Catch the exception. This will result in triggering an error.
-    // If the filename is still unknown, create a user-level error message.
-    trigger_error(
-      sprintf('The following %s is missing from the file system: %s', $type, $name),
-      E_USER_WARNING
-    );
-  }
-}
-
-/**
- * Returns the path to a system item (module, theme, etc.).
- *
- * @param $type
- *   The type of the item; one of 'core', 'profile', 'module', 'theme', or
- *   'theme_engine'.
- * @param $name
- *   The name of the item for which the path is requested. Ignored for
- *   $type 'core'.
- *
- * @return string
- *   The path to the requested item or an empty string if the item is not found.
- */
-function drupal_get_path($type, $name) {
-  return dirname(drupal_get_filename($type, $name));
-}
 
 /**
  * Translates a string to the current language or to a given language.
@@ -283,7 +129,7 @@ function watchdog_exception($type, Exception $exception, $message = NULL, $varia
 
   // Use a default value if $message is not set.
   if (empty($message)) {
-    $message = '%type: @message in %function (line %line of %file).';
+    $message = Error::DEFAULT_ERROR_MESSAGE;
   }
 
   if ($link) {
@@ -355,7 +201,7 @@ function _drupal_exception_handler_additional($exception, $exception2) {
 }
 
 /**
- * Returns the test prefix if this is an internal request from SimpleTest.
+ * Returns the test prefix if this is an internal request from a test.
  *
  * @param string $new_prefix
  *   Internal use only. A new prefix to be stored.
@@ -378,13 +224,12 @@ function drupal_valid_test_ua($new_prefix = NULL) {
   // a test environment.
   $test_prefix = FALSE;
 
-  // A valid Simpletest request will contain a hashed and salted authentication
-  // code. Check if this code is present in a cookie or custom user agent
-  // string.
-  $http_user_agent = isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : NULL;
-  $user_agent = isset($_COOKIE['SIMPLETEST_USER_AGENT']) ? $_COOKIE['SIMPLETEST_USER_AGENT'] : $http_user_agent;
+  // A valid test request will contain a hashed and salted authentication code.
+  // Check if this code is present in a cookie or custom user agent string.
+  $http_user_agent = $_SERVER['HTTP_USER_AGENT'] ?? NULL;
+  $user_agent = $_COOKIE['SIMPLETEST_USER_AGENT'] ?? $http_user_agent;
   if (isset($user_agent) && preg_match("/^simple(\w+\d+):(.+):(.+):(.+)$/", $user_agent, $matches)) {
-    list(, $prefix, $time, $salt, $hmac) = $matches;
+    [, $prefix, $time, $salt, $hmac] = $matches;
     $check_string = $prefix . ':' . $time . ':' . $salt;
     // Read the hash salt prepared by drupal_generate_test_ua().
     // This function is called before settings.php is read and Drupal's error
@@ -406,7 +251,7 @@ function drupal_valid_test_ua($new_prefix = NULL) {
     }
     // The file properties add more entropy not easily accessible to others.
     $key = $private_key . filectime(__FILE__) . fileinode(__FILE__);
-    $time_diff = REQUEST_TIME - $time;
+    $time_diff = time() - $time;
     $test_hmac = Crypt::hmacBase64($check_string, $key);
     // Since we are making a local request a 600 second time window is allowed,
     // and the HMAC must match.
@@ -422,7 +267,7 @@ function drupal_valid_test_ua($new_prefix = NULL) {
 }
 
 /**
- * Generates a user agent string with a HMAC and timestamp for simpletest.
+ * Generates a user agent string with a HMAC and timestamp for tests.
  */
 function drupal_generate_test_ua($prefix) {
   static $key, $last_prefix;

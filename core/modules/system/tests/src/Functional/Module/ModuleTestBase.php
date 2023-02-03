@@ -24,7 +24,10 @@ abstract class ModuleTestBase extends BrowserTestBase {
 
   protected $adminUser;
 
-  protected function setUp() {
+  /**
+   * {@inheritdoc}
+   */
+  protected function setUp(): void {
     parent::setUp();
 
     $this->adminUser = $this->drupalCreateUser([
@@ -77,7 +80,7 @@ abstract class ModuleTestBase extends BrowserTestBase {
    *   The name of the module.
    */
   public function assertModuleConfig($module) {
-    $module_config_dir = drupal_get_path('module', $module) . '/' . InstallStorage::CONFIG_INSTALL_DIRECTORY;
+    $module_config_dir = $this->getModulePath($module) . '/' . InstallStorage::CONFIG_INSTALL_DIRECTORY;
     if (!is_dir($module_config_dir)) {
       return;
     }
@@ -93,7 +96,7 @@ abstract class ModuleTestBase extends BrowserTestBase {
     }
     $this->assertNotEmpty($all_names);
 
-    $module_config_dependencies = \Drupal::service('config.manager')->findConfigEntityDependents('module', [$module]);
+    $module_config_dependencies = \Drupal::service('config.manager')->findConfigEntityDependencies('module', [$module]);
     // Look up each default configuration object name in the active
     // configuration, and if it exists, remove it from the stack.
     $names = $module_file_storage->listAll();
@@ -104,7 +107,7 @@ abstract class ModuleTestBase extends BrowserTestBase {
       // All configuration in a module's config/install directory should depend
       // on the module as it must be removed on uninstall or the module will not
       // be re-installable.
-      $this->assertTrue(strpos($name, $module . '.') === 0 || isset($module_config_dependencies[$name]), "Configuration $name provided by $module in its config/install directory does not depend on it.");
+      $this->assertTrue(str_starts_with($name, $module . '.') || isset($module_config_dependencies[$name]), "Configuration $name provided by $module in its config/install directory does not depend on it.");
     }
     // Verify that all configuration has been installed (which means that $names
     // is empty).

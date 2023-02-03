@@ -12,6 +12,7 @@ use Drupal\Core\StringTranslation\PluralTranslatableMarkup;
 use Drupal\Tests\Traits\PhpUnitWarnings;
 use Drupal\TestTools\TestVarDumper;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Symfony\Component\VarDumper\VarDumper;
 use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 
@@ -27,6 +28,7 @@ abstract class UnitTestCase extends TestCase {
 
   use PhpUnitWarnings;
   use PhpUnitCompatibilityTrait;
+  use ProphecyTrait;
   use ExpectDeprecationTrait;
 
   /**
@@ -46,7 +48,7 @@ abstract class UnitTestCase extends TestCase {
   /**
    * {@inheritdoc}
    */
-  public static function setUpBeforeClass() {
+  public static function setUpBeforeClass(): void {
     parent::setUpBeforeClass();
     VarDumper::setHandler(TestVarDumper::class . '::cliHandler');
   }
@@ -54,7 +56,7 @@ abstract class UnitTestCase extends TestCase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
     // Ensure that an instantiated container in the global state of \Drupal from
     // a previous test does not leak into this test.
@@ -95,25 +97,6 @@ abstract class UnitTestCase extends TestCase {
       $this->randomGenerator = new Random();
     }
     return $this->randomGenerator;
-  }
-
-  /**
-   * Asserts if two arrays are equal by sorting them first.
-   *
-   * @param array $expected
-   * @param array $actual
-   * @param string $message
-   *
-   * @deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. Use
-   *   ::assertEquals, ::assertEqualsCanonicalizing, or ::assertSame instead.
-   *
-   * @see https://www.drupal.org/node/3136304
-   */
-  protected function assertArrayEquals(array $expected, array $actual, $message = NULL) {
-    @trigger_error(__METHOD__ . "() is deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. Use ::assertEquals(), ::assertEqualsCanonicalizing(), or ::assertSame() instead. See https://www.drupal.org/node/3136304", E_USER_DEPRECATED);
-    ksort($expected);
-    ksort($actual);
-    $this->assertEquals($expected, $actual, !empty($message) ? $message : '');
   }
 
   /**
@@ -159,7 +142,7 @@ abstract class UnitTestCase extends TestCase {
         ->getMock();
       $immutable_config_object->expects($this->any())
         ->method('get')
-        ->will($this->returnCallback($config_get));
+        ->willReturnCallback($config_get);
       $config_get_map[] = [$config_name, $immutable_config_object];
 
       $mutable_config_object = $this->getMockBuilder('Drupal\Core\Config\Config')
@@ -167,7 +150,7 @@ abstract class UnitTestCase extends TestCase {
         ->getMock();
       $mutable_config_object->expects($this->any())
         ->method('get')
-        ->will($this->returnCallback($config_get));
+        ->willReturnCallback($config_get);
       $config_editable_map[] = [$config_name, $mutable_config_object];
     }
     // Construct a config factory with the array of configuration object stubs
@@ -175,10 +158,10 @@ abstract class UnitTestCase extends TestCase {
     $config_factory = $this->createMock('Drupal\Core\Config\ConfigFactoryInterface');
     $config_factory->expects($this->any())
       ->method('get')
-      ->will($this->returnValueMap($config_get_map));
+      ->willReturnMap($config_get_map);
     $config_factory->expects($this->any())
       ->method('getEditable')
-      ->will($this->returnValueMap($config_editable_map));
+      ->willReturnMap($config_editable_map);
     return $config_factory;
   }
 
@@ -197,13 +180,13 @@ abstract class UnitTestCase extends TestCase {
     $config_storage = $this->createMock('Drupal\Core\Config\NullStorage');
     $config_storage->expects($this->any())
       ->method('listAll')
-      ->will($this->returnValue(array_keys($configs)));
+      ->willReturn(array_keys($configs));
 
     foreach ($configs as $name => $config) {
       $config_storage->expects($this->any())
         ->method('read')
         ->with($this->equalTo($name))
-        ->will($this->returnValue($config));
+        ->willReturn($config);
     }
     return $config_storage;
   }
@@ -249,7 +232,7 @@ abstract class UnitTestCase extends TestCase {
     $container->expects($this->any())
       ->method('get')
       ->with('cache_tags.invalidator')
-      ->will($this->returnValue($cache_tags_validator));
+      ->willReturn($cache_tags_validator);
 
     \Drupal::setContainer($container);
     return $container;
@@ -265,14 +248,14 @@ abstract class UnitTestCase extends TestCase {
     $class_resolver = $this->createMock('Drupal\Core\DependencyInjection\ClassResolverInterface');
     $class_resolver->expects($this->any())
       ->method('getInstanceFromDefinition')
-      ->will($this->returnCallback(function ($class) {
+      ->willReturnCallback(function ($class) {
         if (is_subclass_of($class, 'Drupal\Core\DependencyInjection\ContainerInjectionInterface')) {
           return $class::create(new ContainerBuilder());
         }
         else {
           return new $class();
         }
-      }));
+      });
     return $class_resolver;
   }
 

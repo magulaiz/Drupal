@@ -40,6 +40,9 @@ class ImageItemTest extends FieldKernelTestBase {
    */
   protected $imageFactory;
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
 
@@ -155,7 +158,7 @@ class ImageItemTest extends FieldKernelTestBase {
     }
     catch (EntityStorageException $exception) {
       $this->assertInstanceOf(Warning::class, $exception->getPrevious());
-      $this->assertEquals($exception->getMessage(), 'Missing file with ID 9999.');
+      $this->assertEquals('Missing file with ID 9999.', $exception->getMessage());
       $this->assertEmpty($entity->image_test->width);
       $this->assertEmpty($entity->image_test->height);
     }

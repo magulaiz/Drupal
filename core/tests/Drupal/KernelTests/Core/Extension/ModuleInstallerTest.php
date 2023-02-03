@@ -147,10 +147,26 @@ class ModuleInstallerTest extends KernelTestBase {
   }
 
   /**
+   * Tests trying to install a deprecated module.
+   *
+   * @covers ::install
+   *
+   * @group legacy
+   */
+  public function testDeprecatedInstall() {
+    $this->expectDeprecation("The module 'deprecated_module' is deprecated. See http://example.com/deprecated");
+    \Drupal::service('module_installer')->install(['deprecated_module']);
+    $this->assertTrue(\Drupal::service('module_handler')->moduleExists('deprecated_module'));
+  }
+
+  /**
    * Tests the message when entity storage creation fails on module install.
    */
   public function testModuleInstallerErrorMessagesText() {
-    \Drupal::service('module_installer')->install(['dblog', 'dblog_exception_message_test']);
+    \Drupal::service('module_installer')->install([
+      'dblog',
+      'dblog_exception_message_test'
+    ]);
     $database = Database::getConnection();
     $results = $database->select('watchdog', 'w')
       ->fields('w', ['variables'])

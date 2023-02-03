@@ -3,11 +3,8 @@
 namespace Drupal\Tests\Core\Database;
 
 use Composer\Autoload\ClassLoader;
-use Drupal\Core\Database\Statement;
-use Drupal\Core\Database\StatementWrapper;
 use Drupal\Tests\Core\Database\Stub\StubConnection;
 use Drupal\Tests\Core\Database\Stub\StubPDO;
-use Drupal\Tests\Core\Database\Stub\Driver;
 use Drupal\Tests\UnitTestCase;
 
 /**
@@ -29,18 +26,17 @@ class ConnectionTest extends UnitTestCase {
   public function providerPrefixRoundTrip() {
     return [
       [
-        ['' => 'test_'],
+        [
+          '' => 'test_',
+        ],
         'test_',
       ],
       [
         [
           'fooTable' => 'foo_',
-          'barTable' => 'bar_',
+          'barTable' => 'foo_',
         ],
-        [
-          'fooTable' => 'foo_',
-          'barTable' => 'bar_',
-        ],
+        'foo_',
       ],
     ];
   }
@@ -63,7 +59,7 @@ class ConnectionTest extends UnitTestCase {
     $set_prefix->invokeArgs($connection, [$prefix_info]);
     // Check the round-trip.
     foreach ($expected as $table => $prefix) {
-      $this->assertEquals($prefix, $connection->tablePrefix($table));
+      $this->assertEquals($prefix, $connection->getPrefix());
     }
   }
 
@@ -75,6 +71,7 @@ class ConnectionTest extends UnitTestCase {
    *   - Expected result.
    *   - Table prefix.
    *   - Query to be prefixed.
+   *   - Quote identifier.
    */
   public function providerTestPrefixTables() {
     return [
@@ -85,23 +82,23 @@ class ConnectionTest extends UnitTestCase {
         ['', ''],
       ],
       [
-        'SELECT * FROM "first_table" JOIN "second"."thingie"',
-        [
-          'table' => 'first_',
-          'thingie' => 'second.',
-        ],
-        'SELECT * FROM {table} JOIN {thingie}',
+        'SELECT * FROM "test_table"',
+        'test_',
+        'SELECT * FROM {table}',
+        ['"', '"'],
       ],
       [
-        'SELECT * FROM [first_table] JOIN [second].[thingie]',
-        [
-          'table' => 'first_',
-          'thingie' => 'second.',
-        ],
-        'SELECT * FROM {table} JOIN {thingie}',
+        "SELECT * FROM 'test_table'",
+        'test_',
+        'SELECT * FROM {table}',
+        ["'", "'"],
+      ],
+      [
+        "SELECT * FROM [test_table]",
+        'test_',
+        'SELECT * FROM {table}',
         ['[', ']'],
       ],
-
     ];
   }
 
@@ -361,51 +358,6 @@ class ConnectionTest extends UnitTestCase {
   }
 
   /**
-   * Tests Connection::destroy().
-   *
-   * @group legacy
-   */
-  public function testDestroy() {
-    $this->expectDeprecation('Drupal\Core\Database\Connection::destroy() is deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. Move custom database destruction logic to __destruct(). See https://www.drupal.org/node/3142866');
-    $mock_pdo = $this->createMock('Drupal\Tests\Core\Database\Stub\StubPDO');
-    // Mocking StubConnection gives us access to the $schema attribute.
-    $connection = new StubConnection($mock_pdo, ['namespace' => 'Drupal\\Tests\\Core\\Database\\Stub\\Driver']);
-    // Generate a schema object in order to verify that we've NULLed it later.
-    $this->assertInstanceOf(
-      'Drupal\\Tests\\Core\\Database\\Stub\\Driver\\Schema',
-      $connection->schema()
-    );
-    $connection->destroy();
-
-    $reflected_schema = (new \ReflectionObject($connection))->getProperty('schema');
-    $reflected_schema->setAccessible(TRUE);
-    $this->assertNull($reflected_schema->getValue($connection));
-  }
-
-  /**
-   * Tests Connection::__destruct().
-   *
-   * @group legacy
-   */
-  public function testDestructBcLayer() {
-    $this->expectDeprecation('Drupal\Core\Database\Connection::destroy() is deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. Move custom database destruction logic to __destruct(). See https://www.drupal.org/node/3142866');
-    $mock_pdo = $this->createMock(StubPDO::class);
-    $fake_connection = new class($mock_pdo, ['namespace' => Driver::class]) extends StubConnection {
-
-      public function destroy() {
-        parent::destroy();
-      }
-
-    };
-    // Destroy the object which will result in the Connection::__destruct()
-    // calling Connection::destroy() and a deprecation error being triggered.
-    // @see \Drupal\KernelTests\Core\Database\ConnectionUnitTest for tests that
-    // connection object destruction does not trigger deprecations unless
-    // Connection::destroy() is overridden.
-    $fake_connection = NULL;
-  }
-
-  /**
    * Data provider for testMakeComments().
    *
    * @return array
@@ -608,16 +560,6 @@ class ConnectionTest extends UnitTestCase {
 
   /**
    * @covers ::__construct
-   * @group legacy
-   */
-  public function testIdentifierQuotesDeprecation() {
-    $this->expectDeprecation('In drupal:10.0.0 not setting the $identifierQuotes property in the concrete Connection class will result in an RuntimeException. See https://www.drupal.org/node/2986894');
-    $mock_pdo = $this->createMock(StubPDO::class);
-    new StubConnection($mock_pdo, [], NULL);
-  }
-
-  /**
-   * @covers ::__construct
    */
   public function testIdentifierQuotesAssertCount() {
     $this->expectException(\AssertionError::class);
@@ -646,41 +588,17 @@ class ConnectionTest extends UnitTestCase {
   }
 
   /**
-   * Tests deprecation of the Statement class.
-   *
-   * @group legacy
-   */
-  public function testStatementDeprecation() {
-    if (PHP_VERSION_ID >= 80000) {
-      $this->markTestSkipped('Drupal\Core\Database\Statement is incompatible with PHP 8.0. Remove in https://www.drupal.org/node/3177490');
-    }
-    $this->expectDeprecation('\Drupal\Core\Database\Statement is deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. Database drivers should use or extend StatementWrapper instead, and encapsulate client-level statement objects. See https://www.drupal.org/node/3177488');
-    $mock_statement = $this->getMockBuilder(Statement::class)
-      ->disableOriginalConstructor()
-      ->getMock();
-  }
-
-  /**
    * Test rtrim() of query strings.
    *
    * @dataProvider provideQueriesToTrim
    */
   public function testQueryTrim($expected, $query, $options) {
-    $mock_pdo = $this->getMockBuilder(StubPdo::class)
-      ->setMethods(['execute', 'prepare', 'setAttribute'])
-      ->getMock();
-    $mock_statement = $this->getMockBuilder(StatementWrapper::class)
-      ->disableOriginalConstructor()
-      ->getMock();
-
-    // Ensure that PDO::prepare() is called only once, and with the
-    // correctly trimmed query string.
-    $mock_pdo->expects($this->once())
-      ->method('prepare')
-      ->with($expected)
-      ->willReturn($mock_statement);
+    $mock_pdo = $this->getMockBuilder(StubPdo::class)->getMock();
     $connection = new StubConnection($mock_pdo, []);
-    $connection->query($query, [], $options);
+
+    $preprocess_method = new \ReflectionMethod($connection, 'preprocessStatement');
+    $preprocess_method->setAccessible(TRUE);
+    $this->assertSame($expected, $preprocess_method->invoke($connection, $query, $options));
   }
 
   /**
@@ -725,33 +643,6 @@ class ConnectionTest extends UnitTestCase {
         ['allow_delimiter_in_query' => TRUE],
       ],
     ];
-  }
-
-  /**
-   * Tests the deprecation of Drupal 8 style database drivers.
-   *
-   * @group legacy
-   */
-  public function testLegacyDatabaseDriverInRootDriversDirectory() {
-    $this->expectDeprecation('Support for database drivers located in the "drivers/lib/Drupal/Driver/Database" directory is deprecated in drupal:9.1.0 and is removed in drupal:10.0.0. Contributed and custom database drivers should be provided by modules and use the namespace "Drupal\MODULE_NAME\Driver\Database\DRIVER_NAME". See https://www.drupal.org/node/3123251');
-    $namespace = 'Drupal\\Driver\\Database\\Stub';
-    $mock_pdo = $this->createMock(StubPDO::class);
-    $connection = new StubConnection($mock_pdo, ['namespace' => $namespace], ['"', '"']);
-    $this->assertEquals($namespace, $connection->getConnectionOptions()['namespace']);
-  }
-
-  /**
-   * Tests the deprecation of \Drupal\Core\Database\Connection::$statementClass.
-   *
-   * @group legacy
-   */
-  public function testPdoStatementClass() {
-    if (PHP_VERSION_ID >= 80000) {
-      $this->markTestSkipped('Drupal\Core\Database\Statement is incompatible with PHP 8.0. Remove in https://www.drupal.org/node/3177490');
-    }
-    $this->expectDeprecation('\Drupal\Core\Database\Connection::$statementClass is deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. Database drivers should use or extend StatementWrapper instead, and encapsulate client-level statement objects. See https://www.drupal.org/node/3177488');
-    $mock_pdo = $this->createMock(StubPDO::class);
-    new StubConnection($mock_pdo, ['namespace' => 'Drupal\\Tests\\Core\\Database\\Stub\\Driver'], ['"', '"'], Statement::class);
   }
 
 }

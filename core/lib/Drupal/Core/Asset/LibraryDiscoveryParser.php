@@ -2,16 +2,17 @@
 
 namespace Drupal\Core\Asset;
 
+use Drupal\Component\Serialization\Exception\InvalidDataTypeException;
+use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Asset\Exception\IncompleteLibraryDefinitionException;
 use Drupal\Core\Asset\Exception\InvalidLibrariesOverrideSpecificationException;
 use Drupal\Core\Asset\Exception\InvalidLibraryFileException;
 use Drupal\Core\Asset\Exception\LibraryDefinitionMissingLicenseException;
+use Drupal\Core\Extension\ExtensionPathResolver;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Serialization\Yaml;
 use Drupal\Core\StreamWrapper\StreamWrapperManagerInterface;
 use Drupal\Core\Theme\ThemeManagerInterface;
-use Drupal\Component\Serialization\Exception\InvalidDataTypeException;
-use Drupal\Component\Utility\NestedArray;
 
 /**
  * Parses library files to get extension data.
@@ -54,6 +55,13 @@ class LibraryDiscoveryParser {
   protected $librariesDirectoryFileFinder;
 
   /**
+   * The extension path resolver.
+   *
+   * @var \Drupal\Core\Extension\ExtensionPathResolver
+   */
+  protected $extensionPathResolver;
+
+  /**
    * Constructs a new LibraryDiscoveryParser instance.
    *
    * @param string $root
@@ -66,17 +74,16 @@ class LibraryDiscoveryParser {
    *   The stream wrapper manager.
    * @param \Drupal\Core\Asset\LibrariesDirectoryFileFinder $libraries_directory_file_finder
    *   The libraries directory file finder.
+   * @param \Drupal\Core\Extension\ExtensionPathResolver $extension_path_resolver
+   *   The extension path resolver.
    */
-  public function __construct($root, ModuleHandlerInterface $module_handler, ThemeManagerInterface $theme_manager, StreamWrapperManagerInterface $stream_wrapper_manager, LibrariesDirectoryFileFinder $libraries_directory_file_finder = NULL) {
+  public function __construct($root, ModuleHandlerInterface $module_handler, ThemeManagerInterface $theme_manager, StreamWrapperManagerInterface $stream_wrapper_manager, LibrariesDirectoryFileFinder $libraries_directory_file_finder, ExtensionPathResolver $extension_path_resolver) {
     $this->root = $root;
     $this->moduleHandler = $module_handler;
     $this->themeManager = $theme_manager;
     $this->streamWrapperManager = $stream_wrapper_manager;
-    if (!$libraries_directory_file_finder) {
-      @trigger_error('Calling LibraryDiscoveryParser::__construct() without the $libraries_directory_file_finder argument is deprecated in drupal:8.9.0. The $libraries_directory_file_finder argument will be required in drupal:10.0.0. See https://www.drupal.org/node/3099614', E_USER_DEPRECATED);
-      $libraries_directory_file_finder = \Drupal::service('library.libraries_directory_file_finder');
-    }
     $this->librariesDirectoryFileFinder = $libraries_directory_file_finder;
+    $this->extensionPathResolver = $extension_path_resolver;
   }
 
   /**
@@ -105,7 +112,7 @@ class LibraryDiscoveryParser {
       else {
         $extension_type = 'theme';
       }
-      $path = $this->drupalGetPath($extension_type, $extension);
+      $path = $this->extensionPathResolver->getPath($extension_type, $extension);
     }
 
     $libraries = $this->parseLibraryInfo($extension, $path);
@@ -201,7 +208,7 @@ class LibraryDiscoveryParser {
               if ($source[1] !== '/') {
                 $source = substr($source, 1);
                 // Non core provided libraries can be in multiple locations.
-                if (strpos($source, 'libraries/') === 0) {
+                if (str_starts_with($source, 'libraries/')) {
                   $path_to_source = $this->librariesDirectoryFileFinder->find(substr($source, 10));
                   if ($path_to_source) {
                     $source = $path_to_source;
@@ -242,7 +249,7 @@ class LibraryDiscoveryParser {
 
           // Set the 'minified' flag on JS file assets, default to FALSE.
           if ($type == 'js' && $options['type'] == 'file') {
-            $options['minified'] = isset($options['minified']) ? $options['minified'] : FALSE;
+            $options['minified'] = $options['minified'] ?? FALSE;
           }
 
           $library[$type][] = $options;
@@ -351,7 +358,7 @@ class LibraryDiscoveryParser {
 
     // Allow modules to add dynamic library definitions.
     $hook = 'library_info_build';
-    if ($this->moduleHandler->implementsHook($extension, $hook)) {
+    if ($this->moduleHandler->hasImplementations($hook, $extension)) {
       $libraries = NestedArray::mergeDeep($libraries, $this->moduleHandler->invoke($extension, $hook));
     }
 
@@ -429,13 +436,6 @@ class LibraryDiscoveryParser {
     }
 
     return $libraries;
-  }
-
-  /**
-   * Wraps drupal_get_path().
-   */
-  protected function drupalGetPath($type, $name) {
-    return drupal_get_path($type, $name);
   }
 
   /**
@@ -523,7 +523,7 @@ class LibraryDiscoveryParser {
         return 2;
       }
       $categories[] = $category;
-      foreach ($files as $source => $options) {
+      foreach ($files as $options) {
         if (!is_array($options)) {
           return 1;
         }

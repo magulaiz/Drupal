@@ -24,7 +24,7 @@ class PageTitleTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'classy';
+  protected $defaultTheme = 'starterkit_theme';
 
   protected $contentUser;
   protected $savedTitle;
@@ -56,8 +56,8 @@ class PageTitleTest extends BrowserTestBase {
     $title = "string with <em>HTML</em>";
     // Generate node content.
     $edit = [
-      'title[0][value]' => '!SimpleTest! ' . $title . $this->randomMachineName(20),
-      'body[0][value]' => '!SimpleTest! test body' . $this->randomMachineName(200),
+      'title[0][value]' => '!Test! ' . $title . $this->randomMachineName(20),
+      'body[0][value]' => '!Test! test body' . $this->randomMachineName(200),
     ];
     // Create the node with HTML in the title.
     $this->drupalGet('node/add/page');
@@ -98,16 +98,16 @@ class PageTitleTest extends BrowserTestBase {
 
     // Test the title, checking for the lack of the unfiltered version of the
     // title.
-    $this->assertNoRaw($title);
+    $this->assertSession()->responseNotContains($title);
     // Add </title> to make sure we're checking the title tag, rather than the
     // first 'heading' on the page.
-    $this->assertRaw($title_filtered . '</title>');
+    $this->assertSession()->responseContains($title_filtered . '</title>');
 
     // Test the slogan.
     // Check the unfiltered version of the slogan is missing.
-    $this->assertNoRaw($slogan);
+    $this->assertSession()->responseNotContains($slogan);
     // Check for the filtered version of the slogan.
-    $this->assertRaw($slogan_filtered);
+    $this->assertSession()->responseContains($slogan_filtered);
   }
 
   /**
@@ -120,15 +120,13 @@ class PageTitleTest extends BrowserTestBase {
     $this->drupalGet('test-render-title');
 
     $this->assertSession()->titleEquals('Foo | Drupal');
-    $result = $this->xpath('//h1[@class="page-title"]');
-    $this->assertEquals('Foo', $result[0]->getText());
+    $this->assertSession()->elementTextEquals('xpath', '//h1[@class="page-title"]', 'Foo');
 
     // Test forms
     $this->drupalGet('form-test/object-builder');
 
     $this->assertSession()->titleEquals('Test dynamic title | Drupal');
-    $result = $this->xpath('//h1[@class="page-title"]');
-    $this->assertEquals('Test dynamic title', $result[0]->getText());
+    $this->assertSession()->elementTextEquals('xpath', '//h1[@class="page-title"]', 'Test dynamic title');
 
     // Set some custom translated strings.
     $settings_key = 'locale_custom_strings_en';
@@ -152,24 +150,22 @@ class PageTitleTest extends BrowserTestBase {
     $this->drupalGet('test-page-static-title');
 
     $this->assertSession()->titleEquals('Static title translated | Drupal');
-    $result = $this->xpath('//h1[@class="page-title"]');
-    $this->assertEquals('Static title translated', $result[0]->getText());
+    $this->assertSession()->elementTextEquals('xpath', '//h1[@class="page-title"]', 'Static title translated');
 
     // Test the dynamic '_title_callback' route option.
     $this->drupalGet('test-page-dynamic-title');
 
     $this->assertSession()->titleEquals('Dynamic title | Drupal');
-    $result = $this->xpath('//h1[@class="page-title"]');
-    $this->assertEquals('Dynamic title', $result[0]->getText());
+    $this->assertSession()->elementTextEquals('xpath', '//h1[@class="page-title"]', 'Dynamic title');
 
     // Ensure that titles are cacheable and are escaped normally if the
     // controller does not escape them.
     $this->drupalGet('test-page-cached-controller');
     $this->assertSession()->titleEquals('Cached title | Drupal');
-    $this->assertRaw(Html::escape('<span>Cached title</span>') . '</h1>');
+    $this->assertSession()->responseContains(Html::escape('<span>Cached title</span>') . '</h1>');
     $this->drupalGet('test-page-cached-controller');
     $this->assertSession()->titleEquals('Cached title | Drupal');
-    $this->assertRaw(Html::escape('<span>Cached title</span>') . '</h1>');
+    $this->assertSession()->responseContains(Html::escape('<span>Cached title</span>') . '</h1>');
   }
 
 }

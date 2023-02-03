@@ -87,6 +87,9 @@ class RouteProviderTest extends KernelTestBase {
    */
   protected $cacheTagsInvalidator;
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
     $this->fixtures = new RoutingFixtures();
@@ -111,6 +114,9 @@ class RouteProviderTest extends KernelTestBase {
     }
   }
 
+  /**
+   * {@inheritdoc}
+   */
   protected function tearDown(): void {
     $this->fixtures->dropTables(Database::getConnection());
 
@@ -288,7 +294,7 @@ class RouteProviderTest extends KernelTestBase {
     $routes = $provider->getRouteCollectionForRequest($request);
     $this->assertCount($number, $routes, 'The correct number of routes was found.');
     if ($expected_route_name) {
-      $route_name = key(current($routes));
+      $route_name = $routes->getIterator()->key();
       $this->assertEquals($expected_route_name, $route_name, 'The expected route name was found.');
     }
   }
@@ -307,12 +313,11 @@ class RouteProviderTest extends KernelTestBase {
     $dumper->dump();
 
     $sample_routes = $this->fixtures->staticSampleRouteCollection();
-    $expected_route_count = count($sample_routes);
 
     $returned_routes = $provider->getAllRoutes();
 
     $this->assertInstanceOf(\Iterator::class, $returned_routes);
-    $this->assertEquals($expected_route_count, count($returned_routes));
+    $this->assertSameSize($sample_routes, $returned_routes);
 
     foreach ($returned_routes as $route_name => $route) {
       $this->assertArrayHasKey($route_name, $sample_routes);
@@ -730,53 +735,6 @@ class RouteProviderTest extends KernelTestBase {
     $this->assertEquals(0, $result->count());
     $candidates = $provider->getCandidateOutlines(explode('/', trim($shortest, '/')));
     $this->assertCount(7, $candidates);
-  }
-
-  /**
-   * Tests getRoutesPaged().
-   *
-   * @group legacy
-   */
-  public function testGetRoutesPaged() {
-    $this->expectDeprecation('Drupal\Core\Routing\RouteProvider::getRoutesPaged() is deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. No direct replacement is provided. See https://www.drupal.org/node/3151009');
-    $connection = Database::getConnection();
-    $provider = new RouteProvider($connection, $this->state, $this->currentPath, $this->cache, $this->pathProcessor, $this->cacheTagsInvalidator, 'test_routes');
-
-    $this->fixtures->createTables($connection);
-    $dumper = new MatcherDumper($connection, $this->state, 'test_routes');
-    $dumper->addRoutes($this->fixtures->sampleRouteCollection());
-    $dumper->dump();
-
-    $fixture_routes = $this->fixtures->staticSampleRouteCollection();
-
-    // Query all the routes.
-    $routes = $provider->getRoutesPaged(0);
-    $this->assertEquals(array_keys($fixture_routes), array_keys($routes));
-
-    // Query non routes.
-    $routes = $provider->getRoutesPaged(0, 0);
-    $this->assertEquals([], array_keys($routes));
-
-    // Query a limited sets of routes.
-    $routes = $provider->getRoutesPaged(1, 2);
-    $this->assertEquals(array_slice(array_keys($fixture_routes), 1, 2), array_keys($routes));
-  }
-
-  /**
-   * Tests getRoutesCount().
-   *
-   * @group legacy
-   */
-  public function testGetRoutesCount() {
-    $this->expectDeprecation('Drupal\Core\Routing\RouteProvider::getRoutesCount() is deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. No direct replacement is provided. See https://www.drupal.org/node/3151009');
-    $connection = Database::getConnection();
-    $provider = new RouteProvider($connection, $this->state, $this->currentPath, $this->cache, $this->pathProcessor, $this->cacheTagsInvalidator, 'test_routes');
-
-    $this->fixtures->createTables($connection);
-    $dumper = new MatcherDumper($connection, $this->state, 'test_routes');
-    $dumper->addRoutes($this->fixtures->sampleRouteCollection());
-    $dumper->dump();
-    $this->assertEquals(5, $provider->getRoutesCount());
   }
 
 }

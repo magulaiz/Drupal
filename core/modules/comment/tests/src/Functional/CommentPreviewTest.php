@@ -20,13 +20,16 @@ class CommentPreviewTest extends CommentTestBase {
   }
 
   /**
-   * The profile to install as a basis for testing.
+   * Modules to install.
    *
-   * Using the standard profile to test user picture display in comments.
-   *
-   * @var string
+   * @var array
    */
-  protected $profile = 'standard';
+  protected static $modules = ['olivero_test', 'test_user_config'];
+
+  /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'olivero';
 
   /**
    * Tests comment preview.
@@ -58,7 +61,7 @@ class CommentPreviewTest extends CommentTestBase {
     $this->submitForm($edit, 'Preview');
     $this->assertInstanceOf(MarkupInterface::class, $this->webUser->getDisplayName());
     $this->assertSession()->assertNoEscaped('<em>' . $this->webUser->id() . '</em>');
-    $this->assertRaw('<em>' . $this->webUser->id() . '</em>');
+    $this->assertSession()->responseContains('<em>' . $this->webUser->id() . '</em>');
 
     // Add a user picture.
     $image = current($this->drupalGetTestFiles('image'));
@@ -121,16 +124,14 @@ class CommentPreviewTest extends CommentTestBase {
     // Store the content of this page.
     $this->submitForm([], 'Save');
     $this->assertSession()->pageTextContains('Your comment has been posted.');
-    $elements = $this->xpath('//section[contains(@class, "comment-wrapper")]/article');
-    $this->assertCount(1, $elements);
+    $this->assertSession()->elementsCount('xpath', '//section[contains(@class, "comments")]/article', 1);
 
     // Go back and re-submit the form.
     $this->getSession()->getDriver()->back();
     $submit_button = $this->assertSession()->buttonExists('Save');
     $submit_button->click();
     $this->assertSession()->pageTextContains('Your comment has been posted.');
-    $elements = $this->xpath('//section[contains(@class, "comment-wrapper")]/article');
-    $this->assertCount(2, $elements);
+    $this->assertSession()->elementsCount('xpath', '//section[contains(@class, "comments")]/article', 2);
   }
 
   /**
@@ -157,7 +158,7 @@ class CommentPreviewTest extends CommentTestBase {
     $edit['date[date]'] = $date->format('Y-m-d');
     $edit['date[time]'] = $date->format('H:i:s');
     $raw_date = $date->getTimestamp();
-    $expected_text_date = $this->container->get('date.formatter')->format($raw_date);
+    $expected_text_date = $this->container->get('date.formatter')->formatInterval(\Drupal::time()->getRequestTime() - $raw_date);
     $expected_form_date = $date->format('Y-m-d');
     $expected_form_time = $date->format('H:i:s');
     $comment = $this->postComment($this->node, $edit['subject[0][value]'], $edit['comment_body[0][value]'], TRUE);

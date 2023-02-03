@@ -79,18 +79,14 @@ class LinkCollectionNormalizer extends NormalizerBase {
    * @param \Drupal\Core\Session\AccountInterface $current_user
    *   The current user.
    */
-  public function __construct(AccountInterface $current_user = NULL) {
-    if (is_null($current_user)) {
-      @trigger_error('Calling ' . __METHOD__ . '() without the $current_user argument is deprecated in drupal:9.2.0 and will be required in drupal:10.0.0.', E_USER_DEPRECATED);
-      $current_user = \Drupal::currentUser();
-    }
+  public function __construct(AccountInterface $current_user) {
     $this->currentUser = $current_user;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function normalize($object, $format = NULL, array $context = []) {
+  public function normalize($object, $format = NULL, array $context = []): array|string|int|float|bool|\ArrayObject|NULL {
     assert($object instanceof LinkCollection);
     $normalized = [];
     /** @var \Drupal\jsonapi\JsonApiResource\Link $link */
@@ -152,6 +148,13 @@ class LinkCollectionNormalizer extends NormalizerBase {
     // Remove any dashes and underscores from the base64 hash and then return
     // the first 7 characters.
     return substr(str_replace(['-', '_'], '', $b64_hash), 0, 7);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function hasCacheableSupportsMethod(): bool {
+    return TRUE;
   }
 
 }

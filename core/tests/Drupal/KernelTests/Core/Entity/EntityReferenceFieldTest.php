@@ -6,6 +6,7 @@ use Drupal\Tests\SchemaCheckTestTrait;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityStorageException;
 use Drupal\Core\Field\BaseFieldDefinition;
+use Drupal\Core\Field\FieldException;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
@@ -331,13 +332,12 @@ class EntityReferenceFieldTest extends EntityKernelTestBase {
    *
    * @param \Drupal\Core\Entity\EntityInterface $entity
    *   The referencing entity.
-   * @param $setter_callback
+   * @param callable $setter_callback
    *   A callback setting the target entity on the referencing entity.
    *
-   * @return bool
-   *   TRUE if the user was autocreated, FALSE otherwise.
+   * @internal
    */
-  protected function assertUserAutocreate(EntityInterface $entity, $setter_callback) {
+  protected function assertUserAutocreate(EntityInterface $entity, callable $setter_callback): void {
     $storage = $this->entityTypeManager->getStorage('user');
     $user_id = $this->generateRandomEntityId();
     $user = $storage->create(['uid' => $user_id, 'name' => $this->randomString()]);
@@ -345,7 +345,7 @@ class EntityReferenceFieldTest extends EntityKernelTestBase {
     $entity->save();
     $storage->resetCache();
     $user = User::load($user_id);
-    return $this->assertEquals($entity->user_id->target_id, $user->id());
+    $this->assertEquals($entity->user_id->target_id, $user->id());
   }
 
   /**
@@ -353,13 +353,12 @@ class EntityReferenceFieldTest extends EntityKernelTestBase {
    *
    * @param \Drupal\Core\Entity\EntityInterface $entity
    *   The referencing entity.
-   * @param $setter_callback
+   * @param callable $setter_callback
    *   A callback setting the target entity on the referencing entity.
    *
-   * @return bool
-   *   TRUE if the user was autocreated, FALSE otherwise.
+   * @internal
    */
-  protected function assertUserRoleAutocreate(EntityInterface $entity, $setter_callback) {
+  protected function assertUserRoleAutocreate(EntityInterface $entity, callable $setter_callback): void {
     $storage = $this->entityTypeManager->getStorage('user_role');
     $role_id = $this->generateRandomEntityId(TRUE);
     $role = $storage->create(['id' => $role_id, 'label' => $this->randomString()]);
@@ -367,7 +366,27 @@ class EntityReferenceFieldTest extends EntityKernelTestBase {
     $entity->save();
     $storage->resetCache();
     $role = Role::load($role_id);
-    return $this->assertEquals($entity->user_role->target_id, $role->id());
+    $this->assertEquals($entity->user_role->target_id, $role->id());
+  }
+
+  /**
+   * Tests exception thrown with a missing target entity type.
+   */
+  public function testTargetEntityTypeMissing() {
+    // Setup a test entity type with an entity reference field to an entity type
+    // that doesn't exist.
+    $definitions = [
+      'bad_reference' => BaseFieldDefinition::create('entity_reference')
+        ->setSetting('target_type', 'made_up_entity_type')
+        ->setSetting('handler', 'default'),
+    ];
+    $this->state->set('entity_test.additional_base_field_definitions', $definitions);
+    $this->entityTypeManager->clearCachedDefinitions();
+
+    $this->expectException(FieldException::class);
+    $this->expectExceptionMessage("Field 'bad_reference' on entity type 'entity_test' references a target entity type 'made_up_entity_type' which does not exist.");
+
+    $this->installEntitySchema('entity_test');
   }
 
   /**

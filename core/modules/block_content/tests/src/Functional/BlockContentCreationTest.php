@@ -2,7 +2,6 @@
 
 namespace Drupal\Tests\block_content\Functional;
 
-use Drupal\Component\Render\FormattableMarkup;
 use Drupal\block_content\Entity\BlockContent;
 use Drupal\Core\Database\Database;
 
@@ -26,7 +25,7 @@ class BlockContentCreationTest extends BlockContentTestBase {
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'classy';
+  protected $defaultTheme = 'stark';
 
   /**
    * Permissions to grant admin user.
@@ -60,10 +59,7 @@ class BlockContentCreationTest extends BlockContentTestBase {
     $this->submitForm($edit, 'Save');
 
     // Check that the Basic block has been created.
-    $this->assertRaw(new FormattableMarkup('@block %name has been created.', [
-      '@block' => 'basic',
-      '%name' => $edit['info[0][value]'],
-    ]));
+    $this->assertSession()->pageTextContains('basic ' . $edit['info[0][value]'] . ' has been created.');
 
     // Check that the view mode setting is hidden because only one exists.
     $this->assertSession()->fieldNotExists('settings[view_mode]');
@@ -81,9 +77,7 @@ class BlockContentCreationTest extends BlockContentTestBase {
     $this->submitForm($edit, 'Save');
 
     // Check that the Basic block has been created.
-    $this->assertRaw(new FormattableMarkup('A custom block with block description %value already exists.', [
-      '%value' => $edit['info[0][value]'],
-    ]));
+    $this->assertSession()->pageTextContains('A custom block with block description ' . $edit['info[0][value]'] . ' already exists.');
     $this->assertSession()->statusCodeEquals(200);
   }
 
@@ -99,7 +93,7 @@ class BlockContentCreationTest extends BlockContentTestBase {
       'label' => 'Test View Mode',
     ];
     $this->submitForm($edit, 'Save');
-    $this->assertRaw(t('Saved the %label view mode.', ['%label' => $edit['label']]));
+    $this->assertSession()->pageTextContains('Saved the ' . $edit['label'] . ' view mode.');
 
     $this->drupalLogin($this->adminUser);
 
@@ -111,19 +105,13 @@ class BlockContentCreationTest extends BlockContentTestBase {
     $this->submitForm($edit, 'Save');
 
     // Check that the Basic block has been created.
-    $this->assertRaw(new FormattableMarkup('@block %name has been created.', [
-      '@block' => 'basic',
-      '%name' => $edit['info[0][value]'],
-    ]));
+    $this->assertSession()->pageTextContains('basic ' . $edit['info[0][value]'] . ' has been created.');
 
     // Save our block permanently
     $this->submitForm(['region' => 'content'], 'Save block');
 
     // Set test_view_mode as a custom display to be available on the list.
-    $this->drupalGet('admin/structure/block/block-content');
-    $this->drupalGet('admin/structure/block/block-content/types');
-    $this->clickLink(t('Manage display'));
-    $this->drupalGet('admin/structure/block/block-content/manage/basic/display');
+    $this->drupalGet('admin/structure/block-content/manage/basic/display');
     $custom_view_mode = [
       'display_modes_custom[test_view_mode]' => 1,
     ];
@@ -167,9 +155,7 @@ class BlockContentCreationTest extends BlockContentTestBase {
     $this->submitForm($edit, 'Save');
 
     // Check that the Basic block has been created.
-    $this->assertRaw(new FormattableMarkup('A custom block with block description %value already exists.', [
-      '%value' => $edit['info[0][value]'],
-    ]));
+    $this->assertSession()->pageTextContains('A custom block with block description ' . $edit['info[0][value]'] . ' already exists.');
     $this->assertSession()->statusCodeEquals(200);
   }
 
@@ -183,15 +169,12 @@ class BlockContentCreationTest extends BlockContentTestBase {
     $edit = [];
     $edit['info[0][value]'] = $this->randomMachineName(8);
     $edit['body[0][value]'] = $this->randomMachineName(16);
-    // Don't pass the custom block type in the url so the default is forced.
+    // Don't pass the custom block type in the URL so the default is forced.
     $this->drupalGet('block/add');
     $this->submitForm($edit, 'Save');
 
     // Check that the block has been created and that it is a basic block.
-    $this->assertRaw(new FormattableMarkup('@block %name has been created.', [
-      '@block' => 'basic',
-      '%name' => $edit['info[0][value]'],
-    ]));
+    $this->assertSession()->pageTextContains('basic ' . $edit['info[0][value]'] . ' has been created.');
 
     // Check that the block exists in the database.
     $blocks = \Drupal::entityTypeManager()
@@ -262,7 +245,7 @@ class BlockContentCreationTest extends BlockContentTestBase {
     $this->assertSession()->pageTextContains('This will also remove 1 placed block instance.');
 
     $this->submitForm([], 'Delete');
-    $this->assertRaw(t('The custom block %name has been deleted.', ['%name' => $edit['info[0][value]']]));
+    $this->assertSession()->pageTextContains('The custom block ' . $edit['info[0][value]'] . ' has been deleted.');
 
     // Create another block and force the plugin cache to flush.
     $edit2 = [];
@@ -272,7 +255,7 @@ class BlockContentCreationTest extends BlockContentTestBase {
     $this->drupalGet('block/add/basic');
     $this->submitForm($edit2, 'Save');
 
-    $this->assertNoRaw('Error message');
+    $this->assertSession()->responseNotContains('Error message');
 
     // Create another block with no instances, and test we don't get a
     // confirmation message about deleting instances.
@@ -285,7 +268,7 @@ class BlockContentCreationTest extends BlockContentTestBase {
 
     // Show the delete confirm form.
     $this->drupalGet('block/3/delete');
-    $this->assertNoText('This will also remove');
+    $this->assertSession()->pageTextNotContains('This will also remove');
   }
 
   /**
@@ -305,7 +288,7 @@ class BlockContentCreationTest extends BlockContentTestBase {
     $this->drupalGet($url);
     $this->submitForm($instance, 'Save block');
 
-    $dependencies = \Drupal::service('config.manager')->findConfigEntityDependentsAsEntities('content', [$block->getConfigDependencyName()]);
+    $dependencies = \Drupal::service('config.manager')->findConfigEntityDependenciesAsEntities('content', [$block->getConfigDependencyName()]);
     $block_placement = reset($dependencies);
     $this->assertEquals($block_placement_id, $block_placement->id(), "The block placement config entity has a dependency on the block content entity.");
   }

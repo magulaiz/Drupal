@@ -116,7 +116,7 @@ class BulkFormTest extends BrowserTestBase {
 
     $this->drupalGet('test_bulk_form');
     $options = $this->assertSession()->selectExists('edit-action')->findAll('css', 'option');
-    $this->assertCount(2, $options);
+    $this->assertCount(3, $options);
     $this->assertSession()->optionExists('edit-action', 'node_make_sticky_action');
     $this->assertSession()->optionExists('edit-action', 'node_make_unsticky_action');
 
@@ -132,8 +132,12 @@ class BulkFormTest extends BrowserTestBase {
 
     // Check the default title.
     $this->drupalGet('test_bulk_form');
-    $result = $this->xpath('//label[@for="edit-action"]');
-    $this->assertEquals('Action', $result[0]->getText());
+    $this->assertSession()->elementTextEquals('xpath', '//label[@for="edit-action"]', 'Action');
+
+    // There should be an error message if no action is selected.
+    $edit = ['node_bulk_form[0]' => TRUE, 'action' => ''];
+    $this->submitForm($edit, 'Apply to selected items');
+    $this->assertSession()->pageTextContains('No Action option selected.');
 
     // Setup up a different bulk form title.
     $view = Views::getView('test_bulk_form');
@@ -142,8 +146,12 @@ class BulkFormTest extends BrowserTestBase {
     $view->save();
 
     $this->drupalGet('test_bulk_form');
-    $result = $this->xpath('//label[@for="edit-action"]');
-    $this->assertEquals('Test title', $result[0]->getText());
+    $this->assertSession()->elementTextEquals('xpath', '//label[@for="edit-action"]', 'Test title');
+
+    // The error message when no action is selected should reflect the new form
+    // title.
+    $this->submitForm($edit, 'Apply to selected items');
+    $this->assertSession()->pageTextContains('No Test title option selected.');
 
     $this->drupalGet('test_bulk_form');
     // Call the node delete action.
@@ -197,7 +205,7 @@ class BulkFormTest extends BrowserTestBase {
 
     // Test that the bulk form works when multiple nodes are selected
     // but all of the selected nodes are already deleted
-    //  by another user before the loaded bulk form was submitted.
+    // by another user before the loaded bulk form was submitted.
     $this->drupalGet('test_bulk_form');
     // Call the node delete action.
     foreach ($nodes as $key => $node) {

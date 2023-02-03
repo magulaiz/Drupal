@@ -107,7 +107,7 @@ interface EntityTypeInterface extends PluginDefinitionInterface {
    * @param string $key
    *   The name of the entity key to return.
    *
-   * @return string|bool
+   * @return string|false
    *   The entity key, or FALSE if it does not exist.
    *
    * @see self::getKeys()
@@ -359,23 +359,6 @@ interface EntityTypeInterface extends PluginDefinitionInterface {
    *   TRUE if the entity type class implements the given interface.
    */
   public function entityClassImplements($interface);
-
-  /**
-   * Indicates if the entity type is a subclass of the given class or interface.
-   *
-   * @param string $class
-   *   The class or interface to check.
-   *
-   * @return bool
-   *   TRUE if the entity type is a subclass of the class or interface.
-   *
-   * @deprecated in drupal:8.3.0 and is removed from drupal:10.0.0.
-   *   Use Drupal\Core\Entity\EntityTypeInterface::entityClassImplements()
-   *   instead.
-   *
-   * @see https://www.drupal.org/node/2842808
-   */
-  public function isSubclassOf($class);
 
   /**
    * Sets the handlers for a given type.
@@ -686,6 +669,14 @@ interface EntityTypeInterface extends PluginDefinitionInterface {
   /**
    * Gets the machine name of the entity type group.
    *
+   * The entity type group is an annotation property of the entity type.
+   *
+   * Drupal core defines two entity type groups:
+   *  - content: Entities which form the information on a site. Content entities
+   *    are typically customized with fields.
+   *  - config: Entities which define structural elements of a site, which are
+   *    managed as part of the site's configuration.
+   *
    * @return string
    */
   public function getGroup();
@@ -695,6 +686,8 @@ interface EntityTypeInterface extends PluginDefinitionInterface {
    *
    * @return string|\Drupal\Core\StringTranslation\TranslatableMarkup
    *   The group label.
+   *
+   * @see self::getGroup()
    */
   public function getGroupLabel();
 

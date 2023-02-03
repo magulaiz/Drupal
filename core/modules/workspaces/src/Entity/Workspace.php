@@ -26,7 +26,9 @@ use Drupal\workspaces\WorkspaceInterface;
  *   ),
  *   handlers = {
  *     "list_builder" = "\Drupal\workspaces\WorkspaceListBuilder",
+ *     "view_builder" = "Drupal\workspaces\WorkspaceViewBuilder",
  *     "access" = "Drupal\workspaces\WorkspaceAccessControlHandler",
+ *     "views_data" = "Drupal\views\EntityViewsData",
  *     "route_provider" = {
  *       "html" = "\Drupal\Core\Entity\Routing\AdminHtmlRouteProvider",
  *     },
@@ -53,6 +55,7 @@ use Drupal\workspaces\WorkspaceInterface;
  *     "owner" = "uid",
  *   },
  *   links = {
+ *     "canonical" = "/admin/config/workflow/workspaces/manage/{workspace}",
  *     "add-form" = "/admin/config/workflow/workspaces/add",
  *     "edit-form" = "/admin/config/workflow/workspaces/manage/{workspace}/edit",
  *     "delete-form" = "/admin/config/workflow/workspaces/manage/{workspace}/delete",

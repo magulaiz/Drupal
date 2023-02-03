@@ -143,9 +143,16 @@ abstract class BuildTestBase extends TestCase {
   private $commandProcess;
 
   /**
+   * The PHP executable finder.
+   *
+   * @var \Symfony\Component\Process\PhpExecutableFinder
+   */
+  private PhpExecutableFinder $phpFinder;
+
+  /**
    * {@inheritdoc}
    */
-  public static function setUpBeforeClass() {
+  public static function setUpBeforeClass(): void {
     parent::setUpBeforeClass();
     static::checkClassCommandRequirements();
   }
@@ -153,7 +160,7 @@ abstract class BuildTestBase extends TestCase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
     static::checkMethodCommandRequirements($this->getName());
     $this->phpFinder = new PhpExecutableFinder();
@@ -169,7 +176,7 @@ abstract class BuildTestBase extends TestCase {
   /**
    * {@inheritdoc}
    */
-  protected function tearDown() {
+  protected function tearDown(): void {
     parent::tearDown();
 
     $this->stopServer();
@@ -263,6 +270,16 @@ abstract class BuildTestBase extends TestCase {
    */
   public function assertErrorOutputContains($expected) {
     $this->assertStringContainsString($expected, $this->commandProcess->getErrorOutput());
+  }
+
+  /**
+   * Assert text is not present in the error output of the most recent command.
+   *
+   * @param string $expected
+   *   Text we expect not to find in the error output of the command.
+   */
+  public function assertErrorOutputNotContains($expected) {
+    $this->assertStringNotContainsString($expected, $this->commandProcess->getErrorOutput());
   }
 
   /**

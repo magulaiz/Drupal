@@ -6,6 +6,7 @@ use Drupal\Component\Utility\Html;
 use Drupal\Component\Render\MarkupInterface;
 use Drupal\Core\Cache\CacheableDependencyInterface;
 use Drupal\Core\Datetime\DateFormatterInterface;
+use Drupal\Core\File\FileUrlGeneratorInterface;
 use Drupal\Core\Render\AttachmentsInterface;
 use Drupal\Core\Render\BubbleableMetadata;
 use Drupal\Core\Render\Markup;
@@ -62,6 +63,13 @@ class TwigExtension extends AbstractExtension {
   protected $dateFormatter;
 
   /**
+   * The file URL generator.
+   *
+   * @var \Drupal\Core\File\FileUrlGeneratorInterface
+   */
+  protected $fileUrlGenerator;
+
+  /**
    * Constructs \Drupal\Core\Template\TwigExtension.
    *
    * @param \Drupal\Core\Render\RendererInterface $renderer
@@ -72,12 +80,15 @@ class TwigExtension extends AbstractExtension {
    *   The theme manager.
    * @param \Drupal\Core\Datetime\DateFormatterInterface $date_formatter
    *   The date formatter.
+   * @param \Drupal\Core\File\FileUrlGeneratorInterface $file_url_generator
+   *   The file URL generator.
    */
-  public function __construct(RendererInterface $renderer, UrlGeneratorInterface $url_generator, ThemeManagerInterface $theme_manager, DateFormatterInterface $date_formatter) {
+  public function __construct(RendererInterface $renderer, UrlGeneratorInterface $url_generator, ThemeManagerInterface $theme_manager, DateFormatterInterface $date_formatter, FileUrlGeneratorInterface $file_url_generator) {
     $this->renderer = $renderer;
     $this->urlGenerator = $url_generator;
     $this->themeManager = $theme_manager;
     $this->dateFormatter = $date_formatter;
+    $this->fileUrlGenerator = $file_url_generator;
   }
 
   /**
@@ -87,14 +98,12 @@ class TwigExtension extends AbstractExtension {
     return [
       // This function will receive a renderable array, if an array is detected.
       new TwigFunction('render_var', [$this, 'renderVar']),
-      // The url and path function are defined in close parallel to those found
+      // The URL and path function are defined in close parallel to those found
       // in \Symfony\Bridge\Twig\Extension\RoutingExtension
       new TwigFunction('url', [$this, 'getUrl'], ['is_safe_callback' => [$this, 'isUrlGenerationSafe']]),
       new TwigFunction('path', [$this, 'getPath'], ['is_safe_callback' => [$this, 'isUrlGenerationSafe']]),
       new TwigFunction('link', [$this, 'getLink']),
-      new TwigFunction('file_url', function ($uri) {
-        return file_url_transform_relative(file_create_url($uri));
-      }),
+      new TwigFunction('file_url', [$this, 'getFileUrl']),
       new TwigFunction('attach_library', [$this, 'attachLibrary']),
       new TwigFunction('active_theme_path', [$this, 'getActiveThemePath']),
       new TwigFunction('active_theme', [$this, 'getActiveTheme']),
@@ -134,6 +143,8 @@ class TwigExtension extends AbstractExtension {
       // This filter will render a renderable array to use the string results.
       new TwigFilter('render', [$this, 'renderVar']),
       new TwigFilter('format_date', [$this->dateFormatter, 'format']),
+      // Add new theme hook suggestions directly from a Twig template.
+      new TwigFilter('add_suggestion', [$this, 'suggestThemeHook']),
     ];
   }
 
@@ -170,7 +181,7 @@ class TwigExtension extends AbstractExtension {
    * @param $name
    *   The name of the route.
    * @param array $parameters
-   *   An associative array of route parameters names and values.
+   *   (optional) An associative array of route parameters names and values.
    * @param array $options
    *   (optional) An associative array of additional options. The 'absolute'
    *   option is forced to be FALSE.
@@ -217,7 +228,7 @@ class TwigExtension extends AbstractExtension {
   }
 
   /**
-   * Gets a rendered link from a url object.
+   * Gets a rendered link from a URL object.
    *
    * @param string $text
    *   The link text for the anchor tag as a translated string.
@@ -257,6 +268,22 @@ class TwigExtension extends AbstractExtension {
       '#url' => $url,
     ];
     return $build;
+  }
+
+  /**
+   * Gets the file URL.
+   *
+   * @param string|null $uri
+   *   The file URI.
+   *
+   * @return string
+   *   The file URL.
+   */
+  public function getFileUrl(?string $uri): string {
+    if (is_null($uri)) {
+      return '';
+    }
+    return $this->fileUrlGenerator->generateString($uri);
   }
 
   /**
@@ -512,9 +539,11 @@ class TwigExtension extends AbstractExtension {
       return 0;
     }
 
-    // Return early for NULL and empty arrays.
+    // Return early for NULL, empty arrays, empty strings and FALSE booleans.
+    // @todo https://www.drupal.org/project/drupal/issues/3240093 Determine if
+    //   this behavior is correct or should be deprecated.
     if ($arg == NULL) {
-      return NULL;
+      return '';
     }
 
     // Optimize for scalars as it is likely they come from the escape filter.
@@ -624,6 +653,63 @@ class TwigExtension extends AbstractExtension {
       unset($filtered_element[$key]);
     }
     return $filtered_element;
+  }
+
+  /**
+   * Adds a theme suggestion to the element.
+   *
+   * @param array|null $element
+   *   A theme element render array.
+   * @param string|\Stringable $suggestion
+   *   The theme suggestion part to append to the existing theme hook(s).
+   *
+   * @return array|null
+   *   The element with the full theme suggestion added as the highest priority.
+   */
+  public function suggestThemeHook(?array $element, string|\Stringable $suggestion): ?array {
+    // Make sure we have a valid theme element render array.
+    if (empty($element['#theme'])) {
+      // Throw assertion for render arrays that contain more than just metadata
+      // (e.g., don't assert on empty field content).
+      assert(array_diff_key($element ?? [], [
+        '#cache' => TRUE,
+        '#weight' => TRUE,
+        '#attached' => TRUE,
+      ]) === [], 'Invalid target for the "|add_suggestion" Twig filter; element does not have a "#theme" key.');
+      return $element;
+    }
+
+    // Replace dashes with underscores to support suggestions that match the
+    // target template name rather than the underlying theme hook.
+    $suggestion = str_replace('-', '_', $suggestion);
+
+    // Transform the theme hook to a format that supports multiple suggestions.
+    if (!is_iterable($element['#theme'])) {
+      $element['#theme'] = [$element['#theme']];
+    }
+
+    // Add _new_ suggestions for each existing theme hook. Simply modifying the
+    // existing items (appending to each theme hook instead of adding new ones)
+    // would cause the original hooks to be unavailable as fallbacks.
+    //
+    // Start with the lowest priority theme hook.
+    foreach (array_reverse($element['#theme']) as $theme_hook) {
+      // Add new suggestions to the front (highest priority).
+      array_unshift($element['#theme'], $theme_hook . '__' . $suggestion);
+    }
+
+    // Reset the "#printed" flag to make sure the content gets rendered with the
+    // new suggestion in place.
+    unset($element['#printed']);
+
+    // Add a cache key to prevent using render cache from before the suggestion
+    // was added. If there are no cache keys already set, don't add one, as that
+    // would enable caching on this element where there wasn't any before.
+    if (isset($element['#cache']['keys'])) {
+      $element['#cache']['keys'][] = $suggestion;
+    }
+
+    return $element;
   }
 
 }

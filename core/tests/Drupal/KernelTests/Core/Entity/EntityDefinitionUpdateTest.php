@@ -243,6 +243,26 @@ class EntityDefinitionUpdateTest extends EntityKernelTestBase {
     $this->deleteEntityType();
 
     // Now uninstall it and check that the tables have been removed.
+    $this->assertTrue($this->database->schema()->tableExists('entity_test_update'), 'Base table for entity_test_update exists before uninstalling it.');
+    $this->entityDefinitionUpdateManager->uninstallEntityType($entity_type);
+    $this->assertFalse($this->database->schema()->tableExists('entity_test_update'), 'Base table for entity_test_update does not exist anymore.');
+  }
+
+  /**
+   * Tests uninstalling a revisionable entity type that doesn't exist in code.
+   *
+   * @covers ::uninstallEntityType
+   */
+  public function testUninstallRevisionableEntityTypeWithoutInCodeDefinition() {
+    $this->updateEntityTypeToRevisionable(TRUE);
+    $entity_type = $this->entityDefinitionUpdateManager->getEntityType('entity_test_update');
+
+    // Remove the entity type definition. This is the same thing as removing the
+    // code that defines it.
+    $this->deleteEntityType();
+
+    // Now uninstall it and check that the tables have been removed.
+    $this->assertTrue($this->database->schema()->tableExists('entity_test_update'), 'Base table for entity_test_update exists before uninstalling it.');
     $this->entityDefinitionUpdateManager->uninstallEntityType($entity_type);
     $this->assertFalse($this->database->schema()->tableExists('entity_test_update'), 'Base table for entity_test_update does not exist anymore.');
   }
@@ -582,7 +602,7 @@ class EntityDefinitionUpdateTest extends EntityKernelTestBase {
       ->orderBy('langcode', 'ASC')
       ->execute()
       ->fetchAll(\PDO::FETCH_ASSOC);
-    $this->assertCount(count($expected), $result);
+    $this->assertSameSize($expected, $result);
 
     // Use assertEquals and not assertSame here to prevent that a different
     // sequence of the columns in the table will affect the check.
@@ -622,7 +642,7 @@ class EntityDefinitionUpdateTest extends EntityKernelTestBase {
         ->orderBy('langcode', 'ASC')
         ->execute()
         ->fetchAll(\PDO::FETCH_ASSOC);
-      $this->assertCount(count($expected), $result);
+      $this->assertSameSize($expected, $result);
 
       // Use assertEquals and not assertSame here to prevent that a different
       // sequence of the columns in the table will affect the check.

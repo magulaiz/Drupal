@@ -14,6 +14,7 @@ use Drupal\views\Render\ViewsRenderPipelineMarkup;
 use Drupal\views\ResultRow;
 use Drupal\views\ViewExecutable;
 use Twig\Environment;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 
 /**
  * @defgroup views_field_handlers Views field handler plugins
@@ -53,12 +54,14 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
 
   /**
    * Indicator of the renderText() method for rendering a single item.
+   *
    * (If no render_item() is present).
    */
   const RENDER_TEXT_PHASE_SINGLE_ITEM = 0;
 
   /**
    * Indicator of the renderText() method for rendering the whole element.
+   *
    * (if no render_item() method is available).
    */
   const RENDER_TEXT_PHASE_COMPLETELY = 1;
@@ -103,6 +106,21 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
    * @var \Drupal\Core\Render\RendererInterface
    */
   protected $renderer;
+
+  /**
+   * The last rendered value.
+   */
+  public string|MarkupInterface|NULL $last_render;
+
+  /**
+   * The last rendered text.
+   */
+  public string|MarkupInterface|NULL $last_render_text;
+
+  /**
+   * The last rendered tokens.
+   */
+  public array $last_tokens;
 
   /**
    * Keeps track of the last render index.
@@ -228,7 +246,7 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
    * {@inheritdoc}
    */
   public function clickSortable() {
-    return isset($this->definition['click sortable']) ? $this->definition['click sortable'] : TRUE;
+    return $this->definition['click sortable'] ?? TRUE;
   }
 
   /**
@@ -587,7 +605,7 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
 
     $form['element_class_enable'] = [
       '#type' => 'checkbox',
-      '#title' => $this->t('Create a CSS class'),
+      '#title' => $this->t('Add HTML class'),
       '#states' => [
         'visible' => [
           ':input[name="options[element_type_enable]"]' => ['checked' => TRUE],
@@ -618,7 +636,7 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
     ];
     $form['element_label_type'] = [
       '#title' => $this->t('Label HTML element'),
-      '#options' => $this->getElements(FALSE),
+      '#options' => $this->getElements(),
       '#type' => 'select',
       '#default_value' => $this->options['element_label_type'],
       '#description' => $this->t('Choose the HTML element to wrap around this label, e.g. H1, H2, etc.'),
@@ -631,7 +649,7 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
     ];
     $form['element_label_class_enable'] = [
       '#type' => 'checkbox',
-      '#title' => $this->t('Create a CSS class'),
+      '#title' => $this->t('Add HTML class'),
       '#states' => [
         'visible' => [
           ':input[name="options[element_label_type_enable]"]' => ['checked' => TRUE],
@@ -662,7 +680,7 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
     ];
     $form['element_wrapper_type'] = [
       '#title' => $this->t('Wrapper HTML element'),
-      '#options' => $this->getElements(FALSE),
+      '#options' => $this->getElements(),
       '#type' => 'select',
       '#default_value' => $this->options['element_wrapper_type'],
       '#description' => $this->t('Choose the HTML element to wrap around this field and label, e.g. H1, H2, etc. This may not be used if the field and label are not rendered together, such as with a table.'),
@@ -676,7 +694,7 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
 
     $form['element_wrapper_class_enable'] = [
       '#type' => 'checkbox',
-      '#title' => $this->t('Create a CSS class'),
+      '#title' => $this->t('Add HTML class'),
       '#states' => [
         'visible' => [
           ':input[name="options[element_wrapper_type_enable]"]' => ['checked' => TRUE],
@@ -874,8 +892,8 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
 
       // Setup the tokens for fields.
       $previous = $this->getPreviousFieldLabels();
-      $optgroup_arguments = (string) t('Arguments');
-      $optgroup_fields = (string) t('Fields');
+      $optgroup_arguments = (string) $this->t('Arguments');
+      $optgroup_fields = (string) $this->t('Fields');
       foreach ($previous as $id => $label) {
         $options[$optgroup_fields]["{{ $id }}"] = substr(strrchr($label, ":"), 2);
       }
@@ -1296,7 +1314,7 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
         // well.
         $base_path = base_path();
         // Checks whether the path starts with the base_path.
-        if (strpos($more_link_path, $base_path) === 0) {
+        if (str_starts_with($more_link_path, $base_path)) {
           $more_link_path = mb_substr($more_link_path, mb_strlen($base_path));
         }
 
@@ -1416,7 +1434,7 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
       // Tokens might have resolved URL's, as is the case for tokens provided by
       // Link fields, so all internal paths will be prefixed by base_path(). For
       // proper further handling reset this to internal:/.
-      if (strpos($path, base_path()) === 0) {
+      if (str_starts_with($path, base_path())) {
         $path = 'internal:/' . substr($path, strlen(base_path()));
       }
 
@@ -1427,11 +1445,11 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
       }
 
       // If no scheme is provided in the $path, assign the default 'http://'.
-      // This allows a url of 'www.example.com' to be converted to
+      // This allows a URL of 'www.example.com' to be converted to
       // 'http://www.example.com'.
       // Only do this when flag for external has been set, $path doesn't contain
       // a scheme and $path doesn't have a leading /.
-      if ($alter['external'] && !parse_url($path, PHP_URL_SCHEME) && strpos($path, '/') !== 0) {
+      if ($alter['external'] && !parse_url($path, PHP_URL_SCHEME) && !str_starts_with($path, '/')) {
         // There is no scheme, add the default 'http://' to the $path.
         $path = "http://" . $path;
       }
@@ -1475,7 +1493,7 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
       return $text;
     }
 
-    // If we get to here we have a path from the url parsing. So assign that to
+    // If we get to here we have a path from the URL parsing. So assign that to
     // $path now so we don't get query strings or fragments in the path.
     $path = $url['path'];
 
@@ -1559,7 +1577,7 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
       $options['language'] = $alter['language'];
     }
 
-    // If the url came from entity_uri(), pass along the required options.
+    // If the URL came from entity_uri(), pass along the required options.
     if (isset($alter['entity'])) {
       $options['entity'] = $alter['entity'];
     }
@@ -1683,7 +1701,7 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
    * @param $parent_keys
    *   An array of parent keys. This will represent the array depth.
    *
-   * @return
+   * @return array
    *   An array of available tokens, with nested keys representative of the array structure.
    */
   protected function getTokenValuesRecursive(array $array, array $parent_keys = []) {
@@ -1817,7 +1835,7 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
       $value = rtrim(preg_replace('/(?:<(?!.+>)|&(?!.+;)).*$/us', '', $value));
 
       if (!empty($alter['ellipsis'])) {
-        $value .= t('…');
+        $value .= new TranslatableMarkup('…');
       }
     }
     if (!empty($alter['html'])) {

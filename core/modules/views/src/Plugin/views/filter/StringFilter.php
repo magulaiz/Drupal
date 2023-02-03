@@ -7,8 +7,9 @@ use Drupal\Core\Form\FormStateInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Basic textfield filter to handle string filtering commands
- * including equality, like, not like, etc.
+ * Basic textfield filter to handle string filtering commands.
+ *
+ * Including equality, like, not like, etc.
  *
  * @ingroup views_filter_handlers
  *
@@ -325,7 +326,7 @@ class StringFilter extends FilterPluginBase {
    */
   protected function getConditionOperator($operator) {
     $mapping = $this->connection->mapConditionOperator($operator);
-    return isset($mapping['operator']) ? $mapping['operator'] : $operator;
+    return $mapping['operator'] ?? $operator;
   }
 
   /**

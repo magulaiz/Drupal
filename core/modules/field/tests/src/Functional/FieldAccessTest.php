@@ -38,6 +38,9 @@ class FieldAccessTest extends FieldTestBase {
    */
   protected $testViewFieldValue;
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
 
@@ -92,7 +95,7 @@ class FieldAccessTest extends FieldTestBase {
     // specifically target the 'test_view_field' field.
     $this->drupalLogout();
     $this->drupalGet('node/' . $this->node->id());
-    $this->assertNoText($this->testViewFieldValue);
+    $this->assertSession()->pageTextNotContains($this->testViewFieldValue);
   }
 
 }

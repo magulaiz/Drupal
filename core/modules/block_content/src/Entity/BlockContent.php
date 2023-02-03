@@ -34,7 +34,12 @@ use Drupal\user\UserInterface;
  *       "add" = "Drupal\block_content\BlockContentForm",
  *       "edit" = "Drupal\block_content\BlockContentForm",
  *       "delete" = "Drupal\block_content\Form\BlockContentDeleteForm",
- *       "default" = "Drupal\block_content\BlockContentForm"
+ *       "default" = "Drupal\block_content\BlockContentForm",
+ *       "revision-delete" = \Drupal\Core\Entity\Form\RevisionDeleteForm::class,
+ *       "revision-revert" = \Drupal\Core\Entity\Form\RevisionRevertForm::class,
+ *     },
+ *     "route_provider" = {
+ *       "revision" = \Drupal\Core\Entity\Routing\RevisionHtmlRouteProvider::class,
  *     },
  *     "translation" = "Drupal\block_content\BlockContentTranslationHandler"
  *   },
@@ -50,6 +55,9 @@ use Drupal\user\UserInterface;
  *     "edit-form" = "/block/{block_content}",
  *     "collection" = "/admin/structure/block/block-content",
  *     "create" = "/block",
+ *     "revision-delete-form" = "/block/{block_content}/revision/{block_content_revision}/delete",
+ *     "revision-revert-form" = "/block/{block_content}/revision/{block_content_revision}/revert",
+ *     "version-history" = "/block/{block_content}/revisions",
  *   },
  *   translatable = TRUE,
  *   entity_keys = {
@@ -129,6 +137,20 @@ class BlockContent extends EditorialContentEntityBase implements BlockContentInt
   /**
    * {@inheritdoc}
    */
+  public static function preDelete(EntityStorageInterface $storage, array $entities) {
+    parent::preDelete($storage, $entities);
+
+    /** @var \Drupal\block_content\BlockContentInterface $block */
+    foreach ($entities as $block) {
+      foreach ($block->getInstances() as $instance) {
+        $instance->delete();
+      }
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public static function postDelete(EntityStorageInterface $storage, array $entities) {
     parent::postDelete($storage, $entities);
     /** @var \Drupal\block_content\BlockContentInterface $block */
@@ -160,16 +182,6 @@ class BlockContent extends EditorialContentEntityBase implements BlockContentInt
       // one.
       $record->revision_log = $this->original->getRevisionLogMessage();
     }
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function delete() {
-    foreach ($this->getInstances() as $instance) {
-      $instance->delete();
-    }
-    parent::delete();
   }
 
   /**

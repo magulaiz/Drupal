@@ -310,7 +310,7 @@ class RouteProvider implements CacheableRouteProviderInterface, PreloadableRoute
           $current .= $parts[$length - $j];
         }
         else {
-          // Bit zero means means wildcard.
+          // Bit zero means wildcard.
           $current .= '%';
         }
         // Unless we are at offset 0, add a slash.
@@ -349,7 +349,7 @@ class RouteProvider implements CacheableRouteProviderInterface, PreloadableRoute
     // have a case-insensitive match from the incoming path to the lower case
     // pattern outlines from \Drupal\Core\Routing\RouteCompiler::compile().
     // @see \Drupal\Core\Routing\CompiledRoute::__construct()
-    $parts = preg_split('@/+@', mb_strtolower($path), NULL, PREG_SPLIT_NO_EMPTY);
+    $parts = preg_split('@/+@', mb_strtolower($path), -1, PREG_SPLIT_NO_EMPTY);
 
     $collection = new RouteCollection();
 
@@ -392,7 +392,7 @@ class RouteProvider implements CacheableRouteProviderInterface, PreloadableRoute
     }
     // Reverse sort from highest to lowest fit. PHP should cast to int, but
     // the explicit cast makes this sort more robust against unexpected input.
-    return (int) $a['fit'] < (int) $b['fit'] ? 1 : -1;
+    return (int) $b['fit'] <=> (int) $a['fit'];
   }
 
   /**
@@ -424,62 +424,9 @@ class RouteProvider implements CacheableRouteProviderInterface, PreloadableRoute
   /**
    * {@inheritdoc}
    */
-  public static function getSubscribedEvents() {
+  public static function getSubscribedEvents(): array {
     $events[RoutingEvents::FINISHED][] = ['reset'];
     return $events;
-  }
-
-  /**
-   * Returns a chunk of routes.
-   *
-   * Should only be used in conjunction with an iterator.
-   *
-   * @param int $offset
-   *   The query offset.
-   * @param int $length
-   *   The number of records.
-   *
-   * @return \Symfony\Component\Routing\Route[]
-   *   Routes keyed by the route name.
-   *
-   * @deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. No direct
-   *   replacement is provided.
-   *
-   * @see https://www.drupal.org/node/3151009
-   */
-  public function getRoutesPaged($offset, $length = NULL) {
-    @trigger_error(__METHOD__ . '() is deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. No direct replacement is provided. See https://www.drupal.org/node/3151009', E_USER_DEPRECATED);
-    $select = $this->connection->select($this->tableName, 'router')
-      ->fields('router', ['name', 'route']);
-
-    if (isset($length)) {
-      $select->range($offset, $length);
-    }
-
-    $routes = $select->execute()->fetchAllKeyed();
-
-    $result = [];
-    foreach ($routes as $name => $route) {
-      $result[$name] = unserialize($route);
-    }
-
-    return $result;
-  }
-
-  /**
-   * Gets the total count of routes provided by the router.
-   *
-   * @return int
-   *   Number of routes.
-   *
-   * @deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. No direct
-   *   replacement is provided.
-   *
-   * @see https://www.drupal.org/node/3151009
-   */
-  public function getRoutesCount() {
-    @trigger_error(__METHOD__ . '() is deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. No direct replacement is provided. See https://www.drupal.org/node/3151009', E_USER_DEPRECATED);
-    return $this->connection->query("SELECT COUNT(*) FROM {" . $this->connection->escapeTable($this->tableName) . "}")->fetchField();
   }
 
   /**

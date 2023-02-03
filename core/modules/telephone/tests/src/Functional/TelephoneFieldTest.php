@@ -3,6 +3,7 @@
 namespace Drupal\Tests\telephone\Functional;
 
 use Drupal\field\Entity\FieldConfig;
+use Drupal\telephone\Plugin\Field\FieldType\TelephoneItem;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\field\Entity\FieldStorageConfig;
 
@@ -89,7 +90,8 @@ class TelephoneFieldTest extends BrowserTestBase {
   public function testTelephoneWidget() {
     $this->drupalGet('node/add/article');
     $this->assertSession()->fieldValueEquals("field_telephone[0][value]", '');
-    $this->assertRaw('placeholder="123-456-7890"');
+    $this->assertSession()->elementAttributeContains('css', 'input[name="field_telephone[0][value]"]', 'maxlength', TelephoneItem::MAX_LENGTH);
+    $this->assertSession()->responseContains('placeholder="123-456-7890"');
   }
 
   /**
@@ -108,7 +110,7 @@ class TelephoneFieldTest extends BrowserTestBase {
 
     $this->drupalGet('node/add/article');
     $this->submitForm($edit, 'Save');
-    $this->assertRaw('<a href="tel:' . $expected . '">');
+    $this->assertSession()->responseContains('<a href="tel:' . $expected . '">');
   }
 
   /**

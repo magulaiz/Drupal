@@ -57,7 +57,7 @@ class BasicAuthTest extends BrowserTestBase {
 
     // Ensure that invalid authentication details give access denied.
     $this->basicAuthGet($url, $account->getAccountName(), $this->randomMachineName());
-    $this->assertNoText($account->getAccountName());
+    $this->assertSession()->pageTextNotContains($account->getAccountName());
     $this->assertSession()->statusCodeEquals(403);
     $this->mink->resetSessions();
 
@@ -179,7 +179,7 @@ class BasicAuthTest extends BrowserTestBase {
     // unauthorized message is displayed.
     $this->drupalGet($url);
     $this->assertSession()->statusCodeEquals(401);
-    $this->assertNoText('Exception');
+    $this->assertSession()->pageTextNotContains('Exception');
     $this->assertSession()->pageTextContains('Please log in to access this page.');
 
     // Case when empty credentials are passed, a user friendly access denied
@@ -203,15 +203,14 @@ class BasicAuthTest extends BrowserTestBase {
   }
 
   /**
-   * Tests the cacheability of Basic Auth's 401 response.
+   * Tests the cacheability of the Basic Auth 401 response.
    *
    * @see \Drupal\basic_auth\Authentication\Provider\BasicAuth::challengeException()
    */
   public function testCacheabilityOf401Response() {
-    $session = $this->getSession();
     $url = Url::fromRoute('router_test.11');
 
-    $assert_response_cacheability = function ($expected_page_cache_header_value, $expected_dynamic_page_cache_header_value) use ($session, $url) {
+    $assert_response_cacheability = function ($expected_page_cache_header_value, $expected_dynamic_page_cache_header_value) use ($url) {
       $this->drupalGet($url);
       $this->assertSession()->statusCodeEquals(401);
       $this->assertSession()->responseHeaderEquals('X-Drupal-Cache', $expected_page_cache_header_value);
@@ -234,7 +233,7 @@ class BasicAuthTest extends BrowserTestBase {
     // If the permissions of the 'anonymous' role change, it may no longer be
     // necessary to be authenticated to access this route. Therefore the cached
     // 401 responses should be invalidated.
-    $this->grantPermissions(Role::load(Role::ANONYMOUS_ID), [$this->randomMachineName()]);
+    $this->grantPermissions(Role::load(Role::ANONYMOUS_ID), ['access content']);
     $assert_response_cacheability('MISS', 'MISS');
     $assert_response_cacheability('HIT', 'MISS');
     // Idem for when the 'system.site' config changes.
@@ -253,17 +252,17 @@ class BasicAuthTest extends BrowserTestBase {
     $this->assertSession()->statusCodeEquals(401);
     $this->drupalGet('/basic_auth_test/state/read');
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertRaw('nope');
+    $this->assertSession()->pageTextContains('nope');
 
     $account = $this->drupalCreateUser();
     $this->basicAuthGet('/basic_auth_test/state/modify', $account->getAccountName(), $account->pass_raw);
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertRaw('Done');
+    $this->assertSession()->pageTextContains('Done');
 
     $this->mink->resetSessions();
     $this->drupalGet('/basic_auth_test/state/read');
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertRaw('yep');
+    $this->assertSession()->pageTextContains('yep');
   }
 
 }

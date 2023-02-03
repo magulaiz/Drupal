@@ -45,7 +45,10 @@ abstract class ImageFieldTestBase extends BrowserTestBase {
    */
   protected $adminUser;
 
-  protected function setUp() {
+  /**
+   * {@inheritdoc}
+   */
+  protected function setUp(): void {
     parent::setUp();
 
     // Create Basic page and Article node types.
@@ -116,7 +119,7 @@ abstract class ImageFieldTestBase extends BrowserTestBase {
     // Retrieve ID of the newly created node from the current URL.
     $matches = [];
     preg_match('/node\/([0-9]+)/', $this->getUrl(), $matches);
-    return isset($matches[1]) ? $matches[1] : FALSE;
+    return $matches[1] ?? FALSE;
   }
 
   /**

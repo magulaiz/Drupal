@@ -75,7 +75,7 @@ class Drupal {
   /**
    * The current system version.
    */
-  const VERSION = '9.3.0-dev';
+  const VERSION = '10.1.0-dev';
 
   /**
    * Core API compatibility.
@@ -86,17 +86,6 @@ class Drupal {
    * Core minimum schema version.
    */
   const CORE_MINIMUM_SCHEMA_VERSION = 8000;
-
-  /**
-   * Minimum supported version of PHP.
-   *
-   * Below this version:
-   * - New sites cannot be installed, except from within tests.
-   * - Updates from previous Drupal versions can be run, but users are warned
-   *   that Drupal no longer supports that PHP version.
-   * - An error is shown in the status report that the PHP version is too old.
-   */
-  const MINIMUM_SUPPORTED_PHP = '7.3.0';
 
   /**
    * Minimum allowed version of PHP for Drupal to be bootstrapped.
@@ -114,7 +103,7 @@ class Drupal {
    * - Once in the error message printed to the user immediately after.
    * Remember to update both whenever this constant is updated.
    */
-  const MINIMUM_PHP = '7.3.0';
+  const MINIMUM_PHP = '8.1.0';
 
   /**
    * Minimum recommended value of PHP memory_limit.
@@ -132,12 +121,12 @@ class Drupal {
    * message, but Drupal can still be installed. Used for (e.g.) PHP versions
    * that have reached their EOL or will in the near future.
    */
-  const RECOMMENDED_PHP = '7.4';
+  const RECOMMENDED_PHP = '8.1.6';
 
   /**
    * The currently active container object, or NULL if not initialized yet.
    *
-   * @var \Symfony\Component\DependencyInjection\ContainerInterface|null
+   * @var \Drupal\Component\DependencyInjection\ContainerInterface|null
    */
   protected static $container;
 
@@ -161,7 +150,7 @@ class Drupal {
   /**
    * Returns the currently active global container.
    *
-   * @return \Symfony\Component\DependencyInjection\ContainerInterface
+   * @return \Drupal\Component\DependencyInjection\ContainerInterface
    *
    * @throws \Drupal\Core\DependencyInjection\ContainerNotInitializedException
    */
@@ -566,10 +555,10 @@ class Drupal {
   }
 
   /**
-   * Returns the url generator service.
+   * Returns the URL generator service.
    *
    * @return \Drupal\Core\Routing\UrlGeneratorInterface
-   *   The url generator service.
+   *   The URL generator service.
    */
   public static function urlGenerator() {
     return static::getContainer()->get('url_generator');

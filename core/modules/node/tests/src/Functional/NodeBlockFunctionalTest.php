@@ -44,6 +44,9 @@ class NodeBlockFunctionalTest extends NodeTestBase {
    */
   protected static $modules = ['block', 'views', 'node_block_test'];
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
 
@@ -110,11 +113,11 @@ class NodeBlockFunctionalTest extends NodeTestBase {
     // see the block.
     $this->drupalLogout();
     $this->drupalGet('');
-    $this->assertNoText($block->label());
+    $this->assertSession()->pageTextNotContains($block->label());
 
     // Test that only the 2 latest nodes are shown.
     $this->drupalLogin($this->webUser);
-    $this->assertNoText($node1->label());
+    $this->assertSession()->pageTextNotContains($node1->label());
     $this->assertSession()->pageTextContains($node2->label());
     $this->assertSession()->pageTextContains($node3->label());
 
@@ -141,18 +144,19 @@ class NodeBlockFunctionalTest extends NodeTestBase {
     $this->assertCacheContexts(['languages:language_content', 'languages:language_interface', 'theme', 'url.query_args:' . MainContentViewSubscriber::WRAPPER_FORMAT, 'url.site', 'user']);
 
     // Enable the "Powered by Drupal" block only on article nodes.
+    $theme = \Drupal::service('theme_handler')->getDefault();
+    $this->drupalGet("admin/structure/block/add/system_powered_by_block/{$theme}");
+    $this->assertSession()->pageTextContains('Content type');
     $edit = [
       'id' => strtolower($this->randomMachineName()),
       'region' => 'sidebar_first',
-      'visibility[node_type][bundles][article]' => 'article',
+      'visibility[entity_bundle:node][bundles][article]' => 'article',
     ];
-    $theme = \Drupal::service('theme_handler')->getDefault();
-    $this->drupalGet("admin/structure/block/add/system_powered_by_block/{$theme}");
     $this->submitForm($edit, 'Save block');
 
     $block = Block::load($edit['id']);
     $visibility = $block->getVisibility();
-    $this->assertTrue(isset($visibility['node_type']['bundles']['article']), 'Visibility settings were saved to configuration');
+    $this->assertTrue(isset($visibility['entity_bundle:node']['bundles']['article']), 'Visibility settings were saved to configuration');
 
     // Create a page node.
     $node5 = $this->drupalCreateNode(['uid' => $this->adminUser->id(), 'type' => 'page']);
@@ -164,7 +168,7 @@ class NodeBlockFunctionalTest extends NodeTestBase {
     $this->drupalGet('');
     $label = $block->label();
     // Check that block is not displayed on the front page.
-    $this->assertNoText($label);
+    $this->assertSession()->pageTextNotContains($label);
     $this->assertCacheContexts(['languages:language_content', 'languages:language_interface', 'theme', 'url.query_args:' . MainContentViewSubscriber::WRAPPER_FORMAT, 'url.site', 'user', 'route']);
 
     // Ensure that a page that does not have a node context can still be cached,
@@ -192,7 +196,7 @@ class NodeBlockFunctionalTest extends NodeTestBase {
     $this->drupalGet('node/' . $node5->id());
     // Check that block is not displayed on the node page when node is of type
     // 'page'.
-    $this->assertNoText($label);
+    $this->assertSession()->pageTextNotContains($label);
     $this->assertCacheContexts(['languages:language_content', 'languages:language_interface', 'theme', 'url.query_args:' . MainContentViewSubscriber::WRAPPER_FORMAT, 'url.site', 'user', 'route', 'timezone']);
     $this->assertSession()->responseHeaderEquals('X-Drupal-Dynamic-Cache', 'MISS');
     $this->drupalGet('node/' . $node5->id());

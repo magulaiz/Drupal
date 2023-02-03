@@ -46,6 +46,9 @@ class TermIndexTest extends TaxonomyTestBase {
    */
   protected $fieldName2;
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
 
@@ -62,7 +65,7 @@ class TermIndexTest extends TaxonomyTestBase {
     $handler_settings = [
       'target_bundles' => [
         $this->vocabulary->id() => $this->vocabulary->id(),
-       ],
+      ],
       'auto_create' => TRUE,
     ];
     $this->createEntityReferenceField('node', 'article', $this->fieldName1, NULL, 'taxonomy_term', 'default', $handler_settings, FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED);
@@ -248,7 +251,7 @@ class TermIndexTest extends TaxonomyTestBase {
     // Breadcrumbs are not rendered with a language, prevent the term
     // language from being added to the options.
     // Check that parent term link is displayed when viewing the node.
-    $this->assertRaw(Link::fromTextAndUrl($term2->getName(), $term2->toUrl('canonical', ['language' => NULL]))->toString());
+    $this->assertSession()->responseContains(Link::fromTextAndUrl($term2->getName(), $term2->toUrl('canonical', ['language' => NULL]))->toString());
   }
 
 }

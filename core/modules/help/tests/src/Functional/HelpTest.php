@@ -45,6 +45,9 @@ class HelpTest extends BrowserTestBase {
    */
   protected $anyUser;
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
 
@@ -73,7 +76,7 @@ class HelpTest extends BrowserTestBase {
     // Verify that introductory help text exists, goes for 100% module coverage.
     $this->drupalLogin($this->adminUser);
     $this->drupalGet('admin/help');
-    $this->assertRaw(t('For more information, refer to the help listed on this page or to the <a href=":docs">online documentation</a> and <a href=":support">support</a> pages at <a href=":drupal">drupal.org</a>.', [':docs' => 'https://www.drupal.org/documentation', ':support' => 'https://www.drupal.org/support', ':drupal' => 'https://www.drupal.org']));
+    $this->assertSession()->responseContains('For more information, refer to the help listed on this page or to the <a href="https://www.drupal.org/documentation">online documentation</a> and <a href="https://www.drupal.org/support">support</a> pages at <a href="https://www.drupal.org">drupal.org</a>.');
 
     // Verify that hook_help() section title and description appear.
     $this->assertSession()->responseContains('<h2>Module overviews</h2>');
@@ -92,7 +95,7 @@ class HelpTest extends BrowserTestBase {
     // Ensure a module which does not provide a module overview page is handled
     // correctly.
     $this->clickLink(\Drupal::moduleHandler()->getName('help_test'));
-    $this->assertRaw(t('No help is available for module %module.', ['%module' => \Drupal::moduleHandler()->getName('help_test')]));
+    $this->assertSession()->pageTextContains('No help is available for module ' . \Drupal::moduleHandler()->getName('help_test'));
 
     // Verify that the order of topics is alphabetical by displayed module
     // name, by checking the order of some modules, including some that would
@@ -101,7 +104,7 @@ class HelpTest extends BrowserTestBase {
     $page_text = $this->getTextContent();
     $start = strpos($page_text, 'Module overviews');
     $pos = $start;
-    $list = ['Block', 'Color', 'Custom Block', 'History', 'Text Editor'];
+    $list = ['Block', 'Breakpoint', 'Custom Block', 'History', 'Text Editor'];
     foreach ($list as $name) {
       $this->assertSession()->linkExists($name);
       $new_pos = strpos($page_text, $name, $start);
@@ -123,7 +126,7 @@ class HelpTest extends BrowserTestBase {
       $this->assertSession()->pageTextContains('This page shows you all available administration tasks for each module.');
     }
     else {
-      $this->assertNoText('This page shows you all available administration tasks for each module.');
+      $this->assertSession()->pageTextNotContains('This page shows you all available administration tasks for each module.');
     }
 
     foreach ($this->getModuleList() as $module => $name) {
@@ -149,6 +152,12 @@ class HelpTest extends BrowserTestBase {
         // Ensure there are no double escaped '&' or '<' characters.
         $this->assertSession()->assertNoEscaped('&amp;');
         $this->assertSession()->assertNoEscaped('&lt;');
+
+        // The help for CKEditor 5 intentionally has escaped '<' so leave this
+        // iteration before the assertion below.
+        if ($module === 'ckeditor5') {
+          continue;
+        }
         // Ensure there are no escaped '<' characters.
         $this->assertSession()->assertNoEscaped('<');
       }
@@ -164,9 +173,12 @@ class HelpTest extends BrowserTestBase {
   protected function getModuleList() {
     $modules = [];
     $module_data = $this->container->get('extension.list.module')->getList();
-    foreach (\Drupal::moduleHandler()->getImplementations('help') as $module) {
-      $modules[$module] = $module_data[$module]->info['name'];
-    }
+    \Drupal::moduleHandler()->invokeAllWith(
+      'help',
+      function (callable $hook, string $module) use (&$modules, $module_data) {
+        $modules[$module] = $module_data[$module]->info['name'];
+      }
+    );
     return $modules;
   }
 

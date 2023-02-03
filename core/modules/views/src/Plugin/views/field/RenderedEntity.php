@@ -129,7 +129,7 @@ class RenderedEntity extends FieldPluginBase implements CacheableDependencyInter
    * {@inheritdoc}
    */
   public function render(ResultRow $values) {
-    $entity = $this->getEntityTranslation($this->getEntity($values), $values);
+    $entity = $this->getEntityTranslationByRelationship($this->getEntity($values), $values);
     $build = [];
     if (isset($entity)) {
       $access = $entity->access('view', NULL, TRUE);
@@ -161,9 +161,9 @@ class RenderedEntity extends FieldPluginBase implements CacheableDependencyInter
 
     $tags = [];
     foreach ($view_displays as $view_display) {
-      $tags = array_merge($tags, $view_display->getCacheTags());
+      $tags[] = $view_display->getCacheTags();
     }
-    return $tags;
+    return array_merge([], ...$tags);
   }
 
   /**

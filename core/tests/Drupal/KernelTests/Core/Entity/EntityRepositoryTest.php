@@ -48,7 +48,7 @@ class EntityRepositoryTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public function setUp(): void {
+  protected function setUp(): void {
     parent::setUp();
 
     $this->entityTypeManager = $this->container->get('entity_type.manager');
@@ -300,8 +300,10 @@ class EntityRepositoryTest extends KernelTestBase {
    *   An entity object or NULL.
    * @param string $expected_entity_type_id
    *   The expected entity type ID.
+   *
+   * @internal
    */
-  protected function assertEntityType($entity, $expected_entity_type_id) {
+  protected function assertEntityType(?object $entity, string $expected_entity_type_id): void {
     $this->assertInstanceOf(EntityTest::class, $entity);
     $this->assertEquals($expected_entity_type_id, $entity->getEntityTypeId());
   }

@@ -64,7 +64,7 @@ class DrupalSqlBaseTest extends MigrateTestCase {
   /**
    * {@inheritdoc}
    */
-  public function setUp(): void {
+  protected function setUp(): void {
     parent::setUp();
     $this->pluginDefinition['requirements_met'] = TRUE;
     $this->pluginDefinition['source_module'] = 'module1';
@@ -184,6 +184,7 @@ class TestDrupalSqlBase extends DrupalSqlBase {
    * {@inheritdoc}
    */
   public function query() {
+    throw new \RuntimeException(__METHOD__ . " not implemented for " . __CLASS__);
   }
 
   /**

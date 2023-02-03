@@ -84,6 +84,9 @@ interface FieldItemInterface extends ComplexDataInterface {
    *     stored in SQL. Also, the possible usage is limited, as you cannot
    *     specify another field as related, only existing SQL tables,
    *     such as {taxonomy_term_data}.
+   *
+   * @throws \Drupal\Core\Field\FieldException
+   *   Throws an exception if the schema is invalid.
    */
   public static function schema(FieldStorageDefinitionInterface $field_definition);
 
@@ -404,7 +407,7 @@ interface FieldItemInterface extends ComplexDataInterface {
    *     'config' => array('user.role.anonymous', 'user.role.authenticated'),
    *     'content' => array('node:article:f0a189e6-55fb-47fb-8005-5bef81c44d6d'),
    *     'module' => array('node', 'user'),
-   *     'theme' => array('seven'),
+   *     'theme' => array('claro'),
    *   );
    *   @endcode
    *
@@ -437,7 +440,7 @@ interface FieldItemInterface extends ComplexDataInterface {
    *     'config' => ['user.role.anonymous', 'user.role.authenticated'],
    *     'content' => ['node:article:f0a189e6-55fb-47fb-8005-5bef81c44d6d'],
    *     'module' => ['node', 'user'],
-   *     'theme' => ['seven'],
+   *     'theme' => ['claro'],
    *   ];
    *   @endcode
    *

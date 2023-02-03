@@ -285,11 +285,13 @@ class ThemeUiTest extends BrowserTestBase {
    *   The modules listed as being required to install the theme.
    * @param string $theme_name
    *   The name of the theme.
+   *
+   * @internal
    */
-  protected function assertUninstallableTheme(array $expected_requires_list_items, $theme_name) {
+  protected function assertUninstallableTheme(array $expected_requires_list_items, string $theme_name): void {
     $theme_container = $this->getSession()->getPage()->find('css', "h3:contains(\"$theme_name\")")->getParent();
     $requires_list_items = $theme_container->findAll('css', '.theme-info__requires li');
-    $this->assertCount(count($expected_requires_list_items), $requires_list_items);
+    $this->assertSameSize($expected_requires_list_items, $requires_list_items);
 
     foreach ($requires_list_items as $key => $item) {
       $this->assertContains($item->getText(), $expected_requires_list_items);
@@ -340,41 +342,30 @@ class ThemeUiTest extends BrowserTestBase {
     ];
 
     $compatible_info = $info + ['core_version_requirement' => '*'];
+    $incompatible_info = $info + ['core_version_requirement' => '^1'];
 
     file_put_contents($file_path, Yaml::encode($compatible_info));
     $this->drupalGet('admin/appearance');
-    $this->assertNoText($incompatible_themes_message);
+    $this->assertSession()->pageTextNotContains($incompatible_themes_message);
     $page->clickLink("Install $theme_name theme");
     $assert_session->addressEquals('admin/appearance');
     $assert_session->pageTextContains("The $theme_name theme has been installed");
 
-    $incompatible_updates = [
-      [
-        'core_version_requirement' => '^1',
-      ],
-      [
-        'core' => '8.x',
-      ],
-    ];
-    foreach ($incompatible_updates as $incompatible_update) {
-      $incompatible_info = $info + $incompatible_update;
-      file_put_contents($file_path, Yaml::encode($incompatible_info));
-      $this->drupalGet('admin/appearance');
-      $this->assertSession()->pageTextContains($incompatible_themes_message);
+    file_put_contents($file_path, Yaml::encode($incompatible_info));
+    $this->drupalGet('admin/appearance');
+    $this->assertSession()->pageTextContains($incompatible_themes_message);
 
-      file_put_contents($file_path, Yaml::encode($compatible_info));
-      $this->drupalGet('admin/appearance');
-      $this->assertNoText($incompatible_themes_message);
-    }
+    file_put_contents($file_path, Yaml::encode($compatible_info));
+    $this->drupalGet('admin/appearance');
+    $this->assertSession()->pageTextNotContains($incompatible_themes_message);
+
     // Uninstall the theme and ensure that incompatible themes message is not
     // displayed for themes that are not installed.
     $this->uninstallTheme($theme_name);
-    foreach ($incompatible_updates as $incompatible_update) {
-      $incompatible_info = $info + $incompatible_update;
-      file_put_contents($file_path, Yaml::encode($incompatible_info));
-      $this->drupalGet('admin/appearance');
-      $this->assertNoText($incompatible_themes_message);
-    }
+
+    file_put_contents($file_path, Yaml::encode($incompatible_info));
+    $this->drupalGet('admin/appearance');
+    $this->assertSession()->pageTextNotContains($incompatible_themes_message);
   }
 
 }

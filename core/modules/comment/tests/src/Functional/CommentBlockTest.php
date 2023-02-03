@@ -23,6 +23,9 @@ class CommentBlockTest extends CommentTestBase {
    */
   protected $defaultTheme = 'stark';
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
     // Update admin user to have the 'administer blocks' permission.
@@ -34,7 +37,7 @@ class CommentBlockTest extends CommentTestBase {
       'access comments',
       'access content',
       'administer blocks',
-     ]);
+    ]);
   }
 
   /**
@@ -60,7 +63,7 @@ class CommentBlockTest extends CommentTestBase {
     $this->drupalLogout();
     user_role_revoke_permissions(RoleInterface::ANONYMOUS_ID, ['access comments']);
     $this->drupalGet('');
-    $this->assertNoText('Recent comments');
+    $this->assertSession()->pageTextNotContains('Recent comments');
     user_role_grant_permissions(RoleInterface::ANONYMOUS_ID, ['access comments']);
 
     // Test that a user with the 'access comments' permission can see the
@@ -70,7 +73,7 @@ class CommentBlockTest extends CommentTestBase {
     $this->assertSession()->pageTextContains('Recent comments');
 
     // Test the only the 10 latest comments are shown and in the proper order.
-    $this->assertNoText($comments[10]->getSubject());
+    $this->assertSession()->pageTextNotContains($comments[10]->getSubject());
     for ($i = 0; $i < 10; $i++) {
       $this->assertSession()->pageTextContains($comments[$i]->getSubject());
       if ($i > 1) {
@@ -87,7 +90,7 @@ class CommentBlockTest extends CommentTestBase {
     for ($i = 0; $i < 10; $i++) {
       $this->clickLink($comments[$i]->getSubject());
       $this->assertSession()->pageTextContains($comments[$i]->getSubject());
-      $this->assertRaw('<link rel="canonical"');
+      $this->assertSession()->responseContains('<link rel="canonical"');
     }
   }
 

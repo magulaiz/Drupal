@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\views\Functional\Plugin;
 
+use Drupal\Component\Render\FormattableMarkup;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\Tests\views\Functional\ViewTestBase;
 use Drupal\views\Views;
@@ -33,13 +34,15 @@ class DisplayTest extends ViewTestBase {
    */
   protected $defaultTheme = 'stark';
 
-  protected function setUp($import_test_views = TRUE): void {
-    parent::setUp();
+  /**
+   * {@inheritdoc}
+   */
+  protected function setUp($import_test_views = TRUE, $modules = ['views_test_config']): void {
+    parent::setUp($import_test_views, $modules);
 
     $this->enableViewsTestModule();
 
-    $this->adminUser = $this->drupalCreateUser(['administer views']);
-    $this->drupalLogin($this->adminUser);
+    $this->drupalLogin($this->drupalCreateUser(['administer views']));
 
     // Create 10 nodes.
     for ($i = 0; $i <= 10; $i++) {
@@ -179,14 +182,14 @@ class DisplayTest extends ViewTestBase {
     $view = Views::getView('test_display_more');
     // Confirm that the view validates when there is a page display.
     $errors = $view->validate();
-    $this->assertTrue(empty($errors), 'More link validation has no errors.');
+    $this->assertEmpty($errors, 'More link validation has no errors.');
 
     // Confirm that the view does not validate when the page display is disabled.
     $view->setDisplay('page_1');
     $view->display_handler->setOption('enabled', FALSE);
     $view->setDisplay('default');
     $errors = $view->validate();
-    $this->assertTrue(!empty($errors), 'More link validation has some errors.');
+    $this->assertNotEmpty($errors, 'More link validation has some errors.');
     $this->assertEquals('Display "Default" uses a "more" link but there are no displays it can link to. You need to specify a custom URL.', $errors['default'][0], 'More link validation has the right error.');
 
     // Confirm that the view does not validate when the page display does not exist.
@@ -194,7 +197,7 @@ class DisplayTest extends ViewTestBase {
     $view->setDisplay('default');
     $view->display_handler->setOption('use_more', 1);
     $errors = $view->validate();
-    $this->assertTrue(!empty($errors), 'More link validation has some errors.');
+    $this->assertNotEmpty($errors, 'More link validation has some errors.');
     $this->assertEquals('Display "Default" uses a "more" link but there are no displays it can link to. You need to specify a custom URL.', $errors['default'][0], 'More link validation has the right error.');
   }
 
@@ -352,7 +355,7 @@ class DisplayTest extends ViewTestBase {
     $view->removeHandler('default', 'relationship', 'uid_1');
     $errors = $view->validate();
     // Check that no error message is shown.
-    $this->assertTrue(empty($errors['default']), 'No errors found when removing unused relationship.');
+    $this->assertArrayNotHasKey('default', $errors, 'No errors found when removing unused relationship.');
 
     // Unset cached relationships (see DisplayPluginBase::getHandlers())
     unset($view->display_handler->handlers['relationship']);
@@ -363,8 +366,8 @@ class DisplayTest extends ViewTestBase {
     $errors = $view->validate();
     // Check that the error messages are shown.
     $this->assertCount(2, $errors['default'], 'Error messages found for required relationship');
-    $this->assertEquals(t('The %handler_type %handler uses a relationship that has been removed.', ['%handler_type' => 'field', '%handler' => 'User: Last login']), $errors['default'][0]);
-    $this->assertEquals(t('The %handler_type %handler uses a relationship that has been removed.', ['%handler_type' => 'field', '%handler' => 'User: Created']), $errors['default'][1]);
+    $this->assertEquals(new FormattableMarkup('The %relationship_name relationship used in %handler_type %handler is not present in the %display_name display.', ['%relationship_name' => 'uid', '%handler_type' => 'field', '%handler' => 'User: Last login', '%display_name' => 'Default']), $errors['default'][0]);
+    $this->assertEquals(new FormattableMarkup('The %relationship_name relationship used in %handler_type %handler is not present in the %display_name display.', ['%relationship_name' => 'uid', '%handler_type' => 'field', '%handler' => 'User: Created', '%display_name' => 'Default']), $errors['default'][1]);
   }
 
   /**
@@ -445,17 +448,17 @@ class DisplayTest extends ViewTestBase {
 
     $this->drupalGet('admin/structure/views/nojs/display/content/page_1/rendering_language');
     if ($expected_node_translatability) {
-      $this->assertNoText($not_supported_text);
+      $this->assertSession()->pageTextNotContains($not_supported_text);
       $this->assertSession()->pageTextContains($supported_text);
     }
     else {
       $this->assertSession()->pageTextContains($not_supported_text);
-      $this->assertNoText($supported_text);
+      $this->assertSession()->pageTextNotContains($supported_text);
     }
 
     $this->drupalGet('admin/structure/views/nojs/display/files/page_1/rendering_language');
     $this->assertSession()->pageTextContains($not_supported_text);
-    $this->assertNoText($supported_text);
+    $this->assertSession()->pageTextNotContains($supported_text);
   }
 
 }

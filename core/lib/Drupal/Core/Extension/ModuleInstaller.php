@@ -11,6 +11,7 @@ use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Extension\Exception\ObsoleteExtensionException;
 use Drupal\Core\Installer\InstallerKernel;
 use Drupal\Core\Serialization\Yaml;
+use Drupal\Core\Update\UpdateHookRegistry;
 
 /**
  * Default implementation of the module installer.
@@ -54,6 +55,13 @@ class ModuleInstaller implements ModuleInstallerInterface {
   protected $connection;
 
   /**
+   * The update registry service.
+   *
+   * @var \Drupal\Core\Update\UpdateHookRegistry
+   */
+  protected $updateRegistry;
+
+  /**
    * The uninstall validators.
    *
    * @var \Drupal\Core\Extension\ModuleUninstallValidatorInterface[]
@@ -71,19 +79,18 @@ class ModuleInstaller implements ModuleInstallerInterface {
    *   The drupal kernel.
    * @param \Drupal\Core\Database\Connection $connection
    *   The database connection.
+   * @param \Drupal\Core\Update\UpdateHookRegistry $update_registry
+   *   The update registry service.
    *
    * @see \Drupal\Core\DrupalKernel
    * @see \Drupal\Core\CoreServiceProvider
    */
-  public function __construct($root, ModuleHandlerInterface $module_handler, DrupalKernelInterface $kernel, Connection $connection = NULL) {
+  public function __construct($root, ModuleHandlerInterface $module_handler, DrupalKernelInterface $kernel, Connection $connection, UpdateHookRegistry $update_registry) {
     $this->root = $root;
     $this->moduleHandler = $module_handler;
     $this->kernel = $kernel;
-    if (!$connection) {
-      @trigger_error('The database connection must be passed to ' . __METHOD__ . '(). Creating ' . __CLASS__ . ' without it is deprecated in drupal:9.2.0 and will be required in drupal:10.0.0. See https://www.drupal.org/node/2970993', E_USER_DEPRECATED);
-      $connection = \Drupal::service('database');
-    }
     $this->connection = $connection;
+    $this->updateRegistry = $update_registry;
   }
 
   /**
@@ -109,6 +116,9 @@ class ModuleInstaller implements ModuleInstallerInterface {
       }
       if ($module_data[$module]->info[ExtensionLifecycle::LIFECYCLE_IDENTIFIER] === ExtensionLifecycle::OBSOLETE) {
         throw new ObsoleteExtensionException("Unable to install modules: module '$module' is obsolete.");
+      }
+      if ($module_data[$module]->info[ExtensionLifecycle::LIFECYCLE_IDENTIFIER] === ExtensionLifecycle::DEPRECATED) {
+        @trigger_error("The module '$module' is deprecated. See " . $module_data[$module]->info['lifecycle_link'], E_USER_DEPRECATED);
       }
     }
     if ($enable_dependencies) {
@@ -227,7 +237,7 @@ class ModuleInstaller implements ModuleInstallerInterface {
 
         // Load the module's .module and .install files.
         $this->moduleHandler->load($module);
-        module_load_install($module);
+        $this->moduleHandler->loadInclude($module, 'install');
 
         if (!InstallerKernel::installationAttempted()) {
           // Replace the route provider service with a version that will rebuild
@@ -254,7 +264,7 @@ class ModuleInstaller implements ModuleInstallerInterface {
         // Set the schema version to the number of the last update provided by
         // the module, or the minimum core schema version.
         $version = \Drupal::CORE_MINIMUM_SCHEMA_VERSION;
-        $versions = drupal_get_schema_versions($module);
+        $versions = $this->updateRegistry->getAvailableUpdates($module);
         if ($versions) {
           $version = max(max($versions), $version);
         }
@@ -314,15 +324,7 @@ class ModuleInstaller implements ModuleInstallerInterface {
         if ($last_removed = $this->moduleHandler->invoke($module, 'update_last_removed')) {
           $version = max($version, $last_removed);
         }
-        drupal_set_installed_schema_version($module, $version);
-
-        // Ensure that all post_update functions are registered already. This
-        // should include existing post-updates, as well as any specified as
-        // having been previously removed, to ensure that newly installed and
-        // updated sites have the same entries in the registry.
-        /** @var \Drupal\Core\Update\UpdateRegistry $post_update_registry */
-        $post_update_registry = \Drupal::service('update.post_update_registry');
-        $post_update_registry->registerInvokedUpdates(array_merge($post_update_registry->getModuleUpdateFunctions($module), array_keys($post_update_registry->getRemovedPostUpdates($module))));
+        $this->updateRegistry->setInstalledVersion($module, $version);
 
         // Record the fact that it was installed.
         $modules_installed[] = $module;
@@ -453,7 +455,7 @@ class ModuleInstaller implements ModuleInstallerInterface {
       $this->moduleHandler->invokeAll('module_preuninstall', [$module]);
 
       // Uninstall the module.
-      module_load_install($module);
+      $this->moduleHandler->loadInclude($module, 'install');
       $this->moduleHandler->invoke($module, 'uninstall', [$sync_status]);
 
       // Remove all configuration belonging to the module.
@@ -508,11 +510,11 @@ class ModuleInstaller implements ModuleInstallerInterface {
       // into its statically cached list.
       \Drupal::service('extension.list.module')->reset();
 
-      // Clear plugin manager caches.
-      \Drupal::getContainer()->get('plugin.cache_clearer')->clearCachedDefinitions();
-
       // Update the kernel to exclude the uninstalled modules.
       $this->updateKernel($module_filenames);
+
+      // Clear plugin manager caches.
+      \Drupal::getContainer()->get('plugin.cache_clearer')->clearCachedDefinitions();
 
       // Update the theme registry to remove the newly uninstalled module.
       drupal_theme_rebuild();
@@ -525,19 +527,15 @@ class ModuleInstaller implements ModuleInstallerInterface {
 
       \Drupal::logger('system')->info('%module module uninstalled.', ['%module' => $module]);
 
-      $schema_store = \Drupal::keyValue('system.schema');
-      $schema_store->delete($module);
-
-      /** @var \Drupal\Core\Update\UpdateRegistry $post_update_registry */
-      $post_update_registry = \Drupal::service('update.post_update_registry');
-      $post_update_registry->filterOutInvokedUpdatesByModule($module);
+      /** @var \Drupal\Core\Update\UpdateHookRegistry $update_registry */
+      $update_registry = \Drupal::service('update.update_hook_registry');
+      $update_registry->deleteInstalledVersion($module);
     }
     // Rebuild routes after installing module. This is done here on top of
     // \Drupal\Core\Routing\RouteBuilder::destruct to not run into errors on
     // fastCGI which executes ::destruct() after the Module uninstallation page
     // was sent already.
     \Drupal::service('router.builder')->rebuild();
-    drupal_get_installed_schema_version(NULL, TRUE);
 
     // Let other modules react.
     $this->moduleHandler->invokeAll('modules_uninstalled', [$module_list, $sync_status]);
@@ -546,7 +544,7 @@ class ModuleInstaller implements ModuleInstallerInterface {
     // Any cache entry might implicitly depend on the uninstalled modules,
     // so clear all of them explicitly.
     $this->moduleHandler->invokeAll('cache_flush');
-    foreach (Cache::getBins() as $service_id => $cache_backend) {
+    foreach (Cache::getBins() as $cache_backend) {
       $cache_backend->deleteAll();
     }
 
@@ -560,7 +558,7 @@ class ModuleInstaller implements ModuleInstallerInterface {
    *   The name of the module for which to remove all registered cache bins.
    */
   protected function removeCacheBins($module) {
-    $service_yaml_file = drupal_get_path('module', $module) . "/$module.services.yml";
+    $service_yaml_file = \Drupal::service('extension.list.module')->getPath($module) . "/$module.services.yml";
     if (!file_exists($service_yaml_file)) {
       return;
     }
@@ -568,9 +566,9 @@ class ModuleInstaller implements ModuleInstallerInterface {
     $definitions = Yaml::decode(file_get_contents($service_yaml_file));
 
     $cache_bin_services = array_filter(
-      isset($definitions['services']) ? $definitions['services'] : [],
+      $definitions['services'] ?? [],
       function ($definition) {
-        $tags = isset($definition['tags']) ? $definition['tags'] : [];
+        $tags = $definition['tags'] ?? [];
         foreach ($tags as $tag) {
           if (isset($tag['name']) && ($tag['name'] == 'cache.bin')) {
             return TRUE;
@@ -605,6 +603,7 @@ class ModuleInstaller implements ModuleInstallerInterface {
     $container = $this->kernel->getContainer();
     $this->moduleHandler = $container->get('module_handler');
     $this->connection = $container->get('database');
+    $this->updateRegistry = $container->get('update.update_hook_registry');
   }
 
   /**

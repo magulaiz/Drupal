@@ -7,6 +7,7 @@ use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Menu\MenuParentFormSelectorInterface;
 use Drupal\views\Plugin\views\wizard\WizardPluginBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -61,9 +62,11 @@ class Node extends WizardPluginBase {
    *   The entity display repository service.
    * @param \Drupal\Core\Entity\EntityFieldManagerInterface $entity_field_manager
    *   The entity field manager.
+   * @param \Drupal\Core\Menu\MenuParentFormSelectorInterface $parent_form_selector
+   *   The parent form selector service.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityTypeBundleInfoInterface $bundle_info_service, EntityDisplayRepositoryInterface $entity_display_repository, EntityFieldManagerInterface $entity_field_manager) {
-    parent::__construct($configuration, $plugin_id, $plugin_definition, $bundle_info_service);
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityTypeBundleInfoInterface $bundle_info_service, EntityDisplayRepositoryInterface $entity_display_repository, EntityFieldManagerInterface $entity_field_manager, MenuParentFormSelectorInterface $parent_form_selector) {
+    parent::__construct($configuration, $plugin_id, $plugin_definition, $bundle_info_service, $parent_form_selector);
 
     $this->entityDisplayRepository = $entity_display_repository;
     $this->entityFieldManager = $entity_field_manager;
@@ -79,7 +82,8 @@ class Node extends WizardPluginBase {
       $plugin_definition,
       $container->get('entity_type.bundle.info'),
       $container->get('entity_display.repository'),
-      $container->get('entity_field.manager')
+      $container->get('entity_field.manager'),
+      $container->get('menu.parent_form_selector')
     );
   }
 

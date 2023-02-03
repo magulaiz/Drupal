@@ -34,7 +34,7 @@ class EmptySource extends SourcePluginBase {
    */
   public function fields() {
     return [
-      'id' => t('ID'),
+      'id' => $this->t('ID'),
     ];
   }
 
@@ -63,7 +63,7 @@ class EmptySource extends SourcePluginBase {
   /**
    * {@inheritdoc}
    */
-  public function count($refresh = FALSE) {
+  protected function doCount() {
     return 1;
   }
 

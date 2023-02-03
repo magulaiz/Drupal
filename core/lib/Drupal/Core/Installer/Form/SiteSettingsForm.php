@@ -9,6 +9,7 @@ use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\RendererInterface;
 use Drupal\Core\Site\Settings;
+use Drupal\Core\Site\SettingsEditor;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -219,7 +220,7 @@ class SiteSettingsForm extends FormBase {
   public static function getDatabaseErrorsTemplate(array $errors) {
     return [
       '#type' => 'inline_template',
-      '#template' => '{% trans %}Resolve all issues below to continue the installation. For help configuring your database server, see the <a href="https://www.drupal.org/docs/8/install">installation handbook</a>, or contact your hosting provider.{% endtrans %}{{ errors }}',
+      '#template' => '{% trans %}Resolve all issues below to continue the installation. For help configuring your database server, see the <a href="https://www.drupal.org/docs/installing-drupal">installation handbook</a>, or contact your hosting provider.{% endtrans %}{{ errors }}',
       '#context' => [
         'errors' => [
           '#theme' => 'item_list',
@@ -264,7 +265,7 @@ class SiteSettingsForm extends FormBase {
       ];
     }
 
-    drupal_rewrite_settings($settings);
+    SettingsEditor::rewrite($this->sitePath . '/settings.php', $settings);
 
     // Indicate that the settings file has been verified, and check the database
     // for the last completed task, now that we have a valid connection. This

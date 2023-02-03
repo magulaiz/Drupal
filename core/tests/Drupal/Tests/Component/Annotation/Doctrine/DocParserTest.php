@@ -211,7 +211,7 @@ DOCBLOCK;
 
         $this->assertNull($annot->name);
         $this->assertNotNull($annot->data);
-        $this->assertEquals($annot->data, "Some data");
+        $this->assertEquals("Some data", $annot->data);
 
 
 
@@ -230,8 +230,8 @@ DOCBLOCK;
         $this->assertNotNull($annot);
         $this->assertInstanceOf(SomeAnnotationClassNameWithoutConstructor::class, $annot);
 
-        $this->assertEquals($annot->name, "Some Name");
-        $this->assertEquals($annot->data, "Some data");
+        $this->assertEquals("Some Name", $annot->name);
+        $this->assertEquals("Some data", $annot->data);
 
 
 
@@ -246,7 +246,7 @@ DOCBLOCK;
         $this->assertCount(1, $result);
         $annot      = $result[0];
 
-        $this->assertEquals($annot->data, "Some data");
+        $this->assertEquals("Some data", $annot->data);
         $this->assertNull($annot->name);
 
 
@@ -260,7 +260,7 @@ DOCBLOCK;
         $this->assertCount(1, $result);
         $annot      = $result[0];
 
-        $this->assertEquals($annot->name, "Some name");
+        $this->assertEquals("Some name", $annot->name);
         $this->assertNull($annot->data);
 
         $docblock = <<<DOCBLOCK
@@ -273,7 +273,7 @@ DOCBLOCK;
         $this->assertCount(1, $result);
         $annot      = $result[0];
 
-        $this->assertEquals($annot->data, "Some data");
+        $this->assertEquals("Some data", $annot->data);
         $this->assertNull($annot->name);
 
 
@@ -288,8 +288,8 @@ DOCBLOCK;
         $this->assertCount(1, $result);
         $annot      = $result[0];
 
-        $this->assertEquals($annot->name, "Some name");
-        $this->assertEquals($annot->data, "Some data");
+        $this->assertEquals("Some name", $annot->name);
+        $this->assertEquals("Some data", $annot->data);
 
 
         $docblock = <<<DOCBLOCK
@@ -302,8 +302,8 @@ DOCBLOCK;
         $this->assertCount(1, $result);
         $annot      = $result[0];
 
-        $this->assertEquals($annot->name, "Some name");
-        $this->assertEquals($annot->data, "Some data");
+        $this->assertEquals("Some name", $annot->name);
+        $this->assertEquals("Some data", $annot->data);
 
         $docblock = <<<DOCBLOCK
 /**
@@ -1187,30 +1187,6 @@ DOCBLOCK;
         $result = $parser->parse("@Marker(-1234.345)");
         $annot = $result[0];
         $this->assertIsFloat($annot->value);
-    }
-
-    public function testReservedKeywordsInAnnotations()
-    {
-        if (PHP_VERSION_ID >= 70000) {
-            $this->markTestSkipped('This test requires PHP 5.6 or lower.');
-        }
-        require 'ReservedKeywordsClasses.php';
-
-        $parser = $this->createTestParser();
-
-        $result = $parser->parse('@Drupal\Tests\Component\Annotation\Doctrine\True');
-        $this->assertInstanceOf(True::class, $result[0]);
-        $result = $parser->parse('@Drupal\Tests\Component\Annotation\Doctrine\False');
-        $this->assertInstanceOf(False::class, $result[0]);
-        $result = $parser->parse('@Drupal\Tests\Component\Annotation\Doctrine\Null');
-        $this->assertInstanceOf(Null::class, $result[0]);
-
-        $result = $parser->parse('@True');
-        $this->assertInstanceOf(True::class, $result[0]);
-        $result = $parser->parse('@False');
-        $this->assertInstanceOf(False::class, $result[0]);
-        $result = $parser->parse('@Null');
-        $this->assertInstanceOf(Null::class, $result[0]);
     }
 
     public function testSetValuesException()

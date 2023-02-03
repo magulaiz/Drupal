@@ -25,8 +25,10 @@ class MigrateCommentTypeTest extends MigrateDrupal7TestBase {
    *   The entity ID.
    * @param string $label
    *   The entity label.
+   *
+   * @internal
    */
-  protected function assertEntity($id, $label) {
+  protected function assertEntity(string $id, string $label): void {
     $entity = CommentType::load($id);
     $this->assertInstanceOf(CommentType::class, $entity);
     $this->assertSame($label, $entity->label());
@@ -99,7 +101,7 @@ class MigrateCommentTypeTest extends MigrateDrupal7TestBase {
     ];
 
     foreach ($expected_messages as $type => $expected_messages_by_type) {
-      $this->assertEquals(count($expected_messages_by_type), count($actual_messages[$type]));
+      $this->assertSameSize($expected_messages_by_type, $actual_messages[$type]);
       // Cast the actual messages to string.
       $actual_messages_by_type = array_reduce($actual_messages[$type], function (array $carry, $actual_message) {
         $carry[] = (string) $actual_message;
@@ -123,7 +125,7 @@ class MigrateCommentTypeTest extends MigrateDrupal7TestBase {
         'Disabled source modules' => ['node'],
         'Expected messages' => [
           'error' => [
-            'Migration d7_comment_type did not meet the requirements. The node module is not enabled in the source site. source_module_additional: node.',
+            'Migration d7_comment_type did not meet the requirements. The node module is not enabled in the source site.',
           ],
         ],
       ],
@@ -131,7 +133,7 @@ class MigrateCommentTypeTest extends MigrateDrupal7TestBase {
         'Disabled source modules' => ['comment'],
         'Expected messages' => [
           'error' => [
-            'Migration d7_comment_type did not meet the requirements. The module comment is not enabled in the source site. source_module: comment.',
+            'Migration d7_comment_type did not meet the requirements. The module comment is not enabled in the source site.',
           ],
         ],
       ],
@@ -139,7 +141,7 @@ class MigrateCommentTypeTest extends MigrateDrupal7TestBase {
         'Disabled source modules' => ['comment', 'node'],
         'Expected messages' => [
           'error' => [
-            'Migration d7_comment_type did not meet the requirements. The module comment is not enabled in the source site. source_module: comment.',
+            'Migration d7_comment_type did not meet the requirements. The module comment is not enabled in the source site.',
           ],
         ],
       ],

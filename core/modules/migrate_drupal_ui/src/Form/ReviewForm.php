@@ -2,6 +2,7 @@
 
 namespace Drupal\migrate_drupal_ui\Form;
 
+use Drupal\Core\Batch\BatchBuilder;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Extension\Exception\UnknownExtensionException;
 use Drupal\Core\Extension\ModuleHandlerInterface;
@@ -76,13 +77,9 @@ class ReviewForm extends MigrateUpgradeFormBase {
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
    *   The module handler service.
    */
-  public function __construct(StateInterface $state, MigrationPluginManagerInterface $migration_plugin_manager, PrivateTempStoreFactory $tempstore_private, MigrationState $migrationState, ConfigFactoryInterface $config_factory, ModuleHandlerInterface $module_handler = NULL) {
+  public function __construct(StateInterface $state, MigrationPluginManagerInterface $migration_plugin_manager, PrivateTempStoreFactory $tempstore_private, MigrationState $migrationState, ConfigFactoryInterface $config_factory, ModuleHandlerInterface $module_handler) {
     parent::__construct($config_factory, $migration_plugin_manager, $state, $tempstore_private);
     $this->migrationState = $migrationState;
-    if (!$module_handler) {
-      @trigger_error('Calling ' . __METHOD__ . ' without the $module_handler argument is deprecated in drupal:9.1.0 and will be required in drupal:10.0.0. See https://www.drupal.org/node/3136769', E_USER_DEPRECATED);
-      $module_handler = \Drupal::service('module_handler');
-    }
     $this->moduleHandler = $module_handler;
   }
 
@@ -241,20 +238,15 @@ class ReviewForm extends MigrateUpgradeFormBase {
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $config['source_base_path'] = $this->store->get('source_base_path');
     $config['source_private_file_path'] = $this->store->get('source_private_file_path');
-    $batch = [
-      'title' => $this->t('Running upgrade'),
-      'progress_message' => '',
-      'operations' => [
-        [
-          [MigrateUpgradeImportBatch::class, 'run'],
-          [array_keys($this->migrations), $config],
-        ],
-      ],
-      'finished' => [
-        MigrateUpgradeImportBatch::class, 'finished',
-      ],
-    ];
-    batch_set($batch);
+    $batch_builder = (new BatchBuilder())
+      ->setTitle($this->t('Running upgrade'))
+      ->setProgressMessage('')
+      ->addOperation([
+        MigrateUpgradeImportBatch::class,
+        'run',
+      ], [array_keys($this->migrations), $config])
+      ->setFinishCallback([MigrateUpgradeImportBatch::class, 'finished']);
+    batch_set($batch_builder->toArray());
     $form_state->setRedirect('<front>');
     $this->store->set('step', 'overview');
     $this->state->set('migrate_drupal_ui.performed', REQUEST_TIME);
@@ -288,7 +280,10 @@ class ReviewForm extends MigrateUpgradeFormBase {
   protected function prepareOutput(array $migration_state) {
     $output = [];
     foreach ($migration_state as $source_machine_name => $destination_modules) {
-      $data = unserialize($this->systemData['module'][$source_machine_name]['info']);
+      $data = NULL;
+      if (isset($this->systemData['module'][$source_machine_name]['info'])) {
+        $data = unserialize($this->systemData['module'][$source_machine_name]['info']);
+      }
       $source_module_name = $data['name'] ?? $source_machine_name;
       // Get the names of all the destination modules.
       $destination_module_names = [];

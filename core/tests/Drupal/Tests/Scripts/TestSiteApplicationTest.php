@@ -87,10 +87,6 @@ class TestSiteApplicationTest extends UnitTestCase {
   public function testInstallWithNonSetupClass() {
     $this->markTestIncomplete('Fix this test in https://www.drupal.org/project/drupal/issues/2962157.');
 
-    // Create a connection to the DB configured in SIMPLETEST_DB.
-    $connection = Database::getConnection('default', $this->addTestDatabase(''));
-    $table_count = count($connection->schema()->findTables('%'));
-
     // Use __FILE__ to test absolute paths.
     $command_line = $this->php . ' core/scripts/test-site.php install --setup-file "' . __FILE__ . '" --db-url "' . getenv('SIMPLETEST_DB') . '"';
     $process = Process::fromShellCommandline($command_line, $this->root, ['COLUMNS' => PHP_INT_MAX]);
@@ -98,8 +94,6 @@ class TestSiteApplicationTest extends UnitTestCase {
 
     $this->assertStringContainsString('The class Drupal\Tests\Scripts\TestSiteApplicationTest contained in', $process->getErrorOutput());
     $this->assertStringContainsString('needs to implement \Drupal\TestSite\TestSetupInterface', $process->getErrorOutput());
-    $this->assertSame(1, $process->getExitCode());
-    $this->assertCount($table_count, $connection->schema()->findTables('%'), 'No additional tables created in the database');
   }
 
   /**
@@ -318,7 +312,7 @@ class TestSiteApplicationTest extends UnitTestCase {
    */
   protected function addTestDatabase($db_prefix) {
     $database = Database::convertDbUrlToConnectionInfo(getenv('SIMPLETEST_DB'), $this->root);
-    $database['prefix'] = ['default' => $db_prefix];
+    $database['prefix'] = $db_prefix;
     $target = __CLASS__ . $db_prefix;
     Database::addConnectionInfo($target, 'default', $database);
     return $target;

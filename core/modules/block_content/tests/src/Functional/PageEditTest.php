@@ -3,6 +3,7 @@
 namespace Drupal\Tests\block_content\Functional;
 
 use Drupal\block_content\Entity\BlockContent;
+use Drupal\Tests\system\Functional\Menu\AssertBreadcrumbTrait;
 
 /**
  * Create a block and test block edit functionality.
@@ -11,15 +12,21 @@ use Drupal\block_content\Entity\BlockContent;
  */
 class PageEditTest extends BlockContentTestBase {
 
+  use AssertBreadcrumbTrait;
+
   /**
    * {@inheritdoc}
    */
   protected $defaultTheme = 'stark';
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
 
     $this->drupalPlaceBlock('page_title_block');
+    $this->drupalPlaceBlock('system_breadcrumb_block');
   }
 
   /**
@@ -72,8 +79,17 @@ class PageEditTest extends BlockContentTestBase {
 
     // Test deleting the block.
     $this->drupalGet("block/" . $revised_block->id());
-    $this->clickLink(t('Delete'));
+    $this->clickLink('Delete');
     $this->assertSession()->pageTextContains('Are you sure you want to delete the custom block ' . $revised_block->label() . '?');
+
+    // Test breadcrumb.
+    $trail = [
+      '' => 'Home',
+      'block/' . $revised_block->id() => $revised_block->label(),
+    ];
+    $this->assertBreadcrumb(
+      'block/' . $revised_block->id() . '/delete', $trail
+    );
   }
 
 }

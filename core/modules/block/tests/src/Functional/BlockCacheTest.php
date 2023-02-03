@@ -22,7 +22,7 @@ class BlockCacheTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'classy';
+  protected $defaultTheme = 'stark';
 
   /**
    * A user with permission to create and edit books and to administer blocks.
@@ -52,6 +52,9 @@ class BlockCacheTest extends BrowserTestBase {
    */
   protected $block;
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
 
@@ -97,7 +100,7 @@ class BlockCacheTest extends BrowserTestBase {
     // Clear the cache and verify that the stale data is no longer there.
     Cache::invalidateTags(['block_view']);
     $this->drupalGet('');
-    $this->assertNoText($old_content);
+    $this->assertSession()->pageTextNotContains($old_content);
     // Fresh block content is displayed after clearing the cache.
     $this->assertSession()->pageTextContains($current_content);
 
@@ -108,7 +111,7 @@ class BlockCacheTest extends BrowserTestBase {
     $this->drupalLogout();
     $this->drupalGet('');
     // Anonymous user does not see content cached per-role for normal user.
-    $this->assertNoText($old_content);
+    $this->assertSession()->pageTextNotContains($old_content);
 
     // User with the same roles sees per-role cached content.
     $this->drupalLogin($this->normalUserAlt);
@@ -118,7 +121,7 @@ class BlockCacheTest extends BrowserTestBase {
     // Admin user does not see content cached per-role for normal user.
     $this->drupalLogin($this->adminUser);
     $this->drupalGet('');
-    $this->assertNoText($old_content);
+    $this->assertSession()->pageTextNotContains($old_content);
 
     // Block is served from the per-role cache.
     $this->drupalLogin($this->normalUser);
@@ -227,7 +230,7 @@ class BlockCacheTest extends BrowserTestBase {
     $this->assertSession()->statusCodeEquals(200);
     // Verify that block content cached for the test page does not show up
     // for the user page.
-    $this->assertNoText($old_content);
+    $this->assertSession()->pageTextNotContains($old_content);
     $this->drupalGet('test-page');
     $this->assertSession()->statusCodeEquals(200);
     // Verify that the block content is cached for the test page.
