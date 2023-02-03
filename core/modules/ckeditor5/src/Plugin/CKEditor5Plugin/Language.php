@@ -27,14 +27,14 @@ class Language extends CKEditor5PluginDefault implements CKEditor5PluginConfigur
   use CKEditor5PluginConfigurableTrait;
 
   /**
-   * The media type entity storage.
+   * The language manager.
    *
    * @var \Drupal\Core\Language\LanguageManagerInterface
    */
   protected $languageManager;
 
   /**
-   * Enable Language constructor.
+   * Language constructor.
    *
    * @param array $configuration
    *   A configuration array containing information about the plugin instance.

@@ -5,6 +5,9 @@ declare(strict_types=1);
 namespace Drupal\Tests\ckeditor5\Unit;
 
 use Drupal\ckeditor5\Plugin\CKEditor5Plugin\Language;
+use Drupal\ckeditor5\Plugin\CKEditor5PluginDefault;
+use Drupal\ckeditor5\Plugin\CKEditor5PluginDefinition;
+use Drupal\ckeditor5\Plugin\Editor\CKEditor5;
 use Drupal\Core\Language\Language as LanguageLanguage;
 use Drupal\Core\Language\LanguageManager;
 use Drupal\Core\Language\LanguageManagerInterface;
@@ -123,17 +126,17 @@ class LanguagePluginTest extends UnitTestCase {
     $language_manager = $this->prophesize(LanguageManagerInterface::class);
     $language_manager->getLanguages()->willReturn([
       new LanguageLanguage([
-        'id' => 'en',
-        'name' => 'English',
+        'id' => 'de',
+        'name' => 'German',
         'direction' => 'ltr',
       ]),
       new LanguageLanguage([
-        'id' => 'fr',
-        'name' => 'French',
-        'direction' => 'ltr',
+        'id' => 'ar',
+        'name' => 'Arabic',
+        'direction' => 'rtl',
       ]),
     ]);
-    $plugin = new Language($configuration, 'ckeditor5_language', NULL, $language_manager->reveal());
+    $plugin = new Language($configuration, 'ckeditor5_language', new CKEditor5PluginDefinition(['id' => 'IRRELEVANT-FOR-A-UNIT-TEST']), $language_manager->reveal());
     $dynamic_config = $plugin->getDynamicPluginConfig([], $this->prophesize(EditorInterface::class)
       ->reveal());
     $this->assertSame($expected_dynamic_config, $dynamic_config);
