@@ -165,7 +165,7 @@ class ModuleInstallerTest extends KernelTestBase {
   public function testModuleInstallerErrorMessagesText() {
     \Drupal::service('module_installer')->install([
       'dblog',
-      'dblog_exception_message_test'
+      'dblog_exception_message_test',
     ]);
     $database = Database::getConnection();
     $results = $database->select('watchdog', 'w')
