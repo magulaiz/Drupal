@@ -17,38 +17,38 @@ class AssetsStream extends PublicStream {
   /**
    * {@inheritdoc}
    */
-  public static function getType() {
+  public static function getType(): int {
     return StreamWrapperInterface::LOCAL_HIDDEN;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getName() {
+  public function getName(): string {
     return $this->t('Optimized assets files');
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getDescription() {
+  public function getDescription(): string {
     return $this->t('Public local optimized assets files served by the webserver.');
   }
 
   /**
    * {@inheritdoc}
    */
-  public static function basePath($site_path = NULL) {
-    $file_public_path = Settings::get('file_public_path', 'sites/default/files');
-
-    $path = Settings::get('file_assets_path', $file_public_path);
-    return $path;
+  public static function basePath($site_path = NULL): string {
+    return Settings::get(
+      'file_assets_path',
+      Settings::get('file_public_path', 'sites/default/files')
+    );
   }
 
   /**
    * {@inheritdoc}
    */
-  public static function baseUrl() {
+  public static function baseUrl(): string {
     $public_path = Settings::get('file_public_path', 'sites/default/files');
     $path = Settings::get('file_assets_path', $public_path);
     if ($path === $public_path) {
