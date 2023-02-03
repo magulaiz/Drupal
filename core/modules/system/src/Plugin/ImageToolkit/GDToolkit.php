@@ -199,30 +199,33 @@ class GDToolkit extends ImageToolkitBase {
       return FALSE;
     }
 
-    $function = 'imagecreatefrom' . image_type_to_extension($this->getType(), FALSE);
-    if (function_exists($function) && $resource = $function($this->getSource())) {
-      $this->setResource($resource);
-      if (imageistruecolor($resource)) {
-        return TRUE;
-      }
-      else {
-        // Convert indexed images to truecolor, copying the image to a new
-        // truecolor resource, so that filters work correctly and don't result
-        // in unnecessary dither.
-        $data = [
-          'width' => imagesx($resource),
-          'height' => imagesy($resource),
-          'extension' => image_type_to_extension($this->getType(), FALSE),
-          'transparent_color' => $this->getTransparentColor(),
-          'is_temp' => TRUE,
-        ];
-        if ($this->apply('create_new', $data)) {
-          imagecopy($this->getResource(), $resource, 0, 0, 0, 0, imagesx($resource), imagesy($resource));
-          imagedestroy($resource);
+    if ($this->getType()) {
+      $function = 'imagecreatefrom' . image_type_to_extension($this->getType(), FALSE);
+      if (function_exists($function) && $resource = $function($this->getSource())) {
+        $this->setResource($resource);
+        if (imageistruecolor($resource)) {
+          return TRUE;
         }
+        else {
+          // Convert indexed images to truecolor, copying the image to a new
+          // truecolor resource, so that filters work correctly and don't result
+          // in unnecessary dither.
+          $data = [
+            'width' => imagesx($resource),
+            'height' => imagesy($resource),
+            'extension' => image_type_to_extension($this->getType(), FALSE),
+            'transparent_color' => $this->getTransparentColor(),
+            'is_temp' => TRUE,
+          ];
+          if ($this->apply('create_new', $data)) {
+            imagecopy($this->getResource(), $resource, 0, 0, 0, 0, imagesx($resource), imagesy($resource));
+            imagedestroy($resource);
+          }
+        }
+        return (bool) $this->getResource();
       }
-      return (bool) $this->getResource();
     }
+
     return FALSE;
   }
 
