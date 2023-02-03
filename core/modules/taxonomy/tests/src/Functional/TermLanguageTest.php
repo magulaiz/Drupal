@@ -26,6 +26,9 @@ class TermLanguageTest extends TaxonomyTestBase {
    */
   protected $vocabulary;
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
 
@@ -62,7 +65,9 @@ class TermLanguageTest extends TaxonomyTestBase {
       'langcode[0][value]' => 'aa',
     ];
     $this->submitForm($edit, 'Save');
-    $terms = taxonomy_term_load_multiple_by_name($edit['name[0][value]']);
+    $terms = \Drupal::entityTypeManager()->getStorage('taxonomy_term')->loadByProperties([
+      'name' => $edit['name[0][value]'],
+    ]);
     $term = reset($terms);
     $this->assertEquals($edit['langcode[0][value]'], $term->language()->getId(), 'The term contains the correct langcode.');
 
@@ -136,7 +141,9 @@ class TermLanguageTest extends TaxonomyTestBase {
       'langcode[0][value]' => 'aa',
     ];
     $this->submitForm($edit, 'Save');
-    $terms = taxonomy_term_load_multiple_by_name($edit['name[0][value]']);
+    $terms = \Drupal::entityTypeManager()->getStorage('taxonomy_term')->loadByProperties([
+      'name' => $edit['name[0][value]'],
+    ]);
     $term = reset($terms);
 
     // Add a translation for that term.

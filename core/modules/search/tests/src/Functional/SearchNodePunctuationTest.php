@@ -28,6 +28,9 @@ class SearchNodePunctuationTest extends BrowserTestBase {
    */
   public $testUser;
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
 
@@ -72,14 +75,14 @@ class SearchNodePunctuationTest extends BrowserTestBase {
     $edit = ['keys' => '&'];
     $this->drupalGet('search/node');
     $this->submitForm($edit, 'Search');
-    $this->assertNoRaw('<strong>&</strong>amp;');
-    $this->assertSession()->pageTextContains('You must include at least one keyword');
+    $this->assertSession()->responseNotContains('<strong>&</strong>amp;');
+    $this->assertSession()->statusMessageContains('You must include at least one keyword', 'warning');
 
     $edit = ['keys' => '&amp;'];
     $this->drupalGet('search/node');
     $this->submitForm($edit, 'Search');
-    $this->assertNoRaw('<strong>&</strong>amp;');
-    $this->assertSession()->pageTextContains('You must include at least one keyword');
+    $this->assertSession()->responseNotContains('<strong>&</strong>amp;');
+    $this->assertSession()->statusMessageContains('You must include at least one keyword', 'warning');
   }
 
 }

@@ -2,7 +2,6 @@
 
 namespace Drupal\Component\DependencyInjection;
 
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\Exception\LogicException;
 use Symfony\Component\DependencyInjection\Exception\InvalidArgumentException;
 use Symfony\Component\DependencyInjection\Exception\RuntimeException;
@@ -45,6 +44,8 @@ use Symfony\Contracts\Service\ResetInterface;
  * @ingroup container
  */
 class Container implements ContainerInterface, ResetInterface {
+
+  use ServiceIdHashTrait;
 
   /**
    * The parameters of the container.
@@ -115,10 +116,10 @@ class Container implements ContainerInterface, ResetInterface {
       throw new InvalidArgumentException('The non-optimized format is not supported by this class. Use an optimized machine-readable format instead, e.g. as produced by \Drupal\Component\DependencyInjection\Dumper\OptimizedPhpArrayDumper.');
     }
 
-    $this->aliases = isset($container_definition['aliases']) ? $container_definition['aliases'] : [];
-    $this->parameters = isset($container_definition['parameters']) ? $container_definition['parameters'] : [];
-    $this->serviceDefinitions = isset($container_definition['services']) ? $container_definition['services'] : [];
-    $this->frozen = isset($container_definition['frozen']) ? $container_definition['frozen'] : FALSE;
+    $this->aliases = $container_definition['aliases'] ?? [];
+    $this->parameters = $container_definition['parameters'] ?? [];
+    $this->serviceDefinitions = $container_definition['services'] ?? [];
+    $this->frozen = $container_definition['frozen'] ?? FALSE;
 
     // Register the service_container with itself.
     $this->services['service_container'] = $this;
@@ -127,7 +128,7 @@ class Container implements ContainerInterface, ResetInterface {
   /**
    * {@inheritdoc}
    */
-  public function get($id, $invalid_behavior = ContainerInterface::EXCEPTION_ON_INVALID_REFERENCE) {
+  public function get($id, $invalid_behavior = ContainerInterface::EXCEPTION_ON_INVALID_REFERENCE): ?object {
     if ($this->hasParameter('_deprecated_service_list')) {
       if ($deprecation = $this->getParameter('_deprecated_service_list')[$id] ?? '') {
         @trigger_error($deprecation, E_USER_DEPRECATED);
@@ -146,7 +147,7 @@ class Container implements ContainerInterface, ResetInterface {
       throw new ServiceCircularReferenceException($id, array_keys($this->loading));
     }
 
-    $definition = isset($this->serviceDefinitions[$id]) ? $this->serviceDefinitions[$id] : NULL;
+    $definition = $this->serviceDefinitions[$id] ?? NULL;
 
     if (!$definition && $invalid_behavior === ContainerInterface::EXCEPTION_ON_INVALID_REFERENCE) {
       if (!$id) {
@@ -160,7 +161,7 @@ class Container implements ContainerInterface, ResetInterface {
     // is used, the actual wanted behavior is to re-try getting the service at a
     // later point.
     if (!$definition) {
-      return;
+      return NULL;
     }
 
     // Definition is a keyed array, so [0] is only defined when it is a
@@ -180,7 +181,7 @@ class Container implements ContainerInterface, ResetInterface {
       unset($this->services[$id]);
 
       if (ContainerInterface::EXCEPTION_ON_INVALID_REFERENCE !== $invalid_behavior) {
-        return;
+        return NULL;
       }
 
       throw $e;
@@ -200,10 +201,6 @@ class Container implements ContainerInterface, ResetInterface {
    * a new instance of the shared service.
    */
   public function reset() {
-    if (!empty($this->scopedServices)) {
-      throw new LogicException('Resetting the container is not allowed when a scope is active.');
-    }
-
     $this->services = [];
   }
 
@@ -315,14 +312,14 @@ class Container implements ContainerInterface, ResetInterface {
   /**
    * {@inheritdoc}
    */
-  public function has($id) {
+  public function has($id): bool {
     return isset($this->aliases[$id]) || isset($this->services[$id]) || isset($this->serviceDefinitions[$id]);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getParameter($name) {
+  public function getParameter($name): array|bool|string|int|float|NULL {
     if (!(isset($this->parameters[$name]) || array_key_exists($name, $this->parameters))) {
       if (!$name) {
         throw new ParameterNotFoundException('');
@@ -337,7 +334,7 @@ class Container implements ContainerInterface, ResetInterface {
   /**
    * {@inheritdoc}
    */
-  public function hasParameter($name) {
+  public function hasParameter($name): bool {
     return isset($this->parameters[$name]) || array_key_exists($name, $this->parameters);
   }
 
@@ -355,7 +352,7 @@ class Container implements ContainerInterface, ResetInterface {
   /**
    * {@inheritdoc}
    */
-  public function initialized($id) {
+  public function initialized($id): bool {
     if (isset($this->aliases[$id])) {
       $id = $this->aliases[$id];
     }
@@ -536,10 +533,7 @@ class Container implements ContainerInterface, ResetInterface {
   }
 
   /**
-   * Gets all defined service IDs.
-   *
-   * @return array
-   *   An array of all defined service IDs.
+   * {@inheritdoc}
    */
   public function getServiceIds() {
     return array_keys($this->serviceDefinitions + $this->services);

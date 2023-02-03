@@ -40,6 +40,9 @@ class EntityReferenceAutoCreateTest extends BrowserTestBase {
    */
   protected $referencedType;
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
 
@@ -193,8 +196,10 @@ class EntityReferenceAutoCreateTest extends BrowserTestBase {
 
     $this->drupalGet('node/add/' . $this->referencingType);
     $this->submitForm($edit, 'Save');
+
+    $term_storage = \Drupal::entityTypeManager()->getStorage('taxonomy_term');
     /** @var \Drupal\taxonomy\Entity\Term $term */
-    $term = taxonomy_term_load_multiple_by_name($term_name);
+    $term = $term_storage->loadByProperties(['name' => $term_name]);
     $term = reset($term);
 
     // The new term is expected to be stored in the second vocabulary.
@@ -219,7 +224,7 @@ class EntityReferenceAutoCreateTest extends BrowserTestBase {
     $this->drupalGet('node/add/' . $this->referencingType);
     $this->submitForm($edit, 'Save');
     /** @var \Drupal\taxonomy\Entity\Term $term */
-    $term = taxonomy_term_load_multiple_by_name($term_name);
+    $term = $term_storage->loadByProperties(['name' => $term_name]);
     $term = reset($term);
 
     // The second term is expected to be stored in the first vocabulary.

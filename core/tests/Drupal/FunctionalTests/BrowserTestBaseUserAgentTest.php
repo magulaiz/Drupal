@@ -28,10 +28,10 @@ class BrowserTestBaseUserAgentTest extends BrowserTestBase {
    */
   public function testUserAgentValidation() {
     $assert_session = $this->assertSession();
-    $system_path = $this->buildUrl(drupal_get_path('module', 'system'));
+    $system_path = $this->buildUrl(\Drupal::service('extension.list.module')->getPath('system'));
     $http_path = $system_path . '/tests/http.php/user/login';
     $https_path = $system_path . '/tests/https.php/user/login';
-    // Generate a valid simpletest User-Agent to pass validation.
+    // Generate a valid test User-Agent to pass validation.
     $this->assertNotFalse(preg_match('/test\d+/', $this->databasePrefix, $matches), 'Database prefix contains test prefix.');
     $this->agent = drupal_generate_test_ua($matches[0]);
 

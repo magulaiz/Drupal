@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\system\Functional\UpdateSystem;
 
+use Drupal\Core\Url;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\RequirementsPageTrait;
 
@@ -45,11 +46,14 @@ class InvalidUpdateHookTest extends BrowserTestBase {
    */
   private $updateUser;
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
     require_once $this->root . '/core/includes/update.inc';
 
-    $this->updateUrl = $GLOBALS['base_url'] . '/update.php';
+    $this->updateUrl = Url::fromRoute('system.db_update')->setAbsolute()->toString();
     $this->updateUser = $this->drupalCreateUser([
       'administer software updates',
     ]);
@@ -60,7 +64,7 @@ class InvalidUpdateHookTest extends BrowserTestBase {
     $this->drupalLogin($this->updateUser);
     $this->drupalGet($this->updateUrl);
     $this->updateRequirementsProblem();
-    $this->clickLink(t('Continue'));
+    $this->clickLink('Continue');
     $this->assertSession()->pageTextContains('Some of the pending updates cannot be applied because their dependencies were not met.');
   }
 

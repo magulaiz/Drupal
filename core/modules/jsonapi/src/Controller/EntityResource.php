@@ -369,7 +369,25 @@ class EntityResource {
    *   The response.
    */
   public function deleteIndividual(EntityInterface $entity) {
-    $entity->delete();
+    // @todo Replace with entity handlers in: https://www.drupal.org/project/drupal/issues/3230434
+    if ($entity->getEntityTypeId() === 'user') {
+      $cancel_method = \Drupal::service('config.factory')->get('user.settings')->get('cancel_method');
+
+      // Allow other modules to act.
+
+      user_cancel([], $entity->id(), $cancel_method);
+      // Since user_cancel() is not invoked via Form API, batch processing
+      // needs to be invoked manually.
+      $batch =& batch_get();
+      // Mark this batch as non-progressive to bypass the progress bar and
+      // redirect.
+      $batch['progressive'] = FALSE;
+      batch_process();
+    }
+    else {
+      $entity->delete();
+    }
+
     return new ResourceResponse(NULL, 204);
   }
 
@@ -411,7 +429,7 @@ class EntityResource {
       // For example: getting users with a particular role, which is a config
       // entity type: https://www.drupal.org/project/drupal/issues/2959445.
       // @todo Remove the message parsing in https://www.drupal.org/project/drupal/issues/3028967.
-      if (strpos($e->getMessage(), 'Getting the base fields is not supported for entity type') === 0) {
+      if (str_starts_with($e->getMessage(), 'Getting the base fields is not supported for entity type')) {
         preg_match('/entity type (.*)\./', $e->getMessage(), $matches);
         $config_entity_type_id = $matches[1];
         $cacheability = (new CacheableMetadata())->addCacheContexts(['url.path', 'url.query_args:filter']);
@@ -883,8 +901,8 @@ class EntityResource {
     if (isset($params[Sort::KEY_NAME]) && $sort = $params[Sort::KEY_NAME]) {
       foreach ($sort->fields() as $field) {
         $path = $this->fieldResolver->resolveInternalEntityQueryPath($resource_type, $field[Sort::PATH_KEY]);
-        $direction = isset($field[Sort::DIRECTION_KEY]) ? $field[Sort::DIRECTION_KEY] : 'ASC';
-        $langcode = isset($field[Sort::LANGUAGE_KEY]) ? $field[Sort::LANGUAGE_KEY] : NULL;
+        $direction = $field[Sort::DIRECTION_KEY] ?? 'ASC';
+        $langcode = $field[Sort::LANGUAGE_KEY] ?? NULL;
         $query->sort($path, $direction, $langcode);
       }
     }
@@ -1217,13 +1235,13 @@ class EntityResource {
    */
   protected function getJsonApiParams(Request $request, ResourceType $resource_type) {
     if ($request->query->has('filter')) {
-      $params[Filter::KEY_NAME] = Filter::createFromQueryParameter($request->query->get('filter'), $resource_type, $this->fieldResolver);
+      $params[Filter::KEY_NAME] = Filter::createFromQueryParameter($request->query->all('filter'), $resource_type, $this->fieldResolver);
     }
     if ($request->query->has('sort')) {
-      $params[Sort::KEY_NAME] = Sort::createFromQueryParameter($request->query->get('sort'));
+      $params[Sort::KEY_NAME] = Sort::createFromQueryParameter($request->query->all()['sort']);
     }
     if ($request->query->has('page')) {
-      $params[OffsetPage::KEY_NAME] = OffsetPage::createFromQueryParameter($request->query->get('page'));
+      $params[OffsetPage::KEY_NAME] = OffsetPage::createFromQueryParameter($request->query->all('page'));
     }
     else {
       $params[OffsetPage::KEY_NAME] = OffsetPage::createFromQueryParameter(['page' => ['offset' => OffsetPage::DEFAULT_OFFSET, 'limit' => OffsetPage::SIZE_MAX]]);

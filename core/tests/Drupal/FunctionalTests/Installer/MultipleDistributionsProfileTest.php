@@ -37,7 +37,7 @@ class MultipleDistributionsProfileTest extends InstallerTestBase {
         'distribution' => [
           'name' => $name,
           'install' => [
-            'theme' => 'bartik',
+            'theme' => 'claro',
           ],
         ],
       ];
@@ -55,11 +55,11 @@ class MultipleDistributionsProfileTest extends InstallerTestBase {
    */
   protected function setUpLanguage() {
     // Verify that the distribution name appears.
-    $this->assertRaw('distribution_one');
+    $this->assertSession()->pageTextContains('distribution_one');
     // Verify that the requested theme is used.
-    $this->assertRaw('bartik');
+    $this->assertSession()->responseContains('claro');
     // Verify that the "Choose profile" step does not appear.
-    $this->assertNoText('profile');
+    $this->assertSession()->pageTextNotContains('profile');
 
     parent::setUpLanguage();
   }

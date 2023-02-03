@@ -54,7 +54,7 @@ class CustomPageExceptionHtmlSubscriberTest extends UnitTestCase {
   /**
    * The tested custom page exception subscriber.
    *
-   * @var \Drupal\Core\EventSubscriber\CustomPageExceptionHtmlSubscriber|\Drupal\Tests\Core\EventSubscriber\TestCustomPageExceptionHtmlSubscriber
+   * @var \Drupal\Core\EventSubscriber\CustomPageExceptionHtmlSubscriber|\Drupal\Tests\Core\EventSubscriber\CustomPageExceptionHtmlSubscriberTest
    */
   protected $customPageSubscriber;
 
@@ -135,11 +135,11 @@ class CustomPageExceptionHtmlSubscriberTest extends UnitTestCase {
       ->method('getContext')
       ->willReturn($request_context);
 
-    $this->kernel->expects($this->once())->method('handle')->will($this->returnCallback(function (Request $request) {
+    $this->kernel->expects($this->once())->method('handle')->willReturnCallback(function (Request $request) {
       return new HtmlResponse($request->getMethod());
-    }));
+    });
 
-    $event = new ExceptionEvent($this->kernel, $request, HttpKernelInterface::MASTER_REQUEST, new NotFoundHttpException('foo'));
+    $event = new ExceptionEvent($this->kernel, $request, HttpKernelInterface::MAIN_REQUEST, new NotFoundHttpException('foo'));
 
     $this->customPageSubscriber->onException($event);
 
@@ -162,11 +162,11 @@ class CustomPageExceptionHtmlSubscriberTest extends UnitTestCase {
       ->method('getContext')
       ->willReturn($request_context);
 
-    $this->kernel->expects($this->once())->method('handle')->will($this->returnCallback(function (Request $request) {
+    $this->kernel->expects($this->once())->method('handle')->willReturnCallback(function (Request $request) {
       return new Response($request->getMethod() . ' ' . UrlHelper::buildQuery($request->query->all()));
-    }));
+    });
 
-    $event = new ExceptionEvent($this->kernel, $request, HttpKernelInterface::MASTER_REQUEST, new NotFoundHttpException('foo'));
+    $event = new ExceptionEvent($this->kernel, $request, HttpKernelInterface::MAIN_REQUEST, new NotFoundHttpException('foo'));
     $this->customPageSubscriber->onException($event);
 
     $response = $event->getResponse();

@@ -37,14 +37,14 @@ interface FileSystemInterface {
    *
    * @see \Drupal\Core\File\FileSystemInterface::INSECURE_EXTENSION_REGEX
    */
-  public const INSECURE_EXTENSIONS = ['phar', 'php', 'pl', 'py', 'cgi', 'asp', 'js'];
+  public const INSECURE_EXTENSIONS = ['phar', 'php', 'pl', 'py', 'cgi', 'asp', 'js', 'htaccess'];
 
   /**
    * The regex pattern used when checking for insecure file types.
    *
    * @see \Drupal\Core\File\FileSystemInterface::INSECURE_EXTENSIONS
    */
-  public const INSECURE_EXTENSION_REGEX = '/\.(phar|php|pl|py|cgi|asp|js)(\.|$)/i';
+  public const INSECURE_EXTENSION_REGEX = '/\.(phar|php|pl|py|cgi|asp|js|htaccess)(\.|$)/i';
 
   /**
    * Moves an uploaded file to a new location.
@@ -361,7 +361,7 @@ interface FileSystemInterface {
   /**
    * Saves a file to the specified destination without invoking file API.
    *
-   * This function is identical to file_save_data() except the file will not be
+   * This function is identical to writeData() except the file will not be
    * saved to the {file_managed} table and none of the file_* hooks will be
    * called.
    *
@@ -383,7 +383,7 @@ interface FileSystemInterface {
    * @throws \Drupal\Core\File\Exception\FileException
    *   Implementation may throw FileException or its subtype on failure.
    *
-   * @see file_save_data()
+   * @see \Drupal\file\FileRepositoryInterface::writeData()
    */
   public function saveData($data, $destination, $replace = self::EXISTS_RENAME);
 

@@ -31,6 +31,9 @@ class MenuRouterTest extends BrowserTestBase {
    */
   protected $adminTheme;
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     // Enable dummy module that implements hook_menu.
     parent::setUp();
@@ -80,7 +83,7 @@ class MenuRouterTest extends BrowserTestBase {
   protected function doTestTitleCallbackFalse() {
     $this->drupalGet('test-page');
     $this->assertSession()->pageTextContains('A title with @placeholder', 'Raw text found on the page');
-    $this->assertNoText('A title with some other text', 'Text with placeholder substitutions not found.');
+    $this->assertSession()->pageTextNotContains('A title with some other text', 'Text with placeholder substitutions not found.');
   }
 
   /**
@@ -89,7 +92,7 @@ class MenuRouterTest extends BrowserTestBase {
   protected function doTestTitleMenuCallback() {
     // Verify that the menu router item title is not visible.
     $this->drupalGet('');
-    $this->assertNoText('Menu Callback Title');
+    $this->assertSession()->pageTextNotContains('Menu Callback Title');
     // Verify that the menu router item title is output as page title.
     $this->drupalGet('menu_callback_title');
     $this->assertSession()->pageTextContains('Menu Callback Title');
@@ -199,8 +202,8 @@ class MenuRouterTest extends BrowserTestBase {
       // cSpell:disable-next-line
       "éøïвβ中國書۞";
     $this->drupalGet($path);
-    $this->assertRaw('This is the menuTestCallback content.');
-    $this->assertNoText('The website encountered an unexpected error. Please try again later.');
+    $this->assertSession()->pageTextContains('This is the menuTestCallback content.');
+    $this->assertSession()->pageTextNotContains('The website encountered an unexpected error. Please try again later.');
   }
 
   /**
@@ -241,8 +244,8 @@ class MenuRouterTest extends BrowserTestBase {
    * Tests theme integration.
    */
   public function testThemeIntegration() {
-    $this->defaultTheme = 'bartik';
-    $this->adminTheme = 'seven';
+    $this->defaultTheme = 'olivero';
+    $this->adminTheme = 'claro';
 
     /** @var \Drupal\Core\Extension\ThemeInstallerInterface $theme_installer */
     $theme_installer = $this->container->get('theme_installer');
@@ -269,8 +272,8 @@ class MenuRouterTest extends BrowserTestBase {
    */
   protected function doTestThemeCallbackAdministrative() {
     $this->drupalGet('menu-test/theme-callback/use-admin-theme');
-    $this->assertSession()->pageTextContains('Active theme: seven. Actual theme: seven.');
-    $this->assertRaw('seven/css/base/elements.css');
+    $this->assertSession()->pageTextContains('Active theme: claro. Actual theme: claro.');
+    $this->assertSession()->responseContains('claro/css/base/elements.css');
   }
 
   /**
@@ -283,15 +286,15 @@ class MenuRouterTest extends BrowserTestBase {
     // we expect the theme callback system to be bypassed entirely.
     $this->drupalGet('menu-test/theme-callback/use-admin-theme');
     // Check that the maintenance theme's CSS appears on the page.
-    $this->assertRaw('bartik/css/base/elements.css');
+    $this->assertSession()->responseContains('olivero/css/base/base.css');
 
     // An administrator, however, should continue to see the requested theme.
     $admin_user = $this->drupalCreateUser(['access site in maintenance mode']);
     $this->drupalLogin($admin_user);
     $this->drupalGet('menu-test/theme-callback/use-admin-theme');
-    $this->assertSession()->pageTextContains('Active theme: seven. Actual theme: seven.');
+    $this->assertSession()->pageTextContains('Active theme: claro. Actual theme: claro.');
     // Check that the administrative theme's CSS appears on the page.
-    $this->assertRaw('seven/css/base/elements.css');
+    $this->assertSession()->responseContains('claro/css/base/elements.css');
 
     $this->container->get('state')->set('system.maintenance_mode', FALSE);
   }
@@ -302,9 +305,9 @@ class MenuRouterTest extends BrowserTestBase {
   protected function doTestThemeCallbackOptionalTheme() {
     // Request a theme that is not installed.
     $this->drupalGet('menu-test/theme-callback/use-test-theme');
-    $this->assertSession()->pageTextContains('Active theme: bartik. Actual theme: bartik.');
+    $this->assertSession()->pageTextContains('Active theme: olivero. Actual theme: olivero.');
     // Check that the default theme's CSS appears on the page.
-    $this->assertRaw('bartik/css/base/elements.css');
+    $this->assertSession()->responseContains('olivero/css/base/base.css');
 
     // Now install the theme and request it again.
     /** @var \Drupal\Core\Extension\ThemeInstallerInterface $theme_installer */
@@ -314,7 +317,7 @@ class MenuRouterTest extends BrowserTestBase {
     $this->drupalGet('menu-test/theme-callback/use-test-theme');
     $this->assertSession()->pageTextContains('Active theme: test_theme. Actual theme: test_theme.');
     // Check that the optional theme's CSS appears on the page.
-    $this->assertRaw('test_theme/kitten.css');
+    $this->assertSession()->responseContains('test_theme/kitten.css');
 
     $theme_installer->uninstall(['test_theme']);
   }
@@ -324,9 +327,9 @@ class MenuRouterTest extends BrowserTestBase {
    */
   protected function doTestThemeCallbackFakeTheme() {
     $this->drupalGet('menu-test/theme-callback/use-fake-theme');
-    $this->assertSession()->pageTextContains('Active theme: bartik. Actual theme: bartik.');
+    $this->assertSession()->pageTextContains('Active theme: olivero. Actual theme: olivero.');
     // Check that the default theme's CSS appears on the page.
-    $this->assertRaw('bartik/css/base/elements.css');
+    $this->assertSession()->responseContains('olivero/css/base/base.css');
   }
 
   /**
@@ -334,9 +337,9 @@ class MenuRouterTest extends BrowserTestBase {
    */
   protected function doTestThemeCallbackNoThemeRequested() {
     $this->drupalGet('menu-test/theme-callback/no-theme-requested');
-    $this->assertSession()->pageTextContains('Active theme: bartik. Actual theme: bartik.');
+    $this->assertSession()->pageTextContains('Active theme: olivero. Actual theme: olivero.');
     // Check that the default theme's CSS appears on the page.
-    $this->assertRaw('bartik/css/base/elements.css');
+    $this->assertSession()->responseContains('olivero/css/base/base.css');
   }
 
 }

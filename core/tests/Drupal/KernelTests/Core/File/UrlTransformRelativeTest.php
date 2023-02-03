@@ -6,7 +6,7 @@ use Drupal\KernelTests\KernelTestBase;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * Tests url transform to relative.
+ * Tests URL transform to relative.
  *
  * @group Utility
  */
@@ -15,7 +15,7 @@ class UrlTransformRelativeTest extends KernelTestBase {
   protected static $modules = ['file_test'];
 
   /**
-   * Tests file_url_transform_relative function.
+   * Tests transformRelative() function.
    *
    * @dataProvider providerFileUrlTransformRelative
    */
@@ -37,7 +37,7 @@ class UrlTransformRelativeTest extends KernelTestBase {
     $request = Request::createFromGlobals();
     \Drupal::requestStack()->push($request);
 
-    $this->assertSame($expected, file_url_transform_relative($url));
+    $this->assertSame($expected, \Drupal::service('file_url_generator')->transformRelative($url));
   }
 
   public function providerFileUrlTransformRelative() {

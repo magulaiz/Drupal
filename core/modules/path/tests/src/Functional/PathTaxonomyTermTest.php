@@ -23,12 +23,15 @@ class PathTaxonomyTermTest extends PathTestBase {
    */
   protected $defaultTheme = 'stark';
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
 
     // Create a Tags vocabulary for the Article node type.
     $vocabulary = Vocabulary::create([
-      'name' => t('Tags'),
+      'name' => 'Tags',
       'vid' => 'tags',
     ]);
     $vocabulary->save();
@@ -68,10 +71,8 @@ class PathTaxonomyTermTest extends PathTestBase {
     $this->assertSession()->pageTextContains($description);
 
     // Confirm the 'canonical' and 'shortlink' URLs.
-    $elements = $this->xpath("//link[contains(@rel, 'canonical') and contains(@href, '" . $edit['path[0][alias]'] . "')]");
-    $this->assertTrue(!empty($elements), 'Term page contains canonical link URL.');
-    $elements = $this->xpath("//link[contains(@rel, 'shortlink') and contains(@href, 'taxonomy/term/" . $tid . "')]");
-    $this->assertTrue(!empty($elements), 'Term page contains shortlink URL.');
+    $this->assertSession()->elementExists('xpath', "//link[contains(@rel, 'canonical') and contains(@href, '" . $edit['path[0][alias]'] . "')]");
+    $this->assertSession()->elementExists('xpath', "//link[contains(@rel, 'shortlink') and contains(@href, 'taxonomy/term/" . $tid . "')]");
 
     // Change the term's URL alias.
     $edit2 = [];
@@ -85,7 +86,7 @@ class PathTaxonomyTermTest extends PathTestBase {
 
     // Confirm that the old alias no longer works.
     $this->drupalGet(trim($edit['path[0][alias]'], '/'));
-    $this->assertNoText($description);
+    $this->assertSession()->pageTextNotContains($description);
     $this->assertSession()->statusCodeEquals(404);
 
     // Remove the term's URL alias.
@@ -96,7 +97,7 @@ class PathTaxonomyTermTest extends PathTestBase {
 
     // Confirm that the alias no longer works.
     $this->drupalGet(trim($edit2['path[0][alias]'], '/'));
-    $this->assertNoText($description);
+    $this->assertSession()->pageTextNotContains($description);
     $this->assertSession()->statusCodeEquals(404);
   }
 

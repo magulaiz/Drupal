@@ -195,6 +195,8 @@ class User extends ContentEntityBase implements UserInterface {
     $roles = $this->getRoles(TRUE);
     $roles[] = $rid;
     $this->set('roles', array_unique($roles));
+
+    return $this;
   }
 
   /**
@@ -202,6 +204,8 @@ class User extends ContentEntityBase implements UserInterface {
    */
   public function removeRole($rid) {
     $this->set('roles', array_diff($this->getRoles(TRUE), [$rid]));
+
+    return $this;
   }
 
   /**
@@ -398,13 +402,16 @@ class User extends ContentEntityBase implements UserInterface {
    */
   public function setExistingPassword($password) {
     $this->get('pass')->existing = $password;
+    return $this;
   }
 
   /**
    * {@inheritdoc}
    */
   public function checkExistingPassword(UserInterface $account_unchanged) {
-    return strlen($this->get('pass')->existing) > 0 && \Drupal::service('password')->check(trim($this->get('pass')->existing), $account_unchanged->getPassword());
+    $existing = $this->get('pass')->existing;
+    return $existing !== NULL && strlen($existing) > 0 &&
+      \Drupal::service('password')->check(trim($existing), $account_unchanged->getPassword());
   }
 
   /**

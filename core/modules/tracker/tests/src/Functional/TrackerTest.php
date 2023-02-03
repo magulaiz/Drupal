@@ -17,6 +17,7 @@ use Drupal\Tests\system\Functional\Cache\AssertPageCacheContextsAndTagsTrait;
  * Create and delete nodes and check for their display in the tracker listings.
  *
  * @group tracker
+ * @group legacy
  */
 class TrackerTest extends BrowserTestBase {
 
@@ -55,6 +56,9 @@ class TrackerTest extends BrowserTestBase {
    */
   protected $otherUser;
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
 
@@ -88,7 +92,7 @@ class TrackerTest extends BrowserTestBase {
     ]);
 
     $this->drupalGet('activity');
-    $this->assertNoText($unpublished->label());
+    $this->assertSession()->pageTextNotContains($unpublished->label());
     $this->assertSession()->pageTextContains($published->label());
     $this->assertSession()->linkExists('My recent content', 0, 'User tab shows up on the global tracker page.');
 
@@ -121,7 +125,7 @@ class TrackerTest extends BrowserTestBase {
     // Delete a node and ensure it no longer appears on the tracker.
     $published->delete();
     $this->drupalGet('activity');
-    $this->assertNoText($published->label());
+    $this->assertSession()->pageTextNotContains($published->label());
 
     // Test proper display of time on activity page when comments are disabled.
     // Disable comments.
@@ -173,9 +177,9 @@ class TrackerTest extends BrowserTestBase {
     $this->submitForm($comment, 'Save');
 
     $this->drupalGet('user/' . $this->user->id() . '/activity');
-    $this->assertNoText($unpublished->label());
+    $this->assertSession()->pageTextNotContains($unpublished->label());
     $this->assertSession()->pageTextContains($my_published->label());
-    $this->assertNoText($other_published_no_comment->label());
+    $this->assertSession()->pageTextNotContains($other_published_no_comment->label());
     $this->assertSession()->pageTextContains($other_published_my_comment->label());
 
     // Assert cache contexts.
@@ -224,7 +228,7 @@ class TrackerTest extends BrowserTestBase {
     $this->drupalGet('comment/1/edit');
     $this->submitForm(['status' => CommentInterface::NOT_PUBLISHED], 'Save');
     $this->drupalGet('user/' . $this->user->id() . '/activity');
-    $this->assertNoText($other_published_my_comment->label());
+    $this->assertSession()->pageTextNotContains($other_published_my_comment->label());
 
     // Test escaping of title on user's tracker tab.
     \Drupal::service('module_installer')->install(['user_hooks_test']);
@@ -237,7 +241,7 @@ class TrackerTest extends BrowserTestBase {
     Cache::invalidateTags(['rendered']);
     $this->drupalGet('user/' . $this->user->id() . '/activity');
     $this->assertSession()->assertNoEscaped('<em>' . $this->user->id() . '</em>');
-    $this->assertRaw('<em>' . $this->user->id() . '</em>');
+    $this->assertSession()->responseContains('<em>' . $this->user->id() . '</em>');
   }
 
   /**
@@ -393,6 +397,9 @@ class TrackerTest extends BrowserTestBase {
       'status' => 0,
     ]);
 
+    $this->drupalGet('activity');
+    $this->assertSession()->responseNotContains($unpublished->label());
+
     // Start indexing backwards from node 4.
     \Drupal::state()->set('tracker.index_nid', 4);
 
@@ -474,12 +481,14 @@ class TrackerTest extends BrowserTestBase {
    *   data-history-node-last-comment-timestamp attribute.
    * @param bool $library_is_present
    *   Whether the drupal.tracker-history library should be present or not.
+   *
+   * @internal
    */
-  public function assertHistoryMetadata($node_id, $node_timestamp, $node_last_comment_timestamp, $library_is_present = TRUE) {
+  public function assertHistoryMetadata(int $node_id, int $node_timestamp, int $node_last_comment_timestamp, bool $library_is_present = TRUE): void {
     $settings = $this->getDrupalSettings();
     $this->assertSame($library_is_present, isset($settings['ajaxPageState']) && in_array('tracker/history', explode(',', $settings['ajaxPageState']['libraries'])), 'drupal.tracker-history library is present.');
-    $this->assertCount(1, $this->xpath('//table/tbody/tr/td[@data-history-node-id="' . $node_id . '" and @data-history-node-timestamp="' . $node_timestamp . '"]'), 'Tracker table cell contains the data-history-node-id and data-history-node-timestamp attributes for the node.');
-    $this->assertCount(1, $this->xpath('//table/tbody/tr/td[@data-history-node-last-comment-timestamp="' . $node_last_comment_timestamp . '"]'), 'Tracker table cell contains the data-history-node-last-comment-timestamp attribute for the node.');
+    $this->assertSession()->elementsCount('xpath', '//table/tbody/tr/td[@data-history-node-id="' . $node_id . '" and @data-history-node-timestamp="' . $node_timestamp . '"]', 1);
+    $this->assertSession()->elementsCount('xpath', '//table/tbody/tr/td[@data-history-node-last-comment-timestamp="' . $node_last_comment_timestamp . '"]', 1);
   }
 
 }

@@ -16,6 +16,7 @@ use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Serialization\Yaml;
 use Drupal\Core\Session\UserSession;
 use Drupal\Core\Site\Settings;
+use Drupal\Core\Site\SettingsEditor;
 use Drupal\Core\StreamWrapper\StreamWrapperInterface;
 use Drupal\Tests\SessionTestTrait;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -42,7 +43,7 @@ trait FunctionalTestSetupTrait {
   /**
    * The class loader to use for installation and initialization of setup.
    *
-   * @var \Symfony\Component\Classloader\Classloader
+   * @var \Composer\Autoload\ClassLoader
    */
   protected $classLoader;
 
@@ -152,9 +153,9 @@ trait FunctionalTestSetupTrait {
    *
    * @param array $settings
    *   An array of settings to write out, in the format expected by
-   *   drupal_rewrite_settings().
+   *   SettingsEditor::rewrite().
    *
-   * @see drupal_rewrite_settings()
+   * @see \Drupal\Core\Site\SettingsEditor::rewrite()
    */
   protected function writeSettings(array $settings) {
     include_once DRUPAL_ROOT . '/core/includes/install.inc';
@@ -163,7 +164,7 @@ trait FunctionalTestSetupTrait {
     // whenever it is invoked.
     // Not using File API; a potential error must trigger a PHP warning.
     chmod($filename, 0666);
-    drupal_rewrite_settings($settings, $filename);
+    SettingsEditor::rewrite($filename, $settings);
   }
 
   /**
@@ -207,7 +208,7 @@ trait FunctionalTestSetupTrait {
     // Rebuild the kernel and bring it back to a fully bootstrapped state.
     $this->container = $this->kernel->rebuildContainer();
 
-    // Make sure the url generator has a request object, otherwise calls to
+    // Make sure the URL generator has a request object, otherwise calls to
     // $this->drupalGet() will fail.
     $this->prepareRequestForGenerator();
   }
@@ -236,12 +237,12 @@ trait FunctionalTestSetupTrait {
    *
    * This is used to manipulate how the generator generates paths during tests.
    * It also ensures that calls to $this->drupalGet() will work when running
-   * from run-tests.sh because the url generator no longer looks at the global
+   * from run-tests.sh because the URL generator no longer looks at the global
    * variables that are set there but relies on getting this information from a
    * request object.
    *
    * @param bool $clean_urls
-   *   Whether to mock the request using clean urls.
+   *   Whether to mock the request using clean URLs.
    * @param array $override_server_vars
    *   An array of server variables to override.
    *
@@ -250,36 +251,26 @@ trait FunctionalTestSetupTrait {
    */
   protected function prepareRequestForGenerator($clean_urls = TRUE, $override_server_vars = []) {
     $request = Request::createFromGlobals();
-    $server = $request->server->all();
-    if (basename($server['SCRIPT_FILENAME']) != basename($server['SCRIPT_NAME'])) {
-      // We need this for when the test is executed by run-tests.sh.
-      // @todo Remove this once run-tests.sh has been converted to use a Request
-      //   object.
-      $cwd = getcwd();
-      $server['SCRIPT_FILENAME'] = $cwd . '/' . basename($server['SCRIPT_NAME']);
-      $base_path = rtrim($server['REQUEST_URI'], '/');
-    }
-    else {
-      $base_path = $request->getBasePath();
-    }
+    $base_path = $request->getBasePath();
     if ($clean_urls) {
       $request_path = $base_path ? $base_path . '/user' : 'user';
     }
     else {
       $request_path = $base_path ? $base_path . '/index.php/user' : '/index.php/user';
     }
-    $server = array_merge($server, $override_server_vars);
+
+    $server = array_merge($request->server->all(), $override_server_vars);
 
     $request = Request::create($request_path, 'GET', [], [], [], $server);
     // Ensure the request time is REQUEST_TIME to ensure that API calls
     // in the test use the right timestamp.
     $request->server->set('REQUEST_TIME', REQUEST_TIME);
-    $this->container->get('request_stack')->push($request);
 
+    $this->container->get('request_stack')->push($request);
     // The request context is normally set by the router_listener from within
-    // its KernelEvents::REQUEST listener. In the simpletest parent site this
-    // event is not fired, therefore it is necessary to updated the request
-    // context manually here.
+    // its KernelEvents::REQUEST listener. In the parent site this event is not
+    // fired, therefore it is necessary to update the request context manually
+    // here.
     $this->container->get('router.request_context')->fromRequest($request);
 
     return $request;
@@ -292,7 +283,11 @@ trait FunctionalTestSetupTrait {
    */
   protected function doInstall() {
     require_once DRUPAL_ROOT . '/core/includes/install.core.inc';
-    install_drupal($this->classLoader, $this->installParameters());
+    $parameters = $this->installParameters();
+    // Simulate a real install which does not start with the any connections set
+    // in \Drupal\Core\Database\Database::$connections.
+    Database::removeConnection('default');
+    install_drupal($this->classLoader, $parameters);
   }
 
   /**
@@ -415,13 +410,13 @@ trait FunctionalTestSetupTrait {
     // not already specified.
     $profile = $container->getParameter('install_profile');
 
-    $default_sync_path = drupal_get_path('profile', $profile) . '/config/sync';
+    $default_sync_path = $container->get('extension.list.profile')->getPath($profile) . '/config/sync';
     $profile_config_storage = new FileStorage($default_sync_path, StorageInterface::DEFAULT_COLLECTION);
     if (!isset($this->defaultTheme) && $profile_config_storage->exists('system.theme')) {
       $this->defaultTheme = $profile_config_storage->read('system.theme')['default'];
     }
 
-    $default_install_path = drupal_get_path('profile', $profile) . '/' . InstallStorage::CONFIG_INSTALL_DIRECTORY;
+    $default_install_path = $container->get('extension.list.profile')->getPath($profile) . '/' . InstallStorage::CONFIG_INSTALL_DIRECTORY;
     $profile_config_storage = new FileStorage($default_install_path, StorageInterface::DEFAULT_COLLECTION);
     if (!isset($this->defaultTheme) && $profile_config_storage->exists('system.theme')) {
       $this->defaultTheme = $profile_config_storage->read('system.theme')['default'];
@@ -499,7 +494,7 @@ trait FunctionalTestSetupTrait {
   }
 
   /**
-   * Returns the parameters that will be used when Simpletest installs Drupal.
+   * Returns the parameters that will be used when the test installs Drupal.
    *
    * @see install_drupal()
    * @see install_state_defaults()
@@ -510,9 +505,9 @@ trait FunctionalTestSetupTrait {
   protected function installParameters() {
     $connection_info = Database::getConnectionInfo();
     $driver = $connection_info['default']['driver'];
-    $connection_info['default']['prefix'] = $connection_info['default']['prefix']['default'];
     unset($connection_info['default']['driver']);
     unset($connection_info['default']['namespace']);
+    unset($connection_info['default']['autoload']);
     unset($connection_info['default']['pdo']);
     unset($connection_info['default']['init_commands']);
     // Remove database connection info that is not used by SQLite.
@@ -540,12 +535,13 @@ trait FunctionalTestSetupTrait {
             'name' => $this->rootUser->name,
             'mail' => $this->rootUser->getEmail(),
             'pass' => [
-              'pass1' => isset($this->rootUser->pass_raw) ? $this->rootUser->pass_raw : $this->rootUser->passRaw,
-              'pass2' => isset($this->rootUser->pass_raw) ? $this->rootUser->pass_raw : $this->rootUser->passRaw,
+              'pass1' => $this->rootUser->pass_raw ?? $this->rootUser->passRaw,
+              'pass2' => $this->rootUser->pass_raw ?? $this->rootUser->passRaw,
             ],
           ],
-          // form_type_checkboxes_value() requires NULL instead of FALSE values
-          // for programmatic form submissions to disable a checkbox.
+          // \Drupal\Core\Render\Element\Checkboxes::valueCallback() requires
+          // NULL instead of FALSE values for programmatic form submissions to
+          // disable a checkbox.
           'enable_update_status_module' => NULL,
           'enable_update_status_emails' => NULL,
         ],
@@ -582,7 +578,7 @@ trait FunctionalTestSetupTrait {
     $parsed_url = parse_url($base_url);
     $host = $parsed_url['host'] . (isset($parsed_url['port']) ? ':' . $parsed_url['port'] : '');
     $path = isset($parsed_url['path']) ? rtrim(rtrim($parsed_url['path']), '/') : '';
-    $port = isset($parsed_url['port']) ? $parsed_url['port'] : 80;
+    $port = $parsed_url['port'] ?? 80;
 
     $valid_url_schemes = ['http', 'https'];
     if (!in_array(strtolower($parsed_url['scheme']), $valid_url_schemes, TRUE)) {
@@ -617,11 +613,6 @@ trait FunctionalTestSetupTrait {
    *
    * Also sets up new resources for the testing environment, such as the public
    * filesystem and configuration directories.
-   *
-   * This method is private as it must only be called once by
-   * BrowserTestBase::setUp() (multiple invocations for the same test would have
-   * unpredictable consequences) and it must not be callable or overridable by
-   * test classes.
    */
   protected function prepareEnvironment() {
     // Bootstrap Drupal so we can use Drupal's built in functions.

@@ -47,10 +47,10 @@ class LanguageSelectElementTest extends BrowserTestBase {
     $this->drupalGet('form-test/language_select');
     // Check that the language fields were rendered on the page.
     $ids = [
-        'edit-languages-all' => LanguageInterface::STATE_ALL,
-        'edit-languages-configurable' => LanguageInterface::STATE_CONFIGURABLE,
-        'edit-languages-locked' => LanguageInterface::STATE_LOCKED,
-        'edit-languages-config-and-locked' => LanguageInterface::STATE_CONFIGURABLE | LanguageInterface::STATE_LOCKED,
+      'edit-languages-all' => LanguageInterface::STATE_ALL,
+      'edit-languages-configurable' => LanguageInterface::STATE_CONFIGURABLE,
+      'edit-languages-locked' => LanguageInterface::STATE_LOCKED,
+      'edit-languages-config-and-locked' => LanguageInterface::STATE_CONFIGURABLE | LanguageInterface::STATE_LOCKED,
     ];
     foreach ($ids as $id => $flags) {
       $this->assertSession()->fieldExists($id);
@@ -58,7 +58,7 @@ class LanguageSelectElementTest extends BrowserTestBase {
       /** @var \Drupal\Core\Language\LanguageManagerInterface $language_manager */
       $language_manager = $this->container->get('language_manager');
       foreach ($language_manager->getLanguages($flags) as $langcode => $language) {
-        $options[$langcode] = $language->isLocked() ? t('- @name -', ['@name' => $language->getName()]) : $language->getName();
+        $options[$langcode] = $language->isLocked() ? "- {$language->getName()} -" : $language->getName();
       }
       $this->_testLanguageSelectElementOptions($id, $options);
     }

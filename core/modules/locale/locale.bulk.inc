@@ -88,7 +88,7 @@ function locale_translate_batch_import_files(array $options, $force = FALSE) {
  *   An array of interface translation files keyed by their URI.
  */
 function locale_translate_get_interface_translation_files(array $projects = [], array $langcodes = []) {
-  module_load_include('compare.inc', 'locale');
+  \Drupal::moduleHandler()->loadInclude('locale', 'inc', 'locale.compare');
   $files = [];
   $projects = $projects ? $projects : array_keys(locale_translation_get_projects());
   $langcodes = $langcodes ? $langcodes : array_keys(locale_translatable_language_list());
@@ -145,7 +145,7 @@ function locale_translate_batch_build(array $files, array $options) {
   ];
   if (count($files)) {
     $batch_builder = (new BatchBuilder())
-      ->setFile(drupal_get_path('module', 'locale') . '/locale.bulk.inc')
+      ->setFile(\Drupal::service('extension.list.module')->getPath('locale') . '/locale.bulk.inc')
       ->setTitle(t('Importing interface translations'))
       ->setErrorMessage(t('Error importing interface translations'));
     foreach ($files as $file) {
@@ -275,6 +275,7 @@ function locale_translate_batch_import($file, array $options, &$context) {
  */
 function locale_translate_batch_import_save($context) {
   if (isset($context['results']['files'])) {
+    $request_time = \Drupal::time()->getRequestTime();
     foreach ($context['results']['files'] as $file) {
       // Update the file history if both project and version are known. This
       // table is used by the automated translation update function which tracks
@@ -282,7 +283,7 @@ function locale_translate_batch_import_save($context) {
       // translation files are not tracked and are therefore not stored in this
       // table.
       if ($file->project && $file->version) {
-        $file->last_checked = REQUEST_TIME;
+        $file->last_checked = $request_time;
         locale_translation_update_file_history($file);
       }
     }
@@ -305,8 +306,9 @@ function locale_translate_batch_refresh(&$context) {
       // Get list of unique string identifiers and language codes updated.
       $langcodes = array_unique(array_values($context['results']['languages']));
       foreach ($context['results']['stats'] as $report) {
-        $strings = array_merge($strings, $report['strings']);
+        $strings[] = $report['strings'];
       }
+      $strings = array_merge([], ...$strings);
     }
     if ($strings) {
       // Initialize multi-step string refresh.
@@ -484,7 +486,7 @@ function locale_translate_file_attach_properties($file, array $options = []) {
   if (isset($matches[5])) {
     $file->project = $matches[2] . $matches[3];
     $file->version = $matches[4];
-    $file->langcode = isset($options['langcode']) ? $options['langcode'] : $matches[5];
+    $file->langcode = $options['langcode'] ?? $matches[5];
   }
   else {
     $file->langcode = LanguageInterface::LANGCODE_NOT_SPECIFIED;
@@ -567,7 +569,7 @@ function locale_config_batch_update_components(array $options, array $langcodes 
 function locale_config_batch_build(array $names, array $langcodes, array $options = []) {
   $options += ['finish_feedback' => TRUE];
   $batch_builder = (new BatchBuilder())
-    ->setFile(drupal_get_path('module', 'locale') . '/locale.bulk.inc')
+    ->setFile(\Drupal::service('extension.list.module')->getPath('locale') . '/locale.bulk.inc')
     ->setTitle(t('Updating configuration translations'))
     ->setInitMessage(t('Starting configuration update'))
     ->setErrorMessage(t('Error updating configuration translations'));
@@ -634,7 +636,7 @@ function locale_config_batch_refresh_name(array $names, array $langcodes, &$cont
  */
 function locale_config_batch_finished($success, array $results) {
   if ($success) {
-    $configuration = isset($results['stats']['config']) ? $results['stats']['config'] : 0;
+    $configuration = $results['stats']['config'] ?? 0;
     if ($configuration) {
       \Drupal::messenger()->addStatus(t('The configuration was successfully updated. There are %number configuration objects updated.', ['%number' => $configuration]));
       \Drupal::logger('locale')->notice('The configuration was successfully updated. %number configuration objects updated.', ['%number' => $configuration]);

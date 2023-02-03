@@ -362,21 +362,24 @@ class DefaultTableMappingTest extends UnitTestCase {
       ->expects($this->any())
       ->method('getColumns')
       ->willReturn($columns);
+    $definition->expects($this->any())
+      ->method('getTargetEntityTypeId')
+      ->willReturn('entity_test');
 
     $this->entityType
       ->expects($this->any())
       ->method('getBaseTable')
-      ->willReturn(isset($table_names['base']) ? $table_names['base'] : 'entity_test');
+      ->willReturn($table_names['base'] ?? 'entity_test');
 
     $this->entityType
       ->expects($this->any())
       ->method('getDataTable')
-      ->willReturn(isset($table_names['data']) ? $table_names['data'] : FALSE);
+      ->willReturn($table_names['data'] ?? FALSE);
 
     $this->entityType
       ->expects($this->any())
       ->method('getRevisionTable')
-      ->willReturn(isset($table_names['revision']) ? $table_names['revision'] : FALSE);
+      ->willReturn($table_names['revision'] ?? FALSE);
 
     $this->entityType
       ->expects($this->any())
@@ -459,10 +462,10 @@ class DefaultTableMappingTest extends UnitTestCase {
     $definition = $this->setUpDefinition($field_name, []);
     $definition->expects($this->any())
       ->method('getTargetEntityTypeId')
-      ->will($this->returnValue($entity_type_id));
+      ->willReturn($entity_type_id);
     $definition->expects($this->any())
       ->method('getUniqueStorageIdentifier')
-      ->will($this->returnValue($entity_type_id . '-' . $field_name));
+      ->willReturn($entity_type_id . '-' . $field_name);
 
     $this->entityType
       ->expects($this->any())
@@ -591,10 +594,10 @@ class DefaultTableMappingTest extends UnitTestCase {
       ->willReturn($base_field);
     $definition->expects($this->any())
       ->method('getName')
-      ->will($this->returnValue($name));
+      ->willReturn($name);
     $definition->expects($this->any())
       ->method('getColumns')
-      ->will($this->returnValue(array_fill_keys($column_names, [])));
+      ->willReturn(array_fill_keys($column_names, []));
     return $definition;
   }
 

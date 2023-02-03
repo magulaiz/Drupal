@@ -247,7 +247,7 @@ class MenuTreeStorage implements MenuTreeStorageInterface {
         return $query->execute();
       }
       // Some other failure that we can not recover from.
-      throw $e;
+      throw new PluginException($e->getMessage(), 0, $e);
     }
   }
 
@@ -310,10 +310,12 @@ class MenuTreeStorage implements MenuTreeStorageInterface {
       }
     }
 
-    $transaction = $this->connection->startTransaction();
     try {
+      $transaction = $this->connection->startTransaction();
       if (!$original) {
         // Generate a new mlid.
+        // @todo Remove the 'return' option in Drupal 11.
+        // @see https://www.drupal.org/project/drupal/issues/3256524
         $options = ['return' => Database::RETURN_INSERT_ID] + $this->options;
         $link['mlid'] = $this->connection->insert($this->table, $options)
           ->fields(['id' => $link['id'], 'menu_name' => $link['menu_name']])
@@ -332,7 +334,9 @@ class MenuTreeStorage implements MenuTreeStorageInterface {
       $this->updateParentalStatus($link);
     }
     catch (\Exception $e) {
-      $transaction->rollBack();
+      if (isset($transaction)) {
+        $transaction->rollBack();
+      }
       throw $e;
     }
     return $affected_menus;
@@ -729,7 +733,7 @@ class MenuTreeStorage implements MenuTreeStorageInterface {
       return $this->definitions[$id];
     }
     $loaded = $this->loadMultiple([$id]);
-    return isset($loaded[$id]) ? $loaded[$id] : FALSE;
+    return $loaded[$id] ?? FALSE;
   }
 
   /**
@@ -743,7 +747,7 @@ class MenuTreeStorage implements MenuTreeStorageInterface {
    */
   protected function loadFull($id) {
     $loaded = $this->loadFullMultiple([$id]);
-    return isset($loaded[$id]) ? $loaded[$id] : [];
+    return $loaded[$id] ?? [];
   }
 
   /**
@@ -1157,27 +1161,20 @@ class MenuTreeStorage implements MenuTreeStorageInterface {
    *
    * @return bool
    *   TRUE if the table was created, FALSE otherwise.
-   *
-   * @throws \Drupal\Component\Plugin\Exception\PluginException
-   *   If a database error occurs.
    */
   protected function ensureTableExists() {
     try {
-      if (!$this->connection->schema()->tableExists($this->table)) {
-        $this->connection->schema()->createTable($this->table, static::schemaDefinition());
-        return TRUE;
-      }
+      $this->connection->schema()->createTable($this->table, static::schemaDefinition());
     }
     catch (DatabaseException $e) {
       // If another process has already created the config table, attempting to
       // recreate it will throw an exception. In this case just catch the
       // exception and do nothing.
-      return TRUE;
     }
     catch (\Exception $e) {
-      throw new PluginException($e->getMessage(), NULL, $e);
+      return FALSE;
     }
-    return FALSE;
+    return TRUE;
   }
 
   /**

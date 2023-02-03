@@ -153,7 +153,7 @@ class DatabaseBackend implements CacheBackendInterface {
     // Check expire time.
     $cache->valid = $cache->expire == Cache::PERMANENT || $cache->expire >= REQUEST_TIME;
 
-    // Check if invalidateTags() has been called with any of the items's tags.
+    // Check if invalidateTags() has been called with any of the item's tags.
     if (!$this->checksumProvider->isValid($cache->checksum, $cache->tags)) {
       $cache->valid = FALSE;
     }
@@ -498,6 +498,7 @@ class DatabaseBackend implements CacheBackendInterface {
           'type' => 'int',
           'not null' => TRUE,
           'default' => 0,
+          'size' => 'big',
         ],
         'created' => [
           'description' => 'A timestamp with millisecond precision indicating when the cache entry was created.',

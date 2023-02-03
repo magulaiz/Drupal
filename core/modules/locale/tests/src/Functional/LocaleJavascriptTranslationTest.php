@@ -32,12 +32,8 @@ class LocaleJavascriptTranslationTest extends BrowserTestBase {
     // _locale_parse_js_file() finds translatable source strings in all valid
     // JavaScript syntax regardless of the coding style used, especially with
     // respect to optional whitespace, line breaks, etc.
-    // - We test locale_test.es6.js, because that is the one that contains a
+    // - We test locale_test.js, because that is the one that contains a
     //   variety of whitespace styles.
-    // - We also test the transpiled locale_test.js as an extra double-check
-    //   that JavaScript transpilation doesn't change what
-    //   _locale_parse_js_file() finds.
-    $files[] = __DIR__ . '/../../locale_test.es6.js';
     $files[] = __DIR__ . '/../../locale_test.js';
 
     foreach ($files as $filename) {
@@ -166,8 +162,8 @@ class LocaleJavascriptTranslationTest extends BrowserTestBase {
     $js_filename = $prefix . '_' . $js_translation_files[$prefix] . '.js';
 
     $content = $this->getSession()->getPage()->getContent();
-    $this->assertRaw('core/misc/drupal.js');
-    $this->assertRaw($js_filename);
+    $this->assertSession()->responseContains('core/misc/drupal.js');
+    $this->assertSession()->responseContains($js_filename);
     // Assert translations JS is included before drupal.js.
     $this->assertLessThan(strpos($content, 'core/misc/drupal.js'), strpos($content, $js_filename));
   }

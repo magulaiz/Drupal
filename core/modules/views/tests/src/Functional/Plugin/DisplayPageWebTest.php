@@ -32,13 +32,13 @@ class DisplayPageWebTest extends ViewTestBase {
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'classy';
+  protected $defaultTheme = 'starterkit_theme';
 
   /**
    * {@inheritdoc}
    */
-  protected function setUp($import_test_views = TRUE): void {
-    parent::setUp($import_test_views);
+  protected function setUp($import_test_views = TRUE, $modules = ['views_test_config']): void {
+    parent::setUp($import_test_views, $modules);
 
     $this->enableViewsTestModule();
     $this->drupalPlaceBlock('local_tasks_block');
@@ -96,11 +96,7 @@ class DisplayPageWebTest extends ViewTestBase {
     // Check local tasks.
     $this->drupalGet('test_page_display_menu');
     $this->assertSession()->statusCodeEquals(200);
-    $element = $this->xpath('//ul[contains(@class, :ul_class)]//a[contains(@class, :a_class)]/child::text()', [
-      ':ul_class' => 'tabs primary',
-      ':a_class' => 'is-active',
-    ]);
-    $this->assertEquals(t('Test default tab'), $element[0]->getText());
+    $this->assertSession()->elementTextEquals('xpath', "//ul[contains(@class, 'tabs primary')]//a[contains(@class, 'is-active')]/child::text()", 'Test default tab');
     $this->assertSession()->titleEquals('Test default page | Drupal');
 
     $this->drupalGet('test_page_display_menu/default');
@@ -108,11 +104,7 @@ class DisplayPageWebTest extends ViewTestBase {
 
     $this->drupalGet('test_page_display_menu/local');
     $this->assertSession()->statusCodeEquals(200);
-    $element = $this->xpath('//ul[contains(@class, :ul_class)]//a[contains(@class, :a_class)]/child::text()', [
-      ':ul_class' => 'tabs primary',
-      ':a_class' => 'is-active',
-    ]);
-    $this->assertEquals(t('Test local tab'), $element[0]->getText());
+    $this->assertSession()->elementTextEquals('xpath', "//ul[contains(@class, 'tabs primary')]//a[contains(@class, 'is-active')]/child::text()", 'Test local tab');
     $this->assertSession()->titleEquals('Test local page | Drupal');
 
     // Check an ordinary menu link.
@@ -161,10 +153,9 @@ class DisplayPageWebTest extends ViewTestBase {
    * @param string $path
    *   Path that will be set as the view page display path.
    *
-   * @return bool
-   *   Assertion result.
+   * @internal
    */
-  public function assertPagePath($path) {
+  public function assertPagePath(string $path): void {
     $view = Views::getView('test_page_display_path');
     $view->initDisplay('page_1');
     $view->displayHandlers->get('page_1')->overrideOption('path', $path);
@@ -172,10 +163,10 @@ class DisplayPageWebTest extends ViewTestBase {
     $this->container->get('router.builder')->rebuild();
     // Check if we successfully changed the path.
     $this->drupalGet($path);
-    $success = $this->assertSession()->statusCodeEquals(200);
+    $this->assertSession()->statusCodeEquals(200);
     // Check if we don't get any error on the view edit page.
     $this->drupalGet('admin/structure/views/view/test_page_display_path');
-    return $success && $this->assertSession()->statusCodeEquals(200);
+    $this->assertSession()->statusCodeEquals(200);
   }
 
 }

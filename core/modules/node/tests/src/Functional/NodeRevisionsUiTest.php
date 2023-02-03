@@ -20,6 +20,11 @@ class NodeRevisionsUiTest extends NodeTestBase {
   protected $defaultTheme = 'stark';
 
   /**
+   * {@inheritdoc}
+   */
+  protected static $modules = ['block'];
+
+  /**
    * @var \Drupal\user\Entity\User
    */
   protected $editor;
@@ -122,11 +127,11 @@ class NodeRevisionsUiTest extends NodeTestBase {
     // Assert the old revision message.
     $date = $this->container->get('date.formatter')->format($nodes[0]->revision_timestamp->value, 'short');
     $url = new Url('entity.node.revision', ['node' => $nodes[0]->id(), 'node_revision' => $nodes[0]->getRevisionId()]);
-    $this->assertRaw(Link::fromTextAndUrl($date, $url)->toString() . ' by ' . $editor);
+    $this->assertSession()->responseContains(Link::fromTextAndUrl($date, $url)->toString() . ' by ' . $editor);
 
     // Assert the current revision message.
     $date = $this->container->get('date.formatter')->format($nodes[1]->revision_timestamp->value, 'short');
-    $this->assertRaw($nodes[1]->toLink($date)->toString() . ' by ' . $editor . '<p class="revision-log">' . $revision_log . '</p>');
+    $this->assertSession()->responseContains($nodes[1]->toLink($date)->toString() . ' by ' . $editor . '<p class="revision-log">' . $revision_log . '</p>');
   }
 
   /**
@@ -171,10 +176,9 @@ class NodeRevisionsUiTest extends NodeTestBase {
     // Verify that the latest affected revision having been a default revision
     // is displayed as the current one.
     $this->assertSession()->linkByHrefNotExists('/node/' . $node_id . '/revisions/1/revert');
-    $elements = $this->xpath('//tr[contains(@class, "revision-current")]/td/a[1]');
     // The site may be installed in a subdirectory, so check if the URL is
     // contained in the retrieved one.
-    $this->assertStringContainsString('/node/1', current($elements)->getAttribute('href'));
+    $this->assertSession()->elementAttributeContains('xpath', '//tr[contains(@class, "revision-current")]/td/a[1]', 'href', '/node/1');
 
     // Verify that the default revision can be an older revision than the latest
     // one.
@@ -186,6 +190,29 @@ class NodeRevisionsUiTest extends NodeTestBase {
     $this->assertSession()->linkByHrefNotExists('/node/' . $node_id . '/revisions/2/revert');
     $this->assertSession()->linkByHrefNotExists('/node/' . $node_id . '/revisions/3/revert');
     $this->assertSession()->linkByHrefNotExists('/node/' . $node_id . '/revisions/5/revert');
+  }
+
+  /**
+   * Checks the Revisions tab.
+   *
+   * Tests two 'Revisions' local tasks are not added by both Node and
+   * VersionHistoryLocalTasks.
+   *
+   * This can be removed after 'entity.node.version_history' local task is
+   * removed by https://www.drupal.org/project/drupal/issues/3153559.
+   *
+   * @covers node_local_tasks_alter()
+   */
+  public function testNodeDuplicateRevisionsTab(): void {
+    $this->drupalPlaceBlock('local_tasks_block');
+    $this->drupalLogin($this->editor);
+
+    $node = $this->drupalCreateNode();
+    $this->drupalGet($node->toUrl('edit-form'));
+
+    // There must be exactly one 'Revisions' local task.
+    $xpath = $this->assertSession()->buildXPathQuery('//a[contains(@href, :href)]', [':href' => $node->toUrl('version-history')->toString()]);
+    $this->assertSession()->elementsCount('xpath', $xpath, 1);
   }
 
 }

@@ -56,7 +56,7 @@ class KernelTestBaseTest extends KernelTestBase {
    */
   public function testGetDatabaseConnectionInfoWithOutManualSetDbUrl() {
     $options = $this->container->get('database')->getConnectionOptions();
-    $this->assertSame($this->databasePrefix, $options['prefix']['default']);
+    $this->assertSame($this->databasePrefix, $options['prefix']);
   }
 
   /**
@@ -87,13 +87,6 @@ class KernelTestBaseTest extends KernelTestBase {
       ],
     ]);
     $this->assertTrue($database->schema()->tableExists('foo'));
-
-    // Ensure that the database tasks have been run during set up. Neither MySQL
-    // nor SQLite make changes that are testable.
-    if ($database->driver() == 'pgsql') {
-      $this->assertEquals('on', $database->query("SHOW standard_conforming_strings")->fetchField());
-      $this->assertEquals('escape', $database->query("SHOW bytea_output")->fetchField());
-    }
 
     $this->assertNotNull(FileCacheFactory::getPrefix());
   }
@@ -175,10 +168,13 @@ class KernelTestBaseTest extends KernelTestBase {
     // which checks the DRUPAL_TEST_IN_CHILD_SITE constant, that is not defined
     // in Kernel tests.
     try {
-      $this->container->get('http_client')->get('http://example.com');
+      /** @var \GuzzleHttp\Psr7\Response $response */
+      $response = $this->container->get('http_client')->head('http://example.com');
+      self::assertEquals(200, $response->getStatusCode());
     }
-    catch (GuzzleException $e) {
-      // Ignore any HTTP errors.
+    catch (\Throwable $e) {
+      // Ignore any HTTP errors, any other exception is considered an error.
+      self::assertInstanceOf(GuzzleException::class, $e, sprintf('Asserting that a possible exception is thrown. Got "%s" with message: "%s".', get_class($e), $e->getMessage()));
     }
   }
 
@@ -313,15 +309,16 @@ class KernelTestBaseTest extends KernelTestBase {
     if ($connection->databaseType() === 'sqlite') {
       $result = $connection->query("SELECT name FROM " . $this->databasePrefix .
         ".sqlite_master WHERE type = :type AND name LIKE :table_name AND name NOT LIKE :pattern", [
-        ':type' => 'table',
-        ':table_name' => '%',
-        ':pattern' => 'sqlite_%',
-      ])->fetchAllKeyed(0, 0);
-      $this->assertTrue(empty($result), 'All test tables have been removed.');
+          ':type' => 'table',
+          ':table_name' => '%',
+          ':pattern' => 'sqlite_%',
+        ]
+      )->fetchAllKeyed(0, 0);
+      $this->assertEmpty($result, 'All test tables have been removed.');
     }
     else {
       $tables = $connection->schema()->findTables($this->databasePrefix . '%');
-      $this->assertTrue(empty($tables), 'All test tables have been removed.');
+      $this->assertEmpty($tables, 'All test tables have been removed.');
     }
   }
 
@@ -337,88 +334,6 @@ class KernelTestBaseTest extends KernelTestBase {
   }
 
   /**
-   * Tests the deprecation of AssertLegacyTrait::assert.
-   *
-   * @group legacy
-   */
-  public function testAssert() {
-    $this->expectDeprecation('AssertLegacyTrait::assert() is deprecated in drupal:8.0.0 and is removed from drupal:10.0.0. Use $this->assertTrue() instead. See https://www.drupal.org/node/3129738');
-    $this->assert(TRUE);
-  }
-
-  /**
-   * Tests the deprecation of AssertLegacyTrait::assertIdenticalObject.
-   *
-   * @group legacy
-   */
-  public function testAssertIdenticalObject() {
-    $this->expectDeprecation('AssertLegacyTrait::assertIdenticalObject() is deprecated in drupal:8.0.0 and is removed from drupal:10.0.0. Use $this->assertEquals() instead. See https://www.drupal.org/node/3129738');
-    $this->assertIdenticalObject((object) ['foo' => 'bar'], (object) ['foo' => 'bar']);
-  }
-
-  /**
-   * Tests the deprecation of AssertLegacyTrait::assertEqual.
-   *
-   * @group legacy
-   */
-  public function testAssertEqual() {
-    $this->expectDeprecation('AssertLegacyTrait::assertEqual() is deprecated in drupal:8.0.0 and is removed from drupal:10.0.0. Use $this->assertEquals() instead. See https://www.drupal.org/node/3129738');
-    $this->assertEqual('0', 0);
-  }
-
-  /**
-   * Tests the deprecation of AssertLegacyTrait::assertNotEqual.
-   *
-   * @group legacy
-   */
-  public function testAssertNotEqual() {
-    $this->expectDeprecation('AssertLegacyTrait::assertNotEqual() is deprecated in drupal:8.0.0 and is removed from drupal:10.0.0. Use $this->assertNotEquals() instead. See https://www.drupal.org/node/3129738');
-    $this->assertNotEqual('foo', 'bar');
-  }
-
-  /**
-   * Tests the deprecation of AssertLegacyTrait::assertIdentical.
-   *
-   * @group legacy
-   */
-  public function testAssertIdentical() {
-    $this->expectDeprecation('AssertLegacyTrait::assertIdentical() is deprecated in drupal:8.0.0 and is removed from drupal:10.0.0. Use $this->assertSame() instead. See https://www.drupal.org/node/3129738');
-    $this->assertIdentical('foo', 'foo');
-  }
-
-  /**
-   * Tests the deprecation of AssertLegacyTrait::assertNotIdentical.
-   *
-   * @group legacy
-   */
-  public function testAssertNotIdentical() {
-    $this->expectDeprecation('AssertLegacyTrait::assertNotIdentical() is deprecated in drupal:8.0.0 and is removed from drupal:10.0.0. Use $this->assertNotSame() instead. See https://www.drupal.org/node/3129738');
-    $this->assertNotIdentical('foo', 'bar');
-  }
-
-  /**
-   * Tests the deprecation of AssertLegacyTrait::verbose().
-   *
-   * @group legacy
-   */
-  public function testVerbose() {
-    $this->expectDeprecation('AssertLegacyTrait::verbose() is deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. Use dump() instead. See https://www.drupal.org/node/3197514');
-    $this->verbose('The show must go on');
-  }
-
-  /**
-   * Tests the deprecation of ::installSchema with the tables key_value(_expire).
-   *
-   * @group legacy
-   */
-  public function testKernelTestBaseInstallSchema() {
-    $this->expectDeprecation('Installing the tables key_value and key_value_expire with the method KernelTestBase::installSchema() is deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. The tables are now lazy loaded and therefore will be installed automatically when used. See https://www.drupal.org/node/3143286');
-    $this->enableModules(['system']);
-    $this->installSchema('system', ['key_value', 'key_value_expire']);
-    $this->assertFalse(Database::getConnection()->schema()->tableExists('key_value'));
-  }
-
-  /**
    * Tests the dump() function provided by the var-dumper Symfony component.
    */
   public function testVarDump() {
@@ -430,12 +345,22 @@ class KernelTestBaseTest extends KernelTestBase {
 
     // Dump some variables.
     $this->enableModules(['system', 'user']);
-    $role = Role::create(['id' => 'test_role']);
+    $role = Role::create(['id' => 'test_role', 'label' => 'Test role']);
     dump($role);
     dump($role->id());
 
     $this->assertStringContainsString('Drupal\user\Entity\Role', StreamCapturer::$cache);
     $this->assertStringContainsString('test_role', StreamCapturer::$cache);
+  }
+
+  /**
+   * @covers ::bootEnvironment
+   */
+  public function testDatabaseDriverModuleEnabled() {
+    $module = Database::getConnection()->getProvider();
+
+    // Test that the module that is providing the database driver is enabled.
+    $this->assertSame(1, \Drupal::service('extension.list.module')->get($module)->status);
   }
 
 }

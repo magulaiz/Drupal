@@ -28,7 +28,6 @@ use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
-use Symfony\Component\Mime\MimeTypeGuesserInterface;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\HttpException;
@@ -167,7 +166,7 @@ class FileUploadResource extends ResourceBase {
    * @param \Symfony\Contracts\EventDispatcher\EventDispatcherInterface $event_dispatcher
    *   The event dispatcher service.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, $serializer_formats, LoggerInterface $logger, FileSystemInterface $file_system, EntityTypeManagerInterface $entity_type_manager, EntityFieldManagerInterface $entity_field_manager, AccountInterface $current_user, $mime_type_guesser, Token $token, LockBackendInterface $lock, Config $system_file_config, EventDispatcherInterface $event_dispatcher = NULL) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, $serializer_formats, LoggerInterface $logger, FileSystemInterface $file_system, EntityTypeManagerInterface $entity_type_manager, EntityFieldManagerInterface $entity_field_manager, AccountInterface $current_user, $mime_type_guesser, Token $token, LockBackendInterface $lock, Config $system_file_config, EventDispatcherInterface $event_dispatcher) {
     parent::__construct($configuration, $plugin_id, $plugin_definition, $serializer_formats, $logger);
     $this->fileSystem = $file_system;
     $this->entityTypeManager = $entity_type_manager;
@@ -177,10 +176,6 @@ class FileUploadResource extends ResourceBase {
     $this->token = $token;
     $this->lock = $lock;
     $this->systemFileConfig = $system_file_config;
-    if (!$event_dispatcher) {
-      @trigger_error('The event dispatcher service should be passed to FileUploadResource::__construct() since 9.2.0. This will be required in Drupal 10.0.0. See https://www.drupal.org/node/3032541', E_USER_DEPRECATED);
-      $event_dispatcher = \Drupal::service('event_dispatcher');
-    }
     $this->eventDispatcher = $event_dispatcher;
   }
 
@@ -271,22 +266,29 @@ class FileUploadResource extends ResourceBase {
     $file = File::create([]);
     $file->setOwnerId($this->currentUser->id());
     $file->setFilename($prepared_filename);
-    if ($this->mimeTypeGuesser instanceof MimeTypeGuesserInterface) {
-      $file->setMimeType($this->mimeTypeGuesser->guessMimeType($prepared_filename));
-    }
-    else {
-      $file->setMimeType($this->mimeTypeGuesser->guess($prepared_filename));
-      @trigger_error('\Symfony\Component\HttpFoundation\File\MimeType\MimeTypeGuesserInterface is deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. Implement \Symfony\Component\Mime\MimeTypeGuesserInterface instead. See https://www.drupal.org/node/3133341', E_USER_DEPRECATED);
-    }
-    $file->setFileUri($file_uri);
+    $file->setMimeType($this->mimeTypeGuesser->guessMimeType($prepared_filename));
+    $file->setFileUri($temp_file_path);
     // Set the size. This is done in File::preSave() but we validate the file
     // before it is saved.
     $file->setSize(@filesize($temp_file_path));
 
-    // Validate the file entity against entity-level validation and field-level
-    // validators.
-    $this->validate($file, $validators);
+    // Validate the file against field-level validators first while the file is
+    // still a temporary file. Validation is split up in 2 steps to be the same
+    // as in \Drupal\file\Upload\FileUploadHandler::handleFileUpload().
+    // For backwards compatibility this part is copied from ::validate() to
+    // leave that method behavior unchanged.
+    // @todo Improve this with a file uploader service in
+    //   https://www.drupal.org/project/drupal/issues/2940383
+    $errors = file_validate($file, $validators);
 
+    if (!empty($errors)) {
+      $message = "Unprocessable Entity: file validation failed.\n";
+      $message .= implode("\n", array_map([PlainTextOutput::class, 'renderFromHtml'], $errors));
+
+      throw new UnprocessableEntityHttpException($message);
+    }
+
+    $file->setFileUri($file_uri);
     // Move the file to the correct location after validation. Use
     // FileSystemInterface::EXISTS_ERROR as the file location has already been
     // determined above in FileSystem::getDestinationFilename().
@@ -296,6 +298,9 @@ class FileUploadResource extends ResourceBase {
     catch (FileException $e) {
       throw new HttpException(500, 'Temporary file could not be moved to file location');
     }
+
+    // Second step of the validation on the file object itself now.
+    $this->resourceValidate($file);
 
     $file->save();
 
@@ -448,6 +453,11 @@ class FileUploadResource extends ResourceBase {
 
   /**
    * Validates the file.
+   *
+   * @todo this method is unused in this class because file validation needs to
+   *   be split up in 2 steps in ::post(). Add a deprecation notice as soon as a
+   *   central core file upload service can be used in this class.
+   *   See https://www.drupal.org/project/drupal/issues/2940383
    *
    * @param \Drupal\file\FileInterface $file
    *   The file entity to validate.

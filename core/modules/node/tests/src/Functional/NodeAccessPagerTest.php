@@ -6,6 +6,7 @@ use Drupal\comment\CommentInterface;
 use Drupal\comment\Tests\CommentTestTrait;
 use Drupal\comment\Entity\Comment;
 use Drupal\Tests\BrowserTestBase;
+use Drupal\user\Entity\User;
 
 /**
  * Tests access controlled node views have the right amount of comment pages.
@@ -15,6 +16,13 @@ use Drupal\Tests\BrowserTestBase;
 class NodeAccessPagerTest extends BrowserTestBase {
 
   use CommentTestTrait;
+
+  /**
+   * An user.
+   *
+   * @var \Drupal\user\Entity\User
+   */
+  protected User $webUser;
 
   /**
    * Modules to enable.
@@ -28,11 +36,14 @@ class NodeAccessPagerTest extends BrowserTestBase {
    */
   protected $defaultTheme = 'stark';
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
 
     node_access_rebuild();
-    $this->drupalCreateContentType(['type' => 'page', 'name' => t('Basic page')]);
+    $this->drupalCreateContentType(['type' => 'page', 'name' => 'Basic page']);
     $this->addDefaultCommentField('node', 'page');
     $this->webUser = $this->drupalCreateUser([
       'access content',
@@ -70,8 +81,8 @@ class NodeAccessPagerTest extends BrowserTestBase {
     $this->drupalGet('node/' . $node->id());
     $this->assertSession()->pageTextContains($node->label());
     $this->assertSession()->pageTextContains('Comments');
-    $this->assertRaw('page=1');
-    $this->assertNoRaw('page=2');
+    $this->assertSession()->responseContains('page=1');
+    $this->assertSession()->responseNotContains('page=2');
   }
 
   /**
@@ -102,8 +113,8 @@ class NodeAccessPagerTest extends BrowserTestBase {
     // page there should be two pages for 30 nodes, no more.
     $this->drupalLogin($this->webUser);
     $this->drupalGet('forum/' . $tid);
-    $this->assertRaw('page=1');
-    $this->assertNoRaw('page=2');
+    $this->assertSession()->responseContains('page=1');
+    $this->assertSession()->responseNotContains('page=2');
   }
 
 }

@@ -29,10 +29,10 @@ class PageTest extends BrowserTestBase {
   public function testBatchProgressPageTheme() {
     // Make sure that the page which starts the batch (an administrative page)
     // is using a different theme than would normally be used by the batch API.
-    $this->container->get('theme_installer')->install(['seven', 'bartik']);
+    $this->container->get('theme_installer')->install(['claro', 'olivero']);
     $this->config('system.theme')
-      ->set('default', 'bartik')
-      ->set('admin', 'seven')
+      ->set('default', 'olivero')
+      ->set('admin', 'claro')
       ->save();
 
     // Log in as an administrator who can see the administrative theme.
@@ -45,7 +45,7 @@ class PageTest extends BrowserTestBase {
     $this->drupalGet('admin/batch-test/test-theme');
     // The stack should contain the name of the theme used on the progress
     // page.
-    $this->assertEquals(['seven'], batch_test_stack(), 'A progressive batch correctly uses the theme of the page that started the batch.');
+    $this->assertEquals(['claro'], batch_test_stack(), 'A progressive batch correctly uses the theme of the page that started the batch.');
   }
 
   /**
@@ -78,13 +78,13 @@ class PageTest extends BrowserTestBase {
     $this->drupalGet('batch-test/test-title');
     // Check that the initial progress message appears correctly and is not
     // double escaped.
-    $this->assertRaw('<div class="progress__description">Initializing.<br />&nbsp;</div>');
-    $this->assertNoRaw('&amp;nbsp;');
+    $this->assertSession()->responseContains('<div class="progress__description">Initializing.<br />&nbsp;</div>');
+    $this->assertSession()->responseNotContains('&amp;nbsp;');
     // Now also go to the next step.
     $this->maximumMetaRefreshCount = 1;
     $this->drupalGet('batch-test/test-title');
     // Check that the progress message for second step appears correctly.
-    $this->assertRaw('<div class="progress__description">Completed 1 of 1.</div>');
+    $this->assertSession()->responseContains('<div class="progress__description">Completed 1 of 1.</div>');
   }
 
 }

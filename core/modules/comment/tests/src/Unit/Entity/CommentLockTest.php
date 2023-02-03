@@ -33,7 +33,7 @@ class CommentLockTest extends UnitTestCase {
     $lock->expects($this->once())
       ->method('acquire')
       ->with($lock_name, 30)
-      ->will($this->returnValue(TRUE));
+      ->willReturn(TRUE);
     $lock->expects($this->once())
       ->method('release')
       ->with($lock_name);
@@ -51,31 +51,31 @@ class CommentLockTest extends UnitTestCase {
     $methods[] = 'invalidateTagsOnSave';
     $comment = $this->getMockBuilder('Drupal\comment\Entity\Comment')
       ->disableOriginalConstructor()
-      ->setMethods($methods)
+      ->onlyMethods($methods)
       ->getMock();
     $comment->expects($this->once())
       ->method('isNew')
-      ->will($this->returnValue(TRUE));
+      ->willReturn(TRUE);
     $comment->expects($this->once())
       ->method('hasParentComment')
-      ->will($this->returnValue(TRUE));
+      ->willReturn(TRUE);
     $comment->expects($this->once())
       ->method('getParentComment')
-      ->will($this->returnValue($comment));
+      ->willReturn($comment);
     $comment->expects($this->once())
       ->method('getCommentedEntityId')
-      ->will($this->returnValue($cid));
+      ->willReturn($cid);
     $comment->expects($this->any())
       ->method('getThread')
-      ->will($this->returnValue(''));
+      ->willReturn('');
 
     $anon_user = $this->createMock('Drupal\Core\Session\AccountInterface');
     $anon_user->expects($this->any())
       ->method('isAnonymous')
-      ->will($this->returnValue(TRUE));
+      ->willReturn(TRUE);
     $comment->expects($this->any())
       ->method('getOwner')
-      ->will($this->returnValue($anon_user));
+      ->willReturn($anon_user);
 
     $parent_entity = $this->createMock('\Drupal\Core\Entity\ContentEntityInterface');
     $parent_entity->expects($this->atLeastOnce())
@@ -88,7 +88,7 @@ class CommentLockTest extends UnitTestCase {
     $entity_type = $this->createMock('\Drupal\Core\Entity\EntityTypeInterface');
     $comment->expects($this->any())
       ->method('getEntityType')
-      ->will($this->returnValue($entity_type));
+      ->willReturn($entity_type);
     $storage = $this->createMock('Drupal\comment\CommentStorageInterface');
 
     // preSave() should acquire the lock. (This is what's really being tested.)

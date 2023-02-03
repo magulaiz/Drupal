@@ -54,7 +54,7 @@ abstract class ExposedFormPluginBase extends PluginBase implements CacheableDepe
     ];
 
     $form['reset_button_label'] = [
-     '#type' => 'textfield',
+      '#type' => 'textfield',
       '#title' => $this->t('Reset button label'),
       '#description' => $this->t('Text to display in the reset button of the exposed form.'),
       '#default_value' => $this->options['reset_button_label'],
@@ -152,13 +152,13 @@ abstract class ExposedFormPluginBase extends PluginBase implements CacheableDepe
    */
   public function query() {
     $view = $this->view;
-    $exposed_data = isset($view->exposed_data) ? $view->exposed_data : [];
-    $sort_by = isset($exposed_data['sort_by']) ? $exposed_data['sort_by'] : NULL;
+    $exposed_data = $view->exposed_data ?? [];
+    $sort_by = $exposed_data['sort_by'] ?? NULL;
     if (!empty($sort_by)) {
       // Make sure the original order of sorts is preserved
       // (e.g. a sticky sort is often first)
       $view->query->orderby = [];
-      foreach ($view->sort as $key => $sort) {
+      foreach ($view->sort as $sort) {
         if (!$sort->isExposed()) {
           $sort->query();
         }
@@ -317,9 +317,12 @@ abstract class ExposedFormPluginBase extends PluginBase implements CacheableDepe
     // remember settings.
     $display_id = ($this->view->display_handler->isDefaulted('filters')) ? 'default' : $this->view->current_display;
 
-    if (isset($_SESSION['views'][$this->view->storage->id()][$display_id])) {
-      unset($_SESSION['views'][$this->view->storage->id()][$display_id]);
+    $session = $this->view->getRequest()->getSession();
+    $views_session = $session->get('views', []);
+    if (isset($views_session[$this->view->storage->id()][$display_id])) {
+      unset($views_session[$this->view->storage->id()][$display_id]);
     }
+    $session->set('views', $views_session);
 
     // Set the form to allow redirect.
     if (empty($this->view->live_preview) && !\Drupal::request()->isXmlHttpRequest()) {

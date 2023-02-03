@@ -1,36 +1,23 @@
-const chalk = require('chalk');
 const log = require('./log');
 const fs = require('fs');
 const postcss = require('postcss');
-const postcssCalc = require("postcss-calc");
 const postcssImport = require('postcss-import');
 const postcssHeader = require('postcss-header');
 const postcssUrl = require('postcss-url');
 const postcssPresetEnv = require('postcss-preset-env');
 // cspell:ignore pxtorem
 const postcssPixelsToRem = require('postcss-pxtorem');
+const stylelint = require('stylelint');
+const removeUnwantedComments = require('./remove-unwanted-comments');
 
 module.exports = (filePath, callback) => {
   // Transform the file.
   fs.readFile(filePath, (err, css) => {
     postcss([
       postcssImport({
-       plugins: [
-         // On import, remove the comments from variables.pcss.css so they don't
-         // appear as useless comments at the top files that import these
-         // variables.
-         postcss.plugin('remove-unwanted-comments-from-variables', (options) => {
-           return css => {
-             if (css.source.input.file.indexOf('variables.pcss.css') !== -1) {
-               css.walk(node => {
-                 if (node.type === 'comment') {
-                   node.remove();
-                 }
-               });
-             }
-           };
-         }),
-       ],
+        plugins: [
+          removeUnwantedComments,
+        ],
       }),
       postcssPresetEnv({
         stage: 1,
@@ -48,7 +35,6 @@ module.exports = (filePath, callback) => {
           'prefers-color-scheme-query': false,
         }
       }),
-      postcssCalc,
       postcssPixelsToRem({
           propList: [
             '*',
@@ -78,10 +64,16 @@ module.exports = (filePath, callback) => {
     ])
     .process(css, { from: filePath })
     .then(result => {
-      callback(result.css);
+        return stylelint.lint({
+          code: result.css,
+          fix: true
+        });
+    })
+    .then(result => {
+      callback(result.output);
     })
     .catch(error => {
-      log(chalk.red(error));
+      log(error);
       process.exitCode = 1;
     });
   });

@@ -65,6 +65,7 @@ class MigrateSqlIdMapEnsureTablesTest extends MigrateTestCase {
       'not null' => TRUE,
       'default' => 0,
       'description' => 'UNIX timestamp of the last time this row was imported',
+      'size' => 'big',
     ];
     $fields['hash'] = [
       'type' => 'varchar',
@@ -109,6 +110,9 @@ class MigrateSqlIdMapEnsureTablesTest extends MigrateTestCase {
       'description' => 'Messages generated during a migration process',
       'fields' => $fields,
       'primary key' => ['msgid'],
+      'indexes' => [
+        'source_ids_hash' => ['source_ids_hash'],
+      ],
     ];
 
     $schema = $this->getMockBuilder('Drupal\Core\Database\Schema')
@@ -197,18 +201,21 @@ class MigrateSqlIdMapEnsureTablesTest extends MigrateTestCase {
     $database->expects($this->any())
       ->method('schema')
       ->willReturn($schema);
+    $database->expects($this->any())
+      ->method('tablePrefix')
+      ->willReturn('');
     $migration = $this->getMigration();
     $plugin = $this->createMock('Drupal\migrate\Plugin\MigrateSourceInterface');
     $plugin->expects($this->any())
       ->method('getIds')
       ->willReturn([
-      'source_id_property' => [
-        'type' => 'integer',
-      ],
-      'source_id_property_2' => [
-        'type' => 'integer',
-      ],
-    ]);
+        'source_id_property' => [
+          'type' => 'integer',
+        ],
+        'source_id_property_2' => [
+          'type' => 'integer',
+        ],
+      ]);
     $migration->expects($this->any())
       ->method('getSourcePlugin')
       ->willReturn($plugin);
@@ -216,16 +223,17 @@ class MigrateSqlIdMapEnsureTablesTest extends MigrateTestCase {
     $plugin->expects($this->any())
       ->method('getIds')
       ->willReturn([
-      'destination_id_property' => [
-        'type' => 'string',
-      ],
-    ]);
+        'destination_id_property' => [
+          'type' => 'string',
+        ],
+      ]);
     $migration->expects($this->any())
       ->method('getDestinationPlugin')
       ->willReturn($plugin);
     /** @var \Symfony\Contracts\EventDispatcher\EventDispatcherInterface $event_dispatcher */
     $event_dispatcher = $this->createMock('Symfony\Contracts\EventDispatcher\EventDispatcherInterface');
-    $map = new TestSqlIdMap($database, [], 'sql', [], $migration, $event_dispatcher);
+    $migration_manager = $this->createMock('Drupal\migrate\Plugin\MigrationPluginManagerInterface');
+    $map = new TestSqlIdMap($database, [], 'sql', [], $migration, $event_dispatcher, $migration_manager);
     $map->getDatabase();
   }
 

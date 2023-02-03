@@ -53,6 +53,9 @@ class ConfigTranslationListUiTest extends BrowserTestBase {
    */
   protected $adminUser;
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
 
@@ -200,9 +203,9 @@ class ConfigTranslationListUiTest extends BrowserTestBase {
     $block_content_type->save();
 
     // Get the custom block type listing.
-    $this->drupalGet('admin/structure/block/block-content/types');
+    $this->drupalGet('admin/structure/block-content');
 
-    $translate_link = 'admin/structure/block/block-content/manage/' . $block_content_type->id() . '/translate';
+    $translate_link = 'admin/structure/block-content/manage/' . $block_content_type->id() . '/translate';
     // Test if the link to translate the custom block type is on the page.
     $this->assertSession()->linkByHrefExists($translate_link);
 
@@ -374,7 +377,7 @@ class ConfigTranslationListUiTest extends BrowserTestBase {
 
     $this->drupalGet('admin/config/media/responsive-image-style/add');
     $this->submitForm($edit, 'Save');
-    $this->assertRaw(t('Responsive image style %label saved.', ['%label' => $edit['label']]));
+    $this->assertSession()->pageTextContains("Responsive image style {$edit['label']} saved.");
 
     // Get the responsive image style listing.
     $this->drupalGet('admin/config/media/responsive-image-style');
@@ -411,7 +414,10 @@ class ConfigTranslationListUiTest extends BrowserTestBase {
       'field_storage' => FieldStorageConfig::loadByName('block_content', 'body'),
       'bundle' => $block_content_type->id(),
       'label' => 'Body',
-      'settings' => ['display_summary' => FALSE],
+      'settings' => [
+        'display_summary' => FALSE,
+        'allowed_formats' => [],
+      ],
     ]);
     $field->save();
 
@@ -422,7 +428,7 @@ class ConfigTranslationListUiTest extends BrowserTestBase {
         'field' => 'node.' . $content_type->id() . '.body',
       ],
       [
-        'list' => 'admin/structure/block/block-content/manage/basic/fields',
+        'list' => 'admin/structure/block-content/manage/basic/fields',
         'field' => 'block_content.basic.body',
       ],
     ];

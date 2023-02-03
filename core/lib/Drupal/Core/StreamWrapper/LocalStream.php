@@ -47,8 +47,6 @@ abstract class LocalStream implements StreamWrapperInterface {
   /**
    * Gets the path that the wrapper is responsible for.
    *
-   * @todo Review this method name in D8 per https://www.drupal.org/node/701358.
-   *
    * @return string
    *   String specifying the path.
    */
@@ -89,7 +87,7 @@ abstract class LocalStream implements StreamWrapperInterface {
       $uri = $this->uri;
     }
 
-    list(, $target) = explode('://', $uri, 2);
+    [, $target] = explode('://', $uri, 2);
 
     // Remove erroneous leading or trailing, forward-slashes and backslashes.
     return trim($target, '\/');
@@ -127,7 +125,7 @@ abstract class LocalStream implements StreamWrapperInterface {
     // filesystem stream wrapper URI, in which case this local stream acts like
     // a proxy. realpath() is not supported by vfsStream, because a virtual
     // file system does not have a real filepath.
-    if (strpos($path, 'vfs://') === 0) {
+    if (str_starts_with($path, 'vfs://')) {
       return $path;
     }
 
@@ -137,7 +135,7 @@ abstract class LocalStream implements StreamWrapperInterface {
       $realpath = realpath(dirname($path)) . '/' . \Drupal::service('file_system')->basename($path);
     }
     $directory = realpath($this->getDirectoryPath());
-    if (!$realpath || !$directory || strpos($realpath, $directory) !== 0) {
+    if (!$realpath || !$directory || !str_starts_with($realpath, $directory)) {
       return FALSE;
     }
     return $realpath;
@@ -317,7 +315,7 @@ abstract class LocalStream implements StreamWrapperInterface {
    * {@inheritdoc}
    */
   public function dirname($uri = NULL) {
-    list($scheme) = explode('://', $uri, 2);
+    [$scheme] = explode('://', $uri, 2);
     $target = $this->getTarget($uri);
     $dirname = dirname($target);
 

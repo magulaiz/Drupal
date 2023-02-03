@@ -220,14 +220,14 @@ abstract class LinkBase extends FieldPluginBase {
   protected function addLangcode(ResultRow $row) {
     $entity = $this->getEntity($row);
     if ($this->languageManager->isMultilingual()) {
-      $this->options['alter']['language'] = $this->getEntityTranslation($entity, $row)->language();
+      $this->options['alter']['language'] = $this->getEntityTranslationByRelationship($entity, $row)->language();
     }
   }
 
   /**
    * Returns the default label for this link.
    *
-   * @return string
+   * @return \Drupal\Core\StringTranslation\TranslatableMarkup
    *   The default link label.
    */
   protected function getDefaultLabel() {

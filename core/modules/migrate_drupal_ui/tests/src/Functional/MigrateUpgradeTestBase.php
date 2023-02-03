@@ -46,7 +46,7 @@ abstract class MigrateUpgradeTestBase extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
     $this->createMigrationConnection();
     $this->sourceDatabase = Database::getConnection('default', 'migrate_drupal_ui');
@@ -99,18 +99,18 @@ abstract class MigrateUpgradeTestBase extends BrowserTestBase {
     $connection_info = Database::getConnectionInfo('default')['default'];
     if ($connection_info['driver'] === 'sqlite') {
       // Create database file in the test site's public file directory so that
-      // \Drupal\simpletest\TestBase::restoreEnvironment() will delete this once
-      // the test is complete.
+      // \Drupal\Tests\BrowserTestBase::cleanupEnvironment() will delete this
+      // once the test is complete.
       $file = $this->publicFilesDirectory . '/' . $this->testId . '-migrate.db.sqlite';
       touch($file);
       $connection_info['database'] = $file;
       $connection_info['prefix'] = '';
     }
     else {
-      $prefix = is_array($connection_info['prefix']) ? $connection_info['prefix']['default'] : $connection_info['prefix'];
-      // Simpletest uses fixed length prefixes. Create a new prefix for the
+      $prefix = $connection_info['prefix'];
+      // Test databases use fixed length prefixes. Create a new prefix for the
       // source database. Adding to the end of the prefix ensures that
-      // \Drupal\simpletest\TestBase::restoreEnvironment() will remove the
+      // \Drupal\Tests\BrowserTestBase::cleanupEnvironment() will remove the
       // additional tables.
       $connection_info['prefix'] = $prefix . '0';
     }
@@ -121,7 +121,7 @@ abstract class MigrateUpgradeTestBase extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function tearDown() {
+  protected function tearDown(): void {
     Database::removeConnection('migrate_drupal_ui');
     parent::tearDown();
   }
@@ -295,7 +295,6 @@ abstract class MigrateUpgradeTestBase extends BrowserTestBase {
     $connection_options = $this->sourceDatabase->getConnectionOptions();
     $version = $this->getLegacyDrupalVersion($this->sourceDatabase);
     $driver = $connection_options['driver'];
-    $connection_options['prefix'] = $connection_options['prefix']['default'];
 
     // Use the driver connection form to get the correct options out of the
     // database settings. This supports all of the databases we test against.
@@ -356,6 +355,16 @@ abstract class MigrateUpgradeTestBase extends BrowserTestBase {
         $this->assertFileExists($filepath);
       }
     }
+  }
+
+  /**
+   * Confirm emails were sent.
+   */
+  protected function assertEmailsSent() {
+    // There should be one user activation email.
+    $captured_emails = \Drupal::state()->get('system.test_mail_collector', []);
+    $this->assertCount(1, $captured_emails);
+    $this->assertEquals('user_status_activated', $captured_emails[0]['id']);
   }
 
 }

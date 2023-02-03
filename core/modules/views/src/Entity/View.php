@@ -334,6 +334,8 @@ class View extends ConfigEntityBase implements ViewEntityInterface {
       // Always include at least the 'languages:' context as there will most
       // probably be translatable strings in the view output.
       $display['cache_metadata']['contexts'] = Cache::mergeContexts($display['cache_metadata']['contexts'], ['languages:' . LanguageInterface::TYPE_INTERFACE]);
+      sort($display['cache_metadata']['tags']);
+      sort($display['cache_metadata']['contexts']);
     }
     // Restore the previous active display.
     $executable->setDisplay($current_display);
@@ -422,6 +424,8 @@ class View extends ConfigEntityBase implements ViewEntityInterface {
     foreach ($entities as $entity) {
       $tempstore->delete($entity->id());
     }
+
+    views_invalidate_cache();
   }
 
   /**

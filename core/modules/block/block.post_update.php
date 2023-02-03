@@ -13,5 +13,6 @@ function block_removed_post_updates() {
     'block_post_update_disable_blocks_with_missing_contexts' => '9.0.0',
     'block_post_update_disabled_region_update' => '9.0.0',
     'block_post_update_fix_negate_in_conditions' => '9.0.0',
+    'block_post_update_replace_node_type_condition' => '10.0.0',
   ];
 }

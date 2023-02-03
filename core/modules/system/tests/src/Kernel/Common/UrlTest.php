@@ -59,7 +59,7 @@ class UrlTest extends KernelTestBase {
     ];
 
     foreach ($cases as $case) {
-      list($title, $uri, $options, $expected_cacheability, $expected_attachments) = $case;
+      [$title, $uri, $options, $expected_cacheability, $expected_attachments] = $case;
       $expected_cacheability['contexts'] = Cache::mergeContexts($expected_cacheability['contexts'], ['languages:language_interface', 'theme', 'user.permissions']);
       $link = [
         '#type' => 'link',
@@ -68,7 +68,7 @@ class UrlTest extends KernelTestBase {
         '#url' => Url::fromUri($uri),
       ];
       \Drupal::service('renderer')->renderRoot($link);
-      $this->assertEquals($expected_cacheability, $link['#cache']);
+      $this->assertEqualsCanonicalizing($expected_cacheability, $link['#cache']);
       $this->assertEquals($expected_attachments, $link['#attached']);
     }
   }
@@ -137,7 +137,7 @@ class UrlTest extends KernelTestBase {
     $l = Link::fromTextAndUrl('foo', Url::fromUri('https://www.drupal.org'))->toString();
 
     // Test a renderable array passed to the link generator.
-    $renderer->executeInRenderContext(new RenderContext(), function () use ($renderer, $l) {
+    $renderer->executeInRenderContext(new RenderContext(), function () use ($l) {
       $renderable_text = ['#markup' => 'foo'];
       $l_renderable_text = \Drupal::service('link_generator')->generate($renderable_text, Url::fromUri('https://www.drupal.org'));
       $this->assertEquals($l, $l_renderable_text);
@@ -166,6 +166,7 @@ class UrlTest extends KernelTestBase {
    * Checks for class existence in link.
    *
    * @param $attribute
+   *   Attribute to be checked.
    * @param $link
    *   URL to search.
    * @param $class

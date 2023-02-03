@@ -5,8 +5,10 @@ namespace Drupal\KernelTests\Core\Datetime;
 use Drupal\Component\Utility\Variable;
 use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\Core\Form\FormInterface;
+use Drupal\Core\Form\FormState;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Security\TrustedCallbackInterface;
+use Drupal\Core\Security\UntrustedCallbackException;
 use Drupal\KernelTests\KernelTestBase;
 
 /**
@@ -15,20 +17,6 @@ use Drupal\KernelTests\KernelTestBase;
  * @group Form
  */
 class DatetimeElementFormTest extends KernelTestBase implements FormInterface, TrustedCallbackInterface {
-
-  /**
-   * Tracks whether a date-time date callback was executed.
-   *
-   * @var bool
-   */
-  protected $dateCallbackExecuted = FALSE;
-
-  /**
-   * Tracks whether a date-time time callback was executed.
-   *
-   * @var bool
-   */
-  protected $timeCallbackExecuted = FALSE;
 
   /**
    * Modules to enable.
@@ -54,29 +42,41 @@ class DatetimeElementFormTest extends KernelTestBase implements FormInterface, T
   /**
    * {@inheritdoc}
    */
-  public function datetimeDateCallbackTrusted() {
-    $this->dateCallbackExecuted = TRUE;
+  public function datetimeDateCallbackTrusted(array &$element, FormStateInterface $form_state, DrupalDateTime $date = NULL) {
+    $element['datetimeDateCallbackExecuted'] = [
+      '#value' => TRUE,
+    ];
+    $form_state->set('datetimeDateCallbackExecuted', TRUE);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function datetimeDateCallback() {
-    $this->dateCallbackExecuted = TRUE;
+  public function datetimeDateCallback(array &$element, FormStateInterface $form_state, DrupalDateTime $date = NULL) {
+    $element['datetimeDateCallbackExecuted'] = [
+      '#value' => TRUE,
+    ];
+    $form_state->set('datetimeDateCallbackExecuted', TRUE);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function datetimeTimeCallbackTrusted() {
-    $this->timeCallbackExecuted = TRUE;
+  public function datetimeTimeCallbackTrusted(array &$element, FormStateInterface $form_state, DrupalDateTime $date = NULL) {
+    $element['timeCallbackExecuted'] = [
+      '#value' => TRUE,
+    ];
+    $form_state->set('timeCallbackExecuted', TRUE);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function datetimeTimeCallback() {
-    $this->timeCallbackExecuted = TRUE;
+  public function datetimeTimeCallback(array &$element, FormStateInterface $form_state, DrupalDateTime $date = NULL) {
+    $element['timeCallbackExecuted'] = [
+      '#value' => TRUE,
+    ];
+    $form_state->set('timeCallbackExecuted', TRUE);
   }
 
   /**
@@ -133,11 +133,14 @@ class DatetimeElementFormTest extends KernelTestBase implements FormInterface, T
    * Tests that default handlers are added even if custom are specified.
    */
   public function testDatetimeElement() {
-    $form = \Drupal::formBuilder()->getForm($this);
+    $form_state = new FormState();
+    $form = \Drupal::formBuilder()->buildForm($this, $form_state);
     $this->render($form);
 
-    $this->assertTrue($this->dateCallbackExecuted);
-    $this->assertTrue($this->timeCallbackExecuted);
+    $this->assertTrue($form['datetime_element']['datetimeDateCallbackExecuted']['#value']);
+    $this->assertTrue($form['datetime_element']['timeCallbackExecuted']['#value']);
+    $this->assertTrue($form_state->get('datetimeDateCallbackExecuted'));
+    $this->assertTrue($form_state->get('timeCallbackExecuted'));
   }
 
   /**
@@ -147,22 +150,23 @@ class DatetimeElementFormTest extends KernelTestBase implements FormInterface, T
    *   Name of the callback to use for the date-time date callback.
    * @param string $time_callback
    *   Name of the callback to use for the date-time time callback.
-   * @param string|null $expected_deprecation
-   *   The expected deprecation message if a deprecation should be raised, or
+   * @param string|null $expected_exception
+   *   The expected exception message if an exception should be thrown, or
    *   NULL if otherwise.
    *
    * @dataProvider providerUntrusted
    * @group legacy
    */
-  public function testDatetimeElementUntrustedCallbacks(string $date_callback = 'datetimeDateCallbackTrusted', string $time_callback = 'datetimeTimeCallbackTrusted', string $expected_deprecation = NULL) : void {
-    $form = \Drupal::formBuilder()->getForm($this, $date_callback, $time_callback);
-    if ($expected_deprecation) {
-      $this->expectDeprecation($expected_deprecation);
+  public function testDatetimeElementUntrustedCallbacks(string $date_callback = 'datetimeDateCallbackTrusted', string $time_callback = 'datetimeTimeCallbackTrusted', string $expected_exception = NULL) : void {
+    if ($expected_exception) {
+      $this->expectException(UntrustedCallbackException::class);
+      $this->expectExceptionMessage($expected_exception);
     }
+    $form = \Drupal::formBuilder()->getForm($this, $date_callback, $time_callback);
     $this->render($form);
 
-    $this->assertTrue($this->dateCallbackExecuted);
-    $this->assertTrue($this->timeCallbackExecuted);
+    $this->assertTrue($form['datetime_element']['datetimeDateCallbackExecuted']['#value']);
+    $this->assertTrue($form['datetime_element']['timeCallbackExecuted']['#value']);
   }
 
   /**
@@ -176,12 +180,12 @@ class DatetimeElementFormTest extends KernelTestBase implements FormInterface, T
       'untrusted date' => [
         'datetimeDateCallback',
         'datetimeTimeCallbackTrusted',
-        sprintf('DateTime element #date_date_callbacks callbacks must be methods of a class that implements \Drupal\Core\Security\TrustedCallbackInterface or be an anonymous function. The callback was %s. Support for this callback implementation is deprecated in drupal:9.3.0 and will be removed in drupal:10.0.0. See https://www.drupal.org/node/3217966', Variable::callableToString([$this, 'datetimeDateCallback'])),
+        sprintf('DateTime element #date_date_callbacks callbacks must be methods of a class that implements \Drupal\Core\Security\TrustedCallbackInterface or be an anonymous function. The callback was %s. See https://www.drupal.org/node/3217966', Variable::callableToString([$this, 'datetimeDateCallback'])),
       ],
       'untrusted time' => [
         'datetimeDateCallbackTrusted',
         'datetimeTimeCallback',
-        sprintf('DateTime element #date_time_callbacks callbacks must be methods of a class that implements \Drupal\Core\Security\TrustedCallbackInterface or be an anonymous function. The callback was %s. Support for this callback implementation is deprecated in drupal:9.3.0 and will be removed in drupal:10.0.0. See https://www.drupal.org/node/3217966', Variable::callableToString([$this, 'datetimeTimeCallback'])),
+        sprintf('DateTime element #date_time_callbacks callbacks must be methods of a class that implements \Drupal\Core\Security\TrustedCallbackInterface or be an anonymous function. The callback was %s. See https://www.drupal.org/node/3217966', Variable::callableToString([$this, 'datetimeTimeCallback'])),
       ],
     ];
   }

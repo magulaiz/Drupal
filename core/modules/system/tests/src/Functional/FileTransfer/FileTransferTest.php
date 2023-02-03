@@ -13,19 +13,23 @@ use Drupal\Tests\BrowserTestBase;
  * @group FileTransfer
  */
 class FileTransferTest extends BrowserTestBase {
-  protected $hostname = 'localhost';
-  protected $username = 'drupal';
-  protected $password = 'password';
-  protected $port = '42';
 
   /**
    * {@inheritdoc}
    */
   protected $defaultTheme = 'stark';
 
+  /**
+   * @var \Drupal\Tests\system\Functional\FileTransfer\TestFileTransfer
+   */
+  protected TestFileTransfer $testConnection;
+
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
-    $this->testConnection = TestFileTransfer::factory($this->root, ['hostname' => $this->hostname, 'username' => $this->username, 'password' => $this->password, 'port' => $this->port]);
+    $this->testConnection = TestFileTransfer::factory($this->root, []);
   }
 
   public function _getFakeModuleFiles() {

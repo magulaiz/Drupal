@@ -31,13 +31,16 @@ class AdminTest extends BrowserTestBase {
    *
    * @var array
    */
-  protected static $modules = ['locale'];
+  protected static $modules = ['locale', 'menu_test'];
 
   /**
    * {@inheritdoc}
    */
   protected $defaultTheme = 'stark';
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     // testAdminPages() requires Locale module.
     parent::setUp();
@@ -96,7 +99,7 @@ class AdminTest extends BrowserTestBase {
       // On admin/index only, the administrator should also see a "Configure
       // permissions" link for the Locale module.
       if ($page == 'admin/index') {
-        $this->assertSession()->linkByHrefExists("admin/people/permissions#module-locale");
+        $this->assertSession()->linkByHrefExists("admin/people/permissions/module/locale");
       }
 
       // For a less privileged user, verify that there are no links to Locale's
@@ -177,6 +180,19 @@ class AdminTest extends BrowserTestBase {
     $this->assertNull($session->getCookie('Drupal.visitor.admin_compact_mode'), 'Compact mode remains off after a repeat call.');
     $this->drupalGet('');
     $this->assertNull($session->getCookie('Drupal.visitor.admin_compact_mode'), 'Compact mode persists off new requests.');
+  }
+
+  /**
+   * Tests admin config page blocks without descriptions.
+   */
+  public function testConfigBlocksDescription(): void {
+    // Go to Config administration page.
+    $this->drupalGet('admin/config');
+    $this->assertSession()->statusCodeEquals(200);
+    // Validates the custom block without description.
+    $this->assertSession()->pageTextContains('Test custom admin block without description');
+    // Validates an empty description block.
+    $this->assertSession()->elementNotExists('xpath', '//dd[@class="list-group__description"][not(text())]');
   }
 
 }

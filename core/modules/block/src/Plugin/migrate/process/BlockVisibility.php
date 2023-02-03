@@ -34,8 +34,9 @@ class BlockVisibility extends ProcessPluginBase implements ContainerFactoryPlugi
   protected $migrateLookup;
 
   /**
-   * Whether or not to skip blocks that use PHP for visibility. Only applies
-   * if the PHP module is not enabled.
+   * Whether or not to skip blocks that use PHP for visibility.
+   *
+   * Only applies if the PHP module is not enabled.
    *
    * @var bool
    */
@@ -82,7 +83,7 @@ class BlockVisibility extends ProcessPluginBase implements ContainerFactoryPlugi
    * {@inheritdoc}
    */
   public function transform($value, MigrateExecutableInterface $migrate_executable, Row $row, $destination_property) {
-    list($old_visibility, $pages, $roles) = $value;
+    [$old_visibility, $pages, $roles] = $value;
 
     $visibility = [];
 

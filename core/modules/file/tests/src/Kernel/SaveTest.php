@@ -18,8 +18,8 @@ class SaveTest extends FileManagedUnitTestBase {
       'filename' => 'druplicon.txt',
       'uri' => 'public://druplicon.txt',
       'filemime' => 'text/plain',
-      'status' => FILE_STATUS_PERMANENT,
     ]);
+    $file->setPermanent();
     file_put_contents($file->getFileUri(), 'hello world');
 
     // Save it, inserting a new record.
@@ -50,7 +50,7 @@ class SaveTest extends FileManagedUnitTestBase {
     $loaded_file = File::load($file->id());
     // Verify that the timestamp didn't go backwards.
     $this->assertGreaterThanOrEqual($file->getChangedTime(), $loaded_file->getChangedTime());
-    $this->assertNotNull($loaded_file, 'Record still exists in the database.', 'File');
+    $this->assertNotNull($loaded_file, 'Record still exists in the database.');
     $this->assertEquals($file->isPermanent(), $loaded_file->isPermanent(), 'Status was saved correctly.');
     $this->assertEquals('en', $loaded_file->langcode->value, 'Langcode was saved correctly.');
 
@@ -61,8 +61,8 @@ class SaveTest extends FileManagedUnitTestBase {
       'filename' => 'DRUPLICON.txt',
       'uri' => 'public://DRUPLICON.txt',
       'filemime' => 'text/plain',
-      'status' => FILE_STATUS_PERMANENT,
     ];
+    $file->setPermanent();
     $uppercase_file = File::create($uppercase_values);
     file_put_contents($uppercase_file->getFileUri(), 'hello world');
     $violations = $uppercase_file->validate();
@@ -90,8 +90,8 @@ class SaveTest extends FileManagedUnitTestBase {
       'filename' => 'no-druplicon.txt',
       'uri' => 'public://no-druplicon.txt',
       'filemime' => 'text/plain',
-      'status' => FILE_STATUS_PERMANENT,
     ]);
+    $file->setPermanent();
 
     file_put_contents($file->getFileUri(), '');
 

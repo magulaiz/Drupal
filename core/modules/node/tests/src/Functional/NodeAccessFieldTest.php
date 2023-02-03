@@ -45,6 +45,9 @@ class NodeAccessFieldTest extends NodeTestBase {
    */
   protected $fieldName;
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
 
@@ -118,7 +121,7 @@ class NodeAccessFieldTest extends NodeTestBase {
 
     // Confirm that the new default value appears when creating a new node.
     $this->drupalGet('node/add/page');
-    $this->assertRaw($default);
+    $this->assertSession()->responseContains($default);
   }
 
 }

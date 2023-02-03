@@ -51,10 +51,8 @@ class FinishResponseSubscriber implements EventSubscriberInterface {
 
   /**
    * The cache contexts manager service.
-   *
-   * @var \Drupal\Core\Cache\Context\CacheContextsManager
    */
-  protected $cacheContexts;
+  protected CacheContextsManager $cacheContextsManager;
 
   /**
    * Whether to send cacheability headers for debugging purposes.
@@ -117,24 +115,15 @@ class FinishResponseSubscriber implements EventSubscriberInterface {
     $request = $event->getRequest();
     $response = $event->getResponse();
 
-    // Set the X-UA-Compatible HTTP header to force IE to use the most recent
-    // rendering engine.
-    $response->headers->set('X-UA-Compatible', 'IE=edge', FALSE);
-
     // Set the Content-language header.
     $response->headers->set('Content-language', $this->languageManager->getCurrentLanguage()->getId());
 
     // Prevent browsers from sniffing a response and picking a MIME type
     // different from the declared content-type, since that can lead to
     // XSS and other vulnerabilities.
-    // https://www.owasp.org/index.php/List_of_useful_HTTP_headers
+    // https://owasp.org/www-project-secure-headers
     $response->headers->set('X-Content-Type-Options', 'nosniff', FALSE);
     $response->headers->set('X-Frame-Options', 'SAMEORIGIN', FALSE);
-
-    // Add a Permissions-Policy header to block Federated Learning of Cohorts.
-    if (Settings::get('block_interest_cohort', TRUE) && !$response->headers->has('Permissions-Policy')) {
-      $response->headers->set('Permissions-Policy', 'interest-cohort=()');
-    }
 
     // If the current response isn't an implementation of the
     // CacheableResponseInterface, we assume that a Response is either
@@ -159,8 +148,12 @@ class FinishResponseSubscriber implements EventSubscriberInterface {
       // Expose the cache contexts and cache tags associated with this page in a
       // X-Drupal-Cache-Contexts and X-Drupal-Cache-Tags header respectively.
       $response_cacheability = $response->getCacheableMetadata();
-      $response->headers->set('X-Drupal-Cache-Tags', implode(' ', $response_cacheability->getCacheTags()));
-      $response->headers->set('X-Drupal-Cache-Contexts', implode(' ', $this->cacheContextsManager->optimizeTokens($response_cacheability->getCacheContexts())));
+      $cache_tags = $response_cacheability->getCacheTags();
+      sort($cache_tags);
+      $response->headers->set('X-Drupal-Cache-Tags', implode(' ', $cache_tags));
+      $cache_contexts = $this->cacheContextsManager->optimizeTokens($response_cacheability->getCacheContexts());
+      sort($cache_contexts);
+      $response->headers->set('X-Drupal-Cache-Contexts', implode(' ', $cache_contexts));
       $max_age_message = $response_cacheability->getCacheMaxAge();
       if ($max_age_message === 0) {
         $max_age_message = '0 (Uncacheable)';
@@ -209,6 +202,7 @@ class FinishResponseSubscriber implements EventSubscriberInterface {
    * @see \Symfony\Component\HttpFoundation\ResponseHeaderBag::computeCacheControlValue()
    *
    * @param \Symfony\Component\HttpFoundation\Response $response
+   *   The response object.
    *
    * @return bool
    *   TRUE when Cache-Control header was set explicitly on the given response.
@@ -310,7 +304,7 @@ class FinishResponseSubscriber implements EventSubscriberInterface {
    * @return array
    *   An array of event listener definitions.
    */
-  public static function getSubscribedEvents() {
+  public static function getSubscribedEvents(): array {
     $events[KernelEvents::RESPONSE][] = ['onRespond'];
     // There is no specific reason for choosing 16 beside it should be executed
     // before ::onRespond().
