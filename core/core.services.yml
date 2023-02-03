@@ -1499,6 +1499,10 @@ services:
     calls:
       - [setContainer, ['@service_container']]
   Drupal\Core\StreamWrapper\StreamWrapperManagerInterface: '@stream_wrapper_manager'
+  stream_wrapper.assets:
+    class: Drupal\Core\StreamWrapper\AssetsStream
+    tags:
+      - { name: stream_wrapper, scheme: assets }
   stream_wrapper.public:
     class: Drupal\Core\StreamWrapper\PublicStream
     tags:

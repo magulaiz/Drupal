@@ -17,6 +17,19 @@ class AssetOptimizationTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
+  protected function setUp(): void {
+    parent::setUp();
+    $settings = [];
+    $settings['asset_file_path'] = (object) [
+      'value' => 'sites/simpletest/files/aggregates',
+      'required' => TRUE,
+    ];
+    $this->writeSettings($settings);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   protected $defaultTheme = 'stark';
 
   /**
