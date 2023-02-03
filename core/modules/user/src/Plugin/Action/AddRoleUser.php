@@ -23,7 +23,6 @@ class AddRoleUser extends ChangeUserRoleBase {
       // For efficiency manually save the original account before applying
       // any changes.
       $account->original = clone $account;
-      $account->save();
       $account->addRole($rid)->save();
     }
   }
