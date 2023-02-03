@@ -446,8 +446,11 @@ abstract class ContentEntityBase extends EntityBase implements \IteratorAggregat
     elseif ($this->validationRequired === NULL && !$this->validated) {
       $violations = $this->validate();
       if ($violations->count() > 0) {
-        @trigger_error('Saving an invalid entity without explicit opt-in is deprecated in drupal:10.1.0 and will throw a \LogicException from drupal:11.0.0. See https://www.drupal.org/node/xxxxxxx', E_USER_DEPRECATED);
-      }
+        $violation_messages = array_map(function (\Symfony\Component\Validator\ConstraintViolationListInterface $item) {
+          return $item->getMessage();
+        }, \iterator_to_array($violations->getIterator()));
+        throw new \LogicException('Saving invalid entity: ' . print_r($violation_message, TRUE));
+      }  
     }
     else {
       $this->validated = FALSE;
