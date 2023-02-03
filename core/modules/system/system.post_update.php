@@ -51,3 +51,30 @@ function system_post_update_linkset_settings() {
   $config = \Drupal::configFactory()->getEditable('system.feature_flags');
   $config->set('linkset_endpoint', FALSE)->save();
 }
+
+/**
+ * Re-save all configuration to ensure sorting.
+ */
+function system_post_update_resave_configuration(&$sandbox = NULL) {
+  $config_factory = \Drupal::configFactory();
+  if (!isset($sandbox['config_names'])) {
+    $sandbox['config_names'] = $config_factory->listAll();
+    $sandbox['count'] = count($sandbox['config_names']);
+  }
+
+  $count = 0;
+  foreach ($sandbox['config_names'] as $key => $config_name) {
+    // Resave configuration to ensure any new sorting is applied.
+    $config_factory->getEditable($config_name)->save();
+
+    unset($sandbox['config_names'][$key]);
+    $count++;
+    // Do 50 at a time.
+    if ($count == 50) {
+      break;
+    }
+  }
+
+  $sandbox['#finished'] = empty($sandbox['config_names']) ? 1 : ($sandbox['count'] - count($sandbox['config_names'])) / $sandbox['count'];
+  return t('Configuration resaved');
+}

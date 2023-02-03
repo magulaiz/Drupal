@@ -197,6 +197,7 @@ class ConfigSchemaTest extends KernelTestBase {
     $expected['mapping']['third_party_settings']['type'] = 'sequence';
     $expected['mapping']['third_party_settings']['label'] = 'Third party settings';
     $expected['mapping']['third_party_settings']['sequence']['type'] = '[%parent.%parent.%type].third_party.[%key]';
+    $expected['mapping']['third_party_settings']['orderby'] = 'key';
     $expected['mapping']['_core']['type'] = '_core_config_info';
     $expected['type'] = 'image.style.*';
 
