@@ -149,9 +149,9 @@ abstract class ContentEntityBase extends EntityBase implements \IteratorAggregat
   /**
    * Whether entity validation is required before saving the entity.
    *
-   * @var bool
+   * @var bool|null
    */
-  protected $validationRequired = FALSE;
+  protected $validationRequired = NULL;
 
   /**
    * The loaded revision ID before the new revision was set.
@@ -439,9 +439,15 @@ abstract class ContentEntityBase extends EntityBase implements \IteratorAggregat
   public function preSave(EntityStorageInterface $storage) {
     // An entity requiring validation should not be saved if it has not been
     // actually validated.
-    if ($this->validationRequired && !$this->validated) {
+    if ($this->validationRequired === TRUE && !$this->validated) {
       // @todo Make this an assertion in https://www.drupal.org/node/2408013.
       throw new \LogicException('Entity validation was skipped.');
+    }
+    elseif ($this->validationRequired === NULL && !$this->validated) {
+      $violations = $this->validate();
+      if ($violations->count() > 0) {
+        @trigger_error('Saving an invalid entity without explicit opt-in is deprecated in drupal:10.1.0 and will throw a \LogicException from drupal:11.0.0. See https://www.drupal.org/node/xxxxxxx', E_USER_DEPRECATED);
+      }
     }
     else {
       $this->validated = FALSE;
