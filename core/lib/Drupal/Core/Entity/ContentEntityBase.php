@@ -11,6 +11,7 @@ use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\TypedData\TranslationStatusInterface;
 use Drupal\Core\TypedData\TypedDataInterface;
+use Symfony\Component\Validator\ConstraintViolationInterface;
 
 /**
  * Implements Entity Field API specific enhancements to the Entity class.
@@ -446,11 +447,11 @@ abstract class ContentEntityBase extends EntityBase implements \IteratorAggregat
     elseif ($this->validationRequired === NULL && !$this->validated) {
       $violations = $this->validate();
       if ($violations->count() > 0) {
-        $violation_messages = array_map(function (\Symfony\Component\Validator\ConstraintViolationListInterface $item) {
+        $violation_messages = array_map(function (ConstraintViolationInterface $item) {
           return $item->getMessage();
         }, \iterator_to_array($violations->getIterator()));
-        throw new \LogicException('Saving invalid entity: ' . print_r($violation_message, TRUE));
-      }  
+        throw new \LogicException('Saving invalid entity: ' . print_r($violation_messages, TRUE));
+      }
     }
     else {
       $this->validated = FALSE;
