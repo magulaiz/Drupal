@@ -91,6 +91,7 @@ function user_install() {
       'mail' => 'placeholder-for-uid-1',
       'status' => TRUE,
     ])
+    ->setValidationRequired(FALSE)
     ->save();
 }
 
