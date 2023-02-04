@@ -98,7 +98,7 @@ class EntityController implements ContainerInjectionInterface {
     $this->stringTranslation = $string_translation;
     $this->urlGenerator = $url_generator;
     if ($route_match === NULL) {
-      @trigger_error('Calling ' . __METHOD__ . '() without the $route_match argument is deprecated in drupal:10.1.0 and it will be required in drupal:11.0.0. See https://www.drupal.org/node/2897251', E_USER_DEPRECATED);
+      @trigger_error('Calling ' . __METHOD__ . '() without the $route_match argument is deprecated in drupal:10.1.0 and it will be required in drupal:11.0.0. See https://www.drupal.org/node/3337782', E_USER_DEPRECATED);
       $route_match = \Drupal::service('current_route_match');
     }
     $this->routeMatch = $route_match;
