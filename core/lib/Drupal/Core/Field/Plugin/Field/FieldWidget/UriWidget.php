@@ -26,6 +26,7 @@ class UriWidget extends WidgetBase {
     return [
       'size' => 60,
       'placeholder' => '',
+      'require_url' => TRUE,
     ] + parent::defaultSettings();
   }
 
@@ -46,6 +47,12 @@ class UriWidget extends WidgetBase {
       '#default_value' => $this->getSetting('placeholder'),
       '#description' => $this->t('Text that will be shown inside the field until a value is entered. This hint is usually a sample value or a brief description of the expected format.'),
     ];
+    $element['require_url'] = [
+      '#type' => 'checkbox',
+      '#title' => $this->t('Restrict to valid URLs (not all URIs)'),
+      '#description' => $this->t('Not all URIs are URLs. Checking this box requires the URI provided is a URL.'),
+      '#default_value' => $this->getSetting('require_url') ?? TRUE,
+    ];
     return $element;
   }
 
@@ -59,6 +66,9 @@ class UriWidget extends WidgetBase {
     $placeholder = $this->getSetting('placeholder');
     if (!empty($placeholder)) {
       $summary[] = $this->t('Placeholder: @placeholder', ['@placeholder' => $placeholder]);
+    }
+    if (!empty($this->getSetting('require_url'))) {
+      $summary[] = $this->t('Must be a URL.');
     }
 
     return $summary;
@@ -74,6 +84,7 @@ class UriWidget extends WidgetBase {
       '#size' => $this->getSetting('size'),
       '#placeholder' => $this->getSetting('placeholder'),
       '#maxlength' => $this->getFieldSetting('max_length'),
+      '#require_url' => $this->getSetting('require_url'),
     ];
     return $element;
   }

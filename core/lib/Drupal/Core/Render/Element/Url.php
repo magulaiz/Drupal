@@ -54,6 +54,7 @@ class Url extends FormElement {
       ],
       '#theme' => 'input__url',
       '#theme_wrappers' => ['form_element'],
+      '#require_url' => TRUE,
     ];
   }
 
@@ -66,8 +67,13 @@ class Url extends FormElement {
     $value = trim($element['#value']);
     $form_state->setValueForElement($element, $value);
 
-    if ($value !== '' && !UrlHelper::isValid($value, TRUE)) {
-      $form_state->setError($element, t('The URL %url is not valid.', ['%url' => $value]));
+    if ($value !== '') {
+      if ($element['#require_url'] && !UrlHelper::isValid($value, TRUE)) {
+        $form_state->setError($element, t('The URL %url is not valid.', ['%url' => $value]));
+      }
+      elseif (!UrlHelper::validateUri($value)) {
+        $form_state->setError($element, t('The URI %uri is not valid.', ['%uri' => $value]));
+      }
     }
   }
 

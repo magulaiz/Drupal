@@ -2,6 +2,7 @@
 
 namespace Drupal\Core\Validation\Plugin\Validation\Constraint;
 
+use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\TypedData\Type\BinaryInterface;
 use Drupal\Core\TypedData\Type\BooleanInterface;
 use Drupal\Core\TypedData\Type\DateTimeInterface;
@@ -53,7 +54,7 @@ class PrimitiveTypeConstraintValidator extends ConstraintValidator {
     // - That it is well formed (parse_url() returns FALSE if not).
     // - That it contains a scheme (parse_url(, PHP_URL_SCHEME) returns NULL if
     //   not).
-    if ($typed_data instanceof UriInterface && in_array(parse_url($value, PHP_URL_SCHEME), [NULL, FALSE], TRUE)) {
+    if ($typed_data instanceof UriInterface && !UrlHelper::validateUri($value)) {
       $valid = FALSE;
     }
     // @todo: Move those to separate constraint validators.
