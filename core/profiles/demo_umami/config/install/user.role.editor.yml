@@ -2,6 +2,9 @@ langcode: en
 status: true
 dependencies:
   config:
+    - core.entity_view_display.node.article.full
+    - core.entity_view_display.node.page.full
+    - core.entity_view_display.node.recipe.full
     - node.type.article
     - node.type.page
     - node.type.recipe
@@ -13,6 +16,7 @@ dependencies:
     - content_translation
     - contextual
     - file
+    - layout_builder
     - node
     - path
     - shortcut
