@@ -79,6 +79,7 @@ function user_install() {
       'status' => 0,
       'name' => '',
     ])
+    ->setValidationRequired(FALSE)
     ->save();
 
   // We need some placeholders here as name and mail are unique.
