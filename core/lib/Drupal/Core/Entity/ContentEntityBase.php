@@ -447,9 +447,10 @@ abstract class ContentEntityBase extends EntityBase implements \IteratorAggregat
     elseif ($this->validationRequired === NULL && !$this->validated) {
       $violations = $this->validate();
       if ($violations->count() > 0) {
-        $violation_messages = array_map(function (ConstraintViolationInterface $item) {
-          return $item->getMessage();
-        }, \iterator_to_array($violations->getIterator()));
+        $violation_messages = [];
+        foreach ($violations->getIterator() as $violation) {
+          $violation_messages[$violation->getPropertyPath()] = (string) $violation->getMessage();          
+        }
         throw new \LogicException('Saving invalid entity: ' . print_r($violation_messages, TRUE));
       }
     }

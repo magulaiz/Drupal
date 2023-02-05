@@ -70,7 +70,7 @@ abstract class FieldKernelTestBase extends KernelTestBase {
       ->create([
         'uid' => 1,
         'name' => 'entity-test',
-        'mail' => 'entity@localhost',
+        'mail' => 'entity@localhost.com',
         'status' => TRUE,
       ])
       ->save();

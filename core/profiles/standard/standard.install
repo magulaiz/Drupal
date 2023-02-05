@@ -29,6 +29,7 @@ function standard_install() {
     'weight' => -20,
     'link' => ['uri' => 'internal:/node/add'],
   ]);
+  $shortcut->setValidationRequired(FALSE);
   $shortcut->save();
 
   $shortcut = Shortcut::create([
@@ -37,5 +38,6 @@ function standard_install() {
     'weight' => -19,
     'link' => ['uri' => 'internal:/admin/content'],
   ]);
+  $shortcut->setValidationRequired(FALSE);
   $shortcut->save();
 }
