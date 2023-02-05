@@ -59,7 +59,7 @@ class DatabaseBackendTagTest extends KernelTestBase {
     }
 
     // Test that only one tag invalidation has occurred.
-    $invalidations_after = (int) $connection->select('cachetags')
+    $invalidations_after = $connection->select('cachetags')
       ->fields('cachetags', ['invalidations'])
       ->condition('tag', 'test_tag:2')
       ->execute()

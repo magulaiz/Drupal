@@ -180,7 +180,7 @@ class StringArgument extends ArgumentPluginBase {
    * $this->ensureMyTable() MUST have been called prior to this.
    */
   public function getFormula() {
-    $formula = "SUBSTRING($this->tableAlias.$this->realField, 1, " . (int) $this->options['limit'] . ")";
+    $formula = "SUBSTRING($this->tableAlias.$this->realField, 1, " . $this->options['limit'] . ")";
 
     if ($this->options['case'] != 'none') {
       // Support case-insensitive substring comparisons for SQLite by using the

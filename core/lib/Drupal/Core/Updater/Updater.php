@@ -374,10 +374,8 @@ abstract class Updater {
   public function makeWorldReadable(&$filetransfer, $path, $recursive = TRUE) {
     if (!is_executable($path)) {
       // Set it to read + execute.
-      $new_perms = substr(sprintf('%o', fileperms($path)), -4, -1) . "5";
-      // phpcs:disable Generic.PHP.ForbiddenFunctions
-      $filetransfer->chmod($path, intval($new_perms, 8), $recursive);
-      // phpcs:enable
+      $new_perms = fileperms($path) & 0777 | 0005;
+      $filetransfer->chmod($path, $new_perms, $recursive);
     }
   }
 

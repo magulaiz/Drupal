@@ -291,10 +291,10 @@ class DateHelper {
   public static function years($min = 0, $max = 0, $required = FALSE) {
     // Ensure $min and $max are valid values.
     if (empty($min)) {
-      $min = (int) (date('Y', REQUEST_TIME) - 3);
+      $min = date('Y', REQUEST_TIME) - 3;
     }
     if (empty($max)) {
-      $max = (int) (date('Y', REQUEST_TIME) + 3);
+      $max = date('Y', REQUEST_TIME) + 3;
     }
     $none = ['' => ''];
     $range = range($min, $max);

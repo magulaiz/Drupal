@@ -114,7 +114,7 @@ for ($i = 0; $i < 24; $i++) {
     $node->filter = variable_get('filter_default_format', 1);
     $node->format = FILTER_FORMAT_DEFAULT;
   }
-  $node->status = (int) ($i / 4) % 2;
+  $node->status = ($i / 4) % 2;
   $node->language = '';
   $node->revision = $i < 12;
   $node->promote = $i % 2;
@@ -160,7 +160,7 @@ for ($i = 0; $i < 12; $i++) {
     $node->filter = variable_get('filter_default_format', 1);
     $node->format = FILTER_FORMAT_DEFAULT;
   }
-  $node->status = (int) ($i / 2) % 2;
+  $node->status = ($i / 2) % 2;
   $node->language = '';
   $node->revision = 1;
   $node->promote = $i % 2;
