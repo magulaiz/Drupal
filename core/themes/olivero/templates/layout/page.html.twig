@@ -46,7 +46,13 @@
  */
 #}
 
-<div id="page-wrapper" class="page-wrapper">
+{% set page_wrapper_classes = [
+    'page-wrapper',
+    is_center_aligned ? 'page-wrapper--centered',
+  ]
+%}
+
+<div id="page-wrapper"{{ attributes.addClass(page_wrapper_classes) }}>
   <div id="page">
 
     {% if page.header or page.primary_menu or page.secondary_menu %}

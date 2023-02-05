@@ -105,6 +105,19 @@ body.is-always-mobile-nav {
       padding-inline-end: calc(100vw - (var(--max-width) + var(--content-left) - var(--sp)));
     }
   }
+
+  & .page-wrapper--centered {
+    & .header-nav {
+      @media (--nav) {
+        max-width: 50vw;
+        padding-inline-end: var(--sp2);
+      }
+
+      @media (--grid-max) {
+        padding-inline-end: calc((50vw - (var(--max-width) / 2)) + var(--content-left) - var(--sp2));
+      }
+    }
+  }
 }
 
 .header-nav-overlay {

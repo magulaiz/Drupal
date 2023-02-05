@@ -50,6 +50,16 @@
 }
 
 @media (min-width: 75rem) {
+  body:not(.is-always-mobile-nav) .page-wrapper--centered .site-header__fixable {
+    /**
+         * To contain the header sliding inside the page wrapper,
+         * we use clip-path instead of overflow: hidden.
+         * In this way, the drop-down menus of the main nav are not cut off.
+         */
+    -webkit-clip-path: inset(0 0 -100vh 0);
+    clip-path: inset(0 0 -100vh 0);
+  }
+
   body:not(.is-always-mobile-nav) .site-header__fixable.is-fixed {
     position: fixed;
     z-index: 102; /* Appear above body content that is position: relative */

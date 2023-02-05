@@ -64,6 +64,12 @@ function olivero_form_system_theme_settings_alter(&$form, FormStateInterface $fo
     '#default_value' => theme_get_setting('mobile_menu_all_widths'),
     '#description' => t('Enables the mobile menu toggle at all widths.'),
   ];
+  $form['olivero_settings']['olivero_utilities']['center_align_layout'] = [
+    '#type' => 'checkbox',
+    '#title' => t('Center align site layout'),
+    '#default_value' => theme_get_setting('center_align_layout'),
+    '#description' => t('Shifts layout from left-aligned to center-aligned'),
+  ];
   $form['olivero_settings']['olivero_utilities']['site_branding_bg_color'] = [
     '#type' => 'select',
     '#title' => t('Header site branding background color'),

@@ -129,6 +129,21 @@ html.js .header-nav {
   }
 }
 
+@media (min-width: 75rem) {
+
+  body.is-always-mobile-nav .page-wrapper--centered .header-nav {
+    max-width: 50vw;
+    padding-inline-end: var(--sp2);
+  }
+}
+
+@media (min-width: 90rem) {
+
+  body.is-always-mobile-nav .page-wrapper--centered .header-nav {
+    padding-inline-end: calc((50vw - (var(--max-width) / 2)) + var(--content-left) - var(--sp2));
+  }
+}
+
 .header-nav-overlay {
   position: fixed;
   z-index: 101;
