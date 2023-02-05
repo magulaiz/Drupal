@@ -11,7 +11,6 @@ use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\TypedData\TranslationStatusInterface;
 use Drupal\Core\TypedData\TypedDataInterface;
-use Symfony\Component\Validator\ConstraintViolationInterface;
 
 /**
  * Implements Entity Field API specific enhancements to the Entity class.
@@ -449,7 +448,7 @@ abstract class ContentEntityBase extends EntityBase implements \IteratorAggregat
       if ($violations->count() > 0) {
         $violation_messages = [];
         foreach ($violations->getIterator() as $violation) {
-          $violation_messages[$violation->getPropertyPath()] = (string) $violation->getMessage();          
+          $violation_messages[$violation->getPropertyPath()] = (string) $violation->getMessage();
         }
         throw new \LogicException('Saving invalid entity: ' . print_r($violation_messages, TRUE));
       }
