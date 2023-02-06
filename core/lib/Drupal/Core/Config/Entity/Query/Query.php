@@ -182,7 +182,7 @@ class Query extends QueryBase implements QueryInterface {
       $filter_by_names = $this->configFactory->listAll($prefix);
     }
     else {
-      $filter_by_names = array_merge([], ...$filter_by_names);
+      $filter_by_names = array_merge(...$filter_by_names);
     }
     // In case we have an ID condition, try to narrow down the list of config
     // objects to load.

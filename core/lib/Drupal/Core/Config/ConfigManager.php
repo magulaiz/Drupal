@@ -264,7 +264,7 @@ class ConfigManager implements ConfigManagerInterface {
     foreach ($names as $name) {
       $dependencies[] = $dependency_manager->getDependentEntities($type, $name);
     }
-    return array_merge([], ...$dependencies);
+    return array_merge(...$dependencies);
   }
 
   /**
@@ -294,7 +294,7 @@ class ConfigManager implements ConfigManagerInterface {
       // configuration entity types.
       $entities_to_return[] = array_values($storage->loadMultiple($entities_to_load));
     }
-    return array_merge([], ...$entities_to_return);
+    return array_merge(...$entities_to_return);
   }
 
   /**
@@ -493,7 +493,7 @@ class ConfigManager implements ConfigManagerInterface {
         $content_dependencies[] = $config_data['dependencies']['enforced']['content'];
       }
     }
-    $unique_content_dependencies = array_unique(array_merge([], ...$content_dependencies));
+    $unique_content_dependencies = array_unique(array_merge(...$content_dependencies));
     foreach ($unique_content_dependencies as $content_dependency) {
       // Format of the dependency is entity_type:bundle:uuid.
       [$entity_type, $bundle, $uuid] = explode(':', $content_dependency, 3);

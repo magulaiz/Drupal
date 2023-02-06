@@ -740,7 +740,7 @@ class FileSystem implements FileSystemInterface {
 
     // Give priority to files in this folder by merging them after
     // any subdirectory files.
-    return array_merge(array_merge([], ...$files_in_sub_dirs), $files_in_this_directory);
+    return array_merge(array_merge(...$files_in_sub_dirs), $files_in_this_directory);
   }
 
 }

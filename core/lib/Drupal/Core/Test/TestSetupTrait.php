@@ -200,7 +200,7 @@ trait TestSetupTrait {
       $class = get_parent_class($class);
     }
     // Filter out any duplicates.
-    return array_unique(array_merge([], ...$exceptions));
+    return array_unique(array_merge(...$exceptions));
   }
 
 }
