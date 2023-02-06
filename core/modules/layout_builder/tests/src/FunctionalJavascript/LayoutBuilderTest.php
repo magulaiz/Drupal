@@ -262,6 +262,33 @@ class LayoutBuilderTest extends WebDriverTestBase {
   }
 
   /**
+   * Tests the Layout Builder UI with extra wrapper divs in template.
+   */
+  public function testLayoutBuilderCustomTemplate() {
+    // Override the layout templates.
+    \Drupal::service('module_installer')->install(['layout_builder_custom_template_test']);
+    \Drupal::service('plugin.manager.core.layout')->clearCachedDefinitions();
+    \Drupal::service('theme_handler')->refreshInfo();
+
+    // Enable layout builder and go to edit a layout.
+    $layout_url = 'node/1/layout';
+    $this->enableLayoutsForBundle('admin/structure/types/manage/bundle_with_section_field/display', TRUE);
+    $this->drupalGet($layout_url);
+    $assert_session = $this->assertSession();
+    $page = $this->getSession()->getPage();
+
+    // Make sure we are using the custom template, which has an extra div.
+    $assert_session->elementExists('css', '.layout__region--content > .extra-wrapper-div > .block-field-blocknodebundle-with-section-fieldbody');
+    $body_block = $page->find('css', '.layout__region--content > .extra-wrapper-div > .block-field-blocknodebundle-with-section-fieldbody');
+    // The body block should begin with a NULL draggable attribute.
+    $this->assertNull($body_block->getAttribute('draggable'));
+    // During a click, the draggable attribute gets set to "true".
+    $body_block->click();
+    // When the click is over, draggable is set to "false".
+    $this->assertSame('false', $body_block->getAttribute('draggable'));
+  }
+
+  /**
    * Tests configurable layouts.
    */
   public function testConfigurableLayoutSections() {

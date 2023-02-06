@@ -1,0 +1,15 @@
+<?php
+
+/**
+ * @file
+ * For testing custom templates.
+ */
+
+/**
+ * Implements hook_theme().
+ */
+function layout_builder_custom_template_test_theme_registry_alter(&$theme_registry) {
+  $module_path = \Drupal::service('extension.path.resolver')->getPath('module', 'layout_builder_custom_template_test');
+  $theme_registry['layout__onecol']['path'] = $module_path . '/templates';
+  $theme_registry['layout__twocol_section']['path'] = $module_path . '/templates';
+}
