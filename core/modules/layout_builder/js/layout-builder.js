@@ -44,6 +44,7 @@
     var $from = $(from);
     var itemRegion = $item.closest('.js-layout-builder-region');
     var itemParent = $($item[0].parentNode);
+
     if (to === itemParent[0]) {
       var deltaTo = $item.closest('[data-layout-delta]').data('layout-delta');
       var deltaFrom = $from ? $from.closest('[data-layout-delta]').data('layout-delta') : deltaTo;

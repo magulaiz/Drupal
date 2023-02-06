@@ -115,6 +115,7 @@
     // Check if the region from the event and region for the item match.
     const itemRegion = $item.closest('.js-layout-builder-region');
     const itemParent = $($item[0].parentNode);
+
     if (to === itemParent[0]) {
       // Find the destination delta.
       const deltaTo = $item.closest('[data-layout-delta]').data('layout-delta');
