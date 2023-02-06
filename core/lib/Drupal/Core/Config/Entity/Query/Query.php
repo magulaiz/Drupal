@@ -143,7 +143,7 @@ class Query extends QueryBase implements QueryInterface {
           if ($condition['field'] == $id_key) {
             $has_added_restrictions = TRUE;
             $ids = (array) $condition['value'];
-            $filter_by_names[] = array_map(function ($id) use ($prefix) {
+            $filter_by_names[] = array_map(static function ($id) use ($prefix) {
               return $prefix . $id;
             }, $ids);
           }
@@ -151,9 +151,8 @@ class Query extends QueryBase implements QueryInterface {
             $has_added_restrictions = TRUE;
             // If we don't find anything then there are no matches. No point in
             // listing anything.
-            $filter_by_names = [];
             $keys = (array) $condition['value'];
-            $keys = array_map(function ($value) use ($condition) {
+            $keys = array_map(static function ($value) use ($condition) {
               return $condition['field'] . ':' . $value;
             }, $keys);
             foreach ($this->getConfigKeyStore()->getMultiple($keys) as $list) {
@@ -192,28 +191,28 @@ class Query extends QueryBase implements QueryInterface {
       $filter = NULL;
       switch ($id_condition['operator']) {
         case '<>':
-          $filter = function ($name) use ($value, $prefix_length) {
+          $filter = static function ($name) use ($value, $prefix_length) {
             $id = substr($name, $prefix_length);
             return $id !== $value;
           };
           break;
 
         case 'STARTS_WITH':
-          $filter = function ($name) use ($value, $prefix_length) {
+          $filter = static function ($name) use ($value, $prefix_length) {
             $id = substr($name, $prefix_length);
             return strpos($id, $value) === 0;
           };
           break;
 
         case 'CONTAINS':
-          $filter = function ($name) use ($value, $prefix_length) {
+          $filter = static function ($name) use ($value, $prefix_length) {
             $id = substr($name, $prefix_length);
             return strpos($id, $value) !== FALSE;
           };
           break;
 
         case 'ENDS_WITH':
-          $filter = function ($name) use ($value, $prefix_length) {
+          $filter = static function ($name) use ($value, $prefix_length) {
             $id = substr($name, $prefix_length);
             return strrpos($id, $value) === strlen($id) - strlen($value);
           };
