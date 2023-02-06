@@ -130,6 +130,7 @@ class Query extends QueryBase implements QueryInterface {
 
     // Search the conditions for restrictions on configuration object names.
     $filter_by_names = [];
+    $has_added_restrictions = FALSE;
     $id_condition = NULL;
     $id_key = $this->entityType->getKey('id');
     if ($this->condition->getConjunction() == 'AND') {
@@ -140,12 +141,14 @@ class Query extends QueryBase implements QueryInterface {
         if (is_string($condition['field']) && ($operator == 'IN' || $operator == '=')) {
           // Special case ID lookups.
           if ($condition['field'] == $id_key) {
+            $has_added_restrictions = TRUE;
             $ids = (array) $condition['value'];
             $filter_by_names[] = array_map(function ($id) use ($prefix) {
               return $prefix . $id;
             }, $ids);
           }
           elseif (in_array($condition['field'], $lookup_keys)) {
+            $has_added_restrictions = TRUE;
             // If we don't find anything then there are no matches. No point in
             // listing anything.
             $filter_by_names = [];
@@ -166,7 +169,7 @@ class Query extends QueryBase implements QueryInterface {
         // We stop at the first restricting condition on name. In the case where
         // there are additional restricting conditions, results will be
         // eliminated when the conditions are checked on the loaded records.
-        if (!empty($filter_by_names)) {
+        if ($has_added_restrictions !== FALSE) {
           // If the condition has been responsible for narrowing the list of
           // configuration to check there is no point in checking it further.
           unset($conditions[$condition_key]);
@@ -176,7 +179,7 @@ class Query extends QueryBase implements QueryInterface {
     }
 
     // If no restrictions on IDs were found, we need to parse all records.
-    if ($filter_by_names === []) {
+    if ($has_added_restrictions === FALSE) {
       $filter_by_names = $this->configFactory->listAll($prefix);
     }
     else {
