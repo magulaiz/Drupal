@@ -129,7 +129,6 @@ class Query extends QueryBase implements QueryInterface {
     $prefix_length = strlen($prefix);
 
     // Search the conditions for restrictions on configuration object names.
-    $restrictions = FALSE;
     $filter_by_names = [];
     $id_condition = NULL;
     $id_key = $this->entityType->getKey('id');
@@ -139,7 +138,6 @@ class Query extends QueryBase implements QueryInterface {
       foreach ($conditions as $condition_key => $condition) {
         $operator = $condition['operator'] ?: (is_array($condition['value']) ? 'IN' : '=');
         if (is_string($condition['field']) && ($operator == 'IN' || $operator == '=')) {
-          $restrictions = TRUE;
           // Special case ID lookups.
           if ($condition['field'] == $id_key) {
             $ids = (array) $condition['value'];
@@ -178,7 +176,7 @@ class Query extends QueryBase implements QueryInterface {
     }
 
     // If no restrictions on IDs were found, we need to parse all records.
-    if ($restrictions === FALSE) {
+    if ($filter_by_names === []) {
       $filter_by_names = $this->configFactory->listAll($prefix);
     }
     else {
