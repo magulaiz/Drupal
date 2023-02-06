@@ -16,57 +16,64 @@ function user_token_info() {
   $types['user'] = [
     'name' => t('Users'),
     'description' => t('Tokens related to individual user accounts.'),
-    'needs-data' => 'user',
+    'needs-data' => 'entity:user',
   ];
   $types['current-user'] = [
     'name' => t('Current user'),
     'description' => t('Tokens related to the currently logged in user.'),
-    'type' => 'user',
+    'type' => 'entity:user',
   ];
 
   $user['uid'] = [
     'name' => t('User ID'),
     'description' => t("The unique ID of the user account."),
+    'type' => 'integer',
   ];
   $user['name'] = [
     'name' => t("Deprecated: User Name"),
     'description' => t("Deprecated: Use account-name or display-name instead."),
+    'type' => 'string',
   ];
   $user['account-name'] = [
     'name' => t("Account Name"),
     'description' => t("The login name of the user account."),
+    'type' => 'string',
   ];
   $user['display-name'] = [
     'name' => t("Display Name"),
     'description' => t("The display name of the user account."),
+    'type' => 'string',
   ];
   $user['mail'] = [
     'name' => t("Email"),
     'description' => t("The email address of the user account."),
+    'type' => 'email',
   ];
   $user['url'] = [
     'name' => t("URL"),
     'description' => t("The URL of the account profile page."),
+    'type' => 'uri',
   ];
   $user['edit-url'] = [
     'name' => t("Edit URL"),
     'description' => t("The URL of the account edit page."),
+    'type' => 'uri',
   ];
 
   $user['last-login'] = [
     'name' => t("Last login"),
     'description' => t("The date the user last logged in to the site."),
-    'type' => 'date',
+    'type' => 'timestamp',
   ];
   $user['created'] = [
     'name' => t("Created"),
     'description' => t("The date the user account was created."),
-    'type' => 'date',
+    'type' => 'timestamp',
   ];
 
   return [
     'types' => $types,
-    'tokens' => ['user' => $user],
+    'tokens' => ['entity:user' => $user],
   ];
 }
 

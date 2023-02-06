@@ -18,7 +18,7 @@ function comment_token_info() {
   $type = [
     'name' => t('Comments'),
     'description' => t('Tokens for comments posted on the site.'),
-    'needs-data' => 'comment',
+    'needs-data' => 'entity:comment',
   ];
 
   $tokens = [];
@@ -36,10 +36,12 @@ function comment_token_info() {
       $tokens[$token_type]['comment-count'] = [
         'name' => t("Comment count"),
         'description' => t("The number of comments posted on an entity."),
+        'type' => 'integer',
       ];
       $tokens[$token_type]['comment-count-new'] = [
         'name' => t("New comment count"),
         'description' => t("The number of comments posted on an entity since the reader last viewed it."),
+        'type' => 'integer',
       ];
     }
   }
@@ -48,55 +50,64 @@ function comment_token_info() {
   $comment['cid'] = [
     'name' => t("Comment ID"),
     'description' => t("The unique ID of the comment."),
+    'type' => 'integer',
   ];
   $comment['hostname'] = [
     'name' => t("IP Address"),
     'description' => t("The IP address of the computer the comment was posted from."),
+    'type' => 'string',
   ];
   $comment['mail'] = [
     'name' => t("Email address"),
     'description' => t("The email address left by the comment author."),
+    'type' => 'email',
   ];
   $comment['homepage'] = [
     'name' => t("Home page"),
     'description' => t("The home page URL left by the comment author."),
+    'type' => 'uri',
   ];
   $comment['title'] = [
     'name' => t("Title"),
     'description' => t("The title of the comment."),
+    'type' => 'string',
   ];
   $comment['body'] = [
     'name' => t("Content"),
     'description' => t("The formatted content of the comment itself."),
+    'type' => 'string',
   ];
   $comment['langcode'] = [
     'name' => t('Language code'),
     'description' => t('The language code of the language the comment is written in.'),
+    'type' => 'string',
   ];
   $comment['url'] = [
     'name' => t("URL"),
     'description' => t("The URL of the comment."),
+    'type' => 'uri',
   ];
   $comment['edit-url'] = [
     'name' => t("Edit URL"),
     'description' => t("The URL of the comment's edit page."),
+    'type' => 'uri',
   ];
 
   // Chained tokens for comments
   $comment['created'] = [
     'name' => t("Date created"),
     'description' => t("The date the comment was posted."),
-    'type' => 'date',
+    'type' => 'timestamp',
   ];
   $comment['changed'] = [
     'name' => t("Date changed"),
     'description' => t("The date the comment was most recently updated."),
-    'type' => 'date',
+    'type' => 'timestamp',
   ];
   $comment['parent'] = [
     'name' => t("Parent"),
     'description' => t("The comment's parent, if comment threading is active."),
-    'type' => 'comment',
+    'type' => 'entity:comment',
   ];
   $comment['entity'] = [
     'name' => t("Entity"),
@@ -106,13 +117,13 @@ function comment_token_info() {
   $comment['author'] = [
     'name' => t("Author"),
     'description' => t("The author name of the comment."),
-    'type' => 'user',
+    'type' => 'entity:user',
   ];
 
   return [
     'types' => ['comment' => $type],
     'tokens' => [
-      'comment' => $comment,
+      'entity:comment' => $comment,
     ] + $tokens,
   ];
 }

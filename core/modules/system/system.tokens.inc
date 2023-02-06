@@ -18,36 +18,44 @@ function system_token_info() {
   $types['site'] = [
     'name' => t("Site information"),
     'description' => t("Tokens for site-wide settings and other global information."),
+    'type' => 'string',
   ];
   $types['date'] = [
     'name' => t("Dates"),
     'description' => t("Tokens related to times and dates."),
+    'type' => 'timestamp',
   ];
 
   // Site-wide global tokens.
   $site['name'] = [
     'name' => t("Name"),
     'description' => t("The name of the site."),
+    'type' => 'string',
   ];
   $site['slogan'] = [
     'name' => t("Slogan"),
     'description' => t("The slogan of the site."),
+    'type' => 'string',
   ];
   $site['mail'] = [
     'name' => t("Email"),
     'description' => t("The administrative email address for the site."),
+    'type' => 'email',
   ];
   $site['url'] = [
     'name' => t("URL"),
     'description' => t("The URL of the site's front page."),
+    'type' => 'uri',
   ];
   $site['url-brief'] = [
     'name' => t("URL (brief)"),
     'description' => t("The URL of the site's front page without the protocol."),
+    'type' => 'uri',
   ];
   $site['login-url'] = [
     'name' => t("Login page"),
     'description' => t("The URL of the site's login page."),
+    'type' => 'uri',
   ];
 
   /** @var \Drupal\Core\Datetime\DateFormatterInterface $date_formatter */
@@ -58,33 +66,39 @@ function system_token_info() {
   $date['short'] = [
     'name' => t("Short format"),
     'description' => t("A date in 'short' format. (%date)", ['%date' => $date_formatter->format($request_time, 'short')]),
+    'type' => 'string',
   ];
   $date['medium'] = [
     'name' => t("Medium format"),
     'description' => t("A date in 'medium' format. (%date)", ['%date' => $date_formatter->format($request_time, 'medium')]),
+    'type' => 'string',
   ];
   $date['long'] = [
     'name' => t("Long format"),
     'description' => t("A date in 'long' format. (%date)", ['%date' => $date_formatter->format($request_time, 'long')]),
+    'type' => 'string',
   ];
   $date['custom'] = [
     'name' => t("Custom format"),
     'description' => t('A date in a custom format. See <a href="https://www.php.net/manual/datetime.format.php#refsect1-datetime.format-parameters">the PHP documentation</a> for details.'),
+    'type' => 'string',
   ];
   $date['since'] = [
     'name' => t("Time-since"),
     'description' => t("A date in 'time-since' format. (%date)", ['%date' => $date_formatter->formatTimeDiffSince($request_time - 360)]),
+    'type' => 'string',
   ];
   $date['raw'] = [
     'name' => t("Raw timestamp"),
     'description' => t("A date in UNIX timestamp format (%date)", ['%date' => $request_time]),
+    'type' => 'timestamp',
   ];
 
   return [
     'types' => $types,
     'tokens' => [
       'site' => $site,
-      'date' => $date,
+      'timestamp' => $date,
     ],
   ];
 }
