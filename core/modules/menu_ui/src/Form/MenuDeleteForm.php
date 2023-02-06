@@ -3,6 +3,7 @@
 namespace Drupal\menu_ui\Form;
 
 use Drupal\Core\Database\Connection;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Entity\EntityDeleteForm;
 use Drupal\Core\Menu\MenuLinkManagerInterface;
 use Drupal\Core\Form\FormStateInterface;
@@ -30,14 +31,24 @@ class MenuDeleteForm extends EntityDeleteForm {
   protected $connection;
 
   /**
+   * The entity type manager.
+   *
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
+   */
+  protected $entityTypeManager;
+
+  /**
    * Constructs a new MenuDeleteForm.
    *
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   *   The entity type manager.
    * @param \Drupal\Core\Menu\MenuLinkManagerInterface $menu_link_manager
    *   The menu link manager.
    * @param \Drupal\Core\Database\Connection $connection
    *   The database connection.
    */
-  public function __construct(MenuLinkManagerInterface $menu_link_manager, Connection $connection) {
+  public function __construct(EntityTypeManagerInterface $entity_type_manager, MenuLinkManagerInterface $menu_link_manager, Connection $connection) {
+    $this->entityTypeManager = $entity_type_manager;
     $this->menuLinkManager = $menu_link_manager;
     $this->connection = $connection;
   }
@@ -47,6 +58,7 @@ class MenuDeleteForm extends EntityDeleteForm {
    */
   public static function create(ContainerInterface $container) {
     return new static(
+      $container->get('entity_type.manager'),
       $container->get('plugin.manager.menu.link'),
       $container->get('database')
     );
@@ -90,6 +102,21 @@ class MenuDeleteForm extends EntityDeleteForm {
     $menu_links = $this->menuLinkManager->loadLinksByRoute('entity.menu.edit_form', ['menu' => $this->entity->id()], TRUE);
     foreach ($menu_links as $id => $link) {
       $this->menuLinkManager->removeDefinition($id);
+    }
+
+    // Removing from associated content types' storage.
+    $menu_id = $this->entity->id();
+    $content_types = $this->entityTypeManager->getStorage('node_type')->loadMultiple();
+    foreach ($content_types as $content_type) {
+      $third_party_settings = $content_type->getThirdPartySettings('menu_ui');
+      if (isset($third_party_settings['available_menus']) && in_array($menu_id, $third_party_settings['available_menus'])) {
+        $key = array_search($menu_id, $third_party_settings['available_menus']);
+        if ($key !== FALSE) {
+          unset($third_party_settings['available_menus'][$key]);
+        }
+        $content_type->setThirdPartySetting('menu_ui', 'available_menus', $third_party_settings['available_menus']);
+        $content_type->save();
+      }
     }
 
     parent::submitForm($form, $form_state);
