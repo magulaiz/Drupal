@@ -13,8 +13,14 @@ class FileSystem {
    * @return string|false
    *   A string containing the path to the temporary directory, or FALSE if no
    *   suitable temporary directory can be found.
+   *
+   * @deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use
+   *   sys_get_temp_dir() instead.
+   *
+   * @see https://www.drupal.org/node/3225275
    */
   public static function getOsTemporaryDirectory() {
+    @trigger_error(__METHOD__ . ' is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use sys_get_temp_dir() instead. See https://www.drupal.org/node/3225275', E_USER_DEPRECATED);
     $directories = [];
 
     // Has PHP been set with an upload_tmp_dir?

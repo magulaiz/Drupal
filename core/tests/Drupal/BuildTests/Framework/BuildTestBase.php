@@ -5,7 +5,6 @@ namespace Drupal\BuildTests\Framework;
 use Behat\Mink\Driver\BrowserKitDriver;
 use Behat\Mink\Mink;
 use Behat\Mink\Session;
-use Drupal\Component\FileSystem\FileSystem as DrupalFilesystem;
 use Drupal\Tests\DrupalTestBrowser;
 use Drupal\Tests\PhpUnitCompatibilityTrait;
 use Drupal\Tests\Traits\PhpUnitWarnings;
@@ -167,7 +166,7 @@ abstract class BuildTestBase extends TestCase {
     // Set up the workspace directory.
     // @todo Glean working directory from env vars, etc.
     $fs = new SymfonyFilesystem();
-    $this->workspaceDir = $fs->tempnam(DrupalFilesystem::getOsTemporaryDirectory(), '/build_workspace_' . md5($this->getName() . microtime(TRUE)));
+    $this->workspaceDir = $fs->tempnam(sys_get_temp_dir(), '/build_workspace_' . md5($this->getName() . microtime(TRUE)));
     $fs->remove($this->workspaceDir);
     $fs->mkdir($this->workspaceDir);
     $this->initMink();
@@ -476,7 +475,7 @@ abstract class BuildTestBase extends TestCase {
    *   Thrown when there are no available ports within the range.
    */
   protected function findAvailablePort() {
-    $store = new FlockStore(DrupalFilesystem::getOsTemporaryDirectory());
+    $store = new FlockStore(sys_get_temp_dir());
     $lock_factory = new LockFactory($store);
 
     $counter = 100;

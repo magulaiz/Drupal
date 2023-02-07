@@ -2,7 +2,6 @@
 
 namespace Drupal\Core\File;
 
-use Drupal\Component\FileSystem\FileSystem as FileSystemComponent;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Core\File\Exception\DirectoryNotReadyException;
 use Drupal\Core\File\Exception\FileException;
@@ -634,7 +633,7 @@ class FileSystem implements FileSystemInterface {
     }
 
     // Fallback to OS default.
-    $temporary_directory = FileSystemComponent::getOsTemporaryDirectory();
+    $temporary_directory = sys_get_temp_dir();
 
     if (empty($temporary_directory)) {
       // If no directory has been found default to 'files/tmp'.

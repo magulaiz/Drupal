@@ -3,7 +3,6 @@
 namespace Drupal\KernelTests\Core\File;
 
 use Drupal\Component\FileSecurity\FileSecurity;
-use Drupal\Component\FileSystem\FileSystem;
 use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Database\Database;
 use Drupal\Core\File\Exception\FileException;
@@ -181,7 +180,7 @@ class DirectoryTest extends FileTestBase {
   public function testFileDirectoryTemp() {
     $tmp_directory = \Drupal::service('file_system')->getTempDirectory();
     $this->assertNotEmpty($tmp_directory);
-    $this->assertEquals($tmp_directory, FileSystem::getOsTemporaryDirectory());
+    $this->assertEquals($tmp_directory, sys_get_temp_dir());
   }
 
   /**

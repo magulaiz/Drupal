@@ -2,7 +2,6 @@
 
 namespace Drupal\Tests\Scripts;
 
-use Drupal\Component\FileSystem\FileSystem;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Test\TestDatabase;
 use Drupal\Tests\UnitTestCase;
@@ -329,7 +328,7 @@ class TestSiteApplicationTest extends UnitTestCase {
    */
   protected function getTestLockFile($db_prefix) {
     $lock_id = str_replace('test', '', $db_prefix);
-    return FileSystem::getOsTemporaryDirectory() . '/test_' . $lock_id;
+    return sys_get_temp_dir() . '/test_' . $lock_id;
   }
 
 }

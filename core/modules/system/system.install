@@ -5,7 +5,6 @@
  * Install, update and uninstall functions for the system module.
  */
 
-use Drupal\Component\FileSystem\FileSystem as FileSystemComponent;
 use Drupal\Component\Utility\Bytes;
 use Drupal\Component\Utility\Crypt;
 use Drupal\Component\Utility\Environment;
@@ -810,7 +809,7 @@ function system_requirements($phase) {
     else {
       // If the temporary directory is not overridden use an appropriate
       // temporary path for the system.
-      $directories[] = FileSystemComponent::getOsTemporaryDirectory();
+      $directories[] = sys_get_temp_dir();
     }
   }
 

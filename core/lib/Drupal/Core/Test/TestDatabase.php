@@ -2,7 +2,6 @@
 
 namespace Drupal\Core\Test;
 
-use Drupal\Component\FileSystem\FileSystem;
 use Drupal\Core\Database\ConnectionNotDefinedException;
 use Drupal\Core\Database\Database;
 
@@ -154,7 +153,7 @@ class TestDatabase {
    * This should only be called once all the test fixtures have been cleaned up.
    */
   public static function releaseAllTestLocks() {
-    $tmp = FileSystem::getOsTemporaryDirectory();
+    $tmp = sys_get_temp_dir();
     $dir = dir($tmp);
     while (($entry = $dir->read()) !== FALSE) {
       if ($entry === '.' || $entry === '..') {
@@ -177,7 +176,7 @@ class TestDatabase {
    *   A file path to the symbolic link that prevents the lock ID being re-used.
    */
   protected function getLockFile($lock_id) {
-    return FileSystem::getOsTemporaryDirectory() . '/test_' . $lock_id;
+    return sys_get_temp_dir() . '/test_' . $lock_id;
   }
 
   /**
