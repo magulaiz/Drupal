@@ -21,7 +21,7 @@ class LegacyFileSystemTest extends TestCase {
    * Tests deprecated getOsTemporaryDirectory()
    */
   public function testDeprecatedGetOsTemporaryDirectory() {
-    $this->expectDeprecation('Drupal\Component\FileSystem\FileSystem::getOsTemporaryDirectory is deprecated in drupal:10.0.0 and is removed from drupal:11.0.0. Use sys_get_temp_dir() instead. See https://www.drupal.org/node/3225275');
+    $this->expectDeprecation('Drupal\Component\FileSystem\FileSystem::getOsTemporaryDirectory is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use sys_get_temp_dir() instead. See https://www.drupal.org/node/3225275');
     $this->assertEquals(sys_get_temp_dir(), FileSystem::getOsTemporaryDirectory());
   }
 
