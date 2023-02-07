@@ -753,9 +753,17 @@
    */
   Drupal.tableDrag.prototype.dragRow = function (event, self) {
     if (self.dragObject) {
+      if (!self.startDrag) {
+        self.startDrag = self.pointerCoords(event);
+      }
+
       self.currentPointerCoords = self.pointerCoords(event);
       const y = self.currentPointerCoords.y - self.dragObject.initOffset.y;
       const x = self.currentPointerCoords.x - self.dragObject.initOffset.x;
+
+      self.rowObject.element.style.transform = `translate(${
+        self.currentPointerCoords.x - self.startDrag.x
+      }px, ${self.currentPointerCoords.y - self.startDrag.y}px)`;
 
       // Check for row swapping and vertical scrolling.
       if (y !== self.oldY) {
@@ -779,9 +787,12 @@
         if (currentRow) {
           if (self.rowObject.direction === 'down') {
             self.rowObject.swap('after', currentRow, self);
+            self.startDrag = false;
           } else {
             self.rowObject.swap('before', currentRow, self);
+            self.startDrag = false;
           }
+          $(currentRow).fadeIn();
           if (self.striping === true) {
             self.restripeTable();
           }
@@ -826,6 +837,7 @@
       $droppedRow = $(droppedRow);
       // The row is already in the right place so we just release it.
       if (self.rowObject.changed === true) {
+        droppedRow.style.transform = null;
         // Update the fields in the dropped row.
         self.updateFields(droppedRow);
 
@@ -842,8 +854,9 @@
 
         self.rowObject.markChanged();
         if (self.changed === false) {
+          // debugger;
           $(Drupal.theme('tableDragChangedWarning'))
-            .insertBefore(self.table)
+            .insertBefore(self.$toggleWeightButton.parent())
             .hide()
             .fadeIn('slow');
           self.changed = true;
@@ -926,6 +939,10 @@
     const rows = $(this.table.tBodies[0].rows).not(':hidden');
     for (let n = 0; n < rows.length; n++) {
       let row = rows[n];
+      if (row.classList.contains('drag')) {
+        // eslint-disable-next-line no-continue
+        continue;
+      }
       let $row = $(row);
       const rowY = $row.offset().top;
       let rowHeight;
@@ -965,10 +982,16 @@
         // We may have found the row the mouse just passed over, but it doesn't
         // take into account hidden rows. Skip backwards until we find a
         // draggable row.
-        while ($row.is(':hidden') && $row.prev('tr').is(':hidden')) {
+        // && $row.hasClass('drag')
+        while (
+          $row.is(':hidden') &&
+          $row.prev('tr').is(':hidden') &&
+          $row.hasClass('drag')
+        ) {
           $row = $row.prev('tr:first-of-type');
           row = $row.get(0);
         }
+        $row.hide();
         return row;
       }
     }
