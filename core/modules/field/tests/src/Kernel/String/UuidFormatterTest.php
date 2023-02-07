@@ -4,6 +4,7 @@ namespace Drupal\Tests\field\Kernel\String;
 
 use Drupal\entity_test\Entity\EntityTest;
 use Drupal\KernelTests\KernelTestBase;
+use Drupal\Tests\user\Traits\UserCreationTrait;
 
 /**
  * Tests the output of a UUID field.
@@ -12,6 +13,7 @@ use Drupal\KernelTests\KernelTestBase;
  */
 class UuidFormatterTest extends KernelTestBase {
 
+  use UserCreationTrait;
 
   /**
    * Modules to enable.
@@ -28,6 +30,10 @@ class UuidFormatterTest extends KernelTestBase {
 
     $this->installConfig(['system', 'field']);
     $this->installEntitySchema('entity_test');
+    $this->installEntitySchema('user');
+    $this->setUpCurrentUser(permissions: [
+      'view test entity',
+    ]);
   }
 
   /**
