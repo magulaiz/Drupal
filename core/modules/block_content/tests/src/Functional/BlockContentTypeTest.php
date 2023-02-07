@@ -276,7 +276,7 @@ class BlockContentTypeTest extends BlockContentTestBase {
    */
   public function testBlockLibraryRedirect() {
     $this->drupalLogin($this->adminUser);
-    $this->expectDeprecation('The path /admin/structure/block/block-content is deprecated in drupal:10.1.0 and will be removed from a future version. Use /admin/content/block-content directly. See https://www.drupal.org/node/3320855.');
+    $this->expectDeprecation('The path /admin/structure/block/block-content is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use /admin/content/block-content. See https://www.drupal.org/node/3320855.');
     $this->drupalGet('admin/structure/block/block-content');
     $base_path = parse_url($this->baseUrl, PHP_URL_PATH) ?? '';
     $this->assertSession()

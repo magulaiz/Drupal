@@ -168,7 +168,7 @@ class BlockContentController extends ControllerBase {
    * @see https://www.drupal.org/node/3320855
    */
   public function blockLibraryRedirect() {
-    @trigger_error('The path /admin/structure/block/block-content is deprecated in drupal:10.1.0 and will be removed from a future version. Use /admin/content/block-content directly. See https://www.drupal.org/node/3320855.', E_USER_DEPRECATED);
+    @trigger_error('The path /admin/structure/block/block-content is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use /admin/content/block-content. See https://www.drupal.org/node/3320855.', E_USER_DEPRECATED);
     $route = 'entity.block_content.collection';
     $params = [
       '%old_path' => Url::fromRoute("$route.bc")->toString(),
