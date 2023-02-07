@@ -546,7 +546,8 @@ class ToolkitGdTest extends KernelTestBase {
   public function testInsufficientAvailableMemory(): void {
     $image = $this->imageFactory->get('core/tests/fixtures/files/image-test.png');
     $memory_in_use = memory_get_usage(TRUE);
-    ini_set('memory_limit', $memory_in_use + 2048);
+    // Leave 50kb of memory to allow selecting tables during teardown.
+    ini_set('memory_limit', $memory_in_use + 50 * 1024);
     $this->assertFalse($image->resize(200000, 200000));
   }
 
