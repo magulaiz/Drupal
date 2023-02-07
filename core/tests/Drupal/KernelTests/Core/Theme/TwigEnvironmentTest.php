@@ -186,7 +186,8 @@ class TwigEnvironmentTest extends KernelTestBase {
    */
   public function register(ContainerBuilder $container) {
     parent::register($container);
-
+    // We cannot use \Drupal::service('file_system')->getTempDirectory()
+    // here because container is not ready yet.
     $definition = new Definition('Twig\Loader\FilesystemLoader', [[sys_get_temp_dir()]]);
     $definition->setPublic(TRUE);
     $container->setDefinition('twig_loader__file_system', $definition)
@@ -204,7 +205,7 @@ TWIG;
 <div>Hello after</div>
 TWIG;
 
-    $tempfile = tempnam(sys_get_temp_dir(), '__METHOD__') . '.html.twig';
+    $tempfile = tempnam(\Drupal::service('file_system')->getTempDirectory(), '__METHOD__') . '.html.twig';
     file_put_contents($tempfile, $template_before);
 
     /** @var \Drupal\Core\Template\TwigEnvironment $environment */

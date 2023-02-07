@@ -82,7 +82,7 @@ class FileTransferTest extends BrowserTestBase {
     // not support expecting exceptions.
     $gotit = FALSE;
     try {
-      $this->testConnection->copyDirectory($source, sys_get_temp_dir());
+      $this->testConnection->copyDirectory($source, \Drupal::service('file_system')->getTempDirectory());
     }
     catch (FileTransferException $e) {
       $gotit = TRUE;

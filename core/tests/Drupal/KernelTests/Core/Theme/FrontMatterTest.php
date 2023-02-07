@@ -44,7 +44,8 @@ class FrontMatterTest extends KernelTestBase {
    */
   public function register(ContainerBuilder $container) {
     parent::register($container);
-
+    // We cannot use \Drupal::service('file_system')->getTempDirectory()
+    // here because container is not ready yet.
     $definition = new Definition(FilesystemLoader::class, [[sys_get_temp_dir()]]);
     $definition->setPublic(TRUE);
     $container->setDefinition('twig_loader__file_system', $definition)
@@ -61,7 +62,7 @@ class FrontMatterTest extends KernelTestBase {
    *   The absolute path to the temporary file.
    */
   protected function createTwigTemplate(string $content = ''): string {
-    $file = tempnam(sys_get_temp_dir(), 'twig') . ".html.twig";
+    $file = tempnam(\Drupal::service('file_system')->getTempDirectory(), 'twig') . ".html.twig";
     file_put_contents($file, $content);
     return $file;
   }

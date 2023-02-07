@@ -191,7 +191,7 @@ class DbDumpTest extends DriverSpecificKernelTestBase {
     }
 
     // This will load the data.
-    $file = sys_get_temp_dir() . '/' . $this->randomMachineName();
+    $file = \Drupal::service('file_system')->getTempDirectory() . '/' . $this->randomMachineName();
     file_put_contents($file, $script);
     require_once $file;
 
