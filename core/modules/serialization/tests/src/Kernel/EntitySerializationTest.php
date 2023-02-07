@@ -11,6 +11,7 @@ use Drupal\entity_test\Entity\EntitySerializedField;
 use Drupal\entity_test\Entity\EntityTestMulRev;
 use Drupal\filter\Entity\FilterFormat;
 use Drupal\serialization\Normalizer\CacheableNormalizerInterface;
+use Symfony\Component\Yaml\Dumper;
 
 /**
  * Tests that entities can be serialized to supported core formats.
@@ -262,6 +263,14 @@ class EntitySerializationTest extends NormalizerTestBase {
     $actual = $this->serializer->serialize($this->entity, 'xml');
     $this->assertSame($expected, $actual);
     $actual = $this->serializer->serialize($normalized, 'xml');
+    $this->assertSame($expected, $actual);
+
+    // Test YAML serialization.
+    $dumper = new Dumper();
+    $expected = $dumper->dump($normalized, PHP_INT_MAX);
+    $actual = $this->serializer->serialize($this->entity, 'yaml');
+    $this->assertSame($expected, $actual);
+    $actual = $this->serializer->serialize($normalized, 'yaml');
     $this->assertSame($expected, $actual);
   }
 
