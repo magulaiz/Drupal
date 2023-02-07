@@ -39,7 +39,7 @@ class BlockContentUpdateTest extends UpdatePathTestBase {
     // Load and initialize the block_content view.
     $view = View::load('block_content');
     $data = $view->toArray();
-    // Check that new fields exist and that they are in the correct order.
+    // Check that the path, description, and menu options have been updated.
     $this->assertEquals('admin/content/block-content', $data['display']['page_1']['display_options']['path']);
     $this->assertEquals('Create and edit custom block content.', $data['display']['page_1']['display_options']['menu']['description']);
     $this->assertFalse($data['display']['page_1']['display_options']['menu']['expanded']);
