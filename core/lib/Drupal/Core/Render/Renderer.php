@@ -165,7 +165,7 @@ class Renderer implements RendererInterface {
    * {@inheritdoc}
    */
   public function renderPlaceholder($placeholder, array $elements) {
-    // Get the render array for the given placeholder
+    // Get the render array for the given placeholder.
     $placeholder_elements = $elements['#attached']['placeholders'][$placeholder];
 
     // Prevent the render array from being auto-placeholdered again.
@@ -216,6 +216,10 @@ class Renderer implements RendererInterface {
   protected function doRender(&$elements, $is_root_call = FALSE) {
     if (empty($elements)) {
       return '';
+    }
+
+    if (!is_array($elements)) {
+      return $elements;
     }
 
     if ($this->rendererConfig['debug'] === TRUE) {
@@ -497,7 +501,10 @@ class Renderer implements RendererInterface {
     // outputted text to be filtered.
     if (isset($elements['#post_render'])) {
       foreach ($elements['#post_render'] as $callable) {
-        $elements['#children'] = $this->doCallback('#post_render', $callable, [$elements['#children'], $elements]);
+        $elements['#children'] = $this->doCallback('#post_render', $callable, [
+          $elements['#children'],
+          $elements,
+        ]);
       }
     }
 
@@ -623,7 +630,7 @@ class Renderer implements RendererInterface {
    * Placeholders may have:
    * - #lazy_builder callback, to build a render array to be rendered into
    *   markup that can replace the placeholder
-   * - #cache: to cache the result of the placeholder
+   * - #cache: to cache the result of the placeholder.
    *
    * Also merges the bubbleable metadata resulting from the rendering of the
    * contents of the placeholders. Hence $elements will be contain the entirety
@@ -656,7 +663,6 @@ class Renderer implements RendererInterface {
     // to this one special case, with this hard-coded solution.
     // @see \Drupal\Core\Render\Element\StatusMessages
     // @see https://www.drupal.org/node/2712935#comment-11368923
-
     // First render all placeholders except 'status messages' placeholders.
     $message_placeholders = [];
     foreach ($elements['#attached']['placeholders'] as $placeholder => $placeholder_element) {

@@ -312,7 +312,7 @@ class Registry implements DestructableInterface {
    * - Base theme engines
    * - Base themes
    * - Theme engine
-   * - Theme
+   * - Theme.
    *
    * All theme hook definitions are essentially just collated and merged in the
    * above order. However, various extension-specific default values and
@@ -452,13 +452,13 @@ class Registry implements DestructableInterface {
     // merge it into $cache.
     $function = $name . '_theme';
     if (function_exists($function)) {
-      $result = $function($cache, $type, $theme, $path);
+      // Cast to an array to not fail an empty hook_theme implementations.
+      $result = (array) $function($cache, $type, $theme, $path);
       foreach ($result as $hook => $info) {
         // When a theme or engine overrides a module's theme function
-        // $result[$hook] will only contain key/value pairs for information being
-        // overridden.  Pull the rest of the information from what was defined by
-        // an earlier hook.
-
+        // $result[$hook] will only contain key/value pairs for information
+        // being overridden.  Pull the rest of the information from what was
+        // defined by an earlier hook.
         // Fill in the type and path of the module, theme, or engine that
         // implements this theme function.
         $result[$hook]['type'] = $type;
@@ -640,7 +640,7 @@ class Registry implements DestructableInterface {
    *   The theme registry, as documented in
    *   \Drupal\Core\Theme\Registry::processExtension().
    */
-  protected function mergePreprocessFunctions($destination_hook_name, $source_hook_name, $parent_hook, array &$cache) {
+  protected function mergePreprocessFunctions($destination_hook_name, $source_hook_name, array $parent_hook, array &$cache) {
     // If base hook exists clone of it for the preprocess function
     // without a template.
     // @see https://www.drupal.org/node/2457295
@@ -780,13 +780,13 @@ class Registry implements DestructableInterface {
   /**
    * Gets all user functions grouped by the word before the first underscore.
    *
-   * @param $prefixes
+   * @param array $prefixes
    *   An array of function prefixes by which the list can be limited.
    *
    * @return array
    *   Functions grouped by the first prefix.
    */
-  public function getPrefixGroupedUserFunctions($prefixes = []) {
+  public function getPrefixGroupedUserFunctions(array $prefixes = []) {
     $functions = get_defined_functions();
 
     // If a list of prefixes is supplied, trim down the list to those items

@@ -2,7 +2,10 @@
 
 namespace Drupal\Tests\Core\Theme;
 
+use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\Extension\ModuleExtensionList;
+use Drupal\Core\KeyValueStore\KeyValueMemoryFactory;
+use Drupal\Core\State\State;
 use Drupal\Core\Theme\ActiveTheme;
 use Drupal\Core\Theme\Registry;
 use Drupal\Tests\UnitTestCase;
@@ -97,6 +100,8 @@ class RegistryTest extends UnitTestCase {
     $this->runtimeCache = $this->createMock('Drupal\Core\Cache\CacheBackendInterface');
     $this->themeManager = $this->createMock('Drupal\Core\Theme\ThemeManagerInterface');
     $this->moduleList = $this->createMock(ModuleExtensionList::class);
+    \Drupal::setContainer(new ContainerBuilder());
+    \Drupal::getContainer()->set('state', new State(new KeyValueMemoryFactory()));
     $this->registry = new Registry($this->root, $this->cache, $this->lock, $this->moduleHandler, $this->themeHandler, $this->themeInitialization, $this->runtimeCache, $this->moduleList);
     $this->registry->setThemeManager($this->themeManager);
   }
@@ -194,7 +199,7 @@ class RegistryTest extends UnitTestCase {
    * @param array $expected
    *   The expected results.
    */
-  public function testPostProcessExtension($defined_functions, $hooks, $expected) {
+  public function testPostProcessExtension(array $defined_functions, array $hooks, array $expected) {
     static::$functions['user'] = $defined_functions;
 
     $theme = $this->prophesize(ActiveTheme::class);
