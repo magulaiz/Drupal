@@ -264,8 +264,9 @@ class BlockContentTypeTest extends BlockContentTestBase {
     $this->drupalLogin($this->adminUser);
     $this->expectDeprecation('The path /admin/structure/block/block-content is deprecated in drupal:10.1.0 and will be removed from a future version. Use /admin/content/block-content directly. See https://www.drupal.org/node/3320855.');
     $this->drupalGet('admin/structure/block/block-content');
+    $base_path = parse_url($this->baseUrl, PHP_URL_PATH) ?? '';
     $this->assertSession()
-      ->pageTextContains('The page /admin/structure/block/block-content has been moved to /admin/content/block-content. Update links and shortcuts.');
+      ->pageTextContains("The page /admin/structure/block/block-content has been moved to /admin/content/block-content. Update links and shortcuts, and bookmarks to use $base_path/admin/structure/block-content.");
   }
 
   /**
