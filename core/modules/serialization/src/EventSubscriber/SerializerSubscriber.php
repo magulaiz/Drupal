@@ -4,7 +4,7 @@ namespace Drupal\serialization\EventSubscriber;
 
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\KernelEvents;
-use Symfony\Component\HttpKernel\Event\GetResponseEvent;
+use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\Event\ExceptionEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Yaml\Exception\ParseException;
@@ -17,10 +17,10 @@ class SerializerSubscriber implements EventSubscriberInterface {
   /**
    * Register content type formats on the request object.
    *
-   * @param \Symfony\Component\HttpKernel\Event\GetResponseEvent $event
-   *   The Events to process.
+   * @param \Symfony\Component\HttpKernel\Event\RequestEvent $event
+   *   An event object.
    */
-  public function onKernelRequest(GetResponseEvent $event) {
+  public function onKernelRequest(RequestEvent $event) {
     $event->getRequest()->setFormat('yaml', ['application/yaml', 'text/yaml']);
   }
 
@@ -39,7 +39,7 @@ class SerializerSubscriber implements EventSubscriberInterface {
   /**
    * {@inheritdoc}
    */
-  public static function getSubscribedEvents() {
+  public static function getSubscribedEvents(): array {
     // To process REST POST endpoints with YAML mime type.
     // Priority 40 is to make sure this event callback is called just before
     // \Symfony\Component\HttpKernel\EventListener\RouterListener::
