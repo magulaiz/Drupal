@@ -297,8 +297,6 @@ class DataDefinition implements DataDefinitionInterface, \ArrayAccess {
 
   /**
    * {@inheritdoc}
-   *
-   * This is for BC support only.
    */
   #[\ReturnTypeWillChange]
   public function offsetExists($offset) {
@@ -309,8 +307,6 @@ class DataDefinition implements DataDefinitionInterface, \ArrayAccess {
 
   /**
    * {@inheritdoc}
-   *
-   * This is for BC support only.
    */
   #[\ReturnTypeWillChange]
   public function &offsetGet($offset) {
@@ -322,8 +318,6 @@ class DataDefinition implements DataDefinitionInterface, \ArrayAccess {
 
   /**
    * {@inheritdoc}
-   *
-   * This is for BC support only.
    */
   #[\ReturnTypeWillChange]
   public function offsetSet($offset, $value) {
@@ -332,8 +326,6 @@ class DataDefinition implements DataDefinitionInterface, \ArrayAccess {
 
   /**
    * {@inheritdoc}
-   *
-   * This is for BC support only.
    */
   #[\ReturnTypeWillChange]
   public function offsetUnset($offset) {
