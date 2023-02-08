@@ -1967,6 +1967,7 @@ function hook_cron() {
  * @see hook_data_type_info()
  */
 function hook_data_type_info_alter(&$data_types) {
+  // Change the class for the email data type to '\Drupal\mymodule\Type\Email'.
   $data_types['email']['class'] = '\Drupal\mymodule\Type\Email';
 }
 
@@ -1989,6 +1990,16 @@ function hook_queue_info_alter(&$queues) {
   // This site has many feeds so let's spend 90 seconds on each cron run
   // updating feeds instead of the default 60.
   $queues['mymodule_feeds']['cron']['time'] = 90;
+}
+
+/**
+ * Alter the information provided in \Drupal\Core\Condition\ConditionManager::getDefinitions().
+ *
+ * @param array $definitions
+ *   The array of condition definitions.
+ */
+function hook_condition_info_alter(array &$definitions) {
+  // Add custom or modify existing condition definitions. (needs be to updated)
 }
 
 /**
@@ -2135,6 +2146,7 @@ function hook_mail($key, &$message, $params) {
  * @see \Drupal\Core\Mail\MailManager
  */
 function hook_mail_backend_info_alter(&$info) {
+  // Remove the 'test_mail_collector' backend from the list of available mail backends.
   unset($info['test_mail_collector']);
 }
 
