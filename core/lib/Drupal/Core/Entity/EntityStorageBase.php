@@ -524,11 +524,6 @@ abstract class EntityStorageBase extends EntityHandlerBase implements EntityStor
       $entity->original = $this->loadUnchanged($id);
     }
 
-    // If the entity ID is not set, generate a new one.
-    if (!$id) {
-      $id = uniqid();
-    }
-
     // Allow code to run before saving.
     $entity->preSave($this);
     $this->invokeHook('presave', $entity);
