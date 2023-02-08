@@ -3086,6 +3086,11 @@ parameters:
 			path: tests/Drupal/KernelTests/Core/TempStore/TempStoreDatabaseTest.php
 
 		-
+			message: "#^Variable \\$theme_test_template in isset\\(\\) always exists and is not nullable\\.$#"
+			count: 1
+			path: tests/Drupal/KernelTests/Core/Theme/RegistryTest.php
+
+		-
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 5
 			path: tests/Drupal/KernelTests/Core/TypedData/TypedDataTest.php
