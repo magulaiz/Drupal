@@ -156,9 +156,6 @@ class UserLoginForm extends FormBase {
         ['user' => $account->id()]
       );
     }
-    else {
-      $this->getRequest()->query->set('destination', $this->getRequest()->request->get('destination'));
-    }
 
     user_login_finalize($account);
   }
