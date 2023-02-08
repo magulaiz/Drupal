@@ -77,6 +77,15 @@
     }
 
     function closeDialog(value) {
+      const opener = $element.data('uiDialog').opener[0];
+      // Check to see if the opener belongs to a drop button and is hidden. If so, focus on
+      // a visible part of the drop button.
+      if (
+        opener.closest('.dropbutton-widget') &&
+        opener.parentElement.classList.contains('secondary-action')
+      ) {
+        $(opener).closest('.dropbutton-widget').find('button').focus();
+      }
       $(window).trigger('dialog:beforeclose', [dialog, $element]);
       $element.dialog('close');
       dialog.returnValue = value;
