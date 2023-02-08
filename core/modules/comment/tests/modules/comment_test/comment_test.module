@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Implements comment related hooks to test API interactions.
+ * Implements comment-related hooks to test API interactions.
  */
 
 use Drupal\comment\CommentInterface;

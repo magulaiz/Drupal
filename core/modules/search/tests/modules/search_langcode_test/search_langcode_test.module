@@ -2,10 +2,11 @@
 
 /**
  * @file
- * Test module setting up two tests.
+ * Tests two scenarios for search preprocess.
  *
- * One for checking if the entity $langcode is being passed on and another one
- * sets up the alternate verb forms for the stemming test.
+ * This module tests the following scenarios:
+ * - A scenario where the language code is passed to the search preprocess.
+ * - A scenario with alternate verb forms for the stemming test.
  */
 
 /**
