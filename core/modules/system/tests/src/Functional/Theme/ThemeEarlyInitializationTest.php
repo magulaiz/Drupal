@@ -5,7 +5,7 @@ namespace Drupal\Tests\system\Functional\Theme;
 use Drupal\Tests\BrowserTestBase;
 
 /**
- * Tests that theme system can be correctly initialized early in page request.
+ * Tests theme system initialization early in the page request.
  *
  * @group Theme
  */

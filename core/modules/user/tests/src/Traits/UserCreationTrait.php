@@ -13,7 +13,7 @@ use Drupal\user\Entity\User;
 use Drupal\user\RoleInterface;
 
 /**
- * Provides methods for working with users in test classes.
+ * Provides test methods for user creation and authentication.
  *
  * This trait is meant to be used only by test classes.
  */

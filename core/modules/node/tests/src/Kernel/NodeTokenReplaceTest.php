@@ -9,7 +9,7 @@ use Drupal\node\Entity\NodeType;
 use Drupal\Tests\system\Kernel\Token\TokenReplaceKernelTestBase;
 
 /**
- * Tests placement of node tokens.
+ * Tests node token replacement.
  *
  * @group node
  */

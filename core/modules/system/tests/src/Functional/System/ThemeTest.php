@@ -9,7 +9,7 @@ use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\TestFileCreationTrait;
 
 /**
- * Tests the theme interface.
+ * Tests the theme administration user interface.
  *
  * @group system
  */

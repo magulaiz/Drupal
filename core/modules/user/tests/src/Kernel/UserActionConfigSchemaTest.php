@@ -7,7 +7,7 @@ use Drupal\KernelTests\KernelTestBase;
 use Drupal\user\Entity\Role;
 
 /**
- * Tests user action for adding and removing roles have valid config schema.
+ * Tests that the config schema is valid when roles are added or removed.
  *
  * @group user
  */

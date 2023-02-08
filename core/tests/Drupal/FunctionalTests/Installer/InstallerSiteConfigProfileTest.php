@@ -3,7 +3,7 @@
 namespace Drupal\FunctionalTests\Installer;
 
 /**
- * Verifies the installer uses the site configuration provided by the profile.
+ * Verifies that the installer uses the profile's site configuration.
  *
  * @group Installer
  */

@@ -6,7 +6,7 @@ use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\views\Views;
 
 /**
- * Tests the RSS display.
+ * Tests the taxonomy RSS display.
  *
  * @group taxonomy
  */

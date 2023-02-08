@@ -6,7 +6,7 @@ use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\KernelTests\KernelTestBase;
 
 /**
- * Provides file specific assertions and helper functions.
+ * Provides file-specific assertions and helper functions.
  */
 abstract class FileTestBase extends KernelTestBase {
 

@@ -6,7 +6,7 @@ use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Tests\BrowserTestBase;
 
 /**
- * Tests the form API element checkbox.
+ * Tests the form API checkbox element.
  *
  * Various combinations of #default_value and #return_value are used.
  *

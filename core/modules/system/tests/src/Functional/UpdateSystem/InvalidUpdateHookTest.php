@@ -7,7 +7,7 @@ use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\RequirementsPageTrait;
 
 /**
- * Tests invalid update hook.
+ * Tests that hook_update_8000() is disallowed.
  *
  * @group Update
  */

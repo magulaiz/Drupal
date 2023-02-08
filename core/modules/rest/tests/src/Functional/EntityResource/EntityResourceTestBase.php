@@ -24,7 +24,7 @@ use GuzzleHttp\RequestOptions;
 use Psr\Http\Message\ResponseInterface;
 
 /**
- * Base class for testing all entity resources.
+ * Defines a base class for testing all entity resources.
  *
  * Even though there is the generic EntityResource, it's necessary for every
  * entity type to have its own test, because they each have different fields,

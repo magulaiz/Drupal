@@ -6,10 +6,7 @@ use Drupal\Core\Database\Database;
 use Drupal\node\NodeInterface;
 
 /**
- * Tests a node with revisions with a user with access to this content type.
- *
- * Test viewing, saving, reverting, and deleting revisions for user with access
- * to all.
+ * Tests global node CRUD operation permissions.
  *
  * @group node
  */

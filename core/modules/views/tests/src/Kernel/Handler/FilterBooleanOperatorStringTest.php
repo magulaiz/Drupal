@@ -6,7 +6,7 @@ use Drupal\Tests\views\Kernel\ViewsKernelTestBase;
 use Drupal\views\Views;
 
 /**
- * Tests core Drupal\views\Plugin\views\filter\BooleanOperatorString handler.
+ * Tests core's BooleanOperatorString views filter handler.
  *
  * @group views
  * @see \Drupal\views\Plugin\views\filter\BooleanOperatorString

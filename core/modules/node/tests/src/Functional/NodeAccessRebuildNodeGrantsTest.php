@@ -5,7 +5,7 @@ namespace Drupal\Tests\node\Functional;
 use Drupal\node\Entity\NodeType;
 
 /**
- * Tests node access rebuild functions.
+ * Tests node access rebuild functions with multiple node access modules.
  *
  * @group node
  */

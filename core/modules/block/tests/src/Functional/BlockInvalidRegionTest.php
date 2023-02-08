@@ -6,7 +6,7 @@ use Drupal\Tests\BrowserTestBase;
 use Drupal\block\Entity\Block;
 
 /**
- * Tests that blocks assigned to invalid regions work correctly.
+ * Tests that blocks assigned to invalid regions are disabled with a warning.
  *
  * @group block
  */
