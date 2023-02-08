@@ -296,8 +296,8 @@ TWIG;
     /** @var \Drupal\Core\Render\RendererInterface $renderer */
     $renderer = $this->container->get('renderer');
 
-    // foo is used but set in the theme_test_deprecate_overriden template.
-    $element = ['#theme' => 'theme_test_deprecate_overriden'];
+    // foo is used but set in the theme_test_deprecate_overridden template.
+    $element = ['#theme' => 'theme_test_deprecate_overridden'];
     $this->assertEquals('foobar', $renderer->renderRoot($element));
 
     // foo is unused in the theme_test_deprecate_unused template.
