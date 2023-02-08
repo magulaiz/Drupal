@@ -3,7 +3,6 @@
 namespace Drupal\Core\Template;
 
 use Twig\Environment;
-use Twig\Node\Expression\AssignNameExpression;
 use Twig\Node\Expression\NameExpression;
 use Twig\Node\ModuleNode;
 use Twig\Node\Node;
