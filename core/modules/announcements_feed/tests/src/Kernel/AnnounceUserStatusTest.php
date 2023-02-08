@@ -125,7 +125,7 @@ class AnnounceUserStatusTest extends KernelTestBase {
         'title' => 'Drupal security update Test',
         'url' => 'https://www.drupal.org/project/announce',
         'content_html' => 'Test teaser 1',
-        '_extra' => [
+        '_drupalorg' => [
           'featured' => 1,
           'version' => '^10',
         ],
@@ -136,7 +136,7 @@ class AnnounceUserStatusTest extends KernelTestBase {
         'title' => 'Drupal security update Test',
         'url' => 'https://www.drupal.org/project/announce',
         'content_html' => 'Test teaser 2',
-        '_extra' => [
+        '_drupalorg' => [
           'featured' => 1,
           'version' => '^10',
         ],
@@ -148,7 +148,7 @@ class AnnounceUserStatusTest extends KernelTestBase {
         'title' => 'Drupal security update Test',
         'url' => 'https://www.drupal.org/project/announce',
         'content_html' => 'Test teaser 3',
-        '_extra' => [
+        '_drupalorg' => [
           'featured' => 1,
           'version' => '^10',
         ],
@@ -159,7 +159,7 @@ class AnnounceUserStatusTest extends KernelTestBase {
         'title' => 'Drupal security update Test',
         'url' => 'https://www.drupal.org/project/announce',
         'content_html' => 'Test teaser 4',
-        '_extra' => [
+        '_drupalorg' => [
           'featured' => 1,
           'version' => '^10',
         ],
@@ -179,7 +179,7 @@ class AnnounceUserStatusTest extends KernelTestBase {
         'title' => 'Drupal security update Test new',
         'url' => 'https://www.drupal.org/project/announce',
         'content_html' => 'Test teaser 1',
-        '_extra' => [
+        '_drupalorg' => [
           'featured' => 1,
           'version' => '^10',
         ],
@@ -190,7 +190,7 @@ class AnnounceUserStatusTest extends KernelTestBase {
         'title' => 'Drupal security update Test',
         'url' => 'https://www.drupal.org/project/announce',
         'content_html' => 'Test teaser 1',
-        '_extra' => [
+        '_drupalorg' => [
           'featured' => 1,
           'version' => '^10',
         ],
@@ -201,7 +201,7 @@ class AnnounceUserStatusTest extends KernelTestBase {
         'title' => 'Drupal security update Test',
         'url' => 'https://www.drupal.org/project/announce',
         'content_html' => 'Test teaser 2',
-        '_extra' => [
+        '_drupalorg' => [
           'featured' => 1,
           'version' => '^10',
         ],
@@ -213,7 +213,7 @@ class AnnounceUserStatusTest extends KernelTestBase {
         'title' => 'Drupal security update Test',
         'url' => 'https://www.drupal.org/project/announce',
         'content_html' => 'Test teaser 3',
-        '_extra' => [
+        '_drupalorg' => [
           'featured' => 1,
           'version' => '^10',
         ],
@@ -224,7 +224,7 @@ class AnnounceUserStatusTest extends KernelTestBase {
         'title' => 'Drupal security update Test',
         'url' => 'https://www.drupal.org/project/announce',
         'content_html' => 'Test teaser 4',
-        '_extra' => [
+        '_drupalorg' => [
           'featured' => 1,
           'version' => '^10',
         ],

@@ -57,7 +57,7 @@ class AnnounceFetcherTest extends KernelTestBase {
     $this->assertCount(1, $feeds);
     $this->assertSame('https://www.drupal.org/project/announce', $feeds[0]['url']);
     $this->assertSame('Drupal security update Test', $feeds[0]['title']);
-    $this->assertSame('^10', $feeds[0]['_extra']['version']);
+    $this->assertSame('^10', $feeds[0]['_drupalorg']['version']);
     $this->assertCount(1, $this->history);
   }
 
@@ -69,7 +69,7 @@ class AnnounceFetcherTest extends KernelTestBase {
       'id' => 1001,
       'content_html' => 'Test teaser 1',
       'url' => 'https://www.drupal.org/project/announce',
-      '_extra' => [
+      '_drupalorg' => [
         'featured' => 1,
         'version' => '^10',
       ],
@@ -80,9 +80,9 @@ class AnnounceFetcherTest extends KernelTestBase {
     $this->assertCount(1, $feeds);
     $this->assertSame($feed_item_1['id'], $feeds[0]['id']);
     $this->assertSame($feed_item_1['content_html'], $feeds[0]['content_html']);
-    $this->assertSame($feed_item_1['_extra']['featured'], $feeds[0]['_extra']['featured']);
+    $this->assertSame($feed_item_1['_drupalorg']['featured'], $feeds[0]['_drupalorg']['featured']);
     $this->assertSame($feed_item_1['date_modified'], $feeds[0]['date_modified']);
-    $this->assertSame($feed_item_1['_extra']['version'], $feeds[0]['_extra']['version']);
+    $this->assertSame($feed_item_1['_drupalorg']['version'], $feeds[0]['_drupalorg']['version']);
   }
 
   /**
@@ -94,7 +94,7 @@ class AnnounceFetcherTest extends KernelTestBase {
         'feed_item' => [
           'id' => 1001,
           'content_html' => 'Test teaser 1',
-          '_extra' => [
+          '_drupalorg' => [
             'featured' => 1,
             'version' => '^10',
           ],
@@ -105,7 +105,7 @@ class AnnounceFetcherTest extends KernelTestBase {
         'feed_item' => [
           'id' => 1002,
           'content_html' => 'Test teaser 2',
-          '_extra' => [
+          '_drupalorg' => [
             'featured' => 1,
             'version' => '^10',
           ],
@@ -116,7 +116,7 @@ class AnnounceFetcherTest extends KernelTestBase {
         'feed_item' => [
           'id' => 1003,
           'content_html' => 'Test teaser 3',
-          '_extra' => [
+          '_drupalorg' => [
             'featured' => 1,
             'version' => '^10',
           ],
@@ -127,7 +127,7 @@ class AnnounceFetcherTest extends KernelTestBase {
         'feed_item' => [
           'id' => 1004,
           'content_html' => 'Test teaser 4',
-          '_extra' => [
+          '_drupalorg' => [
             'featured' => 1,
             'version' => '^10',
           ],

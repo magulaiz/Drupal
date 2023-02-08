@@ -95,8 +95,8 @@ class AnnounceFetcher {
    *   Return True if $announcement['version'] matches Drupal version.
    */
   protected static function isRelevantItem(array $announcement): bool {
-    return isset($announcement['_extra']['version'])
-      && Semver::satisfies(\Drupal::VERSION, $announcement['_extra']['version']);
+    return isset($announcement['_drupalorg']['version'])
+      && Semver::satisfies(\Drupal::VERSION, $announcement['_drupalorg']['version']);
   }
 
   /**
@@ -179,7 +179,7 @@ class AnnounceFetcher {
     // Put all the sticky announcements before the rest.
     $prioritized = [[], []];
     foreach ($announcements as $announcement) {
-      $prioritized[$announcement['_extra']['featured'] ? 0 : 1][] = $announcement;
+      $prioritized[$announcement['_drupalorg']['featured'] ? 0 : 1][] = $announcement;
     }
     $announcements = array_merge($prioritized[0], $prioritized[1]);
 

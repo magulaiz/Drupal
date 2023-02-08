@@ -84,7 +84,7 @@ class AnnounceController extends ControllerBase implements ContainerInjectionInt
     $items['featured'] = [];
     $items['standard'] = [];
     foreach ($announcements as $announcement) {
-      if ($announcement['_extra']['featured']) {
+      if ($announcement['_drupalorg']['featured']) {
         $items['featured'][] = [
           'id' => $announcement['id'],
           'title' => $announcement['title'],
