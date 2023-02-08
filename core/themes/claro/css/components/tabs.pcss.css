@@ -18,7 +18,7 @@
   --tabs--hover-bg-color: var(--color-bgblue-active);
 }
 
-.tabs-wrapper  {
+.tabs-wrapper {
   & > nav {
     width: 100%;
   }
