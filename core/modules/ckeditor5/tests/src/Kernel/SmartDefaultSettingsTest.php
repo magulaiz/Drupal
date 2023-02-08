@@ -1164,7 +1164,7 @@ class SmartDefaultSettingsTest extends KernelTestBase {
           'As part of migrating to CKEditor 5, it was found that the %text_format text format\'s HTML filters includes plugins that support the following tags, but not some of their attributes. To ensure these attributes remain supported, the following were added to the Source Editing plugin\'s <em>Manually editable HTML tags</em>: @missing_attributes. The text format must be saved to make these changes active.',
         ],
         'warning' => [
-          'As part of migrating the %text_format text format to CKEditor 5, the following tag(s) were added to <em>Limit allowed HTML tags and correct faulty HTML</em>, because they are needed to provide fundamental CKEditor 5 functionality : @missing_tags. The text format must be saved to make these changes active.'
+          'As part of migrating the %text_format text format to CKEditor 5, the following tag(s) were added to <em>Limit allowed HTML tags and correct faulty HTML</em>, because they are needed to provide fundamental CKEditor 5 functionality : @missing_tags. The text format must be saved to make these changes active.',
         ],
       ],
       'expected_messages' => [
@@ -1299,7 +1299,7 @@ class SmartDefaultSettingsTest extends KernelTestBase {
           'As part of migrating to CKEditor 5, it was found that the %text_format text format\'s HTML filters includes plugins that support the following tags, but not some of their attributes. To ensure these attributes remain supported, the following were added to the Source Editing plugin\'s <em>Manually editable HTML tags</em>: @missing_attributes. The text format must be saved to make these changes active.',
         ],
         'warning' => [
-          'As part of migrating the %text_format text format to CKEditor 5, the following tag(s) were added to <em>Limit allowed HTML tags and correct faulty HTML</em>, because they are needed to provide fundamental CKEditor 5 functionality : @missing_tags. The text format must be saved to make these changes active.'
+          'As part of migrating the %text_format text format to CKEditor 5, the following tag(s) were added to <em>Limit allowed HTML tags and correct faulty HTML</em>, because they are needed to provide fundamental CKEditor 5 functionality : @missing_tags. The text format must be saved to make these changes active.',
         ],
       ],
       'expected_messages' => [
@@ -1350,7 +1350,7 @@ class SmartDefaultSettingsTest extends KernelTestBase {
       'expected_db_logs' => [
         'warning' => [
           'The CKEditor 4 button %button does not have a known upgrade path. If it allowed editing markup, then you can do so now through the Source Editing functionality.',
-          'The %cke4_plugin_id plugin settings do not have a known upgrade path.'
+          'The %cke4_plugin_id plugin settings do not have a known upgrade path.',
         ],
       ],
       'expected_messages' => [
