@@ -3,7 +3,7 @@
 namespace Drupal\Tests\node\Functional;
 
 /**
- * Tests that the post information text displays appropriately.
+ * Tests the node setting for displaying author and date information.
  *
  * @group node
  */

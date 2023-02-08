@@ -11,10 +11,7 @@ use Drupal\node\Entity\Node;
 use Drupal\node\NodeInterface;
 
 /**
- * Tests a node with revisions with a user with access to this content type.
- *
- * Test viewing, saving, reverting, and deleting revisions for users with access
- * for this content type.
+ * Tests per-content-type node CRUD operation permissions.
  *
  * @group node
  */

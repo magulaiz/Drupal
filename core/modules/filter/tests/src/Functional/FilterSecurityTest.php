@@ -8,7 +8,7 @@ use Drupal\filter\Plugin\FilterInterface;
 use Drupal\user\RoleInterface;
 
 /**
- * Tests \check_markup().
+ * Tests HTML filtering with missing or skipped filters or text formats.
  *
  * @group filter
  */

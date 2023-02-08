@@ -7,7 +7,7 @@ use Drupal\Core\Language\LanguageInterface;
 use Drupal\node\NodeInterface;
 
 /**
- * Tests  multilingual support of content types.
+ * Tests multilingual support for content types and individual nodes.
  *
  * @group locale
  */
