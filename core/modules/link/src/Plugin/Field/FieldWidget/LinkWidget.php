@@ -184,6 +184,16 @@ class LinkWidget extends WidgetBase {
     /** @var \Drupal\link\LinkItemInterface $item */
     $item = $items[$delta];
 
+    $item_url = NULL;
+    try {
+      if (!$item->isEmpty()) {
+        $item_url = $item->getUrl();
+      }
+    }
+    catch (\Exception $e) {
+      // The call to getUrl might throw an exception for an invalid uri.
+    }
+
     $element['uri'] = [
       '#type' => 'url',
       '#title' => $this->t('URL'),
@@ -191,7 +201,7 @@ class LinkWidget extends WidgetBase {
       // The current field value could have been entered by a different user.
       // However, if it is inaccessible to the current user, do not display it
       // to them.
-      '#default_value' => (!$item->isEmpty() && (\Drupal::currentUser()->hasPermission('link to any page') || $item->getUrl()->access())) ? static::getUriAsDisplayableString($item->uri) : NULL,
+      '#default_value' => (!$item->isEmpty() && (\Drupal::currentUser()->hasPermission('link to any page') || ($item_url && $item_url->access()))) ? static::getUriAsDisplayableString($item->uri) : NULL,
       '#element_validate' => [[static::class, 'validateUriElement']],
       '#maxlength' => 2048,
       '#required' => $element['#required'],
