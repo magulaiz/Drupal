@@ -5,7 +5,10 @@ namespace Drupal\module_install_class_loader_test1;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
- * Event subscriber that does different things depending on classes existence.
+ * Defines an event subscriber that conditionally unsets the event list.
+ *
+ * @see Drupal\module_install_class_loader_test2\EventSubscriber
+ * @see Drupal\Tests\system\Functional\Module\ClassLoaderTest::testMultipleModules()
  */
 class EventSubscriber implements EventSubscriberInterface {
 
