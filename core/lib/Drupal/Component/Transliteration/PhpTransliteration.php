@@ -128,6 +128,7 @@ class PhpTransliteration implements TransliterationInterface {
     $result = '';
     $length = 0;
     $hash = FALSE;
+    $string = (string) $string;
 
     // Replace question marks with a unique hash if necessary. This because
     // mb_convert_encoding() replaces all invalid characters with a question
