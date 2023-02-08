@@ -39,6 +39,10 @@ abstract class ConfigStorageTestBase extends KernelTestBase {
     // Checking whether a non-existing name exists returns FALSE.
     $this->assertFalse($this->storage->exists($name));
 
+    // Checking whether readMultiple not throw an exception with empty storage.
+    // @see https://www.drupal.org/project/drupal/issues/3325571
+    $this->assertEmpty($this->storage->readMultiple([$name]));
+
     // Reading a non-existing name returns FALSE.
     $data = $this->storage->read($name);
     $this->assertFalse($data);
@@ -59,6 +63,7 @@ abstract class ConfigStorageTestBase extends KernelTestBase {
     $this->assertTrue($result);
 
     // Listing all names returns all.
+    $this->storage->write('system.performance', []);
     $names = $this->storage->listAll();
     $this->assertContains('system.performance', $names);
     $this->assertContains($name, $names);
