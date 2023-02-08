@@ -7,7 +7,7 @@ use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 
 /**
- * Tests deleting and uninstalling field storage through the UI.
+ * Tests deleting field storage when a module in uninstalled through the UI.
  *
  * @group field
  * @see \Drupal\field\ConfigImporterFieldPurger

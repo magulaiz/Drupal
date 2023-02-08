@@ -5,10 +5,10 @@ namespace Drupal\Tests\language\Functional;
 use Drupal\Tests\BrowserTestBase;
 
 /**
- * Tests enabling Language.
+ * Tests that module installation enables the Language module when needed.
  *
- * Prerequisite is that a module exists that calls
- * LanguageManager::getLanguages() during installation.
+ * If a module calls \Drupal\Core\Language\LanguageManager::getLanguages()
+ * during its installation, the Language module should be enabled automatically.
  *
  * @group language
  */

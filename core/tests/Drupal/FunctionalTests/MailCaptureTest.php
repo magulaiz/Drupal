@@ -7,7 +7,10 @@ use Drupal\Tests\BrowserTestBase;
 use Drupal\Core\Test\AssertMailTrait;
 
 /**
- * Tests email capturing.
+ * Tests the collection of emails during testing.
+ *
+ * The test mail collector, test.mail.collector, intercepts any email sent
+ * during a test do it does not leave the test server.
  *
  * @group browsertestbase
  */

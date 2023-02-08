@@ -256,7 +256,7 @@ class DateTimeIso8601NormalizerTest extends UnitTestCase {
 }
 
 /**
- * DrupalDateTime test class.
+ * Provides a test class for testing DrupalDateTime.
  *
  * Note: Prophecy does not support magic methods. By subclassing and specifying
  * an explicit method, Prophecy works.

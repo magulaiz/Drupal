@@ -14,6 +14,9 @@ use Drupal\KernelTests\KernelTestBase;
 /**
  * Tests the Url object.
  *
+ * @covers \Drupal\Component\Utility\UrlHelper::filterQueryParameters()
+ * @covers \Drupal\Core\Utility\LinkGeneratorInterface::generate()
+ *
  * @group Common
  */
 class UrlTest extends KernelTestBase {
