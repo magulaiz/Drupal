@@ -40,6 +40,13 @@ class NodeGrantDatabaseStorage implements NodeGrantDatabaseStorageInterface {
   protected $languageManager;
 
   /**
+   * The current user.
+   *
+   * @var \Drupal\Core\Session\AccountInterface
+   */
+  private $currentUser;
+
+  /**
    * Constructs a NodeGrantDatabaseStorage object.
    *
    * @param \Drupal\Core\Database\Connection $database
@@ -48,11 +55,18 @@ class NodeGrantDatabaseStorage implements NodeGrantDatabaseStorageInterface {
    *   The module handler.
    * @param \Drupal\Core\Language\LanguageManagerInterface $language_manager
    *   The language manager.
+   * @param \Drupal\Core\Session\AccountInterface|null $current_user
+   *   The current user.
    */
-  public function __construct(Connection $database, ModuleHandlerInterface $module_handler, LanguageManagerInterface $language_manager) {
+  public function __construct(Connection $database, ModuleHandlerInterface $module_handler, LanguageManagerInterface $language_manager, AccountInterface $current_user = NULL) {
     $this->database = $database;
     $this->moduleHandler = $module_handler;
     $this->languageManager = $language_manager;
+    if ($current_user === NULL) {
+      // @todo Trigger deprecation.
+      $current_user = \Drupal::currentUser();
+    }
+    $this->currentUser = $current_user;
   }
 
   /**
@@ -109,8 +123,12 @@ class NodeGrantDatabaseStorage implements NodeGrantDatabaseStorageInterface {
     // cases. For now, this must remain marked as uncacheable, even when it is
     // theoretically cacheable, because we don't have the necessary metadata to
     // know it for a fact.
-    $set_cacheability = function (AccessResult $access_result) use ($operation) {
-      $access_result->addCacheContexts(['user.node_grants:' . $operation]);
+    $current_user = $this->currentUser;
+    $set_cacheability = static function (AccessResult $access_result) use ($operation, $current_user, $account) {
+      // @todo Should we mark the result uncacheable too otherwise?
+      if ($account->id() == $current_user->id()) {
+        $access_result->addCacheContexts(['user.node_grants:' . $operation]);
+      }
       if ($operation !== 'view') {
         $access_result->setCacheMaxAge(0);
       }
