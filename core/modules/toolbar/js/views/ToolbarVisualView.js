@@ -121,8 +121,11 @@
         this.updateTabs();
         this.updateTrayOrientation();
         this.updateBarAttributes();
-
+        // debugger;
         $('body').removeClass('toolbar-loading');
+        $('[data-tray-placeholder]').remove();
+        // debugger;
+
         setTimeout(() => {
           trayMenus.forEach((trayMenu) => {
             trayMenu.classList.remove('init');

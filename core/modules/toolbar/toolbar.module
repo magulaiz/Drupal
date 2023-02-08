@@ -207,30 +207,30 @@ function toolbar_toolbar() {
     '#weight' => -15,
   ];
 
-  $items['anti-flicker'] = [
-    '#type' => 'toolbar_item',
-    'tab' => [
-      '#type' => 'link',
-      '#title' => t('&nbsp;'),
-      '#url' => Url::fromRoute('<front>'),
-    ],
-    'tray' => [
-      '#heading' => t('&nbsp;'),
-      '#wrapper_attributes' => [
-        'id' => 'toolbar-tray-anti-flicker',
-      ],
-      'content' => [
-        '#theme' => 'item_list',
-        '#items' => [
-          Link::fromTextAndUrl('&nbsp;', new Url('<front>', [], [])),
-        ],
-        '#attributes' => [
-          'class' => ['toolbar-menu'],
-        ],
-      ],
-    ],
-    '#weight' => 1000,
-  ];
+//  $items['anti-flicker'] = [
+//    '#type' => 'toolbar_item',
+//    'tab' => [
+//      '#type' => 'link',
+//      '#title' => t('&nbsp;'),
+//      '#url' => Url::fromRoute('<front>'),
+//    ],
+//    'tray' => [
+//      '#heading' => t('&nbsp;'),
+//      '#wrapper_attributes' => [
+//        'id' => 'toolbar-tray-anti-flicker',
+//      ],
+//      'content' => [
+//        '#theme' => 'item_list',
+//        '#items' => [
+//          Link::fromTextAndUrl('&nbsp;', new Url('<front>', [], [])),
+//        ],
+//        '#attributes' => [
+//          'class' => ['toolbar-menu'],
+//        ],
+//      ],
+//    ],
+//    '#weight' => 1000,
+//  ];
 
   $hash_cacheability->applyTo($items['administration']);
 
@@ -293,27 +293,46 @@ function toolbar_preprocess_html(&$variables) {
   if (!empty($activeTab)) {
     $variables['attributes']['class'][] = 'toolbar-tray-open';
     $activeTray = \Drupal::request()->cookies->get('toolbarActiveTray');
-
+    if (!empty($activeTray)) {
 $style = <<<STYLE
-      .toolbar-loading .toolbar-tray {display: none;}
-      .toolbar-loading .toolbar-tray[data-toolbar-tray="$activeTray"] {display: block}
-     .toolbar-loading .toolbar-item[data-toolbar-tray="$activeTray"] {background-image: linear-gradient(rgba(255, 255, 255, 0.25) 20%, transparent 200%);}
-     .toolbar-loading.toolbar-horizontal .toolbar-tray[data-toolbar-tray="$activeTray"] > nav > [data-big-pipe-placeholder-id] {}
+  .toolbar-loading .toolbar-tray {display: none;}
+  .toolbar-loading .toolbar-tray[data-toolbar-tray="$activeTray"] {display: block}
+  .toolbar-loading .toolbar-item[data-toolbar-tray="$activeTray"] {background-image: linear-gradient(rgba(255, 255, 255, 0.25) 20%, transparent 200%);}
+  .toolbar-loading.toolbar-vertical .toolbar-tray[data-toolbar-tray="$activeTray"] {background: red;}
 STYLE;
-    $variables['page']['#attached']['html_head'][] = [
-      [
-        '#tag' => 'style',
-        '#value' => $style,
-      ],
-      'toolbar_init',
-    ];
+    }
+
+//    $variables['page']['#attached']['html_head'][] = [
+//      [
+//        '#tag' => 'style',
+//        '#value' => $style,
+//      ],
+//      'toolbar_init',
+//    ];
     //<a href="/en/admin/config/user-interface/shortcut" title="Shortcuts" class="toolbar-icon toolbar-icon-shortcut trigger toolbar-item is-active" id="toolbar-item-shortcuts" data-toolbar-tray="toolbar-item-shortcuts-tray" role="button" aria-pressed="false">Shortcuts</a>
     // id=toolbar-item-shortcuts-tray data-toolbar-tray= toolbar-item-shortcuts-tray
   }
 
-  $toolbarFixed = \Drupal::request()->cookies->get('isToolbarFixed');
-  if (!empty($toolbarFixed)) {
+  if (!empty(\Drupal::request()->cookies->get('isToolbarFixed'))) {
     $variables['attributes']['class'][] = 'toolbar-fixed';
+  }
+  if (!empty(\Drupal::request()->cookies->get('toolbarIsOriented'))) {
+    $variables['attributes']['class'][] = 'toolbar-oriented';
+    if ($orientation === 'vertical') {
+      $variables['page_top']['vertical_placeholder'] = [
+        '#type' => 'container',
+        '#attributes' => [
+          'class' => [
+            'toolbar-tray',
+            'toolbar-tray-vertical',
+            'is-active',
+            'toolbar',
+          ],
+          'data-tray-placeholder' => TRUE,
+        ],
+        '#markup' => '<div class="progress-bar"><div class="progress-bar-value"></div></div><ul class="toolbar-menu"><li class="menu-item"><div class="toolbar-box"><a href="#">&nbsp;</a></div></li><li class="menu-item"><div class="toolbar-box"><a href="#">&nbsp;</a></div></li><li class="menu-item"><div class="toolbar-box"><a href="#">&nbsp;</a></div></li><li class="menu-item"><div class="toolbar-box"><a href="#">&nbsp;</a></div></li><li class="menu-item"><div class="toolbar-box"><a href="#">&nbsp;</a></div></li><li class="menu-item"><div class="toolbar-box"><a href="#">&nbsp;</a></div></li><li class="menu-item"><div class="toolbar-box"><a href="#">&nbsp;</a></div></li><li class="menu-item"><div class="toolbar-box"><a href="#">&nbsp;</a></div></li><li class="menu-item"><div class="toolbar-box"><a href="#">&nbsp;</a></div></li><li class="menu-item"><div class="toolbar-box"><a href="#">&nbsp;</a></div></li><li class="menu-item"><div class="toolbar-box"><a href="#">&nbsp;</a></div></li><li class="menu-item"><div class="toolbar-box"><a href="#">&nbsp;</a></div></li></ul>',
+      ];
+    }
   }
 }
 

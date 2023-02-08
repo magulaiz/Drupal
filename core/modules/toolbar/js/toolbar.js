@@ -3,7 +3,35 @@
  * Defines the behavior of the Drupal administration toolbar.
  */
 
+const toolbarActiveTray = Cookies.get('toolbarActiveTray');
+const orientation = Cookies.get('toolbar');
+const activeTrayElement = document.querySelector(
+  `.toolbar-tray[data-toolbar-tray="${toolbarActiveTray}"]`,
+);
+const activeTrayToggle = document.querySelector(
+  `.toolbar-item[data-toolbar-tray="${toolbarActiveTray}"]`,
+);
+
+if (activeTrayElement) {
+  activeTrayElement.classList.add(`toolbar-tray-${orientation}`, 'is-active');
+  activeTrayToggle.classList.add('is-active');
+  console.log('activetrayto', activeTrayToggle.outerHTML);
+}
 (function ($, Drupal, drupalSettings, once, Cookies) {
+  // const toolbarActiveTray = Cookies.get('toolbarActiveTray');
+  // const orientation = Cookies.get('toolbar');
+  // const activeTrayElement = document.querySelector(
+  //   `.toolbar-tray[data-toolbar-tray="${toolbarActiveTray}"]`,
+  // );
+  // const activeTrayToggle = document.querySelector(
+  //   `.toolbar-item[data-toolbar-tray="${toolbarActiveTray}"]`,
+  // );
+  //
+  // if (activeTrayElement) {
+  //   activeTrayElement.classList.add(`toolbar-tray-${orientation}`, 'is-active');
+  //   activeTrayToggle.classList.add('is-active');
+  //   console.log('activetrayto', activeTrayToggle.outerHTML);
+  // }
   // Merge run-time settings with the defaults.
   const options = $.extend(
     {
@@ -245,6 +273,9 @@
                     path: '/',
                   },
                 );
+                Cookies.set('toolbarIsOriented', model.get('isOriented'), {
+                  path: '/',
+                });
               },
             );
           },

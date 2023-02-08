@@ -116,7 +116,8 @@
 [dir="rtl"] .toolbar-horizontal .toolbar-tray .menu-item:last-child {
   border-left: 1px solid #ddd;
 }
-.toolbar .toolbar-tray-vertical .menu-item + .menu-item {
+.toolbar .toolbar-tray-vertical .menu-item + .menu-item,
+[data-tray-placeholder].toolbar-tray-vertical .menu-item + .menu-item {
   border-top: 1px solid #ddd;
 }
 .toolbar .toolbar-tray-vertical .menu-item:last-child {
