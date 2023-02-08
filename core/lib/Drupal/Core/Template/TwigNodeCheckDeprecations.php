@@ -11,7 +11,7 @@ use Twig\Node\Node;
  * A node that checks deprecated variable usage.
  *
  * @see \Drupal\Core\Template\TwigNodeVisitorCheckDeprecations
- * @see \Drupal\Core\Template\TwigExtension::checkDeprecations
+ * @see \Drupal\Core\Template\TwigExtension::checkDeprecations()
  */
 class TwigNodeCheckDeprecations extends Node {
 

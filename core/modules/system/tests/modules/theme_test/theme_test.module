@@ -63,7 +63,7 @@ function theme_test_theme($existing, $type, $theme, $path) {
       'message' => '',
     ],
   ];
-  $items['theme_test_deprecate'] = [
+  $items['theme_test_deprecate_used'] = [
     'variables' => [
       'foo' => 'foo',
       'bar' => 'bar',
@@ -72,7 +72,8 @@ function theme_test_theme($existing, $type, $theme, $path) {
       ],
     ],
   ];
-  $items['theme_test_deprecate_unused'] = $items['theme_test_deprecate'];
+  $items['theme_test_deprecate_unused'] = $items['theme_test_deprecate_used'];
+  $items['theme_test_deprecate_overridden'] = $items['theme_test_deprecate_used'];
   return $items;
 }
 

@@ -295,21 +295,19 @@ TWIG;
   public function testRenderArrayDeprecations() {
     /** @var \Drupal\Core\Render\RendererInterface $renderer */
     $renderer = $this->container->get('renderer');
-    $element = [
-      '#theme' => 'theme_test_deprecate',
-    ];
-    // foo is used in the theme_test_deprecate template.
 
-    $this->expectDeprecation('foo is deprecated in drupal:X.0.0 and is removed from drupal:Y.0.0. Use "bar" instead. See https://www.example.com');
-    $rendered = $renderer->renderRoot($element);
-    $this->assertEquals('foobar', $rendered);
+    // foo is used but set in the theme_test_deprecate_overriden template.
+    $element = ['#theme' => 'theme_test_deprecate_overriden'];
+    $this->assertEquals('foobar', $renderer->renderRoot($element));
 
     // foo is unused in the theme_test_deprecate_unused template.
-    $element = [
-      '#theme' => 'theme_test_deprecate_unused',
-    ];
-    $rendered = $renderer->renderRoot($element);
-    $this->assertEquals('bar', $rendered);
+    $element = ['#theme' => 'theme_test_deprecate_unused'];
+    $this->assertEquals('bar', $renderer->renderRoot($element));
+
+    // foo is used in the theme_test_deprecate_used template.
+    $this->expectDeprecation('foo is deprecated in drupal:X.0.0 and is removed from drupal:Y.0.0. Use "bar" instead. See https://www.example.com');
+    $element = ['#theme' => 'theme_test_deprecate_used'];
+    $this->assertEquals('foobar', $renderer->renderRoot($element));
   }
 
 }

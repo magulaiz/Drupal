@@ -6,25 +6,29 @@ use Twig\Environment;
 use Twig\Node\Expression\NameExpression;
 use Twig\Node\ModuleNode;
 use Twig\Node\Node;
+use Twig\Node\SetNode;
 use Twig\NodeVisitor\AbstractNodeVisitor;
 
 /**
  * Provides a Node Visitor to trigger errors if deprecated variables are used.
  *
- * Every use of a named variable is tracked, and the used variable names are passed
- * to TwigExtension::checkDeprecations at runtime for comparison against those in the
- * 'deprecated' array in the template context.
+ * Every use of a named variable is tracked, and the used variable names are
+ * passed to TwigExtension::checkDeprecations at runtime for comparison against
+ *  those in the 'deprecated' array in the template context.
  *
  * @see \Drupal\Core\Template\TwigNodeCheckDeprecations
  */
 class TwigNodeVisitorCheckDeprecations extends AbstractNodeVisitor {
 
   /**
-   * The named variables used in the template.
-   *
-   * @var array
+   * The named variables used in the template from the context.
    */
-  protected $usedNames = [];
+  protected array $usedNames = [];
+
+  /**
+   * The named variables set within the template.
+   */
+  protected array $setNames = [];
 
   /**
    * {@inheritdoc}
@@ -32,9 +36,18 @@ class TwigNodeVisitorCheckDeprecations extends AbstractNodeVisitor {
   protected function doEnterNode(Node $node, Environment $env) {
     if ($node instanceof ModuleNode) {
       $this->usedNames = [];
+      $this->setNames = [];
+    }
+    elseif ($node instanceof SetNode) {
+      // Setting a variable makes subsequent usage is safe.
+      $this->setNames = [...$this->setNames, ...$node->getAttribute('names')];
     }
     elseif ($node instanceof NameExpression) {
-      $this->usedNames[$node->getAttribute('name')] = $node->getAttribute('name');
+      // Track each usage of a variable, unless set within the template.
+      $name = $node->getAttribute('name');
+      if (!in_array($name, $this->setNames)) {
+        $this->usedNames[$name] = $name;
+      }
     }
     return $node;
   }
@@ -43,6 +56,7 @@ class TwigNodeVisitorCheckDeprecations extends AbstractNodeVisitor {
    * {@inheritdoc}
    */
   protected function doLeaveNode(Node $node, Environment $env) {
+    // At the end of the template, check the used variables are not deprecated.
     if ($node instanceof ModuleNode) {
       if (!empty($this->usedNames)) {
         $checkNode = new Node([new TwigNodeCheckDeprecations($this->usedNames), $node->getNode('display_end')]);

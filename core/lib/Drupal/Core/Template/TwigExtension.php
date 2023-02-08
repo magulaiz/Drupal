@@ -713,7 +713,7 @@ class TwigExtension extends AbstractExtension {
    * @param array $context
    *   A Twig context array.
    * @param array $used_variables
-   *   The names of the variables used in a template, which should correspond to keys in $context.
+   *   The names of the variables used in a template.
    *
    * @see \Drupal\Core\Template\TwigNodeCheckDeprecations
    */
