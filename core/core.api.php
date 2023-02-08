@@ -1963,6 +1963,7 @@ function hook_cron() {
  * @see hook_data_type_info()
  */
 function hook_data_type_info_alter(&$data_types) {
+  // Change the class for the email data type to '\Drupal\mymodule\Type\Email'.
   $data_types['email']['class'] = '\Drupal\mymodule\Type\Email';
 }
 
@@ -2129,6 +2130,7 @@ function hook_mail($key, &$message, $params) {
  * @see \Drupal\Core\Mail\MailManager
  */
 function hook_mail_backend_info_alter(&$info) {
+  // Remove the 'test_mail_collector' backend from the list of available mail backends.
   unset($info['test_mail_collector']);
 }
 
