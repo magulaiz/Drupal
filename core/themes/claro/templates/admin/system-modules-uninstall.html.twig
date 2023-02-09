@@ -47,7 +47,7 @@
             <div class="claro-details__wrapper module-details__wrapper">
               <div class="module-details__description">
                 <div class="module-details__requirements">
-                  <div class="module-details__requirement">{{ 'Machine name: <span dir="ltr" class="table-filter-text-source">@machine-name</span>'|t({'@machine-name': module.machine_name }) }}</div>
+                  <div class="module-details__requirement">{{ 'Machine name: <span dir="ltr" class="module-machine-name table-filter-text-source">@machine-name</span>'|t({'@machine-name': module.machine_name }) }}</div>
                   {% if module.reasons_count > 0 %}
                     <div class="admin-requirements">
                       {%- trans -%}
