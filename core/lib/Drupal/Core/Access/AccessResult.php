@@ -2,7 +2,6 @@
 
 namespace Drupal\Core\Access;
 
-use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheableDependencyInterface;
 use Drupal\Core\Cache\RefinableCacheableDependencyInterface;
 use Drupal\Core\Cache\RefinableCacheableDependencyTrait;
@@ -407,14 +406,6 @@ abstract class AccessResult implements AccessResultInterface, RefinableCacheable
    */
   public function inheritCacheability(AccessResultInterface $other) {
     $this->addCacheableDependency($other);
-    if ($other instanceof CacheableDependencyInterface) {
-      if ($this->getCacheMaxAge() !== 0 && $other->getCacheMaxAge() !== 0) {
-        $this->setCacheMaxAge(Cache::mergeMaxAges($this->getCacheMaxAge(), $other->getCacheMaxAge()));
-      }
-      else {
-        $this->setCacheMaxAge($other->getCacheMaxAge());
-      }
-    }
     return $this;
   }
 
