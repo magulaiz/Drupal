@@ -208,7 +208,7 @@ function template_preprocess_theme_test_registered_by_module() {
  *
  * @param array $variables
  *   An associative array of variables.
- */ 
+ */
 function template_preprocess_theme_test_deprecations_preprocess(array &$variables) {
   $variables = array_merge($variables, \Drupal::state()->get('theme_test.theme_test_deprecations_preprocess'));
 }

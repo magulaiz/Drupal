@@ -29,7 +29,7 @@ class TwigDeprecationsTest extends KernelTestBase {
     $element = [
       '#type' => 'deprecated_variables',
     ];
-    // Both 'size' and 'maxlength' are deprecated in 
+    // Both 'size' and 'maxlength' are deprecated in
     // Drupal\element_info_test\Element\DeprecatedVariable
     // but used in input.html.twig.
     $this->expectDeprecation($this->getDeprecationMessage('size'));
@@ -87,7 +87,7 @@ class TwigDeprecationsTest extends KernelTestBase {
   /**
    * Test deprecation of empty variable triggers error.
    */
-  public function testSingleDeprecation() {
+  public function testEmptyDeprecation() {
     $preprocess = [
       'foo' => '',
       'deprecations' => [
@@ -155,7 +155,7 @@ class TwigDeprecationsTest extends KernelTestBase {
 
   /**
    * Assert that 'theme_test_deprecations_preprocess' renders expected text.
-   * 
+   *
    * @param string $expected
    *   The expected text.
    * @param array $preprocess
