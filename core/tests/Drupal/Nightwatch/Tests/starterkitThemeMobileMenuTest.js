@@ -1,7 +1,7 @@
-const mobileNavButtonSelector = '.main-nav__mobile-button';
+const mobileNavButtonSelector = '.primary-nav__mobile-button';
 const headerNavSelector = '.region-primary-navigation';
-const linkSubMenuId = 'main-menu-item-1';
-const buttonSubMenuId = 'main-menu-item-12';
+const linkSubMenuId = 'primary-nav-item-1';
+const buttonSubMenuId = 'primary-nav-item-12';
 
 /**
  * Sends arbitrary number of tab keys, and then checks that the last focused

@@ -1,6 +1,6 @@
 const headerNavSelector = '#region-primary-navigation';
-const linkSubMenuId = 'main-menu-item-1';
-const buttonSubMenuId = 'main-menu-item-12';
+const linkSubMenuId = 'primary-nav-item-1';
+const buttonSubMenuId = 'primary-nav-item-12';
 
 module.exports = {
   '@tags': ['core', 'starterkit_theme'],
