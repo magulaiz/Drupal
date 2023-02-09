@@ -1,7 +1,7 @@
 {#
 /**
  * @file
- * Default theme implementation for the modules uninstall page.
+ * Claro theme implementation for the modules uninstall page.
  *
  * Available variables:
  * - form: The modules uninstall form.
@@ -66,12 +66,16 @@
                         </ul>
                       </div>
                     </div>
-                  </div>
-                {% endif %}
+                  {% endif %}
+                </div>
               </div>
             </div>
           </details>
         </td>
+      </tr>
+    {% else %}
+      <tr>
+        <td colspan="3" class="empty message">{{ 'No modules are available to uninstall.'|t }}</td>
       </tr>
     {% endfor %}
   </tbody>
