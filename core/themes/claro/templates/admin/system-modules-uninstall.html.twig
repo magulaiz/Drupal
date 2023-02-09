@@ -27,23 +27,25 @@
 <table class="responsive-enabled module-list">
   <thead>
     <tr>
-      <th class="checkbox visually-hidden">{{ 'Uninstall'|t }}</th>
-      <th class="name visually-hidden">{{ 'Name'|t }}</th>
-      <th class="description visually-hidden priority-low">{{ 'Description'|t }}</th>
+      <th class="checkbox">{{ 'Uninstall'|t }}</th>
+      <th class="name">{{ 'Name'|t }}</th>
+      <th class="description priority-low">{{ 'Description'|t }}</th>
     </tr>
   </thead>
   <tbody>
     {% for module in modules %}
       <tr{{ module.attributes.addClass('module-list__module') }}>
         <td class="module-list__checkbox">
-          {{ module.checkbox }}
+          {{- module.checkbox -}}
         </td>
         <td class="module-list__module">
           <label id="{{ module.checkbox_id }}" for="{{ module.checkbox_id }}" class="module-list__module-name table-filter-text-source">{{ module.name }}</label>
         </td>
-        <td class="expand priority-low module-list__description">
+        <td class="module-list__description expand priority-low">
           <details class="js-form-wrapper form-wrapper module-list__module-details claro-details" id="{{ module.checkbox_id }}-description">
-            <summary aria-controls="{{ module.checkbox_id }}-description" role="button" aria-expanded="false" class="claro-details__summary module-list__module-summary"><span class="text module-description">{{ module.description }}</span></summary>
+            <summary aria-controls="{{ module.checkbox_id }}-description" role="button" aria-expanded="false" class="claro-details__summary module-list__module-summary">
+              <span class="text module-description">{{ module.description }}</span>
+            </summary>
             <div class="claro-details__wrapper module-details__wrapper">
               <div class="module-details__description">
                 <div class="module-details__requirements">
