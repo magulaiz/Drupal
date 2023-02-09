@@ -602,7 +602,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
    * allows for verifying a 403 in case of missing authorization.
    *
    * @param string $method
-   *   The HTTP method for which to set up authentication.
+   *   The HTTP method for which to set up authorization.
    *
    * @see ::grantPermissionsToTestedRole()
    */
