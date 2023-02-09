@@ -3,10 +3,10 @@
 namespace Drupal\Core\Template;
 
 use Twig\Environment;
+use Twig\Node\Expression\AssignNameExpression;
 use Twig\Node\Expression\NameExpression;
 use Twig\Node\ModuleNode;
 use Twig\Node\Node;
-use Twig\Node\SetNode;
 use Twig\NodeVisitor\AbstractNodeVisitor;
 
 /**
@@ -28,7 +28,7 @@ class TwigNodeVisitorCheckDeprecations extends AbstractNodeVisitor {
   /**
    * The named variables set within the template.
    */
-  protected array $setNames = [];
+  protected array $assignedNames = [];
 
   /**
    * {@inheritdoc}
@@ -38,17 +38,14 @@ class TwigNodeVisitorCheckDeprecations extends AbstractNodeVisitor {
       $this->usedNames = [];
       $this->setNames = [];
     }
-    elseif ($node instanceof SetNode) {
+    elseif ($node instanceof AssignNameExpression) {
       // Setting a variable makes subsequent usage is safe.
-      foreach ($node->getNode('names') as $assignNameExpression) {
-        $name = $assignNameExpression->getAttribute('name');
-        $this->setNames[$name] = $name;
-      }
+      $this->assignedNames[$node->getAttribute('name')] = $node->getAttribute('name');
     }
     elseif ($node instanceof NameExpression) {
       // Track each usage of a variable, unless set within the template.
       $name = $node->getAttribute('name');
-      if (!in_array($name, $this->setNames)) {
+      if (!in_array($name, $this->assignedNames)) {
         $this->usedNames[$name] = $name;
       }
     }

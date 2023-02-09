@@ -298,7 +298,7 @@ TWIG;
 
     // foo is used but set in the theme_test_deprecate_overridden template.
     $element = ['#theme' => 'theme_test_deprecate_overridden'];
-    $this->assertEquals('foobar', $renderer->renderRoot($element));
+    $this->assertEquals('overriddenbar', $renderer->renderRoot($element));
 
     // foo is unused in the theme_test_deprecate_unused template.
     $element = ['#theme' => 'theme_test_deprecate_unused'];
