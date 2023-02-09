@@ -105,6 +105,20 @@ class FieldConfigListBuilderTest extends WebDriverTestBase {
     $modal = $assert_session->waitForElementVisible('css', '#drupal-modal');
     $this->assertTrue($modal->isVisible(), 'Modal window found.');
 
+    // Close the modal and check that the focus goes to the drop button.
+    $close_button = $assert_session->waitForElementVisible('css', '.ui-dialog button:contains(Close)');
+    $close_button->click();
+    $assert_session->assertNoElementAfterWait('css', '#drupal-modal');
+    $assert_session->assertNoElementAfterWait('css', '.dropbutton-wrapper.open');
+    $this->assertJsCondition('document.activeElement === document.querySelector("li.dropbutton-toggle > button")');
+
+    // Open modal again.
+    $this->click('table tr:contains(body) button .dropbutton-arrow');
+    $storage_button = $assert_session->waitForElementVisible('css', 'table tr:contains(body) a:contains(Storage settings)');
+    $this->assertTrue($storage_button->isVisible(), 'Storage settings button found.');
+    $storage_button->click();
+    $assert_session->assertWaitOnAjaxRequest();
+
     // Save the field storage settings.
     $save_button = $assert_session->waitForElementVisible('css', '.ui-dialog button:contains(Save settings)');
     $this->assertTrue($save_button->isVisible(), 'Save settings button found.');
