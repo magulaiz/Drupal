@@ -36,7 +36,7 @@ class TwigNodeVisitorCheckDeprecations extends AbstractNodeVisitor {
   protected function doEnterNode(Node $node, Environment $env) {
     if ($node instanceof ModuleNode) {
       $this->usedNames = [];
-      $this->setNames = [];
+      $this->assignedNames = [];
     }
     elseif ($node instanceof AssignNameExpression) {
       // Setting a variable makes subsequent usage is safe.
