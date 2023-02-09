@@ -18,7 +18,6 @@ use Twig\Error\LoaderError;
  *
  * @see \Drupal\Core\Template\TwigEnvironment
  * @group Twig
- * @group legacy
  */
 class TwigEnvironmentTest extends KernelTestBase {
 
@@ -27,7 +26,7 @@ class TwigEnvironmentTest extends KernelTestBase {
    *
    * @var array
    */
-  protected static $modules = ['system', 'theme_test'];
+  protected static $modules = ['system'];
 
   /**
    * Tests inline templates.
@@ -287,27 +286,6 @@ TWIG;
     // This also applies to twig's file cache resulting in an unlimited growth
     // of the cache storage directory.
     $this->assertEquals(count(array_unique($cache_filenames)), 1);
-  }
-
-  /**
-   * Test deprecation errors are triggered when using deprecated variables.
-   */
-  public function testRenderArrayDeprecations() {
-    /** @var \Drupal\Core\Render\RendererInterface $renderer */
-    $renderer = $this->container->get('renderer');
-
-    // foo is used but set in the theme_test_deprecate_overridden template.
-    $element = ['#theme' => 'theme_test_deprecate_overridden'];
-    $this->assertEquals('overriddenbar', $renderer->renderRoot($element));
-
-    // foo is unused in the theme_test_deprecate_unused template.
-    $element = ['#theme' => 'theme_test_deprecate_unused'];
-    $this->assertEquals('bar', $renderer->renderRoot($element));
-
-    // foo is used in the theme_test_deprecate_used template.
-    $this->expectDeprecation('foo is deprecated in drupal:X.0.0 and is removed from drupal:Y.0.0. Use "bar" instead. See https://www.example.com');
-    $element = ['#theme' => 'theme_test_deprecate_used'];
-    $this->assertEquals('foobar', $renderer->renderRoot($element));
   }
 
 }
