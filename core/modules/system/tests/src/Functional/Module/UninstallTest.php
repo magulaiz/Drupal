@@ -29,6 +29,33 @@ class UninstallTest extends BrowserTestBase {
   protected $defaultTheme = 'stark';
 
   /**
+   * Helper function to set the admin theme.
+   *
+   * @param string $theme
+   *   The admin theme to set.
+   */
+  protected function setAdminTheme($theme) {
+    \Drupal::service('theme_installer')->install([$theme]);
+    \Drupal::configFactory()->getEditable('system.theme')
+      ->set('admin', $theme)
+      ->save(TRUE);
+  }
+
+  /**
+   * Provides test data to run using different themes.
+   *
+   * These tests are run with both the system default theme and the Claro theme
+   * in order to check the custom twig templates in Claro.
+   *
+   * @return array
+   *   List of admin themes to test with.
+   */
+  public function dataAdminThemes() {
+    $data = [['default'], ['claro']];
+    return $data;
+  }
+
+  /**
    * Tests the hook_modules_uninstalled() of the user module.
    */
   public function testUserPermsUninstalled() {
@@ -42,9 +69,14 @@ class UninstallTest extends BrowserTestBase {
 
   /**
    * Tests the Uninstall page and Uninstall confirmation page.
+   *
+   * @dataProvider dataAdminThemes()
    */
-  public function testUninstallPage() {
-    $account = $this->drupalCreateUser(['administer modules']);
+  public function testUninstallPage($theme) {
+    if ($theme !== 'default') {
+      $this->setAdminTheme($theme);
+    }
+    $account = $this->drupalCreateUser(['administer modules', 'view the administration theme']);
     $this->drupalLogin($account);
 
     // Create a node type.
@@ -112,7 +144,12 @@ class UninstallTest extends BrowserTestBase {
 
     // Be sure labels are rendered properly.
     // @see regression https://www.drupal.org/node/2512106
-    $this->assertSession()->responseContains('<label for="edit-uninstall-node" class="module-name table-filter-text-source">Node</label>');
+    if ($theme == 'claro') {
+      $this->assertSession()->responseContains('<label id="edit-uninstall-node" for="edit-uninstall-node" class="module-list__module-name table-filter-text-source">Node</label>');
+    }
+    else {
+      $this->assertSession()->responseContains('<label for="edit-uninstall-node" class="module-name table-filter-text-source">Node</label>');
+    }
 
     $this->assertSession()->pageTextContains('The following reason prevents Node from being uninstalled:');
     $this->assertSession()->pageTextContains('There is content for the entity type: Content');
