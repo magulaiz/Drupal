@@ -416,7 +416,7 @@ function claro_form_alter(array &$form, FormStateInterface $form_state, $form_id
     // Determine if the Views form includes a bulk operations form. If it does,
     // move it to the bottom and remove the second bulk operations submit.
     foreach (Element::children($form['header']) as $key) {
-      if (strpos($key, '_bulk_form') !== FALSE) {
+      if (str_contains($key, '_bulk_form')) {
         // Move the bulk actions form from the header to its own container.
         $form['bulk_actions_container'] = $form['header'][$key];
         unset($form['header'][$key]);
