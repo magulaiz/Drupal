@@ -95,7 +95,7 @@ class TwigDeprecationsTest extends KernelTestBase {
       ],
     ];
     $this->expectDeprecation($this->getDeprecationMessage('foo'));
-    $this->assertRendered('foo|set_var|bar', $preprocess);
+    $this->assertRendered('|set_var|bar', $preprocess);
   }
 
   /**

@@ -15,13 +15,12 @@ class DeprecatedVariables extends Tel {
    * {@inheritdoc}
    */
   public function getInfo() {
-    $class = get_class($this);
     $info = parent::getInfo();
     $info['#deprecations'] = [
       'size' => "'size' is deprecated in drupal:X.0.0 and is removed from drupal:Y.0.0. Use 'new_size' instead. See https://www.example.com.",
     ];
     $info['#pre_render'][] = [
-        [$class, 'preRenderDeprecatedVariable'],
+        [static::class, 'preRenderDeprecatedVariable'],
     ];
     return $info;
   }
