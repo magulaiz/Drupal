@@ -34,7 +34,7 @@ class TwigDeprecationsTest extends KernelTestBase {
     // but used in input.html.twig.
     $this->expectDeprecation($this->getDeprecationMessage('size'));
     $this->expectDeprecation($this->getDeprecationMessage('maxlength'));
-    $this->container->get('renderer')->renderRoot($element)
+    $this->container->get('renderer')->renderRoot($element);
   }
 
   /**
@@ -114,11 +114,11 @@ class TwigDeprecationsTest extends KernelTestBase {
   }
 
   /**
-   * Test deprecation of variables assigned inside template trigers no error.
+   * Test deprecation of variables assigned inside template triggers no error.
    */
   public function testAssignedVariableDeprecation() {
     $preprocess = [
-      'contents' => ['content']
+      'contents' => ['content'],
       'deprecations' => [
         'set_var' => $this->getDeprecationMessage('set_var'),
         'for_var' => $this->getDeprecationMessage('for_var'),
@@ -144,7 +144,7 @@ class TwigDeprecationsTest extends KernelTestBase {
           '#bar' => 'bar-child',
           '#gaz' => 'gaz-child',
         ],
-      ]
+      ],
       'deprecations' => [
         'foo' => $this->getDeprecationMessage('foo'),
         'gaz' => $this->getDeprecationMessage('gaz'),

@@ -23,7 +23,7 @@ class DeprecatedVariables extends Tel {
     $info['#pre_render'][] = [
         [$class, 'preRenderDeprecatedVariable'],
     ];
-    return $info
+    return $info;
   }
 
   /**
