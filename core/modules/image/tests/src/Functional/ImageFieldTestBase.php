@@ -94,7 +94,7 @@ abstract class ImageFieldTestBase extends BrowserTestBase {
   }
 
   /**
-   * Create a random style.
+   * Creates a random style.
    *
    * @param string $style_name
    *   The name of the style to create.
@@ -102,7 +102,7 @@ abstract class ImageFieldTestBase extends BrowserTestBase {
    *   The label of the style to create.
    *
    * @return \Drupal\image\ImageStyleInterface
-   *   A list containing the details of the generated image style.
+   *   Returns an image style entity.
    */
   public function createStyle(string $style_name, string $style_label): ImageStyleInterface {
     $values = ['name' => $style_name, 'label' => $style_label];
