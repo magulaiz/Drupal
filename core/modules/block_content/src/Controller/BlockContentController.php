@@ -150,8 +150,7 @@ class BlockContentController extends ControllerBase {
     ];
     $warning_message = $this->t('You have been redirected from %old_path. Update links, shortcuts, and bookmarks to use %new_path.', $params);
     $this->messenger()->addWarning($warning_message);
-    $this->getLogger('block_content')
-      ->warning('A user was redirected from %old_path to %new_path. This redirect will be removed in a future version of Drupal. Update links, shortcuts, and bookmarks to use %new_path. See %change_record for more information.', $params);
+    $this->getLogger('block_content')->warning('A user was redirected from %old_path to %new_path. This redirect will be removed in a future version of Drupal. Update links, shortcuts, and bookmarks to use %new_path. See %change_record for more information.', $params);
 
     return $this->redirect($route, [], [], 301);
   }
