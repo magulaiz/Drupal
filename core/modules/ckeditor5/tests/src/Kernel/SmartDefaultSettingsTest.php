@@ -29,8 +29,9 @@ class SmartDefaultSettingsTest extends KernelTestBase {
    *
    * The updated Text Format & Text Editors are explicitly checked.
    *
-   * @var bool
    * @see \Drupal\Core\Config\Development\ConfigSchemaChecker
+   *
+   * @var bool
    */
   protected $strictConfigSchema = FALSE;
 
@@ -102,7 +103,7 @@ class SmartDefaultSettingsTest extends KernelTestBase {
             // 2. `<p style>` even though `style` is globally disallowed by
             //    filter_html
             // 3. `<a onclick>` even though `on*` is globally disallowed by
-            //    filter_html.
+            //    filter_html
             'allowed_html' => '<p style> <br> <a onclick>',
           ],
         ],
@@ -157,12 +158,7 @@ class SmartDefaultSettingsTest extends KernelTestBase {
       Yaml::parseFile('core/modules/ckeditor5/tests/fixtures/ckeditor4_config/editor.editor.basic_html.yml')
     )->setImageUploadSettings(['status' => FALSE])->setSyncing(TRUE)->save();
 
-    $allowed_html_parents = [
-      'filters',
-      'filter_html',
-      'settings',
-      'allowed_html',
-    ];
+    $allowed_html_parents = ['filters', 'filter_html', 'settings', 'allowed_html'];
     $current_value = NestedArray::getValue($basic_html_format, $allowed_html_parents);
     $new_value = str_replace(['<h4 id> ', '<h6 id> '], '', $current_value);
     $basic_html_format_without_h4_h6 = $basic_html_format;
@@ -176,11 +172,7 @@ class SmartDefaultSettingsTest extends KernelTestBase {
       Yaml::parseFile('core/modules/ckeditor5/tests/fixtures/ckeditor4_config/editor.editor.basic_html.yml')
     )->setSyncing(TRUE)->save();
 
-    $new_value = str_replace(
-      ['<h2 id> ', '<h3 id> ', '<h4 id> ', '<h5 id> ', '<h6 id> '],
-      '',
-      $current_value
-    );
+    $new_value = str_replace(['<h2 id> ', '<h3 id> ', '<h4 id> ', '<h5 id> ', '<h6 id> '], '', $current_value);
     $basic_html_format_without_headings = $basic_html_format;
     $basic_html_format_without_headings['name'] .= ' (without H*)';
     $basic_html_format_without_headings['format'] = 'basic_html_without_headings';
