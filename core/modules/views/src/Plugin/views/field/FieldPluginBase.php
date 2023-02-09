@@ -1163,10 +1163,13 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
     if ($this->lastRenderIndex != $values->index) {
       $this->last_render_text = '';
     }
+
+    $raw_items = [];
     if ($this->allowAdvancedRender() && $this instanceof MultiItemsFieldHandlerInterface) {
       $raw_items = $this->getItems($values);
-      // If there are no items, set the original value to NULL.
+      // If there are no items, set the last render and original value to NULL.
       if (empty($raw_items)) {
+        $this->last_render = NULL;
         $this->original_value = NULL;
       }
     }
@@ -1180,7 +1183,7 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
     }
 
     if ($this->allowAdvancedRender()) {
-      if ($this instanceof MultiItemsFieldHandlerInterface) {
+      if ($this instanceof MultiItemsFieldHandlerInterface && !empty($raw_items)) {
         $items = [];
         foreach ($raw_items as $count => $item) {
           $value = $this->render_item($count, $item);

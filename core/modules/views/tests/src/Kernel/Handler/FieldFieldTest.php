@@ -2,7 +2,9 @@
 
 namespace Drupal\Tests\views\Kernel\Handler;
 
+use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
+use Drupal\Core\Render\RenderContext;
 use Drupal\entity_test\Entity\EntityTest;
 use Drupal\entity_test\Entity\EntityTestRev;
 use Drupal\field\Entity\FieldConfig;
@@ -226,6 +228,45 @@ class FieldFieldTest extends ViewsKernelTestBase {
     ]);
 
     Views::viewsData()->clear();
+  }
+
+  /**
+   * Tests rewriting empty field where hide_alter_empty is FALSE.
+   */
+  public function testRewriteEmptyFieldWithTokens() {
+    /** @var \Drupal\Core\Render\RendererInterface $renderer */
+    $renderer = \Drupal::service('renderer');
+
+    // Create an entity with no value for field_test.
+    $this->entities[] = $entity = EntityTest::create([
+      'bundle' => 'entity_test',
+      'name' => $this->randomMachineName(),
+      'field_test_multiple' => [3],
+      'user_id' => $this->testUsers[0]->id(),
+    ]);
+    $entity->save();
+
+    $view = Views::getView('test_field_field_test');
+    $this->executeView($view);
+    $field_test_multiple = $view->field['field_test_multiple'];
+    $field_test = $view->field['field_test'];
+    $row = $view->result[5];
+
+    $field_test->options['hide_alter_empty'] = FALSE;
+    $field_test->options['hide_empty'] = FALSE;
+    $field_test->options['empty_zero'] = FALSE;
+    $field_test->options['alter']['alter_text'] = TRUE;
+    $field_test->options['alter']['text'] = '{{ field_test_multiple }} {{ field_test }}';
+
+    $expected_output = $entity->field_test_multiple->value . ' ';
+    $output = $renderer->executeInRenderContext(new RenderContext(), function () use ($field_test_multiple, $field_test, $row) {
+      $field_test_multiple->advancedRender($row);
+      return $field_test->advancedRender($row);
+    });
+    $this->assertEquals($output, $expected_output, new FormattableMarkup('Test token replacement: "@token" gave "@output"', [
+      '@token' => $field_test->options['alter']['text'],
+      '@output' => $output,
+    ]));
   }
 
   /**
