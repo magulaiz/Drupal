@@ -25,7 +25,7 @@ class TwigDeprecationsTest extends KernelTestBase {
   /**
    * Test deprecating variables at definition in hook_theme().
    */
-  public function testHookThemeDeprecations() {
+  public function testHookThemeDeprecations(): void {
     $element = [
       '#theme' => 'theme_test_deprecations_hook_theme',
       '#foo' => 'foo',
@@ -40,14 +40,14 @@ class TwigDeprecationsTest extends KernelTestBase {
   /**
    * Test theme_test_deprecations_preprocess renders without deprecations.
    */
-  public function testThemeTestDeprecations() {
+  public function testThemeTestDeprecations(): void {
     $this->assertRendered('foo|set_var|bar', []);
   }
 
   /**
    * Test deprecation of undefined variable triggers no error.
    */
-  public function testUndefinedDeprecation() {
+  public function testUndefinedDeprecation(): void {
     $preprocess = [
       'deprecations' => [
         'undefined' => $this->getDeprecationMessage('undefined'),
@@ -59,7 +59,7 @@ class TwigDeprecationsTest extends KernelTestBase {
   /**
    * Test deprecation of single variable triggers error.
    */
-  public function testSingleDeprecation() {
+  public function testSingleDeprecation(): void {
     $preprocess = [
       'deprecations' => [
         'foo' => $this->getDeprecationMessage('foo'),
@@ -72,7 +72,7 @@ class TwigDeprecationsTest extends KernelTestBase {
   /**
    * Test deprecation of empty variable triggers error.
    */
-  public function testEmptyDeprecation() {
+  public function testEmptyDeprecation(): void {
     $preprocess = [
       'foo' => '',
       'deprecations' => [
@@ -86,7 +86,7 @@ class TwigDeprecationsTest extends KernelTestBase {
   /**
    * Test deprecation of multiple variables triggers errors.
    */
-  public function testMultipleDeprecations() {
+  public function testMultipleDeprecations(): void {
     $preprocess = [
       'deprecations' => [
         'foo' => $this->getDeprecationMessage('foo'),
@@ -101,7 +101,7 @@ class TwigDeprecationsTest extends KernelTestBase {
   /**
    * Test deprecation of variables assigned inside template triggers no error.
    */
-  public function testAssignedVariableDeprecation() {
+  public function testAssignedVariableDeprecation(): void {
     $preprocess = [
       'contents' => ['content'],
       'deprecations' => [
@@ -115,7 +115,7 @@ class TwigDeprecationsTest extends KernelTestBase {
   /**
    * Test deprecation of variables in parent does not leak to child.
    */
-  public function testParentVariableDeprecation() {
+  public function testParentVariableDeprecation(): void {
     // 'foo' is used before the child template is processed, so this test
     // shows that processing the child does not lead to parent usage being
     // forgotten.
@@ -146,7 +146,7 @@ class TwigDeprecationsTest extends KernelTestBase {
    * @param array $preprocess
    *   An array to merge in theme_test_deprecations_preprocess_preprocess().
    */
-  protected function assertRendered($expected, array $preprocess) {
+  protected function assertRendered($expected, array $preprocess): void {
     \Drupal::state()->set('theme_test.theme_test_deprecations_preprocess', $preprocess);
     $element = [
       '#theme' => 'theme_test_deprecations_preprocess',
@@ -161,7 +161,7 @@ class TwigDeprecationsTest extends KernelTestBase {
   /**
    * Get an example deprecation message for a named variable.
    */
-  protected function getDeprecationMessage($variable) {
+  protected function getDeprecationMessage($variable): string {
     return "'{$variable}' is deprecated in drupal:X.0.0 and is removed from drupal:Y.0.0. Use 'new_{$variable}' instead. See https://www.example.com.";
   }
 

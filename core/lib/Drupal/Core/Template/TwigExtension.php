@@ -717,7 +717,7 @@ class TwigExtension extends AbstractExtension {
    *
    * @see \Drupal\Core\Template\TwigNodeCheckDeprecations
    */
-  public function checkDeprecations(array $context, $used_variables) {
+  public function checkDeprecations(array $context, $used_variables): void {
     if (!isset($context['deprecations'])) {
       return;
     }

@@ -17,10 +17,8 @@ class TwigNodeCheckDeprecations extends Node {
 
   /**
    * The named variables used in the template.
-   *
-   * @var array
    */
-  protected $usedNames = [];
+  protected array $usedNames = [];
 
   /**
    * {@inheritdoc}

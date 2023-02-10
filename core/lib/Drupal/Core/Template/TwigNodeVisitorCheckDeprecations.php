@@ -14,7 +14,7 @@ use Twig\NodeVisitor\AbstractNodeVisitor;
  *
  * Every use of a named variable is tracked, and the used variable names are
  * passed to TwigExtension::checkDeprecations at runtime for comparison against
- *  those in the 'deprecated' array in the template context.
+ * those in the 'deprecated' array in the template context.
  *
  * @see \Drupal\Core\Template\TwigNodeCheckDeprecations
  */
