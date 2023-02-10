@@ -208,7 +208,7 @@ trait FunctionalTestSetupTrait {
     // Rebuild the kernel and bring it back to a fully bootstrapped state.
     $this->container = $this->kernel->rebuildContainer();
 
-    // Make sure the url generator has a request object, otherwise calls to
+    // Make sure the URL generator has a request object, otherwise calls to
     // $this->drupalGet() will fail.
     $this->prepareRequestForGenerator();
   }
@@ -237,12 +237,12 @@ trait FunctionalTestSetupTrait {
    *
    * This is used to manipulate how the generator generates paths during tests.
    * It also ensures that calls to $this->drupalGet() will work when running
-   * from run-tests.sh because the url generator no longer looks at the global
+   * from run-tests.sh because the URL generator no longer looks at the global
    * variables that are set there but relies on getting this information from a
    * request object.
    *
    * @param bool $clean_urls
-   *   Whether to mock the request using clean urls.
+   *   Whether to mock the request using clean URLs.
    * @param array $override_server_vars
    *   An array of server variables to override.
    *
@@ -251,32 +251,22 @@ trait FunctionalTestSetupTrait {
    */
   protected function prepareRequestForGenerator($clean_urls = TRUE, $override_server_vars = []) {
     $request = Request::createFromGlobals();
-    $server = $request->server->all();
-    if (basename($server['SCRIPT_FILENAME']) != basename($server['SCRIPT_NAME'])) {
-      // We need this for when the test is executed by run-tests.sh.
-      // @todo Remove this once run-tests.sh has been converted to use a Request
-      //   object.
-      $cwd = getcwd();
-      $server['SCRIPT_FILENAME'] = $cwd . '/' . basename($server['SCRIPT_NAME']);
-      $base_path = rtrim($server['REQUEST_URI'], '/');
-    }
-    else {
-      $base_path = $request->getBasePath();
-    }
+    $base_path = $request->getBasePath();
     if ($clean_urls) {
       $request_path = $base_path ? $base_path . '/user' : 'user';
     }
     else {
       $request_path = $base_path ? $base_path . '/index.php/user' : '/index.php/user';
     }
-    $server = array_merge($server, $override_server_vars);
+
+    $server = array_merge($request->server->all(), $override_server_vars);
 
     $request = Request::create($request_path, 'GET', [], [], [], $server);
     // Ensure the request time is REQUEST_TIME to ensure that API calls
     // in the test use the right timestamp.
     $request->server->set('REQUEST_TIME', REQUEST_TIME);
-    $this->container->get('request_stack')->push($request);
 
+    $this->container->get('request_stack')->push($request);
     // The request context is normally set by the router_listener from within
     // its KernelEvents::REQUEST listener. In the parent site this event is not
     // fired, therefore it is necessary to update the request context manually
