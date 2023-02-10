@@ -117,7 +117,8 @@
   border-left: 1px solid #ddd;
 }
 .toolbar .toolbar-tray-vertical .menu-item + .menu-item,
-[data-tray-placeholder].toolbar-tray-vertical .menu-item + .menu-item {
+[data-tray-placeholder].toolbar-tray-vertical .menu-item + .menu-item,
+.toolbar-loading.toolbar-vertical .menu-item + .menu-item {
   border-top: 1px solid #ddd;
 }
 .toolbar .toolbar-tray-vertical .menu-item:last-child {

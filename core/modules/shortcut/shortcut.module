@@ -357,7 +357,7 @@ function shortcut_toolbar() {
             'contexts' => ['user'],
           ],
           '#lazy_builder_preview' => [
-            '#markup' => '<a href="#" class="toolbar-tray-lazy-placeholder-link">&nbsp;<div class="progress-bar"><div class="progress-bar-value"></div></div></a>',
+            '#markup' => '<a href="#" class="toolbar-tray-lazy-placeholder-link">&nbsp;</a>',
           ]
         ],
       ],

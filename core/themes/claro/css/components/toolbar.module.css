@@ -305,6 +305,12 @@ body.toolbar-tray-open.toolbar-fixed.toolbar-vertical #toolbar-administration {
   padding-right: 0;
   padding-left: 0;
 }
+.toolbar-loading {
+  padding-top: 2.4375rem;
+}
+.toolbar-loading.toolbar-horizontal.toolbar-tray-open {
+  padding-top: 4.91331rem;
+}
 .toolbar-horizontal #toolbar-tray-anti-flicker {
   display: none;
 }
@@ -382,4 +388,13 @@ body.toolbar-tray-open.toolbar-fixed.toolbar-vertical #toolbar-administration {
   opacity: 0.5;
   color: #565656;
   /* font-size: 1rem; */
+}
+.toolbar-lining * {
+  transition: color 0.3s ease-in;
+}
+.toolbar-lining.lazy-builder-just-added * {
+  color: transparent !important;
+}
+.toolbar-horizontal .toolbar-tray {
+  transition: box-shadow 0.3s ease-in;
 }

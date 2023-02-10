@@ -308,6 +308,14 @@ body.toolbar-tray-open.toolbar-fixed.toolbar-vertical #toolbar-administration {
   padding-left: 0;
 }
 
+.toolbar-loading {
+  padding-top: 39px;
+}
+
+.toolbar-loading.toolbar-horizontal.toolbar-tray-open {
+  padding-top: 78.613px;
+}
+
 .toolbar-horizontal #toolbar-tray-anti-flicker {
   display: none;
 }
@@ -395,6 +403,18 @@ body.toolbar-tray-open.toolbar-fixed.toolbar-vertical #toolbar-administration {
   position: absolute;
   left: 3rem;
   /*font-size: 1rem;*/
+}
+
+.toolbar-lining * {
+  transition: color 0.3s ease-in;
+}
+
+.toolbar-lining.lazy-builder-just-added * {
+  color: transparent !important;
+}
+
+.toolbar-horizontal .toolbar-tray {
+  transition: box-shadow 0.3s ease-in;
 }
 
 

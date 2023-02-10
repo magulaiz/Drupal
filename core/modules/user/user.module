@@ -1178,17 +1178,16 @@ function user_toolbar() {
     ];
   }
   else {
-    $drupal_username = \Drupal::request()->cookies->get('drupalUsername');
-    if (!empty($drupal_username)) {
-      $items['user']['tab']['#title'] = $drupal_username;
-    }
-    else {
-      $items['user']['tab']['#title'] = [
-        '#lazy_builder' => ['user.toolbar_link_builder:renderDisplayName', []],
-        '#create_placeholder' => TRUE,
-      ];
-    }
-
+    $items['user']['tab']['#title'] = [
+      '#lazy_builder' => ['user.toolbar_link_builder:renderDisplayName', []],
+      '#create_placeholder' => TRUE,
+      '#lazy_builder_preview' => [
+        // Add a line of whitespace to the placeholder to ensure the icon is
+        // positioned in the same place it will be when the lazy loaded content
+        // appears.
+        '#markup' => '&nbsp;',
+      ],
+    ];
     $items['user']['tray']['user_links'] = [
       '#lazy_builder' => ['user.toolbar_link_builder:renderToolbarLinks', []],
       '#create_placeholder' => TRUE,
