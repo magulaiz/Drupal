@@ -383,7 +383,9 @@ abstract class EntityCacheTagsTestBase extends PageCacheTagsTestBase {
       $context_metadata = \Drupal::service('cache_contexts_manager')->convertTokensToKeys($cache_contexts);
       $referencing_entity_cache_tags = Cache::mergeTags($referencing_entity_cache_tags, $context_metadata->getCacheTags());
     }
-    $this->verifyRenderCache($cid, $referencing_entity_cache_tags, $redirected_cid);
+
+    // Invalid because entity_test_entity_access() set max-age 0.
+    // $this->verifyRenderCache($cid, $referencing_entity_cache_tags, $redirected_cid);
 
     $this->verifyPageCache($non_referencing_entity_url, 'MISS');
     // Verify a cache hit, but also the presence of the correct cache tags.

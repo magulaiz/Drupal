@@ -96,6 +96,30 @@ abstract class EntityTestResourceTestBase extends ConfigEntityResourceTestBase {
   /**
    * {@inheritdoc}
    */
+  protected function getExpectedUnauthorizedAccessCacheability() {
+    // entity_test_entity_access() kills caching.
+    return parent::getExpectedUnauthorizedAccessCacheability()->setCacheMaxAge(0);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function getExpectedUnauthorizedEntityAccessCacheability($is_authenticated) {
+    // entity_test_entity_access() kills caching.
+    return parent::getExpectedUnauthorizedEntityAccessCacheability($is_authenticated)->setCacheMaxAge(0);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function getExpectedDynamicCacheHeaderValue() {
+    // entity_test_entity_access() kills caching.
+    return 'UNCACHEABLE';
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   protected function getExpectedNormalizedEntity() {
     $author = User::load(0);
     $normalization = [

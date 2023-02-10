@@ -367,6 +367,8 @@ class EntityReferenceFormatterTest extends EntityKernelTestBase {
         'contexts' => [
           'user.permissions',
         ],
+        // entity_test_entity_access() kills caching.
+        'max-age' => 0,
         'tags' => $this->referencedEntity->getCacheTags(),
       ],
     ];
@@ -382,7 +384,8 @@ class EntityReferenceFormatterTest extends EntityKernelTestBase {
           'user.permissions',
         ],
         'tags' => $this->unsavedReferencedEntity->getCacheTags(),
-        'max-age' => Cache::PERMANENT,
+        // entity_test_entity_access() kills caching.
+        'max-age' => 0,
       ],
     ];
     $this->assertEquals($expected_item_2, $build[1], sprintf('The render array returned by the %s formatter is correct for an item with a unsaved entity.', $formatter));

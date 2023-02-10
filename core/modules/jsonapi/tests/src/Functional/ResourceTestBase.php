@@ -932,7 +932,8 @@ abstract class ResourceTestBase extends BrowserTestBase {
       $expected_403_cacheability = $this->getExpectedUnauthorizedAccessCacheability();
       $reason = $this->getExpectedUnauthorizedAccessMessage('GET');
       $message = trim("The current user is not allowed to GET the selected resource. $reason");
-      $this->assertResourceErrorResponse(403, $message, $url, $response, '/data', $expected_403_cacheability->getCacheTags(), $expected_403_cacheability->getCacheContexts(), FALSE, 'MISS');
+      $dynamic_cache = str_starts_with($this->entity->getEntityType()->id(), 'entity_test') ? 'UNCACHEABLE' : 'MISS';
+      $this->assertResourceErrorResponse(403, $message, $url, $response, '/data', $expected_403_cacheability->getCacheTags(), $expected_403_cacheability->getCacheContexts(), FALSE, $dynamic_cache);
       $this->assertArrayNotHasKey('Link', $response->getHeaders());
     }
     else {
@@ -973,7 +974,8 @@ abstract class ResourceTestBase extends BrowserTestBase {
     // 200 for well-formed HEAD request.
     $response = $this->request('HEAD', $url, $request_options);
     // MISS or UNCACHEABLE depends on data. It must not be HIT.
-    $dynamic_cache = !empty(array_intersect(['user', 'session'], $this->getExpectedCacheContexts())) ? 'UNCACHEABLE' : 'MISS';
+    // @todo The comment entity is also uncacheable for some reasons.
+    $dynamic_cache = str_starts_with($this->entity->getEntityType()->id(), 'entity_test') || !empty(array_intersect(['user', 'session'], $this->getExpectedCacheContexts())) ? 'UNCACHEABLE' : 'MISS';
     $this->assertResourceResponse(200, NULL, $response, $this->getExpectedCacheTags(), $this->getExpectedCacheContexts(), FALSE, $dynamic_cache);
     $head_headers = $response->getHeaders();
 
@@ -2694,7 +2696,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
       $response = $this->request('GET', $url, $request_options);
       // Dynamic Page Cache MISS because cache should vary based on the 'field'
       // query param. (Or uncacheable if expensive cache context.)
-      $dynamic_cache = !empty(array_intersect(['user', 'session'], $expected_cacheability->getCacheContexts())) ? 'UNCACHEABLE' : 'MISS';
+      $dynamic_cache = str_starts_with($this->entity->getEntityType()->id(), 'entity_test') || !empty(array_intersect(['user', 'session'], $expected_cacheability->getCacheContexts())) ? 'UNCACHEABLE' : 'MISS';
       $this->assertResourceResponse(
         200,
         $expected_document,
@@ -2753,7 +2755,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
       // 'include' query param.
       $expected_cacheability = $expected_response->getCacheableMetadata();
       // MISS or UNCACHEABLE depends on data. It must not be HIT.
-      $dynamic_cache = ($expected_cacheability->getCacheMaxAge() === 0 || !empty(array_intersect(['user', 'session'], $this->getExpectedCacheContexts()))) ? 'UNCACHEABLE' : 'MISS';
+      $dynamic_cache = (str_starts_with($this->entity->getEntityType()->id(), 'entity_test') || $expected_cacheability->getCacheMaxAge() === 0 || !empty(array_intersect(['user', 'session'], $this->getExpectedCacheContexts()))) ? 'UNCACHEABLE' : 'MISS';
       $this->assertResourceResponse(
         200,
         $expected_document,
