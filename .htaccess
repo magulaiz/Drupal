@@ -113,6 +113,12 @@ AddEncoding gzip svgz
   # uncomment the following line:
   # RewriteBase /
 
+  # To force all users to access the site over HTTPS, uncomment the following:
+  # RewriteCond %{HTTPS} off [OR]
+  # RewriteCond %{HTTP:X-Forwarded-Proto} !https
+  # RewriteCond %{HTTP_HOST} ^www.example\.com*
+  # RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
   # Redirect common PHP files to their new locations.
   RewriteCond %{REQUEST_URI} ^(.*)?/(install\.php) [OR]
   RewriteCond %{REQUEST_URI} ^(.*)?/(rebuild\.php)
