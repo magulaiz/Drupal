@@ -129,7 +129,7 @@ class SiteInformationForm extends ConfigFormBase {
       '#title' => $this->t('Default front page'),
       '#default_value' => $front_page,
       '#size' => 40,
-      '#description' => $this->t('Optionally, specify a relative URL to display as the front page. Leave blank to display the default front page.'),
+      '#description' => $this->t('Optionally, specify a relative URL to display as the front page. Leave blank to display the default front page, which is /user/login. For logged in users, this will redirect to the user profile page.'),
       '#field_prefix' => $this->requestContext->getCompleteBaseUrl(),
     ];
     $form['error_page'] = [
