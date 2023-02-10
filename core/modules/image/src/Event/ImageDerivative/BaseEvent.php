@@ -1,14 +1,14 @@
 <?php
 
-namespace Drupal\image\Event;
+namespace Drupal\image\Event\ImageDerivative;
 
 use Drupal\image\ImageProcessPipelineInterface;
 use Symfony\Component\EventDispatcher\GenericEvent;
 
 /**
- * Provides a class for events related to processing images through pipelines.
+ * Provides a class for events related to processing image derivatives.
  */
-class ImageProcessEvent extends GenericEvent {
+abstract class BaseEvent extends GenericEvent {
 
   /**
    * Returns the ImageProcessPipeline object subject of the event.

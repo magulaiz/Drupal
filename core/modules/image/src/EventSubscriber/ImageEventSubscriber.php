@@ -16,8 +16,19 @@ use Drupal\Core\StreamWrapper\StreamWrapperInterface;
 use Drupal\Core\StreamWrapper\StreamWrapperManagerInterface;
 use Drupal\Core\Url;
 use Drupal\image\Entity\ImageStyle;
-use Drupal\image\Event\ImageDerivativePipelineEvents;
-use Drupal\image\Event\ImageProcessEvent;
+use Drupal\image\Event\ImageDerivative\BuildDerivativeImageEvent;
+use Drupal\image\Event\ImageDerivative\LoadSourceImageEvent;
+use Drupal\image\Event\ImageDerivative\RemoveDerivativeImageEvent;
+use Drupal\image\Event\ImageDerivative\ResolveDerivativeImageDimensionsEvent;
+use Drupal\image\Event\ImageDerivative\ResolveDerivativeImageFormatEvent;
+use Drupal\image\Event\ImageDerivative\ResolveDerivativeImageUriEvent;
+use Drupal\image\Event\ImageDerivative\ResolveSourceImageFormatEvent;
+use Drupal\image\Event\ImageDerivative\ResolveSourceImageProcessableEvent;
+use Drupal\image\Event\ImageDerivative\ResolveDerivativeImageUrlEvent;
+use Drupal\image\Event\ImageDerivative\ResolveDerivativeImageUrlProtectionEvent;
+use Drupal\image\Event\ImageDerivative\ApplyStyleEvent;
+use Drupal\image\Event\ImageDerivative\ApplyStyleEffectEvent;
+use Drupal\image\Event\ImageDerivative\SaveDerivativeImageEvent;
 use Drupal\image\Event\ImageStyle\FlushEvent;
 use Drupal\image\Event\FlushSourceImageEvent;
 use Drupal\image\ImageProcessException;
@@ -91,31 +102,31 @@ class ImageEventSubscriber implements EventSubscriberInterface {
    */
   public static function getSubscribedEvents() {
     return [
-      ImageDerivativePipelineEvents::RESOLVE_SOURCE_IMAGE_FORMAT => 'resolveSourceImageFormat',
-      ImageDerivativePipelineEvents::RESOLVE_SOURCE_IMAGE_PROCESSABLE => 'resolveSourceImageProcessable',
-      ImageDerivativePipelineEvents::RESOLVE_DERIVATIVE_IMAGE_FORMAT => 'resolveDerivativeImageFormat',
-      ImageDerivativePipelineEvents::RESOLVE_DERIVATIVE_IMAGE_DIMENSIONS => 'resolveDerivativeImageDimensions',
-      ImageDerivativePipelineEvents::RESOLVE_DERIVATIVE_IMAGE_URI => 'resolveDerivativeImageUri',
-      ImageDerivativePipelineEvents::RESOLVE_DERIVATIVE_IMAGE_URL_PROTECTION => 'resolveDerivativeImageUrlProtection',
-      ImageDerivativePipelineEvents::RESOLVE_DERIVATIVE_IMAGE_URL => 'resolveDerivativeImageUrl',
-      ImageDerivativePipelineEvents::BUILD_DERIVATIVE_IMAGE => 'buildDerivativeImage',
-      ImageDerivativePipelineEvents::LOAD_SOURCE_IMAGE => 'loadSourceImage',
-      ImageDerivativePipelineEvents::APPLY_IMAGE_STYLE => 'applyImageStyle',
-      ImageDerivativePipelineEvents::APPLY_IMAGE_EFFECT => 'applyImageEffect',
-      ImageDerivativePipelineEvents::SAVE_DERIVATIVE_IMAGE => 'saveDerivativeImage',
+      BuildDerivativeImageEvent::class => 'buildDerivativeImage',
       FlushEvent::class => 'flushImageStyle',
       FlushSourceImageEvent::class => 'flushFromSourceImageUri',
-      ImageDerivativePipelineEvents::REMOVE_DERIVATIVE_IMAGE => 'removeDerivativeImage',
+      ApplyStyleEffectEvent::class => 'applyImageEffect',
+      ApplyStyleEvent::class => 'applyImageStyle',
+      LoadSourceImageEvent::class => 'loadSourceImage',
+      RemoveDerivativeImageEvent::class => 'removeDerivativeImage',
+      ResolveDerivativeImageUrlEvent::class => 'resolveDerivativeImageUrl',
+      ResolveDerivativeImageUrlProtectionEvent::class => 'resolveDerivativeImageUrlProtection',
+      SaveDerivativeImageEvent::class => 'saveDerivativeImage',
+      ResolveDerivativeImageDimensionsEvent::class => 'resolveDerivativeImageDimensions',
+      ResolveDerivativeImageFormatEvent::class => 'resolveDerivativeImageFormat',
+      ResolveDerivativeImageUriEvent::class => 'resolveDerivativeImageUri',
+      ResolveSourceImageFormatEvent::class => 'resolveSourceImageFormat',
+      ResolveSourceImageProcessableEvent::class => 'resolveSourceImageProcessable',
     ];
   }
 
   /**
    * Determines the format of a source image.
    *
-   * @param \Drupal\image\Event\ImageProcessEvent $event
+   * @param \Drupal\image\Event\ImageDerivative\ResolveSourceImageFormatEvent $event
    *   The image process event, carrying the process pipeline object.
    */
-  public function resolveSourceImageFormat(ImageProcessEvent $event): void {
+  public function resolveSourceImageFormat(ResolveSourceImageFormatEvent $event): void {
     $pipeline = $event->getPipeline();
 
     // Get the image file extension from the URI if not already specified.
@@ -127,10 +138,10 @@ class ImageEventSubscriber implements EventSubscriberInterface {
   /**
    * Verifies that an image can be processed into a derivative.
    *
-   * @param \Drupal\image\Event\ImageProcessEvent $event
+   * @param \Drupal\image\Event\ImageDerivative\ResolveSourceImageProcessableEvent $event
    *   The image process event, carrying the process pipeline object.
    */
-  public function resolveSourceImageProcessable(ImageProcessEvent $event): void {
+  public function resolveSourceImageProcessable(ResolveSourceImageProcessableEvent $event): void {
     $pipeline = $event->getPipeline();
 
     // Determine the image toolkit.
@@ -140,7 +151,7 @@ class ImageEventSubscriber implements EventSubscriberInterface {
 
     // Ensure we know the format of the source image.
     try {
-      $pipeline->dispatch(ImageDerivativePipelineEvents::RESOLVE_SOURCE_IMAGE_FORMAT);
+      $pipeline->dispatch(ResolveSourceImageFormatEvent::class);
     }
     catch (ImageProcessException $e) {
       $pipeline->setVariable('isSourceImageProcessable', FALSE);
@@ -161,14 +172,14 @@ class ImageEventSubscriber implements EventSubscriberInterface {
   /**
    * Determines the format of a derivative image.
    *
-   * @param \Drupal\image\Event\ImageProcessEvent $event
+   * @param \Drupal\image\Event\ImageDerivative\ResolveDerivativeImageFormatEvent $event
    *   The image process event, carrying the process pipeline object.
    */
-  public function resolveDerivativeImageFormat(ImageProcessEvent $event): void {
+  public function resolveDerivativeImageFormat(ResolveDerivativeImageFormatEvent $event): void {
     $pipeline = $event->getPipeline();
 
     // Ensure we can process the source image.
-    $pipeline->dispatch(ImageDerivativePipelineEvents::RESOLVE_SOURCE_IMAGE_PROCESSABLE);
+    $pipeline->dispatch(ResolveSourceImageProcessableEvent::class);
     if (!$pipeline->getVariable('isSourceImageProcessable')) {
       throw new ImageProcessException('Cannot determine derivative image format, source image not processable');
     }
@@ -193,15 +204,15 @@ class ImageEventSubscriber implements EventSubscriberInterface {
    * actual image operations, so be aware that performing I/O on the URI may
    * lead to decrease in performance.
    *
-   * @param \Drupal\image\Event\ImageProcessEvent $event
+   * @param \Drupal\image\Event\ImageDerivative\ResolveDerivativeImageDimensionsEvent $event
    *   The image process event, carrying the process pipeline object.
    */
-  public function resolveDerivativeImageDimensions(ImageProcessEvent $event): void {
+  public function resolveDerivativeImageDimensions(ResolveDerivativeImageDimensionsEvent $event): void {
     $pipeline = $event->getPipeline();
 
     // It's still possible to calculate dimensions even if the image at source
     // is not processable but we have input dimensions.
-    $pipeline->dispatch(ImageDerivativePipelineEvents::RESOLVE_SOURCE_IMAGE_PROCESSABLE);
+    $pipeline->dispatch(ResolveSourceImageProcessableEvent::class);
     if (!$pipeline->getVariable('isSourceImageProcessable') && (!$pipeline->hasVariable('sourceImageWidth') || !$pipeline->hasVariable('sourceImageHeight'))) {
       return;
     }
@@ -222,10 +233,10 @@ class ImageEventSubscriber implements EventSubscriberInterface {
   /**
    * Determines the URI of a derivative image.
    *
-   * @param \Drupal\image\Event\ImageProcessEvent $event
+   * @param \Drupal\image\Event\ImageDerivative\ResolveDerivativeImageUriEvent $event
    *   The image process event, carrying the process pipeline object.
    */
-  public function resolveDerivativeImageUri(ImageProcessEvent $event): void {
+  public function resolveDerivativeImageUri(ResolveDerivativeImageUriEvent $event): void {
     $pipeline = $event->getPipeline();
 
     // Return if we already have the derivative URI.
@@ -234,7 +245,7 @@ class ImageEventSubscriber implements EventSubscriberInterface {
     }
 
     // Ensure we can process the source image.
-    $pipeline->dispatch(ImageDerivativePipelineEvents::RESOLVE_DERIVATIVE_IMAGE_FORMAT);
+    $pipeline->dispatch(ResolveDerivativeImageFormatEvent::class);
     if (!$pipeline->getVariable('isSourceImageProcessable')) {
       throw new ImageProcessException('Cannot determine derivative image URI, source image not processable');
     }
@@ -271,14 +282,14 @@ class ImageEventSubscriber implements EventSubscriberInterface {
   /**
    * Determines the URL protection token of a derivative image.
    *
-   * @param \Drupal\image\Event\ImageProcessEvent $event
+   * @param \Drupal\image\Event\ImageDerivative\ResolveDerivativeImageUrlProtectionEvent $event
    *   The image process event, carrying the process pipeline object.
    */
-  public function resolveDerivativeImageUrlProtection(ImageProcessEvent $event): void {
+  public function resolveDerivativeImageUrlProtection(ResolveDerivativeImageUrlProtectionEvent $event): void {
     $pipeline = $event->getPipeline();
 
     // Ensure we have the derivative image URI.
-    $pipeline->dispatch(ImageDerivativePipelineEvents::RESOLVE_DERIVATIVE_IMAGE_URI);
+    $pipeline->dispatch(ResolveDerivativeImageUriEvent::class);
 
     // The token query is added even if the
     // 'image.settings:allow_insecure_derivatives' configuration is TRUE, so
@@ -310,15 +321,15 @@ class ImageEventSubscriber implements EventSubscriberInterface {
    *
    * Including the security token if specified.
    *
-   * @param \Drupal\image\Event\ImageProcessEvent $event
+   * @param \Drupal\image\Event\ImageDerivative\ResolveDerivativeImageUrlEvent $event
    *   The image process event, carrying the process pipeline object.
    */
-  public function resolveDerivativeImageUrl(ImageProcessEvent $event): void {
+  public function resolveDerivativeImageUrl(ResolveDerivativeImageUrlEvent $event): void {
     $pipeline = $event->getPipeline();
 
     // Ensure we have the derivative image URI and the URL protection token.
-    $pipeline->dispatch(ImageDerivativePipelineEvents::RESOLVE_DERIVATIVE_IMAGE_URI);
-    $pipeline->dispatch(ImageDerivativePipelineEvents::RESOLVE_DERIVATIVE_IMAGE_URL_PROTECTION);
+    $pipeline->dispatch(ResolveDerivativeImageUriEvent::class);
+    $pipeline->dispatch(ResolveDerivativeImageUrlProtectionEvent::class);
 
     $clean_urls = $pipeline->hasVariable('setCleanUrl') ? $pipeline->getVariable('setCleanUrl') : NULL;
     $derivative_uri = $pipeline->getVariable('derivativeImageUri');
@@ -357,10 +368,10 @@ class ImageEventSubscriber implements EventSubscriberInterface {
   /**
    * Loads an Image object for subsequent processing into a derivative.
    *
-   * @param \Drupal\image\Event\ImageProcessEvent $event
+   * @param \Drupal\image\Event\ImageDerivative\LoadSourceImageEvent $event
    *   The image process event, carrying the process pipeline object.
    */
-  public function loadSourceImage(ImageProcessEvent $event): void {
+  public function loadSourceImage(LoadSourceImageEvent $event): void {
     $pipeline = $event->getPipeline();
 
     if ($pipeline->hasVariable('sourceImageUri') && !$pipeline->hasImage()) {
@@ -376,13 +387,13 @@ class ImageEventSubscriber implements EventSubscriberInterface {
   /**
    * Stores a transformed image at the derivative URI.
    *
-   * @param \Drupal\image\Event\ImageProcessEvent $event
+   * @param \Drupal\image\Event\ImageDerivative\SaveDerivativeImageEvent $event
    *   The image process event, carrying the process pipeline object.
    */
-  public function saveDerivativeImage(ImageProcessEvent $event): void {
+  public function saveDerivativeImage(SaveDerivativeImageEvent $event): void {
     $pipeline = $event->getPipeline();
 
-    $pipeline->dispatch(ImageDerivativePipelineEvents::RESOLVE_DERIVATIVE_IMAGE_URI);
+    $pipeline->dispatch(ResolveDerivativeImageUriEvent::class);
 
     // Get the folder for the final location of this style.
     $directory = $this->fileSystem->dirname($pipeline->getVariable('derivativeImageUri'));
@@ -404,42 +415,42 @@ class ImageEventSubscriber implements EventSubscriberInterface {
   /**
    * Produces an image derivative.
    *
-   * @param \Drupal\image\Event\ImageProcessEvent $event
+   * @param \Drupal\image\Event\ImageDerivative\BuildDerivativeImageEvent $event
    *   The image process event, carrying the process pipeline object.
    */
-  public function buildDerivativeImage(ImageProcessEvent $event): void {
+  public function buildDerivativeImage(BuildDerivativeImageEvent $event): void {
     $event->getPipeline()
-      ->dispatch(ImageDerivativePipelineEvents::RESOLVE_SOURCE_IMAGE_PROCESSABLE)
-      ->dispatch(ImageDerivativePipelineEvents::LOAD_SOURCE_IMAGE)
-      ->dispatch(ImageDerivativePipelineEvents::APPLY_IMAGE_STYLE)
-      ->dispatch(ImageDerivativePipelineEvents::SAVE_DERIVATIVE_IMAGE);
+      ->dispatch(ResolveSourceImageProcessableEvent::class)
+      ->dispatch(LoadSourceImageEvent::class)
+      ->dispatch(ApplyStyleEvent::class)
+      ->dispatch(SaveDerivativeImageEvent::class);
   }
 
   /**
    * Applies an image style to the image object.
    *
-   * @param \Drupal\image\Event\ImageProcessEvent $event
+   * @param \Drupal\image\Event\ImageDerivative\ApplyStyleEvent $event
    *   The image process event, carrying the process pipeline object.
    */
-  public function applyImageStyle(ImageProcessEvent $event): void {
+  public function applyImageStyle(ApplyStyleEvent $event): void {
     $pipeline = $event->getPipeline();
 
     // Apply the image effects to the image object.
     foreach ($pipeline->getVariable('imageStyle')->getEffects() as $effect) {
       $pipeline->dispatch(
-        ImageDerivativePipelineEvents::APPLY_IMAGE_EFFECT, [
+        ApplyStyleEffectEvent::class, [
           'imageEffect' => $effect,
         ]);
     }
   }
 
   /**
-   * Applies a single image effect to the image object.
+   * Applies a single image style effect to the image object.
    *
-   * @param \Drupal\image\Event\ImageProcessEvent $event
+   * @param \Drupal\image\Event\ImageDerivative\ApplyStyleEffectEvent $event
    *   The image process event, carrying the process pipeline object.
    */
-  public function applyImageEffect(ImageProcessEvent $event): void {
+  public function applyImageEffect(ApplyStyleEffectEvent $event): void {
     $pipeline = $event->getPipeline();
     $effect = $event->getArgument('imageEffect');
     $effect->applyEffect($pipeline->getImage());
@@ -448,15 +459,15 @@ class ImageEventSubscriber implements EventSubscriberInterface {
   /**
    * Removes an image derivative file based on its source file URI.
    *
-   * @param \Drupal\image\Event\ImageProcessEvent $event
+   * @param \Drupal\image\Event\ImageDerivative\RemoveDerivativeImageEvent $event
    *   The image process event, carrying the process pipeline object.
    */
-  public function removeDerivativeImage(ImageProcessEvent $event): void {
+  public function removeDerivativeImage(RemoveDerivativeImageEvent $event): void {
     $pipeline = $event->getPipeline();
 
     try {
       // Remove a single image derivative.
-      $pipeline->dispatch(ImageDerivativePipelineEvents::RESOLVE_DERIVATIVE_IMAGE_URI);
+      $pipeline->dispatch(ResolveDerivativeImageUriEvent::class);
       if ($pipeline->hasVariable('derivativeImageUri') && file_exists($pipeline->getVariable('derivativeImageUri'))) {
         $this->fileSystem->delete($pipeline->getVariable('derivativeImageUri'));
       }
@@ -503,7 +514,7 @@ class ImageEventSubscriber implements EventSubscriberInterface {
       $this->imageProcessor->createInstance('derivative')
         ->setImageStyle($style)
         ->setSourceImageUri($event->uri)
-        ->dispatch(ImageDerivativePipelineEvents::REMOVE_DERIVATIVE_IMAGE);
+        ->dispatch(RemoveDerivativeImageEvent::class);
     }
   }
 

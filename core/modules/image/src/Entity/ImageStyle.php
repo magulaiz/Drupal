@@ -7,7 +7,8 @@ use Drupal\Core\Entity\Entity\EntityFormDisplay;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityWithPluginCollectionInterface;
 use Drupal\Core\Site\Settings;
-use Drupal\image\Event\ImageDerivativePipelineEvents;
+use Drupal\image\Event\ImageDerivative\RemoveDerivativeImageEvent;
+use Drupal\image\Event\ImageDerivative\ResolveDerivativeImageDimensionsEvent;
 use Drupal\image\Event\ImageStyle\FlushEvent;
 use Drupal\image\ImageEffectPluginCollection;
 use Drupal\image\ImageEffectInterface;
@@ -196,7 +197,7 @@ class ImageStyle extends ConfigEntityBase implements ImageStyleInterface, Entity
       \Drupal::service(ImageProcessor::class)->createInstance('derivative')
         ->setImageStyle($this)
         ->setSourceImageUri($path)
-        ->dispatch(ImageDerivativePipelineEvents::REMOVE_DERIVATIVE_IMAGE);
+        ->dispatch(RemoveDerivativeImageEvent::class);
     }
     else {
       \Drupal::service('event_dispatcher')->dispatch(new FlushEvent($this));
@@ -226,7 +227,7 @@ class ImageStyle extends ConfigEntityBase implements ImageStyleInterface, Entity
       ->setImageStyle($this)
       ->setSourceImageUri($uri)
       ->setSourceImageDimensions($dimensions['width'] ?? NULL, $dimensions['height'] ?? NULL)
-      ->dispatch(ImageDerivativePipelineEvents::RESOLVE_DERIVATIVE_IMAGE_DIMENSIONS);
+      ->dispatch(ResolveDerivativeImageDimensionsEvent::class);
     $dimensions['width'] = $pipeline->getVariable('derivativeImageWidth');
     $dimensions['height'] = $pipeline->getVariable('derivativeImageHeight');
   }

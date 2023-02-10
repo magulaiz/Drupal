@@ -5,7 +5,6 @@ namespace Drupal\image\Plugin\ImageProcessPipeline;
 use Drupal\Core\Image\ImageInterface;
 use Drupal\Core\KeyValueStore\MemoryStorage;
 use Drupal\Core\Plugin\PluginBase;
-use Drupal\image\Event\ImageProcessEvent;
 use Drupal\image\ImageProcessException;
 use Drupal\image\ImageProcessPipelineInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -127,7 +126,7 @@ class ImageProcessPipelineBase extends PluginBase implements ImageProcessPipelin
    */
   public function dispatch(string $event, array $arguments = []): ImageProcessPipelineInterface {
     try {
-      $this->eventDispatcher->dispatch(new ImageProcessEvent($this, $arguments), $event);
+      $this->eventDispatcher->dispatch(new $event($this, $arguments));
     }
     catch (ImageProcessException $e) {
       throw new ImageProcessException("Failure processing '$event': " . $e->getMessage(), $e->getCode(), $e);

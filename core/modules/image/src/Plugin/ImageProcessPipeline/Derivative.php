@@ -4,7 +4,13 @@ namespace Drupal\image\Plugin\ImageProcessPipeline;
 
 use Drupal\Core\Image\ImageInterface;
 use Drupal\Core\Url;
-use Drupal\image\Event\ImageDerivativePipelineEvents;
+use Drupal\image\Event\ImageDerivative\BuildDerivativeImageEvent;
+use Drupal\image\Event\ImageDerivative\ResolveDerivativeImageDimensionsEvent;
+use Drupal\image\Event\ImageDerivative\ResolveDerivativeImageFormatEvent;
+use Drupal\image\Event\ImageDerivative\ResolveDerivativeImageUriEvent;
+use Drupal\image\Event\ImageDerivative\ResolveSourceImageProcessableEvent;
+use Drupal\image\Event\ImageDerivative\ResolveDerivativeImageUrlEvent;
+use Drupal\image\Event\ImageDerivative\ResolveDerivativeImageUrlProtectionEvent;
 use Drupal\image\ImageProcessException;
 use Drupal\image\ImageProcessPipelineInterface;
 use Drupal\image\ImageStyleInterface;
@@ -140,7 +146,7 @@ class Derivative extends ImageProcessPipelineBase {
    *   TRUE if the image is supported, FALSE otherwise.
    */
   public function isSourceImageProcessable(): bool {
-    $this->dispatch(ImageDerivativePipelineEvents::RESOLVE_SOURCE_IMAGE_PROCESSABLE);
+    $this->dispatch(ResolveSourceImageProcessableEvent::class);
     return $this->getVariable('isSourceImageProcessable');
   }
 
@@ -152,7 +158,7 @@ class Derivative extends ImageProcessPipelineBase {
    *   original.
    */
   public function getDerivativeImageFileExtension(): string {
-    $this->dispatch(ImageDerivativePipelineEvents::RESOLVE_DERIVATIVE_IMAGE_FORMAT);
+    $this->dispatch(ResolveDerivativeImageFormatEvent::class);
     return $this->getVariable('derivativeImageFileExtension');
   }
 
@@ -163,7 +169,7 @@ class Derivative extends ImageProcessPipelineBase {
    *   The width of the derivative image, or NULL if it cannot be calculated.
    */
   public function getDerivativeImageWidth(): ?int {
-    $this->dispatch(ImageDerivativePipelineEvents::RESOLVE_DERIVATIVE_IMAGE_DIMENSIONS);
+    $this->dispatch(ResolveDerivativeImageDimensionsEvent::class);
     return $this->getVariable('derivativeImageWidth');
   }
 
@@ -174,7 +180,7 @@ class Derivative extends ImageProcessPipelineBase {
    *   The height of the derivative image, or NULL if it cannot be calculated.
    */
   public function getDerivativeImageHeight(): ?int {
-    $this->dispatch(ImageDerivativePipelineEvents::RESOLVE_DERIVATIVE_IMAGE_DIMENSIONS);
+    $this->dispatch(ResolveDerivativeImageDimensionsEvent::class);
     return $this->getVariable('derivativeImageHeight');
   }
 
@@ -190,7 +196,7 @@ class Derivative extends ImageProcessPipelineBase {
    *   The URI to the image derivative for this style.
    */
   public function getDerivativeImageUri(): string {
-    $this->dispatch(ImageDerivativePipelineEvents::RESOLVE_DERIVATIVE_IMAGE_URI);
+    $this->dispatch(ResolveDerivativeImageUriEvent::class);
     return $this->getVariable('derivativeImageUri');
   }
 
@@ -207,7 +213,7 @@ class Derivative extends ImageProcessPipelineBase {
    * @see \Drupal\Core\File\FileUrlGeneratorInterface::transformRelative()
    */
   public function getDerivativeImageUrl(): Url {
-    $this->dispatch(ImageDerivativePipelineEvents::RESOLVE_DERIVATIVE_IMAGE_URL);
+    $this->dispatch(ResolveDerivativeImageUrlEvent::class);
     return $this->getVariable('derivativeImageUrl');
   }
 
@@ -222,7 +228,7 @@ class Derivative extends ImageProcessPipelineBase {
    *   derivatives against denial-of-service attacks.
    */
   public function getDerivativeImageUrlSecurityToken(): ?string {
-    $this->dispatch(ImageDerivativePipelineEvents::RESOLVE_DERIVATIVE_IMAGE_URL_PROTECTION);
+    $this->dispatch(ResolveDerivativeImageUrlProtectionEvent::class);
     return $this->hasVariable('derivativeImageUrlProtection') ? $this->getVariable('derivativeImageUrlProtection')[IMAGE_DERIVATIVE_TOKEN] : NULL;
   }
 
@@ -237,7 +243,7 @@ class Derivative extends ImageProcessPipelineBase {
    */
   public function buildDerivativeImage(): bool {
     try {
-      $this->dispatch(ImageDerivativePipelineEvents::BUILD_DERIVATIVE_IMAGE);
+      $this->dispatch(BuildDerivativeImageEvent::class);
       return TRUE;
     }
     catch (ImageProcessException $e) {
