@@ -45,7 +45,7 @@ class ImageAdminUiTest extends ImageFieldTestBase {
    * Tests if the help text is available on the add/edit effect form.
    */
   public function testEffectHelpText(): void {
-    //Tests if the help text is available on the add effect form
+    // Tests if the help text is available on the add effect form
     // Open the add effect form and check for the help text.
     $this->drupalGet($this->style->toUrl()->toString() . '/add/image_resize');
 
