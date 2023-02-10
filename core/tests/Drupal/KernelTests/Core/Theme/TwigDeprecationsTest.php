@@ -20,22 +20,7 @@ class TwigDeprecationsTest extends KernelTestBase {
    *
    * @var array
    */
-  protected static $modules = ['system', 'theme_test', 'element_info_test'];
-
-  /**
-   * Test deprecating a variable in a render element plugin.
-   */
-  public function testRenderElementVariableDeprecation() {
-    $element = [
-      '#type' => 'deprecated_variables',
-    ];
-    // Both 'size' and 'maxlength' are deprecated in
-    // Drupal\element_info_test\Element\DeprecatedVariable
-    // but used in input.html.twig.
-    $this->expectDeprecation($this->getDeprecationMessage('size'));
-    $this->expectDeprecation($this->getDeprecationMessage('maxlength'));
-    $this->container->get('renderer')->renderRoot($element);
-  }
+  protected static $modules = ['system', 'theme_test'];
 
   /**
    * Test deprecating variables at definition in hook_theme().
