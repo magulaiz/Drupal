@@ -369,16 +369,36 @@ class EntityTypeManagerTest extends UnitTestCase {
   }
 
   /**
-   * Tests the getDefinition() method with an invalid definition.
+   * Tests the getDefinition() method with a non-existent definition.
    *
    * @covers ::getDefinition
    */
-  public function testGetDefinitionInvalidException() {
+  public function testGetDefinitionInvalidExceptionMissingDefinition() {
     $this->setUpEntityTypeDefinitions();
 
     $this->expectException(PluginNotFoundException::class);
     $this->expectExceptionMessage('The "pear" entity type does not exist.');
     $this->entityTypeManager->getDefinition('pear', TRUE);
+  }
+
+
+  /**
+   * Tests the getDefinition() method with a definition whose class is missing.
+   *
+   * @covers ::getDefinition
+   */
+  public function testGetDefinitionInvalidExceptionMissingClass() {
+    // We need to do our own mocking to supply a broken class.
+    $apple = $this->prophesize(EntityTypeInterface::class);
+    $apple->getClass()->willReturn('ClassDoesNotExist');
+    $apple->setClass('ClassDoesNotExist')->willReturn($apple->reveal());
+    $apple->getLinkTemplates()->willReturn([]);
+
+    $this->discovery->getDefinitions()->willReturn(['apple' => $apple]);
+
+    $this->expectException(InvalidPluginDefinitionException::class);
+    $this->expectExceptionMessage('The "apple" entity type specifies a class "ClassDoesNotExist" which does not exist.');
+    $this->entityTypeManager->getDefinition('apple', TRUE);
   }
 
   /**
