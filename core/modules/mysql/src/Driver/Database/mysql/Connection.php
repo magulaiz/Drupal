@@ -276,7 +276,7 @@ class Connection extends DatabaseConnection implements SupportsTemporaryTablesIn
     foreach ($connection_options['init_commands'] as $sql) {
       $pdo->exec($sql);
     }
-    if (isset($connection_options['init_commands']['sql_mode_options'])) {
+    if (isset($sql_mode_command)) {
       $pdo->exec($sql_mode_command);
     }
 
