@@ -149,9 +149,9 @@ abstract class ContentEntityBase extends EntityBase implements \IteratorAggregat
   /**
    * Whether entity validation is required before saving the entity.
    *
-   * @var bool
+   * @var bool|null
    */
-  protected $validationRequired = FALSE;
+  protected $validationRequired = NULL;
 
   /**
    * The loaded revision ID before the new revision was set.
@@ -439,9 +439,19 @@ abstract class ContentEntityBase extends EntityBase implements \IteratorAggregat
   public function preSave(EntityStorageInterface $storage) {
     // An entity requiring validation should not be saved if it has not been
     // actually validated.
-    if ($this->validationRequired && !$this->validated) {
+    if ($this->validationRequired === TRUE && !$this->validated) {
       // @todo Make this an assertion in https://www.drupal.org/node/2408013.
       throw new \LogicException('Entity validation was skipped.');
+    }
+    elseif ($this->validationRequired === NULL && !$this->validated) {
+      $violations = $this->validate();
+      if ($violations->count() > 0) {
+        $violation_messages = [];
+        foreach ($violations->getIterator() as $violation) {
+          $violation_messages[$violation->getPropertyPath()] = (string) $violation->getMessage();
+        }
+        throw new \LogicException('Saving invalid entity: ' . print_r($violation_messages, TRUE));
+      }
     }
     else {
       $this->validated = FALSE;
