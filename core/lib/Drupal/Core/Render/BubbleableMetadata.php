@@ -51,7 +51,11 @@ class BubbleableMetadata extends CacheableMetadata implements AttachmentsInterfa
    */
   public function applyTo(array &$build) {
     parent::applyTo($build);
-    $build['#attached'] = $this->attachments;
+    $attached = isset($build['#attached']) ?
+      static::mergeAttachments($this->attachments, $build['#attached']) : $this->attachments;
+    if (!empty($attached)) {
+      $build['#attached'] = $attached;
+    }
   }
 
   /**
