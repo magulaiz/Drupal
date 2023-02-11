@@ -229,9 +229,9 @@ class NodeTypeForm extends BundleEntityFormBase {
     }
     elseif ($status == SAVED_NEW) {
       node_add_body_field($type);
-      $this->messenger()->addStatus($this->t('The content type %name has been added. Please remember to check <a href="%permissions_url">user permissions</a> for this content type', [
+      $this->messenger()->addStatus($this->t('The content type %name has been added. Please remember to check <a href=":permissions_url">user permissions</a> for this content type', [
         '%name' => $type->label(),
-        '%permissions_url' => Url::fromRoute('user.admin_permissions')->toString(),
+        ':permissions_url' => Url::fromRoute('user.admin_permissions')->toString(),
       ]));
       $context = array_merge($t_args, ['link' => $type->toLink($this->t('View'), 'collection')->toString()]);
       $this->logger('node')->notice('Added content type %name.', $context);
