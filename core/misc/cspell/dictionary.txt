@@ -1302,6 +1302,7 @@ unaliased
 unallowed
 unassigning
 unassigns
+unhides
 unban
 unbans
 unbundleable
