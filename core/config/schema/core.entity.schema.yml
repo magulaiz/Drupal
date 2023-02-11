@@ -219,6 +219,17 @@ field.widget.settings.number:
       type: label
       label: 'Placeholder'
 
+field.widget.settings.number_range:
+  type: mapping
+  label: 'Range field'
+  mapping:
+    placeholder:
+      type: label
+      label: 'Placeholder'
+    output:
+      type: boolean
+      label: 'Display current value'
+
 field.widget.settings.checkbox:
   type: mapping
   label: 'Single on/off checkbox format settings'

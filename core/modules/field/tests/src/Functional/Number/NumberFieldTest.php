@@ -39,6 +39,7 @@ class NumberFieldTest extends BrowserTestBase {
       'administer node display',
       'bypass node access',
       'administer entity_test fields',
+      'administer entity_test form display',
     ]));
   }
 
@@ -128,6 +129,16 @@ class NumberFieldTest extends BrowserTestBase {
       $this->submitForm($edit, 'Save');
       $this->assertSession()->pageTextContains("{$field_name} must be a number.");
     }
+
+    $this->drupalGet('entity_test/structure/entity_test/form-display');
+    $this->assertSession()->pageTextContains('Range field');
+    $this->assertSession()->elementExists('css', 'option[value="number_range"]');
+    $this->submitForm([
+      "fields[{$field_name}][type]" => 'number_range',
+    ], 'Save');
+    $this->assertSession()->statusMessageContains('Your settings have been saved.');
+    $this->drupalGet('entity_test/add');
+    $this->assertSession()->elementExists('css', 'input[type="range"]');
   }
 
   /**
