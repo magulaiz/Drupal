@@ -122,7 +122,7 @@ module.exports = {
 
     browser
       .drupalRelativeURL('/admin/appearance/settings/olivero')
-      .ForElementVisible(selectors.primaryColor.color)
+      .waitForElementVisible(selectors.primaryColor.color)
       .updateValue(selectors.primaryColor.text, '#7a4587') // hsl(0, 100%, 50%)
       .click(selectors.submit)
       .waitForElementVisible(selectors.primaryColor.color)
