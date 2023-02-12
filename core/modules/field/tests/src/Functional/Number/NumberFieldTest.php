@@ -47,13 +47,15 @@ class NumberFieldTest extends BrowserTestBase {
    * Tests decimal field.
    */
   public function testNumberDecimalField() {
+    $precision = 8;
+    $scale = 4;
     // Create a field with settings to validate.
     $field_name = mb_strtolower($this->randomMachineName());
     FieldStorageConfig::create([
       'field_name' => $field_name,
       'entity_type' => 'entity_test',
       'type' => 'decimal',
-      'settings' => ['precision' => 8, 'scale' => 4],
+      'settings' => ['precision' => $precision, 'scale' => $scale],
     ])->save();
     FieldConfig::create([
       'field_name' => $field_name,
@@ -130,15 +132,16 @@ class NumberFieldTest extends BrowserTestBase {
       $this->assertSession()->pageTextContains("{$field_name} must be a number.");
     }
 
-    $this->drupalGet('entity_test/structure/entity_test/form-display');
-    $this->assertSession()->pageTextContains('Range field');
-    $this->assertSession()->elementExists('css', 'option[value="number_range"]');
-    $this->submitForm([
-      "fields[{$field_name}][type]" => 'number_range',
-    ], 'Save');
-    $this->assertSession()->statusMessageContains('Your settings have been saved.');
+    // Test range number widget.
+    $this->assertSetRangeNumberWidget($field_name);
+
     $this->drupalGet('entity_test/add');
+    // Test if elements was printed and all attributes was set correctly.
     $this->assertSession()->elementExists('css', 'input[type="range"]');
+    $rangeInput = $this->getSession()->getPage()->find('css', 'input[type="range"]');
+    $this->assertTrue($rangeInput->hasAttribute('step'));
+    $step = (float) number_format(pow(0.1, $scale), $scale);
+    $this->assertTrue((float) $rangeInput->getAttribute('step') === $step);
   }
 
   /**
@@ -294,6 +297,17 @@ class NumberFieldTest extends BrowserTestBase {
     // Verify that the "content" attribute has been set to the value of the
     // field, and the prefix is being displayed.
     $this->assertSession()->elementTextContains('xpath', '//div[@content="' . $integer_value . '"]', 'ThePrefix' . $integer_value);
+
+    // Test range number widget.
+    $this->assertSetRangeNumberWidget($field_name);
+
+    $this->drupalGet('entity_test/add');
+    // Test if elements was printed and all attributes was set correctly.
+    $this->assertSession()->elementExists('css', 'input[type="range"]');
+    $rangeInput = $this->getSession()->getPage()->find('css', 'input[type="range"]');
+    $this->assertTrue($rangeInput->hasAttribute('step'));
+    $rangeStep = (int) $rangeInput->getAttribute('step');
+    $this->assertTrue($rangeStep === 1, "Step value should be 1 instead of {$rangeStep}");
   }
 
   /**
@@ -387,6 +401,17 @@ class NumberFieldTest extends BrowserTestBase {
       $this->submitForm($edit, 'Save');
       $this->assertSession()->pageTextContains("{$field_name} must be a number.");
     }
+
+    // Test if widget works for float field.
+    $this->assertSetRangeNumberWidget($field_name);
+
+    $this->drupalGet('entity_test/add');
+    // Test if elements was printed and all attributes was set correctly.
+    $this->assertSession()->elementExists('css', 'input[type="range"]');
+    $rangeInput = $this->getSession()->getPage()->find('css', 'input[type="range"]');
+    $this->assertTrue($rangeInput->hasAttribute('step'));
+    $rangeStep = $rangeInput->getAttribute('step');
+    $this->assertTrue($rangeInput->getAttribute('step') === 'any', "Step value should be any instead of {$rangeStep}");
   }
 
   /**
@@ -460,6 +485,32 @@ class NumberFieldTest extends BrowserTestBase {
     // Check if the minimum value was actually set.
     $this->drupalGet($field_configuration_url);
     $this->assertSession()->fieldValueEquals('edit-settings-min', $minimum_value);
+  }
+
+  /**
+   * Helper function to set widget as range number and test it.
+   *
+   * @interal
+   */
+  public function assertSetRangeNumberWidget($field_name) {
+    /** @var \Drupal\Core\Entity\EntityDisplayRepositoryInterface $display_repository */
+    $display_repository = \Drupal::service('entity_display.repository');
+
+    // Test range widget.
+    $this->drupalGet('entity_test/structure/entity_test/form-display');
+    // Test if there is range field option.
+    $this->assertSession()->pageTextContains('Range field');
+    $this->assertSession()->elementExists('css', 'option[value="number_range"]');
+    $this->submitForm([
+      "fields[{$field_name}][type]" => 'number_range',
+    ], 'Save');
+    // Test if Range field widget was saved with success.
+    $this->assertSession()->statusMessageContains('Your settings have been saved.');
+
+    // Test if widget was applied with success on the form display.
+    $comp = $display_repository->getFormDisplay('entity_test', 'entity_test')->getComponent($field_name);
+    $this->assertTrue($comp['type'] === 'number_range');
+    $this->assertTrue($comp['settings']['output']);
   }
 
 }
