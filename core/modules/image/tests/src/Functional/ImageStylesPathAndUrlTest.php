@@ -373,7 +373,7 @@ class ImageStylesPathAndUrlTest extends BrowserTestBase {
   }
 
   /**
-   * @covers \Drupal\image\Plugin\ImageProcessPipeline\Derivative::getDerivativeImageUri
+   * @covers \Drupal\image\Plugin\ImageProcessorPipeline\Derivative::getDerivativeImageUri
    */
   public function testImageStylePath() {
     $scheme = 'public';

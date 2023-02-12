@@ -8,7 +8,7 @@ use Symfony\Component\EventDispatcher\GenericEvent;
 /**
  * Provides a class for events related to image styles.
  */
-abstract class BaseEvent extends GenericEvent {
+abstract class EventBase extends GenericEvent {
 
   /**
    * Returns the Image Style object subject of the event.

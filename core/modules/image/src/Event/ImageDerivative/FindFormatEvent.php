@@ -5,5 +5,5 @@ namespace Drupal\image\Event\ImageDerivative;
 /**
  * Event fired to determine the format of the derivative image.
  */
-class ResolveDerivativeImageFormatEvent extends BaseEvent {
+class FindFormatEvent extends EventBase {
 }

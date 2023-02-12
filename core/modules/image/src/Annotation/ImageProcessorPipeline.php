@@ -5,11 +5,11 @@ namespace Drupal\image\Annotation;
 use Drupal\Component\Annotation\Plugin;
 
 /**
- * Defines a Plugin annotation object for ImageProcessPipeline plugins.
+ * Defines a Plugin annotation object for ImageProcessorPipeline plugins.
  *
  * @Annotation
  */
-class ImageProcessPipeline extends Plugin {
+class ImageProcessorPipeline extends Plugin {
 
   /**
    * The plugin ID.

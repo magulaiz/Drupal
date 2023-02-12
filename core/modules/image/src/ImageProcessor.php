@@ -5,10 +5,10 @@ namespace Drupal\image;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Plugin\DefaultPluginManager;
-use Drupal\image\Annotation\ImageProcessPipeline;
+use Drupal\image\Annotation\ImageProcessorPipeline;
 
 /**
- * Service to manage ImageProcessPipeline plugins.
+ * Service to manage ImageProcessorPipeline plugins.
  */
 class ImageProcessor extends DefaultPluginManager {
 
@@ -17,14 +17,14 @@ class ImageProcessor extends DefaultPluginManager {
    */
   public function __construct(\Traversable $namespaces, CacheBackendInterface $cacheDiscovery, ModuleHandlerInterface $module_handler) {
     parent::__construct(
-      'Plugin/ImageProcessPipeline',
+      'Plugin/ImageProcessorPipeline',
       $namespaces,
       $module_handler,
-      ImageProcessPipelineInterface::class,
-      ImageProcessPipeline::class
+      ImageProcessorPipelineInterface::class,
+      ImageProcessorPipeline::class
     );
-    $this->alterInfo('image_process_pipeline_plugin_info');
-    $this->setCacheBackend($cacheDiscovery, 'image_process_pipeline_plugins');
+    $this->alterInfo('image_processor_pipeline_plugin_info');
+    $this->setCacheBackend($cacheDiscovery, 'image_processor_pipeline_plugins');
   }
 
 }

@@ -7,7 +7,7 @@ use Drupal\image\Entity\ImageStyle;
 use Drupal\image\ImageProcessor;
 
 /**
- * @coversDefaultClass \Drupal\image\Plugin\ImageProcessPipeline\Derivative
+ * @coversDefaultClass \Drupal\image\Plugin\ImageProcessorPipeline\Derivative
  *
  * @group image
  */

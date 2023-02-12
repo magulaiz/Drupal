@@ -7,9 +7,9 @@ use Drupal\Core\Image\ImageInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 
 /**
- * Provides an interface defining an ImageProcessPipeline plugin.
+ * Provides an interface defining an ImageProcessorPipeline plugin.
  */
-interface ImageProcessPipelineInterface extends ContainerFactoryPluginInterface, PluginInspectionInterface {
+interface ImageProcessorPipelineInterface extends ContainerFactoryPluginInterface, PluginInspectionInterface {
 
   /**
    * Sets a pipeline variable to a specified value.
@@ -21,7 +21,7 @@ interface ImageProcessPipelineInterface extends ContainerFactoryPluginInterface,
    *
    * @return self
    */
-  public function setVariable(string $variable, $value): ImageProcessPipelineInterface;
+  public function setVariable(string $variable, $value): ImageProcessorPipelineInterface;
 
   /**
    * Returns the value of a pipeline variable.
@@ -32,7 +32,7 @@ interface ImageProcessPipelineInterface extends ContainerFactoryPluginInterface,
    * @return mixed
    *   The value of the variable.
    *
-   * @throws \Drupal\image\ImageProcessException
+   * @throws \Drupal\image\ImageProcessorException
    *   If the variable is not set.
    */
   public function getVariable(string $variable);
@@ -56,7 +56,7 @@ interface ImageProcessPipelineInterface extends ContainerFactoryPluginInterface,
    *
    * @return self
    */
-  public function deleteVariable(string $variable): ImageProcessPipelineInterface;
+  public function deleteVariable(string $variable): ImageProcessorPipelineInterface;
 
   /**
    * Sets the Image object to be manipulated.
@@ -66,7 +66,7 @@ interface ImageProcessPipelineInterface extends ContainerFactoryPluginInterface,
    *
    * @return self
    */
-  public function setImage(ImageInterface $image): ImageProcessPipelineInterface;
+  public function setImage(ImageInterface $image): ImageProcessorPipelineInterface;
 
   /**
    * Returns the current Image object.
@@ -97,6 +97,6 @@ interface ImageProcessPipelineInterface extends ContainerFactoryPluginInterface,
    *
    * @return self
    */
-  public function dispatch(string $event, array $arguments = []): ImageProcessPipelineInterface;
+  public function dispatch(string $event, array $arguments = []): ImageProcessorPipelineInterface;
 
 }

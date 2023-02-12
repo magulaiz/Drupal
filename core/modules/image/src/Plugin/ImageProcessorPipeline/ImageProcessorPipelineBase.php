@@ -1,19 +1,19 @@
 <?php
 
-namespace Drupal\image\Plugin\ImageProcessPipeline;
+namespace Drupal\image\Plugin\ImageProcessorPipeline;
 
 use Drupal\Core\Image\ImageInterface;
 use Drupal\Core\KeyValueStore\MemoryStorage;
 use Drupal\Core\Plugin\PluginBase;
-use Drupal\image\ImageProcessException;
-use Drupal\image\ImageProcessPipelineInterface;
+use Drupal\image\ImageProcessorException;
+use Drupal\image\ImageProcessorPipelineInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
- * ImageProcessPipeline base class.
+ * ImageProcessorPipeline base class.
  */
-class ImageProcessPipelineBase extends PluginBase implements ImageProcessPipelineInterface {
+class ImageProcessorPipelineBase extends PluginBase implements ImageProcessorPipelineInterface {
 
   /**
    * The event dispatcher.
@@ -37,7 +37,7 @@ class ImageProcessPipelineBase extends PluginBase implements ImageProcessPipelin
   protected $image;
 
   /**
-   * Constructs a ImageProcessPipeline plugin.
+   * Constructs a ImageProcessorPipeline plugin.
    *
    * @param array $configuration
    *   A configuration array containing information about the plugin instance.
@@ -69,7 +69,7 @@ class ImageProcessPipelineBase extends PluginBase implements ImageProcessPipelin
   /**
    * {@inheritdoc}
    */
-  public function setVariable(string $variable, $value): ImageProcessPipelineInterface {
+  public function setVariable(string $variable, $value): ImageProcessorPipelineInterface {
     $this->variables->set($variable, $value);
     return $this;
   }
@@ -79,7 +79,7 @@ class ImageProcessPipelineBase extends PluginBase implements ImageProcessPipelin
    */
   public function getVariable(string $variable) {
     if (!$this->variables->has($variable)) {
-      throw new ImageProcessException("Variable {$variable} not set");
+      throw new ImageProcessorException("Variable {$variable} not set");
     }
     return $this->variables->get($variable);
   }
@@ -94,7 +94,7 @@ class ImageProcessPipelineBase extends PluginBase implements ImageProcessPipelin
   /**
    * {@inheritdoc}
    */
-  public function deleteVariable(string $variable): ImageProcessPipelineInterface {
+  public function deleteVariable(string $variable): ImageProcessorPipelineInterface {
     $this->variables->delete($variable);
     return $this;
   }
@@ -102,7 +102,7 @@ class ImageProcessPipelineBase extends PluginBase implements ImageProcessPipelin
   /**
    * {@inheritdoc}
    */
-  public function setImage(ImageInterface $image): ImageProcessPipelineInterface {
+  public function setImage(ImageInterface $image): ImageProcessorPipelineInterface {
     $this->image = $image;
     return $this;
   }
@@ -124,12 +124,12 @@ class ImageProcessPipelineBase extends PluginBase implements ImageProcessPipelin
   /**
    * {@inheritdoc}
    */
-  public function dispatch(string $event, array $arguments = []): ImageProcessPipelineInterface {
+  public function dispatch(string $event, array $arguments = []): ImageProcessorPipelineInterface {
     try {
       $this->eventDispatcher->dispatch(new $event($this, $arguments));
     }
-    catch (ImageProcessException $e) {
-      throw new ImageProcessException("Failure processing '$event': " . $e->getMessage(), $e->getCode(), $e);
+    catch (ImageProcessorException $e) {
+      throw new ImageProcessorException("Failure processing '$event': " . $e->getMessage(), $e->getCode(), $e);
     }
     return $this;
   }
