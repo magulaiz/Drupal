@@ -114,6 +114,7 @@ module.exports = {
       .waitForElementVisible(selectors.primaryColor.color)
       .updateValue(selectors.primaryColor.text, '#ff0000') // hsl(0, 100%, 50%)
       .click(selectors.submit)
+      .moveToElement(selectors.primaryColor.color, 0, 0)
       .waitForElementPresent(selectors.primaryColor.color, 10000)
       .drupalRelativeURL('/')
       .waitForElementVisible(selectors.siteHeader)
