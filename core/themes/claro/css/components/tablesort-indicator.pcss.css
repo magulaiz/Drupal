@@ -6,7 +6,7 @@
 .tablesort {
   position: absolute;
   top: 50%;
-  inline-start: 1rem;
+  right: 1rem;
   width: 0.875rem; /* 14px */
   height: 1rem; /* 16px */
   margin-top: -0.5rem; /* -8px */
@@ -17,8 +17,8 @@
   background-size: auto;
 
   [dir="rtl"] & {
-    inline-start: auto;
-    inline-end: 1rem; /* 16px */
+    right: auto;
+    left: 1rem; /* 16px */
     background-image: url(../../images/icons/000f33/sort--inactive--rtl.svg);
   }
 
