@@ -114,7 +114,7 @@ module.exports = {
       .waitForElementVisible(selectors.primaryColor.color)
       .updateValue(selectors.primaryColor.text, '#ff0000') // hsl(0, 100%, 50%)
       .click(selectors.submit)
-      .waitForElementVisible(selectors.primaryColor.color)
+      .waitForElementPresent(selectors.primaryColor.color)
       .drupalRelativeURL('/')
       .waitForElementVisible(selectors.siteHeader)
       .expect.element(selectors.siteHeader)
@@ -122,7 +122,7 @@ module.exports = {
 
     browser
       .drupalRelativeURL('/admin/appearance/settings/olivero')
-      .waitForElementVisible(selectors.primaryColor.color)
+      .ForElementVisible(selectors.primaryColor.color)
       .updateValue(selectors.primaryColor.text, '#7a4587') // hsl(0, 100%, 50%)
       .click(selectors.submit)
       .waitForElementVisible(selectors.primaryColor.color)
