@@ -6,38 +6,32 @@
 .tablesort {
   position: absolute;
   top: 50%;
+  inline-start: 1rem;
   width: 0.875rem; /* 14px */
   height: 1rem; /* 16px */
   margin-top: -0.5rem; /* -8px */
   opacity: 0.5;
-  
-  /* LTR */
-  inline-start: 1rem;
   background-image: url(../../images/icons/000f33/sort--inactive--ltr.svg);
-  background-position: 0 50%;
   background-repeat: no-repeat;
+  background-position: 0 50%;
   background-size: auto;
 
-  /* RTL */
   [dir="rtl"] & {
     inline-start: auto;
     inline-end: 1rem; /* 16px */
     background-image: url(../../images/icons/000f33/sort--inactive--rtl.svg);
   }
 
-  /* ASC */
   &.tablesort--asc {
     opacity: 1;
     background-image: url(../../images/icons/003ecc/sort--asc.svg);
   }
 
-  /* DESC */
   &.tablesort--desc {
     opacity: 1;
     background-image: url(../../images/icons/003ecc/sort--desc.svg);
   }
 
-  /* FORCED-COLORS */
   @media (forced-colors: active) {
     background-color: linktext;
     -webkit-mask-image: url(../../images/icons/000f33/sort--inactive--ltr.svg);
