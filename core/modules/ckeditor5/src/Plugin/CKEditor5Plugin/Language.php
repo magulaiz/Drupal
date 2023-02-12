@@ -40,12 +40,12 @@ class Language extends CKEditor5PluginDefault implements CKEditor5PluginConfigur
    *   A configuration array containing information about the plugin instance.
    * @param string $plugin_id
    *   The plugin_id for the plugin instance.
-   * @param \Drupal\ckeditor5\Plugin\CKEditor5PluginDefinition|null $plugin_definition
+   * @param \Drupal\ckeditor5\Plugin\CKEditor5PluginDefinition $plugin_definition
    *   The plugin implementation definition.
    * @param \Drupal\Core\Language\LanguageManagerInterface $language_manager
    *   The language manager.
    */
-  public function __construct(array $configuration, string $plugin_id, ?CKEditor5PluginDefinition $plugin_definition, LanguageManagerInterface $language_manager) {
+  public function __construct(array $configuration, string $plugin_id, CKEditor5PluginDefinition $plugin_definition, LanguageManagerInterface $language_manager) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->languageManager = $language_manager;
   }
