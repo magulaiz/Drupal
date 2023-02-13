@@ -172,21 +172,6 @@ setClassesAsap();
             $(document).trigger('drupalToolbarTrayChange', tray);
           });
 
-        // If the toolbar's orientation is horizontal and no active tab is
-        // defined then show the tray of the first toolbar tab by default (but
-        // not the first 'Home' toolbar tab).
-        if (
-          Drupal.toolbar.models.toolbarModel.get('orientation') ===
-            'horizontal' &&
-          Drupal.toolbar.models.toolbarModel.get('activeTab') === null
-        ) {
-          Drupal.toolbar.models.toolbarModel.set({
-            activeTab: $(
-              '.toolbar-bar .toolbar-tab:not(.home-toolbar-tab) a',
-            ).get(0),
-          });
-        }
-
         $(window).on({
           'dialog:aftercreate': (event, dialog, $element, settings) => {
             const $toolbar = $('#toolbar-bar');
@@ -273,62 +258,6 @@ setClassesAsap();
         // eslint-disable-next-line no-new
         new ChildView();
       }
-      once('user-toolbar-data', '#toolbar-item-user', context).forEach(
-        (toolbarItem) => {
-          const mutationObserver = new MutationObserver((mutations) => {
-            mutations.forEach((mutation) => {
-              console.log(mutation);
-              if (
-                mutation.type === 'childList' &&
-                mutation.removedNodes &&
-                mutation.removedNodes[0].hasAttribute(
-                  'data-big-pipe-placeholder-id',
-                )
-              ) {
-                Cookies.set(
-                  'toolbarUserName',
-                  mutation.addedNodes[0].textContent,
-                  {
-                    path: '/',
-                  },
-                );
-              }
-            });
-          });
-          mutationObserver.observe(toolbarItem, {
-            childList: true,
-          });
-        },
-      );
-      once('toolbar-lazy-trays', '#toolbar-bar', context).forEach((toolbar) => {
-        const mutationObserver = new MutationObserver((mutations) => {
-          mutations.forEach(function (mutation) {
-            console.log('lazy trays', mutation);
-            if (
-              mutation.type === 'childList' &&
-              mutation.removedNodes &&
-              mutation.removedNodes[0].hasAttribute(
-                'data-big-pipe-placeholder-id',
-              )
-            ) {
-              mutation.addedNodes.forEach((node) => {
-                console.log('addyy', node);
-                if (node.classList.contains('toolbar-menu')) {
-                  console.log('WE ADD TO', node);
-                  node.parentNode.classList.add('lazy-builder-just-added');
-                  setTimeout(() => {
-                    node.parentNode.classList.remove('lazy-builder-just-added');
-                  }, 50);
-                }
-              });
-            }
-          });
-        });
-        mutationObserver.observe(toolbar, {
-          childList: true,
-          subtree: true,
-        });
-      });
     },
   };
   /**

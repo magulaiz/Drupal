@@ -201,13 +201,14 @@
        */
       updateTabs() {
         const $tab = $(this.model.get('activeTab'));
+
         // Deactivate the previous tab.
         $(this.model.previous('activeTab'))
           .removeClass('is-active')
           .prop('aria-pressed', false);
         // Deactivate the previous tray.
         $(this.model.previous('activeTray')).removeClass('is-active');
-
+        localStorage.removeItem('Drupal.toolbar.activeTabID');
         // Activate the selected tab.
         if ($tab.length > 0) {
           $tab
@@ -233,6 +234,7 @@
           } else {
             // There is no active tray.
             this.model.set('activeTray', null);
+            localStorage.removeItem('Drupal.toolbar.activeTabID');
           }
         } else {
           // There is no active tray.

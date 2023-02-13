@@ -246,7 +246,16 @@ function toolbar_menu_navigation_links(array $tree) {
   return $tree;
 }
 
-function _get_toolbar_cookie_item($cookie_id) {
+/**
+ * Gets cookie items and accounts for JS falsy values.
+ *
+ * @param string $cookie_id
+ *   The cookie ID.
+ *
+ * @return bool|string
+ *   The cookie value if it isn't JS falsy.
+ */
+function _get_toolbar_cookie_item(string $cookie_id) {
   $cookie_value = \Drupal::request()->cookies->get($cookie_id);
   if (empty($cookie_value) || $cookie_value === 'false' || $cookie_value === 'undefined' || $cookie_value === 'null') {
     return FALSE;
@@ -279,7 +288,7 @@ function toolbar_preprocess_html(&$variables) {
   if ($toolbar_oriented) {
     $variables['attributes']['class'][] = 'toolbar-oriented';
   }
-
+  $gt = '>';
   if ($has_active_tab) {
     $variables['attributes']['class'][] = 'toolbar-tray-open';
     if (!empty($active_tray)) {
@@ -294,21 +303,22 @@ function toolbar_preprocess_html(&$variables) {
   .toolbar-loading.toolbar-vertical.toolbar-tray-open [data-drupal-claro-processed-toolbar] #{$active_tab_id}-tray {
      width: 15rem; height: 100vh;
    }
-   .toolbar-loading.toolbar-horizontal :not(#{$active_tray}) .toolbar-lining {opacity: 0} 
+   .toolbar-loading.toolbar-horizontal :not(#{$active_tray}) {$gt} .toolbar-lining {opacity: 0} 
 STYLE;
 
       $variables['page']['#attached']['html_head'][] = [
         [
           '#tag' => 'style',
-          '#value' => $style,
+          'children' => [
+            '#type' => 'inline_template',
+            '#template' => $style,
+          ],
         ],
         'toolbar_init',
       ];
     }
   }
-
 }
-
 
 /**
  * Returns the rendered subtree of each top-level toolbar link.
@@ -351,7 +361,12 @@ function _toolbar_get_subtrees_hash() {
   return [$hash, $cacheability];
 }
 
-
+/**
+ * Implements hook_user_login().
+ *
+ * Saves username to a cookie so it can be added to the toolbar quicker than a
+ * lazy builder.
+ */
 function toolbar_user_login(UserInterface $account) {
   if ($account->isAuthenticated()) {
     setcookie('toolbarUserName', $account->getDisplayName());
