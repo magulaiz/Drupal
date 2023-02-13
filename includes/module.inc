@@ -881,7 +881,15 @@ function module_hook_info() {
           $function($hook_info);
         }
       }
-      cache_set('hook_info', $hook_info, 'cache_bootstrap');
+      // Store hook_info into cache only if all modules were loaded.
+      // Otherwise is the list of hooks in $hook_info probably not complete and
+      // shouldn't be cached.
+      if (module_load_all(NULL)) {
+        cache_set('hook_info', $hook_info, 'cache_bootstrap');
+      }
+      else {
+        drupal_static_reset('module_hook_info');
+      }
     }
     else {
       $hook_info = $cache->data;
