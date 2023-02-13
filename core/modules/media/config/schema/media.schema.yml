@@ -24,6 +24,8 @@ media.type.*:
       label: 'Machine name'
       constraints:
         Length:
+          # Media type IDs are specifically limited to 32 characters.
+          # @see \Drupal\media\MediaTypeForm::form()
           max: 32
     label:
       type: label
