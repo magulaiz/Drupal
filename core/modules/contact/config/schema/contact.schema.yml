@@ -9,6 +9,8 @@ contact.form.*:
       label: 'ID'
       constraints:
         Length:
+          # Contact form IDs are specifically limited to 32 characters.
+          # @see \Drupal\contact\ContactFormEditForm::form()
           max: 32
     label:
       type: label
