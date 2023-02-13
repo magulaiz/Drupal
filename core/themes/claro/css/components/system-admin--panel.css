@@ -17,7 +17,7 @@
   border-bottom: calc(1em / 16) solid var(--color-gray-200);
 }
 
-.panel__title {
+__title.panel {
   margin: 0;
   padding: calc(12em / 18) calc(24em / 18);
   background: var(--color-gray-050);
@@ -25,7 +25,7 @@
   line-height: calc(24em / 18);
 }
 
-.panel__content,
-.panel__description {
+__content.panel,
+__description.panel {
   padding: 1em 1.5em;
 }
