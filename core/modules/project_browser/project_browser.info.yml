@@ -1,0 +1,6 @@
+name: Project Browser
+type: module
+description: A project browser embedded in the Drupal UI.
+core_version_requirement: ^9 || ^10
+configure: project_browser.settings
+php: 7.4
