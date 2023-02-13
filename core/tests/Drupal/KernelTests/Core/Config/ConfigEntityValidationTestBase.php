@@ -47,6 +47,16 @@ abstract class ConfigEntityValidationTestBase extends KernelTestBase {
     $this->assertValidationErrors([]);
   }
 
+  /**
+   * Returns the validation constraints applied to the entity's ID.
+   *
+   * If the entity type does not define an ID key, the test will fail. If an ID
+   * key is defined but is not using the `machine_name` data type, the test will
+   * be skipped.
+   *
+   * @return array[]
+   *   The validation constraint configuration applied to the entity's ID.
+   */
   protected function getMachineNameConstraints(): array {
     $id_key = $this->entity->getEntityType()->getKey('id');
     $this->assertNotEmpty($id_key, "The entity under test does not define an ID key.");
