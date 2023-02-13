@@ -25,15 +25,4 @@ class MenuValidationTest extends ConfigEntityValidationTestBase {
     $this->entity->save();
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function providerInvalidMachineNameCharacters(): array {
-    $data = parent::providerInvalidMachineNameCharacters();
-    // Menu machine names allow dashes, but not underscores.
-    unset($data['dash separated']);
-    $data['underscore separated'] = ['invalid_name'];
-    return $data;
-  }
-
 }

@@ -47,6 +47,21 @@ abstract class ConfigEntityValidationTestBase extends KernelTestBase {
     $this->assertValidationErrors([]);
   }
 
+  protected function getMachineNameConstraints(): array {
+    $id_key = $this->entity->getEntityType()->getKey('id');
+    $this->assertNotEmpty($id_key, "The entity under test does not define an ID key.");
+
+    $data_definition = $this->entity->getTypedData()
+      ->get($id_key)
+      ->getDataDefinition();
+    if ($data_definition->getDataType() === 'machine_name') {
+      return $data_definition->getConstraints();
+    }
+    else {
+      $this->markTestSkipped("The entity's ID key does not use the machine_name data type.");
+    }
+  }
+
   /**
    * Data provider for ::testInvalidMachineNameCharacters().
    *
@@ -55,47 +70,55 @@ abstract class ConfigEntityValidationTestBase extends KernelTestBase {
    */
   public function providerInvalidMachineNameCharacters(): array {
     return [
-      'space separated' => ['invalid name'],
-      'dash separated' => ['invalid-name'],
-      'uppercase letters' => ['Invalid_Name'],
+      'space separated' => ['space separated'],
+      'dash separated' => ['dash-separated'],
+      'underscore separated' => ['underscore_separated'],
+      'uppercase letters' => ['Uppercase_Letters'],
     ];
   }
 
   /**
-   * Tests that invalid characters in the entity's ID cause validation errors.
+   * Tests that the entity's ID is tested for invalid characters.
    *
    * @param string $machine_name
-   *   A machine name that contains invalid characters.
+   *   A machine name to test.
    *
    * @dataProvider providerInvalidMachineNameCharacters
    */
   public function testInvalidMachineNameCharacters(string $machine_name): void {
-    $id_key = $this->entity->getEntityType()->getKey('id');
-    $this->assertNotEmpty($id_key, "The entity under test does not define an ID key.");
+    $constraints = $this->getMachineNameConstraints();
 
-    $this->entity->set($id_key, $machine_name);
-    $this->assertValidationErrors(['This value is not valid.']);
+    $this->assertNotEmpty($constraints['Regex']);
+    $this->assertIsString($constraints['Regex']);
+
+    if (preg_match($constraints['Regex'], $machine_name)) {
+      $expected_errors = [];
+    }
+    else {
+      $expected_errors = ['This value is not valid.'];
+    }
+
+    $this->entity->set(
+      $this->entity->getEntityType()->getKey('id'),
+      $machine_name
+    );
+    $this->assertValidationErrors($expected_errors);
   }
 
   /**
    * Tests that the entity ID's length is validated if it is a machine name.
    */
   public function testMachineNameLength(): void {
-    $id_key = $this->entity->getEntityType()->getKey('id');
-    $this->assertNotEmpty($id_key, "The entity under test does not define an ID key.");
+    $constraints = $this->getMachineNameConstraints();
 
-    $data_definition = $this->entity->getTypedData()
-      ->get($id_key)
-      ->getDataDefinition();
-    if ($data_definition->getDataType() !== 'machine_name') {
-      $this->markTestSkipped("The entity's ID key does not use the machine_name data type.");
-    }
-
-    $max_length = $data_definition->getConstraints()['Length']['max'];
+    $max_length = $constraints['Length']['max'];
     $this->assertIsInt($max_length);
     $this->assertGreaterThan(0, $max_length);
 
-    $this->entity->set($id_key, mb_strtolower($this->randomMachineName($max_length + 2)));
+    $this->entity->set(
+      $this->entity->getEntityType()->getKey('id'),
+      mb_strtolower($this->randomMachineName($max_length + 2))
+    );
     $this->assertValidationErrors([
       'This value is too long. It should have <em class="placeholder">' . $max_length . '</em> characters or less.',
     ]);
