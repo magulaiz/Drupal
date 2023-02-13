@@ -18,14 +18,16 @@
  */
 .shortcut-action {
   display: inline-block;
-  margin-left: var(--space-xs); /* LTR */
-}
-[dir="rtl"] .shortcut-action {
-  margin-right: var(--space-xs);
+  margin-inline-start: var(--space-xs);
+  &:hover .shortcut-action__message,
+  &:focus .shortcut-action__message {
+    transform: translateY(0);
+    opacity: 1;
+  }
 }
 .shortcut-action__message {
   display: inline-block;
-  margin-left: var(--space-s); /* LTR */
+  margin-inline-start: var(--space-s); /* LTR */
   padding: var(--shortcut-padding-size);
   transition: var(--transition);
   transform: translateY(calc(-1 * var(--space-xs)));
@@ -37,15 +39,6 @@
   font-size: var(--font-size-label);
   backface-visibility: hidden;
 }
-[dir="rtl"] .shortcut-action__message {
-  margin-right: var(--space-s);
-  margin-left: 0;
-}
-.shortcut-action:hover .shortcut-action__message,
-.shortcut-action:focus .shortcut-action__message {
-  transform: translateY(0);
-  opacity: 1;
-}
 
 .shortcut-action__icon {
   display: inline-block;
@@ -54,17 +47,23 @@
   vertical-align: -0.0625rem;
   background: transparent url(../../images/shortcut/favstar.svg) left top / calc(var(--shortcut-icon-size) * 4) var(--shortcut-icon-size) no-repeat;
 }
-[dir="rtl"] .shortcut-action__icon {
-  background-image: url(../../images/shortcut/favstar-rtl.svg);
+[dir="rtl"] {
+  & .shortcut-action__icon {
+    background-image: url(../../images/shortcut/favstar-rtl.svg);
+  }
 }
-.shortcut-action--add:hover .shortcut-action__icon,
-.shortcut-action--add:focus .shortcut-action__icon {
-  background-position: calc(-1 * var(--shortcut-icon-size)) top;
+.shortcut-action--add {
+  &:hover .shortcut-action__icon,
+  &:focus .shortcut-action__icon {
+    background-position: calc(-1 * var(--shortcut-icon-size)) top;
+  }
 }
-.shortcut-action--remove .shortcut-action__icon {
-  background-position: calc(-2 * var(--shortcut-icon-size)) top;
-}
-.shortcut-action--remove:focus .shortcut-action__icon,
-.shortcut-action--remove:hover .shortcut-action__icon {
-  background-position: calc(-3 * var(--shortcut-icon-size)) top;
+.shortcut-action--remove {
+  & .shortcut-action__icon {
+    background-position: calc(-2 * var(--shortcut-icon-size)) top;
+  }
+  &:focus .shortcut-action__icon,
+  &:hover .shortcut-action__icon {
+    background-position: calc(-3 * var(--shortcut-icon-size)) top;
+  }
 }
