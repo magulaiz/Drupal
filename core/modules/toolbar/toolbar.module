@@ -13,6 +13,7 @@ use Drupal\Core\Template\Attribute;
 use Drupal\Component\Utility\Crypt;
 use Drupal\Core\Url;
 use Drupal\toolbar\Controller\ToolbarController;
+use Drupal\user\UserInterface;
 
 /**
  * Implements hook_help().
@@ -245,6 +246,14 @@ function toolbar_menu_navigation_links(array $tree) {
   return $tree;
 }
 
+function _get_toolbar_cookie_item($cookie_id) {
+  $cookie_value = \Drupal::request()->cookies->get($cookie_id);
+  if (empty($cookie_value) || $cookie_value === 'false' || $cookie_value === 'undefined' || $cookie_value === 'null') {
+    return FALSE;
+  }
+  return $cookie_value;
+}
+
 /**
  * Implements hook_preprocess_HOOK() for HTML document templates.
  */
@@ -252,11 +261,54 @@ function toolbar_preprocess_html(&$variables) {
   if (!\Drupal::currentUser()->hasPermission('access toolbar')) {
     return;
   }
-  $variables['attributes']['class'][] = 'toolbar-tray-open';
-  $variables['attributes']['class'][] = 'toolbar-horizontal';
-  $variables['attributes']['class'][] = 'toolbar-fixed';
+
   $variables['attributes']['class'][] = 'toolbar-loading';
+  $orientation = _get_toolbar_cookie_item('toolbarOrientation');
+  $variables['attributes']['class'][] = "toolbar-$orientation";
+  $active_tray = _get_toolbar_cookie_item('toolbarActiveTray');
+  $has_active_tab = _get_toolbar_cookie_item('toolbarActiveTab');
+  $active_tab_id = _get_toolbar_cookie_item('toolbarActiveTabId');
+  $toolbar_fixed = _get_toolbar_cookie_item('isToolbarFixed');
+  $toolbar_oriented = _get_toolbar_cookie_item('toolbarIsOriented');
+
+  $variables['attributes']['class'][] = "toolbar-$orientation";
+
+  if ($toolbar_fixed) {
+    $variables['attributes']['class'][] = 'toolbar-fixed';
+  }
+  if ($toolbar_oriented) {
+    $variables['attributes']['class'][] = 'toolbar-oriented';
+  }
+
+  if ($has_active_tab) {
+    $variables['attributes']['class'][] = 'toolbar-tray-open';
+    if (!empty($active_tray)) {
+      $style = <<<STYLE
+  .toolbar-loading [data-drupal-claro-processed-toolbar] #{$active_tab_id} {
+     background-image: linear-gradient(rgba(255, 255, 255, 0.25) 20%, transparent 200%);
+   }
+  .toolbar-loading [data-drupal-claro-processed-toolbar] #{$active_tab_id}-tray {
+     display: block; box-shadow: -1px 0 5px 2px rgb(0 0 0 / 33%);
+     border-right: 1px solid #aaa; background-color: #f5f5f5;
+   }
+  .toolbar-loading.toolbar-vertical.toolbar-tray-open [data-drupal-claro-processed-toolbar] #{$active_tab_id}-tray {
+     width: 15rem; height: 100vh;
+   }
+   .toolbar-loading.toolbar-horizontal :not(#{$active_tray}) .toolbar-lining {opacity: 0} 
+STYLE;
+
+      $variables['page']['#attached']['html_head'][] = [
+        [
+          '#tag' => 'style',
+          '#value' => $style,
+        ],
+        'toolbar_init',
+      ];
+    }
+  }
+
 }
+
 
 /**
  * Returns the rendered subtree of each top-level toolbar link.
@@ -297,4 +349,11 @@ function _toolbar_get_subtrees_hash() {
   [$subtrees, $cacheability] = toolbar_get_rendered_subtrees();
   $hash = Crypt::hashBase64(serialize($subtrees));
   return [$hash, $cacheability];
+}
+
+
+function toolbar_user_login(UserInterface $account) {
+  if ($account->isAuthenticated()) {
+    setcookie('toolbarUserName', $account->getDisplayName());
+  }
 }

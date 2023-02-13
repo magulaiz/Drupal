@@ -3,7 +3,29 @@
  * Defines the behavior of the Drupal administration toolbar.
  */
 
-(function ($, Drupal, drupalSettings) {
+const setClassesAsap = () => {
+  const toolbarActiveTray = Cookies.get('toolbarActiveTray');
+  const orientation = Cookies.get('toolbarOrientation');
+  const activeTrayElement = document.querySelector(
+    `.toolbar-tray[data-toolbar-tray="${toolbarActiveTray}"]`,
+  );
+  const activeTrayToggle = document.querySelector(
+    `.toolbar-item[data-toolbar-tray="${toolbarActiveTray}"]`,
+  );
+
+  if (activeTrayElement) {
+    activeTrayElement.classList.add(`toolbar-tray-${orientation}`, 'is-active');
+    activeTrayToggle.classList.add('is-active');
+  }
+  const toolbarUserName = Cookies.get('toolbarUserName');
+  if (toolbarUserName) {
+    document.querySelector('#toolbar-item-user').textContent = toolbarUserName;
+  }
+};
+setClassesAsap();
+(function ($, Drupal, drupalSettings, Cookies) {
+  setClassesAsap();
+
   // Merge run-time settings with the defaults.
   const options = $.extend(
     {
@@ -193,6 +215,122 @@
     },
   };
 
+  Drupal.behaviors.toolbarAntiFlicker = {
+    attach: function attach(context) {
+      if (
+        once('toolbarAntiFlicker', '#toolbar-administration', context).length
+      ) {
+        // Remove placeholder
+        $('#toolbar-tray-anti-flicker').parent('.toolbar-tab').remove();
+        // Vertical fixes.
+        const ChildView = Drupal.toolbar.ToolbarVisualView.extend({
+          initialize() {
+            const { model } = Drupal.toolbar.views.toolbarVisualView;
+            this.listenTo(
+              model,
+              'change:activeTab change:orientation change:isOriented change:isTrayToggleVisible',
+              // eslint-disable-next-line func-names
+              function () {
+                // Avoid flickering.
+                Cookies.set(
+                  'toolbarOrientation',
+                  Drupal.toolbar.models.toolbarModel.get('orientation'),
+                  {
+                    path: '/',
+                  },
+                );
+
+                let isToolbarActiveTab = 0;
+                if ($(model.get('activeTab')).length > 0) {
+                  isToolbarActiveTab = 1;
+                }
+
+                Cookies.set('toolbarActiveTab', isToolbarActiveTab, {
+                  path: '/',
+                });
+                Cookies.set(
+                  'toolbarActiveTabId',
+                  isToolbarActiveTab ? model.get('activeTab').id : null,
+                  {
+                    path: '/',
+                  },
+                );
+                Cookies.set(
+                  'toolbarActiveTray',
+                  $(model.get('activeTab')).attr('data-toolbar-tray'),
+                  {
+                    path: '/',
+                  },
+                );
+                Cookies.set('toolbarIsOriented', model.get('isOriented'), {
+                  path: '/',
+                });
+              },
+            );
+          },
+        });
+
+        // eslint-disable-next-line no-new
+        new ChildView();
+      }
+      once('user-toolbar-data', '#toolbar-item-user', context).forEach(
+        (toolbarItem) => {
+          const mutationObserver = new MutationObserver((mutations) => {
+            mutations.forEach((mutation) => {
+              console.log(mutation);
+              if (
+                mutation.type === 'childList' &&
+                mutation.removedNodes &&
+                mutation.removedNodes[0].hasAttribute(
+                  'data-big-pipe-placeholder-id',
+                )
+              ) {
+                Cookies.set(
+                  'toolbarUserName',
+                  mutation.addedNodes[0].textContent,
+                  {
+                    path: '/',
+                  },
+                );
+              }
+            });
+          });
+          mutationObserver.observe(toolbarItem, {
+            childList: true,
+          });
+        },
+      );
+      once('toolbar-lazy-trays', '#toolbar-bar', context).forEach((toolbar) => {
+        const mutationObserver = new MutationObserver((mutations) => {
+          mutations.forEach(function (mutation) {
+            console.log('lazy trays', mutation);
+            if (
+              mutation.type === 'childList' &&
+              mutation.removedNodes &&
+              mutation.removedNodes[0].hasAttribute(
+                'data-big-pipe-placeholder-id',
+              )
+            ) {
+              mutation.addedNodes.forEach((node) => {
+                console.log('addyy', node);
+                if (node.classList.contains('toolbar-menu')) {
+                  console.log('WE ADD TO', node);
+                  node.parentNode.classList.add('lazy-builder-just-added');
+                  setTimeout(() => {
+                    node.parentNode.classList.remove('lazy-builder-just-added');
+                  }, 50);
+                }
+              });
+            }
+          });
+        });
+        mutationObserver.observe(toolbar, {
+          childList: true,
+          subtree: true,
+        });
+      });
+    },
+  };
   /**
    * Toolbar methods of Backbone objects.
    *
@@ -314,4 +452,4 @@
   ) {
     Drupal.toolbar.setSubtrees.resolve(response.subtrees);
   };
-})(jQuery, Drupal, drupalSettings);
+})(jQuery, Drupal, drupalSettings, Cookies);

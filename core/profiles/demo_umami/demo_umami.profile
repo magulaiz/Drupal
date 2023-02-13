@@ -63,18 +63,18 @@ function demo_umami_toolbar() {
 
   // Show warning only on administration pages.
   $admin_context = \Drupal::service('router.admin_context');
-  if ($admin_context->isAdminRoute()) {
-    $items['experimental-profile-warning']['#type'] = 'toolbar_item';
-    $items['experimental-profile-warning']['tab'] = [
-      '#type' => 'inline_template',
-      '#template' => '<a class="toolbar-warning" href="{{ more_info_link }}">This site is intended for demonstration purposes.</a>',
-      '#context' => [
-        'more_info_link' => 'https://www.drupal.org/node/2941833',
-      ],
-      '#attached' => [
-        'library' => ['demo_umami/toolbar-warning'],
-      ],
-    ];
-  }
+//  if ($admin_context->isAdminRoute()) {
+//    $items['experimental-profile-warning']['#type'] = 'toolbar_item';
+//    $items['experimental-profile-warning']['tab'] = [
+//      '#type' => 'inline_template',
+//      '#template' => '<a class="toolbar-warning" href="{{ more_info_link }}">This site is intended for demonstration purposes.</a>',
+//      '#context' => [
+//        'more_info_link' => 'https://www.drupal.org/node/2941833',
+//      ],
+//      '#attached' => [
+//        'library' => ['demo_umami/toolbar-warning'],
+//      ],
+//    ];
+//  }
   return $items;
 }
