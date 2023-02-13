@@ -490,7 +490,7 @@ class NumberFieldTest extends BrowserTestBase {
   /**
    * Helper function to set widget as range number and test it.
    *
-   * @interal
+   * @internal
    */
   public function assertSetRangeNumberWidget($field_name) {
     /** @var \Drupal\Core\Entity\EntityDisplayRepositoryInterface $display_repository */
