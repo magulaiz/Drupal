@@ -200,8 +200,10 @@ class CommentLinkBuilderTest extends UnitTestCase {
     ];
     $permutations = $this->generatePermutations($combinations);
     foreach ($permutations as $combination) {
+      $mock_node = $this->getMockNode(TRUE, $combination['comments'], $combination['form_location'], $combination['comment_count']);
+      $node_label_stripped = $mock_node->label();
       $case = [
-        $this->getMockNode(TRUE, $combination['comments'], $combination['form_location'], $combination['comment_count']),
+        $mock_node,
         ['view_mode' => $combination['view_mode']],
         $combination['has_access_comments'],
         $combination['history_exists'],
@@ -212,7 +214,7 @@ class CommentLinkBuilderTest extends UnitTestCase {
       // When comments are enabled in teaser mode, and comments exist, and the
       // user has access - we can output the comment count.
       if ($combination['comments'] && $combination['view_mode'] == 'teaser' && $combination['comment_count'] && $combination['has_access_comments']) {
-        $expected['comment-comments'] = '1 comment';
+        $expected['comment-comments'] = '1 comment<span class="visually-hidden"> on ' . $node_label_stripped . '</span>';
         // And if history module exists, we can show a 'new comments' link.
         if ($combination['history_exists']) {
           $expected['comment-new-comments'] = '';
@@ -228,7 +230,7 @@ class CommentLinkBuilderTest extends UnitTestCase {
             // comments exist or the form is on a separate page.
             if ($combination['view_mode'] == 'teaser' || ($combination['has_access_comments'] && $combination['comment_count']) || $combination['form_location'] == CommentItemInterface::FORM_SEPARATE_PAGE) {
               // There should be an add comment link.
-              $expected['comment-add'] = ['title' => 'Add new comment'];
+              $expected['comment-add'] = ['title' => 'Add new comment<span class="visually-hidden"> about ' . $node_label_stripped . '</span>'];
               if ($combination['form_location'] == CommentItemInterface::FORM_BELOW) {
                 // On the same page.
                 $expected['comment-add']['url'] = Url::fromRoute('node.view');
