@@ -77,7 +77,8 @@ class Language extends CKEditor5PluginDefault implements CKEditor5PluginConfigur
         foreach ($enabled_languages as $language) {
           $predefined_languages[$language->getId()] = [
             $language->getName(),
-            $language->getDirection() === "rtl" ? LanguageInterface::DIRECTION_RTL : $language,
+            '',
+            $language->getDirection(),
           ];
         }
         break;

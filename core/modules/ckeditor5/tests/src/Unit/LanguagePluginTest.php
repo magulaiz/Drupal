@@ -65,12 +65,13 @@ class LanguagePluginTest extends UnitTestCase {
           'language' => [
             'textPartLanguage' => [
               [
-                'title' => 'German',
-                'languageCode' => 'de',
-              ],
-              [
                 'title' => 'Arabic',
                 'languageCode' => 'ar',
+                'textDirection' => 'rtl',
+              ],
+              [
+                'title' => 'German',
+                'languageCode' => 'de',
               ],
             ],
           ],
@@ -126,7 +127,6 @@ class LanguagePluginTest extends UnitTestCase {
       new LanguageLanguage([
         'id' => 'de',
         'name' => 'German',
-        'direction' => 'ltr',
       ]),
       new LanguageLanguage([
         'id' => 'ar',
