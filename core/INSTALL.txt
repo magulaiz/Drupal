@@ -166,7 +166,7 @@ INSTALLATION
 
       If auto-creation fails, you can create the directory yourself. (If you are
       creating a multisite installation, substitute the correct sites directory
-      for sites/default; see the Multisite Configuration section of this file,
+      for sites/default see the Multisite Configuration section of this file,
       below.) Sample commands from a Unix/Linux command line:
 
         mkdir sites/default/files
@@ -195,7 +195,27 @@ INSTALLATION
 
         chmod go-w sites/default
 
-   b. Missing settings file.
+   b. Missing translations directory.
+
+      When installing in a language other than English The install script will
+      attempt to create a translations directory in the default location
+      at sites/default/files/translations.
+
+      First, confirm that the sites/default/files directory exists and is
+      writable, see step a above.
+
+      If auto-creation fails, you can create the directory yourself. (If you are
+      creating a multisite installation, substitute the correct sites directory
+      for sites/default see the Multisite Configuration section of this file,
+      below.) Sample commands from a Unix/Linux command line:
+
+        mkdir sites/default/files/translations
+        chmod a+w sites/default/files/translations
+
+      Alternatively, you can install in English and then add additional
+      languages.
+
+   c. Missing settings file.
 
       Drupal will try to automatically create a settings.php configuration file,
       which is normally in the directory sites/default (to avoid problems when
@@ -218,7 +238,7 @@ INSTALLATION
 
         chmod go-w sites/default/settings.php
 
-   c. Write permissions after install.
+   d. Write permissions after install.
 
       The install script will attempt to write-protect the settings.php file and
       the sites/default directory after saving your configuration. If this
