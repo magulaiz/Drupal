@@ -122,7 +122,7 @@ function user_update_10000() {
         ]
       );
       $permissions = array_intersect($role_config->get('permissions'), $existing_permissions);
-      $role_config->set('permissions', $permissions);
+      $role_config->set('permissions', array_values($permissions));
       $role_config->save();
     }
   }
