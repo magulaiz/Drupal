@@ -1,4 +1,3 @@
-
 CONTENTS OF THIS FILE
 ---------------------
 
@@ -166,7 +165,7 @@ INSTALLATION
 
       If auto-creation fails, you can create the directory yourself. (If you are
       creating a multisite installation, substitute the correct sites directory
-      for sites/default see the Multisite Configuration section of this file,
+      for sites/default. See the Multisite Configuration section of this file
       below.) Sample commands from a Unix/Linux command line:
 
         mkdir sites/default/files
@@ -197,17 +196,17 @@ INSTALLATION
 
    b. Missing translations directory.
 
-      When installing in a language other than English The install script will
+      When installing in a language other than English, the install script will
       attempt to create a translations directory in the default location
       at sites/default/files/translations.
 
       First, confirm that the sites/default/files directory exists and is
-      writable, see step a above.
+      writable (see step a above).
 
-      If auto-creation fails, you can create the directory yourself. (If you are
+      If auto-creation fails, you can create the directory yourself. If you are
       creating a multisite installation, substitute the correct sites directory
-      for sites/default see the Multisite Configuration section of this file,
-      below.) Sample commands from a Unix/Linux command line:
+      for sites/default. See the Multisite Configuration section of this file
+      below. Sample commands from a Unix/Linux command line:
 
         mkdir sites/default/files/translations
         chmod a+w sites/default/files/translations
