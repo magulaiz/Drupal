@@ -491,9 +491,9 @@ class ModuleInstaller implements ModuleInstallerInterface {
       // Remove the schema.
       $this->uninstallSchema($module);
 
-      //If the module-generated menu item exists and the menu ui changed without cache clear, the router cache needs to be updated
+      // If the module-generated menu item exists and the menu ui changed without cache clear, the router cache needs to be updated
       \Drupal::service('router.builder')->rebuild();
-      
+
       // Remove the module's entry from the config. Don't check schema when
       // uninstalling a module since we are only clearing a key.
       \Drupal::configFactory()->getEditable('core.extension')->clear("module.$module")->save(TRUE);
