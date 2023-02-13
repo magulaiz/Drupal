@@ -33,18 +33,14 @@ class ShortcutSetValidationTest extends ConfigEntityValidationTestBase {
   }
 
   /**
-   * Tests that the shortcut set's ID is validated as a machine name.
-   *
-   * @param string $invalid_id
-   *   An invalid machine name that should raise a validation error.
-   *
-   * @testWith ["invalid name"]
-   *  ["invalid_name"]
-   *  ["Invalid-Name"]
+   * {@inheritdoc}
    */
-  public function testMachineName(string $invalid_id): void {
-    $this->entity->set('id', $invalid_id);
-    $this->assertValidationErrors(['This value is not valid.']);
+  public function providerInvalidMachineNameCharacters(): array {
+    $data = parent::providerInvalidMachineNameCharacters();
+    // Shortcut set machine names allow dashes, but not underscores.
+    unset($data['dash separated']);
+    $data['underscore separated'] = ['invalid_name'];
+    return $data;
   }
 
 }

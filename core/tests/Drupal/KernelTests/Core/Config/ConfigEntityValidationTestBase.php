@@ -48,6 +48,36 @@ abstract class ConfigEntityValidationTestBase extends KernelTestBase {
   }
 
   /**
+   * Data provider for ::testInvalidMachineNameCharacters().
+   *
+   * @return array[]
+   *   The test cases.
+   */
+  public function providerInvalidMachineNameCharacters(): array {
+    return [
+      'space separated' => ['invalid name'],
+      'dash separated' => ['invalid-name'],
+      'uppercase letters' => ['Invalid_Name'],
+    ];
+  }
+
+  /**
+   * Tests that invalid characters in the entity's ID cause validation errors.
+   *
+   * @param string $machine_name
+   *   A machine name that contains invalid characters.
+   *
+   * @dataProvider providerInvalidMachineNameCharacters
+   */
+  public function testInvalidMachineNameCharacters(string $machine_name): void {
+    $id_key = $this->entity->getEntityType()->getKey('id');
+    $this->assertNotEmpty($id_key, "The entity under test does not define an ID key.");
+
+    $this->entity->set($id_key, $machine_name);
+    $this->assertValidationErrors(['This value is not valid.']);
+  }
+
+  /**
    * Tests that the entity ID's length is validated if it is a machine name.
    */
   public function testMachineNameLength(): void {
