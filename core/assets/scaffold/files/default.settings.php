@@ -555,7 +555,7 @@ $settings['update_free_access'] = FALSE;
  *
  * If this is not set, the default for the operating system will be used.
  *
- * @see \Drupal\Component\FileSystem\FileSystem::getOsTemporaryDirectory()
+ * @see \Drupal\Core\File\FileSystemInterface::getTempDirectory()
  */
 # $settings['file_temp_path'] = '/tmp';
 

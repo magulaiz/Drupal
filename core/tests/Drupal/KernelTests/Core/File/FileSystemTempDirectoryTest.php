@@ -2,7 +2,6 @@
 
 namespace Drupal\KernelTests\Core\File;
 
-use Drupal\Component\FileSystem\FileSystem as FileSystemComponent;
 use Drupal\Core\File\FileSystem;
 use Drupal\KernelTests\KernelTestBase;
 
@@ -56,7 +55,7 @@ class FileSystemTempDirectoryTest extends KernelTestBase {
    * @covers ::getTempDirectory
    */
   public function testGetTempDirectoryOsDefault() {
-    $tempDir = FileSystemComponent::getOsTemporaryDirectory();
+    $tempDir = sys_get_temp_dir();
     $dir = $this->fileSystem->getTempDirectory();
     $this->assertEquals($tempDir, $dir);
   }
