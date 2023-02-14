@@ -32,6 +32,7 @@
         "symfony/yaml": "^6.2",
         "twig/twig": "^3.5.0",
         "doctrine/annotations": "^1.14",
+        "drupal/automatic_updates": "^2.6",
         "guzzlehttp/guzzle": "^7.5",
         "guzzlehttp/psr7": "^2.4",
         "egulias/email-validator": "^3.2.1",
