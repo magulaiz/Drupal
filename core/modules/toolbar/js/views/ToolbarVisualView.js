@@ -201,7 +201,6 @@
        */
       updateTabs() {
         const $tab = $(this.model.get('activeTab'));
-
         // Deactivate the previous tab.
         $(this.model.previous('activeTab'))
           .removeClass('is-active')
@@ -209,6 +208,7 @@
         // Deactivate the previous tray.
         $(this.model.previous('activeTray')).removeClass('is-active');
         localStorage.removeItem('Drupal.toolbar.activeTabID');
+
         // Activate the selected tab.
         if ($tab.length > 0) {
           $tab

@@ -172,6 +172,23 @@ setClassesAsap();
             $(document).trigger('drupalToolbarTrayChange', tray);
           });
 
+        // If the toolbar's orientation is horizontal, no active tab is defined,
+        // and the orientation cookie is not set (which means the user has not
+        // yet interacted with the toolbar), then show the tray of the first
+        // toolbar tab by default (but not the first 'Home' toolbar tab).
+        if (
+          Drupal.toolbar.models.toolbarModel.get('orientation') ===
+            'horizontal' &&
+          Drupal.toolbar.models.toolbarModel.get('activeTab') === null &&
+          !Cookies.get('toolbarOrientation')
+        ) {
+          Drupal.toolbar.models.toolbarModel.set({
+            activeTab: $(
+              '.toolbar-bar .toolbar-tab:not(.home-toolbar-tab) a',
+            ).get(0),
+          });
+        }
+
         $(window).on({
           'dialog:aftercreate': (event, dialog, $element, settings) => {
             const $toolbar = $('#toolbar-bar');
