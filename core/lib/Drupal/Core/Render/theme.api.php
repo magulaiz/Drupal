@@ -760,8 +760,7 @@ function hook_extension() {
  * It is the theme engine's responsibility to escape variables. The only
  * exception is if a variable implements
  * \Drupal\Component\Render\MarkupInterface. Drupal is inherently unsafe if
- * other variables are not escaped. The helper function
- * theme_render_and_autoescape() may be used for this.
+ * other variables are not escaped.
  *
  * @param string $template_file
  *   The path (relative to the Drupal root directory) to the template to be
@@ -1142,10 +1141,10 @@ function hook_page_bottom(array &$page_bottom) {
  *   - file: The file that any preprocess implementations reside in. This file
  *     will be included prior to the template being rendered, to make sure that
  *     the preprocess function (as needed) is actually loaded.
- *   - path: Override the path of the file to be used. Ordinarily the module or
- *     theme path will be used, but if the file will not be in the default
- *     path, include it here. This path should be relative to the Drupal root
- *     directory.
+ *   - path: If specified, overrides the path to the directory that contains the
+ *     file to be used. This path should be relative to the Drupal root
+ *     directory. If not provided, the path will be set to the module or theme's
+ *     templates directory.
  *   - template: The template name, without 'html.twig' on the end. The
  *     extension will be added automatically by the default rendering engine
  *     (which is Twig.) If 'path' is specified, 'template' should also be
