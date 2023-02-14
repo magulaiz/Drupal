@@ -52,7 +52,9 @@ module.exports = (filePath, callback) => {
           ],
           mediaQuery: true,
           minPixelValue: 3,
-          // Prevent converting PX to REM for icon styles.
+          // Prevent converting PX to REM for icon styles. These files have been
+          // added to use the `postcssUrl` plugin, but aren't compatible with
+          // `postcssPixelsToRem`.
           exclude: (filePath) => filePath.match(/core\/modules.*\.icons\..*\.pcss\.css$/)
 
       }),
