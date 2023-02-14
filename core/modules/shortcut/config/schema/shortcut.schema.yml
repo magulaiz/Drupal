@@ -7,7 +7,7 @@ shortcut.set.*:
     id:
       type: machine_name
       label: 'ID'
-      # Shortcut set IDs are specifically limited to 32 characters, and allow
+      # Shortcut set IDs are specifically limited to 23 characters, and allow
       # dashes but not underscores.
       # @see \Drupal\shortcut\ShortcutSetForm::form()
       constraints:
