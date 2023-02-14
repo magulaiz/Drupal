@@ -68,7 +68,7 @@ function olivero_form_system_theme_settings_alter(&$form, FormStateInterface $fo
     '#type' => 'checkbox',
     '#title' => t('Center align site layout'),
     '#default_value' => theme_get_setting('center_align_layout'),
-    '#description' => t('Shifts layout from left-aligned to center-aligned'),
+    '#description' => t('Shifts layout from side-aligned to center-aligned'),
   ];
   $form['olivero_settings']['olivero_utilities']['site_branding_bg_color'] = [
     '#type' => 'select',

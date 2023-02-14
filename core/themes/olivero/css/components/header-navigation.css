@@ -132,7 +132,18 @@ html.js .header-nav {
 @media (min-width: 75rem) {
 
   body.is-always-mobile-nav .page-wrapper--centered .header-nav {
+    /**
+         * When the "Enable mobile menu at all widths" option is set,
+         * we stop the off-canvas menu (coming from the side) in the center of the page.
+         */
     max-width: 50vw;
+    /**
+         * We consider the outermost vertices of the menu toggler "X" icon
+         * as a reference point for defining the maximum limit to which the content
+         * of the off-canvas menu can be extended (in other words, the
+         * padding-inline-end of header-nav).
+         * The value is equal to --sp2 in this --nav breakpoint.
+         */
     padding-inline-end: var(--sp2);
   }
 }
@@ -140,6 +151,12 @@ html.js .header-nav {
 @media (min-width: 90rem) {
 
   body.is-always-mobile-nav .page-wrapper--centered .header-nav {
+    /**
+         * [...continue from previous comment]
+         * While in this breakpoint we need to do some calculations to find the value,
+         * involving our global layout helpers (in a very similar way that
+         * has already been done more above for default "not centered" layout).
+         */
     padding-inline-end: calc((50vw - (var(--max-width) / 2)) + var(--content-left) - var(--sp2));
   }
 }
