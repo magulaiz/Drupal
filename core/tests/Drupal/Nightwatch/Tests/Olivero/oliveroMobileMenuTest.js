@@ -174,6 +174,7 @@ module.exports = {
   },
   'Verify mobile menu works when Big Pipe when authenticated': (browser) => {
     browser.drupalInstallModule('big_pipe').drupalLoginAsAdmin(() => {
+      //
       browser
         .drupalRelativeURL('/')
         .assert.not.visible(headerNavSelector)
