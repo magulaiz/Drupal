@@ -54,7 +54,7 @@ abstract class ConfigEntityValidationTestBase extends KernelTestBase {
    * key is defined but is not using the `machine_name` data type, the test will
    * be skipped.
    *
-   * @return \Symfony\Component\Validator\Constraint[]
+   * @return array[]
    *   The validation constraint configuration applied to the entity's ID.
    */
   protected function getMachineNameConstraints(): array {
