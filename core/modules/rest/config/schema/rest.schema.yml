@@ -74,7 +74,7 @@ rest.resource.*:
   label: 'REST resource config'
   mapping:
     id:
-      type: machine_name
+      type: string
       label: 'REST resource config ID'
     plugin_id:
       type: string
