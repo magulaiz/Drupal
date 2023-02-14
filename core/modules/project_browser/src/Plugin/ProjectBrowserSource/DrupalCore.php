@@ -164,7 +164,7 @@ class DrupalCore extends ProjectBrowserSourceBase implements ContainerFactoryPlu
     if (!empty($query['page']) && !empty($query['limit'])) {
       $projects = array_chunk($projects, $query['limit'])[$query['page']] ?? [];
     }
-    return new ProjectsResultsPage($project_count ?? 0, array_values($projects), (string) $this->getPluginDefinition()['label'], $this->getPluginId());
+    return new ProjectsResultsPage($project_count, array_values($projects), (string) $this->getPluginDefinition()['label'], $this->getPluginId());
   }
 
   /**

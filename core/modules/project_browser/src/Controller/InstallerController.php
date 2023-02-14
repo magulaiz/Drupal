@@ -99,6 +99,11 @@ class InstallerController extends ControllerBase {
   protected $logger;
 
   /**
+   * @var \Drupal\package_manager\PathLocator
+   */
+  protected PathLocator $pathLocator;
+
+  /**
    * Constructs an InstallerController object.
    *
    * @param \Drupal\project_browser\ComposerInstaller\Installer $installer

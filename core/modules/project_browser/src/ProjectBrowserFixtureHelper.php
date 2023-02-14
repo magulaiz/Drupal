@@ -406,7 +406,7 @@ class ProjectBrowserFixtureHelper {
     }
 
     $xml = \simplexml_load_string($body);
-    return Json::decode(Json::encode($xml), TRUE);
+    return Json::decode(Json::encode($xml));
   }
 
   /**
@@ -588,8 +588,8 @@ class ProjectBrowserFixtureHelper {
         }
         $used_primary[] = $record['tid'] . $record['pid'];
         array_push($temp_array, (object) $record);
-        $all_categories = Json::encode($temp_array);
       }
+      $all_categories = Json::encode($temp_array);
       file_put_contents($module_path . '/fixtures/categories.json', $all_categories);
 
       return 'Fixture generation complete';
