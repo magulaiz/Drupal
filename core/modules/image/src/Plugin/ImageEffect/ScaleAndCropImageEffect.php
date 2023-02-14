@@ -21,6 +21,10 @@ class ScaleAndCropImageEffect extends CropImageEffect {
   public function applyEffect(ImageInterface $image) {
     $width = $this->configuration['width'];
     $height = $this->configuration['height'];
+    if ($width == 0 || $height == 0) {
+      $this->logger->error('Image scale and crop failed using the %toolkit toolkit on %path (%mimetype, %dimensions)', ['%toolkit' => $image->getToolkitId(), '%path' => $image->getSource(), '%mimetype' => $image->getMimeType(), '%dimensions' => $image->getWidth() . 'x' . $image->getHeight()]);
+      return FALSE;
+    }
     $scale = max($width / $image->getWidth(), $height / $image->getHeight());
 
     [$x, $y] = explode('-', $this->configuration['anchor']);
