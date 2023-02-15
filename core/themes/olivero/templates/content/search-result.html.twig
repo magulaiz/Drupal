@@ -55,6 +55,13 @@
  * @see template_preprocess_search_result()
  */
 #}
+{%
+  set classes = [
+    'search-result__snippet',
+    layout,
+    'text-content',
+  ]
+%}
 {{ attach_library('olivero/search-results') }}
 {% if info_split %}
   <div class="search-result__meta">
@@ -76,5 +83,5 @@
   {{ title_suffix }}
 {% endif %}
 {% if snippet %}
-  <div{{ content_attributes.addClass('search-result__snippet', layout, 'text-content') }}>{{ snippet }}</div>
+  <div{{ content_attributes.addClass(classes) }}>{{ snippet }}</div>
 {% endif %}

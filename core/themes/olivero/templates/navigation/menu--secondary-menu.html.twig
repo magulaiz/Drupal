@@ -24,6 +24,13 @@
 
 {% import _self as menus %}
 
+{%
+  set wrapper_classes = [
+    'csecondary-nav__menu',
+    secondary_nav_level,
+  ]
+%}
+
 {#
   We call a macro which calls itself to render the full tree.
   @see https://twig.symfony.com/doc/3.x/tags/macro.html
@@ -35,7 +42,7 @@
   {% set secondary_nav_level = 'secondary-nav__menu--level-' ~ (menu_level + 1) %}
   {% import _self as menus %}
   {% if items %}
-    <ul{{ attributes.addClass('secondary-nav__menu', secondary_nav_level) }}>
+    <ul{{ attributes.addClass(wrapper_classes) }}>
       {% set attributes = attributes.removeClass(secondary_nav_level) %}
       {% for item in items %}
 
