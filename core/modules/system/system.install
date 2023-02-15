@@ -332,28 +332,6 @@ function system_requirements($phase) {
     $requirements['php']['description'] = t('It is recommended to upgrade to PHP version %recommended or higher for the best ongoing support.  See <a href="http://php.net/supported-versions.php">PHP\'s version support documentation</a> and the <a href=":php_requirements">Drupal PHP requirements</a> page for more information.', ['%recommended' => \Drupal::RECOMMENDED_PHP, ':php_requirements' => 'https://www.drupal.org/docs/system-requirements/php-requirements']);
     $requirements['php']['severity'] = REQUIREMENT_INFO;
 
-    // Check if the SameSite cookie attribute is set to a valid value. Since this
-    // involves checking whether we are using a secure connection this only makes
-    // sense inside an HTTP request, not on the command line.
-    if ($phase === 'runtime' && PHP_SAPI !== 'cli') {
-      $samesite = ini_get('session.cookie_samesite') ?: t('Not set');
-      // Check if the SameSite attribute is set to a valid value. If it is set
-      // to 'None' the request needs to be done over HTTPS.
-      $valid = match ($samesite) {
-        'Lax', 'Strict' => TRUE,
-        'None' => $request_object->isSecure(),
-        default => FALSE,
-      };
-      $requirements['php_session_samesite'] = [
-        'title' => t('SameSite cookie attribute'),
-        'value' => $samesite,
-        'severity' => $valid ? REQUIREMENT_OK : REQUIREMENT_WARNING,
-        'description' => t('This attribute should be explicitly set to Lax, Strict or None. If set to None then the request must be made via HTTPS. See <a href=":url" target="_blank">PHP documentation</a>', [
-          ':url' => 'https://www.php.net/manual/en/session.configuration.php#ini.session.cookie-samesite',
-        ]),
-      ];
-    }
-
     // PHP 8.1.0 through 8.1.5 have a known OPcache bug that can cause fatal
     // errors, so warn about that when running Drupal on those versions.
     // @todo Remove this when \Drupal::MINIMUM_PHP is at least 8.1.6 in
@@ -1329,6 +1307,28 @@ function system_requirements($phase) {
         'description' => t('The rebuild_access setting is enabled in settings.php. It is recommended to have this setting disabled unless you are performing a rebuild.'),
       ];
     }
+  }
+
+  // Check if the SameSite cookie attribute is set to a valid value. Since this
+  // involves checking whether we are using a secure connection this only makes
+  // sense inside an HTTP request, not on the command line.
+  if ($phase === 'runtime' && PHP_SAPI !== 'cli') {
+    $samesite = ini_get('session.cookie_samesite') ?: t('Not set');
+    // Check if the SameSite attribute is set to a valid value. If it is set to
+    // 'None' the request needs to be done over HTTPS.
+    $valid = match ($samesite) {
+      'Lax', 'Strict' => TRUE,
+      'None' => $request_object->isSecure(),
+      default => FALSE,
+    };
+    $requirements['php_session_samesite'] = [
+      'title' => t('SameSite cookie attribute'),
+      'value' => $samesite,
+      'severity' => $valid ? REQUIREMENT_OK : REQUIREMENT_WARNING,
+      'description' => t('This attribute should be explicitly set to Lax, Strict or None. If set to None then the request must be made via HTTPS. See <a href=":url" target="_blank">PHP documentation</a>', [
+        ':url' => 'https://www.php.net/manual/en/session.configuration.php#ini.session.cookie-samesite',
+      ]),
+    ];
   }
 
   // See if trusted hostnames have been configured, and warn the user if they
