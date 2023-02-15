@@ -13,6 +13,12 @@
   border: 0;
   border-radius: 0;
   background-color: transparent;
+
+  & h3 {
+    margin-top: 10px;
+    margin-bottom: 10px;
+    font-size: 1.231em;
+  }
 }
 .system-status-report__entry--error {
   background-color: transparent;
@@ -20,16 +26,13 @@
 .system-status-report__entry--warning {
   background-color: transparent;
 }
-.system-status-report__entry__value h3 {
-  margin-top: 10px;
-  margin-bottom: 10px;
-  font-size: 1.231em;
-}
 
-.system-status-report .claro-details {
-  border: none;
-  border-bottom: var(--details-border-size) solid var(--details-border-color);
-  box-shadow: none;
+.system-status-report {
+  & .claro-details {
+    border: none;
+    border-bottom: var(--details-border-size) solid var(--details-border-color);
+    box-shadow: none;
+  }
 }
 
 .system-status-report__status-title {
@@ -43,7 +46,7 @@
 .system-status-report__status-icon:before {
   position: absolute;
   top: 1em;
-  left: 10px; /* LTR */
+  inset-block-start: 10px;
   display: inline-block;
   width: 24px;
   height: 24px;
@@ -55,8 +58,6 @@
   background-size: contain;
 }
 [dir="rtl"] .system-status-report__status-icon:before {
-  right: 10px;
-  left: auto;
   margin-right: 0;
 }
 .system-status-report__status-icon--error:before {
@@ -67,29 +68,34 @@
 }
 
 @media (forced-colors: active) {
-  .system-status-report__status-icon:before {
-    background-color: canvastext;
-    background-image: none;
-    mask-repeat: no-repeat;
-    mask-position: top center;
-    mask-size: contain;
+  .system-status-report__status-icon {
+    &:before {
+      background-color: canvastext;
+      background-image: none;
+      mask-repeat: no-repeat;
+      mask-position: top center;
+      mask-size: contain;
+    }
   }
-  .system-status-report__status-icon--error:before {
-    mask-image: url(../../../../misc/icons/dc2323/error.svg);
+  .system-status-report__status-icon--error {
+    &:before {
+      mask-image: url(../../../../misc/icons/dc2323/error.svg);
+    }
   }
-  .system-status-report__status-icon--warning:before {
-    mask-image: url(../../images/core/e29700/warning.svg);
+  .system-status-report__status-icon--warning {
+    &:before {
+      mask-image: url(../../images/core/e29700/warning.svg);
+    }
   }
 }
 
 .system-status-report__entry__value {
   box-sizing: border-box;
-  padding: 0 1em 1em 3em; /* LTR */
+  padding-block-start: 0;
+  padding-block-end: 1em;
+  padding-inline-start: 3em;
+  padding-inline-end: 1em;
   font-size: 14px;
-}
-[dir="rtl"] .system-status-report__entry__value {
-  padding-right: 3em;
-  padding-left: 1em;
 }
 
 .claro-details__summary--system-status-report {
@@ -111,10 +117,10 @@
   .system-status-report__status-title {
     width: 18rem;
     cursor: default;
-  }
-  .system-status-report__status-title:hover,
-  .system-status-report__status-title:focus {
-    text-decoration: none;
+    &:hover,
+    &:focus {
+      text-decoration: none;
+    }
   }
 
   html.js .system-status-report__status-title::-webkit-details-marker {
@@ -124,10 +130,6 @@
     display: block;
     width: calc(100% - 23em);
     padding-top: 1em;
-    padding-left: 0; /* LTR */
-  }
-  [dir="rtl"] .system-status-report__entry__value {
-    padding-right: 3em;
-    padding-left: 0;
+    padding-inline-start: 0;
   }
 }

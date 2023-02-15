@@ -23,18 +23,18 @@
   background-color: transparent;
 }
 
+.system-status-report__entry h3 {
+  margin-top: 0.625rem;
+  margin-bottom: 0.625rem;
+  font-size: 1.231em;
+}
+
 .system-status-report__entry--error {
   background-color: transparent;
 }
 
 .system-status-report__entry--warning {
   background-color: transparent;
-}
-
-.system-status-report__entry__value h3 {
-  margin-top: 0.625rem;
-  margin-bottom: 0.625rem;
-  font-size: 1.231em;
 }
 
 .system-status-report .claro-details {
@@ -54,7 +54,7 @@
 .system-status-report__status-icon:before {
   position: absolute;
   top: 1em;
-  left: 0.625rem; /* LTR */
+  inset-block-start: 0.625rem;
   display: inline-block;
   width: 1.5rem;
   height: 1.5rem;
@@ -67,8 +67,6 @@
 }
 
 [dir="rtl"] .system-status-report__status-icon:before {
-  right: 0.625rem;
-  left: auto;
   margin-right: 0;
 }
 
@@ -103,13 +101,11 @@
 
 .system-status-report__entry__value {
   box-sizing: border-box;
-  padding: 0 1em 1em 3em; /* LTR */
+  padding-block-start: 0;
+  padding-block-end: 1em;
+  padding-inline-start: 3em;
+  padding-inline-end: 1em;
   font-size: 0.875rem;
-}
-
-[dir="rtl"] .system-status-report__entry__value {
-  padding-right: 3em;
-  padding-left: 1em;
 }
 
 .claro-details__summary--system-status-report {
@@ -144,10 +140,6 @@
     display: block;
     width: calc(100% - 23em);
     padding-top: 1em;
-    padding-left: 0; /* LTR */
-  }
-  [dir="rtl"] .system-status-report__entry__value {
-    padding-right: 3em;
-    padding-left: 0;
+    padding-inline-start: 0;
   }
 }
