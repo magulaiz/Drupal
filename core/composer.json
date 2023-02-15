@@ -149,8 +149,5 @@
     },
     "scripts": {
         "pre-autoload-dump": "Drupal\\Core\\Composer\\Composer::preAutoloadDump"
-    },
-    "require-dev": {
-        "colinodell/psr-testlogger": "^1"
     }
 }

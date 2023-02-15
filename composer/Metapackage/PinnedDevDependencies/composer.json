@@ -11,6 +11,7 @@
         "behat/mink": "v1.10.0",
         "behat/mink-browserkit-driver": "v2.1.0",
         "behat/mink-selenium2-driver": "v1.6.0",
+        "colinodell/psr-testlogger": "v1.1.0",
         "dealerdirect/phpcodesniffer-composer-installer": "v0.7.2",
         "doctrine/instantiator": "1.4.1",
         "drupal/coder": "8.3.16",
