@@ -107,7 +107,7 @@ class Internal extends CKEditorPluginBase implements ContainerFactoryPluginInter
       'resize_dir' => 'vertical',
       'justifyClasses' => ['text-align-left', 'text-align-center', 'text-align-right', 'text-align-justify'],
       'entities' => FALSE,
-      'disableNativeSpellChecker' => FALSE,
+      'disableNativeSpellChecker' => TRUE,
     ];
 
     // Add the allowedContent setting, which ensures CKEditor only allows tags
