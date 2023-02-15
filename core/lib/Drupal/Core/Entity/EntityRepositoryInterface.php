@@ -63,6 +63,11 @@ interface EntityRepositoryInterface {
    * @param array $context
    *   (optional) An associative array of arbitrary data that can be useful to
    *   determine the proper fallback sequence.
+   *   - strict_fallback: A boolean key to enable strict fallback mode.
+   *     The strict mode disables falling back to default language, if it is not
+   *     allowed by fallback candidates.
+   *   Other values of this context are passed to the function
+   *   LanguageManager::getFallbackCandidates().
    *
    * @return \Drupal\Core\Entity\EntityInterface|null
    *   An entity object for the translated data, or NULL if the requested
@@ -70,7 +75,7 @@ interface EntityRepositoryInterface {
    *
    * @see \Drupal\Core\Language\LanguageManagerInterface::getFallbackCandidates()
    */
-  public function getTranslationFromContext(EntityInterface $entity, $langcode = NULL, $context = []);
+  public function getTranslationFromContext(EntityInterface $entity, $langcode = NULL, $context = []): ?EntityInterface;
 
   /**
    * Retrieves the active entity variant matching the specified context.
