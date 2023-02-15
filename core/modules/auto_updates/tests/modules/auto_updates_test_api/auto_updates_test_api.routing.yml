@@ -1,0 +1,14 @@
+auto_updates_test_api.update:
+  path: '/automatic-updates-test-api'
+  defaults:
+    _controller: 'Drupal\auto_updates_test_api\ApiController::run'
+  requirements:
+    _access: 'TRUE'
+  options:
+    _maintenance_access: TRUE
+auto_updates_test_api.finish:
+  path: '/automatic-updates-test-api/finish/{id}'
+  defaults:
+    _controller: 'Drupal\auto_updates_test_api\ApiController::finish'
+  requirements:
+    _access: 'TRUE'
