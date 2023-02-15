@@ -15,4 +15,18 @@ use Drupal\user\EntityOwnerInterface;
  */
 interface ContentModerationStateInterface extends ContentEntityInterface, EntityOwnerInterface {
 
+  /**
+   * Saves an entity permanently.
+   *
+   * When saving existing entities, the entity is assumed to be complete,
+   * partial updates of entities are not supported.
+   *
+   * @return int
+   *   Either SAVED_NEW or SAVED_UPDATED, depending on the operation performed.
+   *
+   * @throws \Drupal\Core\Entity\EntityStorageException
+   *   In case of failures an exception is thrown.
+   */
+  public function realSave(): int;
+
 }
