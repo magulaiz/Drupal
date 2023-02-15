@@ -332,8 +332,9 @@ function system_requirements($phase) {
     $requirements['php']['description'] = t('It is recommended to upgrade to PHP version %recommended or higher for the best ongoing support.  See <a href="http://php.net/supported-versions.php">PHP\'s version support documentation</a> and the <a href=":php_requirements">Drupal PHP requirements</a> page for more information.', ['%recommended' => \Drupal::RECOMMENDED_PHP, ':php_requirements' => 'https://www.drupal.org/docs/system-requirements/php-requirements']);
     $requirements['php']['severity'] = REQUIREMENT_INFO;
 
-    // Check if the SameSite cookie attribute is set to a valid value. This only
-    // makes sense inside an HTTP request, not on the command line.
+    // Check if the SameSite cookie attribute is set to a valid value. Since this
+    // involves checking whether we are using a secure connection this only makes
+    // sense inside an HTTP request, not on the command line.
     if ($phase === 'runtime' && PHP_SAPI !== 'cli') {
       $samesite = ini_get('session.cookie_samesite') ?: t('Not set');
       // Check if the SameSite attribute is set to a valid value. If it is set
