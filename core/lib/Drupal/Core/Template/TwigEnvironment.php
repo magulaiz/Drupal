@@ -85,7 +85,7 @@ class TwigEnvironment extends Environment {
         $current = [
           'twig_extension_hash' => $twig_extension_hash,
           // Generate a new prefix which invalidates any existing cached files.
-          'twig_cache_prefix' => uniqid(),
+          'twig_cache_prefix' => uniqid('', TRUE),
 
         ];
         $state->set(static::CACHE_PREFIX_METADATA_KEY, $current);

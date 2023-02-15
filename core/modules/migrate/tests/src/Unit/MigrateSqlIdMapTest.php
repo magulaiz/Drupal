@@ -547,7 +547,7 @@ class MigrateSqlIdMapTest extends MigrateTestCase {
     $id_map->getDatabase()->update($id_map->mapTableName())
       ->condition('sourceid1', 1)
       ->condition('sourceid2', 'en')
-      ->fields([TestSqlIdMap::SOURCE_IDS_HASH => uniqid()])
+      ->fields([TestSqlIdMap::SOURCE_IDS_HASH => uniqid('', TRUE)])
       ->execute();
     $this->assertNotEquals([[101, 'en']], $id_map->lookupDestinationIds([1, 'en']));
   }

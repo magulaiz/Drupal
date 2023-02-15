@@ -237,7 +237,7 @@ class MigrationPluginManager extends DefaultPluginManager implements MigrationPl
    * {@inheritdoc}
    */
   public function createStubMigration(array $definition) {
-    $id = $definition['id'] ?? uniqid();
+    $id = $definition['id'] ?? uniqid('', TRUE);
     return Migration::create(\Drupal::getContainer(), [], $id, $definition);
   }
 
