@@ -338,7 +338,11 @@ function system_requirements($phase) {
       $samesite = ini_get('session.cookie_samesite') ?: t('Not set');
       // Check if the SameSite attribute is set to a valid value. If it is set
       // to 'None' the request needs to be done over HTTPS.
-      $valid = in_array($samesite, ['Lax', 'Strict'], TRUE) || ($samesite === 'None' && $request_object->isSecure());
+      $valid = match ($samesite) {
+        'Lax', 'Strict' => TRUE,
+        'None' => $request_object->isSecure(),
+        default => FALSE,
+      };
       $requirements['php_session_samesite'] = [
         'title' => t('SameSite cookie attribute'),
         'value' => $samesite,
