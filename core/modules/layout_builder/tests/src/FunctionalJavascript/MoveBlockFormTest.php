@@ -20,9 +20,11 @@ class MoveBlockFormTest extends WebDriverTestBase {
    */
   protected static $modules = [
     'layout_builder',
+    'layout_builder_test',
     'block',
     'node',
     'contextual',
+    'field_ui',
   ];
 
   /**
@@ -54,7 +56,19 @@ class MoveBlockFormTest extends WebDriverTestBase {
     $this->drupalLogin($this->drupalCreateUser([
       'configure any layout',
       'access contextual links',
+      'administer node display',
+      'administer node fields',
     ]));
+
+    // Remove the extra field provided by layout_builder_test module.
+    // This reduces the clutter.
+    $this->drupalGet('admin/structure/types/manage/bundle_with_section_field/display/default/layout');
+    $this->clickContextualLink('.block-extra-field-blocknodebundle-with-section-fieldlayout-builder-test', 'Remove block');
+    $assert_session->assertWaitOnAjaxRequest();
+    $page->pressButton('Remove');
+    $assert_session->assertWaitOnAjaxRequest();
+    $page->pressButton('Save layout');
+    $assert_session->assertWaitOnAjaxRequest();
 
     $this->drupalGet('node/1/layout');
     $expected_block_order = [
@@ -87,6 +101,16 @@ class MoveBlockFormTest extends WebDriverTestBase {
     $assert_session->assertNoElementAfterWait('css', '#drupal-off-canvas');
     $this->assertNotEmpty($assert_session->waitForElementVisible('css', $first_region_block_locator));
 
+    // Add a new top section using the Layout Without Label.
+    $page->clickLink('Add section');
+    $assert_session->waitForElementVisible('css', '#drupal-off-canvas');
+    $assert_session->assertWaitOnAjaxRequest();
+    $page->clickLink('Layout Without Label');
+    $assert_session->assertWaitOnAjaxRequest();
+    $this->assertNotEmpty($assert_session->waitForElementVisible('css', 'input[value="Add section"]'));
+    $page->pressButton('Add section');
+    $this->assertRegionBlocksOrder(2, 'content', $expected_block_order);
+
     // Ensure the request has completed before the test starts.
     $assert_session->assertWaitOnAjaxRequest();
   }
@@ -98,21 +122,21 @@ class MoveBlockFormTest extends WebDriverTestBase {
     $page = $this->getSession()->getPage();
 
     // Reorder body field in current region.
-    $this->openBodyMoveForm(1, 'content', ['Links', 'Body (current)']);
+    $this->openBodyMoveForm(2, 'content', ['Links', 'Body (current)']);
     $this->moveBlockWithKeyboard('up', 'Body (current)', ['Body (current)*', 'Links']);
     $page->pressButton('Move');
     $expected_block_order = [
       '.block-field-blocknodebundle-with-section-fieldbody',
       '.block-extra-field-blocknodebundle-with-section-fieldlinks',
     ];
-    $this->assertRegionBlocksOrder(1, 'content', $expected_block_order);
+    $this->assertRegionBlocksOrder(2, 'content', $expected_block_order);
     $page->pressButton('Save layout');
     $page->clickLink('Layout');
-    $this->assertRegionBlocksOrder(1, 'content', $expected_block_order);
+    $this->assertRegionBlocksOrder(2, 'content', $expected_block_order);
 
     // Move the body block into the first region above existing block.
-    $this->openBodyMoveForm(1, 'content', ['Body (current)', 'Links']);
-    $page->selectFieldOption('Region', '0:first');
+    $this->openBodyMoveForm(2, 'content', ['Body (current)', 'Links']);
+    $page->selectFieldOption('Region', '1:first');
     $this->markTestSkipped("Skipped temporarily for random fails.");
     $this->assertBlockTable(['Powered by Drupal', 'Body (current)']);
     $this->moveBlockWithKeyboard('up', 'Body', ['Body (current)*', 'Powered by Drupal']);
@@ -121,20 +145,26 @@ class MoveBlockFormTest extends WebDriverTestBase {
       '.block-field-blocknodebundle-with-section-fieldbody',
       '.block-system-powered-by-block',
     ];
-    $this->assertRegionBlocksOrder(0, 'first', $expected_block_order);
+    $this->assertRegionBlocksOrder(1, 'first', $expected_block_order);
 
     // Ensure the body block is no longer in the content region.
-    $this->assertRegionBlocksOrder(1, 'content', ['.block-extra-field-blocknodebundle-with-section-fieldlinks']);
+    $this->assertRegionBlocksOrder(2, 'content', ['.block-extra-field-blocknodebundle-with-section-fieldlinks']);
     $page->pressButton('Save layout');
     $page->clickLink('Layout');
-    $this->assertRegionBlocksOrder(0, 'first', $expected_block_order);
+    $this->assertRegionBlocksOrder(1, 'first', $expected_block_order);
 
     // Move into the second region that has no existing blocks.
-    $this->openBodyMoveForm(0, 'first', ['Body (current)', 'Powered by Drupal']);
-    $page->selectFieldOption('Region', '0:second');
+    $this->openBodyMoveForm(1, 'first', ['Body (current)', 'Powered by Drupal']);
+    $page->selectFieldOption('Region', '1:second');
     $this->assertBlockTable(['Body (current)']);
     $page->pressButton('Move');
-    $this->assertRegionBlocksOrder(0, 'second', ['.block-field-blocknodebundle-with-section-fieldbody']);
+    $this->assertRegionBlocksOrder(1, 'second', ['.block-field-blocknodebundle-with-section-fieldbody']);
+
+    // Go to the move form url directly and check for error messages.
+    $move_form_url = $page->find('css', '.block-field-blocknodebundle-with-section-fieldbody .layout-builder-block-move a')->getAttribute('href');
+    $move_form_path = explode('?', urldecode($move_form_url))[0];
+    $this->drupalGet($move_form_path);
+    $this->assertSession()->elementNotExists('css', '.messages--error');
   }
 
   /**
