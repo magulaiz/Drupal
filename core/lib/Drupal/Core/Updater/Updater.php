@@ -340,13 +340,13 @@ abstract class Updater {
           // Probably still not writable. Try to chmod and do it again.
           // @todo Make a new exception class so we can catch it differently.
           try {
-            $old_perms = substr(sprintf('%o', fileperms($parent_dir)), -4);
+            $old_perms = fileperms($parent_dir) & 0777;
             $filetransfer->chmod($parent_dir, 0755);
             $filetransfer->createDirectory($directory);
             $this->makeWorldReadable($filetransfer, $directory);
             // Put the permissions back.
             // phpcs:disable Generic.PHP.ForbiddenFunctions
-            $filetransfer->chmod($parent_dir, intval($old_perms, 8));
+            $filetransfer->chmod($parent_dir, $old_perms);
             // phpcs:enable
           }
           catch (FileTransferException $e) {

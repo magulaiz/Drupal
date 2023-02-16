@@ -201,7 +201,6 @@
   <rule ref="Generic.PHP.UpperCaseConstant"/>
   <rule ref="Generic.WhiteSpace.DisallowTabIndent"/>
 
-
   <!-- Internal sniffs -->
   <rule ref="Internal.NoCodeFound">
     <!-- No PHP code in *.yml -->
