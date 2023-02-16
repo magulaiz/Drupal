@@ -243,37 +243,34 @@ abstract class LocalStream implements StreamWrapperInterface {
    */
   public function stream_metadata($uri, $option, $value) {
     $target = $this->getLocalPath($uri);
-    $return = FALSE;
+
     switch ($option) {
       case STREAM_META_TOUCH:
         if (!empty($value)) {
-          $return = touch($target, $value[0], $value[1]);
+          return touch($target, $value[0], $value[1]);
         }
-        else {
-          $return = touch($target);
-        }
-        break;
+        return touch($target);
 
       case STREAM_META_OWNER_NAME:
       case STREAM_META_OWNER:
-        $return = chown($target, $value);
-        break;
+        return chown($target, $value);
 
       case STREAM_META_GROUP_NAME:
       case STREAM_META_GROUP:
-        $return = chgrp($target, $value);
-        break;
+        return chgrp($target, $value);
 
       case STREAM_META_ACCESS:
         $return = chmod($target, $value);
+        if ($return) {
+          // For convenience clear the file status cache of the underlying file,
+          // since metadata operations are often followed by file status checks.
+          clearstatcache(TRUE, $target);
+          return TRUE;
+        }
         break;
     }
-    if ($return) {
-      // For convenience clear the file status cache of the underlying file,
-      // since metadata operations are often followed by file status checks.
-      clearstatcache(TRUE, $target);
-    }
-    return $return;
+
+    return FALSE;
   }
 
   /**
