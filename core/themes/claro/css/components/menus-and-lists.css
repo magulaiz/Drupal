@@ -42,15 +42,9 @@
 
 ul.links li,
 ul.inline li {
-  padding-right: 1em; /* LTR */
+  padding-inline-end: 1em;
 }
 
 ul.inline li {
   display: inline;
-}
-
-[dir="rtl"] ul.links li,
-[dir="rtl"] ul.inline li {
-  padding-right: 0;
-  padding-left: 1em;
 }

@@ -2,13 +2,15 @@
  * Menus and lists.
  */
 
-.item-list ul {
-  margin-block-start: 0.25em;
-  margin-block-end: 0.25em;
-  margin-inline-start: 1.5em;
-  margin-inline-end: 0;
-  list-style-type: disc;
-  list-style-image: none;
+.item-list {
+  & ul {
+    margin-block-start: 0.25em;
+    margin-block-end: 0.25em;
+    margin-inline-start: 1.5em;
+    margin-inline-end: 0;
+    list-style-type: disc;
+    list-style-image: none;
+  }
 }
 .item-list ul li,
 .menu-item {
@@ -31,17 +33,10 @@
 ul {
   &.links li,
   &.inline li {
-    padding-right: 1em; /* LTR */
+    padding-inline-end: 1em;
   }
 
   &.inline li {
     display: inline;
-  }
-}
-[dir="rtl"] {
-  & ul.links li,
-  & ul.inline li {
-    padding-right: 0;
-    padding-left: 1em;
   }
 }
