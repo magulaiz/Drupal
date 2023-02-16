@@ -33,36 +33,3 @@ auto_updates.cron.post_apply:
     _controller: 'auto_updates.cron_updater:handlePostApply'
   requirements:
     _access_system_cron: 'TRUE'
-
-# These routes are deprecated and will be removed in the next major version of
-# Automatic Updates. They redirect to existing routes from the core Update
-# module, which are overridden by Automatic Updates.
-# @see \Drupal\auto_updates\Routing\RouteSubscriber::alterRoutes()
-auto_updates.report_update:
-  path: '/admin/reports/updates/automatic-update'
-  defaults:
-    _controller: '\Drupal\auto_updates\Controller\UpdateController::redirectDeprecatedRoute'
-  requirements:
-    _access: 'TRUE'
-auto_updates.module_update:
-  path: '/admin/modules/automatic-update'
-  defaults:
-    _controller: '\Drupal\auto_updates\Controller\UpdateController::redirectDeprecatedRoute'
-  requirements:
-    _access: 'TRUE'
-auto_updates.theme_update:
-  path: '/admin/theme/automatic-update'
-  defaults:
-    _controller: '\Drupal\auto_updates\Controller\UpdateController::redirectDeprecatedRoute'
-  requirements:
-    _access: 'TRUE'
-auto_updates.update_readiness:
-  path: '/admin/auto_updates/readiness'
-  defaults:
-    _controller: '\Drupal\auto_updates\Controller\StatusCheckController::runReadiness'
-    _title: 'Update readiness checking'
-  requirements:
-    _permission: 'administer software updates'
-  options:
-    _maintenance_access: TRUE
-    _auto_updates_status_messages: skip

@@ -57,7 +57,7 @@ class GitExcluderTest extends PackageManagerKernelTestBase {
     $this->fileSystem = $this->prophesize(FileSystemInterface::class);
 
     $container->getDefinition('package_manager.git_excluder')
-      ->setArgument('$file_system', $this->fileSystem->reveal());
+      ->setArgument('$fileSystem', $this->fileSystem->reveal());
   }
 
   /**
@@ -106,7 +106,7 @@ class GitExcluderTest extends PackageManagerKernelTestBase {
       Yaml::encode([
         'name' => 'Unknown to composer in stage',
         'type' => 'module',
-        'core_version_requirement' => '^9.3 || ^10',
+        'core_version_requirement' => '^9.7 || ^10',
       ])
     );
     file_put_contents("$path/.git/ignored.txt", 'Phoenix!');
