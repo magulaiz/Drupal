@@ -40,7 +40,7 @@ class TitleController extends ControllerBase {
   /**
    * The _title_callback for the language.content_settings_page route.
    *
-   * @return string
+   * @return \Drupal\Core\StringTranslation\TranslatableMarkup
    *   The page title.
    */
   public function setTitle(): string {
