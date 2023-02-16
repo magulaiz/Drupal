@@ -6,9 +6,7 @@ use Drupal\image\Entity\ImageStyle;
 use Drupal\image\ImageStyleInterface;
 
 /**
- * Tests the image style administration UI.
- *
- * @group image
+ * {@inheritdoc}
  */
 class ImageAdminUiTest extends ImageFieldTestBase {
 
