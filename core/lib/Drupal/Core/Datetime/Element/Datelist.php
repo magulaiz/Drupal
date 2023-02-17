@@ -246,7 +246,7 @@ class Datelist extends DateElementBase {
       $default = isset($element['#value'][$part]) && trim($element['#value'][$part]) != '' ? $element['#value'][$part] : '';
       $value = $date instanceof DrupalDateTime && !$date->hasErrors() ? $date->format($format) : $default;
       if (!empty($value) && $part != 'ampm') {
-        $value = intval($value);
+        $value = (int) $value;
       }
 
       $element['#attributes']['title'] = $title;
@@ -363,15 +363,15 @@ class Datelist extends DateElementBase {
   protected static function incrementRound(&$date, $increment) {
     // Round minutes and seconds, if necessary.
     if ($date instanceof DrupalDateTime && $increment > 1) {
-      $day = intval($date->format('j'));
-      $hour = intval($date->format('H'));
-      $second = intval(round(intval($date->format('s')) / $increment) * $increment);
-      $minute = intval($date->format('i'));
+      $day = (int) $date->format('j');
+      $hour = (int) $date->format('H');
+      $second = (int) (round((int) $date->format('s') / $increment) * $increment);
+      $minute = (int) $date->format('i');
       if ($second == 60) {
         $minute += 1;
         $second = 0;
       }
-      $minute = intval(round($minute / $increment) * $increment);
+      $minute = (int) (round($minute / $increment) * $increment);
       if ($minute == 60) {
         $hour += 1;
         $minute = 0;

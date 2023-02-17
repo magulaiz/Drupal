@@ -219,7 +219,7 @@ class EntityField extends FieldPluginBase implements CacheableDependencyInterfac
 
       // Otherwise, we only limit values if the user hasn't selected "all", 0, or
       // the value matching field cardinality.
-      if ((($this->options['delta_limit'] > 0) && ($this->options['delta_limit'] != $cardinality)) || intval($this->options['delta_offset'])) {
+      if ((($this->options['delta_limit'] > 0) && ($this->options['delta_limit'] != $cardinality)) || (int) $this->options['delta_offset']) {
         $this->limit_values = TRUE;
       }
     }
@@ -755,7 +755,7 @@ class EntityField extends FieldPluginBase implements CacheableDependencyInterfac
       }
       else {
         $delta_limit = $this->options['delta_limit'];
-        $offset = intval($this->options['delta_offset']);
+        $offset = (int) $this->options['delta_offset'];
 
         // We should only get here in this case if there is an offset, and in
         // that case we are limiting to all values after the offset.

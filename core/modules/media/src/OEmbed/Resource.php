@@ -495,7 +495,7 @@ class Resource implements CacheableDependencyInterface {
    *   If either $width or $height are not numbers greater than zero.
    */
   protected function setThumbnailDimensions($width, $height) {
-    $width = (int) $width;
+    $width = intval($width);
     $height = (int) $height;
 
     if ($width > 0 && $height > 0) {

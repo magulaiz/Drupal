@@ -13,8 +13,8 @@ use Drupal\views\ViewExecutable;
 function node_views_query_substitutions(ViewExecutable $view) {
   $account = \Drupal::currentUser();
   return [
-    '***ADMINISTER_NODES***' => intval($account->hasPermission('administer nodes')),
-    '***VIEW_OWN_UNPUBLISHED_NODES***' => intval($account->hasPermission('view own unpublished content')),
-    '***BYPASS_NODE_ACCESS***' => intval($account->hasPermission('bypass node access')),
+    '***ADMINISTER_NODES***' => (int) $account->hasPermission('administer nodes'),
+    '***VIEW_OWN_UNPUBLISHED_NODES***' => (int) $account->hasPermission('view own unpublished content'),
+    '***BYPASS_NODE_ACCESS***' => (int) $account->hasPermission('bypass node access'),
   ];
 }
