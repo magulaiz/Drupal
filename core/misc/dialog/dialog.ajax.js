@@ -72,6 +72,20 @@
 
         $(event.target).remove();
       };
+
+      const $table = $('#field-overview');
+      $(once('manage-fields-field-type', $table.find('a.use-ajax'))).on(
+        'keypress',
+        (e) => {
+          // The AJAX link has the button role, so we need to make sure the link
+          // is also triggered when pressing the spacebar.
+          if (e.which === 32) {
+            e.preventDefault();
+            e.stopPropagation();
+            $(e.currentTarget).trigger('click');
+          }
+        },
+      );
     },
 
     /**
