@@ -147,6 +147,11 @@ class AssetResolver implements AssetResolverInterface {
       $definition = $this->libraryDiscovery->getLibraryByName($extension, $name);
       if (isset($definition['css'])) {
         foreach ($definition['css'] as $options) {
+          if (array_key_exists($options['data'], $css)) {
+              continue;
+            }
+
+
           $options += $default_options;
           // Copy the asset library license information to each file.
           $options['license'] = $definition['license'];
@@ -155,10 +160,6 @@ class AssetResolver implements AssetResolverInterface {
           if ($options['type'] === 'file' && $options['preprocess'] && str_contains($options['data'], '?')) {
             $options['preprocess'] = FALSE;
           }
-
-          // Always add a tiny value to the weight, to conserve the insertion
-          // order.
-          $options['weight'] += count($css) / 30000;
 
           // CSS files are being keyed by the full path.
           $css[$options['data']] = $options;

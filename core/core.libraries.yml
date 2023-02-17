@@ -409,22 +409,22 @@ drupal.autocomplete:
   version: VERSION
   js:
     assets/vendor/jquery.ui/ui/version-min.js: { minified: true }
+    assets/vendor/jquery.ui/ui/data-min.js: { minified: true }
+    assets/vendor/jquery.ui/ui/disable-selection-min.js: { minified: true }
+    assets/vendor/jquery.ui/ui/focusable-min.js: { minified: true }
+    assets/vendor/jquery.ui/ui/form-min.js: { minified: true }
+    assets/vendor/jquery.ui/ui/ie-min.js: { minified: true }
+    assets/vendor/jquery.ui/ui/jquery-patch-min.js: { minified: true }
+    assets/vendor/jquery.ui/ui/keycode-min.js: { minified: true }
+    assets/vendor/jquery.ui/ui/plugin-min.js: { minified: true }
+    assets/vendor/jquery.ui/ui/safe-active-element-min.js: { minified: true }
+    assets/vendor/jquery.ui/ui/safe-blur-min.js: { minified: true }
+    assets/vendor/jquery.ui/ui/scroll-parent-min.js: { minified: true }
     assets/vendor/jquery.ui/ui/widget-min.js: { minified: true }
     assets/vendor/jquery.ui/ui/unique-id-min.js: { minified: true }
-    assets/vendor/jquery.ui/ui/scroll-parent-min.js: { minified: true }
-    assets/vendor/jquery.ui/ui/safe-blur-min.js: { minified: true }
-    assets/vendor/jquery.ui/ui/safe-active-element-min.js: { minified: true }
-    assets/vendor/jquery.ui/ui/plugin-min.js: { minified: true }
-    assets/vendor/jquery.ui/ui/keycode-min.js: { minified: true }
-    assets/vendor/jquery.ui/ui/jquery-patch-min.js: { minified: true }
-    assets/vendor/jquery.ui/ui/ie-min.js: { minified: true }
-    assets/vendor/jquery.ui/ui/form-min.js: { minified: true }
-    assets/vendor/jquery.ui/ui/focusable-min.js: { minified: true }
-    assets/vendor/jquery.ui/ui/disable-selection-min.js: { minified: true }
-    assets/vendor/jquery.ui/ui/data-min.js: { minified: true }
-    assets/vendor/jquery.ui/ui/widgets/menu-min.js: { minified: true }
-    assets/vendor/jquery.ui/ui/labels-min.js: { minified: true }
     assets/vendor/jquery.ui/ui/widgets/autocomplete-min.js: { minified: true }
+    assets/vendor/jquery.ui/ui/labels-min.js: { minified: true }
+    assets/vendor/jquery.ui/ui/widgets/menu-min.js: { minified: true }
     # @todo replace with solution in https://drupal.org/node/3076171
     # deprecated library.
     # The remaining JavaScript assets previously came from core/jquery.ui, a
@@ -434,8 +434,8 @@ drupal.autocomplete:
   css:
     component:
       assets/vendor/jquery.ui/themes/base/core.css: {}
-      assets/vendor/jquery.ui/themes/base/menu.css: {}
       assets/vendor/jquery.ui/themes/base/autocomplete.css: {}
+      assets/vendor/jquery.ui/themes/base/menu.css: {}
     theme:
       assets/vendor/jquery.ui/themes/base/theme.css: {}
   dependencies:
@@ -508,26 +508,30 @@ drupal.dialog:
     # @todo replace with solution in https://drupal.org/node/2158943
     assets/vendor/tua-body-scroll-lock/tua-bsl.umd.min.js: { minified: true }
     assets/vendor/jquery.ui/ui/version-min.js: { minified: true }
-    assets/vendor/jquery.ui/ui/widget-min.js: { minified: true }
-    assets/vendor/jquery.ui/ui/safe-blur-min.js: { minified: true }
-    assets/vendor/jquery.ui/ui/safe-active-element-min.js: { minified: true }
-    assets/vendor/jquery.ui/ui/plugin-min.js: { minified: true }
-    assets/vendor/jquery.ui/ui/keycode-min.js: { minified: true }
-    assets/vendor/jquery.ui/ui/ie-min.js: { minified: true }
-    assets/vendor/jquery.ui/ui/focusable-min.js: { minified: true }
-    assets/vendor/jquery.ui/ui/unique-id-min.js: { minified: true }
-    assets/vendor/jquery.ui/ui/scroll-parent-min.js: { minified: true }
-    assets/vendor/jquery.ui/ui/jquery-patch-min.js: { minified: true }
-    assets/vendor/jquery.ui/ui/form-min.js: { minified: true }
-    assets/vendor/jquery.ui/ui/disable-selection-min.js: { minified: true }
+
     assets/vendor/jquery.ui/ui/data-min.js: { minified: true }
-    assets/vendor/jquery.ui/ui/widgets/mouse-min.js: { minified: true }
-    assets/vendor/jquery.ui/ui/labels-min.js: { minified: true }
-    assets/vendor/jquery.ui/ui/form-reset-mixin-min.js: { minified: true }
+    assets/vendor/jquery.ui/ui/disable-selection-min.js: { minified: true }
+    assets/vendor/jquery.ui/ui/form-min.js: { minified: true }
+    assets/vendor/jquery.ui/ui/jquery-patch-min.js: { minified: true }
+    assets/vendor/jquery.ui/ui/scroll-parent-min.js: { minified: true }
+    assets/vendor/jquery.ui/ui/unique-id-min.js: { minified: true }
+    assets/vendor/jquery.ui/ui/focusable-min.js: { minified: true }
+    assets/vendor/jquery.ui/ui/ie-min.js: { minified: true }
+    assets/vendor/jquery.ui/ui/keycode-min.js: { minified: true }
+    assets/vendor/jquery.ui/ui/plugin-min.js: { minified: true }
+    assets/vendor/jquery.ui/ui/safe-active-element-min.js: { minified: true }
+    assets/vendor/jquery.ui/ui/safe-blur-min.js: { minified: true }
+    assets/vendor/jquery.ui/ui/widget-min.js: { minified: true }
+    
     assets/vendor/jquery.ui/ui/widgets/controlgroup-min.js: { minified: true }
-    assets/vendor/jquery.ui/ui/widgets/resizable-min.js: { minified: true }
-    assets/vendor/jquery.ui/ui/widgets/draggable-min.js: { minified: true }
+    assets/vendor/jquery.ui/ui/form-reset-mixin-min.js: { minified: true }
+    assets/vendor/jquery.ui/ui/labels-min.js: { minified: true }
+    assets/vendor/jquery.ui/ui/widgets/mouse-min.js: { minified: true }
+
     assets/vendor/jquery.ui/ui/widgets/checkboxradio-min.js: { minified: true }
+    assets/vendor/jquery.ui/ui/widgets/draggable-min.js: { minified: true }
+    assets/vendor/jquery.ui/ui/widgets/resizable-min.js: { minified: true }
+
     assets/vendor/jquery.ui/ui/widgets/button-min.js: { minified: true }
     assets/vendor/jquery.ui/ui/widgets/dialog-min.js: { minified: true }
     misc/dialog/dialog.jquery-ui.js: {}
@@ -539,8 +543,8 @@ drupal.dialog:
     component:
       assets/vendor/jquery.ui/themes/base/core.css: {}
       assets/vendor/jquery.ui/themes/base/controlgroup.css: {}
-      assets/vendor/jquery.ui/themes/base/resizable.css: {}
       assets/vendor/jquery.ui/themes/base/checkboxradio.css: {}
+      assets/vendor/jquery.ui/themes/base/resizable.css: {}
       assets/vendor/jquery.ui/themes/base/button.css: {}
       assets/vendor/jquery.ui/themes/base/dialog.css: {}
     theme:
