@@ -154,7 +154,7 @@ class LibraryDiscoveryParser {
           $library['version'] = \Drupal::VERSION;
         }
         // Remove 'v' prefix from external library versions.
-        elseif (is_string($library['version']) && $library['version'][0] === 'v') {
+        elseif (is_string($library['version']) && isset($library['version'][0]) && $library['version'][0] === 'v') {
           $library['version'] = substr($library['version'], 1);
         }
       }
