@@ -39,6 +39,12 @@ config_test.dynamic.*.third_party.node:
     foo:
       type: string
 
+config_test.dynamic.*.third_party.a:
+  type: ignore
+
+config_test.dynamic.*.third_party.b:
+  type: ignore
+
 config_test.query.*:
   type: config_entity
   mapping:

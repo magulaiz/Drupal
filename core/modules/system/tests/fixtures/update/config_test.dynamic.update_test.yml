@@ -1,0 +1,19 @@
+uuid: a3aea4fb-bb8b-447a-b583-ef6f85111b61
+langcode: en
+status: true
+dependencies:
+  module:
+    - a
+    - b
+third_party_settings:
+  b:
+    foo: bar
+  a:
+    foo: bar
+id: update_test
+label: 'Update test'
+weight: 0
+style: null
+size: null
+size_value: null
+protected_property: null

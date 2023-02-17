@@ -297,6 +297,7 @@ config_entity:
     third_party_settings:
       type: sequence
       label: 'Third party settings'
+      orderby: 'key'
       sequence:
         type: '[%parent.%parent.%type].third_party.[%key]'
     _core:

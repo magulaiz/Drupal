@@ -108,4 +108,24 @@ class ConfigEntityUnitTest extends KernelTestBase {
     $this->assertSame('999', $entity->style);
   }
 
+  /**
+   * Tests third party settings methods.
+   */
+  public function testThirdPartySettings() {
+    /** @var \Drupal\Core\Config\Entity\ConfigEntityInterface $entity */
+    $entity = $this->storage->create([
+      'id' => $this->randomMachineName(),
+      'label' => $this->randomString(),
+    ]);
+    $entity->save();
+
+    // Ensure that regardless of the order third party settings are added they
+    // are sorted by module name after saving.
+    $entity->setThirdPartySetting('b', 'foo', 'bar');
+    $entity->setThirdPartySetting('a', 'foo', 'bar');
+    $this->assertSame(['b', 'a'], array_keys($entity->get('third_party_settings')));
+    $entity->save();
+    $this->assertSame(['a', 'b'], array_keys($entity->get('third_party_settings')));
+  }
+
 }
