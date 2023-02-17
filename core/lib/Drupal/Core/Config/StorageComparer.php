@@ -248,16 +248,33 @@ class StorageComparer implements StorageComparerInterface {
     foreach (array_intersect($this->sourceNames[$collection], $this->targetNames[$collection]) as $name) {
       $source_data = $this->getSourceStorage($collection)->read($name);
       $target_data = $this->getTargetStorage($collection)->read($name);
-      if ($source_data !== $target_data) {
-        if (isset($source_data['uuid']) && $source_data['uuid'] !== $target_data['uuid']) {
-          // The entity has the same file as an existing entity but the UUIDs do
-          // not match. This means that the entity has been recreated so config
-          // synchronization should do the same.
-          $recreates[] = $name;
+
+      $recreate = FALSE;
+      if (isset($source_data['uuid']) && $source_data['uuid'] !== $target_data['uuid']) {
+        // The entity has the same file as an existing entity but the UUIDs do
+        // not match. This means that the entity has been recreated so config
+        // synchronization should do the same.
+        $recreate = TRUE;
+      }
+      elseif ($collection !== StorageInterface::DEFAULT_COLLECTION) {
+        $default_source_data = $this->getSourceStorage()->read($name);
+        $default_target_data = $this->getTargetStorage()->read($name);
+        if (isset($default_source_data['uuid']) && $default_target_data !== FALSE && $default_source_data['uuid'] !== $default_target_data['uuid']) {
+          // This means that this file does have an update, but the default
+          // collection has the config of the same name marked as recreate.
+          // We should also mark this config as been recreated, because it
+          // will lead to errors if this is marked as 'updated' while the
+          // parent is recreated.
+          // See: https://www.drupal.org/project/drupal/issues/3250066
+          $recreate = TRUE;
         }
-        else {
-          $this->addChangeList($collection, 'update', [$name]);
-        }
+      }
+
+      if ($recreate) {
+        $recreates[] = $name;
+      }
+      elseif ($source_data !== $target_data) {
+        $this->addChangeList($collection, 'update', [$name]);
       }
     }
 

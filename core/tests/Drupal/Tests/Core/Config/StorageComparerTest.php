@@ -241,4 +241,114 @@ class StorageComparerTest extends UnitTestCase {
     $this->assertEmpty($this->storageComparer->getChangelist('delete'));
   }
 
+  /**
+   * @covers ::createChangelist
+   */
+  public function testCreateChangelistRecreate() {
+    $target_data = $source_data = [
+      '' => $this->getConfigData(),
+      'language.nl' => [
+        'field.field.node.article.body' => [
+          'title' => 'Dutch article body title',
+        ],
+        'field.storage.node.body' => [
+          'title' => 'Dutch article body storage title',
+        ],
+        'views.view.test_view' => [
+          'title' => 'Dutch test_view title',
+        ],
+      ],
+    ];
+
+    $uuid = new Php();
+
+    // field.field.node.article.body: only change Dutch translation.
+    $source_data['language.nl']['field.field.node.article.body']['title'] = 'New Dutch article body title';
+    // field.storage.node.body: recreate default, don't change override.
+    $source_data['']['field.storage.node.body']['uuid'] = $uuid->generate();
+    // views.view.test_view: recreate parent, change override.
+    $source_data['']['views.view.test_view']['uuid'] = $uuid->generate();
+    $source_data['language.nl']['views.view.test_view']['title'] = 'New Dutch test_view title';
+
+    $this->sourceStorage->expects($this->atLeastOnce())
+      ->method('listAll')
+      ->will($this->returnValue(array_keys($source_data[''])));
+    $this->targetStorage->expects($this->atLeastOnce())
+      ->method('listAll')
+      ->will($this->returnValue(array_keys($target_data[''])));
+    $this->sourceStorage->expects($this->atLeastOnce())
+      ->method('readMultiple')
+      ->will($this->returnValue($source_data['']));
+    $this->targetStorage->expects($this->atLeastOnce())
+      ->method('readMultiple')
+      ->will($this->returnValue($target_data['']));
+    $this->sourceStorage->expects($this->atLeastOnce())
+      ->method('getAllCollectionNames')
+      ->will($this->returnValue(array_keys($source_data)));
+    $this->targetStorage->expects($this->atLeastOnce())
+      ->method('getAllCollectionNames')
+      ->will($this->returnValue(array_keys($target_data)));
+
+    $source_collection_storage = $this->createMock('Drupal\Core\Config\StorageInterface');
+    $target_collection_storage = $this->createMock('Drupal\Core\Config\StorageInterface');
+
+    $source_collection_storage->expects($this->atLeastOnce())
+      ->method('listAll')
+      ->will($this->returnValue(array_keys($source_data['language.nl'])));
+    $target_collection_storage->expects($this->atLeastOnce())
+      ->method('listAll')
+      ->will($this->returnValue(array_keys($target_data['language.nl'])));
+    $source_collection_storage->expects($this->atLeastOnce())
+      ->method('readMultiple')
+      ->will($this->returnValue($source_data['language.nl']));
+    $target_collection_storage->expects($this->atLeastOnce())
+      ->method('readMultiple')
+      ->will($this->returnValue($target_data['language.nl']));
+    $source_collection_storage->expects($this->atLeastOnce())
+      ->method('getCollectionName')
+      ->will($this->returnValue('language.nl'));
+    $target_collection_storage->expects($this->atLeastOnce())
+      ->method('getCollectionName')
+      ->will($this->returnValue('language.nl'));
+
+    $this->sourceStorage->expects($this->atLeastOnce())
+      ->method('createCollection')
+      ->will($this->returnValue($source_collection_storage));
+    $this->targetStorage->expects($this->atLeastOnce())
+      ->method('createCollection')
+      ->will($this->returnValue($target_collection_storage));
+
+    $this->storageComparer->createChangelist();
+
+    $changelist_default = [
+      'create' => [
+        'field.storage.node.body',
+        'views.view.test_view',
+      ],
+      'update' => [],
+      'delete' => [
+        'views.view.test_view',
+        'field.storage.node.body',
+      ],
+      'rename' => [],
+    ];
+    $changelist_nl = [
+      'create' => [
+        'field.storage.node.body',
+        'views.view.test_view',
+      ],
+      'update' => [
+        'field.field.node.article.body',
+      ],
+      'delete' => [
+        'views.view.test_view',
+        'field.storage.node.body',
+      ],
+      'rename' => [],
+    ];
+
+    $this->assertEquals($changelist_default, $this->storageComparer->getChangelist());
+    $this->assertEquals($changelist_nl, $this->storageComparer->getChangelist(NULL, 'language.nl'));
+  }
+
 }
