@@ -3,9 +3,11 @@
 namespace Drupal\Tests;
 
 use Drupal\Component\Utility\Html;
+use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Utility\Error;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
+use Symfony\Component\String\Slugger\AsciiSlugger;
 
 /**
  * Provides the debug functions for browser tests.
@@ -143,10 +145,8 @@ trait BrowserHtmlDebugTrait {
    */
   protected function htmlOutputFilename($counter) {
     if ($this->usesDataProvider()) {
-      $data_name = $this->dataName();
-      if (mb_strlen($data_name) > 32) {
-        $data_name = mb_substr($data_name, 0, 24) . crc32($data_name);
-      }
+      $slugger = new AsciiSlugger();
+      $data_name = $slugger->slug(Unicode::truncate($this->dataName(), 32, FALSE, TRUE));
       // Test uses a data provider: include the data set name.
       $html_output_filename = $this->htmlOutputClassName . '-' . $this->getName(FALSE) . '-dataset__' . $data_name . '-' . $counter . '-' . $this->htmlOutputTestId . '.html';
     }
