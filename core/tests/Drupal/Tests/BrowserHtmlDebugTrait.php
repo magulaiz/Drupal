@@ -143,8 +143,12 @@ trait BrowserHtmlDebugTrait {
    */
   protected function htmlOutputFilename($counter) {
     if ($this->usesDataProvider()) {
+      $data_name = $this->dataName();
+      if (mb_strlen($data_name) > 32) {
+        $data_name = mb_substr($data_name, 0, 24) . crc32($data_name);
+      }
       // Test uses a data provider: include the data set name.
-      $html_output_filename = $this->htmlOutputClassName . '-' . $this->getName(FALSE) . '-dataset__' . $this->dataName() . '-' . $counter . '-' . $this->htmlOutputTestId . '.html';
+      $html_output_filename = $this->htmlOutputClassName . '-' . $this->getName(FALSE) . '-dataset__' . $data_name . '-' . $counter . '-' . $this->htmlOutputTestId . '.html';
     }
     else {
       $html_output_filename = $this->htmlOutputClassName . '-' . $this->getName() . '-' . $counter . '-' . $this->htmlOutputTestId . '.html';
