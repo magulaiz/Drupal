@@ -43,6 +43,7 @@
       }
     ],
     "order/properties-order": [
+      "all",
       "position",
       "z-index",
       "top",

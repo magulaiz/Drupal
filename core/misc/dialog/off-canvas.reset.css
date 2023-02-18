@@ -104,6 +104,7 @@
 #drupal-off-canvas input,
 #drupal-off-canvas select,
 #drupal-off-canvas textarea {
+  all: initial;
   position: static;
   z-index: auto;
   top: auto;
@@ -190,7 +191,6 @@
   perspective: none;
   perspective-origin: 50% 50%;
   transform-style: flat;
-  all: initial;
   -webkit-font-smoothing: antialiased;
   -webkit-tap-highlight-color: initial;
 }
@@ -365,6 +365,7 @@
 #drupal-off-canvas input:before,
 #drupal-off-canvas select:before,
 #drupal-off-canvas textarea:before {
+  all: initial;
   position: static;
   z-index: auto;
   top: auto;
@@ -451,7 +452,6 @@
   perspective: none;
   perspective-origin: 50% 50%;
   transform-style: flat;
-  all: initial;
   -webkit-font-smoothing: antialiased;
   -webkit-tap-highlight-color: initial;
 }
