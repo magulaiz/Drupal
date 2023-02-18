@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\Tests\taxonomy\Functional;
+namespace Drupal\Tests\taxonomy\Kernel;
 
 use Drupal\Component\Render\FormattableMarkup;
 use Drupal\KernelTests\KernelTestBase;
