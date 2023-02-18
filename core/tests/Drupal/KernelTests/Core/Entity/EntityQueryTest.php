@@ -1329,6 +1329,7 @@ class EntityQueryTest extends EntityKernelTestBase {
    */
   public function testToSqlQuery() {
     $query = $this->storage->getQuery();
+    $query->accessCheck(FALSE);
     $group_blue = $query->andConditionGroup()->condition("{$this->figures}.color", ['blue'], 'IN');
     $group_red = $query->andConditionGroup()->condition("{$this->figures}.color", ['red'], 'IN');
     $null_group = $query->andConditionGroup()->notExists("{$this->figures}.color");
