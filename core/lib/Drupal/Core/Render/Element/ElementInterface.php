@@ -3,6 +3,7 @@
 namespace Drupal\Core\Render\Element;
 
 use Drupal\Component\Plugin\PluginInspectionInterface;
+use Drupal\Core\Render\RenderableElementInterface;
 
 /**
  * Provides an interface for render element plugins.
@@ -27,7 +28,7 @@ use Drupal\Component\Plugin\PluginInspectionInterface;
  *
  * @ingroup theme_render
  */
-interface ElementInterface extends PluginInspectionInterface, RenderCallbackInterface {
+interface ElementInterface extends PluginInspectionInterface, RenderCallbackInterface, RenderableElementInterface {
 
   /**
    * Returns the element properties for this element.

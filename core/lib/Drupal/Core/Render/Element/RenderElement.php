@@ -123,8 +123,16 @@ use Drupal\Core\Url;
  * @see plugin_api
  *
  * @ingroup theme_render
+ * @RenderElement("default")
  */
 abstract class RenderElement extends PluginBase implements ElementInterface {
+
+  /**
+   * Element data stored in render array format.
+   *
+   * @var \Drupal\Core\Field\FieldItemInterface[]
+   */
+  protected $data;
 
   /**
    * {@inheritdoc}
@@ -453,6 +461,73 @@ abstract class RenderElement extends PluginBase implements ElementInterface {
     }
 
     return $element;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function fromArray($data) {
+    $this->data = $data;
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+	public function toArray() {
+		return $this->data;
+	}
+
+  /**
+   * Get a reference to the render element's internal array.
+   *
+   * @return array
+   *   A render array.
+   *
+   * @internal
+   *   Should not be used in user code. Use RenderableElementInterface::toArray() instead.
+   */
+	public function &asArray() {
+		return $this->data;
+	}
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getIterator(): \Traversable {
+    return new \ArrayIterator($this->data);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+	public function offsetExists($offset): bool {
+    return is_array($this->data) && isset($this->data[$offset]);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+	public function offsetGet($offset): mixed {
+    return $this->container[$offset] ?? NULL;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+	public function offsetSet($offset, $value): void {
+		if (is_null($offset)) {
+			$this->container[] = $value;
+		} else {
+			$this->container[$offset] = $value;
+		}
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+	public function offsetUnset($offset): void {
+    unset($this->container[$offset]);
   }
 
 }
