@@ -136,38 +136,30 @@ class RoutePreloaderTest extends UnitTestCase {
   }
 
   /**
-   * Tests onRequest on a non html request.
+   * Tests Preload Routes on a non html request.
+   *
+   * @covers ::preloadRoutes
    */
-  public function testOnRequestNonHtml() {
-    $event = $this->getMockBuilder('\Symfony\Component\HttpKernel\Event\KernelEvent')
-      ->disableOriginalConstructor()
-      ->getMock();
+  public function testPreloadRoutesNonHtml() {
     $request = new Request();
     $request->setRequestFormat('non-html');
-    $event->expects($this->any())
-      ->method('getRequest')
-      ->willReturn($request);
 
     $this->routeProvider->expects($this->never())
       ->method('getRoutesByNames');
     $this->state->expects($this->never())
       ->method('get');
 
-    $this->preloader->onRequest($event);
+    $this->preloader->preloadRoutes($request);
   }
 
   /**
-   * Tests onRequest on a html request.
+   * Tests Preload Routes on a html request.
+   *
+   * @covers ::preloadRoutes
    */
-  public function testOnRequestOnHtml() {
-    $event = $this->getMockBuilder('\Symfony\Component\HttpKernel\Event\KernelEvent')
-      ->disableOriginalConstructor()
-      ->getMock();
+  public function testPreloadRoutesOnHtml() {
     $request = new Request();
     $request->setRequestFormat('html');
-    $event->expects($this->any())
-      ->method('getRequest')
-      ->willReturn($request);
 
     $this->routeProvider->expects($this->once())
       ->method('preLoadRoutes')
@@ -177,7 +169,7 @@ class RoutePreloaderTest extends UnitTestCase {
       ->with('routing.non_admin_routes')
       ->willReturn(['test2']);
 
-    $this->preloader->onRequest($event);
+    $this->preloader->preloadRoutes($request);
   }
 
 }

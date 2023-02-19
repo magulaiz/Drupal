@@ -8,6 +8,7 @@ use Drupal\Core\PathProcessor\OutboundPathProcessorInterface;
 use Drupal\Core\PathProcessor\PathProcessorManager;
 use Drupal\Core\Render\BubbleableMetadata;
 use Drupal\Core\Routing\RequestContext;
+use Drupal\Core\Routing\RoutePreloader;
 use Drupal\Core\Routing\RouteProviderInterface;
 use Drupal\Core\Routing\UrlGenerator;
 use Drupal\path_alias\PathProcessor\AliasPathProcessor;
@@ -60,6 +61,13 @@ class UrlGeneratorTest extends UnitTestCase {
    * @var \Symfony\Component\HttpFoundation\RequestStack
    */
   protected $requestStack;
+
+  /**
+   * The mock route preloader.
+   *
+   * @var \Drupal\Core\Routing\RoutePreloader|\PHPUnit_Framework_MockObject_MockObject
+   */
+  protected $routePreloader;
 
   /**
    * The request context.
@@ -168,8 +176,13 @@ class UrlGeneratorTest extends UnitTestCase {
     $this->routeProcessorManager = $this->getMockBuilder('Drupal\Core\RouteProcessor\RouteProcessorManager')
       ->disableOriginalConstructor()
       ->getMock();
+    $this->routePreloader = $this->getMockBuilder(RoutePreloader::class)
+      ->disableOriginalConstructor()
+      ->getMock();
+    $this->routePreloader->expects($this->atMost(1))
+      ->method('preloadRoutes');
 
-    $generator = new UrlGenerator($this->provider, $processor_manager, $this->routeProcessorManager, $this->requestStack, ['http', 'https']);
+    $generator = new UrlGenerator($this->provider, $processor_manager, $this->routeProcessorManager, $this->requestStack, $this->routePreloader, ['http', 'https']);
     $generator->setContext($this->context);
     $this->generator = $generator;
   }
@@ -209,7 +222,6 @@ class UrlGeneratorTest extends UnitTestCase {
     $this->assertEquals('/hello/world', $url);
     // No cacheability to test; UrlGenerator::generate() doesn't support
     // collecting cacheability metadata.
-
     $this->routeProcessorManager->expects($this->exactly(3))
       ->method('processOutbound')
       ->with($this->anything());
@@ -229,7 +241,6 @@ class UrlGeneratorTest extends UnitTestCase {
     $this->assertEquals('/hello/world', $url);
     // No cacheability to test; UrlGenerator::generate() doesn't support
     // collecting cacheability metadata.
-
     $this->routeProcessorManager->expects($this->exactly(3))
       ->method('processOutbound')
       ->with($this->anything());
@@ -247,8 +258,9 @@ class UrlGeneratorTest extends UnitTestCase {
   public function testUrlGenerationWithDisabledPathProcessing() {
     $path_processor = $this->prophesize(OutboundPathProcessorInterface::class);
     $path_processor->processOutbound(Argument::cetera())->shouldNotBeCalled();
+    $route_preloader = $this->prophesize(RoutePreloader::class);
 
-    $generator = new UrlGenerator($this->provider, $path_processor->reveal(), $this->routeProcessorManager, $this->requestStack, ['http', 'https']);
+    $generator = new UrlGenerator($this->provider, $path_processor->reveal(), $this->routeProcessorManager, $this->requestStack, $route_preloader->reveal(), ['http', 'https']);
     $generator->setContext($this->context);
 
     $url = $this->generator->generateFromRoute('test_1', [], ['path_processing' => FALSE]);
@@ -261,11 +273,12 @@ class UrlGeneratorTest extends UnitTestCase {
   public function testUrlGenerationWithDisabledPathProcessingByRoute() {
     $path_processor = $this->prophesize(OutboundPathProcessorInterface::class);
     $path_processor->processOutbound(Argument::cetera())->shouldNotBeCalled();
+    $route_preloader = $this->prophesize(RoutePreloader::class);
 
     $provider = $this->prophesize(RouteProviderInterface::class);
     $provider->getRouteByName('test_1')->willReturn(new Route('/test/one', [], [], ['default_url_options' => ['path_processing' => FALSE]]));
 
-    $generator = new UrlGenerator($provider->reveal(), $path_processor->reveal(), $this->routeProcessorManager, $this->requestStack, ['http', 'https']);
+    $generator = new UrlGenerator($provider->reveal(), $path_processor->reveal(), $this->routeProcessorManager, $this->requestStack, $route_preloader->reveal(), ['http', 'https']);
     $generator->setContext($this->context);
 
     $url = $generator->generateFromRoute('test_1', []);
@@ -278,11 +291,12 @@ class UrlGeneratorTest extends UnitTestCase {
   public function testUrlGenerationWithDisabledPathProcessingByRouteAndOptedInPathProcessing() {
     $path_processor = $this->prophesize(OutboundPathProcessorInterface::class);
     $path_processor->processOutbound('/test/one', Argument::cetera())->willReturn('/hello/world')->shouldBeCalled();
+    $route_preloader = $this->prophesize(RoutePreloader::class);
 
     $provider = $this->prophesize(RouteProviderInterface::class);
     $provider->getRouteByName('test_1')->willReturn(new Route('/test/one', [], [], ['default_url_options' => ['path_processing' => FALSE]]));
 
-    $generator = new UrlGenerator($provider->reveal(), $path_processor->reveal(), $this->routeProcessorManager, $this->requestStack, ['http', 'https']);
+    $generator = new UrlGenerator($provider->reveal(), $path_processor->reveal(), $this->routeProcessorManager, $this->requestStack, $route_preloader->reveal(), ['http', 'https']);
     $generator->setContext($this->context);
 
     $url = $generator->generateFromRoute('test_1', [], ['path_processing' => TRUE]);
@@ -322,7 +336,6 @@ class UrlGeneratorTest extends UnitTestCase {
     $this->assertEquals('/goodbye/cruel/world', $url);
     // No cacheability to test; UrlGenerator::generate() doesn't support
     // collecting cacheability metadata.
-
     $this->routeProcessorManager->expects($this->any())
       ->method('processOutbound')
       ->with($this->anything());
@@ -415,7 +428,6 @@ class UrlGeneratorTest extends UnitTestCase {
     $this->assertEquals('http://localhost/hello/world', $url);
     // No cacheability to test; UrlGenerator::generate() doesn't support
     // collecting cacheability metadata.
-
     $this->routeProcessorManager->expects($this->exactly(2))
       ->method('processOutbound')
       ->with($this->anything());
@@ -433,7 +445,6 @@ class UrlGeneratorTest extends UnitTestCase {
     $this->assertEquals('http://localhost/hello/world', $url);
     // No cacheability to test; UrlGenerator::generate() doesn't support
     // collecting cacheability metadata.
-
     $this->routeProcessorManager->expects($this->exactly(2))
       ->method('processOutbound')
       ->with($this->anything());
@@ -486,7 +497,6 @@ class UrlGeneratorTest extends UnitTestCase {
     $this->assertEquals('https://localhost/test/four', $url);
     // No cacheability to test; UrlGenerator::generate() doesn't support
     // collecting cacheability metadata.
-
     $this->routeProcessorManager->expects($this->exactly(2))
       ->method('processOutbound')
       ->with($this->anything());
