@@ -172,6 +172,11 @@
     this.$toggleWeightButton = null;
 
     /**
+     * @type {?jQuery}
+     */
+    this.$toggleDisabledMenuButton = null;
+
+    /**
      * Check this table's settings for parent relationships.
      *
      * For efficiency, large sections of code can be skipped if we don't need to
@@ -236,6 +241,23 @@
       }, this),
     );
     $table.before($toggleWeightWrapper);
+
+    // toggle button for disabled menu items
+    const $toggleDisabledMenuWrapper = $(Drupal.theme('tableDragToggleDisabledMenu'));
+    this.$toggleDisabledMenuButton = $toggleDisabledMenuWrapper.find(
+      '[data-drupal-selector="tabledrag-toggle-disabled-menu"]',
+    );
+    this.$toggleDisabledMenuButton.on(
+      'click',
+      $.proxy(function (e) {
+        e.preventDefault();
+        this.toggleDisabledMenuRow();
+      }, this),
+    );
+    $table.find('th#menu-table-disabled-menus-hide-btn').append($toggleDisabledMenuWrapper);
+    // initialize menu items with shown state
+    this.displayDisabledMenu('true');
+
 
     // Initialize the specified columns (for example, weight or parent columns)
     // to show or hide according to user preference. This aids accessibility
@@ -375,6 +397,34 @@
       !!displayWeight,
     );
   };
+
+  /**
+   * Hide or display disabled menu items. Triggers an event on change.
+   *
+   * @fires event:columnschange
+   *
+   * @param {boolean} showDisabledMenu
+   *   'true' will show weight columns.
+   */
+  Drupal.tableDrag.prototype.displayDisabledMenu = function (showDisabledMenu) {
+    this.$toggleDisabledMenuButton.html(
+      Drupal.theme('toggleDisabledMenuButtonContent', showDisabledMenu),
+    );
+  };
+
+  /**
+   * Toggle the Enabled column and toggle button depending on 'showWeight' value.
+   *
+   */
+  Drupal.tableDrag.prototype.toggleDisabledMenuRow = function () {
+
+    if ($('#menu-overview tr.menu-disabled').is(":visible")) {
+      this.displayDisabledMenu(false);
+    } else {
+      this.displayDisabledMenu(true);
+    }
+    $('#menu-overview tr.menu-disabled').toggle();
+      };
 
   /**
    * Toggle the weight column depending on 'showWeight' value.

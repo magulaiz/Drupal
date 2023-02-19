@@ -253,6 +253,7 @@ class MenuForm extends EntityForm {
         [
           'data' => $this->t('Enabled'),
           'class' => ['checkbox'],
+           'id' => 'menu-table-disabled-menus-hide-btn',
         ],
         $this->t('Weight'),
         [

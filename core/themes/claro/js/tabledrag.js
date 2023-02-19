@@ -192,6 +192,45 @@
        * @return {string}
        *   HTML markup for the weight toggle button and its container.
        */
+      tableDragToggleDisabledMenu: () =>
+        `<div class="tabledrag-toggle-disabled-menu-wrapper" data-drupal-selector="tabledrag-toggle-disabled-menu-wrapper">
+            <button type="button" class="link action-link tabledrag-toggle-disabled-menu" data-drupal-selector="tabledrag-toggle-disabled-menu"></button>
+            </div>`,
+
+      /**
+       * Constructs contents of the toggle disabled menus button.
+       *
+       * @param {boolean} show
+       *   If the disabled menus are currently displayed.
+       *
+       * @return {string}
+       *  HTML markup for the disabled menus toggle button content.
+       */
+      toggleDisabledMenuButtonContent: (menuShow) => {
+        const classes = [
+          '',
+          'nowrap',
+          'action-link',
+          'action-link--extrasmall',
+          'tabledrag-toggle-disabled-menu',
+        ];
+        let text = '';
+        if (menuShow) {
+          classes.push('action-link--icon-hide');
+          text = Drupal.t('Hide disabled');
+        } else {
+          classes.push('action-link--icon-show');
+          text = Drupal.t('Show disabled');
+        }
+        return `<span class="${classes.join(' ')}">${text}</a>`;
+      },
+
+      /**
+       * The button for toggling table rows with disabled menu.
+       *
+       * @return {string}
+       *   HTML markup for the weight toggle button and its container.
+       */
       tableDragToggle: () =>
         `<div class="tabledrag-toggle-weight-wrapper" data-drupal-selector="tabledrag-toggle-weight-wrapper">
             <button type="button" class="link action-link tabledrag-toggle-weight" data-drupal-selector="tabledrag-toggle-weight"></button>
