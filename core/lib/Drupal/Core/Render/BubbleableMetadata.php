@@ -46,10 +46,10 @@ class BubbleableMetadata extends CacheableMetadata implements AttachmentsInterfa
   /**
    * Applies the values of this bubbleable metadata object to a render array.
    *
-   * @param array &$build
+   * @param array|\Drupal\Core\Render\RenderableElementInterface &$build
    *   A render array.
    */
-  public function applyTo(array &$build) {
+  public function applyTo(array|RenderableElementInterface &$build) {
     parent::applyTo($build);
     $build['#attached'] = $this->attachments;
   }
@@ -57,12 +57,12 @@ class BubbleableMetadata extends CacheableMetadata implements AttachmentsInterfa
   /**
    * Creates a bubbleable metadata object with values taken from a render array.
    *
-   * @param array $build
+   * @param array|\Drupal\Core\Render\RenderableElementInterface $build
    *   A render array.
    *
    * @return static
    */
-  public static function createFromRenderArray(array $build) {
+  public static function createFromRenderArray(array|RenderableElementInterface $build) {
     $meta = parent::createFromRenderArray($build);
     $meta->attachments = (isset($build['#attached'])) ? $build['#attached'] : [];
     return $meta;

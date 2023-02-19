@@ -30,14 +30,14 @@ class Element {
   /**
    * Gets properties of a structured array element (keys beginning with '#').
    *
-   * @param array $element
+   * @param array|\Drupal\Core\Render\RenderableElementInterface $element
    *   An element array to return properties for.
    *
    * @return array
    *   An array of property keys for the element.
    */
-  public static function properties(array $element) {
-    return array_filter(array_keys($element), [static::class, 'property']);
+  public static function properties(array|RenderableElementInterface $element) {
+    return array_filter(array_keys(is_array($element) ?: $element->toArray()), [static::class, 'property']);
   }
 
   /**
@@ -60,7 +60,7 @@ class Element {
    * not start with a '#'. See \Drupal\Core\Render\RendererInterface::render()
    * for details.
    *
-   * @param array $elements
+   * @param array|\Drupal\Core\Render\RenderableElementInterface $elements
    *   The element array whose children are to be identified. Passed by
    *   reference.
    * @param bool $sort
@@ -69,12 +69,12 @@ class Element {
    * @return array
    *   The array keys of the element's children.
    */
-  public static function children(array &$elements, $sort = FALSE) {
+  public static function children(array|RenderableElementInterface &$elements, $sort = FALSE) {
     // Do not attempt to sort elements which have already been sorted.
     $sort = isset($elements['#sorted']) ? !$elements['#sorted'] : $sort;
 
     // Filter out properties from the element, leaving only children.
-    $count = count($elements);
+    $count = count(is_array($elements) ?: $element->toArray());
     $child_weights = [];
     $i = 0;
     $sortable = FALSE;
@@ -121,13 +121,13 @@ class Element {
   /**
    * Returns the visible children of an element.
    *
-   * @param array $elements
+   * @param array|\Drupal\Core\Render\RenderableElementInterface $elements
    *   The parent element.
    *
    * @return array
    *   The array keys of the element's visible children.
    */
-  public static function getVisibleChildren(array $elements) {
+  public static function getVisibleChildren(array|RenderableElementInterface $elements) {
     $visible_children = [];
 
     foreach (static::children($elements) as $key) {
@@ -147,7 +147,7 @@ class Element {
   /**
    * Determines if an element is visible.
    *
-   * @param array $element
+   * @param array|\Drupal\Core\Render\RenderableElementInterface $element
    *   The element to check for visibility.
    *
    * @return bool
@@ -162,7 +162,7 @@ class Element {
   /**
    * Sets HTML attributes based on element properties.
    *
-   * @param array $element
+   * @param array|\Drupal\Core\Render\RenderableElementInterface $element
    *   The renderable element to process. Passed by reference.
    * @param array $map
    *   An associative array whose keys are element property names and whose
@@ -171,7 +171,7 @@ class Element {
    *   names are identical except for the leading '#', then an attribute name
    *   value is sufficient and no property name needs to be specified.
    */
-  public static function setAttributes(array &$element, array $map) {
+  public static function setAttributes(array|RenderableElementInterface &$element, array $map) {
     foreach ($map as $property => $attribute) {
       // If the key is numeric, the attribute name needs to be taken over.
       if (is_int($property)) {
@@ -190,14 +190,14 @@ class Element {
    * An element that only has #cache or #weight set is considered
    * empty, because it will render to the empty string.
    *
-   * @param array $elements
+   * @param array|\Drupal\Core\Render\RenderableElementInterface $elements
    *   The element.
    *
    * @return bool
    *   Whether the given element is empty.
    */
-  public static function isEmpty(array $elements) {
-    return \array_diff(\array_keys($elements), ['#cache', '#weight']) === [];
+  public static function isEmpty(array|RenderableElementInterface $elements) {
+    return \array_diff(\array_keys(is_array($elements) ?: $elements->toArray()), ['#cache', '#weight']) === [];
   }
 
 }

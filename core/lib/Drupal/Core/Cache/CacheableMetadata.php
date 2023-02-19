@@ -129,10 +129,10 @@ class CacheableMetadata implements RefinableCacheableDependencyInterface {
   /**
    * Applies the values of this CacheableMetadata object to a render array.
    *
-   * @param array &$build
+   * @param array|\Drupal\Core\Render\RenderableElementInterface &$build
    *   A render array.
    */
-  public function applyTo(array &$build) {
+  public function applyTo(array|RenderableElementInterface &$build) {
     $build['#cache']['contexts'] = $this->cacheContexts;
     $build['#cache']['tags'] = $this->cacheTags;
     $build['#cache']['max-age'] = $this->cacheMaxAge;
@@ -141,12 +141,12 @@ class CacheableMetadata implements RefinableCacheableDependencyInterface {
   /**
    * Creates a CacheableMetadata object with values taken from a render array.
    *
-   * @param array $build
+   * @param array|\Drupal\Core\Render\RenderableElementInterface $build
    *   A render array.
    *
    * @return static
    */
-  public static function createFromRenderArray(array $build) {
+  public static function createFromRenderArray(array|RenderableElementInterface $build) {
     $meta = new static();
     $meta->cacheContexts = (isset($build['#cache']['contexts'])) ? $build['#cache']['contexts'] : [];
     $meta->cacheTags = (isset($build['#cache']['tags'])) ? $build['#cache']['tags'] : [];
