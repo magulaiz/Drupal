@@ -123,7 +123,6 @@ use Drupal\Core\Url;
  * @see plugin_api
  *
  * @ingroup theme_render
- * @RenderElement("default")
  */
 abstract class RenderElement extends PluginBase implements ElementInterface {
 

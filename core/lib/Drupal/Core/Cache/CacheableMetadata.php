@@ -2,6 +2,8 @@
 
 namespace Drupal\Core\Cache;
 
+use Drupal\Core\Render\RenderableElementInterface;
+
 /**
  * Defines a generic class for passing cacheability metadata.
  *

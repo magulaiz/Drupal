@@ -219,7 +219,7 @@ class Renderer implements RendererInterface {
     }
 
     if (is_array($elements)) {
-      $elements = \Drupal::service('element_info')->createInstance('default')->fromArray($elements);
+      $elements = \Drupal::service('plugin.manager.element_info')->createInstance('default')->fromArray($elements);
     }
 
     if ($this->rendererConfig['debug'] === TRUE) {
@@ -354,7 +354,7 @@ class Renderer implements RendererInterface {
         throw new \LogicException('When #create_placeholder is set, a #lazy_builder callback must be present as well.');
       }
       $placeholder = $this->placeholderGenerator->createPlaceholder($elements->toArray());
-      $elements = \Drupal::service('element_info')->createInstance('default')->fromArray($placeholder);
+      $elements = \Drupal::service('plugin.manager.element_info')->createInstance('default')->fromArray($placeholder);
     }
     // Build the element if it is still empty.
     if (isset($elements['#lazy_builder'])) {
@@ -370,7 +370,7 @@ class Renderer implements RendererInterface {
       if (isset($elements['#cache']['keys'])) {
         $new_elements['#cache']['keys'] = $elements['#cache']['keys'];
       }
-      $elements = \Drupal::service('element_info')->createInstance('default')->fromArray($new_elements);
+      $elements = \Drupal::service('plugin.manager.element_info')->createInstance('default')->fromArray($new_elements);
       $elements['#lazy_builder_built'] = TRUE;
     }
 
