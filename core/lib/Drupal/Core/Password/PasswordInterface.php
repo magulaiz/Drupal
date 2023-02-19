@@ -52,6 +52,6 @@ interface PasswordInterface {
    * @return bool
    *   TRUE if the hash is outdated and needs rehash.
    */
-  public function needsRehash($hash);
+  public function needsRehash(#[\SensitiveParameter] $hash);
 
 }
