@@ -114,28 +114,32 @@ class CoreServiceProvider implements ServiceProviderInterface, ServiceModifierIn
       $uuid_service->setClass('Drupal\Component\Uuid\Com');
     }
 
-    // Enable theme debug mode if set in settings or in UI.
-    if (Settings::get('theme_debug') || $container->get('state')->get('theme_debug')) {
+    // Enable twig debug mode if set in settings or in UI.
+    if (Settings::get('twig_debug') || $container->get('state')->get('twig_debug')) {
       // Enable Twig debug mode.
       $twig_config = $container->getParameter('twig.config');
       $twig_config['debug'] = TRUE;
-      $twig_config['auto_reload'] = TRUE;
-      $twig_config['cache'] = FALSE;
-      $container->setParameter('twig.config', $twig_config);
+      $twig_config['auto_reload'] = (Settings::get('twig_autoreload') || $container->get('state')->get('twig_autoreload'));
 
-      // Set NullBackend for page, dynamic page cache and render bins.
-      // @note we cannot use the $settings['cache']['bin'] trick, because the
-      // settings file is a singleton. However, we can set the default backend
-      // which overrides the global default.
-      $cache_bins = ['page', 'dynamic_page_cache', 'render'];
-      $container->register('cache.backend.null', 'Drupal\Core\Cache\NullBackendFactory');
-      foreach ($cache_bins as $cache_bin) {
-        if ($container->has("cache.$cache_bin")) {
-          $container->getDefinition("cache.$cache_bin")
-            ->clearTag('cache.bin')
-            ->addTag('cache.bin', ['default_backend' => 'cache.backend.null']);
+      if ((Settings::get('twig_cache_disable') || $container->get('state')->get('twig_cache_disable'))) {
+        $twig_config['cache'] = FALSE;
+
+        // Set NullBackend for page, dynamic page cache and render bins.
+        // @note we cannot use the $settings['cache']['bin'] trick, because the
+        // settings file is a singleton. However, we can set the default backend
+        // which overrides the global default.
+        $cache_bins = ['page', 'dynamic_page_cache', 'render'];
+        $container->register('cache.backend.null', 'Drupal\Core\Cache\NullBackendFactory');
+        foreach ($cache_bins as $cache_bin) {
+          if ($container->has("cache.$cache_bin")) {
+            $container->getDefinition("cache.$cache_bin")
+              ->clearTag('cache.bin')
+              ->addTag('cache.bin', ['default_backend' => 'cache.backend.null']);
+          }
         }
       }
+
+      $container->setParameter('twig.config', $twig_config);
     }
   }
 

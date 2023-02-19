@@ -8,11 +8,11 @@ use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\KernelTests\KernelTestBase;
 
 /**
- * Tests theme_debug functionality.
+ * Tests twig_debug functionality.
  *
  * @group Theme
  */
-class ThemeDebugTest extends KernelTestBase {
+class TwigDebugTest extends KernelTestBase {
 
   /**
    * {@inheritdoc}
@@ -31,14 +31,15 @@ class ThemeDebugTest extends KernelTestBase {
     $this->assertCacheBinFactory('dynamic_page_cache', MemoryBackendFactory::class);
     $this->assertCacheBinFactory('page', MemoryBackendFactory::class);
     $this->assertCacheBinFactory('render', MemoryBackendFactory::class);
-    $this->enableThemeDebug();
+    $this->enableTwigDebug();
     $this->assertCacheBinFactory('dynamic_page_cache', NullBackendFactory::class);
     $this->assertCacheBinFactory('page', NullBackendFactory::class);
     $this->assertCacheBinFactory('render', NullBackendFactory::class);
   }
 
-  private function enableThemeDebug(): void {
-    $this->setSetting('theme_debug', TRUE);
+  private function enableTwigDebug(): void {
+    $this->setSetting('twig_debug', TRUE);
+    $this->setSetting('twig_cache_disable', TRUE);
     $this->container->get('kernel')->rebuildContainer();
   }
 

@@ -797,6 +797,16 @@ $settings['migrate_node_migrate_type_classic'] = FALSE;
 # $settings['migrate_file_private_path'] = '';
 
 /**
+ * Twig development settings.
+ *
+ * Autoreload and cache disable flags depend both on debug mode being enabled,
+ * and their values will be ignored when Twig debug is disabled.
+ */
+# $settings['twig_debug'] = FALSE;
+# $settings['twig_autoreload'] = FALSE;
+# $settings['twig_cache_disable'] = FALSE;
+
+/**
  * Load local development override configuration, if available.
  *
  * Create a settings.local.php file to override variables on secondary (staging,

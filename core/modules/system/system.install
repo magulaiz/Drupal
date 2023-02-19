@@ -1508,14 +1508,14 @@ function system_requirements($phase) {
     }
   }
 
-  // Add warning when theme debug option is enabled.
-  if ($phase === 'runtime' && (Settings::get('theme_debug') || \Drupal::state()->get('theme_debug'))) {
-    $requirements['theme_debug_enabled'] = [
-      'title' => t('Theme debug mode'),
-      'value' => t('Debug mode for theme is enabled. Go to @link to disable it.', [
+  // Add warning when twig debug option is enabled.
+  if ($phase === 'runtime' && (Settings::get('twig_debug') || \Drupal::state()->get('twig_debug', FALSE))) {
+    $requirements['twig_debug_enabled'] = [
+      'title' => t('Twig debug mode'),
+      'value' => t('Debug mode for twig is enabled. Go to @link to disable it.', [
         '@link' => Link::createFromRoute(
-          'performance settings page',
-          'system.performance_settings',
+          'developer settings page',
+          'system.developer_settings',
         )->toString(),
       ]),
       'severity' => REQUIREMENT_WARNING,
