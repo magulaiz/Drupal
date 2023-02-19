@@ -95,10 +95,7 @@ class CsrfRequestHeaderAccessCheck implements AccessCheckInterface {
         return AccessResult::forbidden()->setReason('X-CSRF-Token request header is missing')->setCacheMaxAge(0);
       }
       $csrf_token = $request->headers->get('X-CSRF-Token');
-      // @todo Remove validate call using 'rest' in 8.3.
-      //   Kept here for sessions active during update.
-      if (!$this->csrfToken->validate($csrf_token, self::TOKEN_KEY)
-        && !$this->csrfToken->validate($csrf_token, 'rest')) {
+      if (!$this->csrfToken->validate($csrf_token, 'rest')) {
         return AccessResult::forbidden()->setReason('X-CSRF-Token request header is invalid')->setCacheMaxAge(0);
       }
     }
