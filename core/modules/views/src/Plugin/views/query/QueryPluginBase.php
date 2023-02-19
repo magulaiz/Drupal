@@ -36,7 +36,7 @@ abstract class QueryPluginBase extends PluginBase implements CacheableDependency
   /**
    * A pager plugin that should be provided by the display.
    *
-   * @var views_plugin_pager
+   * @var \Drupal\views\Plugin\views\pager\PagerPluginBase|null
    */
   public $pager = NULL;
 
@@ -172,7 +172,7 @@ abstract class QueryPluginBase extends PluginBase implements CacheableDependency
    * @param $where
    *   'where' or 'having'.
    *
-   * @return
+   * @return int|string
    *   The group ID generated.
    */
   public function setWhereGroup($type = 'AND', $group = NULL, $where = 'where') {
