@@ -74,7 +74,7 @@ class Element {
     $sort = isset($elements['#sorted']) ? !$elements['#sorted'] : $sort;
 
     // Filter out properties from the element, leaving only children.
-    $count = count(is_array($elements) ?: $element->toArray());
+    $count = count(is_array($elements) ? $elements : $elements->toArray());
     $child_weights = [];
     $i = 0;
     $sortable = FALSE;
@@ -197,7 +197,7 @@ class Element {
    *   Whether the given element is empty.
    */
   public static function isEmpty(array|RenderableElementInterface $elements) {
-    return \array_diff(\array_keys(is_array($elements) ?: $elements->toArray()), ['#cache', '#weight']) === [];
+    return \array_diff(\array_keys(is_array($elements) ? $elements : $elements->toArray()), ['#cache', '#weight']) === [];
   }
 
 }
