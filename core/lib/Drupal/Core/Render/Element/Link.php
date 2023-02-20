@@ -59,7 +59,7 @@ class Link extends RenderElement {
   public static function preRenderLink($element) {
     // By default, link options to pass to the link generator are normally set
     // in #options.
-    $element += ['#options' => []];
+    $element->addFromArray(['#options' => []]);
     // However, within the scope of renderable elements, #attributes is a valid
     // way to specify attributes, too. Take them into account, but do not override
     // attributes from #options.
@@ -183,7 +183,7 @@ class Link extends RenderElement {
    *   Render array containing child links grouped into a single array.
    */
   public static function preRenderLinks($element) {
-    $element += ['#links' => [], '#attached' => []];
+    $element->addFromArray(['#links' => [], '#attached' => []]);
     foreach (Element::children($element) as $key) {
       $child = &$element[$key];
       // If the child has links which have not been printed yet and the user has

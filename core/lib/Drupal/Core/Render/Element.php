@@ -80,7 +80,7 @@ class Element {
     $sortable = FALSE;
     foreach ($elements as $key => $value) {
       if (is_int($key) || $key === '' || $key[0] !== '#') {
-        if (is_array($value)) {
+        if (is_array($value) || $value instanceof RenderableElementInterface) {
           if (isset($value['#weight'])) {
             $weight = $value['#weight'];
             $sortable = TRUE;

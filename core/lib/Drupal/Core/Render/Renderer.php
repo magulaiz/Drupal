@@ -276,7 +276,7 @@ class Renderer implements RendererInterface {
     if (isset($elements['#cache']['keys'])) {
       $cached_element = $this->renderCache->get($elements->toArray());
       if ($cached_element !== FALSE) {
-        $elements = $cached_element;
+        $elements = \Drupal::service('plugin.manager.element_info')->createInstance('generic')->fromArray($cached_element);
         // Only when we're in a root (non-recursive) Renderer::render() call,
         // placeholders must be processed, to prevent breaking the render cache
         // in case of nested elements with #cache set.
