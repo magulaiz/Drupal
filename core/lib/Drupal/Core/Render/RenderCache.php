@@ -6,6 +6,7 @@ use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Cache\Context\CacheContextsManager;
 use Drupal\Core\Cache\CacheFactoryInterface;
+use Drupal\Core\Render\RenderableElementInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
@@ -328,7 +329,7 @@ class RenderCache implements RenderCacheInterface {
   /**
    * {@inheritdoc}
    */
-  public function getCacheableRenderArray(array $elements) {
+  public function getCacheableRenderArray(array|RenderableElementInterface $elements) {
     $data = [
       '#markup' => $elements['#markup'],
       '#attached' => $elements['#attached'],
