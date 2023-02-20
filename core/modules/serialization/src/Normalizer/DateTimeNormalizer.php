@@ -88,7 +88,7 @@ class DateTimeNormalizer extends NormalizerBase implements DenormalizerInterface
   public function denormalize($data, $class, $format = NULL, array $context = []): mixed {
     // This only knows how to denormalize datetime strings and timestamps. If
     // something else is received, let validation constraints handle this.
-    if (!is_string($data) && !is_numeric($data)) {
+    if (!is_string($data) && !is_numeric($data) || empty($data)) {
       return $data;
     }
 
