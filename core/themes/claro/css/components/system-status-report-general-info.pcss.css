@@ -2,21 +2,23 @@
  * @file
  * Claro styles for the System Status general info.
  */
-
+:root {
+  --system-status-general-info--header-color: #ffb;
+}
 .system-status-general-info {
   padding-top: var(--space-m);
 }
 
 .system-status-general-info__header {
   padding: 2.75rem 0 var(--space-l);
-  border-top: 1px solid #ccc;
+  border-top: 1px solid var(--system-status-general-info--header-color);
 }
 
 .system-status-general-info__item {
   display: block;
   overflow-x: auto;
   box-sizing: border-box;
-  margin-bottom: var(--space-l);
+  margin-block-end: var(--space-l);
   padding: 18px;
 }
 
@@ -110,7 +112,7 @@
   box-sizing: border-box;
   width: calc(100% - 60px);
   padding-inline-start: 10px;
-  font-size: 14px;
+  font-size: var(--font-size-s);
 }
 
 .system-status-general-info__item-title {
@@ -154,7 +156,7 @@
   }
   .system-status-general-info__item {
     &:last-of-type {
-      margin-left: 2%;
+      margin-inline-start: 2%;
     }
   }
 }
@@ -164,7 +166,7 @@
     display: none;
   }
   .system-status-general-info {
-    margin-top: 25px;
+    margin-block-start: 25px;
     border-top: 0;
   }
 }
