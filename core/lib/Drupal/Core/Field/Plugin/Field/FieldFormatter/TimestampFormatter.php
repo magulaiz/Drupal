@@ -258,7 +258,7 @@ class TimestampFormatter extends FormatterBase {
         $refresh_intervals = $this->getRefreshIntervals();
         $summary[] = $this->t('Refresh every @interval', ['@interval' => $refresh_intervals[$time_diff['refresh']]]);
       }
-      $summary[] = $this->t('Disabled Javascript format: @date_format', ['@date_format' => $date_format]);
+      $summary[] = $this->t('Disabled JavaScript format: @date_format', ['@date_format' => $date_format]);
     }
     else {
       $summary[] = $this->t('Date format: @date_format', ['@date_format' => $date_format]);
