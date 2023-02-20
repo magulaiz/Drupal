@@ -507,8 +507,8 @@ abstract class RenderElement extends PluginBase implements ElementInterface {
   /**
    * {@inheritdoc}
    */
-	public function offsetGet($offset): mixed {
-    return $this->container[$offset] ?? NULL;
+	public function &offsetGet($offset): mixed {
+    return $this->data[$offset] ?? NULL;
   }
 
   /**
@@ -516,9 +516,9 @@ abstract class RenderElement extends PluginBase implements ElementInterface {
    */
 	public function offsetSet($offset, $value): void {
 		if (is_null($offset)) {
-			$this->container[] = $value;
+			$this->data[] = $value;
 		} else {
-			$this->container[$offset] = $value;
+			$this->data[$offset] = $value;
 		}
   }
 
@@ -526,7 +526,7 @@ abstract class RenderElement extends PluginBase implements ElementInterface {
    * {@inheritdoc}
    */
 	public function offsetUnset($offset): void {
-    unset($this->container[$offset]);
+    unset($this->data[$offset]);
   }
 
 }
