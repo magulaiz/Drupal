@@ -258,7 +258,7 @@ class PageCacheTest extends BrowserTestBase {
     $this->drupalLogin($user);
     $this->drupalGet('system-test/set-header', ['query' => ['name' => 'Foo', 'value' => 'bar']]);
     $this->assertSession()->responseHeaderDoesNotExist('X-Drupal-Cache');
-    $this->assertSession()->responseHeaderNotContains('Vary', 'cookie');
+    $this->assertSession()->responseHeaderContains('Vary', 'cookie');
     $this->assertSession()->responseHeaderEquals('Cache-Control', 'must-revalidate, no-cache, private');
     $this->assertSession()->responseHeaderEquals('Expires', 'Sun, 19 Nov 1978 05:00:00 GMT');
     $this->assertSession()->responseHeaderEquals('Foo', 'bar');
