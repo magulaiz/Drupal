@@ -508,7 +508,7 @@ abstract class RenderElement extends PluginBase implements ElementInterface {
    * {@inheritdoc}
    */
 	public function &offsetGet($offset): mixed {
-    return $this->data[$offset] ?? NULL;
+    return $this->data[$offset];
   }
 
   /**
