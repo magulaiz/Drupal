@@ -4,7 +4,7 @@
  */
 
 .system-status-report__requirements-group {
-  padding-top: 20px;
+  padding-block-start: 20px;
 }
 .system-status-report__entry {
   overflow: auto;
@@ -15,8 +15,7 @@
   background-color: transparent;
 
   & h3 {
-    margin-top: 10px;
-    margin-bottom: 10px;
+    margin-block: 10px;
     font-size: 1.231em;
   }
 }
@@ -30,7 +29,7 @@
 .system-status-report {
   & .claro-details {
     border: none;
-    border-bottom: var(--details-border-size) solid var(--details-border-color);
+    border-block-end: var(--details-border-size) solid var(--details-border-color);
     box-shadow: none;
   }
 }
@@ -39,26 +38,27 @@
   position: relative;
   box-sizing: border-box;
   width: 100%;
-  padding: 1em 1em 1em 3em; /* LTR */
+  padding: 1em 1em 1em 3em;
   font-weight: bold;
 }
 
 .system-status-report__status-icon:before {
   position: absolute;
-  top: 1em;
-  inset-block-start: 10px;
+  inset-block-start: 1em;
+  inset-inline-start: 10px;
   display: inline-block;
   width: 24px;
   height: 24px;
-  margin-right: 10px; /* LTR */
+  margin-inline-end: 10px;
   content: "";
   vertical-align: top;
   background-repeat: no-repeat;
   background-position: top center;
   background-size: contain;
-}
-[dir="rtl"] .system-status-report__status-icon:before {
-  margin-right: 0;
+
+  @nest [dir="rtl"] & {
+    margin-inline-end: 0;
+  }
 }
 .system-status-report__status-icon--error:before {
   background-image: url(../../../../misc/icons/dc2323/error.svg);
@@ -68,34 +68,26 @@
 }
 
 @media (forced-colors: active) {
-  .system-status-report__status-icon {
-    &:before {
-      background-color: canvastext;
-      background-image: none;
-      mask-repeat: no-repeat;
-      mask-position: top center;
-      mask-size: contain;
-    }
+  .system-status-report__status-icon:before {
+    background-color: canvastext;
+    background-image: none;
+    mask-repeat: no-repeat;
+    mask-position: top center;
+    mask-size: contain;
   }
-  .system-status-report__status-icon--error {
-    &:before {
-      mask-image: url(../../../../misc/icons/dc2323/error.svg);
-    }
+  .system-status-report__status-icon--error:before {
+    mask-image: url(../../../../misc/icons/dc2323/error.svg);
   }
-  .system-status-report__status-icon--warning {
-    &:before {
-      mask-image: url(../../images/core/e29700/warning.svg);
-    }
+  .system-status-report__status-icon--warning:before {
+    mask-image: url(../../images/core/e29700/warning.svg);
   }
 }
 
 .system-status-report__entry__value {
   box-sizing: border-box;
-  padding-block-start: 0;
-  padding-block-end: 1em;
-  padding-inline-start: 3em;
-  padding-inline-end: 1em;
-  font-size: 14px;
+  padding-block: 0 1em;
+  padding-inline: 3em 1em;
+  font-size: var(--font-size-s);
 }
 
 .claro-details__summary--system-status-report {
@@ -117,6 +109,7 @@
   .system-status-report__status-title {
     width: 18rem;
     cursor: default;
+
     &:hover,
     &:focus {
       text-decoration: none;
@@ -129,7 +122,7 @@
   .system-status-report__entry__value {
     display: block;
     width: calc(100% - 23em);
-    padding-top: 1em;
+    padding-block-start: 1em;
     padding-inline-start: 0;
   }
 }
