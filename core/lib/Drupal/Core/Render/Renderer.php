@@ -313,7 +313,7 @@ class Renderer implements RendererInterface {
     // If the default values for this element have not been loaded yet, populate
     // them.
     if (isset($elements['#type']) && empty($elements['#defaults_loaded'])) {
-      $elements += $this->elementInfo->getInfo($elements['#type']);
+      $elements->addFromArray($this->elementInfo->getInfo($elements['#type']));
     }
 
     // First validate the usage of #lazy_builder; both of the next if-statements

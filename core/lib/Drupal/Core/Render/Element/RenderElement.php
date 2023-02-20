@@ -493,6 +493,15 @@ abstract class RenderElement extends PluginBase implements ElementInterface {
   /**
    * {@inheritdoc}
    */
+  public function addFromArray($data) {
+    $this->data += $data;
+    return $this;
+  }
+
+
+  /**
+   * {@inheritdoc}
+   */
   public function getIterator(): \Traversable {
     return new \ArrayIterator($this->data);
   }
