@@ -8,8 +8,8 @@
   top: 50%;
   inset-inline-end: 1rem;
   width: 0.875rem; /* 14px */
-  height: 1rem; /* 16px */
-  margin-top: -0.5rem; /* -8px */
+  height: var(--space-m);
+  margin-block-start: -0.5rem; /* -8px */
   opacity: 0.5;
   background-image: url(../../images/icons/000f33/sort--inactive--ltr.svg);
   background-repeat: no-repeat;
