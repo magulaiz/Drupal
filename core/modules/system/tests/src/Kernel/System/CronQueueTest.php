@@ -175,7 +175,6 @@ class CronQueueTest extends KernelTestBase {
     $this->logger->expects($this->atLeast(2))
       ->method('log')
       ->withConsecutive(
-        [$this->anything()],
         [
           $this->equalTo(RfcLogLevel::ERROR),
           $this->equalTo('%type: @message in %function (line %line of %file).'),
@@ -183,6 +182,11 @@ class CronQueueTest extends KernelTestBase {
             return $args['@message'] === 'That is not supposed to happen.' &&
               $args['exception'] instanceof \Exception;
           }),
+        ],
+        [
+          $this->equalTo(RfcLogLevel::INFO),
+          $this->equalTo('Cron run completed.'),
+          $this->anything(),
         ],
       );
 
@@ -224,13 +228,17 @@ class CronQueueTest extends KernelTestBase {
     $this->logger->expects($this->atLeast(2))
       ->method('log')
       ->withConsecutive(
-        [$this->anything()],
         [
           $this->equalTo(RfcLogLevel::DEBUG),
           $this->equalTo('A worker for @queue queue suspended further processing of the queue.'),
           $this->callback(function ($args) {
             return $args['@queue'] === CronQueueTestSuspendQueue::PLUGIN_ID;
           }),
+        ],
+        [
+          $this->equalTo(RfcLogLevel::INFO),
+          $this->equalTo('Cron run completed.'),
+          $this->anything(),
         ],
       );
 
