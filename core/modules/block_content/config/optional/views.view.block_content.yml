@@ -302,7 +302,7 @@ display:
           admin_label: ''
           plugin_id: text_custom
           empty: true
-          content: 'No custom blocks are available.'
+          content: 'There are no custom blocks available.'
           tokenize: false
         block_content_listing_empty:
           id: block_content_listing_empty
