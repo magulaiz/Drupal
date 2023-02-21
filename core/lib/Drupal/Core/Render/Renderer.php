@@ -361,7 +361,7 @@ class Renderer implements RendererInterface {
       $new_elements = $this->doCallback('#lazy_builder', $elements['#lazy_builder'][0], $elements['#lazy_builder'][1]);
       // Throw an exception if #lazy_builder callback does not return an array;
       // provide helpful details for troubleshooting.
-      assert(is_array($new_elements), "#lazy_builder callbacks must return a valid renderable array, got " . gettype($new_elements) . " from " . Variable::callableToString($elements['#lazy_builder'][0]));
+      //assert(is_array($new_elements), "#lazy_builder callbacks must return a valid renderable array, got " . gettype($new_elements) . " from " . Variable::callableToString($elements['#lazy_builder'][0]));
 
       // Retain the original cacheability metadata, plus cache keys.
       CacheableMetadata::createFromRenderArray($elements)
@@ -370,7 +370,6 @@ class Renderer implements RendererInterface {
       if (isset($elements['#cache']['keys'])) {
         $new_elements['#cache']['keys'] = $elements['#cache']['keys'];
       }
-      $elements = \Drupal::service('plugin.manager.element_info')->createInstance('generic')->fromArray($new_elements);
       $elements['#lazy_builder_built'] = TRUE;
     }
 
@@ -790,7 +789,11 @@ class Renderer implements RendererInterface {
     // - All public methods on Render elements are considered trusted.
     // - Helper classes that contain only callback methods can implement this
     //   instead of TrustedCallbackInterface.
-    return $this->doTrustedCallback($callback, $args, $message, TrustedCallbackInterface::THROW_EXCEPTION, RenderCallbackInterface::class);
+    $result = $this->doTrustedCallback($callback, $args, $message, TrustedCallbackInterface::THROW_EXCEPTION, RenderCallbackInterface::class);
+    if (is_array($result)) {
+      $result = \Drupal::service('plugin.manager.element_info')->createInstance('generic')->fromArray($result);
+    }
+    return $result;
   }
 
   /**

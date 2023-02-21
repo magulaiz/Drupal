@@ -2,6 +2,8 @@
 
 namespace Drupal\Core\Render\Element;
 
+use Drupal\Core\Render\RenderableElementInterface;
+
 /**
  * Provides a messages element.
  *
@@ -45,7 +47,7 @@ class StatusMessages extends RenderElement {
    * @return array
    *   The updated renderable array containing the placeholder.
    */
-  public static function generatePlaceholder(array $element) {
+  public static function generatePlaceholder(RenderableElementInterface $element) {
     $build = [
       '#lazy_builder' => [get_class() . '::renderMessages', [$element['#display']]],
       '#create_placeholder' => TRUE,
