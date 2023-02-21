@@ -577,7 +577,7 @@ $settings['update_free_access'] = FALSE;
  * any added language. (eg locale_custom_strings_de for german).
  */
 # $settings['locale_custom_strings_en'][''] = [
-#   'Home'      => 'Frontpage',
+#   'Home' => 'Frontpage',
 #   '@count min' => '@count minutes',
 # ];
 
