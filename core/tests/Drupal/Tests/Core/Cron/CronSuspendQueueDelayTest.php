@@ -3,6 +3,8 @@
 namespace Drupal\Tests\Core\Cron;
 
 use Drupal\Component\Datetime\TimeInterface;
+use Drupal\Core\Config\ConfigFactoryInterface;
+use Drupal\Core\Config\ImmutableConfig;
 use Drupal\Core\Cron;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\Extension\ModuleHandlerInterface;
@@ -54,9 +56,13 @@ final class CronSuspendQueueDelayTest extends UnitTestCase {
    */
   protected function setUp(): void {
     parent::setUp();
+    $lock = $this->createMock(LockBackendInterface::class);
+    $lock->expects($this->any())
+      ->method('acquire')
+      ->willReturn(TRUE);
     $this->cronConstructorArguments = [
       'module_handler' => $this->createMock(ModuleHandlerInterface::class),
-      'lock' => $this->createMock(LockBackendInterface::class),
+      'lock' => $lock,
       'queue_factory' => $this->createMock(QueueFactory::class),
       'state' => $this->createMock(StateInterface::class),
       'account_switcher' => $this->createMock(AccountSwitcherInterface::class),
@@ -68,8 +74,19 @@ final class CronSuspendQueueDelayTest extends UnitTestCase {
 
     // Capture logs to watchdog_exception().
     $loggerFactory = $this->createMock(LoggerChannelFactoryInterface::class);
+    $config = $this->createMock(ImmutableConfig::class);
+    $config->expects($this->any())
+      ->method('get')
+      ->with('logging')
+      ->willReturn(0);
+    $configFactory = $this->createMock(ConfigFactoryInterface::class);
+    $configFactory->expects($this->any())
+      ->method('get')
+      ->with('system.cron')
+      ->willReturn($config);
     $container = new ContainerBuilder();
     $container->set('logger.factory', $loggerFactory);
+    $container->set('config.factory', $configFactory);
     \Drupal::setContainer($container);
 
     $loggerFactory->expects($this->atLeast(1))
