@@ -15,7 +15,7 @@ class BlockContentUpdateTest extends UpdatePathTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setDatabaseDumpFiles() {
+  protected function setDatabaseDumpFiles(): void {
     $this->databaseDumpFiles = [
       __DIR__ . '/../../../../../system/tests/fixtures/update/drupal-9.4.0.bare.standard.php.gz',
     ];
@@ -26,7 +26,7 @@ class BlockContentUpdateTest extends UpdatePathTestBase {
    *
    * @see block_content_post_update_move_custom_block_library()
    */
-  public function testMoveCustomBlockLibraryToContent() {
+  public function testMoveCustomBlockLibraryToContent(): void {
     $user = $this->drupalCreateUser(['administer blocks']);
     $this->drupalLogin($user);
     $this->drupalGet('admin/structure/block/block-content');
@@ -50,6 +50,24 @@ class BlockContentUpdateTest extends UpdatePathTestBase {
     $this->drupalLogin($user);
     $this->drupalGet('admin/content/block-content');
     $this->assertSession()->statusCodeEquals(200);
+  }
+
+  /**
+   * Tests the block_content view isn't updated if the path has been modified.
+   *
+   * @see block_content_post_update_move_custom_block_library()
+   */
+  public function testCustomBlockLibraryPathOverridden(): void {
+    $view = View::load('block_content');
+    $display =& $view->getDisplay('page_1');
+    $display['display_options']['path'] = 'some/custom/path';
+    $view->save();
+
+    $this->runUpdates();
+
+    $view = View::load('block_content');
+    $data = $view->toArray();
+    $this->assertEquals('some/custom/path', $data['display']['page_1']['display_options']['path']);
   }
 
 }
