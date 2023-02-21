@@ -352,14 +352,14 @@ class PageCache implements HttpKernelInterface {
     // the request format might be NULL during cache lookup and then set during
     // routing, in which case we want to key on NULL during writing, since that
     // will be the value during lookups for subsequent requests.
-    if (!isset($this->cid)) {
+    if (!$request->attributes->has('page_cache_id')) {
       $cid_parts = [
         $request->getSchemeAndHttpHost() . $request->getRequestUri(),
         $request->getRequestFormat(NULL),
       ];
-      $this->cid = implode(':', $cid_parts);
+      $request->attributes->set('page_cache_id', implode(':', $cid_parts));
     }
-    return $this->cid;
+    return $request->attributes->get('page_cache_id');
   }
 
 }
