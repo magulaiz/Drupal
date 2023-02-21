@@ -281,7 +281,7 @@ class Renderer implements RendererInterface {
         // placeholders must be processed, to prevent breaking the render cache
         // in case of nested elements with #cache set.
         if ($is_root_call) {
-          $this->replacePlaceholders($elements);
+          $this->replacePlaceholders($elements->asArray());
         }
         // Mark the element markup as safe if is it a string.
         if (is_string($elements['#markup'])) {
@@ -554,7 +554,7 @@ class Renderer implements RendererInterface {
     // Only the case of a cache hit when #cache is enabled, is not handled here,
     // that is handled earlier in Renderer::render().
     if ($is_root_call) {
-      $this->replacePlaceholders($elements);
+      $this->replacePlaceholders($elements->asArray());
       // @todo remove as part of https://www.drupal.org/node/2511330.
       if ($context->count() !== 1) {
         throw new \LogicException('A stray RendererInterface::render() invocation with $is_root_call = TRUE is causing bubbling of attached assets to break.');
@@ -641,7 +641,7 @@ class Renderer implements RendererInterface {
    *
    * @see \Drupal\Core\Render\Renderer::renderPlaceholder()
    */
-  protected function replacePlaceholders(RenderableElementInterface $elements) {
+  protected function replacePlaceholders(array &$elements) {
     if (!isset($elements['#attached']['placeholders']) || empty($elements['#attached']['placeholders'])) {
       return FALSE;
     }
