@@ -6,13 +6,14 @@
 :root {
   --module-table-cell-padding-vertical: var(--space-m);
   --module-table-cell-padding-horizontal: calc(var(--space-m) - (var(--input-border-size) * 2));
+  --module-table-filter-box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .modules-table-filter {
   padding: 0.25rem var(--space-l);
   border: 1px solid var(--color-gray-200);
   border-radius: 2px 2px 0 0;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: var(--module-table-filter-box-shadow);
 
   & .form-item__description {
     position: absolute !important;
@@ -27,8 +28,7 @@
 .claro-details {
   &.claro-details--package-listing,
   &.module-list__module-details {
-    margin-top: 2rem;
-    margin-bottom: 0;
+    margin-block: 2rem 0;
     border: none;
     box-shadow: none;
   }
@@ -38,7 +38,7 @@
       /* This adjustment is necessary for better alignment with the adjacent button
        text. */
       position: relative;
-      top: -1px;
+      inset-block-start: -1px;
       display: inline-block;
       width: calc(var(--space-m) * 2);
       height: 1.25rem;
@@ -58,7 +58,7 @@
   }
   & .tableresponsive-toggle-columns {
     & button {
-      margin-top: var(--space-xs);
+      margin-block-start: var(--space-xs);
       text-decoration: none;
       color: var(--color-gray-800);
       font-weight: bold;
@@ -87,24 +87,21 @@
     color: var(--color-text);
     border-radius: 4px;
     background: var(--color-gray-050);
-    font-size: 1.125rem; /* 18px */
+    font-size: var(--font-size-h6); /* 18px */
     line-height: 1.424rem; /* 23px */
   }
   &.module-list__module-summary {
-    padding-top: var(--module-table-cell-padding-vertical);
-    padding-bottom: var(--module-table-cell-padding-vertical);
+    padding-block: var(--module-table-cell-padding-vertical);
     font-weight: normal;
     line-height: var(--details-line-height);
   }
-  &.module-list__module-summary {
-    &::before {
-      top: calc(var(--space-m) + var(--space-s));
-    }
+  &.module-list__module-summary::before {
+    inset-block-start: calc(var(--space-m) + var(--space-s));
   }
 }
 
 .module-list {
-  margin-top: 0;
+  margin-block-start: 0;
 }
 
 .module-list__module {
@@ -138,17 +135,19 @@
   padding-inline-start: 0.6875rem;
   text-align: left; /* LTR */
 
-  & .form-type--checkbox {
+  @nest [dir="rtl"] & {
+    padding-left: var(--module-table-cell-padding-horizontal);
+    text-align: right;
+  }
+
+  @nest & .form-type--checkbox {
     margin: 0;
     line-height: var(--details-line-height);
   }
-  & .form-checkbox:not([disabled]) {
+
+  @nest & .form-checkbox:not([disabled]) {
     cursor: pointer;
   }
-}
-[dir="rtl"] .module-list__checkbox {
-  padding-left: var(--module-table-cell-padding-horizontal);
-  text-align: right;
 }
 
 td {
@@ -156,9 +155,8 @@ td {
     width: 4%;
   }
   &.module-list__description {
-    padding-top: 0;
-    padding-right: 0;
-    padding-bottom: 0;
+    padding-block: 0;
+    padding-inline-end: 0;
   }
 }
 
@@ -174,8 +172,7 @@ td {
 .module-details__links {
   position: relative;
   /* Negative margin matches the value of action link's top padding. */
-  margin-top: calc((var(--space-s) - ((var(--space-l) - var(--space-s)) / 2)) * -1);
-  margin-bottom: var(--space-m);
+  margin-block: calc((var(--space-s) - ((var(--space-l) - var(--space-s)) / 2)) * -1) var(--space-m);
 
   & .action-link {
     & + .action-link {
