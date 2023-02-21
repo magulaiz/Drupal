@@ -681,7 +681,7 @@ class Renderer implements RendererInterface {
   /**
    * {@inheritdoc}
    */
-  public function mergeBubbleableMetadata(array $a, array $b) {
+  public function mergeBubbleableMetadata(array|RenderableElementInterface $a, array|RenderableElementInterface $b) {
     $meta_a = BubbleableMetadata::createFromRenderArray($a);
     $meta_b = BubbleableMetadata::createFromRenderArray($b);
     $meta_a->merge($meta_b)->applyTo($a);
