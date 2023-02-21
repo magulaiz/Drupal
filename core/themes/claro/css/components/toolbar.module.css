@@ -46,7 +46,7 @@
   list-style-image: none;
 }
 .toolbar .menu-item {
-  padding-top: 0;
+  padding-block-start: 0;
 }
 .toolbar .toolbar-bar .toolbar-tab,
 .toolbar .menu-item {
@@ -70,7 +70,7 @@
 }
 .toolbar-horizontal .toolbar-tray {
   position: fixed;
-  left: 0;
+  inset-inline-start: 0;
   width: 100%;
 }
 /* Position the admin toolbar absolutely when the configured standard breakpoint
@@ -79,14 +79,12 @@
  * screens, the components of the admin toolbar are positioned statically. */
 .toolbar-oriented .toolbar-bar {
   position: absolute;
-  top: 0;
-  right: 0;
-  left: 0;
+  inset-block-start: 0;
+  inset-inline: 0;
 }
 .toolbar-oriented .toolbar-tray {
   position: absolute;
-  right: 0;
-  left: 0;
+  inset-inline: 0;
 }
 .toolbar-oriented .toolbar-bar {
   z-index: 502; /* Layer the bar just above the trays and above contextual link triggers. */
@@ -94,7 +92,6 @@
 .toolbar-oriented .toolbar-tray-vertical {
   position: absolute;
   inset-inline-start: -100%;
-  width: 240px;
   width: 15rem;
 }
 /* .toolbar-loading is required by Toolbar JavaScript to pre-render markup
@@ -123,8 +120,7 @@ body.toolbar-fixed .toolbar-oriented .toolbar-bar {
  * around the trays in order to provide a context for scrolling tray content
  * that is taller than the viewport. */
 body.toolbar-tray-open.toolbar-fixed.toolbar-vertical .toolbar-oriented {
-  bottom: 0;
-  width: 240px;
+  inset-block-end: 0;
   width: 15rem;
 }
 /* Present the admin toolbar tabs horizontally as a default on user agents that
@@ -227,9 +223,9 @@ body.toolbar-tray-open.toolbar-vertical.toolbar-fixed {
 }
 .toolbar-oriented .toolbar-tray-horizontal .toolbar-toggle-orientation {
   position: absolute;
-  top: auto;
+  inset-block-start: auto;
   inset-inline-end: 0;
-  bottom: 0;
+  inset-block-end: 0;
 }
 .toolbar-oriented .toolbar-tray-vertical .toolbar-toggle-orientation {
   float: right; /* LTR */
