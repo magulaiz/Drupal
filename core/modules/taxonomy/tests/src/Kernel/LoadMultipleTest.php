@@ -20,13 +20,11 @@ class LoadMultipleTest extends KernelTestBase {
    * {@inheritdoc}
    */
   protected static $modules = [
+    'system',
     'taxonomy',
-    'node',
     'user',
     'text',
-    'field',
     'filter',
-    'system',
   ];
 
   /**
@@ -35,10 +33,7 @@ class LoadMultipleTest extends KernelTestBase {
   protected function setUp(): void {
     parent::setUp();
 
-    $this->installEntitySchema('user');
-    $this->installEntitySchema('node');
     $this->installEntitySchema('taxonomy_term');
-    $this->installSchema('node', 'node_access');
   }
 
   /**
