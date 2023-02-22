@@ -272,7 +272,7 @@ class Cron implements CronInterface {
           $queue->delayItem($item, $e->getDelay());
         }
       }
-      catch (RequeueException $e) {
+      catch (RequeueException) {
         // The worker requested the task be immediately requeued.
         $queue->releaseItem($item);
       }
