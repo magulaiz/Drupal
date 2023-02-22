@@ -2,6 +2,8 @@
 
 namespace Drupal\TestTools;
 
+use Drupal\Core\Utility\OmitFromDump;
+use ReflectionClass;
 use Symfony\Component\VarDumper\Cloner\Stub;
 use Symfony\Component\VarDumper\Cloner\VarCloner;
 use Symfony\Component\VarDumper\Dumper\CliDumper;
@@ -16,43 +18,19 @@ use Symfony\Component\VarDumper\Dumper\HtmlDumper;
 class TestVarDumper {
 
   /**
-   * Class properties to remove when dump()ing an object.
-   *
-   * Keys are fully-qualified class names; values are arrays of property names.
-   * Only protected properties are supported.
-   *
-   * @var array
-   */
-  static protected $classPropertiesToRemove = [
-    \Drupal\Core\Entity\ContentEntityStorageBase::class => [
-      'fieldStorageDefinitions',
-      'tableMapping',
-      'database',
-      'moduleHandler',
-      'entityFieldManager',
-      'languageManager',
-      'entityTypeManager',
-    ],
-    \Drupal\Core\Entity\ContentEntityBase::class => [
-      'languages',
-      'fieldDefinitions',
-      'fields',
-      'typedData',
-    ],
-  ];
-
-  /**
    * A CLI handler for \Symfony\Component\VarDumper\VarDumper.
    */
   public static function cliHandler($var) {
     $cloner = new VarCloner();
 
-    $casters = [];
-    foreach (static::$classPropertiesToRemove as $class => $properties) {
-      $casters[$class] = static::class . '::' . 'removePropertiesCaster';
+    if (is_object($var)) {
+      // Add a caster specifically for the class of the object being dumped, as
+      // defining a general caster doesn't seem to be supported.
+      $casters = [
+        get_class($var) => static::class . '::' . 'removePropertiesCaster',
+      ];
+      $cloner->addCasters($casters);
     }
-
-    $cloner->addCasters($casters);
 
     $dumper = new CliDumper();
     fwrite(STDOUT, "\n");
@@ -72,13 +50,15 @@ class TestVarDumper {
   /**
    * Caster to remove properties from objects.
    *
-   * Uses the property lists set in static::$classPropertiesToRemove.
+   * Removes properties marked with the \Drupal\Core\Utility\OmitFromDump
+   * attribute.
    */
   public static function removePropertiesCaster($object, $array, Stub $stub, $isNested, $filter) {
-    foreach (class_parents($object) as $parent_class) {
-      if (isset(static::$classPropertiesToRemove[$parent_class])) {
-        foreach (static::$classPropertiesToRemove[$parent_class] as $property_name) {
-          unset($array["\0*\0" . $property_name]);
+    if (is_object($object)) {
+      $reflection_class = new \ReflectionClass($object);
+      foreach ($reflection_class->getProperties() as $reflection_property) {
+        if ($reflection_property->getAttributes(OmitFromDump::class)) {
+          unset($array["\0*\0" . $reflection_property->getName()]);
         }
       }
     }
