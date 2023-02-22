@@ -191,6 +191,7 @@ class Cron implements CronInterface {
     );
 
     // Build a stack of queues to work on.
+    /** @var array<array{process_from: int<0, max>, queue: \Drupal\Core\Queue\QueueInterface, worker: \Drupal\Core\Queue\QueueWorkerInterface}> $queues */
     $queues = array_map(function (array $queue_info) {
       $queue_name = $queue_info['id'];
       $queue = $this->queueFactory->get($queue_name);
