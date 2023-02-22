@@ -11,6 +11,7 @@ use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\Menu\MenuParentFormSelectorInterface;
 use Drupal\Core\Path\PathValidatorInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Drupal\system\Entity\Menu;
 
 /**
  * Provides a form to add/update content menu links.
@@ -84,7 +85,11 @@ class MenuLinkContentForm extends ContentEntityForm {
 
     $default = $this->entity->getMenuName() . ':' . $this->entity->getParentId();
     $id = $this->entity->isNew() ? '' : $this->entity->getPluginId();
-    $form['menu_parent'] = $this->menuParentSelector->parentSelectElement($default, $id);
+    /** @var \Drupal\system\MenuInterface[] $type_menu */
+    $type_menu = Menu::load($this->entity->getMenuName());
+    $menu = [$type_menu->id() => $type_menu->label()];
+
+    $form['menu_parent'] = $this->menuParentSelector->parentSelectElement($default, $id, $menu);
     $form['menu_parent']['#weight'] = 10;
     $form['menu_parent']['#title'] = $this->t('Parent link');
     $form['menu_parent']['#description'] = $this->t('The maximum depth for a link and all its children is fixed. Some menu links may not be available as parents if selecting them would exceed this limit.');
