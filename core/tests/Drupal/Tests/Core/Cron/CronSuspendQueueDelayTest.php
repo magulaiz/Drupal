@@ -16,7 +16,6 @@ use Drupal\Core\Queue\QueueWorkerInterface;
 use Drupal\Core\Queue\QueueWorkerManagerInterface;
 use Drupal\Core\Queue\SuspendQueueException;
 use Drupal\Core\Session\AccountSwitcherInterface;
-use Drupal\Core\Site\Settings;
 use Drupal\Core\State\StateInterface;
 use Drupal\Tests\UnitTestCase;
 use Psr\Log\LoggerInterface;
@@ -69,7 +68,7 @@ final class CronSuspendQueueDelayTest extends UnitTestCase {
       'logger' => $this->createMock(LoggerInterface::class),
       'queue_manager' => $this->createMock(QueueWorkerManagerInterface::class),
       'time' => $this->createMock(TimeInterface::class),
-      'settings' => new Settings([]),
+      'queueConfig' => [],
     ];
 
     // Capture logs to watchdog_exception().
@@ -221,7 +220,7 @@ final class CronSuspendQueueDelayTest extends UnitTestCase {
    *
    * Cron will pause and reprocess a queue after a delay if a worker throws
    * a SuspendQueueException with a delay time not exceeding the maximum wait
-   * setting.
+   * config.
    *
    * @param float $threshold
    *   The configured threshold.
@@ -233,9 +232,9 @@ final class CronSuspendQueueDelayTest extends UnitTestCase {
    * @dataProvider providerSuspendQueueThreshold
    */
   public function testSuspendQueueThreshold(float $threshold, float $suspendQueueDelay, bool $expectQueueDelay): void {
-    $this->cronConstructorArguments['settings'] = new Settings([
-      'queue_suspend_maximum_wait' => $threshold,
-    ]);
+    $this->cronConstructorArguments['queueConfig'] = [
+      'suspendMaximumWait' => $threshold,
+    ];
     [
       'queue_factory' => $queueFactory,
       'queue_manager' => $queueManager,

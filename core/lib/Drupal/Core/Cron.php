@@ -17,7 +17,6 @@ use Drupal\Core\Queue\RequeueException;
 use Drupal\Core\Queue\SuspendQueueException;
 use Drupal\Core\Session\AccountSwitcherInterface;
 use Drupal\Core\Session\AnonymousUserSession;
-use Drupal\Core\Site\Settings;
 use Drupal\Core\State\StateInterface;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
@@ -84,11 +83,11 @@ class Cron implements CronInterface {
   protected $time;
 
   /**
-   * The site settings.
+   * The queue config.
    *
-   * @var \Drupal\Core\Site\Settings
+   * @var array
    */
-  protected $settings;
+  protected array $queueConfig;
 
   /**
    * Constructs a cron object.
@@ -109,10 +108,10 @@ class Cron implements CronInterface {
    *   The queue plugin manager.
    * @param \Drupal\Component\Datetime\TimeInterface|null $time
    *   The time service.
-   * @param \Drupal\Core\Site\Settings|null $settings
-   *   The site settings.
+   * @param mixed[]|null $queue_config
+   *   Queue configuration from the service container.
    */
-  public function __construct(ModuleHandlerInterface $module_handler, LockBackendInterface $lock, QueueFactory $queue_factory, StateInterface $state, AccountSwitcherInterface $account_switcher, LoggerInterface $logger, QueueWorkerManagerInterface $queue_manager, TimeInterface $time = NULL, Settings $settings = NULL) {
+  public function __construct(ModuleHandlerInterface $module_handler, LockBackendInterface $lock, QueueFactory $queue_factory, StateInterface $state, AccountSwitcherInterface $account_switcher, LoggerInterface $logger, QueueWorkerManagerInterface $queue_manager, TimeInterface $time = NULL, ?array $queue_config = NULL) {
     $this->moduleHandler = $module_handler;
     $this->lock = $lock;
     $this->queueFactory = $queue_factory;
@@ -120,8 +119,18 @@ class Cron implements CronInterface {
     $this->accountSwitcher = $account_switcher;
     $this->logger = $logger;
     $this->queueManager = $queue_manager;
-    $this->time = $time ?: \Drupal::service('datetime.time');
-    $this->settings = $settings ?: \Drupal::service('settings');
+    if (!isset($time)) {
+      @trigger_error('Calling ' . __METHOD__ . '() without the $time argument is deprecated in drupal:10.1.0 and will be required in drupal:11.0.0', E_USER_DEPRECATED);
+      $time = \Drupal::service('datetime.time');
+    }
+    $this->time = $time;
+    if (!isset($queue_config)) {
+      @trigger_error('Calling ' . __METHOD__ . '() without the $queue_config argument is deprecated in drupal:10.1.0 and will be required in drupal:11.0.0', E_USER_DEPRECATED);
+      $queue_config = \Drupal::getContainer()->getParameter('queue.config');
+    }
+    $this->queueConfig = $queue_config + [
+      'suspendMaximumWait' => 30.0,
+    ];
   }
 
   /**
@@ -180,8 +189,7 @@ class Cron implements CronInterface {
    * Processes cron queues.
    */
   protected function processQueues() {
-    $max_wait = $this->settings->get('queue_suspend_maximum_wait', 30.0);
-    assert(is_float($max_wait));
+    $max_wait = (float) $this->queueConfig['suspendMaximumWait'];
 
     $queues = array_filter(
       array_values($this->queueManager->getDefinitions()),

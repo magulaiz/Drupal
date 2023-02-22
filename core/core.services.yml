@@ -56,6 +56,8 @@ parameters:
     maxAge: false
     supportsCredentials: false
   tempstore.expire: 604800
+  queue.config:
+    suspendMaximumWait: 30.0
 services:
   # Simple cache contexts, directly derived from the request context.
   cache_context.ip:
