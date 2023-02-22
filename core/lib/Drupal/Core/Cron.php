@@ -120,12 +120,12 @@ class Cron implements CronInterface {
     $this->logger = $logger;
     $this->queueManager = $queue_manager;
     if (!isset($time)) {
-      @trigger_error('Calling ' . __METHOD__ . '() without the $time argument is deprecated in drupal:10.1.0 and will be required in drupal:11.0.0', E_USER_DEPRECATED);
+      @trigger_error('Calling ' . __METHOD__ . '() without the $time argument is deprecated in drupal:10.1.0 and will be required in drupal:11.0.0. See https://www.drupal.org/node/3343743', E_USER_DEPRECATED);
       $time = \Drupal::service('datetime.time');
     }
     $this->time = $time;
     if (!isset($queue_config)) {
-      @trigger_error('Calling ' . __METHOD__ . '() without the $queue_config argument is deprecated in drupal:10.1.0 and will be required in drupal:11.0.0', E_USER_DEPRECATED);
+      @trigger_error('Calling ' . __METHOD__ . '() without the $queue_config argument is deprecated in drupal:10.1.0 and will be required in drupal:11.0.0. See https://www.drupal.org/node/3343743', E_USER_DEPRECATED);
       $queue_config = \Drupal::getContainer()->getParameter('queue.config');
     }
     $this->queueConfig = $queue_config + [
