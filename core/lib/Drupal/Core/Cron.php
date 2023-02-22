@@ -199,9 +199,9 @@ class Cron implements CronInterface {
       $queue->createQueue();
       $worker = $this->queueManager->createInstance($queue_name);
       return [
-        // Each queue will be processed immediately when it is reached for the
-        // first time. The process_from timestamp will change if a queue is
-        // placed back onto the stack for processing later.
+        // Set process_from to zero so each queue is always processed
+        // immediately for the first time. This process_from timestamp will
+        // change if a queue throws a delayable SuspendQueueException.
         'process_from' => 0,
         'queue' => $queue,
         'worker' => $worker,
@@ -217,6 +217,8 @@ class Cron implements CronInterface {
         'process_from' => $process_from,
       ] = $item;
 
+      // Each queue will be processed immediately when it is reached for the
+      // first time, as zero > currentTime will never be true.
       if ($process_from > $this->time->getCurrentMicroTime()) {
         $this->usleep(round($process_from - $this->time->getCurrentMicroTime(), 3) * 1000000);
       }
