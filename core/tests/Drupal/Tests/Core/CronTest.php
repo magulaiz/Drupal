@@ -10,7 +10,6 @@ use Drupal\Core\Queue\DelayedRequeueException;
 use Drupal\Core\Queue\Memory;
 use Drupal\Core\Queue\RequeueException;
 use Drupal\Core\Queue\SuspendQueueException;
-use Drupal\Core\Site\Settings;
 use Drupal\Core\State\State;
 use Drupal\Tests\UnitTestCase;
 use Prophecy\Argument;
@@ -103,7 +102,9 @@ class CronTest extends UnitTestCase {
     $queue_worker_manager = $this->prophesize('Drupal\Core\Queue\QueueWorkerManagerInterface');
     $state = $this->prophesize('Drupal\Core\State\StateInterface');
     $account_switcher = $this->prophesize('Drupal\Core\Session\AccountSwitcherInterface');
-    $settings = new Settings([]);
+    $queueConfig = [
+      'suspendMaximumWait' => 30.0,
+    ];
 
     // Create a lock that will always fail when attempting to acquire; we're
     // only interested in testing ::processQueues(), not the other stuff.
@@ -126,6 +127,7 @@ class CronTest extends UnitTestCase {
 
     // Create a mock queue worker plugin instance based on above definition.
     $queue_worker_plugin = $this->prophesize('Drupal\Core\Queue\QueueWorkerInterface');
+    $queue_worker_plugin->getPluginId()->willReturn($queue_worker);
     $queue_worker_plugin->getPluginDefinition()->willReturn($queue_worker_definition);
     $queue_worker_plugin->processItem('Complete')->willReturn();
     $queue_worker_plugin->processItem('Exception')->willThrow(\Exception::class);
@@ -153,7 +155,7 @@ class CronTest extends UnitTestCase {
     $queue_worker_manager->createInstance($queue_worker)->willReturn($queue_worker_plugin->reveal());
 
     // Construct the Cron class to test.
-    $this->cron = new Cron($module_handler->reveal(), $lock_backend->reveal(), $queue_factory->reveal(), $state->reveal(), $account_switcher->reveal(), $logger->reveal(), $queue_worker_manager->reveal(), $time->reveal(), $settings);
+    $this->cron = new Cron($module_handler->reveal(), $lock_backend->reveal(), $queue_factory->reveal(), $state->reveal(), $account_switcher->reveal(), $logger->reveal(), $queue_worker_manager->reveal(), $time->reveal(), $queueConfig);
   }
 
   /**

@@ -9,7 +9,6 @@ use Drupal\Core\Cron;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Lock\LockBackendInterface;
-use Drupal\Core\Logger\LoggerChannelFactoryInterface;
 use Drupal\Core\Queue\QueueFactory;
 use Drupal\Core\Queue\QueueInterface;
 use Drupal\Core\Queue\QueueWorkerInterface;
@@ -68,11 +67,10 @@ final class CronSuspendQueueDelayTest extends UnitTestCase {
       'logger' => $this->createMock(LoggerInterface::class),
       'queue_manager' => $this->createMock(QueueWorkerManagerInterface::class),
       'time' => $this->createMock(TimeInterface::class),
-      'queueConfig' => [],
+      'queue_config' => [],
     ];
 
     // Capture logs to watchdog_exception().
-    $loggerFactory = $this->createMock(LoggerChannelFactoryInterface::class);
     $config = $this->createMock(ImmutableConfig::class);
     $config->expects($this->any())
       ->method('get')
@@ -84,14 +82,8 @@ final class CronSuspendQueueDelayTest extends UnitTestCase {
       ->with('system.cron')
       ->willReturn($config);
     $container = new ContainerBuilder();
-    $container->set('logger.factory', $loggerFactory);
     $container->set('config.factory', $configFactory);
     \Drupal::setContainer($container);
-
-    $loggerFactory->expects($this->atLeast(1))
-      ->method('get')
-      ->with('cron')
-      ->willReturn($this->createMock(LoggerInterface::class));
 
     $this->workerA = $this->createMock(QueueWorkerInterface::class);
     $this->workerA->expects($this->any())
@@ -232,7 +224,7 @@ final class CronSuspendQueueDelayTest extends UnitTestCase {
    * @dataProvider providerSuspendQueueThreshold
    */
   public function testSuspendQueueThreshold(float $threshold, float $suspendQueueDelay, bool $expectQueueDelay): void {
-    $this->cronConstructorArguments['queueConfig'] = [
+    $this->cronConstructorArguments['queue_config'] = [
       'suspendMaximumWait' => $threshold,
     ];
     [
