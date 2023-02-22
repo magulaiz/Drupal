@@ -6,6 +6,15 @@ use Drupal\Core\Entity\ContentEntityStorageInterface;
 
 /**
  * Defines an interface for menu_link_content entity storage classes.
+ *
+ * @method \Drupal\menu_link_content\MenuLinkContentInterface create(array $values = [])
+ * @method null|\Drupal\menu_link_content\MenuLinkContentInterface load($id)
+ * @method null|\Drupal\menu_link_content\MenuLinkContentInterface loadRevision($revision_id)
+ * @method null|\Drupal\menu_link_content\MenuLinkContentInterface loadUnchanged($id)
+ * @method \Drupal\menu_link_content\MenuLinkContentInterface[] loadMultiple(array $ids = NULL)
+ * @method \Drupal\menu_link_content\MenuLinkContentInterface[] loadByProperties(array $values = [])
+ * @method null|int save(\Drupal\menu_link_content\MenuLinkContentInterface $entity)
+ * @method void restore(\Drupal\menu_link_content\MenuLinkContentInterface $entity)
  */
 interface MenuLinkContentStorageInterface extends ContentEntityStorageInterface {
 

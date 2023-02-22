@@ -8,6 +8,15 @@ use Drupal\Core\Entity\FieldableEntityInterface;
 
 /**
  * Defines an interface for comment entity storage classes.
+ *
+ * @method \Drupal\comment\CommentInterface create(array $values = [])
+ * @method null|\Drupal\comment\CommentInterface load($id)
+ * @method null|\Drupal\comment\CommentInterface loadRevision($revision_id)
+ * @method null|\Drupal\comment\CommentInterface loadUnchanged($id)
+ * @method \Drupal\comment\CommentInterface[] loadMultiple(array $ids = NULL)
+ * @method \Drupal\comment\CommentInterface[] loadByProperties(array $values = [])
+ * @method null|int save(\Drupal\comment\CommentInterface $entity)
+ * @method void restore(\Drupal\comment\CommentInterface $entity)
  */
 interface CommentStorageInterface extends ContentEntityStorageInterface {
 
