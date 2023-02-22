@@ -138,10 +138,11 @@ class SessionConfiguration implements SessionConfigurationInterface {
     // for top-level domains. Also IP addresses may not be used in the domain
     // attribute of a Set-Cookie header. IPv6 addresses will not pass the first
     // test, so it's acceptable to bias the second test to IPv4.
-    if ($cookie_domain !== '' && count(explode('.', $cookie_domain)) > 2 && !is_numeric(str_replace('.', '', $cookie_domain))) {
-      return $cookie_domain;
-    };
+    if ($cookie_domain !== '' && (!str_contains($cookie_domain, '.') || is_numeric(str_replace('.', '', $cookie_domain)))) {
+      $cookie_domain = '';
+    }
 
+    return $cookie_domain;
   }
 
   /**
