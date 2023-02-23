@@ -33,7 +33,7 @@ class CommentEntityReferenceTest extends CommentTestBase {
    */
   protected $comment;
 
-    /**
+  /**
    * {@inheritdoc}
    */
   protected function setUp(): void {
@@ -134,7 +134,7 @@ class CommentEntityReferenceTest extends CommentTestBase {
       'access content',
       'administer nodes',
       'administer comments',
-      'edit any article content'
+      'edit any article content',
     ]);
     $this->drupalLogin($user);
 
