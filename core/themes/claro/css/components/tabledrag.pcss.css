@@ -15,18 +15,22 @@
 body.drag {
   cursor: move;
 }
+
 /* The block region's title row in table. */
 .region-title {
   font-weight: bold;
 }
+
 /* Empty region message row in table. */
 .region-message {
   color: var(--color-gray-600);
+
+  &.region-populated {
+    /* If the region is populated, we shouldn't display the empty message. */
+    display: none;
+  }
 }
-/* If the region is populated, we shouldn't display the empty message. */
-.region-message.region-populated {
-  display: none;
-}
+
 /**
  * Remove border-bottom from abbr element. Class is duplicated in the selector
  * to increase weight to be able to win normalize.css selectors.
@@ -34,6 +38,7 @@ body.drag {
 .tabledrag-changed.tabledrag-changed {
   border-bottom: none;
 }
+
 /* Don't display the abbreviation of 'add-new' table rows. */
 .add-new .tabledrag-changed {
   display: none;
@@ -41,12 +46,9 @@ body.drag {
 
 .draggable .tabledrag-changed {
   position: relative;
-  left: calc(var(--space-xs) * -1); /* LTR */
+  inset-inline-start: calc(var(--space-xs) * -1);
 }
-[dir="rtl"] .draggable .tabledrag-changed {
-  right: calc(var(--space-xs) * -1); /* LTR */
-  left: auto;
-}
+
 .tabledrag-cell--only-drag .tabledrag-changed {
   width: var(--space-l);
   min-width: var(--space-l);
@@ -68,12 +70,7 @@ body.drag {
  */
 .draggable-table td:first-child ~ td,
 .draggable-table th:first-child ~ th {
-  padding-left: 0 /* LTR */;
-}
-[dir="rtl"] .draggable-table td:first-child ~ td,
-[dir="rtl"] .draggable-table th:first-child ~ th {
-  padding-right: 0;
-  padding-left: var(--space-m);
+  padding-inline-start: 0;
 }
 
 /* Auto width for weight selects and number inputs. */
@@ -99,15 +96,11 @@ body.drag {
   display: inline-block;
   width: var(--tabledrag-handle-icon-size);
   height: var(--tabledrag-handle-icon-size);
-  margin-left: calc(var(--space-m) * -1); /* LTR */
+  margin-inline-start: calc(var(--space-m) * -1);
   padding: var(--space-xs) var(--space-m);
   content: "";
   transition: transform 0.1s ease-in-out 0s;
   background: url(../../images/icons/000f33/tabledrag-handle.svg) no-repeat center;
-}
-[dir="rtl"] .tabledrag-handle::after {
-  margin-right: calc(var(--space-m) * -1);
-  margin-left: 0;
 }
 
 @media (forced-colors: active) {
@@ -165,13 +158,11 @@ body.drag {
  * Increase handle size.
  */
 .touchevents .tabledrag-handle::after {
-  padding-top: var(--space-s);
-  padding-bottom: var(--space-s);
+  padding-block: var(--space-s);
 }
 
 .touchevents .draggable .menu-item__link {
-  padding-top: var(--space-xs);
-  padding-bottom: var(--space-xs);
+  padding-block: var(--space-xs);
 }
 
 /**
@@ -179,9 +170,10 @@ body.drag {
  */
 .tabledrag-toggle-weight-wrapper {
   text-align: right; /* LTR */
-}
-[dir="rtl"] .tabledrag-toggle-weight-wrapper {
-  text-align: left;
+
+  @nest [dir="rtl"] & {
+    text-align: left;
+  }
 }
 
 /* Hide nested weight toggles as they are redundant. */
@@ -193,8 +185,7 @@ body.drag {
  * Keep crowded tabledrag cells vertically centered.
  */
 .tabledrag-cell {
-  padding-top: 0;
-  padding-bottom: 0;
+  padding-block: 0;
 }
 
 /**
@@ -205,11 +196,7 @@ body.drag {
  */
 .tabledrag-cell--only-drag {
   width: 1px; /* This forces this cell to use the smallest possible width. */
-  padding-right: 0; /* LTR */
-}
-[dir="rtl"] .tabledrag-cell--only-drag {
-  padding-right: var(--space-m);
-  padding-left: 0;
+  padding-inline-end: 0;
 }
 
 .tabledrag-cell-content {
@@ -223,11 +210,7 @@ body.drag {
 }
 
 .tabledrag-cell-content__item {
-  padding-right: var(--space-xs); /* LTR */
-}
-[dir="rtl"] .tabledrag-cell-content__item {
-  padding-right: 0;
-  padding-left: var(--space-xs);
+  padding-inline-end: var(--space-xs);
 }
 .tabledrag-cell-content__item:empty {
   display: none;
@@ -268,17 +251,16 @@ body.drag {
  */
 .indentation {
   position: relative;
-  left: calc(var(--space-xs) * -0.5); /* LTR */
+  inset-inline-start: calc(var(--space-xs) * -0.5);
   float: left; /* LTR */
   width: calc(25rem / 16); /* 25px */
   height: calc(25rem / 16); /* 25px */
   background: none !important;
   line-height: 0;
-}
-[dir="rtl"] .indentation {
-  right: calc(var(--space-xs) * -0.5);
-  left: auto;
-  float: right;
+
+  @nest [dir="rtl"] & {
+    float: right;
+  }
 }
 
 /**
