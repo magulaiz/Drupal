@@ -50,12 +50,19 @@ class LanguageNegotiationUrl extends LanguageNegotiationMethodBase implements In
   /**
    * Constructs a new language negotiation URL method.
    *
-   * @param \Drupal\Core\App $app
+   * @param \Drupal\Core\App|null $app
    *   The application object.
+   *
+   * @see https://www.drupal.org/node/3279668
    */
   public function __construct(
-    protected App $app
-  ) {}
+    protected ?App $app = NULL
+  ) {
+    if ($this->app === NULL) {
+      @trigger_error('Calling ' . __METHOD__ . ' without the $app argument is deprecated in drupal:10.1.0 and it will be required in drupal:11.0.0. See https://www.drupal.org/node/3279668', E_USER_DEPRECATED);
+      $this->app = \Drupal::app();
+    }
+  }
 
   /**
    * {@inheritdoc}

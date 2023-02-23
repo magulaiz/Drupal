@@ -9,6 +9,7 @@ use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\ConfigTarget;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Path\PathValidatorInterface;
+use Drupal\Core\Routing\RequestContext;
 use Drupal\path_alias\AliasManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -34,13 +35,6 @@ class SiteInformationForm extends ConfigFormBase {
   protected $pathValidator;
 
   /**
-   * The application object.
-   *
-   * @var \Drupal\Core\App
-   */
-  protected App $app;
-
-  /**
    * Constructs a SiteInformationForm object.
    *
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
@@ -51,14 +45,23 @@ class SiteInformationForm extends ConfigFormBase {
    *   The path alias manager.
    * @param \Drupal\Core\Path\PathValidatorInterface $path_validator
    *   The path validator.
-   * @param \Drupal\Core\App $app
+   * @param \Drupal\Core\App|\Drupal\Core\Routing\RequestContext|null $app
    *   The application object.
+   *
+   * @see https://www.drupal.org/node/3279668
    */
-  public function __construct(ConfigFactoryInterface $config_factory, TypedConfigManagerInterface $typedConfigManager, AliasManagerInterface $alias_manager, PathValidatorInterface $path_validator, App $app) {
+  public function __construct(ConfigFactoryInterface $config_factory, TypedConfigManagerInterface $typedConfigManager, AliasManagerInterface $alias_manager, PathValidatorInterface $path_validator, protected App|RequestContext|null $app = NULL) {
     parent::__construct($config_factory, $typedConfigManager);
     $this->aliasManager = $alias_manager;
     $this->pathValidator = $path_validator;
-    $this->app = $app;
+    if ($this->app === NULL) {
+      @trigger_error('Calling ' . __METHOD__ . ' without the $app argument is deprecated in drupal:10.1.0 and it will be required in drupal:11.0.0. See https://www.drupal.org/node/3279668', E_USER_DEPRECATED);
+      $this->app = \Drupal::app();
+    }
+    elseif ($this->app instanceof RequestContext) {
+      @trigger_error('Drupal\Core\Routing\RequestContext is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use Drupal\Core\App instance instead. See https://www.drupal.org/node/3279668');
+      $this->app = \Drupal::app();
+    }
   }
 
   /**

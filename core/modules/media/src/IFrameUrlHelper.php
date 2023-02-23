@@ -5,6 +5,7 @@ namespace Drupal\media;
 use Drupal\Core\App;
 use Drupal\Component\Utility\Crypt;
 use Drupal\Core\PrivateKey;
+use Drupal\Core\Routing\RequestContext;
 use Drupal\Core\Site\Settings;
 
 /**
@@ -17,13 +18,6 @@ use Drupal\Core\Site\Settings;
 class IFrameUrlHelper {
 
   /**
-   * The application object.
-   *
-   * @var \Drupal\Core\App
-   */
-  protected App $app;
-
-  /**
    * The private key service.
    *
    * @var \Drupal\Core\PrivateKey
@@ -33,13 +27,17 @@ class IFrameUrlHelper {
   /**
    * IFrameUrlHelper constructor.
    *
-   * @param \Drupal\Core\App $app
+   * @param \Drupal\Core\App|\Drupal\Core\Routing\RequestContext $app
    *   The application object.
    * @param \Drupal\Core\PrivateKey $private_key
    *   The private key service.
+   *
+   * @see https://www.drupal.org/node/3279668
    */
-  public function __construct(App $app, PrivateKey $private_key) {
-    $this->app = $app;
+  public function __construct(protected App|RequestContext $app, PrivateKey $private_key) {
+    if ($this->app instanceof  RequestContext) {
+      $this->app = \Drupal::app();
+    }
     $this->privateKey = $private_key;
   }
 

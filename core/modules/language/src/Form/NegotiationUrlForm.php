@@ -30,13 +30,6 @@ class NegotiationUrlForm extends ConfigFormBase {
   protected $languageManager;
 
   /**
-   * The application object.
-   *
-   * @var \Drupal\Core\App
-   */
-  protected App $app;
-
-  /**
    * Constructs a new NegotiationUrlForm object.
    *
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
@@ -45,13 +38,18 @@ class NegotiationUrlForm extends ConfigFormBase {
    *   The typed config manager.
    * @param \Drupal\Core\Language\LanguageManagerInterface $language_manager
    *   The language manager.
-   * @param \Drupal\Core\App $app
+   * @param \Drupal\Core\App|null $app
    *   The application object.
+   *
+   * @see https://www.drupal.org/node/3279668
    */
-  public function __construct(ConfigFactoryInterface $config_factory, TypedConfigManagerInterface $typedConfigManager, LanguageManagerInterface $language_manager, App $app) {
+  public function __construct(ConfigFactoryInterface $config_factory, TypedConfigManagerInterface $typedConfigManager, LanguageManagerInterface $language_manager, protected ?App $app = NULL) {
     parent::__construct($config_factory, $typedConfigManager);
     $this->languageManager = $language_manager;
-    $this->app = $app;
+    if ($this->app === NULL) {
+      @trigger_error('Calling ' . __METHOD__ . ' without the $app argument is deprecated in drupal:10.1.0 and it will be required in drupal:11.0.0. See https://www.drupal.org/node/3279668', E_USER_DEPRECATED);
+      $this->app = \Drupal::app();
+    }
   }
 
   /**

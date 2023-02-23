@@ -31,13 +31,6 @@ class SysLog implements LoggerInterface {
   protected $parser;
 
   /**
-   * The application object.
-   *
-   * @var \Drupal\Core\App
-   */
-  protected App $app;
-
-  /**
    * Stores whether there is a system logger connection opened or not.
    *
    * @var bool
@@ -51,13 +44,18 @@ class SysLog implements LoggerInterface {
    *   The configuration factory object.
    * @param \Drupal\Core\Logger\LogMessageParserInterface $parser
    *   The parser to use when extracting message variables.
-   * @param \Drupal\Core\App $app
+   * @param \Drupal\Core\App|null $app
    *   The application object.
+   *
+   * @see https://www.drupal.org/node/3279668
    */
-  public function __construct(ConfigFactoryInterface $config_factory, LogMessageParserInterface $parser, App $app) {
+  public function __construct(ConfigFactoryInterface $config_factory, LogMessageParserInterface $parser, protected ?App $app = NULL) {
     $this->config = $config_factory->get('syslog.settings');
     $this->parser = $parser;
-    $this->app = $app;
+    if ($this->app === NULL) {
+      @trigger_error('Calling ' . __METHOD__ . ' without the $app argument is deprecated in drupal:10.1.0 and it will be required in drupal:11.0.0. See https://www.drupal.org/node/3279668', E_USER_DEPRECATED);
+      $this->app = \Drupal::app();
+    }
   }
 
   /**

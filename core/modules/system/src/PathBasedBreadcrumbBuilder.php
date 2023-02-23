@@ -102,7 +102,7 @@ class PathBasedBreadcrumbBuilder implements BreadcrumbBuilderInterface {
   /**
    * Constructs the PathBasedBreadcrumbBuilder.
    *
-   * @param \Drupal\Core\Routing\RequestContext|\Symfony\Component\Routing\RequestContext $context
+   * @param \Symfony\Component\Routing\RequestContext $context
    *   The router request context.
    * @param \Drupal\Core\Access\AccessManagerInterface $access_manager
    *   The access check service.
@@ -121,7 +121,7 @@ class PathBasedBreadcrumbBuilder implements BreadcrumbBuilderInterface {
    * @param \Drupal\Core\Path\PathMatcherInterface $path_matcher
    *   The path matcher service.
    */
-  public function __construct($context, AccessManagerInterface $access_manager, RequestMatcherInterface $router, InboundPathProcessorInterface $path_processor, ConfigFactoryInterface $config_factory, TitleResolverInterface $title_resolver, AccountInterface $current_user, CurrentPathStack $current_path, ?PathMatcherInterface $path_matcher = NULL) {
+  public function __construct(RequestContext $context, AccessManagerInterface $access_manager, RequestMatcherInterface $router, InboundPathProcessorInterface $path_processor, ConfigFactoryInterface $config_factory, TitleResolverInterface $title_resolver, AccountInterface $current_user, CurrentPathStack $current_path, ?PathMatcherInterface $path_matcher = NULL) {
     if ($context instanceof RequestContextLegacy) {
       @trigger_error('Drupal\Core\Routing\RequestContext is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use Symfony\Component\Routing\RequestContext instance instead. See https://www.drupal.org/node/3279668');
       $context = new RequestContext();

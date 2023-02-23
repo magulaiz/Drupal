@@ -81,13 +81,6 @@ class UpdateProcessor implements UpdateProcessorInterface {
   protected $privateKey;
 
   /**
-   * The application object.
-   *
-   * @var \Drupal\Core\App
-   */
-  protected App $app;
-
-  /**
    * The queue for fetching release history data.
    */
   protected array $fetchTasks;
@@ -111,8 +104,10 @@ class UpdateProcessor implements UpdateProcessorInterface {
    *   The expirable key/value factory.
    * @param \Drupal\Component\Datetime\TimeInterface $time
    *   The time service.
-   * @param \Drupal\Core\App $app
+   * @param \Drupal\Core\App|null $app
    *   The application object.
+   *
+   * @see https://www.drupal.org/node/3279668
    */
   public function __construct(
     ConfigFactoryInterface $config_factory,
@@ -123,7 +118,7 @@ class UpdateProcessor implements UpdateProcessorInterface {
     KeyValueFactoryInterface $key_value_factory,
     KeyValueExpirableFactoryInterface $key_value_expirable_factory,
     protected TimeInterface $time,
-    App $app,
+    protected ?App $app = NULL,
   ) {
     $this->updateFetcher = $update_fetcher;
     $this->updateSettings = $config_factory->get('update.settings');
@@ -133,7 +128,10 @@ class UpdateProcessor implements UpdateProcessorInterface {
     $this->availableReleasesTempStore = $key_value_expirable_factory->get('update_available_releases');
     $this->stateStore = $state_store;
     $this->privateKey = $private_key;
-    $this->app = $app;
+    if ($this->app === NULL) {
+      @trigger_error('Calling ' . __METHOD__ . ' without the $app argument is deprecated in drupal:10.1.0 and it will be required in drupal:11.0.0. See https://www.drupal.org/node/3279668', E_USER_DEPRECATED);
+      $this->app = \Drupal::app();
+    }
     $this->fetchTasks = [];
     $this->failed = [];
   }
