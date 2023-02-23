@@ -31,11 +31,19 @@
     display: flex;
     flex-wrap: wrap;
   }
+  [dir="rtl"] .layout-node-form {
+    flex-direction: row-reverse;
+  }
 
   .layout-region--node-main,
   .layout-region--node-footer {
     width: calc(100% - var(--node-meta-width));
     padding-inline-end: var(--space-l);
+  }
+
+  [dir="rtl"] .layout-region--node-main,
+  [dir="rtl"] .layout-region--node-footer {
+    padding-inline: var(--space-l) 0;
   }
 
   .layout-region--node-main .layout-region__content,

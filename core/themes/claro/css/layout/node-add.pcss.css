@@ -22,12 +22,20 @@
   .layout-node-form {
     display: flex;
     flex-wrap: wrap;
+
+    @nest [dir="rtl"] & {
+      flex-direction: row-reverse;
+    }
   }
 
   .layout-region--node-main,
   .layout-region--node-footer {
     width: calc(100% - var(--node-meta-width));
     padding-inline-end: var(--space-l);
+
+    @nest [dir="rtl"] & {
+      padding-inline: var(--space-l) 0;
+    }
   }
 
   .layout-region--node-main .layout-region__content,
