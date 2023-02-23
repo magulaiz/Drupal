@@ -2,21 +2,24 @@
 
 namespace Drupal\field\Plugin\migrate\field\d7;
 
-use Drupal\migrate_drupal\Plugin\migrate\field\FieldPluginBase;
+use Drupal\migrate_drupal\Plugin\migrate\field\d7\NumberField as MdNumberField;
 
 /**
  * MigrateField plugin for Drupal 7 number fields.
  *
- * @MigrateField(
- *   id = "number_default",
- *   type_map = {
- *     "number_integer" = "integer",
- *     "number_decimal" = "decimal",
- *     "number_float" = "float",
- *   },
- *   core = {7},
- *   source_module = "number",
- *   destination_module = "core"
- * )
+ *  @deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use
+ *   \Drupal\migrate_drupal\Plugin\migrate\field\DateField instead.
+ *
+ *  @see https://www.drupal.org/node/1234567
  */
-class NumberField extends FieldPluginBase {}
+class NumberField extends MdNumberField {
+
+  /**
+   * {@inheritdoc}
+   */
+  public function __construct(array $configuration, $plugin_id, $plugin_definition) {
+    @trigger_error(__CLASS__ . ' is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use \Drupal\migrate_drupal\Plugin\migrate\field\DateField instead. See https://www.drupal.org/node/1234567', E_USER_DEPRECATED);
+    parent::__construct($configuration, $plugin_id, $plugin_definition);
+  }
+
+}

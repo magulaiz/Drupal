@@ -2,16 +2,23 @@
 
 namespace Drupal\image\Plugin\migrate\field\d6;
 
-use Drupal\file\Plugin\migrate\field\d6\FileField;
-
-// cspell:ignore imagefield
+use Drupal\migrate_drupal\Plugin\migrate\field\d6\ImageField as MdImageField;
 
 /**
- * @MigrateField(
- *   id = "imagefield",
- *   core = {6},
- *   source_module = "imagefield",
- *   destination_module = "image"
- * )
+ *
+ *  @deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use
+ *   \Drupal\migrate_drupal\Plugin\migrate\field\d6\ImageField instead.
+ *
+ *  @see https://www.drupal.org/node/1234567
  */
-class ImageField extends FileField {}
+class ImageField extends MdImageField {
+
+  /**
+   * {@inheritdoc}
+   */
+  public function __construct(array $configuration, $plugin_id, $plugin_definition) {
+    @trigger_error(__CLASS__ . ' is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use \Drupal\migrate_drupal\Plugin\migrate\field\d6\ImageField instead. See https://www.drupal.org/node/1234567', E_USER_DEPRECATED);
+    parent::__construct($configuration, $plugin_id, $plugin_definition);
+  }
+
+}

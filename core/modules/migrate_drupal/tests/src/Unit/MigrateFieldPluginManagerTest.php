@@ -30,10 +30,12 @@ class MigrateFieldPluginManagerTest extends UnitTestCase {
     /** @var \Drupal\Core\Cache\CacheBackendInterface $cache */
     $cache = $this->prophesize(CacheBackendInterface::class)->reveal();
     /** @var \Drupal\Core\Extension\ModuleHandlerInterfaceModuleHandlerInterface $module_handler */
-    $module_handler = $this->prophesize(ModuleHandlerInterface::class)->reveal();
+    $module_handler = $this->prophesize(ModuleHandlerInterface::class);
+    $module_handler->getModuleList()->willReturn(['system' => 'system']);
+    $module_handler->alter("migrate_field_info", $this->pluginFixtureData())->shouldBeCalled();
     $discovery = $this->prophesize(AnnotatedClassDiscovery::class);
     $discovery->getDefinitions()->willReturn($this->pluginFixtureData());
-    $manager = new MigrateFieldPluginManagerTestClass('field', new \ArrayObject(), $cache, $module_handler, MigrateField::class, $discovery->reveal());
+    $manager = new MigrateFieldPluginManagerTestClass('field', new \ArrayObject(), $cache, $module_handler->reveal(), MigrateField::class, $discovery->reveal());
     if (!$expected_plugin_id) {
       $this->expectException(PluginNotFoundException::class);
       $this->expectExceptionMessage(sprintf("Plugin ID '%s' was not found.", $field_type));

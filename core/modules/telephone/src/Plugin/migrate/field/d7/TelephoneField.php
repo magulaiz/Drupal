@@ -2,35 +2,23 @@
 
 namespace Drupal\telephone\Plugin\migrate\field\d7;
 
-use Drupal\migrate_drupal\Plugin\migrate\field\FieldPluginBase;
+use Drupal\migrate_drupal\Plugin\migrate\field\d7\TelephoneField as MdTelephoneField;
 
 /**
- * @MigrateField(
- *   id = "telephone",
- *   core = {7},
- *   source_module = "telephone",
- *   destination_module = "telephone"
- * )
+ *
+ *  @deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use
+ *   \Drupal\migrate_drupal\Plugin\migrate\field\d7\TelephoneField instead.
+ *
+ *  @see https://www.drupal.org/node/1234567
  */
-class TelephoneField extends FieldPluginBase {
+class TelephoneField extends MdTelephoneField {
 
   /**
    * {@inheritdoc}
    */
-  public function getFieldWidgetMap() {
-    // The widget IDs are identical in Drupal 7 and 8, so we do not need any
-    // mapping.
-    return [];
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getFieldFormatterMap() {
-    return [
-      'text_plain' => 'string',
-      'telephone_link' => 'telephone_link',
-    ];
+  public function __construct(array $configuration, $plugin_id, $plugin_definition) {
+    @trigger_error(__CLASS__ . ' is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use \Drupal\migrate_drupal\Plugin\migrate\field\d7\TelephoneField instead. See https://www.drupal.org/node/1234567', E_USER_DEPRECATED);
+    parent::__construct($configuration, $plugin_id, $plugin_definition);
   }
 
 }

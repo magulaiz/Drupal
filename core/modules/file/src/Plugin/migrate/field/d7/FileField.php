@@ -2,45 +2,23 @@
 
 namespace Drupal\file\Plugin\migrate\field\d7;
 
-use Drupal\file\Plugin\migrate\field\d6\FileField as D6FileField;
-use Drupal\migrate\Plugin\MigrationInterface;
-
-// cspell:ignore filefield
+use Drupal\migrate_drupal\Plugin\migrate\field\d7\FileField as MdFileField;
 
 /**
- * @MigrateField(
- *   id = "file",
- *   core = {7},
- *   source_module = "file",
- *   destination_module = "file"
- * )
+ *
+ *  @deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use
+ *   Drupal\migrate_drupal\Plugin\migrate\field\d7\FileField instead.
+ *
+ *  @see https://www.drupal.org/node/1234567
  */
-class FileField extends D6FileField {
+class FileField extends MdFileField {
 
   /**
    * {@inheritdoc}
    */
-  public function getFieldWidgetMap() {
-    return [
-      'file_mfw' => 'file_generic',
-      'filefield_widget' => 'file_generic',
-    ];
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function defineValueProcessPipeline(MigrationInterface $migration, $field_name, $data) {
-    $process = [
-      'plugin' => 'sub_process',
-      'source' => $field_name,
-      'process' => [
-        'target_id' => 'fid',
-        'display' => 'display',
-        'description' => 'description',
-      ],
-    ];
-    $migration->mergeProcessOfProperty($field_name, $process);
+  public function __construct(array $configuration, $plugin_id, $plugin_definition) {
+    @trigger_error(__CLASS__ . ' is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use \Drupal\migrate_drupal\Plugin\migrate\field\d7\FileField instead. See https://www.drupal.org/node/1234567', E_USER_DEPRECATED);
+    parent::__construct($configuration, $plugin_id, $plugin_definition);
   }
 
 }

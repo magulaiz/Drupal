@@ -2,50 +2,23 @@
 
 namespace Drupal\taxonomy\Plugin\migrate\field;
 
-use Drupal\migrate\Plugin\MigrationInterface;
-use Drupal\migrate_drupal\Plugin\migrate\field\FieldPluginBase;
-
-// cspeLL:ignore entityreference
+use Drupal\migrate_drupal\Plugin\migrate\field\TaxonomyTermReference as MdTaxonomyTermReference;
 
 /**
- * @MigrateField(
- *   id = "taxonomy_term_reference",
- *   type_map = {
- *     "taxonomy_term_reference" = "entity_reference"
- *   },
- *   core = {6,7},
- *   source_module = "taxonomy",
- *   destination_module = "core",
- * )
+ *
+ *  @deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use
+ *   \Drupal\migrate_drupal\Plugin\migrate\field\TaxonomyTermReference instead.
+ *
+ *  @see https://www.drupal.org/node/1234567
  */
-class TaxonomyTermReference extends FieldPluginBase {
+class TaxonomyTermReference extends MdTaxonomyTermReference {
 
   /**
    * {@inheritdoc}
    */
-  public function getFieldFormatterMap() {
-    return [
-      'taxonomy_term_reference_link' => 'entity_reference_label',
-      'taxonomy_term_reference_plain' => 'entity_reference_label',
-      'taxonomy_term_reference_rss_category' => 'entity_reference_label',
-      'i18n_taxonomy_term_reference_link' => 'entity_reference_label',
-      'i18n_taxonomy_term_reference_plain' => 'entity_reference_label',
-      'entityreference_entity_view' => 'entity_reference_entity_view',
-    ];
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function defineValueProcessPipeline(MigrationInterface $migration, $field_name, $data) {
-    $process = [
-      'plugin' => 'sub_process',
-      'source' => $field_name,
-      'process' => [
-        'target_id' => 'tid',
-      ],
-    ];
-    $migration->setProcessOfProperty($field_name, $process);
+  public function __construct(array $configuration, $plugin_id, $plugin_definition) {
+    @trigger_error(__CLASS__ . ' is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use \Drupal\migrate_drupal\Plugin\migrate\field\TaxonomyTermReference instead. See https://www.drupal.org/node/1234567', E_USER_DEPRECATED);
+    parent::__construct($configuration, $plugin_id, $plugin_definition);
   }
 
 }

@@ -2,45 +2,23 @@
 
 namespace Drupal\image\Plugin\migrate\field\d7;
 
-use Drupal\migrate\Plugin\MigrationInterface;
-use Drupal\migrate_drupal\Plugin\migrate\field\FieldPluginBase;
+use Drupal\migrate_drupal\Plugin\migrate\field\d7\ImageField as MdImageField;
 
 /**
- * @MigrateField(
- *   id = "image",
- *   core = {7},
- *   source_module = "image",
- *   destination_module = "image"
- * )
+ *
+ *  @deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use
+ *   \Drupal\migrate_drupal\Plugin\migrate\field\d7\ImageField instead.
+ *
+ *  @see https://www.drupal.org/node/1234567
  */
-class ImageField extends FieldPluginBase {
+class ImageField extends MdImageField {
 
   /**
    * {@inheritdoc}
    */
-  public function getFieldWidgetMap() {
-    return [
-      'image' => 'image_default',
-      'image_miw' => 'image_image',
-    ];
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function defineValueProcessPipeline(MigrationInterface $migration, $field_name, $data) {
-    $process = [
-      'plugin' => 'sub_process',
-      'source' => $field_name,
-      'process' => [
-        'target_id' => 'fid',
-        'alt' => 'alt',
-        'title' => 'title',
-        'width' => 'width',
-        'height' => 'height',
-      ],
-    ];
-    $migration->mergeProcessOfProperty($field_name, $process);
+  public function __construct(array $configuration, $plugin_id, $plugin_definition) {
+    @trigger_error(__CLASS__ . ' is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use \Drupal\migrate_drupal\Plugin\migrate\field\d7\ImageField instead. See https://www.drupal.org/node/1234567', E_USER_DEPRECATED);
+    parent::__construct($configuration, $plugin_id, $plugin_definition);
   }
 
 }
