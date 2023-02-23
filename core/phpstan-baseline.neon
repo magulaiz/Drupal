@@ -1176,11 +1176,6 @@ parameters:
 			path: modules/dblog/tests/src/Functional/DbLogTest.php
 
 		-
-			message: "#^Variable \\$goto in isset\\(\\) always exists and is not nullable\\.$#"
-			count: 1
-			path: modules/dblog/tests/src/Functional/DbLogTest.php
-
-		-
 			message: "#^Relying on entity queries to check access by default is deprecated in drupal\\:9\\.2\\.0 and an error will be thrown from drupal\\:10\\.0\\.0\\. Call \\\\Drupal\\\\Core\\\\Entity\\\\Query\\\\QueryInterface\\:\\:accessCheck\\(\\) with TRUE or FALSE to specify whether access should be checked\\.$#"
 			count: 2
 			path: modules/field/field.module
