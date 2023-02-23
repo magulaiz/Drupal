@@ -16,11 +16,6 @@ parameters:
 			path: assets/scaffold/files/default.settings.php
 
 		-
-			message: "#^Function _batch_process invoked with 1 parameter, 0 required\\.$#"
-			count: 1
-			path: includes/batch.inc
-
-		-
 			message: "#^Variable \\$finished might not be defined\\.$#"
 			count: 1
 			path: includes/batch.inc
@@ -49,11 +44,6 @@ parameters:
 			message: "#^Function install_download_translation\\(\\) should return string but return statement is missing\\.$#"
 			count: 1
 			path: includes/install.core.inc
-
-		-
-			message: "#^Function _drupal_rewrite_settings_is_array_index invoked with 2 parameters, 1 required\\.$#"
-			count: 1
-			path: includes/install.inc
 
 		-
 			message: "#^Variable \\$current might not be defined\\.$#"
@@ -201,24 +191,9 @@ parameters:
 			path: lib/Drupal/Component/Gettext/PoMemoryWriter.php
 
 		-
-			message: "#^Class Drupal\\\\Component\\\\Render\\\\FormattableMarkup constructor invoked with 3 parameters, 2 required\\.$#"
-			count: 1
-			path: lib/Drupal/Component/Gettext/PoStreamReader.php
-
-		-
 			message: "#^Variable \\$log_vars might not be defined\\.$#"
 			count: 1
 			path: lib/Drupal/Component/Gettext/PoStreamReader.php
-
-		-
-			message: "#^Variable \\$rgb might not be defined\\.$#"
-			count: 1
-			path: lib/Drupal/Component/Utility/Color.php
-
-		-
-			message: "#^Static method Drupal\\\\Component\\\\Utility\\\\Variable\\:\\:export\\(\\) invoked with 3 parameters, 1\\-2 required\\.$#"
-			count: 1
-			path: lib/Drupal/Component/Utility/Variable.php
 
 		-
 			message: "#^Variable \\$permission might not be defined\\.$#"
@@ -256,27 +231,17 @@ parameters:
 			path: lib/Drupal/Core/Asset/CssCollectionGrouper.php
 
 		-
-			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
-			count: 1
-			path: lib/Drupal/Core/Asset/CssCollectionOptimizer.php
-
-		-
 			message: "#^Variable \\$group_keys might not be defined\\.$#"
 			count: 2
 			path: lib/Drupal/Core/Asset/JsCollectionGrouper.php
 
 		-
-			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
-			count: 1
-			path: lib/Drupal/Core/Asset/JsCollectionOptimizer.php
-
-		-
-			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
+			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 1
 			path: lib/Drupal/Core/Asset/JsCollectionRenderer.php
 
 		-
-			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
+			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 2
 			path: lib/Drupal/Core/Batch/BatchStorage.php
 
@@ -291,17 +256,17 @@ parameters:
 			path: lib/Drupal/Core/Block/BlockManager.php
 
 		-
-			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
+			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 3
 			path: lib/Drupal/Core/Cache/ApcuBackend.php
 
 		-
-			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
+			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 4
 			path: lib/Drupal/Core/Cache/DatabaseBackend.php
 
 		-
-			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
+			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 1
 			path: lib/Drupal/Core/Cache/MemoryBackend.php
 
@@ -311,7 +276,7 @@ parameters:
 			path: lib/Drupal/Core/Cache/NullBackend.php
 
 		-
-			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
+			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 2
 			path: lib/Drupal/Core/Cache/PhpBackend.php
 
@@ -326,9 +291,14 @@ parameters:
 			path: lib/Drupal/Core/Condition/ConditionManager.php
 
 		-
-			message: "#^Method Drupal\\\\Core\\\\Config\\\\ConfigInstaller\\:\\:createConfiguration\\(\\) invoked with 3 parameters, 2 required\\.$#"
+			message: "#^Relying on entity queries to check access by default is deprecated in drupal\\:9\\.2\\.0 and an error will be thrown from drupal\\:10\\.0\\.0\\. Call \\\\Drupal\\\\Core\\\\Entity\\\\Query\\\\QueryInterface\\:\\:accessCheck\\(\\) with TRUE or FALSE to specify whether access should be checked\\.$#"
 			count: 1
-			path: lib/Drupal/Core/Config/ConfigInstaller.php
+			path: lib/Drupal/Core/Config/Entity/ConfigEntityBase.php
+
+		-
+			message: "#^Relying on entity queries to check access by default is deprecated in drupal\\:9\\.2\\.0 and an error will be thrown from drupal\\:10\\.0\\.0\\. Call \\\\Drupal\\\\Core\\\\Entity\\\\Query\\\\QueryInterface\\:\\:accessCheck\\(\\) with TRUE or FALSE to specify whether access should be checked\\.$#"
+			count: 1
+			path: lib/Drupal/Core/Config/Entity/ConfigEntityBundleBase.php
 
 		-
 			message: "#^Variable \\$value in isset\\(\\) always exists and is not nullable\\.$#"
@@ -366,24 +336,9 @@ parameters:
 			path: lib/Drupal/Core/Database/Query/Upsert.php
 
 		-
-			message: "#^Variable \\$query_start might not be defined\\.$#"
-			count: 2
-			path: lib/Drupal/Core/Database/StatementPrefetch.php
-
-		-
-			message: "#^Variable \\$query_start might not be defined\\.$#"
-			count: 2
-			path: lib/Drupal/Core/Database/StatementWrapper.php
-
-		-
-			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
+			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 2
 			path: lib/Drupal/Core/Datetime/DateHelper.php
-
-		-
-			message: "#^Class Symfony\\\\Component\\\\DependencyInjection\\\\Reference constructor invoked with 3 parameters, 1\\-2 required\\.$#"
-			count: 1
-			path: lib/Drupal/Core/DependencyInjection/YamlFileLoader.php
 
 		-
 			message: "#^Method Drupal\\\\Core\\\\DrupalKernel\\:\\:discoverServiceProviders\\(\\) should return array but return statement is missing\\.$#"
@@ -431,9 +386,19 @@ parameters:
 			path: lib/Drupal/Core/Entity/Controller/EntityController.php
 
 		-
+			message: "#^Relying on entity queries to check access by default is deprecated in drupal\\:9\\.2\\.0 and an error will be thrown from drupal\\:10\\.0\\.0\\. Call \\\\Drupal\\\\Core\\\\Entity\\\\Query\\\\QueryInterface\\:\\:accessCheck\\(\\) with TRUE or FALSE to specify whether access should be checked\\.$#"
+			count: 1
+			path: lib/Drupal/Core/Entity/Entity/EntityFormDisplay.php
+
+		-
 			message: "#^Variable \\$candidate_ids might not be defined\\.$#"
 			count: 2
 			path: lib/Drupal/Core/Entity/Entity/EntityFormDisplay.php
+
+		-
+			message: "#^Relying on entity queries to check access by default is deprecated in drupal\\:9\\.2\\.0 and an error will be thrown from drupal\\:10\\.0\\.0\\. Call \\\\Drupal\\\\Core\\\\Entity\\\\Query\\\\QueryInterface\\:\\:accessCheck\\(\\) with TRUE or FALSE to specify whether access should be checked\\.$#"
+			count: 1
+			path: lib/Drupal/Core/Entity/Entity/EntityViewDisplay.php
 
 		-
 			message: "#^Variable \\$string in isset\\(\\) always exists and is not nullable\\.$#"
@@ -471,8 +436,13 @@ parameters:
 			path: lib/Drupal/Core/Entity/KeyValueStore/KeyValueContentEntityStorage.php
 
 		-
+			message: "#^Relying on entity queries to check access by default is deprecated in drupal\\:9\\.2\\.0 and an error will be thrown from drupal\\:10\\.0\\.0\\. Call \\\\Drupal\\\\Core\\\\Entity\\\\Query\\\\QueryInterface\\:\\:accessCheck\\(\\) with TRUE or FALSE to specify whether access should be checked\\.$#"
+			count: 1
+			path: lib/Drupal/Core/Entity/Plugin/EntityReferenceSelection/DefaultSelection.php
+
+		-
 			message: "#^Variable \\$selected_bundles might not be defined\\.$#"
-			count: 3
+			count: 2
 			path: lib/Drupal/Core/Entity/Plugin/EntityReferenceSelection/DefaultSelection.php
 
 		-
@@ -526,7 +496,7 @@ parameters:
 			path: lib/Drupal/Core/Entity/Sql/SqlContentEntityStorageSchema.php
 
 		-
-			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
+			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 2
 			path: lib/Drupal/Core/EventSubscriber/FinishResponseSubscriber.php
 
@@ -576,17 +546,17 @@ parameters:
 			path: lib/Drupal/Core/Field/FieldTypePluginManager.php
 
 		-
-			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
+			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 1
 			path: lib/Drupal/Core/Field/Plugin/Field/FieldFormatter/TimestampFormatter.php
 
 		-
-			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
+			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 2
 			path: lib/Drupal/Core/Field/Plugin/Field/FieldType/ChangedItem.php
 
 		-
-			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
+			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 1
 			path: lib/Drupal/Core/Field/Plugin/Field/FieldType/CreatedItem.php
 
@@ -621,7 +591,7 @@ parameters:
 			path: lib/Drupal/Core/FileTransfer/SSH.php
 
 		-
-			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
+			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 4
 			path: lib/Drupal/Core/Flood/DatabaseBackend.php
 
@@ -661,12 +631,12 @@ parameters:
 			path: lib/Drupal/Core/Form/FormValidator.php
 
 		-
-			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
+			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 4
 			path: lib/Drupal/Core/KeyValueStore/DatabaseStorageExpirable.php
 
 		-
-			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
+			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 1
 			path: lib/Drupal/Core/KeyValueStore/KeyValueDatabaseExpirableFactory.php
 
@@ -686,6 +656,11 @@ parameters:
 			path: lib/Drupal/Core/Lock/NullLockBackend.php
 
 		-
+			message: "#^Relying on entity queries to check access by default is deprecated in drupal\\:9\\.2\\.0 and an error will be thrown from drupal\\:10\\.0\\.0\\. Call \\\\Drupal\\\\Core\\\\Entity\\\\Query\\\\QueryInterface\\:\\:accessCheck\\(\\) with TRUE or FALSE to specify whether access should be checked\\.$#"
+			count: 1
+			path: lib/Drupal/Core/Menu/DefaultMenuLinkTreeManipulators.php
+
+		-
 			message: "#^Variable \\$parent in isset\\(\\) always exists and is not nullable\\.$#"
 			count: 1
 			path: lib/Drupal/Core/Menu/Form/MenuLinkDefaultForm.php
@@ -699,16 +674,6 @@ parameters:
 			message: "#^Method Drupal\\\\Core\\\\Menu\\\\MenuLinkManager\\:\\:menuNameInUse\\(\\) should return bool but return statement is missing\\.$#"
 			count: 1
 			path: lib/Drupal/Core/Menu/MenuLinkManager.php
-
-		-
-			message: "#^Variable \\$fields might not be defined\\.$#"
-			count: 3
-			path: lib/Drupal/Core/Menu/MenuTreeStorage.php
-
-		-
-			message: "#^Variable \\$root might not be defined\\.$#"
-			count: 1
-			path: lib/Drupal/Core/Menu/MenuTreeStorage.php
 
 		-
 			message: "#^Variable \\$transaction in isset\\(\\) always exists and is not nullable\\.$#"
@@ -751,27 +716,17 @@ parameters:
 			path: lib/Drupal/Core/Render/Renderer.php
 
 		-
-			message: "#^Variable \\$render_start might not be defined\\.$#"
-			count: 1
-			path: lib/Drupal/Core/Render/Renderer.php
-
-		-
 			message: "#^Variable \\$transaction in isset\\(\\) always exists and is not nullable\\.$#"
 			count: 1
 			path: lib/Drupal/Core/Routing/MatcherDumper.php
 
 		-
-			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
+			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 2
 			path: lib/Drupal/Core/Session/SessionHandler.php
 
 		-
-			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
-			count: 1
-			path: lib/Drupal/Core/Session/SessionManager.php
-
-		-
-			message: "#^Variable \\$session_data might not be defined\\.$#"
+			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 1
 			path: lib/Drupal/Core/Session/SessionManager.php
 
@@ -786,7 +741,7 @@ parameters:
 			path: lib/Drupal/Core/Template/TwigEnvironment.php
 
 		-
-			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
+			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 1
 			path: lib/Drupal/Core/Template/TwigPhpStorageCache.php
 
@@ -816,11 +771,6 @@ parameters:
 			path: lib/Drupal/Core/Theme/ThemeManager.php
 
 		-
-			message: "#^Call to an undefined method Drupal\\\\Core\\\\TypedData\\\\DataReferenceBase\\:\\:getType\\(\\)\\.$#"
-			count: 1
-			path: lib/Drupal/Core/TypedData/DataReferenceBase.php
-
-		-
 			message: "#^Method Drupal\\\\Core\\\\TypedData\\\\ListDataDefinition\\:\\:setDataType\\(\\) should return static\\(Drupal\\\\Core\\\\TypedData\\\\ListDataDefinition\\) but return statement is missing\\.$#"
 			count: 1
 			path: lib/Drupal/Core/TypedData/ListDataDefinition.php
@@ -836,22 +786,7 @@ parameters:
 			path: lib/Drupal/Core/TypedData/Validation/RecursiveContextualValidator.php
 
 		-
-			message: "#^Class Drupal\\\\Core\\\\Update\\\\UpdateBackend constructor invoked with 2 parameters, 1 required\\.$#"
-			count: 1
-			path: lib/Drupal/Core/Update/UpdateCacheBackendFactory.php
-
-		-
-			message: "#^Method Drupal\\\\Core\\\\Update\\\\UpdateKernel\\:\\:bootSession\\(\\) invoked with 2 parameters, 1 required\\.$#"
-			count: 1
-			path: lib/Drupal/Core/Update/UpdateKernel.php
-
-		-
 			message: "#^Method Drupal\\\\Core\\\\Update\\\\UpdateKernel\\:\\:discoverServiceProviders\\(\\) should return array but return statement is missing\\.$#"
-			count: 1
-			path: lib/Drupal/Core/Update/UpdateKernel.php
-
-		-
-			message: "#^Method Drupal\\\\Core\\\\Update\\\\UpdateKernel\\:\\:handleAccess\\(\\) invoked with 2 parameters, 1 required\\.$#"
 			count: 1
 			path: lib/Drupal/Core/Update/UpdateKernel.php
 
@@ -866,19 +801,14 @@ parameters:
 			path: lib/Drupal/Core/Utility/PhpRequirements.php
 
 		-
+			message: "#^Relying on entity queries to check access by default is deprecated in drupal\\:9\\.2\\.0 and an error will be thrown from drupal\\:10\\.0\\.0\\. Call \\\\Drupal\\\\Core\\\\Entity\\\\Query\\\\QueryInterface\\:\\:accessCheck\\(\\) with TRUE or FALSE to specify whether access should be checked\\.$#"
+			count: 1
+			path: lib/Drupal/Core/Validation/Plugin/Validation/Constraint/UniqueFieldValueValidator.php
+
+		-
 			message: "#^Method Drupal\\\\action\\\\Form\\\\ActionFormBase\\:\\:save\\(\\) should return int but return statement is missing\\.$#"
 			count: 1
 			path: modules/action/src/Form/ActionFormBase.php
-
-		-
-			message: "#^Method Drupal\\\\ban\\\\Plugin\\\\migrate\\\\destination\\\\BlockedIp\\:\\:import\\(\\) should return array\\|bool but return statement is missing\\.$#"
-			count: 1
-			path: modules/ban/src/Plugin/migrate/destination/BlockedIp.php
-
-		-
-			message: "#^Anonymous function has an unused use \\$session\\.$#"
-			count: 1
-			path: modules/basic_auth/tests/src/Functional/BasicAuthTest.php
 
 		-
 			message: "#^\\#lazy_builder callback 'hello_or_yarhar' at key '0' is not callable\\.$#"
@@ -889,6 +819,16 @@ parameters:
 			message: "#^\\#pre_render callback 'current_time' at key '0' is not callable\\.$#"
 			count: 1
 			path: modules/big_pipe/tests/modules/big_pipe_test/src/BigPipePlaceholderTestCases.php
+
+		-
+			message: "#^Relying on entity queries to check access by default is deprecated in drupal\\:9\\.2\\.0 and an error will be thrown from drupal\\:10\\.0\\.0\\. Call \\\\Drupal\\\\Core\\\\Entity\\\\Query\\\\QueryInterface\\:\\:accessCheck\\(\\) with TRUE or FALSE to specify whether access should be checked\\.$#"
+			count: 1
+			path: modules/block/src/BlockForm.php
+
+		-
+			message: "#^Relying on entity queries to check access by default is deprecated in drupal\\:9\\.2\\.0 and an error will be thrown from drupal\\:10\\.0\\.0\\. Call \\\\Drupal\\\\Core\\\\Entity\\\\Query\\\\QueryInterface\\:\\:accessCheck\\(\\) with TRUE or FALSE to specify whether access should be checked\\.$#"
+			count: 1
+			path: modules/block/src/BlockListBuilder.php
 
 		-
 			message: "#^Method Drupal\\\\Component\\\\Plugin\\\\PluginBase\\:\\:__construct\\(\\) invoked with 4 parameters, 3 required\\.$#"
@@ -906,9 +846,9 @@ parameters:
 			path: modules/block/tests/src/Functional/BlockUiTest.php
 
 		-
-			message: "#^Class Drupal\\\\block\\\\Plugin\\\\migrate\\\\process\\\\BlockSettings constructor invoked with 4 parameters, 3 required\\.$#"
-			count: 1
-			path: modules/block/tests/src/Unit/Plugin/migrate/process/BlockSettingsTest.php
+			message: "#^Relying on entity queries to check access by default is deprecated in drupal\\:9\\.2\\.0 and an error will be thrown from drupal\\:10\\.0\\.0\\. Call \\\\Drupal\\\\Core\\\\Entity\\\\Query\\\\QueryInterface\\:\\:accessCheck\\(\\) with TRUE or FALSE to specify whether access should be checked\\.$#"
+			count: 3
+			path: modules/block/tests/src/Kernel/NewDefaultThemeBlocksTest.php
 
 		-
 			message: "#^Variable \\$row in empty\\(\\) is never defined\\.$#"
@@ -931,7 +871,7 @@ parameters:
 			path: modules/block_content/src/BlockContentTypeForm.php
 
 		-
-			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
+			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 1
 			path: modules/block_content/tests/src/Functional/BlockContentRevisionsTest.php
 
@@ -941,7 +881,7 @@ parameters:
 			path: modules/block_content/tests/src/Functional/BlockContentRevisionsTest.php
 
 		-
-			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
+			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 1
 			path: modules/block_content/tests/src/Functional/BlockContentSaveTest.php
 
@@ -951,29 +891,14 @@ parameters:
 			path: modules/block_content/tests/src/Functional/BlockContentTypeTest.php
 
 		-
-			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
+			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 2
 			path: modules/block_content/tests/src/Kernel/Migrate/d6/MigrateBlockContentTest.php
 
 		-
-			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
+			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 3
 			path: modules/block_content/tests/src/Kernel/Migrate/d6/MigrateCustomBlockContentTranslationTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertSame\\(\\) invoked with 4 parameters, 2\\-3 required\\.$#"
-			count: 1
-			path: modules/block_content/tests/src/Kernel/Views/RevisionUserTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertTrue\\(\\) invoked with 3 parameters, 1\\-2 required\\.$#"
-			count: 1
-			path: modules/block_content/tests/src/Kernel/Views/RevisionUserTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:fail\\(\\) invoked with 2 parameters, 0\\-1 required\\.$#"
-			count: 1
-			path: modules/block_content/tests/src/Kernel/Views/RevisionUserTest.php
 
 		-
 			message: "#^Variable \\$book_links in empty\\(\\) is never defined\\.$#"
@@ -1001,21 +926,6 @@ parameters:
 			path: modules/book/src/Form/BookOutlineForm.php
 
 		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertSame\\(\\) invoked with 4 parameters, 2\\-3 required\\.$#"
-			count: 1
-			path: modules/book/tests/src/Kernel/BookMultilingualTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertTrue\\(\\) invoked with 3 parameters, 1\\-2 required\\.$#"
-			count: 1
-			path: modules/book/tests/src/Kernel/BookMultilingualTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:fail\\(\\) invoked with 2 parameters, 0\\-1 required\\.$#"
-			count: 1
-			path: modules/book/tests/src/Kernel/BookMultilingualTest.php
-
-		-
 			message: "#^Function _add_ajax_listeners_to_plugin_inputs not found\\.$#"
 			count: 2
 			path: modules/ckeditor5/ckeditor5.module
@@ -1031,17 +941,17 @@ parameters:
 			path: modules/ckeditor5/ckeditor5.module
 
 		-
+			message: "#^Relying on entity queries to check access by default is deprecated in drupal\\:9\\.2\\.0 and an error will be thrown from drupal\\:10\\.0\\.0\\. Call \\\\Drupal\\\\Core\\\\Entity\\\\Query\\\\QueryInterface\\:\\:accessCheck\\(\\) with TRUE or FALSE to specify whether access should be checked\\.$#"
+			count: 1
+			path: modules/ckeditor5/src/Plugin/CKEditor5Plugin/MediaLibrary.php
+
+		-
 			message: "#^Variable \\$ghs_config_classes in empty\\(\\) always exists and is always falsy\\.$#"
 			count: 1
 			path: modules/ckeditor5/src/Plugin/Validation/Constraint/StyleSensibleElementConstraintValidator.php
 
 		-
-			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
-			count: 1
-			path: modules/comment/src/CommentForm.php
-
-		-
-			message: "#^Method Drupal\\\\Core\\\\Entity\\\\ContentEntityForm\\:\\:form\\(\\) invoked with 3 parameters, 2 required\\.$#"
+			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 1
 			path: modules/comment/src/CommentForm.php
 
@@ -1061,7 +971,7 @@ parameters:
 			path: modules/comment/src/CommentManager.php
 
 		-
-			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
+			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 2
 			path: modules/comment/src/CommentStatistics.php
 
@@ -1086,7 +996,7 @@ parameters:
 			path: modules/comment/src/Plugin/views/row/Rss.php
 
 		-
-			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
+			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 1
 			path: modules/comment/tests/src/Functional/CommentBlockTest.php
 
@@ -1101,69 +1011,19 @@ parameters:
 			path: modules/comment/tests/src/Functional/CommentLanguageTest.php
 
 		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:fail\\(\\) invoked with 2 parameters, 0\\-1 required\\.$#"
-			count: 1
-			path: modules/comment/tests/src/Functional/CommentPagerTest.php
-
-		-
 			message: "#^Variable \\$mode_text might not be defined\\.$#"
 			count: 1
 			path: modules/comment/tests/src/Functional/CommentTestBase.php
 
 		-
-			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
+			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 1
 			path: modules/comment/tests/src/Functional/CommentTranslationUITest.php
 
 		-
-			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
+			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 1
 			path: modules/comment/tests/src/Functional/Views/DefaultViewRecentCommentsTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertSame\\(\\) invoked with 4 parameters, 2\\-3 required\\.$#"
-			count: 1
-			path: modules/comment/tests/src/Kernel/CommentIntegrationTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertTrue\\(\\) invoked with 3 parameters, 1\\-2 required\\.$#"
-			count: 1
-			path: modules/comment/tests/src/Kernel/CommentIntegrationTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:fail\\(\\) invoked with 2 parameters, 0\\-1 required\\.$#"
-			count: 1
-			path: modules/comment/tests/src/Kernel/CommentIntegrationTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertSame\\(\\) invoked with 4 parameters, 2\\-3 required\\.$#"
-			count: 1
-			path: modules/comment/tests/src/Kernel/Views/CommentFieldNameTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertTrue\\(\\) invoked with 3 parameters, 1\\-2 required\\.$#"
-			count: 1
-			path: modules/comment/tests/src/Kernel/Views/CommentFieldNameTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:fail\\(\\) invoked with 2 parameters, 0\\-1 required\\.$#"
-			count: 1
-			path: modules/comment/tests/src/Kernel/Views/CommentFieldNameTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertSame\\(\\) invoked with 4 parameters, 2\\-3 required\\.$#"
-			count: 1
-			path: modules/comment/tests/src/Kernel/Views/FilterAndArgumentUserUidTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertTrue\\(\\) invoked with 3 parameters, 1\\-2 required\\.$#"
-			count: 1
-			path: modules/comment/tests/src/Kernel/Views/FilterAndArgumentUserUidTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:fail\\(\\) invoked with 2 parameters, 0\\-1 required\\.$#"
-			count: 1
-			path: modules/comment/tests/src/Kernel/Views/FilterAndArgumentUserUidTest.php
 
 		-
 			message: "#^Variable \\$data might not be defined\\.$#"
@@ -1171,19 +1031,19 @@ parameters:
 			path: modules/config/src/Form/ConfigSingleImportForm.php
 
 		-
-			message: "#^Anonymous function has an unused use \\$validation_reasons\\.$#"
+			message: "#^Relying on entity queries to check access by default is deprecated in drupal\\:9\\.2\\.0 and an error will be thrown from drupal\\:10\\.0\\.0\\. Call \\\\Drupal\\\\Core\\\\Entity\\\\Query\\\\QueryInterface\\:\\:accessCheck\\(\\) with TRUE or FALSE to specify whether access should be checked\\.$#"
 			count: 1
-			path: modules/config/tests/src/Functional/ConfigImportAllTest.php
+			path: modules/config/tests/config_test/src/ConfigTestForm.php
 
 		-
-			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
+			message: "#^Relying on entity queries to check access by default is deprecated in drupal\\:9\\.2\\.0 and an error will be thrown from drupal\\:10\\.0\\.0\\. Call \\\\Drupal\\\\Core\\\\Entity\\\\Query\\\\QueryInterface\\:\\:accessCheck\\(\\) with TRUE or FALSE to specify whether access should be checked\\.$#"
+			count: 1
+			path: modules/config_translation/src/Controller/ConfigTranslationFieldListBuilder.php
+
+		-
+			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 1
 			path: modules/config_translation/src/FormElement/DateFormat.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertTrue\\(\\) invoked with 3 parameters, 1\\-2 required\\.$#"
-			count: 2
-			path: modules/config_translation/tests/src/Functional/ConfigTranslationUiTest.php
 
 		-
 			message: "#^Variable \\$settings_locations in empty\\(\\) always exists and is not falsy\\.$#"
@@ -1206,29 +1066,19 @@ parameters:
 			path: modules/contact/src/Entity/Message.php
 
 		-
-			message: "#^Method Drupal\\\\Core\\\\Entity\\\\ContentEntityForm\\:\\:form\\(\\) invoked with 3 parameters, 2 required\\.$#"
-			count: 1
-			path: modules/contact/src/MessageForm.php
-
-		-
 			message: "#^Method Drupal\\\\contact\\\\MessageForm\\:\\:save\\(\\) should return int but return statement is missing\\.$#"
 			count: 1
 			path: modules/contact/src/MessageForm.php
 
 		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertTrue\\(\\) invoked with 3 parameters, 1\\-2 required\\.$#"
-			count: 2
-			path: modules/contact/tests/src/Functional/ContactPersonalTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertTrue\\(\\) invoked with 3 parameters, 1\\-2 required\\.$#"
-			count: 2
-			path: modules/contact/tests/src/Functional/ContactSitewideTest.php
-
-		-
 			message: "#^Variable \\$state in isset\\(\\) always exists and is not nullable\\.$#"
 			count: 3
 			path: modules/content_moderation/src/Form/ContentModerationStateForm.php
+
+		-
+			message: "#^Relying on entity queries to check access by default is deprecated in drupal\\:9\\.2\\.0 and an error will be thrown from drupal\\:10\\.0\\.0\\. Call \\\\Drupal\\\\Core\\\\Entity\\\\Query\\\\QueryInterface\\:\\:accessCheck\\(\\) with TRUE or FALSE to specify whether access should be checked\\.$#"
+			count: 1
+			path: modules/content_moderation/src/ModeratedNodeListBuilder.php
 
 		-
 			message: "#^Method Drupal\\\\content_moderation\\\\ModerationInformation\\:\\:getAffectedRevisionTranslation\\(\\) should return Drupal\\\\Core\\\\Entity\\\\ContentEntityInterface but return statement is missing\\.$#"
@@ -1239,96 +1089,6 @@ parameters:
 			message: "#^Method Drupal\\\\content_moderation\\\\ModerationInformation\\:\\:getDefaultRevisionId\\(\\) should return int but return statement is missing\\.$#"
 			count: 1
 			path: modules/content_moderation/src/ModerationInformation.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertSame\\(\\) invoked with 4 parameters, 2\\-3 required\\.$#"
-			count: 1
-			path: modules/content_moderation/tests/src/Kernel/ContentModerationAccessTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertTrue\\(\\) invoked with 3 parameters, 1\\-2 required\\.$#"
-			count: 1
-			path: modules/content_moderation/tests/src/Kernel/ContentModerationAccessTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:fail\\(\\) invoked with 2 parameters, 0\\-1 required\\.$#"
-			count: 1
-			path: modules/content_moderation/tests/src/Kernel/ContentModerationAccessTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertSame\\(\\) invoked with 4 parameters, 2\\-3 required\\.$#"
-			count: 1
-			path: modules/content_moderation/tests/src/Kernel/EntityStateChangeValidationTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertTrue\\(\\) invoked with 3 parameters, 1\\-2 required\\.$#"
-			count: 1
-			path: modules/content_moderation/tests/src/Kernel/EntityStateChangeValidationTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:fail\\(\\) invoked with 2 parameters, 0\\-1 required\\.$#"
-			count: 1
-			path: modules/content_moderation/tests/src/Kernel/EntityStateChangeValidationTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertSame\\(\\) invoked with 4 parameters, 2\\-3 required\\.$#"
-			count: 1
-			path: modules/content_moderation/tests/src/Kernel/ModerationStateFieldItemListTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertTrue\\(\\) invoked with 3 parameters, 1\\-2 required\\.$#"
-			count: 1
-			path: modules/content_moderation/tests/src/Kernel/ModerationStateFieldItemListTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:fail\\(\\) invoked with 2 parameters, 0\\-1 required\\.$#"
-			count: 1
-			path: modules/content_moderation/tests/src/Kernel/ModerationStateFieldItemListTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertSame\\(\\) invoked with 4 parameters, 2\\-3 required\\.$#"
-			count: 1
-			path: modules/content_moderation/tests/src/Kernel/NodeAccessTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertTrue\\(\\) invoked with 3 parameters, 1\\-2 required\\.$#"
-			count: 1
-			path: modules/content_moderation/tests/src/Kernel/NodeAccessTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:fail\\(\\) invoked with 2 parameters, 0\\-1 required\\.$#"
-			count: 1
-			path: modules/content_moderation/tests/src/Kernel/NodeAccessTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertSame\\(\\) invoked with 4 parameters, 2\\-3 required\\.$#"
-			count: 1
-			path: modules/content_moderation/tests/src/Kernel/ViewsModerationStateFilterTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertTrue\\(\\) invoked with 3 parameters, 1\\-2 required\\.$#"
-			count: 1
-			path: modules/content_moderation/tests/src/Kernel/ViewsModerationStateFilterTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:fail\\(\\) invoked with 2 parameters, 0\\-1 required\\.$#"
-			count: 1
-			path: modules/content_moderation/tests/src/Kernel/ViewsModerationStateFilterTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertSame\\(\\) invoked with 4 parameters, 2\\-3 required\\.$#"
-			count: 1
-			path: modules/content_moderation/tests/src/Kernel/WorkspacesContentModerationStateTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertTrue\\(\\) invoked with 3 parameters, 1\\-2 required\\.$#"
-			count: 1
-			path: modules/content_moderation/tests/src/Kernel/WorkspacesContentModerationStateTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:fail\\(\\) invoked with 2 parameters, 0\\-1 required\\.$#"
-			count: 1
-			path: modules/content_moderation/tests/src/Kernel/WorkspacesContentModerationStateTest.php
 
 		-
 			message: "#^Variable \\$checkbox_id might not be defined\\.$#"
@@ -1346,17 +1106,12 @@ parameters:
 			path: modules/content_translation/content_translation.module
 
 		-
-			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
+			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 5
 			path: modules/content_translation/src/ContentTranslationHandler.php
 
 		-
-			message: "#^Method Drupal\\\\content_translation\\\\ContentTranslationHandler\\:\\:addTranslatabilityClue\\(\\) invoked with 2 parameters, 1 required\\.$#"
-			count: 1
-			path: modules/content_translation/src/ContentTranslationHandler.php
-
-		-
-			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
+			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 1
 			path: modules/content_translation/src/Controller/ContentTranslationController.php
 
@@ -1366,14 +1121,9 @@ parameters:
 			path: modules/content_translation/src/Controller/ContentTranslationController.php
 
 		-
-			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
+			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 1
 			path: modules/content_translation/tests/src/Functional/ContentTranslationUITestBase.php
-
-		-
-			message: "#^Anonymous function has an unused use \\$web_assert\\.$#"
-			count: 1
-			path: modules/contextual/tests/src/FunctionalJavascript/EditModeTest.php
 
 		-
 			message: "#^Variable \\$unrestricted_tab_count might not be defined\\.$#"
@@ -1391,7 +1141,7 @@ parameters:
 			path: modules/datetime/src/Plugin/Field/FieldType/DateTimeItem.php
 
 		-
-			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
+			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 1
 			path: modules/datetime/src/Plugin/Field/FieldType/DateTimeItem.php
 
@@ -1406,12 +1156,12 @@ parameters:
 			path: modules/datetime/src/Plugin/Validation/Constraint/DateTimeFormatConstraintValidator.php
 
 		-
-			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
+			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 4
 			path: modules/datetime/tests/src/Functional/DateTimeFieldTest.php
 
 		-
-			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
+			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 1
 			path: modules/datetime/tests/src/Kernel/Views/FilterDateTimeTest.php
 
@@ -1431,7 +1181,7 @@ parameters:
 			path: modules/datetime_range/src/Plugin/Field/FieldType/DateRangeItem.php
 
 		-
-			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
+			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 1
 			path: modules/datetime_range/src/Plugin/Field/FieldType/DateRangeItem.php
 
@@ -1441,7 +1191,7 @@ parameters:
 			path: modules/dblog/dblog.module
 
 		-
-			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
+			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 3
 			path: modules/dblog/tests/src/Functional/DbLogTest.php
 
@@ -1451,14 +1201,19 @@ parameters:
 			path: modules/dblog/tests/src/Functional/DbLogTest.php
 
 		-
-			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
+			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 1
 			path: modules/dblog/tests/src/Kernel/DbLogTest.php
 
 		-
-			message: "#^Method Drupal\\\\Tests\\\\BrowserTestBase\\:\\:drupalLogout\\(\\) invoked with 1 parameter, 0 required\\.$#"
+			message: "#^Relying on entity queries to check access by default is deprecated in drupal\\:9\\.2\\.0 and an error will be thrown from drupal\\:10\\.0\\.0\\. Call \\\\Drupal\\\\Core\\\\Entity\\\\Query\\\\QueryInterface\\:\\:accessCheck\\(\\) with TRUE or FALSE to specify whether access should be checked\\.$#"
 			count: 2
-			path: modules/editor/tests/src/Functional/EditorLoadingTest.php
+			path: modules/field/field.module
+
+		-
+			message: "#^Relying on entity queries to check access by default is deprecated in drupal\\:9\\.2\\.0 and an error will be thrown from drupal\\:10\\.0\\.0\\. Call \\\\Drupal\\\\Core\\\\Entity\\\\Query\\\\QueryInterface\\:\\:accessCheck\\(\\) with TRUE or FALSE to specify whether access should be checked\\.$#"
+			count: 1
+			path: modules/field/src/ConfigImporterFieldPurger.php
 
 		-
 			message: "#^Variable \\$items in empty\\(\\) always exists and is not falsy\\.$#"
@@ -1471,7 +1226,7 @@ parameters:
 			path: modules/field/tests/modules/field_test/src/Plugin/Field/FieldFormatter/TestFieldMultipleFormatter.php
 
 		-
-			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
+			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 2
 			path: modules/field/tests/src/Functional/NestedFormTest.php
 
@@ -1481,29 +1236,14 @@ parameters:
 			path: modules/field/tests/src/Kernel/FieldAttachStorageTest.php
 
 		-
-			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
+			message: "#^Relying on entity queries to check access by default is deprecated in drupal\\:9\\.2\\.0 and an error will be thrown from drupal\\:10\\.0\\.0\\. Call \\\\Drupal\\\\Core\\\\Entity\\\\Query\\\\QueryInterface\\:\\:accessCheck\\(\\) with TRUE or FALSE to specify whether access should be checked\\.$#"
+			count: 2
+			path: modules/field/tests/src/Kernel/FieldImportCreateTest.php
+
+		-
+			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 1
 			path: modules/field/tests/src/Kernel/Timestamp/TimestampFormatterTest.php
-
-		-
-			message: "#^Class Drupal\\\\field\\\\Plugin\\\\migrate\\\\process\\\\d6\\\\FieldInstanceSettings constructor invoked with 4 parameters, 3 required\\.$#"
-			count: 1
-			path: modules/field/tests/src/Unit/Plugin/migrate/process/d6/FieldInstanceSettingsTest.php
-
-		-
-			message: "#^Class Drupal\\\\field\\\\Plugin\\\\migrate\\\\process\\\\d6\\\\FieldSettings constructor invoked with 4 parameters, 3 required\\.$#"
-			count: 1
-			path: modules/field/tests/src/Unit/Plugin/migrate/process/d6/FieldSettingsTest.php
-
-		-
-			message: "#^Class Drupal\\\\field\\\\Plugin\\\\migrate\\\\process\\\\d7\\\\FieldInstanceSettings constructor invoked with 4 parameters, 3 required\\.$#"
-			count: 1
-			path: modules/field/tests/src/Unit/Plugin/migrate/process/d7/FieldInstanceSettingsTest.php
-
-		-
-			message: "#^Class Drupal\\\\field\\\\Plugin\\\\migrate\\\\process\\\\d7\\\\FieldSettings constructor invoked with 4 parameters, 3 required\\.$#"
-			count: 1
-			path: modules/field/tests/src/Unit/Plugin/migrate/process/d7/FieldSettingsTest.php
 
 		-
 			message: "#^Variable \\$entity_display might not be defined\\.$#"
@@ -1536,12 +1276,17 @@ parameters:
 			path: modules/field_ui/src/Form/EntityDisplayModeFormBase.php
 
 		-
+			message: "#^Relying on entity queries to check access by default is deprecated in drupal\\:9\\.2\\.0 and an error will be thrown from drupal\\:10\\.0\\.0\\. Call \\\\Drupal\\\\Core\\\\Entity\\\\Query\\\\QueryInterface\\:\\:accessCheck\\(\\) with TRUE or FALSE to specify whether access should be checked\\.$#"
+			count: 1
+			path: modules/field_ui/src/Form/EntityDisplayModeFormBase.php
+
+		-
 			message: "#^Method Drupal\\\\field_ui\\\\Form\\\\FieldConfigEditForm\\:\\:save\\(\\) should return int but return statement is missing\\.$#"
 			count: 1
 			path: modules/field_ui/src/Form/FieldConfigEditForm.php
 
 		-
-			message: "#^Static method Drupal\\\\field_ui\\\\FieldUI\\:\\:getNextDestination\\(\\) invoked with 2 parameters, 1 required\\.$#"
+			message: "#^Relying on entity queries to check access by default is deprecated in drupal\\:9\\.2\\.0 and an error will be thrown from drupal\\:10\\.0\\.0\\. Call \\\\Drupal\\\\Core\\\\Entity\\\\Query\\\\QueryInterface\\:\\:accessCheck\\(\\) with TRUE or FALSE to specify whether access should be checked\\.$#"
 			count: 1
 			path: modules/field_ui/src/Form/FieldStorageAddForm.php
 
@@ -1581,19 +1326,14 @@ parameters:
 			path: modules/file/src/Plugin/Field/FieldType/FileFieldItemList.php
 
 		-
-			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
+			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 2
 			path: modules/file/tests/src/Functional/FileFieldPathTest.php
 
 		-
-			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
+			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 2
 			path: modules/file/tests/src/Functional/FileFieldRevisionTest.php
-
-		-
-			message: "#^Method Drupal\\\\Tests\\\\file\\\\Functional\\\\FileFieldTestBase\\:\\:uploadNodeFile\\(\\) invoked with 6 parameters, 3\\-5 required\\.$#"
-			count: 1
-			path: modules/file/tests/src/Functional/FileFieldWidgetTest.php
 
 		-
 			message: "#^Variable \\$unexpected in empty\\(\\) always exists and is not falsy\\.$#"
@@ -1611,24 +1351,9 @@ parameters:
 			path: modules/file/tests/src/Functional/FileUploadJsonCookieTest.php
 
 		-
-			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
+			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 2
 			path: modules/file/tests/src/Kernel/DeleteTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertSame\\(\\) invoked with 4 parameters, 2\\-3 required\\.$#"
-			count: 1
-			path: modules/file/tests/src/Kernel/FileManagedAccessTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertTrue\\(\\) invoked with 3 parameters, 1\\-2 required\\.$#"
-			count: 1
-			path: modules/file/tests/src/Kernel/FileManagedAccessTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:fail\\(\\) invoked with 2 parameters, 0\\-1 required\\.$#"
-			count: 1
-			path: modules/file/tests/src/Kernel/FileManagedAccessTest.php
 
 		-
 			message: "#^Variable \\$unexpected in empty\\(\\) always exists and is not falsy\\.$#"
@@ -1636,39 +1361,19 @@ parameters:
 			path: modules/file/tests/src/Kernel/FileManagedUnitTestBase.php
 
 		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertNotNull\\(\\) invoked with 3 parameters, 1\\-2 required\\.$#"
-			count: 1
-			path: modules/file/tests/src/Kernel/SaveTest.php
-
-		-
-			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
+			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 2
 			path: modules/file/tests/src/Kernel/UsageTest.php
 
 		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertSame\\(\\) invoked with 4 parameters, 2\\-3 required\\.$#"
-			count: 1
-			path: modules/file/tests/src/Kernel/Views/RelationshipUserFileDataTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertTrue\\(\\) invoked with 3 parameters, 1\\-2 required\\.$#"
-			count: 1
-			path: modules/file/tests/src/Kernel/Views/RelationshipUserFileDataTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:fail\\(\\) invoked with 2 parameters, 0\\-1 required\\.$#"
-			count: 1
-			path: modules/file/tests/src/Kernel/Views/RelationshipUserFileDataTest.php
+			message: "#^Relying on entity queries to check access by default is deprecated in drupal\\:9\\.2\\.0 and an error will be thrown from drupal\\:10\\.0\\.0\\. Call \\\\Drupal\\\\Core\\\\Entity\\\\Query\\\\QueryInterface\\:\\:accessCheck\\(\\) with TRUE or FALSE to specify whether access should be checked\\.$#"
+			count: 2
+			path: modules/filter/src/FilterFormatFormBase.php
 
 		-
 			message: "#^Variable \\$rows might not be defined\\.$#"
 			count: 1
 			path: modules/filter/src/Plugin/Filter/FilterHtml.php
-
-		-
-			message: "#^Class Drupal\\\\filter\\\\Plugin\\\\migrate\\\\process\\\\FilterSettings constructor invoked with 4 parameters, 3 required\\.$#"
-			count: 1
-			path: modules/filter/tests/src/Kernel/Plugin/migrate/process/FilterSettingsTest.php
 
 		-
 			message: "#^Method Drupal\\\\forum\\\\ForumManager\\:\\:getTopicOrder\\(\\) should return array but return statement is missing\\.$#"
@@ -1691,12 +1396,12 @@ parameters:
 			path: modules/history/src/Plugin/views/field/HistoryUserTimestamp.php
 
 		-
-			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
+			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 1
 			path: modules/history/src/Plugin/views/filter/HistoryUserTimestamp.php
 
 		-
-			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
+			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 2
 			path: modules/history/tests/src/Kernel/Views/HistoryTimestampTest.php
 
@@ -1766,26 +1471,6 @@ parameters:
 			path: modules/jsonapi/src/Revisions/VersionNegotiator.php
 
 		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertSame\\(\\) invoked with 4 parameters, 2\\-3 required\\.$#"
-			count: 1
-			path: modules/jsonapi/tests/src/Functional/EntryPointTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertTrue\\(\\) invoked with 3 parameters, 1\\-2 required\\.$#"
-			count: 1
-			path: modules/jsonapi/tests/src/Functional/EntryPointTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:fail\\(\\) invoked with 2 parameters, 0\\-1 required\\.$#"
-			count: 1
-			path: modules/jsonapi/tests/src/Functional/EntryPointTest.php
-
-		-
-			message: "#^Static method Drupal\\\\Component\\\\Serialization\\\\Json\\:\\:encode\\(\\) invoked with 2 parameters, 1 required\\.$#"
-			count: 1
-			path: modules/jsonapi/tests/src/Functional/ResourceTestBase.php
-
-		-
 			message: "#^Variable \\$created_entity might not be defined\\.$#"
 			count: 1
 			path: modules/jsonapi/tests/src/Functional/ResourceTestBase.php
@@ -1804,41 +1489,6 @@ parameters:
 			message: "#^Variable \\$reason in empty\\(\\) always exists and is not falsy\\.$#"
 			count: 2
 			path: modules/jsonapi/tests/src/Functional/ResourceTestBase.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertSame\\(\\) invoked with 4 parameters, 2\\-3 required\\.$#"
-			count: 1
-			path: modules/jsonapi/tests/src/Kernel/Normalizer/LinkCollectionNormalizerTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertTrue\\(\\) invoked with 3 parameters, 1\\-2 required\\.$#"
-			count: 1
-			path: modules/jsonapi/tests/src/Kernel/Normalizer/LinkCollectionNormalizerTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:fail\\(\\) invoked with 2 parameters, 0\\-1 required\\.$#"
-			count: 1
-			path: modules/jsonapi/tests/src/Kernel/Normalizer/LinkCollectionNormalizerTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertSame\\(\\) invoked with 4 parameters, 2\\-3 required\\.$#"
-			count: 1
-			path: modules/jsonapi/tests/src/Kernel/Normalizer/RelationshipNormalizerTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertTrue\\(\\) invoked with 3 parameters, 1\\-2 required\\.$#"
-			count: 1
-			path: modules/jsonapi/tests/src/Kernel/Normalizer/RelationshipNormalizerTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:fail\\(\\) invoked with 2 parameters, 0\\-1 required\\.$#"
-			count: 1
-			path: modules/jsonapi/tests/src/Kernel/Normalizer/RelationshipNormalizerTest.php
-
-		-
-			message: "#^Class Drupal\\\\jsonapi\\\\Normalizer\\\\JsonApiDocumentTopLevelNormalizer constructor invoked with 3 parameters, 2 required\\.$#"
-			count: 1
-			path: modules/jsonapi/tests/src/Unit/Normalizer/JsonApiDocumentTopLevelNormalizerTest.php
 
 		-
 			message: "#^Variable \\$id in isset\\(\\) always exists and is not nullable\\.$#"
@@ -1876,24 +1526,14 @@ parameters:
 			path: modules/language/tests/src/Functional/LanguageBreadcrumbTest.php
 
 		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertSame\\(\\) invoked with 4 parameters, 2\\-3 required\\.$#"
+			message: "#^Relying on entity queries to check access by default is deprecated in drupal\\:9\\.2\\.0 and an error will be thrown from drupal\\:10\\.0\\.0\\. Call \\\\Drupal\\\\Core\\\\Entity\\\\Query\\\\QueryInterface\\:\\:accessCheck\\(\\) with TRUE or FALSE to specify whether access should be checked\\.$#"
 			count: 1
-			path: modules/layout_builder/tests/src/Kernel/OverridesSectionStorageTest.php
+			path: modules/layout_builder/src/Entity/LayoutBuilderEntityViewDisplay.php
 
 		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertTrue\\(\\) invoked with 3 parameters, 1\\-2 required\\.$#"
+			message: "#^Relying on entity queries to check access by default is deprecated in drupal\\:9\\.2\\.0 and an error will be thrown from drupal\\:10\\.0\\.0\\. Call \\\\Drupal\\\\Core\\\\Entity\\\\Query\\\\QueryInterface\\:\\:accessCheck\\(\\) with TRUE or FALSE to specify whether access should be checked\\.$#"
 			count: 1
-			path: modules/layout_builder/tests/src/Kernel/OverridesSectionStorageTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:fail\\(\\) invoked with 2 parameters, 0\\-1 required\\.$#"
-			count: 1
-			path: modules/layout_builder/tests/src/Kernel/OverridesSectionStorageTest.php
-
-		-
-			message: "#^Call to an undefined method Drupal\\\\Tests\\\\layout_builder\\\\Unit\\\\DefaultsSectionStorageTest\\:\\:getThirdPartySetting\\(\\)\\.$#"
-			count: 1
-			path: modules/layout_builder/tests/src/Unit/DefaultsSectionStorageTest.php
+			path: modules/layout_builder/src/Form/LayoutBuilderEntityViewDisplayForm.php
 
 		-
 			message: "#^Constructor of class Drupal\\\\link\\\\Plugin\\\\migrate\\\\process\\\\FieldLink has an unused parameter \\$migration\\.$#"
@@ -1916,7 +1556,7 @@ parameters:
 			path: modules/locale/src/Form/ExportForm.php
 
 		-
-			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
+			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 1
 			path: modules/locale/src/Form/TranslationStatusForm.php
 
@@ -1961,24 +1601,19 @@ parameters:
 			path: modules/locale/src/StringDatabaseStorage.php
 
 		-
-			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
+			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 5
 			path: modules/locale/tests/src/Functional/LocaleUpdateBase.php
 
 		-
-			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
+			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 1
 			path: modules/locale/tests/src/Functional/LocaleUpdateCronTest.php
 
 		-
-			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
+			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 2
 			path: modules/locale/tests/src/Functional/LocaleUpdateInterfaceTest.php
-
-		-
-			message: "#^Method Drupal\\\\Tests\\\\locale\\\\Kernel\\\\LocaleConfigSubscriberTest\\:\\:assertNoConfigOverride\\(\\) invoked with 4 parameters, 2 required\\.$#"
-			count: 3
-			path: modules/locale/tests/src/Kernel/LocaleConfigSubscriberTest.php
 
 		-
 			message: "#^Variable \\$error in empty\\(\\) always exists and is not falsy\\.$#"
@@ -2001,104 +1636,14 @@ parameters:
 			path: modules/media/src/OEmbed/UrlResolver.php
 
 		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertSame\\(\\) invoked with 4 parameters, 2\\-3 required\\.$#"
+			message: "#^Relying on entity queries to check access by default is deprecated in drupal\\:9\\.2\\.0 and an error will be thrown from drupal\\:10\\.0\\.0\\. Call \\\\Drupal\\\\Core\\\\Entity\\\\Query\\\\QueryInterface\\:\\:accessCheck\\(\\) with TRUE or FALSE to specify whether access should be checked\\.$#"
 			count: 1
-			path: modules/media/tests/src/Kernel/MediaAccessControlHandlerTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertTrue\\(\\) invoked with 3 parameters, 1\\-2 required\\.$#"
-			count: 1
-			path: modules/media/tests/src/Kernel/MediaAccessControlHandlerTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:fail\\(\\) invoked with 2 parameters, 0\\-1 required\\.$#"
-			count: 1
-			path: modules/media/tests/src/Kernel/MediaAccessControlHandlerTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertSame\\(\\) invoked with 4 parameters, 2\\-3 required\\.$#"
-			count: 1
-			path: modules/media/tests/src/Kernel/MediaEmbedFilterTestBase.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertTrue\\(\\) invoked with 3 parameters, 1\\-2 required\\.$#"
-			count: 1
-			path: modules/media/tests/src/Kernel/MediaEmbedFilterTestBase.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:fail\\(\\) invoked with 2 parameters, 0\\-1 required\\.$#"
-			count: 1
-			path: modules/media/tests/src/Kernel/MediaEmbedFilterTestBase.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertSame\\(\\) invoked with 4 parameters, 2\\-3 required\\.$#"
-			count: 1
-			path: modules/media/tests/src/Kernel/Views/RevisionUserTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertTrue\\(\\) invoked with 3 parameters, 1\\-2 required\\.$#"
-			count: 1
-			path: modules/media/tests/src/Kernel/Views/RevisionUserTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:fail\\(\\) invoked with 2 parameters, 0\\-1 required\\.$#"
-			count: 1
-			path: modules/media/tests/src/Kernel/Views/RevisionUserTest.php
+			path: modules/media_library/src/Plugin/Field/FieldWidget/MediaLibraryWidget.php
 
 		-
 			message: "#^Variable \\$jpg_image might not be defined\\.$#"
 			count: 1
 			path: modules/media_library/tests/src/FunctionalJavascript/EmbeddedFormWidgetTest.php
-
-		-
-			message: "#^Method Drupal\\\\Tests\\\\media_library\\\\FunctionalJavascript\\\\MediaLibraryTestBase\\:\\:addMediaFileToField\\(\\) invoked with 3 parameters, 2 required\\.$#"
-			count: 2
-			path: modules/media_library/tests/src/FunctionalJavascript/WidgetUploadTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertSame\\(\\) invoked with 4 parameters, 2\\-3 required\\.$#"
-			count: 1
-			path: modules/media_library/tests/src/Kernel/MediaLibraryAccessTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertTrue\\(\\) invoked with 3 parameters, 1\\-2 required\\.$#"
-			count: 1
-			path: modules/media_library/tests/src/Kernel/MediaLibraryAccessTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:fail\\(\\) invoked with 2 parameters, 0\\-1 required\\.$#"
-			count: 1
-			path: modules/media_library/tests/src/Kernel/MediaLibraryAccessTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertSame\\(\\) invoked with 4 parameters, 2\\-3 required\\.$#"
-			count: 1
-			path: modules/media_library/tests/src/Kernel/MediaLibraryAddFormTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertTrue\\(\\) invoked with 3 parameters, 1\\-2 required\\.$#"
-			count: 1
-			path: modules/media_library/tests/src/Kernel/MediaLibraryAddFormTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:fail\\(\\) invoked with 2 parameters, 0\\-1 required\\.$#"
-			count: 1
-			path: modules/media_library/tests/src/Kernel/MediaLibraryAddFormTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertSame\\(\\) invoked with 4 parameters, 2\\-3 required\\.$#"
-			count: 1
-			path: modules/media_library/tests/src/Kernel/MediaLibraryWidgetTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertTrue\\(\\) invoked with 3 parameters, 1\\-2 required\\.$#"
-			count: 1
-			path: modules/media_library/tests/src/Kernel/MediaLibraryWidgetTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:fail\\(\\) invoked with 2 parameters, 0\\-1 required\\.$#"
-			count: 1
-			path: modules/media_library/tests/src/Kernel/MediaLibraryWidgetTest.php
 
 		-
 			message: "#^Constructor of class Drupal\\\\menu_link_content\\\\Form\\\\MenuLinkContentForm has an unused parameter \\$language_manager\\.$#"
@@ -2116,112 +1661,17 @@ parameters:
 			path: modules/menu_link_content/src/Plugin/Menu/MenuLinkContent.php
 
 		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertSame\\(\\) invoked with 4 parameters, 2\\-3 required\\.$#"
-			count: 1
-			path: modules/menu_link_content/tests/src/Kernel/MenuLinkContentCacheabilityBubblingTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertTrue\\(\\) invoked with 3 parameters, 1\\-2 required\\.$#"
-			count: 1
-			path: modules/menu_link_content/tests/src/Kernel/MenuLinkContentCacheabilityBubblingTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:fail\\(\\) invoked with 2 parameters, 0\\-1 required\\.$#"
-			count: 1
-			path: modules/menu_link_content/tests/src/Kernel/MenuLinkContentCacheabilityBubblingTest.php
-
-		-
-			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
+			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 2
 			path: modules/menu_link_content/tests/src/Kernel/MenuLinksTest.php
 
 		-
-			message: "#^Method Drupal\\\\Tests\\\\menu_link_content\\\\Kernel\\\\Migrate\\\\d6\\\\MigrateMenuLinkLocalizedTest\\:\\:assertEntity\\(\\) invoked with 11 parameters, 10 required\\.$#"
-			count: 1
-			path: modules/menu_link_content/tests/src/Kernel/Migrate/d6/MigrateMenuLinkLocalizedTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertSame\\(\\) invoked with 4 parameters, 2\\-3 required\\.$#"
-			count: 1
-			path: modules/menu_link_content/tests/src/Kernel/Migrate/d6/MigrateMenuLinkLocalizedTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertTrue\\(\\) invoked with 3 parameters, 1\\-2 required\\.$#"
-			count: 1
-			path: modules/menu_link_content/tests/src/Kernel/Migrate/d6/MigrateMenuLinkLocalizedTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:fail\\(\\) invoked with 2 parameters, 0\\-1 required\\.$#"
-			count: 1
-			path: modules/menu_link_content/tests/src/Kernel/Migrate/d6/MigrateMenuLinkLocalizedTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertSame\\(\\) invoked with 4 parameters, 2\\-3 required\\.$#"
-			count: 1
-			path: modules/menu_link_content/tests/src/Kernel/Migrate/d6/MigrateMenuLinkTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertTrue\\(\\) invoked with 3 parameters, 1\\-2 required\\.$#"
-			count: 1
-			path: modules/menu_link_content/tests/src/Kernel/Migrate/d6/MigrateMenuLinkTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:fail\\(\\) invoked with 2 parameters, 0\\-1 required\\.$#"
-			count: 1
-			path: modules/menu_link_content/tests/src/Kernel/Migrate/d6/MigrateMenuLinkTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertSame\\(\\) invoked with 4 parameters, 2\\-3 required\\.$#"
-			count: 1
-			path: modules/menu_link_content/tests/src/Kernel/Migrate/d6/MigrateMenuLinkTranslationTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertTrue\\(\\) invoked with 3 parameters, 1\\-2 required\\.$#"
-			count: 1
-			path: modules/menu_link_content/tests/src/Kernel/Migrate/d6/MigrateMenuLinkTranslationTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:fail\\(\\) invoked with 2 parameters, 0\\-1 required\\.$#"
-			count: 1
-			path: modules/menu_link_content/tests/src/Kernel/Migrate/d6/MigrateMenuLinkTranslationTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertSame\\(\\) invoked with 4 parameters, 2\\-3 required\\.$#"
-			count: 1
-			path: modules/menu_link_content/tests/src/Kernel/Migrate/d7/MigrateMenuLinkTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertTrue\\(\\) invoked with 3 parameters, 1\\-2 required\\.$#"
-			count: 1
-			path: modules/menu_link_content/tests/src/Kernel/Migrate/d7/MigrateMenuLinkTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:fail\\(\\) invoked with 2 parameters, 0\\-1 required\\.$#"
-			count: 1
-			path: modules/menu_link_content/tests/src/Kernel/Migrate/d7/MigrateMenuLinkTest.php
-
-		-
-			message: "#^Class Drupal\\\\menu_link_content\\\\Plugin\\\\migrate\\\\process\\\\LinkUri constructor invoked with 5 parameters, 4 required\\.$#"
-			count: 1
-			path: modules/menu_link_content/tests/src/Kernel/Plugin/migrate/process/LinkUriTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertSame\\(\\) invoked with 4 parameters, 2\\-3 required\\.$#"
-			count: 1
-			path: modules/menu_link_content/tests/src/Kernel/Plugin/migrate/process/LinkUriTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertTrue\\(\\) invoked with 3 parameters, 1\\-2 required\\.$#"
-			count: 1
-			path: modules/menu_link_content/tests/src/Kernel/Plugin/migrate/process/LinkUriTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:fail\\(\\) invoked with 2 parameters, 0\\-1 required\\.$#"
-			count: 1
-			path: modules/menu_link_content/tests/src/Kernel/Plugin/migrate/process/LinkUriTest.php
-
-		-
 			message: "#^Method Drupal\\\\menu_ui\\\\MenuForm\\:\\:save\\(\\) should return int but return statement is missing\\.$#"
+			count: 1
+			path: modules/menu_ui/src/MenuForm.php
+
+		-
+			message: "#^Relying on entity queries to check access by default is deprecated in drupal\\:9\\.2\\.0 and an error will be thrown from drupal\\:10\\.0\\.0\\. Call \\\\Drupal\\\\Core\\\\Entity\\\\Query\\\\QueryInterface\\:\\:accessCheck\\(\\) with TRUE or FALSE to specify whether access should be checked\\.$#"
 			count: 1
 			path: modules/menu_ui/src/MenuForm.php
 
@@ -2271,11 +1721,6 @@ parameters:
 			path: modules/migrate/src/Plugin/migrate/destination/EntityConfigBase.php
 
 		-
-			message: "#^Variable \\$id_keys might not be defined\\.$#"
-			count: 1
-			path: modules/migrate/src/Plugin/migrate/destination/EntityConfigBase.php
-
-		-
 			message: "#^Method Drupal\\\\migrate\\\\Plugin\\\\migrate\\\\destination\\\\NullDestination\\:\\:import\\(\\) should return array\\|bool but return statement is missing\\.$#"
 			count: 1
 			path: modules/migrate/src/Plugin/migrate/destination/NullDestination.php
@@ -2284,26 +1729,6 @@ parameters:
 			message: "#^Call to an undefined static method static\\(Drupal\\\\Tests\\\\migrate\\\\Kernel\\\\MigrateTestBase\\)\\:\\:migrateDumpAlter\\(\\)\\.$#"
 			count: 1
 			path: modules/migrate/tests/src/Kernel/MigrateTestBase.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertSame\\(\\) invoked with 4 parameters, 2\\-3 required\\.$#"
-			count: 1
-			path: modules/migrate/tests/src/Kernel/process/RouteTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertTrue\\(\\) invoked with 3 parameters, 1\\-2 required\\.$#"
-			count: 1
-			path: modules/migrate/tests/src/Kernel/process/RouteTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:fail\\(\\) invoked with 2 parameters, 0\\-1 required\\.$#"
-			count: 1
-			path: modules/migrate/tests/src/Kernel/process/RouteTest.php
-
-		-
-			message: "#^Class Drupal\\\\migrate\\\\Event\\\\EventBase constructor invoked with 4 parameters, 2 required\\.$#"
-			count: 1
-			path: modules/migrate/tests/src/Unit/Event/EventBaseTest.php
 
 		-
 			message: "#^Variable \\$sub_process_plugins might not be defined\\.$#"
@@ -2319,6 +1744,11 @@ parameters:
 			message: "#^Constructor of class Drupal\\\\migrate_drupal\\\\Plugin\\\\migrate\\\\EntityReferenceTranslationDeriver has an unused parameter \\$base_plugin_id\\.$#"
 			count: 1
 			path: modules/migrate_drupal/src/Plugin/migrate/EntityReferenceTranslationDeriver.php
+
+		-
+			message: "#^Relying on entity queries to check access by default is deprecated in drupal\\:9\\.2\\.0 and an error will be thrown from drupal\\:10\\.0\\.0\\. Call \\\\Drupal\\\\Core\\\\Entity\\\\Query\\\\QueryInterface\\:\\:accessCheck\\(\\) with TRUE or FALSE to specify whether access should be checked\\.$#"
+			count: 1
+			path: modules/migrate_drupal/src/Plugin/migrate/source/ContentEntity.php
 
 		-
 			message: "#^Constructor of class Drupal\\\\migrate_drupal\\\\Plugin\\\\migrate\\\\source\\\\ContentEntityDeriver has an unused parameter \\$base_plugin_id\\.$#"
@@ -2351,7 +1781,7 @@ parameters:
 			path: modules/migrate_drupal/tests/src/Unit/MigrationConfigurationTraitTest.php
 
 		-
-			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
+			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 2
 			path: modules/migrate_drupal_ui/src/Batch/MigrateUpgradeImportBatch.php
 
@@ -2371,7 +1801,7 @@ parameters:
 			path: modules/migrate_drupal_ui/src/Form/MigrateUpgradeFormBase.php
 
 		-
-			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
+			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 1
 			path: modules/migrate_drupal_ui/src/Form/ReviewForm.php
 
@@ -2426,6 +1856,11 @@ parameters:
 			path: modules/mysql/tests/src/Kernel/mysql/SchemaTest.php
 
 		-
+			message: "#^Relying on entity queries to check access by default is deprecated in drupal\\:9\\.2\\.0 and an error will be thrown from drupal\\:10\\.0\\.0\\. Call \\\\Drupal\\\\Core\\\\Entity\\\\Query\\\\QueryInterface\\:\\:accessCheck\\(\\) with TRUE or FALSE to specify whether access should be checked\\.$#"
+			count: 3
+			path: modules/node/node.module
+
+		-
 			message: "#^Variable \\$batch in isset\\(\\) is never defined\\.$#"
 			count: 1
 			path: modules/node/node.module
@@ -2461,22 +1896,22 @@ parameters:
 			path: modules/node/src/Plugin/views/row/Rss.php
 
 		-
-			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
+			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 1
 			path: modules/node/tests/src/Functional/NodeAdminTest.php
 
 		-
-			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
+			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 1
 			path: modules/node/tests/src/Functional/NodeRevisionsAllTest.php
 
 		-
-			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
+			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 1
 			path: modules/node/tests/src/Functional/NodeRevisionsTest.php
 
 		-
-			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
+			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 2
 			path: modules/node/tests/src/Functional/NodeSaveTest.php
 
@@ -2486,7 +1921,7 @@ parameters:
 			path: modules/node/tests/src/Functional/NodeTitleTest.php
 
 		-
-			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
+			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 1
 			path: modules/node/tests/src/Functional/NodeTranslationUITest.php
 
@@ -2496,129 +1931,24 @@ parameters:
 			path: modules/node/tests/src/Functional/NodeTypeTest.php
 
 		-
-			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
+			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 3
 			path: modules/node/tests/src/Functional/Views/FrontPageTest.php
 
 		-
-			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
+			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 1
 			path: modules/node/tests/src/Functional/Views/NodeIntegrationTest.php
 
 		-
-			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
+			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 5
 			path: modules/node/tests/src/Functional/Views/Wizard/NodeRevisionWizardTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertSame\\(\\) invoked with 4 parameters, 2\\-3 required\\.$#"
-			count: 1
-			path: modules/node/tests/src/Kernel/Migrate/d6/NodeTranslationRedirectTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertTrue\\(\\) invoked with 3 parameters, 1\\-2 required\\.$#"
-			count: 1
-			path: modules/node/tests/src/Kernel/Migrate/d6/NodeTranslationRedirectTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:fail\\(\\) invoked with 2 parameters, 0\\-1 required\\.$#"
-			count: 1
-			path: modules/node/tests/src/Kernel/Migrate/d6/NodeTranslationRedirectTest.php
 
 		-
 			message: "#^Variable \\$changed in isset\\(\\) always exists and is not nullable\\.$#"
 			count: 1
 			path: modules/node/tests/src/Kernel/Migrate/d7/MigrateNodeTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertSame\\(\\) invoked with 4 parameters, 2\\-3 required\\.$#"
-			count: 1
-			path: modules/node/tests/src/Kernel/Migrate/d7/NodeTranslationRedirectTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertTrue\\(\\) invoked with 3 parameters, 1\\-2 required\\.$#"
-			count: 1
-			path: modules/node/tests/src/Kernel/Migrate/d7/NodeTranslationRedirectTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:fail\\(\\) invoked with 2 parameters, 0\\-1 required\\.$#"
-			count: 1
-			path: modules/node/tests/src/Kernel/Migrate/d7/NodeTranslationRedirectTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertSame\\(\\) invoked with 4 parameters, 2\\-3 required\\.$#"
-			count: 1
-			path: modules/node/tests/src/Kernel/NodeAccessTestBase.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertTrue\\(\\) invoked with 3 parameters, 1\\-2 required\\.$#"
-			count: 1
-			path: modules/node/tests/src/Kernel/NodeAccessTestBase.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:fail\\(\\) invoked with 2 parameters, 0\\-1 required\\.$#"
-			count: 1
-			path: modules/node/tests/src/Kernel/NodeAccessTestBase.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertSame\\(\\) invoked with 4 parameters, 2\\-3 required\\.$#"
-			count: 1
-			path: modules/node/tests/src/Kernel/SummaryLengthTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertTrue\\(\\) invoked with 3 parameters, 1\\-2 required\\.$#"
-			count: 1
-			path: modules/node/tests/src/Kernel/SummaryLengthTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:fail\\(\\) invoked with 2 parameters, 0\\-1 required\\.$#"
-			count: 1
-			path: modules/node/tests/src/Kernel/SummaryLengthTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertSame\\(\\) invoked with 4 parameters, 2\\-3 required\\.$#"
-			count: 1
-			path: modules/node/tests/src/Kernel/Views/ArgumentUidRevisionTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertTrue\\(\\) invoked with 3 parameters, 1\\-2 required\\.$#"
-			count: 1
-			path: modules/node/tests/src/Kernel/Views/ArgumentUidRevisionTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:fail\\(\\) invoked with 2 parameters, 0\\-1 required\\.$#"
-			count: 1
-			path: modules/node/tests/src/Kernel/Views/ArgumentUidRevisionTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertSame\\(\\) invoked with 4 parameters, 2\\-3 required\\.$#"
-			count: 1
-			path: modules/node/tests/src/Kernel/Views/FilterUidRevisionTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertTrue\\(\\) invoked with 3 parameters, 1\\-2 required\\.$#"
-			count: 1
-			path: modules/node/tests/src/Kernel/Views/FilterUidRevisionTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:fail\\(\\) invoked with 2 parameters, 0\\-1 required\\.$#"
-			count: 1
-			path: modules/node/tests/src/Kernel/Views/FilterUidRevisionTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertSame\\(\\) invoked with 4 parameters, 2\\-3 required\\.$#"
-			count: 1
-			path: modules/node/tests/src/Kernel/Views/RevisionUidTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertTrue\\(\\) invoked with 3 parameters, 1\\-2 required\\.$#"
-			count: 1
-			path: modules/node/tests/src/Kernel/Views/RevisionUidTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:fail\\(\\) invoked with 2 parameters, 0\\-1 required\\.$#"
-			count: 1
-			path: modules/node/tests/src/Kernel/Views/RevisionUidTest.php
 
 		-
 			message: "#^Method Drupal\\\\options\\\\Plugin\\\\Field\\\\FieldType\\\\ListFloatItem\\:\\:validateAllowedValue\\(\\) should return string but return statement is missing\\.$#"
@@ -2671,7 +2001,7 @@ parameters:
 			path: modules/path/src/Plugin/Field/FieldType/PathItem.php
 
 		-
-			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
+			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 1
 			path: modules/path_alias/src/AliasManager.php
 
@@ -2691,34 +2021,14 @@ parameters:
 			path: modules/responsive_image/src/Plugin/Field/FieldFormatter/ResponsiveImageFormatter.php
 
 		-
-			message: "#^Method Drupal\\\\Core\\\\Entity\\\\EntityForm\\:\\:form\\(\\) invoked with 3 parameters, 2 required\\.$#"
-			count: 1
-			path: modules/responsive_image/src/ResponsiveImageStyleForm.php
-
-		-
 			message: "#^Method Drupal\\\\responsive_image\\\\ResponsiveImageStyleForm\\:\\:save\\(\\) should return int but return statement is missing\\.$#"
 			count: 1
 			path: modules/responsive_image/src/ResponsiveImageStyleForm.php
 
 		-
-			message: "#^Class Drupal\\\\views\\\\Entity\\\\Render\\\\DefaultLanguageRenderer constructor invoked with 4 parameters, 3 required\\.$#"
-			count: 1
-			path: modules/rest/src/Plugin/views/row/DataEntityRow.php
-
-		-
-			message: "#^Class Drupal\\\\views\\\\Entity\\\\Render\\\\TranslationLanguageRenderer constructor invoked with 4 parameters, 3 required\\.$#"
-			count: 1
-			path: modules/rest/src/Plugin/views/row/DataEntityRow.php
-
-		-
 			message: "#^Method Drupal\\\\rest\\\\Routing\\\\ResourceRoutes\\:\\:onDynamicRouteEvent\\(\\) should return array but return statement is missing\\.$#"
 			count: 1
 			path: modules/rest/src/Routing/ResourceRoutes.php
-
-		-
-			message: "#^Anonymous function has an unused use \\$link_relation_type_manager\\.$#"
-			count: 1
-			path: modules/rest/tests/src/Functional/EntityResource/EntityResourceTestBase.php
 
 		-
 			message: "#^Variable \\$created_entity might not be defined\\.$#"
@@ -2729,11 +2039,6 @@ parameters:
 			message: "#^Variable \\$working_to might not be defined\\.$#"
 			count: 1
 			path: modules/search/search.module
-
-		-
-			message: "#^Variable \\$keys might not be defined\\.$#"
-			count: 1
-			path: modules/search/src/Controller/SearchController.php
 
 		-
 			message: "#^Method Drupal\\\\search\\\\Form\\\\SearchPageAddForm\\:\\:save\\(\\) should return int but return statement is missing\\.$#"
@@ -2751,7 +2056,12 @@ parameters:
 			path: modules/search/src/Form/SearchPageFormBase.php
 
 		-
-			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
+			message: "#^Relying on entity queries to check access by default is deprecated in drupal\\:9\\.2\\.0 and an error will be thrown from drupal\\:10\\.0\\.0\\. Call \\\\Drupal\\\\Core\\\\Entity\\\\Query\\\\QueryInterface\\:\\:accessCheck\\(\\) with TRUE or FALSE to specify whether access should be checked\\.$#"
+			count: 2
+			path: modules/search/src/Form/SearchPageFormBase.php
+
+		-
+			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 1
 			path: modules/search/src/SearchIndex.php
 
@@ -2761,12 +2071,12 @@ parameters:
 			path: modules/search/src/SearchPageRepository.php
 
 		-
-			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
+			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 1
 			path: modules/search/tests/src/Functional/SearchMultilingualEntityTest.php
 
 		-
-			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
+			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 3
 			path: modules/search/tests/src/Functional/SearchRankingTest.php
 
@@ -2774,6 +2084,16 @@ parameters:
 			message: "#^Call to an undefined method Drupal\\\\serialization\\\\Normalizer\\\\EntityNormalizer\\:\\:getCustomSerializedPropertyNames\\(\\)\\.$#"
 			count: 1
 			path: modules/serialization/src/Normalizer/EntityNormalizer.php
+
+		-
+			message: "#^Relying on entity queries to check access by default is deprecated in drupal\\:9\\.2\\.0 and an error will be thrown from drupal\\:10\\.0\\.0\\. Call \\\\Drupal\\\\Core\\\\Entity\\\\Query\\\\QueryInterface\\:\\:accessCheck\\(\\) with TRUE or FALSE to specify whether access should be checked\\.$#"
+			count: 1
+			path: modules/serialization/src/Normalizer/EntityNormalizer.php
+
+		-
+			message: "#^Relying on entity queries to check access by default is deprecated in drupal\\:9\\.2\\.0 and an error will be thrown from drupal\\:10\\.0\\.0\\. Call \\\\Drupal\\\\Core\\\\Entity\\\\Query\\\\QueryInterface\\:\\:accessCheck\\(\\) with TRUE or FALSE to specify whether access should be checked\\.$#"
+			count: 1
+			path: modules/serialization/src/Normalizer/FieldItemNormalizer.php
 
 		-
 			message: "#^Class Drupal\\\\block\\\\Entity\\\\Block referenced with incorrect case\\: Drupal\\\\block\\\\entity\\\\Block\\.$#"
@@ -2786,9 +2106,9 @@ parameters:
 			path: modules/shortcut/src/Form/SetCustomize.php
 
 		-
-			message: "#^Function shortcut_set_edit_access invoked with 2 parameters, 0\\-1 required\\.$#"
-			count: 2
-			path: modules/shortcut/src/ShortcutAccessControlHandler.php
+			message: "#^Relying on entity queries to check access by default is deprecated in drupal\\:9\\.2\\.0 and an error will be thrown from drupal\\:10\\.0\\.0\\. Call \\\\Drupal\\\\Core\\\\Entity\\\\Query\\\\QueryInterface\\:\\:accessCheck\\(\\) with TRUE or FALSE to specify whether access should be checked\\.$#"
+			count: 1
+			path: modules/shortcut/src/Form/SwitchShortcutSet.php
 
 		-
 			message: "#^Method Drupal\\\\shortcut\\\\ShortcutForm\\:\\:save\\(\\) should return int but return statement is missing\\.$#"
@@ -2799,11 +2119,6 @@ parameters:
 			message: "#^Method Drupal\\\\shortcut\\\\ShortcutSetForm\\:\\:save\\(\\) should return int but return statement is missing\\.$#"
 			count: 1
 			path: modules/shortcut/src/ShortcutSetForm.php
-
-		-
-			message: "#^Method Drupal\\\\Tests\\\\BrowserTestBase\\:\\:clickLink\\(\\) invoked with 3 parameters, 1\\-2 required\\.$#"
-			count: 1
-			path: modules/shortcut/tests/src/Functional/ShortcutLinksTest.php
 
 		-
 			message: "#^Variable \\$args might not be defined\\.$#"
@@ -2821,27 +2136,27 @@ parameters:
 			path: modules/system/src/Controller/BatchController.php
 
 		-
-			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
+			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 1
 			path: modules/system/src/DateFormatListBuilder.php
 
 		-
-			message: "#^Constructor of class Drupal\\\\system\\\\Form\\\\CronForm has an unused parameter \\$config_factory\\.$#"
-			count: 1
-			path: modules/system/src/Form/CronForm.php
-
-		-
-			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
+			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 1
 			path: modules/system/src/Form/DateFormatDeleteForm.php
 
 		-
-			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
+			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 1
 			path: modules/system/src/Form/DateFormatEditForm.php
 
 		-
 			message: "#^Method Drupal\\\\system\\\\Form\\\\DateFormatFormBase\\:\\:save\\(\\) should return int but return statement is missing\\.$#"
+			count: 1
+			path: modules/system/src/Form/DateFormatFormBase.php
+
+		-
+			message: "#^Relying on entity queries to check access by default is deprecated in drupal\\:9\\.2\\.0 and an error will be thrown from drupal\\:10\\.0\\.0\\. Call \\\\Drupal\\\\Core\\\\Entity\\\\Query\\\\QueryInterface\\:\\:accessCheck\\(\\) with TRUE or FALSE to specify whether access should be checked\\.$#"
 			count: 1
 			path: modules/system/src/Form/DateFormatFormBase.php
 
@@ -2853,11 +2168,6 @@ parameters:
 		-
 			message: "#^Variable \\$default_theme in isset\\(\\) always exists and is not nullable\\.$#"
 			count: 1
-			path: modules/system/src/Form/ThemeSettingsForm.php
-
-		-
-			message: "#^Variable \\$features might not be defined\\.$#"
-			count: 3
 			path: modules/system/src/Form/ThemeSettingsForm.php
 
 		-
@@ -2901,7 +2211,7 @@ parameters:
 			path: modules/system/tests/modules/entity_test/entity_test.install
 
 		-
-			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
+			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 1
 			path: modules/system/tests/modules/entity_test/src/Plugin/Field/FieldType/ChangedTestItem.php
 
@@ -2909,11 +2219,6 @@ parameters:
 			message: "#^Variable \\$options might not be defined\\.$#"
 			count: 1
 			path: modules/system/tests/modules/form_test/src/Form/FormTestTableSelectJsSelectForm.php
-
-		-
-			message: "#^Method Drupal\\\\Core\\\\Form\\\\ConfigFormBase\\:\\:config\\(\\) invoked with 2 parameters, 1 required\\.$#"
-			count: 1
-			path: modules/system/tests/modules/form_test/src/FormTestServiceObject.php
 
 		-
 			message: "#^Constructor of class Drupal\\\\lazy_route_provider_install_test\\\\PluginManager has an unused parameter \\$cache_backend\\.$#"
@@ -2931,69 +2236,14 @@ parameters:
 			path: modules/system/tests/modules/module_installer_config_test/src/Entity/TestConfigType.php
 
 		-
-			message: "#^Method Drupal\\\\Tests\\\\system\\\\Functional\\\\Ajax\\\\FrameworkTest\\:\\:assertCommand\\(\\) invoked with 3 parameters, 2 required\\.$#"
-			count: 2
-			path: modules/system/tests/src/Functional/Ajax/FrameworkTest.php
-
-		-
-			message: "#^Method Drupal\\\\Tests\\\\system\\\\Functional\\\\Batch\\\\ProcessingTest\\:\\:assertBatchMessages\\(\\) invoked with 2 parameters, 1 required\\.$#"
-			count: 14
-			path: modules/system/tests/src/Functional/Batch/ProcessingTest.php
-
-		-
-			message: "#^Method Drupal\\\\Tests\\\\system\\\\Functional\\\\Entity\\\\EntityCacheTagsTestBase\\:\\:getAdditionalCacheTagsForEntityListing\\(\\) invoked with 1 parameter, 0 required\\.$#"
-			count: 1
-			path: modules/system/tests/src/Functional/Entity/EntityCacheTagsTestBase.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertSame\\(\\) invoked with 4 parameters, 2\\-3 required\\.$#"
-			count: 1
-			path: modules/system/tests/src/Functional/Entity/EntityReferenceSelection/EntityReferenceSelectionAccessTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertTrue\\(\\) invoked with 3 parameters, 1\\-2 required\\.$#"
-			count: 1
-			path: modules/system/tests/src/Functional/Entity/EntityReferenceSelection/EntityReferenceSelectionAccessTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:fail\\(\\) invoked with 2 parameters, 0\\-1 required\\.$#"
-			count: 1
-			path: modules/system/tests/src/Functional/Entity/EntityReferenceSelection/EntityReferenceSelectionAccessTest.php
-
-		-
-			message: "#^Instantiated class Drupal\\\\Tests\\\\system\\\\Functional\\\\FileTransfer\\\\Exception not found\\.$#"
-			count: 1
-			path: modules/system/tests/src/Functional/FileTransfer/FileTransferTest.php
-
-		-
 			message: "#^Access to an undefined property Drupal\\\\Tests\\\\system\\\\Functional\\\\FileTransfer\\\\TestFileTransfer\\:\\:\\$connection\\.$#"
 			count: 5
 			path: modules/system/tests/src/Functional/FileTransfer/TestFileTransfer.php
 
 		-
-			message: "#^Method Drupal\\\\Core\\\\FileTransfer\\\\FileTransfer\\:\\:__construct\\(\\) invoked with 5 parameters, 1 required\\.$#"
-			count: 1
-			path: modules/system/tests/src/Functional/FileTransfer/TestFileTransfer.php
-
-		-
-			message: "#^Variable \\$checked might not be defined\\.$#"
-			count: 1
-			path: modules/system/tests/src/Functional/Form/CheckboxTest.php
-
-		-
 			message: "#^Variable \\$form_output in empty\\(\\) always exists and is not falsy\\.$#"
 			count: 2
 			path: modules/system/tests/src/Functional/Form/FormTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertFalse\\(\\) invoked with 3 parameters, 1\\-2 required\\.$#"
-			count: 1
-			path: modules/system/tests/src/Functional/Lock/LockFunctionalTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertTrue\\(\\) invoked with 3 parameters, 1\\-2 required\\.$#"
-			count: 5
-			path: modules/system/tests/src/Functional/Lock/LockFunctionalTest.php
 
 		-
 			message: "#^Variable \\$goto in isset\\(\\) always exists and is not nullable\\.$#"
@@ -3011,77 +2261,12 @@ parameters:
 			path: modules/system/tests/src/Functional/Menu/BreadcrumbTest.php
 
 		-
-			message: "#^Method Drupal\\\\Tests\\\\system\\\\Functional\\\\Session\\\\SessionTest\\:\\:sessionReset\\(\\) invoked with 1 parameter, 0 required\\.$#"
-			count: 3
-			path: modules/system/tests/src/Functional/Session/SessionTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertTrue\\(\\) invoked with 3 parameters, 1\\-2 required\\.$#"
-			count: 2
-			path: modules/system/tests/src/Functional/System/SiteMaintenanceTest.php
-
-		-
 			message: "#^Variable \\$expected_required_list_items might not be defined\\.$#"
 			count: 2
 			path: modules/system/tests/src/Functional/Theme/ThemeUiTest.php
 
 		-
-			message: "#^Anonymous function has an unused use \\$renderer\\.$#"
-			count: 1
-			path: modules/system/tests/src/Kernel/Common/UrlTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertSame\\(\\) invoked with 4 parameters, 2\\-3 required\\.$#"
-			count: 1
-			path: modules/system/tests/src/Kernel/DateFormatAccessControlHandlerTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertTrue\\(\\) invoked with 3 parameters, 1\\-2 required\\.$#"
-			count: 1
-			path: modules/system/tests/src/Kernel/DateFormatAccessControlHandlerTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:fail\\(\\) invoked with 2 parameters, 0\\-1 required\\.$#"
-			count: 1
-			path: modules/system/tests/src/Kernel/DateFormatAccessControlHandlerTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertSame\\(\\) invoked with 4 parameters, 2\\-3 required\\.$#"
-			count: 1
-			path: modules/system/tests/src/Kernel/MenuAccessControlHandlerTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertTrue\\(\\) invoked with 3 parameters, 1\\-2 required\\.$#"
-			count: 1
-			path: modules/system/tests/src/Kernel/MenuAccessControlHandlerTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:fail\\(\\) invoked with 2 parameters, 0\\-1 required\\.$#"
-			count: 1
-			path: modules/system/tests/src/Kernel/MenuAccessControlHandlerTest.php
-
-		-
-			message: "#^Class Symfony\\\\Component\\\\HttpKernel\\\\Event\\\\RequestEvent constructor invoked with 4 parameters, 3 required\\.$#"
-			count: 1
-			path: modules/system/tests/src/Kernel/TimezoneResolverTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertSame\\(\\) invoked with 4 parameters, 2\\-3 required\\.$#"
-			count: 1
-			path: modules/system/tests/src/Kernel/TimezoneResolverTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertTrue\\(\\) invoked with 3 parameters, 1\\-2 required\\.$#"
-			count: 1
-			path: modules/system/tests/src/Kernel/TimezoneResolverTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:fail\\(\\) invoked with 2 parameters, 0\\-1 required\\.$#"
-			count: 1
-			path: modules/system/tests/src/Kernel/TimezoneResolverTest.php
-
-		-
-			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
+			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 1
 			path: modules/system/tests/src/Kernel/Token/TokenReplaceKernelTest.php
 
@@ -3166,49 +2351,9 @@ parameters:
 			path: modules/taxonomy/tests/src/Kernel/TermKernelTest.php
 
 		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertSame\\(\\) invoked with 4 parameters, 2\\-3 required\\.$#"
-			count: 1
-			path: modules/taxonomy/tests/src/Kernel/Views/TaxonomyTestBase.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertTrue\\(\\) invoked with 3 parameters, 1\\-2 required\\.$#"
-			count: 1
-			path: modules/taxonomy/tests/src/Kernel/Views/TaxonomyTestBase.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:fail\\(\\) invoked with 2 parameters, 0\\-1 required\\.$#"
-			count: 1
-			path: modules/taxonomy/tests/src/Kernel/Views/TaxonomyTestBase.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertSame\\(\\) invoked with 4 parameters, 2\\-3 required\\.$#"
-			count: 1
-			path: modules/text/tests/src/Kernel/TextSummaryTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertTrue\\(\\) invoked with 3 parameters, 1\\-2 required\\.$#"
-			count: 1
-			path: modules/text/tests/src/Kernel/TextSummaryTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:fail\\(\\) invoked with 2 parameters, 0\\-1 required\\.$#"
-			count: 1
-			path: modules/text/tests/src/Kernel/TextSummaryTest.php
-
-		-
-			message: "#^Variable \\$filters might not be defined\\.$#"
-			count: 1
-			path: modules/text/text.module
-
-		-
-			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
+			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 1
 			path: modules/toolbar/src/Controller/ToolbarController.php
-
-		-
-			message: "#^Method Drupal\\\\Core\\\\Menu\\\\MenuLinkTree\\:\\:build\\(\\) invoked with 2 parameters, 1 required\\.$#"
-			count: 2
-			path: modules/toolbar/src/Menu/ToolbarMenuLinkTree.php
 
 		-
 			message: "#^Method Drupal\\\\tour\\\\TipPluginBase\\:\\:get\\(\\) should return string but return statement is missing\\.$#"
@@ -3221,19 +2366,9 @@ parameters:
 			path: modules/tour/src/TipPluginBase.php
 
 		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertSame\\(\\) invoked with 4 parameters, 2\\-3 required\\.$#"
+			message: "#^Relying on entity queries to check access by default is deprecated in drupal\\:9\\.2\\.0 and an error will be thrown from drupal\\:10\\.0\\.0\\. Call \\\\Drupal\\\\Core\\\\Entity\\\\Query\\\\QueryInterface\\:\\:accessCheck\\(\\) with TRUE or FALSE to specify whether access should be checked\\.$#"
 			count: 1
-			path: modules/tracker/tests/src/Kernel/Views/TrackerUserUidTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertTrue\\(\\) invoked with 3 parameters, 1\\-2 required\\.$#"
-			count: 1
-			path: modules/tracker/tests/src/Kernel/Views/TrackerUserUidTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:fail\\(\\) invoked with 2 parameters, 0\\-1 required\\.$#"
-			count: 1
-			path: modules/tracker/tests/src/Kernel/Views/TrackerUserUidTest.php
+			path: modules/tour/tour.module
 
 		-
 			message: "#^Variable \\$violation_messages might not be defined\\.$#"
@@ -3241,34 +2376,9 @@ parameters:
 			path: modules/update/src/ProjectRelease.php
 
 		-
-			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
+			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 4
 			path: modules/update/src/UpdateProcessor.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertSame\\(\\) invoked with 4 parameters, 2\\-3 required\\.$#"
-			count: 1
-			path: modules/update/tests/src/Kernel/UpdateReportTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertTrue\\(\\) invoked with 3 parameters, 1\\-2 required\\.$#"
-			count: 1
-			path: modules/update/tests/src/Kernel/UpdateReportTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:fail\\(\\) invoked with 2 parameters, 0\\-1 required\\.$#"
-			count: 1
-			path: modules/update/tests/src/Kernel/UpdateReportTest.php
-
-		-
-			message: "#^Method Drupal\\\\Core\\\\Entity\\\\ContentEntityForm\\:\\:form\\(\\) invoked with 3 parameters, 2 required\\.$#"
-			count: 1
-			path: modules/user/src/AccountForm.php
-
-		-
-			message: "#^Method Drupal\\\\Core\\\\Entity\\\\EntityForm\\:\\:getEntity\\(\\) invoked with 1 parameter, 0 required\\.$#"
-			count: 1
-			path: modules/user/src/AccountForm.php
 
 		-
 			message: "#^Variable \\$users might not be defined\\.$#"
@@ -3276,14 +2386,19 @@ parameters:
 			path: modules/user/src/Controller/UserAuthenticationController.php
 
 		-
-			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
+			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 2
 			path: modules/user/src/Controller/UserController.php
 
 		-
-			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
+			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 2
 			path: modules/user/src/EventSubscriber/UserRequestSubscriber.php
+
+		-
+			message: "#^Relying on entity queries to check access by default is deprecated in drupal\\:9\\.2\\.0 and an error will be thrown from drupal\\:10\\.0\\.0\\. Call \\\\Drupal\\\\Core\\\\Entity\\\\Query\\\\QueryInterface\\:\\:accessCheck\\(\\) with TRUE or FALSE to specify whether access should be checked\\.$#"
+			count: 2
+			path: modules/user/src/Form/RoleSettingsForm.php
 
 		-
 			message: "#^Variable \\$route_object might not be defined\\.$#"
@@ -3316,19 +2431,9 @@ parameters:
 			path: modules/user/src/ProfileForm.php
 
 		-
-			message: "#^Method Drupal\\\\user\\\\AccountForm\\:\\:form\\(\\) invoked with 3 parameters, 2 required\\.$#"
-			count: 1
-			path: modules/user/src/RegisterForm.php
-
-		-
 			message: "#^Method Drupal\\\\user\\\\RegisterForm\\:\\:save\\(\\) should return int but return statement is missing\\.$#"
 			count: 1
 			path: modules/user/src/RegisterForm.php
-
-		-
-			message: "#^Method Drupal\\\\Core\\\\Entity\\\\EntityForm\\:\\:form\\(\\) invoked with 3 parameters, 2 required\\.$#"
-			count: 1
-			path: modules/user/src/RoleForm.php
 
 		-
 			message: "#^Method Drupal\\\\user\\\\RoleForm\\:\\:save\\(\\) should return int but return statement is missing\\.$#"
@@ -3336,39 +2441,19 @@ parameters:
 			path: modules/user/src/RoleForm.php
 
 		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertTrue\\(\\) invoked with 3 parameters, 1\\-2 required\\.$#"
-			count: 2
-			path: modules/user/tests/src/Functional/UserAdminTest.php
-
-		-
-			message: "#^Method Drupal\\\\Tests\\\\BrowserTestBase\\:\\:drupalLogout\\(\\) invoked with 1 parameter, 0 required\\.$#"
+			message: "#^Relying on entity queries to check access by default is deprecated in drupal\\:9\\.2\\.0 and an error will be thrown from drupal\\:10\\.0\\.0\\. Call \\\\Drupal\\\\Core\\\\Entity\\\\Query\\\\QueryInterface\\:\\:accessCheck\\(\\) with TRUE or FALSE to specify whether access should be checked\\.$#"
 			count: 1
-			path: modules/user/tests/src/Functional/UserBlocksTest.php
+			path: modules/user/src/UserListBuilder.php
 
 		-
-			message: "#^Function node_revision_load invoked with 2 parameters, 0\\-1 required\\.$#"
-			count: 1
-			path: modules/user/tests/src/Functional/UserCancelTest.php
-
-		-
-			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
+			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 2
 			path: modules/user/tests/src/Functional/UserCreateTest.php
 
 		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertTrue\\(\\) invoked with 3 parameters, 1\\-2 required\\.$#"
-			count: 2
-			path: modules/user/tests/src/Functional/UserCreateTest.php
-
-		-
-			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
+			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 1
 			path: modules/user/tests/src/Functional/UserEditTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertTrue\\(\\) invoked with 3 parameters, 1\\-2 required\\.$#"
-			count: 2
-			path: modules/user/tests/src/Functional/UserLoginHttpTest.php
 
 		-
 			message: "#^Variable \\$name in isset\\(\\) always exists and is not nullable\\.$#"
@@ -3381,17 +2466,12 @@ parameters:
 			path: modules/user/tests/src/Functional/UserLoginHttpTest.php
 
 		-
-			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
+			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 5
 			path: modules/user/tests/src/Functional/UserPasswordResetTest.php
 
 		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertTrue\\(\\) invoked with 3 parameters, 1\\-2 required\\.$#"
-			count: 2
-			path: modules/user/tests/src/Functional/UserPasswordResetTest.php
-
-		-
-			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
+			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 1
 			path: modules/user/tests/src/Functional/UserPictureTest.php
 
@@ -3401,169 +2481,24 @@ parameters:
 			path: modules/user/tests/src/Functional/UserRegistrationRestTest.php
 
 		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertTrue\\(\\) invoked with 3 parameters, 1\\-2 required\\.$#"
-			count: 2
-			path: modules/user/tests/src/Functional/UserRegistrationRestTest.php
-
-		-
-			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
+			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 1
 			path: modules/user/tests/src/Functional/UserRegistrationTest.php
 
 		-
-			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
+			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 1
 			path: modules/user/tests/src/Functional/Views/UserChangedTest.php
 
 		-
-			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
+			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 1
 			path: modules/user/tests/src/FunctionalJavascript/UserPasswordResetTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertTrue\\(\\) invoked with 3 parameters, 1\\-2 required\\.$#"
-			count: 2
-			path: modules/user/tests/src/FunctionalJavascript/UserPasswordResetTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertSame\\(\\) invoked with 4 parameters, 2\\-3 required\\.$#"
-			count: 1
-			path: modules/user/tests/src/Kernel/Controller/UserControllerTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertTrue\\(\\) invoked with 3 parameters, 1\\-2 required\\.$#"
-			count: 1
-			path: modules/user/tests/src/Kernel/Controller/UserControllerTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:fail\\(\\) invoked with 2 parameters, 0\\-1 required\\.$#"
-			count: 1
-			path: modules/user/tests/src/Kernel/Controller/UserControllerTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertSame\\(\\) invoked with 4 parameters, 2\\-3 required\\.$#"
-			count: 1
-			path: modules/user/tests/src/Kernel/UserDeleteTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertTrue\\(\\) invoked with 3 parameters, 1\\-2 required\\.$#"
-			count: 1
-			path: modules/user/tests/src/Kernel/UserDeleteTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:fail\\(\\) invoked with 2 parameters, 0\\-1 required\\.$#"
-			count: 1
-			path: modules/user/tests/src/Kernel/UserDeleteTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertSame\\(\\) invoked with 4 parameters, 2\\-3 required\\.$#"
-			count: 1
-			path: modules/user/tests/src/Kernel/UserEntityLabelTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertTrue\\(\\) invoked with 3 parameters, 1\\-2 required\\.$#"
-			count: 1
-			path: modules/user/tests/src/Kernel/UserEntityLabelTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:fail\\(\\) invoked with 2 parameters, 0\\-1 required\\.$#"
-			count: 1
-			path: modules/user/tests/src/Kernel/UserEntityLabelTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertTrue\\(\\) invoked with 3 parameters, 1\\-2 required\\.$#"
-			count: 2
-			path: modules/user/tests/src/Kernel/UserMailNotifyTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertSame\\(\\) invoked with 4 parameters, 2\\-3 required\\.$#"
-			count: 1
-			path: modules/user/tests/src/Kernel/Views/AccessPermissionTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertTrue\\(\\) invoked with 3 parameters, 1\\-2 required\\.$#"
-			count: 1
-			path: modules/user/tests/src/Kernel/Views/AccessPermissionTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:fail\\(\\) invoked with 2 parameters, 0\\-1 required\\.$#"
-			count: 1
-			path: modules/user/tests/src/Kernel/Views/AccessPermissionTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertSame\\(\\) invoked with 4 parameters, 2\\-3 required\\.$#"
-			count: 1
-			path: modules/user/tests/src/Kernel/Views/ArgumentDefaultTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertTrue\\(\\) invoked with 3 parameters, 1\\-2 required\\.$#"
-			count: 1
-			path: modules/user/tests/src/Kernel/Views/ArgumentDefaultTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:fail\\(\\) invoked with 2 parameters, 0\\-1 required\\.$#"
-			count: 1
-			path: modules/user/tests/src/Kernel/Views/ArgumentDefaultTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertSame\\(\\) invoked with 4 parameters, 2\\-3 required\\.$#"
-			count: 1
-			path: modules/user/tests/src/Kernel/Views/ArgumentValidateTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertTrue\\(\\) invoked with 3 parameters, 1\\-2 required\\.$#"
-			count: 1
-			path: modules/user/tests/src/Kernel/Views/ArgumentValidateTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:fail\\(\\) invoked with 2 parameters, 0\\-1 required\\.$#"
-			count: 1
-			path: modules/user/tests/src/Kernel/Views/ArgumentValidateTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertSame\\(\\) invoked with 4 parameters, 2\\-3 required\\.$#"
-			count: 1
-			path: modules/user/tests/src/Kernel/Views/HandlerArgumentUserUidTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertTrue\\(\\) invoked with 3 parameters, 1\\-2 required\\.$#"
-			count: 1
-			path: modules/user/tests/src/Kernel/Views/HandlerArgumentUserUidTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:fail\\(\\) invoked with 2 parameters, 0\\-1 required\\.$#"
-			count: 1
-			path: modules/user/tests/src/Kernel/Views/HandlerArgumentUserUidTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertSame\\(\\) invoked with 4 parameters, 2\\-3 required\\.$#"
-			count: 1
-			path: modules/user/tests/src/Kernel/Views/RelationshipRepresentativeNodeTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertTrue\\(\\) invoked with 3 parameters, 1\\-2 required\\.$#"
-			count: 1
-			path: modules/user/tests/src/Kernel/Views/RelationshipRepresentativeNodeTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:fail\\(\\) invoked with 2 parameters, 0\\-1 required\\.$#"
-			count: 1
-			path: modules/user/tests/src/Kernel/Views/RelationshipRepresentativeNodeTest.php
 
 		-
 			message: "#^Variable \\$result in isset\\(\\) always exists and is not nullable\\.$#"
 			count: 1
 			path: modules/user/tests/src/Unit/UserAccessControlHandlerTest.php
-
-		-
-			message: "#^Class Drupal\\\\views\\\\Entity\\\\Render\\\\DefaultLanguageRenderer constructor invoked with 4 parameters, 3 required\\.$#"
-			count: 1
-			path: modules/views/src/Entity/Render/EntityFieldRenderer.php
-
-		-
-			message: "#^Class Drupal\\\\views\\\\Entity\\\\Render\\\\TranslationLanguageRenderer constructor invoked with 4 parameters, 3 required\\.$#"
-			count: 1
-			path: modules/views/src/Entity/Render/EntityFieldRenderer.php
 
 		-
 			message: "#^Variable \\$batch in isset\\(\\) is never defined\\.$#"
@@ -3631,12 +2566,7 @@ parameters:
 			path: modules/views/src/Plugin/views/argument/Broken.php
 
 		-
-			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
-			count: 1
-			path: modules/views/src/Plugin/views/argument/Date.php
-
-		-
-			message: "#^Method Drupal\\\\views\\\\Plugin\\\\views\\\\argument\\\\ArgumentPluginBase\\:\\:getDefaultArgument\\(\\) invoked with 1 parameter, 0 required\\.$#"
+			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 1
 			path: modules/views/src/Plugin/views/argument/Date.php
 
@@ -3646,17 +2576,12 @@ parameters:
 			path: modules/views/src/Plugin/views/cache/CachePluginBase.php
 
 		-
-			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
+			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 1
 			path: modules/views/src/Plugin/views/cache/Time.php
 
 		-
 			message: "#^Constructor of class Drupal\\\\views\\\\Plugin\\\\views\\\\display\\\\DisplayPluginBase has an unused parameter \\$configuration\\.$#"
-			count: 1
-			path: modules/views/src/Plugin/views/display/DisplayPluginBase.php
-
-		-
-			message: "#^Method Drupal\\\\views\\\\Plugin\\\\views\\\\display\\\\DisplayPluginBase\\:\\:getPlugin\\(\\) invoked with 2 parameters, 1 required\\.$#"
 			count: 1
 			path: modules/views/src/Plugin/views/display/DisplayPluginBase.php
 
@@ -3686,22 +2611,12 @@ parameters:
 			path: modules/views/src/Plugin/views/field/Broken.php
 
 		-
-			message: "#^Class Drupal\\\\views\\\\Entity\\\\Render\\\\DefaultLanguageRenderer constructor invoked with 4 parameters, 3 required\\.$#"
-			count: 1
-			path: modules/views/src/Plugin/views/field/BulkForm.php
-
-		-
-			message: "#^Class Drupal\\\\views\\\\Entity\\\\Render\\\\TranslationLanguageRenderer constructor invoked with 4 parameters, 3 required\\.$#"
-			count: 1
-			path: modules/views/src/Plugin/views/field/BulkForm.php
-
-		-
 			message: "#^Variable \\$entity in empty\\(\\) always exists and is not falsy\\.$#"
 			count: 1
 			path: modules/views/src/Plugin/views/field/BulkForm.php
 
 		-
-			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
+			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 2
 			path: modules/views/src/Plugin/views/field/Date.php
 
@@ -3731,21 +2646,6 @@ parameters:
 			path: modules/views/src/Plugin/views/field/EntityField.php
 
 		-
-			message: "#^Class Drupal\\\\views\\\\Entity\\\\Render\\\\DefaultLanguageRenderer constructor invoked with 4 parameters, 3 required\\.$#"
-			count: 1
-			path: modules/views/src/Plugin/views/field/EntityOperations.php
-
-		-
-			message: "#^Class Drupal\\\\views\\\\Entity\\\\Render\\\\TranslationLanguageRenderer constructor invoked with 4 parameters, 3 required\\.$#"
-			count: 1
-			path: modules/views/src/Plugin/views/field/EntityOperations.php
-
-		-
-			message: "#^Method Drupal\\\\views\\\\Plugin\\\\views\\\\field\\\\FieldPluginBase\\:\\:getElements\\(\\) invoked with 1 parameter, 0 required\\.$#"
-			count: 2
-			path: modules/views/src/Plugin/views/field/FieldPluginBase.php
-
-		-
 			message: "#^Variable \\$options in empty\\(\\) always exists and is not falsy\\.$#"
 			count: 1
 			path: modules/views/src/Plugin/views/field/FieldPluginBase.php
@@ -3761,16 +2661,6 @@ parameters:
 			path: modules/views/src/Plugin/views/field/FieldPluginBase.php
 
 		-
-			message: "#^Class Drupal\\\\views\\\\Entity\\\\Render\\\\DefaultLanguageRenderer constructor invoked with 4 parameters, 3 required\\.$#"
-			count: 1
-			path: modules/views/src/Plugin/views/field/LinkBase.php
-
-		-
-			message: "#^Class Drupal\\\\views\\\\Entity\\\\Render\\\\TranslationLanguageRenderer constructor invoked with 4 parameters, 3 required\\.$#"
-			count: 1
-			path: modules/views/src/Plugin/views/field/LinkBase.php
-
-		-
 			message: "#^Method Drupal\\\\views\\\\Plugin\\\\views\\\\field\\\\Markup\\:\\:render\\(\\) should return Drupal\\\\Component\\\\Render\\\\MarkupInterface\\|string but return statement is missing\\.$#"
 			count: 1
 			path: modules/views/src/Plugin/views/field/Markup.php
@@ -3781,12 +2671,7 @@ parameters:
 			path: modules/views/src/Plugin/views/field/PrerenderList.php
 
 		-
-			message: "#^Class Drupal\\\\views\\\\Entity\\\\Render\\\\DefaultLanguageRenderer constructor invoked with 4 parameters, 3 required\\.$#"
-			count: 1
-			path: modules/views/src/Plugin/views/field/RenderedEntity.php
-
-		-
-			message: "#^Class Drupal\\\\views\\\\Entity\\\\Render\\\\TranslationLanguageRenderer constructor invoked with 4 parameters, 3 required\\.$#"
+			message: "#^Relying on entity queries to check access by default is deprecated in drupal\\:9\\.2\\.0 and an error will be thrown from drupal\\:10\\.0\\.0\\. Call \\\\Drupal\\\\Core\\\\Entity\\\\Query\\\\QueryInterface\\:\\:accessCheck\\(\\) with TRUE or FALSE to specify whether access should be checked\\.$#"
 			count: 1
 			path: modules/views/src/Plugin/views/field/RenderedEntity.php
 
@@ -3814,11 +2699,6 @@ parameters:
 			message: "#^Variable \\$source might not be defined\\.$#"
 			count: 1
 			path: modules/views/src/Plugin/views/filter/InOperator.php
-
-		-
-			message: "#^Variable \\$identifier might not be defined\\.$#"
-			count: 4
-			path: modules/views/src/Plugin/views/filter/NumericFilter.php
 
 		-
 			message: "#^Variable \\$source might not be defined\\.$#"
@@ -3861,16 +2741,6 @@ parameters:
 			path: modules/views/src/Plugin/views/relationship/GroupwiseMax.php
 
 		-
-			message: "#^Class Drupal\\\\views\\\\Entity\\\\Render\\\\DefaultLanguageRenderer constructor invoked with 4 parameters, 3 required\\.$#"
-			count: 1
-			path: modules/views/src/Plugin/views/row/EntityRow.php
-
-		-
-			message: "#^Class Drupal\\\\views\\\\Entity\\\\Render\\\\TranslationLanguageRenderer constructor invoked with 4 parameters, 3 required\\.$#"
-			count: 1
-			path: modules/views/src/Plugin/views/row/EntityRow.php
-
-		-
 			message: "#^Variable \\$items might not be defined\\.$#"
 			count: 1
 			path: modules/views/src/Plugin/views/sort/Broken.php
@@ -3911,14 +2781,14 @@ parameters:
 			path: modules/views/src/Routing/ViewPageController.php
 
 		-
-			message: "#^Method Drupal\\\\views\\\\Plugin\\\\views\\\\PluginBase\\:\\:setOptionDefaults\\(\\) invoked with 3 parameters, 2 required\\.$#"
-			count: 1
-			path: modules/views/src/Tests/TestHelperPlugin.php
-
-		-
-			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
+			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 1
 			path: modules/views/src/ViewExecutable.php
+
+		-
+			message: "#^Relying on entity queries to check access by default is deprecated in drupal\\:9\\.2\\.0 and an error will be thrown from drupal\\:10\\.0\\.0\\. Call \\\\Drupal\\\\Core\\\\Entity\\\\Query\\\\QueryInterface\\:\\:accessCheck\\(\\) with TRUE or FALSE to specify whether access should be checked\\.$#"
+			count: 3
+			path: modules/views/src/Views.php
 
 		-
 			message: "#^Configuration entity must define a `config_export` key\\. See https\\://www\\.drupal\\.org/node/2481909$#"
@@ -3931,17 +2801,17 @@ parameters:
 			path: modules/views/tests/modules/views_test_data/views_test_data.views_execution.inc
 
 		-
-			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
+			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 1
 			path: modules/views/tests/src/Functional/BulkFormTest.php
 
 		-
-			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
+			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 2
 			path: modules/views/tests/src/Functional/DefaultViewsTest.php
 
 		-
-			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
+			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 2
 			path: modules/views/tests/src/Functional/GlossaryTest.php
 
@@ -3951,22 +2821,22 @@ parameters:
 			path: modules/views/tests/src/Functional/TaxonomyGlossaryTest.php
 
 		-
-			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
+			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 6
 			path: modules/views/tests/src/Functional/Wizard/ItemsPerPageTest.php
 
 		-
-			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
+			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 1
 			path: modules/views/tests/src/Functional/Wizard/PagerTest.php
 
 		-
-			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
+			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 3
 			path: modules/views/tests/src/Functional/Wizard/SortingTest.php
 
 		-
-			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
+			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 2
 			path: modules/views/tests/src/FunctionalJavascript/ClickSortingAJAXTest.php
 
@@ -3981,119 +2851,34 @@ parameters:
 			path: modules/views/tests/src/Kernel/Handler/AreaEntityTest.php
 
 		-
-			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
+			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 3
 			path: modules/views/tests/src/Kernel/Handler/FieldDropbuttonTest.php
 
 		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertSame\\(\\) invoked with 4 parameters, 2\\-3 required\\.$#"
-			count: 1
-			path: modules/views/tests/src/Kernel/Handler/FieldDropbuttonTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertTrue\\(\\) invoked with 3 parameters, 1\\-2 required\\.$#"
-			count: 1
-			path: modules/views/tests/src/Kernel/Handler/FieldDropbuttonTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:fail\\(\\) invoked with 2 parameters, 0\\-1 required\\.$#"
-			count: 1
-			path: modules/views/tests/src/Kernel/Handler/FieldDropbuttonTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertSame\\(\\) invoked with 4 parameters, 2\\-3 required\\.$#"
-			count: 1
-			path: modules/views/tests/src/Kernel/Handler/FieldEntityLinkTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertTrue\\(\\) invoked with 3 parameters, 1\\-2 required\\.$#"
-			count: 1
-			path: modules/views/tests/src/Kernel/Handler/FieldEntityLinkTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:fail\\(\\) invoked with 2 parameters, 0\\-1 required\\.$#"
-			count: 1
-			path: modules/views/tests/src/Kernel/Handler/FieldEntityLinkTest.php
-
-		-
-			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
+			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 1
 			path: modules/views/tests/src/Kernel/Handler/FieldFieldTest.php
 
 		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertSame\\(\\) invoked with 4 parameters, 2\\-3 required\\.$#"
-			count: 1
-			path: modules/views/tests/src/Kernel/Plugin/RelationshipJoinInTest.php
+			message: "#^Variable \\$rand1 might not be defined\\.$#"
+			count: 2
+			path: modules/views/tests/src/Kernel/Plugin/StyleTest.php
 
 		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertTrue\\(\\) invoked with 3 parameters, 1\\-2 required\\.$#"
-			count: 1
-			path: modules/views/tests/src/Kernel/Plugin/RelationshipJoinInTest.php
+			message: "#^Variable \\$rand2 might not be defined\\.$#"
+			count: 2
+			path: modules/views/tests/src/Kernel/Plugin/StyleTest.php
 
 		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:fail\\(\\) invoked with 2 parameters, 0\\-1 required\\.$#"
-			count: 1
-			path: modules/views/tests/src/Kernel/Plugin/RelationshipJoinInTest.php
+			message: "#^Variable \\$rand3 might not be defined\\.$#"
+			count: 2
+			path: modules/views/tests/src/Kernel/Plugin/StyleTest.php
 
 		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertSame\\(\\) invoked with 4 parameters, 2\\-3 required\\.$#"
-			count: 1
-			path: modules/views/tests/src/Kernel/Plugin/RelationshipTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertTrue\\(\\) invoked with 3 parameters, 1\\-2 required\\.$#"
-			count: 1
-			path: modules/views/tests/src/Kernel/Plugin/RelationshipTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:fail\\(\\) invoked with 2 parameters, 0\\-1 required\\.$#"
-			count: 1
-			path: modules/views/tests/src/Kernel/Plugin/RelationshipTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertSame\\(\\) invoked with 4 parameters, 2\\-3 required\\.$#"
-			count: 1
-			path: modules/views/tests/src/Kernel/Plugin/RowRenderCacheTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertTrue\\(\\) invoked with 3 parameters, 1\\-2 required\\.$#"
-			count: 1
-			path: modules/views/tests/src/Kernel/Plugin/RowRenderCacheTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:fail\\(\\) invoked with 2 parameters, 0\\-1 required\\.$#"
-			count: 1
-			path: modules/views/tests/src/Kernel/Plugin/RowRenderCacheTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertSame\\(\\) invoked with 4 parameters, 2\\-3 required\\.$#"
-			count: 1
-			path: modules/views/tests/src/Kernel/Plugin/RssFieldsTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertTrue\\(\\) invoked with 3 parameters, 1\\-2 required\\.$#"
-			count: 1
-			path: modules/views/tests/src/Kernel/Plugin/RssFieldsTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:fail\\(\\) invoked with 2 parameters, 0\\-1 required\\.$#"
-			count: 1
-			path: modules/views/tests/src/Kernel/Plugin/RssFieldsTest.php
-
-		-
-			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
+			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 2
 			path: modules/views/tests/src/Kernel/RenderCacheIntegrationTest.php
-
-		-
-			message: "#^Class Drupal\\\\Core\\\\Routing\\\\RouteBuildEvent constructor invoked with 2 parameters, 1 required\\.$#"
-			count: 1
-			path: modules/views/tests/src/Unit/EventSubscriber/RouteSubscriberTest.php
-
-		-
-			message: "#^Variable \\$entity_revision_data_table might not be defined\\.$#"
-			count: 1
-			path: modules/views/views.views.inc
 
 		-
 			message: "#^Variable \\$relationship_handler in empty\\(\\) always exists and is not falsy\\.$#"
@@ -4141,6 +2926,11 @@ parameters:
 			path: modules/views_ui/tests/src/FunctionalJavascript/PreviewTest.php
 
 		-
+			message: "#^Relying on entity queries to check access by default is deprecated in drupal\\:9\\.2\\.0 and an error will be thrown from drupal\\:10\\.0\\.0\\. Call \\\\Drupal\\\\Core\\\\Entity\\\\Query\\\\QueryInterface\\:\\:accessCheck\\(\\) with TRUE or FALSE to specify whether access should be checked\\.$#"
+			count: 1
+			path: modules/workflows/src/Entity/Workflow.php
+
+		-
 			message: "#^Method Drupal\\\\workflows\\\\Form\\\\WorkflowEditForm\\:\\:save\\(\\) should return int but return statement is missing\\.$#"
 			count: 1
 			path: modules/workflows/src/Form/WorkflowEditForm.php
@@ -4164,21 +2954,6 @@ parameters:
 			message: "#^Method Drupal\\\\workflows\\\\Form\\\\WorkflowTransitionEditForm\\:\\:save\\(\\) should return int but return statement is missing\\.$#"
 			count: 1
 			path: modules/workflows/src/Form/WorkflowTransitionEditForm.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertSame\\(\\) invoked with 4 parameters, 2\\-3 required\\.$#"
-			count: 1
-			path: modules/workflows/tests/src/Kernel/WorkflowAccessControlHandlerTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertTrue\\(\\) invoked with 3 parameters, 1\\-2 required\\.$#"
-			count: 1
-			path: modules/workflows/tests/src/Kernel/WorkflowAccessControlHandlerTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:fail\\(\\) invoked with 2 parameters, 0\\-1 required\\.$#"
-			count: 1
-			path: modules/workflows/tests/src/Kernel/WorkflowAccessControlHandlerTest.php
 
 		-
 			message: "#^Method Drupal\\\\workspaces\\\\EntityTypeInfo\\:\\:entityBaseFieldInfo\\(\\) should return array\\<Drupal\\\\Core\\\\Field\\\\FieldDefinitionInterface\\> but return statement is missing\\.$#"
@@ -4221,94 +2996,9 @@ parameters:
 			path: modules/workspaces/src/WorkspacePublisher.php
 
 		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertSame\\(\\) invoked with 4 parameters, 2\\-3 required\\.$#"
+			message: "#^Relying on entity queries to check access by default is deprecated in drupal\\:9\\.2\\.0 and an error will be thrown from drupal\\:10\\.0\\.0\\. Call \\\\Drupal\\\\Core\\\\Entity\\\\Query\\\\QueryInterface\\:\\:accessCheck\\(\\) with TRUE or FALSE to specify whether access should be checked\\.$#"
 			count: 1
-			path: modules/workspaces/tests/src/Functional/UpdateSystem/ActiveWorkspaceUpdateTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertTrue\\(\\) invoked with 3 parameters, 1\\-2 required\\.$#"
-			count: 1
-			path: modules/workspaces/tests/src/Functional/UpdateSystem/ActiveWorkspaceUpdateTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:fail\\(\\) invoked with 2 parameters, 0\\-1 required\\.$#"
-			count: 1
-			path: modules/workspaces/tests/src/Functional/UpdateSystem/ActiveWorkspaceUpdateTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertSame\\(\\) invoked with 4 parameters, 2\\-3 required\\.$#"
-			count: 1
-			path: modules/workspaces/tests/src/Kernel/EntityReferenceSupportedNewEntitiesConstraintValidatorTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertTrue\\(\\) invoked with 3 parameters, 1\\-2 required\\.$#"
-			count: 1
-			path: modules/workspaces/tests/src/Kernel/EntityReferenceSupportedNewEntitiesConstraintValidatorTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:fail\\(\\) invoked with 2 parameters, 0\\-1 required\\.$#"
-			count: 1
-			path: modules/workspaces/tests/src/Kernel/EntityReferenceSupportedNewEntitiesConstraintValidatorTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertSame\\(\\) invoked with 4 parameters, 2\\-3 required\\.$#"
-			count: 1
-			path: modules/workspaces/tests/src/Kernel/WorkspaceAccessTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertTrue\\(\\) invoked with 3 parameters, 1\\-2 required\\.$#"
-			count: 1
-			path: modules/workspaces/tests/src/Kernel/WorkspaceAccessTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:fail\\(\\) invoked with 2 parameters, 0\\-1 required\\.$#"
-			count: 1
-			path: modules/workspaces/tests/src/Kernel/WorkspaceAccessTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertSame\\(\\) invoked with 4 parameters, 2\\-3 required\\.$#"
-			count: 1
-			path: modules/workspaces/tests/src/Kernel/WorkspaceCRUDTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertTrue\\(\\) invoked with 3 parameters, 1\\-2 required\\.$#"
-			count: 1
-			path: modules/workspaces/tests/src/Kernel/WorkspaceCRUDTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:fail\\(\\) invoked with 2 parameters, 0\\-1 required\\.$#"
-			count: 1
-			path: modules/workspaces/tests/src/Kernel/WorkspaceCRUDTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertSame\\(\\) invoked with 4 parameters, 2\\-3 required\\.$#"
-			count: 1
-			path: modules/workspaces/tests/src/Kernel/WorkspaceIntegrationTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertTrue\\(\\) invoked with 3 parameters, 1\\-2 required\\.$#"
-			count: 1
-			path: modules/workspaces/tests/src/Kernel/WorkspaceIntegrationTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:fail\\(\\) invoked with 2 parameters, 0\\-1 required\\.$#"
-			count: 1
-			path: modules/workspaces/tests/src/Kernel/WorkspaceIntegrationTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertSame\\(\\) invoked with 4 parameters, 2\\-3 required\\.$#"
-			count: 1
-			path: modules/workspaces/tests/src/Kernel/WorkspaceMergerTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertTrue\\(\\) invoked with 3 parameters, 1\\-2 required\\.$#"
-			count: 1
-			path: modules/workspaces/tests/src/Kernel/WorkspaceMergerTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:fail\\(\\) invoked with 2 parameters, 0\\-1 required\\.$#"
-			count: 1
-			path: modules/workspaces/tests/src/Kernel/WorkspaceMergerTest.php
+			path: modules/workspaces/workspaces.install
 
 		-
 			message: "#^Variable \\$keyed_content might not be defined\\.$#"
@@ -4336,37 +3026,12 @@ parameters:
 			path: tests/Drupal/FunctionalJavascriptTests/WebDriverCurlService.php
 
 		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertTrue\\(\\) invoked with 3 parameters, 1\\-2 required\\.$#"
-			count: 2
-			path: tests/Drupal/FunctionalTests/MailCaptureTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertTrue\\(\\) invoked with 3 parameters, 1\\-2 required\\.$#"
-			count: 2
-			path: tests/Drupal/KernelTests/Core/Action/EmailActionTest.php
-
-		-
 			message: "#^Variable \\$found might not be defined\\.$#"
 			count: 1
 			path: tests/Drupal/KernelTests/Core/Cache/ApcuBackendTest.php
 
 		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertSame\\(\\) invoked with 4 parameters, 2\\-3 required\\.$#"
-			count: 1
-			path: tests/Drupal/KernelTests/Core/Cache/CacheContextOptimizationTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertTrue\\(\\) invoked with 3 parameters, 1\\-2 required\\.$#"
-			count: 1
-			path: tests/Drupal/KernelTests/Core/Cache/CacheContextOptimizationTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:fail\\(\\) invoked with 2 parameters, 0\\-1 required\\.$#"
-			count: 1
-			path: tests/Drupal/KernelTests/Core/Cache/CacheContextOptimizationTest.php
-
-		-
-			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
+			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 12
 			path: tests/Drupal/KernelTests/Core/Cache/GenericCacheBackendUnitTestBase.php
 
@@ -4376,7 +3041,12 @@ parameters:
 			path: tests/Drupal/KernelTests/Core/Database/DriverSpecificKernelTestBase.php
 
 		-
-			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
+			message: "#^Relying on entity queries to check access by default is deprecated in drupal\\:9\\.2\\.0 and an error will be thrown from drupal\\:10\\.0\\.0\\. Call \\\\Drupal\\\\Core\\\\Entity\\\\Query\\\\QueryInterface\\:\\:accessCheck\\(\\) with TRUE or FALSE to specify whether access should be checked\\.$#"
+			count: 75
+			path: tests/Drupal/KernelTests/Core/Entity/ConfigEntityQueryTest.php
+
+		-
+			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 4
 			path: tests/Drupal/KernelTests/Core/Entity/ContentEntityChangedTest.php
 
@@ -4386,7 +3056,7 @@ parameters:
 			path: tests/Drupal/KernelTests/Core/Entity/CreateSampleEntityTest.php
 
 		-
-			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
+			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 9
 			path: tests/Drupal/KernelTests/Core/Entity/EntityCrudHookTest.php
 
@@ -4396,44 +3066,14 @@ parameters:
 			path: tests/Drupal/KernelTests/Core/Entity/EntityDecoupledTranslationRevisionsTest.php
 
 		-
-			message: "#^Call to an undefined method Drupal\\\\KernelTests\\\\Core\\\\Entity\\\\EntityDisplayFormBaseTest\\:\\:getComponent\\(\\)\\.$#"
-			count: 3
-			path: tests/Drupal/KernelTests/Core/Entity/EntityDisplayFormBaseTest.php
-
-		-
-			message: "#^Call to an undefined method Drupal\\\\KernelTests\\\\Core\\\\Entity\\\\EntityDisplayFormBaseTest\\:\\:setComponent\\(\\)\\.$#"
-			count: 1
-			path: tests/Drupal/KernelTests/Core/Entity/EntityDisplayFormBaseTest.php
-
-		-
 			message: "#^Method Drupal\\\\KernelTests\\\\Core\\\\Entity\\\\EntityKernelTestBase\\:\\:createUser\\(\\) invoked with 4 parameters, 0\\-2 required\\.$#"
 			count: 3
 			path: tests/Drupal/KernelTests/Core/Entity/EntityKernelTestBase.php
 
 		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertSame\\(\\) invoked with 4 parameters, 2\\-3 required\\.$#"
+			message: "#^Relying on entity queries to check access by default is deprecated in drupal\\:9\\.2\\.0 and an error will be thrown from drupal\\:10\\.0\\.0\\. Call \\\\Drupal\\\\Core\\\\Entity\\\\Query\\\\QueryInterface\\:\\:accessCheck\\(\\) with TRUE or FALSE to specify whether access should be checked\\.$#"
 			count: 1
-			path: tests/Drupal/KernelTests/Core/Entity/EntityKernelTestBase.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:fail\\(\\) invoked with 2 parameters, 0\\-1 required\\.$#"
-			count: 1
-			path: tests/Drupal/KernelTests/Core/Entity/EntityKernelTestBase.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertSame\\(\\) invoked with 4 parameters, 2\\-3 required\\.$#"
-			count: 1
-			path: tests/Drupal/KernelTests/Core/Entity/EntityRepositoryTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertTrue\\(\\) invoked with 3 parameters, 1\\-2 required\\.$#"
-			count: 1
-			path: tests/Drupal/KernelTests/Core/Entity/EntityRepositoryTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:fail\\(\\) invoked with 2 parameters, 0\\-1 required\\.$#"
-			count: 1
-			path: tests/Drupal/KernelTests/Core/Entity/EntityRepositoryTest.php
+			path: tests/Drupal/KernelTests/Core/Entity/EntityQueryTest.php
 
 		-
 			message: "#^Variable \\$field might not be defined\\.$#"
@@ -4441,19 +3081,9 @@ parameters:
 			path: tests/Drupal/KernelTests/Core/Entity/EntitySchemaTest.php
 
 		-
-			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
+			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 1
 			path: tests/Drupal/KernelTests/Core/Entity/EntityTypeConstraintsTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertFalse\\(\\) invoked with 3 parameters, 1\\-2 required\\.$#"
-			count: 1
-			path: tests/Drupal/KernelTests/Core/Entity/FieldSqlStorageTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertTrue\\(\\) invoked with 3 parameters, 1\\-2 required\\.$#"
-			count: 2
-			path: tests/Drupal/KernelTests/Core/Entity/FieldSqlStorageTest.php
 
 		-
 			message: "#^Variable \\$e might not be defined\\.$#"
@@ -4471,31 +3101,6 @@ parameters:
 			path: tests/Drupal/KernelTests/Core/Entity/FieldableEntityDefinitionUpdateTest.php
 
 		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertSame\\(\\) invoked with 4 parameters, 2\\-3 required\\.$#"
-			count: 1
-			path: tests/Drupal/KernelTests/Core/Entity/RouteProviderTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertTrue\\(\\) invoked with 3 parameters, 1\\-2 required\\.$#"
-			count: 1
-			path: tests/Drupal/KernelTests/Core/Entity/RouteProviderTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:fail\\(\\) invoked with 2 parameters, 0\\-1 required\\.$#"
-			count: 1
-			path: tests/Drupal/KernelTests/Core/Entity/RouteProviderTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertFalse\\(\\) invoked with 3 parameters, 1\\-2 required\\.$#"
-			count: 2
-			path: tests/Drupal/KernelTests/Core/File/DirectoryTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertTrue\\(\\) invoked with 3 parameters, 1\\-2 required\\.$#"
-			count: 3
-			path: tests/Drupal/KernelTests/Core/File/DirectoryTest.php
-
-		-
 			message: "#^Variable \\$x might not be defined\\.$#"
 			count: 1
 			path: tests/Drupal/KernelTests/Core/Image/ToolkitGdTest.php
@@ -4506,59 +3111,9 @@ parameters:
 			path: tests/Drupal/KernelTests/Core/Image/ToolkitGdTest.php
 
 		-
-			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
+			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 1
 			path: tests/Drupal/KernelTests/Core/KeyValueStore/GarbageCollectionTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertSame\\(\\) invoked with 4 parameters, 2\\-3 required\\.$#"
-			count: 1
-			path: tests/Drupal/KernelTests/Core/ParamConverter/EntityConverterLatestRevisionTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertTrue\\(\\) invoked with 3 parameters, 1\\-2 required\\.$#"
-			count: 1
-			path: tests/Drupal/KernelTests/Core/ParamConverter/EntityConverterLatestRevisionTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:fail\\(\\) invoked with 2 parameters, 0\\-1 required\\.$#"
-			count: 1
-			path: tests/Drupal/KernelTests/Core/ParamConverter/EntityConverterLatestRevisionTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertSame\\(\\) invoked with 4 parameters, 2\\-3 required\\.$#"
-			count: 1
-			path: tests/Drupal/KernelTests/Core/ParamConverter/EntityConverterTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertTrue\\(\\) invoked with 3 parameters, 1\\-2 required\\.$#"
-			count: 1
-			path: tests/Drupal/KernelTests/Core/ParamConverter/EntityConverterTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:fail\\(\\) invoked with 2 parameters, 0\\-1 required\\.$#"
-			count: 1
-			path: tests/Drupal/KernelTests/Core/ParamConverter/EntityConverterTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertSame\\(\\) invoked with 4 parameters, 2\\-3 required\\.$#"
-			count: 1
-			path: tests/Drupal/KernelTests/Core/Path/PathValidatorTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertTrue\\(\\) invoked with 3 parameters, 1\\-2 required\\.$#"
-			count: 1
-			path: tests/Drupal/KernelTests/Core/Path/PathValidatorTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:fail\\(\\) invoked with 2 parameters, 0\\-1 required\\.$#"
-			count: 1
-			path: tests/Drupal/KernelTests/Core/Path/PathValidatorTest.php
-
-		-
-			message: "#^Class Drupal\\\\Core\\\\Extension\\\\ModuleHandler constructor invoked with 4 parameters, 3 required\\.$#"
-			count: 1
-			path: tests/Drupal/KernelTests/Core/Plugin/PluginTestBase.php
 
 		-
 			message: "#^\\#pre_render callback 'element_info_test…' at key '1' is not trusted\\.$#"
@@ -4566,79 +3121,19 @@ parameters:
 			path: tests/Drupal/KernelTests/Core/Render/Element/WeightTest.php
 
 		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertSame\\(\\) invoked with 4 parameters, 2\\-3 required\\.$#"
-			count: 1
-			path: tests/Drupal/KernelTests/Core/Render/RenderCacheTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertTrue\\(\\) invoked with 3 parameters, 1\\-2 required\\.$#"
-			count: 1
-			path: tests/Drupal/KernelTests/Core/Render/RenderCacheTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:fail\\(\\) invoked with 2 parameters, 0\\-1 required\\.$#"
-			count: 1
-			path: tests/Drupal/KernelTests/Core/Render/RenderCacheTest.php
-
-		-
-			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
+			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 1
 			path: tests/Drupal/KernelTests/Core/TempStore/TempStoreDatabaseTest.php
 
 		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertTrue\\(\\) invoked with 3 parameters, 1\\-2 required\\.$#"
-			count: 2
-			path: tests/Drupal/KernelTests/Core/Test/AssertMailTraitTest.php
-
-		-
-			message: "#^Instantiated class Drupal\\\\FunctionalTests\\\\BrowserMissingDependentModuleMethodTest not found\\.$#"
-			count: 1
-			path: tests/Drupal/KernelTests/Core/Test/BrowserTestBaseTest.php
-
-		-
-			message: "#^Instantiated class Drupal\\\\FunctionalTests\\\\BrowserMissingDependentModuleTest not found\\.$#"
-			count: 1
-			path: tests/Drupal/KernelTests/Core/Test/BrowserTestBaseTest.php
-
-		-
-			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
+			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 5
 			path: tests/Drupal/KernelTests/Core/TypedData/TypedDataTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertNotEquals\\(\\) invoked with 4 parameters, 2\\-3 required\\.$#"
-			count: 1
-			path: tests/Drupal/KernelTests/KernelTestBase.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertSame\\(\\) invoked with 4 parameters, 2\\-3 required\\.$#"
-			count: 1
-			path: tests/Drupal/KernelTests/KernelTestBase.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertTrue\\(\\) invoked with 3 parameters, 1\\-2 required\\.$#"
-			count: 2
-			path: tests/Drupal/KernelTests/KernelTestBase.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:fail\\(\\) invoked with 2 parameters, 0\\-1 required\\.$#"
-			count: 1
-			path: tests/Drupal/KernelTests/KernelTestBase.php
 
 		-
 			message: "#^Variable \\$value in isset\\(\\) always exists and is not nullable\\.$#"
 			count: 1
 			path: tests/Drupal/KernelTests/KernelTestBase.php
-
-		-
-			message: "#^Instantiated class Drupal\\\\KernelTests\\\\KernelMissingDependentModuleMethodTest not found\\.$#"
-			count: 1
-			path: tests/Drupal/KernelTests/KernelTestBaseTest.php
-
-		-
-			message: "#^Instantiated class Drupal\\\\KernelTests\\\\KernelMissingDependentModuleTest not found\\.$#"
-			count: 1
-			path: tests/Drupal/KernelTests/KernelTestBaseTest.php
 
 		-
 			message: "#^Call to an undefined method Drupal\\\\TestSite\\\\Commands\\\\TestSiteInstallCommand\\:\\:assertTrue\\(\\)\\.$#"
@@ -4651,7 +3146,7 @@ parameters:
 			path: tests/Drupal/TestSite/Commands/TestSiteInstallCommand.php
 
 		-
-			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
+			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 1
 			path: tests/Drupal/TestSite/Commands/TestSiteInstallCommand.php
 
@@ -4661,22 +3156,7 @@ parameters:
 			path: tests/Drupal/TestTools/Extension/SchemaInspector.php
 
 		-
-			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
-			count: 1
-			path: tests/Drupal/Tests/BrowserTestBase.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertSame\\(\\) invoked with 4 parameters, 2\\-3 required\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/BrowserTestBase.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertTrue\\(\\) invoked with 3 parameters, 1\\-2 required\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/BrowserTestBase.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:fail\\(\\) invoked with 2 parameters, 0\\-1 required\\.$#"
+			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 1
 			path: tests/Drupal/Tests/BrowserTestBase.php
 
@@ -4689,11 +3169,6 @@ parameters:
 			message: "#^Constructor of class Symfony\\\\Component\\\\ExpressionLanguage\\\\Expression has an unused parameter \\$expression\\.$#"
 			count: 1
 			path: tests/Drupal/Tests/Component/DependencyInjection/Dumper/OptimizedPhpArrayDumperTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\TestCase\\:\\:expectException\\(\\) invoked with 2 parameters, 1 required\\.$#"
-			count: 3
-			path: tests/Drupal/Tests/Component/Gettext/PoStreamWriterTest.php
 
 		-
 			message: "#^Constructor of class Drupal\\\\Tests\\\\Component\\\\Plugin\\\\Factory\\\\ArgumentsAllNull has an unused parameter \\$charismatic\\.$#"
@@ -4756,26 +3231,6 @@ parameters:
 			path: tests/Drupal/Tests/Composer/ComposerTest.php
 
 		-
-			message: "#^Method PHPUnit\\\\Framework\\\\TestCase\\:\\:expectError\\(\\) invoked with 1 parameter, 0 required\\.$#"
-			count: 52
-			path: tests/Drupal/Tests/Core/Assert/WebAssertArgumentsTest.php
-
-		-
-			message: "#^Class Drupal\\\\Core\\\\Asset\\\\LibraryDiscovery constructor invoked with 2 parameters, 1 required\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Core/Asset/LibraryDiscoveryTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertTrue\\(\\) invoked with 3 parameters, 1\\-2 required\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Core/Common/TagsTest.php
-
-		-
-			message: "#^Class Drupal\\\\Core\\\\Database\\\\Query\\\\Condition constructor invoked with 2 parameters, 1 required\\.$#"
-			count: 3
-			path: tests/Drupal/Tests/Core/Database/ConditionTest.php
-
-		-
 			message: "#^Class Drupal\\\\Driver\\\\Database\\\\corefake\\\\Install\\\\Tasks not found\\.$#"
 			count: 1
 			path: tests/Drupal/Tests/Core/Database/InstallerObjectTest.php
@@ -4784,56 +3239,6 @@ parameters:
 			message: "#^Class Drupal\\\\Driver\\\\Database\\\\fake\\\\Install\\\\Tasks not found\\.$#"
 			count: 1
 			path: tests/Drupal/Tests/Core/Database/InstallerObjectTest.php
-
-		-
-			message: "#^Call to an undefined method Drupal\\\\Tests\\\\Core\\\\Entity\\\\EntityFieldManagerTest\\:\\:get\\(\\)\\.$#"
-			count: 3
-			path: tests/Drupal/Tests/Core/Entity/EntityFieldManagerTest.php
-
-		-
-			message: "#^Call to an undefined method Drupal\\\\Tests\\\\Core\\\\Entity\\\\EntityTypeBundleInfoTest\\:\\:get\\(\\)\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Core/Entity/EntityTypeBundleInfoTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:stringStartsWith\\(\\) invoked with 2 parameters, 1 required\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Core/EventSubscriber/FinalExceptionSubscriberTest.php
-
-		-
-			message: "#^Class Drupal\\\\Core\\\\Routing\\\\RouteBuildEvent constructor invoked with 2 parameters, 1 required\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Core/EventSubscriber/ModuleRouteSubscriberTest.php
-
-		-
-			message: "#^Class Drupal\\\\Core\\\\Routing\\\\RouteBuildEvent constructor invoked with 2 parameters, 1 required\\.$#"
-			count: 2
-			path: tests/Drupal/Tests/Core/EventSubscriber/PathRootsSubscriberTest.php
-
-		-
-			message: "#^Class Drupal\\\\Core\\\\Routing\\\\RouteBuildEvent constructor invoked with 2 parameters, 1 required\\.$#"
-			count: 2
-			path: tests/Drupal/Tests/Core/EventSubscriber/SpecialAttributesRouteSubscriberTest.php
-
-		-
-			message: "#^Class Drupal\\\\Core\\\\State\\\\State constructor invoked with 3 parameters, 1 required\\.$#"
-			count: 2
-			path: tests/Drupal/Tests/Core/Extension/ThemeExtensionListTest.php
-
-		-
-			message: "#^Class Drupal\\\\Tests\\\\Core\\\\Extension\\\\TestThemeEngineExtensionList constructor invoked with 8 parameters, 7 required\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Core/Extension/ThemeExtensionListTest.php
-
-		-
-			message: "#^Class Drupal\\\\Core\\\\Layout\\\\LayoutPluginManager constructor invoked with 5 parameters, 4 required\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Core/Layout/LayoutPluginManagerTest.php
-
-		-
-			message: "#^Method Drupal\\\\Tests\\\\Core\\\\Menu\\\\LocalTaskManagerTest\\:\\:getLocalTasksCache\\(\\) invoked with 1 parameter, 0 required\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Core/Menu/LocalTaskManagerTest.php
 
 		-
 			message: "#^Call to method getDefinitions\\(\\) on an unknown class Drupal\\\\Core\\\\Plugin\\\\CategorizingPluginManagerTrait\\.$#"
@@ -4856,11 +3261,6 @@ parameters:
 			path: tests/Drupal/Tests/Core/Plugin/TestPluginManager.php
 
 		-
-			message: "#^Anonymous function has an unused use \\$self\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Core/Render/MetadataBubblingUrlGeneratorTest.php
-
-		-
 			message: "#^\\#access_callback callback class '\\$this\\(Drupal\\\\Tests\\\\Core\\\\Render\\\\RendererCallbackTest\\)' at key '0' does not implement Drupal\\\\Core\\\\Security\\\\TrustedCallbackInterface\\.$#"
 			count: 1
 			path: tests/Drupal/Tests/Core/Render/RendererCallbackTest.php
@@ -4879,46 +3279,6 @@ parameters:
 			message: "#^\\#pre_render callback '\\\\\\\\Drupal\\\\\\\\Tests\\\\\\\\Core…' at key '0' is not trusted\\.$#"
 			count: 1
 			path: tests/Drupal/Tests/Core/Render/RendererCallbackTest.php
-
-		-
-			message: "#^Anonymous function has an unused use \\$complex_child_template\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Core/Render/RendererRecursionTest.php
-
-		-
-			message: "#^Anonymous function has an unused use \\$parent_markup\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Core/Render/RendererRecursionTest.php
-
-		-
-			message: "#^Anonymous function has an unused use \\$renderer\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Core/Render/RendererRecursionTest.php
-
-		-
-			message: "#^Class Drupal\\\\Core\\\\Cache\\\\Context\\\\ContextCacheKeys constructor invoked with 2 parameters, 1 required\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Core/Render/RendererTestBase.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertNotEquals\\(\\) invoked with 4 parameters, 2\\-3 required\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Core/Test/AssertContentTraitTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertSame\\(\\) invoked with 4 parameters, 2\\-3 required\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Core/Test/AssertContentTraitTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertTrue\\(\\) invoked with 3 parameters, 1\\-2 required\\.$#"
-			count: 2
-			path: tests/Drupal/Tests/Core/Test/AssertContentTraitTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:fail\\(\\) invoked with 2 parameters, 0\\-1 required\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Core/Test/AssertContentTraitTest.php
 
 		-
 			message: "#^Variable \\$value in isset\\(\\) always exists and is not nullable\\.$#"

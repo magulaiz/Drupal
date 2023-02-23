@@ -636,7 +636,7 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
     ];
     $form['element_label_type'] = [
       '#title' => $this->t('Label HTML element'),
-      '#options' => $this->getElements(FALSE),
+      '#options' => $this->getElements(),
       '#type' => 'select',
       '#default_value' => $this->options['element_label_type'],
       '#description' => $this->t('Choose the HTML element to wrap around this label, e.g. H1, H2, etc.'),
@@ -680,7 +680,7 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
     ];
     $form['element_wrapper_type'] = [
       '#title' => $this->t('Wrapper HTML element'),
-      '#options' => $this->getElements(FALSE),
+      '#options' => $this->getElements(),
       '#type' => 'select',
       '#default_value' => $this->options['element_wrapper_type'],
       '#description' => $this->t('Choose the HTML element to wrap around this field and label, e.g. H1, H2, etc. This may not be used if the field and label are not rendered together, such as with a table.'),
@@ -1445,7 +1445,7 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
       }
 
       // If no scheme is provided in the $path, assign the default 'http://'.
-      // This allows a url of 'www.example.com' to be converted to
+      // This allows a URL of 'www.example.com' to be converted to
       // 'http://www.example.com'.
       // Only do this when flag for external has been set, $path doesn't contain
       // a scheme and $path doesn't have a leading /.
@@ -1493,7 +1493,7 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
       return $text;
     }
 
-    // If we get to here we have a path from the url parsing. So assign that to
+    // If we get to here we have a path from the URL parsing. So assign that to
     // $path now so we don't get query strings or fragments in the path.
     $path = $url['path'];
 
@@ -1577,7 +1577,7 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
       $options['language'] = $alter['language'];
     }
 
-    // If the url came from entity_uri(), pass along the required options.
+    // If the URL came from entity_uri(), pass along the required options.
     if (isset($alter['entity'])) {
       $options['entity'] = $alter['entity'];
     }
