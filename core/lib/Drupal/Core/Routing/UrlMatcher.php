@@ -4,7 +4,7 @@ namespace Drupal\Core\Routing;
 
 use Drupal\Core\Path\CurrentPathStack;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Routing\RequestContext as RequestContextAlias;
+use Symfony\Component\Routing\RequestContext;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 use Symfony\Component\Routing\Matcher\UrlMatcher as BaseUrlMatcher;
@@ -36,7 +36,7 @@ class UrlMatcher extends BaseUrlMatcher {
 
   public function finalMatch(RouteCollection $collection, Request $request) {
     $this->routes = $collection;
-    $context = new RequestContextAlias();
+    $context = new RequestContext();
     $context->fromRequest($request);
     $this->setContext($context);
 
