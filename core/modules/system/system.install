@@ -1664,3 +1664,14 @@ function _system_check_array_table_prefixes() {
   }
   return FALSE;
 }
+
+/**
+ * Set maximum length of menu_link_content menu_name field to 32.
+ */
+function system_update_10101() {
+  $entityUpdateManager = \Drupal::entityDefinitionUpdateManager();
+  $entity_type = $entityUpdateManager->getEntityType('menu_link_content');
+  $field_storage_definitions = \Drupal::service('entity_field.manager')->getFieldStorageDefinitions('menu_link_content');
+  $entityUpdateManager->updateFieldableEntityType($entity_type, $field_storage_definitions);
+  return t('Changed maximum length of menu_link_content menu_name field to 32');
+}
