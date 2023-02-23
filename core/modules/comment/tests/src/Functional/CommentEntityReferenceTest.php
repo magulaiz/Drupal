@@ -20,9 +20,25 @@ class CommentEntityReferenceTest extends CommentTestBase {
   protected $defaultTheme = 'stark';
 
   /**
-   * Tests that comments are correctly saved as entity references.
+   * A second test node containing references to comments.
+   *
+   * @var \Drupal\node\NodeInterface
    */
-  public function testCommentAsEntityReference() {
+  protected $node2;
+
+  /**
+   * A comment linked to a node.
+   *
+   * @var \Drupal\comment\CommentInterface
+   */
+  protected $comment;
+
+    /**
+   * {@inheritdoc}
+   */
+  protected function setUp(): void {
+    parent::setUp();
+
     $this->createEntityReferenceField(
       'node',
       'article',
@@ -34,7 +50,11 @@ class CommentEntityReferenceTest extends CommentTestBase {
     );
     \Drupal::service('entity_display.repository')
       ->getFormDisplay('node', 'article')
-      ->setComponent('entity_reference_comment', ['type' => 'entity_reference_autocomplete'])
+      ->setComponent('entity_reference_comment', ['type' => 'options_select'])
+      ->save();
+    \Drupal::service('entity_display.repository')
+      ->getViewDisplay('node', 'article')
+      ->setComponent('entity_reference_comment', ['type' => 'entity_reference_label'])
       ->save();
 
     $administratorUser = $this->drupalCreateUser([
@@ -48,21 +68,85 @@ class CommentEntityReferenceTest extends CommentTestBase {
     ]);
     $this->drupalLogin($administratorUser);
 
-    $comment = $this->postComment($this->node, $this->randomMachineName(), $this->randomMachineName());
-    $this->assertInstanceOf(Comment::class, $comment);
+    $this->node = $this->drupalCreateNode(['type' => 'article', 'promote' => 1, 'uid' => $this->webUser->id()]);
+    $this->comment = $this->postComment($this->node, $this->randomMachineName(), $this->randomMachineName());
+    $this->assertInstanceOf(Comment::class, $this->comment);
 
-    $node = $this->drupalCreateNode([
+    $this->node2 = $this->drupalCreateNode([
       'title' => $this->randomMachineName(),
       'type' => 'article',
     ]);
+  }
 
+  /**
+   * Tests that comments are correctly saved as entity references.
+   */
+  public function testCommentAsEntityReference() {
     // Load the node and save it.
     $edit = [
-      'entity_reference_comment[0][target_id]' => $comment->label() . ' (' . $comment->id() . ')',
+      'entity_reference_comment' => $this->comment->id(),
     ];
-    $this->drupalGet('node/' . $node->id() . '/edit');
+    $this->drupalGet('node/' . $this->node2->id() . '/edit');
     $this->submitForm($edit, 'Save');
     $this->assertSession()->statusCodeEquals(200);
+    $this->assertSession()->pageTextContains('has been updated');
+
+    // Make sure the comment is linked.
+    $this->assertSession()->pageTextContains($this->comment->label());
+  }
+
+  /**
+   * Tests that comments of unpublished are not shown.
+   */
+  public function testCommentOfUnpublishedNodeBypassAccess() {
+    // Unpublish the node that has the comment.
+    $this->node->setUnpublished()->save();
+
+    // When the user has 'bypass node access' permission, they can still set it.
+    $edit = [
+      'entity_reference_comment' => $this->comment->id(),
+    ];
+    $this->drupalGet('node/' . $this->node2->id() . '/edit');
+    $this->submitForm($edit, 'Save');
+    $this->assertSession()->statusCodeEquals(200);
+    $this->assertSession()->pageTextContains('has been updated');
+
+    // Comment is seen as administrator user.
+    $this->assertSession()->pageTextContains($this->comment->label());
+
+    // But not as anonymous.
+    $this->drupalLogout();
+    $this->assertSession()->pageTextNotContains($this->comment->label());
+  }
+
+  /**
+   * Tests that comments of unpublished are not shown nor offered when editing.
+   */
+  public function testCommentOfUnpublishedNodeNoBypassAccess() {
+    // Unpublish the node that has the comment.
+    $this->node->setUnpublished()->save();
+
+    $this->drupalLogout();
+    $user = $this->drupalCreateUser([
+      'skip comment approval',
+      'post comments',
+      'access comments',
+      'access content',
+      'administer nodes',
+      'administer comments',
+      'edit any article content'
+    ]);
+    $this->drupalLogin($user);
+
+    $edit = [
+      'entity_reference_comment' => $this->comment->id(),
+    ];
+    $this->drupalGet('node/' . $this->node2->id() . '/edit');
+
+    // The comment is not even a valid option, so trying to save it will fail.
+    $this->expectException(\InvalidArgumentException::class);
+    $this->expectExceptionMessage('Input "entity_reference_comment" cannot take "' . $this->comment->id() . '" as a value (possible values: "_none").');
+    $this->submitForm($edit, 'Save');
   }
 
 }
