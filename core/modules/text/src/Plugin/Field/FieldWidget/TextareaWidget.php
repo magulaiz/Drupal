@@ -14,6 +14,7 @@ use Symfony\Component\Validator\ConstraintViolationInterface;
  *   id = "text_textarea",
  *   label = @Translation("Text area (multiple rows)"),
  *   field_types = {
+ *     "text",
  *     "text_long"
  *   }
  * )

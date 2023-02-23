@@ -13,6 +13,7 @@ use Drupal\Core\Form\FormStateInterface;
  *   id = "string_textarea",
  *   label = @Translation("Text area (multiple rows)"),
  *   field_types = {
+ *     "string",
  *     "string_long"
  *   }
  * )
@@ -75,6 +76,10 @@ class StringTextareaWidget extends WidgetBase {
       '#placeholder' => $this->getSetting('placeholder'),
       '#attributes' => ['class' => ['js-text-full', 'text-full']],
     ];
+
+    if ($max_length = $this->getFieldSetting('max_length')) {
+      $element['value']['#maxlength'] = $max_length;
+    }
 
     return $element;
   }
