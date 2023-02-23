@@ -358,10 +358,13 @@ $settings['update_free_access'] = FALSE;
 # $settings['reverse_proxy'] = TRUE;
 
 /**
- * Specify every reverse proxy IP address in your environment.
- * This setting is required if $settings['reverse_proxy'] is TRUE.
+ * Reverse proxy addresses.
+ *
+ * Specify every reverse proxy IP address in your environment, as an array of
+ * IPv4/IPv6 addresses or subnets in CIDR notation. This setting is required if
+ * $settings['reverse_proxy'] is TRUE.
  */
-# $settings['reverse_proxy_addresses'] = ['a.b.c.d', ...];
+# $settings['reverse_proxy_addresses'] = ['a.b.c.d', 'e.f.g.h/24', ...];
 
 /**
  * Reverse proxy trusted headers.
@@ -577,7 +580,7 @@ $settings['update_free_access'] = FALSE;
  * any added language. (eg locale_custom_strings_de for german).
  */
 # $settings['locale_custom_strings_en'][''] = [
-#   'forum'      => 'Discussion board',
+#   'Home' => 'Front page',
 #   '@count min' => '@count minutes',
 # ];
 
@@ -702,6 +705,7 @@ $settings['container_yamls'][] = $app_root . '/' . $site_path . '/services.yml';
  *
  * @see https://www.drupal.org/docs/installing-drupal/trusted-host-settings
  */
+# $settings['trusted_host_patterns'] = [];
 
 /**
  * The default list of directories that will be ignored by Drupal's file API.

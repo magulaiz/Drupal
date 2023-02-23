@@ -21,7 +21,7 @@ use Drupal\Core\Url;
 class LinkGenerator implements LinkGeneratorInterface {
 
   /**
-   * The url generator.
+   * The URL generator.
    *
    * @var \Drupal\Core\Routing\UrlGeneratorInterface
    */
@@ -61,6 +61,7 @@ class LinkGenerator implements LinkGeneratorInterface {
    * {@inheritdoc}
    */
   public function generateFromLink(Link $link) {
+    @trigger_error('\Drupal\Core\Utility\LinkGeneratorInterface::generateFromLink() is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use \Drupal\Core\Utility\LinkGeneratorInterface::generate() instead. See https://www.drupal.org/node/3342992', E_USER_DEPRECATED);
     return $this->generate($link->getText(), $link->getUrl());
   }
 
@@ -106,7 +107,7 @@ class LinkGenerator implements LinkGeneratorInterface {
       'absolute' => FALSE,
     ];
 
-    // Add a hreflang attribute if we know the language of this link's url and
+    // Add a hreflang attribute if we know the language of this link's URL and
     // hreflang has not already been set.
     if (!empty($variables['options']['language']) && !isset($variables['options']['attributes']['hreflang'])) {
       $variables['options']['attributes']['hreflang'] = $variables['options']['language']->getId();

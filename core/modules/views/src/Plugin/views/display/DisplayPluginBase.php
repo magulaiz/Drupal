@@ -63,8 +63,10 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
   /**
    * Stores the rendered output of the display.
    *
-   * @see View::render
-   * @var string
+   * @var array|null
+   *   Render output array, or NULL if no output.
+   *
+   * @see \Drupal\views\ViewExecutable::render()
    */
   public $output = NULL;
 
@@ -2637,7 +2639,7 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
   public function viewExposedFormBlocks() {
     // Avoid interfering with the admin forms.
     $route_name = \Drupal::routeMatch()->getRouteName();
-    if (strpos($route_name, 'views_ui.') === 0) {
+    if (str_starts_with($route_name, 'views_ui.')) {
       return;
     }
     $this->view->initHandlers();
