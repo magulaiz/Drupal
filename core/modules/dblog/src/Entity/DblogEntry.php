@@ -14,7 +14,7 @@ use Drupal\Component\Render\MarkupInterface;
  *
  * Dblog entries should be considered read only entities. Drupal support for
  * read only entities is limited at this point, therefore this entity type
- * is set as internal. This will disable integration for jsonapi, rest and hal
+ * is set as internal. This will disable integration for jsonapi and rest
  * modules, which assume all entities can be saved.
  *
  * @ContentEntityType(

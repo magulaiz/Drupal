@@ -64,29 +64,6 @@ class DblogEntryStorage extends SqlContentEntityStorage implements DblogEntrySto
   /**
    * {@inheritdoc}
    */
-  public function loadMultiple(array $ids = NULL) {
-    if (!empty($ids)) {
-      return parent::loadMultiple($ids);
-    }
-    $query = $this->database->select('watchdog', 'w');
-    $query->fields('w', ['wid']);
-    $query->orderBy('wid', 'DESC');
-
-    $records = $query->execute()->fetchAllAssoc('wid', \PDO::FETCH_ASSOC);
-
-    if (empty($records)) {
-      return [];
-    }
-    $ids = [];
-    foreach ($records as $record) {
-      $ids[] = $record['wid'];
-    }
-    return parent::loadMultiple($ids);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function mostFrequentLogEntries(string $type): array {
     $query = $this->database->select('watchdog', 'w');
     $query->addExpression('COUNT([wid])', 'count');
