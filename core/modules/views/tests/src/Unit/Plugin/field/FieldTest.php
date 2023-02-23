@@ -514,6 +514,70 @@ class FieldTest extends UnitTestCase {
   /**
    * @covers ::query
    */
+  public function testQueryWithGroupByForBaseFieldFailure(): void {
+    $definition = [
+      'entity_type' => 'test_entity',
+      'field_name' => 'title',
+    ];
+    $handler = new EntityField([], 'field', $definition, $this->entityTypeManager, $this->formatterPluginManager, $this->fieldTypePluginManager, $this->languageManager, $this->renderer, $this->entityRepository, $this->entityFieldManager);
+    $handler->view = $this->executable;
+    $handler->view->field = [$handler];
+
+    $this->setupLanguageRenderer($handler, $definition);
+
+    $field_storage = $this->getBaseFieldStorage();
+    $this->entityFieldManager
+      ->method('getFieldStorageDefinitions')
+      ->with('test_entity')
+      ->willReturn([
+        'title' => $field_storage,
+      ]);
+
+    $table_mapping = $this->createMock('Drupal\Core\Entity\Sql\TableMappingInterface');
+    $table_mapping
+      ->method('getFieldColumnName')
+      ->with($field_storage, 'value')
+      ->willReturn('title');
+    $entity_storage = $this->createMock('Drupal\Core\Entity\Sql\SqlEntityStorageInterface');
+    $entity_storage
+      ->method('getTableMapping')
+      ->willReturn($table_mapping);
+    $this->entityTypeManager
+      ->method('getStorage')
+      ->with('test_entity')
+      ->willReturn($entity_storage);
+
+    $options = [
+      'group_column' => NULL,
+      'group_columns' => [],
+      'table' => 'test_entity_table',
+    ];
+    $handler->init($this->executable, $this->display, $options);
+
+    $query = $this->getMockBuilder('Drupal\views\Plugin\views\query\Sql')
+      ->disableOriginalConstructor()
+      ->getMock();
+    $query
+      ->method('ensureTable')
+      ->with('test_entity_table', NULL)
+      ->willReturn('test_entity_table');
+    // Ensure that we add the title field to the query, if we group by some
+    // other field in the view.
+    $query
+      ->method('addField')
+      ->with('test_entity_table', 'title');
+
+    $this->executable->query = $query;
+
+    $handler->query(TRUE);
+
+    $this->assertObjectNotHasAttribute('group_fields', $handler);
+    $this->assertNull($handler->tableAlias);
+  }
+
+  /**
+   * @covers ::query
+   */
   public function testQueryWithGroupByForConfigField() {
     $definition = [
       'entity_type' => 'test_entity',
@@ -571,6 +635,70 @@ class FieldTest extends UnitTestCase {
     $this->executable->query = $query;
 
     $handler->query(TRUE);
+  }
+
+  /**
+   * @covers ::query
+   */
+  public function testQueryWithGroupByForConfigFieldFailure(): void {
+    $definition = [
+      'entity_type' => 'test_entity',
+      'field_name' => 'body',
+    ];
+    $handler = new EntityField([], 'field', $definition, $this->entityTypeManager, $this->formatterPluginManager, $this->fieldTypePluginManager, $this->languageManager, $this->renderer, $this->entityRepository, $this->entityFieldManager);
+    $handler->view = $this->executable;
+    $handler->view->field = [$handler];
+
+    $this->setupLanguageRenderer($handler, $definition);
+
+    $field_storage = $this->getConfigFieldStorage();
+    $this->entityFieldManager
+      ->method('getFieldStorageDefinitions')
+      ->with('test_entity')
+      ->willReturn([
+        'body' => $field_storage,
+      ]);
+
+    $table_mapping = $this->createMock('Drupal\Core\Entity\Sql\TableMappingInterface');
+    $table_mapping
+      ->method('getFieldColumnName')
+      ->with($field_storage, 'value')
+      ->willReturn('body_value');
+    $entity_storage = $this->createMock('Drupal\Core\Entity\Sql\SqlEntityStorageInterface');
+    $entity_storage
+      ->method('getTableMapping')
+      ->willReturn($table_mapping);
+    $this->entityTypeManager
+      ->method('getStorage')
+      ->with('test_entity')
+      ->willReturn($entity_storage);
+
+    $options = [
+      'group_column' => NULL,
+      'group_columns' => [],
+      'table' => 'test_entity__body',
+    ];
+    $handler->init($this->executable, $this->display, $options);
+
+    $query = $this->getMockBuilder('Drupal\views\Plugin\views\query\Sql')
+      ->disableOriginalConstructor()
+      ->getMock();
+    $query
+      ->method('ensureTable')
+      ->with('test_entity__body', NULL)
+      ->willReturn('test_entity__body');
+    // Ensure that we add the title field to the query, if we group by some
+    // other field in the view.
+    $query
+      ->method('addField')
+      ->with('test_entity__body', 'body_value');
+
+    $this->executable->query = $query;
+
+    $handler->query(TRUE);
+
+    $this->assertObjectNotHasAttribute('group_fields', $handler);
+    $this->assertNull($handler->tableAlias);
   }
 
   /**
@@ -739,6 +867,59 @@ class FieldTest extends UnitTestCase {
     $this->entityTypeManager->expects($this->any())
       ->method('getDefinition')
       ->willReturn($entity_type);
+  }
+
+  /**
+   * @covers ::add_field_table
+   */
+  public function testAddAdditionalFieldTable(): void {
+    $definition = [
+      'entity_type' => 'test_entity',
+      'field_name' => 'body',
+    ];
+    $handler = new EntityField([], 'field', $definition, $this->entityTypeManager, $this->formatterPluginManager, $this->fieldTypePluginManager, $this->languageManager, $this->renderer, $this->entityRepository, $this->entityFieldManager);
+    $handler->view = $this->executable;
+    $handler->view->field = [$handler];
+
+    $this->setupLanguageRenderer($handler, $definition);
+
+    $field_storage = $this->getConfigFieldStorage();
+    $this->entityFieldManager
+      ->method('getFieldStorageDefinitions')
+      ->with('test_entity')
+      ->willReturn([
+        'body' => $field_storage,
+      ]);
+
+    $table_mapping = $this->createMock('Drupal\Core\Entity\Sql\TableMappingInterface');
+    $table_mapping
+      ->method('getFieldColumnName')
+      ->with($field_storage, 'value')
+      ->willReturn('body_value');
+    $entity_storage = $this->createMock('Drupal\Core\Entity\Sql\SqlEntityStorageInterface');
+    $entity_storage
+      ->method('getTableMapping')
+      ->willReturn($table_mapping);
+    $this->entityTypeManager
+      ->method('getStorage')
+      ->with('test_entity')
+      ->willReturn($entity_storage);
+
+    $options = [
+      'group_column' => NULL,
+      'group_columns' => [],
+      'table' => 'test_entity__body',
+    ];
+    $handler->init($this->executable, $this->display, $options);
+    $handler->query = $this->getMockBuilder('Drupal\views\Plugin\views\query\Sql')
+      ->disableOriginalConstructor()
+      ->getMock();
+
+    $handler->additional_fields = ['alt', 'title'];
+    $handler->query(TRUE);
+
+    $this->assertEmpty($handler->tableAlias);
+    $this->assertEmpty($handler->aliases);
   }
 
 }
