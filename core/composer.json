@@ -43,7 +43,11 @@
         "pear/archive_tar": "^1.4.14",
         "psr/log": "^3.0",
         "mck89/peast": "^1.14",
-        "sebastian/diff": "^4"
+        "sebastian/diff": "^4",
+        "php-tuf/composer-stager": "^1.2",
+        "composer/composer": "^2.2.12 || ^2.3.5",
+        "symfony/config": "^4.4 || ^6.1",
+        "symfony/finder": "^4.4 || ^6.1"
     },
     "conflict": {
         "drush/drush": "<8.1.10"

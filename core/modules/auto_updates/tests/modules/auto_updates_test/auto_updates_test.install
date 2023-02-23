@@ -1,0 +1,17 @@
+<?php
+
+/**
+ * @file
+ * Contains install and update hooks.
+ */
+
+if (\Drupal::state()->get('auto_updates_test.new_update')) {
+
+  /**
+   * Dynamic auto_updates_update_1191934.
+   */
+  function auto_updates_update_1191934(&$sandbox) {
+
+  }
+
+}

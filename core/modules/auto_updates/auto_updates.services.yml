@@ -1,0 +1,115 @@
+services:
+  auto_updates.route_subscriber:
+    class: Drupal\auto_updates\Routing\RouteSubscriber
+    tags:
+      - { name: event_subscriber }
+  auto_updates.status_checker:
+    class: Drupal\auto_updates\Validation\StatusChecker
+    arguments:
+      - '@keyvalue.expirable'
+      - '@datetime.time'
+      - '@event_dispatcher'
+      - '@auto_updates.updater'
+      - '@auto_updates.cron_updater'
+      - 24
+    tags:
+      - { name: event_subscriber }
+  auto_updates.status_check_mailer:
+    class: Drupal\auto_updates\StatusCheckMailer
+    arguments:
+      - '@config.factory'
+      - '@plugin.manager.mail'
+      - '@language_manager'
+  auto_updates.updater:
+    class: Drupal\auto_updates\Updater
+    arguments:
+      - '@package_manager.path_locator'
+      - '@package_manager.beginner'
+      - '@package_manager.stager'
+      - '@package_manager.committer'
+      - '@file_system'
+      - '@event_dispatcher'
+      - '@tempstore.shared'
+      - '@datetime.time'
+      - '@PhpTuf\ComposerStager\Infrastructure\Factory\Path\PathFactoryInterface'
+      - '@package_manager.failure_marker'
+    calls:
+      - ['setLogger', ['@logger.channel.auto_updates']]
+  auto_updates.cron_updater:
+    class: Drupal\auto_updates\CronUpdater
+    arguments:
+      - '@auto_updates.release_chooser'
+      - '@plugin.manager.mail'
+      - '@auto_updates.status_check_mailer'
+      - '@state'
+      - '@config.factory'
+      - '@package_manager.path_locator'
+      - '@package_manager.beginner'
+      - '@package_manager.stager'
+      - '@package_manager.committer'
+      - '@file_system'
+      - '@event_dispatcher'
+      - '@tempstore.shared'
+      - '@datetime.time'
+      - '@PhpTuf\ComposerStager\Infrastructure\Factory\Path\PathFactoryInterface'
+      - '@package_manager.failure_marker'
+    calls:
+      - ['setLogger', ['@logger.channel.auto_updates']]
+  auto_updates.requested_update_validator:
+    class: Drupal\auto_updates\Validator\RequestedUpdateValidator
+    tags:
+      - { name: event_subscriber }
+  auto_updates.staged_projects_validator:
+    class: Drupal\auto_updates\Validator\StagedProjectsValidator
+    tags:
+      - { name: event_subscriber }
+  auto_updates.release_chooser:
+    class: Drupal\auto_updates\ReleaseChooser
+    arguments:
+      - '@auto_updates.validator.version_policy'
+  auto_updates.cron_frequency_validator:
+    class: Drupal\auto_updates\Validator\CronFrequencyValidator
+    arguments:
+      - '@config.factory'
+      - '@module_handler'
+      - '@state'
+      - '@datetime.time'
+      - '@auto_updates.cron_updater'
+      - '@lock'
+    tags:
+      - { name: event_subscriber }
+  auto_updates.validator.staged_database_updates:
+    class: Drupal\auto_updates\Validator\StagedDatabaseUpdateValidator
+    arguments:
+      - '@package_manager.validator.staged_database_updates'
+    tags:
+      - { name: event_subscriber }
+  auto_updates.validator.version_policy:
+    class: Drupal\auto_updates\Validator\VersionPolicyValidator
+    arguments:
+      - '@class_resolver'
+    tags:
+      - { name: event_subscriber }
+  auto_updates.config_subscriber:
+    class: Drupal\auto_updates\EventSubscriber\ConfigSubscriber
+    arguments:
+      - '@auto_updates.status_checker'
+    tags:
+      - { name: event_subscriber }
+  auto_updates.validator.scaffold_file_permissions:
+    class: Drupal\auto_updates\Validator\ScaffoldFilePermissionsValidator
+    arguments:
+      - '@package_manager.path_locator'
+    tags:
+      - { name: event_subscriber }
+  auto_updates.validator.cron_server:
+    class: Drupal\auto_updates\Validator\CronServerValidator
+    arguments:
+      - '@request_stack'
+      - '@config.factory'
+      - '@module_handler'
+    tags:
+      - { name: event_subscriber }
+  logger.channel.auto_updates:
+    parent: logger.channel_base
+    arguments: ['auto_updates']
