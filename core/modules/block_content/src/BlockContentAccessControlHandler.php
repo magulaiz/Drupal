@@ -62,31 +62,36 @@ class BlockContentAccessControlHandler extends EntityAccessControlHandler implem
     $access = match ($operation) {
       // Allow view and update access to user with the 'edit any (type) block
       // content' permission or the 'administer blocks' permission.
-      'view', 'update' => AccessResult::allowedIfHasPermissions($account, [
-        'access block library',
-        'edit any ' . $bundle . ' block content',
-      ], 'AND'),
+      'view' => AccessResult::allowedIf($entity->isPublished())
+        ->orIf(AccessResult::allowedIfHasPermissions($account, [
+          'access block library',
+          'edit any ' . $bundle . ' block content',
+        ])),
       'create' => AccessResult::allowedIfHasPermissions($account, [
         'access block library',
         'create ' . $bundle . ' block content',
-      ], 'AND'),
+      ]),
+      'update' => AccessResult::allowedIfHasPermissions($account, [
+        'access block library',
+        'edit any ' . $bundle . ' block content',
+      ]),
       'delete' => AccessResult::allowedIfHasPermissions($account, [
         'access block library',
         'delete any ' . $bundle . ' block content',
-      ], 'AND'),
+      ]),
       // Revisions.
       'view all revisions' => AccessResult::allowedIfHasPermissions($account, [
         'access block library',
         'view any ' . $bundle . ' block content history',
-      ], 'AND'),
+      ]),
       'revert' => AccessResult::allowedIfHasPermissions($account, [
         'access block library',
         'revert any ' . $bundle . ' block content revisions',
-      ], 'AND')->orIf($forbidIfNotDefaultAndLatest())->orIf($forbidIfNotReusable()),
+      ])->orIf($forbidIfNotDefaultAndLatest())->orIf($forbidIfNotReusable()),
       'delete revision' => AccessResult::allowedIfHasPermissions($account, [
         'access block library',
         'delete any ' . $bundle . ' block content revisions',
-      ], 'AND')->orIf($forbidIfNotDefaultAndLatest())->orIf($forbidIfNotReusable()),
+      ])->orIf($forbidIfNotDefaultAndLatest())->orIf($forbidIfNotReusable()),
 
       default => parent::checkAccess($entity, $operation, $account),
     };
