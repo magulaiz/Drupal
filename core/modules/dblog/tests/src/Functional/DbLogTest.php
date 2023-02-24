@@ -68,6 +68,7 @@ class DbLogTest extends BrowserTestBase {
     $this->adminUser = $this->drupalCreateUser([
       'administer site configuration',
       'access administration pages',
+      'access help pages',
       'access site reports',
       'administer users',
     ]);
