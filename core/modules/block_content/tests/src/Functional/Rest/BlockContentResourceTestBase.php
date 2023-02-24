@@ -41,15 +41,15 @@ abstract class BlockContentResourceTestBase extends EntityResourceTestBase {
     switch ($method) {
       case 'PATCH':
       case 'GET':
-        $this->grantPermissionsToTestedRole(['edit any basic blocks']);
+        $this->grantPermissionsToTestedRole(['edit any basic block content']);
         break;
 
       case 'POST':
-        $this->grantPermissionsToTestedRole(['create basic blocks']);
+        $this->grantPermissionsToTestedRole(['create basic block content']);
         break;
 
       case 'DELETE':
-        $this->grantPermissionsToTestedRole(['delete any basic blocks']);
+        $this->grantPermissionsToTestedRole(['delete any basic block content']);
         break;
     }
   }
@@ -193,13 +193,13 @@ abstract class BlockContentResourceTestBase extends EntityResourceTestBase {
     switch ($method) {
       case 'GET':
       case 'PATCH':
-        return "The following permissions are required: 'edit any basic blocks' OR 'administer blocks'.";
+        return "The following permissions are required: 'edit any basic block content' OR 'administer blocks'.";
 
       case 'POST':
-        return "The following permissions are required: 'create basic blocks' OR 'administer blocks'.";
+        return "The following permissions are required: 'create basic block content' OR 'administer blocks'.";
 
       case 'DELETE':
-        return "The following permissions are required: 'delete any basic blocks' OR 'administer blocks'.";
+        return "The following permissions are required: 'delete any basic block content' OR 'administer blocks'.";
 
       default:
         return parent::getExpectedUnauthorizedAccessMessage($method);
