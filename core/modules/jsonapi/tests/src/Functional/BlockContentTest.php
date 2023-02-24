@@ -65,7 +65,20 @@ class BlockContentTest extends ResourceTestBase {
    * {@inheritdoc}
    */
   protected function setUpAuthorization($method) {
-    $this->grantPermissionsToTestedRole(['administer blocks']);
+    switch ($method) {
+      case 'GET':
+      case 'PATCH':
+        $this->grantPermissionsToTestedRole(['edit any basic blocks']);
+        break;
+
+      case 'POST':
+        $this->grantPermissionsToTestedRole(['create basic blocks']);
+        break;
+
+      case 'DELETE':
+        $this->grantPermissionsToTestedRole(['delete any basic blocks']);
+        break;
+    }
   }
 
   /**
@@ -180,6 +193,26 @@ class BlockContentTest extends ResourceTestBase {
         ],
       ],
     ];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function getExpectedUnauthorizedAccessMessage($method) {
+    switch ($method) {
+      case 'GET':
+      case 'PATCH':
+        return "The following permissions are required: 'edit any basic blocks' OR 'administer blocks'.";
+
+      case 'POST':
+        return "The following permissions are required: 'create basic blocks' OR 'administer blocks'.";
+
+      case 'DELETE':
+        return "The following permissions are required: 'delete any basic blocks' OR 'administer blocks'.";
+
+      default:
+        return parent::getExpectedUnauthorizedAccessMessage($method);
+    }
   }
 
   /**

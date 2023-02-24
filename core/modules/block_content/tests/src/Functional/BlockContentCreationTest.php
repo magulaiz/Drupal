@@ -35,6 +35,7 @@ class BlockContentCreationTest extends BlockContentTestBase {
   protected $permissions = [
     'administer blocks',
     'administer block_content display',
+    'access custom block library',
   ];
 
   /**
@@ -46,7 +47,7 @@ class BlockContentCreationTest extends BlockContentTestBase {
   }
 
   /**
-   * Creates a "Basic page" block and verifies its consistency in the database.
+   * Creates a "Basic block" block and verifies its consistency in the database.
    */
   public function testBlockContentCreation() {
     $this->drupalLogin($this->adminUser);

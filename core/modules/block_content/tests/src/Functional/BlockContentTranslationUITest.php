@@ -77,6 +77,7 @@ class BlockContentTranslationUITest extends ContentTranslationUITestBase {
       'access administration pages',
       'administer blocks',
       'administer block_content fields',
+      'access custom block library',
     ]);
   }
 
