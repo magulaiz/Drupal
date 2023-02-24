@@ -1998,7 +1998,7 @@ function hook_queue_info_alter(&$queues) {
  *   The array of condition definitions.
  */
 function hook_condition_info_alter(array &$definitions) {
-  // Add custom or modify existing condition definitions. (needs be to updated)
+  // Add custom or modify existing condition definitions.
 }
 
 /**
