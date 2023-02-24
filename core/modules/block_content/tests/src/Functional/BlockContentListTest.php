@@ -60,9 +60,9 @@ class BlockContentListTest extends BlockContentTestBase {
     $this->baseUser1 = $this->drupalCreateUser(['access custom block library']);
     $this->baseUser2 = $this->drupalCreateUser([
       'access custom block library',
-      'create basic blocks',
-      'edit any basic blocks',
-      'delete any basic blocks',
+      'create basic block content',
+      'edit any basic block content',
+      'delete any basic block content',
     ]);
   }
 
