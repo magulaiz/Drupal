@@ -67,6 +67,8 @@ class BlockContentAccessControlHandler extends EntityAccessControlHandler implem
         ->orIf(AccessResult::allowedIfHasPermission($account, 'edit any ' . $bundle . ' block content')),
       'update' => AccessResult::allowedIfHasPermission($account, 'administer blocks')
         ->orIf(AccessResult::allowedIfHasPermission($account, 'edit any ' . $bundle . ' block content')),
+      'create' => AccessResult::allowedIfHasPermission($account, 'administer blocks')
+        ->orIf(AccessResult::allowedIfHasPermission($account, "create {$bundle} blocks")),
 
       // Revisions.
       'view all revisions' => AccessResult::allowedIfHasPermissions($account, [
@@ -106,6 +108,13 @@ class BlockContentAccessControlHandler extends EntityAccessControlHandler implem
       $access = $access->andIf($dependency->access($operation, $account, TRUE));
     }
     return $access;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function checkCreateAccess(AccountInterface $account, array $context, $entity_bundle = NULL) {
+    return AccessResult::allowedIfHasPermissions($account, ["create {$entity_bundle} blocks", 'administer blocks'], 'OR');
   }
 
 }

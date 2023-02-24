@@ -33,6 +33,7 @@ class BlockContentTypeTest extends BlockContentTestBase {
    * @var array
    */
   protected $permissions = [
+    'access custom block library',
     'administer blocks',
     'administer block_content fields',
   ];

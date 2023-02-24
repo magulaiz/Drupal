@@ -74,7 +74,20 @@ class BlockAccessControlHandler extends EntityAccessControlHandler implements En
   protected function checkAccess(EntityInterface $entity, $operation, AccountInterface $account) {
     /** @var \Drupal\block\BlockInterface $entity */
     if ($operation != 'view') {
-      return parent::checkAccess($entity, $operation, $account);
+      switch ($operation) {
+        case 'update':
+          return AccessResult::allowedIfHasPermissions($account, ['administer blocks', 'configure blocks'], 'OR')->cachePerPermissions();
+
+        case 'disable':
+        case 'enable':
+          return AccessResult::allowedIfHasPermissions($account, ['administer blocks', 'modify blocks'], 'OR')->cachePerPermissions();
+
+        case 'delete':
+          return AccessResult::allowedIfHasPermissions($account, ['administer blocks', 'delete blocks'], 'OR')->cachePerPermissions();
+
+        default:
+          return parent::checkAccess($entity, $operation, $account);
+      }
     }
 
     // Don't grant access to disabled blocks.

@@ -1,2 +1,12 @@
 administer blocks:
   title: 'Administer blocks'
+access block overview:
+  title: 'Access block placement overview page'
+place blocks:
+  title: 'Place blocks'
+configure blocks:
+  title: 'Configure blocks'
+modify blocks:
+  title: 'Enable / Disable blocks'
+delete blocks:
+  title: 'Remove blocks'

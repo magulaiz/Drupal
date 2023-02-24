@@ -5,7 +5,7 @@ block.admin_demo:
     _title_callback: 'theme_handler:getName'
   requirements:
     _access_theme: 'TRUE'
-    _permission: 'administer blocks'
+    _access_block_admin_pages: 'TRUE'
   options:
     _admin_route: FALSE
 
@@ -15,7 +15,7 @@ entity.block.delete_form:
     _entity_form: 'block.delete'
     _title: 'Remove block'
   requirements:
-    _permission: 'administer blocks'
+    _entity_access: 'block.delete'
 
 entity.block.edit_form:
   path: '/admin/structure/block/manage/{block}'
@@ -49,7 +49,7 @@ block.admin_display:
     _controller: '\Drupal\block\Controller\BlockListController::listing'
     _title: 'Block layout'
   requirements:
-    _permission: 'administer blocks'
+    _access_block_admin_pages: 'TRUE'
 
 block.admin_display_theme:
   path: '/admin/structure/block/list/{theme}'
@@ -58,7 +58,7 @@ block.admin_display_theme:
     _title: 'Block layout'
   requirements:
     _access_theme: 'TRUE'
-    _permission: 'administer blocks'
+    _access_block_admin_pages: 'TRUE'
 
 block.admin_library:
   path: '/admin/structure/block/library/{theme}'
@@ -67,7 +67,7 @@ block.admin_library:
     _title: 'Place block'
   requirements:
     _access_theme: 'TRUE'
-    _permission: 'administer blocks'
+    _access_block_admin_pages: 'TRUE'
 
 block.admin_add:
   path: '/admin/structure/block/add/{plugin_id}/{theme}'
@@ -76,11 +76,11 @@ block.admin_add:
     theme: null
     _title: 'Configure block'
   requirements:
-    _permission: 'administer blocks'
+    _custom_access: '\Drupal\block\Controller\BlockAddController::access'
 
 block.category_autocomplete:
   path: '/block-category/autocomplete'
   defaults:
     _controller: '\Drupal\block\Controller\CategoryAutocompleteController::autocomplete'
   requirements:
-    _permission: 'administer blocks'
+    _access_block_admin_pages: 'TRUE'
