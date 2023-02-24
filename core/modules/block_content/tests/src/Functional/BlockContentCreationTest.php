@@ -35,7 +35,7 @@ class BlockContentCreationTest extends BlockContentTestBase {
   protected $permissions = [
     'administer blocks',
     'administer block_content display',
-    'access custom block library',
+    'access block library',
   ];
 
   /**

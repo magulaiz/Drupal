@@ -55,6 +55,6 @@ function block_content_post_update_move_custom_block_library() {
 function block_content_post_update_block_library_view_permission() {
   $config_factory = \Drupal::configFactory();
   $config = $config_factory->getEditable('views.view.block_content');
-  $config->set('display.default.display_options.access.options.perm', 'access custom block library')
+  $config->set('display.default.display_options.access.options.perm', 'access block library')
     ->save(TRUE);
 }

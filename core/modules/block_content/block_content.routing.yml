@@ -6,7 +6,7 @@ block_content.add_page:
   options:
     _admin_route: TRUE
   requirements:
-    _permission: 'administer blocks'
+    _block_content_add_access: 'block_content'
 
 # @todo Deprecate this route once
 #   https://www.drupal.org/project/drupal/issues/3159210 is fixed, or remove
@@ -77,7 +77,7 @@ entity.block_content.collection:
     _title: 'Custom blocks'
     _entity_list: 'block_content'
   requirements:
-    _permission: 'administer blocks'
+    _permission: 'access block library'
 
 # @todo Deprecate this route once
 #   https://www.drupal.org/project/drupal/issues/3159210 is fixed, or remove
@@ -88,4 +88,4 @@ entity.block_content.collection.bc:
   defaults:
     _controller: '\Drupal\block_content\Controller\BlockContentController::blockLibraryRedirect'
   requirements:
-    _permission: 'access custom block library'
+    _permission: 'access block library'

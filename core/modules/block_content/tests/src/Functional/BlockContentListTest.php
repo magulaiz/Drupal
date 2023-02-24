@@ -16,7 +16,7 @@ use Drupal\block_content\Entity\BlockContent;
 class BlockContentListTest extends BlockContentTestBase {
 
   /**
-   * A user with 'access custom block library' permission.
+   * A user with 'access block library' permission.
    *
    * @var \Drupal\user\UserInterface
    */
@@ -36,7 +36,7 @@ class BlockContentListTest extends BlockContentTestBase {
    */
   protected $permissions = [
     'administer blocks',
-    'access custom block library',
+    'access block library',
     'translate configuration',
   ];
 
@@ -57,9 +57,9 @@ class BlockContentListTest extends BlockContentTestBase {
    */
   protected function setUp(): void {
     parent::setUp();
-    $this->baseUser1 = $this->drupalCreateUser(['access custom block library']);
+    $this->baseUser1 = $this->drupalCreateUser(['access block library']);
     $this->baseUser2 = $this->drupalCreateUser([
-      'access custom block library',
+      'access block library',
       'create basic block content',
       'edit any basic block content',
       'delete any basic block content',
@@ -164,7 +164,7 @@ class BlockContentListTest extends BlockContentTestBase {
     $link_text = t('Add custom block');
     // Test as a user with view only permissions.
     $this->drupalLogin($this->baseUser1);
-    $this->drupalGet('admin/structure/block/block-content');
+    $this->drupalGet('admin/content/block-content');
     $this->assertSession()->statusCodeEquals(200);
     $this->assertSession()->linkNotExists($link_text);
     $this->assertSession()->linkByHrefNotExists('block/' . $test_block->id());
@@ -174,7 +174,7 @@ class BlockContentListTest extends BlockContentTestBase {
 
     // Test as a user with permission to create/edit/delete basic blocks.
     $this->drupalLogin($this->baseUser2);
-    $this->drupalGet('admin/structure/block/block-content');
+    $this->drupalGet('admin/content/block-content');
     $this->assertSession()->statusCodeEquals(200);
     $this->assertSession()->linkExists($link_text);
     $this->assertSession()->linkByHrefExists('block/' . $test_block->id());
