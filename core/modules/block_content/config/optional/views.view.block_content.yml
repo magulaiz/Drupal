@@ -297,7 +297,7 @@ display:
       access:
         type: perm
         options:
-          perm: 'access custom block library'
+          perm: 'access block library'
       cache:
         type: tag
         options: {  }

@@ -41,7 +41,7 @@ class BlockContentAddAccessCheck implements AccessInterface {
    *   (optional) The block type. If not specified, access is allowed if there
    *   exists at least one block type for which the user may create a block.
    *
-   * @return string
+   * @return bool|\Drupal\Core\Access\AccessResultInterface
    *   A \Drupal\Core\Access\AccessInterface constant value.
    */
   public function access(AccountInterface $account, BlockContentTypeInterface $block_content_type = NULL) {
@@ -55,7 +55,8 @@ class BlockContentAddAccessCheck implements AccessInterface {
     }
     // If checking whether a block of any type may be created.
     foreach ($this->entityTypeManager->getStorage('block_content_type')->loadMultiple() as $block_content_type) {
-      if (($access = $access_control_handler->createAccess($block_content_type->id(), $account, [], TRUE)) && $access->isAllowed()) {
+      $access = $access_control_handler->createAccess($block_content_type->id(), $account, [], TRUE);
+      if ($access && $access->isAllowed()) {
         return $access;
       }
     }

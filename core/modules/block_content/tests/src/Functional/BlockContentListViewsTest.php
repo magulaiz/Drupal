@@ -14,7 +14,7 @@ use Drupal\block_content\Entity\BlockContent;
 class BlockContentListViewsTest extends BlockContentTestBase {
 
   /**
-   * A user with 'access custom block library' permission.
+   * A user with 'access block library' permission.
    *
    * @var \Drupal\user\UserInterface
    */
@@ -34,7 +34,7 @@ class BlockContentListViewsTest extends BlockContentTestBase {
    */
   protected $permissions = [
     'administer blocks',
-    'access custom block library',
+    'access block library',
     'translate configuration',
   ];
 
@@ -60,9 +60,9 @@ class BlockContentListViewsTest extends BlockContentTestBase {
    */
   protected function setUp(): void {
     parent::setUp();
-    $this->baseUser1 = $this->drupalCreateUser(['access custom block library']);
+    $this->baseUser1 = $this->drupalCreateUser(['access block library']);
     $this->baseUser2 = $this->drupalCreateUser([
-      'access custom block library',
+      'access block library',
       'create basic block content',
       'edit any basic block content',
       'delete any basic block content',
