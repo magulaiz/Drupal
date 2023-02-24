@@ -175,7 +175,7 @@ class BlockContentListViewsTest extends BlockContentTestBase {
     $link_text = t('Add custom block');
     // Test as a user with view only permissions.
     $this->drupalLogin($this->baseUser1);
-    $this->drupalGet('admin/structure/block/block-content');
+    $this->drupalGet('admin/content/block-content');
     $this->assertSession()->statusCodeEquals(200);
     $this->assertSession()->linkNotExists($link_text);
     $matches = $this->xpath('//td/a');
@@ -189,7 +189,7 @@ class BlockContentListViewsTest extends BlockContentTestBase {
 
     // Test as a user with permission to create/edit/delete basic blocks.
     $this->drupalLogin($this->baseUser2);
-    $this->drupalGet('admin/structure/block/block-content');
+    $this->drupalGet('admin/content/block-content');
     $this->assertSession()->statusCodeEquals(200);
     $this->assertSession()->linkExists($link_text);
     $matches = $this->xpath('//td/a');
