@@ -61,6 +61,6 @@ class QueueWorker extends Plugin {
    *
    * @see \Drupal\Core\Queue\QueueWorkerManager::processDefinition()
    */
-  public $cron;
+  public $cron = [];
 
 }
