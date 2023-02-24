@@ -143,6 +143,7 @@
   <rule ref="Drupal.WhiteSpace.ScopeIndent"/>
 
   <!-- Drupal Practice sniffs -->
+  <rule ref="DrupalPractice"/>
   <rule ref="DrupalPractice.CodeAnalysis.VariableAnalysis">
     <!-- @todo exclude tests -->
     <exclude-pattern>*/tests/*</exclude-pattern>
