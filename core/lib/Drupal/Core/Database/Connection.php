@@ -377,9 +377,11 @@ abstract class Connection {
    *     the query. This is usually only meaningful for SELECT queries, where
    *     the statement object is how one accesses the result set returned by the
    *     query.
-   *   - Database::RETURN_AFFECTED: Return the number of rows affected by an
-   *     UPDATE or DELETE query. Be aware that means the number of rows actually
-   *     changed, not the number of rows matched by the WHERE clause.
+   *   - Database::RETURN_AFFECTED: Return the number of rows found (matched) by
+   *     the WHERE clause of an UPDATE or DELETE query (not the number of rows
+   *     actually changed). Note that although named RETURN_AFFECTED for
+   *     historical reasons, the number of rows matched is returned for
+   *     consistency across database engines.
    *   - Database::RETURN_INSERT_ID: Return the sequence ID (primary key)
    *     created by an INSERT statement on a table that contains a serial
    *     column.
@@ -901,8 +903,8 @@ abstract class Connection {
    *     $options['return'] is not set (due to self::defaultOptions()),
    *     returns the executed statement.
    *   - If $options['return'] === self::RETURN_AFFECTED,
-   *     returns the number of rows affected by the query
-   *     (not the number matched).
+   *     returns the number of rows matched by the query
+   *     (not the number affected).
    *   - If $options['return'] === self::RETURN_INSERT_ID,
    *     returns the generated insert ID of the last query as a string.
    *   - If $options['return'] === self::RETURN_NULL, returns NULL.
@@ -1814,11 +1816,6 @@ abstract class Connection {
    *
    * @return string
    *   The name of the temporary table.
-   *
-   * @deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. There is no
-   *   replacement.
-   *
-   * @see https://www.drupal.org/node/3211781
    */
   abstract public function queryTemporary($query, array $args = [], array $options = []);
 

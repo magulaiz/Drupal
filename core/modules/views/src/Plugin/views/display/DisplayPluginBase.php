@@ -439,7 +439,6 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
     // If the display cannot use a pager, then we cannot default it.
     if (!$this->usesPager()) {
       unset($sections['pager']);
-      unset($sections['items_per_page']);
     }
 
     foreach ($this->extenders as $extender) {
@@ -2232,7 +2231,7 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
     $element['#feed_icons'] = !empty($view->feedIcons) ? $view->feedIcons : [];
 
     if ($view->display_handler->renderPager()) {
-      $exposed_input = $view->exposed_raw_input ?? NULL;
+      $exposed_input = $view->getExposedInput();
       $element['#pager'] = $view->renderPager($exposed_input);
     }
 

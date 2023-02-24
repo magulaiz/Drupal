@@ -36,6 +36,9 @@
         "symfony/dom-crawler": "^4.4 !=4.4.5",
         "easyrdf/easyrdf": "^0.9 || ^1.0"
     },
+    "conflict": {
+        "phpunit/phpunit": "^9.6"
+    },
     "replace": {
         "symfony/polyfill-php72": "*",
         "symfony/polyfill-php73": "*"
@@ -110,8 +113,8 @@
             "Drupal\\Composer\\Composer::generateMetapackages",
             "Drupal\\Composer\\Composer::generateComponentPackages"
         ],
-        "phpcs": "phpcs --standard=core/phpcs.xml.dist --",
-        "phpcbf": "phpcbf --standard=core/phpcs.xml.dist --"
+        "phpcs": "phpcs --standard=core/phpcs.xml.dist --parallel=$(nproc) --",
+        "phpcbf": "phpcbf --standard=core/phpcs.xml.dist --parallel=$(nproc) --"
     },
     "repositories": [
         {

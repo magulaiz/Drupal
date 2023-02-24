@@ -183,7 +183,9 @@ function hook_module_preinstall($module) {
  *   TRUE if the module is being installed as part of a configuration import. In
  *   these cases, your hook implementation needs to carefully consider what
  *   changes, if any, it should make. For example, it should not make any
- *   changes to configuration objects or entities.
+ *   changes to configuration objects or configuration entities. Those changes
+ *   should be made earlier and exported so during import there's no need to
+ *   do them again.
  *
  * @see \Drupal\Core\Extension\ModuleInstaller::install()
  * @see hook_install()
@@ -230,8 +232,9 @@ function hook_modules_installed($modules, $is_syncing) {
  * @param bool $is_syncing
  *   TRUE if the module is being installed as part of a configuration import. In
  *   these cases, your hook implementation needs to carefully consider what
- *   changes, if any, it should make. For example, it should not make any
- *   changes to configuration objects or entities.
+ *   changes to configuration objects or configuration entities. Those changes
+ *   should be made earlier and exported so during import there's no need to
+ *   do them again.
  *
  * @see \Drupal\Core\Config\ConfigInstallerInterface::isSyncing
  * @see hook_schema()
@@ -269,8 +272,9 @@ function hook_module_preuninstall($module) {
  * @param bool $is_syncing
  *   TRUE if the module is being uninstalled as part of a configuration import.
  *   In these cases, your hook implementation needs to carefully consider what
- *   changes, if any, it should make. For example, it should not make any
- *   changes to configuration objects or entities.
+ *   changes to configuration objects or configuration entities. Those changes
+ *   should be made earlier and exported so during import there's no need to
+ *   do them again.
  *
  * @see hook_uninstall()
  */
@@ -307,8 +311,9 @@ function hook_modules_uninstalled($modules, $is_syncing) {
  * @param bool $is_syncing
  *   TRUE if the module is being uninstalled as part of a configuration import.
  *   In these cases, your hook implementation needs to carefully consider what
- *   changes, if any, it should make. For example, it should not make any
- *   changes to configuration objects or entities.
+ *   changes to configuration objects or configuration entities. Those changes
+ *   should be made earlier and exported so during import there's no need to
+ *   do them again.
  *
  * @see hook_install()
  * @see hook_schema()
@@ -1008,7 +1013,7 @@ function hook_requirements($phase) {
     }
     else {
       $requirements['cron'] = [
-        'description' => t('Cron has not run. It appears cron jobs have not been setup on your system. Check the help pages for <a href=":url">configuring cron jobs</a>.', [':url' => 'https://www.drupal.org/cron']),
+        'description' => t('Cron has not run. It appears cron jobs have not been setup on your system. Check the help pages for <a href=":url">configuring cron jobs</a>.', [':url' => 'https://www.drupal.org/docs/administering-a-drupal-site/cron-automated-tasks/cron-automated-tasks-overview']),
         'severity' => REQUIREMENT_ERROR,
         'value' => t('Never run'),
       ];
@@ -1020,6 +1025,29 @@ function hook_requirements($phase) {
   }
 
   return $requirements;
+}
+
+/**
+ * Alters requirements data.
+ *
+ * Implementations are able to alter the title, value, description or the
+ * severity of certain requirements defined by hook_requirements()
+ * implementations or even remove such entries.
+ *
+ * @param array $requirements
+ *   The requirements data to be altered.
+ *
+ * @see hook_requirements()
+ */
+function hook_requirements_alter(array &$requirements): void {
+  // Change the title from 'PHP' to 'PHP version'.
+  $requirements['php']['title'] = t('PHP version');
+
+  // Decrease the 'update status' requirement severity from warning to info.
+  $requirements['update status']['severity'] = REQUIREMENT_INFO;
+
+  // Remove a requirements entry.
+  unset($requirements['foo']);
 }
 
 /**

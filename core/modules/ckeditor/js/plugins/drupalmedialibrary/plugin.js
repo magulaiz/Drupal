@@ -4,7 +4,6 @@
 * https://www.drupal.org/node/2815083
 * @preserve
 **/
-
 (function (Drupal, CKEDITOR) {
   CKEDITOR.plugins.add('drupalmedialibrary', {
     requires: 'drupalmedia',
@@ -48,11 +47,9 @@
             editor.insertHtml(mediaElement.getOuterHtml());
             editor.fire('saveSnapshot');
           };
-
           Drupal.ckeditor.openDialog(editor, editor.config.DrupalMediaLibrary_url, {}, saveCallback, editor.config.DrupalMediaLibrary_dialogOptions);
         }
       });
-
       if (editor.ui.addButton) {
         editor.ui.addButton('DrupalMediaLibrary', {
           label: Drupal.t('Insert from Media Library'),
