@@ -20,11 +20,6 @@ class ExecutionContextFactory implements ExecutionContextFactoryInterface {
   protected $translator;
 
   /**
-   * @var string|null
-   */
-  protected $translationDomain;
-
-  /**
    * Constructs a new ExecutionContextFactory instance.
    *
    * @param \Drupal\Core\Validation\TranslatorInterface $translator
@@ -32,9 +27,8 @@ class ExecutionContextFactory implements ExecutionContextFactoryInterface {
    * @param string $translationDomain
    *   (optional) The translation domain.
    */
-  public function __construct(TranslatorInterface $translator, $translationDomain = NULL) {
+  public function __construct(TranslatorInterface $translator, protected ?string $translationDomain = NULL) {
     $this->translator = $translator;
-    $this->translationDomain = $translationDomain;
   }
 
   /**

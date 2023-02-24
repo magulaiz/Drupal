@@ -20,22 +20,6 @@ class ExtensionInstallStorage extends InstallStorage {
   protected $configStorage;
 
   /**
-   * Flag to include the profile in the list of enabled modules.
-   *
-   * @var bool
-   */
-  protected $includeProfile = TRUE;
-
-  /**
-   * The name of the currently active installation profile.
-   *
-   * In the early installer this value can be NULL.
-   *
-   * @var string|null
-   */
-  protected $installProfile;
-
-  /**
    * Overrides \Drupal\Core\Config\InstallStorage::__construct().
    *
    * @param \Drupal\Core\Config\StorageInterface $config_storage
@@ -45,17 +29,15 @@ class ExtensionInstallStorage extends InstallStorage {
    *   The directory to scan in each extension to scan for files.
    * @param string $collection
    *   The collection to store configuration in.
-   * @param bool $include_profile
+   * @param bool $includeProfile
    *   Whether to include the install profile in extensions to
    *   search and to get overrides from.
-   * @param string $profile
+   * @param string $installProfile
    *   The current installation profile.
    */
-  public function __construct(StorageInterface $config_storage, $directory, $collection, $include_profile, $profile) {
+  public function __construct(StorageInterface $config_storage, $directory, $collection, protected $includeProfile, protected ?string $installProfile) {
     parent::__construct($directory, $collection);
     $this->configStorage = $config_storage;
-    $this->includeProfile = $include_profile;
-    $this->installProfile = $profile;
   }
 
   /**

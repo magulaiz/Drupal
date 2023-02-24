@@ -19,23 +19,15 @@ class ScaffoldResult {
   protected $destination;
 
   /**
-   * Indicates if this scaffold file is managed by the scaffold command.
-   *
-   * @var bool
-   */
-  protected $managed;
-
-  /**
    * ScaffoldResult constructor.
    *
    * @param \Drupal\Composer\Plugin\Scaffold\ScaffoldFilePath $destination
    *   The path to the scaffold file that was processed.
-   * @param bool $isManaged
+   * @param bool $managed
    *   (optional) Whether this result is managed. Defaults to FALSE.
    */
-  public function __construct(ScaffoldFilePath $destination, $isManaged = FALSE) {
+  public function __construct(ScaffoldFilePath $destination, protected $managed = FALSE) {
     $this->destination = $destination;
-    $this->managed = $isManaged;
   }
 
   /**

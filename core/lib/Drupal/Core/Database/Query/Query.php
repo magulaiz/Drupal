@@ -35,13 +35,6 @@ abstract class Query implements PlaceholderInterface {
   protected $connectionKey;
 
   /**
-   * The query options to pass on to the connection object.
-   *
-   * @var array
-   */
-  protected $queryOptions;
-
-  /**
    * A unique identifier for this query object.
    *
    * @var string
@@ -67,17 +60,15 @@ abstract class Query implements PlaceholderInterface {
    *
    * @param \Drupal\Core\Database\Connection $connection
    *   Database connection object.
-   * @param array $options
+   * @param array $queryOptions
    *   Array of query options.
    */
-  public function __construct(Connection $connection, $options) {
+  public function __construct(Connection $connection, protected $queryOptions) {
     $this->uniqueIdentifier = uniqid('', TRUE);
 
     $this->connection = $connection;
     $this->connectionKey = $this->connection->getKey();
     $this->connectionTarget = $this->connection->getTarget();
-
-    $this->queryOptions = $options;
   }
 
   /**

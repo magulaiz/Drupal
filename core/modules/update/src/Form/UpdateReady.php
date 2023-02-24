@@ -19,13 +19,6 @@ use Symfony\Component\HttpFoundation\Response;
 class UpdateReady extends FormBase {
 
   /**
-   * The root location under which updated projects will be saved.
-   *
-   * @var string
-   */
-  protected $root;
-
-  /**
    * The module handler.
    *
    * @var \Drupal\Core\Extension\ModuleHandlerInterface
@@ -40,13 +33,6 @@ class UpdateReady extends FormBase {
   protected $state;
 
   /**
-   * The Site path.
-   *
-   * @var string
-   */
-  protected $sitePath;
-
-  /**
    * Constructs a new UpdateReady object.
    *
    * @param string $root
@@ -55,14 +41,12 @@ class UpdateReady extends FormBase {
    *   The object that manages enabled modules in a Drupal installation.
    * @param \Drupal\Core\State\StateInterface $state
    *   The state key value store.
-   * @param string $site_path
+   * @param string $sitePath
    *   The site path.
    */
-  public function __construct($root, ModuleHandlerInterface $module_handler, StateInterface $state, $site_path) {
-    $this->root = $root;
+  public function __construct(protected $root, ModuleHandlerInterface $module_handler, StateInterface $state, protected $sitePath) {
     $this->moduleHandler = $module_handler;
     $this->state = $state;
-    $this->sitePath = $site_path;
   }
 
   /**

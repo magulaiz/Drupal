@@ -102,13 +102,6 @@ class CKEditor5 extends EditorBase implements ContainerFactoryPluginInterface {
   protected $cache;
 
   /**
-   * The ckeditor_stylesheets message utility.
-   *
-   * @var \Drupal\ckeditor5\CKEditor5StylesheetsMessage
-   */
-  private $stylesheetsMessage;
-
-  /**
    * A logger instance.
    *
    * @var \Psr\Log\LoggerInterface
@@ -134,19 +127,18 @@ class CKEditor5 extends EditorBase implements ContainerFactoryPluginInterface {
    *   The smart default settings utility.
    * @param \Drupal\Core\Cache\CacheBackendInterface $cache
    *   The cache.
-   * @param \Drupal\ckeditor5\CKEditor5StylesheetsMessage $stylesheets_message
+   * @param \Drupal\ckeditor5\CKEditor5StylesheetsMessage $stylesheetsMessage
    *   The ckeditor_stylesheets message utility.
    * @param \Psr\Log\LoggerInterface $logger
    *   A logger instance.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, CKEditor5PluginManagerInterface $ckeditor5_plugin_manager, LanguageManagerInterface $language_manager, ModuleHandlerInterface $module_handler, SmartDefaultSettings $smart_default_settings, CacheBackendInterface $cache, CKEditor5StylesheetsMessage $stylesheets_message, LoggerInterface $logger) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, CKEditor5PluginManagerInterface $ckeditor5_plugin_manager, LanguageManagerInterface $language_manager, ModuleHandlerInterface $module_handler, SmartDefaultSettings $smart_default_settings, CacheBackendInterface $cache, private CKEditor5StylesheetsMessage $stylesheetsMessage, LoggerInterface $logger) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->ckeditor5PluginManager = $ckeditor5_plugin_manager;
     $this->languageManager = $language_manager;
     $this->moduleHandler = $module_handler;
     $this->smartDefaultSettings = $smart_default_settings;
     $this->cache = $cache;
-    $this->stylesheetsMessage = $stylesheets_message;
     $this->logger = $logger;
   }
 

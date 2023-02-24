@@ -22,13 +22,6 @@ use Drupal\Core\Database\Event\StatementExecutionStartEvent;
 class StatementPrefetch implements \Iterator, StatementInterface {
 
   /**
-   * The query string.
-   *
-   * @var string
-   */
-  protected $queryString;
-
-  /**
    * Driver-specific options. Can be used by child classes.
    *
    * @var array
@@ -144,17 +137,16 @@ class StatementPrefetch implements \Iterator, StatementInterface {
    *   An object of the PDO class representing a database connection.
    * @param \Drupal\Core\Database\Connection $connection
    *   The database connection.
-   * @param string $query
+   * @param string $queryString
    *   The query string.
    * @param array $driver_options
    *   Driver-specific options.
    * @param bool $row_count_enabled
    *   (optional) Enables counting the rows matched. Defaults to FALSE.
    */
-  public function __construct(\PDO $pdo_connection, Connection $connection, $query, array $driver_options = [], bool $row_count_enabled = FALSE) {
+  public function __construct(\PDO $pdo_connection, Connection $connection, protected $queryString, array $driver_options = [], bool $row_count_enabled = FALSE) {
     $this->pdoConnection = $pdo_connection;
     $this->connection = $connection;
-    $this->queryString = $query;
     $this->driverOptions = $driver_options;
     $this->rowCountEnabled = $row_count_enabled;
   }

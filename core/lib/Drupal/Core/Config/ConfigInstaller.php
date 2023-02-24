@@ -60,13 +60,6 @@ class ConfigInstaller implements ConfigInstallerInterface {
   protected $isSyncing = FALSE;
 
   /**
-   * The name of the currently active installation profile.
-   *
-   * @var string
-   */
-  protected $installProfile;
-
-  /**
    * The extension path resolver.
    *
    * @var \Drupal\Core\Extension\ExtensionPathResolver
@@ -86,18 +79,17 @@ class ConfigInstaller implements ConfigInstallerInterface {
    *   The configuration manager.
    * @param \Symfony\Contracts\EventDispatcher\EventDispatcherInterface $event_dispatcher
    *   The event dispatcher.
-   * @param string $install_profile
+   * @param string $installProfile
    *   The name of the currently active installation profile.
    * @param \Drupal\Core\Extension\ExtensionPathResolver $extension_path_resolver
    *   The extension path resolver.
    */
-  public function __construct(ConfigFactoryInterface $config_factory, StorageInterface $active_storage, TypedConfigManagerInterface $typed_config, ConfigManagerInterface $config_manager, EventDispatcherInterface $event_dispatcher, $install_profile, ExtensionPathResolver $extension_path_resolver) {
+  public function __construct(ConfigFactoryInterface $config_factory, StorageInterface $active_storage, TypedConfigManagerInterface $typed_config, ConfigManagerInterface $config_manager, EventDispatcherInterface $event_dispatcher, protected $installProfile, ExtensionPathResolver $extension_path_resolver) {
     $this->configFactory = $config_factory;
     $this->activeStorages[$active_storage->getCollectionName()] = $active_storage;
     $this->typedConfig = $typed_config;
     $this->configManager = $config_manager;
     $this->eventDispatcher = $event_dispatcher;
-    $this->installProfile = $install_profile;
     $this->extensionPathResolver = $extension_path_resolver;
   }
 

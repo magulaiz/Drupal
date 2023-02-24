@@ -19,13 +19,6 @@ class ManageGitIgnore {
   protected $io;
 
   /**
-   * The directory where the project is located.
-   *
-   * @var string
-   */
-  protected $dir;
-
-  /**
    * ManageGitIgnore constructor.
    *
    * @param \Composer\IO\IOInterface $io
@@ -33,9 +26,8 @@ class ManageGitIgnore {
    * @param string $dir
    *   The directory where the project is located.
    */
-  public function __construct(IOInterface $io, $dir) {
+  public function __construct(IOInterface $io, protected $dir) {
     $this->io = $io;
-    $this->dir = $dir;
   }
 
   /**

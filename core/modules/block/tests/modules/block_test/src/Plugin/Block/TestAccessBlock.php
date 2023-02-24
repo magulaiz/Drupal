@@ -21,11 +21,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class TestAccessBlock extends BlockBase implements ContainerFactoryPluginInterface {
 
   /**
-   * The state service.
-   */
-  protected StateInterface $state;
-
-  /**
    * Tests the test access block.
    *
    *
@@ -41,10 +36,11 @@ class TestAccessBlock extends BlockBase implements ContainerFactoryPluginInterfa
    * @param \Drupal\Core\State\StateInterface $state
    *   The state.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, StateInterface $state) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, /**
+   * The state service.
+   */
+  protected StateInterface $state) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
-
-    $this->state = $state;
   }
 
   /**

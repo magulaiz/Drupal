@@ -13,13 +13,6 @@ class WriteSafeSessionHandler implements \SessionHandlerInterface, WriteSafeSess
   protected $wrappedSessionHandler;
 
   /**
-   * Whether or not the session is enabled for writing.
-   *
-   * @var bool
-   */
-  protected $sessionWritable;
-
-  /**
    * The read sessions.
    *
    * @var array
@@ -32,12 +25,11 @@ class WriteSafeSessionHandler implements \SessionHandlerInterface, WriteSafeSess
    *
    * @param \SessionHandlerInterface $wrapped_session_handler
    *   The underlying session handler.
-   * @param bool $session_writable
+   * @param bool $sessionWritable
    *   Whether or not the session should be initially writable.
    */
-  public function __construct(\SessionHandlerInterface $wrapped_session_handler, $session_writable = TRUE) {
+  public function __construct(\SessionHandlerInterface $wrapped_session_handler, protected $sessionWritable = TRUE) {
     $this->wrappedSessionHandler = $wrapped_session_handler;
-    $this->sessionWritable = $session_writable;
   }
 
   /**

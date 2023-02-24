@@ -47,20 +47,6 @@ class ViewsForm implements FormInterface, ContainerInjectionInterface {
   protected $urlGenerator;
 
   /**
-   * The ID of the view.
-   *
-   * @var string
-   */
-  protected $viewId;
-
-  /**
-   * The ID of the active view's display.
-   *
-   * @var string
-   */
-  protected $viewDisplayId;
-
-  /**
    * The arguments passed to the active view.
    *
    * @var string[]
@@ -76,19 +62,17 @@ class ViewsForm implements FormInterface, ContainerInjectionInterface {
    *   The URL generator to generate the form action.
    * @param \Symfony\Component\HttpFoundation\RequestStack $requestStack
    *   The request stack.
-   * @param string $view_id
+   * @param string $viewId
    *   The ID of the view.
-   * @param string $view_display_id
+   * @param string $viewDisplayId
    *   The ID of the active view's display.
    * @param string[] $view_args
    *   The arguments passed to the active view.
    */
-  public function __construct(ClassResolverInterface $class_resolver, UrlGeneratorInterface $url_generator, RequestStack $requestStack, $view_id, $view_display_id, array $view_args) {
+  public function __construct(ClassResolverInterface $class_resolver, UrlGeneratorInterface $url_generator, RequestStack $requestStack, protected $viewId, protected $viewDisplayId, array $view_args) {
     $this->classResolver = $class_resolver;
     $this->urlGenerator = $url_generator;
     $this->requestStack = $requestStack;
-    $this->viewId = $view_id;
-    $this->viewDisplayId = $view_display_id;
     $this->viewArguments = $view_args;
   }
 

@@ -20,13 +20,6 @@ class DynamicLocalTasks extends DeriverBase implements ContainerDeriverInterface
   use StringTranslationTrait;
 
   /**
-   * The base plugin ID.
-   *
-   * @var string
-   */
-  protected $basePluginId;
-
-  /**
    * The entity type manager.
    *
    * @var \Drupal\Core\Entity\EntityTypeManagerInterface
@@ -50,7 +43,7 @@ class DynamicLocalTasks extends DeriverBase implements ContainerDeriverInterface
   /**
    * Creates a FieldUiLocalTask object.
    *
-   * @param string $base_plugin_id
+   * @param string $basePluginId
    *   The base plugin ID.
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    *   The entity type manager.
@@ -61,10 +54,9 @@ class DynamicLocalTasks extends DeriverBase implements ContainerDeriverInterface
    * @param \Symfony\Component\Routing\RouterInterface $router
    *   The router.
    */
-  public function __construct($base_plugin_id, EntityTypeManagerInterface $entity_type_manager, TranslationInterface $string_translation, ModerationInformationInterface $moderation_information, RouterInterface $router) {
+  public function __construct(protected $basePluginId, EntityTypeManagerInterface $entity_type_manager, TranslationInterface $string_translation, ModerationInformationInterface $moderation_information, RouterInterface $router) {
     $this->entityTypeManager = $entity_type_manager;
     $this->stringTranslation = $string_translation;
-    $this->basePluginId = $base_plugin_id;
     $this->moderationInfo = $moderation_information;
     $this->router = $router;
   }

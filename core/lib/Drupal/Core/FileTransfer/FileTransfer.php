@@ -42,13 +42,6 @@ abstract class FileTransfer {
   protected $port;
 
   /**
-   * Full path to directory where file-transfer is restricted to.
-   *
-   * @var string
-   */
-  protected $jail;
-
-  /**
    * Path to connection chroot.
    *
    * @var string|false|null
@@ -69,9 +62,15 @@ abstract class FileTransfer {
    *   The full path where all file operations performed by this object will
    *   be restricted to. This prevents the FileTransfer classes from being
    *   able to touch other parts of the filesystem.
+   * @param string $jail
    */
-  public function __construct($jail) {
-    $this->jail = $jail;
+  public function __construct(
+      /**
+       * Full path to directory where file-transfer is restricted to.
+       */
+      protected $jail
+  )
+  {
   }
 
   /**

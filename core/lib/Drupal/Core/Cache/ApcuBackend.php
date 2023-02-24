@@ -10,20 +10,6 @@ use Drupal\Component\Assertion\Inspector;
 class ApcuBackend implements CacheBackendInterface {
 
   /**
-   * The name of the cache bin to use.
-   *
-   * @var string
-   */
-  protected $bin;
-
-  /**
-   * Prefix for all keys in the storage that belong to this site.
-   *
-   * @var string
-   */
-  protected $sitePrefix;
-
-  /**
    * Prefix for all keys in this cache bin.
    *
    * Includes the site-specific prefix in $sitePrefix.
@@ -44,14 +30,12 @@ class ApcuBackend implements CacheBackendInterface {
    *
    * @param string $bin
    *   The name of the cache bin.
-   * @param string $site_prefix
+   * @param string $sitePrefix
    *   The prefix to use for all keys in the storage that belong to this site.
    * @param \Drupal\Core\Cache\CacheTagsChecksumInterface $checksum_provider
    *   The cache tags checksum provider.
    */
-  public function __construct($bin, $site_prefix, CacheTagsChecksumInterface $checksum_provider) {
-    $this->bin = $bin;
-    $this->sitePrefix = $site_prefix;
+  public function __construct(protected $bin, protected $sitePrefix, CacheTagsChecksumInterface $checksum_provider) {
     $this->checksumProvider = $checksum_provider;
     $this->binPrefix = $this->sitePrefix . '::' . $this->bin . '::';
   }

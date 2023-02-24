@@ -50,15 +50,6 @@ class DefaultPluginManager extends PluginManagerBase implements PluginManagerInt
   protected $alterHook;
 
   /**
-   * The subdirectory within a namespace to look for plugins.
-   *
-   * Set to FALSE if the plugins are in the top level of the namespace.
-   *
-   * @var string|bool
-   */
-  protected $subdir;
-
-  /**
    * The module handler to invoke the alter hook.
    *
    * @var \Drupal\Core\Extension\ModuleHandlerInterface
@@ -74,20 +65,6 @@ class DefaultPluginManager extends PluginManagerBase implements PluginManagerInt
    * @var array
    */
   protected $defaults = [];
-
-  /**
-   * The name of the annotation that contains the plugin definition.
-   *
-   * @var string
-   */
-  protected $pluginDefinitionAnnotationName;
-
-  /**
-   * The interface each plugin should implement.
-   *
-   * @var string|null
-   */
-  protected $pluginInterface;
 
   /**
    * An object of root paths that are traversable.
@@ -119,19 +96,16 @@ class DefaultPluginManager extends PluginManagerBase implements PluginManagerInt
    *   keyed by the corresponding namespace to look for plugin implementations.
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
    *   The module handler.
-   * @param string|null $plugin_interface
+   * @param string|null $pluginInterface
    *   (optional) The interface each plugin should implement.
-   * @param string $plugin_definition_annotation_name
+   * @param string $pluginDefinitionAnnotationName
    *   (optional) The name of the annotation that contains the plugin definition.
    *   Defaults to 'Drupal\Component\Annotation\Plugin'.
    * @param string[] $additional_annotation_namespaces
    *   (optional) Additional namespaces to scan for annotation definitions.
    */
-  public function __construct($subdir, \Traversable $namespaces, ModuleHandlerInterface $module_handler, $plugin_interface = NULL, $plugin_definition_annotation_name = 'Drupal\Component\Annotation\Plugin', array $additional_annotation_namespaces = []) {
-    $this->subdir = $subdir;
+  public function __construct(protected $subdir, \Traversable $namespaces, ModuleHandlerInterface $module_handler, protected ?string $pluginInterface = NULL, protected $pluginDefinitionAnnotationName = 'Drupal\Component\Annotation\Plugin', array $additional_annotation_namespaces = []) {
     $this->namespaces = $namespaces;
-    $this->pluginDefinitionAnnotationName = $plugin_definition_annotation_name;
-    $this->pluginInterface = $plugin_interface;
     $this->moduleHandler = $module_handler;
     $this->additionalAnnotationNamespaces = $additional_annotation_namespaces;
   }

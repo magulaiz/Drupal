@@ -49,13 +49,6 @@ class ThemeManager implements ThemeManagerInterface {
   protected $moduleHandler;
 
   /**
-   * The app root.
-   *
-   * @var string
-   */
-  protected $root;
-
-  /**
    * Constructs a new ThemeManager object.
    *
    * @param string $root
@@ -67,8 +60,7 @@ class ThemeManager implements ThemeManagerInterface {
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
    *   The module handler.
    */
-  public function __construct($root, ThemeNegotiatorInterface $theme_negotiator, ThemeInitializationInterface $theme_initialization, ModuleHandlerInterface $module_handler) {
-    $this->root = $root;
+  public function __construct(protected $root, ThemeNegotiatorInterface $theme_negotiator, ThemeInitializationInterface $theme_initialization, ModuleHandlerInterface $module_handler) {
     $this->themeNegotiator = $theme_negotiator;
     $this->themeInitialization = $theme_initialization;
     $this->moduleHandler = $module_handler;

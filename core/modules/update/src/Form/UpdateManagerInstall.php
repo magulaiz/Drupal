@@ -27,20 +27,6 @@ class UpdateManagerInstall extends FormBase {
   protected $moduleHandler;
 
   /**
-   * The root location under which installed projects will be saved.
-   *
-   * @var string
-   */
-  protected $root;
-
-  /**
-   * The site path.
-   *
-   * @var string
-   */
-  protected $sitePath;
-
-  /**
    * The archiver plugin manager service.
    *
    * @var \Drupal\Core\Archiver\ArchiverManager
@@ -54,15 +40,13 @@ class UpdateManagerInstall extends FormBase {
    *   The root location under which installed projects will be saved.
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
    *   The module handler.
-   * @param string $site_path
+   * @param string $sitePath
    *   The site path.
    * @param \Drupal\Core\Archiver\ArchiverManager $archiver_manager
    *   The archiver plugin manager service.
    */
-  public function __construct($root, ModuleHandlerInterface $module_handler, $site_path, ArchiverManager $archiver_manager) {
-    $this->root = $root;
+  public function __construct(protected $root, ModuleHandlerInterface $module_handler, protected $sitePath, ArchiverManager $archiver_manager) {
     $this->moduleHandler = $module_handler;
-    $this->sitePath = $site_path;
     $this->archiverManager = $archiver_manager;
   }
 

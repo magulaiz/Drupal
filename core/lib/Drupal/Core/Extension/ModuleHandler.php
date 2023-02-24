@@ -79,13 +79,6 @@ class ModuleHandler implements ModuleHandlerInterface {
   protected $alterFunctions;
 
   /**
-   * The app root.
-   *
-   * @var string
-   */
-  protected $root;
-
-  /**
    * A list of module include file keys.
    *
    * @var array
@@ -107,8 +100,7 @@ class ModuleHandler implements ModuleHandlerInterface {
    * @see \Drupal\Core\DrupalKernel
    * @see \Drupal\Core\CoreServiceProvider
    */
-  public function __construct($root, array $module_list, CacheBackendInterface $cache_backend) {
-    $this->root = $root;
+  public function __construct(protected $root, array $module_list, CacheBackendInterface $cache_backend) {
     $this->moduleList = [];
     foreach ($module_list as $name => $module) {
       $this->moduleList[$name] = new Extension($this->root, $module['type'], $module['pathname'], $module['filename']);

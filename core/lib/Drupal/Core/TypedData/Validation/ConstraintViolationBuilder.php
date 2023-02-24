@@ -28,13 +28,6 @@ class ConstraintViolationBuilder implements ConstraintViolationBuilderInterface 
   protected $violations;
 
   /**
-   * The violation message.
-   *
-   * @var string
-   */
-  protected $message;
-
-  /**
    * The message parameters.
    *
    * @var array
@@ -42,39 +35,11 @@ class ConstraintViolationBuilder implements ConstraintViolationBuilderInterface 
   protected $parameters;
 
   /**
-   * The root path.
-   *
-   * @var mixed
-   */
-  protected $root;
-
-  /**
-   * The invalid value caused the violation.
-   *
-   * @var mixed
-   */
-  protected $invalidValue;
-
-  /**
-   * The property path.
-   *
-   * @var string
-   */
-  protected $propertyPath;
-
-  /**
    * The translator.
    *
    * @var \Drupal\Core\Validation\TranslatorInterface
    */
   protected $translator;
-
-  /**
-   * The translation domain.
-   *
-   * @var string|false|null
-   */
-  protected $translationDomain;
 
   /**
    * The number used
@@ -119,16 +84,11 @@ class ConstraintViolationBuilder implements ConstraintViolationBuilderInterface 
    * @param null $translationDomain
    *   (optional) The translation domain.
    */
-  public function __construct(ConstraintViolationList $violations, Constraint $constraint, $message, array $parameters, $root, $propertyPath, $invalidValue, TranslatorInterface $translator, $translationDomain = null)
+  public function __construct(ConstraintViolationList $violations, Constraint $constraint, protected $message, array $parameters, protected $root, protected $propertyPath, protected $invalidValue, TranslatorInterface $translator, protected ?string|bool $translationDomain = null)
     {
       $this->violations = $violations;
-      $this->message = $message;
       $this->parameters = $parameters;
-      $this->root = $root;
-      $this->propertyPath = $propertyPath;
-      $this->invalidValue = $invalidValue;
       $this->translator = $translator;
-      $this->translationDomain = $translationDomain;
       $this->constraint = $constraint;
     }
 

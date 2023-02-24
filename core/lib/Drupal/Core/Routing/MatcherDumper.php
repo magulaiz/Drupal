@@ -39,13 +39,6 @@ class MatcherDumper implements MatcherDumperInterface {
   protected $state;
 
   /**
-   * The name of the SQL table to which to dump the routes.
-   *
-   * @var string
-   */
-  protected $tableName;
-
-  /**
    * The logger.
    *
    * @var \Psr\Log\LoggerInterface
@@ -62,10 +55,10 @@ class MatcherDumper implements MatcherDumperInterface {
    *   The state.
    * @param \Psr\Log\LoggerInterface|null $logger
    *   The logger.
-   * @param string $table
+   * @param string $tableName
    *   (optional) The table to store the route info in. Defaults to 'router'.
    */
-  public function __construct(Connection $connection, StateInterface $state, LoggerInterface|string|null $logger = NULL, $table = 'router') {
+  public function __construct(Connection $connection, StateInterface $state, LoggerInterface|string|null $logger = NULL, protected $tableName = 'router') {
     $this->connection = $connection;
     $this->state = $state;
     if (is_string($logger) || is_null($logger)) {

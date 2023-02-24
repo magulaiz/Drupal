@@ -20,25 +20,17 @@ class AnnotationBridgeDecorator implements DiscoveryInterface {
   protected $decorated;
 
   /**
-   * The name of the annotation that contains the plugin definition.
-   *
-   * @var string|null
-   */
-  protected $pluginDefinitionAnnotationName;
-
-  /**
    * ObjectDefinitionDiscoveryDecorator constructor.
    *
    * @param \Drupal\Component\Plugin\Discovery\DiscoveryInterface $decorated
    *   The discovery object that is being decorated.
-   * @param string $plugin_definition_annotation_name
+   * @param string $pluginDefinitionAnnotationName
    *   The name of the annotation that contains the plugin definition. The class
    *   corresponding to this name must implement
    *   \Drupal\Component\Annotation\AnnotationInterface.
    */
-  public function __construct(DiscoveryInterface $decorated, $plugin_definition_annotation_name) {
+  public function __construct(DiscoveryInterface $decorated, protected ?string $pluginDefinitionAnnotationName) {
     $this->decorated = $decorated;
-    $this->pluginDefinitionAnnotationName = $plugin_definition_annotation_name;
   }
 
   /**

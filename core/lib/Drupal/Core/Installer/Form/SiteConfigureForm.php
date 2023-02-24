@@ -20,13 +20,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class SiteConfigureForm extends ConfigFormBase {
 
   /**
-   * The site path.
-   *
-   * @var string
-   */
-  protected $sitePath;
-
-  /**
    * The user storage.
    *
    * @var \Drupal\user\UserStorageInterface
@@ -48,18 +41,11 @@ class SiteConfigureForm extends ConfigFormBase {
   protected $countryManager;
 
   /**
-   * The app root.
-   *
-   * @var string
-   */
-  protected $root;
-
-  /**
    * Constructs a new SiteConfigureForm.
    *
    * @param string $root
    *   The app root.
-   * @param string $site_path
+   * @param string $sitePath
    *   The site path.
    * @param \Drupal\user\UserStorageInterface $user_storage
    *   The user storage.
@@ -68,9 +54,7 @@ class SiteConfigureForm extends ConfigFormBase {
    * @param \Drupal\Core\Locale\CountryManagerInterface $country_manager
    *   The country manager.
    */
-  public function __construct($root, $site_path, UserStorageInterface $user_storage, ModuleInstallerInterface $module_installer, CountryManagerInterface $country_manager) {
-    $this->root = $root;
-    $this->sitePath = $site_path;
+  public function __construct(protected $root, protected $sitePath, UserStorageInterface $user_storage, ModuleInstallerInterface $module_installer, CountryManagerInterface $country_manager) {
     $this->userStorage = $user_storage;
     $this->moduleInstaller = $module_installer;
     $this->countryManager = $country_manager;

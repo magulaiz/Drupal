@@ -29,13 +29,6 @@ class RouteProvider implements CacheableRouteProviderInterface, PreloadableRoute
   protected $connection;
 
   /**
-   * The name of the SQL table from which to read the routes.
-   *
-   * @var string
-   */
-  protected $tableName;
-
-  /**
    * The state.
    *
    * @var \Drupal\Core\State\StateInterface
@@ -118,19 +111,18 @@ class RouteProvider implements CacheableRouteProviderInterface, PreloadableRoute
    *   The path processor.
    * @param \Drupal\Core\Cache\CacheTagsInvalidatorInterface $cache_tag_invalidator
    *   The cache tag invalidator.
-   * @param string $table
+   * @param string $tableName
    *   (Optional) The table in the database to use for matching. Defaults to 'router'
    * @param \Drupal\Core\Language\LanguageManagerInterface $language_manager
    *   (Optional) The language manager.
    */
-  public function __construct(Connection $connection, StateInterface $state, CurrentPathStack $current_path, CacheBackendInterface $cache_backend, InboundPathProcessorInterface $path_processor, CacheTagsInvalidatorInterface $cache_tag_invalidator, $table = 'router', LanguageManagerInterface $language_manager = NULL) {
+  public function __construct(Connection $connection, StateInterface $state, CurrentPathStack $current_path, CacheBackendInterface $cache_backend, InboundPathProcessorInterface $path_processor, CacheTagsInvalidatorInterface $cache_tag_invalidator, protected $tableName = 'router', LanguageManagerInterface $language_manager = NULL) {
     $this->connection = $connection;
     $this->state = $state;
     $this->currentPath = $current_path;
     $this->cache = $cache_backend;
     $this->cacheTagInvalidator = $cache_tag_invalidator;
     $this->pathProcessor = $path_processor;
-    $this->tableName = $table;
     $this->languageManager = $language_manager ?: \Drupal::languageManager();
   }
 

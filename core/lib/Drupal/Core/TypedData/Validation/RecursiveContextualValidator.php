@@ -53,11 +53,6 @@ class RecursiveContextualValidator implements ContextualValidatorInterface {
   protected $constraintValidatorFactory;
 
   /**
-   * The typed data manager.
-   */
-  protected TypedDataManagerInterface $typedDataManager;
-
-  /**
    * Creates a validator for the given context.
    *
    * @param \Symfony\Component\Validator\Context\ExecutionContextInterface $context
@@ -66,14 +61,16 @@ class RecursiveContextualValidator implements ContextualValidatorInterface {
    *   The metadata factory.
    * @param \Symfony\Component\Validator\ConstraintValidatorFactoryInterface $validator_factory
    *   The constraint validator factory.
-   * @param \Drupal\Core\TypedData\TypedDataManagerInterface $typed_data_manager
+   * @param \Drupal\Core\TypedData\TypedDataManagerInterface $typedDataManager
    *   The typed data manager.
    */
-  public function __construct(ExecutionContextInterface $context, MetadataFactoryInterface $metadata_factory, ConstraintValidatorFactoryInterface $validator_factory, TypedDataManagerInterface $typed_data_manager) {
+  public function __construct(ExecutionContextInterface $context, MetadataFactoryInterface $metadata_factory, ConstraintValidatorFactoryInterface $validator_factory, /**
+   * The typed data manager.
+   */
+  protected TypedDataManagerInterface $typedDataManager) {
     $this->context = $context;
     $this->metadataFactory = $metadata_factory;
     $this->constraintValidatorFactory = $validator_factory;
-    $this->typedDataManager = $typed_data_manager;
   }
 
   /**

@@ -27,13 +27,6 @@ abstract class TypedData implements TypedDataInterface, PluginInspectionInterfac
   protected $definition;
 
   /**
-   * The property name.
-   *
-   * @var string
-   */
-  protected $name;
-
-  /**
    * The parent typed data object.
    *
    * @var \Drupal\Core\TypedData\TraversableTypedDataInterface|null
@@ -61,10 +54,9 @@ abstract class TypedData implements TypedDataInterface, PluginInspectionInterfac
    *
    * @see \Drupal\Core\TypedData\TypedDataManager::create()
    */
-  public function __construct(DataDefinitionInterface $definition, $name = NULL, TypedDataInterface $parent = NULL) {
+  public function __construct(DataDefinitionInterface $definition, protected $name = NULL, TypedDataInterface $parent = NULL) {
     $this->definition = $definition;
     $this->parent = $parent;
-    $this->name = $name;
   }
 
   /**

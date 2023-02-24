@@ -23,13 +23,6 @@ class EntityDeriver implements ContainerDeriverInterface {
   protected $derivatives = [];
 
   /**
-   * The base plugin ID this derivative is for.
-   *
-   * @var string
-   */
-  protected $basePluginId;
-
-  /**
    * The entity type manager.
    *
    * @var \Drupal\Core\Entity\EntityTypeManagerInterface
@@ -46,15 +39,14 @@ class EntityDeriver implements ContainerDeriverInterface {
   /**
    * Constructs an EntityDeriver object.
    *
-   * @param string $base_plugin_id
+   * @param string $basePluginId
    *   The base plugin ID.
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    *   The entity type manager.
    * @param \Drupal\Core\Entity\EntityTypeBundleInfoInterface $bundle_info_service
    *   The bundle info service.
    */
-  public function __construct($base_plugin_id, EntityTypeManagerInterface $entity_type_manager, EntityTypeBundleInfoInterface $bundle_info_service) {
-    $this->basePluginId = $base_plugin_id;
+  public function __construct(protected $basePluginId, EntityTypeManagerInterface $entity_type_manager, EntityTypeBundleInfoInterface $bundle_info_service) {
     $this->entityTypeManager = $entity_type_manager;
     $this->bundleInfoService = $bundle_info_service;
   }

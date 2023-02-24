@@ -18,13 +18,6 @@ namespace Drupal\Core\ProxyClass\Plugin {
         use \Drupal\Core\DependencyInjection\DependencySerializationTrait;
 
         /**
-         * The id of the original proxied service.
-         *
-         * @var string
-         */
-        protected $drupalProxyOriginalServiceId;
-
-        /**
          * The real proxied service, after it was lazy loaded.
          *
          * @var \Drupal\Core\Plugin\CachedDiscoveryClearer
@@ -43,13 +36,12 @@ namespace Drupal\Core\ProxyClass\Plugin {
          *
          * @param \Symfony\Component\DependencyInjection\ContainerInterface $container
          *   The container.
-         * @param string $drupal_proxy_original_service_id
+         * @param string $drupalProxyOriginalServiceId
          *   The service ID of the original service.
          */
-        public function __construct(\Symfony\Component\DependencyInjection\ContainerInterface $container, $drupal_proxy_original_service_id)
+        public function __construct(\Symfony\Component\DependencyInjection\ContainerInterface $container, protected $drupalProxyOriginalServiceId)
         {
             $this->container = $container;
-            $this->drupalProxyOriginalServiceId = $drupal_proxy_original_service_id;
         }
 
         /**

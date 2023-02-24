@@ -217,10 +217,8 @@ class MockControllerPsr7 {
 }
 
 class MockContainerInjection implements ContainerInjectionInterface {
-  protected $result;
-
-  public function __construct($result) {
-    $this->result = $result;
+  public function __construct(protected $result)
+  {
   }
 
   public static function create(ContainerInterface $container) {

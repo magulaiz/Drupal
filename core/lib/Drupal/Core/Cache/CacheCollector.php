@@ -25,13 +25,6 @@ use Drupal\Core\Lock\LockBackendInterface;
 abstract class CacheCollector implements CacheCollectorInterface, DestructableInterface {
 
   /**
-   * The cache id that is used for the cache entry.
-   *
-   * @var string
-   */
-  protected $cid;
-
-  /**
    * A list of tags that are used for the cache entry.
    *
    * @var array
@@ -111,9 +104,8 @@ abstract class CacheCollector implements CacheCollectorInterface, DestructableIn
    * @param array $tags
    *   (optional) The tags to specify for the cache item.
    */
-  public function __construct($cid, CacheBackendInterface $cache, LockBackendInterface $lock, array $tags = []) {
+  public function __construct(protected $cid, CacheBackendInterface $cache, LockBackendInterface $lock, array $tags = []) {
     assert(Inspector::assertAllStrings($tags), 'Cache tags must be strings.');
-    $this->cid = $cid;
     $this->cache = $cache;
     $this->tags = $tags;
     $this->lock = $lock;

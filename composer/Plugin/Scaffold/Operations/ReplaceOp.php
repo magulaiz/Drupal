@@ -27,13 +27,6 @@ class ReplaceOp extends AbstractOperation {
   protected $source;
 
   /**
-   * Whether to overwrite existing files.
-   *
-   * @var bool
-   */
-  protected $overwrite;
-
-  /**
    * Constructs a ReplaceOp.
    *
    * @param \Drupal\Composer\Plugin\Scaffold\ScaffoldFilePath $sourcePath
@@ -42,9 +35,8 @@ class ReplaceOp extends AbstractOperation {
    *   Whether to allow this scaffold file to overwrite files already at
    *   the destination. Defaults to TRUE.
    */
-  public function __construct(ScaffoldFilePath $sourcePath, $overwrite = TRUE) {
+  public function __construct(ScaffoldFilePath $sourcePath, protected $overwrite = TRUE) {
     $this->source = $sourcePath;
-    $this->overwrite = $overwrite;
   }
 
   /**

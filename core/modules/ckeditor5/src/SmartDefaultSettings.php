@@ -39,53 +39,21 @@ final class SmartDefaultSettings {
   protected $pluginManager;
 
   /**
-   * The CKEditor 4 to 5 upgrade plugin manager.
-   *
-   * @var \Drupal\Component\Plugin\PluginManagerInterface
-   */
-  protected $upgradePluginManager;
-
-  /**
-   * The module handler.
-   *
-   * @var \Drupal\Core\Extension\ModuleHandlerInterface
-   */
-  protected $moduleHandler;
-
-  /**
-   * The current user.
-   *
-   * @var \Drupal\Core\Session\AccountInterface
-   */
-  protected $currentUser;
-
-  /**
-   * A logger instance.
-   *
-   * @var \Psr\Log\LoggerInterface
-   */
-  protected $logger;
-
-  /**
    * Constructs a SmartDefaultSettings object.
    *
    * @param \Drupal\ckeditor5\Plugin\CKEditor5PluginManagerInterface $plugin_manager
    *   The CKEditor 5 plugin manager.
-   * @param \Drupal\Component\Plugin\PluginManagerInterface $upgrade_plugin_manager
+   * @param \Drupal\Component\Plugin\PluginManagerInterface $upgradePluginManager
    *   The CKEditor 4 to 5 upgrade plugin manager.
    * @param \Psr\Log\LoggerInterface $logger
    *   A logger instance.
-   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
+   * @param \Drupal\Core\Extension\ModuleHandlerInterface $moduleHandler
    *   The module handler.
-   * @param \Drupal\Core\Session\AccountInterface $current_user
+   * @param \Drupal\Core\Session\AccountInterface $currentUser
    *   The current user.
    */
-  public function __construct(CKEditor5PluginManagerInterface $plugin_manager, PluginManagerInterface $upgrade_plugin_manager, LoggerInterface $logger, ModuleHandlerInterface $module_handler, AccountInterface $current_user) {
+  public function __construct(CKEditor5PluginManagerInterface $plugin_manager, protected PluginManagerInterface $upgradePluginManager, protected LoggerInterface $logger, protected ModuleHandlerInterface $moduleHandler, protected AccountInterface $currentUser) {
     $this->pluginManager = $plugin_manager;
-    $this->upgradePluginManager = $upgrade_plugin_manager;
-    $this->logger = $logger;
-    $this->moduleHandler = $module_handler;
-    $this->currentUser = $current_user;
   }
 
   /**

@@ -18,13 +18,6 @@ use Symfony\Component\Validator\ConstraintValidator;
 class ModerationStateConstraintValidator extends ConstraintValidator implements ContainerInjectionInterface {
 
   /**
-   * The entity type manager.
-   *
-   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
-   */
-  private $entityTypeManager;
-
-  /**
    * The moderation info.
    *
    * @var \Drupal\content_moderation\ModerationInformationInterface
@@ -48,7 +41,7 @@ class ModerationStateConstraintValidator extends ConstraintValidator implements 
   /**
    * Creates a new ModerationStateConstraintValidator instance.
    *
-   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
    *   The entity type manager.
    * @param \Drupal\content_moderation\ModerationInformationInterface $moderation_information
    *   The moderation information.
@@ -57,8 +50,7 @@ class ModerationStateConstraintValidator extends ConstraintValidator implements 
    * @param \Drupal\content_moderation\StateTransitionValidationInterface $state_transition_validation
    *   The state transition validation service.
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager, ModerationInformationInterface $moderation_information, AccountInterface $current_user, StateTransitionValidationInterface $state_transition_validation) {
-    $this->entityTypeManager = $entity_type_manager;
+  public function __construct(private EntityTypeManagerInterface $entityTypeManager, ModerationInformationInterface $moderation_information, AccountInterface $current_user, StateTransitionValidationInterface $state_transition_validation) {
     $this->moderationInformation = $moderation_information;
     $this->currentUser = $current_user;
     $this->stateTransitionValidation = $state_transition_validation;

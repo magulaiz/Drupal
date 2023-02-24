@@ -15,39 +15,11 @@ class Transition implements TransitionInterface {
   protected $workflow;
 
   /**
-   * The transition's ID.
-   *
-   * @var string
-   */
-  protected $id;
-
-  /**
-   * The transition's label.
-   *
-   * @var string
-   */
-  protected $label;
-
-  /**
    * The transition's from state IDs.
    *
    * @var string[]
    */
   protected $fromStateIds;
-
-  /**
-   * The transition's to state ID.
-   *
-   * @var string
-   */
-  protected $toStateId;
-
-  /**
-   * The transition's weight.
-   *
-   * @var int
-   */
-  protected $weight;
 
   /**
    * Transition constructor.
@@ -60,18 +32,14 @@ class Transition implements TransitionInterface {
    *   The transition's label.
    * @param array $from_state_ids
    *   A list of from state IDs.
-   * @param string $to_state_id
+   * @param string $toStateId
    *   The to state ID.
    * @param int $weight
    *   (optional) The transition's weight. Defaults to 0.
    */
-  public function __construct(WorkflowTypeInterface $workflow, $id, $label, array $from_state_ids, $to_state_id, $weight = 0) {
+  public function __construct(WorkflowTypeInterface $workflow, protected $id, protected $label, array $from_state_ids, protected $toStateId, protected $weight = 0) {
     $this->workflow = $workflow;
-    $this->id = $id;
-    $this->label = $label;
     $this->fromStateIds = $from_state_ids;
-    $this->toStateId = $to_state_id;
-    $this->weight = $weight;
   }
 
   /**

@@ -28,13 +28,6 @@ class UpdateRegistry implements EventSubscriberInterface {
   protected $updateType = 'post_update';
 
   /**
-   * The app root.
-   *
-   * @var string
-   */
-  protected $root;
-
-  /**
    * The filename of the log file.
    *
    * @var string
@@ -54,39 +47,22 @@ class UpdateRegistry implements EventSubscriberInterface {
   protected $keyValue;
 
   /**
-   * Should we respect update functions in tests.
-   *
-   * @var bool|null
-   */
-  protected $includeTests = NULL;
-
-  /**
-   * The site path.
-   *
-   * @var string
-   */
-  protected $sitePath;
-
-  /**
    * Constructs a new UpdateRegistry.
    *
    * @param string $root
    *   The app root.
-   * @param string $site_path
+   * @param string $sitePath
    *   The site path.
    * @param string[] $enabled_extensions
    *   A list of enabled extensions.
    * @param \Drupal\Core\KeyValueStore\KeyValueStoreInterface $key_value
    *   The key value store.
-   * @param bool|null $include_tests
+   * @param bool|null $includeTests
    *   (optional) A flag whether to include tests in the scanning of extensions.
    */
-  public function __construct($root, $site_path, array $enabled_extensions, KeyValueStoreInterface $key_value, $include_tests = NULL) {
-    $this->root = $root;
-    $this->sitePath = $site_path;
+  public function __construct(protected $root, protected $sitePath, array $enabled_extensions, KeyValueStoreInterface $key_value, protected ?bool $includeTests = NULL) {
     $this->enabledExtensions = $enabled_extensions;
     $this->keyValue = $key_value;
-    $this->includeTests = $include_tests;
   }
 
   /**

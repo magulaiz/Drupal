@@ -23,30 +23,15 @@ final class CKEditor5StylesheetsMessage {
   use StringTranslationTrait;
 
   /**
-   * The theme handler.
-   *
-   * @var \Drupal\Core\Extension\ThemeHandlerInterface
-   */
-  protected $themeHandler;
-
-  /**
-   * The config factory.
-   *
-   * @var \Drupal\Core\Config\ConfigFactoryInterface
-   */
-  protected $configFactory;
-
-  /**
    * Constructs a new CKEditor5StylesheetsMessage.
    *
-   * @param \Drupal\Core\Extension\ThemeHandlerInterface $theme_handler
+   * @param \Drupal\Core\Extension\ThemeHandlerInterface $themeHandler
    *   The theme handler.
-   * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
+   * @param \Drupal\Core\Config\ConfigFactoryInterface $configFactory
    *   The config factory to get the installed themes.
    */
-  public function __construct(ThemeHandlerInterface $theme_handler, ConfigFactoryInterface $config_factory) {
-    $this->themeHandler = $theme_handler;
-    $this->configFactory = $config_factory;
+  public function __construct(protected ThemeHandlerInterface $themeHandler, protected ConfigFactoryInterface $configFactory)
+  {
   }
 
   /**

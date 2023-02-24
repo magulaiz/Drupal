@@ -20,13 +20,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class SiteSettingsForm extends FormBase {
 
   /**
-   * The site path.
-   *
-   * @var string
-   */
-  protected $sitePath;
-
-  /**
    * The renderer.
    *
    * @var \Drupal\Core\Render\RendererInterface
@@ -36,13 +29,12 @@ class SiteSettingsForm extends FormBase {
   /**
    * Constructs a new SiteSettingsForm.
    *
-   * @param string $site_path
+   * @param string $sitePath
    *   The site path.
    * @param \Drupal\Core\Render\RendererInterface $renderer
    *   The renderer.
    */
-  public function __construct($site_path, RendererInterface $renderer) {
-    $this->sitePath = $site_path;
+  public function __construct(protected $sitePath, RendererInterface $renderer) {
     $this->renderer = $renderer;
   }
 

@@ -27,23 +27,15 @@ class DefaultFactory implements FactoryInterface {
   protected $discovery;
 
   /**
-   * Defines an interface each plugin should implement.
-   *
-   * @var string|null
-   */
-  protected $interface;
-
-  /**
    * Constructs a Drupal\Component\Plugin\Factory\DefaultFactory object.
    *
    * @param \Drupal\Component\Plugin\Discovery\DiscoveryInterface $discovery
    *   The plugin discovery.
-   * @param string|null $plugin_interface
+   * @param string|null $interface
    *   (optional) The interface each plugin should implement.
    */
-  public function __construct(DiscoveryInterface $discovery, $plugin_interface = NULL) {
+  public function __construct(DiscoveryInterface $discovery, protected ?string $interface = NULL) {
     $this->discovery = $discovery;
-    $this->interface = $plugin_interface;
   }
 
   /**

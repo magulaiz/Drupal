@@ -17,13 +17,6 @@ use Drupal\TestTools\PhpUnitCompatibility\ClassWriter;
 class TestDiscovery {
 
   /**
-   * The class loader.
-   *
-   * @var \Composer\Autoload\ClassLoader
-   */
-  protected $classLoader;
-
-  /**
    * Statically cached list of test classes.
    *
    * @var array
@@ -45,13 +38,6 @@ class TestDiscovery {
   protected $availableExtensions;
 
   /**
-   * The app root.
-   *
-   * @var string
-   */
-  protected $root;
-
-  /**
    * Constructs a new test discovery.
    *
    * @param string $root
@@ -60,10 +46,16 @@ class TestDiscovery {
    *   The class loader. Normally Composer's ClassLoader, as included by the
    *   front controller, but may also be decorated; e.g.,
    *   \Symfony\Component\ClassLoader\ApcClassLoader.
+   * @param \Composer\Autoload\ClassLoader $class_loader
    */
-  public function __construct($root, $class_loader) {
-    $this->root = $root;
-    $this->classLoader = $class_loader;
+  public function __construct(
+      protected $root,
+      /**
+       * The class loader.
+       */
+      protected $classLoader
+  )
+  {
   }
 
   /**

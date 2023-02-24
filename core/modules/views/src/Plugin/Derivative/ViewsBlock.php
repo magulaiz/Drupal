@@ -22,13 +22,6 @@ class ViewsBlock implements ContainerDeriverInterface {
   protected $derivatives = [];
 
   /**
-   * The base plugin ID.
-   *
-   * @var string
-   */
-  protected $basePluginId;
-
-  /**
    * The view storage.
    *
    * @var \Drupal\Core\Entity\EntityStorageInterface
@@ -48,13 +41,12 @@ class ViewsBlock implements ContainerDeriverInterface {
   /**
    * Constructs a ViewsBlock object.
    *
-   * @param string $base_plugin_id
+   * @param string $basePluginId
    *   The base plugin ID.
    * @param \Drupal\Core\Entity\EntityStorageInterface $view_storage
    *   The entity storage to load views.
    */
-  public function __construct($base_plugin_id, EntityStorageInterface $view_storage) {
-    $this->basePluginId = $base_plugin_id;
+  public function __construct(protected $basePluginId, EntityStorageInterface $view_storage) {
     $this->viewStorage = $view_storage;
   }
 

@@ -41,22 +41,15 @@ class ConfigEntityUpdater implements ContainerInjectionInterface {
   protected $entityTypeManager;
 
   /**
-   * The number of entities to process in each batch.
-   * @var int
-   */
-  protected $batchSize;
-
-  /**
    * ConfigEntityUpdater constructor.
    *
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    *   The entity type manager.
-   * @param int $batch_size
+   * @param int $batchSize
    *   The number of entities to process in each batch.
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager, $batch_size) {
+  public function __construct(EntityTypeManagerInterface $entity_type_manager, protected $batchSize) {
     $this->entityTypeManager = $entity_type_manager;
-    $this->batchSize = $batch_size;
   }
 
   /**

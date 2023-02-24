@@ -45,11 +45,6 @@ class AppendOp extends AbstractOperation {
   protected $managed;
 
   /**
-   * An indicator of whether we are allowed to append to a non-scaffolded file.
-   */
-  protected $forceAppend;
-
-  /**
    * The contents from the file that we are prepending / appending to.
    *
    * @var string
@@ -63,13 +58,15 @@ class AppendOp extends AbstractOperation {
    *   The relative path to the prepend file.
    * @param \Drupal\Composer\Plugin\Scaffold\ScaffoldFilePath $append_path
    *   The relative path to the append file.
-   * @param bool $force_append
+   * @param bool $forceAppend
    *   TRUE if is okay to append to a file that was not scaffolded.
    * @param \Drupal\Composer\Plugin\Scaffold\ScaffoldFilePath $default_path
    *   The relative path to the default data.
    */
-  public function __construct(ScaffoldFilePath $prepend_path = NULL, ScaffoldFilePath $append_path = NULL, $force_append = FALSE, ScaffoldFilePath $default_path = NULL) {
-    $this->forceAppend = $force_append;
+  public function __construct(ScaffoldFilePath $prepend_path = NULL, ScaffoldFilePath $append_path = NULL, /**
+   * An indicator of whether we are allowed to append to a non-scaffolded file.
+   */
+  protected $forceAppend = FALSE, ScaffoldFilePath $default_path = NULL) {
     $this->prepend = $prepend_path;
     $this->append = $append_path;
     $this->default = $default_path;

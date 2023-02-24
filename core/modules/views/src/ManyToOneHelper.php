@@ -30,13 +30,13 @@ class ManyToOneHelper {
    */
   public bool $formula = FALSE;
 
-  /**
-   * The handler.
-   */
-  public ViewsHandlerInterface $handler;
-
-  public function __construct($handler) {
-    $this->handler = $handler;
+  public function __construct(
+      /**
+       * The handler.
+       */
+      public $handler
+  )
+  {
   }
 
   public static function defineOptions(&$options) {

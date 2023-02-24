@@ -366,13 +366,6 @@ class BigPipePlaceholderTestCase {
   public $renderArray;
 
   /**
-   * The expected corresponding placeholder string.
-   *
-   * @var string
-   */
-  public $placeholder;
-
-  /**
    * The expected corresponding placeholder render array.
    *
    * @var array
@@ -426,9 +419,14 @@ class BigPipePlaceholderTestCase {
    */
   public $embeddedHtmlResponse;
 
-  public function __construct(array $render_array, $placeholder, array $placeholder_render_array) {
+  /**
+   * @param string $placeholder
+   */
+  public function __construct(array $render_array, /**
+   * The expected corresponding placeholder string.
+   */
+  public $placeholder, array $placeholder_render_array) {
     $this->renderArray = $render_array;
-    $this->placeholder = $placeholder;
     $this->placeholderRenderArray = $placeholder_render_array;
   }
 

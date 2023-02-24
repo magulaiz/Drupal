@@ -26,23 +26,15 @@ class Session implements HttpKernelInterface {
   protected $httpKernel;
 
   /**
-   * The session service name.
-   *
-   * @var string
-   */
-  protected $sessionServiceName;
-
-  /**
    * Constructs a Session stack middleware object.
    *
    * @param \Symfony\Component\HttpKernel\HttpKernelInterface $http_kernel
    *   The decorated kernel.
-   * @param string $service_name
+   * @param string $sessionServiceName
    *   The name of the session service, defaults to "session".
    */
-  public function __construct(HttpKernelInterface $http_kernel, $service_name = 'session') {
+  public function __construct(HttpKernelInterface $http_kernel, protected $sessionServiceName = 'session') {
     $this->httpKernel = $http_kernel;
-    $this->sessionServiceName = $service_name;
   }
 
   /**
