@@ -52,12 +52,15 @@ class QueueWorker extends Plugin {
   public $title;
 
   /**
-   * An optional associative array of settings for cron.
+   * Optional settings for cron.
    *
-   * @var array
-   *   The array has one key, time, which is set to the time Drupal cron should
-   *   spend on calling this worker in seconds. The default is set in
-   *   \Drupal\Core\Queue\QueueWorkerManager::processDefinition().
+   * @var array|null
+   *   When it is an array then the array has one key, time, which is set to
+   *   the time Drupal cron should spend on calling this worker in seconds.
+   *   The default is set in \Drupal\Core\Queue\QueueWorkerManager::processDefinition().
+   *   If Drupal cron should not call this worker set this to NULL, in that
+   *   case the execution of the worker must be ensured in other ways, like
+   *   with drush queue:run command.
    *
    * @see \Drupal\Core\Queue\QueueWorkerManager::processDefinition()
    */
