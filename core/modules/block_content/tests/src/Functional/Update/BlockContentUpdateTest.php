@@ -46,7 +46,7 @@ class BlockContentUpdateTest extends UpdatePathTestBase {
     $this->assertEquals('system.admin_content', $data['display']['page_1']['display_options']['menu']['parent']);
 
     // Check the new path is accessible.
-    $user = $this->drupalCreateUser(['administer blocks']);
+    $user = $this->drupalCreateUser(['access block library']);
     $this->drupalLogin($user);
     $this->drupalGet('admin/content/block-content');
     $this->assertSession()->statusCodeEquals(200);

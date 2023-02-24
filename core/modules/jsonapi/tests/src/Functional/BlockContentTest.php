@@ -68,15 +68,15 @@ class BlockContentTest extends ResourceTestBase {
     switch ($method) {
       case 'GET':
       case 'PATCH':
-        $this->grantPermissionsToTestedRole(['edit any basic block content']);
+        $this->grantPermissionsToTestedRole(['access block library', 'edit any basic block content']);
         break;
 
       case 'POST':
-        $this->grantPermissionsToTestedRole(['create basic block content']);
+        $this->grantPermissionsToTestedRole(['access block library', 'create basic block content']);
         break;
 
       case 'DELETE':
-        $this->grantPermissionsToTestedRole(['delete any basic block content']);
+        $this->grantPermissionsToTestedRole(['access block library', 'delete any basic block content']);
         break;
     }
   }
@@ -202,13 +202,13 @@ class BlockContentTest extends ResourceTestBase {
     switch ($method) {
       case 'GET':
       case 'PATCH':
-        return "The following permissions are required: 'edit any basic block content' OR 'administer blocks'.";
+        return "The following permissions are required: 'access block library' AND 'edit any basic block content'.";
 
       case 'POST':
-        return "The following permissions are required: 'create basic block content' OR 'administer blocks'.";
+        return "The following permissions are required: 'access block library' AND 'create basic block content'.";
 
       case 'DELETE':
-        return "The following permissions are required: 'delete any basic block content' OR 'administer blocks'.";
+        return "The following permissions are required: 'access block library' AND 'delete any basic block content'.";
 
       default:
         return parent::getExpectedUnauthorizedAccessMessage($method);
@@ -251,7 +251,7 @@ class BlockContentTest extends ResourceTestBase {
    */
   public function testCollectionFilterAccess() {
     $this->entity->setPublished()->save();
-    $this->doTestCollectionFilterAccessForPublishableEntities('info', NULL, 'administer blocks');
+    $this->doTestCollectionFilterAccessForPublishableEntities('info', NULL, 'access block library');
   }
 
 }
