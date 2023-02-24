@@ -1096,8 +1096,13 @@ function hook_ENTITY_TYPE_storage_load(array $entities) {
 /**
  * Act on an entity before it is created or updated.
  *
- * You can get the original entity object from $entity->original when it is an
- * update of the entity.
+ * If you need to access the original entity object when updating an entity
+ * in a multi-language context, note that $entity->original may not always
+ * refer to the entity's original translation. Depending on the situation,
+ * $entity->original may instead refer to the
+ * default translation of the entity.
+ * In such cases, you can use other available methods
+ * to retrieve the original translation.
  *
  * @param \Drupal\Core\Entity\EntityInterface $entity
  *   The entity object.
