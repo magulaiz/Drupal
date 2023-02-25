@@ -1083,6 +1083,11 @@ services:
   password:
     class: Drupal\Core\Password\PhpPassword
   Drupal\Core\Password\PasswordInterface: '@password'
+  password.update:
+    public: false
+    class: Drupal\Core\Password\PhpassHashedPassword
+    decorates: password
+    arguments: ['@.inner']
   password_generator:
     class: Drupal\Core\Password\DefaultPasswordGenerator
   Drupal\Core\Password\PasswordGeneratorInterface: '@password_generator'
