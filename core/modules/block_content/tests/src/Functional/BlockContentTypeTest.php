@@ -36,6 +36,9 @@ class BlockContentTypeTest extends BlockContentTestBase {
     'administer block library',
     'administer blocks',
     'administer block_content fields',
+    'administer block types',
+    'administer block library',
+    'access block library',
   ];
 
   /**

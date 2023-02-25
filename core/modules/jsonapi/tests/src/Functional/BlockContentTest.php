@@ -207,13 +207,13 @@ class BlockContentTest extends ResourceTestBase {
         return "The 'access block library' permission is required.";
 
       case 'PATCH':
-        return "The following permissions are required: 'access block library' AND 'edit any basic block content'.";
+        return "The following permissions are required: 'edit any basic block content' OR 'administer block library'.";
 
       case 'POST':
-        return "The following permissions are required: 'access block library' AND 'create basic block content'.";
+        return "The following permissions are required: 'create basic block content' OR 'administer block library'.";
 
       case 'DELETE':
-        return "The following permissions are required: 'access block library' AND 'delete any basic block content'.";
+        return "The following permissions are required: 'delete any basic block content' OR 'administer block library'.";
 
       default:
         return parent::getExpectedUnauthorizedAccessMessage($method);
@@ -256,7 +256,7 @@ class BlockContentTest extends ResourceTestBase {
    */
   public function testCollectionFilterAccess() {
     $this->entity->setPublished()->save();
-    $this->doTestCollectionFilterAccessForPublishableEntities('info', NULL, 'administer block library');
+    $this->doTestCollectionFilterAccessForPublishableEntities('info', NULL, 'access block library');
   }
 
 }

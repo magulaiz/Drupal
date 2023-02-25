@@ -47,7 +47,7 @@ class BlockContentAddAccessCheck implements AccessInterface {
   public function access(AccountInterface $account, BlockContentTypeInterface $block_content_type = NULL) {
     $access_control_handler = $this->entityTypeManager->getAccessControlHandler('block_content');
     // If checking whether a block of a particular type may be created.
-    if ($account->hasPermission('administer blocks')) {
+    if ($account->hasPermission('administer block library')) {
       return AccessResult::allowed()->cachePerPermissions();
     }
     if ($block_content_type) {
