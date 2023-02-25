@@ -85,32 +85,30 @@ class LanguageNegotiationContentEntityTest extends UnitTestCase {
     $languageNegotiationContentEntity = $this->createLanguageNegotiationPlugin();
 
     // Case 1: Empty request.
-    $expectedLangcode = NULL;
-    $this->assertEquals($expectedLangcode, $languageNegotiationContentEntity->getLangcode());
+    $this->assertEquals(NULL, $languageNegotiationContentEntity->getLangcode());
 
     // Case 2: A request is available, but the languageManager is not set and
     // the static::QUERY_PARAMETER is not provided as a named parameter.
     $request = Request::create('/de/foo', 'GET');
     $request->query = new ParameterBag();
-    $expectedLangcode = NULL;
-    $this->assertEquals($expectedLangcode, $languageNegotiationContentEntity->getLangcode($request));
+    $this->assertEquals(NULL, $languageNegotiationContentEntity->getLangcode($request));
 
     // Case 3: A request is available, the languageManager is set, but the
     // static::QUERY_PARAMETER is not provided as a named parameter.
     $languageNegotiationContentEntity->setLanguageManager($this->languageManager);
-    $expectedLangcode = NULL;
-    $this->assertEquals($expectedLangcode, $languageNegotiationContentEntity->getLangcode($request));
+    $this->assertEquals(NULL, $languageNegotiationContentEntity->getLangcode($request));
 
     // Case 4: A request is available, the languageManager is set and the
     // static::QUERY_PARAMETER is provided as a named parameter.
-    $request->query->set(LanguageNegotiationContentEntity::QUERY_PARAMETER, 'de');
     $expectedLangcode = 'de';
+    $request->query->set(LanguageNegotiationContentEntity::QUERY_PARAMETER, $expectedLangcode);
     $this->assertEquals($expectedLangcode, $languageNegotiationContentEntity->getLangcode($request));
 
     // Case 5: A request is available, the languageManager is set and the
     // static::QUERY_PARAMETER is provided as a named parameter with a given
     // langcode that is not one of the system supported ones.
-    $request->query->set(LanguageNegotiationContentEntity::QUERY_PARAMETER, 'it');
+    $unknownLangcode = 'xx';
+    $request->query->set(LanguageNegotiationContentEntity::QUERY_PARAMETER, $unknownLangcode);
     $this->assertNull($languageNegotiationContentEntity->getLangcode($request));
   }
 
