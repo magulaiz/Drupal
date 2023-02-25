@@ -7,3 +7,7 @@ access block library:
 
 administer block types:
   title: 'Administer block types'
+
+administer block library:
+  title: 'Administer block library'
+  restrict access: TRUE

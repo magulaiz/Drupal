@@ -65,7 +65,6 @@ class BlockContentAccessControlHandler extends EntityAccessControlHandler implem
       'view' => AccessResult::allowedIf($entity->isPublished())
         ->orIf(AccessResult::allowedIfHasPermissions($account, [
           'access block library',
-          'edit any ' . $bundle . ' block content',
         ])),
       'create' => AccessResult::allowedIfHasPermissions($account, [
         'access block library',
