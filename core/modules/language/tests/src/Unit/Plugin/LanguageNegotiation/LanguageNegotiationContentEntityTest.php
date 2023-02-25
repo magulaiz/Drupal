@@ -54,8 +54,7 @@ class LanguageNegotiationContentEntityTest extends UnitTestCase {
       'en' => $language_en,
     ];
 
-    $language_manager = $this->getMockBuilder(ConfigurableLanguageManagerInterface::class)
-      ->getMock();
+    $language_manager = $this->createMock(ConfigurableLanguageManagerInterface::class);
     $language_manager->expects($this->any())
       ->method('getLanguages')
       ->will($this->returnValue($languages));
@@ -63,15 +62,11 @@ class LanguageNegotiationContentEntityTest extends UnitTestCase {
 
     $container = new ContainerBuilder();
 
-    $cache_contexts_manager = $this->getMockBuilder(CacheContextsManager::class)
-      ->disableOriginalConstructor()
-      ->getMock();
+    $cache_contexts_manager = $this->createMock(CacheContextsManager::class);
     $cache_contexts_manager->method('assertValidTokens')->willReturn(TRUE);
     $container->set('cache_contexts_manager', $cache_contexts_manager);
 
-    $entityTypeManager = $this->getMockBuilder(EntityTypeManager::class)
-      ->disableOriginalConstructor()
-      ->getMock();
+    $entityTypeManager = $this->createMock(EntityTypeManager::class);
     $container->set('entity_type.manager', $entityTypeManager);
 
     \Drupal::setContainer($container);
