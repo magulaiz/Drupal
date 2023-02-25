@@ -138,15 +138,12 @@ class CommentEntityReferenceTest extends CommentTestBase {
     ]);
     $this->drupalLogin($user);
 
-    $edit = [
-      'entity_reference_comment' => $this->comment->id(),
-    ];
-    $this->drupalGet('node/' . $this->node2->id() . '/edit');
+    // Test the validation API directly.
 
-    // The comment is not even a valid option, so trying to save it will fail.
-    $this->expectException(\InvalidArgumentException::class);
-    $this->expectExceptionMessage('Input "entity_reference_comment" cannot take "' . $this->comment->id() . '" as a value (possible values: "_none").');
-    $this->submitForm($edit, 'Save');
+    $this->node2->set('entity_reference_comment', $this->comment->id());
+    $violations = $this->node2->validate();
+    $this->assertCount(1, $violations);
+
   }
 
 }
