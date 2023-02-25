@@ -26,6 +26,7 @@ abstract class BlockContentTestBase extends ViewTestBase {
    */
   protected $permissions = [
     'administer blocks',
+    'administer block library',
     'access block library',
   ];
 

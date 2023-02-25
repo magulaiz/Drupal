@@ -67,6 +67,9 @@ class BlockContentTest extends ResourceTestBase {
   protected function setUpAuthorization($method) {
     switch ($method) {
       case 'GET':
+        $this->grantPermissionsToTestedRole(['access block library']);
+        break;
+
       case 'PATCH':
         $this->grantPermissionsToTestedRole(['access block library', 'edit any basic block content']);
         break;
@@ -201,6 +204,8 @@ class BlockContentTest extends ResourceTestBase {
   protected function getExpectedUnauthorizedAccessMessage($method) {
     switch ($method) {
       case 'GET':
+        return "The 'access block library' permission is required.";
+
       case 'PATCH':
         return "The following permissions are required: 'access block library' AND 'edit any basic block content'.";
 
@@ -251,7 +256,7 @@ class BlockContentTest extends ResourceTestBase {
    */
   public function testCollectionFilterAccess() {
     $this->entity->setPublished()->save();
-    $this->doTestCollectionFilterAccessForPublishableEntities('info', NULL, 'access block library');
+    $this->doTestCollectionFilterAccessForPublishableEntities('info', NULL, 'administer block library');
   }
 
 }
