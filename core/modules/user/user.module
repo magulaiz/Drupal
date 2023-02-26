@@ -126,11 +126,13 @@ function user_entity_extra_field_info() {
     'description' => t('User module account form elements.'),
     'weight' => -10,
   ];
-  $fields['user']['user']['form']['language'] = [
-    'label' => t('Language settings'),
-    'description' => t('User module form element.'),
-    'weight' => 0,
-  ];
+  if (\Drupal::moduleHandler()->moduleExists('language')) {
+    $fields['user']['user']['form']['language'] = [
+      'label' => t('Language settings'),
+      'description' => t('User module form element.'),
+      'weight' => 0,
+    ];
+  }
   if (\Drupal::config('system.date')->get('timezone.user.configurable')) {
     $fields['user']['user']['form']['timezone'] = [
       'label' => t('Timezone'),
