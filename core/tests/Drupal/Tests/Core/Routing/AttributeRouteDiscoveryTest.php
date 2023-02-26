@@ -31,6 +31,7 @@ class AttributeRouteDiscoveryTest extends UnitTestCase {
     $routeCollection = $event->getRouteCollection();
     $this->assertNotEmpty($routeCollection);
 
+    // cSpell:disable-next-line
     $route1 = $routeCollection->get('drupal_router_test_controller_testattributes_attributemethod');
     $this->assertNotNull($route1);
     $this->assertEquals('/test_method_attribute', $route1->getPath());
