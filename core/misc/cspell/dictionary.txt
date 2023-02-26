@@ -35,6 +35,7 @@ arrowthick
 arrowthickstop
 arrr
 assertable
+attributemethod
 attrval
 attrvals
 authless
@@ -967,6 +968,7 @@ tempuser
 tercera
 testajax
 testattribute
+testattributes
 testblock
 testbody
 testbot
