@@ -12,6 +12,7 @@ use Drupal\Core\Entity\Entity\EntityViewDisplay;
 use Drupal\Core\Entity\Entity\EntityViewMode;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
+use Drupal\field_ui\Tests\EntityDisplayTestTrait;
 use Drupal\node\Entity\NodeType;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\user\Entity\Role;
@@ -22,6 +23,8 @@ use Drupal\user\Entity\Role;
  * @group field_ui
  */
 class EntityDisplayTest extends KernelTestBase {
+
+  use EntityDisplayTestTrait;
 
   /**
    * Modules to install.
@@ -277,6 +280,27 @@ class EntityDisplayTest extends KernelTestBase {
     // provides the formatter.
     $dependencies = $display->calculateDependencies()->getDependencies();
     $this->assertEquals(['config' => ['field.field.entity_test.entity_test.test_field'], 'module' => ['entity_test', 'field_test']], $dependencies);
+  }
+
+  /**
+   * Tests the dependencies of field components within an entity display object.
+   */
+  public function testMultipleFieldComponentDependencies() {
+    // Set up two field components, each dependent on different arbitrary
+    // modules that should not already be dependencies otherwise.
+    $dependent_fields = [
+      'test_field' => 'action',
+      'test_field_2' => 'aggregator',
+    ];
+    $this->addDefaultTestFields(array_keys($dependent_fields));
+
+    // Now that the fields exist, set up the display.
+    $display = EntityViewDisplay::create([
+      'targetEntityType' => 'entity_test',
+      'bundle' => 'entity_test',
+      'mode' => 'default',
+    ]);
+    $this->configureAndTestMultipleFieldComponentDependencies($dependent_fields, $display, 'field_test_dynamic_dependencies');
   }
 
   /**

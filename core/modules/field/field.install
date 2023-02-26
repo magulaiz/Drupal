@@ -11,3 +11,20 @@
 function field_update_last_removed() {
   return 8500;
 }
+
+/**
+ * Resave all entity view/form displays with recalculated dependencies.
+ */
+function field_update_8501() {
+  $entity_type_manager = \Drupal::entityTypeManager();
+
+  /** @var \Drupal\Core\Entity\Display\EntityFormDisplayInterface $entity_form_display */
+  foreach ($entity_type_manager->getStorage('entity_form_display')->loadMultiple() as $entity_form_display) {
+    $entity_form_display->save();
+  }
+
+  /** @var \Drupal\Core\Entity\Display\EntityViewDisplayInterface $entity_view_display */
+  foreach ($entity_type_manager->getStorage('entity_view_display')->loadMultiple() as $entity_view_display) {
+    $entity_view_display->save();
+  }
+}

@@ -122,6 +122,7 @@ class ManageDisplayTest extends WebDriverTestBase {
       'field_no_settings',
       'field_empty_test',
       'field_empty_setting',
+      'field_test_dynamic_dependencies',
       'field_test_default',
       'field_test_multiple',
       'field_test_with_prepare_view',
@@ -283,6 +284,7 @@ class ManageDisplayTest extends WebDriverTestBase {
     // Check whether widget weights are respected.
     $this->assertFieldSelectOptions($field_test_type, [
       'test_field_widget',
+      'test_field_widget_dynamic_dependencies',
       'test_field_widget_multilingual',
       'test_field_widget_multiple',
     ]);
@@ -349,11 +351,13 @@ class ManageDisplayTest extends WebDriverTestBase {
     // Checks if the select elements contain the specified options.
     $this->assertFieldSelectOptions($field_test_type, [
       'test_field_widget',
+      'test_field_widget_dynamic_dependencies',
       'test_field_widget_multilingual',
       'test_field_widget_multiple',
     ]);
     $this->assertFieldSelectOptions($field_onewidgetfield_type, [
       'test_field_widget',
+      'test_field_widget_dynamic_dependencies',
       'test_field_widget_multilingual',
     ]);
 
