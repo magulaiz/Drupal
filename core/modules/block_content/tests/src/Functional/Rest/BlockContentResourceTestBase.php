@@ -40,11 +40,8 @@ abstract class BlockContentResourceTestBase extends EntityResourceTestBase {
   protected function setUpAuthorization($method) {
     switch ($method) {
       case 'GET':
-        $this->grantPermissionsToTestedRole(['access block library']);
-        break;
-
       case 'PATCH':
-        $this->grantPermissionsToTestedRole(['access block library', 'edit any basic block content']);
+        $this->grantPermissionsToTestedRole(['access block library', 'update any basic block content']);
         break;
 
       case 'POST':
@@ -198,8 +195,7 @@ abstract class BlockContentResourceTestBase extends EntityResourceTestBase {
    */
   protected function getExpectedUnauthorizedAccessMessage($method) {
     return match ($method) {
-      'GET' => "The 'access block library' permission is required.",
-      'PATCH' => "The following permissions are required: 'access block library' AND 'edit any basic block content'.",
+      'GET', 'PATCH' => "The following permissions are required: 'access block library' AND 'update any basic block content'.",
       'POST' => "The following permissions are required: 'access block library' AND 'create basic block content'.",
       'DELETE' => "The following permissions are required: 'access block library' AND 'delete any basic block content'.",
       default => parent::getExpectedUnauthorizedAccessMessage($method),

@@ -29,7 +29,7 @@ class BlockContentTypeAccessControlHandler extends EntityAccessControlHandler {
    * {@inheritdoc}
    */
   protected function checkCreateAccess(AccountInterface $account, array $context, $entity_bundle = NULL) {
-    return AccessResult::allowedIfHasPermissions($account, ['access block library', 'administer block types'], 'OR')->cachePerPermissions();
+    return AccessResult::allowedIfHasPermissions($account, ['administer block types'])->cachePerPermissions();
   }
 
 }

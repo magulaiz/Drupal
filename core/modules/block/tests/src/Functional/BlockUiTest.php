@@ -426,6 +426,7 @@ class BlockUiTest extends BrowserTestBase {
     ];
     $user1 = $this->drupalCreateUser(['access block overview']);
     $user2 = $this->drupalCreateUser($block_admin_permissions);
+    $user3 = $this->drupalCreateUser([]);
 
     $this->drupalLogin($user1);
     $this->drupalGet('admin/structure/block');
@@ -444,8 +445,9 @@ class BlockUiTest extends BrowserTestBase {
     $this->assertSession()->linkExists('Remove');
     $this->drupalLogout();
 
-    // Log back in as the admin user since other tests expect this.
-    $this->drupalLogin($this->adminUser);
+    $this->drupalLogin($user3);
+    $this->drupalGet('admin/structure/block');
+    $this->assertSession()->statusCodeEquals(403);
   }
 
 }

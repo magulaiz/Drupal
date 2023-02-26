@@ -10,7 +10,3 @@ services:
   block.repository:
     class: Drupal\block\BlockRepository
     arguments: ['@entity_type.manager', '@theme.manager', '@context.handler']
-  access_check.block.block_admin:
-    class: Drupal\block\Access\BlockAdminAccessCheck
-    tags:
-      - { name: access_check, applies_to: _access_block_admin_pages }

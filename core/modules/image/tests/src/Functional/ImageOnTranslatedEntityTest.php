@@ -61,7 +61,7 @@ class ImageOnTranslatedEntityTest extends ImageFieldTestBase {
       'administer node fields',
       'create content translations',
       'create basicpage content',
-      'edit any basicpage content',
+      'update any basicpage content',
       'translate any entity',
       'delete any basicpage content',
     ];

@@ -49,8 +49,8 @@ class BlockContentPermissionsTest extends KernelTestBase {
    */
   public function testDynamicPermissions() {
     $permissions = $this->permissionHandler->getPermissions();
-    $this->assertArrayNotHasKey('edit any basic block content', $permissions, 'The per-block-type permission does not exist.');
-    $this->assertArrayNotHasKey('edit any square block content', $permissions, 'The per-block-type permission does not exist.');
+    $this->assertArrayNotHasKey('update any basic block content', $permissions, 'The per-block-type permission does not exist.');
+    $this->assertArrayNotHasKey('update any square block content', $permissions, 'The per-block-type permission does not exist.');
 
     // Create a basic block content type.
     BlockContentType::create([
@@ -69,17 +69,17 @@ class BlockContentPermissionsTest extends KernelTestBase {
     $permissions = $this->permissionHandler->getPermissions();
 
     // Assert the basic permission has been created.
-    $this->assertArrayHasKey('edit any basic block content', $permissions, 'The per-block-type permission exists.');
+    $this->assertArrayHasKey('update any basic block content', $permissions, 'The per-block-type permission exists.');
     $this->assertEquals(
       '<em class="placeholder">A basic block type</em>: Edit any block content',
-      $permissions['edit any basic block content']['title']->render()
+      $permissions['update any basic block content']['title']->render()
     );
 
     // Assert the square permission has been created.
-    $this->assertArrayHasKey('edit any square block content', $permissions, 'The per-block-type permission exists.');
+    $this->assertArrayHasKey('update any square block content', $permissions, 'The per-block-type permission exists.');
     $this->assertEquals(
-      '<em class="placeholder">A square block type</em>: Edit any block content',
-      $permissions['edit any square block content']['title']->render()
+      '<em class="placeholder">A square block type</em>: Update any block content',
+      $permissions['update any square block content']['title']->render()
     );
   }
 
