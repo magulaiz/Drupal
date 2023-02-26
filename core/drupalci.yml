@@ -9,6 +9,10 @@ _phpunit_testgroups_to_execute: &testgroups
 build:
   assessment:
     validate_codebase:
+      container_command:
+        commands:
+          # Show the codesniffer and coder versions.
+          - 'composer show | grep -E "(php_codesniffer|phpcs|coder)"'
       phpcs:
         sniff-all-files: true
     testing:
