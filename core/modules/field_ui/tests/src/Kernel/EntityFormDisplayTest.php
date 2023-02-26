@@ -6,8 +6,8 @@ use Drupal\Core\Entity\Entity\EntityFormDisplay;
 use Drupal\Core\Entity\Entity\EntityFormMode;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
-use Drupal\field_ui\Tests\EntityDisplayTestTrait;
 use Drupal\KernelTests\KernelTestBase;
+use Drupal\Tests\field_ui\Traits\EntityDisplayTestTrait;
 
 /**
  * Tests the entity display configuration entities.

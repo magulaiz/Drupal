@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\field_ui\Tests;
+namespace Drupal\Tests\field_ui\Traits;
 
 use Drupal\Core\Entity\Display\EntityDisplayInterface;
 use Drupal\field\Entity\FieldConfig;

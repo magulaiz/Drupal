@@ -12,9 +12,9 @@ use Drupal\Core\Entity\Entity\EntityViewDisplay;
 use Drupal\Core\Entity\Entity\EntityViewMode;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
-use Drupal\field_ui\Tests\EntityDisplayTestTrait;
 use Drupal\node\Entity\NodeType;
 use Drupal\KernelTests\KernelTestBase;
+use Drupal\Tests\field_ui\Traits\EntityDisplayTestTrait;
 use Drupal\user\Entity\Role;
 
 /**
