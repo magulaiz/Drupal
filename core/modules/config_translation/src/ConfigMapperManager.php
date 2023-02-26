@@ -210,7 +210,7 @@ class ConfigMapperManager extends DefaultPluginManager implements ConfigMapperMa
   public function clearCachedDefinitions() {
     $cids = [];
     foreach ($this->languageManager->getLanguages() as $language) {
-      $cids[] = 'local_action_plugins:' . $language->getId();
+      $cids[] = 'config_translation_info_plugins:' . $language->getId();
     }
     $this->cacheBackend->deleteMultiple($cids);
     $this->definitions = NULL;
