@@ -1,0 +1,6 @@
+name: Project Browser Source Example
+type: module
+description: Example source plugin for Project Browser containing the bare minimum information to help people build their own source plugin.
+core_version_requirement: ^9 || ^10
+dependencies:
+  - project_browser:project_browser

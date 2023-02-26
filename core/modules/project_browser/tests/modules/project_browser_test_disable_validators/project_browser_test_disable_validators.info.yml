@@ -1,0 +1,4 @@
+name: 'Project Browser Test - Disable validators'
+type: module
+description: 'Provides a mechanism to disable specific readiness validators during functional tests'
+package: Testing

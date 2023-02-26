@@ -10,6 +10,17 @@
     "es6": true,
     "node": true
   },
+  "plugins": [
+    "svelte3"
+  ],
+  "overrides": [
+    {
+      "files": [
+        "*.svelte"
+      ],
+      "processor": "svelte3/svelte3"
+    }
+  ],
   "globals": {
     "Drupal": true,
     "drupalSettings": true,
