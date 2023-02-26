@@ -593,6 +593,8 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
     $route_provider_definition = new Definition(RouteProvider::class);
     $route_provider_definition->setPublic(TRUE);
     $container->setDefinition($id, $route_provider_definition);
+
+    $container->setParameter('password.core_backward_compat', FALSE);
   }
 
   /**
