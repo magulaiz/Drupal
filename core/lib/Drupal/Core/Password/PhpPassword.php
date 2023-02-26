@@ -46,8 +46,6 @@ class PhpPassword implements PasswordInterface {
       return FALSE;
     }
 
-    // FIXME: Check with legacy password verifier if
-    // system_post_update_enable_password_compatibility is pending.
     return password_verify($password, $hash);
   }
 

@@ -9,7 +9,7 @@ namespace Drupal\Core\Password;
  *
  * @see https://www.drupal.org/node/3322420
  */
-class LegacyPassword implements PasswordInterface {
+abstract class PhpassHashedPasswordBase implements PasswordInterface {
 
   /**
    * The minimum allowed log2 number of iterations for password stretching.

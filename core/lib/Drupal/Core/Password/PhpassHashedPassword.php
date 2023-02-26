@@ -13,4 +13,4 @@ namespace Drupal\Core\Password;
  *
  * @see https://www.drupal.org/node/3322420
  */
-class PhpassHashedPassword extends LegacyPassword {}
+class PhpassHashedPassword extends PhpassHashedPasswordBase {}
