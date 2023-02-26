@@ -469,6 +469,12 @@ abstract class WidgetBase extends PluginSettingsBase implements WidgetInterface,
           foreach ($delta_violations as $violation) {
             $error_element = $this->errorElement($delta_element, $violation, $form, $form_state);
             if ($error_element !== FALSE) {
+              // Only select link uri field if the field is of link type
+              // violation regarding the title of the link field has been handled before
+              $parameters = $violation->getParameters();
+              if (isset($parameters['@uri'])) {
+                $error_element = $error_element['uri'];
+              }
               $form_state->setError($error_element, $violation->getMessage());
             }
           }
