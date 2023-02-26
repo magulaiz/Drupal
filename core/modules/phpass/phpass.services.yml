@@ -1,3 +1,5 @@
+parameters:
+  password.core_backward_compat: false
 services:
   phpass.password:
     public: false
