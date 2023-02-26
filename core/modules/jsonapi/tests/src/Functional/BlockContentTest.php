@@ -67,11 +67,8 @@ class BlockContentTest extends ResourceTestBase {
   protected function setUpAuthorization($method) {
     switch ($method) {
       case 'GET':
-        $this->grantPermissionsToTestedRole(['access block library']);
-        break;
-
       case 'PATCH':
-        $this->grantPermissionsToTestedRole(['access block library', 'edit any basic block content']);
+        $this->grantPermissionsToTestedRole(['access block library', 'update any basic block content']);
         break;
 
       case 'POST':
@@ -202,22 +199,12 @@ class BlockContentTest extends ResourceTestBase {
    * {@inheritdoc}
    */
   protected function getExpectedUnauthorizedAccessMessage($method) {
-    switch ($method) {
-      case 'GET':
-        return "The 'access block library' permission is required.";
-
-      case 'PATCH':
-        return "The following permissions are required: 'access block library' AND 'edit any basic block content'.";
-
-      case 'POST':
-        return "The following permissions are required: 'access block library' AND 'create basic block content'.";
-
-      case 'DELETE':
-        return "The following permissions are required: 'access block library' AND 'delete any basic block content'.";
-
-      default:
-        return parent::getExpectedUnauthorizedAccessMessage($method);
-    }
+    return match ($method) {
+      'GET', 'PATCH' => "The following permissions are required: 'access block library' AND 'update any basic block content'.",
+      'POST' => "The following permissions are required: 'access block library' AND 'create basic block content'.",
+      'DELETE' => "The following permissions are required: 'access block library' AND 'delete any basic block content'.",
+      default => parent::getExpectedUnauthorizedAccessMessage($method),
+    };
   }
 
   /**

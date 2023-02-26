@@ -6,7 +6,7 @@ block_content.add_page:
   options:
     _admin_route: TRUE
   requirements:
-    _block_content_add_access: 'block_content'
+    _entity_create_any_access: 'block_content'
 
 # @todo Deprecate this route once
 #   https://www.drupal.org/project/drupal/issues/3159210 is fixed, or remove
@@ -19,7 +19,7 @@ entity.block_content_type.collection.bc:
   options:
     _admin_route: TRUE
   requirements:
-    _block_content_add_access: 'block_content'
+    _permission: 'administer block types'
 
 block_content.add_form:
   path: '/block/add/{block_content_type}'
