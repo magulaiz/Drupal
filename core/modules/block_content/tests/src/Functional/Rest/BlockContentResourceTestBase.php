@@ -54,6 +54,10 @@ abstract class BlockContentResourceTestBase extends EntityResourceTestBase {
       case 'DELETE':
         $this->grantPermissionsToTestedRole(['access block library', 'delete any basic block content']);
         break;
+
+      default:
+        $this->grantPermissionsToTestedRole(['administer block library']);
+        break;
     }
   }
 
@@ -193,22 +197,13 @@ abstract class BlockContentResourceTestBase extends EntityResourceTestBase {
    * {@inheritdoc}
    */
   protected function getExpectedUnauthorizedAccessMessage($method) {
-    switch ($method) {
-      case 'GET':
-        return "The 'access block library' permission is required.";
-
-      case 'PATCH':
-        return "The following permissions are required: 'edit any basic block content' OR 'administer block library'.";
-
-      case 'POST':
-        return "The following permissions are required: 'create basic block content' OR 'administer block library'.";
-
-      case 'DELETE':
-        return "The following permissions are required: 'delete any basic block content' OR 'administer block library'.";
-
-      default:
-        return parent::getExpectedUnauthorizedAccessMessage($method);
-    }
+    return match ($method) {
+      'GET' => "The 'access block library' permission is required.",
+      'PATCH' => "The following permissions are required: 'access block library' AND 'edit any basic block content'.",
+      'POST' => "The following permissions are required: 'access block library' AND 'create basic block content'.",
+      'DELETE' => "The following permissions are required: 'access block library' AND 'delete any basic block content'.",
+      default => parent::getExpectedUnauthorizedAccessMessage($method),
+    };
   }
 
   /**
