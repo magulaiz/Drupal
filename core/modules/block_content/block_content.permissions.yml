@@ -7,7 +7,10 @@ access block library:
 
 administer block types:
   title: 'Administer block types'
+  description: 'Maintain the block types of block content available and the fields that are associated with those types.'
+  restrict access: TRUE
 
 administer block library:
   title: 'Administer block library'
+  description: 'View, edit and delete all block content regardless of permission restrictions.'
   restrict access: TRUE
