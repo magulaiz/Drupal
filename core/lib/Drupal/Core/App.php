@@ -21,14 +21,14 @@ class App {
    *
    * @var string
    */
-  protected string $baseUrl;
+  protected ?string $baseUrl;
 
   /**
    * The path part of the base URL.
    *
    * @var string
    */
-  protected string $basePath;
+  protected ?string $basePath;
 
   /**
    * Constructs a new app object.
