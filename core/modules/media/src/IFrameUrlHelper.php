@@ -35,7 +35,7 @@ class IFrameUrlHelper {
    * @see https://www.drupal.org/node/3279668
    */
   public function __construct(protected App|RequestContext $app, PrivateKey $private_key) {
-    if ($this->app instanceof  RequestContext) {
+    if ($this->app instanceof RequestContext) {
       $this->app = \Drupal::app();
     }
     $this->privateKey = $private_key;
