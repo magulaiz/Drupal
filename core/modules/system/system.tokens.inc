@@ -145,12 +145,12 @@ function system_tokens($type, $tokens, array $data, array $options, BubbleableMe
 
         case 'base-url':
           $bubbleable_metadata->addCacheContexts(['url.site']);
-          $replacements[$original] = \Drupal::service('router.symfony_request_context')->getCompleteBaseUrl();
+          $replacements[$original] = \Drupal::app()->getBaseUrl();
           break;
 
         case 'base-path':
           $bubbleable_metadata->addCacheContexts(['url.site']);
-          $replacements[$original] = \Drupal::request()->getBasePath();
+          $replacements[$original] = \Drupal::app()->getBasePath();
           break;
 
         case 'url':

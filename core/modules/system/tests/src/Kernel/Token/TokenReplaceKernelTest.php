@@ -145,7 +145,7 @@ class TokenReplaceKernelTest extends TokenReplaceKernelTestBase {
     $request->server->add($server);
     $request_stack->push($request);
     $bubbleable_metadata = new BubbleableMetadata();
-    $this->container->get('router.request_context')->setCompleteBaseUrl('http://localhost/subdir');
+    \Drupal::app()->setRequest($request);
     $this->assertEquals('http://localhost/subdir', $this->tokenService->replace('[site:base-url]', [], ['langcode' => $this->interfaceLanguage->getId()], $bubbleable_metadata));
     $this->assertEquals((new BubbleableMetadata())->addCacheContexts(['url.site']), $bubbleable_metadata);
     $bubbleable_metadata = new BubbleableMetadata();
