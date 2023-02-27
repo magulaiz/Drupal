@@ -39,7 +39,9 @@
         }
 
         // Force focus on the modal when the behavior is run.
-        $dialog.dialog('widget').trigger('focus');
+        if (settings.dialog.autoFocus === 'undefined' || settings.dialog.autoFocus !== false) {
+          $dialog.dialog('widget').trigger('focus');
+        }
       }
 
       const originalClose = settings.dialog.close;

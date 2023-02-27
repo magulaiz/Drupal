@@ -16,7 +16,9 @@
         if ($dialog.dialog('option', 'drupalAutoButtons')) {
           $dialog.trigger('dialogButtonsChange');
         }
-        $dialog.dialog('widget').trigger('focus');
+        if (settings.dialog.autoFocus === 'undefined' || settings.dialog.autoFocus !== false) {
+          $dialog.dialog('widget').trigger('focus');
+        }
       }
       var originalClose = settings.dialog.close;
       settings.dialog.close = function (event) {
