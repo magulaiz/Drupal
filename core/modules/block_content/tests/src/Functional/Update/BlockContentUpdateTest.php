@@ -3,6 +3,7 @@
 namespace Drupal\Tests\block_content\Functional\Update;
 
 use Drupal\FunctionalTests\Update\UpdatePathTestBase;
+use Drupal\user\Entity\User;
 use Drupal\views\Entity\View;
 
 /**
@@ -68,6 +69,22 @@ class BlockContentUpdateTest extends UpdatePathTestBase {
     $view = View::load('block_content');
     $data = $view->toArray();
     $this->assertEquals('some/custom/path', $data['display']['page_1']['display_options']['path']);
+  }
+
+  /**
+   * Tests the permissions are updated for users with "administer blocks".
+   *
+   * @see block_content_post_update_sort_permissions()
+   */
+  public function testBlockLibraryPermissionsUpdate(): void {
+    $user = $this->drupalCreateUser(['administer blocks']);
+    $this->assertTrue($user->hasPermission('administer blocks'));
+
+    $this->runUpdates();
+
+    $user = User::load($user->id());
+    $this->assertTrue($user->hasPermission('administer block library'));
+    $this->assertTrue($user->hasPermission('administer block types'));
   }
 
 }

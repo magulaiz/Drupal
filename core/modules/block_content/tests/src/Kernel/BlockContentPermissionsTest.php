@@ -71,7 +71,7 @@ class BlockContentPermissionsTest extends KernelTestBase {
     // Assert the basic permission has been created.
     $this->assertArrayHasKey('update any basic block content', $permissions, 'The per-block-type permission exists.');
     $this->assertEquals(
-      '<em class="placeholder">A basic block type</em>: Edit any block content',
+      '<em class="placeholder">A basic block type</em>: Update any block content',
       $permissions['update any basic block content']['title']->render()
     );
 
