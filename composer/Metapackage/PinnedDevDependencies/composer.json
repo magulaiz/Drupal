@@ -24,6 +24,7 @@
         "drupal/coder": "8.3.18",
         "instaclick/php-webdriver": "1.4.16",
         "justinrainbow/json-schema": "5.2.12",
+        "mglaman/phpstan-drupal": "1.1.29",
         "mikey179/vfsstream": "v1.6.11",
         "myclabs/deep-copy": "1.11.1",
         "nikic/php-parser": "v4.15.5",
@@ -75,6 +76,7 @@
         "symfony/lock": "v6.3.0",
         "symfony/phpunit-bridge": "v6.3.0",
         "theseer/tokenizer": "1.2.1",
+        "webflo/drupal-finder": "1.2.2",
         "webmozart/assert": "1.11.0"
     }
 }
