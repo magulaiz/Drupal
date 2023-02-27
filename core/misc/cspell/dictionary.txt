@@ -975,6 +975,7 @@ testbot
 testbots
 testcase
 testcases
+testclassattribute
 testcontent
 testcontextawareblock
 testdescription
