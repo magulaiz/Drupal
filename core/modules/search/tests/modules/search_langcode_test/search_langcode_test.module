@@ -2,11 +2,10 @@
 
 /**
  * @file
- * Tests two scenarios for search preprocess.
+ * Tests the preprocessing of search text.
  *
- * This module tests the following scenarios:
- * - A scenario where the language code is passed to the search preprocess.
- * - A scenario with alternate verb forms for the stemming test.
+ * Preprocessing is tested when the language code is passed to the preprocess
+ * hook and also when with alternate verb forms for the stemming test.
  */
 
 /**
