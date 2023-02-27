@@ -12,10 +12,10 @@ use Drupal\tour\Entity\Tour;
 use Drupal\user\Entity\Role;
 
 /**
- * Tests that an install profile can override configuration values.
+ * Tests that configuration objects are correct after various operations.
  *
- * Tests installation and removal of configuration objects in install, disable
- * and uninstall functionality.
+ * The installation and removal of configuration objects in install, disable
+ * and uninstall functionality is tested.
  *
  * @group config
  */

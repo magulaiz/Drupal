@@ -12,7 +12,7 @@ use Drupal\comment\Entity\Comment;
 use Drupal\entity_test\Entity\EntityTest;
 
 /**
- * Tests comment cache tags for the comment list formatter on an entity.
+ * Tests comment cache tag bubbling up when using the Comment list formatter.
  *
  * @group comment
  */

@@ -6,7 +6,7 @@ use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\TestFileCreationTrait;
 
 /**
- * Tests proper removal of submitted form values.
+ * Tests the removal of internal Form API elements from submitted form values.
  *
  * @group Form
  */

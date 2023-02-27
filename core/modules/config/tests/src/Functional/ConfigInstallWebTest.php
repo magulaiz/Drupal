@@ -11,10 +11,10 @@ use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\Tests\BrowserTestBase;
 
 /**
- * Tests that a module profile can override configuration values.
+ * Tests configuration objects before and after module install and uninstall.
  *
- * Tests installation and removal of configuration objects in install, disable
- * and uninstall functionality.
+ * The installation and removal of configuration objects in install, disable
+ * and uninstall functionality is tested.
  *
  * @group config
  */
