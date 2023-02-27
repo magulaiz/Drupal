@@ -10,6 +10,7 @@ use Drupal\Core\Menu\MenuParentFormSelectorInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\StringTranslation\TranslationInterface;
+use Drupal\system\Entity\Menu;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -127,8 +128,12 @@ class MenuLinkDefaultForm implements MenuLinkFormInterface, ContainerInjectionIn
       '#default_value' => $this->menuLink->isExpanded(),
     ];
 
+    /** @var \Drupal\system\MenuInterface[] $type_menu */
+    $type_menu = Menu::load( $this->menuLink->getMenuName());
+    $menu = [$type_menu->id() => $type_menu->label()];
+
     $menu_parent = $this->menuLink->getMenuName() . ':' . $this->menuLink->getParent();
-    $form['menu_parent'] = $this->menuParentSelector->parentSelectElement($menu_parent, $this->menuLink->getPluginId());
+    $form['menu_parent'] = $this->menuParentSelector->parentSelectElement($menu_parent, $this->menuLink->getPluginId(), $menu);
     $form['menu_parent']['#title'] = $this->t('Parent link');
     $form['menu_parent']['#description'] = $this->t('The maximum depth for a link and all its children is fixed. Some menu links may not be available as parents if selecting them would exceed this limit.');
     $form['menu_parent']['#attributes']['class'][] = 'menu-title-select';
@@ -184,3 +189,5 @@ class MenuLinkDefaultForm implements MenuLinkFormInterface, ContainerInjectionIn
   }
 
 }
+
+
