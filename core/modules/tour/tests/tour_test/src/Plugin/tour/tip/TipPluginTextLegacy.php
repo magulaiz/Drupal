@@ -26,13 +26,6 @@ class TipPluginTextLegacy extends TipPluginBase implements ContainerFactoryPlugi
   protected $body;
 
   /**
-   * Token service.
-   *
-   * @var \Drupal\Core\Utility\Token
-   */
-  protected $token;
-
-  /**
    * The forced position of where the tip will be located.
    *
    * @var string
@@ -58,9 +51,8 @@ class TipPluginTextLegacy extends TipPluginBase implements ContainerFactoryPlugi
    * @param \Drupal\Core\Utility\Token $token
    *   The token service.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, Token $token) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, protected Token $token) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
-    $this->token = $token;
   }
 
   /**

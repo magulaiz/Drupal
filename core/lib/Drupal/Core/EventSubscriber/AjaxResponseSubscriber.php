@@ -16,20 +16,13 @@ use Symfony\Component\HttpKernel\KernelEvents;
 class AjaxResponseSubscriber implements EventSubscriberInterface {
 
   /**
-   * The AJAX response attachments processor service.
-   *
-   * @var \Drupal\Core\Render\AttachmentsResponseProcessorInterface
-   */
-  protected $ajaxResponseAttachmentsProcessor;
-
-  /**
    * Constructs an AjaxResponseSubscriber object.
    *
-   * @param \Drupal\Core\Render\AttachmentsResponseProcessorInterface $ajax_response_attachments_processor
+   * @param \Drupal\Core\Render\AttachmentsResponseProcessorInterface $ajaxResponseAttachmentsProcessor
    *   The AJAX response attachments processor service.
    */
-  public function __construct(AttachmentsResponseProcessorInterface $ajax_response_attachments_processor) {
-    $this->ajaxResponseAttachmentsProcessor = $ajax_response_attachments_processor;
+  public function __construct(protected AttachmentsResponseProcessorInterface $ajaxResponseAttachmentsProcessor)
+  {
   }
 
   /**

@@ -23,97 +23,35 @@ class ThemeInstaller implements ThemeInstallerInterface {
   use StringTranslationTrait;
 
   /**
-   * @var \Drupal\Core\Extension\ThemeHandlerInterface
-   */
-  protected $themeHandler;
-
-  /**
-   * @var \Drupal\Core\Config\ConfigFactoryInterface
-   */
-  protected $configFactory;
-
-  /**
-   * @var \Drupal\Core\Config\ConfigInstallerInterface
-   */
-  protected $configInstaller;
-
-  /**
-   * @var \Drupal\Core\Extension\ModuleHandlerInterface
-   */
-  protected $moduleHandler;
-
-  /**
-   * @var \Drupal\Core\State\StateInterface
-   */
-  protected $state;
-
-  /**
-   * @var \Drupal\Core\Config\ConfigManagerInterface
-   */
-  protected $configManager;
-
-  /**
-   * @var \Drupal\Core\Asset\AssetCollectionOptimizerInterface
-   */
-  protected $cssCollectionOptimizer;
-
-  /**
-   * @var \Drupal\Core\Routing\RouteBuilderInterface
-   */
-  protected $routeBuilder;
-
-  /**
-   * @var \Psr\Log\LoggerInterface
-   */
-  protected $logger;
-
-  /**
-   * The module extension list.
-   *
-   * @var \Drupal\Core\Extension\ModuleExtensionList
-   */
-  protected $moduleExtensionList;
-
-  /**
    * Constructs a new ThemeInstaller.
    *
-   * @param \Drupal\Core\Extension\ThemeHandlerInterface $theme_handler
+   * @param \Drupal\Core\Extension\ThemeHandlerInterface $themeHandler
    *   The theme handler.
-   * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
+   * @param \Drupal\Core\Config\ConfigFactoryInterface $configFactory
    *   The config factory to get the installed themes.
-   * @param \Drupal\Core\Config\ConfigInstallerInterface $config_installer
+   * @param \Drupal\Core\Config\ConfigInstallerInterface $configInstaller
    *   (optional) The config installer to install configuration. This optional
    *   to allow the theme handler to work before Drupal is installed and has a
    *   database.
-   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
+   * @param \Drupal\Core\Extension\ModuleHandlerInterface $moduleHandler
    *   The module handler to fire themes_installed/themes_uninstalled hooks.
-   * @param \Drupal\Core\Config\ConfigManagerInterface $config_manager
+   * @param \Drupal\Core\Config\ConfigManagerInterface $configManager
    *   The config manager used to uninstall a theme.
-   * @param \Drupal\Core\Asset\AssetCollectionOptimizerInterface $css_collection_optimizer
+   * @param \Drupal\Core\Asset\AssetCollectionOptimizerInterface $cssCollectionOptimizer
    *   The CSS asset collection optimizer service.
-   * @param \Drupal\Core\Routing\RouteBuilderInterface $route_builder
+   * @param \Drupal\Core\Routing\RouteBuilderInterface $routeBuilder
    *   (optional) The route builder service to rebuild the routes if a theme is
    *   installed.
    * @param \Psr\Log\LoggerInterface $logger
    *   A logger instance.
    * @param \Drupal\Core\State\StateInterface $state
    *   The state store.
-   * @param \Drupal\Core\Extension\ModuleExtensionList $module_extension_list
+   * @param \Drupal\Core\Extension\ModuleExtensionList $moduleExtensionList
    *   The module extension list.
    * @param \Drupal\Core\Theme\Registry|null $themeRegistry
    *   The theme registry.
    */
-  public function __construct(ThemeHandlerInterface $theme_handler, ConfigFactoryInterface $config_factory, ConfigInstallerInterface $config_installer, ModuleHandlerInterface $module_handler, ConfigManagerInterface $config_manager, AssetCollectionOptimizerInterface $css_collection_optimizer, RouteBuilderInterface $route_builder, LoggerInterface $logger, StateInterface $state, ModuleExtensionList $module_extension_list, protected ?Registry $themeRegistry = NULL) {
-    $this->themeHandler = $theme_handler;
-    $this->configFactory = $config_factory;
-    $this->configInstaller = $config_installer;
-    $this->moduleHandler = $module_handler;
-    $this->configManager = $config_manager;
-    $this->cssCollectionOptimizer = $css_collection_optimizer;
-    $this->routeBuilder = $route_builder;
-    $this->logger = $logger;
-    $this->state = $state;
-    $this->moduleExtensionList = $module_extension_list;
+  public function __construct(protected ThemeHandlerInterface $themeHandler, protected ConfigFactoryInterface $configFactory, protected ConfigInstallerInterface $configInstaller, protected ModuleHandlerInterface $moduleHandler, protected ConfigManagerInterface $configManager, protected AssetCollectionOptimizerInterface $cssCollectionOptimizer, protected RouteBuilderInterface $routeBuilder, protected LoggerInterface $logger, protected StateInterface $state, protected ModuleExtensionList $moduleExtensionList, protected ?Registry $themeRegistry = NULL) {
     if ($this->themeRegistry === NULL) {
       @trigger_error('Calling ' . __METHOD__ . '() without the $themeRegistry argument is deprecated in drupal:10.1.0 and will be required in drupal:11.0.0. See https://www.drupal.org/node/3350906', E_USER_DEPRECATED);
       $this->themeRegistry = \Drupal::service('theme.registry');

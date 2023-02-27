@@ -12,20 +12,13 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class AdminController extends ControllerBase {
 
   /**
-   * The module extension list.
-   *
-   * @var \Drupal\Core\Extension\ModuleExtensionList
-   */
-  protected $moduleExtensionList;
-
-  /**
    * AdminController constructor.
    *
-   * @param \Drupal\Core\Extension\ModuleExtensionList $extension_list_module
+   * @param \Drupal\Core\Extension\ModuleExtensionList $moduleExtensionList
    *   The module extension list.
    */
-  public function __construct(ModuleExtensionList $extension_list_module) {
-    $this->moduleExtensionList = $extension_list_module;
+  public function __construct(protected ModuleExtensionList $moduleExtensionList)
+  {
   }
 
   /**

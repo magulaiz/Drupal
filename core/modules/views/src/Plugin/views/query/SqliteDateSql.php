@@ -18,13 +18,6 @@ class SqliteDateSql implements DateSqlInterface {
   use DependencySerializationTrait;
 
   /**
-   * The database connection.
-   *
-   * @var \Drupal\Core\Database\Connection
-   */
-  protected $database;
-
-  /**
    * An array of PHP-to-SQLite date replacement patterns.
    *
    * @var array
@@ -63,8 +56,8 @@ class SqliteDateSql implements DateSqlInterface {
    * @param \Drupal\Core\Database\Connection $database
    *   The database connection.
    */
-  public function __construct(Connection $database) {
-    $this->database = $database;
+  public function __construct(protected Connection $database)
+  {
   }
 
   /**

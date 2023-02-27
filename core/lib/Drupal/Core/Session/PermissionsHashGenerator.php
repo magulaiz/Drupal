@@ -14,30 +14,9 @@ use Drupal\Core\Site\Settings;
 class PermissionsHashGenerator implements PermissionsHashGeneratorInterface {
 
   /**
-   * The private key service.
-   *
-   * @var \Drupal\Core\PrivateKey
-   */
-  protected $privateKey;
-
-  /**
-   * The cache backend interface to use for the persistent cache.
-   *
-   * @var \Drupal\Core\Cache\CacheBackendInterface
-   */
-  protected $cache;
-
-  /**
-   * The cache backend interface to use for the static cache.
-   *
-   * @var \Drupal\Core\Cache\CacheBackendInterface
-   */
-  protected $static;
-
-  /**
    * Constructs a PermissionsHashGenerator object.
    *
-   * @param \Drupal\Core\PrivateKey $private_key
+   * @param \Drupal\Core\PrivateKey $privateKey
    *   The private key service.
    * @param \Drupal\Core\Cache\CacheBackendInterface $cache
    *   The cache backend interface to use for the persistent cache.
@@ -46,10 +25,7 @@ class PermissionsHashGenerator implements PermissionsHashGeneratorInterface {
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface|null $entityTypeManager
    *   The entity type manager.
    */
-  public function __construct(PrivateKey $private_key, CacheBackendInterface $cache, CacheBackendInterface $static, protected ?EntityTypeManagerInterface $entityTypeManager = NULL) {
-    $this->privateKey = $private_key;
-    $this->cache = $cache;
-    $this->static = $static;
+  public function __construct(protected PrivateKey $privateKey, protected CacheBackendInterface $cache, protevted CacheBackendInterface $static, protected ?EntityTypeManagerInterface $entityTypeManager = NULL) {
     if ($this->entityTypeManager === NULL) {
       @trigger_error('Calling ' . __METHOD__ . '() without the $entityTypeManager argument is deprecated in drupal:10.1.0 and will be required in drupal:11.0.0. See https://www.drupal.org/node/3348138', E_USER_DEPRECATED);
       $this->entityTypeManager = \Drupal::entityTypeManager();

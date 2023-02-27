@@ -18,13 +18,6 @@ use Drupal\Core\Plugin\DefaultPluginManager;
 class ImageToolkitManager extends DefaultPluginManager {
 
   /**
-   * The config factory.
-   *
-   * @var \Drupal\Core\Config\ConfigFactoryInterface
-   */
-  protected $configFactory;
-
-  /**
    * Constructs the ImageToolkitManager object.
    *
    * @param \Traversable $namespaces
@@ -34,14 +27,13 @@ class ImageToolkitManager extends DefaultPluginManager {
    *   Cache backend instance to use.
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
    *   The module handler.
-   * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
+   * @param \Drupal\Core\Config\ConfigFactoryInterface $configFactory
    *   The config factory.
    */
-  public function __construct(\Traversable $namespaces, CacheBackendInterface $cache_backend, ModuleHandlerInterface $module_handler, ConfigFactoryInterface $config_factory) {
+  public function __construct(\Traversable $namespaces, CacheBackendInterface $cache_backend, ModuleHandlerInterface $module_handler, protected ConfigFactoryInterface $configFactory) {
     parent::__construct('Plugin/ImageToolkit', $namespaces, $module_handler, 'Drupal\Core\ImageToolkit\ImageToolkitInterface', 'Drupal\Core\ImageToolkit\Annotation\ImageToolkit');
 
     $this->setCacheBackend($cache_backend, 'image_toolkit_plugins');
-    $this->configFactory = $config_factory;
   }
 
   /**

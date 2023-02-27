@@ -17,18 +17,13 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class NegotiationBrowserForm extends ConfigFormBase {
 
   /**
-   * The configurable language manager.
-   *
-   * @var \Drupal\language\ConfigurableLanguageManagerInterface
-   */
-  protected $languageManager;
-
-  /**
    * {@inheritdoc}
    */
-  public function __construct(ConfigFactoryInterface $config_factory, ConfigurableLanguageManagerInterface $language_manager) {
+  public function __construct(ConfigFactoryInterface $config_factory, /**
+   * The configurable language manager.
+   */
+  protected ConfigurableLanguageManagerInterface $languageManager) {
     parent::__construct($config_factory);
-    $this->languageManager = $language_manager;
   }
 
   /**

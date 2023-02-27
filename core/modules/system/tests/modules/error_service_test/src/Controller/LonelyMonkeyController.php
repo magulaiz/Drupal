@@ -12,13 +12,13 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  */
 class LonelyMonkeyController extends ControllerBase implements ContainerInjectionInterface {
 
-  /**
-   * The lonely monkey class.
-   */
-  protected LonelyMonkeyClass $class;
-
-  public function __construct(LonelyMonkeyClass $class) {
-    $this->class = $class;
+  public function __construct(
+      /**
+       * The lonely monkey class.
+       */
+      protected LonelyMonkeyClass $class
+  )
+  {
   }
 
   public function testBrokenClass() {

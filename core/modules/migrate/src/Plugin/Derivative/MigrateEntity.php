@@ -15,20 +15,18 @@ class MigrateEntity implements ContainerDeriverInterface {
   protected $derivatives = [];
 
   /**
-   * The entity definitions.
-   *
-   * @var \Drupal\Core\Entity\EntityTypeInterface[]
-   */
-  protected $entityDefinitions;
-
-  /**
    * Constructs a MigrateEntity object.
    *
-   * @param \Drupal\Core\Entity\EntityTypeInterface[] $entity_definitions
+   * @param \Drupal\Core\Entity\EntityTypeInterface[] $entityDefinitions
    *   A list of entity definition objects.
    */
-  public function __construct(array $entity_definitions) {
-    $this->entityDefinitions = $entity_definitions;
+  public function __construct(
+      /**
+       * The entity definitions.
+       */
+      protected array $entityDefinitions
+  )
+  {
   }
 
   /**

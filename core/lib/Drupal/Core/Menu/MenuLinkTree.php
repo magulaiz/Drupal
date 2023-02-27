@@ -16,60 +16,21 @@ use Drupal\Core\Template\Attribute;
 class MenuLinkTree implements MenuLinkTreeInterface {
 
   /**
-   * The menu link tree storage.
-   *
-   * @var \Drupal\Core\Menu\MenuTreeStorageInterface
-   */
-  protected $treeStorage;
-
-  /**
-   * The menu link plugin manager.
-   *
-   * @var \Drupal\Core\Menu\MenuLinkManagerInterface
-   */
-  protected $menuLinkManager;
-
-  /**
-   * The route provider to load routes by name.
-   *
-   * @var \Drupal\Core\Routing\RouteProviderInterface
-   */
-  protected $routeProvider;
-
-  /**
-   * The active menu trail service.
-   *
-   * @var \Drupal\Core\Menu\MenuActiveTrailInterface
-   */
-  protected $menuActiveTrail;
-
-  /**
-   * The controller resolver.
-   *
-   * @var \Drupal\Core\Controller\ControllerResolverInterface
-   */
-  protected $controllerResolver;
-
-  /**
    * Constructs a \Drupal\Core\Menu\MenuLinkTree object.
    *
-   * @param \Drupal\Core\Menu\MenuTreeStorageInterface $tree_storage
+   * @param \Drupal\Core\Menu\MenuTreeStorageInterface $treeStorage
    *   The menu link tree storage.
-   * @param \Drupal\Core\Menu\MenuLinkManagerInterface $menu_link_manager
+   * @param \Drupal\Core\Menu\MenuLinkManagerInterface $menuLinkManager
    *   The menu link plugin manager.
-   * @param \Drupal\Core\Routing\RouteProviderInterface $route_provider
+   * @param \Drupal\Core\Routing\RouteProviderInterface $routeProvider
    *   The route provider to load routes by name.
-   * @param \Drupal\Core\Menu\MenuActiveTrailInterface $menu_active_trail
+   * @param \Drupal\Core\Menu\MenuActiveTrailInterface $menuActiveTrail
    *   The active menu trail service.
-   * @param \Drupal\Core\Controller\ControllerResolverInterface $controller_resolver
+   * @param \Drupal\Core\Controller\ControllerResolverInterface $controllerResolver
    *   The controller resolver.
    */
-  public function __construct(MenuTreeStorageInterface $tree_storage, MenuLinkManagerInterface $menu_link_manager, RouteProviderInterface $route_provider, MenuActiveTrailInterface $menu_active_trail, ControllerResolverInterface $controller_resolver) {
-    $this->treeStorage = $tree_storage;
-    $this->menuLinkManager = $menu_link_manager;
-    $this->routeProvider = $route_provider;
-    $this->menuActiveTrail = $menu_active_trail;
-    $this->controllerResolver = $controller_resolver;
+  public function __construct(protected MenuTreeStorageInterface $treeStorage, protected MenuLinkManagerInterface $menuLinkManager, protected RouteProviderInterface $routeProvider, protected MenuActiveTrailInterface $menuActiveTrail, protected ControllerResolverInterface $controllerResolver)
+  {
   }
 
   /**

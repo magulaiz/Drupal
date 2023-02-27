@@ -26,13 +26,6 @@ class Time extends CachePluginBase {
   protected $usesOptions = TRUE;
 
   /**
-   * The date formatter service.
-   *
-   * @var \Drupal\Core\Datetime\DateFormatterInterface
-   */
-  protected $dateFormatter;
-
-  /**
    * Constructs a Time cache plugin object.
    *
    * @param array $configuration
@@ -41,12 +34,10 @@ class Time extends CachePluginBase {
    *   The plugin_id for the plugin instance.
    * @param mixed $plugin_definition
    *   The plugin implementation definition.
-   * @param \Drupal\Core\Datetime\DateFormatterInterface $date_formatter
+   * @param \Drupal\Core\Datetime\DateFormatterInterface $dateFormatter
    *   The date formatter service.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, DateFormatterInterface $date_formatter) {
-    $this->dateFormatter = $date_formatter;
-
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, protected DateFormatterInterface $dateFormatter) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
   }
 

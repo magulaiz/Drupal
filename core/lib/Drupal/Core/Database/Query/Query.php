@@ -14,13 +14,6 @@ use Drupal\Core\Database\Connection;
 abstract class Query implements PlaceholderInterface {
 
   /**
-   * The connection object on which to run this query.
-   *
-   * @var \Drupal\Core\Database\Connection
-   */
-  protected $connection;
-
-  /**
    * The target of the connection object.
    *
    * @var string
@@ -63,10 +56,8 @@ abstract class Query implements PlaceholderInterface {
    * @param array $queryOptions
    *   Array of query options.
    */
-  public function __construct(Connection $connection, protected $queryOptions) {
+  public function __construct(protected Connection $connection, protected $queryOptions) {
     $this->uniqueIdentifier = uniqid('', TRUE);
-
-    $this->connection = $connection;
     $this->connectionKey = $this->connection->getKey();
     $this->connectionTarget = $this->connection->getTarget();
   }

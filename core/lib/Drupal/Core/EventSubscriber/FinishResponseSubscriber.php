@@ -22,13 +22,6 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 class FinishResponseSubscriber implements EventSubscriberInterface {
 
   /**
-   * The language manager object for retrieving the correct language code.
-   *
-   * @var \Drupal\Core\Language\LanguageManagerInterface
-   */
-  protected $languageManager;
-
-  /**
    * A config object for the system performance configuration.
    *
    * @var \Drupal\Core\Config\Config
@@ -36,43 +29,26 @@ class FinishResponseSubscriber implements EventSubscriberInterface {
   protected $config;
 
   /**
-   * A policy rule determining the cacheability of a request.
-   *
-   * @var \Drupal\Core\PageCache\RequestPolicyInterface
-   */
-  protected $requestPolicy;
-
-  /**
-   * A policy rule determining the cacheability of the response.
-   *
-   * @var \Drupal\Core\PageCache\ResponsePolicyInterface
-   */
-  protected $responsePolicy;
-
-  /**
    * Constructs a FinishResponseSubscriber object.
    *
-   * @param \Drupal\Core\Language\LanguageManagerInterface $language_manager
+   * @param \Drupal\Core\Language\LanguageManagerInterface $languageManager
    *   The language manager object for retrieving the correct language code.
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   A config factory for retrieving required config objects.
-   * @param \Drupal\Core\PageCache\RequestPolicyInterface $request_policy
+   * @param \Drupal\Core\PageCache\RequestPolicyInterface $requestPolicy
    *   A policy rule determining the cacheability of a request.
-   * @param \Drupal\Core\PageCache\ResponsePolicyInterface $response_policy
+   * @param \Drupal\Core\PageCache\ResponsePolicyInterface $responsePolicy
    *   A policy rule determining the cacheability of a response.
    * @param \Drupal\Core\Cache\Context\CacheContextsManager $cacheContextsManager
    *   The cache contexts manager service.
    * @param bool $debugCacheabilityHeaders
    *   (optional) Whether to send cacheability headers for debugging purposes.
    */
-  public function __construct(LanguageManagerInterface $language_manager, ConfigFactoryInterface $config_factory, RequestPolicyInterface $request_policy, ResponsePolicyInterface $response_policy, /**
+  public function __construct(protected LanguageManagerInterface $languageManager, ConfigFactoryInterface $config_factory, protected RequestPolicyInterface $requestPolicy, protected ResponsePolicyInterface $responsePolicy, /**
    * The cache contexts manager service.
    */
   protected CacheContextsManager $cacheContextsManager, protected $debugCacheabilityHeaders = FALSE) {
-    $this->languageManager = $language_manager;
     $this->config = $config_factory->get('system.performance');
-    $this->requestPolicy = $request_policy;
-    $this->responsePolicy = $response_policy;
   }
 
   /**

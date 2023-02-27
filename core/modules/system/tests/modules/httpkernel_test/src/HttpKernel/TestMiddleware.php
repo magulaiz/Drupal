@@ -12,30 +12,15 @@ use Symfony\Component\HttpKernel\HttpKernelInterface;
 class TestMiddleware implements HttpKernelInterface {
 
   /**
-   * The decorated kernel.
-   *
-   * @var \Symfony\Component\HttpKernel\HttpKernelInterface
-   */
-  protected $kernel;
-
-  /**
-   * An optional argument.
-   *
-   * @var mixed
-   */
-  protected $optionalArgument;
-
-  /**
    * Constructs a new TestMiddleware object.
    *
    * @param \Symfony\Component\HttpKernel\HttpKernelInterface $kernel
    *   The decorated kernel.
-   * @param mixed $optional_argument
+   * @param mixed $optionalArgument
    *   (optional) An optional argument.
    */
-  public function __construct(HttpKernelInterface $kernel, $optional_argument = NULL) {
-    $this->kernel = $kernel;
-    $this->optionalArgument = $optional_argument;
+  public function __construct(protected HttpKernelInterface $kernel, protected $optionalArgument = NULL)
+  {
   }
 
   /**

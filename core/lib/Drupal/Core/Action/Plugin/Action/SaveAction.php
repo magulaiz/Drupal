@@ -19,13 +19,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class SaveAction extends EntityActionBase {
 
   /**
-   * The time service.
-   *
-   * @var \Drupal\Component\Datetime\TimeInterface
-   */
-  protected $time;
-
-  /**
    * Constructs a SaveAction object.
    *
    * @param mixed[] $configuration
@@ -39,9 +32,8 @@ class SaveAction extends EntityActionBase {
    * @param \Drupal\Component\Datetime\TimeInterface $time
    *   The time service.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityTypeManagerInterface $entity_type_manager, TimeInterface $time) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityTypeManagerInterface $entity_type_manager, protected TimeInterface $time) {
     parent::__construct($configuration, $plugin_id, $plugin_definition, $entity_type_manager);
-    $this->time = $time;
   }
 
   /**

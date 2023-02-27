@@ -20,13 +20,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class NodeCounter extends DestinationBase implements ContainerFactoryPluginInterface {
 
   /**
-   * The database connection.
-   *
-   * @var \Drupal\Core\Database\Connection
-   */
-  protected $connection;
-
-  /**
    * Constructs a node counter plugin.
    *
    * @param array $configuration
@@ -40,9 +33,8 @@ class NodeCounter extends DestinationBase implements ContainerFactoryPluginInter
    * @param \Drupal\Core\Database\Connection $connection
    *   The database connection.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, MigrationInterface $migration, Connection $connection) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, MigrationInterface $migration, protected Connection $connection) {
     parent::__construct($configuration, $plugin_id, $plugin_definition, $migration);
-    $this->connection = $connection;
   }
 
   /**

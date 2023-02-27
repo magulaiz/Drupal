@@ -33,20 +33,6 @@ class UserRegistrationResource extends ResourceBase {
   use EntityResourceAccessTrait;
 
   /**
-   * User settings config instance.
-   *
-   * @var \Drupal\Core\Config\ImmutableConfig
-   */
-  protected $userSettings;
-
-  /**
-   * The current user.
-   *
-   * @var \Drupal\Core\Session\AccountInterface
-   */
-  protected $currentUser;
-
-  /**
    * Constructs a new UserRegistrationResource instance.
    *
    * @param array $configuration
@@ -59,15 +45,13 @@ class UserRegistrationResource extends ResourceBase {
    *   The available serialization formats.
    * @param \Psr\Log\LoggerInterface $logger
    *   A logger instance.
-   * @param \Drupal\Core\Config\ImmutableConfig $user_settings
+   * @param \Drupal\Core\Config\ImmutableConfig $userSettings
    *   A user settings config instance.
-   * @param \Drupal\Core\Session\AccountInterface $current_user
+   * @param \Drupal\Core\Session\AccountInterface $currentUser
    *   The current user.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, array $serializer_formats, LoggerInterface $logger, ImmutableConfig $user_settings, AccountInterface $current_user) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, array $serializer_formats, LoggerInterface $logger, protected ImmutableConfig $userSettings, protected AccountInterface $currentUser) {
     parent::__construct($configuration, $plugin_id, $plugin_definition, $serializer_formats, $logger);
-    $this->userSettings = $user_settings;
-    $this->currentUser = $current_user;
   }
 
   /**

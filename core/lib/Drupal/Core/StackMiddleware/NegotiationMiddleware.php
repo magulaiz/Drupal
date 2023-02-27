@@ -12,13 +12,6 @@ use Symfony\Component\HttpKernel\HttpKernelInterface;
 class NegotiationMiddleware implements HttpKernelInterface {
 
   /**
-   * The wrapped HTTP kernel.
-   *
-   * @var \Symfony\Component\HttpKernel\HttpKernelInterface
-   */
-  protected $app;
-
-  /**
    * Contains a hashmap of format as key and mimetype as value.
    *
    * @var array
@@ -31,8 +24,8 @@ class NegotiationMiddleware implements HttpKernelInterface {
    * @param \Symfony\Component\HttpKernel\HttpKernelInterface $app
    *   The wrapper HTTP kernel
    */
-  public function __construct(HttpKernelInterface $app) {
-    $this->app = $app;
+  public function __construct(protected HttpKernelInterface $app)
+  {
   }
 
   /**

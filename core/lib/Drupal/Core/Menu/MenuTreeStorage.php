@@ -25,34 +25,6 @@ class MenuTreeStorage implements MenuTreeStorageInterface {
   const MAX_DEPTH = 9;
 
   /**
-   * The database connection.
-   *
-   * @var \Drupal\Core\Database\Connection
-   */
-  protected $connection;
-
-  /**
-   * Cache backend instance for the extracted tree data.
-   *
-   * @var \Drupal\Core\Cache\CacheBackendInterface
-   */
-  protected $menuCacheBackend;
-
-  /**
-   * The cache tags invalidator.
-   *
-   * @var \Drupal\Core\Cache\CacheTagsInvalidatorInterface
-   */
-  protected $cacheTagsInvalidator;
-
-  /**
-   * Additional database connection options to use in queries.
-   *
-   * @var array
-   */
-  protected $options = [];
-
-  /**
    * Stores definitions that have already been loaded for better performance.
    *
    * An array of plugin definition arrays, keyed by plugin ID.
@@ -73,20 +45,17 @@ class MenuTreeStorage implements MenuTreeStorageInterface {
    *
    * @param \Drupal\Core\Database\Connection $connection
    *   A Database connection to use for reading and writing configuration data.
-   * @param \Drupal\Core\Cache\CacheBackendInterface $menu_cache_backend
+   * @param \Drupal\Core\Cache\CacheBackendInterface $menuCacheBackend
    *   Cache backend instance for the extracted tree data.
-   * @param \Drupal\Core\Cache\CacheTagsInvalidatorInterface $cache_tags_invalidator
+   * @param \Drupal\Core\Cache\CacheTagsInvalidatorInterface $cacheTagsInvalidator
    *   The cache tags invalidator.
    * @param string $table
    *   A database table name to store configuration data in.
    * @param array $options
    *   (optional) Any additional database connection options to use in queries.
    */
-  public function __construct(Connection $connection, CacheBackendInterface $menu_cache_backend, CacheTagsInvalidatorInterface $cache_tags_invalidator, protected $table, array $options = []) {
-    $this->connection = $connection;
-    $this->menuCacheBackend = $menu_cache_backend;
-    $this->cacheTagsInvalidator = $cache_tags_invalidator;
-    $this->options = $options;
+  public function __construct(protected Connection $connection, protected CacheBackendInterface $menuCacheBackend, protected CacheTagsInvalidatorInterface $cacheTagsInvalidator, protected $table, protected array $options = [])
+  {
   }
 
   /**

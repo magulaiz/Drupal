@@ -20,13 +20,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class EntityComment extends EntityContentBase {
 
   /**
-   * The state storage object.
-   *
-   * @var \Drupal\Core\State\StateInterface
-   */
-  protected $state;
-
-  /**
    * An array of entity IDs for the 'commented entity' keyed by entity type.
    *
    * @var array
@@ -57,9 +50,8 @@ class EntityComment extends EntityContentBase {
    * @param \Drupal\Core\Session\AccountSwitcherInterface|null $account_switcher
    *   The account switcher service.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, MigrationInterface $migration, EntityStorageInterface $storage, array $bundles, EntityFieldManagerInterface $entity_field_manager, FieldTypePluginManagerInterface $field_type_manager, StateInterface $state, AccountSwitcherInterface $account_switcher = NULL) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, MigrationInterface $migration, EntityStorageInterface $storage, array $bundles, EntityFieldManagerInterface $entity_field_manager, FieldTypePluginManagerInterface $field_type_manager, protected StateInterface $state, AccountSwitcherInterface $account_switcher = NULL) {
     parent::__construct($configuration, $plugin_id, $plugin_definition, $migration, $storage, $bundles, $entity_field_manager, $field_type_manager, $account_switcher);
-    $this->state = $state;
   }
 
   /**

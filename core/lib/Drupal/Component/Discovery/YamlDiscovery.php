@@ -12,13 +12,6 @@ use Drupal\Component\Serialization\Yaml;
 class YamlDiscovery implements DiscoverableInterface {
 
   /**
-   * An array of directories to scan, keyed by the provider.
-   *
-   * @var array
-   */
-  protected $directories = [];
-
-  /**
    * Constructs a YamlDiscovery object.
    *
    * @param string $name
@@ -27,8 +20,8 @@ class YamlDiscovery implements DiscoverableInterface {
    * @param array $directories
    *   An array of directories to scan, keyed by the provider.
    */
-  public function __construct(protected $name, array $directories) {
-    $this->directories = $directories;
+  public function __construct(protected $name, protected array $directories)
+  {
   }
 
   /**

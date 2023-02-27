@@ -14,13 +14,6 @@ use Psr\Log\LoggerInterface;
 class FieldDiscoveryTestClass extends FieldDiscovery {
 
   /**
-   * An array of test data.
-   *
-   * @var array
-   */
-  protected $testData;
-
-  /**
    * Constructs a FieldDiscoveryTestClass object.
    *
    * @param \Drupal\migrate_drupal\Plugin\MigrateFieldPluginManagerInterface $field_plugin_manager
@@ -29,13 +22,12 @@ class FieldDiscoveryTestClass extends FieldDiscovery {
    *   The migration plugin manager.
    * @param \Psr\Log\LoggerInterface $logger
    *   The logger.
-   * @param array $test_data
+   * @param array $testData
    *   An array of test data, keyed by method name, for overridden methods to
    *   return for the purposes of testing other methods.
    */
-  public function __construct(MigrateFieldPluginManagerInterface $field_plugin_manager, MigrationPluginManagerInterface $migration_plugin_manager, LoggerInterface $logger, array $test_data = []) {
+  public function __construct(MigrateFieldPluginManagerInterface $field_plugin_manager, MigrationPluginManagerInterface $migration_plugin_manager, LoggerInterface $logger, protected array $testData = []) {
     parent::__construct($field_plugin_manager, $migration_plugin_manager, $logger);
-    $this->testData = $test_data;
   }
 
   /**

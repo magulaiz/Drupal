@@ -27,59 +27,20 @@ class NodeRevisionDeleteForm extends ConfirmFormBase {
   protected $revision;
 
   /**
-   * The node storage.
-   *
-   * @var \Drupal\Core\Entity\EntityStorageInterface
-   */
-  protected $nodeStorage;
-
-  /**
-   * The node type storage.
-   *
-   * @var \Drupal\Core\Entity\EntityStorageInterface
-   */
-  protected $nodeTypeStorage;
-
-  /**
-   * The access manager.
-   *
-   * @var \Drupal\Core\Access\AccessManagerInterface
-   */
-  protected $accessManager;
-
-  /**
-   * The database connection.
-   *
-   * @var \Drupal\Core\Database\Connection
-   */
-  protected $connection;
-
-  /**
-   * The date formatter service.
-   *
-   * @var \Drupal\Core\Datetime\DateFormatterInterface
-   */
-  protected $dateFormatter;
-
-  /**
    * Constructs a new NodeRevisionDeleteForm.
    *
-   * @param \Drupal\Core\Entity\EntityStorageInterface $node_storage
+   * @param \Drupal\Core\Entity\EntityStorageInterface $nodeStorage
    *   The node storage.
-   * @param \Drupal\Core\Entity\EntityStorageInterface $node_type_storage
+   * @param \Drupal\Core\Entity\EntityStorageInterface $nodeTypeStorage
    *   The node type storage.
-   * @param \Drupal\Core\Access\AccessManagerInterface|\Drupal\Core\Database\Connection $access_manager
+   * @param \Drupal\Core\Access\AccessManagerInterface|\Drupal\Core\Database\Connection $accessManager
    *   The access manager.
-   * @param \Drupal\Core\Datetime\DateFormatterInterface $date_formatter
+   * @param \Drupal\Core\Datetime\DateFormatterInterface $dateFormatter
    *   The date formatter service.
    */
-  public function __construct(EntityStorageInterface $node_storage, EntityStorageInterface $node_type_storage, AccessManagerInterface|Connection $access_manager, DateFormatterInterface $date_formatter) {
-    $this->nodeStorage = $node_storage;
-    $this->nodeTypeStorage = $node_type_storage;
-    $this->accessManager = $access_manager;
-    $this->dateFormatter = $date_formatter;
-    if ($access_manager instanceof Connection) {
-      $this->connection = $access_manager;
+  public function __construct(protected EntityStorageInterface $nodeStorage, protected EntityStorageInterface $nodeTypeStorage, protected AccessManagerInterface|Connection $accessManager, protected DateFormatterInterface $dateFormatter) {
+    if ($accessManager instanceof Connection) {
+      $this->connection = $accessManager;
       $this->accessManager = func_get_arg(3);
       @trigger_error('Calling ' . __CLASS__ . '::_construct() with the $connection argument is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. See https://www.drupal.org/node/3343754', E_USER_DEPRECATED);
     }

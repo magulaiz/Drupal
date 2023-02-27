@@ -34,22 +34,15 @@ class ConfigEntityUpdater implements ContainerInjectionInterface {
   const SANDBOX_KEY = 'config_entity_updater';
 
   /**
-   * The entity type manager.
-   *
-   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
-   */
-  protected $entityTypeManager;
-
-  /**
    * ConfigEntityUpdater constructor.
    *
-   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
    *   The entity type manager.
    * @param int $batchSize
    *   The number of entities to process in each batch.
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager, protected $batchSize) {
-    $this->entityTypeManager = $entity_type_manager;
+  public function __construct(protected EntityTypeManagerInterface $entityTypeManager, protected $batchSize)
+  {
   }
 
   /**

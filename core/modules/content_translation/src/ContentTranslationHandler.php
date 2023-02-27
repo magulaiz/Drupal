@@ -50,34 +50,6 @@ class ContentTranslationHandler implements ContentTranslationHandlerInterface, E
   protected $entityType;
 
   /**
-   * The language manager.
-   *
-   * @var \Drupal\Core\Language\LanguageManagerInterface
-   */
-  protected $languageManager;
-
-  /**
-   * The content translation manager.
-   *
-   * @var \Drupal\content_translation\ContentTranslationManagerInterface
-   */
-  protected $manager;
-
-  /**
-   * The entity type manager.
-   *
-   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
-   */
-  protected $entityTypeManager;
-
-  /**
-   * The current user.
-   *
-   * @var \Drupal\Core\Session\AccountInterface
-   */
-  protected $currentUser;
-
-  /**
    * Installed field storage definitions for the entity type.
    *
    * Keyed by field name.
@@ -87,49 +59,29 @@ class ContentTranslationHandler implements ContentTranslationHandlerInterface, E
   protected $fieldStorageDefinitions;
 
   /**
-   * The messenger service.
-   *
-   * @var \Drupal\Core\Messenger\MessengerInterface
-   */
-  protected $messenger;
-
-  /**
-   * The date formatter service.
-   *
-   * @var \Drupal\Core\Datetime\DateFormatterInterface
-   */
-  protected $dateFormatter;
-
-  /**
    * Initializes an instance of the content translation controller.
    *
    * @param \Drupal\Core\Entity\EntityTypeInterface $entity_type
    *   The info array of the given entity type.
-   * @param \Drupal\Core\Language\LanguageManagerInterface $language_manager
+   * @param \Drupal\Core\Language\LanguageManagerInterface $languageManager
    *   The language manager.
    * @param \Drupal\content_translation\ContentTranslationManagerInterface $manager
    *   The content translation manager service.
-   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
    *   The entity type manager.
-   * @param \Drupal\Core\Session\AccountInterface $current_user
+   * @param \Drupal\Core\Session\AccountInterface $currentUser
    *   The current user.
    * @param \Drupal\Core\Messenger\MessengerInterface $messenger
    *   The messenger service.
-   * @param \Drupal\Core\Datetime\DateFormatterInterface $date_formatter
+   * @param \Drupal\Core\Datetime\DateFormatterInterface $dateFormatter
    *   The date formatter service.
    * @param \Drupal\Core\Entity\EntityLastInstalledSchemaRepositoryInterface $entity_last_installed_schema_repository
    *   The installed entity definition repository service.
    */
-  public function __construct(EntityTypeInterface $entity_type, LanguageManagerInterface $language_manager, ContentTranslationManagerInterface $manager, EntityTypeManagerInterface $entity_type_manager, AccountInterface $current_user, MessengerInterface $messenger, DateFormatterInterface $date_formatter, EntityLastInstalledSchemaRepositoryInterface $entity_last_installed_schema_repository) {
+  public function __construct(EntityTypeInterface $entity_type, protected LanguageManagerInterface $languageManager, protected ContentTranslationManagerInterface $manager, protected EntityTypeManagerInterface $entityTypeManager, protected AccountInterface $currentUser, protected MessengerInterface $messenger, protected DateFormatterInterface $dateFormatter, EntityLastInstalledSchemaRepositoryInterface $entity_last_installed_schema_repository) {
     $this->entityTypeId = $entity_type->id();
     $this->entityType = $entity_type;
-    $this->languageManager = $language_manager;
-    $this->manager = $manager;
-    $this->entityTypeManager = $entity_type_manager;
-    $this->currentUser = $current_user;
     $this->fieldStorageDefinitions = $entity_last_installed_schema_repository->getLastInstalledFieldStorageDefinitions($this->entityTypeId);
-    $this->messenger = $messenger;
-    $this->dateFormatter = $date_formatter;
   }
 
   /**

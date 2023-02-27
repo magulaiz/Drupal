@@ -34,13 +34,6 @@ class TipPluginImage extends TipPluginBase implements ContainerFactoryPluginInte
   protected $alt;
 
   /**
-   * Token service.
-   *
-   * @var \Drupal\Core\Utility\Token
-   */
-  protected $token;
-
-  /**
    * Constructs a \Drupal\tour\Plugin\tour\tip\TipPluginText object.
    *
    * @param array $configuration
@@ -52,9 +45,8 @@ class TipPluginImage extends TipPluginBase implements ContainerFactoryPluginInte
    * @param \Drupal\Core\Utility\Token $token
    *   The token service.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, Token $token) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, protected Token $token) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
-    $this->token = $token;
   }
 
   /**

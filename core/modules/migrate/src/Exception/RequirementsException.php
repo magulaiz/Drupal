@@ -10,13 +10,6 @@ namespace Drupal\migrate\Exception;
 class RequirementsException extends \RuntimeException {
 
   /**
-   * The missing requirements.
-   *
-   * @var array
-   */
-  protected $requirements;
-
-  /**
    * Constructs a new RequirementsException instance.
    *
    * @param string $message
@@ -28,10 +21,8 @@ class RequirementsException extends \RuntimeException {
    * @param \Exception $previous
    *   (optional) The previous exception used for the exception chaining.
    */
-  public function __construct($message = "", array $requirements = [], $code = 0, \Exception $previous = NULL) {
+  public function __construct($message = "", protected array $requirements = [], $code = 0, \Exception $previous = NULL) {
     parent::__construct($message, $code, $previous);
-
-    $this->requirements = $requirements;
   }
 
   /**

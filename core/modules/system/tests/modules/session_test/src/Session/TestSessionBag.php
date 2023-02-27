@@ -15,13 +15,6 @@ class TestSessionBag implements SessionBagInterface {
   const BAG_NAME = 'session_test';
 
   /**
-   * Key used when persisting the session.
-   *
-   * @var string
-   */
-  protected $storageKey;
-
-  /**
    * Storage for data to save.
    *
    * @var array
@@ -31,11 +24,11 @@ class TestSessionBag implements SessionBagInterface {
   /**
    * Constructs a new TestSessionBag object.
    *
-   * @param string $storage_key
+   * @param string $storageKey
    *   The key used to store test attributes.
    */
-  public function __construct($storage_key = '_dp_session_test') {
-    $this->storageKey = $storage_key;
+  public function __construct(protected $storageKey = '_dp_session_test')
+  {
   }
 
   /**

@@ -14,30 +14,15 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 class ConfigCacheTag implements EventSubscriberInterface {
 
   /**
-   * The theme handler.
-   *
-   * @var \Drupal\Core\Extension\ThemeHandlerInterface
-   */
-  protected $themeHandler;
-
-  /**
-   * The cache tags invalidator.
-   *
-   * @var \Drupal\Core\Cache\CacheTagsInvalidatorInterface
-   */
-  protected $cacheTagsInvalidator;
-
-  /**
    * Constructs a ConfigCacheTag object.
    *
-   * @param \Drupal\Core\Extension\ThemeHandlerInterface $theme_handler
+   * @param \Drupal\Core\Extension\ThemeHandlerInterface $themeHandler
    *   The theme handler.
-   * @param \Drupal\Core\Cache\CacheTagsInvalidatorInterface $cache_tags_invalidator
+   * @param \Drupal\Core\Cache\CacheTagsInvalidatorInterface $cacheTagsInvalidator
    *   The cache tags invalidator.
    */
-  public function __construct(ThemeHandlerInterface $theme_handler, CacheTagsInvalidatorInterface $cache_tags_invalidator) {
-    $this->themeHandler = $theme_handler;
-    $this->cacheTagsInvalidator = $cache_tags_invalidator;
+  public function __construct(protected ThemeHandlerInterface $themeHandler, protected CacheTagsInvalidatorInterface $cacheTagsInvalidator)
+  {
   }
 
   /**

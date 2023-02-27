@@ -22,40 +22,17 @@ class EntityOperations implements ContainerInjectionInterface {
   use StringTranslationTrait;
 
   /**
-   * The entity type manager service.
-   *
-   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
-   */
-  protected $entityTypeManager;
-
-  /**
-   * The workspace manager service.
-   *
-   * @var \Drupal\workspaces\WorkspaceManagerInterface
-   */
-  protected $workspaceManager;
-
-  /**
-   * The workspace association service.
-   *
-   * @var \Drupal\workspaces\WorkspaceAssociationInterface
-   */
-  protected $workspaceAssociation;
-
-  /**
    * Constructs a new EntityOperations instance.
    *
-   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
    *   The entity type manager service.
-   * @param \Drupal\workspaces\WorkspaceManagerInterface $workspace_manager
+   * @param \Drupal\workspaces\WorkspaceManagerInterface $workspaceManager
    *   The workspace manager service.
-   * @param \Drupal\workspaces\WorkspaceAssociationInterface $workspace_association
+   * @param \Drupal\workspaces\WorkspaceAssociationInterface $workspaceAssociation
    *   The workspace association service.
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager, WorkspaceManagerInterface $workspace_manager, WorkspaceAssociationInterface $workspace_association) {
-    $this->entityTypeManager = $entity_type_manager;
-    $this->workspaceManager = $workspace_manager;
-    $this->workspaceAssociation = $workspace_association;
+  public function __construct(protected EntityTypeManagerInterface $entityTypeManager, protected WorkspaceManagerInterface $workspaceManager, protected WorkspaceAssociationInterface $workspaceAssociation)
+  {
   }
 
   /**

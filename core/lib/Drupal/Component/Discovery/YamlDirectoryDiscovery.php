@@ -18,16 +18,6 @@ class YamlDirectoryDiscovery implements DiscoverableInterface {
   const FILE_KEY = '_discovered_file_path';
 
   /**
-   * An array of directories to scan, keyed by the provider.
-   *
-   * The value can either be a string or an array of strings. The string values
-   * should be the path of a directory to scan.
-   *
-   * @var array
-   */
-  protected $directories = [];
-
-  /**
    * Constructs a YamlDirectoryDiscovery object.
    *
    * @param array $directories
@@ -41,8 +31,8 @@ class YamlDirectoryDiscovery implements DiscoverableInterface {
    *   (optional) The key contained in the discovered data that identifies it.
    *   Defaults to 'id'.
    */
-  public function __construct(array $directories, protected $fileCacheKeySuffix, protected $idKey = 'id') {
-    $this->directories = $directories;
+  public function __construct(protected array $directories, protected $fileCacheKeySuffix, protected $idKey = 'id')
+  {
   }
 
   /**

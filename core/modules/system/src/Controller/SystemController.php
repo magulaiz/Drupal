@@ -26,70 +26,23 @@ class SystemController extends ControllerBase {
   use ModuleDependencyMessageTrait;
 
   /**
-   * System Manager Service.
-   *
-   * @var \Drupal\system\SystemManager
-   */
-  protected $systemManager;
-
-  /**
-   * The theme access checker service.
-   *
-   * @var \Drupal\Core\Theme\ThemeAccessCheck
-   */
-  protected $themeAccess;
-
-  /**
-   * The form builder service.
-   *
-   * @var \Drupal\Core\Form\FormBuilderInterface
-   */
-  protected $formBuilder;
-
-  /**
-   * The theme handler service.
-   *
-   * @var \Drupal\Core\Extension\ThemeHandlerInterface
-   */
-  protected $themeHandler;
-
-  /**
-   * The menu link tree service.
-   *
-   * @var \Drupal\Core\Menu\MenuLinkTreeInterface
-   */
-  protected $menuLinkTree;
-
-  /**
-   * The module extension list.
-   *
-   * @var \Drupal\Core\Extension\ModuleExtensionList
-   */
-  protected $moduleExtensionList;
-
-  /**
    * Constructs a new SystemController.
    *
    * @param \Drupal\system\SystemManager $systemManager
    *   System manager service.
-   * @param \Drupal\Core\Theme\ThemeAccessCheck $theme_access
+   * @param \Drupal\Core\Theme\ThemeAccessCheck $themeAccess
    *   The theme access checker service.
-   * @param \Drupal\Core\Form\FormBuilderInterface $form_builder
+   * @param \Drupal\Core\Form\FormBuilderInterface $formBuilder
    *   The form builder.
-   * @param \Drupal\Core\Extension\ThemeHandlerInterface $theme_handler
+   * @param \Drupal\Core\Extension\ThemeHandlerInterface $themeHandler
    *   The theme handler.
-   * @param \Drupal\Core\Menu\MenuLinkTreeInterface $menu_link_tree
+   * @param \Drupal\Core\Menu\MenuLinkTreeInterface $menuLinkTree
    *   The menu link tree service.
-   * @param \Drupal\Core\Extension\ModuleExtensionList $module_extension_list
+   * @param \Drupal\Core\Extension\ModuleExtensionList $moduleExtensionList
    *   The module extension list.
    */
-  public function __construct(SystemManager $systemManager, ThemeAccessCheck $theme_access, FormBuilderInterface $form_builder, ThemeHandlerInterface $theme_handler, MenuLinkTreeInterface $menu_link_tree, ModuleExtensionList $module_extension_list) {
-    $this->systemManager = $systemManager;
-    $this->themeAccess = $theme_access;
-    $this->formBuilder = $form_builder;
-    $this->themeHandler = $theme_handler;
-    $this->menuLinkTree = $menu_link_tree;
-    $this->moduleExtensionList = $module_extension_list;
+  public function __construct(protected SystemManager $systemManager, protected ThemeAccessCheck $themeAccess, protected FormBuilderInterface $formBuilder, protected ThemeHandlerInterface $themeHandler, protected MenuLinkTreeInterface $menuLinkTree, protected ModuleExtensionList $moduleExtensionList)
+  {
   }
 
   /**

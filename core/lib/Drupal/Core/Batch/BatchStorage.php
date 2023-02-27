@@ -15,40 +15,17 @@ class BatchStorage implements BatchStorageInterface {
   const TABLE_NAME = 'batch';
 
   /**
-   * The database connection.
-   *
-   * @var \Drupal\Core\Database\Connection
-   */
-  protected $connection;
-
-  /**
-   * The session.
-   *
-   * @var \Symfony\Component\HttpFoundation\Session\SessionInterface
-   */
-  protected $session;
-
-  /**
-   * The CSRF token generator.
-   *
-   * @var \Drupal\Core\Access\CsrfTokenGenerator
-   */
-  protected $csrfToken;
-
-  /**
    * Constructs the database batch storage service.
    *
    * @param \Drupal\Core\Database\Connection $connection
    *   The database connection.
    * @param \Symfony\Component\HttpFoundation\Session\SessionInterface $session
    *   The session.
-   * @param \Drupal\Core\Access\CsrfTokenGenerator $csrf_token
+   * @param \Drupal\Core\Access\CsrfTokenGenerator $csrfToken
    *   The CSRF token generator.
    */
-  public function __construct(Connection $connection, SessionInterface $session, CsrfTokenGenerator $csrf_token) {
-    $this->connection = $connection;
-    $this->session = $session;
-    $this->csrfToken = $csrf_token;
+  public function __construct(protected Connection $connection, protected SessionInterface $session, protected CsrfTokenGenerator $csrfToken)
+  {
   }
 
   /**

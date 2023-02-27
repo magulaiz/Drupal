@@ -37,60 +37,21 @@ use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
 class CKEditor5ImageController extends ControllerBase {
 
   /**
-   * The file system service.
-   *
-   * @var \Drupal\Core\File\FileSystem
-   */
-  protected $fileSystem;
-
-  /**
-   * The currently authenticated user.
-   *
-   * @var \Drupal\Core\Session\AccountInterface
-   */
-  protected $currentUser;
-
-  /**
-   * The MIME type guesser.
-   *
-   * @var \Symfony\Component\Mime\MimeTypeGuesserInterface
-   */
-  protected $mimeTypeGuesser;
-
-  /**
-   * The lock service.
-   *
-   * @var \Drupal\Core\Lock\LockBackendInterface
-   */
-  protected $lock;
-
-  /**
-   * The event dispatcher.
-   *
-   * @var \Symfony\Contracts\EventDispatcher\EventDispatcherInterface
-   */
-  protected $eventDispatcher;
-
-  /**
    * Constructs a new CKEditor5ImageController.
    *
-   * @param \Drupal\Core\File\FileSystemInterface $file_system
+   * @param \Drupal\Core\File\FileSystemInterface $fileSystem
    *   The file system service.
-   * @param \Drupal\Core\Session\AccountInterface $current_user
+   * @param \Drupal\Core\Session\AccountInterface $currentUser
    *   The currently authenticated user.
-   * @param \Symfony\Component\Mime\MimeTypeGuesserInterface $mime_type_guesser
+   * @param \Symfony\Component\Mime\MimeTypeGuesserInterface $mimeTypeGuesser
    *   The MIME type guesser.
    * @param \Drupal\Core\Lock\LockBackendInterface $lock
    *   The lock service.
-   * @param \Symfony\Contracts\EventDispatcher\EventDispatcherInterface $event_dispatcher
+   * @param \Symfony\Contracts\EventDispatcher\EventDispatcherInterface $eventDispatcher
    *   The event dispatcher.
    */
-  public function __construct(FileSystemInterface $file_system, AccountInterface $current_user, MimeTypeGuesserInterface $mime_type_guesser, LockBackendInterface $lock, EventDispatcherInterface $event_dispatcher) {
-    $this->fileSystem = $file_system;
-    $this->currentUser = $current_user;
-    $this->mimeTypeGuesser = $mime_type_guesser;
-    $this->lock = $lock;
-    $this->eventDispatcher = $event_dispatcher;
+  public function __construct(protected FileSystemInterface $fileSystem, protected AccountInterface $currentUser, protected MimeTypeGuesserInterface $mimeTypeGuesser, protected LockBackendInterface $lock, protected EventDispatcherInterface $eventDispatcher)
+  {
   }
 
   /**

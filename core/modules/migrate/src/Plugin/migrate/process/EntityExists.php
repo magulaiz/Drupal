@@ -29,13 +29,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class EntityExists extends ProcessPluginBase implements ContainerFactoryPluginInterface {
 
   /**
-   * The entity storage.
-   *
-   * @var \Drupal\Core\Entity\EntityStorageInterface
-   */
-  protected $storage;
-
-  /**
    * EntityExists constructor.
    *
    * @param array $configuration
@@ -47,9 +40,11 @@ class EntityExists extends ProcessPluginBase implements ContainerFactoryPluginIn
    * @param $storage
    *   The entity storage.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityStorageInterface $storage) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, /**
+   * The entity storage.
+   */
+  protected EntityStorageInterface $storage) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
-    $this->storage = $storage;
   }
 
   /**

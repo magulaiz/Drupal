@@ -14,20 +14,13 @@ use Symfony\Component\Validator\ConstraintValidator;
 class BookOutlineConstraintValidator extends ConstraintValidator implements ContainerInjectionInterface {
 
   /**
-   * The book manager.
-   *
-   * @var \Drupal\book\BookManagerInterface
-   */
-  protected $bookManager;
-
-  /**
    * Creates a new BookOutlineConstraintValidator instance.
    *
-   * @param \Drupal\book\BookManagerInterface $book_manager
+   * @param \Drupal\book\BookManagerInterface $bookManager
    *   The book manager.
    */
-  public function __construct(BookManagerInterface $book_manager) {
-    $this->bookManager = $book_manager;
+  public function __construct(protected BookManagerInterface $bookManager)
+  {
   }
 
   /**

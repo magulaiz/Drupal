@@ -8,13 +8,6 @@ namespace Drupal\Core\ParamConverter;
 class ParamNotConvertedException extends \Exception {
 
   /**
-   * The raw parameters that were not converted.
-   *
-   * @var array
-   */
-  protected $rawParameters = [];
-
-  /**
    * Constructs the ParamNotConvertedException.
    *
    * @param string $message
@@ -25,12 +18,11 @@ class ParamNotConvertedException extends \Exception {
    *   The previous exception used for the exception chaining.
    * @param string $routeName
    *   The route name that was not converted.
-   * @param array $raw_parameters
+   * @param array $rawParameters
    *   The raw parameters that were not converted.
    */
-  public function __construct($message = "", $code = 0, \Exception $previous = NULL, protected $routeName = "", array $raw_parameters = []) {
+  public function __construct($message = "", $code = 0, \Exception $previous = NULL, protected $routeName = "", protected array $rawParameters = []) {
     parent::__construct($message, $code, $previous);
-    $this->rawParameters = $raw_parameters;
   }
 
   /**

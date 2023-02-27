@@ -12,13 +12,6 @@ use Drupal\file\FileInterface;
 class DatabaseFileUsageBackend extends FileUsageBase {
 
   /**
-   * The database connection used to store file usage information.
-   *
-   * @var \Drupal\Core\Database\Connection
-   */
-  protected $connection;
-
-  /**
    * Construct the DatabaseFileUsageBackend.
    *
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
@@ -29,9 +22,8 @@ class DatabaseFileUsageBackend extends FileUsageBase {
    * @param string $tableName
    *   (optional) The table to store file usage info. Defaults to 'file_usage'.
    */
-  public function __construct(ConfigFactoryInterface $config_factory, Connection $connection, protected $tableName = 'file_usage') {
+  public function __construct(ConfigFactoryInterface $config_factory, protected Connection $connection, protected $tableName = 'file_usage') {
     parent::__construct($config_factory);
-    $this->connection = $connection;
   }
 
   /**

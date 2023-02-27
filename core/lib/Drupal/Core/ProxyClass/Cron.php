@@ -25,13 +25,6 @@ namespace Drupal\Core\ProxyClass {
         protected $service;
 
         /**
-         * The service container.
-         *
-         * @var \Symfony\Component\DependencyInjection\ContainerInterface
-         */
-        protected $container;
-
-        /**
          * Constructs a ProxyClass Drupal proxy object.
          *
          * @param \Symfony\Component\DependencyInjection\ContainerInterface $container
@@ -39,9 +32,8 @@ namespace Drupal\Core\ProxyClass {
          * @param string $drupalProxyOriginalServiceId
          *   The service ID of the original service.
          */
-        public function __construct(\Symfony\Component\DependencyInjection\ContainerInterface $container, protected $drupalProxyOriginalServiceId)
+        public function __construct(protected \Symfony\Component\DependencyInjection\ContainerInterface $container, protected $drupalProxyOriginalServiceId)
         {
-            $this->container = $container;
         }
 
         /**

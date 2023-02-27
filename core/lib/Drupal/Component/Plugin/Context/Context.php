@@ -12,22 +12,15 @@ use Symfony\Component\Validator\Validation;
 class Context implements ContextInterface {
 
   /**
-   * The definition to which a context must conform.
-   *
-   * @var \Drupal\Component\Plugin\Context\ContextDefinitionInterface
-   */
-  protected $contextDefinition;
-
-  /**
    * Create a context object.
    *
-   * @param \Drupal\Component\Plugin\Context\ContextDefinitionInterface $context_definition
+   * @param \Drupal\Component\Plugin\Context\ContextDefinitionInterface $contextDefinition
    *   The context definition.
    * @param mixed|null $contextValue
    *   The value of the context.
    */
-  public function __construct(ContextDefinitionInterface $context_definition, protected $contextValue = NULL) {
-    $this->contextDefinition = $context_definition;
+  public function __construct(protected ContextDefinitionInterface $contextDefinition, protected $contextValue = NULL)
+  {
   }
 
   /**

@@ -20,34 +20,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class TrackerController extends ControllerBase {
 
   /**
-   * The database connection.
-   *
-   * @var \Drupal\Core\Database\Connection
-   */
-  protected $database;
-
-  /**
-   * The database replica connection.
-   *
-   * @var \Drupal\Core\Database\Connection
-   */
-  protected $databaseReplica;
-
-  /**
-   * The comment statistics.
-   *
-   * @var \Drupal\comment\CommentStatisticsInterface
-   */
-  protected $commentStatistics;
-
-  /**
-   * The date formatter.
-   *
-   * @var \Drupal\Core\Datetime\DateFormatterInterface
-   */
-  protected $dateFormatter;
-
-  /**
    * The node storage.
    *
    * @var \Drupal\Core\Entity\EntityStorageInterface
@@ -68,11 +40,7 @@ class TrackerController extends ControllerBase {
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
    *   The entity type manager.
    */
-  public function __construct(Connection $database, Connection $databaseReplica, CommentStatisticsInterface $commentStatistics, DateFormatterInterface $dateFormatter, EntityTypeManagerInterface $entityTypeManager) {
-    $this->database = $database;
-    $this->databaseReplica = $databaseReplica;
-    $this->commentStatistics = $commentStatistics;
-    $this->dateFormatter = $dateFormatter;
+  public function __construct(protected Connection $database, protected Connection $databaseReplica, protected CommentStatisticsInterface $commentStatistics, protected DateFormatterInterface $dateFormatter, EntityTypeManagerInterface $entityTypeManager) {
     $this->entityTypeManager = $entityTypeManager;
     $this->nodeStorage = $entityTypeManager->getStorage('node');
   }

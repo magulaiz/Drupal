@@ -8,20 +8,6 @@ namespace Drupal\workflows;
 class Transition implements TransitionInterface {
 
   /**
-   * The workflow that this transition is attached to.
-   *
-   * @var \Drupal\workflows\WorkflowTypeInterface
-   */
-  protected $workflow;
-
-  /**
-   * The transition's from state IDs.
-   *
-   * @var string[]
-   */
-  protected $fromStateIds;
-
-  /**
    * Transition constructor.
    *
    * @param \Drupal\workflows\WorkflowTypeInterface $workflow
@@ -30,16 +16,25 @@ class Transition implements TransitionInterface {
    *   The transition's ID.
    * @param string $label
    *   The transition's label.
-   * @param array $from_state_ids
+   * @param string[] $fromStateIds
    *   A list of from state IDs.
    * @param string $toStateId
    *   The to state ID.
    * @param int $weight
    *   (optional) The transition's weight. Defaults to 0.
    */
-  public function __construct(WorkflowTypeInterface $workflow, protected $id, protected $label, array $from_state_ids, protected $toStateId, protected $weight = 0) {
-    $this->workflow = $workflow;
-    $this->fromStateIds = $from_state_ids;
+  public function __construct(
+      protected WorkflowTypeInterface $workflow,
+      protected $id,
+      protected $label,
+      /**
+       * The transition's from state IDs.
+       */
+      protected array $fromStateIds,
+      protected $toStateId,
+      protected $weight = 0
+  )
+  {
   }
 
   /**

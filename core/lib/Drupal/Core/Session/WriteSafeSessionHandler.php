@@ -8,11 +8,6 @@ namespace Drupal\Core\Session;
 class WriteSafeSessionHandler implements \SessionHandlerInterface, WriteSafeSessionHandlerInterface {
 
   /**
-   * @var \SessionHandlerInterface
-   */
-  protected $wrappedSessionHandler;
-
-  /**
    * The read sessions.
    *
    * @var array
@@ -23,13 +18,13 @@ class WriteSafeSessionHandler implements \SessionHandlerInterface, WriteSafeSess
   /**
    * Constructs a new write safe session handler.
    *
-   * @param \SessionHandlerInterface $wrapped_session_handler
+   * @param \SessionHandlerInterface $wrappedSessionHandler
    *   The underlying session handler.
    * @param bool $sessionWritable
    *   Whether or not the session should be initially writable.
    */
-  public function __construct(\SessionHandlerInterface $wrapped_session_handler, protected $sessionWritable = TRUE) {
-    $this->wrappedSessionHandler = $wrapped_session_handler;
+  public function __construct(protected \SessionHandlerInterface $wrappedSessionHandler, protected $sessionWritable = TRUE)
+  {
   }
 
   /**

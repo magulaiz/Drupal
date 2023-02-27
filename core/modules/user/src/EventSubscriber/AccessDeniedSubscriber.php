@@ -22,20 +22,13 @@ use Symfony\Component\HttpKernel\KernelEvents;
 class AccessDeniedSubscriber implements EventSubscriberInterface {
 
   /**
-   * The current user.
-   *
-   * @var \Drupal\Core\Session\AccountInterface
-   */
-  protected $account;
-
-  /**
    * Constructs a new redirect subscriber.
    *
    * @param \Drupal\Core\Session\AccountInterface $account
    *   The current user.
    */
-  public function __construct(AccountInterface $account) {
-    $this->account = $account;
+  public function __construct(protected AccountInterface $account)
+  {
   }
 
   /**

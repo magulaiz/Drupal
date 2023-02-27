@@ -12,13 +12,6 @@ use Drupal\Composer\Plugin\Scaffold\ScaffoldFilePath;
 class ScaffoldResult {
 
   /**
-   * The path to the scaffold file that was processed.
-   *
-   * @var \Drupal\Composer\Plugin\Scaffold\ScaffoldFilePath
-   */
-  protected $destination;
-
-  /**
    * ScaffoldResult constructor.
    *
    * @param \Drupal\Composer\Plugin\Scaffold\ScaffoldFilePath $destination
@@ -26,8 +19,8 @@ class ScaffoldResult {
    * @param bool $managed
    *   (optional) Whether this result is managed. Defaults to FALSE.
    */
-  public function __construct(ScaffoldFilePath $destination, protected $managed = FALSE) {
-    $this->destination = $destination;
+  public function __construct(protected ScaffoldFilePath $destination, protected $managed = FALSE)
+  {
   }
 
   /**

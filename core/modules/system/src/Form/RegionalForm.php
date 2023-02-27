@@ -17,23 +17,15 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class RegionalForm extends ConfigFormBase {
 
   /**
-   * The country manager.
-   *
-   * @var \Drupal\Core\Locale\CountryManagerInterface
-   */
-  protected $countryManager;
-
-  /**
    * Constructs a RegionalForm object.
    *
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   The factory for configuration objects.
-   * @param \Drupal\Core\Locale\CountryManagerInterface $country_manager
+   * @param \Drupal\Core\Locale\CountryManagerInterface $countryManager
    *   The country manager.
    */
-  public function __construct(ConfigFactoryInterface $config_factory, CountryManagerInterface $country_manager) {
+  public function __construct(ConfigFactoryInterface $config_factory, protected CountryManagerInterface $countryManager) {
     parent::__construct($config_factory);
-    $this->countryManager = $country_manager;
   }
 
   /**

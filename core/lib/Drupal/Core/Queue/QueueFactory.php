@@ -21,17 +21,15 @@ class QueueFactory implements ContainerAwareInterface {
   protected $queues = [];
 
   /**
-   * The settings object.
-   *
-   * @var \Drupal\Core\Site\Settings
-   */
-  protected $settings;
-
-  /**
    * Constructs a queue factory.
    */
-  public function __construct(Settings $settings) {
-    $this->settings = $settings;
+  public function __construct(
+      /**
+       * The settings object.
+       */
+      protected Settings $settings
+  )
+  {
   }
 
   /**

@@ -8,20 +8,13 @@ namespace Drupal\book;
 class BookOutline {
 
   /**
-   * The book manager.
-   *
-   * @var \Drupal\book\BookManagerInterface
-   */
-  protected $bookManager;
-
-  /**
    * Constructs a new BookOutline.
    *
-   * @param \Drupal\book\BookManagerInterface $book_manager
+   * @param \Drupal\book\BookManagerInterface $bookManager
    *   The book manager.
    */
-  public function __construct(BookManagerInterface $book_manager) {
-    $this->bookManager = $book_manager;
+  public function __construct(protected BookManagerInterface $bookManager)
+  {
   }
 
   /**

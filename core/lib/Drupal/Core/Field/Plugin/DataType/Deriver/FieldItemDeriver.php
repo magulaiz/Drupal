@@ -19,22 +19,15 @@ class FieldItemDeriver implements ContainerDeriverInterface {
   protected $derivatives = [];
 
   /**
-   * The field type plugin manager.
-   *
-   * @var \Drupal\Core\Field\FieldTypePluginManagerInterface
-   */
-  protected $fieldTypePluginManager;
-
-  /**
    * Constructs a FieldItemDeriver object.
    *
    * @param string $basePluginId
    *   The base plugin ID.
-   * @param \Drupal\Core\Field\FieldTypePluginManagerInterface $field_type_plugin_manager
+   * @param \Drupal\Core\Field\FieldTypePluginManagerInterface $fieldTypePluginManager
    *   The field type plugin manager.
    */
-  public function __construct(protected $basePluginId, FieldTypePluginManagerInterface $field_type_plugin_manager) {
-    $this->fieldTypePluginManager = $field_type_plugin_manager;
+  public function __construct(protected $basePluginId, protected FieldTypePluginManagerInterface $fieldTypePluginManager)
+  {
   }
 
   /**

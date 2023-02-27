@@ -18,32 +18,16 @@ class BookUninstallValidator implements ModuleUninstallValidatorInterface {
   use StringTranslationTrait;
 
   /**
-   * The book outline storage.
-   *
-   * @var \Drupal\book\BookOutlineStorageInterface
-   */
-  protected $bookOutlineStorage;
-
-  /**
-   * The entity type manager.
-   *
-   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
-   */
-  protected $entityTypeManager;
-
-  /**
    * Constructs a new BookUninstallValidator.
    *
-   * @param \Drupal\book\BookOutlineStorageInterface $book_outline_storage
+   * @param \Drupal\book\BookOutlineStorageInterface $bookOutlineStorage
    *   The book outline storage.
-   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
    *   The entity type manager.
    * @param \Drupal\Core\StringTranslation\TranslationInterface $string_translation
    *   The string translation service.
    */
-  public function __construct(BookOutlineStorageInterface $book_outline_storage, EntityTypeManagerInterface $entity_type_manager, TranslationInterface $string_translation) {
-    $this->bookOutlineStorage = $book_outline_storage;
-    $this->entityTypeManager = $entity_type_manager;
+  public function __construct(protected BookOutlineStorageInterface $bookOutlineStorage, protected EntityTypeManagerInterface $entityTypeManager, TranslationInterface $string_translation) {
     $this->stringTranslation = $string_translation;
   }
 

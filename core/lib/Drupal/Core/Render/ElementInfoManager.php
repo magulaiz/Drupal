@@ -31,20 +31,6 @@ class ElementInfoManager extends DefaultPluginManager implements ElementInfoMana
   protected $elementInfo;
 
   /**
-   * The theme manager.
-   *
-   * @var \Drupal\Core\Theme\ThemeManagerInterface
-   */
-  protected $themeManager;
-
-  /**
-   * The cache tag invalidator.
-   *
-   * @var \Drupal\Core\Cache\CacheTagsInvalidatorInterface
-   */
-  protected $cacheTagInvalidator;
-
-  /**
    * Constructs an ElementInfoManager object.
    *
    * @param \Traversable $namespaces
@@ -52,17 +38,15 @@ class ElementInfoManager extends DefaultPluginManager implements ElementInfoMana
    *   keyed by the corresponding namespace to look for plugin implementations.
    * @param \Drupal\Core\Cache\CacheBackendInterface $cache_backend
    *   Cache backend instance to use.
-   * @param \Drupal\Core\Cache\CacheTagsInvalidatorInterface $cache_tag_invalidator
+   * @param \Drupal\Core\Cache\CacheTagsInvalidatorInterface $cacheTagInvalidator
    *   The cache tag invalidator.
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
    *   The module handler to invoke the alter hook with.
-   * @param \Drupal\Core\Theme\ThemeManagerInterface $theme_manager
+   * @param \Drupal\Core\Theme\ThemeManagerInterface $themeManager
    *   The theme manager.
    */
-  public function __construct(\Traversable $namespaces, CacheBackendInterface $cache_backend, CacheTagsInvalidatorInterface $cache_tag_invalidator, ModuleHandlerInterface $module_handler, ThemeManagerInterface $theme_manager) {
+  public function __construct(\Traversable $namespaces, CacheBackendInterface $cache_backend, protected CacheTagsInvalidatorInterface $cacheTagInvalidator, ModuleHandlerInterface $module_handler, protected ThemeManagerInterface $themeManager) {
     $this->setCacheBackend($cache_backend, 'element_info');
-    $this->themeManager = $theme_manager;
-    $this->cacheTagInvalidator = $cache_tag_invalidator;
 
     parent::__construct('Element', $namespaces, $module_handler, 'Drupal\Core\Render\Element\ElementInterface', 'Drupal\Core\Render\Annotation\RenderElement');
     $this->alterInfo('element_plugin');

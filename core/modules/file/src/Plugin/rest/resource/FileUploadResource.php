@@ -74,60 +74,6 @@ class FileUploadResource extends ResourceBase {
   const BYTES_TO_READ = 8192;
 
   /**
-   * The file system service.
-   *
-   * @var \Drupal\Core\File\FileSystem
-   */
-  protected $fileSystem;
-
-  /**
-   * The entity type manager.
-   *
-   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
-   */
-  protected $entityTypeManager;
-
-  /**
-   * The entity field manager.
-   *
-   * @var \Drupal\Core\Entity\EntityFieldManagerInterface
-   */
-  protected $entityFieldManager;
-
-  /**
-   * The currently authenticated user.
-   *
-   * @var \Drupal\Core\Session\AccountInterface
-   */
-  protected $currentUser;
-
-  /**
-   * The token replacement instance.
-   *
-   * @var \Drupal\Core\Utility\Token
-   */
-  protected $token;
-
-  /**
-   * The lock service.
-   *
-   * @var \Drupal\Core\Lock\LockBackendInterface
-   */
-  protected $lock;
-
-  /**
-   * @var \Drupal\Core\Config\ImmutableConfig
-   */
-  protected $systemFileConfig;
-
-  /**
-   * The event dispatcher to dispatch the filename sanitize event.
-   *
-   * @var \Symfony\Contracts\EventDispatcher\EventDispatcherInterface
-   */
-  protected $eventDispatcher;
-
-  /**
    * Constructs a FileUploadResource instance.
    *
    * @param array $configuration
@@ -140,13 +86,13 @@ class FileUploadResource extends ResourceBase {
    *   The available serialization formats.
    * @param \Psr\Log\LoggerInterface $logger
    *   A logger instance.
-   * @param \Drupal\Core\File\FileSystemInterface $file_system
+   * @param \Drupal\Core\File\FileSystemInterface $fileSystem
    *   The file system service.
-   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
    *   The entity type manager.
-   * @param \Drupal\Core\Entity\EntityFieldManagerInterface $entity_field_manager
+   * @param \Drupal\Core\Entity\EntityFieldManagerInterface $entityFieldManager
    *   The entity field manager.
-   * @param \Drupal\Core\Session\AccountInterface $current_user
+   * @param \Drupal\Core\Session\AccountInterface $currentUser
    *   The currently authenticated user.
    * @param \Symfony\Component\Mime\MimeTypeGuesserInterface $mimeTypeGuesser
    *   The MIME type guesser.
@@ -154,21 +100,13 @@ class FileUploadResource extends ResourceBase {
    *   The token replacement instance.
    * @param \Drupal\Core\Lock\LockBackendInterface $lock
    *   The lock service.
-   * @param \Drupal\Core\Config\Config $system_file_config
+   * @param \Drupal\Core\Config\Config $systemFileConfig
    *   The system file configuration.
-   * @param \Symfony\Contracts\EventDispatcher\EventDispatcherInterface $event_dispatcher
+   * @param \Symfony\Contracts\EventDispatcher\EventDispatcherInterface $eventDispatcher
    *   The event dispatcher service.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, $serializer_formats, LoggerInterface $logger, FileSystemInterface $file_system, EntityTypeManagerInterface $entity_type_manager, EntityFieldManagerInterface $entity_field_manager, AccountInterface $current_user, protected $mimeTypeGuesser, Token $token, LockBackendInterface $lock, Config $system_file_config, EventDispatcherInterface $event_dispatcher) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, $serializer_formats, LoggerInterface $logger, protected FileSystemInterface $fileSystem, protected EntityTypeManagerInterface $entityTypeManager, protected EntityFieldManagerInterface $entityFieldManager, protected AccountInterface $currentUser, protected $mimeTypeGuesser, protected Token $token, protected LockBackendInterface $lock, protected Config $systemFileConfig, protected EventDispatcherInterface $eventDispatcher) {
     parent::__construct($configuration, $plugin_id, $plugin_definition, $serializer_formats, $logger);
-    $this->fileSystem = $file_system;
-    $this->entityTypeManager = $entity_type_manager;
-    $this->entityFieldManager = $entity_field_manager;
-    $this->currentUser = $current_user;
-    $this->token = $token;
-    $this->lock = $lock;
-    $this->systemFileConfig = $system_file_config;
-    $this->eventDispatcher = $event_dispatcher;
   }
 
   /**

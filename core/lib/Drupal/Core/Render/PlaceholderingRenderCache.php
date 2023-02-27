@@ -40,13 +40,6 @@ use Symfony\Component\HttpFoundation\RequestStack;
 class PlaceholderingRenderCache extends RenderCache {
 
   /**
-   * The placeholder generator.
-   *
-   * @var \Drupal\Core\Render\PlaceholderGeneratorInterface
-   */
-  protected $placeholderGenerator;
-
-  /**
    * Stores rendered results for automatically placeholdered elements.
    *
    * This allows us to avoid talking to the cache twice per auto-placeholdered
@@ -80,12 +73,11 @@ class PlaceholderingRenderCache extends RenderCache {
    *   The cache factory.
    * @param \Drupal\Core\Cache\Context\CacheContextsManager $cache_contexts_manager
    *   The cache contexts manager.
-   * @param \Drupal\Core\Render\PlaceholderGeneratorInterface $placeholder_generator
+   * @param \Drupal\Core\Render\PlaceholderGeneratorInterface $placeholderGenerator
    *   The placeholder generator.
    */
-  public function __construct(RequestStack $request_stack, CacheFactoryInterface $cache_factory, CacheContextsManager $cache_contexts_manager, PlaceholderGeneratorInterface $placeholder_generator) {
+  public function __construct(RequestStack $request_stack, CacheFactoryInterface $cache_factory, CacheContextsManager $cache_contexts_manager, protected PlaceholderGeneratorInterface $placeholderGenerator) {
     parent::__construct($request_stack, $cache_factory, $cache_contexts_manager);
-    $this->placeholderGenerator = $placeholder_generator;
   }
 
   /**

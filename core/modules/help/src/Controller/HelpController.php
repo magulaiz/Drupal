@@ -17,40 +17,17 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 class HelpController extends ControllerBase {
 
   /**
-   * The current route match.
-   *
-   * @var \Drupal\Core\Routing\RouteMatchInterface
-   */
-  protected $routeMatch;
-
-  /**
-   * The help section plugin manager.
-   *
-   * @var \Drupal\help\HelpSectionManager
-   */
-  protected $helpManager;
-
-  /**
-   * The module extension list.
-   *
-   * @var \Drupal\Core\Extension\ModuleExtensionList
-   */
-  protected $moduleExtensionList;
-
-  /**
    * Creates a new HelpController.
    *
-   * @param \Drupal\Core\Routing\RouteMatchInterface $route_match
+   * @param \Drupal\Core\Routing\RouteMatchInterface $routeMatch
    *   The current route match.
-   * @param \Drupal\help\HelpSectionManager $help_manager
+   * @param \Drupal\help\HelpSectionManager $helpManager
    *   The help section manager.
-   * @param \Drupal\Core\Extension\ModuleExtensionList|null $module_extension_list
+   * @param \Drupal\Core\Extension\ModuleExtensionList|null $moduleExtensionList
    *   The module extension list.
    */
-  public function __construct(RouteMatchInterface $route_match, HelpSectionManager $help_manager, ModuleExtensionList $module_extension_list) {
-    $this->routeMatch = $route_match;
-    $this->helpManager = $help_manager;
-    $this->moduleExtensionList = $module_extension_list;
+  public function __construct(protected RouteMatchInterface $routeMatch, protected HelpSectionManager $helpManager, protected ModuleExtensionList $moduleExtensionList)
+  {
   }
 
   /**

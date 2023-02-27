@@ -27,13 +27,6 @@ class AnnotatedClassDiscovery implements DiscoveryInterface {
   protected $annotationReader;
 
   /**
-   * Additional namespaces to be scanned for annotation classes.
-   *
-   * @var string[]
-   */
-  protected $annotationNamespaces = [];
-
-  /**
    * The file cache object.
    *
    * @var \Drupal\Component\FileCache\FileCacheInterface
@@ -49,17 +42,18 @@ class AnnotatedClassDiscovery implements DiscoveryInterface {
    * @param string $pluginDefinitionAnnotationName
    *   (optional) The name of the annotation that contains the plugin definition.
    *   Defaults to 'Drupal\Component\Annotation\Plugin'.
-   * @param string[] $annotation_namespaces
+   * @param string[] $annotationNamespaces
    *   (optional) Additional namespaces to be scanned for annotation classes.
    */
   public function __construct(/**
    * The namespaces within which to find plugin classes.
    */
-  protected $pluginNamespaces = [], protected $pluginDefinitionAnnotationName = 'Drupal\Component\Annotation\Plugin', array $annotation_namespaces = []) {
-    $this->annotationNamespaces = $annotation_namespaces;
-
+  protected $pluginNamespaces = [], protected $pluginDefinitionAnnotationName = 'Drupal\Component\Annotation\Plugin', /**
+   * Additional namespaces to be scanned for annotation classes.
+   */
+  protected array $annotationNamespaces = []) {
     $file_cache_suffix = str_replace('\\', '_', $pluginDefinitionAnnotationName);
-    $file_cache_suffix .= ':' . Crypt::hashBase64(serialize($annotation_namespaces));
+    $file_cache_suffix .= ':' . Crypt::hashBase64(serialize($annotationNamespaces));
     $this->fileCache = FileCacheFactory::get('annotation_discovery:' . $file_cache_suffix);
   }
 

@@ -13,20 +13,13 @@ use Drupal\Core\Routing\RouteProviderInterface;
 class MockRouteProvider implements RouteProviderInterface {
 
   /**
-   * A collection of routes for this route provider.
-   *
-   * @var \Symfony\Component\Routing\RouteCollection
-   */
-  protected $routes;
-
-  /**
    * Constructs a new MockRouteProvider.
    *
    * @param \Symfony\Component\Routing\RouteCollection $routes
    *   The route collection to use for this provider.
    */
-  public function __construct(RouteCollection $routes) {
-    $this->routes = $routes;
+  public function __construct(protected RouteCollection $routes)
+  {
   }
 
   /**

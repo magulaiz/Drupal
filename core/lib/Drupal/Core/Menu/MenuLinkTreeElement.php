@@ -25,23 +25,6 @@ namespace Drupal\Core\Menu;
 class MenuLinkTreeElement {
 
   /**
-   * The menu link for this element in a menu link tree.
-   *
-   * @var \Drupal\Core\Menu\MenuLinkInterface
-   */
-  public $link;
-
-  /**
-   * The subtree of this element in the menu link tree (this link's children).
-   *
-   * (Children of a link are only loaded if a link is marked as "expanded" by
-   * the query.)
-   *
-   * @var \Drupal\Core\Menu\MenuLinkTreeElement[]
-   */
-  public $subtree;
-
-  /**
    * Whether this link is accessible by the current user.
    *
    * If the value is NULL the access was not determined yet, if an access result
@@ -76,10 +59,20 @@ class MenuLinkTreeElement {
    * @param \Drupal\Core\Menu\MenuLinkTreeElement[] $subtree
    *   The children of this element in the menu link tree.
    */
-  public function __construct(MenuLinkInterface $link, public $hasChildren, public $depth, public $inActiveTrail, array $subtree) {
-    // Essential properties.
-    $this->link = $link;
-    $this->subtree = $subtree;
+  public function __construct(
+      public MenuLinkInterface $link,
+      public $hasChildren,
+      public $depth,
+      public $inActiveTrail,
+      /**
+       * The subtree of this element in the menu link tree (this link's children).
+       *
+       * (Children of a link are only loaded if a link is marked as "expanded" by
+       * the query.)
+       */
+      public array $subtree
+  )
+  {
   }
 
   /**

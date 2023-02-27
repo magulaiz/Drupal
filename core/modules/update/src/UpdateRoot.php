@@ -11,20 +11,6 @@ use Symfony\Component\HttpFoundation\RequestStack;
 class UpdateRoot {
 
   /**
-   * The Drupal kernel.
-   *
-   * @var \Drupal\Core\DrupalKernelInterface
-   */
-  protected $drupalKernel;
-
-  /**
-   * The request stack.
-   *
-   * @var \Symfony\Component\HttpFoundation\RequestStack
-   */
-  protected $requestStack;
-
-  /**
    * The update root.
    *
    * @var string
@@ -34,14 +20,13 @@ class UpdateRoot {
   /**
    * Constructs an UpdateRootFactory instance.
    *
-   * @param \Drupal\Core\DrupalKernelInterface $drupal_kernel
+   * @param \Drupal\Core\DrupalKernelInterface $drupalKernel
    *   The Drupal kernel.
-   * @param \Symfony\Component\HttpFoundation\RequestStack $request_stack
+   * @param \Symfony\Component\HttpFoundation\RequestStack $requestStack
    *   The request stack.
    */
-  public function __construct(DrupalKernelInterface $drupal_kernel, RequestStack $request_stack) {
-    $this->drupalKernel = $drupal_kernel;
-    $this->requestStack = $request_stack;
+  public function __construct(protected DrupalKernelInterface $drupalKernel, protected RequestStack $requestStack)
+  {
   }
 
   /**

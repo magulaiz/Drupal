@@ -28,13 +28,6 @@ class InsertCommand implements CommandInterface, CommandWithAttachedAssetsInterf
   protected $content;
 
   /**
-   * A settings array to be passed to any attached JavaScript behavior.
-   *
-   * @var array
-   */
-  protected $settings;
-
-  /**
    * Constructs an InsertCommand object.
    *
    * @param string $selector
@@ -45,9 +38,8 @@ class InsertCommand implements CommandInterface, CommandWithAttachedAssetsInterf
    * @param array $settings
    *   An array of JavaScript settings to be passed to any attached behaviors.
    */
-  public function __construct(protected $selector, $content, array $settings = NULL) {
+  public function __construct(protected $selector, $content, protected array $settings = NULL) {
     $this->content = $content;
-    $this->settings = $settings;
   }
 
   /**

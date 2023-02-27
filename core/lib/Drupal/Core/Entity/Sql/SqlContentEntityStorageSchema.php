@@ -41,13 +41,6 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
   protected $entityTypeManager;
 
   /**
-   * The entity field manager service.
-   *
-   * @var \Drupal\Core\Entity\EntityFieldManagerInterface
-   */
-  protected $entityFieldManager;
-
-  /**
    * The entity type this schema builder is responsible for.
    *
    * @var \Drupal\Core\Entity\ContentEntityTypeInterface
@@ -114,17 +107,16 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
    *   The storage of the entity type. This must be an SQL-based storage.
    * @param \Drupal\Core\Database\Connection $database
    *   The database connection to be used.
-   * @param \Drupal\Core\Entity\EntityFieldManagerInterface $entity_field_manager
+   * @param \Drupal\Core\Entity\EntityFieldManagerInterface $entityFieldManager
    *   The entity field manager.
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager, ContentEntityTypeInterface $entity_type, SqlContentEntityStorage $storage, Connection $database, EntityFieldManagerInterface $entity_field_manager) {
+  public function __construct(EntityTypeManagerInterface $entity_type_manager, ContentEntityTypeInterface $entity_type, SqlContentEntityStorage $storage, Connection $database, protected EntityFieldManagerInterface $entityFieldManager) {
     $this->entityTypeManager = $entity_type_manager;
     $this->storage = clone $storage;
     $this->database = $database;
-    $this->entityFieldManager = $entity_field_manager;
 
     $this->entityType = $entity_type_manager->getActiveDefinition($entity_type->id());
-    $this->fieldStorageDefinitions = $entity_field_manager->getActiveFieldStorageDefinitions($entity_type->id());
+    $this->fieldStorageDefinitions = $entityFieldManager->getActiveFieldStorageDefinitions($entity_type->id());
   }
 
   /**

@@ -18,20 +18,13 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class FormOperations implements ContainerInjectionInterface {
 
   /**
-   * The workspace manager service.
-   *
-   * @var \Drupal\workspaces\WorkspaceManagerInterface
-   */
-  protected $workspaceManager;
-
-  /**
    * Constructs a new FormOperations instance.
    *
-   * @param \Drupal\workspaces\WorkspaceManagerInterface $workspace_manager
+   * @param \Drupal\workspaces\WorkspaceManagerInterface $workspaceManager
    *   The workspace manager service.
    */
-  public function __construct(WorkspaceManagerInterface $workspace_manager) {
-    $this->workspaceManager = $workspace_manager;
+  public function __construct(protected WorkspaceManagerInterface $workspaceManager)
+  {
   }
 
   /**

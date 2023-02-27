@@ -23,26 +23,17 @@ class ActionListBuilder extends ConfigEntityListBuilder {
   protected $hasConfigurableActions = FALSE;
 
   /**
-   * The action plugin manager.
-   *
-   * @var \Drupal\Core\Action\ActionManager
-   */
-  protected $actionManager;
-
-  /**
    * Constructs a new ActionListBuilder object.
    *
    * @param \Drupal\Core\Entity\EntityTypeInterface $entity_type
    *   The entity type definition.
    * @param \Drupal\Core\Entity\EntityStorageInterface $storage
    *   The action storage.
-   * @param \Drupal\Core\Action\ActionManager $action_manager
+   * @param \Drupal\Core\Action\ActionManager $actionManager
    *   The action plugin manager.
    */
-  public function __construct(EntityTypeInterface $entity_type, EntityStorageInterface $storage, ActionManager $action_manager) {
+  public function __construct(EntityTypeInterface $entity_type, EntityStorageInterface $storage, protected ActionManager $actionManager) {
     parent::__construct($entity_type, $storage);
-
-    $this->actionManager = $action_manager;
   }
 
   /**

@@ -23,13 +23,6 @@ class UpdateProcessor implements UpdateProcessorInterface {
   protected $updateSettings;
 
   /**
-   * The UpdateFetcher service.
-   *
-   * @var \Drupal\update\UpdateFetcherInterface
-   */
-  protected $updateFetcher;
-
-  /**
    * The update fetch queue.
    *
    * @var \Drupal\Core\Queue\QueueInterface
@@ -65,20 +58,6 @@ class UpdateProcessor implements UpdateProcessorInterface {
   protected $failed;
 
   /**
-   * The state service.
-   *
-   * @var \Drupal\Core\State\StateInterface
-   */
-  protected $stateStore;
-
-  /**
-   * The private key.
-   *
-   * @var \Drupal\Core\PrivateKey
-   */
-  protected $privateKey;
-
-  /**
    * The queue for fetching release history data.
    */
   protected array $fetchTasks;
@@ -90,26 +69,23 @@ class UpdateProcessor implements UpdateProcessorInterface {
    *   The config factory.
    * @param \Drupal\Core\Queue\QueueFactory $queue_factory
    *   The queue factory
-   * @param \Drupal\update\UpdateFetcherInterface $update_fetcher
+   * @param \Drupal\update\UpdateFetcherInterface $updateFetcher
    *   The update fetcher service
-   * @param \Drupal\Core\State\StateInterface $state_store
+   * @param \Drupal\Core\State\StateInterface $stateStore
    *   The state service.
-   * @param \Drupal\Core\PrivateKey $private_key
+   * @param \Drupal\Core\PrivateKey $privateKey
    *   The private key factory service.
    * @param \Drupal\Core\KeyValueStore\KeyValueFactoryInterface $key_value_factory
    *   The key/value factory.
    * @param \Drupal\Core\KeyValueStore\KeyValueExpirableFactoryInterface $key_value_expirable_factory
    *   The expirable key/value factory.
    */
-  public function __construct(ConfigFactoryInterface $config_factory, QueueFactory $queue_factory, UpdateFetcherInterface $update_fetcher, StateInterface $state_store, PrivateKey $private_key, KeyValueFactoryInterface $key_value_factory, KeyValueExpirableFactoryInterface $key_value_expirable_factory) {
-    $this->updateFetcher = $update_fetcher;
+  public function __construct(ConfigFactoryInterface $config_factory, QueueFactory $queue_factory, protected UpdateFetcherInterface $updateFetcher, protected StateInterface $stateStore, protected PrivateKey $privateKey, KeyValueFactoryInterface $key_value_factory, KeyValueExpirableFactoryInterface $key_value_expirable_factory) {
     $this->updateSettings = $config_factory->get('update.settings');
     $this->fetchQueue = $queue_factory->get('update_fetch_tasks');
     $this->tempStore = $key_value_expirable_factory->get('update');
     $this->fetchTaskStore = $key_value_factory->get('update_fetch_task');
     $this->availableReleasesTempStore = $key_value_expirable_factory->get('update_available_releases');
-    $this->stateStore = $state_store;
-    $this->privateKey = $private_key;
     $this->fetchTasks = [];
     $this->failed = [];
   }

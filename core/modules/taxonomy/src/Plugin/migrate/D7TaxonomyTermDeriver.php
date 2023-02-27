@@ -19,22 +19,15 @@ class D7TaxonomyTermDeriver extends DeriverBase implements ContainerDeriverInter
   use StringTranslationTrait;
 
   /**
-   * The migration field discovery service.
-   *
-   * @var \Drupal\migrate_drupal\FieldDiscoveryInterface
-   */
-  protected $fieldDiscovery;
-
-  /**
    * D7TaxonomyTermDeriver constructor.
    *
    * @param string $basePluginId
    *   The base plugin ID for the plugin ID.
-   * @param \Drupal\migrate_drupal\FieldDiscoveryInterface $field_discovery
+   * @param \Drupal\migrate_drupal\FieldDiscoveryInterface $fieldDiscovery
    *   The migration field discovery service.
    */
-  public function __construct(protected $basePluginId, FieldDiscoveryInterface $field_discovery) {
-    $this->fieldDiscovery = $field_discovery;
+  public function __construct(protected $basePluginId, protected FieldDiscoveryInterface $fieldDiscovery)
+  {
   }
 
   /**

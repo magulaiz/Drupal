@@ -24,27 +24,6 @@ use Drupal\Core\Entity\EntityStorageInterface;
 class BookNavigationBlock extends BlockBase implements ContainerFactoryPluginInterface {
 
   /**
-   * The current route match.
-   *
-   * @var \Drupal\Core\Routing\RouteMatchInterface
-   */
-  protected $routeMatch;
-
-  /**
-   * The book manager.
-   *
-   * @var \Drupal\book\BookManagerInterface
-   */
-  protected $bookManager;
-
-  /**
-   * The node storage.
-   *
-   * @var \Drupal\Core\Entity\EntityStorageInterface
-   */
-  protected $nodeStorage;
-
-  /**
    * Constructs a new BookNavigationBlock instance.
    *
    * @param array $configuration
@@ -53,19 +32,15 @@ class BookNavigationBlock extends BlockBase implements ContainerFactoryPluginInt
    *   The plugin_id for the plugin instance.
    * @param mixed $plugin_definition
    *   The plugin implementation definition.
-   * @param \Drupal\Core\Routing\RouteMatchInterface $route_match
+   * @param \Drupal\Core\Routing\RouteMatchInterface $routeMatch
    *   The current route match.
-   * @param \Drupal\book\BookManagerInterface $book_manager
+   * @param \Drupal\book\BookManagerInterface $bookManager
    *   The book manager.
-   * @param \Drupal\Core\Entity\EntityStorageInterface $node_storage
+   * @param \Drupal\Core\Entity\EntityStorageInterface $nodeStorage
    *   The node storage.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, RouteMatchInterface $route_match, BookManagerInterface $book_manager, EntityStorageInterface $node_storage) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, protected RouteMatchInterface $routeMatch, protected BookManagerInterface $bookManager, protected EntityStorageInterface $nodeStorage) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
-
-    $this->routeMatch = $route_match;
-    $this->bookManager = $book_manager;
-    $this->nodeStorage = $node_storage;
   }
 
   /**

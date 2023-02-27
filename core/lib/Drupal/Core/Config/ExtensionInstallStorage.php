@@ -13,16 +13,9 @@ use Drupal\Core\Extension\ExtensionDiscovery;
 class ExtensionInstallStorage extends InstallStorage {
 
   /**
-   * The active configuration store.
-   *
-   * @var \Drupal\Core\Config\StorageInterface
-   */
-  protected $configStorage;
-
-  /**
    * Overrides \Drupal\Core\Config\InstallStorage::__construct().
    *
-   * @param \Drupal\Core\Config\StorageInterface $config_storage
+   * @param \Drupal\Core\Config\StorageInterface $configStorage
    *   The active configuration store where the list of enabled modules and
    *   themes is stored.
    * @param string $directory
@@ -35,9 +28,8 @@ class ExtensionInstallStorage extends InstallStorage {
    * @param string $installProfile
    *   The current installation profile.
    */
-  public function __construct(StorageInterface $config_storage, $directory, $collection, protected $includeProfile, protected ?string $installProfile) {
+  public function __construct(protected StorageInterface $configStorage, $directory, $collection, protected $includeProfile, protected ?string $installProfile) {
     parent::__construct($directory, $collection);
-    $this->configStorage = $config_storage;
   }
 
   /**

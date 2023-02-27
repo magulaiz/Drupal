@@ -10,13 +10,6 @@ use Drupal\workflows\StateInterface;
 class ContentModerationState implements StateInterface {
 
   /**
-   * The vanilla state object from the Workflow module.
-   *
-   * @var \Drupal\workflows\StateInterface
-   */
-  protected $state;
-
-  /**
    * ContentModerationState constructor.
    *
    * Decorates state objects to add methods to determine if an entity should be
@@ -31,8 +24,8 @@ class ContentModerationState implements StateInterface {
    *   (optional) TRUE if entities should be the default revision if in this
    *   state, FALSE if not. Defaults to FALSE.
    */
-  public function __construct(StateInterface $state, protected $published = FALSE, protected $defaultRevision = FALSE) {
-    $this->state = $state;
+  public function __construct(protected StateInterface $state, protected $published = FALSE, protected $defaultRevision = FALSE)
+  {
   }
 
   /**

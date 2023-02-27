@@ -21,40 +21,17 @@ class EntitySchemaSubscriber implements EntityTypeListenerInterface, EventSubscr
   use StringTranslationTrait;
 
   /**
-   * The definition update manager.
-   *
-   * @var \Drupal\Core\Entity\EntityDefinitionUpdateManagerInterface
-   */
-  protected $entityDefinitionUpdateManager;
-
-  /**
-   * The last installed schema definitions.
-   *
-   * @var \Drupal\Core\Entity\EntityLastInstalledSchemaRepositoryInterface
-   */
-  protected $entityLastInstalledSchemaRepository;
-
-  /**
-   * The workspace manager.
-   *
-   * @var \Drupal\workspaces\WorkspaceManagerInterface
-   */
-  protected $workspaceManager;
-
-  /**
    * Constructs a new EntitySchemaSubscriber.
    *
    * @param \Drupal\Core\Entity\EntityDefinitionUpdateManagerInterface $entityDefinitionUpdateManager
    *   Definition update manager.
    * @param \Drupal\Core\Entity\EntityLastInstalledSchemaRepositoryInterface $entityLastInstalledSchemaRepository
    *   Last definitions.
-   * @param \Drupal\workspaces\WorkspaceManagerInterface $workspace_manager
+   * @param \Drupal\workspaces\WorkspaceManagerInterface $workspaceManager
    *   The workspace manager.
    */
-  public function __construct(EntityDefinitionUpdateManagerInterface $entityDefinitionUpdateManager, EntityLastInstalledSchemaRepositoryInterface $entityLastInstalledSchemaRepository, WorkspaceManagerInterface $workspace_manager) {
-    $this->entityDefinitionUpdateManager = $entityDefinitionUpdateManager;
-    $this->entityLastInstalledSchemaRepository = $entityLastInstalledSchemaRepository;
-    $this->workspaceManager = $workspace_manager;
+  public function __construct(protected EntityDefinitionUpdateManagerInterface $entityDefinitionUpdateManager, protected EntityLastInstalledSchemaRepositoryInterface $entityLastInstalledSchemaRepository, protected WorkspaceManagerInterface $workspaceManager)
+  {
   }
 
   /**

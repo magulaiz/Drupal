@@ -16,27 +16,13 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 abstract class FormatterBase extends PluginSettingsBase implements FormatterInterface, ContainerFactoryPluginInterface {
 
   /**
-   * The field definition.
-   *
-   * @var \Drupal\Core\Field\FieldDefinitionInterface
-   */
-  protected $fieldDefinition;
-
-  /**
-   * The formatter settings.
-   *
-   * @var array
-   */
-  protected $settings;
-
-  /**
    * Constructs a FormatterBase object.
    *
    * @param string $plugin_id
    *   The plugin_id for the formatter.
    * @param mixed $plugin_definition
    *   The plugin implementation definition.
-   * @param \Drupal\Core\Field\FieldDefinitionInterface $field_definition
+   * @param \Drupal\Core\Field\FieldDefinitionInterface $fieldDefinition
    *   The definition of the field to which the formatter is associated.
    * @param array $settings
    *   The formatter settings.
@@ -47,11 +33,8 @@ abstract class FormatterBase extends PluginSettingsBase implements FormatterInte
    * @param array $third_party_settings
    *   Any third party settings.
    */
-  public function __construct($plugin_id, $plugin_definition, FieldDefinitionInterface $field_definition, array $settings, protected $label, protected $viewMode, array $third_party_settings) {
+  public function __construct($plugin_id, $plugin_definition, protected FieldDefinitionInterface $fieldDefinition, protected array $settings, protected $label, protected $viewMode, array $third_party_settings) {
     parent::__construct([], $plugin_id, $plugin_definition);
-
-    $this->fieldDefinition = $field_definition;
-    $this->settings = $settings;
     $this->thirdPartySettings = $third_party_settings;
   }
 

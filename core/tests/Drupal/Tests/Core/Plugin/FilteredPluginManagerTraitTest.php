@@ -83,19 +83,13 @@ class TestFilteredPluginManager extends PluginManagerBase implements FilteredPlu
 
   use FilteredPluginManagerTrait;
 
-  protected $definitions = [];
-
   protected $moduleHandler;
 
   protected $themeManager;
 
-  protected $contextHandler;
-
-  public function __construct(array $definitions, ModuleHandlerInterface $module_handler, ThemeManagerInterface $theme_manager, ContextHandlerInterface $context_handler) {
-    $this->definitions = $definitions;
+  public function __construct(protected array $definitions, ModuleHandlerInterface $module_handler, ThemeManagerInterface $theme_manager, protected ContextHandlerInterface $contextHandler) {
     $this->moduleHandler = $module_handler;
     $this->themeManager = $theme_manager;
-    $this->contextHandler = $context_handler;
   }
 
   protected function contextHandler() {

@@ -16,30 +16,15 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class MachineNameController implements ContainerInjectionInterface {
 
   /**
-   * The transliteration helper.
-   *
-   * @var \Drupal\Component\Transliteration\TransliterationInterface
-   */
-  protected $transliteration;
-
-  /**
-   * The token generator.
-   *
-   * @var \Drupal\Core\Access\CsrfTokenGenerator
-   */
-  protected $tokenGenerator;
-
-  /**
    * Constructs a MachineNameController object.
    *
    * @param \Drupal\Component\Transliteration\TransliterationInterface $transliteration
    *   The transliteration helper.
-   * @param \Drupal\Core\Access\CsrfTokenGenerator $token_generator
+   * @param \Drupal\Core\Access\CsrfTokenGenerator $tokenGenerator
    *   The token generator.
    */
-  public function __construct(TransliterationInterface $transliteration, CsrfTokenGenerator $token_generator) {
-    $this->transliteration = $transliteration;
-    $this->tokenGenerator = $token_generator;
+  public function __construct(protected TransliterationInterface $transliteration, protected CsrfTokenGenerator $tokenGenerator)
+  {
   }
 
   /**

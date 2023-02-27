@@ -35,34 +35,21 @@ class UpdateRegistry implements EventSubscriberInterface {
   protected $logFilename;
 
   /**
-   * @var string[]
-   */
-  protected $enabledExtensions;
-
-  /**
-   * The key value storage.
-   *
-   * @var \Drupal\Core\KeyValueStore\KeyValueStoreInterface
-   */
-  protected $keyValue;
-
-  /**
    * Constructs a new UpdateRegistry.
    *
    * @param string $root
    *   The app root.
    * @param string $sitePath
    *   The site path.
-   * @param string[] $enabled_extensions
+   * @param string[] $enabledExtensions
    *   A list of enabled extensions.
-   * @param \Drupal\Core\KeyValueStore\KeyValueStoreInterface $key_value
+   * @param \Drupal\Core\KeyValueStore\KeyValueStoreInterface $keyValue
    *   The key value store.
    * @param bool|null $includeTests
    *   (optional) A flag whether to include tests in the scanning of extensions.
    */
-  public function __construct(protected $root, protected $sitePath, array $enabled_extensions, KeyValueStoreInterface $key_value, protected ?bool $includeTests = NULL) {
-    $this->enabledExtensions = $enabled_extensions;
-    $this->keyValue = $key_value;
+  public function __construct(protected $root, protected $sitePath, protected array $enabledExtensions, protected KeyValueStoreInterface $keyValue, protected ?bool $includeTests = NULL)
+  {
   }
 
   /**

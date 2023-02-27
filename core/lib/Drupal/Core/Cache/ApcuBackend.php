@@ -19,24 +19,16 @@ class ApcuBackend implements CacheBackendInterface {
   protected $binPrefix;
 
   /**
-   * The cache tags checksum provider.
-   *
-   * @var \Drupal\Core\Cache\CacheTagsChecksumInterface
-   */
-  protected $checksumProvider;
-
-  /**
    * Constructs a new ApcuBackend instance.
    *
    * @param string $bin
    *   The name of the cache bin.
    * @param string $sitePrefix
    *   The prefix to use for all keys in the storage that belong to this site.
-   * @param \Drupal\Core\Cache\CacheTagsChecksumInterface $checksum_provider
+   * @param \Drupal\Core\Cache\CacheTagsChecksumInterface $checksumProvider
    *   The cache tags checksum provider.
    */
-  public function __construct(protected $bin, protected $sitePrefix, CacheTagsChecksumInterface $checksum_provider) {
-    $this->checksumProvider = $checksum_provider;
+  public function __construct(protected $bin, protected $sitePrefix, protected CacheTagsChecksumInterface $checksumProvider) {
     $this->binPrefix = $this->sitePrefix . '::' . $this->bin . '::';
   }
 

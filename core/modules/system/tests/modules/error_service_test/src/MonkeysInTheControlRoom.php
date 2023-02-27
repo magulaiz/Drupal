@@ -15,18 +15,6 @@ use Symfony\Component\HttpKernel\HttpKernelInterface;
 class MonkeysInTheControlRoom implements HttpKernelInterface {
 
   /**
-   * The app kernel.
-   *
-   * @var \Symfony\Component\HttpKernel\HttpKernelInterface
-   */
-  protected $app;
-
-  /**
-   * The settings.
-   */
-  protected Settings $settings;
-
-  /**
    * MonkeysInTheControlRoom constructor.
    *
    * @param \Symfony\Component\HttpKernel\HttpKernelInterface $app
@@ -34,9 +22,14 @@ class MonkeysInTheControlRoom implements HttpKernelInterface {
    * @param \Drupal\Core\Site\Settings $settings
    *   The settings object.
    */
-  public function __construct(HttpKernelInterface $app, Settings $settings) {
-    $this->app = $app;
-    $this->settings = $settings;
+  public function __construct(
+      protected HttpKernelInterface $app,
+      /**
+       * The settings.
+       */
+      protected Settings $settings
+  )
+  {
   }
 
   /**

@@ -24,13 +24,6 @@ namespace Drupal\Core\Database;
 class Transaction {
 
   /**
-   * The connection object for this transaction.
-   *
-   * @var \Drupal\Core\Database\Connection
-   */
-  protected $connection;
-
-  /**
    * A boolean value to indicate whether this transaction has been rolled back.
    *
    * @var bool
@@ -47,8 +40,10 @@ class Transaction {
    */
   protected $name;
 
-  public function __construct(Connection $connection, $name = NULL) {
-    $this->connection = $connection;
+  public function __construct(/**
+   * The connection object for this transaction.
+   */
+  protected Connection $connection, $name = NULL) {
     // If there is no transaction depth, then no transaction has started. Name
     // the transaction 'drupal_transaction'.
     if (!$depth = $connection->transactionDepth()) {

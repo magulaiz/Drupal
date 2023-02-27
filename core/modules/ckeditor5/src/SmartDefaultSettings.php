@@ -32,16 +32,9 @@ final class SmartDefaultSettings {
   use StringTranslationTrait;
 
   /**
-   * The CKEditor 5 plugin manager.
-   *
-   * @var \Drupal\ckeditor5\Plugin\CKEditor5PluginManagerInterface
-   */
-  protected $pluginManager;
-
-  /**
    * Constructs a SmartDefaultSettings object.
    *
-   * @param \Drupal\ckeditor5\Plugin\CKEditor5PluginManagerInterface $plugin_manager
+   * @param \Drupal\ckeditor5\Plugin\CKEditor5PluginManagerInterface $pluginManager
    *   The CKEditor 5 plugin manager.
    * @param \Drupal\Component\Plugin\PluginManagerInterface $upgradePluginManager
    *   The CKEditor 4 to 5 upgrade plugin manager.
@@ -52,8 +45,8 @@ final class SmartDefaultSettings {
    * @param \Drupal\Core\Session\AccountInterface $currentUser
    *   The current user.
    */
-  public function __construct(CKEditor5PluginManagerInterface $plugin_manager, protected PluginManagerInterface $upgradePluginManager, protected LoggerInterface $logger, protected ModuleHandlerInterface $moduleHandler, protected AccountInterface $currentUser) {
-    $this->pluginManager = $plugin_manager;
+  public function __construct(protected CKEditor5PluginManagerInterface $pluginManager, protected PluginManagerInterface $upgradePluginManager, protected LoggerInterface $logger, protected ModuleHandlerInterface $moduleHandler, protected AccountInterface $currentUser)
+  {
   }
 
   /**

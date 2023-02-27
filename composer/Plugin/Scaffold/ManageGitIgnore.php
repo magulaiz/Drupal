@@ -12,13 +12,6 @@ use Composer\IO\IOInterface;
 class ManageGitIgnore {
 
   /**
-   * Composer's I/O service.
-   *
-   * @var \Composer\IO\IOInterface
-   */
-  protected $io;
-
-  /**
    * ManageGitIgnore constructor.
    *
    * @param \Composer\IO\IOInterface $io
@@ -26,8 +19,8 @@ class ManageGitIgnore {
    * @param string $dir
    *   The directory where the project is located.
    */
-  public function __construct(IOInterface $io, protected $dir) {
-    $this->io = $io;
+  public function __construct(protected IOInterface $io, protected $dir)
+  {
   }
 
   /**

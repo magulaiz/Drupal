@@ -50,13 +50,6 @@ class DefaultPluginManager extends PluginManagerBase implements PluginManagerInt
   protected $alterHook;
 
   /**
-   * The module handler to invoke the alter hook.
-   *
-   * @var \Drupal\Core\Extension\ModuleHandlerInterface
-   */
-  protected $moduleHandler;
-
-  /**
    * A set of defaults to be referenced by $this->processDefinition().
    *
    * Allows for additional processing of plugins when necessary or helpful for
@@ -67,26 +60,6 @@ class DefaultPluginManager extends PluginManagerBase implements PluginManagerInt
   protected $defaults = [];
 
   /**
-   * An object of root paths that are traversable.
-   *
-   * The root paths are keyed by the corresponding namespace to look for plugin
-   * implementations.
-   *
-   * @var \Traversable
-   */
-  protected $namespaces;
-
-  /**
-   * Additional annotation namespaces.
-   *
-   * The annotation discovery mechanism should scan these for annotation
-   * definitions.
-   *
-   * @var string[]
-   */
-  protected $additionalAnnotationNamespaces = [];
-
-  /**
    * Creates the discovery object.
    *
    * @param string|bool $subdir
@@ -94,20 +67,31 @@ class DefaultPluginManager extends PluginManagerBase implements PluginManagerInt
    * @param \Traversable $namespaces
    *   An object that implements \Traversable which contains the root paths
    *   keyed by the corresponding namespace to look for plugin implementations.
-   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
+   * @param \Drupal\Core\Extension\ModuleHandlerInterface $moduleHandler
    *   The module handler.
    * @param string|null $pluginInterface
    *   (optional) The interface each plugin should implement.
    * @param string $pluginDefinitionAnnotationName
    *   (optional) The name of the annotation that contains the plugin definition.
    *   Defaults to 'Drupal\Component\Annotation\Plugin'.
-   * @param string[] $additional_annotation_namespaces
+   * @param string[] $additionalAnnotationNamespaces
    *   (optional) Additional namespaces to scan for annotation definitions.
    */
-  public function __construct(protected $subdir, \Traversable $namespaces, ModuleHandlerInterface $module_handler, protected ?string $pluginInterface = NULL, protected $pluginDefinitionAnnotationName = 'Drupal\Component\Annotation\Plugin', array $additional_annotation_namespaces = []) {
-    $this->namespaces = $namespaces;
-    $this->moduleHandler = $module_handler;
-    $this->additionalAnnotationNamespaces = $additional_annotation_namespaces;
+  public function __construct(
+      protected $subdir,
+      protected \Traversable $namespaces,
+      protected ModuleHandlerInterface $moduleHandler,
+      protected ?string $pluginInterface = NULL,
+      protected $pluginDefinitionAnnotationName = 'Drupal\Component\Annotation\Plugin',
+      /**
+       * Additional annotation namespaces.
+       *
+       * The annotation discovery mechanism should scan these for annotation
+       * definitions.
+       */
+      protected array $additionalAnnotationNamespaces = []
+  )
+  {
   }
 
   /**

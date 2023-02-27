@@ -11,30 +11,15 @@ use Drupal\Core\State\StateInterface;
 class CssCollectionRenderer implements AssetCollectionRendererInterface {
 
   /**
-   * The state key/value store.
-   *
-   * @var \Drupal\Core\State\StateInterface
-   */
-  protected $state;
-
-  /**
-   * The file URL generator.
-   *
-   * @var \Drupal\Core\File\FileUrlGeneratorInterface
-   */
-  protected $fileUrlGenerator;
-
-  /**
    * Constructs a CssCollectionRenderer.
    *
    * @param \Drupal\Core\State\StateInterface $state
    *   The state key/value store.
-   * @param \Drupal\Core\File\FileUrlGeneratorInterface $file_url_generator
+   * @param \Drupal\Core\File\FileUrlGeneratorInterface $fileUrlGenerator
    *   The file URL generator.
    */
-  public function __construct(StateInterface $state, FileUrlGeneratorInterface $file_url_generator) {
-    $this->state = $state;
-    $this->fileUrlGenerator = $file_url_generator;
+  public function __construct(protected StateInterface $state, protected FileUrlGeneratorInterface $fileUrlGenerator)
+  {
   }
 
   /**

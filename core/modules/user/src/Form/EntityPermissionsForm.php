@@ -25,20 +25,6 @@ use Symfony\Component\Routing\Route;
 class EntityPermissionsForm extends UserPermissionsForm {
 
   /**
-   * The configuration entity manager.
-   *
-   * @var \Drupal\Core\Config\ConfigManagerInterface
-   */
-  protected $configManager;
-
-  /**
-   * The entity type manager service.
-   *
-   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
-   */
-  protected $entityTypeManager;
-
-  /**
    * The bundle object.
    *
    * @var \Drupal\Core\Entity\EntityInterface
@@ -54,15 +40,13 @@ class EntityPermissionsForm extends UserPermissionsForm {
    *   The role storage.
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
    *   The module handler.
-   * @param \Drupal\Core\Config\ConfigManagerInterface $config_manager
+   * @param \Drupal\Core\Config\ConfigManagerInterface $configManager
    *   The configuration entity manager.
-   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
    *   The entity type manager service.
    */
-  public function __construct(PermissionHandlerInterface $permission_handler, RoleStorageInterface $role_storage, ModuleHandlerInterface $module_handler, ConfigManagerInterface $config_manager, EntityTypeManagerInterface $entity_type_manager) {
+  public function __construct(PermissionHandlerInterface $permission_handler, RoleStorageInterface $role_storage, ModuleHandlerInterface $module_handler, protected ConfigManagerInterface $configManager, protected EntityTypeManagerInterface $entityTypeManager) {
     parent::__construct($permission_handler, $role_storage, $module_handler);
-    $this->configManager = $config_manager;
-    $this->entityTypeManager = $entity_type_manager;
   }
 
   /**

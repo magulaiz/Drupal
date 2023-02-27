@@ -26,20 +26,13 @@ class BookNavigationCacheContext implements CacheContextInterface, ContainerAwar
   use ContainerAwareTrait;
 
   /**
-   * The current route match.
-   *
-   * @var \Drupal\Core\Routing\RouteMatchInterface
-   */
-  protected $routeMatch;
-
-  /**
    * Constructs a new BookNavigationCacheContext service.
    *
-   * @param \Drupal\Core\Routing\RouteMatchInterface $route_match
+   * @param \Drupal\Core\Routing\RouteMatchInterface $routeMatch
    *   The current route match.
    */
-  public function __construct(RouteMatchInterface $route_match) {
-    $this->routeMatch = $route_match;
+  public function __construct(protected RouteMatchInterface $routeMatch)
+  {
   }
 
   /**

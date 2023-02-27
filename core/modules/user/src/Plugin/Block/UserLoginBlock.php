@@ -28,13 +28,6 @@ class UserLoginBlock extends BlockBase implements ContainerFactoryPluginInterfac
   use RedirectDestinationTrait;
 
   /**
-   * The route match.
-   *
-   * @var \Drupal\Core\Routing\RouteMatchInterface
-   */
-  protected $routeMatch;
-
-  /**
    * Constructs a new UserLoginBlock instance.
    *
    * @param array $configuration
@@ -46,13 +39,11 @@ class UserLoginBlock extends BlockBase implements ContainerFactoryPluginInterfac
    *   The plugin_id for the plugin instance.
    * @param mixed $plugin_definition
    *   The plugin implementation definition.
-   * @param \Drupal\Core\Routing\RouteMatchInterface $route_match
+   * @param \Drupal\Core\Routing\RouteMatchInterface $routeMatch
    *   The route match.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, RouteMatchInterface $route_match) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, protected RouteMatchInterface $routeMatch) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
-
-    $this->routeMatch = $route_match;
   }
 
   /**

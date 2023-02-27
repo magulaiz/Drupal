@@ -18,13 +18,6 @@ class Link implements RenderableInterface {
   protected $linkGenerator;
 
   /**
-   * The URL of the link.
-   *
-   * @var \Drupal\Core\Url
-   */
-  protected $url;
-
-  /**
    * Constructs a new Link object.
    *
    * @param string|array|\Drupal\Component\Render\MarkupInterface $text
@@ -36,8 +29,8 @@ class Link implements RenderableInterface {
    * @param \Drupal\Core\Url $url
    *   The \Drupal\Core\Url object.
    */
-  public function __construct(protected $text, Url $url) {
-    $this->url = $url;
+  public function __construct(protected $text, protected Url $url)
+  {
   }
 
   /**

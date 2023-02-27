@@ -35,34 +35,6 @@ class EntityController implements ContainerInjectionInterface {
   use StringTranslationTrait;
 
   /**
-   * The entity type manager.
-   *
-   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
-   */
-  protected $entityTypeManager;
-
-  /**
-   * The entity type bundle info.
-   *
-   * @var \Drupal\Core\Entity\EntityTypeBundleInfoInterface
-   */
-  protected $entityTypeBundleInfo;
-
-  /**
-   * The entity repository.
-   *
-   * @var \Drupal\Core\Entity\EntityRepositoryInterface
-   */
-  protected $entityRepository;
-
-  /**
-   * The renderer.
-   *
-   * @var \Drupal\Core\Render\RendererInterface
-   */
-  protected $renderer;
-
-  /**
    * The route match.
    */
   protected RouteMatchInterface $routeMatch;
@@ -70,11 +42,11 @@ class EntityController implements ContainerInjectionInterface {
   /**
    * Constructs a new EntityController.
    *
-   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
    *   The entity type manager.
-   * @param \Drupal\Core\Entity\EntityTypeBundleInfoInterface $entity_type_bundle_info
+   * @param \Drupal\Core\Entity\EntityTypeBundleInfoInterface $entityTypeBundleInfo
    *   The entity type bundle info.
-   * @param \Drupal\Core\Entity\EntityRepositoryInterface $entity_repository
+   * @param \Drupal\Core\Entity\EntityRepositoryInterface $entityRepository
    *   The entity repository.
    * @param \Drupal\Core\Render\RendererInterface $renderer
    *   The renderer.
@@ -85,14 +57,10 @@ class EntityController implements ContainerInjectionInterface {
    * @param \Drupal\Core\Routing\RouteMatchInterface $route_match
    *   The route match.
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager, EntityTypeBundleInfoInterface $entity_type_bundle_info, EntityRepositoryInterface $entity_repository, RendererInterface $renderer, TranslationInterface $string_translation, /**
+  public function __construct(protected EntityTypeManagerInterface $entityTypeManager, protected EntityTypeBundleInfoInterface $entityTypeBundleInfo, protected EntityRepositoryInterface $entityRepository, protected RendererInterface $renderer, TranslationInterface $string_translation, /**
    * The url generator.
    */
   protected UrlGeneratorInterface $urlGenerator, RouteMatchInterface $route_match = NULL) {
-    $this->entityTypeManager = $entity_type_manager;
-    $this->entityTypeBundleInfo = $entity_type_bundle_info;
-    $this->entityRepository = $entity_repository;
-    $this->renderer = $renderer;
     $this->stringTranslation = $string_translation;
     if ($route_match === NULL) {
       @trigger_error('Calling ' . __METHOD__ . '() without the $route_match argument is deprecated in drupal:10.1.0 and it will be required in drupal:11.0.0. See https://www.drupal.org/node/3337782', E_USER_DEPRECATED);

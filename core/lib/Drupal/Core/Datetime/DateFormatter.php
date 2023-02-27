@@ -32,27 +32,6 @@ class DateFormatter implements DateFormatterInterface {
    */
   protected $dateFormatStorage;
 
-  /**
-   * Language manager for retrieving the default langcode when none is specified.
-   *
-   * @var \Drupal\Core\Language\LanguageManagerInterface
-   */
-  protected $languageManager;
-
-  /**
-   * The configuration factory.
-   *
-   * @var \Drupal\Core\Config\ConfigFactoryInterface
-   */
-  protected $configFactory;
-
-  /**
-   * The request stack.
-   *
-   * @var \Symfony\Component\HttpFoundation\RequestStack
-   */
-  protected $requestStack;
-
   protected $country = NULL;
   protected $dateFormats = [];
 
@@ -80,21 +59,18 @@ class DateFormatter implements DateFormatterInterface {
    *
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    *   The entity type manager service.
-   * @param \Drupal\Core\Language\LanguageManagerInterface $language_manager
+   * @param \Drupal\Core\Language\LanguageManagerInterface $languageManager
    *   The language manager.
    * @param \Drupal\Core\StringTranslation\TranslationInterface $translation
    *   The string translation.
-   * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
+   * @param \Drupal\Core\Config\ConfigFactoryInterface $configFactory
    *   The configuration factory.
-   * @param \Symfony\Component\HttpFoundation\RequestStack $request_stack
+   * @param \Symfony\Component\HttpFoundation\RequestStack $requestStack
    *   The request stack.
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager, LanguageManagerInterface $language_manager, TranslationInterface $translation, ConfigFactoryInterface $config_factory, RequestStack $request_stack) {
+  public function __construct(EntityTypeManagerInterface $entity_type_manager, protected LanguageManagerInterface $languageManager, TranslationInterface $translation, protected ConfigFactoryInterface $configFactory, protected RequestStack $requestStack) {
     $this->dateFormatStorage = $entity_type_manager->getStorage('date_format');
-    $this->languageManager = $language_manager;
     $this->stringTranslation = $translation;
-    $this->configFactory = $config_factory;
-    $this->requestStack = $request_stack;
   }
 
   /**

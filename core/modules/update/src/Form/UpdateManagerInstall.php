@@ -20,34 +20,19 @@ use Symfony\Component\HttpFoundation\Response;
 class UpdateManagerInstall extends FormBase {
 
   /**
-   * The module handler.
-   *
-   * @var \Drupal\Core\Extension\ModuleHandlerInterface
-   */
-  protected $moduleHandler;
-
-  /**
-   * The archiver plugin manager service.
-   *
-   * @var \Drupal\Core\Archiver\ArchiverManager
-   */
-  protected $archiverManager;
-
-  /**
    * Constructs a new UpdateManagerInstall.
    *
    * @param string $root
    *   The root location under which installed projects will be saved.
-   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
+   * @param \Drupal\Core\Extension\ModuleHandlerInterface $moduleHandler
    *   The module handler.
    * @param string $sitePath
    *   The site path.
-   * @param \Drupal\Core\Archiver\ArchiverManager $archiver_manager
+   * @param \Drupal\Core\Archiver\ArchiverManager $archiverManager
    *   The archiver plugin manager service.
    */
-  public function __construct(protected $root, ModuleHandlerInterface $module_handler, protected $sitePath, ArchiverManager $archiver_manager) {
-    $this->moduleHandler = $module_handler;
-    $this->archiverManager = $archiver_manager;
+  public function __construct(protected $root, protected ModuleHandlerInterface $moduleHandler, protected $sitePath, protected ArchiverManager $archiverManager)
+  {
   }
 
   /**

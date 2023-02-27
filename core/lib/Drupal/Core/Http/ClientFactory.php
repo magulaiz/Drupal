@@ -13,20 +13,13 @@ use GuzzleHttp\HandlerStack;
 class ClientFactory {
 
   /**
-   * The handler stack.
-   *
-   * @var \GuzzleHttp\HandlerStack
-   */
-  protected $stack;
-
-  /**
    * Constructs a new ClientFactory instance.
    *
    * @param \GuzzleHttp\HandlerStack $stack
    *   The handler stack.
    */
-  public function __construct(HandlerStack $stack) {
-    $this->stack = $stack;
+  public function __construct(protected HandlerStack $stack)
+  {
   }
 
   /**

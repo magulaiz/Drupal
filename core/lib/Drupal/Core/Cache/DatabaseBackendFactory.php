@@ -8,20 +8,6 @@ use Drupal\Core\Site\Settings;
 class DatabaseBackendFactory implements CacheFactoryInterface {
 
   /**
-   * The database connection.
-   *
-   * @var \Drupal\Core\Database\Connection
-   */
-  protected $connection;
-
-  /**
-   * The cache tags checksum provider.
-   *
-   * @var \Drupal\Core\Cache\CacheTagsChecksumInterface
-   */
-  protected $checksumProvider;
-
-  /**
    * The site settings.
    *
    * @var \Drupal\Core\Site\Settings
@@ -33,16 +19,14 @@ class DatabaseBackendFactory implements CacheFactoryInterface {
    *
    * @param \Drupal\Core\Database\Connection $connection
    *   Database connection
-   * @param \Drupal\Core\Cache\CacheTagsChecksumInterface $checksum_provider
+   * @param \Drupal\Core\Cache\CacheTagsChecksumInterface $checksumProvider
    *   The cache tags checksum provider.
    * @param \Drupal\Core\Site\Settings $settings
    *   (optional) The site settings.
    *
    * @throws \BadMethodCallException
    */
-  public function __construct(Connection $connection, CacheTagsChecksumInterface $checksum_provider, Settings $settings = NULL) {
-    $this->connection = $connection;
-    $this->checksumProvider = $checksum_provider;
+  public function __construct(protected Connection $connection, protected CacheTagsChecksumInterface $checksumProvider, Settings $settings = NULL) {
     $this->settings = $settings ?: Settings::getInstance();
   }
 

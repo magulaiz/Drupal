@@ -15,20 +15,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class FileTestSaveUploadFromForm extends FormBase {
 
   /**
-   * Stores the state storage service.
-   *
-   * @var \Drupal\Core\State\StateInterface
-   */
-  protected $state;
-
-  /**
-   * The messenger.
-   *
-   * @var \Drupal\Core\Messenger\MessengerInterface
-   */
-  protected $messenger;
-
-  /**
    * Constructs a FileTestSaveUploadFromForm object.
    *
    * @param \Drupal\Core\State\StateInterface $state
@@ -36,9 +22,8 @@ class FileTestSaveUploadFromForm extends FormBase {
    * @param \Drupal\Core\Messenger\MessengerInterface $messenger
    *   The messenger.
    */
-  public function __construct(StateInterface $state, MessengerInterface $messenger) {
-    $this->state = $state;
-    $this->messenger = $messenger;
+  public function __construct(protected StateInterface $state, protected MessengerInterface $messenger)
+  {
   }
 
   /**

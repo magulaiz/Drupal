@@ -20,77 +20,29 @@ class WorkspacePublisher implements WorkspacePublisherInterface {
   use StringTranslationTrait;
 
   /**
-   * The source workspace entity.
-   *
-   * @var \Drupal\workspaces\WorkspaceInterface
-   */
-  protected $sourceWorkspace;
-
-  /**
-   * The entity type manager.
-   *
-   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
-   */
-  protected $entityTypeManager;
-
-  /**
-   * The database connection.
-   *
-   * @var \Drupal\Core\Database\Connection
-   */
-  protected $database;
-
-  /**
-   * The workspace manager.
-   *
-   * @var \Drupal\workspaces\WorkspaceManagerInterface
-   */
-  protected $workspaceManager;
-
-  /**
-   * The workspace association service.
-   *
-   * @var \Drupal\workspaces\WorkspaceAssociationInterface
-   */
-  protected $workspaceAssociation;
-
-  /**
-   * The event dispatcher.
-   *
-   * @var \Symfony\Contracts\EventDispatcher\EventDispatcherInterface
-   */
-  protected $eventDispatcher;
-
-  /**
    * Constructs a new WorkspacePublisher.
    *
-   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
    *   The entity type manager.
    * @param \Drupal\Core\Database\Connection $database
    *   Database connection.
-   * @param \Drupal\workspaces\WorkspaceManagerInterface $workspace_manager
+   * @param \Drupal\workspaces\WorkspaceManagerInterface $workspaceManager
    *   The workspace manager.
-   * @param \Drupal\workspaces\WorkspaceAssociationInterface $workspace_association
+   * @param \Drupal\workspaces\WorkspaceAssociationInterface $workspaceAssociation
    *   The workspace association service.
-   * @param \Symfony\Contracts\EventDispatcher\EventDispatcherInterface $event_dispatcher
+   * @param \Symfony\Contracts\EventDispatcher\EventDispatcherInterface $eventDispatcher
    *   The event dispatcher.
-   * @param \Drupal\workspaces\WorkspaceInterface $source
+   * @param \Drupal\workspaces\WorkspaceInterface $sourceWorkspace
    *   The source workspace entity.
    * @param \Psr\Log\LoggerInterface|null $logger
    *   The logger.
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager, Connection $database, WorkspaceManagerInterface $workspace_manager, WorkspaceAssociationInterface $workspace_association, $event_dispatcher, WorkspaceInterface $source = NULL, protected ?LoggerInterface $logger = NULL) {
-    $this->entityTypeManager = $entity_type_manager;
-    $this->database = $database;
-    $this->workspaceManager = $workspace_manager;
-    $this->workspaceAssociation = $workspace_association;
-    if ($event_dispatcher instanceof WorkspaceInterface) {
-      @trigger_error('Calling WorkspacePublisher::__construct() without the $event_dispatcher argument is deprecated in drupal:10.1.0 and will be required in drupal:11.0.0. See https://www.drupal.org/node/3242573', E_USER_DEPRECATED);
-      $source = $event_dispatcher;
-      $event_dispatcher = \Drupal::service('event_dispatcher');
+  public function __construct(protected EntityTypeManagerInterface $entityTypeManager, protected Connection $database, protected WorkspaceManagerInterface $workspaceManager, protected WorkspaceAssociationInterface $workspaceAssociation, protected $eventDispatcher, protected WorkspaceInterface $sourceWorkspace = NULL, protected ?LoggerInterface $logger = NULL) {
+    if ($eventDispatcher instanceof WorkspaceInterface) {
+      @trigger_error('Calling WorkspacePublisher::__construct() without the $eventDispatcher argument is deprecated in drupal:10.1.0 and will be required in drupal:11.0.0. See https://www.drupal.org/node/3242573', E_USER_DEPRECATED);
+      $source = $eventDispatcher;
+      $eventDispatcher = \Drupal::service('event_dispatcher');
     }
-    $this->eventDispatcher = $event_dispatcher;
-    $this->sourceWorkspace = $source;
     if ($this->logger === NULL) {
       @trigger_error('Calling ' . __METHOD__ . '() without the $logger argument is deprecated in drupal:10.1.0 and it will be required in drupal:11.0.0. See https://www.drupal.org/node/2932520', E_USER_DEPRECATED);
       $this->logger = \Drupal::service('logger.channel.workspaces');

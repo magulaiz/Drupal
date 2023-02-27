@@ -21,20 +21,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class UserData extends FieldPluginBase {
 
   /**
-   * Provides the user data service object.
-   *
-   * @var \Drupal\user\UserDataInterface
-   */
-  protected $userData;
-
-  /**
-   * The module handler.
-   *
-   * @var \Drupal\Core\Extension\ModuleHandlerInterface
-   */
-  protected $moduleHandler;
-
-  /**
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
@@ -44,11 +30,14 @@ class UserData extends FieldPluginBase {
   /**
    * Constructs a UserData object.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, UserDataInterface $user_data, ModuleHandlerInterface $module_handler) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, /**
+   * Provides the user data service object.
+   */
+  protected UserDataInterface $userData, /**
+   * The module handler.
+   */
+  protected ModuleHandlerInterface $moduleHandler) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
-
-    $this->userData = $user_data;
-    $this->moduleHandler = $module_handler;
   }
 
   /**

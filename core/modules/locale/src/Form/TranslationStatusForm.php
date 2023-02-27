@@ -17,20 +17,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class TranslationStatusForm extends FormBase {
 
   /**
-   * The module handler service.
-   *
-   * @var \Drupal\Core\Extension\ModuleHandlerInterface
-   */
-  protected $moduleHandler;
-
-  /**
-   * The Drupal state storage service.
-   *
-   * @var \Drupal\Core\State\StateInterface
-   */
-  protected $state;
-
-  /**
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container) {
@@ -43,14 +29,13 @@ class TranslationStatusForm extends FormBase {
   /**
    * Constructs a TranslationStatusForm object.
    *
-   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
+   * @param \Drupal\Core\Extension\ModuleHandlerInterface $moduleHandler
    *   A module handler.
    * @param \Drupal\Core\State\StateInterface $state
    *   The state service.
    */
-  public function __construct(ModuleHandlerInterface $module_handler, StateInterface $state) {
-    $this->moduleHandler = $module_handler;
-    $this->state = $state;
+  public function __construct(protected ModuleHandlerInterface $moduleHandler, protected StateInterface $state)
+  {
   }
 
   /**

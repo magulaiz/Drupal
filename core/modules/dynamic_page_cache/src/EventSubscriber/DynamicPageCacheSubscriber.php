@@ -40,34 +40,6 @@ class DynamicPageCacheSubscriber implements EventSubscriberInterface {
   const HEADER = 'X-Drupal-Dynamic-Cache';
 
   /**
-   * A request policy rule determining the cacheability of a response.
-   *
-   * @var \Drupal\Core\PageCache\RequestPolicyInterface
-   */
-  protected $requestPolicy;
-
-  /**
-   * A response policy rule determining the cacheability of the response.
-   *
-   * @var \Drupal\Core\PageCache\ResponsePolicyInterface
-   */
-  protected $responsePolicy;
-
-  /**
-   * The render cache.
-   *
-   * @var \Drupal\Core\Render\RenderCacheInterface
-   */
-  protected $renderCache;
-
-  /**
-   * The renderer configuration array.
-   *
-   * @var array
-   */
-  protected $rendererConfig;
-
-  /**
    * Dynamic Page Cache's redirect render array.
    *
    * @var array
@@ -99,20 +71,16 @@ class DynamicPageCacheSubscriber implements EventSubscriberInterface {
   /**
    * Constructs a new DynamicPageCacheSubscriber object.
    *
-   * @param \Drupal\Core\PageCache\RequestPolicyInterface $request_policy
+   * @param \Drupal\Core\PageCache\RequestPolicyInterface $requestPolicy
    *   A policy rule determining the cacheability of a request.
-   * @param \Drupal\Core\PageCache\ResponsePolicyInterface $response_policy
+   * @param \Drupal\Core\PageCache\ResponsePolicyInterface $responsePolicy
    *   A policy rule determining the cacheability of the response.
-   * @param \Drupal\Core\Render\RenderCacheInterface $render_cache
+   * @param \Drupal\Core\Render\RenderCacheInterface $renderCache
    *   The render cache.
-   * @param array $renderer_config
+   * @param array $rendererConfig
    *   The renderer configuration array.
    */
-  public function __construct(RequestPolicyInterface $request_policy, ResponsePolicyInterface $response_policy, RenderCacheInterface $render_cache, array $renderer_config) {
-    $this->requestPolicy = $request_policy;
-    $this->responsePolicy = $response_policy;
-    $this->renderCache = $render_cache;
-    $this->rendererConfig = $renderer_config;
+  public function __construct(protected RequestPolicyInterface $requestPolicy, protected ResponsePolicyInterface $responsePolicy, protected RenderCacheInterface $renderCache, protected array $rendererConfig) {
     $this->requestPolicyResults = new \SplObjectStorage();
   }
 

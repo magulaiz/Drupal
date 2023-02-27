@@ -20,13 +20,6 @@ class FieldTypePluginManager extends DefaultPluginManager implements FieldTypePl
   use CategorizingPluginManagerTrait;
 
   /**
-   * The typed data manager.
-   *
-   * @var \Drupal\Core\TypedData\TypedDataManagerInterface
-   */
-  protected $typedDataManager;
-
-  /**
    * Constructs the FieldTypePluginManager object.
    *
    * @param \Traversable $namespaces
@@ -36,14 +29,13 @@ class FieldTypePluginManager extends DefaultPluginManager implements FieldTypePl
    *   Cache backend instance to use.
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
    *   The module handler.
-   * @param \Drupal\Core\TypedData\TypedDataManagerInterface $typed_data_manager
+   * @param \Drupal\Core\TypedData\TypedDataManagerInterface $typedDataManager
    *   The typed data manager.
    */
-  public function __construct(\Traversable $namespaces, CacheBackendInterface $cache_backend, ModuleHandlerInterface $module_handler, TypedDataManagerInterface $typed_data_manager) {
+  public function __construct(\Traversable $namespaces, CacheBackendInterface $cache_backend, ModuleHandlerInterface $module_handler, protected TypedDataManagerInterface $typedDataManager) {
     parent::__construct('Plugin/Field/FieldType', $namespaces, $module_handler, 'Drupal\Core\Field\FieldItemInterface', 'Drupal\Core\Field\Annotation\FieldType');
     $this->alterInfo('field_info');
     $this->setCacheBackend($cache_backend, 'field_types_plugins');
-    $this->typedDataManager = $typed_data_manager;
   }
 
   /**

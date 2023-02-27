@@ -22,32 +22,16 @@ class HelpTwigExtension extends AbstractExtension {
   use StringTranslationTrait;
 
   /**
-   * The access manager.
-   *
-   * @var \Drupal\Core\Access\AccessManagerInterface
-   */
-  protected $accessManager;
-
-  /**
-   * The help topic plugin manager.
-   *
-   * @var \Drupal\help_topics\HelpTopicPluginManagerInterface
-   */
-  protected $pluginManager;
-
-  /**
    * Constructs a \Drupal\help_topics\HelpTwigExtension.
    *
-   * @param \Drupal\Core\Access\AccessManagerInterface $access_manager
+   * @param \Drupal\Core\Access\AccessManagerInterface $accessManager
    *   The access manager.
-   * @param \Drupal\help_topics\HelpTopicPluginManagerInterface $plugin_manager
+   * @param \Drupal\help_topics\HelpTopicPluginManagerInterface $pluginManager
    *   The help topic plugin manager service.
    * @param \Drupal\Core\StringTranslation\TranslationInterface $string_translation
    *   The string translation service.
    */
-  public function __construct(AccessManagerInterface $access_manager, HelpTopicPluginManagerInterface $plugin_manager, TranslationInterface $string_translation) {
-    $this->accessManager = $access_manager;
-    $this->pluginManager = $plugin_manager;
+  public function __construct(protected AccessManagerInterface $accessManager, protected HelpTopicPluginManagerInterface $pluginManager, TranslationInterface $string_translation) {
     $this->stringTranslation = $string_translation;
   }
 

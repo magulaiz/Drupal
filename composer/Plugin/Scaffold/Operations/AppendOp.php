@@ -19,27 +19,6 @@ class AppendOp extends AbstractOperation {
   const ID = 'append';
 
   /**
-   * Path to the source file to prepend, if any.
-   *
-   * @var \Drupal\Composer\Plugin\Scaffold\ScaffoldFilePath
-   */
-  protected $prepend;
-
-  /**
-   * Path to the source file to append, if any.
-   *
-   * @var \Drupal\Composer\Plugin\Scaffold\ScaffoldFilePath
-   */
-  protected $append;
-
-  /**
-   * Path to the default data to use when appending to an empty file.
-   *
-   * @var \Drupal\Composer\Plugin\Scaffold\ScaffoldFilePath
-   */
-  protected $default;
-
-  /**
    * An indicator of whether the file we are appending to is managed or not.
    */
   protected $managed;
@@ -54,22 +33,19 @@ class AppendOp extends AbstractOperation {
   /**
    * Constructs an AppendOp.
    *
-   * @param \Drupal\Composer\Plugin\Scaffold\ScaffoldFilePath $prepend_path
+   * @param \Drupal\Composer\Plugin\Scaffold\ScaffoldFilePath $prepend
    *   The relative path to the prepend file.
-   * @param \Drupal\Composer\Plugin\Scaffold\ScaffoldFilePath $append_path
+   * @param \Drupal\Composer\Plugin\Scaffold\ScaffoldFilePath $append
    *   The relative path to the append file.
    * @param bool $forceAppend
    *   TRUE if is okay to append to a file that was not scaffolded.
-   * @param \Drupal\Composer\Plugin\Scaffold\ScaffoldFilePath $default_path
+   * @param \Drupal\Composer\Plugin\Scaffold\ScaffoldFilePath $default
    *   The relative path to the default data.
    */
-  public function __construct(ScaffoldFilePath $prepend_path = NULL, ScaffoldFilePath $append_path = NULL, /**
+  public function __construct(protected ScaffoldFilePath $prepend = NULL, protected ScaffoldFilePath $append = NULL, /**
    * An indicator of whether we are allowed to append to a non-scaffolded file.
    */
-  protected $forceAppend = FALSE, ScaffoldFilePath $default_path = NULL) {
-    $this->prepend = $prepend_path;
-    $this->append = $append_path;
-    $this->default = $default_path;
+  protected $forceAppend = FALSE, protected ScaffoldFilePath $default = NULL) {
     $this->managed = TRUE;
   }
 

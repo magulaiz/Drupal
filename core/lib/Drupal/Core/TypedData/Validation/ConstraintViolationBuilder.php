@@ -21,36 +21,10 @@ use Symfony\Component\Validator\Violation\ConstraintViolationBuilderInterface;
 class ConstraintViolationBuilder implements ConstraintViolationBuilderInterface {
 
   /**
-   * The list of violations.
-   *
-   * @var \Symfony\Component\Validator\ConstraintViolationList
-   */
-  protected $violations;
-
-  /**
-   * The message parameters.
-   *
-   * @var array
-   */
-  protected $parameters;
-
-  /**
-   * The translator.
-   *
-   * @var \Drupal\Core\Validation\TranslatorInterface
-   */
-  protected $translator;
-
-  /**
    * The number used
    * @var int|null
    */
   protected $plural;
-
-  /**
-   * @var Constraint
-   */
-  protected $constraint;
 
   /**
    * @var mixed
@@ -84,12 +58,8 @@ class ConstraintViolationBuilder implements ConstraintViolationBuilderInterface 
    * @param null $translationDomain
    *   (optional) The translation domain.
    */
-  public function __construct(ConstraintViolationList $violations, Constraint $constraint, protected $message, array $parameters, protected $root, protected $propertyPath, protected $invalidValue, TranslatorInterface $translator, protected ?string|bool $translationDomain = null)
+  public function __construct(protected ConstraintViolationList $violations, protected Constraint $constraint, protected $message, protected array $parameters, protected $root, protected $propertyPath, protected $invalidValue, protected TranslatorInterface $translator, protected ?string|bool $translationDomain = null)
     {
-      $this->violations = $violations;
-      $this->parameters = $parameters;
-      $this->translator = $translator;
-      $this->constraint = $constraint;
     }
 
     /**

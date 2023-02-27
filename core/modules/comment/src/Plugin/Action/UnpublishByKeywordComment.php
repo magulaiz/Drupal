@@ -23,20 +23,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class UnpublishByKeywordComment extends ConfigurableActionBase implements ContainerFactoryPluginInterface {
 
   /**
-   * The comment entity builder handler.
-   *
-   * @var \Drupal\Core\Entity\EntityViewBuilderInterface
-   */
-  protected $viewBuilder;
-
-  /**
-   * The renderer.
-   *
-   * @var \Drupal\Core\Render\RendererInterface
-   */
-  protected $renderer;
-
-  /**
    * Constructs an UnpublishByKeywordComment object.
    *
    * @param array $configuration
@@ -45,16 +31,13 @@ class UnpublishByKeywordComment extends ConfigurableActionBase implements Contai
    *   The plugin ID for the plugin instance.
    * @param mixed $plugin_definition
    *   The plugin implementation definition.
-   * @param \Drupal\Core\Entity\EntityViewBuilderInterface $comment_view_builder
+   * @param \Drupal\Core\Entity\EntityViewBuilderInterface $viewBuilder
    *   The comment entity builder handler.
    * @param \Drupal\Core\Render\RendererInterface $renderer
    *   The renderer.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityViewBuilderInterface $comment_view_builder, RendererInterface $renderer) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, protected EntityViewBuilderInterface $viewBuilder, protected RendererInterface $renderer) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
-
-    $this->viewBuilder = $comment_view_builder;
-    $this->renderer = $renderer;
   }
 
   /**

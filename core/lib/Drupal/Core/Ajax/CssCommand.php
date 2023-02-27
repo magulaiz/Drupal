@@ -18,13 +18,6 @@ namespace Drupal\Core\Ajax;
 class CssCommand implements CommandInterface {
 
   /**
-   * An array of property/value pairs to set in the CSS for the selector.
-   *
-   * @var array
-   */
-  protected $css = [];
-
-  /**
    * Constructs a CssCommand object.
    *
    * @param string $selector
@@ -32,8 +25,8 @@ class CssCommand implements CommandInterface {
    * @param array $css
    *   An array of CSS property/value pairs to set.
    */
-  public function __construct(protected $selector, array $css = []) {
-    $this->css = $css;
+  public function __construct(protected $selector, protected array $css = [])
+  {
   }
 
   /**

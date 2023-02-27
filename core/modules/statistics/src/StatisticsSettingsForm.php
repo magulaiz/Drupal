@@ -16,24 +16,15 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class StatisticsSettingsForm extends ConfigFormBase {
 
   /**
-   * The module handler.
-   *
-   * @var \Drupal\Core\Extension\ModuleHandlerInterface
-   */
-  protected $moduleHandler;
-
-  /**
    * Constructs a \Drupal\statistics\StatisticsSettingsForm object.
    *
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   The factory for configuration objects.
-   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
+   * @param \Drupal\Core\Extension\ModuleHandlerInterface $moduleHandler
    *   The module handler.
    */
-  public function __construct(ConfigFactoryInterface $config_factory, ModuleHandlerInterface $module_handler) {
+  public function __construct(ConfigFactoryInterface $config_factory, protected ModuleHandlerInterface $moduleHandler) {
     parent::__construct($config_factory);
-
-    $this->moduleHandler = $module_handler;
   }
 
   /**

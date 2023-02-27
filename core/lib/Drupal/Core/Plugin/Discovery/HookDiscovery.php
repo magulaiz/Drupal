@@ -14,23 +14,16 @@ class HookDiscovery implements DiscoveryInterface {
   use DiscoveryTrait;
 
   /**
-   * The module handler used to find and execute the plugin hook.
-   *
-   * @var \Drupal\Core\Extension\ModuleHandlerInterface
-   */
-  protected $moduleHandler;
-
-  /**
    * Constructs a Drupal\Core\Plugin\Discovery\HookDiscovery object.
    *
-   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
+   * @param \Drupal\Core\Extension\ModuleHandlerInterface $moduleHandler
    *   The module handler.
    * @param string $hook
    *   The Drupal hook that a module can implement in order to interface to
    *   this discovery class.
    */
-  public function __construct(ModuleHandlerInterface $module_handler, protected $hook) {
-    $this->moduleHandler = $module_handler;
+  public function __construct(protected ModuleHandlerInterface $moduleHandler, protected $hook)
+  {
   }
 
   /**

@@ -10,17 +10,15 @@ use Drupal\Core\Database\Connection;
 class BookOutlineStorage implements BookOutlineStorageInterface {
 
   /**
-   * Database Service Object.
-   *
-   * @var \Drupal\Core\Database\Connection
-   */
-  protected $connection;
-
-  /**
    * Constructs a BookOutlineStorage object.
    */
-  public function __construct(Connection $connection) {
-    $this->connection = $connection;
+  public function __construct(
+      /**
+       * Database Service Object.
+       */
+      protected Connection $connection
+  )
+  {
   }
 
   /**

@@ -19,13 +19,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class HookHelpSection extends HelpSectionPluginBase implements ContainerFactoryPluginInterface {
 
   /**
-   * The module handler.
-   *
-   * @var \Drupal\Core\Extension\ModuleHandlerInterface
-   */
-  protected $moduleHandler;
-
-  /**
    * Constructs a HookHelpSection object.
    *
    * @param array $configuration
@@ -34,12 +27,11 @@ class HookHelpSection extends HelpSectionPluginBase implements ContainerFactoryP
    *   The plugin_id for the plugin instance.
    * @param mixed $plugin_definition
    *   The plugin implementation definition.
-   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
+   * @param \Drupal\Core\Extension\ModuleHandlerInterface $moduleHandler
    *   The module handler service.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, ModuleHandlerInterface $module_handler) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, protected ModuleHandlerInterface $moduleHandler) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
-    $this->moduleHandler = $module_handler;
   }
 
   /**

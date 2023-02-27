@@ -17,30 +17,15 @@ class SessionHandler extends AbstractProxy implements \SessionHandlerInterface {
   use DependencySerializationTrait;
 
   /**
-   * The request stack.
-   *
-   * @var \Symfony\Component\HttpFoundation\RequestStack
-   */
-  protected $requestStack;
-
-  /**
-   * The database connection.
-   *
-   * @var \Drupal\Core\Database\Connection
-   */
-  protected $connection;
-
-  /**
    * Constructs a new SessionHandler instance.
    *
-   * @param \Symfony\Component\HttpFoundation\RequestStack $request_stack
+   * @param \Symfony\Component\HttpFoundation\RequestStack $requestStack
    *   The request stack.
    * @param \Drupal\Core\Database\Connection $connection
    *   The database connection.
    */
-  public function __construct(RequestStack $request_stack, Connection $connection) {
-    $this->requestStack = $request_stack;
-    $this->connection = $connection;
+  public function __construct(protected RequestStack $requestStack, protected Connection $connection)
+  {
   }
 
   /**

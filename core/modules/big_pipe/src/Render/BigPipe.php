@@ -164,70 +164,23 @@ class BigPipe {
   const STOP_SIGNAL = '<script type="application/vnd.drupal-ajax" data-big-pipe-event="stop"></script>';
 
   /**
-   * The renderer.
-   *
-   * @var \Drupal\Core\Render\RendererInterface
-   */
-  protected $renderer;
-
-  /**
-   * The session.
-   *
-   * @var \Symfony\Component\HttpFoundation\Session\SessionInterface
-   */
-  protected $session;
-
-  /**
-   * The request stack.
-   *
-   * @var \Symfony\Component\HttpFoundation\RequestStack
-   */
-  protected $requestStack;
-
-  /**
-   * The HTTP kernel.
-   *
-   * @var \Symfony\Component\HttpKernel\HttpKernelInterface
-   */
-  protected $httpKernel;
-
-  /**
-   * The event dispatcher.
-   *
-   * @var \Symfony\Contracts\EventDispatcher\EventDispatcherInterface
-   */
-  protected $eventDispatcher;
-
-  /**
-   * The config factory.
-   *
-   * @var \Drupal\Core\Config\ConfigFactoryInterface
-   */
-  protected $configFactory;
-
-  /**
    * Constructs a new BigPipe class.
    *
    * @param \Drupal\Core\Render\RendererInterface $renderer
    *   The renderer.
    * @param \Symfony\Component\HttpFoundation\Session\SessionInterface $session
    *   The session.
-   * @param \Symfony\Component\HttpFoundation\RequestStack $request_stack
+   * @param \Symfony\Component\HttpFoundation\RequestStack $requestStack
    *   The request stack.
-   * @param \Symfony\Component\HttpKernel\HttpKernelInterface $http_kernel
+   * @param \Symfony\Component\HttpKernel\HttpKernelInterface $httpKernel
    *   The HTTP kernel.
-   * @param \Symfony\Contracts\EventDispatcher\EventDispatcherInterface $event_dispatcher
+   * @param \Symfony\Contracts\EventDispatcher\EventDispatcherInterface $eventDispatcher
    *   The event dispatcher.
-   * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
+   * @param \Drupal\Core\Config\ConfigFactoryInterface $configFactory
    *   The config factory.
    */
-  public function __construct(RendererInterface $renderer, SessionInterface $session, RequestStack $request_stack, HttpKernelInterface $http_kernel, EventDispatcherInterface $event_dispatcher, ConfigFactoryInterface $config_factory) {
-    $this->renderer = $renderer;
-    $this->session = $session;
-    $this->requestStack = $request_stack;
-    $this->httpKernel = $http_kernel;
-    $this->eventDispatcher = $event_dispatcher;
-    $this->configFactory = $config_factory;
+  public function __construct(protected RendererInterface $renderer, protected SessionInterface $session, protected RequestStack $requestStack, protected HttpKernelInterface $httpKernel, protected EventDispatcherInterface $eventDispatcher, protected ConfigFactoryInterface $configFactory)
+  {
   }
 
   /**

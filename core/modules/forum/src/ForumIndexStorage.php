@@ -12,20 +12,13 @@ use Drupal\node\NodeInterface;
 class ForumIndexStorage implements ForumIndexStorageInterface {
 
   /**
-   * The active database connection.
-   *
-   * @var \Drupal\Core\Database\Connection
-   */
-  protected $database;
-
-  /**
    * Constructs a ForumIndexStorage object.
    *
    * @param \Drupal\Core\Database\Connection $database
    *   The current database connection.
    */
-  public function __construct(Connection $database) {
-    $this->database = $database;
+  public function __construct(protected Connection $database)
+  {
   }
 
   /**

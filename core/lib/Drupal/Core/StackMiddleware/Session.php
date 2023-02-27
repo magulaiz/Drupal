@@ -19,22 +19,15 @@ class Session implements HttpKernelInterface {
   use ContainerAwareTrait;
 
   /**
-   * The wrapped HTTP kernel.
-   *
-   * @var \Symfony\Component\HttpKernel\HttpKernelInterface
-   */
-  protected $httpKernel;
-
-  /**
    * Constructs a Session stack middleware object.
    *
-   * @param \Symfony\Component\HttpKernel\HttpKernelInterface $http_kernel
+   * @param \Symfony\Component\HttpKernel\HttpKernelInterface $httpKernel
    *   The decorated kernel.
    * @param string $sessionServiceName
    *   The name of the session service, defaults to "session".
    */
-  public function __construct(HttpKernelInterface $http_kernel, protected $sessionServiceName = 'session') {
-    $this->httpKernel = $http_kernel;
+  public function __construct(protected HttpKernelInterface $httpKernel, protected $sessionServiceName = 'session')
+  {
   }
 
   /**

@@ -14,13 +14,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class MenuLinkAdd extends LocalActionDefault {
 
   /**
-   * The redirect destination.
-   *
-   * @var \Drupal\Core\Routing\RedirectDestinationInterface
-   */
-  private $redirectDestination;
-
-  /**
    * Constructs a MenuLinkAdd object.
    *
    * @param array $configuration
@@ -31,13 +24,11 @@ class MenuLinkAdd extends LocalActionDefault {
    *   The plugin implementation definition.
    * @param \Drupal\Core\Routing\RouteProviderInterface $route_provider
    *   The route provider to load routes by name.
-   * @param \Drupal\Core\Routing\RedirectDestinationInterface $redirect_destination
+   * @param \Drupal\Core\Routing\RedirectDestinationInterface $redirectDestination
    *   The redirect destination.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, RouteProviderInterface $route_provider, RedirectDestinationInterface $redirect_destination) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, RouteProviderInterface $route_provider, private RedirectDestinationInterface $redirectDestination) {
     parent::__construct($configuration, $plugin_id, $plugin_definition, $route_provider);
-
-    $this->redirectDestination = $redirect_destination;
   }
 
   /**

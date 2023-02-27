@@ -16,13 +16,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class BlockRegion extends StaticMap implements ContainerFactoryPluginInterface {
 
   /**
-   * List of regions, keyed by theme.
-   *
-   * @var array[]
-   */
-  protected $regions;
-
-  /**
    * Constructs a BlockRegion plugin instance.
    *
    * @param array $configuration
@@ -31,12 +24,14 @@ class BlockRegion extends StaticMap implements ContainerFactoryPluginInterface {
    *   The plugin ID.
    * @param mixed $plugin_definition
    *   The plugin definition.
-   * @param array $regions
+   * @param mixed[][] $regions
    *   Array of region maps, keyed by theme.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, array $regions) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, /**
+   * List of regions, keyed by theme.
+   */
+  protected array $regions) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
-    $this->regions = $regions;
   }
 
   /**

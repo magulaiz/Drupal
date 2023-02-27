@@ -13,20 +13,6 @@ abstract class PluginBase implements PluginInspectionInterface, DerivativeInspec
   const DERIVATIVE_SEPARATOR = ':';
 
   /**
-   * Configuration information passed into the plugin.
-   *
-   * When using an interface like
-   * \Drupal\Component\Plugin\ConfigurableInterface, this is where the
-   * configuration should be stored.
-   *
-   * Plugin configuration is optional, so plugin implementations must provide
-   * their own setters and getters.
-   *
-   * @var array
-   */
-  protected $configuration;
-
-  /**
    * Constructs a \Drupal\Component\Plugin\PluginBase object.
    *
    * @param array $configuration
@@ -36,8 +22,8 @@ abstract class PluginBase implements PluginInspectionInterface, DerivativeInspec
    * @param mixed $pluginDefinition
    *   The plugin implementation definition.
    */
-  public function __construct(array $configuration, protected $pluginId, protected $pluginDefinition) {
-    $this->configuration = $configuration;
+  public function __construct(protected array $configuration, protected $pluginId, protected $pluginDefinition)
+  {
   }
 
   /**

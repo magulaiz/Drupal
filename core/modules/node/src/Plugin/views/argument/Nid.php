@@ -14,13 +14,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class Nid extends NumericArgument {
 
   /**
-   * The node storage.
-   *
-   * @var \Drupal\node\NodeStorageInterface
-   */
-  protected $nodeStorage;
-
-  /**
    * Constructs the Nid object.
    *
    * @param array $configuration
@@ -29,12 +22,11 @@ class Nid extends NumericArgument {
    *   The plugin_id for the plugin instance.
    * @param mixed $plugin_definition
    *   The plugin implementation definition.
-   * @param \Drupal\node\NodeStorageInterface $node_storage
+   * @param \Drupal\node\NodeStorageInterface $nodeStorage
    *   The node storage handler.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, NodeStorageInterface $node_storage) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, protected NodeStorageInterface $nodeStorage) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
-    $this->nodeStorage = $node_storage;
   }
 
   /**

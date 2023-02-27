@@ -13,20 +13,13 @@ use Drupal\Core\Cache\Cache;
 class PlaceholderGenerator implements PlaceholderGeneratorInterface {
 
   /**
-   * The renderer configuration array.
-   *
-   * @var array
-   */
-  protected $rendererConfig;
-
-  /**
    * Constructs a new Placeholder service.
    *
-   * @param array $renderer_config
+   * @param array $rendererConfig
    *   The renderer configuration array.
    */
-  public function __construct(array $renderer_config) {
-    $this->rendererConfig = $renderer_config;
+  public function __construct(protected array $rendererConfig)
+  {
   }
 
   /**

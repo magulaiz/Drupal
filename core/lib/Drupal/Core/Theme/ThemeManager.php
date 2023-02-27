@@ -14,13 +14,6 @@ use Drupal\Core\Template\Attribute;
 class ThemeManager implements ThemeManagerInterface {
 
   /**
-   * The theme negotiator.
-   *
-   * @var \Drupal\Core\Theme\ThemeNegotiatorInterface
-   */
-  protected $themeNegotiator;
-
-  /**
    * The theme registry used to render an output.
    *
    * @var \Drupal\Core\Theme\Registry
@@ -35,35 +28,19 @@ class ThemeManager implements ThemeManagerInterface {
   protected $activeTheme;
 
   /**
-   * The theme initialization.
-   *
-   * @var \Drupal\Core\Theme\ThemeInitializationInterface
-   */
-  protected $themeInitialization;
-
-  /**
-   * The module handler.
-   *
-   * @var \Drupal\Core\Extension\ModuleHandlerInterface
-   */
-  protected $moduleHandler;
-
-  /**
    * Constructs a new ThemeManager object.
    *
    * @param string $root
    *   The app root.
-   * @param \Drupal\Core\Theme\ThemeNegotiatorInterface $theme_negotiator
+   * @param \Drupal\Core\Theme\ThemeNegotiatorInterface $themeNegotiator
    *   The theme negotiator.
-   * @param \Drupal\Core\Theme\ThemeInitializationInterface $theme_initialization
+   * @param \Drupal\Core\Theme\ThemeInitializationInterface $themeInitialization
    *   The theme initialization.
-   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
+   * @param \Drupal\Core\Extension\ModuleHandlerInterface $moduleHandler
    *   The module handler.
    */
-  public function __construct(protected $root, ThemeNegotiatorInterface $theme_negotiator, ThemeInitializationInterface $theme_initialization, ModuleHandlerInterface $module_handler) {
-    $this->themeNegotiator = $theme_negotiator;
-    $this->themeInitialization = $theme_initialization;
-    $this->moduleHandler = $module_handler;
+  public function __construct(protected $root, protected ThemeNegotiatorInterface $themeNegotiator, protected ThemeInitializationInterface $themeInitialization, protected ModuleHandlerInterface $moduleHandler)
+  {
   }
 
   /**

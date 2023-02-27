@@ -12,20 +12,13 @@ use Drupal\Core\Url;
 class ShortcutLazyBuilders implements TrustedCallbackInterface {
 
   /**
-   * The renderer service.
-   *
-   * @var \Drupal\Core\Render\RendererInterface
-   */
-  protected $renderer;
-
-  /**
    * Constructs a new ShortcutLazyBuilders object.
    *
    * @param \Drupal\Core\Render\RendererInterface $renderer
    *   The renderer service.
    */
-  public function __construct(RendererInterface $renderer) {
-    $this->renderer = $renderer;
+  public function __construct(protected RendererInterface $renderer)
+  {
   }
 
   /**

@@ -28,13 +28,6 @@ use Drupal\Core\Asset\AttachedAssets;
 class MessageCommand implements CommandInterface, CommandWithAttachedAssetsInterface {
 
   /**
-   * The options passed to Drupal.message().add().
-   *
-   * @var array
-   */
-  protected $options;
-
-  /**
    * Constructs a MessageCommand object.
    *
    * @param string $message
@@ -48,8 +41,8 @@ class MessageCommand implements CommandInterface, CommandWithAttachedAssetsInter
    * @param bool $clearPrevious
    *   If TRUE, previous messages will be cleared first.
    */
-  public function __construct(protected $message, protected $wrapperQuerySelector = NULL, array $options = [], protected $clearPrevious = TRUE) {
-    $this->options = $options;
+  public function __construct(protected $message, protected $wrapperQuerySelector = NULL, protected array $options = [], protected $clearPrevious = TRUE)
+  {
   }
 
   /**

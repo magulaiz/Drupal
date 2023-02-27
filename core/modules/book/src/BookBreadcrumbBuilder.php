@@ -28,43 +28,19 @@ class BookBreadcrumbBuilder implements BreadcrumbBuilderInterface {
   protected $nodeStorage;
 
   /**
-   * The current user account.
-   *
-   * @var \Drupal\Core\Session\AccountInterface
-   */
-  protected $account;
-
-  /**
-   * The entity repository service.
-   *
-   * @var \Drupal\Core\Entity\EntityRepositoryInterface
-   */
-  protected $entityRepository;
-
-  /**
-   * The language manager service.
-   *
-   * @var \Drupal\Core\Language\LanguageManagerInterface|null
-   */
-  protected $languageManager;
-
-  /**
    * Constructs the BookBreadcrumbBuilder.
    *
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    *   The entity type manager service.
    * @param \Drupal\Core\Session\AccountInterface $account
    *   The current user account.
-   * @param \Drupal\Core\Entity\EntityRepositoryInterface $entity_repository
+   * @param \Drupal\Core\Entity\EntityRepositoryInterface $entityRepository
    *   The entity repository service.
-   * @param \Drupal\Core\Language\LanguageManagerInterface $language_manager
+   * @param \Drupal\Core\Language\LanguageManagerInterface $languageManager
    *   The language manager service.
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager, AccountInterface $account, EntityRepositoryInterface $entity_repository, LanguageManagerInterface $language_manager) {
+  public function __construct(EntityTypeManagerInterface $entity_type_manager, protected AccountInterface $account, protected EntityRepositoryInterface $entityRepository, protected ?\Drupal\Core\Language\LanguageManagerInterface $languageManager) {
     $this->nodeStorage = $entity_type_manager->getStorage('node');
-    $this->account = $account;
-    $this->entityRepository = $entity_repository;
-    $this->languageManager = $language_manager;
   }
 
   /**

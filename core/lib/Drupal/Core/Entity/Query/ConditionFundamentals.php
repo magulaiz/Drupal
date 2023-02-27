@@ -15,13 +15,6 @@ abstract class ConditionFundamentals {
   protected $conditions = [];
 
   /**
-   * The query this condition belongs to.
-   *
-   * @var \Drupal\Core\Entity\Query\QueryInterface
-   */
-  protected $query;
-
-  /**
    * Constructs a Condition object.
    *
    * @param string $conjunction
@@ -31,8 +24,8 @@ abstract class ConditionFundamentals {
    * @param array $namespaces
    *   List of potential namespaces of the classes belonging to this condition.
    */
-  public function __construct(protected $conjunction, QueryInterface $query, protected $namespaces = []) {
-    $this->query = $query;
+  public function __construct(protected $conjunction, protected QueryInterface $query, protected $namespaces = [])
+  {
   }
 
   /**

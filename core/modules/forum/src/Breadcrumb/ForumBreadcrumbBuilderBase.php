@@ -29,20 +29,6 @@ abstract class ForumBreadcrumbBuilderBase implements BreadcrumbBuilderInterface 
   protected $config;
 
   /**
-   * The entity type manager.
-   *
-   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
-   */
-  protected $entityTypeManager;
-
-  /**
-   * The forum manager service.
-   *
-   * @var \Drupal\forum\ForumManagerInterface
-   */
-  protected $forumManager;
-
-  /**
    * The taxonomy term storage.
    *
    * @var \Drupal\taxonomy\TermStorageInterface
@@ -52,21 +38,19 @@ abstract class ForumBreadcrumbBuilderBase implements BreadcrumbBuilderInterface 
   /**
    * Constructs a forum breadcrumb builder object.
    *
-   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
    *   The entity type manager.
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   The configuration factory.
-   * @param \Drupal\forum\ForumManagerInterface $forum_manager
+   * @param \Drupal\forum\ForumManagerInterface $forumManager
    *   The forum manager service.
    * @param \Drupal\Core\StringTranslation\TranslationInterface $string_translation
    *   The string translation service.
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager, ConfigFactoryInterface $config_factory, ForumManagerInterface $forum_manager, TranslationInterface $string_translation) {
-    $this->entityTypeManager = $entity_type_manager;
+  public function __construct(protected EntityTypeManagerInterface $entityTypeManager, ConfigFactoryInterface $config_factory, protected ForumManagerInterface $forumManager, TranslationInterface $string_translation) {
     $this->config = $config_factory->get('forum.settings');
-    $this->forumManager = $forum_manager;
     $this->setStringTranslation($string_translation);
-    $this->termStorage = $entity_type_manager->getStorage('taxonomy_term');
+    $this->termStorage = $entityTypeManager->getStorage('taxonomy_term');
   }
 
   /**

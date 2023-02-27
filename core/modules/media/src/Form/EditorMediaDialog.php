@@ -36,31 +36,15 @@ use Drupal\Core\Entity\EntityDisplayRepositoryInterface;
 class EditorMediaDialog extends FormBase {
 
   /**
-   * The entity repository.
-   *
-   * @var \Drupal\Core\Entity\EntityRepositoryInterface
-   */
-  protected $entityRepository;
-
-  /**
-   * The entity display repository.
-   *
-   * @var \Drupal\Core\Entity\EntityDisplayRepositoryInterface
-   */
-  protected $entityDisplayRepository;
-
-  /**
    * Constructs a EditorMediaDialog object.
    *
-   * @param \Drupal\Core\Entity\EntityRepositoryInterface $entity_repository
+   * @param \Drupal\Core\Entity\EntityRepositoryInterface $entityRepository
    *   The entity repository.
-   * @param \Drupal\Core\Entity\EntityDisplayRepositoryInterface $entity_display_repository
+   * @param \Drupal\Core\Entity\EntityDisplayRepositoryInterface $entityDisplayRepository
    *   The entity display repository.
    */
-  public function __construct(EntityRepositoryInterface $entity_repository, EntityDisplayRepositoryInterface $entity_display_repository) {
+  public function __construct(protected EntityRepositoryInterface $entityRepository, protected EntityDisplayRepositoryInterface $entityDisplayRepository) {
     @trigger_error(__NAMESPACE__ . '\EditorMediaDialog is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. There is no replacement. See https://www.drupal.org/project/drupal/issues/3291493', E_USER_DEPRECATED);
-    $this->entityRepository = $entity_repository;
-    $this->entityDisplayRepository = $entity_display_repository;
   }
 
   /**

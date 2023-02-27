@@ -18,41 +18,6 @@ use Drupal\Core\State\StateInterface;
 class JsCollectionOptimizer implements AssetCollectionOptimizerInterface {
 
   /**
-   * A JS asset grouper.
-   *
-   * @var \Drupal\Core\Asset\JsCollectionGrouper
-   */
-  protected $grouper;
-
-  /**
-   * A JS asset optimizer.
-   *
-   * @var \Drupal\Core\Asset\JsOptimizer
-   */
-  protected $optimizer;
-
-  /**
-   * An asset dumper.
-   *
-   * @var \Drupal\Core\Asset\AssetDumper
-   */
-  protected $dumper;
-
-  /**
-   * The state key/value store.
-   *
-   * @var \Drupal\Core\State\StateInterface
-   */
-  protected $state;
-
-  /**
-   * The file system service.
-   *
-   * @var \Drupal\Core\File\FileSystemInterface
-   */
-  protected $fileSystem;
-
-  /**
    * Constructs a JsCollectionOptimizer.
    *
    * @param \Drupal\Core\Asset\AssetCollectionGrouperInterface $grouper
@@ -63,15 +28,11 @@ class JsCollectionOptimizer implements AssetCollectionOptimizerInterface {
    *   The dumper for optimized JS assets.
    * @param \Drupal\Core\State\StateInterface $state
    *   The state key/value store.
-   * @param \Drupal\Core\File\FileSystemInterface $file_system
+   * @param \Drupal\Core\File\FileSystemInterface $fileSystem
    *   The file system service.
    */
-  public function __construct(AssetCollectionGrouperInterface $grouper, AssetOptimizerInterface $optimizer, AssetDumperInterface $dumper, StateInterface $state, FileSystemInterface $file_system) {
-    $this->grouper = $grouper;
-    $this->optimizer = $optimizer;
-    $this->dumper = $dumper;
-    $this->state = $state;
-    $this->fileSystem = $file_system;
+  public function __construct(protected AssetCollectionGrouperInterface $grouper, protected AssetOptimizerInterface $optimizer, protected AssetDumperInterface $dumper, protected StateInterface $state, protected FileSystemInterface $fileSystem)
+  {
   }
 
   /**

@@ -11,39 +11,11 @@ use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 class ConfigInstaller implements ConfigInstallerInterface {
 
   /**
-   * The configuration factory.
-   *
-   * @var \Drupal\Core\Config\ConfigFactoryInterface
-   */
-  protected $configFactory;
-
-  /**
    * The active configuration storages, keyed by collection.
    *
    * @var \Drupal\Core\Config\StorageInterface[]
    */
   protected $activeStorages;
-
-  /**
-   * The typed configuration manager.
-   *
-   * @var \Drupal\Core\Config\TypedConfigManagerInterface
-   */
-  protected $typedConfig;
-
-  /**
-   * The configuration manager.
-   *
-   * @var \Drupal\Core\Config\ConfigManagerInterface
-   */
-  protected $configManager;
-
-  /**
-   * The event dispatcher.
-   *
-   * @var \Symfony\Contracts\EventDispatcher\EventDispatcherInterface
-   */
-  protected $eventDispatcher;
 
   /**
    * The configuration storage that provides the default configuration.
@@ -60,37 +32,25 @@ class ConfigInstaller implements ConfigInstallerInterface {
   protected $isSyncing = FALSE;
 
   /**
-   * The extension path resolver.
-   *
-   * @var \Drupal\Core\Extension\ExtensionPathResolver
-   */
-  protected $extensionPathResolver;
-
-  /**
    * Constructs the configuration installer.
    *
-   * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
+   * @param \Drupal\Core\Config\ConfigFactoryInterface $configFactory
    *   The configuration factory.
    * @param \Drupal\Core\Config\StorageInterface $active_storage
    *   The active configuration storage.
-   * @param \Drupal\Core\Config\TypedConfigManagerInterface $typed_config
+   * @param \Drupal\Core\Config\TypedConfigManagerInterface $typedConfig
    *   The typed configuration manager.
-   * @param \Drupal\Core\Config\ConfigManagerInterface $config_manager
+   * @param \Drupal\Core\Config\ConfigManagerInterface $configManager
    *   The configuration manager.
-   * @param \Symfony\Contracts\EventDispatcher\EventDispatcherInterface $event_dispatcher
+   * @param \Symfony\Contracts\EventDispatcher\EventDispatcherInterface $eventDispatcher
    *   The event dispatcher.
    * @param string $installProfile
    *   The name of the currently active installation profile.
-   * @param \Drupal\Core\Extension\ExtensionPathResolver $extension_path_resolver
+   * @param \Drupal\Core\Extension\ExtensionPathResolver $extensionPathResolver
    *   The extension path resolver.
    */
-  public function __construct(ConfigFactoryInterface $config_factory, StorageInterface $active_storage, TypedConfigManagerInterface $typed_config, ConfigManagerInterface $config_manager, EventDispatcherInterface $event_dispatcher, protected $installProfile, ExtensionPathResolver $extension_path_resolver) {
-    $this->configFactory = $config_factory;
+  public function __construct(protected ConfigFactoryInterface $configFactory, StorageInterface $active_storage, protected TypedConfigManagerInterface $typedConfig, protected ConfigManagerInterface $configManager, protected EventDispatcherInterface $eventDispatcher, protected $installProfile, protected ExtensionPathResolver $extensionPathResolver) {
     $this->activeStorages[$active_storage->getCollectionName()] = $active_storage;
-    $this->typedConfig = $typed_config;
-    $this->configManager = $config_manager;
-    $this->eventDispatcher = $event_dispatcher;
-    $this->extensionPathResolver = $extension_path_resolver;
   }
 
   /**

@@ -25,13 +25,6 @@ class WorkspaceForm extends ContentEntityForm implements WorkspaceFormInterface 
   protected $entity;
 
   /**
-   * The messenger service.
-   *
-   * @var \Drupal\Core\Messenger\MessengerInterface
-   */
-  protected $messenger;
-
-  /**
    * Constructs a new WorkspaceForm.
    *
    * @param \Drupal\Core\Entity\EntityRepositoryInterface $entity_repository
@@ -43,9 +36,8 @@ class WorkspaceForm extends ContentEntityForm implements WorkspaceFormInterface 
    * @param \Drupal\Component\Datetime\TimeInterface $time
    *   The time service.
    */
-  public function __construct(EntityRepositoryInterface $entity_repository, MessengerInterface $messenger, EntityTypeBundleInfoInterface $entity_type_bundle_info = NULL, TimeInterface $time = NULL) {
+  public function __construct(EntityRepositoryInterface $entity_repository, protected MessengerInterface $messenger, EntityTypeBundleInfoInterface $entity_type_bundle_info = NULL, TimeInterface $time = NULL) {
     parent::__construct($entity_repository, $entity_type_bundle_info, $time);
-    $this->messenger = $messenger;
   }
 
   /**

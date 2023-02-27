@@ -59,41 +59,6 @@ class TemporaryJsonapiFileFieldUploader {
   const BYTES_TO_READ = 8192;
 
   /**
-   * A logger instance.
-   *
-   * @var \Psr\Log\LoggerInterface
-   */
-  protected $logger;
-
-  /**
-   * The file system service.
-   *
-   * @var \Drupal\Core\File\FileSystemInterface
-   */
-  protected $fileSystem;
-
-  /**
-   * The MIME type guesser.
-   *
-   * @var \Symfony\Component\Mime\MimeTypeGuesserInterface
-   */
-  protected $mimeTypeGuesser;
-
-  /**
-   * The token replacement instance.
-   *
-   * @var \Drupal\Core\Utility\Token
-   */
-  protected $token;
-
-  /**
-   * The lock service.
-   *
-   * @var \Drupal\Core\Lock\LockBackendInterface
-   */
-  protected $lock;
-
-  /**
    * System file configuration.
    *
    * @var \Drupal\Core\Config\ImmutableConfig
@@ -112,9 +77,9 @@ class TemporaryJsonapiFileFieldUploader {
    *
    * @param \Psr\Log\LoggerInterface $logger
    *   A logger instance.
-   * @param \Drupal\Core\File\FileSystemInterface $file_system
+   * @param \Drupal\Core\File\FileSystemInterface $fileSystem
    *   The file system service.
-   * @param \Symfony\Component\Mime\MimeTypeGuesserInterface $mime_type_guesser
+   * @param \Symfony\Component\Mime\MimeTypeGuesserInterface $mimeTypeGuesser
    *   The MIME type guesser.
    * @param \Drupal\Core\Utility\Token $token
    *   The token replacement instance.
@@ -125,12 +90,7 @@ class TemporaryJsonapiFileFieldUploader {
    * @param \Symfony\Contracts\EventDispatcher\EventDispatcherInterface $event_dispatcher
    *   (optional) The event dispatcher.
    */
-  public function __construct(LoggerInterface $logger, FileSystemInterface $file_system, $mime_type_guesser, Token $token, LockBackendInterface $lock, ConfigFactoryInterface $config_factory, EventDispatcherInterface $event_dispatcher = NULL) {
-    $this->logger = $logger;
-    $this->fileSystem = $file_system;
-    $this->mimeTypeGuesser = $mime_type_guesser;
-    $this->token = $token;
-    $this->lock = $lock;
+  public function __construct(protected LoggerInterface $logger, protected FileSystemInterface $fileSystem, protected $mimeTypeGuesser, protected Token $token, protected LockBackendInterface $lock, ConfigFactoryInterface $config_factory, EventDispatcherInterface $event_dispatcher = NULL) {
     $this->systemFileConfig = $config_factory->get('system.file');
     if (!$event_dispatcher) {
       $event_dispatcher = \Drupal::service('event_dispatcher');

@@ -22,48 +22,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class ViewsQueryAlter implements ContainerInjectionInterface {
 
   /**
-   * The entity type manager service.
-   *
-   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
-   */
-  protected $entityTypeManager;
-
-  /**
-   * The entity field manager.
-   *
-   * @var \Drupal\Core\Entity\EntityFieldManagerInterface
-   */
-  protected $entityFieldManager;
-
-  /**
-   * The workspace manager service.
-   *
-   * @var \Drupal\workspaces\WorkspaceManagerInterface
-   */
-  protected $workspaceManager;
-
-  /**
-   * The views data.
-   *
-   * @var \Drupal\views\ViewsData
-   */
-  protected $viewsData;
-
-  /**
-   * A plugin manager which handles instances of views join plugins.
-   *
-   * @var \Drupal\views\Plugin\ViewsHandlerManager
-   */
-  protected $viewsJoinPluginManager;
-
-  /**
-   * The language manager.
-   *
-   * @var \Drupal\Core\Language\LanguageManagerInterface
-   */
-  protected $languageManager;
-
-  /**
    * An array of tables adjusted for workspace_association join.
    *
    * @var \WeakMap
@@ -73,26 +31,20 @@ class ViewsQueryAlter implements ContainerInjectionInterface {
   /**
    * Constructs a new ViewsQueryAlter instance.
    *
-   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
    *   The entity type manager service.
-   * @param \Drupal\Core\Entity\EntityFieldManagerInterface $entity_field_manager
+   * @param \Drupal\Core\Entity\EntityFieldManagerInterface $entityFieldManager
    *   The entity field manager.
-   * @param \Drupal\workspaces\WorkspaceManagerInterface $workspace_manager
+   * @param \Drupal\workspaces\WorkspaceManagerInterface $workspaceManager
    *   The workspace manager service.
-   * @param \Drupal\views\ViewsData $views_data
+   * @param \Drupal\views\ViewsData $viewsData
    *   The views data.
-   * @param \Drupal\views\Plugin\ViewsHandlerManager $views_join_plugin_manager
+   * @param \Drupal\views\Plugin\ViewsHandlerManager $viewsJoinPluginManager
    *   The views join plugin manager.
-   * @param \Drupal\Core\Language\LanguageManagerInterface $language_manager
+   * @param \Drupal\Core\Language\LanguageManagerInterface $languageManager
    *   The language manager.
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager, EntityFieldManagerInterface $entity_field_manager, WorkspaceManagerInterface $workspace_manager, ViewsData $views_data, ViewsHandlerManager $views_join_plugin_manager, LanguageManagerInterface $language_manager) {
-    $this->entityTypeManager = $entity_type_manager;
-    $this->entityFieldManager = $entity_field_manager;
-    $this->workspaceManager = $workspace_manager;
-    $this->viewsData = $views_data;
-    $this->viewsJoinPluginManager = $views_join_plugin_manager;
-    $this->languageManager = $language_manager;
+  public function __construct(protected EntityTypeManagerInterface $entityTypeManager, protected EntityFieldManagerInterface $entityFieldManager, protected WorkspaceManagerInterface $workspaceManager, protected ViewsData $viewsData, protected ViewsHandlerManager $viewsJoinPluginManager, protected LanguageManagerInterface $languageManager) {
     $this->adjustedTables = new \WeakMap();
   }
 

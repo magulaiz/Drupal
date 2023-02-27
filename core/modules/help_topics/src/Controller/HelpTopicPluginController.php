@@ -21,30 +21,15 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 class HelpTopicPluginController extends ControllerBase {
 
   /**
-   * The renderer service.
-   *
-   * @var \Drupal\Core\Render\RendererInterface
-   */
-  protected $renderer;
-
-  /**
-   * The Help Topic plugin manager.
-   *
-   * @var \Drupal\help_topics\HelpTopicPluginManagerInterface
-   */
-  protected $helpTopicPluginManager;
-
-  /**
    * Constructs a HelpTopicPluginController object.
    *
-   * @param \Drupal\help_topics\HelpTopicPluginManagerInterface $help_topic_plugin_manager
+   * @param \Drupal\help_topics\HelpTopicPluginManagerInterface $helpTopicPluginManager
    *   The help topic plugin manager service.
    * @param \Drupal\Core\Render\RendererInterface $renderer
    *   The renderer service.
    */
-  public function __construct(HelpTopicPluginManagerInterface $help_topic_plugin_manager, RendererInterface $renderer) {
-    $this->helpTopicPluginManager = $help_topic_plugin_manager;
-    $this->renderer = $renderer;
+  public function __construct(protected HelpTopicPluginManagerInterface $helpTopicPluginManager, protected RendererInterface $renderer)
+  {
   }
 
   /**

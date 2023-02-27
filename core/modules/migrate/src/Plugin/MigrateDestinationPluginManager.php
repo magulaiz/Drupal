@@ -19,13 +19,6 @@ use Drupal\Core\Extension\ModuleHandlerInterface;
 class MigrateDestinationPluginManager extends MigratePluginManager {
 
   /**
-   * The entity type manager.
-   *
-   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
-   */
-  protected $entityTypeManager;
-
-  /**
    * Constructs a MigrateDestinationPluginManager object.
    *
    * @param string $type
@@ -38,15 +31,14 @@ class MigrateDestinationPluginManager extends MigratePluginManager {
    *   Cache backend instance to use.
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
    *   The module handler to invoke the alter hook with.
-   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
    *   The entity type manager.
    * @param string $annotation
    *   (optional) The annotation class name. Defaults to
    *   'Drupal\migrate\Annotation\MigrateDestination'.
    */
-  public function __construct($type, \Traversable $namespaces, CacheBackendInterface $cache_backend, ModuleHandlerInterface $module_handler, EntityTypeManagerInterface $entity_type_manager, $annotation = 'Drupal\migrate\Annotation\MigrateDestination') {
+  public function __construct($type, \Traversable $namespaces, CacheBackendInterface $cache_backend, ModuleHandlerInterface $module_handler, protected EntityTypeManagerInterface $entityTypeManager, $annotation = 'Drupal\migrate\Annotation\MigrateDestination') {
     parent::__construct($type, $namespaces, $cache_backend, $module_handler, $annotation);
-    $this->entityTypeManager = $entity_type_manager;
   }
 
   /**

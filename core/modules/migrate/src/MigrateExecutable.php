@@ -23,13 +23,6 @@ class MigrateExecutable implements MigrateExecutableInterface {
   use StringTranslationTrait;
 
   /**
-   * The configuration of the migration to do.
-   *
-   * @var \Drupal\migrate\Plugin\MigrationInterface
-   */
-  protected $migration;
-
-  /**
    * Status of one row.
    *
    * The value is a MigrateIdMapInterface::STATUS_* constant, for example:
@@ -75,13 +68,6 @@ class MigrateExecutable implements MigrateExecutableInterface {
   protected $source;
 
   /**
-   * The event dispatcher.
-   *
-   * @var \Symfony\Contracts\EventDispatcher\EventDispatcherInterface
-   */
-  protected $eventDispatcher;
-
-  /**
    * Migration message service.
    *
    * @todo https://www.drupal.org/node/2822663 Make this protected.
@@ -97,14 +83,12 @@ class MigrateExecutable implements MigrateExecutableInterface {
    *   The migration to run.
    * @param \Drupal\migrate\MigrateMessageInterface $message
    *   (optional) The migrate message service.
-   * @param \Symfony\Contracts\EventDispatcher\EventDispatcherInterface $event_dispatcher
+   * @param \Symfony\Contracts\EventDispatcher\EventDispatcherInterface $eventDispatcher
    *   (optional) The event dispatcher.
    */
-  public function __construct(MigrationInterface $migration, MigrateMessageInterface $message = NULL, EventDispatcherInterface $event_dispatcher = NULL) {
-    $this->migration = $migration;
+  public function __construct(protected MigrationInterface $migration, MigrateMessageInterface $message = NULL, protected EventDispatcherInterface $eventDispatcher = NULL) {
     $this->message = $message ?: new MigrateMessage();
     $this->getIdMap()->setMessage($this->message);
-    $this->eventDispatcher = $event_dispatcher;
     // Record the memory limit in bytes
     $limit = trim(ini_get('memory_limit'));
     if ($limit == '-1') {

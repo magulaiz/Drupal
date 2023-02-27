@@ -28,13 +28,6 @@ use Symfony\Component\Routing\Exception\RouteNotFoundException;
 class ViewExecutable {
 
   /**
-   * The config entity in which the view is stored.
-   *
-   * @var \Drupal\views\Entity\View
-   */
-  public $storage;
-
-  /**
    * Whether or not the view has been built.
    *
    * @todo Group with other static properties.
@@ -419,32 +412,11 @@ class ViewExecutable {
   ];
 
   /**
-   * The current user.
-   *
-   * @var \Drupal\Core\Session\AccountInterface
-   */
-  protected $user;
-
-  /**
    * Should the admin links be shown on the rendered view.
    *
    * @var bool
    */
   protected $showAdminLinks;
-
-  /**
-   * The views data.
-   *
-   * @var \Drupal\views\ViewsData
-   */
-  protected $viewsData;
-
-  /**
-   * The route provider.
-   *
-   * @var \Drupal\Core\Routing\RouteProviderInterface
-   */
-  protected $routeProvider;
 
   /**
    * The entity type of the base table, if available.
@@ -467,18 +439,13 @@ class ViewExecutable {
    *   The view config entity the actual information is stored on.
    * @param \Drupal\Core\Session\AccountInterface $user
    *   The current user.
-   * @param \Drupal\views\ViewsData $views_data
+   * @param \Drupal\views\ViewsData $viewsData
    *   The views data.
-   * @param \Drupal\Core\Routing\RouteProviderInterface $route_provider
+   * @param \Drupal\Core\Routing\RouteProviderInterface $routeProvider
    *   The route provider.
    */
-  public function __construct(ViewEntityInterface $storage, AccountInterface $user, ViewsData $views_data, RouteProviderInterface $route_provider) {
-    // Reference the storage and the executable to each other.
-    $this->storage = $storage;
+  public function __construct(public ViewEntityInterface $storage, protected AccountInterface $user, protected ViewsData $viewsData, protected RouteProviderInterface $routeProvider) {
     $this->storage->set('executable', $this);
-    $this->user = $user;
-    $this->viewsData = $views_data;
-    $this->routeProvider = $route_provider;
   }
 
   /**

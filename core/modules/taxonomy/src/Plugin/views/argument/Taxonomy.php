@@ -17,17 +17,10 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class Taxonomy extends NumericArgument implements ContainerFactoryPluginInterface {
 
   /**
-   * @var \Drupal\Core\Entity\EntityStorageInterface
-   */
-  protected $termStorage;
-
-  /**
    * {@inheritdoc}
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityStorageInterface $term_storage) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, protected EntityStorageInterface $termStorage) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
-
-    $this->termStorage = $term_storage;
   }
 
   /**
