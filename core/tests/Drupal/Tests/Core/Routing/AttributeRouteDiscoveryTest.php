@@ -31,12 +31,14 @@ class AttributeRouteDiscoveryTest extends UnitTestCase {
     $routeCollection = $event->getRouteCollection();
     $this->assertNotEmpty($routeCollection);
 
+    // cspell:ignore testattributes attributemethod
     $route1 = $routeCollection->get('drupal_router_test_controller_testattributes_attributemethod');
     $this->assertNotNull($route1);
     $this->assertEquals('/test_method_attribute', $route1->getPath());
     $this->assertEquals('Drupal\router_test\Controller\TestAttributes::attributeMethod', $route1->getDefault('_controller'));
     $this->assertEquals("TRUE", $route1->getRequirement('_access'));
 
+    // cspell:ignore testclassattribute
     $route2 = $routeCollection->get('drupal_router_test_controller_testclassattribute___invoke');
     $this->assertNotNull($route2);
     $this->assertEquals('/test_class_attribute', $route2->getPath());
