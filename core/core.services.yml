@@ -71,6 +71,7 @@ services:
   app:
     class: Drupal\Core\App
     arguments: [ '%app.root%' ]
+  Drupal\Core\App: '@app'
   plugin.manager.config_action:
     class: Drupal\Core\Config\Action\ConfigActionManager
     parent: default_plugin_manager
@@ -1047,6 +1048,7 @@ services:
     class: Symfony\Component\Routing\RequestContext
     tags:
       - { name: persist }
+  Symfony\Component\Routing\RequestContext: '@router.symfony_request_context'
   router.request_context:
     class: Drupal\Core\Routing\RequestContext
     tags:
