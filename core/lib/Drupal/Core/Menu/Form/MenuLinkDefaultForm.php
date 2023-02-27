@@ -129,7 +129,7 @@ class MenuLinkDefaultForm implements MenuLinkFormInterface, ContainerInjectionIn
     ];
 
     /** @var \Drupal\system\MenuInterface[] $type_menu */
-    $type_menu = Menu::load( $this->menuLink->getMenuName());
+    $type_menu = Menu::load($this->menuLink->getMenuName());
     $menu = [$type_menu->id() => $type_menu->label()];
 
     $menu_parent = $this->menuLink->getMenuName() . ':' . $this->menuLink->getParent();
@@ -189,5 +189,3 @@ class MenuLinkDefaultForm implements MenuLinkFormInterface, ContainerInjectionIn
   }
 
 }
-
-
