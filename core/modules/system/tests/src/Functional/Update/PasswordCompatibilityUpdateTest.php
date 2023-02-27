@@ -2,7 +2,6 @@
 
 namespace Drupal\Tests\system\Functional\Update;
 
-use Drupal\Core\Url;
 use Drupal\FunctionalTests\Update\UpdatePathTestBase;
 use Drupal\user\Entity\User;
 
