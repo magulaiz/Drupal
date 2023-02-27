@@ -48,6 +48,7 @@ class ImageTest extends KernelTestBase {
     $request->setSession(new Session(new MockArraySessionStorage()));
     $this->container = \Drupal::service('kernel')->getContainer();
     $this->container->get('request_stack')->push($request);
+    $this->container->get('app')->setRequest($request);
 
     $this->fileUrlGenerator = $this->container->get('file_url_generator');
 

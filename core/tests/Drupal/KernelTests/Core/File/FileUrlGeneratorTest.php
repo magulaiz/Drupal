@@ -164,6 +164,7 @@ class FileUrlGeneratorTest extends FileTestBase {
     $request = Request::create($GLOBALS['base_url']);
     $request->setSession(new Session(new MockArraySessionStorage()));
     $this->container->get('request_stack')->push($request);
+    $this->container->get('app')->setRequest($request);
     \Drupal::setContainer($this->container);
 
     // Shipped file.
@@ -194,6 +195,7 @@ class FileUrlGeneratorTest extends FileTestBase {
     $request = Request::create($GLOBALS['base_url']);
     $request->setSession(new Session(new MockArraySessionStorage()));
     $this->container->get('request_stack')->push($request);
+    $this->container->get('app')->setRequest($request);
     \Drupal::setContainer($this->container);
 
     // No schema file.
@@ -212,6 +214,7 @@ class FileUrlGeneratorTest extends FileTestBase {
     $request = Request::create($GLOBALS['base_url']);
     $request->setSession(new Session(new MockArraySessionStorage()));
     $this->container->get('request_stack')->push($request);
+    $this->container->get('app')->setRequest($request);
     \Drupal::setContainer($this->container);
 
     $public_directory_path = \Drupal::service('stream_wrapper_manager')
