@@ -349,9 +349,18 @@ class MediaTest extends ResourceTestBase {
    * {@inheritdoc}
    */
   protected function getExpectedUnauthorizedAccessCacheability() {
+    $this->entityStorage->resetCache();
+    $latestRevisionId = $this->entityStorage->getLatestRevisionId($this->entity->id());
+    $entity = $this->entityStorage->loadRevision($latestRevisionId);
+    $isPublished = $entity->isPublished();
     // @see \Drupal\media\MediaAccessControlHandler::checkAccess()
-    return parent::getExpectedUnauthorizedAccessCacheability()
-      ->addCacheTags(['media:1']);
+    $parent = parent::getExpectedUnauthorizedAccessCacheability();
+    // If the latest revision is unpublished we probably expect the user cache
+    // context.
+    if (!$isPublished) {
+      $parent->addCacheContexts(['user']);
+    }
+    return $parent->addCacheTags(['media:1']);
   }
 
   /**
