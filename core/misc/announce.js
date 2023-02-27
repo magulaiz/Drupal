@@ -39,6 +39,7 @@
         liveElement.className = 'visually-hidden';
         liveElement.setAttribute('aria-live', 'polite');
         liveElement.setAttribute('aria-busy', 'false');
+        liveElement.setAttribute('aria-atomic', 'false');
         document.body.appendChild(liveElement);
       }
     },
@@ -50,6 +51,7 @@
   function announce() {
     const text = [];
     let priority = 'polite';
+    let atomic = 'false';
     let announcement;
 
     // Create an array of announcement strings to be joined and appended to the
@@ -63,6 +65,11 @@
       if (announcement.priority === 'assertive') {
         priority = 'assertive';
       }
+      // If any of the announcements has an atomic value of true, then the group
+      // of joined announcements will have the same attribute and value
+      if (announcement.atomic === 'true') {
+        atomic = 'true';
+      }
     }
 
     if (text.length) {
@@ -72,6 +79,8 @@
       liveElement.setAttribute('aria-busy', 'true');
       // Set the priority to assertive, or default to polite.
       liveElement.setAttribute('aria-live', priority);
+      // Set the aria-atomic value to true, or default to false
+      liveElement.setAttribute('aria-atomic', atomic);
       // Print the text to the live region. Text should be run through
       // Drupal.t() before being passed to Drupal.announce().
       liveElement.innerHTML = text.join('\n');
@@ -96,18 +105,20 @@
    * @param {string} [priority='polite']
    *   A string to indicate the priority of the message. Can be either
    *   'polite' or 'assertive'.
-   *
+   * @param {string} [atomic='false']
+   *   A string to indicate the value of the aria-atomic attribute. Can be either true or false' default is false
    * @return {function}
    *   The return of the call to debounce.
    *
    * @see http://www.w3.org/WAI/PF/aria-practices/#liveprops
    */
-  Drupal.announce = function (text, priority) {
+  Drupal.announce = function (text, priority, atomic) {
     // Save the text and priority into a closure variable. Multiple simultaneous
     // announcements will be concatenated and read in sequence.
     announcements.push({
       text,
       priority,
+      atomic,
     });
     // Immediately invoke the function that debounce returns. 200 ms is right at
     // the cusp where humans notice a pause, so we will wait
