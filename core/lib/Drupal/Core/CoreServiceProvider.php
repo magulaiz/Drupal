@@ -96,13 +96,12 @@ class CoreServiceProvider implements ServiceProviderInterface, ServiceModifierIn
   }
 
   /**
-   * {@inheritdoc}
+   * Alters the UUID service to use the most efficient method available.
    *
    * @param \Drupal\Core\DependencyInjection\ContainerBuilder $container
    *   The container builder.
    */
   public function alter(ContainerBuilder $container) {
-    // Alter the UUID service to use the most efficient method available.
     $uuid_service = $container->getDefinition('uuid');
     // Debian/Ubuntu uses the (broken) OSSP extension as their UUID
     // implementation. The OSSP implementation is not compatible with the
@@ -113,15 +112,6 @@ class CoreServiceProvider implements ServiceProviderInterface, ServiceModifierIn
     // Try to use the COM implementation for Windows users.
     elseif (function_exists('com_create_guid')) {
       $uuid_service->setClass('Drupal\Component\Uuid\Com');
-    }
-
-    // Remove the password.core_backward_compat service unless the
-    // password.core_backward_compat container parameter is set to TRUE.
-    if (
-      $container->has('password.core_backward_compat') &&
-      !$container->getParameter('password.core_backward_compat')
-    ) {
-      $container->removeDefinition('password.core_backward_compat');
     }
   }
 
