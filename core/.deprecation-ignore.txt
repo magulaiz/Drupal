@@ -26,3 +26,6 @@
 
 # PHPUnit 10.
 %The "PHPUnit\\Framework\\TestCase::__construct\(\)" method is considered internal.*You should not extend it from "Drupal\\[^"]+"%
+
+# JSONAPI
+%The "serializer.normalizer.content_entity.jsonapi" service is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. You should use the 'serializer.normalizer.fieldable_entity.jsonapi' service instead.%
