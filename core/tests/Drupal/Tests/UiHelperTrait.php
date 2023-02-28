@@ -242,10 +242,12 @@ trait UiHelperTrait {
    *
    * @param \Drupal\Core\Session\AccountInterface $account
    *   User object representing the user to log in.
+   * @param string $label
+   *   Text label of button used to submit log in.
    *
    * @see drupalCreateUser()
    */
-  protected function drupalLogin(AccountInterface $account) {
+  protected function drupalLogin(AccountInterface $account, string $label = 'Log in') {
     if ($this->loggedInUser) {
       $this->drupalLogout();
     }
@@ -254,7 +256,7 @@ trait UiHelperTrait {
     $this->submitForm([
       'name' => $account->getAccountName(),
       'pass' => $account->passRaw,
-    ], 'Log in');
+    ], $label);
 
     // @see ::drupalUserIsLoggedIn()
     $account->sessionId = $this->getSession()->getCookie(\Drupal::service('session_configuration')->getOptions(\Drupal::request())['name']);
