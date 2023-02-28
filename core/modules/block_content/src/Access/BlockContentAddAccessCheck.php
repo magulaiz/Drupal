@@ -61,8 +61,7 @@ class BlockContentAddAccessCheck implements AccessInterface {
       }
     }
 
-    // No opinion.
-    return AccessResult::neutral();
+    return AccessResult::forbidden();
   }
 
 }

@@ -6,7 +6,7 @@ block_content.add_page:
   options:
     _admin_route: TRUE
   requirements:
-    _entity_create_any_access: 'block_content'
+    _block_content_add_access: 'block_content'
 
 # @todo Deprecate this route once
 #   https://www.drupal.org/project/drupal/issues/3159210 is fixed, or remove
