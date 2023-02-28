@@ -40,18 +40,20 @@ body.drag {
 }
 
 /* Don't display the abbreviation of 'add-new' table rows. */
-.add-new .tabledrag-changed {
-  display: none;
-}
+.tabledrag-changed {
+  @nest .add-new & {
+    display: none;
+  }
 
-.draggable .tabledrag-changed {
-  position: relative;
-  inset-inline-start: calc(var(--space-xs) * -1);
-}
+  @nest .draggable & {
+    position: relative;
+    inset-inline-start: calc(var(--space-xs) * -1);
+  }
 
-.tabledrag-cell--only-drag .tabledrag-changed {
-  width: var(--space-l);
-  min-width: var(--space-l);
+  @nest .tabledrag-cell--only-drag & {
+    width: var(--space-l);
+    min-width: var(--space-l);
+  }
 }
 
 /**
@@ -141,13 +143,15 @@ body.drag {
 }
 
 /* Disabled tabledrag handle. */
-.tabledrag-disabled .tabledrag-handle {
-  cursor: default;
-  opacity: 0.4;
-}
+.tabledrag-disabled {
+  & .tabledrag-handle {
+    cursor: default;
+    opacity: 0.4;
 
-.tabledrag-disabled .tabledrag-handle.tabledrag-handle::before {
-  content: normal;
+    &.tabledrag-handle::before {
+      content: normal;
+    }
+  }
 }
 
 /**
@@ -157,12 +161,14 @@ body.drag {
 /**
  * Increase handle size.
  */
-.touchevents .tabledrag-handle::after {
-  padding-block: var(--space-s);
-}
+.touchevents {
+  & .tabledrag-handle::after {
+    padding-block: var(--space-s);
+  }
 
-.touchevents .draggable .menu-item__link {
-  padding-block: var(--space-xs);
+  & .draggable .menu-item__link {
+    padding-block: var(--space-xs);
+  }
 }
 
 /**
@@ -216,15 +222,16 @@ body.drag {
   display: none;
 }
 
-.tabledrag-cell-content .indentation,
-[dir="rtl"] .tabledrag-cell-content .indentation {
+.tabledrag-cell-content .indentation {
   float: none;
   overflow: hidden;
   height: 100%;
 }
 
-.tabledrag-cell-content .tree {
-  min-height: 100%;
+.tabledrag-cell-content {
+  & .tree {
+    min-height: 100%;
+  }
 }
 
 /**
@@ -280,41 +287,55 @@ body.drag {
 }
 
 /* LTR tree child. */
-.tree-child path:not(.tree__item-child-ltr) {
-  display: none;
-}
-.tree-child path.tree__item-child-ltr {
-  display: block;
+.tree-child path {
+  &:not(.tree__item-child-ltr) {
+    display: none;
+  }
+
+  &.tree__item-child-ltr {
+    display: block;
+  }
 }
 
 /* RTL tree child. */
-[dir="rtl"] .tree-child path:not(.tree__item-child-rtl) {
-  display: none;
-}
-[dir="rtl"] .tree-child path.tree__item-child-rtl {
-  display: block;
+[dir="rtl"] {
+  & .tree-child path {
+    &:not(.tree__item-child-rtl) {
+      display: none;
+    }
+    &.tree__item-child-rtl {
+      display: block;
+    }
+  }
+
+  /* Last RTL tree child. */
+  & .tree-child-last path {
+    &:not(.tree__item-child-last-rtl) {
+      display: none;
+    }
+    &.tree__item-child-last-rtl {
+      display: block;
+    }
+  }
 }
 
 /* Last LTR tree child. */
-.tree-child-last path:not(.tree__item-child-last-ltr) {
-  display: none;
-}
-.tree-child-last path.tree__item-child-last-ltr {
-  display: block;
-}
-
-/* Last RTL tree child. */
-[dir="rtl"] .tree-child-last path:not(.tree__item-child-last-rtl) {
-  display: none;
-}
-[dir="rtl"] .tree-child-last path.tree__item-child-last-rtl {
-  display: block;
+.tree-child-last path {
+  &:not(.tree__item-child-last-ltr) {
+    display: none;
+  }
+  &.tree__item-child-last-ltr {
+    display: block;
+  }
 }
 
 /* Horizontal line. */
-.tree-child-horizontal path:not(.tree__item-horizontal) {
-  display: none;
-}
-.tree-child-horizontal path.tree__item-horizontal {
-  display: block;
+.tree-child-horizontal path {
+  &:not(.tree__item-horizontal) {
+    display: none;
+  }
+
+  &.tree__item-horizontal {
+    display: block;
+  }
 }

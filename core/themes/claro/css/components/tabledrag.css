@@ -242,8 +242,7 @@ body.drag {
   display: none;
 }
 
-.tabledrag-cell-content .indentation,
-[dir="rtl"] .tabledrag-cell-content .indentation {
+.tabledrag-cell-content .indentation {
   float: none;
   overflow: hidden;
   height: 100%;
@@ -332,16 +331,6 @@ body.drag {
   display: block;
 }
 
-/* Last LTR tree child. */
-
-.tree-child-last path:not(.tree__item-child-last-ltr) {
-  display: none;
-}
-
-.tree-child-last path.tree__item-child-last-ltr {
-  display: block;
-}
-
 /* Last RTL tree child. */
 
 [dir="rtl"] .tree-child-last path:not(.tree__item-child-last-rtl) {
@@ -349,6 +338,16 @@ body.drag {
 }
 
 [dir="rtl"] .tree-child-last path.tree__item-child-last-rtl {
+  display: block;
+}
+
+/* Last LTR tree child. */
+
+.tree-child-last path:not(.tree__item-child-last-ltr) {
+  display: none;
+}
+
+.tree-child-last path.tree__item-child-last-ltr {
   display: block;
 }
 
