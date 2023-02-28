@@ -3,7 +3,11 @@
  * Defines the behavior of the Drupal administration toolbar.
  */
 
-const setClassesAsap = () => {
+/**
+ * Set UI-impacting toolbar classes before Drupal behaviors initialize to
+ * minimize flickering on load.
+ */
+const setToolbarClassesEarly = () => {
   const toolbarActiveTray = Cookies.get('toolbarActiveTray');
   const orientation = Cookies.get('toolbarOrientation');
   const activeTrayElement = document.querySelector(
@@ -17,14 +21,18 @@ const setClassesAsap = () => {
     activeTrayElement.classList.add(`toolbar-tray-${orientation}`, 'is-active');
     activeTrayToggle.classList.add('is-active');
   }
+
   const toolbarUserName = Cookies.get('toolbarUserName');
-  if (toolbarUserName) {
-    document.querySelector('#toolbar-item-user').textContent = toolbarUserName;
+  const toolbarUserButton = document.querySelector('#toolbar-item-user');
+  if (toolbarUserName && toolbarUserButton) {
+    toolbarUserButton.textContent = toolbarUserName;
   }
 };
-setClassesAsap();
+setToolbarClassesEarly();
 (function ($, Drupal, drupalSettings, Cookies) {
-  setClassesAsap();
+  // Re-invoke setToolbarClassesEarly() to account for contrib toolbar items
+  // that may have not been available when it was called earlier.
+  setToolbarClassesEarly();
 
   // Merge run-time settings with the defaults.
   const options = $.extend(
@@ -214,11 +222,8 @@ setClassesAsap();
           },
         });
       });
-    },
-  };
 
-  Drupal.behaviors.toolbarAntiFlicker = {
-    attach: function attach(context) {
+      // Add anti-flicker functionality.
       if (
         once('toolbarAntiFlicker', '#toolbar-administration', context).length
       ) {
@@ -277,6 +282,7 @@ setClassesAsap();
       }
     },
   };
+
   /**
    * Toolbar methods of Backbone objects.
    *

@@ -282,7 +282,7 @@ body.toolbar-tray-open.toolbar-vertical.toolbar-fixed {
   display: block;
 }
 
-/* Anti Flicker etc. */
+/* Anti flicker styling. */
 .toolbar-loading {
   padding-top: 2.4375rem;
 }

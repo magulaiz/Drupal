@@ -282,7 +282,7 @@ body.toolbar-tray-open.toolbar-vertical.toolbar-fixed {
 .path-admin .toolbar-bar .home-toolbar-tab {
   display: block;
 }
-/* Anti Flicker etc. */
+/* Anti flicker styling. */
 .toolbar-loading {
   padding-top: 2.4375rem;
 }
