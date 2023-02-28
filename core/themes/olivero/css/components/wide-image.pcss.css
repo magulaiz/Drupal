@@ -41,7 +41,7 @@
   margin-inline-end: 0;
 }
 
-/* Ensure that image doesn't overlap in the node page*/
+/* Ensure that image doesn't overlap in the node page */
 .node .wide-image {
   max-width: 100%;
   margin-inline-start: 0;
