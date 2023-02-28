@@ -32,7 +32,7 @@ use Drupal\block_content\BlockContentTypeInterface;
  *     },
  *     "list_builder" = "Drupal\block_content\BlockContentTypeListBuilder"
  *   },
- *   admin_permission = "administer block library",
+ *   admin_permission = "administer block types",
  *   config_prefix = "type",
  *   bundle_of = "block_content",
  *   entity_keys = {
