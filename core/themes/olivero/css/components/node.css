@@ -84,6 +84,7 @@
 }
 
 .node--unpublished {
+  padding: var(--sp);
   /* There is no variable for the color - #fff4f4. */
   background-color: #fff4f4;
 }
