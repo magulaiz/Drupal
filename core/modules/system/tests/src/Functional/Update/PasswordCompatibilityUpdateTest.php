@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\system\Functional\Update;
 
+use Drupal\Core\Url;
 use Drupal\FunctionalTests\Update\UpdatePathTestBase;
 use Drupal\user\Entity\User;
 
@@ -30,34 +31,44 @@ class PasswordCompatibilityUpdateTest extends UpdatePathTestBase {
    * Tests that the password compatibility is working properly.
    */
   public function testPasswordCompatibility() {
-    // Ensure phpass extension is not yet enabled.
-    $this->assertArrayNotHasKey('phpass', $this->config('core.extension')->get('module'));
-
-    // Log in as user test1 with password "drupal".
-    // This account still uses the original phpass hash.
-    $account1 = User::load(2);
-    $account1->passRaw = 'drupal';
-    $this->drupalLogin($account1);
-    $this->drupalLogout();
-
     $this->runUpdates();
 
-    // Ensure phpass extension is enabled.
-    $this->assertArrayHasKey('phpass', $this->config('core.extension')->get('module'));
+    /** @var \Drupal\Core\Extension\ModuleInstaller $installer */
+    $installer = \Drupal::service('module_installer');
 
     // Log in as user test1 with password "drupal".
-    // This account now uses the native php password hash.
     $account1 = User::load(2);
     $account1->passRaw = 'drupal';
     $this->drupalLogin($account1);
     $this->drupalLogout();
 
-    // Log in as user test2 with password "drupal".
-    // This account still uses the original phpass hash.
+    // Uninstall the password compatibility module.
+    $installer->uninstall(['phpass']);
+
+    // Log in as user test1 again. The password hash has been updated during the
+    // initial login.
+    $this->drupalLogin($account1);
+    $this->drupalLogout();
+
+    // Attempt to login as user test2 with password "drupal". The password hash
+    // is still the one from the database dump.
     $account2 = User::load(3);
     $account2->passRaw = 'drupal';
+
+    $this->drupalGet(Url::fromRoute('user.login'));
+    $this->submitForm([
+      'name' => $account2->getAccountName(),
+      'pass' => $account2->passRaw,
+    ], 'Log in');
+    $this->assertSession()->statusCodeEquals(200);
+    $this->assertSession()->pageTextContains('Unrecognized username or password. Forgot your password?');
+
+    // Reinstall the password compatibility module.
+    $installer->install(['phpass']);
+
+    // Attempt to login as user test2 again. This time after the password
+    // compatibility module has been reinstalled.
     $this->drupalLogin($account2);
-    $this->drupalLogout();
   }
 
 }
