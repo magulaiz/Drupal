@@ -39,7 +39,7 @@ class LanguageNegotiationContentEntityTest extends LanguageNegotiationTestBase {
   protected $languageManager;
 
   /**
-   * {@inheritDoc}
+   * {@inheritdoc}
    */
   protected function getPluginClass(): string {
     return LanguageNegotiationContentEntity::class;
@@ -147,7 +147,7 @@ class LanguageNegotiationContentEntityTest extends LanguageNegotiationTestBase {
       );
     $options = [];
     $path = $this->randomMachineName();
-    
+
     // Case 1a: Empty request.
     $this->assertEquals($path, $languageNegotiationContentEntityMock->processOutbound($path));
     $request = Request::create('/foo', 'GET');
@@ -156,7 +156,7 @@ class LanguageNegotiationContentEntityTest extends LanguageNegotiationTestBase {
     $this->assertEquals($path, $languageNegotiationContentEntityMock->processOutbound($path, $options, $request));
     $options = ['route' => $this->createMock(Route::class)];
     // Case 1c: hasLowerLanguageNegotiationWeight() returns FALSE.
-    $this->assertEquals($path, $languageNegotiationContentEntityMock->processOutbound($path, $options, $request));    
+    $this->assertEquals($path, $languageNegotiationContentEntityMock->processOutbound($path, $options, $request));
     // Case 1d: meetsContentEntityRoutesCondition() returns FALSE.
     $this->assertEquals($path, $languageNegotiationContentEntityMock->processOutbound($path, $options, $request));
 
@@ -231,7 +231,7 @@ class LanguageNegotiationContentEntityTest extends LanguageNegotiationTestBase {
           LanguageNegotiationContentEntity::QUERY_PARAMETER => 'en',
           'param1' => 'xyz',
         ],
-      ],      
+      ],
     ];
     $providedLanguageSwitchLinksArray = $languageNegotiationContentEntity->getLanguageSwitchLinks($request, $this->randomMachineName(), $url);
     $this->assertEquals(
