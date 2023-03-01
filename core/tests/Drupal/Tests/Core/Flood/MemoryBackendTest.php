@@ -17,105 +17,223 @@ use Drupal\Tests\UnitTestCase;
 class MemoryBackendTest extends UnitTestCase {
 
   /**
-   * A test time service.
-   *
-   * @var \Drupal\Component\Datetime\TimeInterface
-   */
-  protected $time;
-
-  /**
    * The tested memory flood backend.
    *
    * @var \Drupal\Core\Flood\MemoryBackend
    */
-  protected $flood;
+  protected MemoryBackend $flood;
+
+  /**
+   * A test time service.
+   *
+   * @var \PHPUnit\Framework\MockObject\MockObject|\Drupal\Component\Datetime\TimeInterface
+   */
+  protected $time;
+
+  /**
+   * A request for testing.
+   *
+   * @var \PHPUnit\Framework\MockObject\MockObject|\Symfony\Component\HttpFoundation\Request
+   */
+  protected $testRequest;
 
   /**
    * {@inheritdoc}
    */
   protected function setUp(): void {
-    $request = new RequestStack();
-    $request_mock = $this->getMockBuilder(Request::class)
-      ->onlyMethods(['getClientIp'])
-      ->getMock();
-    $request->push($request_mock);
+    parent::setUp();
+
+    $requestStack = $this->createMock(RequestStack::class);
+    $this->testRequest = $this->createMock(Request::class);
+    $requestStack->expects($this->any())
+      ->method('getCurrentRequest')
+      ->willReturn($this->testRequest);
     $this->time = $this->createMock(TimeInterface::class);
+    $this->flood = new class($requestStack, $this->time) extends MemoryBackend {
+
+      /**
+       * Get all flood events.
+       *
+       * @return array
+       *   All flood events.
+       */
+      final public function getEvents(): array {
+        return $this->events;
+      }
+
+    };
+  }
+
+  /**
+   * Tests an allowed flood event with an identifier.
+   *
+   * @covers ::isAllowed
+   */
+  public function testAllowed(): void {
+    // Ensure IP is not retrieved when an identifier is passed.
+    $this->testRequest->expects($this->never())->method('getClientIp');
     $this->time->expects($this->any())
       ->method('getRequestMicroTime')
       ->willReturn(0.0);
-    $this->flood = new MemoryBackend($request, $this->time);
-  }
 
-  /**
-   * Tests an allowed flood event.
-   */
-  public function testAllowedProceeding() {
-    $threshold = 2;
-    $window_expired = -1;
-
-    $this->flood->register('test_event', $window_expired);
-    $this->assertTrue($this->flood->isAllowed('test_event', $threshold));
-  }
-
-  /**
-   * Tests a flood event with more than the allowed calls.
-   */
-  public function testNotAllowedProceeding() {
+    $eventName = 'test_event';
+    $identifier = 'test_identifier';
     $threshold = 1;
-    $window_expired = -1;
+    $window = 10;
 
-    // Register the event twice, so it is not allowed to proceed.
-    $this->flood->register('test_event', $window_expired);
-    $this->flood->register('test_event', $window_expired, 1);
-
-    $this->assertFalse($this->flood->isAllowed('test_event', $threshold));
+    $this->assertTrue($this->flood->isAllowed($eventName, $threshold, $window, $identifier));
+    $this->flood->register($eventName, $window, $identifier);
+    // More than the allowed calls ($threshold).
+    $this->assertFalse($this->flood->isAllowed($eventName, $threshold, $window, $identifier));
   }
 
   /**
-   * Tests a flood event with expiring, so cron will allow to proceed.
+   * Tests when no identifier is passed.
    *
-   * @medium
+   * When no identifier is passed, the client IP is used.
    */
-  public function testExpiring() {
+  public function testDefaultIdentifier(): void {
+    $eventName = 'test_identifier';
+    $window = 10;
+    $ip = '1.2.3.4';
+    $identifier = NULL;
+
+    $this->testRequest->expects($this->exactly(3))
+      ->method('getClientIp')
+      ->willReturn($ip);
+    $this->time->expects($this->any())
+      ->method('getRequestMicroTime')
+      ->willReturn(0.0);
+    $this->flood->register($eventName, $window, $identifier);
+    $this->assertCount(1, $this->flood->getEvents()[$eventName][$ip]);
+    $this->flood->isAllowed($eventName, $window, $identifier);
+    $this->flood->clear($eventName, $identifier);
+    $this->assertCount(0, $this->flood->getEvents()[$eventName]);
+  }
+
+  /**
+   * Tests pre-expired events are accepted.
+   *
+   * Even if an expired event is registered, isAllowed will still return
+   * false until the event is garbage collected.
+   *
+   * @covers ::isAllowed
+   */
+  public function testExpiring(): void {
+    $this->testRequest->expects($this->never())->method('getClientIp');
+    $this->time->expects($this->any())
+      ->method('getRequestMicroTime')
+      ->willReturn(0.0);
+
+    $eventName = 'test_event_name';
+    $identifier = 'test_identifier';
+    $window = 10;
+    $windowExpired = -1;
     $threshold = 1;
-    $window_expired = -1;
 
-    $this->flood->register('test_event', $window_expired);
-    usleep(2);
-    $this->flood->register('test_event', $window_expired);
-
-    $this->assertFalse($this->flood->isAllowed('test_event', $threshold));
-
+    // Register expired event.
+    $this->flood->register($eventName, $windowExpired, $identifier);
+    // Verify event is not allowed.
+    $this->assertFalse($this->flood->isAllowed($eventName, $threshold, $window, $identifier));
     // "Run cron", which clears the flood data and verify event is now allowed.
     $this->flood->garbageCollection();
-    $this->assertTrue($this->flood->isAllowed('test_event', $threshold));
+    $this->assertTrue($this->flood->isAllowed($eventName, $threshold, $window, $identifier));
   }
 
   /**
-   * Tests a flood event with no expiring, so cron will not allow to proceed.
+   * Test events are only garbage collected when the current time passes expiry.
+   *
+   * @covers ::garbageCollection
    */
-  public function testNotExpiring() {
-    $threshold = 2;
+  public function testGarbageCollection(): void {
+    $this->testRequest->expects($this->never())->method('getClientIp');
+    $this->time->expects($this->any())
+      ->method('getRequestMicroTime')
+      ->willReturnOnConsecutiveCalls(0.0, 6.0, 12.0);
+    $eventName = 'test_event_name';
+    $identifier = 'test_identifier';
+    $window = 10;
 
-    $this->flood->register('test_event', 1);
-    usleep(3);
-    $this->flood->register('test_event', 1);
+    $this->assertCount(0, $this->flood->getEvents());
+    $this->flood->register($eventName, $window, $identifier);
+    $this->assertCount(1, $this->flood->getEvents()[$eventName][$identifier]);
 
-    $this->assertFalse($this->flood->isAllowed('test_event', $threshold));
-
-    // "Run cron", which clears the flood data and verify event is not allowed.
+    // Progress time before window, event still exists after garbage collection.
     $this->flood->garbageCollection();
-    $this->assertFalse($this->flood->isAllowed('test_event', $threshold));
+    $this->assertCount(1, $this->flood->getEvents()[$eventName][$identifier]);
+
+    // Progress time after window, event deleted after garbage collection.
+    $this->flood->garbageCollection();
+    $this->assertCount(0, $this->flood->getEvents()[$eventName][$identifier]);
   }
 
   /**
    * Tests memory backend records events to the nearest microsecond.
    */
-  public function testMemoryBackendThreshold() {
-    $this->flood->register('new event');
-    $this->assertTrue($this->flood->isAllowed('new event', '2'));
-    $this->flood->register('new event');
-    $this->assertFalse($this->flood->isAllowed('new event', '2'));
+  public function testMemoryBackendThreshold(): void {
+    $this->testRequest->expects($this->never())->method('getClientIp');
+    $this->time->expects($this->any())
+      ->method('getRequestMicroTime')
+      ->willReturn(0.0);
+    $eventName = 'test_event_name';
+    $identifier = 'test_identifier';
+    $this->flood->register($eventName, identifier: $identifier);
+    $this->assertTrue($this->flood->isAllowed($eventName, 2, identifier: $identifier));
+    $this->flood->register($eventName, identifier: $identifier);
+    $this->assertFalse($this->flood->isAllowed($eventName, 2, identifier: $identifier));
+  }
+
+  /**
+   * Tests events for an event name and identifier combination can be voided.
+   *
+   * @covers ::clear
+   */
+  public function testClear(): void {
+    $this->testRequest->expects($this->never())->method('getClientIp');
+    $this->time->expects($this->any())
+      ->method('getRequestMicroTime')
+      ->willReturn(0.0);
+    $eventName = 'test_event_name';
+    $identifier = 'test_identifier';
+    $window = 10;
+    $this->flood->register($eventName, $window, $identifier);
+    $this->assertCount(1, $this->flood->getEvents()[$eventName][$identifier]);
+    $this->flood->clear($eventName, $identifier);
+    $this->assertCount(0, $this->flood->getEvents()[$eventName]);
+  }
+
+  /**
+   * Tests events with a common identifier prefix are cleared.
+   *
+   * @covers ::clearByPrefix
+   */
+  public function testClearByPrefix(): void {
+    $this->testRequest->expects($this->never())->method('getClientIp');
+    $this->time->expects($this->any())
+      ->method('getRequestMicroTime')
+      ->willReturn(0.0);
+
+    $eventName = 'test_event_name';
+    $identifierPrefix = 'test_identifier';
+    $identifier1 = $identifierPrefix . '-' . $this->randomMachineName();
+    $identifier2 = $identifierPrefix . '-' . $this->randomMachineName();
+    $identifierOther = 'other_test_identifier';
+    $window = 10;
+
+    $this->flood->register($eventName, $window, $identifier1);
+    $this->flood->register($eventName, $window, $identifier2);
+    $this->flood->register($eventName, $window, $identifierOther);
+    $this->assertEquals([
+      $identifier1,
+      $identifier2,
+      'other_test_identifier',
+    ], array_keys($this->flood->getEvents()[$eventName]));
+
+    $this->flood->clearByPrefix($eventName, $identifierPrefix);
+    $this->assertEquals([
+      // Only events without the prefix remain.
+      'other_test_identifier',
+    ], array_keys($this->flood->getEvents()[$eventName]));
   }
 
 }

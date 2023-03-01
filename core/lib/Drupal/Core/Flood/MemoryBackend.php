@@ -18,14 +18,9 @@ class MemoryBackend implements FloodInterface, PrefixFloodInterface {
   protected $requestStack;
 
   /**
-   * The time service.
-   *
-   * @var \Drupal\Component\Datetime\TimeInterface
-   */
-  protected $time;
-
-  /**
    * An array holding flood events, keyed by event name and identifier.
+   *
+   * @var array<string, array<string, array<int, array{expire: float, time: float}>>>
    */
   protected $events = [];
 
@@ -34,13 +29,16 @@ class MemoryBackend implements FloodInterface, PrefixFloodInterface {
    *
    * @param \Symfony\Component\HttpFoundation\RequestStack $request_stack
    *   The request stack used to retrieve the current request.
-   * @param \Drupal\Component\Datetime\TimeInterface $time
+   * @param \Drupal\Component\Datetime\TimeInterface|null $time
    *   The time service.
    */
-  public function __construct(RequestStack $request_stack, TimeInterface $time = NULL) {
+  public function __construct(
+    RequestStack $request_stack,
+    protected ?TimeInterface $time = NULL,
+  ) {
     $this->requestStack = $request_stack;
     if (!$time) {
-      @trigger_error('Calling MemoryBackend::__construct() without the $time argument is deprecated in drupal:9.4.0 and will be required before drupal:10.0.0. See https://www.drupal.org/node/3253739.', E_USER_DEPRECATED);
+      @trigger_error('Calling MemoryBackend::__construct() without the $time argument is deprecated in drupal:10.1.0 and will be required before drupal:11.0.0. See https://www.drupal.org/node/3253739.', E_USER_DEPRECATED);
     }
     $this->time = $time ?? \Drupal::time();
   }
@@ -53,10 +51,7 @@ class MemoryBackend implements FloodInterface, PrefixFloodInterface {
       $identifier = $this->requestStack->getCurrentRequest()->getClientIp();
     }
     $time = $this->getCurrentMicroTime();
-    $this->events[$name][$identifier][] = [
-      'time' => $time,
-      'expire' => $time + $window,
-    ];
+    $this->events[$name][$identifier][] = ['expire' => $time + $window, 'time' => $time];
   }
 
   /**
@@ -73,12 +68,13 @@ class MemoryBackend implements FloodInterface, PrefixFloodInterface {
    * {@inheritdoc}
    */
   public function clearByPrefix(string $name, string $prefix): void {
-    foreach ($this->events as $event_name => $identifier) {
-      $identifier_key = key($identifier);
-      $identifier_parts = explode("-", $identifier_key);
-      $identifier_prefix = reset($identifier_parts);
-      if ($prefix == $identifier_prefix && $name == $event_name) {
-        unset($this->events[$event_name][$identifier_key]);
+    foreach ($this->events as $event_name => $events_by_identifier) {
+      foreach (array_keys($events_by_identifier) as $identifierKey) {
+        $identifier_parts = explode('-', $identifierKey);
+        $identifier_prefix = reset($identifier_parts);
+        if ($prefix == $identifier_prefix && $name == $event_name) {
+          unset($this->events[$event_name][$identifierKey]);
+        }
       }
     }
   }
@@ -96,9 +92,9 @@ class MemoryBackend implements FloodInterface, PrefixFloodInterface {
     $limit = $this->getCurrentMicroTime() - $window;
     $number = count(array_filter(
       $this->events[$name][$identifier],
-      function ($timestamp) use ($limit) {
+      function (array $timestamp) use ($limit): bool {
         return $timestamp['time'] > $limit;
-      }
+      },
     ));
     return ($number < $threshold);
   }
@@ -109,13 +105,13 @@ class MemoryBackend implements FloodInterface, PrefixFloodInterface {
   public function garbageCollection() {
     $time = $this->getCurrentMicroTime();
     foreach ($this->events as $name => $identifiers) {
-      foreach (array_keys($identifiers) as $identifier) {
+      foreach ($this->events[$name] as $identifier => $entries) {
+        // Remove expired entries.
         $this->events[$name][$identifier] = array_filter(
-          $this->events[$name][$identifier],
+          $entries,
           function (array $event) use ($time): bool {
-            // Keep events where expiration is after current time.
             return $event['expire'] > $time;
-          }
+          },
         );
       }
     }
