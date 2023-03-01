@@ -115,6 +115,7 @@
         this.updateBarAttributes();
 
         $('body').removeClass('toolbar-loading');
+        $('#toolbar-anti-flicker-temporary').remove();
 
         // Load the subtrees if the orientation of the toolbar is changed to
         // vertical. This condition responds to the case that the toolbar switches

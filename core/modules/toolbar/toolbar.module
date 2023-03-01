@@ -264,18 +264,6 @@ function _get_toolbar_cookie_item(string $cookie_id) {
 }
 
 /**
- * Determines if Claro is the admin theme but not the active theme.
- *
- * @return bool
- *   TRUE if Claro is the admin theme but not the active theme.
- */
-function _toolbar_is_claro_admin_and_not_active() {
-  $admin_theme = \Drupal::configFactory()->get('system.theme')->get('admin');
-  $active_theme = \Drupal::theme()->getActiveTheme()->getName();
-  return $active_theme !== 'claro' && $admin_theme === 'claro';
-}
-
-/**
  * Implements hook_preprocess_HOOK() for HTML document templates.
  */
 function toolbar_preprocess_html(&$variables) {
@@ -301,10 +289,6 @@ function toolbar_preprocess_html(&$variables) {
 
   if ($has_active_tab) {
     $variables['attributes']['class'][] = 'toolbar-tray-open';
-    if (_toolbar_is_claro_admin_and_not_active()) {
-      require_once DRUPAL_ROOT . '/core/themes/claro/claro.theme';
-      claro_add_toolbar_active_classes_on_load($variables);
-    }
   }
 }
 

@@ -1802,6 +1802,7 @@ STYLE;
     $variables['page']['#attached']['html_head'][] = [
       [
         '#tag' => 'style',
+        '#attributes' => ['id' => 'toolbar-anti-flicker-temporary'],
         'children' => [
           '#type' => 'inline_template',
           '#template' => $style,
