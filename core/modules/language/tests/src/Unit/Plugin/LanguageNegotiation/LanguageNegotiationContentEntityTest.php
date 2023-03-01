@@ -8,6 +8,7 @@ use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\Entity\EntityTypeManager;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Render\BubbleableMetadata;
+use Drupal\Core\Url;
 use Drupal\language\ConfigurableLanguageManagerInterface;
 use Drupal\Tests\UnitTestCase;
 use Drupal\language\Plugin\LanguageNegotiation\LanguageNegotiationContentEntity;
@@ -55,10 +56,16 @@ class LanguageNegotiationContentEntityTest extends UnitTestCase {
     $language_de->expects($this->any())
       ->method('getId')
       ->will($this->returnValue('de'));
+    $language_de->expects($this->any())
+      ->method('getName')
+      ->will($this->returnValue('German'));
     $language_en = $this->createMock(LanguageInterface::class);
     $language_en->expects($this->any())
       ->method('getId')
       ->will($this->returnValue('en'));
+    $language_en->expects($this->any())
+      ->method('getName')
+      ->will($this->returnValue('English'));
     $this->languages = [
       'de' => $language_de,
       'en' => $language_en,
@@ -67,6 +74,9 @@ class LanguageNegotiationContentEntityTest extends UnitTestCase {
     $language_manager = $this->createMock(ConfigurableLanguageManagerInterface::class);
     $language_manager->expects($this->any())
       ->method('getLanguages')
+      ->will($this->returnValue($this->languages));
+    $language_manager->expects($this->any())
+      ->method('getNativeLanguages')
       ->will($this->returnValue($this->languages));
     $this->languageManager = $language_manager;
 
@@ -192,6 +202,43 @@ class LanguageNegotiationContentEntityTest extends UnitTestCase {
     unset($options['query'][LanguageNegotiationContentEntity::QUERY_PARAMETER]);
     $this->assertEquals($path, $languageNegotiationContentEntityMock->processOutbound($path, $options, $request, $bubbleableMetadataMock));
     $this->assertEquals('de', $options['query'][LanguageNegotiationContentEntity::QUERY_PARAMETER]);
+  }
+
+  /**
+   * @covers ::getLanguageSwitchLinks
+   */
+  public function testGetLanguageSwitchLinks() {
+    $languageNegotiationContentEntity = $this->createLanguageNegotiationPlugin();
+    $languageNegotiationContentEntity->setLanguageManager($this->languageManager);
+
+    $request = Request::create('/foo', 'GET', ['param1' => 'xyz']);
+    $url = Url::fromUri('base:' . $this->randomMachineName());
+
+    $expectedLanguageSwitchLinkgsArray = [
+      'de' => [
+        'url' => $url,
+        'title' => 'German',
+        'attributes' => ['class' => ['language-link']],
+        'query' => [
+          LanguageNegotiationContentEntity::QUERY_PARAMETER => 'de',
+          'param1' => 'xyz',
+        ],
+      ],
+      'en' => [
+        'url' => $url,
+        'title' => 'English',
+        'attributes' => ['class' => ['language-link']],
+        'query' => [
+          LanguageNegotiationContentEntity::QUERY_PARAMETER => 'en',
+          'param1' => 'xyz',
+        ],
+      ],      
+    ];
+    $providedLanguageSwitchLinkgsArray = $languageNegotiationContentEntity->getLanguageSwitchLinks($request, $this->randomMachineName(), $url);
+    $this->assertEquals(
+      $expectedLanguageSwitchLinkgsArray,
+      $providedLanguageSwitchLinkgsArray
+    );
   }
 
 }
