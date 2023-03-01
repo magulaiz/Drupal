@@ -2,7 +2,6 @@
 
 namespace Drupal\Tests\language\Unit\Plugin\LanguageNegotiation;
 
-use Symfony\Component\HttpFoundation\Request;
 use Drupal\Core\Cache\Context\CacheContextsManager;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\Entity\EntityTypeManager;
@@ -10,9 +9,10 @@ use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Render\BubbleableMetadata;
 use Drupal\Core\Url;
 use Drupal\language\ConfigurableLanguageManagerInterface;
-use Drupal\Tests\UnitTestCase;
 use Drupal\language\Plugin\LanguageNegotiation\LanguageNegotiationContentEntity;
+use Drupal\Tests\UnitTestCase;
 use Symfony\Component\HttpFoundation\ParameterBag;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\ServerBag;
 use Symfony\Component\Routing\Route;
 
@@ -28,11 +28,6 @@ class LanguageNegotiationContentEntityTest extends UnitTestCase {
   use LanguageNegotiationFactoryTrait;
 
   /**
-   * The language negotiation method plugin class.
-   */
-  const PLUGIN_CLASS = LanguageNegotiationContentEntity::class;
-
-  /**
    * An array of mock LanguageInterface objects.
    *
    * @var \Drupal\Core\Language\LanguageInterface
@@ -45,6 +40,13 @@ class LanguageNegotiationContentEntityTest extends UnitTestCase {
    * @var \Drupal\language\ConfigurableLanguageManagerInterface
    */
   protected $languageManager;
+
+  /**
+   * {@inheritDoc}
+   */
+  protected function getPluginClass(): string {
+    return LanguageNegotiationContentEntity::class;
+  }
 
   /**
    * {@inheritdoc}

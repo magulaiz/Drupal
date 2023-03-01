@@ -10,13 +10,21 @@ use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 trait LanguageNegotiationFactoryTrait {
 
   /**
+   * Returns the plugin class to use for creating the language negotiation plugin.
+   *
+   * @return string
+   *   The plugin class name.
+   */
+  abstract protected function getPluginClass(): string;
+  
+  /**
    * Creates a @LanguageNegotiation plugin using the factory ::create method.
    *
    * @return \Drupal\language\LanguageNegotiationMethodInterface
    */
   private function createLanguageNegotiationPlugin(array $configuration = [], $plugin_definition = NULL) {
-    $this->assertTrue(in_array(ContainerFactoryPluginInterface::class, class_implements(self::PLUGIN_CLASS)));
-    return self::PLUGIN_CLASS::create(\Drupal::getContainer(), $configuration, self::PLUGIN_CLASS::METHOD_ID, $plugin_definition);
+    $this->assertTrue(in_array(ContainerFactoryPluginInterface::class, class_implements($this->getPluginClass())));
+    return $this->getPluginClass()::create(\Drupal::getContainer(), $configuration, $this->getPluginClass()::METHOD_ID, $plugin_definition);
   }
 
 }
