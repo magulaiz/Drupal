@@ -81,9 +81,10 @@ class FloodTest extends KernelTestBase {
   public function floodBackendProvider() :array {
     $request_stack = \Drupal::service('request_stack');
     $connection = \Drupal::service('database');
+    $time = \Drupal::service('datetime.time');
 
     return [
-      new MemoryBackend($request_stack),
+      new MemoryBackend($request_stack, $time),
       new DatabaseBackend($connection, $request_stack),
     ];
   }

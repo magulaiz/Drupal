@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\Core\Flood;
 
+use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Core\Flood\MemoryBackend;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Request;
@@ -16,19 +17,33 @@ use Drupal\Tests\UnitTestCase;
 class MemoryBackendTest extends UnitTestCase {
 
   /**
+   * A test time service.
+   *
+   * @var \Drupal\Component\Datetime\TimeInterface
+   */
+  protected $time;
+
+  /**
    * The tested memory flood backend.
    *
    * @var \Drupal\Core\Flood\MemoryBackend
    */
   protected $flood;
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     $request = new RequestStack();
     $request_mock = $this->getMockBuilder(Request::class)
       ->onlyMethods(['getClientIp'])
       ->getMock();
     $request->push($request_mock);
-    $this->flood = new MemoryBackend($request);
+    $this->time = $this->createMock(TimeInterface::class);
+    $this->time->expects($this->any())
+      ->method('getRequestMicroTime')
+      ->willReturn(0.0);
+    $this->flood = new MemoryBackend($request, $this->time);
   }
 
   /**
