@@ -1781,6 +1781,8 @@ function claro_preprocess_html(&$variables) {
  * @see core/modules/toolbar/js/toolbar.js
  */
 function claro_add_toolbar_active_classes_on_load(&$variables) {
+  require_once DRUPAL_ROOT . '/core/modules/toolbar/toolbar.module';
+
   $active_tray = _get_toolbar_cookie_item('toolbarActiveTray');
   $active_tab_id = _get_toolbar_cookie_item('toolbarActiveTabId');
   if (!empty($active_tray)) {

@@ -1302,7 +1302,7 @@ function system_preprocess_html(&$variables) {
     // If the toolbar is present, preprocess_html should be called on every page
     // load, just like it is when using the admin theme.
     $variables['#cache']['max-age'] = 0;
-    if ( _get_toolbar_cookie_item('toolbarActiveTab')) {
+    if (_get_toolbar_cookie_item('toolbarActiveTab')) {
       require_once DRUPAL_ROOT . '/core/themes/claro/claro.theme';
       claro_add_toolbar_active_classes_on_load($variables);
     }
