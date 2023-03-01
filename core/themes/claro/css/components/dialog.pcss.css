@@ -13,6 +13,11 @@
   background: transparent;
   box-shadow: var(--jui-dialog-box-shadow);
 
+  &:focus {
+    outline: var(--jui-dialog--focus-outline);
+    box-shadow: var(--jui-dialog--focus-box-shadow);
+  }
+
   & .ui-dialog-titlebar {
     position: relative;
     box-sizing: border-box;
@@ -86,11 +91,12 @@
   & .ui-dialog-content {
     position: static;
   }
-}
 
-.ui-dialog:focus {
-  outline: var(--jui-dialog--focus-outline);
-  box-shadow: var(--jui-dialog--focus-box-shadow);
+  /* Form action buttons are moved in dialogs. Remove empty space. */
+  & .ui-dialog-content .form-actions {
+    margin: 0;
+    padding: 0;
+  }
 }
 
 @media all and (max-width: 48em) { /* 768px */
@@ -103,12 +109,6 @@
 .ui-dialog-buttonpane .ui-dialog-buttonset {
   justify-content: flex-end;
   margin: 0 var(--space-s);
-}
-
-/* Form action buttons are moved in dialogs. Remove empty space. */
-.ui-dialog .ui-dialog-content .form-actions {
-  margin: 0;
-  padding: 0;
 }
 
 /**
