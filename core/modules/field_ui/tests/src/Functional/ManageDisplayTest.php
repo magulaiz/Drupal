@@ -229,7 +229,7 @@ class ManageDisplayTest extends BrowserTestBase {
   }
 
   /**
-   * Tests if local tasks appear in alphabetical order by visible name.
+   * Tests if display mode local tasks appear in alphabetical order by label.
    */
   public function testViewModeLocalTasksOrder() {
     $manage_display = 'admin/structure/types/manage/' . $this->type . '/display';
@@ -253,6 +253,9 @@ class ManageDisplayTest extends BrowserTestBase {
     $this->assertOrderInPage(['Breezer', 'RSS']);
   }
 
+  /**
+   * Tests if form mode local tasks appear in alphabetical order by label.
+   */
   public function testFormModeLocalTasksOrder() {
     EntityFormMode::create([
       'id' => 'node.big',
