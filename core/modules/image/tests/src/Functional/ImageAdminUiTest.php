@@ -38,7 +38,7 @@ class ImageAdminUiTest extends ImageFieldTestBase {
     // Add the help block to the page.
     $this->drupalPlaceBlock('help_block', [
       'region' => 'help',
-      'id' => 'block-help',
+      'id' => 'block-help'
     ]);
   }
 
