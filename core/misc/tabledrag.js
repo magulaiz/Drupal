@@ -242,7 +242,7 @@
     );
     $table.before($toggleWeightWrapper);
 
-    // toggle button for disabled menu items
+    // Toggle button for disabled menu items
     const $toggleDisabledMenuWrapper = $(Drupal.theme('tableDragToggleDisabledMenu'));
     this.$toggleDisabledMenuButton = $toggleDisabledMenuWrapper.find(
       '[data-drupal-selector="tabledrag-toggle-disabled-menu"]',
