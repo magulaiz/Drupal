@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\language\Unit\Plugin\LanguageNegotiation;
 
+use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Tests\UnitTestCase;
 
 /**
@@ -25,8 +26,9 @@ abstract class LanguageNegotiationTestBase extends UnitTestCase {
    * @return \Drupal\language\LanguageNegotiationMethodInterface
    */
   protected function createLanguageNegotiationPlugin(array $configuration = [], $plugin_definition = NULL) {
-    $this->assertTrue(in_array(ContainerFactoryPluginInterface::class, class_implements($this->getPluginClass())));
-    return $this->getPluginClass()::create(\Drupal::getContainer(), $configuration, $this->getPluginClass()::METHOD_ID, $plugin_definition);
+    $class = $this->getPluginClass();
+    $this->assertTrue(in_array(ContainerFactoryPluginInterface::class, class_implements($class)));
+    return $class::create(\Drupal::getContainer(), $configuration, $class::METHOD_ID, $plugin_definition);
   }
 
 }
