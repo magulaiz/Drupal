@@ -69,11 +69,11 @@ class MemoryBackend implements FloodInterface, PrefixFloodInterface {
    */
   public function clearByPrefix(string $name, string $prefix): void {
     foreach ($this->events as $event_name => $events_by_identifier) {
-      foreach (array_keys($events_by_identifier) as $identifierKey) {
-        $identifier_parts = explode('-', $identifierKey);
+      foreach (array_keys($events_by_identifier) as $identifier_key) {
+        $identifier_parts = explode('-', $identifier_key);
         $identifier_prefix = reset($identifier_parts);
         if ($prefix == $identifier_prefix && $name == $event_name) {
-          unset($this->events[$event_name][$identifierKey]);
+          unset($this->events[$event_name][$identifier_key]);
         }
       }
     }
