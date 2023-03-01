@@ -10,7 +10,6 @@ use Drupal\Core\Render\BubbleableMetadata;
 use Drupal\Core\Url;
 use Drupal\language\ConfigurableLanguageManagerInterface;
 use Drupal\language\Plugin\LanguageNegotiation\LanguageNegotiationContentEntity;
-use Drupal\Tests\UnitTestCase;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\ServerBag;
@@ -23,9 +22,7 @@ use Symfony\Component\Routing\Route;
  * @coversDefaultClass \Drupal\language\Plugin\LanguageNegotiation\LanguageNegotiationContentEntity
  * @see \Drupal\language\Plugin\LanguageNegotiation\LanguageNegotiationContentEntity
  */
-class LanguageNegotiationContentEntityTest extends UnitTestCase {
-
-  use LanguageNegotiationFactoryTrait;
+class LanguageNegotiationContentEntityTest extends LanguageNegotiationTestBase {
 
   /**
    * An array of mock LanguageInterface objects.
@@ -135,7 +132,7 @@ class LanguageNegotiationContentEntityTest extends UnitTestCase {
   public function testProcessOutbound() {
 
     // Case 1: Not all processing conditions are met.
-    $languageNegotiationContentEntityMock = $this->createPartialMock(self::PLUGIN_CLASS,
+    $languageNegotiationContentEntityMock = $this->createPartialMock($this->getPluginClass(),
       ['hasLowerLanguageNegotiationWeight', 'meetsContentEntityRoutesCondition']);
     $languageNegotiationContentEntityMock->expects($this->exactly(2))
       ->method('hasLowerLanguageNegotiationWeight')
@@ -164,7 +161,7 @@ class LanguageNegotiationContentEntityTest extends UnitTestCase {
     $this->assertEquals($path, $languageNegotiationContentEntityMock->processOutbound($path, $options, $request));
 
     // Case 2: Cannot figure out the langcode.
-    $languageNegotiationContentEntityMock = $this->createPartialMock(self::PLUGIN_CLASS,
+    $languageNegotiationContentEntityMock = $this->createPartialMock($this->getPluginClass(),
       ['hasLowerLanguageNegotiationWeight', 'meetsContentEntityRoutesCondition', 'getLangcode']);
     $languageNegotiationContentEntityMock->expects($this->any())
       ->method('hasLowerLanguageNegotiationWeight')
@@ -183,11 +180,11 @@ class LanguageNegotiationContentEntityTest extends UnitTestCase {
     // Case 3: Can figure out the langcode.
     // Case 3a: via $options['language'].
     $options['language'] = $this->languages['en'];
+    $options['query'] = NULL;
     $bubbleableMetadataMock = $this->createMock(BubbleableMetadata::class);
     $bubbleableMetadataMock->expects($this->exactly(3))
       ->method('addCacheContexts')
       ->with(['url.query_args:' . LanguageNegotiationContentEntity::QUERY_PARAMETER]);
-    $this->assertFalse(isset($options['query'][LanguageNegotiationContentEntity::QUERY_PARAMETER]));
     $this->assertEquals($path, $languageNegotiationContentEntityMock->processOutbound($path, $options, $request, $bubbleableMetadataMock));
     $this->assertFalse(isset($options['language']));
     $this->assertTrue(isset($options['query'][LanguageNegotiationContentEntity::QUERY_PARAMETER]));
@@ -216,10 +213,10 @@ class LanguageNegotiationContentEntityTest extends UnitTestCase {
     $request = Request::create('/foo', 'GET', ['param1' => 'xyz']);
     $url = Url::fromUri('base:' . $this->randomMachineName());
 
-    $expectedLanguageSwitchLinkgsArray = [
+    $expectedLanguageSwitchLinksArray = [
       'de' => [
         'url' => $url,
-        'title' => 'German',
+        'title' => $this->languages['de']->getName(),
         'attributes' => ['class' => ['language-link']],
         'query' => [
           LanguageNegotiationContentEntity::QUERY_PARAMETER => 'de',
@@ -228,7 +225,7 @@ class LanguageNegotiationContentEntityTest extends UnitTestCase {
       ],
       'en' => [
         'url' => $url,
-        'title' => 'English',
+        'title' => $this->languages['en']->getName(),
         'attributes' => ['class' => ['language-link']],
         'query' => [
           LanguageNegotiationContentEntity::QUERY_PARAMETER => 'en',
@@ -236,10 +233,10 @@ class LanguageNegotiationContentEntityTest extends UnitTestCase {
         ],
       ],      
     ];
-    $providedLanguageSwitchLinkgsArray = $languageNegotiationContentEntity->getLanguageSwitchLinks($request, $this->randomMachineName(), $url);
+    $providedLanguageSwitchLinksArray = $languageNegotiationContentEntity->getLanguageSwitchLinks($request, $this->randomMachineName(), $url);
     $this->assertEquals(
-      $expectedLanguageSwitchLinkgsArray,
-      $providedLanguageSwitchLinkgsArray
+      $expectedLanguageSwitchLinksArray,
+      $providedLanguageSwitchLinksArray
     );
   }
 
