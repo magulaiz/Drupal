@@ -122,12 +122,9 @@
 .tabs {
   &.is-open {
     & .tabs__tab.is-active::before {
-      border-bottom-left-radius: 0; /* LTR */
+      border-bottom-left-radius: 0;
     }
   }
-}
-[dir="rtl"] .tabs.is-open .tabs__tab.is-active::before {
-  border-bottom-right-radius: var(--tabs-border-radius-size);
 }
 .tabs--secondary {
   & .tabs__tab:not(.is-active) {

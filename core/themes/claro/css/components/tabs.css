@@ -140,11 +140,7 @@
 }
 
 .tabs.is-open .tabs__tab.is-active::before {
-  border-bottom-left-radius: 0; /* LTR */
-}
-
-[dir="rtl"] .tabs.is-open .tabs__tab.is-active::before {
-  border-bottom-right-radius: var(--tabs-border-radius-size);
+  border-bottom-left-radius: 0;
 }
 
 .tabs--secondary .tabs__tab:not(.is-active) {
