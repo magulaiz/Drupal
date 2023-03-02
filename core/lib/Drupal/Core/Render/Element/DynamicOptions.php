@@ -107,6 +107,8 @@ use Drupal\Core\Form\FormStateInterface;
  */
 class DynamicOptions extends FormElement {
 
+  const FORCE_BUTTONS = -1;
+
   /**
    * {@inheritdoc}
    */
@@ -135,7 +137,7 @@ class DynamicOptions extends FormElement {
 
     // Determine the basic form element to render.
     $type = $element['#multiple'] ? 'checkboxes' : 'radios';
-    if (count($element['#options']) > $element['#select_threshold']) {
+    if ($element['#select_threshold'] != static::FORCE_BUTTONS && count($element['#options']) > $element['#select_threshold']) {
       $type = 'select';
     }
 
