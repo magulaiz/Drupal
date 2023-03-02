@@ -81,7 +81,6 @@ class UserAccountFormFieldsTest extends KernelTestBase {
     $this->installConfig(['user']);
     $this->installEntitySchema('user');
 
-    // Create an user to login.
     $this->user = User::create(['name' => 'test']);
     $this->user->save();
 
@@ -140,6 +139,7 @@ class UserAccountFormFieldsTest extends KernelTestBase {
     // @see HtmlEntityFormController::getFormObject()
     $entity_type = 'user';
     if ($operation != 'register') {
+      // Use an existing user.
       $entity = $this->user;
     }
     else {
