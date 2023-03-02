@@ -64,7 +64,7 @@ interface LanguageManagerInterface {
    *   The current language object for the given type of language, before
    *   setting the new current language.
    */
-  public function setCurrentLanguage(LanguageInterface $language, $type = LanguageInterface::TYPE_INTERFACE);
+  public function setCurrentLanguage(LanguageInterface $language, $type = LanguageInterface::TYPE_INTERFACE): LanguageInterface;
 
   /**
    * Resets the given language type or all types if none specified.
