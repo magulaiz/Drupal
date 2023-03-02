@@ -139,7 +139,7 @@ class UserSession implements AccountInterface {
    * {@inheritdoc}
    */
   public function isAnonymous() {
-    return $this->uid === 0;
+    return $this->id() == 0;
   }
 
   /**
