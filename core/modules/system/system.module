@@ -8,6 +8,7 @@
 use Drupal\Component\FileSecurity\FileSecurity;
 use Drupal\Component\Gettext\PoItem;
 use Drupal\Component\Render\PlainTextOutput;
+use Drupal\Component\Serialization\Json;
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Asset\AttachedAssetsInterface;
 use Drupal\Core\Block\BlockPluginInterface;
@@ -1302,7 +1303,9 @@ function system_preprocess_html(&$variables) {
     // If the toolbar is present, preprocess_html should be called on every page
     // load, just like it is when using the admin theme.
     $variables['#cache']['max-age'] = 0;
-    if (_get_toolbar_cookie_item('toolbarActiveTab')) {
+    $toolbar_state_serialized = \Drupal::request()->cookies->get('toolbarState');
+    $toolbar_state = $toolbar_state_serialized ? JSON::decode($toolbar_state_serialized) : [];
+    if (!empty($toolbar_state['hasActiveTab'])) {
       require_once DRUPAL_ROOT . '/core/themes/claro/claro.theme';
       claro_add_toolbar_active_classes_on_load($variables);
     }

@@ -283,14 +283,11 @@ body.toolbar-tray-open.toolbar-vertical.toolbar-fixed {
   display: block;
 }
 /* Anti flicker styling. */
-.toolbar-loading {
+.toolbar-loading.toolbar-fixed {
   padding-top: 2.4375rem;
 }
-.toolbar-loading.toolbar-horizontal.toolbar-tray-open {
+.toolbar-loading.toolbar-fixed.toolbar-horizontal.toolbar-tray-open {
   padding-top: 4.91331rem;
-}
-.toolbar-loading.toolbar-vertical.toolbar-tray-open {
-  padding-inline-start: 15rem;
 }
 .toolbar-loading.toolbar-vertical.toolbar-tray-open .toolbar-tray {
   position: fixed;

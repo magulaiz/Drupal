@@ -1,0 +1,13 @@
+<?php
+
+/**
+ * @file
+ * Install / uninstall related functionality for toolbar.
+ */
+
+/**
+ * Implements hook_uninstall().
+ */
+function toolbar_uninstall() {
+  user_cookie_delete('toolbarState');
+}

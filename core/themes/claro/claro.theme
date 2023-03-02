@@ -6,6 +6,7 @@
  */
 
 use Drupal\claro\ClaroPreRender;
+use Drupal\Component\Serialization\Json;
 use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Component\Utility\UrlHelper;
@@ -1782,9 +1783,11 @@ function claro_preprocess_html(&$variables) {
  */
 function claro_add_toolbar_active_classes_on_load(&$variables) {
   require_once DRUPAL_ROOT . '/core/modules/toolbar/toolbar.module';
+  $toolbar_state_serialized = \Drupal::request()->cookies->get('toolbarState');
+  $toolbar_state = $toolbar_state_serialized ? JSON::decode($toolbar_state_serialized) : [];
+  $active_tray = $toolbar_state['activeTray'] ?? FALSE;
+  $active_tab_id = $toolbar_state['activeTabId'] ?? FALSE;
 
-  $active_tray = _get_toolbar_cookie_item('toolbarActiveTray');
-  $active_tab_id = _get_toolbar_cookie_item('toolbarActiveTabId');
   if (!empty($active_tray)) {
     $gt = '>';
     // There is a lag between page load and when the toolbar's JavaScript adds

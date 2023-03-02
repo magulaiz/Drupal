@@ -8,13 +8,16 @@
  * minimize flickering on load.
  */
 const setToolbarClassesEarly = () => {
-  const toolbarActiveTray = Cookies.get('toolbarActiveTray');
-  const orientation = Cookies.get('toolbarOrientation');
+  if (!Cookies.get('toolbarState')) {
+    return;
+  }
+  const toolbarState = JSON.parse(Cookies.get('toolbarState'));
+  const { activeTray, orientation, toolbarUserName } = toolbarState;
   const activeTrayElement = document.querySelector(
-    `.toolbar-tray[data-toolbar-tray="${toolbarActiveTray}"]`,
+    `.toolbar-tray[data-toolbar-tray="${activeTray}"]`,
   );
   const activeTrayToggle = document.querySelector(
-    `.toolbar-item[data-toolbar-tray="${toolbarActiveTray}"]`,
+    `.toolbar-item[data-toolbar-tray="${activeTray}"]`,
   );
 
   if (activeTrayElement) {
@@ -22,7 +25,6 @@ const setToolbarClassesEarly = () => {
     activeTrayToggle.classList.add('is-active');
   }
 
-  const toolbarUserName = Cookies.get('toolbarUserName');
   const toolbarUserButton = document.querySelector('#toolbar-item-user');
   if (toolbarUserName && toolbarUserButton) {
     toolbarUserButton.textContent = toolbarUserName;
@@ -180,6 +182,9 @@ setToolbarClassesEarly();
             $(document).trigger('drupalToolbarTrayChange', tray);
           });
 
+        const toolbarState = Cookies.get('toolbarState')
+          ? JSON.parse(Cookies.get('toolbarState'))
+          : {};
         // If the toolbar's orientation is horizontal, no active tab is defined,
         // and the orientation cookie is not set (which means the user has not
         // yet interacted with the toolbar), then show the tray of the first
@@ -188,7 +193,7 @@ setToolbarClassesEarly();
           Drupal.toolbar.models.toolbarModel.get('orientation') ===
             'horizontal' &&
           Drupal.toolbar.models.toolbarModel.get('activeTab') === null &&
-          !Cookies.get('toolbarOrientation')
+          !toolbarState.orientation
         ) {
           Drupal.toolbar.models.toolbarModel.set({
             activeTab: $(
@@ -238,38 +243,26 @@ setToolbarClassesEarly();
               'change:activeTab change:orientation change:isOriented change:isTrayToggleVisible',
               // eslint-disable-next-line func-names
               function () {
-                // Avoid flickering.
-                Cookies.set(
-                  'toolbarOrientation',
-                  Drupal.toolbar.models.toolbarModel.get('orientation'),
-                  {
-                    path: '/',
-                  },
-                );
-
-                let isToolbarActiveTab = 0;
-                if ($(model.get('activeTab')).length > 0) {
-                  isToolbarActiveTab = 1;
-                }
-
-                Cookies.set('toolbarActiveTab', isToolbarActiveTab, {
-                  path: '/',
-                });
-                Cookies.set(
-                  'toolbarActiveTabId',
-                  isToolbarActiveTab ? model.get('activeTab').id : null,
-                  {
-                    path: '/',
-                  },
-                );
-                Cookies.set(
-                  'toolbarActiveTray',
-                  $(model.get('activeTab')).attr('data-toolbar-tray'),
-                  {
-                    path: '/',
-                  },
-                );
-                Cookies.set('toolbarIsOriented', model.get('isOriented'), {
+                const hasActiveTab = $(model.get('activeTab')).length > 0;
+                const previousToolbarState = Cookies.get('toolbarState')
+                  ? JSON.parse(Cookies.get('toolbarState'))
+                  : {};
+                const toolbarState = {
+                  ...previousToolbarState,
+                  orientation:
+                    Drupal.toolbar.models.toolbarModel.get('orientation'),
+                  hasActiveTab,
+                  activeTabId: hasActiveTab ? model.get('activeTab').id : null,
+                  activeTray: $(model.get('activeTab')).attr(
+                    'data-toolbar-tray',
+                  ),
+                  isOriented: model.get('isOriented'),
+                  isFixed: model.get('isFixed'),
+                };
+                // Storing UI state values in a cookie so server side code can
+                // access these values without waiting on JavaScript
+                // initialization.
+                Cookies.set('toolbarState', JSON.stringify(toolbarState), {
                   path: '/',
                 });
               },
