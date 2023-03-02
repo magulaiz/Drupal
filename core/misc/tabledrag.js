@@ -243,7 +243,9 @@
     $table.before($toggleWeightWrapper);
 
     // Toggle button for disabled menu items
-    const $toggleDisabledMenuWrapper = $(Drupal.theme('tableDragToggleDisabledMenu'));
+    const $toggleDisabledMenuWrapper = $(
+      Drupal.theme('tableDragToggleDisabledMenu'),
+    );
     this.$toggleDisabledMenuButton = $toggleDisabledMenuWrapper.find(
       '[data-drupal-selector="tabledrag-toggle-disabled-menu"]',
     );
@@ -254,10 +256,11 @@
         this.toggleDisabledMenuRow();
       }, this),
     );
-    $table.find('th#menu-table-disabled-menus-hide-btn').append($toggleDisabledMenuWrapper);
+    $table
+      .find('th#menu-table-disabled-menus-hide-btn')
+      .append($toggleDisabledMenuWrapper);
     // initialize menu items with shown state
     this.displayDisabledMenu('true');
-
 
     // Initialize the specified columns (for example, weight or parent columns)
     // to show or hide according to user preference. This aids accessibility
@@ -417,14 +420,13 @@
    *
    */
   Drupal.tableDrag.prototype.toggleDisabledMenuRow = function () {
-
-    if ($('#menu-overview tr.menu-disabled').is(":visible")) {
+    if ($('#menu-overview tr.menu-disabled').is(':visible')) {
       this.displayDisabledMenu(false);
     } else {
       this.displayDisabledMenu(true);
     }
     $('#menu-overview tr.menu-disabled').toggle();
-      };
+  };
 
   /**
    * Toggle the weight column depending on 'showWeight' value.
