@@ -63,7 +63,8 @@ class ConfigCacheTag implements EventSubscriberInterface {
     // Library and template overrides potentially change for the default theme
     // when the admin theme is changed.
     if ($config_name === 'system.theme' && $event->isChanged('admin')) {
-      $this->cacheTagsInvalidator->invalidateTags(['library_info', 'theme_registry']);
+      \Drupal::service('theme.registry')->reset();
+      $this->cacheTagsInvalidator->invalidateTags(['library_info']);
     }
 
     // Theme-specific settings, check if this matches a theme settings
