@@ -22,12 +22,17 @@
     margin: 0;
     padding: 0;
   }
-}
 
-@media all and (max-width: 48em) { /* 768px */
-  .ui-dialog:not(.ui-dialog-off-canvas) {
-    min-width: 92%;
-    max-width: 92%;
+  /** Off-canvas styles. */
+  &.ui-dialog-off-canvas .ui-widget-content.ui-dialog-content {
+    background: none;
+  }
+
+  &:not(.ui-dialog-off-canvas) {
+    @media all and (max-width: 48em) { /* 768px */
+      min-width: 92%;
+      max-width: 92%;
+    }
   }
 }
 
@@ -126,13 +131,6 @@
 .ui-dialog .ui-dialog-content .field-actions {
   margin: 0;
   padding: 0;
-}
-
-/**
- * Off-canvas styles.
- */
-.ui-dialog.ui-dialog-off-canvas .ui-widget-content.ui-dialog-content {
-  background: none;
 }
 
 #drupal-off-canvas {
