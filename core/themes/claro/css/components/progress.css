@@ -61,6 +61,20 @@
   background-color: var(--progress-bar-bg-color);
 }
 
+@media screen and (prefers-reduced-motion: reduce) {
+
+  .progress__bar {
+    transition: none;
+  }
+}
+
+@media (forced-colors: active) {
+
+  .progress__bar {
+    background-color: canvastext;
+  }
+}
+
 .progress__label {
   margin-block-end: var(--progress-bar-spacing-size);
   font-size: var(--progress-bar-label-font-size);
@@ -73,16 +87,4 @@
   margin-block-start: var(--progress-bar-spacing-size);
   color: var(--progress-bar-description-color);
   font-size: var(--progress-bar-description-font-size);
-}
-
-@media (forced-colors: active) {
-  .progress__bar {
-    background-color: canvastext;
-  }
-}
-
-@media screen and (prefers-reduced-motion: reduce) {
-  .progress__bar {
-    transition: none;
-  }
 }

@@ -54,6 +54,14 @@
   border: var(--progress-bar-border-size) var(--progress-bar-border-color) solid;
   border-radius: var(--progress-bar-default-size-radius);
   background-color: var(--progress-bar-bg-color);
+
+  @media screen and (prefers-reduced-motion: reduce) {
+    transition: none;
+  }
+
+  @media (forced-colors: active) {
+    background-color: canvastext;
+  }
 }
 
 .progress__label {
@@ -68,16 +76,4 @@
   margin-block-start: var(--progress-bar-spacing-size);
   color: var(--progress-bar-description-color);
   font-size: var(--progress-bar-description-font-size);
-}
-
-@media (forced-colors: active) {
-  .progress__bar {
-    background-color: canvastext;
-  }
-}
-
-@media screen and (prefers-reduced-motion: reduce) {
-  .progress__bar {
-    transition: none;
-  }
 }
