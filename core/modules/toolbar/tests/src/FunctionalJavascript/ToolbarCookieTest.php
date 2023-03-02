@@ -31,7 +31,7 @@ class ToolbarCookieTest extends WebDriverTestBase {
     $this->drupalLogin($admin_user);
     $user_name = $admin_user->getAccountName();
     $page = $this->getSession()->getPage();
-    $assert_session =  $this->assertSession();
+    $assert_session = $this->assertSession();
 
     $this->drupalGet('<front>');
     $this->assertNotEmpty($this->assertSession()->waitForElement('css', 'body.toolbar-horizontal'));
