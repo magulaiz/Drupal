@@ -1787,6 +1787,15 @@ function claro_add_toolbar_active_classes_on_load(&$variables) {
   $active_tab_id = _get_toolbar_cookie_item('toolbarActiveTabId');
   if (!empty($active_tray)) {
     $gt = '>';
+    // There is a lag between page load and when the toolbar's JavaScript adds
+    // the is-active classes to the buttons and trays that are currently active.
+    // If the management of is-active was not managed by JavaScript, the toolbar
+    // cache would need to be cleared any time toolbar button was clicked.
+    // Because active tab and tray info is available via cookie, and
+    // preprocess_html executes on every page load, we can provide styling
+    // equivalent to what results from adding is-active by targeting the
+    // ids of those elements.
+    // These styles are not necessary after the toolbar loads, and are removed.
     $style = <<<STYLE
   .toolbar-loading [data-drupal-claro-processed-toolbar] #{$active_tab_id} {
      background-image: linear-gradient(rgba(255, 255, 255, 0.25) 20%, transparent 200%);
