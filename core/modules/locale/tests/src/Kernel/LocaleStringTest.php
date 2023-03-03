@@ -5,6 +5,7 @@ namespace Drupal\Tests\locale\Kernel;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\locale\StringInterface;
+use Drupal\locale\StringStorageInterface;
 
 /**
  * Tests the locale string storage, string objects and data API.
@@ -81,6 +82,11 @@ class LocaleStringTest extends KernelTestBase {
       ->save();
     $translation = $this->storage->findTranslation(['language' => $langcode, 'lid' => $source->lid]);
     $this->assertEquals(LOCALE_CUSTOMIZED, $translation->customized);
+
+    // Tests that we pass the correct type to the setStorage() method.
+    $this->expectException(\InvalidArgumentException::class);
+    $this->expectExceptionMessage('The storage must implement \Drupal\Core\Config\StorageInterface.');
+    $translation->setStorage($this->randomMachineName());
 
     // Delete translation.
     $translation->delete();
