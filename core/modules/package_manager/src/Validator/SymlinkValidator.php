@@ -7,10 +7,7 @@ namespace Drupal\package_manager\Validator;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\Url;
-use Drupal\package_manager\Event\PreApplyEvent;
-use Drupal\package_manager\Event\PreCreateEvent;
 use Drupal\package_manager\Event\PreOperationStageEvent;
-use Drupal\package_manager\Event\StatusCheckEvent;
 use Drupal\package_manager\PathLocator;
 use PhpTuf\ComposerStager\Domain\Exception\PreconditionException;
 use PhpTuf\ComposerStager\Domain\Service\Precondition\CodebaseContainsNoSymlinksInterface;
@@ -31,6 +28,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
  */
 class SymlinkValidator implements EventSubscriberInterface {
 
+  use BaseRequirementValidatorTrait;
   use StringTranslationTrait;
 
   /**
@@ -53,9 +51,9 @@ class SymlinkValidator implements EventSubscriberInterface {
   ) {}
 
   /**
-   * {@inheritdoc}
+   * Flags errors if the project root or stage directory contain symbolic links.
    */
-  public function validateStagePreOperation(PreOperationStageEvent $event): void {
+  public function validate(PreOperationStageEvent $event): void {
     $active_dir = $this->pathFactory->create($this->pathLocator->getProjectRoot());
 
     // The precondition requires us to pass both an active and stage directory,
@@ -64,7 +62,7 @@ class SymlinkValidator implements EventSubscriberInterface {
     // as the stage directory. The precondition itself doesn't care if the
     // directory actually exists or not.
     try {
-      $stage_dir = $event->getStage()->getStageDirectory();
+      $stage_dir = $event->stage->getStageDirectory();
     }
     catch (\LogicException) {
       $stage_dir = __DIR__;
@@ -93,17 +91,6 @@ class SymlinkValidator implements EventSubscriberInterface {
       }
       $event->addError([$message]);
     }
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getSubscribedEvents(): array {
-    return [
-      PreCreateEvent::class => 'validateStagePreOperation',
-      PreApplyEvent::class => 'validateStagePreOperation',
-      StatusCheckEvent::class => 'validateStagePreOperation',
-    ];
   }
 
 }

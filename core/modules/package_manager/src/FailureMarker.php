@@ -6,7 +6,7 @@ namespace Drupal\package_manager;
 
 use Drupal\Component\Serialization\Json;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
-use Drupal\package_manager\Exception\ApplyFailedException;
+use Drupal\package_manager\Exception\StageFailureMarkerException;
 
 /**
  * Handles failure marker file operation.
@@ -16,6 +16,11 @@ use Drupal\package_manager\Exception\ApplyFailedException;
  * know if a commit operation failed midway through, which could leave the site
  * code base in an indeterminate state -- which, in the worst case scenario,
  * might render Drupal being unable to boot.
+ *
+ * @internal
+ *   This is an internal part of Package Manager and may be changed or removed
+ *   at any time without warning. External code should not interact with this
+ *   class.
  */
 final class FailureMarker {
 
@@ -77,10 +82,10 @@ final class FailureMarker {
         $data = json_decode($data, TRUE, 512, JSON_THROW_ON_ERROR);
       }
       catch (\JsonException $exception) {
-        throw new ApplyFailedException('Failure marker file exists but cannot be decoded.', $exception->getCode(), $exception);
+        throw new StageFailureMarkerException('Failure marker file exists but cannot be decoded.', $exception->getCode(), $exception);
       }
 
-      throw new ApplyFailedException($data['message']);
+      throw new StageFailureMarkerException($data['message']);
     }
   }
 

@@ -6,10 +6,7 @@ namespace Drupal\package_manager\Validator;
 
 use Drupal\Core\Link;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
-use Drupal\package_manager\Event\PreApplyEvent;
-use Drupal\package_manager\Event\PreCreateEvent;
 use Drupal\package_manager\Event\PreOperationStageEvent;
-use Drupal\package_manager\Event\StatusCheckEvent;
 use Drupal\Core\Url;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
@@ -23,6 +20,9 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
  */
 final class EnvironmentSupportValidator implements EventSubscriberInterface {
 
+  use BaseRequirementValidatorTrait {
+    getSubscribedEvents as protected getSubscribedEventsFromTrait;
+  }
   use StringTranslationTrait;
 
   /**
@@ -37,9 +37,9 @@ final class EnvironmentSupportValidator implements EventSubscriberInterface {
   public const VARIABLE_NAME = 'DRUPAL_PACKAGE_MANAGER_NOT_SUPPORTED_HELP_URL';
 
   /**
-   * {@inheritdoc}
+   * Checks that this environment supports Package Manager.
    */
-  public function validateStagePreOperation(PreOperationStageEvent $event): void {
+  public function validate(PreOperationStageEvent $event): void {
     $message = $this->t('Package Manager is not supported by your environment.');
 
     $help_url = getenv(static::VARIABLE_NAME);
@@ -65,11 +65,10 @@ final class EnvironmentSupportValidator implements EventSubscriberInterface {
    * {@inheritdoc}
    */
   public static function getSubscribedEvents(): array {
-    return [
-      PreCreateEvent::class => ['validateStagePreOperation', 200],
-      PreApplyEvent::class => ['validateStagePreOperation', 200],
-      StatusCheckEvent::class => ['validateStagePreOperation', 200],
-    ];
+    // Set priority to run before BaseRequirementsFulfilledValidator, and even
+    // before other base requirement validators.
+    // @see \Drupal\package_manager\Validator\BaseRequirementsFulfilledValidator
+    return array_map(fn () => ['validate', BaseRequirementsFulfilledValidator::PRIORITY + 1000], static::getSubscribedEventsFromTrait());
   }
 
 }

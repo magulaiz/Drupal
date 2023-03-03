@@ -29,10 +29,6 @@ class GitExcluderTest extends PackageManagerKernelTestBase {
    * {@inheritdoc}
    */
   protected function setUp(): void {
-    // In this test, we want to disable the lock file validator because, even
-    // though both the active and stage directories will have a valid lock file,
-    // this validator will complain because they don't differ at all.
-    $this->disableValidators[] = 'package_manager.validator.lock_file';
     parent::setUp();
     $path_locator = $this->container->get('package_manager.path_locator');
     (new ActiveFixtureManipulator())
@@ -40,7 +36,6 @@ class GitExcluderTest extends PackageManagerKernelTestBase {
         'name' => 'foo/package_known_to_composer_removed_later',
         'type' => 'drupal-module',
         'version' => '1.0.0',
-        'install_path' => "../../modules/module_known_to_composer_removed_later",
       ])
       ->addProjectAtPath("modules/module_not_known_to_composer_in_active")
       ->addDotGitFolder($path_locator->getProjectRoot() . "/modules/module_not_known_to_composer_in_active")
@@ -94,6 +89,7 @@ class GitExcluderTest extends PackageManagerKernelTestBase {
 
     $stage = $this->createStage();
     $stage->create();
+    $stage->require(['ext-json:*']);
     $stage_dir = $stage->getStageDirectory();
 
     // Adding a module with .git in stage which is unknown to composer, we

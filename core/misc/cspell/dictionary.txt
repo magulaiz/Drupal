@@ -1365,6 +1365,7 @@ unserializes
 unserializing
 unsets
 unsetting
+unshallow
 unshortened
 unsimplified
 unsticky

@@ -4,7 +4,7 @@ declare(strict_types = 1);
 
 namespace Drupal\Tests\package_manager\Kernel;
 
-use Drupal\package_manager\Exception\StageValidationException;
+use Drupal\package_manager\Exception\StageEventException;
 use Drupal\package_manager\ValidationResult;
 use Symfony\Component\Filesystem\Filesystem;
 
@@ -124,15 +124,15 @@ class DuplicateInfoFileValidatorTest extends PackageManagerKernelTestBase {
       ],
       'Multiple duplicate info.yml files in stage' => [
         [
-          '/module1.info.yml',
-          '/module2.info.yml',
+          '/modules/module1/module1.info.yml',
+          '/modules/module2/module2.info.yml',
         ],
         [
-          '/module1.info.yml',
-          '/modules/module1.info.yml',
-          '/module2.info.yml',
-          '/modules/module2.info.yml',
-          '/module2/module2.info.yml',
+          '/modules/module1/module1.info.yml',
+          '/modules/module2/module2.info.yml',
+          '/modules/foo/module1.info.yml',
+          '/modules/bar/module2.info.yml',
+          '/modules/baz/module2.info.yml',
         ],
         [
           ValidationResult::createError([
@@ -146,11 +146,11 @@ class DuplicateInfoFileValidatorTest extends PackageManagerKernelTestBase {
       'Multiple duplicate info.yml files in stage not present in active' => [
         [],
         [
-          '/module1.info.yml',
-          '/modules/module1.info.yml',
-          '/module2.info.yml',
-          '/modules/module2.info.yml',
-          '/module2/module2.info.yml',
+          '/modules/module1/module1.info.yml',
+          '/modules/module2/module2.info.yml',
+          '/modules/foo/module1.info.yml',
+          '/modules/bar/module2.info.yml',
+          '/modules/baz/module2.info.yml',
         ],
         [
           ValidationResult::createError([
@@ -163,14 +163,14 @@ class DuplicateInfoFileValidatorTest extends PackageManagerKernelTestBase {
       ],
       'Multiple duplicate info.yml files in stage with one info.yml file not present in active' => [
         [
-          '/module1.info.yml',
+          '/modules/module1/module1.info.yml',
         ],
         [
-          '/module1.info.yml',
-          '/modules/module1.info.yml',
-          '/module2.info.yml',
-          '/modules/module2.info.yml',
-          '/module2/module2.info.yml',
+          '/modules/module1/module1.info.yml',
+          '/modules/module2/module2.info.yml',
+          '/modules/foo/module1.info.yml',
+          '/modules/bar/module2.info.yml',
+          '/modules/baz/module2.info.yml',
         ],
         [
           ValidationResult::createError([
@@ -214,9 +214,9 @@ class DuplicateInfoFileValidatorTest extends PackageManagerKernelTestBase {
       $stage->apply();
       $this->assertEmpty($expected_results);
     }
-    catch (StageValidationException $e) {
+    catch (StageEventException $e) {
       $this->assertNotEmpty($expected_results);
-      $this->assertValidationResultsEqual($expected_results, $e->getResults());
+      $this->assertValidationResultsEqual($expected_results, $e->event->getResults());
     }
   }
 
@@ -236,7 +236,7 @@ class DuplicateInfoFileValidatorTest extends PackageManagerKernelTestBase {
     if (!file_exists($file_dir)) {
       $fs->mkdir($root_directory . $file_dir);
     }
-    file_put_contents($root_directory . $file_path, ' ');
+    file_put_contents($root_directory . $file_path, "name: SOME MODULE\ntype: module\n");
   }
 
 }

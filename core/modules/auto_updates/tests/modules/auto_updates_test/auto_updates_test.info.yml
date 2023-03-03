@@ -1,7 +1,0 @@
-name: 'Automatic Updates Test module 1'
-type: module
-description: 'Module for testing Automatic Updates.'
-package: Testing
-dependencies:
-  - drupal:auto_updates
-  - auto_updates:package_manager_test_validation

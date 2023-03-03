@@ -37,16 +37,16 @@ final class ComposerSettingsValidator implements EventSubscriberInterface {
   }
 
   /**
-   * {@inheritdoc}
+   * Validates Composer settings.
    */
-  public function validateStagePreOperation(PreOperationStageEvent $event): void {
+  public function validate(PreOperationStageEvent $event): void {
     $dir = $this->pathLocator->getProjectRoot();
 
     try {
       $setting = (int) $this->inspector->getConfig('secure-http', $dir);
     }
-    catch (\Exception $exception) {
-      $event->addErrorFromThrowable($exception, $this->t('Unable to determine Composer <code>secure-http</code> setting.'));
+    catch (\Throwable $throwable) {
+      $event->addErrorFromThrowable($throwable, $this->t('Unable to determine Composer <code>secure-http</code> setting.'));
       return;
     }
     if ($setting !== 1) {
@@ -63,9 +63,9 @@ final class ComposerSettingsValidator implements EventSubscriberInterface {
    */
   public static function getSubscribedEvents(): array {
     return [
-      PreCreateEvent::class => 'validateStagePreOperation',
-      PreApplyEvent::class => 'validateStagePreOperation',
-      StatusCheckEvent::class => 'validateStagePreOperation',
+      PreCreateEvent::class => 'validate',
+      PreApplyEvent::class => 'validate',
+      StatusCheckEvent::class => 'validate',
     ];
   }
 

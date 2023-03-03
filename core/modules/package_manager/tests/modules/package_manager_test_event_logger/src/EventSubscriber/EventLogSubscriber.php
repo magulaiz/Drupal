@@ -27,22 +27,27 @@ final class EventLogSubscriber implements EventSubscriberInterface {
    *   The event object.
    */
   public function logEventInfo(StageEvent $event): void {
-    \Drupal::logger('package_manager_test_event_logger')->info('package_manager_test_event_logger-start: Event: ' . get_class($event) . ', Stage instance of: ' . get_class($event->getStage()) . ':package_manager_test_event_logger-end');
+    \Drupal::logger('package_manager_test_event_logger')->info('package_manager_test_event_logger-start: Event: ' . get_class($event) . ', Stage instance of: ' . get_class($event->stage) . ':package_manager_test_event_logger-end');
   }
 
   /**
    * {@inheritdoc}
    */
   public static function getSubscribedEvents(): array {
+    // This subscriber should run before every other validator, because the
+    // purpose of this subscriber is to log all dispatched events.
+    // @see \Drupal\package_manager\Validator\BaseRequirementsFulfilledValidator
+    // @see \Drupal\package_manager\Validator\BaseRequirementValidatorTrait
+    // @see \Drupal\package_manager\Validator\EnvironmentSupportValidator
     return [
-      PreCreateEvent::class => ['logEventInfo'],
-      PostCreateEvent::class => ['logEventInfo'],
-      PreRequireEvent::class => ['logEventInfo'],
-      PostRequireEvent::class => ['logEventInfo'],
-      PreApplyEvent::class => ['logEventInfo'],
-      PostApplyEvent::class => ['logEventInfo'],
-      PreDestroyEvent::class => ['logEventInfo'],
-      PostDestroyEvent::class => ['logEventInfo'],
+      PreCreateEvent::class => ['logEventInfo', PHP_INT_MAX],
+      PostCreateEvent::class => ['logEventInfo', PHP_INT_MAX],
+      PreRequireEvent::class => ['logEventInfo', PHP_INT_MAX],
+      PostRequireEvent::class => ['logEventInfo', PHP_INT_MAX],
+      PreApplyEvent::class => ['logEventInfo', PHP_INT_MAX],
+      PostApplyEvent::class => ['logEventInfo', PHP_INT_MAX],
+      PreDestroyEvent::class => ['logEventInfo', PHP_INT_MAX],
+      PostDestroyEvent::class => ['logEventInfo', PHP_INT_MAX],
     ];
   }
 

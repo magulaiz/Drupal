@@ -1,8 +1,0 @@
-<?php
-
-/**
- * @file
- * Blank .install file.
- *
- * @see \Drupal\Tests\auto_updates\Kernel\StatusCheck\StagedDatabaseUpdateValidatorTest
- */

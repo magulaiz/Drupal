@@ -16,6 +16,7 @@ use Drupal\package_manager\Event\PreCreateEvent;
 use Drupal\package_manager\Event\StageEvent;
 use Drupal\package_manager\Exception\ApplyFailedException;
 use Drupal\package_manager\Exception\StageException;
+use Drupal\package_manager\Exception\StageFailureMarkerException;
 use Drupal\package_manager_bypass\LoggingCommitter;
 use PhpTuf\ComposerStager\Domain\Exception\InvalidArgumentException;
 use PhpTuf\ComposerStager\Domain\Exception\PreconditionException;
@@ -184,7 +185,7 @@ class StageTest extends PackageManagerKernelTestBase {
       // handling another event. The only reason we're doing it here is to
       // simulate an attempt to destroy the stage while it's being applied, for
       // testing purposes.
-      $event->getStage()->destroy($force);
+      $event->stage->destroy($force);
       // @see \PhpTuf\ComposerStager\Infrastructure\Service\Precondition\StagingDirDoesNotExist
       LoggingCommitter::setException(
         new PreconditionException(
@@ -219,7 +220,7 @@ class StageTest extends PackageManagerKernelTestBase {
    */
   public function testUninstallModuleDuringApply(): void {
     $listener = function (PreApplyEvent $event): void {
-      $this->assertTrue($event->getStage()->isApplying());
+      $this->assertTrue($event->stage->isApplying());
 
       // Trying to uninstall any module while the stage is being applied should
       // result in a module uninstall validation error.
@@ -332,6 +333,12 @@ class StageTest extends PackageManagerKernelTestBase {
       $this->fail('Expected an exception.');
     }
     catch (\Throwable $exception) {
+      // This needs to be done because we always use the message from
+      // \Drupal\package_manager\Stage::getFailureMarkerMessage() when throwing
+      // ApplyFailedException.
+      if ($expected_class == ApplyFailedException::class) {
+        $thrown_message = 'Staged changes failed to apply, and the site is in an indeterminate state. It is strongly recommended to restore the code and database from a backup.';
+      }
       $this->assertInstanceOf($expected_class, $exception);
       $this->assertSame($thrown_message, $exception->getMessage());
       $this->assertSame(123, $exception->getCode());
@@ -357,7 +364,7 @@ class StageTest extends PackageManagerKernelTestBase {
 
     // Make the committer throw an exception, which should cause the failure
     // marker to be present.
-    $thrown = new \Exception('Disastrous catastrophe!');
+    $thrown = new \Exception('Staged changes failed to apply, and the site is in an indeterminate state. It is strongly recommended to restore the code and database from a backup.');
     LoggingCommitter::setException($thrown);
     try {
       $stage->apply();
@@ -376,7 +383,7 @@ class StageTest extends PackageManagerKernelTestBase {
       $stage->create();
       $this->fail('Expected an exception.');
     }
-    catch (ApplyFailedException $e) {
+    catch (StageFailureMarkerException $e) {
       $this->assertSame('Staged changes failed to apply, and the site is in an indeterminate state. It is strongly recommended to restore the code and database from a backup.', $e->getMessage());
       $this->assertFalse($stage->isApplying());
     }

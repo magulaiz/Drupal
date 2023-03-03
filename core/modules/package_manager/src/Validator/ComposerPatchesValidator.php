@@ -60,10 +60,10 @@ final class ComposerPatchesValidator implements EventSubscriberInterface {
    * @param \Drupal\package_manager\Event\PreOperationStageEvent $event
    *   The event object.
    */
-  public function validatePatcher(PreOperationStageEvent $event): void {
+  public function validate(PreOperationStageEvent $event): void {
     $messages = [];
 
-    $stage = $event->getStage();
+    $stage = $event->stage;
     [$plugin_installed_in_active, $is_active_root_requirement, $active_configuration_ok] = $this->computePatcherStatus($stage->getActiveComposer());
     try {
       [$plugin_installed_in_stage, $is_stage_root_requirement, $stage_configuration_ok] = $this->computePatcherStatus($stage->getStageComposer());
@@ -162,9 +162,9 @@ final class ComposerPatchesValidator implements EventSubscriberInterface {
    */
   public static function getSubscribedEvents(): array {
     return [
-      PreCreateEvent::class => 'validatePatcher',
-      PreApplyEvent::class => 'validatePatcher',
-      StatusCheckEvent::class => 'validatePatcher',
+      PreCreateEvent::class => 'validate',
+      PreApplyEvent::class => 'validate',
+      StatusCheckEvent::class => 'validate',
     ];
   }
 

@@ -68,9 +68,9 @@ final class SupportedReleaseValidator implements EventSubscriberInterface {
    * @param \Drupal\package_manager\Event\PreApplyEvent $event
    *   The event object.
    */
-  public function checkStagedReleases(PreApplyEvent $event): void {
-    $active = $event->getStage()->getActiveComposer();
-    $staged = $event->getStage()->getStageComposer();
+  public function validate(PreApplyEvent $event): void {
+    $active = $event->stage->getActiveComposer();
+    $staged = $event->stage->getStageComposer();
     $updated_packages = array_merge(
       $staged->getPackagesNotIn($active),
       $staged->getPackagesWithDifferentVersionsIn($active)
@@ -121,7 +121,7 @@ final class SupportedReleaseValidator implements EventSubscriberInterface {
    */
   public static function getSubscribedEvents(): array {
     return [
-      PreApplyEvent::class => 'checkStagedReleases',
+      PreApplyEvent::class => 'validate',
     ];
   }
 

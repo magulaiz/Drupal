@@ -46,7 +46,7 @@
  * All stage events extend \Drupal\package_manager\Event\StageEvent, and all
  * pre-operation events extend
  * \Drupal\package_manager\Event\PreOperationStageEvent. All events have a
- * getStage() method which allows access to the stage object itself.
+ * $stage property which allows access to the stage object itself.
  *
  * The stage dispatches the following events during its life cycle:
  *
@@ -97,21 +97,30 @@
  *   releases its ownership. This event is dispatched only once during a stage's
  *   life cycle.
  *
- * - \Drupal\package_manager\Event\PostDestroy
+ * - \Drupal\package_manager\Event\PostDestroyEvent
  *   Dispatched after the temporary stage directory is deleted and the stage
  *   has released its ownership. This event is dispatched only once during a
  *   stage's life cycle.
  *
- *  There are some cases where there is no point for an event to trigger further
- *  event subscribers, in which case the event propagation should be stopped.
- *  For example, in a situation where Composer or Composer Stager cannot work
- *  at all, or a security vulnerability is detected, the event propagation must
- *  be stopped to prevent further event subscribers from breaking. For example,
- *  Package Manager stops event propagation if:
- * - The stage directory is a subdirectory of the active directory.
- * - No composer.json file exists in active directory.
- * - Package Manager has been deliberately disabled in the current environment.
- *   See \Drupal\package_manager\Validator\EnvironmentSupportValidator
+ *  There are certain conditions that are required for Package Manager to
+ *  function. Any validators that check such conditions
+ *  should ensure they run before
+ *  \Drupal\package_manager\Validator\BaseRequirementsFulfilledValidator, by
+ *  using a priority higher than BaseRequirementsFulfilledValidator::PRIORITY.
+ *  BaseRequirementsFulfilledValidator will stop propagation if any errors have
+ *  been added by the validators than ran before it.
+ *
+ * The following base requirements are validated by Package Manager:
+ * - The Composer executable is available.
+ * - composer.json and composer.lock exist in the project root.
+ * - The detected version of Composer is supported.
+ * - The stage directory is not a subdirectory of the active directory.
+ * - There is enough free disk space to do stage operations
+ * - Certain important paths in the file system are writable.
+ * - The current site is not part of a multisite.
+ * - The project root and stage directory don't contain any symbolic links.
+ *
+ * @todo Clarify symbolic link support in https://drupal.org/i/3319507.
  *
  * The public API of any stage consists of the following methods:
  *
@@ -142,6 +151,15 @@
  *   can be used by event subscribers to inspect the directory and get relevant
  *   information from Composer's API, such as what packages are installed and
  *   where.
+ *
+ * If problems occur during any point of the stage life cycle, a
+ * \Drupal\package_manager\Exception\StageException is thrown. If problems were
+ * detected during one of the "pre" operations, a subclass of that is thrown:
+ * \Drupal\package_manager\Exception\StageEventException. This will contain
+ * \Drupal\package_manager\ValidationResult objects.
+ * The Package Manager module does not catch or handle these exceptions: they
+ * provide the foundation for other modules to build user experiences for
+ * installing, updating and removing packages.
  *
  * Package Manager automatically enforces certain constraints at various points
  * of the stage life cycle, to ensure that both the active directory and stage
@@ -180,4 +198,19 @@
  * Dispatched to check the status of the Drupal site and whether Package Manager
  * can function properly. These checks can be performed anytime, so this event
  * may be dispatched multiple times.
+ *
+ * The above constraints are enforced by services that subscribe to events
+ * dispatched during the life cycle of stage. These event subscribers are either
+ * labeled "validator" (validate the state at a certain point in the life cycle)
+ * or "exclude" (to exclude files from being copied from the active to the stage
+ * directory or vice versa).
+ * To be able to do enforce those constraints, these event subscribers need to
+ * know where to look: \Drupal\package_manager\PathLocator informs them where
+ * the project root, the vendor directory, et cetera are.
+ * Whenever a problem is encountered, an event subscriber should generate one or
+ * more messages (with a summary if there's multiple) to explain it to the user
+ * and call \Drupal\package_manager\Event\PreOperationStageEvent::addError() or
+ * \Drupal\package_manager\Event\StatusCheckEvent::addWarning(). If the
+ * subscriber catches an unexpected exception it should use
+ * \Drupal\package_manager\Event\PreOperationStageEvent::addErrorFromThrowable().
  */
