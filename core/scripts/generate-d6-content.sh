@@ -98,7 +98,7 @@ $node_id = 0;
 $revision_id = 0;
 module_load_include('inc', 'node', 'node.pages');
 for ($i = 0; $i < 24; $i++) {
-  $uid = intval($i / 8) + 3;
+  $uid = (int) ($i / 8) + 3;
   $user = user_load($uid);
   $node = new stdClass();
   $node->uid = $uid;
@@ -114,7 +114,7 @@ for ($i = 0; $i < 24; $i++) {
     $node->filter = variable_get('filter_default_format', 1);
     $node->format = FILTER_FORMAT_DEFAULT;
   }
-  $node->status = intval($i / 4) % 2;
+  $node->status = ($i / 4) % 2;
   $node->language = '';
   $node->revision = $i < 12;
   $node->promote = $i % 2;
@@ -146,7 +146,7 @@ for ($i = 0; $i < 24; $i++) {
 
 // Create poll content
 for ($i = 0; $i < 12; $i++) {
-  $uid = intval($i / 4) + 3;
+  $uid = (int) ($i / 4) + 3;
   $user = user_load($uid);
   $node = new stdClass();
   $node->uid = $uid;
@@ -160,7 +160,7 @@ for ($i = 0; $i < 12; $i++) {
     $node->filter = variable_get('filter_default_format', 1);
     $node->format = FILTER_FORMAT_DEFAULT;
   }
-  $node->status = intval($i / 2) % 2;
+  $node->status = ($i / 2) % 2;
   $node->language = '';
   $node->revision = 1;
   $node->promote = $i % 2;

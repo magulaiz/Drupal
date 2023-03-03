@@ -108,7 +108,7 @@ class Explode extends ProcessPluginBase {
     elseif (!$strict) {
       // Check if the incoming value can cast to a string.
       $original = $value;
-      if (!is_string($original) && ($original != ($value = @strval($value)))) {
+      if (!is_string($original) && ($original != ($value = @(string) $value))) {
         throw new MigrateException(sprintf('%s cannot be casted to a string', var_export($original, TRUE)));
       }
       // Empty strings should be exploded to empty arrays.

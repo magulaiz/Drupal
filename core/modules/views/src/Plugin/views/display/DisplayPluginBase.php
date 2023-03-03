@@ -1991,8 +1991,8 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
         break;
 
       case 'use_more':
-        $this->setOption($section, intval($form_state->getValue($section)));
-        $this->setOption('use_more_always', intval($form_state->getValue('use_more_always')));
+        $this->setOption($section, (int) $form_state->getValue($section));
+        $this->setOption('use_more_always', (int) $form_state->getValue('use_more_always'));
         $this->setOption('use_more_text', $form_state->getValue('use_more_text'));
         break;
 

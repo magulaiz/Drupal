@@ -213,7 +213,7 @@ class BookAdminEditForm extends FormBase {
   protected function bookAdminTableTree(array $tree, array &$form) {
     // The delta must be big enough to give each node a distinct value.
     $count = count($tree);
-    $delta = ($count < 30) ? 15 : intval($count / 2) + 1;
+    $delta = ($count < 30) ? 15 : (int) ($count / 2) + 1;
 
     $access = \Drupal::currentUser()->hasPermission('administer nodes');
     $destination = $this->getDestinationArray();
