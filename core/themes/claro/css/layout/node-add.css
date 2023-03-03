@@ -31,9 +31,6 @@
     display: flex;
     flex-wrap: wrap;
   }
-  [dir="rtl"] .layout-node-form {
-    flex-direction: row-reverse;
-  }
 
   .layout-region--node-main,
   .layout-region--node-footer {

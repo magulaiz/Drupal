@@ -22,10 +22,6 @@
   .layout-node-form {
     display: flex;
     flex-wrap: wrap;
-
-    @nest [dir="rtl"] & {
-      flex-direction: row-reverse;
-    }
   }
 
   .layout-region--node-main,
