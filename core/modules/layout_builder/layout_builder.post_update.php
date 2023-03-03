@@ -48,21 +48,18 @@ function layout_builder_post_update_timestamp_formatter(array &$sandbox = NULL):
     if ($entity_view_display instanceof LayoutEntityDisplayInterface && $entity_view_display->isLayoutBuilderEnabled()) {
       foreach ($entity_view_display->getSections() as $section) {
         foreach ($section->getComponents() as $component) {
-          if (strpos($component->getPluginId(), 'field_block:') === 0) {
+          if (str_starts_with($component->getPluginId(), 'field_block:')) {
             $configuration = $component->get('configuration');
             $formatter =& $configuration['formatter'];
             if ($formatter && isset($formatter['type'])) {
               $plugin_definition = $field_formatter_manager->getDefinition($formatter['type'], FALSE);
               // Check also potential plugins extending TimestampFormatter.
-              if (!$plugin_definition || !is_a($plugin_definition['class'], TimestampFormatter::class, TRUE)) {
-                continue;
-              }
-              if (!isset($formatter['settings']['tooltip']) || !isset($formatter['settings']['time_diff'])) {
-                $formatter['settings'] += $plugin_definition['class']::defaultSettings();
-                // Existing timestamp formatters don't have tooltip.
-                $formatter['settings']['tooltip']['date_format'] = '';
-                $component->set('configuration', $configuration);
-                $update = TRUE;
+              if ($plugin_definition && is_a($plugin_definition['class'], TimestampFormatter::class, TRUE)) {
+                if (!isset($formatter['settings']['tooltip']) || !isset($formatter['settings']['time_diff'])) {
+                  $update = TRUE;
+                  // No need to check the rest of components.
+                  break 2;
+                }
               }
             }
           }
