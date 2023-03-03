@@ -61,7 +61,7 @@ class OptionsDynamicWidget extends OptionsWidgetBase {
       '#default_value' => $this->getSetting('threshold_enabled'),
       '#states' => [
         'visible' => [':input[name="fields[' . $this->fieldDefinition->getName() . '][settings_edit_form][settings][form_element]"]' => ['value' => 'buttons']],
-      ]
+      ],
     ];
 
     $element['select_threshold'] = [
@@ -76,8 +76,8 @@ class OptionsDynamicWidget extends OptionsWidgetBase {
         'visible' => [
           ':input[name="fields[' . $this->fieldDefinition->getName() . '][settings_edit_form][settings][form_element]"]' => ['value' => 'buttons'],
           ':input[name="fields[' . $this->fieldDefinition->getName() . '][settings_edit_form][settings][threshold_enabled]"]' => ['checked' => TRUE],
-          ],
-      ]
+        ],
+      ],
     ];
 
     return $element;
@@ -88,8 +88,8 @@ class OptionsDynamicWidget extends OptionsWidgetBase {
    */
   public function settingsSummary() {
     $summary = [];
-    $summary[] = $this->t('Form element: @element',[
-      '@element' => $this->formElements()[$this->getSetting('form_element')]
+    $summary[] = $this->t('Form element: @element', [
+      '@element' => $this->formElements()[$this->getSetting('form_element')],
     ]);
     if ($this->getSetting('form_element') === 'buttons' && $this->getSetting('threshold_enabled')) {
       $summary[] = $this->t('Use checkboxes when there are more than @threshold options.', [
