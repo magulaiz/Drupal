@@ -757,8 +757,8 @@ class FieldPluginBaseTest extends UnitTestCase {
       ->with($build)
       ->willReturn($expected_result);
 
-    foreach ($functions as $callable => $option_name) {
-      $field = $this->setupTestField([$option_name => $test_class]);
+    foreach ($functions as $callable => $optionName) {
+      $field = $this->setupTestField([$optionName => $test_class]);
       $field->view->style_plugin = new \stdClass();
       $field->view->style_plugin->render_tokens[] = $tokens;
 

@@ -40,7 +40,7 @@ abstract class ArgumentDefaultPluginBase extends PluginBase {
   /**
    * The option name.
    */
-  public string $option_name;
+  public string $optionName;
 
   /**
    * Return the default argument.
@@ -95,11 +95,11 @@ abstract class ArgumentDefaultPluginBase extends PluginBase {
    * This is only called by child objects if specified in the buildOptionsForm(),
    * so it will not always be used.
    */
-  protected function checkAccess(&$form, $option_name) {
+  protected function checkAccess(&$form, $optionName) {
     if (!$this->access()) {
-      $form[$option_name]['#disabled'] = TRUE;
-      $form[$option_name]['#value'] = $form[$this->option_name]['#default_value'];
-      $form[$option_name]['#description'] .= ' <strong>' . $this->t('Note: you do not have permission to modify this. If you change the default filter type, this setting will be lost and you will NOT be able to get it back.') . '</strong>';
+      $form[$optionName]['#disabled'] = TRUE;
+      $form[$optionName]['#value'] = $form[$this->optionName]['#default_value'];
+      $form[$optionName]['#description'] .= ' <strong>' . $this->t('Note: you do not have permission to modify this. If you change the default filter type, this setting will be lost and you will NOT be able to get it back.') . '</strong>';
     }
   }
 
