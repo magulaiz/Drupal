@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\Tests\toolbar\Functional;
+namespace Drupal\Tests\toolbar\FunctionalJavascript;
 
 use Drupal\Component\Serialization\Json;
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
