@@ -717,7 +717,7 @@ class UserPasswordResetTestCase extends DrupalWebTestCase {
     $reset_url = $this->generateResetURL($another_account, $use_direct_login_link);
     $this->drupalGet($reset_url);
     $this->assertRaw(t(
-      'Another user (%other_user) is already logged into the site on this computer, but you tried to use a one-time link for user %resetting_user. Please <a href="!logout">logout</a> and try using the link again.',
+      'You cannot use a password reset link while logged into the site. Please <a href="!logout">logout</a> and try using the link again.',
       array('%other_user' => $account->name, '%resetting_user' => $another_account->name, '!logout' => url('user/logout'))
     ));
 
