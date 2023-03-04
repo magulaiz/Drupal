@@ -179,7 +179,7 @@ function user_pass_reset($form, &$form_state, $uid, $timestamp, $hashed_pass, $a
     else {
       $reset_link_account = user_load($uid);
       if (!empty($reset_link_account)) {
-        drupal_set_message(t('Another user (%other_user) is already logged into the site on this computer, but you tried to use a one-time link for user %resetting_user. Please <a href="!logout">logout</a> and try using the link again.',
+        drupal_set_message(t('You cannot use a password reset link while logged into the site. Please <a href="!logout">logout</a> and try using the link again.',
           array('%other_user' => $user->name, '%resetting_user' => $reset_link_account->name, '!logout' => url('user/logout'))), 'warning');
       } else {
         // Invalid one-time link specifies an unknown user.
