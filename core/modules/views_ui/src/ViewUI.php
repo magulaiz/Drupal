@@ -4,6 +4,7 @@ namespace Drupal\views_ui;
 
 use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\Timer;
+use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\EventSubscriber\AjaxResponseSubscriber;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Link;
@@ -960,6 +961,20 @@ class ViewUI implements ViewEntityInterface {
    */
   public function createDuplicate() {
     return $this->storage->createDuplicate();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function preDuplicate(EntityStorageInterface $storage, EntityInterface $entity) {
+    View::preDuplicate($storage, $entity);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function postDuplicate(EntityStorageInterface $storage) {
+    $this->storage->postDuplicate($storage);
   }
 
   /**

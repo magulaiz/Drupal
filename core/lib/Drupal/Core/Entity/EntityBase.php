@@ -18,7 +18,7 @@ use Symfony\Component\Routing\Exception\RouteNotFoundException;
 /**
  * Defines a base entity class.
  */
-abstract class EntityBase implements EntityInterface {
+abstract class EntityBase implements EntityInterface, EntityDuplicateInterface {
 
   use RefinableCacheableDependencyTrait;
 
@@ -46,6 +46,13 @@ abstract class EntityBase implements EntityInterface {
    * @var \Drupal\Core\TypedData\ComplexDataInterface
    */
   protected $typedData;
+
+  /**
+   * The source entity used to create this duplicate.
+   *
+   * @var \Drupal\Core\Entity\EntityInterface
+   */
+  protected $duplicateSource;
 
   /**
    * Constructs an Entity object.
@@ -352,16 +359,12 @@ abstract class EntityBase implements EntityInterface {
    * {@inheritdoc}
    */
   public function createDuplicate() {
-    $duplicate = clone $this;
-    $entity_type = $this->getEntityType();
-    // Reset the entity ID and indicate that this is a new entity.
-    $duplicate->{$entity_type->getKey('id')} = NULL;
-    $duplicate->enforceIsNew();
+    $storage = $this->entityTypeManager()->getStorage($this->getEntityTypeId());
 
-    // Check if the entity type supports UUIDs and generate a new one if so.
-    if ($entity_type->hasKey('uuid')) {
-      $duplicate->{$entity_type->getKey('uuid')} = $this->uuidGenerator()->generate();
-    }
+    /** @var \Drupal\Core\Entity\EntityDuplicateInterface $duplicate */
+    $duplicate = $storage->createDuplicate($this);
+    $duplicate->setDuplicateSource($this);
+
     return $duplicate;
   }
 
@@ -402,6 +405,39 @@ abstract class EntityBase implements EntityInterface {
    * {@inheritdoc}
    */
   public function postCreate(EntityStorageInterface $storage) {
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function preDuplicate(EntityStorageInterface $storage, EntityInterface $entity) {
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function postDuplicate(EntityStorageInterface $storage) {
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function isDuplicate() {
+    return !is_null($this->getDuplicateSource());
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getDuplicateSource() {
+    return $this->duplicateSource ?? NULL;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setDuplicateSource(EntityInterface $duplicate_source) {
+    $this->duplicateSource = $duplicate_source;
   }
 
   /**

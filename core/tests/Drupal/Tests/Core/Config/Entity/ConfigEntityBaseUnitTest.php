@@ -8,6 +8,10 @@
 namespace Drupal\Tests\Core\Config\Entity;
 
 use Drupal\Component\Plugin\PluginManagerInterface;
+use Drupal\Core\Cache\MemoryCache\MemoryCache;
+use Drupal\Core\Config\ConfigFactoryInterface;
+use Drupal\Core\Config\Entity\ConfigEntityBase;
+use Drupal\Core\Config\Entity\ConfigEntityStorage;
 use Drupal\Core\Config\Schema\SchemaIncompleteException;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
@@ -476,17 +480,39 @@ class ConfigEntityBaseUnitTest extends UnitTestCase {
    * @covers ::createDuplicate
    */
   public function testCreateDuplicate() {
-    $this->entityType->expects($this->exactly(2))
+    /** @var \Drupal\Core\Config\ConfigFactoryInterface|\Prophecy\Prophecy\ProphecyInterface $configFactory */
+    $configFactory = $this->prophesize(ConfigFactoryInterface::class);
+
+    /** @var \Drupal\Core\Extension\ModuleHandlerInterface|\Prophecy\Prophecy\ProphecyInterface $moduleHandler */
+    $moduleHandler = $this->prophesize(ModuleHandlerInterface::class);
+
+    $this->entityType->expects($this->exactly(3))
       ->method('getKey')
       ->willReturnMap([
         ['id', 'id'],
         ['uuid', 'uuid'],
+        ['langcode', 'langcode'],
       ]);
 
     $this->entityType->expects($this->once())
-      ->method('hasKey')
-      ->with('uuid')
-      ->willReturn(TRUE);
+      ->method('getClass')
+      ->willReturn(ConfigEntityBase::class);
+
+    // Create a new ConfigEntityStorage object from mocked objects, so we can
+    // use this for testing createDuplicate functionality.
+    $storage = new ConfigEntityStorage($this->entityType, $configFactory->reveal(), $this->uuid, $this->languageManager, new MemoryCache());
+    $storage->setModuleHandler($moduleHandler->reveal());
+
+    $entityTypeManager = $this->getMockBuilder(EntityTypeManagerInterface::class)
+      ->disableOriginalConstructor()
+      ->getMock();
+    $entityTypeManager->expects($this->once())
+      ->method('getStorage')
+      ->willReturn($storage);
+
+    $container = new ContainerBuilder();
+    \Drupal::setContainer($container);
+    $container->set('entity_type.manager', $entityTypeManager);
 
     $new_uuid = '8607ef21-42bc-4913-978f-8c06207b0395';
     $this->uuid->expects($this->once())

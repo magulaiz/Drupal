@@ -217,12 +217,11 @@ abstract class ConfigEntityBase extends EntityBase implements ConfigEntityInterf
   /**
    * {@inheritdoc}
    */
-  public function createDuplicate() {
-    $duplicate = parent::createDuplicate();
+  public function postDuplicate(EntityStorageInterface $storage) {
+    parent::postDuplicate($storage);
 
     // Prevent the new duplicate from being misinterpreted as a rename.
-    $duplicate->setOriginalId(NULL);
-    return $duplicate;
+    $this->setOriginalId(NULL);
   }
 
   /**

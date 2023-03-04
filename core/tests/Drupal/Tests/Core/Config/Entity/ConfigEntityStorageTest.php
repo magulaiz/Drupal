@@ -243,6 +243,39 @@ class ConfigEntityStorageTest extends UnitTestCase {
   }
 
   /**
+   * @covers ::createDuplicate
+   * @covers ::doCreateDuplicate
+   */
+  public function testCreateDuplicate() {
+    $entity = $this->getMockEntity();
+    $entity->set('id', 'foo');
+    $entity->set('langcode', 'hu');
+    $entity->set('uuid', 'bar');
+    $entity->setOriginalId('foo');
+
+    $new_uuid = '8607ef21-42bc-4913-978f-8c06207b0395';
+    $this->uuidService->generate()->willReturn($new_uuid);
+
+    $duplicate = $this->entityStorage->createDuplicate($entity);
+    $this->assertInstanceOf(EntityInterface::class, $duplicate);
+
+    $this->assertNotSame($entity, $duplicate);
+    $this->assertFalse($entity->isNew());
+    $this->assertTrue($duplicate->isNew());
+    $this->assertNull($duplicate->id());
+    $this->assertNull($duplicate->getOriginalId());
+    $this->assertNotEquals($entity->uuid(), $duplicate->uuid());
+    $this->assertSame($new_uuid, $duplicate->uuid());
+
+    $this->moduleHandler->invokeAll('test_entity_type_duplicate_create', [$entity, $duplicate])
+      ->shouldHaveBeenCalled();
+    $this->moduleHandler->invokeAll('entity_duplicate_create', [$entity, $duplicate])
+      ->shouldHaveBeenCalled();
+
+    return $duplicate;
+  }
+
+  /**
    * @covers ::save
    * @covers ::doSave
    *
