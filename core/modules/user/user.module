@@ -167,7 +167,7 @@ function user_user_presave(UserInterface $account) {
  * @param string $mail
  *   String with the account's email address.
  *
- * @return object|bool
+ * @return \Drupal\user\UserInterface|false
  *   A fully-loaded $user object upon successful user load or FALSE if user
  *   cannot be loaded.
  *
@@ -185,7 +185,7 @@ function user_load_by_mail($mail) {
  * @param string $name
  *   String with the account's user name.
  *
- * @return object|bool
+ * @return \Drupal\user\UserInterface|false
  *   A fully-loaded $user object upon successful user load or FALSE if user
  *   cannot be loaded.
  *
@@ -1181,6 +1181,12 @@ function user_toolbar() {
     $items['user']['tab']['#title'] = [
       '#lazy_builder' => ['user.toolbar_link_builder:renderDisplayName', []],
       '#create_placeholder' => TRUE,
+      '#lazy_builder_preview' => [
+        // Add a line of whitespace to the placeholder to ensure the icon is
+        // positioned in the same place it will be when the lazy loaded content
+        // appears.
+        '#markup' => '&nbsp;',
+      ],
     ];
     $items['user']['tray']['user_links'] = [
       '#lazy_builder' => ['user.toolbar_link_builder:renderToolbarLinks', []],
