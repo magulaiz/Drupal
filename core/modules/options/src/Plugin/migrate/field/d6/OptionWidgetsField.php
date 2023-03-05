@@ -2,16 +2,23 @@
 
 namespace Drupal\options\Plugin\migrate\field\d6;
 
-use Drupal\migrate_drupal\Plugin\migrate\field\FieldPluginBase;
-
-// cspell:ignore optionwidgets
+use Drupal\migrate_drupal\Plugin\migrate\field\d6\OptionWidgetsField as MdOptionWidgetsField;
 
 /**
- * @MigrateField(
- *   id = "optionwidgets",
- *   core = {6},
- *   source_module = "optionwidgets",
- *   destination_module = "options"
- * )
+ *
+ *  @deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use
+ *   \Drupal\migrate_drupal\Plugin\migrate\field\DateField instead.
+ *
+ *  @see https://www.drupal.org/node/1234567
  */
-class OptionWidgetsField extends FieldPluginBase {}
+class OptionWidgetsField extends MdOptionWidgetsField {
+
+  /**
+   * {@inheritdoc}
+   */
+  public function __construct(array $configuration, $plugin_id, $plugin_definition) {
+    @trigger_error(__CLASS__ . ' is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use \Drupal\migrate_drupal\Plugin\migrate\field\DateField instead. See https://www.drupal.org/node/1234567', E_USER_DEPRECATED);
+    parent::__construct($configuration, $plugin_id, $plugin_definition);
+  }
+
+}

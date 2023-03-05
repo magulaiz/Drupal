@@ -2,82 +2,22 @@
 
 namespace Drupal\Tests\file\Unit\Plugin\migrate\field\d6;
 
-use Drupal\migrate\Plugin\MigrationInterface;
-use Drupal\migrate\Row;
 use Drupal\Tests\UnitTestCase;
 use Drupal\file\Plugin\migrate\field\d6\FileField;
-use Prophecy\Argument;
-
-// cspell:ignore filefield imagefield
 
 /**
  * @coversDefaultClass \Drupal\file\Plugin\migrate\field\d6\FileField
  * @group file
+ * @group legacy
  */
 class FileFieldTest extends UnitTestCase {
 
   /**
-   * @var \Drupal\migrate_drupal\Plugin\MigrateFieldInterface
+   * Tests deprecation of FileField plugin.
    */
-  protected $plugin;
-
-  /**
-   * @var \Drupal\migrate\Plugin\MigrationInterface
-   */
-  protected $migration;
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function setUp(): void {
-    $this->plugin = new FileField([], 'file', []);
-
-    $migration = $this->prophesize(MigrationInterface::class);
-
-    // The plugin's defineValueProcessPipeline() method will call
-    // mergeProcessOfProperty() and return nothing. So, in order to examine the
-    // process pipeline created by the plugin, we need to ensure that
-    // getProcess() always returns the last input to mergeProcessOfProperty().
-    $migration->mergeProcessOfProperty(Argument::type('string'), Argument::type('array'))
-      ->will(function ($arguments) use ($migration) {
-        $migration->getProcess()->willReturn($arguments[1]);
-      });
-    $this->migration = $migration->reveal();
-  }
-
-  /**
-   * @covers ::defineValueProcessPipeline
-   */
-  public function testDefineValueProcessPipeline($method = 'defineValueProcessPipeline') {
-    $this->plugin->$method($this->migration, 'field_name', []);
-
-    $expected = [
-      'plugin' => 'd6_field_file',
-      'source' => 'field_name',
-    ];
-    $this->assertSame($expected, $this->migration->getProcess());
-  }
-
-  /**
-   * Data provider for testGetFieldType().
-   */
-  public function getFieldTypeProvider() {
-    return [
-      ['image', 'imagefield_widget'],
-      ['file', 'filefield_widget'],
-      ['file', 'x_widget'],
-    ];
-  }
-
-  /**
-   * @covers ::getFieldType
-   * @dataProvider getFieldTypeProvider
-   */
-  public function testGetFieldType($expected_type, $widget_type, array $settings = []) {
-    $row = new Row();
-    $row->setSourceProperty('widget_type', $widget_type);
-    $row->setSourceProperty('global_settings', $settings);
-    $this->assertSame($expected_type, $this->plugin->getFieldType($row));
+  public function testDeprecatedPlugin() {
+    $this->expectDeprecation('Drupal\file\Plugin\migrate\field\d6\FileField is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use \Drupal\migrate_drupal\Plugin\migrate\field\d6\FileField instead. See https://www.drupal.org/node/1234567');
+    new FileField([], 'file', []);
   }
 
 }

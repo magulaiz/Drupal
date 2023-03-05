@@ -12,7 +12,7 @@ use Drupal\migrate_drupal\Plugin\migrate\field\FieldPluginBase;
  *     "file" = "file"
  *   },
  *   source_module = "foo",
- *   destination_module = "bar"
+ *   destination_module = "migrate_field_plugin_manager_test"
  * )
  */
 class D6FileField extends FieldPluginBase {}

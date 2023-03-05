@@ -2,34 +2,26 @@
 
 namespace Drupal\field\Plugin\migrate\field\d7;
 
-use Drupal\migrate_drupal\Plugin\migrate\field\FieldPluginBase;
+use Drupal\migrate_drupal\Plugin\migrate\field\d7\EntityReference as MdEntityReference;
 
 // cspell:ignore entityreference
 
 /**
  * MigrateField plugin for Drupal 7 entity_reference fields.
  *
- * @MigrateField(
- *   id = "entityreference",
- *   type_map = {
- *     "entityreference" = "entity_reference",
- *   },
- *   core = {7},
- *   source_module = "entityreference",
- *   destination_module = "core"
- * )
+ *  @deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use
+ *   \Drupal\migrate_drupal\Plugin\migrate\field\DateField instead.
+ *
+ *  @see https://www.drupal.org/node/1234567
  */
-class EntityReference extends FieldPluginBase {
+class EntityReference extends MdEntityReference {
 
   /**
    * {@inheritdoc}
    */
-  public function getFieldFormatterMap() {
-    return [
-      'entityreference_label' => 'entity_reference_label',
-      'entityreference_entity_id' => 'entity_reference_entity_id',
-      'entityreference_entity_view' => 'entity_reference_entity_view',
-    ];
+  public function __construct(array $configuration, $plugin_id, $plugin_definition) {
+    @trigger_error(__CLASS__ . ' is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use \Drupal\migrate_drupal\Plugin\migrate\field\DateField instead. See https://www.drupal.org/node/1234567', E_USER_DEPRECATED);
+    parent::__construct($configuration, $plugin_id, $plugin_definition);
   }
 
 }

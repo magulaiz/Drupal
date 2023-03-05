@@ -2,61 +2,23 @@
 
 namespace Drupal\file\Plugin\migrate\field\d6;
 
-use Drupal\migrate\Plugin\MigrationInterface;
-use Drupal\migrate\Row;
-use Drupal\migrate_drupal\Plugin\migrate\field\FieldPluginBase;
-
-// cspell:ignore filefield imagefield imagelink nodelink
+use Drupal\migrate_drupal\Plugin\migrate\field\d6\FileField as MdFileField;
 
 /**
- * @MigrateField(
- *   id = "filefield",
- *   core = {6},
- *   source_module = "filefield",
- *   destination_module = "file"
- * )
+ *
+ *  @deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use
+ *   \Drupal\migrate_drupal\Plugin\migrate\field\d6\FileField instead.
+ *
+ *  @see https://www.drupal.org/node/1234567
  */
-class FileField extends FieldPluginBase {
+class FileField extends MdFileField {
 
   /**
    * {@inheritdoc}
    */
-  public function getFieldWidgetMap() {
-    return [
-      'filefield_widget' => 'file_generic',
-    ];
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getFieldFormatterMap() {
-    return [
-      'default' => 'file_default',
-      'url_plain' => 'file_url_plain',
-      'path_plain' => 'file_url_plain',
-      'image_plain' => 'image',
-      'image_nodelink' => 'image',
-      'image_imagelink' => 'image',
-    ];
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function defineValueProcessPipeline(MigrationInterface $migration, $field_name, $data) {
-    $process = [
-      'plugin' => 'd6_field_file',
-      'source' => $field_name,
-    ];
-    $migration->mergeProcessOfProperty($field_name, $process);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getFieldType(Row $row) {
-    return $row->getSourceProperty('widget_type') == 'imagefield_widget' ? 'image' : 'file';
+  public function __construct(array $configuration, $plugin_id, $plugin_definition) {
+    @trigger_error(__CLASS__ . ' is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use \Drupal\migrate_drupal\Plugin\migrate\field\d6\FileField instead. See https://www.drupal.org/node/1234567', E_USER_DEPRECATED);
+    parent::__construct($configuration, $plugin_id, $plugin_definition);
   }
 
 }

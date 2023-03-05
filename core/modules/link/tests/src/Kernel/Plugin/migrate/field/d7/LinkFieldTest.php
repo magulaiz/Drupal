@@ -3,70 +3,21 @@
 namespace Drupal\Tests\link\Kernel\Plugin\migrate\field\d7;
 
 use Drupal\KernelTests\KernelTestBase;
-use Drupal\migrate\Plugin\MigrationInterface;
 use Drupal\link\Plugin\migrate\field\d7\LinkField;
-use Prophecy\Argument;
 
 /**
  * @coversDefaultClass \Drupal\link\Plugin\migrate\field\d7\LinkField
  * @group link
+ * @group legacy
  */
 class LinkFieldTest extends KernelTestBase {
 
   /**
-   * {@inheritdoc}
+   * Tests deprecation of LinkField plugin.
    */
-  protected static $modules = ['system'];
-
-  /**
-   * @var \Drupal\migrate_drupal\Plugin\MigrateFieldInterface
-   */
-  protected $plugin;
-
-  /**
-   * @var \Drupal\migrate\Plugin\MigrationInterface
-   */
-  protected $migration;
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function setUp(): void {
-    parent::setUp();
-
-    $this->plugin = new LinkField([], 'link', []);
-
-    $migration = $this->prophesize(MigrationInterface::class);
-
-    // The plugin's alterFieldInstanceMigration() method will call
-    // mergeProcessOfProperty() and return nothing. So, in order to examine the
-    // process pipeline created by the plugin, we need to ensure that
-    // getProcess() always returns the last input to mergeProcessOfProperty().
-    $migration->mergeProcessOfProperty(Argument::type('string'), Argument::type('array'))
-      ->will(function ($arguments) use ($migration) {
-        $migration->getProcess()->willReturn($arguments[1]);
-      });
-
-    $this->migration = $migration->reveal();
-  }
-
-  /**
-   * @covers ::alterFieldInstanceMigration
-   */
-  public function testAlterFieldInstanceMigration($method = 'alterFieldInstanceMigration') {
-    $this->plugin->$method($this->migration);
-
-    $expected = [
-      'plugin' => 'static_map',
-      'source' => 'settings/title',
-      'bypass' => TRUE,
-      'map' => [
-        'disabled' => DRUPAL_DISABLED,
-        'optional' => DRUPAL_OPTIONAL,
-        'required' => DRUPAL_REQUIRED,
-      ],
-    ];
-    $this->assertSame($expected, $this->migration->getProcess());
+  public function testDeprecatedPlugin() {
+    $this->expectDeprecation('Drupal\link\Plugin\migrate\field\d7\LinkField is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use \Drupal\migrate_drupal\Plugin\migrate\field\d7\LinkField instead. See https://www.drupal.org/node/1234567');
+    new LinkField([], 'text', []);
   }
 
 }

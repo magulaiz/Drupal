@@ -2,49 +2,23 @@
 
 namespace Drupal\link\Plugin\migrate\field\d6;
 
-use Drupal\migrate\Plugin\MigrationInterface;
-use Drupal\migrate_drupal\Plugin\migrate\field\FieldPluginBase;
+use Drupal\migrate_drupal\Plugin\migrate\field\d6\LinkField as MdLinkField;
 
 /**
- * @MigrateField(
- *   id = "link",
- *   core = {6},
- *   type_map = {
- *     "link" = "link",
- *   },
- *   source_module = "link",
- *   destination_module = "link"
- * )
+ *
+ *  @deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use
+ *   \Drupal\migrate_drupal\Plugin\migrate\field\d6\LinkField instead.
+ *
+ *  @see https://www.drupal.org/node/1234567
  */
-class LinkField extends FieldPluginBase {
+class LinkField extends MdLinkField {
 
   /**
    * {@inheritdoc}
    */
-  public function getFieldFormatterMap() {
-    // See d6_field_formatter_settings.yml and FieldPluginBase
-    // alterFieldFormatterMigration().
-    return [
-      'default' => 'link',
-      'plain' => 'link',
-      'absolute' => 'link',
-      'title_plain' => 'link',
-      'url' => 'link',
-      'short' => 'link',
-      'label' => 'link',
-      'separate' => 'link_separate',
-    ];
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function defineValueProcessPipeline(MigrationInterface $migration, $field_name, $data) {
-    $process = [
-      'plugin' => 'field_link',
-      'source' => $field_name,
-    ];
-    $migration->mergeProcessOfProperty($field_name, $process);
+  public function __construct(array $configuration, $plugin_id, $plugin_definition) {
+    @trigger_error(__CLASS__ . ' is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use \Drupal\migrate_drupal\Plugin\migrate\field\d6\LinkField instead. See https://www.drupal.org/node/1234567', E_USER_DEPRECATED);
+    parent::__construct($configuration, $plugin_id, $plugin_definition);
   }
 
 }

@@ -2,20 +2,23 @@
 
 namespace Drupal\options\Plugin\migrate\field\d7;
 
-use Drupal\migrate_drupal\Plugin\migrate\field\FieldPluginBase;
+use Drupal\migrate_drupal\Plugin\migrate\field\d7\ListField as MdListField;
 
 /**
- * @MigrateField(
- *   id = "list",
- *   type_map = {
- *     "list_boolean" = "boolean",
- *     "list_integer" = "list_integer",
- *     "list_text" = "list_string",
- *     "list_float" = "list_float",
- *   },
- *   core = {7},
- *   source_module = "list",
- *   destination_module = "options"
- * )
+ *
+ *  @deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use
+ *   \Drupal\migrate_drupal\Plugin\migrate\field\DateField instead.
+ *
+ *  @see https://www.drupal.org/node/1234567
  */
-class ListField extends FieldPluginBase {}
+class ListField extends MdListField {
+
+  /**
+   * {@inheritdoc}
+   */
+  public function __construct(array $configuration, $plugin_id, $plugin_definition) {
+    @trigger_error(__CLASS__ . ' is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use \Drupal\migrate_drupal\Plugin\migrate\field\DateField instead. See https://www.drupal.org/node/1234567', E_USER_DEPRECATED);
+    parent::__construct($configuration, $plugin_id, $plugin_definition);
+  }
+
+}

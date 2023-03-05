@@ -110,4 +110,29 @@ class MigrateFieldPluginManager extends MigratePluginManager implements MigrateF
     array_multisort(array_column($definitions, 'weight'), SORT_ASC, SORT_NUMERIC, array_keys($definitions), SORT_ASC, SORT_NATURAL, $definitions);
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function getDefinitions() {
+    $definitions = parent::getDefinitions();
+    // Filter out definitions where the destination module is not installed.
+    $installed = array_keys($this->moduleHandler->getModuleList());
+    $filtered_definitions = array_filter($definitions, function ($definition) use ($installed) {
+      $destination_module = $definition['destination_module'] ?? NULL;
+      if (empty($definition['destination_module'])) {
+        if (is_array($definition['provider'])) {
+          $destination_module = reset($definition['provider']);
+        }
+        else {
+          $destination_module = $definition['provider'];
+        }
+      }
+      if ($destination_module == 'core') {
+        return TRUE;
+      }
+      return in_array($destination_module, $installed);
+    });
+    return $filtered_definitions;
+  }
+
 }
