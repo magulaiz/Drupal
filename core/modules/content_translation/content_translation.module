@@ -320,11 +320,15 @@ function content_translation_field_info_alter(&$info) {
 function content_translation_entity_operation(EntityInterface $entity) {
   $operations = [];
   if ($entity->hasLinkTemplate('drupal:content-translation-overview') && content_translation_translate_access($entity)->isAllowed()) {
+    $entity_type = $entity->get('type')->target_id;
+    $account = \Drupal::currentUser();
+    if($account->hasPermission('translate '.$entity_type.' node') || $account->hasPermission('translate any entity')){
     $operations['translate'] = [
       'title' => t('Translate'),
       'url' => $entity->toUrl('drupal:content-translation-overview'),
       'weight' => 50,
     ];
+   }
   }
   return $operations;
 }
