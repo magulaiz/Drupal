@@ -53,7 +53,11 @@ class MigratePrivateFileTest extends MigrateDrupal7TestBase {
    * Tests that all expected files are migrated.
    */
   public function testFileMigration() {
+<<<<<<< HEAD
     $this->assertEntity(3, 'Babylon5.txt', 'private://Babylon5.txt', 'text/plain', 3, 1486104045, 1486104045, '1');
+=======
+    $this->assertEntity(3, 'Babylon5.txt', 'private://Babylon5.txt', 'text/plain', 3, 1486104045, '1486104045', '1');
+>>>>>>> 2b8f1bf6c5 (Issue #3262358 by mfb, smustgrave, joachim: Fix type hints in FileInterface to align with reality)
   }
 
 }
