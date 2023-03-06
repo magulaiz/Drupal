@@ -20,7 +20,7 @@ class ResultRowTest extends UnitTestCase {
     parent::setUp();
     $this->row = new ResultRow([
       'index' => 1,
-      'data' => (object) [
+      'data' => [
         'alpha' => 'foo',
         'beta' => 'bar',
       ],
@@ -33,29 +33,27 @@ class ResultRowTest extends UnitTestCase {
    * @covers ::__get
    * @covers ::__isset
    * @covers ::__unset
+   * @covers ::hasColumn
    */
   public function testMagic(): void {
     $this->assertTrue(isset($this->row->index));
     $this->assertTrue(isset($this->row->alpha));
     $this->assertTrue(isset($this->row->beta));
-    $this->assertFalse(isset($this->row->getData()->index));
-    $this->assertTrue(isset($this->row->getData()->alpha));
-    $this->assertTrue(isset($this->row->getData()->beta));
+    $this->assertFalse($this->row->hasColumn('index'));
+    $this->assertTrue($this->row->hasColumn('alpha'));
+    $this->assertTrue($this->row->hasColumn('beta'));
     $this->assertSame(1, $this->row->index);
     $this->assertSame('foo', $this->row->alpha);
     $this->assertSame('bar', $this->row->beta);
-    $this->assertSame('foo', $this->row->getData()->alpha);
-    $this->assertSame('bar', $this->row->getData()->beta);
     unset($this->row->beta);
     $this->assertFalse(isset($this->row->beta));
-    $this->assertFalse(isset($this->row->getData()->beta));
+    $this->assertFalse($this->row->hasColumn('beta'));
     $this->row->charlie = 'baz';
     $this->assertTrue(isset($this->row->charlie));
-    $this->assertTrue(isset($this->row->getData()->charlie));
+    $this->assertTrue($this->row->hasColumn('charlie'));
     $this->assertSame('baz', $this->row->charlie);
-    $this->assertSame('baz', $this->row->getData()->charlie);
     $this->expectException(\UnexpectedValueException::class);
-    $this->expectExceptionMessage("Property zulu does not exist");
+    $this->expectExceptionMessage("Column 'zulu' does not exist");
     $value = $this->row->zulu;
   }
 

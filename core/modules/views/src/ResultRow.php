@@ -10,7 +10,7 @@ class ResultRow {
   /**
    * Raw row data.
    */
-  protected \stdClass $data;
+  protected array $data;
 
   /**
    * The entity for this result.
@@ -43,7 +43,7 @@ class ResultRow {
    */
   public function __construct(array $values = []) {
     if (!isset($values['data'])) {
-      $this->data = new \stdClass();
+      $this->data = [];
     }
     else {
       $this->data = $values['data'];
@@ -55,10 +55,16 @@ class ResultRow {
   }
 
   /**
-   * Returns the raw row data.
+   * Checks if a named column is in the result row.
+   *
+   * @param string $name
+   *   The name of the column to check existence of.
+   *
+   * @return bool
+   *   TRUE if the result row contains a column of the given name.
    */
-  public function getData(): \stdClass {
-    return $this->data;
+  public function hasColumn(string $name): bool {
+    return array_key_exists($name, $this->data);
   }
 
   /**
@@ -70,54 +76,34 @@ class ResultRow {
   }
 
   /**
-   * Implements the magic method for getting object properties.
-   *
-   * @param string $name
-   *   Property name.
-   *
-   * @return mixed
-   *   The value of the property.
+   * {@inheritdoc}
    */
   public function __get(string $name): mixed {
-    if (property_exists($this->data, $name)) {
-      return $this->data->$name;
+    if (array_key_exists($name, $this->data)) {
+      return $this->data[$name];
     }
-    throw new \UnexpectedValueException("Property {$name} does not exist");
+    throw new \UnexpectedValueException("Column '{$name}' does not exist");
   }
 
   /**
-   * Implements the magic method to determine whether a property is set.
-   *
-   * @param string $name
-   *   Property name.
-   *
-   * @return bool
-   *   True if property is set.
+   * {@inheritdoc}
    */
   public function __isset(string $name): bool {
-    return isset($this->data->$name);
+    return isset($this->data[$name]);
   }
 
   /**
-   * Implements the magic method to set a property.
-   *
-   * @param $name
-   *   Property name.
-   * @param mixed $value
-   *   The value of the property.
+   * {@inheritdoc}
    */
   public function __set(string $name, mixed $value): void {
-    $this->data->$name = $value;
+    $this->data[$name] = $value;
   }
 
   /**
-   * Implements the magic method to unset a property.
-   *
-   * @param $name
-   *   Property name.
+   * {@inheritdoc}
    */
   public function __unset($name): void {
-    unset($this->data->$name);
+    unset($this->data[$name]);
   }
 
 }

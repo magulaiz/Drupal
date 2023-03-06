@@ -913,7 +913,7 @@ class EntityField extends FieldPluginBase implements CacheableDependencyInterfac
       // affect it. Other side effects could happen similarly.
       $data = FALSE;
       foreach ($this->group_fields as $field_name => $column) {
-        if (property_exists($row, $this->aliases[$column]) || property_exists($row->getData(), $this->aliases[$column])) {
+        if ($row->hasColumn($this->aliases[$column])) {
           $base_value[$field_name] = $row->{$this->aliases[$column]};
           if (isset($base_value[$field_name])) {
             $data = TRUE;

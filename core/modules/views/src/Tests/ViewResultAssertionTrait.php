@@ -77,7 +77,7 @@ trait ViewResultAssertionTrait {
     foreach ($view->result as $key => $value) {
       $row = [];
       foreach ($column_map as $view_column => $expected_column) {
-        if (property_exists($value, $view_column) || property_exists($value->getData(), $view_column)) {
+        if ($value->hasColumn($view_column)) {
           $row[$expected_column] = (string) $value->$view_column;
         }
         // For entity fields we don't have the raw value. Let's try to fetch it

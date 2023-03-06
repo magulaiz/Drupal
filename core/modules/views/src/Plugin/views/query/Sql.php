@@ -1530,14 +1530,14 @@ class Sql extends QueryPluginBase {
         }
 
         $result = $query->execute();
-        $result->setFetchMode(\PDO::FETCH_OBJ);
+        $result->setFetchMode(\PDO::FETCH_ASSOC);
 
         // Setup the result row objects.
         $i = 0;
         $view->result = [];
-        foreach ($result as $rowObj) {
+        foreach ($result as $rowData) {
           $view->result[] = new ResultRow([
-            'data' => $rowObj,
+            'data' => $rowData,
             'index' => $i++,
           ]);
         }
