@@ -1530,13 +1530,17 @@ class Sql extends QueryPluginBase {
         }
 
         $result = $query->execute();
-        $result->setFetchMode(\PDO::FETCH_CLASS, 'Drupal\views\ResultRow');
+        $result->setFetchMode(\PDO::FETCH_OBJ);
 
         // Setup the result row objects.
-        $view->result = iterator_to_array($result);
-        array_walk($view->result, function (ResultRow $row, $index) {
-          $row->index = $index;
-        });
+        $i = 0;
+        $view->result = [];
+        foreach ($result as $rowObj) {
+          $view->result[] = new ResultRow([
+            'data' => $rowObj,
+            'index' => $i++,
+          ]);
+        }
 
         $view->pager->postExecute($view->result);
         $view->pager->updatePageInfo();
