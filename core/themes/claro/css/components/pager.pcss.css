@@ -3,15 +3,15 @@
  * Styles for Claro's Pagination.
  */
 .pager {
-  --pager--size: 2rem; /* --space-m Ã— 2 */
-  --pager--border-width: 0.125rem; /* 2px */
-  --pager--fg-color: var(--color-gray-800);
-  --pager--bg-color: var(--color-white);
-  --pager--hover-bg-color: var(--color-bgblue-active);
-  --pager--focus-bg-color: var(--color-focus);
-  --pager--active-fg-color: var(--color-white);
-  --pager--active-bg-color: var(--color-absolutezero);
-  --pager--border-radius--action: var(--pager--border-width);
+  --pager-size: 2rem; /* --space-m Ã— 2 */
+  --pager-border-width: 0.125rem; /* 2px */
+  --pager-fg-color: var(--color-gray-800);
+  --pager-bg-color: var(--color-white);
+  --pager-hover-bg-color: var(--color-bgblue-active);
+  --pager-focus-bg-color: var(--color-focus);
+  --pager-active-fg-color: var(--color-white);
+  --pager-active-bg-color: var(--color-absolutezero);
+  --pager-border-radius--action: var(--pager-border-width);
 
   margin-block: var(--space-m);
 }
@@ -26,9 +26,6 @@
   text-align: center;
   font-weight: bold;
 }
-[dir="rtl"] .pager__items {
-  margin: var(--space-m) 0;
-}
 
 .pager__item {
   display: inline-block;
@@ -42,13 +39,13 @@
   align-items: center;
   justify-content: center;
   box-sizing: border-box;
-  min-inline-size: var(--pager--size);
-  block-size: var(--pager--size);
+  min-inline-size: var(--pager-size);
+  block-size: var(--pager-size);
   padding-inline: var(--space-xs);
   text-decoration: none;
-  color: var(--pager--fg-color);
+  color: var(--pager-fg-color);
   border-radius: var(--space-m); /* Pager size ÷ 2 */
-  background: var(--pager--bg-color); /* Make sure that the text is visible on dark background. */
+  background: var(--pager-bg-color); /* Make sure that the text is visible on dark background. */
   line-height: 1;
 }
 .pager__link:hover,
@@ -58,18 +55,18 @@
 }
 .pager__link:hover,
 .pager__link.is-active:hover {
-  color: var(--pager--fg-color);
-  background: var(--pager--hover-bg-color);
+  color: var(--pager-fg-color);
+  background: var(--pager-hover-bg-color);
 }
 .pager__link--action-link {
-  border-radius: var(--pager--border-radius--action);
+  border-radius: var(--pager-border-radius--action);
 }
 /* Active number link. */
 .pager__link.is-active,
 .pager__item--current {
-  color: var(--pager--active-fg-color);
-  border: var(--pager--border-width) solid transparent;
-  background: var(--pager--active-bg-color);
+  color: var(--pager-active-fg-color);
+  border: var(--pager-border-width) solid transparent;
+  background: var(--pager-active-bg-color);
 }
 .pager__item--first .pager__link::before {
   --background-image: url(../../images/icons/545560/pager-first.svg);
@@ -125,9 +122,9 @@
 }
 
 /**
-   * On the mini pager, remove margins for the previous and next icons.
-   * Margins are not needed here as there is no accompanying text.
-   */
+* On the mini pager, remove margins for the previous and next icons.
+* Margins are not needed here as there is no accompanying text.
+*/
 .pager__link--mini::before {
   margin-inline: 0;
 }
@@ -135,17 +132,9 @@
 .pager__item-title--backwards {
   margin-inline-start: 0.5rem;
 }
-[dir="rtl"] .pager__item-title--backwards {
-  margin-inline-start: 0;
-  margin-inline-end: 0.5rem;
-}
 
 .pager__item-title--forward {
-  margin-inline-end: 0.5rem; /* LTR */
-}
-[dir="rtl"] .pager__item-title--forward {
-  margin-inline-start: 0.5rem;
-  margin-inline-end: 0;
+  margin-inline-end: 0.5rem;
 }
 
 @media (forced-colors: active) {
