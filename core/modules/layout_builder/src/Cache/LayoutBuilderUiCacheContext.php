@@ -25,10 +25,11 @@ class LayoutBuilderUiCacheContext extends RouteNameCacheContext {
    * {@inheritdoc}
    */
   public function getContext() {
-    if (!empty($this->routeMatch->getRouteName()) && strpos($this->routeMatch->getRouteName(), 'layout_builder.') === 0) {
-      return 'is_layout_builder_ui.1';
+    $route_name = $this->routeMatch->getRouteName();
+    if ($route_name && str_starts_with($route_name, 'layout_builder.')) {
+      return 'is_layout_builder_ui.0';
     }
-    return 'is_layout_builder_ui.0';
+    return 'is_layout_builder_ui.1';
   }
 
 }
