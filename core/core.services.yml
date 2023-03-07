@@ -9,6 +9,7 @@ parameters:
     gc_divisor: 100
     gc_maxlifetime: 200000
     cookie_lifetime: 2000000
+    cookie_samesite: Lax
     sid_length: 48
     sid_bits_per_character: 6
   twig.config:
@@ -1552,7 +1553,7 @@ services:
   Drupal\Core\Batch\BatchStorageInterface: '@batch.storage'
   country_manager:
     class: Drupal\Core\Locale\CountryManager
-    arguments: ['@module_handler', '@transliteration', '@language_manager']
+    arguments: ['@module_handler']
   Drupal\Core\Locale\CountryManagerInterface: '@country_manager'
   date.formatter:
     class: Drupal\Core\Datetime\DateFormatter
