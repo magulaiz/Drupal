@@ -4,8 +4,10 @@ namespace Drupal\Core\Test;
 
 use Drupal\Core\Database\Database;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
+use Drupal\Core\File\FileSystemInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Process\PhpExecutableFinder;
+use Symfony\Component\Process\Process;
 
 /**
  * Run PHPUnit-based tests.
@@ -25,18 +27,25 @@ use Symfony\Component\Process\PhpExecutableFinder;
 class PhpUnitTestRunner implements ContainerInjectionInterface {
 
   /**
+   * Path to the working directory.
+   *
+   * JUnit log files will be stored in this directory.
+   */
+  protected string $workingDirectory;
+
+  /**
    * Constructs a test runner.
    *
    * @param string $appRoot
    *   Path to the application root.
-   * @param string $workingDirectory
-   *   Path to the working directory. JUnit log files will be stored in this
-   *   directory.
+   * @param \Drupal\Core\File\FileSystemInterface $fileSystem
+   *   The file system service.
    */
   public function __construct(
     protected string $appRoot,
-    protected string $workingDirectory
+    protected FileSystemInterface $fileSystem
   ) {
+    $this->workingDirectory = $this->fileSystem->realpath('public://simpletest');
   }
 
   /**
@@ -45,12 +54,12 @@ class PhpUnitTestRunner implements ContainerInjectionInterface {
   public static function create(ContainerInterface $container): static {
     return new static(
       (string) $container->getParameter('app.root'),
-      (string) $container->get('file_system')->realpath('public://simpletest')
+      $container->get('file_system')
     );
   }
 
   /**
-   * Returns the path to use for PHPUnit's --log-junit option.
+   * Returns a prepared path to use for the JUnitListener output.
    *
    * @param int $test_id
    *   The current test ID.
@@ -61,6 +70,7 @@ class PhpUnitTestRunner implements ContainerInjectionInterface {
    * @internal
    */
   public function xmlLogFilePath(int $test_id): string {
+    $this->fileSystem->prepareDirectory($this->workingDirectory, FileSystemInterface::CREATE_DIRECTORY | FileSystemInterface::MODIFY_PERMISSIONS);
     return $this->workingDirectory . '/phpunit-' . $test_id . '.xml';
   }
 
@@ -105,38 +115,41 @@ class PhpUnitTestRunner implements ContainerInjectionInterface {
    * @param string[] $output
    *   (optional) The output by running the phpunit command. If provided, this
    *   array will contain the lines output by the command.
+   * @param array $environment_variables
+   *   (optional) The environment variables to add to the process run.
    *
    * @return string
    *   The results as returned by exec().
    *
    * @internal
    */
-  public function runCommand(array $unescaped_test_classnames, string $phpunit_file, int &$status = NULL, array &$output = NULL): string {
+  public function runCommand(array $unescaped_test_classnames, string $phpunit_file, int &$status = NULL, array &$output = NULL, array $environment_variables = []): string {
     global $base_url;
     // Setup an environment variable containing the database connection so that
     // functional tests can connect to the database.
-    putenv('SIMPLETEST_DB=' . Database::getConnectionInfoAsUrl());
+    $process_environment_variables = array_merge($environment_variables, [
+      'SIMPLETEST_DB' => Database::getConnectionInfoAsUrl(),
+      'SIMPLETEST_JUNIT_FILE' => $phpunit_file,
+    ]);
 
     // Setup an environment variable containing the base URL, if it is available.
     // This allows functional tests to browse the site under test. When running
     // tests via CLI, core/phpunit.xml.dist or core/scripts/run-tests.sh can set
     // this variable.
     if ($base_url) {
-      putenv('SIMPLETEST_BASE_URL=' . $base_url);
-      putenv('BROWSERTEST_OUTPUT_DIRECTORY=' . $this->workingDirectory);
+      $process_environment_variables['SIMPLETEST_BASE_URL'] = $base_url;
+      $process_environment_variables['BROWSERTEST_OUTPUT_DIRECTORY'] = $this->workingDirectory;
     }
     $phpunit_bin = $this->phpUnitCommand();
 
     $command = [
       $phpunit_bin,
-      '--log-junit',
-      escapeshellarg($phpunit_file),
     ];
 
     // Optimized for running a single test.
     if (count($unescaped_test_classnames) == 1) {
       $class = new \ReflectionClass($unescaped_test_classnames[0]);
-      $command[] = escapeshellarg($class->getFileName());
+      $command[] = $class->getFileName();
     }
     else {
       // Double escape namespaces so they'll work in a regexp.
@@ -147,25 +160,17 @@ class PhpUnitTestRunner implements ContainerInjectionInterface {
       $filter_string = implode("|", $escaped_test_classnames);
       $command = array_merge($command, [
         '--filter',
-        escapeshellarg($filter_string),
+        $filter_string,
       ]);
     }
 
-    // Need to change directories before running the command so that we can use
-    // relative paths in the configuration file's exclusions.
-    $old_cwd = getcwd();
-    chdir($this->appRoot . "/core");
+    $process = new Process($command, \Drupal::root() . "/core", $process_environment_variables);
+    $process->setTimeout(NULL);
+    $process->run();
+    $output = explode("\n", $process->getOutput());
+    $status = $process->getExitCode();
 
-    // exec in a subshell so that the environment is isolated.
-    $ret = exec(implode(" ", $command), $output, $status);
-
-    chdir($old_cwd);
-    putenv('SIMPLETEST_DB=');
-    if ($base_url) {
-      putenv('SIMPLETEST_BASE_URL=');
-      putenv('BROWSERTEST_OUTPUT_DIRECTORY=');
-    }
-    return $ret;
+    return '';
   }
 
   /**
@@ -179,6 +184,8 @@ class PhpUnitTestRunner implements ContainerInjectionInterface {
    * @param int $status
    *   (optional) The exit status code of the PHPUnit process will be assigned
    *   to this variable.
+   * @param array $environment_variables
+   *   (optional) The environment variables to add to the process run.
    *
    * @return array
    *   The parsed results of PHPUnit's JUnit XML output, in the format of
@@ -186,11 +193,11 @@ class PhpUnitTestRunner implements ContainerInjectionInterface {
    *
    * @internal
    */
-  public function execute(TestRun $test_run, array $unescaped_test_classnames, int &$status = NULL): array {
+  public function execute(TestRun $test_run, array $unescaped_test_classnames, int &$status = NULL, array $environment_variables = []): array {
     $phpunit_file = $this->xmlLogFilePath($test_run->id());
     // Store output from our test run.
     $output = [];
-    $this->runCommand($unescaped_test_classnames, $phpunit_file, $status, $output);
+    $this->runCommand($unescaped_test_classnames, $phpunit_file, $status, $output, $environment_variables);
 
     if ($status == TestStatus::PASS) {
       return JUnitConverter::xmlToRows($test_run->id(), $phpunit_file);
@@ -205,6 +212,7 @@ class PhpUnitTestRunner implements ContainerInjectionInterface {
         'function' => implode(",", $unescaped_test_classnames),
         'line' => '0',
         'file' => $phpunit_file,
+        'time' => 0,
       ],
     ];
   }
@@ -244,10 +252,16 @@ class PhpUnitTestRunner implements ContainerInjectionInterface {
         $summaries[$result['test_class']] = [
           '#pass' => 0,
           '#fail' => 0,
+          '#risky' => 0,
+          '#skipped' => 0,
+          '#incomplete' => 0,
           '#exception' => 0,
           '#debug' => 0,
+          '#time' => 0,
         ];
       }
+
+      $summaries[$result['test_class']]['#time'] += $result['time'];
 
       switch ($result['status']) {
         case 'pass':
@@ -258,6 +272,18 @@ class PhpUnitTestRunner implements ContainerInjectionInterface {
           $summaries[$result['test_class']]['#fail']++;
           break;
 
+        case 'risky':
+          $summaries[$result['test_class']]['#risky']++;
+          break;
+
+        case 'skipped':
+          $summaries[$result['test_class']]['#skipped']++;
+          break;
+
+        case 'incomplete':
+          $summaries[$result['test_class']]['#incomplete']++;
+          break;
+
         case 'exception':
           $summaries[$result['test_class']]['#exception']++;
           break;
@@ -265,6 +291,7 @@ class PhpUnitTestRunner implements ContainerInjectionInterface {
         case 'debug':
           $summaries[$result['test_class']]['#debug']++;
           break;
+
       }
     }
     return $summaries;

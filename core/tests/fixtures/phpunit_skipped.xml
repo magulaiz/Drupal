@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+  <testsuite name="Drupal\Tests\Core\Access\AccessManagerTest" file="/var/www/lab01/core/tests/Drupal/Tests/Core/Access/AccessManagerTest.php" tests="18" assertions="61" errors="0" failures="0" risky="0" skipped="1" incomplete="0" time="0.308898">
+    <testcase name="testSetChecks" class="Drupal\Tests\Core\Access\AccessManagerTest" classname="Drupal.Tests.Core.Access.AccessManagerTest" file="/var/www/lab01/core/tests/Drupal/Tests/Core/Access/AccessManagerTest.php" line="138" assertions="0" time="0.106626">
+      <skipped message="skipped"/>
+    </testcase>
+    <testcase name="testSetChecksWithDynamicAccessChecker" class="Drupal\Tests\Core\Access\AccessManagerTest" classname="Drupal.Tests.Core.Access.AccessManagerTest" file="/var/www/lab01/core/tests/Drupal/Tests/Core/Access/AccessManagerTest.php" line="159" assertions="3" time="0.017037"/>
+    <testcase name="testCheck" class="Drupal\Tests\Core\Access\AccessManagerTest" classname="Drupal.Tests.Core.Access.AccessManagerTest" file="/var/www/lab01/core/tests/Drupal/Tests/Core/Access/AccessManagerTest.php" line="189" assertions="24" time="0.021573"/>
+    <testcase name="testCheckWithNullAccount" class="Drupal\Tests\Core\Access\AccessManagerTest" classname="Drupal.Tests.Core.Access.AccessManagerTest" file="/var/www/lab01/core/tests/Drupal/Tests/Core/Access/AccessManagerTest.php" line="231" assertions="1" time="0.010700"/>
+    <testsuite name="Drupal\Tests\Core\Access\AccessManagerTest::testCheckConjunctions" tests="6" assertions="12" errors="0" failures="0" risky="0" skipped="0" incomplete="0" time="0.063584">
+      <testcase name="testCheckConjunctions with data set #0" class="Drupal\Tests\Core\Access\AccessManagerTest" classname="Drupal.Tests.Core.Access.AccessManagerTest" file="/var/www/lab01/core/tests/Drupal/Tests/Core/Access/AccessManagerTest.php" line="305" assertions="2" time="0.010881"/>
+      <testcase name="testCheckConjunctions with data set #1" class="Drupal\Tests\Core\Access\AccessManagerTest" classname="Drupal.Tests.Core.Access.AccessManagerTest" file="/var/www/lab01/core/tests/Drupal/Tests/Core/Access/AccessManagerTest.php" line="305" assertions="2" time="0.010670"/>
+      <testcase name="testCheckConjunctions with data set #2" class="Drupal\Tests\Core\Access\AccessManagerTest" classname="Drupal.Tests.Core.Access.AccessManagerTest" file="/var/www/lab01/core/tests/Drupal/Tests/Core/Access/AccessManagerTest.php" line="305" assertions="2" time="0.010567"/>
+      <testcase name="testCheckConjunctions with data set #3" class="Drupal\Tests\Core\Access\AccessManagerTest" classname="Drupal.Tests.Core.Access.AccessManagerTest" file="/var/www/lab01/core/tests/Drupal/Tests/Core/Access/AccessManagerTest.php" line="305" assertions="2" time="0.010508"/>
+      <testcase name="testCheckConjunctions with data set #4" class="Drupal\Tests\Core\Access\AccessManagerTest" classname="Drupal.Tests.Core.Access.AccessManagerTest" file="/var/www/lab01/core/tests/Drupal/Tests/Core/Access/AccessManagerTest.php" line="305" assertions="2" time="0.010574"/>
+      <testcase name="testCheckConjunctions with data set #5" class="Drupal\Tests\Core\Access\AccessManagerTest" classname="Drupal.Tests.Core.Access.AccessManagerTest" file="/var/www/lab01/core/tests/Drupal/Tests/Core/Access/AccessManagerTest.php" line="305" assertions="2" time="0.010384"/>
+    </testsuite>
+    <testcase name="testCheckNamedRoute" class="Drupal\Tests\Core\Access\AccessManagerTest" classname="Drupal.Tests.Core.Access.AccessManagerTest" file="/var/www/lab01/core/tests/Drupal/Tests/Core/Access/AccessManagerTest.php" line="333" assertions="5" time="0.012686"/>
+    <testcase name="testCheckNamedRouteWithUpcastedValues" class="Drupal\Tests\Core\Access\AccessManagerTest" classname="Drupal.Tests.Core.Access.AccessManagerTest" file="/var/www/lab01/core/tests/Drupal/Tests/Core/Access/AccessManagerTest.php" line="368" assertions="5" time="0.012923"/>
+    <testcase name="testCheckNamedRouteWithDefaultValue" class="Drupal\Tests\Core\Access\AccessManagerTest" classname="Drupal.Tests.Core.Access.AccessManagerTest" file="/var/www/lab01/core/tests/Drupal/Tests/Core/Access/AccessManagerTest.php" line="417" assertions="5" time="0.012138"/>
+    <testcase name="testCheckNamedRouteWithNonExistingRoute" class="Drupal\Tests\Core\Access\AccessManagerTest" classname="Drupal.Tests.Core.Access.AccessManagerTest" file="/var/www/lab01/core/tests/Drupal/Tests/Core/Access/AccessManagerTest.php" line="464" assertions="2" time="0.010824"/>
+    <testsuite name="Drupal\Tests\Core\Access\AccessManagerTest::testCheckException" tests="4" assertions="4" errors="0" failures="0" risky="0" skipped="0" incomplete="0" time="0.040806">
+      <testcase name="testCheckException with data set #0" class="Drupal\Tests\Core\Access\AccessManagerTest" classname="Drupal.Tests.Core.Access.AccessManagerTest" file="/var/www/lab01/core/tests/Drupal/Tests/Core/Access/AccessManagerTest.php" line="480" assertions="1" time="0.010990"/>
+      <testcase name="testCheckException with data set #1" class="Drupal\Tests\Core\Access\AccessManagerTest" classname="Drupal.Tests.Core.Access.AccessManagerTest" file="/var/www/lab01/core/tests/Drupal/Tests/Core/Access/AccessManagerTest.php" line="480" assertions="1" time="0.009883"/>
+      <testcase name="testCheckException with data set #2" class="Drupal\Tests\Core\Access\AccessManagerTest" classname="Drupal.Tests.Core.Access.AccessManagerTest" file="/var/www/lab01/core/tests/Drupal/Tests/Core/Access/AccessManagerTest.php" line="480" assertions="1" time="0.009928"/>
+      <testcase name="testCheckException with data set #3" class="Drupal\Tests\Core\Access\AccessManagerTest" classname="Drupal.Tests.Core.Access.AccessManagerTest" file="/var/www/lab01/core/tests/Drupal/Tests/Core/Access/AccessManagerTest.php" line="480" assertions="1" time="0.010005"/>
+    </testsuite>
+  </testsuite>
+</testsuites>

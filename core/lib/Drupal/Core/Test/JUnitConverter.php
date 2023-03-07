@@ -109,16 +109,26 @@ class JUnitConverter {
    * @internal
    */
   public static function convertTestCaseToSimpletestRow($test_id, \SimpleXMLElement $test_case) {
+    $status = static::getStatus($test_case);
+
     $message = '';
-    $pass = TRUE;
-    if ($test_case->failure) {
-      $lines = explode("\n", $test_case->failure);
-      $message = $lines[2];
-      $pass = FALSE;
+    if ($status == 'fail') {
+      if ($test_case->failure) {
+        $lines = explode("\n", $test_case->failure);
+        $message = $lines[2];
+      }
+      elseif ($test_case->error) {
+        $message = $test_case->error[0];
+      }
     }
-    if ($test_case->error) {
-      $message = $test_case->error;
-      $pass = FALSE;
+    elseif ($status == 'risky') {
+      $message = 'Risky';
+    }
+    elseif ($status == 'skipped') {
+      $message = 'Skipped';
+    }
+    elseif ($status == 'incomplete') {
+      $message = 'Incomplete';
     }
 
     $attributes = $test_case->attributes();
@@ -126,14 +136,36 @@ class JUnitConverter {
     $record = [
       'test_id' => $test_id,
       'test_class' => (string) $attributes->class,
-      'status' => $pass ? 'pass' : 'fail',
+      'status' => $status,
       'message' => $message,
       'message_group' => 'Other',
       'function' => $attributes->class . '->' . $attributes->name . '()',
       'line' => (int) $attributes->line ?: 0,
       'file' => (string) $attributes->file,
+      'time' => (float) $attributes->time,
     ];
     return $record;
+  }
+
+  /**
+   * Determine a status string for the given testcase.
+   *
+   * @param \SimpleXMLElement $test_case
+   *   The test case XML element.
+   *
+   * @return string
+   *   The status value to insert into the {simpletest} record. Allowed values:
+   *   'pass', 'fail', 'risky', 'skipped', 'incomplete'.
+   */
+  protected static function getStatus(\SimpleXMLElement $test_case) {
+    $status = 'pass';
+    if ($test_case->failure || $test_case->error || $test_case->risky) {
+      $status = 'fail';
+    }
+    elseif ($test_case->skipped) {
+      $status = $test_case->skipped->attributes()->message;
+    }
+    return $status;
   }
 
 }

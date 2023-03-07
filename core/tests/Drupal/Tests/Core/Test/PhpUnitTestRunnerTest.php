@@ -1,12 +1,12 @@
 <?php
 
-namespace Drupal\Tests\Core\Test;
+namespace Drupal\KernelTests\Core\Test;
 
 use Drupal\Core\Test\PhpUnitTestRunner;
 use Drupal\Core\Test\SimpletestTestRunResultsStorage;
 use Drupal\Core\Test\TestRun;
 use Drupal\Core\Test\TestStatus;
-use Drupal\Tests\UnitTestCase;
+use Drupal\KernelTests\KernelTestBase;
 
 /**
  * @coversDefaultClass \Drupal\Core\Test\PhpUnitTestRunner
@@ -14,7 +14,7 @@ use Drupal\Tests\UnitTestCase;
  *
  * @see Drupal\Tests\simpletest\Unit\SimpletestPhpunitRunCommandTest
  */
-class PhpUnitTestRunnerTest extends UnitTestCase {
+class PhpUnitTestRunnerTest extends KernelTestBase {
 
   /**
    * Tests an error in the test running phase.
@@ -85,7 +85,7 @@ class PhpUnitTestRunnerTest extends UnitTestCase {
    * @covers ::phpUnitCommand
    */
   public function testPhpUnitCommand() {
-    $runner = new PhpUnitTestRunner($this->root, sys_get_temp_dir());
+    $runner = new PhpUnitTestRunner($this->root, \Drupal::service('file_system'));
     $this->assertMatchesRegularExpression('/phpunit/', $runner->phpUnitCommand());
   }
 
@@ -93,7 +93,7 @@ class PhpUnitTestRunnerTest extends UnitTestCase {
    * @covers ::xmlLogFilePath
    */
   public function testXmlLogFilePath() {
-    $runner = new PhpUnitTestRunner($this->root, sys_get_temp_dir());
+    $runner = new PhpUnitTestRunner($this->root, \Drupal::service('file_system'));
     $this->assertStringEndsWith('phpunit-23.xml', $runner->xmlLogFilePath(23));
   }
 
@@ -143,7 +143,7 @@ class PhpUnitTestRunnerTest extends UnitTestCase {
    * @covers ::summarizeResults
    */
   public function testSummarizeResults($results, $has_status) {
-    $runner = new PhpUnitTestRunner($this->root, sys_get_temp_dir());
+    $runner = new PhpUnitTestRunner($this->root, \Drupal::service('file_system'));
     $summary = $runner->summarizeResults($results);
 
     $this->assertArrayHasKey(static::class, $summary);

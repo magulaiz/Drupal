@@ -21,6 +21,7 @@
 %"PHPUnit\\Framework\\TestListenerDefaultImplementation".*is deprecated%
 %"PHPUnit\\Framework\\TestSuite".*is considered internal%
 %"PHPUnit\\TextUI\\DefaultResultPrinter".*is considered internal%
+%"Drupal\\Core\\Test\\JUnitListener" class implements "PHPUnit\\Framework\\TestListener" that is deprecated%
 
 # Skip deprecations for EditorMediaDialog, EditorImageDialog and EditorLinkDialog triggered by
 # \Drupal\Core\Entity\EntityResolverManager::setRouteOptions().

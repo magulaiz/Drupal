@@ -781,10 +781,16 @@ function simpletest_script_execute_batch(TestRunResultsStorageInterface $test_ru
             'message_group' => 'run-tests.sh check',
           ]);
           // Ensure that an error line is displayed for the class.
-          simpletest_script_reporter_display_summary(
-            $child['class'],
-            ['#pass' => 0, '#fail' => 1, '#exception' => 0, '#debug' => 0]
-          );
+          simpletest_script_reporter_display_summary($child['class'], [
+            '#pass' => 0,
+            '#fail' => 1,
+            '#risky' => 0,
+            '#skipped' => 0,
+            '#incomplete' => 0,
+            '#exception' => 0,
+            '#debug' => 0,
+            '#time' => 0,
+          ]);
           if ($args['die-on-fail']) {
             $test_db = new TestDatabase($child['test_run']->getDatabasePrefix());
             $test_directory = $test_db->getTestSitePath();
@@ -1076,17 +1082,42 @@ function simpletest_script_reporter_init() {
  */
 function simpletest_script_reporter_display_summary($class, $results) {
   // Output all test results vertically aligned.
-  // Cut off the class name after 60 chars, and pad each group with 3 digits
-  // by default (more than 999 assertions are rare).
-  $output = vsprintf('%-60.60s %10s %9s %14s %12s', [
-    $class,
-    $results['#pass'] . ' passes',
-    !$results['#fail'] ? '' : $results['#fail'] . ' fails',
-    !$results['#exception'] ? '' : $results['#exception'] . ' exceptions',
-    !$results['#debug'] ? '' : $results['#debug'] . ' messages',
-  ]);
+  $class_out = $class;
+  if (strlen($class_out) < 70) {
+      $class_out = str_pad($class, 70, ' ', STR_PAD_RIGHT);
+  }
+  if (strlen($class_out) > 70) {
+      $class_out = '...' . substr($class_out, -70 + 3);
+  }
+  $summary = [str_pad($results['#pass'], 4, " ", STR_PAD_LEFT) . ' passes'];
+  if ($results['#fail']) {
+    $summary[] = $results['#fail'] . ' fails';
+  }
+  if ($results['#risky']) {
+    $summary[] = $results['#risky'] . ' risky';
+  }
+  if ($results['#skipped']) {
+    $summary[] = $results['#skipped'] . ' skipped';
+  }
+  if ($results['#incomplete']) {
+    $summary[] = $results['#incomplete'] . ' incomplete';
+  }
+  if ($results['#exception']) {
+    $summary[] = $results['#exception'] . ' exceptions';
+  }
+  if ($results['#debug']) {
+    $summary[] = $results['#debug'] . ' messages';
+  }
 
-  $status = ($results['#fail'] || $results['#exception'] ? 'fail' : 'pass');
+  if ($results['#time']) {
+    $time = sprintf('%8.3fs', $results['#time']);
+  }
+  else {
+    $time = '         ';
+  }
+
+  $output = vsprintf('%s %s %s', [$time, $class_out, implode(', ', $summary)]);
+  $status = ($results['#fail'] || $results['#exception'] || $results['#risky'] ? 'fail' : 'pass');
   simpletest_script_print($output . "\n", simpletest_script_color_code($status));
 }
 
