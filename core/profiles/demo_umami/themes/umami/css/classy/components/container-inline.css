@@ -7,16 +7,22 @@
 .container-inline .label:after {
   content: ":";
 }
-.form-type-radios .container-inline label:after,
-.form-type-checkboxes .container-inline label:after {
+.container-inline .form-radios label:after,
+.container-inline .form-checkboxes label:after {
   content: "";
 }
-.form-type-radios .container-inline .form-type-radio,
-.form-type-checkboxes .container-inline .form-type-checkbox {
-  margin: 0 1em;
+.container-inline .form-radios .form-type-radio,
+.container-inline .form-checkboxes .form-type-checkbox{
+  margin-right: 1em;
+}
+[dir="rtl"] .container-inline .form-radios .form-type-radio,
+[dir="rtl"] .container-inline .form-checkboxes .form-type-checkbox {
+  margin-right: 0;
+  margin-left: 1em;
 }
 .container-inline .form-actions,
 .container-inline.form-actions {
   margin-top: 0;
   margin-bottom: 0;
 }
+
