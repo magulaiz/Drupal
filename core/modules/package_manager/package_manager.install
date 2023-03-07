@@ -14,8 +14,6 @@ use Drupal\package_manager\Exception\StageFailureMarkerException;
  */
 function package_manager_requirements(string $phase) {
   $requirements = [];
-
-
   // If we're able to check for the presence of the failure marker at all, do it
   // irrespective of the current run phase. If the failure marker is there, the
   // site is in an indeterminate state and should be restored from backup ASAP.
