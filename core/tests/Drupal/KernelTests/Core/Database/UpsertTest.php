@@ -144,4 +144,20 @@ class UpsertTest extends DatabaseTestBase {
     $this->assertNull($r['blob1']);
   }
 
+  /**
+   * @covers \Drupal\Core\Database\Query\Upsert::__toString
+   */
+  public function testUpsertToString(): void {
+    $query = $this->connection->upsert('test_people')
+      ->key('job')
+      ->fields(['job', 'age', 'name'])
+      ->values([
+        'job' => 'Presenter',
+        'age' => 31,
+        'name' => 'Tiffany',
+      ]);
+
+    $this->assertNotEmpty((string) $query);
+  }
+
 }

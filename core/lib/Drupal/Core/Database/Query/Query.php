@@ -118,7 +118,8 @@ abstract class Query implements PlaceholderInterface {
    * statement.
    *
    * @return string
-   *   A prepared statement query string for this object.
+   *   A prepared statement query string for this object. If the query cannot
+   *   be represented as a single statement an empty string is returned.
    */
   abstract public function __toString();
 

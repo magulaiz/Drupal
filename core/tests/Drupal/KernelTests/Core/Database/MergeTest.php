@@ -222,4 +222,13 @@ class MergeTest extends DatabaseTestBase {
     $this->assertEquals('2', $person->id);
   }
 
+  /**
+   * @covers \Drupal\Core\Database\Query\Merge::__toString
+   */
+  public function testMergeToString(): void {
+    $query = $this->connection->merge('test_people');
+
+    $this->assertEmpty((string) $query);
+  }
+
 }
