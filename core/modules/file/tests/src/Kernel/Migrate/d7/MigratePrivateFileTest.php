@@ -54,10 +54,14 @@ class MigratePrivateFileTest extends MigrateDrupal7TestBase {
    */
   public function testFileMigration() {
 <<<<<<< HEAD
+<<<<<<< HEAD
     $this->assertEntity(3, 'Babylon5.txt', 'private://Babylon5.txt', 'text/plain', 3, 1486104045, 1486104045, '1');
 =======
     $this->assertEntity(3, 'Babylon5.txt', 'private://Babylon5.txt', 'text/plain', 3, 1486104045, '1486104045', '1');
 >>>>>>> 2b8f1bf6c5 (Issue #3262358 by mfb, smustgrave, joachim: Fix type hints in FileInterface to align with reality)
+=======
+    $this->assertEntity(3, 'Babylon5.txt', 'private://Babylon5.txt', 'text/plain', 3, 1486104045, 1486104045, '1');
+>>>>>>> 2684dbd6f1 (Issue #3210064 by mfb, TanujJain-TJ, maosmurf, smustgrave, xjm, samuel.mortenson: EntityChangedTrait return type mismatch)
   }
 
 }

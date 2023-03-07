@@ -44,10 +44,14 @@ class MigrateFileTest extends MigrateDrupal7TestBase {
    */
   public function testFileMigration() {
 <<<<<<< HEAD
+<<<<<<< HEAD
     $this->assertEntity(1, 'cube.jpeg', 'public://cube.jpeg', 'image/jpeg', 3620, 1421727515, 1421727515, '1');
 =======
     $this->assertEntity(1, 'cube.jpeg', 'public://cube.jpeg', 'image/jpeg', 3620, 1421727515, '1421727515', '1');
 >>>>>>> 2b8f1bf6c5 (Issue #3262358 by mfb, smustgrave, joachim: Fix type hints in FileInterface to align with reality)
+=======
+    $this->assertEntity(1, 'cube.jpeg', 'public://cube.jpeg', 'image/jpeg', 3620, 1421727515, 1421727515, '1');
+>>>>>>> 2684dbd6f1 (Issue #3210064 by mfb, TanujJain-TJ, maosmurf, smustgrave, xjm, samuel.mortenson: EntityChangedTrait return type mismatch)
     // Ensure temporary file was not migrated.
     $this->assertNull(File::load(4));
   }
