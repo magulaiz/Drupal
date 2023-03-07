@@ -38,7 +38,7 @@ class BlockContentListTest extends BlockContentTestBase {
     'administer blocks',
     'access block library',
     'create basic block content',
-    'update any basic block content',
+    'edit any basic block content',
     'delete any basic block content',
     'translate configuration',
   ];
@@ -64,7 +64,7 @@ class BlockContentListTest extends BlockContentTestBase {
     $this->baseUser2 = $this->drupalCreateUser([
       'access block library',
       'create basic block content',
-      'update any basic block content',
+      'edit any basic block content',
       'delete any basic block content',
     ]);
   }

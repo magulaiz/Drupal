@@ -421,7 +421,7 @@ class BlockUiTest extends BrowserTestBase {
       'access block overview',
       'place blocks',
       'configure blocks',
-      'modify blocks',
+      'enable and disable blocks',
       'delete blocks',
     ];
     $user1 = $this->drupalCreateUser(['access block overview']);

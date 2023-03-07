@@ -617,7 +617,7 @@ JS;
     $non_media_editor = $this->drupalCreateUser([
       'access content',
       'create basic_page content',
-      'update any basic_page content',
+      'edit any basic_page content',
     ]);
     $this->drupalLogin($non_media_editor);
 

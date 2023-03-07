@@ -76,14 +76,14 @@ class BlockAccessControlHandler extends EntityAccessControlHandler implements En
     if ($operation != 'view') {
       switch ($operation) {
         case 'update':
-          return AccessResult::allowedIfHasPermissions($account, ['administer blocks', 'configure blocks'], 'OR')->cachePerPermissions();
+          return AccessResult::allowedIfHasPermissions($account, ['administer blocks', 'configure blocks'], 'OR');
 
         case 'disable':
         case 'enable':
-          return AccessResult::allowedIfHasPermissions($account, ['administer blocks', 'modify blocks'], 'OR')->cachePerPermissions();
+          return AccessResult::allowedIfHasPermissions($account, ['administer blocks', 'enable and disable blocks'], 'OR');
 
         case 'delete':
-          return AccessResult::allowedIfHasPermissions($account, ['administer blocks', 'delete blocks'], 'OR')->cachePerPermissions();
+          return AccessResult::allowedIfHasPermissions($account, ['administer blocks', 'delete blocks'], 'OR');
 
         default:
           return parent::checkAccess($entity, $operation, $account);

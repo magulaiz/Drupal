@@ -1,9 +1,4 @@
 services:
-  access_check.block_content.add:
-    class: Drupal\block_content\Access\BlockContentAddAccessCheck
-    arguments: ['@entity_type.manager']
-    tags:
-      - { name: access_check, applies_to: _block_content_add_access }
   block_content.uuid_lookup:
     class: \Drupal\block_content\BlockContentUuidLookup
     arguments: ['@cache.bootstrap', '@lock', '@entity_type.manager']

@@ -36,7 +36,7 @@ class BlockContentListViewsTest extends BlockContentTestBase {
     'administer blocks',
     'access block library',
     'create basic block content',
-    'update any basic block content',
+    'edit any basic block content',
     'delete any basic block content',
     'translate configuration',
   ];
@@ -67,7 +67,7 @@ class BlockContentListViewsTest extends BlockContentTestBase {
     $this->baseUser2 = $this->drupalCreateUser([
       'access block library',
       'create basic block content',
-      'update any basic block content',
+      'edit any basic block content',
       'delete any basic block content',
     ]);
   }
@@ -198,7 +198,7 @@ class BlockContentListViewsTest extends BlockContentTestBase {
     $matches = $this->xpath('//td/a');
     $actual = $matches[0]->getText();
     $this->assertEquals($label, $actual, 'Label found for test block.');
-    $this->assertSession()->linkExists('Edit');
+    $this->assertSession()->linkByHrefExists('block/' . $test_block->id());
     $this->assertSession()->linkByHrefExists('block/' . $test_block->id() . '/delete');
   }
 
