@@ -74,6 +74,7 @@ class BlockContentController extends ControllerBase {
    *   returns the custom block add page for that custom block type.
    */
   public function add(Request $request) {
+    // todo deprecate see https://www.drupal.org/project/drupal/issues/3346394.
     $types = [];
     // Only use block types the user has access to.
     foreach ($this->blockContentTypeStorage->loadMultiple() as $type) {

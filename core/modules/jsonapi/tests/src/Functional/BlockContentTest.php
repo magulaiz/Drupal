@@ -68,7 +68,7 @@ class BlockContentTest extends ResourceTestBase {
     switch ($method) {
       case 'GET':
       case 'PATCH':
-        $this->grantPermissionsToTestedRole(['access block library', 'update any basic block content']);
+        $this->grantPermissionsToTestedRole(['access block library', 'edit any basic block content']);
         break;
 
       case 'POST':
@@ -200,7 +200,7 @@ class BlockContentTest extends ResourceTestBase {
    */
   protected function getExpectedUnauthorizedAccessMessage($method) {
     return match ($method) {
-      'GET', 'PATCH' => "The following permissions are required: 'access block library' AND 'update any basic block content'.",
+      'GET', 'PATCH' => "The following permissions are required: 'access block library' AND 'edit any basic block content'.",
       'POST' => "The following permissions are required: 'access block library' AND 'create basic block content'.",
       'DELETE' => "The following permissions are required: 'access block library' AND 'delete any basic block content'.",
       default => parent::getExpectedUnauthorizedAccessMessage($method),

@@ -57,8 +57,11 @@ function block_content_post_update_move_custom_block_library() {
 function block_content_post_update_block_library_view_permission() {
   $config_factory = \Drupal::configFactory();
   $config = $config_factory->getEditable('views.view.block_content');
-  $config->set('display.default.display_options.access.options.perm', 'access block library')
-    ->save(TRUE);
+  $current_perm = $config->get('display.default.display_options.access.options.perm');
+  if ($current_perm === 'administer blocks') {
+    $config->set('display.default.display_options.access.options.perm', 'access block library')
+      ->save(TRUE);
+  }
 }
 
 /**
@@ -69,9 +72,8 @@ function block_content_post_update_sort_permissions(&$sandbox = NULL) {
     if ($role->hasPermission('administer blocks')) {
       $role->grantPermission('administer block library');
       $role->grantPermission('administer block types');
-      $role->save();
-      return $role->label() . ' updated.';
+      return TRUE;
     }
-    return $role->label() . ' not updated.';
+    return FALSE;
   });
 }

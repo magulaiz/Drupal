@@ -70,7 +70,7 @@ class BlockContentAccessControlHandler extends EntityAccessControlHandler implem
         ])),
       'update' => AccessResult::allowedIfHasPermissions($account, [
         'access block library',
-        'update any ' . $bundle . ' block content',
+        'edit any ' . $bundle . ' block content',
       ])->orIf(AccessResult::allowedIfHasPermissions($account, [
         'administer block library',
       ])),

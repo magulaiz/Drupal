@@ -6,7 +6,7 @@ place blocks:
   title: 'Place blocks'
 configure blocks:
   title: 'Configure blocks'
-modify blocks:
+enable and disable blocks:
   title: 'Enable / Disable blocks'
 delete blocks:
   title: 'Remove blocks'
