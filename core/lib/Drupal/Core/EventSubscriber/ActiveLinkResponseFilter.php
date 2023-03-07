@@ -83,8 +83,9 @@ class ActiveLinkResponseFilter implements EventSubscriberInterface {
       if (stripos($response->headers->get('Content-Type', ''), 'text/html') === FALSE) {
         return;
       }
-    } else {
-        return;
+    }
+    else {
+      return;
     }
 
     // For authenticated users, the 'is-active' class is set in JavaScript.
