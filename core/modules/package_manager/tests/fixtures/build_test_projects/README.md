@@ -9,4 +9,3 @@ The test updates from one version to the next, and verifies the updated module's
 
 # Why do we need the `alpha` fixtures?
 To be able to test that `php-tuf/composer-stager` indeed only updates the package for which an update was requested (even though more updates are available), no fixture manipulation is allowed to occur. This requires updating a `path` composer package repository to first serve contain one version of a package, and then another. That is what these fixtures are used for.
-
