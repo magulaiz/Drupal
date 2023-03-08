@@ -71,6 +71,7 @@ function block_content_post_update_sort_permissions(&$sandbox = NULL) {
   \Drupal::classResolver(ConfigEntityUpdater::class)->update($sandbox, 'user_role', function (Role $role) {
     if ($role->hasPermission('administer blocks')) {
       $role->grantPermission('administer block library');
+      $role->grantPermission('access block library');
       $role->grantPermission('administer block types');
       return TRUE;
     }

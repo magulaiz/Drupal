@@ -81,6 +81,7 @@ class BlockContentUpdateTest extends UpdatePathTestBase {
     $this->assertTrue($user->hasPermission('administer blocks'));
     $this->assertFalse($user->hasPermission('administer block library'));
     $this->assertFalse($user->hasPermission('administer block types'));
+    $this->assertFalse($user->hasPermission('access block library'));
 
     $this->runUpdates();
 
@@ -88,6 +89,7 @@ class BlockContentUpdateTest extends UpdatePathTestBase {
     $this->assertTrue($user->hasPermission('administer blocks'));
     $this->assertTrue($user->hasPermission('administer block library'));
     $this->assertTrue($user->hasPermission('administer block types'));
+    $this->assertTrue($user->hasPermission('access block library'));
   }
 
 }
