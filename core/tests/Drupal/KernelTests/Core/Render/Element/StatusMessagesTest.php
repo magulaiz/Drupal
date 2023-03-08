@@ -9,7 +9,8 @@ use Drupal\KernelTests\KernelTestBase;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 /**
- * Tests the status_messages element.
+ * @coversDefaultClass \Drupal\Core\Render\Element\StatusMessages
+ * @group Render
  */
 class StatusMessagesTest extends KernelTestBase implements ServiceModifierInterface {
 
