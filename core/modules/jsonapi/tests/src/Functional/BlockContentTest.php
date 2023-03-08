@@ -68,7 +68,11 @@ class BlockContentTest extends ResourceTestBase {
     switch ($method) {
       case 'GET':
       case 'PATCH':
-        $this->grantPermissionsToTestedRole(['access block library', 'edit any basic block content']);
+        $this->grantPermissionsToTestedRole([
+          'access block library',
+          'administer block types',
+          'administer block library',
+        ]);
         break;
 
       case 'POST':
