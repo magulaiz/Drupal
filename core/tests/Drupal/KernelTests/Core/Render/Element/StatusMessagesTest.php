@@ -9,6 +9,31 @@ use Drupal\KernelTests\KernelTestBase;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 /**
+ * Tests the status_messages element.
+ */
+class StatusMessagesTest extends KernelTestBase implements ServiceModifierInterface {
+
+  /**
+   * {@inheritdoc}
+   */
+  public function alter(ContainerBuilder $container) {
+    $service_definition = $container->getDefinition('plugin.manager.element_info');
+    $service_definition->setClass(TestElementInfoManager::class);
+  }
+
+  /**
+   * Tests whether the child class' methods are called when extending.
+   */
+  public function testPluginAlter() {
+    $build = ['#type' => 'status_messages'];
+    $result = $this->container->get('renderer')->renderPlain($build);
+
+    self::assertEquals('test successful!', $result);
+  }
+
+}
+
+/**
  * Status messages plugin class that returns a test render array.
  */
 class TestStatusMessages extends StatusMessages {
@@ -35,30 +60,6 @@ class TestElementInfoManager extends ElementInfoManager {
       return new TestStatusMessages($configuration, $plugin_id, $this->getDefinition($plugin_id));
     }
     return parent::createInstance($plugin_id, $configuration);
-  }
-
-}
-/**
- * Tests the status_messages element.
- */
-class StatusMessagesTest extends KernelTestBase implements ServiceModifierInterface {
-
-  /**
-   * {@inheritdoc}
-   */
-  public function alter(ContainerBuilder $container) {
-    $service_definition = $container->getDefinition('plugin.manager.element_info');
-    $service_definition->setClass(TestElementInfoManager::class);
-  }
-
-  /**
-   * Tests whether the child class' methods are called when extending.
-   */
-  public function testPluginAlter() {
-    $build = ['#type' => 'status_messages'];
-    $result = $this->container->get('renderer')->renderPlain($build);
-
-    self::assertEquals('test successful!', $result);
   }
 
 }
