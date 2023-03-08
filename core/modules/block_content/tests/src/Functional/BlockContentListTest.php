@@ -74,7 +74,7 @@ class BlockContentListTest extends BlockContentTestBase {
    */
   public function testListing() {
     // Test with the admin user.
-    $this->drupalLogin($this->adminUser);
+    $this->drupalLogin($this->drupalCreateUser(['access block library', 'administer block library']));
     $this->drupalGet('admin/content/block-content');
 
     // Test for the page title.

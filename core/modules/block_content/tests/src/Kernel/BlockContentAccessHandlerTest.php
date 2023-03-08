@@ -300,7 +300,8 @@ class BlockContentAccessHandlerTest extends KernelTestBase {
         AccessResultForbidden::class,
       ],
     ];
-    foreach (['edit', 'delete'] as $operation) {
+    foreach (['update', 'delete'] as $operation) {
+      $label = $operation === 'update' ? 'edit' : 'delete';
       $cases += [
         $operation . ':published:reusable' => [
           $operation,
@@ -324,7 +325,7 @@ class BlockContentAccessHandlerTest extends KernelTestBase {
           $operation,
           FALSE,
           TRUE,
-          ['access block library', $operation . ' any square block content'],
+          ['access block library', $label . ' any square block content'],
           TRUE,
           NULL,
           AccessResultAllowed::class,
@@ -333,7 +334,7 @@ class BlockContentAccessHandlerTest extends KernelTestBase {
           $operation,
           TRUE,
           TRUE,
-          ['access block library', $operation . ' any square block content'],
+          ['access block library', $label . ' any square block content'],
           TRUE,
           NULL,
           AccessResultAllowed::class,
