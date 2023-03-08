@@ -12,7 +12,7 @@
   content: "";
 }
 .container-inline .form-radios .form-type-radio,
-.container-inline .form-checkboxes .form-type-checkbox{
+.container-inline .form-checkboxes .form-type-checkbox {
   margin-right: 1em;
 }
 [dir="rtl"] .container-inline .form-radios .form-type-radio,
