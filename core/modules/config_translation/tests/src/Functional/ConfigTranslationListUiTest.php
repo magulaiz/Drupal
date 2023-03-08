@@ -63,6 +63,8 @@ class ConfigTranslationListUiTest extends BrowserTestBase {
       'access site-wide contact form',
       'administer blocks',
       'administer block library',
+      'administer block types',
+      'access block library',
       'administer contact forms',
       'administer content types',
       'administer block_content fields',

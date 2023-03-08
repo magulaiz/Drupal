@@ -300,7 +300,7 @@ class BlockContentAccessHandlerTest extends KernelTestBase {
         AccessResultForbidden::class,
       ],
     ];
-    foreach (['update', 'delete'] as $operation) {
+    foreach (['edit', 'delete'] as $operation) {
       $cases += [
         $operation . ':published:reusable' => [
           $operation,

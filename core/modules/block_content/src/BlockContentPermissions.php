@@ -64,7 +64,7 @@ class BlockContentPermissions implements ContainerInjectionInterface {
         'title' => $this->t('%type_name: Create new block content', $type_params),
       ],
       "edit any $type_id block content" => [
-        'title' => $this->t('%type_name: Update any block content', $type_params),
+        'title' => $this->t('%type_name: Edit any block content', $type_params),
       ],
       "delete any $type_id block content" => [
         'title' => $this->t('%type_name: Delete any block content', $type_params),
