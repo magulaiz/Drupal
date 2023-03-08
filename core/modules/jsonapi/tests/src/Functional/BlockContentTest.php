@@ -200,8 +200,9 @@ class BlockContentTest extends ResourceTestBase {
    */
   protected function getExpectedUnauthorizedAccessMessage($method) {
     return match ($method) {
-      'GET', 'PATCH' => "The following permissions are required: 'access block library' AND 'edit any basic block content'.",
-      'POST' => "The following permissions are required: 'access block library' AND 'create basic block content'.",
+      'GET' => "The 'access block library' permission is required.",
+      'PATCH' => "The following permissions are required: 'access block library' AND 'edit any basic block content'.",
+      'POST' => "The following permissions are required: 'create basic block content' AND 'access block library'.",
       'DELETE' => "The following permissions are required: 'access block library' AND 'delete any basic block content'.",
       default => parent::getExpectedUnauthorizedAccessMessage($method),
     };
