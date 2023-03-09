@@ -6,6 +6,7 @@
  */
 
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Theme\ThemeColorsParser;
 
 /**
  * Implements hook_form_FORM_ID_alter() for system_theme_settings.
@@ -14,45 +15,12 @@ function olivero_form_system_theme_settings_alter(&$form, FormStateInterface $fo
   $form['#validate'][] = 'olivero_theme_settings_validate';
   $form['#attached']['library'][] = 'olivero/color-picker';
 
-  $color_config = [
-    'colors' => [
-      'base_primary_color' => 'Primary base color',
-    ],
-    'schemes' => [
-      'default' => [
-        'label' => 'Blue Lagoon',
-        'colors' => [
-          'base_primary_color' => '#1b9ae4',
-        ],
-      ],
-      'firehouse' => [
-        'label' => 'Firehouse',
-        'colors' => [
-          'base_primary_color' => '#a30f0f',
-        ],
-      ],
-      'ice' => [
-        'label' => 'Ice',
-        'colors' => [
-          'base_primary_color' => '#57919e',
-        ],
-      ],
-      'plum' => [
-        'label' => 'Plum',
-        'colors' => [
-          'base_primary_color' => '#7a4587',
-        ],
-      ],
-      'slate' => [
-        'label' => 'Slate',
-        'colors' => [
-          'base_primary_color' => '#47625b',
-        ],
-      ],
-    ],
-  ];
+  $parser = new ThemeColorsParser();
+  $parsed_colors = $parser->parse(__DIR__ . '/olivero.colors.yml');
+  $form_state->set('parsed_colors', $parsed_colors);
+  $color_schemes = $parsed_colors['schemes'];
 
-  $form['#attached']['drupalSettings']['olivero']['colorSchemes'] = $color_config['schemes'];
+  $form['#attached']['drupalSettings']['olivero']['colorSchemes'] = $color_schemes;
 
   $form['olivero_settings']['olivero_utilities'] = [
     '#type' => 'fieldset',
@@ -88,20 +56,14 @@ function olivero_form_system_theme_settings_alter(&$form, FormStateInterface $fo
     '#title' => t('Olivero Color Scheme'),
     '#empty_option' => t('Custom'),
     '#empty_value' => '',
-    '#options' => [
-      'default' => t('Blue Lagoon (Default)'),
-      'firehouse' => t('Firehouse'),
-      'ice' => t('Ice'),
-      'plum' => t('Plum'),
-      'slate' => t('Slate'),
-    ],
+    '#options' => array_combine(array_keys($color_schemes), array_column($color_schemes, 'label')),
     '#input' => FALSE,
     '#wrapper_attributes' => [
       'style' => 'display:none;',
     ],
   ];
 
-  foreach ($color_config['colors'] as $key => $title) {
+  foreach ($parsed_colors['colors'] as $key => $title) {
     $form['olivero_settings']['olivero_utilities']['olivero_color_scheme'][$key] = [
       '#type' => 'textfield',
       '#maxlength' => 7,
@@ -123,7 +85,10 @@ function olivero_form_system_theme_settings_alter(&$form, FormStateInterface $fo
  * Validation handler for the Olivero system_theme_settings form.
  */
 function olivero_theme_settings_validate($form, FormStateInterface $form_state) {
-  if (!preg_match('/^#[a-fA-F0-9]{6}$/', $form_state->getValue('base_primary_color'))) {
-    $form_state->setErrorByName('base_primary_color', t('Colors must be 7-character string specifying a color hexadecimal format.'));
+  $parsed_colors = $form_state->get('parsed_colors');
+  foreach ($parsed_colors['colors'] as $color_field => $color_name) {
+    if (!preg_match('/^#[a-fA-F0-9]{6}$/', $form_state->getValue($color_field))) {
+      $form_state->setErrorByName($color_field, t('@color must be 7-character string specifying a color hexadecimal format.', ['@color', $color_name]));
+    }
   }
 }

@@ -1,0 +1,24 @@
+colors:
+  base_primary_color: 'Primary base color'
+
+schemes:
+  default:
+    label: 'Blue Lagoon'
+    colors:
+      base_primary_color: '#1b9ae4'
+  firehouse:
+    label: Firehouse
+    colors:
+      base_primary_color: '#a30f0f'
+  ice:
+    label: Ice
+    colors:
+      base_primary_color: '#57919e'
+  plum:
+    label: Plum
+    colors:
+      base_primary_color: '#7a4587'
+  slate:
+    label: Slate
+    colors:
+      base_primary_color: '#47625b'
