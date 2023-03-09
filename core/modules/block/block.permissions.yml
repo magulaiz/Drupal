@@ -3,9 +3,9 @@ administer blocks:
 access block overview:
   title: 'Access block placement overview page'
 place blocks:
-  title: 'Place blocks'
+  title: 'Create new block placements'
 configure blocks:
-  title: 'Configure blocks'
+  title: 'Configure existing block placements'
 enable and disable blocks:
   title: 'Enable / Disable blocks'
 delete blocks:
