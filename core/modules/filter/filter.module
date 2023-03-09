@@ -580,9 +580,7 @@ function _filter_url($text, $filter) {
   }
 
   // If there is no text at this point revert to the previous text.
-  $text = strlen((string) $text) > 0 ? $text : $saved_text;
-
-  return $text;
+  return strlen((string) $text) > 0 ? $text : $saved_text;
 }
 
 /**
