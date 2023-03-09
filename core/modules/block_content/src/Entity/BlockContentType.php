@@ -19,6 +19,7 @@ use Drupal\block_content\BlockContentTypeInterface;
  *     plural = "@count custom block types",
  *   ),
  *   handlers = {
+ *     "access" = "Drupal\block_content\BlockTypeAccessControlHandler",
  *     "form" = {
  *       "default" = "Drupal\block_content\BlockContentTypeForm",
  *       "add" = "Drupal\block_content\BlockContentTypeForm",
