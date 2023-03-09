@@ -75,6 +75,10 @@
   height: var(--dropbutton-toggle-size);
 }
 
+[dir="rtl"] .dropbutton {
+  margin: 0;
+}
+
 /* Variants. */
 
 .js.no-touchevents .dropbutton--small {
@@ -126,10 +130,6 @@
   appearance: none;
 }
 
-[dir="rtl"] .dropbutton__toggle {
-  border-radius: var(--button-border-radius-size) 0 0 var(--button-border-radius-size);
-}
-
 .dropbutton__toggle::before {
   position: absolute;
   inset-block-start: 50%;
@@ -142,7 +142,9 @@
   background-size: contain;
 }
 
-/* Toggler states. */
+.dropbutton-wrapper.open .dropbutton__toggle::before {
+  transform: translate(50%, -50%) rotate(180deg);
+}
 
 .dropbutton__toggle:hover {
   color: var(--button-fg-color);
@@ -159,13 +161,19 @@
   background-color: var(--button--active-bg-color);
 }
 
-.dropbutton-wrapper.open .dropbutton__toggle::before {
-  transform: translate(50%, -50%) rotate(180deg);
+[dir="rtl"] .dropbutton__toggle {
+  border-radius: var(--button-border-radius-size) 0 0 var(--button-border-radius-size);
 }
 
-[dir="rtl"] :is(.dropbutton-wrapper.open .dropbutton__toggle::before) {
-  transform: translate(50%, -50%) rotate(-180deg);
-}
+/* Toggler states. */
+
+/* .dropbutton-wrapper.open .dropbutton__toggle::before {
+  transform: translate(50%, -50%) rotate(180deg);
+
+  @nest [dir="rtl"] & {
+    transform: translate(50%, -50%) rotate(-180deg);
+  }
+} */
 
 /* Toggler variants */
 

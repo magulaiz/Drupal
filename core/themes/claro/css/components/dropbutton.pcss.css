@@ -65,6 +65,10 @@
     min-width: 6rem; /* Help mitigate long dropbutton text from obscuring other dropbuttons. */
     height: var(--dropbutton-toggle-size);
   }
+
+  @nest [dir="rtl"] & {
+    margin: 0;
+  }
 }
 
 /* Variants. */
@@ -111,46 +115,50 @@
   font-size: 1px; /* iOS Safari sets a minimum button-width based on font-size. */
   appearance: none;
 
+  &::before {
+    position: absolute;
+    inset-block-start: 50%;
+    inset-inline-end: 50%;
+    width: 0.875rem;
+    height: 0.5625rem;
+    content: "";
+    transform: translate(50%, -50%) rotate(0);
+    background: url(../../images/icons/000f33/chevron-down.svg) no-repeat center;
+    background-size: contain;
+
+    @nest .dropbutton-wrapper.open & {
+      transform: translate(50%, -50%) rotate(180deg);
+    }
+  }
+
+  &:hover {
+    color: var(--button-fg-color);
+    background-color: var(--button--hover-bg-color);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.25);
+  }
+
+  &:focus {
+    z-index: 2;
+  }
+
+  &:active {
+    color: var(--button-fg-color);
+    background-color: var(--button--active-bg-color);
+  }
+
   @nest [dir="rtl"] & {
     border-radius: var(--button-border-radius-size) 0 0 var(--button-border-radius-size);
   }
 }
 
-.dropbutton__toggle::before {
-  position: absolute;
-  inset-block-start: 50%;
-  inset-inline-end: 50%;
-  width: 0.875rem;
-  height: 0.5625rem;
-  content: "";
-  transform: translate(50%, -50%) rotate(0);
-  background: url(../../images/icons/000f33/chevron-down.svg) no-repeat center;
-  background-size: contain;
-}
-
 /* Toggler states. */
-.dropbutton__toggle:hover {
-  color: var(--button-fg-color);
-  background-color: var(--button--hover-bg-color);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.25);
-}
-
-.dropbutton__toggle:focus {
-  z-index: 2;
-}
-
-.dropbutton__toggle:active {
-  color: var(--button-fg-color);
-  background-color: var(--button--active-bg-color);
-}
-
-.dropbutton-wrapper.open .dropbutton__toggle::before {
+/* .dropbutton-wrapper.open .dropbutton__toggle::before {
   transform: translate(50%, -50%) rotate(180deg);
 
   @nest [dir="rtl"] & {
     transform: translate(50%, -50%) rotate(-180deg);
   }
-}
+} */
 
 /* Toggler variants */
 .no-touchevents {
