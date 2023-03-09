@@ -149,11 +149,11 @@ class FundamentalCompatibilityConstraintValidator extends ConstraintValidator im
     );
 
     $enabled_plugins = array_keys($this->pluginManager->getEnabledDefinitions($text_editor));
-    $provided = $this->pluginManager->getProvidedElements($enabled_plugins, $text_editor);
+    $provided_elements = $this->pluginManager->getProvidedElements($enabled_plugins, $text_editor);
+    $provided = new HTMLRestrictions($provided_elements);
 
     foreach ($html_restrictor_filters as $filter_plugin_id => $filter) {
       $allowed = HTMLRestrictions::fromFilterPluginInstance($filter);
-      $provided = new HTMLRestrictions($provided);
       $diff_allowed = $allowed->diff($provided);
       $diff_elements = $provided->diff($allowed);
 
@@ -263,7 +263,7 @@ class FundamentalCompatibilityConstraintValidator extends ConstraintValidator im
     assert(in_array($filter_type, [
       FilterInterface::TYPE_MARKUP_LANGUAGE,
       FilterInterface::TYPE_HTML_RESTRICTOR,
-      FilterInterface::TYPE_TRANSFORM_IRREVERSIBLE,
+      FilterInterface::TYPE_TRANSFORM_REVERSIBLE,
       FilterInterface::TYPE_TRANSFORM_IRREVERSIBLE,
     ]));
     foreach ($text_format->filters() as $id => $filter) {

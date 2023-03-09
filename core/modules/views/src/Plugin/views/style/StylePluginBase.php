@@ -110,6 +110,13 @@ abstract class StylePluginBase extends PluginBase {
   protected $defaultFieldLabels = FALSE;
 
   /**
+   * Keyed array by placeholder a cached per row tokens to render.
+   *
+   * @var string[]
+   */
+  public array $render_tokens = [];
+
+  /**
    * Overrides \Drupal\views\Plugin\views\PluginBase::init().
    *
    * The style options might come externally as the style can be sourced from at
@@ -444,11 +451,6 @@ abstract class StylePluginBase extends PluginBase {
    * Render the display in this style.
    */
   public function render() {
-    if ($this->usesRowPlugin() && empty($this->view->rowPlugin)) {
-      trigger_error('Drupal\views\Plugin\views\style\StylePluginBase: Missing row plugin', E_WARNING);
-      return [];
-    }
-
     // Group the rows according to the grouping instructions, if specified.
     $sets = $this->renderGrouping(
       $this->view->result,
