@@ -79,6 +79,10 @@ class File extends DrupalSqlBase {
       }
       $query->condition($conditions);
     }
+        // Filter by file type, if configured.
+    if (isset($this->configuration['type'])) {
+      $query->condition('f.type', $this->configuration['type']);
+    }
 
     return $query;
   }
