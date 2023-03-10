@@ -212,21 +212,22 @@
   Drupal.behaviors.autocomplete = {
     attach(context) {
       // Act on textfields with the "form-autocomplete" class.
-      const $form_autocomplete = $(
+      const $formAutocomplete = $(
         once('autocomplete', 'input.form-autocomplete', context),
       );
 
       // Act on textfields with the "js-form-autocomplete" class.
-      const $js_form_autocomplete = $(
-          once('autocomplete', 'input.js-form-autocomplete', context),
+      const $jsFormAutocomplete = $(
+        once('autocomplete', 'input.js-form-autocomplete', context),
       );
 
-      let $autocomplete = $form_autocomplete || $js_form_autocomplete;
+      const $autocomplete = $formAutocomplete || $jsFormAutocomplete;
 
       if ($autocomplete.length) {
         if (!$autocomplete.hasClass('js-form-autocomplete')) {
           Drupal.deprecationError({
-            message: 'The form-autocomplete class is deprecated. Please use js-form-autocomplete instead.',
+            message:
+              'The form-autocomplete class is deprecated. Please use js-form-autocomplete instead.',
           });
         }
 
