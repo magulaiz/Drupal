@@ -209,7 +209,7 @@
   Drupal.behaviors.autocomplete = {
     attach(context) {
       // Act on textfields with the "form-autocomplete" class.
-      once('autocomplete', 'input.form-autocomplete, input.js-form-autocomplete', context).forEach(
+      once('autocomplete', 'input.form-autocomplete, input.form-autocomplete', context).forEach(
         (element) => {
           const $autocomplete = $(element);
           if (!$autocomplete.hasClass('js-form-autocomplete')) {
