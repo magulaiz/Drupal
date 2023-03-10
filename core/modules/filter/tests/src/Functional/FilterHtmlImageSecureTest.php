@@ -90,7 +90,7 @@ class FilterHtmlImageSecureTest extends BrowserTestBase {
     $csrf_path = $public_files_path . '/' . implode('/', array_fill(0, substr_count($public_files_path, '/') + 1, '..'));
 
     $druplicon = 'core/misc/druplicon.png';
-    $svg_image = 'core/themes/classy/logo.svg';
+    $svg_image = 'core/themes/olivero/logo.svg';
     $red_x_image = base_path() . 'core/misc/icons/e32700/error.svg';
 
     // Put a test image in the files directory.
