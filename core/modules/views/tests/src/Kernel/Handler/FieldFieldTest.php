@@ -2,7 +2,6 @@
 
 namespace Drupal\Tests\views\Kernel\Handler;
 
-use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Render\RenderContext;
 use Drupal\entity_test\Entity\EntityTest;
