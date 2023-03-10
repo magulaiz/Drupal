@@ -214,6 +214,7 @@ drupalmedia
 drupalmediaediting
 drupalmediatoolbar
 drupalorg
+eacute
 editables
 egulias
 elbonia
