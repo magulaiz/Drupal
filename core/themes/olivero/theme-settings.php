@@ -6,7 +6,6 @@
  */
 
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Theme\ThemeColorsParser;
 
 /**
  * Implements hook_form_FORM_ID_alter() for system_theme_settings.
