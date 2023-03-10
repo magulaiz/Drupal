@@ -15,6 +15,7 @@ use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Theme\ThemeManagerInterface;
+use Drupal\Core\Theme\ThemeColorsParser;
 
 // cspell:ignore apng
 
@@ -322,6 +323,59 @@ class ThemeSettingsForm extends ConfigFormBase {
     }
 
     if ($theme) {
+      // Parse the THEMENAME.colors.yml if it exists and create the necessary form elements.
+      $active_theme = $themes[$theme];
+      $color_info = DRUPAL_ROOT . '/' . $active_theme->getPath() . '/' . $theme . '.colors.yml';
+      if (file_exists($color_info)) {
+        $parser = new ThemeColorsParser();
+        $parsed_colors = $parser->parse($color_info);
+
+        $form_state->set('parsed_colors', $parsed_colors);
+        $color_schemes = $parsed_colors['schemes'];
+
+        $form['#attached']['library'][] = 'core/colors';
+        $form['#attached']['drupalSettings'][$theme]['colorSchemes'] = $color_schemes;
+
+        $form['colors'] = [
+          '#type' => 'details',
+          '#title' => t('Colors'),
+          '#open' => TRUE,
+        ];
+        $form['colors']['description'] = [
+          '#type' => 'html_tag',
+          '#tag' => 'p',
+          '#value' => t('These settings adjust the look and feel of the theme.'),
+        ];
+        $form['colors']['color_scheme'] = [
+          '#type' => 'select',
+          '#title' => t('Color Scheme'),
+          '#empty_option' => t('Custom'),
+          '#empty_value' => '',
+          '#options' => array_combine(array_keys($color_schemes), array_column($color_schemes, 'label')),
+          '#input' => FALSE,
+          '#wrapper_attributes' => [
+            'style' => 'display:none;',
+          ],
+        ];
+
+        foreach ($parsed_colors['colors'] as $key => $title) {
+          $form['colors'][$key] = [
+            '#type' => 'textfield',
+            '#maxlength' => 7,
+            '#size' => 10,
+            '#title' => t($title),
+            '#description' => t('Enter color in full hexadecimal format (#abc123).'),
+            '#default_value' => theme_get_setting($key),
+            '#attributes' => [
+              'pattern' => '^#[a-fA-F0-9]{6}',
+            ],
+            '#wrapper_attributes' => [
+              'data-drupal-selector' => 'olivero-color-picker',
+            ],
+          ];
+        }
+      }
+
       // Call engine-specific settings.
       $function = $themes[$theme]->prefix . '_engine_settings';
       if (function_exists($function)) {
