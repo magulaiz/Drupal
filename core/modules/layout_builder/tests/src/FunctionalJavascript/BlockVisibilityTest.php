@@ -14,7 +14,7 @@ class BlockVisibilityTest extends WebDriverTestBase {
 
   use ContextualLinkClickTrait;
 
-  protected $defaultTheme = 'classy';
+  protected $defaultTheme = 'olivero';
 
   /**
    * {@inheritdoc}
@@ -190,7 +190,7 @@ class BlockVisibilityTest extends WebDriverTestBase {
     $this->removeVisibilityConditions();
     $this->beginAddCondition('current_theme');
     $page->checkField('settings[negate]');
-    $page->findField('settings[theme]')->setValue('classy');
+    $page->findField('settings[theme]')->setValue('olivero');
     $page->pressButton('Add condition');
     $assert_session->assertWaitOnAjaxRequest();
     $page->pressButton('Save layout');
