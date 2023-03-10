@@ -365,7 +365,7 @@ class ThemeSettingsForm extends ConfigFormBase {
             '#size' => 10,
             '#title' => $this->t($title),
             '#description' => $this->t('Enter color in full hexadecimal format (#abc123).'),
-            '#default_value' => theme_get_setting($key),
+            '#default_value' => theme_get_setting($key, $theme),
             '#attributes' => [
               'pattern' => '^#[a-fA-F0-9]{6}',
             ],
