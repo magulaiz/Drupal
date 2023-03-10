@@ -365,6 +365,7 @@ druplicon
 drush
 drépal
 détruire
+eacute
 editables
 editunblock
 eerste
@@ -431,8 +432,8 @@ fieldgroups
 fielditem
 fieldlayout
 fieldlinks
-fieldnames
 fieldnid
+fieldnames
 fieldsets
 filelist
 filemime
