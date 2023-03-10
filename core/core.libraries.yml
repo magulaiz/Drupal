@@ -314,6 +314,15 @@ ckeditor5.translations:
     # are not allowed.
     assets/vendor/ckeditor5/translation.js: {}
 
+colors:
+  version: VERSION
+  js:
+    misc/color-picker.js: {}
+  dependencies:
+    - core/drupal
+    - core/once
+    - core/drupal.announce
+
 css.escape:
   version: VERSION
   drupalSettings: {}
