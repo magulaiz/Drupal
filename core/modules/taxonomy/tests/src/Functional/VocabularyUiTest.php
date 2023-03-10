@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\taxonomy\Functional;
 
+use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Url;
 use Drupal\taxonomy\Entity\Vocabulary;
 
@@ -91,14 +92,16 @@ class VocabularyUiTest extends TaxonomyTestBase {
 
     // Delete the vocabulary.
     $this->drupalGet('admin/structure/taxonomy');
-    $this->assertSession()->linkByHrefExists(Url::fromRoute('entity.taxonomy_vocabulary.delete_form', ['taxonomy_vocabulary' => $edit['vid']])->toString());
-    $this->clickLink(t('Delete vocabulary'));
-    $this->assertSession()->responseContains(t('Are you sure you want to delete the vocabulary %name?', ['%name' => $edit['name']]));
-    $this->assertSession()->pageTextContains(t('Deleting a vocabulary will delete all the terms in it. This action cannot be undone.'));
+    $href = Url::fromRoute('entity.taxonomy_vocabulary.delete_form', ['taxonomy_vocabulary' => $edit['vid']])->toString();
+    $xpath = $this->assertSession()->buildXPathQuery('//a[contains(@href, :href)]', [':href' => $href]);
+    $link = $this->assertSession()->elementExists('xpath', $xpath);
+    $this->assertEquals('Delete vocabulary', $link->getText());
+    $link->click();
 
     // Confirm deletion.
+    $this->assertSession()->responseContains(new FormattableMarkup('Are you sure you want to delete the vocabulary %name?', ['%name' => $edit['name']]));
     $this->submitForm([], 'Delete');
-    $this->assertSession()->responseContains(t('Deleted vocabulary %name.', ['%name' => $edit['name']]));
+    $this->assertSession()->responseContains(new FormattableMarkup('Deleted vocabulary %name.', ['%name' => $edit['name']]));
     $this->container->get('entity_type.manager')->getStorage('taxonomy_vocabulary')->resetCache();
     $this->assertNull(Vocabulary::load($edit['vid']), 'Vocabulary not found.');
   }

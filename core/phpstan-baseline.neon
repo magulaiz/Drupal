@@ -646,11 +646,6 @@ parameters:
 			path: lib/Drupal/Core/Lock/NullLockBackend.php
 
 		-
-			message: "#^Relying on entity queries to check access by default is deprecated in drupal\\:9\\.2\\.0 and an error will be thrown from drupal\\:10\\.0\\.0\\. Call \\\\Drupal\\\\Core\\\\Entity\\\\Query\\\\QueryInterface\\:\\:accessCheck\\(\\) with TRUE or FALSE to specify whether access should be checked\\.$#"
-			count: 1
-			path: lib/Drupal/Core/Menu/DefaultMenuLinkTreeManipulators.php
-
-		-
 			message: "#^Variable \\$parent in isset\\(\\) always exists and is not nullable\\.$#"
 			count: 1
 			path: lib/Drupal/Core/Menu/Form/MenuLinkDefaultForm.php
@@ -826,11 +821,6 @@ parameters:
 			path: modules/block/src/BlockListBuilder.php
 
 		-
-			message: "#^Method Drupal\\\\Component\\\\Plugin\\\\PluginBase\\:\\:__construct\\(\\) invoked with 4 parameters, 3 required\\.$#"
-			count: 1
-			path: modules/block/src/Plugin/migrate/process/BlockTheme.php
-
-		-
 			message: "#^Variable \\$position might not be defined\\.$#"
 			count: 4
 			path: modules/block/tests/src/Functional/BlockRenderOrderTest.php
@@ -879,16 +869,6 @@ parameters:
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 1
 			path: modules/block_content/tests/src/Functional/BlockContentSaveTest.php
-
-		-
-			message: "#^Variable \\$goto in isset\\(\\) always exists and is not nullable\\.$#"
-			count: 1
-			path: modules/block_content/tests/src/Functional/BlockContentTypeTest.php
-
-		-
-			message: "#^Variable \\$goto in isset\\(\\) always exists and is not nullable\\.$#"
-			count: 1
-			path: modules/block_content/tests/src/Functional/PageEditTest.php
 
 		-
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
@@ -1196,11 +1176,6 @@ parameters:
 			path: modules/dblog/tests/src/Functional/DbLogTest.php
 
 		-
-			message: "#^Variable \\$goto in isset\\(\\) always exists and is not nullable\\.$#"
-			count: 1
-			path: modules/dblog/tests/src/Functional/DbLogTest.php
-
-		-
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 1
 			path: modules/dblog/tests/src/Kernel/DbLogTest.php
@@ -1386,11 +1361,6 @@ parameters:
 			path: modules/forum/src/ForumUninstallValidator.php
 
 		-
-			message: "#^Variable \\$goto in isset\\(\\) always exists and is not nullable\\.$#"
-			count: 1
-			path: modules/help_topics/tests/src/Functional/HelpTopicTest.php
-
-		-
 			message: "#^Method Drupal\\\\history\\\\Plugin\\\\views\\\\field\\\\HistoryUserTimestamp\\:\\:render\\(\\) should return Drupal\\\\Component\\\\Render\\\\MarkupInterface\\|string but return statement is missing\\.$#"
 			count: 1
 			path: modules/history/src/Plugin/views/field/HistoryUserTimestamp.php
@@ -1519,11 +1489,6 @@ parameters:
 			message: "#^Variable \\$langcode might not be defined\\.$#"
 			count: 1
 			path: modules/language/src/Plugin/LanguageNegotiation/LanguageNegotiationContentEntity.php
-
-		-
-			message: "#^Variable \\$goto in isset\\(\\) always exists and is not nullable\\.$#"
-			count: 1
-			path: modules/language/tests/src/Functional/LanguageBreadcrumbTest.php
 
 		-
 			message: "#^Relying on entity queries to check access by default is deprecated in drupal\\:9\\.2\\.0 and an error will be thrown from drupal\\:10\\.0\\.0\\. Call \\\\Drupal\\\\Core\\\\Entity\\\\Query\\\\QueryInterface\\:\\:accessCheck\\(\\) with TRUE or FALSE to specify whether access should be checked\\.$#"
@@ -1857,7 +1822,7 @@ parameters:
 
 		-
 			message: "#^Relying on entity queries to check access by default is deprecated in drupal\\:9\\.2\\.0 and an error will be thrown from drupal\\:10\\.0\\.0\\. Call \\\\Drupal\\\\Core\\\\Entity\\\\Query\\\\QueryInterface\\:\\:accessCheck\\(\\) with TRUE or FALSE to specify whether access should be checked\\.$#"
-			count: 3
+			count: 2
 			path: modules/node/node.module
 
 		-
@@ -1916,19 +1881,9 @@ parameters:
 			path: modules/node/tests/src/Functional/NodeSaveTest.php
 
 		-
-			message: "#^Variable \\$goto in isset\\(\\) always exists and is not nullable\\.$#"
-			count: 1
-			path: modules/node/tests/src/Functional/NodeTitleTest.php
-
-		-
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 1
 			path: modules/node/tests/src/Functional/NodeTranslationUITest.php
-
-		-
-			message: "#^Variable \\$goto in isset\\(\\) always exists and is not nullable\\.$#"
-			count: 1
-			path: modules/node/tests/src/Functional/NodeTypeTest.php
 
 		-
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
@@ -2077,7 +2032,7 @@ parameters:
 
 		-
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
-			count: 3
+			count: 2
 			path: modules/search/tests/src/Functional/SearchRankingTest.php
 
 		-
@@ -2196,11 +2151,6 @@ parameters:
 			path: modules/system/system.install
 
 		-
-			message: "#^Class Drupal\\\\advisory_feed_test\\\\AdvisoriesTestHttpClient extends @final class GuzzleHttp\\\\Client\\.$#"
-			count: 1
-			path: modules/system/tests/modules/advisory_feed_test/src/AdvisoriesTestHttpClient.php
-
-		-
 			message: "#^Variable \\$messages might not be defined\\.$#"
 			count: 1
 			path: modules/system/tests/modules/batch_test/batch_test.callbacks.inc
@@ -2244,16 +2194,6 @@ parameters:
 			message: "#^Variable \\$form_output in empty\\(\\) always exists and is not falsy\\.$#"
 			count: 2
 			path: modules/system/tests/src/Functional/Form/FormTest.php
-
-		-
-			message: "#^Variable \\$goto in isset\\(\\) always exists and is not nullable\\.$#"
-			count: 1
-			path: modules/system/tests/src/Functional/Menu/BreadcrumbFrontCacheContextsTest.php
-
-		-
-			message: "#^Variable \\$goto in isset\\(\\) always exists and is not nullable\\.$#"
-			count: 1
-			path: modules/system/tests/src/Functional/Menu/BreadcrumbTest.php
 
 		-
 			message: "#^Variable \\$parent might not be defined\\.$#"
@@ -2334,16 +2274,6 @@ parameters:
 			message: "#^Method Drupal\\\\taxonomy\\\\VocabularyForm\\:\\:save\\(\\) should return int but return statement is missing\\.$#"
 			count: 1
 			path: modules/taxonomy/src/VocabularyForm.php
-
-		-
-			message: "#^Variable \\$goto in isset\\(\\) always exists and is not nullable\\.$#"
-			count: 1
-			path: modules/taxonomy/tests/src/Functional/TermTest.php
-
-		-
-			message: "#^Variable \\$goto in isset\\(\\) always exists and is not nullable\\.$#"
-			count: 1
-			path: modules/taxonomy/tests/src/Functional/TermTranslationTest.php
 
 		-
 			message: "#^Variable \\$depth_count might not be defined\\.$#"
@@ -2441,11 +2371,6 @@ parameters:
 			path: modules/user/src/RoleForm.php
 
 		-
-			message: "#^Relying on entity queries to check access by default is deprecated in drupal\\:9\\.2\\.0 and an error will be thrown from drupal\\:10\\.0\\.0\\. Call \\\\Drupal\\\\Core\\\\Entity\\\\Query\\\\QueryInterface\\:\\:accessCheck\\(\\) with TRUE or FALSE to specify whether access should be checked\\.$#"
-			count: 1
-			path: modules/user/src/UserListBuilder.php
-
-		-
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 2
 			path: modules/user/tests/src/Functional/UserCreateTest.php
@@ -2489,11 +2414,6 @@ parameters:
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 1
 			path: modules/user/tests/src/Functional/Views/UserChangedTest.php
-
-		-
-			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
-			count: 1
-			path: modules/user/tests/src/FunctionalJavascript/UserPasswordResetTest.php
 
 		-
 			message: "#^Variable \\$result in isset\\(\\) always exists and is not nullable\\.$#"
@@ -3256,17 +3176,7 @@ parameters:
 			path: tests/Drupal/Tests/Core/Plugin/TestPluginManager.php
 
 		-
-			message: "#^\\#access_callback callback class '\\$this\\(Drupal\\\\Tests\\\\Core\\\\Render\\\\RendererCallbackTest\\)' at key '0' does not implement Drupal\\\\Core\\\\Security\\\\TrustedCallbackInterface\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Core/Render/RendererCallbackTest.php
-
-		-
 			message: "#^\\#lazy_builder callback '\\\\\\\\Drupal\\\\\\\\Tests\\\\\\\\Core…' at key '0' is not trusted\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Core/Render/RendererCallbackTest.php
-
-		-
-			message: "#^\\#post_render callback class 'static\\(Drupal\\\\Tests\\\\Core\\\\Render\\\\RendererCallbackTest\\)' at key '0' does not implement Drupal\\\\Core\\\\Security\\\\TrustedCallbackInterface\\.$#"
 			count: 1
 			path: tests/Drupal/Tests/Core/Render/RendererCallbackTest.php
 
