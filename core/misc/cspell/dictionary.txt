@@ -253,6 +253,7 @@ drupalmediatoolbar
 drupalorg
 drépal
 détruire
+eacute
 editables
 egulias
 eins
@@ -302,8 +303,8 @@ fieldgroup
 fieldgroups
 fieldlayout
 fieldlinks
-fieldnames
 fieldnid
+fieldnames
 fieldsets
 filemime
 filesort
