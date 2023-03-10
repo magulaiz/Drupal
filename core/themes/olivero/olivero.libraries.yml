@@ -270,14 +270,6 @@ sidebar:
     layout:
       css/layout/layout-sidebar.css: {}
 
-tabs:
-  version: VERSION
-  css:
-    theme:
-      css/components/tabs.css: {}
-  js:
-    js/tabs.js: {}
-
 tags:
   version: VERSION
   css:
