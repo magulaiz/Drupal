@@ -1,6 +1,6 @@
 /**
  * @file
- * Provides UI/UX progressive enhancements on Olivero's theme settings by
+ * Provides UI/UX progressive enhancements on theme settings form by
  * creating an HTMLColorInput element and synchronizing its input with a text
  * input to provide an accessible and user-friendly interface. Additionally,
  * provides a select element with pre-defined color values for easy color
@@ -36,8 +36,8 @@
   function synchronizeInputs(changedInput, inputToSync) {
     inputToSync.value = changedInput.value;
 
-    changedInput.setAttribute('data-olivero-custom-color', changedInput.value);
-    inputToSync.setAttribute('data-olivero-custom-color', changedInput.value);
+    changedInput.setAttribute('data-custom-color', changedInput.value);
+    inputToSync.setAttribute('data-custom-color', changedInput.value);
 
     const colorSchemeSelect = document.querySelector(
       '[data-drupal-selector="edit-color-scheme"]',
@@ -73,11 +73,9 @@
           });
       });
     } else {
-      document
-        .querySelectorAll(`input[data-olivero-custom-color]`)
-        .forEach((input) => {
-          input.value = input.getAttribute('data-olivero-custom-color');
-        });
+      document.querySelectorAll(`input[data-custom-color]`).forEach((input) => {
+        input.value = input.getAttribute('data-custom-color');
+      });
     }
   }
 
@@ -111,7 +109,7 @@
   }
 
   /**
-   * Initializes Olivero theme-settings color picker.
+   * Initializes theme-settings color picker.
    *   creates a color-type input and inserts it after the original text field.
    *   modifies aria values to make label apply to both inputs.
    *   adds event listeners to keep text & color inputs in sync.
@@ -133,8 +131,8 @@
     colorInput.value = textInput.value;
     colorInput.setAttribute('name', `${textInput.name}_visual`);
     colorInput.setAttribute(
-      'data-olivero-custom-color',
-      textInput.getAttribute('data-olivero-custom-color'),
+      'data-custom-color',
+      textInput.getAttribute('data-custom-color'),
     );
 
     // Insert new input into DOM.
@@ -160,16 +158,16 @@
   }
 
   /**
-   * Olivero Color Picker behavior.
+   * Color Picker behavior.
    *
    * @type {Drupal~behavior}
    * @prop {Drupal~behaviorAttach} attach
    *   Initializes color picker fields.
    */
-  Drupal.behaviors.oliveroColorPicker = {
+  Drupal.behaviors.ColorPicker = {
     attach: () => {
       const colorSchemeSelect = once(
-        'olivero-color-picker',
+        'color-picker',
         '[data-drupal-selector="edit-color-scheme"]',
       );
 
@@ -178,8 +176,8 @@
       });
 
       const colorTextInputs = once(
-        'olivero-color-picker',
-        '[data-drupal-selector="olivero-color-picker"] input[type="text"]',
+        'color-picker',
+        '[data-drupal-selector="color-picker"] input[type="text"]',
       );
 
       colorTextInputs.forEach((textInput) => {

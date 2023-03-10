@@ -370,7 +370,7 @@ class ThemeSettingsForm extends ConfigFormBase {
               'pattern' => '^#[a-fA-F0-9]{6}',
             ],
             '#wrapper_attributes' => [
-              'data-drupal-selector' => 'olivero-color-picker',
+              'data-drupal-selector' => 'color-picker',
             ],
           ];
         }
