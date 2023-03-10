@@ -24,6 +24,24 @@ contains_element() {
   for e in ${@:2}; do [[ "$e" == "$1" ]] && return 0; done
   return 1
 }
+# Prints a separator.
+print_separator() {
+  printf "\n${title}"
+  printf -- '-%.0s' {1..100}
+  printf "${reset}\n"
+}
+# Prints a result based on the given exit code and label, and updates FINAL_STATUS.
+print_results() {
+  local EXIT_CODE=$1
+  local LABEL=$2
+  if [ "$EXIT_CODE" -ne "0" ]; then
+    # If there are failures set the status to a number other than 0.
+    FINAL_STATUS=1
+    printf "\n$LABEL: ${red}failed${reset}\n"
+  else
+    printf "\n$LABEL: ${green}passed${reset}\n"
+  fi
+}
 
 CACHED=0
 DRUPALCI=0
@@ -202,20 +220,12 @@ if [ $DEPENDENCIES_NEED_INSTALLING -ne 0 ]; then
 fi
 
 # Check all files for spelling in one go for better performance.
-yarn run -s spellcheck --no-must-find-files --root $TOP_LEVEL $ABS_FILES
-if [ "$?" -ne "0" ]; then
-  # If there are failures set the status to a number other than 0.
-  FINAL_STATUS=1
-  printf "\nCSpell: ${red}failed${reset}\n"
-else
-  printf "\nCSpell: ${green}passed${reset}\n"
-fi
+yarn run -s spellcheck --no-must-find-files -c $TOP_LEVEL/core/.cspell.json $ABS_FILES$
+print_results $? "CSpell"
 cd "$TOP_LEVEL"
 
 # Add a separator line to make the output easier to read.
-printf "\n"
-printf -- '-%.0s' {1..100}
-printf "\n"
+print_separator
 
 # Run PHPStan on all files on DrupalCI or when phpstan files are changed.
 # APCu is disabled to ensure that the composer classmap is not corrupted.
@@ -227,73 +237,38 @@ else
   printf "\nRunning PHPStan on changed files.\n"
   php -d apc.enabled=0 -d apc.enable_cli=0 vendor/bin/phpstan analyze --no-progress --configuration="$TOP_LEVEL/core/phpstan-partial.neon" $ABS_FILES
 fi
-
-if [ "$?" -ne "0" ]; then
-  # If there are failures set the status to a number other than 0.
-  FINAL_STATUS=1
-  printf "\nPHPStan: ${red}failed${reset}\n"
-else
-  printf "\nPHPStan: ${green}passed${reset}\n"
-fi
+print_results $? "PHPStan"
 
 # Add a separator line to make the output easier to read.
-printf "\n"
-printf -- '-%.0s' {1..100}
-printf "\n"
+print_separator
 
 # Run PHPCS on all files on DrupalCI or when phpcs files are changed.
 if [[ $PHPCS_XML_DIST_FILE_CHANGED == "1" ]] || [[ "$DRUPALCI" == "1" ]]; then
   # Test all files with phpcs rules.
   vendor/bin/phpcs -ps --parallel=$(nproc) --standard="$TOP_LEVEL/core/phpcs.xml.dist"
-  PHPCS=$?
-  if [ "$PHPCS" -ne "0" ]; then
-    # If there are failures set the status to a number other than 0.
-    FINAL_STATUS=1
-    printf "\nPHPCS: ${red}failed${reset}\n"
-  else
-    printf "\nPHPCS: ${green}passed${reset}\n"
-  fi
+  print_results $? "PHPCS"
   # Add a separator line to make the output easier to read.
-  printf "\n"
-  printf -- '-%.0s' {1..100}
-  printf "\n"
+  print_separator
 fi
 
 # When the eslint config has been changed, then eslint must check all files.
 if [[ $ESLINT_CONFIG_PASSING_FILE_CHANGED == "1" ]]; then
   cd "$TOP_LEVEL/core"
   yarn run -s lint:core-js-passing "$TOP_LEVEL/core"
-  CORRECTJS=$?
-  if [ "$CORRECTJS" -ne "0" ]; then
-    # If there are failures set the status to a number other than 0.
-    FINAL_STATUS=1
-    printf "\neslint: ${red}failed${reset}\n"
-  else
-    printf "\neslint: ${green}passed${reset}\n"
-  fi
+  print_results $? "eslint"
   cd $TOP_LEVEL
   # Add a separator line to make the output easier to read.
-  printf "\n"
-  printf -- '-%.0s' {1..100}
-  printf "\n"
+  print_separator
 fi
 
 # When the stylelint config has been changed, then stylelint must check all files.
 if [[ $STYLELINT_CONFIG_FILE_CHANGED == "1" ]]; then
   cd "$TOP_LEVEL/core"
   yarn run -s lint:css
-  if [ "$?" -ne "0" ]; then
-    # If there are failures set the status to a number other than 0.
-    FINAL_STATUS=1
-    printf "\nstylelint: ${red}failed${reset}\n"
-  else
-    printf "\nstylelint: ${green}passed${reset}\n"
-  fi
+  print_results $? "stylelint"
   cd $TOP_LEVEL
   # Add a separator line to make the output easier to read.
-  printf "\n"
-  printf -- '-%.0s' {1..100}
-  printf "\n"
+  print_separator
 fi
 
 # When a Drupal-specific CKEditor 5 plugin changed ensure that it is compiled
@@ -303,18 +278,10 @@ fi
 if [[ "$DRUPALCI" == "1" ]] && [[ $CKEDITOR5_PLUGINS_CHANGED == "1" ]]; then
   cd "$TOP_LEVEL/core"
   yarn run -s check:ckeditor5
-  if [ "$?" -ne "0" ]; then
-    # If there are failures set the status to a number other than 0.
-    FINAL_STATUS=1
-    printf "\nDrupal-specific CKEditor 5 plugins: ${red}failed${reset}\n"
-  else
-    printf "\nDrupal-specific CKEditor 5 plugins: ${green}passed${reset}\n"
-  fi
+  print_results $? "Drupal-specific CKEditor 5 plugins"
   cd $TOP_LEVEL
   # Add a separator line to make the output easier to read.
-  printf "\n"
-  printf -- '-%.0s' {1..100}
-  printf "\n"
+  print_separator
 fi
 
 for FILE in $FILES; do
@@ -464,9 +431,7 @@ for FILE in $FILES; do
   fi
 
   # Print a line to separate each file's checks.
-  printf "\n"
-  printf -- '-%.0s' {1..100}
-  printf "\n"
+  print_separator
 done
 
 if [[ "$FINAL_STATUS" == "1" ]] && [[ "$DRUPALCI" == "1" ]]; then
