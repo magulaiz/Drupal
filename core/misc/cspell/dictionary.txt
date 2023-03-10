@@ -232,6 +232,7 @@ fieldgroup
 fieldgroups
 fieldlayout
 fieldnames
+fieldnid
 fieldsets
 filemime
 filetransfer
