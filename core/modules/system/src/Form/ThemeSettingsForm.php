@@ -338,18 +338,18 @@ class ThemeSettingsForm extends ConfigFormBase {
 
         $form['colors'] = [
           '#type' => 'details',
-          '#title' => t('Colors'),
+          '#title' => $this->t('Colors'),
           '#open' => TRUE,
         ];
         $form['colors']['description'] = [
           '#type' => 'html_tag',
           '#tag' => 'p',
-          '#value' => t('These settings adjust the look and feel of the theme.'),
+          '#value' => $this->t('These settings adjust the look and feel of the theme.'),
         ];
         $form['colors']['color_scheme'] = [
           '#type' => 'select',
-          '#title' => t('Color Scheme'),
-          '#empty_option' => t('Custom'),
+          '#title' => $this->t('Color Scheme'),
+          '#empty_option' => $this->t('Custom'),
           '#empty_value' => '',
           '#options' => array_combine(array_keys($color_schemes), array_column($color_schemes, 'label')),
           '#input' => FALSE,
@@ -363,8 +363,8 @@ class ThemeSettingsForm extends ConfigFormBase {
             '#type' => 'textfield',
             '#maxlength' => 7,
             '#size' => 10,
-            '#title' => t($title),
-            '#description' => t('Enter color in full hexadecimal format (#abc123).'),
+            '#title' => $this->t($title),
+            '#description' => $this->t('Enter color in full hexadecimal format (#abc123).'),
             '#default_value' => theme_get_setting($key),
             '#attributes' => [
               'pattern' => '^#[a-fA-F0-9]{6}',
