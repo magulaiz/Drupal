@@ -1,4 +1,4 @@
-@import "../base/media-queries.pcss.css";
+@import "../../css/base/media-queries.pcss.css";
 
 /* Breakpoint where tabs switch between vertical and horizontal layouts. */
 @custom-media --tabs-layout-switch (--md);
