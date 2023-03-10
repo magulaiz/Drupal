@@ -259,6 +259,7 @@ fieldgroups
 fieldlayout
 fieldlinks
 fieldnames
+fieldnid
 fieldsets
 filemime
 filesystems
