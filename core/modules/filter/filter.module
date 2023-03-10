@@ -789,6 +789,23 @@ function _filter_html_image_secure_process($text) {
       // with the Drupal root and running getimagesize() on it.
       $local_image_path = $local_dir . mb_substr($src, $base_path_length);
       $local_image_path = rawurldecode($local_image_path);
+      // Check SVG images, which are not supported by getimagesize().
+      // Assume that it the file has an svg mimetype, validates as XML file and
+      // starts with and <svg> tag, it is an SVG image. Since SVG images in img
+      // tags should not form a risk, we do not need to sanitize it. Refer to
+      // https://www.w3.org/wiki/SVG_Security#SVG_as_image and
+      // https://www.drupal.org/project/drupal/issues/2868079
+      $guesser = \Drupal::service('file.mime_type.guesser');
+      if ($guesser->guessMimeType($local_image_path) === 'image/svg+xml' &&
+        ($xml = simplexml_load_file($local_image_path)) &&
+        $xml !== FALSE &&
+        $xml->getName() === 'svg'
+      ) {
+        // This is an SVG image.
+        continue;
+      }
+
+      // Check pixel based images.
       if (@getimagesize($local_image_path)) {
         // The image has the right path. Erroneous images are dealt with below.
         continue;
