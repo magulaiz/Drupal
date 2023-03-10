@@ -334,7 +334,7 @@ class ThemeSettingsForm extends ConfigFormBase {
         $color_schemes = $parsed_colors['schemes'];
 
         $form['#attached']['library'][] = 'core/colors';
-        $form['#attached']['drupalSettings'][$theme]['colorSchemes'] = $color_schemes;
+        $form['#attached']['drupalSettings']['colorSchemes'] = $color_schemes;
 
         $form['colors'] = [
           '#type' => 'details',

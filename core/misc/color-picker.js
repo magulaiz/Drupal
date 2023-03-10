@@ -8,7 +8,7 @@
  */
 
 ((Drupal, settings, once) => {
-  const colorSchemeOptions = settings.olivero.colorSchemes;
+  const colorSchemeOptions = settings.colorSchemes;
 
   /**
    * Announces the text value of the field's label.
