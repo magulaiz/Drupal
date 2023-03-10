@@ -263,10 +263,7 @@ class FieldFieldTest extends ViewsKernelTestBase {
       $field_test_multiple->advancedRender($row);
       return $field_test->advancedRender($row);
     });
-    $this->assertEquals($output, $expected_output, new FormattableMarkup('Test token replacement: "@token" gave "@output"', [
-      '@token' => $field_test->options['alter']['text'],
-      '@output' => $output,
-    ]));
+    $this->assertEquals($expected_output, $output);
   }
 
   /**
