@@ -112,10 +112,7 @@ class LanguageManager implements LanguageManagerInterface {
    * {@inheritdoc}
    */
   public function setCurrentLanguage(LanguageInterface $language, $type = LanguageInterface::TYPE_INTERFACE): LanguageInterface {
-    $current_language = $this->getCurrentLanguage($type);
-    $this->defaultLanguage->set($language);
-
-    return $current_language;
+    return $this->getDefaultLanguage();
   }
 
   /**
