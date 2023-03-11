@@ -59,7 +59,7 @@ class ConfigurableLanguageManagerTest extends LanguageTestBase {
   public function testSetCurrentLanguage() {
     $this->assertEquals('en', \Drupal::languageManager()
       ->getCurrentLanguage(LanguageInterface::TYPE_INTERFACE)->getId());
-    
+
     $language_code = 'es';
     $current_language = \Drupal::languageManager()
       ->setCurrentLanguage(ConfigurableLanguage::createFromLangcode($language_code), LanguageInterface::TYPE_INTERFACE);
