@@ -972,6 +972,7 @@ realpaths
 realword
 rebuilder
 reclosed
+recolorable
 redeclaration
 redirections
 redstrawberryhiddenfield
@@ -1401,6 +1402,7 @@ vocabs
 volgende
 vorige
 vous
+WCAG
 wcprops
 webassert
 webcal
