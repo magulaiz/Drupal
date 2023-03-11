@@ -235,6 +235,7 @@ third_party_settings:
         layout_id: layout_onecol
         layout_settings:
           label: ''
+        components: {  }
         third_party_settings: {  }
       -
         layout_id: layout_onecol
