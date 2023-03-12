@@ -32,14 +32,14 @@ class DateRangeItem extends DateTimeItem {
   /**
    * The computed start DateTime object.
    *
-   * @var DateTimeComputed|null
+   * @var \Drupal\datetime\dateTimeComputed|null
    */
   protected DateTimeComputed|null $start_date;
 
   /**
    * The computed end DateTime object.
    *
-   * @var DateTimeComputed|null
+   * @var \Drupal\datetime\dateTimeComputed|null
    */
   protected DateTimeComputed|null $end_date;
 

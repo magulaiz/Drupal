@@ -131,7 +131,7 @@ abstract class EntityDisplayBase extends ConfigEntityBase implements EntityDispl
    *
    * @var array
    */
-  private array $_serializedKeys = [];
+  private array $serializedKeys = [];
 
   /**
    * {@inheritdoc}
@@ -565,7 +565,7 @@ abstract class EntityDisplayBase extends ConfigEntityBase implements EntityDispl
     $keys[] = '_serializedKeys';
     // Keep track of the initialization status.
     $keys[] = 'initialized';
-    $this->_serializedKeys = $keys;
+    $this->serializedKeys = $keys;
     return $keys;
   }
 
@@ -575,8 +575,8 @@ abstract class EntityDisplayBase extends ConfigEntityBase implements EntityDispl
   public function __wakeup() {
     // Determine what were the properties from toArray() that were saved in
     // __sleep().
-    $keys = $this->_serializedKeys;
-    unset($this->_serializedKeys);
+    $keys = $this->serializedKeys;
+    unset($this->serializedKeys);
     $values = array_intersect_key(get_object_vars($this), array_flip($keys));
     // Run those values through the __construct(), as if they came from a
     // regular entity load.

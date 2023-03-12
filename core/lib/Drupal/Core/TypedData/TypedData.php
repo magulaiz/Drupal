@@ -41,9 +41,9 @@ abstract class TypedData implements TypedDataInterface, PluginInspectionInterfac
   protected $parent;
 
   /**
-   * The value.S
+   * The data value.
    *
-   * @var mixed|null
+   * @var mixed
    */
   protected mixed $value;
 
