@@ -96,51 +96,6 @@ parameters:
 			path: lib/Drupal/Component/Diff/DiffFormatter.php
 
 		-
-			message: "#^Access to an undefined property Drupal\\\\Component\\\\Diff\\\\Engine\\\\DiffEngine\\:\\:\\$in_seq\\.$#"
-			count: 3
-			path: lib/Drupal/Component/Diff/Engine/DiffEngine.php
-
-		-
-			message: "#^Access to an undefined property Drupal\\\\Component\\\\Diff\\\\Engine\\\\DiffEngine\\:\\:\\$lcs\\.$#"
-			count: 4
-			path: lib/Drupal/Component/Diff/Engine/DiffEngine.php
-
-		-
-			message: "#^Access to an undefined property Drupal\\\\Component\\\\Diff\\\\Engine\\\\DiffEngine\\:\\:\\$seq\\.$#"
-			count: 7
-			path: lib/Drupal/Component/Diff/Engine/DiffEngine.php
-
-		-
-			message: "#^Access to an undefined property Drupal\\\\Component\\\\Diff\\\\Engine\\\\DiffEngine\\:\\:\\$xchanged\\.$#"
-			count: 2
-			path: lib/Drupal/Component/Diff/Engine/DiffEngine.php
-
-		-
-			message: "#^Access to an undefined property Drupal\\\\Component\\\\Diff\\\\Engine\\\\DiffEngine\\:\\:\\$xind\\.$#"
-			count: 2
-			path: lib/Drupal/Component/Diff/Engine/DiffEngine.php
-
-		-
-			message: "#^Access to an undefined property Drupal\\\\Component\\\\Diff\\\\Engine\\\\DiffEngine\\:\\:\\$xv\\.$#"
-			count: 5
-			path: lib/Drupal/Component/Diff/Engine/DiffEngine.php
-
-		-
-			message: "#^Access to an undefined property Drupal\\\\Component\\\\Diff\\\\Engine\\\\DiffEngine\\:\\:\\$ychanged\\.$#"
-			count: 2
-			path: lib/Drupal/Component/Diff/Engine/DiffEngine.php
-
-		-
-			message: "#^Access to an undefined property Drupal\\\\Component\\\\Diff\\\\Engine\\\\DiffEngine\\:\\:\\$yind\\.$#"
-			count: 2
-			path: lib/Drupal/Component/Diff/Engine/DiffEngine.php
-
-		-
-			message: "#^Access to an undefined property Drupal\\\\Component\\\\Diff\\\\Engine\\\\DiffEngine\\:\\:\\$yv\\.$#"
-			count: 5
-			path: lib/Drupal/Component/Diff/Engine/DiffEngine.php
-
-		-
 			message: "#^Variable \\$k might not be defined\\.$#"
 			count: 4
 			path: lib/Drupal/Component/Diff/Engine/DiffEngine.php
@@ -396,11 +351,6 @@ parameters:
 			path: lib/Drupal/Core/Entity/EntityAutocompleteMatcher.php
 
 		-
-			message: "#^Access to an undefined property Drupal\\\\Core\\\\Entity\\\\EntityBase\\:\\:\\$id\\.$#"
-			count: 1
-			path: lib/Drupal/Core/Entity/EntityBase.php
-
-		-
 			message: "#^Method Drupal\\\\Core\\\\Entity\\\\EntityConfirmFormBase\\:\\:save\\(\\) should return int but return statement is missing\\.$#"
 			count: 1
 			path: lib/Drupal/Core/Entity/EntityConfirmFormBase.php
@@ -409,11 +359,6 @@ parameters:
 			message: "#^Variable \\$selection in empty\\(\\) always exists and is not falsy\\.$#"
 			count: 1
 			path: lib/Drupal/Core/Entity/EntityDeleteMultipleAccessCheck.php
-
-		-
-			message: "#^Access to an undefined property Drupal\\\\Core\\\\Entity\\\\EntityDisplayBase\\:\\:\\$_serializedKeys\\.$#"
-			count: 2
-			path: lib/Drupal/Core/Entity/EntityDisplayBase.php
 
 		-
 			message: "#^Method Drupal\\\\Core\\\\Entity\\\\KeyValueStore\\\\KeyValueContentEntityStorage\\:\\:createTranslation\\(\\) should return Drupal\\\\Core\\\\Entity\\\\ContentEntityInterface but return statement is missing\\.$#"
@@ -556,29 +501,9 @@ parameters:
 			path: lib/Drupal/Core/Field/Plugin/Field/FieldType/EntityReferenceItem.php
 
 		-
-			message: "#^Access to an undefined property Drupal\\\\Core\\\\Field\\\\Plugin\\\\Field\\\\FieldType\\\\NumericItemBase\\:\\:\\$value\\.$#"
-			count: 1
-			path: lib/Drupal/Core/Field/Plugin/Field/FieldType/NumericItemBase.php
-
-		-
-			message: "#^Access to an undefined property Drupal\\\\Core\\\\FileTransfer\\\\FTPExtension\\:\\:\\$connection\\.$#"
-			count: 19
-			path: lib/Drupal/Core/FileTransfer/FTPExtension.php
-
-		-
-			message: "#^Access to an undefined property Drupal\\\\Core\\\\FileTransfer\\\\FileTransfer\\:\\:\\$chroot\\.$#"
-			count: 3
-			path: lib/Drupal/Core/FileTransfer/FileTransfer.php
-
-		-
 			message: "#^Method Drupal\\\\Core\\\\FileTransfer\\\\FileTransfer\\:\\:__get\\(\\) should return bool\\|string but return statement is missing\\.$#"
 			count: 1
 			path: lib/Drupal/Core/FileTransfer/FileTransfer.php
-
-		-
-			message: "#^Access to an undefined property Drupal\\\\Core\\\\FileTransfer\\\\SSH\\:\\:\\$connection\\.$#"
-			count: 9
-			path: lib/Drupal/Core/FileTransfer/SSH.php
 
 		-
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
@@ -769,11 +694,6 @@ parameters:
 			message: "#^Method Drupal\\\\Core\\\\TypedData\\\\ListDataDefinition\\:\\:setDataType\\(\\) should return static\\(Drupal\\\\Core\\\\TypedData\\\\ListDataDefinition\\) but return statement is missing\\.$#"
 			count: 1
 			path: lib/Drupal/Core/TypedData/ListDataDefinition.php
-
-		-
-			message: "#^Access to an undefined property Drupal\\\\Core\\\\TypedData\\\\TypedData\\:\\:\\$value\\.$#"
-			count: 2
-			path: lib/Drupal/Core/TypedData/TypedData.php
 
 		-
 			message: "#^Variable \\$cache_key in isset\\(\\) always exists and is not nullable\\.$#"
@@ -1116,11 +1036,6 @@ parameters:
 			path: modules/datetime/src/Plugin/Field/FieldType/DateTimeFieldItemList.php
 
 		-
-			message: "#^Access to an undefined property Drupal\\\\datetime\\\\Plugin\\\\Field\\\\FieldType\\\\DateTimeItem\\:\\:\\$date\\.$#"
-			count: 1
-			path: modules/datetime/src/Plugin/Field/FieldType/DateTimeItem.php
-
-		-
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 1
 			path: modules/datetime/src/Plugin/Field/FieldType/DateTimeItem.php
@@ -1149,16 +1064,6 @@ parameters:
 			message: "#^Method Drupal\\\\datetime_range\\\\Plugin\\\\Field\\\\FieldType\\\\DateRangeFieldItemList\\:\\:defaultValuesForm\\(\\) should return array but return statement is missing\\.$#"
 			count: 1
 			path: modules/datetime_range/src/Plugin/Field/FieldType/DateRangeFieldItemList.php
-
-		-
-			message: "#^Access to an undefined property Drupal\\\\datetime_range\\\\Plugin\\\\Field\\\\FieldType\\\\DateRangeItem\\:\\:\\$end_date\\.$#"
-			count: 1
-			path: modules/datetime_range/src/Plugin/Field/FieldType/DateRangeItem.php
-
-		-
-			message: "#^Access to an undefined property Drupal\\\\datetime_range\\\\Plugin\\\\Field\\\\FieldType\\\\DateRangeItem\\:\\:\\$start_date\\.$#"
-			count: 1
-			path: modules/datetime_range/src/Plugin/Field/FieldType/DateRangeItem.php
 
 		-
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
@@ -1394,16 +1299,6 @@ parameters:
 			message: "#^Method Drupal\\\\image\\\\Form\\\\ImageStyleFormBase\\:\\:save\\(\\) should return int but return statement is missing\\.$#"
 			count: 1
 			path: modules/image/src/Form/ImageStyleFormBase.php
-
-		-
-			message: "#^Access to an undefined property Drupal\\\\image\\\\Plugin\\\\Field\\\\FieldType\\\\ImageItem\\:\\:\\$height\\.$#"
-			count: 2
-			path: modules/image/src/Plugin/Field/FieldType/ImageItem.php
-
-		-
-			message: "#^Access to an undefined property Drupal\\\\image\\\\Plugin\\\\Field\\\\FieldType\\\\ImageItem\\:\\:\\$width\\.$#"
-			count: 2
-			path: modules/image/src/Plugin/Field/FieldType/ImageItem.php
 
 		-
 			message: "#^Variable \\$image_that_is_too_small_file might not be defined\\.$#"
@@ -1916,11 +1811,6 @@ parameters:
 			path: modules/options/src/Plugin/Field/FieldType/ListIntegerItem.php
 
 		-
-			message: "#^Access to an undefined property Drupal\\\\options\\\\Plugin\\\\Field\\\\FieldType\\\\ListItemBase\\:\\:\\$value\\.$#"
-			count: 1
-			path: modules/options/src/Plugin/Field/FieldType/ListItemBase.php
-
-		-
 			message: "#^Method Drupal\\\\options\\\\Plugin\\\\Field\\\\FieldType\\\\ListItemBase\\:\\:validateAllowedValue\\(\\) should return string but return statement is missing\\.$#"
 			count: 1
 			path: modules/options/src/Plugin/Field/FieldType/ListItemBase.php
@@ -1934,21 +1824,6 @@ parameters:
 			message: "#^Method Drupal\\\\path\\\\PathAliasForm\\:\\:save\\(\\) should return int but return statement is missing\\.$#"
 			count: 1
 			path: modules/path/src/PathAliasForm.php
-
-		-
-			message: "#^Access to an undefined property Drupal\\\\path\\\\Plugin\\\\Field\\\\FieldType\\\\PathItem\\:\\:\\$alias\\.$#"
-			count: 3
-			path: modules/path/src/Plugin/Field/FieldType/PathItem.php
-
-		-
-			message: "#^Access to an undefined property Drupal\\\\path\\\\Plugin\\\\Field\\\\FieldType\\\\PathItem\\:\\:\\$langcode\\.$#"
-			count: 2
-			path: modules/path/src/Plugin/Field/FieldType/PathItem.php
-
-		-
-			message: "#^Access to an undefined property Drupal\\\\path\\\\Plugin\\\\Field\\\\FieldType\\\\PathItem\\:\\:\\$pid\\.$#"
-			count: 5
-			path: modules/path/src/Plugin/Field/FieldType/PathItem.php
 
 		-
 			message: "#^Method Drupal\\\\path\\\\Plugin\\\\Field\\\\FieldType\\\\PathItem\\:\\:postSave\\(\\) should return bool but return statement is missing\\.$#"
@@ -2184,11 +2059,6 @@ parameters:
 			message: "#^Configuration entity must define a `config_export` key\\. See https\\://www\\.drupal\\.org/node/2481909$#"
 			count: 1
 			path: modules/system/tests/modules/module_installer_config_test/src/Entity/TestConfigType.php
-
-		-
-			message: "#^Access to an undefined property Drupal\\\\Tests\\\\system\\\\Functional\\\\FileTransfer\\\\TestFileTransfer\\:\\:\\$connection\\.$#"
-			count: 5
-			path: modules/system/tests/src/Functional/FileTransfer/TestFileTransfer.php
 
 		-
 			message: "#^Variable \\$form_output in empty\\(\\) always exists and is not falsy\\.$#"
