@@ -20,7 +20,7 @@ class Timestamp extends IntegerData implements DateTimeInterface {
    *
    * @var int
    */
-  protected $value;
+  protected mixed $value;
 
   /**
    * {@inheritdoc}
