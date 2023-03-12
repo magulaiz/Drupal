@@ -1402,7 +1402,7 @@ vocabs
 volgende
 vorige
 vous
-WCAG
+wcag
 wcprops
 webassert
 webcal
