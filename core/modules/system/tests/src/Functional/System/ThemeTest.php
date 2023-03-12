@@ -155,7 +155,7 @@ class ThemeTest extends BrowserTestBase {
       // branding block.
       $this->drupalPlaceBlock('system_branding_block', ['region' => 'header']);
       $this->drupalGet('');
-      $this->assertSession()->elementAttributeContains('xpath', '//header//a[@rel="home"]/img', 'src', $expected['src']);
+      $this->assertSession()->elementAttributeContains('xpath', '//header//a/img', 'src', $expected['src']);
     }
     $unsupported_paths = [
       // Stream wrapper URI to non-existing file.
@@ -203,7 +203,7 @@ class ThemeTest extends BrowserTestBase {
 
     $this->drupalPlaceBlock('system_branding_block', ['region' => 'header']);
     $this->drupalGet('');
-    $this->assertSession()->elementAttributeContains('xpath', '//header//a[@rel="home"]/img', 'src', $file_url_generator->generateString($uploaded_filename));
+    $this->assertSession()->elementAttributeContains('xpath', '//header//a/img', 'src', $file_url_generator->generateString($uploaded_filename));
 
     $this->container->get('theme_installer')->install(['olivero']);
 
