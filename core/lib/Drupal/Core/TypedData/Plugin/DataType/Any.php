@@ -16,13 +16,4 @@ use Drupal\Core\TypedData\TypedData;
  *   label = @Translation("Any data")
  * )
  */
-class Any extends TypedData {
-
-  /**
-   * The data value.
-   *
-   * @var mixed
-   */
-  protected $value;
-
-}
+class Any extends TypedData {}
