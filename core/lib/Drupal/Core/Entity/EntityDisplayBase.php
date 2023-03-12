@@ -125,6 +125,15 @@ abstract class EntityDisplayBase extends ConfigEntityBase implements EntityDispl
   protected $initialized = FALSE;
 
   /**
+   * The serialized keys.
+   *
+   * Internally used in __sleep() and __wakeup().
+   *
+   * @var array
+   */
+  private array $_serializedKeys = [];
+
+  /**
    * {@inheritdoc}
    */
   public function __construct(array $values, $entity_type) {

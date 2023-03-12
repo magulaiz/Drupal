@@ -30,6 +30,20 @@ class DateRangeItem extends DateTimeItem {
   const DATETIME_TYPE_ALLDAY = 'allday';
 
   /**
+   * The computed start DateTime object.
+   *
+   * @var DateTimeComputed|null
+   */
+  protected DateTimeComputed|null $start_date;
+
+  /**
+   * The computed end DateTime object.
+   *
+   * @var DateTimeComputed|null
+   */
+  protected DateTimeComputed|null $end_date;
+
+  /**
    * {@inheritdoc}
    */
   public static function propertyDefinitions(FieldStorageDefinitionInterface $field_definition) {
