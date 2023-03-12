@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\language\Kernel\Views;
 
+use Drupal\Core\Language\LanguageInterface;
 use Drupal\views\Views;
 
 /**
@@ -53,6 +54,45 @@ class FilterLanguageTest extends LanguageTestBase {
 
       $view->destroy();
     }
+  }
+
+  /**
+   * Tests the language filter value options.
+   */
+  public function testValueOptions() {
+    $view = Views::getView('test_view');
+    $view->setDisplay();
+    $view->displayHandlers->get('default')->overrideOption('filters', [
+      'langcode' => [
+        'id' => 'langcode',
+        'table' => 'views_test_data',
+        'field' => 'langcode',
+        'value' => [],
+      ],
+    ]);
+    $this->executeView($view);
+    $this->assertSame([
+      '***LANGUAGE_' . LanguageInterface::LANGCODE_SITE_DEFAULT . '***',
+      '***LANGUAGE_' . LanguageInterface::TYPE_INTERFACE . '***',
+      'en',
+      'xx-lolspeak',
+      LanguageInterface::LANGCODE_NOT_SPECIFIED,
+      LanguageInterface::LANGCODE_NOT_APPLICABLE,
+    ], array_keys($view->filter['langcode']->getValueOptions()));
+    $view->destroy();
+
+    $view->setDisplay();
+    $view->displayHandlers->get('default')->overrideOption('filters', [
+      'langcode' => [
+        'id' => 'langcode',
+        'table' => 'views_test_data',
+        'field' => 'langcode',
+        'value' => [],
+        'exposed' => TRUE,
+      ],
+    ]);
+    $this->executeView($view);
+    $this->assertSame(['en', 'xx-lolspeak'], array_keys($view->filter['langcode']->getValueOptions()));
   }
 
 }
