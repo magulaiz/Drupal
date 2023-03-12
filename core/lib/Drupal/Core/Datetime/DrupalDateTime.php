@@ -129,7 +129,7 @@ class DrupalDateTime extends DateTimePlus {
       // Paired backslashes are isolated to prevent errors in
       // read-ahead evaluation. The read-ahead expression ensures that
       // A matches, but not \A.
-      $format = preg_replace(['/\\\\\\\\/', '/(?<!\\\\)([AaeDlMTF])/'], ["\xEF\\\\\\\\\xFF", "\xEF\\\\\$1\$1\xFF"], $format);
+      $format = preg_replace(['/\\\\\\\\/', '/(?<!\\\\)([AaeDlMTF])/'], ["\xFE\\\\\\\\\xFF", "\xFE\\\\\$1\$1\xFF"], $format);
 
       // Call date_format().
       $format = parent::format($format, $settings);
@@ -157,7 +157,7 @@ class DrupalDateTime extends DateTimePlus {
         };
 
         // Translate the marked sequences.
-        $value = preg_replace_callback('/\xEF([AaeDlMTF]?)(.*?)\xFF/', $translation_callback, $format);
+        $value = preg_replace_callback('/\xFE([AaeDlMTF]?)(.*?)\xFF/', $translation_callback, $format);
       }
     }
     catch (\Exception $e) {
