@@ -1,7 +1,7 @@
-import {FULL_MODULE_PATH, ORIGIN_URL} from './constants';
+import { FULL_MODULE_PATH, ORIGIN_URL } from './constants';
 // cspell:ignore Dont
 
-export const copyCommand = (cmd, project) =>  {
+export const copyCommand = (cmd, project) => {
   const copiedCommand = document.getElementById(
     cmd === 'Download'
       ? `${project.project_machine_name}-download-command`
@@ -21,9 +21,9 @@ export const copyCommand = (cmd, project) =>  {
     copyReceipt.style.transition = 'opacity 0.3s';
     copyReceipt.style.opacity = '0';
   }, 1000);
-}
+};
 
-export const getCommandsPopupMessage = (project) =>  {
+export const getCommandsPopupMessage = (project) => {
   const download = Drupal.t('Download');
   const composerText = Drupal.t(
     'The !use_composer_open recommended way to download any Drupal module!close is with !get_composer_open Composer!close.</a>',
@@ -38,9 +38,7 @@ export const getCommandsPopupMessage = (project) =>  {
   const composerExistsText = Drupal.t(
     "If you already manage your Drupal application dependencies with Composer, run the following from the command line in your application's Composer root directory",
   );
-  const infoText = Drupal.t(
-    'This will download the module to your codebase.',
-  );
+  const infoText = Drupal.t('This will download the module to your codebase.');
   const composerDontWorkText = Drupal.t(
     "Didn't work? !learn_open Learn how to troubleshoot Composer!close",
     {
@@ -68,16 +66,27 @@ export const getCommandsPopupMessage = (project) =>  {
   const drushText = Drupal.t(
     'Alternatively, you can use !drush_openDrush!close to install it via the command line',
     {
-      '!drush_open':
-        '<a href="https://www.drush.org/latest/" target="_blank">',
+      '!drush_open': '<a href="https://www.drush.org/latest/" target="_blank">',
       '!close': '</a>',
     },
   );
   const copied = Drupal.t('Copied!');
-  const downloadCopyButton = navigator.clipboard ? `<button id="download-btn"><img src="${FULL_MODULE_PATH}/images/copy-icon.svg" alt="${Drupal.t('Copy the download command')}"/></button>
-                <div id="${project.project_machine_name}-copied-download" class="copied-download">${copied}</div>` : '';
-  const installCopyButton = navigator.clipboard ? `<button id="install-btn"><img src="${FULL_MODULE_PATH}/images/copy-icon.svg" alt="${Drupal.t('Copy the install command')}"/></button>
-                <div id="${project.project_machine_name}-copied-install" class="copied-install">${copied}</div>` : '';
+  const downloadCopyButton = navigator.clipboard
+    ? `<button id="download-btn"><img src="${FULL_MODULE_PATH}/images/copy-icon.svg" alt="${Drupal.t(
+        'Copy the download command',
+      )}"/></button>
+                <div id="${
+                  project.project_machine_name
+                }-copied-download" class="copied-download">${copied}</div>`
+    : '';
+  const installCopyButton = navigator.clipboard
+    ? `<button id="install-btn"><img src="${FULL_MODULE_PATH}/images/copy-icon.svg" alt="${Drupal.t(
+        'Copy the install command',
+      )}"/></button>
+                <div id="${
+                  project.project_machine_name
+                }-copied-install" class="copied-install">${copied}</div>`
+    : '';
 
   const div = document.createElement('div');
   div.classList.add('window');
@@ -107,15 +116,14 @@ export const getCommandsPopupMessage = (project) =>  {
     });
   }
   return div;
-}
+};
 
-export const openPopup = (getMessage, project) =>  {
-  const message =
-    typeof getMessage === 'function' ? getMessage() : getMessage;
+export const openPopup = (getMessage, project) => {
+  const message = typeof getMessage === 'function' ? getMessage() : getMessage;
   const popupModal = Drupal.dialog(message, {
     title: project.title,
     dialogClass: 'project-browser-popup',
     width: '50rem',
   });
   popupModal.showModal();
-}
+};
