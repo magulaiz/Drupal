@@ -29,7 +29,9 @@
     "check:ckeditor5": "node ./scripts/js/ckeditor5-check-plugins.js",
     "build:ckeditor5-types": "node ./scripts/js/ckeditor5-types-documentation.js",
     "build:ckeditor5-dev": "yarn build:ckeditor5 --mode=development",
-    "watch:ckeditor5-dev": "yarn watch:ckeditor5 --mode=development"
+    "watch:ckeditor5-dev": "yarn watch:ckeditor5 --mode=development",
+    "watch:svelte": "webpack --config ./modules/project_browser/sveltejs/webpack.config.js --watch",
+    "build:svelte": "webpack --config ./modules/project_browser/sveltejs/webpack.config.js"
   },
   "devDependencies": {
     "@ckeditor/ckeditor5-alignment": "~35.4.0",
@@ -107,5 +109,13 @@
     "last 1 ChromeAndroid version",
     "last 1 Samsung version",
     "Firefox ESR"
-  ]
+  ],
+  "dependencies": {
+    "css-loader": "^6.7.3",
+    "eslint-plugin-svelte3": "^4.0.0",
+    "mini-css-extract-plugin": "^2.7.3",
+    "svelte": "^3.56.0",
+    "svelte-loader": "^3.1.7",
+    "svelte-previous": "^2.1.3"
+  }
 }
