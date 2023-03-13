@@ -24,12 +24,14 @@ contains_element() {
   for e in ${@:2}; do [[ "$e" == "$1" ]] && return 0; done
   return 1
 }
+
 # Prints a separator.
 print_separator() {
   printf "\n${title}"
   printf -- '-%.0s' {1..100}
   printf "${reset}\n"
 }
+
 # Prints a result based on the given exit code and label, and updates FINAL_STATUS.
 print_results() {
   local EXIT_CODE=$1
