@@ -50,7 +50,7 @@ abstract class TypedData implements TypedDataInterface, PluginInspectionInterfac
   /**
    * {@inheritdoc}
    */
-  public static function createInstance($definition, $name = NULL, TraversableTypedDataInterface $parent = NULL, $value = NULL) {
+  public static function createInstance($definition, $name = NULL, TraversableTypedDataInterface $parent = NULL, mixed $value = NULL) {
     return new static($definition, $name, $parent, $value);
   }
 
