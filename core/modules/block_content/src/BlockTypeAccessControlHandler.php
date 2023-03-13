@@ -24,11 +24,10 @@ class BlockTypeAccessControlHandler extends EntityAccessControlHandler {
    */
   protected function checkAccess(EntityInterface $entity, $operation, AccountInterface $account) {
     if ($operation === 'view label') {
-      return AccessResult::allowedIfHasPermission($account, 'access block library');
+      return AccessResult::allowedIfHasPermission($account, 'access block library')
+        ->orIf(parent::checkAccess($entity, $operation, $account));
     }
-    else {
-      return parent::checkAccess($entity, $operation, $account);
-    }
+    return parent::checkAccess($entity, $operation, $account);
   }
 
 }
