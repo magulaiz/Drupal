@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\Tests\user;
+namespace Drupal\Tests\user\Unit;
 
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Tests\UnitTestCase;
