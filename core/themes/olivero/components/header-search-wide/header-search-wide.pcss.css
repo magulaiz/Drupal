@@ -119,6 +119,15 @@
       }
     }
 
+    /* Override styles from button--primary */
+    /* @todo can we just drop that class? */
+    &:active,
+    &:hover,
+    &:focus {
+      background-color: transparent;
+      border-color: transparent;
+    }
+
     &:focus {
       outline: solid 4px transparent;
       outline-offset: -4px;
