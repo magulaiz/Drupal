@@ -2,7 +2,6 @@
 
 namespace Drupal\Tests\project_browser\Traits;
 
-use Drupal\package_manager_bypass\LoggingBeginner;
 use Symfony\Component\Filesystem\Filesystem;
 
 /**

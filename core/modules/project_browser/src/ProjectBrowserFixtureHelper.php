@@ -1,7 +1,8 @@
 <?php
-// cspell:ignore acquia
 
 namespace Drupal\project_browser;
+
+// cspell:ignore acquia
 
 use GuzzleHttp\ClientInterface;
 use Composer\Semver\Semver;
@@ -317,6 +318,7 @@ class ProjectBrowserFixtureHelper {
    */
   private function getProjectsFromSource(array $query = []): array {
     try {
+      // phpcs:ignore DrupalPractice.CodeAnalysis.VariableAnalysis.UnusedVariable
       $response = $this->httpClient->request('GET', "https://www.drupal.org/api-d7/node.json", [
         'on_stats' => static function (TransferStats $stats) use (&$url) {
           $url = $stats->getEffectiveUri();
