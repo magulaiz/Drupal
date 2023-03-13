@@ -133,15 +133,9 @@ function olivero_preprocess_block(&$variables) {
         }
       }
 
-      if ($variables['base_plugin_id'] === 'search_form_block') {
-        if ($region === 'primary_menu') {
-          $variables['#attached']['library'][] = 'olivero/search-narrow';
-          $variables['content']['actions']['submit']['#theme_wrappers'] = ['input__submit__header_search'];
-        }
-        elseif ($region === 'secondary_menu') {
-          $variables['#attached']['library'][] = 'olivero/search-wide';
-          $variables['content']['actions']['submit']['#theme_wrappers'] = ['input__submit__header_search'];
-        }
+      // @todo can this move to SDC?
+      if ($variables['base_plugin_id'] === 'search_form_block' && in_array($region, ['primary_menu','secondary_menu'], TRUE)) {
+        $variables['content']['actions']['submit']['#theme_wrappers'] = ['input__submit__header_search'];
       }
     }
   }
