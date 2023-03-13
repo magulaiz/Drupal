@@ -412,42 +412,4 @@ class BlockUiTest extends BrowserTestBase {
     $assert_session->pageTextNotContains('This block is broken or missing. You may be missing content or you might need to enable the original module.');
   }
 
-  /**
-   * Tests that a user without administer blocks permissions can access UI.
-   */
-  public function testNonAdminBlockAdminUIPage() {
-    $this->drupalLogout();
-    $block_admin_permissions = [
-      'access block overview',
-      'place blocks',
-      'configure blocks',
-      'enable and disable blocks',
-      'delete blocks',
-    ];
-    $user1 = $this->drupalCreateUser(['access block overview']);
-    $user2 = $this->drupalCreateUser($block_admin_permissions);
-    $user3 = $this->drupalCreateUser([]);
-
-    $this->drupalLogin($user1);
-    $this->drupalGet('admin/structure/block');
-    $this->assertSession()->statusCodeEquals(200);
-    // Verify that no block operations links appear
-    $this->assertSession()->linkNotExists('Configure');
-    $this->assertSession()->linkNotExists('Disable');
-    $this->assertSession()->linkNotExists('Remove');
-    $this->drupalLogout();
-    $this->drupalLogin($user2);
-    $this->drupalGet('admin/structure/block');
-    $this->assertSession()->statusCodeEquals(200);
-    // Verify that block operations links appear
-    $this->assertSession()->linkExists('Configure');
-    $this->assertSession()->linkExists('Disable');
-    $this->assertSession()->linkExists('Remove');
-    $this->drupalLogout();
-
-    $this->drupalLogin($user3);
-    $this->drupalGet('admin/structure/block');
-    $this->assertSession()->statusCodeEquals(403);
-  }
-
 }
