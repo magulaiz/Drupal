@@ -35,6 +35,7 @@
   } from './constants';
 
   const { Drupal } = window;
+  // cspell:ignore tabwise
 
   let data;
   let rows = [];

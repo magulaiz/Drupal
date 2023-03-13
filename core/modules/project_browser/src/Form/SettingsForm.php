@@ -115,7 +115,7 @@ class SettingsForm extends ConfigFormBase {
     ];
 
     if ($package_manager_not_ready) {
-      $form['allow_ui_install_compatiblity'] = [
+      $form['allow_ui_install_compatibility'] = [
         '#type' => 'container',
         '#markup' => $this->t('The ability to install modules via the Project Browser UI requires Package Manager version 2.5 or newer. Package Manager is provided as part of the Automatic Updates module.'),
       ];

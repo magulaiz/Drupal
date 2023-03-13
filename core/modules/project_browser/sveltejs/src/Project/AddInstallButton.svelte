@@ -84,7 +84,7 @@
    * Uses package manager to download a module using Composer.
    *
    * @param {boolean} install
-   *   If true, the module will be installed after it is downlaoded.
+   *   If true, the module will be installed after it is downloaded.
    */
   function downloadModule(install = false) {
     showStatus(true);

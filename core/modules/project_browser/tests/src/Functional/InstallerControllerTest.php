@@ -2,6 +2,8 @@
 
 namespace Drupal\Tests\project_browser\Functional;
 
+// cspell:ignore crashmore
+
 use Drupal\Component\Serialization\Json;
 use Drupal\package_manager\ValidationResult;
 use Drupal\package_manager_test_validation\EventSubscriber\TestSubscriber;

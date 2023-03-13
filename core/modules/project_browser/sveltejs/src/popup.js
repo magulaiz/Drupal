@@ -1,4 +1,5 @@
 import {FULL_MODULE_PATH, ORIGIN_URL} from './constants';
+// cspell:ignore Dont
 
 export const copyCommand = (cmd, project) =>  {
   const copiedCommand = document.getElementById(

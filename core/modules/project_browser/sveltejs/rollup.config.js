@@ -7,6 +7,9 @@ import css from 'rollup-plugin-css-only';
 import json from '@rollup/plugin-json';
 import { writeFileSync } from 'fs';
 
+// cspell:ignore iife
+
+
 const production = !process.env.ROLLUP_WATCH;
 
 function serve() {

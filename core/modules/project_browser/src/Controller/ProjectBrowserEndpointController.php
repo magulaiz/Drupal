@@ -2,6 +2,8 @@
 
 namespace Drupal\project_browser\Controller;
 
+// cspell:ignore tabwise
+
 use Drupal\Component\Serialization\Json;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\project_browser\EnabledSourceHandler;

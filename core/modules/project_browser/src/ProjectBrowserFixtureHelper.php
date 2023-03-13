@@ -1,4 +1,5 @@
 <?php
+// cspell:ignore acquia
 
 namespace Drupal\project_browser;
 
@@ -444,7 +445,7 @@ class ProjectBrowserFixtureHelper {
       'sort' => 'changed',
       'direction' => 'DESC',
     ];
-    $eariest_possible_timestamp_reached = NULL;
+    $earliest_possible_timestamp_reached = NULL;
     $drupal_org_response = $this->getProjectsFromSource($query);
     $returned_projects = $drupal_org_response['list'];
 
@@ -470,7 +471,7 @@ class ProjectBrowserFixtureHelper {
         // know they aren't compatible because it is before
         // https://www.drupal.org/node/3119415.
         if ($project['changed'] < 1583985600) {
-          $eariest_possible_timestamp_reached = TRUE;
+          $earliest_possible_timestamp_reached = TRUE;
         }
       }
       $sandbox['current_page'] += 1;
@@ -523,7 +524,7 @@ class ProjectBrowserFixtureHelper {
       $projects_to_store = array_filter($projects_to_store);
       $sandbox['projects'] = array_merge($sandbox['projects'], $projects_to_store);
       $sandbox['progress'] += count($sandbox['projects']);
-      $sandbox['#finished'] = count($sandbox['projects']) >= $sandbox['max'] || $eariest_possible_timestamp_reached ? TRUE : (count($sandbox['projects']) / $sandbox['max']);
+      $sandbox['#finished'] = count($sandbox['projects']) >= $sandbox['max'] || $earliest_possible_timestamp_reached ? TRUE : (count($sandbox['projects']) / $sandbox['max']);
     }
     else {
       $sandbox['#finished'] = TRUE;

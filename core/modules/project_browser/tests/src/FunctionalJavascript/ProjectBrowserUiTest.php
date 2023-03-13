@@ -2,6 +2,8 @@
 
 namespace Drupal\Tests\project_browser\FunctionalJavascript;
 
+// cspell:ignore doomer eggman statusactive vetica quiznos statusmaintained coverageall
+
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 
 /**

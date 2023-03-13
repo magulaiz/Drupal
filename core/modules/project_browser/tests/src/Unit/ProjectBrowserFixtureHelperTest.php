@@ -2,6 +2,8 @@
 
 namespace Drupal\Tests\project_browser\Unit;
 
+// cspell:ignore elle
+
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Database\Query\Insert;
 use Drupal\Core\Database\Query\Truncate;

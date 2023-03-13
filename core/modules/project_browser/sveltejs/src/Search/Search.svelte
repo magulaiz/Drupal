@@ -25,6 +25,7 @@
     FULL_MODULE_PATH,
     DARK_COLOR_SCHEME,
   } from '../constants';
+  // cspell:ignore searchterm
 
   const { Drupal } = window;
   const { announce } = Drupal;

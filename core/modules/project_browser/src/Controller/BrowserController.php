@@ -2,6 +2,8 @@
 
 namespace Drupal\project_browser\Controller;
 
+// cspell:ignore ctools
+
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Extension\InfoParserException;
 use Drupal\Core\Extension\ModuleExtensionList;

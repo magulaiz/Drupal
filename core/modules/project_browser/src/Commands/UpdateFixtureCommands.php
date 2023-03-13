@@ -2,6 +2,8 @@
 
 namespace Drupal\project_browser\Commands;
 
+// cspell:ignore commandfile
+
 use Drupal\Core\Logger\LoggerChannelFactoryInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\project_browser\EnabledSourceHandler;
