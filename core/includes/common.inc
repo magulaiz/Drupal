@@ -12,7 +12,6 @@ use Drupal\Component\Utility\Bytes;
 use Drupal\Component\Utility\SortArray;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\DrupalKernel;
-use Drupal\Core\Render\Element;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 
 /**
@@ -349,7 +348,7 @@ function drupal_attach_tabledrag(&$element, array $options) {
 /**
  * Hides an element from later rendering.
  *
- * Refer to Drupal\core\lib\Drupal\Core\Render\Element::hide()
+ * Refer to Drupal\core\lib\Drupal\Core\Render\RendererInterface::render()
  * for additional documentation.
  *
  * @param $element
@@ -359,22 +358,21 @@ function drupal_attach_tabledrag(&$element, array $options) {
  *   The element.
  *
  * @deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use
- *   \Drupal\Core\Render\Element::hide() instead.
+ *   to inline #printed=TRUE instead.
  *
  * @see https://www.drupal.org/node/3261271
- * @see \Drupal\Core\Render\RendererInterface
- * @see Drupal\core\lib\Drupal\Core\Render\Element::hide()
- * @see Drupal\core\lib\Drupal\Core\Render\Element::show()
+ * @see \Drupal\Core\Render\RendererInterface::render()
  */
 function hide(&$element) {
-  @trigger_error('The global hide() function is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use \Drupal\Core\Render\Element::hide() instead. See https://www.drupal.org/node/3261271', E_USER_DEPRECATED);
-  return Element::hide($element);
+  @trigger_error('The global hide() function is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use to inline #printed=TRUE instead. See https://www.drupal.org/node/3261271', E_USER_DEPRECATED);
+  $element['#printed'] = TRUE;
+  return $element;
 }
 
 /**
  * Shows a hidden element for later rendering.
  *
- * Refer to Drupal\core\lib\Drupal\Core\Render\Element::show()
+ * Refer to Drupal\core\lib\Drupal\Core\Render\RendererInterface::render()
  * for additional documentation.
  *
  * @param $element
@@ -384,16 +382,15 @@ function hide(&$element) {
  *   The element.
  *
  * @deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use
- *   \Drupal\Core\Render\Element::show() instead.
+ *   to inline #printed=FALSE instead.
  *
  * @see https://www.drupal.org/node/3261271
- * @see \Drupal\Core\Render\RendererInterface
- * @see Drupal\core\lib\Drupal\Core\Render\Element::hide()
- * @see Drupal\core\lib\Drupal\Core\Render\Element::show()
+ * @see \Drupal\Core\Render\RendererInterface::render()
  */
 function show(&$element) {
-  @trigger_error('The global show() function is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use \Drupal\Core\Render\Element::show() instead. See https://www.drupal.org/node/3261271', E_USER_DEPRECATED);
-  return Element::show($element);
+  @trigger_error('The global show() function is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use to inline #printed=FALSE instead. See https://www.drupal.org/node/3261271', E_USER_DEPRECATED);
+  $element['#printed'] = FALSE;
+  return $element;
 }
 
 /**

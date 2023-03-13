@@ -59,7 +59,7 @@ function template_preprocess_file_widget_multiple(&$variables) {
     $operations_elements = [];
     foreach (Element::children($widget) as $sub_key) {
       if (isset($widget[$sub_key]['#type']) && $widget[$sub_key]['#type'] == 'submit') {
-        Element::hide($widget[$sub_key]);
+        $widget[$sub_key]['#printed'] = TRUE;
         $operations_elements[] = &$widget[$sub_key];
       }
     }
@@ -67,9 +67,9 @@ function template_preprocess_file_widget_multiple(&$variables) {
     // Delay rendering of the "Display" option and the weight selector, so that
     // each can be rendered later in its own column.
     if ($element['#display_field']) {
-      Element::hide($widget['display']);
+      $widget['display']['#printed'] = TRUE;
     }
-    Element::hide($widget['_weight']);
+    $widget['_weight']['#printed'] = TRUE;
     $widget['_weight']['#attributes']['class'] = [$weight_class];
 
     // Render everything else together in a column, without the normal wrappers.
@@ -90,10 +90,10 @@ function template_preprocess_file_widget_multiple(&$variables) {
     ];
 
     // Show the buttons that had previously been marked as hidden in this
-    // preprocess function. We use Element::show() to undo the earlier
-    // Element::hide().
+    // preprocess function. We use ['#printed'] = FALSE to undo the earlier
+    // ['#printed'] = TRUE.
     foreach (Element::children($operations_elements) as $key) {
-      Element::show($operations_elements[$key]);
+      $operations_elements[$key]['#printed'] = FALSE;
     }
     $row[] = [
       'data' => $operations_elements,
