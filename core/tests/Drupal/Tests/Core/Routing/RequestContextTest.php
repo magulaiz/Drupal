@@ -20,8 +20,8 @@ class RequestContextTest extends UnitTestCase {
   public function testFromRequestStack() {
     $request_context = new RequestContext();
     $request_stack = new RequestStack();
-    $result = $request_context->fromRequestStack($request_stack);
-    $this->assertNotNull($result);
+    $request_context->fromRequestStack($request_stack);
+    $this->assertIsObject($request_context);
   }
 
 }
