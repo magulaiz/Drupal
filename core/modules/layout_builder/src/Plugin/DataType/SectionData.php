@@ -24,7 +24,7 @@ class SectionData extends TypedData {
    *
    * @var \Drupal\layout_builder\Section
    */
-  protected mixed $value;
+  protected $value;
 
   /**
    * {@inheritdoc}

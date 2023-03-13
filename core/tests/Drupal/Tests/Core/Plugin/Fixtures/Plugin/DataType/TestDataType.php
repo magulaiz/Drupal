@@ -13,4 +13,13 @@ use Drupal\Core\TypedData\TypedData;
  *   deriver = "Drupal\Tests\Core\Plugin\Fixtures\Plugin\DataType\TestDataTypeDeriver"
  * )
  */
-class TestDataType extends TypedData {}
+class TestDataType extends TypedData {
+
+  /**
+   * Required by the parent class.
+   *
+   * @var mixed
+   */
+  protected $value;
+
+}

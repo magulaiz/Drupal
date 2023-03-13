@@ -696,6 +696,11 @@ parameters:
 			path: lib/Drupal/Core/TypedData/ListDataDefinition.php
 
 		-
+			message: "#^Access to an undefined property Drupal\\\\Core\\\\TypedData\\\\TypedData\\:\\:\\$value\\.$#"
+			count: 2
+			path: lib/Drupal/Core/TypedData/TypedData.php
+
+		-
 			message: "#^Variable \\$cache_key in isset\\(\\) always exists and is not nullable\\.$#"
 			count: 1
 			path: lib/Drupal/Core/TypedData/Validation/RecursiveContextualValidator.php

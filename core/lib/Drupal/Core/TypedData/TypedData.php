@@ -5,6 +5,7 @@ namespace Drupal\Core\TypedData;
 use Drupal\Component\Plugin\PluginInspectionInterface;
 use Drupal\Core\DependencyInjection\DependencySerializationTrait;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
+use phpDocumentor\Reflection\Types\Null_;
 
 /**
  * The abstract base class for typed data.
@@ -41,17 +42,10 @@ abstract class TypedData implements TypedDataInterface, PluginInspectionInterfac
   protected $parent;
 
   /**
-   * The data value.
-   *
-   * @var mixed
-   */
-  protected mixed $value;
-
-  /**
    * {@inheritdoc}
    */
-  public static function createInstance($definition, $name = NULL, TraversableTypedDataInterface $parent = NULL, mixed $value = NULL) {
-    return new static($definition, $name, $parent, $value);
+  public static function createInstance($definition, $name = NULL, TraversableTypedDataInterface $parent = NULL) {
+    return new static($definition, $name, $parent);
   }
 
   /**
@@ -65,16 +59,13 @@ abstract class TypedData implements TypedDataInterface, PluginInspectionInterfac
    * @param \Drupal\Core\TypedData\TypedDataInterface $parent
    *   (optional) The parent object of the data property, or NULL if it is the
    *   root of a typed data tree. Defaults to NULL.
-   * @param mixed|null $value
-   *   (optional) The data value.
    *
-   * @see \Drupal\Core\TypedData\TypedDataManager::create()
+   * @see \Drupal\Core\TypnedData\TypedDataManager::create()
    */
-  public function __construct(DataDefinitionInterface $definition, $name = NULL, TypedDataInterface $parent = NULL, mixed $value = NULL) {
+  public function __construct(DataDefinitionInterface $definition, $name = NULL, TypedDataInterface $parent = NULL) {
     $this->definition = $definition;
     $this->parent = $parent;
     $this->name = $name;
-    $this->value = $value;
   }
 
   /**

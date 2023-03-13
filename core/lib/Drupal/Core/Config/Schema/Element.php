@@ -12,6 +12,13 @@ use Drupal\Core\TypedData\TypedDataManagerInterface;
 abstract class Element extends TypedData {
 
   /**
+   * The configuration value.
+   *
+   * @var mixed
+   */
+  protected $value;
+
+  /**
    * Gets the typed configuration manager.
    *
    * Overrides \Drupal\Core\TypedData\TypedDataTrait::getTypedDataManager() to
