@@ -16,6 +16,13 @@ use Drupal\Core\TypedData\OptionsProviderInterface;
 abstract class ListItemBase extends FieldItemBase implements OptionsProviderInterface {
 
   /**
+   * The data value.
+   *
+   * @var mixed
+   */
+  protected $value;
+
+  /**
    * {@inheritdoc}
    */
   public static function defaultStorageSettings() {
