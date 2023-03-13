@@ -365,7 +365,6 @@ class BlockListBuilder extends ConfigEntityListBuilder implements FormInterface 
     if (isset($operations['delete'])) {
       $operations['delete']['title'] = $this->t('Remove');
     }
-
     return $operations;
   }
 
