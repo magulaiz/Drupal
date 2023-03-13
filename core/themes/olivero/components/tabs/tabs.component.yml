@@ -14,3 +14,6 @@ schemas:
       secondary:
         type: array
         title: secondary
+libraryDependencies:
+  - core/drupal
+  - core/once
