@@ -48,23 +48,21 @@
   vertical-align: -0.0625rem;
   background: transparent url(../../images/shortcut/favstar.svg) left top / calc(var(--shortcut-icon-size) * 4) var(--shortcut-icon-size) no-repeat;
 
-  @nest [dir="rtl"] & {
-    background-image: url(../../images/shortcut/favstar-rtl.svg);
-  }
-}
-
-.shortcut-action--add {
-  &:hover .shortcut-action__icon,
-  &:focus .shortcut-action__icon {
+  @nest .shortcut-action--add:hover &,
+  .shortcut-action--add:focus & {
     background-position: calc(-1 * var(--shortcut-icon-size)) top;
   }
-}
-.shortcut-action--remove {
-  & .shortcut-action__icon {
+
+  @nest .shortcut-action--remove & {
     background-position: calc(-2 * var(--shortcut-icon-size)) top;
   }
-  &:focus .shortcut-action__icon,
-  &:hover .shortcut-action__icon {
+
+  @nest .shortcut-action--remove:focus &,
+  .shortcut-action--remove:hover & {
     background-position: calc(-3 * var(--shortcut-icon-size)) top;
+  }
+
+  @nest [dir="rtl"] & {
+    background-image: url(../../images/shortcut/favstar-rtl.svg);
   }
 }
