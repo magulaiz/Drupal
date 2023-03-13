@@ -850,7 +850,7 @@ DOCBLOCK;
       );
       $provider[] = array(
           '@AnnotationWithConstants({AnnotationWithConstants::class = AnnotationWithConstants::class})',
-          array('Drupal\Tests\Component\Annotation\Doctrine\Fixtures\AnnotationWithConstants' =>      '        Drupal\Tests\Component\Annotation\Doctrine\Fixtures\AnnotationWithConstants')
+          array('Drupal\Tests\Component\Annotation\Doctrine\Fixtures\AnnotationWithConstants' =>'Drupal\Tests\Component\Annotation\Doctrine\Fixtures\AnnotationWithConstants')
         );
       $provider[] = array(
           '@AnnotationWithConstants(Drupal\Tests\Component\Annotation\Doctrine\Fixtures\AnnotationWithConstants::class)',
