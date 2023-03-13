@@ -42,13 +42,3 @@ Navigate to Administration > Extend > Browse.
 Filter by Recommended projects or All projects
 Search and filter by Title, Sort By, Order and Categories
 Customize results layout by List or Grid Format
-
-
-## Maintainers
-
-- Leslie Glynn (leslieg) - https://www.drupal.org/u/leslieg
-- Chris Wells (chrisfromredfin) - https://www.drupal.org/u/chrisfromredfin
-- Ron Northcutt (rlnorthcutt) - https://www.drupal.org/u/rlnorthcutt
-- Tim Plunkett (tim.plunkett) - https://www.drupal.org/u/timplunkett
-- Matthew Grasmick (grasmash) - https://www.drupal.org/u/grasmash
-

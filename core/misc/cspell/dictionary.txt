@@ -1158,6 +1158,7 @@ sunzzzzzzz
 supercede
 svenska
 svgz
+sveltejs
 svibanj
 swcf
 sxto
