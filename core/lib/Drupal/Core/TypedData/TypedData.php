@@ -5,7 +5,6 @@ namespace Drupal\Core\TypedData;
 use Drupal\Component\Plugin\PluginInspectionInterface;
 use Drupal\Core\DependencyInjection\DependencySerializationTrait;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
-use phpDocumentor\Reflection\Types\Null_;
 
 /**
  * The abstract base class for typed data.
@@ -60,7 +59,7 @@ abstract class TypedData implements TypedDataInterface, PluginInspectionInterfac
    *   (optional) The parent object of the data property, or NULL if it is the
    *   root of a typed data tree. Defaults to NULL.
    *
-   * @see \Drupal\Core\TypnedData\TypedDataManager::create()
+   * @see \Drupal\Core\TypedData\TypedDataManager::create()
    */
   public function __construct(DataDefinitionInterface $definition, $name = NULL, TypedDataInterface $parent = NULL) {
     $this->definition = $definition;
