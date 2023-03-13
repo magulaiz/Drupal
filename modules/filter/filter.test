@@ -1634,6 +1634,7 @@ www.example.com with a newline in comments -->
    *   comments.
    * - Empty HTML tags (BR, IMG).
    * - Mix of absolute and partial URLs, and e-mail addresses in one content.
+   * - Input that exceeds PCRE backtracking limit.
    */
   function testUrlFilterContent() {
     // Setup dummy filter object.
