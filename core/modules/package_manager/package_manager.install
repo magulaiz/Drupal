@@ -1,0 +1,34 @@
+<?php
+
+/**
+ * @file
+ * Contains install and update functions for Package Manager.
+ */
+
+declare(strict_types = 1);
+
+use Drupal\package_manager\Exception\StageFailureMarkerException;
+
+/**
+ * Implements hook_requirements().
+ */
+function package_manager_requirements(string $phase) {
+  $requirements = [];
+  // If we're able to check for the presence of the failure marker at all, do it
+  // irrespective of the current run phase. If the failure marker is there, the
+  // site is in an indeterminate state and should be restored from backup ASAP.
+  $service_id = 'package_manager.failure_marker';
+  if (\Drupal::hasService($service_id)) {
+    try {
+      \Drupal::service($service_id)->assertNotExists(NULL);
+    }
+    catch (StageFailureMarkerException $exception) {
+      $requirements['package_manager_failure_marker'] = [
+        'title' => t('Failed update detected'),
+        'description' => $exception->getMessage(),
+        'severity' => REQUIREMENT_ERROR,
+      ];
+    }
+  }
+  return $requirements;
+}
