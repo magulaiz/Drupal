@@ -57,6 +57,13 @@ class InstallerController extends ControllerBase {
   private $installer;
 
   /**
+   * The path locator service.
+   *
+   * @var \Drupal\package_manager\PathLocator
+   */
+  protected $pathLocator;
+
+  /**
    * The Project Browser tempstore object.
    *
    * @var \Drupal\Core\TempStore\SharedTempStore
