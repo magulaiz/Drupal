@@ -18,8 +18,9 @@
 a.block-demo-backlink,
 a.block-demo-backlink:link,
 a.block-demo-backlink:visited {
-  position: fixed;
+  position: sticky;
   z-index: 499;
+  top: var(--drupal-displace-offset-top);
   left: 20px; /* LTR */
   padding: 5px 10px;
   color: #000;
