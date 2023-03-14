@@ -1164,6 +1164,7 @@ sveltejs
 svibanj
 swcf
 sxto
+syncer
 synchronizable
 syrop
 szwr
