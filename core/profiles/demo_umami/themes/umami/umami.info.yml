@@ -8,6 +8,9 @@ libraries:
   - core/normalize
   - umami/global
 
+dependenciers:
+  - drupal:sdc
+
 libraries-override:
   layout_builder/twocol_section:
     css:
