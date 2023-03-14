@@ -75,7 +75,7 @@ class BrowserController extends ControllerBase {
    *   The request stack.
    * @param \Drupal\project_browser\EnabledSourceHandler $enabled_source
    *   The enabled source.
-   * @param \Drupal\project_browser\InstallReadiness|NULL $install_readiness
+   * @param \Drupal\project_browser\InstallReadiness|null $install_readiness
    *   The install readiness service.
    */
   public function __construct(ModuleHandlerInterface $module_handler, ModuleExtensionList $module_list, RequestStack $request_stack, EnabledSourceHandler $enabled_source, InstallReadiness|NULL $install_readiness) {

@@ -1,3 +1,4 @@
+// eslint-disable-next-line import/no-extraneous-dependencies
 import { writable } from 'svelte/store';
 
 import { DEFAULT_SOURCE_ID, SORT_OPTIONS } from './constants';
