@@ -46,12 +46,15 @@ module.exports = {
       },
       {
         test: /\.css$/,
-        use: [{
-          loader: MiniCssExtractPlugin.loader,
-          options: {
-            publicPath: path.join(__dirname, '/public/build'),
+        use: [
+          {
+            loader: MiniCssExtractPlugin.loader,
+            options: {
+              publicPath: path.join(__dirname, '/public/build'),
+            },
           },
-        }, 'css-loader'],
+          'css-loader',
+        ],
       },
       {
         // required to prevent errors from Svelte on Webpack 5+
@@ -63,9 +66,7 @@ module.exports = {
     ],
   },
   mode,
-  plugins: [
-    new MiniCssExtractPlugin({filename: 'build/bundle.css'}),
-  ],
+  plugins: [new MiniCssExtractPlugin({ filename: 'build/bundle.css' })],
   devtool: prod ? false : 'source-map',
   devServer: {
     hot: true,
