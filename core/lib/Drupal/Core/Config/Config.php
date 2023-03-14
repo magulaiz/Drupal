@@ -199,6 +199,9 @@ class Config extends StorableConfigBase {
    * {@inheritdoc}
    */
   public function save($has_trusted_data = FALSE) {
+    if (func_num_args() > 0) {
+      @trigger_error('Calling ' . __METHOD__ . '() with the $has_trusted_data argument is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. There is no replacement. See https://www.drupal.org/node/TBD', E_USER_DEPRECATED);
+    }
     // Validate the configuration object name before saving.
     static::validateName($this->name);
 

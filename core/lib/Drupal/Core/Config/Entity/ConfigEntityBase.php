@@ -99,6 +99,11 @@ abstract class ConfigEntityBase extends EntityBase implements ConfigEntityInterf
    * Trust supplied data and not use configuration schema on save.
    *
    * @var bool
+   *
+   * @deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. There is no
+   *   replacement.
+   *
+   * @see https://www.drupal.org/node/3347842
    */
   protected $trustedData = FALSE;
 
@@ -590,6 +595,7 @@ abstract class ConfigEntityBase extends EntityBase implements ConfigEntityInterf
    * {@inheritdoc}
    */
   public function trustData() {
+    @trigger_error(__METHOD__ . '() is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. There is no replacement. See https://www.drupal.org/node/TBD', E_USER_DEPRECATED);
     $this->trustedData = TRUE;
     return $this;
   }
@@ -598,6 +604,7 @@ abstract class ConfigEntityBase extends EntityBase implements ConfigEntityInterf
    * {@inheritdoc}
    */
   public function hasTrustedData() {
+    @trigger_error(__METHOD__ . '() is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. There is no replacement. See https://www.drupal.org/node/TBD', E_USER_DEPRECATED);
     return $this->trustedData;
   }
 
