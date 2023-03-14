@@ -167,6 +167,11 @@ interface ConfigEntityInterface extends EntityInterface, ThirdPartySettingsInter
    * @return $this
    *
    * @see \Drupal\Core\Config\ConfigInstaller::createConfiguration()
+   *
+   * @deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. There is no
+   *   replacement.
+   *
+   * @see https://www.drupal.org/node/3347842
    */
   public function trustData();
 
@@ -175,6 +180,11 @@ interface ConfigEntityInterface extends EntityInterface, ThirdPartySettingsInter
    *
    * @return bool
    *   TRUE if the configuration data is trusted, FALSE if not.
+   *
+   * @deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. There is no
+   *   replacement.
+   *
+   * @see https://www.drupal.org/node/3347842
    */
   public function hasTrustedData();
 
