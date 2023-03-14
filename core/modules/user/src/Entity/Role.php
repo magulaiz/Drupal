@@ -186,10 +186,10 @@ class Role extends ConfigEntityBase implements RoleInterface {
       $this->weight = $max + 1;
     }
 
-    if ($this->trustedData) {
+    if (!$this->isSyncing() && $this->trustedData) {
       // Permissions are always ordered alphabetically to avoid conflicts in the
-      // exported configuration. Normally this is handled by schema but if
-      // the data is trusted we still need to sort.
+      // exported configuration. If the save is not trusted then the
+      // configuration will be sorted by StorableConfigBase.
       sort($this->permissions);
     }
   }
