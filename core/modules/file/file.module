@@ -212,6 +212,10 @@ function file_validate_size(FileInterface $file, $file_limit = 0, $user_limit = 
  *
  * @param \Drupal\file\FileInterface $file
  *   A file entity.
+ * @param string $extensions
+ *   (Optional) A string with a space separated list of allowed extensions. If
+ *   blank, any of the extensions supported by the current image toolkit will
+ *   be allowed.
  *
  * @return array
  *   An empty array if the file is a valid image or an array containing an error
@@ -219,14 +223,26 @@ function file_validate_size(FileInterface $file, $file_limit = 0, $user_limit = 
  *
  * @see hook_file_validate()
  */
-function file_validate_is_image(FileInterface $file) {
+function file_validate_is_image(FileInterface $file, string $extensions = '') {
   $errors = [];
-
   $image_factory = \Drupal::service('image.factory');
+  $valid_extensions = $image_factory->getSupportedExtensions();
+
+  // If the allowed extensions are specified, and the uploaded file's extension
+  // is not in the list, then return with no error, as the file extension
+  // validator will cope with this case.
+  if ($extensions !== '') {
+    $errors = file_validate_extensions($file, $extensions);
+    if (!empty($errors)) {
+      return [];
+    }
+    $valid_extensions = array_intersect($valid_extensions, explode(' ', $extensions));
+  }
+
+  // Use the current toolkit to validate the image file.
   $image = $image_factory->get($file->getFileUri());
   if (!$image->isValid()) {
-    $supported_extensions = $image_factory->getSupportedExtensions();
-    $errors[] = t('The image file is invalid or the image type is not allowed. Allowed types: %types', ['%types' => implode(', ', $supported_extensions)]);
+    $errors[] = t('The image file is invalid or the image type is not allowed. Allowed types: %types', ['%types' => implode(' ', $valid_extensions)]);
   }
 
   return $errors;

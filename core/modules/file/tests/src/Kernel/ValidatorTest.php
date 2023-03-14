@@ -135,20 +135,98 @@ class ValidatorTest extends FileManagedUnitTestBase {
           'Only files with the following extensions are allowed: <em class="placeholder">exe txt</em>.',
         ],
       ],
+  }
+
+  /**
+   * Provides data for testFileValidateIsImage.
+   *
+   * @return array[]
+   *   An associative array of simple arrays, with key the test scenario and
+   *   value an array having the following elements:
+   *   - the file path of the image file to be tested
+   *   - the extensions restriction
+   *   - the expected error message or NULL if no error expected.
+   */
+  public function providerFileValidateIsImage(): array {
+    return [
+      'Valid image, no extensions restriction' => [
+        'core/misc/druplicon.png',
+        '',
+        NULL,
+      ],
+      'Invalid image, no extensions restriction' => [
+        'core/tests/fixtures/files/invalid-img-test.png',
+        '',
+        'The image file is invalid or the image type is not allowed. Allowed types: png jpeg jpg jpe gif',
+      ],
+      'Not an image, no extensions restriction' => [
+        'core/assets/vendor/jquery/jquery.min.js',
+        '',
+        'The image file is invalid or the image type is not allowed. Allowed types: png jpeg jpg jpe gif',
+      ],
+      // If extension restrictions are specified, we expect that the
+      // validator returns an empty array if the test file extension is not in
+      // the list of the restricted extensions, as the extension validator will
+      // cope with that case.
+      'Valid image, extension included in restriction' => [
+        'core/misc/druplicon.png',
+        'jpeg png',
+        NULL,
+      ],
+      'Invalid image, extension included in restriction' => [
+        'core/tests/fixtures/files/invalid-img-test.png',
+        'jpeg png',
+        'The image file is invalid or the image type is not allowed. Allowed types: png jpeg',
+      ],
+      'Valid png image, extensions restricted to jpeg' => [
+        'core/misc/druplicon.png',
+        'jpeg',
+        NULL,
+      ],
+      'Invalid png image, extensions restricted to png' => [
+        'core/tests/fixtures/files/invalid-img-test.png',
+        'png',
+        'The image file is invalid or the image type is not allowed. Allowed types: png',
+      ],
+      'Not an image, extensions restricted to jpeg' => [
+        'core/assets/vendor/jquery/jquery.min.js',
+        'jpeg',
+        NULL,
+      ],
+      // Even if we include a non-image file extension in the allowed
+      // extensions, still the toolkit will cut it.
+      'Not an image, but extension allowed in restriction' => [
+        'core/assets/vendor/jquery/jquery.min.js',
+        'jpeg png js',
+        'The image file is invalid or the image type is not allowed. Allowed types: png jpeg',
+      ],
     ];
   }
 
   /**
    * This ensures a specific file is actually an image.
+   *
+   * @param string $image_path
+   *   The file path of the image file to be tested.
+   * @param string $extensions
+   *   The allowed extensions restriction.
+   * @param string $expected_error
+   *   The expected error message or NULL if no error expected.
+   *
+   * @dataProvider providerFileValidateIsImage
    */
-  public function testFileValidateIsImage() {
-    $this->assertFileExists($this->image->getFileUri());
-    $errors = file_validate_is_image($this->image);
-    $this->assertCount(0, $errors, 'No error reported for our image file.');
-
-    $this->assertFileExists($this->nonImage->getFileUri());
-    $errors = file_validate_is_image($this->nonImage);
-    $this->assertCount(1, $errors, 'An error reported for our non-image file.');
+  public function testFileValidateIsImage(string $image_path, string $extensions, string $expected_error): void {
+    $image = File::create();
+    $image->setFileUri($image_path);
+    $image->setFilename(\Drupal::service('file_system')->basename($image_path));
+    $this->assertFileExists($image->getFileUri());
+    $errors = file_validate_is_image($image, $extensions);
+    if ($expected_error !== NULL) {
+      $this->assertEquals($expected_error, strip_tags($errors[0]));
+    }
+    else {
+      $this->assertEmpty($errors);
+    }
   }
 
   /**
