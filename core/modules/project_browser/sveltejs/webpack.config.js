@@ -1,5 +1,9 @@
 // eslint-disable-next-line import/no-extraneous-dependencies
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const TerserPlugin = require('terser-webpack-plugin');
+const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
+
+
 const path = require('path');
 
 const mode = process.env.NODE_ENV || 'development';
@@ -31,13 +35,12 @@ module.exports = {
           options: {
             compilerOptions: {
               dev: !prod,
-              cssHash: ({ hash, css, name, filename }) => {
+              cssHash: ({ hash, css, name, filename }) =>
                 // Strip all line breaks and whitespace from the CSS string used to
                 // calculate hash.
-                return `pb-${hash(
+                `pb-${hash(
                   css ? css.replaceAll(/(\r\n|\n|\r|\s)/gm, '') : '',
-                )}`;
-              },
+                )}`,
             },
             emitCss: true,
             hotReload: !prod,
@@ -66,9 +69,20 @@ module.exports = {
     ],
   },
   mode,
-  plugins: [new MiniCssExtractPlugin({ filename: 'build/bundle.css' })],
+  plugins: [
+    new MiniCssExtractPlugin({ filename: 'build/bundle.css' }),
+    new CssMinimizerPlugin()
+  ],
   devtool: prod ? false : 'source-map',
-  devServer: {
-    hot: true,
+  optimization: {
+    minimize: true,
+    minimizer: [
+      new CssMinimizerPlugin({
+        minify: CssMinimizerPlugin.cssnanoMinify,
+      }),
+      new TerserPlugin({
+        extractComments: false,
+      }),
+    ],
   },
 };
