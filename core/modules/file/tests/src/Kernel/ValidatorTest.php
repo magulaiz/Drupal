@@ -135,6 +135,7 @@ class ValidatorTest extends FileManagedUnitTestBase {
           'Only files with the following extensions are allowed: <em class="placeholder">exe txt</em>.',
         ],
       ],
+    ];
   }
 
   /**
