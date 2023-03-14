@@ -317,6 +317,7 @@ if [[ "$DRUPALCI" == "1" ]] && [[ $CKEDITOR5_PLUGINS_CHANGED == "1" ]]; then
   printf "\n"
 fi
 
+SVELTE_COMPILE_CHECK=0
 for FILE in $FILES; do
   STATUS=0;
   # Print a line to separate spellcheck output from per file output.
@@ -402,15 +403,14 @@ for FILE in $FILES; do
   ############################################################################
   ### SVELTE FILES
   ############################################################################
-  SVELTE_COMPILE_CHECK=0
   if [[ -f "$TOP_LEVEL/$FILE" ]] && [[ $FILE =~ \.svelte$ ]] && [[ "$SVELTE_COMPILE_CHECK" == "0" ]]; then
-    $SVELTE_COMPILE_CHECK=1
+    SVELTE_COMPILE_CHECK=1
     cd "$TOP_LEVEL/core"
     yarn run -s build:svelte
     git diff --quiet; NOCHANGES=$?
     if [ "$NOCHANGES" -ne 0 ]; then
       FINAL_STATUS=1
-      printf "\nSvelte ${red}compiled files do not match${reset}. Running yarn build and commiting the changs should fix this. \n"
+      printf "\nSvelte ${red}compiled files do not match${reset}. Running yarn build and commiting the changes should fix this. \n"
     else
 pr    printf "\nSvelte compiling ${green}successful${reset}\n"
     fi
