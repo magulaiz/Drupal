@@ -562,9 +562,9 @@ class MockDrupalDotOrg extends ProjectBrowserSourceBase implements ContainerFact
    */
   public function isProjectSafe(string $project_id): bool {
     try {
-      // phpcs:ignore DrupalPractice.CodeAnalysis.VariableAnalysis.UnusedVariable
       $response = $this->httpClient->request('GET', "https://www.drupal.org/api-d7/node.json", [
         'on_stats' => static function (TransferStats $stats) use (&$url) {
+          // phpcs:ignore DrupalPractice.CodeAnalysis.VariableAnalysis.UnusedVariable
           $url = $stats->getEffectiveUri();
         },
         'query' => ['field_project_machine_name' => $project_id],
@@ -572,9 +572,9 @@ class MockDrupalDotOrg extends ProjectBrowserSourceBase implements ContainerFact
     }
     catch (RequestException $re) {
       // Try a second time because sometimes d.o times out the request.
-      // phpcs:ignore DrupalPractice.CodeAnalysis.VariableAnalysis.UnusedVariable
       $response = $this->httpClient->request('GET', "https://www.drupal.org/api-d7/node.json", [
         'on_stats' => static function (TransferStats $stats) use (&$url) {
+          // phpcs:ignore DrupalPractice.CodeAnalysis.VariableAnalysis.UnusedVariable
           $url = $stats->getEffectiveUri();
         },
         'query' => ['field_project_machine_name' => $project_id],
