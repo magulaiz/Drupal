@@ -8,7 +8,7 @@ libraries:
   - core/normalize
   - umami/global
 
-dependenciers:
+dependencies:
   - drupal:sdc
 
 libraries-override:
