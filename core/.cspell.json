@@ -6,7 +6,7 @@
     "ignorePaths": [
       "**/.*.json",
       ".*ignore",
-      "**/.eslintrc.js",
+      "**/.eslintrc*.js",
       "composer.lock",
       "assets/vendor/**",
       "lib/Drupal/Component/Diff/**",
