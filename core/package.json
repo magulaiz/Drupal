@@ -8,8 +8,8 @@
     "node": ">= 16.0"
   },
   "scripts": {
-    "build": "yarn build:css & yarn build:ckeditor5 & yarn vendor-update",
-    "watch": "yarn watch:css & yarn watch:ckeditor5",
+    "build": "yarn build:css & yarn build:ckeditor5 * yarn build:svelte & yarn vendor-update",
+    "watch": "yarn watch:css & yarn watch:ckeditor5 & yarn watch:svelte",
     "build:css": "node ./scripts/css/postcss-build.js",
     "watch:css": "node ./scripts/css/postcss-watch.js",
     "lint:core-js": "node ./node_modules/eslint/bin/eslint.js .",

@@ -39,14 +39,19 @@ module.exports = {
                 )}`;
               },
             },
-            emitCss: prod,
+            emitCss: true,
             hotReload: !prod,
           },
         },
       },
       {
         test: /\.css$/,
-        use: [MiniCssExtractPlugin.loader, 'css-loader'],
+        use: [{
+          loader: MiniCssExtractPlugin.loader,
+          options: {
+            publicPath: path.join(__dirname, '/public/build'),
+          },
+        }, 'css-loader'],
       },
       {
         // required to prevent errors from Svelte on Webpack 5+
@@ -59,9 +64,7 @@ module.exports = {
   },
   mode,
   plugins: [
-    new MiniCssExtractPlugin({
-      filename: '[name].css',
-    }),
+    new MiniCssExtractPlugin({filename: 'build/bundle.css'}),
   ],
   devtool: prod ? false : 'source-map',
   devServer: {

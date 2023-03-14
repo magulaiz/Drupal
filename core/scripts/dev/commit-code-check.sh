@@ -400,6 +400,24 @@ for FILE in $FILES; do
   fi
 
   ############################################################################
+  ### SVELTE FILES
+  ############################################################################
+  SVELTE_COMPILE_CHECK=0
+  if [[ -f "$TOP_LEVEL/$FILE" ]] && [[ $FILE =~ \.svelte$ ]] && [[ "$SVELTE_COMPILE_CHECK" == "0" ]]; then
+    $SVELTE_COMPILE_CHECK=1
+    cd "$TOP_LEVEL/core"
+    yarn run -s build:svelte
+    git diff --quiet; NOCHANGES=$?
+    if [ "$NOCHANGES" -ne 0 ]; then
+      FINAL_STATUS=1
+      printf "\nSvelte ${red}compiled files do not match${reset}. Running yarn build and commiting the changs should fix this. \n"
+    else
+pr    printf "\nSvelte compiling ${green}successful${reset}\n"
+    fi
+    cd $TOP_LEVEL
+  fi
+
+  ############################################################################
   ### CSS FILES
   ############################################################################
   if [[ -f "$TOP_LEVEL/$FILE" ]] && [[ $FILE =~ \.css$ ]]; then
