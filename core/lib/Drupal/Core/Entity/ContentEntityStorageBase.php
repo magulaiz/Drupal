@@ -557,6 +557,9 @@ abstract class ContentEntityStorageBase extends EntityStorageBase implements Con
    * {@inheritdoc}
    */
   public function purgeFieldData(FieldDefinitionInterface $field_definition, $batch_size) {
+    if ($field_definition->getFieldStorageDefinition()->hasCustomStorage()) {
+      return 0;
+    }
     $items_by_entity = $this->readFieldItemsToPurge($field_definition, $batch_size);
 
     foreach ($items_by_entity as $items) {

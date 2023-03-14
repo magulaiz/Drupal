@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\field_ui\Functional;
 
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\Tests\BrowserTestBase;
@@ -17,6 +18,7 @@ use Drupal\views\Tests\ViewTestData;
 class FieldUIDeleteTest extends BrowserTestBase {
 
   use FieldUiTestTrait;
+  use StringTranslationTrait;
 
   /**
    * Modules to install.
@@ -142,6 +144,49 @@ class FieldUIDeleteTest extends BrowserTestBase {
     // Test that the View no longer depends on the deleted field.
     $dependencies = $view->getDependencies() + ['config' => []];
     $this->assertNotContains("field.storage.node.$field_name", $dependencies['config']);
+  }
+
+  /**
+   * Tests that deletion of a field using custom_storage works as expected.
+   */
+  public function testDeleteFieldCustomStorage() {
+    $field_label = $this->randomMachineName();
+    $field_name = 'test_custom_storage';
+
+    // Create a node type.
+    $type_name = strtolower($this->randomMachineName(8)) . '_test';
+    $type = $this->drupalCreateContentType(['name' => $type_name, 'type' => $type_name]);
+    $type_name = $type->id();
+    $bundle_path = 'admin/structure/types/manage/' . $type_name;
+
+    // Create a test field storage and field.
+    FieldStorageConfig::create([
+      'field_name' => $field_name,
+      'entity_type' => 'node',
+      'type' => 'test_field',
+      'custom_storage' => TRUE,
+    ])->save();
+    $field = FieldConfig::create([
+      'field_name' => $field_name,
+      'entity_type' => 'node',
+      'bundle' => $type_name,
+      'label' => $field_label,
+    ]);
+    $field->save();
+
+    // Check the config dependencies of the first field, the field storage must
+    // not be shown as being deleted yet.
+    $this->drupalGet("$bundle_path/fields/node.$type_name.$field_name/delete");
+    $this->assertSession()->pageTextNotContains($this->t('The listed configuration will be deleted.'));
+    $this->assertSession()->pageTextNotContains('test_view_field_delete');
+
+    // Delete the first field.
+    $this->fieldUIDeleteField($bundle_path, "node.$type_name.$field_name", $field_label, $type_name);
+
+    // Check that the field was deleted.
+    $this->assertNull(FieldConfig::loadByName('node', $type_name, $field_name), 'Field was deleted.');
+    // Check that the field storage was deleted too.
+    $this->assertNull(FieldStorageConfig::loadByName('node', $field_name), 'Field storage was deleted.');
   }
 
 }
