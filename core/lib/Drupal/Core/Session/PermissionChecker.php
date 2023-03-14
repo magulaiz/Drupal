@@ -5,7 +5,7 @@ namespace Drupal\Core\Session;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 
 /**
- * Calculates permissions for an account.
+ * Checks permissions for an account.
  */
 class PermissionChecker implements PermissionCheckerInterface {
 
