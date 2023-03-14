@@ -397,7 +397,7 @@ class EntityReferenceItem extends FieldItemBase implements OptionsProviderInterf
    * {@inheritdoc}
    */
   public function fieldSettingsForm(array $form, FormStateInterface $form_state) {
-    $field = $form_state->getFormObject()->getEntity();
+    $field = $this->getFieldDefinition();
 
     // Get all selection plugins for this entity type.
     $selection_plugins = \Drupal::service('plugin.manager.entity_reference_selection')->getSelectionGroups($this->getSetting('target_type'));
