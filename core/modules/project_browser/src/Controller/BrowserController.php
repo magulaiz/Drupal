@@ -78,7 +78,7 @@ class BrowserController extends ControllerBase {
    * @param \Drupal\project_browser\InstallReadiness|NULL $install_readiness
    *   The install readiness service.
    */
-  public function __construct(ModuleHandlerInterface $module_handler, ModuleExtensionList $module_list, RequestStack $request_stack, EnabledSourceHandler $enabled_source, InstallReadiness|null $install_readiness) {
+  public function __construct(ModuleHandlerInterface $module_handler, ModuleExtensionList $module_list, RequestStack $request_stack, EnabledSourceHandler $enabled_source, InstallReadiness|NULL $install_readiness) {
     $this->moduleHandler = $module_handler;
     $this->moduleList = $module_list;
     $this->requestStack = $request_stack;

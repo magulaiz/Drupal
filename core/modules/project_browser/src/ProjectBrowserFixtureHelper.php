@@ -321,6 +321,7 @@ class ProjectBrowserFixtureHelper {
       // phpcs:ignore DrupalPractice.CodeAnalysis.VariableAnalysis.UnusedVariable
       $response = $this->httpClient->request('GET', "https://www.drupal.org/api-d7/node.json", [
         'on_stats' => static function (TransferStats $stats) use (&$url) {
+          // phpcs:ignore DrupalPractice.CodeAnalysis.VariableAnalysis.UnusedVariable
           $url = $stats->getEffectiveUri();
         },
         'query' => $query,
@@ -330,6 +331,7 @@ class ProjectBrowserFixtureHelper {
       // Try a second time because sometimes d.o times out the request.
       $response = $this->httpClient->request('GET', "https://www.drupal.org/api-d7/node.json", [
         'on_stats' => static function (TransferStats $stats) use (&$url) {
+          // phpcs:ignore DrupalPractice.CodeAnalysis.VariableAnalysis.UnusedVariable
           $url = $stats->getEffectiveUri();
         },
         'query' => $query,
