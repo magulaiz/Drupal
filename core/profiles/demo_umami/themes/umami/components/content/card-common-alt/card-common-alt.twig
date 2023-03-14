@@ -80,6 +80,10 @@
 
 <article{{ attributes.addClass(classes) }}>
 
+  <div{{ content_attributes.addClass('node__content') }}>
+    {{ content }}
+  </div>
+  
   {{ title_prefix }}
   {% if label and not page %}
     <h2{{ title_attributes.addClass('node__title') }}>
@@ -94,8 +98,6 @@
     </a>
   </div>
 
-  <div{{ content_attributes.addClass('node__content') }}>
-    {{ content }}
-  </div>
+  
 
 </article>

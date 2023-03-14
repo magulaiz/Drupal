@@ -15,4 +15,4 @@ schemas:
         examples:
           - A recipe for success!
 libraryDependencies:
-  - sdc/card
+  - sdc/umami--card
