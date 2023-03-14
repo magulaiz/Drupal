@@ -22,7 +22,7 @@ class PermissionChecker implements PermissionCheckerInterface {
    */
   public function hasPermission(string $permission, AccountInterface $account): bool {
     // User #1 has all privileges.
-    if ($account->id() === 1) {
+    if ((int) $account->id() === 1) {
       return TRUE;
     }
 
