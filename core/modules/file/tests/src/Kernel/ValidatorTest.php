@@ -158,12 +158,12 @@ class ValidatorTest extends FileManagedUnitTestBase {
       'Invalid image, no extensions restriction' => [
         'core/tests/fixtures/files/invalid-img-test.png',
         '',
-        'The image file is invalid or the image type is not allowed. Allowed types: png jpeg jpg jpe gif',
+        'The image file is invalid or the image type is not allowed. Allowed types: png jpeg jpg jpe gif webp',
       ],
       'Not an image, no extensions restriction' => [
         'core/assets/vendor/jquery/jquery.min.js',
         '',
-        'The image file is invalid or the image type is not allowed. Allowed types: png jpeg jpg jpe gif',
+        'The image file is invalid or the image type is not allowed. Allowed types: png jpeg jpg jpe gif webp',
       ],
       // If extension restrictions are specified, we expect that the
       // validator returns an empty array if the test file extension is not in
@@ -211,12 +211,12 @@ class ValidatorTest extends FileManagedUnitTestBase {
    *   The file path of the image file to be tested.
    * @param string $extensions
    *   The allowed extensions restriction.
-   * @param string $expected_error
+   * @param string|null $expected_error
    *   The expected error message or NULL if no error expected.
    *
    * @dataProvider providerFileValidateIsImage
    */
-  public function testFileValidateIsImage(string $image_path, string $extensions, string $expected_error): void {
+  public function testFileValidateIsImage(string $image_path, string $extensions, ?string $expected_error): void {
     $image = File::create();
     $image->setFileUri($image_path);
     $image->setFilename(\Drupal::service('file_system')->basename($image_path));
