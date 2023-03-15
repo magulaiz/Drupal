@@ -5,7 +5,6 @@ namespace Drupal\filter;
 use Drupal\Core\Entity\EntityForm;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\filter\Plugin\Filter\FilterNull;
-use Drupal\user\Entity\Role;
 
 /**
  * Provides a base form for a filter format.
@@ -217,7 +216,7 @@ abstract class FilterFormatFormBase extends EntityForm {
     // Save user permissions.
     if ($permission = $format->getPermissionName()) {
       foreach ($form_state->getValue('roles') as $rid => $enabled) {
-        Role::load($rid)->changePermissions([$permission => $enabled])->save();
+        user_role_change_permissions($rid, [$permission => $enabled]);
       }
     }
 

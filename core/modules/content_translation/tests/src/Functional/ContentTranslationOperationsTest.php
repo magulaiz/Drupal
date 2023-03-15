@@ -90,10 +90,10 @@ class ContentTranslationOperationsTest extends NodeTestBase {
     // Ensure that an unintended misconfiguration of permissions does not open
     // access to the translation form, see https://www.drupal.org/node/2558905.
     $this->drupalLogout();
-    Role::load(Role::AUTHENTICATED_ID)->changePermissions([
+    user_role_change_permissions(Role::AUTHENTICATED_ID, [
       'create content translations' => TRUE,
       'access content' => FALSE,
-    ])->save();
+    ]);
     $this->drupalLogin($this->baseUser1);
     $this->drupalGet($node->toUrl('drupal:content-translation-overview'));
     $this->assertSession()->statusCodeEquals(403);

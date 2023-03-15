@@ -170,11 +170,11 @@ class CommentAnonymousTest extends CommentTestBase {
     $this->assertSession()->statusCodeEquals(403);
 
     // Reset.
-    Role::load(RoleInterface::ANONYMOUS_ID)->changePermissions([
+    user_role_change_permissions(RoleInterface::ANONYMOUS_ID, [
       'access comments' => FALSE,
       'post comments' => FALSE,
       'skip comment approval' => FALSE,
-    ])->save();
+    ]);
 
     // Attempt to view comments while disallowed.
     // NOTE: if authenticated user has permission to post comments, then a
@@ -188,22 +188,22 @@ class CommentAnonymousTest extends CommentTestBase {
     $this->drupalGet('comment/reply/node/' . $this->node->id() . '/comment');
     $this->assertSession()->statusCodeEquals(403);
 
-    Role::load(RoleInterface::ANONYMOUS_ID)->changePermissions([
+    user_role_change_permissions(RoleInterface::ANONYMOUS_ID, [
       'access comments' => TRUE,
       'post comments' => FALSE,
       'skip comment approval' => FALSE,
-    ])->save();
+    ]);
     $this->drupalGet('node/' . $this->node->id());
     // Verify that the comment field title is displayed.
     $this->assertSession()->responseMatches('@<h2[^>]*>Comments</h2>@');
     $this->assertSession()->linkExists('Log in', 1, 'Link to login was found.');
     $this->assertSession()->linkExists('register', 1, 'Link to register was found.');
 
-    Role::load(RoleInterface::ANONYMOUS_ID)->changePermissions([
+    user_role_change_permissions(RoleInterface::ANONYMOUS_ID, [
       'access comments' => FALSE,
       'post comments' => TRUE,
       'skip comment approval' => TRUE,
-    ])->save();
+    ]);
     $this->drupalGet('node/' . $this->node->id());
     // Verify that comments were not displayed.
     $this->assertSession()->responseNotMatches('@<h2[^>]*>Comments</h2>@');

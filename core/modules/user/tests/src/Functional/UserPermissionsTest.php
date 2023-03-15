@@ -184,7 +184,7 @@ class UserPermissionsTest extends BrowserTestBase {
       'administer users' => 1,
       'access user profiles' => 0,
     ];
-    Role::load($rid)->changePermissions($permissions)->save();
+    user_role_change_permissions($rid, $permissions);
 
     // Verify proper permission changes.
     $this->assertTrue($account->hasPermission('administer users'), 'User now has "administer users" permission.');

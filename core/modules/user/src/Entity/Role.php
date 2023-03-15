@@ -164,23 +164,6 @@ class Role extends ConfigEntityBase implements RoleInterface {
   /**
    * {@inheritdoc}
    */
-  public function changePermissions(array $permissions): static {
-    // Grant new permissions for the role.
-    $grant = array_filter($permissions);
-    if (!empty($grant)) {
-      $this->grantPermissions(array_keys($grant));
-    }
-    // Revoke permissions for the role.
-    $revoke = array_diff_assoc($permissions, $grant);
-    if (!empty($revoke)) {
-      $this->revokePermissions(array_keys($revoke));
-    }
-    return $this;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function isAdmin() {
     return (bool) $this->is_admin;
   }
