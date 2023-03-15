@@ -406,9 +406,12 @@ for FILE in $FILES; do
   if [[ -f "$TOP_LEVEL/$FILE" ]] && [[ $FILE =~ \.svelte$ ]] && [[ "$SVELTE_COMPILE_CHECK" == "0" ]]; then
     SVELTE_COMPILE_CHECK=1
     cd "$TOP_LEVEL/core"
+    COMPILED_JS_PRE=$(<./modules/project_browser/sveltejs/public/build/bundle.js)
+    COMPILED_CSS_PRE=$(<./modules/project_browser/sveltejs/public/build/bundle.css)
     yarn run -s build:svelte
-    git diff --quiet; NOCHANGES=$?
-    if [ "$NOCHANGES" -ne 0 ]; then
+    COMPILED_JS_POST=$(<./modules/project_browser/sveltejs/public/build/bundle.js)
+    COMPILED_CSS_POST=$(<./modules/project_browser/sveltejs/public/build/bundle.css)
+    if [[ "$COMPILED_JS_PRE" != "$COMPILED_JS_POST" ]] || [[ "$COMPILED_CSS_PRE" != "$COMPILED_CSS_POST" ]]; then
       FINAL_STATUS=1
       printf "\nSvelte ${red}compiled files do not match${reset}. Running yarn build and commiting the changes should fix this. \n"
       exit 1;
