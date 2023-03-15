@@ -504,9 +504,7 @@ class MediaLibraryWidget extends WidgetBase implements TrustedCallbackInterface 
     if (!$entity->isNew()) {
       $opener_parameters['entity_id'] = (string) $entity->id();
 
-      // Check if revision ID isn't empty because the value is lost when the
-      // entity is loaded from the Temp Store. Issue: #3332784.
-      if ($entity->getEntityType()->isRevisionable() && $entity->getRevisionId()) {
+      if ($entity->getEntityType()->isRevisionable()) {
         $opener_parameters['revision_id'] = (string) $entity->getRevisionId();
       }
     }
