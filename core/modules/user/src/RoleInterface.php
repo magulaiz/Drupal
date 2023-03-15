@@ -46,6 +46,8 @@ interface RoleInterface extends ConfigEntityInterface {
    *
    * @param string $permission
    *   The permission to grant.
+   * @param string ...$permissions
+   *   More permissions to grant.
    *
    * @return $this
    */
@@ -56,6 +58,8 @@ interface RoleInterface extends ConfigEntityInterface {
    *
    * @param string $permission
    *   The permission to revoke.
+   * @param string ...$permissions
+   *   More permissions to revoke.
    *
    * @return $this
    */
