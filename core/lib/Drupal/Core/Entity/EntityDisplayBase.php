@@ -125,15 +125,6 @@ abstract class EntityDisplayBase extends ConfigEntityBase implements EntityDispl
   protected $initialized = FALSE;
 
   /**
-   * The serialized keys.
-   *
-   * Internally used in __sleep() and __wakeup().
-   *
-   * @var array
-   */
-  private array $serializedKeys = [];
-
-  /**
    * {@inheritdoc}
    */
   public function __construct(array $values, $entity_type) {
@@ -565,7 +556,7 @@ abstract class EntityDisplayBase extends ConfigEntityBase implements EntityDispl
     $keys[] = '_serializedKeys';
     // Keep track of the initialization status.
     $keys[] = 'initialized';
-    $this->serializedKeys = $keys;
+    $this->_serializedKeys = $keys;
     return $keys;
   }
 
@@ -575,8 +566,8 @@ abstract class EntityDisplayBase extends ConfigEntityBase implements EntityDispl
   public function __wakeup() {
     // Determine what were the properties from toArray() that were saved in
     // __sleep().
-    $keys = $this->serializedKeys;
-    unset($this->serializedKeys);
+    $keys = $this->_serializedKeys;
+    unset($this->_serializedKeys);
     $values = array_intersect_key(get_object_vars($this), array_flip($keys));
     // Run those values through the __construct(), as if they came from a
     // regular entity load.

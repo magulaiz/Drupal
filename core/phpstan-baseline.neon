@@ -366,6 +366,11 @@ parameters:
 			path: lib/Drupal/Core/Entity/KeyValueStore/KeyValueContentEntityStorage.php
 
 		-
+			message: "#^Access to an undefined property Drupal\\\\Core\\\\Entity\\\\EntityDisplayBase\\:\\:\\$_serializedKeys\\.$#"
+			count: 2
+			path: lib/Drupal/Core/Entity/EntityDisplayBase.php
+
+		-
 			message: "#^Method Drupal\\\\Core\\\\Entity\\\\KeyValueStore\\\\KeyValueContentEntityStorage\\:\\:createWithSampleValues\\(\\) should return Drupal\\\\Core\\\\Entity\\\\FieldableEntityInterface but return statement is missing\\.$#"
 			count: 1
 			path: lib/Drupal/Core/Entity/KeyValueStore/KeyValueContentEntityStorage.php
