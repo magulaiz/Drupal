@@ -224,7 +224,7 @@ class NodeForm extends ContentEntityForm {
       '#access' => $preview_mode != DRUPAL_DISABLED && ($node->access('create') || $node->access('update')),
       '#value' => $this->t('Preview'),
       '#weight' => 20,
-      '#submit' => ['::submitForm', '::preview'],
+      '#submit' => ['::setInPreview', '::submitForm', '::preview'],
     ];
 
     if (array_key_exists('delete', $element)) {
@@ -232,6 +232,18 @@ class NodeForm extends ContentEntityForm {
     }
 
     return $element;
+  }
+
+  /**
+   * Form submission handler to set 'in_preview' flag.
+   *
+   * @param $form
+   *   An associative array containing the structure of the form.
+   * @param $form_state
+   *   The current state of the form.
+   */
+  public function setInPreview(array $form, FormStateInterface $form_state) {
+    $this->entity->in_preview = TRUE;
   }
 
   /**
@@ -244,7 +256,6 @@ class NodeForm extends ContentEntityForm {
    */
   public function preview(array $form, FormStateInterface $form_state) {
     $store = $this->tempStoreFactory->get('node_preview');
-    $this->entity->in_preview = TRUE;
     $store->set($this->entity->uuid(), $form_state);
 
     $route_parameters = [

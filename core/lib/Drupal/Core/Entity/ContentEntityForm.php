@@ -158,7 +158,7 @@ class ContentEntityForm extends EntityForm implements ContentEntityFormInterface
     $entity->setValidationRequired(!$form_state->getTemporaryValue('entity_validated'));
 
     // Save as a new revision if requested to do so.
-    if ($this->showRevisionUi() && !$form_state->isValueEmpty('revision')) {
+    if ($this->showRevisionUi() && !$form_state->isValueEmpty('revision') && !$entity->in_preview) {
       $entity->setNewRevision();
       if ($entity instanceof RevisionLogInterface) {
         // If a new revision is created, save the current user as
