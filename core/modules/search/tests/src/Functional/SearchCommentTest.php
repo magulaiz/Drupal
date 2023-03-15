@@ -8,6 +8,7 @@ use Drupal\comment\Tests\CommentTestTrait;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\Traits\Core\CronRunTrait;
+use Drupal\user\Entity\Role;
 use Drupal\user\RoleInterface;
 use Drupal\filter\Entity\FilterFormat;
 
@@ -305,7 +306,7 @@ class SearchCommentTest extends BrowserTestBase {
       'access comments' => $access_comments,
       'search content' => $search_content,
     ];
-    user_role_change_permissions($rid, $permissions);
+    Role::load($rid)->changePermissions($permissions)->save();
   }
 
   /**

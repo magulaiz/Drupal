@@ -6,6 +6,7 @@ use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\comment\CommentInterface;
 use Drupal\comment\CommentManagerInterface;
+use Drupal\user\Entity\Role;
 use Drupal\user\RoleInterface;
 use Drupal\comment\Entity\Comment;
 
@@ -89,12 +90,12 @@ class CommentLinksTest extends CommentTestBase {
 
     // Change user permissions.
     $perms = [
-      'access comments' => 1,
-      'post comments' => 1,
-      'skip comment approval' => 1,
-      'edit own comments' => 1,
+      'access comments',
+      'post comments',
+      'skip comment approval',
+      'edit own comments',
     ];
-    user_role_change_permissions(RoleInterface::ANONYMOUS_ID, $perms);
+    Role::load(RoleInterface::ANONYMOUS_ID)->grantPermissions($perms)->save();
 
     $nid = $this->node->id();
 

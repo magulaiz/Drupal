@@ -116,8 +116,8 @@ class FilterAdminTest extends BrowserTestBase {
       'create page content',
       'edit own page content',
     ]);
-    user_role_grant_permissions('authenticated', [$basic_html_format->getPermissionName()]);
-    user_role_grant_permissions('anonymous', [$restricted_html_format->getPermissionName()]);
+    Role::load(Role::AUTHENTICATED_ID)->grantPermission($basic_html_format->getPermissionName())->save();
+    Role::load(Role::ANONYMOUS_ID)->grantPermission($restricted_html_format->getPermissionName())->save();
     $this->drupalLogin($this->adminUser);
     $this->drupalPlaceBlock('local_actions_block');
   }

@@ -4,6 +4,7 @@ namespace Drupal\Tests\system\Functional\Common;
 
 use Drupal\node\NodeInterface;
 use Drupal\Tests\BrowserTestBase;
+use Drupal\user\Entity\Role;
 
 /**
  * Tests that anonymous users are not served any JavaScript.
@@ -32,7 +33,7 @@ class NoJavaScriptAnonymousTest extends BrowserTestBase {
     parent::setUp();
 
     // Grant the anonymous user the permission to look at user profiles.
-    user_role_grant_permissions('anonymous', ['access user profiles']);
+    Role::load(Role::ANONYMOUS_ID)->grantPermission('access user profiles')->save();
   }
 
   /**

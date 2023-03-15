@@ -8,6 +8,7 @@ use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
 use Drupal\comment\Entity\Comment;
 use Drupal\Core\Entity\Entity\EntityViewDisplay;
 use Drupal\Core\Entity\Entity\EntityViewMode;
+use Drupal\user\Entity\Role;
 use Drupal\user\RoleInterface;
 use Drupal\filter\Entity\FilterFormat;
 
@@ -77,7 +78,7 @@ class CommentInterfaceTest extends CommentTestBase {
 
     // Comment as anonymous with preview required.
     $this->drupalLogout();
-    user_role_grant_permissions(RoleInterface::ANONYMOUS_ID, ['access content', 'access comments', 'post comments', 'skip comment approval']);
+    Role::load(RoleInterface::ANONYMOUS_ID)->grantPermissions(['access content', 'access comments', 'post comments', 'skip comment approval'])->save();
     $anonymous_comment = $this->postComment($this->node, $this->randomMachineName(), $this->randomMachineName(), TRUE);
     $this->assertTrue($this->commentExists($anonymous_comment), 'Comment found.');
     $anonymous_comment->delete();

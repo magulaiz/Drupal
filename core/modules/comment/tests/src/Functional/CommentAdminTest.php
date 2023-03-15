@@ -5,6 +5,7 @@ namespace Drupal\Tests\comment\Functional;
 use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Component\Utility\Html;
 use Drupal\language\Entity\ConfigurableLanguage;
+use Drupal\user\Entity\Role;
 use Drupal\user\RoleInterface;
 use Drupal\comment\Entity\Comment;
 
@@ -34,11 +35,11 @@ class CommentAdminTest extends CommentTestBase {
    */
   public function testApprovalAdminInterface() {
     // Set anonymous comments to require approval.
-    user_role_change_permissions(RoleInterface::ANONYMOUS_ID, [
+    Role::load(RoleInterface::ANONYMOUS_ID)->changePermissions([
       'access comments' => TRUE,
       'post comments' => TRUE,
       'skip comment approval' => FALSE,
-    ]);
+    ])->save();
     $this->drupalLogin($this->adminUser);
     // Ensure that doesn't require contact info.
     $this->setCommentAnonymous('0');
@@ -127,11 +128,11 @@ class CommentAdminTest extends CommentTestBase {
    */
   public function testApprovalNodeInterface() {
     // Set anonymous comments to require approval.
-    user_role_change_permissions(RoleInterface::ANONYMOUS_ID, [
+    Role::load(RoleInterface::ANONYMOUS_ID)->changePermissions([
       'access comments' => TRUE,
       'post comments' => TRUE,
       'skip comment approval' => FALSE,
-    ]);
+    ])->save();
     $this->drupalLogin($this->adminUser);
     // Ensure that doesn't require contact info.
     $this->setCommentAnonymous('0');
@@ -204,11 +205,11 @@ class CommentAdminTest extends CommentTestBase {
    */
   public function testEditComment() {
     // Enable anonymous user comments.
-    user_role_grant_permissions(RoleInterface::ANONYMOUS_ID, [
+    Role::load(RoleInterface::ANONYMOUS_ID)->grantPermissions([
       'access comments',
       'post comments',
       'skip comment approval',
-    ]);
+    ])->save();
 
     // Log in as a web user.
     $this->drupalLogin($this->webUser);

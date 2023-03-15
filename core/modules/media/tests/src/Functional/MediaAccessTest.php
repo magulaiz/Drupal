@@ -85,7 +85,7 @@ class MediaAccessTest extends MediaFunctionalTestBase {
     /** @var \Drupal\user\RoleInterface $role */
     $role = Role::load(RoleInterface::AUTHENTICATED_ID);
 
-    user_role_revoke_permissions($role->id(), ['view media']);
+    $role->revokePermission('view media')->save();
 
     // Test 'create BUNDLE media' permission.
     $this->drupalGet('media/add/' . $media_type->id());
@@ -96,8 +96,7 @@ class MediaAccessTest extends MediaFunctionalTestBase {
     $this->drupalGet('media/add/' . $media_type->id());
     $this->assertCacheContext('user.permissions');
     $assert_session->statusCodeEquals(200);
-    user_role_revoke_permissions($role->id(), $permissions);
-    $role = Role::load(RoleInterface::AUTHENTICATED_ID);
+    $role->revokePermissions($permissions)->save();
 
     // Verify the author can not view the unpublished media item without
     // 'view own unpublished media' permission.
@@ -126,8 +125,7 @@ class MediaAccessTest extends MediaFunctionalTestBase {
     $this->drupalGet('media/add/' . $media_type->id());
     $this->assertCacheContext('user.permissions');
     $assert_session->statusCodeEquals(200);
-    user_role_revoke_permissions($role->id(), $permissions);
-    $role = Role::load(RoleInterface::AUTHENTICATED_ID);
+    $role->revokePermissions($permissions)->save();
 
     // Test 'edit own BUNDLE media' and 'delete own BUNDLE media' permissions.
     $this->drupalGet('media/' . $user_media->id() . '/edit');
@@ -147,8 +145,7 @@ class MediaAccessTest extends MediaFunctionalTestBase {
     $this->drupalGet('media/' . $user_media->id() . '/delete');
     $this->assertCacheContext('user');
     $assert_session->statusCodeEquals(200);
-    user_role_revoke_permissions($role->id(), $permissions);
-    $role = Role::load(RoleInterface::AUTHENTICATED_ID);
+    $role->revokePermissions($permissions)->save();
 
     // Test 'edit any BUNDLE media' and 'delete any BUNDLE media' permissions.
     $this->drupalGet('media/' . $media->id() . '/edit');
@@ -222,10 +219,8 @@ class MediaAccessTest extends MediaFunctionalTestBase {
     $user_media->save();
 
     $this->drupalLogin($this->nonAdminUser);
-    /** @var \Drupal\user\RoleInterface $role */
     $role = Role::load(RoleInterface::AUTHENTICATED_ID);
-
-    user_role_revoke_permissions($role->id(), ['view media']);
+    $role->revokePermission('view media')->save();
 
     $this->drupalGet('media/' . $media->id());
     $this->assertCacheContext('user.permissions');
