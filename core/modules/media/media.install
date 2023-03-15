@@ -47,8 +47,8 @@ function media_install() {
 
   // Grant the "view media" permission to all users by default.
   if (\Drupal::moduleHandler()->moduleExists('user')) {
-    Role::load(RoleInterface::ANONYMOUS_ID)->grantPermission('view media')->trustData()->save();
-    Role::load(RoleInterface::AUTHENTICATED_ID)->grantPermission('view media')->trustData()->save();
+    Role::load(RoleInterface::ANONYMOUS_ID)?->grantPermission('view media')->trustData()->save();
+    Role::load(RoleInterface::AUTHENTICATED_ID)?->grantPermission('view media')->trustData()->save();
   }
 }
 
