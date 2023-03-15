@@ -18,10 +18,8 @@
 }
 
 .item-list ul {
-  margin-block-start: 0.25em; /* @todo One-off value. */
-  margin-block-end: 0.25em; /* @todo One-off value. */
-  margin-inline-start: var(--item-list-spacing-l);
-  margin-inline-end: 0;
+  margin-block: 0.25em; /* @todo One-off value. */
+  margin-inline: var(--item-list-spacing-l) 0;
   list-style-type: disc;
   list-style-image: none;
 }
