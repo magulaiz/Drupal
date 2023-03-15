@@ -144,23 +144,23 @@ for FILE in $FILES; do
     PHPCS_XML_DIST_FILE_CHANGED=1;
   fi;
 
-#  if [[ $FILE == "core/phpstan-baseline.neon" || $FILE == "core/phpstan.neon.dist" ]]; then
-#    PHPSTAN_DIST_FILE_CHANGED=1;
-#  fi;
-#
-#  if [[ $FILE == "core/.eslintrc.json" || $FILE == "core/.eslintrc.passing.json" || $FILE == "core/.eslintrc.jquery.json" ]]; then
-#    ESLINT_CONFIG_PASSING_FILE_CHANGED=1;
-#  fi;
-#
-#  if [[ $FILE == "core/.stylelintignore" || $FILE == "core/.stylelintrc.json" ]]; then
-#    STYLELINT_CONFIG_FILE_CHANGED=1;
-#  fi;
-#
-#  # If JavaScript packages change, then rerun all JavaScript style checks.
-#  if [[ $FILE == "core/package.json" || $FILE == "core/yarn.lock" ]]; then
-#    ESLINT_CONFIG_PASSING_FILE_CHANGED=1;
-#    STYLELINT_CONFIG_FILE_CHANGED=1;
-#  fi;
+  if [[ $FILE == "core/phpstan-baseline.neon" || $FILE == "core/phpstan.neon.dist" ]]; then
+    PHPSTAN_DIST_FILE_CHANGED=1;
+  fi;
+
+  if [[ $FILE == "core/.eslintrc.json" || $FILE == "core/.eslintrc.passing.json" || $FILE == "core/.eslintrc.jquery.json" ]]; then
+    ESLINT_CONFIG_PASSING_FILE_CHANGED=1;
+  fi;
+
+  if [[ $FILE == "core/.stylelintignore" || $FILE == "core/.stylelintrc.json" ]]; then
+    STYLELINT_CONFIG_FILE_CHANGED=1;
+  fi;
+
+  # If JavaScript packages change, then rerun all JavaScript style checks.
+  if [[ $FILE == "core/package.json" || $FILE == "core/yarn.lock" ]]; then
+    ESLINT_CONFIG_PASSING_FILE_CHANGED=1;
+    STYLELINT_CONFIG_FILE_CHANGED=1;
+  fi;
 
   if [[ -f "$TOP_LEVEL/$FILE" ]] && [[ $FILE =~ \.js$ ]] && [[ $FILE =~ ^core/modules/ckeditor5/js/build || $FILE =~ ^core/modules/ckeditor5/js/ckeditor5_plugins ]]; then
     CKEDITOR5_PLUGINS_CHANGED=1;
