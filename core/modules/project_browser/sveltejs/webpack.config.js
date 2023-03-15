@@ -3,7 +3,6 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
 const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
 
-
 const path = require('path');
 
 const mode = process.env.NODE_ENV || 'development';
@@ -71,7 +70,7 @@ module.exports = {
   mode,
   plugins: [
     new MiniCssExtractPlugin({ filename: 'build/bundle.css' }),
-    new CssMinimizerPlugin()
+    new CssMinimizerPlugin(),
   ],
   devtool: prod ? false : 'source-map',
   optimization: {
