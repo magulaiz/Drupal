@@ -11,6 +11,7 @@
  * @see template_preprocess_status_report()
  */
 #}
+{{ attach_library('system/drupal.system.status.report.counters') }}
 {% if counters|length == 3 %}
   {% set element_width_class = ' system-status-report-counters__item--third-width' %}
 {% elseif counters|length == 2 %}

@@ -11,6 +11,7 @@
  * @ingroup themeable
  */
 #}
+{{ attach_library('system/drupal.system.status.counter') }}
 <span class="system-status-counter__status-icon system-status-counter__status-icon--{{ severity }}"></span>
 <span>{{ amount }} {{ text }}</span>
 <a href="#{{ severity }}"><span class="visually-hidden">{{ text }} </span>Details</a>
