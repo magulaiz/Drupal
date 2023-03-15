@@ -61,3 +61,7 @@
 .quickedit .icon-close:before {
   top: 8px;
 }
+
+.quickedit-toolgroup.wysiwyg-main form label {
+  padding-right: 1rem;
+}

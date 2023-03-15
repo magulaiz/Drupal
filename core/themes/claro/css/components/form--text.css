@@ -145,6 +145,10 @@ _:-ms-fullscreen,
   -webkit-text-fill-color: #828388;
 }
 
+.quickedit-toolgroup.wysiwyg-main form label {
+  padding-right: 1rem;
+}
+
 /**
  * Improve form element usability on narrow devices.
  */
