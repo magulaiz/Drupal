@@ -10,6 +10,7 @@ use Drupal\Core\Url;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\Tests\field_ui\Traits\FieldUiTestTrait;
+use Drupal\user\Entity\Role;
 use Drupal\user\RoleInterface;
 use Drupal\file\Entity\File;
 use Drupal\user\Entity\User;
@@ -247,7 +248,7 @@ class FileFieldWidgetTest extends FileFieldTestBase {
   public function testPrivateFileSetting() {
     $node_storage = $this->container->get('entity_type.manager')->getStorage('node');
     // Grant the admin user required permissions.
-    user_role_grant_permissions($this->adminUser->roles[0]->target_id, ['administer node fields']);
+    $this->adminUser->roles[0]->entity->grantPermission('administer node fields')->save();
 
     $type_name = 'article';
     $field_name = strtolower($this->randomMachineName());
@@ -289,12 +290,12 @@ class FileFieldWidgetTest extends FileFieldTestBase {
 
     // Grant the admin user required comment permissions.
     $roles = $this->adminUser->getRoles();
-    user_role_grant_permissions($roles[1], ['administer comment fields', 'administer comments']);
+    Role::load($roles[1])->grantPermissions(['administer comment fields', 'administer comments'])->save();
 
     // Revoke access comments permission from anon user, grant post to
     // authenticated.
-    user_role_revoke_permissions(RoleInterface::ANONYMOUS_ID, ['access comments']);
-    user_role_grant_permissions(RoleInterface::AUTHENTICATED_ID, ['post comments', 'skip comment approval']);
+    Role::load(RoleInterface::ANONYMOUS_ID)->revokePermission('access comments')->save();
+    Role::load(RoleInterface::AUTHENTICATED_ID)->grantPermissions(['post comments', 'skip comment approval'])->save();
 
     // Create a new field.
     $this->addDefaultCommentField('node', 'article');
@@ -456,11 +457,11 @@ class FileFieldWidgetTest extends FileFieldTestBase {
     $attacker_user = User::getAnonymousUser();
 
     // Set up permissions for anonymous attacker user.
-    user_role_change_permissions(RoleInterface::ANONYMOUS_ID, [
-      'access content' => TRUE,
-      'create article content' => TRUE,
-      'edit any article content' => TRUE,
-    ]);
+    Role::load(RoleInterface::ANONYMOUS_ID)->grantPermissions([
+      'access content',
+      'create article content',
+      'edit any article content',
+    ])->save();
 
     // Log out so as to be the anonymous attacker user.
     $this->drupalLogout();
@@ -474,7 +475,7 @@ class FileFieldWidgetTest extends FileFieldTestBase {
    */
   public function testMaximumUploadFileSizeValidation() {
     // Grant the admin user required permissions.
-    user_role_grant_permissions($this->adminUser->roles[0]->target_id, ['administer node fields']);
+    $this->adminUser->roles[0]->entity->grantPermission('administer node fields')->save();
 
     $type_name = 'article';
     $field_name = strtolower($this->randomMachineName());
@@ -501,7 +502,7 @@ class FileFieldWidgetTest extends FileFieldTestBase {
    */
   public function testFileExtensionsSetting() {
     // Grant the admin user required permissions.
-    user_role_grant_permissions($this->adminUser->roles[0]->target_id, ['administer node fields']);
+    $this->adminUser->roles[0]->entity->grantPermission('administer node fields')->save();
 
     $type_name = 'article';
     $field_name = strtolower($this->randomMachineName());

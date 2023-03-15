@@ -7,6 +7,7 @@
 
 use Drupal\Core\Url;
 use Drupal\Core\Database\Database;
+use Drupal\user\Entity\Role;
 use Drupal\user\RoleInterface;
 
 /**
@@ -129,8 +130,8 @@ function node_install() {
   // these permissions. Doing so also allows tests to continue to operate as
   // expected without first having to manually grant these default permissions.
   if (\Drupal::moduleHandler()->moduleExists('user')) {
-    user_role_grant_permissions(RoleInterface::ANONYMOUS_ID, ['access content']);
-    user_role_grant_permissions(RoleInterface::AUTHENTICATED_ID, ['access content']);
+    Role::load(RoleInterface::ANONYMOUS_ID)->grantPermission('access content')->trustData()->save();
+    Role::load(RoleInterface::AUTHENTICATED_ID)->grantPermission('access content')->trustData()->save();
   }
 
   // Populate the node access table.

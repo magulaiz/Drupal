@@ -4,6 +4,7 @@ namespace Drupal\Tests\file\Functional;
 
 use Drupal\file\Entity\File;
 use Drupal\node\Entity\NodeType;
+use Drupal\user\Entity\Role;
 use Drupal\user\RoleInterface;
 
 /**
@@ -135,13 +136,10 @@ class FilePrivateTest extends FileFieldTestBase {
     // As an anonymous user, create a temporary file with no references and
     // confirm that only the session that uploaded it may view it.
     $this->drupalLogout();
-    user_role_change_permissions(
-      RoleInterface::ANONYMOUS_ID,
-      [
-        "create $type_name content" => TRUE,
-        'access content' => TRUE,
-      ]
-    );
+    Role::load(RoleInterface::ANONYMOUS_ID)->grantPermissions([
+      "create $type_name content" => TRUE,
+      'access content',
+    ])->save();
     $test_file = $this->getTestFile('text');
     $this->drupalGet('node/add/' . $type_name);
     $edit = ['files[' . $field_name . '_0]' => $file_system->realpath($test_file->getFileUri())];

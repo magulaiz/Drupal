@@ -6,6 +6,7 @@ use Drupal\block\Entity\Block;
 use Drupal\Core\Url;
 use Drupal\node\Entity\NodeType;
 use Drupal\Tests\BrowserTestBase;
+use Drupal\user\Entity\Role;
 use Drupal\user\RoleInterface;
 use PHPUnit\Framework\ExpectationFailedException;
 
@@ -307,9 +308,7 @@ class BreadcrumbTest extends BrowserTestBase {
     // Verify breadcrumbs on user and user/%.
     // We need to log back in and out below, and cannot simply grant the
     // 'administer users' permission, since user_page() makes your head explode.
-    user_role_grant_permissions(RoleInterface::ANONYMOUS_ID, [
-      'access user profiles',
-    ]);
+    Role::load(RoleInterface::ANONYMOUS_ID)->grantPermission('access user profiles')->save();
 
     // Verify breadcrumb on front page.
     $this->assertBreadcrumb('<front>', []);

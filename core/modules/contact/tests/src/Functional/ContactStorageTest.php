@@ -3,6 +3,7 @@
 namespace Drupal\Tests\contact\Functional;
 
 use Drupal\contact\Entity\Message;
+use Drupal\user\Entity\Role;
 use Drupal\user\RoleInterface;
 
 /**
@@ -57,7 +58,7 @@ class ContactStorageTest extends ContactSitewideTest {
     $this->assertSession()->pageTextContains('Contact form ' . $label . ' has been added.');
 
     // Ensure that anonymous can submit site-wide contact form.
-    user_role_grant_permissions(RoleInterface::ANONYMOUS_ID, ['access site-wide contact form']);
+    Role::load(RoleInterface::ANONYMOUS_ID)->grantPermission('access site-wide contact form')->save();
     $this->drupalLogout();
     $this->drupalGet('contact');
     $this->assertSession()->pageTextContains('Your email address');

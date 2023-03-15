@@ -62,7 +62,7 @@ class MediaRevisionTest extends MediaFunctionalTestBase {
 
     // Test 'view all media revisions' permission ('view media' permission is
     // needed as well).
-    user_role_revoke_permissions($role->id(), ['view media', 'view all media revisions']);
+    $role->revokePermissions(['view media', 'view all media revisions'])->save();
     $this->drupalGet('media/' . $media->id() . '/revisions/' . $media->getRevisionId() . '/view');
     $assert->statusCodeEquals(403);
     $this->grantPermissions($role, ['view media', 'view all media revisions']);

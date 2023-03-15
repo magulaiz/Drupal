@@ -943,8 +943,15 @@ function user_roles($membersonly = FALSE, $permission = NULL) {
  *
  * @see user_role_grant_permissions()
  * @see user_role_revoke_permissions()
+ *
+ * @deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use
+ *   Drupal\user\Entity\Role::changePermissions() instead. Do not forget to call
+ *   Drupal\user\Entity\Role::save() afterwards.
+ *
+ * @see https://www.drupal.org/node/3348027
  */
 function user_role_change_permissions($rid, array $permissions = []) {
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use Drupal\user\Entity\Role::changePermissions() instead. Do not forget to call Drupal\user\Entity\Role::save() afterwards. See https://www.drupal.org/node/3348027', E_USER_DEPRECATED);
   // Grant new permissions for the role.
   $grant = array_filter($permissions);
   if (!empty($grant)) {
@@ -967,8 +974,16 @@ function user_role_change_permissions($rid, array $permissions = []) {
  *
  * @see user_role_change_permissions()
  * @see user_role_revoke_permissions()
+ *
+ * @deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use
+ *   Drupal\user\Entity\Role::grantPermission() or
+ *   Drupal\user\Entity\Role::grantPermissions() instead. Do not forget to call
+ *   Drupal\user\Entity\Role::save() afterwards.
+ *
+ * @see https://www.drupal.org/node/3348027
  */
 function user_role_grant_permissions($rid, array $permissions = []) {
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use Drupal\user\Entity\Role::grantPermission() or Drupal\user\Entity\Role::grantPermissions() instead. Do not forget to call Drupal\user\Entity\Role::save() afterwards. See https://www.drupal.org/node/3348027', E_USER_DEPRECATED);
   // Grant new permissions for the role.
   if ($role = Role::load($rid)) {
     foreach ($permissions as $permission) {
@@ -988,8 +1003,16 @@ function user_role_grant_permissions($rid, array $permissions = []) {
  *
  * @see user_role_change_permissions()
  * @see user_role_grant_permissions()
+ *
+ * @deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use
+ *   Drupal\user\Entity\Role::revokePermission() or
+ *   Drupal\user\Entity\Role::revokePermissions() instead. Do not forget to call
+ *   Drupal\user\Entity\Role::save() afterwards.
+ *
+ * @see https://www.drupal.org/node/3348027
  */
 function user_role_revoke_permissions($rid, array $permissions = []) {
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use Drupal\user\Entity\Role::revokePermission() or Drupal\user\Entity\Role::revokePermissions() instead. Do not forget to call Drupal\user\Entity\Role::save() afterwards. See https://www.drupal.org/node/3348027', E_USER_DEPRECATED);
   // Revoke permissions for the role.
   $role = Role::load($rid);
   foreach ($permissions as $permission) {

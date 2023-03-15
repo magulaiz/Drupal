@@ -4,6 +4,7 @@ namespace Drupal\Tests\system\Functional\System;
 
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\system\Functional\Cache\AssertPageCacheContextsAndTagsTrait;
+use Drupal\user\Entity\Role;
 use Drupal\user\RoleInterface;
 
 /**
@@ -47,8 +48,8 @@ class AccessDeniedTest extends BrowserTestBase {
     $this->adminUser->roles[] = 'administrator';
     $this->adminUser->save();
 
-    user_role_grant_permissions(RoleInterface::ANONYMOUS_ID, ['access user profiles']);
-    user_role_grant_permissions(RoleInterface::AUTHENTICATED_ID, ['access user profiles']);
+    Role::load(RoleInterface::ANONYMOUS_ID)->grantPermission('access user profiles')->save();
+    Role::load(RoleInterface::AUTHENTICATED_ID)->grantPermission('access user profiles')->save();
   }
 
   public function testAccessDenied() {
