@@ -457,11 +457,11 @@ class FileFieldWidgetTest extends FileFieldTestBase {
     $attacker_user = User::getAnonymousUser();
 
     // Set up permissions for anonymous attacker user.
-    Role::load(RoleInterface::ANONYMOUS_ID)->grantPermission(
-      'access content',
-      'create article content',
-      'edit any article content',
-    )->save();
+    user_role_change_permissions(RoleInterface::ANONYMOUS_ID, [
+      'access content' => TRUE,
+      'create article content' => TRUE,
+      'edit any article content' => TRUE,
+    ]);
 
     // Log out so as to be the anonymous attacker user.
     $this->drupalLogout();

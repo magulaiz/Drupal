@@ -3,7 +3,6 @@
 namespace Drupal\Tests\file\Functional;
 
 use Drupal\node\Entity\Node;
-use Drupal\user\Entity\Role;
 use Drupal\user\RoleInterface;
 use Drupal\file\Entity\File;
 
@@ -25,10 +24,10 @@ class FileFieldAnonymousSubmissionTest extends FileFieldTestBase {
   protected function setUp(): void {
     parent::setUp();
     // Set up permissions for anonymous attacker user.
-    Role::load(RoleInterface::ANONYMOUS_ID)->grantPermission(
-      'create article content',
-      'access content',
-    )->save();
+    user_role_change_permissions(RoleInterface::ANONYMOUS_ID, [
+      'create article content' => TRUE,
+      'access content' => TRUE,
+    ]);
   }
 
   /**

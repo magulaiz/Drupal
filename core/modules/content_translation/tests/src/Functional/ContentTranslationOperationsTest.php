@@ -90,20 +90,26 @@ class ContentTranslationOperationsTest extends NodeTestBase {
     // Ensure that an unintended misconfiguration of permissions does not open
     // access to the translation form, see https://www.drupal.org/node/2558905.
     $this->drupalLogout();
-    user_role_change_permissions(Role::AUTHENTICATED_ID, [
-      'create content translations' => TRUE,
-      'access content' => FALSE,
-    ]);
+    user_role_change_permissions(
+      Role::AUTHENTICATED_ID,
+      [
+        'create content translations' => TRUE,
+        'access content' => FALSE,
+      ]
+    );
     $this->drupalLogin($this->baseUser1);
     $this->drupalGet($node->toUrl('drupal:content-translation-overview'));
     $this->assertSession()->statusCodeEquals(403);
 
     // Ensure that the translation overview is also not accessible when the user
     // has 'access content', but the node is not published.
-    Role::load(Role::AUTHENTICATED_ID)->grantPermission(
-      'create content translations',
-      'access content',
-    )->save();
+    user_role_change_permissions(
+      Role::AUTHENTICATED_ID,
+      [
+        'create content translations' => TRUE,
+        'access content' => TRUE,
+      ]
+    );
     $node->setUnpublished()->save();
     $this->drupalGet($node->toUrl('drupal:content-translation-overview'));
     $this->assertSession()->statusCodeEquals(403);
@@ -112,10 +118,13 @@ class ContentTranslationOperationsTest extends NodeTestBase {
     // Ensure the 'Translate' local task does not show up anymore when disabling
     // translations for a content type.
     $node->setPublished()->save();
-    Role::load(Role::AUTHENTICATED_ID)->grantPermission(
-      'administer content translation',
-      'administer languages',
-    )->save();
+    user_role_change_permissions(
+      Role::AUTHENTICATED_ID,
+      [
+        'administer content translation' => TRUE,
+        'administer languages' => TRUE,
+      ]
+    );
     $this->drupalPlaceBlock('local_tasks_block');
     $this->drupalLogin($this->baseUser2);
     $this->drupalGet('node/' . $node->id());
@@ -145,7 +154,12 @@ class ContentTranslationOperationsTest extends NodeTestBase {
     $this->assertTrue(content_translation_translate_access($node)->isAllowed());
     $access_control_handler->resetCache();
 
-    Role::load(Role::AUTHENTICATED_ID)->revokePermission('access content')->save();
+    user_role_change_permissions(
+      Role::AUTHENTICATED_ID,
+      [
+        'access content' => FALSE,
+      ]
+    );
 
     $user = $this->createUser(['create content translations']);
     $this->drupalLogin($user);

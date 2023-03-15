@@ -224,9 +224,9 @@ class FilterFormat extends ConfigEntityBase implements FilterFormatInterface, En
       // to specify a list of user roles to grant access to for the new format;
       // apply the defined user role permissions when a new format is inserted
       // and has a non-empty $roles property.
-      // Note: \Drupal\user\Entity\Role::changePermissions() triggers a call
-      // chain back into \Drupal\filter\FilterPermissions::permissions() and
-      // lastly filter_formats(), so its cache must be reset upfront.
+      // Note: user_role_change_permissions() triggers a call chain back into
+      // \Drupal\filter\FilterPermissions::permissions() and lastly
+      // filter_formats(), so its cache must be reset upfront.
       if (($roles = $this->get('roles')) && $permission = $this->getPermissionName()) {
         foreach (user_roles() as $rid => $name) {
           $enabled = in_array($rid, $roles, TRUE);
