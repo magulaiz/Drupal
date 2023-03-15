@@ -171,7 +171,7 @@ interface ConfigEntityInterface extends EntityInterface, ThirdPartySettingsInter
    * @deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. There is no
    *   replacement.
    *
-   * @see https://www.drupal.org/node/3347842
+   * @see https://www.drupal.org/node/3348180
    */
   public function trustData();
 
@@ -184,7 +184,7 @@ interface ConfigEntityInterface extends EntityInterface, ThirdPartySettingsInter
    * @deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. There is no
    *   replacement.
    *
-   * @see https://www.drupal.org/node/3347842
+   * @see https://www.drupal.org/node/3348180
    */
   public function hasTrustedData();
 
