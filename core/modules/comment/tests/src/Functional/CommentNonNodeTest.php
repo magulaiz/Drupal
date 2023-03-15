@@ -87,16 +87,16 @@ class CommentNonNodeTest extends BrowserTestBase {
     ]);
 
     // Enable anonymous and authenticated user comments.
-    Role::load(RoleInterface::ANONYMOUS_ID)->grantPermissions([
+    Role::load(RoleInterface::ANONYMOUS_ID)->grantPermission(
       'access comments',
       'post comments',
       'skip comment approval',
-    ])->save();
-    Role::load(RoleInterface::AUTHENTICATED_ID)->grantPermissions([
+    )->save();
+    Role::load(RoleInterface::AUTHENTICATED_ID)->grantPermission(
       'access comments',
       'post comments',
       'skip comment approval',
-    ])->save();
+    )->save();
 
     // Create a test entity.
     $random_label = $this->randomMachineName();

@@ -95,7 +95,7 @@ class CommentLinksTest extends CommentTestBase {
       'skip comment approval',
       'edit own comments',
     ];
-    Role::load(RoleInterface::ANONYMOUS_ID)->grantPermissions($perms)->save();
+    Role::load(RoleInterface::ANONYMOUS_ID)->grantPermission(...$perms)->save();
 
     $nid = $this->node->id();
 

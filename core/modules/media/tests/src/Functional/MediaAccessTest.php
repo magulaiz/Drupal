@@ -96,7 +96,7 @@ class MediaAccessTest extends MediaFunctionalTestBase {
     $this->drupalGet('media/add/' . $media_type->id());
     $this->assertCacheContext('user.permissions');
     $assert_session->statusCodeEquals(200);
-    $role->revokePermissions($permissions)->save();
+    $role->revokePermission(...$permissions)->save();
 
     // Verify the author can not view the unpublished media item without
     // 'view own unpublished media' permission.
@@ -125,7 +125,7 @@ class MediaAccessTest extends MediaFunctionalTestBase {
     $this->drupalGet('media/add/' . $media_type->id());
     $this->assertCacheContext('user.permissions');
     $assert_session->statusCodeEquals(200);
-    $role->revokePermissions($permissions)->save();
+    $role->revokePermission(...$permissions)->save();
 
     // Test 'edit own BUNDLE media' and 'delete own BUNDLE media' permissions.
     $this->drupalGet('media/' . $user_media->id() . '/edit');
@@ -145,7 +145,7 @@ class MediaAccessTest extends MediaFunctionalTestBase {
     $this->drupalGet('media/' . $user_media->id() . '/delete');
     $this->assertCacheContext('user');
     $assert_session->statusCodeEquals(200);
-    $role->revokePermissions($permissions)->save();
+    $role->revokePermission(...$permissions)->save();
 
     // Test 'edit any BUNDLE media' and 'delete any BUNDLE media' permissions.
     $this->drupalGet('media/' . $media->id() . '/edit');

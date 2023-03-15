@@ -100,10 +100,10 @@ class ContentTranslationOperationsTest extends NodeTestBase {
 
     // Ensure that the translation overview is also not accessible when the user
     // has 'access content', but the node is not published.
-    Role::load(Role::AUTHENTICATED_ID)->grantPermissions([
+    Role::load(Role::AUTHENTICATED_ID)->grantPermission(
       'create content translations',
       'access content',
-    ])->save();
+    )->save();
     $node->setUnpublished()->save();
     $this->drupalGet($node->toUrl('drupal:content-translation-overview'));
     $this->assertSession()->statusCodeEquals(403);
@@ -112,10 +112,10 @@ class ContentTranslationOperationsTest extends NodeTestBase {
     // Ensure the 'Translate' local task does not show up anymore when disabling
     // translations for a content type.
     $node->setPublished()->save();
-    Role::load(Role::AUTHENTICATED_ID)->grantPermissions([
+    Role::load(Role::AUTHENTICATED_ID)->grantPermission(
       'administer content translation',
       'administer languages',
-    ])->save();
+    )->save();
     $this->drupalPlaceBlock('local_tasks_block');
     $this->drupalLogin($this->baseUser2);
     $this->drupalGet('node/' . $node->id());

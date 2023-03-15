@@ -290,12 +290,12 @@ class FileFieldWidgetTest extends FileFieldTestBase {
 
     // Grant the admin user required comment permissions.
     $roles = $this->adminUser->getRoles();
-    Role::load($roles[1])->grantPermissions(['administer comment fields', 'administer comments'])->save();
+    Role::load($roles[1])->grantPermission('administer comment fields', 'administer comments')->save();
 
     // Revoke access comments permission from anon user, grant post to
     // authenticated.
     Role::load(RoleInterface::ANONYMOUS_ID)->revokePermission('access comments')->save();
-    Role::load(RoleInterface::AUTHENTICATED_ID)->grantPermissions(['post comments', 'skip comment approval'])->save();
+    Role::load(RoleInterface::AUTHENTICATED_ID)->grantPermission('post comments', 'skip comment approval')->save();
 
     // Create a new field.
     $this->addDefaultCommentField('node', 'article');
@@ -457,11 +457,11 @@ class FileFieldWidgetTest extends FileFieldTestBase {
     $attacker_user = User::getAnonymousUser();
 
     // Set up permissions for anonymous attacker user.
-    Role::load(RoleInterface::ANONYMOUS_ID)->grantPermissions([
+    Role::load(RoleInterface::ANONYMOUS_ID)->grantPermission(
       'access content',
       'create article content',
       'edit any article content',
-    ])->save();
+    )->save();
 
     // Log out so as to be the anonymous attacker user.
     $this->drupalLogout();

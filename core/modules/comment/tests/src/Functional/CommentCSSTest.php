@@ -32,10 +32,10 @@ class CommentCSSTest extends CommentTestBase {
     parent::setUp();
 
     // Allow anonymous users to see comments.
-    Role::load(RoleInterface::ANONYMOUS_ID)->grantPermissions([
+    Role::load(RoleInterface::ANONYMOUS_ID)->grantPermission(
       'access comments',
       'access content',
-    ])->save();
+    )->save();
   }
 
   /**

@@ -532,7 +532,7 @@ class PagePreviewTest extends NodeTestBase {
     \Drupal::service('module_installer')->uninstall(['node_test']);
     $this->drupalLogout();
     $title_key = 'title[0][value]';
-    Role::load(RoleInterface::ANONYMOUS_ID)->grantPermissions(['create page content', 'access content'])->save();
+    Role::load(RoleInterface::ANONYMOUS_ID)->grantPermission('create page content', 'access content')->save();
     $edit = [
       $title_key => $this->randomMachineName(8),
     ];

@@ -126,19 +126,12 @@ class Role extends ConfigEntityBase implements RoleInterface {
   /**
    * {@inheritdoc}
    */
-  public function grantPermission($permission) {
-    return $this->grantPermissions((array) $permission);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function grantPermissions(array $permissions): static {
+  public function grantPermission($permission, string ...$permissions): static {
     if ($this->isAdmin()) {
       return $this;
     }
     // Remove existing permissions
-    $permissions = array_diff($permissions, $this->permissions);
+    $permissions = array_diff([$permission, ...$permissions], $this->permissions);
     $this->permissions = array_merge($this->permissions, $permissions);
     return $this;
   }
@@ -146,18 +139,11 @@ class Role extends ConfigEntityBase implements RoleInterface {
   /**
    * {@inheritdoc}
    */
-  public function revokePermission($permission) {
-    return $this->revokePermissions((array) $permission);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function revokePermissions(array $permissions): static {
+  public function revokePermission($permission, string ...$permissions): static {
     if ($this->isAdmin()) {
       return $this;
     }
-    $this->permissions = array_diff($this->permissions, $permissions);
+    $this->permissions = array_diff($this->permissions, [$permission, ...$permissions]);
     return $this;
   }
 

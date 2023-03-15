@@ -223,13 +223,17 @@ abstract class ResourceTestBase extends BrowserTestBase {
 
     // Ensure the anonymous user role has no permissions at all.
     $user_role = Role::load(RoleInterface::ANONYMOUS_ID);
-    $user_role->revokePermissions($user_role->getPermissions())->save();
+    foreach ($user_role->getPermissions() as $permission) {
+      $user_role->revokePermission($permission);
+    }
     $user_role->save();
     assert([] === $user_role->getPermissions(), 'The anonymous user role has no permissions at all.');
 
     // Ensure the authenticated user role has no permissions at all.
     $user_role = Role::load(RoleInterface::AUTHENTICATED_ID);
-    $user_role->revokePermissions($user_role->getPermissions())->save();
+    foreach ($user_role->getPermissions() as $permission) {
+      $user_role->revokePermission($permission);
+    }
     $user_role->save();
     assert([] === $user_role->getPermissions(), 'The authenticated user role has no permissions at all.');
 
@@ -663,7 +667,9 @@ abstract class ResourceTestBase extends BrowserTestBase {
    */
   protected function revokePermissionsFromTestedRole(array $permissions) {
     $role = Role::load(RoleInterface::AUTHENTICATED_ID);
-    $role->revokePermissions($permissions);
+    foreach ($permissions as $permission) {
+      $role->revokePermission($permission);
+    }
     $role->trustData()->save();
   }
 

@@ -69,10 +69,10 @@ class TrackerTest extends BrowserTestBase {
     $this->user = $this->drupalCreateUser($permissions);
     $this->otherUser = $this->drupalCreateUser($permissions);
     $this->addDefaultCommentField('node', 'page');
-    Role::load(AccountInterface::ANONYMOUS_ROLE)->grantPermissions([
+    Role::load(AccountInterface::ANONYMOUS_ROLE)->grantPermission(
       'access content',
       'access user profiles',
-    ])->save();
+    )->save();
     $this->drupalPlaceBlock('local_tasks_block', ['id' => 'page_tabs_block']);
     $this->drupalPlaceBlock('local_actions_block', ['id' => 'page_actions_block']);
   }

@@ -25,10 +25,10 @@ class FileFieldAnonymousSubmissionTest extends FileFieldTestBase {
   protected function setUp(): void {
     parent::setUp();
     // Set up permissions for anonymous attacker user.
-    Role::load(RoleInterface::ANONYMOUS_ID)->grantPermissions([
+    Role::load(RoleInterface::ANONYMOUS_ID)->grantPermission(
       'create article content',
       'access content',
-    ])->save();
+    )->save();
   }
 
   /**

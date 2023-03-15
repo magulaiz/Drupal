@@ -203,11 +203,11 @@ class TextFieldTest extends StringFieldTest {
 
     // Grant access to both formats to the user.
     $roles = $this->webUser->getRoles();
-    Role::load($roles[0])->grantPermissions([
+    Role::load($roles[0])->grantPermission(
       $format1->getPermissionName(),
       $format2->getPermissionName(),
       $format3->getPermissionName(),
-    ])->save();
+    )->save();
 
     // Create a field with multiple formats allowed.
     $field_name = mb_strtolower($this->randomMachineName());

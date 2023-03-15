@@ -205,11 +205,11 @@ class CommentAdminTest extends CommentTestBase {
    */
   public function testEditComment() {
     // Enable anonymous user comments.
-    Role::load(RoleInterface::ANONYMOUS_ID)->grantPermissions([
+    Role::load(RoleInterface::ANONYMOUS_ID)->grantPermission(
       'access comments',
       'post comments',
       'skip comment approval',
-    ])->save();
+    )->save();
 
     // Log in as a web user.
     $this->drupalLogin($this->webUser);

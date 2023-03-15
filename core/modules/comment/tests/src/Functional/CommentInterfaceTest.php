@@ -78,7 +78,7 @@ class CommentInterfaceTest extends CommentTestBase {
 
     // Comment as anonymous with preview required.
     $this->drupalLogout();
-    Role::load(RoleInterface::ANONYMOUS_ID)->grantPermissions(['access content', 'access comments', 'post comments', 'skip comment approval'])->save();
+    Role::load(RoleInterface::ANONYMOUS_ID)->grantPermission('access content', 'access comments', 'post comments', 'skip comment approval')->save();
     $anonymous_comment = $this->postComment($this->node, $this->randomMachineName(), $this->randomMachineName(), TRUE);
     $this->assertTrue($this->commentExists($anonymous_comment), 'Comment found.');
     $anonymous_comment->delete();
