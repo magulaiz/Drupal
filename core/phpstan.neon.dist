@@ -27,7 +27,7 @@ parameters:
     # Below extends on purpose a non existing class for testing.
     - modules/system/tests/modules/plugin_test/src/Plugin/plugin_test/fruit/ExtendingNonInstalledClass.php
     # This package manager module is a temporary addition, do not check it.
-    - modules/project_browser/tests/modules/package_manager/*
+    - modules/project_browser/modules/package_manager/*
 
 
   ignoreErrors:

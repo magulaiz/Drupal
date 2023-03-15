@@ -76,9 +76,7 @@ module.exports = {
   optimization: {
     minimize: true,
     minimizer: [
-      new CssMinimizerPlugin({
-        minify: CssMinimizerPlugin.cssnanoMinify,
-      }),
+      new CssMinimizerPlugin(),
       new TerserPlugin({
         extractComments: false,
       }),
