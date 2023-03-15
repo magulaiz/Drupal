@@ -137,7 +137,7 @@ class FilePrivateTest extends FileFieldTestBase {
     // confirm that only the session that uploaded it may view it.
     $this->drupalLogout();
     Role::load(RoleInterface::ANONYMOUS_ID)->grantPermissions([
-      "create $type_name content" => TRUE,
+      "create $type_name content",
       'access content',
     ])->save();
     $test_file = $this->getTestFile('text');
