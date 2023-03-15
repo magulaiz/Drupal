@@ -155,7 +155,7 @@ class SettingsTrayBlockFormTest extends SettingsTrayTestBase {
     // Clean up test data so each test does not impact the next.
     $block->delete();
     if ($permissions) {
-      Role::load(Role::AUTHENTICATED_ID)->revokePermission($permissions)->save();
+      Role::load(Role::AUTHENTICATED_ID)->revokePermission(...$permissions)->save();
     }
   }
 
