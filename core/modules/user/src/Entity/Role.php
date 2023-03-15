@@ -133,7 +133,7 @@ class Role extends ConfigEntityBase implements RoleInterface {
   /**
    * {@inheritdoc}
    */
-  public function grantPermissions(array $permissions) {
+  public function grantPermissions(array $permissions): static {
     if ($this->isAdmin()) {
       return $this;
     }
@@ -153,7 +153,7 @@ class Role extends ConfigEntityBase implements RoleInterface {
   /**
    * {@inheritdoc}
    */
-  public function revokePermissions(array $permissions) {
+  public function revokePermissions(array $permissions): static {
     if ($this->isAdmin()) {
       return $this;
     }
