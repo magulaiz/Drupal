@@ -234,7 +234,7 @@ class ContactSitewideTest extends BrowserTestBase {
     $this->assertSession()->statusCodeEquals(403);
 
     // Give anonymous user permission and see that page is viewable.
-    Role::load(RoleInterface::ANONYMOUS_ID)->revokePermission('access site-wide contact form')->save();
+    Role::load(RoleInterface::ANONYMOUS_ID)->grantPermission('access site-wide contact form')->save();
     $this->drupalGet('contact');
     $this->assertSession()->statusCodeEquals(200);
 
