@@ -131,6 +131,7 @@ class AnnounceFetcher {
    *   - content_html: Announcement teaser.
    *   - url: URL
    *   - date_modified: Last updated timestamp.
+   *   - date_published: Created timestamp.
    *   - _extra.featured: 1 if featured, 0 if not featured.
    *   - _extra.version: Target version of Drupal, as a Composer version.
    *

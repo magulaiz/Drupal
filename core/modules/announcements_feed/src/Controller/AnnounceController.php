@@ -94,7 +94,7 @@ class AnnounceController extends ControllerBase implements ContainerInjectionInt
         ];
       }
       else {
-        $timestamp = DrupalDateTime::createFromFormat(DATE_ATOM, $announcement['date_modified']);
+        $timestamp = DrupalDateTime::createFromFormat(DATE_ATOM, $announcement['date_published']);
         $items['standard'][] = [
           'id' => $announcement['id'],
           'title' => $announcement['title'],

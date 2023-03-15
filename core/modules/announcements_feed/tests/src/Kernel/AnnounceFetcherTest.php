@@ -74,6 +74,7 @@ class AnnounceFetcherTest extends KernelTestBase {
         'version' => '^10',
       ],
       'date_modified' => "2021-09-02T15:09:42+00:00",
+      'date_published' => "2021-09-01T15:09:42+00:00",
     ];
     $this->setFeedItems([$feed_item_1]);
     $feeds = $this->fetchFeedItems();
@@ -81,7 +82,7 @@ class AnnounceFetcherTest extends KernelTestBase {
     $this->assertSame($feed_item_1['id'], $feeds[0]['id']);
     $this->assertSame($feed_item_1['content_html'], $feeds[0]['content_html']);
     $this->assertSame($feed_item_1['_drupalorg']['featured'], $feeds[0]['_drupalorg']['featured']);
-    $this->assertSame($feed_item_1['date_modified'], $feeds[0]['date_modified']);
+    $this->assertSame($feed_item_1['date_published'], $feeds[0]['date_published']);
     $this->assertSame($feed_item_1['_drupalorg']['version'], $feeds[0]['_drupalorg']['version']);
   }
 
@@ -99,6 +100,7 @@ class AnnounceFetcherTest extends KernelTestBase {
             'version' => '^10',
           ],
           'date_modified' => "2021-09-02T15:09:42+00:00",
+          'date_published' => "2021-09-01T15:09:42+00:00",
         ],
       ],
       '2' => [
@@ -110,6 +112,7 @@ class AnnounceFetcherTest extends KernelTestBase {
             'version' => '^10',
           ],
           'date_modified' => "2021-09-02T15:09:42+00:00",
+          'date_published' => "2021-09-01T15:09:42+00:00",
         ],
       ],
       '3' => [
@@ -121,6 +124,7 @@ class AnnounceFetcherTest extends KernelTestBase {
             'version' => '^10',
           ],
           'date_modified' => "2021-09-02T15:09:42+00:00",
+          'date_published' => "2021-09-01T15:09:42+00:00",
         ],
       ],
       '4' => [
@@ -132,6 +136,7 @@ class AnnounceFetcherTest extends KernelTestBase {
             'version' => '^10',
           ],
           'date_modified' => "2021-09-02T15:09:42+00:00",
+          'date_published' => "2021-09-01T15:09:42+00:00",
         ],
       ],
     ];

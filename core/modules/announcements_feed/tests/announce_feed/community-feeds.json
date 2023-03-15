@@ -11,6 +11,7 @@
       "content_html": "This release will have a community alert prototype to notify site admins about drupal updates and required information",
       "url": "https://www.drupal.org/project/announce",
       "date_modified": "2021-01-19T07:29:38+00:00",
+      "date_published": "2021-01-18T07:29:38+00:00",
       "_drupalorg": {
         "featured": false,
         "version": "^9 | ^10"
@@ -22,6 +23,7 @@
       "content_html": "This release will have a community alert prototype to notify site admins about drupal updates and required information",
       "url": "https://www.drupal.org/project/announce",
       "date_modified": "2021-01-19T07:29:38+00:00",
+      "date_published": "2021-01-18T07:29:38+00:00",
       "_drupalorg":  {
         "featured": true,
         "version": "^10"
@@ -33,6 +35,7 @@
       "content_html": "This release will have a community alert prototype to notify site admins about drupal updates and required information",
       "url": "https://www.drupal.org/project/announce",
       "date_modified": "2021-01-19T07:29:38+00:00",
+      "date_published": "2021-01-18T07:29:38+00:00",
       "_drupalorg":  {
         "featured": false,
         "version": "^9"
@@ -44,6 +47,7 @@
       "content_html": "This release will have a community alert prototype to notify site admins about drupal updates and required information",
       "url": "https://www.drupal.org/project/announce",
       "date_modified": "2021-01-19T07:29:39+00:00",
+      "date_published": "2021-01-18T07:29:39+00:00",
       "_drupalorg":  {
         "featured": false,
         "version": "^10"

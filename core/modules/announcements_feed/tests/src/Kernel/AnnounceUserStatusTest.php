@@ -130,6 +130,7 @@ class AnnounceUserStatusTest extends KernelTestBase {
           'version' => '^10',
         ],
         'date_modified' => date('c', 1611041378),
+        'date_published' => date('c', 1610958578),
       ],
       [
         'id' => 1002,
@@ -141,6 +142,7 @@ class AnnounceUserStatusTest extends KernelTestBase {
           'version' => '^10',
         ],
         'date_modified' => date('c', 1611041378),
+        'date_published' => date('c', 1610958578),
       ],
       [
 
@@ -153,6 +155,7 @@ class AnnounceUserStatusTest extends KernelTestBase {
           'version' => '^10',
         ],
         'date_modified' => date('c', 1611041378),
+        'date_published' => date('c', 1610958578),
       ],
       [
         'id' => 1004,
@@ -164,6 +167,7 @@ class AnnounceUserStatusTest extends KernelTestBase {
           'version' => '^10',
         ],
         'date_modified' => date('c', 1611041378),
+        'date_published' => date('c', 1610958578),
       ],
     ];
   }
@@ -184,6 +188,7 @@ class AnnounceUserStatusTest extends KernelTestBase {
           'version' => '^10',
         ],
         'date_modified' => date('c', 1611041378),
+        'date_published' => date('c', 1610958578),
       ],
       [
         'id' => 1001,
@@ -195,6 +200,7 @@ class AnnounceUserStatusTest extends KernelTestBase {
           'version' => '^10',
         ],
         'date_modified' => date('c', 1611041378),
+        'date_published' => date('c', 1610958578),
       ],
       [
         'id' => 1002,
@@ -206,6 +212,7 @@ class AnnounceUserStatusTest extends KernelTestBase {
           'version' => '^10',
         ],
         'date_modified' => date('c', 1611041378),
+        'date_published' => date('c', 1610958578),
       ],
       [
 
@@ -218,6 +225,7 @@ class AnnounceUserStatusTest extends KernelTestBase {
           'version' => '^10',
         ],
         'date_modified' => date('c', 1611041378),
+        'date_published' => date('c', 1610958578),
       ],
       [
         'id' => 1004,
@@ -229,6 +237,7 @@ class AnnounceUserStatusTest extends KernelTestBase {
           'version' => '^10',
         ],
         'date_modified' => date('c', 1611041378),
+        'date_published' => date('c', 1610958578),
       ],
     ];
   }
