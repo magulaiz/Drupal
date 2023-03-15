@@ -353,12 +353,12 @@ class CommentNonNodeTest extends BrowserTestBase {
     $this->drupalLogout();
 
     // Deny anonymous users access to comments.
-    Role::load(RoleInterface::ANONYMOUS_ID)->changePermissions([
+    user_role_change_permissions(RoleInterface::ANONYMOUS_ID, [
       'access comments' => FALSE,
       'post comments' => FALSE,
       'skip comment approval' => FALSE,
       'view test entity' => TRUE,
-    ])->save();
+    ]);
 
     // Attempt to view comments while disallowed.
     $this->drupalGet('entity-test/' . $this->entity->id());
@@ -372,12 +372,12 @@ class CommentNonNodeTest extends BrowserTestBase {
     $this->assertSession()->fieldNotExists('subject[0][value]');
     $this->assertSession()->fieldNotExists('comment_body[0][value]');
 
-    Role::load(RoleInterface::ANONYMOUS_ID)->changePermissions([
+    user_role_change_permissions(RoleInterface::ANONYMOUS_ID, [
       'access comments' => TRUE,
       'post comments' => FALSE,
       'view test entity' => TRUE,
       'skip comment approval' => FALSE,
-    ])->save();
+    ]);
     $this->drupalGet('entity_test/' . $this->entity->id());
     // Verify that the comment field title is displayed.
     $this->assertSession()->responseMatches('@<h2[^>]*>Comments</h2>@');
@@ -389,12 +389,12 @@ class CommentNonNodeTest extends BrowserTestBase {
     // Test the combination of anonymous users being able to post, but not view
     // comments, to ensure that access to post comments doesn't grant access to
     // view them.
-    Role::load(RoleInterface::ANONYMOUS_ID)->changePermissions([
+    user_role_change_permissions(RoleInterface::ANONYMOUS_ID, [
       'access comments' => FALSE,
       'post comments' => TRUE,
       'skip comment approval' => TRUE,
       'view test entity' => TRUE,
-    ])->save();
+    ]);
     $this->drupalGet('entity_test/' . $this->entity->id());
     // Verify that comments were not displayed.
     $this->assertSession()->responseNotMatches('@<h2[^>]*>Comments</h2>@');

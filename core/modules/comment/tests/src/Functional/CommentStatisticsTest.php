@@ -79,11 +79,11 @@ class CommentStatisticsTest extends CommentTestBase {
 
     // Prepare for anonymous comment submission (comment approval enabled).
     $this->drupalLogin($this->adminUser);
-    Role::load(RoleInterface::ANONYMOUS_ID)->changePermissions([
+    user_role_change_permissions(RoleInterface::ANONYMOUS_ID, [
       'access comments' => TRUE,
       'post comments' => TRUE,
       'skip comment approval' => FALSE,
-    ])->save();
+    ]);
     // Ensure that the poster can leave some contact info.
     $this->setCommentAnonymous('1');
     $this->drupalLogout();

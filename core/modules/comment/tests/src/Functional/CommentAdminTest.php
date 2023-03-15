@@ -35,11 +35,11 @@ class CommentAdminTest extends CommentTestBase {
    */
   public function testApprovalAdminInterface() {
     // Set anonymous comments to require approval.
-    Role::load(RoleInterface::ANONYMOUS_ID)->changePermissions([
+    user_role_change_permissions(RoleInterface::ANONYMOUS_ID, [
       'access comments' => TRUE,
       'post comments' => TRUE,
       'skip comment approval' => FALSE,
-    ])->save();
+    ]);
     $this->drupalLogin($this->adminUser);
     // Ensure that doesn't require contact info.
     $this->setCommentAnonymous('0');
@@ -128,11 +128,11 @@ class CommentAdminTest extends CommentTestBase {
    */
   public function testApprovalNodeInterface() {
     // Set anonymous comments to require approval.
-    Role::load(RoleInterface::ANONYMOUS_ID)->changePermissions([
+    user_role_change_permissions(RoleInterface::ANONYMOUS_ID, [
       'access comments' => TRUE,
       'post comments' => TRUE,
       'skip comment approval' => FALSE,
-    ])->save();
+    ]);
     $this->drupalLogin($this->adminUser);
     // Ensure that doesn't require contact info.
     $this->setCommentAnonymous('0');

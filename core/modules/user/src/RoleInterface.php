@@ -82,36 +82,6 @@ interface RoleInterface extends ConfigEntityInterface {
   public function revokePermissions(array $permissions);
 
   /**
-   * Change permissions on the user role.
-   *
-   * This method may be used to grant and revoke multiple permissions at once.
-   * For example, when a form exposes checkboxes to configure permissions for a
-   * role, the form submit handler may directly pass the submitted values for
-   * the checkboxes form element to this function.
-   *
-   * @param array $permissions
-   *   (optional) An associative array, where the key holds the permission name
-   *   and the value determines whether to grant or revoke that permission. Any
-   *   value that evaluates to TRUE will cause the permission to be granted.
-   *   Any value that evaluates to FALSE will cause the permission to be
-   *   revoked.
-   *   @code
-   *     array(
-   *       'administer nodes' => 0,                // Revoke 'administer nodes'
-   *       'administer blocks' => FALSE,           // Revoke 'administer blocks'
-   *       'access user profiles' => 1,            // Grant 'access user profiles'
-   *       'access content' => TRUE,               // Grant 'access content'
-   *       'access comments' => 'access comments', // Grant 'access comments'
-   *     )
-   *   @endcode
-   *   Existing permissions are not changed, unless specified in $permissions.
-   *
-   * @see \Drupal\user\Entity\Role::grantPermissions()
-   * @see \Drupal\user\Entity\Role::revokePermissions()
-   */
-  public function changePermissions(array $permissions): static;
-
-  /**
    * Indicates that a role has all available permissions.
    *
    * @return bool
