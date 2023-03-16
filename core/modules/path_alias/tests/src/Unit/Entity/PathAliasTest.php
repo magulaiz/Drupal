@@ -13,13 +13,16 @@ class PathAliasTest extends UnitTestCase {
 
   /**
    * @covers ::trimAlias
-   * @dataProvider provideAliases
+   * @dataProvider provideTrimAliases
    */
   public function testTrimAlias($alias, $expected) {
     $this->assertEquals($expected, PathAlias::trimAlias($alias));
   }
 
-  public function provideAliases() {
+  /**
+   * Dataprovider method to provide trim aliases actual / expected values.
+   */
+  public function provideTrimAliases() {
     return [
       ['/', '/'],
       ['/ ', '/'],

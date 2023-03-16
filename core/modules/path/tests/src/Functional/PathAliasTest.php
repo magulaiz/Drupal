@@ -420,6 +420,8 @@ class PathAliasTest extends PathTestBase {
     $this->drupalGet('<front>');
     $this->assertSession()->statusCodeEquals(200);
     $this->assertSession()->pageTextContains($node7->label());
+    $this->drupalGet($node7->toUrl('edit-form'));
+    $this->assertSession()->elementTextEquals('css', 'edit-path-0-alias', '/');
   }
 
   /**
