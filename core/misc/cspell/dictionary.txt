@@ -359,6 +359,7 @@ drupallink
 drupalmedia
 drupalmediaediting
 drupalmediatoolbar
+drupalorg
 drupaltest
 druplicon
 drush
@@ -702,6 +703,7 @@ mlfr
 mlid
 mlids
 moby
+mockapi
 mocktail
 mocktails
 mocky
@@ -1158,9 +1160,11 @@ sunzzzzzzz
 supercede
 svenska
 svgz
+sveltejs
 svibanj
 swcf
 sxto
+syncer
 synchronizable
 syrop
 szwr

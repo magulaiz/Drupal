@@ -317,6 +317,7 @@ if [[ "$DRUPALCI" == "1" ]] && [[ $CKEDITOR5_PLUGINS_CHANGED == "1" ]]; then
   printf "\n"
 fi
 
+SVELTE_COMPILE_CHECK=0
 for FILE in $FILES; do
   STATUS=0;
   # Print a line to separate spellcheck output from per file output.
@@ -391,6 +392,42 @@ for FILE in $FILES; do
     node ./node_modules/eslint/bin/eslint.js --quiet --config=.eslintrc.passing.json "$TOP_LEVEL/$FILE"
     JSLINT=$?
     if [ "$JSLINT" -ne "0" ]; then
+      # No need to write any output the node command will do this for us.
+      STATUS=1
+    else
+      printf "ESLint: $FILE ${green}passed${reset}\n"
+    fi
+    cd $TOP_LEVEL
+  fi
+
+  ############################################################################
+  ### SVELTE FILES
+  ############################################################################
+  if [[ -f "$TOP_LEVEL/$FILE" ]] && [[ $FILE =~ \.svelte$ ]]; then
+    # Check if Svelte was compiled
+    if [[ "$SVELTE_COMPILE_CHECK" == "0" ]]; then
+      SVELTE_COMPILE_CHECK=1
+      cd "$TOP_LEVEL/core"
+      COMPILED_JS_PRE=$(<./modules/project_browser/sveltejs/public/build/bundle.js)
+      COMPILED_CSS_PRE=$(<./modules/project_browser/sveltejs/public/build/bundle.css)
+      yarn run -s build:svelte
+      COMPILED_JS_POST=$(<./modules/project_browser/sveltejs/public/build/bundle.js)
+      COMPILED_CSS_POST=$(<./modules/project_browser/sveltejs/public/build/bundle.css)
+      if [[ "$COMPILED_JS_PRE" != "$COMPILED_JS_POST" ]] || [[ "$COMPILED_CSS_PRE" != "$COMPILED_CSS_POST" ]]; then
+        FINAL_STATUS=1
+        printf "\nSvelte ${red}compiled files do not match${reset}. Running yarn build and commiting the changes should fix this. \n"
+        exit 1;
+      else
+        printf "\nSvelte compiling ${green}successful${reset}\n"
+      fi
+      cd $TOP_LEVEL
+    fi
+
+    cd "$TOP_LEVEL/core"
+    # Check the coding standards.
+    node ./node_modules/eslint/bin/eslint.js --quiet --config=.eslintrc.svelte.js "$TOP_LEVEL/$FILE"
+    SVLINT=$?
+    if [ "$SVLINT" -ne "0" ]; then
       # No need to write any output the node command will do this for us.
       STATUS=1
     else

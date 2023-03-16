@@ -26,6 +26,9 @@ parameters:
     - lib/Drupal/Component/Transliteration/data/*.php
     # Below extends on purpose a non existing class for testing.
     - modules/system/tests/modules/plugin_test/src/Plugin/plugin_test/fruit/ExtendingNonInstalledClass.php
+    # This package manager module is a temporary addition, do not check it.
+    - modules/project_browser/modules/package_manager/*
+
 
   ignoreErrors:
     # new static() is a best practice in Drupal, so we cannot fix that.
