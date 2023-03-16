@@ -20,7 +20,7 @@ class PathAliasTest extends UnitTestCase {
   }
 
   /**
-   * Dataprovider method to provide trim aliases actual / expected values.
+   * Data provider method to provide trim aliases actual / expected values.
    */
   public function provideTrimAliases() {
     return [
