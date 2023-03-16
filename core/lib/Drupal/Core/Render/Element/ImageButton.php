@@ -46,7 +46,7 @@ class ImageButton extends Submit {
         $input = $form_state->getUserInput();
         foreach (explode('[', $element['#name']) as $element_name) {
           // chop off the ] that may exist.
-          if (str_ends_with($element_name, ']')) {
+          if (substr($element_name, -1) == ']') {
             $element_name = substr($element_name, 0, -1);
           }
 
