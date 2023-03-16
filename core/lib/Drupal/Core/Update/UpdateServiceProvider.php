@@ -2,10 +2,10 @@
 
 namespace Drupal\Core\Update;
 
+use Drupal\Core\Config\NoSchemaConfig;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\DependencyInjection\ServiceModifierInterface;
 use Drupal\Core\DependencyInjection\ServiceProviderInterface;
-use Drupal\Core\Installer\InstallerTypedConfig;
 use Symfony\Component\DependencyInjection\Compiler\PassConfig;
 use Symfony\Component\DependencyInjection\Reference;
 
@@ -48,11 +48,11 @@ class UpdateServiceProvider implements ServiceProviderInterface, ServiceModifier
     require_once $root . '/core/includes/update.inc';
     drupal_load_updates();
     if (!empty(update_get_update_list())) {
-      // Decorate typed.config during hook_update_N updates as config schema can
-      // be incorrect at this time.
-      $container->register('core.installer.typed_config', InstallerTypedConfig::class)
-        ->setDecoratedService('config.typed')
-        ->setArguments([new Reference('core.installer.typed_config.inner')]);
+      // Disable config schema in the config system during hook_update_N updates
+      // as config schema can be incorrect at this time.
+      // @todo does this actually work here - I think the service might exist
+      //   at this point.
+      $container->getDefinition('config.factory')->addMethodCall('setMutableConfigClass', [NoSchemaConfig::class]);
     }
   }
 
