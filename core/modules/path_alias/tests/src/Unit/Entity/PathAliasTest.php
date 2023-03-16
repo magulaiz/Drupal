@@ -22,12 +22,20 @@ class PathAliasTest extends UnitTestCase {
   public function provideAliases() {
     return [
       ['/', '/'],
+      ['/ ', '/'],
       ['//alias', '//alias'],
       ['/first/second/', '/first/second'],
       ['/first/second\\', '/first/second'],
       ['/first/second//', '/first/second'],
-      ['/first/second// / ', '/first/second// '],
+      ['/first/second// / ', '/first/second'],
       ['/first/second//  ', '/first/second'],
+      ['/first/second // / ', '/first/second'],
+      ['/first/second\\\\', '/first/second'],
+      ['/first/second\\\\ / \\ ', '/first/second'],
+      // These values shouldn't be changed, as it is not in scope of the
+      // function:
+      ['/first/second /third', '/first/second /third'],
+      ['/first//second', '/first//second'],
     ];
   }
 
