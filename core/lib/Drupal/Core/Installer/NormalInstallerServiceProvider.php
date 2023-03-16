@@ -11,7 +11,6 @@ use Symfony\Component\DependencyInjection\Compiler\InlineServiceDefinitionsPass;
 use Symfony\Component\DependencyInjection\Compiler\RemoveUnusedDefinitionsPass;
 use Symfony\Component\DependencyInjection\Compiler\ReplaceAliasByActualDefinitionPass;
 use Symfony\Component\DependencyInjection\Compiler\ResolveHotPathPass;
-use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Reference;
 
 /**
@@ -59,11 +58,9 @@ class NormalInstallerServiceProvider implements ServiceProviderInterface {
 
     // Decorate typed.config during install to prevent schema cache being
     // create all the time.
-    $definition = new Definition(InstallerTypedConfig::class);
-    $definition
+    $container->register('core.installer.typed_config', InstallerTypedConfig::class)
       ->setDecoratedService('config.typed')
       ->setArguments([new Reference('core.installer.typed_config.inner')]);
-    $container->setDefinition('core.installer.typed_config', $definition);
 
     // Don't register the lazy route provider in the super early installer.
     if (get_called_class() === NormalInstallerServiceProvider::class) {

@@ -5,6 +5,7 @@ namespace Drupal\Core\Update;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\DependencyInjection\ServiceModifierInterface;
 use Drupal\Core\DependencyInjection\ServiceProviderInterface;
+use Drupal\Core\Installer\InstallerTypedConfig;
 use Symfony\Component\DependencyInjection\Compiler\PassConfig;
 use Symfony\Component\DependencyInjection\Reference;
 
@@ -40,6 +41,18 @@ class UpdateServiceProvider implements ServiceProviderInterface, ServiceModifier
       $container->getDefinition('path_alias.path_processor')
         ->clearTag('path_processor_inbound')
         ->clearTag('path_processor_outbound');
+    }
+
+    $root = $container->getParameter('app.root');
+    require_once $root . '/core/includes/install.inc';
+    require_once $root . '/core/includes/update.inc';
+    drupal_load_updates();
+    if (!empty(update_get_update_list())) {
+      // Decorate typed.config during hook_update_N updates as config schema can
+      // be incorrect at this time.
+      $container->register('core.installer.typed_config', InstallerTypedConfig::class)
+        ->setDecoratedService('config.typed')
+        ->setArguments([new Reference('core.installer.typed_config.inner')]);
     }
   }
 
