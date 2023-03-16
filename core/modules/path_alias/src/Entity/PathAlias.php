@@ -48,7 +48,7 @@ class PathAlias extends ContentEntityBase implements PathAliasInterface {
 
   use EntityPublishedTrait;
 
-   /**
+  /**
    * Trims the alias.
    *
    * Trim the alias value of whitespaces and slashes.
