@@ -7,6 +7,7 @@ use Drupal\Core\Config\Config;
 use Drupal\Core\Config\ConfigNameException;
 use Drupal\Core\Config\ConfigValueException;
 use Drupal\Core\Config\DatabaseStorage;
+use Drupal\Core\Config\NoSchemaConfig;
 use Drupal\Core\Config\UnsupportedDataTypeConfigException;
 use Drupal\KernelTests\KernelTestBase;
 
@@ -302,9 +303,13 @@ class ConfigCRUDTest extends KernelTestBase {
     $this->assertSame($data, $config->get());
     $this->assertSame($data, $storage->read($name));
 
-    // Test that schema type enforcement can be overridden by trusting the data.
+    // Test that schema type enforcement can be overridden by using a different
+    // class.
     $this->assertSame(99, $config->get('int'));
-    $config->set('int', '99')->save();
+    $no_schema_config = $this->container->get('config.factory')->getEditable($config->getName(), NoSchemaConfig::class);
+    $no_schema_config->set('int', '99')->save();
+    $this->assertSame('99', $no_schema_config->get('int'));
+    $config = $this->config($config->getName());
     $this->assertSame('99', $config->get('int'));
     // Test that re-saving without testing the data enforces the schema type.
     $config->save();
