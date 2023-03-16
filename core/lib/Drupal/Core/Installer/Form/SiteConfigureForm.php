@@ -268,12 +268,12 @@ class SiteConfigureForm extends ConfigFormBase {
       $this->config('system.site')
         ->set('name', (string) $form_state->getValue('site_name'))
         ->set('mail', (string) $form_state->getValue('site_mail'))
-        ->save(TRUE);
+        ->save();
 
       $this->config('system.date')
         ->set('timezone.default', (string) $form_state->getValue('date_default_timezone'))
         ->set('country.default', (string) $form_state->getValue('site_default_country'))
-        ->save(TRUE);
+        ->save();
     }
 
     $account_values = $form_state->getValue('account');
@@ -289,7 +289,7 @@ class SiteConfigureForm extends ConfigFormBase {
       if ($email_update_status_emails) {
         // Reset the configuration factory so it is updated with the new module.
         $this->resetConfigFactory();
-        $this->config('update.settings')->set('notification.emails', [$account_values['mail']])->save(TRUE);
+        $this->config('update.settings')->set('notification.emails', [$account_values['mail']])->save();
       }
     }
 

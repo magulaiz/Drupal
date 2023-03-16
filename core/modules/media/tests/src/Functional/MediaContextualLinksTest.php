@@ -32,7 +32,7 @@ class MediaContextualLinksTest extends MediaFunctionalTestBase {
     \Drupal::configFactory()
       ->getEditable('media.settings')
       ->set('standalone_url', TRUE)
-      ->save(TRUE);
+      ->save();
 
     $this->container->get('router.builder')->rebuild();
 
