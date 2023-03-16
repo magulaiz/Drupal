@@ -28,11 +28,13 @@ interface ConfigFactoryInterface {
    *
    * @param string $name
    *   The name of the configuration object to construct.
+   * @param string|null $class
+   *   The class to use for creating the config object.
    *
    * @return \Drupal\Core\Config\Config
    *   A configuration object.
    */
-  public function getEditable($name);
+  public function getEditable($name, ?string $class = NULL);
 
   /**
    * Returns a list of configuration objects for the given names.
@@ -116,5 +118,20 @@ interface ConfigFactoryInterface {
    *   priority list (lower priority relative to existing ones).
    */
   public function addOverride(ConfigFactoryOverrideInterface $config_factory_override);
+
+  /**
+   * Sets the mutable config class.
+   *
+   * This method should only be use during container building to set the global
+   * state. If you want to override this class on a one-off basis pass the class
+   * name into ::getEditable().
+   *
+   * @param string $class
+   *   The class to use for mutable config. Must be a subclass of
+   *   \Drupal\Core\Config\StorableConfigBase
+   *
+   * @see \Drupal\Core\Config\ConfigFactoryInterface::getEditable()
+   */
+  public function setMutableConfigClass(string $class): void;
 
 }
