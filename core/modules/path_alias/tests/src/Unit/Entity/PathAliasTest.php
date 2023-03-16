@@ -24,6 +24,7 @@ class PathAliasTest extends UnitTestCase {
       ['/', '/'],
       ['/ ', '/'],
       ['//alias', '//alias'],
+      ['/alias ', '/alias'],
       ['/first/second/', '/first/second'],
       ['/first/second\\', '/first/second'],
       ['/first/second//', '/first/second'],
