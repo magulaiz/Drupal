@@ -379,7 +379,7 @@ function shortcut_themes_installed($theme_list) {
   if (in_array('claro', $theme_list, TRUE)) {
     \Drupal::configFactory()->getEditable("claro.settings")
       ->set('third_party_settings.shortcut.module_link', TRUE)
-      ->save(TRUE);
+      ->save();
   }
 }
 

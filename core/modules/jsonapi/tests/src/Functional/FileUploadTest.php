@@ -212,7 +212,7 @@ class FileUploadTest extends ResourceTestBase {
     $this->assertResourceErrorResponse(405, sprintf("JSON:API is configured to accept only read operations. Site administrators can configure this at %s.", Url::fromUri('base:/admin/config/services/jsonapi')->setAbsolute()->toString(TRUE)->getGeneratedUrl()), $uri, $response);
     $this->assertSame(['GET'], $response->getHeader('Allow'));
 
-    $this->config('jsonapi.settings')->set('read_only', FALSE)->save(TRUE);
+    $this->config('jsonapi.settings')->set('read_only', FALSE)->save();
 
     // DX: 403 when unauthorized.
     $response = $this->fileRequest($uri, $this->testFileData);
@@ -290,7 +290,7 @@ class FileUploadTest extends ResourceTestBase {
     $this->assertResourceErrorResponse(405, sprintf("JSON:API is configured to accept only read operations. Site administrators can configure this at %s.", Url::fromUri('base:/admin/config/services/jsonapi')->setAbsolute()->toString(TRUE)->getGeneratedUrl()), $uri, $response);
     $this->assertSame(['GET'], $response->getHeader('Allow'));
 
-    $this->config('jsonapi.settings')->set('read_only', FALSE)->save(TRUE);
+    $this->config('jsonapi.settings')->set('read_only', FALSE)->save();
 
     // DX: 403 when unauthorized.
     $response = $this->fileRequest($uri, $this->testFileData);
@@ -384,7 +384,7 @@ class FileUploadTest extends ResourceTestBase {
    */
   public function testPostFileUploadInvalidHeaders() {
     $this->setUpAuthorization('POST');
-    $this->config('jsonapi.settings')->set('read_only', FALSE)->save(TRUE);
+    $this->config('jsonapi.settings')->set('read_only', FALSE)->save();
 
     $uri = Url::fromUri('base:' . static::$postUri);
 
@@ -423,7 +423,7 @@ class FileUploadTest extends ResourceTestBase {
    */
   public function testPostFileUploadDuplicateFile() {
     $this->setUpAuthorization('POST');
-    $this->config('jsonapi.settings')->set('read_only', FALSE)->save(TRUE);
+    $this->config('jsonapi.settings')->set('read_only', FALSE)->save();
 
     $uri = Url::fromUri('base:' . static::$postUri);
 
@@ -453,7 +453,7 @@ class FileUploadTest extends ResourceTestBase {
    */
   public function testPostFileUploadDuplicateFileRaceCondition() {
     $this->setUpAuthorization('POST');
-    $this->config('jsonapi.settings')->set('read_only', FALSE)->save(TRUE);
+    $this->config('jsonapi.settings')->set('read_only', FALSE)->save();
 
     $uri = Url::fromUri('base:' . static::$postUri);
 
@@ -481,7 +481,7 @@ class FileUploadTest extends ResourceTestBase {
    */
   public function testFileUploadStrippedFilePath() {
     $this->setUpAuthorization('POST');
-    $this->config('jsonapi.settings')->set('read_only', FALSE)->save(TRUE);
+    $this->config('jsonapi.settings')->set('read_only', FALSE)->save();
 
     $uri = Url::fromUri('base:' . static::$postUri);
 
@@ -527,7 +527,7 @@ class FileUploadTest extends ResourceTestBase {
    */
   public function testFileUploadUnicodeFilename() {
     $this->setUpAuthorization('POST');
-    $this->config('jsonapi.settings')->set('read_only', FALSE)->save(TRUE);
+    $this->config('jsonapi.settings')->set('read_only', FALSE)->save();
 
     $uri = Url::fromUri('base:' . static::$postUri);
 
@@ -545,7 +545,7 @@ class FileUploadTest extends ResourceTestBase {
    */
   public function testFileUploadZeroByteFile() {
     $this->setUpAuthorization('POST');
-    $this->config('jsonapi.settings')->set('read_only', FALSE)->save(TRUE);
+    $this->config('jsonapi.settings')->set('read_only', FALSE)->save();
 
     $uri = Url::fromUri('base:' . static::$postUri);
 
@@ -566,7 +566,7 @@ class FileUploadTest extends ResourceTestBase {
    */
   public function testFileUploadInvalidFileType() {
     $this->setUpAuthorization('POST');
-    $this->config('jsonapi.settings')->set('read_only', FALSE)->save(TRUE);
+    $this->config('jsonapi.settings')->set('read_only', FALSE)->save();
 
     $uri = Url::fromUri('base:' . static::$postUri);
 
@@ -589,7 +589,7 @@ class FileUploadTest extends ResourceTestBase {
     $this->rebuildAll();
 
     $this->setUpAuthorization('POST');
-    $this->config('jsonapi.settings')->set('read_only', FALSE)->save(TRUE);
+    $this->config('jsonapi.settings')->set('read_only', FALSE)->save();
 
     $uri = Url::fromUri('base:' . static::$postUri);
 
@@ -611,7 +611,7 @@ class FileUploadTest extends ResourceTestBase {
     $this->field->setSetting('file_extensions', '')->save();
 
     $this->setUpAuthorization('POST');
-    $this->config('jsonapi.settings')->set('read_only', FALSE)->save(TRUE);
+    $this->config('jsonapi.settings')->set('read_only', FALSE)->save();
 
     $uri = Url::fromUri('base:' . static::$postUri);
 
@@ -726,7 +726,7 @@ class FileUploadTest extends ResourceTestBase {
    */
   public function testFileUploadNoExtensionSetting() {
     $this->setUpAuthorization('POST');
-    $this->config('jsonapi.settings')->set('read_only', FALSE)->save(TRUE);
+    $this->config('jsonapi.settings')->set('read_only', FALSE)->save();
 
     $uri = Url::fromUri('base:' . static::$postUri);
 
@@ -746,7 +746,7 @@ class FileUploadTest extends ResourceTestBase {
    */
   public function testFileUploadNoDirectorySetting() {
     $this->setUpAuthorization('POST');
-    $this->config('jsonapi.settings')->set('read_only', FALSE)->save(TRUE);
+    $this->config('jsonapi.settings')->set('read_only', FALSE)->save();
 
     $uri = Url::fromUri('base:' . static::$postUri);
 

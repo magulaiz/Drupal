@@ -385,14 +385,18 @@ class ConfigInstaller implements ConfigInstallerInterface {
           $entity = $entity_storage->createFromStorageRecord($new_config->get());
         }
         if ($entity->isInstallable()) {
-          $entity->trustData()->save();
+          // @todo How to disable schema during module install?
+          //   Is this even correct?
+          $entity->save();
           if ($id !== $entity->id()) {
             trigger_error(sprintf('The configuration name "%s" does not match the ID "%s"', $name, $entity->id()), E_USER_WARNING);
           }
         }
       }
       else {
-        $new_config->save(TRUE);
+        // @todo How to disable schema during module install?
+        //   Is this even correct?
+        $new_config->save();
       }
     }
   }

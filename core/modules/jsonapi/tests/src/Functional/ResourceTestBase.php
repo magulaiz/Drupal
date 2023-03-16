@@ -670,6 +670,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
     foreach ($permissions as $permission) {
       $role->revokePermission($permission);
     }
+    // @todo How to allow tests to write invalid data and then run updates?
     $role->trustData()->save();
   }
 
@@ -1325,7 +1326,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
     $this->doTestRelationshipGet($request_options);
 
     // Test POST.
-    $this->config('jsonapi.settings')->set('read_only', FALSE)->save(TRUE);
+    $this->config('jsonapi.settings')->set('read_only', FALSE)->save();
     $this->doTestRelationshipMutation($request_options);
     // Grant entity-level edit access.
     $this->setUpAuthorization('PATCH');
@@ -1988,7 +1989,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
       $this->assertSame([''], $response->getHeader('Allow'));
     }
 
-    $this->config('jsonapi.settings')->set('read_only', FALSE)->save(TRUE);
+    $this->config('jsonapi.settings')->set('read_only', FALSE)->save();
 
     // DX: 415 when no Content-Type request header.
     $response = $this->request('POST', $url, $request_options);
@@ -2211,7 +2212,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
     $this->assertResourceErrorResponse(405, sprintf("JSON:API is configured to accept only read operations. Site administrators can configure this at %s.", Url::fromUri('base:/admin/config/services/jsonapi')->setAbsolute()->toString(TRUE)->getGeneratedUrl()), $url, $response);
     $this->assertSame(['GET'], $response->getHeader('Allow'));
 
-    $this->config('jsonapi.settings')->set('read_only', FALSE)->save(TRUE);
+    $this->config('jsonapi.settings')->set('read_only', FALSE)->save();
 
     // DX: 415 when no Content-Type request header.
     $response = $this->request('PATCH', $url, $request_options);
@@ -2506,7 +2507,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
     $this->assertResourceErrorResponse(405, sprintf("JSON:API is configured to accept only read operations. Site administrators can configure this at %s.", Url::fromUri('base:/admin/config/services/jsonapi')->setAbsolute()->toString(TRUE)->getGeneratedUrl()), $url, $response);
     $this->assertSame(['GET'], $response->getHeader('Allow'));
 
-    $this->config('jsonapi.settings')->set('read_only', FALSE)->save(TRUE);
+    $this->config('jsonapi.settings')->set('read_only', FALSE)->save();
 
     // DX: 403 when unauthorized.
     $response = $this->request('DELETE', $url, $request_options);
@@ -3184,7 +3185,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
       $this->assertResourceResponse(200, $expected_document, $actual_response, $expected_cache_tags, $expected_cacheability->getCacheContexts(), FALSE, $dynamic_cache);
     }
 
-    $this->config('jsonapi.settings')->set('read_only', FALSE)->save(TRUE);
+    $this->config('jsonapi.settings')->set('read_only', FALSE)->save();
 
     // Ensures that PATCH and DELETE on individual resources with a
     // `resourceVersion` query parameter is not supported.

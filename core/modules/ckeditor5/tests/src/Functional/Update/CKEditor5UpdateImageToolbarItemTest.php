@@ -66,6 +66,7 @@ class CKEditor5UpdateImageToolbarItemTest extends UpdatePathTestBase {
         $format->setFilterConfig('filter_html', $filter_html_config);
       }
     }
+    // @todo How to allow tests to write invalid data and then run updates?
     $format->trustData()->save();
     $editor->trustData()->save();
 

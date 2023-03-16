@@ -304,7 +304,7 @@ class ConfigCRUDTest extends KernelTestBase {
 
     // Test that schema type enforcement can be overridden by trusting the data.
     $this->assertSame(99, $config->get('int'));
-    $config->set('int', '99')->save(TRUE);
+    $config->set('int', '99')->save();
     $this->assertSame('99', $config->get('int'));
     // Test that re-saving without testing the data enforces the schema type.
     $config->save();

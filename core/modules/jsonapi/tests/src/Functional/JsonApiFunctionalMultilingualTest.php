@@ -98,7 +98,7 @@ class JsonApiFunctionalMultilingualTest extends JsonApiFunctionalTestBase {
    * Tests updating a translation.
    */
   public function testPatchTranslation() {
-    $this->config('jsonapi.settings')->set('read_only', FALSE)->save(TRUE);
+    $this->config('jsonapi.settings')->set('read_only', FALSE)->save();
     $node = $this->nodes[0];
     $uuid = $node->uuid();
 
@@ -197,7 +197,7 @@ class JsonApiFunctionalMultilingualTest extends JsonApiFunctionalTestBase {
    * Tests updating a translation fallback.
    */
   public function testPatchTranslationFallback() {
-    $this->config('jsonapi.settings')->set('read_only', FALSE)->save(TRUE);
+    $this->config('jsonapi.settings')->set('read_only', FALSE)->save();
     $node = $this->nodes[0];
     $uuid = $node->uuid();
 
@@ -238,7 +238,7 @@ class JsonApiFunctionalMultilingualTest extends JsonApiFunctionalTestBase {
    * Tests creating a translation.
    */
   public function testPostTranslation() {
-    $this->config('jsonapi.settings')->set('read_only', FALSE)->save(TRUE);
+    $this->config('jsonapi.settings')->set('read_only', FALSE)->save();
     $this->grantPermissions(Role::load(RoleInterface::ANONYMOUS_ID), [
       'bypass node access',
     ]);
@@ -302,7 +302,7 @@ class JsonApiFunctionalMultilingualTest extends JsonApiFunctionalTestBase {
    * Tests deleting multilingual content.
    */
   public function testDeleteMultilingual() {
-    $this->config('jsonapi.settings')->set('read_only', FALSE)->save(TRUE);
+    $this->config('jsonapi.settings')->set('read_only', FALSE)->save();
     $this->grantPermissions(Role::load(RoleInterface::ANONYMOUS_ID), [
       'bypass node access',
     ]);
