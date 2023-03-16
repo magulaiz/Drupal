@@ -15,6 +15,7 @@
     "lint:core-js": "node ./node_modules/eslint/bin/eslint.js .",
     "lint:core-js-passing": "node ./node_modules/eslint/bin/eslint.js --quiet --config=.eslintrc.passing.json .",
     "lint:core-js-stats": "node ./node_modules/eslint/bin/eslint.js --format=./scripts/js/eslint-stats-by-type.js .",
+    "lint:svelte": "node ./node_modules/eslint/bin/eslint.js --quiet --ext .svelte --config=.eslintrc.svelte.js .",
     "lint:css": "stylelint \"**/*.css\"",
     "lint:css-checkstyle": "stylelint \"**/*.css\" --custom-formatter ./node_modules/stylelint-checkstyle-formatter/index.js",
     "lint:yaml": "node ./node_modules/eslint/bin/eslint.js --ext .yml .",
