@@ -58,7 +58,7 @@ class PathAlias extends ContentEntityBase implements PathAliasInterface {
    *   The trimmed alias.
    */
   public static function trimAlias(string $alias): ?string {
-    return preg_replace('#([^/])([\\\/]\s*)*$#', '\1', $alias);
+    return preg_replace('#([^/])([\\\/]*\s*)*$#', '\1', $alias);
   }
 
   /**
