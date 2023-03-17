@@ -349,12 +349,12 @@ function node_entity_extra_field_info() {
  *   The number of nodes whose node type field was modified.
  *
  * @deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use
- *   \Drupal\Core\Entity\EntityStorageInterface::updateType instead.
+ *   \Drupal\Core\Entity\RevisionableStorageInterface::updateType instead.
  *
  * @see https://www.drupal.org/node/3323340
  */
 function node_type_update_nodes($old_id, $new_id) {
-  @trigger_error(__METHOD__ . ' is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use \Drupal\Core\Entity\EntityStorageInterface::updateType instead. See https://www.drupal.org/node/3323340', E_USER_DEPRECATED);
+  @trigger_error(__METHOD__ . ' is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use \Drupal\Core\Entity\RevisionableStorageInterface::updateType instead. See https://www.drupal.org/node/3294237', E_USER_DEPRECATED);
   return \Drupal::entityTypeManager()->getStorage('node')->updateType($old_id, $new_id);
 }
 
@@ -368,12 +368,12 @@ function node_type_update_nodes($old_id, $new_id) {
  *   A fully-populated node entity, or NULL if the node is not found.
  *
  * @deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use
- *   \Drupal\Core\Entity\EntityStorageInterface::loadRevision instead.
+ *   \Drupal\Core\Entity\RevisionableStorageInterface::loadRevision instead.
  *
  * @see https://www.drupal.org/node/3323340
  */
 function node_revision_load($vid = NULL) {
-  @trigger_error(__METHOD__ . ' is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use \Drupal\Core\Entity\EntityStorageInterface::loadRevision instead. See https://www.drupal.org/node/3323340', E_USER_DEPRECATED);
+  @trigger_error(__METHOD__ . ' is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use \Drupal\Core\Entity\RevisionableStorageInterface::loadRevision instead. See https://www.drupal.org/node/3294237', E_USER_DEPRECATED);
   return \Drupal::entityTypeManager()->getStorage('node')->loadRevision($vid);
 }
 
@@ -384,12 +384,12 @@ function node_revision_load($vid = NULL) {
  *   The revision ID to delete.
  *
  * @deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use
- *   \Drupal\Core\Entity\EntityStorageInterface::deleteRevision instead.
+ *   \Drupal\Core\Entity\RevisionableStorageInterface::deleteRevision instead.
  *
  * @see https://www.drupal.org/node/3323340
  */
 function node_revision_delete($revision_id) {
-  @trigger_error(__METHOD__ . ' is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use \Drupal\Core\Entity\EntityStorageInterface::deleteRevision instead. See https://www.drupal.org/node/3323340', E_USER_DEPRECATED);
+  @trigger_error(__METHOD__ . ' is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use \Drupal\Core\Entity\RevisionableStorageInterface::deleteRevision instead. See https://www.drupal.org/node/3294237', E_USER_DEPRECATED);
   \Drupal::entityTypeManager()->getStorage('node')->deleteRevision($revision_id);
 }
 
@@ -468,7 +468,6 @@ function node_preprocess_block(&$variables) {
 function node_preprocess_field__node(&$variables) {
   // Set a variable 'is_inline' in cases where inline markup is required,
   // without any block elements such as <div>.
-
   if ($variables['element']['#is_page_title'] ?? FALSE) {
     // Page title is always inline because it will be displayed inside <h1>.
     $variables['is_inline'] = TRUE;
