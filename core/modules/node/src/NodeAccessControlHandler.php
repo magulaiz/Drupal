@@ -52,7 +52,7 @@ class NodeAccessControlHandler extends EntityAccessControlHandler implements Nod
   protected const REVISION_OPERATION_MAP = [
     'view all revisions' => ['view', 'view'],
     'view revision' => ['view', 'view'],
-    'revert revision' => ['revert', 'update'],
+    'revert' => ['revert', 'update'],
     'delete revision' => ['delete', 'delete'],
   ];
 
@@ -158,7 +158,7 @@ class NodeAccessControlHandler extends EntityAccessControlHandler implements Nod
 
       // If this is the default revision, return access denied for revert or
       // delete operations.
-      if ($node->isDefaultRevision() && ($operation === 'revert revision' || $operation === 'delete revision')) {
+      if ($node->isDefaultRevision() && ($operation === 'revert' || $operation === 'delete revision')) {
         return AccessResult::forbidden()->addCacheableDependency($node);
       }
       elseif ($account->hasPermission('administer nodes')) {
