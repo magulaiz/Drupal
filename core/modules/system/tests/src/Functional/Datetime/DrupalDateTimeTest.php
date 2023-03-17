@@ -110,9 +110,11 @@ class DrupalDateTimeTest extends BrowserTestBase {
   }
 
   /**
-   * @param $timestamp
+   * Test DateTime object creation.
    *
-   * @return void
+   * @param mixed $timestamp
+   *   Timestamp value.
+   *
    * @dataProvider timestampProvider()
    */
   public function testTimestampArgumentTypes($timestamp) {
@@ -136,4 +138,5 @@ class DrupalDateTimeTest extends BrowserTestBase {
       [87654321.1],
     ];
   }
+
 }
