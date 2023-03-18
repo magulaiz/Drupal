@@ -10,32 +10,31 @@
   --item-list-spacing-m: var(--space-m);
 }
 
-.item-list {
-  & ul {
-    margin-block: 0.25em; /* @todo One-off value. */
-    margin-inline: var(--item-list-spacing-l) 0;
-    list-style-type: disc;
-    list-style-image: none;
-  }
+.item-list ul {
+  margin-block: 4px;
+  margin-inline: var(--item-list-spacing-l) 0;
+  list-style: disc;
 }
+
 .item-list ul li,
 .menu-item {
-  list-style-type: disc;
-  list-style-image: none;
+  list-style: disc;
 }
+
 .menu-item {
   margin: 0;
 }
+
 .item-list ul li.collapsed,
 .menu-item--collapsed {
-  list-style-type: disc;
-  list-style-image: url(../../images/menu-collapsed.png);
+  list-style: disc;
 }
+
 .item-list ul li.expanded,
 .menu-item--expanded {
-  list-style-type: circle;
-  list-style-image: url(../../images/menu-expanded.png);
+  list-style: circle;
 }
+
 ul {
   &.links li,
   &.inline li {
