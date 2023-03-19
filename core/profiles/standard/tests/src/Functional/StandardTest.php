@@ -197,7 +197,7 @@ class StandardTest extends BrowserTestBase {
     $this->drupalGet($url);
     // Verify that site-wide contact page cannot be cached by Dynamic Page
     // Cache.
-    $this->assertSession()->responseHeaderEquals(DynamicPageCacheSubscriber::HEADER, 'UNCACHEABLE');
+    $this->assertSession()->responseHeaderEquals(DynamicPageCacheSubscriber::HEADER, 'UNCACHEABLE (poor cacheability)');
 
     $url = Url::fromRoute('<front>');
     $this->drupalGet($url);

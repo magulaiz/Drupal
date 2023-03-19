@@ -510,13 +510,13 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
     // 200 for well-formed HEAD request.
     $response = $this->request('HEAD', $url, $request_options);
     $is_cacheable_by_dynamic_page_cache = empty(array_intersect(['user', 'session'], $this->getExpectedCacheContexts()));
-    $this->assertResourceResponse(200, '', $response, $this->getExpectedCacheTags(), $this->getExpectedCacheContexts(), static::$auth ? FALSE : 'MISS', $is_cacheable_by_dynamic_page_cache ? 'MISS' : 'UNCACHEABLE');
+    $this->assertResourceResponse(200, '', $response, $this->getExpectedCacheTags(), $this->getExpectedCacheContexts(), static::$auth ? FALSE : 'MISS', $is_cacheable_by_dynamic_page_cache ? 'MISS' : 'UNCACHEABLE (poor cacheability)');
     $head_headers = $response->getHeaders();
 
     // 200 for well-formed GET request. Page Cache hit because of HEAD request.
     // Same for Dynamic Page Cache hit.
     $response = $this->request('GET', $url, $request_options);
-    $this->assertResourceResponse(200, FALSE, $response, $this->getExpectedCacheTags(), $this->getExpectedCacheContexts(), static::$auth ? FALSE : 'HIT', $is_cacheable_by_dynamic_page_cache ? (static::$auth ? 'HIT' : 'MISS') : 'UNCACHEABLE');
+    $this->assertResourceResponse(200, FALSE, $response, $this->getExpectedCacheTags(), $this->getExpectedCacheContexts(), static::$auth ? FALSE : 'HIT', $is_cacheable_by_dynamic_page_cache ? (static::$auth ? 'HIT' : 'MISS') : 'UNCACHEABLE (poor cacheability)');
     // Assert that Dynamic Page Cache did not store a ResourceResponse object,
     // which needs serialization after every cache hit. Instead, it should
     // contain a flattened response. Otherwise performance suffers.
@@ -620,7 +620,7 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
 
     // DX: upon re-enabling a resource, immediate 200.
     $response = $this->request('GET', $url, $request_options);
-    $this->assertResourceResponse(200, FALSE, $response, $this->getExpectedCacheTags(), $this->getExpectedCacheContexts(), static::$auth ? FALSE : 'MISS', $is_cacheable_by_dynamic_page_cache ? 'MISS' : 'UNCACHEABLE');
+    $this->assertResourceResponse(200, FALSE, $response, $this->getExpectedCacheTags(), $this->getExpectedCacheContexts(), static::$auth ? FALSE : 'MISS', $is_cacheable_by_dynamic_page_cache ? 'MISS' : 'UNCACHEABLE (poor cacheability)');
 
     $this->resourceConfigStorage->load(static::$resourceConfigId)->delete();
     $this->refreshTestStateAfterRestConfigChange();
