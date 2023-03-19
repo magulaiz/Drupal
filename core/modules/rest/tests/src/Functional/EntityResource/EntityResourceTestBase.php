@@ -452,14 +452,14 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
 
     // DX: 403 when attempting to use unallowed authentication provider.
     $response = $this->request('GET', $url, $request_options);
-    $this->assertSame(403, $response->getStatusCode());
+    $this->assertResourceErrorResponse(403, 'The used authentication method is not allowed on this route.', $response);
 
     unset($request_options[RequestOptions::HEADERS]['REST-test-auth']);
     $request_options[RequestOptions::HEADERS]['REST-test-auth-global'] = '1';
 
     // DX: 403 when attempting to use unallowed global authentication provider.
     $response = $this->request('GET', $url, $request_options);
-    $this->assertSame(403, $response->getStatusCode());
+    $this->assertResourceErrorResponse(403, 'The used authentication method is not allowed on this route.', $response);
 
     unset($request_options[RequestOptions::HEADERS]['REST-test-auth-global']);
     $request_options = NestedArray::mergeDeep($request_options, $this->getAuthenticationRequestOptions('GET'));
@@ -652,7 +652,7 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
     $response = $this->request('GET', $url, $request_options);
     $path = str_replace('987654321', '{' . static::$entityTypeId . '}', $url->setAbsolute()->setOptions(['base_url' => '', 'query' => []])->toString());
     $message = 'The "' . static::$entityTypeId . '" parameter was not converted for the path "' . $path . '" (route name: "rest.entity.' . static::$entityTypeId . '.GET")';
-    $this->assertSame(404, $response->getStatusCode());
+    $this->assertResourceErrorResponse(404, $message, $response);
   }
 
   /**
