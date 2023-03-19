@@ -82,8 +82,11 @@ class TaxonomyTermFilterDepthTest extends TaxonomyTestBase {
 
   /**
    * Tests the terms with depth filter.
+   *
+   * @group legacy
    */
   public function testTermWithDepthFilter() {
+    $this->expectDeprecation("The 'vid' key in 'views.filter.taxonomy_index_tid' config schema is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Update your view to use the 'vids' key instead. See https://www.drupal.org/node/3162414");
     $column_map = ['nid' => 'nid'];
     $assert_method = 'assertIdentical';
 
