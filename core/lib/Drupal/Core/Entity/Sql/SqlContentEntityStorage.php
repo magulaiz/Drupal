@@ -560,8 +560,9 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
             // returns an array keyed by property names so remove the keys
             // before array_merge() to avoid losing data with fields having the
             // same columns i.e. value.
-            $column_names = array_merge($column_names, array_values($table_mapping->getColumnNames($data_field)));
+            $column_names[] = array_values($table_mapping->getColumnNames($data_field));
           }
+          $column_names = array_merge(...$column_names);
           $query->fields('data', $column_names);
         }
 
@@ -746,15 +747,17 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
       return;
     }
 
-    $transaction = $this->database->startTransaction();
     try {
+      $transaction = $this->database->startTransaction();
       parent::delete($entities);
 
       // Ignore replica server temporarily.
       \Drupal::service('database.replica_kill_switch')->trigger();
     }
     catch (\Exception $e) {
-      $transaction->rollBack();
+      if (isset($transaction)) {
+        $transaction->rollBack();
+      }
       watchdog_exception($this->entityTypeId, $e);
       throw new EntityStorageException($e->getMessage(), $e->getCode(), $e);
     }
@@ -797,8 +800,8 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
    * {@inheritdoc}
    */
   public function save(EntityInterface $entity) {
-    $transaction = $this->database->startTransaction();
     try {
+      $transaction = $this->database->startTransaction();
       $return = parent::save($entity);
 
       // Ignore replica server temporarily.
@@ -806,7 +809,9 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
       return $return;
     }
     catch (\Exception $e) {
-      $transaction->rollBack();
+      if (isset($transaction)) {
+        $transaction->rollBack();
+      }
       watchdog_exception($this->entityTypeId, $e);
       throw new EntityStorageException($e->getMessage(), $e->getCode(), $e);
     }
@@ -816,8 +821,8 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
    * {@inheritdoc}
    */
   public function restore(EntityInterface $entity) {
-    $transaction = $this->database->startTransaction();
     try {
+      $transaction = $this->database->startTransaction();
       // Insert the entity data in the base and data tables only for default
       // revisions.
       /** @var \Drupal\Core\Entity\ContentEntityInterface $entity */
@@ -853,7 +858,9 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
       \Drupal::service('database.replica_kill_switch')->trigger();
     }
     catch (\Exception $e) {
-      $transaction->rollBack();
+      if (isset($transaction)) {
+        $transaction->rollBack();
+      }
       watchdog_exception($this->entityTypeId, $e);
       throw new EntityStorageException($e->getMessage(), $e->getCode(), $e);
     }
@@ -1294,6 +1301,11 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
     }
 
     $original = !empty($entity->original) ? $entity->original : NULL;
+
+    // Use the loaded revision instead of default one to check for data change.
+    if ($original && !$entity->isNewRevision() && !$entity->isDefaultRevision()) {
+      $original = $this->loadRevision($entity->getLoadedRevisionId());
+    }
 
     // Determine which fields should be actually stored.
     $definitions = $this->entityFieldManager->getFieldDefinitions($entity_type, $bundle);

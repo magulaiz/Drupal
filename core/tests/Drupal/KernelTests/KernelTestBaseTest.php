@@ -88,13 +88,6 @@ class KernelTestBaseTest extends KernelTestBase {
     ]);
     $this->assertTrue($database->schema()->tableExists('foo'));
 
-    // Ensure that the database tasks have been run during set up. Neither MySQL
-    // nor SQLite make changes that are testable.
-    if ($database->driver() == 'pgsql') {
-      $this->assertEquals('on', $database->query("SHOW standard_conforming_strings")->fetchField());
-      $this->assertEquals('escape', $database->query("SHOW bytea_output")->fetchField());
-    }
-
     $this->assertNotNull(FileCacheFactory::getPrefix());
   }
 
@@ -209,8 +202,8 @@ class KernelTestBaseTest extends KernelTestBase {
     $output = \Drupal::service('renderer')->renderRoot($build);
     $this->assertEquals('core', \Drupal::theme()->getActiveTheme()->getName());
 
-    $this->assertEquals($expected, $build['#markup']);
-    $this->assertEquals($expected, $output);
+    $this->assertSame($expected, (string) $build['#markup']);
+    $this->assertSame($expected, (string) $output);
   }
 
   /**
@@ -261,6 +254,7 @@ class KernelTestBaseTest extends KernelTestBase {
   public function testMethodRequiresModule() {
     require __DIR__ . '/../../fixtures/KernelMissingDependentModuleMethodTest.php';
 
+    // @phpstan-ignore-next-line
     $stub_test = new KernelMissingDependentModuleMethodTest();
     // We have to setName() to the method name we're concerned with.
     $stub_test->setName('testRequiresModule');
@@ -288,6 +282,7 @@ class KernelTestBaseTest extends KernelTestBase {
   public function testRequiresModule() {
     require __DIR__ . '/../../fixtures/KernelMissingDependentModuleTest.php';
 
+    // @phpstan-ignore-next-line
     $stub_test = new KernelMissingDependentModuleTest();
     // We have to setName() to the method name we're concerned with.
     $stub_test->setName('testRequiresModule');

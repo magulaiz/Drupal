@@ -121,7 +121,7 @@ class Schema extends DatabaseSchema {
     // Take into account that temporary tables are stored in a different schema.
     // \Drupal\Core\Database\Connection::generateTemporaryTableName() sets the
     // 'db_temporary_' prefix to all temporary tables.
-    if (strpos($key, '.') === FALSE && strpos($table, 'db_temporary_') === FALSE) {
+    if (!str_contains($key, '.') && !str_contains($table, 'db_temporary_')) {
       $key = 'public.' . $key;
     }
     else {
@@ -207,7 +207,7 @@ EOD;
    */
   protected function resetTableInformation($table) {
     $key = $this->connection->prefixTables('{' . $table . '}');
-    if (strpos($key, '.') === FALSE) {
+    if (!str_contains($key, '.')) {
       $key = 'public.' . $key;
     }
     unset($this->tableInformation[$key]);
@@ -271,15 +271,7 @@ EOD;
   }
 
   /**
-   * Generate SQL to create a new table from a Drupal schema definition.
-   *
-   * @param string $name
-   *   The name of the table to create.
-   * @param array $table
-   *   A Schema API table definition array.
-   *
-   * @return array
-   *   An array of SQL statements to create the table.
+   * {@inheritdoc}
    */
   protected function createTableSql($name, $table) {
     $sql_fields = [];
@@ -572,7 +564,7 @@ EOD;
       // exceed the 63 chars limit of PostgreSQL, we need to take care of that.
       // cSpell:disable-next-line
       // Example (drupal_Gk7Su_T1jcBHVuvSPeP22_I3Ni4GrVEgTYlIYnBJkro_idx).
-      if (strpos($index->indexname, 'drupal_') !== FALSE) {
+      if (str_contains($index->indexname, 'drupal_')) {
         preg_match('/^drupal_(.*)_' . preg_quote($index_type) . '/', $index->indexname, $matches);
         $index_name = $matches[1];
       }
@@ -714,7 +706,7 @@ EOD;
    * {@inheritdoc}
    */
   public function indexExists($table, $name) {
-    // Details https://www.postgresql.org/docs/10/view-pg-indexes.html
+    // Details https://www.postgresql.org/docs/12/view-pg-indexes.html
     $index_name = $this->ensureIdentifiersLength($table, $name, 'idx');
     // Remove leading and trailing quotes because the index name is in a WHERE
     // clause and not used as an identifier.
@@ -802,6 +794,7 @@ EOD;
       throw new SchemaObjectExistsException("Cannot add unique key '$name' to table '$table': unique key already exists.");
     }
 
+    $fields = array_map([$this->connection, 'escapeField'], $fields);
     $this->connection->query('ALTER TABLE {' . $table . '} ADD CONSTRAINT ' . $this->ensureIdentifiersLength($table, $name, 'key') . ' UNIQUE (' . implode(',', $fields) . ')');
     $this->resetTableInformation($table);
   }
@@ -918,11 +911,11 @@ EOD;
     $field_info = $this->queryFieldInformation($table, $field);
 
     foreach ($field_info as $check) {
-      $this->connection->query('ALTER TABLE {' . $table . '} DROP CONSTRAINT "' . $check . '"');
+      $this->connection->query('ALTER TABLE {' . $table . '} DROP CONSTRAINT [' . $check . ']');
     }
 
     // Remove old default.
-    $this->connection->query('ALTER TABLE {' . $table . '} ALTER COLUMN "' . $field . '" DROP DEFAULT');
+    $this->connection->query('ALTER TABLE {' . $table . '} ALTER COLUMN [' . $field . '] DROP DEFAULT');
 
     // Convert field type.
     // Usually, we do this via a simple typecast 'USING fieldname::type'. But
@@ -932,10 +925,10 @@ EOD;
     $is_bytea = !empty($table_information->blob_fields[$field]);
     if ($spec['pgsql_type'] != 'bytea') {
       if ($is_bytea) {
-        $this->connection->query('ALTER TABLE {' . $table . '} ALTER "' . $field . '" TYPE ' . $field_def . ' USING convert_from("' . $field . '"' . ", 'UTF8')");
+        $this->connection->query('ALTER TABLE {' . $table . '} ALTER [' . $field . '] TYPE ' . $field_def . ' USING convert_from([' . $field . ']' . ", 'UTF8')");
       }
       else {
-        $this->connection->query('ALTER TABLE {' . $table . '} ALTER "' . $field . '" TYPE ' . $field_def . ' USING "' . $field . '"::' . $field_def);
+        $this->connection->query('ALTER TABLE {' . $table . '} ALTER [' . $field . '] TYPE ' . $field_def . ' USING [' . $field . ']::' . $field_def);
       }
     }
     else {
@@ -944,7 +937,7 @@ EOD;
         // Convert to a bytea type by using the SQL replace() function to
         // convert any single backslashes in the field content to double
         // backslashes ('\' to '\\').
-        $this->connection->query('ALTER TABLE {' . $table . '} ALTER "' . $field . '" TYPE ' . $field_def . ' USING decode(replace("' . $field . '"' . ", E'\\\\', E'\\\\\\\\'), 'escape');");
+        $this->connection->query('ALTER TABLE {' . $table . '} ALTER [' . $field . '] TYPE ' . $field_def . ' USING decode(replace("' . $field . '"' . ", E'\\\\', E'\\\\\\\\'), 'escape');");
       }
     }
 
@@ -955,7 +948,7 @@ EOD;
       else {
         $null_action = 'DROP NOT NULL';
       }
-      $this->connection->query('ALTER TABLE {' . $table . '} ALTER "' . $field . '" ' . $null_action);
+      $this->connection->query('ALTER TABLE {' . $table . '} ALTER [' . $field . '] ' . $null_action);
     }
 
     if (in_array($spec['pgsql_type'], ['serial', 'bigserial'])) {
@@ -966,28 +959,28 @@ EOD;
       $this->connection->query("CREATE SEQUENCE " . $seq);
       // Set sequence to maximal field value to not conflict with existing
       // entries.
-      $this->connection->query("SELECT setval('" . $seq . "', MAX(\"" . $field . '")) FROM {' . $table . "}");
-      $this->connection->query('ALTER TABLE {' . $table . '} ALTER ' . $field . ' SET DEFAULT nextval(' . $this->connection->quote($seq) . ')');
+      $this->connection->query("SELECT setval('" . $seq . "', MAX([" . $field . "])) FROM {" . $table . "}");
+      $this->connection->query('ALTER TABLE {' . $table . '} ALTER [' . $field . '] SET DEFAULT nextval(' . $this->connection->quote($seq) . ')');
     }
 
     // Rename the column if necessary.
     if ($field != $field_new) {
-      $this->connection->query('ALTER TABLE {' . $table . '} RENAME "' . $field . '" TO "' . $field_new . '"');
+      $this->connection->query('ALTER TABLE {' . $table . '} RENAME [' . $field . '] TO [' . $field_new . ']');
     }
 
     // Add unsigned check if necessary.
     if (!empty($spec['unsigned'])) {
-      $this->connection->query('ALTER TABLE {' . $table . '} ADD CHECK ("' . $field_new . '" >= 0)');
+      $this->connection->query('ALTER TABLE {' . $table . '} ADD CHECK ([' . $field_new . '] >= 0)');
     }
 
     // Add default if necessary.
     if (isset($spec['default'])) {
-      $this->connection->query('ALTER TABLE {' . $table . '} ALTER COLUMN "' . $field_new . '" SET DEFAULT ' . $this->escapeDefaultValue($spec['default']));
+      $this->connection->query('ALTER TABLE {' . $table . '} ALTER COLUMN [' . $field_new . '] SET DEFAULT ' . $this->escapeDefaultValue($spec['default']));
     }
 
     // Change description if necessary.
     if (!empty($spec['description'])) {
-      $this->connection->query('COMMENT ON COLUMN {' . $table . '}."' . $field_new . '" IS ' . $this->prepareComment($spec['description']));
+      $this->connection->query('COMMENT ON COLUMN {' . $table . '}.[' . $field_new . '] IS ' . $this->prepareComment($spec['description']));
     }
 
     if (isset($new_keys)) {

@@ -1357,7 +1357,7 @@ class Sql extends QueryPluginBase {
     $entity_information = $this->getEntityTableInfo();
     if ($entity_information) {
       $params = [];
-      if ($groupby) {
+      if ($this->hasAggregate) {
         // Handle grouping, by retrieving the minimum entity_id.
         $params = [
           'function' => 'min',
@@ -1429,7 +1429,7 @@ class Sql extends QueryPluginBase {
    * Get the arguments attached to the WHERE and HAVING clauses of this query.
    */
   public function getWhereArgs() {
-    return array_merge([], ...array_column($this->where, 'args'), ...array_column($this->having, 'args'));
+    return array_merge(...array_column($this->where, 'args'), ...array_column($this->having, 'args'));
   }
 
   /**

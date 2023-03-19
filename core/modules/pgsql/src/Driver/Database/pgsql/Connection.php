@@ -7,7 +7,8 @@ use Drupal\Core\Database\Connection as DatabaseConnection;
 use Drupal\Core\Database\DatabaseAccessDeniedException;
 use Drupal\Core\Database\DatabaseNotFoundException;
 use Drupal\Core\Database\StatementInterface;
-use Drupal\Core\Database\StatementWrapper;
+use Drupal\Core\Database\StatementWrapperIterator;
+use Drupal\Core\Database\SupportsTemporaryTablesInterface;
 
 // cSpell:ignore ilike nextval
 
@@ -19,7 +20,7 @@ use Drupal\Core\Database\StatementWrapper;
 /**
  * PostgreSQL implementation of \Drupal\Core\Database\Connection.
  */
-class Connection extends DatabaseConnection {
+class Connection extends DatabaseConnection implements SupportsTemporaryTablesInterface {
 
   /**
    * The name by which to obtain a lock for retrieve the next insert id.
@@ -42,7 +43,7 @@ class Connection extends DatabaseConnection {
   /**
    * {@inheritdoc}
    */
-  protected $statementWrapperClass = StatementWrapper::class;
+  protected $statementWrapperClass = StatementWrapperIterator::class;
 
   /**
    * A map of condition operators to PostgreSQL operators.
@@ -131,10 +132,10 @@ class Connection extends DatabaseConnection {
     }
     catch (\PDOException $e) {
       if (static::getSQLState($e) == static::CONNECTION_FAILURE) {
-        if (strpos($e->getMessage(), 'password authentication failed for user') !== FALSE) {
+        if (str_contains($e->getMessage(), 'password authentication failed for user')) {
           throw new DatabaseAccessDeniedException($e->getMessage(), $e->getCode(), $e);
         }
-        elseif (strpos($e->getMessage(), 'database') !== FALSE && strpos($e->getMessage(), 'does not exist') !== FALSE) {
+        elseif (str_contains($e->getMessage(), 'database') && str_contains($e->getMessage(), 'does not exist')) {
           throw new DatabaseNotFoundException($e->getMessage(), $e->getCode(), $e);
         }
       }
@@ -207,6 +208,15 @@ class Connection extends DatabaseConnection {
 
   public function queryRange($query, $from, $count, array $args = [], array $options = []) {
     return $this->query($query . ' LIMIT ' . (int) $count . ' OFFSET ' . (int) $from, $args, $options);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function queryTemporary($query, array $args = [], array $options = []) {
+    $tablename = 'db_temporary_' . uniqid();
+    $this->query('CREATE TEMPORARY TABLE {' . $tablename . '} AS ' . $query, $args, $options);
+    return $tablename;
   }
 
   public function driver() {
@@ -354,7 +364,7 @@ class Connection extends DatabaseConnection {
   }
 
   /**
-   * {@inheritDoc}
+   * {@inheritdoc}
    */
   public function hasJson(): bool {
     try {

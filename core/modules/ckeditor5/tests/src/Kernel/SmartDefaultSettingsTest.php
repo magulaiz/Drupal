@@ -5,6 +5,7 @@ declare(strict_types = 1);
 namespace Drupal\Tests\ckeditor5\Kernel;
 
 use Drupal\ckeditor5\HTMLRestrictions;
+use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Entity\Entity\EntityViewMode;
 use Drupal\editor\Entity\Editor;
@@ -89,6 +90,44 @@ class SmartDefaultSettingsTest extends KernelTestBase {
     $this->database = $this->container->get('database');
 
     $this->installSchema('dblog', ['watchdog']);
+
+    FilterFormat::create([
+      'format' => 'minimal_ckeditor_wrong_allowed_html',
+      'name' => 'Most basic HTML, but with allowed_html misconfigured',
+      'filters' => [
+        'filter_html' => [
+          'status' => 1,
+          'settings' => [
+            // Misconfiguration aspects:
+            // 1. `<a>`, not `<a href>`, while `DrupalLink` is enabled
+            // 2. `<p style>` even though `style` is globally disallowed by
+            //    filter_html
+            // 3. `<a onclick>` even though `on*` is globally disallowed by
+            //    filter_html
+            'allowed_html' => '<p style> <br> <a onclick>',
+          ],
+        ],
+      ],
+    ])->setSyncing(TRUE)->save();
+    Editor::create([
+      'format' => 'minimal_ckeditor_wrong_allowed_html',
+      'editor' => 'ckeditor',
+      'settings' => [
+        'toolbar' => [
+          'rows' => [
+            0 => [
+              [
+                'name' => 'Basic Formatting',
+                'items' => [
+                  'DrupalLink',
+                ],
+              ],
+            ],
+          ],
+        ],
+        'plugins' => [],
+      ],
+    ])->setSyncing(TRUE)->save();
 
     FilterFormat::create(
       Yaml::parseFile('core/modules/ckeditor5/tests/fixtures/ckeditor4_config/filter.format.full_html.yml')
@@ -465,6 +504,10 @@ class SmartDefaultSettingsTest extends KernelTestBase {
       $updated_text_editor->toArray()
     );
 
+    // Save this to ensure the config export order is applied.
+    // @see \Drupal\Core\Config\StorableConfigBase::castValue()
+    $updated_text_editor->save();
+
     // We should now have the expected data in the Editor config entity.
     $this->assertSame('ckeditor5', $updated_text_editor->getEditor());
     $this->assertSame($expected_ckeditor5_settings, $updated_text_editor->getSettings());
@@ -534,7 +577,9 @@ class SmartDefaultSettingsTest extends KernelTestBase {
     ];
     $db_logs = [];
     foreach ($db_logged as $log) {
-      $db_logs[$type_to_status[$log->severity]][] = $log->message;
+      $variables = unserialize($log->variables);
+      $message = new FormattableMarkup($log->message, $variables);
+      $db_logs[$type_to_status[$log->severity]][] = (string) $message;
     }
 
     // Transforms TranslatableMarkup objects to string.
@@ -890,12 +935,12 @@ class SmartDefaultSettingsTest extends KernelTestBase {
           ),
         ],
         'plugins' => array_merge(
-          $basic_html_test_case['expected_ckeditor5_settings']['plugins'],
           [
             'ckeditor5_alignment' => [
               'enabled_alignments' => ['center', 'justify'],
             ],
           ],
+          $basic_html_test_case['expected_ckeditor5_settings']['plugins'],
         ),
       ],
       'expected_superset' => implode(' ', [
@@ -1092,6 +1137,10 @@ class SmartDefaultSettingsTest extends KernelTestBase {
               'heading6',
             ],
           ],
+          'ckeditor5_list' => [
+            'reversed' => FALSE,
+            'startIndex' => TRUE,
+          ],
           'ckeditor5_sourceEditing' => [
             'allowed_tags' => [
               '<cite>',
@@ -1108,10 +1157,6 @@ class SmartDefaultSettingsTest extends KernelTestBase {
               '<h5 id>',
               '<h6 id>',
             ],
-          ],
-          'ckeditor5_list' => [
-            'reversed' => FALSE,
-            'startIndex' => TRUE,
           ],
         ],
       ],
@@ -1227,6 +1272,10 @@ class SmartDefaultSettingsTest extends KernelTestBase {
               'heading6',
             ],
           ],
+          'ckeditor5_list' => [
+            'reversed' => FALSE,
+            'startIndex' => TRUE,
+          ],
           'ckeditor5_sourceEditing' => [
             'allowed_tags' => [
               '<cite>',
@@ -1243,10 +1292,6 @@ class SmartDefaultSettingsTest extends KernelTestBase {
               '<h5 id>',
               '<h6 id>',
             ],
-          ],
-          'ckeditor5_list' => [
-            'reversed' => FALSE,
-            'startIndex' => TRUE,
           ],
         ],
       ],
@@ -1334,17 +1379,17 @@ class SmartDefaultSettingsTest extends KernelTestBase {
           ],
         ],
         'plugins' => [
+          'ckeditor5_sourceEditing' => [
+            'allowed_tags' => [
+              '<span>',
+            ],
+          ],
           'ckeditor5_style' => [
             'styles' => [
               [
                 'label' => 'Llama span',
                 'element' => '<span class="llama">',
               ],
-            ],
-          ],
-          'ckeditor5_sourceEditing' => [
-            'allowed_tags' => [
-              '<span>',
             ],
           ],
         ],
@@ -1378,6 +1423,27 @@ class SmartDefaultSettingsTest extends KernelTestBase {
       'expected_fundamental_compatibility_violations' => [],
       'expected_db_logs' => [],
       'expected_messages' => [],
+    ];
+
+    yield "minimal_ckeditor_wrong_allowed_html does not have sufficient allowed HTML => necessary allowed HTML added (1 upgrade message)" => [
+      'format_id' => 'minimal_ckeditor_wrong_allowed_html',
+      'filters_to_drop' => [],
+      'expected_ckeditor5_settings' => [
+        'toolbar' => [
+          'items' => [
+            'link',
+          ],
+        ],
+        'plugins' => [],
+      ],
+      'expected_superset' => '<a href>',
+      'expected_fundamental_compatibility_violations' => [],
+      'expected_db_logs' => [],
+      'expected_messages' => [
+        'warning' => [
+          0 => 'Updating to CKEditor 5 added support for some previously unsupported tags/attributes. A plugin introduced support for the following:   This attribute: <em class="placeholder"> href (for &lt;a&gt;)</em>; Additional details are available in your logs.',
+        ],
+      ],
     ];
   }
 

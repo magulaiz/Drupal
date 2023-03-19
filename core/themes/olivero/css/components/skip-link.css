@@ -12,19 +12,6 @@
  * Allows keyboard users to quickly skip to the main content of the page.
  */
 
-/*
- * Media query breakpoints.
- * Processed by postcss/postcss-custom-media.
- */
-
-/* Navigation related breakpoints */
-
-/* Grid related breakpoints */
-
-/* Grid shifts from 6 to 14 columns. */
-
-/* Width of the entire grid maxes out. */
-
 .skip-link {
   display: block;
   width: 100%;
@@ -39,13 +26,13 @@
 }
 
 .skip-link:hover {
-    text-decoration: underline;
-    color: var(--color--white);
-  }
+  text-decoration: underline;
+  color: var(--color--white);
+}
 
 .skip-link:after {
-    content: "\0020	➔";
-  }
+  content: "\0020	➔";
+}
 
 .skip-link.focusable:focus {
   position: absolute !important;

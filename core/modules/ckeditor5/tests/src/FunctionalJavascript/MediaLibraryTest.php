@@ -152,7 +152,7 @@ class MediaLibraryTest extends WebDriverTestBase {
     $media_preview_selector = '.ck-content .ck-widget.drupal-media .media';
     $this->drupalGet('/node/add/blog');
     $this->waitForEditor();
-    $this->pressEditorButton('Insert Drupal Media');
+    $this->pressEditorButton('Insert Media');
     $assert_session = $this->assertSession();
     $page = $this->getSession()->getPage();
     $this->assertNotEmpty($assert_session->waitForElementVisible('css', '#drupal-modal #media-library-content'));
@@ -195,7 +195,7 @@ class MediaLibraryTest extends WebDriverTestBase {
       ->save();
     $this->drupalGet('/node/add/blog');
     $this->waitForEditor();
-    $this->pressEditorButton('Insert Drupal Media');
+    $this->pressEditorButton('Insert Media');
     $this->assertNotEmpty($assert_session->waitForElementVisible('css', '#drupal-modal #media-library-content'));
     $assert_session->elementExists('css', '.js-media-library-item')->click();
     $assert_session->elementExists('css', '.ui-dialog-buttonpane')->pressButton('Insert selected');
@@ -205,11 +205,12 @@ class MediaLibraryTest extends WebDriverTestBase {
     $expected_attributes = [
       'data-entity-type' => 'media',
       'data-entity-uuid' => $this->media->uuid(),
-      'data-align' => 'center',
     ];
     foreach ($expected_attributes as $name => $expected) {
       $this->assertSame($expected, $drupal_media->getAttribute($name));
     }
+    // Ensure that by default, data-align attribute is not set.
+    $this->assertFalse($drupal_media->hasAttribute('data-align'));
   }
 
   /**
@@ -240,7 +241,7 @@ class MediaLibraryTest extends WebDriverTestBase {
       // verify the expected behavior.
       $this->drupalGet('/node/add/blog');
       $this->waitForEditor();
-      $this->pressEditorButton('Insert Drupal Media');
+      $this->pressEditorButton('Insert Media');
 
       $assert_session = $this->assertSession();
       $this->assertNotEmpty($assert_session->waitForElementVisible('css', '#drupal-modal #media-library-wrapper'));
@@ -273,7 +274,7 @@ class MediaLibraryTest extends WebDriverTestBase {
 
     $this->drupalGet('/node/add/blog');
     $this->waitForEditor();
-    $this->pressEditorButton('Insert Drupal Media');
+    $this->pressEditorButton('Insert Media');
     $this->assertNotEmpty($assert_session->waitForElementVisible('css', '#drupal-modal #media-library-content'));
     $assert_session->elementExists('css', '.js-media-library-item')->click();
     $assert_session->elementExists('css', '.ui-dialog-buttonpane')->pressButton('Insert selected');

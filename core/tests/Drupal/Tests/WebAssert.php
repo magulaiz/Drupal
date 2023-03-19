@@ -5,7 +5,6 @@ namespace Drupal\Tests;
 use Behat\Mink\Exception\ExpectationException;
 use Behat\Mink\Exception\ResponseTextException;
 use Behat\Mink\WebAssert as MinkWebAssert;
-use Behat\Mink\Element\ElementInterface;
 use Behat\Mink\Element\TraversableElement;
 use Behat\Mink\Exception\ElementNotFoundException;
 use Behat\Mink\Session;
@@ -51,13 +50,13 @@ class WebAssert extends MinkWebAssert {
       $url = $url->setAbsolute()->toString();
     }
     // Strip the base URL from the beginning for absolute URLs.
-    if ($this->baseUrl !== '' && strpos($url, $this->baseUrl) === 0) {
+    if ($this->baseUrl !== '' && str_starts_with($url, $this->baseUrl)) {
       $url = substr($url, strlen($this->baseUrl));
     }
     $parts = parse_url($url);
     // Make sure there is a forward slash at the beginning of relative URLs for
     // consistency.
-    if (empty($parts['host']) && strpos($url, '/') !== 0) {
+    if (empty($parts['host']) && !str_starts_with($url, '/')) {
       $parts['path'] = '/' . $parts['path'];
     }
     $fragment = empty($parts['fragment']) ? '' : '#' . $parts['fragment'];
@@ -138,7 +137,6 @@ class WebAssert extends MinkWebAssert {
    *   When the element doesn't exist.
    */
   public function buttonExists($button, TraversableElement $container = NULL) {
-    assert(func_num_args() <= 2);
     $container = $container ?: $this->session->getPage();
     $node = $container->findButton($button);
 
@@ -161,7 +159,6 @@ class WebAssert extends MinkWebAssert {
    *   When the button exists.
    */
   public function buttonNotExists($button, TraversableElement $container = NULL) {
-    assert(func_num_args() <= 2);
     $container = $container ?: $this->session->getPage();
     $node = $container->findButton($button);
 
@@ -183,7 +180,6 @@ class WebAssert extends MinkWebAssert {
    *   When the element doesn't exist.
    */
   public function selectExists($select, TraversableElement $container = NULL) {
-    assert(func_num_args() <= 2);
     $container = $container ?: $this->session->getPage();
     $node = $container->find('named', [
       'select',
@@ -214,7 +210,6 @@ class WebAssert extends MinkWebAssert {
    *   When the element doesn't exist.
    */
   public function optionExists($select, $option, TraversableElement $container = NULL) {
-    assert(func_num_args() <= 3);
     $container = $container ?: $this->session->getPage();
     $select_field = $container->find('named', [
       'select',
@@ -248,7 +243,6 @@ class WebAssert extends MinkWebAssert {
    *   When the select element doesn't exist.
    */
   public function optionNotExists($select, $option, TraversableElement $container = NULL) {
-    assert(func_num_args() <= 3);
     $container = $container ?: $this->session->getPage();
     $select_field = $container->find('named', [
       'select',
@@ -274,7 +268,6 @@ class WebAssert extends MinkWebAssert {
    *   Thrown when element doesn't exist, or the title is a different one.
    */
   public function titleEquals($expected_title) {
-    assert(func_num_args() === 1);
     $title_element = $this->session->getPage()->find('css', 'title');
     if (!$title_element) {
       throw new ExpectationException('No title element found on the page', $this->session->getDriver());
@@ -301,7 +294,7 @@ class WebAssert extends MinkWebAssert {
    *   Thrown when element doesn't exist, or the link label is a different one.
    */
   public function linkExists($label, $index = 0, $message = '') {
-    $message = ($message ? $message : strtr('Link with label %label found.', ['%label' => $label]));
+    $message = ($message ? $message : strtr('Link with label %label not found.', ['%label' => $label]));
     $links = $this->session->getPage()->findAll('named', ['link', $label]);
     $this->assert(!empty($links[$index]), $message);
   }
@@ -324,7 +317,7 @@ class WebAssert extends MinkWebAssert {
    *   Thrown when element doesn't exist, or the link label is a different one.
    */
   public function linkExistsExact($label, $index = 0, $message = '') {
-    $message = ($message ? $message : strtr('Link with label %label found.', ['%label' => $label]));
+    $message = ($message ? $message : strtr('Link with label %label not found.', ['%label' => $label]));
     $links = $this->session->getPage()->findAll('named_exact', ['link', $label]);
     $this->assert(!empty($links[$index]), $message);
   }
@@ -345,7 +338,7 @@ class WebAssert extends MinkWebAssert {
    *   Thrown when element doesn't exist, or the link label is a different one.
    */
   public function linkNotExists($label, $message = '') {
-    $message = ($message ? $message : strtr('Link with label %label not found.', ['%label' => $label]));
+    $message = ($message ? $message : strtr('Link with label %label found.', ['%label' => $label]));
     $links = $this->session->getPage()->findAll('named', ['link', $label]);
     $this->assert(empty($links), $message);
   }
@@ -366,7 +359,7 @@ class WebAssert extends MinkWebAssert {
    *   Thrown when element doesn't exist, or the link label is a different one.
    */
   public function linkNotExistsExact($label, $message = '') {
-    $message = ($message ? $message : strtr('Link with label %label not found.', ['%label' => $label]));
+    $message = ($message ? $message : strtr('Link with label %label found.', ['%label' => $label]));
     $links = $this->session->getPage()->findAll('named_exact', ['link', $label]);
     $this->assert(empty($links), $message);
   }
@@ -389,7 +382,7 @@ class WebAssert extends MinkWebAssert {
    */
   public function linkByHrefExists($href, $index = 0, $message = '') {
     $xpath = $this->buildXPathQuery('//a[contains(@href, :href)]', [':href' => $href]);
-    $message = ($message ? $message : strtr('Link containing href %href found.', ['%href' => $href]));
+    $message = ($message ? $message : strtr('No link containing href %href found.', ['%href' => $href]));
     $links = $this->session->getPage()->findAll('xpath', $xpath);
     $this->assert(!empty($links[$index]), $message);
   }
@@ -410,7 +403,7 @@ class WebAssert extends MinkWebAssert {
    */
   public function linkByHrefNotExists($href, $message = '') {
     $xpath = $this->buildXPathQuery('//a[contains(@href, :href)]', [':href' => $href]);
-    $message = ($message ? $message : strtr('No link containing href %href found.', ['%href' => $href]));
+    $message = ($message ? $message : strtr('Link containing href %href found.', ['%href' => $href]));
     $links = $this->session->getPage()->findAll('xpath', $xpath);
     $this->assert(empty($links), $message);
   }
@@ -476,7 +469,6 @@ class WebAssert extends MinkWebAssert {
    *   Raw (HTML) string to look for.
    */
   public function assertNoEscaped($raw) {
-    assert(func_num_args() === 1);
     $this->responseNotContains(Html::escape($raw));
   }
 
@@ -489,7 +481,6 @@ class WebAssert extends MinkWebAssert {
    *   Raw (HTML) string to look for.
    */
   public function assertEscaped($raw) {
-    assert(func_num_args() === 1);
     $this->responseContains(Html::escape($raw));
   }
 
@@ -502,7 +493,6 @@ class WebAssert extends MinkWebAssert {
    * @throws \Behat\Mink\Exception\ExpectationException
    */
   public function responseContains($text) {
-    assert(func_num_args() === 1);
     parent::responseContains((string) $text);
   }
 
@@ -515,7 +505,6 @@ class WebAssert extends MinkWebAssert {
    * @throws \Behat\Mink\Exception\ExpectationException
    */
   public function responseNotContains($text) {
-    assert(func_num_args() === 1);
     parent::responseNotContains((string) $text);
   }
 
@@ -555,7 +544,6 @@ class WebAssert extends MinkWebAssert {
    * @throws \Behat\Mink\Exception\ExpectationException
    */
   public function fieldDisabled($field, TraversableElement $container = NULL) {
-    assert(func_num_args() <= 2);
     $container = $container ?: $this->session->getPage();
     $node = $container->findField($field);
 
@@ -585,7 +573,6 @@ class WebAssert extends MinkWebAssert {
    * @throws \Behat\Mink\Exception\ExpectationException
    */
   public function fieldEnabled($field, TraversableElement $container = NULL) {
-    assert(func_num_args() <= 2);
     $container = $container ?: $this->session->getPage();
     $node = $container->findField($field);
 
@@ -614,7 +601,6 @@ class WebAssert extends MinkWebAssert {
    * @throws \Behat\Mink\Exception\ElementNotFoundException
    */
   public function hiddenFieldExists($field, TraversableElement $container = NULL) {
-    assert(func_num_args() <= 2);
     $container = $container ?: $this->session->getPage();
     if ($node = $container->find('hidden_field_selector', ['hidden_field', $field])) {
       return $node;
@@ -633,7 +619,6 @@ class WebAssert extends MinkWebAssert {
    * @throws \Behat\Mink\Exception\ExpectationException
    */
   public function hiddenFieldNotExists($field, TraversableElement $container = NULL) {
-    assert(func_num_args() <= 2);
     $container = $container ?: $this->session->getPage();
     $node = $container->find('hidden_field_selector', ['hidden_field', $field]);
     $this->assert($node === NULL, "A hidden field '$field' exists on this page, but it should not.");
@@ -653,7 +638,6 @@ class WebAssert extends MinkWebAssert {
    * @throws \Behat\Mink\Exception\ExpectationException
    */
   public function hiddenFieldValueEquals($field, $value, TraversableElement $container = NULL) {
-    assert(func_num_args() <= 3);
     $node = $this->hiddenFieldExists($field, $container);
     $actual = $node->getValue();
     $regex = '/^' . preg_quote($value, '/') . '$/ui';
@@ -675,7 +659,6 @@ class WebAssert extends MinkWebAssert {
    * @throws \Behat\Mink\Exception\ExpectationException
    */
   public function hiddenFieldValueNotEquals($field, $value, TraversableElement $container = NULL) {
-    assert(func_num_args() <= 3);
     $node = $this->hiddenFieldExists($field, $container);
     $actual = $node->getValue();
     $regex = '/^' . preg_quote($value, '/') . '$/ui';
@@ -692,7 +675,6 @@ class WebAssert extends MinkWebAssert {
    * @see \Behat\Mink\WebAssert::pageTextContains()
    */
   public function pageTextContainsOnce($text) {
-    assert(func_num_args() === 1);
     $regex = '/' . preg_quote($text, '/') . '/ui';
     try {
       $this->pageTextMatchesCount(1, $regex);
@@ -722,9 +704,8 @@ class WebAssert extends MinkWebAssert {
    * {@inheritdoc}
    */
   public function addressEquals($page) {
-    assert(func_num_args() === 1);
     $expected = $this->cleanUrl($page, TRUE);
-    $actual = $this->cleanUrl($this->session->getCurrentUrl(), strpos($expected, '?') !== FALSE);
+    $actual = $this->cleanUrl($this->session->getCurrentUrl(), str_contains($expected, '?'));
 
     $this->assert($actual === $expected, sprintf('Current page is "%s", but "%s" expected.', $actual, $expected));
   }
@@ -733,171 +714,10 @@ class WebAssert extends MinkWebAssert {
    * {@inheritdoc}
    */
   public function addressNotEquals($page) {
-    assert(func_num_args() === 1);
     $expected = $this->cleanUrl($page, TRUE);
-    $actual = $this->cleanUrl($this->session->getCurrentUrl(), strpos($expected, '?') !== FALSE);
+    $actual = $this->cleanUrl($this->session->getCurrentUrl(), str_contains($expected, '?'));
 
     $this->assert($actual !== $expected, sprintf('Current page is "%s", but should not be.', $actual));
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function addressMatches($regex) {
-    assert(func_num_args() === 1);
-    return parent::addressMatches($regex);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function cookieEquals($name, $value) {
-    assert(func_num_args() === 2);
-    return parent::cookieEquals($name, $value);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function cookieExists($name) {
-    assert(func_num_args() === 1);
-    return parent::cookieExists($name);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function statusCodeEquals($code) {
-    assert(func_num_args() === 1);
-    return parent::statusCodeEquals($code);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function statusCodeNotEquals($code) {
-    assert(func_num_args() === 1);
-    return parent::statusCodeNotEquals($code);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function responseHeaderEquals($name, $value) {
-    assert(func_num_args() === 2);
-    return parent::responseHeaderEquals($name, $value);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function responseHeaderNotEquals($name, $value) {
-    assert(func_num_args() === 2);
-    return parent::responseHeaderNotEquals($name, $value);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function responseHeaderContains($name, $value) {
-    assert(func_num_args() === 2);
-    return parent::responseHeaderContains($name, $value);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function responseHeaderNotContains($name, $value) {
-    assert(func_num_args() === 2);
-    return parent::responseHeaderNotContains($name, $value);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function responseHeaderMatches($name, $regex) {
-    assert(func_num_args() === 2);
-    return parent::responseHeaderMatches($name, $regex);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function responseHeaderNotMatches($name, $regex) {
-    assert(func_num_args() === 2);
-    return parent::responseHeaderNotMatches($name, $regex);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function pageTextContains($text) {
-    assert(func_num_args() === 1);
-    return parent::pageTextContains($text);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function pageTextNotContains($text) {
-    assert(func_num_args() === 1);
-    return parent::pageTextNotContains($text);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function pageTextMatches($regex) {
-    assert(func_num_args() === 1);
-    return parent::pageTextMatches($regex);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function pageTextNotMatches($regex) {
-    assert(func_num_args() === 1);
-    return parent::pageTextNotMatches($regex);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function responseMatches($regex) {
-    assert(func_num_args() === 1);
-    return parent::responseMatches($regex);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function responseNotMatches($regex) {
-    assert(func_num_args() === 1);
-    return parent::responseNotMatches($regex);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function elementsCount($selectorType, $selector, $count, ElementInterface $container = NULL) {
-    assert(func_num_args() <= 4);
-    return parent::elementsCount($selectorType, $selector, $count, $container);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function elementExists($selectorType, $selector, ElementInterface $container = NULL) {
-    assert(func_num_args() <= 3);
-    return parent::elementExists($selectorType, $selector, $container);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function elementNotExists($selectorType, $selector, ElementInterface $container = NULL) {
-    assert(func_num_args() <= 3);
-    return parent::elementNotExists($selectorType, $selector, $container);
   }
 
   /**
@@ -915,110 +735,6 @@ class WebAssert extends MinkWebAssert {
     $message = "Failed asserting that the text of the element identified by '$selector_string' equals '$text'.";
     $constraint = new IsEqual($text);
     Assert::assertThat($this->elementExists($selectorType, $selector)->getText(), $constraint, $message);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function elementTextContains($selectorType, $selector, $text) {
-    assert(func_num_args() === 3);
-    return parent::elementTextContains($selectorType, $selector, $text);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function elementTextNotContains($selectorType, $selector, $text) {
-    assert(func_num_args() === 3);
-    return parent::elementTextNotContains($selectorType, $selector, $text);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function elementContains($selectorType, $selector, $html) {
-    assert(func_num_args() === 3);
-    return parent::elementContains($selectorType, $selector, $html);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function elementNotContains($selectorType, $selector, $html) {
-    assert(func_num_args() === 3);
-    return parent::elementNotContains($selectorType, $selector, $html);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function elementAttributeExists($selectorType, $selector, $attribute) {
-    assert(func_num_args() === 3);
-    return parent::elementAttributeExists($selectorType, $selector, $attribute);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function elementAttributeContains($selectorType, $selector, $attribute, $text) {
-    assert(func_num_args() === 4);
-    return parent::elementAttributeContains($selectorType, $selector, $attribute, $text);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function elementAttributeNotContains($selectorType, $selector, $attribute, $text) {
-    assert(func_num_args() === 4);
-    return parent::elementAttributeNotContains($selectorType, $selector, $attribute, $text);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function fieldExists($field, TraversableElement $container = NULL) {
-    assert(func_num_args() <= 2);
-    return parent::fieldExists($field, $container);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function fieldNotExists($field, TraversableElement $container = NULL) {
-    assert(func_num_args() <= 2);
-    return parent::fieldNotExists($field, $container);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function fieldValueEquals($field, $value, TraversableElement $container = NULL) {
-    assert(func_num_args() <= 3);
-    return parent::fieldValueEquals($field, $value, $container);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function fieldValueNotEquals($field, $value, TraversableElement $container = NULL) {
-    assert(func_num_args() <= 3);
-    return parent::fieldValueNotEquals($field, $value, $container);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function checkboxChecked($field, TraversableElement $container = NULL) {
-    assert(func_num_args() <= 2);
-    return parent::checkboxChecked($field, $container);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function checkboxNotChecked($field, TraversableElement $container = NULL) {
-    assert(func_num_args() <= 2);
-    return parent::checkboxNotChecked($field, $container);
   }
 
   /**

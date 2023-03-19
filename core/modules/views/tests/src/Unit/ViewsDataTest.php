@@ -128,8 +128,6 @@ class ViewsDataTest extends UnitTestCase {
 
   /**
    * Mocks the basic module handler used for the test.
-   *
-   * @return \Drupal\Core\Extension\ModuleHandlerInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected function setupMockedModuleHandler(): void {
     $this->moduleHandler->expects($this->atLeastOnce())
@@ -371,7 +369,7 @@ class ViewsDataTest extends UnitTestCase {
       );
     $this->cacheBackend->expects($this->exactly(2))
       ->method('set')
-      ->withConsecutive(
+      ->willReturnOnConsecutiveCalls(
         ['views_data:en', $expected_views_data],
         ['views_data:views_test_data:en', $expected_views_data['views_test_data']],
       );
@@ -602,7 +600,7 @@ class ViewsDataTest extends UnitTestCase {
       );
     $this->cacheBackend->expects($this->exactly(2))
       ->method('set')
-      ->withConsecutive(
+      ->willReturnOnConsecutiveCalls(
         ["views_data:$table_name:en", $expected_views_data[$table_name]],
         ["views_data:$table_name_2:en", $expected_views_data[$table_name_2]],
       );

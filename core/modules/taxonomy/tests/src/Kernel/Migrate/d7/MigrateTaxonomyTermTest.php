@@ -90,7 +90,7 @@ class MigrateTaxonomyTermTest extends MigrateDrupal7TestBase {
     $this->assertEquals($expected_vid, $entity->bundle());
     $this->assertEquals($expected_description, $entity->getDescription());
     $this->assertEquals($expected_format, $entity->getFormat());
-    $this->assertEquals($expected_weight, (int) $entity->getWeight());
+    $this->assertEquals($expected_weight, $entity->getWeight());
     $this->assertEquals($expected_parents, $this->getParentIDs($id));
     $this->assertHierarchy($expected_vid, $id, $expected_parents);
     if (!is_null($expected_field_integer_value)) {
@@ -186,7 +186,7 @@ class MigrateTaxonomyTermTest extends MigrateDrupal7TestBase {
     $this->assertSame('en', $metadata_fr->getSource());
     $this->assertSame('2', $metadata_fr->getAuthor()->uid->value);
     $this->assertSame('1531922267', $metadata_fr->getCreatedTime());
-    $this->assertSame('1531922268', $metadata_fr->getChangedTime());
+    $this->assertSame(1531922268, $metadata_fr->getChangedTime());
     $this->assertTrue($metadata_fr->isOutdated());
 
     // Test that the Icelandic translation metadata is correctly migrated.
@@ -195,7 +195,7 @@ class MigrateTaxonomyTermTest extends MigrateDrupal7TestBase {
     $this->assertSame('en', $metadata_is->getSource());
     $this->assertSame('1', $metadata_is->getAuthor()->uid->value);
     $this->assertSame('1531922278', $metadata_is->getCreatedTime());
-    $this->assertSame('1531922279', $metadata_is->getChangedTime());
+    $this->assertSame(1531922279, $metadata_is->getChangedTime());
     $this->assertFalse($metadata_is->isOutdated());
 
     // Test that untranslatable properties are the same as the source language.

@@ -10,6 +10,7 @@ namespace Drupal\Tests\Component\DependencyInjection;
 use Drupal\Component\Utility\Crypt;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
+use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\Exception\InvalidArgumentException;
 use Symfony\Component\DependencyInjection\Exception\LogicException;
@@ -24,7 +25,7 @@ use Prophecy\Argument;
  * @group DependencyInjection
  */
 class ContainerTest extends TestCase {
-
+  use ExpectDeprecationTrait;
   use ProphecyTrait;
 
   /**
@@ -168,7 +169,7 @@ class ContainerTest extends TestCase {
     $this->assertEquals($some_parameter, $service->getSomeParameter(), '%some_config% was injected via constructor.');
     $this->assertEquals($this->container, $service->getContainer(), 'Container was injected via setter injection.');
     $this->assertEquals($some_other_parameter, $service->getSomeOtherParameter(), '%some_other_config% was injected via setter injection.');
-    $this->assertEquals('foo', $service->_someProperty, 'Service has added properties.');
+    $this->assertEquals('foo', $service->someProperty, 'Service has added properties.');
   }
 
   /**
@@ -688,8 +689,12 @@ class ContainerTest extends TestCase {
   /**
    * @covers \Drupal\Component\DependencyInjection\ServiceIdHashTrait::getServiceIdMappings
    * @covers \Drupal\Component\DependencyInjection\ServiceIdHashTrait::generateServiceIdHash
+   *
+   * @group legacy
    */
   public function testGetServiceIdMappings() {
+    $this->expectDeprecation("Drupal\Component\DependencyInjection\ServiceIdHashTrait::generateServiceIdHash() is deprecated in drupal:9.5.1 and is removed from drupal:11.0.0. Use the 'Drupal\Component\DependencyInjection\ReverseContainer' service instead. See https://www.drupal.org/node/3327942");
+    $this->expectDeprecation("Drupal\Component\DependencyInjection\ServiceIdHashTrait::getServiceIdMappings() is deprecated in drupal:9.5.1 and is removed from drupal:11.0.0. Use the 'Drupal\Component\DependencyInjection\ReverseContainer' service instead. See https://www.drupal.org/node/3327942");
     $this->assertEquals([], $this->container->getServiceIdMappings());
     $s1 = $this->container->get('other.service');
     $s2 = $this->container->get('late.service');
@@ -741,7 +746,7 @@ class ContainerTest extends TestCase {
         $this->getServiceCall('other.service'),
         $this->getParameterCall('some_config'),
       ]),
-      'properties' => $this->getCollection(['_someProperty' => 'foo']),
+      'properties' => $this->getCollection(['someProperty' => 'foo']),
       'calls' => [
         [
           'setContainer',
@@ -1102,6 +1107,11 @@ class MockService {
    * @var string
    */
   protected $someOtherParameter;
+
+  /**
+   * @var string
+   */
+  public string $someProperty;
 
   /**
    * Constructs a MockService object.

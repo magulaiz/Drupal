@@ -201,10 +201,6 @@ class Container implements ContainerInterface, ResetInterface {
    * a new instance of the shared service.
    */
   public function reset() {
-    if (!empty($this->scopedServices)) {
-      throw new LogicException('Resetting the container is not allowed when a scope is active.');
-    }
-
     $this->services = [];
   }
 
@@ -501,7 +497,7 @@ class Container implements ContainerInterface, ResetInterface {
     $alternatives = [];
     foreach ($keys as $key) {
       $lev = levenshtein($search_key, $key);
-      if ($lev <= strlen($search_key) / 3 || strpos($key, $search_key) !== FALSE) {
+      if ($lev <= strlen($search_key) / 3 || str_contains($key, $search_key)) {
         $alternatives[] = $key;
       }
     }

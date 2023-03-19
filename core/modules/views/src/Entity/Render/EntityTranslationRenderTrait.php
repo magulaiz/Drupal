@@ -34,23 +34,22 @@ trait EntityTranslationRenderTrait {
         '***LANGUAGE_entity_translation***' => 'TranslationLanguageRenderer',
         '***LANGUAGE_entity_default***' => 'DefaultLanguageRenderer',
       ];
+      $entity_type = $this->getEntityTypeManager()->getDefinition($this->getEntityTypeId());
       if (isset($dynamic_renderers[$rendering_language])) {
         // Dynamic language set based on result rows or instance defaults.
-        $renderer = $dynamic_renderers[$rendering_language];
+        $class = '\Drupal\views\Entity\Render\\' . $dynamic_renderers[$rendering_language];
+        $this->entityTranslationRenderer = new $class($view, $this->getLanguageManager(), $entity_type);
       }
       else {
-        if (strpos($rendering_language, '***LANGUAGE_') !== FALSE) {
+        if (str_contains($rendering_language, '***LANGUAGE_')) {
           $langcode = PluginBase::queryLanguageSubstitutions()[$rendering_language];
         }
         else {
           // Specific langcode set.
           $langcode = $rendering_language;
         }
-        $renderer = 'ConfigurableLanguageRenderer';
+        $this->entityTranslationRenderer = new ConfigurableLanguageRenderer($view, $this->getLanguageManager(), $entity_type, $langcode);
       }
-      $class = '\Drupal\views\Entity\Render\\' . $renderer;
-      $entity_type = $this->getEntityTypeManager()->getDefinition($this->getEntityTypeId());
-      $this->entityTranslationRenderer = new $class($view, $this->getLanguageManager(), $entity_type, $langcode);
     }
     return $this->entityTranslationRenderer;
   }

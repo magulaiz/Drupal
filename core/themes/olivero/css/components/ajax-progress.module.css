@@ -10,19 +10,6 @@
  * Visual styles for ajax-progress throbber.
  */
 
-/*
- * Media query breakpoints.
- * Processed by postcss/postcss-custom-media.
- */
-
-/* Navigation related breakpoints */
-
-/* Grid related breakpoints */
-
-/* Grid shifts from 6 to 14 columns. */
-
-/* Width of the entire grid maxes out. */
-
 .ajax-progress {
   display: inline-block;
 }
@@ -78,15 +65,15 @@
 }
 
 .ajax-progress-fullscreen:before {
-    position: absolute;
-    inset-block-start: 50%;
-    inset-inline-start: 50%;
-    width: 1.75rem;
-    height: 1.75rem;
-    margin: -0.875rem;
-    content: "";
-    border-width: 3px;
-  }
+  position: absolute;
+  inset-block-start: 50%;
+  inset-inline-start: 50%;
+  width: 1.75rem;
+  height: 1.75rem;
+  margin: -0.875rem;
+  content: "";
+  border-width: 3px;
+}
 
 [dir="rtl"] .ajax-progress-fullscreen {
   box-shadow: 0 -0.25rem 0.625rem rgba(34, 35, 48, 0.1);

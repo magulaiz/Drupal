@@ -1194,6 +1194,7 @@ class ValidatorsTest extends KernelTestBase {
         ],
       ],
       'violations' => [
+        'filters.filter_html' => 'The current CKEditor 5 build requires the following elements and attributes: <br><code>&lt;br&gt; &lt;p onhover style&gt; &lt;* dir=&quot;ltr rtl&quot; lang&gt; &lt;img on*&gt; &lt;blockquote style&gt; &lt;marquee&gt; &lt;a onclick=&quot;javascript:*&quot;&gt; &lt;code style=&quot;foo: bar;&quot;&gt;</code><br>The following elements are missing: <br><code>&lt;p onhover style&gt; &lt;img on*&gt; &lt;blockquote style&gt; &lt;code style=&quot;foo: bar;&quot;&gt;</code>',
         'settings.plugins.ckeditor5_sourceEditing.allowed_tags.0' => 'The following tag in the Source Editing "Manually editable HTML tags" field is a security risk: <em class="placeholder">&lt;p onhover&gt;</em>.',
         'settings.plugins.ckeditor5_sourceEditing.allowed_tags.1' => 'The following tag in the Source Editing "Manually editable HTML tags" field is a security risk: <em class="placeholder">&lt;img on*&gt;</em>.',
         'settings.plugins.ckeditor5_sourceEditing.allowed_tags.2' => 'The following tag in the Source Editing "Manually editable HTML tags" field is a security risk: <em class="placeholder">&lt;blockquote style&gt;</em>.',
@@ -1463,6 +1464,66 @@ class ValidatorsTest extends KernelTestBase {
       'violations' => [],
     ];
     return $data;
+  }
+
+  /**
+   * Tests that validation works with >1 enabled HTML restrictor filters.
+   *
+   * @covers \Drupal\ckeditor5\Plugin\Validation\Constraint\FundamentalCompatibilityConstraintValidator::checkHtmlRestrictionsMatch()
+   */
+  public function testMultipleHtmlRestrictingFilters(): void {
+    $this->container->get('module_installer')->install(['filter_test']);
+
+    $text_format = FilterFormat::create([
+      'format' => 'very_restricted',
+      'name' => $this->randomMachineName(),
+      'filters' => [
+        // The first filter of type TYPE_HTML_RESTRICTOR.
+        'filter_html' => [
+          'id' => 'filter_html',
+          'provider' => 'filter',
+          'status' => TRUE,
+          'weight' => 0,
+          'settings' => [
+            'allowed_html' => "<p> <br>",
+            'filter_html_help' => TRUE,
+            'filter_html_nofollow' => TRUE,
+          ],
+        ],
+        // The second filter of type TYPE_HTML_RESTRICTOR. Configure this to
+        // allow exactly what the first filter allows.
+        'filter_test_restrict_tags_and_attributes' => [
+          'id' => 'filter_test_restrict_tags_and_attributes',
+          'provider' => 'filter_test',
+          'status' => TRUE,
+          'settings' => [
+            'restrictions' => [
+              'allowed' => [
+                'p' => FALSE,
+                'br' => FALSE,
+                '*' => [
+                  'dir' => ['ltr' => TRUE, 'rtl' => TRUE],
+                  'lang' => TRUE,
+                ],
+              ],
+            ],
+          ],
+        ],
+      ],
+    ]);
+    $text_editor = Editor::create([
+      'format' => 'very_restricted',
+      'editor' => 'ckeditor5',
+      'settings' => [
+        'toolbar' => [
+          'items' => [],
+        ],
+        'plugins' => [],
+      ],
+      'image_upload' => [],
+    ]);
+
+    $this->assertSame([], $this->validatePairToViolationsArray($text_editor, $text_format, TRUE));
   }
 
 }

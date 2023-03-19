@@ -10,19 +10,6 @@
  * Styles for pagination.
  */
 
-/*
- * Media query breakpoints.
- * Processed by postcss/postcss-custom-media.
- */
-
-/* Navigation related breakpoints */
-
-/* Grid related breakpoints */
-
-/* Grid shifts from 6 to 14 columns. */
-
-/* Width of the entire grid maxes out. */
-
 .pager__items {
   display: flex;
   flex-wrap: wrap;
@@ -49,11 +36,11 @@
 
 @media (min-width: 31.25rem) {
 
-.pager__item {
+  .pager__item {
     width: var(--sp3);
     height: var(--sp3);
-}
   }
+}
 
 [dir="rtl"] .pager__item--control {
   transform: scaleX(-1);
@@ -65,10 +52,10 @@
 }
 
 @media (forced-colors: active) {
-    .pager__item--control path {
-      fill: linktext;
-    }
+  .pager__item--control path {
+    fill: linktext;
   }
+}
 
 .pager__link {
   display: flex;

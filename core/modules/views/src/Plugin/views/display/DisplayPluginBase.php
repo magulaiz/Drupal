@@ -63,8 +63,10 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
   /**
    * Stores the rendered output of the display.
    *
-   * @see View::render
-   * @var string
+   * @var array|null
+   *   Render output array, or NULL if no output.
+   *
+   * @see \Drupal\views\ViewExecutable::render()
    */
   public $output = NULL;
 
@@ -449,7 +451,6 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
     // If the display cannot use a pager, then we cannot default it.
     if (!$this->usesPager()) {
       unset($sections['pager']);
-      unset($sections['items_per_page']);
     }
 
     foreach ($this->extenders as $extender) {
@@ -1688,7 +1689,7 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
         if (empty($style)) {
           $form['#title'] .= $this->t('Row style options');
         }
-        $plugin = $this->getPlugin(empty($style) ? 'row' : 'style', $name);
+        $plugin = $this->getPlugin(empty($style) ? 'row' : 'style');
         if ($plugin) {
           $form[$section] = [
             '#tree' => TRUE,
@@ -1924,7 +1925,7 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
 
     // Validate plugin options. Every section with "_options" in it, belongs to
     // a plugin type, like "style_options".
-    if (strpos($section, '_options') !== FALSE) {
+    if (str_contains($section, '_options')) {
       $plugin_type = str_replace('_options', '', $section);
       // Load the plugin and let it handle the validation.
       if ($plugin = $this->getPlugin($plugin_type)) {
@@ -2242,7 +2243,7 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
     $element['#feed_icons'] = !empty($view->feedIcons) ? $view->feedIcons : [];
 
     if ($view->display_handler->renderPager()) {
-      $exposed_input = $view->exposed_raw_input ?? NULL;
+      $exposed_input = $view->getExposedInput();
       $element['#pager'] = $view->renderPager($exposed_input);
     }
 
@@ -2638,7 +2639,7 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
   public function viewExposedFormBlocks() {
     // Avoid interfering with the admin forms.
     $route_name = \Drupal::routeMatch()->getRouteName();
-    if (strpos($route_name, 'views_ui.') === 0) {
+    if (str_starts_with($route_name, 'views_ui.')) {
       return;
     }
     $this->view->initHandlers();
