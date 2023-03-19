@@ -205,7 +205,7 @@ class TaxonomyIndexTid extends ManyToOne {
         foreach ($vocabularies as $vocabulary) {
           $terms = array_merge($terms, array_filter(
             $this->termStorage->loadTree($vocabulary->id(), 0, NULL, TRUE), function (TermInterface $term): bool {
-              return $term->isPublished() || $this->currentUser->hasPermission('administer taxonomy');
+              return $term->access('view label');
             }
           ));
         }
