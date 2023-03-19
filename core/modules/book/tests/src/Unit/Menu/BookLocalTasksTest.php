@@ -2,6 +2,8 @@
 
 namespace Drupal\Tests\book\Unit\Menu;
 
+use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Extension\ThemeHandlerInterface;
 use Drupal\Tests\Core\Menu\LocalTaskIntegrationTestBase;
 
 /**
@@ -18,8 +20,29 @@ class BookLocalTasksTest extends LocalTaskIntegrationTestBase {
     $this->directoryList = [
       'book' => 'core/modules/book',
       'node' => 'core/modules/node',
+      'system' => 'core/modules/system',
     ];
     parent::setUp();
+
+    // Setup theme handler for ThemeLocalTask.
+    $theme_handler = $this->createMock(ThemeHandlerInterface::class);
+    $theme_handler->expects($this->any())
+      ->method('listInfo')
+      ->willReturn([]);
+
+    $entity_type = $this->createMock('Drupal\Core\Entity\EntityTypeInterface');
+    $entity_type->expects($this->any())
+      ->method('hasLinkTemplate')
+      ->with('version-history')
+      ->willReturn(TRUE);
+    $entity_type_manager = $this->createMock(EntityTypeManagerInterface::class);
+    $entity_type_manager->expects($this->any())
+      ->method('getDefinitions')
+      ->willReturn([
+        'node' => $entity_type,
+      ]);
+    \Drupal::getContainer()->set('theme_handler', $theme_handler);
+    \Drupal::getContainer()->set('entity_type.manager', $entity_type_manager);
   }
 
   /**
@@ -51,7 +74,13 @@ class BookLocalTasksTest extends LocalTaskIntegrationTestBase {
    */
   public function testBookNodeLocalTasks($route) {
     $this->assertLocalTasks($route, [
-      0 => ['entity.node.book_outline_form', 'entity.node.canonical', 'entity.node.edit_form', 'entity.node.delete_form', 'entity.node.version_history'],
+      [
+        'entity.node.book_outline_form',
+        'entity.node.canonical',
+        'entity.node.edit_form',
+        'entity.node.delete_form',
+        'entity.version_history:node.version_history',
+      ],
     ]);
   }
 
