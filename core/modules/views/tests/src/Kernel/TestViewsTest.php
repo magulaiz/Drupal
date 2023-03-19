@@ -26,8 +26,11 @@ class TestViewsTest extends KernelTestBase {
 
   /**
    * Tests default configuration data type.
+   *
+   * @group legacy
    */
   public function testDefaultConfig() {
+    $this->expectDeprecation("The 'vid' key in 'views.filter.taxonomy_index_tid' config schema is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Update your view to use the 'vids' key instead. See https://www.drupal.org/node/3162414");
     // Create a typed config manager with access to configuration schema in
     // every module, profile and theme.
     $typed_config = new TypedConfigManager(

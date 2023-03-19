@@ -59,8 +59,10 @@ class TaxonomyIndexTidFilterTest extends TaxonomyTestBase {
    * Tests dependencies are not added for terms that do not exist.
    *
    * @covers ::calculateDependencies
+   * @group legacy
    */
   public function testConfigDependency() {
+    $this->expectDeprecation("The 'vid' key in 'views.filter.taxonomy_index_tid' config schema is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Update your view to use the 'vids' key instead. See https://www.drupal.org/node/3162414");
     /** @var \Drupal\views\Entity\View $view */
     $view = View::load('test_filter_taxonomy_index_tid__non_existing_dependency');
 
@@ -104,8 +106,10 @@ class TaxonomyIndexTidFilterTest extends TaxonomyTestBase {
    * Tests 'taxonomy_index_tid' filter handler vocabulary dependencies.
    *
    * @covers ::calculateDependencies
+   * @group legacy
    */
   public function testMultipleVocabularies(): void {
+    $this->expectDeprecation("The 'vid' key in 'views.filter.taxonomy_index_tid' config schema is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Update your view to use the 'vids' key instead. See https://www.drupal.org/node/3162414");
     /** @var \Drupal\views\Entity\View $view */
     $view = View::load('test_filter_taxonomy_index_tid__non_existing_dependency');
 

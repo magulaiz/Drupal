@@ -124,8 +124,11 @@ class TaggedWithTest extends WizardTestBase {
 
   /**
    * Tests the "tagged with" functionality.
+   *
+   * @group legacy
    */
   public function testTaggedWith() {
+    $this->expectDeprecation("The 'vid' key in 'views.filter.taxonomy_index_tid' config schema is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Update your view to use the 'vids' key instead. See https://www.drupal.org/node/3162414");
     // In this test we will only create nodes that have an instance of the tag
     // field.
     $node_add_path = 'node/add/' . $this->nodeTypeWithTags->id();

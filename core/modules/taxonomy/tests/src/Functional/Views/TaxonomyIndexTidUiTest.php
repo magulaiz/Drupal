@@ -119,8 +119,11 @@ class TaxonomyIndexTidUiTest extends UITestBase {
 
   /**
    * Tests the filter UI.
+   *
+   * @group legacy
    */
   public function testFilterUI() {
+    $this->expectDeprecation("The 'vid' key in 'views.filter.taxonomy_index_tid' config schema is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Update your view to use the 'vids' key instead. See https://www.drupal.org/node/3162414");
     $this->drupalGet('admin/structure/views/nojs/handler/test_filter_taxonomy_index_tid/default/filter/tid');
     $this->assertSession()->fieldExists("Select terms from vocabulary 'Test Vocabulary tags'");
 
@@ -167,8 +170,11 @@ class TaxonomyIndexTidUiTest extends UITestBase {
 
   /**
    * Tests the filter UI with multiple vocabularies.
+   *
+   * @group legacy
    */
   public function testFilterUIWithMultipleVocabularies() {
+    $this->expectDeprecation("The 'vid' key in 'views.filter.taxonomy_index_tid' config schema is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Update your view to use the 'vids' key instead. See https://www.drupal.org/node/3162414");
     $terms2 = $this->createVocabularyAndTerms('tags2');
     $node_type = $this->drupalCreateContentType(['type' => 'page']);
     // Create the tag field itself.
@@ -241,8 +247,11 @@ class TaxonomyIndexTidUiTest extends UITestBase {
 
   /**
    * Tests exposed taxonomy filters.
+   *
+   * @group legacy
    */
   public function testExposedFilter() {
+    $this->expectDeprecation("The 'vid' key in 'views.filter.taxonomy_index_tid' config schema is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Update your view to use the 'vids' key instead. See https://www.drupal.org/node/3162414");
     $node_type = $this->drupalCreateContentType(['type' => 'page']);
 
     // Create the tag field itself.
@@ -376,8 +385,11 @@ class TaxonomyIndexTidUiTest extends UITestBase {
 
   /**
    * Tests exposed grouped taxonomy filters.
+   *
+   * @group legacy
    */
   public function testExposedGroupedFilter() {
+    $this->expectDeprecation("The 'vid' key in 'views.filter.taxonomy_index_tid' config schema is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Update your view to use the 'vids' key instead. See https://www.drupal.org/node/3162414");
     // Create a content type with a taxonomy field.
     $this->drupalCreateContentType(['type' => 'article']);
     $field_name = 'field_views_testing_tags';
@@ -420,8 +432,12 @@ class TaxonomyIndexTidUiTest extends UITestBase {
 
   /**
    * Tests that an exposed taxonomy filter doesn't show unpublished terms.
+   *
+   * @group legacy
    */
   public function testExposedUnpublishedFilterOptions() {
+    $this->expectDeprecation("The 'vid' key in 'views.filter.taxonomy_index_tid' config schema is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Update your view to use the 'vids' key instead. See https://www.drupal.org/node/3162414");
+
     $this->terms[1][0]->setUnpublished()->save();
     // Expose the filter.
     $this->drupalGet('admin/structure/views/nojs/handler/test_filter_taxonomy_index_tid/default/filter/tid');
