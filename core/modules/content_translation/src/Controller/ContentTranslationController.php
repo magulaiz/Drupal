@@ -376,7 +376,7 @@ class ContentTranslationController extends ControllerBase {
     }
 
     if ($entity->hasTranslation($target->getId())) {
-      return new RedirectResponse($entity->toUrl('drupal:content-translation-overview')->toString());
+      return new RedirectResponse($entity->getTranslation($target->getId())->toUrl('edit-form')->toString());
     }
 
     // @todo Exploit the upcoming hook_entity_prepare() when available.
