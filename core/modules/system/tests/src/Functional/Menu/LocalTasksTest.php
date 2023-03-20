@@ -4,7 +4,9 @@ namespace Drupal\Tests\system\Functional\Menu;
 
 use Drupal\Component\Utility\Html;
 use Drupal\Core\Url;
+use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\Tests\BrowserTestBase;
+use Drupal\user\Entity\User;
 
 /**
  * Tests local tasks derived from router and added/altered via hooks.
@@ -280,6 +282,80 @@ class LocalTasksTest extends BrowserTestBase {
       ['entity.entity_view_display.node.default', ['node_type' => 'page']],
       ['entity.node_type.entity_permissions_form', ['node_type' => 'page']],
     ]);
+  }
+
+  /**
+   * Test local tasks translation when the user has a preferred admin langcode.
+   */
+  public function testLocalTaskPreferredAdminLanguage() {
+    // Enable locale to make the local tasks translatable.
+    \Drupal::service('module_installer')->install(['locale']);
+    // Clear all caches so the config schema for language.negotiation is
+    // available.
+    $this->resetAll();
+
+    // Add another language.
+    $xx_language = ConfigurableLanguage::create(['id' => 'xx', 'label' => 'xx']);
+    $xx_language->save();
+
+    $this->config('language.negotiation')
+      ->set('url.prefixes.en', 'en')
+      ->set('url.prefixes.xx', 'xx')
+      ->save();
+
+    /** @var \Drupal\locale\StringDatabaseStorage $locale_storage */
+    $locale_storage = \Drupal::service('locale.storage');
+
+    // Add a translation for the 'Edit' local task.
+    $edit_translated_string = $this->randomString();
+    $source = $locale_storage->createString([
+      'source' => 'Edit',
+      'context' => '',
+    ])->save();
+    $locale_storage->createTranslation([
+      'lid' => $source->getId(),
+      'language' => 'xx',
+      'translation' => $edit_translated_string,
+    ])->save();
+    // Clear all caches so the newly added translation is used.
+    $this->resetAll();
+
+    $this->drupalLogin($this->rootUser);
+
+    // Local tasks are shown in the current language.
+    $this->drupalGet(Url::fromRoute('menu_test.local_task_test_tasks_settings'));
+    $this->assertSession()->elementTextContains('css', '.tabs', 'Edit');
+    $this->drupalGet(Url::fromRoute('menu_test.local_task_test_tasks_settings', [], ['language' => $xx_language]));
+    $this->assertSession()->elementTextContains('css', '.tabs', $edit_translated_string);
+
+    // Set a preferred admin language for the current user.
+    $user = User::load($this->rootUser->id());
+    $user->set('preferred_admin_langcode', 'en')->save();
+
+    // Clear all caches so the local tasks block is built again.
+    $this->resetAll();
+
+    // Local tasks are still shown in the current language since the
+    // language-user-admin language negotiation is not enabled.
+    $this->drupalGet(Url::fromRoute('menu_test.local_task_test_tasks_settings'));
+    $this->assertSession()->elementTextContains('css', '.tabs', 'Edit');
+    $this->drupalGet(Url::fromRoute('menu_test.local_task_test_tasks_settings', [], ['language' => $xx_language]));
+    $this->assertSession()->elementTextContains('css', '.tabs', $edit_translated_string);
+
+    // Enable the language-user-admin language negotiation.
+    $this->config('language.types')
+      ->set('negotiation.language_interface.enabled.language-user-admin', -20)
+      ->set('negotiation.language_interface.method_weights.language-user-admin', -20)
+      ->save();
+
+    // Clear all caches so the local tasks block is built again.
+    $this->resetAll();
+
+    // Local tasks are shown in the user's preferred admin langcode.
+    $this->drupalGet(Url::fromRoute('menu_test.local_task_test_tasks_settings'));
+    $this->assertSession()->elementTextContains('css', '.tabs', 'Edit');
+    $this->drupalGet(Url::fromRoute('menu_test.local_task_test_tasks_settings', [], ['language' => $xx_language]));
+    $this->assertSession()->elementTextContains('css', '.tabs', 'Edit');
   }
 
 }
