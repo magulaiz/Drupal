@@ -11,7 +11,7 @@ use Drupal\field\Entity\FieldStorageConfig;
 
 /**
  * Tests multilingual node access with a language-aware module.
- * 
+ *
  * @group node
  */
 class NodeAccessLanguageAwareTest extends NodeAccessTestBase {
