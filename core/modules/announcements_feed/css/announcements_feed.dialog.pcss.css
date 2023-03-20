@@ -32,6 +32,7 @@
 
   & .announcement__title {
     font-size: 16px;
+
     @media only screen and (min-width: 1000px) {
       width: 85%;
     }
@@ -39,6 +40,7 @@
 
   & .announcement__new {
     font-style: italic;
+
     @media only screen and (min-width: 1000px) {
       inset-inline-end: var(--off-canvas-padding);
       position: absolute;
