@@ -61,14 +61,10 @@
       announcement = announcements.pop();
       text.unshift(announcement.text);
       // If any of the announcements has a priority of assertive then the group
-      // of joined announcements will have this priority.
+      // of joined announcements will have this priority. Also add aria-atomic='true' for full WCAG compliance
       if (announcement.priority === 'assertive') {
         priority = 'assertive';
-      }
-      // If any of the announcements has an atomic value of true, then the group
-      // of joined announcements will have the same attribute and value
-      if (announcement.atomic === 'true') {
-        atomic = 'true';
+        atomic = 'true'
       }
     }
 
@@ -105,20 +101,17 @@
    * @param {string} [priority='polite']
    *   A string to indicate the priority of the message. Can be either
    *   'polite' or 'assertive'.
-   * @param {string} [atomic='false']
-   *   A string to indicate the value of the aria-atomic attribute. Can be either true or false' default is false
    * @return {function}
    *   The return of the call to debounce.
    *
    * @see http://www.w3.org/WAI/PF/aria-practices/#liveprops
    */
-  Drupal.announce = function (text, priority, atomic) {
+  Drupal.announce = function (text, priority) {
     // Save the text and priority into a closure variable. Multiple simultaneous
     // announcements will be concatenated and read in sequence.
     announcements.push({
       text,
       priority,
-      atomic,
     });
     // Immediately invoke the function that debounce returns. 200 ms is right at
     // the cusp where humans notice a pause, so we will wait
