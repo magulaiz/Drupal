@@ -40,10 +40,23 @@
   font-size: 1rem;
 }
 
+@media only screen and (min-width: 62.5rem) {
+
+  #drupal-off-canvas-wrapper .announcement__title {
+    width: 85%;
+  }
+}
+
 #drupal-off-canvas-wrapper .announcement__new {
-  position: absolute;
-  inset-inline-end: var(--off-canvas-padding);
   font-style: italic;
+}
+
+@media only screen and (min-width: 62.5rem) {
+
+  #drupal-off-canvas-wrapper .announcement__new {
+    inset-inline-end: var(--off-canvas-padding);
+    position: absolute;
+  }
 }
 
 #drupal-off-canvas-wrapper .no_alerts {
