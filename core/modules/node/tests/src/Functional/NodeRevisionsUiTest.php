@@ -126,7 +126,14 @@ class NodeRevisionsUiTest extends NodeTestBase {
 
     // Assert the old revision message.
     $date = $this->container->get('date.formatter')->format($nodes[0]->revision_timestamp->value, 'short');
-    $url = new Url('entity.node.revision', ['node' => $nodes[0]->id(), 'node_revision' => $nodes[0]->getRevisionId()]);
+    $url = Url::fromRoute('entity.node.revision', [
+      'node' => $nodes[0]->id(),
+      'node_revision' => $nodes[0]->getRevisionId(),
+    ], [
+      'attributes' => [
+        'hreflang' => 'en',
+      ],
+    ]);
     $this->assertSession()->responseContains(Link::fromTextAndUrl($date, $url)->toString() . ' by ' . $editor);
 
     // Assert the current revision message.
