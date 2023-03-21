@@ -63,8 +63,10 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
   /**
    * Stores the rendered output of the display.
    *
-   * @see View::render
-   * @var string
+   * @var array|null
+   *   Render output array, or NULL if no output.
+   *
+   * @see \Drupal\views\ViewExecutable::render()
    */
   public $output = NULL;
 
@@ -1923,7 +1925,7 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
 
     // Validate plugin options. Every section with "_options" in it, belongs to
     // a plugin type, like "style_options".
-    if (strpos($section, '_options') !== FALSE) {
+    if (str_contains($section, '_options')) {
       $plugin_type = str_replace('_options', '', $section);
       // Load the plugin and let it handle the validation.
       if ($plugin = $this->getPlugin($plugin_type)) {
@@ -2241,7 +2243,7 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
     $element['#feed_icons'] = !empty($view->feedIcons) ? $view->feedIcons : [];
 
     if ($view->display_handler->renderPager()) {
-      $exposed_input = $view->exposed_raw_input ?? NULL;
+      $exposed_input = $view->getExposedInput();
       $element['#pager'] = $view->renderPager($exposed_input);
     }
 

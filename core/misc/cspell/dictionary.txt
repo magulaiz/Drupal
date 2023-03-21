@@ -213,6 +213,7 @@ cnfi
 cochez
 codesniffer
 colgroups
+colinodell
 collegehumor
 colonpos
 colour
@@ -645,6 +646,7 @@ lstitle
 ltitle
 ltlanguage
 lundi
+lzma
 lzop
 maailma
 macbinary
@@ -1030,6 +1032,7 @@ safa
 sameline
 samename
 sameorigin
+samesite
 sata
 savepoints
 sayre
@@ -1043,6 +1046,7 @@ screenreaders
 scriptable
 scrollbars
 searchdirs
+sebastianbergmann
 sebe
 seld
 selectbox
@@ -1217,6 +1221,7 @@ testk
 testkey
 testlist
 testload
+testlogger
 testname
 testproject
 testservice

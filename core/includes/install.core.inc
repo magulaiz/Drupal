@@ -318,7 +318,7 @@ function install_begin_request($class_loader, &$install_state) {
   // running tests. However, for security reasons, it is imperative that no
   // installation be permitted using such a prefix.
   $user_agent = $request->cookies->get('SIMPLETEST_USER_AGENT') ?: $request->server->get('HTTP_USER_AGENT');
-  if ($install_state['interactive'] && strpos($user_agent, 'simpletest') !== FALSE && !drupal_valid_test_ua()) {
+  if ($install_state['interactive'] && str_contains($user_agent, 'simpletest') && !drupal_valid_test_ua()) {
     header($request->server->get('SERVER_PROTOCOL') . ' 403 Forbidden');
     exit;
   }
@@ -386,7 +386,7 @@ function install_begin_request($class_loader, &$install_state) {
   $install_state['database_verified'] = install_verify_database_settings($site_path);
   // A valid settings.php has database settings and a hash_salt value. Other
   // settings will be checked by system_requirements().
-  $install_state['settings_verified'] = $install_state['database_verified'] && (bool) Settings::get('hash_salt', FALSE);
+  $install_state['settings_verified'] = $install_state['config_verified'] && $install_state['database_verified'] && (bool) Settings::get('hash_salt', FALSE);
 
   if ($install_state['settings_verified']) {
     try {
@@ -1841,7 +1841,7 @@ function install_finish_translations(&$install_state) {
   }
 
   // Creates configuration translations.
-  $batches[] = locale_config_batch_update_components([], array_keys($languages));
+  $batches[] = locale_config_batch_update_components([], array_keys($languages), [], TRUE);
   return $batches;
 }
 
@@ -2195,7 +2195,7 @@ function install_check_requirements($install_state) {
       }
       // If the $file is not writable, throw an error.
       if (!$writable) {
-        $requirements["$file file writeable"] = [
+        $requirements["$file file writable"] = [
           'title' => $default_file_info['title'],
           'value' => t('The %file is not writable.', ['%file' => $default_file_info['title']]),
           'severity' => REQUIREMENT_ERROR,
