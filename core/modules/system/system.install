@@ -196,8 +196,9 @@ function system_requirements($phase) {
       }
       $requirements['obsolete_extensions'] = [
         'title' => t('Obsolete extensions enabled'),
-        'value' => t('Obsolete extensions found: %extensions. Obsolete extensions are provided only so that they can be uninstalled cleanly. You should immediately uninstall these extensions since they may be removed in a future release.', [
+        'value' => t('Obsolete extensions found: %extensions. Obsolete extensions are provided only so that they can be uninstalled cleanly. You should immediately <a href=":uninstall_url">uninstall these extensions</a> since they may be removed in a future release.', [
           '%extensions' => Markup::create(implode(', ', $obsolete_extensions_link_list)),
+          ':uninstall_url' => Url::fromRoute('system.modules_uninstall')->toString(),
         ]),
         'severity' => REQUIREMENT_WARNING,
       ];
@@ -214,7 +215,7 @@ function system_requirements($phase) {
   ];
 
   // Tests clean URL support.
-  if ($phase == 'install' && $install_state['interactive'] && !$request_object->query->has('rewrite') && strpos($software, 'Apache') !== FALSE) {
+  if ($phase == 'install' && $install_state['interactive'] && !$request_object->query->has('rewrite') && str_contains($software, 'Apache')) {
     // If the Apache rewrite module is not enabled, Apache version must be >=
     // 2.2.16 because of the FallbackResource directive in the root .htaccess
     // file. Since the Apache version reported by the server is dependent on the
@@ -704,7 +705,7 @@ function system_requirements($phase) {
       $htaccess_file = $protected_dir->getPath() . '/.htaccess';
       // Check for the string which was added to the recommended .htaccess file
       // in the latest security update.
-      if (!file_exists($htaccess_file) || !($contents = @file_get_contents($htaccess_file)) || strpos($contents, 'Drupal_Security_Do_Not_Remove_See_SA_2013_003') === FALSE) {
+      if (!file_exists($htaccess_file) || !($contents = @file_get_contents($htaccess_file)) || !str_contains($contents, 'Drupal_Security_Do_Not_Remove_See_SA_2013_003')) {
         $url = 'https://www.drupal.org/SA-CORE-2013-003';
         $requirements[$htaccess_file] = [
           'title' => new TranslatableMarkup($protected_dir->getTitle()),
@@ -1309,6 +1310,28 @@ function system_requirements($phase) {
     }
   }
 
+  // Check if the SameSite cookie attribute is set to a valid value. Since this
+  // involves checking whether we are using a secure connection this only makes
+  // sense inside an HTTP request, not on the command line.
+  if ($phase === 'runtime' && PHP_SAPI !== 'cli') {
+    $samesite = ini_get('session.cookie_samesite') ?: t('Not set');
+    // Check if the SameSite attribute is set to a valid value. If it is set to
+    // 'None' the request needs to be done over HTTPS.
+    $valid = match ($samesite) {
+      'Lax', 'Strict' => TRUE,
+      'None' => $request_object->isSecure(),
+      default => FALSE,
+    };
+    $requirements['php_session_samesite'] = [
+      'title' => t('SameSite cookie attribute'),
+      'value' => $samesite,
+      'severity' => $valid ? REQUIREMENT_OK : REQUIREMENT_WARNING,
+      'description' => t('This attribute should be explicitly set to Lax, Strict or None. If set to None then the request must be made via HTTPS. See <a href=":url" target="_blank">PHP documentation</a>', [
+        ':url' => 'https://www.php.net/manual/en/session.configuration.php#ini.session.cookie-samesite',
+      ]),
+    ];
+  }
+
   // See if trusted hostnames have been configured, and warn the user if they
   // are not set.
   if ($phase == 'runtime') {
@@ -1337,7 +1360,7 @@ function system_requirements($phase) {
     $provider = $connection->getProvider();
     if ($provider !== 'core' && !\Drupal::moduleHandler()->moduleExists($provider)) {
       $autoload = $connection->getConnectionOptions()['autoload'] ?? '';
-      if (strpos($autoload, 'src/Driver/Database/') !== FALSE) {
+      if (str_contains($autoload, 'src/Driver/Database/')) {
         $post_update_registry = \Drupal::service('update.post_update_registry');
         $pending_updates = $post_update_registry->getPendingUpdateInformation();
         if (!in_array('enable_provider_database_driver', array_keys($pending_updates['system']['pending'] ?? []), TRUE)) {
@@ -1754,6 +1777,25 @@ function system_update_10100(&$sandbox = NULL) {
       ];
       $schema->changeField($table, 'expire', 'expire', $new);
     }
+  }
+
+}
+
+/**
+ * Change the {batch} table [bid] field to serial.
+ */
+function system_update_10101(&$sandbox = NULL) {
+  $connection = \Drupal::database();
+  $schema = $connection->schema();
+
+  // Update batch table.
+  if ($schema->tableExists('batch')) {
+    $schema->changeField('batch', 'bid', 'bid', [
+      'description' => 'Primary Key: Unique batch ID.',
+      'type' => 'serial',
+      'unsigned' => TRUE,
+      'not null' => TRUE,
+    ]);
   }
 
 }
