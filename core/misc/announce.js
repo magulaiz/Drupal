@@ -64,7 +64,7 @@
       // of joined announcements will have this priority. Also add aria-atomic='true' for full WCAG compliance
       if (announcement.priority === 'assertive') {
         priority = 'assertive';
-        atomic = 'true'
+        atomic = 'true';
       }
     }
 
