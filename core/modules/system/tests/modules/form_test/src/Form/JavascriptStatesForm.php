@@ -254,6 +254,43 @@ class JavascriptStatesForm extends FormBase {
         ],
       ],
     ];
+    $form['checkboxes_all_readonly_when_checkbox_trigger_checked'] = [
+      '#type' => 'checkboxes',
+      '#title' => 'Checkboxes: all readonly when checkbox trigger checked',
+      '#options' => [
+        'value1' => 'Value 1',
+        'value2' => 'Value 2',
+        'value3' => 'Value 3',
+      ],
+      '#states' => [
+        'readonly' => [
+          ':input[name="checkbox_trigger"]' => ['checked' => TRUE],
+        ],
+      ],
+    ];
+    $form['checkboxes_some_readonly_when_checkbox_trigger_checked'] = [
+      '#type' => 'checkboxes',
+      '#title' => 'Checkboxes: some readonly when checkbox trigger checked',
+      '#options' => [
+        'value1' => 'Value 1',
+        'value2' => 'Value 2',
+        'value3' => 'Value 3',
+      ],
+      'value1' => [
+        '#states' => [
+          'readonly' => [
+            ':input[name="checkbox_trigger"]' => ['checked' => TRUE],
+          ],
+        ],
+      ],
+      'value3' => [
+        '#states' => [
+          'readonly' => [
+            ':input[name="checkbox_trigger"]' => ['checked' => TRUE],
+          ],
+        ],
+      ],
+    ];
     $form['radios_checked_when_checkbox_trigger_checked'] = [
       '#type' => 'radios',
       '#title' => 'Radios checked when checkbox trigger checked',
@@ -292,6 +329,34 @@ class JavascriptStatesForm extends FormBase {
       'value1' => [
         '#states' => [
           'disabled' => [
+            ':input[name="checkbox_trigger"]' => ['checked' => TRUE],
+          ],
+        ],
+      ],
+    ];
+    $form['radios_all_readonly_when_checkbox_trigger_checked'] = [
+      '#type' => 'radios',
+      '#title' => 'Radios: all readonly when checkbox trigger checked',
+      '#options' => [
+        'value1' => 'Value 1',
+        'value2' => 'Value 2',
+      ],
+      '#states' => [
+        'readonly' => [
+          ':input[name="checkbox_trigger"]' => ['checked' => TRUE],
+        ],
+      ],
+    ];
+    $form['radios_some_readonly_when_checkbox_trigger_checked'] = [
+      '#type' => 'radios',
+      '#title' => 'Radios: some readonly when checkbox trigger checked',
+      '#options' => [
+        'value1' => 'Value 1',
+        'value2' => 'Value 2',
+      ],
+      'value1' => [
+        '#states' => [
+          'readonly' => [
             ':input[name="checkbox_trigger"]' => ['checked' => TRUE],
           ],
         ],
