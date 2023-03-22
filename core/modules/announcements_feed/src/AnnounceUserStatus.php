@@ -13,6 +13,11 @@ use Drupal\user\UserData;
 class AnnounceUserStatus {
 
   /**
+   * The UserData service.
+   */
+  protected UserData $userData;
+
+  /**
    * Current user.
    */
   protected AccountInterface $currentUser;
