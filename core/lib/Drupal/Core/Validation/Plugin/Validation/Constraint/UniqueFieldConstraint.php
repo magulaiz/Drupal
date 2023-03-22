@@ -15,6 +15,13 @@ use Symfony\Component\Validator\Constraint;
 class UniqueFieldConstraint extends Constraint {
 
   public $message = 'A @entity_type with @field_name %value already exists.';
+  
+  /**
+   * The name of the property to check.
+   *
+   * @var string
+   */
+  public $propertyName = NULL;
 
   /**
    * {@inheritdoc}

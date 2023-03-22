@@ -3,6 +3,7 @@
 namespace Drupal\KernelTests\Core\Validation;
 
 use Drupal\Component\Render\FormattableMarkup;
+use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\entity_test\Entity\EntityTestStringId;
 use Drupal\KernelTests\KernelTestBase;
 
@@ -87,6 +88,52 @@ class UniqueFieldConstraintTest extends KernelTestBase {
       '@entity_type' => $entity->getEntityType()->getSingularLabel(),
       '@field_name' => 'name',
     ]);
+
+    // Check that the validation has created the appropriate violation.
+    $this->assertCount(1, $violations);
+    $this->assertEquals($message, $violations[0]->getMessage());
+  }
+
+  /**
+   * Tests cases where the validation raises violations for custom properties.
+   *
+   * @covers ::validate
+   */
+  public function testEntityWithFieldCustomProperties() {
+    $value = $this->randomString();
+    $uri1 = 'http://example.com/page1';
+    $uri2 = 'http://example.com/page2';
+
+    $definitions['link'] = BaseFieldDefinition::create('link')
+      ->setLabel('Link')
+      ->addConstraint('UniqueField', ['propertyName' => 'uri']);
+
+    $this->container->get('state')->set('entity_test.additional_base_field_definitions', $definitions);
+    $this->installEntitySchema('entity_test');
+
+    EntityTest::create([
+      'link' => ['title' => $value, 'uri' => $uri1],
+    ])->save();
+
+    // Create a new entity with the same title and different uri value.
+    $entity = EntityTest::create([
+      'link' => ['title' => $value, 'uri' => $uri2],
+    ]);
+    $this->assertCount(0, $entity->name->validate());
+
+    // Create a new entity with the same title and uri value.
+    $entity = EntityTest::create([
+      'link' => ['title' => $value, 'uri' => $uri1],
+    ]);
+
+    $message = new FormattableMarkup('A @entity_type with @field_name %value already exists.', [
+      '%value' => $uri1,
+      '@entity_type' => $entity->getEntityType()->getSingularLabel(),
+      '@field_name' => 'Link',
+    ]);
+
+    /** @var \Symfony\Component\Validator\ConstraintViolationList $violations */
+    $violations = $entity->get('link')->validate();
 
     // Check that the validation has created the appropriate violation.
     $this->assertCount(1, $violations);
