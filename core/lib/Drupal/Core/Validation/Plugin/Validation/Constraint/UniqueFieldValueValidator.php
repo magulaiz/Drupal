@@ -22,6 +22,14 @@ class UniqueFieldValueValidator extends ConstraintValidator {
     $entity = $items->getEntity();
     $entity_type_id = $entity->getEntityTypeId();
     $id_key = $entity->getEntityType()->getKey('id');
+ 
+    $propertyName = $constraint->propertyName ?? $item->mainPropertyName() ?? 'value';
+
+    if (!isset($item->getProperties()[$propertyName])) {
+      throw new \LogicException(
+        sprintf('The specified property "%s" does not exist in the field.', $constraint->propertyName)
+      );
+    }
 
     $query = \Drupal::entityQuery($entity_type_id);
 
@@ -36,14 +44,17 @@ class UniqueFieldValueValidator extends ConstraintValidator {
     }
 
     $value_taken = (bool) $query
-      ->condition($field_name, $item->value)
+      ->condition(
+        $field_name . '.' . $propertyName,
+        $item->$propertyName
+      )
       ->range(0, 1)
       ->count()
       ->execute();
 
     if ($value_taken) {
       $this->context->addViolation($constraint->message, [
-        '%value' => $item->value,
+        '%value' => $item->$propertyName,
         '@entity_type' => $entity->getEntityType()->getSingularLabel(),
         '@field_name' => mb_strtolower($items->getFieldDefinition()->getLabel()),
       ]);
