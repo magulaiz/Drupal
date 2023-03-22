@@ -615,7 +615,6 @@ class EntityType extends PluginDefinition implements EntityTypeInterface {
     return $this->admin_permission ?: FALSE;
   }
 
-
   /**
    * {@inheritdoc}
    */
