@@ -63,10 +63,15 @@ class HtmlResponseAttachmentsTest extends BrowserTestBase {
     // Test ['#attached']['html_head_link'] when outputted as HTTP header.
     $this->drupalGet('/render_attached_test/html_header_link');
     $expected_link_headers = [
-      '</foo?bar=&lt;baz&gt;&amp;baz=false>; rel="alternate"',
+      '</foo?bar=<baz>&baz=false>; rel="alternate"',
       '</foo/bar>; hreflang="nl"; rel="alternate"',
+      '</foo/bar>; hreflang="de"; rel="alternate"',
     ];
     $this->assertEquals($expected_link_headers, $this->getSession()->getResponseHeaders()['Link']);
+
+    // Check that duplicate alternate URLs with different hreflang attributes
+    // are allowed.
+    $this->assertSession()->elementsCount('xpath', '//head/link[@rel="alternate"][@href="/foo/bar"]', 2);
   }
 
   /**
@@ -96,8 +101,10 @@ class HtmlResponseAttachmentsTest extends BrowserTestBase {
 
   /**
    * Helper function to make assertions about added HTTP headers.
+   *
+   * @internal
    */
-  protected function assertTeapotHeaders() {
+  protected function assertTeapotHeaders(): void {
     $this->assertSession()->responseHeaderEquals('X-Test-Teapot', 'Teapot Mode Active');
     $this->assertSession()->responseHeaderEquals('X-Test-Teapot-Replace', 'Teapot replaced');
     $this->assertSession()->responseHeaderEquals('X-Test-Teapot-No-Replace', 'This value is not replaced');
@@ -105,8 +112,10 @@ class HtmlResponseAttachmentsTest extends BrowserTestBase {
 
   /**
    * Helper function to make assertions about the presence of an RSS feed.
+   *
+   * @internal
    */
-  protected function assertFeed() {
+  protected function assertFeed(): void {
     // Discover the DOM element for the feed link.
     $test_meta = $this->xpath('//head/link[@href="test://url"]');
     $this->assertCount(1, $test_meta, 'Link has URL.');
@@ -130,8 +139,10 @@ class HtmlResponseAttachmentsTest extends BrowserTestBase {
 
   /**
    * Helper function to make assertions about HTML head elements.
+   *
+   * @internal
    */
-  protected function assertHead() {
+  protected function assertHead(): void {
     // Discover the DOM element for the meta link.
     $test_meta = $this->xpath('//head/meta[@test-attribute="testvalue"]');
     $this->assertCount(1, $test_meta, 'There\'s only one test attribute.');

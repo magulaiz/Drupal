@@ -70,7 +70,14 @@ class MigrateMenuLinkTest extends MigrateDrupal7TestBase {
 
     $this->assertEntity(245, 'und', 'Home', 'main', NULL, TRUE, FALSE, [], 'internal:/', 0);
     $this->assertEntity(478, 'und', 'custom link test', 'admin', NULL, TRUE, FALSE, ['attributes' => ['title' => '']], 'internal:/admin/content', 0);
-    $this->assertEntity(479, 'und', 'node link test', 'tools', 'node 2', TRUE, FALSE, ['attributes' => ['title' => 'node 2']], 'entity:node/2', 3);
+    $this->assertEntity(479, 'und', 'node link test', 'tools', 'node 2', TRUE, FALSE, [
+      'attributes' => ['title' => 'node 2'],
+      'query' => [
+        'name' => 'ferret',
+        'color' => 'purple',
+      ],
+    ],
+      'entity:node/2', 3);
 
     $menu_link_tree_service = \Drupal::service('menu.link_tree');
     $parameters = new MenuTreeParameters();
@@ -105,6 +112,11 @@ class MigrateMenuLinkTest extends MigrateDrupal7TestBase {
     $this->assertEntity(485, 'en', 'is - The thing about Deep Space 9', 'tools', NULL, TRUE, FALSE, ['attributes' => ['title' => '']], 'entity:node/2', 10);
     $this->assertEntity(486, 'und', 'is - The thing about Firefly', 'tools', NULL, TRUE, FALSE, ['attributes' => ['title' => '']], 'entity:node/4', 11);
     $this->assertEntity(487, 'en', 'en - The thing about Firefly', 'tools', NULL, TRUE, FALSE, ['attributes' => ['title' => '']], 'entity:node/4', 12);
+
+    // Test there have been no attempts to stub a shortcut in a MigrationLookup
+    // process.
+    $messages = $this->getMigration('d7_menu')->getIdMap()->getMessages()->fetchAll();
+    $this->assertCount(0, $messages);
   }
 
 }

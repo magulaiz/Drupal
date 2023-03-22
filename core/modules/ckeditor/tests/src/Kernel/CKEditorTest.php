@@ -11,6 +11,7 @@ use Drupal\filter\Entity\FilterFormat;
  * Tests for the 'CKEditor' text editor plugin.
  *
  * @group ckeditor
+ * @group legacy
  */
 class CKEditorTest extends KernelTestBase {
 
@@ -45,10 +46,13 @@ class CKEditorTest extends KernelTestBase {
   /**
    * The Editor Plugin Manager.
    *
-   * @var \Drupal\editor\Plugin\EditorManager;
+   * @var \Drupal\editor\Plugin\EditorManager
    */
   protected $manager;
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
     $this->fileUrlGenerator = $this->container->get('file_url_generator');
@@ -280,14 +284,15 @@ class CKEditorTest extends KernelTestBase {
     $expected[] = $this->fileUrlGenerator->generateString($this->getModulePath('ckeditor_test') . '/css/llama.css') . $query_string;
     $this->assertSame($expected, $this->ckeditor->buildContentsCssJSSetting($editor), '"contentsCss" configuration part of JS settings built correctly while a CKEditorPluginInterface implementation exists.');
 
-    // Enable the Bartik theme, which specifies a CKEditor stylesheet.
-    \Drupal::service('theme_installer')->install(['bartik']);
-    $this->config('system.theme')->set('default', 'bartik')->save();
-    $expected[] = $this->fileUrlGenerator->generateString('core/themes/bartik/css/base/elements.css') . $query_string;
-    $expected[] = $this->fileUrlGenerator->generateString('core/themes/bartik/css/components/captions.css') . $query_string;
-    $expected[] = $this->fileUrlGenerator->generateString('core/themes/bartik/css/components/table.css') . $query_string;
-    $expected[] = $this->fileUrlGenerator->generateString('core/themes/bartik/css/components/text-formatted.css') . $query_string;
-    $expected[] = $this->fileUrlGenerator->generateString('core/themes/bartik/css/classy/components/media-embed-error.css') . $query_string;
+    // Enable the Olivero theme, which specifies a CKEditor stylesheet.
+    \Drupal::service('theme_installer')->install(['olivero']);
+    $this->config('system.theme')->set('default', 'olivero')->save();
+    $expected[] = $this->fileUrlGenerator->generateString('core/themes/olivero/css/base/fonts.css') . $query_string;
+    $expected[] = $this->fileUrlGenerator->generateString('core/themes/olivero/css/base/base.css') . $query_string;
+    $expected[] = $this->fileUrlGenerator->generateString('core/themes/olivero/css/components/embedded-media.css') . $query_string;
+    $expected[] = $this->fileUrlGenerator->generateString('core/themes/olivero/css/components/table.css') . $query_string;
+    $expected[] = $this->fileUrlGenerator->generateString('core/themes/olivero/css/components/text-content.css') . $query_string;
+    $expected[] = $this->fileUrlGenerator->generateString('core/themes/olivero/css/theme/ckeditor-frame.css') . $query_string;
     $this->assertSame($expected, $this->ckeditor->buildContentsCssJSSetting($editor), '"contentsCss" configuration part of JS settings built correctly while a theme providing a CKEditor stylesheet exists.');
   }
 
@@ -422,7 +427,7 @@ class CKEditorTest extends KernelTestBase {
     $this->ckeditor->getJSSettings($editor);
     $localeStorage = $this->container->get('locale.storage');
     $string = $localeStorage->findString(['source' => 'Edit Link', 'context' => '']);
-    $this->assertTrue(!empty($string), 'String from JavaScript file saved.');
+    $this->assertNotEmpty($string, 'String from JavaScript file saved.');
 
     // With locale module, CKEditor should not adhere to the language selected.
     $this->assertCKEditorLanguage();
@@ -473,8 +478,10 @@ class CKEditorTest extends KernelTestBase {
    * @param string $langcode
    *   Language code to assert for. Defaults to French. That is the default
    *   language set in this assertion.
+   *
+   * @internal
    */
-  protected function assertCKEditorLanguage($langcode = 'fr') {
+  protected function assertCKEditorLanguage(string $langcode = 'fr'): void {
     // Set French as the site default language.
     ConfigurableLanguage::createFromLangcode('fr')->save();
     $this->config('system.site')->set('default_langcode', 'fr')->save();

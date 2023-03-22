@@ -23,6 +23,8 @@ use PHPUnit\Framework\TestCase;
  * Relevant CVEs:
  * - CVE-2002-1806, ~CVE-2005-0682, ~CVE-2005-2106, CVE-2005-3973,
  *   CVE-2006-1226 (= rev. 1.112?), CVE-2008-0273, CVE-2008-3740.
+ *
+ * @runTestsInSeparateProcesses
  */
 class XssTest extends TestCase {
 
@@ -86,7 +88,7 @@ class XssTest extends TestCase {
    *     - The value to filter.
    *     - The value to expect after filtering.
    *     - The assertion message.
-   *     - (optional) The allowed HTML HTML tags array that should be passed to
+   *     - (optional) The allowed HTML tags array that should be passed to
    *       \Drupal\Component\Utility\Xss::filter().
    */
   public function providerTestFilterXssNormalized() {
@@ -153,7 +155,7 @@ class XssTest extends TestCase {
    *     - The value to filter.
    *     - The value to expect that's missing after filtering.
    *     - The assertion message.
-   *     - (optional) The allowed HTML HTML tags array that should be passed to
+   *     - (optional) The allowed HTML tags array that should be passed to
    *       \Drupal\Component\Utility\Xss::filter().
    */
   public function providerTestFilterXssNotNormalized() {
@@ -504,8 +506,8 @@ class XssTest extends TestCase {
   public function providerTestAttributes() {
     return [
       [
-        '<img src="http://example.com/foo.jpg" title="Example: title" alt="Example: alt">',
-        '<img src="http://example.com/foo.jpg" title="Example: title" alt="Example: alt">',
+        '<img src="http://example.com/foo.jpg" title="Example: title" alt="Example: alt" class="md:block">',
+        '<img src="http://example.com/foo.jpg" title="Example: title" alt="Example: alt" class="md:block">',
         'Image tag with alt and title attribute',
         ['img'],
       ],
@@ -532,6 +534,24 @@ class XssTest extends TestCase {
         '<a data-a2a-url="foo"></a>',
         'Link tag with numeric data attribute',
         ['a'],
+      ],
+      [
+        '<img src= onmouseover="script(\'alert\');">',
+        '<img>',
+        'Image tag with malformed SRC',
+        ['img'],
+      ],
+      [
+        'Body"></iframe><img/src="x"/onerror="alert(document.domain)"/><"',
+        'Body"&gt;<img />&lt;"',
+        'Image tag with malformed SRC',
+        ['img'],
+      ],
+      [
+        '<img/src="x"/onerror="alert(document.domain)"/>',
+        '<img />',
+        'Image tag with malformed SRC',
+        ['img'],
       ],
     ];
   }
@@ -594,10 +614,10 @@ class XssTest extends TestCase {
    *   Lowercase, plain text to look for.
    * @param string $message
    *   (optional) Message to display if failed. Defaults to an empty string.
-   * @param string $group
-   *   (optional) The group this message belongs to. Defaults to 'Other'.
+   *
+   * @internal
    */
-  protected function assertNormalized($haystack, $needle, $message = '', $group = 'Other') {
+  protected function assertNormalized(string $haystack, string $needle, string $message = ''): void {
     $this->assertStringContainsString($needle, strtolower(Html::decodeEntities($haystack)), $message);
   }
 
@@ -616,10 +636,10 @@ class XssTest extends TestCase {
    *   Lowercase, plain text to look for.
    * @param string $message
    *   (optional) Message to display if failed. Defaults to an empty string.
-   * @param string $group
-   *   (optional) The group this message belongs to. Defaults to 'Other'.
+   *
+   * @internal
    */
-  protected function assertNotNormalized($haystack, $needle, $message = '', $group = 'Other') {
+  protected function assertNotNormalized(string $haystack, string $needle, string $message = ''): void {
     $this->assertStringNotContainsString($needle, strtolower(Html::decodeEntities($haystack)), $message);
   }
 

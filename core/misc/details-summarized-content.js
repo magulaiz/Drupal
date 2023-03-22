@@ -4,13 +4,11 @@
 * https://www.drupal.org/node/2815083
 * @preserve
 **/
-
 (function ($, Drupal) {
   function DetailsSummarizedContent(node) {
     this.$node = $(node);
     this.setupSummary();
   }
-
   $.extend(DetailsSummarizedContent, {
     instances: []
   });
@@ -20,7 +18,7 @@
       this.$node.on('summaryUpdated', $.proxy(this.onSummaryUpdated, this)).trigger('summaryUpdated').find('> summary').append(this.$detailsSummarizedContentWrapper);
     },
     onSummaryUpdated: function onSummaryUpdated() {
-      var text = $.trim(this.$node.drupalGetSummary());
+      var text = this.$node.drupalGetSummary();
       this.$detailsSummarizedContentWrapper.html(Drupal.theme('detailsSummarizedContentText', text));
     }
   });
@@ -32,11 +30,9 @@
     }
   };
   Drupal.DetailsSummarizedContent = DetailsSummarizedContent;
-
   Drupal.theme.detailsSummarizedContentWrapper = function () {
     return "<span class=\"summary\"></span>";
   };
-
   Drupal.theme.detailsSummarizedContentText = function (text) {
     return text ? " (".concat(text, ")") : '';
   };

@@ -5,6 +5,8 @@ namespace Drupal\comment\Plugin\migrate\source\d6;
 use Drupal\migrate\Row;
 use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
 
+// cspell:ignore vancode
+
 /**
  * Drupal 6 comment source from database.
  *
@@ -25,10 +27,10 @@ class Comment extends DrupalSqlBase {
    */
   public function query() {
     $query = $this->select('comments', 'c')
-      ->fields('c', ['cid', 'pid', 'nid', 'uid', 'subject',
-      'comment', 'hostname', 'timestamp', 'status', 'thread', 'name',
-      'mail', 'homepage', 'format',
-    ]);
+      ->fields('c', ['cid', 'pid', 'nid', 'uid', 'subject', 'comment',
+        'hostname', 'timestamp', 'status', 'thread', 'name', 'mail', 'homepage',
+        'format',
+      ]);
     $query->innerJoin('node', 'n', '[c].[nid] = [n].[nid]');
     $query->fields('n', ['type', 'language']);
     $query->orderBy('c.timestamp');

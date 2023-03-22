@@ -21,6 +21,9 @@ class BundleConstraintValidatorTest extends KernelTestBase {
 
   protected static $modules = ['node', 'field', 'text', 'user'];
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
     $this->installEntitySchema('user');
@@ -42,8 +45,10 @@ class BundleConstraintValidatorTest extends KernelTestBase {
    *
    * @param string|array $bundle
    *   Bundle/bundles to use as constraint option.
+   *
+   * @internal
    */
-  protected function assertValidation($bundle) {
+  protected function assertValidation($bundle): void {
     // Create a typed data definition with a Bundle constraint.
     $definition = DataDefinition::create('entity_reference')
       ->addConstraint('Bundle', $bundle);

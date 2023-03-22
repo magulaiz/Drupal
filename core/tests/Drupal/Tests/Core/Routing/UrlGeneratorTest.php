@@ -34,7 +34,7 @@ class UrlGeneratorTest extends UnitTestCase {
   protected $provider;
 
   /**
-   * The url generator to test.
+   * The URL generator to test.
    *
    * @var \Drupal\Core\Routing\UrlGenerator
    */
@@ -452,7 +452,7 @@ class UrlGeneratorTest extends UnitTestCase {
   }
 
   /**
-   * Tests that the 'scheme' route requirement is respected during url
+   * Tests that the 'scheme' route requirement is respected during URL
    * generation.
    */
   public function testUrlGenerationWithHttpsRequirement() {
@@ -512,35 +512,38 @@ class UrlGeneratorTest extends UnitTestCase {
    * Note: We use absolute covers to let
    * \Drupal\Tests\Core\Render\MetadataBubblingUrlGeneratorTest work.
    */
-  public function testGenerateWithPathProcessorChangingQueryParameter() {
+  public function testGenerateWithPathProcessorChangingOptions() {
     $path_processor = $this->createMock(OutboundPathProcessorInterface::CLASS);
     $path_processor->expects($this->atLeastOnce())
       ->method('processOutbound')
       ->willReturnCallback(function ($path, &$options = [], Request $request = NULL, BubbleableMetadata $bubbleable_metadata = NULL) {
         $options['query'] = ['zoo' => 5];
+        $options['fragment'] = 'foo';
         return $path;
       });
     $this->processorManager->addOutbound($path_processor);
 
     $options = [];
-    $this->assertGenerateFromRoute('test_2', ['narf' => 5], $options, '/goodbye/cruel/world?zoo=5', (new BubbleableMetadata())->setCacheMaxAge(Cache::PERMANENT));
+    $this->assertGenerateFromRoute('test_2', ['narf' => 5], $options, '/goodbye/cruel/world?zoo=5#foo', (new BubbleableMetadata())->setCacheMaxAge(Cache::PERMANENT));
   }
 
   /**
    * Asserts \Drupal\Core\Routing\UrlGenerator::generateFromRoute()'s output.
    *
-   * @param $route_name
+   * @param string $route_name
    *   The route name to test.
    * @param array $route_parameters
    *   The route parameters to test.
    * @param array $options
    *   The options to test.
-   * @param $expected_url
+   * @param string $expected_url
    *   The expected generated URL string.
    * @param \Drupal\Core\Render\BubbleableMetadata $expected_bubbleable_metadata
    *   The expected generated bubbleable metadata.
+   *
+   * @internal
    */
-  protected function assertGenerateFromRoute($route_name, array $route_parameters, array $options, $expected_url, BubbleableMetadata $expected_bubbleable_metadata) {
+  protected function assertGenerateFromRoute(string $route_name, array $route_parameters, array $options, string $expected_url, BubbleableMetadata $expected_bubbleable_metadata): void {
     // First, test with $collect_cacheability_metadata set to the default value.
     $url = $this->generator->generateFromRoute($route_name, $route_parameters, $options);
     $this->assertSame($expected_url, $url);

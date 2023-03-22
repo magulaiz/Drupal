@@ -132,6 +132,11 @@ abstract class QueryBase implements QueryInterface {
   protected $namespaces = [];
 
   /**
+   * Defines how the conditions on the query need to match.
+   */
+  protected $conjunction;
+
+  /**
    * Constructs this object.
    *
    * @param \Drupal\Core\Entity\EntityTypeInterface $entity_type
@@ -330,7 +335,7 @@ abstract class QueryBase implements QueryInterface {
     $direction = TableSort::getSort($headers, \Drupal::request());
     foreach ($headers as $header) {
       if (is_array($header) && ($header['data'] == $order['name'])) {
-        $this->sort($header['specifier'], $direction, isset($header['langcode']) ? $header['langcode'] : NULL);
+        $this->sort($header['specifier'], $direction, $header['langcode'] ?? NULL);
       }
     }
 
@@ -385,7 +390,7 @@ abstract class QueryBase implements QueryInterface {
    * {@inheritdoc}
    */
   public function getMetaData($key) {
-    return isset($this->alterMetaData[$key]) ? $this->alterMetaData[$key] : NULL;
+    return $this->alterMetaData[$key] ?? NULL;
   }
 
   /**

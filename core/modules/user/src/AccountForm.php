@@ -96,7 +96,7 @@ abstract class AccountForm extends ContentEntityForm implements TrustedCallbackI
     $form['account']['mail'] = [
       '#type' => 'email',
       '#title' => $this->t('Email address'),
-      '#description' => $this->t('A valid email address. All emails from the system will be sent to this address. The email address is not made public and will only be used if you wish to receive a new password or wish to receive certain news or notifications by email.'),
+      '#description' => $this->t('The email address is not made public. It will only be used if you need to be contacted about your account or for opted-in notifications.'),
       '#required' => !(!$account->getEmail() && $user->hasPermission('administer users')),
       '#default_value' => (!$register ? $account->getEmail() : ''),
     ];
@@ -174,7 +174,7 @@ abstract class AccountForm extends ContentEntityForm implements TrustedCallbackI
     }
 
     // When not building the user registration form, prevent web browsers from
-    // autofilling/prefilling the email, username, and password fields.
+    // auto-filling/prefilling the email, username, and password fields.
     if (!$register) {
       foreach (['mail', 'name', 'pass'] as $key) {
         if (isset($form['account'][$key])) {
@@ -418,7 +418,7 @@ abstract class AccountForm extends ContentEntityForm implements TrustedCallbackI
       'preferred_admin_langcode',
     ];
     foreach ($violations->getByFields($field_names) as $violation) {
-      list($field_name) = explode('.', $violation->getPropertyPath(), 2);
+      [$field_name] = explode('.', $violation->getPropertyPath(), 2);
       $form_state->setErrorByName($field_name, $violation->getMessage());
     }
     parent::flagViolations($violations, $form, $form_state);

@@ -101,8 +101,11 @@ abstract class UnitTestCase extends TestCase {
    * Asserts if two arrays are equal by sorting them first.
    *
    * @param array $expected
+   *   An expected results array.
    * @param array $actual
+   *   The actual array value.
    * @param string $message
+   *   An optional error message.
    *
    * @deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. Use
    *   ::assertEquals, ::assertEqualsCanonicalizing, or ::assertSame instead.
@@ -197,13 +200,13 @@ abstract class UnitTestCase extends TestCase {
     $config_storage = $this->createMock('Drupal\Core\Config\NullStorage');
     $config_storage->expects($this->any())
       ->method('listAll')
-      ->will($this->returnValue(array_keys($configs)));
+      ->willReturn(array_keys($configs));
 
     foreach ($configs as $name => $config) {
       $config_storage->expects($this->any())
         ->method('read')
         ->with($this->equalTo($name))
-        ->will($this->returnValue($config));
+        ->willReturn($config);
     }
     return $config_storage;
   }
@@ -249,7 +252,7 @@ abstract class UnitTestCase extends TestCase {
     $container->expects($this->any())
       ->method('get')
       ->with('cache_tags.invalidator')
-      ->will($this->returnValue($cache_tags_validator));
+      ->willReturn($cache_tags_validator);
 
     \Drupal::setContainer($container);
     return $container;

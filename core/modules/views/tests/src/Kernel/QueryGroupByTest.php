@@ -21,7 +21,14 @@ class QueryGroupByTest extends ViewsKernelTestBase {
    *
    * @var array
    */
-  public static $testViews = ['test_group_by_in_filters', 'test_aggregate_count', 'test_group_by_count', 'test_group_by_count_multicardinality', 'test_group_by_field_not_within_bundle'];
+  public static $testViews = [
+    'test_group_by_in_filters',
+    'test_aggregate_count',
+    'test_aggregate_count_function',
+    'test_group_by_count',
+    'test_group_by_count_multicardinality',
+    'test_group_by_field_not_within_bundle',
+  ];
 
   /**
    * Modules to enable.
@@ -80,6 +87,19 @@ class QueryGroupByTest extends ViewsKernelTestBase {
   }
 
   /**
+   * Tests aggregate count feature with no group by.
+   */
+  public function testAggregateCountFunction() {
+    $this->setupTestEntities();
+
+    $view = Views::getView('test_aggregate_count_function');
+    $this->executeView($view);
+
+    $this->assertEquals(7, $view->result[0]->id);
+    $this->assertCount(1, $view->result, 'Make sure the count of rows is one.');
+  }
+
+  /**
    * Provides a test helper which runs a view with some aggregation function.
    *
    * @param string|null $aggregation_function
@@ -111,8 +131,8 @@ class QueryGroupByTest extends ViewsKernelTestBase {
     foreach ($view->result as $item) {
       $results[$item->entity_test_name] = $item->id;
     }
-    $this->assertEquals($values[0], $results['name1'], new FormattableMarkup('Aggregation with @aggregation_function and groupby name: name1 returned the expected amount of results', ['@aggregation_function' => $aggregation_function]));
-    $this->assertEquals($values[1], $results['name2'], new FormattableMarkup('Aggregation with @aggregation_function and groupby name: name2 returned the expected amount of results', ['@aggregation_function' => $aggregation_function]));
+    $this->assertEquals($values[0], $results['name1'], new FormattableMarkup('Aggregation with @aggregation_function and groupby name: name1 returned the expected amount of results', ['@aggregation_function' => $aggregation_function ?? 'NULL']));
+    $this->assertEquals($values[1], $results['name2'], new FormattableMarkup('Aggregation with @aggregation_function and groupby name: name2 returned the expected amount of results', ['@aggregation_function' => $aggregation_function ?? 'NULL']));
   }
 
   /**
@@ -210,7 +230,7 @@ class QueryGroupByTest extends ViewsKernelTestBase {
     $view->displayHandlers->get('default')->options['fields']['name']['group_type'] = 'min';
     unset($view->displayHandlers->get('default')->options['fields']['id']['group_type']);
     $this->executeView($view);
-    $this->assertStringContainsString('GROUP BY entity_test.id', (string) $view->build_info['query'], 'GROUP BY field includes the base table name when grouping on the base field.');
+    $this->assertMatchesRegularExpression('/GROUP BY .*[^\w\s]entity_test[^\w\s]\.[^\w\s]id[^\w\s]/', (string) $view->build_info['query'], 'GROUP BY field includes the base table name when grouping on the base field.');
   }
 
   /**

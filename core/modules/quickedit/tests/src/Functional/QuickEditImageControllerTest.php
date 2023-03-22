@@ -11,6 +11,7 @@ use Drupal\Tests\TestFileCreationTrait;
  * Tests the endpoints used by the "image" in-place editor.
  *
  * @group quickedit
+ * @group legacy
  */
 class QuickEditImageControllerTest extends BrowserTestBase {
 
@@ -83,7 +84,7 @@ class QuickEditImageControllerTest extends BrowserTestBase {
     // Create a test Node.
     $node = $this->drupalCreateNode([
       'type' => 'article',
-      'title' => t('Test Node'),
+      'title' => 'Test Node',
     ]);
     $this->drupalGet('quickedit/image/info/node/' . $node->id() . '/' . $this->fieldName . '/' . $node->language()->getId() . '/default');
     $this->assertSession()->statusCodeEquals(403);
@@ -101,7 +102,7 @@ class QuickEditImageControllerTest extends BrowserTestBase {
     // Create a test Node.
     $node = $this->drupalCreateNode([
       'type' => 'article',
-      'title' => t('Test Node'),
+      'title' => 'Test Node',
     ]);
     $json = $this->drupalGet('quickedit/image/info/node/' . $node->id() . '/' . $this->fieldName . '/' . $node->language()->getId() . '/default', ['query' => ['_format' => 'json']]);
     $info = Json::decode($json);
@@ -118,7 +119,7 @@ class QuickEditImageControllerTest extends BrowserTestBase {
     // Create a test Node.
     $node = $this->drupalCreateNode([
       'type' => 'article',
-      'title' => t('Test Node'),
+      'title' => 'Test Node',
     ]);
 
     // We want a test image that is a valid size.
@@ -145,7 +146,7 @@ class QuickEditImageControllerTest extends BrowserTestBase {
     // Create a test Node.
     $node = $this->drupalCreateNode([
       'type' => 'article',
-      'title' => t('Test Node'),
+      'title' => 'Test Node',
     ]);
 
     // We want a test image that will fail validation.

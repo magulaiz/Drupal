@@ -296,7 +296,7 @@ class CacheTest extends ViewsKernelTestBase {
     // Note: views_test_data_views_pre_render() adds some cache tags.
     $this->assertEquals(['config:views.view.test_cache_header_storage', 'views_test_data:1'], $output['#cache']['tags']);
     $this->assertEquals(['non-existing-placeholder-just-for-testing-purposes' => ['#lazy_builder' => ['Drupal\views_test_data\Controller\ViewsTestDataController::placeholderLazyBuilder', ['bar']]]], $output['#attached']['placeholders']);
-    $this->assertFalse(!empty($view->build_info['pre_render_called']), 'Make sure hook_views_pre_render is not called for the cached view.');
+    $this->assertArrayNotHasKey('pre_render_called', $view->build_info, 'Make sure hook_views_pre_render is not called for the cached view.');
   }
 
   /**
@@ -366,7 +366,7 @@ class CacheTest extends ViewsKernelTestBase {
     // Update the entry in the DB to ensure that result caching works.
     \Drupal::database()->update('views_test_data')
       ->condition('name', 'George')
-      ->fields(['name' => 'egroeG'])
+      ->fields(['name' => 'notGeorge'])
       ->execute();
 
     $view = Views::getView('test_cache');

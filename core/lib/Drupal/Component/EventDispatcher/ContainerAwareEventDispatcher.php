@@ -130,8 +130,8 @@ class ContainerAwareEventDispatcher implements EventDispatcherInterface {
       }
 
       // Invoke listeners and resolve callables if necessary.
-      foreach ($this->listeners[$event_name] as $priority => &$definitions) {
-        foreach ($definitions as $key => &$definition) {
+      foreach ($this->listeners[$event_name] as &$definitions) {
+        foreach ($definitions as &$definition) {
           if (!isset($definition['callable'])) {
             $definition['callable'] = [$this->container->get($definition['service'][0]), $definition['service'][1]];
           }
@@ -173,8 +173,8 @@ class ContainerAwareEventDispatcher implements EventDispatcherInterface {
       }
 
       // Collect listeners and resolve callables if necessary.
-      foreach ($this->listeners[$event_name] as $priority => &$definitions) {
-        foreach ($definitions as $key => &$definition) {
+      foreach ($this->listeners[$event_name] as &$definitions) {
+        foreach ($definitions as &$definition) {
           if (!isset($definition['callable'])) {
             $definition['callable'] = [$this->container->get($definition['service'][0]), $definition['service'][1]];
           }
@@ -202,7 +202,7 @@ class ContainerAwareEventDispatcher implements EventDispatcherInterface {
     }
     // Resolve service definitions if the listener has not been found so far.
     foreach ($this->listeners[$event_name] as $priority => &$definitions) {
-      foreach ($definitions as $key => &$definition) {
+      foreach ($definitions as &$definition) {
         if (!isset($definition['callable'])) {
           // Once the callable is retrieved we keep it for subsequent method
           // invocations on this class.
@@ -293,11 +293,11 @@ class ContainerAwareEventDispatcher implements EventDispatcherInterface {
         $this->addListener($event_name, [$subscriber, $params]);
       }
       elseif (is_string($params[0])) {
-        $this->addListener($event_name, [$subscriber, $params[0]], isset($params[1]) ? $params[1] : 0);
+        $this->addListener($event_name, [$subscriber, $params[0]], $params[1] ?? 0);
       }
       else {
         foreach ($params as $listener) {
-          $this->addListener($event_name, [$subscriber, $listener[0]], isset($listener[1]) ? $listener[1] : 0);
+          $this->addListener($event_name, [$subscriber, $listener[0]], $listener[1] ?? 0);
         }
       }
     }

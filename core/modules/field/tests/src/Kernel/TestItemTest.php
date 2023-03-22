@@ -30,6 +30,9 @@ class TestItemTest extends FieldKernelTestBase {
    */
   protected $fieldName = 'field_test';
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
 
@@ -47,7 +50,7 @@ class TestItemTest extends FieldKernelTestBase {
   }
 
   /**
-   * Tests using entity fields of the field field type.
+   * Tests using entity fields of the test field type.
    */
   public function testTestItem() {
     // Verify entity creation.

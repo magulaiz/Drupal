@@ -17,6 +17,13 @@ class NodeAccessPagerTest extends BrowserTestBase {
   use CommentTestTrait;
 
   /**
+   * An user.
+   *
+   * @var \Drupal\user\Entity\User
+   */
+  protected $webUser;
+
+  /**
    * Modules to enable.
    *
    * @var array
@@ -28,11 +35,14 @@ class NodeAccessPagerTest extends BrowserTestBase {
    */
   protected $defaultTheme = 'stark';
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
 
     node_access_rebuild();
-    $this->drupalCreateContentType(['type' => 'page', 'name' => t('Basic page')]);
+    $this->drupalCreateContentType(['type' => 'page', 'name' => 'Basic page']);
     $this->addDefaultCommentField('node', 'page');
     $this->webUser = $this->drupalCreateUser([
       'access content',

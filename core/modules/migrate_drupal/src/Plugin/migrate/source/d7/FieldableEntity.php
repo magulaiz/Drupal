@@ -5,14 +5,16 @@ namespace Drupal\migrate_drupal\Plugin\migrate\source\d7;
 use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
 
 /**
- * Base class for D7 source plugins which need to collect field values from
- * the Field API.
+ * Base class for D7 source plugins which need to collect field values.
+ *
+ * Field values are collected from the Field API.
  *
  * Refer to the existing implementations for examples:
  * @see \Drupal\node\Plugin\migrate\source\d7\Node
  * @see \Drupal\user\Plugin\migrate\source\d7\User
  *
- * For available configuration keys, refer to the parent classes:
+ * For available configuration keys, refer to the parent classes.
+ *
  * @see \Drupal\migrate\Plugin\migrate\source\SqlBase
  * @see \Drupal\migrate\Plugin\migrate\source\SourcePluginBase
  */
@@ -20,6 +22,12 @@ abstract class FieldableEntity extends DrupalSqlBase {
 
   /**
    * Returns all non-deleted field instances attached to a specific entity type.
+   *
+   * Typically, getFields() is used in the prepareRow method of a source plugin
+   * to get a list of all the field instances of the entity. A source plugin can
+   * then loop through the list of fields to do any other preparation before
+   * processing the row. Typically, a source plugin will use getFieldValues()
+   * to get the values of each field.
    *
    * @param string $entity_type
    *   The entity type ID.
@@ -33,7 +41,7 @@ abstract class FieldableEntity extends DrupalSqlBase {
     $query = $this->select('field_config_instance', 'fci')
       ->fields('fci')
       ->condition('fci.entity_type', $entity_type)
-      ->condition('fci.bundle', isset($bundle) ? $bundle : $entity_type)
+      ->condition('fci.bundle', $bundle ?? $entity_type)
       ->condition('fci.deleted', 0);
 
     // Join the 'field_config' table and add the 'translatable' setting to the
@@ -46,6 +54,9 @@ abstract class FieldableEntity extends DrupalSqlBase {
 
   /**
    * Retrieves field values for a single field of a single entity.
+   *
+   * Typically, getFieldValues() is used in the prepareRow method of a source
+   * plugin where the return values are placed on the row source.
    *
    * @param string $entity_type
    *   The entity type.

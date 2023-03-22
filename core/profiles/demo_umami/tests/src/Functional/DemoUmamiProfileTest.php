@@ -67,7 +67,7 @@ class DemoUmamiProfileTest extends BrowserTestBase {
    * @param \Drupal\Core\Config\StorageInterface $active_config_storage
    *   The active configuration storage.
    */
-  protected function assertDefaultConfig(StorageInterface $default_config_storage, StorageInterface $active_config_storage) {
+  protected function assertDefaultConfig(StorageInterface $default_config_storage, StorageInterface $active_config_storage): void {
     /** @var \Drupal\Core\Config\ConfigManagerInterface $config_manager */
     $config_manager = $this->container->get('config.manager');
 
@@ -128,6 +128,12 @@ class DemoUmamiProfileTest extends BrowserTestBase {
     $node = reset($nodes);
     $this->drupalGet($node->toUrl('edit-form'));
     $webassert->statusCodeEquals('200');
+
+    $this->submitForm([], 'Preview');
+    $webassert->statusCodeEquals('200');
+    $this->assertSession()->elementsCount('css', 'h1', 1);
+    $this->clickLink('Back to content editing');
+
     $this->submitForm([], "Save");
     $webassert->pageTextContains('Recipe Deep mediterranean quiche has been updated.');
   }

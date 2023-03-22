@@ -10,6 +10,7 @@ use Drupal\Tests\BrowserTestBase;
  * Tests loading of CKEditor.
  *
  * @group ckeditor
+ * @group legacy
  */
 class CKEditorLoadingTest extends BrowserTestBase {
 
@@ -39,6 +40,9 @@ class CKEditorLoadingTest extends BrowserTestBase {
    */
   protected $normalUser;
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
 
@@ -93,7 +97,7 @@ class CKEditorLoadingTest extends BrowserTestBase {
     // - doesn't have access to the filtered_html text format, so: no text editor.
     $this->drupalLogin($this->untrustedUser);
     $this->drupalGet('node/add/article');
-    list($settings, $editor_settings_present, $editor_js_present) = $this->getThingsToCheck();
+    [$settings, $editor_settings_present, $editor_js_present] = $this->getThingsToCheck();
     $this->assertFalse($editor_settings_present, 'No Text Editor module settings.');
     $this->assertFalse($editor_js_present, 'No Text Editor JavaScript.');
     $this->assertSession()->fieldExists('edit-body-0-value');
@@ -112,7 +116,7 @@ class CKEditorLoadingTest extends BrowserTestBase {
     // - does have access to the filtered_html text format, so: CKEditor.
     $this->drupalLogin($this->normalUser);
     $this->drupalGet('node/add/article');
-    list($settings, $editor_settings_present, $editor_js_present) = $this->getThingsToCheck();
+    [$settings, $editor_settings_present, $editor_js_present] = $this->getThingsToCheck();
     $ckeditor_plugin = $this->container->get('plugin.manager.editor')->createInstance('ckeditor');
     $editor = Editor::load('filtered_html');
     $expected = [
@@ -149,7 +153,7 @@ class CKEditorLoadingTest extends BrowserTestBase {
     $editor->setSettings($editor_settings);
     $editor->save();
     $this->drupalGet('node/add/article');
-    list($settings, $editor_settings_present, $editor_js_present) = $this->getThingsToCheck();
+    [$settings, $editor_settings_present, $editor_js_present] = $this->getThingsToCheck();
     $expected = [
       'formats' => [
         'filtered_html' => [

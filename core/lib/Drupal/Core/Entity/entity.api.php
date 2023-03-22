@@ -14,6 +14,8 @@ use Drupal\Core\Render\Element;
 use Drupal\language\Entity\ContentLanguageSettings;
 use Drupal\node\Entity\NodeType;
 
+// cspell:ignore rdftype
+
 /**
  * @defgroup entity_crud Entity CRUD, editing, and view hooks
  * @{
@@ -119,6 +121,12 @@ use Drupal\node\Entity\NodeType;
  * manipulated via the API.
  * @see \Drupal\Core\Entity\TranslatableRevisionableInterface
  * @see \Drupal\Core\Entity\TranslatableRevisionableStorageInterface
+ *
+ * @section characteristics Entity characteristics
+ *
+ * In addition to entity interfaces for revisionable and translatable
+ * interfaces, there are interfaces for other kinds of entity functionality.
+ * @see entity_characteristics
  *
  * @section create Create operations
  * To create an entity:
@@ -355,7 +363,10 @@ use Drupal\node\Entity\NodeType;
  *   as short as possible, and may not exceed 32 characters.
  * - Define an interface for your entity's get/set methods, usually extending
  *   either \Drupal\Core\Config\Entity\ConfigEntityInterface or
- *   \Drupal\Core\Entity\ContentEntityInterface.
+ *   \Drupal\Core\Entity\ContentEntityInterface. Other interfaces that add
+ *   functionality are also available: see the
+ *   @link entity_characteristics Entity characteristics topic @endlink
+ *   for more information.
  * - Define a class for your entity, implementing your interface and extending
  *   either \Drupal\Core\Config\Entity\ConfigEntityBase or
  *   \Drupal\Core\Entity\ContentEntityBase, with annotation for
@@ -639,6 +650,31 @@ use Drupal\node\Entity\NodeType;
  */
 
 /**
+ * @defgroup entity_type_characteristics Entity type characteristics
+ * @{
+ * Describes how to enhance entity types with additional functionality.
+ *
+ * When @link entity_api defining an entity type @endlink, the functionality of
+ * the entities can be enhanced with additional characteristics. Examples
+ * include entities that have a published/unpublished status, or a timestamp
+ * that gives the time they were last modified.
+ *
+ * These characteristics are provided by an interface, which the entity's own
+ * interface should inherit from, in addition to
+ * \Drupal\Core\Config\Entity\ConfigEntityInterface or
+ * \Drupal\Core\Entity\ContentEntityInterface.
+ *
+ * Some characteristics also provide a trait for the entity class. This has
+ * implementations of the interface's methods, and may also have a helper method
+ * for \Drupal\Core\Entity\FieldableEntityInterface::baseFieldDefinitions()
+ * which defines base fields that the trait expects to store data. Furthermore,
+ * trait methods may expect certain entity keys to be set: see the documentation
+ * for each trait for details.
+ *
+ * @}
+ */
+
+/**
  * @addtogroup hooks
  * @{
  */
@@ -846,6 +882,11 @@ function hook_entity_view_mode_info_alter(&$view_modes) {
  *     the entity type and the bundle, the one for the bundle is used.
  *   - translatable: (optional) A boolean value specifying whether this bundle
  *     has translation support enabled. Defaults to FALSE.
+ *   - class: (optional) The fully qualified class name for this bundle. If
+ *     omitted, the class from the entity type definition will be used. Multiple
+ *     bundles must not use the same subclass. If a class is reused by multiple
+ *     bundles, an \Drupal\Core\Entity\Exception\AmbiguousBundleClassException
+ *     will be thrown.
  *
  * @see \Drupal\Core\Entity\EntityTypeBundleInfo::getBundleInfo()
  * @see hook_entity_bundle_info_alter()
@@ -866,6 +907,8 @@ function hook_entity_bundle_info() {
  */
 function hook_entity_bundle_info_alter(&$bundles) {
   $bundles['user']['user']['label'] = t('Full account');
+  // Override the bundle class for the "article" node type in a custom module.
+  $bundles['node']['article']['class'] = 'Drupal\mymodule\Entity\Article';
 }
 
 /**

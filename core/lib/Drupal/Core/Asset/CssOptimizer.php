@@ -71,7 +71,16 @@ class CssOptimizer implements AssetOptimizerInterface {
   }
 
   /**
-   * Build aggregate CSS file.
+   * Processes CSS file and adds base URLs to any relative resource paths.
+   *
+   * @param array $css_asset
+   *   A CSS asset. The array should contain the `data` key where the value
+   *   should be the path to the CSS file relative to the Drupal root. This is
+   *   an example of the `data` key's value,
+   *   "core/assets/vendor/normalize-css/normalize.css".
+   *
+   * @return string
+   *   The asset's cleaned/optimized contents.
    */
   protected function processFile($css_asset) {
     $contents = $this->loadFile($css_asset['data'], TRUE);
@@ -109,7 +118,7 @@ class CssOptimizer implements AssetOptimizerInterface {
    * @param $reset_basepath
    *   Used internally to facilitate recursive resolution of @import commands.
    *
-   * @return
+   * @return string
    *   Contents of the stylesheet, including any resolved @import commands.
    */
   public function loadFile($file, $optimize = NULL, $reset_basepath = TRUE) {
@@ -171,7 +180,7 @@ class CssOptimizer implements AssetOptimizerInterface {
    *   An array of matches by a preg_replace_callback() call that scans for
    *   @import-ed CSS files, except for external CSS files.
    *
-   * @return
+   * @return string
    *   The contents of the CSS file at $matches[1], with corrected paths.
    *
    * @see \Drupal\Core\Asset\AssetOptimizerInterface::loadFile()
@@ -188,7 +197,7 @@ class CssOptimizer implements AssetOptimizerInterface {
     // the url() path.
     $directory = $directory == '.' ? '' : $directory . '/';
 
-    // Alter all internal url() paths. Leave external paths alone. We don't need
+    // Alter all internal asset paths. Leave external paths alone. We don't need
     // to normalize absolute paths here because that will be done later.
     return preg_replace('/url\(\s*([\'"]?)(?![a-z]+:|\/+)([^\'")]+)([\'"]?)\s*\)/i', 'url(\1' . $directory . '\2\3)', $file);
   }
@@ -202,7 +211,7 @@ class CssOptimizer implements AssetOptimizerInterface {
    *   (optional) Boolean whether CSS contents should be minified. Defaults to
    *   FALSE.
    *
-   * @return
+   * @return string
    *   Contents of the stylesheet including the imported stylesheets.
    */
   protected function processCss($contents, $optimize = FALSE) {
@@ -252,7 +261,9 @@ class CssOptimizer implements AssetOptimizerInterface {
     }
 
     // Replaces @import commands with the actual stylesheet content.
-    // This happens recursively but omits external files.
+    // This happens recursively but omits external files and local files
+    // with supports- or media-query qualifiers, as those are conditionally
+    // loaded depending on the user agent.
     $contents = preg_replace_callback('/@import\s*(?:url\(\s*)?[\'"]?(?![a-z]+:)(?!\/\/)([^\'"\()]+)[\'"]?\s*\)?\s*;/', [$this, 'loadNestedFile'], $contents);
 
     return $contents;

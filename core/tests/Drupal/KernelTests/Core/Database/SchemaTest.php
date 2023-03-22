@@ -4,9 +4,8 @@ namespace Drupal\KernelTests\Core\Database;
 
 use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Database\Database;
+use Drupal\Core\Database\IntegrityConstraintViolationException;
 use Drupal\Core\Database\SchemaException;
-use Drupal\Core\Database\SchemaObjectDoesNotExistException;
-use Drupal\Core\Database\SchemaObjectExistsException;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Tests\Core\Database\SchemaIntrospectionTestTrait;
@@ -105,8 +104,8 @@ class SchemaTest extends KernelTestBase {
           $string_ascii_check = ($column->Collation == 'ascii_general_ci');
         }
       }
-      $this->assertTrue(!empty($string_check), 'string field has the right collation.');
-      $this->assertTrue(!empty($string_ascii_check), 'ASCII string field has the right collation.');
+      $this->assertNotEmpty($string_check, 'string field has the right collation.');
+      $this->assertNotEmpty($string_ascii_check, 'ASCII string field has the right collation.');
     }
 
     // An insert without a value for the column 'test_table' should fail.
@@ -276,9 +275,9 @@ class SchemaTest extends KernelTestBase {
   }
 
   /**
-   * @covers \Drupal\Core\Database\Driver\mysql\Schema::introspectIndexSchema
-   * @covers \Drupal\Core\Database\Driver\pgsql\Schema::introspectIndexSchema
-   * @covers \Drupal\Core\Database\Driver\sqlite\Schema::introspectIndexSchema
+   * @covers \Drupal\mysql\Driver\Database\mysql\Schema::introspectIndexSchema
+   * @covers \Drupal\pgsql\Driver\Database\pgsql\Schema::introspectIndexSchema
+   * @covers \Drupal\sqlite\Driver\Database\sqlite\Schema::introspectIndexSchema
    */
   public function testIntrospectIndexSchema() {
     $table_specification = [
@@ -350,139 +349,6 @@ class SchemaTest extends KernelTestBase {
     }
 
     $this->assertEquals($table_specification, $index_schema);
-  }
-
-  /**
-   * Tests that indexes on string fields are limited to 191 characters on MySQL.
-   *
-   * @see \Drupal\Core\Database\Driver\mysql\Schema::getNormalizedIndexes()
-   */
-  public function testIndexLength() {
-    if ($this->connection->databaseType() !== 'mysql') {
-      $this->markTestSkipped("The '{$this->connection->databaseType()}' database type does not support setting column length for indexes.");
-    }
-
-    $table_specification = [
-      'fields' => [
-        'id'  => [
-          'type' => 'int',
-          'default' => NULL,
-        ],
-        'test_field_text'  => [
-          'type' => 'text',
-          'not null' => TRUE,
-        ],
-        'test_field_string_long'  => [
-          'type' => 'varchar',
-          'length' => 255,
-          'not null' => TRUE,
-        ],
-        'test_field_string_ascii_long'  => [
-          'type' => 'varchar_ascii',
-          'length' => 255,
-        ],
-        'test_field_string_short'  => [
-          'type' => 'varchar',
-          'length' => 128,
-          'not null' => TRUE,
-        ],
-      ],
-      'indexes' => [
-        'test_regular' => [
-          'test_field_text',
-          'test_field_string_long',
-          'test_field_string_ascii_long',
-          'test_field_string_short',
-        ],
-        'test_length' => [
-          ['test_field_text', 128],
-          ['test_field_string_long', 128],
-          ['test_field_string_ascii_long', 128],
-          ['test_field_string_short', 128],
-        ],
-        'test_mixed' => [
-          ['test_field_text', 200],
-          'test_field_string_long',
-          ['test_field_string_ascii_long', 200],
-          'test_field_string_short',
-        ],
-      ],
-    ];
-    $this->schema->createTable('test_table_index_length', $table_specification);
-
-    // Ensure expected exception thrown when adding index with missing info.
-    $expected_exception_message = "MySQL needs the 'test_field_text' field specification in order to normalize the 'test_regular' index";
-    $missing_field_spec = $table_specification;
-    unset($missing_field_spec['fields']['test_field_text']);
-    try {
-      $this->schema->addIndex('test_table_index_length', 'test_separate', [['test_field_text', 200]], $missing_field_spec);
-      $this->fail('SchemaException not thrown when adding index with missing information.');
-    }
-    catch (SchemaException $e) {
-      $this->assertEquals($expected_exception_message, $e->getMessage());
-    }
-
-    // Add a separate index.
-    $this->schema->addIndex('test_table_index_length', 'test_separate', [['test_field_text', 200]], $table_specification);
-    $table_specification_with_new_index = $table_specification;
-    $table_specification_with_new_index['indexes']['test_separate'] = [['test_field_text', 200]];
-
-    // Ensure that the exceptions of addIndex are thrown as expected.
-    try {
-      $this->schema->addIndex('test_table_index_length', 'test_separate', [['test_field_text', 200]], $table_specification);
-      $this->fail('\Drupal\Core\Database\SchemaObjectExistsException exception missed.');
-    }
-    catch (SchemaObjectExistsException $e) {
-      // Expected exception; just continue testing.
-    }
-
-    try {
-      $this->schema->addIndex('test_table_non_existing', 'test_separate', [['test_field_text', 200]], $table_specification);
-      $this->fail('\Drupal\Core\Database\SchemaObjectDoesNotExistException exception missed.');
-    }
-    catch (SchemaObjectDoesNotExistException $e) {
-      // Expected exception; just continue testing.
-    }
-
-    // Get index information.
-    $results = $this->connection->query('SHOW INDEX FROM {test_table_index_length}');
-    $expected_lengths = [
-      'test_regular' => [
-        'test_field_text' => 191,
-        'test_field_string_long' => 191,
-        'test_field_string_ascii_long' => NULL,
-        'test_field_string_short' => NULL,
-      ],
-      'test_length' => [
-        'test_field_text' => 128,
-        'test_field_string_long' => 128,
-        'test_field_string_ascii_long' => 128,
-        'test_field_string_short' => NULL,
-      ],
-      'test_mixed' => [
-        'test_field_text' => 191,
-        'test_field_string_long' => 191,
-        'test_field_string_ascii_long' => 200,
-        'test_field_string_short' => NULL,
-      ],
-      'test_separate' => [
-        'test_field_text' => 191,
-      ],
-    ];
-
-    // Count the number of columns defined in the indexes.
-    $column_count = 0;
-    foreach ($table_specification_with_new_index['indexes'] as $index) {
-      foreach ($index as $field) {
-        $column_count++;
-      }
-    }
-    $test_count = 0;
-    foreach ($results as $result) {
-      $this->assertEquals($expected_lengths[$result->Key_name][$result->Column_name], $result->Sub_part, 'Index length matches expected value.');
-      $test_count++;
-    }
-    $this->assertEquals($column_count, $test_count, 'Number of tests matches expected value.');
   }
 
   /**
@@ -672,10 +538,12 @@ class SchemaTest extends KernelTestBase {
    * The addition test covers both defining a field of a given specification
    * when initially creating at table and extending an existing table.
    *
-   * @param $field_spec
+   * @param array $field_spec
    *   The schema specification of the field.
+   *
+   * @internal
    */
-  protected function assertFieldAdditionRemoval($field_spec) {
+  protected function assertFieldAdditionRemoval(array $field_spec): void {
     // Try creating the field on a new table.
     $table_name = 'test_table_' . ($this->counter++);
     $table_spec = [
@@ -737,8 +605,10 @@ class SchemaTest extends KernelTestBase {
 
   /**
    * Asserts that a newly added field has the correct characteristics.
+   *
+   * @internal
    */
-  protected function assertFieldCharacteristics($table_name, $field_name, $field_spec) {
+  protected function assertFieldCharacteristics(string $table_name, string $field_name, array $field_spec): void {
     // Check that the initial value has been registered.
     if (isset($field_spec['initial'])) {
       // There should be no row with a value different then $field_spec['initial'].
@@ -921,6 +791,70 @@ class SchemaTest extends KernelTestBase {
   }
 
   /**
+   * Tests converting an int to a serial when the int column has data.
+   */
+  public function testChangePrimaryKeyToSerial() {
+    // Test making an invalid field the primary key of the table upon creation.
+    $table_name = 'test_table';
+    $table_spec = [
+      'fields' => [
+        'test_field' => ['type' => 'int', 'not null' => TRUE],
+        'test_field_string'  => ['type' => 'varchar', 'length' => 20],
+      ],
+      'primary key' => ['test_field'],
+    ];
+    $this->schema->createTable($table_name, $table_spec);
+
+    if ($this->connection->databaseType() !== 'sqlite') {
+      try {
+        $this->connection
+          ->insert($table_name)
+          ->fields(['test_field_string' => 'test'])
+          ->execute();
+        $this->fail('Expected IntegrityConstraintViolationException not thrown');
+      }
+      catch (IntegrityConstraintViolationException $e) {
+      }
+    }
+
+    // @todo https://www.drupal.org/project/drupal/issues/3222127 Change the
+    //   first item to 0 to test changing a field with 0 to a serial.
+    // Create 8 rows in the table. Note that the 5 value is deliberately
+    // omitted.
+    foreach ([1, 2, 3, 4, 6, 7, 8, 9] as $value) {
+      $this->connection
+        ->insert($table_name)
+        ->fields(['test_field' => $value])
+        ->execute();
+    }
+    $this->schema->changeField($table_name, 'test_field', 'test_field', ['type' => 'serial', 'not null' => TRUE]);
+
+    $data = $this->connection
+      ->select($table_name)
+      ->fields($table_name, ['test_field'])
+      ->execute()
+      ->fetchCol();
+    $this->assertEquals([1, 2, 3, 4, 6, 7, 8, 9], array_values($data));
+
+    try {
+      $this->connection
+        ->insert($table_name)
+        ->fields(['test_field' => 1])
+        ->execute();
+      $this->fail('Expected IntegrityConstraintViolationException not thrown');
+    }
+    catch (IntegrityConstraintViolationException $e) {
+    }
+
+    // Ensure auto numbering now works.
+    $id = $this->connection
+      ->insert($table_name)
+      ->fields(['test_field_string' => 'test'])
+      ->execute();
+    $this->assertEquals(10, $id);
+  }
+
+  /**
    * Tests adding an invalid field specification as a primary key.
    */
   public function testInvalidPrimaryKeyAddition() {
@@ -1007,14 +941,16 @@ class SchemaTest extends KernelTestBase {
   /**
    * Asserts that a field can be changed from one spec to another.
    *
-   * @param $old_spec
+   * @param array $old_spec
    *   The beginning field specification.
-   * @param $new_spec
+   * @param array $new_spec
    *   The ending field specification.
-   * @param $test_data
+   * @param mixed $test_data
    *   (optional) A test value to insert and test, if specified.
+   *
+   * @internal
    */
-  protected function assertFieldChange($old_spec, $new_spec, $test_data = NULL) {
+  protected function assertFieldChange(array $old_spec, array $new_spec, $test_data = NULL): void {
     $table_name = 'test_table_' . ($this->counter++);
     $table_spec = [
       'fields' => [
@@ -1248,6 +1184,61 @@ class SchemaTest extends KernelTestBase {
       'test_2_table',
     ];
     $this->assertEquals($expected, $tables, 'Two tables were found.');
+
+    // Check '_' and '%' wildcards.
+    $test_schema->createTable('test3table', $table_specification);
+    $test_schema->createTable('test4', $table_specification);
+    $test_schema->createTable('testTable', $table_specification);
+    $test_schema->createTable('test', $table_specification);
+
+    $tables = $test_schema->findTables('test%');
+    sort($tables);
+    $expected = [
+      'test',
+      'test3table',
+      'test4',
+      'testTable',
+      'test_1_table',
+      'test_2_table',
+    ];
+    $this->assertEquals($expected, $tables, 'All "test" prefixed tables were found.');
+
+    $tables = $test_schema->findTables('test_%');
+    sort($tables);
+    $expected = [
+      'test3table',
+      'test4',
+      'testTable',
+      'test_1_table',
+      'test_2_table',
+    ];
+    $this->assertEquals($expected, $tables, 'All "/^test..*?/" tables were found.');
+
+    $tables = $test_schema->findTables('test%table');
+    sort($tables);
+    $expected = [
+      'test3table',
+      'testTable',
+      'test_1_table',
+      'test_2_table',
+    ];
+    $this->assertEquals($expected, $tables, 'All "/^test.*?table/" tables were found.');
+
+    $tables = $test_schema->findTables('test_%table');
+    sort($tables);
+    $expected = [
+      'test3table',
+      'test_1_table',
+      'test_2_table',
+    ];
+    $this->assertEquals($expected, $tables, 'All "/^test..*?table/" tables were found.');
+
+    $tables = $test_schema->findTables('test_');
+    sort($tables);
+    $expected = [
+      'test4',
+    ];
+    $this->assertEquals($expected, $tables, 'All "/^test./" tables were found.');
 
     // Go back to the initial connection.
     Database::setActiveConnection('default');

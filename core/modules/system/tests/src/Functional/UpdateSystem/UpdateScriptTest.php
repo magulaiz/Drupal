@@ -38,11 +38,6 @@ class UpdateScriptTest extends BrowserTestBase {
   protected $defaultTheme = 'stark';
 
   /**
-   * {@inheritdoc}
-   */
-  protected $dumpHeaders = TRUE;
-
-  /**
    * The URL to the status report page.
    *
    * @var \Drupal\Core\Url
@@ -63,6 +58,9 @@ class UpdateScriptTest extends BrowserTestBase {
    */
   private $updateUser;
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
     $this->updateUrl = Url::fromRoute('system.db_update');
@@ -279,7 +277,7 @@ class UpdateScriptTest extends BrowserTestBase {
     return [
       'module: core_version_requirement key incompatible' => [
         [
-          'core_version_requirement' => '^8 || ^9',
+          'core_version_requirement' => '>= 8',
           'type' => 'module',
         ],
         [
@@ -290,7 +288,7 @@ class UpdateScriptTest extends BrowserTestBase {
       ],
       'theme: core_version_requirement key incompatible' => [
         [
-          'core_version_requirement' => '^8 || ^9',
+          'core_version_requirement' => '>= 8',
           'type' => 'theme',
         ],
         [
@@ -301,12 +299,12 @@ class UpdateScriptTest extends BrowserTestBase {
       ],
       'module: php requirement' => [
         [
-          'core_version_requirement' => '^8 || ^9',
+          'core_version_requirement' => '>= 8',
           'type' => 'module',
           'php' => 1,
         ],
         [
-          'core_version_requirement' => '^8 || ^9',
+          'core_version_requirement' => '>= 8',
           'type' => 'module',
           'php' => 1000000000,
         ],
@@ -314,12 +312,12 @@ class UpdateScriptTest extends BrowserTestBase {
       ],
       'theme: php requirement' => [
         [
-          'core_version_requirement' => '^8 || ^9',
+          'core_version_requirement' => '>= 8',
           'type' => 'theme',
           'php' => 1,
         ],
         [
-          'core_version_requirement' => '^8 || ^9',
+          'core_version_requirement' => '>= 8',
           'type' => 'theme',
           'php' => 1000000000,
         ],
@@ -327,7 +325,7 @@ class UpdateScriptTest extends BrowserTestBase {
       ],
       'module: core_version_requirement key missing' => [
         [
-          'core_version_requirement' => '^8 || ^9',
+          'core_version_requirement' => '>= 8',
           'type' => 'module',
         ],
         [
@@ -338,7 +336,7 @@ class UpdateScriptTest extends BrowserTestBase {
       ],
       'theme: core_version_requirement key missing' => [
         [
-          'core_version_requirement' => '^8 || ^9',
+          'core_version_requirement' => '>= 8',
           'type' => 'theme',
         ],
         [
@@ -377,7 +375,7 @@ class UpdateScriptTest extends BrowserTestBase {
     $extension_info = [
       'name' => $extension_name,
       'type' => $extension_type,
-      'core_version_requirement' => '^8 || ^9',
+      'core_version_requirement' => '^8 || ^9 || ^10',
     ];
     if ($extension_type === 'theme') {
       $extension_info['base theme'] = FALSE;
@@ -595,9 +593,9 @@ class UpdateScriptTest extends BrowserTestBase {
     // Add some custom languages.
     foreach (['aa', 'bb'] as $language_code) {
       ConfigurableLanguage::create([
-          'id' => $language_code,
-          'label' => $this->randomMachineName(),
-        ])->save();
+        'id' => $language_code,
+        'label' => $this->randomMachineName(),
+      ])->save();
     }
 
     $config = \Drupal::service('config.factory')->getEditable('language.negotiation');
@@ -661,6 +659,7 @@ class UpdateScriptTest extends BrowserTestBase {
     $this->drupalLogin($full_admin_user);
     $this->drupalGet($this->updateUrl, ['external' => TRUE]);
     $this->assertSession()->statusCodeEquals(200);
+    $this->updateRequirementsProblem();
     $this->clickLink('maintenance mode');
     $this->assertSession()->statusCodeEquals(200);
     $this->assertSession()->elementContains('css', 'main h1', 'Maintenance mode');
@@ -670,6 +669,7 @@ class UpdateScriptTest extends BrowserTestBase {
     $this->drupalLogin($this->updateUser);
     $this->drupalGet($this->updateUrl, ['external' => TRUE]);
     $this->assertSession()->statusCodeEquals(200);
+    $this->updateRequirementsProblem();
     $this->clickLink('maintenance mode');
     $this->assertSession()->statusCodeEquals(200);
     $this->assertSession()->elementContains('css', 'main h1', 'Maintenance mode');
@@ -803,8 +803,10 @@ class UpdateScriptTest extends BrowserTestBase {
    *   The extension type, either 'module' or 'theme'.
    * @param string $extension_machine_name
    *   The extension machine name.
+   *
+   * @internal
    */
-  protected function assertInstalledExtensionConfig($extension_type, $extension_machine_name) {
+  protected function assertInstalledExtensionConfig(string $extension_type, string $extension_machine_name): void {
     $extension_config = $this->container->get('config.factory')->getEditable('core.extension');
     $this->assertSame(0, $extension_config->get("$extension_type.$extension_machine_name"));
   }
@@ -820,8 +822,10 @@ class UpdateScriptTest extends BrowserTestBase {
    *   The extension machine name.
    *
    * @throws \Behat\Mink\Exception\ResponseTextException
+   *
+   * @internal
    */
-  protected function assertUpdateWithNoError($unexpected_error_text, $extension_type, $extension_machine_name) {
+  protected function assertUpdateWithNoError(string $unexpected_error_text, string $extension_type, string $extension_machine_name): void {
     $assert_session = $this->assertSession();
     $this->drupalGet($this->statusReportUrl);
     $this->assertSession()->pageTextNotContains($unexpected_error_text);
@@ -845,8 +849,10 @@ class UpdateScriptTest extends BrowserTestBase {
    *
    * @throws \Behat\Mink\Exception\ExpectationException
    * @throws \Behat\Mink\Exception\ResponseTextException
+   *
+   * @internal
    */
-  protected function assertErrorOnUpdate($expected_error_text, $extension_type, $extension_machine_name) {
+  protected function assertErrorOnUpdate(string $expected_error_text, string $extension_type, string $extension_machine_name): void {
     $assert_session = $this->assertSession();
     $this->drupalGet($this->statusReportUrl);
     $this->assertSession()->pageTextContains($expected_error_text);

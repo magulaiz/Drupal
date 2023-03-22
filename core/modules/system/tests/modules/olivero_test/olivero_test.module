@@ -14,3 +14,29 @@ function olivero_test_preprocess_field_multiple_value_form(&$variables) {
     $variables['element']['#disabled'] = TRUE;
   }
 }
+
+/**
+ * Implements hook_preprocess().
+ */
+function olivero_test_preprocess_page(&$variables) {
+  $route = \Drupal::routeMatch()->getRouteName();
+
+  switch ($route) {
+    case 'js_message_test.links':
+      $messenger = \Drupal::messenger();
+      $messenger->addStatus('PHP Status');
+      $messenger->addWarning('PHP Warning');
+      $messenger->addError('PHP Error');
+      break;
+
+    default:
+      break;
+  }
+}
+
+/**
+ * Implements hook_preprocess_html().
+ */
+function olivero_test_preprocess_html(&$variables) {
+  $variables['#attached']['library'][] = 'olivero_test/log-errors';
+}

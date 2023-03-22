@@ -182,7 +182,7 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
 
     $skip_cache = \Drupal::config('views.settings')->get('skip_cache');
 
-    if (empty($view->editing) || !$skip_cache) {
+    if (!$skip_cache) {
       $cid = 'views:unpack_options:' . hash('sha256', serialize([$this->options, $options])) . ':' . \Drupal::languageManager()->getCurrentLanguage()->getId();
       if (empty(static::$unpackOptions[$cid])) {
         $cache = \Drupal::cache('data')->get($cid);
@@ -439,7 +439,6 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
     // If the display cannot use a pager, then we cannot default it.
     if (!$this->usesPager()) {
       unset($sections['pager']);
-      unset($sections['items_per_page']);
     }
 
     foreach ($this->extenders as $extender) {
@@ -562,21 +561,21 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
         'contains' => [
           'type' => ['default' => 'views_query'],
           'options' => ['default' => []],
-         ],
+        ],
         'merge_defaults' => [$this, 'mergePlugin'],
       ],
       'exposed_form' => [
         'contains' => [
           'type' => ['default' => 'basic'],
           'options' => ['default' => []],
-         ],
+        ],
         'merge_defaults' => [$this, 'mergePlugin'],
       ],
       'pager' => [
         'contains' => [
           'type' => ['default' => 'mini'],
           'options' => ['default' => []],
-         ],
+        ],
         'merge_defaults' => [$this, 'mergePlugin'],
       ],
       'style' => [
@@ -806,7 +805,7 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
     // Query plugins allow specifying a specific query class per base table.
     if ($type == 'query') {
       $views_data = Views::viewsData()->get($this->view->storage->get('base_table'));
-      $name = isset($views_data['table']['base']['query_id']) ? $views_data['table']['base']['query_id'] : 'views_query';
+      $name = $views_data['table']['base']['query_id'] ?? 'views_query';
     }
     else {
       $name = $options['type'];
@@ -1029,16 +1028,16 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
     }
 
     return Link::fromTextAndUrl($text, Url::fromRoute('views_ui.form_display', [
-        'js' => 'nojs',
-        'view' => $this->view->storage->id(),
-        'display_id' => $this->display['id'],
-        'type' => $section,
-      ], [
-        'attributes' => [
-          'class' => ['views-ajax-link', $class],
-          'title' => $title,
-          'id' => Html::getUniqueId('views-' . $this->display['id'] . '-' . $section),
-        ],
+      'js' => 'nojs',
+      'view' => $this->view->storage->id(),
+      'display_id' => $this->display['id'],
+      'type' => $section,
+    ], [
+      'attributes' => [
+        'class' => ['views-ajax-link', $class],
+        'title' => $title,
+        'id' => Html::getUniqueId('views-' . $this->display['id'] . '-' . $section),
+      ],
     ]))->toString();
   }
 
@@ -1731,7 +1730,7 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
         ];
 
         $options = [];
-        $optgroup_arguments = (string) t('Arguments');
+        $optgroup_arguments = (string) $this->t('Arguments');
         foreach ($this->view->display_handler->getHandlers('argument') as $arg => $handler) {
           $options[$optgroup_arguments]["{{ arguments.$arg }}"] = $this->t('@argument title', ['@argument' => $handler->adminLabel()]);
           $options[$optgroup_arguments]["{{ raw_arguments.$arg }}"] = $this->t('@argument input', ['@argument' => $handler->adminLabel()]);
@@ -2205,9 +2204,9 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
     $cache = $this->getPlugin('cache');
 
     (new CacheableMetadata())
-      ->setCacheTags(Cache::mergeTags($this->view->getCacheTags(), isset($this->display['cache_metadata']['tags']) ? $this->display['cache_metadata']['tags'] : []))
-      ->setCacheContexts(isset($this->display['cache_metadata']['contexts']) ? $this->display['cache_metadata']['contexts'] : [])
-      ->setCacheMaxAge(Cache::mergeMaxAges($cache->getCacheMaxAge(), isset($this->display['cache_metadata']['max-age']) ? $this->display['cache_metadata']['max-age'] : Cache::PERMANENT))
+      ->setCacheTags(Cache::mergeTags($this->view->getCacheTags(), $this->display['cache_metadata']['tags'] ?? []))
+      ->setCacheContexts($this->display['cache_metadata']['contexts'] ?? [])
+      ->setCacheMaxAge(Cache::mergeMaxAges($cache->getCacheMaxAge(), $this->display['cache_metadata']['max-age'] ?? Cache::PERMANENT))
       ->merge(CacheableMetadata::createFromRenderArray($element))
       ->applyTo($element);
   }
@@ -2232,7 +2231,7 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
     $element['#feed_icons'] = !empty($view->feedIcons) ? $view->feedIcons : [];
 
     if ($view->display_handler->renderPager()) {
-      $exposed_input = isset($view->exposed_raw_input) ? $view->exposed_raw_input : NULL;
+      $exposed_input = $view->getExposedInput();
       $element['#pager'] = $view->renderPager($exposed_input);
     }
 
@@ -2520,9 +2519,14 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
     // Check for missing relationships.
     $relationships = array_keys($this->getHandlers('relationship'));
     foreach (ViewExecutable::getHandlerTypes() as $type => $handler_type_info) {
-      foreach ($this->getHandlers($type) as $handler_id => $handler) {
+      foreach ($this->getHandlers($type) as $handler) {
         if (!empty($handler->options['relationship']) && $handler->options['relationship'] != 'none' && !in_array($handler->options['relationship'], $relationships)) {
-          $errors[] = $this->t('The %handler_type %handler uses a relationship that has been removed.', ['%handler_type' => $handler_type_info['lstitle'], '%handler' => $handler->adminLabel()]);
+          $errors[] = $this->t('The %relationship_name relationship used in %handler_type %handler is not present in the %display_name display.', [
+            '%relationship_name' => $handler->options['relationship'],
+            '%handler_type' => $handler_type_info['lstitle'],
+            '%handler' => $handler->adminLabel(),
+            '%display_name' => $this->display['display_title'],
+          ]);
         }
       }
     }

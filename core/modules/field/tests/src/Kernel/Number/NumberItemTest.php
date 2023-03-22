@@ -23,6 +23,9 @@ class NumberItemTest extends FieldKernelTestBase {
    */
   protected static $modules = [];
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
 
@@ -95,9 +98,28 @@ class NumberItemTest extends FieldKernelTestBase {
 
     // Test sample item generation.
     $entity = EntityTest::create();
+
+    // Make sure that field settings are respected by the generation.
+    $entity->field_decimal
+      ->getFieldDefinition()
+      ->setSetting('min', 99)
+      ->setSetting('max', 100);
+
+    $entity->field_float
+      ->getFieldDefinition()
+      ->setSetting('min', 99)
+      ->setSetting('max', 100);
+
+    $entity->field_integer
+      ->getFieldDefinition()
+      ->setSetting('min', 99)
+      ->setSetting('max', 100);
+
+    $entity->field_decimal->generateSampleItems();
     $entity->field_integer->generateSampleItems();
     $entity->field_float->generateSampleItems();
-    $entity->field_decimal->generateSampleItems();
+
+    // Confirm that the generated sample values are within range.
     $this->entityValidateAndSave($entity);
   }
 

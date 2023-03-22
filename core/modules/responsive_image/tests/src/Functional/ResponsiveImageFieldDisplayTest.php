@@ -26,8 +26,6 @@ class ResponsiveImageFieldDisplayTest extends ImageFieldTestBase {
    */
   protected $defaultTheme = 'stark';
 
-  protected $dumpHeaders = TRUE;
-
   /**
    * Responsive image style entity instance we test with.
    *
@@ -211,6 +209,7 @@ class ResponsiveImageFieldDisplayTest extends ImageFieldTestBase {
       '#width' => 360,
       '#height' => 240,
       '#alt' => $alt,
+      '#attributes' => ['loading' => 'lazy'],
     ];
     $default_output = str_replace("\n", '', $renderer->renderRoot($image));
     $this->assertSession()->responseContains($default_output);
@@ -427,9 +426,9 @@ class ResponsiveImageFieldDisplayTest extends ImageFieldTestBase {
         'image_mapping' => 'medium',
       ])
       ->addImageStyleMapping('responsive_image_test_module.empty', '2x', [
-          'image_mapping_type' => 'image_style',
-          'image_mapping' => 'large',
-        ])
+        'image_mapping_type' => 'image_style',
+        'image_mapping' => 'large',
+      ])
       ->save();
     $node_storage = $this->container->get('entity_type.manager')->getStorage('node');
     $field_name = mb_strtolower($this->randomMachineName());
@@ -469,7 +468,7 @@ class ResponsiveImageFieldDisplayTest extends ImageFieldTestBase {
    * @param string $link_type
    *   The link type to test. Either 'file' or 'content'.
    */
-  private function assertResponsiveImageFieldFormattersLink($link_type) {
+  private function assertResponsiveImageFieldFormattersLink(string $link_type): void {
     $field_name = mb_strtolower($this->randomMachineName());
     $field_settings = ['alt_field_required' => 0];
     $this->createImageField($field_name, 'article', ['uri_scheme' => 'public'], $field_settings);

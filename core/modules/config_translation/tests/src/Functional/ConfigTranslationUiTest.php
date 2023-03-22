@@ -3,7 +3,6 @@
 namespace Drupal\Tests\config_translation\Functional;
 
 use Drupal\Component\Utility\Html;
-use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Language\Language;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Test\AssertMailTrait;
@@ -13,6 +12,8 @@ use Drupal\filter\Entity\FilterFormat;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\node\Entity\NodeType;
 use Drupal\Tests\BrowserTestBase;
+
+// cspell:ignore viewsviewfiles
 
 /**
  * Translate settings and entities to various languages.
@@ -79,6 +80,9 @@ class ConfigTranslationUiTest extends BrowserTestBase {
    */
   protected $localeStorage;
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
     $translator_permissions = [
@@ -843,7 +847,7 @@ class ConfigTranslationUiTest extends BrowserTestBase {
 
     // Make sure there is no translation stored in locale storage before edit.
     $translation = $this->getTranslation('user.settings', 'anonymous', 'fr');
-    $this->assertTrue(empty($translation));
+    $this->assertEmpty($translation);
 
     // Add custom translation.
     $edit = [
@@ -1124,12 +1128,12 @@ class ConfigTranslationUiTest extends BrowserTestBase {
    */
   protected function getTranslation($config_name, $key, $langcode) {
     $settings_locations = $this->localeStorage->getLocations(['type' => 'configuration', 'name' => $config_name]);
-    $this->assertTrue(!empty($settings_locations), new FormattableMarkup('Configuration locations found for %config_name.', ['%config_name' => $config_name]));
+    $this->assertNotEmpty($settings_locations, "$config_name should have configuration locations.");
 
     if (!empty($settings_locations)) {
       $source = $this->container->get('config.factory')->get($config_name)->get($key);
       $source_string = $this->localeStorage->findString(['source' => $source, 'type' => 'configuration']);
-      $this->assertTrue(!empty($source_string), new FormattableMarkup('Found string for %config_name.%key.', ['%config_name' => $config_name, '%key' => $key]));
+      $this->assertNotEmpty($source_string, "$config_name.$key should have a source string.");
 
       if (!empty($source_string)) {
         $conditions = [
@@ -1147,7 +1151,9 @@ class ConfigTranslationUiTest extends BrowserTestBase {
    * Sets site name and slogan for default language, helps in tests.
    *
    * @param string $site_name
+   *   The site name.
    * @param string $site_slogan
+   *   The site slogan.
    */
   protected function setSiteInformation($site_name, $site_slogan) {
     $edit = [
@@ -1184,10 +1190,9 @@ class ConfigTranslationUiTest extends BrowserTestBase {
    * @param string $id
    *   The HTML ID of the textarea.
    *
-   * @return bool
-   *   TRUE if the assertion passed; FALSE otherwise.
+   * @internal
    */
-  protected function assertDisabledTextarea($id) {
+  protected function assertDisabledTextarea(string $id): void {
     $textarea = $this->assertSession()->fieldDisabled($id);
     $this->assertSame('textarea', $textarea->getTagName());
     $this->assertSame('This field has been disabled because you do not have sufficient permissions to edit it.', $textarea->getText());

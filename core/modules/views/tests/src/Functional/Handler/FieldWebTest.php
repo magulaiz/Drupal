@@ -48,8 +48,11 @@ class FieldWebTest extends ViewTestBase {
     'views_test_data_name' => 'name',
   ];
 
-  protected function setUp($import_test_views = TRUE): void {
-    parent::setUp($import_test_views);
+  /**
+   * {@inheritdoc}
+   */
+  protected function setUp($import_test_views = TRUE, $modules = ['views_test_config']): void {
+    parent::setUp($import_test_views, $modules);
 
     $this->enableViewsTestModule();
   }
@@ -141,10 +144,10 @@ class FieldWebTest extends ViewTestBase {
    *   The value to search for.
    * @param string $message
    *   The message to display along with the assertion.
-   * @param string $group
-   *   The type of assertion - examples are "Browser", "PHP".
+   *
+   * @internal
    */
-  protected function assertSubString($haystack, $needle, $message = '', $group = 'Other') {
+  protected function assertSubString(string $haystack, string $needle, string $message = ''): void {
     $this->assertStringContainsString($needle, $haystack, $message);
   }
 
@@ -157,10 +160,10 @@ class FieldWebTest extends ViewTestBase {
    *   The value to search for.
    * @param string $message
    *   The message to display along with the assertion.
-   * @param string $group
-   *   The type of assertion - examples are "Browser", "PHP".
+   *
+   * @internal
    */
-  protected function assertNotSubString($haystack, $needle, $message = '', $group = 'Other') {
+  protected function assertNotSubString(string $haystack, string $needle, string $message = ''): void {
     $this->assertStringNotContainsString($needle, $haystack, $message);
   }
 
@@ -308,11 +311,11 @@ class FieldWebTest extends ViewTestBase {
     $output = $renderer->executeInRenderContext(new RenderContext(), function () use ($id_field, $row) {
       return $id_field->theme($row);
     });
-    // The url has a space in it, so to check we have to decode the url output.
+    // The URL has a space in it, so to check we have to decode the URL output.
     $this->assertSubString(urldecode($output), $path);
 
     // Tests the external flag.
-    // Switch on the external flag should output an external url as well.
+    // Switch on the external flag should output an external URL as well.
     $id_field->options['alter']['external'] = TRUE;
     $id_field->options['alter']['path'] = $path = 'www.drupal.org';
     $output = $renderer->executeInRenderContext(new RenderContext(), function () use ($id_field, $row) {
@@ -320,7 +323,7 @@ class FieldWebTest extends ViewTestBase {
     });
     $this->assertSubString($output, 'http://www.drupal.org');
 
-    // Setup a not external url, which shouldn't lead to an external url.
+    // Setup a not external URL, which shouldn't lead to an external URL.
     $id_field->options['alter']['external'] = FALSE;
     $id_field->options['alter']['path'] = $path = 'www.drupal.org';
     $output = $renderer->executeInRenderContext(new RenderContext(), function () use ($id_field, $row) {
@@ -473,7 +476,7 @@ class FieldWebTest extends ViewTestBase {
 
     // Tests the element classes/element.
 
-    // Set some common element element types and see whether they appear with and without a custom class set.
+    // Set some common element types and see whether they appear with and without a custom class set.
     foreach (['h1', 'span', 'p', 'div'] as $element_type) {
       $id_field->options['element_type'] = $element_type;
 

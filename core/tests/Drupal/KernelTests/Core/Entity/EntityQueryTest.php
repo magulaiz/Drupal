@@ -62,6 +62,9 @@ class EntityQueryTest extends EntityKernelTestBase {
    */
   protected $storage;
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
 
@@ -98,24 +101,34 @@ class EntityQueryTest extends EntityKernelTestBase {
       $bundles[] = $bundle;
     }
     // Each unit is a list of field name, langcode and a column-value array.
-    $units[] = [$figures, 'en', [
+    $units[] = [$figures, 'en',
+      [
         'color' => 'red',
         'shape' => 'triangle',
       ],
     ];
-    $units[] = [$figures, 'en', [
+    $units[] = [
+      $figures,
+      'en',
+      [
         'color' => 'blue',
         'shape' => 'circle',
       ],
     ];
     // To make it easier to test sorting, the greetings get formats according
     // to their langcode.
-    $units[] = [$greetings, 'tr', [
+    $units[] = [
+      $greetings,
+      'tr',
+      [
         'value' => 'merhaba',
         'format' => 'format-tr',
       ],
     ];
-    $units[] = [$greetings, 'pl', [
+    $units[] = [
+      $greetings,
+      'pl',
+      [
         'value' => 'siema',
         'format' => 'format-pl',
       ],
@@ -140,7 +153,7 @@ class EntityQueryTest extends EntityKernelTestBase {
       foreach (array_reverse(str_split(decbin($i))) as $key => $bit) {
         if ($bit) {
           // @todo https://www.drupal.org/project/drupal/issues/3001920 Doing
-          //   list($field_name, $langcode, $values) = $units[$key]; causes
+          //   [$field_name, $langcode, $values] = $units[$key]; causes
           //   problems in PHP 7.3. Revert to better variable names once
           //   https://bugs.php.net/bug.php?id=76937 is fixed.
           $entity->getTranslation($units[$key][1])->{$units[$key][0]}[] = $units[$key][2];
@@ -178,7 +191,7 @@ class EntityQueryTest extends EntityKernelTestBase {
       ->condition("$figures.color", 'red')
       ->sort('id');
     $count_query = clone $query;
-    $this->assertEquals(12, $count_query->count()->execute());
+    $this->assertSame(12, $count_query->count()->execute());
     $this->queryResults = $query->execute();
     // Now bit 0 (1, 3, 5, 7, 9, 11, 13, 15) or bit 2 (4, 5, 6, 7, 12, 13, 14,
     // 15) needs to be set.
@@ -438,7 +451,7 @@ class EntityQueryTest extends EntityKernelTestBase {
     // 13 red  tr
     // 15 red  tr
     $count_query = clone $query;
-    $this->assertEquals(15, $count_query->count()->execute());
+    $this->assertSame(15, $count_query->count()->execute());
     $this->queryResults = $query->execute();
     $this->assertResult(8, 12, 4, 2, 3, 10, 11, 14, 15, 6, 7, 1, 9, 13, 5);
 
@@ -467,7 +480,7 @@ class EntityQueryTest extends EntityKernelTestBase {
       ->sort("$greetings.format", 'DESC')
       ->sort('id', 'DESC');
     $count_query = clone $query;
-    $this->assertEquals(15, $count_query->count()->execute());
+    $this->assertSame(15, $count_query->count()->execute());
     $this->queryResults = $query->execute();
     $this->assertResult(15, 13, 7, 5, 11, 9, 3, 1, 14, 6, 10, 2, 12, 4, 8);
   }
@@ -563,7 +576,7 @@ class EntityQueryTest extends EntityKernelTestBase {
       ->exists("$field_name.color")
       ->count()
       ->execute();
-    $this->assertEquals(0, $count);
+    $this->assertSame(0, $count);
   }
 
   /**
@@ -608,7 +621,7 @@ class EntityQueryTest extends EntityKernelTestBase {
       ->condition($this->figures . '.shape', 'triangle');
 
     // We added 2 conditions so count should be 2.
-    $this->assertEquals(2, $and_condition_group->count());
+    $this->assertSame(2, $and_condition_group->count());
 
     // Add an OR condition group with 2 conditions in it.
     $or_condition_group = $query->orConditionGroup()
@@ -616,7 +629,7 @@ class EntityQueryTest extends EntityKernelTestBase {
       ->condition($this->figures . '.shape', 'triangle');
 
     // We added 2 conditions so count should be 2.
-    $this->assertEquals(2, $or_condition_group->count());
+    $this->assertSame(2, $or_condition_group->count());
   }
 
   /**
@@ -720,7 +733,10 @@ class EntityQueryTest extends EntityKernelTestBase {
 
   }
 
-  protected function assertResult() {
+  /**
+   * @internal
+   */
+  protected function assertResult(): void {
     $assert = [];
     $expected = func_get_args();
     if ($expected && is_array($expected[0])) {
@@ -732,16 +748,21 @@ class EntityQueryTest extends EntityKernelTestBase {
     $this->assertSame($assert, $this->queryResults);
   }
 
-  protected function assertRevisionResult($keys, $expected) {
+  /**
+   * @internal
+   */
+  protected function assertRevisionResult(array $keys, array $expected): void {
     $assert = [];
     foreach ($expected as $key => $binary) {
       $assert[$keys[$key]] = strval($binary);
     }
     $this->assertSame($assert, $this->queryResults);
-    return $assert;
   }
 
-  protected function assertBundleOrder($order) {
+  /**
+   * @internal
+   */
+  protected function assertBundleOrder(string $order): void {
     // This loop is for bundle1 entities.
     for ($i = 1; $i <= 15; $i += 2) {
       $ok = TRUE;

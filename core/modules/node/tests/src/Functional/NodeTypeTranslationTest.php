@@ -54,11 +54,15 @@ class NodeTypeTranslationTest extends BrowserTestBase {
    */
   protected $adminUser;
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
 
     $admin_permissions = [
       'administer content types',
+      'bypass node access',
       'administer node fields',
       'administer languages',
       'administer site configuration',

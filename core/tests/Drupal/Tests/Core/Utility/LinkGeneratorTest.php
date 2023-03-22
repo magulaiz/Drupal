@@ -28,7 +28,7 @@ class LinkGeneratorTest extends UnitTestCase {
   protected $linkGenerator;
 
   /**
-   * The mocked url generator.
+   * The mocked URL generator.
    *
    * @var \PHPUnit\Framework\MockObject\MockObject
    */
@@ -90,7 +90,7 @@ class LinkGeneratorTest extends UnitTestCase {
    */
   public function providerTestGenerateHrefs() {
     return [
-      // Test that the url returned by the URL generator is used.
+      // Test that the URL returned by the URL generator is used.
       ['test_route_1', [], FALSE, '/test-route-1'],
         // Test that $parameters is passed to the URL generator.
       ['test_route_2', ['value' => 'example'], FALSE, '/test-route-2/example'],
@@ -120,7 +120,7 @@ class LinkGeneratorTest extends UnitTestCase {
     $result = $this->linkGenerator->generate('Test', $url);
     $this->assertLink([
       'attributes' => ['href' => $expected_url],
-      ], $result);
+    ], $result);
   }
 
   /**
@@ -274,7 +274,7 @@ class LinkGeneratorTest extends UnitTestCase {
   }
 
   /**
-   * Tests the generate() method with a url containing double quotes.
+   * Tests the generate() method with a URL containing double quotes.
    *
    * @covers ::generate
    */
@@ -628,7 +628,7 @@ class LinkGeneratorTest extends UnitTestCase {
   public function testGenerateTwice() {
     $this->urlGenerator->expects($this->any())
       ->method('generateFromRoute')
-      ->will($this->returnValue((new GeneratedUrl())->setGeneratedUrl('/')));
+      ->willReturn((new GeneratedUrl())->setGeneratedUrl('/'));
 
     $url = Url::fromRoute('<front>', [], ['attributes' => ['class' => ['foo', 'bar']]]);
     $url->setUrlGenerator($this->urlGenerator);
@@ -650,8 +650,10 @@ class LinkGeneratorTest extends UnitTestCase {
    *   The HTML to check.
    * @param int $count
    *   How many times the link should be present in the HTML. Defaults to 1.
+   *
+   * @internal
    */
-  public static function assertLink(array $properties, MarkupInterface $html, $count = 1) {
+  public static function assertLink(array $properties, MarkupInterface $html, int $count = 1): void {
     // Provide default values.
     $properties += ['attributes' => []];
 
@@ -686,10 +688,9 @@ class LinkGeneratorTest extends UnitTestCase {
    * @param string $html
    *   The HTML snippet to check.
    *
-   * @return int
-   *   The number of results that are found.
+   * @internal
    */
-  protected function assertNoXPathResults($query, $html) {
+  protected function assertNoXPathResults(string $query, string $html): void {
     $document = new \DOMDocument();
     $document->loadHTML($html);
     $xpath = new \DOMXPath($document);

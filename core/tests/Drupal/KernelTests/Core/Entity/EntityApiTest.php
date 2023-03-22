@@ -46,8 +46,10 @@ class EntityApiTest extends EntityKernelTestBase {
    *   The entity type to run the tests with.
    * @param \Drupal\user\UserInterface $user1
    *   The user to run the tests with.
+   *
+   * @internal
    */
-  protected function assertCRUD($entity_type, UserInterface $user1) {
+  protected function assertCRUD(string $entity_type, UserInterface $user1): void {
     // Create some test entities.
     $entity = $this->container->get('entity_type.manager')
       ->getStorage($entity_type)
@@ -92,7 +94,7 @@ class EntityApiTest extends EntityKernelTestBase {
     $storage->delete($entities);
 
     $all = $storage->loadMultiple();
-    $this->assertTrue(empty($all), new FormattableMarkup('%entity_type: Deleted all entities.', ['%entity_type' => $entity_type]));
+    $this->assertEmpty($all, "All entities of type '$entity_type' should have been deleted.");
 
     // Verify that all data got deleted.
     $definition = \Drupal::entityTypeManager()->getDefinition($entity_type);
@@ -122,7 +124,7 @@ class EntityApiTest extends EntityKernelTestBase {
 
     // Verify that entities got deleted.
     $all = $storage->loadMultiple();
-    $this->assertTrue(empty($all), new FormattableMarkup('%entity_type: Deleted all entities.', ['%entity_type' => $entity_type]));
+    $this->assertEmpty($all, "All entities of type '$entity_type' should have been deleted.");
 
     // Verify that all data got deleted from the tables.
     $definition = \Drupal::entityTypeManager()->getDefinition($entity_type);
@@ -209,7 +211,7 @@ class EntityApiTest extends EntityKernelTestBase {
       $this->fail('Entity presave EntityStorageException thrown but not caught.');
     }
     catch (EntityStorageException $e) {
-      $this->assertEquals(1, $e->getcode(), 'Entity presave EntityStorageException caught.');
+      $this->assertEquals(1, $e->getCode(), 'Entity presave EntityStorageException caught.');
     }
 
     $entity = EntityTest::create(['name' => 'test2']);

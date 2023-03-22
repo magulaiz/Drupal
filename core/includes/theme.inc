@@ -84,7 +84,7 @@ const RESPONSIVE_PRIORITY_LOW = 'priority-low';
  *   ArrayObject which allows it to be accessed with array syntax and isset(),
  *   and should be more lightweight than the full registry. Defaults to TRUE.
  *
- * @return
+ * @return array|\Drupal\Core\Utility\ThemeRegistry
  *   The complete theme registry array, or an instance of the
  *   Drupal\Core\Utility\ThemeRegistry class.
  */
@@ -126,6 +126,9 @@ function drupal_theme_rebuild() {
 /**
  * Allows themes and/or theme engines to discover overridden theme functions.
  *
+ * @internal only exists to support discovery of deprecated theme functions,
+ *   will be removed in Drupal 10.0.0.
+ *
  * @param array $cache
  *   The existing cache of theme hooks to test against.
  * @param array $prefixes
@@ -151,9 +154,9 @@ function drupal_find_theme_functions($cache, $prefixes) {
       // refers to a base hook, not to another suggestion, and all suggestions
       // are found using the base hook's pattern, not a pattern from an
       // intermediary suggestion.
-      $pattern = isset($info['pattern']) ? $info['pattern'] : ($hook . '__');
+      $pattern = $info['pattern'] ?? ($hook . '__');
       // Grep only the functions which are within the prefix group.
-      list($first_prefix,) = explode('_', $prefix, 2);
+      [$first_prefix] = explode('_', $prefix, 2);
       if (!isset($info['base hook']) && !empty($pattern) && isset($grouped_functions[$first_prefix])) {
         $matches = preg_grep('/^' . $prefix . '_' . $pattern . '/', $grouped_functions[$first_prefix]);
         if ($matches) {
@@ -212,7 +215,7 @@ function drupal_find_theme_templates($cache, $extension, $path) {
     }
   }
   $theme = \Drupal::theme()->getActiveTheme()->getName();
-  $subtheme_paths = isset($theme_paths[$theme]) ? $theme_paths[$theme] : [];
+  $subtheme_paths = $theme_paths[$theme] ?? [];
 
   // Escape the periods in the extension.
   $regex = '/' . str_replace('.', '\.', $extension) . '$/';
@@ -261,7 +264,7 @@ function drupal_find_theme_templates($cache, $extension, $path) {
   // the use of 'pattern' and 'base hook'.
   $patterns = array_keys($files);
   foreach ($cache as $hook => $info) {
-    $pattern = isset($info['pattern']) ? $info['pattern'] : ($hook . '__');
+    $pattern = $info['pattern'] ?? ($hook . '__');
     if (!isset($info['base hook']) && !empty($pattern)) {
       // Transform _ in pattern to - to match file naming scheme
       // for the purposes of searching.
@@ -304,7 +307,7 @@ function drupal_find_theme_templates($cache, $extension, $path) {
  * @param $theme
  *   The name of a given theme; defaults to the current theme.
  *
- * @return
+ * @return mixed
  *   The value of the requested setting, NULL if the setting does not exist.
  */
 function theme_get_setting($setting_name, $theme = NULL) {
@@ -473,7 +476,7 @@ function theme_render_and_autoescape($arg) {
  * @param \Drupal\Core\Config\Config $config
  *   The configuration object to update.
  *
- * @return
+ * @return \Drupal\Core\Config\Config
  *   The Config object with updated data.
  */
 function theme_settings_convert_to_config(array $theme_settings, Config $config) {
@@ -1020,7 +1023,7 @@ function template_preprocess_table(&$variables) {
           unset($cell['data']);
         }
         // Flag the cell as a header or not and remove the flag.
-        $is_header = isset($cell['header']) ? $cell['header'] : TRUE;
+        $is_header = $cell['header'] ?? TRUE;
         unset($cell['header']);
 
         // Track responsive classes for each column as needed. Only the header
@@ -1061,7 +1064,7 @@ function template_preprocess_table(&$variables) {
         // Check if we're dealing with a simple or complex row
         if (isset($row['data'])) {
           $cells = $row['data'];
-          $variables['no_striping'] = isset($row['no_striping']) ? $row['no_striping'] : FALSE;
+          $variables['no_striping'] = $row['no_striping'] ?? FALSE;
 
           // Set the attributes array and exclude 'data' and 'no_striping'.
           $row_attributes = $row;
@@ -1433,7 +1436,7 @@ function template_preprocess_page(&$variables) {
     $variables['db_is_active'] = FALSE;
   }
 
-  if ($node = \Drupal::routeMatch()->getParameter('node')) {
+  if (($node = \Drupal::routeMatch()->getParameter('node')) || ($node = \Drupal::routeMatch()->getParameter('node_preview'))) {
     $variables['node'] = $node;
   }
 }
@@ -1456,7 +1459,7 @@ function template_preprocess_page(&$variables) {
  *   of '__' is appropriate for theme hook suggestions. '-' is appropriate for
  *   extra classes.
  *
- * @return
+ * @return array
  *   An array of suggestions, suitable for adding to
  *   hook_theme_suggestions_HOOK_alter() or to $variables['attributes']['class']
  *   if the suggestions represent extra CSS classes.
@@ -1788,7 +1791,7 @@ function template_preprocess_pager(&$variables) {
   $parameters = $variables['pager']['#parameters'];
   $quantity = empty($variables['pager']['#quantity']) ? 0 : $variables['pager']['#quantity'];
   $route_name = $variables['pager']['#route_name'];
-  $route_parameters = isset($variables['pager']['#route_parameters']) ? $variables['pager']['#route_parameters'] : [];
+  $route_parameters = $variables['pager']['#route_parameters'] ?? [];
 
   /** @var \Drupal\Core\Pager\PagerManagerInterface $pager_manager */
   $pager_manager = \Drupal::service('pager.manager');

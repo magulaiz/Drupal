@@ -27,7 +27,7 @@ abstract class BaseFieldDefinitionTestBase extends UnitTestCase {
     parent::setUp();
 
     // getModuleAndPath() returns an array of the module name and directory.
-    list($module_name, $module_dir) = $this->getModuleAndPath();
+    [$module_name, $module_dir] = $this->getModuleAndPath();
 
     $namespaces = new \ArrayObject();
     $namespaces["Drupal\\$module_name"] = $module_dir . '/src';
@@ -36,7 +36,7 @@ abstract class BaseFieldDefinitionTestBase extends UnitTestCase {
     $module_handler->expects($this->once())
       ->method('moduleExists')
       ->with($module_name)
-      ->will($this->returnValue(TRUE));
+      ->willReturn(TRUE);
     $typed_data_manager = $this->createMock(TypedDataManagerInterface::class);
     $plugin_manager = new FieldTypePluginManager(
       $namespaces,

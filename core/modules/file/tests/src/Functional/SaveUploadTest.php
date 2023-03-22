@@ -59,6 +59,9 @@ class SaveUploadTest extends FileManagedTestBase {
    */
   protected $imageExtension;
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
     $account = $this->drupalCreateUser(['access site reports']);
@@ -67,7 +70,7 @@ class SaveUploadTest extends FileManagedTestBase {
     $image_files = $this->drupalGetTestFiles('image');
     $this->image = File::create((array) current($image_files));
 
-    list(, $this->imageExtension) = explode('.', $this->image->getFilename());
+    [, $this->imageExtension] = explode('.', $this->image->getFilename());
     $this->assertFileExists($this->image->getFileUri());
 
     $this->phpfile = current($this->drupalGetTestFiles('php'));
@@ -429,7 +432,9 @@ class SaveUploadTest extends FileManagedTestBase {
     // Ensure insecure uploads are disabled for this test.
     $this->config('system.file')->set('allow_insecure_uploads', 0)->save();
     $original_image_uri = $this->image->getFileUri();
-    $this->image = file_move($this->image, $original_image_uri . '.foo.' . $this->imageExtension);
+    /** @var \Drupal\file\FileRepositoryInterface $file_repository */
+    $file_repository = \Drupal::service('file.repository');
+    $this->image = $file_repository->move($this->image, $original_image_uri . '.foo.' . $this->imageExtension);
 
     // Reset the hook counters to get rid of the 'move' we just called.
     file_test_reset();
@@ -461,9 +466,9 @@ class SaveUploadTest extends FileManagedTestBase {
     // extensions.
     $extensions = 'foo ' . $this->imageExtension;
     $edit = [
-        'files[file_test_upload]' => \Drupal::service('file_system')->realpath($this->image->getFileUri()),
-        'extensions' => $extensions,
-      ];
+      'files[file_test_upload]' => \Drupal::service('file_system')->realpath($this->image->getFileUri()),
+      'extensions' => $extensions,
+    ];
 
     $this->drupalGet('file-test/upload');
     $this->submitForm($edit, 'Submit');
@@ -476,7 +481,7 @@ class SaveUploadTest extends FileManagedTestBase {
     $this->assertFileHooksCalled(['validate', 'insert']);
 
     // Ensure we don't munge files if we're allowing any extension.
-    $this->image = file_move($this->image, $original_image_uri . '.foo.txt.' . $this->imageExtension);
+    $this->image = $file_repository->move($this->image, $original_image_uri . '.foo.txt.' . $this->imageExtension);
     // Reset the hook counters.
     file_test_reset();
 
@@ -497,15 +502,15 @@ class SaveUploadTest extends FileManagedTestBase {
 
     // Test that a dangerous extension such as .php is munged even if it is in
     // the list of allowed extensions.
-    $this->image = file_move($this->image, $original_image_uri . '.php.' . $this->imageExtension);
+    $this->image = $file_repository->move($this->image, $original_image_uri . '.php.' . $this->imageExtension);
     // Reset the hook counters.
     file_test_reset();
 
     $extensions = 'php ' . $this->imageExtension;
     $edit = [
-        'files[file_test_upload]' => \Drupal::service('file_system')->realpath($this->image->getFileUri()),
-        'extensions' => $extensions,
-      ];
+      'files[file_test_upload]' => \Drupal::service('file_system')->realpath($this->image->getFileUri()),
+      'extensions' => $extensions,
+    ];
 
     $this->drupalGet('file-test/upload');
     $this->submitForm($edit, 'Submit');
@@ -537,7 +542,7 @@ class SaveUploadTest extends FileManagedTestBase {
     $this->assertFileHooksCalled(['validate', 'insert']);
 
     // Dangerous extensions are munged if is renamed to end in .txt.
-    $this->image = file_move($this->image, $original_image_uri . '.cgi.' . $this->imageExtension . '.txt');
+    $this->image = $file_repository->move($this->image, $original_image_uri . '.cgi.' . $this->imageExtension . '.txt');
     // Reset the hook counters.
     file_test_reset();
 
@@ -725,6 +730,28 @@ class SaveUploadTest extends FileManagedTestBase {
     $this->assertStringContainsString((string) $error_text, $content);
     $this->assertStringContainsString('Epic upload FAIL!', $content);
     $this->assertFileDoesNotExist('temporary://' . $filename);
+  }
+
+  /**
+   * Tests the file_save_upload() function when the field is required.
+   */
+  public function testRequired() {
+    // Reset the hook counters to get rid of the 'load' we just called.
+    file_test_reset();
+
+    // Confirm the field is required.
+    $this->drupalGet('file-test/upload_required');
+    $this->submitForm([], 'Submit');
+    $this->assertSession()->statusCodeEquals(200);
+    $this->assertSession()->responseContains('field is required');
+
+    // Confirm that uploading another file works.
+    $image = current($this->drupalGetTestFiles('image'));
+    $edit = ['files[file_test_upload]' => \Drupal::service('file_system')->realpath($image->uri)];
+    $this->drupalGet('file-test/upload_required');
+    $this->submitForm($edit, 'Submit');
+    $this->assertSession()->statusCodeEquals(200);
+    $this->assertSession()->responseContains('You WIN!');
   }
 
 }

@@ -22,14 +22,14 @@ function views_views_data() {
   $data['views']['table']['group'] = t('Global');
   $data['views']['table']['join'] = [
   // #global is a special flag which allows a table to appear all the time.
-  '#global' => [],
+    '#global' => [],
   ];
 
   $data['views']['random'] = [
-  'title' => t('Random'),
-  'help' => t('Randomize the display order.'),
-  'sort' => [
-    'id' => 'random',
+    'title' => t('Random'),
+    'help' => t('Randomize the display order.'),
+    'sort' => [
+      'id' => 'random',
     ],
   ];
 
@@ -116,7 +116,7 @@ function views_views_data() {
   ];
 
   $data['views']['combine'] = [
-   'title' => t('Combine fields filter'),
+    'title' => t('Combine fields filter'),
     'help' => t('Combine multiple fields together and search by them.'),
     'filter' => [
       'id' => 'combine',
@@ -280,7 +280,7 @@ function views_entity_field_label($entity_type, $field_name) {
     if ($label_counter[$a] === $label_counter[$b]) {
       return strcmp($a, $b);
     }
-    return $label_counter[$a] > $label_counter[$b] ? -1 : 1;
+    return $label_counter[$b] <=> $label_counter[$a];
   });
   $label_counter = array_keys($label_counter);
   return [$label_counter[0], $all_labels];
@@ -507,7 +507,7 @@ function views_field_default_views_data(FieldStorageConfigInterface $field_stora
   // Determine the label to use for the field. We don't have a label available
   // at the field level, so we just go through all fields and take the one
   // which is used the most frequently.
-  list($label, $all_labels) = views_entity_field_label($entity_type_id, $field_name);
+  [$label, $all_labels] = views_entity_field_label($entity_type_id, $field_name);
 
   // Expose data for the field as a whole.
   foreach ($field_tables as $type => $table_info) {
