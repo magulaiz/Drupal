@@ -29,7 +29,7 @@ class TermForm extends ContentEntityForm {
 
     if (!$term->isNew()) {
       $form['#title'] = $this->t('<em>Edit @type</em> @title', [
-        '@type' => $vocabulary->getName(),
+        '@type' => $vocabulary->getName() ?? '',
         '@title' => $term->label(),
       ]);
     }
