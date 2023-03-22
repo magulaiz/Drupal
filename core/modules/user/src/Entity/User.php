@@ -139,7 +139,7 @@ class User extends ContentEntityBase implements UserInterface {
         // Send email only if user account has an email.
         if ($this->getEmail()) {
           _user_mail_notify($op, $this);
-        }  
+        }
       }
     }
   }
