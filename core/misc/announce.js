@@ -61,7 +61,7 @@
       announcement = announcements.pop();
       text.unshift(announcement.text);
       // If any of the announcements has a priority of assertive then the group
-      // of joined announcements will have this priority. Also add aria-atomic='true' for full web accessibility guidelines compliance
+      // of joined announcements will have this priority. Also add aria-atomic='true' for full WCAG
       if (announcement.priority === 'assertive') {
         priority = 'assertive';
         atomic = 'true';
