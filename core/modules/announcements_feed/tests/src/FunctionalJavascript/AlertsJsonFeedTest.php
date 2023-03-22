@@ -2,8 +2,8 @@
 
 namespace Drupal\Tests\announcements_feed\FunctionalJavascript;
 
-use Drupal\announce_feed_test\AnnounceTestHttpClient;
 use Drupal\Tests\system\FunctionalJavascript\OffCanvasTestBase;
+use Drupal\announce_feed_test\AnnounceTestHttpClient;
 
 /**
  * Test the access announcement according to json feed changes.

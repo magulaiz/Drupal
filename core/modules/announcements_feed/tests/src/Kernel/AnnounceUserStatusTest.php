@@ -3,12 +3,12 @@
 namespace Drupal\Tests\announcements_feed\Kernel;
 
 use Drupal\KernelTests\KernelTestBase;
+use Drupal\Tests\user\Traits\UserCreationTrait;
 use GuzzleHttp\Client;
-use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\HandlerStack;
+use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\Middleware;
 use GuzzleHttp\Psr7\Response;
-use Drupal\Tests\user\Traits\UserCreationTrait;
 
 /**
  * @coversDefaultClass \Drupal\system\SecurityAdvisories\SecurityAdvisoriesFetcher
