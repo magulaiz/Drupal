@@ -43,7 +43,7 @@ class AnnounceController extends ControllerBase implements ContainerInjectionInt
   /**
    * {@inheritdoc}
    */
-  public static function create(ContainerInterface $container) {
+  public static function create(ContainerInterface $container): AnnounceController {
     return new static(
       $container->get('announcements_feed.user_status'),
       $container->get('current_user')
@@ -78,9 +78,7 @@ class AnnounceController extends ControllerBase implements ContainerInjectionInt
       return $build;
     }
 
-    $items = [];
-    $items['featured'] = [];
-    $items['standard'] = [];
+    $items = ['featured' => [], 'standard' => []];
     foreach ($announcements as $announcement) {
       if ($announcement['_drupalorg']['featured']) {
         $items['featured'][] = [
