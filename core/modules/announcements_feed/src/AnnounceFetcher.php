@@ -7,7 +7,6 @@ use Drupal\Component\Serialization\Json;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\KeyValueStore\KeyValueExpirableFactory;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
-use GuzzleHttp\Client;
 use GuzzleHttp\ClientInterface;
 use Psr\Log\LoggerInterface;
 
@@ -20,28 +19,38 @@ class AnnounceFetcher {
 
   /**
    * The Http Client.
+   *
+   * @var \GuzzleHttp\Client
    */
-  protected Client $httpClient;
+  protected $httpClient;
 
   /**
    * The ConfigFactory service.
+   *
+   * @var \Drupal\Core\Config\ConfigFactoryInterface
    */
-  protected ConfigFactoryInterface $config;
+  protected $config;
 
   /**
    * The tempstore service.
+   *
+   * @var \Drupal\Core\KeyValueStore\KeyValueExpirableFactory
    */
-  protected KeyValueExpirableFactory $tempStore;
+  protected $tempStore;
 
   /**
    * The logger service.
+   *
+   * @var \Psr\Log\LoggerInterface
    */
-  protected LoggerInterface $logger;
+  protected $logger;
 
   /**
    * URL for the announcement.
+   *
+   * @var string
    */
-  protected string $feedUrl;
+  protected $feedUrl;
 
   /**
    * Construct an AnnounceFetcher service.
