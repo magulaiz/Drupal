@@ -3,6 +3,7 @@
 namespace Drupal\announcements_feed;
 
 use Drupal\Core\Cache\Cache;
+use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Session\AccountProxy;
 use Drupal\user\UserData;
 
@@ -12,25 +13,14 @@ use Drupal\user\UserData;
 class AnnounceUserStatus {
 
   /**
-   * The UserData service.
-   *
-   * @var \Drupal\user\UserData
-   */
-  protected $userData;
-
-  /**
    * Current user.
-   *
-   * @var \Drupal\Core\Session\AccountInterface
    */
-  protected $currentUser;
+  protected AccountInterface $currentUser;
 
   /**
    * AnnounceFetcher service.
-   *
-   * @var \Drupal\announcements_feed\AnnounceFetcher
    */
-  protected $fetcher;
+  protected AnnounceFetcher $fetcher;
 
   /**
    * Construct an AnnounceUserStatus object.

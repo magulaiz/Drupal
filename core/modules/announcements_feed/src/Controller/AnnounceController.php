@@ -3,10 +3,10 @@
 namespace Drupal\announcements_feed\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
-use Drupal\announcements_feed\AnnounceUserStatus;
 use Drupal\Core\Datetime\DrupalDateTime;
-use Drupal\Core\Session\AccountProxy;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
+use Drupal\Core\Session\AccountProxy;
+use Drupal\announcements_feed\AnnounceUserStatus;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -17,10 +17,8 @@ class AnnounceController extends ControllerBase implements ContainerInjectionInt
 
   /**
    * AnnounceUserStatus service.
-   *
-   * @var \Drupal\announcements_feed\AnnounceUserStatus
    */
-  protected $userStatus;
+  protected AnnounceUserStatus $userStatus;
 
   /**
    * Current user object.
