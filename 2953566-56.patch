@@ -1,0 +1,221 @@
+diff --git a/core/lib/Drupal/Core/Entity/EntityType.php b/core/lib/Drupal/Core/Entity/EntityType.php
+index f4c6d99..16b3f00 100644
+--- a/core/lib/Drupal/Core/Entity/EntityType.php
++++ b/core/lib/Drupal/Core/Entity/EntityType.php
+@@ -77,6 +77,13 @@ class EntityType extends PluginDefinition implements EntityTypeInterface {
+   protected $admin_permission;
+ 
+   /**
++   * The name of the collection permission.
++   *
++   * @var string
++   */
++  protected $collection_permission;
++
++  /**
+    * The permission granularity level.
+    *
+    * The allowed values are respectively "entity_type" or "bundle".
+@@ -618,6 +625,14 @@ public function getAdminPermission() {
+     return $this->admin_permission ?: FALSE;
+   }
+ 
++
++  /**
++   * {@inheritdoc}
++   */
++  public function getCollectionPermission() {
++    return $this->collection_permission;
++  }
++
+   /**
+    * {@inheritdoc}
+    */
+diff --git a/core/lib/Drupal/Core/Entity/EntityTypeInterface.php b/core/lib/Drupal/Core/Entity/EntityTypeInterface.php
+index dafaf3c..84f59fd 100644
+--- a/core/lib/Drupal/Core/Entity/EntityTypeInterface.php
++++ b/core/lib/Drupal/Core/Entity/EntityTypeInterface.php
+@@ -395,6 +395,16 @@ public function setHandlerClass($handler_type, $value);
+   public function getAdminPermission();
+ 
+   /**
++   * Gets the name of the default collection permission.
++   *
++   * @see \Drupal\Core\Entity\Routing\DefaultHtmlRouteProvider::getCollectionRoute()
++   *
++   * @return string|null
++   *   The collection permission name, or NULL if none.
++   */
++  public function getCollectionPermission();
++
++  /**
+    * Gets the permission granularity level.
+    *
+    * The allowed values are respectively "entity_type" or "bundle".
+diff --git a/core/lib/Drupal/Core/Entity/Routing/DefaultHtmlRouteProvider.php b/core/lib/Drupal/Core/Entity/Routing/DefaultHtmlRouteProvider.php
+index 1f7fd6d..e866018 100644
+--- a/core/lib/Drupal/Core/Entity/Routing/DefaultHtmlRouteProvider.php
++++ b/core/lib/Drupal/Core/Entity/Routing/DefaultHtmlRouteProvider.php
+@@ -318,7 +318,11 @@ protected function getDeleteFormRoute(EntityTypeInterface $entity_type) {
+   protected function getCollectionRoute(EntityTypeInterface $entity_type) {
+     // If the entity type does not provide an admin permission, there is no way
+     // to control access, so we cannot provide a route in a sensible way.
+-    if ($entity_type->hasLinkTemplate('collection') && $entity_type->hasListBuilderClass() && ($admin_permission = $entity_type->getAdminPermission())) {
++    $permissions = array_filter([
++      $entity_type->getAdminPermission(),
++      $entity_type->getCollectionPermission(),
++    ]);
++    if ($entity_type->hasLinkTemplate('collection') && $entity_type->hasListBuilderClass() && $permissions) {
+       /** @var \Drupal\Core\StringTranslation\TranslatableMarkup $label */
+       $label = $entity_type->getCollectionLabel();
+ 
+@@ -330,7 +334,7 @@ protected function getCollectionRoute(EntityTypeInterface $entity_type) {
+           '_title_arguments' => $label->getArguments(),
+           '_title_context' => $label->getOption('context'),
+         ])
+-        ->setRequirement('_permission', $admin_permission);
++        ->setRequirement('_permission', implode('+', $permissions));
+ 
+       return $route;
+     }
+diff --git a/core/modules/node/src/Entity/Node.php b/core/modules/node/src/Entity/Node.php
+index d6c64e2..59d3126 100644
+--- a/core/modules/node/src/Entity/Node.php
++++ b/core/modules/node/src/Entity/Node.php
+@@ -70,6 +70,7 @@
+  *   field_ui_base_route = "entity.node_type.edit_form",
+  *   common_reference_target = TRUE,
+  *   permission_granularity = "bundle",
++ *   collection_permission = "access content overview",
+  *   links = {
+  *     "canonical" = "/node/{node}",
+  *     "delete-form" = "/node/{node}/delete",
+diff --git a/core/modules/taxonomy/src/Entity/Routing/VocabularyRouteProvider.php b/core/modules/taxonomy/src/Entity/Routing/VocabularyRouteProvider.php
+index 56a93dc..7457f15 100644
+--- a/core/modules/taxonomy/src/Entity/Routing/VocabularyRouteProvider.php
++++ b/core/modules/taxonomy/src/Entity/Routing/VocabularyRouteProvider.php
+@@ -27,16 +27,6 @@ public function getRoutes(EntityTypeInterface $entity_type) {
+   }
+ 
+   /**
+-   * {@inheritdoc}
+-   */
+-  protected function getCollectionRoute(EntityTypeInterface $entity_type) {
+-    if ($route = parent::getCollectionRoute($entity_type)) {
+-      $route->setRequirement('_permission', 'access taxonomy overview+administer taxonomy');
+-      return $route;
+-    }
+-  }
+-
+-  /**
+    * Gets the reset page route.
+    *
+    * @param \Drupal\Core\Entity\EntityTypeInterface $entity_type
+diff --git a/core/modules/taxonomy/src/Entity/Term.php b/core/modules/taxonomy/src/Entity/Term.php
+index 270f9b7..688bbce 100644
+--- a/core/modules/taxonomy/src/Entity/Term.php
++++ b/core/modules/taxonomy/src/Entity/Term.php
+@@ -66,6 +66,7 @@
+  *     "create" = "/taxonomy/term",
+  *   },
+  *   permission_granularity = "bundle",
++ *   collection_permission = "access taxonomy overview",
+  *   constraints = {
+  *     "TaxonomyHierarchy" = {}
+  *   }
+diff --git a/core/modules/taxonomy/src/Entity/Vocabulary.php b/core/modules/taxonomy/src/Entity/Vocabulary.php
+index 015eb61..2d63609 100644
+--- a/core/modules/taxonomy/src/Entity/Vocabulary.php
++++ b/core/modules/taxonomy/src/Entity/Vocabulary.php
+@@ -34,6 +34,7 @@
+  *     }
+  *   },
+  *   admin_permission = "administer taxonomy",
++ *   collection_permission = "access taxonomy overview",
+  *   config_prefix = "vocabulary",
+  *   bundle_of = "taxonomy_term",
+  *   entity_keys = {
+diff --git a/core/tests/Drupal/Tests/Core/Entity/Routing/DefaultHtmlRouteProviderTest.php b/core/tests/Drupal/Tests/Core/Entity/Routing/DefaultHtmlRouteProviderTest.php
+index 05de4c6..1e6db4f 100644
+--- a/core/tests/Drupal/Tests/Core/Entity/Routing/DefaultHtmlRouteProviderTest.php
++++ b/core/tests/Drupal/Tests/Core/Entity/Routing/DefaultHtmlRouteProviderTest.php
+@@ -270,9 +270,13 @@ public function providerTestGetCollectionRoute() {
+ 
+     $entity_type1 = $this->getEntityType();
+     $entity_type1->hasLinkTemplate('collection')->willReturn(FALSE);
++    $entity_type1->getAdminPermission()->willReturn(FALSE);
++    $entity_type1->getCollectionPermission()->willReturn(NULL);
+     $data['no_collection_link_template'] = [NULL, $entity_type1->reveal()];
+ 
+     $entity_type2 = $this->getEntityType();
++    $entity_type2->getAdminPermission()->willReturn(FALSE);
++    $entity_type2->getCollectionPermission()->willReturn(NULL);
+     $entity_type2->hasLinkTemplate('collection')->willReturn(TRUE);
+     $entity_type2->hasListBuilderClass()->willReturn(FALSE);
+     $data['no_list_builder'] = [NULL, $entity_type2->reveal()];
+@@ -280,10 +284,12 @@ public function providerTestGetCollectionRoute() {
+     $entity_type3 = $this->getEntityType($entity_type2);
+     $entity_type3->hasListBuilderClass()->willReturn(TRUE);
+     $entity_type3->getAdminPermission()->willReturn(FALSE);
+-    $data['no_admin_permission'] = [NULL, $entity_type3->reveal()];
++    $entity_type3->getCollectionPermission()->willReturn(NULL);
++    $data['no_permission'] = [NULL, $entity_type3->reveal()];
+ 
+     $entity_type4 = $this->getEntityType($entity_type3);
+-    $entity_type4->getAdminPermission()->willReturn('administer the entity type');
++    $entity_type4->getAdminPermission()->willReturn(FALSE);
++    $entity_type4->getCollectionPermission()->willReturn('overview the entity type');
+     $entity_type4->id()->willReturn('the_entity_type_id');
+     $entity_type4->getLabel()->willReturn('The entity type');
+     $entity_type4->getCollectionLabel()->willReturn(new TranslatableMarkup('Test entities'));
+@@ -297,10 +303,49 @@ public function providerTestGetCollectionRoute() {
+         '_title_context' => '',
+       ])
+       ->setRequirements([
++        '_permission' => 'overview the entity type',
++      ]);
++    $data['collection_route_with_collection_permission'] = [clone $route, $entity_type4->reveal()];
++
++    $entity_type5 = $this->getEntityType($entity_type4);
++    $entity_type5->getAdminPermission()->willReturn('administer the entity type');
++    $entity_type5->getCollectionPermission()->willReturn(NULL);
++    $entity_type5->id()->willReturn('the_entity_type_id');
++    $entity_type5->getLabel()->willReturn('The entity type');
++    $entity_type5->getCollectionLabel()->willReturn(new TranslatableMarkup('Test entities'));
++    $entity_type5->getLinkTemplate('collection')->willReturn('/the/collection/link/template');
++    $entity_type5->entityClassImplements(FieldableEntityInterface::class)->willReturn(FALSE);
++    $route = (new Route('/the/collection/link/template'))
++      ->setDefaults([
++        '_entity_list' => 'the_entity_type_id',
++        '_title' => 'Test entities',
++        '_title_arguments' => [],
++        '_title_context' => '',
++      ])
++      ->setRequirements([
+         '_permission' => 'administer the entity type',
+       ]);
+-    $data['collection_route'] = [clone $route, $entity_type4->reveal()];
++    $data['collection_route_with_admin_permission'] = [clone $route, $entity_type5->reveal()];
+ 
++    $entity_type6 = $this->getEntityType($entity_type5);
++    $entity_type6->getAdminPermission()->willReturn('administer the entity type');
++    $entity_type6->getCollectionPermission()->willReturn('overview the entity type');
++    $entity_type6->id()->willReturn('the_entity_type_id');
++    $entity_type6->getLabel()->willReturn('The entity type');
++    $entity_type6->getCollectionLabel()->willReturn(new TranslatableMarkup('Test entities'));
++    $entity_type6->getLinkTemplate('collection')->willReturn('/the/collection/link/template');
++    $entity_type6->entityClassImplements(FieldableEntityInterface::class)->willReturn(FALSE);
++    $route = (new Route('/the/collection/link/template'))
++      ->setDefaults([
++        '_entity_list' => 'the_entity_type_id',
++        '_title' => 'Test entities',
++        '_title_arguments' => [],
++        '_title_context' => '',
++      ])
++      ->setRequirements([
++        '_permission' => 'administer the entity type+overview the entity type',
++      ]);
++    $data['collection_route_with_both_permission'] = [clone $route, $entity_type6->reveal()];
+     return $data;
+   }
+ 
