@@ -53,7 +53,8 @@ class ActionAdminManageForm extends FormBase {
   public function buildForm(array $form, FormStateInterface $form_state) {
     $actions = [];
     foreach ($this->manager->getDefinitions() as $id => $definition) {
-      $actions[$id] = $definition['label'];
+      $category = $definition['category'] ?? $this->t('Uncategorized')->__toString();
+      $actions[$category][$id] = $definition['label'];
     }
     asort($actions);
     $form['parent'] = [

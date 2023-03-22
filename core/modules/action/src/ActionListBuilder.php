@@ -74,8 +74,10 @@ class ActionListBuilder extends ConfigEntityListBuilder {
    * {@inheritdoc}
    */
   public function buildRow(EntityInterface $entity) {
+    $pluginDefinition = $entity->getPluginDefinition();
     $row['type'] = $entity->getType();
     $row['label'] = $entity->label();
+    $row['category'] = $pluginDefinition['category'] ?? '';
     if ($this->hasConfigurableActions) {
       $row += parent::buildRow($entity);
     }
@@ -89,6 +91,7 @@ class ActionListBuilder extends ConfigEntityListBuilder {
     $header = [
       'type' => t('Action type'),
       'label' => t('Label'),
+      'category' => t('Category'),
     ] + parent::buildHeader();
     return $header;
   }
