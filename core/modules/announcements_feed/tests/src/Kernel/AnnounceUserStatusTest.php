@@ -2,12 +2,7 @@
 
 namespace Drupal\Tests\announcements_feed\Kernel;
 
-use Drupal\KernelTests\KernelTestBase;
 use Drupal\Tests\user\Traits\UserCreationTrait;
-use GuzzleHttp\Client;
-use GuzzleHttp\HandlerStack;
-use GuzzleHttp\Handler\MockHandler;
-use GuzzleHttp\Middleware;
 use GuzzleHttp\Psr7\Response;
 
 /**
@@ -15,7 +10,7 @@ use GuzzleHttp\Psr7\Response;
  *
  * @group announcements_feed
  */
-class AnnounceUserStatusTest extends KernelTestBase {
+class AnnounceUserStatusTest extends AnnounceTestBase {
 
   use UserCreationTrait;
 
@@ -23,26 +18,14 @@ class AnnounceUserStatusTest extends KernelTestBase {
    * {@inheritdoc}
    */
   protected static $modules = [
-    'user',
     'toolbar',
-    'system',
-    'announcements_feed',
   ];
-
-  /**
-   * History of requests/responses.
-   *
-   * @var array
-   */
-  protected $history = [];
 
   /**
    * {@inheritdoc}
    */
   protected function setUp(): void {
     parent::setUp();
-    $this->installConfig('system');
-    $this->installConfig(['user']);
     $this->installSchema('user', ['users_data']);
 
     // Setting current user.
@@ -64,8 +47,8 @@ class AnnounceUserStatusTest extends KernelTestBase {
     $this->setFeedItems($feed_item);
 
     // First time access.
-    $feeds = $this->fetchFeedItems();
-    $all_items = $feeds->getAllAnnouncements();
+    $user_status = $this->fetchFeedUserStatus();
+    $all_items = $user_status->getAllAnnouncements();
     $this->assertCount(4, $all_items);
 
     // Checking the 'new' status is enabled or not.
@@ -75,8 +58,8 @@ class AnnounceUserStatusTest extends KernelTestBase {
     $this->setFeedItems($feed_item);
 
     // Second time access.
-    $feeds = $this->fetchFeedItems();
-    $all_items = $feeds->getAllAnnouncements();
+    $user_status = $this->fetchFeedUserStatus();
+    $all_items = $user_status->getAllAnnouncements();
     $this->assertCount(4, $all_items);
 
     // Checking the 'new' status is disabled or not.
@@ -93,8 +76,8 @@ class AnnounceUserStatusTest extends KernelTestBase {
     $this->setFeedItems($feed_item);
 
     // First time access.
-    $feeds = $this->fetchFeedItems();
-    $all_items = $feeds->getAllAnnouncements();
+    $user_status = $this->fetchFeedUserStatus();
+    $all_items = $user_status->getAllAnnouncements();
     $this->assertCount(4, $all_items);
 
     // Checking the 'new' status is enabled or not.
@@ -104,8 +87,8 @@ class AnnounceUserStatusTest extends KernelTestBase {
     // Check after adding new record.
     $feed_item = $this->providerShowUpdatedAnnouncements();
     $this->setFeedItems($feed_item);
-    $feeds = $this->fetchFeedItems();
-    $all_items = $feeds->getAllAnnouncements();
+    $user_status = $this->fetchFeedUserStatus();
+    $all_items = $user_status->getAllAnnouncements();
     $this->assertCount(5, $all_items);
     $this->assertSame($all_items[0]['id'], 1005);
 
@@ -259,31 +242,10 @@ class AnnounceUserStatusTest extends KernelTestBase {
   }
 
   /**
-   * Sets test feed responses.
-   *
-   * @param \GuzzleHttp\Psr7\Response[] $responses
-   *   The responses for the http_client service to return.
-   */
-  protected function setTestFeedResponses(array $responses): void {
-    // Create a mock and queue responses.
-    $mock = new MockHandler($responses);
-    $handler_stack = HandlerStack::create($mock);
-    $history = Middleware::history($this->history);
-    $handler_stack->push($history);
-    // Rebuild the container because the 'system.sa_fetcher' service and other
-    // services may already have an instantiated instance of the 'http_client'
-    // service without these changes.
-    $this->container->get('kernel')->rebuildContainer();
-    $this->container = $this->container->get('kernel')->getContainer();
-    $this->container->set('http_client', new Client(['handler' => $handler_stack]));
-  }
-
-  /**
    * Gets the user_status object from the announcements_feed service.
    */
-  protected function fetchFeedItems(): ?object {
-    $user_status = $this->container->get('announcements_feed.user_status');
-    return $user_status;
+  protected function fetchFeedUserStatus(): ?object {
+    return $this->container->get('announcements_feed.user_status');
   }
 
 }

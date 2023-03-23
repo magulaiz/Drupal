@@ -2,11 +2,6 @@
 
 namespace Drupal\Tests\announcements_feed\Kernel;
 
-use Drupal\KernelTests\KernelTestBase;
-use GuzzleHttp\Client;
-use GuzzleHttp\HandlerStack;
-use GuzzleHttp\Handler\MockHandler;
-use GuzzleHttp\Middleware;
 use GuzzleHttp\Psr7\Response;
 
 /**
@@ -14,31 +9,13 @@ use GuzzleHttp\Psr7\Response;
  *
  * @group announcements_feed
  */
-class AnnounceFetcherTest extends KernelTestBase {
-
-  /**
-   * {@inheritdoc}
-   */
-  protected static $modules = [
-    'user',
-    'system',
-    'announcements_feed',
-  ];
-
-  /**
-   * History of requests/responses.
-   *
-   * @var array
-   */
-  protected $history = [];
+class AnnounceFetcherTest extends AnnounceTestBase {
 
   /**
    * {@inheritdoc}
    */
   protected function setUp(): void {
     parent::setUp();
-    $this->installConfig('system');
-    $this->installConfig(['user']);
     $this->installConfig(['announcements_feed']);
   }
 
@@ -163,34 +140,13 @@ class AnnounceFetcherTest extends KernelTestBase {
   }
 
   /**
-   * Sets test feed responses.
-   *
-   * @param \GuzzleHttp\Psr7\Response[] $responses
-   *   The responses for the http_client service to return.
-   */
-  protected function setTestFeedResponses(array $responses): void {
-    // Create a mock and queue responses.
-    $mock = new MockHandler($responses);
-    $handler_stack = HandlerStack::create($mock);
-    $history = Middleware::history($this->history);
-    $handler_stack->push($history);
-    // Rebuild the container because the 'announce.fetcher' service and other
-    // services may already have an instantiated instance of the 'http_client'
-    // service without these changes.
-    $this->container->get('kernel')->rebuildContainer();
-    $this->container = $this->container->get('kernel')->getContainer();
-    $this->container->set('http_client', new Client(['handler' => $handler_stack]));
-  }
-
-  /**
    * Gets the announcements from the 'announce.fetcher' service.
    *
-   * @return \Drupal\announcements_feed\AnnounceFetcher\fetch[]|null
+   * @return array
    *   The return value of AnnounceFetcher::fetch().
    */
-  protected function fetchFeedItems(): ?array {
-    $fetcher = $this->container->get('announcements_feed.fetcher');
-    return $fetcher->fetch();
+  protected function fetchFeedItems(): array {
+    return $this->container->get('announcements_feed.fetcher')->fetch();
   }
 
 }

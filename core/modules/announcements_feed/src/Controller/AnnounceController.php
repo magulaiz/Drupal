@@ -64,7 +64,7 @@ class AnnounceController extends ControllerBase implements ContainerInjectionInt
       $announcements = $this->userStatus->getAllAnnouncements();
     }
     catch (\Exception $e) {
-      $build = [
+      return [
         '#theme' => 'status_messages',
         '#message_list' => [
           'error' => [
@@ -75,7 +75,6 @@ class AnnounceController extends ControllerBase implements ContainerInjectionInt
           'error' => $this->t('Error Message'),
         ],
       ];
-      return $build;
     }
 
     $items = ['featured' => [], 'standard' => []];
