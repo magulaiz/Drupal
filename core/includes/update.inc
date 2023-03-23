@@ -373,10 +373,10 @@ function update_get_update_list() {
     catch (UnknownExtensionException $e) {
       $args = [
         '%name' => $module,
-        ':url' => 'https://www.drupal.org/node/3137656',
+        '%url' => 'https://www.drupal.org/node/3137656',
       ];
-      \Drupal::messenger()->addWarning(t('Module %name has an entry in the system.schema key/value storage, but is missing from your site. <a href=":url">More information about this error</a>.', $args));
-      \Drupal::logger('system')->notice('Module %name has an entry in the system.schema key/value storage, but is missing from your site. <a href=":url">More information about this error</a>.', $args);
+      \Drupal::messenger()->addWarning(t('Module %name has an entry in the system.schema key/value storage, but is missing from your site. <a href="%url">More information about this error</a>.', $args));
+      \Drupal::logger('system')->notice('Module %name has an entry in the system.schema key/value storage, but is missing from your site. <a href="%url">More information about this error</a>.', $args);
       continue;
     }
     // There might be orphaned entries for modules that are in the filesystem
@@ -384,10 +384,10 @@ function update_get_update_list() {
     if (empty($installed_module_info[$module])) {
       $args = [
         '%name' => $module,
-        ':url' => 'https://www.drupal.org/node/3137656',
+        '%url' => 'https://www.drupal.org/node/3137656',
       ];
-      \Drupal::messenger()->addWarning(t('Module %name has an entry in the system.schema key/value storage, but is not installed. <a href=":url">More information about this error</a>.', $args));
-      \Drupal::logger('system')->notice('Module %name has an entry in the system.schema key/value storage, but is not installed. <a href=":url">More information about this error</a>.', $args);
+      \Drupal::messenger()->addWarning(t('Module %name has an entry in the system.schema key/value storage, but is not installed. <a href="%url">More information about this error</a>.', $args));
+      \Drupal::logger('system')->notice('Module %name has an entry in the system.schema key/value storage, but is not installed. <a href="%url">More information about this error</a>.', $args);
       continue;
     }
 
