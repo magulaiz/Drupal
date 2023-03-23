@@ -20,6 +20,7 @@
 
 (function (Drupal, debounce) {
   let liveElement;
+  let main;
   const announcements = [];
 
   /**
@@ -39,7 +40,13 @@
         liveElement.className = 'visually-hidden';
         liveElement.setAttribute('aria-live', 'polite');
         liveElement.setAttribute('aria-busy', 'false');
-        document.body.appendChild(liveElement);
+        // Append to <main> element, which should always be present thereby keeping perceivable text in an aria landmark. If it's not present, append to body so aria-live region at least exists.
+        main = document.querySelector('main');
+        if (main.length === 0) {
+          document.body.appendChild(liveElement);
+        } else {
+          main.appendChild(liveElement);
+        }
       }
     },
   };
