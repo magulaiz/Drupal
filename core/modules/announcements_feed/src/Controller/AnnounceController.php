@@ -5,7 +5,7 @@ namespace Drupal\announcements_feed\Controller;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
-use Drupal\Core\Session\AccountProxy;
+use Drupal\Core\Session\AccountInterface;
 use Drupal\announcements_feed\AnnounceUserStatus;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -21,21 +21,14 @@ class AnnounceController extends ControllerBase implements ContainerInjectionInt
   protected AnnounceUserStatus $userStatus;
 
   /**
-   * Current user object.
-   *
-   * @var \Drupal\Core\Session\AccountInterface
-   */
-  protected $currentUser;
-
-  /**
    * Constructs an AnnounceController object.
    *
    * @param \Drupal\announcements_feed\AnnounceUserStatus $user_status
    *   The AnnounceUserStatus service.
-   * @param \Drupal\Core\Session\AccountProxy $current_user
+   * @param \Drupal\Core\Session\AccountInterface $current_user
    *   The current_user service.
    */
-  public function __construct(AnnounceUserStatus $user_status, AccountProxy $current_user) {
+  public function __construct(AnnounceUserStatus $user_status, AccountInterface $current_user) {
     $this->userStatus = $user_status;
     $this->currentUser = $current_user;
   }
