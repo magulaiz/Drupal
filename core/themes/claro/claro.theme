@@ -1768,7 +1768,6 @@ function claro_preprocess_html(&$variables) {
  * @see core/modules/toolbar/js/toolbar.js
  */
 function claro_add_toolbar_active_classes_on_load(&$variables) {
-  require_once DRUPAL_ROOT . '/core/modules/toolbar/toolbar.module';
   $toolbar_state_serialized = \Drupal::request()->cookies->get('toolbarState');
   $toolbar_state = $toolbar_state_serialized ? JSON::decode($toolbar_state_serialized) : [];
 
