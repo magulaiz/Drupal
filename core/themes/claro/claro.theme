@@ -1777,11 +1777,11 @@ function claro_add_toolbar_active_classes_on_load(&$variables) {
   if (!isset($toolbar_state['hasActiveTab'])) {
     $active_tray = 'toolbar-item-administration-tray';
     $active_tab_id = 'toolbar-item-administration';
-  } else {
+  }
+  else {
     $active_tray = $toolbar_state['activeTray'] ?? FALSE;
     $active_tab_id = $toolbar_state['activeTabId'] ?? FALSE;
   }
-
 
   if (!empty($active_tray)) {
     $gt = '>';
