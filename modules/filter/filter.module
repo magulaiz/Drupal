@@ -1522,7 +1522,7 @@ function _filter_url($text, $filter) {
     $text = is_null($text) ? '' : preg_replace_callback('`<!--(.*?)-->`s', '_filter_url_escape_comments', $text);
 
     // Split at all tags; ensures that no tags or attributes are processed.
-    $chunks = is_null($text) ? array() : preg_split('/(<.+?>)/is', $text, -1, PREG_SPLIT_DELIM_CAPTURE);
+    $chunks = is_null($text) ? array('') : preg_split('/(<.+?>)/is', $text, -1, PREG_SPLIT_DELIM_CAPTURE);
 
     // Do not attempt to convert links into URLs if preg_split() fails.
     if ($chunks !== FALSE) {
