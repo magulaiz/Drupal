@@ -70,34 +70,25 @@ class AnnounceController extends ControllerBase implements ContainerInjectionInt
       ];
     }
 
-    $items = ['featured' => [], 'standard' => []];
+    $build = [];
     foreach ($announcements as $announcement) {
       if ($announcement['_drupalorg']['featured']) {
-        $items['featured'][] = [
-          'id' => $announcement['id'],
-          'title' => $announcement['title'],
+        $build['#featured'][] = $announcement + [
           'teaser' => strip_tags($announcement['content_html']),
           'link' => $announcement['url'],
-          'new' => $announcement['new'],
         ];
+        continue;
       }
-      else {
-        $timestamp = DrupalDateTime::createFromFormat(DATE_ATOM, $announcement['date_published']);
-        $items['standard'][] = [
-          'id' => $announcement['id'],
-          'title' => $announcement['title'],
-          'teaser' => strip_tags($announcement['content_html']),
-          'link' => $announcement['url'],
-          'timestamp' => $timestamp->getTimestamp(),
-          'new' => $announcement['new'],
-        ];
-      }
+      $timestamp = DrupalDateTime::createFromFormat(DATE_ATOM, $announcement['date_published']);
+      $build['#standard'][] = $announcement + [
+        'teaser' => strip_tags($announcement['content_html']),
+        'link' => $announcement['url'],
+        'timestamp' => $timestamp->getTimestamp(),
+      ];
     }
 
-    $build = [
+    $build += [
       '#theme' => 'announcements_feed',
-      '#featured' => $items['featured'],
-      '#standard' => $items['standard'],
       '#count' => count($announcements),
       '#cache' => [
         'contexts' => [
