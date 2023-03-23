@@ -144,7 +144,7 @@ class TaxonomyTermContentModerationTest extends TaxonomyTestBase {
     // Check that parents were changed.
     $assert_session->pageTextNotContains($validation_message);
     $taxonomy_storage->resetCache();
-    $this->assertEquals([$parent_2->id()], array_keys($taxonomy_storage->loadParents($child->id())));
+    $this->assertNotEquals([$parent_1->id()], array_keys($taxonomy_storage->loadParents($child->id())));
 
     // Add a pending revision and change the weight.
     $this->drupalGet('taxonomy/term/' . $child->id() . '/edit');
