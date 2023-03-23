@@ -263,6 +263,8 @@ function toolbar_preprocess_html(&$variables) {
 
   if (!empty($toolbar_state['orientation'])) {
     $variables['attributes']['class'][] = "toolbar-{$toolbar_state['orientation']}";
+  } else {
+    $variables['attributes']['class'][] = 'toolbar-horizontal';
   }
 
   if (!isset($toolbar_state['hasActiveTab']) || $toolbar_state['hasActiveTab'] !== FALSE) {

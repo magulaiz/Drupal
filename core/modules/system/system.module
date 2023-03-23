@@ -1307,7 +1307,7 @@ function system_preprocess_html(&$variables) {
     $variables['#cache']['max-age'] = 0;
     $toolbar_state_serialized = \Drupal::request()->cookies->get('toolbarState');
     $toolbar_state = $toolbar_state_serialized ? JSON::decode($toolbar_state_serialized) : [];
-    if (!empty($toolbar_state['hasActiveTab'])) {
+    if (!isset($toolbar_state['hasActiveTab']) || $toolbar_state['hasActiveTab'] !== FALSE) {
       require_once DRUPAL_ROOT . '/core/themes/claro/claro.theme';
       claro_add_toolbar_active_classes_on_load($variables);
     }

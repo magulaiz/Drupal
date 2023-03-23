@@ -1771,8 +1771,17 @@ function claro_add_toolbar_active_classes_on_load(&$variables) {
   require_once DRUPAL_ROOT . '/core/modules/toolbar/toolbar.module';
   $toolbar_state_serialized = \Drupal::request()->cookies->get('toolbarState');
   $toolbar_state = $toolbar_state_serialized ? JSON::decode($toolbar_state_serialized) : [];
-  $active_tray = $toolbar_state['activeTray'] ?? FALSE;
-  $active_tab_id = $toolbar_state['activeTabId'] ?? FALSE;
+
+  // If hasActiveTab is not yet set, then the Cookie itself is not yet set and
+  // the toolbar defaults to having the administration tray open.
+  if (!isset($toolbar_state['hasActiveTab'])) {
+    $active_tray = 'toolbar-item-administration-tray';
+    $active_tab_id = 'toolbar-item-administration';
+  } else {
+    $active_tray = $toolbar_state['activeTray'] ?? FALSE;
+    $active_tab_id = $toolbar_state['activeTabId'] ?? FALSE;
+  }
+
 
   if (!empty($active_tray)) {
     $gt = '>';
