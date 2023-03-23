@@ -65,11 +65,4 @@ class AnnounceFetcherUnitTest extends UnitTestCase {
     ];
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function tearDown(): void {
-    unset($this->fetcher);
-  }
-
 }
