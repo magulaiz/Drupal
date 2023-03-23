@@ -1666,7 +1666,6 @@ www.example.com with a newline in comments -->
 
     // Setting limit back to default.
     ini_set('pcre.backtrack_limit', $pcre_backtrack_limit);
-    
   }
 
   /**
