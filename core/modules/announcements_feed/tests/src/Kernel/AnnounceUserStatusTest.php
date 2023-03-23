@@ -51,7 +51,7 @@ class AnnounceUserStatusTest extends AnnounceTestBase {
     $all_items = $user_status->getAllAnnouncements();
     $this->assertCount(4, $all_items);
 
-    // Checking the 'new' status is enabled or not.
+    // Checking the 'new' status is enabled.
     $this->assertSame($all_items[0]['id'], $all_items[0]['new']);
     $this->assertCount(3, $this->history);
 
@@ -62,12 +62,11 @@ class AnnounceUserStatusTest extends AnnounceTestBase {
     $all_items = $user_status->getAllAnnouncements();
     $this->assertCount(4, $all_items);
 
-    // Checking the 'new' status is disabled or not.
+    // Checking the 'new' status is disabled.
     $this->assertSame('', $all_items[0]['new']);
     $this->assertCount(5, $this->history);
 
-    // Change user.
-    // Setting current user.
+    // Create another user and test again.
     $permissions = [
       'access toolbar',
       'access announcements',
@@ -80,7 +79,7 @@ class AnnounceUserStatusTest extends AnnounceTestBase {
     $all_items = $user_status->getAllAnnouncements();
     $this->assertCount(4, $all_items);
 
-    // Checking the 'new' status is enabled or not.
+    // Checking the 'new' status is enabled.
     $this->assertSame($all_items[0]['id'], $all_items[0]['new']);
     $this->assertCount(8, $this->history);
 
@@ -90,12 +89,11 @@ class AnnounceUserStatusTest extends AnnounceTestBase {
     $user_status = $this->fetchFeedUserStatus();
     $all_items = $user_status->getAllAnnouncements();
     $this->assertCount(5, $all_items);
-    $this->assertSame($all_items[0]['id'], 1005);
+    $this->assertSame(1005, $all_items[0]['id']);
 
-    // Checking the 'new' status is enabled or not.
+    // Checking the 'new' status is enabled.
     $this->assertSame($all_items[0]['id'], $all_items[0]['new']);
     $this->assertCount(11, $this->history);
-
   }
 
   /**
