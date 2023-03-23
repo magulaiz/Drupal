@@ -162,7 +162,7 @@
           Sortable.create(region, {
             draggable: '.js-layout-builder-block',
             ghostClass: 'ui-state-drop',
-            group: 'builder-region',
+            group: region.getAttribute('data-layout-group'),
             onEnd: (event) =>
               Drupal.layoutBuilderBlockUpdate(event.item, event.from, event.to),
           });
