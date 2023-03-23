@@ -3,38 +3,36 @@
  * Defines the behavior of the Drupal administration toolbar.
  */
 
-/**
- * Set UI-impacting toolbar classes before Drupal behaviors initialize to
- * minimize flickering on load.
- */
-const setToolbarClassesEarly = () => {
-  if (!Cookies.get('toolbarState')) {
-    return;
-  }
-  const toolbarState = JSON.parse(Cookies.get('toolbarState'));
-  const { activeTray, orientation, toolbarUserName } = toolbarState;
-  const activeTrayElement = document.querySelector(
-    `.toolbar-tray[data-toolbar-tray="${activeTray}"]`,
-  );
-  const activeTrayToggle = document.querySelector(
-    `.toolbar-item[data-toolbar-tray="${activeTray}"]`,
-  );
-
-  if (activeTrayElement) {
-    activeTrayElement.classList.add(`toolbar-tray-${orientation}`, 'is-active');
-    activeTrayToggle.classList.add('is-active');
-  }
-
-  const toolbarUserButton = document.querySelector('#toolbar-item-user');
-  if (toolbarUserName && toolbarUserButton) {
-    toolbarUserButton.textContent = toolbarUserName;
-  }
-};
-setToolbarClassesEarly();
 (function ($, Drupal, drupalSettings, Cookies) {
-  // Re-invoke setToolbarClassesEarly() to account for contrib toolbar items
-  // that may have not been available when it was called earlier.
-  setToolbarClassesEarly();
+  // Set UI-impacting toolbar classes before Drupal behaviors initialize to
+  // minimize flickering on load. This is encapsulated in a function to
+  // emphasize this having a distinct purpose than the code that follows it.
+  (() => {
+    if (!Cookies.get('toolbarState')) {
+      return;
+    }
+    const toolbarState = JSON.parse(Cookies.get('toolbarState'));
+    const { activeTray, orientation, toolbarUserName } = toolbarState;
+    const activeTrayElement = document.querySelector(
+      `.toolbar-tray[data-toolbar-tray="${activeTray}"]`,
+    );
+    const activeTrayToggle = document.querySelector(
+      `.toolbar-item[data-toolbar-tray="${activeTray}"]`,
+    );
+
+    if (activeTrayElement) {
+      activeTrayElement.classList.add(
+        `toolbar-tray-${orientation}`,
+        'is-active',
+      );
+      activeTrayToggle.classList.add('is-active');
+    }
+
+    const toolbarUserButton = document.querySelector('#toolbar-item-user');
+    if (toolbarUserName && toolbarUserButton) {
+      toolbarUserButton.textContent = toolbarUserName;
+    }
+  })();
 
   // Merge run-time settings with the defaults.
   const options = $.extend(
@@ -234,44 +232,34 @@ setToolbarClassesEarly();
       ) {
         // Remove placeholder
         $('#toolbar-tray-anti-flicker').parent('.toolbar-tab').remove();
-        // Vertical fixes.
-        const ChildView = Drupal.toolbar.ToolbarVisualView.extend({
-          initialize() {
-            const { model } = Drupal.toolbar.views.toolbarVisualView;
-            this.listenTo(
-              model,
-              'change:activeTab change:orientation change:isOriented change:isTrayToggleVisible',
-              // eslint-disable-next-line func-names
-              function () {
-                const hasActiveTab = $(model.get('activeTab')).length > 0;
-                const previousToolbarState = Cookies.get('toolbarState')
-                  ? JSON.parse(Cookies.get('toolbarState'))
-                  : {};
-                const toolbarState = {
-                  ...previousToolbarState,
-                  orientation:
-                    Drupal.toolbar.models.toolbarModel.get('orientation'),
-                  hasActiveTab,
-                  activeTabId: hasActiveTab ? model.get('activeTab').id : null,
-                  activeTray: $(model.get('activeTab')).attr(
-                    'data-toolbar-tray',
-                  ),
-                  isOriented: model.get('isOriented'),
-                  isFixed: model.get('isFixed'),
-                };
-                // Storing UI state values in a cookie so server side code can
-                // access these values without waiting on JavaScript
-                // initialization.
-                Cookies.set('toolbarState', JSON.stringify(toolbarState), {
-                  path: '/',
-                });
-              },
-            );
-          },
-        });
 
-        // eslint-disable-next-line no-new
-        new ChildView();
+        // Store UI state in a cookie so PHP has access to it on page load.
+        // Drupal.toolbar.views.toolbarVisualView.model.on(
+        Drupal.toolbar.models.toolbarModel.on(
+          'change:activeTab change:orientation change:isOriented change:isTrayToggleVisible',
+          function () {
+            const hasActiveTab = !!$(this.get('activeTab')).length > 0;
+            const previousToolbarState = Cookies.get('toolbarState')
+              ? JSON.parse(Cookies.get('toolbarState'))
+              : {};
+            const toolbarState = {
+              ...previousToolbarState,
+              orientation:
+                Drupal.toolbar.models.toolbarModel.get('orientation'),
+              hasActiveTab,
+              activeTabId: hasActiveTab ? this.get('activeTab').id : null,
+              activeTray: $(this.get('activeTab')).attr('data-toolbar-tray'),
+              isOriented: this.get('isOriented'),
+              isFixed: this.get('isFixed'),
+            };
+            // Storing UI state values in a cookie so server side code can
+            // access these values without waiting on JavaScript
+            // initialization.
+            Cookies.set('toolbarState', JSON.stringify(toolbarState), {
+              path: '/',
+            });
+          },
+        );
       }
     },
   };

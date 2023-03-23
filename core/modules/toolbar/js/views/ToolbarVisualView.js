@@ -235,7 +235,6 @@
           } else {
             // There is no active tray.
             this.model.set('activeTray', null);
-            localStorage.removeItem('Drupal.toolbar.activeTabID');
           }
         } else {
           // There is no active tray.

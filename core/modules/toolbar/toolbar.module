@@ -265,7 +265,7 @@ function toolbar_preprocess_html(&$variables) {
     $variables['attributes']['class'][] = "toolbar-{$toolbar_state['orientation']}";
   }
 
-  if (!empty($toolbar_state['hasActiveTab'])) {
+  if (!isset($toolbar_state['hasActiveTab']) || $toolbar_state['hasActiveTab'] !== FALSE) {
     $variables['attributes']['class'][] = 'toolbar-tray-open';
   }
 
