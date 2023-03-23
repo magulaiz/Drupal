@@ -33,7 +33,7 @@ class AnnounceFetcherUnitTest extends UnitTestCase {
   /**
    * Test the ValidateUrl() method.
    *
-   * @covers Drupal\announcements_feed\AnnounceFetcher::validateUrl
+   * @covers \Drupal\announcements_feed\AnnounceFetcher::validateUrl
    *
    * @dataProvider urlProvider
    */
