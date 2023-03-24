@@ -70,6 +70,9 @@ class EntityLinks extends FilterBase implements ContainerFactoryPluginInterface 
       $dom = Html::load($text);
       $xpath = new \DOMXPath($dom);
 
+      // Note: this filter only processes links (<a href>) to Files, not
+      // tags with a File as a source (e.g. <img src>).
+      // @see \Drupal\editor\Plugin\Filter\EditorFileReference
       foreach ($xpath->query('//a[@data-entity-type and @data-entity-uuid]') as $element) {
         /** @var \DOMElement $element */
         try {
