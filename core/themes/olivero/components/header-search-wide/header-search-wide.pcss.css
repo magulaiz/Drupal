@@ -3,7 +3,7 @@
  * Header Search Wide Block.
  */
 
-@import "../base/media-queries.pcss.css";
+@import "../../css/base/media-queries.pcss.css";
 
 /* Override contextual links so we can position against .site-header. */
 .block-search-wide.contextual-region {
@@ -117,6 +117,15 @@
         transform-origin: left;
         border-block-start: solid var(--sp0-5) var(--color--primary-50);
       }
+    }
+
+    /* Override styles from button--primary */
+    /* @todo can we just drop that class? */
+    &:active,
+    &:hover,
+    &:focus {
+      background-color: transparent;
+      border-color: transparent;
     }
 
     &:focus {

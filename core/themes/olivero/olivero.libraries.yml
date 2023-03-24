@@ -244,25 +244,11 @@ progress:
     component:
       css/components/progress.css: {}
 
-search-narrow:
-  version: VERSION
-  css:
-    component:
-      css/components/header-search-narrow.css: {}
-
 search-results:
   version: VERSION
   css:
     theme:
       css/components/search-results.css: {}
-
-search-wide:
-  version: VERSION
-  css:
-    component:
-      css/components/header-search-wide.css: {}
-  js:
-    js/search.js: {}
 
 sidebar:
   version: VERSION

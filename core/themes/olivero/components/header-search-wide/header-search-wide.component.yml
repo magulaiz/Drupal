@@ -1,0 +1,36 @@
+$schema: https://git.drupalcode.org/project/sdc/-/raw/1.x/src/metadata.schema.json
+machineName: header-search-wide
+name: Header search (wide)
+status: BETA
+schemas:
+  props:
+    type: object
+    required:
+      - content
+    properties:
+      attributes:
+        type: array
+        title: attributes
+      content:
+        type: array
+        title: content
+      content_attributes:
+        type: array
+        title: content attributes
+      label:
+        type: array
+        title: label
+      title_prefix:
+        type: array
+        title: title prefix
+      title_suffix:
+        type: array
+        title: title suffix
+  slots:
+    type: object
+    required:
+      - content
+    properties:
+      content:
+        type: string
+        title: content
