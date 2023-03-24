@@ -230,9 +230,6 @@
       if (
         once('toolbarAntiFlicker', '#toolbar-administration', context).length
       ) {
-        // Remove placeholder
-        $('#toolbar-tray-anti-flicker').parent('.toolbar-tab').remove();
-
         // Store UI state in a cookie so PHP has access to it on page load.
         // Drupal.toolbar.views.toolbarVisualView.model.on(
         Drupal.toolbar.models.toolbarModel.on(
