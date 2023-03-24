@@ -128,7 +128,7 @@ class MediaEntityMetadataApiTest extends BrowserTestBase {
               'view_mode_2' => 'view_mode_2',
             ],
             'allowed_media_types' => [],
-            'default_view_mode_10101'=> 'view_mode_1',
+            'default_view_mode_10101' => 'view_mode_1',
           ],
         ],
       ],
