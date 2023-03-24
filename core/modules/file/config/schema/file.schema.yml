@@ -24,6 +24,19 @@ file.settings:
     make_unused_managed_files_temporary:
       type: boolean
       label: 'Controls if unused files should be marked temporary'
+    filename_sanitization:
+      type: mapping
+      label: 'Uploaded filename sanitization options'
+      mapping:
+        replacement_character:
+          type: string
+          label: 'Character to use in replacements'
+        transliterate:
+          type: boolean
+          label: 'Transliterate'
+        lowercase:
+          type: boolean
+          label: 'Convert to lowercase'
 
 field.storage_settings.file:
   type: base_entity_reference_field_settings
