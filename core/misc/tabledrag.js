@@ -191,9 +191,9 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
   Drupal.tableDrag.prototype.makeDraggable = function (item) {
     var self = this;
     var $item = $(item);
-    $item.find('td:first-of-type').find('a').addClass('menu-item__link');
+    $item.find('> td:first-of-type').find('a').addClass('menu-item__link');
     var $handle = $(Drupal.theme('tableDragHandle'));
-    var $indentationLast = $item.find('td:first-of-type').find('.js-indentation').eq(-1);
+    var $indentationLast = $item.find('> td:first-of-type').find('.js-indentation').eq(-1);
     if ($indentationLast.length) {
       $indentationLast.after($handle);
       self.indentCount = Math.max($item.find('.js-indentation').length, self.indentCount);
