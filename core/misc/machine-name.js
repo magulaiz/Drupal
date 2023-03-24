@@ -63,6 +63,7 @@
           .replace(rx, options.replace)
           .substr(0, options.maxlength);
 
+        const needsTransliteration = !/^[A-Za-z0-9_\s]*$/.test(baseValue);
         // Abort the last pending request because the label has changed and it
         // is no longer valid.
         if (xhr && xhr.readystate !== 4) {
@@ -72,11 +73,11 @@
 
         // Wait 300 milliseconds for Ajax request since the last event to update
         // the machine name i.e., after the user has stopped typing.
-        if (timeout) {
+        if (timeout || !needsTransliteration) {
           clearTimeout(timeout);
           timeout = null;
         }
-        if (baseValue.toLowerCase() !== expected) {
+        if (needsTransliteration) {
           timeout = setTimeout(() => {
             xhr = self.transliterate(baseValue, options).done((machine) => {
               self.showMachineName(machine.substr(0, options.maxlength), data);
@@ -151,12 +152,23 @@
         // If no initial value, determine machine name based on the
         // human-readable form element value.
         if (machine === '' && $source[0].value !== '') {
-          self.transliterate($source[0].value, options).done((machineName) => {
-            self.showMachineName(
-              machineName.substr(0, options.maxlength),
-              eventData,
-            );
-          });
+          if (/^[A-Za-z0-9_\s]*$/.test($source[0].value)) {
+            const rx = new RegExp(options.replace_pattern, 'g');
+            const expected = $source[0].value
+              .toLowerCase()
+              .replace(rx, options.replace)
+              .substr(0, options.maxlength);
+            self.showMachineName(expected, eventData);
+          } else {
+            self
+              .transliterate($source[0].value, options)
+              .done((machineName) => {
+                self.showMachineName(
+                  machineName.substr(0, options.maxlength),
+                  eventData,
+                );
+              });
+          }
         }
 
         // If it is editable, append an edit link.
