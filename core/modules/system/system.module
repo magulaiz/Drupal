@@ -1298,6 +1298,9 @@ function system_preprocess_toolbar(array &$variables, $hook, $info) {
   }
 }
 
+/**
+ * Implements hook_preprocess_html().
+ */
 function system_preprocess_html(&$variables) {
   // Add toolbar-specific preprocessing of the html render array when Claro is
   // the admin theme, but viewing the default theme.
