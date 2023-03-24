@@ -13,6 +13,7 @@
         "drupal/core": "self.version",
         "drupal/core-project-message": "self.version",
         "drupal/core-vendor-hardening": "self.version",
+        "symfony/intl": "^6.2",
         "symfony/string": "^6.2"
     },
     "require-dev": {
