@@ -117,8 +117,8 @@
 
   &::before {
     position: absolute;
-    inset-block-start: 50%;
-    inset-inline-end: 50%;
+    top: 50%;
+    right: 50%;
     width: 0.875rem;
     height: 0.5625rem;
     content: "";
@@ -150,15 +150,6 @@
     border-radius: var(--button-border-radius-size) 0 0 var(--button-border-radius-size);
   }
 }
-
-/* Toggler states. */
-/* .dropbutton-wrapper.open .dropbutton__toggle::before {
-  transform: translate(50%, -50%) rotate(180deg);
-
-  @nest [dir="rtl"] & {
-    transform: translate(50%, -50%) rotate(-180deg);
-  }
-} */
 
 /* Toggler variants */
 .no-touchevents {
