@@ -27,8 +27,8 @@ class MediaEmbedViewModeUpdateTest extends UpdatePathTestBase {
    */
   protected function setDatabaseDumpFiles() {
     $this->databaseDumpFiles = [
-      __DIR__ . '/../../../../../system/tests/fixtures/update/drupal-9.0.0.bare.standard.php.gz',
-      __DIR__ . '/../../../fixtures/update/drupal-9.2.0.standard.media-installed.php.gz',
+      __DIR__ . '/../../../../../system/tests/fixtures/update/drupal-9.4.0.bare.standard.php.gz',
+      __DIR__ . '/../../../fixtures/update/media.php',
     ];
   }
 
