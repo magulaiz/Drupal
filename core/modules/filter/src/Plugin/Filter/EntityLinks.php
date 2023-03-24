@@ -10,6 +10,7 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityRepositoryInterface;
 use Drupal\Core\GeneratedUrl;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+use Drupal\Core\TypedData\TranslatableInterface;
 use Drupal\file\FileInterface;
 use Drupal\filter\FilterProcessResult;
 use Drupal\filter\Plugin\FilterBase;
@@ -88,7 +89,10 @@ class EntityLinks extends FilterBase implements ContainerFactoryPluginInterface 
 
           $entity = $this->entityRepository->loadEntityByUuid($entity_type, $uuid);
           if ($entity) {
-            $entity = $this->entityRepository->getTranslationFromContext($entity, $langcode);
+            // @todo Consider using \Drupal\Core\Entity\EntityRepositoryInterface::getTranslationFromContext() after https://drupal.org/i/3061761 is fixed.
+            if ($entity instanceof TranslatableInterface && $entity->hasTranslation($langcode)) {
+              $entity = $entity->getTranslation($langcode);
+            }
 
             $url = $this->getUrl($entity);
 
