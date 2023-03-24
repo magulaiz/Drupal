@@ -53,7 +53,7 @@ abstract class BlockContentResourceTestBase extends EntityResourceTestBase {
         break;
 
       default:
-        $this->grantPermissionsToTestedRole(['administer block library']);
+        $this->grantPermissionsToTestedRole(['administer block content']);
         break;
     }
   }

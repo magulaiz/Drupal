@@ -66,26 +66,26 @@ class BlockContentAccessControlHandler extends EntityAccessControlHandler implem
         ->orIf(AccessResult::allowedIfHasPermissions($account, [
           'access block library',
         ]))->orIf(AccessResult::allowedIfHasPermissions($account, [
-          'administer block library',
+          'administer block content',
         ])),
       'update' => AccessResult::allowedIfHasPermissions($account, [
         'access block library',
         'edit any ' . $bundle . ' block content',
       ])->orIf(AccessResult::allowedIfHasPermissions($account, [
-        'administer block library',
+        'administer block content',
       ])),
       'delete' => AccessResult::allowedIfHasPermissions($account, [
         'access block library',
         'delete any ' . $bundle . ' block content',
       ])->orIf(AccessResult::allowedIfHasPermissions($account, [
-        'administer block library',
+        'administer block content',
       ])),
       // Revisions.
       'view all revisions' => AccessResult::allowedIfHasPermissions($account, [
         'access block library',
         'view any ' . $bundle . ' block content history',
       ])->orIf(AccessResult::allowedIfHasPermissions($account, [
-        'administer block library',
+        'administer block content',
       ])),
       'revert' => AccessResult::allowedIfHasPermissions($account, [
         'access block library',
@@ -98,7 +98,7 @@ class BlockContentAccessControlHandler extends EntityAccessControlHandler implem
         ->orIf($forbidIfNotDefaultAndLatest())
         ->orIf($forbidIfNotReusable())
         ->orIf(AccessResult::allowedIfHasPermissions($account, [
-          'administer block library',
+          'administer block content',
         ])),
 
       default => parent::checkAccess($entity, $operation, $account),
@@ -135,7 +135,7 @@ class BlockContentAccessControlHandler extends EntityAccessControlHandler implem
       'create ' . $entity_bundle . ' block content',
       'access block library',
     ])->orIf(AccessResult::allowedIfHasPermissions($account, [
-      'administer block library',
+      'administer block content',
     ]));
   }
 

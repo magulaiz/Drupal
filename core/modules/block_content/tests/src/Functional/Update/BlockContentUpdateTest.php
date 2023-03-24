@@ -79,7 +79,7 @@ class BlockContentUpdateTest extends UpdatePathTestBase {
   public function testBlockLibraryPermissionsUpdate(): void {
     $user = $this->drupalCreateUser(['administer blocks']);
     $this->assertTrue($user->hasPermission('administer blocks'));
-    $this->assertFalse($user->hasPermission('administer block library'));
+    $this->assertFalse($user->hasPermission('administer block content'));
     $this->assertFalse($user->hasPermission('administer block types'));
     $this->assertFalse($user->hasPermission('access block library'));
 
@@ -87,7 +87,7 @@ class BlockContentUpdateTest extends UpdatePathTestBase {
 
     $user = User::load($user->id());
     $this->assertTrue($user->hasPermission('administer blocks'));
-    $this->assertTrue($user->hasPermission('administer block library'));
+    $this->assertTrue($user->hasPermission('administer block content'));
     $this->assertTrue($user->hasPermission('administer block types'));
     $this->assertTrue($user->hasPermission('access block library'));
   }

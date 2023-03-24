@@ -71,7 +71,7 @@ class BlockContentTest extends ResourceTestBase {
         $this->grantPermissionsToTestedRole([
           'access block library',
           'administer block types',
-          'administer block library',
+          'administer block content',
         ]);
         break;
 
@@ -248,7 +248,7 @@ class BlockContentTest extends ResourceTestBase {
    */
   public function testCollectionFilterAccess() {
     $this->entity->setPublished()->save();
-    $this->doTestCollectionFilterAccessForPublishableEntities('info', NULL, 'administer block library');
+    $this->doTestCollectionFilterAccessForPublishableEntities('info', NULL, 'administer block content');
   }
 
 }

@@ -34,7 +34,7 @@ abstract class BlockContentTestBase extends BrowserTestBase {
     'administer blocks',
     'access block library',
     'administer block types',
-    'administer block library',
+    'administer block content',
   ];
 
   /**

@@ -62,7 +62,7 @@ class ConfigTranslationListUiTest extends BrowserTestBase {
     $permissions = [
       'access site-wide contact form',
       'administer blocks',
-      'administer block library',
+      'administer block content',
       'administer block types',
       'access block library',
       'administer contact forms',

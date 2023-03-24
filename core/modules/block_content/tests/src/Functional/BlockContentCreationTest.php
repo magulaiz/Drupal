@@ -36,7 +36,7 @@ class BlockContentCreationTest extends BlockContentTestBase {
     'administer blocks',
     'administer block_content display',
     'access block library',
-    'administer block library',
+    'administer block content',
   ];
 
   /**

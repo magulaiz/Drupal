@@ -10,7 +10,7 @@ administer block types:
   description: 'Maintain the block types of block content available and the fields that are associated with those types.'
   restrict access: TRUE
 
-administer block library:
-  title: 'Administer block library'
+administer block content:
+  title: 'Administer block content'
   description: 'View, edit and delete all block content regardless of permission restrictions.'
   restrict access: TRUE
