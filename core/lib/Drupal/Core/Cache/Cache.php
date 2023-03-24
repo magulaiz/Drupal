@@ -95,8 +95,9 @@ class Cache {
    */
   public static function buildTags($prefix, array $suffixes, $glue = ':') {
     $tags = [];
+    $full_prefix = $prefix . $glue;
     foreach ($suffixes as $suffix) {
-      $tags[] = $prefix . $glue . $suffix;
+      $tags[] = $full_prefix . $suffix;
     }
     return $tags;
   }
