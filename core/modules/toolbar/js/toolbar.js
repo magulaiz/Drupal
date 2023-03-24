@@ -231,7 +231,6 @@
         once('toolbarAntiFlicker', '#toolbar-administration', context).length
       ) {
         // Store UI state in a cookie so PHP has access to it on page load.
-        // Drupal.toolbar.views.toolbarVisualView.model.on(
         Drupal.toolbar.models.toolbarModel.on(
           'change:activeTab change:orientation change:isOriented change:isTrayToggleVisible',
           function () {
