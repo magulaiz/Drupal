@@ -52,7 +52,7 @@
         "symfony/routing": "~v6.2.5",
         "symfony/serializer": "~v6.2.5",
         "symfony/service-contracts": "~v3.2.0",
-        "symfony/string": "~v6.2.5",
+        "symfony/string": "~v6.2.7",
         "symfony/translation-contracts": "~v3.2.0",
         "symfony/validator": "~v6.2.5",
         "symfony/var-dumper": "~v6.2.5",
