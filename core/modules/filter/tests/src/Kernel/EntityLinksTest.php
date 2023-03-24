@@ -106,10 +106,9 @@ class EntityLinksTest extends KernelTestBase {
     ];
     $expected_hrefs = $expected_aliases + [
       LanguageInterface::LANGCODE_DEFAULT => '/foo-en',
-      // @todo The following 3 arguably should fall back to "/foo-en" as well, but don't. This is a known bug in EntityRepository::getTranslationFromContext(): https://www.drupal.org/project/drupal/issues/3061761
-      LanguageInterface::LANGCODE_NOT_APPLICABLE => '/foo-da',
-      LanguageInterface::LANGCODE_NOT_SPECIFIED => '/foo-da',
-      LanguageInterface::LANGCODE_SITE_DEFAULT => '/foo-da',
+      LanguageInterface::LANGCODE_NOT_APPLICABLE => '/foo-en',
+      LanguageInterface::LANGCODE_NOT_SPECIFIED => '/foo-en',
+      LanguageInterface::LANGCODE_SITE_DEFAULT => '/foo-en',
     ];
 
     // Create an entity and add translations to that.
