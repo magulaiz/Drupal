@@ -64,9 +64,8 @@ class FileEventSubscriber implements EventSubscriberInterface {
     }
     if ($transliterate) {
       $slugger = new AsciiSlugger();
-      $locale = $this->languageManager->getCurrentLanguage()->getId();
       $replacement = $fileSettings->get('filename_sanitization.replacement_character');
-      $filename = $slugger->slug($filename, $replacement, $locale);
+      $filename = $slugger->slug($filename, $replacement);
       $filename = trim($filename);
     }
     if ($lowercase) {
