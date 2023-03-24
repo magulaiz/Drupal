@@ -139,7 +139,7 @@ class ResponsiveImageStyleForm extends EntityForm {
           '#options' => [
             'sizes' => $this->t('Select multiple image styles and use the sizes attribute.'),
             'image_style' => $this->t('Select a single image style.'),
-            'group_image_styles' => $this->t('Select few image styles. (Avif, Webp etc)'),
+            'group_image_styles' => $this->t('Select multiple image styles. (Avif, Webp etc)'),
             '_none' => $this->t('Do not use this breakpoint.'),
           ],
           '#default_value' => $image_style_mapping['image_mapping_type'] ?? '_none',
