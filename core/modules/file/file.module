@@ -1355,6 +1355,13 @@ function file_form_system_file_system_settings_alter(array &$form, FormStateInte
     '#tree' => TRUE,
   ];
 
+  $form['filename_sanitization']['transliterate'] = [
+    '#type' => 'checkbox',
+    '#title' => t('Transliterate'),
+    '#default_value' => $config->get('filename_sanitization.transliterate'),
+    '#description' => t('Transliteration replaces any characters that are not alphanumeric, underscores, periods or hyphens with the replacement character. It ensures filenames only contain ASCII characters. It is recommended to keep transliteration enabled.'),
+  ];
+
   $form['filename_sanitization']['replacement_character'] = [
     '#type' => 'select',
     '#title' => t('Replacement character'),
@@ -1364,13 +1371,11 @@ function file_form_system_file_system_settings_alter(array &$form, FormStateInte
       '_' => t('Underscore (_)'),
     ],
     '#description' => t('Used when replacing whitespace, replacing non-alphanumeric characters or transliterating unknown characters.'),
-  ];
-
-  $form['filename_sanitization']['transliterate'] = [
-    '#type' => 'checkbox',
-    '#title' => t('Transliterate'),
-    '#default_value' => $config->get('filename_sanitization.transliterate'),
-    '#description' => t('Transliteration replaces any characters that are not alphanumeric, underscores, periods or hyphens with the replacement character. It ensures filenames only contain ASCII characters. It is recommended to keep transliteration enabled.'),
+    '#states' => [
+      'visible' => [
+        ':input[name="filename_sanitization[transliterate]"]' => ['checked' => TRUE],
+      ],
+    ],
   ];
 
   $form['filename_sanitization']['lowercase'] = [
