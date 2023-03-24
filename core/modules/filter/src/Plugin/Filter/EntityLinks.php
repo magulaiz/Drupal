@@ -5,8 +5,12 @@ declare(strict_types = 1);
 namespace Drupal\filter\Plugin\Filter;
 
 use Drupal\Component\Utility\Html;
+use Drupal\Core\Cache\Cache;
+use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityRepositoryInterface;
+use Drupal\Core\GeneratedUrl;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+use Drupal\file\FileInterface;
 use Drupal\filter\FilterProcessResult;
 use Drupal\filter\Plugin\FilterBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -83,8 +87,7 @@ class EntityLinks extends FilterBase implements ContainerFactoryPluginInterface 
           if ($entity) {
             $entity = $this->entityRepository->getTranslationFromContext($entity, $langcode);
 
-            /** @var \Drupal\Core\GeneratedUrl $url */
-            $url = $entity->toUrl()->toString(TRUE);
+            $url = $this->getUrl($entity);
 
             // Parse link href as URL, extract query and fragment from it.
             $href_url = parse_url($element->getAttribute('href'));
@@ -110,6 +113,33 @@ class EntityLinks extends FilterBase implements ContainerFactoryPluginInterface 
     }
 
     return $result;
+  }
+
+  /**
+   * Gets the generated URL object for a linked entity.
+   *
+   * @param \Drupal\Core\Entity\EntityInterface $entity
+   *   A linked entity.
+   *
+   * @return \Drupal\Core\GeneratedUrl
+   *   The generated URL plus cacheability metadata.
+   */
+  protected static function getUrl(EntityInterface $entity): GeneratedUrl {
+    // The special case: File entities. They are the exception because
+    // they are not served by Drupal, but by the web server.
+    // @see \Drupal\file\FileInterface::createFileUrl()
+    // @see \Drupal\Core\File\FileUrlGeneratorInterface
+    if ($entity instanceof FileInterface) {
+      $url = $entity->createFileUrl(TRUE);
+      // The $url is a string, which provides no cacheability metadata.
+      assert(is_string($url));
+      return (new GeneratedUrl())
+        ->setGeneratedUrl($url)
+        // No path & route processing means permanent cacheability.
+        ->setCacheMaxAge(Cache::PERMANENT);
+    }
+
+    return $entity->toUrl()->toString(TRUE);
   }
 
 }
