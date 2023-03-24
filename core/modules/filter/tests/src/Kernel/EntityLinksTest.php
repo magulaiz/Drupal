@@ -13,6 +13,7 @@ use Drupal\entity_test\Entity\EntityTestMul;
 use Drupal\file\Entity\File;
 use Drupal\file\FileInterface;
 use Drupal\filter\FilterPluginCollection;
+use Drupal\filter\FilterProcessResult;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\Tests\Traits\Core\PathAliasTestTrait;
@@ -94,7 +95,7 @@ class EntityLinksTest extends KernelTestBase {
   }
 
   /**
-   * Tests the entity_links filter for entities with translations.
+   * @covers ::process
    */
   public function test(): void {
     $expected_aliases = [
@@ -110,11 +111,6 @@ class EntityLinksTest extends KernelTestBase {
       LanguageInterface::LANGCODE_NOT_SPECIFIED => '/foo-da',
       LanguageInterface::LANGCODE_SITE_DEFAULT => '/foo-da',
     ];
-    $expected_template = '<a data-entity-type="entity_test_mul" data-entity-uuid="%s" href="%s">Link text</a>';
-    $expected_cacheability = (new CacheableMetadata())
-      ->setCacheTags(['entity_test_mul:1'])
-      ->setCacheContexts([])
-      ->setCacheMaxAge(Cache::PERMANENT);
 
     // Create an entity and add translations to that.
     /** @var \Drupal\entity_test\Entity\EntityTestMul $entity */
@@ -133,47 +129,42 @@ class EntityLinksTest extends KernelTestBase {
       $this->createPathAlias($canonical_url, $alias, $langcode);
     }
 
-    // Test the cases of input without href or with a typical href (only path).
     foreach ($expected_hrefs as $langcode => $expected_alias) {
-      $expected = sprintf($expected_template, $entity->uuid(), $expected_alias);
+      $expected_result = (new FilterProcessResult())
+        ->setProcessedText('<a data-entity-type="entity_test_mul" data-entity-uuid="' . $entity->uuid() . '" href="' . $expected_alias . '">Link text</a>')
+        ->setCacheTags(['entity_test_mul:1'])
+        ->setCacheContexts([])
+        ->setCacheMaxAge(Cache::PERMANENT);
 
       // The expected href is generated.
-      $processed = $this->filter->process(
+      $this->assertFilterProcessResult(
         '<a data-entity-type="entity_test_mul" data-entity-uuid="' . $entity->uuid() . '">Link text</a>',
-        $langcode
+        $langcode,
+        $expected_result
       );
-      $this->assertSame([], $this->logger->records);
-      $this->assertSame($expected, $processed->getProcessedText(), $langcode);
-      $this->assertEquals($expected_cacheability, CacheableMetadata::createFromObject($processed));
-
       // The existing href is overwritten with the expected value.
-      $processed = $this->filter->process(
+      $this->assertFilterProcessResult(
         '<a data-entity-type="entity_test_mul" data-entity-uuid="' . $entity->uuid() . '" href="something">Link text</a>',
-        $langcode
+        $langcode,
+        $expected_result
       );
-      $this->assertSame([], $this->logger->records);
-      $this->assertSame($expected, $processed->getProcessedText());
-      $this->assertEquals($expected_cacheability, CacheableMetadata::createFromObject($processed));
-    }
 
-    // Test the cases of input with a customized href: query string + fragment.
-    foreach ($expected_hrefs as $langcode => $expected_alias) {
-      $expected = sprintf($expected_template, $entity->uuid(), $expected_alias . '?query=string#fragment');
-
-      // The existing href is overwritten with the expected value, but query
-      // string and fragment are retained.
-      $processed = $this->filter->process(
+      // The existing href is overwritten, but its customized query string and
+      // fragment remain unchanged.
+      $this->assertFilterProcessResult(
         '<a data-entity-type="entity_test_mul" data-entity-uuid="' . $entity->uuid() . '" href="something?query=string#fragment">Link text</a>',
         $langcode,
+        (new FilterProcessResult())
+          ->setProcessedText('<a data-entity-type="entity_test_mul" data-entity-uuid="' . $entity->uuid() . '" href="' . $expected_alias . '?query=string#fragment">Link text</a>')
+          ->setCacheTags(['entity_test_mul:1'])
+          ->setCacheContexts([])
+          ->setCacheMaxAge(Cache::PERMANENT)
       );
-      $this->assertSame([], $this->logger->records);
-      $this->assertSame($expected, $processed->getProcessedText());
-      $this->assertEquals($expected_cacheability, CacheableMetadata::createFromObject($processed));
     }
   }
 
   /**
-   * Tests the entity_links filter for file entities.
+   * @covers ::getUrl
    */
   public function testFileEntity(): void {
     $file = File::create([
@@ -185,22 +176,34 @@ class EntityLinksTest extends KernelTestBase {
     ]);
     $file->save();
 
-    $processed = $this->filter->process(
+    $this->assertFilterProcessResult(
       '<a data-entity-type="file" data-entity-uuid="' . $file->uuid() . '" href="something?query=string#fragment">Link text</a>',
       'en',
-    );
-    $this->assertSame([], $this->logger->records);
-    $this->assertSame(
-      sprintf('<a data-entity-type="file" data-entity-uuid="%s" href="%s?query=string#fragment">Link text</a>', $file->uuid(), $file->createFileUrl(TRUE)),
-      $processed->getProcessedText(),
-    );
-    $this->assertEquals(
-      (new CacheableMetadata())
+      (new FilterProcessResult())
+        ->setProcessedText(sprintf('<a data-entity-type="file" data-entity-uuid="%s" href="%s?query=string#fragment">Link text</a>', $file->uuid(), $file->createFileUrl(TRUE)))
         ->setCacheTags(['file:1'])
         ->setCacheContexts([])
-        ->setCacheMaxAge(Cache::PERMANENT),
-      CacheableMetadata::createFromObject($processed)
+        ->setCacheMaxAge(Cache::PERMANENT)
     );
+  }
+
+  /**
+   * Asserts an input string + langcode yield the expected FilterProcessResult.
+   *
+   * @param string $input
+   *   The text string to be filtered.
+   * @param string $langcode
+   *   The language code of the text to be filtered.
+   * @param \Drupal\filter\FilterProcessResult $expected_result
+   *   The expected filtered result.a
+   */
+  private function assertFilterProcessResult(string $input, string $langcode, FilterProcessResult $expected_result): void {
+    $result = $this->filter->process($input, $langcode);
+    // No exceptions should have occurred.
+    $this->assertSame([], $this->logger->records);
+    // Assert both the processed text and the associated cacheability.
+    $this->assertSame($expected_result->getProcessedText(), $result->getProcessedText());
+    $this->assertEquals(CacheableMetadata::createFromObject($expected_result), CacheableMetadata::createFromObject($result));
   }
 
 }
