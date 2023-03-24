@@ -312,6 +312,7 @@ class EntityViewsData implements EntityHandlerInterface, EntityViewsDataInterfac
     // the entity base, revision, data tables.
     $field_definitions = $this->entityFieldManager->getBaseFieldDefinitions($this->entityType->id());
     /** @var \Drupal\Core\Entity\Sql\DefaultTableMapping $table_mapping */
+    $table_mapping = $this->storage->getTableMapping($field_definitions);
     // Fetch all fields that can appear in both the base table and the data
     // table.
     $duplicate_fields = array_intersect_key($entity_keys, array_flip(['id', 'revision', 'bundle']));
