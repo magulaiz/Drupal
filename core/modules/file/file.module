@@ -1373,25 +1373,6 @@ function file_form_system_file_system_settings_alter(array &$form, FormStateInte
     '#description' => t('Transliteration replaces any characters that are not alphanumeric, underscores, periods or hyphens with the replacement character. It ensures filenames only contain ASCII characters. It is recommended to keep transliteration enabled.'),
   ];
 
-  $form['filename_sanitization']['replace_whitespace'] = [
-    '#type' => 'checkbox',
-    '#title' => t('Replace whitespace with the replacement character'),
-    '#default_value' => $config->get('filename_sanitization.replace_whitespace'),
-  ];
-
-  $form['filename_sanitization']['replace_non_alphanumeric'] = [
-    '#type' => 'checkbox',
-    '#title' => t('Replace non-alphanumeric characters with the replacement character'),
-    '#default_value' => $config->get('filename_sanitization.replace_non_alphanumeric'),
-    '#description' => t('Alphanumeric characters, dots <span aria-hidden="true">(.)</span>, underscores <span aria-hidden="true">(_)</span> and dashes <span aria-hidden="true">(-)</span> are preserved.'),
-  ];
-
-  $form['filename_sanitization']['deduplicate_separators'] = [
-    '#type' => 'checkbox',
-    '#title' => t('Replace sequences of dots, underscores and/or dashes with the replacement character'),
-    '#default_value' => $config->get('filename_sanitization.deduplicate_separators'),
-  ];
-
   $form['filename_sanitization']['lowercase'] = [
     '#type' => 'checkbox',
     '#title' => t('Convert to lowercase'),

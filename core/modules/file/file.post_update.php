@@ -35,11 +35,8 @@ function file_post_update_add_permissions_to_roles(?array &$sandbox = NULL): voi
  */
 function file_post_update_add_default_filename_sanitization_configuration() {
   $config = \Drupal::configFactory()->getEditable('file.settings');
-  $config->set('filename_sanitization.transliterate', FALSE);
-  $config->set('filename_sanitization.replace_whitespace', FALSE);
-  $config->set('filename_sanitization.replace_non_alphanumeric', FALSE);
-  $config->set('filename_sanitization.deduplicate_separators', FALSE);
-  $config->set('filename_sanitization.lowercase', FALSE);
   $config->set('filename_sanitization.replacement_character', '-');
+  $config->set('filename_sanitization.transliterate', FALSE);
+  $config->set('filename_sanitization.lowercase', FALSE);
   $config->save();
 }

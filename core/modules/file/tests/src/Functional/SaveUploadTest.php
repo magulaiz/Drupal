@@ -788,9 +788,6 @@ class SaveUploadTest extends FileManagedTestBase {
     // For now, just transliterate, with no other transformations.
     $options = [
       'filename_sanitization[transliterate]' => TRUE,
-      'filename_sanitization[replace_whitespace]' => FALSE,
-      'filename_sanitization[replace_non_alphanumeric]' => FALSE,
-      'filename_sanitization[deduplicate_separators]' => FALSE,
       'filename_sanitization[lowercase]' => FALSE,
       'filename_sanitization[replacement_character]' => '-',
     ];
@@ -820,37 +817,6 @@ class SaveUploadTest extends FileManagedTestBase {
     $this->assertSession()->statusCodeEquals(200);
     // Test that the file name has only been transliterated.
     $this->assertSession()->responseContains('File name is S  Pace--tab#	#---.txt.');
-
-    // Leave transliteration on and enable whitespace replacement.
-    $this->drupalLogin($admin);
-    $options['filename_sanitization[replace_whitespace]'] = TRUE;
-    $this->drupalGet('admin/config/media/file-system');
-    $this->submitForm($options, 'Save configuration');
-    $this->drupalLogin($this->account);
-
-    // Try again with the monster filename.
-    $this->drupalGet('file-test/upload');
-    $this->submitForm($edit, 'Submit');
-    $this->assertSession()->statusCodeEquals(200);
-    // Test that the file name has been transliterated and whitespace replaced.
-    $this->assertSession()->responseContains('File name is S--Pace--tab#-#---.txt.');
-
-    // Leave transliteration and whitespace replacement on, replace non-alpha.
-    $this->drupalLogin($admin);
-    $options['filename_sanitization[replace_non_alphanumeric]'] = TRUE;
-    $options['filename_sanitization[replacement_character]'] = '_';
-    $this->drupalGet('admin/config/media/file-system');
-    $this->submitForm($options, 'Save configuration');
-    $this->drupalLogin($this->account);
-
-    // Try again with the monster filename.
-    $this->drupalGet('file-test/upload');
-    $this->submitForm($edit, 'Submit');
-    $this->assertSession()->statusCodeEquals(200);
-
-    // Test that the file name has been transliterated, whitespace replaced with
-    // '_', and non-alphanumeric characters replaced with '_'.
-    $this->assertSession()->responseContains('File name is S__Pace--tab___--_.txt.');
 
     // Now turn on the setting to remove duplicate separators.
     $this->drupalLogin($admin);
