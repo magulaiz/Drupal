@@ -151,6 +151,23 @@ class UrlTest extends UnitTestCase {
   }
 
   /**
+   * Tests creating a Url from a request with query parameters.
+   */
+  public function testUrlFromRequestWithQueryParameters() {
+    $this->router->expects($this->at(0))
+      ->method('matchRequest')
+      ->with($this->getRequestConstraint('/node'))
+      ->willReturn([
+        RouteObjectInterface::ROUTE_NAME => 'view.frontpage.page_1',
+        '_raw_variables' => new ParameterBag(),
+      ]);
+    $query = ['foo' => 'bar'];
+    $request = Request::create('/node', 'GET', $query);
+    $url = Url::createFromRequest($request);
+    $this->assertEquals($query, $url->getOption('query'));
+  }
+
+  /**
    * This constraint checks whether a Request object has the right path.
    *
    * @param string $path
