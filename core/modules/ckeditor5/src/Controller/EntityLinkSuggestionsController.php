@@ -135,7 +135,7 @@ class EntityLinkSuggestionsController implements ContainerInjectionInterface {
       // If no suggestions were found, add a special suggestion that has the
       // same path as the given string so users can select it and use it anyway.
       // This typically occurs when entering external links.
-      if (empty($suggestions) && !empty($input)) {
+      if (empty($suggestions) && mb_strlen($input) > 0) {
         $suggestions = [
           [
             'description' => $this->t('No content suggestions found. This URL will be used as is.'),
