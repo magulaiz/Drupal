@@ -1414,11 +1414,11 @@ class MediaTest extends WebDriverTestBase {
     $this->assertNotEmpty($assert_session->waitForElementVisible('css', '.ck-widget.drupal-media img'));
     $this->click('.ck-widget.drupal-media');
     $this->assertVisibleBalloon('[aria-label="Drupal Media toolbar"]');
-    // Check that there is no data-view-mode set after embedding media.
+    // Check that the default data-view-mode is set after embedding media.
     $editor_dom = $this->getEditorDataAsDom();
     $drupal_media_element = $editor_dom->getElementsByTagName('drupal-media')
       ->item(0);
-    $this->assertFalse($drupal_media_element->hasAttribute('data-view-mode'));
+    $this->assertEquals('view_mode_1', $drupal_media_element->getAttribute('data-view-mode'));
     $this->click('.ck-widget.drupal-media');
     $this->assertVisibleBalloon('[aria-label="Drupal Media toolbar"]');
     $this->getBalloonButton('View Mode 1')->click();
@@ -1468,9 +1468,9 @@ class MediaTest extends WebDriverTestBase {
     $editor_dom = $this->getEditorDataAsDom();
     $drupal_media_element = $editor_dom->getElementsByTagName('drupal-media')
       ->item(0);
-    // Test that setting the view mode back to the default removes the
+    // Test that setting the view mode back to the default does not remove the
     // `data-view-mode` attribute.
-    $this->assertFalse($drupal_media_element->hasAttribute('data-view-mode'));
+    $this->assertTrue($drupal_media_element->hasAttribute('data-view-mode'));
     $assert_session->elementExists('css', 'article.media--view-mode-view-mode-1');
 
     // Check that the toolbar status matches "no view mode".
