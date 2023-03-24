@@ -121,6 +121,7 @@ class MediaTest extends WebDriverTestBase {
               '22222' => '22222',
             ],
             'allowed_media_types' => [],
+            'default_view_mode_10101' => 'view_mode_1',
           ],
         ],
       ],

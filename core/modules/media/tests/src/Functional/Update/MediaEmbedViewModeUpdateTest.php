@@ -25,10 +25,25 @@ class MediaEmbedViewModeUpdateTest extends UpdatePathTestBase {
   /**
    * {@inheritdoc}
    */
+  protected function setUp(): void {
+    parent::setUp();
+    // Because the test manually installs media module, the entity type config
+    // must be manually installed similar to kernel tests.
+    $entity_type_manager = \Drupal::entityTypeManager();
+    $media = $entity_type_manager->getDefinition('media');
+    \Drupal::service('entity_type.listener')->onEntityTypeCreate($media);
+    $media_type = $entity_type_manager->getDefinition('media_type');
+    \Drupal::service('entity_type.listener')->onEntityTypeCreate($media_type);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   protected function setDatabaseDumpFiles() {
     $this->databaseDumpFiles = [
       __DIR__ . '/../../../../../system/tests/fixtures/update/drupal-9.4.0.bare.standard.php.gz',
       __DIR__ . '/../../../fixtures/update/media.php',
+      __DIR__ . '/../../../fixtures/update/media-image.php',
     ];
   }
 
