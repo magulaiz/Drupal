@@ -425,6 +425,11 @@ EOD;
    * @ingroup sanitization
    */
   public static function escape($text): string {
+    // If the text is a render array, get the markup.
+    if (is_array($text) && isset($text['#markup'])) {
+      $text = $text['#markup'];
+    }
+
     if (is_null($text)) {
       @trigger_error('Passing NULL to ' . __METHOD__ . ' is deprecated in drupal:9.5.0 and will trigger a PHP error from drupal:11.0.0. Pass a string instead. See https://www.drupal.org/node/3318826', E_USER_DEPRECATED);
       return '';
