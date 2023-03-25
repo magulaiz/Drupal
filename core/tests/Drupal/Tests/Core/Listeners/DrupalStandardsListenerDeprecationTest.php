@@ -12,24 +12,15 @@ use Drupal\Tests\UnitTestCase;
  * covering a deprecated class. This way we can know whether the standards
  * listener process ignores deprecation errors.
  *
- * Note that this test is annotated as covering
- * \Drupal\deprecation_test\Deprecation\FixtureDeprecatedClass::testFunction(),
- * but the reason the test exists is to cover
- * \Drupal\Tests\Listeners\DrupalStandardsListener::endTest(). We never
- * actually instantiate
- * \Drupal\deprecation_test\Deprecation\FixtureDeprecatedClass because that
- * would trigger another deprecation error.
+ * Note that this test is not annotated as "@cover"-ing anything, because that
+ * would trigger a deprecation error.
  *
  * @group Listeners
- *
- * @coversDefaultClass \Drupal\deprecation_test\Deprecation\DrupalStandardsListenerDeprecatedClass
  */
 class DrupalStandardsListenerDeprecationTest extends UnitTestCase {
 
   /**
    * Exercise DrupalStandardsListener's coverage validation.
-   *
-   * @covers ::testFunction
    */
   public function testDeprecation() {
     // Meaningless assertion so this test is not risky.

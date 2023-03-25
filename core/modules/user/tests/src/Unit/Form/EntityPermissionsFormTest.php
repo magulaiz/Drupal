@@ -37,8 +37,8 @@ class EntityPermissionsFormTest extends UnitTestCase {
    *   TRUE if there is a permission to be managed by the form.
    *
    * @dataProvider providerTestPermissionsByProvider
-   * @covers ::access()
-   * @covers ::permissionsByProvider()
+   * @covers ::access
+   * @covers ::permissionsByProvider
    */
   public function testPermissionsByProvider(string $dependency_name, bool $found) {
 

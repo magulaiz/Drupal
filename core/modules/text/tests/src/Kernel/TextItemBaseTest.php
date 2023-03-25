@@ -24,7 +24,7 @@ class TextItemBaseTest extends KernelTestBase {
   /**
    * Tests creation of sample values.
    *
-   * @covers ::generateSampleValue
+   * @covers \Drupal\text\Plugin\Field\FieldType\TextItemBase::generateSampleValue
    * @dataProvider providerTextFieldSampleValue
    */
   public function testTextFieldSampleValue($max_length) {
@@ -61,7 +61,7 @@ class TextItemBaseTest extends KernelTestBase {
   }
 
   /**
-   * @covers ::calculateDependencies
+   * @covers \Drupal\field\Entity\FieldConfig::calculateDependencies
    */
   public function testCalculateDependencies() {
     $format = FilterFormat::create([

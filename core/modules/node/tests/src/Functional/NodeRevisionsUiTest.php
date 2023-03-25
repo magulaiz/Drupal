@@ -201,7 +201,9 @@ class NodeRevisionsUiTest extends NodeTestBase {
    * This can be removed after 'entity.node.version_history' local task is
    * removed by https://www.drupal.org/project/drupal/issues/3153559.
    *
-   * @covers node_local_tasks_alter()
+   * @todo change the @see below into a @covers in
+   *   https://www.drupal.org/project/drupal/issues/3326239
+   * @see node_local_tasks_alter
    */
   public function testNodeDuplicateRevisionsTab(): void {
     $this->drupalPlaceBlock('local_tasks_block');

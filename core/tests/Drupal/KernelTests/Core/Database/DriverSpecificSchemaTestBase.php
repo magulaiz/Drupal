@@ -570,10 +570,10 @@ abstract class DriverSpecificSchemaTestBase extends DriverSpecificKernelTestBase
    *
    * @dataProvider providerTestSchemaCreateTablePrimaryKey
    *
-   * @covers ::addField
-   * @covers ::changeField
-   * @covers ::dropField
-   * @covers ::findPrimaryKeyColumns
+   * @covers \Drupal\Core\Database\Schema::addField
+   * @covers \Drupal\Core\Database\Schema::changeField
+   * @covers \Drupal\Core\Database\Schema::dropField
+   * @covers \Drupal\Core\Database\Schema::findPrimaryKeyColumns
    */
   public function testSchemaChangePrimaryKey(array $initial_primary_key, array $renamed_primary_key): void {
     $find_primary_key_columns = new \ReflectionMethod(get_class($this->schema), 'findPrimaryKeyColumns');
@@ -881,7 +881,7 @@ abstract class DriverSpecificSchemaTestBase extends DriverSpecificKernelTestBase
   }
 
   /**
-   * @covers ::findPrimaryKeyColumns
+   * @covers \Drupal\Core\Database\Schema::findPrimaryKeyColumns
    */
   public function testFindPrimaryKeyColumns(): void {
     $method = new \ReflectionMethod(get_class($this->schema), 'findPrimaryKeyColumns');

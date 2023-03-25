@@ -60,10 +60,8 @@ trait DrupalStandardsListenerTrait {
       return;
     }
     // Gather our annotations.
-    $annotations = Test::parseTestMethodAnnotations(
-      static::class,
-      $test->getName()
-    );
+    [$method] = explode(' ', $test->getName());
+    $annotations = Test::parseTestMethodAnnotations(get_class($test), $method);
     // Glean the @coversDefaultClass annotation.
     $default_class = '';
     $valid_default_class = FALSE;
