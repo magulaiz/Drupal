@@ -179,6 +179,18 @@
      * @type {string}
      */
     this.name = 'AjaxError';
+
+    if (!Drupal.AjaxError.messages) {
+      Drupal.AjaxError.messages = new Drupal.Message();
+    }
+    Drupal.AjaxError.messages.add(
+      Drupal.t(
+        "Oops, something went wrong. Check your browser's developer console for more details.",
+      ),
+      {
+        type: 'error',
+      },
+    );
   };
 
   Drupal.AjaxError.prototype = new Error();
@@ -1747,6 +1759,32 @@
           },
         });
       });
+    },
+
+    /**
+     * Command to scroll the page to an html element.
+     *
+     * @param {Drupal.Ajax} [ajax]
+     *   A {@link Drupal.ajax} object.
+     * @param {object} response
+     *   Ajax response.
+     * @param {string} response.selector
+     *   Selector to use.
+     */
+    scrollTop(ajax, response) {
+      const offset = $(response.selector).offset();
+      // We can't guarantee that the scrollable object should be
+      // the body, as the element could be embedded in something
+      // more complex such as a modal popup. Recurse up the DOM
+      // and scroll the first element that has a non-zero top.
+      let scrollTarget = response.selector;
+      while ($(scrollTarget).scrollTop() === 0 && $(scrollTarget).parent()) {
+        scrollTarget = $(scrollTarget).parent();
+      }
+      // Only scroll upward.
+      if (offset.top - 10 < $(scrollTarget).scrollTop()) {
+        $(scrollTarget).animate({ scrollTop: offset.top - 10 }, 500);
+      }
     },
   };
 

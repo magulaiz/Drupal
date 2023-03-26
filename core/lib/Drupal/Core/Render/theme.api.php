@@ -610,7 +610,26 @@ function hook_preprocess_HOOK(&$variables) {
  * must otherwise make sure that the hook implementation is available at
  * any given time.
  *
- * @todo Add @code sample.
+ * Suggestions must begin with the value of HOOK, followed by two underscores to be discoverable.
+ *
+ * In the following example, we provide suggestions to
+ * node templates based bundle, id, and view mode.
+ *
+ * @code
+ * function node_theme_suggestions_node(array $variables) {
+ *   $suggestions = [];
+ *   $node = $variables['elements']['#node'];
+ *   $sanitized_view_mode = strtr($variables['elements']['#view_mode'], '.', '_');
+ *   $suggestions[] = 'node__' . $sanitized_view_mode;
+ *   $suggestions[] = 'node__' . $node->bundle();
+ *   $suggestions[] = 'node__' . $node->bundle() . '__' . $sanitized_view_mode;
+ *   $suggestions[] = 'node__' . $node->id();
+ *   $suggestions[] = 'node__' . $node->id() . '__' . $sanitized_view_mode;
+ *
+ *   return $suggestions;
+ * }
+ *
+ * @endcode
  *
  * @param array $variables
  *   An array of variables passed to the theme hook. Note that this hook is
@@ -644,6 +663,8 @@ function hook_theme_suggestions_HOOK(array $variables) {
  * following order: first, hook_theme_suggestions_alter(); second,
  * hook_theme_suggestions_HOOK_alter(). So, for each module or theme, the more
  * general hooks are called first followed by the more specific.
+ *
+ * New suggestions must begin with the value of HOOK, followed by two underscores to be discoverable.
  *
  * In the following example, we provide an alternative template suggestion to
  * node and taxonomy term templates based on the user being logged in.
@@ -690,11 +711,27 @@ function hook_theme_suggestions_alter(array &$suggestions, array $variables, $ho
  * hook called (in this case 'node__article') is available in
  * $variables['theme_hook_original'].
  *
+ * New suggestions must begin with the value of HOOK, followed by two underscores to be discoverable.
+ * For example, consider the below suggestions from hook_theme_suggestions_node_alter:
+ *   - node__article is valid
+ *   - node__article__custom_template is valid
+ *   - node--article is invalid
+ *   - article__custom_template is invalid
+ *
  * Implementations of this hook must be placed in *.module or *.theme files, or
  * must otherwise make sure that the hook implementation is available at
  * any given time.
  *
- * @todo Add @code sample.
+ * In the following example, we provide an alternative template suggestion to
+ * node templates based on the user being logged in.
+ * @code
+ * function MYMODULE_theme_suggestions_node_alter(array &$suggestions, array $variables) {
+ *   if (\Drupal::currentUser()->isAuthenticated()) {
+ *     $suggestions[] = 'node__logged_in';
+ *   }
+ * }
+ *
+ * @endcode
  *
  * @param array $suggestions
  *   An array of theme suggestions.

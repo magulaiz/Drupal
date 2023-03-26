@@ -149,7 +149,7 @@ class LinkGenerator implements LinkGeneratorInterface {
 
     // Remove all HTML and PHP tags from a tooltip, calling expensive strip_tags()
     // only when a quick strpos() gives suspicion tags are present.
-    if (isset($variables['options']['attributes']['title']) && strpos($variables['options']['attributes']['title'], '<') !== FALSE) {
+    if (isset($variables['options']['attributes']['title']) && str_contains($variables['options']['attributes']['title'], '<')) {
       $variables['options']['attributes']['title'] = strip_tags($variables['options']['attributes']['title']);
     }
 
@@ -191,14 +191,14 @@ class LinkGenerator implements LinkGeneratorInterface {
   /**
    * Generates the link.
    *
-   * @param Drupal\Core\GeneratedLink $generated_link
+   * @param \Drupal\Core\GeneratedLink $generated_link
    *   The generated link, along with its associated cacheability metadata.
    * @param array $attributes
    *   The attributes of the generated link.
    * @param array $variables
    *   The link text, url, and other options.
    *
-   * @return Drupal\Core\GeneratedLink
+   * @return \Drupal\Core\GeneratedLink
    *   The generated link, along with its associated cacheability metadata.
    */
   protected function doGenerate($generated_link, $attributes, $variables) {
