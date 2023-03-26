@@ -9,6 +9,7 @@ parameters:
     gc_divisor: 100
     gc_maxlifetime: 200000
     cookie_lifetime: 2000000
+    cookie_samesite: Lax
     sid_length: 48
     sid_bits_per_character: 6
   twig.config:
@@ -56,6 +57,8 @@ parameters:
     maxAge: false
     supportsCredentials: false
   tempstore.expire: 604800
+  queue.config:
+    suspendMaximumWait: 30.0
 services:
   # Simple cache contexts, directly derived from the request context.
   cache_context.ip:
@@ -390,7 +393,7 @@ services:
     arguments: [ '@service_container' ]
   cron:
     class: Drupal\Core\Cron
-    arguments: ['@module_handler', '@lock', '@queue', '@state', '@account_switcher', '@logger.channel.cron', '@plugin.manager.queue_worker', '@datetime.time']
+    arguments: ['@module_handler', '@lock', '@queue', '@state', '@account_switcher', '@logger.channel.cron', '@plugin.manager.queue_worker', '@datetime.time', '%queue.config%']
     lazy: true
   Drupal\Core\CronInterface: '@cron'
   diff.formatter:
@@ -412,6 +415,9 @@ services:
     tags:
       - { name: event_subscriber }
   Drupal\Core\Database\ReplicaKillSwitch: '@database.replica_kill_switch'
+  Drupal\Core\Database\EventSubscriber\StatementExecutionSubscriber:
+    tags:
+      - { name: event_subscriber }
   datetime.time:
     class: Drupal\Component\Datetime\Time
     arguments: ['@request_stack']
@@ -1018,7 +1024,6 @@ services:
     class: \Drupal\Core\Routing\Router
     arguments: ['@router.route_provider', '@path.current', '@url_generator']
     tags:
-      # @todo Try to combine those tags together, see https://www.drupal.org/node/2915772.
       - { name: service_collector, tag: non_lazy_route_enhancer, call: addDeprecatedRouteEnhancer }
       - { name: service_collector, tag: route_enhancer, call: addRouteEnhancer  }
       - { name: service_collector, tag: non_lazy_route_filter, call: addDeprecatedRouteFilter }

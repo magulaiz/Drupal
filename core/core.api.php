@@ -789,11 +789,6 @@
  * be passed in; see the section at https://www.drupal.org/node/2133171 for more
  * detailed information.
  *
- * Services using factories can be defined as shown in the above example, if the
- * factory is itself a service. The factory can also be a class; details of how
- * to use service factories can be found in the section at
- * https://www.drupal.org/node/2133171.
- *
  * @section sec_container Accessing a service through the container
  * As noted above, if you need to use a service in your code, you should always
  * instantiate the service class via a call to the container, using the machine
@@ -2444,6 +2439,28 @@ function hook_validation_constraint_alter(array &$definitions) {
  *   autocomplete, as a \Symfony\Component\HttpFoundation\JsonResponse object.
  *   See the @link menu Routing topic @endlink for more information about
  *   routing.
+ *
+ * @section sec_query Query parameters in Ajax requests
+ * If a form uses an Ajax field, all the query parameters in the current request
+ * will be also added to the Ajax POST requests along with an additional
+ * 'ajax_form=1' parameter (See \Drupal\Core\Render\Element\RenderElement).
+ * @code
+ * $settings['options']['query'] += \Drupal::request()->query->all();
+ * $settings['options']['query'][FormBuilderInterface::AJAX_FORM_REQUEST] = TRUE;
+ * @endcode
+ *
+ * Form elements of type 'managed_file' will have an additional
+ * 'element_parents' query parameter in Ajax POST requests. This parameter will
+ * include the name of the element and its parents as per the render array.
+ * This helps to identify the position of the element in the form (See
+ * \Drupal\file\Element\ManagedFile).
+ * @code
+ * 'options' => [
+ *   'query' => [
+ *     'element_parents' => implode('/', $element['#array_parents']),
+ *   ],
+ * ],
+ * @endcode
  */
 
 /**

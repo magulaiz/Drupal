@@ -7,7 +7,7 @@ use Drupal\Core\Database\Connection as DatabaseConnection;
 use Drupal\Core\Database\DatabaseAccessDeniedException;
 use Drupal\Core\Database\DatabaseNotFoundException;
 use Drupal\Core\Database\StatementInterface;
-use Drupal\Core\Database\StatementWrapper;
+use Drupal\Core\Database\StatementWrapperIterator;
 use Drupal\Core\Database\SupportsTemporaryTablesInterface;
 
 // cSpell:ignore ilike nextval
@@ -43,7 +43,7 @@ class Connection extends DatabaseConnection implements SupportsTemporaryTablesIn
   /**
    * {@inheritdoc}
    */
-  protected $statementWrapperClass = StatementWrapper::class;
+  protected $statementWrapperClass = StatementWrapperIterator::class;
 
   /**
    * A map of condition operators to PostgreSQL operators.
@@ -132,10 +132,10 @@ class Connection extends DatabaseConnection implements SupportsTemporaryTablesIn
     }
     catch (\PDOException $e) {
       if (static::getSQLState($e) == static::CONNECTION_FAILURE) {
-        if (strpos($e->getMessage(), 'password authentication failed for user') !== FALSE) {
+        if (str_contains($e->getMessage(), 'password authentication failed for user')) {
           throw new DatabaseAccessDeniedException($e->getMessage(), $e->getCode(), $e);
         }
-        elseif (strpos($e->getMessage(), 'database') !== FALSE && strpos($e->getMessage(), 'does not exist') !== FALSE) {
+        elseif (str_contains($e->getMessage(), 'database') && str_contains($e->getMessage(), 'does not exist')) {
           throw new DatabaseNotFoundException($e->getMessage(), $e->getCode(), $e);
         }
       }
