@@ -168,11 +168,14 @@ class AnnounceFetcher {
     }
 
     // Put all the sticky announcements before the rest.
-    $prioritized = [[], []];
-    foreach ($announcements as $announcement) {
-      $prioritized[$announcement['_drupalorg']['featured'] ? 0 : 1][] = $announcement;
-    }
-    $announcements = array_merge($prioritized[0], $prioritized[1]);
+    uasort($announcements, function($a, $b) {
+      $a_value = (int) $a['_drupalorg']['featured'];
+      $b_value = (int) $b['_drupalorg']['featured'];
+      if ($a_value == $b_value) {
+        return 0;
+      }
+      return ($a_value < $b_value) ? -1 : 1;
+    });
 
     return array_slice($announcements, 0, $this->config->get('limit'));
   }
