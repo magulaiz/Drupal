@@ -18,13 +18,6 @@ class AnnounceFetcher {
   use StringTranslationTrait;
 
   /**
-   * The Http Client.
-   *
-   * @var \GuzzleHttp\Client
-   */
-  protected $httpClient;
-
-  /**
    * The ConfigFactory service.
    *
    * @var \Drupal\Core\Config\ConfigFactoryInterface
@@ -37,13 +30,6 @@ class AnnounceFetcher {
    * @var \Drupal\Core\KeyValueStore\KeyValueExpirableFactory
    */
   protected $tempStore;
-
-  /**
-   * The logger service.
-   *
-   * @var \Psr\Log\LoggerInterface
-   */
-  protected $logger;
 
   /**
    * URL for the announcement.
@@ -66,11 +52,15 @@ class AnnounceFetcher {
    * @param string $feed_url
    *   The feed url path.
    */
-  public function __construct(ClientInterface $http_client, ConfigFactoryInterface $config, KeyValueExpirableFactory $temp_store, LoggerInterface $logger, string $feed_url) {
-    $this->httpClient = $http_client;
+  public function __construct(
+    protected ClientInterface $http_client,
+    ConfigFactoryInterface $config,
+    KeyValueExpirableFactory $temp_store,
+    protected LoggerInterface $logger,
+    string $feed_url
+  ) {
     $this->config = $config->get('announcements_feed.settings');
     $this->tempStore = $temp_store->get('announcements_feed');
-    $this->logger = $logger;
     $this->feedUrl = $feed_url;
   }
 
