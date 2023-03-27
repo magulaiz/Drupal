@@ -127,6 +127,9 @@ class AnnounceFetcher {
    *   - _extra.featured: 1 if featured, 0 if not featured.
    *   - _extra.version: Target version of Drupal, as a Composer version.
    *
+   * @param bool $force
+   *   (optional) Whether to always fetch new items or not. Defaults to FALSE.
+   *
    * @return array
    *   An array of announcements from the feed relevant to the Drupal version.
    *   The array is empty if there were no matching announcements. If an error
@@ -134,9 +137,9 @@ class AnnounceFetcher {
    *
    * @throws \Exception
    */
-  public function fetch(): array {
+  public function fetch(bool $force = FALSE): array {
     $announcements = $this->tempStore->get('announcements');
-    if ($announcements === NULL) {
+    if ($force || $announcements === NULL) {
       try {
         $feed_content = (string) $this->httpClient->get($this->feedUrl)->getBody();
       }
