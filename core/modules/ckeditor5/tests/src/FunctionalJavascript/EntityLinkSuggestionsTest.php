@@ -50,7 +50,7 @@ class EntityLinkSuggestionsTest extends WebDriverTestBase {
         'filter_html' => [
           'status' => TRUE,
           'settings' => [
-            'allowed_html' => '<p> <br> <a href data-entity-type data-entity-uuid>',
+            'allowed_html' => '<p> <br> <a href data-entity-type data-entity-uuid> <img src alt width height>',
           ],
         ],
         'entity_links' => [
@@ -65,8 +65,16 @@ class EntityLinkSuggestionsTest extends WebDriverTestBase {
         'toolbar' => [
           'items' => [
             'link',
+            // TRICKY: Work-around until the CKEditor team offers a better solution: force the ContextualBalloon to get instantiated early thanks to DrupalImage not yet being optimized like https://github.com/ckeditor/ckeditor5/commit/c276c45a934e4ad7c2a8ccd0bd9a01f6442d4cd3#diff-1753317a1a0b947ca8b66581b533616a5309f6d4236a527b9d21ba03e13a78d8.
+            'drupalInsertImage',
           ],
         ],
+        'plugins' => [
+          'ckeditor5_imageResize' => ['allow_resize' => TRUE],
+        ],
+      ],
+      'image_upload' => [
+        'status' => FALSE,
       ],
     ])->save();
     $this->assertSame([], array_map(
