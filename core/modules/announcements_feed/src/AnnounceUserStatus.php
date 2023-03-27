@@ -21,11 +21,14 @@ class AnnounceUserStatus {
    *   Store announcements for the user.
    * @param \Drupal\Core\Session\AccountProxy $currentUser
    *   Current user object.
+   * @param \Drupal\Core\Cache\CacheTagsInvalidator $cacheTagsInvalidator
+   *   Cache invalidator service.
    */
   public function __construct(
     protected AnnounceFetcher $fetcher,
     protected UserData $userData,
-    protected AccountProxy $currentUser
+    protected AccountProxy $currentUser,
+    protected CacheTagsInvalidator $cacheTagsInvalidator
   ) {
   }
 
@@ -46,7 +49,7 @@ class AnnounceUserStatus {
     $new_announcement_ids = array_diff($announcement_ids, $old_announcement_ids);
     // Invalidate cache if there are new announcements for the user.
     if (!empty($new_announcement_ids)) {
-      Cache::invalidateTags(['announcements_feed:feed:' . $this->currentUser->id()]);
+      $this->cacheTagsInvalidator->invalidateTags(['announcements_feed:feed:' . $this->currentUser->id()]);
     }
     return $new_announcement_ids;
   }
