@@ -16,6 +16,8 @@ class DrupalEntityLinkSuggestions extends Plugin {
   init() {
     this._state = {};
     const editor = this.editor;
+    // TRICKY: Work-around until the CKEditor team offers a better solution: force the ContextualBalloon to get instantiated early thanks to DrupalImage not yet being optimized like https://github.com/ckeditor/ckeditor5/commit/c276c45a934e4ad7c2a8ccd0bd9a01f6442d4cd3#diff-1753317a1a0b947ca8b66581b533616a5309f6d4236a527b9d21ba03e13a78d8.
+    editor.plugins.get('LinkUI')._createViews();
     this._enableLinkAutocomplete();
     this._handleExtraFormFieldSubmit();
     this._handleDataLoadingIntoExtraFormField();
@@ -40,8 +42,8 @@ class DrupalEntityLinkSuggestions extends Plugin {
 
     editor.plugins
       .get('ContextualBalloon')
-      ._rotatorView.content.on('add', (evt, view) => {
-        if (view !== linkFormView || wasAutocompleteAdded) {
+      .on('set:visibleView', (evt, propertyName, newValue, oldValue) => {
+        if (newValue !== linkFormView || wasAutocompleteAdded) {
           return;
         }
 
