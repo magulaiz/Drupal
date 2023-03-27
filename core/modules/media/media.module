@@ -196,8 +196,8 @@ function media_form_field_ui_field_storage_add_form_alter(&$form, FormStateInter
   // File, or Image reference field.
   $description_text = t('Use <em>Media</em> reference fields for most files, images, audio, videos, and remote media. Use <em>File</em> or <em>Image</em> reference fields when creating your own media types, or for legacy files and images created before enabling the Media module.');
   if (\Drupal::moduleHandler()->moduleExists('help')) {
-    $description_text .= ' ' . t('For more information, see the <a href="@help_url">Media help page</a>.', [
-      '@help_url' => Url::fromRoute('help.page', ['name' => 'media'])->toString(),
+    $description_text .= ' ' . t('For more information, see the <a href=":help_url">Media help page</a>.', [
+      ':help_url' => Url::fromRoute('help.page', ['name' => 'media'])->toString(),
     ]);
   }
   $form['add']['description_wrapper'] = [

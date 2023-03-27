@@ -217,7 +217,7 @@ class SiteConfigureForm extends ConfigFormBase {
     $form['update_notifications'] = [
       '#type' => 'fieldgroup',
       '#title' => $this->t('Update notifications'),
-      '#description' => $this->t('When checking for updates, anonymous information about your site is sent to <a href="@drupal">Drupal.org</a>.', ['@drupal' => 'https://drupal.org']),
+      '#description' => $this->t('When checking for updates, anonymous information about your site is sent to <a href=":drupal">Drupal.org</a>.', [':drupal' => 'https://drupal.org']),
       '#access' => empty($install_state['config_install_path']),
     ];
     $form['update_notifications']['enable_update_status_module'] = [
