@@ -72,7 +72,7 @@ class AnnounceUserStatus {
     $new_announcements = $this->getNewAnnouncements();
     foreach ($announcements as &$announcement) {
       // Add an attribute 'new' to the announcements to identify new items.
-      $announcement['new'] = in_array($announcement['id'], $new_announcements)
+      $announcement['new'] = in_array($announcement['id'], $new_announcements, TRUE)
         ? $announcement['id'] : '';
     }
     if (!empty($new_announcements)) {
