@@ -35,9 +35,8 @@ function announcements_feed_toolbar() {
     $current_user_id = \Drupal::currentUser()->id();
     $items['announcement'] = [
       '#cache' => [
-        'contexts' => [
-          'user',
-        ],
+        // Vary cache for anonymous and authenticated users.
+        'contexts' => ['user.roles:anonymous'],
         'tags' => [
           'announcements_feed:feed:' . $current_user_id,
         ],
