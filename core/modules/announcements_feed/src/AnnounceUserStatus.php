@@ -2,8 +2,7 @@
 
 namespace Drupal\announcements_feed;
 
-use Drupal\Core\Cache\Cache;
-use Drupal\Core\Session\AccountInterface;
+use Drupal\Core\Cache\CacheTagsInvalidator;
 use Drupal\Core\Session\AccountProxy;
 use Drupal\user\UserData;
 
