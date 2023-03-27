@@ -446,6 +446,8 @@ class StringDatabaseStorage implements StringStorageInterface {
       $query = $query->extend(PagerSelectExtender::class)->limit($options['pager limit']);
     }
 
+    $query->orderBy('source');
+
     return $query;
   }
 
