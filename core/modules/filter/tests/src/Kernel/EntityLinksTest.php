@@ -16,6 +16,8 @@ use Drupal\filter\FilterPluginCollection;
 use Drupal\filter\FilterProcessResult;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\language\Entity\ConfigurableLanguage;
+use Drupal\media\Entity\Media;
+use Drupal\media\Entity\MediaType;
 use Drupal\Tests\Traits\Core\PathAliasTestTrait;
 
 /**
@@ -52,6 +54,12 @@ class EntityLinksTest extends KernelTestBase {
     'language',
     'file',
     'user',
+    // @see ::testMediaEntity
+    'system',
+    'field',
+    'image',
+    'media',
+    'media_test_source',
   ];
 
   /**
@@ -60,10 +68,23 @@ class EntityLinksTest extends KernelTestBase {
   protected function setUp(): void {
     parent::setUp();
 
+    // @see ::test
     $this->installEntitySchema('entity_test');
     $this->installEntitySchema('entity_test_mul');
-    $this->installEntitySchema('file');
     $this->installEntitySchema('path_alias');
+
+    // @see ::testFileEntity
+    // @see ::testMediaEntity
+    $this->installEntitySchema('file');
+
+    // @see ::testMediaEntity
+    $this->installEntitySchema('media');
+    $this->installEntitySchema('media_type');
+    $this->installEntitySchema('field_storage_config');
+    $this->installEntitySchema('field_config');
+    $this->installEntitySchema('user');
+    $this->installSchema('file', ['file_usage']);
+    $this->installConfig(['media']);
 
     // Add Swedish, Danish and Finnish.
     ConfigurableLanguage::createFromLangcode('sv')->save();
@@ -181,6 +202,75 @@ class EntityLinksTest extends KernelTestBase {
       (new FilterProcessResult())
         ->setProcessedText(sprintf('<a data-entity-type="file" data-entity-uuid="%s" href="%s?query=string#fragment">Link text</a>', $file->uuid(), $file->createFileUrl(TRUE)))
         ->setCacheTags(['file:1'])
+        ->setCacheContexts([])
+        ->setCacheMaxAge(Cache::PERMANENT)
+    );
+  }
+
+  /**
+   * @covers ::getUrl
+   * @testWith [true,  "file", {"target_id": 1}, "/<SITE_DIRECTORY>/files/druplicon.txt", ["file:1", "media:1"]]
+   *           [false, "file", {"target_id": 1}, "/<SITE_DIRECTORY>/files/druplicon.txt", ["file:1", "media:1"]]
+   *           [true,  "test", {"value": "foobar"}, "/media/1", ["media:1"]]
+   *           [false, "test", {"value": "foobar"}, "", ["media:1"]]
+   *
+   * @see \Drupal\media\Plugin\media\Source\File
+   * @see \Drupal\file\FileInterface::getFileUri()
+   *
+   * @param bool $standalone_url_setting
+   *   Whether the standalone_url setting is off (Drupal's default) or on.
+   * @param string $media_source
+   *   Which media source to use.
+   * @param array $media_entity_values
+   *   Which values to assign to the media entity.
+   * @param string $expected_url
+   *   The expected URL.
+   * @param string[] $expected_cache_tags
+   *   The expected cache tags.
+   */
+  public function testMediaEntity(bool $standalone_url_setting, string $media_source, array $media_entity_values, string $expected_url, array $expected_cache_tags): void {
+    \Drupal::configFactory()
+      ->getEditable('media.settings')
+      ->set('standalone_url', $standalone_url_setting)
+      ->save();
+    // Create media type using the given source plugin.
+    $media_type = MediaType::create([
+      'label' => 'test',
+      'id' => 'test',
+      'description' => 'Test type.',
+      'source' => $media_source,
+    ]);
+    $media_type->save();
+    $source_field = $media_type->getSource()->createSourceField($media_type);
+    $source_field->getFieldStorageDefinition()->save();
+    $source_field->save();
+    $media_type->set('source_configuration', [
+      'source_field' => $source_field->getName(),
+    ])->save();
+    // @see \Drupal\media\Plugin\media\Source\File
+    if ($media_source === 'file') {
+      $file = File::create([
+        'uid' => 1,
+        'filename' => 'druplicon.txt',
+        'uri' => 'public://druplicon.txt',
+        'filemime' => 'text/plain',
+        'status' => FileInterface::STATUS_PERMANENT,
+      ]);
+      $file->save();
+    }
+    $media = Media::create([
+      'bundle' => 'test',
+      $source_field->getName() => $media_entity_values,
+    ]);
+    $media->save();
+
+    $expected_url = str_replace('<SITE_DIRECTORY>', $this->siteDirectory, $expected_url);
+    $this->assertFilterProcessResult(
+      '<a data-entity-type="media" data-entity-uuid="' . $media->uuid() . '" href="something?query=string#fragment">Link text</a>',
+      'en',
+      (new FilterProcessResult())
+        ->setProcessedText(sprintf('<a data-entity-type="media" data-entity-uuid="%s" href="%s?query=string#fragment">Link text</a>', $media->uuid(), $expected_url))
+        ->setCacheTags($expected_cache_tags)
         ->setCacheContexts([])
         ->setCacheMaxAge(Cache::PERMANENT)
     );
