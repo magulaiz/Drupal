@@ -14,6 +14,7 @@ use Drupal\Core\TypedData\TranslatableInterface;
 use Drupal\file\FileInterface;
 use Drupal\filter\FilterProcessResult;
 use Drupal\filter\Plugin\FilterBase;
+use Drupal\media\MediaInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -132,7 +133,7 @@ class EntityLinks extends FilterBase implements ContainerFactoryPluginInterface 
    *   The generated URL plus cacheability metadata.
    */
   protected static function getUrl(EntityInterface $entity): GeneratedUrl {
-    // The special case: File entities. They are the exception because
+    // The first special case: File entities. They are the exception because
     // they are not served by Drupal, but by the web server.
     // @see \Drupal\file\FileInterface::createFileUrl()
     // @see \Drupal\Core\File\FileUrlGeneratorInterface
@@ -144,6 +145,43 @@ class EntityLinks extends FilterBase implements ContainerFactoryPluginInterface 
         ->setGeneratedUrl($url)
         // No path & route processing means permanent cacheability.
         ->setCacheMaxAge(Cache::PERMANENT);
+    }
+
+    // The second special case: Media entities. They are the exception because
+    // by default they do not have their own stand-alone URL, which means only
+    // a subset of Media entities is actually linkable.
+    // @see https://www.drupal.org/i/3017935
+    if ($entity instanceof MediaInterface) {
+      // Media entities using the "file" media source plugin.
+      // @see \Drupal\media\Plugin\media\Source\File
+      $source_field = $entity->getSource()->getSourceFieldDefinition($entity->get('bundle')->entity);
+      if ($source_field && $entity->hasField($source_field->getName()) && $entity->get($source_field->getName())->entity instanceof FileInterface) {
+        $file = $entity->get($source_field->getName())->entity;
+        // Similar to the File entities special case, but subtly different.
+        $url = $file->createFileUrl(TRUE);
+        assert(is_string($url));
+        return (new GeneratedUrl())
+          ->setGeneratedUrl($url)
+          ->setCacheMaxAge(Cache::PERMANENT)
+          // The subtle but crucial difference compared to File entity.
+          ->addCacheableDependency($file);
+      }
+      else {
+        // Media entities using a media source plugin other than "file" are only
+        // linkable if and only if standalone URLs are enabled: linking to their
+        // edit forms is meaningless.
+        // @see media_entity_type_alter()
+        // @see \Drupal\media\Routing\MediaRouteProvider::getCanonicalRoute
+        if ($entity->getEntityType()->getLinkTemplate('canonical') == $entity->getEntityType()->getLinkTemplate('edit-form')) {
+          // @todo Ensure that in the entity selection plugin logic only file
+          // media entities are returned unless standalone URLs are enabled, to
+          // avoid meaningless links like this one.
+          return (new GeneratedUrl())
+            ->setGeneratedUrl('')
+            // No path & route processing means permanent cacheability.
+            ->setCacheMaxAge(Cache::PERMANENT);
+        }
+      }
     }
 
     return $entity->toUrl()->toString(TRUE);
