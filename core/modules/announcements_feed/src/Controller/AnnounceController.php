@@ -92,7 +92,8 @@ class AnnounceController extends ControllerBase implements ContainerInjectionInt
       '#count' => count($announcements),
       '#cache' => [
         'contexts' => [
-          'user',
+          'user.roles:anonymous',
+          'url.query_args:_wrapper_format',
         ],
         'tags' => [
           'announcements_feed:feed:' . $this->currentUser->id(),
@@ -105,7 +106,6 @@ class AnnounceController extends ControllerBase implements ContainerInjectionInt
       ],
     ];
     if ($request->query->get('_wrapper_format') != 'drupal_dialog.off_canvas') {
-      // @todo is this correct? even before the fix I think it should have been announcements-admin?
       $build['#theme'] = 'announcements_feed_admin';
       $build['#attached'] = [];
     }
