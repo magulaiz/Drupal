@@ -17,6 +17,7 @@ class DrupalEntityLinkSuggestions extends Plugin {
     this._state = {};
     const editor = this.editor;
     this._enableLinkAutocomplete();
+    this._handleExtraFormFieldSubmit();
     this._handleDataLoadingIntoExtraFormField();
   }
 
@@ -28,27 +29,21 @@ class DrupalEntityLinkSuggestions extends Plugin {
     const hostEntityLangcode = editor.sourceElement.getAttribute(
       'data-ckeditor5-host-entity-langcode',
     );
+    const linkFormView = editor.plugins.get('LinkUI').formView;
     let wasAutocompleteAdded = false;
 
-    editor.plugins.get('ContextualBalloon')._rotatorView.content.on(
-      'add',
-      (evt, view) => {
-        // The linkFormView is lazily instantiated. Modify it when it is created. It's reused for the lifetime of the editor.
-        // @todo Once LinkUI makes _isFormInPanel public (or an alternative), use that instead of checking this class
-        const isLinkFormView =
-          view.template.attributes.class.includes('ck-link-form');
-        if (!isLinkFormView || wasAutocompleteAdded) {
+    linkFormView.extendTemplate({
+      attributes: {
+        class: ['ck-vertical-form', 'ck-link-form_layout-vertical'],
+      },
+    });
+
+    editor.plugins
+      .get('ContextualBalloon')
+      ._rotatorView.content.on('add', (evt, view) => {
+        if (view !== linkFormView || wasAutocompleteAdded) {
           return;
         }
-
-        // This is the earliest known time for the LinkFormView to exist: extends its template + submit event listener.
-        const linkFormView = view;
-        linkFormView.extendTemplate({
-          attributes: {
-            class: ['ck-vertical-form', 'ck-link-form_layout-vertical'],
-          },
-        });
-        this._handleExtraFormFieldSubmit();
 
         /**
          * Used to know if a selection was made from the autocomplete results.
@@ -95,9 +90,7 @@ class DrupalEntityLinkSuggestions extends Plugin {
         });
 
         wasAutocompleteAdded = true;
-      },
-      { priority: 'highest' },
-    );
+      });
   }
 
   _handleExtraFormFieldSubmit() {
