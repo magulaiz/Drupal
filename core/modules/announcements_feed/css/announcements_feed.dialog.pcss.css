@@ -11,7 +11,7 @@
 
   & .announcements ul {
     margin: 0;
-    padding-left: 0;
+    padding-inline-start: 0;
     list-style: none;
   }
 
@@ -23,11 +23,11 @@
     position: relative;
     margin-inline: calc(-1 * var(--off-canvas-padding));
     padding: 0 var(--off-canvas-padding) var(--off-canvas-padding);
-    border-bottom: 1px solid var(--off-canvas-border-color);
+    border-block-end: 1px solid var(--off-canvas-border-color);
   }
 
   & .announcement--standard {
-    padding-top: var(--off-canvas-padding);
+    padding-block-start: var(--off-canvas-padding);
   }
 
   & .announcement__title {

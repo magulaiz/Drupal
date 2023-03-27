@@ -4,10 +4,10 @@
 }
 
 .announcement:not(.announcement:last-child) {
-  margin-bottom: 16px;
+  margin-block-end: 1rem;
 }
 
 .announcement .announcement__new {
-  padding-inline-start: 10px;
+  padding-inline-start: 0.625rem;
   font-style: italic;
 }

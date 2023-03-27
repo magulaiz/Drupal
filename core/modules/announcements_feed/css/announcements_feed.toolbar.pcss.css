@@ -18,19 +18,19 @@
 /* Red dot that appears when there's a new message. */
 .announce-new:after {
   position: absolute;
-  inset-block-start: 10px;
-  inset-inline-start: 18px;
+  inset-block-start: 0.625rem;
+  inset-inline-start: 1.125rem;
   display: block;
-  width: 4px;
-  height: 4px;
+  width: 0.25rem;
+  height: 0.25rem;
   content: "";
   border: 3px solid #d72222;
-  border-radius: 20px;
+  border-radius: 1.25rem;
   background: #fff;
 
-  @media all and (max-width: 560px) {
-    inset-block-start: 9px;
-    inset-inline-start: 25px;
+  @media all and (max-width: 35rem) {
+    inset-block-start: 0.5625rem;
+    inset-inline-start: 1.5625rem;
   }
 }
 
