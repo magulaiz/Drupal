@@ -61,7 +61,6 @@ class AccessAnnouncementTest extends OffCanvasTestBase {
     $this->assertSession()->elementExists('css', '.announcement__new');
     $title_count = count($this->getSession()->getPage()->findAll('css', '.announcement__title'));
     $this->assertSession()->elementsCount('css', '.announcement__new', $title_count);
-    $this->drupalLogout();
   }
 
   /**

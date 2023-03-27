@@ -14,20 +14,12 @@ use Psr\Http\Message\ResponseInterface;
 class AnnounceTestHttpClient implements ClientInterface {
 
   /**
-   * The decorated http_client service.
-   *
-   * @var \GuzzleHttp\Client
-   */
-  protected $innerClient;
-
-  /**
    * Constructs an AdvisoriesTestHttpClient object.
    *
-   * @param \GuzzleHttp\Client $client
+   * @param \GuzzleHttp\Client $innerClient
    *   The decorated http_client service.
    */
-  public function __construct(Client $client) {
-    $this->innerClient = $client;
+  public function __construct(protected Client $innerClient) {
   }
 
   /**

@@ -31,8 +31,7 @@ class AnnounceTestController {
       // Return an empty response.
       return new Response('', 404, $headers);
     }
-    $contents = file_get_contents($file);
-    return new JsonResponse($contents, 200, $headers, TRUE);
+    return new JsonResponse(file_get_contents($file), 200, $headers, TRUE);
   }
 
 }
