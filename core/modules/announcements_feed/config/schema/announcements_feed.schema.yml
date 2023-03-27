@@ -8,3 +8,6 @@ announcements_feed.settings:
     cron_interval:
       type: integer
       label: 'Cron interval for fetching announcements in seconds.'
+    limit:
+      type: integer
+      label: 'Number of announcements that will be displayed.'

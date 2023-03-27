@@ -174,7 +174,7 @@ class AnnounceFetcher {
     }
     $announcements = array_merge($prioritized[0], $prioritized[1]);
 
-    return array_slice($announcements, 0, 10);
+    return array_slice($announcements, 0, $this->config->get('limit'));
   }
 
 }
