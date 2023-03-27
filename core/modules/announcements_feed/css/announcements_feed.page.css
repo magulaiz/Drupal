@@ -18,3 +18,7 @@
   padding-inline-start: 0.625rem;
   font-style: italic;
 }
+
+.announcement.announcement--featured:last-child {
+  border: 1px solid #aaa;
+}

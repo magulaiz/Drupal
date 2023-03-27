@@ -26,42 +26,4 @@
  * @ingroup themeable
  */
 #}
-{% if count %}
-  <nav class="announcements">
-    <ul>
-      {% if featured|length %}
-        {% for announcement in featured %}
-          <li class="announcement announcement--featured" data-drupal-featured>
-            <div class="announcement__title">
-              <h4>{{ announcement.title }}</h4>
-            </div>
-            <div class="announcement__teaser">
-              {{ announcement.teaser }}
-            </div>
-            {% if announcement.new %}
-              <span class="announcement__new">{{ 'New'|t }}</span>
-            {% endif %}
-            <div class="announcement__link">
-              {% if announcement.link %}
-                <a href="{{ announcement.link }}">{{ 'Learn More'|t }}</a>
-              {% endif %}
-            </div>
-          </li>
-        {% endfor %}
-      {% endif %}
-      {% for announcement in standard %}
-        <li class="announcement announcement--standard">
-          <div class="announcement__title">
-            <a href="{{ announcement.link }}">{{ announcement.title }}</a>
-            {% if announcement.new %}
-              <span class="announcement__new">{{ 'New'|t }}</span>
-            {% endif %}
-            <div class="announcement__date">{{ announcement.timestamp | format_date('short') }}</div>
-          </div>
-        </li>
-      {% endfor %}
-    </ul>
-  </nav>
-{% else %}
-  <div class="announcements announcements--empty"><p> {{ 'No announcements available'|t }}</p></div>
-{% endif %}
+{% include '@announcements_feed/announcements.html.twig' %}
