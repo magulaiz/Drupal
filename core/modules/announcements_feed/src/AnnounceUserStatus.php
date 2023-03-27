@@ -13,34 +13,20 @@ use Drupal\user\UserData;
 class AnnounceUserStatus {
 
   /**
-   * The UserData service.
-   */
-  protected UserData $userData;
-
-  /**
-   * Current user.
-   */
-  protected AccountInterface $currentUser;
-
-  /**
-   * AnnounceFetcher service.
-   */
-  protected AnnounceFetcher $fetcher;
-
-  /**
    * Construct an AnnounceUserStatus object.
    *
    * @param \Drupal\announcements_feed\AnnounceFetcher $fetcher
    *   Fetch the announcements from the external feed.
-   * @param \Drupal\user\UserData $user_data
+   * @param \Drupal\user\UserData $userData
    *   Store announcements for the user.
-   * @param \Drupal\Core\Session\AccountProxy $current_user
+   * @param \Drupal\Core\Session\AccountProxy $currentUser
    *   Current user object.
    */
-  public function __construct(AnnounceFetcher $fetcher, UserData $user_data, AccountProxy $current_user) {
-    $this->fetcher = $fetcher;
-    $this->userData = $user_data;
-    $this->currentUser = $current_user;
+  public function __construct(
+    protected AnnounceFetcher $fetcher,
+    protected UserData $userData,
+    protected AccountProxy $currentUser
+  ) {
   }
 
   /**

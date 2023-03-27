@@ -41,7 +41,7 @@ class AnnounceFetcher {
   /**
    * Construct an AnnounceFetcher service.
    *
-   * @param \GuzzleHttp\ClientInterface $http_client
+   * @param \GuzzleHttp\ClientInterface $httpClient
    *   The http client.
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config
    *   The config factory service.
@@ -53,7 +53,7 @@ class AnnounceFetcher {
    *   The feed url path.
    */
   public function __construct(
-    protected ClientInterface $http_client,
+    protected ClientInterface $httpClient,
     ConfigFactoryInterface $config,
     KeyValueExpirableFactory $temp_store,
     protected LoggerInterface $logger,
