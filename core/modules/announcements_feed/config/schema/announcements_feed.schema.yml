@@ -4,7 +4,7 @@ announcements_feed.settings:
   mapping:
     max_age:
       type: integer
-      label: 'Cache announcements for max-age milliseconds.'
+      label: 'Cache announcements for max-age seconds.'
     cron_interval:
       type: integer
-      label: 'Cron interval for fetching announcements in milliseconds.'
+      label: 'Cron interval for fetching announcements in seconds.'
