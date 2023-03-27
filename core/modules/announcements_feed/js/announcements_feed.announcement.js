@@ -31,9 +31,10 @@
 
             if (dialog.open) {
               $('.announce-dialog .announce-close').trigger('click');
-            } else {
-              dialog.show();
+              return;
             }
+
+            dialog.show();
           });
 
         $('.announce-dialog .announce-close').on('click', function () {
