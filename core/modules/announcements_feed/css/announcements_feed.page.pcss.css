@@ -8,6 +8,6 @@
 }
 
 .announcement .announcement__new {
-  padding-left: 10px;
+  padding-inline-start: 10px;
   font-style: italic;
 }
