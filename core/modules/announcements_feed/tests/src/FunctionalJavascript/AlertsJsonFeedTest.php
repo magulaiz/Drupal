@@ -126,11 +126,7 @@ class AlertsJsonFeedTest extends OffCanvasTestBase {
     $this->drupalGet('<front>');
     $this->assertSession()->elementNotExists('css', '.announce-new');
 
-    // Add new items to the announce-feed and
-    // logged in as a user who has "access announcements" permission.
-    // Change the feed url to updated json file which contain new feeds.
-    // This is check if the user has new announcement is it been reflected on
-    // the site. Setup test announce endpoint.
+    // Change the feed url and reset temp storage.
     AnnounceTestHttpClient::setAnnounceTestEndpoint($this->updatedJson);
     drupal_flush_all_caches();
 
@@ -203,7 +199,7 @@ class AlertsJsonFeedTest extends OffCanvasTestBase {
   }
 
   /**
-   * Check the status of the red dot icon when few items are drop from the feed.
+   * Check the status of the red dot icon when the feed is updated.
    */
   public function testAnnounceFeedRemoved() {
 
@@ -220,8 +216,7 @@ class AlertsJsonFeedTest extends OffCanvasTestBase {
     $new_page_html = $page->getHtml();
     $this->assertStringNotContainsString('Only 10 - Drupal 106 is available and this feed is Updated', $new_page_html);
 
-    // Change the feed url to updated json file.
-    // For resetting temp storage.
+    // Change the feed url and reset temp storage.
     AnnounceTestHttpClient::setAnnounceTestEndpoint($this->updatedJson);
     drupal_flush_all_caches();
 
@@ -236,8 +231,7 @@ class AlertsJsonFeedTest extends OffCanvasTestBase {
     $this->assertStringContainsString('Only 10 - Drupal 106 is available and this feed is Updated', $unread_status->getParent()->getText());
     $this->drupalLogout();
 
-    // Change the feed url to removed feeds json file.
-    // For resetting temp storage.
+    // Change the feed url and reset temp storage.
     AnnounceTestHttpClient::setAnnounceTestEndpoint($this->removed);
     drupal_flush_all_caches();
     $this->drupalLogin($this->user3);
@@ -261,8 +255,7 @@ class AlertsJsonFeedTest extends OffCanvasTestBase {
    * Check the status of the red dot alert with an empty JSON feed.
    */
   public function testAnnounceFeedEmpty() {
-    // Change the feed url to empty json file.
-    // For resetting temp storage.
+    // Change the feed url and reset temp storage.
     AnnounceTestHttpClient::setAnnounceTestEndpoint($this->emptyJson);
     drupal_flush_all_caches();
 
