@@ -12,6 +12,8 @@ use Psr\Log\LoggerInterface;
 
 /**
  * Service to fetch announcements from the external feed.
+ *
+ * @internal
  */
 class AnnounceFetcher {
 
@@ -167,6 +169,9 @@ class AnnounceFetcher {
         $this->config->get('max_age'));
     }
 
+    // Limit the announcements to show.
+    $announcements = array_slice($announcements, 0, $this->config->get('limit'));
+
     // Put all the sticky announcements before the rest.
     uasort($announcements, function($a, $b) {
       $a_value = (int) $a['_drupalorg']['featured'];
@@ -177,7 +182,7 @@ class AnnounceFetcher {
       return ($a_value < $b_value) ? -1 : 1;
     });
 
-    return array_slice($announcements, 0, $this->config->get('limit'));
+    return $announcements;
   }
 
 }

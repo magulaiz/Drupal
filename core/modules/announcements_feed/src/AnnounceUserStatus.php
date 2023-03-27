@@ -9,6 +9,8 @@ use Drupal\user\UserData;
 
 /**
  * Service to manage announcements for the user.
+ *
+ * @internal
  */
 class AnnounceUserStatus {
 
