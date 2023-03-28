@@ -55,4 +55,39 @@ class AnnounceTestHttpClient implements ClientInterface {
     return $this->innerClient->__call($name, $arguments);
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function send(RequestInterface $request, array $options = []): ResponseInterface {
+    return $this->innerClient->send($request, $options);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function sendAsync(RequestInterface $request, array $options = []): PromiseInterface {
+    return $this->innerClient->sendAsync($request, $options);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function request($method, $uri, array $options = []): ResponseInterface {
+    return $this->innerClient->request($method, $uri, $options);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function requestAsync($method, $uri, array $options = []): PromiseInterface {
+    return $this->innerClient->request($method, $uri, $options);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getConfig($option = NULL) {
+    return $this->innerClient->getConfig($option);
+  }
+
 }
