@@ -185,6 +185,7 @@ class EntityLinksTest extends KernelTestBase {
 
   /**
    * @covers ::getUrl
+   * @covers \Drupal\file\Entity\FileLinkTarget
    */
   public function testFileEntity(): void {
     $file = File::create([
@@ -209,13 +210,11 @@ class EntityLinksTest extends KernelTestBase {
 
   /**
    * @covers ::getUrl
+   * @covers \Drupal\media\Entity\MediaLinkTarget
    * @testWith [true,  "file", {"target_id": 1}, "/<SITE_DIRECTORY>/files/druplicon.txt", ["file:1", "media:1"]]
    *           [false, "file", {"target_id": 1}, "/<SITE_DIRECTORY>/files/druplicon.txt", ["file:1", "media:1"]]
    *           [true,  "test", {"value": "foobar"}, "/media/1", ["media:1"]]
    *           [false, "test", {"value": "foobar"}, "", ["media:1"]]
-   *
-   * @see \Drupal\media\Plugin\media\Source\File
-   * @see \Drupal\file\FileInterface::getFileUri()
    *
    * @param bool $standalone_url_setting
    *   Whether the standalone_url setting is off (Drupal's default) or on.
