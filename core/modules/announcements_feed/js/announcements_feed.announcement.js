@@ -1,4 +1,4 @@
-(function ($, Drupal, once) {
+(function (Drupal, once) {
   /**
    * Update the announce icon when tray is opened.
    *
@@ -16,38 +16,37 @@
           e.currentTarget.classList.remove('announce-new');
         });
       }
-    },
-  };
 
-  // @todo Remove all jQuery.
-  // https://stackoverflow.com/questions/63063081/need-make-this-code-without-jquery-in-vanilla-javascript
-  $(window).on(
-    'dialog:aftercreate',
-    function (event, dialog, $element, settings) {
-      if (settings.announce) {
-        $('[data-drupal-announce-trigger]')
-          .off('click')
-          .on('click.announce', function (e) {
+      window.addEventListener('dialog:aftercreate', function (event, dialog, $element, settings) {
+        if (settings.announce) {
+          const handler = (e) => {
+            document.querySelector('[data-drupal-announce-trigger]')
+              .removeEventListener('click', handler);
             e.preventDefault();
             e.stopPropagation();
 
             if (dialog.open) {
-              $('.announce-dialog .announce-close').trigger('click');
+              document.querySelector('.announce-dialog .announce-close').click();
               return;
             }
 
             dialog.show();
+          }
+
+          document.querySelector('[data-drupal-announce-trigger]')
+            .addEventListener('click.announce', handler);
+
+          document.querySelector('.announce-dialog .announce-close').addEventListener('click', function () {
+            dialog.open = false;
           });
 
-        $('.announce-dialog .announce-close').on('click', function () {
-          dialog.open = false;
-        });
-
-        $(window).on('dialog:afterclose', function (event, dialog) {
-          $('[data-drupal-announce-trigger]').trigger('click');
-          $(this).off('dialog:afterclose');
-        });
-      }
+          const afterClose = (event, dialog) => {
+            window.removeEventListener('dialog:afterclose', afterClose);
+            document.querySelector('[data-drupal-announce-trigger]').click();
+          }
+          window.addEventListener('dialog:afterclose', afterClose);
+        }
+      });
     },
-  );
-})(jQuery, Drupal, once);
+  };
+})(Drupal, once);
