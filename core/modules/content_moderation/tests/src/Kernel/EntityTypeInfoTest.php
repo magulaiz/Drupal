@@ -63,18 +63,18 @@ class EntityTypeInfoTest extends KernelTestBase {
   }
 
   /**
-   * @covers ::entityBaseFieldInfo
+   * @covers ::entityBundleFieldInfo
    */
-  public function testEntityBaseFieldInfo() {
+  public function testEntityBundleFieldInfo() {
     $definition = $this->entityTypeManager->getDefinition('entity_test');
     $definition->setHandlerClass('moderation', ModerationHandler::class);
 
     $this->enableModeration('entity_test', 'entity_test');
-    $base_fields = $this->entityTypeInfo->entityBaseFieldInfo($definition);
+    $bundle_fields = $this->entityTypeInfo->entityBundleFieldInfo($definition, 'entity_test', []);
 
-    $this->assertFalse($base_fields['moderation_state']->isReadOnly());
-    $this->assertTrue($base_fields['moderation_state']->isComputed());
-    $this->assertTrue($base_fields['moderation_state']->isTranslatable());
+    $this->assertFalse($bundle_fields['moderation_state']->isReadOnly());
+    $this->assertTrue($bundle_fields['moderation_state']->isComputed());
+    $this->assertTrue($bundle_fields['moderation_state']->isTranslatable());
   }
 
   /**
@@ -108,9 +108,9 @@ class EntityTypeInfoTest extends KernelTestBase {
   }
 
   /**
-   * @covers ::entityBaseFieldInfo
+   * @covers ::entityBundleFieldInfo
    */
-  public function testBaseFieldOnlyAddedToModeratedEntityTypes() {
+  public function testBundleFieldOnlyAddedToModeratedEntityTypes() {
     $definition = $this->entityTypeManager->getDefinition('entity_test_with_bundle');
 
     EntityTestBundle::create([
@@ -120,12 +120,37 @@ class EntityTypeInfoTest extends KernelTestBase {
       'id' => 'unmoderated',
     ])->save();
 
-    $base_fields = $this->entityTypeInfo->entityBaseFieldInfo($definition);
-    $this->assertFalse(isset($base_fields['moderation_state']));
+    $this->assertArrayNotHasKey('moderation_state', $this->entityTypeInfo->entityBundleFieldInfo($definition, 'moderated', []));
+    $this->assertArrayNotHasKey('moderation_state', $this->entityTypeInfo->entityBundleFieldInfo($definition, 'unmoderated', []));
 
     $this->enableModeration('entity_test_with_bundle', 'moderated');
-    $base_fields = $this->entityTypeInfo->entityBaseFieldInfo($definition);
-    $this->assertTrue(isset($base_fields['moderation_state']));
+
+    $this->assertArrayHasKey('moderation_state', $this->entityTypeInfo->entityBundleFieldInfo($definition, 'moderated', []));
+    $this->assertArrayNotHasKey('moderation_state', $this->entityTypeInfo->entityBundleFieldInfo($definition, 'unmoderated', []));
+  }
+
+  /**
+   * @covers ::entityBundleFieldInfo
+   */
+  public function testBundleFieldOnlyAddedToModeratedBundles() {
+    EntityTestBundle::create([
+      'id' => 'foo',
+    ])->save();
+
+    EntityTestBundle::create([
+      'id' => 'bar',
+    ])->save();
+
+    $workflow = $this->createEditorialWorkflow();
+    $workflow->getTypePlugin()->addEntityTypeAndBundle('entity_test_with_bundle', 'foo');
+    $workflow->getTypePlugin()->addEntityTypeAndBundle('entity_test_with_bundle', 'bar');
+    $workflow->save();
+
+    $entity_field_manager = \Drupal::service('entity_field.manager');
+    $foo_field = $entity_field_manager->getFieldDefinitions('entity_test_with_bundle', 'foo')['moderation_state'];
+    $bar_field = $entity_field_manager->getFieldDefinitions('entity_test_with_bundle', 'bar')['moderation_state'];
+    $this->assertEquals($foo_field->getTargetBundle(), 'foo');
+    $this->assertEquals($bar_field->getTargetBundle(), 'bar');
   }
 
   /**

@@ -186,10 +186,7 @@ class ModerationStateFieldItemListTest extends KernelTestBase {
       'title' => 'Test title',
     ]);
     $unmoderated_node->save();
-    $this->assertEquals(0, $unmoderated_node->moderation_state->count());
-
-    $unmoderated_node->moderation_state = NULL;
-    $this->assertEquals(0, $unmoderated_node->moderation_state->count());
+    $this->assertNull($unmoderated_node->moderation_state);
     $this->assertCount(0, $unmoderated_node->validate());
   }
 
@@ -269,7 +266,7 @@ class ModerationStateFieldItemListTest extends KernelTestBase {
     $this->assertNull($workflow);
 
     $this->assertTrue($test_node->isPublished());
-    $test_node->moderation_state->setValue('draft');
+    $test_node->moderation_state = 'draft';
     // The entity is still published because there is not a workflow.
     $this->assertTrue($test_node->isPublished());
   }
@@ -439,13 +436,16 @@ class ModerationStateFieldItemListTest extends KernelTestBase {
     $workflow->getTypePlugin()->addEntityTypeAndBundle('node', 'unmoderated');
     $workflow->save();
 
+    // Node object had been created before the bundle field was added. It must
+    // be reloaded.
+    $node_storage = $this->container->get('entity_type.manager')->getStorage('node');
+    $node = $node_storage->load($node->id());
+
     $translation = $node->addTranslation('de');
     $translation->moderation_state = 'draft';
     $translation->save();
 
-    $node_storage = $this->container->get('entity_type.manager')->getStorage('node');
     $node = $node_storage->loadRevision($node_storage->getLatestRevisionId($node->id()));
-
     $this->assertEquals('published', $node->moderation_state->value);
     $this->assertEquals('draft', $translation->moderation_state->value);
     $this->assertTrue($node->isPublished());

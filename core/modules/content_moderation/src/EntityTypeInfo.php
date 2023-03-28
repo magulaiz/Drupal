@@ -249,21 +249,58 @@ class EntityTypeInfo implements ContainerInjectionInterface {
    *
    * @param \Drupal\Core\Entity\EntityTypeInterface $entity_type
    *   Entity type for adding base fields to.
+   * @param string $bundle
+   *   The bundle.
+   * @param \Drupal\Core\Field\FieldDefinitionInterface[] $base_field_definitions
+   *   The list of base field definitions for the entity type.
    *
    * @return \Drupal\Core\Field\BaseFieldDefinition[]
    *   New fields added by moderation state.
    *
-   * @see hook_entity_base_field_info()
+   * @see hook_entity_bundle_field_info()
    */
-  public function entityBaseFieldInfo(EntityTypeInterface $entity_type) {
+  public function entityBundleFieldInfo(EntityTypeInterface $entity_type, $bundle, array $base_field_definitions) {
+    if (!$this->moderationInfo->shouldModerateEntitiesOfBundle($entity_type, $bundle)) {
+      return [];
+    }
+
+    return [
+      'moderation_state' => $this->getModerationStateFieldDefinition()
+        ->setTargetBundle($bundle),
+    ];
+  }
+
+  /**
+   * Returns storage info for the moderation state fields.
+   *
+   * @param \Drupal\Core\Entity\EntityTypeInterface $entity_type
+   *   Entity type for adding base fields to.
+   *
+   * @return \Drupal\Core\Field\BaseFieldDefinition[]
+   *   New fields added by moderation state.
+   *
+   * @see hook_entity_field_storage_info()
+   */
+  public function entityFieldStorageInfo(EntityTypeInterface $entity_type) {
     if (!$this->moderationInfo->isModeratedEntityType($entity_type)) {
       return [];
     }
 
-    $fields = [];
-    $fields['moderation_state'] = BaseFieldDefinition::create('string')
-      ->setLabel(t('Moderation state'))
-      ->setDescription(t('The moderation state of this piece of content.'))
+    return [
+      'moderation_state' => $this->getModerationStateFieldDefinition(),
+    ];
+  }
+
+  /**
+   * Returns bundle field definition for moderation state.
+   *
+   * @return \Drupal\Core\Field\BaseFieldDefinition
+   *   New fields added by moderation state.
+   */
+  protected function getModerationStateFieldDefinition() {
+    return BaseFieldDefinition::create('string')
+      ->setLabel($this->t('Moderation state'))
+      ->setDescription($this->t('The moderation state of this piece of content.'))
       ->setComputed(TRUE)
       ->setClass(ModerationStateFieldItemList::class)
       ->setDisplayOptions('view', [
@@ -281,8 +318,6 @@ class EntityTypeInfo implements ContainerInjectionInterface {
       ->setDisplayConfigurable('view', FALSE)
       ->setReadOnly(FALSE)
       ->setTranslatable(TRUE);
-
-    return $fields;
   }
 
   /**

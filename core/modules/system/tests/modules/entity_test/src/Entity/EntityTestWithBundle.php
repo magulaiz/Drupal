@@ -35,6 +35,7 @@ use Drupal\Core\Field\BaseFieldDefinition;
  *     "bundle" = "type",
  *     "label" = "name",
  *     "langcode" = "langcode",
+ *     "revision" = "revision_id",
  *   },
  *   bundle_entity_type = "entity_test_bundle",
  *   links = {
