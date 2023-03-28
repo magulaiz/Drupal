@@ -286,7 +286,6 @@ function toolbar_menu_navigation_links(array $tree) {
 }
 
 /**
-<<<<<<< HEAD
  * Implements hook_preprocess_html().
  *
  * Adds UI state dependent classes to `<body>`.
@@ -300,8 +299,6 @@ function toolbar_preprocess_html(&$variables) {
 }
 
 /**
-=======
->>>>>>> afa35c9e57 (custom command prep)
  * Returns the rendered subtree of each top-level toolbar link.
  *
  * @return array
