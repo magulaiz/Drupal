@@ -18,6 +18,8 @@ use Drupal\KernelTests\KernelTestBase;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\media\Entity\Media;
 use Drupal\media\Entity\MediaType;
+use Drupal\menu_link_content\Entity\MenuLinkContent;
+use Drupal\shortcut\Entity\Shortcut;
 use Drupal\Tests\Traits\Core\PathAliasTestTrait;
 
 /**
@@ -60,6 +62,11 @@ class EntityLinksTest extends KernelTestBase {
     'image',
     'media',
     'media_test_source',
+    // @see ::testMenuLinkContentEntity
+    'link',
+    'menu_link_content',
+    // @see ::testShortcutEntity
+    'shortcut',
   ];
 
   /**
@@ -85,6 +92,13 @@ class EntityLinksTest extends KernelTestBase {
     $this->installEntitySchema('user');
     $this->installSchema('file', ['file_usage']);
     $this->installConfig(['media']);
+
+    // @see ::testMenuLinkContentEntity
+    $this->installEntitySchema('menu_link_content');
+
+    // @see ::testShortcutEntity
+    $this->installEntitySchema('shortcut');
+    $this->installConfig(['shortcut']);
 
     // Add Swedish, Danish and Finnish.
     ConfigurableLanguage::createFromLangcode('sv')->save();
@@ -270,6 +284,61 @@ class EntityLinksTest extends KernelTestBase {
       (new FilterProcessResult())
         ->setProcessedText(sprintf('<a data-entity-type="media" data-entity-uuid="%s" href="%s?query=string#fragment">Link text</a>', $media->uuid(), $expected_url))
         ->setCacheTags($expected_cache_tags)
+        ->setCacheContexts([])
+        ->setCacheMaxAge(Cache::PERMANENT)
+    );
+  }
+
+  /**
+   * @covers ::getUrl
+   * @covers \Drupal\menu_link_content\Entity\MenuLinkContentLinkTarget
+   */
+  public function testMenuLinkContentEntity(): void {
+    $link = 'https://nl.wikipedia.org/wiki/Llama';
+
+    $menu_link_content = MenuLinkContent::create([
+      'id' => 'llama',
+      'title' => 'Llama Gabilondo',
+      'description' => 'Llama Gabilondo',
+      'link' => $link,
+      'weight' => 0,
+      'menu_name' => 'main',
+    ]);
+    $menu_link_content->save();
+
+    $this->assertFilterProcessResult(
+      '<a data-entity-type="menu_link_content" data-entity-uuid="' . $menu_link_content->uuid() . '" href="something?query=string#fragment">Link text</a>',
+      'en',
+      (new FilterProcessResult())
+        ->setProcessedText(sprintf('<a data-entity-type="menu_link_content" data-entity-uuid="%s" href="%s?query=string#fragment">Link text</a>', $menu_link_content->uuid(), $link))
+        ->setCacheTags(['menu_link_content:1'])
+        ->setCacheContexts([])
+        ->setCacheMaxAge(Cache::PERMANENT)
+    );
+  }
+
+  /**
+   * @covers ::getUrl
+   * @covers \Drupal\shortcut\Entity\ShortcutLinkTarget
+   */
+  public function testShortcutEntity(): void {
+    $path = '/user/logout';
+    $shortcut = Shortcut::create([
+      'shortcut_set' => 'default',
+      'title' => 'Comments',
+      'weight' => -20,
+      'link' => [
+        'uri' => "internal:$path",
+      ],
+    ]);
+    $shortcut->save();
+
+    $this->assertFilterProcessResult(
+      '<a data-entity-type="shortcut" data-entity-uuid="' . $shortcut->uuid() . '" href="something?query=string#fragment">Link text</a>',
+      'en',
+      (new FilterProcessResult())
+        ->setProcessedText(sprintf('<a data-entity-type="shortcut" data-entity-uuid="%s" href="%s?query=string#fragment">Link text</a>', $shortcut->uuid(), $path))
+        ->setCacheTags(['config:shortcut.set.default'])
         ->setCacheContexts([])
         ->setCacheMaxAge(Cache::PERMANENT)
     );
