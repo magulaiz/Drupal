@@ -227,6 +227,8 @@ class EntityLinksTest extends KernelTestBase {
    * @covers \Drupal\media\Entity\MediaLinkTarget
    * @testWith [true,  "file", {"target_id": 1}, "/<SITE_DIRECTORY>/files/druplicon.txt", ["file:1", "media:1"]]
    *           [false, "file", {"target_id": 1}, "/<SITE_DIRECTORY>/files/druplicon.txt", ["file:1", "media:1"]]
+   *           [true,  "oembed:video", {"value": "https://www.youtube.com/watch?v=dQw4w9WgXcQ"}, "https://www.youtube.com/watch?v=dQw4w9WgXcQ", ["media:1"]]
+   *           [false, "oembed:video", {"value": "https://www.youtube.com/watch?v=dQw4w9WgXcQ"}, "https://www.youtube.com/watch?v=dQw4w9WgXcQ", ["media:1"]]
    *           [true,  "test", {"value": "foobar"}, "/media/1", ["media:1"]]
    *           [false, "test", {"value": "foobar"}, "", ["media:1"]]
    *
