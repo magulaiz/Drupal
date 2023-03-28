@@ -137,9 +137,12 @@ class AccessAnnouncementTest extends OffCanvasTestBase {
     );
     $this->drupalLogin($account);
     $this->drupalGet('<front>');
-    $page = $this->getSession()->getPage();
-    $page_html = $page->getHtml();
-    $this->assertStringNotContainsString('toolbar-icon-announce', $page_html, 'toolbar-icon-announce class not found');
+
+    // Check that the user can see the toolbar.
+    $this->assertSession()->elementExists('css', '#toolbar-bar');
+
+    // But not the announcements.
+    $this->assertSession()->elementNotExists('css', '.toolbar-icon-announce');
 
     $this->drupalGet('admin/announcements_feed');
     $this->assertSession()->responseContains('You are not authorized to access this page.');
