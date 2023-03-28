@@ -31,22 +31,6 @@ class EntityLinkSuggestionsController implements ContainerInjectionInterface {
   use StringTranslationTrait;
 
   /**
-   * Suggestions are made for the host entity type + common reference targets.
-   *
-   * Not every entity type that has `common_reference_target = TRUE` makes sense
-   * in a "text field" context though.
-   *
-   * @var string[]
-   */
-  const IGNORED_COMMON_REFERENCE_TARGETS = [
-    // Media should not be linked, but embedded.
-    // @see `media_media` CKEditor 5 plugin
-    'media',
-    // Content very rarely needs to link to users.
-    'user',
-  ];
-
-  /**
    * The default limit for matches.
    */
   const DEFAULT_LIMIT = 100;
@@ -108,8 +92,8 @@ class EntityLinkSuggestionsController implements ContainerInjectionInterface {
 
     if ($input) {
       // First, find suggestions for the host entity type.
-      $host_entity_type_is_linkable = $this->entityTypeManager->getDefinition($host_entity_type_id)
-        ->hasLinkTemplate('canonical');
+      $entity_type = $this->entityTypeManager->getDefinition($host_entity_type_id);
+      $host_entity_type_is_linkable = $entity_type->hasLinkTemplate('canonical') || $entity_type->hasHandlerClass('link_target');
       if ($host_entity_type_is_linkable) {
         $suggestions = $this->getSuggestions($host_entity_type_id, $input);
       }
@@ -120,9 +104,7 @@ class EntityLinkSuggestionsController implements ContainerInjectionInterface {
         if ($host_entity_type_id === $entity_type_id) {
           continue;
         }
-        if (in_array($entity_type_id, self::IGNORED_COMMON_REFERENCE_TARGETS, TRUE)) {
-          continue;
-        }
+        // @todo Move this to filter configuration?
         if ($entity_type->isCommonReferenceTarget()) {
           $suggestions = array_merge($suggestions, $this->getSuggestions($entity_type_id, $input));
         }
