@@ -41,6 +41,7 @@ function announcements_feed_toolbar() {
   if (\Drupal::currentUser()->hasPermission('access announcements')) {
     $current_user_id = \Drupal::currentUser()->id();
     $items['announcement'] = [
+      // @todo Lazy builder and `user` context.
       '#cache' => [
         // Vary cache for anonymous and authenticated users.
         'contexts' => ['user.roles:anonymous'],

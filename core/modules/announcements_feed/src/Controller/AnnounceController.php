@@ -90,6 +90,7 @@ class AnnounceController extends ControllerBase implements ContainerInjectionInt
     $build += [
       '#theme' => 'announcements_feed',
       '#count' => count($announcements),
+      // @todo Lazy builder and `user` context.
       '#cache' => [
         'contexts' => [
           'user.roles:anonymous',
