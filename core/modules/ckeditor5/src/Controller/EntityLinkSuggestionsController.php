@@ -5,24 +5,24 @@ declare(strict_types = 1);
 namespace Drupal\ckeditor5\Controller;
 
 use Drupal\Component\Utility\Html;
-use Drupal\Core\Config\Entity\ConfigEntityTypeInterface;
-use Drupal\Core\Database\Connection;
 use Drupal\Core\Datetime\DateFormatterInterface;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\EntityReferenceSelection\SelectionPluginManagerInterface;
 use Drupal\Core\Entity\EntityRepositoryInterface;
 use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
-use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
-use Drupal\Core\Url;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Returns responses for entity link suggestions autocomplete route.
+ *
+ * @see \Drupal\Core\Entity\EntityReferenceSelection\SelectionInterface
+ * @see \Drupal\Core\Entity\Plugin\EntityReferenceSelection\DefaultSelection
  *
  * @internal
  */
@@ -54,25 +54,22 @@ class EntityLinkSuggestionsController implements ContainerInjectionInterface {
   /**
    * Constructs a EntityLinkSuggestionsController.
    *
-   * @param \Drupal\Core\Database\Connection $database
-   *   The database connection.
+   * @param \Drupal\Core\Entity\EntityReferenceSelection\SelectionPluginManagerInterface $selectionPluginManager
+   *   The entity reference selection plugin manager.
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
    *   The entity type manager.
    * @param \Drupal\Core\Entity\EntityTypeBundleInfoInterface $entityTypeBundleInfo
    *   The entity type bundle info.
    * @param \Drupal\Core\Entity\EntityRepositoryInterface $entityRepository
    *   The entity repository.
-   * @param \Drupal\Core\Session\AccountInterface $currentUser
-   *   The current user.
    * @param \Drupal\Core\Datetime\DateFormatterInterface $dateFormatter
    *   The date formatter service.
    */
   public function __construct(
-    protected readonly Connection $database,
+    protected readonly SelectionPluginManagerInterface $selectionPluginManager,
     protected readonly EntityTypeManagerInterface $entityTypeManager,
     protected readonly EntityTypeBundleInfoInterface $entityTypeBundleInfo,
     protected readonly EntityRepositoryInterface $entityRepository,
-    protected readonly AccountInterface $currentUser,
     protected readonly DateFormatterInterface $dateFormatter,
   ) {}
 
@@ -81,11 +78,10 @@ class EntityLinkSuggestionsController implements ContainerInjectionInterface {
    */
   public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('database'),
+      $container->get(SelectionPluginManagerInterface::class),
       $container->get('entity_type.manager'),
       $container->get('entity_type.bundle.info'),
       $container->get('entity.repository'),
-      $container->get('current_user'),
       $container->get('date.formatter')
     );
   }
@@ -170,29 +166,19 @@ class EntityLinkSuggestionsController implements ContainerInjectionInterface {
    *   The string to search.
    */
   public function getSuggestions(string $target_entity_type_id, string $string) {
+    $selection = $this->selectionPluginManager->getInstance(['target_type' => $target_entity_type_id]);
+    $entities_by_bundle = $selection->getReferenceableEntities($string, 'CONTAINS', static::DEFAULT_LIMIT);
+    // DefaultSelection::getReferenceableEntities() loads entities and even
+    // their translation but then only keeps bundle, entity ID and label. Reload
+    // them to generate rich results. Note that performance overhead of this is
+    // minimal because all this data is statically cached already anyway.
+    $entity_ids = array_reduce($entities_by_bundle, function ($flattened, $bundle_entities) {
+      return array_merge($flattened, array_keys($bundle_entities));
+    }, []);
+    $entities = $this->entityTypeManager->getStorage($target_entity_type_id)->loadMultiple($entity_ids);
+
     $suggestions = [];
-    $query = $this->buildEntityQuery($target_entity_type_id, $string);
-    $query->accessCheck(TRUE);
-    $query_result = $query->execute();
-    $url_results = self::findEntityIdByUrl($target_entity_type_id, $string);
-    $result = array_merge($query_result, $url_results);
-
-    // If no results, return an empty suggestion collection.
-    if (empty($result)) {
-      return $suggestions;
-    }
-
-    $entities = $this->entityTypeManager->getStorage($target_entity_type_id)->loadMultiple($result);
-
     foreach ($entities as $entity) {
-      // Check the access against the defined entity access handler.
-      /** @var \Drupal\Core\Access\AccessResultInterface $access */
-      $access = $entity->access('view', $this->currentUser, TRUE);
-
-      if (!$access->isAllowed()) {
-        continue;
-      }
-
       $entity = $this->entityRepository->getTranslationFromContext($entity);
       $suggestions[] = $this->createSuggestion($entity);
     }
@@ -282,80 +268,6 @@ class EntityLinkSuggestionsController implements ContainerInjectionInterface {
     $args[':bundle-label'] = $bundles[$entity->bundle()]['label'];
 
     return $this->t(':entity-type-label - :bundle-label', $args);
-  }
-
-  /**
-   * Builds an EntityQuery to get entities.
-   *
-   * @param string $target_entity_type_id
-   *   An entity type to get suggestions for.
-   * @param string $search_string
-   *   Text to match the label against.
-   *
-   * @return \Drupal\Core\Entity\Query\QueryInterface
-   *   The EntityQuery object with the basic conditions and sorting applied to
-   *   it.
-   */
-  protected function buildEntityQuery(string $target_entity_type_id, string $search_string) {
-    $search_string = $this->database->escapeLike($search_string);
-
-    $entity_type = $this->entityTypeManager->getDefinition($target_entity_type_id);
-    $query = $this->entityTypeManager->getStorage($target_entity_type_id)->getQuery();
-    $query->accessCheck(TRUE);
-    $label_key = $entity_type->getKey('label');
-
-    if ($label_key) {
-      // For configuration entities, the condition needs to be CONTAINS as
-      // the matcher does not support LIKE.
-      if ($entity_type instanceof ConfigEntityTypeInterface) {
-        $query->condition($label_key, $search_string, 'CONTAINS');
-      }
-      else {
-        $query->condition($label_key, '%' . $search_string . '%', 'LIKE');
-      }
-
-      $query->sort($label_key, 'ASC');
-    }
-
-    $query->range(0, self::DEFAULT_LIMIT);
-
-    // Add tags to let other modules alter the query.
-    $query->addTag('entity_link_suggestions_autocomplete');
-    $query->addTag('entity_link_suggestions_autocomplete_' . $target_entity_type_id . '_autocomplete');
-
-    // Add access tag for the query.
-    $query->addTag('entity_access');
-    $query->addTag($target_entity_type_id . '_access');
-
-    return $query;
-  }
-
-  /**
-   * Finds entity ID from the given input.
-   *
-   * @param string $target_entity_type_id
-   *   An entity type to get suggestions for.
-   * @param string $user_input
-   *   The string to url parse.
-   *
-   * @return array
-   *   An array with an entity ID if the input can be parsed as an internal url
-   *   and a match is found, otherwise an empty array.
-   */
-  protected static function findEntityIdByUrl(string $target_entity_type_id, string $user_input): array {
-    $result = [];
-
-    try {
-      $params = Url::fromUserInput($user_input)->getRouteParameters();
-      if (key($params) === $target_entity_type_id) {
-        $result = [end($params)];
-      }
-    }
-    catch (\Exception $e) {
-      // Do nothing.
-    }
-
-    return $result;
   }
 
 }
