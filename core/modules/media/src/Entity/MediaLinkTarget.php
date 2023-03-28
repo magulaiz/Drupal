@@ -34,6 +34,7 @@ use Drupal\media\MediaSourceInterface;
  * @see \Drupal\media\Plugin\media\Source\File::getMetadata()
  * @see \Drupal\media\Plugin\media\Source\OEmbed::getMetadata()
  * @see \Drupal\file\Entity\FileLinkTarget
+ * @see \Drupal\media\Plugin\EntityReferenceSelection\MediaWithLinkTargetSelection
  */
 class MediaLinkTarget implements EntityLinkTargetInterface {
 

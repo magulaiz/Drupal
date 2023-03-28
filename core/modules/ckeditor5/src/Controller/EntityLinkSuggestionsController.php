@@ -148,7 +148,24 @@ class EntityLinkSuggestionsController implements ContainerInjectionInterface {
    *   The string to search.
    */
   public function getSuggestions(string $target_entity_type_id, string $string) {
-    $selection = $this->selectionPluginManager->getInstance(['target_type' => $target_entity_type_id]);
+    // Do not call ::getPluginId() or ::getInstance() because this favors a
+    // "link_target" variant of the default selection plugin for the given
+    // entity type, if it exists.
+    $selection_handler_groups = $this->selectionPluginManager->getSelectionGroups($target_entity_type_id);
+    if (!array_key_exists('default', $selection_handler_groups)) {
+      return [];
+    }
+    // Sort the selection plugins by weight and select the best match.
+    uasort($selection_handler_groups['default'], ['Drupal\Component\Utility\SortArray', 'sortByWeightElement']);
+    end($selection_handler_groups['default']);
+    // Select the link_target variant of the default selection plugin for the
+    // entity type, if it exists. Otherwise, select the next best match.
+    $link_target_selection_plugin_id = "default:${target_entity_type_id}_link_target";
+    $plugin_id = array_key_exists($link_target_selection_plugin_id, $selection_handler_groups['default'])
+      ? $link_target_selection_plugin_id
+      : key($selection_handler_groups['default']);
+    $selection = $this->selectionPluginManager->createInstance($plugin_id, ['target_type' => $target_entity_type_id]);
+
     $entities_by_bundle = $selection->getReferenceableEntities($string, 'CONTAINS', static::DEFAULT_LIMIT);
     // DefaultSelection::getReferenceableEntities() loads entities and even
     // their translation but then only keeps bundle, entity ID and label. Reload
