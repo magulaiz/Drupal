@@ -103,7 +103,7 @@
 }
 /* Position the admin toolbar fixed when the configured standard breakpoint is
  * active. */
-body.toolbar-fixed .toolbar-oriented .toolbar-bar
+body.toolbar-fixed .toolbar-oriented .toolbar-bar,
 html.toolbar-fixed .toolbar-oriented .toolbar-bar {
   position: fixed;
 }

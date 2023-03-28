@@ -6,7 +6,6 @@
  */
 
 use Drupal\claro\ClaroPreRender;
-use Drupal\Component\Serialization\Json;
 use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Component\Utility\UrlHelper;

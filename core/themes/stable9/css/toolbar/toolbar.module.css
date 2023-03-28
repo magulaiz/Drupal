@@ -111,7 +111,7 @@ html.toolbar-fixed .toolbar-oriented .toolbar-bar {
  * around the trays in order to provide a context for scrolling tray content
  * that is taller than the viewport. */
 body.toolbar-tray-open.toolbar-fixed.toolbar-vertical .toolbar-oriented,
-html.toolbar-tray-open.toolbar-fixed.toolbar-vertical .toolbar-oriented{
+html.toolbar-tray-open.toolbar-fixed.toolbar-vertical .toolbar-oriented {
   bottom: 0;
   width: 240px;
   width: 15rem;
