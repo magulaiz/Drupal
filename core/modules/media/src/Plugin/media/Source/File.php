@@ -2,6 +2,8 @@
 
 namespace Drupal\media\Plugin\media\Source;
 
+use Drupal\Core\Cache\Cache;
+use Drupal\Core\GeneratedUrl;
 use Drupal\file\FileInterface;
 use Drupal\media\MediaInterface;
 use Drupal\media\MediaTypeInterface;
@@ -77,6 +79,16 @@ class File extends MediaSourceBase {
 
       case 'thumbnail_uri':
         return $this->getThumbnail($file) ?: parent::getMetadata($media, $attribute_name);
+
+      case self::METADATA_ATTRIBUTE_LINK_TARGET:
+        $url = $file->createFileUrl(TRUE);
+        assert(is_string($url));
+        return (new GeneratedUrl())
+          ->setGeneratedUrl($url)
+          ->setCacheMaxAge(Cache::PERMANENT)
+          // The subtle but crucial difference compared to FileLinkTarget.
+          // @see \Drupal\file\Entity\FileLinkTarget
+          ->addCacheableDependency($file);
 
       default:
         return parent::getMetadata($media, $attribute_name);
