@@ -13,6 +13,7 @@ use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Tests\field_ui\Traits\FieldUiTestTrait;
+use Drupal\user\Entity\Role;
 use Drupal\user\RoleInterface;
 
 /**
@@ -86,16 +87,16 @@ class CommentNonNodeTest extends BrowserTestBase {
     ]);
 
     // Enable anonymous and authenticated user comments.
-    user_role_grant_permissions(RoleInterface::ANONYMOUS_ID, [
+    Role::load(RoleInterface::ANONYMOUS_ID)->grantPermission(
       'access comments',
       'post comments',
       'skip comment approval',
-    ]);
-    user_role_grant_permissions(RoleInterface::AUTHENTICATED_ID, [
+    )->save();
+    Role::load(RoleInterface::AUTHENTICATED_ID)->grantPermission(
       'access comments',
       'post comments',
       'skip comment approval',
-    ]);
+    )->save();
 
     // Create a test entity.
     $random_label = $this->randomMachineName();

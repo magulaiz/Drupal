@@ -3,6 +3,7 @@
 namespace Drupal\Tests\comment\Functional;
 
 use Drupal\comment\CommentInterface;
+use Drupal\user\Entity\Role;
 use Drupal\user\RoleInterface;
 
 /**
@@ -24,16 +25,16 @@ class CommentAnonymousTest extends CommentTestBase {
     parent::setUp();
 
     // Enable anonymous and authenticated user comments.
-    user_role_grant_permissions(RoleInterface::ANONYMOUS_ID, [
+    Role::load(RoleInterface::ANONYMOUS_ID)->grantPermission(
       'access comments',
       'post comments',
       'skip comment approval',
-    ]);
-    user_role_grant_permissions(RoleInterface::AUTHENTICATED_ID, [
+    )->save();
+    Role::load(RoleInterface::AUTHENTICATED_ID)->grantPermission(
       'access comments',
       'post comments',
       'skip comment approval',
-    ]);
+    )->save();
   }
 
   /**
@@ -58,7 +59,7 @@ class CommentAnonymousTest extends CommentTestBase {
     $this->assertStringContainsString($body, $preview, 'Anonymous user can preview comment body.');
 
     // Preview comments (without `skip comment approval` permission).
-    user_role_revoke_permissions(RoleInterface::ANONYMOUS_ID, ['skip comment approval']);
+    Role::load(RoleInterface::ANONYMOUS_ID)->revokePermission('skip comment approval')->save();
     $edit = [];
     $title = 'comment title without skip comment approval';
     $body = 'comment body without skip comment approval';
@@ -70,7 +71,7 @@ class CommentAnonymousTest extends CommentTestBase {
     $preview = (string) $this->cssSelect('[data-drupal-selector="edit-comment-preview"]')[0]->getHtml();
     $this->assertStringContainsString($title, $preview, 'Anonymous user can preview comment title.');
     $this->assertStringContainsString($body, $preview, 'Anonymous user can preview comment body.');
-    user_role_grant_permissions(RoleInterface::ANONYMOUS_ID, ['skip comment approval']);
+    Role::load(RoleInterface::ANONYMOUS_ID)->grantPermission('skip comment approval')->save();
 
     // Post anonymous comment without contact info.
     $anonymous_comment1 = $this->postComment($this->node, $this->randomMachineName(), $this->randomMachineName());

@@ -126,24 +126,24 @@ class Role extends ConfigEntityBase implements RoleInterface {
   /**
    * {@inheritdoc}
    */
-  public function grantPermission($permission) {
+  public function grantPermission($permission, string ...$permissions): static {
     if ($this->isAdmin()) {
       return $this;
     }
-    if (!$this->hasPermission($permission)) {
-      $this->permissions[] = $permission;
-    }
+    // Remove existing permissions
+    $permissions = array_diff([$permission, ...$permissions], $this->permissions);
+    $this->permissions = array_merge($this->permissions, $permissions);
     return $this;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function revokePermission($permission) {
+  public function revokePermission($permission, string ...$permissions): static {
     if ($this->isAdmin()) {
       return $this;
     }
-    $this->permissions = array_diff($this->permissions, [$permission]);
+    $this->permissions = array_diff($this->permissions, [$permission, ...$permissions]);
     return $this;
   }
 

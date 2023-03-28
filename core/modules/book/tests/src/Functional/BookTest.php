@@ -4,6 +4,7 @@ namespace Drupal\Tests\book\Functional;
 
 use Drupal\Core\Cache\Cache;
 use Drupal\Tests\BrowserTestBase;
+use Drupal\user\Entity\Role;
 use Drupal\user\RoleInterface;
 
 /**
@@ -268,7 +269,7 @@ class BookTest extends BrowserTestBase {
     // Now grant anonymous users permission to view the printer-friendly
     // version and verify that node access restrictions still prevent them from
     // seeing it.
-    user_role_grant_permissions(RoleInterface::ANONYMOUS_ID, ['access printer-friendly version']);
+    Role::load(RoleInterface::ANONYMOUS_ID)->grantPermission('access printer-friendly version')->save();
     $this->drupalGet('book/export/html/' . $this->book->id());
     $this->assertSession()->statusCodeEquals(403);
   }

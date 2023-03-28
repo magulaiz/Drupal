@@ -5,6 +5,7 @@ namespace Drupal\Tests\comment\Functional;
 use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Component\Utility\Html;
 use Drupal\language\Entity\ConfigurableLanguage;
+use Drupal\user\Entity\Role;
 use Drupal\user\RoleInterface;
 use Drupal\comment\Entity\Comment;
 
@@ -204,11 +205,11 @@ class CommentAdminTest extends CommentTestBase {
    */
   public function testEditComment() {
     // Enable anonymous user comments.
-    user_role_grant_permissions(RoleInterface::ANONYMOUS_ID, [
+    Role::load(RoleInterface::ANONYMOUS_ID)->grantPermission(
       'access comments',
       'post comments',
       'skip comment approval',
-    ]);
+    )->save();
 
     // Log in as a web user.
     $this->drupalLogin($this->webUser);
