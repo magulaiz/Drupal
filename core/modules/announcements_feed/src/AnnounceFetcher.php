@@ -148,14 +148,7 @@ class AnnounceFetcher {
         throw $e;
       }
 
-      try {
-        $announcements = Json::decode($feed_content);
-      }
-      catch (\Exception $e) {
-        $this->logger->error($e->getMessage());
-        throw $e;
-      }
-
+      $announcements = Json::decode($feed_content);
       if (!isset($announcements['items'])) {
         $this->logger->error($this->t('The feed format is not valid.'));
         throw new \Exception('Invalid format');
