@@ -1,7 +1,17 @@
-.featured-announcements-wrapper {
-  margin-bottom: 48px;
+.announcements ul {
+  margin-inline-start: 0;
+  list-style: none;
 }
 
 .announcement:not(.announcement:last-child) {
-  margin-bottom: 16px;
+  margin-block-end: 1rem;
+}
+
+.announcement .announcement__new {
+  padding-inline-start: 0.625rem;
+  font-style: italic;
+}
+
+.announcement.announcement--featured:last-child {
+  border: 1px solid #aaa;
 }
