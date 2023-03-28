@@ -8,6 +8,8 @@ use GuzzleHttp\Promise\PromiseInterface;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 
+// @todo Consider doing this with a middleware service.
+
 /**
  * Provides a decorator service for the 'http_client' service for testing.
  */
@@ -47,6 +49,7 @@ class AnnounceTestHttpClient implements ClientInterface {
     \Drupal::service('keyvalue.expirable')->get('announcements_feed')->delete('announcements');
     \Drupal::service('user.data')->delete('announcements_feed');
     \Drupal::service('announcements_feed.fetcher')->fetch(TRUE);
+    drupal_flush_all_caches();
   }
 
   /**

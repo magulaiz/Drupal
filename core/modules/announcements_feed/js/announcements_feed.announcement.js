@@ -19,6 +19,8 @@
     },
   };
 
+  // @todo Remove all jQuery.
+  // https://stackoverflow.com/questions/63063081/need-make-this-code-without-jquery-in-vanilla-javascript
   $(window).on(
     'dialog:aftercreate',
     function (event, dialog, $element, settings) {
