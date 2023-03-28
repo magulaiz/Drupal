@@ -45,6 +45,7 @@ class AnnounceTestHttpClient implements ClientInterface {
   public static function setAnnounceTestEndpoint(string $test_endpoint): void {
     \Drupal::state()->set('announce_test_endpoint', $test_endpoint);
     \Drupal::service('keyvalue.expirable')->get('announcements_feed')->delete('announcements');
+    \Drupal::service('user.data')->delete('announcements_feed');
   }
 
   /**
@@ -52,41 +53,6 @@ class AnnounceTestHttpClient implements ClientInterface {
    */
   public function __call($name, $arguments) {
     return $this->innerClient->__call($name, $arguments);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function send(RequestInterface $request, array $options = []): ResponseInterface {
-    return $this->innerClient->send($request, $options);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function sendAsync(RequestInterface $request, array $options = []): PromiseInterface {
-    return $this->innerClient->sendAsync($request, $options);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function request($method, $uri, array $options = []): ResponseInterface {
-    return $this->innerClient->request($method, $uri, $options);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function requestAsync($method, $uri, array $options = []): PromiseInterface {
-    return $this->innerClient->request($method, $uri, $options);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getConfig($option = NULL) {
-    return $this->innerClient->getConfig($option);
   }
 
 }

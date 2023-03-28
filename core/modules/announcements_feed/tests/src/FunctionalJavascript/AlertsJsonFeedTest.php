@@ -112,7 +112,6 @@ class AlertsJsonFeedTest extends OffCanvasTestBase {
    * Check the status of the red dot alert with an updated JSON feed URL.
    */
   public function testAnnounceFeedUpdated() {
-
     $this->drupalLogin($this->user2);
     $this->drupalGet('<front>');
     $this->clickLink('Announcements');
@@ -128,7 +127,6 @@ class AlertsJsonFeedTest extends OffCanvasTestBase {
 
     // Change the feed url and reset temp storage.
     AnnounceTestHttpClient::setAnnounceTestEndpoint($this->updatedJson);
-    drupal_flush_all_caches();
 
     $this->drupalGet('<front>');
 
@@ -202,7 +200,6 @@ class AlertsJsonFeedTest extends OffCanvasTestBase {
    * Check the status of the red dot icon when the feed is updated.
    */
   public function testAnnounceFeedRemoved() {
-
     $this->drupalLogin($this->user3);
     $this->drupalGet('<front>');
     $this->clickLink('Announcements');
@@ -218,7 +215,6 @@ class AlertsJsonFeedTest extends OffCanvasTestBase {
 
     // Change the feed url and reset temp storage.
     AnnounceTestHttpClient::setAnnounceTestEndpoint($this->updatedJson);
-    drupal_flush_all_caches();
 
     $this->drupalGet('<front>');
     $this->assertSession()->elementExists('css', '.announce-new');
@@ -233,7 +229,6 @@ class AlertsJsonFeedTest extends OffCanvasTestBase {
 
     // Change the feed url and reset temp storage.
     AnnounceTestHttpClient::setAnnounceTestEndpoint($this->removed);
-    drupal_flush_all_caches();
     $this->drupalLogin($this->user3);
 
     // If the removed item is only item the
@@ -248,7 +243,6 @@ class AlertsJsonFeedTest extends OffCanvasTestBase {
     $page = $this->getSession()->getPage();
     $new_page_html = $page->getHtml();
     $this->assertStringNotContainsString('Only 10 - Drupal 106 is available and this feed is Updated', $new_page_html);
-
   }
 
   /**
@@ -257,7 +251,6 @@ class AlertsJsonFeedTest extends OffCanvasTestBase {
   public function testAnnounceFeedEmpty() {
     // Change the feed url and reset temp storage.
     AnnounceTestHttpClient::setAnnounceTestEndpoint($this->emptyJson);
-    drupal_flush_all_caches();
 
     $this->drupalLogin($this->user3);
     $this->drupalGet('<front>');
@@ -270,7 +263,6 @@ class AlertsJsonFeedTest extends OffCanvasTestBase {
     $page = $this->getSession()->getPage();
     $new_page_html = $page->getHtml();
     $this->assertStringContainsString('No announcements available', $new_page_html);
-
   }
 
 }
