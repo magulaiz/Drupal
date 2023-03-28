@@ -33,6 +33,7 @@ use Drupal\menu_link_content\MenuLinkContentInterface;
  *       "default" = "Drupal\menu_link_content\Form\MenuLinkContentForm",
  *       "delete" = "Drupal\menu_link_content\Form\MenuLinkContentDeleteForm"
  *     },
+ *     "link_target" = "\Drupal\menu_link_content\Entity\MenuLinkContentLinkTarget",
  *     "list_builder" = "Drupal\menu_link_content\MenuLinkListBuilder"
  *   },
  *   admin_permission = "administer menu",
