@@ -919,4 +919,4 @@ js-cookie:
     url: https://raw.githubusercontent.com/js-cookie/js-cookie/v3.0.1/LICENSE
     gpl-compatible: true
   js:
-    assets/vendor/js-cookie/js.cookie.min.js: {}
+    assets/vendor/js-cookie/js.cookie.min.js: {weight: -20}

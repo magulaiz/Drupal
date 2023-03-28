@@ -12,7 +12,8 @@
       return;
     }
     const toolbarState = JSON.parse(Cookies.get('toolbarState'));
-    const { activeTray, orientation, toolbarUserName } = toolbarState;
+    const { activeTray, orientation, toolbarUserName, isOriented } =
+      toolbarState;
     const activeTrayElement = document.querySelector(
       `.toolbar-tray[data-toolbar-tray="${activeTray}"]`,
     );
@@ -26,6 +27,12 @@
         'is-active',
       );
       activeTrayToggle.classList.add('is-active');
+    }
+
+    if (isOriented) {
+      document
+        .querySelector('#toolbar-administration')
+        .classList.add('toolbar-oriented');
     }
 
     const toolbarUserButton = document.querySelector('#toolbar-item-user');

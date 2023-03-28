@@ -677,6 +677,11 @@ function system_page_attachments(array &$page) {
   if (\Drupal::currentUser()->isAuthenticated()) {
     $page['#attached']['library'][] = 'core/drupal.active-link';
   }
+
+  if (_system_is_claro_admin_and_not_active() && \Drupal::service('module_handler')->moduleExists('user') && \Drupal::currentUser()->hasPermission('access toolbar')) {
+    require_once DRUPAL_ROOT . '/core/themes/claro/claro.theme';
+    claro_toolbar_attachments($page);
+  }
 }
 
 /**
@@ -1295,25 +1300,6 @@ function system_preprocess_toolbar(array &$variables, $hook, $info) {
   if (_system_is_claro_admin_and_not_active()) {
     require_once DRUPAL_ROOT . '/core/themes/claro/claro.theme';
     claro_preprocess_toolbar($variables, $hook, $info);
-  }
-}
-
-/**
- * Implements hook_preprocess_html().
- */
-function system_preprocess_html(&$variables) {
-  // Add toolbar-specific preprocessing of the html render array when Claro is
-  // the admin theme, but viewing the default theme.
-  if (_system_is_claro_admin_and_not_active() && \Drupal::service('module_handler')->moduleExists('user') && \Drupal::currentUser()->hasPermission('access toolbar')) {
-    // If the toolbar is present, preprocess_html should be called on every page
-    // load, just like it is when using the admin theme.
-    $variables['#cache']['max-age'] = 0;
-    $toolbar_state_serialized = \Drupal::request()->cookies->get('toolbarState');
-    $toolbar_state = $toolbar_state_serialized ? JSON::decode($toolbar_state_serialized) : [];
-    if (!isset($toolbar_state['hasActiveTab']) || $toolbar_state['hasActiveTab'] !== FALSE) {
-      require_once DRUPAL_ROOT . '/core/themes/claro/claro.theme';
-      claro_add_toolbar_active_classes_on_load($variables);
-    }
   }
 }
 

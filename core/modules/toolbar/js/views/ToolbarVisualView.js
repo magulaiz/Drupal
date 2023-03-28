@@ -114,8 +114,15 @@
         this.updateTrayOrientation();
         this.updateBarAttributes();
 
+        $('html').removeClass([
+          'toolbar-loading',
+          'toolbar-horizontal',
+          'toolbar-vertical',
+          'toolbar-tray-open',
+          'toolbar-fixed',
+        ]);
         $('body').removeClass('toolbar-loading');
-        $('#toolbar-anti-flicker-temporary').remove();
+        $('[data-toolbar-anti-flicker-loading]').remove();
 
         // Load the subtrees if the orientation of the toolbar is changed to
         // vertical. This condition responds to the case that the toolbar switches

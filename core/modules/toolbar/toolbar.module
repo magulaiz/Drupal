@@ -15,6 +15,7 @@ use Drupal\Core\Template\Attribute;
 use Drupal\Component\Utility\Crypt;
 use Drupal\Core\Url;
 use Drupal\toolbar\Controller\ToolbarController;
+use PHP_CodeSniffer\Tokenizers\JS;
 
 /**
  * Implements hook_help().
@@ -48,6 +49,45 @@ function toolbar_theme($existing, $type, $theme, $path) {
   ];
 
   return $items;
+}
+
+/**
+ * Implements hook_page_attachments().
+ */
+function toolbar_page_attachments(array &$page) {
+
+  $js = <<<JS
+  (function() {
+    const prefixedCookie = '; ' + document.cookie;
+    const parts = prefixedCookie.split('; toolbarState=');
+    const encodedToolbarState =  (parts.length === 2) ? parts.pop().split(';').shift() : false;
+    const classesToAdd = ['toolbar-loading'];
+    if (encodedToolbarState) {
+      const toolbarState = JSON.parse(decodeURIComponent(encodedToolbarState));
+      const { orientation, hasActiveTab, isFixed} = toolbarState;
+      classesToAdd.push(orientation ? 'toolbar-' + orientation : 'toolbar-horizontal');
+      if(hasActiveTab !== false) {
+        classesToAdd.push('toolbar-tray-open');
+      }
+      if (isFixed) {
+        classesToAdd.push('toolbar-fixed');
+      }
+    }
+    document.querySelector('html').classList.add(...classesToAdd);
+  })();
+JS;
+
+  $page['#attached']['html_head'][] = [
+    [
+      '#tag' => 'script',
+      '#attributes' => [
+        'type' => 'text/javascript',
+        'data-toolbar-anti-flicker-loading' => TRUE,
+      ],
+      '#value' => $js,
+    ],
+    'anti_flicker_js',
+  ];
 }
 
 /**
@@ -256,29 +296,8 @@ function toolbar_preprocess_html(&$variables) {
   if (!\Drupal::currentUser()->hasPermission('access toolbar')) {
     return;
   }
-  $toolbar_state_serialized = \Drupal::request()->cookies->get('toolbarState');
-  $toolbar_state = $toolbar_state_serialized ? JSON::decode($toolbar_state_serialized) : [];
 
   $variables['attributes']['class'][] = 'toolbar-loading';
-
-  if (!empty($toolbar_state['orientation'])) {
-    $variables['attributes']['class'][] = "toolbar-{$toolbar_state['orientation']}";
-  }
-  else {
-    $variables['attributes']['class'][] = 'toolbar-horizontal';
-  }
-
-  if (!isset($toolbar_state['hasActiveTab']) || $toolbar_state['hasActiveTab'] !== FALSE) {
-    $variables['attributes']['class'][] = 'toolbar-tray-open';
-  }
-
-  if (!empty($toolbar_state['isFixed'])) {
-    $variables['attributes']['class'][] = 'toolbar-fixed';
-  }
-
-  if (!empty($toolbar_state['isOriented'])) {
-    $variables['attributes']['class'][] = 'toolbar-oriented';
-  }
 }
 
 /**

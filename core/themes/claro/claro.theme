@@ -1749,11 +1749,11 @@ function claro_system_module_invoked_theme_registry_alter(array &$theme_registry
 }
 
 /**
- * Implements hook_preprocess_html().
+ * Implements hook_page_attachments().
  */
-function claro_preprocess_html(&$variables) {
+function claro_page_attachments_alter(&$page) {
   if (\Drupal::service('module_handler')->moduleExists('user') && \Drupal::currentUser()->hasPermission('access toolbar')) {
-    claro_add_toolbar_active_classes_on_load($variables);
+    claro_toolbar_attachments($page);
   }
 }
 
@@ -1762,61 +1762,57 @@ function claro_preprocess_html(&$variables) {
  * the toolbar is completely initialized by JavaScript. Once the toolbar is
  * loaded, the style tag is no longer necessary and is removed from the DOM.
  *
- * @param array $variables
- *   An associative array provided by to hook_preprocess_html().
+ * This is added via JavaScript as the styles are based on stored cookie values.
  *
- * @see core/modules/toolbar/js/toolbar.js
+ * The JavaScript is inline so it is executed before the first render and is not
+ * delayed by asset load time.
  */
-function claro_add_toolbar_active_classes_on_load(&$variables) {
-  $toolbar_state_serialized = \Drupal::request()->cookies->get('toolbarState');
-  $toolbar_state = $toolbar_state_serialized ? JSON::decode($toolbar_state_serialized) : [];
+function claro_toolbar_attachments(&$page) {
+  $gt = '>';
+  $js = <<<JS
+  (function() {
+    const prefixedCookie = '; ' + document.cookie;
+    const parts = prefixedCookie.split('; toolbarState=');
+    const encodedToolbarState =  (parts.length === 2) ? parts.pop().split(';').shift() : false;
+    if (encodedToolbarState) {
+      const toolbarState = JSON.parse(decodeURIComponent(encodedToolbarState));
+      let {hasActiveTab, activeTray, activeTabId} = toolbarState;
+  
+      if (typeof hasActiveTab === 'undefined') {
+        activeTray = 'toolbar-item-administration-tray';
+        activeTabId = 'toolbar-item-administration';
+      }
+      if (activeTray) {
+        let styleContent = `.toolbar-loading [data-drupal-claro-processed-toolbar] #` + activeTabId + ` {
+          background-image: linear-gradient(rgba(255, 255, 255, 0.25) 20%, transparent 200%);
+        }
+        .toolbar-loading [data-drupal-claro-processed-toolbar] #` + activeTabId + `-tray {
+          display: block; box-shadow: -1px 0 5px 2px rgb(0 0 0 / 33%);
+          border-right: 1px solid #aaa; background-color: #f5f5f5;
+        }
+        .toolbar-loading.toolbar-vertical.toolbar-tray-open [data-drupal-claro-processed-toolbar] #` + activeTabId + `-tray {
+          width: 15rem; height: 100vh;
+        }
+       .toolbar-loading.toolbar-horizontal :not(#` + activeTray + `) {$gt} .toolbar-lining {opacity: 0}`;
+        
+        const style = document.createElement('style');
+        style.textContent = styleContent;
+        style.setAttribute('data-toolbar-anti-flicker-loading', true)
+        document.querySelector('head').appendChild(style);
+      }
+    }
+  })()
+JS;
 
-  // If hasActiveTab is not yet set, then the Cookie itself is not yet set and
-  // the toolbar defaults to having the administration tray open.
-  if (!isset($toolbar_state['hasActiveTab'])) {
-    $active_tray = 'toolbar-item-administration-tray';
-    $active_tab_id = 'toolbar-item-administration';
-  }
-  else {
-    $active_tray = $toolbar_state['activeTray'] ?? FALSE;
-    $active_tab_id = $toolbar_state['activeTabId'] ?? FALSE;
-  }
-
-  if (!empty($active_tray)) {
-    $gt = '>';
-    // There is a lag between page load and when the toolbar's JavaScript adds
-    // the is-active classes to the buttons and trays that are currently active.
-    // If the management of is-active was not managed by JavaScript, the toolbar
-    // cache would need to be cleared any time toolbar button was clicked.
-    // Because active tab and tray info is available via cookie, and
-    // preprocess_html executes on every page load, we can provide styling
-    // equivalent to what results from adding is-active by targeting the
-    // ids of those elements.
-    // These styles are not necessary after the toolbar loads, and are removed.
-    $style = <<<STYLE
-  .toolbar-loading [data-drupal-claro-processed-toolbar] #{$active_tab_id} {
-     background-image: linear-gradient(rgba(255, 255, 255, 0.25) 20%, transparent 200%);
-   }
-  .toolbar-loading [data-drupal-claro-processed-toolbar] #{$active_tab_id}-tray {
-     display: block; box-shadow: -1px 0 5px 2px rgb(0 0 0 / 33%);
-     border-right: 1px solid #aaa; background-color: #f5f5f5;
-   }
-  .toolbar-loading.toolbar-vertical.toolbar-tray-open [data-drupal-claro-processed-toolbar] #{$active_tab_id}-tray {
-     width: 15rem; height: 100vh;
-   }
-   .toolbar-loading.toolbar-horizontal :not(#{$active_tray}) {$gt} .toolbar-lining {opacity: 0} 
-STYLE;
-
-    $variables['page']['#attached']['html_head'][] = [
-      [
-        '#tag' => 'style',
-        '#attributes' => ['id' => 'toolbar-anti-flicker-temporary'],
-        'children' => [
-          '#type' => 'inline_template',
-          '#template' => $style,
-        ],
+  $page['#attached']['html_head'][] = [
+    [
+      '#tag' => 'script',
+      '#attributes' => [
+        'type' => 'text/javascript',
+        'data-toolbar-anti-flicker-loading' => TRUE,
       ],
-      'toolbar_init',
-    ];
-  }
+      '#value' => $js,
+    ],
+    'anti_flicker_js_to_make_css',
+  ];
 }
