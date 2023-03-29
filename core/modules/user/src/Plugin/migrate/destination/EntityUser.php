@@ -12,7 +12,6 @@ use Drupal\Core\Session\AccountSwitcherInterface;
 use Drupal\migrate\Plugin\MigrationInterface;
 use Drupal\migrate\Plugin\migrate\destination\EntityContentBase;
 use Drupal\migrate\Row;
-use Drupal\user\UserInterface;
 use Drupal\user\UserNameItem;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
