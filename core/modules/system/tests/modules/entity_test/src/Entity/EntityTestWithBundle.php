@@ -26,6 +26,8 @@ use Drupal\Core\Field\BaseFieldDefinition;
  *   },
  *   base_table = "entity_test_with_bundle",
  *   data_table = "entity_test_with_bundle_field_data",
+ *   revision_table = "entity_test_with_bundle_revision",
+ *   revision_data_table = "entity_test_with_bundle_revision_field_data",
  *   admin_permission = "administer entity_test_with_bundle content",
  *   persistent_cache = FALSE,
  *   translatable = TRUE,
