@@ -35,7 +35,7 @@ class ListItemFormatter extends FormatterBase {
   /**
    * {@inheritdoc}
    */
-  public static function getListTypeOptions() {
+  public function getListTypeOptions() {
     return [
       'ol' => $this->t('Ordered list'),
       'ul' => $this->t('Unordered list'),
@@ -50,9 +50,9 @@ class ListItemFormatter extends FormatterBase {
 
     $elements = parent::settingsForm($form, $form_state);
     $elements['list_type'] = [
-      '#title' => t('List type'),
+      '#title' => $this->t('List type'),
       '#type' => 'select',
-      '#options' => static::getListTypeOptions(),
+      '#options' => $this->getListTypeOptions(),
       '#default_value' => $this->getSetting('list_type'),
     ];
 
@@ -64,7 +64,7 @@ class ListItemFormatter extends FormatterBase {
    */
   public function settingsSummary() {
     $summary = parent::settingsSummary();
-    $list_type_options = static::getListTypeOptions();
+    $list_type_options = $this->getListTypeOptions();
     $summary[] = $this->t('List type: @list_type', ['@list_type' => $list_type_options[$this->getSetting('list_type')]]);
     return $summary;
   }
