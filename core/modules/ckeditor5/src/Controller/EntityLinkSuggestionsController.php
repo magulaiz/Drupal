@@ -148,6 +148,12 @@ class EntityLinkSuggestionsController implements ContainerInjectionInterface {
    *   The string to search.
    */
   public function getSuggestions(string $target_entity_type_id, string $string) {
+    // If the user input is a current entity URL, don't get more suggestions.
+    if ($entity_id = static::findEntityIdByUrl($target_entity_type_id, $string)) {
+      $entity = $this->entityTypeManager->getStorage($target_entity_type_id)->load($entity_id);
+      return [$this->createSuggestion($entity)];
+    }
+
     // Do not call ::getPluginId() or ::getInstance() because this favors a
     // "link_target" variant of the default selection plugin for the given
     // entity type, if it exists.
@@ -272,4 +278,22 @@ class EntityLinkSuggestionsController implements ContainerInjectionInterface {
     return $this->t(':entity-type-label - :bundle-label', $args);
   }
 
+  /**
+   * Finds entity ID from the given input.
+   *
+   * @param string $target_entity_type_id
+   *   An entity type to get suggestions for.
+   * @param string $user_input
+   *   The string to url parse.
+   *
+   * @return string|null
+   *   An entity ID parsed from the user input, otherwise NULL.
+   */
+  protected static function findEntityIdByUrl(string $target_entity_type_id, string $user_input): ?string {
+    $expected_url_prefix = "entity:$target_entity_type_id/";
+    if (str_starts_with($user_input, $expected_url_prefix)) {
+      return substr($user_input, strlen($expected_url_prefix));
+    }
+    return NULL;
+  }
 }
