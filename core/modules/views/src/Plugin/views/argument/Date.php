@@ -141,4 +141,14 @@ class Date extends Formula implements ContainerFactoryPluginInterface {
     return parent::getFormula();
   }
 
+  /**
+   * Returns the date format used in the query in a form usable by PHP.
+   *
+   * @return string
+   *   The date format used in the query.
+   */
+  public function getArgFormat() {
+    return $this->argFormat;
+  }
+
 }

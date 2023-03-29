@@ -94,3 +94,10 @@ function views_post_update_fix_revision_id_part(&$sandbox = NULL): void {
       return $view_config_updater->needsRevisionFieldHyphenFix($view);
     });
 }
+
+/**
+ * Clear cache to add new date default arguments.
+ */
+function views_post_update_add_date_default_arguments() {
+  // Empty update to cause a cache rebuild so that schema additions are read.
+}
