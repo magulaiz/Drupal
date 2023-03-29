@@ -4,7 +4,7 @@ import { findAttributeRange } from 'ckeditor5/src/typing';
 
 export default class DrupalEntityLinkSuggestionsEditing extends Plugin {
   init() {
-    this.attrs = ['data-entity-type', 'data-entity-uuid'];
+    this.attrs = ['data-entity-type', 'data-entity-uuid', 'download'];
     this._allowAndConvertExtraAttributes();
     this._removeExtraAttributesOnUnlinkCommandExecute();
     this._refreshExtraAttributeValues();
