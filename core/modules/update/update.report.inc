@@ -5,6 +5,7 @@
  * Code required only when rendering the available updates report.
  */
 
+use Drupal\Core\Extension\ExtensionTypeInterface;
 use Drupal\Core\Template\Attribute;
 use Drupal\Core\Url;
 use Drupal\update\ProjectRelease;
@@ -86,8 +87,8 @@ function template_preprocess_update_report(&$variables) {
 
   $project_types = [
     'core' => t('Drupal core'),
-    'module' => t('Modules'),
-    'theme' => t('Themes'),
+    ExtensionTypeInterface::MODULE => t('Modules'),
+    ExtensionTypeInterface::THEME => t('Themes'),
     'module-disabled' => t('Uninstalled modules'),
     'theme-disabled' => t('Uninstalled themes'),
   ];

@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\update\Functional;
 
+use Drupal\Core\Extension\ExtensionTypeInterface;
 use Drupal\Core\Extension\InfoParserDynamic;
 use Drupal\Core\Updater\Updater;
 use Drupal\Core\Url;
@@ -80,7 +81,7 @@ class UpdateUploadTest extends UpdateUploaderTestBase {
 
     // Ensure that a new module can be extracted and installed.
     $updaters = drupal_get_updaters();
-    $moduleUpdater = $updaters['module']['class'];
+    $moduleUpdater = $updaters[ExtensionTypeInterface::MODULE]['class'];
     $installedInfoFilePath = $this->container->get('update.root') . '/' . $moduleUpdater::getRootDirectoryRelativePath() . '/update_test_new_module/update_test_new_module.info.yml';
     $this->assertFileDoesNotExist($installedInfoFilePath);
     $validArchiveFile = __DIR__ . '/../../update_test_new_module/8.x-1.0/update_test_new_module.tar.gz';
