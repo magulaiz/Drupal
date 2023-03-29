@@ -23,6 +23,7 @@ class AnnounceFetcherUnitTest extends UnitTestCase {
    * {@inheritdoc}
    */
   public function setUp():void {
+    parent::setUp();
     $httpClient = $this->createMock('GuzzleHttp\ClientInterface');
     $config = $this->createMock('Drupal\Core\Config\ConfigFactoryInterface');
     $tempStore = $this->createMock('Drupal\Core\KeyValueStore\KeyValueExpirableFactory');
