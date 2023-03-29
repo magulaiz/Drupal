@@ -296,4 +296,5 @@ class EntityLinkSuggestionsController implements ContainerInjectionInterface {
     }
     return NULL;
   }
+
 }
