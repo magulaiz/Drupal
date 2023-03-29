@@ -491,7 +491,7 @@
             "dist": {
                 "type": "path",
                 "url": "core",
-                "reference": "4a6aa3700723fe42a3a8add8c27af45f8710ddb2"
+                "reference": "8306c0b1df5310fa3b84712de01cb389a4ce3e1a"
             },
             "require": {
                 "asm89/stack-cors": "^2.1",
@@ -531,6 +531,7 @@
                 "symfony/psr-http-message-bridge": "^2.1",
                 "symfony/routing": "^6.2",
                 "symfony/serializer": "^6.2",
+                "symfony/string": "^6.2",
                 "symfony/validator": "^6.2",
                 "symfony/yaml": "^6.2",
                 "twig/twig": "^3.5.0"
@@ -5179,8 +5180,14 @@
             "version": "8.3.17",
             "source": {
                 "type": "git",
-                "url": "https://git.drupalcode.org/project/coder.git",
+                "url": "https://github.com/pfrenssen/coder.git",
                 "reference": "1c4662337418ab88c9ddf40348f0638e35d49182"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/pfrenssen/coder/zipball/1c4662337418ab88c9ddf40348f0638e35d49182",
+                "reference": "1c4662337418ab88c9ddf40348f0638e35d49182",
+                "shasum": ""
             },
             "require": {
                 "dealerdirect/phpcodesniffer-composer-installer": "^0.7.1 || ^1.0.0",
