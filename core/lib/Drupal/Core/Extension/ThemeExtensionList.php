@@ -116,7 +116,7 @@ class ThemeExtensionList extends ExtensionList {
     // Always get the freshest list of themes (rather than the already cached
     // list in $this->installedThemes) when building the theme listing because a
     // theme could have just been installed or uninstalled.
-    $this->installedThemes = $this->configFactory->get('core.extension')->get('theme') ?: [];
+    $this->installedThemes = $this->configFactory->get('core.extension')->get(ExtensionTypeInterface::THEME) ?: [];
 
     $sub_themes = [];
     // Read info files for each theme.
@@ -293,7 +293,7 @@ class ThemeExtensionList extends ExtensionList {
   protected function getInstalledExtensionNames() {
     // Cache the installed themes to avoid multiple calls to the config system.
     if (!isset($this->installedThemes)) {
-      $this->installedThemes = $this->configFactory->get('core.extension')->get('theme') ?: [];
+      $this->installedThemes = $this->configFactory->get('core.extension')->get(ExtensionTypeInterface::THEME) ?: [];
     }
     return array_keys($this->installedThemes);
   }

@@ -106,9 +106,9 @@ class ModuleExtensionList extends ExtensionList {
    */
   protected function getProfileDirectories(ExtensionDiscovery $discovery) {
     $discovery->setProfileDirectories([]);
-    $all_profiles = $discovery->scan('profile');
+    $all_profiles = $discovery->scan(ExtensionTypeInterface::PROFILE);
     $active_profile = $all_profiles[$this->installProfile];
-    $profiles = array_intersect_key($all_profiles, $this->configFactory->get('core.extension')->get('module') ?: [$active_profile->getName() => 0]);
+    $profiles = array_intersect_key($all_profiles, $this->configFactory->get('core.extension')->get(ExtensionTypeInterface::MODULE) ?: [$active_profile->getName() => 0]);
 
     $profile_directories = array_map(function (Extension $profile) {
       return $profile->getPath();
@@ -160,7 +160,7 @@ class ModuleExtensionList extends ExtensionList {
     }
 
     // Add status, weight, and schema version.
-    $installed_modules = $this->configFactory->get('core.extension')->get('module') ?: [];
+    $installed_modules = $this->configFactory->get('core.extension')->get(ExtensionTypeInterface::MODULE) ?: [];
     foreach ($extensions as $name => $module) {
       $module->weight = $installed_modules[$name] ?? 0;
       $module->status = (int) isset($installed_modules[$name]);
