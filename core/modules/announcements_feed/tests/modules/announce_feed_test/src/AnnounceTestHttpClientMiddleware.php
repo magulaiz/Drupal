@@ -2,6 +2,7 @@
 
 namespace Drupal\announce_feed_test;
 
+use Drupal\Core\Cache\Cache;
 use GuzzleHttp\Promise\PromiseInterface;
 use GuzzleHttp\Psr7\Uri;
 use Psr\Http\Message\RequestInterface;
@@ -38,8 +39,7 @@ class AnnounceTestHttpClientMiddleware {
   public static function setAnnounceTestEndpoint(string $test_endpoint): void {
     \Drupal::state()->set('announce_test_endpoint', $test_endpoint);
     \Drupal::service('keyvalue.expirable')->get('announcements_feed')->delete('announcements');
-    \Drupal::service('announcements_feed.fetcher')->fetch(TRUE);
-    drupal_flush_all_caches();
+    Cache::invalidateTags(['announcements_feed:feed:' . \Drupal::currentUser()->id()]);
   }
 
 }
