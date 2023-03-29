@@ -407,7 +407,7 @@
       method: 'replaceWith',
       progress: {
         type: 'throbber',
-        message: Drupal.t('Processing...'),
+        message: Drupal.t('Wait a moment...'),
       },
       submit: {
         js: true,

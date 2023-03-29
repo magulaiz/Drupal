@@ -21928,7 +21928,7 @@ $connection->insert('locales_source')
   'lid' => '28',
   'location' => 'misc/ajax.js',
   'textgroup' => 'default',
-  'source' => 'Please wait...',
+  'source' => 'Wait a moment...',
   'context' => '',
   'version' => 'none',
 ))
