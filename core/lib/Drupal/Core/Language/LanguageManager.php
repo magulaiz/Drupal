@@ -307,7 +307,7 @@ class LanguageManager implements LanguageManagerInterface {
       'nb' => ['Norwegian Bokmål', 'Norsk, bokmål'],
       'nn' => ['Norwegian Nynorsk', 'Norsk, nynorsk'],
       'oc' => ['Occitan', 'Occitan'],
-      'or' => ['Odia', 'Odia'],
+      'or' => ['Odia', 'ଓଡିଆ'],
       'os' => ['Ossetian', 'Ossetian'],
       'pa' => ['Punjabi', 'ਪੰਜਾਬੀ'],
       'pl' => ['Polish', 'Polski'],
