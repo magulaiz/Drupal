@@ -3,6 +3,7 @@
 namespace Drupal\Core\Config;
 
 use Drupal\Core\Config\Importer\MissingContentEvent;
+use Drupal\Core\Extension\ExtensionTypeInterface;
 use Drupal\Core\Extension\ModuleExtensionList;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Extension\ModuleInstallerInterface;
@@ -280,11 +281,11 @@ class ConfigImporter {
    */
   protected function getEmptyExtensionsProcessedList() {
     return [
-      'module' => [
+      ExtensionTypeInterface::MODULE => [
         'install' => [],
         'uninstall' => [],
       ],
-      'theme' => [
+      ExtensionTypeInterface::THEME => [
         'install' => [],
         'uninstall' => [],
       ],
@@ -367,7 +368,8 @@ class ConfigImporter {
    * Sets an extension change as processed.
    *
    * @param string $type
-   *   The type of extension, either 'theme' or 'module'.
+   *   The type of extension, either ExtensionTypeInterface::THEME or
+   *   ExtensionTypeInterface::MODULE.
    * @param string $op
    *   The change operation performed, either install or uninstall.
    * @param string $name
@@ -406,7 +408,12 @@ class ConfigImporter {
     }, $module_list);
 
     // Determine which modules to uninstall.
-    $uninstall = array_keys(array_diff_key($current_extensions['module'], $new_extensions['module']));
+    $uninstall = array_keys(
+      array_diff_key(
+        $current_extensions[ExtensionTypeInterface::MODULE],
+        $new_extensions[ExtensionTypeInterface::MODULE]
+      )
+    );
     // Sort the list of newly uninstalled extensions by their weights, so that
     // dependencies are uninstalled last. Extensions of the same weight are
     // sorted in reverse alphabetical order, to ensure the order is exactly
@@ -426,10 +433,15 @@ class ConfigImporter {
     // 4.  0 1 actions
     // @todo Move this sorting functionality to the extension system.
     array_multisort(array_values($module_list), SORT_ASC, array_keys($module_list), SORT_DESC, $module_list);
-    $this->extensionChangelist['module']['uninstall'] = array_intersect(array_keys($module_list), $uninstall);
+    $this->extensionChangelist[ExtensionTypeInterface::MODULE]['uninstall'] = array_intersect(array_keys($module_list), $uninstall);
 
     // Determine which modules to install.
-    $install = array_keys(array_diff_key($new_extensions['module'], $current_extensions['module']));
+    $install = array_keys(
+      array_diff_key(
+        $new_extensions[ExtensionTypeInterface::MODULE],
+        $current_extensions[ExtensionTypeInterface::MODULE]
+      )
+    );
     // Always install required modules first. Respect the dependencies between
     // the modules.
     $install_required = [];
@@ -453,14 +465,18 @@ class ConfigImporter {
     arsort($install_required);
     arsort($install_non_required);
 
-    $this->extensionChangelist['module']['install'] = array_keys($install_required + $install_non_required);
+    $this->extensionChangelist[ExtensionTypeInterface::MODULE]['install'] = array_keys($install_required + $install_non_required);
 
     // If we're installing the install profile ensure it comes last. This will
     // occur when installing a site from configuration.
-    $install_profile_key = array_search($new_extensions['profile'], $this->extensionChangelist['module']['install'], TRUE);
+    $install_profile_key = array_search(
+      $new_extensions[ExtensionTypeInterface::PROFILE],
+      $this->extensionChangelist[ExtensionTypeInterface::MODULE]['install'],
+      TRUE
+    );
     if ($install_profile_key !== FALSE) {
-      unset($this->extensionChangelist['module']['install'][$install_profile_key]);
-      $this->extensionChangelist['module']['install'][] = $new_extensions['profile'];
+      unset($this->extensionChangelist[ExtensionTypeInterface::MODULE]['install'][$install_profile_key]);
+      $this->extensionChangelist[ExtensionTypeInterface::MODULE]['install'][] = $new_extensions[ExtensionTypeInterface::PROFILE];
     }
 
     // Get a list of themes with dependency weights as values.
@@ -473,21 +489,32 @@ class ConfigImporter {
     array_multisort(array_values($theme_list), SORT_ASC, array_keys($theme_list), SORT_DESC, $theme_list);
 
     // Work out what themes to install and to uninstall.
-    $uninstall = array_keys(array_diff_key($current_extensions['theme'], $new_extensions['theme']));
-    $this->extensionChangelist['theme']['uninstall'] = array_intersect(array_keys($theme_list), $uninstall);
+    $uninstall = array_keys(
+      array_diff_key(
+        $current_extensions[ExtensionTypeInterface::THEME],
+        $new_extensions[ExtensionTypeInterface::THEME]
+      )
+    );
+    $this->extensionChangelist[ExtensionTypeInterface::THEME]['uninstall'] = array_intersect(array_keys($theme_list), $uninstall);
     // Ensure that installed themes are sorted in exactly the reverse order
     // (with dependencies installed first, and themes of the same weight sorted
     // in alphabetical order).
-    $install = array_keys(array_diff_key($new_extensions['theme'], $current_extensions['theme']));
+    $install = array_keys(
+      array_diff_key(
+        $new_extensions[ExtensionTypeInterface::THEME],
+        $current_extensions[ExtensionTypeInterface::THEME]
+      )
+    );
     $theme_list = array_reverse($theme_list);
-    $this->extensionChangelist['theme']['install'] = array_intersect(array_keys($theme_list), $install);
+    $this->extensionChangelist[ExtensionTypeInterface::THEME]['install'] = array_intersect(array_keys($theme_list), $install);
   }
 
   /**
    * Gets a list changes for extensions.
    *
    * @param string $type
-   *   The type of extension, either 'theme' or 'module'.
+   *   The type of extension, either ExtensionTypeInterface::THEME or
+   *   ExtensionTypeInterface::MODULE.
    * @param string $op
    *   The change operation to get the unprocessed list for, either install
    *   or uninstall.
@@ -506,7 +533,8 @@ class ConfigImporter {
    * Gets a list of unprocessed changes for extensions.
    *
    * @param string $type
-   *   The type of extension, either 'theme' or 'module'.
+   *   The type of extension, either ExtensionTypeInterface::THEME or
+   *   ExtensionTypeInterface::MODULE.
    *
    * @return array
    *   An array of extension names.
@@ -591,11 +619,11 @@ class ConfigImporter {
     }
 
     $sync_steps = [];
-    $modules = $this->getUnprocessedExtensions('module');
+    $modules = $this->getUnprocessedExtensions(ExtensionTypeInterface::MODULE);
     foreach (['install', 'uninstall'] as $op) {
       $this->totalExtensionsToProcess += count($modules[$op]);
     }
-    $themes = $this->getUnprocessedExtensions('theme');
+    $themes = $this->getUnprocessedExtensions(ExtensionTypeInterface::THEME);
     foreach (['install', 'uninstall'] as $op) {
       $this->totalExtensionsToProcess += count($themes[$op]);
     }
@@ -623,8 +651,8 @@ class ConfigImporter {
     if (!empty($operation)) {
       $this->processExtension($operation['type'], $operation['op'], $operation['name']);
       $context['message'] = t('Synchronizing extensions: @op @name.', ['@op' => $operation['op'], '@name' => $operation['name']]);
-      $processed_count = count($this->processedExtensions['module']['install']) + count($this->processedExtensions['module']['uninstall']);
-      $processed_count += count($this->processedExtensions['theme']['uninstall']) + count($this->processedExtensions['theme']['install']);
+      $processed_count = count($this->processedExtensions[ExtensionTypeInterface::MODULE]['install']) + count($this->processedExtensions[ExtensionTypeInterface::MODULE]['uninstall']);
+      $processed_count += count($this->processedExtensions[ExtensionTypeInterface::THEME]['uninstall']) + count($this->processedExtensions[ExtensionTypeInterface::THEME]['install']);
       $context['finished'] = $processed_count / $this->totalExtensionsToProcess;
     }
     else {
@@ -741,7 +769,9 @@ class ConfigImporter {
    */
   protected function getNextExtensionOperation() {
     foreach (['uninstall', 'install'] as $op) {
-      $types = $op === 'uninstall' ? ['theme', 'module'] : ['module', 'theme'];
+      $types = $op === 'uninstall'
+        ? [ExtensionTypeInterface::THEME, ExtensionTypeInterface::MODULE]
+        : [ExtensionTypeInterface::MODULE, ExtensionTypeInterface::THEME];
       foreach ($types as $type) {
         $unprocessed = $this->getUnprocessedExtensions($type);
         if (!empty($unprocessed[$op])) {
@@ -857,7 +887,8 @@ class ConfigImporter {
    * Processes an extension change.
    *
    * @param string $type
-   *   The type of extension, either 'module' or 'theme'.
+   *   The type of extension, either ExtensionTypeInterface::MODULE or
+   *   ExtensionTypeInterface::THEME.
    * @param string $op
    *   The change operation.
    * @param string $name
@@ -868,7 +899,7 @@ class ConfigImporter {
     // extensions own default config directories.
     \Drupal::service('config.installer')
       ->setSourceStorage($this->storageComparer->getSourceStorage());
-    if ($type == 'module') {
+    if ($type == ExtensionTypeInterface::MODULE) {
       $this->moduleInstaller->$op([$name], FALSE);
       // Installing a module can cause a kernel boot therefore reinject all the
       // services.
@@ -878,7 +909,7 @@ class ConfigImporter {
       // module handler not to have loaded all the enabled modules.
       $this->moduleHandler->loadAll();
     }
-    if ($type == 'theme') {
+    if ($type == ExtensionTypeInterface::THEME) {
       // Theme uninstalls possible remove default or admin themes therefore we
       // need to import this before doing any. If there are no uninstalls and
       // the default or admin theme is changing this will be picked up whilst

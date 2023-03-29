@@ -16,6 +16,7 @@ use Drupal\Core\DependencyInjection\ServiceProviderInterface;
 use Drupal\Core\DependencyInjection\YamlFileLoader;
 use Drupal\Core\Extension\Extension;
 use Drupal\Core\Extension\ExtensionDiscovery;
+use Drupal\Core\Extension\ExtensionTypeInterface;
 use Drupal\Core\Http\TrustedHostsRequestFactory;
 use Drupal\Core\Installer\InstallerKernel;
 use Drupal\Core\Installer\InstallerRedirectTrait;
@@ -631,7 +632,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
         $this->containerNeedsDumping = FALSE;
         $GLOBALS['conf']['container_service_providers']['InstallerServiceProvider'] = 'Drupal\Core\Installer\InstallerServiceProvider';
       }
-      $this->moduleList = $extensions['module'] ?? [];
+      $this->moduleList = $extensions[ExtensionTypeInterface::MODULE] ?? [];
     }
     $module_filenames = $this->getModuleFileNames();
     $this->classLoaderAddMultiplePsr4($this->getModuleNamespacesPsr4($module_filenames));
@@ -756,7 +757,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
       // First, find profiles.
       $listing = new ExtensionDiscovery($this->root);
       $listing->setProfileDirectories([]);
-      $all_profiles = $listing->scan('profile');
+      $all_profiles = $listing->scan(ExtensionTypeInterface::PROFILE);
       $profiles = array_intersect_key($all_profiles, $this->moduleList);
 
       $profile_directories = array_map(function (Extension $profile) {
@@ -765,7 +766,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
       $listing->setProfileDirectories($profile_directories);
 
       // Now find modules.
-      $this->moduleData = $profiles + $listing->scan('module');
+      $this->moduleData = $profiles + $listing->scan(ExtensionTypeInterface::MODULE);
     }
     return $this->moduleData[$module] ?? FALSE;
   }
@@ -1634,7 +1635,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
     $config = $this->getConfigStorage()->read('core.extension');
 
     // Normalize an empty string to a NULL value.
-    return $config['profile'] ?? NULL;
+    return $config[ExtensionTypeInterface::PROFILE] ?? NULL;
   }
 
 }
