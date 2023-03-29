@@ -133,7 +133,7 @@ class EntityLinkSuggestionsTest extends WebDriverTestBase {
     $results[0]->click();
 
     // Make sure the link field is populated with the test entity's URL.
-    $expected_url = base_path() . 'node/1';
+    $expected_url = 'entity:node/1';
     $this->assertSame($expected_url, $autocomplete_field->getValue());
     $balloon->pressButton('Save');
     // Assert balloon was closed by pressing its "Save" button.
@@ -142,7 +142,7 @@ class EntityLinkSuggestionsTest extends WebDriverTestBase {
     // Make sure all attributes are populated.
     $linkit_link = $assert_session->waitForElementVisible('css', '.ck-content a');
     $this->assertNotNull($linkit_link);
-    $this->assertSame($expected_url, $linkit_link->getAttribute('href'));
+    $this->assertSame('#', $linkit_link->getAttribute('href'));
     $this->assertSame('node', $linkit_link->getAttribute('data-entity-type'));
     $this->assertSame($entity->uuid(), $linkit_link->getAttribute('data-entity-uuid'));
 
