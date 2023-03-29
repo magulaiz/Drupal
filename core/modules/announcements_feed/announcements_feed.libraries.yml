@@ -14,7 +14,6 @@ drupal.announcements_feed.toolbar:
   dependencies:
     - core/drupal
     - core/once
-    - core/jquery
 
 drupal.announcements_feed.page:
   version: VERSION

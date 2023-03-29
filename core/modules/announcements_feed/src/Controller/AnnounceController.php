@@ -93,7 +93,7 @@ class AnnounceController extends ControllerBase implements ContainerInjectionInt
       // @todo Lazy builder and `user` context.
       '#cache' => [
         'contexts' => [
-          'user.roles:anonymous',
+          'user',
           'url.query_args:_wrapper_format',
         ],
         'tags' => [

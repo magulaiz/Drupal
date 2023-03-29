@@ -47,7 +47,6 @@ class AnnounceTestHttpClient implements ClientInterface {
   public static function setAnnounceTestEndpoint(string $test_endpoint): void {
     \Drupal::state()->set('announce_test_endpoint', $test_endpoint);
     \Drupal::service('keyvalue.expirable')->get('announcements_feed')->delete('announcements');
-    \Drupal::service('user.data')->delete('announcements_feed');
     \Drupal::service('announcements_feed.fetcher')->fetch(TRUE);
     drupal_flush_all_caches();
   }
