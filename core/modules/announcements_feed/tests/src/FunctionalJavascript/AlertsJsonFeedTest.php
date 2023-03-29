@@ -3,7 +3,7 @@
 namespace Drupal\Tests\announcements_feed\FunctionalJavascript;
 
 use Drupal\Tests\system\FunctionalJavascript\OffCanvasTestBase;
-use Drupal\announce_feed_test\AnnounceTestHttpClient;
+use Drupal\announce_feed_test\AnnounceTestHttpClientMiddleware;
 
 /**
  * Test the access announcement according to json feed changes.
@@ -105,7 +105,7 @@ class AlertsJsonFeedTest extends OffCanvasTestBase {
         'access announcements',
       ]
     );
-    AnnounceTestHttpClient::setAnnounceTestEndpoint($this->responseJson);
+    AnnounceTestHttpClientMiddleware::setAnnounceTestEndpoint($this->responseJson);
   }
 
   /**
@@ -126,7 +126,7 @@ class AlertsJsonFeedTest extends OffCanvasTestBase {
     $this->assertSession()->elementNotExists('css', '.announce-new');
 
     // Change the feed url and reset temp storage.
-    AnnounceTestHttpClient::setAnnounceTestEndpoint($this->updatedJson);
+    AnnounceTestHttpClientMiddleware::setAnnounceTestEndpoint($this->updatedJson);
 
     $this->drupalGet('<front>');
 
@@ -214,7 +214,7 @@ class AlertsJsonFeedTest extends OffCanvasTestBase {
     $this->assertStringNotContainsString('Only 10 - Drupal 106 is available and this feed is Updated', $new_page_html);
 
     // Change the feed url and reset temp storage.
-    AnnounceTestHttpClient::setAnnounceTestEndpoint($this->updatedJson);
+    AnnounceTestHttpClientMiddleware::setAnnounceTestEndpoint($this->updatedJson);
 
     $this->drupalGet('<front>');
     $this->assertSession()->elementExists('css', '.announce-new');
@@ -228,7 +228,7 @@ class AlertsJsonFeedTest extends OffCanvasTestBase {
     $this->drupalLogout();
 
     // Change the feed url and reset temp storage.
-    AnnounceTestHttpClient::setAnnounceTestEndpoint($this->removed);
+    AnnounceTestHttpClientMiddleware::setAnnounceTestEndpoint($this->removed);
     $this->drupalLogin($this->user3);
 
     // If the removed item is only item the
@@ -250,7 +250,7 @@ class AlertsJsonFeedTest extends OffCanvasTestBase {
    */
   public function testAnnounceFeedEmpty() {
     // Change the feed url and reset temp storage.
-    AnnounceTestHttpClient::setAnnounceTestEndpoint($this->emptyJson);
+    AnnounceTestHttpClientMiddleware::setAnnounceTestEndpoint($this->emptyJson);
 
     $this->drupalLogin($this->user3);
     $this->drupalGet('<front>');

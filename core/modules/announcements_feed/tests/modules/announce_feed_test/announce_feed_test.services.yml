@@ -1,6 +1,5 @@
 services:
-  http_client.announce_feed_test:
-    public: false
-    class: Drupal\announce_feed_test\AnnounceTestHttpClient
-    decorates: http_client
-    arguments: ['@http_client.announce_feed_test.inner']
+  announce_feed_test.announce_client_middleware:
+    class: Drupal\announce_feed_test\AnnounceTestHttpClientMiddleware
+    tags:
+      - { name: http_client_middleware }

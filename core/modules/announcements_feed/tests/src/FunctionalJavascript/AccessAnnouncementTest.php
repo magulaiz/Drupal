@@ -3,7 +3,7 @@
 namespace Drupal\Tests\announcements_feed\FunctionalJavascript;
 
 use Drupal\Tests\system\FunctionalJavascript\OffCanvasTestBase;
-use Drupal\announce_feed_test\AnnounceTestHttpClient;
+use Drupal\announce_feed_test\AnnounceTestHttpClientMiddleware;
 
 /**
  * Test the access announcement permissions to get access announcement icon.
@@ -33,7 +33,7 @@ class AccessAnnouncementTest extends OffCanvasTestBase {
   public function setUp():void {
     parent::setUp();
     $response_json = $this->buildUrl('/announce-feed-json/community-feeds');
-    AnnounceTestHttpClient::setAnnounceTestEndpoint($response_json);
+    AnnounceTestHttpClientMiddleware::setAnnounceTestEndpoint($response_json);
   }
 
   /**

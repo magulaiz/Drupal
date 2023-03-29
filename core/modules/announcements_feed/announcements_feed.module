@@ -43,8 +43,9 @@ function announcements_feed_toolbar() {
     $items['announcement'] = [
       // @todo Lazy builder and `user` context.
       '#cache' => [
-        // Vary cache for anonymous and authenticated users.
-        'contexts' => ['user.roles:anonymous'],
+        'contexts' => [
+          'user',
+        ],
         'tags' => [
           'announcements_feed:feed:' . $current_user_id,
         ],
