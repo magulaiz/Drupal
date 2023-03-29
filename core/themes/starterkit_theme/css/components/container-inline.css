@@ -7,6 +7,8 @@
 .container-inline .label:after {
   content: ":";
 }
+.container-inline .form-type--checkbox label:after,
+.container-inline .form-type--radio label:after,
 .form-type-radios .container-inline label:after,
 .form-type-checkboxes .container-inline label:after {
   content: "";
@@ -19,4 +21,12 @@
 .container-inline.form-actions {
   margin-top: 0;
   margin-bottom: 0;
+}
+
+/* remove the trailing colon from the label
+of the last checkbox in a group of nested checkboxes
+inside an element with the class ".container-inline" */
+
+.container-inline .form-item label:last-child::after {
+  content: none;
 }

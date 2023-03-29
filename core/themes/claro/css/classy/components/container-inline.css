@@ -21,3 +21,11 @@
   margin-top: 0;
   margin-bottom: 0;
 }
+
+/* remove the trailing colon from the label
+of the last checkbox in a group of nested checkboxes
+inside an element with the class ".container-inline" */
+
+.container-inline .form-item label:last-child::after {
+  content: none;
+}
