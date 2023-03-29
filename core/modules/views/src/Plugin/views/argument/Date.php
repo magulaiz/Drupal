@@ -147,7 +147,7 @@ class Date extends Formula implements ContainerFactoryPluginInterface {
    * @return string
    *   The date format used in the query.
    */
-  public function getArgFormat() {
+  public function getArgFormat(): string {
     return $this->argFormat;
   }
 

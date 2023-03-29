@@ -77,17 +77,10 @@ class NodeCreated extends ArgumentDefaultPluginBase implements CacheableDependen
   public function getArgument() {
     // Return the current node creation time if a current node can be found.
     if (($node = $this->routeMatch->getParameter('node')) && $node instanceof NodeInterface) {
-      $argument = $this->argument;
 
       // The Date argument handlers provide their own format strings, otherwise
       // use a default.
-      if ($argument instanceof Date) {
-        /** @var \Drupal\views\Plugin\views\argument\Date $argument */
-        $format = $argument->getArgFormat();
-      }
-      else {
-        $format = 'Y-m-d';
-      }
+      $format = $this->argument instanceof Date ? $this->argument->getArgFormat() : 'Y-m-d';
 
       return $this->dateFormatter->format($node->getCreatedTime(), 'custom', $format);
     }

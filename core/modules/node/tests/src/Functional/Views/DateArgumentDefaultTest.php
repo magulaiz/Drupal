@@ -163,7 +163,7 @@ class DateArgumentDefaultTest extends NodeTestBase {
     $display['display_options']['arguments']['changed']['id'] = 'changed_year_month';
     $view->save();
 
-    // Test that the nodes with a create date in the same month are shown.
+    // Test that the nodes with a changed date in the same month are shown.
     $this->drupalGet($this->fixedTimeNode->toUrl());
     $assert->pageTextContains($this->fixedTimeNode->getTitle());
     $assert->pageTextContains($this->sameMonthNode->getTitle());
@@ -173,7 +173,7 @@ class DateArgumentDefaultTest extends NodeTestBase {
     $display['display_options']['arguments']['changed']['field'] = 'title';
     $view->save();
 
-    // Test that the nodes with a title in the same create date are shown.
+    // Test that the nodes with a title in the same changed date are shown.
     $nodeTitleFixed = $this->drupalCreateNode(['type' => 'page', 'title' => '1975-05-18']);
     $this->drupalGet($this->fixedTimeNode->toUrl());
     $assert->pageTextContains($nodeTitleFixed->getTitle());
