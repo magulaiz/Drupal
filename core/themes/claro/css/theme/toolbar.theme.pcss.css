@@ -158,18 +158,18 @@
 .toolbar-menu-administration button:focus::after,
 .toolbar-toggle-orientation button:focus::after {
   position: absolute;
-  content: '';
+  content: "";
   box-shadow: inset 0 0 0 var(--focus-border-size) var(--color-focus), inset 0 0 0 calc(var(--focus-border-size) + var(--focus-border-offset-size)) var(--color-white);
 }
 .toolbar-tray-horizontal a:focus::after,
 .toolbar-tray-horizontal button:focus::after {
-  width: calc(100% + 2px);
   left: -1px; /* LTR */
+  width: calc(100% + 2px);
 }
 [dir="rtl"] .toolbar-tray-horizontal a:focus::after,
 [dir="rtl"] .toolbar-tray-horizontal button:focus::after {
-  left: auto;
   right: -1px;
+  left: auto;
 }
 .toolbar-tray-horizontal .toolbar-toggle-orientation button:focus::after {
   width: calc(100% + 1px);
@@ -193,19 +193,19 @@
 [dir="rtl"] .toolbar-tray-horizontal .toolbar-menu-administration > .toolbar-menu > .menu-item:first-child > :not(.toolbar-menu) a:focus::after,
 [dir="rtl"] .toolbar-tray-horizontal .toolbar-menu-administration > .toolbar-menu > .menu-item:first-child > button:focus::after,
 [dir="rtl"] .toolbar-tray-horizontal .toolbar-menu-administration > .toolbar-menu > .menu-item:first-child > :not(.toolbar-menu) button:focus::after {
-  left: auto;
   right: 0;
+  left: auto;
 }
 .toolbar-tray-horizontal .toolbar-menu .toolbar-menu a:focus::after,
 .toolbar-tray-horizontal .toolbar-menu .toolbar-menu button:focus::after {
-  height: calc(100% + 2px);
-  top: -1px;
   z-index: 2;
+  top: -1px;
+  height: calc(100% + 2px);
 }
 .toolbar-tray-vertical a:focus::after,
 .toolbar-tray-vertical button:focus::after {
-  left: 0; /* LTR */
   top: 0;
+  left: 0; /* LTR */
   width: 100%;
   height: calc(100% + 1px);
 }
