@@ -51,7 +51,7 @@
 /* Medium */
 @media screen and (min-width: 48rem) { /* 768px */
   .block-type-banner-block {
-    background-color: var(--color-grey-darkest);
+    background-color: var(--color-gray-darkest);
     background-repeat: no-repeat;
     background-position: left center;
     background-size: cover;
@@ -72,7 +72,7 @@
     margin: 0;
     padding: 1.777em;
     color: var(--color-white);
-    border: var(--border-width) solid var(--color-grey-darkest);
+    border: var(--border-width) solid var(--color-gray-darkest);
     background: rgba(0, 0, 0, 0.42);
   }
 

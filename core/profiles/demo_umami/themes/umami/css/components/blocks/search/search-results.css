@@ -60,7 +60,7 @@
   margin: var(--spacing-smallest) 0;
   padding: 0.8rem 0.4rem;
   color: var(--color-black);
-  border: var(--border-width-medium) solid var(--color-grey);
+  border: var(--border-width-medium) solid var(--color-gray);
   font-size: var(--spacing);
 }
 .search-form .form-search:focus {

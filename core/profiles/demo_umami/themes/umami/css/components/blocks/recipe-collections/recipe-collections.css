@@ -1,7 +1,7 @@
 .block-views-blockrecipe-collections-block {
   padding: var(--spacing-largest) 4%;
   color: var(--color-white);
-  background: var(--color-grey);
+  background: var(--color-gray);
 }
 .block-views-blockrecipe-collections-block .block__title {
   margin-bottom: var(--spacing-larger);
