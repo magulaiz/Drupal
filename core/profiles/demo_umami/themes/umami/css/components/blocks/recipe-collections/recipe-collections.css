@@ -21,7 +21,7 @@
 @media screen and (min-width: 48em) {
   .block-views-blockrecipe-collections-block .views-col {
     width: 25%;
-    max-width: 1var(--spacing-largest);
+    max-width: 13rem;
     text-align: left; /* LTR */
   }
   [dir="rtl"] .block-views-blockrecipe-collections-block .views-col {
