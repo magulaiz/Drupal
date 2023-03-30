@@ -1299,7 +1299,7 @@ function _locale_rebuild_js($langcode = NULL) {
 
     // Save the file.
     try {
-      if ($file_system->saveData($data, $dest)) {
+      if ($file_system->saveData($data, $dest, FileSystemInterface::EXISTS_REPLACE)) {
         $locale_javascripts[$language->getId()] = $data_hash;
         // If we deleted a previous version of the file and we replace it with a
         // new one we have an update.
