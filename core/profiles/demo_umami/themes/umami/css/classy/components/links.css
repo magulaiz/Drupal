@@ -19,5 +19,5 @@ ul.inline li {
   list-style-type: none;
 }
 ul.links a.is-active {
-  color: #000;
+  color: var(--color-black);
 }

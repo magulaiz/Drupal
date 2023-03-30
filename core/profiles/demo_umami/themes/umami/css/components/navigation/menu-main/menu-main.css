@@ -10,7 +10,7 @@
   padding: 0;
   list-style-type: none;
   transition: max-height 0.5s ease-in;
-  color: #000;
+  color: var(--color-black);
   font-family: "Scope One", Georgia, serif;
   font-size: 1.266rem;
   font-weight: 400;
@@ -33,7 +33,7 @@
   padding: 0 6px;
   text-align: left;
   border: 3px solid transparent;
-  border-radius: 0;
+  border-radius: var(--border-radius-none);
   background-color: transparent;
   line-height: 1;
 }
@@ -62,14 +62,14 @@
 .menu-main__link.is-active:hover,
 .menu-main__link:focus {
   text-decoration: none;
-  color: #da3c13;
-  border-bottom-color: #da3c13;
+  color: var(--color-accent);
+  border-bottom-color: var(--color-accent);
   background-color: inherit;
 }
 .menu-main__link:active,
 .menu-main__link.is-active {
   text-decoration: none;
-  border-bottom-color: #da3c13;
+  border-bottom-color: var(--color-accent);
 }
 
 @media screen and (min-width: 48em) {

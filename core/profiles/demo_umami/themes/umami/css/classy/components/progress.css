@@ -7,7 +7,7 @@
 
 .progress__track {
   border-color: #b3b3b3;
-  border-radius: 10em;
+  border-radius: var(--border-radius-largest);
   background-color: #f2f1eb;
   background-image: linear-gradient(#e7e7df, #f0f0f0);
   box-shadow: inset 0 1px 3px hsla(0, 0%, 0%, 0.16);
@@ -20,8 +20,8 @@
   -webkit-transition: width 0.5s ease-out;
   transition: width 0.5s ease-out;
   -webkit-animation: animate-stripes 3s linear infinite;
-  border: 1px #07629a solid;
-  border-radius: 10em;
+  border: var(--border-width) #07629a solid;
+  border-radius: var(--border-radius-largest);
   background: #057ec9;
   background-image:
     linear-gradient(to bottom, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.15)),

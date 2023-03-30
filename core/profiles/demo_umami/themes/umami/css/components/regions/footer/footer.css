@@ -9,8 +9,8 @@
 .footer {
   padding: 2rem 4%;
   text-align: center;
-  color: #fff;
-  background-color: #5f635d;
+  color: var(--color-white);
+  background-color: var(--color-grey-dark);
   font-size: 0.9rem;
 }
 /* Large */
@@ -34,7 +34,7 @@
 }
 
 .footer a {
-  color: #fff;
+  color: var(--color-white);
   background-color: inherit;
   font-weight: 400;
 }
@@ -42,6 +42,6 @@
 .footer a:active,
 .footer a:focus,
 .footer a:hover {
-  outline-color: #fff;
-  background-color: #000;
+  outline-color: var(--color-white);
+  background-color: var(--color-black);
 }

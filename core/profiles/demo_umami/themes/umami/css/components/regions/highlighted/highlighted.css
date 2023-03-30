@@ -6,7 +6,7 @@
 
 .layout-highlighted {
   padding: 0 0 1em;
-  background: #fff;
+  background: var(--color-white);
 }
 .region-highlighted {
   padding: 0 4%;

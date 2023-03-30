@@ -8,10 +8,10 @@
  */
 
 .is-front .block-page-title-block {
-  margin: 1rem 0;
+  margin: var(--spacing) 0;
 }
 
 .block-page-title-block {
-  margin: 1rem 0 3rem;
+  margin: var(--spacing) 0 var(--spacing-largest);
   text-align: center;
 }

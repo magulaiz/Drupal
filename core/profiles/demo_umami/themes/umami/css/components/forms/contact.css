@@ -5,7 +5,7 @@
 
 .contact-form {
   max-width: 600px;
-  margin: auto auto 1rem;
+  margin: auto auto var(--spacing);
 }
 
 @media screen and (min-width: 30rem) { /* 480px */
@@ -16,7 +16,7 @@
 
 @media screen and (min-width: 60rem) { /* 960px */
   .contact-form {
-    margin-bottom: 3rem;
+    margin-bottom: var(--spacing-largest);
   }
 }
 .contact-form .form-item-copy {

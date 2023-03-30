@@ -15,7 +15,7 @@
 
 .search-block-form form {
   display: flex;
-  margin-top: 1.3rem;
+  margin-top: var(--spacing-largest);
   margin-bottom: 1.2rem;
 }
 
@@ -43,7 +43,7 @@
 }
 .search-link:focus,
 .search-link:hover {
-  background-color: #fff;
+  background-color: var(--color-white);
 }
 .search-link svg {
   display: block;
@@ -55,7 +55,7 @@
 .search-block-form .form-type-search {
   margin-top: 0;
   margin-bottom: 0;
-  border: 1px solid #dbdbdb;
+  border: var(--border-width) solid var(--color-grey-lighter);
   border-top-left-radius: 3px; /* LTR */
   border-bottom-right-radius: 3px; /* LTR */
 }
@@ -71,9 +71,9 @@
   height: auto;
   margin: 0;
   padding: 7px 8px 7px 32px;
-  color: #464646;
-  border: 2px solid #fff;
-  background: url(../../../../images/svg/search.svg) no-repeat 0.5em center #fff;
+  color: var(--color-grey-dark);
+  border: var(--border-width-medium) solid var(--color-white);
+  background: url(../../../../images/svg/search.svg) no-repeat 0.5em center var(--color-white);
   font-size: 0.875rem;
   line-height: normal;
 }
@@ -85,7 +85,7 @@
 }
 
 .search-block-form .form-search:focus {
-  border: 2px solid #008068;
+  border: var(--border-width-medium) solid var(--color-primary);
   border-top-left-radius: 2px;  /* LTR */
   border-bottom-left-radius: 2px; /* LTR */
 }
@@ -108,15 +108,15 @@
   position: relative;
   margin: 0;
   padding: 0;
-  border-top: 1px solid #dbdbdb;
-  border-right: 1px solid #dbdbdb; /* LTR */
-  border-bottom: 1px solid #dbdbdb;
+  border-top: 1px solid var(--color-grey-lighter);
+  border-right: 1px solid var(--color-grey-lighter); /* LTR */
+  border-bottom: 1px solid var(--color-grey-lighter);
   border-top-right-radius: 3px; /* LTR */
   border-bottom-right-radius: 3px; /* LTR */
 }
 [dir=rtl] .search-block-form .form-actions {
   border-right: none;
-  border-left: 1px solid #dbdbdb;
+  border-left: 1px solid var(--color-grey-lighter);
   border-top-left-radius: 3px;
   border-top-right-radius: 0;
   border-bottom-right-radius: 0;
@@ -129,9 +129,9 @@
   margin: 0;
   padding: 0.6em 1.25em 0.4em;
   transition: background-color 0.5s ease, border 0.5s ease;
-  color: #000;
-  border: 2px solid #fff;
-  background-color: #fff;
+  color: var(--color-black);
+  border: var(--border-width-medium) solid var(--color-white);
+  background-color: var(--color-white);
   font-size: 0.875rem;
 }
 
@@ -151,7 +151,7 @@
 .search-block-form .form-submit:focus,
 .search-block-form .form-submit:hover {
   margin: 0;
-  border: 2px solid #008068;
+  border: var(--border-width-medium) solid var(--color-primary);
   outline-offset: 2px;
-  background-color: #e6eee0;
+  background-color: var(--color-primary-lightest);
 }

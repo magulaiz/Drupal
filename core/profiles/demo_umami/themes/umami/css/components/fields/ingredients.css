@@ -6,7 +6,7 @@
 .field--name-field-ingredients {
   margin-bottom: 1.184rem;
   padding: 1.266rem;
-  background-color: #fbf5ee;
+  background-color: var(--color-tertiary);
 }
 /* Large */
 @media screen and (min-width: 60rem) {

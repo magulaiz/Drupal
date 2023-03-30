@@ -37,7 +37,7 @@
   max-width: 34.7em;
   margin: 0.7em 0;
   padding: 0.2em 0.5em;
-  border: 1px solid #b4b4b4;
+  border: var(--border-width) solid #b4b4b4;
 }
 .password-suggestions ul {
   margin-bottom: 0;

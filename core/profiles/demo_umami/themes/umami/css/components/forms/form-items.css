@@ -4,9 +4,9 @@
 
 .form-label {
   display: block;
-  margin: 0.25rem 0;
-  color: #464646;
-  font-size: 1rem;
+  margin: var(--spacing-smallest) 0;
+  color: var(--color-grey-darkest);
+  font-size: var(--spacing);
   font-weight: 700;
 }
 
@@ -14,15 +14,15 @@
 .form-email {
   min-width: 100%;
   max-width: 100%;
-  margin: 0.25rem 0;
+  margin: var(--spacing-smallest) 0;
   padding: 0.8rem 0.4rem;
-  color: #000;
-  border: 2px solid #767775;
-  font-size: 1rem;
+  color: var(--color-black);
+  border: var(--border-width-medium) solid var(--color-grey);
+  font-size: var(--spacing);
 }
 .form-text:focus,
 .form-email:focus {
-  border: 2px solid #008068;
+  border: var(--border-width-medium) solid var(--color-primary);
 }
 .form-text[type="checkbox"] {
   min-width: inherit;
@@ -31,22 +31,22 @@
 
 .form-textarea {
   padding: 0.8rem 0.4rem;
-  color: #000;
-  border: 2px solid #767775;
+  color: var(--color-black);
+  border: var(--border-width-medium) solid var(--color-grey);
 }
 .form-textarea:focus {
-  border: 2px solid #008068;
+  border: var(--border-width-medium) solid var(--color-primary);
 }
 
 .form-select {
-  margin: 0.25rem 0;
-  color: #000;
-  border: 2px solid #767775;
-  background: #fff;
-  font-size: 1rem;
+  margin: var(--spacing-smallest) 0;
+  color: var(--color-black);
+  border: var(--border-width-medium) solid var(--color-grey);
+  background: var(--color-white);
+  font-size: var(--spacing);
 }
 
 .form-select:focus {
   margin-bottom: 2px;
-  border: 2px solid #00836d;
+  border: var(--border-width-medium) solid #00836d;
 }
