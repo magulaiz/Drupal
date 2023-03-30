@@ -9,9 +9,9 @@
   padding: 1px 10px 2px;
   -webkit-transform: translateX(-50%);
   transform: translateX(-50%);
-  border: 1px solid #444;
+  border: var(--border-width) solid #444;
   border-top-width: 0;
-  border-radius: 0 0 10px 10px;
+  border-radius: var(--border-radius-none) var(--border-radius-none) var(--border-radius-larger) var(--border-radius-larger);
   outline: 0;
   background: #444;
   background: rgba(0, 0, 0, 0.6);

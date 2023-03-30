@@ -20,8 +20,8 @@
 .read-more__link:focus,
 .read-more__link:hover {
   text-decoration: none;
-  color: #008068;
-  border-bottom: 1px solid #008068;
+  color: var(--color-primary);
+  border-bottom: 1px solid var(--color-primary);
   background-color: inherit;
 }
 .read-more__link::before {

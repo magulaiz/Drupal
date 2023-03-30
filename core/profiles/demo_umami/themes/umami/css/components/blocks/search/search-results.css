@@ -4,13 +4,13 @@
  */
 
 .search-form + .item-list > h3 {
-  margin: 1.28rem;
+  margin: var(--spacing-large);
 }
 .search-form > .form-wrapper {
-  margin-bottom: 1.28rem;
+  margin-bottom: var(--spacing-large);
   padding: 0.889rem;
-  border: 1px solid #fcece7;
-  background: #fff;
+  border: var(--border-width) solid var(--color-tertiary-dark);
+  background: var(--color-white);
 }
 
 @media screen and (min-width: 48em) {
@@ -18,8 +18,8 @@
     display: flex;
     flex-wrap: wrap;
     align-items: flex-end;
-    margin-bottom: 1.28rem;
-    padding: 1.28rem;
+    margin-bottom: var(--spacing-large);
+    padding: var(--spacing-large);
   }
 }
 
@@ -29,7 +29,7 @@
     margin: 0;
   }
   .search-form > .form-wrapper {
-    margin: 0 0 1.28rem;
+    margin: 0 0 var(--spacing-large);
   }
 }
 
@@ -40,12 +40,12 @@
 @media screen and (min-width: 48em) {
   .search-form .form-type-search {
     flex-grow: 1;
-    margin: 0 1.28rem 0 0; /* LTR */
+    margin: 0 var(--spacing-large) 0 0; /* LTR */
   }
 
   [dir="rtl"] .search-form .form-type-search {
     margin-right: 0;
-    margin-left: 1.28rem;
+    margin-left: var(--spacing-large);
   }
 }
 
@@ -57,14 +57,14 @@
 .search-form .form-search {
   min-width: 100%;
   max-width: 100%;
-  margin: 0.25rem 0;
+  margin: var(--spacing-smallest) 0;
   padding: 0.8rem 0.4rem;
-  color: #000;
-  border: 2px solid #767775;
-  font-size: 1rem;
+  color: var(--color-black);
+  border: var(--border-width-medium) solid var(--color-grey);
+  font-size: var(--spacing);
 }
 .search-form .form-search:focus {
-  border: 2px solid #008068;
+  border: var(--border-width-medium) solid var(--color-primary);
 }
 
 .search-form .form-search {
@@ -73,7 +73,7 @@
 
 .search-help-link {
   display: inline-block;
-  margin: 1.28rem;
+  margin: var(--spacing-large);
 }
 
 /**
@@ -84,12 +84,12 @@
   flex-wrap: wrap;
   justify-content: space-between;
   box-sizing: border-box;
-  padding: 1.28rem 0 0;
+  padding: var(--spacing-large) 0 0;
 }
 .search-form .search-advanced .details-wrapper > fieldset {
   width: 100%;
-  margin: 0 0 1rem;
-  padding: 1rem;
+  margin: 0 0 var(--spacing);
+  padding: var(--spacing);
 }
 /* 480px */
 @media screen and (min-width: 30em) {
@@ -114,7 +114,7 @@
   Search results
 */
 .search-form + h2 {
-  margin: 0 1.28rem 1.28rem;
+  margin: 0 var(--spacing-large) var(--spacing-large);
 }
 
 .search-results {
@@ -130,21 +130,21 @@
 }
 
 .search-results li {
-  margin: 0 0 1rem 0; /* LTR */
-  padding: 1.28rem;
-  border: 1px solid #fcece7;
-  background: #fff;
+  margin: 0 0 var(--spacing) 0; /* LTR */
+  padding: var(--spacing-large);
+  border: var(--border-width) solid var(--color-tertiary-dark);
+  background: var(--color-white);
 }
 /* Without this rule, another RTL rule from item-list.css will break the design */
 [dir=rtl] .search-results li {
-  margin: 0 0 1rem 0;
+  margin: 0 0 var(--spacing) 0;
 }
 
 .search-results .search-result__snippet {
   margin-bottom: 0;
 }
 .search-results .search-result__info {
-  margin-top: 1.28rem;
+  margin-top: var(--spacing-large);
   margin-bottom: 0;
 }
 

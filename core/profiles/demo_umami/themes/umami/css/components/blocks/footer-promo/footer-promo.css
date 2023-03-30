@@ -8,16 +8,16 @@
 }
 
 .block-type-footer-promo-block .block__title {
-  font-size: 1.5rem;
+  font-size: var(--spacing-larger);
   font-weight: 400;
 }
 
 .block-type-footer-promo-block .footer-promo-content {
-  margin-bottom: 1.28rem;
+  margin-bottom: var(--spacing-large);
 }
 
 .footer-promo-block__link.footer-promo-block__link {
-  color: #fff;
+  color: var(--color-white);
   background-color: inherit;
   font-weight: 700;
 }

@@ -8,7 +8,7 @@
 
 .layout-header {
   padding: 0;
-  background: #fff;
+  background: var(--color-white);
 }
 
 .region-header {
@@ -16,7 +16,7 @@
   flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
-  padding: 0.75rem 4%;
+  padding: var(--spacing-small) 4%;
 }
 
 @media screen and (min-width: 48em) {

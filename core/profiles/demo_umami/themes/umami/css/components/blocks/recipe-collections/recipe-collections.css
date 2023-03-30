@@ -1,10 +1,10 @@
 .block-views-blockrecipe-collections-block {
-  padding: 3rem 4%;
-  color: #fff;
-  background: #767775;
+  padding: var(--spacing-largest) 4%;
+  color: var(--color-white);
+  background: var(--color-grey);
 }
 .block-views-blockrecipe-collections-block .block__title {
-  margin-bottom: 1.5rem;
+  margin-bottom: var(--spacing-larger);
   text-align: center;
 }
 .block-views-blockrecipe-collections-block .views-view-grid {
@@ -21,7 +21,7 @@
 @media screen and (min-width: 48em) {
   .block-views-blockrecipe-collections-block .views-col {
     width: 25%;
-    max-width: 13rem;
+    max-width: 1var(--spacing-largest);
     text-align: left; /* LTR */
   }
   [dir="rtl"] .block-views-blockrecipe-collections-block .views-col {
@@ -29,18 +29,18 @@
   }
 }
 .block-views-blockrecipe-collections-block .views-row {
-  margin-bottom: 0.5rem;
+  margin-bottom: var(--spacing-small);
   font-size: 0.9rem;
 }
 .block-views-blockrecipe-collections-block .views-row a {
   text-decoration: none;
-  color: #fff;
+  color: var(--color-white);
   font-weight: bold;
 }
 .block-views-blockrecipe-collections-block .views-row a:active,
 .block-views-blockrecipe-collections-block .views-row a:focus,
 .block-views-blockrecipe-collections-block .views-row a:hover {
   text-decoration: underline;
-  outline-color: #fff;
+  outline-color: var(--color-white);
   background: transparent;
 }

@@ -1,0 +1,37 @@
+:root {
+  /* Theme Colors */
+  --color-accent: #da3c13;
+  --color-primary: #008068;
+  --color-primary-lightest: #e6eee0;
+  --color-secondary: #d93760;
+  --color-secondary-dark: #cc2a00;
+  --color-tertiary: #fbf5ee;
+  --color-tertiary-dark: #fcece7;
+
+  /* Greys */
+  --color-white: #fff;
+  --color-grey-lighter: #dbdbdb;
+  --color-grey-light: #ccc;
+  --color-grey: #767775;
+  --color-grey-dark: #5f635d;
+  --color-grey-darkest: #464646;
+  --color-black: #000;
+
+  /* Spacing */
+  --spacing: 1rem;
+  --spacing-small: 0.75rem;
+  --spacing-smaller: 0.5rem;
+  --spacing-smallest: 0.25rem;
+  --spacing-large: 1.28rem;
+  --spacing-larger: 1.5rem;
+  --spacing-largest: 3rem;
+
+  /* Borders */
+  --border-width: 1px;
+  --border-width-medium: 2px;
+  --border-radius: 3px;
+  --border-radius-none: 0;
+  --border-radius-large: 7px;
+  --border-radius-larger: 10px;
+  --border-radius-largest: 10em;
+}

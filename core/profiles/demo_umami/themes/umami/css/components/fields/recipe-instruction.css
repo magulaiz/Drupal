@@ -39,8 +39,8 @@
   top: 0;
   left: 0; /* LTR */
   content: counter(step-counter);
-  color: #cc2a00;
-  font-size: 1.5rem;
+  color: var(--color-secondary-dark);
+  font-size: var(--spacing-larger);
 }
 [dir=rtl] .field--name-field-recipe-instruction ol > li::before {
   right: 0;
