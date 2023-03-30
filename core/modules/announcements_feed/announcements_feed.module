@@ -30,85 +30,28 @@ function announcements_feed_help($route_name, RouteMatchInterface $route_match) 
  * Implements hook_toolbar().
  */
 function announcements_feed_toolbar() {
-  $items = [];
   $items['announcement'] = [
-    '#cache' => [
-      'contexts' => [
-        'user.permissions',
+    '#type' => 'toolbar_item',
+    'tab' => [
+      '#lazy_builder' => [
+        'announcements_feed.lazy_builders:renderAnnouncements',
+        [],
+      ],
+      '#create_placeholder' => TRUE,
+      '#cache' => [
+        'contexts' => ['user'],
+        'tags' => [
+          'announcements_feed:feed:' . \Drupal::currentUser()->id(),
+        ],
       ],
     ],
+    '#wrapper_attributes' => [
+      'class' => ['announce-toolbar-tab'],
+    ],
+    '#cache' => ['contexts' => ['user.permissions']],
+    '#access' => \Drupal::currentUser()->hasPermission('access announcements'),
+    '#weight' => 3399,
   ];
-  if (\Drupal::currentUser()->hasPermission('access announcements')) {
-    $current_user_id = \Drupal::currentUser()->id();
-    $items['announcement'] = [
-      // @todo Lazy builder and `user` context.
-      '#cache' => [
-        'contexts' => [
-          'user',
-        ],
-        'tags' => [
-          'announcements_feed:feed:' . $current_user_id,
-        ],
-      ],
-    ];
-    $announce_icon = 'announce-default';
-
-    $user_status = \Drupal::service('announcements_feed.user_status');
-    // Check for new announcements for the current user.
-    try {
-      $new_announcements = $user_status->getNewAnnouncements();
-    }
-    catch (\Exception $e) {
-      \Drupal::messenger()->addError('An error occurred while parsing the announcements feed, check the logs for more information.');
-    }
-
-    if (!empty($new_announcements)) {
-      $announce_icon = 'announce-new';
-    }
-
-    $items['announcement'] += [
-      '#type' => 'toolbar_item',
-      'tab' => [
-        '#type' => 'link',
-        '#title' => t('Announcements'),
-        '#url' => Url::fromRoute('announcements_feed.announcement'),
-        '#attributes' => [
-          'title' => t('Announcements'),
-          'data-drupal-announce-trigger' => '',
-          'class' => [
-            'toolbar-icon',
-            'toolbar-icon-announce',
-            'use-ajax',
-            'announce-canvas-link',
-            $announce_icon,
-          ],
-          'data-dialog-renderer' => 'off_canvas',
-          'data-dialog-type' => 'dialog',
-          'data-dialog-options' => Json::encode(
-            [
-              'announce' => TRUE,
-              'width' => '25%',
-              'classes' => [
-                'ui-dialog' => 'announce-dialog',
-                'ui-dialog-titlebar' => 'announce-titlebar',
-                'ui-dialog-title' => 'announce-title',
-                'ui-dialog-titlebar-close' => 'announce-close',
-                'ui-dialog-content' => 'announce-body',
-              ],
-            ]),
-        ],
-        '#attached' => [
-          'library' => [
-            'announcements_feed/drupal.announcements_feed.toolbar',
-          ],
-        ],
-      ],
-      '#wrapper_attributes' => [
-        'class' => ['announce-toolbar-tab'],
-      ],
-      '#weight' => 3399,
-    ];
-  }
   return $items;
 }
 
