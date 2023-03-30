@@ -4,7 +4,7 @@
  */
 
 .js .dropbutton-widget {
-  border: var(--border-width) solid var(--color-grey-light);
+  border: 1px solid #ccc;
   background-color: white;
 }
 .js .dropbutton-widget:hover {
