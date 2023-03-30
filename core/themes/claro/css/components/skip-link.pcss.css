@@ -8,14 +8,15 @@
 @import "../base/variables.pcss.css";
 
 .skip-link {
-  z-index: 50;
-  left: 50%;
+  z-index: 503;
+  left: 0;
+  top: 0;
   padding: 1px 10px 2px;
-  transform: translateX(-50%);
   color: var(--color-white);
-  border-radius: 0 0 10px 10px;
+  border-radius: 0 0 10px 0;
   background: var(--color-gray-800);
   font-size: 0.94em;
+  box-shadow: 0 0 0 2px var(--color-white), 0 0 0 5px var(--color-focus);
 }
 .skip-link:hover,
 .skip-link:active {
