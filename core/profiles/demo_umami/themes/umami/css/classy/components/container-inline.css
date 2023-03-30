@@ -30,4 +30,3 @@ inside an element with the class ".container-inline" */
 .container-inline .form-item label:last-child::after {
   content: none;
 }
-
