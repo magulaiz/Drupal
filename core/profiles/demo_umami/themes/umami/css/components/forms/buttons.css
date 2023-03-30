@@ -35,8 +35,8 @@
 .button[disabled]:focus,
 .button[disabled] {
   cursor: default;
-  color: var(--color-grey-dark);
-  background: var(--color-grey);
+  color: var(--color-gray-dark);
+  background: var(--color-gray);
 }
 
 .form-actions {

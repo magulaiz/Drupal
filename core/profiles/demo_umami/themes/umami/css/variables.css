@@ -8,13 +8,13 @@
   --color-tertiary: #fbf5ee;
   --color-tertiary-dark: #fcece7;
 
-  /* Greys */
+  /* grays */
   --color-white: #fff;
-  --color-grey-lighter: #dbdbdb;
-  --color-grey-light: #ccc;
-  --color-grey: #767775;
-  --color-grey-dark: #5f635d;
-  --color-grey-darkest: #464646;
+  --color-gray-lighter: #dbdbdb;
+  --color-gray-light: #ccc;
+  --color-gray: #767775;
+  --color-gray-dark: #5f635d;
+  --color-gray-darkest: #464646;
   --color-black: #000;
 
   /* Spacing */

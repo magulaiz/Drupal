@@ -55,7 +55,7 @@
 .search-block-form .form-type-search {
   margin-top: 0;
   margin-bottom: 0;
-  border: var(--border-width) solid var(--color-grey-lighter);
+  border: var(--border-width) solid var(--color-gray-lighter);
   border-top-left-radius: 3px; /* LTR */
   border-bottom-right-radius: 3px; /* LTR */
 }
@@ -71,7 +71,7 @@
   height: auto;
   margin: 0;
   padding: 7px 8px 7px 32px;
-  color: var(--color-grey-dark);
+  color: var(--color-gray-dark);
   border: var(--border-width-medium) solid var(--color-white);
   background: url(../../../../images/svg/search.svg) no-repeat 0.5em center var(--color-white);
   font-size: 0.875rem;
@@ -108,15 +108,15 @@
   position: relative;
   margin: 0;
   padding: 0;
-  border-top: 1px solid var(--color-grey-lighter);
-  border-right: 1px solid var(--color-grey-lighter); /* LTR */
-  border-bottom: 1px solid var(--color-grey-lighter);
+  border-top: 1px solid var(--color-gray-lighter);
+  border-right: 1px solid var(--color-gray-lighter); /* LTR */
+  border-bottom: 1px solid var(--color-gray-lighter);
   border-top-right-radius: 3px; /* LTR */
   border-bottom-right-radius: 3px; /* LTR */
 }
 [dir=rtl] .search-block-form .form-actions {
   border-right: none;
-  border-left: 1px solid var(--color-grey-lighter);
+  border-left: 1px solid var(--color-gray-lighter);
   border-top-left-radius: 3px;
   border-top-right-radius: 0;
   border-bottom-right-radius: 0;

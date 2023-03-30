@@ -44,7 +44,7 @@
 @media screen and (min-width: 48rem) { /* 768px */
   .banner-block {
     position: relative; /* Anchor absolutely positioned background image. */
-    background-color: var(--color-grey-darkest);
+    background-color: var(--color-gray-darkest);
   }
 
   .banner-block__inner {
@@ -62,7 +62,7 @@
     margin: 0;
     padding: 1.777em;
     color: var(--color-white);
-    border: var(--border-width) solid var(--color-grey-darkest);
+    border: var(--border-width) solid var(--color-gray-darkest);
     background: rgba(0, 0, 0, 0.42);
   }
 
