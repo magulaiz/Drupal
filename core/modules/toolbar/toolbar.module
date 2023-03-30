@@ -5,12 +5,10 @@
  * Administration toolbar for quick access to top level administration items.
  */
 
-use Drupal\Component\Serialization\Json;
 use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Render\RenderContext;
 use Drupal\Core\Routing\RouteMatchInterface;
-use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Template\Attribute;
 use Drupal\Component\Utility\Crypt;
 use Drupal\Core\Url;
@@ -54,27 +52,13 @@ function toolbar_theme($existing, $type, $theme, $path) {
  * Implements hook_page_attachments().
  */
 function toolbar_page_attachments(array &$page) {
-  $js = <<<JS
-  (function() {
-    const prefixedCookie = '; ' + document.cookie;
-    const parts = prefixedCookie.split('; toolbarState=');
-    const encodedToolbarState =  (parts.length === 2) ? parts.pop().split(';').shift() : false;
-    const classesToAdd = ['toolbar-loading'];
-    if (encodedToolbarState) {
-      const toolbarState = JSON.parse(decodeURIComponent(encodedToolbarState));
-      const { orientation, hasActiveTab, isFixed} = toolbarState;
-      classesToAdd.push(orientation ? 'toolbar-' + orientation : 'toolbar-horizontal');
-      if(hasActiveTab !== false) {
-        classesToAdd.push('toolbar-tray-open');
-      }
-      if (isFixed) {
-        classesToAdd.push('toolbar-fixed');
-      }
-    }
-    document.querySelector('html').classList.add(...classesToAdd);
-  })();
-JS;
+  $anti_flicker_js_path = DRUPAL_ROOT . '/core/modules/toolbar/js/toolbar.anti-flicker.js';
+  assert(file_exists($anti_flicker_js_path));
+  $js = file_get_contents($anti_flicker_js_path);
 
+  // The anti flicker javascript is added as an inline tag so it is executed
+  // as early as possible, adding the necessary classes to prevent flickering
+  // before the first paint.
   $page['#attached']['html_head'][] = [
     [
       '#tag' => 'script',
@@ -337,48 +321,4 @@ function _toolbar_get_subtrees_hash() {
   [$subtrees, $cacheability] = toolbar_get_rendered_subtrees();
   $hash = Crypt::hashBase64(serialize($subtrees));
   return [$hash, $cacheability];
-}
-
-/**
- * Implements hook_user_login().
- *
- * Saves the username to a cookie so it can be added to the toolbar before the
- * lazy builder has completed.
- */
-function toolbar_user_login(AccountInterface $account) {
-  _toolbar_update_username_cookie($account);
-}
-
-/**
- * Implements hook_user_update().
- *
- * Saves the username to a cookie so it can be added to the toolbar before the
- * lazy builder has completed.
- */
-function toolbar_user_update(AccountInterface $account) {
-  _toolbar_update_username_cookie($account);
-}
-
-/**
- * Update the toolbarState cookie with the current username.
- *
- * @param \Drupal\Core\Session\AccountInterface $account
- *   The active account object.
- */
-function _toolbar_update_username_cookie(AccountInterface $account) {
-  if ($account->isAuthenticated()) {
-    $toolbar_state_serialized = \Drupal::request()->cookies->get('toolbarState');
-    $toolbar_state = $toolbar_state_serialized ? JSON::decode($toolbar_state_serialized) : [];
-    $toolbar_state['toolbarUserName'] = $account->getDisplayName();
-    setcookie('toolbarState', JSON::encode($toolbar_state), ['path' => '/']);
-  }
-}
-
-/**
- * Implements hook_user_logout().
- *
- * Empty the toolbarState cookie on logout.
- */
-function toolbar_user_logout(AccountInterface $account) {
-  setcookie('toolbarState', JSON::encode([]), ['path' => '/']);
 }

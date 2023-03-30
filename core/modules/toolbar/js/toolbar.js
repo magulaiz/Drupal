@@ -34,11 +34,6 @@
         .querySelector('#toolbar-administration')
         .classList.add('toolbar-oriented');
     }
-
-    const toolbarUserButton = document.querySelector('#toolbar-item-user');
-    if (toolbarUserName && toolbarUserButton) {
-      toolbarUserButton.textContent = toolbarUserName;
-    }
   })();
 
   // Merge run-time settings with the defaults.

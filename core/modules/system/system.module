@@ -676,11 +676,6 @@ function system_page_attachments(array &$page) {
   if (\Drupal::currentUser()->isAuthenticated()) {
     $page['#attached']['library'][] = 'core/drupal.active-link';
   }
-
-  if (_system_is_claro_admin_and_not_active() && \Drupal::service('module_handler')->moduleExists('user') && \Drupal::currentUser()->hasPermission('access toolbar')) {
-    require_once DRUPAL_ROOT . '/core/themes/claro/claro.theme';
-    claro_toolbar_attachments($page);
-  }
 }
 
 /**

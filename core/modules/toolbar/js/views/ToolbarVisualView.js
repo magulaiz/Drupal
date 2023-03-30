@@ -120,6 +120,7 @@
           'toolbar-vertical',
           'toolbar-tray-open',
           'toolbar-fixed',
+          'toolbar-anti-flicker',
         ]);
         $('body').removeClass('toolbar-loading');
         $('[data-toolbar-anti-flicker-loading]').remove();
