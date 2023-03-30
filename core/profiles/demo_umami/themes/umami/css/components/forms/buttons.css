@@ -8,7 +8,7 @@
   min-width: inherit;
   max-width: inherit;
   margin: 0;
-  padding: 0.7rem 1.var(--spacing-largest);
+  padding: 0.7rem 1.3rem;
   cursor: pointer;
   transition: background-color 0.5s ease;
   text-align: center;
@@ -42,13 +42,13 @@
 .form-actions {
   display: flex;
   flex-wrap: wrap;
-  margin: -var(--spacing-small);
+  margin: calc(-var(--spacing-small) * -1);
   padding: var(--spacing-small) 0;
 }
 
 @media screen and (min-width: 77em) {
   .form-actions {
-    margin: var(--spacing) -var(--spacing-small);
+    margin: var(--spacing) calc(-var(--spacing-small) * -1);
     padding: 0;
   }
 }
