@@ -42,13 +42,13 @@
 .form-actions {
   display: flex;
   flex-wrap: wrap;
-  margin: calc(-var(--spacing-small) * -1);
+  margin: calc(var(--spacing-small) * -1);
   padding: var(--spacing-small) 0;
 }
 
 @media screen and (min-width: 77em) {
   .form-actions {
-    margin: var(--spacing) calc(-var(--spacing-small) * -1);
+    margin: var(--spacing) calc(var(--spacing-small) * -1);
     padding: 0;
   }
 }
