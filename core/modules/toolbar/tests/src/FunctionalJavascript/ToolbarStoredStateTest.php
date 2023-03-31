@@ -29,7 +29,6 @@ class ToolbarCookieTest extends WebDriverTestBase {
       'access content overview',
     ]);
     $this->drupalLogin($admin_user);
-    $user_name = $admin_user->getAccountName();
     $page = $this->getSession()->getPage();
     $assert_session = $this->assertSession();
 
@@ -44,7 +43,6 @@ class ToolbarCookieTest extends WebDriverTestBase {
     // Expected cookie values with the user tray open with horizontal
     // orientation.
     $expected = [
-      'toolbarUserName' => $user_name,
       'orientation' => 'horizontal',
       'hasActiveTab' => TRUE,
       'activeTabId' => 'toolbar-item-user',
@@ -52,8 +50,11 @@ class ToolbarCookieTest extends WebDriverTestBase {
       'isOriented' => TRUE,
       'isFixed' => TRUE,
     ];
-    $toolbar_state_cookie = JSON::decode($this->getSession()->getCookie('toolbarState'));
-    $this->assertSame($expected, $toolbar_state_cookie);
+    $toolbar_stored_state = JSON::decode(
+      $this->getSession()->evaluateScript("sessionStorage.getItem('Drupal.toolbar.toolbarState')")
+    );
+
+    $this->assertSame($expected, $toolbar_stored_state);
 
     $page->clickLink('toolbar-item-user');
     $assert_session->assertNoElementAfterWait('css', '#toolbar-item-user.is-active');
@@ -62,8 +63,10 @@ class ToolbarCookieTest extends WebDriverTestBase {
     $expected['hasActiveTab'] = FALSE;
     $expected['activeTabId'] = NULL;
     unset($expected['activeTray']);
-    $toolbar_state_cookie = JSON::decode($this->getSession()->getCookie('toolbarState'));
-    $this->assertSame($expected, $toolbar_state_cookie);
+    $toolbar_stored_state = JSON::decode(
+      $this->getSession()->evaluateScript("sessionStorage.getItem('Drupal.toolbar.toolbarState')")
+    );
+    $this->assertSame($expected, $toolbar_stored_state);
 
     $page->clickLink('toolbar-item-administration');
     $orientation_toggle = $assert_session->waitForElementVisible('css', '[title="Vertical orientation"]');
@@ -76,22 +79,28 @@ class ToolbarCookieTest extends WebDriverTestBase {
     $expected['hasActiveTab'] = TRUE;
     $expected['activeTabId'] = 'toolbar-item-administration';
     $expected['activeTray'] = 'toolbar-item-administration-tray';
-    $toolbar_state_cookie = JSON::decode($this->getSession()->getCookie('toolbarState'));
-    $this->assertSame($expected, $toolbar_state_cookie);
+    $toolbar_stored_state = JSON::decode(
+      $this->getSession()->evaluateScript("sessionStorage.getItem('Drupal.toolbar.toolbarState')")
+    );
+    $this->assertSame($expected, $toolbar_stored_state);
 
     $this->getSession()->resizeWindow(600, 600);
 
     // Update expected cookie values to reflect the viewport being at a width
     // that is narrow enough that the toolbar isn't fixed.
     $expected['isFixed'] = FALSE;
-    $toolbar_state_cookie = JSON::decode($this->getSession()->getCookie('toolbarState'));
-    $this->assertSame($expected, $toolbar_state_cookie);
+    $toolbar_stored_state = JSON::decode(
+      $this->getSession()->evaluateScript("sessionStorage.getItem('Drupal.toolbar.toolbarState')")
+    );
+    $this->assertSame($expected, $toolbar_stored_state);
 
     $this->drupalLogout();
-    $toolbar_state_cookie = JSON::decode($this->getSession()->getCookie('toolbarState'));
+    $toolbar_stored_state = JSON::decode(
+      $this->getSession()->evaluateScript("sessionStorage.getItem('Drupal.toolbar.toolbarState')")
+    );
 
     // After logging out, the cookie should be empty.
-    $this->assertSame([], $toolbar_state_cookie);
+    $this->assertSame([], $toolbar_stored_state);
   }
 
 }
