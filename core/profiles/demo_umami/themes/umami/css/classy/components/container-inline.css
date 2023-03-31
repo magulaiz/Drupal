@@ -13,12 +13,7 @@
 }
 .container-inline .form-radios .form-type-radio,
 .container-inline .form-checkboxes .form-type-checkbox {
-  margin-right: 1em;
-}
-[dir="rtl"] .container-inline .form-radios .form-type-radio,
-[dir="rtl"] .container-inline .form-checkboxes .form-type-checkbox {
-  margin-right: 0;
-  margin-left: 1em;
+  margin-inline-end: 1em;
 }
 .container-inline .form-actions,
 .container-inline.form-actions {

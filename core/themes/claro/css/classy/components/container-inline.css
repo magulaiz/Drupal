@@ -11,14 +11,9 @@
 .container-inline .form-checkboxes label:after {
   content: "";
 }
-.container-inline .form-radios .form-type-radio,
-.container-inline .form-checkboxes .form-type-checkbox {
-  margin-right: 1em;
-}
-[dir="rtl"] .container-inline .form-radios .form-type-radio,
-[dir="rtl"] .container-inline .form-checkboxes .form-type-checkbox {
-  margin-right: 0;
-  margin-left: 1em;
+.container-inline .form-radios .form-boolean--type-radio,
+.container-inline .form-checkboxes .form-boolean--type-checkbox {
+  margin-inline-end: 1em;
 }
 .container-inline .form-actions,
 .container-inline.form-actions {
