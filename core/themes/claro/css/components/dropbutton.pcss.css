@@ -78,7 +78,7 @@
 }
 
 .js .dropbutton-action {
-  border-block-end: var(--dropbutton-border-size) solid white;
+  border-inline-end: var(--dropbutton-border-size) solid white;
 }
 
 /* Variants. */

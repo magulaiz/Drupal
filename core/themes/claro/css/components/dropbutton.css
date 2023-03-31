@@ -88,12 +88,7 @@
 }
 
 .js .dropbutton-action {
-  border-right: 1px solid white; /* LTR */
-}
-
-[dir="rtl"].js .dropbutton-action {
-  border-right: none;
-  border-left: 1px solid white;
+  border-inline-end: var(--dropbutton-border-size) solid white;
 }
 
 /* Variants. */
