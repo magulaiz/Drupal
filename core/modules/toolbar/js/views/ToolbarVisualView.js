@@ -83,7 +83,7 @@
           'height',
           toolbarTabOuterHeight + toolbarTrayHorizontalOuterHeight,
         );
-        //@todo this is where the loading thing should go away.
+
         $('body').css({
           'padding-top': this.model.get('height'),
         });
