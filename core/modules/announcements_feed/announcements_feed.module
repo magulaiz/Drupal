@@ -5,9 +5,7 @@
  * Fetch community announcements from www.drupal.org feed.
  */
 
-use Drupal\Component\Serialization\Json;
 use Drupal\Core\Routing\RouteMatchInterface;
-use Drupal\Core\Url;
 
 /**
  * Implements hook_help().
