@@ -82,6 +82,20 @@
   height: var(--dropbutton-toggle-size);
 }
 
+.js .dropbutton-widget {
+  border-radius: var(--button-border-radius-size);
+  background-color: var(--button-bg-color);
+}
+
+.js .dropbutton-action {
+  border-right: 1px solid white; /* LTR */
+}
+
+[dir="rtl"].js .dropbutton-action {
+  border-right: none;
+  border-left: 1px solid white;
+}
+
 /* Variants. */
 
 .js.no-touchevents .dropbutton--small {
