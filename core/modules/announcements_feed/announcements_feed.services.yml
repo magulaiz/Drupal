@@ -13,4 +13,4 @@ services:
     arguments: ['announcements_feed']
   announcements_feed.lazy_builders:
     class: Drupal\announcements_feed\LazyBuilders
-    arguments: [ 'announcements_feed.user_status', '@messenger']
+    arguments: [ '@announcements_feed.user_status', '@messenger', '@plugin.manager.element_info']
