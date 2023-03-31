@@ -1,5 +1,5 @@
 block.admin_demo:
-  path: '/admin/structure/block/demo/{theme}'
+  path: '/admin/appearance/block/demo/{theme}'
   defaults:
     _controller: '\Drupal\block\Controller\BlockController::demo'
     _title_callback: 'theme_handler:getName'
@@ -10,7 +10,7 @@ block.admin_demo:
     _admin_route: FALSE
 
 entity.block.delete_form:
-  path: '/admin/structure/block/manage/{block}/delete'
+  path: '/admin/appearance/block/manage/{block}/delete'
   defaults:
     _entity_form: 'block.delete'
     _title: 'Remove block'
@@ -18,7 +18,7 @@ entity.block.delete_form:
     _permission: 'administer blocks'
 
 entity.block.edit_form:
-  path: '/admin/structure/block/manage/{block}'
+  path: '/admin/appearance/block/manage/{block}'
   defaults:
     _entity_form: 'block.default'
     _title: 'Configure block'
@@ -26,7 +26,7 @@ entity.block.edit_form:
     _entity_access: 'block.update'
 
 entity.block.enable:
-  path: '/admin/structure/block/manage/{block}/enable'
+  path: '/admin/appearance/block/manage/{block}/enable'
   defaults:
     _controller: '\Drupal\block\Controller\BlockController::performOperation'
     op: enable
@@ -35,7 +35,7 @@ entity.block.enable:
     _csrf_token: 'TRUE'
 
 entity.block.disable:
-  path: '/admin/structure/block/manage/{block}/disable'
+  path: '/admin/appearance/block/manage/{block}/disable'
   defaults:
     _controller: '\Drupal\block\Controller\BlockController::performOperation'
     op: disable
@@ -44,7 +44,7 @@ entity.block.disable:
     _csrf_token: 'TRUE'
 
 block.admin_display:
-  path: '/admin/structure/block'
+  path: '/admin/appearance/block'
   defaults:
     _controller: '\Drupal\block\Controller\BlockListController::listing'
     _title: 'Block layout'
@@ -52,7 +52,7 @@ block.admin_display:
     _permission: 'administer blocks'
 
 block.admin_display_theme:
-  path: '/admin/structure/block/list/{theme}'
+  path: '/admin/appearance/block/list/{theme}'
   defaults:
     _controller: '\Drupal\block\Controller\BlockListController::listing'
     _title: 'Block layout'
@@ -61,7 +61,7 @@ block.admin_display_theme:
     _permission: 'administer blocks'
 
 block.admin_library:
-  path: '/admin/structure/block/library/{theme}'
+  path: '/admin/appearance/block/library/{theme}'
   defaults:
     _controller: '\Drupal\block\Controller\BlockLibraryController::listBlocks'
     _title: 'Place block'
@@ -70,7 +70,7 @@ block.admin_library:
     _permission: 'administer blocks'
 
 block.admin_add:
-  path: '/admin/structure/block/add/{plugin_id}/{theme}'
+  path: '/admin/appearance/block/add/{plugin_id}/{theme}'
   defaults:
     _controller: '\Drupal\block\Controller\BlockAddController::blockAddConfigureForm'
     theme: null
