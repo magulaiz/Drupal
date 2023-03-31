@@ -221,19 +221,13 @@
 /* When the configured standard breakpoint is active, the tray appears to push
  * the page content away from the edge of the viewport. */
 .toolbar-tray-open.toolbar-vertical.toolbar-fixed {
-  margin-left: 240px; /* LTR */
-  margin-left: 15rem; /* LTR */
+  margin-inline-start: 15rem;
 }
 
 @media print {
   .toolbar-tray-open.toolbar-vertical.toolbar-fixed {
     margin-inline-start: 0;
   }
-}
-[dir="rtl"] .toolbar-tray-open.toolbar-vertical.toolbar-fixed {
-  margin-right: 240px;
-  margin-right: 15rem;
-  margin-left: auto;
 }
 
 /**
