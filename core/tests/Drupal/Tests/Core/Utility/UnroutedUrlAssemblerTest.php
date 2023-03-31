@@ -108,7 +108,7 @@ class UnroutedUrlAssemblerTest extends UnitTestCase {
 
   /**
    * @covers ::assemble
-   * @covers::buildLocalUrl
+   * @covers ::buildLocalUrl
    *
    * @dataProvider providerTestAssembleWithLocalUri
    */
