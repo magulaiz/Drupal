@@ -39,10 +39,10 @@ use Drupal\Core\Entity\EntityStorageInterface;
  *     "status" = "status"
  *   },
  *   links = {
- *     "delete-form" = "/admin/structure/block/manage/{block}/delete",
- *     "edit-form" = "/admin/structure/block/manage/{block}",
- *     "enable" = "/admin/structure/block/manage/{block}/enable",
- *     "disable" = "/admin/structure/block/manage/{block}/disable",
+ *     "delete-form" = "/admin/appearance/block/manage/{block}/delete",
+ *     "edit-form" = "/admin/appearance/block/manage/{block}",
+ *     "enable" = "/admin/appearance/block/manage/{block}/enable",
+ *     "disable" = "/admin/appearance/block/manage/{block}/disable",
  *   },
  *   config_export = {
  *     "id",
