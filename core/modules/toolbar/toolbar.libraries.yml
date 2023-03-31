@@ -28,7 +28,6 @@ toolbar:
     - core/once
     - core/drupal.displace
     - toolbar/toolbar.menu
-    - core/js-cookie
 
 toolbar.menu:
   version: VERSION

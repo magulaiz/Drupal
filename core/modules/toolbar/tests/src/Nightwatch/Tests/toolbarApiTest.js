@@ -38,12 +38,6 @@ module.exports = {
         localStorage.clear();
         // Clear escapeAdmin url values.
         sessionStorage.clear();
-
-        Object.keys(Cookies.get()).forEach(function (cookieName) {
-          if (cookieName.includes('toolbar')) {
-            Cookies.remove(cookieName, { path: '/' });
-          }
-        });
       })
       .drupalRelativeURL('/')
       .waitForElementPresent('#toolbar-administration', 50000, 1000, false);

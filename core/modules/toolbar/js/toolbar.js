@@ -190,7 +190,7 @@
           ? JSON.parse(sessionStorage.getItem('Drupal.toolbar.toolbarState'))
           : {};
         // If the toolbar's orientation is horizontal, no active tab is defined,
-        // and the orientation cookie is not set (which means the user has not
+        // and the orientation state is not set (which means the user has not
         // yet interacted with the toolbar), then show the tray of the first
         // toolbar tab by default (but not the first 'Home' toolbar tab).
         if (
@@ -236,7 +236,6 @@
       if (
         once('toolbarAntiFlicker', '#toolbar-administration', context).length
       ) {
-        // Store UI state in a cookie so PHP has access to it on page load.
         Drupal.toolbar.models.toolbarModel.on(
           'change:activeTab change:orientation change:isOriented change:isTrayToggleVisible',
           function () {
@@ -258,9 +257,9 @@
               isOriented: this.get('isOriented'),
               isFixed: this.get('isFixed'),
             };
-            // Storing UI state values in a cookie so server side code can
-            // access these values without waiting on JavaScript
-            // initialization.
+            // Store toolbar UI state in session storage, so it can be accessed
+            // by JavaScript that executes before the first paint.
+            // @see core/modules/toolbar/js/toolbar.anti-flicker.js
             sessionStorage.setItem(
               'Drupal.toolbar.toolbarState',
               JSON.stringify(toolbarState),

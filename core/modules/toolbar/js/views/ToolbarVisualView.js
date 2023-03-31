@@ -113,7 +113,6 @@
         this.updateTabs();
         this.updateTrayOrientation();
         this.updateBarAttributes();
-        this.updateToolbarHeight();
 
         $('[data-toolbar-anti-flicker-loading]').remove();
         $('html').removeClass([
@@ -145,6 +144,7 @@
         ) {
           this.loadSubtrees();
         }
+
         return this;
       },
 
@@ -217,8 +217,10 @@
           .prop('aria-pressed', false);
         // Deactivate the previous tray.
         $(this.model.previous('activeTray')).removeClass('is-active');
-        localStorage.removeItem('Drupal.toolbar.activeTabID');
 
+        // The stored active tab is removed as updateTabs() can be called when
+        // a tray is explicitly closed, thus not replaced with a new active tab.
+        localStorage.removeItem('Drupal.toolbar.activeTabID');
         // Activate the selected tab.
         if ($tab.length > 0) {
           $tab

@@ -224,7 +224,7 @@
 
 @media print {
   .toolbar-tray-open.toolbar-vertical.toolbar-fixed {
-    margin-left: 0;
+    margin-inline-start: 0;
   }
 }
 [dir="rtl"] .toolbar-tray-open.toolbar-vertical.toolbar-fixed {
@@ -233,11 +233,6 @@
   margin-left: auto;
 }
 
-@media print {
-  [dir="rtl"] .toolbar-tray-open.toolbar-vertical.toolbar-fixed {
-    margin-right: 0;
-  }
-}
 /**
  * ToolBar tray orientation toggle.
  */
