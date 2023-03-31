@@ -5,6 +5,7 @@
  * Fetch community announcements from www.drupal.org feed.
  */
 
+use Drupal\announcements_feed\RenderCallbacks;
 use Drupal\Core\Routing\RouteMatchInterface;
 
 /**
@@ -50,6 +51,15 @@ function announcements_feed_toolbar() {
     '#access' => \Drupal::currentUser()->hasPermission('access announcements'),
     '#weight' => 3399,
   ];
+
+  // \Drupal\toolbar\Element\ToolbarItem::preRenderToolbarItem adds an
+  // #attributes property to each toolbar item's tab child automatically. Our
+  // tab link is per-user, so we're using a lazy builder to allow it to be
+  // cached. Lazy builders don't support a #attributes property so we need to
+  // add another render callback to remove the #attributes property. We start by
+  // adding the defaults, and then we append our own pre render callback.
+  $items['announcement'] += \Drupal::service('plugin.manager.element_info')->getInfo('toolbar_item');
+  $items['announcement']['#pre_render'][] = [RenderCallbacks::class, 'removeTabAttributes'];
   return $items;
 }
 
