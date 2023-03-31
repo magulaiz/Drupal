@@ -83,7 +83,7 @@
           'height',
           toolbarTabOuterHeight + toolbarTrayHorizontalOuterHeight,
         );
-
+        //@todo this is where the loading thing should go away.
         $('body').css({
           'padding-top': this.model.get('height'),
         });
@@ -113,17 +113,19 @@
         this.updateTabs();
         this.updateTrayOrientation();
         this.updateBarAttributes();
+        this.updateToolbarHeight();
 
+        $('[data-toolbar-anti-flicker-loading]').remove();
         $('html').removeClass([
           'toolbar-loading',
           'toolbar-horizontal',
           'toolbar-vertical',
           'toolbar-tray-open',
           'toolbar-fixed',
+          'toolbar-oriented',
           'toolbar-anti-flicker',
         ]);
         $('body').removeClass('toolbar-loading');
-        $('[data-toolbar-anti-flicker-loading]').remove();
 
         // Load the subtrees if the orientation of the toolbar is changed to
         // vertical. This condition responds to the case that the toolbar switches
@@ -143,7 +145,6 @@
         ) {
           this.loadSubtrees();
         }
-
         return this;
       },
 

@@ -3,15 +3,17 @@
  * Defines the behavior of the Drupal administration toolbar.
  */
 
-(function ($, Drupal, drupalSettings, Cookies) {
+(function ($, Drupal, drupalSettings) {
   // Set UI-impacting toolbar classes before Drupal behaviors initialize to
   // minimize flickering on load. This is encapsulated in a function to
   // emphasize this having a distinct purpose than the code that follows it.
   (() => {
-    if (!Cookies.get('toolbarState')) {
+    if (!sessionStorage.getItem('Drupal.toolbar.toolbarState')) {
       return;
     }
-    const toolbarState = JSON.parse(Cookies.get('toolbarState'));
+    const toolbarState = JSON.parse(
+      sessionStorage.getItem('Drupal.toolbar.toolbarState'),
+    );
     const { activeTray, orientation, toolbarUserName, isOriented } =
       toolbarState;
     const activeTrayElement = document.querySelector(
@@ -182,8 +184,10 @@
             $(document).trigger('drupalToolbarTrayChange', tray);
           });
 
-        const toolbarState = Cookies.get('toolbarState')
-          ? JSON.parse(Cookies.get('toolbarState'))
+        const toolbarState = sessionStorage.getItem(
+          'Drupal.toolbar.toolbarState',
+        )
+          ? JSON.parse(sessionStorage.getItem('Drupal.toolbar.toolbarState'))
           : {};
         // If the toolbar's orientation is horizontal, no active tab is defined,
         // and the orientation cookie is not set (which means the user has not
@@ -237,8 +241,12 @@
           'change:activeTab change:orientation change:isOriented change:isTrayToggleVisible',
           function () {
             const hasActiveTab = !!$(this.get('activeTab')).length > 0;
-            const previousToolbarState = Cookies.get('toolbarState')
-              ? JSON.parse(Cookies.get('toolbarState'))
+            const previousToolbarState = sessionStorage.getItem(
+              'Drupal.toolbar.toolbarState',
+            )
+              ? JSON.parse(
+                  sessionStorage.getItem('Drupal.toolbar.toolbarState'),
+                )
               : {};
             const toolbarState = {
               ...previousToolbarState,
@@ -253,9 +261,10 @@
             // Storing UI state values in a cookie so server side code can
             // access these values without waiting on JavaScript
             // initialization.
-            Cookies.set('toolbarState', JSON.stringify(toolbarState), {
-              path: '/',
-            });
+            sessionStorage.setItem(
+              'Drupal.toolbar.toolbarState',
+              JSON.stringify(toolbarState),
+            );
           },
         );
       }
@@ -383,4 +392,4 @@
   ) {
     Drupal.toolbar.setSubtrees.resolve(response.subtrees);
   };
-})(jQuery, Drupal, drupalSettings, Cookies);
+})(jQuery, Drupal, drupalSettings);

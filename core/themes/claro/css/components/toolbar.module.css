@@ -283,6 +283,13 @@
 .path-admin .toolbar-bar .home-toolbar-tab {
   display: block;
 }
+/* Anti flicker styling. */
+.toolbar-anti-flicker.toolbar-loading.toolbar-fixed body {
+  padding-top: 2.4375rem;
+}
+.toolbar-anti-flicker.toolbar-loading.toolbar-fixed.toolbar-horizontal.toolbar-tray-open body {
+  padding-top: 4.91331rem;
+}
 .toolbar-loading.toolbar-vertical.toolbar-tray-open .toolbar-tray {
   position: fixed;
   z-index: -1;

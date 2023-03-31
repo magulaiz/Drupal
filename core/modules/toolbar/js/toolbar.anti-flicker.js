@@ -1,21 +1,22 @@
 (function () {
-  const prefixedCookie = `; ${document.cookie}`;
-  // Manually parse the toolbarState cookie as this JavaScript executes before
-  // any file based asset is loaded, including the js-cookie library.
-  const parts = prefixedCookie.split('; toolbarState=');
-  const encodedToolbarState =
-    parts.length === 2 ? parts.pop().split(';').shift() : false;
-
+  const toolbarState = sessionStorage.getItem('Drupal.toolbar.toolbarState')
+    ? JSON.parse(sessionStorage.getItem('Drupal.toolbar.toolbarState'))
+    : false;
   // These are classes that toolbar typically adds to <body>, but this code
   // executes before the first paint, when <body> is not yet present. The
   // classes are added to <html> so styling immediately reflects the current
   // toolbar state. The classes are removed after the toolbar completes
   // initialization.
   const classesToAdd = ['toolbar-loading', 'toolbar-anti-flicker'];
-  if (encodedToolbarState) {
-    const toolbarState = JSON.parse(decodeURIComponent(encodedToolbarState));
-    const { orientation, hasActiveTab, isFixed, activeTray, activeTabId } =
-      toolbarState;
+  if (toolbarState) {
+    const {
+      orientation,
+      hasActiveTab,
+      isFixed,
+      activeTray,
+      activeTabId,
+      isOriented,
+    } = toolbarState;
 
     classesToAdd.push(
       orientation ? `toolbar-${orientation}` : 'toolbar-horizontal',
@@ -25,6 +26,9 @@
     }
     if (isFixed) {
       classesToAdd.push('toolbar-fixed');
+    }
+    if (isOriented) {
+      classesToAdd.push('toolbar-oriented');
     }
 
     if (activeTray) {

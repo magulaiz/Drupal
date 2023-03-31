@@ -6,11 +6,11 @@ use Drupal\Component\Serialization\Json;
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 
 /**
- * Tests the cookie set by the toolbar.
+ * Tests the sessionStorage state set by the toolbar.
  *
  * @group toolbar
  */
-class ToolbarCookieTest extends WebDriverTestBase {
+class ToolbarStoredStateTest extends WebDriverTestBase {
 
   /**
    * {@inheritdoc}
@@ -22,7 +22,7 @@ class ToolbarCookieTest extends WebDriverTestBase {
    */
   protected $defaultTheme = 'stark';
 
-  public function testToolbarCookie() {
+  public function testToolbarStoredState() {
     $admin_user = $this->drupalCreateUser([
       'access toolbar',
       'administer site configuration',
@@ -40,7 +40,7 @@ class ToolbarCookieTest extends WebDriverTestBase {
     $page->clickLink('toolbar-item-user');
     $this->assertNotEmpty($assert_session->waitForElementVisible('css', '#toolbar-item-user.is-active'));
 
-    // Expected cookie values with the user tray open with horizontal
+    // Expected state values with the user tray open with horizontal
     // orientation.
     $expected = [
       'orientation' => 'horizontal',
@@ -59,7 +59,7 @@ class ToolbarCookieTest extends WebDriverTestBase {
     $page->clickLink('toolbar-item-user');
     $assert_session->assertNoElementAfterWait('css', '#toolbar-item-user.is-active');
 
-    // Update expected cookie values to reflect no tray being open.
+    // Update expected state values to reflect no tray being open.
     $expected['hasActiveTab'] = FALSE;
     $expected['activeTabId'] = NULL;
     unset($expected['activeTray']);
@@ -73,7 +73,7 @@ class ToolbarCookieTest extends WebDriverTestBase {
     $orientation_toggle->click();
     $assert_session->waitForElementVisible('css', 'body.toolbar-vertical');
 
-    // Update expected cookie values to reflect the administration tray being
+    // Update expected state values to reflect the administration tray being
     // open with vertical orientation.
     $expected['orientation'] = 'vertical';
     $expected['hasActiveTab'] = TRUE;
@@ -86,21 +86,13 @@ class ToolbarCookieTest extends WebDriverTestBase {
 
     $this->getSession()->resizeWindow(600, 600);
 
-    // Update expected cookie values to reflect the viewport being at a width
+    // Update expected state values to reflect the viewport being at a width
     // that is narrow enough that the toolbar isn't fixed.
     $expected['isFixed'] = FALSE;
     $toolbar_stored_state = JSON::decode(
       $this->getSession()->evaluateScript("sessionStorage.getItem('Drupal.toolbar.toolbarState')")
     );
     $this->assertSame($expected, $toolbar_stored_state);
-
-    $this->drupalLogout();
-    $toolbar_stored_state = JSON::decode(
-      $this->getSession()->evaluateScript("sessionStorage.getItem('Drupal.toolbar.toolbarState')")
-    );
-
-    // After logging out, the cookie should be empty.
-    $this->assertSame([], $toolbar_stored_state);
   }
 
 }
