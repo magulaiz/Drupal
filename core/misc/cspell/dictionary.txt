@@ -213,6 +213,7 @@ cnfi
 cochez
 codesniffer
 colgroups
+colinodell
 collegehumor
 colonpos
 colour
@@ -972,6 +973,7 @@ realpaths
 realword
 rebuilder
 reclosed
+recolorable
 redeclaration
 redirections
 redstrawberryhiddenfield
@@ -1031,6 +1033,7 @@ safa
 sameline
 samename
 sameorigin
+samesite
 sata
 savepoints
 sayre
@@ -1219,6 +1222,7 @@ testk
 testkey
 testlist
 testload
+testlogger
 testname
 testproject
 testservice
@@ -1400,6 +1404,7 @@ vocabs
 volgende
 vorige
 vous
+wcag
 wcprops
 webassert
 webcal
