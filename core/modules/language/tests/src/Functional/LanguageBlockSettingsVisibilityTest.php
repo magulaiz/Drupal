@@ -27,7 +27,7 @@ class LanguageBlockSettingsVisibilityTest extends BrowserTestBase {
     $this->drupalLogin($admin_user);
     $this->drupalGet('admin/config/regional/language/add');
     $this->submitForm(['predefined_langcode' => 'hu'], 'Add language');
-    $this->drupalGet('admin/structure/block/add/system_menu_block:admin/stark');
+    $this->drupalGet('admin/appearance/block/add/system_menu_block:admin/stark');
     $this->assertSession()->fieldNotExists("edit-visibility-language-langcodes-und");
     $this->assertSession()->fieldNotExists("edit-visibility-language-langcodes-zxx");
     $this->assertSession()->fieldExists("edit-visibility-language-langcodes-en");

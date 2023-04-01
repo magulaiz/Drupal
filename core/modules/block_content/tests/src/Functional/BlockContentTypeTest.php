@@ -222,7 +222,7 @@ class BlockContentTypeTest extends BlockContentTestBase {
       foreach ($themes as $theme) {
         // Test that adding a block from the 'place blocks' form sends you to the
         // block configure form.
-        $path = $theme == $default_theme ? 'admin/structure/block' : "admin/structure/block/list/$theme";
+        $path = $theme == $default_theme ? 'admin/appearance/block' : "admin/appearance/block/list/$theme";
         $this->drupalGet($path);
         $this->clickLink('Place block');
         $this->clickLink('Add content block');

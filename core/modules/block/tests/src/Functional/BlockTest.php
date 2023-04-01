@@ -40,7 +40,7 @@ class BlockTest extends BlockTestBase {
     $edit['visibility[request_path][pages]'] = '/user*';
     $edit['visibility[request_path][negate]'] = TRUE;
     $edit['visibility[user_role][roles][' . RoleInterface::AUTHENTICATED_ID . ']'] = TRUE;
-    $this->drupalGet('admin/structure/block/add/' . $block_name . '/' . $default_theme);
+    $this->drupalGet('admin/appearance/block/add/' . $block_name . '/' . $default_theme);
     $this->assertSession()->checkboxChecked('edit-visibility-request-path-negate-0');
 
     $this->submitForm($edit, 'Save block');
@@ -85,7 +85,7 @@ class BlockTest extends BlockTestBase {
     $block_id = $edit['id'];
     // Set the block to be shown only to authenticated users.
     $edit['visibility[user_role][roles][' . RoleInterface::AUTHENTICATED_ID . ']'] = TRUE;
-    $this->drupalGet('admin/structure/block/add/' . $block_name . '/' . $default_theme);
+    $this->drupalGet('admin/appearance/block/add/' . $block_name . '/' . $default_theme);
     $this->submitForm($edit, 'Save block');
     $this->clickLink('Configure');
     $this->assertSession()->checkboxChecked('edit-visibility-user-role-roles-authenticated');
@@ -122,7 +122,7 @@ class BlockTest extends BlockTestBase {
     ];
     // Set the block to be hidden on any user path, and to be shown only to
     // authenticated users.
-    $this->drupalGet('admin/structure/block/add/' . $block_name . '/' . $default_theme);
+    $this->drupalGet('admin/appearance/block/add/' . $block_name . '/' . $default_theme);
     $this->submitForm($edit, 'Save block');
     $this->assertSession()->statusMessageContains('The block configuration has been saved.', 'status');
 
@@ -199,7 +199,7 @@ class BlockTest extends BlockTestBase {
     $this->drupalPlaceBlock('page_title_block');
 
     // Disable the block.
-    $this->drupalGet('admin/structure/block');
+    $this->drupalGet('admin/appearance/block');
     $this->clickLink('Disable');
 
     // Select the 'Powered by Drupal' block to be configured and moved.
@@ -211,7 +211,7 @@ class BlockTest extends BlockTestBase {
     $block['region'] = 'header';
 
     // Set block title to confirm that interface works and override any custom titles.
-    $this->drupalGet('admin/structure/block/add/' . $block['id'] . '/' . $block['theme']);
+    $this->drupalGet('admin/appearance/block/add/' . $block['id'] . '/' . $block['theme']);
     $this->submitForm([
       'settings[label]' => $block['settings[label]'],
       'settings[label_display]' => $block['settings[label_display]'],
@@ -230,7 +230,7 @@ class BlockTest extends BlockTestBase {
     }
 
     // Disable the block.
-    $this->drupalGet('admin/structure/block');
+    $this->drupalGet('admin/appearance/block');
     $this->clickLink('Disable');
 
     // Confirm that the block is now listed as disabled.
@@ -251,12 +251,12 @@ class BlockTest extends BlockTestBase {
       'user/login',
     ];
     // Test error when not including forward slash.
-    $this->drupalGet('admin/structure/block/manage/' . $block['id']);
+    $this->drupalGet('admin/appearance/block/manage/' . $block['id']);
     $this->submitForm(['visibility[request_path][pages]' => implode("\n", $pages)], 'Save block');
     $this->assertSession()->pageTextContains('The path user/login requires a leading forward slash when used with the Pages setting.');
 
     // Test deleting the block from the edit form.
-    $this->drupalGet('admin/structure/block/manage/' . $block['id']);
+    $this->drupalGet('admin/appearance/block/manage/' . $block['id']);
     $this->clickLink('Remove block');
     $this->assertSession()->pageTextContains('Are you sure you want to remove the block ' . $block['settings[label]'] . ' from the Footer region?');
     $this->submitForm([], 'Remove');
@@ -266,7 +266,7 @@ class BlockTest extends BlockTestBase {
     $block = $this->drupalPlaceBlock('system_powered_by_block', [
       'region' => 'left_sidebar',
     ]);
-    $this->drupalGet('admin/structure/block/manage/' . $block->id(), ['query' => ['destination' => 'admin']]);
+    $this->drupalGet('admin/appearance/block/manage/' . $block->id(), ['query' => ['destination' => 'admin']]);
     $this->clickLink('Remove block');
     $this->assertSession()->pageTextContains('Are you sure you want to remove the block ' . $block->label() . ' from the Left sidebar region?');
     $this->submitForm([], 'Remove');
@@ -288,17 +288,17 @@ class BlockTest extends BlockTestBase {
     \Drupal::service('theme_installer')->install($themes);
     $theme_settings = $this->config('system.theme');
     foreach ($themes as $theme) {
-      $this->drupalGet('admin/structure/block/list/' . $theme);
+      $this->drupalGet('admin/appearance/block/list/' . $theme);
       $this->assertSession()->titleEquals('Block layout | Drupal');
       // Select the 'Powered by Drupal' block to be placed.
       $block = [];
       $block['id'] = strtolower($this->randomMachineName());
       $block['theme'] = $theme;
       $block['region'] = 'content';
-      $this->drupalGet('admin/structure/block/add/system_powered_by_block');
+      $this->drupalGet('admin/appearance/block/add/system_powered_by_block');
       $this->submitForm($block, 'Save block');
       $this->assertSession()->statusMessageContains('The block configuration has been saved.', 'status');
-      $this->assertSession()->addressEquals('admin/structure/block/list/' . $theme . '?block-placement=' . Html::getClass($block['id']));
+      $this->assertSession()->addressEquals('admin/appearance/block/list/' . $theme . '?block-placement=' . Html::getClass($block['id']));
 
       // Set the default theme and ensure the block is placed.
       $theme_settings->set('default', $theme)->save();
@@ -318,9 +318,9 @@ class BlockTest extends BlockTestBase {
     // Explicitly set the default and admin themes.
     $theme = 'block_test_specialchars_theme';
     \Drupal::service('theme_installer')->install([$theme]);
-    $this->drupalGet('admin/structure/block');
+    $this->drupalGet('admin/appearance/block');
     $this->assertSession()->assertEscaped('<"Cat" & \'Mouse\'>');
-    $this->drupalGet('admin/structure/block/list/block_test_specialchars_theme');
+    $this->drupalGet('admin/appearance/block/list/block_test_specialchars_theme');
     $this->assertSession()->assertEscaped('Demonstrate block regions (<"Cat" & \'Mouse\'>)');
   }
 
@@ -339,7 +339,7 @@ class BlockTest extends BlockTestBase {
       'region' => 'sidebar_first',
       'settings[label]' => $title,
     ];
-    $this->drupalGet('admin/structure/block/add/' . $block_name . '/' . $default_theme);
+    $this->drupalGet('admin/appearance/block/add/' . $block_name . '/' . $default_theme);
     $this->submitForm($edit, 'Save block');
     $this->assertSession()->statusMessageContains('The block configuration has been saved.', 'status');
 
@@ -350,11 +350,11 @@ class BlockTest extends BlockTestBase {
     $edit = [
       'settings[label_display]' => TRUE,
     ];
-    $this->drupalGet('admin/structure/block/manage/' . $id);
+    $this->drupalGet('admin/appearance/block/manage/' . $id);
     $this->submitForm($edit, 'Save block');
     $this->assertSession()->statusMessageContains('The block configuration has been saved.', 'status');
 
-    $this->drupalGet('admin/structure/block/manage/' . $id);
+    $this->drupalGet('admin/appearance/block/manage/' . $id);
     $this->assertSession()->checkboxChecked('edit-settings-label-display');
 
     // Confirm that the block is displayed when enabled.
@@ -379,7 +379,7 @@ class BlockTest extends BlockTestBase {
     $block += ['theme' => $this->config('system.theme')->get('default')];
     $edit = [];
     $edit['blocks[' . $block['id'] . '][region]'] = $region;
-    $this->drupalGet('admin/structure/block');
+    $this->drupalGet('admin/appearance/block');
     $this->submitForm($edit, 'Save blocks');
 
     // Confirm that the block was moved to the proper region.
@@ -530,7 +530,7 @@ class BlockTest extends BlockTestBase {
     $this->drupalLogin($theme_admin);
     $this->drupalGet('admin/appearance');
     $this->assertSession()->pageTextContains('You can place blocks for each theme on the block layout page');
-    $this->assertSession()->linkByHrefExists('admin/structure/block');
+    $this->assertSession()->linkByHrefExists('admin/appearance/block');
   }
 
   /**
@@ -615,7 +615,7 @@ class BlockTest extends BlockTestBase {
     ];
     // Set the block to be shown only to authenticated users.
     $edit['visibility[user_role][roles][' . RoleInterface::AUTHENTICATED_ID . ']'] = TRUE;
-    $this->drupalGet('admin/structure/block/add/foo/' . $default_theme);
+    $this->drupalGet('admin/appearance/block/add/foo/' . $default_theme);
     $this->submitForm($edit, 'Save block');
 
     // Ensure that the title is displayed as plain text.

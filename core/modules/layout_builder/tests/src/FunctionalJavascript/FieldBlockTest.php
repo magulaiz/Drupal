@@ -71,7 +71,7 @@ class FieldBlockTest extends WebDriverTestBase {
     $this->drupalGet('admin');
     $assert_session->pageTextNotContains('Sunday, November 19, 1978 - 16:00');
 
-    $this->drupalGet('admin/structure/block');
+    $this->drupalGet('admin/appearance/block');
     $this->clickLink('Place block');
     $assert_session->assertWaitOnAjaxRequest();
 
@@ -81,7 +81,7 @@ class FieldBlockTest extends WebDriverTestBase {
     $assert_session->pageTextNotContains('Initial email');
 
     $assert_session->pageTextContains('Date field');
-    $block_url = 'admin/structure/block/add/field_block_test%3Auser%3Auser%3Afield_date/starterkit_theme';
+    $block_url = 'admin/appearance/block/add/field_block_test%3Auser%3Auser%3Afield_date/starterkit_theme';
     $assert_session->linkByHrefExists($block_url);
 
     $this->drupalGet($block_url);
@@ -152,7 +152,7 @@ class FieldBlockTest extends WebDriverTestBase {
     ]);
     $timestamp_field->save();
 
-    $this->drupalGet('admin/structure/block/add/field_block_test%3Auser%3Auser%3Afield_timestamp/starterkit_theme');
+    $this->drupalGet('admin/appearance/block/add/field_block_test%3Auser%3Auser%3Afield_timestamp/starterkit_theme');
     $this->assertFalse($page->findField('settings[formatter][settings][custom_date_format]')->isVisible(), 'Custom date format is not visible');
     $page->selectFieldOption('settings[formatter][settings][date_format]', 'custom');
     $this->assertTrue($page->findField('settings[formatter][settings][custom_date_format]')->isVisible(), 'Custom date format is visible');

@@ -254,7 +254,7 @@ class MenuUiTest extends BrowserTestBase {
     $this->assertSession()->pageTextContains($label);
 
     // Confirm that the custom menu block is available.
-    $this->drupalGet('admin/structure/block/list/' . $this->config('system.theme')->get('default'));
+    $this->drupalGet('admin/appearance/block/list/' . $this->config('system.theme')->get('default'));
     $this->clickLink('Place block');
     $this->assertSession()->pageTextContains($label);
 
@@ -640,7 +640,7 @@ class MenuUiTest extends BrowserTestBase {
 
     // Make sure menu shows up with new name in block addition.
     $default_theme = $this->config('system.theme')->get('default');
-    $this->drupalget('admin/structure/block/list/' . $default_theme);
+    $this->drupalget('admin/appearance/block/list/' . $default_theme);
     $this->clickLink('Place block');
     $this->assertSession()->pageTextContains($edit['label']);
   }
@@ -997,7 +997,7 @@ class MenuUiTest extends BrowserTestBase {
 
     // Update the menu block to show all levels of depth as expanded.
     $block_id = $this->blockPlacements[$menu->id()];
-    $this->drupalGet('admin/structure/block/manage/' . $block_id);
+    $this->drupalGet('admin/appearance/block/manage/' . $block_id);
     $this->assertSession()->checkboxNotChecked('settings[expand_all_items]');
     $this->submitForm([
       'settings[depth]' => 2,
@@ -1006,7 +1006,7 @@ class MenuUiTest extends BrowserTestBase {
     ], 'Save block');
 
     // Ensure the setting is persisted.
-    $this->drupalGet('admin/structure/block/manage/' . $block_id);
+    $this->drupalGet('admin/appearance/block/manage/' . $block_id);
     $this->assertSession()->checkboxChecked('settings[expand_all_items]');
 
     // Ensure all three links are shown, including the children which would
@@ -1084,7 +1084,7 @@ class MenuUiTest extends BrowserTestBase {
   protected function doTestMenuBlock() {
     $menu_id = $this->menu->id();
     $block_id = $this->blockPlacements[$menu_id];
-    $this->drupalGet('admin/structure/block/manage/' . $block_id);
+    $this->drupalGet('admin/appearance/block/manage/' . $block_id);
     $this->submitForm([
       'settings[depth]' => 3,
       'settings[level]' => 2,

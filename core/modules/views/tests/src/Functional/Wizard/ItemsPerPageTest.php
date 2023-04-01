@@ -101,7 +101,7 @@ class ItemsPerPageTest extends WizardTestBase {
     $this->assertGreaterThan($pos3, $pos2);
 
     // Confirm that the block is listed in the block administration UI.
-    $this->drupalGet('admin/structure/block/list/' . $this->config('system.theme')->get('default'));
+    $this->drupalGet('admin/appearance/block/list/' . $this->config('system.theme')->get('default'));
     $this->clickLink('Place block');
     $this->assertSession()->pageTextContains($view['label']);
 

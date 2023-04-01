@@ -79,7 +79,7 @@ class ModerationStateBlockTest extends ModerationStateTestBase {
       'region' => 'sidebar_first',
     ];
     $block = BlockContent::load(1);
-    $url = 'admin/structure/block/add/block_content:' . $block->uuid() . '/' . $this->config('system.theme')->get('default');
+    $url = 'admin/appearance/block/add/block_content:' . $block->uuid() . '/' . $this->config('system.theme')->get('default');
     $this->drupalGet($url);
     $this->submitForm($instance, 'Save block');
 

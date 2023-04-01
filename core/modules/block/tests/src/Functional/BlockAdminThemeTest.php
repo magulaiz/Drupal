@@ -36,7 +36,7 @@ class BlockAdminThemeTest extends BrowserTestBase {
 
     // Ensure that access to block admin page is denied when theme is not
     // installed.
-    $this->drupalGet('admin/structure/block/list/olivero');
+    $this->drupalGet('admin/appearance/block/list/olivero');
     $this->assertSession()->statusCodeEquals(403);
 
     // Install admin theme and confirm that tab is accessible.
@@ -44,7 +44,7 @@ class BlockAdminThemeTest extends BrowserTestBase {
     $edit['admin_theme'] = 'olivero';
     $this->drupalGet('admin/appearance');
     $this->submitForm($edit, 'Save configuration');
-    $this->drupalGet('admin/structure/block/list/olivero');
+    $this->drupalGet('admin/appearance/block/list/olivero');
     $this->assertSession()->statusCodeEquals(200);
   }
 
