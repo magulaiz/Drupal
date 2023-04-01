@@ -54,7 +54,7 @@ class StandardTest extends BrowserTestBase {
     ]);
     $this->drupalLogin($this->adminUser);
     // Configure the block.
-    $this->drupalGet('admin/structure/block/add/system_menu_block:main/olivero');
+    $this->drupalGet('admin/appearance/block/add/system_menu_block:main/olivero');
     $this->submitForm([
       'region' => 'sidebar',
       'id' => 'main_navigation',
@@ -64,7 +64,7 @@ class StandardTest extends BrowserTestBase {
     $this->assertSession()->pageTextContains('Main navigation');
 
     // Verify we have role = complementary on help_block blocks.
-    $this->drupalGet('admin/structure/block');
+    $this->drupalGet('admin/appearance/block');
     $this->assertSession()->elementAttributeContains('xpath', "//div[@id='block-olivero-help']", 'role', 'complementary');
 
     // Verify anonymous user can see the block.
