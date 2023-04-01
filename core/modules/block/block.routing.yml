@@ -9,6 +9,20 @@ block.admin_demo:
   options:
     _admin_route: FALSE
 
+# @todo Deprecate this route once
+#   https://www.drupal.org/project/drupal/issues/3159210 is fixed, or remove
+#   it in Drupal 11.
+# @see https://www.drupal.org/node/3318112
+block.admin_demo.bc:
+  path: '/admin/structure/block/demo/{theme}'
+  defaults:
+    _controller: '\Drupal\block\Controller\BlockController::demoRedirect'
+  requirements:
+    _access_theme: 'TRUE'
+    _permission: 'administer blocks'
+  options:
+    _admin_route: FALSE
+
 entity.block.delete_form:
   path: '/admin/appearance/block/manage/{block}/delete'
   defaults:
@@ -17,11 +31,33 @@ entity.block.delete_form:
   requirements:
     _permission: 'administer blocks'
 
+# @todo Deprecate this route once
+#   https://www.drupal.org/project/drupal/issues/3159210 is fixed, or remove
+#   it in Drupal 11.
+# @see https://www.drupal.org/node/3318112
+entity.block.delete_form.bc:
+  path: '/admin/structure/block/manage/{block}/delete'
+  defaults:
+    _controller: '\Drupal\block\Controller\BlockController::blockDeleteRedirect'
+  requirements:
+    _permission: 'administer blocks'
+
 entity.block.edit_form:
   path: '/admin/appearance/block/manage/{block}'
   defaults:
     _entity_form: 'block.default'
     _title: 'Configure block'
+  requirements:
+    _entity_access: 'block.update'
+
+# @todo Deprecate this route once
+#   https://www.drupal.org/project/drupal/issues/3159210 is fixed, or remove
+#   it in Drupal 11.
+# @see https://www.drupal.org/node/3318112
+entity.block.edit_form.bc:
+  path: '/admin/structure/block/manage/{block}'
+  defaults:
+    _controller: '\Drupal\block\Controller\BlockController::blockEditRedirect'
   requirements:
     _entity_access: 'block.update'
 
@@ -51,11 +87,34 @@ block.admin_display:
   requirements:
     _permission: 'administer blocks'
 
+# @todo Deprecate this route once
+#   https://www.drupal.org/project/drupal/issues/3159210 is fixed, or remove
+#   it in Drupal 11.
+# @see https://www.drupal.org/node/3318112
+block.admin_display.bc:
+  path: '/admin/structure/block'
+  defaults:
+    _controller: '\Drupal\block\Controller\BlockListController::listingRedirect'
+  requirements:
+    _permission: 'administer blocks'
+
 block.admin_display_theme:
   path: '/admin/appearance/block/list/{theme}'
   defaults:
     _controller: '\Drupal\block\Controller\BlockListController::listing'
     _title: 'Block layout'
+  requirements:
+    _access_theme: 'TRUE'
+    _permission: 'administer blocks'
+
+# @todo Deprecate this route once
+#   https://www.drupal.org/project/drupal/issues/3159210 is fixed, or remove
+#   it in Drupal 11.
+# @see https://www.drupal.org/node/3318112
+block.admin_display_theme.bc:
+  path: '/admin/structure/block/list/{theme}'
+  defaults:
+    _controller: '\Drupal\block\Controller\BlockListController::themeListingRedirect'
   requirements:
     _access_theme: 'TRUE'
     _permission: 'administer blocks'
@@ -69,12 +128,35 @@ block.admin_library:
     _access_theme: 'TRUE'
     _permission: 'administer blocks'
 
+# @todo Deprecate this route once
+#   https://www.drupal.org/project/drupal/issues/3159210 is fixed, or remove
+#   it in Drupal 11.
+# @see https://www.drupal.org/node/3318112
+block.admin_library.bc:
+  path: '/admin/structure/block/library/{theme}'
+  defaults:
+    _controller: '\Drupal\block\Controller\BlockLibraryController::listBlocksRedirect'
+  requirements:
+    _access_theme: 'TRUE'
+    _permission: 'administer blocks'
+
 block.admin_add:
   path: '/admin/appearance/block/add/{plugin_id}/{theme}'
   defaults:
     _controller: '\Drupal\block\Controller\BlockAddController::blockAddConfigureForm'
     theme: null
     _title: 'Configure block'
+  requirements:
+    _permission: 'administer blocks'
+
+# @todo Deprecate this route once
+#   https://www.drupal.org/project/drupal/issues/3159210 is fixed, or remove
+#   it in Drupal 11.
+# @see https://www.drupal.org/node/3318112
+block.admin_add.bc:
+  path: '/admin/structure/block/add/{plugin_id}/{theme}'
+  defaults:
+    _controller: '\Drupal\block\Controller\BlockAddController::blockAddConfigureFormRedirect'
   requirements:
     _permission: 'administer blocks'
 

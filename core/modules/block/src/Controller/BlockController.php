@@ -6,7 +6,9 @@ use Drupal\Component\Utility\Html;
 use Drupal\block\BlockInterface;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Extension\ThemeHandlerInterface;
+use Drupal\Core\Url;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
@@ -113,6 +115,93 @@ class BlockController extends ControllerBase {
    */
   protected function getVisibleRegionNames($theme) {
     return system_region_list($theme, REGIONS_VISIBLE);
+  }
+
+  /**
+   * Provides a redirect to the theme demonstration page.
+   *
+   * @param string $theme
+   *   The name of the theme.
+   *
+   * @return \Symfony\Component\HttpFoundation\RedirectResponse
+   *
+   * @deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use
+   *   /admin/appearance/block/demo/{theme} directly instead of
+   *   /admin/structure/block/demo/{theme}.
+   *
+   * @see https://www.drupal.org/node/3318112
+   */
+  public function demoRedirect(string $theme): RedirectResponse {
+    @trigger_error('The path /admin/structure/block/demo/{theme} is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use /admin/appearance/block/demo/{theme}. See https://www.drupal.org/node/3318112.', E_USER_DEPRECATED);
+    $route = 'block.admin_demo';
+    $params = [
+      '%old_path' => Url::fromRoute("$route.bc", ['theme' => $theme])->toString(),
+      '%new_path' => Url::fromRoute($route, ['theme' => $theme])->toString(),
+      '%change_record' => 'https://www.drupal.org/node/3320855',
+    ];
+    $warning_message = $this->t('You have been redirected from %old_path. Update links, shortcuts, and bookmarks to use %new_path.', $params);
+    $this->messenger()->addWarning($warning_message);
+    $this->getLogger('block')->warning('A user was redirected from %old_path to %new_path. This redirect will be removed in a future version of Drupal. Update links, shortcuts, and bookmarks to use %new_path. See %change_record for more information.', $params);
+
+    return $this->redirect($route, ['theme' => $theme], [], 301);
+  }
+
+  /**
+   * Provides a redirect to the block delete form.
+   *
+   * @param \Drupal\block\BlockInterface $block
+   *   The Block configuration entity to be deleted.
+   *
+   * @return \Symfony\Component\HttpFoundation\RedirectResponse
+   *
+   * @deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use
+   *   /admin/appearance/block/manage/{block}/delete directly instead of
+   *   /admin/structure/block/manage/{block}/delete.
+   *
+   * @see https://www.drupal.org/node/3318112
+   */
+  public function blockDeleteRedirect(BlockInterface $block): RedirectResponse {
+    @trigger_error('The path /admin/structure/block/manage/{block}/delete is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use /admin/appearance/block/manage/{block}/delete. See https://www.drupal.org/node/3318112.', E_USER_DEPRECATED);
+    $route = 'entity.block.delete_form';
+    $params = [
+      '%old_path' => Url::fromRoute("$route.bc", ['block' => $block->id()])->toString(),
+      '%new_path' => Url::fromRoute($route, ['block' => $block->id()])->toString(),
+      '%change_record' => 'https://www.drupal.org/node/3320855',
+    ];
+    $warning_message = $this->t('You have been redirected from %old_path. Update links, shortcuts, and bookmarks to use %new_path.', $params);
+    $this->messenger()->addWarning($warning_message);
+    $this->getLogger('block')->warning('A user was redirected from %old_path to %new_path. This redirect will be removed in a future version of Drupal. Update links, shortcuts, and bookmarks to use %new_path. See %change_record for more information.', $params);
+
+    return $this->redirect($route, ['block' => $block->id()], [], 301);
+  }
+
+  /**
+   * Provides a redirect to the block edit form.
+   *
+   * @param \Drupal\block\BlockInterface $block
+   *   The Block configuration entity to be edited.
+   *
+   * @return \Symfony\Component\HttpFoundation\RedirectResponse
+   *
+   * @deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use
+   *   /admin/appearance/block/manage/{block} directly instead of
+   *   /admin/structure/block/manage/{block}.
+   *
+   * @see https://www.drupal.org/node/3318112
+   */
+  public function blockEditRedirect(BlockInterface $block): RedirectResponse {
+    @trigger_error('The path /admin/structure/block/manage/{block} is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use /admin/appearance/block/manage/{block}. See https://www.drupal.org/node/3318112.', E_USER_DEPRECATED);
+    $route = 'entity.block.edit_form';
+    $params = [
+      '%old_path' => Url::fromRoute("$route.bc", ['block' => $block->id()])->toString(),
+      '%new_path' => Url::fromRoute($route, ['block' => $block->id()])->toString(),
+      '%change_record' => 'https://www.drupal.org/node/3320855',
+    ];
+    $warning_message = $this->t('You have been redirected from %old_path. Update links, shortcuts, and bookmarks to use %new_path.', $params);
+    $this->messenger()->addWarning($warning_message);
+    $this->getLogger('block')->warning('A user was redirected from %old_path to %new_path. This redirect will be removed in a future version of Drupal. Update links, shortcuts, and bookmarks to use %new_path. See %change_record for more information.', $params);
+
+    return $this->redirect($route, ['block' => $block->id()], [], 301);
   }
 
 }
