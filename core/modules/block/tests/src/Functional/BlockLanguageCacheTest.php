@@ -63,7 +63,7 @@ class BlockLanguageCacheTest extends BrowserTestBase {
 
     // Create the block cache for all languages.
     foreach ($this->langcodes as $langcode) {
-      $this->drupalGet('admin/structure/block', ['language' => $langcode]);
+      $this->drupalGet('admin/appearance/block', ['language' => $langcode]);
       $this->clickLink('Place block');
     }
 
@@ -76,7 +76,7 @@ class BlockLanguageCacheTest extends BrowserTestBase {
 
     // Check that the block is listed for all languages.
     foreach ($this->langcodes as $langcode) {
-      $this->drupalGet('admin/structure/block', ['language' => $langcode]);
+      $this->drupalGet('admin/appearance/block', ['language' => $langcode]);
       $this->clickLink('Place block');
       $this->assertSession()->pageTextContains($edit['label']);
     }

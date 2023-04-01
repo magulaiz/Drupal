@@ -167,7 +167,7 @@ class UpdatePathTestBaseFilledTest extends UpdatePathTestBaseTest {
     $this->assertSession()->pageTextContains('Test title');
 
     // Make sure our content blocks show up.
-    $this->drupalGet('admin/structure/block');
+    $this->drupalGet('admin/appearance/block');
     $this->assertSession()->pageTextContains('Another block');
     $this->assertSession()->pageTextContains('Test block');
     $this->drupalGet('admin/content/block');
@@ -175,14 +175,14 @@ class UpdatePathTestBaseFilledTest extends UpdatePathTestBaseTest {
     $this->assertSession()->pageTextContains('Test block');
 
     // Make sure our custom visibility conditions are correct.
-    $this->drupalGet('admin/structure/block/manage/testblock');
+    $this->drupalGet('admin/appearance/block/manage/testblock');
     $this->assertSession()->checkboxNotChecked('edit-visibility-language-langcodes-es');
     $this->assertSession()->checkboxChecked('edit-visibility-language-langcodes-en');
     $this->assertSession()->checkboxNotChecked('edit-visibility-entity-bundlenode-bundles-book');
     $this->assertSession()->checkboxChecked('edit-visibility-entity-bundlenode-bundles-test-content-type');
 
     // Make sure our block is still translated.
-    $this->drupalGet('admin/structure/block/manage/testblock/translate/es/edit');
+    $this->drupalGet('admin/appearance/block/manage/testblock/translate/es/edit');
     $this->assertSession()->responseContains('Test block spanish');
 
     // Make sure our custom text format exists.

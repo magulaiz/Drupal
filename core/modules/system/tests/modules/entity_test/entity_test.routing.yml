@@ -69,7 +69,7 @@ entity.entity_test_mulrev.revision:
     _access: 'TRUE'
 
 entity.block.test_operation:
-  path: '/admin/structure/block/manage/{block}/test_operation'
+  path: '/admin/appearance/block/manage/{block}/test_operation'
   defaults:
     _entity_view: 'entity_test'
   requirements:

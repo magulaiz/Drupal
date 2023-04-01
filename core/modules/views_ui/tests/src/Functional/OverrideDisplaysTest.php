@@ -61,7 +61,7 @@ class OverrideDisplaysTest extends UITestBase {
     $this->assertSession()->pageTextContains($original_title);
 
     // Confirm that the view block is available in the block administration UI.
-    $this->drupalGet('admin/structure/block/list/' . $this->config('system.theme')->get('default'));
+    $this->drupalGet('admin/appearance/block/list/' . $this->config('system.theme')->get('default'));
     $this->clickLink('Place block');
     $this->assertSession()->pageTextContains($view['label']);
 
@@ -124,7 +124,7 @@ class OverrideDisplaysTest extends UITestBase {
     $this->assertSession()->responseNotContains($view['block[title]']);
 
     // Confirm that the block is available in the block administration UI.
-    $this->drupalGet('admin/structure/block/list/' . $this->config('system.theme')->get('default'));
+    $this->drupalGet('admin/appearance/block/list/' . $this->config('system.theme')->get('default'));
     $this->clickLink('Place block');
     $this->assertSession()->pageTextContains($view['label']);
 

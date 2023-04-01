@@ -94,18 +94,18 @@ class BlockUiTest extends BrowserTestBase {
    */
   public function testBlockDemoUiPage() {
     $this->drupalPlaceBlock('help_block', ['region' => 'help']);
-    $this->drupalGet('admin/structure/block');
+    $this->drupalGet('admin/appearance/block');
     $this->clickLink('Demonstrate block regions (Stark)');
     $this->assertSession()->elementExists('xpath', '//header[@role = "banner"]/div/div[contains(@class, "block-region") and contains(text(), "Header")]');
 
     // Ensure that other themes can use the block demo page.
     \Drupal::service('theme_installer')->install(['test_theme']);
-    $this->drupalGet('admin/structure/block/demo/test_theme');
+    $this->drupalGet('admin/appearance/block/demo/test_theme');
     $this->assertSession()->assertEscaped('<strong>Test theme</strong>');
 
     // Ensure that a hidden theme cannot use the block demo page.
     \Drupal::service('theme_installer')->install(['stable9']);
-    $this->drupalGet('admin/structure/block/demo/stable9');
+    $this->drupalGet('admin/appearance/block/demo/stable9');
     $this->assertSession()->statusCodeEquals(404);
 
     // Delete all blocks and verify saving the block layout results in a
@@ -115,7 +115,7 @@ class BlockUiTest extends BrowserTestBase {
     foreach ($blocks as $block) {
       $block->delete();
     }
-    $this->drupalGet('admin/structure/block');
+    $this->drupalGet('admin/appearance/block');
     $blocks_table = $this->xpath("//tr[@class='block-enabled']");
     $this->assertEmpty($blocks_table, 'The blocks table is now empty.');
     $this->submitForm([], 'Save blocks');
@@ -128,7 +128,7 @@ class BlockUiTest extends BrowserTestBase {
    */
   public function testBlockAdminUiPage() {
     // Visit the blocks admin ui.
-    $this->drupalGet('admin/structure/block');
+    $this->drupalGet('admin/appearance/block');
     // Look for the blocks table.
     $this->assertSession()->elementExists('xpath', "//table[@id='blocks']");
     // Look for test blocks in the table.
@@ -145,7 +145,7 @@ class BlockUiTest extends BrowserTestBase {
       // Change the test block's weight.
       $edit['blocks[' . $values['settings']['id'] . '][weight]'] = $values['test_weight'];
     }
-    $this->drupalGet('admin/structure/block');
+    $this->drupalGet('admin/appearance/block');
     $this->submitForm($edit, 'Save blocks');
     foreach ($this->blockValues as $values) {
       // Check if the region and weight settings changes have persisted.
@@ -155,7 +155,7 @@ class BlockUiTest extends BrowserTestBase {
 
     // Add a block with a machine name the same as a region name.
     $this->drupalPlaceBlock('system_powered_by_block', ['region' => 'header', 'id' => 'header']);
-    $this->drupalGet('admin/structure/block');
+    $this->drupalGet('admin/appearance/block');
     $this->assertSession()->elementExists('xpath', '//tr[contains(@class, "region-title-header")]');
 
     // Ensure hidden themes do not appear in the UI. Enable another non base
@@ -165,14 +165,14 @@ class BlockUiTest extends BrowserTestBase {
     // We have to enable at least one extra theme that is not hidden so that
     // local tasks will show up. That's why we enable test_theme_theme.
     \Drupal::service('theme_installer')->install(['stable9', 'test_theme_theme']);
-    $this->drupalGet('admin/structure/block');
+    $this->drupalGet('admin/appearance/block');
     $theme_handler = \Drupal::service('theme_handler');
     $this->assertSession()->linkExists($theme_handler->getName('stark'));
     $this->assertSession()->linkExists($theme_handler->getName('test_theme_theme'));
     $this->assertSession()->linkNotExists($theme_handler->getName('stable9'));
 
     // Ensure that a hidden theme cannot use the block demo page.
-    $this->drupalGet('admin/structure/block/list/stable9');
+    $this->drupalGet('admin/appearance/block/list/stable9');
     $this->assertSession()->statusCodeEquals(404);
 
     // Ensure that a hidden theme set as the admin theme can use the block demo
@@ -180,9 +180,9 @@ class BlockUiTest extends BrowserTestBase {
     \Drupal::configFactory()->getEditable('system.theme')->set('admin', 'stable9')->save();
     \Drupal::service('router.builder')->rebuildIfNeeded();
     $this->drupalPlaceBlock('local_tasks_block', ['region' => 'header', 'theme' => 'stable9']);
-    $this->drupalGet('admin/structure/block');
+    $this->drupalGet('admin/appearance/block');
     $this->assertSession()->linkExists($theme_handler->getName('stable9'));
-    $this->drupalGet('admin/structure/block/list/stable9');
+    $this->drupalGet('admin/appearance/block/list/stable9');
     $this->assertSession()->statusCodeEquals(200);
   }
 
@@ -190,27 +190,27 @@ class BlockUiTest extends BrowserTestBase {
    * Tests the block categories on the listing page.
    */
   public function testCandidateBlockList() {
-    $this->drupalGet('admin/structure/block');
+    $this->drupalGet('admin/appearance/block');
     $this->clickLink('Place block');
-    $this->assertSession()->elementExists('xpath', '//tr[.//td/div[text()="Display message"] and .//td[text()="Block test"] and .//td//a[contains(@href, "admin/structure/block/add/test_block_instantiation/stark")]]');
+    $this->assertSession()->elementExists('xpath', '//tr[.//td/div[text()="Display message"] and .//td[text()="Block test"] and .//td//a[contains(@href, "admin/appearance/block/add/test_block_instantiation/stark")]]');
 
     // Trigger the custom category addition in block_test_block_alter().
     $this->container->get('state')->set('block_test_info_alter', TRUE);
     $this->container->get('plugin.manager.block')->clearCachedDefinitions();
 
-    $this->drupalGet('admin/structure/block');
+    $this->drupalGet('admin/appearance/block');
     $this->clickLink('Place block');
-    $this->assertSession()->elementExists('xpath', '//tr[.//td/div[text()="Display message"] and .//td[text()="Custom category"] and .//td//a[contains(@href, "admin/structure/block/add/test_block_instantiation/stark")]]');
+    $this->assertSession()->elementExists('xpath', '//tr[.//td/div[text()="Display message"] and .//td[text()="Custom category"] and .//td//a[contains(@href, "admin/appearance/block/add/test_block_instantiation/stark")]]');
   }
 
   /**
    * Tests the behavior of unsatisfied context-aware blocks.
    */
   public function testContextAwareUnsatisfiedBlocks() {
-    $this->drupalGet('admin/structure/block');
+    $this->drupalGet('admin/appearance/block');
     $this->clickLink('Place block');
     // Verify that the context-aware test block does not appear.
-    $this->assertSession()->elementNotExists('xpath', '//tr[.//td/div[text()="Test context-aware unsatisfied block"] and .//td[text()="Block test"] and .//td//a[contains(@href, "admin/structure/block/add/test_context_aware_unsatisfied/stark")]]');
+    $this->assertSession()->elementNotExists('xpath', '//tr[.//td/div[text()="Test context-aware unsatisfied block"] and .//td[text()="Block test"] and .//td//a[contains(@href, "admin/appearance/block/add/test_context_aware_unsatisfied/stark")]]');
 
     $definition = \Drupal::service('plugin.manager.block')->getDefinition('test_context_aware_unsatisfied');
     $this->assertNotEmpty($definition, 'The context-aware test block does not exist.');
@@ -225,9 +225,9 @@ class BlockUiTest extends BrowserTestBase {
     $this->assertSession()->pageTextNotContains('Test context-aware block');
     $this->assertSession()->responseNotContains($expected_text);
 
-    $block_url = 'admin/structure/block/add/test_context_aware/stark';
+    $block_url = 'admin/appearance/block/add/test_context_aware/stark';
 
-    $this->drupalGet('admin/structure/block');
+    $this->drupalGet('admin/appearance/block');
     $this->clickLink('Place block');
     $this->assertSession()->elementExists('xpath', '//tr[.//td/div[text()="Test context-aware block"] and .//td[text()="Block test"] and .//td//a[contains(@href, "' . $block_url . '")]]');
     $definition = \Drupal::service('plugin.manager.block')->getDefinition('test_context_aware');
@@ -248,11 +248,11 @@ class BlockUiTest extends BrowserTestBase {
     // context options for the block (the test_context_aware_no_valid_context_options
     // block has one context defined which is not available for it on the
     // Block Layout interface).
-    $this->drupalGet('admin/structure/block/add/test_context_aware_no_valid_context_options/stark');
+    $this->drupalGet('admin/appearance/block/add/test_context_aware_no_valid_context_options/stark');
     $this->assertSession()->fieldNotExists('edit-settings-context-mapping-email');
 
     // Test context mapping allows empty selection for optional contexts.
-    $this->drupalGet('admin/structure/block/manage/stark_testcontextawareblock');
+    $this->drupalGet('admin/appearance/block/manage/stark_testcontextawareblock');
     $edit = [
       'settings[context_mapping][user]' => '',
     ];
@@ -262,7 +262,7 @@ class BlockUiTest extends BrowserTestBase {
     $this->assertSession()->pageTextNotContains('User context found.');
 
     // Tests that conditions with missing context are not displayed.
-    $this->drupalGet('admin/structure/block/manage/stark_testcontextawareblock');
+    $this->drupalGet('admin/appearance/block/manage/stark_testcontextawareblock');
     $this->assertSession()->responseNotContains('No existing type');
     $this->assertSession()->elementNotExists('xpath', '//*[@name="visibility[condition_test_no_existing_type][negate]"]');
   }
@@ -273,7 +273,7 @@ class BlockUiTest extends BrowserTestBase {
   public function testMachineNameSuggestion() {
     // Check the form uses the raw machine name suggestion when no instance
     // already exists.
-    $url = 'admin/structure/block/add/test_block_instantiation/stark';
+    $url = 'admin/appearance/block/add/test_block_instantiation/stark';
     $this->drupalGet($url);
     $this->assertSession()->fieldValueEquals('id', 'stark_displaymessage');
     $edit = ['region' => 'content'];
@@ -322,13 +322,13 @@ class BlockUiTest extends BrowserTestBase {
     $block['region'] = 'content';
 
     // After adding a block, it will indicate which block was just added.
-    $this->drupalGet('admin/structure/block/add/system_powered_by_block');
+    $this->drupalGet('admin/appearance/block/add/system_powered_by_block');
     $this->submitForm($block, 'Save block');
-    $this->assertSession()->addressEquals('admin/structure/block/list/stark?block-placement=' . Html::getClass($block['id']));
+    $this->assertSession()->addressEquals('admin/appearance/block/list/stark?block-placement=' . Html::getClass($block['id']));
 
     // Resaving the block page will remove the block placement indicator.
     $this->submitForm([], 'Save blocks');
-    $this->assertSession()->addressEquals('admin/structure/block/list/stark');
+    $this->assertSession()->addressEquals('admin/appearance/block/list/stark');
 
     // Place another block and test the remove functionality works with the
     // block placement indicator. Click the first 'Place block' link to bring up
@@ -339,21 +339,21 @@ class BlockUiTest extends BrowserTestBase {
     // for the 'block-placement' querystring parameter.
     $this->clickLink('Place block');
     $this->submitForm([], 'Save block');
-    $this->assertSession()->addressEquals('admin/structure/block/list/stark?block-placement=stark-scriptalertxsssubjectscript');
+    $this->assertSession()->addressEquals('admin/appearance/block/list/stark?block-placement=stark-scriptalertxsssubjectscript');
 
     // Removing a block will remove the block placement indicator.
     $this->clickLink('Remove');
     $this->submitForm([], 'Remove');
     // @todo https://www.drupal.org/project/drupal/issues/2980527 this should be
-    //   'admin/structure/block/list/stark' but there is a bug.
-    $this->assertSession()->addressEquals('admin/structure/block');
+    //   'admin/appearance/block/list/stark' but there is a bug.
+    $this->assertSession()->addressEquals('admin/appearance/block');
   }
 
   /**
    * Tests if validation errors are passed plugin form to the parent form.
    */
   public function testBlockValidateErrors() {
-    $this->drupalGet('admin/structure/block/add/test_settings_validation/stark');
+    $this->drupalGet('admin/appearance/block/add/test_settings_validation/stark');
     $this->submitForm([
       'region' => 'content',
       'settings[digits]' => 'abc',
@@ -371,9 +371,9 @@ class BlockUiTest extends BrowserTestBase {
     /** @var \Drupal\block\BlockInterface $block */
     $block = reset($this->blocks);
     // Ensure that the enable and disable routes are protected.
-    $this->drupalGet('admin/structure/block/manage/' . $block->id() . '/disable');
+    $this->drupalGet('admin/appearance/block/manage/' . $block->id() . '/disable');
     $this->assertSession()->statusCodeEquals(403);
-    $this->drupalGet('admin/structure/block/manage/' . $block->id() . '/enable');
+    $this->drupalGet('admin/appearance/block/manage/' . $block->id() . '/enable');
     $this->assertSession()->statusCodeEquals(403);
   }
 
@@ -386,7 +386,7 @@ class BlockUiTest extends BrowserTestBase {
     $block = $this->drupalPlaceBlock('broken');
 
     // Ensure that broken block configuration can be accessed.
-    $this->drupalGet('admin/structure/block/manage/' . $block->id());
+    $this->drupalGet('admin/appearance/block/manage/' . $block->id());
     $assert_session->statusCodeEquals(200);
 
     // Login as an admin user to the site.

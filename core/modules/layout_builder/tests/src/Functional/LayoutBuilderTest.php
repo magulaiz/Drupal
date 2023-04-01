@@ -1395,7 +1395,7 @@ class LayoutBuilderTest extends BrowserTestBase {
       'administer blocks',
     ]));
 
-    $this->drupalGet('admin/structure/block');
+    $this->drupalGet('admin/appearance/block');
     $page->clickLink('Place block');
 
     // Ensure that blocks expected to appear are available.

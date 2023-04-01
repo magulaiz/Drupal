@@ -44,7 +44,7 @@ class BlockLayoutTourTest extends TourTestBase {
    * Tests Block Layout tour tip availability.
    */
   public function testBlockLayoutTourTips() {
-    $this->drupalGet('admin/structure/block');
+    $this->drupalGet('admin/appearance/block');
     $this->assertTourTips();
   }
 
