@@ -3,7 +3,7 @@
  * A Backbone view for the body element.
  */
 
-(function ($, Drupal, Backbone) {
+(function ($, Drupal, Backbone, Cookies) {
   Drupal.toolbar.BodyVisualView = Backbone.View.extend(
     /** @lends Drupal.toolbar.BodyVisualView# */ {
       /**
@@ -27,6 +27,11 @@
         const isViewportOverflowConstrained = this.model.get(
           'isViewportOverflowConstrained',
         );
+        const isToolbarFixed =
+          isViewportOverflowConstrained || this.model.get('isFixed');
+        Cookies.set('isToolbarFixed', isToolbarFixed, {
+          path: '/',
+        });
         $('body').toggleClass(
           'toolbar-fixed',
           isViewportOverflowConstrained || this.model.get('isFixed'),
@@ -45,4 +50,4 @@
       },
     },
   );
-})(jQuery, Drupal, Backbone);
+})(jQuery, Drupal, Backbone, Cookies);

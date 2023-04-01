@@ -2,8 +2,34 @@
  * @file
  * Defines the behavior of the Drupal administration toolbar.
  */
+const setClassesAsap = () => {
+  const toolbarActiveTray = Cookies.get('toolbarActiveTray');
+  const orientation = Cookies.get('toolbar');
+  const activeTrayElement = document.querySelector(
+    `.toolbar-tray[data-toolbar-tray="${toolbarActiveTray}"]`,
+  );
+  const activeTrayToggle = document.querySelector(
+    `.toolbar-item[data-toolbar-tray="${toolbarActiveTray}"]`,
+  );
 
-(function ($, Drupal, drupalSettings) {
+  if (activeTrayElement) {
+    activeTrayElement.classList.add(`toolbar-tray-${orientation}`, 'is-active');
+    activeTrayToggle.classList.add('is-active');
+    console.log('activetrayto', activeTrayToggle.outerHTML);
+  }
+  const toolbarUserName = Cookies.get('toolbarUserName');
+  if (toolbarUserName) {
+    document.querySelector('#toolbar-item-user').textContent = toolbarUserName;
+  }
+
+  // document.body.style['padding-top'] = horizontalTrayOpen ? `${toolbarHeight * 2}px` :`${toolbarHeight}px` ;
+  // document.documentElement.style['scroll-padding-top'] = document.body.style['padding-top'];
+};
+setClassesAsap();
+
+(function ($, Drupal, drupalSettings, once, Cookies) {
+  setClassesAsap();
+
   // Merge run-time settings with the defaults.
   const options = $.extend(
     {
@@ -114,7 +140,7 @@
         // asynchronously.
         Drupal.toolbar.setSubtrees.done((subtrees) => {
           menuModel.set('subtrees', subtrees);
-          const theme = drupalSettings.ajaxPageState.theme;
+          const { theme } = drupalSettings.ajaxPageState;
           localStorage.setItem(
             `Drupal.toolbar.subtrees.${theme}`,
             JSON.stringify(subtrees),
@@ -140,15 +166,27 @@
 
         // Broadcast model changes to other modules.
         model
+          // eslint-disable-next-line no-shadow
           .on('change:orientation', (model, orientation) => {
             $(document).trigger('drupalToolbarOrientationChange', orientation);
           })
+          // eslint-disable-next-line no-shadow
           .on('change:activeTab', (model, tab) => {
             $(document).trigger('drupalToolbarTabChange', tab);
           })
+          // eslint-disable-next-line no-shadow
           .on('change:activeTray', (model, tray) => {
             $(document).trigger('drupalToolbarTrayChange', tray);
           });
+
+        // Avoid flickering.
+        Cookies.set(
+          'toolbar',
+          Drupal.toolbar.models.toolbarModel.get('orientation'),
+          {
+            path: '/',
+          },
+        );
 
         // If the toolbar's orientation is horizontal and no active tab is
         // defined then show the tray of the first toolbar tab by default (but
@@ -188,6 +226,124 @@
           'dialog:beforeclose': () => {
             $('#toolbar-bar').css('margin-top', '0');
           },
+        });
+      });
+    },
+  };
+
+  Drupal.behaviors.toolbarAntiFlicker = {
+    attach: function attach(context) {
+      if (
+        once('toolbarAntiFlicker', '#toolbar-administration', context).length
+      ) {
+        // Remove placeholder
+        $('#toolbar-tray-anti-flicker').parent('.toolbar-tab').remove();
+        // Vertical fixes.
+        const ChildView = Drupal.toolbar.ToolbarVisualView.extend({
+          initialize() {
+            const { model } = Drupal.toolbar.views.toolbarVisualView;
+            this.listenTo(
+              model,
+              'change:activeTab change:orientation change:isOriented change:isTrayToggleVisible',
+              // eslint-disable-next-line func-names
+              function () {
+                // Avoid flickering.
+                Cookies.set(
+                  'toolbar',
+                  Drupal.toolbar.models.toolbarModel.get('orientation'),
+                  {
+                    path: '/',
+                  },
+                );
+
+                let isToolbarActiveTab = 0;
+                if ($(model.get('activeTab')).length > 0) {
+                  isToolbarActiveTab = 1;
+                }
+
+                Cookies.set('toolbarActiveTab', isToolbarActiveTab, {
+                  path: '/',
+                });
+                Cookies.set(
+                  'toolbarActiveTabId',
+                  isToolbarActiveTab ? model.get('activeTab').id : null,
+                  {
+                    path: '/',
+                  },
+                );
+                Cookies.set(
+                  'toolbarActiveTray',
+                  $(model.get('activeTab')).attr('data-toolbar-tray'),
+                  {
+                    path: '/',
+                  },
+                );
+                Cookies.set('toolbarIsOriented', model.get('isOriented'), {
+                  path: '/',
+                });
+              },
+            );
+          },
+        });
+
+        // eslint-disable-next-line no-new
+        new ChildView();
+      }
+      once('user-toolbar-data', '#toolbar-item-user', context).forEach(
+        (toolbarItem) => {
+          const mutationObserver = new MutationObserver((mutations) => {
+            mutations.forEach((mutation) => {
+              console.log(mutation);
+              if (
+                mutation.type === 'childList' &&
+                mutation.removedNodes &&
+                mutation.removedNodes[0].hasAttribute(
+                  'data-big-pipe-placeholder-id',
+                )
+              ) {
+                Cookies.set(
+                  'toolbarUserName',
+                  mutation.addedNodes[0].textContent,
+                  {
+                    path: '/',
+                  },
+                );
+              }
+            });
+          });
+          mutationObserver.observe(toolbarItem, {
+            childList: true,
+          });
+        },
+      );
+      once('toolbar-lazy-trays', '#toolbar-bar', context).forEach((toolbar) => {
+        console.log('add', toolbar);
+        const mutationObserver = new MutationObserver((mutations) => {
+          mutations.forEach(function (mutation) {
+            console.log('lazy trays', mutation);
+            if (
+              mutation.type === 'childList' &&
+              mutation.removedNodes &&
+              mutation.removedNodes[0].hasAttribute(
+                'data-big-pipe-placeholder-id',
+              )
+            ) {
+              mutation.addedNodes.forEach((node) => {
+                console.log('addyy', node);
+                if (node.classList.contains('toolbar-menu')) {
+                  console.log('WE ADD TO', node);
+                  node.parentNode.classList.add('lazy-builder-just-added');
+                  setTimeout(() => {
+                    node.parentNode.classList.remove('lazy-builder-just-added');
+                  }, 50);
+                }
+              });
+            }
+          });
+        });
+        mutationObserver.observe(toolbar, {
+          childList: true,
+          subtree: true,
         });
       });
     },
@@ -314,4 +470,4 @@
   ) {
     Drupal.toolbar.setSubtrees.resolve(response.subtrees);
   };
-})(jQuery, Drupal, drupalSettings);
+})(jQuery, Drupal, drupalSettings, once, Cookies);

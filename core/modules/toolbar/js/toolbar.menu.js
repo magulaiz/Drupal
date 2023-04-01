@@ -111,9 +111,12 @@
           options.text = Drupal.t('@label', {
             '@label': $link.length ? $link[0].textContent : '',
           });
-          $item
-            .children('.toolbar-box')
-            .append(Drupal.theme('toolbarMenuItemToggle', options));
+          $item.children('.toolbar-box').each((index, toolbarBox) => {
+            $(Drupal.theme('toolbarMenuItemToggle', options))
+              .hide()
+              .appendTo(toolbarBox)
+              .fadeIn(100);
+          });
         }
       });
     }

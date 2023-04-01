@@ -110,11 +110,27 @@
        *   The `ToolbarVisualView` instance.
        */
       render() {
+        const trayMenus = document.querySelectorAll(
+          '[data-toolbar-tray].toolbar-tray',
+        );
+        if (document.body.classList.contains('toolbar-loading')) {
+          trayMenus.forEach((trayMenu) => {
+            trayMenu.classList.add('init');
+          });
+        }
         this.updateTabs();
         this.updateTrayOrientation();
         this.updateBarAttributes();
-
+        // debugger;
         $('body').removeClass('toolbar-loading');
+        $('[data-tray-placeholder]').remove();
+        // debugger;
+
+        setTimeout(() => {
+          trayMenus.forEach((trayMenu) => {
+            trayMenu.classList.remove('init');
+          });
+        }, 4);
 
         // Load the subtrees if the orientation of the toolbar is changed to
         // vertical. This condition responds to the case that the toolbar switches
