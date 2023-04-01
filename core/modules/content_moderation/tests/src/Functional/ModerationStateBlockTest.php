@@ -138,7 +138,7 @@ class ModerationStateBlockTest extends ModerationStateTestBase {
 
     // Check that revision is checked by default when content moderation is
     // enabled.
-    $this->drupalGet('/block/' . $block->id());
+    $this->drupalGet('/admin/content/block-content/' . $block->id());
     $this->assertSession()->checkboxChecked('revision');
     $this->assertSession()->pageTextContains('Revisions must be required when moderation is enabled.');
     $this->assertSession()->fieldDisabled('revision');
