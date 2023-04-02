@@ -141,7 +141,7 @@ class BlockController extends ControllerBase {
    * @see https://www.drupal.org/node/3320855
    */
   public function blockLayoutRedirect(RouteMatchInterface $route_match, Request $request, ?BlockInterface $block = NULL): RedirectResponse {
-    @trigger_error('The path /admin/structure/block, with its child paths, is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use /admin/appearance/block. See https://www.drupal.org/node/3318112.', E_USER_DEPRECATED);
+    @trigger_error('The path /admin/structure/block, with its child paths, is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use /admin/appearance/block. See https://www.drupal.org/node/3320855.', E_USER_DEPRECATED);
 
     $change_record = 'https://www.drupal.org/node/3320855';
     return $this->redirectWithWarning(
