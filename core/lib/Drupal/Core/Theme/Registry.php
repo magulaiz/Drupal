@@ -359,7 +359,7 @@ class Registry implements DestructableInterface {
    * - Base theme engines
    * - Base themes
    * - Theme engine
-   * - Theme
+   * - Theme.
    *
    * All theme hook definitions are essentially just collated and merged in the
    * above order. However, various extension-specific default values and
@@ -527,7 +527,6 @@ class Registry implements DestructableInterface {
         // $result[$hook] will only contain key/value pairs for information being
         // overridden.  Pull the rest of the information from what was defined by
         // an earlier hook.
-
         // Fill in the type and path of the module, theme, or engine that
         // implements this theme function.
         $result[$hook]['type'] = $type;
@@ -890,6 +889,172 @@ class Registry implements DestructableInterface {
     }
 
     return $grouped_functions;
+  }
+
+  /**
+   * Allows themes and/or theme engines to easily discover overridden templates.
+   *
+   * @param $cache
+   *   The existing cache of theme hooks to test against.
+   * @param $extension
+   *   The extension that these templates will have.
+   * @param $path
+   *   The path to search.
+   */
+  public function findThemeTemplates($cache, $extension, $path) {
+    $implementations = $files = [];
+
+    // Collect paths to all sub-themes grouped by base themes. These will be
+    // used for filtering. This allows base themes to have sub-themes in its
+    // folder hierarchy without affecting the base themes template discovery.
+    $theme_paths = [];
+    foreach ($this->themeHandler->listInfo() as $theme_info) {
+      if (!empty($theme_info->base_theme)) {
+        $theme_paths[$theme_info->base_theme][$theme_info->getName()] = $theme_info->getPath();
+      }
+    }
+    foreach ($theme_paths as $basetheme => $subthemes) {
+      foreach ($subthemes as $subtheme => $subtheme_path) {
+        if (isset($theme_paths[$subtheme])) {
+          $theme_paths[$basetheme] = array_merge($theme_paths[$basetheme], $theme_paths[$subtheme]);
+        }
+      }
+    }
+    $theme = $this->themeManager->getActiveTheme()->getName();
+    $subtheme_paths = $theme_paths[$theme] ?? [];
+
+    // Escape the periods in the extension.
+    $regex = '/' . str_replace('.', '\.', $extension) . '$/';
+    // Get a listing of all template files in the path to search.
+    if (is_dir($path)) {
+      $files = \Drupal::service('file_system')->scanDirectory($path, $regex, ['key' => 'filename']);
+    }
+
+    // Find templates that implement registered theme hooks and include that in
+    // what is returned so that the registry knows that the theme has this
+    // implementation.
+    foreach ($files as $template => $file) {
+      // Ignore sub-theme templates for the current theme.
+      if (strpos($file->uri, str_replace($subtheme_paths, '', $file->uri)) !== 0) {
+        continue;
+      }
+      // Remove the extension from the filename.
+      $template = str_replace($extension, '', $template);
+      // Transform - in filenames to _ to match function naming scheme
+      // for the purposes of searching.
+      $hook = strtr($template, '-', '_');
+      if (isset($cache[$hook])) {
+        $implementations[$hook] = [
+          'template' => $template,
+          'path' => dirname($file->uri),
+        ];
+      }
+
+      // Match templates based on the 'template' filename.
+      foreach ($cache as $hook => $info) {
+        if (isset($info['template'])) {
+          $template_candidates = [$info['template'], str_replace($info['theme path'] . '/templates/', '', $info['template'])];
+          if (in_array($template, $template_candidates)) {
+            $implementations[$hook] = [
+              'template' => $template,
+              'path' => dirname($file->uri),
+            ];
+          }
+        }
+      }
+    }
+
+    // Find templates that implement possible "suggestion" variants of registered
+    // theme hooks and add those as new registered theme hooks. See
+    // drupal_find_theme_functions() for more information about suggestions and
+    // the use of 'pattern' and 'base hook'.
+    $patterns = array_keys($files);
+    foreach ($cache as $hook => $info) {
+      $pattern = $info['pattern'] ?? ($hook . '__');
+      if (!isset($info['base hook']) && !empty($pattern)) {
+        // Transform _ in pattern to - to match file naming scheme
+        // for the purposes of searching.
+        $pattern = strtr($pattern, '_', '-');
+
+        $matches = preg_grep('/^' . $pattern . '/', $patterns);
+        if ($matches) {
+          foreach ($matches as $match) {
+            $file = $match;
+            // Remove the extension from the filename.
+            $file = str_replace($extension, '', $file);
+            // Put the underscores back in for the hook name and register this
+            // pattern.
+            $arg_name = isset($info['variables']) ? 'variables' : 'render element';
+            $implementations[strtr($file, '-', '_')] = [
+              'template' => $file,
+              'path' => dirname($files[$match]->uri),
+              $arg_name => $info[$arg_name],
+              'base hook' => $hook,
+            ];
+          }
+        }
+      }
+    }
+    return $implementations;
+  }
+
+  /**
+   * Allows themes and/or theme engines to discover overridden theme functions.
+   *
+   * @param array $cache
+   *   The existing cache of theme hooks to test against.
+   * @param array $prefixes
+   *   An array of prefixes to test, in reverse order of importance.
+   *
+   * @return array
+   *   The functions found, suitable for returning from hook_theme;
+   */
+  public function findThemeFunctions($cache, $prefixes) {
+    $implementations = [];
+    $grouped_functions = $this->getPrefixGroupedUserFunctions();
+
+    foreach ($cache as $hook => $info) {
+      foreach ($prefixes as $prefix) {
+        // Find theme functions that implement possible "suggestion" variants of
+        // registered theme hooks and add those as new registered theme hooks.
+        // The 'pattern' key defines a common prefix that all suggestions must
+        // start with. The default is the name of the hook followed by '__'. An
+        // 'base hook' key is added to each entry made for a found suggestion,
+        // so that common functionality can be implemented for all suggestions of
+        // the same base hook. To keep things simple, deep hierarchy of
+        // suggestions is not supported: each suggestion's 'base hook' key
+        // refers to a base hook, not to another suggestion, and all suggestions
+        // are found using the base hook's pattern, not a pattern from an
+        // intermediary suggestion.
+        $pattern = $info['pattern'] ?? ($hook . '__');
+        // Grep only the functions which are within the prefix group.
+        [$first_prefix] = explode('_', $prefix, 2);
+        if (!isset($info['base hook']) && !empty($pattern) && isset($grouped_functions[$first_prefix])) {
+          $matches = preg_grep('/^' . $prefix . '_' . $pattern . '/', $grouped_functions[$first_prefix]);
+          if ($matches) {
+            foreach ($matches as $match) {
+              $new_hook = substr($match, strlen($prefix) + 1);
+              $arg_name = isset($info['variables']) ? 'variables' : 'render element';
+              $implementations[$new_hook] = [
+                'function' => $match,
+                $arg_name => $info[$arg_name],
+                'base hook' => $hook,
+              ];
+            }
+          }
+        }
+        // Find theme functions that implement registered theme hooks and include
+        // that in what is returned so that the registry knows that the theme has
+        // this implementation.
+        if (function_exists($prefix . '_' . $hook)) {
+          $implementations[$hook] = [
+            'function' => $prefix . '_' . $hook,
+          ];
+        }
+      }
+    }
+
+    return $implementations;
   }
 
 }
