@@ -102,4 +102,30 @@ final class ResponsiveImageConfigUpdater {
     return $changed;
   }
 
+  /**
+   * Add the image preload setting to image field formatter instances.
+   *
+   * @param \Drupal\Core\Entity\Display\EntityViewDisplayInterface $view_display
+   *   The view display.
+   *
+   * @return bool
+   *   Whether the display was updated.
+   */
+  public function processResponsiveImagePreload(EntityViewDisplayInterface $view_display): bool {
+    $changed = FALSE;
+
+    foreach ($view_display->getComponents() as $field => $component) {
+      if (isset($component['type'])
+        && ($component['type'] === 'responsive_image')
+        && !array_key_exists('image_preload', $component['settings'])
+      ) {
+        $component['settings']['image_preload'] = FALSE;
+        $view_display->setComponent($field, $component);
+        $changed = TRUE;
+      }
+    }
+
+    return $changed;
+  }
+
 }

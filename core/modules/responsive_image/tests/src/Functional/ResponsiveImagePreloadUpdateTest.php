@@ -1,0 +1,45 @@
+<?php
+
+namespace Drupal\Tests\responsive_image\Functional;
+
+use Drupal\Core\Entity\Entity\EntityViewDisplay;
+use Drupal\FunctionalTests\Update\UpdatePathTestBase;
+
+/**
+ * Tests preload upgrade path.
+ *
+ * @coversDefaultClass \Drupal\responsive_image\ResponsiveImageConfigUpdater
+ *
+ * @group responsive_image
+ * @group legacy
+ */
+class ResponsiveImagePreloadUpdateTest extends UpdatePathTestBase {
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function setDatabaseDumpFiles(): void {
+    $this->databaseDumpFiles = [
+      __DIR__ . '/../../../../system/tests/fixtures/update/drupal-9.4.0.filled.standard.php.gz',
+      __DIR__ . '/../../fixtures/update/responsive_image.php',
+      __DIR__ . '/../../fixtures/update/responsive_image-loading-attribute.php',
+    ];
+  }
+
+  /**
+   * Test new lazy-load setting upgrade path.
+   *
+   * @see responsive_image_post_update_image_loading_attribute
+   */
+  public function testUpdate(): void {
+    $data = EntityViewDisplay::load('node.article.default')->toArray();
+    $this->assertArrayNotHasKey('image_preload', $data['content']['field_image']['settings']);
+
+    $this->runUpdates();
+
+    $data = EntityViewDisplay::load('node.article.default')->toArray();
+    $this->assertArrayHasKey('image_preload', $data['content']['field_image']['settings']);
+    $this->assertEquals(FALSE, $data['content']['field_image']['settings']['image_preload']);
+  }
+
+}

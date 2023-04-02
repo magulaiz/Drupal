@@ -1130,6 +1130,7 @@ display:
           settings:
             image_link: ''
             image_style: media_library
+            image_preload: false
             image_loading:
               attribute: eager
         name:

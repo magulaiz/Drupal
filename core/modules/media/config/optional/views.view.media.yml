@@ -132,6 +132,7 @@ display:
           settings:
             image_link: ''
             image_style: thumbnail
+            image_preload: false
             image_loading:
               attribute: lazy
           group_column: ''

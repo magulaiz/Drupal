@@ -94,3 +94,14 @@ function views_post_update_fix_revision_id_part(&$sandbox = NULL): void {
       return $view_config_updater->needsRevisionFieldHyphenFix($view);
     });
 }
+
+/**
+ * Add lazy load options to all image type field configurations.
+ */
+function views_post_update_image_preload(?array &$sandbox = NULL): void {
+  /** @var \Drupal\views\ViewsConfigUpdater $view_config_updater */
+  $view_config_updater = \Drupal::classResolver(ViewsConfigUpdater::class);
+  \Drupal::classResolver(ConfigEntityUpdater::class)->update($sandbox, 'view', function (ViewEntityInterface $view) use ($view_config_updater): bool {
+    return $view_config_updater->needsImagePreloadFieldUpdate($view);
+  });
+}
