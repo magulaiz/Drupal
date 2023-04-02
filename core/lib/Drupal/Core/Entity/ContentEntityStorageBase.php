@@ -1202,4 +1202,11 @@ abstract class ContentEntityStorageBase extends EntityStorageBase implements Con
     }
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function requireDeleteContentBeforeUninstall() : bool {
+    return TRUE;
+  }
+
 }
