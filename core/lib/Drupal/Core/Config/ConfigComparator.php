@@ -32,7 +32,7 @@ class ConfigComparator implements ConfigComparatorInterface {
 
     if (!$active) {
       throw new ConfigNameException(
-        sprintf('Configuration does not exist for "%s".', $config_name)
+        sprintf('Configuration "%s" does not exist.', $config_name);
       );
     }
 
