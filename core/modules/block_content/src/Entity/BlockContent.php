@@ -34,11 +34,16 @@ use Drupal\user\UserInterface;
  *       "add" = "Drupal\block_content\BlockContentForm",
  *       "edit" = "Drupal\block_content\BlockContentForm",
  *       "delete" = "Drupal\block_content\Form\BlockContentDeleteForm",
- *       "default" = "Drupal\block_content\BlockContentForm"
+ *       "default" = "Drupal\block_content\BlockContentForm",
+ *       "revision-delete" = \Drupal\Core\Entity\Form\RevisionDeleteForm::class,
+ *       "revision-revert" = \Drupal\Core\Entity\Form\RevisionRevertForm::class,
+ *     },
+ *     "route_provider" = {
+ *       "revision" = \Drupal\Core\Entity\Routing\RevisionHtmlRouteProvider::class,
  *     },
  *     "translation" = "Drupal\block_content\BlockContentTranslationHandler"
  *   },
- *   admin_permission = "administer blocks",
+ *   admin_permission = "administer block content",
  *   base_table = "block_content",
  *   revision_table = "block_content_revision",
  *   data_table = "block_content_field_data",
@@ -48,8 +53,11 @@ use Drupal\user\UserInterface;
  *     "canonical" = "/block/{block_content}",
  *     "delete-form" = "/block/{block_content}/delete",
  *     "edit-form" = "/block/{block_content}",
- *     "collection" = "/admin/structure/block/block-content",
+ *     "collection" = "/admin/content/block-content",
  *     "create" = "/block",
+ *     "revision-delete-form" = "/block/{block_content}/revision/{block_content_revision}/delete",
+ *     "revision-revert-form" = "/block/{block_content}/revision/{block_content_revision}/revert",
+ *     "version-history" = "/block/{block_content}/revisions",
  *   },
  *   translatable = TRUE,
  *   entity_keys = {
@@ -207,8 +215,7 @@ class BlockContent extends EditorialContentEntityBase implements BlockContentInt
         'type' => 'string_textfield',
         'weight' => -5,
       ])
-      ->setDisplayConfigurable('form', TRUE)
-      ->addConstraint('UniqueField', []);
+      ->setDisplayConfigurable('form', TRUE);
 
     $fields['changed'] = BaseFieldDefinition::create('changed')
       ->setLabel(t('Changed'))

@@ -150,13 +150,6 @@ class ComponentGenerator {
 
     $stability = VersionParser::parseStability(\Drupal::VERSION);
 
-    // Drupal 10.0.0-RC1 is being released before Symfony 6.2.0-RC1, so
-    // temporarily set the stability to beta instead of RC.
-    // @todo Remove this after Symfony 6.2.0-RC1 is released.
-    if (str_starts_with(\Drupal::VERSION, '10.0.0-') && ($stability === 'RC')) {
-      $stability = 'beta';
-    }
-
     // List of packages which we didn't find in either core requirement.
     $not_in_core = [];
 
@@ -169,7 +162,7 @@ class ComponentGenerator {
       }
       // The package wasn't in the lock file, which means we need to tell the
       // user. But there are some packages we want to exclude from this list.
-      elseif ($package_name !== 'php' && (strpos($package_name, 'drupal/core-') === FALSE)) {
+      elseif ($package_name !== 'php' && !str_contains($package_name, 'drupal/core-')) {
         $not_in_core[$package_name] = $package_name;
       }
 
@@ -181,7 +174,7 @@ class ComponentGenerator {
 
       // Reconcile dependencies on other Drupal components, so we can set the
       // constraint to our current version.
-      if (strpos($package_name, 'drupal/core-') !== FALSE) {
+      if (str_contains($package_name, 'drupal/core-')) {
         if ($stability === 'stable') {
           // Set the constraint to ^maj.min.
           $package_data['require'][$package_name] = SemanticVersion::majorMinorConstraint(\Drupal::VERSION);

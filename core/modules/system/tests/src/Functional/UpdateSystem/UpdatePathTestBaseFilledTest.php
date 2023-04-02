@@ -39,7 +39,6 @@ class UpdatePathTestBaseFilledTest extends UpdatePathTestBaseTest {
     $expected_node_data = [
       [1, 'article', 'en', 'Test Article - New title'],
       [2, 'book', 'en', 'Book page'],
-      [3, 'forum', 'en', 'Forum topic'],
       [4, 'page', 'en', 'Test page'],
       [8, 'test_content_type', 'en', 'Test title'],
     ];
@@ -169,7 +168,7 @@ class UpdatePathTestBaseFilledTest extends UpdatePathTestBaseTest {
     $this->drupalGet('admin/structure/block');
     $this->assertSession()->pageTextContains('Another block');
     $this->assertSession()->pageTextContains('Test block');
-    $this->drupalGet('admin/structure/block/block-content');
+    $this->drupalGet('admin/content/block-content');
     $this->assertSession()->pageTextContains('Another block');
     $this->assertSession()->pageTextContains('Test block');
 
@@ -194,10 +193,6 @@ class UpdatePathTestBaseFilledTest extends UpdatePathTestBaseTest {
     $this->drupalGet('admin/structure/views');
     $this->assertSession()->pageTextContains('test_view');
     $this->assertSession()->pageTextContains('Test view');
-
-    // Make sure our custom forum exists.
-    $this->drupalGet('admin/structure/forum');
-    $this->assertSession()->pageTextContains('Test forum');
 
     // Make sure our custom menu exists.
     $this->drupalGet('admin/structure/menu');
@@ -375,7 +370,6 @@ class UpdatePathTestBaseFilledTest extends UpdatePathTestBaseTest {
       'search',
       'serialization',
       'shortcut',
-      'statistics',
       'syslog',
       'system',
       'taxonomy',
@@ -387,7 +381,6 @@ class UpdatePathTestBaseFilledTest extends UpdatePathTestBaseTest {
       'update',
       'user',
       'views_ui',
-      'forum',
       'menu_link_content',
       'views',
       'standard',

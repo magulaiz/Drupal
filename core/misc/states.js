@@ -28,10 +28,10 @@
    *
    * @param {*} a
    *   The value to maybe invert.
-   * @param {bool} invertState
+   * @param {boolean} invertState
    *   Whether to invert state or not.
    *
-   * @return {bool}
+   * @return {boolean}
    *   The result.
    */
   function invert(a, invertState) {
@@ -48,7 +48,7 @@
    * @param {*} b
    *   Value b.
    *
-   * @return {bool}
+   * @return {boolean}
    *   The comparison result.
    */
   function compare(a, b) {
@@ -69,7 +69,7 @@
    * @param {*} b
    *   Value b
    *
-   * @return {bool}
+   * @return {boolean}
    *   The result.
    */
   function ternary(a, b) {
@@ -222,7 +222,7 @@
      * @param {Drupal.states.State} state
      *   A State object describing the dependee's updated state.
      *
-     * @return {bool}
+     * @return {boolean}
      *   true or false.
      */
     compare(reference, selector, state) {
@@ -299,7 +299,7 @@
      *   selector that these constraints apply to. In that case, the keys of the
      *   object are interpreted as the selector if encountered.
      *
-     * @return {bool}
+     * @return {boolean}
      *   true or false, depending on whether these constraints are satisfied.
      */
     verifyConstraints(constraints, selector) {
@@ -366,7 +366,7 @@
      *   state is performed. This parameter is not a State object but a pristine
      *   state string.
      *
-     * @return {bool}
+     * @return {boolean}
      *   true or false, depending on whether this constraint is satisfied.
      */
     checkConstraints(value, selector, state) {
@@ -526,6 +526,10 @@
         // the state.
         return this.val() === '';
       },
+      // Listen to 'change' for number native "spinner" widgets.
+      change() {
+        return this.val() === '';
+      },
     },
 
     checked: {
@@ -679,14 +683,10 @@
     // element monitoring itself.
     if (e.trigger) {
       $(e.target)
-        .prop('disabled', e.value)
         .closest('.js-form-item, .js-form-submit, .js-form-wrapper')
         .toggleClass('form-disabled', e.value)
         .find('select, input, textarea')
         .prop('disabled', e.value);
-
-      // Note: WebKit nightlies don't reflect that change correctly.
-      // See https://bugs.webkit.org/show_bug.cgi?id=23789
     }
   });
 
@@ -722,7 +722,11 @@
 
   $document.on('state:checked', (e) => {
     if (e.trigger) {
-      $(e.target).prop('checked', e.value);
+      $(e.target)
+        .closest('.js-form-item, .js-form-wrapper')
+        .find('input')
+        .prop('checked', e.value)
+        .trigger('change');
     }
   });
 

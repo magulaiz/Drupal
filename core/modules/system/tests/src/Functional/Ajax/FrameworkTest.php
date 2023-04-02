@@ -36,7 +36,7 @@ class FrameworkTest extends BrowserTestBase {
     // Verify that settings command is generated if JavaScript settings exist.
     $commands = $this->drupalGetAjax('ajax-test/render');
     $expected = new SettingsCommand(['ajax' => 'test'], TRUE);
-    $this->assertCommand($commands, $expected->render(), 'JavaScript settings command is present.');
+    $this->assertCommand($commands, $expected->render());
   }
 
   /**
@@ -53,7 +53,7 @@ class FrameworkTest extends BrowserTestBase {
     $build['#attached']['library'][] = 'ajax_test/order-css-command';
     $assets = AttachedAssets::createFromRenderArray($build);
     $css_render_array = $css_collection_renderer->render($asset_resolver->getCssAssets($assets, FALSE, \Drupal::languageManager()->getCurrentLanguage()));
-    $expected_commands[1] = new AddCssCommand($renderer->renderRoot($css_render_array));
+    $expected_commands[1] = new AddCssCommand(array_column($css_render_array, '#attributes'));
     $build['#attached']['library'][] = 'ajax_test/order-header-js-command';
     $build['#attached']['library'][] = 'ajax_test/order-footer-js-command';
     $assets = AttachedAssets::createFromRenderArray($build);
@@ -86,7 +86,7 @@ class FrameworkTest extends BrowserTestBase {
     ];
     $commands = $this->drupalGetAjax('ajax-test/render-error', ['query' => $edit]);
     $expected = new AlertCommand($edit['message']);
-    $this->assertCommand($commands, $expected->render(), 'Custom error message is output.');
+    $this->assertCommand($commands, $expected->render());
   }
 
   /**

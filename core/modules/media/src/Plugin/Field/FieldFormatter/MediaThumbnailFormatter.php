@@ -148,7 +148,9 @@ class MediaThumbnailFormatter extends ImageFormatter {
       $elements[$delta] = [
         '#theme' => 'image_formatter',
         '#item' => $media->get('thumbnail')->first(),
-        '#item_attributes' => [],
+        '#item_attributes' => [
+          'loading' => $this->getSetting('image_loading')['attribute'],
+        ],
         '#image_style' => $this->getSetting('image_style'),
         '#url' => $this->getMediaThumbnailUrl($media, $items->getEntity()),
       ];
@@ -172,6 +174,14 @@ class MediaThumbnailFormatter extends ImageFormatter {
     // This formatter is only available for entity types that reference
     // media items.
     return ($field_definition->getFieldStorageDefinition()->getSetting('target_type') == 'media');
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function checkAccess(EntityInterface $entity) {
+    return $entity->access('view', NULL, TRUE)
+      ->andIf(parent::checkAccess($entity));
   }
 
   /**

@@ -218,7 +218,7 @@ class ShortcutLinksTest extends ShortcutTestBase {
       'revision' => FALSE,
     ])->save();
     // Test page with HTML tags in title.
-    $this->drupalGet('admin/structure/block/block-content/manage/basic');
+    $this->drupalGet('admin/structure/block-content/manage/basic');
     $page_title = "Edit Basic block custom block type";
     $this->assertSession()->pageTextContains($page_title);
     // Add shortcut to this page.
@@ -372,7 +372,7 @@ class ShortcutLinksTest extends ShortcutTestBase {
     $this->drupalLogin($this->drupalCreateUser([
       'access toolbar', 'access shortcuts', 'administer site configuration',
     ]));
-    $this->clickLink('Shortcuts', 0, 'Shortcut link found on page.');
+    $this->clickLink('Shortcuts');
     $this->assertSession()->linkExists('Cron', 0, 'Cron shortcut link found on page.');
 
     $this->verifyAccessShortcutsPermissionForEditPages();

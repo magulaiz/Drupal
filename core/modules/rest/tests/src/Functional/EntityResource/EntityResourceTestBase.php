@@ -64,7 +64,7 @@ use Psr\Http\Message\ResponseInterface;
  *
  * If there is an entity type-specific format-specific edge case to test, then
  * add that to a concrete subclass. Example:
- * \Drupal\Tests\hal\Functional\EntityResource\Comment\CommentHalJsonTestBase::$patchProtectedFieldNames
+ * \Drupal\Tests\comment\Functional\Rest\CommentJsonAnonTest::$patchProtectedFieldNames
  */
 abstract class EntityResourceTestBase extends ResourceTestBase {
 
@@ -580,7 +580,7 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
           ? $link_relation_type->getRegisteredName()
           : $link_relation_type->getExtensionUri();
       }, array_keys($this->entity->getEntityType()->getLinkTemplates()));
-      $parse_rel_from_link_header = function ($value) use ($link_relation_type_manager) {
+      $parse_rel_from_link_header = function ($value) {
         $matches = [];
         if (preg_match('/rel="([^"]+)"/', $value, $matches) === 1) {
           return $matches[1];
@@ -599,7 +599,7 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
     $ignored_headers = ['Date', 'Content-Length', 'X-Drupal-Cache', 'X-Drupal-Dynamic-Cache', 'Transfer-Encoding', 'Vary'];
     $header_cleaner = function ($headers) use ($ignored_headers) {
       foreach ($headers as $header => $value) {
-        if (strpos($header, 'X-Drupal-Assertion-') === 0 || in_array($header, $ignored_headers)) {
+        if (str_starts_with($header, 'X-Drupal-Assertion-') || in_array($header, $ignored_headers)) {
           unset($headers[$header]);
         }
       }
@@ -1386,7 +1386,7 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
   protected function assertStoredEntityMatchesSentNormalization(array $sent_normalization, FieldableEntityInterface $modified_entity) {
     foreach ($sent_normalization as $field_name => $field_normalization) {
       // Some top-level keys in the normalization may not be fields on the
-      // entity (for example '_links' and '_embedded' in the HAL normalization).
+      // entity.
       if ($modified_entity->hasField($field_name)) {
         $field_definition = $modified_entity->get($field_name)->getFieldDefinition();
         $property_definitions = $field_definition->getItemDefinition()->getPropertyDefinitions();
