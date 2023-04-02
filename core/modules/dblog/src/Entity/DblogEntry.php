@@ -203,4 +203,11 @@ final class DblogEntry extends ContentEntityBase implements DblogEntryInterface 
     return $formatter->format($message, $variables, $backtrace_string);
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function requireDeleteContentBeforeUninstall() : bool {
+    return FALSE;
+  }
+
 }

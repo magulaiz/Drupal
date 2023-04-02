@@ -40,8 +40,7 @@ class ContentUninstallValidator implements ModuleUninstallValidatorInterface {
     $entity_types = $this->entityTypeManager->getDefinitions();
     $reasons = [];
     foreach ($entity_types as $entity_type) {
-      $storage = $this->entityTypeManager->getStorage($entity_type->id());
-      if ($module == $entity_type->getProvider() && $entity_type instanceof ContentEntityTypeInterface && $storage->requireDeleteContentBeforeUninstall() && $storage->hasData()) {
+      if ($module == $entity_type->getProvider() && $entity_type instanceof ContentEntityTypeInterface && $entity_type->requireDeleteContentBeforeUninstall() && $this->entityTypeManager->getStorage($entity_type->id())->hasData()) {
         $reasons[] = $this->t('There is content for the entity type: @entity_type. <a href=":url">Remove @entity_type_plural</a>.', [
           '@entity_type' => $entity_type->getLabel(),
           '@entity_type_plural' => $entity_type->getPluralLabel(),

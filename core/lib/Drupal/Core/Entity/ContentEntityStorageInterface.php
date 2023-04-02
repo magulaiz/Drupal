@@ -23,12 +23,4 @@ interface ContentEntityStorageInterface extends EntityStorageInterface, Translat
    */
   public function createWithSampleValues($bundle = FALSE, array $values = []);
 
-  /**
-   * Require delete content before uninstall the module owner of the content.
-   *
-   * @return bool
-   *   TRUE if content needs to be deleted before allowing module uninstall.
-   */
-  public function requireDeleteContentBeforeUninstall() : bool;
-
 }
