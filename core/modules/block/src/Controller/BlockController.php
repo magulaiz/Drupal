@@ -169,7 +169,7 @@ class BlockController extends ControllerBase {
    *
    * @return \Symfony\Component\HttpFoundation\RedirectResponse
    */
-  public function redirectWithWarning(RouteMatchInterface $route_match, Request $request, string $change_record, ?LoggerInterface $logger = NULL, ?MessengerInterface $messenger = NULL): RedirectResponse {
+  protected function redirectWithWarning(RouteMatchInterface $route_match, Request $request, string $change_record, ?LoggerInterface $logger = NULL, ?MessengerInterface $messenger = NULL): RedirectResponse {
     $args = $route_match->getRawParameters()->all();
     // Strip '.bc' from the end of the route name.
     $route_name = substr($route_match->getRouteName(), 0, -3);
