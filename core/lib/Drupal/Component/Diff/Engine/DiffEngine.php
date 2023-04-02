@@ -46,8 +46,13 @@ class DiffEngine {
     $n_from = sizeof($from_lines);
     $n_to = sizeof($to_lines);
 
+    // Since this class is qlready deprecated, we're not fixing any PhPStan
+    // issues, we just ignore them.
+    // @phpstan-ignore-next-line
     $this->xchanged = $this->ychanged = [];
+    // @phpstan-ignore-next-line
     $this->xv = $this->yv = [];
+    // @phpstan-ignore-next-line
     $this->xind = $this->yind = [];
     unset($this->seq);
     unset($this->in_seq);
@@ -180,16 +185,21 @@ class DiffEngine {
 
     if ($flip) {
       for ($i = $ylim - 1; $i >= $yoff; $i--) {
+        // @phpstan-ignore-next-line
         $ymatches[$this->xv[$i]][] = $i;
       }
     }
     else {
       for ($i = $ylim - 1; $i >= $yoff; $i--) {
+        // @phpstan-ignore-next-line
         $ymatches[$this->yv[$i]][] = $i;
       }
     }
+    // @phpstan-ignore-next-line
     $this->lcs = 0;
+    // @phpstan-ignore-next-line
     $this->seq[0] = $yoff - 1;
+    // @phpstan-ignore-next-line
     $this->in_seq = [];
     $ymids[0] = [];
 
@@ -204,6 +214,7 @@ class DiffEngine {
 
       $x1 = $xoff + (int)(($numer + ($xlim - $xoff) * $chunk) / $nchunks);
       for (; $x < $x1; $x++) {
+        // @phpstan-ignore-next-line
         $line = $flip ? $this->yv[$x] : $this->xv[$x];
         if (empty($ymatches[$line])) {
           continue;
@@ -252,9 +263,13 @@ class DiffEngine {
 
   protected function _lcs_pos($ypos) {
 
+    // @phpstan-ignore-next-line
     $end = $this->lcs;
+    // @phpstan-ignore-next-line
     if ($end == 0 || $ypos > $this->seq[$end]) {
+      // @phpstan-ignore-next-line
       $this->seq[++$this->lcs] = $ypos;
+      // @phpstan-ignore-next-line
       $this->in_seq[$ypos] = 1;
       return $this->lcs;
     }
@@ -262,6 +277,7 @@ class DiffEngine {
     $beg = 1;
     while ($beg < $end) {
       $mid = (int)(($beg + $end) / 2);
+      // @phpstan-ignore-next-line
       if ($ypos > $this->seq[$mid]) {
         $beg = $mid + 1;
       }
@@ -270,9 +286,12 @@ class DiffEngine {
       }
     }
 
+    // @phpstan-ignore-next-line
     $this::USE_ASSERTS && assert($ypos != $this->seq[$end]);
 
+    // @phpstan-ignore-next-line
     $this->in_seq[$this->seq[$end]] = FALSE;
+    // @phpstan-ignore-next-line
     $this->seq[$end] = $ypos;
     $this->in_seq[$ypos] = 1;
     return $end;
@@ -293,12 +312,14 @@ class DiffEngine {
   protected function _compareseq($xoff, $xlim, $yoff, $ylim) {
 
     // Slide down the bottom initial diagonal.
+    // @phpstan-ignore-next-line
     while ($xoff < $xlim && $yoff < $ylim && $this->xv[$xoff] == $this->yv[$yoff]) {
       ++$xoff;
       ++$yoff;
     }
 
     // Slide up the top initial diagonal.
+    // @phpstan-ignore-next-line
     while ($xlim > $xoff && $ylim > $yoff && $this->xv[$xlim - 1] == $this->yv[$ylim - 1]) {
       --$xlim;
       --$ylim;
@@ -319,9 +340,11 @@ class DiffEngine {
       // X and Y sequences have no common subsequence:
       // mark all changed.
       while ($yoff < $ylim) {
+        // @phpstan-ignore-next-line
         $this->ychanged[$this->yind[$yoff++]] = 1;
       }
       while ($xoff < $xlim) {
+        // @phpstan-ignore-next-line
         $this->xchanged[$this->xind[$xoff++]] = 1;
       }
     }

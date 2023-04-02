@@ -49,6 +49,20 @@ use Drupal\file\Plugin\Field\FieldType\FileItem;
 class ImageItem extends FileItem {
 
   /**
+   * The height of the image.
+   *
+   * @var int|null
+   */
+  protected int|null $width;
+
+  /**
+   * The width of the image.
+   *
+   * @var int|null
+   */
+  protected int|null $height;
+
+  /**
    * {@inheritdoc}
    */
   public static function defaultStorageSettings() {

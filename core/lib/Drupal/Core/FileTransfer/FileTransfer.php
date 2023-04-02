@@ -63,6 +63,13 @@ abstract class FileTransfer {
   private $connectionHandle;
 
   /**
+   * The connection chroot.
+   *
+   * @var string|bool
+   */
+  private string|bool $chroot;
+
+  /**
    * Constructs a Drupal\Core\FileTransfer\FileTransfer object.
    *
    * @param $jail

@@ -8,6 +8,7 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\TypedData\DataDefinition;
 use Drupal\Core\Field\FieldItemBase;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\datetime\DateTimeComputed;
 
 /**
  * Plugin implementation of the 'datetime' field type.
@@ -23,6 +24,13 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
  * )
  */
 class DateTimeItem extends FieldItemBase implements DateTimeItemInterface {
+
+  /**
+   * The computed DateTime object.
+   *
+   * @var \Drupal\datetime\DateTimeComputed|null
+   */
+  protected DateTimeComputed|null $date;
 
   /**
    * {@inheritdoc}

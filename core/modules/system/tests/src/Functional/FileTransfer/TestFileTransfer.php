@@ -36,6 +36,13 @@ class TestFileTransfer extends FileTransfer {
    */
   public $shouldIsDirectoryReturnTrue = FALSE;
 
+  /**
+   * The connection.
+   *
+   * @var \Drupal\Tests\system\Functional\FileTransfer\MockTestConnection
+   */
+  protected MockTestConnection $connection;
+
   public static function factory($jail, $settings) {
     assert(is_array($settings));
     return new TestFileTransfer($jail);

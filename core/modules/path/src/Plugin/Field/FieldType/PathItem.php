@@ -24,6 +24,27 @@ use Drupal\Core\TypedData\DataDefinition;
 class PathItem extends FieldItemBase {
 
   /**
+   * The path alias.
+   *
+   * @var string|null
+   */
+  protected string|null $alias;
+
+  /**
+   * The path ID.
+   *
+   * @var string|int|null
+   */
+  protected string|int|null $pid;
+
+  /**
+   * The language code.
+   *
+   * @var string|null
+   */
+  protected string|null $langcode;
+
+  /**
    * {@inheritdoc}
    */
   public static function propertyDefinitions(FieldStorageDefinitionInterface $field_definition) {
