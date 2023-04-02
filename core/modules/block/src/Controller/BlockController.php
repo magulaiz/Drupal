@@ -6,7 +6,10 @@ use Drupal\Component\Utility\Html;
 use Drupal\block\BlockInterface;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Extension\ThemeHandlerInterface;
+use Drupal\Core\Messenger\MessengerInterface;
+use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Url;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -121,16 +124,13 @@ class BlockController extends ControllerBase {
   /**
    * Provides a redirect for /admin/structure/block and child paths.
    *
+   * @param \Drupal\Core\Routing\RouteMatchInterface $route_match
+   *   The current route match. The route name should end in '.bc'.
    * @param \Symfony\Component\HttpFoundation\Request $request
    *   The current request.
-   * @param string $route_name
-   *   The name of the route whose path has changed. Do not include '.bc'.
    * @param \Drupal\block\BlockInterface|null $block
-   *   The Block configuration entity to be deleted.
-   * @param string $plugin_id
-   *   (optional) The plugin ID for the block instance.
-   * @param string $theme
-   *   (optional) The name of the theme.
+   *   (optional) The Block configuration entity. This variable is not
+   *   explicitly referenced, but it may be used for access checks.
    *
    * @return \Symfony\Component\HttpFoundation\RedirectResponse
    *
@@ -140,25 +140,53 @@ class BlockController extends ControllerBase {
    *
    * @see https://www.drupal.org/node/3320855
    */
-  public function blockLayoutRedirect(Request $request, string $route_name, ?BlockInterface $block = NULL, string $plugin_id = '', string $theme = ''): RedirectResponse {
+  public function blockLayoutRedirect(RouteMatchInterface $route_match, Request $request, ?BlockInterface $block = NULL): RedirectResponse {
     @trigger_error('The path /admin/structure/block, with its child paths, is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use /admin/appearance/block. See https://www.drupal.org/node/3318112.', E_USER_DEPRECATED);
-    $args = array_filter([
-      'block' => $block ? $block->id() : '',
-      'plugin_id' => $plugin_id,
-      'theme' => $theme,
-    ]);
-    $query = $request->query->all();
+
+    $change_record = 'https://www.drupal.org/node/3320855';
+    return $this->redirectWithWarning(
+      $route_match,
+      $request,
+      $change_record,
+      $this->getLogger('block'),
+      $this->messenger()
+    );
+  }
+
+  /**
+   * Provides a redirect and optionally adds warning messages.
+   *
+   * @param \Drupal\Core\Routing\RouteMatchInterface $route_match
+   *   The current route match. The route name should end in '.bc'.
+   * @param \Symfony\Component\HttpFoundation\Request $request
+   *   The current request.
+   * @param string $change_record
+   *   The URL of the change record, to be included in the log message.
+   * @param \Psr\Log\LoggerInterface|null $logger
+   *   (optional) A logger for the warning message.
+   * @param \Drupal\Core\Messenger\MessengerInterface|null $messenger
+   *   (optional) A messenger for the warning message.
+   *
+   * @return \Symfony\Component\HttpFoundation\RedirectResponse
+   */
+  public function redirectWithWarning(RouteMatchInterface $route_match, Request $request, string $change_record, ?LoggerInterface $logger = NULL, ?MessengerInterface $messenger = NULL): RedirectResponse {
+    $args = $route_match->getRawParameters()->all();
+    // Strip '.bc' from the end of the route name.
+    $route_name = substr($route_match->getRouteName(), 0, -3);
 
     $params = [
       '%old_path' => Url::fromRoute("$route_name.bc", $args)->toString(),
       '%new_path' => Url::fromRoute($route_name, $args)->toString(),
-      '%change_record' => 'https://www.drupal.org/node/3320855',
+      '%change_record' => $change_record,
     ];
-    $this ->messenger()
-      ->addWarning($this->t('You have been redirected from %old_path. Update links, shortcuts, and bookmarks to use %new_path.', $params));
-    $this->getLogger('block')
-      ->warning('A user was redirected from %old_path. This redirect will be removed in a future version of Drupal. Update links, shortcuts, and bookmarks to use %new_path. See %change_record for more information.', $params);
+    if ($logger) {
+      $logger->warning('A user was redirected from %old_path. This redirect will be removed in a future version of Drupal. Update links, shortcuts, and bookmarks to use %new_path. See %change_record for more information.', $params);
+    }
+    if ($messenger) {
+      $messenger->addWarning($this->t('You have been redirected from %old_path. Update links, shortcuts, and bookmarks to use %new_path.', $params));
+    }
 
+    $query = $request->query->all();
     return $this->redirect($route_name, $args, ['query' => $query], 301);
   }
 
