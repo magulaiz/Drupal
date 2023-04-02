@@ -16,7 +16,8 @@ block.admin_demo:
 block.admin_demo.bc:
   path: '/admin/structure/block/demo/{theme}'
   defaults:
-    _controller: '\Drupal\block\Controller\BlockController::demoRedirect'
+    _controller: '\Drupal\block\Controller\BlockController::blockLayoutRedirect'
+    route_name: block.admin_demo
   requirements:
     _access_theme: 'TRUE'
     _permission: 'administer blocks'
@@ -38,7 +39,8 @@ entity.block.delete_form:
 entity.block.delete_form.bc:
   path: '/admin/structure/block/manage/{block}/delete'
   defaults:
-    _controller: '\Drupal\block\Controller\BlockController::blockDeleteRedirect'
+    _controller: '\Drupal\block\Controller\BlockController::blockLayoutRedirect'
+    route_name: entity.block.delete_form
   requirements:
     _permission: 'administer blocks'
 
@@ -57,7 +59,8 @@ entity.block.edit_form:
 entity.block.edit_form.bc:
   path: '/admin/structure/block/manage/{block}'
   defaults:
-    _controller: '\Drupal\block\Controller\BlockController::blockEditRedirect'
+    _controller: '\Drupal\block\Controller\BlockController::blockLayoutRedirect'
+    route_name: entity.block.edit_form
   requirements:
     _entity_access: 'block.update'
 
@@ -94,7 +97,8 @@ block.admin_display:
 block.admin_display.bc:
   path: '/admin/structure/block'
   defaults:
-    _controller: '\Drupal\block\Controller\BlockListController::listingRedirect'
+    _controller: '\Drupal\block\Controller\BlockController::blockLayoutRedirect'
+    route_name: block.admin_display
   requirements:
     _permission: 'administer blocks'
 
@@ -114,7 +118,8 @@ block.admin_display_theme:
 block.admin_display_theme.bc:
   path: '/admin/structure/block/list/{theme}'
   defaults:
-    _controller: '\Drupal\block\Controller\BlockListController::themeListingRedirect'
+    _controller: '\Drupal\block\Controller\BlockController::blockLayoutRedirect'
+    route_name: block.admin_display_theme
   requirements:
     _access_theme: 'TRUE'
     _permission: 'administer blocks'
@@ -135,7 +140,8 @@ block.admin_library:
 block.admin_library.bc:
   path: '/admin/structure/block/library/{theme}'
   defaults:
-    _controller: '\Drupal\block\Controller\BlockLibraryController::listBlocksRedirect'
+    _controller: '\Drupal\block\Controller\BlockController::blockLayoutRedirect'
+    route_name: block.admin_library
   requirements:
     _access_theme: 'TRUE'
     _permission: 'administer blocks'
@@ -156,7 +162,8 @@ block.admin_add:
 block.admin_add.bc:
   path: '/admin/structure/block/add/{plugin_id}/{theme}'
   defaults:
-    _controller: '\Drupal\block\Controller\BlockAddController::blockAddConfigureFormRedirect'
+    _controller: '\Drupal\block\Controller\BlockController::blockLayoutRedirect'
+    route_name: block.admin_add
   requirements:
     _permission: 'administer blocks'
 
