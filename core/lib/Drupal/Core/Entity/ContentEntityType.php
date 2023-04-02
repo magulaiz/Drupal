@@ -90,4 +90,11 @@ class ContentEntityType extends EntityType implements ContentEntityTypeInterface
     return $this;
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function requireDeleteContentBeforeUninstall() : bool {
+    return TRUE;
+  }
+
 }

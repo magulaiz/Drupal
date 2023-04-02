@@ -143,11 +143,4 @@ class DblogEntryStorage extends SqlContentEntityStorage implements DblogEntrySto
     return $this->load(reset($ids));
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function requireDeleteContentBeforeUninstall() : bool {
-    return FALSE;
-  }
-
 }
