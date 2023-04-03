@@ -82,7 +82,7 @@ class ConfigModifiedTest extends KernelTestBase {
       $this->fail('Configuration does not exist.');
     }
     catch (ConfigNameException $e) {
-      $this->assertEquals(sprintf('Configuration does not exist for "%s".', $not_existing_config), $e->getMessage());
+      $this->assertEquals(sprintf('Configuration "%s" does not exist.', $not_existing_config), $e->getMessage());
     }
   }
 
