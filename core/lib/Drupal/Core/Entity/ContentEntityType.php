@@ -93,7 +93,7 @@ class ContentEntityType extends EntityType implements ContentEntityTypeInterface
    * {@inheritdoc}
    */
   public function requireDeleteContentBeforeUninstall() : bool {
-    return TRUE;
+    return (bool) $this->get('require_delete_content_before_uninstalling');
   }
 
 }
