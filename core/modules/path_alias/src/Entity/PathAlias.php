@@ -56,6 +56,7 @@ class PathAlias extends ContentEntityBase implements PathAliasInterface {
    *
    * @param string $alias
    *   The path alias to trim.
+   *
    * @throws Exception
    *
    * @return string
