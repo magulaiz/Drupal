@@ -113,7 +113,7 @@ class BlockAdminThemeTest extends BrowserTestBase {
     ];
     $block = $this->drupalPlaceBlock('local_tasks_block', $settings);
 
-    $this->expectDeprecation("The path $old_path is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use $new_path. See https://www.drupal.org/node/3318112.");
+    $this->expectDeprecation('The path /admin/structure/block, with its child paths, is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use /admin/appearance/block. See https://www.drupal.org/node/3320855.');
     [$old_path, $new_path] = str_replace(
       ['{theme}', '{block}', '{plugin_id}'],
       ['stark', $block->id(), 'stark_' . $block->id()],
