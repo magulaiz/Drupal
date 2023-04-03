@@ -41,7 +41,7 @@ use Drupal\Component\Render\MarkupInterface;
  *   base_table = "watchdog",
  *   persistent_cache = FALSE,
  *   translatable = FALSE,
- *   require_delete_content_before_uninstalling = FALSE,
+ *   allow_uninstall_with_content = TRUE,
  *   internal = TRUE,
  *   entity_keys = {
  *     "id" = "wid",
