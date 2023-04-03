@@ -85,6 +85,10 @@ class JavascriptStatesTest extends WebDriverTestBase {
     $this->assertNotEmpty($textfield_invisible_element);
     $textfield_required_element = $page->findField('textfield_required_when_checkbox_trigger_checked');
     $this->assertNotEmpty($textfield_required_element);
+    $textfield_readonly_element = $page->findField('textfield_readonly_when_checkbox_trigger_checked');
+    $this->assertNotEmpty($textfield_readonly_element);
+    $textarea_readonly_element = $page->findField('textarea_readonly_when_checkbox_trigger_checked');
+    $this->assertNotEmpty($textarea_readonly_element);
     $details = $this->assertSession()->elementExists('css', '#edit-details-expanded-when-checkbox-trigger-checked');
     $textfield_in_details = $details->findField('textfield_in_details');
     $this->assertNotEmpty($textfield_in_details);
@@ -126,19 +130,6 @@ class JavascriptStatesTest extends WebDriverTestBase {
     $this->assertNotEmpty($checkboxes_some_disabled_element_value2);
     $checkboxes_some_disabled_element_value3 = $page->findField('checkboxes_some_disabled_when_checkbox_trigger_checked[value3]');
 
-    $checkboxes_all_readonly_element_value1 = $page->findField('checkboxes_all_readonly_when_checkbox_trigger_checked[value1]');
-    $this->assertNotEmpty($checkboxes_all_readonly_element_value1);
-    $checkboxes_all_readonly_element_value2 = $page->findField('checkboxes_all_readonly_when_checkbox_trigger_checked[value2]');
-    $this->assertNotEmpty($checkboxes_all_readonly_element_value2);
-    $checkboxes_all_readonly_element_value3 = $page->findField('checkboxes_all_readonly_when_checkbox_trigger_checked[value3]');
-    $this->assertNotEmpty($checkboxes_all_readonly_element_value3);
-
-    $checkboxes_some_readonly_element_value1 = $page->findField('checkboxes_some_readonly_when_checkbox_trigger_checked[value1]');
-    $this->assertNotEmpty($checkboxes_some_readonly_element_value1);
-    $checkboxes_some_readonly_element_value2 = $page->findField('checkboxes_some_readonly_when_checkbox_trigger_checked[value2]');
-    $this->assertNotEmpty($checkboxes_some_readonly_element_value2);
-    $checkboxes_some_readonly_element_value3 = $page->findField('checkboxes_some_readonly_when_checkbox_trigger_checked[value3]');
-
     $radios_checked_element = $page->findField('radios_checked_when_checkbox_trigger_checked');
     $this->assertNotEmpty($radios_checked_element);
 
@@ -159,28 +150,13 @@ class JavascriptStatesTest extends WebDriverTestBase {
     $this->assertCount(1, $radios_some_disabled_value2);
     $radios_some_disabled_value2 = reset($radios_some_disabled_value2);
 
-    // We want to select the specific radio buttons, not the whole radios field itself.
-    $radios_all_readonly_value1 = $this->xpath('//input[@name=:name][@value=:value]', [':name' => 'radios_all_readonly_when_checkbox_trigger_checked', ':value' => 'value1']);
-    $this->assertCount(1, $radios_all_readonly_value1);
-    // We want to access the radio button directly for the rest of the test, so
-    // take it out of the array we got back from xpath().
-    $radios_all_readonly_value1 = reset($radios_all_readonly_value1);
-    $radios_all_readonly_value2 = $this->xpath('//input[@name=:name][@value=:value]', [':name' => 'radios_all_readonly_when_checkbox_trigger_checked', ':value' => 'value2']);
-    $this->assertCount(1, $radios_all_readonly_value2);
-    $radios_all_readonly_value2 = reset($radios_all_readonly_value2);
-
-    $radios_some_readonly_value1 = $this->xpath('//input[@name=:name][@value=:value]', [':name' => 'radios_some_readonly_when_checkbox_trigger_checked', ':value' => 'value1']);
-    $this->assertCount(1, $radios_some_readonly_value1);
-    $radios_some_readonly_value1 = reset($radios_some_readonly_value1);
-    $radios_some_readonly_value2 = $this->xpath('//input[@name=:name][@value=:value]', [':name' => 'radios_some_readonly_when_checkbox_trigger_checked', ':value' => 'value2']);
-    $this->assertCount(1, $radios_some_readonly_value2);
-    $radios_some_readonly_value2 = reset($radios_some_readonly_value2);
-
     // Verify initial state.
     $this->assertTrue($textfield_invisible_element->isVisible());
     $this->assertFalse($details->hasAttribute('open'));
     $this->assertFalse($textfield_in_details->isVisible());
     $this->assertFalse($textfield_required_element->hasAttribute('required'));
+    $this->assertFalse($textfield_readonly_element->hasAttribute('readonly'));
+    $this->assertFalse($textarea_readonly_element->hasAttribute('readonly'));
     $this->assertFalse($checkbox_checked_element->isChecked());
     $this->assertTrue($checkbox_unchecked_element->isChecked());
     $this->assertFalse($checkbox_visible_element->isVisible());
@@ -198,28 +174,20 @@ class JavascriptStatesTest extends WebDriverTestBase {
     $this->assertFalse($checkboxes_some_disabled_element_value1->hasAttribute('disabled'));
     $this->assertFalse($checkboxes_some_disabled_element_value2->hasAttribute('disabled'));
     $this->assertFalse($checkboxes_some_disabled_element_value3->hasAttribute('disabled'));
-    $this->assertFalse($checkboxes_all_readonly_element_value1->hasAttribute('readonly'));
-    $this->assertFalse($checkboxes_all_readonly_element_value2->hasAttribute('readonly'));
-    $this->assertFalse($checkboxes_all_readonly_element_value3->hasAttribute('readonly'));
-    $this->assertFalse($checkboxes_some_readonly_element_value1->hasAttribute('readonly'));
-    $this->assertFalse($checkboxes_some_readonly_element_value2->hasAttribute('readonly'));
-    $this->assertFalse($checkboxes_some_readonly_element_value3->hasAttribute('readonly'));
     $this->assertFalse($radios_checked_element->isChecked());
     $this->assertEquals(NULL, $radios_checked_element->getValue());
     $this->assertFalse($radios_all_disabled_value1->hasAttribute('disabled'));
     $this->assertFalse($radios_all_disabled_value2->hasAttribute('disabled'));
     $this->assertFalse($radios_some_disabled_value1->hasAttribute('disabled'));
     $this->assertFalse($radios_some_disabled_value2->hasAttribute('disabled'));
-    $this->assertFalse($radios_all_readonly_value1->hasAttribute('readonly'));
-    $this->assertFalse($radios_all_readonly_value2->hasAttribute('readonly'));
-    $this->assertFalse($radios_some_readonly_value1->hasAttribute('readonly'));
-    $this->assertFalse($radios_some_readonly_value2->hasAttribute('readonly'));
 
     // Change state: check the checkbox.
     $trigger->check();
     // Verify triggered state.
     $this->assertFalse($textfield_invisible_element->isVisible());
     $this->assertEquals('required', $textfield_required_element->getAttribute('required'));
+    $this->assertEquals('readonly', $textfield_readonly_element->getAttribute('readonly'));
+    $this->assertEquals('readonly', $textarea_readonly_element->getAttribute('readonly'));
     $this->assertTrue($details->hasAttribute('open'));
     $this->assertTrue($textfield_in_details->isVisible());
     $this->assertTrue($checkbox_checked_element->isChecked());
@@ -251,21 +219,7 @@ class JavascriptStatesTest extends WebDriverTestBase {
     // Only value1 should be disabled, value 2 should remain enabled.
     $this->assertTrue($radios_some_disabled_value1->hasAttribute('disabled'));
     $this->assertFalse($radios_some_disabled_value2->hasAttribute('disabled'));
-    // All 3 of these should be readonly.
-    $this->assertTrue($checkboxes_all_readonly_element_value1->hasAttribute('readonly'));
-    $this->assertTrue($checkboxes_all_readonly_element_value2->hasAttribute('readonly'));
-    $this->assertTrue($checkboxes_all_readonly_element_value3->hasAttribute('readonly'));
-    // Only values 1 and 3 should be readonly, 2 should still be enabled.
-    $this->assertTrue($checkboxes_some_readonly_element_value1->hasAttribute('readonly'));
-    $this->assertFalse($checkboxes_some_readonly_element_value2->hasAttribute('readonly'));
-    $this->assertTrue($checkboxes_some_readonly_element_value3->hasAttribute('readonly'));
     $this->assertEquals('value1', $radios_checked_element->getValue());
-    // Both of these should now be readonly.
-    $this->assertTrue($radios_all_readonly_value1->hasAttribute('readonly'));
-    $this->assertTrue($radios_all_readonly_value2->hasAttribute('readonly'));
-    // Only value1 should be readonly, value 2 should remain enabled.
-    $this->assertTrue($radios_some_readonly_value1->hasAttribute('readonly'));
-    $this->assertFalse($radios_some_readonly_value2->hasAttribute('readonly'));
 
     // Change state: uncheck the checkbox.
     $trigger->uncheck();
@@ -274,6 +228,8 @@ class JavascriptStatesTest extends WebDriverTestBase {
     $this->assertFalse($details->hasAttribute('open'));
     $this->assertFalse($textfield_in_details->isVisible());
     $this->assertFalse($textfield_required_element->hasAttribute('required'));
+    $this->assertFalse($textfield_readonly_element->hasAttribute('readonly'));
+    $this->assertFalse($textarea_readonly_element->hasAttribute('readonly'));
     $this->assertFalse($checkbox_checked_element->isChecked());
     $this->assertTrue($checkbox_unchecked_element->isChecked());
     $this->assertFalse($checkbox_visible_element->isVisible());
@@ -291,12 +247,6 @@ class JavascriptStatesTest extends WebDriverTestBase {
     $this->assertFalse($checkboxes_some_disabled_element_value1->hasAttribute('disabled'));
     $this->assertFalse($checkboxes_some_disabled_element_value2->hasAttribute('disabled'));
     $this->assertFalse($checkboxes_some_disabled_element_value3->hasAttribute('disabled'));
-    $this->assertFalse($checkboxes_all_readonly_element_value1->hasAttribute('readonly'));
-    $this->assertFalse($checkboxes_all_readonly_element_value2->hasAttribute('readonly'));
-    $this->assertFalse($checkboxes_all_readonly_element_value3->hasAttribute('readonly'));
-    $this->assertFalse($checkboxes_some_readonly_element_value1->hasAttribute('readonly'));
-    $this->assertFalse($checkboxes_some_readonly_element_value2->hasAttribute('readonly'));
-    $this->assertFalse($checkboxes_some_readonly_element_value3->hasAttribute('readonly'));
 
     $this->assertFalse($radios_checked_element->isChecked());
     $this->assertEquals(NULL, $radios_checked_element->getValue());
@@ -304,10 +254,6 @@ class JavascriptStatesTest extends WebDriverTestBase {
     $this->assertFalse($radios_all_disabled_value2->hasAttribute('disabled'));
     $this->assertFalse($radios_some_disabled_value1->hasAttribute('disabled'));
     $this->assertFalse($radios_some_disabled_value2->hasAttribute('disabled'));
-    $this->assertFalse($radios_all_readonly_value1->hasAttribute('readonly'));
-    $this->assertFalse($radios_all_readonly_value2->hasAttribute('readonly'));
-    $this->assertFalse($radios_some_readonly_value1->hasAttribute('readonly'));
-    $this->assertFalse($radios_some_readonly_value2->hasAttribute('readonly'));
   }
 
   /**
