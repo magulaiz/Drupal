@@ -43,6 +43,7 @@
       .toolbar-loading #${activeTabId}-tray {
         display: block; box-shadow: -1px 0 5px 2px rgb(0 0 0 / 33%);
         border-right: 1px solid #aaa; background-color: #f5f5f5;
+        z-index: 0;
       }
       .toolbar-loading.toolbar-vertical.toolbar-tray-open #${activeTabId}-tray {
         width: 15rem; height: 100vh;

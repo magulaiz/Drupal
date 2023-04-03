@@ -237,7 +237,7 @@
         once('toolbarAntiFlicker', '#toolbar-administration', context).length
       ) {
         Drupal.toolbar.models.toolbarModel.on(
-          'change:activeTab change:orientation change:isOriented change:isTrayToggleVisible',
+          'change:activeTab change:orientation change:isOriented change:isTrayToggleVisible change:offsets',
           function () {
             const hasActiveTab = !!$(this.get('activeTab')).length > 0;
             const previousToolbarState = sessionStorage.getItem(

@@ -306,3 +306,6 @@
   content: "";
   inset-inline-start: 0;
 }
+.toolbar-anti-flicker.toolbar-vertical.toolbar-tray-open .menu-item + .menu-item {
+  border-top: 1px solid #ddd;
+}
