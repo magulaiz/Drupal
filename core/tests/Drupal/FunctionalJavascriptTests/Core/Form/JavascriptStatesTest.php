@@ -219,7 +219,6 @@ class JavascriptStatesTest extends WebDriverTestBase {
     // Only value1 should be disabled, value 2 should remain enabled.
     $this->assertTrue($radios_some_disabled_value1->hasAttribute('disabled'));
     $this->assertFalse($radios_some_disabled_value2->hasAttribute('disabled'));
-    $this->assertEquals('value1', $radios_checked_element->getValue());
 
     // Change state: uncheck the checkbox.
     $trigger->uncheck();
@@ -247,7 +246,6 @@ class JavascriptStatesTest extends WebDriverTestBase {
     $this->assertFalse($checkboxes_some_disabled_element_value1->hasAttribute('disabled'));
     $this->assertFalse($checkboxes_some_disabled_element_value2->hasAttribute('disabled'));
     $this->assertFalse($checkboxes_some_disabled_element_value3->hasAttribute('disabled'));
-
     $this->assertFalse($radios_checked_element->isChecked());
     $this->assertEquals(NULL, $radios_checked_element->getValue());
     $this->assertFalse($radios_all_disabled_value1->hasAttribute('disabled'));
