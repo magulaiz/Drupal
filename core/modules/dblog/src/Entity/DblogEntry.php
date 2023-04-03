@@ -41,6 +41,7 @@ use Drupal\Component\Render\MarkupInterface;
  *   base_table = "watchdog",
  *   persistent_cache = FALSE,
  *   translatable = FALSE,
+ *   require_delete_content_before_uninstalling = FALSE,
  *   internal = TRUE,
  *   entity_keys = {
  *     "id" = "wid",
@@ -201,13 +202,6 @@ final class DblogEntry extends ContentEntityBase implements DblogEntryInterface 
       $backtrace_string = '@backtrace_string';
     }
     return $formatter->format($message, $variables, $backtrace_string);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function requireDeleteContentBeforeUninstall() : bool {
-    return FALSE;
   }
 
 }
