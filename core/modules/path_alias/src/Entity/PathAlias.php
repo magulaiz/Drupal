@@ -49,18 +49,18 @@ class PathAlias extends ContentEntityBase implements PathAliasInterface {
   use EntityPublishedTrait;
 
   /**
-   * Trims the alias.
+   * Trims a path alias.
    *
-   * Trim the alias value of whitespaces and slashes.
-   * Ensure to not trim the slash on the left side.
+   * Trim whitespaces and slashes from a path alias.
+   * Ensures the leading slash is retained.
    *
    * @param string $alias
    *   The path alias to trim.
    *
-   * @return string|null
+   * @return string
    *   The trimmed alias.
    */
-  public static function trimAlias(string $alias): ?string {
+  public static function trimAlias(string $alias): string {
     return trim(preg_replace('#([^\/])([\\\/]*\s*)*$#', '\1', $alias));
   }
 

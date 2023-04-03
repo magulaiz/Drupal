@@ -262,7 +262,7 @@ class PathAliasTest extends PathTestBase {
     $this->assertSession()->statusCodeEquals(200);
     $this->assertSession()->pageTextContains($node6->label());
     $this->drupalGet($node6->toUrl('edit-form'));
-    $this->assertSession()->elementAttributeContains('css', '#edit-path-0-alias', 'value', '/');
+    $this->assertSession()->fieldValueEquals('path[0][alias]', '/');
   }
 
   /**
@@ -423,7 +423,7 @@ class PathAliasTest extends PathTestBase {
     $this->assertSession()->statusCodeEquals(200);
     $this->assertSession()->pageTextContains($node7->label());
     $this->drupalGet($node7->toUrl('edit-form'));
-    $this->assertSession()->elementAttributeContains('css', '#edit-path-0-alias', 'value', '/');
+    $this->assertSession()->fieldValueEquals('path[0][alias]', '/');
   }
 
   /**
