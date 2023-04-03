@@ -186,8 +186,8 @@ class JavascriptStatesTest extends WebDriverTestBase {
     // Verify triggered state.
     $this->assertFalse($textfield_invisible_element->isVisible());
     $this->assertEquals('required', $textfield_required_element->getAttribute('required'));
-    $this->assertEquals('readonly', $textfield_readonly_element->getAttribute('readonly'));
-    $this->assertEquals('readonly', $textarea_readonly_element->getAttribute('readonly'));
+    $this->assertTrue($textfield_readonly_element->hasAttribute('readonly'));
+    $this->assertTrue($textarea_readonly_element->hasAttribute('readonly'));
     $this->assertTrue($details->hasAttribute('open'));
     $this->assertTrue($textfield_in_details->isVisible());
     $this->assertTrue($checkbox_checked_element->isChecked());
