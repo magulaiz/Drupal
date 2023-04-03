@@ -55,6 +55,8 @@ class Upgrade6Test extends MigrateUpgradeExecuteTestBase {
       'comment_type' => 8,
       'contact_form' => 2,
       'contact_message' => 0,
+      // Dblog entries are not fixed, ignore the actual number.
+      'dblog' => 0,
       'editor' => 2,
       'field_config' => 34,
       'field_storage_config' => 22,
