@@ -29,6 +29,11 @@ function announcements_feed_help($route_name, RouteMatchInterface $route_match) 
  * Implements hook_toolbar().
  */
 function announcements_feed_toolbar() {
+  if (!\Drupal::currentUser()->hasPermission('access announcements')) {
+    return [
+      '#cache' => ['contexts' => ['user.permissions']],
+    ];
+  }
   $items['announcement'] = [
     '#type' => 'toolbar_item',
     'tab' => [
@@ -48,7 +53,6 @@ function announcements_feed_toolbar() {
       'class' => ['announce-toolbar-tab'],
     ],
     '#cache' => ['contexts' => ['user.permissions']],
-    '#access' => \Drupal::currentUser()->hasPermission('access announcements'),
     '#weight' => 3399,
   ];
 
