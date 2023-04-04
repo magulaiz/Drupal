@@ -102,7 +102,6 @@ class LegacyPasswordHashingTest extends UnitTestCase {
    * Tests password rehashing.
    *
    * @covers ::__construct
-   * @covers ::deprecatedConstructor
    * @covers ::hash
    * @covers ::getCountLog2
    * @covers ::check

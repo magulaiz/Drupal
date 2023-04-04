@@ -46,7 +46,7 @@ class PasswordVerifyTest extends UnitTestCase {
 
     $passwordService = new PhpassHashedPassword($corePassword->reveal());
     $result = $passwordService->needsRehash($sampleHash);
-    $this->assertSame(TRUE, $result, 'Calls to needsRehash() are forwarded to core password service.');
+    $this->assertTrue($result, 'Calls to needsRehash() are forwarded to core password service.');
   }
 
   /**
@@ -63,7 +63,7 @@ class PasswordVerifyTest extends UnitTestCase {
 
     $passwordService = new PhpassHashedPassword($corePassword->reveal());
     $result = $passwordService->check($samplePassword, $sampleHash);
-    $this->assertSame(TRUE, $result, 'Calls to check() are forwarded to core password service if hash settings are not recognized.');
+    $this->assertTrue($result, 'Calls to check() are forwarded to core password service if hash settings are not recognized.');
   }
 
   /**
