@@ -79,8 +79,8 @@ class Upgrade6Test extends MigrateUpgradeExecuteTestBase {
       // Dblog entries are not fixed, ignore the actual number.
       'dblog' => 0,
       'editor' => 2,
-      'field_config' => 102,
-      'field_storage_config' => 70,
+      'field_config' => 103,
+      'field_storage_config' => 71,
       'file' => 7,
       'filter_format' => 7,
       'image_style' => 6,
@@ -152,6 +152,7 @@ class Upgrade6Test extends MigrateUpgradeExecuteTestBase {
       'Menu translation',
       'Node',
       'Node Reference',
+      'Node Reference URL Widget',
       'Option Widgets',
       'Path',
       'Profile translation',

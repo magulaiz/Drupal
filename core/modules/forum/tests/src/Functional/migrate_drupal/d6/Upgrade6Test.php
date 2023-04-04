@@ -58,7 +58,7 @@ class Upgrade6Test extends MigrateUpgradeExecuteTestBase {
       // Dblog entries are not fixed, ignore the actual number.
       'dblog' => 0,
       'editor' => 2,
-      'field_config' => 34,
+      'field_config' => 38,
       'field_storage_config' => 22,
       'file' => 2,
       'filter_format' => 7,
@@ -127,6 +127,7 @@ class Upgrade6Test extends MigrateUpgradeExecuteTestBase {
       'Search',
       'System',
       'Taxonomy',
+      'Upload',
       'User',
       'Variable admin',
     ];
