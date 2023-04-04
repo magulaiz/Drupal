@@ -361,7 +361,11 @@ function olivero_preprocess_radios(&$variables) {
 function olivero_preprocess_field(&$variables) {
 
   // Make iframe sizes available to twig template for aspect-ratio.
-  if ($variables['entity_type'] === 'media' && $variables['field_name'] === 'field_media_oembed_video') {
+  if (
+      !empty($variables['element']['#object']) &&
+      ($variables['element']['#object'] instanceof \Drupal\media\MediaInterface) &&
+      ($variables['element']['#object']->getSource() instanceof \Drupal\media\Plugin\media\Source\OEmbedInterface)
+    ) {
     foreach ($variables['items'] as $delta => $item) {
       if (isset($item['content']) && isset($item['content']['#attributes'])) {
         $variables['items'][$delta]['size'] = [
