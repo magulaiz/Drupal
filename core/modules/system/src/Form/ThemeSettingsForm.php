@@ -327,8 +327,7 @@ class ThemeSettingsForm extends ConfigFormBase {
       $active_theme = $themes[$theme];
       $color_info = DRUPAL_ROOT . '/' . $active_theme->getPath() . '/' . $theme . '.colors.yml';
       if (file_exists($color_info)) {
-        $parser = new ThemeColorsParser();
-        $parsed_colors = $parser->parse($color_info);
+        $parsed_colors = ThemeColorsParser::parse($color_info);
 
         $form_state->set('parsed_colors', $parsed_colors);
         $color_schemes = $parsed_colors['schemes'];
@@ -496,7 +495,7 @@ class ThemeSettingsForm extends ConfigFormBase {
         }
       }
     }
-    // Check for valid color strings
+    // Check for valid color strings.
     if (isset($form['colors'])) {
       $parsed_colors = $form_state->get('parsed_colors');
       foreach ($parsed_colors['colors'] as $color_field => $color_name) {

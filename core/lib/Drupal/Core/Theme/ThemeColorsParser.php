@@ -41,7 +41,7 @@ class ThemeColorsParser {
    * @throws \Drupal\Core\Extension\InfoParserException
    *   Exception thrown if there is a parsing error.
    */
-  public function parse(string $filename): array {
+  public static function parse(string $filename): array {
     $defaults = [
       'colors' => [],
       'schemes' => [],

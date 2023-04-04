@@ -18,27 +18,12 @@ use org\bovigo\vfs\vfsStream;
 class ThemeColorsParserTest extends UnitTestCase {
 
   /**
-   * The ThemeColorsParser object.
-   *
-   * @var \Drupal\Core\Theme\ThemeColorsParser
-   */
-  protected $themeColorsParser;
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function setUp(): void {
-    parent::setUp();
-    $this->themeColorsParser = new ThemeColorsParser();
-  }
-
-  /**
    * Tests the themeColorsParser object for a non-existing file.
    *
    * @covers ::parse
    */
   public function testColorParserNotExisting() {
-    $parsed_yaml = $this->themeColorsParser->parse('/does_not_exist.colors.yml');
+    $parsed_yaml = ThemeColorsParser::parse('/does_not_exist.colors.yml');
     ['colors' => $colors, 'schemes' => $schemes] = $parsed_yaml;
     $this->assertEmpty($colors, 'Non existing .colors.yml returns empty array for colors.');
     $this->assertEmpty($schemes, 'Non existing .colors.yml returns empty array for schemes.');
@@ -69,7 +54,7 @@ COLOR_FILE;
       ],
     ]);
     $filename = vfsStream::url('root/fixtures/good.colors.yml');
-    ['colors' => $colors, 'schemes' => $schemes] = $this->themeColorsParser->parse($filename);
+    ['colors' => $colors, 'schemes' => $schemes] = ThemeColorsParser::parse($filename);
     $this->assertEquals(['base_primary_color' => 'Primary base color'], $colors);
     $this->assertEquals([
       'default' => [
@@ -108,7 +93,7 @@ BROKEN;
     $filename = vfsStream::url('root/fixtures/broken.colors.yml');
     $this->expectException(\RuntimeException::class);
     $this->expectExceptionMessage('broken.colors.yml');
-    $this->themeColorsParser->parse($filename);
+    ThemeColorsParser::parse($filename);
   }
 
   /**
@@ -137,7 +122,7 @@ MISSING_REQUIRED;
     $filename = vfsStream::url('root/fixtures/required.colors.yml');
     $this->expectException(\RuntimeException::class);
     $this->expectExceptionMessage('At least one configurable color is required.');
-    $this->themeColorsParser->parse($filename);
+    ThemeColorsParser::parse($filename);
   }
 
   /**
@@ -167,7 +152,7 @@ SCHEME_MISMATCH;
     $filename = vfsStream::url('root/fixtures/mismatch.colors.yml');
     $this->expectException(\RuntimeException::class);
     $this->expectExceptionMessage('default');
-    $this->themeColorsParser->parse($filename);
+    ThemeColorsParser::parse($filename);
   }
 
 }
