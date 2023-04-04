@@ -55,7 +55,7 @@ abstract class PhpassHashedPasswordBase implements PasswordInterface {
    * @param \Drupal\Core\Password\PasswordInterface|int $corePassword
    *   The core PHP password interface (or the countLog2 value for BC).
    */
-  public function __construct($corePassword) {
+  public function __construct(PasswordInterface|int $corePassword) {
     if ($corePassword instanceof PasswordInterface) {
       // Note: If $corePassword is set, $countLog2 isn't used anywhere in the
       // code path of this class. Still, set it to the default value for BC
@@ -63,15 +63,12 @@ abstract class PhpassHashedPasswordBase implements PasswordInterface {
       $this->countLog2 = 16;
       $this->corePassword = $corePassword;
     }
-    elseif (is_numeric($corePassword)) {
+    else {
       $countLog2 = $corePassword;
-      @trigger_error('Calling ' . __METHOD__ . '() with numeric $countLog2 as the first parameter is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use PhpassHashedPassword::__construct() with $corePassword parameter set to an instance of Drupal\Core\Password\PhpPassword instead. See https://www.drupal.org/node/3322420', E_USER_DEPRECATED);
+      @trigger_error('Calling ' . __METHOD__ . '() with numeric $countLog2 as the first parameter is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use PhpassHashedPasswordInterface::__construct() with $corePassword parameter set to an instance of Drupal\Core\Password\PhpPassword instead. See https://www.drupal.org/node/3322420', E_USER_DEPRECATED);
       // Ensure that $countLog2 is within set bounds.
       $this->countLog2 = $this->enforceLog2Boundaries($countLog2);
       $this->corePassword = NULL;
-    }
-    else {
-      throw new \InvalidArgumentException("First argument of PhpassHashedPassword::__construct() must either be numeric or a PasswordInterface instance");
     }
   }
 
