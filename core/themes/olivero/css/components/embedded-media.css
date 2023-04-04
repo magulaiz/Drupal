@@ -156,3 +156,8 @@ figcaption {
   display: block;
   max-width: 100%;
 }
+
+*[style*="aspect-ratio"] > .media-oembed-content {
+  width: 100%;
+  height: 100%;
+}

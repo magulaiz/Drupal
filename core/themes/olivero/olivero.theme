@@ -359,6 +359,19 @@ function olivero_preprocess_radios(&$variables) {
  * Implements hook_preprocess_HOOK().
  */
 function olivero_preprocess_field(&$variables) {
+
+  // Make iframe sizes available to twig template for aspect-ratio.
+  if ($variables['entity_type'] === 'media' && $variables['field_name'] === 'field_media_oembed_video') {
+    foreach ($variables['items'] as $delta => $item) {
+      if (isset($item['content']) && isset($item['content']['#attributes'])) {
+        $variables['items'][$delta]['size'] = [
+          'width' => $item['content']['#attributes']['width'],
+          'height' => $item['content']['#attributes']['height'],
+        ];
+      }
+    }
+  }
+
   $rich_field_types = ['text_with_summary', 'text', 'text_long'];
 
   if (in_array($variables['field_type'], $rich_field_types, TRUE)) {
