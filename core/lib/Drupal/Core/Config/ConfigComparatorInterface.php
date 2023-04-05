@@ -19,6 +19,6 @@ interface ConfigComparatorInterface {
    * @throws ConfigNameException
    *   When configuration is not found.
    */
-  public function isModified($config_name);
+  public function isModified(string $config_name);
 
 }
