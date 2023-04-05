@@ -165,6 +165,7 @@ class EntityUser extends EntityContentBase {
 
     // Name is generated using a dedicated sample value generator to ensure
     // uniqueness and a valid length.
+    // @todo Remove this as part of https://www.drupal.org/node/3352288.
     $name = UserNameItem::generateSampleValue($field_definitions['name']);
     $row->setDestinationProperty('name', reset($name));
 
