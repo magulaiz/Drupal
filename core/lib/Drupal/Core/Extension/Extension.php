@@ -16,6 +16,8 @@ class Extension {
   /**
    * The type of the extension (e.g., 'module').
    *
+   * @see \Drupal\Core\Extension\ExtensionTypeInterface
+   *
    * @var string
    */
   protected $type;
@@ -67,6 +69,8 @@ class Extension {
    *   'core/modules/node/node.info.yml'.
    * @param string $filename
    *   (optional) The filename of the main extension file; e.g., 'node.module'.
+   *
+   * @see \Drupal\Core\Extension\ExtensionTypeInterface
    */
   public function __construct($root, $type, $pathname, $filename = NULL) {
     // @see \Drupal\Core\Theme\ThemeInitialization::getActiveThemeByName()

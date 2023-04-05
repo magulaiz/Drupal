@@ -3,6 +3,7 @@
 namespace Drupal\Core\Config;
 
 use Drupal\Core\Extension\ExtensionDiscovery;
+use Drupal\Core\Extension\ExtensionTypeInterface;
 
 /**
  * Storage to access configuration and schema in enabled extensions.
@@ -91,11 +92,11 @@ class ExtensionInstallStorage extends InstallStorage {
       $extensions = $this->configStorage->read('core.extension');
       // @todo Remove this scan as part of https://www.drupal.org/node/2186491
       $listing = new ExtensionDiscovery(\Drupal::root());
-      if (!empty($extensions['module'])) {
-        $modules = $extensions['module'];
+      if (!empty($extensions[ExtensionTypeInterface::MODULE])) {
+        $modules = $extensions[ExtensionTypeInterface::MODULE];
         // Remove the install profile as this is handled later.
         unset($modules[$this->installProfile]);
-        $profile_list = $listing->scan('profile');
+        $profile_list = $listing->scan(ExtensionTypeInterface::PROFILE);
         if ($this->installProfile && isset($profile_list[$this->installProfile])) {
           // Prime the \Drupal\Core\Extension\ExtensionList::getPathname()
           // static cache with the profile info file location so we can use
@@ -106,7 +107,7 @@ class ExtensionInstallStorage extends InstallStorage {
           $profile_extension_list = \Drupal::service('extension.list.profile');
           $profile_extension_list->setPathname($this->installProfile, $profile_list[$this->installProfile]->getPathname());
         }
-        $module_list_scan = $listing->scan('module');
+        $module_list_scan = $listing->scan(ExtensionTypeInterface::MODULE);
         $module_list = [];
         foreach (array_keys($modules) as $module) {
           if (isset($module_list_scan[$module])) {
@@ -115,9 +116,9 @@ class ExtensionInstallStorage extends InstallStorage {
         }
         $this->folders += $this->getComponentNames($module_list);
       }
-      if (!empty($extensions['theme'])) {
-        $theme_list_scan = $listing->scan('theme');
-        foreach (array_keys($extensions['theme']) as $theme) {
+      if (!empty($extensions[ExtensionTypeInterface::THEME])) {
+        $theme_list_scan = $listing->scan(ExtensionTypeInterface::THEME);
+        foreach (array_keys($extensions[ExtensionTypeInterface::THEME]) as $theme) {
           if (isset($theme_list_scan[$theme])) {
             $theme_list[$theme] = $theme_list_scan[$theme];
           }
@@ -131,7 +132,7 @@ class ExtensionInstallStorage extends InstallStorage {
         // install profile version if there are any duplicates.
         if ($this->installProfile) {
           if (!isset($profile_list)) {
-            $profile_list = $listing->scan('profile');
+            $profile_list = $listing->scan(ExtensionTypeInterface::PROFILE);
           }
           if (isset($profile_list[$this->installProfile])) {
             $profile_folders = $this->getComponentNames([$profile_list[$this->installProfile]]);

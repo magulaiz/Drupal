@@ -6,6 +6,7 @@ use Composer\Autoload\ClassLoader;
 use Drupal\Core\Database\Event\StatementExecutionEndEvent;
 use Drupal\Core\Database\Event\StatementExecutionStartEvent;
 use Drupal\Core\Extension\ExtensionDiscovery;
+use Drupal\Core\Extension\ExtensionTypeInterface;
 
 /**
  * Primary front-controller for the database system.
@@ -547,12 +548,12 @@ abstract class Database {
 
     // Add the module key for core database drivers when the module key is not
     // set.
-    if (!isset($query['module']) && in_array($driver, ['mysql', 'pgsql', 'sqlite'], TRUE)) {
-      $query['module'] = $driver;
+    if (!isset($query[ExtensionTypeInterface::MODULE]) && in_array($driver, ['mysql', 'pgsql', 'sqlite'], TRUE)) {
+      $query[ExtensionTypeInterface::MODULE] = $driver;
     }
 
-    if (isset($query['module']) && $query['module']) {
-      $module = $query['module'];
+    if (isset($query[ExtensionTypeInterface::MODULE]) && $query[ExtensionTypeInterface::MODULE]) {
+      $module = $query[ExtensionTypeInterface::MODULE];
       // Set up an additional autoloader. We don't use the main autoloader as
       // this method can be called before Drupal is installed and is never
       // called during regular runtime.
@@ -655,7 +656,7 @@ abstract class Database {
     // The namespace is within a Drupal module. Find the directory where the
     // module is located.
     $extension_discovery = new ExtensionDiscovery($root, FALSE, []);
-    $modules = $extension_discovery->scan('module', $include_test_drivers);
+    $modules = $extension_discovery->scan(ExtensionTypeInterface::MODULE, $include_test_drivers);
     if (!isset($modules[$module])) {
       throw new \RuntimeException(sprintf("Cannot find the module '%s' for the database driver namespace '%s'", $module, $namespace));
     }
@@ -693,7 +694,7 @@ abstract class Database {
     // to the connection options to make it easy for the connection class's
     // createUrlFromConnectionOptions() method to add it to the URL.
     if (static::isWithinModuleNamespace($namespace)) {
-      $db_info['default']['module'] = explode('\\', $namespace)[1];
+      $db_info['default'][ExtensionTypeInterface::MODULE] = explode('\\', $namespace)[1];
     }
 
     $connection_class = $namespace . '\\Connection';

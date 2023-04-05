@@ -6,6 +6,7 @@ use Drupal\Core\Config\ConfigCrudEvent;
 use Drupal\Core\Config\ConfigEvents;
 use Drupal\Core\Extension\Extension;
 use Drupal\Core\Extension\ExtensionDiscovery;
+use Drupal\Core\Extension\ExtensionTypeInterface;
 use Drupal\Core\KeyValueStore\KeyValueStoreInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
@@ -265,9 +266,9 @@ class UpdateRegistry implements EventSubscriberInterface {
   protected function scanExtensionsAndLoadUpdateFiles(string $extension = NULL) {
     // Scan for extensions.
     $extension_discovery = new ExtensionDiscovery($this->root, TRUE, [], $this->sitePath);
-    $module_extensions = $extension_discovery->scan('module');
-    $theme_extensions = $this->includeThemes() ? $extension_discovery->scan('theme') : [];
-    $profile_extensions = $extension_discovery->scan('profile');
+    $module_extensions = $extension_discovery->scan(ExtensionTypeInterface::MODULE);
+    $theme_extensions = $this->includeThemes() ? $extension_discovery->scan(ExtensionTypeInterface::THEME) : [];
+    $profile_extensions = $extension_discovery->scan(ExtensionTypeInterface::PROFILE);
     $extensions = array_merge($module_extensions, $theme_extensions, $profile_extensions);
 
     // Limit to a single extension.
@@ -315,11 +316,11 @@ class UpdateRegistry implements EventSubscriberInterface {
       // UpdateRegistry is constructed after _drupal_maintenance_theme() has
       // added a theme to the theme handler it will not be considered as already
       // installed.
-      $old_extension_list = array_keys($config->getOriginal('module') ?? []);
-      $new_extension_list = array_keys($config->get('module'));
+      $old_extension_list = array_keys($config->getOriginal(ExtensionTypeInterface::MODULE) ?? []);
+      $new_extension_list = array_keys($config->get(ExtensionTypeInterface::MODULE));
       if ($this->includeThemes()) {
-        $new_extension_list = array_merge($new_extension_list, array_keys($config->get('theme')));
-        $old_extension_list = array_merge($old_extension_list, array_keys($config->getOriginal('theme') ?? []));
+        $new_extension_list = array_merge($new_extension_list, array_keys($config->get(ExtensionTypeInterface::THEME)));
+        $old_extension_list = array_merge($old_extension_list, array_keys($config->getOriginal(ExtensionTypeInterface::THEME) ?? []));
       }
 
       // The list of extensions installed or uninstalled. In regular operation

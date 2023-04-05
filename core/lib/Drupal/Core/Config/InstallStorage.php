@@ -2,8 +2,9 @@
 
 namespace Drupal\Core\Config;
 
-use Drupal\Core\Extension\ExtensionDiscovery;
 use Drupal\Core\Extension\Extension;
+use Drupal\Core\Extension\ExtensionDiscovery;
+use Drupal\Core\Extension\ExtensionTypeInterface;
 
 /**
  * Storage used by the Drupal installer.
@@ -157,7 +158,7 @@ class InstallStorage extends FileStorage {
       // @todo Remove as part of https://www.drupal.org/node/2186491
       $listing = new ExtensionDiscovery(\Drupal::root());
       if ($profile = \Drupal::installProfile()) {
-        $profile_list = $listing->scan('profile');
+        $profile_list = $listing->scan(ExtensionTypeInterface::PROFILE);
         if (isset($profile_list[$profile])) {
           // Prime the \Drupal\Core\Extension\ExtensionList::getPathname static
           // cache with the profile info file location so we can use
@@ -171,8 +172,8 @@ class InstallStorage extends FileStorage {
         }
       }
       // @todo Remove as part of https://www.drupal.org/node/2186491
-      $this->folders += $this->getComponentNames($listing->scan('module'));
-      $this->folders += $this->getComponentNames($listing->scan('theme'));
+      $this->folders += $this->getComponentNames($listing->scan(ExtensionTypeInterface::MODULE));
+      $this->folders += $this->getComponentNames($listing->scan(ExtensionTypeInterface::THEME));
     }
     return $this->folders;
   }
