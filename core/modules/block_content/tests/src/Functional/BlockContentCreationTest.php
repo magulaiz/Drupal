@@ -35,6 +35,8 @@ class BlockContentCreationTest extends BlockContentTestBase {
   protected $permissions = [
     'administer blocks',
     'administer block_content display',
+    'access block library',
+    'administer block content',
   ];
 
   /**
@@ -46,7 +48,7 @@ class BlockContentCreationTest extends BlockContentTestBase {
   }
 
   /**
-   * Creates a "Basic page" block and verifies its consistency in the database.
+   * Creates a "Basic block" block and verifies its consistency in the database.
    */
   public function testBlockContentCreation() {
     $this->drupalLogin($this->adminUser);
@@ -70,15 +72,6 @@ class BlockContentCreationTest extends BlockContentTestBase {
       ->loadByProperties(['info' => $edit['info[0][value]']]);
     $block = reset($blocks);
     $this->assertNotEmpty($block, 'Custom Block found in database.');
-
-    // Check that attempting to create another block with the same value for
-    // 'info' returns an error.
-    $this->drupalGet('block/add/basic');
-    $this->submitForm($edit, 'Save');
-
-    // Check that the Basic block has been created.
-    $this->assertSession()->pageTextContains('A custom block with block description ' . $edit['info[0][value]'] . ' already exists.');
-    $this->assertSession()->statusCodeEquals(200);
   }
 
   /**
@@ -118,7 +111,7 @@ class BlockContentCreationTest extends BlockContentTestBase {
     $this->submitForm($custom_view_mode, 'Save');
 
     // Go to the configure page and change the view mode.
-    $this->drupalGet('admin/structure/block/manage/testblock');
+    $this->drupalGet('admin/structure/block/manage/stark_testblock');
 
     // Test the available view mode options.
     // Verify that the default view mode is available.
@@ -130,7 +123,7 @@ class BlockContentCreationTest extends BlockContentTestBase {
     $this->submitForm($view_mode, 'Save block');
 
     // Check that the view mode setting is shown because more than one exists.
-    $this->drupalGet('admin/structure/block/manage/testblock');
+    $this->drupalGet('admin/structure/block/manage/stark_testblock');
     $this->assertSession()->fieldExists('settings[view_mode]');
 
     // Change the view mode.
@@ -139,7 +132,7 @@ class BlockContentCreationTest extends BlockContentTestBase {
     $this->submitForm($view_mode, 'Save block');
 
     // Go to the configure page and verify the view mode has changed.
-    $this->drupalGet('admin/structure/block/manage/testblock');
+    $this->drupalGet('admin/structure/block/manage/stark_testblock');
     $this->assertSession()->fieldValueEquals('settings[view_mode]', 'test_view_mode');
 
     // Check that the block exists in the database.
@@ -148,15 +141,6 @@ class BlockContentCreationTest extends BlockContentTestBase {
       ->loadByProperties(['info' => $edit['info[0][value]']]);
     $block = reset($blocks);
     $this->assertNotEmpty($block, 'Custom Block found in database.');
-
-    // Check that attempting to create another block with the same value for
-    // 'info' returns an error.
-    $this->drupalGet('block/add/basic');
-    $this->submitForm($edit, 'Save');
-
-    // Check that the Basic block has been created.
-    $this->assertSession()->pageTextContains('A custom block with block description ' . $edit['info[0][value]'] . ' already exists.');
-    $this->assertSession()->statusCodeEquals(200);
   }
 
   /**

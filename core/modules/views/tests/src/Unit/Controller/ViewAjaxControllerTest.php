@@ -74,7 +74,7 @@ class ViewAjaxControllerTest extends UnitTestCase {
       ->getMock();
     $this->renderer = $this->createMock('\Drupal\Core\Render\RendererInterface');
     $this->renderer->expects($this->any())
-      ->method('render')
+      ->method('renderRoot')
       ->willReturnCallback(function (array &$elements) {
         $elements['#attached'] = [];
 
@@ -93,6 +93,10 @@ class ViewAjaxControllerTest extends UnitTestCase {
     $this->viewAjaxController = new ViewAjaxController($this->viewStorage, $this->executableFactory, $this->renderer, $this->currentPath, $this->redirectDestination);
 
     $element_info_manager = $this->createMock('\Drupal\Core\Render\ElementInfoManagerInterface');
+    $element_info_manager->expects($this->any())
+      ->method('getInfo')
+      ->with('status_messages')
+      ->willReturn([]);
     $request_stack = new RequestStack();
     $request_stack->push(new Request());
     $this->renderer = new Renderer(
@@ -343,7 +347,7 @@ class ViewAjaxControllerTest extends UnitTestCase {
     $this->assertInstanceOf(ViewAjaxResponse::class, $response);
 
     $commands = $this->getCommands($response);
-    $this->assertEquals('viewsScrollTop', $commands[0]['command']);
+    $this->assertEquals('scrollTop', $commands[0]['command']);
     $this->assertEquals('.js-view-dom-id-' . $dom_id, $commands[0]['selector']);
 
     $this->assertViewResultCommand($response, 1);

@@ -43,7 +43,7 @@ use Drupal\user\UserInterface;
  *     },
  *     "translation" = "Drupal\block_content\BlockContentTranslationHandler"
  *   },
- *   admin_permission = "administer blocks",
+ *   admin_permission = "administer block content",
  *   base_table = "block_content",
  *   revision_table = "block_content_revision",
  *   data_table = "block_content_field_data",
@@ -53,7 +53,7 @@ use Drupal\user\UserInterface;
  *     "canonical" = "/block/{block_content}",
  *     "delete-form" = "/block/{block_content}/delete",
  *     "edit-form" = "/block/{block_content}",
- *     "collection" = "/admin/structure/block/block-content",
+ *     "collection" = "/admin/content/block-content",
  *     "create" = "/block",
  *     "revision-delete-form" = "/block/{block_content}/revision/{block_content_revision}/delete",
  *     "revision-revert-form" = "/block/{block_content}/revision/{block_content_revision}/revert",
@@ -215,8 +215,7 @@ class BlockContent extends EditorialContentEntityBase implements BlockContentInt
         'type' => 'string_textfield',
         'weight' => -5,
       ])
-      ->setDisplayConfigurable('form', TRUE)
-      ->addConstraint('UniqueField', []);
+      ->setDisplayConfigurable('form', TRUE);
 
     $fields['changed'] = BaseFieldDefinition::create('changed')
       ->setLabel(t('Changed'))

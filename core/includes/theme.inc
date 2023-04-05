@@ -87,13 +87,20 @@ const RESPONSIVE_PRIORITY_LOW = 'priority-low';
  * @return array|\Drupal\Core\Utility\ThemeRegistry
  *   The complete theme registry array, or an instance of the
  *   Drupal\Core\Utility\ThemeRegistry class.
+ *
+ * @deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use
+ *   theme.registry service methods get() or getRuntime() instead.
+ *
+ * @see https://www.drupal.org/node/3348850
  */
 function theme_get_registry($complete = TRUE) {
   $theme_registry = \Drupal::service('theme.registry');
   if ($complete) {
+    @trigger_error(__FUNCTION__ . '() is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use theme.registry service method get() instead. See https://www.drupal.org/node/3348850', E_USER_DEPRECATED);
     return $theme_registry->get();
   }
   else {
+    @trigger_error(__FUNCTION__ . '() is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use theme.registry service method getRuntime() instead. See https://www.drupal.org/node/3348850', E_USER_DEPRECATED);
     return $theme_registry->getRuntime();
   }
 }
@@ -118,8 +125,14 @@ function _system_default_theme_features() {
  *
  * This function should be called when modules are added to the system, or when
  * a dynamic system needs to add more theme hooks.
+ *
+ * @deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use
+ *   theme.registry service reset() method instead.
+ *
+ * @see https://www.drupal.org/node/3348853
  */
 function drupal_theme_rebuild() {
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use theme.registry service reset() method instead. See https://www.drupal.org/node/3348853', E_USER_DEPRECATED);
   \Drupal::service('theme.registry')->reset();
 }
 
@@ -344,13 +357,14 @@ function theme_get_setting($setting_name, $theme = NULL) {
  * @throws \Exception
  *   Thrown when an object is passed in which cannot be printed.
  *
- * @see \Drupal\Core\Template\TwigExtension::escapeFilter()
+ * @deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. There is no
+ *   replacement. Theme engines must handle escaping by themselves.
  *
- * @todo Discuss deprecating this in https://www.drupal.org/node/2575081.
- * @todo Refactor this to keep it in sync with Twig filtering in
- *   https://www.drupal.org/node/2575065
+ * @see https://www.drupal.org/node/3336253
  */
 function theme_render_and_autoescape($arg) {
+  @trigger_error('theme_render_and_autoescape() is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. There is no replacement. Theme engines must handle escaping by themselves. See https://www.drupal.org/node/3336253', E_USER_DEPRECATED);
+
   // If it's a renderable, then it'll be up to the generated render array it
   // returns to contain the necessary cacheability & attachment metadata. If
   // it doesn't implement CacheableDependencyInterface or AttachmentsInterface
@@ -1374,7 +1388,7 @@ function template_preprocess_page(&$variables) {
     $variables['db_is_active'] = FALSE;
   }
 
-  if ($node = \Drupal::routeMatch()->getParameter('node')) {
+  if (($node = \Drupal::routeMatch()->getParameter('node')) || ($node = \Drupal::routeMatch()->getParameter('node_preview'))) {
     $variables['node'] = $node;
   }
 }
@@ -1607,9 +1621,10 @@ function template_preprocess_field_multiple_value_form(&$variables) {
     $header = [
       [
         'data' => [
-          '#prefix' => '<h4' . $header_attributes . '>',
-          '#markup' => $element['#title'],
-          '#suffix' => '</h4>',
+          '#type' => 'html_tag',
+          '#tag' => 'h4',
+          '#value' => $element['#title'],
+          '#attributes' => $header_attributes,
         ],
         'colspan' => 2,
         'class' => ['field-label'],
