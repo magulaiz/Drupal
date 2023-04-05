@@ -211,4 +211,15 @@ class RelatedResourceTypesTest extends JsonapiKernelTestBase {
     }
   }
 
+  /**
+   * Test the deprecation error on entity reference fields.
+   *
+   * @group legacy
+   */
+  public function testGetRelatableResourceTypesFromFieldDefinitionEntityReferenceFieldDeprecated(): void {
+    \Drupal::service('module_installer')->install(['jsonapi_test_reference_types']);
+    $this->expectDeprecation('Entity reference field items not implementing Drupal\Core\Field\Plugin\Field\FieldType\EntityReferenceItemInterface are deprecated in Drupal 10.1.0 and must do so in Drupal 11.0.0.');
+    $this->resourceTypeRepository->all();
+  }
+
 }
