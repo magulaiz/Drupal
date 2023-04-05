@@ -252,7 +252,7 @@ class Condition implements ConditionInterface, \Countable {
           // If something passed in an invalid character stop early, so we
           // don't rely on a broken SQL statement when we would just replace
           // those characters.
-          if (stripos(!empty($condition['operator']) ? $condition['operator']: '', 'UNION') !== FALSE || strpbrk(!empty($condition['operator']) ? $condition['operator']: '', '[-\'"();') !== FALSE) {
+          if (stripos(!empty($condition['operator']) ? $condition['operator'] : '', 'UNION') !== FALSE || strpbrk(!empty($condition['operator']) ? $condition['operator'] : '', '[-\'"();') !== FALSE) {
             $this->changed = TRUE;
             $this->arguments = [];
             // Provide a string which will result into an empty query result.
