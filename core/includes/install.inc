@@ -10,6 +10,7 @@ use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Extension\Dependency;
 use Drupal\Core\Extension\ExtensionDiscovery;
+use Drupal\Core\Extension\ExtensionTypeInterface;
 use Drupal\Core\Installer\InstallerKernel;
 use Drupal\Core\Site\SettingsEditor;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -191,7 +192,7 @@ function drupal_get_database_types() {
   $class_loader = \Drupal::service('class_loader');
   // We cannot use the file cache because it does not always exist.
   $extension_discovery = new ExtensionDiscovery(DRUPAL_ROOT, FALSE, []);
-  $modules = $extension_discovery->scan('module');
+  $modules = $extension_discovery->scan(ExtensionTypeInterface::MODULE);
   foreach ($modules as $module) {
     $module_driver_path = DRUPAL_ROOT . '/' . $module->getPath() . '/src/Driver/Database';
     if (is_dir($module_driver_path)) {
@@ -442,7 +443,7 @@ function drupal_verify_profile($install_state) {
   // Get the list of available modules for the selected installation profile.
   $listing = new ExtensionDiscovery(\Drupal::root());
   $present_modules = [];
-  foreach ($listing->scan('module') as $present_module) {
+  foreach ($listing->scan(ExtensionTypeInterface::MODULE) as $present_module) {
     $present_modules[] = $present_module->getName();
   }
 
@@ -874,7 +875,7 @@ function drupal_check_profile($profile) {
   // we don't yet know where all the modules are located.
   // @todo Remove as part of https://www.drupal.org/node/2186491
   $drupal_root = \Drupal::root();
-  $module_list = (new ExtensionDiscovery($drupal_root))->scan('module');
+  $module_list = (new ExtensionDiscovery($drupal_root))->scan(ExtensionTypeInterface::MODULE);
 
   foreach ($info['install'] as $module) {
     // If the module is in the module list we know it exists and we can continue
@@ -1046,7 +1047,7 @@ function install_profile_info($profile, $langcode = 'en') {
     // Get a list of core's required modules.
     $required = [];
     $listing = new ExtensionDiscovery(\Drupal::root());
-    $files = $listing->scan('module');
+    $files = $listing->scan(ExtensionTypeInterface::MODULE);
     foreach ($files as $name => $file) {
       $parsed = $parser->parse($file->getPathname());
       if (!empty($parsed) && !empty($parsed['required']) && $parsed['required']) {
