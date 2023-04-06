@@ -15,13 +15,20 @@
 .skip-link {
   z-index: 503;
   top: 0;
-  left: 0;
+  left: 0; /* LTR */
   padding: 1px 0.625rem 2px;
   color: #fff;
-  border-radius: 0 0 0.625rem 0;
+  border-radius: 0 0 0.625rem 0; /* LTR */
   background: #55565b;
   box-shadow: 0 0 0 2px #fff, 0 0 0 5px #26a769;
   font-size: 0.94em;
+}
+
+[dir="rtl"] .skip-link {
+  left: auto;
+  right: 0;
+  border-bottom-right-radius: 0;
+  border-bottom-left-radius: 0.625rem;
 }
 
 .skip-link:hover,
