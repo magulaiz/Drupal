@@ -57,7 +57,7 @@ class FilterDateTest extends DateTimeHandlerTestBase {
     static::$date = $this->getUTCEquivalentOfUserNowAsTimestamp();
 
     // Change field storage to date-only.
-    $storage = FieldStorageConfig::load('node.' . static::$fieldName);
+    $storage = FieldStorageConfig::load('node.' . static::$field_name);
     $storage->setSetting('datetime_type', DateTimeItemInterface::DATETIME_TYPE_DATE);
     $storage->save();
 
