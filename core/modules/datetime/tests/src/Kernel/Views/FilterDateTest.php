@@ -50,7 +50,7 @@ class FilterDateTest extends DateTimeHandlerTestBase {
     parent::setUp($import_test_views);
 
     // Change field storage to date-only.
-    $storage = FieldStorageConfig::load('node.' . static::$field_name);
+    $storage = FieldStorageConfig::load('node.' . static::$fieldName);
     $storage->setSetting('datetime_type', DateTimeItemInterface::DATETIME_TYPE_DATE);
     $storage->save();
 
