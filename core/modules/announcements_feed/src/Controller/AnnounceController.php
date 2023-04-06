@@ -16,20 +16,14 @@ use Symfony\Component\HttpFoundation\Request;
 class AnnounceController extends ControllerBase implements ContainerInjectionInterface {
 
   /**
-   * AnnounceUserStatus service.
-   */
-  protected AnnounceUserStatus $userStatus;
-
-  /**
    * Constructs an AnnounceController object.
    *
-   * @param \Drupal\announcements_feed\AnnounceUserStatus $user_status
+   * @param \Drupal\announcements_feed\AnnounceUserStatus $userStatus
    *   The AnnounceUserStatus service.
    * @param \Drupal\Core\Session\AccountInterface $current_user
    *   The current_user service.
    */
-  public function __construct(AnnounceUserStatus $user_status, AccountInterface $current_user) {
-    $this->userStatus = $user_status;
+  public function __construct(protected AnnounceUserStatus $userStatus, AccountInterface $current_user) {
     $this->currentUser = $current_user;
   }
 
@@ -90,7 +84,6 @@ class AnnounceController extends ControllerBase implements ContainerInjectionInt
     $build += [
       '#theme' => 'announcements_feed',
       '#count' => count($announcements),
-      // @todo Lazy builder and `user` context.
       '#cache' => [
         'contexts' => [
           'user',
