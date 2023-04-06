@@ -5,7 +5,6 @@ namespace Drupal\datetime\Plugin\views\filter;
 use Drupal\Component\Datetime\DateTimePlus;
 use Drupal\Core\Datetime\DateFormatterInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
-use Drupal\datetime\Plugin\Field\FieldType\DateTimeItem;
 use Drupal\datetime\Plugin\Field\FieldType\DateTimeItemInterface;
 use Drupal\views\FieldAPIHandlerTrait;
 use Drupal\views\Plugin\views\filter\Date as NumericDate;
