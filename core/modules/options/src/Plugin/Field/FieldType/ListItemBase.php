@@ -87,7 +87,10 @@ abstract class ListItemBase extends FieldItemBase implements OptionsProviderInte
    * {@inheritdoc}
    */
   public function storageSettingsForm(array &$form, FormStateInterface $form_state, $has_data) {
-    $allowed_values = $this->getSetting('allowed_values');
+    if (!array_key_exists('allowed_values', $form_state->getStorage())) {
+      $form_state->set('allowed_values', $this->getFieldDefinition()->getSetting('allowed_values'));
+    }
+    $allowed_values = $form_state->getStorage()['allowed_values'];
     $allowed_values_function = $this->getSetting('allowed_values_function');
 
     if (!$form_state->get('items_count')) {
@@ -224,18 +227,29 @@ abstract class ListItemBase extends FieldItemBase implements OptionsProviderInte
   }
 
   public static function deleteSubmit(array $form, FormStateInterface $form_state) {
-    $form_state->set('items_count', $form_state->get('items_count') + 1);
+    $allowed_values = $form_state->getStorage()['allowed_values'];
+    $button = $form_state->getTriggeringElement();
+    $element = NestedArray::getValue($form, array_slice($button['#array_parents'], 0, -1));
+    $item_to_be_removed = $element['item']['label']['#default_value'];
+    $remaining_allowed_values = array_diff($allowed_values, [$item_to_be_removed]);
+    $form_state->set('allowed_values', $remaining_allowed_values);
+
+    $delta = $button['#delta'];
+    $user_input = $form_state->getUserInput();
+    // The user input is directly modified to preserve the rest of the data on
+    // the page as it cannot be rebuilt from a fresh form state.
+    unset($user_input['settings']['allowed_values']['table'][$delta]);
+    $user_input['settings']['allowed_values']['table'] = array_values($user_input['settings']['allowed_values']['table']);
+    $form_state->setUserInput($user_input);
+    $form_state->set('items_count', $form_state->get('items_count') - 1);
+
     $form_state->setRebuild();
   }
+
   public static function deleteAjax(array $form, FormStateInterface $form_state) {
     $button = $form_state->getTriggeringElement();
 
-    $element = NestedArray::getValue($form, array_slice($button['#array_parents'], 0, -3));
-    $delta = $element['table']['#max_delta'];
-    $element['table'][$delta]['item']['#prefix'] = '<div class="ajax-new-content">' . ($element['table'][$delta]['item']['#prefix'] ?? '');
-    $element['table'][$delta]['item']['#suffix'] = ($element['table'][$delta]['item']['#suffix'] ?? '') . '</div>';
-
-    return $element;
+    return NestedArray::getValue($form, array_slice($button['#array_parents'], 0, -3));
   }
 
   /**
