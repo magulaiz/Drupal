@@ -5,6 +5,7 @@ namespace Drupal\Tests\datetime_range\Kernel;
 use Drupal\Core\Entity\Entity\EntityViewDisplay;
 use Drupal\Core\Language\Language;
 use Drupal\datetime\Plugin\Field\FieldType\DateTimeItem;
+use Drupal\datetime\Plugin\Field\FieldType\DateTimeItemInterface;
 use Drupal\entity_test\Entity\EntityTest;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
@@ -61,7 +62,7 @@ class SeparatorTranslationTest extends KernelTestBase {
       'field_name' => mb_strtolower($this->randomMachineName()),
       'entity_type' => 'entity_test',
       'type' => 'daterange',
-      'settings' => ['datetime_type' => DateTimeItem::DATETIME_TYPE_DATE],
+      'settings' => ['datetime_type' => DateTimeItemInterface::DATETIME_TYPE_DATE],
     ]);
     $this->fieldStorage->save();
 
