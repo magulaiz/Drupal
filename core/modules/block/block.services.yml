@@ -10,3 +10,6 @@ services:
   block.repository:
     class: Drupal\block\BlockRepository
     arguments: ['@entity_type.manager', '@theme.manager', '@context.handler']
+  block.machine_name_generator:
+    class: Drupal\block\BlockMachineNameGenerator
+    arguments: ['@entity_type.manager']

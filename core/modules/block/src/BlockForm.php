@@ -74,6 +74,13 @@ class BlockForm extends EntityForm {
   protected $pluginFormFactory;
 
   /**
+   * The block machine name generator.
+   *
+   * @var \Drupal\block\BlockMachineNameGeneratorInterface
+   */
+  protected $machineNameGenerator;
+
+  /**
    * Constructs a BlockForm object.
    *
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
@@ -88,14 +95,21 @@ class BlockForm extends EntityForm {
    *   The theme handler.
    * @param \Drupal\Core\Plugin\PluginFormFactoryInterface $plugin_form_manager
    *   The plugin form manager.
+   * @param BlockMachineNameGeneratorInterface|null $machine_name_generator
+   *   The unique machine name generator.
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager, ExecutableManagerInterface $manager, ContextRepositoryInterface $context_repository, LanguageManagerInterface $language, ThemeHandlerInterface $theme_handler, PluginFormFactoryInterface $plugin_form_manager) {
+  public function __construct(EntityTypeManagerInterface $entity_type_manager, ExecutableManagerInterface $manager, ContextRepositoryInterface $context_repository, LanguageManagerInterface $language, ThemeHandlerInterface $theme_handler, PluginFormFactoryInterface $plugin_form_manager, ?BlockMachineNameGeneratorInterface $machine_name_generator = NULL) {
+    if ($machine_name_generator === NULL) {
+      @trigger_error('Calling BlockMachineNameGenerator::__construct() without the $machine_name_generator argument is deprecated in drupal:10.1.0 and will be required in drupal:11.0.0. See https://www.drupal.org/node/3333575', E_USER_DEPRECATED);
+      $machine_name_generator = \Drupal::service('block.machine_name_generator');
+    }
     $this->storage = $entity_type_manager->getStorage('block');
     $this->manager = $manager;
     $this->contextRepository = $context_repository;
     $this->language = $language;
     $this->themeHandler = $theme_handler;
     $this->pluginFormFactory = $plugin_form_manager;
+    $this->machineNameGenerator = $machine_name_generator;
   }
 
   /**
@@ -108,7 +122,8 @@ class BlockForm extends EntityForm {
       $container->get('context.repository'),
       $container->get('language_manager'),
       $container->get('theme_handler'),
-      $container->get('plugin_form.factory')
+      $container->get('plugin_form.factory'),
+      $container->get('block.machine_name_generator')
     );
   }
 
@@ -377,7 +392,7 @@ class BlockForm extends EntityForm {
   }
 
   /**
-   * Generates a unique machine name for a block.
+   * Generates a unique machine name for a block based on a suggested string.
    *
    * @param \Drupal\block\BlockInterface $block
    *   The block entity.
@@ -387,28 +402,7 @@ class BlockForm extends EntityForm {
    */
   public function getUniqueMachineName(BlockInterface $block) {
     $suggestion = $block->getPlugin()->getMachineNameSuggestion();
-    if ($block->getTheme()) {
-      $suggestion = $block->getTheme() . '_' . $suggestion;
-    }
-
-    // Get all the blocks which starts with the suggested machine name.
-    $query = $this->storage->getQuery();
-    $query->condition('id', $suggestion, 'CONTAINS');
-    $block_ids = $query->execute();
-
-    $block_ids = array_map(function ($block_id) {
-      $parts = explode('.', $block_id);
-      return end($parts);
-    }, $block_ids);
-
-    // Iterate through potential IDs until we get a new one. E.g.
-    // 'plugin', 'plugin_2', 'plugin_3', etc.
-    $count = 1;
-    $machine_default = $suggestion;
-    while (in_array($machine_default, $block_ids)) {
-      $machine_default = $suggestion . '_' . ++$count;
-    }
-    return $machine_default;
+    return $this->machineNameGenerator->getUniqueMachineName($suggestion, $block->getTheme());
   }
 
   /**

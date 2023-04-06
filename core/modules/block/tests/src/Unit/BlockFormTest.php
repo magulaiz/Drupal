@@ -3,6 +3,7 @@
 namespace Drupal\Tests\block\Unit;
 
 use Drupal\block\BlockForm;
+use Drupal\block\BlockMachineNameGenerator;
 use Drupal\block\Entity\Block;
 use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Plugin\PluginFormFactoryInterface;
@@ -63,6 +64,13 @@ class BlockFormTest extends UnitTestCase {
    * @var \Drupal\Core\Plugin\PluginFormFactoryInterface|\Prophecy\Prophecy\ProphecyInterface
    */
   protected $pluginFormFactory;
+
+  /**
+   * The machine name generator.
+   *
+   * @var \Drupal\block\BlockMachineNameGeneratorInterface
+   */
+  protected $machineNameGenerator;
 
   /**
    * {@inheritdoc}
@@ -136,10 +144,11 @@ class BlockFormTest extends UnitTestCase {
       ->method('getQuery')
       ->willReturn($query);
 
-    $block_form_controller = new BlockForm($this->entityTypeManager, $this->conditionManager, $this->contextRepository, $this->language, $this->themeHandler, $this->pluginFormFactory->reveal());
+    $machine_name_generator = new BlockMachineNameGenerator($this->entityTypeManager);
+    $block_form_controller = new BlockForm($this->entityTypeManager, $this->conditionManager, $this->contextRepository, $this->language, $this->themeHandler, $this->pluginFormFactory->reveal(), $machine_name_generator);
 
-    // Ensure that the block with just one other instance gets the next available
-    // name suggestion.
+    // Ensure that the block with just one other instance gets
+    // the next available name suggestion.
     $this->assertEquals('test_2', $block_form_controller->getUniqueMachineName($blocks['test']));
 
     // Ensure that the block with already three instances (_0, _1, _2) gets the
