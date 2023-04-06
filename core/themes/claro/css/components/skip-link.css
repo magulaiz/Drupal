@@ -25,10 +25,9 @@
 }
 
 [dir="rtl"] .skip-link {
-  left: auto;
   right: 0;
-  border-bottom-right-radius: 0;
-  border-bottom-left-radius: 0.625rem;
+  left: auto;
+  border-radius: 0 0 0 0.625rem;
 }
 
 .skip-link:hover,
