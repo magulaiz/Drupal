@@ -69,7 +69,7 @@ abstract class DateTimeHandlerTestBase extends ViewsKernelTestBase {
     $fieldStorage = FieldStorageConfig::create([
       'field_name' => static::$fieldName,
       'entity_type' => 'node',
-      'type' => static::$fieldName,
+      'type' => static::$field_type,
       'settings' => ['datetime_type' => DateTimeItemInterface::DATETIME_TYPE_DATETIME],
     ]);
     $fieldStorage->save();
