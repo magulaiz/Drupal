@@ -11,6 +11,7 @@ use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\TypedData\Plugin\DataType\DateTimeIso8601;
 use Drupal\Core\TypedData\Plugin\DataType\IntegerData;
 use Drupal\Core\TypedData\Type\DateTimeInterface;
+use Drupal\datetime\Plugin\Field\FieldType\DateTimeItem;
 use Drupal\datetime\Plugin\Field\FieldType\DateTimeItemInterface;
 use Drupal\serialization\Normalizer\DateTimeIso8601Normalizer;
 use Drupal\Tests\UnitTestCase;
@@ -87,7 +88,7 @@ class DateTimeIso8601NormalizerTest extends UnitTestCase {
     $formatted_string = $this->randomMachineName();
 
     $field_item = $this->prophesize($parent_field_item_class);
-    if ($parent_field_item_class === DateTimeItemInterface::class) {
+    if ($parent_field_item_class === DateTimeItem::class) {
       $field_storage_definition = $this->prophesize(FieldStorageDefinitionInterface::class);
       $field_storage_definition->getSetting('datetime_type')
         ->willReturn($datetime_type);
@@ -122,7 +123,7 @@ class DateTimeIso8601NormalizerTest extends UnitTestCase {
    */
   public function testNormalizeWhenNull($parent_field_item_class, $datetime_type, $expected_format) {
     $field_item = $this->prophesize($parent_field_item_class);
-    if ($parent_field_item_class === DateTimeItemInterface::class) {
+    if ($parent_field_item_class === DateTimeItem::class) {
       $field_storage_definition = $this->prophesize(FieldStorageDefinitionInterface::class);
       $field_storage_definition->getSetting('datetime_type')
         ->willReturn($datetime_type);
@@ -155,14 +156,14 @@ class DateTimeIso8601NormalizerTest extends UnitTestCase {
     return [
       // @see \Drupal\datetime\Plugin\Field\FieldType\DateTimeItemInterface::DATETIME_TYPE_DATE
       'datetime field, configured to store only date: must be handled by DateTimeIso8601Normalizer' => [
-        DateTimeItemInterface::class,
+        DateTimeItem::class,
         DateTimeItemInterface::DATETIME_TYPE_DATE,
         // This expected format call proves that normalization is handled by \Drupal\serialization\Normalizer\DateTimeIso8601Normalizer::normalize().
         'Y-m-d',
       ],
       // @see \Drupal\datetime\Plugin\Field\FieldType\DateTimeItemInterface::DATETIME_TYPE_DATETIME
       'datetime field, configured to store date and time; must be handled by the parent normalizer' => [
-        DateTimeItemInterface::class,
+        DateTimeItem::class,
         DateTimeItemInterface::DATETIME_TYPE_DATETIME,
         \DateTime::RFC3339,
       ],
