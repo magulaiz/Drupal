@@ -15,32 +15,32 @@ use Drupal\Tests\BrowserTestBase;
 class AssetOptimizationTest extends BrowserTestBase {
 
   /**
-   * {@inheritdoc}
-   */
-  protected function setUp(): void {
-    parent::setUp();
-    $settings = [];
-    $settings['asset_file_path'] = (object) [
-      'value' => 'sites/simpletest/files/aggregates',
-      'required' => TRUE,
-    ];
-    $this->writeSettings($settings);
-  }
-
-  /**
-   * {@inheritdoc}
+   * {@inheritdoc}.
    */
   protected $defaultTheme = 'stark';
 
   /**
+   * The file assets path settings value.
+   */
+  protected $fileAssetsPath;
+
+  /**
    * {@inheritdoc}
    */
-  protected static $modules = ['system'];
+  function writeSettings(array $settings): void {
+  }
 
   /**
    * Tests that asset aggregates are rendered and created on disk.
    */
   public function testAssetAggregation(): void {
+    $this->fileAssetsPath = $this->publicFilesDirectory . '/test_assets/';
+    $settings['file_assets_path'] = (object) [
+      'value' => $this->fileAssetsPath,
+      'required' => TRUE,
+    ];
+    $this->writeSettings($settings);
+    $this->rebuildAll();
     $this->config('system.performance')->set('css', [
       'preprocess' => TRUE,
       'gzip' => TRUE,
@@ -101,6 +101,7 @@ class AssetOptimizationTest extends BrowserTestBase {
    */
   protected function assertAggregate(string $url, bool $from_php = TRUE): void {
     $url = $this->getAbsoluteUrl($url);
+    $this->assertStringContainsString($this->fileAssetsPath, $url);
     $session = $this->getSession();
     $session->visit($url);
     $this->assertSession()->statusCodeEquals(200);
