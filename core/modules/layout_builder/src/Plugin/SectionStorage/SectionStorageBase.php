@@ -112,4 +112,16 @@ abstract class SectionStorageBase extends PluginBase implements SectionStorageIn
     return $this->getStorageId();
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function inlineBlocksAllowedInContext(int $delta, string $region): array {
+    $bundles = \Drupal::service('entity_type.bundle.info')->getBundleInfo('block_content');
+    $inline_blocks = [];
+    foreach ($bundles as $machine_name => $bundle) {
+      $inline_blocks[] = 'inline_block:' . $machine_name;
+    }
+    return $inline_blocks;
+  }
+
 }

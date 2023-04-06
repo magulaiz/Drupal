@@ -89,11 +89,12 @@ class ChooseBlockController implements ContainerInjectionInterface {
    *   A render array.
    */
   public function build(SectionStorageInterface $section_storage, int $delta, $region) {
-    if ($this->entityTypeManager->hasDefinition('block_content_type') && $types = $this->entityTypeManager->getStorage('block_content_type')->loadMultiple()) {
+    $allowed_inline_blocks = $section_storage->inlineBlocksAllowedInContext($delta, $region);
+    if ($this->entityTypeManager->hasDefinition('block_content_type') && count($allowed_inline_blocks) > 0 && $types = $this->entityTypeManager->getStorage('block_content_type')->loadMultiple()) {
       if (count($types) === 1) {
         $type = reset($types);
         $plugin_id = 'inline_block:' . $type->id();
-        if ($this->blockManager->hasDefinition($plugin_id)) {
+        if ($this->blockManager->hasDefinition($plugin_id) && in_array($type->id(), $allowed_inline_blocks)) {
           $url = Url::fromRoute('layout_builder.add_block', [
             'section_storage_type' => $section_storage->getStorageType(),
             'section_storage' => $section_storage->getStorageId(),
@@ -222,24 +223,28 @@ class ChooseBlockController implements ContainerInjectionInterface {
    */
   protected function getBlockLinks(SectionStorageInterface $section_storage, int $delta, $region, array $blocks) {
     $links = [];
-    foreach ($blocks as $block_id => $block) {
-      $attributes = $this->getAjaxAttributes();
-      $attributes['class'][] = 'js-layout-builder-block-link';
-      $link = [
-        'title' => $block['admin_label'],
-        'url' => Url::fromRoute('layout_builder.add_block',
-          [
-            'section_storage_type' => $section_storage->getStorageType(),
-            'section_storage' => $section_storage->getStorageId(),
-            'delta' => $delta,
-            'region' => $region,
-            'plugin_id' => $block_id,
-          ]
-        ),
-        'attributes' => $attributes,
-      ];
+    $allowed_inline_blocks = $section_storage->inlineBlocksAllowedInContext($delta, $region);
 
-      $links[] = $link;
+    foreach ($blocks as $block_id => $block) {
+      if (in_array($allowed_inline_blocks, $block_id)) {
+        $attributes = $this->getAjaxAttributes();
+        $attributes['class'][] = 'js-layout-builder-block-link';
+        $link = [
+          'title' => $block['admin_label'],
+          'url' => Url::fromRoute('layout_builder.add_block',
+            [
+              'section_storage_type' => $section_storage->getStorageType(),
+              'section_storage' => $section_storage->getStorageId(),
+              'delta' => $delta,
+              'region' => $region,
+              'plugin_id' => $block_id,
+            ]
+          ),
+          'attributes' => $attributes,
+        ];
+
+        $links[] = $link;
+      }
     }
     return [
       '#theme' => 'links',

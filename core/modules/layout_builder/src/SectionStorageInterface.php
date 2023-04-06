@@ -150,4 +150,19 @@ interface SectionStorageInterface extends SectionListInterface, PluginInspection
    */
   public function access($operation, AccountInterface $account = NULL, $return_as_object = FALSE);
 
+  /**
+   * Determines which inline blocks are allowed on this section storage.
+   *
+   * @param int $delta
+   *   The delta of the section to splice.
+   * @param string $region
+   *   The region the block is going in.
+   *
+   * @return array
+   *   array of "inline_block": bundles with the "inline_block:" prefix.
+   *
+   * @return bool
+   */
+  public function inlineBlocksAllowedInContext(int $delta, string $region): array;
+
 }
