@@ -6,6 +6,40 @@
  */
 
 /**
+ * @addtogroup hooks
+ * @{
+ */
+
+/**
+ * Provides a way to change the allowed inline blocks for a given section
+ * storage, delta and region.
+ *
+ * @param array &$inline_blocks
+ *   Array of "inline_block": bundles with the "inline_block:" prefix.
+ * @param \Drupal\layout_builder\SectionStorageInterface $section_storage
+ *   The section storage.
+ * @param int $delta
+ *   The delta of the section to splice.
+ * @param string $region
+ *   The region the block is going in.
+ *
+ * @see \Drupal\layout_builder\Plugin\SectionStorage\SectionStorageBase::inlineBlocksAllowedInContext()
+ *
+ * @ingroup layout_builder
+ */
+function hook_layout_builder_inline_blocks_allowed_in_context(array &$inline_blocks, \Drupal\layout_builder\SectionStorageInterface $section_storage, int $delta, string $region) {
+  // Don't allow custom basic blocks.
+  if (isset($inline_blocks['inline_block:basic'])) {
+    unset($inline_blocks['inline_block:basic']);
+  }
+}
+
+/**
+ * @} End of "addtogroup hooks".
+ */
+
+
+/**
  * @defgroup layout_builder_access Layout Builder access
  * @{
  * In determining access rights for the Layout Builder UI,
