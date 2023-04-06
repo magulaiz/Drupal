@@ -5,6 +5,8 @@
  * Functions to support theming in the Olivero theme.
  */
 
+use Drupal\media\MediaInterface;
+use Drupal\media\Plugin\media\Source\OEmbedInterface;
 use Drupal\olivero\OliveroPreRender;
 use Drupal\Component\Utility\Html;
 use Drupal\Core\Form\FormStateInterface;
@@ -363,11 +365,11 @@ function olivero_preprocess_field(&$variables) {
   // Make iframe sizes available to twig template for aspect-ratio.
   if (
       !empty($variables['element']['#object']) &&
-      ($variables['element']['#object'] instanceof \Drupal\media\MediaInterface) &&
-      ($variables['element']['#object']->getSource() instanceof \Drupal\media\Plugin\media\Source\OEmbedInterface)
+      ($variables['element']['#object'] instanceof MediaInterface) &&
+      ($variables['element']['#object']->getSource() instanceof OEmbedInterface)
     ) {
     foreach ($variables['items'] as $delta => $item) {
-      if (isset($item['content']) && isset($item['content']['#attributes'])) {
+      if (isset($item['content']['#attributes'])) {
         $variables['items'][$delta]['size'] = [
           'width' => $item['content']['#attributes']['width'],
           'height' => $item['content']['#attributes']['height'],
