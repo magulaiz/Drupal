@@ -160,8 +160,6 @@ interface SectionStorageInterface extends SectionListInterface, PluginInspection
    *
    * @return array
    *   array of "inline_block": bundles with the "inline_block:" prefix.
-   *
-   * @return bool
    */
   public function inlineBlocksAllowedInContext(int $delta, string $region): array;
 
