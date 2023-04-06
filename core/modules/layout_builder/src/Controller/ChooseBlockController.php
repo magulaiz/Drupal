@@ -226,25 +226,26 @@ class ChooseBlockController implements ContainerInjectionInterface {
     $allowed_inline_blocks = $section_storage->inlineBlocksAllowedInContext($delta, $region);
 
     foreach ($blocks as $block_id => $block) {
-      if (in_array($allowed_inline_blocks, $block_id)) {
-        $attributes = $this->getAjaxAttributes();
-        $attributes['class'][] = 'js-layout-builder-block-link';
-        $link = [
-          'title' => $block['admin_label'],
-          'url' => Url::fromRoute('layout_builder.add_block',
-            [
-              'section_storage_type' => $section_storage->getStorageType(),
-              'section_storage' => $section_storage->getStorageId(),
-              'delta' => $delta,
-              'region' => $region,
-              'plugin_id' => $block_id,
-            ]
-          ),
-          'attributes' => $attributes,
-        ];
-
-        $links[] = $link;
+      if ($block['id'] === 'inline_block' && !in_array($block_id, $allowed_inline_blocks)) {
+        continue;
       }
+      $attributes = $this->getAjaxAttributes();
+      $attributes['class'][] = 'js-layout-builder-block-link';
+      $link = [
+        'title' => $block['admin_label'],
+        'url' => Url::fromRoute('layout_builder.add_block',
+          [
+            'section_storage_type' => $section_storage->getStorageType(),
+            'section_storage' => $section_storage->getStorageId(),
+            'delta' => $delta,
+            'region' => $region,
+            'plugin_id' => $block_id,
+          ]
+        ),
+        'attributes' => $attributes,
+      ];
+
+      $links[] = $link;
     }
     return [
       '#theme' => 'links',
