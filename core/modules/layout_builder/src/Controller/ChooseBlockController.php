@@ -94,7 +94,7 @@ class ChooseBlockController implements ContainerInjectionInterface {
       if (count($types) === 1) {
         $type = reset($types);
         $plugin_id = 'inline_block:' . $type->id();
-        if ($this->blockManager->hasDefinition($plugin_id) && in_array($type->id(), $allowed_inline_blocks)) {
+        if ($this->blockManager->hasDefinition($plugin_id) && in_array('inline_block:' . $type->id(), $allowed_inline_blocks)) {
           $url = Url::fromRoute('layout_builder.add_block', [
             'section_storage_type' => $section_storage->getStorageType(),
             'section_storage' => $section_storage->getStorageId(),
