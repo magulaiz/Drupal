@@ -148,7 +148,7 @@ class ImageFormatter extends ImageFormatterBase {
       '#title' => $this->t('Preload'),
       '#weight' => 9,
       '#default_value' => $this->getSetting('image_preload') ?? FALSE,
-      '#description' => $this->t("Preload to optimize the loading of late-discovered resources. Normally large or hero images below the fold. By preloading a resource, you tell the browser to fetch it sooner than the browser would otherwise discover it before lazy loader kicks in. The browser caches preloaded resources so they are available immediately when needed. Nothing is loaded or executed at preloading stage. <br>Just a friendly heads up: do not overuse this option, because not everything are critical"),
+      '#description' => $this->t("Preload to optimize the loading of late-discovered resources. Normally large or hero images below the fold. By preloading a resource, you tell the browser to fetch it sooner than the browser would otherwise discover it before lazy loader kicks in. The browser caches preloaded resources so they are available immediately when needed. Nothing is loaded or executed at preloading stage. <br>Just a friendly heads up: do not overuse this option, because not everything are critical, also image loading attributes will be ignored."),
     ];
 
     $image_loading = $this->getSetting('image_loading');
