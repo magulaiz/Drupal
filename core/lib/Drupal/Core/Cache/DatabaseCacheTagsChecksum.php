@@ -2,6 +2,7 @@
 
 namespace Drupal\Core\Cache;
 
+use Drupal\Core\Cache\Optimizer\CacheTagsAggregatorManager;
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Database\DatabaseException;
 
@@ -27,6 +28,8 @@ class DatabaseCacheTagsChecksum implements CacheTagsChecksumInterface, CacheTags
    */
   public function __construct(Connection $connection) {
     $this->connection = $connection;
+    // @fixme Inject.
+    $this->cacheTagsAggregatorManager = new CacheTagsAggregatorManager();
   }
 
   /**
