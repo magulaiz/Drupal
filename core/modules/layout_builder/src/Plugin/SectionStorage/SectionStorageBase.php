@@ -121,7 +121,11 @@ abstract class SectionStorageBase extends PluginBase implements SectionStorageIn
     foreach ($bundles as $machine_name => $bundle) {
       $inline_blocks[] = 'inline_block:' . $machine_name;
     }
-    \Drupal::moduleHandler()->invokeAll('layout_builder_inline_blocks_allowed_in_context', [&$inline_blocks, $this, $delta, $region]);
+    $context = [
+      $delta,
+      $region,
+    ];
+    \Drupal::moduleHandler()->alter('layout_builder_allowed_inline_blocks', $inline_blocks, $this, $context);
     return $inline_blocks;
   }
 
