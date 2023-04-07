@@ -229,12 +229,12 @@ class NodeRevisionsTest extends NodeTestBase {
     // Confirm user was redirected to revisions history page.
     $this->drupalGet("node/" . $node->id() . "/revisions/" . $remaining_revision_ids[0] . "/delete");
     $this->submitForm([], 'Delete');
-    $this->assertSession()->addressEquals($nodes[2]->toUrl('version-history')->toString());
+    $this->assertSession()->addressEquals($nodes[2]->toUrl('version-history'));
     $this->assertSession()->pageTextNotContains($nodes[2]->body->value);
 
     $this->drupalGet("node/" . $node->id() . "/revisions/" . $remaining_revision_ids[1] . "/delete");
     $this->submitForm([], 'Delete');
-    $this->assertSession()->addressEquals($nodes[2]->toUrl('version-history')->toString());
+    $this->assertSession()->addressEquals($nodes[2]->toUrl('version-history'));
     $this->assertSession()->pageTextNotContains($nodes[2]->body->value);
 
     // Make a new revision and set it to not be default.

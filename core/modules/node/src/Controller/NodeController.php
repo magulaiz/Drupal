@@ -226,7 +226,7 @@ class NodeController extends ControllerBase implements ContainerInjectionInterfa
         }
         else {
           $links = [];
-          if ($revision->access('revert revision')) {
+          if ($revision->access('revert')) {
             $links['revert'] = [
               'title' => $vid < $node->getRevisionId() ? $this->t('Revert') : $this->t('Set as current revision'),
               'url' => $has_translations ?
