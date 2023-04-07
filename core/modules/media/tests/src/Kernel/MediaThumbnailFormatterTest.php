@@ -100,6 +100,7 @@ class MediaThumbnailFormatterTest extends MediaKernelTestBase {
         [
           'Original image',
           'Linked to content',
+          'Preload: no',
           'Image loading: lazy',
         ],
       ],
@@ -109,6 +110,7 @@ class MediaThumbnailFormatterTest extends MediaKernelTestBase {
         ],
         [
           'Original image',
+          'Preload: no',
           'Image loading: lazy',
           'Linked to media item',
         ],
@@ -119,6 +121,7 @@ class MediaThumbnailFormatterTest extends MediaKernelTestBase {
         ],
         [
           'Original image',
+          'Preload: no',
           'Image loading: lazy',
         ],
       ],
