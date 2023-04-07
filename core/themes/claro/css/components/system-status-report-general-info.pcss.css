@@ -2,6 +2,7 @@
  * @file
  * Claro styles for the System Status general info.
  */
+
 .system-status-general-info {
   padding-top: var(--space-m);
 }
