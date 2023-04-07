@@ -123,11 +123,11 @@ class BlockAdminThemeTest extends BrowserTestBase {
     if ($message) {
       $base_path = parse_url($this->baseUrl, PHP_URL_PATH) ?? '';
       $this->assertSession()
-        ->pageTextContains("You have been redirected from {$base_path}{$old_path}. Update links, shortcuts, and bookmarks to use {$base_path}{$new_path}.");
+        ->statusMessageContains("You have been redirected from {$base_path}{$old_path}. Update links, shortcuts, and bookmarks to use {$base_path}{$new_path}.");
     }
     else {
       $this->assertSession()
-        ->pageTextNotContains($old_path);
+        ->statusMessageNotContains($old_path);
     }
   }
 
