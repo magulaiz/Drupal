@@ -2,16 +2,15 @@
  * @file
  * Claro styles for the System Status general info.
  */
-:root {
-  --system-status-general-info--header-color: #ffb;
-}
 .system-status-general-info {
   padding-top: var(--space-m);
 }
 
 .system-status-general-info__header {
+  --system-status-general-info-header-color: #ffb;
+
   padding: 2.75rem 0 var(--space-l);
-  border-top: 1px solid var(--system-status-general-info--header-color);
+  border-block-start: 1px solid var(--system-status-general-info-header-color);
 }
 
 .system-status-general-info__item {
@@ -139,6 +138,6 @@
   }
   .system-status-general-info {
     margin-block-start: 25px;
-    border-top: 0;
+    border-block-start: 0;
   }
 }
