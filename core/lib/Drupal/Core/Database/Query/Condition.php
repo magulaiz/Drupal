@@ -398,7 +398,7 @@ class Condition implements ConditionInterface, \Countable {
       // We need to upper case because PHP index matches are case sensitive but
       // do not need the more expensive mb_strtoupper() because SQL statements
       // are ASCII.
-      $operator = strtoupper($operator  ??  '');
+      $operator = strtoupper($operator ?? '');
       $return = static::$conditionOperatorMap[$operator] ?? [];
     }
 
