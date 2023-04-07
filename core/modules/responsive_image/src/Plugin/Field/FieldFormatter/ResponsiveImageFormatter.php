@@ -222,7 +222,7 @@ class ResponsiveImageFormatter extends ImageFormatterBase {
 
     $image_preload = $this->getSetting('image_preload');
     $summary[] = $this->t('Preload: @preload', [
-      '@preload' => $image_preload ? 'yes' : 'no',
+      '@preload' => $image_preload ? $this->t('yes') : $this->t('no'),
     ]);
 
     $image_loading = $this->getSetting('image_loading');

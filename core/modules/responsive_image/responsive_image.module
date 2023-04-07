@@ -276,7 +276,7 @@ function _responsive_image_prepare_header_link(string $uri, Attribute $item): ar
   // Prepare a unique key to prevent the case when we have several preloaded
   // images on the page and the IDs of the html_head attachments
   // will conflict.
-  $key = hash('md5', serialize($attrs));
+  $key = hash('crc32', serialize($attrs));
 
   return [
     [

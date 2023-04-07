@@ -784,7 +784,8 @@ function template_preprocess_image(&$variables) {
   $image_src = '';
 
   if (!empty($variables['uri'])) {
-    $variables['attributes']['src'] = $image_src = $file_url_generator->generateString($variables['uri']);
+    $image_src = $file_url_generator->generateString($variables['uri']);
+    $variables['attributes']['src'] = $image_src;
   }
   // Generate a srcset attribute conforming to the spec at
   // http://www.w3.org/html/wg/drafts/html/master/embedded-content.html#attr-img-srcset
@@ -822,9 +823,9 @@ function template_preprocess_image(&$variables) {
     $variables['attributes']['loading'] = 'lazy';
   }
 
-  if ($image_src && $variables['image_preload']) {
+  if ($image_src !== '' && $variables['image_preload']) {
     // Prepare link attributes.
-    $attrs = [
+    $attributes = [
       'rel' => 'preload',
       'as' => 'image',
       'href' => $image_src,
@@ -832,18 +833,18 @@ function template_preprocess_image(&$variables) {
 
     // Each field may have different mime types for each image just like URIs.
     if ($mime = @mime_content_type('.' . preg_replace('/\?itok=.*$/', '', $image_src))) {
-      $attrs['type'] = $mime;
+      $attributes['type'] = $mime;
     }
 
     // Prepare a unique key to prevent the case when we have several preloaded
     // images on the page and the IDs of the html_head attachments
     // will conflict.
-    $key = hash('md5', serialize($image_src));
+    $key = hash('crc32', serialize($image_src));
 
     // Add HTML head link to preload the image.
     $variables['#attached']['html_head'] = $variables['#attached']['html_head'] ?? [];
     $variables['#attached']['html_head'][] = [
-      ['#tag' => 'link', '#attributes' => $attrs],
+      ['#tag' => 'link', '#attributes' => $attributes],
       'image_preload_' . $key,
     ];
   }
