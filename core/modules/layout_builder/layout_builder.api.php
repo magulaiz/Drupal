@@ -29,8 +29,8 @@
  */
 function hook_layout_builder_allowed_inline_blocks_alter(array &$inline_blocks, \Drupal\layout_builder\SectionStorageInterface $section_storage, array $context) {
   // Don't allow custom basic blocks.
-  if (isset($inline_blocks['inline_block:basic'])) {
-    unset($inline_blocks['inline_block:basic']);
+  if (($index = array_search('inline_block:basic', $inline_blocks)) !== FALSE) {
+    unset($inline_blocks[$index]);
   }
 }
 
