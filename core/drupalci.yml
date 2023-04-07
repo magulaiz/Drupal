@@ -3,7 +3,7 @@
 # https://www.drupal.org/drupalorg/docs/drupal-ci/customizing-drupalci-testing
 _phpunit_testgroups_to_execute: &testgroups
   # Default: all of Drupal core's test suite runs.
-  testgroups: '--module block'
+  testgroups: '--all'
   # Alternative: run only the tests for one particular module.
   # testgroups: '--module ckeditor5'
 build:
@@ -48,4 +48,4 @@ build:
         <<: *testgroups
       # Run nightwatch testing.
       # @see https://www.drupal.org/project/drupal/issues/2869825
-      # nightwatchjs: {}
+      nightwatchjs: {}
