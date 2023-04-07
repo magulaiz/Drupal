@@ -1,0 +1,18 @@
+<?php
+
+/**
+ * @file
+ * For testing hooks.
+ */
+
+use Drupal\layout_builder\SectionStorageInterface;
+
+/**
+ * Implements hook_layout_builder_allowed_inline_blocks_alter().
+ */
+function layout_builder_hooks_test_layout_builder_allowed_inline_blocks_alter(array &$inline_blocks, SectionStorageInterface $section_storage, array $context) {
+  // Don't allow custom basic blocks.
+  if (($index = array_search('inline_block:basic', $inline_blocks)) !== FALSE) {
+    unset($inline_blocks[$index]);
+  }
+}
