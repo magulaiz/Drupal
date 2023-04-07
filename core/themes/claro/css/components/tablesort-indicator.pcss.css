@@ -17,7 +17,7 @@
   background-size: auto;
 
   @media (forced-colors: active) {
-    background-color: linktext;
+    background: linktext;
     mask-image: url(../../images/icons/000f33/sort--inactive--ltr.svg);
     mask-repeat: no-repeat;
     mask-position: 0 50%;
