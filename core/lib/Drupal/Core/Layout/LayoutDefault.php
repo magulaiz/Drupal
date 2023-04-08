@@ -49,6 +49,7 @@ class LayoutDefault extends PluginBase implements LayoutInterface, PluginFormInt
     $cacheable_metadata = new CacheableMetadata();
     // Ensure $build only contains defined regions and in the order defined.
     $build = [];
+    $route_name = \Drupal::routeMatch()->getRouteName();
     foreach ($this->getPluginDefinition()->getRegionNames() as $region_name) {
       if (array_key_exists($region_name, $regions)) {
         foreach ($regions[$region_name] as $uuid => $block) {
@@ -65,7 +66,7 @@ class LayoutDefault extends PluginBase implements LayoutInterface, PluginFormInt
     }
 
     // Only add the theme info if there is something to render.
-    if ($build) {
+    if ($build || str_starts_with($route_name, 'layout_builder.')) {
       $build['#theme'] = $this->pluginDefinition->getThemeHook();
       if ($library = $this->pluginDefinition->getLibrary()) {
         $build['#attached']['library'][] = $library;

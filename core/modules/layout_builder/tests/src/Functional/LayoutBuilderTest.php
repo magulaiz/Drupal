@@ -374,11 +374,12 @@ class LayoutBuilderTest extends BrowserTestBase {
     $assert_session->buttonExists('Add section');
     $page->pressButton('Add section');
     $page->pressButton('Save');
+    // Since the section is empty nothing should render.
     $assert_session->pageTextNotContains('The first node body');
     $assert_session->pageTextNotContains('Powered by Drupal');
     $assert_session->pageTextNotContains('Extra, Extra read all about it.');
     $assert_session->pageTextNotContains('Placeholder for the "Extra label" field');
-    $assert_session->pageTextContains(sprintf('Yes, I can access the entity %s in two column', Node::load(1)->label()));
+    $assert_session->pageTextNotContains(sprintf('Yes, I can access the entity %s in two column', Node::load(1)->label()));
 
     // Assert that overrides cannot be turned off while overrides exist.
     $this->drupalGet("$field_ui_prefix/display/default");
@@ -1480,7 +1481,8 @@ class LayoutBuilderTest extends BrowserTestBase {
     $assert_session->elementsCount('css', '.layout-builder__add-section', 2);
 
     $page->pressButton('Save layout');
-    $assert_session->elementsCount('css', '.layout', 1);
+    // Since no blocks were added the section won't render.
+    $assert_session->elementsCount('css', '.layout', 0);
     $assert_session->pageTextNotContains('The first node body');
 
     // By default, the default has one section.
@@ -1504,7 +1506,8 @@ class LayoutBuilderTest extends BrowserTestBase {
 
     // The override is still in use.
     $this->drupalGet('node/1');
-    $assert_session->elementsCount('css', '.layout', 1);
+    // Since no blocks were added the section won't render.
+    $assert_session->elementsCount('css', '.layout', 0);
     $assert_session->pageTextNotContains('The first node body');
     $page->clickLink('Layout');
     $assert_session->elementsCount('css', '.layout', 1);
