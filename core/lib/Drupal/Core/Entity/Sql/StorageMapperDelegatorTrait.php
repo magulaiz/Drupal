@@ -23,6 +23,7 @@ trait StorageMapperDelegatorTrait {
     if (is_subclass_of($fieldItemClass, FieldItemStorageMapperInterface::class)) {
       return $fieldItemClass::mapColumnsOnLoad($columns);
     }
+    return NULL;
   }
 
 }
