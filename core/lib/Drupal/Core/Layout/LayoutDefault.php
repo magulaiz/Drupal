@@ -64,8 +64,15 @@ class LayoutDefault extends PluginBase implements LayoutInterface, PluginFormInt
       }
     }
 
+    // Check for presence of layout_builder_tempstore parameter option.
+    // _layout_builder and _admin_route didn't offer complete coverage.
+    $temp_store = FALSE;
+    if (!empty(\Drupal::routeMatch()->getRouteObject()->getOption('parameters')) && isset(\Drupal::routeMatch()->getRouteObject()->getOption('parameters')['section_storage'])) {
+      $temp_store = \Drupal::routeMatch()->getRouteObject()->getOption('parameters')['section_storage']['layout_builder_tempstore'];
+    }
+
     // Only add the theme info if there is something to render.
-    if ($build || \Drupal::routeMatch()->getRouteObject()->getOption('_admin_route')) {
+    if ($build || $temp_store) {
       $build['#theme'] = $this->pluginDefinition->getThemeHook();
       if ($library = $this->pluginDefinition->getLibrary()) {
         $build['#attached']['library'][] = $library;
