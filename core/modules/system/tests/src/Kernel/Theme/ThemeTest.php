@@ -148,11 +148,15 @@ class ThemeTest extends KernelTestBase {
   }
 
   /**
-   * Tests drupal_find_theme_templates().
+   * Tests \Drupal\Core\Theme::findThemeFunctions().
    */
-  public function testFindThemeTemplates(): void {
-    $registry = $this->container->get('theme.registry')->get();
-    $templates = drupal_find_theme_templates($registry, '.html.twig', $this->getThemePath('test_theme'));
+  public function testFindThemeTemplates() {
+
+    $registry = \Drupal::service('theme.registry');
+    $cache = $registry->get();
+    $extension = '.html.twig';
+    $path = $this->getThemePath('test_theme');
+    $templates = $registry->findThemeFunctions($cache, $extension, $path);
     $this->assertEquals('node--1', $templates['node__1']['template'], 'Template node--1.html.twig was found in test_theme.');
   }
 
