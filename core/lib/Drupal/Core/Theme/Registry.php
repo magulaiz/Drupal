@@ -953,8 +953,7 @@ class Registry implements DestructableInterface {
       // Match templates based on the 'template' filename.
       foreach ($cache as $hook => $info) {
         if (isset($info['template'])) {
-          $template_candidates = [$info['template'], str_replace($info['theme path'] . '/templates/', '', $info['template'])];
-          if (in_array($template, $template_candidates)) {
+          if ($template === $info['template']) {
             $implementations[$hook] = [
               'template' => $template,
               'path' => dirname($file->uri),
@@ -966,7 +965,7 @@ class Registry implements DestructableInterface {
 
     // Find templates that implement possible "suggestion" variants of registered
     // theme hooks and add those as new registered theme hooks. See
-    // drupal_find_theme_functions() for more information about suggestions and
+    // hook_theme_suggestions_alter() for more information about suggestions and
     // the use of 'pattern' and 'base hook'.
     $patterns = array_keys($files);
     foreach ($cache as $hook => $info) {
