@@ -3,7 +3,6 @@
 namespace Drupal\serialization\Normalizer;
 
 use Drupal\Core\TypedData\Plugin\DataType\DateTimeIso8601;
-use Drupal\datetime\Plugin\Field\FieldType\DateTimeItem;
 use Drupal\datetime\Plugin\Field\FieldType\DateTimeItemInterface;
 use Symfony\Component\Serializer\Exception\InvalidArgumentException;
 
@@ -41,7 +40,7 @@ class DateTimeIso8601Normalizer extends DateTimeNormalizer {
     assert($datetime instanceof DateTimeIso8601);
     $field_item = $datetime->getParent();
     // @todo Remove this in https://www.drupal.org/project/drupal/issues/2958416.
-    if ($field_item instanceof DateTimeItem && $field_item->getFieldDefinition()->getFieldStorageDefinition()->getSetting('datetime_type') === DateTimeItem::DATETIME_TYPE_DATE) {
+    if ($field_item instanceof DateTimeItemInterface && $field_item->getFieldDefinition()->getFieldStorageDefinition()->getSetting('datetime_type') === DateTimeItemInterface::DATETIME_TYPE_DATE) {
       $drupal_date_time = $datetime->getDateTime();
       if ($drupal_date_time === NULL) {
         return $drupal_date_time;
@@ -67,7 +66,7 @@ class DateTimeIso8601Normalizer extends DateTimeNormalizer {
     }
 
     $datetime_type = $field_definition->getSetting('datetime_type');
-    $is_date_only = $datetime_type === DateTimeItem::DATETIME_TYPE_DATE;
+    $is_date_only = $datetime_type === DateTimeItemInterface::DATETIME_TYPE_DATE;
 
     if ($is_date_only) {
       $context['datetime_allowed_formats'] = array_intersect_key($this->allowedFormats, ['date-only' => TRUE]);

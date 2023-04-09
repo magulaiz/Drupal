@@ -10,7 +10,7 @@ use Drupal\Core\Entity\TranslatableInterface;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Url;
-use Drupal\datetime\Plugin\Field\FieldType\DateTimeItem;
+use Drupal\datetime\Plugin\Field\FieldType\DateTimeItemInterface;
 use Drupal\entity_test\Entity\EntityTest;
 use Drupal\entity_test\Entity\EntityTestMapField;
 use Drupal\field\Entity\FieldConfig;
@@ -675,7 +675,7 @@ class JsonApiRegressionTest extends JsonApiFunctionalTestBase {
       'field_name' => 'when',
       'type' => 'datetime',
       'entity_type' => 'node',
-      'settings' => ['datetime_type' => DateTimeItem::DATETIME_TYPE_DATETIME],
+      'settings' => ['datetime_type' => DateTimeItemInterface::DATETIME_TYPE_DATETIME],
     ])
       ->save();
     FieldConfig::create([
@@ -726,7 +726,7 @@ class JsonApiRegressionTest extends JsonApiFunctionalTestBase {
       'field_name' => 'when',
       'type' => 'datetime',
       'entity_type' => 'node',
-      'settings' => ['datetime_type' => DateTimeItem::DATETIME_TYPE_DATE],
+      'settings' => ['datetime_type' => DateTimeItemInterface::DATETIME_TYPE_DATE],
     ])
       ->save();
     FieldConfig::create([
@@ -739,7 +739,7 @@ class JsonApiRegressionTest extends JsonApiFunctionalTestBase {
       'field_name' => 'when_exactly',
       'type' => 'datetime',
       'entity_type' => 'node',
-      'settings' => ['datetime_type' => DateTimeItem::DATETIME_TYPE_DATETIME],
+      'settings' => ['datetime_type' => DateTimeItemInterface::DATETIME_TYPE_DATETIME],
     ])
       ->save();
     FieldConfig::create([
