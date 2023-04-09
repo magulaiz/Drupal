@@ -1057,14 +1057,10 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
       $definition = $this->fieldStorageDefinitions[$field_name];
 
       // First try field item mapping.
-      if ($definition instanceof StorageColumnMapperInterface) {
-        // @todo Consider calling field item directly.
-        $itemValue = $entity->$field_name->first()->getValue();
-        $mapped = $definition->mapColumnsOnSave($itemValue);
-      }
-
-      if (isset($mapped)) {
+      $field_item = $entity->$field_name->first();
+      if ($field_item instanceof StorageColumnStaticMapperInterface) {
         // @fixme The mapper should not be responsible for prefixing.
+        $mapped = $field_item->mapColumnsOnSave();
         $record += $mapped;
       }
       else {
@@ -1403,8 +1399,8 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
             'langcode' => $langcode,
           ];
           // Try field item mapping.
-          if ($storage_definition instanceof StorageColumnMapperInterface) {
-            $record = $storage_definition->mapColumnsOnSave($item->getValue());
+          if ($item instanceof StorageColumnStaticMapperInterface) {
+            $record = $item->mapColumnsOnSave();
           }
           if (!isset($record)) {
             // Use fallback mapping.

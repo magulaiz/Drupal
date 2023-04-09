@@ -2,10 +2,12 @@
 
 namespace Drupal\Core\Entity\Sql;
 
+use Drupal\Core\Field\FieldItemInterface;
+
 /**
  * Interface for field item classes that support storage mapping.
  */
-interface StorageColumnStaticMapperInterface {
+interface StorageColumnStaticMapperInterface extends FieldItemInterface {
 
   /**
    * Map columns on load.
@@ -21,12 +23,9 @@ interface StorageColumnStaticMapperInterface {
   /**
    * Map columns on save.
    *
-   * @param array $columns
-   *   The columns to map.
-   *
-   * @return array|null
+   * @return array
    *   The mapped columns, or NULL to fall back to default mapping.
    */
-  public static function mapColumnsOnSave(array $columns): ?array;
+  public function mapColumnsOnSave(): array;
 
 }

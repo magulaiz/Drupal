@@ -13,11 +13,4 @@ trait StorageColumnMapperDelegatorTrait {
     }
   }
 
-  public function mapColumnsOnSave(array $columns): ?array {
-    $fieldItemClass = $this->getFieldItemClass();
-    if (is_subclass_of($fieldItemClass, StorageColumnStaticMapperInterface::class)) {
-      return $fieldItemClass::mapColumnsOnSave($columns);
-    }
-  }
-
 }
