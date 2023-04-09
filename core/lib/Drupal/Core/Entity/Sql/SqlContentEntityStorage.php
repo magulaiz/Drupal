@@ -1839,7 +1839,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
         $propertyValues[$property] = $value;
       }
     }
-    return $propertyValues
+    return $propertyValues;
   }
 
   protected function mapColumnNamesOnSave(string $field_name, array $propertYValues): array {
@@ -1850,7 +1850,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
         $columnValues[$column] = $value;
       }
     }
-    return $columnValues
+    return $columnValues;
   }
 
 }
