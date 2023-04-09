@@ -766,6 +766,17 @@ abstract class ContentEntityStorageBase extends EntityStorageBase implements Con
       if (!$entity->isNewRevision() && $entity->getRevisionId() != $entity->getLoadedRevisionId()) {
         throw new EntityStorageException("Update existing '{$this->entityTypeId}' entity revision while changing the revision ID is not supported.");
       }
+
+      // Notify modules of translation being pre-saved.
+      if ($this->entityType->isTranslatable()) {
+        foreach ($entity->getTranslationLanguages() as $langcode => $language) {
+          /** @var \Drupal\Core\Entity\ContentEntityInterface $translation */
+          $translation = $entity->getTranslation($langcode);
+          $translation->preSaveTranslation($this);
+          $this->invokeHook('translation_presave', $translation);
+        }
+      }
+
     }
 
     return $id;
@@ -840,17 +851,32 @@ abstract class ContentEntityStorageBase extends EntityStorageBase implements Con
    *   The entity being saved.
    */
   protected function invokeTranslationHooks(ContentEntityInterface $entity) {
-    $translations = $entity->getTranslationLanguages(FALSE);
-    $original_translations = $entity->original->getTranslationLanguages(FALSE);
+    $default_langcode = $entity->getUntranslated()->language()->getId();
+    $translations = $entity->getTranslationLanguages();
+    $original_default_langcode = $entity->original->getUntranslated()->language()->getId();
+    $original_translations = $entity->original->getTranslationLanguages();
     $all_translations = array_keys($translations + $original_translations);
 
-    // Notify modules of translation insertion/deletion.
     foreach ($all_translations as $langcode) {
-      if (isset($translations[$langcode]) && !isset($original_translations[$langcode])) {
-        $this->invokeHook('translation_insert', $entity->getTranslation($langcode));
+      $update = TRUE;
+
+      // Notify modules of translation insertion/deletion.
+      if ($langcode != $default_langcode && $langcode != $original_default_langcode) {
+        if (isset($translations[$langcode]) && !isset($original_translations[$langcode])) {
+          $this->invokeHook('translation_insert', $entity->getTranslation($langcode));
+          $update = FALSE;
+        }
+        elseif (!isset($translations[$langcode]) && isset($original_translations[$langcode])) {
+          $this->invokeHook('translation_delete', $entity->original->getTranslation($langcode));
+          $update = FALSE;
+        }
       }
-      elseif (!isset($translations[$langcode]) && isset($original_translations[$langcode])) {
-        $this->invokeHook('translation_delete', $entity->original->getTranslation($langcode));
+      // Notify modules of translation update.
+      if ($update) {
+        /** @var \Drupal\Core\Entity\ContentEntityInterface $translation */
+        $translation = $entity->getTranslation($langcode);
+        $translation->postSaveTranslation($this);
+        $this->invokeHook('translation_update', $translation);
       }
     }
   }

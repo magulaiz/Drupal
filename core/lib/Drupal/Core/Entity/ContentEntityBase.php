@@ -455,6 +455,18 @@ abstract class ContentEntityBase extends EntityBase implements \IteratorAggregat
   /**
    * {@inheritdoc}
    */
+  public function preSaveTranslation(EntityStorageInterface $storage) {
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function postSaveTranslation(EntityStorageInterface $storage) {
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function postSave(EntityStorageInterface $storage, $update = TRUE) {
     parent::postSave($storage, $update);
 
