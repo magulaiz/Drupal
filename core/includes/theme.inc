@@ -1193,7 +1193,7 @@ function theme_get_suggestions($args, $base, $delimiter = '__') {
     // Remove slashes or null per SA-CORE-2009-003 and change - (hyphen) to _
     // (underscore).
     //
-    // When we discover templates in @see \Drupal\Core\Utility\ThemeRegistry::findThemeFunctions(),
+    // When we discover templates in @see \\Drupal\Core\Theme\Registry::findThemeFunctions(),
     // hyphens (-) are converted to underscores (_) before the theme hook
     // is registered. We do this because the hyphens used for delimiters
     // in hook suggestions cannot be used in the function names of the
