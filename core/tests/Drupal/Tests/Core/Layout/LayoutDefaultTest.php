@@ -5,7 +5,10 @@ namespace Drupal\Tests\Core\Layout;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Layout\LayoutDefault;
 use Drupal\Core\Layout\LayoutDefinition;
+use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Tests\UnitTestCase;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\Routing\Route;
 
 /**
  * @coversDefaultClass \Drupal\Core\Layout\LayoutDefault
@@ -18,6 +21,11 @@ class LayoutDefaultTest extends UnitTestCase {
    * @dataProvider providerTestBuild
    */
   public function testBuild($regions, $expected) {
+    \Drupal::setContainer(new ContainerBuilder());
+    $route_matcher = $this->prophesize(RouteMatchInterface::class);
+    $route_matcher->getRouteObject()->willReturn(new Route('layout_builder.add_section'));
+    \Drupal::getContainer()->set('current_route_match', $route_matcher->reveal());
+
     $definition = new LayoutDefinition([
       'theme_hook' => 'layout',
       'library' => 'core/drupal',

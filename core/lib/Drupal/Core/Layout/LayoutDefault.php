@@ -65,7 +65,7 @@ class LayoutDefault extends PluginBase implements LayoutInterface, PluginFormInt
     }
 
     // Only add the theme info if there is something to render.
-    if ($build || \Drupal::routeMatch()->getRouteObject()->getOption('_layout_builder')) {
+    if ($build || \Drupal::routeMatch()->getRouteObject()->getOption('_admin_route')) {
       $build['#theme'] = $this->pluginDefinition->getThemeHook();
       if ($library = $this->pluginDefinition->getLibrary()) {
         $build['#attached']['library'][] = $library;

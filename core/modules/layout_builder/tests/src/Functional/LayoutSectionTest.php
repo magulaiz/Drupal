@@ -301,6 +301,10 @@ class LayoutSectionTest extends BrowserTestBase {
     // Find the given selector.
     foreach ((array) $expected_selector as $selector) {
       $element = $this->cssSelect($selector);
+      if (empty($expected_content)) {
+        $this->assertEmpty($element);
+        continue;
+      }
       $this->assertNotEmpty($element);
     }
 
