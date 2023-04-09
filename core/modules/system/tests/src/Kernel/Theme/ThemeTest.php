@@ -148,7 +148,7 @@ class ThemeTest extends KernelTestBase {
   }
 
   /**
-   * Tests \Drupal\Core\Theme::findThemeFunctions().
+   * Tests \Drupal\Core\Theme\Registry:findThemeFunctions().
    */
   public function testFindThemeTemplates() {
 

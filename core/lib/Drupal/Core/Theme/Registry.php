@@ -802,7 +802,7 @@ class Registry implements DestructableInterface {
     foreach ($cache as $hook => $info) {
       // The 'base hook' is only applied to derivative hooks already registered
       // from a pattern. This is typically set from
-      // \Drupal::service('theme.registry')->findThemeFunctions().
+      // \Drupal\Core\Theme\Registry::findThemeFunctions().
       if (isset($info['incomplete preprocess functions'])) {
         $this->completeSuggestion($hook, $cache);
         unset($cache[$hook]['incomplete preprocess functions']);
