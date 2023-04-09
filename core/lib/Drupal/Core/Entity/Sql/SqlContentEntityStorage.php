@@ -591,7 +591,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
           $storage_definition = $this->fieldStorageDefinitions[$field_name];
           // Try field item mapping.
           if ($storage_definition instanceof StorageMapperInterface) {
-            $item_values = $storage_definition->mapColumnsOnLoad($row);
+            $item_values = $this->mapColumnNamesOnLoad($field_name, $storage_definition->mapColumnsOnLoad($row));
           }
           if (isset($item_values)) {
             $values[$id][$field_name][$langcode] = $item_values;
@@ -1059,8 +1059,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
       // First try field item mapping.
       $field_item = $entity->$field_name->first();
       if ($field_item instanceof FieldItemStorageMapperInterface) {
-        // @fixme The mapper should not be responsible for prefixing.
-        $mapped = $field_item->mapColumnsOnSave();
+        $mapped = $this->mapColumnNamesOnSave($field_item->getName(), $field_item->mapColumnsOnSave());
         $record += $mapped;
       }
       else {
@@ -1281,7 +1280,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
           if ($storage_definition->getCardinality() == FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED || count($values[$value_key][$field_name][$langcode]) < $storage_definition->getCardinality()) {
             // Try field item mapping.
             if ($storage_definition instanceof StorageMapperInterface) {
-              $item = $storage_definition->mapColumnsOnLoad((array) $row);
+              $item = $this->mapColumnNamesOnLoad($field_name, $storage_definition->mapColumnsOnLoad((array) $row));
             }
             // Use fallback mapping.
             if (!isset($item)) {
@@ -1400,7 +1399,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
           ];
           // Try field item mapping.
           if ($item instanceof FieldItemStorageMapperInterface) {
-            $record = $item->mapColumnsOnSave();
+            $record = $this->mapColumnNamesOnSave($item->getName(), $item->mapColumnsOnSave());
           }
           if (!isset($record)) {
             // Use fallback mapping.
@@ -1827,6 +1826,31 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
       $count = $query->execute()->fetchField();
     }
     return $as_bool ? (bool) $count : (int) $count;
+  }
+
+  protected function mapColumnNamesOnLoad(string $field_name, ?array $columnValues): ?array {
+    if (!isset($columns)) {
+      return NULL;
+    }
+    $columns_to_properties = array_flip($this->tableMapping->getColumnNames($field_name));
+    $propertyValues = [];
+    foreach ($columnValues as $column => $value) {
+      if ($property = $columns_to_properties[$column] ?? NULL) {
+        $propertyValues[$property] = $value;
+      }
+    }
+    return $propertyValues
+  }
+
+  protected function mapColumnNamesOnSave(string $field_name, array $propertYValues): array {
+    $properties_to_columns = $this->tableMapping->getColumnNames($field_name);
+    $columnValues = [];
+    foreach ($this->tableMapping->getColumnNames($field_name) as $property => $value) {
+      if ($column = $properties_to_columns[$property] ?? NULL) {
+        $columnValues[$column] = $value;
+      }
+    }
+    return $columnValues
   }
 
 }
