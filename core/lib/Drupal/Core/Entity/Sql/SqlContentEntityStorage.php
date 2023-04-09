@@ -591,7 +591,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
           $storage_definition = $this->fieldStorageDefinitions[$field_name];
           // Try field item mapping.
           if ($storage_definition instanceof StorageMapperInterface) {
-            $item_values = $storage_definition->mapColumnsOnLoad((array) $row);
+            $item_values = $storage_definition->mapColumnsOnLoad($row);
           }
           if (isset($item_values)) {
             $values[$id][$field_name][$langcode] = $item_values;
