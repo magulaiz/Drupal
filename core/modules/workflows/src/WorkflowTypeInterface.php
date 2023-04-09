@@ -254,7 +254,7 @@ interface WorkflowTypeInterface extends PluginWithFormsInterface, DerivativeInsp
    *   TransitionInterface::DIRECTION_FROM or TransitionInterface::DIRECTION_TO.
    *
    * @return array
-   *   The array is keyed by transition IDs for a state for the provided direction.
+   *   An array of the transition objects for the state in the given direction, keyed by transition ID.
    *
    * @see \Drupal\workflows\TransitionInterface::DIRECTION_FROM
    * @see \Drupal\workflows\TransitionInterface::DIRECTION_TO
