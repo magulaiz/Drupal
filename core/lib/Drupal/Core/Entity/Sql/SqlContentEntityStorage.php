@@ -1060,7 +1060,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
       $field_item = $entity->$field_name->first();
       if ($field_item instanceof FieldItemStorageMapperInterface) {
         $mapped = $this->mapColumnNamesOnSave($field_item->getName(), $field_item->mapColumnsOnSave());
-        $record += $mapped;
+        $record = (object)($mapped + (array)$record);
       }
       else {
         // Use fallback mapping.
