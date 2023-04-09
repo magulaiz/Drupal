@@ -4,8 +4,8 @@ namespace Drupal\Core\Field;
 
 use Drupal\Core\Cache\UnchangingCacheableDependencyTrait;
 use Drupal\Core\Entity\FieldableEntityInterface;
-use Drupal\Core\Entity\Sql\StorageColumnMapperDelegatorTrait;
-use Drupal\Core\Entity\Sql\StorageColumnMapperInterface;
+use Drupal\Core\Entity\Sql\StorageMapperDelegatorTrait;
+use Drupal\Core\Entity\Sql\StorageMapperInterface;
 use Drupal\Core\Field\Entity\BaseFieldOverride;
 use Drupal\Core\Field\TypedData\FieldItemDataDefinition;
 use Drupal\Core\TypedData\ListDataDefinition;
@@ -14,11 +14,11 @@ use Drupal\Core\TypedData\OptionsProviderInterface;
 /**
  * A class for defining entity fields.
  */
-class BaseFieldDefinition extends ListDataDefinition implements FieldDefinitionInterface, FieldStorageDefinitionInterface, RequiredFieldStorageDefinitionInterface, StorageColumnMapperInterface {
+class BaseFieldDefinition extends ListDataDefinition implements FieldDefinitionInterface, FieldStorageDefinitionInterface, RequiredFieldStorageDefinitionInterface, StorageMapperInterface {
 
   use UnchangingCacheableDependencyTrait;
   use FieldInputValueNormalizerTrait;
-  use StorageColumnMapperDelegatorTrait;
+  use StorageMapperDelegatorTrait;
 
   /**
    * The field type.

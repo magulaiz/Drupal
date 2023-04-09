@@ -5,7 +5,7 @@ namespace Drupal\Core\Entity\Sql;
 /**
  * Interface for field storage definitions that support storage mapping.
  */
-interface StorageColumnMapperInterface {
+interface StorageMapperInterface {
 
   /**
    * Map columns on load.

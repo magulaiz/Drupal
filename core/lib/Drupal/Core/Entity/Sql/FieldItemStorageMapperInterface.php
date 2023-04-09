@@ -7,7 +7,7 @@ use Drupal\Core\Field\FieldItemInterface;
 /**
  * Interface for field item classes that support storage mapping.
  */
-interface StorageColumnStaticMapperInterface extends FieldItemInterface {
+interface FieldItemStorageMapperInterface extends FieldItemInterface {
 
   /**
    * Map columns on load.

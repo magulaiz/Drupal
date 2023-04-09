@@ -590,7 +590,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
         foreach ($all_fields as $field_name) {
           $storage_definition = $this->fieldStorageDefinitions[$field_name];
           // Try field item mapping.
-          if ($storage_definition instanceof StorageColumnMapperInterface) {
+          if ($storage_definition instanceof StorageMapperInterface) {
             $item = $storage_definition->mapColumnsOnLoad((array) $row);
           }
           if (isset($item)) {
@@ -1058,7 +1058,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
 
       // First try field item mapping.
       $field_item = $entity->$field_name->first();
-      if ($field_item instanceof StorageColumnStaticMapperInterface) {
+      if ($field_item instanceof FieldItemStorageMapperInterface) {
         // @fixme The mapper should not be responsible for prefixing.
         $mapped = $field_item->mapColumnsOnSave();
         $record += $mapped;
@@ -1280,7 +1280,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
         if ($langcode == LanguageInterface::LANGCODE_DEFAULT || $definitions[$bundle][$field_name]->isTranslatable()) {
           if ($storage_definition->getCardinality() == FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED || count($values[$value_key][$field_name][$langcode]) < $storage_definition->getCardinality()) {
             // Try field item mapping.
-            if ($storage_definition instanceof StorageColumnMapperInterface) {
+            if ($storage_definition instanceof StorageMapperInterface) {
               $item = $storage_definition->mapColumnsOnLoad((array) $row);
             }
             // Use fallback mapping.
@@ -1399,7 +1399,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
             'langcode' => $langcode,
           ];
           // Try field item mapping.
-          if ($item instanceof StorageColumnStaticMapperInterface) {
+          if ($item instanceof FieldItemStorageMapperInterface) {
             $record = $item->mapColumnsOnSave();
           }
           if (!isset($record)) {

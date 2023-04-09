@@ -2,13 +2,13 @@
 
 namespace Drupal\Core\Entity\Sql;
 
-trait StorageColumnMapperDelegatorTrait {
+trait StorageMapperDelegatorTrait {
 
   abstract protected function getFieldItemClass();
 
   public function mapColumnsOnLoad(array $columns): ?array {
     $fieldItemClass = $this->getFieldItemClass();
-    if (is_subclass_of($fieldItemClass, StorageColumnStaticMapperInterface::class)) {
+    if (is_subclass_of($fieldItemClass, FieldItemStorageMapperInterface::class)) {
       return $fieldItemClass::mapColumnsOnLoad($columns);
     }
   }
