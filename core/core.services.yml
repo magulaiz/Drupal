@@ -1503,6 +1503,7 @@ services:
     class: Drupal\Core\StreamWrapper\AssetsStream
     tags:
       - { name: stream_wrapper, scheme: assets }
+  Drupal\Core\StreamWrapper\AssetsStream: '@stream_wrapper.assets'
   stream_wrapper.public:
     class: Drupal\Core\StreamWrapper\PublicStream
     tags:
