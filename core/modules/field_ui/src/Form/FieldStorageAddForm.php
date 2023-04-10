@@ -218,7 +218,7 @@ class FieldStorageAddForm extends FormBase {
       '#button_type' => 'primary',
       '#ajax' => [
         'callback' => [$this, 'ajaxSubmitForm'],
-      ]
+      ],
     ];
 
     $form['#attached']['library'][] = 'field_ui/drupal.field_ui';

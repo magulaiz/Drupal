@@ -4,9 +4,7 @@ namespace Drupal\field_ui;
 
 use Drupal\Component\Serialization\Json;
 use Drupal\Core\Menu\LocalActionDefault;
-use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Routing\RouteMatchInterface;
-
 
 /**
  * Defines a local action plugin with a dynamic title.

@@ -98,7 +98,7 @@ class FieldConfigEditForm extends EntityForm {
           'value' => [
             '#type' => 'link',
             '#title' => $this->t('Basic settings'),
-            '#url' =>  Url::fromUri('internal://<none>#basic'),
+            '#url' => Url::fromUri('internal://<none>#basic'),
             '#attributes' => [
               'class' => [
                 'tabs__link',
@@ -112,7 +112,7 @@ class FieldConfigEditForm extends EntityForm {
           'value' => [
             '#type' => 'link',
             '#title' => $this->t('Advanced settings'),
-            '#url' =>  Url::fromUri('internal://<none>#advanced'),
+            '#url' => Url::fromUri('internal://<none>#advanced'),
             '#attributes' => [
               'class' => [
                 'tabs__link',
@@ -126,14 +126,14 @@ class FieldConfigEditForm extends EntityForm {
     $form['basic'] = [
       '#type' => 'container',
       '#attributes' => [
-        'id' => ['basic']
+        'id' => ['basic'],
       ],
       '#title' => $this->t('Basic settings'),
     ];
     $form['advanced'] = [
       '#type' => 'container',
       '#attributes' => [
-        'id' => ['advanced']
+        'id' => ['advanced'],
       ],
       '#title' => $this->t('Advanced settings'),
     ];
@@ -150,7 +150,7 @@ class FieldConfigEditForm extends EntityForm {
 
     if (array_diff($this->fieldStorage->getBundles(), [$this->entity->getTargetBundle()])) {
       $bundle_info = $this->entityTypeBundleInfo->getAllBundleInfo();
-      $bundle_labels = array_map(function($bundle) use ($bundle_info) {
+      $bundle_labels = array_map(function ($bundle) use ($bundle_info) {
         return $bundle_info[$this->fieldStorage->getTargetEntityTypeId()][$bundle]['label'];
       }, $this->fieldStorage->getBundles());
       $form['basic']['storage'] = [
@@ -442,7 +442,7 @@ class FieldConfigEditForm extends EntityForm {
     $this->entity->setDefaultValue($default_value);
 
     $this->fieldStorage->setCardinality(!$form_state->getValue('cardinality') ? 1 : ($form_state->getValue('cardinality_unlimited') ? FieldStorageConfigInterface::CARDINALITY_UNLIMITED : $form_state->getValue('cardinality_number')));
-    if (null !== $form_state->getValue('field_storage_settings')) {
+    if (NULL !== $form_state->getValue('field_storage_settings')) {
       $this->fieldStorage->setSettings($form_state->getValue('field_storage_settings'));
     }
   }
