@@ -19,10 +19,10 @@ trait StorageMapperDelegatorTrait {
    * Map columns on load.
    *
    * @param array $columns
-   *   The columns to map.
+   *   The field properties to map.
    *
    * @return array|null
-   *   The mapped result.
+   *   The mapped field properties, or NULL to fall back to default mapping.
    */
   public function mapColumnsOnLoad(array $columns): ?array {
     $fieldItemClass = $this->getFieldItemClass();
