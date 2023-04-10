@@ -592,7 +592,10 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
           $storage_definition = $this->fieldStorageDefinitions[$field_name];
           // Try field item mapping.
           if ($storage_definition instanceof StorageMapperInterface) {
-            $item_values = $this->mapColumnNamesOnLoad($field_name, $storage_definition->mapColumnsOnLoad($row));
+            $item_values = $this->mapColumnNamesOnLoad(
+              $field_name,
+              $storage_definition->mapColumnsOnLoad($row)
+            );
           }
           if (isset($item_values)) {
             $values[$id][$field_name][$langcode] = $item_values;
@@ -1285,7 +1288,10 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
           if ($storage_definition->getCardinality() == FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED || count($values[$value_key][$field_name][$langcode]) < $storage_definition->getCardinality()) {
             // Try field item mapping.
             if ($storage_definition instanceof StorageMapperInterface) {
-              $item = $this->mapColumnNamesOnLoad($field_name, $storage_definition->mapColumnsOnLoad((array) $row));
+              $item = $this->mapColumnNamesOnLoad(
+                $field_name,
+                $storage_definition->mapColumnsOnLoad((array) $row)
+              );
             }
             // Use fallback mapping.
             if (!isset($item)) {
@@ -1404,7 +1410,10 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
           ];
           // Try field item mapping.
           if ($item && $storage_definition instanceof StorageMapperInterface) {
-            $maybe_mapped_columns = $this->mapColumnNamesOnSave($item->getName(), $storage_definition->mapColumnsOnSave($item->getValue()));
+            $maybe_mapped_columns = $this->mapColumnNamesOnSave(
+              $item->getName(),
+              $storage_definition->mapColumnsOnSave($item->getValue())
+            );
           }
           if (isset($maybe_mapped_columns)) {
             $record += $maybe_mapped_columns;
