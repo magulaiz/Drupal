@@ -1849,7 +1849,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
   }
 
   protected function mapColumnNamesOnSave(string $field_name, ?array $propertyValues): ?array {
-    if (!isset($columnValues)) {
+    if (!isset($propertyValues)) {
       return NULL;
     }
     $properties_to_columns = $this->tableMapping->getColumnNames($field_name);
