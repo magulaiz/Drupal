@@ -21,6 +21,7 @@ use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\Query\QueryInterface;
 use Drupal\Core\Entity\Schema\DynamicallyFieldableEntityStorageSchemaInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
+use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
@@ -1057,9 +1058,11 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
       $definition = $this->fieldStorageDefinitions[$field_name];
 
       // First try field item mapping.
-      $field_item = $entity->get($field_name)?->first();
-      if ($field_item && $definition instanceof StorageMapperInterface) {
-        $maybe_mapped_columns = $this->mapColumnNamesOnSave($field_item->getName(), $definition->mapColumnsOnSave($field_item->getValue()));
+      if ($definition instanceof StorageMapperInterface && $entity->$field_name instanceof FieldItemListInterface) {
+        $maybe_mapped_columns = $this->mapColumnNamesOnSave(
+          $entity->$field_name->first()->getName(),
+          $definition->mapColumnsOnSave($entity->$field_name->first()->getValue())
+        );
       }
       if (isset($maybe_mapped_columns)) {
         $record = (object) ($maybe_mapped_columns + (array) $record);
