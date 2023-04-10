@@ -27,15 +27,14 @@ class AssetOptimizationTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  function writeSettings(array $settings): void {
-  }
+  protected static $modules = ['system'];
 
   /**
    * Tests that asset aggregates are rendered and created on disk.
    */
   public function testAssetAggregation(): void {
-    $this->fileAssetsPath = $this->publicFilesDirectory . '/test_assets/';
-    $settings['file_assets_path'] = (object) [
+    $this->fileAssetsPath = $this->publicFilesDirectory . '/test-assets';
+    $settings['settings']['file_assets_path'] = (object) [
       'value' => $this->fileAssetsPath,
       'required' => TRUE,
     ];
