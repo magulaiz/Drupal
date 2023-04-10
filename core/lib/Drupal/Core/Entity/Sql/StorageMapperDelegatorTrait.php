@@ -3,7 +3,7 @@
 namespace Drupal\Core\Entity\Sql;
 
 /**
- * Delegate ::mapColumnsOnLoad to the field item class.
+ * Delegate StorageMapperInterface methods to the field item class.
  */
 trait StorageMapperDelegatorTrait {
 
