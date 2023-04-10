@@ -1060,7 +1060,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
       $field_item = $entity->$field_name->first();
       if ($field_item instanceof FieldItemStorageMapperInterface) {
         $mapped = $this->mapColumnNamesOnSave($field_item->getName(), $field_item->mapColumnsOnSave());
-        $record = (object)($mapped + (array)$record);
+        $record = (object) ($mapped + (array) $record);
       }
       else {
         // Use fallback mapping.
@@ -1399,9 +1399,9 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
           ];
           // Try field item mapping.
           if ($item instanceof FieldItemStorageMapperInterface) {
-            $record = $this->mapColumnNamesOnSave($item->getName(), $item->mapColumnsOnSave());
+            $record += $this->mapColumnNamesOnSave($item->getName(), $item->mapColumnsOnSave());
           }
-          if (!isset($record)) {
+          else {
             // Use fallback mapping.
             foreach ($storage_definition->getColumns() as $column => $attributes) {
               $column_name = $table_mapping->getFieldColumnName($storage_definition, $column);
@@ -1829,7 +1829,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
   }
 
   protected function mapColumnNamesOnLoad(string $field_name, ?array $columnValues): ?array {
-    if (!isset($columns)) {
+    if (!isset($columnValues)) {
       return NULL;
     }
     $columns_to_properties = array_flip($this->tableMapping->getColumnNames($field_name));
