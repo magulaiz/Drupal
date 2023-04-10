@@ -18,6 +18,7 @@
         "ext-tokenizer": "*",
         "ext-xml": "*",
         "php": ">=8.1.0",
+        "spatie/color": "^1.5.3",
         "symfony/console": "^6.2",
         "symfony/dependency-injection": "^6.2",
         "symfony/event-dispatcher": "^6.2",

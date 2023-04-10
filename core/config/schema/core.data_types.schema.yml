@@ -93,6 +93,38 @@ date_format:
 color_hex:
   type: string
   label: 'Color'
+color_hsla:
+  type: mapping
+  label: 'HSLA Color'
+  mapping:
+    h:
+      type: integer
+      label: 'Hue'
+    s:
+      type: integer
+      label: 'Saturation'
+    l:
+      type: integer
+      label: 'Lightness'
+    a:
+      type: integer
+      label: 'Alpha'
+color_rgba:
+  type: mapping
+  label: 'RGBA Color'
+  mapping:
+    r:
+      type: integer
+      label: 'Red'
+    g:
+      type: integer
+      label: 'Green'
+    b:
+      type: integer
+      label: 'Blue'
+    a:
+      type: integer
+      label: 'Alpha'
 
 # Complex extended data types:
 
