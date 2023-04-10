@@ -64,6 +64,7 @@ class FieldUiLocalAction extends DeriverBase implements ContainerDeriverInterfac
           'route_name' => "field_ui.field_storage_config_add_$entity_type_id",
           'title' => $this->t('Create a new field'),
           'appears_on' => ["entity.$entity_type_id.field_ui_fields"],
+          'class' => '\Drupal\field_ui\AjaxifyLocalAction',
         ];
         $this->derivatives["field_storage_config_reuse_$entity_type_id"] = [
           'route_name' => "field_ui.field_storage_config_reuse_$entity_type_id",

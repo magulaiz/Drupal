@@ -507,5 +507,31 @@
         });
       }
     },
+  }(jQuery, Drupal, drupalSettings, Drupal.debounce);
+
+  Drupal.behaviors.fieldUiAddForm = {
+    attach(context) {
+      once('fieldUiTabs', '#field-ui-tabs', context).forEach((tabs) => {
+        const form = tabs.parentElement;
+        form.querySelector('#advanced').setAttribute('style', 'display: none');
+        tabs.querySelectorAll('a').forEach((tab) => {
+          tab.addEventListener('click', (e) => {
+            const url = new URL(e.target.href);
+            tabs
+              .querySelectorAll('a')
+              .forEach((element) => element.classList.remove('is-active'));
+            form.querySelector('#basic').setAttribute('style', 'display: none');
+            form
+              .querySelector('#advanced')
+              .setAttribute('style', 'display: none');
+
+            e.target.classList.add('is-active');
+            form
+              .querySelector(url.hash)
+              .setAttribute('style', 'display: revert');
+          });
+        });
+      });
+    },
   };
-})(jQuery, Drupal, drupalSettings, Drupal.debounce);
+})(jQuery, Drupal, drupalSettings);
