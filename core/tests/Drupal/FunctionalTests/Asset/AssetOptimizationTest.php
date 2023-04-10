@@ -15,7 +15,7 @@ use Drupal\Tests\BrowserTestBase;
 class AssetOptimizationTest extends BrowserTestBase {
 
   /**
-   * {@inheritdoc}.
+   * {@inheritdoc}
    */
   protected $defaultTheme = 'stark';
 
