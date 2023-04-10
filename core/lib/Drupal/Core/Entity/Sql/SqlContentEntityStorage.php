@@ -1059,7 +1059,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
       // First try field item mapping.
       $field_item = $entity->$field_name->first();
       if ($definition instanceof StorageMapperInterface) {
-        $itemValue = $entity->$field_name->first()->getValue();
+        $itemValue = $entity->$field_name->first()?->getValue();
         $maybe_mapped_columns = $this->mapColumnNamesOnSave($field_item->getName(), $definition->mapColumnsOnSave($itemValue));
       }
       if (isset($maybe_mapped_columns)) {
@@ -1402,7 +1402,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
           ];
           // Try field item mapping.
           if ($storage_definition instanceof StorageMapperInterface) {
-            $maybe_mapped_columns = $this->mapColumnNamesOnSave($item->getName(), $storage_definition->mapColumnsOnSave($item->getValue()));
+            $maybe_mapped_columns = $this->mapColumnNamesOnSave($item->getName(), $storage_definition->mapColumnsOnSave($item?->getValue()));
           }
           if (isset($maybe_mapped_columns)) {
             $record += $maybe_mapped_columns;
@@ -1848,10 +1848,13 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
     return $propertyValues;
   }
 
-  protected function mapColumnNamesOnSave(string $field_name, array $propertYValues): array {
+  protected function mapColumnNamesOnSave(string $field_name, ?array $propertyValues): ?array {
+    if (!isset($columnValues)) {
+      return NULL;
+    }
     $properties_to_columns = $this->tableMapping->getColumnNames($field_name);
     $columnValues = [];
-    foreach ($this->tableMapping->getColumnNames($field_name) as $property => $value) {
+    foreach ($propertyValues as $property => $value) {
       if ($column = $properties_to_columns[$property] ?? NULL) {
         $columnValues[$column] = $value;
       }
