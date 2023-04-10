@@ -125,6 +125,10 @@ abstract class ListItemBase extends FieldItemBase implements OptionsProviderInte
       ],
     ];
 
+    $field_storage = \Drupal::entityTypeManager()->getStorage('field_storage_config');
+    $entity_type_ids = $field_storage->getQuery()
+      ->condition('field_name', $this->getFieldDefinition()->getName())
+      ->execute();
     $max = $form_state->get('items_count');
     $current_keys = array_keys($allowed_values);
     for ($delta = 0; $delta <= $max; $delta++) {
@@ -176,6 +180,18 @@ abstract class ListItemBase extends FieldItemBase implements OptionsProviderInte
         '#default_value' => 0,
         '#attributes' => ['class' => ['weight']],
       ];
+      foreach ($entity_type_ids as $entity_type_id) {
+        [$entity_type, $field] = explode('.', $entity_type_id);
+        $query = \Drupal::entityQuery($entity_type)
+          ->accessCheck(FALSE)
+          ->condition('status', 1)
+          ->condition($field, $current_keys[$delta]);
+        $entity_ids = $query->execute();
+        if (!empty($entity_ids)) {
+          $element['allowed_values']['table'][$delta]['delete']['#attributes']['disabled'] = 'disabled';
+          break;
+        }
+      }
     }
     $element['allowed_values']['table']['#max_delta'] = $max;
 
