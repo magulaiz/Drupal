@@ -16,9 +16,9 @@ interface FieldItemStorageMapperInterface extends FieldItemInterface {
    *   The columns to map.
    *
    * @return array|null
-   *   The mapped field properties, or NULL to fall back to default mapping.
+   *   The mapped field properties.
    */
-  public static function mapColumnsOnLoad(array $columns): ?array;
+  public static function mapColumnsOnLoad(array $columns): array;
 
   /**
    * Map columns on save.
@@ -27,8 +27,8 @@ interface FieldItemStorageMapperInterface extends FieldItemInterface {
    *   The field properties to map.
    *
    * @return array
-   *   The mapped columns, or NULL to fall back to default mapping.
+   *   The mapped columns.
    */
-  public static function mapColumnsOnSave(array $properties): ?array;
+  public static function mapColumnsOnSave(array $properties): array;
 
 }
