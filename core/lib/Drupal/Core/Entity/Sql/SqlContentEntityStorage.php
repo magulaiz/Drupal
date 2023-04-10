@@ -1058,9 +1058,12 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
 
       // First try field item mapping.
       $field_item = $entity->$field_name->first();
-      if ($field_item instanceof FieldItemStorageMapperInterface) {
-        $mapped = $this->mapColumnNamesOnSave($field_item->getName(), $field_item->mapColumnsOnSave());
-        $record = (object) ($mapped + (array) $record);
+      if ($definition instanceof StorageMapperInterface) {
+        $itemValue = $entity->$field_name->first()->getValue();
+        $maybe_mapped_columns = $this->mapColumnNamesOnSave($field_item->getName(), $definition->mapColumnsOnSave($itemValue));
+      }
+      if (isset($maybe_mapped_columns)) {
+        $record = (object) ($maybe_mapped_columns + (array) $record);
       }
       else {
         // Use fallback mapping.
@@ -1398,8 +1401,11 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
             'langcode' => $langcode,
           ];
           // Try field item mapping.
-          if ($item instanceof FieldItemStorageMapperInterface) {
-            $record += $this->mapColumnNamesOnSave($item->getName(), $item->mapColumnsOnSave());
+          if ($storage_definition instanceof StorageMapperInterface) {
+            $maybe_mapped_columns = $this->mapColumnNamesOnSave($item->getName(), $storage_definition->mapColumnsOnSave($item->getValue()));
+          }
+          if (isset($maybe_mapped_columns)) {
+            $record += $maybe_mapped_columns;
           }
           else {
             // Use fallback mapping.
