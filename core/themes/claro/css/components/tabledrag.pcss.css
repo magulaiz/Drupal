@@ -7,13 +7,14 @@
  * @see tabledrag.js
  */
 
-:root {
-  --table-row--dragging-bg-color: #fe7;
-  --table-row--last-dragged-bg-color: #ffb;
-}
-
 body.drag {
   cursor: move;
+}
+
+.draggable-table {
+  --table-row--dragging-bg-color: #fe7;
+  --table-row--last-dragged-bg-color: #ffb;
+  --tabledrag-handle-icon-size: 17px;
 }
 
 /* The block region's title row in table. */
@@ -39,8 +40,8 @@ body.drag {
   border-bottom: none;
 }
 
-/* Don't display the abbreviation of 'add-new' table rows. */
 .tabledrag-changed {
+  /* Don't display the abbreviation of 'add-new' table rows. */
   @nest .add-new & {
     display: none;
   }
@@ -63,6 +64,7 @@ body.drag {
 .draggable.drag:focus {
   background-color: var(--table-row--dragging-bg-color);
 }
+
 .draggable.drag-previous {
   background-color: var(--table-row--last-dragged-bg-color);
 }
@@ -70,8 +72,7 @@ body.drag {
 /**
  * Reduce the spacing of draggable table cells.
  */
-.draggable-table td:first-child ~ td,
-.draggable-table th:first-child ~ th {
+.draggable-table td:first-child ~ :is(td, th) {
   padding-inline-start: 0;
 }
 
@@ -92,26 +93,23 @@ body.drag {
   cursor: move;
   text-align: center;
   vertical-align: text-top;
-}
 
-.tabledrag-handle::after {
-  display: inline-block;
-  width: var(--tabledrag-handle-icon-size);
-  height: var(--tabledrag-handle-icon-size);
-  margin-inline-start: calc(var(--space-m) * -1);
-  padding: var(--space-xs) var(--space-m);
-  content: "";
-  transition: transform 0.1s ease-in-out 0s;
-  background: url(../../images/icons/000f33/tabledrag-handle.svg) no-repeat center;
-}
-
-@media (forced-colors: active) {
-  .tabledrag-handle::after {
+  &::after {
+    display: inline-block;
+    width: var(--tabledrag-handle-icon-size);
+    height: var(--tabledrag-handle-icon-size);
+    margin-inline-start: calc(var(--space-m) * -1);
+    padding: var(--space-xs) var(--space-m);
     content: "";
-    background: linktext;
-    mask-image: url(../../images/icons/000f33/tabledrag-handle.svg);
-    mask-repeat: no-repeat;
-    mask-position: center;
+    transition: transform 0.1s ease-in-out 0s;
+    background: url(../../images/icons/000f33/tabledrag-handle.svg) no-repeat center;
+
+    @media (forced-colors: active) {
+      background: linktext;
+      mask-image: url(../../images/icons/000f33/tabledrag-handle.svg);
+      mask-repeat: no-repeat;
+      mask-position: center;
+    }
   }
 }
 
@@ -120,8 +118,7 @@ body.drag {
   transform: scale(1);
 }
 
-.tabledrag-handle:hover::after,
-.tabledrag-handle:focus::after,
+.tabledrag-handle:is(:hover, :focus)::after,
 .draggable.drag .tabledrag-handle::after {
   transform: scale(1.25);
 }
@@ -129,17 +126,17 @@ body.drag {
 .tabledrag-handle:focus {
   outline: none !important;
   box-shadow: none !important;
-}
 
-.tabledrag-handle:focus::before {
-  display: block;
-  width: calc(var(--space-m) + (var(--space-xs) * 2)); /* Same as height. */
-  height: calc(var(--space-m) + (var(--space-xs) * 2)); /* Hande svg height + its vertical padding */
-  margin: 0 calc(var(--space-xs) * -1) calc((var(--space-m) + (var(--space-xs) * 2)) * -1); /* Bottom: handle height as negative value. */
-  content: "";
-  border-radius: var(--base-border-radius);
-  outline: var(--outline-size) dotted transparent;
-  box-shadow: 0 0 0 var(--focus-border-size) var(--color-focus);
+  &::before {
+    display: block;
+    width: calc(var(--space-m) + (var(--space-xs) * 2)); /* Same as height. */
+    height: calc(var(--space-m) + (var(--space-xs) * 2)); /* Hande svg height + its vertical padding */
+    margin: 0 calc(var(--space-xs) * -1) calc((var(--space-m) + (var(--space-xs) * 2)) * -1); /* Bottom: handle height as negative value. */
+    content: "";
+    border-radius: var(--base-border-radius);
+    outline: var(--outline-size) dotted transparent;
+    box-shadow: 0 0 0 var(--focus-border-size) var(--color-focus);
+  }
 }
 
 /* Disabled tabledrag handle. */
@@ -149,7 +146,7 @@ body.drag {
     opacity: 0.4;
 
     &.tabledrag-handle::before {
-      content: normal;
+      content: none;
     }
   }
 }
@@ -175,16 +172,12 @@ body.drag {
  * Wrapper of the toggle weight button (styled as a link).
  */
 .tabledrag-toggle-weight-wrapper {
-  text-align: right; /* LTR */
+  text-align: start;
 
-  @nest [dir="rtl"] & {
-    text-align: left;
+  /* Hide nested weight toggles as they are redundant. */
+  @nest .draggable-table & {
+    display: none;
   }
-}
-
-/* Hide nested weight toggles as they are redundant. */
-.draggable-table .tabledrag-toggle-weight-wrapper {
-  display: none;
 }
 
 /**
@@ -208,49 +201,27 @@ body.drag {
 .tabledrag-cell-content {
   display: table;
   height: 100%;
-}
 
-.tabledrag-cell-content > * {
-  display: table-cell;
-  vertical-align: middle;
+  & > * {
+    display: table-cell;
+    vertical-align: middle;
+  }
+
+  & .tree {
+    min-height: 100%;
+  }
+
+  & .tabledrag-handle::after {
+    vertical-align: middle;
+  }
 }
 
 .tabledrag-cell-content__item {
   padding-inline-end: var(--space-xs);
-}
-.tabledrag-cell-content__item:empty {
-  display: none;
-}
 
-.tabledrag-cell-content .indentation {
-  float: none;
-  overflow: hidden;
-  height: 100%;
-}
-
-.tabledrag-cell-content {
-  & .tree {
-    min-height: 100%;
+  &:empty {
+    display: none;
   }
-}
-
-/**
- * Safari (at least version 13.0) thinks that if we define a width or height for
- * and SVG, then we refer to the elements total size inside the SVG.
- * We only want to inherit the height of the parent element.
- */
-/* stylelint-disable-next-line unit-allowed-list */
-@media not all and (min-resolution: 0.001dpcm) {
-  @supports (-webkit-appearance: none) {
-    .tabledrag-cell-content .tree {
-      overflow: visible;
-      min-height: 0;
-    }
-  }
-}
-
-.tabledrag-cell-content .tabledrag-handle::after {
-  vertical-align: middle;
 }
 
 /**
@@ -260,10 +231,19 @@ body.drag {
   position: relative;
   inset-inline-start: calc(var(--space-xs) * -0.5);
   float: left; /* LTR */
-  width: calc(25rem / 16); /* 25px */
-  height: calc(25rem / 16); /* 25px */
+  width: 25px;
+  height: 25px;
   background: none !important;
   line-height: 0;
+
+  @nest .tabledrag-cell-content & {
+    /* Fixes Safari bug (16.1 at least) where table rows are overly large when
+      using indentation (e.g. re-ordering menu items. */
+    display: inline-flex;
+    float: none;
+    overflow: hidden;
+    height: 100%;
+  }
 
   @nest [dir="rtl"] & {
     float: right;
@@ -278,8 +258,8 @@ body.drag {
  * element.
  */
 .tree {
-  width: calc(25rem / 16); /* 25px */
-  height: calc(25rem / 16); /* 25px */
+  width: 25px;
+  height: 25px;
 }
 
 .tree__item {
