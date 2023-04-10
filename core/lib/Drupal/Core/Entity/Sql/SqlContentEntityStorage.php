@@ -1061,7 +1061,11 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
       $definition = $this->fieldStorageDefinitions[$field_name];
 
       // First try field item mapping.
-      if ($definition instanceof StorageMapperInterface && $entity->$field_name instanceof FieldItemListInterface) {
+      if (
+        $definition instanceof StorageMapperInterface
+        && $entity->$field_name instanceof FieldItemListInterface
+        && $entity->$field_name->first()
+      ) {
         $maybe_mapped_columns = $this->mapColumnNamesOnSave(
           $entity->$field_name->first()->getName(),
           $definition->mapColumnsOnSave($entity->$field_name->first()->getValue())
