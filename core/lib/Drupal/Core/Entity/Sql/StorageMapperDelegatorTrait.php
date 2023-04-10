@@ -44,8 +44,9 @@ trait StorageMapperDelegatorTrait {
   public function mapColumnsOnSave(array $columns): ?array {
     $fieldItemClass = $this->getFieldItemClass();
     if (is_subclass_of($fieldItemClass, FieldItemStorageMapperInterface::class)) {
-        return $fieldItemClass::mapColumnsOnSave($columns);
+      return $fieldItemClass::mapColumnsOnSave($columns);
     }
     return NULL;
   }
+
 }
