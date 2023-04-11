@@ -132,6 +132,7 @@ abstract class ListItemBase extends FieldItemBase implements OptionsProviderInte
       ->execute();
     $max = $form_state->get('items_count');
     $current_keys = array_keys($allowed_values);
+    $field_type = $this->getFieldDefinition()->getType();
     for ($delta = 0; $delta <= $max; $delta++) {
       $element['allowed_values']['table'][$delta] = [
         '#attributes' => [
@@ -146,20 +147,35 @@ abstract class ListItemBase extends FieldItemBase implements OptionsProviderInte
           '#weight' => -30,
           '#default_value' => isset($current_keys[$delta]) ? $allowed_values[$current_keys[$delta]] : '',
         ],
-        'key' => [
-          '#type' => 'machine_name',
-          '#required' => FALSE,
-          '#maxlength' => 255,
-          '#default_value' => $current_keys[$delta] ?? '',
-          '#machine_name' => [
-            // @todo is there a way to avoid specifying this?
-            'exists' => [static::class, 'exists'],
-            // @todo Is there a way to retrieve this to avoid hardcoding?
-            'source' => ['settings', 'allowed_values', 'table', $delta, 'item', 'label'],
-          ],
-          '#weight' => -20,
-        ],
       ];
+      if ($field_type == 'list_string') {
+        $element['allowed_values']['table'][$delta]['item'] += [
+          'key' => [
+            '#type' => 'machine_name',
+            '#required' => FALSE,
+            '#maxlength' => 255,
+            '#default_value' => $current_keys[$delta] ?? '',
+            '#machine_name' => [
+              // @todo is there a way to avoid specifying this?
+              'exists' => [static::class, 'exists'],
+              // @todo Is there a way to retrieve this to avoid hardcoding?
+              'source' => ['settings', 'allowed_values', 'table', $delta, 'item', 'label'],
+            ],
+            '#weight' => -20,
+          ],
+        ];
+      }
+      else {
+        $element['allowed_values']['table'][$delta]['item'] += [
+          'key' => [
+            '#type' => 'number',
+            '#title' => $this->t('Value'),
+            '#default_value' => $current_keys[$delta] ?? '',
+            '#step' => ($field_type == 'list_float' ? 'any' : ''),
+            '#weight' => -20,
+          ],
+        ];
+      }
       $element['allowed_values']['table'][$delta]['delete'] = [
         '#type' => 'submit',
         '#value' => $this->t('Remove'),
