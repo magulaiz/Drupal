@@ -215,12 +215,12 @@
       const $autocomplete = $(
         once('autocomplete', 'input.form-autocomplete', context),
       );
-      // Add the 'ui-autocomplete-in-dialog' class to autocomplete.
+      // Add the 'ui-autocomplete-in-dialog' class to autocomplete
+      // cspell:ignore autocompletecreate.
       $autocomplete.on('autocompletecreate', function (event, ui)  {
         // Check if the autocomplete element is inside a dialog.
-        var $dialog = $(this).closest('.form-autocomplete');
-        if ($dialog.length)
-        {
+        let $dialog = $(this).closest('.form-autocomplete');
+        if ($dialog.length) {
           $(this).autocomplete('widget').addClass('ui-autocomplete-in-dialog');
         }
       });
