@@ -89,6 +89,62 @@ class Toolbar extends RenderElement {
       $element[$key]['#id'] = Html::getId('toolbar-item-' . $key);
     }
 
+
+    $collapse_info = ['num_items' => 0];
+    foreach (Element::children($element) as $key) {
+      if (!isset($element[$key]['#type']) || $element[$key]['#type'] !== 'toolbar_item') {
+        continue;
+      }
+
+      // If a tab that opens a tray is in the items, reset the count as it can't
+      // be included in a collapsed element.
+      if ($collapse_info['num_items'] > 1 && isset($element[$key]['tray'])) {
+        $collapse_info['start'] = NULL;
+        $collapse_info['end'] = NULL;
+      }
+
+      if ($key !== 'home' && !isset($element[$key]['tray'])) {
+        if (!isset($collapse_info['start'])) {
+          $collapse_info['start'] = $key;
+        } else {
+          $collapse_info['end'] = $key;
+        }
+        $collapse_info['num_items'] += 1;
+      }
+    }
+
+    if ($collapse_info['num_items'] > 2) {
+      $go = FALSE;
+      foreach (Element::children($element) as $key) {
+        if ($key === $collapse_info['start']) {
+          $go = TRUE;
+        }
+
+        if ($go && isset($element[$key]['#type']) && $element[$key]['#type'] === 'toolbar_item') {
+          $element[$key]['#wrapper_attributes']['data-toolbar-extra-item'] = TRUE;
+        }
+
+        if ($key === $collapse_info['end']) {
+          $go = FALSE;
+        }
+      }
+    }
+
+    $element['extra_item_toggle'] = [
+      '#type' => 'toolbar_item',
+      '#wrapper_attributes' => [
+        'data-toolbar-extra-item-toggle' => TRUE,
+      ],
+      'tab' => [
+        '#type' => 'html_tag',
+        '#tag' => 'a',
+        '#value' => t('...'),
+        '#attributes' => [
+          'type' => 'button',
+          'data-toolbar-extra-item-toggle-button' => TRUE,
+        ],
+      ],
+    ];
     return $element;
   }
 
