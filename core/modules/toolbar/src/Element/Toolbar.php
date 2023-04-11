@@ -89,7 +89,6 @@ class Toolbar extends RenderElement {
       $element[$key]['#id'] = Html::getId('toolbar-item-' . $key);
     }
 
-
     $collapse_info = ['num_items' => 0];
     foreach (Element::children($element) as $key) {
       if (!isset($element[$key]['#type']) || $element[$key]['#type'] !== 'toolbar_item') {
@@ -106,7 +105,8 @@ class Toolbar extends RenderElement {
       if ($key !== 'home' && !isset($element[$key]['tray'])) {
         if (!isset($collapse_info['start'])) {
           $collapse_info['start'] = $key;
-        } else {
+        }
+        else {
           $collapse_info['end'] = $key;
         }
         $collapse_info['num_items'] += 1;
