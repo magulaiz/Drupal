@@ -60,7 +60,7 @@
          *
          * @type {boolean}
          */
-        isFixed: false,
+        isFixed: true,
 
         /**
          * Menu subtrees are loaded through an AJAX request only when the Toolbar
