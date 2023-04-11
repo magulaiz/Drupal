@@ -16,7 +16,7 @@ use Drupal\Core\TypedData\DataReferenceTargetDefinition;
  * @see https://www.drupal.org/node/3279140
  * @see \Drupal\Tests\jsonapi\Kernel\ResourceType\RelatedResourceTypesTest::testGetRelatableResourceTypesFromFieldDefinitionEntityReferenceFieldDeprecated()
  *
- * @todo Remove this in Drupal 11.
+ * @todo Remove this in Drupal 11 https://www.drupal.org/project/drupal/issues/3353314.
  *
  * @FieldType(
  *   id = "jsonapi_test_deprecated_reference",
