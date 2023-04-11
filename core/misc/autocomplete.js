@@ -121,12 +121,10 @@
       $autocomplete.on('autocompletecreate', function (event, ui)  {
         // Check if the autocomplete element is inside a dialog.
         var $dialog = $(this).closest('.form-autocomplete');
-        console.log($dialog);
         if ($dialog.length)
         {
           $(this).autocomplete('widget').addClass('ui-autocomplete-in-dialog');
         }
-        console.log($autocomplete.autocomplete('widget').attr('class'));
       } );
 
       if ($autocomplete.length) {
@@ -171,4 +169,5 @@
     }
   };
   Drupal.autocomplete = autocomplete;
+  
 })(jQuery, Drupal);
