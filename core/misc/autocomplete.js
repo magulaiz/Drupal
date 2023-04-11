@@ -117,6 +117,17 @@
   Drupal.behaviors.autocomplete = {
     attach: function attach(context) {
       var $autocomplete = $(once('autocomplete', 'input.form-autocomplete', context));
+      // Add the 'ui-autocomplete-in-dialog' class to autocomplete.
+      $autocomplete.on('autocompletecreate', function (event, ui)  {
+        // Check if the autocomplete element is inside a dialog.
+        var $dialog = $(this).closest('.form-autocomplete');
+        console.log($dialog);
+        if ($dialog.length)
+        {
+          $(this).autocomplete('widget').addClass('ui-autocomplete-in-dialog');
+        }
+        console.log($autocomplete.autocomplete('widget').attr('class'));
+      } );
 
       if ($autocomplete.length) {
         var blacklist = $autocomplete.attr('data-autocomplete-first-character-blacklist');
