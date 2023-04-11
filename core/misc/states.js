@@ -159,6 +159,21 @@
       // The "reference" variable is a comparison function.
       return reference(value);
     },
+    Array(reference, value) {
+      // Make sure value is an array.
+      if (!Array.isArray(value)) {
+        return false;
+      }
+      // Convert all comparisons to strings for indexOf to work with integers
+      // comparing to strings.
+      reference = reference.map(String);
+      value = value.map(String);
+      // We iterate through each value provided in the reference. If all of them
+      // exist in value array, we return true. Otherwise return false.
+      return Object.values(reference).every(([key, referenceValue]) =>
+        value.includes(referenceValue),
+      );
+    },
     Number(reference, value) {
       // If "reference" is a number and "value" is a string, then cast
       // reference as a string before applying the strict comparison in
