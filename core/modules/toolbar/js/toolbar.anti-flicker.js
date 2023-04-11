@@ -1,4 +1,4 @@
-(function () {
+(() => {
   const toolbarState = sessionStorage.getItem('Drupal.toolbar.toolbarState')
     ? JSON.parse(sessionStorage.getItem('Drupal.toolbar.toolbarState'))
     : false;

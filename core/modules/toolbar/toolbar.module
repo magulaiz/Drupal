@@ -49,30 +49,6 @@ function toolbar_theme($existing, $type, $theme, $path) {
 }
 
 /**
- * Implements hook_page_attachments().
- */
-function toolbar_page_attachments(array &$page) {
-  $anti_flicker_js_path = DRUPAL_ROOT . '/core/modules/toolbar/js/toolbar.anti-flicker.js';
-  assert(file_exists($anti_flicker_js_path));
-  $js = file_get_contents($anti_flicker_js_path);
-
-  // The anti flicker javascript is added as an inline tag so it is executed
-  // as early as possible, adding the necessary classes to prevent flickering
-  // before the first paint.
-  $page['#attached']['html_head'][] = [
-    [
-      '#tag' => 'script',
-      '#attributes' => [
-        'type' => 'text/javascript',
-        'data-toolbar-anti-flicker-loading' => TRUE,
-      ],
-      '#value' => $js,
-    ],
-    'anti_flicker_js',
-  ];
-}
-
-/**
  * Implements hook_page_top().
  *
  * Add admin toolbar to the top of the page automatically.
