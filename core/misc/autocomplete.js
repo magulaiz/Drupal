@@ -217,9 +217,9 @@
       );
       // Add the 'ui-autocomplete-in-dialog' class to autocomplete
       // cspell:ignore autocompletecreate.
-      $autocomplete.on('autocompletecreate', function (event, ui)  {
+      $autocomplete.on('autocompletecreate', function (event, ui) {
         // Check if the autocomplete element is inside a dialog.
-        let $dialog = $(this).closest('.form-autocomplete');
+        const $dialog = $(this).closest('.form-autocomplete');
         if ($dialog.length) {
           $(this).autocomplete('widget').addClass('ui-autocomplete-in-dialog');
         }
