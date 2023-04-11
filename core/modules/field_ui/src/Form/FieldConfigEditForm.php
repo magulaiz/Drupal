@@ -91,38 +91,6 @@ class FieldConfigEditForm extends EntityForm {
 
     $form['#prefix'] = '<div id="field-ui-edit-form">';
     $form['#suffix'] = '</div>';
-    $form['tabs'] = [
-      '#theme' => 'field_ui_tabs',
-      '#items' => [
-        [
-          'value' => [
-            '#type' => 'link',
-            '#title' => $this->t('Basic settings'),
-            '#url' => Url::fromUri('internal://<none>#basic'),
-            '#attributes' => [
-              'class' => [
-                'tabs__link',
-                'js-tabs-link',
-                'is-active',
-              ],
-            ],
-          ],
-        ],
-        [
-          'value' => [
-            '#type' => 'link',
-            '#title' => $this->t('Advanced settings'),
-            '#url' => Url::fromUri('internal://<none>#advanced'),
-            '#attributes' => [
-              'class' => [
-                'tabs__link',
-                'js-tabs-link',
-              ],
-            ],
-          ],
-        ],
-      ],
-    ];
     $form['basic'] = [
       '#type' => 'container',
       '#attributes' => [
