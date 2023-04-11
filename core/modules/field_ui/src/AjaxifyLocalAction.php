@@ -6,6 +6,8 @@ use Drupal\Component\Serialization\Json;
 use Drupal\Core\Menu\LocalActionDefault;
 use Drupal\Core\Routing\RouteMatchInterface;
 
+// cspell:ignore AjaxifyLocalAction
+
 /**
  * Defines a local action plugin with a dynamic title.
  */

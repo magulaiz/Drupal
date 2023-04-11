@@ -10,6 +10,8 @@ use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\Component\Serialization\Json;
 
+// cspell:ignore AjaxifyLocalAction
+
 /**
  * Provides local action definitions for all entity bundles.
  */
