@@ -271,3 +271,20 @@
   content: "";
   inset-inline-start: 0;
 }
+[data-toolbar-extra-item][data-toolbar-extra-item][data-toolbar-extra-item] {
+  display: none;
+}
+[data-show-toolbar-extra-item] [data-toolbar-extra-item][data-toolbar-extra-item][data-toolbar-extra-item] {
+  display: block;
+}
+[data-toolbar-extra-item-toggle][data-toolbar-extra-item-toggle][data-toolbar-extra-item-toggle] {
+  float: right;
+}
+@media only screen and (min-width: 36em) {
+  [data-toolbar-extra-item][data-toolbar-extra-item][data-toolbar-extra-item] {
+    display: block;
+  }
+  [data-toolbar-extra-item-toggle][data-toolbar-extra-item-toggle][data-toolbar-extra-item-toggle] {
+    display: none;
+  }
+}
