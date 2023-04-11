@@ -1,3 +1,4 @@
+/* cspell:words autocompletecreate */
 /**
  * @file
  * Autocomplete based on jQuery UI.
@@ -216,7 +217,6 @@
         once('autocomplete', 'input.form-autocomplete', context),
       );
       // Add the 'ui-autocomplete-in-dialog' class to autocomplete
-      // cspell:ignore autocompletecreate.
       $autocomplete.on('autocompletecreate', function (event, ui) {
         // Check if the autocomplete element is inside a dialog.
         const $dialog = $(this).closest('.form-autocomplete');
