@@ -91,30 +91,30 @@ class ModuleHandlerTest extends KernelTestBase {
     $this->assertTrue($this->moduleHandler()->moduleExists('module_test'), 'Test module is enabled.');
 
     // Ensure that modules are not enabled.
-    $this->assertFalse($this->moduleHandler()->moduleExists('dblog'), 'dblog module is disabled.');
+    $this->assertFalse($this->moduleHandler()->moduleExists('syslog'), 'syslog module is disabled.');
     $this->assertFalse($this->moduleHandler()->moduleExists('config'), 'Config module is disabled.');
     $this->assertFalse($this->moduleHandler()->moduleExists('help'), 'Help module is disabled.');
 
     // Create a missing fake dependency.
-    // dblog will depend on Config, which depends on a non-existing module Foo.
+    // syslog will depend on Config, which depends on a non-existing module Foo.
     // Nothing should be installed.
     \Drupal::state()->set('module_test.dependency', 'missing dependency');
 
     try {
-      $result = $this->moduleInstaller()->install(['dblog']);
+      $result = $this->moduleInstaller()->install(['syslog']);
       $this->fail('ModuleInstaller::install() throws an exception if dependencies are missing.');
     }
     catch (MissingDependencyException $e) {
       // Expected exception; just continue testing.
     }
 
-    $this->assertFalse($this->moduleHandler()->moduleExists('dblog'), 'ModuleInstaller::install() aborts if dependencies are missing.');
+    $this->assertFalse($this->moduleHandler()->moduleExists('syslog'), 'ModuleInstaller::install() aborts if dependencies are missing.');
 
     // Fix the missing dependency.
-    // dblog module depends on Config. Config depends on Help module.
+    // syslog module depends on Config. Config depends on Help module.
     \Drupal::state()->set('module_test.dependency', 'dependency');
 
-    $result = $this->moduleInstaller()->install(['dblog']);
+    $result = $this->moduleInstaller()->install(['syslog']);
     $this->assertTrue($result, 'ModuleInstaller::install() returns the correct value.');
 
     // Verify that the fake dependency chain was installed.
@@ -122,33 +122,33 @@ class ModuleHandlerTest extends KernelTestBase {
     $this->assertTrue($this->moduleHandler()->moduleExists('help'));
 
     // Verify that the original module was installed.
-    $this->assertTrue($this->moduleHandler()->moduleExists('dblog'), 'Module installation with dependencies succeeded.');
+    $this->assertTrue($this->moduleHandler()->moduleExists('syslog'), 'Module installation with dependencies succeeded.');
 
     // Verify that the modules were enabled in the correct order.
     $module_order = \Drupal::state()->get('module_test.install_order', []);
-    $this->assertEquals(['help', 'config', 'dblog'], $module_order);
+    $this->assertEquals(['help', 'config', 'syslog'], $module_order);
 
     // Uninstall all three modules explicitly, but in the incorrect order,
     // and make sure that ModuleInstaller::uninstall() uninstalled them in the
     // correct sequence.
-    $result = $this->moduleInstaller()->uninstall(['config', 'help', 'dblog']);
+    $result = $this->moduleInstaller()->uninstall(['config', 'help', 'syslog']);
     $this->assertTrue($result, 'ModuleInstaller::uninstall() returned TRUE.');
 
     /** @var \Drupal\Core\Update\UpdateHookRegistry $update_registry */
     $update_registry = \Drupal::service('update.update_hook_registry');
-    foreach (['dblog', 'config', 'help'] as $module) {
+    foreach (['syslog', 'config', 'help'] as $module) {
       $this->assertEquals($update_registry::SCHEMA_UNINSTALLED, $update_registry->getInstalledVersion($module), "{$module} module was uninstalled.");
     }
     $uninstalled_modules = \Drupal::state()->get('module_test.uninstall_order', []);
-    $this->assertEquals(['dblog', 'config', 'help'], $uninstalled_modules, 'Modules were uninstalled in the correct order.');
+    $this->assertEquals(['syslog', 'config', 'help'], $uninstalled_modules, 'Modules were uninstalled in the correct order.');
 
-    // Enable dblog module again, which should enable both the Config module and
+    // Enable syslog module again, which should enable both the Config module and
     // Help module. But, this time do it with Config module declaring a
     // dependency on a specific version of Help module in its info file. Make
     // sure that Drupal\Core\Extension\ModuleInstaller::install() still works.
     \Drupal::state()->set('module_test.dependency', 'version dependency');
 
-    $result = $this->moduleInstaller()->install(['dblog']);
+    $result = $this->moduleInstaller()->install(['syslog']);
     $this->assertTrue($result, 'ModuleInstaller::install() returns the correct value.');
 
     // Verify that the fake dependency chain was installed.
@@ -156,11 +156,11 @@ class ModuleHandlerTest extends KernelTestBase {
     $this->assertTrue($this->moduleHandler()->moduleExists('help'));
 
     // Verify that the original module was installed.
-    $this->assertTrue($this->moduleHandler()->moduleExists('dblog'), 'Module installation with version dependencies succeeded.');
+    $this->assertTrue($this->moduleHandler()->moduleExists('syslog'), 'Module installation with version dependencies succeeded.');
 
     // Finally, verify that the modules were enabled in the correct order.
     $enable_order = \Drupal::state()->get('module_test.install_order', []);
-    $this->assertSame(['help', 'config', 'dblog'], $enable_order);
+    $this->assertSame(['help', 'config', 'syslog'], $enable_order);
   }
 
   /**

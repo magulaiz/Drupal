@@ -19,6 +19,7 @@ use Drupal\Core\Logger\RfcLogLevel;
  *   - options: Array of options for the select list for the filter.
  */
 function dblog_filters() {
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. See https://www.drupal.org/node/3236383', E_USER_DEPRECATED);
   $filters = [];
 
   foreach (_dblog_get_message_types() as $type) {

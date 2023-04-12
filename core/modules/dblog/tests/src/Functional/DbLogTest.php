@@ -244,7 +244,7 @@ class DbLogTest extends BrowserTestBase {
   }
 
   /**
-   * Test that twig errors are displayed correctly.
+   * Tests that twig errors are displayed correctly.
    */
   public function testMessageParsing() {
     $this->drupalLogin($this->adminUser);
@@ -790,6 +790,9 @@ class DbLogTest extends BrowserTestBase {
     // Find the class that contains the severity.
     $classes = explode(' ', $class);
     foreach ($classes as $class) {
+      if (strpos($class, 'severity-') !== FALSE) {
+        return intval(str_replace('severity-', '', $class));
+      }
       if (isset($map[$class])) {
         return $map[$class];
       }
@@ -852,7 +855,7 @@ class DbLogTest extends BrowserTestBase {
    */
   public function testOverviewLinks() {
     $this->drupalLogin($this->adminUser);
-    // cSpell:disable-next-line
+    // cSpell:disable-next-line.
     $this->generateLogEntries(1, ['message' => "&lt;script&gt;alert('foo');&lt;/script&gt;<strong>Lorem</strong> ipsum dolor sit amet, consectetur adipiscing & elit."]);
     $this->drupalGet('admin/reports/dblog');
     $this->assertSession()->statusCodeEquals(200);

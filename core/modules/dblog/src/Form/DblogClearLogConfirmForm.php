@@ -2,10 +2,10 @@
 
 namespace Drupal\dblog\Form;
 
+use Drupal\Core\Form\ConfirmFormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
-use Drupal\Core\Database\Connection;
-use Drupal\Core\Form\ConfirmFormBase;
+use Drupal\dblog\DblogEntryStorageInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -16,20 +16,12 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class DblogClearLogConfirmForm extends ConfirmFormBase {
 
   /**
-   * The database connection.
-   *
-   * @var \Drupal\Core\Database\Connection
-   */
-  protected $connection;
-
-  /**
    * Constructs a new DblogClearLogConfirmForm.
    *
-   * @param \Drupal\Core\Database\Connection $connection
-   *   The database connection.
+   * @param \Drupal\dblog\DblogEntryStorageInterface $dblogStorage
+   *   The dblog entry storage service.
    */
-  public function __construct(Connection $connection) {
-    $this->connection = $connection;
+  public function __construct(protected DblogEntryStorageInterface $dblogStorage) {
   }
 
   /**
@@ -37,7 +29,7 @@ class DblogClearLogConfirmForm extends ConfirmFormBase {
    */
   public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('database')
+      $container->get('entity_type.manager')->getStorage('dblog')
     );
   }
 
@@ -67,7 +59,7 @@ class DblogClearLogConfirmForm extends ConfirmFormBase {
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $this->getRequest()->getSession()->remove('dblog_overview_filter');
-    $this->connection->truncate('watchdog')->execute();
+    $this->dblogStorage->deleteAll();
     $this->messenger()->addStatus($this->t('Database log cleared.'));
     $form_state->setRedirectUrl($this->getCancelUrl());
   }
