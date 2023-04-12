@@ -69,7 +69,7 @@ class DblogFilterForm extends FormBase {
       '#options' => RfcLogLevel::getLevels(),
     ];
 
-    foreach (['type', 'severity'] as $key) {
+    foreach (array_keys($form['filters']['status']) as $key) {
       if (!empty($session_filters[$key])) {
         $form['filters']['status'][$key]['#default_value'] = $session_filters[$key];
       }
@@ -108,7 +108,7 @@ class DblogFilterForm extends FormBase {
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $session_filters = $this->getRequest()->getSession()->get('dblog_overview_filter', []);
-    foreach (['severity', 'type'] as $name) {
+    foreach (array_keys($form['filters']['status']) as $name) {
       if ($form_state->hasValue($name)) {
         $session_filters[$name] = $form_state->getValue($name);
       }
