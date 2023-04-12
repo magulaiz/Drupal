@@ -330,7 +330,7 @@ class FieldConfigEditForm extends EntityForm {
     $actions['submit']['#value'] = $this->t('Save settings');
     $actions['submit']['#ajax'] = [
       'callback' => [$this, 'ajaxSubmitForm'],
-      'url' => Url::fromRoute("entity.field_config.{$this->entity->getTargetEntityTypeId()}_field_edit_form", ['field_config' => $this->entity->id(), 'node_type' => $this->entity->getTargetBundle()]),
+      'url' => Url::fromRoute("entity.field_config.{$this->entity->getTargetEntityTypeId()}_field_edit_form", ['field_config' => $this->entity->id()] + FieldUI::getRouteBundleParameter($this->entity->getEntityType(), $this->entity->getTargetBundle())),
       'options' => [
         'query' => [
           FormBuilderInterface::AJAX_FORM_REQUEST => TRUE,
