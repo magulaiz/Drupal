@@ -57,6 +57,9 @@ class CallableResolverTest extends UnitTestCase {
           return 'foo' . $suffix;
         },
       ],
+      'First-class callable function' => [$this->method(...)],
+      'First-class callable static' => [static::staticMethod(...)],
+      'Arrow function' => [fn($suffix) => 'foo' . $suffix],
       'Static function' => [
         '\Drupal\Tests\Core\Utility\NoInstantiationMockStaticCallable::staticMethod',
       ],
