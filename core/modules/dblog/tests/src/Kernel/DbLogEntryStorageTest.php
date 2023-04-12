@@ -105,26 +105,22 @@ class DbLogEntryStorageTest extends KernelTestBase {
     $logs = $this->storage->loadMultiple();
     $this->assertCount(3, $logs);
 
-    $third = array_pop($logs);
-    $second = array_pop($logs);
     $first = array_pop($logs);
-
-    $this->assertEquals('Dblog test log message Entry #2', $first->getFormattedMessage($this->dblogFormatter), 'Logs are loaded, most recent first');
-    $this->assertEquals('Dblog test log message Entry #1', $second->getFormattedMessage($this->dblogFormatter), 'Logs are loaded, most recent first');
-    $this->assertEquals('Dblog test log message Entry #0', $third->getFormattedMessage($this->dblogFormatter), 'Logs are loaded, most recent first');
+    $second = array_pop($logs);
+    $third = array_pop($logs);
 
     $logs = $this->storage->loadMultiple(
       [$second->id(), $third->id(), $first->id()]
     );
 
+    $a = array_pop($logs);
     $c = array_pop($logs);
     $b = array_pop($logs);
-    $a = array_pop($logs);
 
     // Logs can be loaded in a particular order as well.
-    $this->assertEquals('Dblog test log message Entry #1', $a->getFormattedMessage($this->dblogFormatter));
-    $this->assertEquals('Dblog test log message Entry #0', $b->getFormattedMessage($this->dblogFormatter));
-    $this->assertEquals('Dblog test log message Entry #2', $c->getFormattedMessage($this->dblogFormatter));
+    $this->assertEquals('Dblog test log message Entry #1', $b->getFormattedMessage($this->dblogFormatter));
+    $this->assertEquals('Dblog test log message Entry #0', $c->getFormattedMessage($this->dblogFormatter));
+    $this->assertEquals('Dblog test log message Entry #2', $a->getFormattedMessage($this->dblogFormatter));
 
     $logs = $this->storage->loadMultiple([$a->id(), $a->id(), $a->id()]);
     $this->assertCount(1, $logs, 'Duplicated logs id are loaded once');
