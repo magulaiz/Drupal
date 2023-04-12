@@ -61,7 +61,7 @@ trait UpdateTestTrait {
    * @return \Drupal\Core\Config\Config
    *   The configuration object with original configuration data.
    */
-  protected function config($name): Config {
+  protected function config(string $name): Config {
     return $this->container->get('config.factory')->getEditable($name);
   }
 
