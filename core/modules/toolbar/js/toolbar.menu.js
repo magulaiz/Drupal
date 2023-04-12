@@ -187,6 +187,66 @@
     });
   };
 
+  Drupal.behaviors.adminToolbar = {
+    attach (context, settings) {
+      $('a.toolbar-icon', context).removeAttr('title');
+
+      // Make the toolbar menu navigable with keyboard.
+      $('ul.toolbar-menu li.menu-item--expanded a', context).on(
+        'focusin',
+        // eslint-disable-next-line func-names
+        function () {
+          $('li.menu-item--expanded', context).removeClass('hover-intent');
+          $(this).parents('li.menu-item--expanded').addClass('hover-intent');
+        },
+      );
+
+      $('ul.toolbar-menu li.menu-item a', context).keydown(function (e) {
+        if (e.shiftKey && (e.keyCode || e.which) === 9) {
+          if (
+            $(this).parent('.menu-item').prev().hasClass('menu-item--expanded')
+          ) {
+            $(this).parent('.menu-item').prev().addClass('hover-intent');
+          }
+        }
+      });
+
+      $(
+        '.toolbar-menu:first-child > .menu-item:not(.menu-item--expanded) a, .toolbar-tab > a',
+        context,
+      ).on('focusin', () => {
+        $('.menu-item--expanded').removeClass('hover-intent');
+      });
+
+      $('.toolbar-menu:first-child > .menu-item', context).on(
+        'hover',
+        // eslint-disable-next-line func-names
+        function () {
+          $(this, 'a').css('background: #fff;');
+        },
+      );
+
+      $('ul:not(.toolbar-menu)', context).on({
+        mousemove() {
+          $('li.menu-item--expanded').removeClass('hover-intent');
+        },
+        hover() {
+          $('li.menu-item--expanded').removeClass('hover-intent');
+        },
+      });
+
+      // Always hide the dropdown menu on mobile.
+      if (
+        window.matchMedia('(max-width: 767px)').matches &&
+        $('body').hasClass('toolbar-tray-open')
+      ) {
+        $('body').removeClass('toolbar-tray-open');
+        $('#toolbar-item-administration').removeClass('is-active');
+        $('#toolbar-item-administration-tray').removeClass('is-active');
+      }
+    },
+  };
+
   /**
    * A toggle is an interactive element often bound to a click handler.
    *

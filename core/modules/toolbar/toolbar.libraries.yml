@@ -33,6 +33,7 @@ toolbar.menu:
   version: VERSION
   js:
     js/toolbar.menu.js: {}
+    js/toolbar.hover.js: { }
   css:
     state:
       css/toolbar.menu.css: {}
