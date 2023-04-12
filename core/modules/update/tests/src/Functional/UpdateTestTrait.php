@@ -2,19 +2,10 @@
 
 namespace Drupal\Tests\update\Functional;
 
-use Drupal\Core\Config\Config;
-
 /**
  * Provides a trait to set system info and XML mappings.
  */
 trait UpdateTestTrait {
-
-  /**
-   * The dependency injection container used in the test.
-   *
-   * @var \Symfony\Component\DependencyInjection\ContainerInterface
-   */
-  protected $container;
 
   /**
    * Sets system info.
@@ -50,19 +41,6 @@ trait UpdateTestTrait {
    */
   public function setXmlMap(array $xml_map): void {
     $this->config('update_test.settings')->set('xml_map', $xml_map)->save();
-  }
-
-  /**
-   * Configuration accessor for tests. Returns non-overridden configuration.
-   *
-   * @param string $name
-   *   Configuration name.
-   *
-   * @return \Drupal\Core\Config\Config
-   *   The configuration object with original configuration data.
-   */
-  protected function config(string $name): Config {
-    return $this->container->get('config.factory')->getEditable($name);
   }
 
 }
