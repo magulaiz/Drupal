@@ -188,7 +188,7 @@
   };
 
   Drupal.behaviors.adminToolbar = {
-    attach (context, settings) {
+    attach(context, settings) {
       $('a.toolbar-icon', context).removeAttr('title');
 
       // Make the toolbar menu navigable with keyboard.

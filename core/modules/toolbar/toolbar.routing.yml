@@ -12,4 +12,3 @@ toolbar.settings:
     _title: 'Toolbar settings'
   requirements:
     _permission: 'administer site configuration'
-

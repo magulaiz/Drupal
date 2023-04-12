@@ -56,7 +56,7 @@ class ToolbarSettingsForm extends ConfigFormBase {
   }
 
   /**
-   * {@inheritDoc}
+   * {@inheritdoc}
    */
   protected function getEditableConfigNames() {
     return [
@@ -65,7 +65,7 @@ class ToolbarSettingsForm extends ConfigFormBase {
   }
 
   /**
-   * {@inheritDoc}
+   * {@inheritdoc}
    */
   public function getFormId() {
     return 'toolbar_settings';
