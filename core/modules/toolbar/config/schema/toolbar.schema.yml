@@ -1,0 +1,7 @@
+toolbar.settings:
+  type: config_object
+  label: 'Toolbar settings'
+  mapping:
+    menu_depth:
+      type: integer
+      label: 'Depth of displayed menu'

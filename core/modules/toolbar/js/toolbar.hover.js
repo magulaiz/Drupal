@@ -6,7 +6,7 @@
       // eslint-disable-next-line func-names
       function () {
         // At the current depth, we should delete all "hover-intent" classes.
-        // Otherwise we get unwanted behaviour where menu items are expanded while already in hovering other ones.
+        // Otherwise, we get unwanted behaviour where menu items are expanded while already in hovering other ones.
         $(this).parent().find('li').removeClass('hover-intent');
         $(this).addClass('hover-intent');
       },
