@@ -1061,14 +1061,13 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
       $definition = $this->fieldStorageDefinitions[$field_name];
 
       // First try field item mapping.
-      if (
-        $definition instanceof StorageMapperInterface
-        && $entity->$field_name instanceof FieldItemListInterface
-        && ($item = $entity->$field_name->first())
-      ) {
+      if ($definition instanceof StorageMapperInterface) {
+        // Ensuring that __get returns a FieldItemList is crucial here.
+        $item_value = $entity->$field_name instanceof FieldItemListInterface
+          && ($item = $entity->$field_name->first()) ? $item->getValue() : [];
         $maybe_mapped_columns = $this->mapColumnNamesOnSave(
-          $item->getName(),
-          $definition->mapColumnsOnSave($item->getValue())
+          $field_name,
+          $definition->mapColumnsOnSave($item_value)
         );
       }
       if (isset($maybe_mapped_columns)) {
@@ -1413,10 +1412,11 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
             'langcode' => $langcode,
           ];
           // Try field item mapping.
-          if ($item && $storage_definition instanceof StorageMapperInterface) {
+          if ($storage_definition instanceof StorageMapperInterface) {
+            $item_value = $item ? $item->getValue() : [];
             $maybe_mapped_columns = $this->mapColumnNamesOnSave(
-              $item->getName(),
-              $storage_definition->mapColumnsOnSave($item->getValue())
+              $field_name,
+              $storage_definition->mapColumnsOnSave($item_value)
             );
           }
           if (isset($maybe_mapped_columns)) {
