@@ -841,6 +841,7 @@ services:
   callable_resolver:
     class: Drupal\Core\Utility\CallableResolver
     arguments: ['@class_resolver']
+  Drupal\Core\Utility\CallableResolver: '@callable_resolver'
   title_resolver:
     class: Drupal\Core\Controller\TitleResolver
     arguments: ['@controller_resolver', '@string_translation', '@http_kernel.controller.argument_resolver']
