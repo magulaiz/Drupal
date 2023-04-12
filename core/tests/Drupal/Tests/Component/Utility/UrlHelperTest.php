@@ -576,10 +576,10 @@ class UrlHelperTest extends TestCase {
   }
 
   /**
-   * Enhances test urls with schemes.
+   * Enhances test URLs with schemes.
    *
    * @param array $urls
-   *   The list of urls.
+   *   The list of URLs.
    *
    * @return array
    *   A list of provider data with schemes.
@@ -596,10 +596,10 @@ class UrlHelperTest extends TestCase {
   }
 
   /**
-   * Enhances test urls with prefixes.
+   * Enhances test URLs with prefixes.
    *
    * @param array $urls
-   *   The list of urls.
+   *   The list of URLs.
    *
    * @return array
    *   A list of provider data with prefixes.
@@ -616,7 +616,7 @@ class UrlHelperTest extends TestCase {
   }
 
   /**
-   * Tests detecting external urls that point to local resources.
+   * Tests detecting external URLs that point to local resources.
    *
    * @param string $url
    *   The external URL to test.
@@ -696,7 +696,7 @@ class UrlHelperTest extends TestCase {
       ['http://example.com/foo', ''],
       ['http://example.com/foo', 'bar'],
       ['http://example.com/foo', 'http://'],
-      // Invalid destination urls.
+      // Invalid destination URLs.
       ['', 'http://example.com/foo'],
       ['bar', 'http://example.com/foo'],
       ['/bar', 'http://example.com/foo'],
