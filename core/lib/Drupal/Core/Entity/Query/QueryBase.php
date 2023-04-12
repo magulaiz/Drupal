@@ -468,6 +468,11 @@ abstract class QueryBase implements QueryInterface {
   /**
    * Gets a list of namespaces of the ancestors of a class.
    *
+   * This method returns a list of namespaces that includes the namespace of the
+   * class, as well as the namespaces of its parent classes and ancestors. This
+   * is useful for locating classes in a hierarchy of namespaces, such as when
+   * searching for the appropriate query class for an entity type.
+   *
    * @param $object
    *   An object within a namespace.
    *
@@ -485,6 +490,9 @@ abstract class QueryBase implements QueryInterface {
 
   /**
    * Finds a class in a list of namespaces.
+   *
+   * This method searches through a list of namespaces to find a class with a
+   * specific name, returning the fully qualified name of the class if found.
    *
    * @param array $namespaces
    *   A list of namespaces.
