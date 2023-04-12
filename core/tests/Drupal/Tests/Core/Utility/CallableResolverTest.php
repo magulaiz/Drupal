@@ -36,17 +36,15 @@ class CallableResolverTest extends UnitTestCase {
     $class_resolver = new ClassResolver();
     $class_resolver->setContainer($container);
 
-    $this->resolver = new CallableResolver($container, $class_resolver);
+    $this->resolver = new CallableResolver($class_resolver);
   }
 
   /**
    * @dataProvider callableResolverTestCases
    * @covers ::getCallableFromDefinition
-   * @covers ::invokeFromDefinition
    */
   public function testCallbackResolver($definition) {
     $this->assertEquals('foobar', $this->resolver->getCallableFromDefinition($definition)('bar'));
-    $this->assertEquals('foobar', $this->resolver->invokeFromDefinition($definition, 'bar'));
   }
 
   /**
@@ -95,12 +93,11 @@ class CallableResolverTest extends UnitTestCase {
   /**
    * @dataProvider callableResolverExceptionHandlingTestCases
    * @covers ::getCallableFromDefinition
-   * @covers ::invokeFromDefinition
    */
   public function testCallbackResolverExceptionHandling($definition, $exception_class, $exception_message) {
     $this->expectException($exception_class);
     $this->expectExceptionMessage($exception_message);
-    $this->resolver->invokeFromDefinition($definition);
+    $this->resolver->getCallableFromDefinition($definition);
   }
 
   /**
@@ -111,17 +108,17 @@ class CallableResolverTest extends UnitTestCase {
       'String function' => [
         'not_a_callable',
         \InvalidArgumentException::class,
-        'The callable definition provided was not a valid callable to service method.',
+        'Class "not_a_callable" does not exist.',
       ],
       'Array notation' => [
         ['not_a_callable', 'not_a_callable'],
         \InvalidArgumentException::class,
-        'The callable definition provided was not a valid callable to service method.',
+        'The callable definition provided was not a valid callable array.',
       ],
       'Missing method on class, array notation' => [
         [static::class, 'method_not_exists'],
         \InvalidArgumentException::class,
-        'The callable definition provided was not a valid callable to service method.',
+        'The callable definition provided was not a valid callable array.',
       ],
       'Missing method on class, static notation' => [
         static::class . '::method_not_exists',
@@ -131,17 +128,17 @@ class CallableResolverTest extends UnitTestCase {
       'Missing class, static notation' => [
         '\NotARealClass::method',
         \InvalidArgumentException::class,
-        'The callable definition provided was invalid. Either class "\NotARealClass" does not have a method "method", or it is not callable.',
+        'Class "\NotARealClass" does not exist.',
       ],
       'Service not in container' => [
         'bad_service:method',
         \InvalidArgumentException::class,
-        'The callable definition provided was invalid. No service found with name "bad_service".',
+        'Class "bad_service" does not exist.',
       ],
       'Invalid method on valid service' => [
         'test_service:not_a_callable',
         \InvalidArgumentException::class,
-        'The callable definition provided was invalid. No method with name "not_a_callable" found on the "test_service" service.',
+        'The callable definition provided was invalid. Either class "Drupal\Tests\Core\Utility\CallableResolverTest" does not have a method "not_a_callable", or it is not callable.',
       ],
     ];
   }
@@ -172,9 +169,6 @@ class CallableResolverTest extends UnitTestCase {
    *   Throws an exception when called statically.
    */
   public function method($suffix) {
-    if (!isset($this)) {
-      throw new \Exception('Non-static method called statically.');
-    }
     return 'foo' . $suffix;
   }
 
