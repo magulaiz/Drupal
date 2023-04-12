@@ -216,7 +216,7 @@ class PermissionHandler implements PermissionHandlerInterface {
     });
     return $all_permissions;
   }
-  
+
   /**
    * Returns all module names.
    *
