@@ -191,6 +191,8 @@ class LegacyValidatorTest extends FileManagedUnitTestBase {
       // Verify that the image was scaled to the correct width and height.
       $this->assertLessThanOrEqual(10, $image->getWidth());
       $this->assertLessThanOrEqual(5, $image->getHeight());
+      // Verify that the file size has been updated after resizing.
+      $this->assertEquals($this->image->getSize(), $image->getFileSize());
 
       // Once again, now with negative width and height to force an error.
       copy('core/misc/druplicon.png', 'temporary://druplicon.png');
