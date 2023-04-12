@@ -2,6 +2,7 @@
 
 namespace Drupal\Core\Field\Plugin\Field\FieldType;
 
+use Drupal\Core\Entity\Sql\FieldItemStorageMapperInterface;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Field\FieldItemBase;
 
@@ -16,7 +17,7 @@ use Drupal\Core\Field\FieldItemBase;
  *   list_class = "\Drupal\Core\Field\MapFieldItemList",
  * )
  */
-class MapItem extends FieldItemBase {
+class MapItem extends FieldItemBase implements FieldItemStorageMapperInterface {
 
   /**
    * {@inheritdoc}
@@ -35,7 +36,6 @@ class MapItem extends FieldItemBase {
         'value' => [
           'type' => 'blob',
           'size' => 'big',
-          'serialize' => TRUE,
         ],
       ],
     ];
@@ -112,6 +112,20 @@ class MapItem extends FieldItemBase {
    */
   public function isEmpty() {
     return empty($this->values);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function mapColumnsOnLoad(array $columns): array {
+    return unserialize($columns['value']);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function mapColumnsOnSave(array $properties): array {
+    return ['value' => serialize($properties)];
   }
 
 }
