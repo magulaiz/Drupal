@@ -1236,12 +1236,12 @@
    *   Use data with desired wrapper.
    *
    * @see https://www.drupal.org/node/2940704
-   *
-   * @todo Add deprecation warning after it is possible. For more information
-   *   see: https://www.drupal.org/project/drupal/issues/2973400
    */
-  Drupal.theme.ajaxWrapperNewContent = ($newContent, ajax, response) =>
-    (response.effect || ajax.effect) !== 'none' &&
+  Drupal.theme.ajaxWrapperNewContent = ($newContent, ajax, response) => {
+    Drupal.deprecationError({
+      message: 'The Drupal.theme.ajaxWrapperNewContent is deprecated in drupal:8.6.0 and is removed from drupal:11.0.0. See https://www.drupal.org/node/2940704.'
+    });
+    return (response.effect || ajax.effect) !== 'none' &&
     $newContent.filter(
       (i) =>
         !(
@@ -1256,6 +1256,7 @@
     ).length > 1
       ? Drupal.theme('ajaxWrapperMultipleRootElements', $newContent)
       : $newContent;
+  }
 
   /**
    * Provide a wrapper for multiple root elements via Ajax.
@@ -1267,12 +1268,13 @@
    *   Use data with desired wrapper.
    *
    * @see https://www.drupal.org/node/2940704
-   *
-   * @todo Add deprecation warning after it is possible. For more information
-   *   see: https://www.drupal.org/project/drupal/issues/2973400
    */
-  Drupal.theme.ajaxWrapperMultipleRootElements = ($elements) =>
-    $('<div></div>').append($elements);
+  Drupal.theme.ajaxWrapperMultipleRootElements = ($elements) => {
+    Drupal.deprecationError({
+      message: 'The Drupal.theme.ajaxWrapperMultipleRootElements is deprecated in drupal:8.6.0 and is removed from drupal:11.0.0. See https://www.drupal.org/node/2940704.'
+    });
+    return $('<div></div>').append($elements);
+  }
 
   /**
    * @typedef {object} Drupal.AjaxCommands~commandDefinition
