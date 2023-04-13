@@ -82,6 +82,11 @@ class FieldStorageAddForm extends FormBase {
   protected $fieldType;
 
   /**
+   * @var \Drupal\field\FieldStorageConfigInterface
+   */
+  protected FieldStorageConfigInterface $fieldStorage;
+
+  /**
    * @var \Drupal\field\FieldConfigInterface
    */
   protected $field;
@@ -238,7 +243,12 @@ class FieldStorageAddForm extends FormBase {
 
     /** @var \Drupal\Core\Entity\EntityFormBuilderInterface $entity_form_builder */
     $entity_form_builder = \Drupal::service('entity.form_builder');
-    $next_form = $entity_form_builder->getForm($this->field, 'edit');
+    if ($form_state->getValue('existing_storage_name')) {
+      $next_form = $entity_form_builder->getForm($this->field, 'edit');
+    }
+    else {
+      $next_form = $entity_form_builder->getForm($this->fieldStorage, 'edit', ['build_info' => ['args' => ['field_config' => $this->field->id()]]]);
+    }
 
     $dialog_options = [
       'width' => '85vw',
@@ -339,8 +349,13 @@ class FieldStorageAddForm extends FormBase {
 
     try {
       // Create the field storage.
-      $this->entityTypeManager->getStorage('field_storage_config')
-        ->create($field_storage_values)->save();
+      if ($is_new_field) {
+        assert(isset($field_storage_values));
+        $field_storage = $this->entityTypeManager->getStorage('field_storage_config')
+          ->create($field_storage_values);
+        $field_storage->save();
+        $this->fieldStorage = $field_storage;
+      }
 
       // Create the field.
       $field = $this->entityTypeManager->getStorage('field_config')
