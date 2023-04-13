@@ -241,6 +241,8 @@ class FieldStorageAddForm extends FormBase {
       return $response;
     }
 
+    // @todo This is duplicating the logic in submitForm, but since it's in an
+    //   AJAX request, the redirects are not respected.
     /** @var \Drupal\Core\Entity\EntityFormBuilderInterface $entity_form_builder */
     $entity_form_builder = \Drupal::service('entity.form_builder');
     if ($form_state->getValue('existing_storage_name')) {
