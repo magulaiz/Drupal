@@ -326,11 +326,19 @@ class FieldConfigEditForm extends EntityForm {
    * {@inheritdoc}
    */
   protected function actions(array $form, FormStateInterface $form_state) {
+    $target_entity_type = $this->entityTypeManager->getDefinition($this->entity->getTargetEntityTypeId());
+    $route_parameters = [
+        'field_config' => $this->entity->id(),
+      ] + FieldUI::getRouteBundleParameter($target_entity_type, $this->entity->getTargetBundle());
+    if ($this->entity->getTargetEntityTypeId() == 'node') {
+      $route_parameters['node_type'] = $this->entity->getTargetBundle();
+    }
+    $url = new Url('entity.field_config.' . $target_entity_type->id() . '_field_edit_form', $route_parameters);
     $actions = parent::actions($form, $form_state);
     $actions['submit']['#value'] = $this->t('Save settings');
     $actions['submit']['#ajax'] = [
       'callback' => [$this, 'ajaxSubmitForm'],
-      'url' => Url::fromRoute("entity.field_config.{$this->entity->getTargetEntityTypeId()}_field_edit_form", ['field_config' => $this->entity->id()] + FieldUI::getRouteBundleParameter($this->entity->getEntityType(), $this->entity->getTargetBundle())),
+      'url' => $url,
       'options' => [
         'query' => [
           FormBuilderInterface::AJAX_FORM_REQUEST => TRUE,
@@ -339,10 +347,6 @@ class FieldConfigEditForm extends EntityForm {
     ];
 
     if (!$this->entity->isNew()) {
-      $target_entity_type = $this->entityTypeManager->getDefinition($this->entity->getTargetEntityTypeId());
-      $route_parameters = [
-        'field_config' => $this->entity->id(),
-      ] + FieldUI::getRouteBundleParameter($target_entity_type, $this->entity->getTargetBundle());
       $url = new Url('entity.field_config.' . $target_entity_type->id() . '_field_delete_form', $route_parameters);
 
       if ($this->getRequest()->query->has('destination')) {
