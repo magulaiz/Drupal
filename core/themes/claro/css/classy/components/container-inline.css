@@ -7,13 +7,13 @@
 .container-inline .label:after {
   content: ":";
 }
-.form-type-radios .container-inline label:after,
-.form-type-checkboxes .container-inline label:after {
+.container-inline .form-radios label:after,
+.container-inline .form-checkboxes label:after {
   content: "";
 }
-.form-type-radios .container-inline .form-type-radio,
-.form-type-checkboxes .container-inline .form-type-checkbox {
-  margin: 0 1em;
+.container-inline .form-radios .form-boolean--type-radio,
+.container-inline .form-checkboxes .form-boolean--type-checkbox {
+  margin-inline-end: 1em;
 }
 .container-inline .form-actions,
 .container-inline.form-actions {
