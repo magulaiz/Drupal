@@ -1,0 +1,8 @@
+options.form:
+  js:
+    js/options.js: { }
+  dependencies:
+    - core/jquery
+    - core/drupal
+    - core/once
+    - core/tabledrag

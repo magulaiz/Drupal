@@ -56,6 +56,9 @@ field.storage_settings.list_float:
     allowed_values_function:
       type: string
       label: 'Allowed values function'
+    allowed_values_meta:
+      type: sequence
+      label: 'Allowed values meta'
 
 field.field_settings.list_float:
   label: 'List (float) settings'
@@ -89,6 +92,9 @@ field.storage_settings.list_string:
     allowed_values_function:
       type: string
       label: 'Allowed values function'
+    allowed_values_meta:
+      type: sequence
+      label: 'Allowed values meta'
 
 field.field_settings.list_string:
   label: 'List (text) settings'

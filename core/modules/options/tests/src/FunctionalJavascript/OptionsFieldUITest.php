@@ -91,9 +91,12 @@ class OptionsFieldUITest extends WebDriverTestBase {
     $page->fillField('settings[allowed_values][table][0][item][label]', 'First');
     $page->fillField('settings[allowed_values][table][1][item][label]', 'Second');
     $page->fillField('settings[allowed_values][table][2][item][label]', 'Third');
+    $this->assertSession()->waitForText('Machine name: third');
+
     $page->pressButton('Save field settings');
 
     $this->drupalGet($this->adminPath);
+
     $this->assertOrder(['First', 'Second', 'Third', '', '', '']);
 
     $drag_handle = $page->find('css', '[data-drupal-selector="edit-settings-allowed-values-table-0"] .tabledrag-handle');

@@ -91,6 +91,8 @@ abstract class ListItemBase extends FieldItemBase implements OptionsProviderInte
     if (!array_key_exists('allowed_values', $form_state->getStorage())) {
       $form_state->set('allowed_values', $this->getFieldDefinition()->getSetting('allowed_values'));
     }
+    $form['#attached']['library'][] = 'options/options.form';
+
     $allowed_values = $form_state->getStorage()['allowed_values'];
     $allowed_values_function = $this->getSetting('allowed_values_function');
     $allowed_values_meta = $this->getSetting('allowed_values_meta');
@@ -133,9 +135,15 @@ abstract class ListItemBase extends FieldItemBase implements OptionsProviderInte
       ->condition('field_name', $this->getFieldDefinition()->getName())
       ->execute();
     $max = $form_state->get('items_count');
-    $current_keys = array_keys($allowed_values);
     $field_type = $this->getFieldDefinition()->getType();
+    usort($allowed_values, function($a, $b) use ($allowed_values_meta) {
+      $a_weight = isset($allowed_values_meta[$a]) ? $allowed_values_meta[$a] : 0;
+      $b_weight = isset($allowed_values_meta[$b]) ? $allowed_values_meta[$b] : 0;
+      return $a_weight <=> $b_weight;
+    });
+    $current_keys = array_keys($allowed_values);
     for ($delta = 0; $delta <= $max; $delta++) {
+      $key = $current_keys[$delta] ?? '-----------------------';
       $element['allowed_values']['table'][$delta] = [
         '#attributes' => [
           'class' => ['draggable'],
@@ -197,7 +205,7 @@ abstract class ListItemBase extends FieldItemBase implements OptionsProviderInte
         '#title' => $this->t('Weight for row @number', ['@number' => $delta + 1]),
         '#title_display' => 'invisible',
         '#delta' => 50,
-        '#default_value' => $allowed_values_meta[$current_keys[$delta]]['weight'] ?? 0,
+        '#default_value' => isset($allowed_values_meta[$key]['weight']) ? $allowed_values_meta[$key]['weight'] : 0,
         '#attributes' => ['class' => ['weight']],
       ];
       if ($delta < count($allowed_values)) {
