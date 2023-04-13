@@ -11,6 +11,7 @@ use Drupal\Core\Controller\ControllerResolver;
 use Drupal\Core\DependencyInjection\ClassResolver;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\Utility\CallableResolver;
 use Drupal\Tests\UnitTestCase;
 use GuzzleHttp\Psr7\HttpFactory;
 use Symfony\Bridge\PsrHttpMessage\Factory\PsrHttpFactory;
@@ -42,13 +43,6 @@ class ControllerResolverTest extends UnitTestCase {
   protected $container;
 
   /**
-   * The PSR-7 converter.
-   *
-   * @var \Symfony\Bridge\PsrHttpMessage\HttpMessageFactoryInterface
-   */
-  protected $httpMessageFactory;
-
-  /**
    * {@inheritdoc}
    */
   protected function setUp(): void {
@@ -57,8 +51,8 @@ class ControllerResolverTest extends UnitTestCase {
     $this->container = new ContainerBuilder();
     $class_resolver = new ClassResolver();
     $class_resolver->setContainer($this->container);
-    $this->httpMessageFactory = new PsrHttpFactory(new HttpFactory(), new HttpFactory(), new HttpFactory(), new HttpFactory());
-    $this->controllerResolver = new ControllerResolver($this->httpMessageFactory, $class_resolver);
+    $callable_resolver = new CallableResolver($class_resolver);
+    $this->controllerResolver = new ControllerResolver($callable_resolver);
   }
 
   /**

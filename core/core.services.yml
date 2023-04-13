@@ -830,7 +830,7 @@ services:
   Symfony\Contracts\EventDispatcher\EventDispatcherInterface: '@event_dispatcher'
   controller_resolver:
     class: Drupal\Core\Controller\ControllerResolver
-    arguments: ['@psr7.http_message_factory', '@class_resolver']
+    arguments: ['@callable_resolver']
   Drupal\Core\Controller\ControllerResolverInterface: '@controller_resolver'
   Symfony\Component\HttpKernel\Controller\ControllerResolverInterface: '@controller_resolver'
   class_resolver:
