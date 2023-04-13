@@ -15,8 +15,6 @@ use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Utility\CallableResolver;
 use Drupal\Tests\UnitTestCase;
 use Symfony\Component\Routing\Route;
-use Drupal\Core\DependencyInjection\ClassResolverInterface;
-use Symfony\Bridge\PsrHttpMessage\HttpMessageFactoryInterface;
 
 /**
  * @coversDefaultClass \Drupal\Core\Access\CustomAccessCheck
