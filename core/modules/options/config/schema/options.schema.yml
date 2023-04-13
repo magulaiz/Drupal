@@ -20,6 +20,9 @@ field.storage_settings.list_integer:
     allowed_values_function:
       type: string
       label: 'Allowed values function'
+    allowed_values_meta:
+      type: sequence
+      label: 'Allowed values meta'
 
 field.field_settings.list_integer:
   label: 'List (integer) settings'

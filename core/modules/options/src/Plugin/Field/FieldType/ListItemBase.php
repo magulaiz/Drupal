@@ -25,7 +25,8 @@ abstract class ListItemBase extends FieldItemBase implements OptionsProviderInte
     return [
       'allowed_values' => [],
       'allowed_values_function' => '',
-    ] + parent::defaultStorageSettings();
+      'allowed_values_meta' => [],
+      ] + parent::defaultStorageSettings();
   }
 
   /**
@@ -92,6 +93,7 @@ abstract class ListItemBase extends FieldItemBase implements OptionsProviderInte
     }
     $allowed_values = $form_state->getStorage()['allowed_values'];
     $allowed_values_function = $this->getSetting('allowed_values_function');
+    $allowed_values_meta = $this->getSetting('allowed_values_meta');
 
     if (!$form_state->get('items_count')) {
       $form_state->set('items_count', max(count($allowed_values), 5));
@@ -195,7 +197,7 @@ abstract class ListItemBase extends FieldItemBase implements OptionsProviderInte
         '#title' => $this->t('Weight for row @number', ['@number' => $delta + 1]),
         '#title_display' => 'invisible',
         '#delta' => 50,
-        '#default_value' => 0,
+        '#default_value' => $allowed_values_meta[$current_keys[$delta]]['weight'] ?? 0,
         '#attributes' => ['class' => ['weight']],
       ];
       if ($delta < count($allowed_values)) {
@@ -347,6 +349,15 @@ abstract class ListItemBase extends FieldItemBase implements OptionsProviderInte
       }
 
       $form_state->setValueForElement($element, $values);
+      $table = $form_state->getUserInput()['settings']['allowed_values']['table'];
+      $allowed_values_meta = [];
+      foreach ($table as $item) {
+        if (!empty($item['item']['key']) && !empty($item['weight'])) {
+          $allowed_values_meta[$item['item']['key']]['weight'] = $item['weight'];
+        }
+      }
+
+      $form_state->setValue(['settings', 'allowed_values_meta'], $allowed_values_meta);
     }
   }
 

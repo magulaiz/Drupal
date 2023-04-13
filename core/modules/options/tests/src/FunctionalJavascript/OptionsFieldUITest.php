@@ -76,7 +76,7 @@ class OptionsFieldUITest extends WebDriverTestBase {
     ]);
     $this->drupalLogin($admin_user);
 
-    $this->typeName = 'plan' ;
+    $this->typeName = 'plan';
     $type = $this->drupalCreateContentType(['name' => $this->typeName, 'type' => $this->typeName]);
     $this->type = $type->id();
   }
@@ -85,18 +85,15 @@ class OptionsFieldUITest extends WebDriverTestBase {
     $this->fieldName = 'field_options_text';
     $this->createOptionsField('list_string');
     $page = $this->getSession()->getPage();
-    $assert_session = $this->assertSession();
 
     $this->drupalGet($this->adminPath);
 
     $page->fillField('settings[allowed_values][table][0][item][label]', 'First');
     $page->fillField('settings[allowed_values][table][1][item][label]', 'Second');
     $page->fillField('settings[allowed_values][table][2][item][label]', 'Third');
-
     $page->pressButton('Save field settings');
 
     $this->drupalGet($this->adminPath);
-
     $this->assertOrder(['First', 'Second', 'Third', '', '', '']);
 
     $drag_handle = $page->find('css', '[data-drupal-selector="edit-settings-allowed-values-table-0"] .tabledrag-handle');
@@ -104,26 +101,25 @@ class OptionsFieldUITest extends WebDriverTestBase {
 
     $drag_handle->dragTo($target);
 
-    // Change the order the tiems appear.
+    // Change the order the items appear.
     $this->assertOrder(['Second', 'Third', 'First' , '', '', '']);
 
     $page->pressButton('Save field settings');
     $this->drupalGet($this->adminPath);
 
     // Confirm the change in order was saved.
-//    $this->assertOrder(['Second', 'Third', 'First' , '', '', '']);
-
+    $this->assertOrder(['Second', 'Third', 'First' , '', '', '']);
     $page->pressButton('remove_row_button__1');
 
-    // @todo this assertion might need changing, but not able to confirm until \
+    // @todo this assertion might need changing, but not able to confirm until
     // the tabledrag ordering is fixed.
-    $this->assertOrder(['Second', 'First' , '', '', '']);
+    $this->assertOrder(['Second', 'First', '', '', '']);
 
     $page->pressButton('Save field settings');
     $this->drupalGet($this->adminPath);
 
     // Confirm the item removal was saved.
-    $this->assertOrder(['Second', 'First' , '', '', '']);
+    $this->assertOrder(['Second', 'First', '', '', '']);
   }
 
   protected function assertOrder($expected) {
@@ -134,7 +130,6 @@ class OptionsFieldUITest extends WebDriverTestBase {
     }
 
   }
-
 
   /**
    * Helper function to create list field of a given type.
@@ -162,4 +157,5 @@ class OptionsFieldUITest extends WebDriverTestBase {
 
     $this->adminPath = 'admin/structure/types/manage/' . $this->type . '/fields/node.' . $this->type . '.' . $this->fieldName . '/storage';
   }
+
 }
