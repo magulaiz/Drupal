@@ -8,11 +8,11 @@ namespace Drupal\Tests\update\Functional;
 trait UpdateTestTrait {
 
   /**
-   * Sets system info.
+   * Sets mocked installed modules config.
    *
    * It expects information about the installed modules.
    *
-   * @param string[] $system_info
+   * @param string[][] $system_info
    *   The system info.
    *   In the format as the key to be the project name and an array of sub keys
    *   as value such as 'project' (which is just the project name), 'version',
@@ -22,8 +22,13 @@ trait UpdateTestTrait {
    *     'version' => '8.0.0',
    *     'hidden' => FALSE,
    *   ].
+   * @param string[] $default_config
+   *   (optional) The default config keys to be set for all the modules.
    */
-  public function setSystemInfo(array $system_info): void {
+  public function mockInstalledModules(array $system_info, array $default_config = []): void {
+    if (!empty($default_config)) {
+      $system_info = array_merge(['#all' => $default_config], $system_info);
+    }
     $this->config('update_test.settings')->set('system_info', $system_info)->save();
   }
 

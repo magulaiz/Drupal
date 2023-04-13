@@ -11,6 +11,7 @@ use Drupal\Core\Url;
  * @group update
  */
 class UpdateSemverCoreTest extends UpdateSemverTestBase {
+  use UpdateTestTrait;
 
   /**
    * {@inheritdoc}
@@ -34,12 +35,7 @@ class UpdateSemverCoreTest extends UpdateSemverTestBase {
    *   The version.
    */
   protected function setProjectInstalledVersion($version) {
-    $setting = [
-      '#all' => [
-        'version' => $version,
-      ],
-    ];
-    $this->config('update_test.settings')->set('system_info', $setting)->save();
+    $this->mockInstalledModules([], ['version' => $version]);
   }
 
   /**
@@ -277,18 +273,14 @@ class UpdateSemverCoreTest extends UpdateSemverTestBase {
    * Ensures proper results where there are date mismatches among modules.
    */
   public function testDatestampMismatch() {
-    $system_info = [
-      '#all' => [
-        // We need to think we're running a -dev snapshot to see dates.
-        'version' => '8.1.0-dev',
-        'datestamp' => time(),
-      ],
+    $installed_modules = [
       'block' => [
         // This is 2001-09-09 01:46:40 GMT, so test for "2001-Sep-".
         'datestamp' => '1000000000',
       ],
     ];
-    $this->config('update_test.settings')->set('system_info', $system_info)->save();
+    // We need to think we're running a -dev snapshot to see dates.
+    $this->mockInstalledModules($installed_modules, ['version' => '8.1.0-dev', 'datestamp' => time()]);
     $this->refreshUpdateStatus(['drupal' => 'dev']);
     $this->assertSession()->pageTextNotContains('2001-Sep-');
     $this->assertSession()->pageTextContains('Up to date');
