@@ -328,8 +328,8 @@ class FieldConfigEditForm extends EntityForm {
   protected function actions(array $form, FormStateInterface $form_state) {
     $target_entity_type = $this->entityTypeManager->getDefinition($this->entity->getTargetEntityTypeId());
     $route_parameters = [
-        'field_config' => $this->entity->id(),
-      ] + FieldUI::getRouteBundleParameter($target_entity_type, $this->entity->getTargetBundle());
+      'field_config' => $this->entity->id(),
+    ] + FieldUI::getRouteBundleParameter($target_entity_type, $this->entity->getTargetBundle());
     if ($this->entity->getTargetEntityTypeId() == 'node') {
       $route_parameters['node_type'] = $this->entity->getTargetBundle();
     }
