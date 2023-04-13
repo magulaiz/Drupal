@@ -219,7 +219,7 @@
       // Add the 'ui-autocomplete-in-dialog' class to autocomplete
       $autocomplete.on('autocompletecreate', function (event, ui) {
         // Check if the autocomplete element is inside a dialog.
-        const $dialog = $(this).closest('.form-autocomplete');
+        const $dialog = $(this).closest('#drupal-modal');
         if ($dialog.length) {
           $(this).autocomplete('widget').addClass('ui-autocomplete-in-dialog');
         }
