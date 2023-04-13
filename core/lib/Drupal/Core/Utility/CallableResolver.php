@@ -29,14 +29,14 @@ class CallableResolver {
    *   The class resolver.
    */
   public function __construct(
-    protected ClassResolverInterface $classResolver
+    protected readonly ClassResolverInterface $classResolver
   ) {
   }
 
   /**
    * Get a callable from a definition.
    *
-   * @param mixed $definition
+   * @param callable|array|string $definition
    *   A callable definition.
    *
    * @return callable
@@ -45,7 +45,7 @@ class CallableResolver {
    * @throws \InvalidArgumentException
    *   Thrown when no valid callable could be resolved from the definition.
    */
-  public function getCallableFromDefinition($definition): callable {
+  public function getCallableFromDefinition(callable|array|string $definition): callable {
     // If the definition is natively a callable, we can return it immediately.
     if (is_callable($definition)) {
       return $definition;

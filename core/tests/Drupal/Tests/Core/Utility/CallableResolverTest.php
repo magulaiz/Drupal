@@ -22,7 +22,7 @@ class CallableResolverTest extends UnitTestCase {
    *
    * @var \Drupal\Core\Utility\CallableResolver
    */
-  protected $resolver;
+  protected CallableResolver $resolver;
 
   /**
    * {@inheritdoc}
