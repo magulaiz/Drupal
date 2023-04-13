@@ -207,8 +207,10 @@ class TestClass {
 }
 
 class TestStaticMethodClass {
+
   public static function access($foo) {
   }
+
 }
 
 /**
