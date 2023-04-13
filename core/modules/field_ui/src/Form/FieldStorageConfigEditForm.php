@@ -92,6 +92,8 @@ class FieldStorageConfigEditForm extends EntityForm {
     // Add the cardinality sub-form.
     $form['cardinality_container'] = $this->getCardinalityForm();
 
+    $form['#attached']['library'][] = 'field_ui/drupal.field_ui';
+    $form['#attached']['library'][] = 'core/drupal.dialog.ajax';
     return $form;
   }
 
