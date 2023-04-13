@@ -36,6 +36,7 @@ class ValidatorTest extends FileManagedUnitTestBase {
     /** @var \Drupal\Core\File\FileSystemInterface $file_system */
     $file_system = \Drupal::service('file_system');
     $this->image->setFilename($file_system->basename($this->image->getFileUri()));
+    $this->image->setSize(@filesize($this->image->getFileUri()));
 
     $this->nonImage = File::create();
     $this->nonImage->setFileUri('core/assets/vendor/jquery/jquery.min.js');
