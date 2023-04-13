@@ -496,7 +496,7 @@ class LayoutBuilderTest extends BrowserTestBase {
     // Install module that decorates controller.entity_form.
     \Drupal::service('module_installer')->install(['layout_builder_decoration_test']);
     $this->drupalGet('admin/structure/types/manage/bundle_with_section_field/display/default');
-    $assert_session->pageTextContains('Manage Display');
+    $assert_session->pageTextContains('Manage form display');
   }
 
   /**
