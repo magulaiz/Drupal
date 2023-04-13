@@ -4,11 +4,11 @@
  */
 
 .system-status-general-info {
-  padding-top: var(--space-m);
+  padding-block-start: var(--space-m);
 }
 
 .system-status-general-info__header {
-  --system-status-general-info-header-color: #ffb;
+  --system-status-general-info-header-color: #ccc;
 
   padding: 2.75rem 0 var(--space-l);
   border-block-start: 1px solid var(--system-status-general-info-header-color);
