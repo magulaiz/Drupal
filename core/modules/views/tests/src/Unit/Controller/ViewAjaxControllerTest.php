@@ -74,7 +74,7 @@ class ViewAjaxControllerTest extends UnitTestCase {
       ->getMock();
     $this->renderer = $this->createMock('\Drupal\Core\Render\RendererInterface');
     $this->renderer->expects($this->any())
-      ->method('render')
+      ->method('renderRoot')
       ->willReturnCallback(function (array &$elements) {
         $elements['#attached'] = [];
 
@@ -93,6 +93,10 @@ class ViewAjaxControllerTest extends UnitTestCase {
     $this->viewAjaxController = new ViewAjaxController($this->viewStorage, $this->executableFactory, $this->renderer, $this->currentPath, $this->redirectDestination);
 
     $element_info_manager = $this->createMock('\Drupal\Core\Render\ElementInfoManagerInterface');
+    $element_info_manager->expects($this->any())
+      ->method('getInfo')
+      ->with('status_messages')
+      ->willReturn([]);
     $request_stack = new RequestStack();
     $request_stack->push(new Request());
     $this->renderer = new Renderer(
@@ -178,18 +182,18 @@ class ViewAjaxControllerTest extends UnitTestCase {
    */
   public function testAjaxView() {
     $request = new Request();
-    $request->request->set('view_name', 'test_view');
-    $request->request->set('view_display_id', 'page_1');
-    $request->request->set('view_path', '/test-page');
-    $request->request->set('_wrapper_format', 'ajax');
-    $request->request->set('ajax_page_state', 'drupal.settings[]');
-    $request->request->set('type', 'article');
+    $request->query->set('view_name', 'test_view');
+    $request->query->set('view_display_id', 'page_1');
+    $request->query->set('view_path', '/test-page');
+    $request->query->set('_wrapper_format', 'ajax');
+    $request->query->set('ajax_page_state', 'drupal.settings[]');
+    $request->query->set('type', 'article');
 
     [$view, $executable] = $this->setupValidMocks();
 
     $this->redirectDestination->expects($this->atLeastOnce())
       ->method('set')
-      ->with('/test-page?type=article');
+      ->with('/test-page?ajax_page_state=drupal.settings%5B%5D&type=article');
     $this->currentPath->expects($this->once())
       ->method('setPath')
       ->with('/test-page', $request);
@@ -207,18 +211,18 @@ class ViewAjaxControllerTest extends UnitTestCase {
    */
   public function testAjaxViewViewPathNoSlash() {
     $request = new Request();
-    $request->request->set('view_name', 'test_view');
-    $request->request->set('view_display_id', 'page_1');
-    $request->request->set('view_path', 'test-page');
-    $request->request->set('_wrapper_format', 'ajax');
-    $request->request->set('ajax_page_state', 'drupal.settings[]');
-    $request->request->set('type', 'article');
+    $request->query->set('view_name', 'test_view');
+    $request->query->set('view_display_id', 'page_1');
+    $request->query->set('view_path', 'test-page');
+    $request->query->set('_wrapper_format', 'ajax');
+    $request->query->set('ajax_page_state', 'drupal.settings[]');
+    $request->query->set('type', 'article');
 
     [$view, $executable] = $this->setupValidMocks();
 
     $this->redirectDestination->expects($this->atLeastOnce())
       ->method('set')
-      ->with('test-page?type=article');
+      ->with('test-page?ajax_page_state=drupal.settings%5B%5D&type=article');
     $this->currentPath->expects($this->once())
       ->method('setPath')
       ->with('/test-page');
