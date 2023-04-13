@@ -68,7 +68,7 @@ class CommentLanguageTest extends BrowserTestBase {
 
     // Set "Article" content type to use multilingual support.
     $edit = ['language_configuration[language_alterable]' => TRUE];
-    $this->drupalGet('admin/structure/types/manage/article');
+    $this->drupalGet('admin/structure/content/manage/article');
     $this->submitForm($edit, 'Save content type');
 
     // Enable content language negotiation UI.

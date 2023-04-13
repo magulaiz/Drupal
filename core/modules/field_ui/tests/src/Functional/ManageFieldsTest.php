@@ -67,7 +67,7 @@ class ManageFieldsTest extends BrowserTestBase {
       ])
       ->save();
 
-    $this->drupalGet("/admin/structure/types/manage/{$bundle}/fields");
+    $this->drupalGet("/admin/structure/content/manage/{$bundle}/fields");
 
     // Check that the summary element for the string field type exists and has
     // the correct text (which comes from the FieldItemBase class).
@@ -104,7 +104,7 @@ class ManageFieldsTest extends BrowserTestBase {
       ])
       ->save();
 
-    $this->drupalGet("/admin/structure/types/manage/{$bundle}/fields");
+    $this->drupalGet("/admin/structure/content/manage/{$bundle}/fields");
     $element = $assert_session->elementExists('css', '#downlander');
     $custom_summary_text = 'Reference type: Content';
     $allowed_bundles_text = "Content type: $bundle";

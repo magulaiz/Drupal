@@ -50,7 +50,7 @@ class LayoutBuilderOptInTest extends WebDriverTestBase {
     $assert_session = $this->assertSession();
     $page = $this->getSession()->getPage();
 
-    $this->drupalGet('admin/structure/types/manage/before/display/default');
+    $this->drupalGet('admin/structure/content/manage/before/display/default');
     // Both fields are unchecked and allow_custom is disabled and hidden.
     $assert_session->checkboxNotChecked('layout[enabled]');
     $assert_session->checkboxNotChecked('layout[allow_custom]');
@@ -95,10 +95,10 @@ class LayoutBuilderOptInTest extends WebDriverTestBase {
 
     // Both the content type created before and after Layout Builder was
     // installed is still using the Field UI.
-    $this->drupalGet('admin/structure/types/manage/before/display/default');
+    $this->drupalGet('admin/structure/content/manage/before/display/default');
     $assert_session->checkboxNotChecked('layout[enabled]');
 
-    $field_ui_prefix = 'admin/structure/types/manage/after/display/default';
+    $field_ui_prefix = 'admin/structure/content/manage/after/display/default';
     $this->drupalGet($field_ui_prefix);
     $assert_session->checkboxNotChecked('layout[enabled]');
     $page->checkField('layout[enabled]');

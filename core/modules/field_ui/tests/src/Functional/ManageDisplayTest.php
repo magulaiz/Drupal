@@ -102,7 +102,7 @@ class ManageDisplayTest extends BrowserTestBase {
    */
   public function testViewModeCustom() {
     // Create a field, and a node with some data for the field.
-    $this->fieldUIAddNewField('admin/structure/types/manage/' . $this->type, 'test', 'Test field');
+    $this->fieldUIAddNewField('admin/structure/content/manage/' . $this->type, 'test', 'Test field');
     \Drupal::service('entity_field.manager')->clearCachedFieldDefinitions();
     // For this test, use a formatter setting value that is an integer unlikely
     // to appear in a rendered node other than as part of the field being tested
@@ -134,7 +134,7 @@ class ManageDisplayTest extends BrowserTestBase {
       'fields[field_test][type]' => 'field_test_with_prepare_view',
       'fields[field_test][region]' => 'content',
     ];
-    $this->drupalGet('admin/structure/types/manage/' . $this->type . '/display');
+    $this->drupalGet('admin/structure/content/manage/' . $this->type . '/display');
     $this->submitForm($edit, 'Save');
     $this->assertNodeViewText($node, 'rss', $output['field_test_with_prepare_view'], "The field is displayed as expected in view modes that use 'default' settings.");
 
@@ -142,7 +142,7 @@ class ManageDisplayTest extends BrowserTestBase {
     $edit = [
       "display_modes_custom[rss]" => TRUE,
     ];
-    $this->drupalGet('admin/structure/types/manage/' . $this->type . '/display');
+    $this->drupalGet('admin/structure/content/manage/' . $this->type . '/display');
     $this->submitForm($edit, 'Save');
     $this->assertNodeViewText($node, 'rss', $output['field_test_with_prepare_view'], "The field is displayed as expected in newly specialized 'rss' mode.");
 
@@ -151,7 +151,7 @@ class ManageDisplayTest extends BrowserTestBase {
     $edit = [
       'fields[field_test][region]' => 'hidden',
     ];
-    $this->drupalGet('admin/structure/types/manage/' . $this->type . '/display/rss');
+    $this->drupalGet('admin/structure/content/manage/' . $this->type . '/display/rss');
     $this->submitForm($edit, 'Save');
     $this->assertNodeViewNoText($node, 'rss', $value, "The field is hidden in 'rss' mode.");
 
@@ -160,7 +160,7 @@ class ManageDisplayTest extends BrowserTestBase {
     $edit = [
       "display_modes_custom[rss]" => FALSE,
     ];
-    $this->drupalGet('admin/structure/types/manage/' . $this->type . '/display');
+    $this->drupalGet('admin/structure/content/manage/' . $this->type . '/display');
     $this->submitForm($edit, 'Save');
     $this->assertNodeViewText($node, 'rss', $output['field_test_with_prepare_view'], "The field is displayed as expected when 'rss' mode is set back to 'default' settings.");
 
@@ -168,7 +168,7 @@ class ManageDisplayTest extends BrowserTestBase {
     $edit = [
       "display_modes_custom[rss]" => TRUE,
     ];
-    $this->drupalGet('admin/structure/types/manage/' . $this->type . '/display');
+    $this->drupalGet('admin/structure/content/manage/' . $this->type . '/display');
     $this->submitForm($edit, 'Save');
     // Check that the previous settings for the view mode have been kept.
     $this->assertNodeViewNoText($node, 'rss', $value, "The previous settings are kept when 'rss' mode is specialized again.");
@@ -178,7 +178,7 @@ class ManageDisplayTest extends BrowserTestBase {
    * Tests the local tasks are displayed correctly for view modes.
    */
   public function testViewModeLocalTasks() {
-    $manage_display = 'admin/structure/types/manage/' . $this->type . '/display';
+    $manage_display = 'admin/structure/content/manage/' . $this->type . '/display';
     $this->drupalGet($manage_display);
     $this->assertSession()->linkNotExists('Full content');
     $this->assertSession()->linkExists('Teaser');
@@ -193,11 +193,11 @@ class ManageDisplayTest extends BrowserTestBase {
    */
   public function testNonInitializedFields() {
     // Create a test field.
-    $this->fieldUIAddNewField('admin/structure/types/manage/' . $this->type, 'test', 'Test');
+    $this->fieldUIAddNewField('admin/structure/content/manage/' . $this->type, 'test', 'Test');
 
     // Check that the field appears as 'hidden' on the 'Manage display' page
     // for the 'teaser' mode.
-    $this->drupalGet('admin/structure/types/manage/' . $this->type . '/display/teaser');
+    $this->drupalGet('admin/structure/content/manage/' . $this->type . '/display/teaser');
     $this->assertSession()->fieldValueEquals('fields[field_test][region]', 'hidden');
   }
 
@@ -223,7 +223,7 @@ class ManageDisplayTest extends BrowserTestBase {
       'name' => 'No fields',
     ])->save();
 
-    $this->drupalGet('admin/structure/types/manage/no_fields/display');
+    $this->drupalGet('admin/structure/content/manage/no_fields/display');
     $this->assertSession()->pageTextContains("There are no fields yet added. You can add new fields on the Manage fields page.");
     $this->assertSession()->linkByHrefExists(Url::fromRoute('entity.node.field_ui_fields', ['node_type' => 'no_fields'])->toString());
   }
@@ -232,7 +232,7 @@ class ManageDisplayTest extends BrowserTestBase {
    * Tests if display mode local tasks appear in alphabetical order by label.
    */
   public function testViewModeLocalTasksOrder() {
-    $manage_display = 'admin/structure/types/manage/' . $this->type . '/display';
+    $manage_display = 'admin/structure/content/manage/' . $this->type . '/display';
 
     // Specify the 'rss' mode, check that the field is displayed the same.
     $edit = [
@@ -267,7 +267,7 @@ class ManageDisplayTest extends BrowserTestBase {
       'label' => 'Little Form',
       'targetEntityType' => 'node',
     ])->save();
-    $manage_form = 'admin/structure/types/manage/' . $this->type . '/form-display';
+    $manage_form = 'admin/structure/content/manage/' . $this->type . '/form-display';
     $this->drupalGet($manage_form);
     $this->assertOrderInPage(['Big Form', 'Little Form']);
     $edit = [

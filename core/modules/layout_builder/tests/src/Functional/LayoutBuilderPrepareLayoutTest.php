@@ -86,7 +86,7 @@ class LayoutBuilderPrepareLayoutTest extends BrowserTestBase {
     ]));
 
     // Add a block to the defaults.
-    $this->drupalGet('admin/structure/types/manage/bundle_with_section_field/display/default');
+    $this->drupalGet('admin/structure/content/manage/bundle_with_section_field/display/default');
     $page->clickLink('Manage layout');
     $page->clickLink('Add block');
     $page->clickLink('Powered by Drupal');

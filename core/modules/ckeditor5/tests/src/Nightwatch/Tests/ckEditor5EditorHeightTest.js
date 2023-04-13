@@ -44,7 +44,7 @@ module.exports = {
         .waitForElementVisible('[data-drupal-messages]')
         .assert.textContains('[data-drupal-messages]', 'Added text format')
         // Create new content type.
-        .drupalRelativeURL('/admin/structure/types/add')
+        .drupalRelativeURL('/admin/structure/content/add')
         .waitForElementVisible('[data-drupal-selector="edit-name"]')
         .updateValue('[data-drupal-selector="edit-name"]', 'test')
         .waitForElementVisible('#edit-name-machine-name-suffix') // Wait for machine name to update.
@@ -127,7 +127,7 @@ module.exports = {
         )
 
         // Double the editor row count.
-        .drupalRelativeURL('/admin/structure/types/manage/test/form-display')
+        .drupalRelativeURL('/admin/structure/content/manage/test/form-display')
         .waitForElementVisible(
           '[data-drupal-selector="edit-fields-body-settings-edit"]',
         )

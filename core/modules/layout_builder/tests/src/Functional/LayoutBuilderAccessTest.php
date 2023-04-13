@@ -115,7 +115,7 @@ class LayoutBuilderAccessTest extends BrowserTestBase {
     $this->drupalGet($non_editable_node->toUrl('edit-form'));
     $this->assertExpectedAccess(FALSE);
 
-    $this->drupalGet('admin/structure/types/manage/bundle_with_section_field/display/default/layout');
+    $this->drupalGet('admin/structure/content/manage/bundle_with_section_field/display/default/layout');
     $this->assertExpectedAccess($default_access);
 
     $this->drupalGet('node/' . $editable_node->id() . '/layout');

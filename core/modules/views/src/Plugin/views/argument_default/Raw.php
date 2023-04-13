@@ -92,7 +92,7 @@ class Raw extends ArgumentDefaultPluginBase implements CacheableDependencyInterf
       // - keys that count from 0 to match PHP array keys from explode().
       // - values that count from 1 for display to humans.
       '#options' => range(1, 10),
-      '#description' => $this->t('The numbering starts from 1, e.g. on the page admin/structure/types, the 3rd path component is "types".'),
+      '#description' => $this->t('The numbering starts from 1, e.g. on the page admin/structure/content, the 3rd path component is "types".'),
     ];
     $form['use_alias'] = [
       '#type' => 'checkbox',

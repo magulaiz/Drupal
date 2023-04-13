@@ -245,20 +245,20 @@ class LayoutSectionTest extends BrowserTestBase {
   public function testLayoutDeletingField() {
     $assert_session = $this->assertSession();
 
-    $this->drupalGet('/admin/structure/types/manage/bundle_with_section_field/display/default/layout');
+    $this->drupalGet('/admin/structure/content/manage/bundle_with_section_field/display/default/layout');
     $assert_session->statusCodeEquals(200);
     $assert_session->elementExists('css', '.field--name-body');
 
     // Delete the field from both bundles.
-    $this->drupalGet('/admin/structure/types/manage/bundle_without_section_field/fields/node.bundle_without_section_field.body/delete');
+    $this->drupalGet('/admin/structure/content/manage/bundle_without_section_field/fields/node.bundle_without_section_field.body/delete');
     $this->submitForm([], 'Delete');
-    $this->drupalGet('/admin/structure/types/manage/bundle_with_section_field/display/default/layout');
+    $this->drupalGet('/admin/structure/content/manage/bundle_with_section_field/display/default/layout');
     $assert_session->statusCodeEquals(200);
     $assert_session->elementExists('css', '.field--name-body');
 
-    $this->drupalGet('/admin/structure/types/manage/bundle_with_section_field/fields/node.bundle_with_section_field.body/delete');
+    $this->drupalGet('/admin/structure/content/manage/bundle_with_section_field/fields/node.bundle_with_section_field.body/delete');
     $this->submitForm([], 'Delete');
-    $this->drupalGet('/admin/structure/types/manage/bundle_with_section_field/display/default/layout');
+    $this->drupalGet('/admin/structure/content/manage/bundle_with_section_field/display/default/layout');
     $assert_session->statusCodeEquals(200);
     $assert_session->elementNotExists('css', '.field--name-body');
   }
@@ -272,7 +272,7 @@ class LayoutSectionTest extends BrowserTestBase {
     $display = LayoutBuilderEntityViewDisplay::load('node.bundle_with_section_field.default');
     $this->assertInstanceOf(LayoutBuilderEntityViewDisplay::class, $display);
 
-    $this->drupalGet('/admin/structure/types/manage/bundle_with_section_field/delete');
+    $this->drupalGet('/admin/structure/content/manage/bundle_with_section_field/delete');
     $this->submitForm([], 'Delete');
     $assert_session->statusCodeEquals(200);
 

@@ -72,7 +72,7 @@ class ContentTranslationLanguageChangeTest extends NodeTestBase {
     $this->submitForm($edit, 'Save configuration');
 
     // Add an image field.
-    $this->drupalGet('admin/structure/types/manage/article/fields/add-field');
+    $this->drupalGet('admin/structure/content/manage/article/fields/add-field');
     $edit = [
       'new_storage_type' => 'image',
       'field_name' => 'image_field',

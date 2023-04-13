@@ -253,9 +253,9 @@ class ConfigTranslationListUiTest extends BrowserTestBase {
     ]);
 
     // Get the content type listing.
-    $this->drupalGet('admin/structure/types');
+    $this->drupalGet('admin/structure/content');
 
-    $translate_link = 'admin/structure/types/manage/' . $content_type->id() . '/translate';
+    $translate_link = 'admin/structure/content/manage/' . $content_type->id() . '/translate';
     // Test if the link to translate the content type is on the page.
     $this->assertSession()->linkByHrefExists($translate_link);
 
@@ -427,7 +427,7 @@ class ConfigTranslationListUiTest extends BrowserTestBase {
     // Look at a few fields on a few entity types.
     $pages = [
       [
-        'list' => 'admin/structure/types/manage/' . $content_type->id() . '/fields',
+        'list' => 'admin/structure/content/manage/' . $content_type->id() . '/fields',
         'field' => 'node.' . $content_type->id() . '.body',
       ],
       [

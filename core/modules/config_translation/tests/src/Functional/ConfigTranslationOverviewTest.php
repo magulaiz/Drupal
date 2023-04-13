@@ -203,7 +203,7 @@ class ConfigTranslationOverviewTest extends BrowserTestBase {
     $this->drupalGet('admin/config/regional/config-translation/node_fields');
     $this->assertSession()->pageTextContains('Body');
     $this->assertSession()->pageTextContains('Basic');
-    $this->assertSession()->linkByHrefExists('admin/structure/types/manage/basic/fields/node.basic.body/translate');
+    $this->assertSession()->linkByHrefExists('admin/structure/content/manage/basic/fields/node.basic.body/translate');
   }
 
 }

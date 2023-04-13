@@ -20,7 +20,7 @@ class LayoutBuilderUiTest extends WebDriverTestBase {
    *
    * @var string
    */
-  const FIELD_UI_PREFIX = 'admin/structure/types/manage/bundle_with_section_field';
+  const FIELD_UI_PREFIX = 'admin/structure/content/manage/bundle_with_section_field';
 
   /**
    * {@inheritdoc}

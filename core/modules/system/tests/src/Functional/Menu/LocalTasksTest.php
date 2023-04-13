@@ -264,7 +264,7 @@ class LocalTasksTest extends BrowserTestBase {
     $this->assertNoLocalTasks();
 
     // Only the Edit and Manage permission tabs.
-    $this->drupalGet('/admin/structure/types/manage/page');
+    $this->drupalGet('/admin/structure/content/manage/page');
     $this->assertLocalTasks([
       ['entity.node_type.edit_form', ['node_type' => 'page']],
       ['entity.node_type.entity_permissions_form', ['node_type' => 'page']],
@@ -272,7 +272,7 @@ class LocalTasksTest extends BrowserTestBase {
 
     // Field UI adds the usual Manage fields etc tabs.
     \Drupal::service('module_installer')->install(['field_ui']);
-    $this->drupalGet('/admin/structure/types/manage/page');
+    $this->drupalGet('/admin/structure/content/manage/page');
     $this->assertLocalTasks([
       ['entity.node_type.edit_form', ['node_type' => 'page']],
       ['entity.node.field_ui_fields', ['node_type' => 'page']],

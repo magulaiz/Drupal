@@ -227,7 +227,7 @@ class ForumTest extends BrowserTestBase {
       'create forum content',
       'post comments',
     ]));
-    $this->drupalGet('admin/structure/types/manage/forum');
+    $this->drupalGet('admin/structure/content/manage/forum');
     $this->submitForm(['options[promote]' => 'promote'], 'Save content type');
     $this->createForumTopic($this->forum, FALSE);
     $this->createForumTopic($this->forum, FALSE);

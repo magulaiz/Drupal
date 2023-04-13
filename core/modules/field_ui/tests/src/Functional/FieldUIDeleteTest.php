@@ -82,7 +82,7 @@ class FieldUIDeleteTest extends BrowserTestBase {
     $type_name1 = $type1->id();
 
     // Create a new field.
-    $bundle_path1 = 'admin/structure/types/manage/' . $type_name1;
+    $bundle_path1 = 'admin/structure/content/manage/' . $type_name1;
     $this->fieldUIAddNewField($bundle_path1, $field_name_input, $field_label);
 
     // Create an additional node type.
@@ -91,7 +91,7 @@ class FieldUIDeleteTest extends BrowserTestBase {
     $type_name2 = $type2->id();
 
     // Add a field to the second node type.
-    $bundle_path2 = 'admin/structure/types/manage/' . $type_name2;
+    $bundle_path2 = 'admin/structure/content/manage/' . $type_name2;
     $this->fieldUIAddExistingField($bundle_path2, $field_name, $field_label);
 
     \Drupal::service('module_installer')->install(['views']);

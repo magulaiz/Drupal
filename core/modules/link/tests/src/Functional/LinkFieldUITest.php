@@ -151,7 +151,7 @@ class LinkFieldUITest extends BrowserTestBase {
    */
   public function runFieldUIItem($cardinality, $link_type, $title, $label, $field_name, $default_uri) {
     $this->drupalLogin($this->adminUser);
-    $type_path = 'admin/structure/types/manage/' . $this->contentType->id();
+    $type_path = 'admin/structure/content/manage/' . $this->contentType->id();
 
     // Add a link field to the newly-created type.
     $description = 'link field description';

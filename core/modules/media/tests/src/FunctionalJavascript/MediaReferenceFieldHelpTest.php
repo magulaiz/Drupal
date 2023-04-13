@@ -28,7 +28,7 @@ class MediaReferenceFieldHelpTest extends MediaJavascriptTestBase {
     $type = $this->drupalCreateContentType([
       'type' => 'foo',
     ]);
-    $this->drupalGet("/admin/structure/types/manage/{$type->id()}/fields/add-field");
+    $this->drupalGet("/admin/structure/content/manage/{$type->id()}/fields/add-field");
 
     $field_types = [
       'file',

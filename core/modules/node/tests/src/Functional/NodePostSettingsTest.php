@@ -36,7 +36,7 @@ class NodePostSettingsTest extends NodeTestBase {
     // Set "Basic page" content type to display post information.
     $edit = [];
     $edit['display_submitted'] = TRUE;
-    $this->drupalGet('admin/structure/types/manage/page');
+    $this->drupalGet('admin/structure/content/manage/page');
     $this->submitForm($edit, 'Save content type');
 
     // Create a node.
@@ -54,7 +54,7 @@ class NodePostSettingsTest extends NodeTestBase {
     // Set "Basic page" content type to display post information.
     $edit = [];
     $edit['display_submitted'] = FALSE;
-    $this->drupalGet('admin/structure/types/manage/page');
+    $this->drupalGet('admin/structure/content/manage/page');
     $this->submitForm($edit, 'Save content type');
 
     // Create a node.

@@ -20,7 +20,7 @@ const testCases = [
   { name: 'Create Page', path: '/node/add/page?destination=/admin/content' },
   { name: 'Content Page', path: '/admin/content' },
   { name: 'Structure Page', path: '/admin/structure' },
-  { name: 'Add content type', path: '/admin/structure/types/add' },
+  { name: 'Add content type', path: '/admin/structure/content/add' },
   { name: 'Add vocabulary', path: '/admin/structure/taxonomy/add' },
   // @todo remove the skipped rules below in https://drupal.org/i/3318394.
   {

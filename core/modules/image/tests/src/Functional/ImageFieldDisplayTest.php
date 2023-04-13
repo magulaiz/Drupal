@@ -64,7 +64,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
     $instance = $this->createImageField($field_name, 'article', ['uri_scheme' => $scheme], $field_settings);
 
     // Go to manage display page.
-    $this->drupalGet("admin/structure/types/manage/article/display");
+    $this->drupalGet("admin/structure/content/manage/article/display");
 
     // Test for existence of link to image styles configuration.
     $this->submitForm([], "{$field_name}_settings_edit");
@@ -75,7 +75,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
     user_role_change_permissions(reset($admin_user_roles), ['administer image styles' => FALSE]);
 
     // Go to manage display page again.
-    $this->drupalGet("admin/structure/types/manage/article/display");
+    $this->drupalGet("admin/structure/content/manage/article/display");
 
     // Test for absence of link to image styles configuration.
     $this->submitForm([], "{$field_name}_settings_edit");
@@ -233,7 +233,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
     ];
     $display = \Drupal::service('entity_display.repository')->getViewDisplay('node', $node->getType(), 'default');
     $display->setComponent($field_name, $display_options)->save();
-    $this->drupalGet("admin/structure/types/manage/" . $node->getType() . "/display");
+    $this->drupalGet("admin/structure/content/manage/" . $node->getType() . "/display");
     $this->assertSession()->responseContains('Image style: Thumbnail (100×100)');
   }
 
@@ -262,7 +262,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
 
     // Verify that the min/max resolution set on the field are properly
     // extracted, and displayed, on the image field's configuration form.
-    $this->drupalGet('admin/structure/types/manage/article/fields/' . $field->id());
+    $this->drupalGet('admin/structure/content/manage/article/fields/' . $field->id());
     $this->assertSession()->fieldValueEquals('settings[max_resolution][x]', '100');
     $this->assertSession()->fieldValueEquals('settings[max_resolution][y]', '100');
     $this->assertSession()->fieldValueEquals('settings[min_resolution][x]', '10');
@@ -334,7 +334,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
     // 1, so we need to make sure the file widget prevents these notices by
     // providing all settings, even if they are not used.
     // @see FileWidget::formMultipleElements().
-    $this->drupalGet('admin/structure/types/manage/article/fields/node.article.' . $field_name . '/storage');
+    $this->drupalGet('admin/structure/content/manage/article/fields/node.article.' . $field_name . '/storage');
     $this->submitForm([
       'cardinality' => FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED,
     ], 'Save field settings');
@@ -369,7 +369,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
     $instance = $this->createImageField($field_name, 'article', [], $field_settings);
 
     // Go to manage display page.
-    $this->drupalGet("admin/structure/types/manage/article/display");
+    $this->drupalGet("admin/structure/content/manage/article/display");
 
     // Test for existence of link to image styles configuration.
     $this->submitForm([], "{$field_name}_settings_edit");
@@ -380,7 +380,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
     user_role_change_permissions(reset($admin_user_roles), ['administer image styles' => FALSE]);
 
     // Go to manage display page again.
-    $this->drupalGet("admin/structure/types/manage/article/display");
+    $this->drupalGet("admin/structure/content/manage/article/display");
 
     // Test for absence of link to image styles configuration.
     $this->submitForm([], "{$field_name}_settings_edit");
@@ -503,7 +503,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
       'settings[default_image][alt]' => $alt,
       'settings[default_image][title]' => $title,
     ];
-    $this->drupalGet("admin/structure/types/manage/article/fields/node.article.{$field_name}/storage");
+    $this->drupalGet("admin/structure/content/manage/article/fields/node.article.{$field_name}/storage");
     $this->submitForm($edit, 'Save field settings');
     // Clear field definition cache so the new default image is detected.
     \Drupal::service('entity_field.manager')->clearCachedFieldDefinitions();
@@ -558,7 +558,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
 
     // Remove default image from the field and make sure it is no longer used.
     // Can't use fillField cause Mink can't fill hidden fields.
-    $this->drupalGet("admin/structure/types/manage/article/fields/node.article.$field_name/storage");
+    $this->drupalGet("admin/structure/content/manage/article/fields/node.article.$field_name/storage");
     $this->getSession()->getPage()->find('css', 'input[name="settings[default_image][uuid][fids]"]')->setValue(0);
     $this->getSession()->getPage()->pressButton('Save field settings');
 
@@ -578,7 +578,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
       'settings[default_image][alt]' => $alt,
       'settings[default_image][title]' => $title,
     ];
-    $this->drupalGet('admin/structure/types/manage/article/fields/node.article.' . $private_field_name . '/storage');
+    $this->drupalGet('admin/structure/content/manage/article/fields/node.article.' . $private_field_name . '/storage');
     $this->submitForm($edit, 'Save field settings');
     // Clear field definition cache so the new default image is detected.
     \Drupal::service('entity_field.manager')->clearCachedFieldDefinitions();

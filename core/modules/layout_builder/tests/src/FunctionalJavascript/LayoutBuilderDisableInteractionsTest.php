@@ -107,7 +107,7 @@ class LayoutBuilderDisableInteractionsTest extends WebDriverTestBase {
       'access contextual links',
     ]));
 
-    $field_ui_prefix = 'admin/structure/types/manage/bundle_with_section_field';
+    $field_ui_prefix = 'admin/structure/content/manage/bundle_with_section_field';
 
     $this->drupalGet("{$field_ui_prefix}/display");
     $this->submitForm(['layout[enabled]' => TRUE], 'Save');

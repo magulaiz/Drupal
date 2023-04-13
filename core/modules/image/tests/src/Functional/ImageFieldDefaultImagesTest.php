@@ -128,18 +128,18 @@ class ImageFieldDefaultImagesTest extends ImageFieldTestBase {
     // Confirm the defaults are present on the article field storage settings
     // form.
     $field_id = $field->id();
-    $this->drupalGet("admin/structure/types/manage/article/fields/$field_id/storage");
+    $this->drupalGet("admin/structure/content/manage/article/fields/$field_id/storage");
     $this->assertSession()->hiddenFieldValueEquals('settings[default_image][uuid][fids]', $default_images['field_storage']->id());
     // Confirm the defaults are present on the article field edit form.
-    $this->drupalGet("admin/structure/types/manage/article/fields/$field_id");
+    $this->drupalGet("admin/structure/content/manage/article/fields/$field_id");
     $this->assertSession()->hiddenFieldValueEquals('settings[default_image][uuid][fids]', $default_images['field']->id());
 
     // Confirm the defaults are present on the page field storage settings form.
-    $this->drupalGet("admin/structure/types/manage/page/fields/$field_id/storage");
+    $this->drupalGet("admin/structure/content/manage/page/fields/$field_id/storage");
     $this->assertSession()->hiddenFieldValueEquals('settings[default_image][uuid][fids]', $default_images['field_storage']->id());
     // Confirm the defaults are present on the page field edit form.
     $field2_id = $field2->id();
-    $this->drupalGet("admin/structure/types/manage/page/fields/$field2_id");
+    $this->drupalGet("admin/structure/content/manage/page/fields/$field2_id");
     $this->assertSession()->hiddenFieldValueEquals('settings[default_image][uuid][fids]', $default_images['field2']->id());
 
     // Confirm that the image default is shown for a new article node.
@@ -167,7 +167,7 @@ class ImageFieldDefaultImagesTest extends ImageFieldTestBase {
 
     // Confirm that the new default is used on the article field storage
     // settings form.
-    $this->drupalGet("admin/structure/types/manage/article/fields/$field_id/storage");
+    $this->drupalGet("admin/structure/content/manage/article/fields/$field_id/storage");
     $this->assertSession()->hiddenFieldValueEquals('settings[default_image][uuid][fids]', $default_images['field_storage_new']->id());
 
     // Reload the nodes and confirm the field defaults are used.
@@ -184,7 +184,7 @@ class ImageFieldDefaultImagesTest extends ImageFieldTestBase {
     $field->save();
 
     // Confirm the new field default is used on the article field admin form.
-    $this->drupalGet("admin/structure/types/manage/article/fields/$field_id");
+    $this->drupalGet("admin/structure/content/manage/article/fields/$field_id");
     $this->assertSession()->hiddenFieldValueEquals('settings[default_image][uuid][fids]', $default_images['field_new']->id());
 
     // Reload the nodes.
@@ -209,7 +209,7 @@ class ImageFieldDefaultImagesTest extends ImageFieldTestBase {
     $field->save();
 
     // Confirm the article field default has been removed.
-    $this->drupalGet("admin/structure/types/manage/article/fields/$field_id");
+    $this->drupalGet("admin/structure/content/manage/article/fields/$field_id");
     $this->assertSession()->hiddenFieldValueEquals('settings[default_image][uuid][fids]', '');
 
     // Reload the nodes.
@@ -241,7 +241,7 @@ class ImageFieldDefaultImagesTest extends ImageFieldTestBase {
 
     // Confirm that the new default is used on the article field storage
     // settings form.
-    $this->drupalGet("admin/structure/types/manage/article/fields/$field_id/storage");
+    $this->drupalGet("admin/structure/content/manage/article/fields/$field_id/storage");
     $this->assertSession()->hiddenFieldValueEquals('settings[default_image][uuid][fids]', $default_images['field_storage_private']->id());
 
     // Upload a new default for the article's field after setting the field
@@ -252,7 +252,7 @@ class ImageFieldDefaultImagesTest extends ImageFieldTestBase {
     $field->save();
 
     // Confirm the new field default is used on the article field admin form.
-    $this->drupalGet("admin/structure/types/manage/article/fields/$field_id");
+    $this->drupalGet("admin/structure/content/manage/article/fields/$field_id");
     $this->assertSession()->hiddenFieldValueEquals('settings[default_image][uuid][fids]', $default_images['field_private']->id());
   }
 

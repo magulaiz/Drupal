@@ -701,11 +701,11 @@ class DateTimeFieldTest extends DateTestBase {
         'set_default_value' => '1',
         'default_value_input[default_date_type]' => 'now',
       ];
-      $this->drupalGet('admin/structure/types/manage/date_content/fields/node.date_content.' . $field_name);
+      $this->drupalGet('admin/structure/content/manage/date_content/fields/node.date_content.' . $field_name);
       $this->submitForm($field_edit, 'Save settings');
 
       // Check that default value is selected in default value form.
-      $this->drupalGet('admin/structure/types/manage/date_content/fields/node.date_content.' . $field_name);
+      $this->drupalGet('admin/structure/content/manage/date_content/fields/node.date_content.' . $field_name);
       $this->assertTrue($this->assertSession()->optionExists('edit-default-value-input-default-date-type', 'now')->isSelected());
       // Check that the relative default value is empty.
       $this->assertSession()->fieldValueEquals('default_value_input[default_date]', '');
@@ -729,7 +729,7 @@ class DateTimeFieldTest extends DateTestBase {
         'default_value_input[default_date_type]' => 'relative',
         'default_value_input[default_date]' => 'invalid date',
       ];
-      $this->drupalGet('admin/structure/types/manage/date_content/fields/node.date_content.' . $field_name);
+      $this->drupalGet('admin/structure/content/manage/date_content/fields/node.date_content.' . $field_name);
       $this->submitForm($field_edit, 'Save settings');
 
       $this->assertSession()->pageTextContains('The relative date value entered is invalid.');
@@ -740,11 +740,11 @@ class DateTimeFieldTest extends DateTestBase {
         'default_value_input[default_date_type]' => 'relative',
         'default_value_input[default_date]' => '+90 days',
       ];
-      $this->drupalGet('admin/structure/types/manage/date_content/fields/node.date_content.' . $field_name);
+      $this->drupalGet('admin/structure/content/manage/date_content/fields/node.date_content.' . $field_name);
       $this->submitForm($field_edit, 'Save settings');
 
       // Check that default value is selected in default value form.
-      $this->drupalGet('admin/structure/types/manage/date_content/fields/node.date_content.' . $field_name);
+      $this->drupalGet('admin/structure/content/manage/date_content/fields/node.date_content.' . $field_name);
       $this->assertTrue($this->assertSession()->optionExists('edit-default-value-input-default-date-type', 'relative')->isSelected());
       // Check that the relative default value is displayed.
       $this->assertSession()->fieldValueEquals('default_value_input[default_date]', '+90 days');
@@ -768,11 +768,11 @@ class DateTimeFieldTest extends DateTestBase {
         'set_default_value' => '1',
         'default_value_input[default_date_type]' => '',
       ];
-      $this->drupalGet('admin/structure/types/manage/date_content/fields/node.date_content.' . $field_name);
+      $this->drupalGet('admin/structure/content/manage/date_content/fields/node.date_content.' . $field_name);
       $this->submitForm($field_edit, 'Save settings');
 
       // Check that default value is selected in default value form.
-      $this->drupalGet('admin/structure/types/manage/date_content/fields/node.date_content.' . $field_name);
+      $this->drupalGet('admin/structure/content/manage/date_content/fields/node.date_content.' . $field_name);
       $this->assertTrue($this->assertSession()->optionExists('edit-default-value-input-default-date-type', '')->isSelected());
       // Check that the relative default value is empty.
       $this->assertSession()->fieldValueEquals('default_value_input[default_date]', '');
@@ -921,7 +921,7 @@ class DateTimeFieldTest extends DateTestBase {
     ];
     $this->drupalGet('node/add/date_content');
     $this->submitForm($edit, 'Save');
-    $this->drupalGet('admin/structure/types/manage/date_content/fields/node.date_content.' . $field_name . '/storage');
+    $this->drupalGet('admin/structure/content/manage/date_content/fields/node.date_content.' . $field_name . '/storage');
     $this->assertSession()->elementsCount('xpath', "//*[@id='edit-settings-datetime-type' and contains(@disabled, 'disabled')]", 1);
   }
 

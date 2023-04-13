@@ -109,7 +109,7 @@ abstract class ModerationStateTestBase extends BrowserTestBase {
    *   The workflow to attach to the bundle.
    */
   protected function createContentTypeFromUi($content_type_name, $content_type_id, $moderated = FALSE, $workflow_id = 'editorial') {
-    $this->drupalGet('admin/structure/types');
+    $this->drupalGet('admin/structure/content');
     $this->clickLink('Add content type');
 
     $edit = [

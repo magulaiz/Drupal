@@ -287,7 +287,7 @@ class NodeCreationTest extends NodeTestBase {
   public function testNodeAddWithoutContentTypes() {
     $this->drupalGet('node/add');
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertSession()->linkByHrefNotExists('/admin/structure/types/add');
+    $this->assertSession()->linkByHrefNotExists('/admin/structure/content/add');
 
     // Test /node/add page without content types.
     foreach (\Drupal::entityTypeManager()->getStorage('node_type')->loadMultiple() as $entity) {
@@ -304,7 +304,7 @@ class NodeCreationTest extends NodeTestBase {
 
     $this->drupalGet('node/add');
 
-    $this->assertSession()->linkByHrefExists('/admin/structure/types/add');
+    $this->assertSession()->linkByHrefExists('/admin/structure/content/add');
   }
 
   /**

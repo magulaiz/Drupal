@@ -181,7 +181,7 @@ class EntityReferenceWidgetTest extends MediaLibraryTestBase {
     }
     $expected_link_titles = ['Show Type Three media (selected)', 'Show Type One media', 'Show Type Two media', 'Show Type Four media'];
     $this->assertSame($link_titles, $expected_link_titles);
-    $this->drupalGet('admin/structure/types/manage/basic_page/form-display');
+    $this->drupalGet('admin/structure/content/manage/basic_page/form-display');
 
     // Ensure that the widget settings form is not displayed when only
     // one media type is allowed.

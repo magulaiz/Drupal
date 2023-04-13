@@ -39,10 +39,10 @@ use Drupal\node\NodeTypeInterface;
  *     "label" = "name"
  *   },
  *   links = {
- *     "edit-form" = "/admin/structure/types/manage/{node_type}",
- *     "delete-form" = "/admin/structure/types/manage/{node_type}/delete",
- *     "entity-permissions-form" = "/admin/structure/types/manage/{node_type}/permissions",
- *     "collection" = "/admin/structure/types",
+ *     "edit-form" = "/admin/structure/content/manage/{node_type}",
+ *     "delete-form" = "/admin/structure/content/manage/{node_type}/delete",
+ *     "entity-permissions-form" = "/admin/structure/content/manage/{node_type}/permissions",
+ *     "collection" = "/admin/structure/content",
  *   },
  *   config_export = {
  *     "name",

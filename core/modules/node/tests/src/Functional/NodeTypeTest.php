@@ -86,7 +86,7 @@ class NodeTypeTest extends NodeTestBase {
       'title_label' => 'title for foo',
       'type' => 'foo',
     ];
-    $this->drupalGet('admin/structure/types/add');
+    $this->drupalGet('admin/structure/content/add');
     $this->submitForm($edit, 'Save and manage fields');
     $type_exists = (bool) NodeType::load('foo');
     $this->assertTrue($type_exists, 'The new content type has been created in the database.');
@@ -121,7 +121,7 @@ class NodeTypeTest extends NodeTestBase {
     $edit = [
       'title_label' => 'Foo',
     ];
-    $this->drupalGet('admin/structure/types/manage/page');
+    $this->drupalGet('admin/structure/content/manage/page');
     $this->submitForm($edit, 'Save content type');
 
     $this->drupalGet('node/add/page');
@@ -133,7 +133,7 @@ class NodeTypeTest extends NodeTestBase {
       'name' => 'Bar',
       'description' => 'Lorem ipsum.',
     ];
-    $this->drupalGet('admin/structure/types/manage/page');
+    $this->drupalGet('admin/structure/content/manage/page');
     $this->submitForm($edit, 'Save content type');
 
     $this->drupalGet('node/add');
@@ -155,16 +155,16 @@ class NodeTypeTest extends NodeTestBase {
     $this->assertEquals('NewBar', $node_bundles['page']['label'], 'Node type bundle cache is updated');
 
     // Remove the body field.
-    $this->drupalGet('admin/structure/types/manage/page/fields/node.page.body/delete');
+    $this->drupalGet('admin/structure/content/manage/page/fields/node.page.body/delete');
     $this->submitForm([], 'Delete');
     // Resave the settings for this type.
-    $this->drupalGet('admin/structure/types/manage/page');
+    $this->drupalGet('admin/structure/content/manage/page');
     $this->submitForm([], 'Save content type');
     $front_page_path = Url::fromRoute('<front>')->toString();
-    $this->assertBreadcrumb('admin/structure/types/manage/page/fields', [
+    $this->assertBreadcrumb('admin/structure/content/manage/page/fields', [
       $front_page_path => 'Home',
-      'admin/structure/types' => 'Content types',
-      'admin/structure/types/manage/page' => 'NewBar',
+      'admin/structure/content' => 'Content types',
+      'admin/structure/content/manage/page' => 'NewBar',
     ]);
     // Check that the body field doesn't exist.
     $this->drupalGet('node/add/page');
@@ -189,14 +189,14 @@ class NodeTypeTest extends NodeTestBase {
     // Add a new node of this type.
     $node = $this->drupalCreateNode(['type' => $type->id()]);
     // Attempt to delete the content type, which should not be allowed.
-    $this->drupalGet('admin/structure/types/manage/' . $type->label() . '/delete');
+    $this->drupalGet('admin/structure/content/manage/' . $type->label() . '/delete');
     $this->assertSession()->pageTextContains("{$type->label()} is used by 1 piece of content on your site. You can not remove this content type until you have removed all of the {$type->label()} content.");
     $this->assertSession()->pageTextNotContains('This action cannot be undone.');
 
     // Delete the node.
     $node->delete();
     // Attempt to delete the content type, which should now be allowed.
-    $this->drupalGet('admin/structure/types/manage/' . $type->label() . '/delete');
+    $this->drupalGet('admin/structure/content/manage/' . $type->label() . '/delete');
     $this->assertSession()->pageTextContains("Are you sure you want to delete the content type {$type->label()}?");
     $this->assertSession()->pageTextContains('This action cannot be undone.');
 
@@ -209,15 +209,15 @@ class NodeTypeTest extends NodeTestBase {
     // Call to flush all caches after installing the forum module in the same
     // way installing a module through the UI does.
     $this->resetAll();
-    $this->drupalGet('admin/structure/types/manage/default');
+    $this->drupalGet('admin/structure/content/manage/default');
     $this->assertSession()->linkNotExists('Delete');
-    $this->drupalGet('admin/structure/types/manage/default/delete');
+    $this->drupalGet('admin/structure/content/manage/default/delete');
     $this->assertSession()->statusCodeEquals(403);
     $this->container->get('module_installer')->uninstall(['node_test_config']);
     $this->container = \Drupal::getContainer();
     unset($locked['default']);
     \Drupal::state()->set('node.type.locked', $locked);
-    $this->drupalGet('admin/structure/types/manage/default');
+    $this->drupalGet('admin/structure/content/manage/default');
     $this->clickLink('Delete');
     $this->assertSession()->statusCodeEquals(200);
     $this->submitForm([], 'Delete');
@@ -237,10 +237,10 @@ class NodeTypeTest extends NodeTestBase {
     $this->drupalLogin($admin_user_1);
 
     // Test that the user only sees the actions available to them.
-    $this->drupalGet('admin/structure/types');
-    $this->assertSession()->linkByHrefExists('admin/structure/types/manage/article/fields');
-    $this->assertSession()->linkByHrefExists('admin/structure/types/manage/article/permissions');
-    $this->assertSession()->linkByHrefNotExists('admin/structure/types/manage/article/display');
+    $this->drupalGet('admin/structure/content');
+    $this->assertSession()->linkByHrefExists('admin/structure/content/manage/article/fields');
+    $this->assertSession()->linkByHrefExists('admin/structure/content/manage/article/permissions');
+    $this->assertSession()->linkByHrefNotExists('admin/structure/content/manage/article/display');
 
     // Create another admin user who can manage node fields display.
     $admin_user_2 = $this->drupalCreateUser([
@@ -250,10 +250,10 @@ class NodeTypeTest extends NodeTestBase {
     $this->drupalLogin($admin_user_2);
 
     // Test that the user only sees the actions available to them.
-    $this->drupalGet('admin/structure/types');
-    $this->assertSession()->linkByHrefNotExists('admin/structure/types/manage/article/fields');
-    $this->assertSession()->linkByHrefNotExists('admin/structure/types/manage/article/permissions');
-    $this->assertSession()->linkByHrefExists('admin/structure/types/manage/article/display');
+    $this->drupalGet('admin/structure/content');
+    $this->assertSession()->linkByHrefNotExists('admin/structure/content/manage/article/fields');
+    $this->assertSession()->linkByHrefNotExists('admin/structure/content/manage/article/permissions');
+    $this->assertSession()->linkByHrefExists('admin/structure/content/manage/article/display');
   }
 
   /**
@@ -267,14 +267,14 @@ class NodeTypeTest extends NodeTestBase {
     $this->drupalLogin($web_user);
 
     // Delete 'article' bundle.
-    $this->drupalGet('admin/structure/types/manage/article/delete');
+    $this->drupalGet('admin/structure/content/manage/article/delete');
     $this->submitForm([], 'Delete');
     // Delete 'page' bundle.
-    $this->drupalGet('admin/structure/types/manage/page/delete');
+    $this->drupalGet('admin/structure/content/manage/page/delete');
     $this->submitForm([], 'Delete');
 
     // Navigate to content type administration screen
-    $this->drupalGet('admin/structure/types');
+    $this->drupalGet('admin/structure/content');
     $this->assertSession()->pageTextContains("No content types available. Add content type.");
     $this->assertSession()->linkExists("Add content type");
     $this->assertSession()->linkByHrefExists(Url::fromRoute('node.type_add')->toString());

@@ -87,9 +87,9 @@ class EntityTranslationFormTest extends BrowserTestBase {
     $this->assertSame($form_langcode, $langcode, 'Form language is the same as the language parameter.');
 
     // Enable language selector.
-    $this->drupalGet('admin/structure/types/manage/page');
+    $this->drupalGet('admin/structure/content/manage/page');
     $edit = ['language_configuration[language_alterable]' => TRUE, 'language_configuration[langcode]' => LanguageInterface::LANGCODE_NOT_SPECIFIED];
-    $this->drupalGet('admin/structure/types/manage/page');
+    $this->drupalGet('admin/structure/content/manage/page');
     $this->submitForm($edit, 'Save content type');
     $this->assertSession()->pageTextContains("The content type Basic page has been updated.");
 

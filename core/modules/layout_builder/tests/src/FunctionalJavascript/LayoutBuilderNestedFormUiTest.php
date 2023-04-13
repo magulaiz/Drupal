@@ -73,7 +73,7 @@ class LayoutBuilderNestedFormUiTest extends WebDriverTestBase {
     ]));
 
     // From the manage display page, enable Layout Builder.
-    $field_ui_prefix = 'admin/structure/types/manage/bundle_with_section_field';
+    $field_ui_prefix = 'admin/structure/content/manage/bundle_with_section_field';
     $this->drupalGet("$field_ui_prefix/display/default");
     $this->submitForm(['layout[enabled]' => TRUE], 'Save');
     $this->submitForm(['layout[allow_custom]' => TRUE], 'Save');
@@ -107,7 +107,7 @@ class LayoutBuilderNestedFormUiTest extends WebDriverTestBase {
     ]));
 
     // From the manage display page, enable Layout Builder.
-    $field_ui_prefix = 'admin/structure/types/manage/bundle_with_section_field';
+    $field_ui_prefix = 'admin/structure/content/manage/bundle_with_section_field';
     $this->drupalGet("$field_ui_prefix/display/default");
     $this->submitForm(['layout[enabled]' => TRUE], 'Save');
     $this->submitForm(['layout[allow_custom]' => TRUE], 'Save');

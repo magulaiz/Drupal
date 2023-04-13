@@ -65,7 +65,7 @@ class OptionsFloatFieldImportTest extends FieldTestBase {
     $field_storage = FieldStorageConfig::loadByName('node', $field_name);
     $this->assertSame($array = ['0' => 'Zero', '0.5' => 'Point five'], $field_storage->getSetting('allowed_values'));
 
-    $admin_path = 'admin/structure/types/manage/' . $type . '/fields/node.' . $type . '.' . $field_name . '/storage';
+    $admin_path = 'admin/structure/content/manage/' . $type . '/fields/node.' . $type . '.' . $field_name . '/storage';
 
     // Export active config to sync.
     $this->copyConfig($this->container->get('config.storage'), $this->container->get('config.storage.sync'));

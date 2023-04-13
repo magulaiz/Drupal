@@ -80,7 +80,7 @@ class ClaroLayoutBuilderTest extends BrowserTestBase {
       'access contextual links',
     ]));
 
-    $field_ui_prefix = 'admin/structure/types/manage/bundle_with_section_field';
+    $field_ui_prefix = 'admin/structure/content/manage/bundle_with_section_field';
 
     // From the manage display page, go to manage the layout.
     $this->drupalGet("$field_ui_prefix/display/default");

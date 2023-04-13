@@ -133,7 +133,7 @@ class EntityReferenceAutocompleteWidgetTest extends WebDriverTestBase {
       'administer node form display',
       'create page content',
     ]));
-    $this->drupalGet('/admin/structure/types/manage/page/form-display');
+    $this->drupalGet('/admin/structure/content/manage/page/form-display');
     $assert_session->pageTextContains('Autocomplete suggestion list size: 1');
     // Click on the widget settings button to open the widget settings form.
     $this->submitForm([], $field_name . "_settings_edit");

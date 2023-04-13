@@ -41,7 +41,7 @@ class LocaleContentTest extends BrowserTestBase {
     $this->drupalLogin($admin_user);
 
     // Verify that the machine name field is LTR for a new content type.
-    $this->drupalGet('admin/structure/types/add');
+    $this->drupalGet('admin/structure/content/add');
     $type = $this->assertSession()->fieldExists('type');
     $this->assertSame('ltr', $type->getAttribute('dir'));
 
@@ -58,7 +58,7 @@ class LocaleContentTest extends BrowserTestBase {
     $this->submitForm($edit, 'Save configuration');
 
     // Verify that the machine name field is still LTR for a new content type.
-    $this->drupalGet('admin/structure/types/add');
+    $this->drupalGet('admin/structure/content/add');
     $type = $this->assertSession()->fieldExists('type');
     $this->assertSame('ltr', $type->getAttribute('dir'));
   }
@@ -99,12 +99,12 @@ class LocaleContentTest extends BrowserTestBase {
     $this->submitForm($edit, 'Add custom language');
 
     // Set the content type to use multilingual support.
-    $this->drupalGet("admin/structure/types/manage/{$type2->id()}");
+    $this->drupalGet("admin/structure/content/manage/{$type2->id()}");
     $this->assertSession()->pageTextContains('Language settings');
     $edit = [
       'language_configuration[language_alterable]' => TRUE,
     ];
-    $this->drupalGet("admin/structure/types/manage/{$type2->id()}");
+    $this->drupalGet("admin/structure/content/manage/{$type2->id()}");
     $this->submitForm($edit, 'Save content type');
     $this->assertSession()->pageTextContains("The content type {$type2->label()} has been updated.");
     $this->drupalLogout();
@@ -189,11 +189,11 @@ class LocaleContentTest extends BrowserTestBase {
     \Drupal::languageManager()->reset();
 
     // Set the content type to use multilingual support.
-    $this->drupalGet("admin/structure/types/manage/{$type->id()}");
+    $this->drupalGet("admin/structure/content/manage/{$type->id()}");
     $edit = [
       'language_configuration[language_alterable]' => TRUE,
     ];
-    $this->drupalGet("admin/structure/types/manage/{$type->id()}");
+    $this->drupalGet("admin/structure/content/manage/{$type->id()}");
     $this->submitForm($edit, 'Save content type');
     $this->assertSession()->pageTextContains("The content type {$type->label()} has been updated.");
     $this->drupalLogout();
