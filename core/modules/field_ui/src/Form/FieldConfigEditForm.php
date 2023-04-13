@@ -239,21 +239,7 @@ class FieldConfigEditForm extends EntityForm {
 
     // Add handling for default value.
     if ($element = $items->defaultValuesForm($form, $form_state)) {
-      $has_default_value = FALSE;
-      if (isset($element['widget'])) {
-        foreach (Element::children($element['widget']) as $child) {
-          if (isset($element['widget'][$child]['#default_value'])) {
-            $has_default_value = TRUE;
-            break;
-          }
-        }
-      }
-      $form['advanced']['default_value_checkbox'] = [
-        '#type' => 'checkbox',
-        '#title' => $this->t('Set initial value (default value)'),
-        '#default_value' => $has_default_value,
-        '#description' => $this->t('Provide a pre-filled value for the editing form.'),
-      ];
+      $has_required = $this->hasAnyRequired($element);
 
       $element = array_merge($element, [
         '#type' => 'details',
@@ -262,12 +248,23 @@ class FieldConfigEditForm extends EntityForm {
         '#tree' => TRUE,
         '#description' => $this->t('The default value for this field, used when creating new content.'),
         '#weight' => 12,
-        '#states' => [
-          'invisible' => [
-            ':input[name="default_value_checkbox"]' => ['checked' => FALSE],
-          ],
-        ],
       ]);
+
+      if (!$has_required) {
+        $has_default_value = $this->hasAnyElementDefaultValue($element);
+        $element['#states'] = [
+          'invisible' => [
+            ':input[name="set_default_value"]' => ['checked' => FALSE],
+          ],
+        ];
+        $form['advanced']['set_default_value'] = [
+          '#type' => 'checkbox',
+          '#title' => $this->t('Set default value'),
+          '#default_value' => $has_default_value,
+          '#description' => $this->t('Provide a pre-filled value for the editing form.'),
+          '#weight' => $element['#weight'],
+        ];
+      }
 
       $form['advanced']['default_value'] = $element;
     }
