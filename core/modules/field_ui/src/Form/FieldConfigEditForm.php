@@ -10,13 +10,11 @@ use Drupal\Core\Ajax\ReplaceCommand;
 use Drupal\Core\Entity\EntityForm;
 use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
 use Drupal\Core\Field\FieldFilteredMarkup;
-use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Form\FormBuilderInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Url;
 use Drupal\field\FieldConfigInterface;
-use Drupal\field\FieldStorageConfigInterface;
 use Drupal\field_ui\FieldUI;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -33,13 +31,6 @@ class FieldConfigEditForm extends EntityForm {
    * @var \Drupal\field\FieldConfigInterface
    */
   protected $entity;
-
-  /**
-   * The field storage being used by this form.
-   *
-   * @var \Drupal\field\FieldStorageConfigInterface
-   */
-  protected $fieldStorage;
 
   /**
    * The entity type bundle info service.
@@ -73,7 +64,7 @@ class FieldConfigEditForm extends EntityForm {
   public function form(array $form, FormStateInterface $form_state) {
     $form = parent::form($form, $form_state);
 
-    $this->fieldStorage = $this->entity->getFieldStorageDefinition();
+    $field_storage = $this->entity->getFieldStorageDefinition();
     $bundles = $this->entityTypeBundleInfo->getBundleInfo($this->entity->getTargetEntityTypeId());
 
     $form_title = $this->t('%field settings for %bundle', [
@@ -82,7 +73,7 @@ class FieldConfigEditForm extends EntityForm {
     ]);
     $form['#title'] = $form_title;
 
-    if ($this->fieldStorage->isLocked()) {
+    if ($field_storage->isLocked()) {
       $form['locked'] = [
         '#markup' => $this->t('The field %field is locked and cannot be edited.', ['%field' => $this->entity->getLabel()]),
       ];
@@ -91,82 +82,18 @@ class FieldConfigEditForm extends EntityForm {
 
     $form['#prefix'] = '<div id="field-ui-edit-form">';
     $form['#suffix'] = '</div>';
-    $form['basic'] = [
-      '#type' => 'container',
-      '#attributes' => [
-        'id' => ['basic'],
-      ],
-      '#title' => $this->t('Basic settings'),
-    ];
-    $form['advanced'] = [
-      '#type' => 'container',
-      '#attributes' => [
-        'id' => ['advanced'],
-      ],
-      '#title' => $this->t('Advanced settings'),
-    ];
 
     // Build the configurable field values.
-    $form['basic']['label'] = [
+    $form['label'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Label'),
-      '#default_value' => $this->entity->getLabel() ?: $this->fieldStorage->getName(),
+      '#default_value' => $this->entity->getLabel() ?: $field_storage->getName(),
       '#required' => TRUE,
       '#maxlength' => 255,
       '#weight' => -20,
     ];
 
-    if (array_diff($this->fieldStorage->getBundles(), [$this->entity->getTargetBundle()])) {
-      $bundle_info = $this->entityTypeBundleInfo->getAllBundleInfo();
-      $bundle_labels = array_map(function ($bundle) use ($bundle_info) {
-        return $bundle_info[$this->fieldStorage->getTargetEntityTypeId()][$bundle]['label'];
-      }, $this->fieldStorage->getBundles());
-      $form['basic']['storage'] = [
-        '#type' => 'fieldset',
-        '#title' => $this->t('Field Storage'),
-        '#description_display' => 'before',
-        '#weight' => -15,
-        '#description' => $this->t('These settings apply to the %field field everywhere it is used (%other_types). Some also impact the way that data is stored and cannot be changed once data has been created.', ['%field' => $this->entity->getLabel(), '%other_types' => implode(', ', $bundle_labels)]),
-      ];
-      $form['advanced']['storage'] = [
-        '#type' => 'fieldset',
-        '#title' => $this->t('Field Storage'),
-        '#description_display' => 'before',
-        '#weight' => -15,
-        '#description' => $this->t('These settings apply to the %field field everywhere it is used (%other_types). Some also impact the way that data is stored and cannot be changed once data has been created.', ['%field' => $this->entity->getLabel(), '%other_types' => implode(', ', $bundle_labels)]),
-      ];
-    }
-
-    $form['basic']['storage']['cardinality'] = [
-      '#type' => 'checkbox',
-      '#title' => $this->t('Allow multiple values (cardinality)'),
-      '#default_value' => $this->fieldStorage->getCardinality() > 1 || $this->fieldStorage->getCardinality() === FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED,
-    ];
-    $form['basic']['storage']['cardinality_unlimited'] = [
-      '#type' => 'checkbox',
-      '#title' => $this->t('Allow unlimited values (cardinality)'),
-      '#default_value' => $this->fieldStorage->getCardinality() === FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED,
-      '#states' => [
-        'invisible' => [
-          ':input[name="cardinality"]' => ['checked' => FALSE],
-        ],
-      ],
-    ];
-    $form['basic']['storage']['cardinality_number'] = [
-      '#type' => 'number',
-      '#min' => 2,
-      '#title' => $this->t('Limit'),
-      '#default_value' => $this->fieldStorage->getCardinality() > 1 ? $this->fieldStorage->getCardinality() : '2',
-      '#size' => 2,
-      '#states' => [
-        'visible' => [
-          ':input[name="cardinality"]' => ['checked' => TRUE],
-          ':input[name="cardinality_unlimited"]' => ['checked' => FALSE],
-        ],
-      ],
-    ];
-
-    $form['advanced']['description'] = [
+    $form['description'] = [
       '#type' => 'textarea',
       '#title' => $this->t('Help text'),
       '#default_value' => $this->entity->getDescription(),
@@ -175,7 +102,7 @@ class FieldConfigEditForm extends EntityForm {
       '#weight' => -10,
     ];
 
-    $form['basic']['required'] = [
+    $form['required'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Required field'),
       '#default_value' => $this->entity->isRequired(),
@@ -192,49 +119,16 @@ class FieldConfigEditForm extends EntityForm {
     $items = $form['#entity']->get($this->entity->getName());
     $item = $items->first() ?: $items->appendItem();
 
-    $form['basic']['storage']['field_storage_settings'] = [
-      '#tree' => TRUE,
-    ];
-    $form['basic']['storage']['field_storage_settings'] += $item->storageSettingsForm($form, $form_state, $this->fieldStorage->hasData());
-    if (isset($form['basic']['storage']['field_storage_settings'])) {
-      foreach (Element::children($form['basic']['storage']['field_storage_settings']) as $child) {
-        if (isset($form['basic']['storage']['field_storage_settings'][$child]['#group'])) {
-          $form['basic']['storage']['field_storage_settings'][$child]['#parents'] = ['field_storage_settings', $child];
-          $form['advanced']['storage']['field_storage_settings'][$child] = $form['basic']['storage']['field_storage_settings'][$child];
-          unset($form['basic']['storage']['field_storage_settings'][$child]);
-        }
-      }
-    }
-
-    // Avoid empty fieldsets.
-    if (isset($form['basic']['storage']) && !Element::children($form['basic']['storage'])) {
-      unset($form['basic']['storage']);
-    }
-    if (isset($form['advanced']['storage']) && !Element::children($form['advanced']['storage'])) {
-      unset($form['advanced']['storage']);
-    }
-
     // Add field settings for the field type and a container for third party
     // settings that modules can add to via hook_form_FORM_ID_alter().
-    $form['basic']['settings'] = [
+    $form['settings'] = [
       '#tree' => TRUE,
       '#weight' => 10,
     ];
-    $form['basic']['settings'] += $item->fieldSettingsForm($form, $form_state);
-    if (isset($form['basic']['settings'])) {
-      foreach (Element::children($form['basic']['settings']) as $child) {
-        if (isset($form['basic']['settings'][$child]['#group'])) {
-          $form['basic']['settings'][$child]['#parents'] = ['settings', $child];
-          $form['advanced']['settings'][$child] = $form['basic']['settings'][$child];
-          unset($form['basic']['settings'][$child]);
-        }
-      }
-    }
-
+    $form['settings'] += $item->fieldSettingsForm($form, $form_state);
     $form['third_party_settings'] = [
       '#tree' => TRUE,
       '#weight' => 11,
-      '#group' => 'advanced',
     ];
 
     // Add handling for default value.
@@ -257,7 +151,7 @@ class FieldConfigEditForm extends EntityForm {
             ':input[name="set_default_value"]' => ['checked' => FALSE],
           ],
         ];
-        $form['advanced']['set_default_value'] = [
+        $form['set_default_value'] = [
           '#type' => 'checkbox',
           '#title' => $this->t('Set default value'),
           '#default_value' => $has_default_value,
@@ -266,7 +160,7 @@ class FieldConfigEditForm extends EntityForm {
         ];
       }
 
-      $form['advanced']['default_value'] = $element;
+      $form['default_value'] = $element;
     }
     $form['#attached']['library'][] = 'field_ui/drupal.field_ui';
     $form['#attached']['library'][] = 'core/drupal.dialog.ajax';
@@ -390,9 +284,9 @@ class FieldConfigEditForm extends EntityForm {
   public function validateForm(array &$form, FormStateInterface $form_state) {
     parent::validateForm($form, $form_state);
 
-    if (isset($form['advanced']['default_value']) && (!isset($form['set_default_value']) || $form_state->getValue('set_default_value'))) {
+    if (isset($form['default_value']) && (!isset($form['set_default_value']) || $form_state->getValue('set_default_value'))) {
       $item = $form['#entity']->get($this->entity->getName());
-      $item->defaultValuesFormValidate($form['advanced']['default_value'], $form, $form_state);
+      $item->defaultValuesFormValidate($form['default_value'], $form, $form_state);
     }
   }
 
@@ -404,16 +298,11 @@ class FieldConfigEditForm extends EntityForm {
 
     // Handle the default value.
     $default_value = [];
-    if (isset($form['advanced']['default_value']) && (!isset($form['set_default_value']) || $form_state->getValue('set_default_value'))) {
+    if (isset($form['default_value']) && (!isset($form['set_default_value']) || $form_state->getValue('set_default_value'))) {
       $items = $form['#entity']->get($this->entity->getName());
-      $default_value = $items->defaultValuesFormSubmit($form['advanced']['default_value'], $form, $form_state);
+      $default_value = $items->defaultValuesFormSubmit($form['default_value'], $form, $form_state);
     }
     $this->entity->setDefaultValue($default_value);
-
-    $this->fieldStorage->setCardinality(!$form_state->getValue('cardinality') ? 1 : ($form_state->getValue('cardinality_unlimited') ? FieldStorageConfigInterface::CARDINALITY_UNLIMITED : $form_state->getValue('cardinality_number')));
-    if (NULL !== $form_state->getValue('field_storage_settings')) {
-      $this->fieldStorage->setSettings($form_state->getValue('field_storage_settings'));
-    }
   }
 
   /**
@@ -421,7 +310,6 @@ class FieldConfigEditForm extends EntityForm {
    */
   public function save(array $form, FormStateInterface $form_state) {
     $this->entity->save();
-    $this->fieldStorage->save();
 
     $this->messenger()->addStatus($this->t('Saved %label configuration.', ['%label' => $this->entity->getLabel()]));
 

@@ -37,11 +37,10 @@ class FieldConfigListBuilderTest extends WebDriverTestBase {
 
     $this->drupalCreateContentType(['type' => 'test']);
 
-    $this->adminUser = $this->drupalCreateUser(
-      [
-        'administer content types',
-        'administer node fields',
-      ]);
+    $this->adminUser = $this->drupalCreateUser([
+      'administer content types',
+      'administer node fields',
+    ]);
     $this->drupalLogin($this->adminUser);
   }
 
