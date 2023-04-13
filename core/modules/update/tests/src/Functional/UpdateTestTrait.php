@@ -12,7 +12,7 @@ trait UpdateTestTrait {
    *
    * It expects information about the installed modules.
    *
-   * @param string[][] $system_info
+   * @param string[][] $installed_modules
    *   The system info.
    *   In the format as the key to be the project name and an array of sub keys
    *   as value such as 'project' (which is just the project name), 'version',
@@ -25,11 +25,11 @@ trait UpdateTestTrait {
    * @param string[] $default_config
    *   (optional) The default config keys to be set for all the modules.
    */
-  public function mockInstalledModules(array $system_info, array $default_config = []): void {
+  public function mockInstalledModules(array $installed_modules, array $default_config = []): void {
     if (!empty($default_config)) {
-      $system_info = array_merge(['#all' => $default_config], $system_info);
+      $installed_modules = array_merge(['#all' => $default_config], $installed_modules);
     }
-    $this->config('update_test.settings')->set('system_info', $system_info)->save();
+    $this->config('update_test.settings')->set('system_info', $installed_modules)->save();
   }
 
   /**
