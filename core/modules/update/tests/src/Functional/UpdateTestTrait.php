@@ -13,7 +13,7 @@ trait UpdateTestTrait {
    * It expects information about the installed modules.
    *
    * @param string[][] $installed_modules
-   *   The system info.
+   *   The mock installed modules array.
    *   In the format as the key to be the project name and an array of sub keys
    *   as value such as 'project' (which is just the project name), 'version',
    *   'hidden', for example:
