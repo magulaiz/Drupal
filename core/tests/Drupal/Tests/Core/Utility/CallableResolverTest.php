@@ -43,8 +43,9 @@ class CallableResolverTest extends UnitTestCase {
    * @dataProvider callableResolverTestCases
    * @covers ::getCallableFromDefinition
    */
-  public function testCallbackResolver($definition) {
-    $this->assertEquals('foobar', $this->resolver->getCallableFromDefinition($definition)('bar'));
+  public function testCallbackResolver($definition, $result) {
+    $argument = 'bar';
+    $this->assertEquals($result . '+' . $argument, $this->resolver->getCallableFromDefinition($definition)($argument));
   }
 
   /**
@@ -53,42 +54,62 @@ class CallableResolverTest extends UnitTestCase {
   public function callableResolverTestCases() {
     return [
       'Inline function' => [
-        function ($suffix) {
-          return 'foo' . $suffix;
+        function($suffix) {
+          return __METHOD__ . '+' . $suffix;
         },
+        'Drupal\Tests\Core\Utility\{closure}',
       ],
-      'First-class callable function' => [$this->method(...)],
-      'First-class callable static' => [static::staticMethod(...)],
-      'Arrow function' => [fn($suffix) => 'foo' . $suffix],
+      'First-class callable function' => [
+        $this->method(...),
+        __CLASS__ . '::method',
+      ],
+      'First-class callable static' => [
+        static::staticMethod(...),
+        __CLASS__ . '::staticMethod',
+      ],
+      'Arrow function' => [
+        fn($suffix) => __METHOD__ . '+' . $suffix,
+        'Drupal\Tests\Core\Utility\{closure}',
+      ],
       'Static function' => [
         '\Drupal\Tests\Core\Utility\NoInstantiationMockStaticCallable::staticMethod',
+        'Drupal\Tests\Core\Utility\NoInstantiationMockStaticCallable::staticMethod',
       ],
       'Static function, array notation' => [
         [NoInstantiationMockStaticCallable::class, 'staticMethod'],
+        'Drupal\Tests\Core\Utility\NoInstantiationMockStaticCallable::staticMethod',
       ],
       'Static function, array notation, with object' => [
         [$this, 'staticMethod'],
+        __CLASS__ . '::staticMethod',
       ],
       'Non-static function, array notation, with object' => [
         [$this, 'method'],
+        __CLASS__ . '::method',
       ],
       'Non-static function, instantiated by class resolver' => [
         static::class . '::method',
+        __CLASS__ . '::method',
       ],
       'Non-static function, instantiated by class resolver, container injection' => [
         '\Drupal\Tests\Core\Utility\MockContainerInjection::getResult',
+        'Drupal\Tests\Core\Utility\MockContainerInjection::getResult-foo',
       ],
       'Non-static function, instantiated by class resolver, container aware' => [
         '\Drupal\Tests\Core\Utility\MockContainerAware::getResult',
+        'Drupal\Tests\Core\Utility\MockContainerAware::getResult',
       ],
       'Service notation' => [
         'test_service:method',
+        __CLASS__ . '::method',
       ],
       'Service notation, static method' => [
         'test_service:staticMethod',
+        __CLASS__ . '::staticMethod',
       ],
       'Class with invoke method' => [
         static::class,
+        __CLASS__ . '::__invoke',
       ],
     ];
   }
@@ -161,7 +182,7 @@ class CallableResolverTest extends UnitTestCase {
    *   A test string.
    */
   public static function staticMethod($suffix) {
-    return 'foo' . $suffix;
+    return __METHOD__ . '+' . $suffix;
   }
 
   /**
@@ -177,7 +198,7 @@ class CallableResolverTest extends UnitTestCase {
    *   Throws an exception when called statically.
    */
   public function method($suffix) {
-    return 'foo' . $suffix;
+    return __METHOD__ . '+' . $suffix;
   }
 
   /**
@@ -190,7 +211,7 @@ class CallableResolverTest extends UnitTestCase {
    *   A test string.
    */
   public function __invoke($suffix) {
-    return 'foo' . $suffix;
+    return __METHOD__ . '+' . $suffix;
   }
 
 }
@@ -208,7 +229,7 @@ class MockContainerInjection implements ContainerInjectionInterface {
   }
 
   public function getResult($suffix) {
-    return $this->injected . $suffix;
+    return __METHOD__ . '-' . $this->injected . '+' . $suffix;
   }
 
 }
@@ -220,7 +241,7 @@ class NoInstantiationMockStaticCallable {
   }
 
   public static function staticMethod($suffix) {
-    return 'foo' . $suffix;
+    return __METHOD__ . '+' . $suffix;
   }
 
 }
@@ -236,7 +257,7 @@ class MockContainerAware implements ContainerAwareInterface {
     if (empty($this->container)) {
       throw new \Exception('Container was not injected.');
     }
-    return 'foo' . $suffix;
+    return __METHOD__ . '+' . $suffix;
   }
 
 }
