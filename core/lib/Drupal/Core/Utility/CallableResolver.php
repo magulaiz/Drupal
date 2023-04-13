@@ -52,7 +52,7 @@ class CallableResolver {
     }
 
     if (is_array($definition)) {
-      throw new \InvalidArgumentException('The callable definition provided was not a valid callable array.');
+      throw new \InvalidArgumentException(sprintf('The callable definition provided "[%s]" is not a valid callable.', implode(",", $definition)));
     }
 
     if (!is_string($definition)) {
@@ -79,8 +79,8 @@ class CallableResolver {
     if (str_contains($definition, '::')) {
       [$classOrService, $method] = explode('::', $definition, 2);
     }
-    if ($classOrService === NULL || $method === NULL) {
-      throw new \InvalidArgumentException(sprintf('The callable definition provided was invalid.'));
+    if (empty($classOrService) || empty($method)) {
+      throw new \InvalidArgumentException(sprintf('The callable definition provided was invalid. Could not get class and method from definition "%s".', $definition));
     }
 
     $instance = $this->classResolver->getInstanceFromDefinition($classOrService);

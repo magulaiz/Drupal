@@ -116,12 +116,12 @@ class CallableResolverTest extends UnitTestCase {
       'Array notation' => [
         ['not_a_callable', 'not_a_callable'],
         \InvalidArgumentException::class,
-        'The callable definition provided was not a valid callable array.',
+        'The callable definition provided "[not_a_callable,not_a_callable]" is not a valid callable.',
       ],
       'Missing method on class, array notation' => [
         [static::class, 'method_not_exists'],
         \InvalidArgumentException::class,
-        'The callable definition provided was not a valid callable array.',
+        'The callable definition provided "[Drupal\Tests\Core\Utility\CallableResolverTest,method_not_exists]" is not a valid callable.',
       ],
       'Missing method on class, static notation' => [
         static::class . '::method_not_exists',
@@ -132,6 +132,11 @@ class CallableResolverTest extends UnitTestCase {
         '\NotARealClass::method',
         \InvalidArgumentException::class,
         'Class "\NotARealClass" does not exist.',
+      ],
+      'No method, static notation' => [
+        NoMethodCallable::class . "::",
+        \InvalidArgumentException::class,
+        'The callable definition provided was invalid. Could not get class and method from definition "Drupal\Tests\Core\Utility\NoMethodCallable::".',
       ],
       'Service not in container' => [
         'bad_service:method',
@@ -218,6 +223,9 @@ class NoInstantiationMockStaticCallable {
     return 'foo' . $suffix;
   }
 
+}
+
+class NoMethodCallable {
 }
 
 class MockContainerAware implements ContainerAwareInterface {
