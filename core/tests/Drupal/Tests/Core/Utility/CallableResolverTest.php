@@ -54,7 +54,7 @@ class CallableResolverTest extends UnitTestCase {
   public function callableResolverTestCases() {
     return [
       'Inline function' => [
-        function($suffix) {
+        function ($suffix) {
           return __METHOD__ . '+' . $suffix;
         },
         'Drupal\Tests\Core\Utility\{closure}',

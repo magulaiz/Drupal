@@ -12,18 +12,32 @@ use Drupal\Core\DependencyInjection\ClassResolverInterface;
  * resolver will return or invoke a callable defined in any of the following
  * definition formats:
  *
- * - Static methods: @code '\FooClass::staticMethod' @endcode
+ * - Service notation:
+ * @code
+ * 'some.service:method'
+ * @endcode
+ * - Static methods:
+ * @code
+ * '\FooClass::staticMethod'
+ * @endcode
  * - Non-static methods, instantiated with the class resolver:
- *
- * @code '\DependencyInjectedClass::method' @endcode
- * - Object calls: @code [$object, 'method'] @endcode
- * - Classes with an __invoke method: @code '\ClassWithInvoke' @endcode
- * - Service notation: @code 'some.service:method' @endcode
+ * @code
+ * '\DependencyInjectedClass::method'
+ * @endcode
+ * - Object calls:
+ * @code
+ * [$object, 'method']
+ * @endcode
+ * - Classes with an __invoke method:
+ * @code
+ * '\ClassWithInvoke'
+ * @endcode
+ * - Closures.
  */
 class CallableResolver {
 
   /**
-   * Create an instance of the callable resolver.
+   * Constructs a CallableResolver object.
    *
    * @param \Drupal\Core\DependencyInjection\ClassResolverInterface $classResolver
    *   The class resolver.
@@ -34,7 +48,7 @@ class CallableResolver {
   }
 
   /**
-   * Get a callable from a definition.
+   * Gets a callable from a definition.
    *
    * @param callable|array|string $definition
    *   A callable definition.
@@ -69,21 +83,21 @@ class CallableResolver {
     }
 
     // Callable in the service:method notation.
-    $classOrService = NULL;
+    $class_or_service = NULL;
     $method = NULL;
     $count = substr_count($definition, ':');
     if ($count == 1) {
-      [$classOrService, $method] = explode(':', $definition, 2);
+      [$class_or_service, $method] = explode(':', $definition, 2);
     }
     // Callable in the class::method notation.
     if (str_contains($definition, '::')) {
-      [$classOrService, $method] = explode('::', $definition, 2);
+      [$class_or_service, $method] = explode('::', $definition, 2);
     }
-    if (empty($classOrService) || empty($method)) {
+    if (empty($class_or_service) || empty($method)) {
       throw new \InvalidArgumentException(sprintf('The callable definition provided was invalid. Could not get class and method from definition "%s".', $definition));
     }
 
-    $instance = $this->classResolver->getInstanceFromDefinition($classOrService);
+    $instance = $this->classResolver->getInstanceFromDefinition($class_or_service);
     if (!is_callable([$instance, $method])) {
       throw new \InvalidArgumentException(sprintf('The callable definition provided was invalid. Either class "%s" does not have a method "%s", or it is not callable.', $instance::class, $method));
     }
