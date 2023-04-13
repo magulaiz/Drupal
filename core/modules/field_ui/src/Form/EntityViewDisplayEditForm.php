@@ -78,7 +78,7 @@ class EntityViewDisplayEditForm extends EntityDisplayFormBase {
     $form = parent::form($form, $form_state);
 
     $bundle_info = $this->entityTypeBundleInfo->getBundleInfo($this->entity->getTargetEntityTypeId());
-    $form['#title'] = $this->t('Manage form display: @bundle-label', [
+    $form['#title'] = $this->t('Manage display: @bundle-label', [
       '@bundle-label' => $bundle_info[$this->entity->getTargetBundle()]['label'],
     ]);
 
