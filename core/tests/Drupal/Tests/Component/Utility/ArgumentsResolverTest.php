@@ -67,6 +67,15 @@ class ArgumentsResolverTest extends TestCase {
       function ($foo) {}, $scalars, $objects, [], ['baz'],
     ];
 
+    // Test a static method string.
+    $data[] = [
+      TestStaticMethodClass::class . "::access",
+      [],
+      ['foo' => NULL],
+      [],
+      [NULL],
+    ];
+
     return $data;
   }
 
@@ -195,6 +204,11 @@ class TestClass {
   public function access($foo) {
   }
 
+}
+
+class TestStaticMethodClass {
+  public static function access($foo) {
+  }
 }
 
 /**
