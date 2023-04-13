@@ -49,7 +49,7 @@ abstract class HelpTopicTranslatedTestBase extends BrowserTestBase {
 
     // Create user.
     $this->drupalLogin($this->createUser([
-      'access administration pages',
+      'access help pages',
       'view the administration theme',
       'administer permissions',
     ]));
