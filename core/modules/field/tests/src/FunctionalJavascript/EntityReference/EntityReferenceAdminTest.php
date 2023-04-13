@@ -127,6 +127,7 @@ class EntityReferenceAdminTest extends WebDriverTestBase {
     $machine_name = $assert_session->waitForElement('xpath', '//*[@id="edit-label-machine-name-suffix"]/span[contains(text(), "field_test")]');
     $this->assertNotEmpty($machine_name);
     $page->pressButton('Save and continue');
+    $this->assertNotEmpty($this->assertSession()->waitForElementVisible('css', '#drupal-modal'));
 
     // Node should be selected by default.
     $this->assertSession()->fieldValueEquals('settings[target_type]', 'node');
@@ -135,7 +136,14 @@ class EntityReferenceAdminTest extends WebDriverTestBase {
     $this->assertFieldSelectOptions('settings[target_type]', array_keys(\Drupal::entityTypeManager()->getDefinitions()));
 
     // Second step: 'Field settings' form.
-    $this->submitForm([], 'Save field settings');
+    $submit_button = $this->assertSession()->waitForElementVisible('css', '.ui-dialog-buttonset .js-form-submit');
+    $this->assertSame('Save field settings', $submit_button->getText());
+    // Submit by a button press action to ensure submitForm() does not target
+    // The other 'Save settings' on the page that, unlike this one, is in a
+    // <form>.
+    $submit_button->press();
+
+    $this->assertNotEmpty($this->assertSession()->waitForElementVisible('css', '#drupal-modal'));
 
     // The base handler should be selected by default.
     $this->assertSession()->fieldValueEquals('settings[handler]', 'default:node');
