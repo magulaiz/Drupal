@@ -508,13 +508,17 @@ class UpdateContribTest extends UpdateTestBase {
     $this->drupalLogin($update_admin_user);
 
     $installed_modules = [
+      // The #all just defines the default config for all modules.
+      '#all' => [
+        'version' => '8.0.0',
+      ],
       'aaa_update_test' => [
         'project' => 'aaa_update_test',
         'version' => '8.x-1.0',
         'hidden' => FALSE,
       ],
     ];
-    $this->mockInstalledModules($installed_modules, ['version' => '8.0.0']);
+    $update_test_config->set('system_info', $installed_modules)->save();
     $update_status = [
       'aaa_update_test' => [
         'status' => UpdateManagerInterface::NOT_SECURE,
@@ -527,6 +531,7 @@ class UpdateContribTest extends UpdateTestBase {
         'aaa_update_test' => '1_0',
       ]
     );
+    file_put_contents('/Users/omkar.podey/www/auto_updates_dev/sites/test.html',$this->getSession()->getPage()->getContent());
     $this->assertSession()->responseContains('<h3>Modules</h3>');
     $this->assertSession()->pageTextContains('Security update required!');
     $this->assertSession()->linkExists('AAA Update test');
