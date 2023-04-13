@@ -180,6 +180,7 @@ abstract class ListItemBase extends FieldItemBase implements OptionsProviderInte
         '#type' => 'submit',
         '#value' => $this->t('Remove'),
         '#name' => "remove_row_button__$delta",
+        '#id' => "remove_row_button__$delta",
         '#delta' => $delta,
         '#submit' => [[static::class, 'deleteSubmit']],
         '#limit_validation_errors' => [],
@@ -205,6 +206,7 @@ abstract class ListItemBase extends FieldItemBase implements OptionsProviderInte
             ->condition($field, $current_keys[$delta]);
           $entity_ids = $query->execute();
           if (!empty($entity_ids)) {
+            $element['allowed_values']['table'][$delta]['item']['key']['#attributes']['disabled'] = 'disabled';
             $element['allowed_values']['table'][$delta]['delete']['#attributes']['disabled'] = 'disabled';
             break;
           }
