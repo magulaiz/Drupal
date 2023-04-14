@@ -48,7 +48,7 @@
   & .menu-item {
     display: block;
   }
-  &.toolbar-bar {
+  & .toolbar-bar {
     & .toolbar-tab {
       &.hidden {
         display: none;

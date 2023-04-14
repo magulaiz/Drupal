@@ -52,7 +52,7 @@
 .toolbar .menu-item {
   display: block;
 }
-.toolbar.toolbar-bar .toolbar-tab.hidden {
+.toolbar .toolbar-bar .toolbar-tab.hidden {
   display: none;
 }
 .toolbar a {
