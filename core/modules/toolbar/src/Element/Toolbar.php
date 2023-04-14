@@ -128,23 +128,25 @@ class Toolbar extends RenderElement {
           $go = FALSE;
         }
       }
+
+      $element['extra_item_toggle'] = [
+        '#type' => 'toolbar_item',
+        '#wrapper_attributes' => [
+          'data-toolbar-extra-item-toggle' => TRUE,
+        ],
+        '#id' => 'extra-item-toggle',
+        'tab' => [
+          '#type' => 'html_tag',
+          '#tag' => 'a',
+          '#value' => t('...'),
+          '#attributes' => [
+            'type' => 'button',
+            'data-toolbar-extra-item-toggle-button' => TRUE,
+          ],
+        ],
+      ];
     }
 
-    $element['extra_item_toggle'] = [
-      '#type' => 'toolbar_item',
-      '#wrapper_attributes' => [
-        'data-toolbar-extra-item-toggle' => TRUE,
-      ],
-      'tab' => [
-        '#type' => 'html_tag',
-        '#tag' => 'a',
-        '#value' => t('...'),
-        '#attributes' => [
-          'type' => 'button',
-          'data-toolbar-extra-item-toggle-button' => TRUE,
-        ],
-      ],
-    ];
     return $element;
   }
 
