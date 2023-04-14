@@ -3,8 +3,9 @@
 namespace Drupal\Tests\field_ui\Functional;
 
 use Drupal\Core\Entity\Entity\EntityFormMode;
+use Drupal\Core\Entity\Entity\EntityViewDisplay;
 use Drupal\Core\Entity\Entity\EntityViewMode;
-use Drupal\node\Entity\NodeType;
+use Drupal\entity_test\Entity\EntityTest;
 use Drupal\Tests\BrowserTestBase;
 
 /**
@@ -19,7 +20,7 @@ class FieldUIRouteTest extends BrowserTestBase {
    *
    * @var string[]
    */
-  protected static $modules = ['block', 'entity_test', 'field_ui', 'node', 'user'];
+  protected static $modules = ['block', 'entity_test', 'field_ui'];
 
   /**
    * {@inheritdoc}
@@ -41,7 +42,7 @@ class FieldUIRouteTest extends BrowserTestBase {
    * Ensures that entity types with bundles do not break following entity types.
    */
   public function testFieldUIRoutes() {
-    $this->drupalGet('entity_test_no_id/structure/entity_test/fields');
+    $this->drupalGet('entity_test_no_id/structure/entity_test_no_id/fields');
     $this->assertSession()->pageTextContains('No fields are present yet.');
 
     $this->drupalGet('admin/config/people/accounts/fields');
@@ -133,29 +134,40 @@ class FieldUIRouteTest extends BrowserTestBase {
    * Tests titles of admin routes.
    */
   public function testBundleEntityTitles() {
-    /** @var \Drupal\node\NodeTypeInterface $node_type */
-    $node_type = NodeType::load('article');
+//    entity_test_create_bundle('entity_test', 'Entity Test', 'entity_test');
+    $entity = EntityTest::create([
+      'name' => 'entity_test',
+      'entity_type' => 'entity_test',
+    ]);
+    $entity->save();
+    $entity_type_manager = \Drupal::entityTypeManager();
+    $node_type = $entity_type_manager->getStorage('entity_test')->load($entity->id());
     $node_type_label = $node_type->label();
-    /** @var \Drupal\Core\Entity\EntityViewModeInterface $teaser_display_mode */
-    $teaser_display_mode = EntityViewMode::load('node.teaser');
+    $entity_view_mode = EntityViewMode::create([
+      'id' => 'node.teaser',
+      'label' => 'Teaser',
+      'targetEntityType' => 'entity_test',
+    ]);
+    $entity_view_mode->save();
+    $teaser_display_mode = EntityViewMode::load('entity_test.teaser');
     $user_entity_type_label = $this->container->get('entity_type.manager')
       ->getStorage('user')->getEntityType()->getLabel();
     /** @var \Drupal\Core\Entity\EntityViewModeInterface $compact_display_mode */
     $compact_display_mode = EntityViewMode::load('user.compact');
 
     // Entities having bundles (e.g. 'node', 'taxonomy_term').
-    $path = 'admin/structure/types/manage/article';
+    $path = 'entity_test/structure/entity_test';
     $args = [
       '@bundle' => $node_type_label,
     ];
     $titles = [
-      "$path/fields" => (string) t('Manage fields: @bundle', $args),
-      "$path/fields/add-field" => (string) t('Add field to @bundle', $args),
-      "$path/form-display" => (string) t('Manage form display: @bundle', $args),
-      "$path/form-display/default" => (string) t('Manage form display: @bundle', $args),
-      "$path/display" => (string) t('Manage display: @bundle', $args),
-      "$path/display/default" => (string) t('Manage display: @bundle', $args),
-      "$path/display/teaser" => (string) t('Manage display: @bundle', $args),
+      "$path/fields" => (string) t('Manage fields: Entity Test Bundle'),
+      "$path/fields/add-field" => (string) t('Add field to Entity Test Bundle'),
+      "$path/form-display" => (string) t('Manage form display: Entity Test Bundle'),
+      "$path/form-display/default" => (string) t('Manage form display: Entity Test Bundle'),
+      "$path/display" => (string) t('Manage display: Entity Test Bundle'),
+      "$path/display/default" => (string) t('Manage display: Entity Test Bundle'),
+      "$path/display/teaser" => (string) t('Manage display: Entity Test Bundle'),
     ];
     // Entities without bundles (e.g. 'user').
     $path = 'admin/config/people/accounts';
