@@ -92,32 +92,26 @@ class OptionsFieldUITest extends WebDriverTestBase {
     $page->fillField('settings[allowed_values][table][1][item][label]', 'Second');
     $page->fillField('settings[allowed_values][table][2][item][label]', 'Third');
     $this->assertSession()->waitForText('Machine name: third');
-
     $page->pressButton('Save field settings');
 
     $this->drupalGet($this->adminPath);
-
     $this->assertOrder(['First', 'Second', 'Third', '', '', '']);
-
     $drag_handle = $page->find('css', '[data-drupal-selector="edit-settings-allowed-values-table-0"] .tabledrag-handle');
     $target = $page->find('css', '[data-drupal-selector="edit-settings-allowed-values-table-2"]');
 
-    $drag_handle->dragTo($target);
-
     // Change the order the items appear.
+    $drag_handle->dragTo($target);
     $this->assertOrder(['Second', 'Third', 'First', '', '', '']);
-
     $page->pressButton('Save field settings');
     $this->drupalGet($this->adminPath);
 
     // Confirm the change in order was saved.
     $this->assertOrder(['Second', 'Third', 'First', '', '', '']);
+
+    // Delete an item.
     $page->pressButton('remove_row_button__1');
-
-    // @todo this assertion might need changing, but not able to confirm until
-    // the tabledrag ordering is fixed.
+    $this->assertSession()->assertWaitOnAjaxRequest();
     $this->assertOrder(['Second', 'First', '', '', '']);
-
     $page->pressButton('Save field settings');
     $this->drupalGet($this->adminPath);
 
@@ -129,9 +123,9 @@ class OptionsFieldUITest extends WebDriverTestBase {
     $page = $this->getSession()->getPage();
     $inputs = $page->findAll('css', '.draggable .form-text.machine-name-source');
     foreach ($expected as $step => $expected_input_value) {
-      $this->assertSame($expected_input_value, $inputs[$step]->getValue());
+      $value = $inputs[$step]->getValue();
+      $this->assertSame($expected_input_value, $value, "Item $step should be $expected_input_value, but got $value");
     }
-
   }
 
   /**

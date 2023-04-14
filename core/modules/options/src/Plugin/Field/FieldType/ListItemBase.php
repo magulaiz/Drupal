@@ -136,7 +136,7 @@ abstract class ListItemBase extends FieldItemBase implements OptionsProviderInte
       ->execute();
     $max = $form_state->get('items_count');
     $field_type = $this->getFieldDefinition()->getType();
-    usort($allowed_values, function ($a, $b) use ($allowed_values_meta) {
+    uksort($allowed_values, function ($a, $b) use ($allowed_values_meta) {
       $a_weight = isset($allowed_values_meta[$a]) ? $allowed_values_meta[$a] : 0;
       $b_weight = isset($allowed_values_meta[$b]) ? $allowed_values_meta[$b] : 0;
       return $a_weight <=> $b_weight;
@@ -172,6 +172,7 @@ abstract class ListItemBase extends FieldItemBase implements OptionsProviderInte
               'source' => ['settings', 'allowed_values', 'table', $delta, 'item', 'label'],
             ],
             '#weight' => -20,
+            '#disabled' => !empty($current_keys[$delta]),
           ],
         ];
       }
@@ -360,7 +361,7 @@ abstract class ListItemBase extends FieldItemBase implements OptionsProviderInte
       $table = $form_state->getUserInput()['settings']['allowed_values']['table'];
       $allowed_values_meta = [];
       foreach ($table as $item) {
-        if (!empty($item['item']['key']) && !empty($item['weight'])) {
+        if (!empty($item['item']['key']) && isset($item['weight'])) {
           $allowed_values_meta[$item['item']['key']]['weight'] = $item['weight'];
         }
       }
