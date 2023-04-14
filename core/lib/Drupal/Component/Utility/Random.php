@@ -153,9 +153,13 @@ class Random {
    * @return string
    *   Randomly generated string.
    *
+   * @throws \RuntimeException
+   *   Thrown if a unique machine name cannot be generated within the allowed
+   *   number of random attempts.
+   *
    * @see \Drupal\Component\Utility\Random::string()
    */
-  public function machineName($length = 8, $unique = FALSE) {
+  public function machineName(int $length = 8, bool $unique = FALSE): string {
     $values = array_merge(range('a', 'z'), range(0, 9));
     $start_characters = range('a', 'z');
     $counter = 0;
