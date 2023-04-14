@@ -15,6 +15,10 @@
   text-align: center;
 }
 
+.ck .drupal-media [data-drupal-media-preview] {
+  pointer-events: none;
+}
+
 .ck-content .drupal-media img {
   display: block;
   min-width: 100%;
