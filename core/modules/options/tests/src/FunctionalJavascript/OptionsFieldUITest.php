@@ -105,13 +105,13 @@ class OptionsFieldUITest extends WebDriverTestBase {
     $drag_handle->dragTo($target);
 
     // Change the order the items appear.
-    $this->assertOrder(['Second', 'Third', 'First' , '', '', '']);
+    $this->assertOrder(['Second', 'Third', 'First', '', '', '']);
 
     $page->pressButton('Save field settings');
     $this->drupalGet($this->adminPath);
 
     // Confirm the change in order was saved.
-    $this->assertOrder(['Second', 'Third', 'First' , '', '', '']);
+    $this->assertOrder(['Second', 'Third', 'First', '', '', '']);
     $page->pressButton('remove_row_button__1');
 
     // @todo this assertion might need changing, but not able to confirm until

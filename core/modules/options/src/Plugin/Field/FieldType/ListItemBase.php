@@ -26,7 +26,7 @@ abstract class ListItemBase extends FieldItemBase implements OptionsProviderInte
       'allowed_values' => [],
       'allowed_values_function' => '',
       'allowed_values_meta' => [],
-      ] + parent::defaultStorageSettings();
+    ] + parent::defaultStorageSettings();
   }
 
   /**
@@ -136,7 +136,7 @@ abstract class ListItemBase extends FieldItemBase implements OptionsProviderInte
       ->execute();
     $max = $form_state->get('items_count');
     $field_type = $this->getFieldDefinition()->getType();
-    usort($allowed_values, function($a, $b) use ($allowed_values_meta) {
+    usort($allowed_values, function ($a, $b) use ($allowed_values_meta) {
       $a_weight = isset($allowed_values_meta[$a]) ? $allowed_values_meta[$a] : 0;
       $b_weight = isset($allowed_values_meta[$b]) ? $allowed_values_meta[$b] : 0;
       return $a_weight <=> $b_weight;
