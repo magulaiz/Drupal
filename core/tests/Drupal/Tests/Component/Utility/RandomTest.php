@@ -116,6 +116,52 @@ class RandomTest extends TestCase {
   }
 
   /**
+   * Tests unique random name generation.
+   *
+   * @covers ::machineName
+   */
+  public function testRandomMachineNamesUniqueness() {
+    $names = [];
+    $random = new Random();
+    for ($i = 0; $i <= 25; $i++) {
+      $str = $random->machineName(1, TRUE);
+      $this->assertFalse(isset($names[$str]), 'Generated duplicate random name ' . $str);
+      $names[$str] = TRUE;
+    }
+  }
+
+  /**
+   * Tests infinite loop prevention whilst generating random names.
+   *
+   * @covers ::machineName
+   */
+  public function testRandomMachineNameException() {
+    // There are fewer than 100 possibilities so an exception should occur to
+    // prevent infinite loops.
+    $random = new Random();
+    $this->expectException(\RuntimeException::class);
+    for ($i = 0; $i <= 100; $i++) {
+      $str = $random->machineName(1, TRUE);
+      $names[$str] = TRUE;
+    }
+  }
+
+  /**
+   * Tests random name generation if uniqueness is not enforced.
+   *
+   * @covers ::machineName
+   */
+  public function testRandomMachineNameNonUnique() {
+    // There are fewer than 100 possibilities if we were forcing uniqueness so
+    // exception would occur.
+    $random = new Random();
+    for ($i = 0; $i <= 100; $i++) {
+      $random->machineName(1);
+    }
+    $this->assertTrue(TRUE, 'No exception thrown when uniqueness is not enforced.');
+  }
+
+  /**
    * Tests random object generation to ensure the expected number of properties.
    *
    * @covers ::object
