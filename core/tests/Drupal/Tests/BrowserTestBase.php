@@ -283,7 +283,7 @@ abstract class BrowserTestBase extends TestCase {
   /**
    * Gets an instance of the default Mink driver.
    *
-   * @return Behat\Mink\Driver\DriverInterface
+   * @return \Behat\Mink\Driver\DriverInterface
    *   Instance of default Mink driver.
    *
    * @throws \InvalidArgumentException
@@ -548,7 +548,7 @@ abstract class BrowserTestBase extends TestCase {
     // as expected.
     $this->container->get('cache_tags.invalidator')->resetChecksums();
 
-    // Generate a route to prime the url generator with the correct base url.
+    // Generate a route to prime the URL generator with the correct base URL.
     // @todo Remove in https://www.drupal.org/project/drupal/issues/3207896.
     Url::fromRoute('<front>')->setAbsolute()->toString();
 

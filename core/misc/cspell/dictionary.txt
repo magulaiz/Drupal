@@ -213,6 +213,7 @@ cnfi
 cochez
 codesniffer
 colgroups
+colinodell
 collegehumor
 colonpos
 colour
@@ -645,6 +646,7 @@ lstitle
 ltitle
 ltlanguage
 lundi
+lzma
 lzop
 maailma
 macbinary
@@ -971,6 +973,7 @@ realpaths
 realword
 rebuilder
 reclosed
+recolorable
 redeclaration
 redirections
 redstrawberryhiddenfield
@@ -1030,6 +1033,7 @@ safa
 sameline
 samename
 sameorigin
+samesite
 sata
 savepoints
 sayre
@@ -1043,6 +1047,7 @@ screenreaders
 scriptable
 scrollbars
 searchdirs
+sebastianbergmann
 sebe
 seld
 selectbox
@@ -1217,6 +1222,7 @@ testk
 testkey
 testlist
 testload
+testlogger
 testname
 testproject
 testservice
@@ -1398,6 +1404,7 @@ vocabs
 volgende
 vorige
 vous
+wcag
 wcprops
 webassert
 webcal
