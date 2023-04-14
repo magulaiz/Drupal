@@ -7,24 +7,25 @@
   position: absolute;
   top: 50%;
   inset-inline-end: 1rem;
-  width: 0.875rem; /* 14px */
+  width: 14px;
   height: var(--space-m);
-  margin-block-start: -0.5rem; /* -8px */
+  margin-block-start: -8px;
   opacity: 0.5;
-  background-image: url(../../images/icons/000f33/sort--inactive--ltr.svg);
+  background-image: url(../../images/icons/000f33/sort--inactive.svg);
   background-repeat: no-repeat;
   background-position: 0 50%;
   background-size: auto;
 
   @media (forced-colors: active) {
     background: linktext;
-    mask-image: url(../../images/icons/000f33/sort--inactive--ltr.svg);
+    mask-image: url(../../images/icons/000f33/sort--inactive.svg);
     mask-repeat: no-repeat;
     mask-position: 0 50%;
   }
 
   @nest [dir="rtl"] & {
-    background-image: url(../../images/icons/000f33/sort--inactive--rtl.svg);
+    /* Horizontally flip the element. */
+    transform: scaleX(-1);
   }
 }
 
