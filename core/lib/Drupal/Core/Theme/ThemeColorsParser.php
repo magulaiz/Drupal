@@ -24,7 +24,7 @@ use Drupal\Core\Serialization\Yaml;
 class ThemeColorsParser {
 
   /**
-   * Parses optional Drupal theme .colors.yml files.
+   * Parses optional Drupal theme THEME.colors.yml files.
    *
    * Information stored in a theme THEME.colors.yml file:
    * - colors: List of CSS variable names and their human names.

@@ -323,7 +323,7 @@ class ThemeSettingsForm extends ConfigFormBase {
     }
 
     if ($theme) {
-      // Parse the THEMENAME.colors.yml if it exists and create the necessary form elements.
+      // Parse the THEME.colors.yml if it exists and create the necessary form elements.
       $active_theme = $themes[$theme];
       $color_info = DRUPAL_ROOT . '/' . $active_theme->getPath() . '/' . $theme . '.colors.yml';
       if (file_exists($color_info)) {
