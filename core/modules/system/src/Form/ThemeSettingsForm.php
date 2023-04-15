@@ -499,7 +499,7 @@ class ThemeSettingsForm extends ConfigFormBase {
     if (isset($form['colors'])) {
       $parsed_colors = $form_state->get('parsed_colors');
       foreach ($parsed_colors['colors'] as $color_field => $color_name) {
-        if (!preg_match('/^#[a-fA-F0-9]{6}$/', $form_state->getValue($color_field))) {
+        if (!ThemeColorsParser::validate($form_state->getValue($color_field))) {
           $form_state->setErrorByName($color_field, $this->t('@color must be 7-character string specifying a color hexadecimal format.', ['@color' => $color_name]));
         }
       }

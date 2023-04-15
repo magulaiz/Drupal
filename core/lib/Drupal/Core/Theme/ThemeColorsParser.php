@@ -68,7 +68,26 @@ class ThemeColorsParser {
         throw new \RuntimeException("The colors in scheme '$scheme' do not match with the configurable colors.");
       }
     }
+    // Check if all scheme colors have a correct color format.
+    foreach ($parsed_info['colors'] as $color_field => $color_name) {
+      if (!ThemeColorsParser::validate($color_field)) {
+        throw new \RuntimeException("The colors in scheme '$scheme' must be 7-character string specifying a color hexadecimal format.");
+      }
+    }
     return $parsed_info;
+  }
+
+  /**
+   * Validates color value.
+   *
+   * @param string $colorValue
+   *   Color value as a string.
+   *
+   * @return bool
+   *   True if validates against color pattern.
+   */
+  public static function validate(string $colorValue): bool {
+    return preg_match('/^#[a-fA-F0-9]{6}$/', $colorValue);
   }
 
 }
