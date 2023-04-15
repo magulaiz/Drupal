@@ -54,6 +54,7 @@ abstract class WorkflowTypeBase extends ConfigurablePluginBase implements Workfl
    */
   public function setConfiguration(array $configuration) {
     $this->configuration = $configuration + $this->defaultConfiguration();
+    return $this;
   }
 
   /**
