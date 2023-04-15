@@ -355,6 +355,7 @@ class ThemeSettingsForm extends ConfigFormBase {
           '#wrapper_attributes' => [
             'style' => 'display:none;',
           ],
+          '#default_value' => theme_get_setting('colors.color_scheme', $theme),
         ];
 
         foreach ($parsed_colors['colors'] as $key => $title) {
