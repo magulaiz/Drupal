@@ -10,7 +10,6 @@ use Drupal\Core\Render\Element;
 use Drupal\Core\Render\Element\RenderElement;
 use Drupal\Core\Template\Attribute;
 use Drupal\Core\Url;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 
 /**
  * Prepares variables for select element templates.
@@ -739,54 +738,17 @@ function template_preprocess_form_element_label(&$variables) {
  *       Typically, the class will either be \Drupal\Core\Queue\Batch or
  *       \Drupal\Core\Queue\BatchMemory. Defaults to Batch if progressive is
  *       TRUE, or to BatchMemory if progressive is FALSE.
+ *
+ * @deprecated in drupal:10.1.0 and is removed from drupal:11.0.0.
+ *   Use \Drupal\Core\Batch\BatchProcessorInterface::queue() instead.
+ *
+ * @see https://www.drupal.org/node/3229844
  */
 function batch_set($batch_definition) {
-  if ($batch_definition) {
-    $batch =& batch_get();
-
-    // Initialize the batch if needed.
-    if (empty($batch)) {
-      $batch = [
-        'sets' => [],
-        'has_form_submits' => FALSE,
-      ];
-    }
-
-    // Base and default properties for the batch set.
-    $init = [
-      'sandbox' => [],
-      'results' => [],
-      'success' => FALSE,
-      'start' => 0,
-      'elapsed' => 0,
-    ];
-    $defaults = [
-      'title' => t('Processing'),
-      'init_message' => t('Initializing.'),
-      'progress_message' => t('Completed @current of @total.'),
-      'error_message' => t('An error has occurred.'),
-    ];
-    $batch_set = $init + $batch_definition + $defaults;
-
-    // Tweak init_message to avoid the bottom of the page flickering down after
-    // init phase.
-    $batch_set['init_message'] .= '<br/>&nbsp;';
-
-    // The non-concurrent workflow of batch execution allows us to save
-    // numberOfItems() queries by handling our own counter.
-    $batch_set['total'] = count($batch_set['operations']);
-    $batch_set['count'] = $batch_set['total'];
-
-    // Add the set to the batch.
-    if (empty($batch['id'])) {
-      // The batch is not running yet. Simply add the new set.
-      $batch['sets'][] = $batch_set;
-    }
-    else {
-      // The set is being added while the batch is running.
-      _batch_append_set($batch, $batch_set);
-    }
-  }
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use \Drupal\Core\Batch\BatchProcessorInterface::queue() instead. See https://www.drupal.org/node/3229844', E_USER_DEPRECATED);
+  /** @var \Drupal\Core\Batch\BatchProcessorInterface $batch_processor */
+  $batch_processor = \Drupal::service('batch.processor');
+  $batch_processor->queue($batch_definition);
 }
 
 /**
@@ -801,50 +763,17 @@ function batch_set($batch_definition) {
  *   The batch array.
  * @param $batch_set
  *   The batch set.
+ *
+ * @deprecated in drupal:10.1.0 and is removed from drupal:11.0.0.
+ *   Use \Drupal\Core\Batch\BatchProcessorInterface::appendSet() instead.
+ *
+ * @see https://www.drupal.org/node/3229844
  */
 function _batch_append_set(&$batch, $batch_set) {
-  $append_after_index = $batch['current_set'];
-  $reached_current_set = FALSE;
-  foreach ($batch['sets'] as $index => $set) {
-    // As the indexes are not ordered numerically we need to first reach the
-    // index of the current set and then search for the proper place to append
-    // the new batch set.
-    if (!$reached_current_set) {
-      if ($index == $batch['current_set']) {
-        $reached_current_set = TRUE;
-      }
-      continue;
-    }
-    if ($index > $append_after_index) {
-      if (isset($set['appended_after_index'])) {
-        $append_after_index = $index;
-      }
-      else {
-        break;
-      }
-    }
-  }
-  $batch_set['appended_after_index'] = $append_after_index;
-
-  // Iterate by reference over the existing batch sets and assign them by
-  // reference in the new batch sets array in order not to break a retrieved
-  // reference to the current set. Among other places a reference to the current
-  // set is being retrieved in _batch_process(). Additionally, we have to
-  // preserve the original indexes, as they are used to generate the queue name
-  // of each batch set, otherwise the operations of the new batch set will be
-  // queued in the queue of a previous batch set.
-  // @see _batch_populate_queue().
-  $new_sets = [];
-  foreach ($batch['sets'] as $index => &$set) {
-    $new_sets[$index] = &$set;
-    if ($index == $append_after_index) {
-      $new_set_index = count($batch['sets']);
-      $new_sets[$new_set_index] = $batch_set;
-    }
-  }
-
-  $batch['sets'] = $new_sets;
-  _batch_populate_queue($batch, $new_set_index);
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use \Drupal\Core\Batch\BatchProcessorInterface::queue() instead. See https://www.drupal.org/node/3229844', E_USER_DEPRECATED);
+  /** @var \Drupal\Core\Batch\BatchProcessorInterface $batch_processor */
+  $batch_processor = \Drupal::service('batch.processor');
+  $batch_processor->appendSet($batch, $batch_set);
 }
 
 /**
@@ -875,100 +804,32 @@ function _batch_append_set(&$batch, $batch_set) {
  *
  * @return \Symfony\Component\HttpFoundation\RedirectResponse|null
  *   A redirect response if the batch is progressive. No return value otherwise.
+ *
+ * @deprecated in drupal:10.1.0 and is removed from drupal:11.0.0.
+ *   Use \Drupal\Core\Batch\BatchProcessorInterface::process() instead.
+ *
+ * @see https://www.drupal.org/node/3229844
  */
 function batch_process($redirect = NULL, Url $url = NULL, $redirect_callback = NULL) {
-  $batch =& batch_get();
-
-  if (isset($batch)) {
-    // Add process information
-    $process_info = [
-      'current_set' => 0,
-      'progressive' => TRUE,
-      'url' => $url ?? Url::fromRoute('system.batch_page.html'),
-      'source_url' => Url::fromRouteMatch(\Drupal::routeMatch())->mergeOptions(['query' => \Drupal::request()->query->all()]),
-      'batch_redirect' => $redirect,
-      'theme' => \Drupal::theme()->getActiveTheme()->getName(),
-      'redirect_callback' => $redirect_callback,
-    ];
-    $batch += $process_info;
-
-    // The batch is now completely built. Allow other modules to make changes
-    // to the batch so that it is easier to reuse batch processes in other
-    // environments.
-    \Drupal::moduleHandler()->alter('batch', $batch);
-
-    // Assign an arbitrary id: don't rely on a serial column in the 'batch'
-    // table, since non-progressive batches skip database storage completely.
-    $batch['id'] = \Drupal::database()->nextId();
-
-    // Move operations to a job queue. Non-progressive batches will use a
-    // memory-based queue.
-    foreach ($batch['sets'] as $key => $batch_set) {
-      _batch_populate_queue($batch, $key);
-    }
-
-    // Initiate processing.
-    if ($batch['progressive']) {
-      // Now that we have a batch id, we can generate the redirection link in
-      // the generic error message.
-      /** @var \Drupal\Core\Url $batch_url */
-      $batch_url = $batch['url'];
-      /** @var \Drupal\Core\Url $error_url */
-      $error_url = clone $batch_url;
-      $query_options = $error_url->getOption('query');
-      $query_options['id'] = $batch['id'];
-      $query_options['op'] = 'finished';
-      $error_url->setOption('query', $query_options);
-
-      $batch['error_message'] = t('Please continue to <a href=":error_url">the error page</a>', [':error_url' => $error_url->toString(TRUE)->getGeneratedUrl()]);
-
-      // Clear the way for the redirection to the batch processing page, by
-      // saving and unsetting the 'destination', if there is any.
-      $request = \Drupal::request();
-      if ($request->query->has('destination')) {
-        $batch['destination'] = $request->query->get('destination');
-        $request->query->remove('destination');
-      }
-
-      // Store the batch.
-      \Drupal::service('batch.storage')->create($batch);
-
-      // Set the batch number in the session to guarantee that it will stay alive.
-      $_SESSION['batches'][$batch['id']] = TRUE;
-
-      // Redirect for processing.
-      $query_options = $error_url->getOption('query');
-      $query_options['op'] = 'start';
-      $query_options['id'] = $batch['id'];
-      $batch_url->setOption('query', $query_options);
-      if (($function = $batch['redirect_callback']) && function_exists($function)) {
-        $function($batch_url->toString(), ['query' => $query_options]);
-      }
-      else {
-        return new RedirectResponse($batch_url->setAbsolute()->toString(TRUE)->getGeneratedUrl());
-      }
-    }
-    else {
-      // Non-progressive execution: bypass the whole progressbar workflow
-      // and execute the batch in one pass.
-      require_once __DIR__ . '/batch.inc';
-      _batch_process();
-    }
-  }
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use \Drupal\Core\Batch\BatchProcessorInterface::process() instead. See https://www.drupal.org/node/3229844', E_USER_DEPRECATED);
+  /** @var \Drupal\Core\Batch\BatchProcessorInterface $batch_processor */
+  $batch_processor = \Drupal::service('batch.processor');
+  $batch_processor->process($redirect, $url, $redirect_callback);
 }
 
 /**
  * Retrieves the current batch.
+ *
+ * @deprecated in drupal:10.1.0 and is removed from drupal:11.0.0.
+ *   Use \Drupal\Core\Batch\BatchProcessorInterface::getCurrentBatch() instead.
+ *
+ * @see https://www.drupal.org/node/3229844
  */
 function &batch_get() {
-  // Not drupal_static(), because Batch API operates at a lower level than most
-  // use-cases for resetting static variables, and we specifically do not want a
-  // global drupal_static_reset() resetting the batch information. Functions
-  // that are part of the Batch API and need to reset the batch information may
-  // call batch_get() and manipulate the result by reference. Functions that are
-  // not part of the Batch API can also do this, but shouldn't.
-  static $batch = [];
-  return $batch;
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use \Drupal\Core\Batch\BatchProcessorInterface::getCurrentBatch() instead. See https://www.drupal.org/node/3229844', E_USER_DEPRECATED);
+  /** @var \Drupal\Core\Batch\BatchProcessorInterface $batch_processor */
+  $batch_processor = \Drupal::service('batch.processor');
+  return $batch_processor->getCurrentBatch();
 }
 
 /**
@@ -983,26 +844,17 @@ function &batch_get() {
  *   The batch array.
  * @param $set_id
  *   The id of the set to process.
+ *
+ * @deprecated in drupal:10.1.0 and is removed from drupal:11.0.0.
+ *   Use \Drupal\Core\Batch\BatchProcessorInterface::queuePopulate() instead.
+ *
+ * @see https://www.drupal.org/node/3229844
  */
 function _batch_populate_queue(&$batch, $set_id) {
-  $batch_set = &$batch['sets'][$set_id];
-
-  if (isset($batch_set['operations'])) {
-    $batch_set += [
-      'queue' => [
-        'name' => 'drupal_batch:' . $batch['id'] . ':' . $set_id,
-        'class' => $batch['progressive'] ? 'Drupal\Core\Queue\Batch' : 'Drupal\Core\Queue\BatchMemory',
-      ],
-    ];
-
-    $queue = _batch_queue($batch_set);
-    $queue->createQueue();
-    foreach ($batch_set['operations'] as $operation) {
-      $queue->createItem($operation);
-    }
-
-    unset($batch_set['operations']);
-  }
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use \Drupal\Core\Batch\BatchProcessorInterface::queuePopulate() instead. See https://www.drupal.org/node/3229844', E_USER_DEPRECATED);
+  /** @var \Drupal\Core\Batch\BatchProcessorInterface $batch_processor */
+  $batch_processor = \Drupal::service('batch.processor');
+  $batch_processor->queuePopulate($batch, $set_id);
 }
 
 /**
@@ -1013,23 +865,17 @@ function _batch_populate_queue(&$batch, $set_id) {
  *
  * @return \Drupal\Core\Queue\QueueInterface|null
  *   The queue object.
+ *
+ * @deprecated in drupal:10.1.0 and is removed from drupal:11.0.0.
+ *   Use \Drupal\Core\Batch\BatchProcessorInterface::getQueue() instead.
+ *
+ * @see https://www.drupal.org/node/3229844
  */
 function _batch_queue($batch_set) {
-  static $queues;
-
-  if (!isset($queues)) {
-    $queues = [];
-  }
-
-  if (isset($batch_set['queue'])) {
-    $name = $batch_set['queue']['name'];
-    $class = $batch_set['queue']['class'];
-
-    if (!isset($queues[$class][$name])) {
-      $queues[$class][$name] = new $class($name, \Drupal::database());
-    }
-    return $queues[$class][$name];
-  }
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use \Drupal\Core\Batch\BatchProcessorInterface::getQueue() instead. See https://www.drupal.org/node/3229844', E_USER_DEPRECATED);
+  /** @var \Drupal\Core\Batch\BatchProcessorInterface $batch_processor */
+  $batch_processor = \Drupal::service('batch.processor');
+  return $batch_processor->getQueue($batch_set);
 }
 
 /**

@@ -113,10 +113,12 @@ function _batch_test_nested_batch_callback(array $batches = []) {
   foreach ($batches as $batch) {
     batch_test_stack("setting up batch $batch");
     $function = '_batch_test_batch_' . $batch;
-    batch_set($function());
+    \Drupal::service('batch.processor')->queue($function());
   }
+  /** @var \Drupal\Core\Batch\BatchProcessorInterface $batch_processor */
+  $batch_processor = \Drupal::service('batch.processor');
   \Drupal::state()
-    ->set('batch_test_nested_order_multiple_batches', batch_get());
+    ->set('batch_test_nested_order_multiple_batches', $batch_processor->getCurrentBatch());
 }
 
 /**

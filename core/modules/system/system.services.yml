@@ -25,7 +25,7 @@ services:
       - { name: event_subscriber }
   theme.negotiator.system.batch:
     class: Drupal\system\Theme\BatchNegotiator
-    arguments: ['@batch.storage', '@request_stack']
+    arguments: ['@batch.storage', '@request_stack', '@batch.processor']
     tags:
       - { name: theme_negotiator, priority: 1000 }
   theme.negotiator.system.db_update:

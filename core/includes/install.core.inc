@@ -620,6 +620,8 @@ function install_run_task($task, &$install_state) {
     // already.
     $current_batch = \Drupal::state()->get('install_current_batch');
     if (!$install_state['interactive'] || !$current_batch) {
+      /** @var \Drupal\Core\Batch\BatchProcessorInterface $batch_processor */
+      $batch_processor = \Drupal::service('batch.processor');
       $batches = $function($install_state);
       if (empty($batches)) {
         // If the task did some processing and decided no batch was necessary,
@@ -631,7 +633,7 @@ function install_run_task($task, &$install_state) {
         $batches = [$batches];
       }
       foreach ($batches as $batch_definition) {
-        batch_set($batch_definition);
+        $batch_processor->queue($batch_definition);
         // For interactive batches, we need to store the fact that this batch
         // task is currently running. Otherwise, we need to make sure the batch
         // will complete in one page request.
@@ -639,7 +641,7 @@ function install_run_task($task, &$install_state) {
           \Drupal::state()->set('install_current_batch', $function);
         }
         else {
-          $batch =& batch_get();
+          $batch = &$batch_processor->getCurrentBatch();
           $batch['progressive'] = FALSE;
         }
       }
@@ -648,7 +650,7 @@ function install_run_task($task, &$install_state) {
       // Disable the default script for the URL and clone the object, as
       // batch_process() will add additional options to the batch URL.
       $url = Url::fromUri('base:install.php', ['query' => $install_state['parameters'], 'script' => '']);
-      $response = batch_process($url, clone $url);
+      $response = $batch_processor->process($url, clone $url);
       if ($response instanceof Response) {
         if (\Drupal::request()->hasSession()) {
           \Drupal::request()->getSession()->save();

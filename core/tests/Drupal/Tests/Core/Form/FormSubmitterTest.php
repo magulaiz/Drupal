@@ -2,12 +2,14 @@
 
 namespace Drupal\Tests\Core\Form;
 
+use Drupal\Core\Batch\BatchProcessorInterface;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\Form\FormState;
 use Drupal\Core\Routing\UrlGeneratorInterface;
 use Drupal\Core\Url;
 use Drupal\Core\Utility\UnroutedUrlAssemblerInterface;
 use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -33,12 +35,20 @@ class FormSubmitterTest extends UnitTestCase {
   protected $unroutedUrlAssembler;
 
   /**
+   * The mocked batch processor.
+   *
+   * @var \Drupal\Core\Batch\BatchProcessorInterface|\PHPUnit\Framework\MockObject\MockObject
+   */
+  protected BatchProcessorInterface|MockObject $batchProcessor;
+
+  /**
    * {@inheritdoc}
    */
   protected function setUp(): void {
     parent::setUp();
     $this->urlGenerator = $this->createMock(UrlGeneratorInterface::class);
     $this->unroutedUrlAssembler = $this->createMock(UnroutedUrlAssemblerInterface::class);
+    $this->batchProcessor = $this->createMock(BatchProcessorInterface::class);
   }
 
   /**
@@ -255,8 +265,11 @@ class FormSubmitterTest extends UnitTestCase {
     $request_stack = new RequestStack();
     $request_stack->push(Request::create('/test-path'));
     return $this->getMockBuilder('Drupal\Core\Form\FormSubmitter')
-      ->setConstructorArgs([$request_stack, $this->urlGenerator])
-      ->onlyMethods(['batchGet'])
+      ->setConstructorArgs([
+        $request_stack,
+        $this->urlGenerator,
+        $this->batchProcessor,
+      ])
       ->getMock();
   }
 

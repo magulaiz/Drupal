@@ -2,6 +2,7 @@
 
 namespace Drupal\Core\Form;
 
+use Drupal\Core\Batch\BatchProcessorInterface;
 use Drupal\Core\Url;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -28,16 +29,26 @@ class FormSubmitter implements FormSubmitterInterface {
   protected $requestStack;
 
   /**
+   * Batch processor.
+   *
+   * @var \Drupal\Core\Batch\BatchProcessorInterface|null
+   */
+  protected ?BatchProcessorInterface $batchProcessor;
+
+  /**
    * Constructs a new FormSubmitter.
    *
    * @param \Symfony\Component\HttpFoundation\RequestStack $request_stack
    *   The request stack.
    * @param \Drupal\Core\Routing\UrlGeneratorInterface $url_generator
    *   The URL generator.
+   * @param \Drupal\Core\Batch\BatchProcessorInterface|null $batch_processor
+   *   (Optional) Batch processor.
    */
-  public function __construct(RequestStack $request_stack, UrlGeneratorInterface $url_generator) {
+  public function __construct(RequestStack $request_stack, UrlGeneratorInterface $url_generator, BatchProcessorInterface $batch_processor = NULL) {
     $this->requestStack = $request_stack;
     $this->urlGenerator = $url_generator;
+    $this->batchProcessor = $batch_processor;
   }
 
   /**
@@ -55,12 +66,12 @@ class FormSubmitter implements FormSubmitterInterface {
     // possibly ending execution. We make sure we do not react to the batch
     // that is already being processed (if a batch operation performs a
     // \Drupal\Core\Form\FormBuilderInterface::submitForm).
-    if ($batch = &$this->batchGet() && !isset($batch['current_set'])) {
+    if (($batch = &$this->batchProcessor()->getCurrentBatch()) && !isset($batch['current_set'])) {
       // Store $form_state information in the batch definition.
       $batch['form_state'] = $form_state;
 
       $batch['progressive'] = !$form_state->isProgrammed();
-      $response = batch_process();
+      $response = $this->batchProcessor()->process();
       // If the batch has been completed and _batch_finished() called then
       // $batch will be NULL.
       if ($batch && $batch['progressive']) {
@@ -97,13 +108,13 @@ class FormSubmitter implements FormSubmitterInterface {
     if (!$handlers && !empty($form['#submit'])) {
       $handlers = $form['#submit'];
     }
-
+    $batch_processor = $this->batchProcessor();
     foreach ($handlers as $callback) {
       // Check if a previous _submit handler has set a batch, but make sure we
       // do not react to a batch that is already being processed (for instance
       // if a batch operation performs a
       // \Drupal\Core\Form\FormBuilderInterface::submitForm()).
-      if (($batch = &$this->batchGet()) && !isset($batch['id'])) {
+      if ($batch_processor && ($batch = &$batch_processor->getCurrentBatch()) && !isset($batch['id'])) {
         // Some previous submit handler has set a batch. To ensure correct
         // execution order, store the call in a special 'control' batch set.
         // See _batch_next_set().
@@ -147,10 +158,18 @@ class FormSubmitter implements FormSubmitterInterface {
   }
 
   /**
-   * Wraps batch_get().
+   * Batch processor getter.
+   *
+   * Defined to avoid circular dependency issue.
+   *
+   * @return \Drupal\Core\Batch\BatchProcessorInterface|null
+   *   Batch processor instance.
    */
-  protected function &batchGet() {
-    return batch_get();
+  public function batchProcessor(): ?BatchProcessorInterface {
+    if ($this->batchProcessor === NULL) {
+      $this->batchProcessor = \Drupal::service('batch.processor');
+    }
+    return $this->batchProcessor;
   }
 
 }

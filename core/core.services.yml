@@ -1543,9 +1543,13 @@ services:
     class: Drupal\Core\Utility\Token
     arguments: ['@module_handler', '@cache.default', '@language_manager', '@cache_tags.invalidator', '@renderer']
   Drupal\Core\Utility\Token: '@token'
+  batch.processor:
+    class: Drupal\Core\Batch\BatchProcessor
+    arguments: ['%app.root%', '@date.formatter', '@request_stack', '@module_handler', '@theme.manager', '@current_route_match']
+  Drupal\Core\Batch\BatchProcessorInterface: '@batch.processor'
   batch.storage:
     class: Drupal\Core\Batch\BatchStorage
-    arguments: ['@database', '@session', '@csrf_token']
+    arguments: ['@database', '@session', '@csrf_token', '@datetime.time']
     tags:
       - { name: backend_overridable }
     lazy: true

@@ -330,8 +330,8 @@ function hook_form_BASE_FORM_ID_alter(&$form, \Drupal\Core\Form\FormStateInterfa
  *   The associative array of batch information. See batch_set() for details on
  *   what this could contain.
  *
- * @see batch_set()
- * @see batch_process()
+ * @see \Drupal\Core\Batch\BatchProcessorInterface::queue()
+ * @see \Drupal\Core\Batch\BatchProcessorInterface::process()
  *
  * @ingroup batch
  */
