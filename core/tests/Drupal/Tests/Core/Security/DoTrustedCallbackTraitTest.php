@@ -37,6 +37,7 @@ class DoTrustedCallbackTraitTest extends UnitTestCase {
     $tests['TrustedCallbackInterface_object_attribute'] = [[new TrustedMethods(), 'attributeCallback'], TrustedInterface::class];
     $tests['TrustedCallbackInterface_static_string'] = ['\Drupal\Tests\Core\Security\TrustedMethods::callback', TrustedInterface::class];
     $tests['TrustedCallbackInterface_static_array'] = [[TrustedMethods::class, 'callback'], TrustedInterface::class];
+    $tests['TrustedCallbackInterface_static_array_attribute'] = [[TrustedMethods::class, 'attributeCallback'], TrustedInterface::class];
     $tests['extra_trusted_interface_object'] = [[new TrustedObject(), 'callback'], TrustedInterface::class];
     $tests['extra_trusted_interface_static_string'] = ['\Drupal\Tests\Core\Security\TrustedObject::callback', TrustedInterface::class];
     $tests['extra_trusted_interface_static_array'] = [[TrustedObject::class, 'callback'], TrustedInterface::class];

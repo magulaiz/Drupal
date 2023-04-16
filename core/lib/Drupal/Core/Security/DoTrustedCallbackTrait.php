@@ -76,11 +76,7 @@ trait DoTrustedCallbackTrait {
       }
       if (!$safe_callback) {
         $method = new \ReflectionMethod($object_or_classname, $method_name);
-        foreach ($method->getAttributes() as $attribute) {
-          if ($attribute->getName() === TrustedCallback::class) {
-            $safe_callback = TRUE;
-          }
-        }
+        $safe_callback = (bool) $method->getAttributes(TrustedCallback::class);
       }
     }
     elseif ($callback instanceof \Closure) {
