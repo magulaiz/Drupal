@@ -34,7 +34,7 @@ class FieldConfigListController extends EntityListController {
    */
   public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('entity_type.bundle.info')
+      $container->get('entity_type.bundle.info'),
     );
   }
 

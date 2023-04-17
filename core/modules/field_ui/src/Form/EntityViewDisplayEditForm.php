@@ -2,12 +2,7 @@
 
 namespace Drupal\field_ui\Form;
 
-use Drupal\Component\Plugin\PluginManagerBase;
-use Drupal\Core\Entity\EntityDisplayRepositoryInterface;
-use Drupal\Core\Entity\EntityFieldManagerInterface;
-use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
-use Drupal\Core\Field\FieldTypePluginManagerInterface;
 use Drupal\Core\Field\PluginSettingsInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
@@ -22,41 +17,9 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class EntityViewDisplayEditForm extends EntityDisplayFormBase {
 
   /**
-   * The entity type bundle info service.
-   *
-   * @var \Drupal\Core\Entity\EntityTypeBundleInfoInterface
-   */
-  protected $entityTypeBundleInfo;
-
-  /**
    * {@inheritdoc}
    */
   protected $displayContext = 'view';
-
-  /**
-   * Constructs a new EntityViewDisplayEditForm.
-   *
-   * @param \Drupal\Core\Field\FieldTypePluginManagerInterface $field_type_manager
-   *   The field type manager.
-   * @param \Drupal\Component\Plugin\PluginManagerBase $plugin_manager
-   *   The widget or formatter plugin manager.
-   * @param \Drupal\Core\Entity\EntityDisplayRepositoryInterface $entity_display_repository
-   *   The entity display_repository.
-   * @param \Drupal\Core\Entity\EntityFieldManagerInterface $entity_field_manager
-   *   The entity field manager.
-   * @param \Drupal\Core\Entity\EntityTypeBundleInfoInterface $entity_type_bundle_info
-   *   The entity type bundle info service.
-   */
-  public function __construct(FieldTypePluginManagerInterface $field_type_manager, PluginManagerBase $plugin_manager, EntityDisplayRepositoryInterface $entity_display_repository, EntityFieldManagerInterface $entity_field_manager, EntityTypeBundleInfoInterface $entity_type_bundle_info) {
-    parent::__construct(
-      $field_type_manager,
-      $plugin_manager,
-      $entity_display_repository,
-      $entity_field_manager
-    );
-
-    $this->entityTypeBundleInfo = $entity_type_bundle_info;
-  }
 
   /**
    * {@inheritdoc}
@@ -67,7 +30,7 @@ class EntityViewDisplayEditForm extends EntityDisplayFormBase {
       $container->get('plugin.manager.field.formatter'),
       $container->get('entity_display.repository'),
       $container->get('entity_field.manager'),
-      $container->get('entity_type.bundle.info')
+      $container->get('entity_type.bundle.info'),
     );
   }
 

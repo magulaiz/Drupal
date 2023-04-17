@@ -36,11 +36,7 @@ class FieldLayoutEntityFormDisplayEditForm extends EntityFormDisplayEditForm {
    * @param \Drupal\Core\Entity\EntityTypeBundleInfoInterface $entity_type_bundle_info
    *   The entity type bundle info service.
    */
-  public function __construct(FieldTypePluginManagerInterface $field_type_manager, PluginManagerBase $plugin_manager, LayoutPluginManagerInterface $layout_plugin_manager, EntityDisplayRepositoryInterface $entity_display_repository = NULL, EntityFieldManagerInterface $entity_field_manager = NULL, EntityTypeBundleInfoInterface $entity_type_bundle_info = NULL) {
-    if (is_null($entity_type_bundle_info)) {
-      @trigger_error('Calling ' . __METHOD__ . ' without the $entity_type_bundle_info argument is deprecated in drupal:10.1.0 and will be required in drupal:11.0.0. See https://www.drupal.org/node/3350276', E_USER_DEPRECATED);
-      $entity_type_bundle_info = \Drupal::service('entity_type.bundle.info');
-    }
+  public function __construct(FieldTypePluginManagerInterface $field_type_manager, PluginManagerBase $plugin_manager, LayoutPluginManagerInterface $layout_plugin_manager, EntityDisplayRepositoryInterface $entity_display_repository, EntityFieldManagerInterface $entity_field_manager, EntityTypeBundleInfoInterface $entity_type_bundle_info) {
     parent::__construct($field_type_manager, $plugin_manager, $entity_display_repository, $entity_field_manager, $entity_type_bundle_info);
     $this->layoutPluginManager = $layout_plugin_manager;
   }
@@ -55,7 +51,7 @@ class FieldLayoutEntityFormDisplayEditForm extends EntityFormDisplayEditForm {
       $container->get('plugin.manager.core.layout'),
       $container->get('entity_display.repository'),
       $container->get('entity_field.manager'),
-      $container->get('entity_type.bundle.info')
+      $container->get('entity_type.bundle.info'),
     );
   }
 

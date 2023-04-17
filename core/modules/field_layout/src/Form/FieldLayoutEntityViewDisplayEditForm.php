@@ -51,7 +51,7 @@ class FieldLayoutEntityViewDisplayEditForm extends EntityViewDisplayEditForm {
       $container->get('plugin.manager.core.layout'),
       $container->get('entity_display.repository'),
       $container->get('entity_field.manager'),
-      $container->get('entity_type.bundle.info')
+      $container->get('entity_type.bundle.info'),
     );
   }
 
