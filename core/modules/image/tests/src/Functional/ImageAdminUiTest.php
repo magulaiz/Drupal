@@ -7,7 +7,7 @@ use Drupal\image\ImageStyleInterface;
 
 /**
  * Tests admin UI image styles and effects.
- * 
+ *
  * @group image
  */
 class ImageAdminUiTest extends ImageFieldTestBase {
