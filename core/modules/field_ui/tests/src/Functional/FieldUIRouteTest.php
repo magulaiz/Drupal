@@ -3,7 +3,6 @@
 namespace Drupal\Tests\field_ui\Functional;
 
 use Drupal\Core\Entity\Entity\EntityFormMode;
-use Drupal\Core\Entity\Entity\EntityViewDisplay;
 use Drupal\Core\Entity\Entity\EntityViewMode;
 use Drupal\entity_test\Entity\EntityTest;
 use Drupal\Tests\BrowserTestBase;
@@ -134,7 +133,6 @@ class FieldUIRouteTest extends BrowserTestBase {
    * Tests titles of admin routes.
    */
   public function testBundleEntityTitles() {
-//    entity_test_create_bundle('entity_test', 'Entity Test', 'entity_test');
     $entity = EntityTest::create([
       'name' => 'entity_test',
       'entity_type' => 'entity_test',
@@ -143,17 +141,26 @@ class FieldUIRouteTest extends BrowserTestBase {
     $entity_type_manager = \Drupal::entityTypeManager();
     $node_type = $entity_type_manager->getStorage('entity_test')->load($entity->id());
     $node_type_label = $node_type->label();
+
+    // Create teaser view mode for test entity.
     $entity_view_mode = EntityViewMode::create([
-      'id' => 'node.teaser',
+      'id' => 'entity_test.teaser',
       'label' => 'Teaser',
       'targetEntityType' => 'entity_test',
     ]);
     $entity_view_mode->save();
-    $teaser_display_mode = EntityViewMode::load('entity_test.teaser');
+    $edit = ['display_modes_custom[teaser]' => TRUE];
+    $this->drupalGet('entity_test/structure/entity_test/display');
+    $this->submitForm($edit, 'Save');
+
     $user_entity_type_label = $this->container->get('entity_type.manager')
       ->getStorage('user')->getEntityType()->getLabel();
     /** @var \Drupal\Core\Entity\EntityViewModeInterface $compact_display_mode */
     $compact_display_mode = EntityViewMode::load('user.compact');
+
+    $this->drupalGet('admin/config/people/accounts/display');
+    $edit = ['display_modes_custom[compact]' => TRUE];
+    $this->submitForm($edit, 'Save');
 
     // Entities having bundles (e.g. 'node', 'taxonomy_term').
     $path = 'entity_test/structure/entity_test';
