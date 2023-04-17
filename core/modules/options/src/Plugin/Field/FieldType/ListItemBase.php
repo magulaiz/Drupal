@@ -172,7 +172,6 @@ abstract class ListItemBase extends FieldItemBase implements OptionsProviderInte
               'source' => ['settings', 'allowed_values', 'table', $delta, 'item', 'label'],
             ],
             '#weight' => -20,
-            '#disabled' => !empty($current_keys[$delta]),
           ],
         ];
       }
@@ -217,7 +216,7 @@ abstract class ListItemBase extends FieldItemBase implements OptionsProviderInte
             ->condition($field, $current_keys[$delta]);
           $entity_ids = $query->execute();
           if (!empty($entity_ids)) {
-            $element['allowed_values']['table'][$delta]['item']['key']['#attributes']['disabled'] = 'disabled';
+            $element['allowed_values']['table'][$delta]['item']['key']['#attributes']['readonly'] = TRUE;
             $element['allowed_values']['table'][$delta]['delete']['#attributes']['disabled'] = 'disabled';
             break;
           }
@@ -361,7 +360,7 @@ abstract class ListItemBase extends FieldItemBase implements OptionsProviderInte
       $table = $form_state->getUserInput()['settings']['allowed_values']['table'];
       $allowed_values_meta = [];
       foreach ($table as $item) {
-        if (!empty($item['item']['key']) && isset($item['weight'])) {
+        if (isset($item['item']['key']) && $item['item']['key'] !== '' && isset($item['weight'])) {
           $allowed_values_meta[$item['item']['key']]['weight'] = $item['weight'];
         }
       }
@@ -466,6 +465,9 @@ abstract class ListItemBase extends FieldItemBase implements OptionsProviderInte
     if (isset($settings['allowed_values'])) {
       $settings['allowed_values'] = static::structureAllowedValues($settings['allowed_values']);
     }
+    if (isset($settings['allowed_values_meta'])) {
+      $settings['allowed_values_meta'] = static::structureAllowedValuesMeta($settings['allowed_values_meta']);
+    }
     return $settings;
   }
 
@@ -475,6 +477,9 @@ abstract class ListItemBase extends FieldItemBase implements OptionsProviderInte
   public static function storageSettingsFromConfigData(array $settings) {
     if (isset($settings['allowed_values'])) {
       $settings['allowed_values'] = static::simplifyAllowedValues($settings['allowed_values']);
+    }
+    if (isset($settings['allowed_values_meta'])) {
+      $settings['allowed_values_meta'] = static::simplifyAllowedValuesMeta($settings['allowed_values_meta']);
     }
     return $settings;
   }
@@ -504,6 +509,14 @@ abstract class ListItemBase extends FieldItemBase implements OptionsProviderInte
     return $values;
   }
 
+  protected static function simplifyAllowedValuesMeta(array $structured_values) {
+    $values = [];
+    foreach ($structured_values as $item) {
+      $values[$item['value']] = ['weight' => $item['weight']];
+    }
+    return $values;
+  }
+
   /**
    * Creates a structured array of allowed values from a key-value array.
    *
@@ -526,6 +539,17 @@ abstract class ListItemBase extends FieldItemBase implements OptionsProviderInte
       $structured_values[] = [
         'value' => static::castAllowedValue($value),
         'label' => $label,
+      ];
+    }
+    return $structured_values;
+  }
+
+  protected static function structureAllowedValuesMeta(array $values) {
+    $structured_values = [];
+    foreach ($values as $value => $weight) {
+      $structured_values[] = [
+        'value' => $value,
+        'weight' => $weight['weight'],
       ];
     }
     return $structured_values;
