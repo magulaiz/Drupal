@@ -55,23 +55,12 @@ class FieldConfigListController extends EntityListController {
   public function listing($entity_type_id = NULL, $bundle = NULL, RouteMatchInterface $route_match = NULL) {
     $build = $this->entityTypeManager()->getListBuilder('field_config')->render($entity_type_id, $bundle);
 
-    $build['#title'] = $this->title($entity_type_id, $bundle);
-
-    return $build;
-  }
-
-  /**
-   * Provides the title for the 'Manage fields' page.
-   *
-   * @return string
-   *   The title.
-   */
-  protected function title($entity_type_id, $bundle) {
     $bundle_info = $this->entityTypeBundleInfo->getBundleInfo($entity_type_id);
-
-    return $this->t('Manage fields: @bundle-label', [
+    $build['#title'] = $this->t('Manage fields: @bundle-label', [
       '@bundle-label' => $bundle_info[$bundle]['label'],
     ]);
+
+    return $build;
   }
 
 }
