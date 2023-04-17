@@ -33,7 +33,6 @@ class FieldUIRouteTest extends BrowserTestBase {
     parent::setUp();
 
     $this->drupalLogin($this->rootUser);
-    $this->drupalPlaceBlock('page_title_block', ['weight' => -10]);
     $this->drupalPlaceBlock('local_tasks_block');
   }
 
