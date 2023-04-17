@@ -54,9 +54,8 @@ class ListStringItem extends ListItemBase {
    * {@inheritdoc}
    */
   protected function allowedValuesDescription() {
-    $description = '<p>' . $this->t('The possible values this field can contain. Enter one value per line, in the format key|label.');
-    $description .= '<br/>' . $this->t('The key is the stored value. The label will be used in displayed values and edit forms.');
-    $description .= '<br/>' . $this->t('The label is optional: if a line contains a single string, it will be used as key and label.');
+    $description = '<p>' . $this->t('The value is the stored value. The label will be used in displayed values and edit forms.');
+    $description .= '<br/>' . $this->t('The label is automatically generated machine name of the value provided.');
     $description .= '</p>';
     $description .= '<p>' . $this->t('Allowed HTML tags in labels: @tags', ['@tags' => FieldFilteredMarkup::displayAllowedTags()]) . '</p>';
     return $description;

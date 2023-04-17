@@ -129,12 +129,9 @@ abstract class ListItemBase extends FieldItemBase implements OptionsProviderInte
       ],
     ];
 
-    $field_storage = \Drupal::entityTypeManager()->getStorage('field_storage_config');
-    $entity_type_ids = $field_storage->getQuery()
-      ->accessCheck(FALSE)
-      ->condition('field_name', $this->getFieldDefinition()->getName())
-      ->execute();
     $max = $form_state->get('items_count');
+    $entity_type_id = $this->getFieldDefinition()->getTargetEntityTypeId();
+    $field_name = $this->getFieldDefinition()->getName();
     $field_type = $this->getFieldDefinition()->getType();
     uksort($allowed_values, function ($a, $b) use ($allowed_values_meta) {
       $a_weight = isset($allowed_values_meta[$a]) ? $allowed_values_meta[$a] : 0;
@@ -143,7 +140,7 @@ abstract class ListItemBase extends FieldItemBase implements OptionsProviderInte
     });
     $current_keys = array_keys($allowed_values);
     for ($delta = 0; $delta <= $max; $delta++) {
-      $key = $current_keys[$delta] ?? '-----------------------';
+      $key = $current_keys[$delta] ?? '';
       $element['allowed_values']['table'][$delta] = [
         '#attributes' => [
           'class' => ['draggable'],
@@ -209,17 +206,13 @@ abstract class ListItemBase extends FieldItemBase implements OptionsProviderInte
         '#attributes' => ['class' => ['weight']],
       ];
       if ($delta < count($allowed_values)) {
-        foreach ($entity_type_ids as $entity_type_id) {
-          [$entity_type, $field] = explode('.', $entity_type_id);
-          $query = \Drupal::entityQuery($entity_type)
-            ->accessCheck(FALSE)
-            ->condition($field, $current_keys[$delta]);
-          $entity_ids = $query->execute();
-          if (!empty($entity_ids)) {
-            $element['allowed_values']['table'][$delta]['item']['key']['#attributes']['readonly'] = TRUE;
-            $element['allowed_values']['table'][$delta]['delete']['#attributes']['disabled'] = 'disabled';
-            break;
-          }
+        $query = \Drupal::entityQuery($entity_type_id)
+          ->accessCheck(FALSE)
+          ->condition($field_name, $current_keys[$delta]);
+        $entity_ids = $query->execute();
+        if (!empty($entity_ids)) {
+          $element['allowed_values']['table'][$delta]['item']['key']['#attributes']['readonly'] = TRUE;
+          $element['allowed_values']['table'][$delta]['delete']['#attributes']['disabled'] = 'disabled';
         }
       }
     }
@@ -345,14 +338,6 @@ abstract class ListItemBase extends FieldItemBase implements OptionsProviderInte
         if ($error = static::validateAllowedValue($key)) {
           $form_state->setError($element, $error);
           break;
-        }
-      }
-
-      // Prevent removing values currently in use.
-      if ($element['#field_has_data']) {
-        $lost_keys = array_keys(array_diff_key($element['#allowed_values'], $values));
-        if (_options_values_in_use($element['#entity_type'], $element['#field_name'], $lost_keys)) {
-          $form_state->setError($element, new TranslatableMarkup('Allowed values list: some values are being removed while currently in use.'));
         }
       }
 
@@ -509,6 +494,19 @@ abstract class ListItemBase extends FieldItemBase implements OptionsProviderInte
     return $values;
   }
 
+  /**
+   * Simplifies allowed values to a key-value array from the structured array.
+   *
+   * @param array $structured_values
+   *   Array of items with the metadata i.e. weight, each for the allowed
+   *   values.
+   *
+   * @return array
+   *   Metadata for allowed values as nested array keyed by the allowed
+   *   values.
+   *
+   * @see \Drupal\options\Plugin\Field\FieldType\ListItemBase::structureAllowedValuesMeta()
+   */
   protected static function simplifyAllowedValuesMeta(array $structured_values) {
     $values = [];
     foreach ($structured_values as $item) {
@@ -544,6 +542,19 @@ abstract class ListItemBase extends FieldItemBase implements OptionsProviderInte
     return $structured_values;
   }
 
+  /**
+   * Creates a structured array of allowed values meta from a key-value array.
+   *
+   * @param array $values
+   *   Metadata for allowed values were the array key is the 'value' value, the
+   *   value is the nested array with it's 'weight'.
+   *
+   * @return array
+   *   Array of items with a 'value' and 'weight' key each for the allowed
+   *   values.
+   *
+   * @see \Drupal\options\Plugin\Field\FieldType\ListItemBase::simplifyAllowedValuesMeta()
+   */
   protected static function structureAllowedValuesMeta(array $values) {
     $structured_values = [];
     foreach ($values as $value => $weight) {
