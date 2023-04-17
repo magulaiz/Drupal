@@ -1,6 +1,6 @@
 {
     "name": "drupal/recommended-project",
-    "description": "Project template for Drupal projects with a relocated document root",
+    "description": "Recommended project template for Drupal 8, 9, and 10 projects with a relocated document root",
     "type": "project",
     "license": "GPL-2.0-or-later",
     "homepage": "https://www.drupal.org/project/drupal",
@@ -8,6 +8,11 @@
         "docs": "https://www.drupal.org/docs/user_guide/en/index.html",
         "chat": "https://www.drupal.org/node/314178"
     },
+    "keywords": [
+        "drupal",
+        "drupal 9",
+        "drupal 10"
+    ],
     "repositories": [
         {
             "type": "composer",
