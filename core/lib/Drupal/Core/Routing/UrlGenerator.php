@@ -38,7 +38,7 @@ class UrlGenerator implements UrlGeneratorInterface {
   protected $requestStack;
 
   /**
-   * The path processor to convert the system path to one suitable for urls.
+   * The path processor to convert the system path to one suitable for URLs.
    *
    * @var \Drupal\Core\PathProcessor\OutboundPathProcessorInterface
    */
@@ -76,7 +76,7 @@ class UrlGenerator implements UrlGeneratorInterface {
    * @param \Drupal\Core\Routing\RouteProviderInterface $provider
    *   The route provider to be searched for routes.
    * @param \Drupal\Core\PathProcessor\OutboundPathProcessorInterface $path_processor
-   *   The path processor to convert the system path to one suitable for urls.
+   *   The path processor to convert the system path to one suitable for URLs.
    * @param \Drupal\Core\RouteProcessor\OutboundRouteProcessorInterface $route_processor
    *   The route processor.
    * @param \Symfony\Component\HttpFoundation\RequestStack $request_stack
@@ -311,7 +311,7 @@ class UrlGenerator implements UrlGeneratorInterface {
     $path = str_replace($this->decodedChars[0], $this->decodedChars[1], rawurlencode($path));
 
     // Drupal paths rarely include dots, so skip this processing if possible.
-    if (strpos($path, '/.') !== FALSE) {
+    if (str_contains($path, '/.')) {
       // the path segments "." and ".." are interpreted as relative reference when
       // resolving a URI; see http://tools.ietf.org/html/rfc3986#section-3.3
       // so we need to encode them as they are not used for this purpose here

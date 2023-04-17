@@ -350,7 +350,7 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
     $driver = $connection_info['default']['driver'];
     $namespace = $connection_info['default']['namespace'] ?? '';
     $autoload = $connection_info['default']['autoload'] ?? '';
-    if (strpos($autoload, 'src/Driver/Database/') !== FALSE) {
+    if (str_contains($autoload, 'src/Driver/Database/')) {
       [$first, $second] = explode('\\', $namespace, 3);
       if ($first === 'Drupal' && strtolower($second) === $second) {
         // Add the module that provides the database driver to the list of
@@ -572,9 +572,10 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
         ->clearTag('path_processor_outbound');
     }
 
+    // Relax the password hashing cost in tests to avoid performance issues.
     if ($container->hasDefinition('password')) {
       $container->getDefinition('password')
-        ->setArguments([1]);
+        ->setArguments([PASSWORD_BCRYPT, ['cost' => 4]]);
     }
 
     // Add the on demand rebuild route provider service.

@@ -77,6 +77,8 @@ class SqlContentEntityStorageSchemaTest extends UnitTestCase {
    * {@inheritdoc}
    */
   protected function setUp(): void {
+    parent::setUp();
+
     $this->entityTypeManager = $this->createMock(EntityTypeManager::class);
     $this->entityFieldManager = $this->createMock(EntityFieldManager::class);
     $this->entityLastInstalledSchemaRepository = $this->createMock(EntityLastInstalledSchemaRepositoryInterface::class);
@@ -1538,7 +1540,7 @@ class SqlContentEntityStorageSchemaTest extends UnitTestCase {
     // The original indexes should be dropped before the new one is added.
     $this->dbSchemaHandler->expects($this->exactly(3))
       ->method('dropIndex')
-      ->willReturnOnConsecutiveCalls(
+      ->withConsecutive(
         ['entity_test', 'entity_test__b588603cb9'],
         ['entity_test', 'entity_test__removed_field'],
       );

@@ -419,6 +419,9 @@ services:
     tags:
       - { name: event_subscriber }
   Drupal\Core\Database\ReplicaKillSwitch: '@database.replica_kill_switch'
+  Drupal\Core\Database\EventSubscriber\StatementExecutionSubscriber:
+    tags:
+      - { name: event_subscriber }
   datetime.time:
     class: Drupal\Component\Datetime\Time
     arguments: ['@request_stack']
@@ -640,7 +643,7 @@ services:
   Drupal\Core\Extension\ThemeHandlerInterface: '@theme_handler'
   theme_installer:
     class: Drupal\Core\Extension\ThemeInstaller
-    arguments: ['@theme_handler', '@config.factory', '@config.installer', '@module_handler', '@config.manager', '@asset.css.collection_optimizer', '@router.builder', '@logger.channel.default', '@state', '@extension.list.module']
+    arguments: ['@theme_handler', '@config.factory', '@config.installer', '@module_handler', '@config.manager', '@asset.css.collection_optimizer', '@router.builder', '@logger.channel.default', '@state', '@extension.list.module', '@theme.registry']
   Drupal\Core\Extension\ThemeInstallerInterface: '@theme_installer'
   entity.memory_cache:
     class: Drupal\Core\Cache\MemoryCache\MemoryCache
@@ -1025,7 +1028,6 @@ services:
     class: \Drupal\Core\Routing\Router
     arguments: ['@router.route_provider', '@path.current', '@url_generator']
     tags:
-      # @todo Try to combine those tags together, see https://www.drupal.org/node/2915772.
       - { name: service_collector, tag: non_lazy_route_enhancer, call: addDeprecatedRouteEnhancer }
       - { name: service_collector, tag: route_enhancer, call: addRouteEnhancer  }
       - { name: service_collector, tag: non_lazy_route_filter, call: addDeprecatedRouteFilter }
@@ -1082,16 +1084,8 @@ services:
     class: Drupal\Core\Path\PathValidator
     arguments: ['@router', '@router.no_access_checks', '@current_user', '@path_processor_manager']
   Drupal\Core\Path\PathValidatorInterface: '@path.validator'
-
-  # The argument to the hashing service defined in services.yml, to the
-  # constructor of PhpassHashedPassword is the log2 number of iterations for
-  # password stretching.
-  # @todo increase by 1 every Drupal version in order to counteract increases in
-  # the speed and power of computers available to crack the hashes. The current
-  # password hashing method was introduced in Drupal 7 with a log2 count of 15.
   password:
-    class: Drupal\Core\Password\PhpassHashedPassword
-    arguments: [16]
+    class: Drupal\Core\Password\PhpPassword
   Drupal\Core\Password\PasswordInterface: '@password'
   password_generator:
     class: Drupal\Core\Password\DefaultPasswordGenerator
@@ -1506,6 +1500,11 @@ services:
     calls:
       - [setContainer, ['@service_container']]
   Drupal\Core\StreamWrapper\StreamWrapperManagerInterface: '@stream_wrapper_manager'
+  stream_wrapper.assets:
+    class: Drupal\Core\StreamWrapper\AssetsStream
+    tags:
+      - { name: stream_wrapper, scheme: assets }
+  Drupal\Core\StreamWrapper\AssetsStream: '@stream_wrapper.assets'
   stream_wrapper.public:
     class: Drupal\Core\StreamWrapper\PublicStream
     tags:
@@ -1601,7 +1600,7 @@ services:
   Drupal\Core\Session\AccountSwitcherInterface: '@account_switcher'
   user_permissions_hash_generator:
     class: Drupal\Core\Session\PermissionsHashGenerator
-    arguments: ['@private_key', '@cache.bootstrap', '@cache.static']
+    arguments: ['@private_key', '@cache.bootstrap', '@cache.static', '@entity_type.manager']
   Drupal\Core\Session\PermissionsHashGeneratorInterface: '@user_permissions_hash_generator'
   current_user:
     class: Drupal\Core\Session\AccountProxy

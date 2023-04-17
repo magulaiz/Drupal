@@ -254,7 +254,7 @@ class ViewExecutable {
   public $override_url;
 
   /**
-   * Allow to override the path used for generated urls.
+   * Allow to override the path used for generated URLs.
    *
    * @var string
    */
@@ -1972,7 +1972,7 @@ class ViewExecutable {
     $path = $this->getPath();
 
     // Don't bother working if there's nothing to do:
-    if (empty($path) || (empty($args) && strpos($path, '%') === FALSE)) {
+    if (empty($path) || (empty($args) && !str_contains($path, '%'))) {
       return $display_handler->getUrlInfo();
     }
 

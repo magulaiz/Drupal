@@ -25,6 +25,8 @@ use GuzzleHttp\RequestOptions;
 use Psr\Http\Message\ResponseInterface;
 
 /**
+ * Defines a base class for testing all entity resources.
+ *
  * Even though there is the generic EntityResource, it's necessary for every
  * entity type to have its own test, because they each have different fields,
  * validation constraints, et cetera. It's not because the generic case works,
@@ -65,7 +67,7 @@ use Psr\Http\Message\ResponseInterface;
  *
  * If there is an entity type-specific format-specific edge case to test, then
  * add that to a concrete subclass. Example:
- * \Drupal\Tests\hal\Functional\EntityResource\Comment\CommentHalJsonTestBase::$patchProtectedFieldNames
+ * \Drupal\Tests\comment\Functional\Rest\CommentJsonAnonTest::$patchProtectedFieldNames
  */
 abstract class EntityResourceTestBase extends ResourceTestBase {
 
@@ -1386,7 +1388,7 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
   protected function assertStoredEntityMatchesSentNormalization(array $sent_normalization, FieldableEntityInterface $modified_entity) {
     foreach ($sent_normalization as $field_name => $field_normalization) {
       // Some top-level keys in the normalization may not be fields on the
-      // entity (for example '_links' and '_embedded' in the HAL normalization).
+      // entity.
       if ($modified_entity->hasField($field_name)) {
         $field_definition = $modified_entity->get($field_name)->getFieldDefinition();
         $property_definitions = $field_definition->getItemDefinition()->getPropertyDefinitions();

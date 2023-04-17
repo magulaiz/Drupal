@@ -57,6 +57,8 @@ class EntityNormalizerTest extends UnitTestCase {
    * {@inheritdoc}
    */
   protected function setUp(): void {
+    parent::setUp();
+
     $this->entityFieldManager = $this->createMock(EntityFieldManagerInterface::class);
     $this->entityTypeManager = $this->createMock(EntityTypeManagerInterface::class);
     $this->entityTypeRepository = $this->createMock(EntityTypeRepositoryInterface::class);
@@ -96,7 +98,7 @@ class EntityNormalizerTest extends UnitTestCase {
       ->getMock();
     $serializer->expects($this->exactly(2))
       ->method('normalize')
-      ->willReturnOnConsecutiveCalls(
+      ->withConsecutive(
         [$list_item_1, 'test_format'],
         [$list_item_2, 'test_format'],
       );
@@ -222,7 +224,7 @@ class EntityNormalizerTest extends UnitTestCase {
       ->getMock();
     $serializer->expects($this->exactly(2))
       ->method('denormalize')
-      ->willReturnOnConsecutiveCalls(
+      ->withConsecutive(
         ['value_1', get_class($key_1), NULL, ['target_instance' => $key_1, 'entity_type' => 'test']],
         ['value_2', get_class($key_2), NULL, ['target_instance' => $key_2, 'entity_type' => 'test']],
       );
@@ -371,7 +373,7 @@ class EntityNormalizerTest extends UnitTestCase {
       ->getMock();
     $serializer->expects($this->exactly(2))
       ->method('denormalize')
-      ->willReturnOnConsecutiveCalls(
+      ->withConsecutive(
         ['value_1', get_class($key_1), NULL, ['target_instance' => $key_1, 'entity_type' => 'test']],
         ['value_2', get_class($key_2), NULL, ['target_instance' => $key_2, 'entity_type' => 'test']],
       );
