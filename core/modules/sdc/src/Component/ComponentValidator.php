@@ -2,9 +2,9 @@
 
 namespace Drupal\sdc\Component;
 
+use Drupal\Core\Render\Element;
 use Drupal\sdc\Exception\InvalidComponentException;
 use Drupal\sdc\Plugin\Component;
-use Drupal\sdc\Utilities;
 use JsonSchema\Validator;
 
 /**
@@ -176,7 +176,7 @@ final class ComponentValidator {
         if (($error['constraint'] ?? '') !== 'type') {
           return TRUE;
         }
-        return !Utilities::isRenderArray($context[$error['property']] ?? NULL);
+        return !Element::isRenderArray($context[$error['property']] ?? NULL);
       }
     );
     if (empty($errors)) {
