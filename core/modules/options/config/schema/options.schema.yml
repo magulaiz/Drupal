@@ -26,6 +26,9 @@ field.storage_settings.list_integer:
       sequence:
         type: mapping
         mapping:
+          value:
+            type: integer
+            label: 'Value'
           weight:
             type: integer
             label: 'Weight'
@@ -68,6 +71,9 @@ field.storage_settings.list_float:
       sequence:
         type: mapping
         mapping:
+          value:
+            type: float || integer
+            label: 'Value'
           weight:
             type: integer
             label: 'Weight'
@@ -110,6 +116,9 @@ field.storage_settings.list_string:
       sequence:
         type: mapping
         mapping:
+          value:
+            type: string
+            label: 'Value'
           weight:
             type: integer
             label: 'Weight'
