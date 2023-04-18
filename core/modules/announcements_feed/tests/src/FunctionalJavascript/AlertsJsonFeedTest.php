@@ -29,34 +29,6 @@ class AlertsJsonFeedTest extends OffCanvasTestBase {
   protected $defaultTheme = 'stark';
 
   /**
-   * A test endpoint which contains the community feeds.
-   *
-   * @var string
-   */
-  protected $responseJson;
-
-  /**
-   * A test endpoint which include the new feeds.
-   *
-   * @var string
-   */
-  protected string $updatedJson;
-
-  /**
-   * A test endpoint which displays an empty json.
-   *
-   * @var string
-   */
-  protected string $emptyJson;
-
-  /**
-   * A test endpoint that will have some feeds removed.
-   *
-   * @var string
-   */
-  protected string $removed;
-
-  /**
    * A user with permission to access toolbar and access announcements.
    *
    * @var \Drupal\user\UserInterface
@@ -75,10 +47,7 @@ class AlertsJsonFeedTest extends OffCanvasTestBase {
    */
   public function setUp():void {
     parent::setUp();
-    $this->responseJson = $this->buildUrl('/announce-feed-json/community-feeds');
-    $this->updatedJson = $this->buildUrl('/announce-feed-json/updated');
-    $this->emptyJson = $this->buildUrl('/announce-feed-json/empty');
-    $this->removed = $this->buildUrl('/announce-feed-json/removed');
+
     $this->user1 = $this->drupalCreateUser(
       [
         'access toolbar',
@@ -93,7 +62,7 @@ class AlertsJsonFeedTest extends OffCanvasTestBase {
       ]
     );
 
-    AnnounceTestHttpClientMiddleware::setAnnounceTestEndpoint($this->responseJson);
+    AnnounceTestHttpClientMiddleware::setAnnounceTestEndpoint('/announce-feed-json/community-feeds');
   }
 
   /**
@@ -114,7 +83,7 @@ class AlertsJsonFeedTest extends OffCanvasTestBase {
     $this->assertSession()->elementNotExists('css', '.announce-new');
 
     // Change the feed url and reset temp storage.
-    AnnounceTestHttpClientMiddleware::setAnnounceTestEndpoint($this->updatedJson);
+    AnnounceTestHttpClientMiddleware::setAnnounceTestEndpoint('/announce-feed-json/updated');
 
     $this->drupalGet('<front>');
 
@@ -198,7 +167,7 @@ class AlertsJsonFeedTest extends OffCanvasTestBase {
     $this->assertStringNotContainsString('Only 10 - Drupal 106 is available and this feed is Updated', $new_page_html);
 
     // Change the feed url and reset temp storage.
-    AnnounceTestHttpClientMiddleware::setAnnounceTestEndpoint($this->updatedJson);
+    AnnounceTestHttpClientMiddleware::setAnnounceTestEndpoint('/announce-feed-json/updated');
 
     $this->drupalGet('<front>');
     $this->assertSession()->elementExists('css', '.announce-new');
@@ -212,7 +181,7 @@ class AlertsJsonFeedTest extends OffCanvasTestBase {
     $this->drupalLogout();
 
     // Change the feed url and reset temp storage.
-    AnnounceTestHttpClientMiddleware::setAnnounceTestEndpoint($this->removed);
+    AnnounceTestHttpClientMiddleware::setAnnounceTestEndpoint('/announce-feed-json/removed');
     $this->drupalLogin($this->user1);
 
     // If the removed item is only item the user hasn't read the red dot should
@@ -234,7 +203,7 @@ class AlertsJsonFeedTest extends OffCanvasTestBase {
    */
   public function testAnnounceFeedEmpty() {
     // Change the feed url and reset temp storage.
-    AnnounceTestHttpClientMiddleware::setAnnounceTestEndpoint($this->emptyJson);
+    AnnounceTestHttpClientMiddleware::setAnnounceTestEndpoint('/announce-feed-json/empty');
 
     $this->drupalLogin($this->user1);
     $this->drupalGet('<front>');

@@ -3,6 +3,7 @@
 namespace Drupal\announce_feed_test;
 
 use Drupal\Core\Cache\Cache;
+use Drupal\Core\Url;
 use GuzzleHttp\Promise\PromiseInterface;
 use GuzzleHttp\Psr7\Uri;
 use Psr\Http\Message\RequestInterface;
@@ -37,6 +38,8 @@ class AnnounceTestHttpClientMiddleware {
    *   The test endpoint.
    */
   public static function setAnnounceTestEndpoint(string $test_endpoint): void {
+    // Convert the endpoint to an absolute URL.
+    $test_endpoint = Url::fromUri('base:/' . $test_endpoint)->setAbsolute()->toString();
     \Drupal::state()->set('announce_test_endpoint', $test_endpoint);
     \Drupal::service('keyvalue.expirable')->get('announcements_feed')->delete('announcements');
     Cache::invalidateTags(['announcements_feed:feed:' . \Drupal::currentUser()->id()]);
