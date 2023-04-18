@@ -8,13 +8,13 @@ use Drupal\Component\Serialization\Json;
 use Drupal\Component\Utility\Html;
 use Drupal\Core\Messenger\MessengerInterface;
 use Drupal\Core\Render\ElementInfoManagerInterface;
-use Drupal\Core\Security\Attribute\TrustedCallback;
+use Drupal\Core\Security\TrustedCallbackInterface;
 use Drupal\Core\Url;
 
 /**
  * Defines a class for lazy building render arrays.
  */
-final class LazyBuilders {
+final class LazyBuilders implements TrustedCallbackInterface {
 
   /**
    * Constructs a new LazyBuilders.
@@ -39,7 +39,6 @@ final class LazyBuilders {
    * @return array
    *   Render array.
    */
-  #[TrustedCallback]
   public function renderAnnouncements(): array {
     $announce_icon = 'announce-default';
 
@@ -101,6 +100,13 @@ final class LazyBuilders {
     // @see https://www.drupal.org/project/drupal/issues/2609250
     $build += $this->elementInfo->getInfo('link');
     return $build;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function trustedCallbacks(): array {
+    return ['renderAnnouncements'];
   }
 
 }
