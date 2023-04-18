@@ -32,7 +32,7 @@ block_content.add_form:
     _entity_create_access: 'block_content:{block_content_type}'
 
 entity.block_content.canonical:
-  path: '/admin/content/block-content/{block_content}'
+  path: '/admin/content/block/{block_content}'
   defaults:
     _entity_form: 'block_content.edit'
     _title_callback: '\Drupal\Core\Entity\Controller\EntityController::title'
@@ -57,7 +57,7 @@ entity.block_content.canonical.bc:
     block_content: \d+
 
 entity.block_content.edit_form:
-  path: '/admin/content/block-content/{block_content}'
+  path: '/admin/content/block/{block_content}'
   defaults:
     _entity_form: 'block_content.edit'
   options:
@@ -81,7 +81,7 @@ entity.block_content.edit_form.bc:
     block_content: \d+
 
 entity.block_content.delete_form:
-  path: '/admin/content/block-content/{block_content}/delete'
+  path: '/admin/content/block/{block_content}/delete'
   defaults:
     _entity_form: 'block_content.delete'
     _title: 'Delete'

@@ -85,7 +85,7 @@ class PageEditTest extends BlockContentTestBase {
     // Test breadcrumb.
     $trail = [
       '' => 'Home',
-      'admin/content/block' => 'Custom blocks',
+      'admin/content/block' => 'Content blocks',
       'admin/content/block/' . $revised_block->id() => $revised_block->label(),
     ];
     $this->assertBreadcrumb(
