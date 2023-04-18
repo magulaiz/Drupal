@@ -6,6 +6,7 @@ namespace Drupal\Tests\announcements_feed\Functional;
 
 use Drupal\Core\Url;
 use Drupal\Tests\BrowserTestBase;
+use Drupal\dynamic_page_cache\EventSubscriber\DynamicPageCacheSubscriber;
 
 /**
  * Defines a class for testing pages are still cacheable with dynamic page cache.
@@ -36,13 +37,12 @@ final class AnnouncementsCacheTest extends BrowserTestBase {
       'access toolbar',
       'access announcements',
     ]));
+    // Front-page is visited right after login.
+    $this->assertSession()->responseHeaderEquals(DynamicPageCacheSubscriber::HEADER, 'MISS');
+    // Reload the page, it should be cached now.
     $this->drupalGet(Url::fromRoute('<front>'));
     $this->assertSession()->elementExists('css', '[data-drupal-announce-trigger]');
-    // First time check should not be cached.
-    $this->assertEquals('MISS', $this->getSession()->getResponseHeader('X-Drupal-Dynamic-Cache'));
-    // Reload the page and check that the result is cached now.
-    $this->drupalGet(Url::fromRoute('<front>'));
-    $this->assertEquals('HIT', $this->getSession()->getResponseHeader('X-Drupal-Dynamic-Cache'));
+    $this->assertSession()->responseHeaderEquals(DynamicPageCacheSubscriber::HEADER, 'HIT');
   }
 
 }
