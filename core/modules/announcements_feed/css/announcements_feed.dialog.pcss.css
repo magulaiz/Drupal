@@ -46,6 +46,6 @@
   }
 
   & .no_alerts {
-    margin-block-start: var(--off-canvas-padding));
+    margin-block-start: var(--off-canvas-padding);
   }
 }

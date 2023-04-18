@@ -24,7 +24,7 @@ class AnnounceTestController {
    *   JsonResponse will be returned using the contents of the file, otherwise a
    *   Response will be returned with a 404 status code.
    */
-  public function setFeedConfig(string $json_name): Response {
+  public function setFeedConfig(string $json_name): JsonResponse|Response {
     $file = __DIR__ . "/../../../../announce_feed/$json_name.json";
     $headers = ['Content-Type' => 'application/json; charset=utf-8'];
     if (!is_file($file)) {

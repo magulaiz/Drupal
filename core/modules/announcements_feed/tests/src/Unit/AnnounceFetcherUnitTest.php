@@ -17,7 +17,7 @@ class AnnounceFetcherUnitTest extends UnitTestCase {
    *
    * @var \Drupal\announcements_feed\AnnounceFetcher
    */
-  protected $fetcher;
+  protected AnnounceFetcher $fetcher;
 
   /**
    * {@inheritdoc}
@@ -45,7 +45,7 @@ class AnnounceFetcherUnitTest extends UnitTestCase {
   /**
    * Data for the testValidateUrl.
    */
-  public function urlProvider() {
+  public function urlProvider(): array {
     return [
       ['https://www.drupal.org', TRUE],
       ['https://drupal.org', TRUE],

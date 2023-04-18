@@ -88,7 +88,7 @@ class AccessAnnouncementTest extends OffCanvasTestBase {
     $this->drupalLogin($account);
     $this->drupalGet('<front>');
 
-    // Announcements should not longer be marked as new.
+    // Announcements should no longer be marked as new.
     $this->assertSession()->elementNotExists('css', '.announcement__new');
 
     // All alerts items should display as unread alerts,

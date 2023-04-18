@@ -4,6 +4,7 @@ namespace Drupal\Tests\announcements_feed\FunctionalJavascript;
 
 use Drupal\Tests\system\FunctionalJavascript\OffCanvasTestBase;
 use Drupal\announce_feed_test\AnnounceTestHttpClientMiddleware;
+use Drupal\user\UserInterface;
 
 /**
  * Test the access announcement according to json feed changes.
@@ -25,7 +26,7 @@ class AlertsJsonFeedTest extends OffCanvasTestBase {
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'stark';
+  protected string $defaultTheme = 'stark';
 
   /**
    * A test endpoint which contains the community feeds.
@@ -39,42 +40,35 @@ class AlertsJsonFeedTest extends OffCanvasTestBase {
    *
    * @var string
    */
-  protected $updatedJson;
+  protected string $updatedJson;
 
   /**
    * A test endpoint which displays an empty json.
    *
    * @var string
    */
-  protected $emptyJson;
+  protected string $emptyJson;
 
   /**
    * A test endpoint that will have some feeds removed.
    *
    * @var string
    */
-  protected $removed;
+  protected string $removed;
 
   /**
    * A user with permission to access toolbar and access announcements.
    *
    * @var \Drupal\user\UserInterface
    */
-  protected $user1;
+  protected UserInterface $user1;
 
   /**
    * A user with permission to access toolbar and access announcements.
    *
    * @var \Drupal\user\UserInterface
    */
-  protected $user2;
-
-  /**
-   * A user with permission to access toolbar and access announcements.
-   *
-   * @var \Drupal\user\UserInterface
-   */
-  protected $user3;
+  protected UserInterface $user2;
 
   /**
    * {@inheritdoc}
@@ -135,9 +129,9 @@ class AlertsJsonFeedTest extends OffCanvasTestBase {
     $this->waitForOffCanvasToOpen();
 
     $this->assertSession()->elementExists('css', '.announcement__new');
-    $total_updated_records_count = 1;
+
     // Checking existence of the unread record.
-    $this->assertSession()->elementsCount('css', '.announcement__new', $total_updated_records_count);
+    $this->assertSession()->elementsCount('css', '.announcement__new', 1);
     $page = $this->getSession()->getPage();
     $unread_status = $page->find('css', '.announcement__new');
     $this->assertNotEmpty($unread_status);
@@ -172,10 +166,8 @@ class AlertsJsonFeedTest extends OffCanvasTestBase {
     $this->waitForOffCanvasToOpen();
     $this->assertSession()->elementExists('css', '.announcement__new');
 
-    $total_updated_records_count = 1;
-
     // Checking existence of the unread record.
-    $this->assertSession()->elementsCount('css', '.announcement__new', $total_updated_records_count);
+    $this->assertSession()->elementsCount('css', '.announcement__new', 1);
 
     // The new items for that user should be shown as unread.
     $page = $this->getSession()->getPage();
@@ -223,8 +215,8 @@ class AlertsJsonFeedTest extends OffCanvasTestBase {
     AnnounceTestHttpClientMiddleware::setAnnounceTestEndpoint($this->removed);
     $this->drupalLogin($this->user1);
 
-    // If the removed item is only item the
-    // user hasn't read the the red dot should not show.
+    // If the removed item is only item the user hasn't read the red dot should
+    // not show.
     $this->drupalGet('<front>');
     $this->assertSession()->elementNotExists('css', '.announce-new');
 

@@ -58,7 +58,7 @@ class AnnounceUserStatus {
   /**
    * Get announcements for the current logged in user.
    *
-   * Return an array of announcements with a additional attribute new for the
+   * Return an array of announcements with an additional attribute new for the
    * new items in the list.
    *
    * @return array

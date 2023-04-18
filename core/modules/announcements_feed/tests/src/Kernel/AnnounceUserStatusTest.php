@@ -232,9 +232,9 @@ class AnnounceUserStatusTest extends AnnounceTestBase {
    *   'url' are omitted because they do not need to vary between test cases.
    */
   protected function setFeedItems(array $feed_items): void {
-    $responses[] = new Response('200', [], json_encode(['items' => $feed_items]));
-    $responses[] = new Response('200', [], json_encode(['items' => $feed_items]));
-    $responses[] = new Response('200', [], json_encode(['items' => $feed_items]));
+    $responses[] = new Response(200, [], json_encode(['items' => $feed_items]));
+    $responses[] = new Response(200, [], json_encode(['items' => $feed_items]));
+    $responses[] = new Response(200, [], json_encode(['items' => $feed_items]));
 
     $this->setTestFeedResponses($responses);
   }

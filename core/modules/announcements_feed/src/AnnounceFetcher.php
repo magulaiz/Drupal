@@ -5,8 +5,11 @@ namespace Drupal\announcements_feed;
 use Composer\Semver\Semver;
 use Drupal\Component\Serialization\Json;
 use Drupal\Core\Config\ConfigFactoryInterface;
+use Drupal\Core\Config\ImmutableConfig;
 use Drupal\Core\KeyValueStore\KeyValueExpirableFactory;
+use Drupal\Core\KeyValueStore\KeyValueStoreInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
+use Drupal\Core\Utility\Error;
 use GuzzleHttp\ClientInterface;
 use Psr\Log\LoggerInterface;
 
@@ -20,18 +23,18 @@ class AnnounceFetcher {
   use StringTranslationTrait;
 
   /**
-   * The ConfigFactory service.
+   * The configuration settings of this module.
    *
-   * @var \Drupal\Core\Config\ConfigFactoryInterface
+   * @var \Drupal\Core\Config\ImmutableConfig
    */
-  protected $config;
+  protected ImmutableConfig $config;
 
   /**
    * The tempstore service.
    *
    * @var \Drupal\Core\KeyValueStore\KeyValueExpirableFactory
    */
-  protected $tempStore;
+  protected KeyValueStoreInterface $tempStore;
 
   /**
    * Construct an AnnounceFetcher service.
@@ -135,7 +138,7 @@ class AnnounceFetcher {
         $feed_content = (string) $this->httpClient->get($this->feedUrl)->getBody();
       }
       catch (\Exception $e) {
-        $this->logger->error($e->getMessage());
+        $this->logger->error(Error::DEFAULT_ERROR_MESSAGE, Error::decodeException($e));
         throw $e;
       }
 
@@ -156,10 +159,12 @@ class AnnounceFetcher {
         $this->config->get('max_age'));
     }
 
-    // Limit the announcements to show.
+    // The drupal.org endpoint is sorted by created date in descending order.
+    // We will limit the announcements based on the configuration limit.
     $announcements = array_slice($announcements, 0, $this->config->get('limit'));
 
-    // Put all the sticky announcements before the rest.
+    // For the remaining announcements, put all the featured announcements
+    // before the rest.
     uasort($announcements, function ($a, $b) {
       $a_value = (int) $a['_drupalorg']['featured'];
       $b_value = (int) $b['_drupalorg']['featured'];

@@ -8,14 +8,14 @@ use GuzzleHttp\Psr7\Uri;
 use Psr\Http\Message\RequestInterface;
 
 /**
- * Overrides the User-Agent HTTP header for outbound HTTP requests.
+ * Overrides the requested endpoint when running tests.
  */
 class AnnounceTestHttpClientMiddleware {
 
   /**
-   * Invoked method that returns a promise.
+   * HTTP middleware that replaces request endpoint for a test one.
    */
-  public function __invoke() {
+  public function __invoke(): \Closure {
     return function ($handler) {
       return function (RequestInterface $request, array $options) use ($handler): PromiseInterface {
         $test_end_point = \Drupal::state()->get('announce_test_endpoint');
