@@ -73,8 +73,7 @@ class AnnounceFetcher {
    *   An array with ids of all announcements in the feed.
    */
   public function fetchIds(): array {
-    $announcements = $this->fetch();
-    return array_column($announcements, 'id');
+    return array_column($this->fetch(), 'id');
   }
 
   /**

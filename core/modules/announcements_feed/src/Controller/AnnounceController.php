@@ -20,11 +20,11 @@ class AnnounceController extends ControllerBase implements ContainerInjectionInt
    *
    * @param \Drupal\announcements_feed\AnnounceUserStatus $userStatus
    *   The AnnounceUserStatus service.
-   * @param \Drupal\Core\Session\AccountInterface $current_user
+   * @param \Drupal\Core\Session\AccountInterface $currentUser
    *   The current_user service.
    */
-  public function __construct(protected AnnounceUserStatus $userStatus, AccountInterface $current_user) {
-    $this->currentUser = $current_user;
+  public function __construct(protected AnnounceUserStatus $userStatus, AccountInterface $currentUser) {
+    $this->currentUser = $currentUser;
   }
 
   /**

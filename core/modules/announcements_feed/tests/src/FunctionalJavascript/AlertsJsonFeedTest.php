@@ -99,12 +99,6 @@ class AlertsJsonFeedTest extends OffCanvasTestBase {
       ]
     );
 
-    $this->user3 = $this->drupalCreateUser(
-      [
-        'access toolbar',
-        'access announcements',
-      ]
-    );
     AnnounceTestHttpClientMiddleware::setAnnounceTestEndpoint($this->responseJson);
   }
 
@@ -192,15 +186,13 @@ class AlertsJsonFeedTest extends OffCanvasTestBase {
     // Checking updated title.
     $new_page_html = $page->getHtml();
     $this->assertStringContainsString('announce title updated', $new_page_html);
-
-    $this->drupalLogout();
   }
 
   /**
-   * Check the status of the red dot icon when the feed is updated.
+   * Check the status of the new announcements when the feed is updated.
    */
   public function testAnnounceFeedRemoved() {
-    $this->drupalLogin($this->user3);
+    $this->drupalLogin($this->user1);
     $this->drupalGet('<front>');
     $this->clickLink('Announcements');
     $this->waitForOffCanvasToOpen();
@@ -229,7 +221,7 @@ class AlertsJsonFeedTest extends OffCanvasTestBase {
 
     // Change the feed url and reset temp storage.
     AnnounceTestHttpClientMiddleware::setAnnounceTestEndpoint($this->removed);
-    $this->drupalLogin($this->user3);
+    $this->drupalLogin($this->user1);
 
     // If the removed item is only item the
     // user hasn't read the the red dot should not show.
@@ -252,7 +244,7 @@ class AlertsJsonFeedTest extends OffCanvasTestBase {
     // Change the feed url and reset temp storage.
     AnnounceTestHttpClientMiddleware::setAnnounceTestEndpoint($this->emptyJson);
 
-    $this->drupalLogin($this->user3);
+    $this->drupalLogin($this->user1);
     $this->drupalGet('<front>');
     $this->assertSession()->elementNotExists('css', '.announce-new');
 
