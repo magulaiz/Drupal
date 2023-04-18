@@ -16,7 +16,7 @@
 }
 
 /* Red dot that appears when there's a new message. */
-.announce-new:after {
+.announce-new::after {
   position: absolute;
   inset-block-start: 0.625rem;
   inset-inline-start: 1.125rem;
