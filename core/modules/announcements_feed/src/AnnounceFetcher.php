@@ -34,13 +34,6 @@ class AnnounceFetcher {
   protected $tempStore;
 
   /**
-   * URL for the announcement.
-   *
-   * @var string
-   */
-  protected $feedUrl;
-
-  /**
    * Construct an AnnounceFetcher service.
    *
    * @param \GuzzleHttp\ClientInterface $httpClient
@@ -51,7 +44,7 @@ class AnnounceFetcher {
    *   The tempstore factory service.
    * @param \Psr\Log\LoggerInterface $logger
    *   The logger service.
-   * @param string $feed_url
+   * @param string $feedUrl
    *   The feed url path.
    */
   public function __construct(
@@ -59,11 +52,10 @@ class AnnounceFetcher {
     ConfigFactoryInterface $config,
     KeyValueExpirableFactory $temp_store,
     protected LoggerInterface $logger,
-    string $feed_url
+    protected string $feedUrl
   ) {
     $this->config = $config->get('announcements_feed.settings');
     $this->tempStore = $temp_store->get('announcements_feed');
-    $this->feedUrl = $feed_url;
   }
 
   /**
