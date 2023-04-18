@@ -15,6 +15,7 @@ use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Theme\ThemeManagerInterface;
+use Drupal\Core\Theme\ThemeColorsParser;
 
 // cspell:ignore apng
 
@@ -322,6 +323,59 @@ class ThemeSettingsForm extends ConfigFormBase {
     }
 
     if ($theme) {
+      // Parse the THEME.colors.yml if it exists and create the necessary form elements.
+      $active_theme = $themes[$theme];
+      $color_info = DRUPAL_ROOT . '/' . $active_theme->getPath() . '/' . $theme . '.colors.yml';
+      if (file_exists($color_info)) {
+        $parsed_colors = ThemeColorsParser::parse($color_info);
+
+        $form_state->set('parsed_colors', $parsed_colors);
+        $color_schemes = $parsed_colors['schemes'];
+
+        $form['#attached']['library'][] = 'core/colors';
+        $form['#attached']['drupalSettings']['colorSchemes'] = $color_schemes;
+
+        $form['colors'] = [
+          '#type' => 'details',
+          '#title' => $this->t('Colors'),
+          '#open' => TRUE,
+        ];
+        $form['colors']['description'] = [
+          '#type' => 'html_tag',
+          '#tag' => 'p',
+          '#value' => $this->t('These settings adjust the look and feel of the theme.'),
+        ];
+        $form['colors']['color_scheme'] = [
+          '#type' => 'select',
+          '#title' => $this->t('Color Scheme'),
+          '#empty_option' => $this->t('Custom'),
+          '#empty_value' => '',
+          '#options' => array_combine(array_keys($color_schemes), array_column($color_schemes, 'label')),
+          '#input' => FALSE,
+          '#wrapper_attributes' => [
+            'style' => 'display:none;',
+          ],
+          '#default_value' => theme_get_setting('colors.color_scheme', $theme),
+        ];
+
+        foreach ($parsed_colors['colors'] as $key => $title) {
+          $form['colors'][$key] = [
+            '#type' => 'textfield',
+            '#maxlength' => 7,
+            '#size' => 10,
+            '#title' => $this->t($title),
+            '#description' => $this->t('Enter color in full hexadecimal format (#abc123).'),
+            '#default_value' => theme_get_setting($key, $theme),
+            '#attributes' => [
+              'pattern' => '^#[a-fA-F0-9]{6}',
+            ],
+            '#wrapper_attributes' => [
+              'data-drupal-selector' => 'color-picker',
+            ],
+          ];
+        }
+      }
+
       // Call engine-specific settings.
       $function = $themes[$theme]->prefix . '_engine_settings';
       if (function_exists($function)) {
@@ -439,6 +493,15 @@ class ThemeSettingsForm extends ConfigFormBase {
         $path = $this->validatePath($form_state->getValue('favicon_path'));
         if (!$path) {
           $form_state->setErrorByName('favicon_path', $this->t('The custom favicon path is invalid.'));
+        }
+      }
+    }
+    // Check for valid color strings.
+    if (isset($form['colors'])) {
+      $parsed_colors = $form_state->get('parsed_colors');
+      foreach ($parsed_colors['colors'] as $color_field => $color_name) {
+        if (!ThemeColorsParser::validate($form_state->getValue($color_field))) {
+          $form_state->setErrorByName($color_field, $this->t('@color must be 7-character string specifying a color hexadecimal format.', ['@color' => $color_name]));
         }
       }
     }
