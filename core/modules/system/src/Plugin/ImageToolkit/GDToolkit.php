@@ -200,8 +200,8 @@ class GDToolkit extends ImageToolkitBase {
     }
 
     if ($this->getType()) {
-      $function = 'imagecreatefrom' . image_type_to_extension($this->getType(), FALSE);
-      if (function_exists($function) && $resource = $function($this->getSource())) {
+      $function = $this->getType() ? 'imagecreatefrom' . image_type_to_extension($this->getType(), FALSE) : NULL;
+      if ($function && function_exists($function) && $resource = $function($this->getSource())) {
         $this->setResource($resource);
         if (imageistruecolor($resource)) {
           return TRUE;
