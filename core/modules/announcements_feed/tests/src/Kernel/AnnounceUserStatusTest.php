@@ -47,8 +47,7 @@ class AnnounceUserStatusTest extends AnnounceTestBase {
     $this->setFeedItems($feed_item);
 
     // First time access.
-    $user_status = $this->fetchFeedUserStatus();
-    $all_items = $user_status->getAllAnnouncements();
+    $all_items = $this->container->get('announcements_feed.user_status')->getAllAnnouncements();
     $this->assertCount(4, $all_items);
 
     // Checking the 'new' status is enabled.
@@ -58,8 +57,7 @@ class AnnounceUserStatusTest extends AnnounceTestBase {
     $this->setFeedItems($feed_item);
 
     // Second time access.
-    $user_status = $this->fetchFeedUserStatus();
-    $all_items = $user_status->getAllAnnouncements();
+    $all_items = $this->container->get('announcements_feed.user_status')->getAllAnnouncements();
     $this->assertCount(4, $all_items);
 
     // Checking the 'new' status is disabled.
@@ -75,8 +73,7 @@ class AnnounceUserStatusTest extends AnnounceTestBase {
     $this->setFeedItems($feed_item);
 
     // First time access.
-    $user_status = $this->fetchFeedUserStatus();
-    $all_items = $user_status->getAllAnnouncements();
+    $all_items = $this->container->get('announcements_feed.user_status')->getAllAnnouncements();
     $this->assertCount(4, $all_items);
 
     // Checking the 'new' status is enabled.
@@ -86,8 +83,7 @@ class AnnounceUserStatusTest extends AnnounceTestBase {
     // Check after adding new record.
     $feed_item = $this->providerShowUpdatedAnnouncements();
     $this->setFeedItems($feed_item);
-    $user_status = $this->fetchFeedUserStatus();
-    $all_items = $user_status->getAllAnnouncements();
+    $all_items = $this->container->get('announcements_feed.user_status')->getAllAnnouncements();
     $this->assertCount(5, $all_items);
     $this->assertSame(1005, $all_items[0]['id']);
 
@@ -237,13 +233,6 @@ class AnnounceUserStatusTest extends AnnounceTestBase {
     $responses[] = new Response(200, [], json_encode(['items' => $feed_items]));
 
     $this->setTestFeedResponses($responses);
-  }
-
-  /**
-   * Gets the user_status object from the announcements_feed service.
-   */
-  protected function fetchFeedUserStatus(): ?object {
-    return $this->container->get('announcements_feed.user_status');
   }
 
 }
