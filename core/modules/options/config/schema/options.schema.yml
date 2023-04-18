@@ -72,7 +72,7 @@ field.storage_settings.list_float:
         type: mapping
         mapping:
           value:
-            type: float || integer
+            type: float
             label: 'Value'
           weight:
             type: integer

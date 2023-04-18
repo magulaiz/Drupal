@@ -559,7 +559,7 @@ abstract class ListItemBase extends FieldItemBase implements OptionsProviderInte
     $structured_values = [];
     foreach ($values as $value => $weight) {
       $structured_values[] = [
-        'value' => $value,
+        'value' => static::castAllowedValue($value),
         'weight' => $weight['weight'],
       ];
     }

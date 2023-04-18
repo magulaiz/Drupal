@@ -107,6 +107,17 @@ class ListFloatItem extends ListItemBase {
   /**
    * {@inheritdoc}
    */
+  protected static function simplifyAllowedValuesMeta(array $structured_values) {
+    $values = [];
+    foreach ($structured_values as $item) {
+      $values[(string) (float) $item['value']] = ['weight' => $item['weight']];
+    }
+    return $values;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   protected static function castAllowedValue($value) {
     return (float) $value;
   }
