@@ -6,7 +6,7 @@ use Composer\Semver\Semver;
 use Drupal\Component\Serialization\Json;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Config\ImmutableConfig;
-use Drupal\Core\KeyValueStore\KeyValueExpirableFactory;
+use Drupal\Core\KeyValueStore\KeyValueExpirableFactoryInterface;
 use Drupal\Core\KeyValueStore\KeyValueStoreInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\Utility\Error;
@@ -43,7 +43,7 @@ class AnnounceFetcher {
    *   The http client.
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config
    *   The config factory service.
-   * @param \Drupal\Core\KeyValueStore\KeyValueExpirableFactory $temp_store
+   * @param \Drupal\Core\KeyValueStore\KeyValueExpirableFactoryInterface $temp_store
    *   The tempstore factory service.
    * @param \Psr\Log\LoggerInterface $logger
    *   The logger service.
@@ -53,7 +53,7 @@ class AnnounceFetcher {
   public function __construct(
     protected ClientInterface $httpClient,
     ConfigFactoryInterface $config,
-    KeyValueExpirableFactory $temp_store,
+    KeyValueExpirableFactoryInterface $temp_store,
     protected LoggerInterface $logger,
     protected string $feedUrl
   ) {

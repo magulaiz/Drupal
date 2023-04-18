@@ -32,7 +32,11 @@ class AnnounceFetcherUnitTest extends UnitTestCase {
         'limit' => 10,
       ],
     ]);
-    $tempStore = $this->createMock('Drupal\Core\KeyValueStore\KeyValueExpirableFactory');
+    $tempStore = $this->createMock('Drupal\Core\KeyValueStore\KeyValueExpirableFactoryInterface');
+    $tempStore->expects($this->once())
+      ->method('get')
+      ->willReturn($this->createMock('Drupal\Core\KeyValueStore\KeyValueStoreExpirableInterface'));
+
     $logger = $this->createMock('Psr\Log\LoggerInterface');
     $this->fetcher = new AnnounceFetcher($httpClient, $config, $tempStore, $logger, 'https://www.drupal.org/announcements.json');
   }
