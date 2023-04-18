@@ -26,7 +26,7 @@ class AlertsJsonFeedTest extends OffCanvasTestBase {
   /**
    * {@inheritdoc}
    */
-  protected string $defaultTheme = 'stark';
+  protected $defaultTheme = 'stark';
 
   /**
    * A test endpoint which contains the community feeds.

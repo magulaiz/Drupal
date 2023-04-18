@@ -38,7 +38,11 @@ final class AnnouncementsCacheTest extends BrowserTestBase {
     ]));
     $this->drupalGet(Url::fromRoute('<front>'));
     $this->assertSession()->elementExists('css', '[data-drupal-announce-trigger]');
-    $this->assertNotEquals('UNCACHEABLE', $this->getSession()->getResponseHeader('X-Drupal-Dynamic-Cache'));
+    // First time check should not be cached.
+    $this->assertEquals('MISS', $this->getSession()->getResponseHeader('X-Drupal-Dynamic-Cache'));
+    // Reload the page and check that the result is cached now.
+    $this->drupalGet(Url::fromRoute('<front>'));
+    $this->assertEquals('HIT', $this->getSession()->getResponseHeader('X-Drupal-Dynamic-Cache'));
   }
 
 }
