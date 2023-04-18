@@ -1,4 +1,4 @@
-name: Announcements Feed
+name: Announcements
 type: module
 description: Notifies site users of an announcement from the Drupal community.
 version: VERSION

@@ -16,7 +16,7 @@ function announcements_feed_help($route_name, RouteMatchInterface $route_match) 
     case 'help.page.announcements_feed':
       $output = '';
       $output .= '<h3>' . t('About') . '</h3>';
-      $output .= '<p>' . t('The Announcements Feed module notifies users when there is an announcement from the Drupal community. For more information, see the <a href=":documentation">online documentation for the Announcements Feed module</a>.', [':documentation' => 'https://www.drupal.org/docs/core-modules-and-themes/core-modules/announcements-feed']) . '</p>';
+      $output .= '<p>' . t('The Announcements module notifies users when there is an announcement from the Drupal community. For more information, see the <a href=":documentation">online documentation for the Announcements module</a>.', [':documentation' => 'https://www.drupal.org/docs/core-modules-and-themes/core-modules/announcements-feed']) . '</p>';
       $output .= '<h3>' . t('Uses') . '</h3>';
       $output .= '<dl><dt>' . t('Accessing announcements') . '</dt>';
       $output .= '<dd>' . t('Site users with the "View drupal.org announcements" permission may click on the "Announcements" item in the administration toolbar to see all announcements relevant to the Drupal version of your site.') . '</dd>';
