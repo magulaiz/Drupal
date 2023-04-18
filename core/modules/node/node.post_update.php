@@ -17,3 +17,10 @@ function node_removed_post_updates() {
     'node_post_update_modify_base_field_author_override' => '10.0.0',
   ];
 }
+
+/**
+ * Enables the add default body field for existing installations.
+ */
+function node_post_update_enable_add_default_body_field() {
+  \Drupal::configFactory()->getEditable('node.settings')->set('add_default_body_field', TRUE)->save();
+}
