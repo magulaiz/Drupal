@@ -50,7 +50,7 @@ class NodeDeprecationTest extends KernelTestBase {
    */
   public function testNodeTypeUpdateNodesDeprecation(): void {
     $this->installEntitySchema('node');
-    $this->expectDeprecation('node_type_update_nodes is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use \Drupal\Core\Entity\RevisionableStorageInterface::updateType instead. See https://www.drupal.org/node/3294237');
+    $this->expectDeprecation('node_type_update_nodes is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use \Drupal\Core\Entity\EntityStorageInterface::updateType instead. See https://www.drupal.org/node/3294237');
     node_type_update_nodes(1, 2);
   }
 
