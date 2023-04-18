@@ -3,7 +3,7 @@
 namespace Drupal\comment\Plugin\views\argument;
 
 use Drupal\Core\Database\Connection;
-use Drupal\user\Entity\User;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\views\Plugin\views\argument\ArgumentPluginBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -26,6 +26,13 @@ class UserUid extends ArgumentPluginBase {
   protected $database;
 
   /**
+   * The entity type manager.
+   *
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
+   */
+  protected $entityTypeManager;
+
+  /**
    * Constructs a \Drupal\comment\Plugin\views\argument\UserUid object.
    *
    * @param array $configuration
@@ -36,26 +43,33 @@ class UserUid extends ArgumentPluginBase {
    *   The plugin implementation definition.
    * @param \Drupal\Core\Database\Connection $database
    *   Database Service Object.
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   *   The entity type manager.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, Connection $database) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, Connection $database, EntityTypeManagerInterface $entity_type_manager) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
 
     $this->database = $database;
+    $this->entityTypeManager = $entity_type_manager;
+
   }
 
   /**
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
-    return new static($configuration, $plugin_id, $plugin_definition, $container->get('database'));
+    return new static($configuration, $plugin_id, $plugin_definition, $container->get('database'), $container->get('entity_type.manager'));
   }
 
+  /**
+   * Override the behavior of title(). Get the title of the node.
+   */
   public function title() {
     if (!$this->argument) {
       $title = \Drupal::config('user.settings')->get('anonymous');
     }
     else {
-      $user = User::load($this->argument);
+      $user = $this->entityTypeManager->getStorage('user')->load($this->argument);
       $title = $user?->getDisplayName();
     }
     if (empty($title)) {
@@ -65,6 +79,9 @@ class UserUid extends ArgumentPluginBase {
     return $title;
   }
 
+  /**
+   * Override defaultActions() to remove summary actions.
+   */
   protected function defaultActions($which = NULL) {
     // Disallow summary views on this argument.
     if (!$which) {
@@ -79,6 +96,9 @@ class UserUid extends ArgumentPluginBase {
     }
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function query($group_by = FALSE) {
     $this->ensureMyTable();
 
