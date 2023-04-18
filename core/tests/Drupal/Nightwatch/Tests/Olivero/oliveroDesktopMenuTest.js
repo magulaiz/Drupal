@@ -15,7 +15,7 @@ module.exports = {
       // greater than 2 do not break the site.
       .drupalLoginAsAdmin(() => {
         browser
-          .drupalRelativeURL('/admin/structure/block/manage/olivero_main_menu')
+          .drupalRelativeURL('/admin/appearance/block/manage/olivero_main_menu')
           .waitForElementVisible('[data-drupal-selector="edit-settings-depth"]')
           .setValue('[data-drupal-selector="edit-settings-depth"]', 'Unlimited')
           .click('[data-drupal-selector="edit-actions-submit"]')

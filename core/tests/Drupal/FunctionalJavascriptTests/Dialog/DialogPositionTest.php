@@ -27,7 +27,7 @@ class DialogPositionTest extends WebDriverTestBase {
   public function testDialogOpenAndClose() {
     $admin_user = $this->drupalCreateUser(['administer blocks']);
     $this->drupalLogin($admin_user);
-    $this->drupalGet('admin/structure/block');
+    $this->drupalGet('admin/appearance/block');
     $session = $this->getSession();
     $assert_session = $this->assertSession();
     $page = $session->getPage();

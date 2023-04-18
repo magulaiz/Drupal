@@ -25,7 +25,7 @@ const testCases = [
   // @todo remove the skipped rules below in https://drupal.org/i/3318394.
   {
     name: 'Structure | Block',
-    path: '/admin/structure/block',
+    path: '/admin/appearance/block',
     options: {
       rules: {
         'color-contrast': { enabled: false },
