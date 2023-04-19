@@ -170,7 +170,7 @@
       value = value.map(String);
       // We iterate through each value provided in the reference. If all of them
       // exist in value array, we return true. Otherwise return false.
-      return Object.values(reference).every(([key, referenceValue]) =>
+      return Object.entries(reference).every(([key, referenceValue]) =>
         value.includes(referenceValue),
       );
     },
