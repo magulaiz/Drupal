@@ -2,6 +2,8 @@
 
 namespace Drupal\announcements_feed;
 
+use Drupal\Core\Datetime\DrupalDateTime;
+
 /**
  * Object containing a single announcement from the feed.
  *
@@ -45,23 +47,23 @@ final class Announcement {
   }
 
   /**
-   * Normalizes the value object.
+   * Returns the content of the announcement with no markup.
    *
-   * @return array
-   *   The normalized value object.
+   * @return string
+   *   Content of the announcement without markup.
    */
-  public function normalize(): array {
-    return [
-      'id' => $this->id,
-      'title' => $this->title,
-      'url' => $this->url,
-      'date_modified' => $this->date_modified,
-      'date_published' => $this->date_published,
-      'content_html' => $this->content_html,
-      'version' => $this->version,
-      'featured' => $this->featured,
-      'new' => $this->new,
-    ];
+  public function getContent() {
+    return strip_tags($this->content_html);
+  }
+
+  /**
+   * Gets the published date in timestamp format.
+   *
+   * @return int
+   *   Date published timestamp.
+   */
+  public function getDatePublishedTimestamp() {
+    return DrupalDateTime::createFromFormat(DATE_ATOM, $this->date_published)->getTimestamp();
   }
 
 }

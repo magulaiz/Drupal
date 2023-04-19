@@ -3,7 +3,6 @@
 namespace Drupal\announcements_feed\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
-use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\announcements_feed\AnnounceUserStatus;
@@ -66,19 +65,8 @@ class AnnounceController extends ControllerBase implements ContainerInjectionInt
 
     $build = [];
     foreach ($announcements as $announcement) {
-      if ($announcement->featured) {
-        $build['#featured'][] = $announcement->normalize() + [
-          'teaser' => strip_tags($announcement->content_html),
-          'link' => $announcement->url,
-        ];
-        continue;
-      }
-      $timestamp = DrupalDateTime::createFromFormat(DATE_ATOM, $announcement->date_published);
-      $build['#standard'][] = $announcement->normalize() + [
-        'teaser' => strip_tags($announcement->content_html),
-        'link' => $announcement->url,
-        'timestamp' => $timestamp->getTimestamp(),
-      ];
+      $key = $announcement->featured ? '#featured' : '#standard';
+      $build[$key][] = $announcement;
     }
 
     $build += [

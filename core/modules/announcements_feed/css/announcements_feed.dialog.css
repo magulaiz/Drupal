@@ -34,7 +34,10 @@
   position: relative;
   margin-inline: calc(-1 * var(--off-canvas-padding));
   padding: 0 var(--off-canvas-padding) var(--off-canvas-padding);
-  border-block-end: 1px solid var(--off-canvas-border-color);
+}
+
+#drupal-off-canvas-wrapper .announcement.announcement--featured + .announcement.announcement--standard {
+  border-block-start: 1px solid var(--off-canvas-border-color);
 }
 
 #drupal-off-canvas-wrapper .announcement--standard {

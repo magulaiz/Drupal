@@ -8,11 +8,11 @@
               <h4>{{ announcement.title }}</h4>
             </div>
             <div class="announcement__teaser">
-              {{ announcement.teaser }}
+              {{ announcement.content }}
             </div>
             <div class="announcement__link">
-              {% if announcement.link %}
-                <a href="{{ announcement.link }}">{{ 'Learn More'|t }}</a>
+              {% if announcement.url %}
+                <a href="{{ announcement.url }}">{{ 'Learn More'|t }}</a>
               {% endif %}
               {% if announcement.new %}
                 <span class="announcement__new">{{ 'New'|t }}</span>
@@ -24,11 +24,11 @@
       {% for announcement in standard %}
         <li class="announcement announcement--standard">
           <div class="announcement__title">
-            <a href="{{ announcement.link }}">{{ announcement.title }}</a>
+            <a href="{{ announcement.url }}">{{ announcement.title }}</a>
             {% if announcement.new %}
               <span class="announcement__new">{{ 'New'|t }}</span>
             {% endif %}
-            <div class="announcement__date">{{ announcement.timestamp | format_date('short') }}</div>
+            <div class="announcement__date">{{ announcement.datePublishedTimestamp | format_date('short') }}</div>
           </div>
         </li>
       {% endfor %}

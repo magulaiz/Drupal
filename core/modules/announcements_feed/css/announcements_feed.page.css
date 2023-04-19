@@ -19,6 +19,7 @@
   font-style: italic;
 }
 
-.announcement.announcement--featured:last-child {
-  border: 1px solid #aaa;
+.announcement.announcement--featured + .announcement.announcement--standard {
+  padding-block-start: 1rem;
+  border-top: 1px solid #aaa;
 }
