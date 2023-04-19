@@ -58,7 +58,7 @@ class NodeFieldMultilingualTest extends BrowserTestBase {
     $edit = [
       'language_configuration[language_alterable]' => TRUE,
     ];
-    $this->drupalGet('admin/structure/types/manage/page');
+    $this->drupalGet('admin/structure/content/manage/page');
     $this->submitForm($edit, 'Save content type');
     $this->assertSession()->pageTextContains("The content type Basic page has been updated.");
 

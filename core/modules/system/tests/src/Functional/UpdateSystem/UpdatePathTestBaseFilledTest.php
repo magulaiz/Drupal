@@ -219,9 +219,9 @@ class UpdatePathTestBaseFilledTest extends UpdatePathTestBaseTest {
     // Make sure our contact form exists.
     $this->drupalGet('admin/structure/contact');
     $this->assertSession()->pageTextContains('Test contact form');
-    $this->drupalGet('admin/structure/types');
+    $this->drupalGet('admin/structure/content');
     $this->assertSession()->pageTextContains('Test content type description');
-    $this->drupalGet('admin/structure/types/manage/test_content_type/fields');
+    $this->drupalGet('admin/structure/content/manage/test_content_type/fields');
 
     // Make sure fields are the right type.
     $assert_session->elementContains('css', '#body', 'Text (formatted, long, with summary)');

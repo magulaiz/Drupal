@@ -168,12 +168,12 @@ class ContentTranslationSettingsTest extends BrowserTestBase {
       'language_configuration[content_translation]' => TRUE,
     ];
     // Make sure the checkbox is available and not checked by default.
-    $this->drupalGet('admin/structure/types/manage/article');
+    $this->drupalGet('admin/structure/content/manage/article');
     $this->assertSession()->fieldExists('language_configuration[content_translation]');
     $this->assertSession()->checkboxNotChecked('edit-language-configuration-content-translation');
-    $this->drupalGet('admin/structure/types/manage/article');
+    $this->drupalGet('admin/structure/content/manage/article');
     $this->submitForm($edit, 'Save content type');
-    $this->drupalGet('admin/structure/types/manage/article');
+    $this->drupalGet('admin/structure/content/manage/article');
     $this->assertSession()->checkboxChecked('edit-language-configuration-content-translation');
 
     // Test that the title field of nodes is available in the settings form.
@@ -198,7 +198,7 @@ class ContentTranslationSettingsTest extends BrowserTestBase {
       // Test that also the Field UI form behaves correctly.
       $translatable = !$translatable;
       $edit = ['translatable' => $translatable];
-      $this->drupalGet('admin/structure/types/manage/article/fields/node.article.body');
+      $this->drupalGet('admin/structure/content/manage/article/fields/node.article.body');
       $this->submitForm($edit, 'Save settings');
       $entity_field_manager->clearCachedFieldDefinitions();
       $field = FieldConfig::loadByName('node', 'article', 'body');
@@ -214,7 +214,7 @@ class ContentTranslationSettingsTest extends BrowserTestBase {
       'language_configuration[language_alterable]' => FALSE,
       'language_configuration[content_translation]' => TRUE,
     ];
-    $this->drupalGet('admin/structure/types/manage/article');
+    $this->drupalGet('admin/structure/content/manage/article');
     $this->submitForm($edit, 'Save content type');
     $this->getSession()->getPage()->hasContent('"Show language selector" is not compatible with translating content that has default language: und. Either do not hide the language selector or pick a specific language.');
 
@@ -295,12 +295,12 @@ class ContentTranslationSettingsTest extends BrowserTestBase {
       'label' => 'Test',
       'field_name' => 'article_text',
     ];
-    $this->drupalGet('admin/structure/types/manage/article/fields/add-field');
+    $this->drupalGet('admin/structure/content/manage/article/fields/add-field');
     $this->submitForm($edit, 'Save and continue');
 
     // Tests that field doesn't have translatable setting if bundle is not
     // translatable.
-    $path = 'admin/structure/types/manage/article/fields/node.article.field_article_text';
+    $path = 'admin/structure/content/manage/article/fields/node.article.field_article_text';
     $this->drupalGet($path);
     $this->assertSession()->fieldDisabled('edit-translatable');
     $this->assertSession()->pageTextContains('To configure translation for this field, enable language support for this type.');

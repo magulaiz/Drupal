@@ -68,7 +68,7 @@ class ResponsiveImageFieldUiTest extends WebDriverTestBase {
    * Tests formatter settings.
    */
   public function testResponsiveImageFormatterUi() {
-    $manage = 'admin/structure/types/manage/' . $this->type;
+    $manage = 'admin/structure/content/manage/' . $this->type;
     $add_field = $manage . '/fields/add-field';
     $manage_display = $manage . '/display';
     $assert_session = $this->assertSession();

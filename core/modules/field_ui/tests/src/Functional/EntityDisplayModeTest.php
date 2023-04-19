@@ -169,7 +169,7 @@ class EntityDisplayModeTest extends BrowserTestBase {
       'administer node form display',
       'view the administration theme',
     ]));
-    $this->drupalGet('admin/structure/types/manage/article/display');
+    $this->drupalGet('admin/structure/content/manage/article/display');
     // Verify that the order of view modes is alphabetical by visible label.
     // Since the default view modes all have machine names which coincide with
     // the English labels, they should appear in alphabetical order, by default
@@ -199,7 +199,7 @@ class EntityDisplayModeTest extends BrowserTestBase {
     // Re-open the display settings for the article content type and verify
     // that changing "Teaser" to "Breezer" makes it appear before "Full
     // content".
-    $this->drupalGet('admin/structure/types/manage/article/display');
+    $this->drupalGet('admin/structure/content/manage/article/display');
     $page_text = $this->getTextContent();
     $start = strpos($page_text, 'view modes');
     $pos = $start;

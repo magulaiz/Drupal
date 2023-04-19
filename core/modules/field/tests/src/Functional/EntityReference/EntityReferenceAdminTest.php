@@ -77,7 +77,7 @@ class EntityReferenceAdminTest extends BrowserTestBase {
    * Tests the Entity Reference Admin UI.
    */
   public function testFieldAdminHandler() {
-    $bundle_path = 'admin/structure/types/manage/' . $this->type;
+    $bundle_path = 'admin/structure/content/manage/' . $this->type;
     // Create a new view and display it as an entity reference.
     $edit = [
       'id' => 'node_test_view',
@@ -261,7 +261,7 @@ class EntityReferenceAdminTest extends BrowserTestBase {
     $date_format_field_name = $this->createEntityReferenceField('date_format');
 
     // Display all newly created Entity Reference configuration.
-    $this->drupalGet('admin/structure/types/manage/' . $this->type . '/display');
+    $this->drupalGet('admin/structure/content/manage/' . $this->type . '/display');
 
     // Check for Taxonomy Term select box values.
     // Test if Taxonomy Term Entity Reference Field has the correct formatters.
@@ -319,7 +319,7 @@ class EntityReferenceAdminTest extends BrowserTestBase {
     $field_name = $this->createEntityReferenceField('taxonomy_term', [$vocabularies[0]->id()]);
     $field_name = "field_$field_name";
     $field_id = 'node.' . $this->type . '.' . $field_name;
-    $path = 'admin/structure/types/manage/' . $this->type . '/fields/' . $field_id;
+    $path = 'admin/structure/content/manage/' . $this->type . '/fields/' . $field_id;
 
     $this->drupalGet($path);
 
@@ -375,7 +375,7 @@ class EntityReferenceAdminTest extends BrowserTestBase {
    */
   protected function createEntityReferenceField($target_type, $bundles = []) {
     // Generates a bundle path for the newly created content type.
-    $bundle_path = 'admin/structure/types/manage/' . $this->type;
+    $bundle_path = 'admin/structure/content/manage/' . $this->type;
 
     // Generate a random field name, must be only lowercase characters.
     $field_name = strtolower($this->randomMachineName());

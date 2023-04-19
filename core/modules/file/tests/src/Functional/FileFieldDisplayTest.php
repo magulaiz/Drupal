@@ -53,7 +53,7 @@ class FileFieldDisplayTest extends FileFieldTestBase {
           "fields[$field_name][region]" => 'content',
         ];
       }
-      $this->drupalGet("admin/structure/types/manage/{$type_name}/display");
+      $this->drupalGet("admin/structure/content/manage/{$type_name}/display");
       $this->submitForm($edit, 'Save');
       $this->drupalGet('node/' . $node->id());
       // Verify that the field label is hidden when no file is attached.
@@ -163,14 +163,14 @@ class FileFieldDisplayTest extends FileFieldTestBase {
       'name' => $type_name,
       'type' => $type_name,
     ];
-    $this->drupalGet('admin/structure/types/add');
+    $this->drupalGet('admin/structure/content/add');
     $this->submitForm($edit, 'Save and manage fields');
     $edit = [
       'new_storage_type' => $field_type,
       'field_name' => $field_name,
       'label' => $this->randomString(),
     ];
-    $this->drupalGet('/admin/structure/types/manage/' . $type_name . '/fields/add-field');
+    $this->drupalGet('/admin/structure/content/manage/' . $type_name . '/fields/add-field');
     $this->submitForm($edit, 'Save and continue');
     $this->submitForm([], 'Save field settings');
     // Ensure the description field is selected on the field instance settings

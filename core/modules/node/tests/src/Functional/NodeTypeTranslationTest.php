@@ -116,7 +116,7 @@ class NodeTypeTranslationTest extends BrowserTestBase {
     ];
 
     // Edit the title label to avoid having an exception when we save the translation.
-    $this->drupalGet("admin/structure/types/manage/{$type}/translate/{$langcode}/add");
+    $this->drupalGet("admin/structure/content/manage/{$type}/translate/{$langcode}/add");
     $this->submitForm($edit, 'Save translation');
 
     // Check the name is translated without admin theme for editing.
@@ -147,11 +147,11 @@ class NodeTypeTranslationTest extends BrowserTestBase {
     $langcode = $this->additionalLangcodes[0];
 
     // Edit the title label for it to be displayed on the translation form.
-    $this->drupalGet("admin/structure/types/manage/{$type}");
+    $this->drupalGet("admin/structure/content/manage/{$type}");
     $this->submitForm(['title_label' => 'Edited title'], 'Save content type');
 
     // Assert that the title label is displayed on the translation form with the right value.
-    $this->drupalGet("admin/structure/types/manage/$type/translate/$langcode/add");
+    $this->drupalGet("admin/structure/content/manage/$type/translate/$langcode/add");
     $this->assertSession()->pageTextContains('Edited title');
 
     // Translate the title label.
@@ -167,7 +167,7 @@ class NodeTypeTranslationTest extends BrowserTestBase {
     $this->assertSession()->pageTextContains('Translated title');
 
     // Add an e-mail field.
-    $this->drupalGet("admin/structure/types/manage/{$type}/fields/add-field");
+    $this->drupalGet("admin/structure/content/manage/{$type}/fields/add-field");
     $this->submitForm([
       'new_storage_type' => 'email',
       'label' => 'Email',
@@ -188,10 +188,10 @@ class NodeTypeTranslationTest extends BrowserTestBase {
     $this->submitForm(['site_default_language' => 'es'], 'Save configuration');
 
     // Try re-using the email field.
-    $this->drupalGet("es/admin/structure/types/manage/$type/fields/add-field");
+    $this->drupalGet("es/admin/structure/content/manage/$type/fields/add-field");
     $this->submitForm(['existing_storage_name' => 'field_email', 'existing_storage_label' => 'Email'], 'Save and continue');
     $this->assertSession()->statusCodeEquals(200);
-    $this->drupalGet("es/admin/structure/types/manage/$type/fields/node.$type.field_email/translate");
+    $this->drupalGet("es/admin/structure/content/manage/$type/fields/node.$type.field_email/translate");
     $this->assertSession()->statusCodeEquals(200);
     $this->assertSession()->pageTextContains("The configuration objects have different language codes so they cannot be translated");
   }

@@ -111,7 +111,7 @@ class NodeAccessFieldTest extends NodeTestBase {
     ];
     $default = 'Sometimes words have two meanings';
     $edit["default_value_input[{$this->fieldName}][0][value]"] = $default;
-    $this->drupalGet("admin/structure/types/manage/page/fields/node.page.{$this->fieldName}");
+    $this->drupalGet("admin/structure/content/manage/page/fields/node.page.{$this->fieldName}");
     $this->submitForm($edit, 'Save settings');
 
     // Log in as the administrator.

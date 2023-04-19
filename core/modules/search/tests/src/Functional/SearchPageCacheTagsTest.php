@@ -143,7 +143,7 @@ class SearchPageCacheTagsTest extends BrowserTestBase {
     $type_name = 'entity_reference_test';
     $type = $this->drupalCreateContentType(['name' => $type_name, 'type' => $type_name]);
 
-    $bundle_path = 'admin/structure/types/manage/' . $type->id();
+    $bundle_path = 'admin/structure/content/manage/' . $type->id();
 
     // Create test user.
     $admin_user = $this->drupalCreateUser([

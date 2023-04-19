@@ -75,7 +75,7 @@ class MenuUiNodeTest extends BrowserTestBase {
     // access checking that is performed when determining the "default parent
     // item" options in menu_ui_form_node_type_form_alter(). The "log out" link
     // adds the "user.roles:authenticated" cache context.
-    $this->drupalGet('admin/structure/types/manage/page');
+    $this->drupalGet('admin/structure/content/manage/page');
     $this->assertSession()->responseHeaderContains('X-Drupal-Cache-Contexts', 'user.roles:authenticated');
 
     // Assert the description of "Available menus" checkboxes field.
@@ -95,7 +95,7 @@ class MenuUiNodeTest extends BrowserTestBase {
     $edit = [
       'menu_options[main]' => FALSE,
     ];
-    $this->drupalGet('admin/structure/types/manage/page');
+    $this->drupalGet('admin/structure/content/manage/page');
     $this->submitForm($edit, 'Save content type');
 
     // Verify that no menu settings are displayed and nodes can be created.
@@ -117,7 +117,7 @@ class MenuUiNodeTest extends BrowserTestBase {
       'menu_options[tools]' => 1,
       'menu_parent' => 'main:',
     ];
-    $this->drupalGet('admin/structure/types/manage/page');
+    $this->drupalGet('admin/structure/content/manage/page');
     $this->submitForm($edit, 'Save content type');
     $this->assertSession()->pageTextContains('The selected menu link is not under one of the selected menus.');
     $this->assertSession()->pageTextNotContains("The content type Basic page has been updated.");
@@ -128,7 +128,7 @@ class MenuUiNodeTest extends BrowserTestBase {
       'menu_options[tools]' => 1,
       'menu_parent' => 'main:',
     ];
-    $this->drupalGet('admin/structure/types/manage/page');
+    $this->drupalGet('admin/structure/content/manage/page');
     $this->submitForm($edit, 'Save content type');
     $this->assertSession()->pageTextContains("The content type Basic page has been updated.");
 

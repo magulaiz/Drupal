@@ -259,7 +259,7 @@ class FileFieldWidgetTest extends FileFieldTestBase {
 
     // Change the field setting to make its files private, and upload a file.
     $edit = ['settings[uri_scheme]' => 'private'];
-    $this->drupalGet("admin/structure/types/manage/{$type_name}/fields/{$field_id}/storage");
+    $this->drupalGet("admin/structure/content/manage/{$type_name}/fields/{$field_id}/storage");
     $this->submitForm($edit, 'Save field settings');
     $nid = $this->uploadNodeFile($test_file, $field_name, $type_name);
     $node = $node_storage->loadUnchanged($nid);
@@ -272,12 +272,12 @@ class FileFieldWidgetTest extends FileFieldTestBase {
 
     // Ensure we can't change 'uri_scheme' field settings while there are some
     // entities with uploaded files.
-    $this->drupalGet("admin/structure/types/manage/$type_name/fields/$field_id/storage");
+    $this->drupalGet("admin/structure/content/manage/$type_name/fields/$field_id/storage");
     $this->assertSession()->fieldDisabled("edit-settings-uri-scheme-public");
 
     // Delete node and confirm that setting could be changed.
     $node->delete();
-    $this->drupalGet("admin/structure/types/manage/$type_name/fields/$field_id/storage");
+    $this->drupalGet("admin/structure/content/manage/$type_name/fields/$field_id/storage");
     $this->assertSession()->fieldEnabled("edit-settings-uri-scheme-public");
   }
 
@@ -482,7 +482,7 @@ class FileFieldWidgetTest extends FileFieldTestBase {
     /** @var \Drupal\Field\FieldConfigInterface $field */
     $field = FieldConfig::loadByName('node', $type_name, $field_name);
     $field_id = $field->id();
-    $this->drupalGet("admin/structure/types/manage/$type_name/fields/$field_id");
+    $this->drupalGet("admin/structure/content/manage/$type_name/fields/$field_id");
 
     // Tests that form validation trims the user input.
     $edit = ['settings[max_filesize]' => ' 5.1 megabytes '];
@@ -510,7 +510,7 @@ class FileFieldWidgetTest extends FileFieldTestBase {
     $field_id = $field->id();
 
     // By default allowing .php files without .txt is not permitted.
-    $this->drupalGet("admin/structure/types/manage/$type_name/fields/$field_id");
+    $this->drupalGet("admin/structure/content/manage/$type_name/fields/$field_id");
     $edit = ['settings[file_extensions]' => 'jpg php'];
     $this->submitForm($edit, 'Save settings');
     $this->assertSession()->pageTextContains('Add txt to the list of allowed extensions to securely upload files with a php extension. The txt extension will then be added automatically.');
@@ -523,7 +523,7 @@ class FileFieldWidgetTest extends FileFieldTestBase {
     // If the system is configured to allow insecure uploads, .txt is not
     // required when allowing .php.
     $this->config('system.file')->set('allow_insecure_uploads', TRUE)->save();
-    $this->drupalGet("admin/structure/types/manage/$type_name/fields/$field_id");
+    $this->drupalGet("admin/structure/content/manage/$type_name/fields/$field_id");
     $edit = ['settings[file_extensions]' => 'jpg php'];
     $this->submitForm($edit, 'Save settings');
     $this->assertSession()->pageTextContains('Saved ' . $field_name . ' configuration.');
@@ -532,7 +532,7 @@ class FileFieldWidgetTest extends FileFieldTestBase {
     $edit = [
       'settings[file_extensions]' => 'x_t x.t xt x_y_t',
     ];
-    $this->drupalGet("admin/structure/types/manage/$type_name/fields/$field_id");
+    $this->drupalGet("admin/structure/content/manage/$type_name/fields/$field_id");
     $this->submitForm($edit, 'Save settings');
     $field = FieldConfig::loadByName('node', $type_name, $field_name);
     $this->assertEquals('x_t x.t xt x_y_t', $field->getSetting('file_extensions'));
@@ -544,7 +544,7 @@ class FileFieldWidgetTest extends FileFieldTestBase {
       $edit = [
         'settings[file_extensions]' => $value,
       ];
-      $this->drupalGet("admin/structure/types/manage/$type_name/fields/$field_id");
+      $this->drupalGet("admin/structure/content/manage/$type_name/fields/$field_id");
       $this->submitForm($edit, 'Save settings');
       $this->assertSession()->pageTextContains("The list of allowed extensions is not valid. Allowed characters are a-z, 0-9, '.', and '_'. The first and last characters cannot be '.' or '_', and these two characters cannot appear next to each other. Separate extensions with a comma or space.");
     }

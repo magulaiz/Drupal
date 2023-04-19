@@ -84,11 +84,11 @@ class LanguageConfigurationElementTest extends BrowserTestBase {
       'language_configuration[langcode]' => 'authors_default',
       'language_configuration[language_alterable]' => TRUE,
     ];
-    $this->drupalGet('admin/structure/types/add');
+    $this->drupalGet('admin/structure/content/add');
     $this->submitForm($edit, 'Save and manage fields');
 
     // Make sure the settings are saved when creating the content type.
-    $this->drupalGet('admin/structure/types/manage/page');
+    $this->drupalGet('admin/structure/content/manage/page');
     $this->assertTrue($this->assertSession()->optionExists('edit-language-configuration-langcode', 'authors_default')->isSelected());
     $this->assertSession()->checkboxChecked('edit-language-configuration-language-alterable');
 
@@ -181,7 +181,7 @@ class LanguageConfigurationElementTest extends BrowserTestBase {
       'language_configuration[langcode]' => 'current_interface',
       'language_configuration[language_alterable]' => TRUE,
     ];
-    $this->drupalGet('admin/structure/types/manage/article');
+    $this->drupalGet('admin/structure/content/manage/article');
     $this->submitForm($edit, 'Save content type');
     // Check the language default configuration for the articles.
     $configuration = ContentLanguageSettings::loadByEntityTypeBundle('node', 'article');
@@ -192,7 +192,7 @@ class LanguageConfigurationElementTest extends BrowserTestBase {
     $edit = [
       'title_label' => 'Name',
     ];
-    $this->drupalGet('admin/structure/types/manage/article');
+    $this->drupalGet('admin/structure/content/manage/article');
     $this->submitForm($edit, 'Save content type');
     // Check that we still have the settings for the updated node type.
     $configuration = ContentLanguageSettings::loadByEntityTypeBundle('node', 'article');
@@ -221,7 +221,7 @@ class LanguageConfigurationElementTest extends BrowserTestBase {
       'language_configuration[langcode]' => 'authors_default',
       'language_configuration[language_alterable]' => TRUE,
     ];
-    $this->drupalGet('admin/structure/types/manage/article');
+    $this->drupalGet('admin/structure/content/manage/article');
     $this->submitForm($edit, 'Save content type');
 
     // Check the language default configuration for articles is present.
@@ -229,7 +229,7 @@ class LanguageConfigurationElementTest extends BrowserTestBase {
     $this->assertNotEmpty($configuration, 'The language configuration is present.');
 
     // Delete 'article' bundle.
-    $this->drupalGet('admin/structure/types/manage/article/delete');
+    $this->drupalGet('admin/structure/content/manage/article/delete');
     $this->submitForm([], 'Delete');
 
     // Check that the language configuration has been deleted.

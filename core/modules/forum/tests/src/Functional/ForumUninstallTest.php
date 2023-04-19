@@ -98,7 +98,7 @@ class ForumUninstallTest extends BrowserTestBase {
     $storage->delete($terms);
 
     // Ensure that the forum node type can not be deleted.
-    $this->drupalGet('admin/structure/types/manage/forum');
+    $this->drupalGet('admin/structure/content/manage/forum');
     $this->assertSession()->linkNotExists('Delete');
 
     // Now attempt to uninstall forum.
@@ -120,10 +120,10 @@ class ForumUninstallTest extends BrowserTestBase {
       'title_label' => 'title for forum',
       'type' => 'forum',
     ];
-    $this->drupalGet('admin/structure/types/add');
+    $this->drupalGet('admin/structure/content/add');
     $this->submitForm($edit, 'Save content type');
     $this->assertTrue((bool) NodeType::load('forum'), 'Node type with machine forum created.');
-    $this->drupalGet('admin/structure/types/manage/forum');
+    $this->drupalGet('admin/structure/content/manage/forum');
     $this->clickLink('Delete');
     $this->submitForm([], 'Delete');
     $this->assertSession()->statusCodeEquals(200);

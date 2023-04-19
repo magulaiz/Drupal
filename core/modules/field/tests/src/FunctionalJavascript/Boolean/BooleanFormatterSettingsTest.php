@@ -111,14 +111,14 @@ class BooleanFormatterSettingsTest extends WebDriverTestBase {
     $assert_session = $this->assertSession();
     foreach ($settings as $values) {
       // Set up the field settings.
-      $this->drupalGet('admin/structure/types/manage/' . $this->bundle . '/fields/node.' . $this->bundle . '.' . $this->fieldName);
+      $this->drupalGet('admin/structure/content/manage/' . $this->bundle . '/fields/node.' . $this->bundle . '.' . $this->fieldName);
       $this->submitForm([
         'settings[on_label]' => $values[0],
         'settings[off_label]' => $values[1],
       ], 'Save settings');
 
       // Open the Manage Display page and trigger the field settings form.
-      $this->drupalGet('admin/structure/types/manage/' . $this->bundle . '/display');
+      $this->drupalGet('admin/structure/content/manage/' . $this->bundle . '/display');
       $this->getSession()->getPage()->pressButton($this->fieldName . '_settings_edit');
       $assert_session->waitForElement('css', '.ajax-new-content');
 

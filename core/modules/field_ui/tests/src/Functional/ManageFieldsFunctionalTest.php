@@ -175,7 +175,7 @@ class ManageFieldsFunctionalTest extends BrowserTestBase {
    */
   public function manageFieldsPage($type = '') {
     $type = empty($type) ? $this->contentType : $type;
-    $this->drupalGet('admin/structure/types/manage/' . $type . '/fields');
+    $this->drupalGet('admin/structure/content/manage/' . $type . '/fields');
     // Check all table columns.
     $table_headers = ['Label', 'Machine name', 'Field type', 'Operations'];
     foreach ($table_headers as $table_header) {
@@ -190,7 +190,7 @@ class ManageFieldsFunctionalTest extends BrowserTestBase {
     $number_of_links = 3;
     $number_of_links_found = 0;
     $operation_links = $this->xpath('//ul[@class = "dropbutton"]/li/a');
-    $url = base_path() . "admin/structure/types/manage/$type/fields/node.$type.body";
+    $url = base_path() . "admin/structure/content/manage/$type/fields/node.$type.body";
 
     foreach ($operation_links as $link) {
       switch ($link->getAttribute('title')) {
@@ -222,7 +222,7 @@ class ManageFieldsFunctionalTest extends BrowserTestBase {
    */
   public function createField() {
     // Create a test field.
-    $this->fieldUIAddNewField('admin/structure/types/manage/' . $this->contentType, $this->fieldNameInput, $this->fieldLabel);
+    $this->fieldUIAddNewField('admin/structure/content/manage/' . $this->contentType, $this->fieldNameInput, $this->fieldLabel);
   }
 
   /**
@@ -231,7 +231,7 @@ class ManageFieldsFunctionalTest extends BrowserTestBase {
   public function updateField() {
     $field_id = 'node.' . $this->contentType . '.' . $this->fieldName;
     // Go to the field edit page.
-    $this->drupalGet('admin/structure/types/manage/' . $this->contentType . '/fields/' . $field_id . '/storage');
+    $this->drupalGet('admin/structure/content/manage/' . $this->contentType . '/fields/' . $field_id . '/storage');
     $this->assertSession()->assertEscaped($this->fieldLabel);
 
     // Populate the field settings with new settings.
@@ -242,7 +242,7 @@ class ManageFieldsFunctionalTest extends BrowserTestBase {
     $this->submitForm($edit, 'Save field settings');
 
     // Go to the field edit page.
-    $this->drupalGet('admin/structure/types/manage/' . $this->contentType . '/fields/' . $field_id);
+    $this->drupalGet('admin/structure/content/manage/' . $this->contentType . '/fields/' . $field_id);
     $edit = [
       'settings[test_field_setting]' => $string,
     ];
@@ -253,7 +253,7 @@ class ManageFieldsFunctionalTest extends BrowserTestBase {
     $this->assertFieldSettings($this->contentType, $this->fieldName, $string);
 
     // Assert redirection back to the "manage fields" page.
-    $this->assertSession()->addressEquals('admin/structure/types/manage/' . $this->contentType . '/fields');
+    $this->assertSession()->addressEquals('admin/structure/content/manage/' . $this->contentType . '/fields');
   }
 
   /**
@@ -261,7 +261,7 @@ class ManageFieldsFunctionalTest extends BrowserTestBase {
    */
   public function addExistingField() {
     // Check "Re-use existing field" appears.
-    $this->drupalGet('admin/structure/types/manage/page/fields/add-field');
+    $this->drupalGet('admin/structure/content/manage/page/fields/add-field');
     $this->assertSession()->pageTextContains('Re-use an existing field');
 
     // Check that fields of other entity types (here, the 'comment_body' field)
@@ -271,7 +271,7 @@ class ManageFieldsFunctionalTest extends BrowserTestBase {
     $this->assertSession()->optionExists('edit-existing-storage-name', $this->fieldName);
 
     // Add a new field based on an existing field.
-    $this->fieldUIAddExistingField("admin/structure/types/manage/page", $this->fieldName, $this->fieldLabel . '_2');
+    $this->fieldUIAddExistingField("admin/structure/content/manage/page", $this->fieldName, $this->fieldLabel . '_2');
   }
 
   /**
@@ -281,7 +281,7 @@ class ManageFieldsFunctionalTest extends BrowserTestBase {
    * numeric value. That is tested already in FormTest::testNumber().
    */
   public function cardinalitySettings() {
-    $field_edit_path = 'admin/structure/types/manage/article/fields/node.article.body/storage';
+    $field_edit_path = 'admin/structure/content/manage/article/fields/node.article.body/storage';
 
     // Assert the cardinality other field cannot be empty when cardinality is
     // set to 'number'.
@@ -307,7 +307,7 @@ class ManageFieldsFunctionalTest extends BrowserTestBase {
 
     // Check that tabs displayed.
     $this->assertSession()->linkExists('Edit');
-    $this->assertSession()->linkByHrefExists('admin/structure/types/manage/article/fields/node.article.body');
+    $this->assertSession()->linkByHrefExists('admin/structure/content/manage/article/fields/node.article.body');
     $this->assertSession()->linkExists('Field settings');
     $this->assertSession()->linkByHrefExists($field_edit_path);
 
@@ -418,7 +418,7 @@ class ManageFieldsFunctionalTest extends BrowserTestBase {
   protected function deleteField() {
     // Delete the field.
     $field_id = 'node.' . $this->contentType . '.' . $this->fieldName;
-    $this->drupalGet('admin/structure/types/manage/' . $this->contentType . '/fields/' . $field_id);
+    $this->drupalGet('admin/structure/content/manage/' . $this->contentType . '/fields/' . $field_id);
     $this->clickLink('Delete');
     $this->assertSession()->statusCodeEquals(200);
   }
@@ -433,18 +433,18 @@ class ManageFieldsFunctionalTest extends BrowserTestBase {
     // Delete all instances of the field.
     foreach ($field_storage->getBundles() as $node_type) {
       // Delete all the body field instances.
-      $this->drupalGet('admin/structure/types/manage/' . $node_type . '/fields/node.' . $node_type . '.' . $this->fieldName);
+      $this->drupalGet('admin/structure/content/manage/' . $node_type . '/fields/node.' . $node_type . '.' . $this->fieldName);
       $this->clickLink('Delete');
       $this->submitForm([], 'Delete');
     }
     // Check "Re-use existing field" appears.
-    $this->drupalGet('admin/structure/types/manage/page/fields/add-field');
+    $this->drupalGet('admin/structure/content/manage/page/fields/add-field');
     $this->assertSession()->pageTextContains("Re-use an existing field");
 
     // Ensure that we test with a label that contains HTML.
     $label = $this->randomString(4) . '<br/>' . $this->randomString(4);
     // Add a new field for the orphaned storage.
-    $this->fieldUIAddExistingField("admin/structure/types/manage/page", $this->fieldName, $label);
+    $this->fieldUIAddExistingField("admin/structure/content/manage/page", $this->fieldName, $label);
   }
 
   /**
@@ -488,13 +488,13 @@ class ManageFieldsFunctionalTest extends BrowserTestBase {
       'label' => $field_exceed_max_length_label,
       'field_name' => $field_exceed_max_length_input,
     ];
-    $this->drupalGet('admin/structure/types/manage/' . $this->contentType . '/fields/add-field');
+    $this->drupalGet('admin/structure/content/manage/' . $this->contentType . '/fields/add-field');
     $this->submitForm($edit, 'Save and continue');
     $this->assertSession()->pageTextContains('Machine-readable name cannot be longer than 22 characters but is currently 23 characters long.');
 
     // Create a valid field.
-    $this->fieldUIAddNewField('admin/structure/types/manage/' . $this->contentType, $this->fieldNameInput, $this->fieldLabel);
-    $this->drupalGet('admin/structure/types/manage/' . $this->contentType . '/fields/node.' . $this->contentType . '.' . $field_prefix . $this->fieldNameInput);
+    $this->fieldUIAddNewField('admin/structure/content/manage/' . $this->contentType, $this->fieldNameInput, $this->fieldLabel);
+    $this->drupalGet('admin/structure/content/manage/' . $this->contentType . '/fields/node.' . $this->contentType . '.' . $field_prefix . $this->fieldNameInput);
     $this->assertSession()->pageTextContains($this->fieldLabel . ' settings for ' . $this->contentType);
   }
 
@@ -523,7 +523,7 @@ class ManageFieldsFunctionalTest extends BrowserTestBase {
       ->setComponent($field_name)
       ->save();
 
-    $admin_path = 'admin/structure/types/manage/' . $this->contentType . '/fields/' . $field->id();
+    $admin_path = 'admin/structure/content/manage/' . $this->contentType . '/fields/' . $field->id();
     $element_id = "edit-default-value-input-$field_name-0-value";
     $element_name = "default_value_input[{$field_name}][0][value]";
     $this->drupalGet($admin_path);
@@ -595,7 +595,7 @@ class ManageFieldsFunctionalTest extends BrowserTestBase {
    */
   public function testDeleteField() {
     // Create a new field.
-    $bundle_path1 = 'admin/structure/types/manage/' . $this->contentType;
+    $bundle_path1 = 'admin/structure/content/manage/' . $this->contentType;
     $this->fieldUIAddNewField($bundle_path1, $this->fieldNameInput, $this->fieldLabel);
 
     // Create an additional node type.
@@ -604,7 +604,7 @@ class ManageFieldsFunctionalTest extends BrowserTestBase {
     $type_name2 = $type2->id();
 
     // Add a field to the second node type.
-    $bundle_path2 = 'admin/structure/types/manage/' . $type_name2;
+    $bundle_path2 = 'admin/structure/content/manage/' . $type_name2;
     $this->fieldUIAddExistingField($bundle_path2, $this->fieldName, $this->fieldLabel);
 
     // Delete the first field.
@@ -639,14 +639,14 @@ class ManageFieldsFunctionalTest extends BrowserTestBase {
 
     // Try with an entity key.
     $edit['field_name'] = 'title';
-    $bundle_path = 'admin/structure/types/manage/' . $this->contentType;
+    $bundle_path = 'admin/structure/content/manage/' . $this->contentType;
     $this->drupalGet("{$bundle_path}/fields/add-field");
     $this->submitForm($edit, 'Save and continue');
     $this->assertSession()->pageTextContains('The machine-readable name is already in use. It must be unique.');
 
     // Try with a base field.
     $edit['field_name'] = 'sticky';
-    $bundle_path = 'admin/structure/types/manage/' . $this->contentType;
+    $bundle_path = 'admin/structure/content/manage/' . $this->contentType;
     $this->drupalGet("{$bundle_path}/fields/add-field");
     $this->submitForm($edit, 'Save and continue');
     $this->assertSession()->pageTextContains('The machine-readable name is already in use. It must be unique.');
@@ -679,10 +679,10 @@ class ManageFieldsFunctionalTest extends BrowserTestBase {
       ->save();
 
     // Check that the links for edit and delete are not present.
-    $this->drupalGet('admin/structure/types/manage/' . $this->contentType . '/fields');
+    $this->drupalGet('admin/structure/content/manage/' . $this->contentType . '/fields');
     $locked = $this->xpath('//tr[@id=:field_name]/td[4]', [':field_name' => $field_name]);
     $this->assertSame('Locked', $locked[0]->getHtml(), 'Field is marked as Locked in the UI');
-    $this->drupalGet('admin/structure/types/manage/' . $this->contentType . '/fields/node.' . $this->contentType . '.' . $field_name . '/delete');
+    $this->drupalGet('admin/structure/content/manage/' . $this->contentType . '/fields/node.' . $this->contentType . '.' . $field_name . '/delete');
     $this->assertSession()->statusCodeEquals(403);
   }
 
@@ -691,7 +691,7 @@ class ManageFieldsFunctionalTest extends BrowserTestBase {
    */
   public function testHiddenFields() {
     // Check that the field type is not available in the 'add new field' row.
-    $this->drupalGet('admin/structure/types/manage/' . $this->contentType . '/fields/add-field');
+    $this->drupalGet('admin/structure/content/manage/' . $this->contentType . '/fields/add-field');
     $this->assertSession()->optionNotExists('edit-new-storage-type', 'hidden_test_field');
     $this->assertSession()->optionExists('edit-new-storage-type', 'shape');
 
@@ -717,12 +717,12 @@ class ManageFieldsFunctionalTest extends BrowserTestBase {
 
     // Check that the newly added field appears on the 'Manage Fields'
     // screen.
-    $this->drupalGet('admin/structure/types/manage/' . $this->contentType . '/fields');
+    $this->drupalGet('admin/structure/content/manage/' . $this->contentType . '/fields');
     $this->assertSession()->elementTextContains('xpath', '//table[@id="field-overview"]//tr[@id="hidden-test-field"]//td[1]', $field['label']);
 
     // Check that the field does not appear in the 're-use existing field' row
     // on other bundles.
-    $this->drupalGet('admin/structure/types/manage/page/fields/add-field');
+    $this->drupalGet('admin/structure/content/manage/page/fields/add-field');
     $this->assertSession()->optionNotExists('edit-existing-storage-name', $field_name);
     $this->assertSession()->optionExists('edit-existing-storage-name', 'field_tags');
 
@@ -749,7 +749,7 @@ class ManageFieldsFunctionalTest extends BrowserTestBase {
       'label' => $this->randomMachineName(),
       'new_storage_type' => 'entity_reference',
     ];
-    $url = 'admin/structure/types/manage/' . $this->contentType . '/fields/add-field';
+    $url = 'admin/structure/content/manage/' . $this->contentType . '/fields/add-field';
     $this->drupalGet($url);
     $this->submitForm($edit, 'Save and continue');
 
@@ -764,10 +764,10 @@ class ManageFieldsFunctionalTest extends BrowserTestBase {
     $options = [
       'query' => ['destinations' => ['http://example.com']],
     ];
-    $this->drupalGet('admin/structure/types/manage/article/fields/node.article.body/storage', $options);
+    $this->drupalGet('admin/structure/content/manage/article/fields/node.article.body/storage', $options);
     $this->submitForm([], 'Save field settings');
     // The external redirect should not fire.
-    $this->assertSession()->addressEquals('admin/structure/types/manage/article/fields/node.article.body/storage?destinations%5B0%5D=http%3A//example.com');
+    $this->assertSession()->addressEquals('admin/structure/content/manage/article/fields/node.article.body/storage?destinations%5B0%5D=http%3A//example.com');
     $this->assertSession()->statusCodeEquals(200);
     $this->assertSession()->responseContains('Attempt to update field <em class="placeholder">Body</em> failed: <em class="placeholder">The internal path component &#039;http://example.com&#039; is external. You are not allowed to specify an external URL together with internal:/.</em>.');
   }
@@ -816,18 +816,18 @@ class ManageFieldsFunctionalTest extends BrowserTestBase {
     $edit = [
       'description' => '<strong>Test with an upload field.',
     ];
-    $this->drupalGet('admin/structure/types/manage/article/fields/node.article.field_image');
+    $this->drupalGet('admin/structure/content/manage/article/fields/node.article.field_image');
     $this->submitForm($edit, 'Save settings');
 
     // Check that hook_field_widget_single_element_form_alter() does believe
     // this is the default value form.
-    $this->drupalGet('admin/structure/types/manage/article/fields/node.article.field_tags');
+    $this->drupalGet('admin/structure/content/manage/article/fields/node.article.field_tags');
     $this->assertSession()->pageTextContains('From hook_field_widget_single_element_form_alter(): Default form is true.');
 
     $edit = [
       'description' => '<em>Test with a non upload field.',
     ];
-    $this->drupalGet('admin/structure/types/manage/article/fields/node.article.field_tags');
+    $this->drupalGet('admin/structure/content/manage/article/fields/node.article.field_tags');
     $this->submitForm($edit, 'Save settings');
 
     $this->drupalGet('node/add/article');
@@ -841,7 +841,7 @@ class ManageFieldsFunctionalTest extends BrowserTestBase {
   public function fieldListAdminPage() {
     $this->drupalGet('admin/reports/fields');
     $this->assertSession()->pageTextContains($this->fieldName);
-    $this->assertSession()->linkByHrefExists('admin/structure/types/manage/' . $this->contentType . '/fields');
+    $this->assertSession()->linkByHrefExists('admin/structure/content/manage/' . $this->contentType . '/fields');
   }
 
   /**
@@ -850,7 +850,7 @@ class ManageFieldsFunctionalTest extends BrowserTestBase {
    * @see \Drupal\Core\Field\PreconfiguredFieldUiOptionsInterface
    */
   public function testPreconfiguredFields() {
-    $this->drupalGet('admin/structure/types/manage/article/fields/add-field');
+    $this->drupalGet('admin/structure/content/manage/article/fields/add-field');
 
     // Check that the preconfigured field option exist alongside the regular
     // field type option.
@@ -883,10 +883,10 @@ class ManageFieldsFunctionalTest extends BrowserTestBase {
   public function testNonExistentFieldUrls() {
     $field_id = 'node.foo.bar';
 
-    $this->drupalGet('admin/structure/types/manage/' . $this->contentType . '/fields/' . $field_id);
+    $this->drupalGet('admin/structure/content/manage/' . $this->contentType . '/fields/' . $field_id);
     $this->assertSession()->statusCodeEquals(404);
 
-    $this->drupalGet('admin/structure/types/manage/' . $this->contentType . '/fields/' . $field_id . '/storage');
+    $this->drupalGet('admin/structure/content/manage/' . $this->contentType . '/fields/' . $field_id . '/storage');
     $this->assertSession()->statusCodeEquals(404);
   }
 
@@ -1032,11 +1032,11 @@ class ManageFieldsFunctionalTest extends BrowserTestBase {
         'entity_type' => 'node',
         'article' => [
           'id' => 'article',
-          'path' => 'admin/structure/types/manage/article/fields/add-field',
+          'path' => 'admin/structure/content/manage/article/fields/add-field',
         ],
         'page' => [
           'id' => 'page',
-          'path' => 'admin/structure/types/manage/page/fields/add-field',
+          'path' => 'admin/structure/content/manage/page/fields/add-field',
         ],
       ],
       'taxonomy' => [

@@ -208,39 +208,39 @@ class DateTimeTest extends BrowserTestBase {
 
     $this->drupalCreateContentType(['type' => 'page_with_date', 'name' => 'Page with date']);
 
-    $this->drupalGet('admin/structure/types/manage/page_with_date');
+    $this->drupalGet('admin/structure/content/manage/page_with_date');
     $this->assertSession()->statusCodeEquals(200);
 
-    $this->drupalGet('admin/structure/types/manage/page_with_date/fields/add-field');
+    $this->drupalGet('admin/structure/content/manage/page_with_date/fields/add-field');
     $edit = [
       'new_storage_type' => 'datetime',
       'label' => 'dt',
       'field_name' => 'dt',
     ];
-    $this->drupalGet('admin/structure/types/manage/page_with_date/fields/add-field');
+    $this->drupalGet('admin/structure/content/manage/page_with_date/fields/add-field');
     $this->submitForm($edit, 'Save and continue');
     // Check that the new datetime field was created, and process is now set
     // to continue for configuration.
     $this->assertSession()->pageTextContains('These settings apply to the');
 
-    $this->drupalGet('admin/structure/types/manage/page_with_date/fields/node.page_with_date.field_dt/storage');
+    $this->drupalGet('admin/structure/content/manage/page_with_date/fields/node.page_with_date.field_dt/storage');
     $edit = [
       'settings[datetime_type]' => 'datetime',
       'cardinality' => 'number',
       'cardinality_number' => '1',
     ];
-    $this->drupalGet('admin/structure/types/manage/page_with_date/fields/node.page_with_date.field_dt/storage');
+    $this->drupalGet('admin/structure/content/manage/page_with_date/fields/node.page_with_date.field_dt/storage');
     $this->submitForm($edit, 'Save field settings');
 
-    $this->drupalGet('admin/structure/types/manage/page_with_date/fields');
+    $this->drupalGet('admin/structure/content/manage/page_with_date/fields');
     $this->assertSession()->pageTextContains('field_dt');
 
-    $this->drupalGet('admin/structure/types/manage/page_with_date/form-display');
+    $this->drupalGet('admin/structure/content/manage/page_with_date/form-display');
     $edit = [
       'fields[field_dt][type]' => 'datetime_datelist',
       'fields[field_dt][region]' => 'content',
     ];
-    $this->drupalGet('admin/structure/types/manage/page_with_date/form-display');
+    $this->drupalGet('admin/structure/content/manage/page_with_date/form-display');
     $this->submitForm($edit, 'Save');
     $this->drupalLogout();
 

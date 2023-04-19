@@ -549,7 +549,7 @@ class InlineBlockTest extends InlineBlockTestBase {
     $this->drupalGet(static::FIELD_UI_PREFIX . '/display/default');
     $this->submitForm(['layout[enabled]' => TRUE, 'layout[allow_custom]' => TRUE], 'Save');
 
-    $layout_default_path = 'admin/structure/types/manage/bundle_with_section_field/display/default/layout';
+    $layout_default_path = 'admin/structure/content/manage/bundle_with_section_field/display/default/layout';
     $this->drupalGet($layout_default_path);
     // Add a basic block with the body field set.
     $page->clickLink('Add block');

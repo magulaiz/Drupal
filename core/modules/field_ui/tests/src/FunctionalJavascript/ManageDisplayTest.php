@@ -77,7 +77,7 @@ class ManageDisplayTest extends WebDriverTestBase {
    * Tests formatter settings.
    */
   public function testFormatterUI() {
-    $manage_fields = 'admin/structure/types/manage/' . $this->type;
+    $manage_fields = 'admin/structure/content/manage/' . $this->type;
     $manage_display = $manage_fields . '/display';
 
     // Create a field, and a node with some data for the field.
@@ -252,7 +252,7 @@ class ManageDisplayTest extends WebDriverTestBase {
    */
   public function testWidgetUI() {
     // Admin Manage Fields page.
-    $manage_fields = 'admin/structure/types/manage/' . $this->type;
+    $manage_fields = 'admin/structure/content/manage/' . $this->type;
     // Admin Manage Display page.
     $manage_display = $manage_fields . '/form-display';
 

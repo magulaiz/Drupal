@@ -33,7 +33,7 @@ class EntityReferenceFieldCreationTest extends BrowserTestBase {
 
     // Entity types without an ID key should not be presented as options when
     // creating an entity reference field in the UI.
-    $this->drupalGet("/admin/structure/types/manage/$node_type/fields/add-field");
+    $this->drupalGet("/admin/structure/content/manage/$node_type/fields/add-field");
     $edit = [
       'new_storage_type' => 'entity_reference',
       'label' => 'Test Field',

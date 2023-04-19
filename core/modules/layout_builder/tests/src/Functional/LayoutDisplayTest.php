@@ -45,7 +45,7 @@ class LayoutDisplayTest extends BrowserTestBase {
   public function testMultipleViewModes() {
     $assert_session = $this->assertSession();
     $page = $this->getSession()->getPage();
-    $field_ui_prefix = 'admin/structure/types/manage/bundle_with_section_field/display';
+    $field_ui_prefix = 'admin/structure/content/manage/bundle_with_section_field/display';
 
     // Enable Layout Builder for the default view modes, and overrides.
     $this->drupalGet("$field_ui_prefix/default");

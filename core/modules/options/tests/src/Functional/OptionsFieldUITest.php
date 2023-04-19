@@ -303,7 +303,7 @@ class OptionsFieldUITest extends FieldTestBase {
       ->setComponent($this->fieldName)
       ->save();
 
-    $this->adminPath = 'admin/structure/types/manage/' . $this->type . '/fields/node.' . $this->type . '.' . $this->fieldName . '/storage';
+    $this->adminPath = 'admin/structure/content/manage/' . $this->type . '/fields/node.' . $this->type . '.' . $this->fieldName . '/storage';
   }
 
   /**
@@ -368,7 +368,7 @@ class OptionsFieldUITest extends FieldTestBase {
         "fields[$this->fieldName][type]" => $formatter,
         "fields[$this->fieldName][region]" => 'content',
       ];
-      $this->drupalGet('admin/structure/types/manage/' . $this->typeName . '/display');
+      $this->drupalGet('admin/structure/content/manage/' . $this->typeName . '/display');
       $this->submitForm($edit, 'Save');
       $this->drupalGet('node/' . $node->id());
 

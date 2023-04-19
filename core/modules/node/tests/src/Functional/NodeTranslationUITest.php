@@ -75,7 +75,7 @@ class NodeTranslationUITest extends ContentTranslationUITestBase {
     // Display the language selector.
     $this->drupalLogin($this->administrator);
     $edit = ['language_configuration[language_alterable]' => TRUE];
-    $this->drupalGet('admin/structure/types/manage/article');
+    $this->drupalGet('admin/structure/content/manage/article');
     $this->submitForm($edit, 'Save content type');
     $this->drupalLogin($this->translator);
   }
@@ -95,12 +95,12 @@ class NodeTranslationUITest extends ContentTranslationUITestBase {
     // Test changing the published status of an article without fields.
     $this->drupalLogin($this->administrator);
     // Delete all fields.
-    $this->drupalGet('admin/structure/types/manage/article/fields');
-    $this->drupalGet('admin/structure/types/manage/article/fields/node.article.' . $this->fieldName . '/delete');
+    $this->drupalGet('admin/structure/content/manage/article/fields');
+    $this->drupalGet('admin/structure/content/manage/article/fields/node.article.' . $this->fieldName . '/delete');
     $this->submitForm([], 'Delete');
-    $this->drupalGet('admin/structure/types/manage/article/fields/node.article.field_tags/delete');
+    $this->drupalGet('admin/structure/content/manage/article/fields/node.article.field_tags/delete');
     $this->submitForm([], 'Delete');
-    $this->drupalGet('admin/structure/types/manage/article/fields/node.article.field_image/delete');
+    $this->drupalGet('admin/structure/content/manage/article/fields/node.article.field_image/delete');
     $this->submitForm([], 'Delete');
 
     // Add a node.
@@ -559,7 +559,7 @@ class NodeTranslationUITest extends ContentTranslationUITestBase {
     // Make the image field a multi-value field in order to display a
     // details form element.
     $edit = ['cardinality_number' => 2];
-    $this->drupalGet('admin/structure/types/manage/article/fields/node.article.field_image/storage');
+    $this->drupalGet('admin/structure/content/manage/article/fields/node.article.field_image/storage');
     $this->submitForm($edit, 'Save field settings');
 
     // Make the image field non-translatable.

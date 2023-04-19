@@ -115,24 +115,24 @@ class BreadcrumbTest extends BrowserTestBase {
     // Verify Node administration breadcrumbs.
     $trail = $admin + [
       'admin/structure' => 'Structure',
-      'admin/structure/types' => 'Content types',
+      'admin/structure/content' => 'Content types',
     ];
-    $this->assertBreadcrumb('admin/structure/types/add', $trail);
-    $this->assertBreadcrumb("admin/structure/types/manage/$type", $trail);
+    $this->assertBreadcrumb('admin/structure/content/add', $trail);
+    $this->assertBreadcrumb("admin/structure/content/manage/$type", $trail);
     $trail += [
-      "admin/structure/types/manage/$type" => 'Article',
+      "admin/structure/content/manage/$type" => 'Article',
     ];
-    $this->assertBreadcrumb("admin/structure/types/manage/$type/fields", $trail);
-    $this->assertBreadcrumb("admin/structure/types/manage/$type/display", $trail);
+    $this->assertBreadcrumb("admin/structure/content/manage/$type/fields", $trail);
+    $this->assertBreadcrumb("admin/structure/content/manage/$type/display", $trail);
     $trail_teaser = $trail + [
-      "admin/structure/types/manage/$type/display" => 'Manage display',
+      "admin/structure/content/manage/$type/display" => 'Manage display',
     ];
-    $this->assertBreadcrumb("admin/structure/types/manage/$type/display/teaser", $trail_teaser);
-    $this->assertBreadcrumb("admin/structure/types/manage/$type/delete", $trail);
+    $this->assertBreadcrumb("admin/structure/content/manage/$type/display/teaser", $trail_teaser);
+    $this->assertBreadcrumb("admin/structure/content/manage/$type/delete", $trail);
     $trail += [
-      "admin/structure/types/manage/$type/fields" => 'Manage fields',
+      "admin/structure/content/manage/$type/fields" => 'Manage fields',
     ];
-    $this->assertBreadcrumb("admin/structure/types/manage/$type/fields/node.$type.body", $trail);
+    $this->assertBreadcrumb("admin/structure/content/manage/$type/fields/node.$type.body", $trail);
 
     // Verify Filter text format administration breadcrumbs.
     $filter_formats = filter_formats();

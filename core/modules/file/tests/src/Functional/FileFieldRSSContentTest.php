@@ -34,14 +34,14 @@ class FileFieldRSSContentTest extends FileFieldTestBase {
     $this->createFileField($field_name, 'node', $type_name);
 
     // RSS display must be added manually.
-    $this->drupalGet("admin/structure/types/manage/$type_name/display");
+    $this->drupalGet("admin/structure/content/manage/$type_name/display");
     $edit = [
       "display_modes_custom[rss]" => '1',
     ];
     $this->submitForm($edit, 'Save');
 
     // Change the format to 'RSS enclosure'.
-    $this->drupalGet("admin/structure/types/manage/$type_name/display/rss");
+    $this->drupalGet("admin/structure/content/manage/$type_name/display/rss");
     $edit = [
       "fields[$field_name][type]" => 'file_rss_enclosure',
       "fields[$field_name][region]" => 'content',
