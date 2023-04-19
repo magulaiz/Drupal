@@ -102,7 +102,7 @@ class FileUrlGeneratorTest extends FileTestBase {
     \Drupal::state()->delete('file_test.hook_file_url_alter');
     $filepath = 'core/misc/favicon.ico';
     $url = $this->fileUrlGenerator->generateAbsoluteString($filepath . '?foo');
-    $this->assertEquals($GLOBALS['base_url'] . '/' . $filepath . '?foo=', $url, 'Correctly generated URL. The query string is present.');
+    $this->assertEquals($GLOBALS['base_url'] . '/' . $filepath . '?foo', $url, 'Correctly generated URL. The query string is present.');
     $url = $this->fileUrlGenerator->generateAbsoluteString($filepath . '?foo=bar');
     $this->assertEquals($GLOBALS['base_url'] . '/' . $filepath . '?foo=bar', $url, 'Correctly generated URL. The query string is present.');
     $url = $this->fileUrlGenerator->generateAbsoluteString($filepath . '#v1.2');

@@ -51,7 +51,7 @@ class UrlHelper {
       }
       // If a query parameter value is NULL, only append its key.
       elseif (!isset($value)) {
-        $params[] = $key;
+        $params[] = str_replace('=', '', $key);
       }
       else {
         // For better readability of paths in query strings, we decode slashes.
