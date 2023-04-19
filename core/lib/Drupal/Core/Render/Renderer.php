@@ -666,13 +666,13 @@ class Renderer implements RendererInterface {
         $message_placeholders[] = $placeholder;
       }
       else {
-        $elements = $this->renderPlaceholder($placeholder, $elements->toArray());
+        $elements = $this->renderPlaceholder($placeholder, $elements);
       }
     }
 
     // Then render 'status messages' placeholders.
     foreach ($message_placeholders as $message_placeholder) {
-      $elements = $this->renderPlaceholder($message_placeholder, $elements->toArray());
+      $elements = $this->renderPlaceholder($message_placeholder, $elements);
     }
 
     return TRUE;
