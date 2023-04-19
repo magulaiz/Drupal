@@ -91,7 +91,6 @@ abstract class ListItemBase extends FieldItemBase implements OptionsProviderInte
     if (!array_key_exists('allowed_values', $form_state->getStorage())) {
       $form_state->set('allowed_values', $this->getFieldDefinition()->getSetting('allowed_values'));
     }
-    $form['#attached']['library'][] = 'options/options.form';
 
     $allowed_values = $form_state->getStorage()['allowed_values'];
     $allowed_values_function = $this->getSetting('allowed_values_function');
