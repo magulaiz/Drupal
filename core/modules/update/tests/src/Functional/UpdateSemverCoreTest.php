@@ -296,9 +296,7 @@ class UpdateSemverCoreTest extends UpdateSemverTestBase {
     $this->config('update.settings')
       ->set('fetch.url', Url::fromRoute('update_test.update_test')->setAbsolute()->toString())
       ->save();
-    $this->config('update_test.settings')
-      ->set('xml_map', ['drupal' => '0.0'])
-      ->save();
+    $this->setXmlMap(['drupal' => '0.0']);
 
     $this->cronRun();
     $this->drupalGet('admin/modules');
@@ -331,9 +329,7 @@ class UpdateSemverCoreTest extends UpdateSemverTestBase {
     $this->config('update.settings')
       ->set('fetch.url', Url::fromRoute('update_test.update_test')->setAbsolute()->toString())
       ->save();
-    $this->config('update_test.settings')
-      ->set('xml_map', ['drupal' => '0.0'])
-      ->save();
+    $this->setXmlMap(['drupal' => '0.0']);
 
     $this->drupalGet('admin/reports/updates');
     $this->clickLink('Check manually');
@@ -358,9 +354,7 @@ class UpdateSemverCoreTest extends UpdateSemverTestBase {
     $this->config('update.settings')
       ->set('fetch.url', Url::fromRoute('update_test.update_test')->setAbsolute()->toString())
       ->save();
-    $this->config('update_test.settings')
-      ->set('xml_map', ['drupal' => '0.1'])
-      ->save();
+    $this->setXmlMap(['drupal' => '0.1']);
 
     $this->drupalGet('admin/reports/updates');
     $this->clickLink('Check manually');
@@ -396,9 +390,7 @@ class UpdateSemverCoreTest extends UpdateSemverTestBase {
     $this->config('update.settings')
       ->set('fetch.url', Url::fromRoute('update_test.update_test')->setAbsolute()->toString())
       ->save();
-    $this->config('update_test.settings')
-      ->set('xml_map', ['drupal' => 'sec.0.2'])
-      ->save();
+    $this->setXmlMap(['drupal' => 'sec.0.2']);
 
     $this->drupalGet('admin/reports/updates');
     $this->clickLink('Check manually');
@@ -469,9 +461,7 @@ class UpdateSemverCoreTest extends UpdateSemverTestBase {
     $this->config('update.settings')
       ->set('fetch.url', Url::fromRoute('update_test.update_test')->setAbsolute()->toString())
       ->save();
-    $this->config('update_test.settings')
-      ->set('xml_map', ['drupal' => '0.1'])
-      ->save();
+    $this->setXmlMap(['drupal' => '0.1']);
 
     $this->drupalGet('admin/reports/updates');
     $this->assertSession()->pageTextContains('Language');
@@ -518,18 +508,14 @@ class UpdateSemverCoreTest extends UpdateSemverTestBase {
       ->save();
     // Use update XML that has no information to simulate a broken response from
     // the update server.
-    $this->config('update_test.settings')
-      ->set('xml_map', ['drupal' => 'broken'])
-      ->save();
+    $this->setXmlMap(['drupal' => 'broken']);
 
     // This will retrieve broken updates.
     $this->cronRun();
     $this->drupalGet('admin/reports/status');
     $this->assertSession()->statusCodeEquals(200);
     $this->assertSession()->pageTextContains('There was a problem checking available updates for Drupal.');
-    $this->config('update_test.settings')
-      ->set('xml_map', ['drupal' => 'sec.0.2'])
-      ->save();
+    $this->setXmlMap(['drupal' => 'sec.0.2']);
     // Simulate the update_available_releases state expiring before cron is run
     // and the state is used by \Drupal\update\UpdateManager::getProjects().
     \Drupal::keyValueExpirable('update_available_releases')->deleteAll();

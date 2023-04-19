@@ -124,13 +124,12 @@ class UpdateUploadTest extends UpdateUploaderTestBase {
 
     // Define the update XML such that the new module downloaded above needs an
     // update from 8.x-1.0 to 8.x-1.1.
-    $update_test_config = $this->config('update_test.settings');
-    $system_info = [
+    $installed_modules = [
       'update_test_new_module' => [
         'project' => 'update_test_new_module',
       ],
     ];
-    $update_test_config->set('system_info', $system_info)->save();
+    $this->mockInstalledModules($installed_modules);
     $xml_mapping = [
       'update_test_new_module' => '1_1',
     ];
@@ -164,15 +163,8 @@ class UpdateUploadTest extends UpdateUploaderTestBase {
    * Checks the messages on update manager pages when missing a security update.
    */
   public function testUpdateManagerCoreSecurityUpdateMessages() {
-    $setting = [
-      '#all' => [
-        'version' => '8.0.0',
-      ],
-    ];
-    $this->config('update_test.settings')
-      ->set('system_info', $setting)
-      ->set('xml_map', ['drupal' => '0.2-sec'])
-      ->save();
+    $this->mockInstalledModules([], ['version' => '8.0.0']);
+    $this->setXmlMap(['drupal' => '0.2-sec']);
     $this->config('update.settings')
       ->set('fetch.url', Url::fromRoute('update_test.update_test')->setAbsolute()->toString())
       ->save();
