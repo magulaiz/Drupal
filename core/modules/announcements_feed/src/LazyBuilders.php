@@ -44,7 +44,7 @@ final class LazyBuilders implements TrustedCallbackInterface {
 
     // Check for new announcements for the current user.
     try {
-      $new_announcements = $this->userStatus->getNewAnnouncements();
+      $new_announcements = $this->userStatus->getNewAnnouncementsIds();
     }
     catch (\Exception $e) {
       $this->messenger->addError('An error occurred while parsing the announcements feed, check the logs for more information.');

@@ -38,13 +38,13 @@ class AnnounceUserStatus {
    *
    * Return an array of ids of new announcements for the user.
    *
-   * @return array
+   * @return string[]
    *   Ids of new announcements for the user, empty array if there are no unread
    *   announcements for the user.
    */
-  public function getNewAnnouncements(): array {
+  public function getNewAnnouncementsIds(): array {
     // Get the announcements viewed by the user.
-    $old_announcement_ids = $this->getAnnouncementStatus();
+    $old_announcement_ids = $this->getSeenAnnouncementIds();
     // Fetch the announcements from the feed.
     $announcement_ids = $this->fetcher->fetchIds();
     $new_announcement_ids = array_diff($announcement_ids, $old_announcement_ids);
@@ -68,14 +68,14 @@ class AnnounceUserStatus {
     // Fetch announcements from the feed.
     $announcements = $this->fetcher->fetch();
     // Get the new/unread items for the user.
-    $new_announcements = $this->getNewAnnouncements();
+    $new_announcements = $this->getNewAnnouncementsIds();
     foreach ($announcements as &$announcement) {
       // Add an attribute 'new' to the announcements to identify new items.
       $announcement->new = in_array($announcement->id, $new_announcements, TRUE);
     }
     if (!empty($new_announcements)) {
       // Store the ids of announcements for the user to mark it as read items.
-      $this->setAnnouncementStatus($this->fetcher->fetchIds());
+      $this->setSeenAnnouncementIds($new_announcements);
     }
     return $announcements;
   }
@@ -83,11 +83,11 @@ class AnnounceUserStatus {
   /**
    * Get all announcements read by the current user.
    *
-   * @return array
+   * @return string[]
    *   All announcement ids stored against current user's id, empty if no
    *   announcement data stored for the user.
    */
-  protected function getAnnouncementStatus(): array {
+  protected function getSeenAnnouncementIds(): array {
     $user_announcements = $this->userData->get(
       'announcements_feed',
       $this->currentUser->id(),
@@ -99,15 +99,15 @@ class AnnounceUserStatus {
   /**
    * Set the read status of announcements for the current user.
    *
-   * @parm array $announcements
-   *  IDs of announcements to store against the current user.
+   * @parm string[] $announcements
+   *  IDs of new announcements to store against the current user.
    */
-  public function setAnnouncementStatus(array $announcements): void {
+  protected function setSeenAnnouncementIds(array $new_announcements): void {
     $this->userData->set(
       'announcements_feed',
       $this->currentUser->id(),
       'announcements',
-      $announcements
+      array_unique(array_merge($this->getSeenAnnouncementIds(), $new_announcements))
     );
   }
 
