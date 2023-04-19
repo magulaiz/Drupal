@@ -524,7 +524,7 @@ class UrlGeneratorTest extends UnitTestCase {
       // Query parameters only.
       [['query' => ['foo' => 'bar']], '?foo=bar'],
       // Multiple query parameters.
-      [['query' => ['foo' => 'bar', 'baz' => '']], '?foo=bar&baz='],
+      [['query' => ['foo' => 'bar', 'baz' => '']], '?foo=bar&baz'],
       // Fragment only.
       [['fragment' => 'foo'], '#foo'],
       // Query parameters and fragment.
