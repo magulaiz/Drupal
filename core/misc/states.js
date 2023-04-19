@@ -685,7 +685,7 @@
       $(e.target)
         .closest('.js-form-item, .js-form-submit, .js-form-wrapper')
         .toggleClass('form-disabled', e.value)
-        .find('select, input, textarea')
+        .find('button, fieldset, input, optgroup, option, select, textarea')
         .prop('disabled', e.value);
     }
   });
