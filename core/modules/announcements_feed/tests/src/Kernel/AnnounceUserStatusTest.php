@@ -52,7 +52,7 @@ class AnnounceUserStatusTest extends AnnounceTestBase {
 
     // Checking the 'new' status is enabled.
     $this->assertTrue($all_items[0]->new);
-    $this->assertCount(3, $this->history);
+    $this->assertCount(2, $this->history);
 
     $this->setFeedItems($feed_items);
 
@@ -62,7 +62,7 @@ class AnnounceUserStatusTest extends AnnounceTestBase {
 
     // Checking the 'new' status is disabled.
     $this->assertFalse($all_items[0]->new);
-    $this->assertCount(5, $this->history);
+    $this->assertCount(4, $this->history);
 
     // Create another user and test again.
     $permissions = [
@@ -78,7 +78,7 @@ class AnnounceUserStatusTest extends AnnounceTestBase {
 
     // Checking the 'new' status is enabled.
     $this->assertTrue($all_items[0]->new);
-    $this->assertCount(8, $this->history);
+    $this->assertCount(6, $this->history);
 
     // Check after adding new record.
     $feed_items = $this->providerShowUpdatedAnnouncements();
@@ -89,7 +89,7 @@ class AnnounceUserStatusTest extends AnnounceTestBase {
 
     // Checking the 'new' status is enabled.
     $this->assertTrue($all_items[0]->new);
-    $this->assertCount(11, $this->history);
+    $this->assertCount(8, $this->history);
   }
 
   /**
