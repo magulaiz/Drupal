@@ -58,12 +58,15 @@ class ElementInfoManager extends DefaultPluginManager implements ElementInfoMana
    * @param \Drupal\Core\Theme\ThemeManagerInterface $theme_manager
    *   The theme manager.
    */
-  public function __construct(\Traversable $namespaces, CacheBackendInterface $cache_backend, $theme_handler, ModuleHandlerInterface $module_handler, ThemeManagerInterface $theme_manager) {
+  public function __construct(\Traversable $namespaces, CacheBackendInterface $cache_backend, $theme_handler, $module_handler, $theme_manager) {
     $this->setCacheBackend($cache_backend, 'element_info');
-    $this->themeManager = $theme_manager;
     if (!$theme_handler instanceof ThemeHandlerInterface) {
+      @trigger_error('Calling ' . __METHOD__ . ' with the $cache_tag_invalidator argument is deprecated in drupal:10.1.0 and will be removed in drupal:11.0.0.', E_USER_DEPRECATED);
       $theme_handler = \Drupal::service('theme_handler');
+      $module_handler = \Drupal::service('module_handler');
+      $theme_manager = \Drupal::service('@theme.manager');
     }
+    $this->themeManager = $theme_manager;
     $this->themeHandler = $theme_handler;
 
     parent::__construct('Element', $namespaces, $module_handler, 'Drupal\Core\Render\Element\ElementInterface', 'Drupal\Core\Render\Annotation\RenderElement');
