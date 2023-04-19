@@ -6,6 +6,7 @@ use Drupal\Core\Cache\CacheTagsInvalidatorInterface;
 use Drupal\Core\Config\ConfigCrudEvent;
 use Drupal\Core\Config\ConfigEvents;
 use Drupal\Core\Extension\ThemeHandlerInterface;
+use Drupal\Core\Theme\Registry;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
@@ -28,16 +29,30 @@ class ConfigCacheTag implements EventSubscriberInterface {
   protected $cacheTagsInvalidator;
 
   /**
+   * The theme registry.
+   *
+   * @var \Drupal\Core\Theme\Registry
+   */
+  protected $themeRegistry;
+
+  /**
    * Constructs a ConfigCacheTag object.
    *
    * @param \Drupal\Core\Extension\ThemeHandlerInterface $theme_handler
    *   The theme handler.
    * @param \Drupal\Core\Cache\CacheTagsInvalidatorInterface $cache_tags_invalidator
    *   The cache tags invalidator.
+   * @param \Drupal\Core\Theme\Registry $theme_registry
+   *   The theme registry.
    */
-  public function __construct(ThemeHandlerInterface $theme_handler, CacheTagsInvalidatorInterface $cache_tags_invalidator) {
+  public function __construct(ThemeHandlerInterface $theme_handler, CacheTagsInvalidatorInterface $cache_tags_invalidator, Registry $theme_registry = NULL) {
     $this->themeHandler = $theme_handler;
     $this->cacheTagsInvalidator = $cache_tags_invalidator;
+    if (!$theme_registry) {
+      @trigger_error('Calling ' . __METHOD__ . ' without the $theme_registry argument is deprecated in drupal:10.1.0 and will be required in drupal:11.0.0.', E_USER_DEPRECATED);
+      $theme_registry = \Drupal::service('theme.registry');
+    }
+    $this->themeRegistry = $theme_registry;
   }
 
   /**
@@ -63,7 +78,7 @@ class ConfigCacheTag implements EventSubscriberInterface {
     // Library and template overrides potentially change for the default theme
     // when the admin theme is changed.
     if ($config_name === 'system.theme' && $event->isChanged('admin')) {
-      \Drupal::service('theme.registry')->reset();
+      $this->themeRegistry->reset();
       $this->cacheTagsInvalidator->invalidateTags(['library_info']);
     }
 
