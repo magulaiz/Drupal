@@ -14,6 +14,9 @@ media.settings:
     standalone_url:
       type: boolean
       label: 'Allow media items to be viewed standalone at /media/{id}'
+    show_private_file_warning:
+      type: boolean
+      label: 'Whether the site should show a warning on the UI when the source field is configured to use private file storage'
 
 media.type.*:
   type: config_entity

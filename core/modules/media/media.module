@@ -20,11 +20,14 @@ use Drupal\field\FieldConfigInterface;
 use Drupal\media\MediaConfigUpdater;
 use Drupal\media\Plugin\media\Source\OEmbedInterface;
 use Drupal\views\ViewExecutable;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\media\Plugin\media\Source\File;
 
 /**
  * Implements hook_help().
  */
-function media_help($route_name, RouteMatchInterface $route_match) {
+function media_help($route_name, RouteMatchInterface $route_match)
+{
   switch ($route_name) {
     case 'help.page.media':
       $output = '<h3>' . t('About') . '</h3>';
@@ -61,14 +64,50 @@ function media_help($route_name, RouteMatchInterface $route_match) {
       $output .= '<li>' . t('Existing media items can be reused on any other content items with a media reference field.') . '</li>';
       $output .= '</ul>';
       $output .= '<p>' . t('Use <em>Media</em> reference fields for most files, images, audio, videos, and remote media. Use <em>File</em> or <em>Image</em> reference fields when creating your own media types, or for legacy files and images created before enabling the Media module.') . '</p>';
+      $output .= '<h3>' . t('Media and private file access') . '</h3>';
+      $output .= '<p>' . t('Media items behave differently than files and images where restricted access is concerned. While files and images, when configured to use the private storage, will inherit access permissions from the content where they are attached to, media items have their own access restrictions. This usually means that by default users could have access to files on media items even though they do not have access to the content that references the media items. <a href=":doc_url">More information on configuring media access restrictions</a>.', [
+        ':doc_url' => 'https://www.drupal.org/docs/8/core/modules/media/setting-up-private-access-to-media-items',
+      ]) . '</p>';
       return $output;
+
+    case 'entity.media.field_ui_fields':
+      // If there are file fields on media types using the private scheme, users
+      // may have the expectation that they inherit access from their parent
+      // entities, which is something that media items don't do by default.
+      // Show a message letting them know that.
+      $media_type = \Drupal::routeMatch()->getParameter('media_type');
+      $build = [
+        // By returning an uncacheable render array we ensure that this has
+        // up-to-date information every time the field config changes.
+        '#markup' => '',
+        '#cache' => [
+          'max-age' => 0,
+        ],
+      ];
+      if (!File::acceptsFileInSourceField($media_type)) {
+        return $build;
+      }
+      /** @var \Drupal\field\FieldConfigInterface $source_definition */
+      $source_definition = $media_type->getSource()->getSourceFieldDefinition($media_type);
+      if (
+        $source_definition->getSetting('uri_scheme') === 'private'
+        && \Drupal::config('media.settings')->get('show_private_file_warning')
+      ) {
+        $warning = '<p>' . t('The source field is configured to use the private file storage. By default, the media items will be accessible to any users with access to %type media, even if the user does not have access to content that references it. <a href=":doc_url">More information on configuring media access restrictions</a>.', [
+          '%type' => $media_type->label(),
+          ':doc_url' => 'https://www.drupal.org/docs/8/core/modules/media/setting-up-private-access-to-media-items',
+        ]) . '</p>';
+        $build['#markup'] = $warning;
+      }
+      return $build;
   }
 }
 
 /**
  * Implements hook_theme().
  */
-function media_theme() {
+function media_theme()
+{
   return [
     'media' => [
       'render element' => 'elements',
@@ -96,7 +135,8 @@ function media_theme() {
 /**
  * Implements hook_entity_access().
  */
-function media_entity_access(EntityInterface $entity, $operation, AccountInterface $account) {
+function media_entity_access(EntityInterface $entity, $operation, AccountInterface $account)
+{
   if ($operation === 'delete' && $entity instanceof FieldConfigInterface && $entity->getTargetEntityTypeId() === 'media') {
     /** @var \Drupal\media\MediaTypeInterface $media_type */
     $media_type = \Drupal::entityTypeManager()->getStorage('media_type')->load($entity->getTargetBundle());
@@ -108,7 +148,8 @@ function media_entity_access(EntityInterface $entity, $operation, AccountInterfa
 /**
  * Implements hook_theme_suggestions_HOOK().
  */
-function media_theme_suggestions_media(array $variables) {
+function media_theme_suggestions_media(array $variables)
+{
   $suggestions = [];
   /** @var \Drupal\media\MediaInterface $media */
   $media = $variables['elements']['#media'];
@@ -126,8 +167,7 @@ function media_theme_suggestions_media(array $variables) {
     if ($derivative_id) {
       $source_id .= '__derivative_' . $derivative_id;
     }
-  }
-  else {
+  } else {
     $source_id = $source->getPluginId();
   }
   $suggestions[] = "media__source_$source_id";
@@ -158,7 +198,8 @@ function media_theme_suggestions_media(array $variables) {
  *   - name: The label for the media item.
  *   - view_mode: View mode; e.g., 'full', 'teaser', etc.
  */
-function template_preprocess_media(array &$variables) {
+function template_preprocess_media(array &$variables)
+{
   $variables['media'] = $variables['elements']['#media'];
   $variables['view_mode'] = $variables['elements']['#view_mode'];
   $variables['name'] = $variables['media']->label();
@@ -172,7 +213,8 @@ function template_preprocess_media(array &$variables) {
 /**
  * Implements hook_field_ui_preconfigured_options_alter().
  */
-function media_field_ui_preconfigured_options_alter(array &$options, $field_type) {
+function media_field_ui_preconfigured_options_alter(array &$options, $field_type)
+{
   // If the field is not an "entity_reference"-based field, bail out.
   /** @var \Drupal\Core\Field\FieldTypePluginManager $field_type_manager */
   $field_type_manager = \Drupal::service('plugin.manager.field.field_type');
@@ -191,7 +233,8 @@ function media_field_ui_preconfigured_options_alter(array &$options, $field_type
 /**
  * Implements hook_form_FORM_ID_alter().
  */
-function media_form_field_ui_field_storage_add_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+function media_form_field_ui_field_storage_add_form_alter(&$form, FormStateInterface $form_state, $form_id)
+{
   // Provide some help text to aid users decide whether they need a Media,
   // File, or Image reference field.
   $description_text = t('Use <em>Media</em> reference fields for most files, images, audio, videos, and remote media. Use <em>File</em> or <em>Image</em> reference fields when creating your own media types, or for legacy files and images created before enabling the Media module.');
@@ -226,7 +269,8 @@ function media_form_field_ui_field_storage_add_form_alter(&$form, FormStateInter
 /**
  * Implements hook_field_widget_complete_form_alter().
  */
-function media_field_widget_complete_form_alter(array &$field_widget_complete_form, FormStateInterface $form_state, array $context) {
+function media_field_widget_complete_form_alter(array &$field_widget_complete_form, FormStateInterface $form_state, array $context)
+{
   $elements = &$field_widget_complete_form['widget'];
   // Do not alter the default settings form.
   if ($context['default']) {
@@ -244,8 +288,7 @@ function media_field_widget_complete_form_alter(array &$field_widget_complete_fo
   $widget_plugin_id = $context['widget']->getPluginId();
   if (in_array($widget_plugin_id, ['entity_reference_autocomplete', 'entity_reference_autocomplete_tags'])) {
     $is_autocomplete = TRUE;
-  }
-  else {
+  } else {
     // @todo We can't yet properly alter non-autocomplete fields. Resolve this
     //   in https://www.drupal.org/node/2943020 and remove this condition.
     return;
@@ -309,7 +352,8 @@ function media_field_widget_complete_form_alter(array &$field_widget_complete_fo
 /**
  * Implements hook_preprocess_HOOK() for media reference widgets.
  */
-function media_preprocess_media_reference_help(&$variables) {
+function media_preprocess_media_reference_help(&$variables)
+{
   // Most of these attribute checks are copied from
   // template_preprocess_fieldset(). Our template extends
   // field-multiple-value-form.html.twig to provide our help text, but also
@@ -345,15 +389,15 @@ function media_preprocess_media_reference_help(&$variables) {
  * @internal
  *   This function is internal and may be removed in a minor release.
  */
-function _media_get_add_url($allowed_bundles) {
+function _media_get_add_url($allowed_bundles)
+{
   $access_handler = \Drupal::entityTypeManager()->getAccessControlHandler('media');
   $create_bundles = array_filter($allowed_bundles, [$access_handler, 'createAccess']);
 
   // Add a section about how to create media if the user has access to do so.
   if (count($create_bundles) === 1) {
     return Url::fromRoute('entity.media.add_form', ['media_type' => reset($create_bundles)])->toString();
-  }
-  elseif (count($create_bundles) > 1) {
+  } elseif (count($create_bundles) > 1) {
     return Url::fromRoute('entity.media.add_page')->toString();
   }
 
@@ -363,7 +407,8 @@ function _media_get_add_url($allowed_bundles) {
 /**
  * Implements hook_entity_type_alter().
  */
-function media_entity_type_alter(array &$entity_types) {
+function media_entity_type_alter(array &$entity_types)
+{
   if (\Drupal::config('media.settings')->get('standalone_url')) {
     /** @var \Drupal\Core\Entity\ContentEntityTypeInterface $entity_type */
     $entity_type = $entity_types['media'];
@@ -374,7 +419,8 @@ function media_entity_type_alter(array &$entity_types) {
 /**
  * Implements hook_ENTITY_TYPE_presave() for entity_view_display.
  */
-function media_entity_view_display_presave(EntityViewDisplayInterface $view_display): void {
+function media_entity_view_display_presave(EntityViewDisplayInterface $view_display): void
+{
   $config_updater = \Drupal::classResolver(MediaConfigUpdater::class);
   assert($config_updater instanceof MediaConfigUpdater);
   $config_updater->processOembedEagerLoadField($view_display);
@@ -383,7 +429,8 @@ function media_entity_view_display_presave(EntityViewDisplayInterface $view_disp
 /**
  * Implements hook_form_FORM_ID_alter().
  */
-function media_form_filter_format_edit_form_alter(array &$form, FormStateInterface $form_state, $form_id) {
+function media_form_filter_format_edit_form_alter(array &$form, FormStateInterface $form_state, $form_id)
+{
   // Add an additional validate callback so we can ensure the order of filters
   // is correct.
   $form['#validate'][] = 'media_filter_format_edit_form_validate';
@@ -392,7 +439,8 @@ function media_form_filter_format_edit_form_alter(array &$form, FormStateInterfa
 /**
  * Implements hook_form_FORM_ID_alter().
  */
-function media_form_filter_format_add_form_alter(array &$form, FormStateInterface $form_state, $form_id) {
+function media_form_filter_format_add_form_alter(array &$form, FormStateInterface $form_state, $form_id)
+{
   // Add an additional validate callback so we can ensure the order of filters
   // is correct.
   $form['#validate'][] = 'media_filter_format_edit_form_validate';
@@ -401,7 +449,8 @@ function media_form_filter_format_add_form_alter(array &$form, FormStateInterfac
 /**
  * Validate callback to ensure filter order and allowed_html are compatible.
  */
-function media_filter_format_edit_form_validate($form, FormStateInterface $form_state) {
+function media_filter_format_edit_form_validate($form, FormStateInterface $form_state)
+{
   if ($form_state->getTriggeringElement()['#name'] !== 'op') {
     return;
   }
@@ -453,8 +502,7 @@ function media_filter_format_edit_form_validate($form, FormStateInterface $form_
       $form_state->setError($form['filters']['settings']['filter_html']['allowed_html'], t('The %media-embed-filter-label filter requires <code>&lt;drupal-media&gt;</code> among the allowed HTML tags.', [
         '%media-embed-filter-label' => $get_filter_label('media_embed'),
       ]));
-    }
-    else {
+    } else {
       $required_attributes = [
         'data-entity-type',
         'data-entity-uuid',
@@ -464,8 +512,7 @@ function media_filter_format_edit_form_validate($form, FormStateInterface $form_
       // otherwise, it is set to an array.
       if ($allowed['drupal-media'] === FALSE) {
         $missing_attributes = $required_attributes;
-      }
-      else {
+      } else {
         $missing_attributes = array_diff($required_attributes, array_keys($allowed['drupal-media']));
       }
 
@@ -520,7 +567,8 @@ function media_filter_format_edit_form_validate($form, FormStateInterface $form_
 /**
  * Implements hook_field_widget_single_element_form_alter().
  */
-function media_field_widget_single_element_form_alter(&$element, FormStateInterface $form_state, $context) {
+function media_field_widget_single_element_form_alter(&$element, FormStateInterface $form_state, $context)
+{
   // Add an attribute so that text editors plugins can pass the host entity's
   // language to EditorMediaDialog, allowing it to present entities in the same
   // language.
@@ -532,7 +580,8 @@ function media_field_widget_single_element_form_alter(&$element, FormStateInterf
 /**
  * Implements hook_views_query_substitutions().
  */
-function media_views_query_substitutions(ViewExecutable $view) {
+function media_views_query_substitutions(ViewExecutable $view)
+{
   $account = \Drupal::currentUser();
   return [
     '***VIEW_OWN_UNPUBLISHED_MEDIA***' => (int) $account->hasPermission('view own unpublished media'),

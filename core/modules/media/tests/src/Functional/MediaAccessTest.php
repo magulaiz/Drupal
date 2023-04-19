@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\media\Functional;
 
+use Drupal\Core\Url;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\media\Entity\Media;
@@ -14,7 +15,8 @@ use Drupal\user\RoleInterface;
  *
  * @group media
  */
-class MediaAccessTest extends MediaFunctionalTestBase {
+class MediaAccessTest extends MediaFunctionalTestBase
+{
 
   use AssertPageCacheContextsAndTagsTrait;
 
@@ -24,6 +26,7 @@ class MediaAccessTest extends MediaFunctionalTestBase {
   protected static $modules = [
     'block',
     'media_test_source',
+    'help',
   ];
 
   /**
@@ -34,7 +37,8 @@ class MediaAccessTest extends MediaFunctionalTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp(): void {
+  protected function setUp(): void
+  {
     parent::setUp();
     // This is needed to provide the user cache context for a below assertion.
     $this->drupalPlaceBlock('local_tasks_block');
@@ -43,7 +47,8 @@ class MediaAccessTest extends MediaFunctionalTestBase {
   /**
    * Tests some access control functionality.
    */
-  public function testMediaAccess() {
+  public function testMediaAccess()
+  {
     $assert_session = $this->assertSession();
     $media_type = $this->createMediaType('test');
 
@@ -195,9 +200,56 @@ class MediaAccessTest extends MediaFunctionalTestBase {
   }
 
   /**
+   * Test some access-related warnings.
+   */
+  public function testMediaAccessWarnings()
+  {
+    $assert_session = $this->assertSession();
+
+    // The help text is placed in the help block.
+    $this->drupalPlaceBlock('help_block');
+
+    $media_type = $this->createMediaType('file');
+    $source_field_name = $media_type->getSource()->getSourceFieldDefinition($media_type)->getName();
+
+    // Initially the field config page shows no warning message.
+    $field_warning_message = 'The source field is configured to use the private file storage. By default, the media items will be accessible to any users with access to';
+    $manage_field_url = Url::fromRoute('entity.media.field_ui_fields', ['media_type' => $media_type->id()]);
+    $this->drupalGet($manage_field_url);
+    $assert_session->pageTextNotContains($field_warning_message);
+
+    // If we make the source field private a warning should appear there.
+    $field_config = FieldStorageConfig::loadByName('media', $source_field_name);
+    $field_config->setSetting('uri_scheme', 'private');
+    $field_config->save();
+
+    $this->getSession()->reload();
+    $assert_session->pageTextContains($field_warning_message);
+
+    // Status report page should also show a warning.
+    Role::load(RoleInterface::AUTHENTICATED_ID)
+      ->grantPermission('administer site configuration')
+      ->save();
+    $this->drupalGet(Url::fromRoute('system.status'));
+    $status_report_message = 'uses the private file storage. By default, the media items will be accessible to any users with access to';
+    $assert_session->pageTextContains($status_report_message);
+
+    // Switch off the messaging on the UI by changing the flag.
+    \Drupal::configFactory()
+      ->getEditable('media.settings')
+      ->set('show_private_file_warning', 0)
+      ->save();
+    $this->drupalGet($manage_field_url);
+    $assert_session->pageTextNotContains($field_warning_message);
+    $this->drupalGet(Url::fromRoute('system.status'));
+    $assert_session->pageTextNotContains($status_report_message);
+  }
+
+  /**
    * Tests view access control on the canonical page.
    */
-  public function testCanonicalMediaAccess() {
+  public function testCanonicalMediaAccess()
+  {
     $media_type = $this->createMediaType('test');
     $assert_session = $this->assertSession();
 
@@ -241,7 +293,8 @@ class MediaAccessTest extends MediaFunctionalTestBase {
   /**
    * Tests unpublished media access.
    */
-  public function testUnpublishedMediaUserAccess() {
+  public function testUnpublishedMediaUserAccess()
+  {
     \Drupal::configFactory()
       ->getEditable('media.settings')
       ->set('standalone_url', TRUE)
@@ -283,7 +336,8 @@ class MediaAccessTest extends MediaFunctionalTestBase {
   /**
    * Tests media access of anonymous user.
    */
-  public function testMediaAnonymousUserAccess() {
+  public function testMediaAnonymousUserAccess()
+  {
     \Drupal::configFactory()
       ->getEditable('media.settings')
       ->set('standalone_url', TRUE)
@@ -322,7 +376,8 @@ class MediaAccessTest extends MediaFunctionalTestBase {
   /**
    * Tests access for embedded medias.
    */
-  public function testReferencedRendering() {
+  public function testReferencedRendering()
+  {
     \Drupal::configFactory()
       ->getEditable('media.settings')
       ->set('standalone_url', TRUE)
@@ -406,5 +461,4 @@ class MediaAccessTest extends MediaFunctionalTestBase {
     $this->assertNoCacheContext('user');
     $assert_session->pageTextNotContains($child_title);
   }
-
 }

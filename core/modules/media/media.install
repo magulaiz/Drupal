@@ -10,6 +10,7 @@ use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Url;
 use Drupal\media\Entity\MediaType;
 use Drupal\media\MediaTypeInterface;
+use Drupal\media\Plugin\media\Source\File;
 use Drupal\media\Plugin\media\Source\OEmbedInterface;
 use Drupal\user\RoleInterface;
 use Drupal\image\Plugin\Field\FieldType\ImageItem;
@@ -18,7 +19,8 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
 /**
  * Implements hook_install().
  */
-function media_install() {
+function media_install()
+{
   $source = \Drupal::service('extension.list.module')->getPath('media') . '/images/icons';
   $destination = \Drupal::config('media.settings')->get('icon_base_uri');
   /** @var \Drupal\Core\File\FileSystemInterface $file_system */
@@ -36,11 +38,9 @@ function media_install() {
     if (!file_exists($destination . DIRECTORY_SEPARATOR . $file->filename)) {
       try {
         $file_system->copy($file->uri, $destination, FileSystemInterface::EXISTS_ERROR);
-      }
-      catch (FileException $e) {
+      } catch (FileException $e) {
         // Ignore and continue.
       }
-
     }
   }
 
@@ -54,7 +54,8 @@ function media_install() {
 /**
  * Implements hook_requirements().
  */
-function media_requirements($phase) {
+function media_requirements($phase)
+{
   $requirements = [];
   if ($phase == 'install') {
     $destination = 'public://media-icons/generic';
@@ -64,8 +65,7 @@ function media_requirements($phase) {
     if (!$is_writable || !$is_directory) {
       if (!$is_directory) {
         $error = t('The directory %directory does not exist.', ['%directory' => $destination]);
-      }
-      else {
+      } else {
         $error = t('The directory %directory is not writable.', ['%directory' => $destination]);
       }
       $description = t('An automated attempt to create this directory failed, possibly due to a permissions problem. To proceed with the installation, either create the directory and modify its permissions manually or ensure that the installer has the permissions to create it automatically. For more information, see INSTALL.txt or the <a href=":handbook_url">online handbook</a>.', [':handbook_url' => 'https://www.drupal.org/server-permissions']);
@@ -75,8 +75,12 @@ function media_requirements($phase) {
         $requirements['media']['severity'] = REQUIREMENT_ERROR;
       }
     }
-  }
-  elseif ($phase === 'runtime') {
+  } elseif ($phase === 'runtime') {
+    /** @var \Drupal\media\MediaTypeInterface[] $media_types */
+    $media_types = \Drupal::entityTypeManager()
+      ->getStorage('media_type')
+      ->loadMultiple();
+
     // Check that oEmbed content is served in an iframe on a different domain,
     // and complain if it isn't.
     $domain = \Drupal::config('media.settings')->get('iframe_domain');
@@ -84,10 +88,6 @@ function media_requirements($phase) {
     if (!\Drupal::service('media.oembed.iframe_url_helper')->isSecure($domain)) {
       // Find all media types which use a source plugin that implements
       // OEmbedInterface.
-      $media_types = \Drupal::entityTypeManager()
-        ->getStorage('media_type')
-        ->loadMultiple();
-
       $oembed_types = array_filter($media_types, function (MediaTypeInterface $media_type) {
         return $media_type->getSource() instanceof OEmbedInterface;
       });
@@ -117,7 +117,8 @@ function media_requirements($phase) {
       if (empty($source_field_definition)) {
         $requirements['media_missing_source_field_' . $type->id()] = [
           'title' => t('Media'),
-          'description' => t('The source field definition for the %type media type is missing.',
+          'description' => t(
+            'The source field definition for the %type media type is missing.',
             [
               '%type' => $type->label(),
             ]
@@ -150,15 +151,18 @@ function media_requirements($phase) {
         $url = Url::fromRoute('entity.entity_view_display.media.default', [
           'media_type' => $type->id(),
         ])->toString();
-        $action_item = new TranslatableMarkup('If you would like to change this, <a href=":display">add an image style to the %field_name field</a>.',
+        $action_item = new TranslatableMarkup(
+          'If you would like to change this, <a href=":display">add an image style to the %field_name field</a>.',
           [
             '%field_name' => $source_field_definition->label(),
             ':display' => $url,
-          ]);
+          ]
+        );
       }
       $requirements['media_default_image_style_' . $type->id()] = [
         'title' => t('Media'),
-        'description' => new TranslatableMarkup('The default display for the %type media type is not currently using an image style on the %field_name field. Not using an image style can lead to much larger file downloads. @action_item',
+        'description' => new TranslatableMarkup(
+          'The default display for the %type media type is not currently using an image style on the %field_name field. Not using an image style can lead to much larger file downloads. @action_item',
           [
             '%field_name' => $source_field_definition->label(),
             '@action_item' => $action_item,
@@ -168,7 +172,28 @@ function media_requirements($phase) {
         'severity' => REQUIREMENT_WARNING,
       ];
     }
-
+    // Show a warning if there are file source fields using the private scheme.
+    if (\Drupal::config('media.settings')->get('show_private_file_warning')) {
+      $types_to_warn = array_filter($media_types, [File::class, 'acceptsFileInSourceField']);
+      $types_to_warn = array_map(function (MediaTypeInterface $type) {
+        return $type->label();
+      }, $types_to_warn);
+      if (!empty($types_to_warn)) {
+        $requirements['media_private_scheme_in_use'] = [
+          'title' => t('Media'),
+          'description' => \Drupal::translation()->formatPlural(
+            count($types_to_warn),
+            'Media type %type uses the private file storage. By default, the media items will be accessible to any users with access to %type media, even if the user does not have access to content that references it. <a href=":doc_url">More information on configuring media access restrictions</a>.',
+            'Media types %types use the private file storage. By default, the media items will be accessible to any users with access to %types media, even if the user does not have access to content that references them. <a href=":doc_url">More information on configuring media access restrictions</a>.',
+            [
+              '%type' => reset($types_to_warn),
+              '%types' => implode(", ", $types_to_warn),
+              ':doc_url' => 'https://www.drupal.org/docs/8/core/modules/media/setting-up-private-access-to-media-items',
+            ]),
+          'severity' => REQUIREMENT_INFO,
+        ];
+      }
+    }
   }
 
   return $requirements;
@@ -177,6 +202,7 @@ function media_requirements($phase) {
 /**
  * Implements hook_update_last_removed().
  */
-function media_update_last_removed() {
+function media_update_last_removed()
+{
   return 8700;
 }
