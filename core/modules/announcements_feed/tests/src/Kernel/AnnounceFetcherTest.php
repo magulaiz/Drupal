@@ -32,9 +32,9 @@ class AnnounceFetcherTest extends AnnounceTestBase {
     $this->setFeedItems([$feed_item]);
     $feeds = $this->fetchFeedItems();
     $this->assertCount(1, $feeds);
-    $this->assertSame('https://www.drupal.org/project/announce', $feeds[0]['url']);
-    $this->assertSame('Drupal security update Test', $feeds[0]['title']);
-    $this->assertSame('^10', $feeds[0]['_drupalorg']['version']);
+    $this->assertSame('https://www.drupal.org/project/announce', $feeds[0]->url);
+    $this->assertSame('Drupal security update Test', $feeds[0]->title);
+    $this->assertSame('^10', $feeds[0]->version);
     $this->assertCount(1, $this->history);
   }
 
@@ -56,11 +56,11 @@ class AnnounceFetcherTest extends AnnounceTestBase {
     $this->setFeedItems([$feed_item_1]);
     $feeds = $this->fetchFeedItems();
     $this->assertCount(1, $feeds);
-    $this->assertSame($feed_item_1['id'], $feeds[0]['id']);
-    $this->assertSame($feed_item_1['content_html'], $feeds[0]['content_html']);
-    $this->assertSame($feed_item_1['_drupalorg']['featured'], $feeds[0]['_drupalorg']['featured']);
-    $this->assertSame($feed_item_1['date_published'], $feeds[0]['date_published']);
-    $this->assertSame($feed_item_1['_drupalorg']['version'], $feeds[0]['_drupalorg']['version']);
+    $this->assertSame($feed_item_1['id'], $feeds[0]->id);
+    $this->assertSame($feed_item_1['content_html'], $feeds[0]->content_html);
+    $this->assertSame($feed_item_1['_drupalorg']['featured'], $feeds[0]->featured);
+    $this->assertSame($feed_item_1['date_published'], $feeds[0]->date_published);
+    $this->assertSame($feed_item_1['_drupalorg']['version'], $feeds[0]->version);
   }
 
   /**
@@ -142,7 +142,7 @@ class AnnounceFetcherTest extends AnnounceTestBase {
   /**
    * Gets the announcements from the 'announce.fetcher' service.
    *
-   * @return array
+   * @return \Drupal\announcements_feed\Announcement[]
    *   The return value of AnnounceFetcher::fetch().
    */
   protected function fetchFeedItems(): array {

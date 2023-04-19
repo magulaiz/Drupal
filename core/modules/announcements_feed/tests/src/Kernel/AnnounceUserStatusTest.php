@@ -51,7 +51,7 @@ class AnnounceUserStatusTest extends AnnounceTestBase {
     $this->assertCount(4, $all_items);
 
     // Checking the 'new' status is enabled.
-    $this->assertSame($all_items[0]['id'], $all_items[0]['new']);
+    $this->assertTrue($all_items[0]->new);
     $this->assertCount(3, $this->history);
 
     $this->setFeedItems($feed_item);
@@ -61,7 +61,7 @@ class AnnounceUserStatusTest extends AnnounceTestBase {
     $this->assertCount(4, $all_items);
 
     // Checking the 'new' status is disabled.
-    $this->assertSame('', $all_items[0]['new']);
+    $this->assertFalse($all_items[0]->new);
     $this->assertCount(5, $this->history);
 
     // Create another user and test again.
@@ -77,7 +77,7 @@ class AnnounceUserStatusTest extends AnnounceTestBase {
     $this->assertCount(4, $all_items);
 
     // Checking the 'new' status is enabled.
-    $this->assertSame($all_items[0]['id'], $all_items[0]['new']);
+    $this->assertTrue($all_items[0]->new);
     $this->assertCount(8, $this->history);
 
     // Check after adding new record.
@@ -85,10 +85,10 @@ class AnnounceUserStatusTest extends AnnounceTestBase {
     $this->setFeedItems($feed_item);
     $all_items = $this->container->get('announcements_feed.user_status')->getAllAnnouncements();
     $this->assertCount(5, $all_items);
-    $this->assertSame(1005, $all_items[0]['id']);
+    $this->assertSame(1005, $all_items[0]->id);
 
     // Checking the 'new' status is enabled.
-    $this->assertSame($all_items[0]['id'], $all_items[0]['new']);
+    $this->assertTrue($all_items[0]->new);
     $this->assertCount(11, $this->history);
   }
 

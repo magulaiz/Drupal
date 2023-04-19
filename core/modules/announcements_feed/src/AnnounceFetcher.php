@@ -72,33 +72,32 @@ class AnnounceFetcher {
   }
 
   /**
-   * Check whether the feed item is relevant to the Drupal version used.
+   * Check whether the version given is relevant to the Drupal version used.
    *
-   * @param array $announcement
-   *   Announcement feed item to check.
+   * @param string $version
+   *   Version to check.
    *
    * @return bool
-   *   Return True if $announcement['version'] matches Drupal version.
+   *   Return True if the version matches Drupal version.
    */
-  protected static function isRelevantItem(array $announcement): bool {
-    return isset($announcement['_drupalorg']['version'])
-      && Semver::satisfies(\Drupal::VERSION, $announcement['_drupalorg']['version']);
+  protected static function isRelevantItem(string $version): bool {
+    return Semver::satisfies(\Drupal::VERSION, $version);
   }
 
   /**
-   * Check whether the link of announcement controlled by D.O.
+   * Check whether a link is controlled by D.O.
    *
-   * @param array $announcement
-   *   Announcement feed item to check.
+   * @param string $url
+   *   URL to check.
    *
    * @return bool
-   *   Return True if $announcement['url'] is controlled by the D.O.
+   *   Return True if the URL is controlled by the D.O.
    */
-  public static function validateUrl(array $announcement): bool {
-    if (!$announcement['url']) {
+  public static function validateUrl(string $url): bool {
+    if (empty($url)) {
       return FALSE;
     }
-    $host = parse_url($announcement['url'], PHP_URL_HOST);
+    $host = parse_url($url, PHP_URL_HOST);
 
     // First character can only be a letter or a digit.
     // @see https://www.rfc-editor.org/rfc/rfc1123#page-13
@@ -118,13 +117,13 @@ class AnnounceFetcher {
    *   - url: URL
    *   - date_modified: Last updated timestamp.
    *   - date_published: Created timestamp.
-   *   - _extra.featured: 1 if featured, 0 if not featured.
-   *   - _extra.version: Target version of Drupal, as a Composer version.
+   *   - _drupalorg.featured: 1 if featured, 0 if not featured.
+   *   - _drupalorg.version: Target version of Drupal, as a Composer version.
    *
    * @param bool $force
    *   (optional) Whether to always fetch new items or not. Defaults to FALSE.
    *
-   * @return array
+   * @return \Drupal\announcements_feed\Announcement[]
    *   An array of announcements from the feed relevant to the Drupal version.
    *   The array is empty if there were no matching announcements. If an error
    *   occurred while fetching/decoding the feed, it is thrown as an exception.
@@ -152,9 +151,10 @@ class AnnounceFetcher {
       // Ensure that announcements reference drupal.org and are applicable to
       // the current Drupal version.
       $announcements = array_filter($announcements, function (array $announcement) {
-        return static::validateUrl($announcement) && static::isRelevantItem($announcement);
+        return static::validateUrl($announcement['url']) && static::isRelevantItem($announcement['_drupalorg']['version']);
       });
 
+      // Save the raw decoded and filtered array to temp store.
       $this->tempStore->setWithExpire('announcements', $announcements,
         $this->config->get('max_age'));
     }
@@ -173,6 +173,20 @@ class AnnounceFetcher {
       }
       return ($a_value < $b_value) ? -1 : 1;
     });
+
+    // Map the multidimensional array into an array of Announcement objects.
+    $announcements = array_map(function ($announcement) {
+      return new Announcement(
+        $announcement['id'],
+        $announcement['title'],
+        $announcement['url'],
+        $announcement['date_modified'],
+        $announcement['date_published'],
+        $announcement['content_html'],
+        $announcement['_drupalorg']['version'],
+        (bool) $announcement['_drupalorg']['featured'],
+      );
+    }, $announcements);
 
     return $announcements;
   }

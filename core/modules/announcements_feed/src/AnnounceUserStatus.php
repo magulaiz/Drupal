@@ -61,7 +61,7 @@ class AnnounceUserStatus {
    * Return an array of announcements with an additional attribute new for the
    * new items in the list.
    *
-   * @return array
+   * @return \Drupal\announcements_feed\Announcement[]
    *   Announcements for the current logged in user.
    */
   public function getAllAnnouncements(): array {
@@ -71,15 +71,13 @@ class AnnounceUserStatus {
     $new_announcements = $this->getNewAnnouncements();
     foreach ($announcements as &$announcement) {
       // Add an attribute 'new' to the announcements to identify new items.
-      $announcement['new'] = in_array($announcement['id'], $new_announcements, TRUE)
-        ? $announcement['id'] : '';
+      $announcement->new = in_array($announcement->id, $new_announcements, TRUE);
     }
     if (!empty($new_announcements)) {
       // Store the ids of announcements for the user to mark it as read items.
       $this->setAnnouncementStatus($this->fetcher->fetchIds());
     }
     return $announcements;
-
   }
 
   /**

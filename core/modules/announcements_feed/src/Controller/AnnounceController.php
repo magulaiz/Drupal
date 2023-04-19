@@ -66,17 +66,17 @@ class AnnounceController extends ControllerBase implements ContainerInjectionInt
 
     $build = [];
     foreach ($announcements as $announcement) {
-      if ($announcement['_drupalorg']['featured']) {
-        $build['#featured'][] = $announcement + [
-          'teaser' => strip_tags($announcement['content_html']),
-          'link' => $announcement['url'],
+      if ($announcement->featured) {
+        $build['#featured'][] = $announcement->normalize() + [
+          'teaser' => strip_tags($announcement->content_html),
+          'link' => $announcement->url,
         ];
         continue;
       }
-      $timestamp = DrupalDateTime::createFromFormat(DATE_ATOM, $announcement['date_published']);
-      $build['#standard'][] = $announcement + [
-        'teaser' => strip_tags($announcement['content_html']),
-        'link' => $announcement['url'],
+      $timestamp = DrupalDateTime::createFromFormat(DATE_ATOM, $announcement->date_published);
+      $build['#standard'][] = $announcement->normalize() + [
+        'teaser' => strip_tags($announcement->content_html),
+        'link' => $announcement->url,
         'timestamp' => $timestamp->getTimestamp(),
       ];
     }
