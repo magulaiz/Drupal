@@ -43,8 +43,8 @@ class AnnounceUserStatusTest extends AnnounceTestBase {
    */
   public function testAllAnnouncementsFirst(): void {
 
-    $feed_item = $this->providerShowAnnouncements();
-    $this->setFeedItems($feed_item);
+    $feed_items = $this->providerShowAnnouncements();
+    $this->setFeedItems($feed_items);
 
     // First time access.
     $all_items = $this->container->get('announcements_feed.user_status')->getAllAnnouncements();
@@ -54,7 +54,7 @@ class AnnounceUserStatusTest extends AnnounceTestBase {
     $this->assertTrue($all_items[0]->new);
     $this->assertCount(3, $this->history);
 
-    $this->setFeedItems($feed_item);
+    $this->setFeedItems($feed_items);
 
     // Second time access.
     $all_items = $this->container->get('announcements_feed.user_status')->getAllAnnouncements();
@@ -70,7 +70,7 @@ class AnnounceUserStatusTest extends AnnounceTestBase {
       'access announcements',
     ];
     $this->setUpCurrentUser(['uid' => 2], $permissions);
-    $this->setFeedItems($feed_item);
+    $this->setFeedItems($feed_items);
 
     // First time access.
     $all_items = $this->container->get('announcements_feed.user_status')->getAllAnnouncements();
@@ -81,11 +81,11 @@ class AnnounceUserStatusTest extends AnnounceTestBase {
     $this->assertCount(8, $this->history);
 
     // Check after adding new record.
-    $feed_item = $this->providerShowUpdatedAnnouncements();
-    $this->setFeedItems($feed_item);
+    $feed_items = $this->providerShowUpdatedAnnouncements();
+    $this->setFeedItems($feed_items);
     $all_items = $this->container->get('announcements_feed.user_status')->getAllAnnouncements();
     $this->assertCount(5, $all_items);
-    $this->assertSame(1005, $all_items[0]->id);
+    $this->assertSame('1005', $all_items[0]->id);
 
     // Checking the 'new' status is enabled.
     $this->assertTrue($all_items[0]->new);
@@ -98,24 +98,24 @@ class AnnounceUserStatusTest extends AnnounceTestBase {
   public function providerShowAnnouncements(): array {
     return [
       [
-        'id' => 1001,
+        'id' => '1001',
         'title' => 'Drupal security update Test',
         'url' => 'https://www.drupal.org/project/announce',
         'content_html' => 'Test teaser 1',
         '_drupalorg' => [
-          'featured' => 1,
+          'featured' => TRUE,
           'version' => '^10',
         ],
         'date_modified' => date('c', 1611041378),
         'date_published' => date('c', 1610958578),
       ],
       [
-        'id' => 1002,
+        'id' => '1002',
         'title' => 'Drupal security update Test',
         'url' => 'https://www.drupal.org/project/announce',
         'content_html' => 'Test teaser 2',
         '_drupalorg' => [
-          'featured' => 1,
+          'featured' => TRUE,
           'version' => '^10',
         ],
         'date_modified' => date('c', 1611041378),
@@ -128,19 +128,19 @@ class AnnounceUserStatusTest extends AnnounceTestBase {
         'url' => 'https://www.drupal.org/project/announce',
         'content_html' => 'Test teaser 3',
         '_drupalorg' => [
-          'featured' => 1,
+          'featured' => TRUE,
           'version' => '^10',
         ],
         'date_modified' => date('c', 1611041378),
         'date_published' => date('c', 1610958578),
       ],
       [
-        'id' => 1004,
+        'id' => '1004',
         'title' => 'Drupal security update Test',
         'url' => 'https://www.drupal.org/project/announce',
         'content_html' => 'Test teaser 4',
         '_drupalorg' => [
-          'featured' => 1,
+          'featured' => TRUE,
           'version' => '^10',
         ],
         'date_modified' => date('c', 1611041378),
@@ -156,36 +156,36 @@ class AnnounceUserStatusTest extends AnnounceTestBase {
     return [
 
       [
-        'id' => 1005,
+        'id' => '1005',
         'title' => 'Drupal security update Test new',
         'url' => 'https://www.drupal.org/project/announce',
         'content_html' => 'Test teaser 1',
         '_drupalorg' => [
-          'featured' => 1,
+          'featured' => TRUE,
           'version' => '^10',
         ],
         'date_modified' => date('c', 1611041378),
         'date_published' => date('c', 1610958578),
       ],
       [
-        'id' => 1001,
+        'id' => '1001',
         'title' => 'Drupal security update Test',
         'url' => 'https://www.drupal.org/project/announce',
         'content_html' => 'Test teaser 1',
         '_drupalorg' => [
-          'featured' => 1,
+          'featured' => TRUE,
           'version' => '^10',
         ],
         'date_modified' => date('c', 1611041378),
         'date_published' => date('c', 1610958578),
       ],
       [
-        'id' => 1002,
+        'id' => '1002',
         'title' => 'Drupal security update Test',
         'url' => 'https://www.drupal.org/project/announce',
         'content_html' => 'Test teaser 2',
         '_drupalorg' => [
-          'featured' => 1,
+          'featured' => TRUE,
           'version' => '^10',
         ],
         'date_modified' => date('c', 1611041378),
@@ -193,24 +193,24 @@ class AnnounceUserStatusTest extends AnnounceTestBase {
       ],
       [
 
-        'id' => 1003,
+        'id' => '1003',
         'title' => 'Drupal security update Test',
         'url' => 'https://www.drupal.org/project/announce',
         'content_html' => 'Test teaser 3',
         '_drupalorg' => [
-          'featured' => 1,
+          'featured' => TRUE,
           'version' => '^10',
         ],
         'date_modified' => date('c', 1611041378),
         'date_published' => date('c', 1610958578),
       ],
       [
-        'id' => 1004,
+        'id' => '1004',
         'title' => 'Drupal security update Test',
         'url' => 'https://www.drupal.org/project/announce',
         'content_html' => 'Test teaser 4',
         '_drupalorg' => [
-          'featured' => 1,
+          'featured' => TRUE,
           'version' => '^10',
         ],
         'date_modified' => date('c', 1611041378),

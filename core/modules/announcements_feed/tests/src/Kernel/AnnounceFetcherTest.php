@@ -43,11 +43,11 @@ class AnnounceFetcherTest extends AnnounceTestBase {
    */
   public function testFeedFields(): void {
     $feed_item_1 = [
-      'id' => 1001,
+      'id' => '1001',
       'content_html' => 'Test teaser 1',
       'url' => 'https://www.drupal.org/project/announce',
       '_drupalorg' => [
-        'featured' => 1,
+        'featured' => TRUE,
         'version' => '^10',
       ],
       'date_modified' => "2021-09-02T15:09:42+00:00",
@@ -70,7 +70,7 @@ class AnnounceFetcherTest extends AnnounceTestBase {
     return [
       '1' => [
         'feed_item' => [
-          'id' => 1001,
+          'id' => '1001',
           'content_html' => 'Test teaser 1',
           '_drupalorg' => [
             'featured' => 1,
@@ -82,7 +82,7 @@ class AnnounceFetcherTest extends AnnounceTestBase {
       ],
       '2' => [
         'feed_item' => [
-          'id' => 1002,
+          'id' => '1002',
           'content_html' => 'Test teaser 2',
           '_drupalorg' => [
             'featured' => 1,
@@ -94,7 +94,7 @@ class AnnounceFetcherTest extends AnnounceTestBase {
       ],
       '3' => [
         'feed_item' => [
-          'id' => 1003,
+          'id' => '1003',
           'content_html' => 'Test teaser 3',
           '_drupalorg' => [
             'featured' => 1,
@@ -106,7 +106,7 @@ class AnnounceFetcherTest extends AnnounceTestBase {
       ],
       '4' => [
         'feed_item' => [
-          'id' => 1004,
+          'id' => '1004',
           'content_html' => 'Test teaser 4',
           '_drupalorg' => [
             'featured' => 1,
