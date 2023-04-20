@@ -38,9 +38,9 @@ page][documentation].
 You can quickly extend Drupal's core feature set by installing any of its
 [thousands of free and open source modules][modules]. With Drupal and its
 module ecosystem, you can often build most or all of what your project needs
-before writing a single line of code.
+without writing a single line of code.
 
-## Changelog
+## Change log
 
 Drupal keeps detailed [change records][changelog]. You can search Drupal's
 changes for a record of every notable breaking change and new feature since
