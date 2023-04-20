@@ -3,11 +3,9 @@
 namespace Drupal\Core\Render;
 
 use Drupal\Core\Cache\CacheBackendInterface;
-use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Extension\ThemeHandlerInterface;
 use Drupal\Core\Plugin\DefaultPluginManager;
 use Drupal\Core\Render\Element\FormElementInterface;
-use Drupal\Core\Theme\ThemeManagerInterface;
 
 /**
  * Provides a plugin manager for element plugins.
