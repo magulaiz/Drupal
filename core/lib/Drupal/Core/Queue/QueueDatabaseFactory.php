@@ -2,6 +2,7 @@
 
 namespace Drupal\Core\Queue;
 
+use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Core\Database\Connection;
 
 /**
@@ -17,13 +18,25 @@ class QueueDatabaseFactory {
   protected $connection;
 
   /**
+   * The time service.
+   */
+  protected readonly TimeInterface $time;
+
+  /**
    * Constructs this factory object.
    *
    * @param \Drupal\Core\Database\Connection $connection
    *   The Connection object containing the key-value tables.
+   * @param \Drupal\Component\Datetime\TimeInterface $time
+   *   The time service.
    */
-  public function __construct(Connection $connection) {
+  public function __construct(Connection $connection, TimeInterface $time = NULL) {
     $this->connection = $connection;
+    if (!$time) {
+      @trigger_error('Calling ' . __METHOD__ . '() without the $time argument is deprecated in drupal:10.1.0 and will be required in drupal:11.0.0. See https://www.drupal.org/node/3161659', E_USER_DEPRECATED);
+      $time = \Drupal::time();
+    }
+    $this->time = $time;
   }
 
   /**
@@ -35,8 +48,8 @@ class QueueDatabaseFactory {
    * @return \Drupal\Core\Queue\DatabaseQueue
    *   A key/value store implementation for the given $collection.
    */
-  public function get($name) {
-    return new DatabaseQueue($name, $this->connection);
+  public function get(string $name) {
+    return new DatabaseQueue($name, $this->connection, $this->time);
   }
 
 }

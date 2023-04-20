@@ -7,6 +7,7 @@
 
 namespace Drupal\Tests\Core\Entity\Sql;
 
+use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Core\Cache\MemoryCache\MemoryCache;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\Entity\EntityFieldManager;
@@ -111,6 +112,13 @@ class SqlContentEntityStorageTest extends UnitTestCase {
   protected $connection;
 
   /**
+   * The time service used in this test.
+   *
+   * @var \Drupal\Component\Datetime\TimeInterface|\PHPUnit\Framework\MockObject\MockObject
+   */
+  protected $time;
+
+  /**
    * {@inheritdoc}
    */
   protected function setUp(): void {
@@ -127,6 +135,7 @@ class SqlContentEntityStorageTest extends UnitTestCase {
     $this->entityTypeManager = $this->createMock(EntityTypeManager::class);
     $this->entityTypeBundleInfo = $this->createMock(EntityTypeBundleInfoInterface::class);
     $this->entityFieldManager = $this->createMock(EntityFieldManager::class);
+    $this->time = $this->createMock(TimeInterface::class);
     $this->moduleHandler = $this->createMock('Drupal\Core\Extension\ModuleHandlerInterface');
     $this->cache = $this->createMock('Drupal\Core\Cache\CacheBackendInterface');
     $this->languageManager = $this->createMock('Drupal\Core\Language\LanguageManagerInterface');
@@ -139,6 +148,7 @@ class SqlContentEntityStorageTest extends UnitTestCase {
 
     $this->container->set('entity_type.manager', $this->entityTypeManager);
     $this->container->set('entity_field.manager', $this->entityFieldManager);
+    $this->container->set('datetime.time', $this->time);
   }
 
   /**
@@ -428,13 +438,13 @@ class SqlContentEntityStorageTest extends UnitTestCase {
       ->willReturn($schema_handler);
 
     $storage = $this->getMockBuilder('Drupal\Core\Entity\Sql\SqlContentEntityStorage')
-      ->setConstructorArgs([$this->entityType, $this->connection, $this->entityFieldManager, $this->cache, $this->languageManager, new MemoryCache(), $this->entityTypeBundleInfo, $this->entityTypeManager])
+      ->setConstructorArgs([$this->entityType, $this->connection, $this->entityFieldManager, $this->cache, $this->languageManager, new MemoryCache(), $this->entityTypeBundleInfo, $this->entityTypeManager, $this->time])
       ->onlyMethods(['getStorageSchema'])
       ->getMock();
 
     $key_value = $this->createMock('Drupal\Core\KeyValueStore\KeyValueStoreInterface');
     $schema_handler = $this->getMockBuilder('Drupal\Core\Entity\Sql\SqlContentEntityStorageSchema')
-      ->setConstructorArgs([$this->entityTypeManager, $this->entityType, $storage, $this->connection, $this->entityFieldManager])
+      ->setConstructorArgs([$this->entityTypeManager, $this->entityType, $storage, $this->connection, $this->entityFieldManager, $this->time])
       ->onlyMethods(['installedStorageSchema', 'createSharedTableSchema'])
       ->getMock();
     $schema_handler
@@ -1176,7 +1186,7 @@ class SqlContentEntityStorageTest extends UnitTestCase {
       ->method('getActiveFieldStorageDefinitions')
       ->willReturn($this->fieldDefinitions);
 
-    $this->entityStorage = new SqlContentEntityStorage($this->entityType, $this->connection, $this->entityFieldManager, $this->cache, $this->languageManager, new MemoryCache(), $this->entityTypeBundleInfo, $this->entityTypeManager);
+    $this->entityStorage = new SqlContentEntityStorage($this->entityType, $this->connection, $this->entityFieldManager, $this->cache, $this->languageManager, new MemoryCache(), $this->entityTypeBundleInfo, $this->entityTypeManager, $this->time);
     $this->entityStorage->setModuleHandler($this->moduleHandler);
   }
 
@@ -1250,7 +1260,7 @@ class SqlContentEntityStorageTest extends UnitTestCase {
       ->willReturn($this->entityType);
 
     $entity_storage = $this->getMockBuilder('Drupal\Core\Entity\Sql\SqlContentEntityStorage')
-      ->setConstructorArgs([$this->entityType, $this->connection, $this->entityFieldManager, $this->cache, $this->languageManager, new MemoryCache(), $this->entityTypeBundleInfo, $this->entityTypeManager])
+      ->setConstructorArgs([$this->entityType, $this->connection, $this->entityFieldManager, $this->cache, $this->languageManager, new MemoryCache(), $this->entityTypeBundleInfo, $this->entityTypeManager, $this->time])
       ->onlyMethods(['getFromStorage', 'invokeStorageLoadHook', 'initTableLayout'])
       ->getMock();
     $entity_storage->method('invokeStorageLoadHook')
@@ -1310,7 +1320,7 @@ class SqlContentEntityStorageTest extends UnitTestCase {
       ->willReturn($this->entityType);
 
     $entity_storage = $this->getMockBuilder('Drupal\Core\Entity\Sql\SqlContentEntityStorage')
-      ->setConstructorArgs([$this->entityType, $this->connection, $this->entityFieldManager, $this->cache, $this->languageManager, new MemoryCache(), $this->entityTypeBundleInfo, $this->entityTypeManager])
+      ->setConstructorArgs([$this->entityType, $this->connection, $this->entityFieldManager, $this->cache, $this->languageManager, new MemoryCache(), $this->entityTypeBundleInfo, $this->entityTypeManager, $this->time])
       ->onlyMethods(['getFromStorage', 'invokeStorageLoadHook', 'initTableLayout'])
       ->getMock();
     $entity_storage->method('invokeStorageLoadHook')
@@ -1371,7 +1381,7 @@ class SqlContentEntityStorageTest extends UnitTestCase {
       ->method('getActiveFieldStorageDefinitions')
       ->willReturn($this->fieldDefinitions);
 
-    $this->entityStorage = new SqlContentEntityStorage($this->entityType, $database, $this->entityFieldManager, $this->cache, $this->languageManager, new MemoryCache(), $this->entityTypeBundleInfo, $this->entityTypeManager);
+    $this->entityStorage = new SqlContentEntityStorage($this->entityType, $database, $this->entityFieldManager, $this->cache, $this->languageManager, new MemoryCache(), $this->entityTypeBundleInfo, $this->entityTypeManager, $this->time);
 
     $result = $this->entityStorage->hasData();
 
@@ -1457,6 +1467,28 @@ class SqlContentEntityStorageTest extends UnitTestCase {
       ]);
 
     $this->container->set('module_handler', $this->moduleHandler);
+  }
+
+  /**
+   * Tests deprecation of constructing a SqlContentEntityStorage object
+   * without the renderer argument.
+   *
+   * @covers ::__construct
+   * @group legacy
+   */
+  public function testSqlContentEntityStorageConstructorDeprecation(): void {
+    $this->setUpEntityStorage();
+    $this->expectDeprecation('Calling Drupal\Core\Entity\Sql\SqlContentEntityStorage::__construct() without the $time argument is deprecated in drupal:10.1.0 and will be required in drupal:11.0.0. See https://www.drupal.org/node/3161659');
+    new SqlContentEntityStorage(
+      $this->entityType,
+      $this->connection,
+      $this->entityFieldManager,
+      $this->cache,
+      $this->languageManager,
+      new MemoryCache(),
+      $this->entityTypeBundleInfo,
+      $this->entityTypeManager
+    );
   }
 
 }

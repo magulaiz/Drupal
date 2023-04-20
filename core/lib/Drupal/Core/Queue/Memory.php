@@ -2,6 +2,8 @@
 
 namespace Drupal\Core\Queue;
 
+use Drupal\Component\Datetime\TimeInterface;
+
 /**
  * Static queue implementation.
  *
@@ -28,14 +30,28 @@ class Memory implements QueueInterface {
   protected $idSequence;
 
   /**
+   * The time service.
+   */
+  protected readonly TimeInterface $time;
+
+  /**
    * Constructs a Memory object.
    *
-   * @param string $name
-   *   An arbitrary string. The name of the queue to work with.
+   * @param \Drupal\Component\Datetime\TimeInterface $time
+   *   The time service.
    */
-  public function __construct($name) {
+  public function __construct($time = NULL) {
     $this->queue = [];
     $this->idSequence = 0;
+    if (is_string($time)) {
+      @trigger_error('Calling ' . __METHOD__ . '() with the $name argument instead of $time argument is deprecated in drupal:10.1.0 and will be required in drupal:11.0.0. See https://www.drupal.org/node/3161659', E_USER_DEPRECATED);
+      $time = \Drupal::time();
+    }
+    elseif (!$time) {
+      @trigger_error('Calling ' . __METHOD__ . '() without the $time argument is deprecated in drupal:10.1.0 and will be required in drupal:11.0.0. See https://www.drupal.org/node/3161659', E_USER_DEPRECATED);
+      $time = \Drupal::time();
+    }
+    $this->time = $time;
   }
 
   /**
@@ -45,7 +61,7 @@ class Memory implements QueueInterface {
     $item = new \stdClass();
     $item->item_id = $this->idSequence++;
     $item->data = $data;
-    $item->created = \Drupal::time()->getCurrentTime();
+    $item->created = $this->time->getCurrentTime();
     $item->expire = 0;
     $this->queue[$item->item_id] = $item;
     return $item->item_id;
@@ -64,7 +80,7 @@ class Memory implements QueueInterface {
   public function claimItem($lease_time = 30) {
     foreach ($this->queue as $key => $item) {
       if ($item->expire == 0) {
-        $item->expire = \Drupal::time()->getCurrentTime() + $lease_time;
+        $item->expire = $this->time->getCurrentTime() + $lease_time;
         $this->queue[$key] = $item;
         return $item;
       }

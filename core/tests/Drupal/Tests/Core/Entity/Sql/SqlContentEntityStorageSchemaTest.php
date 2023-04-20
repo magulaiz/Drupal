@@ -2,6 +2,9 @@
 
 namespace Drupal\Tests\Core\Entity\Sql;
 
+use Drupal\Component\Datetime\TimeInterface;
+use Drupal\Core\Database\Connection;
+use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\Entity\ContentEntityType;
 use Drupal\Core\Entity\ContentEntityTypeInterface;
 use Drupal\Core\Entity\EntityFieldManager;
@@ -74,6 +77,20 @@ class SqlContentEntityStorageSchemaTest extends UnitTestCase {
   protected $storageSchema;
 
   /**
+   * The dependency injection container.
+   *
+   * @var \Symfony\Component\DependencyInjection\ContainerBuilder
+   */
+  protected $container;
+
+  /**
+   * The time service used in this test.
+   *
+   * @var \Drupal\Component\Datetime\TimeInterface|\PHPUnit\Framework\MockObject\MockObject
+   */
+  protected $time;
+
+  /**
    * {@inheritdoc}
    */
   protected function setUp(): void {
@@ -85,6 +102,7 @@ class SqlContentEntityStorageSchemaTest extends UnitTestCase {
     $this->storage = $this->getMockBuilder('Drupal\Core\Entity\Sql\SqlContentEntityStorage')
       ->disableOriginalConstructor()
       ->getMock();
+    $this->time = $this->createMock(TimeInterface::class);
 
     $this->storage->expects($this->any())
       ->method('getBaseTable')
@@ -99,6 +117,11 @@ class SqlContentEntityStorageSchemaTest extends UnitTestCase {
         ],
       ],
     ]);
+
+    $this->container = new ContainerBuilder();
+    \Drupal::setContainer($this->container);
+
+    $this->container->set('datetime.time', $this->time);
   }
 
   /**
@@ -1222,7 +1245,7 @@ class SqlContentEntityStorageSchemaTest extends UnitTestCase {
       ->willReturn($this->storageDefinitions);
 
     $this->storageSchema = $this->getMockBuilder('Drupal\Core\Entity\Sql\SqlContentEntityStorageSchema')
-      ->setConstructorArgs([$this->entityTypeManager, $this->entityType, $this->storage, $connection, $this->entityFieldManager, $this->entityLastInstalledSchemaRepository])
+      ->setConstructorArgs([$this->entityTypeManager, $this->entityType, $this->storage, $connection, $this->entityFieldManager, $this->time])
       ->onlyMethods(['installedStorageSchema', 'hasSharedTableStructureChange'])
       ->getMock();
 
@@ -1419,7 +1442,7 @@ class SqlContentEntityStorageSchemaTest extends UnitTestCase {
       ->willReturn($this->storageDefinitions);
 
     $this->storageSchema = $this->getMockBuilder('Drupal\Core\Entity\Sql\SqlContentEntityStorageSchema')
-      ->setConstructorArgs([$this->entityTypeManager, $this->entityType, $this->storage, $connection, $this->entityFieldManager, $this->entityLastInstalledSchemaRepository])
+      ->setConstructorArgs([$this->entityTypeManager, $this->entityType, $this->storage, $connection, $this->entityFieldManager, $this->time])
       ->onlyMethods(['installedStorageSchema', 'loadEntitySchemaData', 'hasSharedTableNameChanges', 'isTableEmpty', 'getTableMapping'])
       ->getMock();
     $this->storageSchema
@@ -1678,6 +1701,24 @@ class SqlContentEntityStorageSchemaTest extends UnitTestCase {
       ],
     ];
     return $cases;
+  }
+
+  /**
+   * Tests deprecation of constructing a SqlContentEntityStorageSchema object
+   * without the renderer argument.
+   *
+   * @covers ::__construct
+   * @group legacy
+   */
+  public function testSqlContentEntityStorageSchemaConstructorDeprecation(): void {
+    $this->expectDeprecation('Calling Drupal\Core\Entity\Sql\SqlContentEntityStorageSchema::__construct() without the $time argument is deprecated in drupal:10.1.0 and will be required in drupal:11.0.0. See https://www.drupal.org/node/3161659');
+    new SqlContentEntityStorageSchema(
+      $this->entityTypeManager,
+      $this->prophesize(ContentEntityTypeInterface::class)->reveal(),
+      $this->storage,
+      $this->prophesize(Connection::class)->reveal(),
+      $this->entityFieldManager
+    );
   }
 
 }

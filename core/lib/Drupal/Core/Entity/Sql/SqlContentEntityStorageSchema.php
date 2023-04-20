@@ -2,6 +2,7 @@
 
 namespace Drupal\Core\Entity\Sql;
 
+use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Core\Database\Connection;
 use Drupal\Core\DependencyInjection\DependencySerializationTrait;
 use Drupal\Core\Entity\ContentEntityTypeInterface;
@@ -104,6 +105,11 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
   protected $deletedFieldsRepository;
 
   /**
+   * The time service.
+   */
+  protected readonly TimeInterface $time;
+
+  /**
    * Constructs a SqlContentEntityStorageSchema.
    *
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
@@ -116,8 +122,10 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
    *   The database connection to be used.
    * @param \Drupal\Core\Entity\EntityFieldManagerInterface $entity_field_manager
    *   The entity field manager.
+   * @param \Drupal\Component\Datetime\TimeInterface $time
+   *   The time service.
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager, ContentEntityTypeInterface $entity_type, SqlContentEntityStorage $storage, Connection $database, EntityFieldManagerInterface $entity_field_manager) {
+  public function __construct(EntityTypeManagerInterface $entity_type_manager, ContentEntityTypeInterface $entity_type, SqlContentEntityStorage $storage, Connection $database, EntityFieldManagerInterface $entity_field_manager, TimeInterface $time = NULL) {
     $this->entityTypeManager = $entity_type_manager;
     $this->storage = clone $storage;
     $this->database = $database;
@@ -125,6 +133,11 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
 
     $this->entityType = $entity_type_manager->getActiveDefinition($entity_type->id());
     $this->fieldStorageDefinitions = $entity_field_manager->getActiveFieldStorageDefinitions($entity_type->id());
+    if (!$time) {
+      @trigger_error('Calling ' . __METHOD__ . '() without the $time argument is deprecated in drupal:10.1.0 and will be required in drupal:11.0.0. See https://www.drupal.org/node/3161659', E_USER_DEPRECATED);
+      $time = \Drupal::time();
+    }
+    $this->time = $time;
   }
 
   /**
@@ -450,15 +463,16 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
    * {@inheritdoc}
    */
   protected function preUpdateEntityTypeSchema(EntityTypeInterface $entity_type, EntityTypeInterface $original, array $field_storage_definitions, array $original_field_storage_definitions, array &$sandbox = NULL) {
-    $temporary_prefix = static::getTemporaryTableMappingPrefix($entity_type, $field_storage_definitions);
+    $time = $this->time->getRequestTime();
+    $temporary_prefix = static::getTemporaryTableMappingPrefix($entity_type, $field_storage_definitions, $time, 'tmp_');
     $sandbox['temporary_table_mapping'] = $this->storage->getCustomTableMapping($entity_type, $field_storage_definitions, $temporary_prefix);
     $sandbox['new_table_mapping'] = $this->storage->getCustomTableMapping($entity_type, $field_storage_definitions);
     $sandbox['original_table_mapping'] = $this->storage->getCustomTableMapping($original, $original_field_storage_definitions);
 
-    $backup_prefix = static::getTemporaryTableMappingPrefix($original, $original_field_storage_definitions, 'old_');
+    $backup_prefix = static::getTemporaryTableMappingPrefix($original, $original_field_storage_definitions, $time, 'old_');
     $sandbox['backup_table_mapping'] = $this->storage->getCustomTableMapping($original, $original_field_storage_definitions, $backup_prefix);
     $sandbox['backup_prefix_key'] = substr($backup_prefix, 4);
-    $sandbox['backup_request_time'] = \Drupal::time()->getRequestTime();
+    $sandbox['backup_request_time'] = $time;
 
     // Create temporary tables based on the new entity type and field storage
     // definitions.
@@ -666,6 +680,8 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
    *   An entity type definition.
    * @param \Drupal\Core\Field\FieldStorageDefinitionInterface[] $field_storage_definitions
    *   An array of field storage definitions.
+   * @param int|string|null $time
+   *   The request time as last part of prefix. Defaults to NULL.
    * @param string $first_prefix_part
    *   (optional) The first part of the prefix. Defaults to 'tmp_'.
    *
@@ -674,14 +690,20 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
    *
    * @internal
    */
-  public static function getTemporaryTableMappingPrefix(EntityTypeInterface $entity_type, array $field_storage_definitions, $first_prefix_part = 'tmp_') {
+  public static function getTemporaryTableMappingPrefix(EntityTypeInterface $entity_type, array $field_storage_definitions, int|string|null $time = NULL, string $first_prefix_part = 'tmp_'): string {
     // Construct a unique prefix based on the contents of the entity type and
     // field storage definitions.
     $prefix_parts[] = spl_object_hash($entity_type);
     foreach ($field_storage_definitions as $storage_definition) {
       $prefix_parts[] = spl_object_hash($storage_definition);
     }
-    $prefix_parts[] = \Drupal::time()->getRequestTime();
+    if (is_string($time) || $time === NULL) {
+      // Old parameter sequence.
+      @trigger_error('Calling ' . __METHOD__ . '() without the $time argument is deprecated in drupal:10.1.0 and will be required in drupal:11.0.0. See https://www.drupal.org/node/3161659', E_USER_DEPRECATED);
+      $first_prefix_part = $time;
+      $time = \Drupal::time()->getRequestTime();
+    }
+    $prefix_parts[] = $time;
     $hash = hash('sha256', implode('', $prefix_parts));
 
     return $first_prefix_part . substr($hash, 0, 6);
