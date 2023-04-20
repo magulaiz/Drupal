@@ -454,7 +454,15 @@ class ViewsConfigUpdater implements ContainerInjectionInterface {
       && $handler['plugin_id'] === 'field'
       && in_array($handler['type'], $allowed_types)
       && !isset($handler['settings']['image_loading']['preload'])) {
-      $handler['settings']['image_loading'] = ['preload' => FALSE] + $handler['settings']['image_loading'];
+      $image_loading = $handler['settings']['image_loading'] ?? [];
+      // In the context of #3192234, we updated the image loading config for the
+      // "responsive_image" formatter, but forgot to do the same for "image" and
+      // "media_thumbnail" formatters.
+      // @see processResponsiveImageLazyLoadFieldHandler()
+      if (!$image_loading) {
+        $image_loading = ['attribute' => 'eager'];
+      }
+      $handler['settings']['image_loading'] = ['preload' => FALSE] + $image_loading;
       $changed = TRUE;
     }
 
