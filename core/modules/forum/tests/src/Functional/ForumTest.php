@@ -319,7 +319,7 @@ class ForumTest extends BrowserTestBase {
 
     // Edit forum taxonomy.
     // Restoration of the settings fails and causes subsequent tests to fail.
-    $this->editForumVocabulary();
+    $name = $this->editForumVocabulary();
     // Create forum container.
     $this->forumContainer = $this->createForum('container');
     // Verify "edit container" link exists and functions correctly.
@@ -330,7 +330,7 @@ class ForumTest extends BrowserTestBase {
     $this->assertSession()->linkExists('Add forum');
     $this->assertSession()->linkExists('Add container');
     $this->clickLink('edit container');
-    $this->assertSession()->pageTextContains('Edit forum container');
+    $this->assertSession()->pageTextContains('Edit ' . $name . 'container');
     // Create forum inside the forum container.
     $this->forum = $this->createForum('forum', $this->forumContainer['tid']);
     // Verify the "edit forum" link exists and functions correctly.
@@ -416,6 +416,7 @@ class ForumTest extends BrowserTestBase {
     // Reload vocabulary to make sure changes are saved.
     $current_vocabulary = Vocabulary::load($vid);
     $this->assertEquals($original_vocabulary->label(), $current_vocabulary->label(), 'The original vocabulary settings were restored');
+    return $edit['name'];
   }
 
   /**
