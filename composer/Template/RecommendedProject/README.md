@@ -1,6 +1,6 @@
 <img alt="Drupal Logo" src="https://www.drupal.org/files/Wordmark_blue_RGB.png" height="60px">
 
-# Recommended method to download Drupal, when starting a new project
+# Recommended method to download Drupal when starting a new project
 
 If you want to start a new Drupal project, this is the recommended starting
 point.
