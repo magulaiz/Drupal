@@ -453,8 +453,8 @@ class ViewsConfigUpdater implements ContainerInjectionInterface {
       && isset($handler['plugin_id'], $handler['type'])
       && $handler['plugin_id'] === 'field'
       && in_array($handler['type'], $allowed_types)
-      && !isset($handler['settings']['image_preload'])) {
-      $handler['settings']['image_preload'] = FALSE;
+      && !isset($handler['settings']['image_loading']['preload'])) {
+      $handler['settings']['image_loading'] = ['preload' => FALSE] + $handler['settings']['image_loading'];
       $changed = TRUE;
     }
 

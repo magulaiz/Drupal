@@ -481,8 +481,8 @@ class ResponsiveImageFieldDisplayTest extends ImageFieldTestBase {
       'settings' => [
         'image_link' => '',
         'responsive_image_style' => 'style_one',
-        'image_preload' => $preload,
         'image_loading' => [
+          'preload' => $preload,
           // Test the image loading default option can be overridden.
           'attribute' => 'eager',
         ],
@@ -502,8 +502,9 @@ class ResponsiveImageFieldDisplayTest extends ImageFieldTestBase {
     $image_uri = File::load($node->{$field_name}->target_id)->getFileUri();
     $medium_transform_url = $this->fileUrlGenerator->transformRelative($medium_style->buildUrl($image_uri));
     $large_transform_url = $this->fileUrlGenerator->transformRelative($large_style->buildUrl($image_uri));
+    $loading = $preload ? '' : 'loading="eager" ';
     $srcset = $medium_transform_url . ' 1x, ' . $large_transform_url . ' 1.5x, ' . $large_transform_url . ' 2x';
-    $this->assertSession()->responseMatches('/<img loading="eager" srcset="' . \preg_quote($srcset, '/') . '" width="220" height="220" src="' . \preg_quote($large_transform_url, '/') . '" alt="\w+" \/>/');
+    $this->assertSession()->responseMatches('/<img '. $loading . 'srcset="' . \preg_quote($srcset, '/') . '" width="220" height="220" src="' . \preg_quote($large_transform_url, '/') . '" alt="\w+" \/>/');
     // Check preload head link tag.
     $this->assertPageHead('link', [
       'rel' => 'preload',
@@ -521,7 +522,7 @@ class ResponsiveImageFieldDisplayTest extends ImageFieldTestBase {
 
     // Assert the picture tag has source tags that include dimensions.
     $this->drupalGet('node/' . $nid);
-    $this->assertSession()->responseMatches('/<picture>\s+<source srcset="' . \preg_quote($large_transform_url, '/') . ' 1x" media="\(min-width: 851px\)" type="image\/png" width="480" height="480"\/>\s+<source srcset="' . \preg_quote($medium_transform_url, '/') . ' 1x, ' . \preg_quote($large_transform_url, '/') . ' 1.5x, ' . \preg_quote($large_transform_url, '/') . ' 2x" type="image\/png" width="220" height="220"\/>\s+<img loading="eager" src="' . \preg_quote($large_transform_url, '/') . '" alt="\w+" \/>\s+<\/picture>/');
+    $this->assertSession()->responseMatches('/<picture>\s+<source srcset="' . \preg_quote($large_transform_url, '/') . ' 1x" media="\(min-width: 851px\)" type="image\/png" width="480" height="480"\/>\s+<source srcset="' . \preg_quote($medium_transform_url, '/') . ' 1x, ' . \preg_quote($large_transform_url, '/') . ' 1.5x, ' . \preg_quote($large_transform_url, '/') . ' 2x" type="image\/png" width="220" height="220"\/>\s+<img ' . $loading . 'src="' . \preg_quote($large_transform_url, '/') . '" alt="\w+" \/>\s+<\/picture>/');
     // Check preload head link tag.
     $this->assertPageHead('link', [
       'rel' => 'preload',

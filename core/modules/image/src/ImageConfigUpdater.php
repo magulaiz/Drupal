@@ -29,9 +29,9 @@ final class ImageConfigUpdater {
     foreach ($view_display->getComponents() as $field => $component) {
       if (isset($component['type'])
         && ($component['type'] === 'image')
-        && !array_key_exists('image_preload', $component['settings'])
+        && !array_key_exists('preload', $component['settings']['image_loading'])
       ) {
-        $component['settings']['image_preload'] = FALSE;
+        $component['settings']['image_loading'] = ['preload' => FALSE] + $component['settings']['image_loading'];
         $view_display->setComponent($field, $component);
         $changed = TRUE;
       }

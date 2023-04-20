@@ -30,12 +30,12 @@ class ImagePreloadUpdateTest extends UpdatePathTestBase {
     /** @var \Drupal\Core\Entity\Display\EntityViewDisplayInterface $view_display */
     $view_display = $storage->load('node.article.default');
     $component = $view_display->getComponent('field_image');
-    $this->assertArrayNotHasKey('image_preload', $component['settings']);
+    $this->assertArrayNotHasKey('preload', $component['settings']['image_loading']);
     $this->runUpdates();
     $view_display = $storage->load('node.article.default');
     $component = $view_display->getComponent('field_image');
-    $this->assertArrayHasKey('image_preload', $component['settings']);
-    $this->assertEquals(FALSE, $component['settings']['image_preload']);
+    $this->assertArrayHasKey('preload', $component['settings']['image_loading']);
+    $this->assertEquals(FALSE, $component['settings']['image_loading']['preload']);
   }
 
 }

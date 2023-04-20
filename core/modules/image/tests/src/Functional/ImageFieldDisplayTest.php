@@ -543,8 +543,10 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
       'settings' => [
         'image_link' => '',
         'image_style' => '',
-        'image_preload' => $preload,
-        'image_loading' => ['attribute' => 'lazy'],
+        'image_loading' => [
+          'preload' => $preload,
+          'attribute' => 'lazy',
+        ],
       ],
     ];
     $display = \Drupal::service('entity_display.repository')

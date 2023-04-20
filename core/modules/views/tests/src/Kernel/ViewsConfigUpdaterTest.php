@@ -100,7 +100,7 @@ class ViewsConfigUpdaterTest extends ViewsKernelTestBase {
     $this->assertTrue($needs_update);
 
     $default_display = $test_view->getDisplay('default');
-    self::assertEquals(FALSE, $default_display['display_options']['fields']['bar']['settings']['image_preload']);
+    self::assertEquals(FALSE, $default_display['display_options']['fields']['bar']['settings']['image_loading']['preload']);
   }
 
   /**
@@ -130,7 +130,7 @@ class ViewsConfigUpdaterTest extends ViewsKernelTestBase {
     $this->assertTrue($needs_update);
 
     $default_display = $test_view->getDisplay('default');
-    self::assertEquals(FALSE, $default_display['display_options']['fields']['bar']['settings']['image_preload']);
+    self::assertEquals(FALSE, $default_display['display_options']['fields']['bar']['settings']['image_loading']['preload']);
   }
 
   /**

@@ -104,8 +104,8 @@ class ImageFormatter extends ImageFormatterBase {
     return [
       'image_style' => '',
       'image_link' => '',
-      'image_preload' => FALSE,
       'image_loading' => [
+        'preload' => FALSE,
         'attribute' => 'lazy',
       ],
     ] + parent::defaultSettings();
@@ -143,20 +143,36 @@ class ImageFormatter extends ImageFormatterBase {
       '#empty_option' => $this->t('Nothing'),
       '#options' => $link_types,
     ];
-    $element['image_preload'] = [
-      '#type' => 'checkbox',
-      '#title' => $this->t('Preload'),
-      '#weight' => 9,
-      '#default_value' => $this->getSetting('image_preload') ?? FALSE,
-      '#description' => $this->t("Preload to optimize the loading of late-discovered resources. Normally large or hero images below the fold. By preloading a resource, you tell the browser to fetch it sooner than the browser would otherwise discover it before lazy loader kicks in. The browser caches preloaded resources so they are available immediately when needed. Nothing is loaded or executed at preloading stage. <br>Just a friendly heads up: do not overuse this option, because not everything are critical, also image loading attributes will be ignored."),
-    ];
 
     $image_loading = $this->getSetting('image_loading');
     $element['image_loading'] = [
       '#type' => 'details',
       '#title' => $this->t('Image loading'),
       '#weight' => 10,
-      '#description' => $this->t('Lazy render images with native image loading attribute (<em>loading="lazy"</em>). This improves performance by allowing browsers to lazily load images.'),
+      '#description' => $this->t('Render images with page preload link or image loading attribute.'),
+    ];
+    $element['image_loading']['preload'] = [
+      '#type' => 'checkbox',
+      '#title' => $this->t('Preload'),
+      '#default_value' => $image_loading['preload'] ?? FALSE,
+      '#description' => $this->t('Preload to optimize the loading of late-discovered resources. Normally large or hero images below the fold. <a href=":link_preload">Learn more about preload</a> and see <a href=":link_examples">examples for images</a>', [
+        ':link_preload' => 'https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/rel/preload',
+        ':link_examples' => 'https://html.spec.whatwg.org/multipage/semantics.html#attr-link-imagesrcset',
+      ]),
+    ];
+    $element['image_loading']['attribute_pre_description'] = [
+      '#type' => 'container',
+      'description' => [
+        '#type' => 'html_tag',
+        '#tag' => 'div',
+        '#value' => $this->t('Lazy render images with native image loading attribute (<em>loading="lazy"</em>). This improves performance by allowing browsers to lazily load images.'),
+        '#attributes' => ['class' => ['form-item__description']],
+      ],
+      '#states' => [
+        'visible' => [
+          ':input[name*="preload"]' => ['checked' => FALSE],
+        ],
+      ],
     ];
     $loading_attribute_options = [
       'lazy' => $this->t('Lazy (<em>loading="lazy"</em>)'),
@@ -170,6 +186,11 @@ class ImageFormatter extends ImageFormatterBase {
       '#description' => $this->t('Select the loading attribute for images. <a href=":link">Learn more about the loading attribute for images.</a>', [
         ':link' => 'https://html.spec.whatwg.org/multipage/urls-and-fetching.html#lazy-loading-attributes',
       ]),
+      '#states' => [
+        'visible' => [
+          ':input[name*="preload"]' => ['checked' => FALSE],
+        ],
+      ],
     ];
     $element['image_loading']['attribute']['lazy']['#description'] = $this->t('Delays loading the image until that section of the page is visible in the browser. When in doubt, lazy loading is recommended.');
     $element['image_loading']['attribute']['eager']['#description'] = $this->t('Force browsers to download an image as soon as possible. This is the browser default for legacy reasons. Only use this option when the image is always expected to render.');
@@ -206,14 +227,9 @@ class ImageFormatter extends ImageFormatterBase {
       $summary[] = $link_types[$image_link_setting];
     }
 
-    $image_preload = $this->getSetting('image_preload');
-    $summary[] = $this->t('Preload: @preload', [
-      '@preload' => $image_preload ? $this->t('yes') : $this->t('no'),
-    ]);
-
     $image_loading = $this->getSetting('image_loading');
     $summary[] = $this->t('Image loading: @attribute', [
-      '@attribute' => $image_loading['attribute'],
+      '@attribute' => $image_loading['preload'] ? $this->t('preload') : $image_loading['attribute'],
     ]);
 
     return array_merge($summary, parent::settingsSummary());
@@ -267,7 +283,9 @@ class ImageFormatter extends ImageFormatterBase {
       unset($item->_attributes);
 
       $image_loading_settings = $this->getSetting('image_loading');
-      $item_attributes['loading'] = $image_loading_settings['attribute'];
+      if (!$image_loading_settings['preload']) {
+        $item_attributes['loading'] = $image_loading_settings['attribute'];
+      }
 
       $elements[$delta] = [
         '#theme' => 'image_formatter',
@@ -275,7 +293,7 @@ class ImageFormatter extends ImageFormatterBase {
         '#item_attributes' => $item_attributes,
         '#image_style' => $image_style_setting,
         '#url' => $url,
-        '#image_preload' => (bool) $this->getSetting('image_preload'),
+        '#image_preload' => (bool) $image_loading_settings['preload'],
         '#cache' => [
           'tags' => $cache_tags,
         ],

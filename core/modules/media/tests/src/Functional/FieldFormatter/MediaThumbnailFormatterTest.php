@@ -139,8 +139,10 @@ class MediaThumbnailFormatterTest extends MediaFunctionalTestBase {
         'settings' => [
           'image_link' => $type,
           'image_style' => '',
-          'image_loading' => ['attribute' => 'eager'],
-          'image_preload' => $preload,
+          'image_loading' => [
+            'preload' => $preload,
+            'attribute' => 'eager',
+          ],
         ],
       ])
       ->save();

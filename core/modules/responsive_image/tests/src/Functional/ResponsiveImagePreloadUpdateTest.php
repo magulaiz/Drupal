@@ -33,13 +33,13 @@ class ResponsiveImagePreloadUpdateTest extends UpdatePathTestBase {
    */
   public function testUpdate(): void {
     $data = EntityViewDisplay::load('node.article.default')->toArray();
-    $this->assertArrayNotHasKey('image_preload', $data['content']['field_image']['settings']);
+    $this->assertArrayNotHasKey('preload', $data['content']['field_image']['settings']['image_loading']);
 
     $this->runUpdates();
 
     $data = EntityViewDisplay::load('node.article.default')->toArray();
-    $this->assertArrayHasKey('image_preload', $data['content']['field_image']['settings']);
-    $this->assertEquals(FALSE, $data['content']['field_image']['settings']['image_preload']);
+    $this->assertArrayHasKey('preload', $data['content']['field_image']['settings']['image_loading']);
+    $this->assertEquals(FALSE, $data['content']['field_image']['settings']['image_loading']['preload']);
   }
 
 }

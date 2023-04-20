@@ -150,8 +150,8 @@ class MigrateFieldFormatterSettingsTest extends MigrateDrupal6TestBase {
     $expected['settings'] = [
       'image_link' => '',
       'image_style' => '',
-      'image_preload' => FALSE,
       'image_loading' => [
+        'preload' => FALSE,
         'attribute' => 'lazy',
       ],
     ];
