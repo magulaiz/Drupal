@@ -100,6 +100,16 @@
     width: 15rem;
   }
 }
+/* .toolbar-loading is required by Toolbar JavaScript to pre-render markup
+ * style to avoid extra reflow & flicker. */
+@media (min-width: 61em) {
+  .toolbar-loading.toolbar-horizontal .toolbar .toolbar-bar .toolbar-tab:last-child .toolbar-tray {
+    position: relative;
+    z-index: -999;
+    display: block;
+    visibility: hidden;
+    width: 1px;
+}
 
 /* Position the admin toolbar fixed when the configured standard breakpoint is
  * active. */
