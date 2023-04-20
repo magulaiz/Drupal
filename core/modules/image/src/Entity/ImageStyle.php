@@ -205,10 +205,10 @@ class ImageStyle extends ConfigEntityBase implements ImageStyleInterface, Entity
    * {@inheritdoc}
    */
   public function buildUrl($path, $clean_urls = NULL) {
-    $uri = $this->buildUri($path);
-
     /** @var \Drupal\Core\StreamWrapper\StreamWrapperManagerInterface $stream_wrapper_manager */
     $stream_wrapper_manager = \Drupal::service('stream_wrapper_manager');
+
+    $uri = $stream_wrapper_manager->normalizeUri($this->buildUri($path));
 
     // The token query is added even if the
     // 'image.settings:allow_insecure_derivatives' configuration is TRUE, so
@@ -299,7 +299,7 @@ class ImageStyle extends ConfigEntityBase implements ImageStyleInterface, Entity
     $module_handler->invokeAll('image_style_flush', [$this]);
 
     // Clear caches so that formatters may be added for this style.
-    drupal_theme_rebuild();
+    \Drupal::service('theme.registry')->reset();
 
     Cache::invalidateTags($this->getCacheTagsToInvalidate());
 
