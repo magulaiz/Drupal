@@ -242,6 +242,7 @@ class FieldConfigEditForm extends EntityForm {
     }
 
     if (!$this->entity->isNew()) {
+      $url = new Url('entity.field_config.' . $target_entity_type->id() . '_field_delete_form', $route_parameters);
       if ($this->getRequest()->query->has('destination')) {
         $query = $url->getOption('query');
         $query['destination'] = $this->getRequest()->query->get('destination');
@@ -253,13 +254,16 @@ class FieldConfigEditForm extends EntityForm {
         '#url' => $url,
         '#access' => $this->entity->access('delete'),
         '#attributes' => [
-          'class' => ['button', 'button--danger', 'use-ajax'],
-          'data-dialog-type' => 'modal',
-          'data-dialog-options' => Json::encode([
-            'width' => '700',
-          ]),
+          'class' => ['button', 'button--danger'],
         ],
       ];
+      if ($this->getRequest()->isXmlHttpRequest()) {
+        $actions['delete']['#attributes']['class'][] = 'use-ajax';
+        $actions['delete']['#attributes']['data-dialog-type'] = 'modal';
+        $actions['delete']['#attributes']['data-dialog-options'] = Json::encode([
+          'width' => '700',
+        ]);
+      }
     }
 
     return $actions;
