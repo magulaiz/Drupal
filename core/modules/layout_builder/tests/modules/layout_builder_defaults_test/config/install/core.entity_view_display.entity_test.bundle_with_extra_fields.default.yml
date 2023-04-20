@@ -8,10 +8,12 @@ third_party_settings:
     enabled: true
     allow_custom: false
     sections:
-      -
+      b3529a4a-aeb2-45c2-845b-30af586c3a47:
+        uuid: b3529a4a-aeb2-45c2-845b-30af586c3a47
         layout_id: layout_twocol_section
         layout_settings:
           column_widths: 50-50
+        weight: 0
         components:
           1445597a-c674-431d-ac0a-277d99347a7f:
             uuid: 1445597a-c674-431d-ac0a-277d99347a7f
