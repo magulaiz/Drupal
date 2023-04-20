@@ -1,18 +1,14 @@
 $schema: https://git.drupalcode.org/project/sdc/-/raw/1.x/src/metadata.schema.json
-machineName: card
 name: Card
-status: BETA
-schemas:
-  props:
-    type: object
-    required:
-      - label
-    properties:
-      label:
-        type: string
-        title: Title
-        description: The title of the node
-        examples:
-          - A recipe for success!
+description: A card with an image, title, and a link.
+props:
+  type: object
+  properties:
+    label:
+      type: string
+      title: Title
+      description: The title of the node
+      examples:
+        - A recipe for success!
 libraryDependencies:
   - umami/more-link
