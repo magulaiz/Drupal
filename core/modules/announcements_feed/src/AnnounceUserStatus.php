@@ -35,13 +35,16 @@ class AnnounceUserStatus {
    *   Cache invalidator service.
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config
    *   The config factory service.
+   * @param string $feedUrl
+   *   The feed url path.
    */
   public function __construct(
     protected AnnounceFetcher $fetcher,
     protected UserData $userData,
     protected AccountProxy $currentUser,
     protected CacheTagsInvalidator $cacheTagsInvalidator,
-    ConfigFactoryInterface $config
+    ConfigFactoryInterface $config,
+    protected string $feedUrl
   ) {
     $this->config = $config->get('announcements_feed.settings');
   }
@@ -106,7 +109,7 @@ class AnnounceUserStatus {
       $this->currentUser->id(),
       'announcements'
     );
-    return $user_announcements ?? [];
+    return $user_announcements[$this->feedUrl] ?? [];
   }
 
   /**
@@ -116,8 +119,14 @@ class AnnounceUserStatus {
    *  IDs of new announcements to store against the current user.
    */
   protected function setSeenAnnouncementIds(array $new_announcements): void {
+    $user_announcements = $this->userData->get(
+      'announcements_feed',
+      $this->currentUser->id(),
+      'announcements'
+    );
+
     // Merge the new ones with the previous ones.
-    $announcements = array_unique(array_merge($new_announcements, $this->getSeenAnnouncementIds()));
+    $announcements = array_unique(array_merge($new_announcements, $user_announcements[$this->feedUrl] ?? []));
 
     // Per-user limit is usually higher than the announcements feed limit just
     // in case the limit actually changes. We don't want already seen messages
@@ -125,11 +134,14 @@ class AnnounceUserStatus {
     // want the array to grow forever either.
     $announcements = array_slice($announcements, 0, $this->config->get('per_user_limit') ?? 40);
 
+    // Store the announcements per feed URL in case this changes.
+    $user_announcements[$this->feedUrl] = $announcements;
+
     $this->userData->set(
       'announcements_feed',
       $this->currentUser->id(),
       'announcements',
-      $announcements
+      $user_announcements
     );
   }
 
