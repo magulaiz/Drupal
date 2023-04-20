@@ -21,8 +21,7 @@ use Drupal\media\MediaSourceBase;
  *   default_thumbnail_filename = "generic.png"
  * )
  */
-class File extends MediaSourceBase
-{
+class File extends MediaSourceBase {
 
   /**
    * Key for "Name" metadata attribute.
@@ -48,8 +47,7 @@ class File extends MediaSourceBase
   /**
    * {@inheritdoc}
    */
-  public function getMetadataAttributes()
-  {
+  public function getMetadataAttributes() {
     return [
       static::METADATA_ATTRIBUTE_NAME => $this->t('Name'),
       static::METADATA_ATTRIBUTE_MIME => $this->t('MIME type'),
@@ -60,8 +58,7 @@ class File extends MediaSourceBase
   /**
    * {@inheritdoc}
    */
-  public function getMetadata(MediaInterface $media, $attribute_name)
-  {
+  public function getMetadata(MediaInterface $media, $attribute_name) {
     /** @var \Drupal\file\FileInterface $file */
     $file = $media->get($this->configuration['source_field'])->entity;
     // If the source field is not required, it may be empty.
@@ -96,8 +93,7 @@ class File extends MediaSourceBase
    * @return string
    *   File URI of the thumbnail image or NULL if there is no specific icon.
    */
-  protected function getThumbnail(FileInterface $file)
-  {
+  protected function getThumbnail(FileInterface $file) {
     $icon_base = $this->configFactory->get('media.settings')->get('icon_base_uri');
 
     // We try to automatically use the most specific icon present in the
@@ -125,8 +121,7 @@ class File extends MediaSourceBase
   /**
    * {@inheritdoc}
    */
-  public function createSourceField(MediaTypeInterface $type)
-  {
+  public function createSourceField(MediaTypeInterface $type) {
     return parent::createSourceField($type)->set('settings', ['file_extensions' => 'txt doc docx pdf']);
   }
 
@@ -140,8 +135,7 @@ class File extends MediaSourceBase
    *   TRUE if the type uses a source plugin with a file/image as a source
    *   field, FALSE otherwise.
    */
-  public static function acceptsFileInSourceField(MediaTypeInterface $type)
-  {
+  public static function acceptsFileInSourceField(MediaTypeInterface $type) {
     $source_field_definition = $type->getSource()->getSourceFieldDefinition($type);
     $target_type = $source_field_definition->getSetting('target_type');
     if (empty($target_type)) {

@@ -15,8 +15,7 @@ use Drupal\user\RoleInterface;
  *
  * @group media
  */
-class MediaAccessTest extends MediaFunctionalTestBase
-{
+class MediaAccessTest extends MediaFunctionalTestBase {
 
   use AssertPageCacheContextsAndTagsTrait;
 
@@ -37,8 +36,7 @@ class MediaAccessTest extends MediaFunctionalTestBase
   /**
    * {@inheritdoc}
    */
-  protected function setUp(): void
-  {
+  protected function setUp(): void {
     parent::setUp();
     // This is needed to provide the user cache context for a below assertion.
     $this->drupalPlaceBlock('local_tasks_block');
@@ -47,8 +45,7 @@ class MediaAccessTest extends MediaFunctionalTestBase
   /**
    * Tests some access control functionality.
    */
-  public function testMediaAccess()
-  {
+  public function testMediaAccess() {
     $assert_session = $this->assertSession();
     $media_type = $this->createMediaType('test');
 
@@ -202,8 +199,7 @@ class MediaAccessTest extends MediaFunctionalTestBase
   /**
    * Test some access-related warnings.
    */
-  public function testMediaAccessWarnings()
-  {
+  public function testMediaAccessWarnings() {
     $assert_session = $this->assertSession();
 
     // The help text is placed in the help block.
@@ -248,8 +244,7 @@ class MediaAccessTest extends MediaFunctionalTestBase
   /**
    * Tests view access control on the canonical page.
    */
-  public function testCanonicalMediaAccess()
-  {
+  public function testCanonicalMediaAccess() {
     $media_type = $this->createMediaType('test');
     $assert_session = $this->assertSession();
 
@@ -293,8 +288,7 @@ class MediaAccessTest extends MediaFunctionalTestBase
   /**
    * Tests unpublished media access.
    */
-  public function testUnpublishedMediaUserAccess()
-  {
+  public function testUnpublishedMediaUserAccess() {
     \Drupal::configFactory()
       ->getEditable('media.settings')
       ->set('standalone_url', TRUE)
@@ -336,8 +330,7 @@ class MediaAccessTest extends MediaFunctionalTestBase
   /**
    * Tests media access of anonymous user.
    */
-  public function testMediaAnonymousUserAccess()
-  {
+  public function testMediaAnonymousUserAccess() {
     \Drupal::configFactory()
       ->getEditable('media.settings')
       ->set('standalone_url', TRUE)
@@ -376,8 +369,7 @@ class MediaAccessTest extends MediaFunctionalTestBase
   /**
    * Tests access for embedded medias.
    */
-  public function testReferencedRendering()
-  {
+  public function testReferencedRendering() {
     \Drupal::configFactory()
       ->getEditable('media.settings')
       ->set('standalone_url', TRUE)
