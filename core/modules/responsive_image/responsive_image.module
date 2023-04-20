@@ -233,10 +233,11 @@ function template_preprocess_responsive_image(&$variables) {
 
   // Prepare preload links.
   if ($variables['image_preload']) {
-    $variables['#attached']['html_head'] = $variables['#attached']['html_head'] ?? [];
+    $html_head = [];
     foreach ($variables['sources'] as $source) {
-      $variables['#attached']['html_head'][] = _responsive_image_prepare_header_link($variables['uri'], $source);
+      $html_head[] = _responsive_image_prepare_header_link($variables['uri'], $source);
     }
+    $variables['img_element']['#image_preload'] = $html_head;
   }
 }
 

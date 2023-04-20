@@ -299,7 +299,7 @@ class ResponsiveImageFormatter extends ImageFormatterBase {
       unset($item->_attributes);
 
       $image_loading_settings = $this->getSetting('image_loading');
-      if (!$image_loading_settings['preload']) {
+      if (empty($image_loading_settings['preload'])) {
         $item_attributes['loading'] = $image_loading_settings['attribute'];
       }
 
@@ -309,7 +309,7 @@ class ResponsiveImageFormatter extends ImageFormatterBase {
         '#item_attributes' => $item_attributes,
         '#responsive_image_style_id' => $responsive_image_style ? $responsive_image_style->id() : '',
         '#url' => $url,
-        '#image_preload' => (bool) $image_loading_settings['preload'],
+        '#image_preload' => $image_loading_settings['preload'] ?? FALSE,
         '#cache' => [
           'tags' => $cache_tags,
         ],

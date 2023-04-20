@@ -283,7 +283,7 @@ class ImageFormatter extends ImageFormatterBase {
       unset($item->_attributes);
 
       $image_loading_settings = $this->getSetting('image_loading');
-      if (!$image_loading_settings['preload']) {
+      if (empty($image_loading_settings['preload'])) {
         $item_attributes['loading'] = $image_loading_settings['attribute'];
       }
 
@@ -293,7 +293,7 @@ class ImageFormatter extends ImageFormatterBase {
         '#item_attributes' => $item_attributes,
         '#image_style' => $image_style_setting,
         '#url' => $url,
-        '#image_preload' => (bool) $image_loading_settings['preload'],
+        '#image_preload' => $image_loading_settings['preload'] ?? FALSE,
         '#cache' => [
           'tags' => $cache_tags,
         ],

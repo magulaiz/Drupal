@@ -504,7 +504,7 @@ class ResponsiveImageFieldDisplayTest extends ImageFieldTestBase {
     $large_transform_url = $this->fileUrlGenerator->transformRelative($large_style->buildUrl($image_uri));
     $loading = $preload ? '' : 'loading="eager" ';
     $srcset = $medium_transform_url . ' 1x, ' . $large_transform_url . ' 1.5x, ' . $large_transform_url . ' 2x';
-    $this->assertSession()->responseMatches('/<img '. $loading . 'srcset="' . \preg_quote($srcset, '/') . '" width="220" height="220" src="' . \preg_quote($large_transform_url, '/') . '" alt="\w+" \/>/');
+    $this->assertSession()->responseMatches('/<img ' . $loading . 'srcset="' . \preg_quote($srcset, '/') . '" width="220" height="220" src="' . \preg_quote($large_transform_url, '/') . '" alt="\w+" \/>/');
     // Check preload head link tag.
     $this->assertPageHead('link', [
       'rel' => 'preload',

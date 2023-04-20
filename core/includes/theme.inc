@@ -819,34 +819,49 @@ function template_preprocess_image(&$variables) {
   // Without dimensions specified, layout shifts can occur,
   // which are more noticeable on pages that take some time to load.
   // As a result, only mark images as lazy load that have dimensions.
-  if (isset($variables['width'], $variables['height']) && !isset($variables['attributes']['loading'])) {
+  if (isset($variables['width'], $variables['height'])
+    && !isset($variables['attributes']['loading'])
+    && !$variables['image_preload']
+  ) {
     $variables['attributes']['loading'] = 'lazy';
   }
 
   if ($image_src !== '' && $variables['image_preload']) {
-    // Prepare link attributes.
-    $attributes = [
-      'rel' => 'preload',
-      'as' => 'image',
-      'href' => $image_src,
-    ];
+    // Make sure that we don't have loading attribute when we use preload.
+    unset($variables['attributes']['loading']);
 
-    // Each field may have different mime types for each image just like URIs.
-    if ($mime = @mime_content_type('.' . preg_replace('/\?itok=.*$/', '', $image_src))) {
-      $attributes['type'] = $mime;
+    // Prepare head links.
+    $html_heads = [];
+    if (is_array($variables['image_preload'])) {
+      // The case when image preload was prepared earlier.
+      // @see template_preprocess_responsive_image().
+      $html_heads = $variables['image_preload'];
+    }
+    else {
+      // Prepare link attributes.
+      $attributes = [
+        'rel' => 'preload',
+        'as' => 'image',
+        'href' => $image_src,
+      ];
+
+      // Each field may have different mime types for each image just like URIs.
+      if ($mime = @mime_content_type('.' . preg_replace('/\?itok=.*$/', '', $image_src))) {
+        $attributes['type'] = $mime;
+      }
+
+      // Prepare a unique key to prevent the case when we have several preloaded
+      // images on the page and the IDs of the html_head attachments
+      // will conflict.
+      $key = hash('crc32', serialize($image_src));
+      $html_heads[] = [
+        ['#tag' => 'link', '#attributes' => $attributes],
+        'image_preload_' . $key,
+      ];
     }
 
-    // Prepare a unique key to prevent the case when we have several preloaded
-    // images on the page and the IDs of the html_head attachments
-    // will conflict.
-    $key = hash('crc32', serialize($image_src));
-
     // Add HTML head link to preload the image.
-    $variables['#attached']['html_head'] = $variables['#attached']['html_head'] ?? [];
-    $variables['#attached']['html_head'][] = [
-      ['#tag' => 'link', '#attributes' => $attributes],
-      'image_preload_' . $key,
-    ];
+    $variables['#attached']['html_head'] = array_merge($variables['#attached']['html_head'] ?? [], $html_heads);
   }
 }
 
