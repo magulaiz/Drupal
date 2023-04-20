@@ -30,6 +30,7 @@ class AnnounceFetcherUnitTest extends UnitTestCase {
         'max_age' => 86400,
         'cron_interval' => 21600,
         'limit' => 10,
+        'per_user_limit' => 40,
       ],
     ]);
     $tempStore = $this->createMock('Drupal\Core\KeyValueStore\KeyValueExpirableFactoryInterface');

@@ -161,7 +161,7 @@ class AnnounceFetcher {
 
     // The drupal.org endpoint is sorted by created date in descending order.
     // We will limit the announcements based on the configuration limit.
-    $announcements = array_slice($announcements, 0, $this->config->get('limit'));
+    $announcements = array_slice($announcements, 0, $this->config->get('limit') ?? 10);
 
     // For the remaining announcements, put all the featured announcements
     // before the rest.

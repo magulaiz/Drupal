@@ -3,6 +3,8 @@
 namespace Drupal\announcements_feed;
 
 use Drupal\Core\Cache\CacheTagsInvalidator;
+use Drupal\Core\Config\ConfigFactoryInterface;
+use Drupal\Core\Config\ImmutableConfig;
 use Drupal\Core\Session\AccountProxy;
 use Drupal\user\UserData;
 
@@ -12,6 +14,13 @@ use Drupal\user\UserData;
  * @internal
  */
 class AnnounceUserStatus {
+
+  /**
+   * The configuration settings of this module.
+   *
+   * @var \Drupal\Core\Config\ImmutableConfig
+   */
+  protected ImmutableConfig $config;
 
   /**
    * Construct an AnnounceUserStatus object.
@@ -24,13 +33,17 @@ class AnnounceUserStatus {
    *   Current user object.
    * @param \Drupal\Core\Cache\CacheTagsInvalidator $cacheTagsInvalidator
    *   Cache invalidator service.
+   * @param \Drupal\Core\Config\ConfigFactoryInterface $config
+   *   The config factory service.
    */
   public function __construct(
     protected AnnounceFetcher $fetcher,
     protected UserData $userData,
     protected AccountProxy $currentUser,
-    protected CacheTagsInvalidator $cacheTagsInvalidator
+    protected CacheTagsInvalidator $cacheTagsInvalidator,
+    ConfigFactoryInterface $config
   ) {
+    $this->config = $config->get('announcements_feed.settings');
   }
 
   /**
@@ -103,11 +116,20 @@ class AnnounceUserStatus {
    *  IDs of new announcements to store against the current user.
    */
   protected function setSeenAnnouncementIds(array $new_announcements): void {
+    // Merge the new ones with the previous ones.
+    $announcements = array_unique(array_merge($new_announcements, $this->getSeenAnnouncementIds()));
+
+    // Per-user limit is usually higher than the announcements feed limit just
+    // in case the limit actually changes. We don't want already seen messages
+    // to show up as new again (ie: if the limit is made bigger), but we don't
+    // want the array to grow forever either.
+    $announcements = array_slice($announcements, 0, $this->config->get('per_user_limit') ?? 40);
+
     $this->userData->set(
       'announcements_feed',
       $this->currentUser->id(),
       'announcements',
-      array_unique(array_merge($this->getSeenAnnouncementIds(), $new_announcements))
+      $announcements
     );
   }
 

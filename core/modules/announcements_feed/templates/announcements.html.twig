@@ -24,7 +24,11 @@
       {% for announcement in standard %}
         <li class="announcement announcement--standard">
           <div class="announcement__title">
-            <a href="{{ announcement.url }}">{{ announcement.title }}</a>
+            {% if announcement.url %}
+              <a href="{{ announcement.url }}">{{ announcement.title }}</a>
+            {% else %}
+              <span>{{ announcement.title }}</span>
+            {% endif %}
             {% if announcement.new %}
               <span class="announcement__new">{{ 'New'|t }}</span>
             {% endif %}
