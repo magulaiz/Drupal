@@ -137,6 +137,9 @@ class AnnounceUserStatus {
     // Store the announcements per feed URL in case this changes.
     $user_announcements[$this->feedUrl] = $announcements;
 
+    // We no longer need the data from other feeds if the feed changed.
+    $user_announcements = array_intersect_key($user_announcements, array_flip([$this->feedUrl]));
+
     $this->userData->set(
       'announcements_feed',
       $this->currentUser->id(),
