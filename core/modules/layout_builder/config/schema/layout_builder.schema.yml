@@ -17,12 +17,18 @@ layout_builder.section:
   type: mapping
   label: 'Layout section'
   mapping:
+    uuid:
+      type: uuid
+      label: 'UUID'
     layout_id:
       type: string
       label: 'Layout ID'
     layout_settings:
       type: layout_plugin.settings.[%parent.layout_id]
       label: 'Layout settings'
+    weight:
+      type: integer
+      label: 'Weight'
     components:
       type: sequence
       label: 'Components'
