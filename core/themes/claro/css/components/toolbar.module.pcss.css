@@ -109,6 +109,7 @@
     display: block;
     visibility: hidden;
     width: 1px;
+  }
 }
 
 /* Position the admin toolbar fixed when the configured standard breakpoint is
