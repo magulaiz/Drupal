@@ -21,8 +21,14 @@ class AnnounceController extends ControllerBase implements ContainerInjectionInt
    *   The AnnounceUserStatus service.
    * @param \Drupal\Core\Session\AccountInterface $currentUser
    *   The current_user service.
+   * @param string $feedLink
+   *   The feed url path.
    */
-  public function __construct(protected AnnounceUserStatus $userStatus, AccountInterface $currentUser) {
+  public function __construct(
+    protected AnnounceUserStatus $userStatus,
+    AccountInterface $currentUser,
+    protected string $feedLink
+  ) {
     $this->currentUser = $currentUser;
   }
 
@@ -32,7 +38,8 @@ class AnnounceController extends ControllerBase implements ContainerInjectionInt
   public static function create(ContainerInterface $container): AnnounceController {
     return new static(
       $container->get('announcements_feed.user_status'),
-      $container->get('current_user')
+      $container->get('current_user'),
+      $container->getParameter('announcements_feed.feed_link')
     );
   }
 
@@ -72,6 +79,7 @@ class AnnounceController extends ControllerBase implements ContainerInjectionInt
     $build += [
       '#theme' => 'announcements_feed',
       '#count' => count($announcements),
+      '#feed_link' => $this->feedLink,
       '#cache' => [
         'contexts' => [
           'user',

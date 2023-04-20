@@ -38,6 +38,12 @@
       {% endfor %}
     </ul>
   </nav>
+
+  {% if feed_link %}
+    <p class="announcements--view-all">
+      <a target="_blank" href="{{ feed_link }}">{{ 'View all announcements'|t }}</a>
+    </p>
+  {% endif %}
 {% else %}
   <div class="announcements announcements--empty"><p> {{ 'No announcements available'|t }}</p></div>
 {% endif %}
