@@ -5,7 +5,21 @@ namespace Drupal\Core\Render\Element;
 /**
  * Provides a render element for adding Ajax to a render element.
  *
- * Holds an array whose values control the Ajax behavior of the element.
+ * Holds an array whose values control the Ajax behavior of the element or
+ * set to true to use default values.
+ *
+ * Example usage:
+ * @code
+ * $form['#ajax'] = TRUE;
+ * @endcode
+ * In this example, the default values will be used.
+ *
+ * @code
+ * $form['#ajax'] = [
+ *   'callback' => [static::class, 'myAjaxCallback'],
+ * ];
+ * @endcode
+ * In this example, a custom callback is used to set the #ajax array values.
  *
  * @ingroup ajax
  *
