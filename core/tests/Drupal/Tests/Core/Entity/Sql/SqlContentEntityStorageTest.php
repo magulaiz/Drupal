@@ -114,6 +114,8 @@ class SqlContentEntityStorageTest extends UnitTestCase {
    * {@inheritdoc}
    */
   protected function setUp(): void {
+    parent::setUp();
+
     $this->entityType = $this->createMock('Drupal\Core\Entity\ContentEntityTypeInterface');
     $this->entityType->expects($this->any())
       ->method('id')
@@ -472,7 +474,7 @@ class SqlContentEntityStorageTest extends UnitTestCase {
    * @covers ::__construct
    * @covers ::getTableMapping
    *
-   * @dataProvider providerTestGetTableMappingSimple()
+   * @dataProvider providerTestGetTableMappingSimple
    */
   public function testGetTableMappingSimple(array $entity_keys) {
     $this->entityType->expects($this->any())
@@ -504,7 +506,7 @@ class SqlContentEntityStorageTest extends UnitTestCase {
    * @covers ::__construct
    * @covers ::getTableMapping
    *
-   * @dataProvider providerTestGetTableMappingSimple()
+   * @dataProvider providerTestGetTableMappingSimple
    */
   public function testGetTableMappingSimpleWithFields(array $entity_keys) {
     $base_field_names = ['title', 'description', 'owner'];
@@ -579,7 +581,7 @@ class SqlContentEntityStorageTest extends UnitTestCase {
    * @covers ::__construct
    * @covers ::getTableMapping
    *
-   * @dataProvider providerTestGetTableMappingSimple()
+   * @dataProvider providerTestGetTableMappingSimple
    */
   public function testGetTableMappingRevisionable(array $entity_keys) {
     // This allows to re-use the data provider.
@@ -630,7 +632,7 @@ class SqlContentEntityStorageTest extends UnitTestCase {
    * @covers ::__construct
    * @covers ::getTableMapping
    *
-   * @dataProvider providerTestGetTableMappingSimple()
+   * @dataProvider providerTestGetTableMappingSimple
    */
   public function testGetTableMappingRevisionableWithFields(array $entity_keys) {
     // This allows to re-use the data provider.
@@ -708,7 +710,7 @@ class SqlContentEntityStorageTest extends UnitTestCase {
    * @covers ::__construct
    * @covers ::getTableMapping
    *
-   * @dataProvider providerTestGetTableMappingSimple()
+   * @dataProvider providerTestGetTableMappingSimple
    */
   public function testGetTableMappingTranslatable(array $entity_keys) {
     // This allows to re-use the data provider.
@@ -764,7 +766,7 @@ class SqlContentEntityStorageTest extends UnitTestCase {
    * @covers ::__construct
    * @covers ::getTableMapping
    *
-   * @dataProvider providerTestGetTableMappingSimple()
+   * @dataProvider providerTestGetTableMappingSimple
    */
   public function testGetTableMappingTranslatableWithFields(array $entity_keys) {
     // This allows to re-use the data provider.
@@ -824,7 +826,7 @@ class SqlContentEntityStorageTest extends UnitTestCase {
    * @covers ::__construct
    * @covers ::getTableMapping
    *
-   * @dataProvider providerTestGetTableMappingSimple()
+   * @dataProvider providerTestGetTableMappingSimple
    */
   public function testGetTableMappingRevisionableTranslatable(array $entity_keys) {
     // This allows to re-use the data provider.
@@ -935,7 +937,7 @@ class SqlContentEntityStorageTest extends UnitTestCase {
    * @covers ::__construct
    * @covers ::getTableMapping
    *
-   * @dataProvider providerTestGetTableMappingSimple()
+   * @dataProvider providerTestGetTableMappingSimple
    */
   public function testGetTableMappingRevisionableTranslatableWithFields(array $entity_keys) {
     // This allows to re-use the data provider.

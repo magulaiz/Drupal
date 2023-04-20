@@ -52,6 +52,8 @@ class TitleResolverTest extends UnitTestCase {
    * {@inheritdoc}
    */
   protected function setUp(): void {
+    parent::setUp();
+
     $this->controllerResolver = $this->createMock('\Drupal\Core\Controller\ControllerResolverInterface');
     $this->translationManager = $this->createMock('\Drupal\Core\StringTranslation\TranslationInterface');
     $this->argumentResolver = $this->createMock('\Symfony\Component\HttpKernel\Controller\ArgumentResolverInterface');
@@ -68,6 +70,17 @@ class TitleResolverTest extends UnitTestCase {
     $request = new Request();
     $route = new Route('/test-route', ['_title' => 'static title']);
     $this->assertEquals(new TranslatableMarkup('static title', [], [], $this->translationManager), $this->titleResolver->getTitle($request, $route));
+  }
+
+  /**
+   * Tests a static title of '0'.
+   *
+   * @see \Drupal\Core\Controller\TitleResolver::getTitle()
+   */
+  public function testStaticTitleZero() {
+    $request = new Request();
+    $route = new Route('/test-route', ['_title' => '0', '_title_context' => '0']);
+    $this->assertEquals(new TranslatableMarkup('0', [], ['context' => '0'], $this->translationManager), $this->titleResolver->getTitle($request, $route));
   }
 
   /**
