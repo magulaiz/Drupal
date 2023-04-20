@@ -94,7 +94,7 @@ abstract class ImageFieldTestBase extends BrowserTestBase {
   }
 
   /**
-   * Creates a random style.
+   * Creates an image style.
    *
    * @param string $style_name
    *   The name of the style to create.
@@ -105,10 +105,11 @@ abstract class ImageFieldTestBase extends BrowserTestBase {
    *   Returns an image style entity.
    */
   public function createStyle(string $style_name, string $style_label): ImageStyleInterface {
-    $values = ['name' => $style_name, 'label' => $style_label];
-
     /** @var \Drupal\image\ImageStyleInterface $style */
-    $style = \Drupal::entityTypeManager()->getStorage('image_style')->create($values);
+    $style = \Drupal::entityTypeManager()->getStorage('image_style')->create([
+      'name' => $style_name,
+      'label' => $style_label,
+    ]);
     $style->save();
     return $style;
   }
