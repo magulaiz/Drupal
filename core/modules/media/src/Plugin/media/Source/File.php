@@ -4,7 +4,6 @@ namespace Drupal\media\Plugin\media\Source;
 
 use Drupal\file\FileInterface;
 use Drupal\media\MediaInterface;
-use Drupal\file\Plugin\Field\FieldType\FileFieldItemList;
 use Drupal\media\MediaTypeInterface;
 use Drupal\media\MediaSourceBase;
 
@@ -144,4 +143,5 @@ class File extends MediaSourceBase {
     $target_types = is_array($target_type) ? $target_type : [$target_type];
     return in_array('file', $target_types, TRUE);
   }
+
 }

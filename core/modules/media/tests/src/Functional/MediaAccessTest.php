@@ -453,4 +453,5 @@ class MediaAccessTest extends MediaFunctionalTestBase {
     $this->assertNoCacheContext('user');
     $assert_session->pageTextNotContains($child_title);
   }
+
 }

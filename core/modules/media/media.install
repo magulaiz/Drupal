@@ -37,7 +37,8 @@ function media_install() {
     if (!file_exists($destination . DIRECTORY_SEPARATOR . $file->filename)) {
       try {
         $file_system->copy($file->uri, $destination, FileSystemInterface::EXISTS_ERROR);
-      } catch (FileException $e) {
+      }
+      catch (FileException $e) {
         // Ignore and continue.
       }
     }
@@ -63,7 +64,8 @@ function media_requirements($phase) {
     if (!$is_writable || !$is_directory) {
       if (!$is_directory) {
         $error = t('The directory %directory does not exist.', ['%directory' => $destination]);
-      } else {
+      }
+      else {
         $error = t('The directory %directory is not writable.', ['%directory' => $destination]);
       }
       $description = t('An automated attempt to create this directory failed, possibly due to a permissions problem. To proceed with the installation, either create the directory and modify its permissions manually or ensure that the installer has the permissions to create it automatically. For more information, see INSTALL.txt or the <a href=":handbook_url">online handbook</a>.', [':handbook_url' => 'https://www.drupal.org/server-permissions']);
@@ -73,7 +75,8 @@ function media_requirements($phase) {
         $requirements['media']['severity'] = REQUIREMENT_ERROR;
       }
     }
-  } elseif ($phase === 'runtime') {
+  }
+  elseif ($phase === 'runtime') {
     /** @var \Drupal\media\MediaTypeInterface[] $media_types */
     $media_types = \Drupal::entityTypeManager()
       ->getStorage('media_type')
