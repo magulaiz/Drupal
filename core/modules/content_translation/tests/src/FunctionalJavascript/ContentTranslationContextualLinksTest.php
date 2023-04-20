@@ -4,7 +4,6 @@ namespace Drupal\Tests\content_translation\FunctionalJavascript;
 
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 use Drupal\language\Entity\ConfigurableLanguage;
-use Drupal\language\Entity\ContentLanguageSettings;
 
 /**
  * Tests that contextual links are available for content translation.
@@ -43,10 +42,9 @@ class ContentTranslationContextualLinksTest extends WebDriverTestBase {
     $this->drupalCreateContentType(['type' => 'page']);
 
     // Enable content translation.
-    ContentLanguageSettings::loadByEntityTypeBundle('node', 'page')
-      ->setDefaultLangcode('en')
-      ->setLanguageAlterable(TRUE)
-      ->save();
+    $content_translation_manager = $this->container->get('content_translation.manager');
+    $content_translation_manager->setEnabled('node', 'page', TRUE);
+    $this->rebuildContainer();
 
     // Create a translator user.
     $permissions = [
