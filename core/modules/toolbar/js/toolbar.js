@@ -46,10 +46,12 @@
       // Process the administrative toolbar.
       once('toolbar', '#toolbar-administration', context).forEach((toolbar) => {
         // Establish the toolbar models and views.
-        const defaultLock = (options.default_orientation == 'vertical');
-        const userLocked = JSON.parse(localStorage.getItem('Drupal.toolbar.trayVerticalLocked'));
+        const defaultLock = options.default_orientation === 'vertical';
+        const userLocked = JSON.parse(
+          localStorage.getItem('Drupal.toolbar.trayVerticalLocked'),
+        );
         const model = new Drupal.toolbar.ToolbarModel({
-          locked: (userLocked != null) ? userLocked : defaultLock,
+          locked: userLocked != null ? userLocked : defaultLock,
           activeTab: document.getElementById(
             JSON.parse(localStorage.getItem('Drupal.toolbar.activeTabID')),
           ),
