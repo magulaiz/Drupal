@@ -276,10 +276,10 @@
 .toolbar-tray-open.toolbar-fixed.toolbar-vertical #toolbar-administration {
   margin-inline-start: -15rem;
 }
-.toolbar .toolbar-tray-vertical > .toolbar-lining:before {
+.toolbar .toolbar-tray-vertical > .toolbar-lining::before {
   width: 100%;
 }
-.toolbar-oriented .toolbar-tray-vertical > .toolbar-lining:before {
+.toolbar-oriented .toolbar-tray-vertical > .toolbar-lining::before {
   position: fixed;
   z-index: -1;
   top: 0;

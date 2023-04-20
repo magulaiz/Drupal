@@ -46,7 +46,7 @@
   list-style-image: none;
 }
 .toolbar .menu-item {
-  padding-top: 0;
+  padding-block-start: 0;
 }
 .toolbar .toolbar-bar .toolbar-tab,
 .toolbar .menu-item {
@@ -59,17 +59,18 @@
   display: block;
   line-height: 1;
 }
-/**
- * Administration menu.
- */
 .toolbar .toolbar-bar,
 .toolbar .toolbar-tray {
   position: relative;
   z-index: 1250;
 }
+.toolbar .toolbar-tray {
+  z-index: 501;
+  display: none;
+}
 .toolbar-horizontal .toolbar-tray {
   position: fixed;
-  left: 0;
+  inset-inline-start: 0;
   width: 100%;
 }
 /* Position the admin toolbar absolutely when the configured standard breakpoint
@@ -78,18 +79,20 @@
  * screens, the components of the admin toolbar are positioned statically. */
 .toolbar-oriented .toolbar-bar {
   position: absolute;
-  top: 0;
-  right: 0;
-  left: 0;
+  inset-block-start: 0;
+  inset-inline: 0;
 }
 .toolbar-oriented .toolbar-tray {
   position: absolute;
-  right: 0;
-  left: 0;
+  inset-inline: 0;
 }
-/* Layer the bar just above the trays and above contextual link triggers. */
 .toolbar-oriented .toolbar-bar {
-  z-index: 502;
+  z-index: 502; /* Layer the bar just above the trays and above contextual link triggers. */
+}
+.toolbar-oriented .toolbar-tray-vertical {
+  position: absolute;
+  inset-inline-start: -100%;
+  width: 15rem;
 }
 /* Position the admin toolbar fixed when the configured standard breakpoint is
  * active. */
@@ -100,8 +103,7 @@
  * around the trays in order to provide a context for scrolling tray content
  * that is taller than the viewport. */
 .toolbar-tray-open.toolbar-fixed.toolbar-vertical .toolbar-oriented {
-  bottom: 0;
-  width: 240px;
+  inset-block-end: 0;
   width: 15rem;
 }
 /* Present the admin toolbar tabs horizontally as a default on user agents that
@@ -123,10 +125,6 @@
   .toolbar .toolbar-bar .toolbar-tab,
   .toolbar .toolbar-tray-horizontal li {
     float: none; /* LTR */
-  }
-  [dir="rtl"] .toolbar .toolbar-bar .toolbar-tab,
-  [dir="rtl"] .toolbar .toolbar-tray-horizontal li {
-    float: none;
   }
 }
 /* This min-width media query is meant to provide basic horizontal layout to
@@ -151,23 +149,6 @@
 [dir="rtl"] .toolbar-oriented .toolbar-bar .toolbar-tab,
 [dir="rtl"] .toolbar-oriented .toolbar-tray-horizontal li {
   float: right;
-}
-/**
- * Toolbar tray.
- */
-.toolbar .toolbar-tray {
-  z-index: 501;
-  display: none;
-}
-.toolbar-oriented .toolbar-tray-vertical {
-  position: absolute;
-  left: -100%; /* LTR */
-  width: 240px;
-  width: 15rem;
-}
-[dir="rtl"] .toolbar-oriented .toolbar-tray-vertical {
-  right: -100%;
-  left: auto;
 }
 .toolbar .toolbar-tray-vertical > .toolbar-lining {
   min-height: 100%;
@@ -197,11 +178,7 @@
 }
 /* Bring the tray into the viewport. By default it is just off-screen. */
 .toolbar-oriented .toolbar-tray-vertical.is-active {
-  left: 0; /* LTR */
-}
-[dir="rtl"] .toolbar-oriented .toolbar-tray-vertical.is-active {
-  right: 0;
-  left: auto;
+  inset-inline-start: 0;
 }
 /* When the configured standard breakpoint is active, the tray appears to push
  * the page content away from the edge of the viewport. */
@@ -229,13 +206,9 @@
 }
 .toolbar-oriented .toolbar-tray-horizontal .toolbar-toggle-orientation {
   position: absolute;
-  top: auto;
-  right: 0; /* LTR */
-  bottom: 0;
-}
-[dir="rtl"] .toolbar-oriented .toolbar-tray-horizontal .toolbar-toggle-orientation {
-  right: auto;
-  left: 0;
+  inset-block-start: auto;
+  inset-inline-end: 0;
+  inset-block-end: 0;
 }
 .toolbar-oriented .toolbar-tray-vertical .toolbar-toggle-orientation {
   float: right; /* LTR */
@@ -260,6 +233,9 @@
 .toolbar-anti-flicker.toolbar-loading.toolbar-fixed.toolbar-horizontal.toolbar-tray-open body {
   padding-top: 4.91331rem;
 }
+.toolbar-anti-flicker.toolbar-vertical.toolbar-tray-open .menu-item + .menu-item {
+  border-top: 1px solid #ddd;
+}
 .toolbar-loading.toolbar-vertical.toolbar-tray-open .toolbar-tray {
   position: fixed;
   z-index: -1;
@@ -277,10 +253,10 @@
 .toolbar-tray-open.toolbar-fixed.toolbar-vertical #toolbar-administration {
   margin-inline-start: -15rem;
 }
-.toolbar .toolbar-tray-vertical > .toolbar-lining:before {
+.toolbar .toolbar-tray-vertical > .toolbar-lining::before {
   width: 100%;
 }
-.toolbar-oriented .toolbar-tray-vertical > .toolbar-lining:before {
+.toolbar-oriented .toolbar-tray-vertical > .toolbar-lining::before {
   position: fixed;
   z-index: -1;
   top: 0;
@@ -289,7 +265,4 @@
   width: 15rem;
   content: "";
   inset-inline-start: 0;
-}
-.toolbar-anti-flicker.toolbar-vertical.toolbar-tray-open .menu-item + .menu-item {
-  border-top: 1px solid #ddd;
 }
