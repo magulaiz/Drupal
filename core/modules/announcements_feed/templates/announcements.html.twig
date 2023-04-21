@@ -11,9 +11,7 @@
               {{ announcement.content }}
             </div>
             <div class="announcement__link">
-              {% if announcement.url %}
-                <a href="{{ announcement.url }}">{{ 'Learn More'|t }}</a>
-              {% endif %}
+              <a href="{{ announcement.url }}">{{ 'Learn More'|t }}</a>
               {% if announcement.new %}
                 <span class="announcement__new">{{ 'New'|t }}</span>
               {% endif %}
@@ -24,11 +22,7 @@
       {% for announcement in standard %}
         <li class="announcement announcement--standard">
           <div class="announcement__title">
-            {% if announcement.url %}
-              <a href="{{ announcement.url }}">{{ announcement.title }}</a>
-            {% else %}
-              <span>{{ announcement.title }}</span>
-            {% endif %}
+            <a href="{{ announcement.url }}">{{ announcement.title }}</a>
             {% if announcement.new %}
               <span class="announcement__new">{{ 'New'|t }}</span>
             {% endif %}

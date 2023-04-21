@@ -81,7 +81,7 @@ class AnnounceFetcher {
    *   Return True if the version matches Drupal version.
    */
   protected static function isRelevantItem(string $version): bool {
-    return Semver::satisfies(\Drupal::VERSION, $version);
+    return !empty($version) && Semver::satisfies(\Drupal::VERSION, $version);
   }
 
   /**
@@ -151,7 +151,7 @@ class AnnounceFetcher {
       // Ensure that announcements reference drupal.org and are applicable to
       // the current Drupal version.
       $announcements = array_filter($announcements, function (array $announcement) {
-        return static::validateUrl($announcement['url']) && static::isRelevantItem($announcement['_drupalorg']['version']);
+        return static::validateUrl($announcement['url'] ?? '') && static::isRelevantItem($announcement['_drupalorg']['version'] ?? '');
       });
 
       // Save the raw decoded and filtered array to temp store.
