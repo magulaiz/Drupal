@@ -30,7 +30,7 @@ class DrupalLogErrorTest extends UnitTestCase {
     $this->assertFalse($process->isSuccessful());
   }
 
-  protected function provideFatalExitCodeData() {
+  public function provideFatalExitCodeData() {
     $verbose = "\$GLOBALS['config']['system.logging']['error_level'] = 'verbose';";
     $scriptBody = $this->getScriptBody();
     $data['normal'] = [
