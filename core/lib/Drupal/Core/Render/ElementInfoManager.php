@@ -3,9 +3,12 @@
 namespace Drupal\Core\Render;
 
 use Drupal\Core\Cache\CacheBackendInterface;
+use Drupal\Core\DependencyInjection\DeprecatedServicePropertyTrait;
+use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Extension\ThemeHandlerInterface;
 use Drupal\Core\Plugin\DefaultPluginManager;
 use Drupal\Core\Render\Element\FormElementInterface;
+use Drupal\Core\Theme\ThemeManagerInterface;
 
 /**
  * Provides a plugin manager for element plugins.
@@ -19,6 +22,15 @@ use Drupal\Core\Render\Element\FormElementInterface;
  * @see plugin_api
  */
 class ElementInfoManager extends DefaultPluginManager implements ElementInfoManagerInterface {
+
+  use DeprecatedServicePropertyTrait;
+
+  /**
+   * Defines deprecated injected properties.
+   *
+   * @var array
+   */
+  protected array $deprecatedProperties = ['cacheTagInvalidator' => 'cache_tags.invalidator'];
 
   /**
    * Stores the available element information.
@@ -56,15 +68,13 @@ class ElementInfoManager extends DefaultPluginManager implements ElementInfoMana
    * @param \Drupal\Core\Theme\ThemeManagerInterface $theme_manager
    *   The theme manager.
    */
-  public function __construct(\Traversable $namespaces, CacheBackendInterface $cache_backend, $theme_handler, $module_handler, $theme_manager) {
+  public function __construct(\Traversable $namespaces, CacheBackendInterface $cache_backend, $theme_handler, ModuleHandlerInterface $module_handler, ThemeManagerInterface $theme_manager) {
     $this->setCacheBackend($cache_backend, 'element_info');
-    if (!$theme_handler instanceof ThemeHandlerInterface) {
-      @trigger_error('Calling ' . __METHOD__ . ' with the $cache_tag_invalidator argument is deprecated in drupal:10.1.0 and will be removed in drupal:11.0.0.', E_USER_DEPRECATED);
-      $theme_handler = \Drupal::service('theme_handler');
-      $module_handler = \Drupal::service('module_handler');
-      $theme_manager = \Drupal::service('@theme.manager');
-    }
     $this->themeManager = $theme_manager;
+    if (!$theme_handler instanceof ThemeHandlerInterface) {
+      @trigger_error('Calling ' . __METHOD__ . ' with the $cache_tag_invalidator argument is deprecated and replaced with $theme_handler in drupal:10.1.0 and will be removed in drupal:11.0.0.', E_USER_DEPRECATED);
+      $theme_handler = \Drupal::service('theme_handler');
+    }
     $this->themeHandler = $theme_handler;
 
     parent::__construct('Element', $namespaces, $module_handler, 'Drupal\Core\Render\Element\ElementInterface', 'Drupal\Core\Render\Annotation\RenderElement');
