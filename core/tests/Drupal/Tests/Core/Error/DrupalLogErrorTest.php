@@ -14,10 +14,34 @@ class DrupalLogErrorTest extends UnitTestCase {
 
   /**
    * Tests that fatal errors return a non-zero exit code.
+   *
+   * @dataProvider provideFatalExitCodeData
    */
-  public function testFatalExitCode() {
-    $script = <<<'EOT'
-<?php
+  public function testFatalExitCode(string $script, string $output, string $errorOutput) {
+    // We need to override the current working directory for invocations from
+    // run-tests.sh to work properly.
+    $process = new PhpProcess($script, $this->root);
+    $process->run();
+
+    // Assert the output strings as unrelated errors (like the log-exit.php
+    // script throwing a PHP error) would still pass the final assertion.
+    $this->assertEquals($output, $process->getOutput());
+    $this->assertEquals($errorOutput, $process->getErrorOutput());
+    $this->assertFalse($process->isSuccessful());
+  }
+
+  protected function provideFatalExitCodeData() {
+    $scriptBody = $this->getScriptBody();
+    $data['normal'] = [
+      "<?php\n$scriptBody",
+      "kernel test: This is a test message in test_function (line 456 of test.module).\n",
+      "kernel test: This is a test message in test.module on line 456 backtrace\n",
+    ];
+    return $data;
+  }
+
+  protected function getScriptBody() {
+    return <<<'EOT'
 if (PHP_SAPI !== 'cli') {
   return;
 }
@@ -39,17 +63,6 @@ $error = [
 ];
 _drupal_log_error($error, TRUE);
 EOT;
-
-    // We need to override the current working directory for invocations from
-    // run-tests.sh to work properly.
-    $process = new PhpProcess($script, $this->root);
-    $process->run();
-
-    // Assert the output strings as unrelated errors (like the log-exit.php
-    // script throwing a PHP error) would still pass the final assertion.
-    $this->assertEquals("kernel test: This is a test message in test_function (line 456 of test.module).\n", $process->getOutput());
-    $this->assertEquals("kernel test: This is a test message in test.module on line 456 backtrace\n", $process->getErrorOutput());
-    $this->assertFalse($process->isSuccessful());
   }
 
 }
