@@ -41,7 +41,7 @@ trait SectionListTrait {
     if ($this->hasSection($delta)) {
       $i = 0;
       foreach ($this->getSections() as $section) {
-        if ($i === $delta) {
+        if ($i == $delta) {
           return $section;
         }
         $i++;
