@@ -63,8 +63,21 @@ trait SectionListTrait {
    */
   protected function setSection($delta, Section $section) {
     $sections = $this->getSections();
-    $sections[$delta] = $section;
-    $this->setSections($sections);
+    if ($delta >= $this->count()) {
+      $sections[$section->getUuid()] = $section;
+      $this->setSections($sections);
+    }
+    else {
+      foreach ($sections as $original_section) {
+        if ($original_section->getWeight() === $delta) {
+          // @todo Use https://www.drupal.org/node/66183 once resolved.
+          $start = array_slice($sections, 0, $delta);
+          $end = array_slice($sections, $delta + 1);
+          $this->setSections(array_merge($start, [$section->getUuid() => $section], $end));
+          break;
+        }
+      }
+    }
     return $this;
   }
 
@@ -91,7 +104,7 @@ trait SectionListTrait {
       // @todo Use https://www.drupal.org/node/66183 once resolved.
       $start = array_slice($this->getSections(), 0, $delta);
       $end = array_slice($this->getSections(), $delta);
-      $this->setSections(array_merge($start, [$section], $end));
+      $this->setSections(array_merge($start, [$section->getUuid() => $section], $end));
     }
     else {
       $this->appendSection($section);
