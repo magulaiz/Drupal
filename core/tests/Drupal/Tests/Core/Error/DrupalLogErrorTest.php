@@ -31,10 +31,16 @@ class DrupalLogErrorTest extends UnitTestCase {
   }
 
   protected function provideFatalExitCodeData() {
+    $verbose = "\$GLOBALS['config']['system.logging']['error_level'] = 'verbose';";
     $scriptBody = $this->getScriptBody();
     $data['normal'] = [
       "<?php\n$scriptBody",
       "kernel test: This is a test message in test_function (line 456 of test.module).\n",
+      "kernel test: This is a test message in test.module on line 456 backtrace\nand-more-backtrace\n",
+    ];
+    $data['verbose'] = [
+      "<?php\n$verbose\n$scriptBody",
+      "<details class=\"error-with-backtrace\"><summary>kernel test: This is a test message in test_function (line 456 of test.module).</summary>backtrace<br>and-more-backtrace\n</details>\n",
       "kernel test: This is a test message in test.module on line 456 backtrace\nand-more-backtrace\n",
     ];
     return $data;
