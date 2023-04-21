@@ -35,7 +35,7 @@ class DrupalLogErrorTest extends UnitTestCase {
     $data['normal'] = [
       "<?php\n$scriptBody",
       "kernel test: This is a test message in test_function (line 456 of test.module).\n",
-      "kernel test: This is a test message in test.module on line 456 backtrace\n",
+      "kernel test: This is a test message in test.module on line 456 backtrace\nand-more-backtrace\n",
     ];
     return $data;
   }
@@ -56,7 +56,7 @@ $error = [
   '%function' => 'test_function',
   '%file' => 'test.module',
   '%line' => 456,
-  '@backtrace_string' => 'backtrace',
+  '@backtrace_string' => "backtrace\nand-more-backtrace",
   'severity_level' => 0,
   'backtrace' => [],
   'exception' => NULL,
