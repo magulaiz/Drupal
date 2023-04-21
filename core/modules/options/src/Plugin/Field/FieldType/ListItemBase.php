@@ -212,6 +212,12 @@ abstract class ListItemBase extends FieldItemBase implements OptionsProviderInte
         if (!empty($entity_ids)) {
           $element['allowed_values']['table'][$delta]['item']['key']['#attributes']['readonly'] = TRUE;
           $element['allowed_values']['table'][$delta]['delete']['#attributes']['disabled'] = 'disabled';
+          $element['allowed_values']['table'][$delta]['delete'] += [
+            'message' => [
+              '#type' => 'item',
+              '#markup' => $this->t('Option in use cannot be removed.'),
+            ],
+          ];
         }
       }
     }
@@ -247,11 +253,22 @@ abstract class ListItemBase extends FieldItemBase implements OptionsProviderInte
     return FALSE;
   }
 
+  /**
+   * Adds a new option.
+   *
+   * @param array $form
+   *   The form array to add elements to.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The current state of the form.
+   */
   public static function addMoreSubmit(array $form, FormStateInterface $form_state) {
     $form_state->set('items_count', $form_state->get('items_count') + 1);
     $form_state->setRebuild();
   }
 
+  /**
+   * Ajax callback for the "Add another item" button.
+   */
   public static function addMoreAjax(array $form, FormStateInterface $form_state) {
     $button = $form_state->getTriggeringElement();
 
@@ -264,6 +281,14 @@ abstract class ListItemBase extends FieldItemBase implements OptionsProviderInte
     return $element;
   }
 
+  /**
+   * Deletes a row/option.
+   *
+   * @param array $form
+   *   The form array to add elements to.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The current state of the form.
+   */
   public static function deleteSubmit(array $form, FormStateInterface $form_state) {
     $allowed_values = $form_state->getStorage()['allowed_values'];
     $button = $form_state->getTriggeringElement();
@@ -284,6 +309,9 @@ abstract class ListItemBase extends FieldItemBase implements OptionsProviderInte
     $form_state->setRebuild();
   }
 
+  /**
+   * Ajax callback for per row delete button.
+   */
   public static function deleteAjax(array $form, FormStateInterface $form_state) {
     $button = $form_state->getTriggeringElement();
 
@@ -326,7 +354,7 @@ abstract class ListItemBase extends FieldItemBase implements OptionsProviderInte
     }, Element::children($element['table'])), function ($item) {
       return $item;
     });
-    $values = static::extractAllowedValues(implode("\n", $items), $element['#field_has_data']);
+    $values = static::extractAllowedValues($items, $element['#field_has_data']);
 
     if (!is_array($values)) {
       $form_state->setError($element, new TranslatableMarkup('Allowed values list: invalid input.'));
@@ -356,8 +384,8 @@ abstract class ListItemBase extends FieldItemBase implements OptionsProviderInte
   /**
    * Extracts the allowed values array from the allowed_values element.
    *
-   * @param string $string
-   *   The raw string to extract values from.
+   * @param array $list
+   *   The array to extract values from.
    * @param bool $has_data
    *   The current field already has data inserted or not.
    *
@@ -366,12 +394,8 @@ abstract class ListItemBase extends FieldItemBase implements OptionsProviderInte
    *
    * @see \Drupal\options\Plugin\Field\FieldType\ListItemBase::allowedValuesString()
    */
-  protected static function extractAllowedValues($string, $has_data) {
+  protected static function extractAllowedValues($list, $has_data) {
     $values = [];
-
-    $list = explode("\n", $string);
-    $list = array_map('trim', $list);
-    $list = array_filter($list, 'strlen');
 
     $generated_keys = $explicit_keys = FALSE;
     foreach ($list as $position => $text) {
@@ -494,10 +518,10 @@ abstract class ListItemBase extends FieldItemBase implements OptionsProviderInte
   }
 
   /**
-   * Simplifies allowed values to a key-value array from the structured array.
+   * Converts allowed values from a numeric array to an associative array.
    *
    * @param array $structured_values
-   *   Array of items with the metadata i.e. weight, each for the allowed
+   *   Array of items with the metadata (for eg: weight), each for the allowed
    *   values.
    *
    * @return array
@@ -509,7 +533,7 @@ abstract class ListItemBase extends FieldItemBase implements OptionsProviderInte
   protected static function simplifyAllowedValuesMeta(array $structured_values) {
     $values = [];
     foreach ($structured_values as $item) {
-      $values[$item['value']] = ['weight' => $item['weight']];
+      $values[$item['value']] = array_diff_key($item, ['value' => '']);
     }
     return $values;
   }
@@ -542,27 +566,19 @@ abstract class ListItemBase extends FieldItemBase implements OptionsProviderInte
   }
 
   /**
-   * Creates a structured array of allowed values meta from a key-value array.
+   * Creates a numeric array of allowed values metadata from an associative
+   * array.
    *
    * @param array $values
-   *   Metadata for allowed values were the array key is the 'value' value, the
-   *   value is the nested array with it's 'weight'.
+   *   Nested array of the allowed values metadata keyed by its value.
    *
    * @return array
-   *   Array of items with a 'value' and 'weight' key each for the allowed
-   *   values.
+   *   Numeric array having value and metadata of each allowed value.
    *
    * @see \Drupal\options\Plugin\Field\FieldType\ListItemBase::simplifyAllowedValuesMeta()
    */
   protected static function structureAllowedValuesMeta(array $values) {
-    $structured_values = [];
-    foreach ($values as $value => $weight) {
-      $structured_values[] = [
-        'value' => static::castAllowedValue($value),
-        'weight' => $weight['weight'],
-      ];
-    }
-    return $structured_values;
+    return array_map(fn($value, $meta) => [...$meta, 'value' => static::castAllowedValue($value)], array_keys($values), $values);
   }
 
   /**
