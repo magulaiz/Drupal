@@ -38,11 +38,17 @@ trait SectionListTrait {
    * {@inheritdoc}
    */
   public function getSection($delta) {
-    if (!$this->hasSection($delta)) {
-      throw new \OutOfBoundsException(sprintf('Invalid delta "%s"', $delta));
+    if ($this->hasSection($delta)) {
+      $i = 0;
+      foreach ($this->getSections() as $section) {
+        if ($i === $delta) {
+          return $section;
+        }
+        $i++;
+      }
     }
 
-    return $this->getSections()[$delta];
+    throw new \OutOfBoundsException(sprintf('Invalid delta "%s"', $delta));
   }
 
   /**
@@ -167,7 +173,7 @@ trait SectionListTrait {
    *   TRUE if there is a section for this delta, FALSE otherwise.
    */
   protected function hasSection($delta) {
-    return isset($this->getSections()[$delta]);
+    return $delta < count($this->getSections());
   }
 
   /**
