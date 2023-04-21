@@ -252,7 +252,7 @@ function _drupal_log_error($error, $fatal = FALSE) {
         array_shift($backtrace);
         // Generate a backtrace containing only scalar argument values.
         $error['@backtrace'] = nl2br(Error::formatBacktrace($backtrace));
-        $message = new FormattableMarkup('<details class="backtrace"><summary>' . Error::DEFAULT_ERROR_MESSAGE . '</summary>@backtrace</details>', $error);
+        $message = new FormattableMarkup('<details class="error-with-backtrace"><summary>' . Error::DEFAULT_ERROR_MESSAGE . '</summary>@backtrace</details>', $error);
       }
     }
 
