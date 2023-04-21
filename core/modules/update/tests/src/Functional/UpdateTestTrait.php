@@ -35,8 +35,7 @@ trait UpdateTestTrait {
   /**
    * Sets XML mappings.
    *
-   * The array that maps project names to availability scenarios to
-   * fetch.
+   * The array that maps project names to available releases to fetch.
    *
    * @param string[] $xml_map
    *   The XML mappings.
