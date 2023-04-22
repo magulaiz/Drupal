@@ -42,20 +42,6 @@ class UninstallTest extends BrowserTestBase {
   }
 
   /**
-   * Provides test data to run using different themes.
-   *
-   * These tests are run with both the system default theme and the Claro theme
-   * in order to check the custom twig templates in Claro.
-   *
-   * @return array
-   *   List of admin themes to test with.
-   */
-  public function dataUninstallPage() {
-    $data = [['default'], ['claro']];
-    return $data;
-  }
-
-  /**
    * Tests the hook_modules_uninstalled() of the user module.
    */
   public function testUserPermsUninstalled() {
@@ -68,9 +54,23 @@ class UninstallTest extends BrowserTestBase {
   }
 
   /**
+   * Provides test data to run using different themes.
+   *
+   * The test is run with both the system default theme and the Claro theme
+   * in order to check the custom twig templates in Claro.
+   *
+   * @return array
+   *   List of admin themes to test with.
+   */
+  public function dataUninstallPage() {
+    $data = [['default'], ['claro']];
+    return $data;
+  }
+
+  /**
    * Tests the Uninstall page and Uninstall confirmation page.
    *
-   * @dataProvider dataUninstallPage()
+   * @dataProvider dataUninstallPage
    */
   public function testUninstallPage($theme) {
     if ($theme !== 'default') {
