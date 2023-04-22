@@ -34,14 +34,14 @@ class DrupalLogErrorTest extends UnitTestCase {
     $verbose = "\$GLOBALS['config']['system.logging']['error_level'] = 'verbose';";
     $scriptBody = $this->getScriptBody();
     $data['normal'] = [
-      "<?php\n$scriptBody",
+      "<?php\n\$fatal = TRUE;\n$scriptBody",
       "kernel test: This is a test message in test_function (line 456 of test.module).\n",
       "kernel test: This is a test message in test.module on line 456 backtrace\nand-more-backtrace\n",
     ];
     $data['verbose'] = [
-      "<?php\n$verbose\n$scriptBody",
+      "<?php\n\$fatal = FALSE;\n$verbose\n$scriptBody",
       "<details class=\"error-with-backtrace\"><summary>kernel test: This is a test message in test_function (line 456 of test.module).</summary><pre class=\"backtrace\">backtrace\nand-more-backtrace</pre></details>\n",
-      "kernel test: This is a test message in test.module on line 456 backtrace\nand-more-backtrace\n",
+      "",
     ];
     return $data;
   }
@@ -67,7 +67,7 @@ $error = [
   'backtrace' => [],
   'exception' => NULL,
 ];
-_drupal_log_error($error, TRUE);
+_drupal_log_error($error, $fatal);
 EOT;
   }
 
