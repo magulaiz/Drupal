@@ -28,6 +28,7 @@ class TaxonomyIndexTidUiTest extends UITestBase {
     'test_filter_taxonomy_index_tid',
     'test_taxonomy_term_name',
     'test_taxonomy_exposed_grouped_filter',
+    'test_taxonomy_exposed_filter',
   ];
 
   /**
@@ -301,7 +302,7 @@ class TaxonomyIndexTidUiTest extends UITestBase {
     $this->submitForm($edit, 'Apply');
     $this->submitForm([], 'Save');
 
-    // Visit the view's page url and validate the results.
+    // Visit the view's page URL and validate the results.
     $this->drupalGet('/test-taxonomy-exposed-grouped-filter');
     $this->submitForm(['field_views_testing_tags_target_id' => 1], 'Apply');
     $this->assertSession()->pageTextContains($nodes[0]->getTitle());
@@ -356,6 +357,22 @@ class TaxonomyIndexTidUiTest extends UITestBase {
     // Make sure the unpublished term isn't shown to the anonymous user.
     $this->assertNotEmpty($this->cssSelect('option[value="' . $this->terms[0][0]->id() . '"]'));
     $this->assertEmpty($this->cssSelect('option[value="' . $this->terms[1][0]->id() . '"]'));
+  }
+
+  /**
+   * Test to ensure that term exists in views exposed form after it is created.
+   */
+  public function testExposedFilterOptions() {
+    $this->drupalGet('test-taxonomy-exposed-filter');
+    $this->assertSession()->optionExists('edit-tid', 'Term 1.0');
+    $term = Term::create([
+      'vid' => 'tags',
+      'name' => "Test Term",
+      'parent' => 0,
+    ]);
+    $term->save();
+    $this->drupalGet('test-taxonomy-exposed-filter');
+    $this->assertSession()->optionExists('edit-tid', 'Test Term');
   }
 
 }
