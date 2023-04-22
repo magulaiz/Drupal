@@ -491,7 +491,7 @@
             "dist": {
                 "type": "path",
                 "url": "core",
-                "reference": "4a6aa3700723fe42a3a8add8c27af45f8710ddb2"
+                "reference": "f039885a25c4ab1c08d4a00ac026b38074c3a7be"
             },
             "require": {
                 "asm89/stack-cors": "^2.1",
@@ -531,6 +531,8 @@
                 "symfony/psr-http-message-bridge": "^2.1",
                 "symfony/routing": "^6.2",
                 "symfony/serializer": "^6.2",
+                "symfony/string": "^6.2",
+                "symfony/translation-contracts": "^3",
                 "symfony/validator": "^6.2",
                 "symfony/yaml": "^6.2",
                 "twig/twig": "^3.5.0"
