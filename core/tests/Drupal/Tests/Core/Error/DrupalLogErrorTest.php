@@ -17,7 +17,7 @@ class DrupalLogErrorTest extends UnitTestCase {
    *
    * @dataProvider provideFatalExitCodeData
    */
-  public function testFatalExitCode(string $script, string $output, string $errorOutput) {
+  public function testFatalExitCode(string $script, string $output, string $errorOutput, bool $processIsSuccessful) {
     // We need to override the current working directory for invocations from
     // run-tests.sh to work properly.
     $process = new PhpProcess($script, $this->root);
@@ -27,7 +27,7 @@ class DrupalLogErrorTest extends UnitTestCase {
     // script throwing a PHP error) would still pass the final assertion.
     $this->assertEquals($output, $process->getOutput());
     $this->assertEquals($errorOutput, $process->getErrorOutput());
-    $this->assertFalse($process->isSuccessful());
+    $this->assertSame($processIsSuccessful, $process->isSuccessful());
   }
 
   public function provideFatalExitCodeData() {
@@ -37,11 +37,13 @@ class DrupalLogErrorTest extends UnitTestCase {
       "<?php\n\$fatal = TRUE;\n$scriptBody",
       "kernel test: This is a test message in test_function (line 456 of test.module).\n",
       "kernel test: This is a test message in test.module on line 456 backtrace\nand-more-backtrace\n",
+      FALSE,
     ];
     $data['verbose'] = [
       "<?php\n\$fatal = FALSE;\n$verbose\n$scriptBody",
       "<details class=\"error-with-backtrace\"><summary><em class=\"placeholder\">kernel test</em>: This is a test message in <em class=\"placeholder\">test_function</em> (line <em class=\"placeholder\">456</em> of <em class=\"placeholder\">test.module</em>).</summary><pre class=\"backtrace\"></pre></details>",
       "",
+      TRUE,
     ];
     return $data;
   }
