@@ -40,7 +40,7 @@ class DrupalLogErrorTest extends UnitTestCase {
     ];
     $data['verbose'] = [
       "<?php\n\$fatal = FALSE;\n$verbose\n$scriptBody",
-      "<details class=\"error-with-backtrace\"><summary>kernel test: This is a test message in test_function (line 456 of test.module).</summary><pre class=\"backtrace\">backtrace\nand-more-backtrace</pre></details>\n",
+      "<details class=\"error-with-backtrace\"><summary><em class=\"placeholder\">kernel test</em>: This is a test message in <em class=\"placeholder\">test_function</em> (line <em class=\"placeholder\">456</em> of <em class=\"placeholder\">test.module</em>).</summary><pre class=\"backtrace\"></pre></details>",
       "",
     ];
     return $data;
