@@ -40,7 +40,7 @@ class Upgrade7TestWithContentModeration extends Upgrade7Test {
     $type_settings = $editorial->getTypePlugin()->getConfiguration();
     $type_settings['default_moderation_state'] = 'published';
     $type_settings['entity_types']['node'] = array_merge(
-      ['article', 'forum'],
+      ['article'],
       $types
     );
     $type_plugin = $editorial->getTypePlugin();
@@ -53,7 +53,7 @@ class Upgrade7TestWithContentModeration extends Upgrade7Test {
    */
   protected function getEntityCounts() {
     $entity_counts = parent::getEntityCounts() + [
-      'content_moderation_state' => 7,
+      'content_moderation_state' => 5,
       'workflow' => 1,
     ];
     $entity_counts['entity_view_display'] = $entity_counts['entity_view_display'] + 1;
