@@ -50,7 +50,7 @@ class UninstallTest extends BrowserTestBase {
    * @return array
    *   List of admin themes to test with.
    */
-  public function dataAdminThemes() {
+  public function dataUninstallPage() {
     $data = [['default'], ['claro']];
     return $data;
   }
@@ -70,7 +70,7 @@ class UninstallTest extends BrowserTestBase {
   /**
    * Tests the Uninstall page and Uninstall confirmation page.
    *
-   * @dataProvider dataAdminThemes()
+   * @dataProvider dataUninstallPage()
    */
   public function testUninstallPage($theme) {
     if ($theme !== 'default') {
