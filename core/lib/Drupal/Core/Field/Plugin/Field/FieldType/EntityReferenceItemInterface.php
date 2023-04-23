@@ -24,6 +24,6 @@ interface EntityReferenceItemInterface {
    *   array with the entity type ID if the entity type does not implement
    *   bundles.)
    */
-  public static function getReferenceableBundles(FieldDefinitionInterface $field_definition);
+  public static function getReferenceableBundles(FieldDefinitionInterface $field_definition): array;
 
 }

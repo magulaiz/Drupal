@@ -780,7 +780,7 @@ class EntityReferenceItem extends EntityReferenceItemBase implements OptionsProv
   /**
    * {@inheritdoc}
    */
-  public static function getReferenceableBundles(FieldDefinitionInterface $field_definition) {
+  public static function getReferenceableBundles(FieldDefinitionInterface $field_definition): array {
     $settings = $field_definition->getSettings();
     $target_type_id = $settings['target_type'];
     $handler_settings = $settings['handler_settings'];
