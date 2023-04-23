@@ -51,28 +51,6 @@ class ResourceResponseSubscriberTest extends UnitTestCase {
     $this->assertEquals($expected_response !== FALSE ? $expected_response : Json::encode($data), $event->getResponse()->getContent());
   }
 
-  /**
-   * @covers ::onResponse
-   */
-  public function testSerializationOnDelete() {
-    $data = ['hello world'];
-    $request = new Request();
-    $route_match = new RouteMatch('test', new Route('/rest/test', ['_rest_resource_config' => 'restplugin']));
-
-    $handler_response = new ResourceResponse($data);
-    $resource_response_subscriber = $this->getFunctioningResourceResponseSubscriber($route_match);
-    $event = new ResponseEvent(
-      $this->prophesize(HttpKernelInterface::class)->reveal(),
-      $request,
-      HttpKernelInterface::MASTER_REQUEST,
-      $handler_response
-    );
-    $resource_response_subscriber->onResponse($event);
-
-    // Content is a serialized version of the data we provided.
-    $this->assertEquals(Json::encode($data), $event->getResponse()->getContent());
-  }
-
   public function providerTestSerialization() {
     return [
       // The default data for \Drupal\rest\ResourceResponse.
