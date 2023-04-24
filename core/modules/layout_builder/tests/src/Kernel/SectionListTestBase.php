@@ -36,12 +36,13 @@ abstract class SectionListTestBase extends EntityKernelTestBase {
     parent::setUp();
 
     $section_data = [
-      new Section('layout_test_plugin', [], [
+      'first-section-uuid' => (new Section('layout_test_plugin', [], [
         '10000000-0000-1000-a000-000000000000' => new SectionComponent('10000000-0000-1000-a000-000000000000', 'content', ['id' => 'foo']),
-      ]),
-      new Section('layout_test_plugin', ['setting_1' => 'bar'], [
+      ]))->setUuid('first-section-uuid'),
+      'second-section-uuid' => (new Section('layout_test_plugin', ['setting_1' => 'bar'], [
         '20000000-0000-1000-a000-000000000000' => new SectionComponent('20000000-0000-1000-a000-000000000000', 'content', ['id' => 'foo']),
-      ]),
+      ]))->setUuid('second-section-uuid')
+        ->setWeight(1),
     ];
     $this->sectionList = $this->getSectionList($section_data);
   }
@@ -62,12 +63,13 @@ abstract class SectionListTestBase extends EntityKernelTestBase {
    */
   public function testGetSections() {
     $expected = [
-      new Section('layout_test_plugin', ['setting_1' => 'Default'], [
+      'first-section-uuid' => (new Section('layout_test_plugin', ['setting_1' => 'Default'], [
         '10000000-0000-1000-a000-000000000000' => new SectionComponent('10000000-0000-1000-a000-000000000000', 'content', ['id' => 'foo']),
-      ]),
-      new Section('layout_test_plugin', ['setting_1' => 'bar'], [
+      ]))->setUuid('first-section-uuid'),
+      'second-section-uuid' => (new Section('layout_test_plugin', ['setting_1' => 'bar'], [
         '20000000-0000-1000-a000-000000000000' => new SectionComponent('20000000-0000-1000-a000-000000000000', 'content', ['id' => 'foo']),
-      ]),
+      ]))->setUuid('second-section-uuid')
+        ->setWeight(1),
     ];
     $this->assertSections($expected);
   }
@@ -93,13 +95,15 @@ abstract class SectionListTestBase extends EntityKernelTestBase {
    */
   public function testInsertSection() {
     $expected = [
-      new Section('layout_test_plugin', ['setting_1' => 'Default'], [
+      'first-section-uuid' => (new Section('layout_test_plugin', ['setting_1' => 'Default'], [
         '10000000-0000-1000-a000-000000000000' => new SectionComponent('10000000-0000-1000-a000-000000000000', 'content', ['id' => 'foo']),
-      ]),
-      new Section('layout_onecol'),
-      new Section('layout_test_plugin', ['setting_1' => 'bar'], [
+      ]))->setUuid('first-section-uuid'),
+      'third-section-uuid' => (new Section('layout_onecol'))->setUuid('third-section-uuid')
+        ->setWeight(1),
+      'second-section-uuid' => (new Section('layout_test_plugin', ['setting_1' => 'bar'], [
         '20000000-0000-1000-a000-000000000000' => new SectionComponent('20000000-0000-1000-a000-000000000000', 'content', ['id' => 'foo']),
-      ]),
+      ]))->setUuid('second-section-uuid')
+        ->setWeight(2),
     ];
 
     $this->sectionList->insertSection(1, new Section('layout_onecol'));

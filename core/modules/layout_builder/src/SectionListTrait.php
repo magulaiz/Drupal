@@ -39,12 +39,10 @@ trait SectionListTrait {
    */
   public function getSection($delta) {
     if ($this->hasSection($delta)) {
-      $i = 0;
       foreach ($this->getSections() as $section) {
-        if ($i == $delta) {
+        if ($delta == $section->getWeight()) {
           return $section;
         }
-        $i++;
       }
     }
 
@@ -69,7 +67,7 @@ trait SectionListTrait {
     }
     else {
       foreach ($sections as $original_section) {
-        if ($original_section->getWeight() === $delta) {
+        if ($original_section->getWeight() == $delta) {
           // @todo Use https://www.drupal.org/node/66183 once resolved.
           $start = array_slice($sections, 0, $delta);
           $end = array_slice($sections, $delta + 1);
@@ -193,10 +191,10 @@ trait SectionListTrait {
    * Magic method: Implements a deep clone.
    */
   public function __clone() {
-    $sections = $this->getSections();
+    $sections = [];
 
-    foreach ($sections as $delta => $item) {
-      $sections[$delta] = clone $item;
+    foreach ($this->getSections() as $uuid => $item) {
+      $sections[$uuid] = clone $item;
     }
 
     $this->setSections($sections);

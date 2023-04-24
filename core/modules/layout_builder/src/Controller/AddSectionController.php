@@ -61,7 +61,8 @@ class AddSectionController implements ContainerInjectionInterface {
    *   The controller response.
    */
   public function build(SectionStorageInterface $section_storage, int $delta, $plugin_id) {
-    $section_storage->insertSection($delta, new Section($plugin_id));
+    $section_storage->insertSection($delta, (new Section($plugin_id))
+      ->setUuid(\Drupal::service('uuid')->generate()));
 
     $this->layoutTempstoreRepository->set($section_storage);
 
