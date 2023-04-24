@@ -65,7 +65,7 @@ class QueryParameter extends ArgumentDefaultPluginBase implements CacheableDepen
    */
   public function getArgument() {
     $current_request = $this->view->getRequest();
-    $path = array_filter(preg_split('#(\[|][|])#', $this->options['query_param']));
+    $path = array_filter(preg_split('#(\[|\]\[|\])#', $this->options['query_param']));
 
     if ($current_request->query->has($path[0])) {
       $all = $current_request->query->all();
