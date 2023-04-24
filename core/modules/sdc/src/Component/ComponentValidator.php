@@ -67,7 +67,7 @@ final class ComponentValidator {
       throw new InvalidComponentException($message);
     }
     // If the validator isn't set, then the validation library is not installed.
-    if (!$this->validator) {
+    if (!isset($this->validator)) {
       return TRUE;
     }
     // Detect the props with a type class, and validate that the class exists.
@@ -136,7 +136,7 @@ final class ComponentValidator {
    */
   public function validateProps(array $context, Component $component): bool {
     // If the validator isn't set, then the validation library is not installed.
-    if (!$this->validator) {
+    if (!isset($this->validator)) {
       return TRUE;
     }
     $component_id = $component->getPluginId();
