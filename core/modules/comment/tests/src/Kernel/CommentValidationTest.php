@@ -217,7 +217,7 @@ class CommentValidationTest extends EntityKernelTestBase {
       ['target_bundles' => ['comment']]
     );
 
-    $comment_admin_user = $this->createUser(['uid' => 2, 'name' => 'admin'], [
+    $comment_admin_user = $this->drupalCreateUser([
       'skip comment approval',
       'post comments',
       'access comments',
@@ -226,7 +226,7 @@ class CommentValidationTest extends EntityKernelTestBase {
       'administer comments',
       'bypass node access',
     ]);
-    $web_user = $this->createUser(['uid' => 3, 'name' => 'web_user'], [
+    $comment_non_admin_user = $this->drupalCreateUser([
       'access comments',
       'post comments',
       'create page content',
@@ -238,10 +238,10 @@ class CommentValidationTest extends EntityKernelTestBase {
     // Create a node with a comment and make it unpublished.
     $node1 = $this->entityTypeManager->getStorage('node')->create([
       'type' => 'page',
-      'title' => 'test',
+      'title' => 'test 1',
       'promote' => 1,
       'status' => 0,
-      'uid' => $web_user->id(),
+      'uid' => $comment_non_admin_user->id(),
     ]);
     $node1->save();
     $comment1 = $this->entityTypeManager->getStorage('comment')->create([
@@ -250,25 +250,29 @@ class CommentValidationTest extends EntityKernelTestBase {
       'field_name' => 'comment',
       'comment_body' => $this->randomMachineName(),
     ]);
+    $comment1->save();
     $this->assertInstanceOf(Comment::class, $comment1);
 
     // Create a second published node.
+    /** @var \Drupal\node\Entity\Node $node2 */
     $node2 = $this->entityTypeManager->getStorage('node')->create([
       'type' => 'page',
-      'title' => 'test',
+      'title' => 'test 2',
       'promote' => 1,
       'status' => 1,
-      'uid' => $web_user->id(),
+      'uid' => $comment_non_admin_user->id(),
     ]);
     $node2->save();
 
     // Test the validation API directly.
-    $this->drupalSetCurrentUser($web_user);
+    $this->drupalSetCurrentUser($comment_non_admin_user);
+    $this->assertEquals(\Drupal::currentUser()->id(), $comment_non_admin_user->id());
     $node2->set('entity_reference_comment', $comment1->id());
     $violations = $node2->validate();
     $this->assertCount(1, $violations);
 
     $this->drupalSetCurrentUser($comment_admin_user);
+    $this->assertEquals(\Drupal::currentUser()->id(), $comment_admin_user->id());
     $node2->set('entity_reference_comment', $comment1->id());
     $violations = $node2->validate();
     $this->assertCount(0, $violations);
