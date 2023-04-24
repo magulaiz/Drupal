@@ -65,11 +65,12 @@ class QueryParameter extends ArgumentDefaultPluginBase implements CacheableDepen
    */
   public function getArgument() {
     $current_request = $this->view->getRequest();
+    // Convert a[b][c][d] into ['a', 'b', 'c', 'd'].
     $path = array_filter(preg_split('#(\[|\]\[|\])#', $this->options['query_param']));
 
     if ($current_request->query->has($path[0])) {
-      $all = $current_request->query->all();
-      $param = NestedArray::getValue($all, $path);
+      $query = $current_request->query->all();
+      $param = NestedArray::getValue($query, $path);
       if (is_array($param)) {
         $conjunction = ($this->options['multiple'] == 'and') ? ',' : '+';
         $param = implode($conjunction, $param);
