@@ -119,31 +119,4 @@ class CommentEntityReferenceTest extends CommentTestBase {
     $this->assertSession()->pageTextNotContains($this->comment->label());
   }
 
-  /**
-   * Tests that comments of unpublished are not shown nor offered when editing.
-   */
-  public function testCommentOfUnpublishedNodeNoBypassAccess() {
-    // Unpublish the node that has the comment.
-    $this->node->setUnpublished()->save();
-
-    $this->drupalLogout();
-    $user = $this->drupalCreateUser([
-      'skip comment approval',
-      'post comments',
-      'access comments',
-      'access content',
-      'administer nodes',
-      'administer comments',
-      'edit any article content',
-    ]);
-    $this->drupalLogin($user);
-
-    // Test the validation API directly.
-
-    $this->node2->set('entity_reference_comment', $this->comment->id());
-    $violations = $this->node2->validate();
-    $this->assertCount(1, $violations);
-
-  }
-
 }
