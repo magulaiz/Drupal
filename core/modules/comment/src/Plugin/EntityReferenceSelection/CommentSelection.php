@@ -6,7 +6,6 @@ use Drupal\Component\Utility\Html;
 use Drupal\Core\Database\Query\SelectInterface;
 use Drupal\Core\Entity\Plugin\EntityReferenceSelection\DefaultSelection;
 use Drupal\comment\CommentInterface;
-use Drupal\node\NodeInterface;
 
 /**
  * Provides specific access control for the comment entity type.
@@ -75,7 +74,7 @@ class CommentSelection extends DefaultSelection {
       $query = $this->buildEntityQuery();
       // Mirror the conditions checked in buildEntityQuery().
       if (!$this->currentUser->hasPermission('administer comments')) {
-        $query->condition('status', NodeInterface::PUBLISHED);
+        $query->condition('status', 1);
       }
       $result = $query
         ->condition($entity_type->getKey('id'), $ids, 'IN')
@@ -131,7 +130,7 @@ class CommentSelection extends DefaultSelection {
           // insufficient for nodes.
           // @see \Drupal\node\Plugin\EntityReferenceSelection\NodeSelection::buildEntityQuery()
           if (!$this->currentUser->hasPermission('bypass node access') && !$this->moduleHandler->hasImplementations('node_grants')) {
-            $query->condition($entity_alias . '.status', NodeInterface::PUBLISHED);
+            $query->condition($entity_alias . '.status', 1);
           }
         }
       }
