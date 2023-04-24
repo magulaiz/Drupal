@@ -169,11 +169,6 @@ body.drag {
   padding-bottom: var(--space-s);
 }
 
-.touchevents .draggable .menu-item__link {
-  padding-top: var(--space-xs);
-  padding-bottom: var(--space-xs);
-}
-
 /**
  * Wrapper of the toggle weight button (styled as a link).
  */
