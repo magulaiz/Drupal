@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\announcements_feed;
 
 use Composer\Semver\Semver;
@@ -8,7 +10,6 @@ use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Config\ImmutableConfig;
 use Drupal\Core\KeyValueStore\KeyValueExpirableFactoryInterface;
 use Drupal\Core\KeyValueStore\KeyValueStoreInterface;
-use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\Utility\Error;
 use GuzzleHttp\ClientInterface;
 use Psr\Log\LoggerInterface;
@@ -19,8 +20,6 @@ use Psr\Log\LoggerInterface;
  * @internal
  */
 class AnnounceFetcher {
-
-  use StringTranslationTrait;
 
   /**
    * The configuration settings of this module.
@@ -143,7 +142,7 @@ class AnnounceFetcher {
 
       $announcements = Json::decode($feed_content);
       if (!isset($announcements['items'])) {
-        $this->logger->error($this->t('The feed format is not valid.'));
+        $this->logger->error('The feed format is not valid.');
         throw new \Exception('Invalid format');
       }
 

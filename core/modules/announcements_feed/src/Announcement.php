@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\announcements_feed;
 
 use Drupal\Core\Datetime\DrupalDateTime;

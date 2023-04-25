@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\announcements_feed\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
@@ -11,6 +13,8 @@ use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Controller for community announcements.
+ *
+ * @internal
  */
 class AnnounceController extends ControllerBase implements ContainerInjectionInterface {
 
