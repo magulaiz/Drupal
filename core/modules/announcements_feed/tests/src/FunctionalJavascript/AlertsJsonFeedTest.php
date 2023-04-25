@@ -33,14 +33,7 @@ class AlertsJsonFeedTest extends OffCanvasTestBase {
    *
    * @var \Drupal\user\UserInterface
    */
-  protected UserInterface $user1;
-
-  /**
-   * A user with permission to access toolbar and access announcements.
-   *
-   * @var \Drupal\user\UserInterface
-   */
-  protected UserInterface $user2;
+  protected UserInterface $user;
 
   /**
    * {@inheritdoc}
@@ -48,14 +41,7 @@ class AlertsJsonFeedTest extends OffCanvasTestBase {
   public function setUp():void {
     parent::setUp();
 
-    $this->user1 = $this->drupalCreateUser(
-      [
-        'access toolbar',
-        'access announcements',
-      ]
-    );
-
-    $this->user2 = $this->drupalCreateUser(
+    $this->user = $this->drupalCreateUser(
       [
         'access toolbar',
         'access announcements',
@@ -66,156 +52,50 @@ class AlertsJsonFeedTest extends OffCanvasTestBase {
   }
 
   /**
-   * Check the status of the red dot alert with an updated JSON feed URL.
+   * Check the status of the announcements when the feed is updated and removed.
    */
-  public function testAnnounceFeedUpdated() {
-    $this->drupalLogin($this->user2);
-    $this->drupalGet('<front>');
-    $this->clickLink('Announcements');
-    $this->drupalLogout();
-
-    $this->drupalLogin($this->user1);
+  public function testAnnounceFeedUpdatedAndRemoved() {
+    $this->drupalLogin($this->user);
     $this->drupalGet('<front>');
     $this->clickLink('Announcements');
     $this->waitForOffCanvasToOpen();
-
-    $this->drupalGet('<front>');
-    $this->assertSession()->elementNotExists('css', '.announce-new');
+    $page_html = $this->getSession()->getPage()->getHtml();
+    $this->assertStringNotContainsString('Only 10 - Drupal 106 is available and this feed is Updated', $page_html);
 
     // Change the feed url and reset temp storage.
     AnnounceTestHttpClientMiddleware::setAnnounceTestEndpoint('/announce-feed-json/updated');
 
     $this->drupalGet('<front>');
-
-    // Assert the '.announce-new' class is added when there are new
-    // announcements.
-    // Alert Icon should display a red dot over it.
-    $this->assertSession()->elementExists('css', '.announce-new');
-
-    // The new items in the feed should show as unread.
-    // Old items should show as read.
     $this->clickLink('Announcements');
     $this->waitForOffCanvasToOpen();
-
-    $this->assertSession()->elementExists('css', '.announcement__new');
-
-    // Checking existence of the unread record.
-    $this->assertSession()->elementsCount('css', '.announcement__new', 1);
-    $page = $this->getSession()->getPage();
-    $unread_status = $page->find('css', '.announcement__new');
-    $this->assertNotEmpty($unread_status);
-    $this->assertStringContainsString('Only 10 - Drupal 106 is available and this feed is Updated', $unread_status->getParent()->getText());
-
-    // Access the alert icon again.
-    $this->drupalLogout();
-
-    // Login user second time.
-    $this->drupalLogin($this->user1);
-
-    // Alert Icon should not display a red dot over it.
-    $this->drupalGet('<front>');
-    $this->assertSession()->elementNotExists('css', '.announce-new');
-
-    // All items should show as read.
-    $this->clickLink('Announcements');
-    $this->waitForOffCanvasToOpen();
-    $this->assertSession()->elementNotExists('css', '.announcement__new');
-    $this->drupalLogout();
-
-    // Login as another user and access the alert icon.
-    $this->drupalLogin($this->user2);
-    $this->drupalGet('<front>');
-
-    // Alert Icon should display a red dot over it.
-    $this->assertSession()->elementExists('css', '.announce-new');
-
-    // The new items in the feed should show as unread.
-    // Old items should show as read.
-    $this->clickLink('Announcements');
-    $this->waitForOffCanvasToOpen();
-    $this->assertSession()->elementExists('css', '.announcement__new');
-
-    // Checking existence of the unread record.
-    $this->assertSession()->elementsCount('css', '.announcement__new', 1);
-
-    // The new items for that user should be shown as unread.
-    $page = $this->getSession()->getPage();
-    $unread_status = $page->find('css', '.announcement__new');
-    $this->assertNotEmpty($unread_status);
-    $this->assertStringContainsString('Only 10 - Drupal 106 is available and this feed is Updated', $unread_status->getParent()->getText());
-
-    // Checking updated title.
-    $new_page_html = $page->getHtml();
-    $this->assertStringContainsString('announce title updated', $new_page_html);
-  }
-
-  /**
-   * Check the status of the new announcements when the feed is updated.
-   */
-  public function testAnnounceFeedRemoved() {
-    $this->drupalLogin($this->user1);
-    $this->drupalGet('<front>');
-    $this->clickLink('Announcements');
-    $this->waitForOffCanvasToOpen();
-    $this->assertSession()->elementNotExists('css', '.announce-new');
-    $this->drupalGet('<front>');
-    $this->clickLink('Announcements');
-    $this->waitForOffCanvasToOpen();
-    $this->assertSession()->elementNotExists('css', '.announcement__new');
-    $page = $this->getSession()->getPage();
-    $new_page_html = $page->getHtml();
-    $this->assertStringNotContainsString('Only 10 - Drupal 106 is available and this feed is Updated', $new_page_html);
-
-    // Change the feed url and reset temp storage.
-    AnnounceTestHttpClientMiddleware::setAnnounceTestEndpoint('/announce-feed-json/updated');
-
-    $this->drupalGet('<front>');
-    $this->assertSession()->elementExists('css', '.announce-new');
-    $this->clickLink('Announcements');
-    $this->waitForOffCanvasToOpen();
-    $this->assertSession()->elementsCount('css', '.announcement__new', 1);
-    $page = $this->getSession()->getPage();
-    $unread_status = $page->find('css', '.announcement__new');
-    $this->assertNotEmpty($unread_status);
-    $this->assertStringContainsString('Only 10 - Drupal 106 is available and this feed is Updated', $unread_status->getParent()->getText());
+    $page_html = $this->getSession()->getPage()->getHtml();
+    $this->assertStringContainsString('Only 10 - Drupal 106 is available and this feed is Updated', $page_html);
     $this->drupalLogout();
 
     // Change the feed url and reset temp storage.
     AnnounceTestHttpClientMiddleware::setAnnounceTestEndpoint('/announce-feed-json/removed');
-    $this->drupalLogin($this->user1);
-
-    // If the removed item is only item the user hasn't read the red dot should
-    // not show.
+    $this->drupalLogin($this->user);
     $this->drupalGet('<front>');
-    $this->assertSession()->elementNotExists('css', '.announce-new');
-
-    // Removed items should not display in the announcement model.
     $this->clickLink('Announcements');
     $this->waitForOffCanvasToOpen();
-    $this->assertSession()->elementNotExists('css', '.announcement__new');
-    $page = $this->getSession()->getPage();
-    $new_page_html = $page->getHtml();
-    $this->assertStringNotContainsString('Only 10 - Drupal 106 is available and this feed is Updated', $new_page_html);
+    $page_html = $this->getSession()->getPage()->getHtml();
+    $this->assertStringNotContainsString('Only 10 - Drupal 106 is available and this feed is Updated', $page_html);
   }
 
   /**
-   * Check the status of the red dot alert with an empty JSON feed.
+   * Check with an empty JSON feed.
    */
   public function testAnnounceFeedEmpty() {
     // Change the feed url and reset temp storage.
     AnnounceTestHttpClientMiddleware::setAnnounceTestEndpoint('/announce-feed-json/empty');
 
-    $this->drupalLogin($this->user1);
+    $this->drupalLogin($this->user);
     $this->drupalGet('<front>');
-    $this->assertSession()->elementNotExists('css', '.announce-new');
 
     // Removed items should not display in the announcement model.
     $this->clickLink('Announcements');
     $this->waitForOffCanvasToOpen();
-    $this->assertSession()->elementNotExists('css', '.announcement__new');
-    $page = $this->getSession()->getPage();
-    $new_page_html = $page->getHtml();
-    $this->assertStringContainsString('No announcements available', $new_page_html);
+    $this->assertStringContainsString('No announcements available', $this->getSession()->getPage()->getHtml());
   }
 
 }

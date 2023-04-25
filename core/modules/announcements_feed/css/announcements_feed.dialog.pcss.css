@@ -43,11 +43,6 @@
     font-size: 1rem;
   }
 
-  & .announcement__new {
-    font-size: 0.875rem;
-    font-style: italic;
-  }
-
   & .no_alerts {
     margin-block-start: var(--off-canvas-padding);
   }

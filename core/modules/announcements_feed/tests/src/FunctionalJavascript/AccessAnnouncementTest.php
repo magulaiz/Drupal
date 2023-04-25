@@ -50,78 +50,11 @@ class AccessAnnouncementTest extends OffCanvasTestBase {
 
     $this->drupalGet('<front>');
 
-    // Alert Icon should display a red dot over it.
-    $this->assertSession()->elementExists('css', '.announce-new');
+    // Check that the user can see the toolbar.
+    $this->assertSession()->elementExists('css', '#toolbar-bar');
 
-    // All alerts items should display as unread alerts,
-    // having darker background and dot icon to indicate unread.
-    $this->clickLink('Announcements');
-    $this->waitForOffCanvasToOpen();
-    $this->assertSession()->elementExists('css', '.announcement__new');
-    $title_count = count($this->getSession()->getPage()->findAll('css', '.announcement__title'));
-    $this->assertSession()->elementsCount('css', '.announcement__new', $title_count);
-  }
-
-  /**
-   * Testing on Second time login.
-   *
-   * Tests for access announce red dot icon.
-   *
-   * Unread/Read status of alerts in announce panel.
-   *
-   * Check status with new user to test cache system.
-   */
-  public function testAnnounceSecondLogin() {
-    // Create user with announce permissions.
-    $account = $this->drupalCreateUser(
-      [
-        'access toolbar',
-        'access announcements',
-      ]
-    );
-    $this->drupalLogin($account);
-    $this->drupalGet('<front>');
-    $this->clickLink('Announcements');
-    $this->drupalLogout();
-    // Login user second time.
-    $this->drupalLogin($account);
-    $this->drupalGet('<front>');
-
-    // Announcements should no longer be marked as new.
-    $this->assertSession()->elementNotExists('css', '.announcement__new');
-
-    // All alerts items should display as unread alerts,
-    // having darker background and dot icon to indicate unread.
-    $this->clickLink('Announcements');
-    $this->waitForOffCanvasToOpen();
-
-    // All alerts icons should display as read alerts,
-    // having light background and no dot icon.
-    $this->assertSession()->elementNotExists('css', '.announcement__new');
-    $this->drupalLogout();
-
-    // Login with new user with announce permissions.
-    $account = $this->drupalCreateUser(
-      [
-        'access toolbar',
-        'access announcements',
-      ]
-    );
-    $this->drupalLogin($account);
-    $this->drupalGet('<front>');
-
-    // Test if class of red dot icon exist.
-    // Alert Icon should display a red dot over it.
-    $this->assertSession()->elementExists('css', '.announce-new');
-
-    // All should be shown as unread.
-    $this->clickLink('Announcements');
-    $this->waitForOffCanvasToOpen();
-    $this->assertSession()->elementExists('css', '.announcement__new');
-    $title_count = count($this->getSession()->getPage()->findAll('css', '.announcement__title'));
-    $this->assertSession()->elementsCount('css', '.announcement__new', $title_count);
-    $this->drupalLogout();
-
+    // And the announcements.
+    $this->assertSession()->elementExists('css', '.toolbar-icon-announce');
   }
 
   /**

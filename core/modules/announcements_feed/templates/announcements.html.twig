@@ -12,9 +12,6 @@
             </div>
             <div class="announcement__link">
               <a href="{{ announcement.url }}">{{ 'Learn More'|t }}</a>
-              {% if announcement.new %}
-                <span class="announcement__new">{{ 'New'|t }}</span>
-              {% endif %}
             </div>
           </li>
         {% endfor %}
@@ -23,9 +20,6 @@
         <li class="announcement announcement--standard">
           <div class="announcement__title">
             <a href="{{ announcement.url }}">{{ announcement.title }}</a>
-            {% if announcement.new %}
-              <span class="announcement__new">{{ 'New'|t }}</span>
-            {% endif %}
             <div class="announcement__date">{{ announcement.datePublishedTimestamp | format_date('short') }}</div>
           </div>
         </li>

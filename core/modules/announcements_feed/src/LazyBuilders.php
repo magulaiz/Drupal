@@ -19,15 +19,12 @@ final class LazyBuilders implements TrustedCallbackInterface {
   /**
    * Constructs a new LazyBuilders.
    *
-   * @param \Drupal\announcements_feed\AnnounceUserStatus $userStatus
-   *   User status service.
    * @param \Drupal\Core\Messenger\MessengerInterface $messenger
    *   Messenger service.
    * @param \Drupal\Core\Render\ElementInfoManagerInterface $elementInfo
    *   Element info.
    */
   public function __construct(
-    protected AnnounceUserStatus $userStatus,
     protected MessengerInterface $messenger,
     protected ElementInfoManagerInterface $elementInfo,
   ) {
@@ -40,24 +37,10 @@ final class LazyBuilders implements TrustedCallbackInterface {
    *   Render array.
    */
   public function renderAnnouncements(): array {
-    $announce_icon = 'announce-default';
-
-    // Check for new announcements for the current user.
-    try {
-      $new_announcements = $this->userStatus->getNewAnnouncementsIds();
-    }
-    catch (\Exception $e) {
-      $this->messenger->addError('An error occurred while parsing the announcements feed, check the logs for more information.');
-    }
-
-    if (!empty($new_announcements)) {
-      $announce_icon = 'announce-new';
-    }
-
     $build = [
       '#type' => 'link',
       '#cache' => [
-        'context' => ['user'],
+        'context' => ['user.permissions'],
       ],
       '#title' => t('Announcements'),
       '#url' => Url::fromRoute('announcements_feed.announcement'),
@@ -71,7 +54,7 @@ final class LazyBuilders implements TrustedCallbackInterface {
           'toolbar-icon-announce',
           'use-ajax',
           'announce-canvas-link',
-          $announce_icon,
+          'announce-default',
         ],
         'data-dialog-renderer' => 'off_canvas',
         'data-dialog-type' => 'dialog',

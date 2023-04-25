@@ -9,11 +9,6 @@ drupal.announcements_feed.toolbar:
   css:
     component:
       css/announcements_feed.toolbar.css: {}
-  js:
-    js/announcements_feed.announcement.js: {}
-  dependencies:
-    - core/drupal
-    - core/once
 
 drupal.announcements_feed.page:
   version: VERSION

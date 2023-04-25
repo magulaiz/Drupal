@@ -11,6 +11,3 @@ announcements_feed.settings:
     limit:
       type: integer
       label: 'Number of announcements that will be displayed.'
-    per_user_limit:
-      type: integer
-      label: 'Number of announcements IDs that will be stored per user.'

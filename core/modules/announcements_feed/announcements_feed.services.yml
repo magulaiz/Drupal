@@ -6,13 +6,10 @@ services:
   announcements_feed.fetcher:
     class: Drupal\announcements_feed\AnnounceFetcher
     arguments: ['@http_client', '@config.factory', '@keyvalue.expirable', '@logger.channel.announcements_feed', '%announcements_feed.feed_json_url%']
-  announcements_feed.user_status:
-    class: Drupal\announcements_feed\AnnounceUserStatus
-    arguments: ['@announcements_feed.fetcher', '@user.data', '@current_user', '@cache_tags.invalidator', '@config.factory', '%announcements_feed.feed_json_url%']
   logger.channel.announcements_feed:
     parent: logger.channel_base
     arguments: ['announcements_feed']
     public: false
   announcements_feed.lazy_builders:
     class: Drupal\announcements_feed\LazyBuilders
-    arguments: [ '@announcements_feed.user_status', '@messenger', '@plugin.manager.element_info']
+    arguments: [ '@messenger', '@plugin.manager.element_info']

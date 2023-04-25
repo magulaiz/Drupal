@@ -6,8 +6,7 @@ namespace Drupal\announcements_feed\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
-use Drupal\Core\Session\AccountInterface;
-use Drupal\announcements_feed\AnnounceUserStatus;
+use Drupal\announcements_feed\AnnounceFetcher;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -21,19 +20,15 @@ class AnnounceController extends ControllerBase implements ContainerInjectionInt
   /**
    * Constructs an AnnounceController object.
    *
-   * @param \Drupal\announcements_feed\AnnounceUserStatus $userStatus
-   *   The AnnounceUserStatus service.
-   * @param \Drupal\Core\Session\AccountInterface $currentUser
-   *   The current_user service.
+   * @param \Drupal\announcements_feed\AnnounceFetcher $announceFetcher
+   *   The AnnounceFetcher service.
    * @param string $feedLink
    *   The feed url path.
    */
   public function __construct(
-    protected AnnounceUserStatus $userStatus,
-    AccountInterface $currentUser,
+    protected AnnounceFetcher $announceFetcher,
     protected string $feedLink
   ) {
-    $this->currentUser = $currentUser;
   }
 
   /**
@@ -41,24 +36,23 @@ class AnnounceController extends ControllerBase implements ContainerInjectionInt
    */
   public static function create(ContainerInterface $container): AnnounceController {
     return new static(
-      $container->get('announcements_feed.user_status'),
-      $container->get('current_user'),
+      $container->get('announcements_feed.fetcher'),
       $container->getParameter('announcements_feed.feed_link')
     );
   }
 
   /**
-   * Returns Announcements for the current user.
+   * Returns the list of Announcements.
    *
    * @param \Symfony\Component\HttpFoundation\Request $request
    *   The request.
    *
    * @return array
-   *   A build array with announcements for the current user.
+   *   A build array with announcements.
    */
   public function getAnnouncements(Request $request): array {
     try {
-      $announcements = $this->userStatus->getAllAnnouncements();
+      $announcements = $this->announceFetcher->fetch();
     }
     catch (\Exception $e) {
       return [
@@ -86,11 +80,10 @@ class AnnounceController extends ControllerBase implements ContainerInjectionInt
       '#feed_link' => $this->feedLink,
       '#cache' => [
         'contexts' => [
-          'user',
           'url.query_args:_wrapper_format',
         ],
         'tags' => [
-          'announcements_feed:feed:' . $this->currentUser->id(),
+          'announcements_feed:feed',
         ],
       ],
       '#attached' => [

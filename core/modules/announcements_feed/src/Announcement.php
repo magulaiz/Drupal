@@ -32,8 +32,6 @@ final class Announcement {
    *   Target Drupal version of the announcement.
    * @param bool $featured
    *   Whether this announcement is featured or not.
-   * @param bool $new
-   *   Indicates if the announcement is new to the user. Defaults to FALSE.
    */
   public function __construct(
     public readonly string $id,
@@ -43,8 +41,7 @@ final class Announcement {
     public readonly string $date_published,
     public readonly string $content_html,
     public readonly string $version,
-    public readonly bool $featured,
-    public bool $new = FALSE
+    public readonly bool $featured
   ) {
   }
 

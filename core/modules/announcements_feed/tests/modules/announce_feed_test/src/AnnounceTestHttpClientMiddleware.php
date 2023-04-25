@@ -42,7 +42,7 @@ class AnnounceTestHttpClientMiddleware {
     $test_endpoint = Url::fromUri('base:/' . $test_endpoint)->setAbsolute()->toString();
     \Drupal::state()->set('announce_test_endpoint', $test_endpoint);
     \Drupal::service('keyvalue.expirable')->get('announcements_feed')->delete('announcements');
-    Cache::invalidateTags(['announcements_feed:feed:' . \Drupal::currentUser()->id()]);
+    Cache::invalidateTags(['announcements_feed:feed']);
   }
 
 }
