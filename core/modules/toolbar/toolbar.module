@@ -49,7 +49,6 @@ function toolbar_theme($existing, $type, $theme, $path) {
   return $items;
 }
 
-
 /**
  * Implements hook_page_attachments().
  */
@@ -132,7 +131,7 @@ JS;
         'data-toolbar-anti-flicker-loading' => TRUE,
       ],
       // Process through Markup to prevent character escaping.
-      '#value' =>  Markup::create($anti_flicker_js),
+      '#value' => Markup::create($anti_flicker_js),
     ],
     'anti_flicker_js',
   ];
