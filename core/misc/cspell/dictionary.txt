@@ -186,7 +186,7 @@ chien
 chiens
 childlist
 chocolatiers
-Christoforou
+christoforou
 chromedriver
 chtext
 chumillas
