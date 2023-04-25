@@ -154,7 +154,13 @@ trait SectionListTrait {
     }
 
     $sections = $this->getSections();
-    unset($sections[$delta]);
+    foreach ($sections as $uuid => $section) {
+      if ($delta == $section->getWeight()) {
+        unset($sections[$uuid]);
+        break;
+      }
+    }
+    
     $this->setSections($sections);
     // Add a blank section when the last section is removed.
     if (empty($sections)) {
