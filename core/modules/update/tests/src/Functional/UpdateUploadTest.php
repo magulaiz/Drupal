@@ -164,7 +164,7 @@ class UpdateUploadTest extends UpdateUploaderTestBase {
    */
   public function testUpdateManagerCoreSecurityUpdateMessages() {
     $this->mockInstalledModules([], ['version' => '8.0.0']);
-    $this->setXmlMap(['drupal' => '0.2-sec']);
+    $this->setAvailableReleasesMetadata(['drupal' => '0.2-sec']);
     $this->config('update.settings')
       ->set('fetch.url', Url::fromRoute('update_test.update_test')->setAbsolute()->toString())
       ->save();

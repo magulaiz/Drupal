@@ -4,26 +4,30 @@ namespace Drupal\Tests\update\Functional;
 
 /**
  * Provides a trait to set system info and XML mappings.
+ *
+ * @see update_test_system_info_alter
+ * @see \Drupal\update_test\Controller\UpdateTestController::updateTest
  */
 trait UpdateTestTrait {
 
   /**
-   * Sets mocked installed modules config.
-   *
-   * It expects information about the installed modules.
+   * Sets information about installed modules.
    *
    * @param string[][] $installed_modules
    *   The mock installed modules array.
-   *   In the format as the key to be the project name and an array of sub keys
-   *   as value such as 'project' (which is just the project name), 'version',
-   *   'hidden', for example:
+   *   In the format as the key to be the extension name and an array of sub
+   *   keys as the extensions info such as 'project' (which is just the project
+   *   name), 'version', 'hidden', only the keys that are defined will be
+   *   overwritten in the info.
+   *   @see update_test_system_info_alter
+   *   for example:
    *   'drupal' => [
    *     'project' => 'drupal',
    *     'version' => '8.0.0',
    *     'hidden' => FALSE,
    *   ].
    * @param string[] $default_config
-   *   (optional) The default config keys to be set for all the modules.
+   *   (optional) The default info keys to be set for all the modules.
    */
   public function mockInstalledModules(array $installed_modules, array $default_config = []): void {
     if (!empty($default_config)) {
@@ -33,18 +37,15 @@ trait UpdateTestTrait {
   }
 
   /**
-   * Sets XML mappings.
+   * Sets available release mappings.
    *
-   * The array that maps project names to available releases to fetch.
-   *
-   * @param string[] $xml_map
-   *   The XML mappings.
-   *   In the format as the key to be the project name and available release as
-   *   its value, for example:
+   * @param string[] $release_metadata
+   *   The available release mappings. In the format as the key to be the
+   *   extension name and available release as its value, for example:
    *   'aaa_update_test' => '8.x-1.2'.
    */
-  public function setXmlMap(array $xml_map): void {
-    $this->config('update_test.settings')->set('xml_map', $xml_map)->save();
+  public function setAvailableReleasesMetadata(array $release_metadata): void {
+    $this->config('update_test.settings')->set('xml_map', $release_metadata)->save();
   }
 
 }

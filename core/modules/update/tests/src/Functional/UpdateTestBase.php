@@ -71,7 +71,7 @@ abstract class UpdateTestBase extends BrowserTestBase {
     // update_test module.
     $this->config('update.settings')->set('fetch.url', Url::fromUri('base:' . $url, ['absolute' => TRUE])->toString())->save();
     // Save the map for UpdateTestController::updateTest() to use.
-    $this->setXmlMap($xml_map);
+    $this->setAvailableReleasesMetadata($xml_map);
     // Manually check the update status.
     $this->drupalGet('admin/reports/updates');
     $this->clickLink('Check manually');
