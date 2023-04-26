@@ -110,7 +110,7 @@ class AnnounceFetcherUserTest extends AnnounceTestBase {
       ],
       [
 
-        'id' => 1003,
+        'id' => '1003',
         'title' => 'Drupal security update Test',
         'url' => 'https://www.drupal.org/project/announce',
         'content_html' => 'Test teaser 3',
