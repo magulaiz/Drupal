@@ -49,13 +49,13 @@ class AnnounceFetcherUserTest extends AnnounceTestBase {
     $this->setFeedItems($feed_items);
     $all_items = $this->container->get('announcements_feed.fetcher')->fetch();
     $this->assertCount(4, $all_items);
-    $this->assertCount(2, $this->history);
+    $this->assertCount(1, $this->history);
 
     // Second time access.
     $this->setFeedItems($feed_items);
     $all_items = $this->container->get('announcements_feed.fetcher')->fetch();
     $this->assertCount(4, $all_items);
-    $this->assertCount(4, $this->history);
+    $this->assertCount(2, $this->history);
 
     // Create another user and test again.
     $permissions = [
@@ -68,7 +68,7 @@ class AnnounceFetcherUserTest extends AnnounceTestBase {
     // First time access.
     $all_items = $this->container->get('announcements_feed.fetcher')->fetch();
     $this->assertCount(4, $all_items);
-    $this->assertCount(6, $this->history);
+    $this->assertCount(3, $this->history);
 
     // Check after adding new record.
     $feed_items = $this->providerShowUpdatedAnnouncements();
@@ -76,7 +76,7 @@ class AnnounceFetcherUserTest extends AnnounceTestBase {
     $all_items = $this->container->get('announcements_feed.fetcher')->fetch();
     $this->assertCount(5, $all_items);
     $this->assertSame('1005', $all_items[0]->id);
-    $this->assertCount(8, $this->history);
+    $this->assertCount(4, $this->history);
   }
 
   /**
