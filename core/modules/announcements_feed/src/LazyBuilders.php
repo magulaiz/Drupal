@@ -6,26 +6,24 @@ namespace Drupal\announcements_feed;
 
 use Drupal\Component\Serialization\Json;
 use Drupal\Component\Utility\Html;
-use Drupal\Core\Messenger\MessengerInterface;
 use Drupal\Core\Render\ElementInfoManagerInterface;
 use Drupal\Core\Security\TrustedCallbackInterface;
 use Drupal\Core\Url;
 
 /**
  * Defines a class for lazy building render arrays.
+ *
+ * @internal
  */
 final class LazyBuilders implements TrustedCallbackInterface {
 
   /**
-   * Constructs a new LazyBuilders.
+   * Constructs LazyBuilders object.
    *
-   * @param \Drupal\Core\Messenger\MessengerInterface $messenger
-   *   Messenger service.
    * @param \Drupal\Core\Render\ElementInfoManagerInterface $elementInfo
    *   Element info.
    */
   public function __construct(
-    protected MessengerInterface $messenger,
     protected ElementInfoManagerInterface $elementInfo,
   ) {
   }

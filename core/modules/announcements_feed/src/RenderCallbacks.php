@@ -8,6 +8,8 @@ use Drupal\Core\Security\TrustedCallbackInterface;
 
 /**
  * Defines a class for render callbacks.
+ *
+ * @internal
  */
 final class RenderCallbacks implements TrustedCallbackInterface {
 

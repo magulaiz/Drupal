@@ -12,4 +12,4 @@ services:
     public: false
   announcements_feed.lazy_builders:
     class: Drupal\announcements_feed\LazyBuilders
-    arguments: [ '@messenger', '@plugin.manager.element_info']
+    arguments: [ '@plugin.manager.element_info']
