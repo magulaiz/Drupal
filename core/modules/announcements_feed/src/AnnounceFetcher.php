@@ -19,7 +19,7 @@ use Psr\Log\LoggerInterface;
  *
  * @internal
  */
-class AnnounceFetcher {
+final class AnnounceFetcher {
 
   /**
    * The configuration settings of this module.
