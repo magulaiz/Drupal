@@ -6,7 +6,7 @@
 :root {
   --module-table-cell-padding-vertical: var(--space-m);
   --module-table-cell-padding-horizontal: calc(var(--space-m) - (var(--input-border-size) * 2));
-  --module-table-filter-box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.1);
+  --module-table-filter-box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .modules-table-filter,
