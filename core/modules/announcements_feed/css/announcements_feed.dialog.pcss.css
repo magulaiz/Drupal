@@ -43,10 +43,6 @@
     font-size: 1rem;
   }
 
-  & .no_alerts {
-    margin-block-start: var(--off-canvas-padding);
-  }
-
   & .announcements--view-all {
     margin-block-start: 3rem;
   }

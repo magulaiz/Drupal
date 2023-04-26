@@ -29,12 +29,3 @@
 #drupal-off-canvas-wrapper .announcement__title {
   font-size: 1rem;
 }
-
-#drupal-off-canvas-wrapper .announcement__new {
-  font-size: 0.875rem;
-  font-style: italic;
-}
-
-#drupal-off-canvas-wrapper .no_alerts {
-  margin-block-start: var(--off-canvas-padding);
-}
