@@ -63,12 +63,19 @@ class MapBaseFieldTest extends EntityKernelTestBase {
 
     $this->entityDefinitionUpdateManager->installFieldStorageDefinition('data_map', 'entity_test_update', 'entity_test', $definitions['data_map']);
 
+    $dataMapValue = [
+      'key' => 'value',
+      'another' => ['array', 'indexed' => 'value'],
+    ];
+
     $entity = EntityTestUpdate::create([
-      'data_map' => [
-        'key' => 'value',
-      ],
+      'data_map' => $dataMapValue,
     ]);
     $entity->save();
+    $entityId = $entity->id();
+
+    $entity = EntityTestUpdate::load($entityId);
+    $this->assertSame($dataMapValue, $entity->get('data_map')->getValue());
 
     $this->entityDefinitionUpdateManager->uninstallFieldStorageDefinition($definitions['data_map']);
   }
