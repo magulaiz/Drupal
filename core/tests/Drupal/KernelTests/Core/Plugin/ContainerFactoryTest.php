@@ -36,6 +36,9 @@ class ContainerFactoryTest extends KernelTestBase {
     $this->assertSame($plugin->routeMatch, $this->container->get('current_route_match'));
     $this->assertSame($plugin->eventDispatcher, $this->container->get('event_dispatcher'));
 
+    $plugin = $manager->createInstance('container_factory_trait');
+    $this->assertSame($plugin->routeMatch, $this->container->get('current_route_match'));
+
     $plugin = $manager->createInstance('fully_autowire');
     $this->assertSame($plugin->routeMatch, $this->container->get('current_route_match'));
     $this->assertSame($plugin->eventDispatcher, $this->container->get('event_dispatcher'));
