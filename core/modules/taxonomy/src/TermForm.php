@@ -22,14 +22,9 @@ class TermForm extends ContentEntityForm {
     /** @var \Drupal\taxonomy\TermStorageInterface $taxonomy_storage */
     $taxonomy_storage = $this->entityTypeManager->getStorage('taxonomy_term');
     $vocabulary = $vocab_storage->load($term->bundle());
-    if ($term->isNew()) {
+    if ($term->isNew() && $vocabulary->label()) {
       $form['#title'] = $this->t('<em>Add new term in </em> %parent', [
         '%parent' => $vocabulary->label(),
-      ]);
-    }
-    else {
-      $form['#title'] = $this->t('<em>Edit</em> @name', [
-        '@name' => $term->label(),
       ]);
     }
 
@@ -38,7 +33,7 @@ class TermForm extends ContentEntityForm {
     $form_state->set(['taxonomy', 'vocabulary'], $vocabulary);
 
     if (!$term->isNew()) {
-      $form['#title'] = $this->t('<em>Edit @type in </em> @title', [
+      $form['#title'] = $this->t('<em>Edit @title in </em> @type', [
         '@type' => $vocabulary->getName() ?? '',
         '@title' => $term->label(),
       ]);
