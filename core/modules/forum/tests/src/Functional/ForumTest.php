@@ -332,13 +332,13 @@ class ForumTest extends BrowserTestBase {
     $this->assertSession()->linkExists('Add forum');
     $this->assertSession()->linkExists('Add container');
     $this->clickLink('edit container');
-    $this->assertSession()->pageTextContains('Edit Forums in ' . $this->forumContainer['name']);
+    $this->assertSession()->pageTextContains('Edit ' . $this->forumContainer['name'] . ' in Forums');
     // Create forum inside the forum container.
     $this->forum = $this->createForum('forum', $this->forumContainer['tid']);
     // Verify the "edit forum" link exists and functions correctly.
     $this->drupalGet('admin/structure/forum');
     $this->clickLink('edit forum');
-    $this->assertSession()->pageTextContains('Edit forum');
+    $this->assertSession()->pageTextContains('Edit General Discussion in forum');
     // Navigate back to forum structure page.
     $this->drupalGet('admin/structure/forum');
     // Create second forum in container, destined to be deleted below.
