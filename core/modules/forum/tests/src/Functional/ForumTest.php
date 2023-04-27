@@ -330,7 +330,7 @@ class ForumTest extends BrowserTestBase {
     $this->assertSession()->linkExists('Add forum');
     $this->assertSession()->linkExists('Add container');
     $this->clickLink('edit container');
-    $this->assertSession()->pageTextContains('Edit container');
+    $this->assertSession()->pageTextContains('Edit Forums in ' . $this->forumContainer['name']);
     // Create forum inside the forum container.
     $this->forum = $this->createForum('forum', $this->forumContainer['tid']);
     // Verify the "edit forum" link exists and functions correctly.
