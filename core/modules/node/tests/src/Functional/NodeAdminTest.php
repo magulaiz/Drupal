@@ -3,6 +3,7 @@
 namespace Drupal\Tests\node\Functional;
 
 use Drupal\Core\Database\Database;
+use Drupal\user\Entity\Role;
 use Drupal\user\RoleInterface;
 
 /**
@@ -61,7 +62,7 @@ class NodeAdminTest extends NodeTestBase {
     // Remove the "view own unpublished content" permission which is set
     // by default for authenticated users so we can test this permission
     // correctly.
-    user_role_revoke_permissions(RoleInterface::AUTHENTICATED_ID, ['view own unpublished content']);
+    Role::load(RoleInterface::AUTHENTICATED_ID)->revokePermission('view own unpublished content')->save();
 
     $this->adminUser = $this->drupalCreateUser([
       'access administration pages',

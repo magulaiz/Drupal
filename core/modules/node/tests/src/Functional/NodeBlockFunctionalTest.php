@@ -7,6 +7,7 @@ use Drupal\Core\Database\Database;
 use Drupal\Core\EventSubscriber\MainContentViewSubscriber;
 use Drupal\Core\Url;
 use Drupal\Tests\system\Functional\Cache\AssertPageCacheContextsAndTagsTrait;
+use Drupal\user\Entity\Role;
 use Drupal\user\RoleInterface;
 
 /**
@@ -71,9 +72,7 @@ class NodeBlockFunctionalTest extends NodeTestBase {
     $this->drupalLogin($this->adminUser);
 
     // Disallow anonymous users to view content.
-    user_role_change_permissions(RoleInterface::ANONYMOUS_ID, [
-      'access content' => FALSE,
-    ]);
+    Role::load(RoleInterface::ANONYMOUS_ID)->revokePermission('access content')->save();
 
     // Enable the recent content block with two items.
     $block = $this->drupalPlaceBlock('views_block:content_recent-block_1', ['id' => 'test_block', 'items_per_page' => 2]);

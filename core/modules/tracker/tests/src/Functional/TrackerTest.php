@@ -12,6 +12,7 @@ use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\node\Entity\Node;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\system\Functional\Cache\AssertPageCacheContextsAndTagsTrait;
+use Drupal\user\Entity\Role;
 
 /**
  * Create and delete nodes and check for their display in the tracker listings.
@@ -68,10 +69,10 @@ class TrackerTest extends BrowserTestBase {
     $this->user = $this->drupalCreateUser($permissions);
     $this->otherUser = $this->drupalCreateUser($permissions);
     $this->addDefaultCommentField('node', 'page');
-    user_role_grant_permissions(AccountInterface::ANONYMOUS_ROLE, [
+    Role::load(AccountInterface::ANONYMOUS_ROLE)->grantPermissions([
       'access content',
       'access user profiles',
-    ]);
+    ])->save();
     $this->drupalPlaceBlock('local_tasks_block', ['id' => 'page_tabs_block']);
     $this->drupalPlaceBlock('local_actions_block', ['id' => 'page_actions_block']);
   }

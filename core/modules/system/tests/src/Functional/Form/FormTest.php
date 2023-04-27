@@ -10,6 +10,7 @@ use Drupal\Core\Render\Element;
 use Drupal\Core\Url;
 use Drupal\form_test\Form\FormTestDisabledElementsForm;
 use Drupal\Tests\BrowserTestBase;
+use Drupal\user\Entity\Role;
 use Drupal\user\RoleInterface;
 use Drupal\filter\Entity\FilterFormat;
 use Behat\Mink\Element\NodeElement;
@@ -46,7 +47,7 @@ class FormTest extends BrowserTestBase {
     $filtered_html_format->save();
 
     $filtered_html_permission = $filtered_html_format->getPermissionName();
-    user_role_grant_permissions(RoleInterface::ANONYMOUS_ID, [$filtered_html_permission]);
+    Role::load(RoleInterface::ANONYMOUS_ID)->grantPermission($filtered_html_permission)->save();
   }
 
   /**

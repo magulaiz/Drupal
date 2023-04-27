@@ -9,6 +9,7 @@ use Drupal\entity_test\Entity\EntityTest;
 use Drupal\Core\Cache\Cache;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\system\Functional\Cache\AssertPageCacheContextsAndTagsTrait;
+use Drupal\user\Entity\Role;
 use Drupal\user\RoleInterface;
 
 /**
@@ -301,7 +302,7 @@ class PageCacheTest extends BrowserTestBase {
     $this->assertSession()->responseHeaderContains('X-Drupal-Cache-Tags', 'config:user.role.anonymous');
 
     // 2. anonymous user, with permission.
-    user_role_grant_permissions(RoleInterface::ANONYMOUS_ID, ['pet llamas']);
+    Role::load(RoleInterface::ANONYMOUS_ID)->grantPermission('pet llamas')->save();
     $this->drupalGet($content_url);
     $this->assertSession()->pageTextContains('Permission to pet llamas: yes!');
     $this->assertCacheContext('user.permissions');
@@ -322,7 +323,7 @@ class PageCacheTest extends BrowserTestBase {
     $this->assertSession()->responseHeaderNotContains('X-Drupal-Cache-Tags', 'config:user.role.authenticated');
 
     // 4. authenticated user, with permission.
-    user_role_grant_permissions(RoleInterface::AUTHENTICATED_ID, ['pet llamas']);
+    Role::load(RoleInterface::AUTHENTICATED_ID)->grantPermission('pet llamas')->save();
     $this->drupalGet($content_url);
     $this->assertSession()->pageTextContains('Permission to pet llamas: yes!');
     $this->assertCacheContext('user.permissions');

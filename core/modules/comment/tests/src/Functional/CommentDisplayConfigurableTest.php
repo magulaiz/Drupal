@@ -6,6 +6,7 @@ use Drupal\Core\Entity\Entity\EntityViewDisplay;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\comment\CommentInterface;
 use Drupal\comment\Entity\Comment;
+use Drupal\user\Entity\Role;
 use Drupal\user\RoleInterface;
 
 /**
@@ -27,10 +28,10 @@ class CommentDisplayConfigurableTest extends CommentTestBase {
     parent::setUp();
 
     // Allow anonymous users to see comments.
-    user_role_grant_permissions(RoleInterface::ANONYMOUS_ID, [
+    Role::load(RoleInterface::ANONYMOUS_ID)->grantPermissions([
       'access comments',
       'access content',
-    ]);
+    ])->save();
   }
 
   /**

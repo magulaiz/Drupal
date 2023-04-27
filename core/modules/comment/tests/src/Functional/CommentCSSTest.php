@@ -4,6 +4,7 @@ namespace Drupal\Tests\comment\Functional;
 
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\comment\CommentInterface;
+use Drupal\user\Entity\Role;
 use Drupal\user\RoleInterface;
 use Drupal\comment\Entity\Comment;
 use Drupal\Tests\Traits\Core\GeneratePermutationsTrait;
@@ -31,10 +32,10 @@ class CommentCSSTest extends CommentTestBase {
     parent::setUp();
 
     // Allow anonymous users to see comments.
-    user_role_grant_permissions(RoleInterface::ANONYMOUS_ID, [
+    Role::load(RoleInterface::ANONYMOUS_ID)->grantPermissions([
       'access comments',
       'access content',
-    ]);
+    ])->save();
   }
 
   /**

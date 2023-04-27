@@ -4,6 +4,7 @@ namespace Drupal\Tests\comment\Functional;
 
 use Drupal\comment\CommentManagerInterface;
 use Drupal\comment\Entity\Comment;
+use Drupal\user\Entity\Role;
 use Drupal\user\RoleInterface;
 
 /**
@@ -102,11 +103,11 @@ class CommentStatisticsTest extends CommentTestBase {
 
     // Prepare for anonymous comment submission (no approval required).
     $this->drupalLogin($this->adminUser);
-    user_role_change_permissions(RoleInterface::ANONYMOUS_ID, [
-      'access comments' => TRUE,
-      'post comments' => TRUE,
-      'skip comment approval' => TRUE,
-    ]);
+    Role::load(RoleInterface::ANONYMOUS_ID)->grantPermissions([
+      'access comments',
+      'post comments',
+      'skip comment approval',
+    ])->save();
     $this->drupalLogout();
 
     // Post comment #3 as anonymous.
