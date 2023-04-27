@@ -3,3 +3,8 @@ block.admin_display:
   parent: system.themes_page
   description: 'Configure what block content appears in your site''s sidebars and other regions.'
   route_name: block.admin_display
+block.admin_display.bc:
+  title: 'Block layout'
+  parent: system.admin_structure
+  description: 'Use the link under Appearance.'
+  route_name: block.admin_display.bc
