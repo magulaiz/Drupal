@@ -28,7 +28,6 @@ toolbar:
     - core/once
     - core/drupal.displace
     - toolbar/toolbar.menu
-    - toolbar/toolbar.anti-flicker
 
 toolbar.menu:
   version: VERSION
