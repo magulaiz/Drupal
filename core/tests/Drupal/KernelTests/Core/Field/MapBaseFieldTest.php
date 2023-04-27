@@ -3,6 +3,7 @@
 namespace Drupal\KernelTests\Core\Field;
 
 use Drupal\Core\Field\BaseFieldDefinition;
+use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\entity_test_update\Entity\EntityTestUpdate;
 use Drupal\KernelTests\Core\Entity\EntityKernelTestBase;
 
@@ -40,12 +41,22 @@ class MapBaseFieldTest extends EntityKernelTestBase {
     }
   }
 
+  public function provideUninstallMapItemBaseFieldData() {
+    return [
+      'single item cardinality, stored in base table' => [1],
+      'single item cardinality, stored in dedicated table' => [FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED],
+    ];
+  }
+
   /**
    * Tests uninstalling map item base field.
+   *
+   * @dataProvider provideUninstallMapItemBaseFieldData
    */
-  public function testUninstallMapItemBaseField() {
+  public function testUninstallMapItemBaseField(int $cardinality) {
     $definitions['data_map'] = BaseFieldDefinition::create('map')
       ->setLabel(t('Data'))
+      ->setCardinality($cardinality)
       ->setRequired(TRUE);
 
     $this->state->set('entity_test_update.additional_base_field_definitions', $definitions);
