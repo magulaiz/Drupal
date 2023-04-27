@@ -46,6 +46,13 @@ class TermAccessControlHandler extends EntityAccessControlHandler {
 
         return AccessResult::neutral()->setReason("The following permissions are required: 'delete terms in {$entity->bundle()}' OR 'administer taxonomy'.");
 
+      case 'view all revisions':
+        if ($account->hasPermission('view all revisions')) {
+          return AccessResult::allowed()->cachePerPermissions();
+        }
+
+        return AccessResult::neutral()->setReason("The following permissions are required: 'view all revisions' OR 'administer taxonomy'.");
+
       default:
         // No opinion.
         return AccessResult::neutral()->cachePerPermissions();
