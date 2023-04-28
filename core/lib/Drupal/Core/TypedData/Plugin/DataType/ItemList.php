@@ -44,6 +44,24 @@ class ItemList extends TypedData implements \IteratorAggregate, ListInterface {
   }
 
   /**
+   * Check value exist in itemList.
+   *
+   * @param string $value
+   *   Search value in itemList.
+   *
+   * @return bool
+   *   Return a boolean result if a value exists in the item list.
+   */
+  public function hasValue($value) {
+    foreach ($this->list as $item) {
+      if ($item->getString() == $value) {
+        return TRUE;
+      }
+    }
+    return FALSE;
+  }
+
+  /**
    * Overrides \Drupal\Core\TypedData\TypedData::setValue().
    *
    * @param array|null $values
