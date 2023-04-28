@@ -224,8 +224,8 @@
    *     };
    *
    *     // This command will remove this Ajax object from the page.
-   *     myAjaxObject.commands.destroyObject = function (ajax, response, status) {
-   *       Drupal.ajax.instances[this.instanceIndex] = null;
+   *     myAjaxObject.commands.destroyObject = function (ajax, response,
+   *     status) { Drupal.ajax.instances[this.instanceIndex] = null;
    *     };
    *
    *     // Programmatically trigger the Ajax request.
@@ -1239,7 +1239,8 @@
    */
   Drupal.theme.ajaxWrapperNewContent = ($newContent, ajax, response) => {
     Drupal.deprecationError({
-      message: 'The Drupal.theme.ajaxWrapperNewContent is deprecated in drupal:8.6.0 and is removed from drupal:11.0.0. See https://www.drupal.org/node/2940704.'
+      message:
+          'The Drupal.theme.ajaxWrapperNewContent is deprecated in drupal:8.6.0 and is removed from drupal:11.0.0. See https://www.drupal.org/node/2940704.',
     });
     return (response.effect || ajax.effect) !== 'none' &&
     $newContent.filter(
@@ -1271,7 +1272,8 @@
    */
   Drupal.theme.ajaxWrapperMultipleRootElements = ($elements) => {
     Drupal.deprecationError({
-      message: 'The Drupal.theme.ajaxWrapperMultipleRootElements is deprecated in drupal:8.6.0 and is removed from drupal:11.0.0. See https://www.drupal.org/node/2940704.'
+      message:
+          'The Drupal.theme.ajaxWrapperMultipleRootElements is deprecated in drupal:8.6.0 and is removed from drupal:11.0.0. See https://www.drupal.org/node/2940704.',
     });
     return $('<div></div>').append($elements);
   }
