@@ -74,7 +74,8 @@ class MapBaseFieldTest extends EntityKernelTestBase {
     $entity->save();
     $entityId = $entity->id();
 
-    $entity = EntityTestUpdate::load($entityId);
+    $storage = \Drupal::entityTypeManager()->getStorage('entity_test_update');
+    $entity = $storage->loadUnchanged($entityId);
     $this->assertSame($dataMapValue, $entity->get('data_map')->first()->getValue());
 
     $this->entityDefinitionUpdateManager->uninstallFieldStorageDefinition($definitions['data_map']);
