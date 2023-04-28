@@ -156,7 +156,6 @@
   background-image: url(../../../../misc/icons/000000/announcement-bell.svg);
 }
 
-
 @media only screen and (min-width: 16.5em) {
   .toolbar .toolbar-bar .toolbar-tab > .toolbar-icon {
     width: 4em;
