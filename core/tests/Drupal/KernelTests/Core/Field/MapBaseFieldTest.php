@@ -53,7 +53,7 @@ class MapBaseFieldTest extends EntityKernelTestBase {
    *
    * @dataProvider provideUninstallMapItemBaseFieldData
    */
-  public function testUninstallMapItemBaseField(int $cardinality) {
+  public function tesMapItemBaseField(int $cardinality) {
     $definitions['data_map'] = BaseFieldDefinition::create('map')
       ->setLabel(t('Data'))
       ->setCardinality($cardinality)
