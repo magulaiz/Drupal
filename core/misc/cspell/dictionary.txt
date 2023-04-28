@@ -581,6 +581,7 @@ keyvalue
 killswitch
 kinberg
 kitt
+klopotenko
 kolkata
 kontex
 kpresenter
@@ -1451,6 +1452,7 @@ yarhar
 yarr
 ybeg
 yearless
+yevhen
 ylen
 yokotsoko
 yottabyte
