@@ -57,7 +57,7 @@ class AlertsJsonFeedTest extends OffCanvasTestBase {
   public function testAnnounceFeedUpdatedAndRemoved() {
     $this->drupalLogin($this->user);
     $this->drupalGet('<front>');
-    $this->clickLink('Announcements');
+    $this->click('.announce-canvas-link');
     $this->waitForOffCanvasToOpen();
     $page_html = $this->getSession()->getPage()->getHtml();
     $this->assertStringNotContainsString('Only 10 - Drupal 106 is available and this feed is Updated', $page_html);
@@ -66,7 +66,7 @@ class AlertsJsonFeedTest extends OffCanvasTestBase {
     AnnounceTestHttpClientMiddleware::setAnnounceTestEndpoint('/announce-feed-json/updated');
 
     $this->drupalGet('<front>');
-    $this->clickLink('Announcements');
+    $this->click('.announce-canvas-link');
     $this->waitForOffCanvasToOpen();
     $page_html = $this->getSession()->getPage()->getHtml();
     $this->assertStringContainsString('Only 10 - Drupal 106 is available and this feed is Updated', $page_html);
@@ -76,7 +76,7 @@ class AlertsJsonFeedTest extends OffCanvasTestBase {
     AnnounceTestHttpClientMiddleware::setAnnounceTestEndpoint('/announce-feed-json/removed');
     $this->drupalLogin($this->user);
     $this->drupalGet('<front>');
-    $this->clickLink('Announcements');
+    $this->click('.announce-canvas-link');
     $this->waitForOffCanvasToOpen();
     $page_html = $this->getSession()->getPage()->getHtml();
     $this->assertStringNotContainsString('Only 10 - Drupal 106 is available and this feed is Updated', $page_html);
@@ -93,7 +93,7 @@ class AlertsJsonFeedTest extends OffCanvasTestBase {
     $this->drupalGet('<front>');
 
     // Removed items should not display in the announcement model.
-    $this->clickLink('Announcements');
+    $this->click('.announce-canvas-link');
     $this->waitForOffCanvasToOpen();
     $this->assertStringContainsString('No announcements available', $this->getSession()->getPage()->getHtml());
   }
