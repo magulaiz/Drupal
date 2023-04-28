@@ -148,6 +148,14 @@
 .toolbar-icon-help-main.is-active::before {
   background-image: url(../../../../misc/icons/000000/questionmark-disc.svg);
 }
+.toolbar-icon-announcements-feed-announcement::before {
+  background-image: url(../../../../misc/icons/787878/announcement-bell.svg);
+}
+.toolbar-icon-announcements-feed-announcement:active::before,
+.toolbar-icon-announcements-feed-announcement.is-active::before {
+  background-image: url(../../../../misc/icons/000000/announcement-bell.svg);
+}
+
 
 @media only screen and (min-width: 16.5em) {
   .toolbar .toolbar-bar .toolbar-tab > .toolbar-icon {
