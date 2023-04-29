@@ -13,8 +13,6 @@ services:
   Drupal\update\UpdateProcessorInterface: '@update.processor'
   update.fetcher:
     class: Drupal\update\UpdateFetcher
-    arguments:
-      $logger: '@logger.channel.update'
   Drupal\update\UpdateFetcherInterface: '@update.fetcher'
   update.root:
     class: Drupal\update\UpdateRoot

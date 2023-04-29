@@ -5,6 +5,7 @@ namespace Drupal\migrate\Plugin;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 
 /**
  * Plugin manager for migrate destination plugins.
@@ -44,7 +45,15 @@ class MigrateDestinationPluginManager extends MigratePluginManager {
    *   (optional) The annotation class name. Defaults to
    *   'Drupal\migrate\Annotation\MigrateDestination'.
    */
-  public function __construct($type, \Traversable $namespaces, CacheBackendInterface $cache_backend, ModuleHandlerInterface $module_handler, EntityTypeManagerInterface $entity_type_manager, $annotation = 'Drupal\migrate\Annotation\MigrateDestination') {
+  public function __construct(
+    $type,
+    \Traversable $namespaces,
+    #[Autowire(service: 'cache.discovery')]
+    CacheBackendInterface $cache_backend,
+    ModuleHandlerInterface $module_handler,
+    EntityTypeManagerInterface $entity_type_manager,
+    $annotation = 'Drupal\migrate\Annotation\MigrateDestination',
+  ) {
     parent::__construct($type, $namespaces, $cache_backend, $module_handler, $annotation);
     $this->entityTypeManager = $entity_type_manager;
   }

@@ -12,7 +12,6 @@ services:
     arguments: [{  }, {  }]
   serializer.normalizer.http_exception.jsonapi:
     class: Drupal\jsonapi\Normalizer\HttpExceptionNormalizer
-    arguments: ['@current_user']
     tags:
       - { name: jsonapi_normalizer }
   serializer.normalizer.unprocessable_entity_exception.jsonapi:
@@ -78,8 +77,6 @@ services:
       - { name: jsonapi_encoder, format: 'api_json' }
   jsonapi.resource_type.repository:
     class: Drupal\jsonapi\ResourceType\ResourceTypeRepository
-    arguments:
-      $cache: '@cache.jsonapi_resource_types'
   Drupal\jsonapi\ResourceType\ResourceTypeRepositoryInterface: '@jsonapi.resource_type.repository'
   jsonapi.route_enhancer:
     class: Drupal\jsonapi\Routing\RouteEnhancer
@@ -148,8 +145,6 @@ services:
   jsonapi.entity_access_checker:
     class: Drupal\jsonapi\Access\EntityAccessChecker
     public: false
-    arguments:
-      $router: '@router.no_access_checks'
     calls:
       # This is a temporary measure. JSON:API should not need to be aware of the Content Moderation module.
       - [setLatestRevisionCheck, ['@?access_check.latest_revision']] # This is only injected when the service is available.
@@ -169,8 +164,6 @@ services:
   # Controller.
   jsonapi.entity_resource:
     class: Drupal\jsonapi\Controller\EntityResource
-    arguments:
-      $serializer: '@jsonapi.serializer'
   jsonapi.file_upload:
     class: Drupal\jsonapi\Controller\FileUpload
 
@@ -181,14 +174,10 @@ services:
       - { name: event_subscriber }
   jsonapi.resource_response.subscriber:
     class: Drupal\jsonapi\EventSubscriber\ResourceResponseSubscriber
-    arguments: ['@jsonapi.serializer']
     tags:
       - { name: event_subscriber }
   jsonapi.resource_response_validator.subscriber:
     class: Drupal\jsonapi\EventSubscriber\ResourceResponseValidator
-    arguments:
-      $logger: '@logger.channel.jsonapi'
-      $app_root: '%app.root%'
     calls:
       - [setValidator, []]
     tags:
@@ -228,6 +217,4 @@ services:
   jsonapi.file.uploader.field:
     class: Drupal\jsonapi\Controller\TemporaryJsonapiFileFieldUploader
     public: false
-    arguments:
-      $logger: '@logger.channel.file'
   Drupal\jsonapi\Controller\TemporaryJsonapiFileFieldUploader: '@jsonapi.file.uploader.field'

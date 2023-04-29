@@ -53,8 +53,6 @@ services:
     arguments: ['system']
   system.sa_fetcher:
     class: Drupal\system\SecurityAdvisories\SecurityAdvisoriesFetcher
-    arguments:
-      $logger: '@logger.channel.system'
   Drupal\system\SecurityAdvisories\SecurityAdvisoriesFetcher: '@system.sa_fetcher'
   system.advisories_config_subscriber:
     class: Drupal\system\EventSubscriber\AdvisoriesConfigSubscriber
@@ -62,7 +60,5 @@ services:
       - { name: event_subscriber }
   system.menus.route_subscriber:
     class: Drupal\system\Routing\MenuLinksetRoutes
-    arguments:
-      $authenticationProviders: '%authentication_providers%'
     tags:
       - { name: event_subscriber }

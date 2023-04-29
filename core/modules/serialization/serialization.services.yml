@@ -5,6 +5,7 @@ services:
   serializer:
     class: Symfony\Component\Serializer\Serializer
     arguments: [{  }, {  }]
+  Symfony\Component\Serializer\SerializerInterface: '@serializer'
   serializer.normalizer.config_entity:
     class: Drupal\serialization\Normalizer\ConfigEntityNormalizer
     tags:
@@ -59,13 +60,11 @@ services:
       - { name: normalizer, priority: 8 }
   serializer.normalizer.timestamp:
     class: Drupal\serialization\Normalizer\TimestampNormalizer
-    arguments: ['@config.factory']
     tags:
       # Priority must be higher than serializer.normalizer.primitive_data.
       - { name: normalizer, priority: 20 }
   serializer.normalizer.datetimeiso8601:
     class: \Drupal\serialization\Normalizer\DateTimeIso8601Normalizer
-    arguments: ['@config.factory']
     tags:
       # Priority must be higher than serializer.normalizer.primitive_data.
       - { name: normalizer, priority: 20 }
@@ -104,9 +103,7 @@ services:
     class: Drupal\serialization\EventSubscriber\DefaultExceptionSubscriber
     tags:
       - { name: event_subscriber }
-    arguments: ['@serializer', '%serializer.formats%']
   serialization.user_route_alter_subscriber:
     class: Drupal\serialization\EventSubscriber\UserRouteAlterSubscriber
     tags:
       - { name: event_subscriber }
-    arguments: ['%serializer.formats%']

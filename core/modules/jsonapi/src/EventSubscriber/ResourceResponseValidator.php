@@ -6,6 +6,7 @@ use Drupal\Component\Serialization\Json;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use JsonSchema\Validator;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -67,7 +68,13 @@ class ResourceResponseValidator implements EventSubscriberInterface {
    * @param string $app_root
    *   The application's root file path.
    */
-  public function __construct(LoggerInterface $logger, ModuleHandlerInterface $module_handler, $app_root) {
+  public function __construct(
+    #[Autowire(service: 'logger.channel.jsonapi')]
+    LoggerInterface $logger,
+    ModuleHandlerInterface $module_handler,
+    #[Autowire('%app.root%')]
+    $app_root,
+  ) {
     $this->logger = $logger;
     $this->moduleHandler = $module_handler;
     $this->appRoot = $app_root;

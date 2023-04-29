@@ -13,8 +13,6 @@ services:
       - { name: path_processor_outbound, priority: 300 }
   path_alias.manager:
     class: Drupal\path_alias\AliasManager
-    arguments:
-      $cache: '@cache.data'
   Drupal\path_alias\AliasManagerInterface: '@path_alias.manager'
   path_alias.repository:
     class: Drupal\path_alias\AliasRepository
@@ -27,5 +25,4 @@ services:
       - { name: needs_destruction }
     arguments:
       $cid: 'path_alias_whitelist'
-      $cache: '@cache.bootstrap'
   Drupal\path_alias\AliasWhitelistInterface: '@path_alias.whitelist'

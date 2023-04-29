@@ -11,8 +11,6 @@ services:
       - { name: access_check, applies_to: _layout_builder_access }
   plugin.manager.layout_builder.section_storage:
     class: Drupal\layout_builder\SectionStorage\SectionStorageManager
-    parent: default_plugin_manager
-    arguments: ['@context.handler']
   Drupal\layout_builder\SectionStorage\SectionStorageManagerInterface: '@plugin.manager.layout_builder.section_storage'
   layout_builder.routes:
     class: Drupal\layout_builder\Routing\LayoutBuilderRoutes
@@ -45,7 +43,6 @@ services:
     arguments: ['layout_builder']
   inline_block.usage:
     class: Drupal\layout_builder\InlineBlockUsage
-    arguments: ['@database']
   layout_builder.controller.entity_form:
     # Override the entity form controller to handle the entity layout_builder
     # operation.

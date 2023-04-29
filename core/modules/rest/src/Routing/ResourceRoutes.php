@@ -47,7 +47,12 @@ class ResourceRoutes implements EventSubscriberInterface {
    * @param \Psr\Log\LoggerInterface $logger
    *   A logger instance.
    */
-  public function __construct(ResourcePluginManager $manager, EntityTypeManagerInterface $entity_type_manager, LoggerInterface $logger) {
+  public function __construct(
+    ResourcePluginManager $manager,
+    EntityTypeManagerInterface $entity_type_manager,
+    #[Autowire(service: 'logger.channel.rest')]
+    LoggerInterface $logger,
+  ) {
     $this->manager = $manager;
     $this->resourceConfigStorage = $entity_type_manager->getStorage('rest_resource_config');
     $this->logger = $logger;

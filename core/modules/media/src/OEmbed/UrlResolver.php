@@ -8,6 +8,7 @@ use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\TransferException;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 
 /**
  * Converts oEmbed media URLs into endpoint-specific resource URLs.
@@ -73,7 +74,14 @@ class UrlResolver implements UrlResolverInterface {
    * @param \Drupal\Core\Cache\CacheBackendInterface $cache_backend
    *   The cache backend.
    */
-  public function __construct(ProviderRepositoryInterface $providers, ResourceFetcherInterface $resource_fetcher, ClientInterface $http_client, ModuleHandlerInterface $module_handler, CacheBackendInterface $cache_backend) {
+  public function __construct(
+    ProviderRepositoryInterface $providers,
+    ResourceFetcherInterface $resource_fetcher,
+    ClientInterface $http_client,
+    ModuleHandlerInterface $module_handler,
+    #[Autowire(service: 'cache.default')]
+    CacheBackendInterface $cache_backend,
+  ) {
     $this->providers = $providers;
     $this->resourceFetcher = $resource_fetcher;
     $this->httpClient = $http_client;

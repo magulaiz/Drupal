@@ -14,6 +14,7 @@ use Drupal\Core\Plugin\Discovery\YamlDiscoveryDecorator;
 use Drupal\Core\Layout\Annotation\Layout;
 use Drupal\Core\Plugin\FilteredPluginManagerTrait;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 
 /**
  * Provides a plugin manager for layouts.
@@ -42,7 +43,13 @@ class LayoutPluginManager extends DefaultPluginManager implements LayoutPluginMa
    * @param \Drupal\Core\Extension\ThemeHandlerInterface $theme_handler
    *   The theme handler to invoke the alter hook with.
    */
-  public function __construct(\Traversable $namespaces, CacheBackendInterface $cache_backend, ModuleHandlerInterface $module_handler, ThemeHandlerInterface $theme_handler) {
+  public function __construct(
+    \Traversable $namespaces,
+    #[Autowire(service: 'cache.discovery')]
+    CacheBackendInterface $cache_backend,
+    ModuleHandlerInterface $module_handler,
+    ThemeHandlerInterface $theme_handler,
+  ) {
     parent::__construct('Plugin/Layout', $namespaces, $module_handler, LayoutInterface::class, Layout::class);
     $this->themeHandler = $theme_handler;
 

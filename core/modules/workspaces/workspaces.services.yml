@@ -4,27 +4,19 @@ services:
 
   workspaces.manager:
     class: Drupal\workspaces\WorkspaceManager
-    arguments:
-      $logger: '@logger.channel.workspaces'
     tags:
       - { name: service_id_collector, tag: workspace_negotiator }
   Drupal\workspaces\WorkspaceManagerInterface: '@workspaces.manager'
   workspaces.operation_factory:
     class: Drupal\workspaces\WorkspaceOperationFactory
-    arguments:
-      $logger: '@logger.channel.workspaces'
   workspaces.association:
     class: Drupal\workspaces\WorkspaceAssociation
-    arguments:
-      $logger: '@logger.channel.workspaces'
     tags:
       - { name: backend_overridable }
       - { name: event_subscriber }
   Drupal\workspaces\WorkspaceAssociationInterface: '@workspaces.association'
   workspaces.repository:
     class: Drupal\workspaces\WorkspaceRepository
-    arguments:
-      $cache_backend: '@cache.default'
 
   workspaces.negotiator.session:
     class: Drupal\workspaces\Negotiator\SessionWorkspaceNegotiator
