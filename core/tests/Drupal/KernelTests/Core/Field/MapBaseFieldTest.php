@@ -44,7 +44,7 @@ class MapBaseFieldTest extends EntityKernelTestBase {
   public function provideUninstallMapItemBaseFieldData() {
     return [
       'single item cardinality, stored in base table' => [1],
-      'single item cardinality, stored in dedicated table' => [FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED],
+      'multiple item cardinality, stored in dedicated table' => [FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED],
     ];
   }
 
