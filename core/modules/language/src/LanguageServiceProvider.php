@@ -7,7 +7,6 @@ use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\DependencyInjection\ServiceProviderBase;
 use Drupal\Core\Language\LanguageInterface;
 use Symfony\Component\DependencyInjection\Reference;
-use Drupal\language\ConfigurableLanguageManagerInterface;
 
 /**
  * Overrides the language_manager service to point to language's module one.
