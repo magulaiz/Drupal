@@ -1860,6 +1860,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
         $propertyValues[$property] = $value;
       }
     }
+    throw new \Exception(var_export([$columnValues, $propertyValues], TRUE));
     return $propertyValues;
   }
 
@@ -1874,6 +1875,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
         $columnValues[$column] = $value;
       }
     }
+    throw new \Exception(var_export([$propertyValues, $columnValues], TRUE));
     return $columnValues;
   }
 
