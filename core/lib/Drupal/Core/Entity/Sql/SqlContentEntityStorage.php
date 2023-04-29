@@ -1418,7 +1418,6 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
               $field_name,
               $storage_definition->mapColumnsOnSave($item_value)
             );
-            dump([$maybe_mapped_columns, $item_value, $item]);
           }
           if (isset($maybe_mapped_columns)) {
             $record += $maybe_mapped_columns;
