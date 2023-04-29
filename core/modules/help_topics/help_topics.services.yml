@@ -9,14 +9,9 @@ services:
     public: false
   plugin.manager.help_topic:
     class: Drupal\help_topics\HelpTopicPluginManager
-    arguments:
-      $cache_backend: '@cache.discovery'
-      $root: '%app.root%'
   Drupal\help_topics\HelpTopicPluginManagerInterface: '@plugin.manager.help_topic'
   help.twig.loader:
     class: Drupal\help_topics\HelpTopicTwigLoader
-    arguments:
-      $root_path: '%app.root%'
     # Lowest core priority because loading help topics is not the usual case.
     tags:
       - { name: twig.loader, priority: -200 }

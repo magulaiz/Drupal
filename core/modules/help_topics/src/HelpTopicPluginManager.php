@@ -8,6 +8,7 @@ use Drupal\Core\Extension\ThemeHandlerInterface;
 use Drupal\Core\Plugin\DefaultPluginManager;
 use Drupal\Core\Plugin\Discovery\YamlDiscoveryDecorator;
 use Drupal\Core\Plugin\Discovery\ContainerDerivativeDiscoveryDecorator;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 
 /**
  * Provides the default help_topic manager.
@@ -114,7 +115,14 @@ class HelpTopicPluginManager extends DefaultPluginManager implements HelpTopicPl
    * @param string $root
    *   The app root.
    */
-  public function __construct(ModuleHandlerInterface $module_handler, ThemeHandlerInterface $theme_handler, CacheBackendInterface $cache_backend, $root) {
+  public function __construct(
+    ModuleHandlerInterface $module_handler,
+    ThemeHandlerInterface $theme_handler,
+    #[Autowire(service: 'cache.discovery')]
+    CacheBackendInterface $cache_backend,
+    #[Autowire('%app.root%')]
+    $root,
+  ) {
     // Note that the parent construct is not called because this not use
     // annotated class discovery.
     $this->moduleHandler = $module_handler;

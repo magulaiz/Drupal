@@ -15,6 +15,7 @@ use Drupal\Core\Plugin\Discovery\ContainerDerivativeDiscoveryDecorator;
 use Drupal\Core\Plugin\Factory\ContainerFactory;
 use Drupal\Core\TypedData\TraversableTypedDataInterface;
 use Drupal\Core\TypedData\TypedDataInterface;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\Routing\RouteCollection;
 
 /**
@@ -60,7 +61,14 @@ class ConfigMapperManager extends DefaultPluginManager implements ConfigMapperMa
    * @param \Drupal\Core\Extension\ThemeHandlerInterface $theme_handler
    *   The theme handler.
    */
-  public function __construct(CacheBackendInterface $cache_backend, LanguageManagerInterface $language_manager, ModuleHandlerInterface $module_handler, TypedConfigManagerInterface $typed_config_manager, ThemeHandlerInterface $theme_handler) {
+  public function __construct(
+    #[Autowire(service: 'cache.discovery')]
+    CacheBackendInterface $cache_backend,
+    LanguageManagerInterface $language_manager,
+    ModuleHandlerInterface $module_handler,
+    TypedConfigManagerInterface $typed_config_manager,
+    ThemeHandlerInterface $theme_handler,
+  ) {
     $this->typedConfigManager = $typed_config_manager;
 
     $this->factory = new ContainerFactory($this, '\Drupal\config_translation\ConfigMapperInterface');

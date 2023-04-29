@@ -7,6 +7,7 @@ use Drupal\Component\Serialization\Exception\InvalidDataTypeException;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Extension\ThemeHandlerInterface;
 use Drupal\Core\Serialization\Yaml;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Twig\Error\LoaderError;
 use Twig\Loader\FilesystemLoader;
 use Twig\Source;
@@ -43,7 +44,12 @@ class HelpTopicTwigLoader extends FilesystemLoader {
    * @param \Drupal\Core\Extension\ThemeHandlerInterface $theme_handler
    *   The theme handler service.
    */
-  public function __construct($root_path, ModuleHandlerInterface $module_handler, ThemeHandlerInterface $theme_handler) {
+  public function __construct(
+    #[Autowire('%app.root%')]
+    $root_path,
+    ModuleHandlerInterface $module_handler,
+    ThemeHandlerInterface $theme_handler,
+  ) {
     parent::__construct([], $root_path);
     // Add help_topics directories for modules and themes in the 'help_topic'
     // namespace, plus core.

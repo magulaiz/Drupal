@@ -1,4 +1,7 @@
 services:
+  _defaults:
+    autowire: true
+
   cache.dynamic_page_cache:
     class: Drupal\Core\Cache\CacheBackendInterface
     tags:
@@ -7,7 +10,6 @@ services:
     arguments: [dynamic_page_cache]
   dynamic_page_cache_subscriber:
     class: Drupal\dynamic_page_cache\EventSubscriber\DynamicPageCacheSubscriber
-    arguments: ['@dynamic_page_cache_request_policy', '@dynamic_page_cache_response_policy', '@render_cache', '%renderer.config%']
     tags:
       - { name: event_subscriber }
 
@@ -23,7 +25,6 @@ services:
     lazy: true
   dynamic_page_cache_deny_admin_routes:
     class: Drupal\dynamic_page_cache\PageCache\ResponsePolicy\DenyAdminRoutes
-    autowire: true
     public: false
     tags:
       - { name: dynamic_page_cache_response_policy }

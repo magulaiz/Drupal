@@ -1,12 +1,12 @@
 services:
+  _defaults:
+    autowire: true
   plugin.manager.editor:
     class: Drupal\editor\Plugin\EditorManager
     parent: default_plugin_manager
   element.editor:
     class: Drupal\editor\Element
-    arguments: ['@plugin.manager.editor']
   editor.config_translation_mapper_subscriber:
     class: Drupal\editor\EventSubscriber\EditorConfigTranslationSubscriber
-    autowire: true
     tags:
       - {name: event_subscriber}
