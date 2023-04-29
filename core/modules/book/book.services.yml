@@ -8,9 +8,6 @@ services:
       - { name: breadcrumb_builder, priority: 701 }
   book.manager:
     class: Drupal\book\BookManager
-    arguments:
-      $backend_chained_cache: '@book.backend_chained_cache'
-      $memory_cache: '@book.memory_cache'
   Drupal\book\BookManagerInterface: '@book.manager'
   book.outline:
     class: Drupal\book\BookOutline

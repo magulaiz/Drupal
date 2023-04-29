@@ -19,6 +19,4 @@ services:
 
   plugin.manager.config_translation.mapper:
     class: Drupal\config_translation\ConfigMapperManager
-    arguments:
-      $cache_backend: '@cache.discovery'
   Drupal\config_translation\ConfigMapperManagerInterface: '@plugin.manager.config_translation.mapper'

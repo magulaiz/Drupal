@@ -20,6 +20,7 @@ use Drupal\editor\EditorInterface;
 use Drupal\editor\Entity\Editor;
 use Drupal\filter\FilterFormatInterface;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 
 /**
  * Generates CKEditor 5 settings for existing text editors/formats.
@@ -80,7 +81,15 @@ final class SmartDefaultSettings {
    * @param \Drupal\Core\Session\AccountInterface $current_user
    *   The current user.
    */
-  public function __construct(CKEditor5PluginManagerInterface $plugin_manager, PluginManagerInterface $upgrade_plugin_manager, LoggerInterface $logger, ModuleHandlerInterface $module_handler, AccountInterface $current_user) {
+  public function __construct(
+    CKEditor5PluginManagerInterface $plugin_manager,
+    #[Autowire(service: 'plugin.manager.ckeditor4to5upgrade.plugin')]
+    PluginManagerInterface $upgrade_plugin_manager,
+    #[Autowire(service: 'logger.channel.ckeditor5')]
+    LoggerInterface $logger,
+    ModuleHandlerInterface $module_handler,
+    AccountInterface $current_user,
+  ) {
     $this->pluginManager = $plugin_manager;
     $this->upgradePluginManager = $upgrade_plugin_manager;
     $this->logger = $logger;

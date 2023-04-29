@@ -2,7 +2,5 @@ services:
   block_content.uuid_lookup:
     class: \Drupal\block_content\BlockContentUuidLookup
     autowire: true
-    arguments:
-      $cache: '@cache.bootstrap'
     tags:
       - { name: needs_destruction }

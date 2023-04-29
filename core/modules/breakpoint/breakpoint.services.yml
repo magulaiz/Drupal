@@ -2,7 +2,5 @@ services:
   breakpoint.manager:
     class: Drupal\breakpoint\BreakpointManager
     autowire: true
-    arguments:
-      $cache_backend: '@cache.discovery'
     tags:
       - { name: plugin_manager_cache_clear }

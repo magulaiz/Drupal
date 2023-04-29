@@ -6,6 +6,7 @@ use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Cache\CacheCollector;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Lock\LockBackendInterface;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 
 /**
  * A cache collector that caches IDs for block_content UUIDs.
@@ -37,7 +38,12 @@ class BlockContentUuidLookup extends CacheCollector {
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    *   The entity type manager.
    */
-  public function __construct(CacheBackendInterface $cache, LockBackendInterface $lock, EntityTypeManagerInterface $entity_type_manager) {
+  public function __construct(
+    #[Autowire(service: 'cache.bootstrap')]
+    CacheBackendInterface $cache,
+    LockBackendInterface $lock,
+    EntityTypeManagerInterface $entity_type_manager,
+  ) {
     parent::__construct('block_content_uuid', $cache, $lock);
     $this->entityTypeManager = $entity_type_manager;
   }

@@ -12,6 +12,7 @@ use Drupal\Core\Plugin\Discovery\YamlDiscovery;
 use Drupal\Core\Plugin\Factory\ContainerFactory;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\StringTranslation\TranslationInterface;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 
 /**
  * Defines a breakpoint plugin manager to deal with breakpoints.
@@ -99,7 +100,13 @@ class BreakpointManager extends DefaultPluginManager implements BreakpointManage
    * @param \Drupal\Core\StringTranslation\TranslationInterface $string_translation
    *   The string translation service.
    */
-  public function __construct(ModuleHandlerInterface $module_handler, ThemeHandlerInterface $theme_handler, CacheBackendInterface $cache_backend, TranslationInterface $string_translation) {
+  public function __construct(
+    ModuleHandlerInterface $module_handler,
+    ThemeHandlerInterface $theme_handler,
+    #[Autowire(service: 'cache.discovery')]
+    CacheBackendInterface $cache_backend,
+    TranslationInterface $string_translation,
+  ) {
     $this->factory = new ContainerFactory($this);
     $this->moduleHandler = $module_handler;
     $this->themeHandler = $theme_handler;

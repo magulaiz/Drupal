@@ -7,6 +7,7 @@ use Drupal\editor\Entity\Editor;
 use Drupal\filter\Entity\FilterFormat;
 use Drupal\Component\Plugin\PluginManagerInterface;
 use Drupal\Core\Render\BubbleableMetadata;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 
 /**
  * Defines a service for Text Editor's render elements.
@@ -26,7 +27,10 @@ class Element implements TrustedCallbackInterface {
    * @param \Drupal\Component\Plugin\PluginManagerInterface $plugin_manager
    *   The Text Editor plugin manager service.
    */
-  public function __construct(PluginManagerInterface $plugin_manager) {
+  public function __construct(
+    #[Autowire(service: 'plugin.manager.editor')]
+    PluginManagerInterface $plugin_manager,
+  ) {
     $this->pluginManager = $plugin_manager;
   }
 

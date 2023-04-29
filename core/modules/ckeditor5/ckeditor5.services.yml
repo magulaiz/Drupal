@@ -13,9 +13,6 @@ services:
     parent: default_plugin_manager
   ckeditor5.smart_default_settings:
     class: Drupal\ckeditor5\SmartDefaultSettings
-    arguments:
-      $logger: '@logger.channel.ckeditor5'
-      $upgrade_plugin_manager: '@plugin.manager.ckeditor4to5upgrade.plugin'
   ckeditor5.stylesheets.message:
     class: Drupal\ckeditor5\CKEditor5StylesheetsMessage
   ckeditor5.ckeditor5_cache_tag:
