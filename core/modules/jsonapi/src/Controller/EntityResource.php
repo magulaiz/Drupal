@@ -52,6 +52,7 @@ use Drupal\jsonapi\ResourceType\ResourceType;
 use Drupal\jsonapi\ResourceType\ResourceTypeField;
 use Drupal\jsonapi\ResourceType\ResourceTypeRepositoryInterface;
 use Drupal\jsonapi\Revisions\ResourceVersionRouteEnhancer;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Drupal\Core\Http\Exception\CacheableBadRequestHttpException;
@@ -177,7 +178,20 @@ class EntityResource {
    * @param \Drupal\Core\Session\AccountInterface $user
    *   The current user account.
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager, EntityFieldManagerInterface $field_manager, ResourceTypeRepositoryInterface $resource_type_repository, RendererInterface $renderer, EntityRepositoryInterface $entity_repository, IncludeResolver $include_resolver, EntityAccessChecker $entity_access_checker, FieldResolver $field_resolver, SerializerInterface $serializer, TimeInterface $time, AccountInterface $user) {
+  public function __construct(
+    EntityTypeManagerInterface $entity_type_manager,
+    EntityFieldManagerInterface $field_manager,
+    ResourceTypeRepositoryInterface $resource_type_repository,
+    RendererInterface $renderer,
+    EntityRepositoryInterface $entity_repository,
+    IncludeResolver $include_resolver,
+    EntityAccessChecker $entity_access_checker,
+    FieldResolver $field_resolver,
+    #[Autowire(service: 'jsonapi.serializer')]
+    SerializerInterface $serializer,
+    TimeInterface $time,
+    AccountInterface $user,
+  ) {
     $this->entityTypeManager = $entity_type_manager;
     $this->fieldManager = $field_manager;
     $this->resourceTypeRepository = $resource_type_repository;

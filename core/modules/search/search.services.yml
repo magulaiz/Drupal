@@ -11,8 +11,6 @@ services:
 
   search.index:
     class: Drupal\search\SearchIndex
-    arguments:
-      $replica: '@database.replica'
     tags:
       - { name: backend_overridable }
 

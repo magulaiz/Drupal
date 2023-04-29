@@ -59,7 +59,6 @@ services:
     class: Drupal\user\UserFloodControl
   user.flood_subscriber:
     class: Drupal\user\EventSubscriber\UserFloodSubscriber
-    arguments: ['@logger.channel.user']
     tags:
       - { name: 'event_subscriber' }
   logger.channel.user:

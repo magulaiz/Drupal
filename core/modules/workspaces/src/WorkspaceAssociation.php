@@ -10,6 +10,7 @@ use Drupal\Core\Utility\Error;
 use Drupal\workspaces\Event\WorkspacePostPublishEvent;
 use Drupal\workspaces\Event\WorkspacePublishEvent;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
@@ -55,7 +56,13 @@ class WorkspaceAssociation implements WorkspaceAssociationInterface, EventSubscr
    * @param \Psr\Log\LoggerInterface|null $logger
    *   The logger.
    */
-  public function __construct(Connection $connection, EntityTypeManagerInterface $entity_type_manager, WorkspaceRepositoryInterface $workspace_repository, protected ?LoggerInterface $logger = NULL) {
+  public function __construct(
+    Connection $connection,
+    EntityTypeManagerInterface $entity_type_manager,
+    WorkspaceRepositoryInterface $workspace_repository,
+    #[Autowire(service: 'logger.channel.workspaces')]
+    protected ?LoggerInterface $logger = NULL,
+  ) {
     $this->database = $connection;
     $this->entityTypeManager = $entity_type_manager;
     $this->workspaceRepository = $workspace_repository;

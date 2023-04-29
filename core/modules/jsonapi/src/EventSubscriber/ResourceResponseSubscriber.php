@@ -6,6 +6,7 @@ use Drupal\Core\Cache\CacheableResponse;
 use Drupal\Core\Cache\CacheableResponseInterface;
 use Drupal\jsonapi\Normalizer\Value\CacheableNormalization;
 use Drupal\jsonapi\ResourceResponse;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -51,7 +52,10 @@ class ResourceResponseSubscriber implements EventSubscriberInterface {
    * @param \Symfony\Component\Serializer\SerializerInterface $serializer
    *   The serializer.
    */
-  public function __construct(SerializerInterface $serializer) {
+  public function __construct(
+    #[Autowire(service: 'jsonapi.serializer')]
+    SerializerInterface $serializer
+  ) {
     $this->serializer = $serializer;
   }
 

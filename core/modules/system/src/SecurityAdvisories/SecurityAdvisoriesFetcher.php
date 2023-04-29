@@ -16,6 +16,7 @@ use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\TransferException;
 use GuzzleHttp\RequestOptions;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 
 /**
  * Defines a service to get security advisories.
@@ -89,7 +90,17 @@ final class SecurityAdvisoriesFetcher {
    * @param \Drupal\Core\Site\Settings $settings
    *   The settings instance.
    */
-  public function __construct(ConfigFactoryInterface $config_factory, KeyValueExpirableFactoryInterface $key_value_factory, ClientInterface $client, ModuleExtensionList $module_list, ThemeExtensionList $theme_list, ProfileExtensionList $profile_list, LoggerInterface $logger, Settings $settings) {
+  public function __construct(
+    ConfigFactoryInterface $config_factory,
+    KeyValueExpirableFactoryInterface $key_value_factory,
+    ClientInterface $client,
+    ModuleExtensionList $module_list,
+    ThemeExtensionList $theme_list,
+    ProfileExtensionList $profile_list,
+    #[Autowire(service: 'logger.channel.system')]
+    LoggerInterface $logger,
+    Settings $settings,
+  ) {
     $this->config = $config_factory->get('system.advisories');
     $this->keyValueExpirable = $key_value_factory->get('system');
     $this->httpClient = $client;

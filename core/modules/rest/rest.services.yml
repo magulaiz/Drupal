@@ -4,8 +4,6 @@ services:
 
   plugin.manager.rest:
     class: Drupal\rest\Plugin\Type\ResourcePluginManager
-    arguments:
-      $cache_backend: '@cache.discovery'
   Drupal\rest\Plugin\Type\ResourcePluginManager: '@plugin.manager.rest'
   cache.rest:
     class: Drupal\Core\Cache\CacheBackendInterface
@@ -15,8 +13,6 @@ services:
     arguments: [rest]
   rest.resource_routes:
     class: Drupal\rest\Routing\ResourceRoutes
-    arguments:
-      $logger: '@logger.channel.rest'
     tags:
       - { name: 'event_subscriber' }
   logger.channel.rest:

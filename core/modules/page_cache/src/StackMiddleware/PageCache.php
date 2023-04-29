@@ -8,6 +8,7 @@ use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\PageCache\RequestPolicyInterface;
 use Drupal\Core\PageCache\ResponsePolicyInterface;
 use Drupal\Core\Site\Settings;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -66,7 +67,13 @@ class PageCache implements HttpKernelInterface {
    * @param \Drupal\Core\PageCache\ResponsePolicyInterface $response_policy
    *   A policy rule determining the cacheability of the response.
    */
-  public function __construct(HttpKernelInterface $http_kernel, CacheBackendInterface $cache, RequestPolicyInterface $request_policy, ResponsePolicyInterface $response_policy) {
+  public function __construct(
+    HttpKernelInterface $http_kernel,
+    #[Autowire(service: 'cache.page')]
+    CacheBackendInterface $cache,
+    RequestPolicyInterface $request_policy,
+    ResponsePolicyInterface $response_policy,
+  ) {
     $this->httpKernel = $http_kernel;
     $this->cache = $cache;
     $this->requestPolicy = $request_policy;

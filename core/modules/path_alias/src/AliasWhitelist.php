@@ -6,6 +6,7 @@ use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Cache\CacheCollector;
 use Drupal\Core\Lock\LockBackendInterface;
 use Drupal\Core\State\StateInterface;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 
 /**
  * Extends CacheCollector to build the path alias whitelist over time.
@@ -40,7 +41,14 @@ class AliasWhitelist extends CacheCollector implements AliasWhitelistInterface {
    * @param \Drupal\path_alias\AliasRepositoryInterface $alias_repository
    *   The path alias repository.
    */
-  public function __construct($cid, CacheBackendInterface $cache, LockBackendInterface $lock, StateInterface $state, AliasRepositoryInterface $alias_repository) {
+  public function __construct(
+    $cid,
+    #[Autowire(service: 'cache.bootstrap')]
+    CacheBackendInterface $cache,
+    LockBackendInterface $lock,
+    StateInterface $state,
+    AliasRepositoryInterface $alias_repository,
+  ) {
     parent::__construct($cid, $cache, $lock);
     $this->state = $state;
     $this->pathAliasRepository = $alias_repository;

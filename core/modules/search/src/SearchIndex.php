@@ -6,6 +6,7 @@ use Drupal\Core\Cache\CacheTagsInvalidatorInterface;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Database\Connection;
 use Drupal\search\Exception\SearchIndexException;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 
 /**
  * Provides search index management functions.
@@ -61,7 +62,14 @@ class SearchIndex implements SearchIndexInterface {
    * @param \Drupal\search\SearchTextProcessorInterface $text_processor
    *   The text processor.
    */
-  public function __construct(ConfigFactoryInterface $config_factory, Connection $connection, Connection $replica, CacheTagsInvalidatorInterface $cache_tags_invalidator, SearchTextProcessorInterface $text_processor) {
+  public function __construct(
+    ConfigFactoryInterface $config_factory,
+    Connection $connection,
+    #[Autowire(service: 'database.replica')]
+    Connection $replica,
+    CacheTagsInvalidatorInterface $cache_tags_invalidator,
+    SearchTextProcessorInterface $text_processor,
+  ) {
     $this->configFactory = $config_factory;
     $this->connection = $connection;
     $this->replica = $replica;

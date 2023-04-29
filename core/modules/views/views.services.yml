@@ -4,65 +4,63 @@ services:
 
   plugin.manager.views.access:
     class: Drupal\views\Plugin\ViewsPluginManager
-    arguments: [access, '@container.namespaces', '@cache.discovery', '@module_handler']
+    arguments: [access]
   plugin.manager.views.area:
     class: Drupal\views\Plugin\ViewsHandlerManager
-    arguments: [area, '@container.namespaces', '@views.views_data', '@cache.discovery', '@module_handler']
+    arguments: [area]
   plugin.manager.views.argument:
     class: Drupal\views\Plugin\ViewsHandlerManager
-    arguments: [argument, '@container.namespaces', '@views.views_data', '@cache.discovery', '@module_handler']
+    arguments: [argument]
   plugin.manager.views.argument_default:
     class: Drupal\views\Plugin\ViewsPluginManager
-    arguments: [argument_default, '@container.namespaces', '@cache.discovery', '@module_handler']
+    arguments: [argument_default]
   plugin.manager.views.argument_validator:
     class: Drupal\views\Plugin\ViewsPluginManager
-    arguments: [argument_validator, '@container.namespaces', '@cache.discovery', '@module_handler']
+    arguments: [argument_validator]
   plugin.manager.views.cache:
     class: Drupal\views\Plugin\ViewsPluginManager
-    arguments: [cache, '@container.namespaces', '@cache.discovery', '@module_handler']
+    arguments: [cache]
   plugin.manager.views.display_extender:
     class: Drupal\views\Plugin\ViewsPluginManager
-    arguments: [display_extender, '@container.namespaces', '@cache.discovery', '@module_handler']
+    arguments: [display_extender]
   plugin.manager.views.display:
     class: Drupal\views\Plugin\ViewsPluginManager
-    arguments: [display, '@container.namespaces', '@cache.discovery', '@module_handler']
+    arguments: [display]
   plugin.manager.views.exposed_form:
     class: Drupal\views\Plugin\ViewsPluginManager
-    arguments: [exposed_form, '@container.namespaces', '@cache.discovery', '@module_handler']
+    arguments: [exposed_form]
   plugin.manager.views.field:
     class: Drupal\views\Plugin\ViewsHandlerManager
-    arguments: [field, '@container.namespaces', '@views.views_data', '@cache.discovery', '@module_handler']
+    arguments: [field]
   plugin.manager.views.filter:
     class: Drupal\views\Plugin\ViewsHandlerManager
-    arguments: [filter, '@container.namespaces', '@views.views_data', '@cache.discovery', '@module_handler']
+    arguments: [filter]
   plugin.manager.views.join:
     class: Drupal\views\Plugin\ViewsHandlerManager
-    arguments: [join, '@container.namespaces', '@views.views_data', '@cache.discovery', '@module_handler']
+    arguments: [join]
   plugin.manager.views.pager:
     class: Drupal\views\Plugin\ViewsPluginManager
-    arguments: [pager, '@container.namespaces', '@cache.discovery', '@module_handler']
+    arguments: [pager]
   plugin.manager.views.query:
     class: Drupal\views\Plugin\ViewsPluginManager
-    arguments: [query, '@container.namespaces', '@cache.discovery', '@module_handler']
+    arguments: [query]
   plugin.manager.views.relationship:
     class: Drupal\views\Plugin\ViewsHandlerManager
-    arguments: [relationship, '@container.namespaces', '@views.views_data', '@cache.discovery', '@module_handler']
+    arguments: [relationship]
   plugin.manager.views.row:
     class: Drupal\views\Plugin\ViewsPluginManager
-    arguments: [row, '@container.namespaces', '@cache.discovery', '@module_handler']
+    arguments: [row]
   plugin.manager.views.sort:
     class: Drupal\views\Plugin\ViewsHandlerManager
-    arguments: [sort, '@container.namespaces', '@views.views_data', '@cache.discovery', '@module_handler']
+    arguments: [sort]
   plugin.manager.views.style:
     class: Drupal\views\Plugin\ViewsPluginManager
-    arguments: [style, '@container.namespaces', '@cache.discovery', '@module_handler']
+    arguments: [style]
   plugin.manager.views.wizard:
     class: Drupal\views\Plugin\ViewsPluginManager
-    arguments: [wizard, '@container.namespaces', '@cache.discovery', '@module_handler']
+    arguments: [wizard]
   views.views_data:
     class: Drupal\views\ViewsData
-    arguments:
-      $cache_backend: '@cache.default'
     tags:
       - { name: backend_overridable }
   Drupal\views\ViewsData: '@views.views_data'
@@ -70,6 +68,7 @@ services:
     class: Drupal\views\ViewsDataHelper
   views.executable:
     class: Drupal\views\ViewExecutableFactory
+  Drupal\views\ViewExecutableFactory: '@views.executable'
   views.analyzer:
     class: Drupal\views\Analyzer
   views.route_subscriber:
@@ -80,8 +79,6 @@ services:
     class: Drupal\views\ExposedFormCache
   views.entity_schema_subscriber:
     class: Drupal\views\EventSubscriber\ViewsEntitySchemaSubscriber
-    arguments:
-      $logger: '@logger.channel.default'
     tags:
       - { name: 'event_subscriber' }
   views.date_sql:

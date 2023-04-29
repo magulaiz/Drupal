@@ -4,12 +4,8 @@ services:
 
   plugin.manager.language_negotiation_method:
     class: Drupal\language\LanguageNegotiationMethodManager
-    arguments:
-      $cache_backend: '@cache.discovery'
   language_negotiator:
     class: Drupal\language\LanguageNegotiator
-    arguments:
-      $negotiator_manager: '@plugin.manager.language_negotiation_method'
     calls:
       - [initLanguageManager]
   Drupal\language\LanguageNegotiatorInterface: '@language_negotiator'

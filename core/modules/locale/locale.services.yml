@@ -4,8 +4,6 @@ services:
 
   locale.default.config.storage:
     class: Drupal\locale\LocaleDefaultConfigStorage
-    arguments:
-      $install_profile: '%install_profile%'
     public: false
   Drupal\locale\LocaleDefaultConfigStorage: '@locale.default.config.storage'
   locale.config_manager:
@@ -22,8 +20,6 @@ services:
     class: Drupal\locale\PluralFormula
   string_translator.locale.lookup:
     class: Drupal\locale\LocaleTranslation
-    arguments:
-      $cache: '@cache.default'
     tags:
       - { name: string_translator }
       - { name: needs_destruction }
