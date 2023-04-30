@@ -118,7 +118,7 @@ class MapItem extends FieldItemBase implements FieldItemStorageMapperInterface {
    * {@inheritdoc}
    */
   public static function mapColumnsOnLoad(array $columns): array {
-    return isset($columns['value']) ? unserialize($columns['value']) : throw new \Exception(var_export($columns, TRUE));
+    return isset($columns['value']) ? unserialize($columns['value']) : [];
   }
 
   /**
