@@ -592,9 +592,11 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
           $storage_definition = $this->fieldStorageDefinitions[$field_name];
           // Try field item mapping.
           if ($storage_definition instanceof StorageMapperInterface) {
-            $item_values = $this->mapColumnNamesOnLoad(
-              $field_name,
-              $storage_definition->mapColumnsOnLoad($row)
+            $item_values = $storage_definition->mapColumnsOnLoad(
+              $this->mapColumnNamesOnLoad(
+                $field_name,
+                $row
+              )
             );
           }
           if (isset($item_values)) {
@@ -1291,9 +1293,11 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
           if ($storage_definition->getCardinality() == FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED || count($values[$value_key][$field_name][$langcode]) < $storage_definition->getCardinality()) {
             // Try field item mapping.
             if ($storage_definition instanceof StorageMapperInterface) {
-              $item = $this->mapColumnNamesOnLoad(
-                $field_name,
-                $storage_definition->mapColumnsOnLoad((array) $row)
+              $item = $storage_definition->mapColumnsOnLoad(
+                $this->mapColumnNamesOnLoad(
+                  $field_name,
+                  (array) $row
+                )
               );
             }
             // Use fallback mapping.
@@ -1849,10 +1853,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
     return $as_bool ? (bool) $count : (int) $count;
   }
 
-  protected function mapColumnNamesOnLoad(string $field_name, ?array $columnValues): ?array {
-    if (!isset($columnValues)) {
-      return NULL;
-    }
+  protected function mapColumnNamesOnLoad(string $field_name, array $columnValues): array {
     $columns_to_properties = array_flip($this->tableMapping->getColumnNames($field_name));
     $propertyValues = [];
     foreach ($columnValues as $column => $value) {
