@@ -41,7 +41,7 @@ class MapBaseFieldTest extends EntityKernelTestBase {
     }
   }
 
-  public function provideUninstallMapItemBaseFieldData() {
+  public function provideMapItemBaseFieldData() {
     return [
       'single item cardinality, stored in base table' => [1],
       'multiple item cardinality, stored in dedicated table' => [FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED],
@@ -51,7 +51,7 @@ class MapBaseFieldTest extends EntityKernelTestBase {
   /**
    * Tests uninstalling map item base field.
    *
-   * @dataProvider provideUninstallMapItemBaseFieldData
+   * @dataProvider provideMapItemBaseFieldData
    */
   public function testMapItemBaseField(int $cardinality) {
     $definitions['data_map'] = BaseFieldDefinition::create('map')
