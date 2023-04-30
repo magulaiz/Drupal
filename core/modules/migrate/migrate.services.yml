@@ -16,6 +16,7 @@ services:
     class: Drupal\migrate\Plugin\MigrateSourcePluginManager
     arguments:
       $type: 'source'
+  Drupal\migrate\Plugin\MigrateSourcePluginManager: '@plugin.manager.migrate.source'
   plugin.manager.migrate.process:
     class: Drupal\migrate\Plugin\MigratePluginManager
     arguments:
