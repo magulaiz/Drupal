@@ -593,10 +593,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
           // Try field item mapping.
           if ($storage_definition instanceof StorageMapperInterface) {
             $item_values = $storage_definition->mapColumnsOnLoad(
-              $this->mapColumnNamesOnLoad(
-                $field_name,
-                $row
-              )
+              $this->mapColumnNamesOnLoad($field_name, $row)
             );
           }
           if (isset($item_values)) {
@@ -1294,10 +1291,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
             // Try field item mapping.
             if ($storage_definition instanceof StorageMapperInterface) {
               $item = $storage_definition->mapColumnsOnLoad(
-                $this->mapColumnNamesOnLoad(
-                  $field_name,
-                  (array) $row
-                )
+                $this->mapColumnNamesOnLoad($field_name, (array) $row)
               );
             }
             // Use fallback mapping.
