@@ -1860,7 +1860,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
         $propertyValues[$property] = $value;
       }
     }
-    throw new \Exception(var_export([$columnValues, $propertyValues], TRUE));
+    return $propertyValues;
   }
 
   protected function mapColumnNamesOnSave(string $field_name, ?array $propertyValues): ?array {
