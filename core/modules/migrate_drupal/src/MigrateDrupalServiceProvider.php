@@ -4,7 +4,6 @@ namespace Drupal\migrate_drupal;
 
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\DependencyInjection\ServiceProviderBase;
-use Symfony\Component\DependencyInjection\Reference;
 
 /**
  * Alters container services.
