@@ -414,6 +414,7 @@ class ViewsConfigUpdater implements ContainerInjectionInterface {
     });
   }
 
+  /**
    * Update taxonomy term ID filter handlers to allow multiple vocabularies.
    *
    * @param \Drupal\views\ViewEntityInterface $view
