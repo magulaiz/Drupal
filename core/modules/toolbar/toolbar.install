@@ -8,7 +8,7 @@
 /**
  * Add toolbar settings with default menu depth.
  */
-function toolbar_update_10002() {
+function toolbar_update_10101() {
   $config_factory = \Drupal::configFactory();
   $config = $config_factory->getEditable('toolbar.settings');
   if (empty($config->get('menu_depth'))) {

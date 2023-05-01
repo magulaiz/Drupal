@@ -129,7 +129,7 @@
 }
 
 .toolbar-tray-horizontal .toolbar-menu:not(:first-child) li.menu-item--expanded > a:focus {
-  background-image: url(../misc/icons/0074bd/chevron-right.svg);
+  background-image: url(../../images/core/0074bd/chevron-right.svg);
   background-repeat: no-repeat;
   background-position: center right;
 }
@@ -196,7 +196,7 @@
 }
 
 .toolbar-tray-horizontal ul li.menu-item--expanded ul li.menu-item--expanded {
-  background-image: url(../misc/icons/0074bd/chevron-right.svg);
+  background-image: url(../../images/core/0074bd/chevron-right.svg);
   background-repeat: no-repeat;
   background-position: center right;
 }
@@ -234,7 +234,7 @@
 }
 
 [dir="rtl"] .toolbar-tray-horizontal ul li.menu-item--expanded ul li.menu-item--expanded {
-  background-image: url(../misc/icons/0074bd/chevron-left.svg);
+  background-image: url(../../images/core/0074bd/chevron-left.svg);
   background-position: center left;
 }
 

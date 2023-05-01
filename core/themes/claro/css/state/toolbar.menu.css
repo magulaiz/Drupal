@@ -127,7 +127,7 @@
   background: #abeae4;
 }
 .toolbar-tray-horizontal .toolbar-menu:not(:first-child) li.menu-item--expanded > a:focus {
-  background-image: url(../misc/icons/0074bd/chevron-right.svg);
+  background-image: url("data:image/svg+xml,%3csvg height='16' width='16' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='m8.053 8.355c.193-.195.193-.517 0-.711l-3.26-3.289c-.193-.195-.192-.514.002-.709l1.371-1.371c.194-.194.512-.193.706.001l5.335 5.369c.195.195.195.515 0 .708l-5.335 5.37c-.194.192-.512.193-.706.002l-1.371-1.371c-.194-.195-.195-.514-.002-.709z' fill='%230074bd'/%3e%3c/svg%3e");
   background-repeat: no-repeat;
   background-position: center right;
 }
@@ -183,7 +183,7 @@
   display: none;
 }
 .toolbar-tray-horizontal ul li.menu-item--expanded ul li.menu-item--expanded {
-  background-image: url(../misc/icons/0074bd/chevron-right.svg);
+  background-image: url("data:image/svg+xml,%3csvg height='16' width='16' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='m8.053 8.355c.193-.195.193-.517 0-.711l-3.26-3.289c-.193-.195-.192-.514.002-.709l1.371-1.371c.194-.194.512-.193.706.001l5.335 5.369c.195.195.195.515 0 .708l-5.335 5.37c-.194.192-.512.193-.706.002l-1.371-1.371c-.194-.195-.195-.514-.002-.709z' fill='%230074bd'/%3e%3c/svg%3e");
   background-repeat: no-repeat;
   background-position: center right;
 }
@@ -214,7 +214,7 @@
   color: #434343;
 }
 [dir="rtl"] .toolbar-tray-horizontal ul li.menu-item--expanded ul li.menu-item--expanded {
-  background-image: url(../misc/icons/0074bd/chevron-left.svg);
+  background-image: url("data:image/svg+xml,%3csvg height='16' width='16' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='m7.951 7.645c-.193.196-.193.516 0 .71l3.258 3.29c.193.193.191.519-.002.709l-1.371 1.371c-.193.192-.512.191-.707 0l-5.335-5.371c-.194-.194-.194-.514 0-.708l5.335-5.369c.195-.195.514-.195.707-.001l1.371 1.371c.193.194.195.513.002.709z' fill='%230074bd'/%3e%3c/svg%3e");
   background-position: center left;
 }
 [dir="rtl"] .toolbar-tray-horizontal ul li.menu-item--expanded .menu-item.hover-intent ul {
