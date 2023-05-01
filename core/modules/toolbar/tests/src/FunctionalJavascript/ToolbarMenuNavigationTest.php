@@ -17,7 +17,7 @@ class ToolbarMenuNavigationTest extends WebDriverTestBase {
   protected static $modules = [
     'node',
     'block',
-    'toolbar'
+    'toolbar',
   ];
 
   /**
@@ -73,7 +73,7 @@ class ToolbarMenuNavigationTest extends WebDriverTestBase {
     $this->assertTrue($system_submenu_menu->isVisible());
 
     // Confirm the menu text since it was selected with nth-child and the item
-    //in that position could change.
+    // in that position could change.
     $this->assertSame('Basic site settings Cron', trim($system_submenu_menu->getText()));
   }
 
