@@ -72,7 +72,7 @@ class ToolbarController extends ControllerBase implements TrustedCallbackInterfa
     // link. In order to load the children of that link, start and end on the
     // second level.
     $parameters = new MenuTreeParameters();
-    $max_depth = \Drupal::config('admin_toolbar.settings')->get('menu_depth');
+    $max_depth = \Drupal::config('toolbar.settings')->get('menu_depth');
     $parameters->setRoot('system.admin')->excludeRoot()->setMaxDepth($max_depth)->onlyEnabledLinks();
     // @todo Make the menu configurable in https://www.drupal.org/node/1869638.
     $tree = $menu_tree->load('admin', $parameters);
