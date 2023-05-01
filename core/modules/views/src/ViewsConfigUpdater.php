@@ -563,4 +563,5 @@ class ViewsConfigUpdater implements ContainerInjectionInterface {
     }
     return FALSE;
   }
+
 }
