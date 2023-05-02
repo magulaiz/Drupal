@@ -69,6 +69,22 @@ function announcements_feed_toolbar() {
 }
 
 /**
+ * Implements hook_toolbar_alter().
+ */
+function announcements_feed_toolbar_alter(&$items) {
+  // As the Announcements link is shown in the top toolbar bar, we don't need
+  // it again in the administration menu tray, so just hide it.
+  if (!empty($items['administration']['tray'])) {
+    $callable = function (array $element) {
+      unset($element['administration_menu']['#items']['announcements_feed.announcement']);
+      return $element;
+    };
+
+    $items['administration']['tray']['toolbar_administration']['#pre_render'][] = $callable;
+  }
+}
+
+/**
  * Implements hook_theme().
  */
 function announcements_feed_theme($existing, $type, $theme, $path) {
