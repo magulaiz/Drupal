@@ -216,6 +216,9 @@ class FileItem extends EntityReferenceItem {
         'visible' => [
           ':input[name="settings[description_field]"]' => ['checked' => TRUE],
         ],
+        'disabled' => [
+          ':input[name="settings[description_field]"]' => ['checked' => FALSE],
+        ],
       ],
     ];
 
