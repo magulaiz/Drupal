@@ -226,8 +226,9 @@ abstract class ExposedFormPluginBase extends PluginBase implements CacheableDepe
         $default_sort_order = $this->view->sort[$exposed_sorts[$user_input['sort_by']]]->options['order'];
       }
       else {
-        $first_sort = reset($this->view->sort);
-        $default_sort_order = $first_sort->options['order'];
+        $first_exposed_sort_id = reset($exposed_sorts);
+        $first_exposed_sort = $this->view->sort[$first_exposed_sort_id];
+        $default_sort_order = $first_exposed_sort->options['order'];
       }
 
       if (!isset($user_input['sort_by'])) {
