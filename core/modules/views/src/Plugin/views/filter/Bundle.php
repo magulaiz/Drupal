@@ -96,10 +96,20 @@ class Bundle extends InOperator {
   public function getValueOptions() {
     if (!isset($this->valueOptions)) {
       $types = $this->bundleInfoService->getBundleInfo($this->entityTypeId);
+      $bundle_type = $this->entityType->getBundleEntityType();
+      $should_filter = $bundle_type !== NULL && $this->isExposed();
+      $bundle_storage = $should_filter ? $this->entityTypeManager->getStorage($bundle_type) : NULL;
+
       $this->valueTitle = $this->t('@entity types', ['@entity' => $this->entityType->getLabel()]);
 
       $options = [];
       foreach ($types as $type => $info) {
+        if ($should_filter) {
+          $bundle_entity = $bundle_storage->load($type);
+          if (!$bundle_entity || !$bundle_entity->access('view label')) {
+            continue;
+          }
+        }
         $options[$type] = $info['label'];
       }
 
