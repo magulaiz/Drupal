@@ -3,8 +3,10 @@
 namespace Drupal\layout_builder\Element;
 
 use Drupal\Core\Ajax\AjaxHelperTrait;
+use Drupal\Core\Layout\LayoutInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Plugin\PluginFormInterface;
+use Drupal\Core\Plugin\PluginWithFormsInterface;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Render\Element\RenderElement;
 use Drupal\Core\Url;
@@ -337,6 +339,7 @@ class LayoutBuilder extends RenderElement implements ContainerFactoryPluginInter
     $build['#attributes']['class'][] = 'layout-builder__layout';
     $build['#attributes']['data-layout-builder-highlight-id'] = $this->sectionUpdateHighlightId($delta);
 
+    $has_configure_form = $this->hasConfigurationForm($layout);
     return [
       '#type' => 'container',
       '#attributes' => [
@@ -366,12 +369,12 @@ class LayoutBuilder extends RenderElement implements ContainerFactoryPluginInter
       // link, and is only visible when the move block dialog is open.
       'section_label' => [
         '#markup' => $this->t('<span class="layout-builder__section-label" aria-hidden="true">@section</span>', ['@section' => $section_label]),
-        '#access' => !$layout instanceof PluginFormInterface,
+        '#access' => !$has_configure_form,
       ],
       'configure' => [
         '#type' => 'link',
         '#title' => $this->t('Configure @section', ['@section' => $section_label]),
-        '#access' => $layout instanceof PluginFormInterface,
+        '#access' => $has_configure_form,
         '#url' => Url::fromRoute('layout_builder.configure_section', [
           'section_storage_type' => $storage_type,
           'section_storage' => $storage_id,
@@ -389,6 +392,23 @@ class LayoutBuilder extends RenderElement implements ContainerFactoryPluginInter
       ],
       'layout-builder__section' => $build,
     ];
+  }
+
+  /**
+   * Determines if the layout provides a configuration form.
+   *
+   * @param \Drupal\Core\Layout\LayoutInterface $layout
+   *   The layout plugin.
+   *
+   * @return bool
+   *   TRUE if the layout has a configure form, FALSE otherwise.
+   */
+  protected function hasConfigurationForm(LayoutInterface $layout) {
+    if ($layout instanceof PluginWithFormsInterface && $layout->hasFormClass('configure')) {
+      return TRUE;
+    }
+
+    return $layout instanceof PluginFormInterface;
   }
 
 }

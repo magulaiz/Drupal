@@ -964,6 +964,46 @@ class LayoutBuilderTest extends BrowserTestBase {
   }
 
   /**
+   * Tests a layout with a custom form.
+   */
+  public function testCustomForm() {
+    $assert_session = $this->assertSession();
+    $page = $this->getSession()->getPage();
+
+    $this->drupalLogin($this->drupalCreateUser(['configure any layout']));
+
+    LayoutBuilderEntityViewDisplay::load('node.bundle_with_section_field.default')
+      ->enableLayoutBuilder()
+      ->setOverridable()
+      ->save();
+
+    $this->drupalGet('node/1');
+    $page->clickLink('Layout');
+
+    // Test a custom plugin form that is specified by the plugin annotation.
+    $page->clickLink('Add section');
+    $page->clickLink('Layout Builder Test Custom Form Plugin');
+    $page->fillField('layout_settings[custom_element]', 'This is a custom form specified by the plugin');
+    $page->pressButton('Add section');
+    $assert_session->pageTextContains('This is a custom form specified by the plugin');
+
+    // Test a custom plugin form that is altered onto a plugin that has no form.
+    $page->clickLink('Add section');
+    $page->clickLink('Layout Builder Test No Form Plugin');
+    $page->fillField('layout_settings[custom_element]', 'This had no form now it does');
+    $page->pressButton('Add section');
+    $assert_session->pageTextContains('This had no form now it does');
+
+    // Test a custom plugin form that is altered onto a plugin that has an
+    // existing form.
+    $page->clickLink('Add section');
+    $page->clickLink('Layout Builder Test No Form Plugin');
+    $page->fillField('layout_settings[custom_element]', 'This had an existing form now it has more');
+    $page->pressButton('Add section');
+    $assert_session->pageTextContains('This had an existing form now it has more');
+  }
+
+  /**
    * Tests that extra fields work before and after enabling Layout Builder.
    */
   public function testExtraFields() {

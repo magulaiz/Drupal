@@ -8,6 +8,7 @@ use Drupal\Core\Plugin\ContextAwarePluginAssignmentTrait;
 use Drupal\Core\Plugin\ContextAwarePluginTrait;
 use Drupal\Core\Plugin\PluginBase;
 use Drupal\Core\Plugin\PluginFormInterface;
+use Drupal\Core\Plugin\PluginWithFormsTrait;
 use Drupal\Core\Plugin\PreviewAwarePluginInterface;
 
 /**
@@ -17,6 +18,7 @@ class LayoutDefault extends PluginBase implements LayoutInterface, PluginFormInt
 
   use ContextAwarePluginAssignmentTrait;
   use ContextAwarePluginTrait;
+  use PluginWithFormsTrait;
 
   /**
    * Whether the plugin is being rendered in preview mode.
@@ -124,6 +126,13 @@ class LayoutDefault extends PluginBase implements LayoutInterface, PluginFormInt
    */
   public function submitConfigurationForm(array &$form, FormStateInterface $form_state) {
     $this->configuration['label'] = $form_state->getValue('label');
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getFormClass($operation) {
+    return $this->getPluginDefinition()->get('forms')[$operation] ?? static::class;
   }
 
   /**
