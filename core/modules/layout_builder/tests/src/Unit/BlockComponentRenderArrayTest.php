@@ -195,6 +195,7 @@ class BlockComponentRenderArrayTest extends UnitTestCase {
       '#base_plugin_id' => 'block_plugin_id',
       '#derivative_plugin_id' => NULL,
       'content' => $block_content,
+      '#attributes' => [],
     ];
 
     $expected_cache = $expected_build + [
