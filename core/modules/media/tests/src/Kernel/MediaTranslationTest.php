@@ -3,8 +3,11 @@
 namespace Drupal\Tests\media\Kernel;
 
 use Drupal\Component\Render\FormattableMarkup;
+use Drupal\file\Entity\File;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\content_translation\ContentTranslationHandler;
+use Drupal\media\Entity\Media;
+use Drupal\Tests\TestFileCreationTrait;
 
 /**
  * Tests multilanguage fields logic.
@@ -12,6 +15,8 @@ use Drupal\content_translation\ContentTranslationHandler;
  * @group media
  */
 class MediaTranslationTest extends MediaKernelTestBase {
+
+  use TestFileCreationTrait;
 
   /**
    * Modules to install.
@@ -46,6 +51,64 @@ class MediaTranslationTest extends MediaKernelTestBase {
       ])->save();
       file_put_contents('public://' . $language_id . '.png', '');
     }
+  }
+
+  public function testThing(): void {
+    ConfigurableLanguage::createFromLangcode('nl')->save();
+
+    // Create two test image files: one for the media item in its original
+    // language, and one in its Dutch translation.
+    $images = $this->getTestFiles('image');
+    $this->assertGreaterThan(1, count($images));
+
+    $original_image = File::create([
+      'uri' => reset($images)->uri,
+    ]);
+    $original_image->save();
+
+    $translated_image = File::create([
+      'uri' => end($images)->uri,
+    ]);
+    $translated_image->save();
+
+    $media_type = $this->createMediaType('image', [
+      'field_map' => [
+        'name' => 'name',
+      ],
+    ]);
+    $source_field_name = $media_type->getSource()
+      ->getSourceFieldDefinition($media_type)
+      ->getName();
+
+    // The media's name should be derived from the filename of the image.
+    $media = Media::create([
+      'bundle' => $media_type->id(),
+      $source_field_name => $original_image->id(),
+    ]);
+    $media->save();
+    $this->assertSame($original_image->getFilename(), $media->getName());
+
+    // Create a Dutch translation which uses a different image, but also sets
+    // an arbitrary title.
+    $translation = $media->addTranslation('nl');
+    $this->assertNotSame($media->language()->getId(), $translation->language()->getId());
+    $translation->set($source_field_name, $translated_image->id());
+    $translation->setName('Capricious and arbitrary');
+    $translation->save();
+    // Change of source will override mapped field.
+    $this->assertSame('image-1.png', $translation->getName());
+
+    // The arbitrary title should be preserved when saved without changing the
+    // source.
+    $translation->setName('Capricious and arbitrary');
+    $translation->save();
+    $this->assertSame('Capricious and arbitrary', $translation->getName());
+
+    // The original version should be unaffected by Dutch shenanigans.
+    $this->container->get('entity_type.manager')
+      ->getStorage('media')
+      ->resetCache();
+    $this->assertSame($original_image->getFilename(), Media::load($media->id())->getName());
   }
 
   /**
