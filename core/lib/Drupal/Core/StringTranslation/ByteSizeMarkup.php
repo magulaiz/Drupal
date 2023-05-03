@@ -39,40 +39,17 @@ final class ByteSizeMarkup {
       }
 
       $args = ['@size' => $rounded_size * $sign];
-      switch ($unit) {
-        case 'KB':
-          $markup = new TranslatableMarkup('@size KB', $args, $options, $stringTranslation);
-          break;
-
-        case 'MB':
-          $markup = new TranslatableMarkup('@size MB', $args, $options, $stringTranslation);
-          break;
-
-        case 'GB':
-          $markup = new TranslatableMarkup('@size GB', $args, $options, $stringTranslation);
-          break;
-
-        case 'TB':
-          $markup = new TranslatableMarkup('@size TB', $args, $options, $stringTranslation);
-          break;
-
-        case 'PB':
-          $markup = new TranslatableMarkup('@size PB', $args, $options, $stringTranslation);
-          break;
-
-        case 'EB':
-          $markup = new TranslatableMarkup('@size EB', $args, $options, $stringTranslation);
-          break;
-
-        case 'ZB':
-          $markup = new TranslatableMarkup('@size ZB', $args, $options, $stringTranslation);
-          break;
-
-        case 'YB':
-          $markup = new TranslatableMarkup('@size YB', $args, $options, $stringTranslation);
-          break;
-
-      }
+      $markup = match ($unit) {
+        'KB' => new TranslatableMarkup('@size KB', $args, $options, $stringTranslation),
+        'MB' => new TranslatableMarkup('@size MB', $args, $options, $stringTranslation),
+        'GB' => new TranslatableMarkup('@size GB', $args, $options, $stringTranslation),
+        'TB' => new TranslatableMarkup('@size TB', $args, $options, $stringTranslation),
+        'PB' => new TranslatableMarkup('@size PB', $args, $options, $stringTranslation),
+        'EB' => new TranslatableMarkup('@size EB', $args, $options, $stringTranslation),
+        'ZB' => new TranslatableMarkup('@size ZB', $args, $options, $stringTranslation),
+        'YB' => new TranslatableMarkup('@size YB', $args, $options, $stringTranslation),
+        default => throw new \LogicException("Unexpected unit value"),
+      };
     }
     // At this point $markup must be set.
     return $markup;
