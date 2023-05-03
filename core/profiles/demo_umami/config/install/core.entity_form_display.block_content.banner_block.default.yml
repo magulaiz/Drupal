@@ -61,10 +61,5 @@ content:
     settings:
       include_locked: true
     third_party_settings: {  }
-  translation:
-    weight: 7
-    region: content
-    settings: {  }
-    third_party_settings: {  }
 hidden:
   moderation_state: true
