@@ -2,6 +2,9 @@
 
 namespace Drupal\Core\Access;
 
+use Drupal\Core\Authentication\AuthenticationCollectorInterface;
+use Drupal\Core\Authentication\AuthenticationProviderInterface;
+use Drupal\Core\Authentication\CsrfSafeAuthenticationProviderInterface;
 use Drupal\Core\Routing\Access\AccessInterface as RoutingAccessInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Symfony\Component\Routing\Route;
@@ -24,13 +27,27 @@ class CsrfAccessCheck implements RoutingAccessInterface {
   protected $csrfToken;
 
   /**
+   * The authentication provider collector.
+   *
+   * @var \Drupal\Core\Authentication\AuthenticationCollectorInterface
+   */
+  protected $authenticationCollector;
+
+  /**
    * Constructs a CsrfAccessCheck object.
    *
    * @param \Drupal\Core\Access\CsrfTokenGenerator $csrf_token
    *   The CSRF token generator.
+   * @param \Drupal\Core\Authentication\AuthenticationCollectorInterface|null $authentication_collector
+   *   The authentication provider collector.
    */
-  public function __construct(CsrfTokenGenerator $csrf_token) {
+  public function __construct(CsrfTokenGenerator $csrf_token, ?AuthenticationCollectorInterface $authentication_collector = NULL) {
     $this->csrfToken = $csrf_token;
+    if (!$authentication_collector) {
+      @trigger_error('Calling CsrfAccessCheck::__construct() without the $authentication_collector argument is deprecated in drupal:9.4.0 and will be required before drupal:10.0.0. See https://www.drupal.org/node/3253916.', E_USER_DEPRECATED);
+      $authentication_collector = \Drupal::service('authentication_collector');
+    }
+    $this->authenticationCollector = $authentication_collector;
   }
 
   /**
@@ -47,6 +64,9 @@ class CsrfAccessCheck implements RoutingAccessInterface {
    *   The access result.
    */
   public function access(Route $route, Request $request, RouteMatchInterface $route_match) {
+    if ($result = $this->csrfCheckDisabled($route, $request, $route_match)) {
+      return $result;
+    }
     $parameters = $route_match->getRawParameters();
     $path = ltrim($route->getPath(), '/');
     // Replace the path parameters with values from the parameters array.
@@ -62,6 +82,36 @@ class CsrfAccessCheck implements RoutingAccessInterface {
     }
     // Not cacheable because the CSRF token is highly dynamic.
     return $result->setCacheMaxAge(0);
+  }
+
+  /**
+   * Early check to determine if a CSRF check can be disabled.
+   *
+   * Authentication methods which are not subject to CSRF concerns (e.g.,
+   * Bearer token authentication by a native app) may allow CSRF checks to be
+   * bypassed. Additionally, they may apply cache contexts reflecting the
+   * conditions under which the exclusion applies.
+   *
+   * @param \Symfony\Component\Routing\Route $route
+   *   The route to check against.
+   * @param \Symfony\Component\HttpFoundation\Request $request
+   *   The request object.
+   * @param \Drupal\Core\Routing\RouteMatchInterface $route_match
+   *   The route match object.
+   *
+   * @return \Drupal\Core\Access\AccessResultInterface|null
+   *   An allowed access result, with cacheability metadata appended, or NULL.
+   */
+  protected function csrfCheckDisabled(Route $route, Request $request, RouteMatchInterface $route_match) {
+    if (!$providerId = $request->attributes->get(AuthenticationProviderInterface::AUTHENTICATION_PROVIDER_ID)) {
+      return NULL;
+    }
+    $provider = $this->authenticationCollector->getProvider($providerId);
+    if (!($provider instanceof CsrfSafeAuthenticationProviderInterface)) {
+      return NULL;
+    }
+    return AccessResult::allowed()
+      ->addCacheContexts($provider->getCacheContexts());
   }
 
 }
