@@ -83,7 +83,7 @@ abstract class UnitTestCase extends TestCase {
    * @see \Drupal\Component\Utility\Random::name()
    */
   public function randomMachineName($length = 8) {
-    return $this->getRandomGenerator()->name($length, TRUE);
+    return $this->getRandomGenerator()->machineName($length, TRUE);
   }
 
   /**
