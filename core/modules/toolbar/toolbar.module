@@ -76,6 +76,7 @@ function toolbar_page_attachments(array &$page) {
       activeTray,
       activeTabId,
       isOriented,
+      userButtonMinWidth
     } = toolbarState;
 
     classesToAdd.push(
@@ -109,11 +110,17 @@ function toolbar_page_attachments(array &$page) {
         width: 15rem; height: 100vh;
       }
      .toolbar-loading.toolbar-horizontal :not(#` + activeTray + `) > .toolbar-lining {opacity: 0}`;
-
+      
       const style = document.createElement('style');
       style.textContent = styleContent;
       style.setAttribute('data-toolbar-anti-flicker-loading', true);
       document.querySelector('head').appendChild(style);
+      
+      if (userButtonMinWidth) {
+        const userButtonStyle = document.createElement('style');
+        userButtonStyle.textContent = `#toolbar-item-user {min-width: ` + userButtonMinWidth +`px;}`
+        document.querySelector('head').appendChild(userButtonStyle);
+      }
     }
   }
   document.querySelector('html').classList.add(...classesToAdd);
