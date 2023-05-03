@@ -141,7 +141,7 @@ class ThemeInitialization implements ThemeInitializationInterface {
 
       if (function_exists($theme_engine . '_init')) {
         @trigger_error('THEME_ENGINE_init() is deprecated in drupal:9.3.0 and removed in drupal:10.0.0. There is no replacement. See https://www.drupal.org/node/3246978', E_USER_DEPRECATED);
-        foreach ($active_theme->getBaseThemeExtensions() as $base) {
+        foreach (array_reverse($active_theme->getBaseThemeExtensions()) as $base) {
           call_user_func($theme_engine . '_init', $base);
         }
         call_user_func($theme_engine . '_init', $active_theme->getExtension());
@@ -155,7 +155,7 @@ class ThemeInitialization implements ThemeInitializationInterface {
     }
     else {
       // include non-engine theme files
-      foreach ($active_theme->getBaseThemeExtensions() as $base) {
+      foreach (array_reverse($active_theme->getBaseThemeExtensions()) as $base) {
         // Include the theme file or the engine.
         if ($base->owner) {
           include_once $this->root . '/' . $base->owner;
@@ -198,7 +198,7 @@ class ThemeInitialization implements ThemeInitializationInterface {
     $values['libraries_override'] = [];
 
     // Get libraries overrides declared by base themes.
-    foreach ($base_themes as $base) {
+    foreach (array_reverse($base_themes) as $base) {
       if (!empty($base->info['libraries-override'])) {
         foreach ($base->info['libraries-override'] as $library => $override) {
           $values['libraries_override'][$base->getPath()][$library] = $override;
