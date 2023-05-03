@@ -2,6 +2,7 @@
 
 namespace Drupal\Core\Field\Plugin\Field\FieldFormatter;
 
+use Drupal\Component\Render\MarkupInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\Exception\UndefinedLinkTemplateException;
 use Drupal\Core\Field\FieldItemListInterface;
@@ -91,6 +92,9 @@ class EntityReferenceLabelFormatter extends EntityReferenceFormatterBase {
           // formatter output and shouldn't be rendered in the field template.
           unset($items[$delta]->_attributes);
         }
+      }
+      elseif ($label instanceof MarkupInterface) {
+        $elements[$delta] = ['#markup' => $label];
       }
       else {
         $elements[$delta] = ['#plain_text' => $label];
