@@ -6,6 +6,7 @@
  */
 
 use Drupal\Core\Field\Entity\BaseFieldOverride;
+use Drupal\Core\Config\Entity\ConfigEntityUpdater;
 use Drupal\views\Entity\View;
 
 /**
@@ -47,6 +48,15 @@ function node_post_update_glossary_view_published() {
       $view->save();
     }
   }
+}
+
+/**
+ * Add plural label variants to node-type entities.
+ */
+function node_post_update_plural_variants(array &$sandbox): void {
+  \Drupal::classResolver(ConfigEntityUpdater::class)->update($sandbox, 'node_type', function (): bool {
+    return TRUE;
+  });
 }
 
 /**
