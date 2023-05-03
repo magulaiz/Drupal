@@ -209,4 +209,49 @@ class PathLanguageTest extends PathTestBase {
     $this->assertSession()->pageTextContains($english_node->body->value);
   }
 
+  /**
+   * Tests alias functionality when switching entity language.
+   */
+  public function testAliasLanguageSwitch() {
+    $english_node = $this->drupalCreateNode(['type' => 'page', 'langcode' => 'en']);
+    $english_alias = $this->randomMachineName();
+
+    // Edit the node to set language and path.
+    $edit = [];
+    $edit['path[0][alias]'] = '/' . $english_alias;
+    $this->drupalGet('node/' . $english_node->id() . '/edit');
+    $this->submitForm($edit, 'Save');
+
+    // Confirm that the alias works.
+    $this->drupalGet($english_alias);
+    $this->assertSession()->pageTextContains($english_node->body->value);
+
+    // Switch language node to French and use a new specific alias.
+    $french_alias = $this->randomMachineName();
+    $edit = [];
+    $edit['path[0][alias]'] = '/' . $french_alias;
+    $edit['langcode[0][value]'] = 'fr';
+    $this->drupalGet('node/' . $english_node->id() . '/edit');
+    $this->submitForm($edit, 'Save');
+
+    $this->drupalGet('fr/' . $french_alias);
+    $this->assertSession()->pageTextContains($english_node->body->value);
+    $this->drupalGet('node/' . $english_node->id() . '/edit');
+    $this->assertPathAliasNotExists('/' . $english_alias, 'en', NULL, 'English alias is deleted when French version is created.');
+    $this->assertPathAliasExists('/' . $french_alias, 'fr', NULL, 'French alias exists when French version is created.');
+
+    // Switch language node back to English preserving the alias.
+    $french_alias = $this->randomMachineName();
+    $edit = [];
+    $edit['path[0][alias]'] = '/' . $french_alias;
+    $edit['langcode[0][value]'] = 'en';
+    $this->drupalGet('node/' . $english_node->id() . '/edit');
+    $this->submitForm($edit, 'Save');
+
+    $this->assertPathAliasExists('/' . $french_alias, 'en', NULL, 'French alias exists when switching to English.');
+    $this->drupalGet($french_alias);
+    $this->assertSession()->pageTextContains($english_node->body->value);
+
+  }
+
 }
