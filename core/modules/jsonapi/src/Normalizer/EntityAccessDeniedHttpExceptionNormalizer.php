@@ -4,6 +4,7 @@ namespace Drupal\jsonapi\Normalizer;
 
 use Drupal\Core\Url;
 use Drupal\jsonapi\Exception\EntityAccessDeniedHttpException;
+use Drupal\jsonapi\JsonApiSpec;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
 /**
@@ -45,6 +46,7 @@ class EntityAccessDeniedHttpExceptionNormalizer extends HttpExceptionNormalizer 
 
       if (isset($entity)) {
         $entity_type_id = $entity->getEntityTypeId();
+        $entity_uuid = $entity->uuid();
         $bundle = $entity->bundle();
         /** @var \Drupal\jsonapi\ResourceType\ResourceType $resource_type */
         $resource_type = \Drupal::service('jsonapi.resource_type.repository')->get($entity_type_id, $bundle);
@@ -52,8 +54,19 @@ class EntityAccessDeniedHttpExceptionNormalizer extends HttpExceptionNormalizer 
         $route_name = !is_null($relationship_field)
           ? "jsonapi.$resource_type_name.$relationship_field.related"
           : "jsonapi.$resource_type_name.individual";
-        $url = Url::fromRoute($route_name, ['entity' => $entity->uuid()]);
+        $url = Url::fromRoute($route_name, ['entity' => $entity_uuid]);
+        // Provide a link to the *exact* revision.
+        // Note: adding the query parameter to links of non-versionable
+        // resources will cause HTTP 501 on visiting those links.
+        /* @see \Drupal\jsonapi\Revisions\ResourceVersionRouteEnhancer::enhance() */
+        if ($error['revision_id'] !== NULL && $resource_type->isVersionable()) {
+          $url->setOption('query', [
+            JsonApiSpec::VERSION_QUERY_PARAMETER => 'id:' . $error['revision_id'],
+          ]);
+        }
         $errors[0]['links']['via']['href'] = $url->setAbsolute()->toString(TRUE)->getGeneratedUrl();
+        $errors[0]['links']['via']['meta']['resourceId'] = $entity_uuid;
+        $errors[0]['links']['via']['meta'][JsonApiSpec::VERSION_QUERY_PARAMETER] = $error['revision_id'];
       }
       $errors[0]['source']['pointer'] = $pointer;
 

@@ -12,6 +12,7 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\RevisionableInterface;
 use Drupal\Core\Url;
 use Drupal\jsonapi\CacheableResourceResponse;
+use Drupal\jsonapi\JsonApiSpec;
 use Drupal\jsonapi\Normalizer\HttpExceptionNormalizer;
 use Psr\Http\Message\ResponseInterface;
 
@@ -120,8 +121,7 @@ trait ResourceResponseTestTrait {
    * @see \GuzzleHttp\ClientInterface::request()
    */
   protected function getExpectedIncludedResourceResponse(array $include_paths, array $request_options) {
-    $resource_type = $this->resourceType;
-    $resource_data = array_reduce($include_paths, function ($data, $path) use ($request_options, $resource_type) {
+    $resource_data = array_reduce($include_paths, function ($data, $path) use ($request_options) {
       $field_names = explode('.', $path);
       /** @var \Drupal\Core\Entity\EntityInterface $entity */
       $entity = $this->entity;
@@ -134,10 +134,11 @@ trait ResourceResponseTestTrait {
           if (!$entity->access('view') && $entity->access('view label') && $field_access instanceof AccessResultReasonInterface && empty($field_access->getReason())) {
             $field_access->setReason("The user only has authorization for the 'view label' operation.");
           }
-          $via_link = Url::fromRoute(
+          $url = Url::fromRoute(
             sprintf('jsonapi.%s.%s.related', $entity->getEntityTypeId() . '--' . $entity->bundle(), $public_field_name),
             ['entity' => $entity->uuid()]
           );
+          $via_link = $this->getViaLinkArrayWithMeta($url, $entity);
           $collected_responses[] = static::getAccessDeniedResponse($entity, $field_access, $via_link, $field_name, 'The current user is not allowed to view this relationship.', $field_name);
           break;
         }
@@ -150,10 +151,11 @@ trait ResourceResponseTestTrait {
             $resource_identifier = static::toResourceIdentifier($target_entity);
             if (!static::collectionHasResourceIdentifier($resource_identifier, $data['already_checked'])) {
               $data['already_checked'][] = $resource_identifier;
-              $via_link = Url::fromRoute(
+              $url = Url::fromRoute(
                 sprintf('jsonapi.%s.individual', $resource_identifier['type']),
                 ['entity' => $resource_identifier['id']]
               );
+              $via_link = $this->getViaLinkArrayWithMeta($url, $target_entity);
               $collected_responses[] = static::getAccessDeniedResponse($entity, $target_access, $via_link, NULL, NULL, '/data');
             }
             break;
@@ -485,7 +487,7 @@ trait ResourceResponseTestTrait {
    *   The entity for which to generate the forbidden response.
    * @param \Drupal\Core\Access\AccessResultInterface $access
    *   The denied AccessResult. This can carry a reason and cacheability data.
-   * @param \Drupal\Core\Url $via_link
+   * @param \Drupal\Core\Url|array $via_link
    *   The source URL for the errors of the response.
    * @param string|null $relationship_field_name
    *   (optional) The field name to which the forbidden result applies. Useful
@@ -499,7 +501,8 @@ trait ResourceResponseTestTrait {
    * @return \Drupal\jsonapi\CacheableResourceResponse
    *   The forbidden ResourceResponse.
    */
-  protected static function getAccessDeniedResponse(EntityInterface $entity, AccessResultInterface $access, Url $via_link, $relationship_field_name = NULL, $detail = NULL, $pointer = NULL) {
+  protected static function getAccessDeniedResponse(EntityInterface $entity, AccessResultInterface $access, $via_link, $relationship_field_name = NULL, $detail = NULL, $pointer = NULL) {
+    assert(is_array($via_link) || $via_link instanceof Url);
     $detail = ($detail) ? $detail : 'The current user is not allowed to GET the selected resource.';
     if ($access instanceof AccessResultReasonInterface && ($reason = $access->getReason())) {
       $detail .= ' ' . $reason;
@@ -515,8 +518,11 @@ trait ResourceResponseTestTrait {
     if ($pointer || $pointer !== FALSE && $relationship_field_name) {
       $error['source']['pointer'] = ($pointer) ? $pointer : $relationship_field_name;
     }
-    if ($via_link) {
+    if ($via_link instanceof Url) {
       $error['links']['via']['href'] = $via_link->setAbsolute()->toString();
+    }
+    else {
+      $error['links']['via'] = $via_link;
     }
 
     return (new CacheableResourceResponse([
@@ -594,12 +600,13 @@ trait ResourceResponseTestTrait {
       ],
     ];
     foreach ($errors as $error) {
-      $omitted['links']['item--' . substr(Crypt::hashBase64($error['links']['via']['href']), 0, 7)] = [
-        'href' => $error['links']['via']['href'],
+      $link_via = $error['links']['via'];
+      $omitted['links']['item--' . substr(Crypt::hashBase64($link_via['meta'][JsonApiSpec::VERSION_QUERY_PARAMETER] ?? $link_via['href']), 0, 7)] = [
+        'href' => $link_via['href'],
         'meta' => [
-          'detail' => $error['detail'],
           'rel' => 'item',
-        ],
+          'detail' => $error['detail'],
+        ] + ($link_via['meta'] ?? []),
       ];
     }
     return $omitted;
