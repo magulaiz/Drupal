@@ -18,10 +18,10 @@ final class ByteSizeMarkup {
   /**
    * Gets the TranslatableMarkup object for the provided size.
    *
-   * @return \Drupal\Core\StringTranslation\PluralTranslatableMarkup|\Drupal\Core\StringTranslation\TranslatableMarkup
+   * @return \Drupal\Core\StringTranslation\TranslatableMarkup
    *   The translatable markup.
    */
-  public static function create(?float|?int $size, string $langcode = NULL, TranslationInterface $stringTranslation = NULL): TranslatableMarkup {
+  public static function create(float|int $size, string $langcode = NULL, TranslationInterface $stringTranslation = NULL): TranslatableMarkup {
     $options = ['langcode' => $langcode];
     $absolute_size = abs($size);
     if ($absolute_size < Bytes::KILOBYTE) {
