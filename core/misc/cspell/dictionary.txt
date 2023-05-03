@@ -230,6 +230,7 @@ compositionstart
 configentity
 configurability
 configurator
+configurators
 conneg
 contaynz
 contentblock
