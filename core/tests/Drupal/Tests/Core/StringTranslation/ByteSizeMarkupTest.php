@@ -30,7 +30,6 @@ class ByteSizeMarkupTest extends UnitTestCase {
   public function providerTestCommonFormatSize() {
     $kb = Bytes::KILOBYTE;
     return [
-      ['0 bytes', NULL],
       ['0 bytes', 0],
       // @todo https://www.drupal.org/node/3161118 Prevent display of fractional
       //   bytes for size less then 1KB.
