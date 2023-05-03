@@ -26,7 +26,7 @@ class DefaultContentFilesAccessTest extends BrowserTestBase {
 
     $files_to_test = [
       'images/heritage-carrots.jpg',
-      'languages/en/recipe_instructions/mediterranean-quiche-umami.html',
+      'languages/en/how_to_make_it/mediterranean-quiche-umami.html',
       'languages/en/article_body/lets-hear-it-for-carrots.html',
       'languages/en/node/article.csv',
     ];

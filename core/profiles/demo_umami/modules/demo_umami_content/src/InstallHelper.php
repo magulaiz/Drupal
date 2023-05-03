@@ -488,12 +488,12 @@ class InstallHelper implements ContainerInjectionInterface {
         $values['field_ingredients'][] = ['value' => $ingredient];
       }
     }
-    // Set field_recipe_instruction field.
-    if (!empty($data['recipe_instruction'])) {
-      $recipe_instruction_path = $this->module_path . '/default_content/languages/' . $langcode . '/recipe_instructions/' . $data['recipe_instruction'];
+    // Set field_how_to_make_it field.
+    if (!empty($data['how_to_make_it'])) {
+      $recipe_instruction_path = $this->module_path . '/default_content/languages/' . $langcode . '/how_to_make_it/' . $data['how_to_make_it'];
       $recipe_instructions = file_get_contents($recipe_instruction_path);
       if ($recipe_instructions !== FALSE) {
-        $values['field_recipe_instruction'] = [['value' => $recipe_instructions, 'format' => 'basic_html']];
+        $values['field_how_to_make_it'] = [['value' => $recipe_instructions, 'format' => 'basic_html']];
       }
     }
     // Set field_tags if exists.
