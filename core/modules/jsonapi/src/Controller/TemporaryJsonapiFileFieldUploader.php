@@ -50,7 +50,14 @@ class TemporaryJsonapiFileFieldUploader {
    *
    * @var string
    */
-  const REQUEST_HEADER_FILENAME_REGEX = '@\bfilename(?<star>\*?)=\"(?<filename>.+)\"@';
+  const REQUEST_HEADER_FILENAME_REGEX = '@\bfilename=\"(?<filename>.+)\"@';
+
+  /**
+   * The regex used to extract an extended filename from the content disposition header.
+   *
+   * @var string
+   */
+  const REQUEST_HEADER_EXTENDED_FILENAME_REGEX = "@\bfilename\*=\"?(?<charset>[\w-]+)'(?<lang>\w*)'(?<filename>.+)\"?@";
 
   /**
    * The amount of bytes to read in each iteration when streaming file data.
@@ -278,22 +285,24 @@ class TemporaryJsonapiFileFieldUploader {
 
     $content_disposition = $request->headers->get('content-disposition');
 
-    // Parse the header value. This regex does not allow an empty filename.
-    // i.e. 'filename=""'. This also matches on a word boundary so other keys
+    // Parse the header value. This regex does not allow an empty filename. Check for an extended filename first.
+    // i.e. 'filename*=""' or 'filename=""'. This also matches on a word boundary so other keys
     // like 'not_a_filename' don't work.
-    if (!preg_match(static::REQUEST_HEADER_FILENAME_REGEX, $content_disposition, $matches)) {
-      throw new BadRequestHttpException('No filename found in "Content-Disposition" header. A file name in the format "filename=FILENAME" must be provided.');
-    }
-
-    // Check for the "filename*" format. This is currently unsupported.
-    if (!empty($matches['star'])) {
-      throw new BadRequestHttpException('The extended "filename*" format is currently not supported in the "Content-Disposition" header.');
+    if (!preg_match(static::REQUEST_HEADER_EXTENDED_FILENAME_REGEX, $content_disposition, $matches)) {
+      if (!preg_match(static::REQUEST_HEADER_FILENAME_REGEX, $content_disposition, $matches)) {
+        throw new BadRequestHttpException('No filename found in "Content-Disposition" header. A file name in the format "filename=FILENAME" must be provided.');
+      }
     }
 
     // Don't validate the actual filename here, that will be done by the upload
     // validators in validate().
     // @see \Drupal\file\Plugin\rest\resource\FileUploadResource::validate()
     $filename = $matches['filename'];
+
+    // Decode filename if character set provided by extended filename. Only UTF-8 currently supported.
+    if (!empty($matches['charset']) && $matches['charset'] === 'UTF-8') {
+      $filename = rawurldecode($filename);
+    }
 
     // Make sure only the filename component is returned. Path information is
     // stripped as per https://tools.ietf.org/html/rfc6266#section-4.3.
