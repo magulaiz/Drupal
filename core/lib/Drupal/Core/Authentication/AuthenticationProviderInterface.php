@@ -10,6 +10,11 @@ use Symfony\Component\HttpFoundation\Request;
 interface AuthenticationProviderInterface {
 
   /**
+   * Request attribute name for the successful authentication provider.
+   */
+  const AUTHENTICATION_PROVIDER_ID = '_authentication_provider';
+
+  /**
    * Checks whether suitable authentication credentials are on the request.
    *
    * @param \Symfony\Component\HttpFoundation\Request $request

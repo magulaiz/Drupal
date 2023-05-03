@@ -49,7 +49,14 @@ class AuthenticationManager implements AuthenticationProviderInterface, Authenti
     $provider = $this->authCollector->getProvider($provider_id);
 
     if ($provider) {
-      return $provider->authenticate($request);
+      $account = $provider->authenticate($request);
+      if ($account) {
+        $request->attributes->set(
+          AuthenticationProviderInterface::AUTHENTICATION_PROVIDER_ID,
+          $provider_id
+        );
+      }
+      return $account;
     }
 
     return NULL;
