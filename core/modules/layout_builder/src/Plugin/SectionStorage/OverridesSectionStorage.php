@@ -316,6 +316,9 @@ class OverridesSectionStorage extends SectionStorageBase implements ContainerFac
       $contexts['layout_builder.entity'] = $contexts['entity'];
       unset($contexts['entity']);
     }
+
+    $allow_sample = TRUE;
+    \Drupal::moduleHandler()->alter('layout_builder_view_context', $contexts, $this, $allow_sample);
     return $contexts;
   }
 
