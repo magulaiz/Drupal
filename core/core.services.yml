@@ -537,7 +537,6 @@ services:
     class: GuzzleHttp\HandlerStack
     public: false
     factory: GuzzleHttp\HandlerStack::create
-    configurator: ['@http_handler_stack_configurator', configure]
   GuzzleHttp\HandlerStack: '@http_handler_stack'
   http_handler_stack_configurator:
     class: Drupal\Core\Http\HandlerStackConfigurator
@@ -545,6 +544,7 @@ services:
     arguments: ['@service_container']
     tags:
       - { name: service_id_collector, tag: http_client_middleware }
+      - { name: configurator, target: http_handler_stack, method: configure }
   Drupal\Core\Http\HandlerStackConfigurator: '@http_handler_stack_configurator'
   http_client:
     class: GuzzleHttp\Client
