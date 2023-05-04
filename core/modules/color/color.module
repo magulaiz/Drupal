@@ -490,8 +490,9 @@ function color_scheme_form_submit($form, FormStateInterface $form_state) {
       // off the name of the file at the end of the path.
       $css_optimizer->rewriteFileURIBasePath = base_path() . dirname($paths['source'] . $file) . '/';
 
-      // Prefix all paths within this CSS file, ignoring absolute paths.
-      $style = preg_replace_callback('/url\([\'"]?(?![a-z]+:|\/+)([^\'")]+)[\'"]?\)/i', [$css_optimizer, 'rewriteFileURI'], $style);
+      // Prefix all paths within this CSS file, ignoring external, absolute, and
+      // fragment URLs (# or %23).
+      $style = preg_replace_callback('/url\([\'"]?(?![a-z]+:|\/+|\#|\%23+)([^\'")]+)[\'"]?\)/i', [$css_optimizer, 'rewriteFileURI'], $style);
 
       // Rewrite stylesheet with new colors.
       $style = _color_rewrite_stylesheet($theme, $info, $paths, $palette, $style);

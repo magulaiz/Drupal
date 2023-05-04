@@ -78,6 +78,8 @@ class CssOptimizerUnitTest extends UnitTestCase {
       //   should not be expanded. (https://www.drupal.org/node/2014851)
       //   Potential forms of @import might also include media queries.
       //   (https://developer.mozilla.org/en-US/docs/Web/CSS/@import)
+      // - Fragment URLs are not altered.
+      //   See https://www.drupal.org/project/drupal/issues/2362643.
       [
         [
           'group' => -100,
