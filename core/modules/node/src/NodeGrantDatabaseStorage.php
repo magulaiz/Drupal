@@ -8,6 +8,7 @@ use Drupal\Core\Database\Query\SelectInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\views\Plugin\views\filter\LanguageFilter;
 
 /**
  * Defines a storage handler class that handles the node grants system.
@@ -147,8 +148,24 @@ class NodeGrantDatabaseStorage implements NodeGrantDatabaseStorageInterface {
    * {@inheritdoc}
    */
   public function alterQuery($query, array $tables, $op, AccountInterface $account, $base_table) {
+    $operator = '';
     if (!$langcode = $query->getMetaData('langcode')) {
       $langcode = FALSE;
+
+      // If views has a 'language' filter use its value as $langcode
+      $view = $query->getMetaData("view");
+      if (isset($view->filter)) {
+        /** @var \Drupal\views\Plugin\views\filter\LanguageFilter $filter */
+        foreach ($view->filter as $filter) {
+          if ($filter instanceof LanguageFilter &&
+            $filter->table == $base_table &&
+            in_array($filter->operator, ['in', 'not in'])
+          ) {
+            $operator = $filter->operator;
+            $langcode = !empty($filter->value) ? $filter->value : FALSE;
+          }
+        }
+      }
     }
 
     // Find all instances of the base table being joined -- could appear
@@ -182,8 +199,8 @@ class NodeGrantDatabaseStorage implements NodeGrantDatabaseStorageInterface {
           if ($langcode === FALSE) {
             $subquery->condition('na.fallback', 1, '=');
           }
-          else {
-            $subquery->condition('na.langcode', $langcode, '=');
+          elseif (in_array($operator, ['in', 'not in'])) {
+            $subquery->condition('na.langcode', $langcode, $operator);
           }
         }
 
