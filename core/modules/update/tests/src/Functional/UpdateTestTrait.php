@@ -42,7 +42,8 @@ trait UpdateTestTrait {
    * @param string[] $release_metadata
    *   The available release mappings. In the format as the key to be the
    *   extension name and available release as its value, for example:
-   *   'aaa_update_test' => '8.x-1.2'.
+   *   'drupal' => 'sec.0.2', which matches the release history xml file named
+   *   drupal.sec.0.2.xml.
    */
   public function setAvailableReleasesMetadata(array $release_metadata): void {
     $this->config('update_test.settings')->set('xml_map', $release_metadata)->save();
