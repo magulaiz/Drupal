@@ -18,8 +18,10 @@ use Drupal\Core\Security\TrustedCallbackInterface;
 use Drupal\filter\FilterProcessResult;
 use Drupal\filter\Plugin\FilterBase;
 use Drupal\image\Plugin\Field\FieldType\ImageItem;
+use Drupal\media\Event\MediaPreEmbedEvent;
 use Drupal\media\MediaInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 /**
  * Provides a filter to embed media items using a custom tag.
@@ -116,8 +118,10 @@ class MediaEmbed extends FilterBase implements ContainerFactoryPluginInterface, 
    *   The renderer.
    * @param \Drupal\Core\Logger\LoggerChannelFactoryInterface $logger_factory
    *   The logger factory.
+   * @param \Symfony\Contracts\EventDispatcher\EventDispatcherInterface $eventDispatcher
+   *   The event dispatcher service.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityRepositoryInterface $entity_repository, EntityTypeManagerInterface $entity_type_manager, EntityDisplayRepositoryInterface $entity_display_repository, EntityTypeBundleInfoInterface $bundle_info, RendererInterface $renderer, LoggerChannelFactoryInterface $logger_factory) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityRepositoryInterface $entity_repository, EntityTypeManagerInterface $entity_type_manager, EntityDisplayRepositoryInterface $entity_display_repository, EntityTypeBundleInfoInterface $bundle_info, RendererInterface $renderer, LoggerChannelFactoryInterface $logger_factory, protected ?EventDispatcherInterface $eventDispatcher) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->entityRepository = $entity_repository;
     $this->entityTypeManager = $entity_type_manager;
@@ -125,6 +129,10 @@ class MediaEmbed extends FilterBase implements ContainerFactoryPluginInterface, 
     $this->entityTypeBundleInfo = $bundle_info;
     $this->renderer = $renderer;
     $this->loggerFactory = $logger_factory;
+    if (!$this->eventDispatcher) {
+      @trigger_error('Calling MediaEmbed::__construct() without the $eventDispatcher argument is deprecated in drupal:10.1.0 and will be required in drupal:11.0.0. See TBD', E_USER_DEPRECATED);
+      $this->eventDispatcher = \Drupal::service('event_dispatcher');
+    }
   }
 
   /**
@@ -140,7 +148,8 @@ class MediaEmbed extends FilterBase implements ContainerFactoryPluginInterface, 
       $container->get('entity_display.repository'),
       $container->get('entity_type.bundle.info'),
       $container->get('renderer'),
-      $container->get('logger.factory')
+      $container->get('logger.factory'),
+      $container->get('event_dispatcher'),
     );
   }
 
@@ -485,6 +494,9 @@ class MediaEmbed extends FilterBase implements ContainerFactoryPluginInterface, 
         $node->removeAttribute('title');
       }
     }
+
+    // Allow third-party to alter the media entity before being rendered.
+    $this->eventDispatcher->dispatch(new MediaPreEmbedEvent($node, $media));
   }
 
   /**
