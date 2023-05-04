@@ -309,7 +309,7 @@ class Updater {
   public function prepareInstallDirectory(&$filetransfer, $directory) {
     // Make the parent dir writable if need be and create the dir.
     if (!is_dir($directory)) {
-      $parent_dir = dirname($directory);
+      $parent_dir = dirname($directory ?? '');
       if (!is_writable($parent_dir)) {
         @chmod($parent_dir, 0755);
         // It is expected that this will fail if the directory is owned by the

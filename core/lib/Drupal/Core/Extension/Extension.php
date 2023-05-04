@@ -95,7 +95,7 @@ class Extension {
    * @return string
    */
   public function getPath() {
-    return dirname($this->pathname);
+    return dirname($this->pathname ?? '');
   }
 
   /**
