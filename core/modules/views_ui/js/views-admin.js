@@ -44,7 +44,7 @@
     attach(context) {
       const $context = $(context);
       // Set up regular expressions to allow only numbers, letters, and dashes.
-      const exclude = new RegExp('[^a-z0-9\\-]+', 'g');
+      const exclude = /[^a-z0-9\\-]+/g;
       const replace = '-';
       let suffix;
 
