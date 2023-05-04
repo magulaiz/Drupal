@@ -29,3 +29,44 @@
 /**
  * @} End of "defgroup layout_builder_access".
  */
+
+/**
+ * @addtogroup hooks
+ * @{
+ */
+
+/**
+ * Perform custom block form alterations before it's rendered.
+ *
+ * @param array $element
+ *   The containing element.
+ * @param \Drupal\Core\Form\FormStateInterface $form_state
+ *   The current state of the form.
+ * @param \Drupal\block_content\BlockContentInterface $block
+ *   The block content entity.
+ */
+function hook_layout_builder_inline_block_alter(array &$element, \Drupal\Core\Form\FormStateInterface $form_state, \Drupal\block_content\BlockContentInterface $block) {
+  if ($block->bundle() !== 'awesome_block') {
+    return;
+  }
+
+  $element['info']['#access'] = FALSE;
+}
+
+/**
+ * Perform a block bundle specific form alterations before it's rendered.
+ *
+ * @param array $element
+ *   The containing element.
+ * @param \Drupal\Core\Form\FormStateInterface $form_state
+ *   The current state of the form.
+ * @param \Drupal\block_content\BlockContentInterface $block
+ *   The block content entity.
+ */
+function hook_layout_builder_inline_block_BLOCK_BUNDLE_alter(array &$element, \Drupal\Core\Form\FormStateInterface $form_state, \Drupal\block_content\BlockContentInterface $block) {
+  $element['info']['#access'] = FALSE;
+}
+
+/**
+ * @} End of "addtogroup hooks".
+ */

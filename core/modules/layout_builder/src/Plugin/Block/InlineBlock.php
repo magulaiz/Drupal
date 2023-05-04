@@ -165,6 +165,12 @@ class InlineBlock extends BlockBase implements ContainerFactoryPluginInterface, 
     EntityFormDisplay::collectRenderDisplay($block, 'edit')->buildForm($block, $element, $form_state);
     $element['revision_log']['#access'] = FALSE;
     $element['info']['#access'] = FALSE;
+    // Allow modules to alter the inline block form.
+    $types = [
+      'layout_builder_inline_block',
+      'layout_builder_inline_block_' . $block->bundle(),
+    ];
+    \Drupal::moduleHandler()->alter($types, $element, $form_state, $block);
     return $element;
   }
 
