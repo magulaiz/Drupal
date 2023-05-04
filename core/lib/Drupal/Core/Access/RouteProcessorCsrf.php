@@ -38,7 +38,7 @@ class RouteProcessorCsrf implements OutboundRouteProcessorInterface, TrustedCall
       $path = ltrim($route->getPath(), '/');
       // Replace the path parameters with values from the parameters array.
       foreach ($parameters as $param => $value) {
-        $path = str_replace("{{$param}}", $value, $path);
+        $path = str_replace("{{$param}}", (string) $value, $path);
       }
       // Adding this to the parameters means it will get merged into the query
       // string when the route is compiled.
