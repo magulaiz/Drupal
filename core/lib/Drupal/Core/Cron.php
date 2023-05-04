@@ -176,7 +176,7 @@ class Cron implements CronInterface {
         $queue_worker = $this->queueManager->createInstance($queue_name);
         $end = $this->time->getCurrentTime() + $info['cron']['time'];
         $queue = $this->queueFactory->get($queue_name);
-        $lease_time = $info['cron']['time'];
+        $lease_time = $info['cron']['lease_time'];
         while ($this->time->getCurrentTime() < $end && ($item = $queue->claimItem($lease_time))) {
           try {
             $queue_worker->processItem($item->data);

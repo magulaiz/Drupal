@@ -50,6 +50,10 @@ class QueueWorkerManager extends DefaultPluginManager implements QueueWorkerMana
       if ($time <= 0) {
         $definition['cron']['time'] = self::DEFAULT_QUEUE_CRON_TIME;
       }
+      $lease_time = $definition['cron']['lease_time'] ?? 0;
+      if ($lease_time <= 0) {
+        $definition['cron']['lease_time'] = self::DEFAULT_QUEUE_CRON_LEASE_TIME;
+      }
     }
   }
 
