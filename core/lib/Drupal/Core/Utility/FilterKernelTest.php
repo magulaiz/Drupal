@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\Tests\filter\Kernel;
+namespace Drupal\Core\Utility;
 
 use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Component\Utility\Html;
