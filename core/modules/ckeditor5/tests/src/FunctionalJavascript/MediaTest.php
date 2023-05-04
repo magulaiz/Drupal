@@ -1387,6 +1387,7 @@ class MediaTest extends WebDriverTestBase {
           '22222' => '22222',
           'view_mode_3' => 'view_mode_3',
         ],
+        'default_view_mode_9301' => 'view_mode_4',
       ],
     ])->save();
 
@@ -1400,6 +1401,7 @@ class MediaTest extends WebDriverTestBase {
       'core.entity_view_mode.media.view_mode_1',
       'core.entity_view_mode.media.22222',
       'core.entity_view_mode.media.view_mode_3',
+      'core.entity_view_mode.media.view_mode_4',
     ];
 
     $dependencies = $filter_format->getDependencies();
@@ -1486,6 +1488,7 @@ class MediaTest extends WebDriverTestBase {
         'allowed_view_modes' => [
           'view_mode_1' => 'view_mode_1',
         ],
+        'default_view_mode_9301' => '22222',
       ],
     ])->save();
 
@@ -1516,6 +1519,7 @@ class MediaTest extends WebDriverTestBase {
           'view_mode_1' => 'view_mode_1',
           '22222' => '22222',
         ],
+        'default_view_mode_9301' => 'view_mode_4',
       ],
     ])->save();
 
@@ -1523,6 +1527,7 @@ class MediaTest extends WebDriverTestBase {
     $expected_config_dependencies = [
       'core.entity_view_mode.media.view_mode_1',
       'core.entity_view_mode.media.22222',
+      'core.entity_view_mode.media.view_mode_4',
     ];
     $dependencies = $filter_format->getDependencies();
     $this->assertArrayHasKey('config', $dependencies);
@@ -1557,6 +1562,7 @@ class MediaTest extends WebDriverTestBase {
         'default_view_mode' => 'view_mode_1',
         'allowed_media_types' => [],
         'allowed_view_modes' => [],
+        'default_view_mode_9301' => 'view_mode_1',
       ],
     ])->save();
     $dependencies = $filter_format->getDependencies();
@@ -1580,6 +1586,7 @@ class MediaTest extends WebDriverTestBase {
           '22222' => '22222',
           'view_mode_4' => 'view_mode_4',
         ],
+        'default_view_mode_9301' => 'view_mode_4',
       ],
     ])->save();
 

@@ -61,3 +61,4 @@ filters:
       allowed_media_types:
         image: image
         remote_video: remote_video
+      default_view_mode_9301: responsive_3x2
