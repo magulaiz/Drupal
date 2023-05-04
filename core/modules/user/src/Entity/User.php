@@ -537,12 +537,12 @@ class User extends ContentEntityBase implements UserInterface {
     $fields['access'] = BaseFieldDefinition::create('timestamp')
       ->setLabel(t('Last access'))
       ->setDescription(t('The time that the user last accessed the site.'))
-      ->setDefaultValue(0);
+      ->setDefaultValue('');
 
     $fields['login'] = BaseFieldDefinition::create('timestamp')
       ->setLabel(t('Last login'))
       ->setDescription(t('The time that the user last logged in.'))
-      ->setDefaultValue(0);
+      ->setDefaultValue('');
 
     $fields['init'] = BaseFieldDefinition::create('email')
       ->setLabel(t('Initial email'))
