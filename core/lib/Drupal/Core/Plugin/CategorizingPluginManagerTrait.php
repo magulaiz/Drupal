@@ -94,7 +94,9 @@ trait CategorizingPluginManagerTrait {
       if ((string) $a['category'] != (string) $b['category']) {
         return strnatcasecmp($a['category'], $b['category']);
       }
-      return strnatcasecmp($a[$label_key], $b[$label_key]);
+      $a_label = $a[$label_key] ?? '';
+      $b_label = $b[$label_key] ?? '';
+      return strnatcasecmp($a_label, $b_label);
     });
     return $definitions;
   }
