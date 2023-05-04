@@ -41,7 +41,9 @@ trait UpdateTestTrait {
    *
    * @param string[] $release_metadata
    *   The available release mappings. In the format as the key to be the
-   *   extension name and available release as its value, for example:
+   *   extension name and available release as its value,
+   *   @see \Drupal\update_test\Controller\UpdateTestController::updateTest
+   *   for example:
    *   'drupal' => 'sec.0.2', which matches the release history xml file named
    *   drupal.sec.0.2.xml.
    */
