@@ -3,6 +3,7 @@
 namespace Drupal\Core\Asset;
 
 use Drupal\Component\Serialization\Json;
+use Drupal\Core\DependencyInjection\DeprecatedServicePropertyTrait;
 use Drupal\Core\File\FileUrlGeneratorInterface;
 use Drupal\Core\State\StateInterface;
 
@@ -10,6 +11,13 @@ use Drupal\Core\State\StateInterface;
  * Renders JavaScript assets.
  */
 class JsCollectionRenderer implements AssetCollectionRendererInterface {
+
+  use DeprecatedServicePropertyTrait;
+
+  /**
+   * {@inheritdoc}
+   */
+  protected array $deprecatedProperties = ['state' => 'state'];
 
   /**
    * The asset query string.

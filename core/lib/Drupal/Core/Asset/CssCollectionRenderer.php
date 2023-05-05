@@ -10,7 +10,13 @@ use Drupal\Core\State\StateInterface;
  * Renders CSS assets.
  */
 class CssCollectionRenderer implements AssetCollectionRendererInterface {
+
   use DeprecatedServicePropertyTrait;
+
+  /**
+   * {@inheritdoc}
+   */
+  protected array $deprecatedProperties = ['state' => 'state'];
 
   /**
    * The asset query string.
