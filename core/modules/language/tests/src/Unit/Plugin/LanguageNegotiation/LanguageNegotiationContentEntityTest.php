@@ -66,7 +66,7 @@ class LanguageNegotiationContentEntityTest extends LanguageNegotiationTestBase {
     $language_en->expects($this->any())
       ->method('getName')
       ->will($this->returnValue('English'));
-    $languages = [
+    $this->languages = [
       'de' => $language_de,
       'en' => $language_en,
     ];
