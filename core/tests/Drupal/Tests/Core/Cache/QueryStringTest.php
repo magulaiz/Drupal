@@ -12,6 +12,7 @@ use Drupal\Tests\UnitTestCase;
 /**
  * Tests the query string class.
  *
+ * @group Cache
  * @coversDefaultClass \Drupal\Core\Cache\QueryString
  */
 class QueryStringTest extends UnitTestCase {
