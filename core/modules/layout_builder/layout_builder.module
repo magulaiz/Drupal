@@ -437,6 +437,7 @@ function layout_builder_entity_view_display_presave(EntityViewDisplayInterface $
             continue;
           }
           if (!isset($formatter['settings']['tooltip']) || !isset($formatter['settings']['time_diff'])) {
+            // phpcs:ignore Drupal.Semantics.FunctionTriggerError
             @trigger_error("The 'timestamp' formatter plugin 'tooltip' and 'time_diff' settings were added in drupal:10.1.0 and will be mandatory in Drupal 11.0.0. See https://www.drupal.org/node/2993639", E_USER_DEPRECATED);
             $formatter['settings'] += $plugin_definition['class']::defaultSettings();
             // Existing timestamp formatters don't have tooltip.

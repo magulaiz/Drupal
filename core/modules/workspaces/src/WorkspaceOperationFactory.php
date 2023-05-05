@@ -85,6 +85,7 @@ class WorkspaceOperationFactory {
     $this->workspaceAssociation = $workspace_association;
     $this->cacheTagsInvalidator = $cache_tags_invalidator;
     if (!$event_dispatcher) {
+      // phpcs:ignore Drupal.Semantics.FunctionTriggerError
       @trigger_error('The event dispatcher service should be passed to WorkspaceOperationFactory::__construct() since 10.1.0. This will be required in Drupal 11.0.0.', E_USER_DEPRECATED);
       $event_dispatcher = \Drupal::service('event_dispatcher');
     }
