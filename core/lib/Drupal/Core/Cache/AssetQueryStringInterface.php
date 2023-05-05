@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace Drupal\Core\Cache;
 
 /**
- * Defines an interface for the cache query string service.
+ * Stores a cache busting query string for asset URLs.
  */
-interface QueryStringInterface {
+interface AssetQueryStringInterface {
 
   /**
    * Resets the cache query string added to all CSS and JavaScript URLs.

@@ -3,7 +3,7 @@
 namespace Drupal\Tests\Core\Asset;
 
 use Drupal\Core\Asset\CssCollectionRenderer;
-use Drupal\Core\Cache\QueryStringInterface;
+use Drupal\Core\Cache\AssetQueryStringInterface;
 use Drupal\Core\File\FileUrlGeneratorInterface;
 use Drupal\Tests\UnitTestCase;
 use Drupal\Core\State\StateInterface;
@@ -35,7 +35,7 @@ class CssCollectionRendererUnitTest extends UnitTestCase {
   protected function setUp(): void {
     parent::setUp();
     $state = $this->prophesize(StateInterface::class);
-    $queryStringCache = $this->prophesize(QueryStringInterface::class);
+    $queryStringCache = $this->prophesize(AssetQueryStringInterface::class);
     $file_url_generator = $this->createMock(FileUrlGeneratorInterface::class);
     $file_url_generator->expects($this->any())
       ->method('generateString')

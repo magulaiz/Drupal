@@ -8,12 +8,12 @@ use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Core\State\StateInterface;
 
 /**
- * A query-string cache handler service to support browser-caching.
+ * Stores a cache busting query string service for asset URLs.
  *
  * The string changes on every update or full cache flush, forcing browsers to
  * load a new copy of the files, as the URL changed.
  */
-class QueryString implements QueryStringInterface {
+class AssetQueryString implements AssetQueryStringInterface {
 
   /**
    * Creates a new QueryString instance.

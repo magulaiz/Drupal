@@ -3,14 +3,14 @@
 namespace Drupal\KernelTests\Core\Cache;
 
 use Drupal\Component\Datetime\TimeInterface;
-use Drupal\Core\Cache\QueryString;
+use Drupal\Core\Cache\AssetQueryString;
 use Drupal\KernelTests\KernelTestBase;
 
 /**
  * Tests the query string cache functionality.
  *
  * @group Cache
- * @coversDefaultClass \Drupal\Core\Cache\QueryString
+ * @coversDefaultClass \Drupal\Core\Cache\AssetQueryString
  */
 class QueryStringTest extends KernelTestBase {
 
@@ -24,7 +24,7 @@ class QueryStringTest extends KernelTestBase {
     $time->method('getRequestTime')
       ->willReturn(1683246590);
 
-    $queryString = new QueryString($state, $time);
+    $queryString = new AssetQueryString($state, $time);
 
     $queryString->reset();
     $value = $queryString->get();
