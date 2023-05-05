@@ -27,7 +27,7 @@ class CKEditor5DialogTestController {
         'class' => ['use-ajax'],
         'data-dialog-type' => 'dialog',
         'data-dialog-options' => Json::encode([
-          'width' => 700,
+          'width' => 880,
           'modal' => TRUE,
           'autoResize' => TRUE,
         ]),
