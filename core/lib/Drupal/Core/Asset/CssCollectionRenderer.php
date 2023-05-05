@@ -11,11 +11,11 @@ use Drupal\Core\State\StateInterface;
 class CssCollectionRenderer implements AssetCollectionRendererInterface {
 
   /**
-   * The query string cache.
+   * The asset query string.
    *
    * @var \Drupal\Core\Asset\AssetQueryStringInterface
    */
-  protected AssetQueryStringInterface $queryStringCache;
+  protected AssetQueryStringInterface $assetQueryString;
 
   /**
    * The file URL generator.
@@ -27,17 +27,17 @@ class CssCollectionRenderer implements AssetCollectionRendererInterface {
   /**
    * Constructs a CssCollectionRenderer.
    *
-   * @param \Drupal\Core\Asset\AssetQueryStringInterface|\Drupal\Core\State\StateInterface $query_string_cache
-   *   The query string cache.
+   * @param \Drupal\Core\Asset\AssetQueryStringInterface|\Drupal\Core\State\StateInterface $asset_query_string
+   *   The asset query string.
    * @param \Drupal\Core\File\FileUrlGeneratorInterface $file_url_generator
    *   The file URL generator.
    */
-  public function __construct(AssetQueryStringInterface|StateInterface $query_string_cache, FileUrlGeneratorInterface $file_url_generator) {
-    if ($query_string_cache instanceof StateInterface) {
-      @trigger_error('Calling ' . __METHOD__ . '() with $query_string_cache argument as \Drupal\Core\State\StateInterface instead of \Drupal\Core\Asset\AssetQueryStringInterface is deprecated in drupal:10.1.0 and will be required in drupal:11.0.0. See https://www.drupal.org/node/3358337', E_USER_DEPRECATED);
-      $query_string_cache = \Drupal::service('asset.query_string');
+  public function __construct(AssetQueryStringInterface|StateInterface $asset_query_string, FileUrlGeneratorInterface $file_url_generator) {
+    if ($asset_query_string instanceof StateInterface) {
+      @trigger_error('Calling ' . __METHOD__ . '() with an $asset_query_string argument as \Drupal\Core\State\StateInterface instead of \Drupal\Core\Asset\AssetQueryStringInterface is deprecated in drupal:10.1.0 and will be required in drupal:11.0.0. See https://www.drupal.org/node/3358337', E_USER_DEPRECATED);
+      $asset_query_string = \Drupal::service('asset.query_string');
     }
-    $this->queryStringCache = $query_string_cache;
+    $this->assetQueryString = $asset_query_string;
     $this->fileUrlGenerator = $file_url_generator;
   }
 
@@ -51,7 +51,7 @@ class CssCollectionRenderer implements AssetCollectionRendererInterface {
     // browser-caching. The string changes on every update or full cache
     // flush, forcing browsers to load a new copy of the files, as the
     // URL changed.
-    $query_string = $this->queryStringCache->get();
+    $query_string = $this->assetQueryString->get();
 
     // Defaults for LINK and STYLE elements.
     $link_element_defaults = [
