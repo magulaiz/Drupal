@@ -292,6 +292,7 @@ services:
       - { name: cache.bin, default_backend: cache.backend.chainedfast }
     factory: ['@cache_factory', 'get']
     arguments: [discovery]
+  Drupal\Core\Cache\QueryStringInterface: '@cache.query_string'
   cache.query_string:
     class: Drupal\Core\Cache\QueryString
     arguments:
