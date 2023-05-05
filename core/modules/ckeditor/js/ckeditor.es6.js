@@ -86,6 +86,22 @@
           }, 400),
         );
 
+        // Editing content in "source" mode does not trigger the change event,
+        // so we need to handle changes another way.
+        // @see https://ckeditor.com/docs/ckeditor4/latest/api/CKEDITOR_editor.html#event-change
+        editor.on('mode', () => {
+          if (editor.mode === 'source') {
+            const editable = editor.editable();
+            editable.attachListener(
+              editable,
+              'input',
+              debounce(() => {
+                callback(editor.getData());
+              }, 400),
+            );
+          }
+        });
+
         // A temporary workaround to control scrollbar appearance when using
         // autoGrow event to control editor's height.
         // @todo Remove when http://dev.ckeditor.com/ticket/12120 is fixed.
