@@ -223,7 +223,7 @@ function update_calculate_project_update_status(&$project_data, $available) {
         }
         $project_data['extra'][] = [
           'label' => t('Project not secure'),
-          'data' => t('This project has been labeled insecure by the Drupal security team, and is no longer available for download. Immediately disabling everything included by this project is strongly recommended!'),
+          'data' => t('Your currently installed release has been unsupported and is no longer available for download. Please note that upgrading to the latest version is strongly recommended. However, if no update is available, please disable all the features included in this release to ensure the security of your system.'),
         ];
         break;
 
