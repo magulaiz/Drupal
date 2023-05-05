@@ -35,7 +35,7 @@ class CssCollectionRendererUnitTest extends UnitTestCase {
   protected function setUp(): void {
     parent::setUp();
     $state = $this->prophesize(StateInterface::class);
-    $queryStringCache = $this->prophesize(AssetQueryStringInterface::class);
+    $assetQueryStringCache = $this->prophesize(AssetQueryStringInterface::class);
     $file_url_generator = $this->createMock(FileUrlGeneratorInterface::class);
     $file_url_generator->expects($this->any())
       ->method('generateString')
@@ -43,8 +43,8 @@ class CssCollectionRendererUnitTest extends UnitTestCase {
       ->willReturnCallback(function ($uri) {
          return 'generated-relative-url:' . $uri;
       });
-    $queryStringCache->get()->shouldBeCalledOnce()->willReturn('');
-    $this->renderer = new CssCollectionRenderer($queryStringCache->reveal(), $file_url_generator);
+    $assetQueryStringCache->get()->shouldBeCalledOnce()->willReturn('');
+    $this->renderer = new CssCollectionRenderer($assetQueryStringCache->reveal(), $file_url_generator);
     $this->fileCssGroup = [
       'group' => -100,
       'type' => 'file',

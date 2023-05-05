@@ -2,6 +2,7 @@
 
 namespace Drupal\Core\Asset;
 
+use Drupal\Core\DependencyInjection\DeprecatedServicePropertyTrait;
 use Drupal\Core\File\FileUrlGeneratorInterface;
 use Drupal\Core\State\StateInterface;
 
@@ -9,6 +10,7 @@ use Drupal\Core\State\StateInterface;
  * Renders CSS assets.
  */
 class CssCollectionRenderer implements AssetCollectionRendererInterface {
+  use DeprecatedServicePropertyTrait;
 
   /**
    * The asset query string.
@@ -44,7 +46,7 @@ class CssCollectionRenderer implements AssetCollectionRendererInterface {
   /**
    * {@inheritdoc}
    */
-  public function render(array $css_assets) {
+  public function render(array $assets) {
     $elements = [];
 
     // A dummy query-string is added to filenames, to gain control over
@@ -62,24 +64,24 @@ class CssCollectionRenderer implements AssetCollectionRendererInterface {
       ],
     ];
 
-    foreach ($css_assets as $css_asset) {
+    foreach ($assets as $asset) {
       $element = $link_element_defaults;
-      $element['#attributes']['media'] = $css_asset['media'];
+      $element['#attributes']['media'] = $asset['media'];
 
-      switch ($css_asset['type']) {
+      switch ($asset['type']) {
         // For file items, output a LINK tag for file CSS assets.
         case 'file':
-          $element['#attributes']['href'] = $this->fileUrlGenerator->generateString($css_asset['data']);
+          $element['#attributes']['href'] = $this->fileUrlGenerator->generateString($asset['data']);
           // Only add the cache-busting query string if this isn't an aggregate
           // file.
-          if (!isset($css_asset['preprocessed'])) {
-            $query_string_separator = str_contains($css_asset['data'], '?') ? '&' : '?';
+          if (!isset($asset['preprocessed'])) {
+            $query_string_separator = str_contains($asset['data'], '?') ? '&' : '?';
             $element['#attributes']['href'] .= $query_string_separator . $query_string;
           }
           break;
 
         case 'external':
-          $element['#attributes']['href'] = $css_asset['data'];
+          $element['#attributes']['href'] = $asset['data'];
           break;
 
         default:
@@ -87,8 +89,8 @@ class CssCollectionRenderer implements AssetCollectionRendererInterface {
       }
 
       // Merge any additional attributes.
-      if (!empty($css_asset['attributes'])) {
-        $element['#attributes'] += $css_asset['attributes'];
+      if (!empty($asset['attributes'])) {
+        $element['#attributes'] += $asset['attributes'];
       }
 
       $elements[] = $element;

@@ -16,7 +16,7 @@ use Drupal\Core\State\StateInterface;
 class AssetQueryString implements AssetQueryStringInterface {
 
   /**
-   * Creates a new QueryString instance.
+   * Creates a new AssetQueryString instance.
    *
    * @param \Drupal\Core\State\StateInterface $state
    *   State service.

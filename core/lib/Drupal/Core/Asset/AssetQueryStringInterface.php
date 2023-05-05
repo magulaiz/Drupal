@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Drupal\Core\Asset;
 
 /**
- * Stores a cache busting query string for asset URLs.
+ * Provides a cache busting query string service for asset URLs.
  */
 interface AssetQueryStringInterface {
 
@@ -18,7 +18,7 @@ interface AssetQueryStringInterface {
   public function reset(): void;
 
   /**
-   * Get the query string value.
+   * Gets the query string value.
    */
   public function get(): string;
 
