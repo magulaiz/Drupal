@@ -15,7 +15,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\ServerBag;
 use Symfony\Component\Routing\Route;
 
-
 /**
  * Tests the LanguageNegotiationContentEntity plugin class.
  *
