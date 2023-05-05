@@ -96,7 +96,6 @@ final class ResponsiveImageConfigUpdater {
     $deprecations_triggered = &$this->triggeredDeprecations['3192234'][$view_display->id()];
     if ($this->deprecationsEnabled && $changed && !$deprecations_triggered) {
       $deprecations_triggered = TRUE;
-      // phpcs:ignore Drupal.Semantics.FunctionTriggerError
       @trigger_error(sprintf('The responsive image loading attribute update for "%s" is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Configuration should be updated. See https://www.drupal.org/node/3279032', $view_display->id()), E_USER_DEPRECATED);
     }
 

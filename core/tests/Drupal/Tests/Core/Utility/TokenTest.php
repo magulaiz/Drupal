@@ -335,7 +335,7 @@ class TokenTest extends UnitTestCase {
    * @group legacy
    */
   public function testScanDeprecation() {
-    $this->expectDeprecation('Calling Drupal\Core\Utility\Token::scan() with a $text parameter of type other than string is deprecated in drupal:10.1.0 and is removed in drupal:11.0.0. Instead, a type hint is added. See https://www.drupal.org/node/3334317');
+    $this->expectDeprecation('Calling Drupal\Core\Utility\Token::scan() with a $text parameter of type other than string is deprecated in drupal:10.1.0 and is removed in drupal:11.0.0. See https://www.drupal.org/node/3334317');
     $this->assertSame([], $this->token->scan(NULL));
   }
 

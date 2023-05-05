@@ -4,9 +4,6 @@ namespace Drupal\Component\Utility;
 
 /**
  * An array that triggers a deprecation warning when accessed.
- *
- * Ignore the trigger_error standard throughout this file because the text is
- * provided by the $message parameter.
  */
 class DeprecatedArray extends \ArrayObject {
 
