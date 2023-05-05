@@ -4,6 +4,7 @@ namespace Drupal\menu_link_content\Form;
 
 use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Core\Entity\ContentEntityForm;
+use Drupal\Core\Entity\EntityConstraintViolationListInterface;
 use Drupal\Core\Entity\EntityRepositoryInterface;
 use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
 use Drupal\Core\Form\FormStateInterface;
@@ -132,6 +133,26 @@ class MenuLinkContentForm extends ContentEntityForm {
     $this->messenger()->addStatus($this->t('The menu link has been saved.'));
 
     $form_state->setRedirectUrl($menu_link->toUrl('canonical'));
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function getEditedFieldNames(FormStateInterface $form_state) {
+    $field_names = parent::getEditedFieldNames($form_state);
+    $field_names[] = 'parent';
+
+    return $field_names;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function flagViolations(EntityConstraintViolationListInterface $violations, array $form, FormStateInterface $form_state) {
+    foreach ($violations->getByField('parent') as $violation) {
+      $form_state->setErrorByName('menu_parent', $violation->getMessage());
+    }
+    parent::flagViolations($violations, $form, $form_state);
   }
 
 }
