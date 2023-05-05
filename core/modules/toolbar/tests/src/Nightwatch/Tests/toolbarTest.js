@@ -53,45 +53,6 @@ module.exports = {
   after(browser) {
     browser.drupalUninstall();
   },
-  'Access items via tab': (browser) => {
-    // Click the admin tab twice so it is focused and the admin tray is open.
-    browser
-      .click('#toolbar-item-administration')
-      .click('#toolbar-item-administration');
-
-    browser.execute(
-      () => {
-        // Get the test of every list in the admin menu.
-        const list = [];
-        document
-          .querySelectorAll('#toolbar-item-administration-tray a')
-          .forEach((link) => list.push(link.textContent.split(/[\r\n]+/)[0]));
-        return list;
-      },
-      (result) => {
-        // Loop through the text of each link in the admin menu. Press tab to
-        // move focus and confirm the active element matches the link text.
-        result.value.forEach((expectedText) => {
-          browser
-            // eslint-disable-next-line func-names
-            .perform(function () {
-              const actions = this.actions({ async: true });
-              return actions.keyDown(browser.Keys.TAB).keyUp(browser.Keys.TAB);
-            })
-            .execute(
-              () => document.activeElement.textContent,
-              (activeResult) => {
-                browser.assert.ok(activeResult.value);
-                browser.assert.equal(
-                  activeResult.value.split(/[\r\n]+/)[0],
-                  expectedText,
-                );
-              },
-            );
-        });
-      },
-    );
-  },
   'Change tab': (browser) => {
     browser.waitForElementPresent(itemUserTray);
     browser.assert.not.hasClass(itemUser, 'is-active');

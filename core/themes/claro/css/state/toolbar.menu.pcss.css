@@ -124,10 +124,6 @@
   background: #fff;
 }
 
-.toolbar-tray-horizontal .menu-item a:focus {
-  background: #abeae4;
-}
-
 .toolbar-tray-horizontal .toolbar-menu:not(:first-child) li.menu-item--expanded > a:focus {
   background-image: url(../../images/core/0074bd/chevron-right.svg);
   background-repeat: no-repeat;
