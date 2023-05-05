@@ -608,7 +608,7 @@ class CKEditor5 extends EditorBase implements ContainerFactoryPluginInterface {
 
     // This basic validation must live in the form logic because it can only
     // occur in a form context.
-    if (!$toolbar_items) {
+    if (json_last_error() !== JSON_ERROR_NONE) {
       $form_state->setErrorByName('toolbar][items', $this->t('Invalid toolbar value.'));
       return;
     }
