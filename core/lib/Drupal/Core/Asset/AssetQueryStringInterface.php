@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Drupal\Core\Cache;
+namespace Drupal\Core\Asset;
 
 /**
  * Stores a cache busting query string for asset URLs.

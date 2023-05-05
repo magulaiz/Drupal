@@ -2,11 +2,11 @@
 
 namespace Drupal\Tests\Core\Asset;
 
+use Drupal\Core\Asset\AssetQueryStringInterface;
 use Drupal\Core\Asset\CssCollectionRenderer;
-use Drupal\Core\Cache\AssetQueryStringInterface;
 use Drupal\Core\File\FileUrlGeneratorInterface;
-use Drupal\Tests\UnitTestCase;
 use Drupal\Core\State\StateInterface;
+use Drupal\Tests\UnitTestCase;
 
 /**
  * Tests the CSS asset collection renderer.

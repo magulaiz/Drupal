@@ -1582,7 +1582,7 @@ function system_install() {
   $site->save(TRUE);
 
   // Populate the dummy query string added to all CSS and JavaScript files.
-  \Drupal::service('cache.asset_query_string')->reset();
+  \Drupal::service('asset.query_string')->reset();
 }
 
 /**

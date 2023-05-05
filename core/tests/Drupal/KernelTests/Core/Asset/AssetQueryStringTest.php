@@ -1,18 +1,18 @@
 <?php
 
-namespace Drupal\KernelTests\Core\Cache;
+namespace Drupal\KernelTests\Core\Asset;
 
 use Drupal\Component\Datetime\TimeInterface;
-use Drupal\Core\Cache\AssetQueryString;
+use Drupal\Core\Asset\AssetQueryString;
 use Drupal\KernelTests\KernelTestBase;
 
 /**
- * Tests the query string cache functionality.
+ * Tests the asset query string functionality.
  *
- * @group Cache
- * @coversDefaultClass \Drupal\Core\Cache\AssetQueryString
+ * @group Asset
+ * @coversDefaultClass \Drupal\Core\Asset\AssetQueryString
  */
-class QueryStringTest extends KernelTestBase {
+class AssetQueryStringTest extends KernelTestBase {
 
   /**
    * Tests resetting and getting the query string value.

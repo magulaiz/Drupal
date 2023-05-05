@@ -481,7 +481,7 @@ function drupal_flush_all_caches($kernel = NULL) {
   // Flush asset file caches.
   \Drupal::service('asset.css.collection_optimizer')->deleteAll();
   \Drupal::service('asset.js.collection_optimizer')->deleteAll();
-  \Drupal::service('cache.asset_query_string')->reset();
+  \Drupal::service('asset.query_string')->reset();
 
   // Reset all static caches.
   drupal_static_reset();
@@ -533,13 +533,13 @@ function drupal_flush_all_caches($kernel = NULL) {
  * all browsers to reload fresh files.
  *
  * @deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use
- *   Use \Drupal\Core\Cache\QueryString::reset() instead.
+ *   Use \Drupal\Core\Asset\AssetQueryStringInterface::reset() instead.
  *
  * @see https://www.drupal.org/node/3358337
  */
 function _drupal_flush_css_js() {
-  @trigger_error('_drupal_flush_css_js is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use \Drupal\Core\Cache\QueryString::reset() instead. See https://www.drupal.org/node/3358337', E_USER_DEPRECATED);
-  \Drupal::service('cache.asset_query_string')->reset();
+  @trigger_error('_drupal_flush_css_js is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use \Drupal\Core\Asset\AssetQueryStringInterface::reset() instead. See https://www.drupal.org/node/3358337', E_USER_DEPRECATED);
+  \Drupal::service('asset.query_string')->reset();
 }
 
 /**

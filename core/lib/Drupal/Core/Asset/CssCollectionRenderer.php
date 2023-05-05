@@ -2,7 +2,6 @@
 
 namespace Drupal\Core\Asset;
 
-use Drupal\Core\Cache\AssetQueryStringInterface;
 use Drupal\Core\File\FileUrlGeneratorInterface;
 use Drupal\Core\State\StateInterface;
 
@@ -14,7 +13,7 @@ class CssCollectionRenderer implements AssetCollectionRendererInterface {
   /**
    * The query string cache.
    *
-   * @var \Drupal\Core\Cache\AssetQueryStringInterface
+   * @var \Drupal\Core\Asset\AssetQueryStringInterface
    */
   protected AssetQueryStringInterface $queryStringCache;
 
@@ -28,15 +27,15 @@ class CssCollectionRenderer implements AssetCollectionRendererInterface {
   /**
    * Constructs a CssCollectionRenderer.
    *
-   * @param \Drupal\Core\Cache\AssetQueryStringInterface|\Drupal\Core\State\StateInterface $query_string_cache
+   * @param \Drupal\Core\Asset\AssetQueryStringInterface|\Drupal\Core\State\StateInterface $query_string_cache
    *   The query string cache.
    * @param \Drupal\Core\File\FileUrlGeneratorInterface $file_url_generator
    *   The file URL generator.
    */
   public function __construct(AssetQueryStringInterface|StateInterface $query_string_cache, FileUrlGeneratorInterface $file_url_generator) {
     if ($query_string_cache instanceof StateInterface) {
-      @trigger_error('Calling ' . __METHOD__ . '() with $query_string_cache argument as \Drupal\Core\State\StateInterface instead of \Drupal\Core\Cache\QueryStringInterface is deprecated in drupal:10.1.0 and will be required in drupal:11.0.0. See https://www.drupal.org/node/3358337', E_USER_DEPRECATED);
-      $query_string_cache = \Drupal::service('cache.asset_query_string');
+      @trigger_error('Calling ' . __METHOD__ . '() with $query_string_cache argument as \Drupal\Core\State\StateInterface instead of \Drupal\Core\Asset\AssetQueryStringInterface is deprecated in drupal:10.1.0 and will be required in drupal:11.0.0. See https://www.drupal.org/node/3358337', E_USER_DEPRECATED);
+      $query_string_cache = \Drupal::service('asset.query_string');
     }
     $this->queryStringCache = $query_string_cache;
     $this->fileUrlGenerator = $file_url_generator;
