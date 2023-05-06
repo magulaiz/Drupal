@@ -43,8 +43,8 @@ class TwigDebugMarkupTest extends BrowserTestBase {
     $registry = \Drupal::service('theme.registry');
     $cache = $registry->get();
     // Create array of Twig templates.
-    $templates = $registry->findThemeFunctions($cache, $extension, $this->getThemePath('test_theme'));
-    $templates += $registry->findThemeFunctions($cache, $extension, $this->getModulePath('node'));
+    $templates = $registry->findThemeTemplates($cache, $extension, $this->getThemePath('test_theme'));
+    $templates += $registry->findThemeTemplates($cache, $extension, $this->getModulePath('node'));
 
     // Create a node and test different features of the debug markup.
     $node = $this->drupalCreateNode();

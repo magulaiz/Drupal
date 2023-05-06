@@ -15,7 +15,7 @@ use Drupal\Component\Utility\Html;
  * Implements hook_theme().
  */
 function nyan_cat_theme($existing, $type, $theme, $path) {
-  return \Drupal::service('theme.registry')->findThemeFunctions($existing, '.nyan-cat.html', $path);
+  return \Drupal::service('theme.registry')->findThemeTemplates($existing, '.nyan-cat.html', $path);
 }
 
 /**

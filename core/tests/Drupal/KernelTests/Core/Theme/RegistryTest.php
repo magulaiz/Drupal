@@ -311,15 +311,15 @@ class RegistryTest extends KernelTestBase {
    * @see drupal_find_theme_templates()
    * @group legacy
    */
-  public function testLegacyfindThemeFunctions() {
+  public function testLegacyfindThemeTemplates() {
 
     $registry = \Drupal::service('theme.registry');
     $cache = $registry->get();
     $extension = '.html.twig';
     $path = $this->getThemePath('test_theme');
-    $this->assertEquals($registry->findThemeFunctions($cache, $extension, $path), drupal_find_theme_templates($cache, $extension, $path));
+    $this->assertEquals($registry->findThemeTemplates($cache, $extension, $path), drupal_find_theme_templates($cache, $extension, $path));
 
-    $this->expectDeprecation('drupal_find_theme_templates() is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use theme.registry service findThemeFunctions() method instead. See https://www.drupal.org/node/3351736');
+    $this->expectDeprecation('drupal_find_theme_templates() is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use theme.registry service findThemeTemplates() method instead. See https://www.drupal.org/node/3351736');
 
   }
 
