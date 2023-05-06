@@ -220,11 +220,15 @@ class DiffEngine {
             }
           }
           else {
+            // @phpstan-ignore-next-line
             if ($y > $this->seq[$k - 1]) {
+              // @phpstan-ignore-next-line
               $this::USE_ASSERTS && assert($y < $this->seq[$k]);
               // Optimization: this is a common case:
               // next match is just replacing previous match.
+              // @phpstan-ignore-next-line
               $this->in_seq[$this->seq[$k]] = FALSE;
+              // @phpstan-ignore-next-line
               $this->seq[$k] = $y;
               $this->in_seq[$y] = 1;
             }
@@ -327,8 +331,11 @@ class DiffEngine {
     }
     else {
       // Use the partitions to split this problem into subproblems.
+      // @phpstan-ignore-next-line
       reset($seps);
+      // @phpstan-ignore-next-line
       $pt1 = $seps[0];
+      // @phpstan-ignore-next-line
       while ($pt2 = next($seps)) {
         $this->_compareseq ($pt1[0], $pt2[0], $pt1[1], $pt2[1]);
         $pt1 = $pt2;
