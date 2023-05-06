@@ -89,6 +89,7 @@ class EntityFormDisplay extends EntityDisplayBase implements EntityFormDisplayIn
     // Check the existence and status of:
     // - the display for the form mode,
     // - the 'default' display.
+    $candidate_ids = [];
     if ($form_mode != 'default') {
       $candidate_ids[] = $entity_type . '.' . $bundle . '.' . $form_mode;
     }

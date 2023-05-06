@@ -515,6 +515,8 @@ abstract class Connection {
    * @throws \InvalidArgumentException
    *   If multiple statements are included in the string, and delimiters are
    *   not allowed in the query.
+   * @throws \LogicException
+   *   If an exception was not rethrown in ::handleStatementException().
    * @throws \Drupal\Core\Database\DatabaseExceptionWrapper
    */
   public function prepareStatement(string $query, array $options, bool $allow_row_count = FALSE): StatementInterface {
@@ -529,6 +531,8 @@ abstract class Connection {
     catch (\Exception $e) {
       $this->exceptionHandler()->handleStatementException($e, $query, $options);
     }
+
+    throw new \LogicException('An error thrown in ' . __METHOD__ . ' was not handled by ::handleStatementException()');
   }
 
   /**

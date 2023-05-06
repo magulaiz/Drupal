@@ -1382,7 +1382,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
             $record[$column_name] = SqlContentEntityStorageSchema::castValue($attributes, $value);
           }
           $query->values($record);
-          if ($this->entityType->isRevisionable()) {
+          if ($this->entityType->isRevisionable() && isset($revision_query)) {
             $revision_query->values($record);
           }
 
@@ -1399,7 +1399,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
         if ($entity->isDefaultRevision()) {
           $query->execute();
         }
-        if ($this->entityType->isRevisionable()) {
+        if ($this->entityType->isRevisionable() && isset($revision_query)) {
           $revision_query->execute();
         }
       }

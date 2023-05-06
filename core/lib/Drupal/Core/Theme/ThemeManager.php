@@ -142,7 +142,7 @@ class ThemeManager implements ThemeManagerInterface {
 
     // If an array of hook candidates were passed, use the first one that has an
     // implementation.
-    if (is_array($hook)) {
+    if (is_array($hook) && !empty($hook)) {
       foreach ($hook as $candidate) {
         if ($theme_registry->has($candidate)) {
           break;

@@ -949,9 +949,11 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
       $container = new $class($container_definition);
     }
 
-    $this->attachSynthetic($container);
+    if (isset($container)) {
+      $this->attachSynthetic($container);
+      $this->container = $container;
+    }
 
-    $this->container = $container;
     if ($session_started) {
       $this->container->get('session')->start();
     }
@@ -987,7 +989,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
     }
 
     // If needs dumping flag was set, dump the container.
-    if ($this->containerNeedsDumping && !$this->cacheDrupalContainer($container_definition)) {
+    if ($this->containerNeedsDumping && isset($container_definition) && !$this->cacheDrupalContainer($container_definition)) {
       $this->container->get('logger.factory')->get('DrupalKernel')->error('Container cannot be saved to cache.');
     }
 
