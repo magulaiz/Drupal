@@ -51,7 +51,7 @@ function _drupal_maintenance_theme() {
       // about to fall back to a sensible theme so there is no need for special
       // handling.
     }
-    if (!$custom_theme) {
+    if (!isset($custom_theme)) {
       // We have been unable to identify the configured theme, so fall back to
       // a safe default. Claro is reasonably user friendly and fairly generic.
       $custom_theme = 'claro';

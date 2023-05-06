@@ -835,10 +835,10 @@ function _batch_append_set(&$batch, $batch_set) {
   // queued in the queue of a previous batch set.
   // @see _batch_populate_queue().
   $new_sets = [];
+  $new_set_index = count($batch['sets']);
   foreach ($batch['sets'] as $index => &$set) {
     $new_sets[$index] = &$set;
     if ($index == $append_after_index) {
-      $new_set_index = count($batch['sets']);
       $new_sets[$new_set_index] = $batch_set;
     }
   }
