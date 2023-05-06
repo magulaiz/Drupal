@@ -117,6 +117,7 @@ class ExtensionInstallStorage extends InstallStorage {
       }
       if (!empty($extensions['theme'])) {
         $theme_list_scan = $listing->scan('theme');
+        $theme_list = [];
         foreach (array_keys($extensions['theme']) as $theme) {
           if (isset($theme_list_scan[$theme])) {
             $theme_list[$theme] = $theme_list_scan[$theme];
