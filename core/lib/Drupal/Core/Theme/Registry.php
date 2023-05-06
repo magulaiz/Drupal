@@ -13,6 +13,7 @@ use Drupal\Core\Lock\LockBackendInterface;
 use Drupal\Core\Update\UpdateKernel;
 use Drupal\Core\Utility\ThemeRegistry;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
+use Drupal\Core\File\FileSystemInterface;
 
 /**
  * Defines the theme registry service.
@@ -162,6 +163,13 @@ class Registry implements DestructableInterface {
   protected $moduleList;
 
   /**
+   * The file system service.
+   *
+   * @var \Drupal\Core\File\FileSystemInterface
+   */
+  protected $fileSystem;
+
+  /**
    * Constructs a \Drupal\Core\Theme\Registry object.
    *
    * @param string $root
@@ -184,8 +192,10 @@ class Registry implements DestructableInterface {
    *   The kernel.
    * @param string $theme_name
    *   (optional) The name of the theme for which to construct the registry.
+   * @param \Drupal\Core\File\FileSystemInterface $file_system
+   *   The file system service.
    */
-  public function __construct($root, CacheBackendInterface $cache, LockBackendInterface $lock, ModuleHandlerInterface $module_handler, ThemeHandlerInterface $theme_handler, ThemeInitializationInterface $theme_initialization, CacheBackendInterface $runtime_cache, ModuleExtensionList $module_list, protected HttpKernelInterface $kernel, $theme_name = NULL) {
+  public function __construct($root, CacheBackendInterface $cache, LockBackendInterface $lock, ModuleHandlerInterface $module_handler, ThemeHandlerInterface $theme_handler, ThemeInitializationInterface $theme_initialization, CacheBackendInterface $runtime_cache, ModuleExtensionList $module_list, protected HttpKernelInterface $kernel, $theme_name = NULL, FileSystemInterface $file_system) {
     $this->root = $root;
     $this->cache = $cache;
     $this->lock = $lock;
@@ -195,6 +205,7 @@ class Registry implements DestructableInterface {
     $this->runtimeCache = $runtime_cache;
     $this->moduleList = $module_list;
     $this->themeName = $theme_name;
+    $this->fileSystem = $file_system;
   }
 
   /**
@@ -927,7 +938,7 @@ class Registry implements DestructableInterface {
     $regex = '/' . str_replace('.', '\.', $extension) . '$/';
     // Get a listing of all template files in the path to search.
     if (is_dir($path)) {
-      $files = \Drupal::service('file_system')->scanDirectory($path, $regex, ['key' => 'filename']);
+      $files = $this->fileSystem->scanDirectory($path, $regex, ['key' => 'filename']);
     }
 
     // Find templates that implement registered theme hooks and include that in
