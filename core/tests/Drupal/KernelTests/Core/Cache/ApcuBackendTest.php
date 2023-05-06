@@ -34,6 +34,7 @@ class ApcuBackendTest extends GenericCacheBackendUnitTestBase {
    */
   public function testSetGet() {
     parent::testSetGet();
+    $found = FALSE;
 
     // Make sure entries are permanent (i.e. no TTL).
     $backend = $this->getCacheBackend($this->getTestBin());

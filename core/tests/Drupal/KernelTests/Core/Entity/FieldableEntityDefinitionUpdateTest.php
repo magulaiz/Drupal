@@ -435,7 +435,7 @@ class FieldableEntityDefinitionUpdateTest extends EntityKernelTestBase {
         if ($translatable) {
           $translation = $revision->getTranslation('ro');
           $this->assertEquals("test entity - {$translation->id()} - ro{$revision_label}", $translation->label());
-          $this->assertEquals("bundle field - {$entity->id()} - ro{$revision_label}", $translation->new_bundle_field->value);
+          $this->assertEquals("bundle field - {$translation->id()} - ro{$revision_label}", $translation->new_bundle_field->value);
           $this->assertEquals("shared table - {$revision->id()} - value 1 - ro{$revision_label}", $translation->test_multiple_properties->value1);
           $this->assertEquals("shared table - {$revision->id()} - value 2 - ro{$revision_label}", $translation->test_multiple_properties->value2);
           $this->assertEquals("dedicated table - {$translation->id()} - delta 0 - value 1 - ro{$revision_label}", $translation->test_multiple_properties_multiple_values[0]->value1);
@@ -714,7 +714,9 @@ class FieldableEntityDefinitionUpdateTest extends EntityKernelTestBase {
     }
     // Allow other tests to be performed after the exception has been thrown.
     finally {
-      $this->assertSame('Peekaboo!', $e->getPrevious()->getMessage());
+      if (isset($e)) {
+        $this->assertSame('Peekaboo!', $e->getPrevious()->getMessage());
+      }
 
       // Check that the last installed entity type definition is kept as
       // non-revisionable.
@@ -735,6 +737,7 @@ class FieldableEntityDefinitionUpdateTest extends EntityKernelTestBase {
       $new_entity_schema_data = $this->installedStorageSchema->get('entity_test_update.entity_schema_data', []);
       $this->assertEquals($original_entity_schema_data, $new_entity_schema_data);
 
+      $new_field_schema_data = [];
       foreach ($new_storage_definitions as $storage_definition) {
         $new_field_schema_data[$storage_definition->getName()] = $this->installedStorageSchema->get('entity_test_update.field_schema_data.' . $storage_definition->getName(), []);
       }

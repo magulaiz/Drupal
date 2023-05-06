@@ -172,6 +172,7 @@ class InstallHelper implements ContainerInjectionInterface {
    */
   protected function readMultilingualContent($filename) {
     $default_content_path = $this->module_path . "/default_content/languages/";
+    $keyed_content = [];
 
     // Get all enabled languages.
     $translated_languages = $this->enabledLanguages;
@@ -713,6 +714,7 @@ class InstallHelper implements ContainerInjectionInterface {
         break;
 
       default:
+        $structured_content = [];
         break;
     }
     return $structured_content;
