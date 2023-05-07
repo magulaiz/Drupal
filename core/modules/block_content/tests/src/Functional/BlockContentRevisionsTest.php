@@ -3,6 +3,7 @@
 namespace Drupal\Tests\block_content\Functional;
 
 use Drupal\Component\Render\FormattableMarkup;
+use Drupal\block_content\BlockContentInterface;
 use Drupal\block_content\Entity\BlockContent;
 use Drupal\user\UserInterface;
 
@@ -83,6 +84,8 @@ class BlockContentRevisionsTest extends BlockContentTestBase {
         $this->assertIsNumeric($loaded->getRevisionCreationTime());
       }
     }
+
+    $this->assertInstanceOf(BlockContentInterface::class, $loaded);
 
     // Confirm that this is the default revision.
     $this->assertTrue($loaded->isDefaultRevision(), 'Third block revision is the default one.');

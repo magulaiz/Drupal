@@ -219,7 +219,9 @@ function _content_translation_preprocess_language_content_settings_table(&$varia
       ];
       array_unshift($rows[$bundle]['data'], $translatable);
 
-      $rows[$bundle]['data'][1]['data']['#prefix'] = '<label for="' . $checkbox_id . '">';
+      if (isset($checkbox_id)) {
+        $rows[$bundle]['data'][1]['data']['#prefix'] = '<label for="' . $checkbox_id . '">';
+      }
     }
     else {
       $translatable = [
@@ -327,6 +329,7 @@ function content_translation_form_language_content_settings_validate(array $form
 
         $values = $bundle_settings['settings']['language'];
         if (empty($values['language_alterable']) && \Drupal::languageManager()->isLanguageLocked($values['langcode'])) {
+          $locked_languages = [];
           foreach (\Drupal::languageManager()->getLanguages(LanguageInterface::STATE_LOCKED) as $language) {
             $locked_languages[] = $language->getName();
           }

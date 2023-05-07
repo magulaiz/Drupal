@@ -74,6 +74,7 @@ class CommentBlockTest extends CommentTestBase {
 
     // Test the only the 10 latest comments are shown and in the proper order.
     $this->assertSession()->pageTextNotContains($comments[10]->getSubject());
+    $position = NULL;
     for ($i = 0; $i < 10; $i++) {
       $this->assertSession()->pageTextContains($comments[$i]->getSubject());
       if ($i > 1) {

@@ -89,7 +89,7 @@ class EntityComment extends EntityContentBase {
       $this->state->set('comment.maintain_entity_statistics', 0);
     }
     $return = parent::import($row, $old_destination_id_values);
-    if ($row->isStub() && $state) {
+    if ($row->isStub() && isset($state) && $state) {
       $this->state->set('comment.maintain_entity_statistics', $state);
     }
     return $return;
