@@ -2,8 +2,8 @@
 
 namespace Drupal\file\Plugin\Field\FieldType;
 
-use Drupal\Component\Utility\Bytes;
 use Drupal\Component\Render\PlainTextOutput;
+use Drupal\Component\Utility\Bytes;
 use Drupal\Component\Utility\Environment;
 use Drupal\Component\Utility\Random;
 use Drupal\Core\Field\FieldDefinitionInterface;
@@ -189,10 +189,14 @@ class FileItem extends EntityReferenceItem {
       '#type' => 'textfield',
       '#title' => $this->t('Maximum upload size'),
       '#default_value' => $settings['max_filesize'],
-      '#description' => $this->t('Enter a value like "512" (bytes), "80 KB" (kilobytes) or "50 MB" (megabytes) in order to restrict the allowed file size. If left empty the file sizes will be limited only by PHP\'s maximum post and file upload sizes (current limit <strong>%limit</strong>).', [
+      '#description' => $this->t('Enter a value like "512" (bytes), "80 KB" (kilobytes) or "50 MB" (megabytes) in order to restrict the allowed file size. If left empty the file sizes could be limited only by PHP\'s maximum post and file upload sizes (current limit <strong>%limit</strong>).', [
         '%limit' => ByteSizeMarkup::create(Environment::getUploadMaxSize()),
       ]),
+      '#size' => 10,
+      '#element_validate' => [[static::class, 'validateMaxFilesize']],
+      '#weight' => 5,
     ];
+
     $element['description_field'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Enable <em>Description</em> field'),
