@@ -9,6 +9,7 @@ declare(strict_types=1);
 
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Extension\Extension;
+use Drupal\Core\Theme\ThemeHook;
 
 /**
  * Implements hook_theme().
@@ -92,6 +93,8 @@ function theme_test_theme($existing, $type, $theme, $path): array {
       ],
     ],
   ];
+  $items[] = ThemeHook::create('theme_test_object_based')
+    ->setRenderElement('elements');
   return $items;
 }
 
