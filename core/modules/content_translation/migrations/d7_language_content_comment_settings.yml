@@ -34,13 +34,14 @@ process:
       plugin: skip_on_empty
       method: row
   language_alterable:
-    plugin: static_map
+    plugin: evaluate_condition
+    condition: in_array
     source: language_content_type
-    map:
-      0: false
-      1: true
-      2: true
-      4: true
+    configuration:
+      value:
+        - 1
+        - 2
+        - 4
   third_party_settings/content_translation/enabled:
     plugin: content_translation_enabled_setting
     source:

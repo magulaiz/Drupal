@@ -125,15 +125,13 @@ process:
       int_phone:
         phone_textfield: telephone
   boolean_type:
-    -
-      plugin: static_map
-      source: '@type'
-      map:
-        boolean: boolean
-      default_value: false
-    -
-      plugin: skip_on_empty
-      method: row
+    plugin: skip_on_condition
+    condition: equals
+    negate: true
+    source: '@type'
+    configuration:
+      value: boolean
+    method: row
   bundle:
     -
       plugin: migration_lookup

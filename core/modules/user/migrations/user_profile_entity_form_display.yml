@@ -46,11 +46,11 @@ process:
       - '@type'
       - 'constants/empty' # we don't have any settings.
   'options/settings/display_label':  # Single on/off checkboxes need to have display_label = true otherwise their label doesn't show.
-    plugin: static_map
-    default_value: false
+    plugin: evaluate_condition
+    condition: equals
     source: type
-    map:
-      checkbox: true
+    configuration:
+      value: checkbox
   hidden:
     plugin: static_map
     source: visibility

@@ -67,6 +67,15 @@ use Drupal\migrate\Row;
  *
  * @link https://api.drupal.org/api/drupal/namespace/Drupal!migrate!Plugin!migrate!process List of process plugins for common operations provided by the core Migrate module. @endlink
  *
+ * @section sec_process Migrate API condition plugins
+ * Migrate API condition plugins implement
+ * \Drupal\migrate\Plugin\MigrateConditionInterface and usually extend
+ * \Drupal\migrate\Plugin\migrate\condition PConditionBase. They are annotated
+ * with \Drupal\migrate\Annotation\MigrateConditionPlugin annotation and must be
+ * in namespace subdirectory 'Plugin\migrate\condition' under the namespace of
+ * the module that defines them. Migrate API condition plugins are managed by
+ * the \Drupal\migrate\Plugin\MigrateConditionManager class.
+ *
  * @section sec_destination Migrate API destination plugins
  * Migrate API destination plugins implement
  * \Drupal\migrate\Plugin\MigrateDestinationInterface and usually extend

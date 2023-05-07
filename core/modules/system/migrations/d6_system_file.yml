@@ -10,11 +10,10 @@ source:
   source_module: system
 process:
   allow_insecure_uploads:
-    plugin: static_map
+    plugin: evaluate_condition
+    condition: empty
+    negate: true
     source: allow_insecure_uploads
-    map:
-      0: FALSE
-      1: TRUE
 destination:
   plugin: config
   config_name: system.file

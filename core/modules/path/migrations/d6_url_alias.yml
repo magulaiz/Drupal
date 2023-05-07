@@ -42,7 +42,9 @@ process:
       plugin: node_complete_node_translation_lookup
   langcode:
     -
-      plugin: null_coalesce
+      plugin: first_meeting_condition
+      condition: is_null
+      negate: true
       source:
         - '@node_translation/1'
         - language
