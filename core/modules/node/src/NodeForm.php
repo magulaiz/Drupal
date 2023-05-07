@@ -266,22 +266,33 @@ class NodeForm extends ContentEntityForm {
    */
   public function save(array $form, FormStateInterface $form_state) {
     $node = $this->entity;
-    $insert = $node->isNew();
-    $node->save();
-    $node_link = $node->toLink($this->t('View'))->toString();
-    $context = ['@type' => $node->getType(), '%title' => $node->label(), 'link' => $node_link];
-    $t_args = ['@type' => node_get_type_label($node), '%title' => $node->toLink()->toString()];
-
-    if ($insert) {
-      $this->logger('content')->notice('@type: added %title.', $context);
-      $this->messenger()->addStatus($this->t('@type %title has been created.', $t_args));
-    }
-    else {
-      $this->logger('content')->notice('@type: updated %title.', $context);
-      $this->messenger()->addStatus($this->t('@type %title has been updated.', $t_args));
-    }
-
+    $status = $node->save();
     if ($node->id()) {
+      $node_link = $node->toLink($this->t('View'))->toString();
+      $context = [
+        '@type' => $node->getType(),
+        '%title' => $node->label(),
+        'link' => $node_link,
+      ];
+      $t_args = [
+        '@type' => node_get_type_label($node),
+        '%title' => $node->toLink()->toString(),
+      ];
+
+      switch ($status) {
+        case SAVED_NEW:
+          $this->logger('content')->notice('@type: added %title.', $context);
+          $this->messenger()
+            ->addStatus($this->t('@type %title has been created.', $t_args));
+          break;
+
+        case SAVED_UPDATED:
+          $this->logger('content')->notice('@type: updated %title.', $context);
+          $this->messenger()
+            ->addStatus($this->t('@type %title has been updated.', $t_args));
+          break;
+      }
+
       $form_state->setValue('nid', $node->id());
       $form_state->set('nid', $node->id());
       if ($node->access('view')) {
@@ -304,6 +315,7 @@ class NodeForm extends ContentEntityForm {
       $this->messenger()->addError($this->t('The post could not be saved.'));
       $form_state->setRebuild();
     }
+    return $status;
   }
 
 }
