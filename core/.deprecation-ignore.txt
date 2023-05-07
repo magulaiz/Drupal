@@ -35,3 +35,8 @@
 # Symfony 7.2
 %Since symfony/http-foundation 7.2: NativeSessionStorage's "sid_length" option is deprecated and will be ignored in Symfony 8.0.%
 %Since symfony/http-foundation 7.2: NativeSessionStorage's "sid_bits_per_character" option is deprecated and will be ignored in Symfony 8.0.%
+
+# ThemeHook.
+%The "theme_test_template_test" theme hook must have either a render element, variables, or a base hook%
+%The "theme_test_template_test_2" theme hook must have either a render element, variables, or a base hook%
+%The "locale_test_tokenized" theme hook must have either a render element, variables, or a base hook%

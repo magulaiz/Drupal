@@ -130,7 +130,10 @@ final class ThemeHook implements \ArrayAccess {
    *
    * @var mixed[]
    *
-   * @deprecated Only used as part of the \ArrayAccess backwards compatibility.
+   * @deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Only used
+   *   as part of the \ArrayAccess backwards compatibility
+   *
+   * @see https://www.drupal.org/project/drupal/issues/2873117
    */
   protected $extra = [];
 
@@ -191,9 +194,12 @@ final class ThemeHook implements \ArrayAccess {
    *
    * @return static
    *
-   * @deprecated
+   * @deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Stop using
+   *   this.
+   *
+   * @see https://www.drupal.org/project/drupal/issues/2873117
    */
-  public static function createFromLegacy($name, array $values) {
+  public static function createFromLegacy(string $name, array $values) {
     $instance = static::create($name);
     foreach ($values as $key => $value) {
       $instance->offsetSet($key, $value);
@@ -268,7 +274,7 @@ final class ThemeHook implements \ArrayAccess {
   /**
    * {@inheritdoc}
    */
-  public function &offsetGet($name) {
+  public function &offsetGet(mixed $name): mixed {
     $value = NULL;
     $name = str_replace(' ', '_', $name);
     if (property_exists($this, $name)) {
@@ -285,7 +291,7 @@ final class ThemeHook implements \ArrayAccess {
   /**
    * {@inheritdoc}
    */
-  public function offsetSet($name, $value) {
+  public function offsetSet(mixed $name, mixed $value): void {
     $name = str_replace(' ', '_', $name);
     if (property_exists($this, $name)) {
       $this->{$name} = $value;
@@ -298,7 +304,7 @@ final class ThemeHook implements \ArrayAccess {
   /**
    * {@inheritdoc}
    */
-  public function offsetUnset($name) {
+  public function offsetUnset(mixed $name): void {
     $name = str_replace(' ', '_', $name);
     if (property_exists($this, $name)) {
       $reflection = new \ReflectionClass($this);
@@ -312,7 +318,7 @@ final class ThemeHook implements \ArrayAccess {
   /**
    * {@inheritdoc}
    */
-  public function offsetExists($name) {
+  public function offsetExists(mixed $name): bool {
     $name = str_replace(' ', '_', $name);
     if (property_exists($this, $name)) {
       return isset($this->{$name});
