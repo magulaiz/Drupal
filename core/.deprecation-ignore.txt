@@ -40,3 +40,4 @@
 %The "theme_test_template_test" theme hook must have either a render element, variables, or a base hook%
 %The "theme_test_template_test_2" theme hook must have either a render element, variables, or a base hook%
 %The "locale_test_tokenized" theme hook must have either a render element, variables, or a base hook%
+%The "twig_theme_test_php_variables" theme hook must have either a render element, variables, or a base hook"
