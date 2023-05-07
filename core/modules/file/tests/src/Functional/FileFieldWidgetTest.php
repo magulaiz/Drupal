@@ -485,7 +485,7 @@ class FileFieldWidgetTest extends FileFieldTestBase {
     $this->drupalGet("admin/structure/types/manage/$type_name/fields/$field_id");
 
     // Tests that form validation trims the user input.
-    $edit = ['settings[max_filesize]' => '5.1 megabytes'];
+    $edit = ['settings[max_filesize]' => ' 5.1 megabytes '];
     $this->submitForm($edit, 'Save settings');
     $this->assertSession()->pageTextContains('Saved ' . $field_name . ' configuration.');
 

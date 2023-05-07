@@ -20,6 +20,9 @@ final class ByteSizeMarkup {
    *
    * @return \Drupal\Core\StringTranslation\TranslatableMarkup
    *   The translatable markup.
+   *
+   * @throws \LogicException
+   *   Thrown when an invalid unit size is used.
    */
   public static function create(float|int $size, string $langcode = NULL, TranslationInterface $stringTranslation = NULL): TranslatableMarkup {
     $options = ['langcode' => $langcode];

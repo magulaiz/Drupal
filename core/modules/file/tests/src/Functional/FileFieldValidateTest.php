@@ -44,11 +44,7 @@ class FileFieldValidateTest extends FileFieldTestBase {
 
     // Create a new node with the uploaded file.
     $nid = $this->uploadNodeFile($test_file, $field_name, $type_name);
-    $this->assertNotFalse($nid, new FormattableMarkup('uploadNodeFile(@test_file, @field_name, @type_name) succeeded', [
-      '@test_file' => $test_file->getFileUri(),
-      '@field_name' => $field_name,
-      '@type_name' => $type_name,
-    ]));
+    $this->assertNotFalse($nid, new FormattableMarkup('uploadNodeFile(@test_file, @field_name, @type_name) succeeded', ['@test_file' => $test_file->getFileUri(), '@field_name' => $field_name, '@type_name' => $type_name]));
 
     $node_storage->resetCache([$nid]);
     $node = $node_storage->load($nid);
@@ -115,11 +111,9 @@ class FileFieldValidateTest extends FileFieldTestBase {
 
       // Check that uploading the large file fails (1M limit).
       $this->uploadNodeFile($large_file, $field_name, $type_name);
-      $error_message = t('The file is %filesize exceeding the maximum file size of %maxsize.', [
-        '%filesize' => ByteSizeMarkup::create($large_file->getSize()),
-        '%maxsize' => ByteSizeMarkup::create($file_limit),
-      ]);
-      $this->assertSession()->responseContains($error_message);
+      $filesize = ByteSizeMarkup::create($large_file->getSize());
+      $maxsize = ByteSizeMarkup::create($file_limit);
+      $this->assertSession()->pageTextContains("The file is {$filesize} exceeding the maximum file size of {$maxsize}.");
     }
 
     // Turn off the max filesize.

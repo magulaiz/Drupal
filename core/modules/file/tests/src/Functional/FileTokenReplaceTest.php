@@ -27,8 +27,6 @@ class FileTokenReplaceTest extends FileFieldTestBase {
     $node_storage = $this->container->get('entity_type.manager')->getStorage('node');
     $token_service = \Drupal::token();
     $language_interface = \Drupal::languageManager()->getCurrentLanguage();
-    $translation = \Drupal::translation();
-
     /** @var \Drupal\Core\Datetime\DateFormatterInterface $date_formatter */
     $date_formatter = $this->container->get('date.formatter');
 
