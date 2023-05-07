@@ -209,7 +209,7 @@ class ImageStyleDownloadController extends FileDownloadController {
     // were acquiring the lock.
     $success = file_exists($derivative_uri) || $image_style->createDerivative($image_uri, $derivative_uri);
 
-    if (!empty($lock_acquired)) {
+    if (!empty($lock_acquired) && isset($lock_name)) {
       $this->lock->release($lock_name);
     }
 

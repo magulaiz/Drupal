@@ -2020,6 +2020,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
     $this->assertResourceErrorResponse(400, 'Resource object must include a "type".', $url, $response, FALSE);
 
     if ($this->entity->getEntityType()->hasKey('label')) {
+      assert(isset($parseable_invalid_request_body));
       $request_options[RequestOptions::BODY] = $parseable_invalid_request_body;
       // DX: 422 when invalid entity: multiple values sent for single-value field.
       $response = $this->request('POST', $url, $request_options);
@@ -2125,7 +2126,8 @@ abstract class ResourceTestBase extends BrowserTestBase {
       $location = Url::fromRoute(sprintf('jsonapi.%s.individual', static::$resourceTypeName), ['entity' => $uuid]);
       /* $location = $this->entityStorage->load(static::$secondCreatedEntityId)->toUrl('jsonapi')->setAbsolute(TRUE)->toString(); */
       if (static::$resourceTypeIsVersionable) {
-        assert($created_entity instanceof RevisionableInterface);
+        assert(isset($created_entity));
+        $this->assertInstanceOf(RevisionableInterface::class, $created_entity);
         $location->setOption('query', ['resourceVersion' => 'id:' . $second_created_entity->getRevisionId()]);
       }
       $this->assertSame([$location->setAbsolute()->toString()], $response->getHeader('Location'));
@@ -2238,6 +2240,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
 
     // DX: 422 when invalid entity: multiple values sent for single-value field.
     if ($this->entity->getEntityType()->hasKey('label')) {
+      assert(isset($parseable_invalid_request_body));
       $request_options[RequestOptions::BODY] = $parseable_invalid_request_body;
       $response = $this->request('PATCH', $url, $request_options);
       $label_field = $this->entity->getEntityType()->getKey('label');
@@ -2699,6 +2702,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
     // Test Dynamic Page Cache HIT for a query with the same field set (unless
     // expensive cache context is present).
     $response = $this->request('GET', $url, $request_options);
+    assert(isset($dynamic_cache));
     $this->assertResourceResponse(200, FALSE, $response, $expected_cacheability->getCacheTags(), $expected_cacheability->getCacheContexts(), FALSE, $dynamic_cache === 'MISS' ? 'HIT' : 'UNCACHEABLE');
   }
 
