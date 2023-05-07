@@ -70,9 +70,11 @@ class BlockContentRevisionsTest extends BlockContentTestBase {
     $blocks = $this->blocks;
     $logs = $this->revisionLogs;
 
+    /** @var \Drupal\block_content\BlockContentInterface|null $loaded */
+    $loaded = NULL;
+
     foreach ($blocks as $delta => $revision_id) {
       // Confirm the correct revision text appears.
-      /** @var \Drupal\block_content\BlockContentInterface  $loaded */
       $loaded = $this->container->get('entity_type.manager')
         ->getStorage('block_content')
         ->loadRevision($revision_id);

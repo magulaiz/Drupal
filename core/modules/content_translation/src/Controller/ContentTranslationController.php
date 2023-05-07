@@ -180,6 +180,7 @@ class ContentTranslationController extends ControllerBase {
 
         $links = &$operations['data']['#links'];
         $source_name = $this->t('n/a');
+        $row_title = $this->t('n/a');
         if (array_key_exists($langcode, $translations)) {
           // Existing translation in the translation set: display status.
           $translation = $entity->getTranslation($langcode);
@@ -193,8 +194,8 @@ class ContentTranslationController extends ControllerBase {
             $row_title = Link::fromTextAndUrl($label, $link['url'])->toString();
           }
 
-          if (empty($link['url'])) {
-            $row_title = $is_original ? $label : $this->t('n/a');
+          if (empty($link['url']) && $is_original) {
+            $row_title = $label;
           }
 
           // If the user is allowed to edit the entity we point the edit link to
