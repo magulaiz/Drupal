@@ -3,6 +3,7 @@
 namespace Drupal\Core\Render;
 
 use Drupal\Core\Cache\CacheBackendInterface;
+use Drupal\Core\Cache\CacheTagsInvalidatorInterface;
 use Drupal\Core\DependencyInjection\DeprecatedServicePropertyTrait;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Extension\ThemeHandlerInterface;
@@ -61,18 +62,18 @@ class ElementInfoManager extends DefaultPluginManager implements ElementInfoMana
    *   keyed by the corresponding namespace to look for plugin implementations.
    * @param \Drupal\Core\Cache\CacheBackendInterface $cache_backend
    *   Cache backend instance to use.
-   * @param \Drupal\Core\Extension\ThemeHandlerInterface $theme_handler
+   * @param \Drupal\Core\Extension\ThemeHandlerInterface|\Drupal\Core\Cache\CacheTagsInvalidatorInterface $theme_handler
    *   The theme handler.
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
    *   The module handler to invoke the alter hook with.
    * @param \Drupal\Core\Theme\ThemeManagerInterface $theme_manager
    *   The theme manager.
    */
-  public function __construct(\Traversable $namespaces, CacheBackendInterface $cache_backend, $theme_handler, ModuleHandlerInterface $module_handler, ThemeManagerInterface $theme_manager) {
+  public function __construct(\Traversable $namespaces, CacheBackendInterface $cache_backend, ThemeHandlerInterface|CacheTagsInvalidatorInterface $theme_handler, ModuleHandlerInterface $module_handler, ThemeManagerInterface $theme_manager) {
     $this->setCacheBackend($cache_backend, 'element_info');
     $this->themeManager = $theme_manager;
-    if (!$theme_handler instanceof ThemeHandlerInterface) {
-      @trigger_error('Calling ' . __METHOD__ . ' with the $cache_tag_invalidator argument is deprecated and replaced with $theme_handler in drupal:10.1.0 and will be removed in drupal:11.0.0.', E_USER_DEPRECATED);
+    if (!$theme_handler instanceof CacheTagsInvalidatorInterface) {
+      @trigger_error('Calling ' . __METHOD__ . '() with the $cache_tag_invalidator argument is deprecated and replaced with $theme_handler in drupal:10.1.0 and will be removed in drupal:11.0.0.', E_USER_DEPRECATED);
       $theme_handler = \Drupal::service('theme_handler');
     }
     $this->themeHandler = $theme_handler;

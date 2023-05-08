@@ -29,30 +29,22 @@ class ConfigCacheTag implements EventSubscriberInterface {
   protected $cacheTagsInvalidator;
 
   /**
-   * The theme registry.
-   *
-   * @var \Drupal\Core\Theme\Registry
-   */
-  protected $themeRegistry;
-
-  /**
    * Constructs a ConfigCacheTag object.
    *
    * @param \Drupal\Core\Extension\ThemeHandlerInterface $theme_handler
    *   The theme handler.
    * @param \Drupal\Core\Cache\CacheTagsInvalidatorInterface $cache_tags_invalidator
    *   The cache tags invalidator.
-   * @param \Drupal\Core\Theme\Registry $theme_registry
+   * @param \Drupal\Core\Theme\Registry|null $themeRegistry
    *   The theme registry.
    */
-  public function __construct(ThemeHandlerInterface $theme_handler, CacheTagsInvalidatorInterface $cache_tags_invalidator, Registry $theme_registry = NULL) {
+  public function __construct(ThemeHandlerInterface $theme_handler, CacheTagsInvalidatorInterface $cache_tags_invalidator, protected ?Registry $themeRegistry = NULL) {
     $this->themeHandler = $theme_handler;
     $this->cacheTagsInvalidator = $cache_tags_invalidator;
-    if (!$theme_registry) {
-      @trigger_error('Calling ' . __METHOD__ . ' without the $theme_registry argument is deprecated in drupal:10.1.0 and will be required in drupal:11.0.0.', E_USER_DEPRECATED);
-      $theme_registry = \Drupal::service('theme.registry');
+    if ($this->themeRegistry === NULL) {
+      @trigger_error('Calling ' . __METHOD__ . '() without the $themeRegistry argument is deprecated in drupal:10.1.0 and will be required in drupal:11.0.0.', E_USER_DEPRECATED);
+      $this->themeRegistry = \Drupal::service('theme.registry');
     }
-    $this->themeRegistry = $theme_registry;
   }
 
   /**
