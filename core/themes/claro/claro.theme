@@ -9,6 +9,7 @@ use Drupal\claro\ClaroPreRender;
 use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Component\Utility\UrlHelper;
+use Drupal\Core\Entity\EntityDescriptionInterface;
 use Drupal\Core\Entity\EntityForm;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Link;
@@ -111,7 +112,7 @@ function claro_preprocess_node_add_list(&$variables) {
     /** @var \Drupal\node\NodeTypeInterface $type */
     foreach ($variables['content'] as $type) {
       $label = $type->label();
-      $description = $type->getDescription();
+      $description = $type instanceof EntityDescriptionInterface ? $type->getDescription() : '';
       $type_id = $type->id();
       $add_url = Url::fromRoute('node.add', ['node_type' => $type_id]);
       $variables['bundles'][$type_id] = [

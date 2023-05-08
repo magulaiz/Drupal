@@ -6,6 +6,7 @@ use Drupal\Component\Utility\Xss;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Datetime\DateFormatterInterface;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
+use Drupal\Core\Entity\ContentEntityType;
 use Drupal\Core\Entity\EntityRepositoryInterface;
 use Drupal\Core\Link;
 use Drupal\Core\Render\RendererInterface;
@@ -81,7 +82,7 @@ class NodeController extends ControllerBase implements ContainerInjectionInterfa
    */
   public function addPage() {
     $definition = $this->entityTypeManager()->getDefinition('node_type');
-    $build = [
+    $build['top'] = [
       '#theme' => 'node_add_list',
       '#cache' => [
         'tags' => $this->entityTypeManager()->getDefinition('node_type')->getListCacheTags(),
@@ -107,7 +108,64 @@ class NodeController extends ControllerBase implements ContainerInjectionInterfa
       return $this->redirect('node.add', ['node_type' => $type->id()]);
     }
 
-    $build['#content'] = $content;
+    $build['top']['#content'] = $content;
+
+    $content_entity_types = [];
+    $entity_type_definitions = $this->entityTypeManager()->getDefinitions();
+    /* @var $definition EntityTypeInterface */
+    $content_entity_types = (array) array_filter($entity_type_definitions, fn($definition) => $definition instanceof ContentEntityType && $definition->getBundleEntityType() && $definition->getBundleEntityType() !== 'node_type' && $definition->hasFormClasses());
+    foreach ($this->entityTypeManager()->getDefinitions() as $definition) {
+      if ($definition instanceof ContentEntityType && $definition->getBundleEntityType() && $definition->getBundleEntityType() !== 'node_type' && $definition->hasFormClasses()) {
+        $entity_type_access = $this->entityTypeManager()->getAccessControlHandler($definition->id())->createAccess(NULL, NULL, [], TRUE);
+        if (!$entity_type_access->isAllowed()) {
+          continue;
+        }
+
+        $entity_type_bundles = [];
+        $types = $this->entityTypeManager()->getStorage($definition->getBundleEntityType())->loadMultiple();
+
+        foreach ($types as $type) {
+          $access = $this->entityTypeManager()->getAccessControlHandler($definition->id())->createAccess($type->id(), NULL, [], TRUE);
+          if ($access->isAllowed()) {
+            $entity_type_bundles[$type->id()] = $type;
+          }
+          $this->renderer->addCacheableDependency($build, $access);
+        }
+        if(!empty($entity_type_bundles)) {
+          if (!isset($build['other_types'])) {
+            $build['other_types'] = [
+              '#type' => 'html_tag',
+              '#tag' => 'h2',
+              '#value' => $this->t('Other Entity Types')
+            ];
+            $build['other_types_wrapper'] = [
+              '#type' => 'container',
+              '#attributes' => ['class' => ['other-entity-types']],
+            ];
+          }
+          $build['other_types_wrapper'][$definition->id()] = [
+            '#type' => 'container',
+            '#attributes' => [
+              'class' => ['other-entity-types__box'],
+            ],
+            'content' => [
+              'label' => [
+                '#type' => 'html_tag',
+                '#tag' => 'h3',
+                '#value' => $definition->getLabel()
+              ],
+              'list' => [
+                '#theme' => 'node_add_list',
+                '#cache' => [
+                  'tags' => $this->entityTypeManager()->getDefinition($definition->getBundleEntityType())->getListCacheTags(),
+                ],
+                '#content' => $entity_type_bundles,
+              ],
+            ],
+          ];
+        }
+      }
+    }
 
     return $build;
   }

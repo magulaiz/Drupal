@@ -88,6 +88,13 @@
 .toolbar-bar .toolbar-icon-help.is-active::before {
   background-image: url(../../../../misc/icons/ffffff/questionmark-disc.svg);
 }
+.toolbar-bar .toolbar-icon-add-content::before {
+  background-image: url(../../../../misc/icons/bebebe/plus.svg);
+}
+.toolbar-bar .toolbar-icon-add-content:active::before,
+.toolbar-bar .toolbar-icon-add-content.is-active::before {
+  background-image: url(../../../../misc/icons/ffffff/plus.svg);
+}
 
 /**
  * Main menu icons.
