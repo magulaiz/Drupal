@@ -112,7 +112,7 @@ function claro_preprocess_node_add_list(&$variables) {
     /** @var \Drupal\node\NodeTypeInterface $type */
     foreach ($variables['content'] as $type) {
       $label = $type->label();
-      $description = $type instanceof EntityDescriptionInterface ? $type->getDescription() : '';
+      $description = method_exists($type, 'getDescription') ? $type->getDescription() : '';
       $type_id = $type->id();
       $add_url = Url::fromRoute('node.add', ['node_type' => $type_id]);
       $variables['bundles'][$type_id] = [
