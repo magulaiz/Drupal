@@ -94,7 +94,7 @@ class LocalActionManager extends DefaultPluginManager implements LocalActionMana
    *
    * @var \Drupal\Core\Language\LanguageManagerInterface
    */
-  protected $languageManager;
+  protected LanguageManagerInterface $languageManager;
 
   /**
    * The plugin instances.

@@ -77,7 +77,7 @@ class ContextualLinkManager extends DefaultPluginManager implements ContextualLi
    *
    * @var \Drupal\Core\Language\LanguageManagerInterface
    */
-  protected $languageManager;
+  protected LanguageManagerInterface $languageManager;
 
   /**
    * A static cache of all the contextual link plugins by group name.

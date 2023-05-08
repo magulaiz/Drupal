@@ -41,7 +41,7 @@ class ConfigMapperManager extends DefaultPluginManager implements ConfigMapperMa
    *
    * @var \Drupal\Core\Language\LanguageManagerInterface
    */
-  protected $languageManager;
+  protected LanguageManagerInterface $languageManager;
 
   /**
    * {@inheritdoc}
