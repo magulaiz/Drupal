@@ -22,7 +22,7 @@
   /**
    * Drag and drop table rows with field manipulation.
    *
-   * Using the drupal_attach_tabledrag() function, any table with weights or
+   * Using the Table::attachTabledrag() function, any table with weights or
    * parent relationships may be made into draggable tables. Columns containing
    * a field may optionally be hidden, providing a better user experience.
    *
@@ -35,20 +35,15 @@
    */
   Drupal.behaviors.tableDrag = {
     attach(context, settings) {
-      function initTableDrag(table, base) {
-        if (table.length) {
-          // Create the new tableDrag instance. Save in the Drupal variable
-          // to allow other scripts access to the object.
-          Drupal.tableDrag[base] = new Drupal.tableDrag(
-            table[0],
-            settings.tableDrag[base],
-          );
-        }
+      function initTableDrag(base) {
+        // Create the new tableDrag instance. Save in the Drupal variable
+        // to allow other scripts access to the object.
+        Drupal.tableDrag[base] = new Drupal.tableDrag(base);
       }
 
-      Object.keys(settings.tableDrag || {}).forEach((base) => {
-        initTableDrag($(once('tabledrag', `#${base}`, context)), base);
-      });
+      once('tabledrag', '[data-drupal-tabledrag]', context).forEach(
+        initTableDrag,
+      );
     },
   };
 
@@ -59,10 +54,8 @@
    *
    * @param {HTMLElement} table
    *   DOM object for the table to be made draggable.
-   * @param {object} tableSettings
-   *   Settings for the table added via drupal_add_dragtable().
    */
-  Drupal.tableDrag = function (table, tableSettings) {
+  Drupal.tableDrag = function (table) {
     const self = this;
     const $table = $(table);
 
@@ -80,7 +73,9 @@
     /**
      * @type {object}
      */
-    this.tableSettings = tableSettings;
+    this.tableSettings = table.dataset.drupalTabledragData.length
+      ? JSON.parse(table.dataset.drupalTabledragData)
+      : {};
 
     /**
      * Used to hold information about a current drag operation.
@@ -180,15 +175,13 @@
      * @type {bool}
      */
     this.indentEnabled = false;
-    Object.keys(tableSettings || {}).forEach((group) => {
-      Object.keys(tableSettings[group] || {}).forEach((n) => {
-        if (tableSettings[group][n].relationship === 'parent') {
-          this.indentEnabled = true;
-        }
-        if (tableSettings[group][n].limit > 0) {
-          this.maxDepth = tableSettings[group][n].limit;
-        }
-      });
+    Object.keys(this.tableSettings).forEach((group) => {
+      if (this.tableSettings[group].relationship === 'parent') {
+        this.indentEnabled = true;
+      }
+      if (this.tableSettings[group].limit > 0) {
+        this.maxDepth = this.tableSettings[group].limit;
+      }
     });
     if (this.indentEnabled) {
       /**
@@ -283,7 +276,7 @@
     let hidden;
     let cell;
     let columnIndex;
-    Object.keys(this.tableSettings || {}).forEach((group) => {
+    Object.keys(this.tableSettings).forEach((group) => {
       // Find the first field in this group.
       Object.keys(this.tableSettings[group]).some((tableSetting) => {
         const field = $table
@@ -441,20 +434,14 @@
   Drupal.tableDrag.prototype.rowSettings = function (group, row) {
     const field = $(row).find(`.${group}`);
     const tableSettingsGroup = this.tableSettings[group];
-    return Object.keys(tableSettingsGroup)
-      .map((delta) => {
-        const targetClass = tableSettingsGroup[delta].target;
-        let rowSettings;
-        if (field.is(`.${targetClass}`)) {
-          // Return a copy of the row settings.
-          rowSettings = {};
-          Object.keys(tableSettingsGroup[delta]).forEach((n) => {
-            rowSettings[n] = tableSettingsGroup[delta][n];
-          });
-        }
-        return rowSettings;
-      })
-      .filter((rowSetting) => rowSetting)[0];
+    const targetClass = tableSettingsGroup.target;
+    const rowSettings = {};
+    if (field.is(`.${targetClass}`)) {
+      Object.keys(tableSettingsGroup).forEach((n) => {
+        rowSettings[n] = tableSettingsGroup[n];
+      });
+    }
+    return rowSettings;
   };
 
   /**
@@ -831,7 +818,7 @@
 
         // If a setting exists for affecting the entire group, update all the
         // fields in the entire dragged group.
-        Object.keys(self.tableSettings || {}).forEach((group) => {
+        Object.keys(self.tableSettings).forEach((group) => {
           const rowSettings = self.rowSettings(group, droppedRow);
           if (rowSettings.relationship === 'group') {
             Object.keys(self.rowObject.children || {}).forEach((n) => {
