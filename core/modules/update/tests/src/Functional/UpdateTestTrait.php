@@ -18,20 +18,21 @@ trait UpdateTestTrait {
    *   In the format as the key to be the extension name and an array of sub
    *   keys as the extensions info such as 'project' (which is just the project
    *   name), 'version', 'hidden', only the keys that are defined will be
-   *   overwritten in the info.
+   *   overwritten individually in the info.
    *   @see update_test_system_info_alter
+   *   @see \Drupal\Core\Extension\ExtensionList::doList
    *   for example:
    *   'drupal' => [
    *     'project' => 'drupal',
    *     'version' => '8.0.0',
    *     'hidden' => FALSE,
    *   ].
-   * @param string[] $default_config
+   * @param string[] $default_info
    *   (optional) The default info keys to be set for all the modules.
    */
-  public function mockInstalledModules(array $installed_modules, array $default_config = []): void {
-    if (!empty($default_config)) {
-      $installed_modules = array_merge(['#all' => $default_config], $installed_modules);
+  public function mockInstalledModules(array $installed_modules, array $default_info = []): void {
+    if (!empty($default_info)) {
+      $installed_modules = array_merge(['#all' => $default_info], $installed_modules);
     }
     $this->config('update_test.settings')->set('system_info', $installed_modules)->save();
   }
