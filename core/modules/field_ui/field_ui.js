@@ -335,7 +335,19 @@
             returnFocus = {};
           });
         });
+
+        // Temporarily disable drag handles until the AJAX refresh is complete.
+        // Elements dragged to a new position before a prior drag has completed
+        // do not properly complete, so that is prevented here.
+        document
+          .querySelector('#field-display-overview-wrapper')
+          .classList.add('tabledrag-ajaxing');
         $('input[data-drupal-selector="edit-refresh"]').trigger('mousedown');
+        $(document).on('ajaxComplete', () => {
+          document
+            .querySelector('#field-display-overview-wrapper')
+            .classList.remove('tabledrag-ajaxing');
+        });
 
         // Disabled elements do not appear in POST ajax data, so we mark the
         // elements disabled only after firing the request.
