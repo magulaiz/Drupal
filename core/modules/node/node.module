@@ -1318,17 +1318,17 @@ function node_config_translation_info_alter(&$info) {
 
 function node_toolbar() {
   $items['add_content'] = [
-      '#type' => 'toolbar_item',
-      'tab' => [
-        '#type' => 'link',
-        '#title' => t('Add Content'),
-        '#url' => Url::fromRoute('node.add_page'),
-        '#attributes' => [
-          'title' => t('Return to site content'),
-          'class' => ['toolbar-icon', 'toolbar-icon-add-content'],
-        ],
+    '#type' => 'toolbar_item',
+    'tab' => [
+      '#type' => 'link',
+      '#title' => t('Add Content'),
+      '#url' => Url::fromRoute('node.add_page'),
+      '#attributes' => [
+        'title' => t('Return to site content'),
+        'class' => ['toolbar-icon', 'toolbar-icon-add-content'],
       ],
-      '#weight' => -10,
+    ],
+    '#weight' => -10,
   ];
   return $items;
 }

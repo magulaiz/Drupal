@@ -110,10 +110,6 @@ class NodeController extends ControllerBase implements ContainerInjectionInterfa
 
     $build['top']['#content'] = $content;
 
-    $content_entity_types = [];
-    $entity_type_definitions = $this->entityTypeManager()->getDefinitions();
-    /* @var $definition EntityTypeInterface */
-    $content_entity_types = (array) array_filter($entity_type_definitions, fn($definition) => $definition instanceof ContentEntityType && $definition->getBundleEntityType() && $definition->getBundleEntityType() !== 'node_type' && $definition->hasFormClasses());
     foreach ($this->entityTypeManager()->getDefinitions() as $definition) {
       if ($definition instanceof ContentEntityType && $definition->getBundleEntityType() && $definition->getBundleEntityType() !== 'node_type' && $definition->hasFormClasses()) {
         $entity_type_access = $this->entityTypeManager()->getAccessControlHandler($definition->id())->createAccess(NULL, NULL, [], TRUE);
@@ -131,12 +127,12 @@ class NodeController extends ControllerBase implements ContainerInjectionInterfa
           }
           $this->renderer->addCacheableDependency($build, $access);
         }
-        if(!empty($entity_type_bundles)) {
+        if (!empty($entity_type_bundles)) {
           if (!isset($build['other_types'])) {
             $build['other_types'] = [
               '#type' => 'html_tag',
               '#tag' => 'h2',
-              '#value' => $this->t('Other Entity Types')
+              '#value' => $this->t('Other Entity Types'),
             ];
             $build['other_types_wrapper'] = [
               '#type' => 'container',
@@ -152,7 +148,7 @@ class NodeController extends ControllerBase implements ContainerInjectionInterfa
               'label' => [
                 '#type' => 'html_tag',
                 '#tag' => 'h3',
-                '#value' => $definition->getLabel()
+                '#value' => $definition->getLabel(),
               ],
               'list' => [
                 '#theme' => 'node_add_list',
