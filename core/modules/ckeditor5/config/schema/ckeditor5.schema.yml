@@ -62,6 +62,25 @@ ckeditor5.plugin.ckeditor5_heading:
           Choice:
             callback: \Drupal\ckeditor5\Plugin\CKEditor5Plugin\Heading::validChoices
 
+
+# Plugin \Drupal\ckeditor5\Plugin\CKEditor5Plugin\CodeBlock
+ckeditor5.plugin.ckeditor5_codeBlock:
+  type: mapping
+  label: CodeBlock
+  mapping:
+    enabled_languages:
+      type: sequence
+      label: 'Enabled Languages'
+      constraints:
+        NotBlank:
+          message: "Enable at least one language, otherwise disable the CodeBlock plugin."
+      sequence:
+        type: string
+        label: 'Language'
+        constraints:
+          Choice:
+            callback: \Drupal\ckeditor5\Plugin\CKEditor5Plugin\CodeBlock::validChoices
+
 # Plugin \Drupal\ckeditor5\Plugin\CKEditor5Plugin\ImageResize
 ckeditor5.plugin.ckeditor5_imageResize:
   type: mapping
