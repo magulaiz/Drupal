@@ -46,6 +46,7 @@ class LanguageNegotiationContentEntityTest extends UnitTestCase {
    * {@inheritdoc}
    */
   protected function setUp(): void {
+    parent::setUp();
 
     // Set up some languages to be used by the language-based path processor.
     $language_de = $this->createMock(LanguageInterface::class);
@@ -92,18 +93,18 @@ class LanguageNegotiationContentEntityTest extends UnitTestCase {
     $languageNegotiationContentEntity->setLanguageManager($this->languageManager);
 
     // Case 1: NULL request object argument.
-    $this->assertSame(NULL, $languageNegotiationContentEntity->getLangcode());
+    $this->assertNull($languageNegotiationContentEntity->getLangcode());
 
     // Case 2: A request object is available, but the languageManager is not
     // set.
     $request = Request::create('/foo', 'GET');
-    $this->assertSame(NULL, $languageNegotiationContentEntity->getLangcode($request));
+    $this->assertNull($languageNegotiationContentEntity->getLangcode($request));
 
     // Case 3: A request object is available, but static::QUERY_PARAMETER is
     // set to a non-enabled language.
     $request = Request::create('/foo', 'GET',
       [LanguageNegotiationContentEntity::QUERY_PARAMETER => 'it']);
-    $this->assertSame(NULL, $languageNegotiationContentEntity->getLangcode($request));
+    $this->assertNull($languageNegotiationContentEntity->getLangcode($request));
 
     // Case 4: A request object is available and static::QUERY_PARAMETER is
     // set to an enabled language.
