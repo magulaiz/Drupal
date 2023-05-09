@@ -70,6 +70,13 @@ abstract class MenuLinkBase extends PluginBase implements MenuLinkInterface {
   /**
    * {@inheritdoc}
    */
+  public function isTransitive(): bool {
+    return (bool) ($this->pluginDefinition['transitive'] ?? FALSE);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function isResettable() {
     return FALSE;
   }
