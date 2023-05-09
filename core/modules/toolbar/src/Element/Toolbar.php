@@ -121,7 +121,7 @@ class Toolbar extends RenderElement {
         }
 
         if ($go && isset($element[$key]['#type']) && $element[$key]['#type'] === 'toolbar_item') {
-          $element[$key]['#wrapper_attributes']['data-toolbar-extra-item'] = TRUE;
+          $element[$key]['#wrapper_attributes']['data-drupal-selector'] = 'toolbar-extra-item-toggle';
         }
 
         if ($key === $collapse_info['end']) {
@@ -132,13 +132,12 @@ class Toolbar extends RenderElement {
       $element['extra_item_toggle'] = [
         '#type' => 'toolbar_item',
         '#wrapper_attributes' => [
-          'data-toolbar-extra-item-toggle' => TRUE,
+          'data-drupal-selector' => 'toolbar-extra-item-toggle',
         ],
-        '#id' => 'extra-item-toggle',
         'tab' => [
           '#type' => 'html_tag',
           '#tag' => 'a',
-          '#value' => t('...'),
+          'aria-label' => t('...'),
           '#attributes' => [
             'type' => 'button',
             'data-toolbar-extra-item-toggle-button' => TRUE,
