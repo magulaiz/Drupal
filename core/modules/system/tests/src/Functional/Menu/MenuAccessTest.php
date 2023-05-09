@@ -25,12 +25,24 @@ class MenuAccessTest extends BrowserTestBase {
   protected $defaultTheme = 'stark';
 
   /**
+   * A test user with permission to access administration pages.
+   *
+   * @var \Drupal\user\UserInterface
+   */
+  protected $testUser;
+
+  /**
    * {@inheritdoc}
    */
   protected function setUp(): void {
     parent::setUp();
 
     $this->drupalPlaceBlock('local_tasks_block');
+    $this->drupalPlaceBlock('system_menu_block:admin', [
+      'expand_all_items' => TRUE,
+    ]);
+
+    $this->testUser = $this->drupalCreateUser(['access administration pages'], 'editor');
   }
 
   /**
@@ -69,6 +81,26 @@ class MenuAccessTest extends BrowserTestBase {
     ));
     $this->assertSession()->linkByHrefNotExists('foo/asdf/b');
     $this->assertSession()->linkByHrefNotExists('foo/asdf/c');
+  }
+
+  /**
+   * Tests access to the admin menu block page when it has no child items.
+   *
+   * @see \Drupal\system\Controller\SystemController::systemAdminMenuBlockPage()
+   */
+  public function testAdminMenuBlockPage() {
+    // Test as the root user with full access.
+    $this->drupalLogin($this->rootUser);
+    $this->assertSession()->linkExists('System');
+    $this->assertSession()->linkExists('Basic site settings');
+    $this->drupalGet('/admin/config/system');
+    $this->assertSession()->pageTextContains('Change site name, email address, slogan, default front page, and error pages.');
+    // Test as the test user with limited access.
+    $this->drupalLogin($this->testUser);
+    $this->assertSession()->linkNotExists('System');
+    $this->assertSession()->linkNotExists('Basic site settings');
+    $this->drupalGet('/admin/config/system');
+    $this->assertSession()->pageTextContains('You are not authorized to access this page.');
   }
 
 }
