@@ -382,6 +382,7 @@ class MenuTreeStorage implements MenuTreeStorageInterface {
 
     // Cast Booleans to int, if needed.
     $fields['enabled'] = (int) $fields['enabled'];
+    $fields['transitive'] = (int) $fields['transitive'];
     $fields['expanded'] = (int) $fields['expanded'];
     return $fields;
   }
@@ -1278,6 +1279,13 @@ class MenuTreeStorage implements MenuTreeStorageInterface {
           'type' => 'int',
           'not null' => TRUE,
           'default' => 1,
+          'size' => 'small',
+        ],
+        'transitive' => [
+          'description' => 'A flag for whether the link should be rendered whether it has visible children or not. (0 = a link that should always be visible, 1 = a link that should only be visible when it has visible children)',
+          'type' => 'int',
+          'not null' => TRUE,
+          'default' => 0,
           'size' => 'small',
         ],
         'discovered' => [

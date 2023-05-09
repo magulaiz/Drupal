@@ -102,6 +102,7 @@ class ToolbarController extends ControllerBase implements TrustedCallbackInterfa
     $tree = $menu_tree->load('admin', $parameters);
     $manipulators = [
       ['callable' => 'menu.default_tree_manipulators:checkAccess'],
+      ['callable' => 'menu.default_tree_manipulators:trimTransitiveElements'],
       ['callable' => 'menu.default_tree_manipulators:generateIndexAndSort'],
       ['callable' => 'toolbar_menu_navigation_links'],
     ];

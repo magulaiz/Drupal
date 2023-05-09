@@ -4,6 +4,7 @@ namespace Drupal\Core\Menu;
 
 use Drupal\Core\Access\AccessManagerInterface;
 use Drupal\Core\Access\AccessResult;
+use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Session\AccountInterface;
@@ -228,6 +229,37 @@ class DefaultMenuLinkTreeManipulators {
       }
     }
     return $access_result->cachePerPermissions();
+  }
+
+  /**
+   * Makes transitive links with inaccessible children inaccessible.
+   *
+   * @param \Drupal\Core\Menu\MenuLinkTreeElement[] $tree
+   *   The menu link tree to manipulate.
+   *
+   * @return \Drupal\Core\Menu\MenuLinkTreeElement[]
+   *   The manipulated menu link tree.
+   */
+  public function trimTransitiveElements(array $tree) {
+    foreach ($tree as $key => $element) {
+      $cacheability = new CacheableMetadata();
+      $has_accessible_child = FALSE;
+      if (!empty($element->subtree)) {
+        $tree[$key]->subtree = $this->trimTransitiveElements($tree[$key]->subtree);
+        foreach ($tree[$key]->subtree as $child) {
+          $cacheability->addCacheableDependency($child->access);
+          if ($child->access->isAllowed()) {
+            $has_accessible_child = TRUE;
+          }
+        }
+      }
+      if (!$element->link->isTransitive() || $has_accessible_child) {
+        continue;
+      }
+      $tree[$key]->link = new InaccessibleMenuLink($tree[$key]->link);
+      $tree[$key]->access = AccessResult::forbidden()->addCacheableDependency($cacheability);
+    }
+    return $tree;
   }
 
   /**

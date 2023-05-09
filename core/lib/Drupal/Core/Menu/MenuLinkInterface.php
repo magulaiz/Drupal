@@ -77,6 +77,15 @@ interface MenuLinkInterface extends PluginInspectionInterface, DerivativeInspect
   public function isExpanded();
 
   /**
+   * Returns whether the link should only be shown when it has visible children.
+   *
+   * @return bool
+   *   TRUE if the link should only be shown if it has visible children, FALSE
+   *   if it should always be shown.
+   */
+  public function isTransitive(): bool;
+
+  /**
    * Returns whether this link can be reset.
    *
    * In general, only links that store overrides using the

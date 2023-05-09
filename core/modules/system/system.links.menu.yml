@@ -3,46 +3,54 @@ system.admin:
   route_name: system.admin
   weight: 9
   menu_name: admin
+  transitive: false
 system.admin_content:
   title: Content
   description: 'Find and manage content.'
   route_name: system.admin_content
   parent: system.admin
   weight: -10
+  transitive: false
 system.admin_structure:
   route_name: system.admin_structure
   parent: system.admin
   description: 'Administer blocks, content types, menus, etc.'
   title: Structure
   weight: -8
+  transitive: true
 system.themes_page:
   route_name: system.themes_page
   title: Appearance
   description: 'Select and configure themes.'
   parent: system.admin
   weight: -6
+  transitive: true
 system.modules_list:
   title: Extend
   description: 'Add and enable modules to extend site functionality.'
   parent: system.admin
   route_name: system.modules_list
   weight: -2
+  transitive: true
 system.admin_config:
   title: Configuration
   parent: system.admin
   description: 'Administer settings.'
   route_name: system.admin_config
   weight: 0
+  transitive: true
 system.admin_config_media:
   route_name: system.admin_config_media
   parent: system.admin_config
   title: Media
   weight: -10
+  transitive: true
 system.file_system_settings:
   title: 'File system'
   description: 'Configure the location of uploaded files and how they are accessed.'
   parent: system.admin_config_media
   route_name: system.file_system_settings
+  transitive: true
 system.image_toolkit_settings:
   title: 'Image toolkit'
   parent: system.admin_config_media
@@ -53,6 +61,7 @@ system.admin_config_services:
   title: 'Web services'
   parent: system.admin_config
   route_name: system.admin_config_services
+  transitive: true
 system.rss_feeds_settings:
   title: 'RSS publishing'
   parent: system.admin_config_services
@@ -64,6 +73,7 @@ system.admin_config_development:
   title: Development
   description: 'Configure and use development tools.'
   weight: -10
+  transitive: true
 system.site_maintenance_mode:
   title: 'Maintenance mode'
   parent: system.admin_config_development
@@ -94,6 +104,7 @@ system.admin_config_regional:
   parent: system.admin_config
   description: 'Configure regional settings, localization, and translation.'
   weight: -5
+  transitive: true
 system.regional_settings:
   title: 'Regional settings'
   parent: system.admin_config_regional
@@ -112,12 +123,14 @@ system.admin_config_search:
   parent: system.admin_config
   description: 'Configure site search, metadata, and search engine optimization.'
   weight: -10
+  transitive: true
 system.admin_config_system:
   title: System
   route_name: system.admin_config_system
   parent: system.admin_config
   description: 'Configure basic site settings, actions, and cron.'
   weight: -20
+  transitive: true
 system.site_information_settings:
   title: 'Basic site settings'
   parent: system.admin_config_system
@@ -136,24 +149,28 @@ system.admin_config_ui:
   parent: system.admin_config
   description: 'Configure the administrative user interface.'
   weight: -15
+  transitive: true
 system.admin_config_workflow:
   title: Workflow
   route_name: system.admin_config_workflow
   parent: system.admin_config
   description: 'Manage the content workflow.'
   weight: 5
+  transitive: true
 system.admin_config_content:
   title: 'Content authoring'
   route_name: system.admin_config_content
   parent: system.admin_config
   description: 'Configure content formatting and authoring.'
   weight: -15
+  transitive: true
 system.admin_reports:
   title: Reports
   route_name: system.admin_reports
   parent: system.admin
   description: 'View reports, updates, and errors.'
   weight: 5
+  transitive: true
 system.status:
   title: 'Status report'
   parent: system.admin_reports
