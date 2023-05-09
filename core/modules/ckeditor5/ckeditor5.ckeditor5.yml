@@ -480,7 +480,7 @@ ckeditor5_table:
       - table.PlainTableOutput
     config:
       table:
-        contentToolbar: [tableColumn, tableRow, mergeTableCells, tableProperties]
+        contentToolbar: [tableColumn, tableRow, mergeTableCells, toggleTableCaption]
   drupal:
     label: Table
     library: core/ckeditor5.table
