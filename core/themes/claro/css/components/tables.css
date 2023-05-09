@@ -156,7 +156,6 @@ tr {
 tr,
 .draggable-table.tabledrag-disabled tr {
   color: var(--color-text);
-  background: var(--color-white);
 }
 
 thead tr {
@@ -166,7 +165,6 @@ thead tr {
 tr:hover,
 tr:focus {
   color: var(--color-text);
-  background: var(--color-bgblue-hover);
 }
 
 tr.color-warning:hover,
