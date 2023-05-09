@@ -4,6 +4,7 @@ namespace Drupal\Tests\system\Functional\Menu;
 
 use Drupal\Core\Url;
 use Drupal\Tests\BrowserTestBase;
+use Drupal\user\Entity\Role;
 
 /**
  * Tests the route access checks on menu links.
@@ -41,8 +42,10 @@ class MenuAccessTest extends BrowserTestBase {
     $this->drupalPlaceBlock('system_menu_block:admin', [
       'expand_all_items' => TRUE,
     ]);
-
-    $this->testUser = $this->drupalCreateUser(['access administration pages'], 'editor');
+    $this->testRole = Role::load($this->drupalCreateRole(['access administration pages']));
+    $this->testUser = $this->drupalCreateUser([], 'editor');
+    $this->testUser->addRole($this->testRole->id());
+    $this->testUser->save();
   }
 
   /**
@@ -93,14 +96,18 @@ class MenuAccessTest extends BrowserTestBase {
     $this->drupalLogin($this->rootUser);
     $this->assertSession()->linkExists('System');
     $this->assertSession()->linkExists('Basic site settings');
-    $this->drupalGet('/admin/config/system');
-    $this->assertSession()->pageTextContains('Change site name, email address, slogan, default front page, and error pages.');
     // Test as the test user with limited access.
     $this->drupalLogin($this->testUser);
     $this->assertSession()->linkNotExists('System');
     $this->assertSession()->linkNotExists('Basic site settings');
-    $this->drupalGet('/admin/config/system');
-    $this->assertSession()->pageTextContains('You are not authorized to access this page.');
+    $this->assertSession()->linkNotExists('Structure');
+    $this->assertSession()->linkNotExists('Block layout');
+    // Grant the test user access to administer blocks.
+    $this->testRole->grantPermission('administer blocks')->save();
+    // Reload the page and check that the newly accessible links are now visible.
+    $this->getSession()->reload();
+    $this->assertSession()->linkExists('Structure');
+    $this->assertSession()->linkExists('Block layout');
   }
 
 }
