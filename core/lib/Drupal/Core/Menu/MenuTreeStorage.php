@@ -10,6 +10,7 @@ use Drupal\Core\Cache\CacheTagsInvalidatorInterface;
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Database\DatabaseException;
+use Drupal\Core\Database\Query\ConditionInterface;
 use Drupal\Core\Database\Query\SelectInterface;
 
 /**
@@ -211,12 +212,29 @@ class MenuTreeStorage implements MenuTreeStorageInterface {
    *   failed.
    */
   protected function safeExecuteSelect(SelectInterface $query) {
+    return $this->safeExecute($query);
+  }
+
+  /**
+   * Executes a query while making sure the database table exists.
+   *
+   * @param \Drupal\Core\Database\Query\ConditionInterface $query
+   *   The query object to be executed.
+   *
+   * @return \Drupal\Core\Database\StatementInterface|null
+   *   A prepared statement, or NULL if the query is not valid.
+   *
+   * @throws \Exception
+   *   Thrown if the table could not be created or the database connection
+   *   failed.
+   */
+  protected function safeExecute(ConditionInterface $query) {
     try {
       return $query->execute();
     }
     catch (\Exception $e) {
       // If there was an exception, try to create the table.
-      if ($this->ensureTableExists()) {
+      if ($this->ensureTableExists() && $this->ensureTableFieldsExist()) {
         return $query->execute();
       }
       // Some other failure that we can not recover from.
@@ -299,8 +317,8 @@ class MenuTreeStorage implements MenuTreeStorageInterface {
       $affected_menus[$fields['menu_name']] = $fields['menu_name'];
       $query = $this->connection->update($this->table, $this->options);
       $query->condition('mlid', $link['mlid']);
-      $query->fields($fields)
-        ->execute();
+      $query->fields($fields);
+      $this->safeExecute($query);
       if ($original) {
         $this->updateParentalStatus($original);
       }
@@ -1139,6 +1157,34 @@ class MenuTreeStorage implements MenuTreeStorageInterface {
   protected function ensureTableExists() {
     try {
       $this->connection->schema()->createTable($this->table, static::schemaDefinition());
+    }
+    catch (DatabaseException $e) {
+      // If another process has already created the config table, attempting to
+      // recreate it will throw an exception. In this case just catch the
+      // exception and do nothing.
+    }
+    catch (\Exception $e) {
+      return FALSE;
+    }
+    return TRUE;
+  }
+
+  /**
+   * Checks if updated fields exist and creates them if not.
+   *
+   * @return bool
+   *   TRUE if the fields exist, FALSE otherwise.
+   */
+  protected function ensureTableFieldsExist(): bool {
+    try {
+      $this->connection->schema()->addField($this->table, 'transitive', [
+        'description' => 'A flag for whether the link should be rendered whether it has visible children or not. (0 = a link that should always be visible, 1 = a link that should only be visible when it has visible children)',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+        'size' => 'small',
+        'initial' => 0,
+      ]);
     }
     catch (DatabaseException $e) {
       // If another process has already created the config table, attempting to
