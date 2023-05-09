@@ -265,3 +265,11 @@ function system_post_update_enable_provider_database_driver() {
     \Drupal::service('module_installer')->install(array_keys($modules_to_install));
   }
 }
+
+/**
+ * Rebuild the menu tree to account for newly transitive menu items.
+ */
+function system_post_update_account_for_newly_transitive_menu_items(&$sandbox) {
+  $menu_link_manager = \Drupal::service('plugin.manager.menu.link');
+  $menu_link_manager->rebuild();
+}
