@@ -35,6 +35,28 @@ class CallbackTest extends MigrateProcessTestCase {
   }
 
   /**
+   * Test callback with valid "callable" and no arguments.
+   *
+   * @dataProvider providerCallbackNoArgs
+   */
+  public function testCallbackNoArgs($callable) {
+    $configuration = ['callable' => $callable, 'no_args' => TRUE];
+    $this->plugin = new Callback($configuration, 'map', []);
+    $value = $this->plugin->transform(NULL, $this->migrateExecutable, $this->row, 'destination_property');
+    $this->assertSame(M_PI, $value);
+  }
+
+  /**
+   * Data provider for ::testCallbackNoArgs().
+   */
+  public function providerCallbackNoArgs() {
+    return [
+      'function' => ['pi'],
+      'class method' => [[self::class, 'pi']],
+    ];
+  }
+
+  /**
    * Test callback with valid "callable" and multiple arguments.
    *
    * @dataProvider providerCallbackArray
@@ -130,6 +152,18 @@ class CallbackTest extends MigrateProcessTestCase {
    */
   public static function strToLower($string) {
     return mb_strtolower($string);
+  }
+
+  /**
+   * Returns an approximation of pi for testing purposes.
+   *
+   * @return float
+   *   The approximation of pi.
+   *
+   * @see \Drupal\Tests\migrate\Unit\process\CallbackTest::providerCallbackNoArgs()
+   */
+  public static function pi() {
+    return pi();
   }
 
 }
