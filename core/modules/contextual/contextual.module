@@ -211,7 +211,9 @@ function _contextual_id_to_links($id) {
     [$group, $route_parameters_raw, $metadata_raw] = explode(':', $context);
     parse_str($route_parameters_raw, $route_parameters);
     $metadata = [];
-    parse_str($metadata_raw, $metadata);
+    if (!empty($metadata_raw)) {
+      parse_str($metadata_raw, $metadata);
+    }
     $contextual_links[$group] = [
       'route_parameters' => $route_parameters,
       'metadata' => $metadata,
