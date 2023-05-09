@@ -340,7 +340,7 @@ class ConfigSync extends FormBase {
               'class' => ['use-ajax'],
               'data-dialog-type' => 'modal',
               'data-dialog-options' => json_encode([
-                'width' => 880,
+                'width' => 700,
               ]),
             ],
           ];
