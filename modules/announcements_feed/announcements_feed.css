@@ -1,0 +1,34 @@
+/**
+ * @file
+ * Styles for announcement feeds.
+ */
+
+#toolbar div.toolbar-menu ul li a#toolbar-link-admin-announcement:before {
+  content: "";
+  background: url(images/announcement-bell.svg) no-repeat;
+}
+
+.announcements {
+  padding-bottom: 1rem;
+}
+
+.announcements .featured-announcements-wrapper {
+  margin-bottom: 2.5rem;
+  border-bottom: 1px solid #ccc;
+}
+
+.announcements .featured-announcements-wrapper .announcements-featured,
+.announcements .announcements-standard {
+  margin-bottom: 1rem;
+}
+
+#new-feed-featured .announcement_title h4 {
+  display: inline-block;
+}
+
+#new-feed-featured .new-feed,
+#new-feed-standard .new-feed {
+  color: #f00;
+  font-size: 12px;
+  margin-left: 10px;
+}

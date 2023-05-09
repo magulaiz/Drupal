@@ -1,0 +1,37 @@
+<?php
+
+/**
+ * @file
+ * Module for testing the Announcements Feed functionality.
+ */
+
+/**
+ * Implements hook_menu().
+ */
+function announce_test_menu() {
+  $items['announce-feed-json/%'] = array(
+    'title' => 'Announce Feed test',
+    'page callback' => 'announce_test_set_feed_config',
+    'page arguments' => array(1),
+    // In unit tests, restrictions not required.
+    'access callback' => TRUE,
+  );
+  return $items;
+}
+
+/**
+ * Helper function to set announce feed url.
+ */
+function announce_test_set_feed_config($json_name) {
+  $file = __DIR__ . "/announce_feed/$json_name.json";
+  if (!is_file($file)) {
+    // Return an empty response.
+    drupal_not_found();
+  }
+  if (!_cache_get_object('cache_announcements_feed')) {
+    cache_clear_all('announcements_feed', 'cache_announcements_feed');
+  }
+
+  $contents = file_get_contents($file);
+  drupal_json_output(drupal_json_decode($contents));
+}

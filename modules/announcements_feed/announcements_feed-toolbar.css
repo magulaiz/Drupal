@@ -1,0 +1,34 @@
+/**
+* @file
+* Styles for announcement feeds toolbar.
+*/
+
+#toolbar div.toolbar-menu ul li a#toolbar-link-admin-announcement {
+  position: relative;
+  padding-left: 30px;
+}
+
+#toolbar div.toolbar-menu ul li a#toolbar-link-admin-announcement:before {
+  position: absolute;
+  left: 10px;
+  top: 0;
+  display: block;
+  width: 20px;
+  height: 19px;
+  content: "";
+  background: url(images/announcement-bell.svg) no-repeat;
+  background-size: 100%;
+}
+
+#toolbar div.toolbar-menu ul li a#toolbar-link-admin-announcement.announce-new:after {
+  position: absolute;
+  top: 0;
+  left: 19px;
+  display: block;
+  width: 4px;
+  height: 4px;
+  content: "";
+  border: 3px solid #d72222;
+  border-radius: 20px;
+  background: #fff;
+}
