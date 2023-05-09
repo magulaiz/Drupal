@@ -478,9 +478,11 @@ ckeditor5_table:
       - table.TableToolbar
       - table.TableCaption
       - table.PlainTableOutput
+      - table.TableProperties
+      - table.TableCellProperties
     config:
       table:
-        contentToolbar: [tableColumn, tableRow, mergeTableCells, toggleTableCaption]
+        contentToolbar: [tableColumn, tableRow, mergeTableCells, tableProperties, tableCellProperties, toggleTableCaption]
   drupal:
     label: Table
     library: core/ckeditor5.table
