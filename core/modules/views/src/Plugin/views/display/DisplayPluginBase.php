@@ -2142,6 +2142,7 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
       return $this->view->getUrl(NULL, $this->display['id']);
     }
 
+    $path = $this->globalTokenReplace($path);
     $parts = UrlHelper::parse($path);
     $options = $parts;
     $tokens = $this->getArgumentsTokens();
