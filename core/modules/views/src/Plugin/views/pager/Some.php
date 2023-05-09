@@ -69,4 +69,10 @@ class Some extends PagerPluginBase {
     $this->view->query->setOffset($this->options['offset']);
   }
 
+  /**
+   * Total_rows is counted.
+   */
+  public function postExecute(&$result) {
+    $this->total_items = count($result);
+  }
 }
