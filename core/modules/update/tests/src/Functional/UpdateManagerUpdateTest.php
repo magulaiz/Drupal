@@ -43,7 +43,7 @@ class UpdateManagerUpdateTest extends UpdateTestBase {
     // The installed state of the system is the same for all test cases. What
     // varies for each test scenario is which release history fixture we fetch,
     // which in turn changes the expected state of the UpdateManagerUpdateForm.
-    $installed_modules = [
+    $installed_extensions = [
       'aaa_update_test' => [
         'project' => 'aaa_update_test',
         'version' => '8.x-1.0',
@@ -55,7 +55,7 @@ class UpdateManagerUpdateTest extends UpdateTestBase {
         'hidden' => FALSE,
       ],
     ];
-    $this->mockInstalledExtensions($installed_modules, ['version' => '8.0.0']);
+    $this->mockInstalledExtensions($installed_extensions, ['version' => '8.0.0']);
   }
 
   /**
