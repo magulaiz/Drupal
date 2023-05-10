@@ -120,20 +120,18 @@
   left: 0;
   padding: 0;
 }
-.toolbar-tray-horizontal .menu-item:hover {
-  background: #fff;
-}
-.toolbar-tray-horizontal .toolbar-menu:not(:first-child) li.menu-item--expanded > a:focus {
-  background-image: url("data:image/svg+xml,%3csvg height='16' width='16' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='m8.053 8.355c.193-.195.193-.517 0-.711l-3.26-3.289c-.193-.195-.192-.514.002-.709l1.371-1.371c.194-.194.512-.193.706.001l5.335 5.369c.195.195.195.515 0 .708l-5.335 5.37c-.194.192-.512.193-.706.002l-1.371-1.371c-.194-.195-.195-.514-.002-.709z' fill='%230074bd'/%3e%3c/svg%3e");
-  background-repeat: no-repeat;
-  background-position: center right;
-}
 .toolbar-tray-horizontal .menu-item--expanded .menu {
   width: auto;
   height: auto;
   background: #fff;
 }
-.toolbar-tray-horizontal .menu-item--expanded {
+.toolbar-tray-horizontal .menu-item--expanded.menu-item--expanded > a {
+  padding-right: 2rem;
+  background-image: url("data:image/svg+xml,%3csvg width='14' height='9' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='M.238 1.938L1.647.517 7 5.819 12.354.517l1.408 1.421L7 8.636z' fill='%23565656'/%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: center right 10px;
+}
+.toolbar-tray-horizontal .menu-item:hover > a {
   background-color: #f5f5f2;
 }
 .toolbar-tray-horizontal ul li li.menu-item {
@@ -179,14 +177,14 @@
 .toolbar-tray-horizontal ul li.menu-item--expanded .menu-item > ul {
   display: none;
 }
-.toolbar-tray-horizontal ul li.menu-item--expanded ul li.menu-item--expanded {
-  background-image: url("data:image/svg+xml,%3csvg height='16' width='16' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='m8.053 8.355c.193-.195.193-.517 0-.711l-3.26-3.289c-.193-.195-.192-.514.002-.709l1.371-1.371c.194-.194.512-.193.706.001l5.335 5.369c.195.195.195.515 0 .708l-5.335 5.37c-.194.192-.512.193-.706.002l-1.371-1.371c-.194-.195-.195-.514-.002-.709z' fill='%230074bd'/%3e%3c/svg%3e");
+.toolbar-tray-horizontal ul li.menu-item--expanded ul li.menu-item--expanded > a {
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16'%3e%3cpath d='M5.21 1.314L3.79 2.723l5.302 5.353-5.303 5.354 1.422 1.408 6.697-6.762z' fill='%23565656'/%3e%3c/svg%3e");
   background-repeat: no-repeat;
-  background-position: center right;
+  background-position: center right 8px;
 }
 .toolbar-tray-horizontal ul li.menu-item--expanded .menu-item.hover-intent ul {
   display: block;
-  margin: -2.5rem 0 0 12.3125rem;
+  margin: -2.5rem 0 0 12.4375rem;
 }
 .toolbar-tray-horizontal li:hover ul li {
   float: none;

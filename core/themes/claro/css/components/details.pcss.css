@@ -271,7 +271,7 @@
 .claro-details[open] > .claro-details__summary--accordion::before,
 .claro-details[open] > .claro-details__summary--accordion-item::before,
 .claro-details[open] > .claro-details__summary--vertical-tabs-item::before {
-  background-image: url(../../images/icons/0036b1/chevron-right.svg);
+  background-image: url(../../images/icons/565656/chevron-right.svg);
 }
 
 .claro-details[open] > .claro-details__summary {
