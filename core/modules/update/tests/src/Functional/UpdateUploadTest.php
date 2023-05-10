@@ -129,7 +129,7 @@ class UpdateUploadTest extends UpdateUploaderTestBase {
         'project' => 'update_test_new_module',
       ],
     ];
-    $this->mockInstalledModules($installed_modules);
+    $this->mockInstalledExtensions($installed_modules);
     $xml_mapping = [
       'update_test_new_module' => '1_1',
     ];
@@ -163,7 +163,7 @@ class UpdateUploadTest extends UpdateUploaderTestBase {
    * Checks the messages on update manager pages when missing a security update.
    */
   public function testUpdateManagerCoreSecurityUpdateMessages() {
-    $this->mockInstalledModules([], ['version' => '8.0.0']);
+    $this->mockInstalledExtensions([], ['version' => '8.0.0']);
     $this->setAvailableReleasesMetadata(['drupal' => '0.2-sec']);
     $this->config('update.settings')
       ->set('fetch.url', Url::fromRoute('update_test.update_test')->setAbsolute()->toString())

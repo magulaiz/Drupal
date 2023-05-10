@@ -55,7 +55,7 @@ class UpdateManagerUpdateTest extends UpdateTestBase {
         'hidden' => FALSE,
       ],
     ];
-    $this->mockInstalledModules($installed_modules, ['version' => '8.0.0']);
+    $this->mockInstalledExtensions($installed_modules, ['version' => '8.0.0']);
   }
 
   /**
