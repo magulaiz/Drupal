@@ -80,8 +80,14 @@ class Module extends Updater implements UpdaterInterface {
    * Returns available database schema updates once a new version is installed.
    *
    * @return array
+   *
+   * @deprecated in drupal 10.1.0 and is removed from drupal:11.0.0 use
+   * hook_update_N() instead.
+   *
+   * @see https://www.drupal.org/node/3359445
    */
   public function getSchemaUpdates() {
+    @trigger_error('getSchemaUpdates() is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use hook_update_N(). See https://www.drupal.org/node/3359445', E_USER_DEPRECATED);
     require_once DRUPAL_ROOT . '/core/includes/install.inc';
     require_once DRUPAL_ROOT . '/core/includes/update.inc';
 
