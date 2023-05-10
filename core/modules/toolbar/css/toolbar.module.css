@@ -250,6 +250,26 @@ body .toolbar .toolbar-tray-vertical {
   display: block;
 }
 
+[data-drupal-selector="toolbar-extra-item"][data-drupal-selector="toolbar-extra-item"][data-drupal-selector="toolbar-extra-item"] {
+  display: none;
+}
+[data-show-toolbar-extra-item] [data-drupal-selector="toolbar-extra-item"][data-drupal-selector="toolbar-extra-item"][data-drupal-selector="toolbar-extra-item"] {
+  display: block;
+}
+
+[data-drupal-selector="toolbar-extra-item-toggle"][data-drupal-selector="toolbar-extra-item-toggle"][data-drupal-selector="toolbar-extra-item-toggle"] {
+  float: right;
+}
+
+@media only screen and (min-width: 36em) {
+  [data-drupal-selector="toolbar-extra-item"][data-drupal-selector="toolbar-extra-item"][data-drupal-selector="toolbar-extra-item"] {
+    display: block;
+  }
+  [data-drupal-selector="toolbar-extra-item-toggle"][data-drupal-selector="toolbar-extra-item-toggle"][data-drupal-selector="toolbar-extra-item-toggle"] {
+    display: none;
+  }
+}
+
 /* Anti flicker styling. */
 .toolbar-anti-flicker.toolbar-loading.toolbar-fixed body {
   padding-top: 2.4375rem;
