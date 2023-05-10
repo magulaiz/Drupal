@@ -14,9 +14,8 @@
     _allowInteraction(event) {
       if (event.target.classList === undefined) {
         return this._super(event);
-      } else {
-        return event.target.classList.contains('ck') || this._super(event);
       }
+        return event.target.classList.contains('ck') || this._super(event);
     },
   });
 })(jQuery);
