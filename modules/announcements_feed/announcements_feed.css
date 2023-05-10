@@ -12,11 +12,6 @@
   padding-bottom: 1rem;
 }
 
-.announcements .featured-announcements-wrapper {
-  margin-bottom: 2.5rem;
-  border-bottom: 1px solid #ccc;
-}
-
 .announcements .featured-announcements-wrapper .announcements-featured {
   position: relative;
   padding-left: 30px;
@@ -44,4 +39,10 @@
   padding-left: 30px;
   border-top: 1px solid #ccc;
   padding-top: 10px;
+}
+.announcements .announcement_title .announce_date {
+  color: #666;
+  margin: 5px 0;
+  line-height: 1.231em;
+  font-size: 0.923em;
 }
