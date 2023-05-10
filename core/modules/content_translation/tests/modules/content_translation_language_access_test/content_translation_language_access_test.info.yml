@@ -1,0 +1,5 @@
+name: 'Content translation language-specific access tests'
+type: module
+description: 'Provides language-specific access check for content translation tests.'
+package: Testing
+version: VERSION

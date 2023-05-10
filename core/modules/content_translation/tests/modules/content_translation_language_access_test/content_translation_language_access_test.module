@@ -1,0 +1,39 @@
+<?php
+
+/**
+ * @file
+ * Helper module that provides language-specific access checks for the tests.
+ */
+
+use Drupal\Core\Access\AccessResult;
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Session\AccountInterface;
+
+/**
+ * Implements hook_entity_access().
+ */
+function content_translation_language_access_test_entity_access(
+  EntityInterface $entity,
+  string $operation,
+  AccountInterface $account
+) {
+  $entity_type_id = $entity->getEntityTypeId();
+  $key = implode('.', [
+    'content_translation_language_access_test',
+    $entity_type_id,
+    $entity->language()->getId(),
+  ]);
+
+  $value = \Drupal::state()
+    ->get($key);
+  $access = $value[$operation] ?? NULL;
+  if ($access === NULL) {
+    return AccessResult::neutral()->addCacheableDependency($entity);
+  }
+  elseif (!empty($access)) {
+    return AccessResult::allowed()->addCacheableDependency($entity);
+  }
+  else {
+    return AccessResult::forbidden()->addCacheableDependency($entity);
+  }
+}
