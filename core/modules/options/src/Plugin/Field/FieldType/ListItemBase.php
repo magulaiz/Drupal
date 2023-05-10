@@ -162,12 +162,14 @@ abstract class ListItemBase extends FieldItemBase implements OptionsProviderInte
             '#maxlength' => 255,
             '#default_value' => $current_keys[$delta] ?? '',
             '#machine_name' => [
-              // @todo is there a way to avoid specifying this?
               'exists' => [static::class, 'exists'],
-              // @todo Is there a way to retrieve this to avoid hardcoding?
-              'source' => ['settings', 'allowed_values', 'table', $delta, 'item', 'label'],
             ],
             '#weight' => -20,
+            '#process' => array_merge(
+              [[static::class, 'processAllowedValuesKey']],
+              // Workaround for https://drupal.org/i/1300290#comment-12873635.
+              \Drupal::service('plugin.manager.element_info')->getInfoProperty('machine_name', '#process', []),
+            ),
           ],
         ];
       }
@@ -249,8 +251,24 @@ abstract class ListItemBase extends FieldItemBase implements OptionsProviderInte
     return $element;
   }
 
-  public static function exists() {
+  /**
+   * Checks for existing keys for allowed values.
+   */
+  public static function exists(): bool {
+    // Without access to the current form state, we cannot know if a given key
+    // is in use. Return FALSE in all cases.
     return FALSE;
+  }
+
+  /**
+   * Sets the machine name source to be the label.
+   */
+  public static function processAllowedValuesKey(array &$element): array {
+    $parents = $element['#parents'];
+    array_pop($parents);
+    $parents[] = 'label';
+    $element['#machine_name']['source'] = $parents;
+    return $element;
   }
 
   /**
