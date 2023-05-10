@@ -33,6 +33,7 @@ class Date extends SortPluginBase {
         'minute' => $this->t('Minute'),
         'hour'   => $this->t('Hour'),
         'day'    => $this->t('Day'),
+        'week'   => $this->t('Week'),
         'month'  => $this->t('Month'),
         'year'   => $this->t('Year'),
       ],
@@ -62,6 +63,10 @@ class Date extends SortPluginBase {
 
       case 'day':
         $formula = $this->getDateFormat('Ymd');
+        break;
+
+      case 'week':
+        $formula = $this->getDateFormat('W');
         break;
 
       case 'month':
