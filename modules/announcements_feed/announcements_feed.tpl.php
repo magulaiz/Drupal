@@ -25,15 +25,11 @@
   <?php if ($featured) : ?>
     <div class="featured-announcements-wrapper">
       <?php foreach ($featured as $key => $announcement) : ?>
-        <div class="announcements-featured" <?php if ($announcement['new']) : ?> id="new-feed-featured"
-       <?php endif; ?>>
+        <div class="announcements-featured">
           <div class="announcement_title">
             <h4>
               <?php print $announcement['title']; ?>
             </h4>
-            <?php if($announcement['new']) : ?><span class="new-feed"><?php print t('New'); ?></span>
-                <div class="unread_status"></div>
-            <?php endif ?>
           </div>
           <div class="announcement_teaser">
             <?php print $announcement['teaser']; ?>
@@ -49,13 +45,9 @@
   <?php endif ?>
 
     <?php foreach ($standard as $key => $announcement) : ?>
-      <div class="announcements-standard" <?php if ($announcement['new']): ?> id="new-feed-standard"
-     <?php endif?> >
+      <div class="announcements-standard">
         <div class="announcement_title">
             <a href="<?php print $announcement['link']; ?>"><?php print $announcement['title'] ?></a>
-          <?php if($announcement['new']) : ?><span class="new-feed"><?php print t('New'); ?></span>
-              <div class="unread_status"></div>
-          <?php endif ?>
             <div class="announce_date"><?php print $announcement['date_published']; ?></div>
         </div>
       </div>

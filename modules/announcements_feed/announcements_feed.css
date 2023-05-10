@@ -3,7 +3,7 @@
  * Styles for announcement feeds.
  */
 
-#toolbar div.toolbar-menu ul li a#toolbar-link-admin-announcement:before {
+ #toolbar div.toolbar-menu ul li a#toolbar-link-admin-announcement:before {
   content: "";
   background: url(images/announcement-bell.svg) no-repeat;
 }
@@ -17,18 +17,31 @@
   border-bottom: 1px solid #ccc;
 }
 
-.announcements .featured-announcements-wrapper .announcements-featured,
+.announcements .featured-announcements-wrapper .announcements-featured {
+  position: relative;
+  padding-left: 30px;
+  border-top: 1px solid #ccc;
+  margin-left: 0;
+  margin-bottom: 10px;
+  background: url(images/list-item.png) no-repeat 0 11px;
+}
+
 .announcements .announcements-standard {
-  margin-bottom: 1rem;
+  position: relative;
+  padding-left: 30px;
+  padding-top: 9px;
+  border-top: 1px solid #ccc;
+  margin-left: 0;
+  margin-bottom: 10px;
+  background: url(images/list-item.png) no-repeat 0 11px;
 }
 
 #new-feed-featured .announcement_title h4 {
   display: inline-block;
 }
 
-#new-feed-featured .new-feed,
-#new-feed-standard .new-feed {
-  color: #f00;
-  font-size: 12px;
-  margin-left: 10px;
+.announcements .announcements--view-all {
+  padding-left: 30px;
+  border-top: 1px solid #ccc;
+  padding-top: 10px;
 }
