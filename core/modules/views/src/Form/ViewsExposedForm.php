@@ -159,6 +159,9 @@ class ViewsExposedForm extends FormBase {
       $form['#attributes']['data-drupal-target-view'] = $view->storage->id() . '-' . $display['id'];
     }
     $form['#id'] = Html::getUniqueId(Html::cleanCssIdentifier('views_exposed_form-' . $view->storage->id() . '-' . $display['id']));
+    // Labels are built too late for inline form errors to work, resulting
+    // in duplicated messages.
+    $form['#disable_inline_form_errors'] = TRUE;
 
     /** @var \Drupal\views\Plugin\views\exposed_form\ExposedFormPluginInterface $exposed_form_plugin */
     $exposed_form_plugin = $view->display_handler->getPlugin('exposed_form');
