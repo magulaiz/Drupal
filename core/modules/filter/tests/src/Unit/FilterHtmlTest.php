@@ -22,7 +22,7 @@ class FilterHtmlTest extends UnitTestCase {
   protected function setUp(): void {
     parent::setUp();
     $configuration['settings'] = [
-      'allowed_html' => '<a href> <p> <em> <strong> <cite> <blockquote> <code class="pretty boring align-*"> <ul alpaca-*="wooly-* strong"> <ol llama-*> <li> <dl> <dt> <dd> <br> <h3 id>',
+      'allowed_html' => '<a href> <p> <em> <strong> <cite> <blockquote> <code class="pretty boring align-*"> <ul alpaca-*="wooly-* strong"> <ol llama-*> <li> <dl> <dt> <dd> <br> <h3 id> <h4 *>',
       'filter_html_help' => 1,
       'filter_html_nofollow' => 0,
     ];
@@ -76,6 +76,7 @@ class FilterHtmlTest extends UnitTestCase {
       ['<ol style="display: none;" llama-="noble majestic"></ol>', '<ol llama-="noble majestic"></ol>'],
       // Both wildcard names and values.
       ['<ul style="display: none;" alpaca-wool="wooly-warm strong majestic"></ul>', '<ul alpaca-wool="wooly-warm strong"></ul>'],
+      ['<h4 llama="foo" bar="llama"></h4>', '<h4 llama="foo" bar="llama">'],
     ];
   }
 
