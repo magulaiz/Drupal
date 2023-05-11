@@ -1,3 +1,4 @@
+/* cspell:words autocompletecreate */
 /**
  * @file
  * Autocomplete based on jQuery UI.
@@ -215,6 +216,14 @@
       const $autocomplete = $(
         once('autocomplete', 'input.form-autocomplete', context),
       );
+      // Add the 'ui-autocomplete-in-dialog' class to autocomplete
+      $autocomplete.on('autocompletecreate', function (event, ui) {
+        // Check if the autocomplete element is inside a dialog.
+        const $dialog = $(this).closest('#drupal-modal');
+        if ($dialog.length) {
+          $(this).autocomplete('widget').addClass('ui-autocomplete-in-dialog');
+        }
+      });
       if ($autocomplete.length) {
         // Allow options to be overridden per instance.
         const blacklist = $autocomplete.attr(

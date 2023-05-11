@@ -983,3 +983,7 @@
 .autocomplete .ui-state-hover a {
   color: #fff;
 }
+
+.ui-autocomplete-in-dialog {
+  z-index: 1500;
+}
