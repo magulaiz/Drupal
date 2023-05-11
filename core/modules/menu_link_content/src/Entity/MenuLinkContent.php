@@ -195,7 +195,7 @@ class MenuLinkContent extends EditorialContentEntityBase implements MenuLinkCont
   public function preSave(EntityStorageInterface $storage) {
     parent::preSave($storage);
 
-    if (parse_url($this->link->uri, PHP_URL_SCHEME) === 'internal') {
+    if (is_null($this->link->uri) && parse_url($this->link->uri, PHP_URL_SCHEME) === 'internal') {
       $this->setRequiresRediscovery(TRUE);
     }
     else {
