@@ -52,10 +52,12 @@
         </div>
       </div>
     <?php endforeach; ?>
-        <p class="announcements--view-all">
+    <?php if ($feed_link) : ?>
+      <div class="announcements--view-all">
         <a href="<?php print $feed_link; ?>">View all announcements</a>
-    </p>
+    </div>
+  <?php endif ?>
   </div>
 <?php else: ?>
-<div class="no_alerts"><p> <?php print t('No announcements available') ?></p></div>
+<div class="no_alerts"><span><?php print t('No announcements available') ?></span></div>
 <?php endif; ?>

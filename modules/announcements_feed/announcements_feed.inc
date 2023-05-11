@@ -25,35 +25,16 @@ function announcements_feed_get_announcements() {
   catch (Exception $e) {
     return theme('status_message', drupal_set_message($e->getMessage(), 'error'));
   }
-  $standard = array();
-  $featured = array();
   foreach ($announcements as $announcement) {
-    $element = [
-      'id' => $announcement['id'],
-      'title' => $announcement['title'],
-      'link' => $announcement['url'],
-      'date_modified' => format_date(strtotime($announcement['date_modified']), 'custom', 'm/d/Y - H:i:s'),
-      'date_published' => format_date(strtotime($announcement['date_published']), 'custom', 'm/d/Y - H:i:s'),
-      'teaser' => $announcement['content_html'],
-      'version' => $announcement['_drupalorg']['version'],
-      'featured' => (bool) $announcement['_drupalorg']['featured'],
-    ];
-    // Pushed data to with respect to its precedence.
-    if ($announcement['_drupalorg']['featured']) {
-      array_push($featured, $element);
-    }
-    else {
-      array_push($standard, $element);
-    }
+    $key = $announcement['featured'] ? '#featured' : '#standard';
+    $build[$key][] = $announcement;
   }
-  return theme('announcements_feed', array(
-    'featured' => $featured,
-    'standard' => $standard,
-    'feed_link' => variable_get('feed_link'),
-    'count' => count($featured) + count($standard),
-  )
-  );
-
+  $build += [
+    '#theme' => 'announcements_feed',
+    '#count' => count($announcements),
+    '#feed_link' => variable_get('feed_link'),
+  ];
+  return $build;
 }
 
 /**
@@ -77,7 +58,19 @@ function announcements_feed_get_all_announcements() {
     // Store the ids of announcements for the user to mark it as read items.
     announcements_feed_set_announcement_status(announcements_feed_fetch_ids());
   }
-  return $announcements;
+  foreach ($announcements as $announcement) {
+    $announcements_feed[] = [
+      'id' => $announcement['id'],
+      'title' => $announcement['title'],
+      'link' => $announcement['url'],
+      'date_modified' => format_date(strtotime($announcement['date_modified']), 'custom', 'm/d/Y - H:i:s'),
+      'date_published' => format_date(strtotime($announcement['date_published']), 'custom', 'm/d/Y - H:i:s'),
+      'teaser' => $announcement['content_html'],
+      'version' => $announcement['_drupalorg']['version'],
+      'featured' => (bool) $announcement['_drupalorg']['featured'],
+    ];
+  }
+  return $announcements_feed;
 }
 
 /**

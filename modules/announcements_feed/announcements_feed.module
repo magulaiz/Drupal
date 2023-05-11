@@ -17,7 +17,7 @@ function announcements_feed_help($path) {
       $output .= '<p>' . t('The Announcements Feed module notifies site users about the latest announcements from the Drupal community. For more information, see the <a href=":documentation">online documentation for the Announcements Feed module</a>.', [':documentation' => 'https://www.drupal.org/docs/core-modules-and-themes/core-modules/announcements-feed']) . '</p>';
       $output .= '<h3>' . t('Uses') . '</h3>';
       $output .= '<dl><dt>' . t('Accessing announcements') . '</dt>';
-      $output .= '<dd>' . t('Site users with the "View drupal.org announcements" permission may click on the "Community Announcements" item in the administration toolbar to see all announcements relevant to the Drupal version used.') . '</dd>';
+      $output .= '<dd>' . t('Site users with the "View drupal.org announcements" permission may click on the "Community Announcements" item in the administration toolbar to see all announcements relevant to the Drupal version used or access <a href="@announcement_feeds">Community Announcements</a>, to see all announcements relevant to the Drupal version of your site.', array('@announcement_feeds' => '/admin/announcements_feed')) . '</dd>';
       $output .= '</dl>';
       return $output;
   }
@@ -28,8 +28,9 @@ function announcements_feed_help($path) {
  * Implements hook_menu().
  */
 function announcements_feed_menu() {
-  $items['admin/announcement'] = array(
+  $items['admin/announcements_feed'] = array(
     'title' => 'Community Announcements',
+    'description' => 'Announcements and updates by drupal.org community.',
     'page callback' => 'announcements_feed_get_announcements',
     'access arguments' => array('access announcements'),
     'position' => 'left',
@@ -51,8 +52,7 @@ function announcements_feed_menu() {
 function announcements_feed_permission() {
   return array(
     'access announcements' => array(
-      'title' => t('View drupal.org announcements'),
-      'description' => t('View official news and announcements related to Drupal'),
+      'title' => t('View official announcements related to Drupal'),
     ),
   );
 }
@@ -91,22 +91,16 @@ function announcements_feed_page_alter(&$page) {
 function announcements_feed_toolbar_pre_render_alter($toolbar) {
   $path = drupal_get_path('module', 'announcements_feed');
   $toolbar['#attached']['css'][] = $path . '/announcements_feed-toolbar.css';
-  $toolbar['#attached']['js'][] = $path . '/announcements_feed-toolbar.js';
   module_load_include('inc', 'announcements_feed');
   foreach ($toolbar['toolbar_menu']['#links'] as &$link) {
-    if ($link['href'] === 'admin/announcement') {
+    if ($link['href'] === 'admin/announcements_feed') {
       try {
         $new_announcements = announcements_feed_get_new_announcements();
       }
       catch (Exception $e) {
         drupal_set_message($e->getMessage(), 'error');
       }
-      if (!empty($new_announcements)) {
-        $link['attributes']['class'][] = 'announce-new';
-      }
-      else {
-        $link['attributes']['class'][] = 'announce-default';
-      }
+      $link['attributes']['class'][] = 'announce-default';
     }
   }
   return $toolbar;

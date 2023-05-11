@@ -2,12 +2,7 @@
  * @file
  * Styles for announcement feeds.
  */
-
- #toolbar div.toolbar-menu ul li a#toolbar-link-admin-announcement:before {
-  content: "";
-  background: url(images/announcement-bell.svg) no-repeat;
-}
-
+ 
 .announcements {
   padding-bottom: 1rem;
 }
