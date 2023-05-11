@@ -148,6 +148,7 @@ class ThemeManager implements ThemeManagerInterface {
           break;
         }
       }
+      assert(isset($candidate) && is_string($candidate));
       $hook = $candidate;
     }
     // Save the original theme hook, so it can be supplied to theme variable

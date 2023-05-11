@@ -139,6 +139,7 @@ abstract class AccessResult implements AccessResultInterface, RefinableCacheable
    */
   public static function allowedIfHasPermissions(AccountInterface $account, array $permissions, $conjunction = 'AND') {
     $access = FALSE;
+    $permission = NULL;
 
     if ($conjunction == 'AND' && !empty($permissions)) {
       $access = TRUE;

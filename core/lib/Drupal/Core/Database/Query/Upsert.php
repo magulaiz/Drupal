@@ -122,7 +122,7 @@ abstract class Upsert extends Query implements \Countable {
     // Re-initialize the values array so that we can re-use this query.
     $this->insertValues = [];
 
-    return $affected_rows;
+    return $affected_rows ?? 0;
   }
 
 }

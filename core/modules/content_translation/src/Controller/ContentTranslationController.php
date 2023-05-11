@@ -179,6 +179,8 @@ class ContentTranslationController extends ControllerBase {
         ];
 
         $links = &$operations['data']['#links'];
+        $source_name = $this->t('n/a');
+        $row_title = $this->t('n/a');
         if (array_key_exists($langcode, $translations)) {
           // Existing translation in the translation set: display status.
           $translation = $entity->getTranslation($langcode);
@@ -192,8 +194,8 @@ class ContentTranslationController extends ControllerBase {
             $row_title = Link::fromTextAndUrl($label, $link['url'])->toString();
           }
 
-          if (empty($link['url'])) {
-            $row_title = $is_original ? $label : $this->t('n/a');
+          if (empty($link['url']) && $is_original) {
+            $row_title = $label;
           }
 
           // If the user is allowed to edit the entity we point the edit link to
@@ -228,7 +230,6 @@ class ContentTranslationController extends ControllerBase {
 
           if ($is_original) {
             $language_name = $this->t('<strong>@language_name (Original language)</strong>', ['@language_name' => $language_name]);
-            $source_name = $this->t('n/a');
           }
           else {
             /** @var \Drupal\Core\Access\AccessResultInterface $delete_route_access */
@@ -236,7 +237,9 @@ class ContentTranslationController extends ControllerBase {
             $cacheability->addCacheableDependency($delete_route_access);
 
             if ($delete_route_access->isAllowed()) {
-              $source_name = isset($languages[$source]) ? $languages[$source]->getName() : $this->t('n/a');
+              if (isset($languages[$source])) {
+                $source_name = $languages[$source]->getName();
+              }
               $delete_access = $entity->access('delete', NULL, TRUE);
               $translation_access = $handler->getTranslationAccess($entity, 'delete');
               $cacheability
@@ -264,7 +267,6 @@ class ContentTranslationController extends ControllerBase {
         }
         else {
           // No such translation in the set yet: help user to create it.
-          $row_title = $source_name = $this->t('n/a');
           $source = $entity->language()->getId();
 
           $create_translation_access = $handler->getTranslationAccess($entity, 'create');

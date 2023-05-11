@@ -1791,6 +1791,8 @@ function template_preprocess_pager(&$variables) {
   }
   // End of generation loop preparation.
 
+  $items = [];
+
   // Create the "first" and "previous" links if we are not on the first page.
   if ($current_page > 0) {
     $items['first'] = [];

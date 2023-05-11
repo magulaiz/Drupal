@@ -299,6 +299,7 @@ function file_validate_image_resolution(FileInterface $file, $maximum_dimensions
                 '%new_height' => $image->getHeight(),
               ]);
           }
+          assert(isset($message));
           \Drupal::messenger()->addStatus($message);
         }
         else {

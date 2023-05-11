@@ -281,6 +281,9 @@ class Tables implements TablesInterface {
           $relationship_specifier = $specifiers[$key + 1];
           $next_index_prefix = $relationship_specifier;
         }
+        else {
+          throw new QueryException("Cannot determine relationship identifier and index prefix");
+        }
         $entity_type_id = NULL;
         // Relationship specifier can also contain the entity type ID, i.e.
         // entity:node, entity:user or entity:taxonomy.

@@ -1090,7 +1090,7 @@ class ViewEditForm extends ViewFormBase {
     // Filters can now be grouped so we do a little bit extra:
     $groups = [];
     $grouping = FALSE;
-    if ($type == 'filter') {
+    if ($type === 'filter') {
       $group_info = $executable->display_handler->getOption('filter_groups');
       // If there is only one group but it is using the "OR" filter, we still
       // treat it as a group for display purposes, since we want to display the
@@ -1176,7 +1176,7 @@ class ViewEditForm extends ViewFormBase {
     }
 
     // If using grouping, re-order fields so that they show up properly in the list.
-    if ($type == 'filter' && $grouping) {
+    if ($type === 'filter' && $grouping) {
       $store = $build['fields'];
       $build['fields'] = [];
       foreach ($groups as $gid => $contents) {

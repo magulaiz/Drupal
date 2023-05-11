@@ -69,11 +69,11 @@ final class ExtensionVersion {
     $version_parts = explode('.', $version_string);
     $major_version = $version_parts[0];
     $version_parts_count = count($version_parts);
-    if ($version_parts_count === 2) {
-      $minor_version = NULL;
-    }
-    elseif ($version_parts_count === 3) {
+    if ($version_parts_count === 3) {
       $minor_version = $version_parts[1];
+    }
+    else {
+      $minor_version = NULL;
     }
     $last_part_split = explode('-', $version_parts[count($version_parts) - 1]);
     $version_extra = count($last_part_split) === 1 ? NULL : $last_part_split[1];

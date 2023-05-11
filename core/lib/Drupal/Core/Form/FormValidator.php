@@ -250,6 +250,7 @@ class FormValidator implements FormValidatorInterface {
       $form_state->setLimitValidationErrors($this->determineLimitValidationErrors($form_state));
 
       // Make sure a value is passed when the field is required.
+      $is_empty_multiple = $is_empty_string = $is_empty_null = FALSE;
       if (isset($elements['#needs_validation']) && $elements['#required']) {
         // A simple call to empty() will not cut it here as some fields, like
         // checkboxes, can return a valid value of '0'. Instead, check the

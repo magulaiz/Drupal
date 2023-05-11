@@ -90,16 +90,14 @@ function file_requirements($phase) {
       $fastcgi = FALSE;
     }
 
+    $value = t('Not enabled');
     if (!$is_apache && !$is_nginx) {
-      $value = t('Not enabled');
       $description = t('Your server is not capable of displaying file upload progress. File upload progress requires an Apache server running PHP with mod_php or Nginx with PHP-FPM.');
     }
     elseif ($fastcgi) {
-      $value = t('Not enabled');
       $description = t('Your server is not capable of displaying file upload progress. File upload progress requires PHP be run with mod_php or PHP-FPM and not as FastCGI.');
     }
     elseif (!$implementation) {
-      $value = t('Not enabled');
       $description = t('Your server is capable of displaying file upload progress, but does not have the required libraries. It is recommended to install the <a href="http://pecl.php.net/package/uploadprogress">PECL uploadprogress library</a>.');
     }
     elseif ($implementation == 'uploadprogress') {

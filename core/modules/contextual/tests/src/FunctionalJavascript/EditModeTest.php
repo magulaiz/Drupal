@@ -93,6 +93,7 @@ class EditModeTest extends WebDriverTestBase {
       // Disable edit mode.
       $this->pressToolbarEditButton();
       $this->assertAnnounceLeaveEditMode();
+      assert(isset($unrestricted_tab_count));
       $this->assertSame($unrestricted_tab_count, $this->getTabbableElementsCount());
       // Enable edit mode again.
       $this->pressToolbarEditButton();

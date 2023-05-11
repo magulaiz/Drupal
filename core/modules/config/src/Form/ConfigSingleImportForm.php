@@ -320,6 +320,7 @@ class ConfigSingleImportForm extends ConfirmFormBase {
       $data = Yaml::decode($form_state->getValue('import'));
     }
     catch (InvalidDataTypeException $e) {
+      $data = NULL;
       $form_state->setErrorByName('import', $this->t('The import failed with the following message: %message', ['%message' => $e->getMessage()]));
     }
 

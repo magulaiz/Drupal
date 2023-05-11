@@ -115,6 +115,7 @@ final class SettingsEditor {
 
             case 'right_bracket':
               if ($value === ']') {
+                assert(isset($index));
                 if (isset($current[$index])) {
                   // If the new settings has this index, descend into it.
                   $parent = &$current;
@@ -134,6 +135,7 @@ final class SettingsEditor {
 
             case 'candidate_right':
               if (self::isSimple($type, $value)) {
+                assert(isset($current, $index));
                 $value = self::exportSingleSettingToPhp($current);
                 // Unsetting $current would not affect $settings at all.
                 unset($parent[$index]);

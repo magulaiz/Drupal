@@ -198,6 +198,7 @@ class DefaultSelection extends SelectionPluginBase implements ContainerFactoryPl
       ];
     }
     else {
+      $selected_bundles = NULL;
       $form['target_bundles'] = [
         '#type' => 'value',
         '#value' => [],
