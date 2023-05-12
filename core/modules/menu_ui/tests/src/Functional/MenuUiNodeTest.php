@@ -78,6 +78,9 @@ class MenuUiNodeTest extends BrowserTestBase {
     $this->drupalGet('admin/structure/types/manage/page');
     $this->assertSession()->responseHeaderContains('X-Drupal-Cache-Contexts', 'user.roles:authenticated');
 
+    // Assert the description of "Available menus" checkboxes field.
+    $this->assertSession()->pageTextContains('Content of this type can be placed in the selected menus.');
+
     // Verify that the menu link title has the correct maxlength.
     $title_max_length = \Drupal::service('entity_field.manager')->getBaseFieldDefinitions('menu_link_content')['title']->getSetting('max_length');
     $this->drupalGet('node/add/page');
@@ -157,9 +160,9 @@ class MenuUiNodeTest extends BrowserTestBase {
     ];
     $this->drupalGet('node/' . $node->id() . '/edit');
     $this->submitForm($edit, 'Save');
-    // Assert that there is no link for the node.
+    // Assert that there is a link for the node.
     $this->drupalGet('test-page');
-    $this->assertSession()->linkNotExists($node_title);
+    $this->assertSession()->linkExists($node_title);
 
     // Make sure the menu links only appear when the node is published.
     // These buttons just appear for 'administer nodes' users.
