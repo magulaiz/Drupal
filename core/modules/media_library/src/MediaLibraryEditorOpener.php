@@ -7,7 +7,7 @@ use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\editor\Ajax\EditorDialogSave;
-use \Drupal\file\Entity\File;
+use Drupal\file\Entity\File;
 
 /**
  * The media library opener for text editors.
