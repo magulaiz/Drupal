@@ -63,12 +63,19 @@ class MediaLibraryEditorOpener implements MediaLibraryOpenerInterface {
   public function getSelectionResponse(MediaLibraryState $state, array $selected_ids) {
     $selected_media = $this->mediaStorage->load(reset($selected_ids));
 
+    $fid = $selected_media->getSource()->getSourceFieldValue($selected_media);
+    $file = \Drupal\file\Entity\File::load($fid);
+    $url = $file->createFileUrl();
+
     $response = new AjaxResponse();
     $values = [
       'attributes' => [
         'data-entity-type' => 'media',
         'data-entity-uuid' => $selected_media->uuid(),
         'data-align' => 'center',
+        'src' => $url,
+        'alt' => $selected_media->field_media_image->alt,
+        'src-type' => $state->getSelectedTypeId(),
       ],
     ];
     $response->addCommand(new EditorDialogSave($values));

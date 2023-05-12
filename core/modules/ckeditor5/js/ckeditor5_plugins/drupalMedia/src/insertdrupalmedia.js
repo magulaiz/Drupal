@@ -86,9 +86,25 @@ export default class InsertDrupalMediaCommand extends Command {
     }
 
     this.editor.model.change((writer) => {
-      this.editor.model.insertContent(
-        createDrupalMedia(writer, modelAttributes),
-      );
+      if (modelAttributes.drupalMediaSrcType === 'image') {
+        //
+        // For image type, simply add image, not drupal-media tag
+        //
+        this.editor.execute('insertImage', {
+          source: [
+            {
+              src: modelAttributes.drupalMediaSrc,
+              alt: modelAttributes.drupalMediaAlt,
+            },
+          ],
+        });
+        // Focus back to editor content
+        this.editor.editing.view.focus();
+      } else {
+        this.editor.model.insertContent(
+          createDrupalMedia(writer, modelAttributes),
+        );
+      }
     });
   }
 
