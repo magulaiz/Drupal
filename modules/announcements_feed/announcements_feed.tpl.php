@@ -13,7 +13,7 @@
  * - $announcement['title']: Title of the announcement.
  * - $announcement['teaser']: Short description of the announcement
  * - $announcement['link']: Link given by the announcement.
- * - $announcement['timestamp']: Time of the announcement.
+ * - $announcement['date_published']: Time of the announcement.
  *
  * @see announcements_feed_theme()
  * @ingroup themeable
@@ -48,7 +48,7 @@
       <div class="announcements-standard">
         <div class="announcement_title">
             <a href="<?php print $announcement['link']; ?>"><?php print $announcement['title'] ?></a>
-            <div class="announce_date"><?php print $announcement['date_published']; ?></div>
+            <div class="announce_date"><?php print format_date(strtotime($announcement['date_published']), 'short'); ?></div>
         </div>
       </div>
     <?php endforeach; ?>
@@ -56,7 +56,7 @@
       <div class="announcements--view-all">
         <a href="<?php print $feed_link; ?>">View all announcements</a>
     </div>
-  <?php endif ?>
+    <?php endif ?>
   </div>
 <?php else: ?>
 <div class="no_alerts"><span><?php print t('No announcements available') ?></span></div>

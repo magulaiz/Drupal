@@ -19,7 +19,8 @@ function announcements_feed_schema() {
  */
 function announcements_feed_install() {
   // Creating the default values.
-  variable_set('max_age', 1400);
+  variable_set('max_age', 86400);
+  variable_set('announce_limit', 10);
   variable_set('feed_url', 'https://www.drupal.org/announcements.json');
   variable_set('feed_link', 'https://www.drupal.org/about/announcements');
 }
@@ -29,6 +30,7 @@ function announcements_feed_install() {
  */
 function announcements_feed_uninstall() {
   // Deleting the announcements_feed variable.
+  variable_del('announce_limit');
   variable_del('max_age');
   variable_del('feed_url');
   variable_del('feed_link');

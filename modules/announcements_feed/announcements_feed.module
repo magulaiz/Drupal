@@ -94,12 +94,6 @@ function announcements_feed_toolbar_pre_render_alter($toolbar) {
   module_load_include('inc', 'announcements_feed');
   foreach ($toolbar['toolbar_menu']['#links'] as &$link) {
     if ($link['href'] === 'admin/announcements_feed') {
-      try {
-        $new_announcements = announcements_feed_get_new_announcements();
-      }
-      catch (Exception $e) {
-        drupal_set_message($e->getMessage(), 'error');
-      }
       $link['attributes']['class'][] = 'announce-default';
     }
   }

@@ -29,6 +29,7 @@ function announcements_feed_get_announcements() {
     $key = $announcement['featured'] ? '#featured' : '#standard';
     $build[$key][] = $announcement;
   }
+  $build = $build ?? array();
   $build += [
     '#theme' => 'announcements_feed',
     '#count' => count($announcements),
@@ -48,29 +49,19 @@ function announcements_feed_get_announcements() {
  */
 function announcements_feed_get_all_announcements() {
   $announcements = announcements_feed_fetch();
-  $new_announcements = announcements_feed_get_new_announcements();
-  foreach ($announcements as $key => $announcement) {
-    // Add an attribute 'new' to the announcements to identify new items.
-    $announcements[$key]['new'] = in_array($announcement['id'],
-      $new_announcements) ? $announcement['id'] : '';
-  }
-  if (!empty($new_announcements)) {
-    // Store the ids of announcements for the user to mark it as read items.
-    announcements_feed_set_announcement_status(announcements_feed_fetch_ids());
-  }
   foreach ($announcements as $announcement) {
     $announcements_feed[] = [
       'id' => $announcement['id'],
       'title' => $announcement['title'],
       'link' => $announcement['url'],
-      'date_modified' => format_date(strtotime($announcement['date_modified']), 'custom', 'm/d/Y - H:i:s'),
-      'date_published' => format_date(strtotime($announcement['date_published']), 'custom', 'm/d/Y - H:i:s'),
+      'date_modified' => $announcement['date_modified'],
+      'date_published' => $announcement['date_published'],
       'teaser' => $announcement['content_html'],
       'version' => $announcement['_drupalorg']['version'],
       'featured' => (bool) $announcement['_drupalorg']['featured'],
     ];
   }
-  return $announcements_feed;
+  return $announcements_feed ?? array();
 }
 
 /**
@@ -103,9 +94,11 @@ function announcements_feed_fetch() {
         watchdog('error', 'JSON data is not parsable please check the api.', WATCHDOG_ERROR);
         throw new Exception('Announcement Feed unable to parse the JSON data. Check logs for more.');
       }
-      $announcements = $feeds['items'] ?? [];
+      $announcements = $feeds['items'] ?? array();
       $announcements = array_filter($announcements, function (array $announcement) {
-        return announcements_feed_validate_url($announcement['url'] ?? '') && announcements_feed_is_relevant_item($announcement['_drupalorg']['version'] ?? '');
+        $announcement_url = $announcement['url'] ?? '';
+        $announcement_version = $announcement['_drupalorg']['version'] ?? '';
+        return announcements_feed_validate_url($announcement_url) && announcements_feed_is_relevant_item($announcement_version);
       });
       cache_set('announcements_feed', $announcements, 'cache_announcements_feed', REQUEST_TIME + variable_get('max_age'));
     }
@@ -114,31 +107,26 @@ function announcements_feed_fetch() {
       throw new Exception('Announcements Feed Url fetch failed with an error: @code @error. Check logs for more',
         array('@code' => $response->code, '@error' => $response->error));
     }
-
   }
   else {
     $announcements = $announcements->data;
-    $announcements = array_filter($announcements, 'announcements_feed_is_relevant_item');
 
   }
+  // The drupal.org endpoint is sorted by created date in descending order.
+  // We will limit the announcements based on the configuration limit.
+  $announce_limit = !empty(variable_get('announce_limit')) ? variable_get('announce_limit') : 10;
+  $announcements = array_slice($announcements, 0, $announce_limit);
+  // For the remaining announcements, put all the featured announcements
+  // before the rest.
+  uasort($announcements, function ($a, $b) {
+    $a_value = (int) $a['_drupalorg']['featured'];
+    $b_value = (int) $b['_drupalorg']['featured'];
+    if ($a_value == $b_value) {
+      return 0;
+    }
+    return ($a_value < $b_value) ? -1 : 1;
+  });
   return $announcements;
-}
-
-/**
- * Fetch new announcements for the logged-in user.
- *
- * Return an array of ids of new announcements for the user.
- *
- * @return array
- *   Ids of new announcements for the user, empty array if there are no unread
- *   announcements for the user.
- */
-function announcements_feed_get_new_announcements() {
-  // Get the announcements viewed by the user.
-  $user_announcements = announcements_feed_get_announcement_status();
-  // Fetch the announcements from the feed.
-  $announcements = announcements_feed_fetch_ids();
-  return array_diff($announcements, $user_announcements);
 }
 
 /**
@@ -151,58 +139,10 @@ function announcements_feed_get_new_announcements() {
  *   Return True if $announcement['version'] matches Drupal version.
  */
 function announcements_feed_is_relevant_item(string $version): bool {
-  /*
-  if (Semver::satisfies(VERSION, $version)) {
-
-  }
-  if ($announcement['version'] >= '^7' || VERSION == $announcement['version']) {
-  return TRUE;
-  }
-   */
   if (preg_match('/(>|>=)7/', $version)) {
     return TRUE;
   }
   return FALSE;
-}
-
-/**
- * Get all announcements read by the current user.
- *
- * @return array
- *   All announcement ids stored against current user's id, empty if no
- *   announcement data stored for the user.
- */
-function announcements_feed_get_announcement_status() {
-  global $user;
-  if ($user->data && array_key_exists('announcements_feed', $user->data)) {
-    return $user->data['announcements_feed'];
-  }
-  else {
-    return [];
-  }
-}
-
-/**
- * Set the read status of announcements for the current user.
- *
- * @parm array $announcements
- *  IDs of announcements to store against the current user.
- */
-function announcements_feed_set_announcement_status(array $announcements) {
-  global $user;
-  $user->data['announcements_feed'] = $announcements;
-  user_save($user);
-}
-
-/**
- * Fetch ids of announcements.
- *
- * @return array
- *   An array with ids of all announcements in the feed.
- */
-function announcements_feed_fetch_ids() {
-  $announcements = announcements_feed_fetch();
-  return array_column($announcements, 'id');
 }
 
 /**
