@@ -116,14 +116,6 @@ drupal.nav-tabs:
     - core/once
     - core/drupal.debounce
 
-drupal.responsive-detail:
-  version: VERSION
-  js:
-    js/responsive-details.js: {}
-  dependencies:
-    - core/jquery
-    - core/once
-
 claro.jquery.ui:
   version: VERSION
   css:
@@ -163,7 +155,6 @@ system.admin:
       css/components/system-admin--links.css: { weight: -10 }
       css/components/system-admin--modules.css: { weight: -10 }
       css/components/system-admin--panel.css: { weight: -10 }
-      css/components/system-admin--status-report.css: { weight: -10 }
     layout:
       css/layout/system-admin--layout.css: { weight: -10 }
   dependencies:

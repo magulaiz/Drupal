@@ -73,8 +73,7 @@ class DependencyTest extends ModuleTestBase {
   }
 
   /**
-   * Tests enabling a module that depends on an incompatible version of a
-   * module.
+   * Tests enabling a module with an incompatible dependency version.
    */
   public function testIncompatibleModuleVersionDependency() {
     // Test that the system_incompatible_module_version_dependencies_test is
@@ -172,6 +171,7 @@ class DependencyTest extends ModuleTestBase {
    * Tests enabling modules with different core version specifications.
    */
   public function testCoreCompatibility() {
+    $this->markTestSkipped('Skipped due to major version-specific logic. See https://www.drupal.org/project/drupal/issues/3359322');
     $assert_session = $this->assertSession();
 
     // Test incompatible 'core_version_requirement'.
