@@ -35,7 +35,7 @@ trait UpdateTestTrait {
    * @see update_test_system_info_alter()
    * @see \Drupal\Core\Extension\ExtensionList::doList()
    */
-  public function mockInstalledExtensions(array $installed_extensions, array $default_info = []): void {
+  protected function mockInstalledExtensions(array $installed_extensions, array $default_info = []): void {
     if (!empty($default_info)) {
       $installed_extensions = array_merge(['#all' => $default_info], $installed_extensions);
     }
@@ -56,7 +56,7 @@ trait UpdateTestTrait {
    *
    * @see \Drupal\update_test\Controller\UpdateTestController::updateTest
    */
-  public function mockReleaseHistory(array $release_history): void {
+  protected function mockReleaseHistory(array $release_history): void {
     $this->config('update_test.settings')->set('xml_map', $release_history)->save();
   }
 
