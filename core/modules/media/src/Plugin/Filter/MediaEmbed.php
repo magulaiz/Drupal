@@ -175,7 +175,7 @@ class MediaEmbed extends FilterBase implements ContainerFactoryPluginInterface, 
     $form['media_image_use_img'] = [
       '#title' => $this->t('Use <img> tag for Media Image type'),
       '#type' => 'checkbox',
-      '#default_value' => $this->settings['media_image_use_img'],
+      '#default_value' => isset($this->settings['media_image_use_img']) ? $this->settings['media_image_use_img'] : 0,
       '#description' => $this->t('Place Media Image as a normal image element using <img> tag, rather than using <drupal-media>.'),
     ];
 
