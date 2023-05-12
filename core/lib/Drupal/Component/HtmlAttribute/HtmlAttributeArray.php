@@ -66,6 +66,7 @@ class HtmlAttributeArray extends HtmlAttributeValueBase implements \ArrayAccess,
    * Returns the value at the specified index.
    *
    * @param string|int $key
+   *   The offset to retrieve.
    *
    * @return scalar
    */
@@ -77,7 +78,9 @@ class HtmlAttributeArray extends HtmlAttributeValueBase implements \ArrayAccess,
    * Sets the value at the specified index.
    *
    * @param string|int|null $key
+   *   The offset to assign the value to.
    * @param scalar $value
+   *   The value to set.
    */
   public function offsetSet(mixed $key, mixed $value): void {
     if (isset($key)) {
@@ -92,6 +95,7 @@ class HtmlAttributeArray extends HtmlAttributeValueBase implements \ArrayAccess,
    * Unsets the value at the specified index.
    *
    * @param string|int $key
+   *   The offset to unset.
    */
   public function offsetUnset(mixed $key): void {
     unset($this->arrayValue[$key]);
@@ -101,6 +105,7 @@ class HtmlAttributeArray extends HtmlAttributeValueBase implements \ArrayAccess,
    * Returns whether the requested index exists.
    *
    * @param string|int $key
+   *   An offset to check for.
    */
   public function offsetExists(mixed $key): bool {
     return isset($this->arrayValue[$key]);

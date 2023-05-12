@@ -96,8 +96,9 @@ class HtmlAttributeCollection implements \ArrayAccess, \IteratorAggregate, \Stri
    * Returns the value at the specified index.
    *
    * @param string $key
+   *   The offset to retrieve.
    *
-   * @return HtmlAttributeValueBase|null
+   * @return \Drupal\Component\HtmlAttribute\HtmlAttributeValueBase|null
    */
   public function offsetGet(mixed $key): ?HtmlAttributeValueBase {
     return $this->storage[$key] ?? NULL;
@@ -107,7 +108,9 @@ class HtmlAttributeCollection implements \ArrayAccess, \IteratorAggregate, \Stri
    * Sets the value at the specified index.
    *
    * @param string $key
-   * @param MarkupInterface|HtmlAttributeValueBase|scalar|array<scalar>|null $value
+   *   The offset to assign the value to.
+   * @param \Drupal\Component\Render\MarkupInterface|\Drupal\Component\HtmlAttribute\HtmlAttributeValueBase|scalar|array<scalar>|null $value
+   *   The value to set.
    */
   public function offsetSet(mixed $key, mixed $value): void {
     $this->storage[$key] = $this->createAttributeValue($key, $value);
@@ -118,10 +121,10 @@ class HtmlAttributeCollection implements \ArrayAccess, \IteratorAggregate, \Stri
    *
    * @param string $name
    *   The attribute name.
-   * @param MarkupInterface|HtmlAttributeValueBase|scalar|array<scalar>|null $value
+   * @param \Drupal\Component\Render\MarkupInterface|\Drupal\Component\HtmlAttribute\HtmlAttributeValueBase|scalar|array<scalar>|null $value
    *   The attribute value.
    *
-   * @return HtmlAttributeValueBase
+   * @return \Drupal\Component\HtmlAttribute\HtmlAttributeValueBase
    *   An HtmlAttributeValueBase representation of the attribute's value.
    */
   protected function createAttributeValue(string $name, MarkupInterface|HtmlAttributeValueBase|string|int|bool|float|array|NULL $value): HtmlAttributeValueBase {
@@ -167,6 +170,7 @@ class HtmlAttributeCollection implements \ArrayAccess, \IteratorAggregate, \Stri
    * Unsets the value at the specified index.
    *
    * @param string $key
+   *   The offset to unset.
    */
   public function offsetUnset(mixed $key): void {
     unset($this->storage[$key]);
@@ -176,6 +180,7 @@ class HtmlAttributeCollection implements \ArrayAccess, \IteratorAggregate, \Stri
    * Returns whether the requested index exists.
    *
    * @param string $key
+   *   An offset to check for.
    */
   public function offsetExists(mixed $key): bool {
     return isset($this->storage[$key]);
@@ -220,7 +225,7 @@ class HtmlAttributeCollection implements \ArrayAccess, \IteratorAggregate, \Stri
    *
    * @param string $attribute
    *   Name of the attribute.
-   * @param MarkupInterface|HtmlAttributeValueBase|scalar|array<scalar>|null $value
+   * @param \Drupal\Component\Render\MarkupInterface|\Drupal\Component\HtmlAttribute\HtmlAttributeValueBase|scalar|array<scalar>|null $value
    *   Value(s) to set for the given attribute key.
    *
    * @return $this
