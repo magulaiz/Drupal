@@ -1,0 +1,8 @@
+/**
+ * Don't set background colors in CKEditor.
+ */
+.ck tr,
+.ck th,
+.ck td {
+  background-color: transparent;
+}
