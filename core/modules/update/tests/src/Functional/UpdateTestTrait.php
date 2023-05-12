@@ -43,19 +43,21 @@ trait UpdateTestTrait {
   }
 
   /**
-   * Sets available release metadata.
+   * Sets available release history.
    *
-   * @param string[] $release_metadata
-   *   The available release metadata. In the format as the key to be the
-   *   extension name and available release as its value,
-   *   for example:
-   *   @code 'drupal' => 'sec.0.2' @endcode , which matches the release history
-   *   xml file named drupal.sec.0.2.xml.
+   * @param string[] $release_history
+   *   The release history XML files to use for particular extension(s). The
+   *   keys are the extension names (use 'drupal' for Drupal core itself), and
+   *   the values are the suffix of the release history XML file to use. For
+   *   example, @code 'drupal' => 'sec.0.2' @endcode will map to a file called
+   *   drupal.sec.0.2.xml. Look at
+   *   core/modules/update/tests/fixtures/release-history for more release
+   *   history XML examples.
    *
    * @see \Drupal\update_test\Controller\UpdateTestController::updateTest
    */
-  public function setAvailableReleasesMetadata(array $release_metadata): void {
-    $this->config('update_test.settings')->set('xml_map', $release_metadata)->save();
+  public function mockReleaseHistory(array $release_history): void {
+    $this->config('update_test.settings')->set('xml_map', $release_history)->save();
   }
 
 }
