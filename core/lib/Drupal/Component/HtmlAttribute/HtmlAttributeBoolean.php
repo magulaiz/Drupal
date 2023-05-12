@@ -32,9 +32,9 @@ class HtmlAttributeBoolean extends HtmlAttributeValueBase {
   /**
    * Constructs an HtmlAttributeBoolean object.
    *
-   * @phpstan-param string $name
+   * @param string $name
    *   The name of the value.
-   * @phpstan-param bool $boolValue
+   * @param bool $boolValue
    *   The value itself.
    */
   public function __construct(
@@ -47,7 +47,7 @@ class HtmlAttributeBoolean extends HtmlAttributeValueBase {
   /**
    * Returns the raw value.
    *
-   * @phpstan-return bool
+   * @return bool
    *   The raw value.
    */
   protected function doGetValue(): bool {

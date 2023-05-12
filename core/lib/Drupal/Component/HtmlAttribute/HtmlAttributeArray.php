@@ -40,9 +40,9 @@ class HtmlAttributeArray extends HtmlAttributeValueBase implements \ArrayAccess,
   /**
    * Constructs an HtmlAttributeArray object.
    *
-   * @phpstan-param string $name
+   * @param string $name
    *   The name of the value.
-   * @phpstan-param array<scalar> $arrayValue
+   * @param array<scalar> $arrayValue
    *   The value itself.
    */
   public function __construct(
@@ -55,7 +55,7 @@ class HtmlAttributeArray extends HtmlAttributeValueBase implements \ArrayAccess,
   /**
    * Returns the raw value.
    *
-   * @phpstan-return array<scalar>
+   * @return array<scalar>
    *   The raw value.
    */
   protected function doGetValue(): array {
@@ -65,9 +65,9 @@ class HtmlAttributeArray extends HtmlAttributeValueBase implements \ArrayAccess,
   /**
    * Returns the value at the specified index.
    *
-   * @phpstan-param string|int $key
+   * @param string|int $key
    *
-   * @phpstan-return scalar
+   * @return scalar
    */
   public function offsetGet(mixed $key): bool|float|int|string {
     return $this->arrayValue[$key];
@@ -76,8 +76,8 @@ class HtmlAttributeArray extends HtmlAttributeValueBase implements \ArrayAccess,
   /**
    * Sets the value at the specified index.
    *
-   * @phpstan-param string|int|null $key
-   * @phpstan-param scalar $value
+   * @param string|int|null $key
+   * @param scalar $value
    */
   public function offsetSet(mixed $key, mixed $value): void {
     if (isset($key)) {
@@ -91,7 +91,7 @@ class HtmlAttributeArray extends HtmlAttributeValueBase implements \ArrayAccess,
   /**
    * Unsets the value at the specified index.
    *
-   * @phpstan-param string|int $key
+   * @param string|int $key
    */
   public function offsetUnset(mixed $key): void {
     unset($this->arrayValue[$key]);
@@ -100,7 +100,7 @@ class HtmlAttributeArray extends HtmlAttributeValueBase implements \ArrayAccess,
   /**
    * Returns whether the requested index exists.
    *
-   * @phpstan-param string|int $key
+   * @param string|int $key
    */
   public function offsetExists(mixed $key): bool {
     return isset($this->arrayValue[$key]);
@@ -118,7 +118,7 @@ class HtmlAttributeArray extends HtmlAttributeValueBase implements \ArrayAccess,
   /**
    * Retrieves an external iterator.
    *
-   * @phpstan-return \ArrayIterator<string|int, scalar>
+   * @return \ArrayIterator<string|int, scalar>
    */
   public function getIterator(): \Traversable {
     return new \ArrayIterator($this->arrayValue);
@@ -129,10 +129,10 @@ class HtmlAttributeArray extends HtmlAttributeValueBase implements \ArrayAccess,
    *
    * @see ArrayObject::exchangeArray
    *
-   * @phpstan-param array<scalar> $input
+   * @param array<scalar> $input
    *   The array input to replace the internal value.
    *
-   * @phpstan-return array<scalar>
+   * @return array<scalar>
    *   The old array value.
    */
   public function exchangeArray(array $input): array {
