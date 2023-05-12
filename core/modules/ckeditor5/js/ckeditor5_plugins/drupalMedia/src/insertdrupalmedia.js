@@ -36,6 +36,7 @@ function createDrupalMedia(writer, attributes) {
 export default class InsertDrupalMediaCommand extends Command {
   execute(attributes) {
     const mediaEditing = this.editor.plugins.get('DrupalMediaEditing');
+    const drupalMediaOptions = this.editor.config.get('drupalMedia');
 
     // Create object that contains supported data-attributes in view data by
     // flipping `DrupalMediaEditing.attrs` object (i.e. keys from object become
@@ -86,7 +87,7 @@ export default class InsertDrupalMediaCommand extends Command {
     }
 
     this.editor.model.change((writer) => {
-      if (modelAttributes.drupalMediaSrcType === 'image') {
+      if ((drupalMediaOptions.useImgTag == 1) && (modelAttributes.drupalMediaSrcType === 'image')) {
         //
         // For image type, simply add image, not drupal-media tag
         //

@@ -67,12 +67,17 @@ class MediaLibrary extends CKEditor5PluginDefault implements ContainerFactoryPlu
    */
   public function getDynamicPluginConfig(array $static_plugin_config, EditorInterface $editor): array {
     $media_type_ids = $this->mediaTypeStorage->getQuery()->execute();
+    $media_embed_filter = $editor->getFilterFormat()->filters()->get('media_embed');
 
     // Making the title for editor drupal media embed translatable.
     $static_plugin_config['drupalMedia']['dialogSettings']['title'] = $this->t('Add or select media');
 
+    // Add configuration whether use img tag for Media Image or not.
+    if (isset($media_embed_filter->settings['media_image_use_img'])) {
+      $static_plugin_config['drupalMedia']['useImgTag'] = $media_embed_filter->settings['media_image_use_img'];
+    }
+
     if ($editor->hasAssociatedFilterFormat()) {
-      $media_embed_filter = $editor->getFilterFormat()->filters()->get('media_embed');
       // Optionally limit the allowed media types based on the MediaEmbed
       // setting. If the setting is empty, do not limit the options.
       if (!empty($media_embed_filter->settings['allowed_media_types'])) {
