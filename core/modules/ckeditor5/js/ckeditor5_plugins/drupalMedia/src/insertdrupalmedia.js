@@ -87,7 +87,10 @@ export default class InsertDrupalMediaCommand extends Command {
     }
 
     this.editor.model.change((writer) => {
-      if ((drupalMediaOptions.useImgTag == 1) && (modelAttributes.drupalMediaSrcType === 'image')) {
+      if (
+        drupalMediaOptions.useImgTag === 1 &&
+        modelAttributes.drupalMediaSrcType === 'image'
+      ) {
         //
         // For image type, simply add image, not drupal-media tag
         //

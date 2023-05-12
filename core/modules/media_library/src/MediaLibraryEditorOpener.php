@@ -7,6 +7,7 @@ use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\editor\Ajax\EditorDialogSave;
+use \Drupal\file\Entity\File;
 
 /**
  * The media library opener for text editors.
@@ -64,7 +65,7 @@ class MediaLibraryEditorOpener implements MediaLibraryOpenerInterface {
     $selected_media = $this->mediaStorage->load(reset($selected_ids));
 
     $fid = $selected_media->getSource()->getSourceFieldValue($selected_media);
-    $file = \Drupal\file\Entity\File::load($fid);
+    $file = File::load($fid);
     $url = $file->createFileUrl();
 
     $response = new AjaxResponse();
