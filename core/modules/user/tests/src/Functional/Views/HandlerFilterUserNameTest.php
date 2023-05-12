@@ -127,6 +127,10 @@ class HandlerFilterUserNameTest extends ViewTestBase {
     $this->drupalGet($path);
     $this->submitForm($edit, 'Apply');
     $this->assertSession()->pageTextNotContains('There are no users matching "' . implode(', ', $users) . '".');
+
+    // Make sure the filter settings form can be submitted again.
+    $this->drupalGet($path);
+    $this->submitForm($edit, 'Apply');
   }
 
   /**
