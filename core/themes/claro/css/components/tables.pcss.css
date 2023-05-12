@@ -237,11 +237,3 @@ td.priority-medium {
 .tabledrag-toggle-weight-wrapper + .tableresponsive-toggle-columns + table {
   margin-top: 0;
 }
-
-/**
- * Don't set background colors in CKEditor.
- */
-.ck tr,
-.ck td {
-  background-color: transparent;
-}

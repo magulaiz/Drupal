@@ -199,6 +199,8 @@ internal.admin.table:
   css:
     theme:
       css/table.admin.css: { }
+  dependencies:
+    - core/ckeditor5.table
 
 internal.admin.codeBlock:
   css:

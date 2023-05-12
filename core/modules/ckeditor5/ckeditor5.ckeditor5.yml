@@ -508,7 +508,8 @@ ckeditor5_table_properties:
       table:
         contentToolbar: [tableProperties]
   drupal:
-    label: Table Properties
+    label: Table properties
+    admin_library: ckeditor5/internal.admin.table
     conditions:
       plugins:
         - ckeditor5_table
@@ -525,6 +526,7 @@ ckeditor5_table_cell_properties:
         contentToolbar: [tableCellProperties]
   drupal:
     label: Table Cell Properties
+    admin_library: ckeditor5/internal.admin.table
     conditions:
       plugins:
         - ckeditor5_table
