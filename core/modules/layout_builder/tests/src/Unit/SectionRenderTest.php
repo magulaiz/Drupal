@@ -116,6 +116,7 @@ class SectionRenderTest extends UnitTestCase {
         'max-age' => -1,
       ],
       '#in_preview' => FALSE,
+      '#id' => 'block_plugin_id',
     ];
 
     $block = $this->prophesize(BlockPluginInterface::class)->willImplement(PreviewFallbackInterface::class);
@@ -200,6 +201,7 @@ class SectionRenderTest extends UnitTestCase {
         'max-age' => 0,
       ],
       '#in_preview' => TRUE,
+      '#id' => 'block_plugin_id',
     ];
     $block = $this->prophesize(BlockPluginInterface::class)->willImplement(PreviewFallbackInterface::class);
     $this->blockManager->createInstance('block_plugin_id', ['id' => 'block_plugin_id'])->willReturn($block->reveal());
@@ -257,6 +259,7 @@ class SectionRenderTest extends UnitTestCase {
         'max-age' => -1,
       ],
       '#in_preview' => FALSE,
+      '#id' => 'block_plugin_id',
     ];
 
     $block = $this->prophesize(BlockPluginInterface::class)
