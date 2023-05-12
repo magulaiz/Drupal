@@ -1,5 +1,8 @@
 /**
- * Don't set background colors in CKEditor.
+ * Allow users to specify the background color in all themes.
+ * 
+ * (Users can set this using CKEditor 5's optional TableProperties and
+ * TableCellProperties plugins.)
  */
 .ck tr,
 .ck th,
