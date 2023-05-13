@@ -127,7 +127,7 @@ class UniqueFieldConstraintTest extends KernelTestBase {
     $uri2 = 'http://example.com/page2';
 
     $definitions['link'] = BaseFieldDefinition::create('link')
-      ->setLabel('Link')
+      ->setLabel('My link')
       ->addConstraint('UniqueField', ['propertyName' => 'uri']);
 
     $this->container->get('state')->set('entity_test.additional_base_field_definitions', $definitions);
@@ -151,7 +151,7 @@ class UniqueFieldConstraintTest extends KernelTestBase {
     $message = new FormattableMarkup('A @entity_type with @field_name %value already exists.', [
       '%value' => $uri1,
       '@entity_type' => $entity->getEntityType()->getSingularLabel(),
-      '@field_name' => 'link',
+      '@field_name' => 'My link',
     ]);
 
     /** @var \Symfony\Component\Validator\ConstraintViolationList $violations */
