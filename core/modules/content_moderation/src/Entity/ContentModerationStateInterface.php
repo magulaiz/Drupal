@@ -27,6 +27,6 @@ interface ContentModerationStateInterface extends ContentEntityInterface, Entity
    * @throws \Drupal\Core\Entity\EntityStorageException
    *   In case of failures an exception is thrown.
    */
-  public function realSave(): int;
+  public function realSave();
 
 }
