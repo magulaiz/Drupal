@@ -26,7 +26,7 @@ use Drupal\Core\Security\RequestSanitizer;
 use Drupal\Core\Site\Settings;
 use Drupal\Core\Test\TestDatabase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\DependencyInjection\ParameterBag\ParameterBag;
+use Symfony\Component\DependencyInjection\ParameterBag\EnvPlaceholderParameterBag;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -1373,7 +1373,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
     $container->setParameter('app.root', $this->getAppRoot());
     $container->setParameter('site.path', $this->getSitePath());
 
-    $container->compile();
+    $container->compile(TRUE);
     return $container;
   }
 
@@ -1406,7 +1406,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
    * @return \Drupal\Core\DependencyInjection\ContainerBuilder
    */
   protected function getContainerBuilder() {
-    return new ContainerBuilder(new ParameterBag($this->getKernelParameters()));
+    return new ContainerBuilder(new EnvPlaceholderParameterBag($this->getKernelParameters()));
   }
 
   /**
