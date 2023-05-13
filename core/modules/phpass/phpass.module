@@ -5,6 +5,7 @@
  * Provides the password checking algorithm used prior to version 10.1.x.
  */
 
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 
 /**
@@ -22,4 +23,18 @@ function phpass_help($route_name, RouteMatchInterface $route_match) {
       return $output;
 
   }
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter() for system_modules_uninstall_confirm_form.
+ */
+function phpass_form_system_modules_uninstall_confirm_form_alter(array &$form, FormStateInterface $form_state): void {
+  $modules = \Drupal::keyValueExpirable('modules_uninstall')
+    ->get(\Drupal::currentUser()->id());
+  if (!in_array('phpass', $modules)) {
+    return;
+  }
+  \Drupal::messenger()->addWarning(t('Make sure that you can log in before uninstalling the Password Compatibility module. For more information, see the <a href=":phpass">online documentation for the Password Compatibility module</a>.', [
+    ':phpass' => 'https://www.drupal.org/docs/core-modules-and-themes/core-modules/password-compatibility-module',
+  ]));
 }
