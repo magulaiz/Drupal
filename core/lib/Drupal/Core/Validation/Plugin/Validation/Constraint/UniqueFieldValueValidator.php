@@ -22,7 +22,7 @@ class UniqueFieldValueValidator extends ConstraintValidator {
     $entity = $items->getEntity();
     $entity_type_id = $entity->getEntityTypeId();
     $id_key = $entity->getEntityType()->getKey('id');
- 
+
     $propertyName = $constraint->propertyName ?? $item->mainPropertyName() ?? 'value';
 
     if (!isset($item->getProperties()[$propertyName])) {

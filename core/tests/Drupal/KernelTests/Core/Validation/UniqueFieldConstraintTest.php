@@ -4,6 +4,7 @@ namespace Drupal\KernelTests\Core\Validation;
 
 use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Field\BaseFieldDefinition;
+use Drupal\entity_test\Entity\EntityTest;
 use Drupal\entity_test\Entity\EntityTestStringId;
 use Drupal\KernelTests\KernelTestBase;
 
@@ -114,7 +115,7 @@ class UniqueFieldConstraintTest extends KernelTestBase {
       'alphanumeric' => [$this->randomMachineName()],
     ];
   }
- 
+
   /**
    * Tests cases where the validation raises violations for custom properties.
    *
@@ -150,7 +151,7 @@ class UniqueFieldConstraintTest extends KernelTestBase {
     $message = new FormattableMarkup('A @entity_type with @field_name %value already exists.', [
       '%value' => $uri1,
       '@entity_type' => $entity->getEntityType()->getSingularLabel(),
-      '@field_name' => 'Link',
+      '@field_name' => 'link',
     ]);
 
     /** @var \Symfony\Component\Validator\ConstraintViolationList $violations */
