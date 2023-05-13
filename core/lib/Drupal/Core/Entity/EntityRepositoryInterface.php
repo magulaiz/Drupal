@@ -75,7 +75,7 @@ interface EntityRepositoryInterface {
    *
    * @see \Drupal\Core\Language\LanguageManagerInterface::getFallbackCandidates()
    */
-  public function getTranslationFromContext(EntityInterface $entity, $langcode = NULL, $context = []): ?EntityInterface;
+  public function getTranslationFromContext(EntityInterface $entity, $langcode = NULL, $context = []);
 
   /**
    * Retrieves the active entity variant matching the specified context.

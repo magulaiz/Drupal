@@ -90,7 +90,7 @@ class EntityRepository implements EntityRepositoryInterface {
   /**
    * {@inheritdoc}
    */
-  public function getTranslationFromContext(EntityInterface $entity, $langcode = NULL, $context = []): ?EntityInterface {
+  public function getTranslationFromContext(EntityInterface $entity, $langcode = NULL, $context = []) {
     $translation = $entity;
 
     if ($entity instanceof TranslatableDataInterface && count($entity->getTranslationLanguages()) > 1) {
