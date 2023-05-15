@@ -27,18 +27,12 @@ trait UpdateTestTrait {
    *     'hidden' => FALSE,
    *   ]
    *   @endcode
-   * @param string[] $default_info
-   *   (optional) The *.info.yml key-value pairs to be mocked across all
-   *   extensions. Hence, these can be seen as default/fallback values.
    *
    * @see \Drupal\Core\Extension\InfoParserInterface
    * @see update_test_system_info_alter()
    * @see \Drupal\Core\Extension\ExtensionList::doList()
    */
-  protected function mockInstalledExtensions(array $installed_extensions, array $default_info = []): void {
-    if (!empty($default_info)) {
-      $installed_extensions = array_merge(['#all' => $default_info], $installed_extensions);
-    }
+  protected function mockInstalledExtensionsInfo(array $installed_extensions): void {
     $this->config('update_test.settings')->set('system_info', $installed_extensions)->save();
   }
 
@@ -51,7 +45,7 @@ trait UpdateTestTrait {
    *
    * @see update_test_system_info_alter()
    */
-  protected function setDefaultMockedExtensionInfo(array $default_info): void {
+  protected function mockDefaultExtensionsInfo(array $default_info): void {
     $system_info = $this->config('update_test.settings')->get('system_info');
     $system_info = ['#all' => $default_info] + $system_info;
     $this->config('update_test.settings')->set('system_info', $system_info)->save();

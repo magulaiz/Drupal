@@ -34,7 +34,7 @@ class UpdateSemverCoreTest extends UpdateSemverTestBase {
    *   The version.
    */
   protected function setProjectInstalledVersion($version) {
-    $this->mockInstalledExtensions([], ['version' => $version]);
+    $this->mockDefaultExtensionsInfo(['version' => $version]);
   }
 
   /**
@@ -278,11 +278,14 @@ class UpdateSemverCoreTest extends UpdateSemverTestBase {
         'datestamp' => '1000000000',
       ],
     ];
-    $this->mockInstalledExtensions(
+    $this->mockInstalledExtensionsInfo(
       $installed_extensions,
-      // We need to think we're running a -dev snapshot to see dates.
-      ['version' => '8.1.0-dev', 'datestamp' => time()]
     );
+    // We need to think we're running a -dev snapshot to see dates.
+    $this->mockDefaultExtensionsInfo([
+      'version' => '8.1.0-dev',
+      'datestamp' => time(),
+    ]);
     $this->refreshUpdateStatus(['drupal' => 'dev']);
     $this->assertSession()->pageTextNotContains('2001-Sep-');
     $this->assertSession()->pageTextContains('Up to date');

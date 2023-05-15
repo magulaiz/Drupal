@@ -61,7 +61,8 @@ class UpdateContribTest extends UpdateTestBase {
         'hidden' => FALSE,
       ],
     ];
-    $this->mockInstalledExtensions($installed_extensions, ['version' => '8.0.0']);
+    $this->mockInstalledExtensionsInfo($installed_extensions);
+    $this->mockDefaultExtensionsInfo(['version' => '8.0.0']);
     $this->refreshUpdateStatus(['drupal' => '0.0', 'aaa_update_test' => 'no-releases']);
     // Cannot use $this->standardTests() because we need to check for the
     // 'No available releases found' string.
@@ -90,7 +91,8 @@ class UpdateContribTest extends UpdateTestBase {
         'hidden' => FALSE,
       ],
     ];
-    $this->mockInstalledExtensions($installed_extensions, ['version' => '8.0.0']);
+    $this->mockInstalledExtensionsInfo($installed_extensions);
+    $this->mockDefaultExtensionsInfo(['version' => '8.0.0']);
     $this->refreshUpdateStatus(
       [
         'drupal' => '0.0',
@@ -107,7 +109,8 @@ class UpdateContribTest extends UpdateTestBase {
     // Since aaa_update_test is installed the fact it is hidden and in the
     // Testing package means it should not appear.
     $installed_extensions['aaa_update_test']['hidden'] = TRUE;
-    $this->mockInstalledExtensions($installed_extensions, ['version' => '8.0.0']);
+    $this->mockInstalledExtensionsInfo($installed_extensions);
+    $this->mockDefaultExtensionsInfo(['version' => '8.0.0']);
     $this->refreshUpdateStatus(
       [
         'drupal' => '0.0',
@@ -119,7 +122,8 @@ class UpdateContribTest extends UpdateTestBase {
 
     // A hidden and installed project not in the Testing package should appear.
     $installed_extensions['aaa_update_test']['package'] = 'aaa_update_test';
-    $this->mockInstalledExtensions($installed_extensions, ['version' => '8.0.0']);
+    $this->mockInstalledExtensionsInfo($installed_extensions);
+    $this->mockDefaultExtensionsInfo(['version' => '8.0.0']);
     $this->refreshUpdateStatus(
       [
         'drupal' => '0.0',
@@ -170,7 +174,8 @@ class UpdateContribTest extends UpdateTestBase {
       ],
     ];
     // We want core to be version 8.0.0.
-    $this->mockInstalledExtensions($installed_extensions, ['version' => '8.0.0']);
+    $this->mockInstalledExtensionsInfo($installed_extensions);
+    $this->mockDefaultExtensionsInfo(['version' => '8.0.0']);
     $this->refreshUpdateStatus(['drupal' => '0.0', '#all' => '1_0']);
     $this->standardTests();
     // We're expecting the report to say all projects are up to date.
@@ -227,7 +232,8 @@ class UpdateContribTest extends UpdateTestBase {
       ],
     ];
     // We want core to be version 8.0.0.
-    $this->mockInstalledExtensions($installed_extensions, ['version' => '8.0.0']);
+    $this->mockInstalledExtensionsInfo($installed_extensions);
+    $this->mockDefaultExtensionsInfo(['version' => '8.0.0']);
     $xml_mapping = [
       'drupal' => '0.0',
       'update_test_subtheme' => '1_0',
@@ -255,7 +261,7 @@ class UpdateContribTest extends UpdateTestBase {
         'hidden' => FALSE,
       ],
     ];
-    $this->mockInstalledExtensions($installed_extensions);
+    $this->mockInstalledExtensionsInfo($installed_extensions);
 
     foreach (['1.1', '1.2', '2.0'] as $version) {
       foreach (['-beta1', '-alpha1', ''] as $extra_version) {
@@ -370,7 +376,8 @@ class UpdateContribTest extends UpdateTestBase {
     // to avoid test failures in those cases.
     $update_settings->set('fetch.max_attempts', 99999)->save();
     // We want core to be version 8.0.0.
-    $this->mockInstalledExtensions($installed_extensions, ['version' => '8.0.0']);
+    $this->mockInstalledExtensionsInfo($installed_extensions);
+    $this->mockDefaultExtensionsInfo(['version' => '8.0.0']);
     $xml_mapping = [
       'drupal' => '0.0',
       'update_test_subtheme' => '1_0',
@@ -422,7 +429,7 @@ class UpdateContribTest extends UpdateTestBase {
         'hidden' => FALSE,
       ],
     ];
-    $this->mockInstalledExtensions($installed_extensions);
+    $this->mockInstalledExtensionsInfo($installed_extensions);
     $projects = \Drupal::service('update.manager')->getProjects();
     $theme_data = \Drupal::service('theme_handler')->rebuildThemeData();
     $project_info = new ProjectInfo();
@@ -452,8 +459,8 @@ class UpdateContribTest extends UpdateTestBase {
         'hidden' => FALSE,
       ],
     ];
-    $this->mockInstalledExtensions($installed_extensions, ['version' => '8.0.0']);
-
+    $this->mockInstalledExtensionsInfo($installed_extensions);
+    $this->mockDefaultExtensionsInfo(['version' => '8.0.0']);
     // Ensure that the update information is correct before testing.
     $this->drupalGet('admin/reports/updates');
 
@@ -512,7 +519,8 @@ class UpdateContribTest extends UpdateTestBase {
         'hidden' => FALSE,
       ],
     ];
-    $this->mockInstalledExtensions($installed_extensions, ['version' => '8.0.0']);
+    $this->mockInstalledExtensionsInfo($installed_extensions);
+    $this->mockDefaultExtensionsInfo(['version' => '8.0.0']);
     $update_test_config = $this->config('update_test.settings');
     $update_status = [
       'aaa_update_test' => [
@@ -562,7 +570,8 @@ class UpdateContribTest extends UpdateTestBase {
         'hidden' => FALSE,
       ],
     ];
-    $this->mockInstalledExtensions($installed_extensions, ['version' => '8.0.0']);
+    $this->mockInstalledExtensionsInfo($installed_extensions);
+    $this->mockDefaultExtensionsInfo(['version' => '8.0.0']);
 
     // Confirm that messages are displayed for recommended and latest updates.
     // @todo In https://www.drupal.org/project/drupal/issues/3112962:
@@ -610,7 +619,8 @@ class UpdateContribTest extends UpdateTestBase {
         'hidden' => FALSE,
       ],
     ];
-    $this->mockInstalledExtensions($installed_extensions, ['version' => '8.0.0']);
+    $this->mockInstalledExtensionsInfo($installed_extensions);
+    $this->mockDefaultExtensionsInfo(['version' => '8.0.0']);
     $this->refreshUpdateStatus(['drupal' => '0.0', 'aaa_update_test' => $fixture]);
     $this->assertSecurityUpdates('aaa_update_test', $expected_security_releases, $expected_update_message_type, 'table.update:nth-of-type(2)');
   }
@@ -737,7 +747,7 @@ class UpdateContribTest extends UpdateTestBase {
         'hidden' => FALSE,
       ],
     ];
-    $this->mockInstalledExtensions($installed_extensions);
+    $this->mockInstalledExtensionsInfo($installed_extensions);
     $this->refreshUpdateStatus([
       'drupal' => '0.0',
       $this->updateProject => '1_0-supported',
@@ -776,7 +786,7 @@ class UpdateContribTest extends UpdateTestBase {
         'hidden' => FALSE,
       ],
     ];
-    $this->mockInstalledExtensions($installed_extensions);
+    $this->mockInstalledExtensionsInfo($installed_extensions);
     $this->refreshUpdateStatus([
       'drupal' => '0.0',
       $this->updateProject => '1_0-supported',
@@ -819,7 +829,7 @@ class UpdateContribTest extends UpdateTestBase {
       if (isset($version_info['version'])) {
         $installed_extensions['aaa_update_test']['version'] = $version_info['version'];
       }
-      $this->mockInstalledExtensions($installed_extensions);
+      $this->mockInstalledExtensionsInfo($installed_extensions);
       $this->refreshUpdateStatus([
         'drupal' => '0.0',
         $this->updateProject => '1_0-supported',
