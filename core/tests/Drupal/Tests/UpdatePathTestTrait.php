@@ -3,6 +3,7 @@
 namespace Drupal\Tests;
 
 use Drupal\Core\Database\Database;
+use Drupal\Core\Update\Update;
 use Drupal\Core\Url;
 
 /**
@@ -64,7 +65,7 @@ trait UpdatePathTestTrait {
         switch ($update_type) {
           case 'update':
             drupal_load_updates();
-            $all_updates = update_get_update_list();
+            $all_updates = \Drupal::service(Update::class)->getList();
             break;
 
           case 'post_update':

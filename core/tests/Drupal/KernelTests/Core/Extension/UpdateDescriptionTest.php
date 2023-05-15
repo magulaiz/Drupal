@@ -2,6 +2,7 @@
 
 namespace Drupal\KernelTests\Core\Extension;
 
+use Drupal\Core\Update\Update;
 use Drupal\KernelTests\KernelTestBase;
 
 /**
@@ -19,14 +20,13 @@ class UpdateDescriptionTest extends KernelTestBase {
   /**
    * Tests the list of pending database updates.
    *
-   * @see update_get_update_list()
+   * @see \Drupal\Core\Update\Update::getList()
    */
   public function testUpdateGetUpdateList() {
-    require_once $this->root . '/core/includes/update.inc';
     \Drupal::service('update.update_hook_registry')->setInstalledVersion('update_test_description', 8000);
     \Drupal::moduleHandler()->loadInclude('update_test_description', 'install');
 
-    $updates = update_get_update_list();
+    $updates = \Drupal::service(Update::class)->getList();
     $expected = [
       'pending' => [
         8001 => '8001 - Update test of slash in description and/or.',

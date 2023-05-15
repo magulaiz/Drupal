@@ -1747,6 +1747,14 @@ services:
   email.validator:
     class: Drupal\Component\Utility\EmailValidator
   Drupal\Component\Utility\EmailValidatorInterface: '@email.validator'
+  Drupal\Core\Update\Update:
+    class: Drupal\Core\Update\Update
+    autowire: true
+  Drupal\Core\Update\DeprecatedUpdate:
+    class: Drupal\Core\Update\DeprecatedUpdate
+    autowire: true
+    deprecated: The "%service_id%" service is deprecated. You should use the 'Drupal\Core\Update\Update' service
+      instead. See https://www.drupal.org/node/3013060
   update.update_hook_registry:
     class: Drupal\Core\Update\UpdateHookRegistry
     factory: ['@update.update_hook_registry_factory', create]
@@ -1757,6 +1765,9 @@ services:
   update.post_update_registry:
     class: Drupal\Core\Update\UpdateRegistry
     factory: ['@update.post_update_registry_factory', create]
+    tags:
+      - { name: event_subscriber }
+  Drupal\Core\Update\UpdateRegistry: "@update.post_update_registry"
   update.post_update_registry_factory:
     class: Drupal\Core\Update\UpdateRegistryFactory
     parent: container.trait

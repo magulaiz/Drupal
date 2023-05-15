@@ -12,6 +12,7 @@ use Drupal\Core\Render\BareHtmlPageRendererInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Site\Settings;
 use Drupal\Core\State\StateInterface;
+use Drupal\Core\Update\Update;
 use Drupal\Core\Update\UpdateRegistry;
 use Drupal\Core\Url;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -100,8 +101,23 @@ class DbUpdateController extends ControllerBase {
    *   The post update registry.
    * @param \Drupal\Core\Asset\AssetQueryStringInterface $assetQueryString
    *   The asset query string.
+   * @param \Drupal\Core\Update\Update|null $update
+   *   The update service.
+   *
+   * @see https://www.drupal.org/node/3013060
    */
-  public function __construct($root, KeyValueExpirableFactoryInterface $key_value_expirable_factory, CacheBackendInterface $cache, StateInterface $state, ModuleHandlerInterface $module_handler, AccountInterface $account, BareHtmlPageRendererInterface $bare_html_page_renderer, UpdateRegistry $post_update_registry, protected ?AssetQueryStringInterface $assetQueryString = NULL) {
+  public function __construct(
+    $root,
+    KeyValueExpirableFactoryInterface $key_value_expirable_factory,
+    CacheBackendInterface $cache,
+    StateInterface $state,
+    ModuleHandlerInterface $module_handler,
+    AccountInterface $account,
+    BareHtmlPageRendererInterface $bare_html_page_renderer,
+    UpdateRegistry $post_update_registry,
+    protected ?AssetQueryStringInterface $assetQueryString = NULL,
+    protected ?Update $update = NULL,
+  ) {
     $this->root = $root;
     $this->keyValueExpirableFactory = $key_value_expirable_factory;
     $this->cache = $cache;
@@ -115,6 +131,9 @@ class DbUpdateController extends ControllerBase {
       @trigger_error('Calling' . __METHOD__ . '() without the $assetQueryString argument is deprecated in drupal:10.2.0 and is required in drupal:11.0.0. See https://www.drupal.org/node/3358337', E_USER_DEPRECATED);
     }
 
+    if ($this->update === NULL) {
+      $this->update = \Drupal::service(Update::class);
+    }
   }
 
   /**
@@ -130,7 +149,8 @@ class DbUpdateController extends ControllerBase {
       $container->get('current_user'),
       $container->get('bare_html_page_renderer'),
       $container->get('update.post_update_registry'),
-      $container->get('asset.query_string')
+      $container->get('asset.query_string'),
+      $container->get(Update::class),
     );
   }
 
@@ -160,7 +180,7 @@ class DbUpdateController extends ControllerBase {
     }
 
     $regions = [];
-    $requirements = update_check_requirements();
+    $requirements = $this->update->getRequirements();
     $severity = drupal_requirements_severity($requirements);
     if ($severity == REQUIREMENT_ERROR || ($severity == REQUIREMENT_WARNING && !$request->getSession()->has('update_ignore_warnings'))) {
       $regions['sidebar_first'] = $this->updateTasksList('requirements');
@@ -281,7 +301,7 @@ class DbUpdateController extends ControllerBase {
     foreach (['update', 'post_update'] as $update_type) {
       switch ($update_type) {
         case 'update':
-          $updates = update_get_update_list();
+          $updates = $this->update->getList();
           break;
 
         case 'post_update':
@@ -326,7 +346,7 @@ class DbUpdateController extends ControllerBase {
     }
 
     // Find and label any incompatible updates.
-    foreach (update_resolve_dependencies($starting_updates) as $data) {
+    foreach ($this->update->resolveDependencies($starting_updates) as $data) {
       if (!$data['allowed']) {
         $incompatible_updates_exist = TRUE;
         $incompatible_count++;
@@ -609,7 +629,7 @@ class DbUpdateController extends ControllerBase {
     // Resolve any update dependencies to determine the actual updates that will
     // be run and the order they will be run in.
     $start = $this->getModuleUpdates();
-    $updates = update_resolve_dependencies($start);
+    $updates = $this->update->resolveDependencies($start);
 
     // Store the dependencies for each update function in an array which the
     // batch API can pass in to the batch operation each time it is called. (We
@@ -630,7 +650,7 @@ class DbUpdateController extends ControllerBase {
           \Drupal::service('update.update_hook_registry')->setInstalledVersion($update['module'], $update['number'] - 1);
           unset($start[$update['module']]);
         }
-        $batch_builder->addOperation('update_do_one', [$update['module'], $update['number'], $dependency_map[$function]]);
+        $batch_builder->addOperation([$this->update, 'doOne'], [$update['module'], $update['number'], $dependency_map[$function]]);
       }
     }
 
@@ -641,7 +661,7 @@ class DbUpdateController extends ControllerBase {
       // functions.
       $batch_builder->addOperation('drupal_flush_all_caches', []);
       foreach ($post_updates as $function) {
-        $batch_builder->addOperation('update_invoke_post_update', [$function]);
+        $batch_builder->addOperation([$this->update, 'invokePostUpdate'], [$function]);
       }
     }
 
@@ -715,7 +735,7 @@ class DbUpdateController extends ControllerBase {
    */
   protected function getModuleUpdates() {
     $return = [];
-    $updates = update_get_update_list();
+    $updates = $this->update->getList();
     foreach ($updates as $module => $update) {
       $return[$module] = $update['start'];
     }

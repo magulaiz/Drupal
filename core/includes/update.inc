@@ -8,106 +8,30 @@
  * installation. It is included and used extensively by update.php.
  */
 
-use Drupal\Component\Graph\Graph;
-use Drupal\Core\Extension\Exception\UnknownExtensionException;
-use Drupal\Core\Utility\Error;
+use Drupal\Core\Update\DeprecatedUpdate;
+use Drupal\Core\Update\Update;
 
 /**
  * Returns whether the minimum schema requirement has been satisfied.
  *
  * @return array
  *   A requirements info array.
+ * @deprecated todo.
  */
 function update_system_schema_requirements() {
-  $requirements = [];
-
-  $system_schema = \Drupal::service('update.update_hook_registry')->getInstalledVersion('system');
-
-  $requirements['minimum schema']['title'] = 'Minimum schema version';
-  if ($system_schema >= \Drupal::CORE_MINIMUM_SCHEMA_VERSION) {
-    $requirements['minimum schema'] += [
-      'value' => 'The installed schema version meets the minimum.',
-      'description' => 'Schema version: ' . $system_schema,
-    ];
-  }
-  else {
-    $requirements['minimum schema'] += [
-      'value' => 'The installed schema version does not meet the minimum.',
-      'severity' => REQUIREMENT_ERROR,
-      'description' => 'Your system schema version is ' . $system_schema . '. Updating directly from a schema version prior to 8000 is not supported. You must upgrade your site to Drupal 8 first, see https://www.drupal.org/docs/8/upgrade.',
-    ];
-  }
-
-  return $requirements;
+  /** @var \Drupal\Core\Update\DeprecatedUpdate $update */
+  $update = \Drupal::service(DeprecatedUpdate::class);
+  return $update->systemSchemaRequirements();
 }
 
 /**
  * Checks update requirements and reports errors and (optionally) warnings.
+ * @deprecated todo.
  */
 function update_check_requirements() {
-  // Because this is one of the earliest points in the update process,
-  // detect and fix missing schema versions for modules here to ensure
-  // it runs on all update code paths.
-  _update_fix_missing_schema();
-
-  // Check requirements of all loaded modules.
-  $requirements = \Drupal::moduleHandler()->invokeAll('requirements', ['update']);
-  $requirements += update_system_schema_requirements();
-  return $requirements;
-}
-
-/**
- * Helper to detect and fix 'missing' schema information.
- *
- * Repairs the case where a module has no schema version recorded.
- * This has to be done prior to updates being run, otherwise the update
- * system would detect and attempt to run all historical updates for a
- * module.
- *
- * @todo: remove in a major version after
- * https://www.drupal.org/project/drupal/issues/3130037 has been fixed.
- */
-function _update_fix_missing_schema() {
-  /** @var \Drupal\Core\Update\UpdateHookRegistry $update_registry */
-  $update_registry = \Drupal::service('update.update_hook_registry');
-  $versions = $update_registry->getAllInstalledVersions();
-  $module_handler = \Drupal::moduleHandler();
-  $enabled_modules = $module_handler->getModuleList();
-
-  foreach (array_keys($enabled_modules) as $module) {
-    // All modules should have a recorded schema version, but when they
-    // don't, detect and fix the problem.
-    if (!isset($versions[$module])) {
-      // Ensure the .install file is loaded.
-      $module_handler->loadInclude($module, 'install');
-      $all_updates = $update_registry->getAvailableUpdates($module);
-      // If the schema version of a module hasn't been recorded, we cannot
-      // know the actual schema version a module is at, because
-      // no updates will ever have been run on the site and it was not set
-      // correctly when the module was installed, so instead set it to
-      // the same as the last update. This means that updates will proceed
-      // again the next time the module is updated and a new update is
-      // added. Updates added in between the module being installed and the
-      // schema version being fixed here (if any have been added) will never
-      // be run, but we have no way to identify which updates these are.
-      if ($all_updates) {
-        $last_update = max($all_updates);
-      }
-      else {
-        $last_update = \Drupal::CORE_MINIMUM_SCHEMA_VERSION;
-      }
-      // If the module implements hook_update_last_removed() use the
-      // value of that if it's higher than the schema versions found so
-      // far.
-      if ($last_removed = $module_handler->invoke($module, 'update_last_removed')) {
-        $last_update = max($last_update, $last_removed);
-      }
-      $update_registry->setInstalledVersion($module, $last_update);
-      $args = ['%module' => $module, '%last_update_hook' => $module . '_update_' . $last_update . '()'];
-      \Drupal::messenger()->addWarning(t('Schema information for module %module was missing from the database. You should manually review the module updates and your database to check if any updates have been skipped up to, and including, %last_update_hook.', $args));
-      \Drupal::logger('update')->warning('Schema information for module %module was missing from the database. You should manually review the module updates and your database to check if any updates have been skipped up to, and including, %last_update_hook.', $args);
-    }
-  }
+  /** @var \Drupal\Core\Update\Update $update */
+  $update = \Drupal::service(Update::class);
+  return $update->getRequirements();
 }
 
 /**
@@ -154,59 +78,12 @@ function _update_fix_missing_schema() {
  *   The batch context array.
  *
  * @see update_resolve_dependencies()
+ * @deprecated todo.
  */
 function update_do_one($module, $number, $dependency_map, &$context) {
-  $function = $module . '_update_' . $number;
-
-  // If this update was aborted in a previous step, or has a dependency that
-  // was aborted in a previous step, go no further.
-  if (!empty($context['results']['#abort']) && array_intersect($context['results']['#abort'], array_merge($dependency_map, [$function]))) {
-    return;
-  }
-
-  $ret = [];
-  if (function_exists($function)) {
-    try {
-      $ret['results']['query'] = $function($context['sandbox']);
-      $ret['results']['success'] = TRUE;
-    }
-    // @TODO We may want to do different error handling for different
-    // exception types, but for now we'll just log the exception and
-    // return the message for printing.
-    // @see https://www.drupal.org/node/2564311
-    catch (Exception $e) {
-      $variables = Error::decodeException($e);
-      \Drupal::logger('update')->error(Error::DEFAULT_ERROR_MESSAGE, $variables);
-
-      unset($variables['backtrace'], $variables['exception'], $variables['severity_level']);
-      $ret['#abort'] = ['success' => FALSE, 'query' => t(Error::DEFAULT_ERROR_MESSAGE, $variables)];
-    }
-  }
-
-  if (isset($context['sandbox']['#finished'])) {
-    $context['finished'] = $context['sandbox']['#finished'];
-    unset($context['sandbox']['#finished']);
-  }
-
-  if (!isset($context['results'][$module])) {
-    $context['results'][$module] = [];
-  }
-  if (!isset($context['results'][$module][$number])) {
-    $context['results'][$module][$number] = [];
-  }
-  $context['results'][$module][$number] = array_merge($context['results'][$module][$number], $ret);
-
-  if (!empty($ret['#abort'])) {
-    // Record this function in the list of updates that were aborted.
-    $context['results']['#abort'][] = $function;
-  }
-
-  // Record the schema update if it was completed successfully.
-  if ($context['finished'] == 1 && empty($ret['#abort'])) {
-    \Drupal::service('update.update_hook_registry')->setInstalledVersion($module, $number);
-  }
-
-  $context['message'] = t('Updating @module', ['@module' => $module]);
+  /** @var \Drupal\Core\Update\Update $update */
+  $update = \Drupal::service(Update::class);
+  $update->doOne($module, $number, $dependency_map, $context);
 }
 
 /**
@@ -216,59 +93,12 @@ function update_do_one($module, $number, $dependency_map, &$context) {
  *   The function name, that should be executed.
  * @param array $context
  *   The batch context array.
+ * @deprecated todo.
  */
 function update_invoke_post_update($function, &$context) {
-  $ret = [];
-
-  // If this update was aborted in a previous step, or has a dependency that was
-  // aborted in a previous step, go no further.
-  if (!empty($context['results']['#abort'])) {
-    return;
-  }
-
-  // Ensure extension post update code is loaded.
-  [$extension, $name] = explode('_post_update_', $function, 2);
-  \Drupal::service('update.post_update_registry')->getUpdateFunctions($extension);
-
-  if (function_exists($function)) {
-    try {
-      $ret['results']['query'] = $function($context['sandbox']);
-      $ret['results']['success'] = TRUE;
-
-      if (!isset($context['sandbox']['#finished']) || (isset($context['sandbox']['#finished']) && $context['sandbox']['#finished'] >= 1)) {
-        \Drupal::service('update.post_update_registry')->registerInvokedUpdates([$function]);
-      }
-    }
-    // @TODO We may want to do different error handling for different exception
-    // types, but for now we'll just log the exception and return the message
-    // for printing.
-    // @see https://www.drupal.org/node/2564311
-    catch (Exception $e) {
-      $variables = Error::decodeException($e);
-      \Drupal::logger('update')->error(Error::DEFAULT_ERROR_MESSAGE, $variables);
-      unset($variables['backtrace'], $variables['exception'], $variables['severity_level']);
-      $ret['#abort'] = [
-        'success' => FALSE,
-        'query' => t(Error::DEFAULT_ERROR_MESSAGE, $variables),
-      ];
-    }
-  }
-
-  if (isset($context['sandbox']['#finished'])) {
-    $context['finished'] = $context['sandbox']['#finished'];
-    unset($context['sandbox']['#finished']);
-  }
-  if (!isset($context['results'][$extension][$name])) {
-    $context['results'][$extension][$name] = [];
-  }
-  $context['results'][$extension][$name] = array_merge($context['results'][$extension][$name], $ret);
-
-  if (!empty($ret['#abort'])) {
-    // Record this function in the list of updates that were aborted.
-    $context['results']['#abort'][] = $function;
-  }
-
-  $context['message'] = t('Post updating @extension', ['@extension' => $extension]);
+  /** @var \Drupal\Core\Update\Update $update */
+  $update = \Drupal::service(Update::class);
+  $update->invokePostUpdate($function, $context);
 }
 
 /**
@@ -288,89 +118,13 @@ function update_invoke_post_update($function, &$context) {
  *   - pending: An array of all the pending updates for the module including
  *       the update number and the description from source code comment for
  *       each update function. This array is keyed by the update number.
+ *
+ * @deprecated todo.
  */
 function update_get_update_list() {
-  // Make sure that the system module is first in the list of updates.
-  $ret = ['system' => []];
-
-  /** @var \Drupal\Core\Update\UpdateHookRegistry $update_registry */
-  $update_registry = \Drupal::service('update.update_hook_registry');
-  $modules = $update_registry->getAllInstalledVersions();
-  /** @var \Drupal\Core\Extension\ExtensionList $extension_list */
-  $extension_list = \Drupal::service('extension.list.module');
-  /** @var array $installed_module_info */
-  $installed_module_info = $extension_list->getAllInstalledInfo();
-  foreach ($modules as $module => $schema_version) {
-    // Skip uninstalled and incompatible modules.
-    try {
-      if ($schema_version == $update_registry::SCHEMA_UNINSTALLED || $extension_list->checkIncompatibility($module)) {
-        continue;
-      }
-    }
-    // It is possible that the system schema has orphaned entries, so the
-    // incompatibility checking might throw an exception.
-    catch (UnknownExtensionException $e) {
-      $args = [
-        '%name' => $module,
-        ':url' => 'https://www.drupal.org/node/3137656',
-      ];
-      \Drupal::messenger()->addWarning(t('Module %name has an entry in the system.schema key/value storage, but is missing from your site. <a href=":url">More information about this error</a>.', $args));
-      \Drupal::logger('system')->notice('Module %name has an entry in the system.schema key/value storage, but is missing from your site. <a href=":url">More information about this error</a>.', $args);
-      continue;
-    }
-    // There might be orphaned entries for modules that are in the filesystem
-    // but not installed. Also skip those, but warn site admins about it.
-    if (empty($installed_module_info[$module])) {
-      $args = [
-        '%name' => $module,
-        ':url' => 'https://www.drupal.org/node/3137656',
-      ];
-      \Drupal::messenger()->addWarning(t('Module %name has an entry in the system.schema key/value storage, but is not installed. <a href=":url">More information about this error</a>.', $args));
-      \Drupal::logger('system')->notice('Module %name has an entry in the system.schema key/value storage, but is not installed. <a href=":url">More information about this error</a>.', $args);
-      continue;
-    }
-
-    // Display a requirements error if the user somehow has a schema version
-    // from the previous Drupal major version.
-    if ($schema_version < \Drupal::CORE_MINIMUM_SCHEMA_VERSION) {
-      $ret[$module]['warning'] = '<em>' . $module . '</em> module cannot be updated. Its schema version is ' . $schema_version . ', which is from an earlier major release of Drupal. See the <a href="https://www.drupal.org/docs/upgrading-drupal">Upgrading Drupal guide</a>.';
-      continue;
-    }
-    // Otherwise, get the list of updates defined by this module.
-    $updates = $update_registry->getAvailableUpdates($module);
-    if ($updates) {
-      foreach ($updates as $update) {
-        if ($update == \Drupal::CORE_MINIMUM_SCHEMA_VERSION) {
-          $ret[$module]['warning'] = '<em>' . $module . '</em> module cannot be updated. It contains an update numbered as ' . \Drupal::CORE_MINIMUM_SCHEMA_VERSION . ' which is reserved for the earliest installation of a module in Drupal ' . \Drupal::CORE_COMPATIBILITY . ', before any updates. In order to update <em>' . $module . '</em> module, you will need to download a version of the module with valid updates.';
-          continue 2;
-        }
-        if ($update > $schema_version) {
-          // The description for an update comes from its Doxygen.
-          $func = new ReflectionFunction($module . '_update_' . $update);
-          $patterns = [
-            '/^\s*[\/*]*/',
-            '/(\n\s*\**)(.*)/',
-            '/\/$/',
-            '/^\s*/',
-          ];
-          $replacements = ['', '$2', '', ''];
-          $description = preg_replace($patterns, $replacements, $func->getDocComment());
-          $ret[$module]['pending'][$update] = "$update - $description";
-          if (!isset($ret[$module]['start'])) {
-            $ret[$module]['start'] = $update;
-          }
-        }
-      }
-      if (!isset($ret[$module]['start']) && isset($ret[$module]['pending'])) {
-        $ret[$module]['start'] = $schema_version;
-      }
-    }
-  }
-
-  if (empty($ret['system'])) {
-    unset($ret['system']);
-  }
-  return $ret;
+  /** @var \Drupal\Core\Update\Update $update */
+  $update = \Drupal::service(Update::class);
+  return $update->getList();
 }
 
 /**
@@ -413,42 +167,12 @@ function update_get_update_list() {
  *   - 'number': The number of this update function within that module.
  *
  * @see \Drupal\Component\Graph\Graph::searchAndSort()
+ * @deprecated todo.
  */
 function update_resolve_dependencies($starting_updates) {
-  // Obtain a dependency graph for the requested update functions.
-  $update_functions = update_get_update_function_list($starting_updates);
-  $graph = update_build_dependency_graph($update_functions);
-
-  // Perform the depth-first search and sort on the results.
-  $graph_object = new Graph($graph);
-  $graph = $graph_object->searchAndSort();
-  uasort($graph, ['Drupal\Component\Utility\SortArray', 'sortByWeightElement']);
-
-  foreach ($graph as $function => &$data) {
-    $module = $data['module'];
-    $number = $data['number'];
-    // If the update function is missing and has not yet been performed, mark
-    // it and everything that ultimately depends on it as disallowed.
-    if (update_is_missing($module, $number, $update_functions) && !update_already_performed($module, $number)) {
-      $data['allowed'] = FALSE;
-      foreach (array_keys($data['paths']) as $dependent) {
-        $graph[$dependent]['allowed'] = FALSE;
-        $graph[$dependent]['missing_dependencies'][] = $function;
-      }
-    }
-    elseif (!isset($data['allowed'])) {
-      $data['allowed'] = TRUE;
-      $data['missing_dependencies'] = [];
-    }
-    // Now that we have finished processing this function, remove it from the
-    // graph if it was not part of the original list. This ensures that we
-    // never try to run any updates that were not specifically requested.
-    if (!isset($update_functions[$module][$number])) {
-      unset($graph[$function]);
-    }
-  }
-
-  return $graph;
+  /** @var \Drupal\Core\Update\Update $update */
+  $update = \Drupal::service(Update::class);
+  return $update->resolveDependencies($starting_updates);
 }
 
 /**
@@ -466,28 +190,12 @@ function update_resolve_dependencies($starting_updates) {
  *   number.
  *
  * @see update_resolve_dependencies()
+ * @deprecated todo.
  */
 function update_get_update_function_list($starting_updates) {
-  // Go through each module and find all updates that we need (including the
-  // first update that was requested and any updates that run after it).
-  $update_functions = [];
-  /** @var \Drupal\Core\Update\UpdateHookRegistry $update_registry */
-  $update_registry = \Drupal::service('update.update_hook_registry');
-  foreach ($starting_updates as $module => $version) {
-    $update_functions[$module] = [];
-    $updates = $update_registry->getAvailableUpdates($module);
-    if ($updates) {
-      $max_version = max($updates);
-      if ($version <= $max_version) {
-        foreach ($updates as $update) {
-          if ($update >= $version) {
-            $update_functions[$module][$update] = $module . '_update_' . $update;
-          }
-        }
-      }
-    }
-  }
-  return $update_functions;
+  /** @var \Drupal\Core\Update\Update $update */
+  $update = \Drupal::service(Update::class);
+  return $update->getUpdateFunctionList($starting_updates);
 }
 
 /**
@@ -532,44 +240,12 @@ function update_get_update_function_list($starting_updates) {
  *
  * @see \Drupal\Component\Graph\Graph::searchAndSort()
  * @see update_resolve_dependencies()
+ * @deprecated todo.
  */
 function update_build_dependency_graph($update_functions) {
-  // Initialize an array that will define a directed graph representing the
-  // dependencies between update functions.
-  $graph = [];
-
-  // Go through each update function and build an initial list of dependencies.
-  foreach ($update_functions as $module => $functions) {
-    $previous_function = NULL;
-    foreach ($functions as $number => $function) {
-      // Add an edge to the directed graph representing the fact that each
-      // update function in a given module must run after the update that
-      // numerically precedes it.
-      if ($previous_function) {
-        $graph[$previous_function]['edges'][$function] = TRUE;
-      }
-      $previous_function = $function;
-
-      // Define the module and update number associated with this function.
-      $graph[$function]['module'] = $module;
-      $graph[$function]['number'] = $number;
-    }
-  }
-
-  // Now add any explicit update dependencies declared by modules.
-  $update_dependencies = update_retrieve_dependencies();
-  foreach ($graph as $function => $data) {
-    if (!empty($update_dependencies[$data['module']][$data['number']])) {
-      foreach ($update_dependencies[$data['module']][$data['number']] as $module => $number) {
-        $dependency = $module . '_update_' . $number;
-        $graph[$dependency]['edges'][$function] = TRUE;
-        $graph[$dependency]['module'] = $module;
-        $graph[$dependency]['number'] = $number;
-      }
-    }
-  }
-
-  return $graph;
+  /** @var \Drupal\Core\Update\Update $update */
+  $update = \Drupal::service(Update::class);
+  return $update->buildDependencyGraph($update_functions);
 }
 
 /**
@@ -587,9 +263,12 @@ function update_build_dependency_graph($update_functions) {
  * @return bool
  *   TRUE if the provided module update is not installed or is not in the
  *   provided list of updates to run; FALSE otherwise.
+ * @deprecated todo.
  */
 function update_is_missing($module, $number, $update_functions) {
-  return !isset($update_functions[$module][$number]) || !function_exists($update_functions[$module][$number]);
+  /** @var \Drupal\Core\Update\Update $update */
+  $update = \Drupal::service(Update::class);
+  return $update->isMissing($module, $number, $update_functions);
 }
 
 /**
@@ -603,9 +282,12 @@ function update_is_missing($module, $number, $update_functions) {
  * @return bool
  *   TRUE if the database schema indicates that the update has already been
  *   performed; FALSE otherwise.
+ * @deprecated todo.
  */
 function update_already_performed($module, $number) {
-  return $number <= \Drupal::service('update.update_hook_registry')->getInstalledVersion($module);
+  /** @var \Drupal\Core\Update\Update $update */
+  $update = \Drupal::service(Update::class);
+  return $update->isAlreadyPerformed($module, $number);
 }
 
 /**
@@ -622,72 +304,10 @@ function update_already_performed($module, $number) {
  *
  * @see \Drupal\Core\Extension\ModuleHandlerInterface::invokeAll()
  * @see hook_update_dependencies()
+ * @deprecated todo.
  */
 function update_retrieve_dependencies() {
-  $return = [];
-  /** @var \Drupal\Core\Extension\ModuleExtensionList */
-  $extension_list = \Drupal::service('extension.list.module');
-  /** @var \Drupal\Core\Update\UpdateHookRegistry $update_registry */
-  $update_registry = \Drupal::service('update.update_hook_registry');
-  // Get a list of installed modules, arranged so that we invoke their hooks in
-  // the same order that \Drupal::moduleHandler()->invokeAll() does.
-  foreach ($update_registry->getAllInstalledVersions() as $module => $schema) {
-    // Skip modules that are entirely missing from the filesystem here, since
-    // loading .install file will call trigger_error() if invoked on a module
-    // that doesn't exist. There's no way to catch() that, so avoid it entirely.
-    // This can happen when there are orphaned entries in the system.schema k/v
-    // store for modules that have been removed from a site without first being
-    // cleanly uninstalled. We don't care here if the module has been installed
-    // or not, since we'll filter those out in update_get_update_list().
-    if ($schema == $update_registry::SCHEMA_UNINSTALLED || !$extension_list->exists($module)) {
-      // Nothing to upgrade.
-      continue;
-    }
-    $function = $module . '_update_dependencies';
-    // Ensure install file is loaded.
-    \Drupal::moduleHandler()->loadInclude($module, 'install');
-    if (function_exists($function)) {
-      $updated_dependencies = $function();
-      // Each implementation of hook_update_dependencies() returns a
-      // multidimensional, associative array containing some keys that
-      // represent module names (which are strings) and other keys that
-      // represent update function numbers (which are integers). We cannot use
-      // array_merge_recursive() to properly merge these results, since it
-      // treats strings and integers differently. Therefore, we have to
-      // explicitly loop through the expected array structure here and perform
-      // the merge manually.
-      if (isset($updated_dependencies) && is_array($updated_dependencies)) {
-        foreach ($updated_dependencies as $module_name => $module_data) {
-          foreach ($module_data as $update_version => $update_data) {
-            foreach ($update_data as $module_dependency => $update_dependency) {
-              // If there are redundant dependencies declared for the same
-              // update function (so that it is declared to depend on more than
-              // one update from a particular module), record the dependency on
-              // the highest numbered update here, since that automatically
-              // implies the previous ones. For example, if one module's
-              // implementation of hook_update_dependencies() required this
-              // ordering:
-              //
-              // system_update_8002 ---> user_update_8001
-              //
-              // but another module's implementation of the hook required this
-              // one:
-              //
-              // system_update_8003 ---> user_update_8001
-              //
-              // we record the second one, since system_update_8002() is always
-              // guaranteed to run before system_update_8003() anyway (within
-              // an individual module, updates are always run in numerical
-              // order).
-              if (!isset($return[$module_name][$update_version][$module_dependency]) || $update_dependency > $return[$module_name][$update_version][$module_dependency]) {
-                $return[$module_name][$update_version][$module_dependency] = $update_dependency;
-              }
-            }
-          }
-        }
-      }
-    }
-  }
-
-  return $return;
+  /** @var \Drupal\Core\Update\Update $update */
+  $update = \Drupal::service(Update::class);
+  return $update->retrieveDependencies();
 }
