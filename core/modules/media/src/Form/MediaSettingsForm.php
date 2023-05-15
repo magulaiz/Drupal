@@ -110,6 +110,20 @@ class MediaSettingsForm extends ConfigFormBase {
       '#default_value' => $this->config('media.settings')->get('standalone_url'),
       '#description' => $this->t("Allow users to access @media-entities at /media/{id}.", ['@media-entities' => $this->entityTypeManager->getDefinition('media')->getPluralLabel()]),
     ];
+
+    $form['security']['absolute_url'] = [
+      '#prefix' => '<hr>',
+      '#type' => 'checkbox',
+      '#title' => $this->t('Absolute oembed media URL'),
+      '#default_value' => $this->config('media.settings')->get('absolute_url'),
+      '#description' => $this->t("Provides absolute path to oembed media."),
+      '#states' => [
+        'visible' => [
+          ':input[name="iframe_domain"]' => ['filled' => FALSE],
+        ],
+      ],
+    ];
+
     return parent::buildForm($form, $form_state);
   }
 
@@ -120,6 +134,7 @@ class MediaSettingsForm extends ConfigFormBase {
     $this->config('media.settings')
       ->set('iframe_domain', $form_state->getValue('iframe_domain'))
       ->set('standalone_url', $form_state->getValue('standalone_url'))
+      ->set('absolute_url', $form_state->getValue('absolute_url'))
       ->save();
 
     parent::submitForm($form, $form_state);
