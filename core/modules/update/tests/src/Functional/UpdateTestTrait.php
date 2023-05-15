@@ -43,6 +43,21 @@ trait UpdateTestTrait {
   }
 
   /**
+   * Sets default information about installed extensions.
+   *
+   * @param string[] $default_info
+   *   (optional) The *.info.yml key-value pairs to be mocked across all
+   *   extensions. Hence, these can be seen as default/fallback values.
+   *
+   * @see update_test_system_info_alter()
+   */
+  protected function setDefaultMockedExtensionInfo(array $default_info): void {
+    $system_info = $this->config('update_test.settings')->get('system_info');
+    $system_info = ['#all' => $default_info] + $system_info;
+    $this->config('update_test.settings')->set('system_info', $system_info)->save();
+  }
+
+  /**
    * Sets available release history.
    *
    * @param string[] $release_history
