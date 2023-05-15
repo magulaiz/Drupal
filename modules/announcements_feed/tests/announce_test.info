@@ -3,4 +3,3 @@ description = "Support module for announce feed testing."
 package = Testing
 core = 7.x
 hidden = TRUE
-dependencies[] = simpletest_example

@@ -60,16 +60,12 @@ class AnnounceTestValidateJsonFeed extends DrupalWebTestCase {
     global $base_path;
     $module_path = drupal_get_path('module', 'announcements_feed');
     module_load_include('inc', 'announce_test', 'announce_test');
-    parent::setUp(array(
-      'user',
-      'toolbar',
-      'announcements_feed',
-      'announce_test',
-    ));
+    parent::setUp('user', 'toolbar', 'announcements_feed', 'announce_test');
     $this->user = $this->drupalCreateUser(array(
       'access toolbar',
       'access announcements',
     ));
+    $this->drupalLogin($this->user);
     $this->responseJson = $base_url . $base_path . $module_path . '/tests/announce_feed/community-feeds.json';
     $this->updatedJson = $base_url . $base_path . $module_path . '/tests/announce_feed/updated.json';
     $this->emptyJson = $base_url . $base_path . $module_path . '/tests/announce_feed/empty.json';
@@ -81,6 +77,10 @@ class AnnounceTestValidateJsonFeed extends DrupalWebTestCase {
    * Testing the feed notification with different kind of urls.
    */
   public function testAnnounceFeedUpdatedAndRemoved() {
+    $this->user = $this->drupalCreateUser(array(
+      'access toolbar',
+      'access announcements',
+    ));
     module_load_include('inc', 'announce_test', 'announce_test');
     $this->drupalLogin($this->user);
     $this->drupalGet('');
@@ -88,7 +88,7 @@ class AnnounceTestValidateJsonFeed extends DrupalWebTestCase {
     set_announce_test_endpoint($this->updatedJson);
     drupal_flush_all_caches();
 
-    $this->drupalGet('');
+    $this->drupalGet('/admin/announcements_feed');
     $this->assertText('Only 9 - Drupal 106 is available and this feed is Updated');
     $this->drupalLogout();
 
@@ -98,8 +98,7 @@ class AnnounceTestValidateJsonFeed extends DrupalWebTestCase {
     $this->clickLink('Community Announcements');
     set_announce_test_endpoint($this->removed);
     drupal_flush_all_caches();
-
-    $this->drupalGet('');
+    $this->drupalGet('/admin/announcements_feed');
     $this->assertNoText('Only 9 - Drupal 106 is available and this feed is Updated');
 
     $this->drupalLogout();
@@ -109,13 +108,16 @@ class AnnounceTestValidateJsonFeed extends DrupalWebTestCase {
    * Check the status of the red dot alert with an empty JSON feed.
    */
   public function testAnnounceFeedEmpty() {
+    $this->user = $this->drupalCreateUser(array(
+      'access toolbar',
+      'access announcements',
+    ));
     // Change the feed url to empty json file.
     // For resetting temp storage.
     set_announce_test_endpoint($this->emptyJson);
     drupal_flush_all_caches();
 
     $this->drupalLogin($this->user);
-    $this->drupalGet('');
     // Only no annoucnements available message should show.
     $this->clickLink('Community Announcements');
     $this->assertText('No announcements available');
@@ -197,15 +199,10 @@ class AnnounceTestValidateLoginTestCase extends DrupalWebTestCase {
   public function setUp() {
     global $base_url;
     global $base_path;
+    $module_path = drupal_get_path('module', 'announcements_feed');
     module_load_include('inc', 'announce_test', 'announce_test');
-    parent::setUp(array(
-      'user',
-      'toolbar',
-      'announcements_feed',
-      'announce_test',
-    ));
+    parent::setUp('user', 'toolbar', 'announcements_feed', 'announce_test');
     $response_json = $base_url . $base_path . $module_path . '/tests/announce_feed/community-feeds.json';
-    ;
     set_announce_test_endpoint($response_json);
   }
 
@@ -213,6 +210,10 @@ class AnnounceTestValidateLoginTestCase extends DrupalWebTestCase {
    * Test of viewing announcements by different user with permission.
    */
   public function testAnnounceValidateLogin() {
+    $this->user = $this->drupalCreateUser(array(
+      'access toolbar',
+      'access announcements',
+    ));
     // Create a user with proper permission.
     $this->privilegedUser = $this->drupalCreateUser(array(
       'access toolbar',
@@ -220,8 +221,6 @@ class AnnounceTestValidateLoginTestCase extends DrupalWebTestCase {
     ));
     $this->drupalLogin($this->privilegedUser);
     $this->drupalGet('');
-    // Check for the new announcement class in the toolbar.
-    $this->clickLink('Community Announcements');
     $class_exists = count($this->xpath("//div[@class='announce-default']"));
     // Since it is valid login the class should be matches in html.
     $this->assertEqual(1, $class_exists, 'announce-default class exist for privileged user');
