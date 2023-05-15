@@ -233,4 +233,18 @@
       $(scrollTarget).animate({ scrollTop: offset.top - 10 }, 500);
     }
   };
+
+  /**
+   * Sets the browser URL ajax command.
+   *
+   * @param {Drupal.Ajax} [ajax]
+   *   A {@link Drupal.ajax} object.
+   * @param {object} response
+   *   Ajax response.
+   * @param {string} response.url
+   *   URL to be set.
+   */
+  Drupal.AjaxCommands.prototype.setBrowserUrl = (ajax, response) => {
+    window.history.replaceState(null, '', response.url);
+  };
 })(jQuery, Drupal, drupalSettings);

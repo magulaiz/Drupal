@@ -16,6 +16,7 @@ use Drupal\Core\Render\RenderContext;
 use Drupal\Core\Render\RendererInterface;
 use Drupal\Core\Routing\RedirectDestinationInterface;
 use Drupal\views\Ajax\ScrollTopCommand;
+use Drupal\views\Ajax\SetBrowserUrl;
 use Drupal\views\Ajax\ViewAjaxResponse;
 use Drupal\views\ViewExecutableFactory;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -124,6 +125,7 @@ class ViewAjaxController implements ContainerInjectionInterface {
       }, $args);
 
       $path = $request->request->get('view_path');
+      $target_url = $GLOBALS['base_path'] . $request->request->get('view_base_path');
       $dom_id = $request->request->get('view_dom_id');
       $dom_id = isset($dom_id) ? preg_replace('/[^a-zA-Z0-9_-]+/', '-', $dom_id) : NULL;
       $pager_element = $request->request->get('pager_element');
@@ -178,6 +180,7 @@ class ViewAjaxController implements ContainerInjectionInterface {
         $query = UrlHelper::buildQuery($used_query_parameters);
         if ($query != '') {
           $origin_destination .= '?' . $query;
+          $target_url .= '?' . $query;
         }
         $this->redirectDestination->set($origin_destination);
 
@@ -200,6 +203,7 @@ class ViewAjaxController implements ContainerInjectionInterface {
             ->applyTo($preview);
         }
         $response->addCommand(new ReplaceCommand(".js-view-dom-id-$dom_id", $preview));
+        $response->addCommand(new SetBrowserUrl($target_url));
 
         return $response;
       }

@@ -124,4 +124,8 @@
       }, 500);
     }
   };
+
+  Drupal.AjaxCommands.prototype.setBrowserUrl = function (ajax, response) {
+    window.history.replaceState(null, '', response.url);
+  };
 })(jQuery, Drupal, drupalSettings);

@@ -112,6 +112,8 @@ class ViewAjaxControllerTest extends UnitTestCase {
     $container = new ContainerBuilder();
     $container->set('renderer', $this->renderer);
     \Drupal::setContainer($container);
+    // Not initialized in Unit tests.
+    $GLOBALS['base_path'] = '/';
   }
 
   /**
