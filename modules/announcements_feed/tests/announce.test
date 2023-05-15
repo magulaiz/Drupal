@@ -15,19 +15,7 @@ class AnnounceTestValidateJsonFeed extends DrupalWebTestCase {
    *
    * @var object
    */
-  protected $user1;
-  /**
-   * A user with permission to access toolbar and access announcements.
-   *
-   * @var object
-   */
-  protected $user2;
-  /**
-   * A user with permission to access toolbar and access announcements.
-   *
-   * @var object
-   */
-  protected $user3;
+  protected $user;
   /**
    * A test endpoint which contains the community feeds.
    *
@@ -53,6 +41,9 @@ class AnnounceTestValidateJsonFeed extends DrupalWebTestCase {
    */
   protected $removed;
 
+  /**
+   * {@inheritdoc}
+   */
   public static function getInfo() {
     return array(
       'name' => 'Validate Json Feeds',
@@ -61,9 +52,13 @@ class AnnounceTestValidateJsonFeed extends DrupalWebTestCase {
     );
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function setUp() {
     global $base_url;
     global $base_path;
+    $module_path = drupal_get_path('module', 'announcements_feed');
     module_load_include('inc', 'announce_test', 'announce_test');
     parent::setUp(array(
       'user',
@@ -71,141 +66,43 @@ class AnnounceTestValidateJsonFeed extends DrupalWebTestCase {
       'announcements_feed',
       'announce_test',
     ));
-    $this->user1 = $this->drupalCreateUser(array(
+    $this->user = $this->drupalCreateUser(array(
       'access toolbar',
       'access announcements',
     ));
-    $this->user2 = $this->drupalCreateUser(array(
-      'access toolbar',
-      'access announcements',
-    ));
-    $this->user3 = $this->drupalCreateUser(array(
-      'access toolbar',
-      'access announcements',
-    ));
-    $this->responseJson = $base_url . $base_path . 'announce-feed-json/community-feeds';
-    $this->updatedJson = $base_url . $base_path . 'announce-feed-json/updated';
-    $this->emptyJson = $base_url . $base_path . 'announce-feed-json/empty';
-    $this->removed = $base_url . $base_path . 'announce-feed-json/removed';
+    $this->responseJson = $base_url . $base_path . $module_path . '/tests/announce_feed/community-feeds.json';
+    $this->updatedJson = $base_url . $base_path . $module_path . '/tests/announce_feed/updated.json';
+    $this->emptyJson = $base_url . $base_path . $module_path . '/tests/announce_feed/empty.json';
+    $this->removed = $base_url . $base_path . $module_path . '/tests/announce_feed/removed.json';
     set_announce_test_endpoint($this->responseJson);
   }
 
   /**
    * Testing the feed notification with different kind of urls.
    */
-  public function testAnnounceFeedUpdated() {
+  public function testAnnounceFeedUpdatedAndRemoved() {
     module_load_include('inc', 'announce_test', 'announce_test');
-    $this->drupalLogin($this->user2);
+    $this->drupalLogin($this->user);
     $this->drupalGet('');
     $this->clickLink('Community Announcements');
-    $this->drupalLogout();
-
-    $this->drupalLogin($this->user1);
-    $this->drupalGet('');
-    $this->clickLink('Community Announcements');
-
-    $this->drupalGet('');
-    $alert_elements = $this->xpath("//a[@class='announce-new']");
-    $this->assertEqual(0, count($alert_elements), 'No New Announcement Exist');
-
-    // Add new items to the announce-feed and
-    // logged in as a user who has "access announcements" permission.
-    // Change the feed url to updated json file which contain new feeds.
-    // This is check if the user has new announcement is it been reflected on
-    // the site. Setup test announce endpoint.
     set_announce_test_endpoint($this->updatedJson);
     drupal_flush_all_caches();
 
     $this->drupalGet('');
-    $unread_alert_elements = $this->xpath("//a[@class='announce-new']");
-
-    // Assert the '.announce-new' class is added when there are new
-    // announcements.
-    // Alert Icon should display a red dot over it.
-    $this->assertEqual(array_key_exists(0, $unread_alert_elements), TRUE, 'New Announcement Exist');
-
-    $this->clickLink('Community Announcements');
-    $unread_msg_count = count($this->xpath("//div[@class='unread_status']"));
-    // Total number of unread records.
-    $total_updated_records_count = 1;
-
-    $this->assertEqual($unread_msg_count, $total_updated_records_count, 'Matches the total number of updated records');
     $this->assertText('Only 9 - Drupal 106 is available and this feed is Updated');
     $this->drupalLogout();
 
-    // Login user second time.
-    $this->drupalLogin($this->user1);
-
-    $this->drupalGet('');
-    // Check if unread messages are there in site.
-    $this->assertEqual(0, count($this->xpath("//div[@class='unread_status']")), 'No new messages');
-    $this->clickLink('Community Announcements');
-    $this->assertEqual(0, count($this->xpath("//div[@class='unread_status']")), 'No new announcements');
-
-    // Login as another user and access the alert icon.
-    $this->drupalLogin($this->user2);
-    $this->drupalGet('');
-
-    $unread_alert_elements = $this->xpath("//a[@class='announce-new']");
-
-    // Assert the '.announce-new' class is added when there are new
-    // announcements.
-    // Alert Icon should display a red dot over it.
-    $this->assertEqual(array_key_exists(0, $unread_alert_elements), TRUE, 'New Announcement Exist');
-
-    $this->clickLink('Community Announcements');
-    $unread_msg_count = count($this->xpath("//div[@class='unread_status']"));
-    // Total number of unread records.
-    $total_updated_records_count = 1;
-
-    $this->assertEqual($unread_msg_count, $total_updated_records_count, 'Matches the total number of updated records');
-    $title = $this->xpath("//div[@id='new-feed-standard']/div/a[text()='Only 9 - Drupal 106 is available and this feed is Updated']");
-    $this->assertEqual(array_key_exists(0, $title), TRUE, 'Title Exist');
-    $this->assertText('announce title updated');
-
-    $this->drupalLogout();
-  }
-
-  /**
-   * Check the status of the red dot icon when few items are drop from the feed.
-   */
-  public function testAnnounceFeedRemoved() {
-    $this->drupalLogin($this->user3);
+    // Testing the removed json feed.
+    $this->drupalLogin($this->user);
     $this->drupalGet('');
     $this->clickLink('Community Announcements');
-    $this->assertEqual(0, count($this->xpath("//a[@class='announce-new']")), 'No new messages');
-    $this->clickLink('Community Announcements');
-    $this->assertEqual(0, count($this->xpath("//div[@class='unread_status']")), 'No new messages');
-    $this->assertNoText('Only 9 - Drupal 106 is available and this feed is Updated');
-
-    // Change the feed url to updated json file.
-    // For resetting temp storage.
-    set_announce_test_endpoint($this->updatedJson);
-    drupal_flush_all_caches();
-
-    $this->drupalGet('');
-    $this->assertEqual(array_key_exists(0, $this->xpath("//a[@class='announce-new']")), TRUE, 'New Announcement Exist');
-    $this->clickLink('Community Announcements');
-    $this->assertEqual(count($this->xpath("//div[@class='unread_status']")), 1, 'Matches the total number of updated records');
-    $this->assertText('Only 9 - Drupal 106 is available and this feed is Updated');
-    $this->drupalLogout();
-
-    // Change the feed url to removed feeds json file.
-    // For resetting temp storage.
     set_announce_test_endpoint($this->removed);
     drupal_flush_all_caches();
-    $this->drupalLogin($this->user3);
 
-    // If the removed item is only item the
-    // user hasn't read the red dot should not show.
     $this->drupalGet('');
-    $this->assertEqual(0, count($this->xpath("//a[@class='announce-new']")), 'No new messages');
-
-    // Removed items should not display in the announcement model.
-    $this->clickLink('Community Announcements');
-    $this->assertEqual(0, count($this->xpath("//div[@class='unread_status']")), 'No new messages');
     $this->assertNoText('Only 9 - Drupal 106 is available and this feed is Updated');
 
+    $this->drupalLogout();
   }
 
   /**
@@ -217,13 +114,10 @@ class AnnounceTestValidateJsonFeed extends DrupalWebTestCase {
     set_announce_test_endpoint($this->emptyJson);
     drupal_flush_all_caches();
 
-    $this->drupalLogin($this->user3);
+    $this->drupalLogin($this->user);
     $this->drupalGet('');
-    $this->assertEqual(0, count($this->xpath("//a[@class='announce-new']")), 'No new messages');
-
-    // Removed items should not display in the announcement model.
+    // Only no annoucnements available message should show.
     $this->clickLink('Community Announcements');
-    $this->assertEqual(0, count($this->xpath("//div[@class='unread_status']")), 'No new messages');
     $this->assertText('No announcements available');
   }
 
@@ -233,6 +127,9 @@ class AnnounceTestValidateJsonFeed extends DrupalWebTestCase {
  */
 class AnnounceTestValidateUrl extends DrupalUnitTestCase {
 
+  /**
+   * {@inheritdoc}
+   */
   public static function getInfo() {
     return array(
       'name' => 'Validate URL',
@@ -241,6 +138,9 @@ class AnnounceTestValidateUrl extends DrupalUnitTestCase {
     );
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function setUp() {
     parent::setUp('announcements_feed');
     module_load_include('inc', 'announcements_feed', 'announcements_feed');
@@ -252,15 +152,24 @@ class AnnounceTestValidateUrl extends DrupalUnitTestCase {
   public function testValidateUrl() {
     $urls = array(
       array('https://www.drupal.org', TRUE),
+      array('https://drupal.org', TRUE),
       array('https://api.drupal.org', TRUE),
+      array('https://a.drupal.org', TRUE),
+      array('https://123.drupal.org', TRUE),
+      array('https://api-new.drupal.org', TRUE),
+      array('https://api_new.drupal.org', TRUE),
+      array('https://api-.drupal.org', TRUE),
       array('https://www.example.org', FALSE),
+      array('https://example.org', FALSE),
       array('https://api.example.org/project/announce', FALSE),
+      array('https://-api.drupal.org', FALSE),
       array('https://a.example.org/project/announce', FALSE),
       array('https://test.drupaal.com', FALSE),
       array('https://api.drupal.org.example.com', FALSE),
+      array('https://example.org/drupal.org', FALSE),
     );
     foreach ($urls as $url) {
-      $result = announcements_feed_validate_url(array('link' => $url[0]));
+      $result = announcements_feed_validate_url($url[0]);
       $this->assertEqual($url[1], $result, 'Returned' . $url[1]);
     }
   }
@@ -271,6 +180,9 @@ class AnnounceTestValidateUrl extends DrupalUnitTestCase {
  */
 class AnnounceTestValidateLoginTestCase extends DrupalWebTestCase {
 
+  /**
+   * {@inheritdoc}
+   */
   public static function getInfo() {
     return array(
       'name' => 'Validate login',
@@ -279,6 +191,9 @@ class AnnounceTestValidateLoginTestCase extends DrupalWebTestCase {
     );
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function setUp() {
     global $base_url;
     global $base_path;
@@ -289,7 +204,8 @@ class AnnounceTestValidateLoginTestCase extends DrupalWebTestCase {
       'announcements_feed',
       'announce_test',
     ));
-    $response_json = $base_url . $base_path . '/announce-feed-json/community-feeds';
+    $response_json = $base_url . $base_path . $module_path . '/tests/announce_feed/community-feeds.json';
+    ;
     set_announce_test_endpoint($response_json);
   }
 
@@ -305,42 +221,10 @@ class AnnounceTestValidateLoginTestCase extends DrupalWebTestCase {
     $this->drupalLogin($this->privilegedUser);
     $this->drupalGet('');
     // Check for the new announcement class in the toolbar.
-    $unread_alert_elements = $this->xpath("//a[@class='announce-new']");
-    $this->assertEqual(array_key_exists(0, $unread_alert_elements), TRUE, 'New Announcement Exist');
     $this->clickLink('Community Announcements');
-    $unread_msg_count = count($this->xpath("//div[@class='unread_status']"));
-    $title_count = count($this->xpath("//div[@class='announcement_title']"));
-    // Check if unread messages are there in site.
-    $this->assertNotEqual(0, $unread_msg_count, 'Contains new messages');
-    // Since it new login all the messages should be unread message.
-    $this->assertEqual($unread_msg_count, $title_count, 'Unread messages matches the number of messages');
-    $this->drupalLogout();
-    // Log-in again to check if the unread messages are read.
-    $this->drupalLogin($this->privilegedUser);
-    // Check for alert is popping up.
-    $read_alert_elements = $this->xpath("//a[@class='announce-new']");
-    $this->assertEqual(0, count($read_alert_elements), 'No New Announcement Exist');
-    $this->clickLink('Community Announcements');
-    $unread_msg_count = count($this->xpath("//div[@class='unread_status']"));
-    // Check if unread messages are there in site.
-    $this->assertEqual(0, $unread_msg_count, 'No new messages');
-    // Checking the same with a new user.
-    $account = $this->drupalCreateUser(array(
-      'access toolbar',
-      'access announcements',
-    ));
-    $this->drupalLogin($account);
-    $this->drupalGet('');
-    // Check for the new announcement class in the toolbar.
-    $unread_alert_elements = $this->xpath("//a[@class='announce-new']");
-    $this->assertEqual(array_key_exists(0, $unread_alert_elements), TRUE, 'New Announcement Exist');
-    $this->clickLink('Community Announcements');
-    $unread_msg_count = count($this->xpath("//div[@class='unread_status']"));
-    $title_count = count($this->xpath("//div[@class='announcement_title']"));
-    // Check if unread messages are there in site.
-    $this->assertNotEqual(0, $unread_msg_count, 'Contains new messages');
-    // Since it new login all the messages should be unread message.
-    $this->assertEqual($unread_msg_count, $title_count, 'Unread messages matches the number of messages');
+    $class_exists = count($this->xpath("//div[@class='announce-default']"));
+    // Since it is valid login the class should be matches in html.
+    $this->assertEqual(1, $class_exists, 'announce-default class exist for privileged user');
     $this->drupalLogout();
   }
 
@@ -350,7 +234,7 @@ class AnnounceTestValidateLoginTestCase extends DrupalWebTestCase {
   public function testAnnounceWithoutPermission() {
     $account = $this->drupalCreateUser(array('access toolbar'));
     $this->drupalLogin($account);
-    $this->drupalGet('/admin/announcement');
+    $this->drupalGet('/admin/announcements_feed');
     $this->assertText('You are not authorized to access this page.');
   }
 

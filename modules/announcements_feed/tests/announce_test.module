@@ -28,8 +28,8 @@ function announce_test_set_feed_config($json_name) {
     // Return an empty response.
     drupal_not_found();
   }
-  if (!_cache_get_object('cache_announcements_feed')) {
-    cache_clear_all('announcements_feed', 'cache_announcements_feed');
+  if (!_cache_get_object('cache_announce')) {
+    cache_clear_all('announcements_feed', 'cache_announce');
   }
 
   $contents = file_get_contents($file);

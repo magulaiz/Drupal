@@ -25,11 +25,11 @@ function announcements_feed_get_announcements() {
   catch (Exception $e) {
     return theme('status_message', drupal_set_message($e->getMessage(), 'error'));
   }
+  $build = array();
   foreach ($announcements as $announcement) {
     $key = $announcement['featured'] ? '#featured' : '#standard';
     $build[$key][] = $announcement;
   }
-  $build = $build ?? array();
   $build += [
     '#theme' => 'announcements_feed',
     '#count' => count($announcements),
@@ -49,6 +49,7 @@ function announcements_feed_get_announcements() {
  */
 function announcements_feed_get_all_announcements() {
   $announcements = announcements_feed_fetch();
+  $announcements_feed = array();
   foreach ($announcements as $announcement) {
     $announcements_feed[] = [
       'id' => $announcement['id'],
@@ -61,7 +62,7 @@ function announcements_feed_get_all_announcements() {
       'featured' => (bool) $announcement['_drupalorg']['featured'],
     ];
   }
-  return $announcements_feed ?? array();
+  return $announcements_feed;
 }
 
 /**
@@ -94,13 +95,22 @@ function announcements_feed_fetch() {
         watchdog('error', 'JSON data is not parsable please check the api.', WATCHDOG_ERROR);
         throw new Exception('Announcement Feed unable to parse the JSON data. Check logs for more.');
       }
-      $announcements = $feeds['items'] ?? array();
+      $announcements = array();
+      if ($feeds['items']) {
+        $announcements = $feeds['items'];
+      }
       $announcements = array_filter($announcements, function (array $announcement) {
-        $announcement_url = $announcement['url'] ?? '';
-        $announcement_version = $announcement['_drupalorg']['version'] ?? '';
+        $announcement_url = '';
+        $announcement_version = '';
+        if (!empty($announcement['url'])) {
+          $announcement_url = $announcement['url'];
+        }
+        if (!empty($announcement['_drupalorg']['version'])) {
+          $announcement_version = $announcement['_drupalorg']['version'];
+        }
         return announcements_feed_validate_url($announcement_url) && announcements_feed_is_relevant_item($announcement_version);
       });
-      cache_set('announcements_feed', $announcements, 'cache_announcements_feed', REQUEST_TIME + variable_get('max_age'));
+      cache_set('announcements_feed', $announcements, 'cache_announce', REQUEST_TIME + variable_get('max_age'));
     }
     else {
       watchdog('error', $response->code, (array) $response, WATCHDOG_ERROR);
@@ -139,7 +149,8 @@ function announcements_feed_fetch() {
  *   Return True if $announcement['version'] matches Drupal version.
  */
 function announcements_feed_is_relevant_item(string $version): bool {
-  if (preg_match('/(>|>=)7/', $version)) {
+  // Return true if version is one of supporting Drupal 7.
+  if (preg_match('/^(\^7\s*\|\|\s*)|\|\|\s*\^7(\s*\|\|)?|\^7\s*|=7|\*|7\.[0-9]{2}/', $version)) {
     return TRUE;
   }
   return FALSE;

@@ -53,30 +53,6 @@
 		}
 	},
         {
-		"id": "3343439",
-		"title": "New Updated community feed available.",
-		"content_html": "<p>Drupal is introducing a new project Announcements feature so that you can see news and updates about the Drupal project and community directly in your Drupal dashboard. Learn what to expect.</p>",
-		"url": "https://www.drupal.org/about/announcements/blog/what-to-expect-from-the-announcements-feed",
-		"date_modified": "2023-03-11T19:45:53+00:00",
-		"date_published": "2023-03-11T19:45:53+00:00",
-		"_drupalorg": {
-			"featured": true,
-			"version": ">=7.0"
-		}
-	},
-        {
-		"id": "3343440",
-		"title": "Latest community feed available.",
-		"content_html": "<p>Drupal is introducing a new project Announcements feature so that you can see news and updates about the Drupal project and community directly in your Drupal dashboard. Learn what to expect.</p>",
-		"url": "https://www.drupal.org/about/announcements/blog/what-to-expect-from-the-announcements-feed",
-		"date_modified": "2023-01-29T19:45:53+00:00",
-		"date_published": "2023-01-29T19:45:53+00:00",
-		"_drupalorg": {
-			"featured": true,
-			"version": ">=7.0"
-		}
-	},
-        {
 		"id": "3343431",
 		"title": "Any plan to migrate to Drupal 9/10?",
 		"content_html": "<p>Drupal is introducing a new project Announcements feature so that you can see news and updates about the Drupal project and community directly in your Drupal dashboard. Learn what to expect.</p>",
@@ -87,5 +63,17 @@
 			"featured": true,
 			"version": ">=7.0"
 		}
-	}]
+	},
+  {
+    "id": "3343440",
+    "title": "Only 9 - Drupal 106 is available and this feed is Updated",
+    "content_html": "<p>Drupal is introducing a new project Announcements feature so that you can see news and updates about the Drupal project and community directly in your Drupal dashboard. Learn what to expect.</p>",
+    "url": "https://www.drupal.org/about/announcements/blog/what-to-expect-from-the-announcements-feed",
+    "date_modified": "2023-01-29T19:45:53+00:00",
+    "date_published": "2023-01-29T19:45:53+00:00",
+    "_drupalorg": {
+      "featured": true,
+      "version": ">=7.0"
+    }
+  }]
 }
