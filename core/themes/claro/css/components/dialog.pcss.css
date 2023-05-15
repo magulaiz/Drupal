@@ -50,10 +50,10 @@
     border: 2px solid transparent;
     border-radius: var(--jui-dialog-close-button-border-radius);
     background: none;
-  }
 
-  & .ui-dialog-titlebar-close:hover {
-    border-color: var(--color-white);
+    &:hover {
+      border-color: var(--color-white);
+    }
   }
 
   & .ui-dialog-titlebar-close:focus {
@@ -90,12 +90,12 @@
 
   & .ui-dialog-content {
     position: static;
-  }
 
-  /* Form action buttons are moved in dialogs. Remove empty space. */
-  & .ui-dialog-content .form-actions {
-    margin: 0;
-    padding: 0;
+    /* Form action buttons are moved in dialogs. Remove empty space. */
+    & .form-actions {
+      margin: 0;
+      padding: 0;
+    }
   }
 
   /** Off-canvas styles. */
@@ -108,6 +108,10 @@
       min-width: 92%;
       max-width: 92%;
     }
+  }
+
+  @media (forced-colors: active) {
+    border: 1px solid transparent;
   }
 }
 

@@ -98,9 +98,9 @@
 
 .ui-dialog .ui-dialog-content {
   position: static;
-}
 
-/* Form action buttons are moved in dialogs. Remove empty space. */
+  /* Form action buttons are moved in dialogs. Remove empty space. */
+}
 
 .ui-dialog .ui-dialog-content .form-actions {
   margin: 0;
@@ -114,10 +114,16 @@
 }
 
 @media all and (max-width: 48em) {
-
-  .ui-dialog:not(.ui-dialog-off-canvas) { /* 768px */
+  .ui-dialog:not(.ui-dialog-off-canvas) {
+    /* 768px */
     min-width: 92%;
     max-width: 92%;
+  }
+}
+
+@media (forced-colors: active) {
+  .ui-dialog {
+    border: 1px solid transparent;
   }
 }
 

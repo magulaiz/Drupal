@@ -324,7 +324,7 @@ class ViewEditForm extends ViewFormBase {
     $destination = $query->get('destination');
 
     if (!empty($destination)) {
-      // Find out the first display which has a changed path and redirect to this url.
+      // Find out the first display which has a changed path and redirect to this URL.
       $old_view = Views::getView($view->id());
       $old_view->initDisplay();
       foreach ($old_view->displayHandlers as $id => $display) {
@@ -450,7 +450,7 @@ class ViewEditForm extends ViewFormBase {
         elseif ($view->status() && $view->getExecutable()->displayHandlers->get($display['id'])->hasPath()) {
           $path = $view->getExecutable()->displayHandlers->get($display['id'])->getPath();
 
-          if ($path && (strpos($path, '%') === FALSE)) {
+          if ($path && (!str_contains($path, '%'))) {
             // Wrap this in a try/catch as trying to generate links to some
             // routes may throw a NotAcceptableHttpException if they do not
             // respond to HTML, such as RESTExports.

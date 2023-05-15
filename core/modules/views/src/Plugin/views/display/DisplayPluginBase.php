@@ -790,7 +790,7 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
       return $this->default_display->getOption($option);
     }
 
-    if (isset($this->options[$option]) || array_key_exists($option, $this->options)) {
+    if (\array_key_exists($option, $this->options)) {
       return $this->options[$option];
     }
   }
@@ -1925,7 +1925,7 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
 
     // Validate plugin options. Every section with "_options" in it, belongs to
     // a plugin type, like "style_options".
-    if (strpos($section, '_options') !== FALSE) {
+    if (str_contains($section, '_options')) {
       $plugin_type = str_replace('_options', '', $section);
       // Load the plugin and let it handle the validation.
       if ($plugin = $this->getPlugin($plugin_type)) {
@@ -2137,7 +2137,7 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
   protected function getMoreUrl() {
     $path = $this->getOption('link_url');
 
-    // Return the display URL if there is no custom url.
+    // Return the display URL if there is no custom URL.
     if ($this->getOption('link_display') !== 'custom_url' || empty($path)) {
       return $this->view->getUrl(NULL, $this->display['id']);
     }
@@ -2162,7 +2162,7 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
     $path = $options['path'];
     unset($options['path']);
 
-    // Create url.
+    // Create URL.
     // @todo Views should expect and store a leading /. See:
     //   https://www.drupal.org/node/2423913
     $url = UrlHelper::isExternal($path) ? Url::fromUri($path, $options) : Url::fromUserInput('/' . ltrim($path, '/'), $options);
