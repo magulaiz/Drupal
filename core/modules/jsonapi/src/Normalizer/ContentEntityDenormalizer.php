@@ -19,6 +19,8 @@ final class ContentEntityDenormalizer extends EntityDenormalizerBase {
 
   /**
    * {@inheritdoc}
+   * @deprecated in drupal 10.1.0 and is removed from drupal:11.0.0
+   * @see https://www.drupal.org/project/drupal/issues/3360124
    */
   protected $supportedInterfaceOrClass = ContentEntityInterface::class;
 
