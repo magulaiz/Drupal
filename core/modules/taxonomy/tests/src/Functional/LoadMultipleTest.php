@@ -28,7 +28,9 @@ class LoadMultipleTest extends TaxonomyTestBase {
    */
   public function testTaxonomyTermMultipleLoad() {
     // Create a vocabulary.
-    $vocabulary = $this->createVocabulary();
+    $vocabulary_name = $this->randomGenerator->string();
+    $vocabulary = $this->createVocabulary(['name' => $vocabulary_name]);
+    $this->assertEquals($vocabulary_name, $vocabulary->label());
 
     // Create five terms in the vocabulary.
     $i = 0;
