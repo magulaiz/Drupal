@@ -114,7 +114,8 @@ function announcements_feed_fetch() {
     }
     else {
       watchdog('error', $response->code, (array) $response, WATCHDOG_ERROR);
-      throw new Exception('Announcements Feed Url fetch failed with an error');
+      throw new Exception('Announcements Feed Url fetch failed with an error: @code. Check logs for more',
+        array('@code' => $response->code));
     }
   }
   else {

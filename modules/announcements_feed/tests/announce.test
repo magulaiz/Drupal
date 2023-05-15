@@ -221,9 +221,9 @@ class AnnounceTestValidateLoginTestCase extends DrupalWebTestCase {
     ));
     $this->drupalLogin($this->privilegedUser);
     $this->drupalGet('');
-    $class_exists = count($this->xpath("//div[@class='announce-default']"));
     // Since it is valid login the class should be matches in html.
-    $this->assertEqual(1, $class_exists, 'announce-default class exist for privileged user');
+    $this->drupalGet('/admin/announcements_feed');
+    $this->assertText('Community Announcements');
     $this->drupalLogout();
   }
 
