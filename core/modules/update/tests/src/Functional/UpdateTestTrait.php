@@ -20,20 +20,28 @@ trait UpdateTestTrait {
    *   For a list of accepted keys, see InfoParserInterface. Key-value pairs not
    *   present here will be inherited from $default_info.
    *   For example:
-   *   @code
+   *
+   * @code
    *   'drupal' => [
    *     'project' => 'drupal',
    *     'version' => '8.0.0',
    *     'hidden' => FALSE,
    *   ]
-   *   @endcode
+   * @endcode
    *
+   * @throws \Exception
+   *
+   * @see \Drupal\Core\Extension\ExtensionList::doList()
    * @see \Drupal\Core\Extension\InfoParserInterface
    * @see update_test_system_info_alter()
-   * @see \Drupal\Core\Extension\ExtensionList::doList()
    */
   protected function mockInstalledExtensionsInfo(array $installed_extensions): void {
-    $this->config('update_test.settings')->set('system_info', $installed_extensions)->save();
+    if (in_array('#all', array_keys($installed_extensions))) {
+      throw new \Exception("#all (default value) shouldn't be set here instead use ::mockDefaultExtensionsInfo().");
+    }
+    $system_info = $this->config('update_test.settings')->get('system_info');
+    $system_info = $installed_extensions + $system_info;
+    $this->config('update_test.settings')->set('system_info', $system_info)->save();
   }
 
   /**

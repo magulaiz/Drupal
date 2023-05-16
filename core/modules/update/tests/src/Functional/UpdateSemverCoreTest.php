@@ -272,15 +272,12 @@ class UpdateSemverCoreTest extends UpdateSemverTestBase {
    * Ensures proper results where there are date mismatches among modules.
    */
   public function testDatestampMismatch() {
-    $installed_extensions = [
+    $this->mockInstalledExtensionsInfo([
       'block' => [
         // This is 2001-09-09 01:46:40 GMT, so test for "2001-Sep-".
         'datestamp' => '1000000000',
       ],
-    ];
-    $this->mockInstalledExtensionsInfo(
-      $installed_extensions,
-    );
+    ]);
     // We need to think we're running a -dev snapshot to see dates.
     $this->mockDefaultExtensionsInfo([
       'version' => '8.1.0-dev',

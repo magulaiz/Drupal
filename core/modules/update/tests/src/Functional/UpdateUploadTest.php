@@ -124,12 +124,11 @@ class UpdateUploadTest extends UpdateUploaderTestBase {
 
     // Define the update XML such that the new module downloaded above needs an
     // update from 8.x-1.0 to 8.x-1.1.
-    $installed_extensions = [
+    $this->mockInstalledExtensionsInfo([
       'update_test_new_module' => [
         'project' => 'update_test_new_module',
       ],
-    ];
-    $this->mockInstalledExtensionsInfo($installed_extensions);
+    ]);
     $xml_mapping = [
       'update_test_new_module' => '1_1',
     ];

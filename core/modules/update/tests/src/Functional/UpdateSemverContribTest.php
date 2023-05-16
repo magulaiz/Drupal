@@ -34,7 +34,7 @@ class UpdateSemverContribTest extends UpdateSemverTestBase {
    * {@inheritdoc}
    */
   protected function setProjectInstalledVersion($version) {
-    $installed_extensions = [
+    $this->mockInstalledExtensionsInfo([
       $this->updateProject => [
         'project' => $this->updateProject,
         'version' => $version,
@@ -46,8 +46,7 @@ class UpdateSemverContribTest extends UpdateSemverTestBase {
         'version' => '8.0.0',
         'hidden' => FALSE,
       ],
-    ];
-    $this->mockInstalledExtensionsInfo($installed_extensions);
+    ]);
     $this->mockDefaultExtensionsInfo(['version' => '8.0.0']);
   }
 
