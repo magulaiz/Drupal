@@ -83,13 +83,14 @@ class UpdateContribTest extends UpdateTestBase {
    * Tests the basic functionality of a contrib module on the status report.
    */
   public function testUpdateContribBasic() {
-    $this->mockInstalledExtensionsInfo([
+    $installed_extensions = [
       'aaa_update_test' => [
         'project' => 'aaa_update_test',
         'version' => '8.x-1.0',
         'hidden' => FALSE,
       ],
-    ]);
+    ];
+    $this->mockInstalledExtensionsInfo($installed_extensions);
     $this->mockDefaultExtensionsInfo(['version' => '8.0.0']);
     $this->refreshUpdateStatus(
       [
@@ -605,7 +606,7 @@ class UpdateContribTest extends UpdateTestBase {
     $this->mockInstalledExtensionsInfo([
       'aaa_update_test' => [
         'project' => 'aaa_update_test',
-        'version' => '8.x-1.0',
+        'version' => $module_version,
         'hidden' => FALSE,
       ],
     ]);
@@ -808,7 +809,6 @@ class UpdateContribTest extends UpdateTestBase {
     ];
     foreach ($version_infos as $version_info) {
       $installed_extensions = [
-        '#all' => ['some' => 'value'],
         'aaa_update_test' => [
           'project' => 'aaa_update_test',
           'hidden' => FALSE,
