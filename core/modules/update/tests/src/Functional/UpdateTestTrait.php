@@ -7,6 +7,9 @@ namespace Drupal\Tests\update\Functional;
  *
  * @see update_test_system_info_alter
  * @see \Drupal\update_test\Controller\UpdateTestController::updateTest
+ * @see \Drupal\Core\Extension\ExtensionList::doList()
+ * @see \Drupal\Core\Extension\InfoParserInterface
+ * @see update_test_system_info_alter
  */
 trait UpdateTestTrait {
 
@@ -30,10 +33,6 @@ trait UpdateTestTrait {
    * @endcode
    *
    * @throws \Exception
-   *
-   * @see \Drupal\Core\Extension\ExtensionList::doList()
-   * @see \Drupal\Core\Extension\InfoParserInterface
-   * @see update_test_system_info_alter()
    */
   protected function mockInstalledExtensionsInfo(array $installed_extensions): void {
     if (in_array('#all', array_keys($installed_extensions), TRUE)) {
@@ -50,8 +49,6 @@ trait UpdateTestTrait {
    * @param string[] $default_info
    *   The *.info.yml key-value pairs to be mocked across all
    *   extensions. Hence, these can be seen as default/fallback values.
-   *
-   * @see update_test_system_info_alter()
    */
   protected function mockDefaultExtensionsInfo(array $default_info): void {
     $system_info = $this->config('update_test.settings')->get('system_info');
@@ -70,8 +67,6 @@ trait UpdateTestTrait {
    *   drupal.sec.0.2.xml. Look at
    *   core/modules/update/tests/fixtures/release-history for more release
    *   history XML examples.
-   *
-   * @see \Drupal\update_test\Controller\UpdateTestController::updateTest
    */
   protected function mockReleaseHistory(array $release_history): void {
     $this->config('update_test.settings')->set('xml_map', $release_history)->save();
