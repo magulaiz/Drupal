@@ -195,7 +195,7 @@ class UserPermissionsForm extends FormBase {
               'class' => ['checkbox'],
             ],
             '#type' => 'checkbox',
-            '#default_value' => in_array($perm, $role_permissions[$rid]) ? 1 : 0,
+            '#default_value' => in_array($perm, !empty($role_permissions[$rid]) ? $role_permissions[$rid] : []) ? 1 : 0,
             '#attributes' => ['class' => ['rid-' . $rid, 'js-rid-' . $rid]],
             '#parents' => [$rid, $perm],
           ];
