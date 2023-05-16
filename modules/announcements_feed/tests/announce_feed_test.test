@@ -8,7 +8,7 @@
 /**
  * Tests for validating Json feed with different urls.
  */
-class AnnounceTestValidateJsonFeed extends DrupalWebTestCase {
+class AnnounceFeedTestValidateJsonFeed extends DrupalWebTestCase {
 
   /**
    * A user with permission to access toolbar and access announcements.
@@ -59,8 +59,9 @@ class AnnounceTestValidateJsonFeed extends DrupalWebTestCase {
     global $base_url;
     global $base_path;
     $module_path = drupal_get_path('module', 'announcements_feed');
-    module_load_include('inc', 'announce_test', 'announce_test');
-    parent::setUp('user', 'toolbar', 'announcements_feed', 'announce_test');
+    module_load_include('inc', 'announce_feed_test', 'announce_feed_test');
+    $modules[] = array('user');
+    parent::setUp('user', 'toolbar', 'announcements_feed', 'announce_feed_test');
     $this->user = $this->drupalCreateUser(array(
       'access toolbar',
       'access announcements',
@@ -70,7 +71,7 @@ class AnnounceTestValidateJsonFeed extends DrupalWebTestCase {
     $this->updatedJson = $base_url . $base_path . $module_path . '/tests/announce_feed/updated.json';
     $this->emptyJson = $base_url . $base_path . $module_path . '/tests/announce_feed/empty.json';
     $this->removed = $base_url . $base_path . $module_path . '/tests/announce_feed/removed.json';
-    set_announce_test_endpoint($this->responseJson);
+    set_announce_feed_test_endpoint($this->responseJson);
   }
 
   /**
@@ -81,12 +82,14 @@ class AnnounceTestValidateJsonFeed extends DrupalWebTestCase {
       'access toolbar',
       'access announcements',
     ));
-    module_load_include('inc', 'announce_test', 'announce_test');
+    module_load_include('inc', 'announce_feed_test', 'announce_feed_test');
     $this->drupalLogin($this->user);
     $this->drupalGet('');
     $this->clickLink('Community Announcements');
-    set_announce_test_endpoint($this->updatedJson);
-    drupal_flush_all_caches();
+    set_announce_feed_test_endpoint($this->updatedJson);
+    if (!_cache_get_object('cache_announcements_feed')) {
+      cache_clear_all('announcements_feed', 'cache_announcements_feed');
+    }
 
     $this->drupalGet('/admin/announcements_feed');
     $this->assertText('Only 9 - Drupal 106 is available and this feed is Updated');
@@ -96,8 +99,8 @@ class AnnounceTestValidateJsonFeed extends DrupalWebTestCase {
     $this->drupalLogin($this->user);
     $this->drupalGet('');
     $this->clickLink('Community Announcements');
-    set_announce_test_endpoint($this->removed);
-    drupal_flush_all_caches();
+    set_announce_feed_test_endpoint($this->removed);
+    cache_clear_all('announcements_feed', 'cache_announcements_feed');
     $this->drupalGet('/admin/announcements_feed');
     $this->assertNoText('Only 9 - Drupal 106 is available and this feed is Updated');
 
@@ -114,9 +117,10 @@ class AnnounceTestValidateJsonFeed extends DrupalWebTestCase {
     ));
     // Change the feed url to empty json file.
     // For resetting temp storage.
-    set_announce_test_endpoint($this->emptyJson);
-    drupal_flush_all_caches();
-
+    set_announce_feed_test_endpoint($this->emptyJson);
+    if (!_cache_get_object('cache_announcements_feed')) {
+      cache_clear_all('announcements_feed', 'cache_announcements_feed');
+    }
     $this->drupalLogin($this->user);
     // Only no annoucnements available message should show.
     $this->clickLink('Community Announcements');
@@ -127,7 +131,7 @@ class AnnounceTestValidateJsonFeed extends DrupalWebTestCase {
 /**
  * Unit test for module functions.
  */
-class AnnounceTestValidateUrl extends DrupalUnitTestCase {
+class AnnounceFeedTestValidateUrl extends DrupalUnitTestCase {
 
   /**
    * {@inheritdoc}
@@ -178,9 +182,9 @@ class AnnounceTestValidateUrl extends DrupalUnitTestCase {
 
 }
 /**
- * Testing the Announce login test cases.
+ * Testing the Announcements feed login test cases.
  */
-class AnnounceTestValidateLoginTestCase extends DrupalWebTestCase {
+class AnnounceFeedTestValidateLoginTestCase extends DrupalWebTestCase {
 
   /**
    * {@inheritdoc}
@@ -200,10 +204,10 @@ class AnnounceTestValidateLoginTestCase extends DrupalWebTestCase {
     global $base_url;
     global $base_path;
     $module_path = drupal_get_path('module', 'announcements_feed');
-    module_load_include('inc', 'announce_test', 'announce_test');
-    parent::setUp('user', 'toolbar', 'announcements_feed', 'announce_test');
+    module_load_include('inc', 'announce_feed_test', 'announce_feed_test');
+    parent::setUp('user', 'toolbar', 'announcements_feed', 'announce_feed_test');
     $response_json = $base_url . $base_path . $module_path . '/tests/announce_feed/community-feeds.json';
-    set_announce_test_endpoint($response_json);
+    set_announce_feed_test_endpoint($response_json);
   }
 
   /**

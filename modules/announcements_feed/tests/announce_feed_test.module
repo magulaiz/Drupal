@@ -8,10 +8,10 @@
 /**
  * Implements hook_menu().
  */
-function announce_test_menu() {
-  $items['announce-feed-json/%'] = array(
-    'title' => 'Announce Feed test',
-    'page callback' => 'announce_test_set_feed_config',
+function announce_feed_test_menu() {
+  $items['announcements-feed-json/%'] = array(
+    'title' => 'Announcements Feed test',
+    'page callback' => 'announce_feed_test_set_feed_config',
     'page arguments' => array(1),
     // In unit tests, restrictions not required.
     'access callback' => TRUE,
@@ -20,16 +20,16 @@ function announce_test_menu() {
 }
 
 /**
- * Helper function to set announce feed url.
+ * Helper function to set announcements feed url.
  */
-function announce_test_set_feed_config($json_name) {
+function announce_feed_test_set_feed_config($json_name) {
   $file = __DIR__ . "/announce_feed/$json_name.json";
   if (!is_file($file)) {
     // Return an empty response.
     drupal_not_found();
   }
-  if (!_cache_get_object('cache_announce')) {
-    cache_clear_all('announcements_feed', 'cache_announce');
+  if (!_cache_get_object('cache_announcements_feed')) {
+    cache_clear_all('announcements_feed', 'cache_announcements_feed');
   }
 
   $contents = file_get_contents($file);

@@ -21,29 +21,27 @@
 ?>
 <?php if ($count) : ?>
   <div class="announcements">
-
-  <?php if ($featured) : ?>
-    <div class="featured-announcements-wrapper">
-      <?php foreach ($featured as $key => $announcement) : ?>
-        <div class="announcements-featured">
-          <div class="announcement_title">
-            <h4>
-              <?php print $announcement['title']; ?>
-            </h4>
+    <?php if ($featured) : ?>
+      <div class="featured-announcements-wrapper">
+        <?php foreach ($featured as $key => $announcement) : ?>
+          <div class="announcements-featured">
+            <div class="announcement_title">
+              <h4>
+                <?php print $announcement['title']; ?>
+              </h4>
+            </div>
+            <div class="announcement_teaser">
+              <?php print $announcement['teaser']; ?>
+            </div>
+            <div class="announcement_link">
+              <?php if($announcement['link']) : ?>
+                  <a href="<?php print $announcement['link']; ?>"><span><?php print t('Learn More'); ?></span></a>
+              <?php endif ?>
+            </div>
           </div>
-          <div class="announcement_teaser">
-            <?php print $announcement['teaser']; ?>
-          </div>
-          <div class="announcement_link">
-            <?php if($announcement['link']) : ?>
-                <a href="<?php print $announcement['link']; ?>"><span><?php print t('Learn More'); ?></span></a>
-            <?php endif ?>
-          </div>
-        </div>
-      <?php endforeach; ?>
+        <?php endforeach; ?>
       </div>
-  <?php endif ?>
-
+    <?php endif ?>
     <?php foreach ($standard as $key => $announcement) : ?>
       <div class="announcements-standard">
         <div class="announcement_title">
@@ -54,8 +52,8 @@
     <?php endforeach; ?>
     <?php if ($feed_link) : ?>
       <div class="announcements--view-all">
-        <a href="<?php print $feed_link; ?>">View all announcements</a>
-    </div>
+        <a href="<?php print $feed_link; ?>"><?php print t('View all announcements'); ?></a>
+      </div>
     <?php endif ?>
   </div>
 <?php else: ?>

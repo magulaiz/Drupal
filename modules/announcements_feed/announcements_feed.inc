@@ -30,11 +30,11 @@ function announcements_feed_get_announcements() {
     $key = $announcement['featured'] ? '#featured' : '#standard';
     $build[$key][] = $announcement;
   }
-  $build += [
+  $build = array_merge($build, array(
     '#theme' => 'announcements_feed',
     '#count' => count($announcements),
-    '#feed_link' => variable_get('feed_link'),
-  ];
+    '#feed_link' => variable_get('announcements_feed_link'),
+  ));
   return $build;
 }
 
@@ -51,7 +51,7 @@ function announcements_feed_get_all_announcements() {
   $announcements = announcements_feed_fetch();
   $announcements_feed = array();
   foreach ($announcements as $announcement) {
-    $announcements_feed[] = [
+    $announcements_feed[] = array(
       'id' => $announcement['id'],
       'title' => $announcement['title'],
       'link' => $announcement['url'],
@@ -60,7 +60,7 @@ function announcements_feed_get_all_announcements() {
       'teaser' => $announcement['content_html'],
       'version' => $announcement['_drupalorg']['version'],
       'featured' => (bool) $announcement['_drupalorg']['featured'],
-    ];
+    );
   }
   return $announcements_feed;
 }
@@ -85,10 +85,10 @@ function announcements_feed_get_all_announcements() {
  * @throws Exception
  */
 function announcements_feed_fetch() {
-  $announcements = cache_get('announce', 'cache_announce');
+  $announcements = cache_get('announce', 'cache_announcements_feed');
   if (empty($announcements)) {
-    $feed_url = variable_get('feed_url');
-    $response = drupal_http_request($feed_url);
+    $announcements_feed_url = variable_get('announcements_feed_url');
+    $response = drupal_http_request($announcements_feed_url);
     if ($response->code == 200) {
       $feeds = json_decode($response->data, TRUE);
       if (is_null($feeds)) {
@@ -99,18 +99,8 @@ function announcements_feed_fetch() {
       if ($feeds['items']) {
         $announcements = $feeds['items'];
       }
-      $announcements = array_filter($announcements, function (array $announcement) {
-        $announcement_url = '';
-        $announcement_version = '';
-        if (!empty($announcement['url'])) {
-          $announcement_url = $announcement['url'];
-        }
-        if (!empty($announcement['_drupalorg']['version'])) {
-          $announcement_version = $announcement['_drupalorg']['version'];
-        }
-        return announcements_feed_validate_url($announcement_url) && announcements_feed_is_relevant_item($announcement_version);
-      });
-      cache_set('announcements_feed', $announcements, 'cache_announce', REQUEST_TIME + variable_get('max_age'));
+      $announcements = array_filter($announcements, 'announcements_feed_filter_announcements');
+      cache_set('announcements_feed', $announcements, 'cache_announcements_feed', REQUEST_TIME + variable_get('announcements_feed_max_age'));
     }
     else {
       watchdog('error', $response->code, (array) $response, WATCHDOG_ERROR);
@@ -124,8 +114,8 @@ function announcements_feed_fetch() {
   }
   // The drupal.org endpoint is sorted by created date in descending order.
   // We will limit the announcements based on the configuration limit.
-  $announce_limit = !empty(variable_get('announce_limit')) ? variable_get('announce_limit') : 10;
-  $announcements = array_slice($announcements, 0, $announce_limit);
+  $announcements_feed_limit = !empty(variable_get('announcements_feed_limit')) ? variable_get('announcements_feed_limit') : 10;
+  $announcements = array_slice($announcements, 0, $announcements_feed_limit);
   // For the remaining announcements, put all the featured announcements
   // before the rest.
   uasort($announcements, function ($a, $b) {
@@ -140,9 +130,30 @@ function announcements_feed_fetch() {
 }
 
 /**
+ * Filter the validated and relavant announcements only.
+ *
+ * @param array $announcement
+ *   Announcement feed array to check.
+ *
+ * @return bool
+ *   Return True if $announcement is relavant and the url is validated.
+ */
+function announcements_feed_filter_announcements($announcement) {
+  $announcement_url = '';
+  $announcement_version = '';
+  if (!empty($announcement['url'])) {
+    $announcement_url = $announcement['url'];
+  }
+  if (!empty($announcement['_drupalorg']['version'])) {
+    $announcement_version = $announcement['_drupalorg']['version'];
+  }
+  return announcements_feed_validate_url($announcement_url) && announcements_feed_is_relevant_item($announcement_version);
+}
+
+/**
  * Check whether the feed item is relevant to the Drupal version used.
  *
- * @param array $version
+ * @param string $version
  *   Announcement feed item to check.
  *
  * @return bool
@@ -159,7 +170,7 @@ function announcements_feed_is_relevant_item(string $version): bool {
 /**
  * Check whether the link of announcement controlled by D.O.
  *
- * @param array $url
+ * @param string $url
  *   Announcement feed item to check.
  *
  * @return bool

@@ -2,4 +2,4 @@ name = Announcements Feed
 description = Notifies site users about latest updates from the Drupal community.
 package = Core
 core = 7.x
-files[] = tests/announce.test
+files[] = tests/announce_feed_test.test
