@@ -1230,12 +1230,18 @@ function template_preprocess(&$variables, $hook, $info) {
   }
   $variables += $default_variables;
 
-  // When theming a render element, merge its #attributes into
-  // $variables['attributes'].
+  // When theming a render element, merge its #attributes, #title_attributes and
+  // #content_attributes into $variables corresponding attributes.
   if (isset($info['render element'])) {
     $key = $info['render element'];
     if (isset($variables[$key]['#attributes'])) {
       $variables['attributes'] = AttributeHelper::mergeCollections($variables['attributes'], $variables[$key]['#attributes']);
+    }
+    if (isset($variables[$key]['#title_attributes'])) {
+      $variables['title_attributes'] = AttributeHelper::mergeCollections($variables['title_attributes'], $variables[$key]['#title_attributes']);
+    }
+    if (isset($variables[$key]['#content_attributes'])) {
+      $variables['content_attributes'] = AttributeHelper::mergeCollections($variables['content_attributes'], $variables[$key]['#content_attributes']);
     }
   }
 }
