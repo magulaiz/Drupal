@@ -384,8 +384,8 @@ class FormValidatorTest extends UnitTestCase {
       ->getMock();
     $form_validator->expects($this->never())
       ->method('executeValidateHandlers');
-    $mock = $this->getMockBuilder('stdClass')
-      ->addMethods(['element_validate'])
+    $mock = $this->getMockBuilder(FormValidatorTestMockInterface::class)
+      ->onlyMethods(['validate_handler', 'hash_validate', 'element_validate'])
       ->getMock();
     $mock->expects($this->never())
       ->method('element_validate')
