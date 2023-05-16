@@ -147,6 +147,7 @@ class UpdateContribTest extends UpdateTestBase {
    * inside \Drupal\Core\Extension\ExtensionList::getList() for example).
    */
   public function testUpdateContribOrder() {
+    $this->mockDefaultExtensionsInfo(['version' => '8.0.0']);
     $this->mockInstalledExtensionsInfo([
       // aaa_update_test needs to be part of the "CCC Update test" project,
       // which would throw off the report if we weren't properly sorting by
@@ -172,8 +173,6 @@ class UpdateContribTest extends UpdateTestBase {
         'hidden' => FALSE,
       ],
     ]);
-    // We want core to be version 8.0.0.
-    $this->mockDefaultExtensionsInfo(['version' => '8.0.0']);
     $this->refreshUpdateStatus(['drupal' => '0.0', '#all' => '1_0']);
     $this->standardTests();
     // We're expecting the report to say all projects are up to date.
@@ -215,7 +214,6 @@ class UpdateContribTest extends UpdateTestBase {
     \Drupal::service('theme_installer')->install(['update_test_subtheme']);
 
     // Define the initial state for core and the subtheme.
-    // We want core to be version 8.0.0.
     $this->mockInstalledExtensionsInfo([
       // Show the update_test_basetheme.
       'update_test_basetheme' => [
@@ -230,7 +228,6 @@ class UpdateContribTest extends UpdateTestBase {
         'hidden' => FALSE,
       ],
     ]);
-    $this->mockDefaultExtensionsInfo(['version' => '8.0.0']);
     $xml_mapping = [
       'drupal' => '0.0',
       'update_test_subtheme' => '1_0',
@@ -371,8 +368,6 @@ class UpdateContribTest extends UpdateTestBase {
         'hidden' => FALSE,
       ],
     ]);
-    // We want core to be version 8.0.0.
-    $this->mockDefaultExtensionsInfo(['version' => '8.0.0']);
     $xml_mapping = [
       'drupal' => '0.0',
       'update_test_subtheme' => '1_0',
