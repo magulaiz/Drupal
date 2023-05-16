@@ -415,6 +415,21 @@ abstract class FormStateDecoratorBase implements FormStateInterface {
   /**
    * {@inheritdoc}
    */
+  public function setValidationCanceled($cancel_validation = TRUE): self {
+    $this->decoratedFormState->setValidationCanceled($cancel_validation);
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function isValidationCanceled(): bool {
+    return $this->decoratedFormState->isValidationCanceled();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function loadInclude($module, $type, $name = NULL) {
     return $this->decoratedFormState->loadInclude($module, $type, $name);
   }

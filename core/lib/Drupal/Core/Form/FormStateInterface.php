@@ -1110,6 +1110,28 @@ interface FormStateInterface {
   public function isValidationComplete();
 
   /**
+   * Sets that validation has been canceled.
+   *
+   * If canceled no further validation should run.
+   *
+   * @param bool $cancel_validation
+   *   TRUE if validation is canceled, FALSE otherwise.
+   *
+   * @return $this
+   */
+  public function setValidationCanceled($cancel_validation = TRUE): self;
+
+  /**
+   * Determines if validation has been canceled.
+   *
+   * If canceled no further validation should run.
+   *
+   * @return bool
+   *   TRUE if validation is canceled, FALSE otherwise.
+   */
+  public function isValidationCanceled(): bool;
+
+  /**
    * Gets the keys of the form values that will be cleaned.
    *
    * @return array

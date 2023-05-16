@@ -497,6 +497,13 @@ class FormState implements FormStateInterface {
   protected $submit_handlers = [];
 
   /**
+   * Tracks if the form has been cancelled early.
+   *
+   * @var bool
+   */
+  protected $cancel_validation = FALSE;
+
+  /**
    * {@inheritdoc}
    */
   public function setFormState(array $form_state_additions) {
@@ -901,6 +908,21 @@ class FormState implements FormStateInterface {
   /**
    * {@inheritdoc}
    */
+  public function setValidationCanceled($cancel_validation = TRUE): self {
+    $this->cancel_validation = (bool) $cancel_validation;
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function isValidationCanceled(): bool {
+    return $this->cancel_validation;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function loadInclude($module, $type, $name = NULL) {
     if (!isset($name)) {
       $name = $module;
@@ -1207,7 +1229,7 @@ class FormState implements FormStateInterface {
    * {@inheritdoc}
    */
   public function prepareCallback($callback) {
-    if (is_string($callback) && str_starts_with($callback, '::')) {
+    if (is_string($callback) && substr($callback, 0, 2) == '::') {
       $callback = [$this->getFormObject(), substr($callback, 2)];
     }
     return $callback;
