@@ -295,7 +295,8 @@
             .attr('title', this.strings[antiOrientation])
             .removeClass(iconClass)
             .addClass(iconAntiClass);
-          $orientationToggleButton[0].textContent = this.strings[antiOrientation];
+          $orientationToggleButton[0].textContent =
+            this.strings[antiOrientation];
         }
 
         // Update data offset attributes for the trays.
