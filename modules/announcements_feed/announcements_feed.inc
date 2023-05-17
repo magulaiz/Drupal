@@ -168,10 +168,17 @@ function announcements_feed_filter_announcements($announcement) {
  *   Return True if $announcement['version'] matches Drupal version.
  */
 function announcements_feed_is_relevant_item($version) {
+  $version_patterns = '/\|\||>=|=|\^/';
+  $all_versions = preg_split($version_patterns, $version);
   // Return true if version is one of supporting Drupal 7.
-  if (preg_match('/^(\^7\s*\|\|\s*)|\|\|\s*\^7(\s*\|\|)?|\^7\s*|=7|\*|7\.[0-9]{2}/', $version)) {
-    return TRUE;
+  foreach ($all_versions as $drupal_versions) {
+    if (substr($drupal_versions, 0, 1) === '7' || substr($drupal_versions, 0, 1) === '*') {
+      return TRUE;
+    }
   }
+  /* if (preg_match('/^(\^7\s*\|\|\s*)|\|\|\s*\^7(\s*\|\|)?|\^7\s*|=7|\*|7\.[0-9]{2}/', $version)) {
+  return TRUE;
+  } */
   return FALSE;
 }
 
