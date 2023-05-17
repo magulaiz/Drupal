@@ -580,7 +580,7 @@ class Url implements TrustedCallbackInterface {
    */
   public function getRouteParameters() {
     if ($this->unrouted) {
-      throw new \UnexpectedValueException('External URLs do not have internal route parameters.');
+      throw new \UnexpectedValueException($this->getUri() . ' has no corresponding route.');
     }
 
     return $this->routeParameters;
