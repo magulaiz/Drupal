@@ -167,7 +167,7 @@ function announcements_feed_filter_announcements($announcement) {
  * @return bool
  *   Return True if $announcement['version'] matches Drupal version.
  */
-function announcements_feed_is_relevant_item(string $version) {
+function announcements_feed_is_relevant_item($version) {
   // Return true if version is one of supporting Drupal 7.
   if (preg_match('/^(\^7\s*\|\|\s*)|\|\|\s*\^7(\s*\|\|)?|\^7\s*|=7|\*|7\.[0-9]{2}/', $version)) {
     return TRUE;
@@ -184,7 +184,7 @@ function announcements_feed_is_relevant_item(string $version) {
  * @return bool
  *   Return True if $announcement['link'] is controlled by the D.O.
  */
-function announcements_feed_validate_url(string $url) {
+function announcements_feed_validate_url($url) {
   if (empty($url)) {
     return FALSE;
   }
