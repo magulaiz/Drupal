@@ -16,9 +16,15 @@ use Drupal\Core\Update\Update;
  *
  * @return array
  *   A requirements info array.
- * @deprecated todo.
+ *
+ * @deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use
+ *   \Drupal\Core\Update\DeprecatedUpdate::systemSchemaRequirements() instead.
+ *
+ * @see https://www.drupal.org/node/3013060
+ * @see \Drupal\Core\Update\DeprecatedUpdate::systemSchemaRequirements()
  */
 function update_system_schema_requirements() {
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use \Drupal\Core\Update\DeprecatedUpdate::systemSchemaRequirements() instead. See https://www.drupal.org/node/3013060', E_USER_DEPRECATED);
   /** @var \Drupal\Core\Update\DeprecatedUpdate $update */
   $update = \Drupal::service(DeprecatedUpdate::class);
   return $update->systemSchemaRequirements();
@@ -26,12 +32,42 @@ function update_system_schema_requirements() {
 
 /**
  * Checks update requirements and reports errors and (optionally) warnings.
- * @deprecated todo.
+ *
+ * @deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use
+ *   \Drupal\Core\Update\Update::getRequirements() instead.
+ *
+ * @see https://www.drupal.org/node/3013060
+ * @see \Drupal\Core\Update\Update::getRequirements()
  */
 function update_check_requirements() {
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use \Drupal\Core\Update\Update::getRequirements() instead. See https://www.drupal.org/node/3013060', E_USER_DEPRECATED);
   /** @var \Drupal\Core\Update\Update $update */
   $update = \Drupal::service(Update::class);
   return $update->getRequirements();
+}
+
+/**
+ * Helper to detect and fix 'missing' schema information.
+ *
+ * Repairs the case where a module has no schema version recorded.
+ * This has to be done prior to updates being run, otherwise the update
+ * system would detect and attempt to run all historical updates for a
+ * module.
+ *
+ * @todo: remove in a major version after
+ *   https://www.drupal.org/project/drupal/issues/3130037 has been fixed.
+ *
+ * @deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use
+ *   \Drupal\Core\Update\DeprecatedUpdate::fixMissingSchema() instead.
+ *
+ * @see https://www.drupal.org/node/3013060
+ * @see \Drupal\Core\Update\DeprecatedUpdate::fixMissingSchema()
+ */
+function _update_fix_missing_schema() {
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use \Drupal\Core\Update\DeprecatedUpdate::fixMissingSchema() instead. See https://www.drupal.org/node/3013060', E_USER_DEPRECATED);
+  /** @var \Drupal\Core\Update\DeprecatedUpdate $update */
+  $update = \Drupal::service(DeprecatedUpdate::class);
+  $update->fixMissingSchema();
 }
 
 /**
@@ -77,10 +113,15 @@ function update_check_requirements() {
  * @param $context
  *   The batch context array.
  *
- * @see update_resolve_dependencies()
- * @deprecated todo.
+ * @deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use
+ *   \Drupal\Core\Update\Update::doOne() instead.
+ *
+ * @see https://www.drupal.org/node/3013060
+ * @see \Drupal\Core\Update\Update::doOne()
+ * @see \Drupal\Core\Update\Update::resolveDependencies()
  */
 function update_do_one($module, $number, $dependency_map, &$context) {
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use \Drupal\Core\Update\Update::doOne() instead. See https://www.drupal.org/node/3013060', E_USER_DEPRECATED);
   /** @var \Drupal\Core\Update\Update $update */
   $update = \Drupal::service(Update::class);
   $update->doOne($module, $number, $dependency_map, $context);
@@ -93,9 +134,15 @@ function update_do_one($module, $number, $dependency_map, &$context) {
  *   The function name, that should be executed.
  * @param array $context
  *   The batch context array.
- * @deprecated todo.
+ *
+ * @deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use
+ *   \Drupal\Core\Update\Update::invokePostUpdate() instead.
+ *
+ * @see https://www.drupal.org/node/3013060
+ * @see \Drupal\Core\Update\Update::invokePostUpdate()
  */
 function update_invoke_post_update($function, &$context) {
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use \Drupal\Core\Update\Update::invokePostUpdate() instead. See https://www.drupal.org/node/3013060', E_USER_DEPRECATED);
   /** @var \Drupal\Core\Update\Update $update */
   $update = \Drupal::service(Update::class);
   $update->invokePostUpdate($function, $context);
@@ -119,9 +166,14 @@ function update_invoke_post_update($function, &$context) {
  *       the update number and the description from source code comment for
  *       each update function. This array is keyed by the update number.
  *
- * @deprecated todo.
+ * @deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use
+ *   \Drupal\Core\Update\Update::getList() instead.
+ *
+ * @see https://www.drupal.org/node/3013060
+ * @see \Drupal\Core\Update\Update::getList()
  */
 function update_get_update_list() {
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use \Drupal\Core\Update\Update::getList() instead. See https://www.drupal.org/node/3013060', E_USER_DEPRECATED);
   /** @var \Drupal\Core\Update\Update $update */
   $update = \Drupal::service(Update::class);
   return $update->getList();
@@ -166,10 +218,15 @@ function update_get_update_list() {
  *   - 'module': The name of the module that this update function belongs to.
  *   - 'number': The number of this update function within that module.
  *
+ * @deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use
+ *   \Drupal\Core\Update\Update::resolveDependencies() instead.
+ *
+ * @see https://www.drupal.org/node/3013060
+ * @see \Drupal\Core\Update\Update::resolveDependencies()
  * @see \Drupal\Component\Graph\Graph::searchAndSort()
- * @deprecated todo.
  */
 function update_resolve_dependencies($starting_updates) {
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use \Drupal\Core\Update\Update::resolveDependencies() instead. See https://www.drupal.org/node/3013060', E_USER_DEPRECATED);
   /** @var \Drupal\Core\Update\Update $update */
   $update = \Drupal::service(Update::class);
   return $update->resolveDependencies($starting_updates);
@@ -189,10 +246,15 @@ function update_resolve_dependencies($starting_updates) {
  *   each value is an ordered array of update functions, keyed by the update
  *   number.
  *
- * @see update_resolve_dependencies()
- * @deprecated todo.
+ * @deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use
+ *   \Drupal\Core\Update\Update::getUpdateFunctionList() instead.
+ *
+ * @see https://www.drupal.org/node/3013060
+ * @see \Drupal\Core\Update\Update::getUpdateFunctionList()
+ * @see \Drupal\Core\Update\Update::resolveDependencies()
  */
 function update_get_update_function_list($starting_updates) {
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use \Drupal\Core\Update\Update::getUpdateFunctionList() instead. See https://www.drupal.org/node/3013060', E_USER_DEPRECATED);
   /** @var \Drupal\Core\Update\Update $update */
   $update = \Drupal::service(Update::class);
   return $update->getUpdateFunctionList($starting_updates);
@@ -238,11 +300,16 @@ function update_get_update_function_list($starting_updates) {
  *   - 'module': The name of the module that this update function belongs to.
  *   - 'number': The number of this update function within that module.
  *
+ * @deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use
+ *   \Drupal\Core\Update\Update::buildDependencyGraph() instead.
+ *
+ * @see https://www.drupal.org/node/3013060
+ * @see \Drupal\Core\Update\Update::buildDependencyGraph()
  * @see \Drupal\Component\Graph\Graph::searchAndSort()
- * @see update_resolve_dependencies()
- * @deprecated todo.
+ * @see \Drupal\Core\Update\Update::resolveDependencies()
  */
 function update_build_dependency_graph($update_functions) {
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use \Drupal\Core\Update\Update::buildDependencyGraph() instead. See https://www.drupal.org/node/3013060', E_USER_DEPRECATED);
   /** @var \Drupal\Core\Update\Update $update */
   $update = \Drupal::service(Update::class);
   return $update->buildDependencyGraph($update_functions);
@@ -263,9 +330,15 @@ function update_build_dependency_graph($update_functions) {
  * @return bool
  *   TRUE if the provided module update is not installed or is not in the
  *   provided list of updates to run; FALSE otherwise.
- * @deprecated todo.
+ *
+ * @deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use
+ *   \Drupal\Core\Update\Update::isMissing() instead.
+ *
+ * @see https://www.drupal.org/node/3013060
+ * @see \Drupal\Core\Update\Update::isMissing()
  */
 function update_is_missing($module, $number, $update_functions) {
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use \Drupal\Core\Update\Update::isMissing() instead. See https://www.drupal.org/node/3013060', E_USER_DEPRECATED);
   /** @var \Drupal\Core\Update\Update $update */
   $update = \Drupal::service(Update::class);
   return $update->isMissing($module, $number, $update_functions);
@@ -282,9 +355,15 @@ function update_is_missing($module, $number, $update_functions) {
  * @return bool
  *   TRUE if the database schema indicates that the update has already been
  *   performed; FALSE otherwise.
- * @deprecated todo.
+ *
+ * @deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use
+ *   \Drupal\Core\Update\Update::isAlreadyPerformed() instead.
+ *
+ * @see https://www.drupal.org/node/3013060
+ * @see \Drupal\Core\Update\Update::isAlreadyPerformed()
  */
 function update_already_performed($module, $number) {
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use \Drupal\Core\Update\Update::isAlreadyPerformed() instead. See https://www.drupal.org/node/3013060', E_USER_DEPRECATED);
   /** @var \Drupal\Core\Update\Update $update */
   $update = \Drupal::service(Update::class);
   return $update->isAlreadyPerformed($module, $number);
@@ -302,11 +381,16 @@ function update_already_performed($module, $number) {
  *   An array of return values obtained by merging the results of the
  *   hook_update_dependencies() implementations in all installed modules.
  *
+ * @deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use
+ *   \Drupal\Core\Update\Update::retrieveDependencies() instead.
+ *
+ * @see https://www.drupal.org/node/3013060
+ * @see \Drupal\Core\Update\Update::retrieveDependencies()
  * @see \Drupal\Core\Extension\ModuleHandlerInterface::invokeAll()
  * @see hook_update_dependencies()
- * @deprecated todo.
  */
 function update_retrieve_dependencies() {
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use \Drupal\Core\Update\Update::retrieveDependencies() instead. See https://www.drupal.org/node/3013060', E_USER_DEPRECATED);
   /** @var \Drupal\Core\Update\Update $update */
   $update = \Drupal::service(Update::class);
   return $update->retrieveDependencies();

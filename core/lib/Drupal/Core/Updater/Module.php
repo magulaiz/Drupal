@@ -84,7 +84,7 @@ class Module extends Updater implements UpdaterInterface {
    */
   public function getSchemaUpdates() {
     require_once DRUPAL_ROOT . '/core/includes/install.inc';
-    // ToDo: Remove deprecated include file requirement.
+    // ToDo: Remove  deprecated include file requirement.
     require_once DRUPAL_ROOT . '/core/includes/update.inc';
 
     if (!self::canUpdate($this->name)) {

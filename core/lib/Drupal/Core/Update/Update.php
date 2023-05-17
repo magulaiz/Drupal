@@ -14,7 +14,7 @@ use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\Utility\Error;
 
 /**
- * Class Update.
+ * The update utility class.
  *
  * @package Drupal\Core\Update.
  */
@@ -27,18 +27,33 @@ class Update {
 
   protected LoggerChannelInterface $updateLogger;
 
+  /**
+   * Constructor of update utility.
+   *
+   * @param \Drupal\Core\Update\UpdateHookRegistry $updateRegistry
+   *   The update registry.
+   * @param \Drupal\Core\Update\UpdateRegistry $postUpdateRegistry
+   *   The post update registry.
+   * @param \Drupal\Core\Extension\ModuleExtensionList $moduleExtensionList
+   *   The module extension list.
+   * @param \Drupal\Core\Extension\ModuleHandlerInterface $moduleHandler
+   *   The module handler.
+   * @param \Drupal\Core\Messenger\MessengerInterface $messenger
+   *   The messenger.
+   * @param \Drupal\Core\Logger\LoggerChannelFactoryInterface $loggerChannelFactory
+   *   The logger channel factory.
+   */
   public function __construct(
-    protected UpdateHookRegistry            $updateRegistry,
-    protected UpdateRegistry                $postUpdateRegistry,
-    protected ModuleExtensionList           $moduleExtensionList,
-    protected ModuleHandlerInterface        $moduleHandler,
-    protected MessengerInterface            $messenger,
+    protected UpdateHookRegistry $updateRegistry,
+    protected UpdateRegistry $postUpdateRegistry,
+    protected ModuleExtensionList $moduleExtensionList,
+    protected ModuleHandlerInterface $moduleHandler,
+    protected MessengerInterface $messenger,
     protected LoggerChannelFactoryInterface $loggerChannelFactory,
   ) {
     $this->systemLogger = $this->loggerChannelFactory->get('system');
     $this->updateLogger = $this->loggerChannelFactory->get('update');
   }
-
 
   /**
    * Returns whether the minimum schema requirement has been satisfied.
@@ -61,7 +76,7 @@ class Update {
     else {
       $requirements['minimum schema'] += [
         'value' => 'The installed schema version does not meet the minimum.',
-        'severity' => REQUIREMENT_ERROR,
+        'severity' => \REQUIREMENT_ERROR,
         'description' => 'Your system schema version is ' . $system_schema . '. Updating directly from a schema version prior to 8000 is not supported. You must upgrade your site to Drupal 8 first, see https://www.drupal.org/docs/8/upgrade.',
       ];
     }
@@ -179,7 +194,7 @@ class Update {
    *
    * @see resolveDependencies()
    */
-  function doOne(string $module, int $number, array $dependency_map, &$context): void {
+  public function doOne(string $module, int $number, array $dependency_map, &$context): void {
     $function = $module . '_update_' . $number;
 
     // If this update was aborted in a previous step, or has a dependency that
@@ -194,10 +209,10 @@ class Update {
         $ret['results']['query'] = $function($context['sandbox']);
         $ret['results']['success'] = TRUE;
       }
-        // @TODO We may want to do different error handling for different
-        // exception types, but for now we'll just log the exception and
-        // return the message for printing.
-        // @see https://www.drupal.org/node/2564311
+      // @TODO We may want to do different error handling for different
+      // exception types, but for now we'll just log the exception and
+      // return the message for printing.
+      // @see https://www.drupal.org/node/2564311
       catch (\Exception $e) {
         $variables = Error::decodeException($e);
         $this->updateLogger->error(Error::DEFAULT_ERROR_MESSAGE, $variables);
@@ -263,10 +278,10 @@ class Update {
           $this->postUpdateRegistry->registerInvokedUpdates([$function]);
         }
       }
-        // @TODO We may want to do different error handling for different exception
-        // types, but for now we'll just log the exception and return the message
-        // for printing.
-        // @see https://www.drupal.org/node/2564311
+      // @TODO We may want to do different error handling for different exception
+      // types, but for now we'll just log the exception and return the message
+      // for printing.
+      // @see https://www.drupal.org/node/2564311
       catch (\Exception $e) {
         $variables = Error::decodeException($e);
         $this->updateLogger->error(Error::DEFAULT_ERROR_MESSAGE, $variables);
@@ -326,8 +341,8 @@ class Update {
           continue;
         }
       }
-        // It is possible that the system schema has orphaned entries, so the
-        // incompatibility checking might throw an exception.
+      // It is possible that the system schema has orphaned entries, so the
+      // incompatibility checking might throw an exception.
       catch (UnknownExtensionException $e) {
         $args = [
           '%name' => $module,
