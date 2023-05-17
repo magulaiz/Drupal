@@ -2,6 +2,8 @@
 
 namespace Drupal\Tests\user\Unit\Form;
 
+use Drupal\Tests\UnitTestCase;
+
 /**
  * Tests the user permissions administration form.
  *
