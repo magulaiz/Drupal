@@ -114,19 +114,27 @@ function announcements_feed_fetch() {
   }
   // The drupal.org endpoint is sorted by created date in descending order.
   // We will limit the announcements based on the configuration limit.
-  $announcements_feed_limit = !empty(variable_get('announcements_feed_limit')) ? variable_get('announcements_feed_limit') : 10;
+  $announcements_feed_limit = variable_get('announcements_feed_limit', 10);
+  if (empty($announcements_feed_limit)) {
+    $announcements_feed_limit = 10;
+  }
   $announcements = array_slice($announcements, 0, $announcements_feed_limit);
   // For the remaining announcements, put all the featured announcements
   // before the rest.
-  uasort($announcements, function ($a, $b) {
-    $a_value = (int) $a['_drupalorg']['featured'];
-    $b_value = (int) $b['_drupalorg']['featured'];
-    if ($a_value == $b_value) {
-      return 0;
-    }
-    return ($a_value < $b_value) ? -1 : 1;
-  });
+  uasort($announcements, 'announcements_feed_sort_featured');
   return $announcements;
+}
+
+/**
+ * Sort the elements of announcements_feed by values in comparison function.
+ */
+function announcements_feed_sort_featured($a, $b) {
+  $a_value = (int) $a['_drupalorg']['featured'];
+  $b_value = (int) $b['_drupalorg']['featured'];
+  if ($a_value == $b_value) {
+    return 0;
+  }
+  return ($a_value < $b_value) ? -1 : 1;
 }
 
 /**
