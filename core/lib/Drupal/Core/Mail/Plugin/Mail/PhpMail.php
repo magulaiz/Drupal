@@ -109,7 +109,8 @@ class PhpMail implements MailInterface {
     // We suppress warnings and notices from mail() because of issues on some
     // hosts. The return value of this method will still indicate whether mail
     // was sent successfully.
-    if (!$request->server->has('WINDIR') && strpos($request->server->get('SERVER_SOFTWARE'), 'Win32') === FALSE) {
+    $server_software = empty($request->server->get('SERVER_SOFTWARE')) ? PHP_OS : $request->server->get('SERVER_SOFTWARE');
+    if (!$request->server->has('WINDIR') && strpos($server_software, 'Win32') === FALSE) {
       // On most non-Windows systems, the "-f" option to the sendmail command
       // is used to set the Return-Path. There is no space between -f and
       // the value of the return path.
