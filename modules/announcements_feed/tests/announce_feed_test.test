@@ -207,11 +207,6 @@ class AnnounceFeedTestValidateLoginTestCase extends DrupalWebTestCase {
     module_load_include('inc', 'announce_feed_test', 'announce_feed_test');
     $modules[] = array('user');
     parent::setUp('user', 'toolbar', 'announcements_feed', 'announce_feed_test');
-    $this->user = $this->drupalCreateUser(array(
-      'access toolbar',
-      'access announcements',
-    ));
-    $this->drupalLogin($this->user);
     $response_json = $base_url . $base_path . $module_path . '/tests/announce_feed/community-feeds.json';
     set_announce_feed_test_endpoint($response_json);
   }
@@ -221,11 +216,11 @@ class AnnounceFeedTestValidateLoginTestCase extends DrupalWebTestCase {
    */
   public function testAnnounceValidateLogin() {
     // Create a user with proper permission.
-    $this->user = $this->drupalCreateUser(array(
+    $account = $this->drupalCreateUser(array(
       'access toolbar',
       'access announcements',
     ));
-    $this->drupalLogin($this->user);
+    $this->drupalLogin($account);
     $this->drupalGet('');
     // Since it is valid login the class should be matches in html.
     $this->drupalGet('/admin/announcements_feed');
