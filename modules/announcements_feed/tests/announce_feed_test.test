@@ -206,6 +206,11 @@ class AnnounceFeedTestValidateLoginTestCase extends DrupalWebTestCase {
     $module_path = drupal_get_path('module', 'announcements_feed');
     module_load_include('inc', 'announce_feed_test', 'announce_feed_test');
     parent::setUp('user', 'toolbar', 'announcements_feed', 'announce_feed_test');
+    // Create a user with proper permission.
+    $this->privilegedUser = $this->drupalCreateUser(array(
+      'access toolbar',
+      'access announcements',
+    ));
     $response_json = $base_url . $base_path . $module_path . '/tests/announce_feed/community-feeds.json';
     set_announce_feed_test_endpoint($response_json);
   }
@@ -214,10 +219,6 @@ class AnnounceFeedTestValidateLoginTestCase extends DrupalWebTestCase {
    * Test of viewing announcements by different user with permission.
    */
   public function testAnnounceValidateLogin() {
-    $this->user = $this->drupalCreateUser(array(
-      'access toolbar',
-      'access announcements',
-    ));
     // Create a user with proper permission.
     $this->privilegedUser = $this->drupalCreateUser(array(
       'access toolbar',
