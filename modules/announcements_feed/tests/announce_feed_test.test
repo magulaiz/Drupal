@@ -207,7 +207,7 @@ class AnnounceFeedTestValidateLoginTestCase extends DrupalWebTestCase {
     module_load_include('inc', 'announce_feed_test', 'announce_feed_test');
     parent::setUp('user', 'toolbar', 'announcements_feed', 'announce_feed_test');
     // Create a user with proper permission.
-    $this->privilegedUser = $this->drupalCreateUser(array(
+    $this->user = $this->drupalCreateUser(array(
       'access toolbar',
       'access announcements',
     ));
@@ -220,7 +220,7 @@ class AnnounceFeedTestValidateLoginTestCase extends DrupalWebTestCase {
    */
   public function testAnnounceValidateLogin() {
     // Create a user with proper permission.
-    $this->privilegedUser = $this->drupalCreateUser(array(
+    $this->user = $this->drupalCreateUser(array(
       'access toolbar',
       'access announcements',
     ));
