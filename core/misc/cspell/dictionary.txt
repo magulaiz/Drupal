@@ -1326,6 +1326,7 @@ tabledrag
 tableheader
 tableinfo
 tableresponsive
+tablescroll
 tableselect
 tablesort
 tablesort's
