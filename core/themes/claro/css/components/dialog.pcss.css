@@ -54,12 +54,12 @@
     &:hover {
       border-color: var(--color-white);
     }
-  }
 
-  & .ui-dialog-titlebar-close:focus {
-    border-color: var(--color-focus);
-    outline: var(--jui-dialog--focus-outline);
-    box-shadow: none;
+    &:focus {
+      border-color: var(--color-focus);
+      outline: var(--jui-dialog--focus-outline);
+      box-shadow: none;
+    }
   }
 
   & .ui-icon.ui-icon-closethick {
