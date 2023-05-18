@@ -348,11 +348,6 @@ class UpdateContribTest extends UpdateTestBase {
     }
     $extension_config->save();
 
-    // When there are contributed modules in the site's file system, the
-    // total number of attempts made in the test may exceed the default value
-    // of update_max_fetch_attempts. Therefore this variable is set very high
-    // to avoid test failures in those cases.
-    $update_settings->set('fetch.max_attempts', 99999)->save();
     // Define the initial state for core and the test contrib themes.
     $this->mockInstalledExtensionsInfo([
       // The update_test_basetheme should be visible and up to date.
@@ -368,6 +363,11 @@ class UpdateContribTest extends UpdateTestBase {
         'hidden' => FALSE,
       ],
     ]);
+    // When there are contributed modules in the site's file system, the
+    // total number of attempts made in the test may exceed the default value
+    // of update_max_fetch_attempts. Therefore this variable is set very high
+    // to avoid test failures in those cases.
+    $update_settings->set('fetch.max_attempts', 99999)->save();
     $xml_mapping = [
       'drupal' => '0.0',
       'update_test_subtheme' => '1_0',
