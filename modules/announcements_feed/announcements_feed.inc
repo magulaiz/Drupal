@@ -168,17 +168,33 @@ function announcements_feed_filter_announcements($announcement) {
  *   Return True if $announcement['version'] matches Drupal version.
  */
 function announcements_feed_is_relevant_item($version) {
-  $version_patterns = '/\|\||>=|=|\^/';
+  // Split the version if received in || formats.
+  $version_patterns = '/\|\|/';
   $all_versions = preg_split($version_patterns, $version);
-  // Return true if version is one of supporting Drupal 7.
-  foreach ($all_versions as $drupal_versions) {
-    if (substr($drupal_versions, 0, 1) === '7' || substr($drupal_versions, 0, 1) === '*') {
-      return TRUE;
+  // supports. Also, operation is optional and defaults to equals.
+  $p_op = '(?P<operation>!=|\^|==|=|<|<=|>|>=|<>)?';
+  $operations = '=';
+  // Extracts major version from version string like 7, 8, 9.
+  $p_major = '(?P<major>\d+)';
+  // Extracts minor version from version string.
+  $p_minor = '(?P<minor>(?:\d+|x)(?:-[A-Za-z]+\d+)?)';
+  foreach ($all_versions as $version) {
+    if (preg_match("/^\s*$p_op\s*$p_major(\.$p_minor)?/", $version, $matches)) {
+      $feed_version = $matches['major'];
+      if (!empty($matches['minor'])) {
+        $feed_version = $matches['major'] . '.' . $matches['minor'];
+      }
+      if (!empty($matches['operation'])) {
+        $operations = $matches['operation'];
+        if ($operations == '^') {
+          $operations = '>=';
+        }
+      }
+      if ((isset($operations) && version_compare(VERSION, $feed_version, $operations))) {
+        return TRUE;
+      }
     }
   }
-  /* if (preg_match('/^(\^7\s*\|\|\s*)|\|\|\s*\^7(\s*\|\|)?|\^7\s*|=7|\*|7\.[0-9]{2}/', $version)) {
-  return TRUE;
-  } */
   return FALSE;
 }
 

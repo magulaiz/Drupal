@@ -75,7 +75,7 @@ class AnnounceFeedTestValidateJsonFeed extends DrupalWebTestCase {
   }
 
   /**
-   * Testing the feed notification with different kind of urls.
+   * Testing the feed with Updated and Removed JSON feeds.
    */
   public function testAnnounceFeedUpdatedAndRemoved() {
     $this->user = $this->drupalCreateUser(array(
@@ -108,7 +108,7 @@ class AnnounceFeedTestValidateJsonFeed extends DrupalWebTestCase {
   }
 
   /**
-   * Check the status of the red dot alert with an empty JSON feed.
+   * Check the status of the feed with an empty JSON feed.
    */
   public function testAnnounceFeedEmpty() {
     $this->user = $this->drupalCreateUser(array(
@@ -129,7 +129,7 @@ class AnnounceFeedTestValidateJsonFeed extends DrupalWebTestCase {
 
 }
 /**
- * Unit test for module functions.
+ * Unit test for validate URL functions.
  */
 class AnnounceFeedTestValidateUrl extends DrupalUnitTestCase {
 
@@ -177,6 +177,56 @@ class AnnounceFeedTestValidateUrl extends DrupalUnitTestCase {
     foreach ($urls as $url) {
       $result = announcements_feed_validate_url($url[0]);
       $this->assertEqual($url[1], $result, 'Returned' . $url[1]);
+    }
+  }
+
+}
+/**
+ * Unit test for version compatibility functions.
+ */
+class AnnounceFeedTestRelevantVersion extends DrupalUnitTestCase {
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function getInfo() {
+    return array(
+      'name' => 'Validate the Version',
+      'description' => 'Unit test for the module to check the Relevant Version function',
+      'group' => 'Announcements Feed',
+    );
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setUp() {
+    parent::setUp('announcements_feed');
+    module_load_include('inc', 'announcements_feed', 'announcements_feed');
+  }
+
+  /**
+   * Test for validating the announcements_feed_validate_url function.
+   */
+  public function testValidateUrl() {
+    $version_strings = array(
+      array('^7', TRUE),
+      // Will TRUE Only if drupal version is exact 7.0.
+      array('=7.0', FALSE),
+      array('>=7', TRUE),
+      array('^7 || ^8 || ^9', TRUE),
+      array('>=7.52', TRUE),
+      array('^7.1 || ^8 || ^9', TRUE),
+      // Can set TRUE Only if drupal version is exact 7.100.
+      array('=7.100', FALSE),
+      array('^8 || ^9', FALSE),
+      array('>8', FALSE),
+      array('>=8.1', FALSE),
+      array('^8 || ^9 || ^10', FALSE),
+    );
+    foreach ($version_strings as $strings) {
+      $result = announcements_feed_is_relevant_item($strings[0]);
+      $this->assertEqual($strings[1], $result, 'Returned' . $strings[1]);
     }
   }
 
