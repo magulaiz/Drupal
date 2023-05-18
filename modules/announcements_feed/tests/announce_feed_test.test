@@ -85,7 +85,7 @@ class AnnounceFeedTestValidateJsonFeed extends DrupalWebTestCase {
     module_load_include('inc', 'announce_feed_test', 'announce_feed_test');
     $this->drupalLogin($this->user);
     $this->drupalGet('');
-    $this->clickLink('Community Announcements');
+    $this->clickLink('Announcements');
     set_announce_feed_test_endpoint($this->updatedJson);
     if (!_cache_get_object('cache_announcements_feed')) {
       cache_clear_all('announcements_feed', 'cache_announcements_feed');
@@ -98,7 +98,7 @@ class AnnounceFeedTestValidateJsonFeed extends DrupalWebTestCase {
     // Testing the removed json feed.
     $this->drupalLogin($this->user);
     $this->drupalGet('');
-    $this->clickLink('Community Announcements');
+    $this->clickLink('Announcements');
     set_announce_feed_test_endpoint($this->removed);
     cache_clear_all('announcements_feed', 'cache_announcements_feed');
     $this->drupalGet('/admin/announcements_feed');
@@ -123,7 +123,7 @@ class AnnounceFeedTestValidateJsonFeed extends DrupalWebTestCase {
     }
     $this->drupalLogin($this->user);
     // Only no annoucnements available message should show.
-    $this->clickLink('Community Announcements');
+    $this->clickLink('Announcements');
     $this->assertText('No announcements available');
   }
 
@@ -274,7 +274,7 @@ class AnnounceFeedTestValidateLoginTestCase extends DrupalWebTestCase {
     $this->drupalGet('');
     // Since it is valid login the class should be matches in html.
     $this->drupalGet('/admin/announcements_feed');
-    $this->assertText('Community Announcements');
+    $this->assertText('Announcements');
     $this->drupalLogout();
   }
 
