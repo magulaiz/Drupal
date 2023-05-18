@@ -168,6 +168,9 @@ function announcements_feed_filter_announcements($announcement) {
  *   Return True if $announcement['version'] matches Drupal version.
  */
 function announcements_feed_is_relevant_item($version) {
+  if ($version == '*') {
+    return TRUE;
+  }
   // Split the version if received in || formats.
   $version_patterns = '/\|\|/';
   $all_versions = preg_split($version_patterns, $version);
