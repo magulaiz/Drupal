@@ -9,17 +9,16 @@
  * Implements hook_help().
  */
 function announcements_feed_help($path) {
+  if ($path == 'admin/help/announcements_feed') {
+    $output = '';
+    $output .= '<h3>' . t('About') . '</h3>';
+    $output .= '<p>' . t('The Announcements Feed module notifies site users about the latest announcements from the Drupal community. For more information, see the <a href="@documentation">online documentation for the Announcements Feed module</a>.', array('@documentation' => 'https://www.drupal.org/docs/core-modules-and-themes/core-modules/announcements-feed')) . '</p>';
+    $output .= '<h3>' . t('Uses') . '</h3>';
+    $output .= '<dl><dt>' . t('Accessing announcements') . '</dt>';
+    $output .= '<dd>' . t('Site users with the "View drupal.org announcements" permission may click on the "Community Announcements" item in the administration toolbar to see all announcements relevant to the Drupal version used or access <a href="@announcement_feeds">Community Announcements</a>, to see all announcements relevant to the Drupal version of your site.', array('@announcement_feeds' => '/admin/announcements_feed')) . '</dd>';
+    $output .= '</dl>';
 
-  switch ($path) {
-    case 'admin/help#announcements_feed':
-      $output = '';
-      $output .= '<h3>' . t('About') . '</h3>';
-      $output .= '<p>' . t('The Announcements Feed module notifies site users about the latest announcements from the Drupal community. For more information, see the <a href="@documentation">online documentation for the Announcements Feed module</a>.', array('@documentation' => 'https://www.drupal.org/docs/core-modules-and-themes/core-modules/announcements-feed')) . '</p>';
-      $output .= '<h3>' . t('Uses') . '</h3>';
-      $output .= '<dl><dt>' . t('Accessing announcements') . '</dt>';
-      $output .= '<dd>' . t('Site users with the "View drupal.org announcements" permission may click on the "Community Announcements" item in the administration toolbar to see all announcements relevant to the Drupal version used or access <a href="@announcement_feeds">Community Announcements</a>, to see all announcements relevant to the Drupal version of your site.', array('@announcement_feeds' => '/admin/announcements_feed')) . '</dd>';
-      $output .= '</dl>';
-      return $output;
+    return $output;
   }
 
 }
@@ -30,7 +29,7 @@ function announcements_feed_help($path) {
 function announcements_feed_menu() {
   $items['admin/announcements_feed'] = array(
     'title' => 'Announcements',
-    'description' => 'Announcements and updates by drupal.org community.',
+    'description' => 'Announcements and updates posted by the drupal.org community.',
     'page callback' => 'announcements_feed_get_announcements',
     'access arguments' => array('access announcements'),
     'position' => 'left',
@@ -94,8 +93,9 @@ function announcements_feed_toolbar_pre_render_alter($toolbar) {
   module_load_include('inc', 'announcements_feed');
   foreach ($toolbar['toolbar_menu']['#links'] as &$link) {
     if ($link['href'] === 'admin/announcements_feed') {
-      $link['attributes']['class'][] = 'announce-default';
+      $link['attributes']['class'][] = 'announcement-default';
     }
   }
+
   return $toolbar;
 }

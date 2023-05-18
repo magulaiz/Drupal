@@ -35,6 +35,7 @@ function announcements_feed_get_announcements() {
     '#count' => count($announcements),
     '#feed_link' => variable_get('announcements_feed_link'),
   ));
+
   return $build;
 }
 
@@ -62,6 +63,7 @@ function announcements_feed_get_all_announcements() {
       'featured' => (bool) $announcement['_drupalorg']['featured'],
     );
   }
+
   return $announcements_feed;
 }
 
@@ -122,6 +124,7 @@ function announcements_feed_fetch() {
   // For the remaining announcements, put all the featured announcements
   // before the rest.
   uasort($announcements, 'announcements_feed_sort_featured');
+
   return $announcements;
 }
 
@@ -134,6 +137,7 @@ function announcements_feed_sort_featured($a, $b) {
   if ($a_value == $b_value) {
     return 0;
   }
+
   return ($a_value < $b_value) ? -1 : 1;
 }
 
@@ -155,6 +159,7 @@ function announcements_feed_filter_announcements($announcement) {
   if (!empty($announcement['_drupalorg']['version'])) {
     $announcement_version = $announcement['_drupalorg']['version'];
   }
+
   return announcements_feed_validate_url($announcement_url) && announcements_feed_is_relevant_item($announcement_version);
 }
 
@@ -198,6 +203,7 @@ function announcements_feed_is_relevant_item($version) {
       }
     }
   }
+
   return FALSE;
 }
 

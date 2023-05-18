@@ -16,6 +16,7 @@ function announce_feed_test_menu() {
     // In unit tests, restrictions not required.
     'access callback' => TRUE,
   );
+
   return $items;
 }
 

@@ -25,7 +25,7 @@
   background: url(images/list-item.png) no-repeat 0 11px;
 }
 
-#new-feed-featured .announcement_title h4 {
+#new-feed-featured .announcement-title h4 {
   display: inline-block;
 }
 
@@ -34,7 +34,7 @@
   border-top: 1px solid #ccc;
   padding-top: 10px;
 }
-.announcements .announcement_title .announce_date {
+.announcements .announcement-title .announcement-date {
   color: #666;
   margin: 5px 0;
   line-height: 1.231em;

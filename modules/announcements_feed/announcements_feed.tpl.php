@@ -25,15 +25,15 @@
       <div class="featured-announcements-wrapper">
         <?php foreach ($featured as $key => $announcement) : ?>
           <div class="announcements-featured">
-            <div class="announcement_title">
+            <div class="announcement-title">
               <h4>
                 <?php print $announcement['title']; ?>
               </h4>
             </div>
-            <div class="announcement_teaser">
+            <div class="announcement-teaser">
               <?php print $announcement['teaser']; ?>
             </div>
-            <div class="announcement_link">
+            <div class="announcement-link">
               <?php if($announcement['link']) : ?>
                   <a href="<?php print $announcement['link']; ?>"><span><?php print t('Learn More'); ?></span></a>
               <?php endif ?>
@@ -44,9 +44,9 @@
     <?php endif ?>
     <?php foreach ($standard as $key => $announcement) : ?>
       <div class="announcements-standard">
-        <div class="announcement_title">
+        <div class="announcement-title">
             <a href="<?php print $announcement['link']; ?>"><?php print $announcement['title'] ?></a>
-            <div class="announce_date"><?php print format_date(strtotime($announcement['date_published']), 'short'); ?></div>
+            <div class="announcement-date"><?php print format_date(strtotime($announcement['date_published']), 'short'); ?></div>
         </div>
       </div>
     <?php endforeach; ?>
@@ -57,5 +57,5 @@
     <?php endif ?>
   </div>
 <?php else: ?>
-<div class="no_alerts"><span><?php print t('No announcements available') ?></span></div>
+<div class="no-announcements"><span><?php print t('No announcements available') ?></span></div>
 <?php endif; ?>

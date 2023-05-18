@@ -14,7 +14,7 @@
       "date_published": "2021-01-18T07:29:38+00:00",
       "_drupalorg": {
         "featured": false,
-        "version": "^9 | ^10"
+        "version": ">=7.0"
       }
     },
     {
@@ -26,7 +26,7 @@
       "date_published": "2021-01-18T07:29:38+00:00",
       "_drupalorg":  {
         "featured": true,
-        "version": "^10"
+        "version": ">=7.0"
       }
     },
     {
@@ -38,7 +38,7 @@
       "date_published": "2021-01-18T07:29:38+00:00",
       "_drupalorg":  {
         "featured": false,
-        "version": "^9"
+        "version": ">=7.0"
       }
     },
     {
@@ -50,7 +50,7 @@
       "date_published": "2021-01-18T07:29:39+00:00",
       "_drupalorg":  {
         "featured": false,
-        "version": "^10"
+        "version": ">=7.0"
       }
     }
   ]

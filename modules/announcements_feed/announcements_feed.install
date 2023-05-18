@@ -10,7 +10,7 @@
  */
 function announcements_feed_schema() {
   $schema['cache_announcements_feed'] = drupal_get_schema_unprocessed('system', 'cache');
-  $schema['cache_announcements_feed']['description'] = 'Cache table for the announcements feed module to store the recent announcements, fetched from central server.';
+  $schema['cache_announcements_feed']['description'] = 'Cache table for the announcements feed module to store the recent announcements, fetched from the central server.';
   return $schema;
 }
 

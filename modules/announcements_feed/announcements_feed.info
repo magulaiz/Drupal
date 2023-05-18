@@ -1,4 +1,4 @@
-name = Announcements Feed
+name = Announcements feed
 description = Notifies site users about latest updates from the Drupal community.
 package = Core
 core = 7.x
