@@ -32,7 +32,9 @@ use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
  *   items that can be selected, it can pass the number of remaining slots. When
  *   the number of remaining slots is a negative number, an unlimited amount of
  *   items can be selected.
- * - media_library_view_display: The view and display to use in the media library.
+ * - media_library_view: The ID of the view to use in the media library.
+ * - media_library_display: The ID of the display in the media library view to
+ *   use in the media library.
  *
  * This object can also carry an optional opener-specific array of arbitrary
  * values, under the media_library_opener_parameters key. These values are
@@ -44,9 +46,14 @@ use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 class MediaLibraryState extends ParameterBag implements CacheableDependencyInterface {
 
   /**
-   * The ID of the default view and display to use for the media library.
+   * The ID of the default view to use for the media library.
    */
-  const DEFAULT_VIEW_DISPLAY = 'media_library.widget';
+  const DEFAULT_VIEW = 'media_library';
+
+  /**
+   * The ID of the default display to use for the media library.
+   */
+  const DEFAULT_DISPLAY = 'widget';
 
   /**
    * {@inheritdoc}
@@ -57,7 +64,8 @@ class MediaLibraryState extends ParameterBag implements CacheableDependencyInter
       $parameters['media_library_allowed_types'],
       $parameters['media_library_selected_type'],
       $parameters['media_library_remaining'],
-      $parameters['media_library_view_display']
+      $parameters['media_library_view'],
+      $parameters['media_library_display']
     );
     $parameters += [
       'media_library_opener_parameters' => [],
@@ -80,21 +88,25 @@ class MediaLibraryState extends ParameterBag implements CacheableDependencyInter
    *   library.
    * @param array $opener_parameters
    *   (optional) Any additional opener-specific parameter values.
-   * @param string|null $view_display
-   *   (optional) The view/display to use in the media library. If NULL, then
-   *   DEFAULT_VIEW_DISPLAY is used.
+   * @param string|null $view
+   *   (optional) The ID of the view to use in the media library. If NULL, then
+   *   DEFAULT_VIEW is used.
+   * @param string|null $display
+   *   (optional) The ID of the display in the media library view to use in the
+   *   media library. If NULL, then DEFAULT_DISPLAY is used.
    *
    * @return static
    *   A state object.
    */
-  public static function create($opener_id, array $allowed_media_type_ids, $selected_type_id, $remaining_slots, array $opener_parameters = [], $view_display = NULL) {
+  public static function create($opener_id, array $allowed_media_type_ids, $selected_type_id, $remaining_slots, array $opener_parameters = [], $view = NULL, $display = NULL) {
     $state = new static([
       'media_library_opener_id' => $opener_id,
       'media_library_allowed_types' => $allowed_media_type_ids,
       'media_library_selected_type' => $selected_type_id,
       'media_library_remaining' => $remaining_slots,
       'media_library_opener_parameters' => $opener_parameters,
-      'media_library_view_display' => $view_display ?? self::DEFAULT_VIEW_DISPLAY,
+      'media_library_view' => $view ?? self::DEFAULT_VIEW,
+      'media_library_display' => $display ?? self::DEFAULT_DISPLAY,
     ]);
     return $state;
   }
@@ -122,7 +134,8 @@ class MediaLibraryState extends ParameterBag implements CacheableDependencyInter
       $query->get('media_library_selected_type'),
       $query->get('media_library_remaining'),
       $query->all('media_library_opener_parameters'),
-      $query->get('media_library_view_display')
+      $query->get('media_library_view'),
+      $query->get('media_library_display')
     );
 
     // The request parameters need to contain a valid hash to prevent a
@@ -150,14 +163,16 @@ class MediaLibraryState extends ParameterBag implements CacheableDependencyInter
    * @param int $remaining_slots
    *   The number of remaining items the user is allowed to select or add in the
    *   library.
-   * @param string $view_display
-   *   The ID of the view and display to use for the media library.
+   * @param string $view_id
+   *   The ID of the view to use for the media library.
+   * @param string $display_id
+   *   The ID of the display to use for the media library.
    *
    * @throws \InvalidArgumentException
    *   If one of the passed arguments is missing or does not pass the
    *   validation.
    */
-  protected function validateRequiredParameters($opener_id, array $allowed_media_type_ids, $selected_type_id, $remaining_slots, $view_display) {
+  protected function validateRequiredParameters($opener_id, array $allowed_media_type_ids, $selected_type_id, $remaining_slots, $view_id, $display_id) {
     // The opener ID must be a non-empty string.
     if (!is_string($opener_id) || empty(trim($opener_id))) {
       throw new \InvalidArgumentException('The opener ID parameter is required and must be a string.');
@@ -187,11 +202,6 @@ class MediaLibraryState extends ParameterBag implements CacheableDependencyInter
       throw new \InvalidArgumentException('The remaining slots parameter is required and must be numeric.');
     }
 
-    // The view display must be dot-delimited and reference a valid view and display.
-    if (strpos($view_display, '.') === FALSE) {
-      throw new \InvalidArgumentException('The view ID and display ID must be joined by a period (".").');
-    }
-    [$view_id, $display_id] = explode('.', $view_display);
     $view_storage = \Drupal::entityTypeManager()->getStorage('view');
     $media_views = $view_storage->loadByProperties(['base_table' => 'media_field_data']);
     $view = $media_views[$view_id] ?? NULL;
@@ -355,25 +365,13 @@ class MediaLibraryState extends ParameterBag implements CacheableDependencyInter
   }
 
   /**
-   * Returns the ID of the view and display to use for the media library.
-   *
-   * @return string
-   *   The IDs of the view and display, in the format "VIEW_ID.DISPLAY_ID".
-   */
-  public function getViewDisplay() {
-    return $this->get('media_library_view_display', self::DEFAULT_VIEW_DISPLAY);
-  }
-
-  /**
    * Returns the ID of the view to use for the media library.
    *
    * @return string
    *   The ID (machine name) of the media library view.
    */
   public function getViewId() {
-    [$view_id, /* Display ID */] = explode('.', $this->getViewDisplay());
-
-    return $view_id;
+    return $this->get('media_library_view', self::DEFAULT_VIEW);
   }
 
   /**
@@ -383,9 +381,7 @@ class MediaLibraryState extends ParameterBag implements CacheableDependencyInter
    *   The ID (machine name) of the display in the media library view.
    */
   public function getViewDisplayId() {
-    [/* View ID */, $display_id] = explode('.', $this->getViewDisplay());
-
-    return $display_id;
+    return $this->get('media_library_display', self::DEFAULT_DISPLAY);
   }
 
 }

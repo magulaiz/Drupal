@@ -246,7 +246,8 @@ class MediaLibraryUiBuilder {
         $allowed_type_id,
         $state->getAvailableSlots(),
         $state->getOpenerParameters(),
-        $state->getViewDisplay()
+        $state->getViewId(),
+        $state->getViewDisplayId()
       );
       // Add the 'media_library_content' parameter so the response will contain
       // only the updated content for the tab.
