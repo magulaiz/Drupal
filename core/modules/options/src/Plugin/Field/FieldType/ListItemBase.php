@@ -584,8 +584,7 @@ abstract class ListItemBase extends FieldItemBase implements OptionsProviderInte
   }
 
   /**
-   * Creates a numeric array of allowed values metadata from an associative
-   * array.
+   * Creates a numeric array of allowed values metadata from an associative array.
    *
    * @param array $values
    *   Nested array of the allowed values metadata keyed by its value.
