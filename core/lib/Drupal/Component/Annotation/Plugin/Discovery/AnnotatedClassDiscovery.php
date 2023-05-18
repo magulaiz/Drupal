@@ -180,7 +180,7 @@ class AnnotatedClassDiscovery implements DiscoveryInterface {
   }
 
   /**
-   * Gets an array of PSR-4 directories where namespace as a key and dirs as value to search for plugin classes
+   * Gets an array of PSR-4 directories where namespaces as a key and dirs as value to search for plugin classes.
    *
    * @return string[]
    */
