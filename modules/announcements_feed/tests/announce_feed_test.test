@@ -218,7 +218,7 @@ class AnnounceFeedTestRelevantVersion extends DrupalUnitTestCase {
       array('>=7.52', TRUE),
       array('^7.1 || ^8 || ^9', TRUE),
       // Can set TRUE Only if drupal version is exact 7.100.
-      array('=7.100', FALSE),
+      array('=7.9999', FALSE),
       array('^8 || ^9', FALSE),
       array('>8', FALSE),
       array('>=8.1', FALSE),
