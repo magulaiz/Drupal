@@ -5,8 +5,6 @@ namespace Drupal\Core\Cache;
 /**
  * Defines the cache backend factory.
  */
-
-use Drupal\Core\Installer\InstallerKernel;
 use Drupal\Core\Site\Settings;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareTrait;
@@ -79,9 +77,8 @@ class CacheFactory implements CacheFactoryInterface, ContainerAwareInterface {
       $service_name = $cache_settings['default'];
     }
     else {
-      // Fall back to either to the memory backend or the database backend if
-      // nothing else is configured.
-      $service_name = InstallerKernel::installationAttempted() ? 'cache.backend.memory' : 'cache.backend.database';
+      // Fall back to the database backend if nothing else is configured.
+      $service_name = 'cache.backend.database';
     }
     return $this->container->get($service_name)->get($bin);
   }
