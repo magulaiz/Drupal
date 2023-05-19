@@ -95,7 +95,10 @@ class FieldUITest extends FieldTestBase {
     $view = Views::getView('test_view_fieldapi');
     $view->initHandlers();
     $this->assertEquals('text_default', $view->field['field_name_0']->options['type']);
-    $this->assertEquals([], $view->field['field_name_0']->options['settings']);
+    $field_settings_expected = [
+      'wrap_label_tag' => '',
+    ];
+    $this->assertEquals($field_settings_expected, $view->field['field_name_0']->options['settings']);
 
     // Ensure that the view depends on the field storage.
     $dependencies = \Drupal::service('config.manager')->findConfigEntityDependencies('config', [$this->fieldStorages[0]->getConfigDependencyName()]);
