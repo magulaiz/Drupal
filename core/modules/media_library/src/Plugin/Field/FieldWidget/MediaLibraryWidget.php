@@ -394,7 +394,6 @@ class MediaLibraryWidget extends WidgetBase implements TrustedCallbackInterface 
 
     foreach ($referenced_entities as $delta => $media_item) {
       if ($media_item->access('view')) {
-        // @todo Make the view mode configurable in https://www.drupal.org/project/drupal/issues/2971209
         $preview = $view_builder->view($media_item, 'media_library');
       }
       else {
