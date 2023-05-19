@@ -991,7 +991,7 @@ class EntityField extends FieldPluginBase implements CacheableDependencyInterfac
     if (!isset($format)) {
       $format = $this->options['type'];
     }
-    $settings = $this->options['settings'] + $this->formatterPluginManager->getDefaultSettings($format);
+    $settings = $this->options['settings'] + ($this->formatterPluginManager->getDefaultSettings($format) ?? []);
 
     $options = [
       'field_definition' => $this->getFieldDefinition(),
@@ -1004,7 +1004,7 @@ class EntityField extends FieldPluginBase implements CacheableDependencyInterfac
       'view_mode' => '_custom',
     ];
 
-    return $this->formatterPluginManager->getInstance($options);
+    return $this->formatterPluginManager->getInstance($options) ?? [];
   }
 
   /**

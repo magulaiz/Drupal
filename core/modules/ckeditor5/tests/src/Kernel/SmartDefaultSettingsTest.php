@@ -5,6 +5,7 @@ declare(strict_types = 1);
 namespace Drupal\Tests\ckeditor5\Kernel;
 
 use Drupal\ckeditor5\HTMLRestrictions;
+use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Entity\Entity\EntityViewMode;
 use Drupal\editor\Entity\Editor;
@@ -14,7 +15,7 @@ use Drupal\Tests\SchemaCheckTestTrait;
 use Symfony\Component\Yaml\Yaml;
 
 /**
- * @covers \Drupal\ckeditor5\SmartDefaultSettings::computeSmartDefaultSettings()
+ * @covers \Drupal\ckeditor5\SmartDefaultSettings::computeSmartDefaultSettings
  * @group ckeditor5
  * @internal
  */
@@ -576,7 +577,9 @@ class SmartDefaultSettingsTest extends KernelTestBase {
     ];
     $db_logs = [];
     foreach ($db_logged as $log) {
-      $db_logs[$type_to_status[$log->severity]][] = $log->message;
+      $variables = unserialize($log->variables);
+      $message = new FormattableMarkup($log->message, $variables);
+      $db_logs[$type_to_status[$log->severity]][] = (string) $message;
     }
 
     // Transforms TranslatableMarkup objects to string.
@@ -900,7 +903,26 @@ class SmartDefaultSettingsTest extends KernelTestBase {
             ['codeBlock'],
           ),
         ],
-        'plugins' => $basic_html_test_case['expected_ckeditor5_settings']['plugins'],
+        'plugins' => [
+          'ckeditor5_codeBlock' => [
+            'languages' => [
+              ['label' => 'Plain text', 'language' => 'plaintext'],
+              ['label' => 'C', 'language' => 'c'],
+              ['label' => 'C#', 'language' => 'cs'],
+              ['label' => 'C++', 'language' => 'cpp'],
+              ['label' => 'CSS', 'language' => 'css'],
+              ['label' => 'Diff', 'language' => 'diff'],
+              ['label' => 'HTML', 'language' => 'html'],
+              ['label' => 'Java', 'language' => 'java'],
+              ['label' => 'JavaScript', 'language' => 'javascript'],
+              ['label' => 'PHP', 'language' => 'php'],
+              ['label' => 'Python', 'language' => 'python'],
+              ['label' => 'Ruby', 'language' => 'ruby'],
+              ['label' => 'TypeScript', 'language' => 'typescript'],
+              ['label' => 'XML', 'language' => 'xml'],
+            ],
+          ],
+        ] + $basic_html_test_case['expected_ckeditor5_settings']['plugins'],
       ],
       'expected_superset' => '<code class="language-*">',
       'expected_fundamental_compatibility_violations' => $basic_html_test_case['expected_fundamental_compatibility_violations'],
@@ -1212,6 +1234,24 @@ class SmartDefaultSettingsTest extends KernelTestBase {
           ],
         ],
         'plugins' => [
+          'ckeditor5_codeBlock' => [
+            'languages' => [
+              ['label' => 'Plain text', 'language' => 'plaintext'],
+              ['label' => 'C', 'language' => 'c'],
+              ['label' => 'C#', 'language' => 'cs'],
+              ['label' => 'C++', 'language' => 'cpp'],
+              ['label' => 'CSS', 'language' => 'css'],
+              ['label' => 'Diff', 'language' => 'diff'],
+              ['label' => 'HTML', 'language' => 'html'],
+              ['label' => 'Java', 'language' => 'java'],
+              ['label' => 'JavaScript', 'language' => 'javascript'],
+              ['label' => 'PHP', 'language' => 'php'],
+              ['label' => 'Python', 'language' => 'python'],
+              ['label' => 'Ruby', 'language' => 'ruby'],
+              ['label' => 'TypeScript', 'language' => 'typescript'],
+              ['label' => 'XML', 'language' => 'xml'],
+            ],
+          ],
           'ckeditor5_heading' => [
             'enabled_headings' => [
               'heading2',

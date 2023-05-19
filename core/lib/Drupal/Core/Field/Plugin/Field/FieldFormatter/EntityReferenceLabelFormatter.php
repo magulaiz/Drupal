@@ -99,6 +99,7 @@ class EntityReferenceLabelFormatter extends EntityReferenceFormatterBase {
       else {
         $elements[$delta] = ['#plain_text' => $label];
       }
+      $elements[$delta]['#entity'] = $entity;
       $elements[$delta]['#cache']['tags'] = $entity->getCacheTags();
     }
 
