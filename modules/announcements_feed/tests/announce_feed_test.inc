@@ -6,7 +6,7 @@
  */
 
 /**
- * Function to set feed url with respect to endpoint also reset the cache.
+ * Function to set feed url with respect to endpoint.
  */
 function set_announce_feed_test_endpoint($announcements_feed_url) {
   variable_set('announcements_feed_url', $announcements_feed_url);

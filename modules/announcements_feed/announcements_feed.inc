@@ -2,11 +2,6 @@
 
 /**
  * @file
- * Require_once DRUPAL_ROOT . '/vendor/autoload.php';.
- */
-
-/**
- * @file
  * Announcements Feed helper functions.
  */
 
@@ -42,8 +37,7 @@ function announcements_feed_get_announcements() {
 /**
  * Get announcements for the current logged-in user.
  *
- * Return an array of announcements with an additional attribute new for the
- * new items in the list.
+ * Return an array of announcements.
  *
  * @return array
  *   Announcements for the current logged-in user.
@@ -68,7 +62,7 @@ function announcements_feed_get_all_announcements() {
 }
 
 /**
- * Helper function that fetch the feed.
+ * Helper function to fetch the announcements feed.
  *
  * Return all announcements from the feed relevant to the Drupal version.
  * Structure of the JSON feed:
@@ -76,9 +70,10 @@ function announcements_feed_get_all_announcements() {
  *   title: Title of the announcement.
  *   teaser: Announcement teaser.
  *   link: URL
- *   sticky: 1 if featured, 0 if not featured.
- *   version: Target version of Drupal in SemVer format.
- *   updated: Last updated timestamp.
+ *   date_modified: Modified date of announcements.
+ *   date_published: Published date of announcements.
+ *   version: Drupal version of announcements.
+ *   featured: 1 is the announcement is featured..
  *
  * @return array
  *   An array of Announcements from the feed, or an empty array if the feed
@@ -87,7 +82,7 @@ function announcements_feed_get_all_announcements() {
  * @throws Exception
  */
 function announcements_feed_fetch() {
-  $announcements = cache_get('announce', 'cache_announcements_feed');
+  $announcements = cache_get('announcements_feed', 'cache_announcements_feed');
   if (empty($announcements)) {
     $announcements_feed_url = variable_get('announcements_feed_url');
     $response = drupal_http_request($announcements_feed_url);
@@ -145,7 +140,7 @@ function announcements_feed_sort_featured($a, $b) {
  * Filter the validated and relavant announcements only.
  *
  * @param array $announcement
- *   Announcement feed array to check.
+ *   Announcement feed array to filter the announcements.
  *
  * @return bool
  *   Return True if $announcement is relavant and the url is validated.
@@ -164,13 +159,13 @@ function announcements_feed_filter_announcements($announcement) {
 }
 
 /**
- * Check whether the feed item is relevant to the Drupal version used.
+ * Check whether the feed item is relevant to the current Drupal version.
  *
  * @param string $version
- *   Announcement feed item to check.
+ *   Version of the announcement feed received from the json feed.
  *
  * @return bool
- *   Return True if $announcement['version'] matches Drupal version.
+ *   Return True if $announcement['version'] matches the current Drupal version.
  */
 function announcements_feed_is_relevant_item($version) {
   if ($version == '*') {
@@ -211,10 +206,10 @@ function announcements_feed_is_relevant_item($version) {
  * Check whether the link of announcement controlled by D.O.
  *
  * @param string $url
- *   Announcement feed item to check.
+ *   Announcement feed url for validation.
  *
  * @return bool
- *   Return True if $announcement['link'] is controlled by the D.O.
+ *   Return True if $announcement['url'] is controlled by the D.O.
  */
 function announcements_feed_validate_url($url) {
   if (empty($url)) {

@@ -2,14 +2,14 @@
 
 /**
  * @file
- * Updates the site user with new announcements from the community side.
+ * Updates the site with new announcements from the community side.
  */
 
 /**
  * Implements hook_help().
  */
 function announcements_feed_help($path) {
-  if ($path == 'admin/help/announcements_feed') {
+  if ($path == 'admin/help#announcements_feed') {
     $output = '';
     $output .= '<h3>' . t('About') . '</h3>';
     $output .= '<p>' . t('The Announcements Feed module notifies site users about the latest announcements from the Drupal community. For more information, see the <a href="@documentation">online documentation for the Announcements Feed module</a>.', array('@documentation' => 'https://www.drupal.org/docs/core-modules-and-themes/core-modules/announcements-feed')) . '</p>';
@@ -37,7 +37,7 @@ function announcements_feed_menu() {
     'file' => 'announcements_feed.inc',
     'options' => array(
       'attributes' => array(
-        'class' => array('announce-menu-class'),
+        'class' => array('announcement-menu-class'),
       ),
     ),
   );
@@ -51,7 +51,7 @@ function announcements_feed_menu() {
 function announcements_feed_permission() {
   return array(
     'access announcements' => array(
-      'title' => t('View official announcements related to Drupal'),
+      'title' => t('View official announcements posted by the Drupal community'),
     ),
   );
 }
@@ -85,7 +85,7 @@ function announcements_feed_page_alter(&$page) {
 }
 
 /**
- * Pre-render function for adding notification class to announcement link.
+ * Pre-render function for adding default class to announcement link.
  */
 function announcements_feed_toolbar_pre_render_alter($toolbar) {
   $path = drupal_get_path('module', 'announcements_feed');

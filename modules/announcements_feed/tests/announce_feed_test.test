@@ -262,7 +262,7 @@ class AnnounceFeedTestValidateLoginTestCase extends DrupalWebTestCase {
   }
 
   /**
-   * Test of viewing announcements by different user with permission.
+   * Testing the announcements page with access announcements permission.
    */
   public function testAnnounceValidateLogin() {
     // Create a user with proper permission.
@@ -279,7 +279,7 @@ class AnnounceFeedTestValidateLoginTestCase extends DrupalWebTestCase {
   }
 
   /**
-   * Testing the page without permission.
+   * Testing the announcements page without access announcements permission.
    */
   public function testAnnounceWithoutPermission() {
     $account = $this->drupalCreateUser(array('access toolbar'));

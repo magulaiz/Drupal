@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Template file for the theming example text form.
+ * Template file for the announcements feed.
  *
  * Available custom variables:
  * - $count: A int containing the total number of announcements.
