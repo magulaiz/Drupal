@@ -87,9 +87,7 @@ class AnnounceFeedTestValidateJsonFeed extends DrupalWebTestCase {
     $this->drupalGet('');
     $this->clickLink('Announcements');
     set_announce_feed_test_endpoint($this->updatedJson);
-    if (!_cache_get_object('cache_announcements_feed')) {
-      cache_clear_all('announcements_feed', 'cache_announcements_feed');
-    }
+    cache_clear_all('announcements_feed', 'cache_announcements_feed');
 
     $this->drupalGet('/admin/announcements_feed');
     $this->assertText('Only 9 - Drupal 106 is available and this feed is Updated');
@@ -118,9 +116,7 @@ class AnnounceFeedTestValidateJsonFeed extends DrupalWebTestCase {
     // Change the feed url to empty json file.
     // For resetting temp storage.
     set_announce_feed_test_endpoint($this->emptyJson);
-    if (!_cache_get_object('cache_announcements_feed')) {
-      cache_clear_all('announcements_feed', 'cache_announcements_feed');
-    }
+    cache_clear_all('announcements_feed', 'cache_announcements_feed');
     $this->drupalLogin($this->user);
     // Only no annoucnements available message should show.
     $this->clickLink('Announcements');
