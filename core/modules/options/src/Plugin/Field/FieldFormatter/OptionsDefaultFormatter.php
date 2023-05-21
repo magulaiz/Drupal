@@ -5,6 +5,8 @@ namespace Drupal\options\Plugin\Field\FieldFormatter;
 use Drupal\Core\Field\FieldFilteredMarkup;
 use Drupal\Core\Field\FormatterBase;
 use Drupal\Core\Field\FieldItemListInterface;
+use Drupal\Core\Field\Plugin\Field\FieldFormatter\WrapperLabelFormatterTrait;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Form\OptGroup;
 
 /**
@@ -21,6 +23,8 @@ use Drupal\Core\Form\OptGroup;
  * )
  */
 class OptionsDefaultFormatter extends FormatterBase {
+
+  use WrapperLabelFormatterTrait;
 
   /**
    * {@inheritdoc}
@@ -47,8 +51,23 @@ class OptionsDefaultFormatter extends FormatterBase {
         ];
       }
     }
-
     return $elements;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function settingsForm(array $form, FormStateInterface $form_state){
+    $form = parent::settingsForm($form, $form_state);
+    $this->settingsFormWrapperOption($form);
+    return $form;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function defaultSettings() {
+    return parent::defaultSettings() + self::wrapperLabelDefaultSettings();
   }
 
 }

@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\field\Kernel\Number;
 
+use Drupal\entity_test\Entity\EntityTestRev;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\KernelTests\KernelTestBase;
@@ -24,6 +25,7 @@ class NumberItemFormatterTest extends KernelTestBase {
     'system',
     'filter',
     'user',
+    'field_test',
   ];
 
   /**
@@ -62,55 +64,60 @@ class NumberItemFormatterTest extends KernelTestBase {
     $this->installConfig(['system', 'field']);
     $this->installEntitySchema('entity_test_rev');
     $this->installEntitySchema('entity_test_label');
-
     $this->entityType = 'entity_test_rev';
     $this->bundle = $this->entityType;
-    $this->fieldName = mb_strtolower('my_test_field');
+  }
 
-    $field_storage = FieldStorageConfig::create([
-      'field_name' => $this->fieldName,
+  /**
+   * Test numeric field formatters.
+   *
+   * @dataProvider dataNumericFormatterProvider
+   *
+   * @param $field_type
+   *   The field type to be tested.
+   * @param $value
+   *   The value to set on the field.
+   * @param $settings
+   *   The array of settings to be used on formatter.
+   */
+  public function testNumericFormatter($field_type, $value, $settings) {
+    FieldStorageConfig::create([
       'entity_type' => $this->entityType,
-      'type' => 'string',
-    ]);
-    $field_storage->save();
-
-    $instance = FieldConfig::create([
-      'field_storage' => $field_storage,
+      'field_name' => 'field_' . $field_type,
+      'type' => $field_type,
+    ])->save();
+    FieldConfig::create([
+      'entity_type' => $this->entityType,
+      'field_name' => 'field_' . $field_type,
       'bundle' => $this->bundle,
-      'label' => $this->randomMachineName(),
-    ]);
-    $instance->save();
+    ])->save();
 
     $this->display = \Drupal::service('entity_display.repository')
       ->getViewDisplay($this->entityType, $this->bundle)
-      ->setComponent($this->fieldName, [
-        'type' => 'string',
-        'settings' => [],
+      ->setComponent('field_' . $field_type, [
+        'type' => 'number_' . ($field_type !== 'float' ? $field_type : 'decimal'),
+        'settings' => $settings,
       ]);
     $this->display->save();
 
-    $this->entityTypeManager = \Drupal::entityTypeManager();
+    $entity = EntityTestRev::create();
+    $entity->set('field_' . $field_type, $value);
+    $entity->save();
+    $content = $this->display->build($entity);
+    $content = $this->render($content);
+    $needle = sprintf('<%s>field_%s</%s>', $settings['wrap_label_tag'], $field_type, $settings['wrap_label_tag']);
+    $this->assertStringContainsString($needle, $content);
   }
 
   /**
-   * Test formatter wrap label for integer formatter.
+   * Provider function to test integer, float and decimal.
+   *
+   * @return \Generator
    */
-  public function testIntegerFormatter() {
-    // @todo implement test.
-  }
-
-  /**
-   * Test formatter wrap label for decimal formatter.
-   */
-  public function testDecimalFormatter() {
-    // @todo implement test.
-  }
-
-  /**
-   * Test formatter wrap label for float formatter.
-   */
-  public function testFloatFormatter() {
-    // @todo implement test.
+  public function dataNumericFormatterProvider() {
+    yield ['integer', 1, ['wrap_label_tag' => 'h2']];
+    yield ['float', 1.0, ['wrap_label_tag' => 'h3']];
+    yield ['decimal', 1.0, ['wrap_label_tag' => 'h4']];
   }
 
 }
