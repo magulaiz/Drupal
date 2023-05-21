@@ -35,12 +35,10 @@ function announcements_feed_get_announcements() {
 }
 
 /**
- * Get announcements for the current logged-in user.
- *
- * Return an array of announcements.
+ * Returns the list of Announcements.
  *
  * @return array
- *   Announcements for the current logged-in user.
+ *   A build array with announcements.
  */
 function announcements_feed_get_all_announcements() {
   $announcements = announcements_feed_fetch();
@@ -62,22 +60,25 @@ function announcements_feed_get_all_announcements() {
 }
 
 /**
- * Helper function to fetch the announcements feed.
+ * Fetches the feed either from a local cache or fresh remotely.
  *
- * Return all announcements from the feed relevant to the Drupal version.
- * Structure of the JSON feed:
- *   id: Id.
- *   title: Title of the announcement.
- *   teaser: Announcement teaser.
- *   link: URL
- *   date_modified: Modified date of announcements.
- *   date_published: Published date of announcements.
- *   version: Drupal version of announcements.
- *   featured: 1 is the announcement is featured..
+ * The feed follows the "JSON Feed" format:
+ * - https://www.jsonfeed.org/version/1.1/
+ *
+ * The structure of an announcement item in the feed is:
+ *   - id: Id.
+ *   - title: Title of the announcement.
+ *   - content_html: Announcement teaser.
+ *   - url: URL
+ *   - date_modified: Last updated timestamp.
+ *   - date_published: Created timestamp.
+ *   - _drupalorg.featured: 1 if featured, 0 if not featured.
+ *   - _drupalorg.version: Target version of Drupal, as a Composer version.
  *
  * @return array
- *   An array of Announcements from the feed, or an empty array if the feed
- *   is empty or an error in fetching/decoding feed.
+ *   An array of announcements from the feed relevant to the Drupal version.
+ *   The array is empty if there were no matching announcements. If an error
+ *   occurred while fetching/decoding the feed, it is thrown as an exception.
  *
  * @throws Exception
  */
@@ -159,13 +160,13 @@ function announcements_feed_filter_announcements($announcement) {
 }
 
 /**
- * Check whether the feed item is relevant to the current Drupal version.
+ * Check whether the version given is relevant to the Drupal version used.
  *
  * @param string $version
- *   Version of the announcement feed received from the json feed.
+ *   Version to check.
  *
  * @return bool
- *   Return True if $announcement['version'] matches the current Drupal version.
+ *   Return True if the version matches Drupal version.
  */
 function announcements_feed_is_relevant_item($version) {
   if ($version == '*') {
@@ -203,13 +204,13 @@ function announcements_feed_is_relevant_item($version) {
 }
 
 /**
- * Check whether the link of announcement controlled by D.O.
+ * Check whether a link is controlled by D.O.
  *
  * @param string $url
- *   Announcement feed url for validation.
+ *   URL to check.
  *
  * @return bool
- *   Return True if $announcement['url'] is controlled by the D.O.
+ *   Return True if the URL is controlled by the D.O.
  */
 function announcements_feed_validate_url($url) {
   if (empty($url)) {
