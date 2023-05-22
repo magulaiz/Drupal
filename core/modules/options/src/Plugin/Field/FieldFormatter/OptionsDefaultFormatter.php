@@ -57,7 +57,7 @@ class OptionsDefaultFormatter extends FormatterBase {
   /**
    * {@inheritdoc}
    */
-  public function settingsForm(array $form, FormStateInterface $form_state){
+  public function settingsForm(array $form, FormStateInterface $form_state) {
     $form = parent::settingsForm($form, $form_state);
     $this->settingsFormWrapperOption($form);
     return $form;
