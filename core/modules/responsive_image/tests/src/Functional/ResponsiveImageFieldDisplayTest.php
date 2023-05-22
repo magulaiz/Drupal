@@ -334,10 +334,12 @@ class ResponsiveImageFieldDisplayTest extends ImageFieldTestBase {
     $this->assertSession()->responseHeaderContains('X-Drupal-Cache-Tags', 'config:image.style.large');
 
     // Test the fallback image style:
+    $fallback_image = $image;
+    $fallback_image['#uri'] = $this->fileUrlGenerator->transformRelative($large_style->buildUrl($image_uri));
     // The image.html.twig template has a newline after the <img> tag but
     // responsive-image.html.twig doesn't have one after the fallback image, so
     // we remove it here.
-    $default_output = trim($renderer->renderRoot($image));
+    $default_output = trim($renderer->renderRoot($fallback_image));
     $this->assertSession()->responseContains($default_output);
 
     if ($scheme == 'private') {
