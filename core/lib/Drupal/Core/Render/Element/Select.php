@@ -82,14 +82,12 @@ use Drupal\Core\Render\Element;
  *
  * @FormElement("select")
  */
-class Select extends FormElement
-{
+class Select extends FormElement {
 
   /**
    * {@inheritdoc}
    */
-  public function getInfo()
-  {
+  public function getInfo() {
     $class = static::class;
     return [
       '#input' => TRUE,
@@ -128,8 +126,7 @@ class Select extends FormElement
    *
    * @see _form_validate()
    */
-  public static function processSelect(&$element, FormStateInterface $form_state, &$complete_form)
-  {
+  public static function processSelect(&$element, FormStateInterface $form_state, &$complete_form) {
     // #multiple select fields need a special #name.
     if ($element['#multiple']) {
       $element['#attributes']['multiple'] = 'multiple';
@@ -167,8 +164,7 @@ class Select extends FormElement
   /**
    * {@inheritdoc}
    */
-  public static function valueCallback(&$element, $input, FormStateInterface $form_state)
-  {
+  public static function valueCallback(&$element, $input, FormStateInterface $form_state) {
     if ($input !== FALSE) {
       if (isset($element['#multiple']) && $element['#multiple']) {
         // If an enabled multi-select submits NULL, it means all items are
@@ -176,7 +172,8 @@ class Select extends FormElement
         // default value should be used.
         if (empty($element['#disabled'])) {
           return (is_array($input)) ? array_combine($input, $input) : [];
-        } else {
+        }
+        else {
           return (isset($element['#default_value']) && is_array($element['#default_value'])) ? $element['#default_value'] : [];
         }
       }
@@ -188,7 +185,8 @@ class Select extends FormElement
       // is selected, set the value to match the empty value exactly.
       elseif (isset($element['#empty_value']) && $input === (string) $element['#empty_value']) {
         return $element['#empty_value'];
-      } else {
+      }
+      else {
         return $input;
       }
     }
@@ -197,10 +195,10 @@ class Select extends FormElement
   /**
    * Prepares a select render element.
    */
-  public static function preRenderSelect($element)
-  {
+  public static function preRenderSelect($element) {
     Element::setAttributes($element, ['id', 'name', 'size']);
     static::setAttributes($element, ['form-select']);
     return $element;
   }
+
 }
