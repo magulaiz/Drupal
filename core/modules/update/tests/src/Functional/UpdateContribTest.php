@@ -147,7 +147,9 @@ class UpdateContribTest extends UpdateTestBase {
    * inside \Drupal\Core\Extension\ExtensionList::getList() for example).
    */
   public function testUpdateContribOrder() {
+    // We want core to be version 8.0.0.
     $this->mockDefaultExtensionsInfo(['version' => '8.0.0']);
+    // All the rest should be visible as contrib modules at version 8.x-1.0.
     $this->mockInstalledExtensionsInfo([
       // aaa_update_test needs to be part of the "CCC Update test" project,
       // which would throw off the report if we weren't properly sorting by
