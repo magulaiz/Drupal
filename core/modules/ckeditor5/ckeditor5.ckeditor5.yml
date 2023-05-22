@@ -513,6 +513,7 @@ ckeditor5_table_properties:
     conditions:
       plugins:
         - ckeditor5_table
+        # When arbitrary HTML is already allowed, it's harmless to enable CKEditor 5's UI for table properties.
         - ckeditor5_arbitraryHtmlSupport
     elements:
       - <table style>
@@ -525,11 +526,12 @@ ckeditor5_table_cell_properties:
       table:
         contentToolbar: [tableCellProperties]
   drupal:
-    label: Table Cell Properties
+    label: Table cell properties
     library: ckeditor5/internal.drupal.ckeditor5.table
     conditions:
       plugins:
         - ckeditor5_table
+        # When arbitrary HTML is already allowed, it's harmless to enable CKEditor 5's UI for table cell properties.
         - ckeditor5_arbitraryHtmlSupport
     elements:
       - <td style>
