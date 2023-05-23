@@ -57,59 +57,59 @@ class EmphasisTest extends WebDriverTestBase {
     parent::setUp();
 
     // Initiate filtered test format:
-      FilterFormat::create([
-        'format' => 'test_format',
-        'name' => 'Test format',
-        'filters' => [
-          'filter_html' => [
-            'status' => TRUE,
-            'settings' => [
-              'allowed_html' => '<p> <br> <em>',
-            ],
+    FilterFormat::create([
+      'format' => 'test_format',
+      'name' => 'Test format',
+      'filters' => [
+        'filter_html' => [
+          'status' => TRUE,
+          'settings' => [
+            'allowed_html' => '<p> <br> <em>',
           ],
         ],
-      ])->save();
-      Editor::create([
-        'editor' => 'ckeditor5',
-        'format' => 'test_format',
-        'settings' => [
-          'toolbar' => [
-            'items' => [
-              'italic',
-              'sourceEditing',
-            ],
-          ],
-          'plugins' => [
-            'ckeditor5_sourceEditing' => [
-              'allowed_tags' => [],
-            ],
+      ],
+    ])->save();
+    Editor::create([
+      'editor' => 'ckeditor5',
+      'format' => 'test_format',
+      'settings' => [
+        'toolbar' => [
+          'items' => [
+            'italic',
+            'sourceEditing',
           ],
         ],
-      ])->save();
+        'plugins' => [
+          'ckeditor5_sourceEditing' => [
+            'allowed_tags' => [],
+          ],
+        ],
+      ],
+    ])->save();
 
-      // Initiate unfiltered test format:
-      FilterFormat::create([
-        'format' => 'test_format_unfiltered',
-        'name' => 'Test format unfiltered',
-        'filters' => [],
-      ])->save();
-      Editor::create([
-        'editor' => 'ckeditor5',
-        'format' => 'test_format_unfiltered',
-        'settings' => [
-          'toolbar' => [
-            'items' => [
-              'italic',
-              'sourceEditing',
-            ],
-          ],
-          'plugins' => [
-            'ckeditor5_sourceEditing' => [
-              'allowed_tags' => [],
-            ],
+    // Initiate unfiltered test format:
+    FilterFormat::create([
+      'format' => 'test_format_unfiltered',
+      'name' => 'Test format unfiltered',
+      'filters' => [],
+    ])->save();
+    Editor::create([
+      'editor' => 'ckeditor5',
+      'format' => 'test_format_unfiltered',
+      'settings' => [
+        'toolbar' => [
+          'items' => [
+            'italic',
+            'sourceEditing',
           ],
         ],
-      ])->save();
+        'plugins' => [
+          'ckeditor5_sourceEditing' => [
+            'allowed_tags' => [],
+          ],
+        ],
+      ],
+    ])->save();
 
     $this->assertSame([], array_map(
       function (ConstraintViolation $v) {
