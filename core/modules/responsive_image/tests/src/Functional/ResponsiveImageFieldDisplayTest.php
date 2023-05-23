@@ -342,7 +342,6 @@ class ResponsiveImageFieldDisplayTest extends ImageFieldTestBase {
     // we remove it here.
     $default_output = trim($renderer->renderRoot($fallback_image));
     $this->assertSession()->responseContains($default_output);
-    
 
     if ($scheme == 'private') {
       // Log out and ensure the file cannot be accessed.
