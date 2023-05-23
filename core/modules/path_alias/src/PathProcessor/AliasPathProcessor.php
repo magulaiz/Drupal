@@ -68,22 +68,20 @@ class AliasPathProcessor implements InboundPathProcessorInterface, OutboundPathP
     // Look for paths that are not already the front page.
     if ($path != '/') {
       $system_config = $this->config->get('system.site');
-      if (!empty($system_config)) {
-        $front = $system_config->get('page.front');
-        $langcode = !empty($options['language']) ? $options['language']->getId() : NULL;
+      $front = $system_config->get('page.front');
+      $langcode = !empty($options['language']) ? $options['language']->getId() : NULL;
 
-        // Get path and alias for the configured frontpage setting
-        $alias_manager = \Drupal::service('path_alias.manager');
-        $front_path = $alias_manager->getPathByAlias($front, $langcode);
-        $front_alias = $alias_manager->getAliasByPath($front, $langcode);
+      // Get path and alias for the configured frontpage setting
+      $alias_manager = \Drupal::service('path_alias.manager');
+      $front_path = $alias_manager->getPathByAlias($front, $langcode);
+      $front_alias = $alias_manager->getAliasByPath($front, $langcode);
 
-        // Replace the path and alias with default frontpage path
-        if (!empty($front_path) && $path === $front_path) {
-          $path = '/';
-        }
-        if (!empty($front_alias) && $path === $front_alias) {
-          $path = '/';
-        }
+      // Replace the path and alias with default frontpage path
+      if (!empty($front_path) && $path === $front_path) {
+        $path = '/';
+      }
+      if (!empty($front_alias) && $path === $front_alias) {
+        $path = '/';
       }
     }
 
