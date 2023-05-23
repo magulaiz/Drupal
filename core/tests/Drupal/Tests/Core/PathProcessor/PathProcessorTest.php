@@ -79,7 +79,7 @@ class PathProcessorTest extends UnitTestCase {
   public function testProcessInbound() {
 
     // Create an alias manager stub.
-    $alias_manager = $this->getMockBuilder(AliasManager::class)
+    $alias_manager = $this->getMockBuilder('Drupal\path_alias\AliasManagerInterface')
       ->disableOriginalConstructor()
       ->getMock();
 
@@ -140,7 +140,7 @@ class PathProcessorTest extends UnitTestCase {
       ->getMock();
 
     // Create the processors.
-    $alias_processor = new AliasPathProcessor($alias_manager);
+    $alias_processor = new AliasPathProcessor($alias_manager, $config_factory_stub);
     $decode_processor = new PathProcessorDecode();
     $front_processor = new PathProcessorFront($config_factory_stub);
     $language_processor = new PathProcessorLanguage($config_factory_stub, $this->languageManager, $negotiator, $current_user, $config_subscriber);

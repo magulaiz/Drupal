@@ -2,6 +2,7 @@
 
 namespace Drupal\path_alias\PathProcessor;
 
+use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\PathProcessor\InboundPathProcessorInterface;
 use Drupal\Core\PathProcessor\OutboundPathProcessorInterface;
 use Drupal\Core\Render\BubbleableMetadata;
@@ -33,9 +34,9 @@ class AliasPathProcessor implements InboundPathProcessorInterface, OutboundPathP
    * @param \Drupal\path_alias\AliasManagerInterface $alias_manager
    *   An alias manager for looking up the system path.
    */
-  public function __construct(AliasManagerInterface $alias_manager) {
+  public function __construct(AliasManagerInterface $alias_manager, ConfigFactoryInterface $config) {
     $this->aliasManager = $alias_manager;
-    $this->config = \Drupal::service('config.factory');
+    $this->config = $config;
   }
 
   /**
