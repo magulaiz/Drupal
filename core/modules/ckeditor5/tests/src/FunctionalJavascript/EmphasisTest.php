@@ -91,7 +91,14 @@ class EmphasisTest extends WebDriverTestBase {
     FilterFormat::create([
       'format' => 'test_format_unfiltered',
       'name' => 'Test format unfiltered',
-      'filters' => [],
+      'filters' => [
+        'filter_html' => [
+          'status' => FALSE,
+          'settings' => [
+            'allowed_html' => '<p> <br> <em>',
+          ],
+        ],
+      ],
     ])->save();
     Editor::create([
       'editor' => 'ckeditor5',
