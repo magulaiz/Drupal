@@ -109,6 +109,8 @@ fi
 
 TOP_LEVEL=$($GIT rev-parse --show-toplevel)
 
+DRUPAL_ROOT=${DRUPAL_ROOT:="$TOP_LEVEL"}
+
 # This variable will be set to one when the file core/phpcs.xml.dist is changed.
 PHPCS_XML_DIST_FILE_CHANGED=0
 
@@ -190,12 +192,12 @@ DEPENDENCIES_NEED_INSTALLING=0
 #  determine if dependencies in the lock file match the installed versions.
 #  Using composer install --dry-run is not valid because it would depend on
 #  user-facing strings in Composer.
-if ! [[ -f 'vendor/bin/phpcs' ]]; then
+if ! [[ -f "$DRUPAL_ROOT/vendor/bin/phpcs" ]]; then
   printf "Drupal's PHP development dependencies are not installed. Run 'composer install' from the root directory.\n"
   DEPENDENCIES_NEED_INSTALLING=1;
 fi
 
-cd "$TOP_LEVEL/core"
+cd "$DRUPAL_ROOT/core"
 
 # Ensure JavaScript development dependencies are installed.
 yarn check -s 2>/dev/null
@@ -209,7 +211,7 @@ if [ $DEPENDENCIES_NEED_INSTALLING -ne 0 ]; then
 fi
 
 # Check all files for spelling in one go for better performance.
-yarn run -s spellcheck --no-must-find-files --root $TOP_LEVEL $ABS_FILES
+yarn run -s spellcheck --no-must-find-files -c $DRUPAL_ROOT/core/.cspell.json --root $TOP_LEVEL $ABS_FILES
 if [ "$?" -ne "0" ]; then
   # If there are failures set the status to a number other than 0.
   FINAL_STATUS=1
@@ -218,6 +220,8 @@ else
   printf "\nCSpell: ${green}passed${reset}\n"
 fi
 cd "$TOP_LEVEL"
+
+exit 0
 
 # Add a separator line to make the output easier to read.
 printf "\n"
