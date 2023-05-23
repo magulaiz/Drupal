@@ -56,35 +56,61 @@ class EmphasisTest extends WebDriverTestBase {
   protected function setUp(): void {
     parent::setUp();
 
-    FilterFormat::create([
-      'format' => 'test_format',
-      'name' => 'Test format',
-      'filters' => [
-        'filter_html' => [
-          'status' => TRUE,
-          'settings' => [
-            'allowed_html' => '<p> <br> <em>',
+    // Initiate filtered test format:
+      FilterFormat::create([
+        'format' => 'test_format',
+        'name' => 'Test format',
+        'filters' => [
+          'filter_html' => [
+            'status' => TRUE,
+            'settings' => [
+              'allowed_html' => '<p> <br> <em>',
+            ],
           ],
         ],
-      ],
-    ])->save();
-    Editor::create([
-      'editor' => 'ckeditor5',
-      'format' => 'test_format',
-      'settings' => [
-        'toolbar' => [
-          'items' => [
-            'italic',
-            'sourceEditing',
+      ])->save();
+      Editor::create([
+        'editor' => 'ckeditor5',
+        'format' => 'test_format',
+        'settings' => [
+          'toolbar' => [
+            'items' => [
+              'italic',
+              'sourceEditing',
+            ],
+          ],
+          'plugins' => [
+            'ckeditor5_sourceEditing' => [
+              'allowed_tags' => [],
+            ],
           ],
         ],
-        'plugins' => [
-          'ckeditor5_sourceEditing' => [
-            'allowed_tags' => [],
+      ])->save();
+
+      // Initiate unfiltered test format:
+      FilterFormat::create([
+        'format' => 'test_format_unfiltered',
+        'name' => 'Test format unfiltered',
+        'filters' => [],
+      ])->save();
+      Editor::create([
+        'editor' => 'ckeditor5',
+        'format' => 'test_format_unfiltered',
+        'settings' => [
+          'toolbar' => [
+            'items' => [
+              'italic',
+              'sourceEditing',
+            ],
+          ],
+          'plugins' => [
+            'ckeditor5_sourceEditing' => [
+              'allowed_tags' => [],
+            ],
           ],
         ],
-      ],
-    ])->save();
+      ])->save();
+
     $this->assertSame([], array_map(
       function (ConstraintViolation $v) {
         return (string) $v->getMessage();
@@ -143,8 +169,8 @@ class EmphasisTest extends WebDriverTestBase {
       'type' => 'blog',
       'title' => 'Animals with strange names',
       'body' => [
-        'value' => '<p>test!</p>',
-        'format' => 'full_html',
+        'value' => '<i class="test">Test</i>',
+        'format' => 'test_format_unfiltered',
       ],
     ]);
     $this->host->save();
@@ -155,16 +181,16 @@ class EmphasisTest extends WebDriverTestBase {
     $this->drupalGet($this->host->toUrl('edit-form'));
     $this->waitForEditor();
 
-    $emphasis_element = $assert_session->waitForElementVisible('css', '.ck-content p');
-    $this->assertEquals('test!', $emphasis_element->getText());
+    $emphasis_element = $assert_session->waitForElementVisible('css', '.ck-content i');
+    $this->assertEquals('Test', $emphasis_element->getText());
 
     $xpath = new \DOMXPath($this->getEditorDataAsDom());
-    $emphasis_source = $xpath->query('//p');
+    $emphasis_source = $xpath->query('//i');
     $this->assertNotEmpty($emphasis_source);
-    $this->assertEquals('test!', $emphasis_source[0]->textContent);
+    $this->assertEquals('Test', $emphasis_source[0]->textContent);
     $page->pressButton('Save');
 
-    $assert_session->responseContains('<p>test!</p>');
+    $assert_session->responseContains('<i class="test">Test</i>');
   }
 
   /**
