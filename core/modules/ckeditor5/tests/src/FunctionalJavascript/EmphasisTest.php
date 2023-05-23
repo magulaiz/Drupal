@@ -42,6 +42,7 @@ class EmphasisTest extends WebDriverTestBase {
     'ckeditor5',
     'node',
     'text',
+    'filter',
   ];
 
   /**
@@ -132,6 +133,38 @@ class EmphasisTest extends WebDriverTestBase {
     $page->pressButton('Save');
 
     $assert_session->responseContains('<p>This is a <em>test!</em></p>');
+  }
+
+  /**
+   * Ensures that CKEditor doesn't add random em's.
+   */
+  public function testEmphasisWithoutFilterHtml() {
+    $this->host = $this->createNode([
+      'type' => 'blog',
+      'title' => 'Animals with strange names',
+      'body' => [
+        'value' => '<p>test!</p>',
+        'format' => 'full_html',
+      ],
+    ]);
+    $this->host->save();
+
+    $page = $this->getSession()->getPage();
+    $assert_session = $this->assertSession();
+
+    $this->drupalGet($this->host->toUrl('edit-form'));
+    $this->waitForEditor();
+
+    $emphasis_element = $assert_session->waitForElementVisible('css', '.ck-content p');
+    $this->assertEquals('test!', $emphasis_element->getText());
+
+    $xpath = new \DOMXPath($this->getEditorDataAsDom());
+    $emphasis_source = $xpath->query('//p');
+    $this->assertNotEmpty($emphasis_source);
+    $this->assertEquals('test!', $emphasis_source[0]->textContent);
+    $page->pressButton('Save');
+
+    $assert_session->responseContains('<p>test!</p>');
   }
 
   /**
