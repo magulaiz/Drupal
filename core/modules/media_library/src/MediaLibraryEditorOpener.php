@@ -64,9 +64,19 @@ class MediaLibraryEditorOpener implements MediaLibraryOpenerInterface {
   public function getSelectionResponse(MediaLibraryState $state, array $selected_ids) {
     $selected_media = $this->mediaStorage->load(reset($selected_ids));
 
-    $fid = $selected_media->getSource()->getSourceFieldValue($selected_media);
-    $file = File::load($fid);
-    $url = $file->createFileUrl();
+    $alt = '';
+    $url = '';
+    if ($selected_media) {
+      $fid = $selected_media->getSource()->getSourceFieldValue($selected_media);
+      $file = File::load($fid);
+      if ($file) {
+        $url = $file->createFileUrl();
+      } else {
+        $url = $fid;
+      }
+
+      if ($selected_media->field_media_image) $alt = $selected_media->field_media_image->alt;
+    }
 
     $response = new AjaxResponse();
     $values = [
@@ -75,7 +85,7 @@ class MediaLibraryEditorOpener implements MediaLibraryOpenerInterface {
         'data-entity-uuid' => $selected_media->uuid(),
         'data-align' => 'center',
         'src' => $url,
-        'alt' => $selected_media->field_media_image->alt,
+        'alt' => $alt,
         'src-type' => $state->getSelectedTypeId(),
       ],
     ];
