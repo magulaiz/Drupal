@@ -79,11 +79,11 @@
 }
 
 .ui-dialog > .ui-dialog-content {
+  position: static;
   overflow: auto;
   padding: var(--space-m) var(--space-l);
   color: var(--color-text);
   background: var(--color-white);
-  position: static;
 
   /* Form action buttons are moved in dialogs. Remove empty space. */
 }
