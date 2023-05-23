@@ -20,6 +20,7 @@ class BlockVisibilityTest extends WebDriverTestBase {
    * {@inheritdoc}
    */
   protected static $modules = [
+    'field_ui',
     'layout_builder',
     'node',
     'contextual',
@@ -146,7 +147,8 @@ class BlockVisibilityTest extends WebDriverTestBase {
     // Confirm "Control visibility" contextual links available on each block.
     foreach ($blocks_in_layout as $block) {
       $rendered_block_selector = $block['rendered_block_selector'];
-      $assert_session->elementExists('css', "#layout-builder $rendered_block_selector .layout-builder-block-visibility a");
+      $block_element = $page->find('css', "#layout-builder $rendered_block_selector");
+      $block_element->hasLink('Control visibility');
     }
 
     // Test Request Path visibility rule.
