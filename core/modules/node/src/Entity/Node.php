@@ -265,6 +265,7 @@ class Node extends EditorialContentEntityBase implements NodeInterface {
     $fields['title'] = BaseFieldDefinition::create('string')
       ->setLabel(t('Title'))
       ->setRequired(TRUE)
+      ->setStorageRequired(FALSE)
       ->setTranslatable(TRUE)
       ->setRevisionable(TRUE)
       ->setSetting('max_length', 255)
