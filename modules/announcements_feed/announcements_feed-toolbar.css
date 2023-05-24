@@ -7,7 +7,6 @@
   position: relative;
   padding-left: 30px;
 }
-
 #toolbar div.toolbar-menu ul li a#toolbar-link-admin-announcements_feed:before {
   position: absolute;
   left: 10px;
