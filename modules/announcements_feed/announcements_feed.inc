@@ -2,13 +2,17 @@
 
 /**
  * @file
- * Announcements Feed helper functions.
+ * Announcements feed helper functions.
  */
 
 /**
- * Page callback for the announcement entry.
+ * Returns the list of Announcements.
+ *
+ * @return array
+ *   A build array with announcements.
  */
 function announcements_feed_get_announcements() {
+  drupal_set_title('Community announcements');
   drupal_add_css(drupal_get_path('module', 'announcements_feed')
     . '/announcements_feed.css', array(
       'group' => CSS_DEFAULT,
@@ -18,7 +22,8 @@ function announcements_feed_get_announcements() {
     $announcements = announcements_feed_get_all_announcements();
   }
   catch (Exception $e) {
-    return theme('status_message', drupal_set_message($e->getMessage(), 'error'));
+    drupal_set_message(t('An error occurred while parsing the announcements feed, check the logs for more information.'), 'error');
+    return '';
   }
   $build = array();
   foreach ($announcements as $announcement) {
@@ -30,15 +35,14 @@ function announcements_feed_get_announcements() {
     '#count' => count($announcements),
     '#feed_link' => variable_get('announcements_feed_link'),
   ));
-
   return $build;
 }
 
 /**
- * Returns the list of Announcements.
+ * Generate an array of announcements with keys to be used in the build array.
  *
  * @return array
- *   A build array with announcements.
+ *   An array of announcements.
  */
 function announcements_feed_get_all_announcements() {
   $announcements = announcements_feed_fetch();
@@ -83,39 +87,40 @@ function announcements_feed_get_all_announcements() {
  * @throws Exception
  */
 function announcements_feed_fetch() {
-  $announcements = cache_get('announcements_feed', 'cache_announcements_feed');
+  $announcements = cache_get('announcements_feed');
   if (empty($announcements)) {
-    $announcements_feed_url = variable_get('announcements_feed_url');
-    $response = drupal_http_request($announcements_feed_url);
+    $announcements_feed_json_url = variable_get('announcements_feed_json_url');
+    $response = drupal_http_request($announcements_feed_json_url);
     if ($response->code == 200) {
       $feeds = json_decode($response->data, TRUE);
-      if (is_null($feeds)) {
-        watchdog('error', 'JSON data is not parsable please check the api.', WATCHDOG_ERROR);
-        throw new Exception('Announcement Feed unable to parse the JSON data. Check logs for more.');
+      if (!isset($feeds['items'])) {
+        watchdog('announcements_feed', 'The feed format is not valid.', NULL, WATCHDOG_ERROR);
+        throw new Exception('Invalid format');
       }
       $announcements = array();
       if ($feeds['items']) {
         $announcements = $feeds['items'];
       }
       $announcements = array_filter($announcements, 'announcements_feed_filter_announcements');
-      cache_set('announcements_feed', $announcements, 'cache_announcements_feed', REQUEST_TIME + variable_get('announcements_feed_max_age'));
+      cache_set('announcements_feed', $announcements, 'cache', REQUEST_TIME + variable_get('announcements_feed_max_age', 86400));
     }
     else {
-      watchdog('error', $response->code, (array) $response, WATCHDOG_ERROR);
-      throw new Exception('Announcements Feed Url fetch failed with an error: @code. Check logs for more',
-        array('@code' => $response->code));
+      watchdog(
+        'announcements_feed',
+        'The feed failed to fetch with an error code: @code, error message: @message.',
+        array('@code' => $response->code, '@message' => $response->error),
+        WATCHDOG_ERROR
+      );
+      throw new Exception($response->error, $response->code);
+
     }
   }
   else {
     $announcements = $announcements->data;
-
   }
   // The drupal.org endpoint is sorted by created date in descending order.
   // We will limit the announcements based on the configuration limit.
   $announcements_feed_limit = variable_get('announcements_feed_limit', 10);
-  if (empty($announcements_feed_limit)) {
-    $announcements_feed_limit = 10;
-  }
   $announcements = array_slice($announcements, 0, $announcements_feed_limit);
   // For the remaining announcements, put all the featured announcements
   // before the rest.
@@ -138,13 +143,13 @@ function announcements_feed_sort_featured($a, $b) {
 }
 
 /**
- * Filter the validated and relavant announcements only.
+ * Filter the announcements relevant to the Drupal version used with valid URL controlled by the D.O.
  *
  * @param array $announcement
- *   Announcement feed array to filter the announcements.
+ *   Announcement feed array item to check.
  *
  * @return bool
- *   Return True if $announcement is relavant and the url is validated.
+ *   Return True if $announcement is relevant and the URL is valid.
  */
 function announcements_feed_filter_announcements($announcement) {
   $announcement_url = '';
@@ -194,7 +199,7 @@ function announcements_feed_is_relevant_item($version) {
           $operations = '>=';
         }
       }
-      if ((isset($operations) && version_compare(VERSION, $feed_version, $operations))) {
+      if (isset($operations) && version_compare(VERSION, $feed_version, $operations)) {
         return TRUE;
       }
     }

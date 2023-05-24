@@ -6,37 +6,12 @@
   padding-bottom: 1rem;
 }
 
-.announcements .featured-announcements-wrapper .announcements-featured {
-  position: relative;
-  padding-left: 30px;
-  border-top: 1px solid #ccc;
-  margin-left: 0;
-  margin-bottom: 10px;
-  background: url(images/list-item.png) no-repeat 0 11px;
-}
-
-.announcements .announcements-standard {
-  position: relative;
-  padding-left: 30px;
-  padding-top: 9px;
-  border-top: 1px solid #ccc;
-  margin-left: 0;
-  margin-bottom: 10px;
-  background: url(images/list-item.png) no-repeat 0 11px;
-}
-
-#new-feed-featured .announcement-title h4 {
-  display: inline-block;
+.featured-announcements-wrapper .leaf {
+  padding-top: 0;
 }
 
 .announcements .announcements--view-all {
   padding-left: 30px;
   border-top: 1px solid #ccc;
   padding-top: 10px;
-}
-.announcements .announcement-title .announcement-date {
-  color: #666;
-  margin: 5px 0;
-  line-height: 1.231em;
-  font-size: 0.923em;
 }

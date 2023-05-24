@@ -6,22 +6,14 @@
  */
 
 /**
- * Implements hook_schema().
- */
-function announcements_feed_schema() {
-  $schema['cache_announcements_feed'] = drupal_get_schema_unprocessed('system', 'cache');
-  $schema['cache_announcements_feed']['description'] = 'Cache table for the announcements feed module to store the recent announcements, fetched from the central server.';
-  return $schema;
-}
-
-/**
  * Implements hook_install().
  */
 function announcements_feed_install() {
   // Creating the default values.
   variable_set('announcements_feed_max_age', 86400);
+  variable_set('announcements_feed_cron_interval', 21600);
   variable_set('announcements_feed_limit', 10);
-  variable_set('announcements_feed_url', 'https://www.drupal.org/announcements.json');
+  variable_set('announcements_feed_json_url', 'https://www.drupal.org/announcements.json');
   variable_set('announcements_feed_link', 'https://www.drupal.org/about/announcements');
 }
 
@@ -31,7 +23,8 @@ function announcements_feed_install() {
 function announcements_feed_uninstall() {
   // Deleting the announcements_feed variable.
   variable_del('announcements_feed_limit');
+  variable_del('announcements_feed_cron_interval');
   variable_del('announcements_feed_max_age');
-  variable_del('announcements_feed_url');
+  variable_del('announcements_feed_json_url');
   variable_del('announcements_feed_link');
 }

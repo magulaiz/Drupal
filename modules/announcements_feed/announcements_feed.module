@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Updates the site with new announcements from the community side.
+ * Fetch community announcements from www.drupal.org feed.
  */
 
 /**
@@ -98,4 +98,18 @@ function announcements_feed_toolbar_pre_render_alter($toolbar) {
   }
 
   return $toolbar;
+}
+
+/**
+ * Implements hook_cron().
+ */
+function announcements_feed_cron() {
+  module_load_include('inc', 'announcements_feed', 'announcements_feed');
+  $cron_interval = variable_get('announcements_feed_cron_interval', 21600);
+  $last_check = variable_get('announcements_feed_last_check', 0);
+  $time = time();
+  if (($time - $last_check) > $cron_interval) {
+    announcements_feed_fetch();
+    variable_set('announcements_feed_last_check', $time);
+  }
 }

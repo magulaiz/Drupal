@@ -2,60 +2,67 @@
 
 /**
  * @file
- * Template file for the announcements feed.
+ * Template file for the theming of announcements_feed admin page.
  *
- * Available custom variables:
- * - $count: A int containing the total number of announcements.
+ * Available variables:
+ * - $count: Contains the total number of announcements.
  * - $featured: An array of featured announcements.
  * - $standard: An array of non-featured announcements.
  *
  * Each $announcement in $featured and $standard contain:
+ * - $announcement['id']: Unique id of the announcement.
  * - $announcement['title']: Title of the announcement.
- * - $announcement['teaser']: Short description of the announcement
- * - $announcement['link']: Link given by the announcement.
- * - $announcement['date_published']: Time of the announcement.
+ * - $announcement['teaser']: Short description of the announcement.
+ * - $announcement['link']: Learn more link of the announcement.
+ * - $announcement['date_published']: Timestamp of the announcement.
  *
  * @see announcements_feed_theme()
+ *
  * @ingroup themeable
  */
 ?>
-<?php if ($count) : ?>
+<?php if ($count): ?>
   <div class="announcements">
-    <?php if ($featured) : ?>
+    <ul class="admin-list">
+    <?php if ($featured): ?>
       <div class="featured-announcements-wrapper">
-        <?php foreach ($featured as $key => $announcement) : ?>
-          <div class="announcements-featured">
+        <?php foreach ($featured as $key => $announcement): ?>
+          <li class="leaf">
             <div class="announcement-title">
               <h4>
                 <?php print $announcement['title']; ?>
               </h4>
             </div>
             <div class="announcement-teaser">
-              <?php print $announcement['teaser']; ?>
+              <?php print strip_tags($announcement['teaser']); ?>
             </div>
             <div class="announcement-link">
-              <?php if($announcement['link']) : ?>
-                  <a href="<?php print $announcement['link']; ?>"><span><?php print t('Learn More'); ?></span></a>
-              <?php endif ?>
+              <?php if($announcement['link']): ?>
+                  <a target="_blank" href="<?php print $announcement['link']; ?>">
+                    <span>
+                      <?php print t('Learn More'); ?>
+                    </span>
+                  </a>
+              <?php endif; ?>
             </div>
-          </div>
+          </li>
         <?php endforeach; ?>
       </div>
-    <?php endif ?>
-    <?php foreach ($standard as $key => $announcement) : ?>
-      <div class="announcements-standard">
-        <div class="announcement-title">
-            <a href="<?php print $announcement['link']; ?>"><?php print $announcement['title'] ?></a>
-            <div class="announcement-date"><?php print format_date(strtotime($announcement['date_published']), 'short'); ?></div>
+    <?php endif; ?>
+    <?php foreach ($standard as $key => $announcement): ?>
+      <li class="leaf">
+        <a target="_blank" href="<?php print $announcement['link']; ?>"><?php print $announcement['title']; ?></a>
+        <div class="description">
+          <?php print format_date(strtotime($announcement['date_published']), 'short'); ?>
         </div>
-      </div>
+      </li>
     <?php endforeach; ?>
-    <?php if ($feed_link) : ?>
+    <?php if ($feed_link): ?>
       <div class="announcements--view-all">
-        <a href="<?php print $feed_link; ?>"><?php print t('View all announcements'); ?></a>
+        <a target="_blank" href="<?php print $feed_link; ?>"><?php print t('View all announcements'); ?></a>
       </div>
-    <?php endif ?>
+    <?php endif; ?>
   </div>
 <?php else: ?>
-<div class="no-announcements"><span><?php print t('No announcements available') ?></span></div>
+  <div class="no-announcements"><span><?php print t('No announcements available'); ?></span></div>
 <?php endif; ?>
