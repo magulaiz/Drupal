@@ -38,7 +38,7 @@ class AliasPathProcessorTest extends UnitTestCase {
     $configFactory = $this->getConfigFactoryStub(
       [
         'system.site' => [
-          'page.front' => '/user/login',
+          'page.front' => '<front>',
         ],
       ]
     );

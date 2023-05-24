@@ -33,10 +33,12 @@ class AliasPathProcessor implements InboundPathProcessorInterface, OutboundPathP
    *
    * @param \Drupal\path_alias\AliasManagerInterface $alias_manager
    *   An alias manager for looking up the system path.
+   * @param \Drupal\Core\Config\ConfigFactoryInterface $configFactory
+   *   The config factory to get the system config from.
    */
-  public function __construct(AliasManagerInterface $alias_manager, ConfigFactoryInterface $config) {
+  public function __construct(AliasManagerInterface $alias_manager, ConfigFactoryInterface $configFactory) {
     $this->aliasManager = $alias_manager;
-    $this->config = $config;
+    $this->config = $configFactory->get('system.site');
   }
 
   /**
@@ -65,32 +67,29 @@ class AliasPathProcessor implements InboundPathProcessorInterface, OutboundPathP
       }
     }
 
+    // The special path '<front>' links to the default front page.
+    if ($path === '/<front>') {
+      return '/';
+    }
+
     // Look for paths that are not already the front page.
     if ($path !== '/') {
-      $system_config = $this->config->get('system.site');
-      $front = $system_config->get('page.front');
+      $front = $this->config->get('page.front');
       $langcode = !empty($options['language']) ? $options['language']->getId() : NULL;
 
       // Get path and alias for the configured frontpage setting
-      $alias_manager = \Drupal::service('path_alias.manager');
-      $front_path = $alias_manager->getPathByAlias($front, $langcode);
-      $front_alias = $alias_manager->getAliasByPath($front, $langcode);
+      $front_path = $this->aliasManager->getPathByAlias($front, $langcode);
+      $front_alias = $this->aliasManager->getAliasByPath($front, $langcode);
 
       // Replace the path and alias with default frontpage path
       if (!empty($front_path) && $path === $front_path) {
-        $path = '/';
+        return '/';
       }
       if (!empty($front_alias) && $path === $front_alias) {
-        $path = '/';
+        return '/';
       }
-    }
-
-    // The special path '<front>' links to the default front page.
-    if ($path === '/<front>') {
-      $path = '/';
     }
 
     return $path;
   }
-
 }

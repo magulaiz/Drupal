@@ -9,7 +9,6 @@ use Drupal\Core\PathProcessor\PathProcessorFront;
 use Drupal\Core\PathProcessor\PathProcessorManager;
 use Drupal\language\HttpKernel\PathProcessorLanguage;
 use Drupal\language\Plugin\LanguageNegotiation\LanguageNegotiationUrl;
-use Drupal\path_alias\AliasManager;
 use Drupal\path_alias\PathProcessor\AliasPathProcessor;
 use Drupal\Tests\UnitTestCase;
 use Symfony\Component\HttpFoundation\Request;
