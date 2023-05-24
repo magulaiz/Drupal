@@ -66,7 +66,7 @@ class AliasPathProcessor implements InboundPathProcessorInterface, OutboundPathP
     }
 
     // Look for paths that are not already the front page.
-    if ($path != '/') {
+    if ($path !== '/') {
       $system_config = $this->config->get('system.site');
       $front = $system_config->get('page.front');
       $langcode = !empty($options['language']) ? $options['language']->getId() : NULL;
