@@ -131,26 +131,6 @@ parameters:
 			path: lib/Drupal/Component/Diff/Engine/DiffEngine.php
 
 		-
-			message: "#^Constructor of class Drupal\\\\Component\\\\FileCache\\\\NullFileCache has an unused parameter \\$cache_backend_class\\.$#"
-			count: 1
-			path: lib/Drupal/Component/FileCache/NullFileCache.php
-
-		-
-			message: "#^Constructor of class Drupal\\\\Component\\\\FileCache\\\\NullFileCache has an unused parameter \\$cache_backend_configuration\\.$#"
-			count: 1
-			path: lib/Drupal/Component/FileCache/NullFileCache.php
-
-		-
-			message: "#^Constructor of class Drupal\\\\Component\\\\FileCache\\\\NullFileCache has an unused parameter \\$collection\\.$#"
-			count: 1
-			path: lib/Drupal/Component/FileCache/NullFileCache.php
-
-		-
-			message: "#^Constructor of class Drupal\\\\Component\\\\FileCache\\\\NullFileCache has an unused parameter \\$prefix\\.$#"
-			count: 1
-			path: lib/Drupal/Component/FileCache/NullFileCache.php
-
-		-
 			message: "#^Method Drupal\\\\Component\\\\Gettext\\\\PoMemoryWriter\\:\\:getHeader\\(\\) should return Drupal\\\\Component\\\\Gettext\\\\PoHeader but return statement is missing\\.$#"
 			count: 1
 			path: lib/Drupal/Component/Gettext/PoMemoryWriter.php
@@ -236,12 +216,7 @@ parameters:
 			path: lib/Drupal/Core/Cache/MemoryBackend.php
 
 		-
-			message: "#^Constructor of class Drupal\\\\Core\\\\Cache\\\\NullBackend has an unused parameter \\$bin\\.$#"
-			count: 1
-			path: lib/Drupal/Core/Cache/NullBackend.php
-
-		-
-			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
+			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 2
 			path: lib/Drupal/Core/Cache/PhpBackend.php
 
@@ -611,11 +586,6 @@ parameters:
 			path: lib/Drupal/Core/Menu/MenuTreeStorage.php
 
 		-
-			message: "#^Constructor of class Drupal\\\\Core\\\\Queue\\\\Memory has an unused parameter \\$name\\.$#"
-			count: 1
-			path: lib/Drupal/Core/Queue/Memory.php
-
-		-
 			message: "#^Variable \\$sort in isset\\(\\) always exists and is not nullable\\.$#"
 			count: 1
 			path: lib/Drupal/Core/Render/Element/RenderElement.php
@@ -676,19 +646,9 @@ parameters:
 			path: lib/Drupal/Core/Template/AttributeValueBase.php
 
 		-
-			message: "#^Constructor of class Drupal\\\\Core\\\\Template\\\\TwigEnvironment has an unused parameter \\$root\\.$#"
-			count: 1
-			path: lib/Drupal/Core/Template/TwigEnvironment.php
-
-		-
-			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
+			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 1
 			path: lib/Drupal/Core/Template/TwigPhpStorageCache.php
-
-		-
-			message: "#^Constructor of class Drupal\\\\Core\\\\Test\\\\TestRunnerKernel has an unused parameter \\$allow_dumping\\.$#"
-			count: 1
-			path: lib/Drupal/Core/Test/TestRunnerKernel.php
 
 		-
 			message: "#^Method Drupal\\\\Core\\\\Theme\\\\ThemeInitialization\\:\\:resolveStyleSheetPlaceholders\\(\\) should return string but return statement is missing\\.$#"
@@ -1366,9 +1326,14 @@ parameters:
 			path: modules/language/src/Plugin/LanguageNegotiation/LanguageNegotiationContentEntity.php
 
 		-
-			message: "#^Constructor of class Drupal\\\\link\\\\Plugin\\\\migrate\\\\process\\\\FieldLink has an unused parameter \\$migration\\.$#"
+			message: "#^Variable \\$goto in isset\\(\\) always exists and is not nullable\\.$#"
 			count: 1
-			path: modules/link/src/Plugin/migrate/process/FieldLink.php
+			path: modules/language/tests/src/Functional/LanguageBreadcrumbTest.php
+
+		-
+			message: "#^Call to an undefined method Drupal\\\\Tests\\\\layout_builder\\\\Unit\\\\DefaultsSectionStorageTest\\:\\:getThirdPartySetting\\(\\)\\.$#"
+			count: 1
+			path: modules/layout_builder/tests/src/Unit/DefaultsSectionStorageTest.php
 
 		-
 			message: "#^Function locale_config_batch_update_components\\(\\) should return array but return statement is missing\\.$#"
@@ -1471,11 +1436,6 @@ parameters:
 			path: modules/media_library/tests/src/FunctionalJavascript/EmbeddedFormWidgetTest.php
 
 		-
-			message: "#^Constructor of class Drupal\\\\menu_link_content\\\\Form\\\\MenuLinkContentForm has an unused parameter \\$language_manager\\.$#"
-			count: 1
-			path: modules/menu_link_content/src/Form/MenuLinkContentForm.php
-
-		-
 			message: "#^Method Drupal\\\\menu_link_content\\\\Form\\\\MenuLinkContentForm\\:\\:save\\(\\) should return int but return statement is missing\\.$#"
 			count: 1
 			path: modules/menu_link_content/src/Form/MenuLinkContentForm.php
@@ -1499,21 +1459,6 @@ parameters:
 			message: "#^Method Drupal\\\\menu_ui\\\\MenuForm\\:\\:save\\(\\) should return int but return statement is missing\\.$#"
 			count: 1
 			path: modules/menu_ui/src/MenuForm.php
-
-		-
-			message: "#^Constructor of class Drupal\\\\migrate\\\\MigrateException has an unused parameter \\$code\\.$#"
-			count: 1
-			path: modules/migrate/src/MigrateException.php
-
-		-
-			message: "#^Constructor of class Drupal\\\\migrate\\\\MigrateException has an unused parameter \\$previous\\.$#"
-			count: 1
-			path: modules/migrate/src/MigrateException.php
-
-		-
-			message: "#^Constructor of class Drupal\\\\migrate\\\\Plugin\\\\MigrationPluginManager has an unused parameter \\$language_manager\\.$#"
-			count: 1
-			path: modules/migrate/src/Plugin/MigrationPluginManager.php
 
 		-
 			message: "#^Method Drupal\\\\migrate\\\\Plugin\\\\migrate\\\\destination\\\\ComponentEntityDisplayBase\\:\\:fields\\(\\) should return array but return statement is missing\\.$#"
@@ -1564,16 +1509,6 @@ parameters:
 			message: "#^Variable \\$patterns might not be defined\\.$#"
 			count: 1
 			path: modules/migrate_drupal/src/NodeMigrateType.php
-
-		-
-			message: "#^Constructor of class Drupal\\\\migrate_drupal\\\\Plugin\\\\migrate\\\\EntityReferenceTranslationDeriver has an unused parameter \\$base_plugin_id\\.$#"
-			count: 1
-			path: modules/migrate_drupal/src/Plugin/migrate/EntityReferenceTranslationDeriver.php
-
-		-
-			message: "#^Constructor of class Drupal\\\\migrate_drupal\\\\Plugin\\\\migrate\\\\source\\\\ContentEntityDeriver has an unused parameter \\$base_plugin_id\\.$#"
-			count: 1
-			path: modules/migrate_drupal/src/Plugin/migrate/source/ContentEntityDeriver.php
 
 		-
 			message: "#^Variable \\$patterns might not be defined\\.$#"
@@ -1986,14 +1921,14 @@ parameters:
 			path: modules/system/tests/modules/form_test/src/Form/FormTestTableSelectJsSelectForm.php
 
 		-
-			message: "#^Constructor of class Drupal\\\\lazy_route_provider_install_test\\\\PluginManager has an unused parameter \\$cache_backend\\.$#"
+			message: "#^Configuration entity must define a `config_export` key\\. See https\\://www\\.drupal\\.org/node/2481909$#"
 			count: 1
-			path: modules/system/tests/modules/lazy_route_provider_install_test/src/PluginManager.php
+			path: modules/system/tests/modules/module_installer_config_test/src/Entity/TestConfigType.php
 
 		-
-			message: "#^Constructor of class Drupal\\\\lazy_route_provider_install_test\\\\PluginManager has an unused parameter \\$url_generator\\.$#"
+			message: "#^Instantiated class Drupal\\\\Tests\\\\system\\\\Functional\\\\FileTransfer\\\\Exception not found\\.$#"
 			count: 1
-			path: modules/system/tests/modules/lazy_route_provider_install_test/src/PluginManager.php
+			path: modules/system/tests/src/Functional/FileTransfer/FileTransferTest.php
 
 		-
 			message: "#^Access to an undefined property Drupal\\\\Tests\\\\system\\\\Functional\\\\FileTransfer\\\\TestFileTransfer\\:\\:\\$connection\\.$#"
@@ -2299,11 +2234,6 @@ parameters:
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 1
 			path: modules/views/src/Plugin/views/cache/Time.php
-
-		-
-			message: "#^Constructor of class Drupal\\\\views\\\\Plugin\\\\views\\\\display\\\\DisplayPluginBase has an unused parameter \\$configuration\\.$#"
-			count: 1
-			path: modules/views/src/Plugin/views/display/DisplayPluginBase.php
 
 		-
 			message: "#^Variable \\$pager in isset\\(\\) always exists and is not nullable\\.$#"
@@ -2846,69 +2776,9 @@ parameters:
 			path: tests/Drupal/Tests/BrowserTestBase.php
 
 		-
-			message: "#^Constructor of class Symfony\\\\Component\\\\ExpressionLanguage\\\\Expression has an unused parameter \\$expression\\.$#"
+			message: "#^Array has 2 duplicate keys with value 'ClassWithConstants\\.SOME_KEY' \\(\\\\Drupal\\\\Tests\\\\Component\\\\Annotation\\\\Doctrine\\\\Fixtures\\\\ClassWithConstants\\:\\:SOME_KEY, \\\\Drupal\\\\Tests\\\\Component\\\\Annotation\\\\Doctrine\\\\Fixtures\\\\ClassWithConstants\\:\\:SOME_KEY\\)\\.$#"
 			count: 1
-			path: tests/Drupal/Tests/Component/DependencyInjection/Dumper/OptimizedPhpArrayDumperTest.php
-
-		-
-			message: "#^Constructor of class Drupal\\\\Tests\\\\Component\\\\Plugin\\\\Factory\\\\ArgumentsAllNull has an unused parameter \\$charismatic\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Component/Plugin/Factory/ReflectionFactoryTest.php
-
-		-
-			message: "#^Constructor of class Drupal\\\\Tests\\\\Component\\\\Plugin\\\\Factory\\\\ArgumentsAllNull has an unused parameter \\$delightful\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Component/Plugin/Factory/ReflectionFactoryTest.php
-
-		-
-			message: "#^Constructor of class Drupal\\\\Tests\\\\Component\\\\Plugin\\\\Factory\\\\ArgumentsAllNull has an unused parameter \\$demure\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Component/Plugin/Factory/ReflectionFactoryTest.php
-
-		-
-			message: "#^Constructor of class Drupal\\\\Tests\\\\Component\\\\Plugin\\\\Factory\\\\ArgumentsAllNull has an unused parameter \\$electrostatic\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Component/Plugin/Factory/ReflectionFactoryTest.php
-
-		-
-			message: "#^Constructor of class Drupal\\\\Tests\\\\Component\\\\Plugin\\\\Factory\\\\ArgumentsConfigArrayKey has an unused parameter \\$config_name\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Component/Plugin/Factory/ReflectionFactoryTest.php
-
-		-
-			message: "#^Constructor of class Drupal\\\\Tests\\\\Component\\\\Plugin\\\\Factory\\\\ArgumentsMany has an unused parameter \\$configuration\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Component/Plugin/Factory/ReflectionFactoryTest.php
-
-		-
-			message: "#^Constructor of class Drupal\\\\Tests\\\\Component\\\\Plugin\\\\Factory\\\\ArgumentsMany has an unused parameter \\$foo\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Component/Plugin/Factory/ReflectionFactoryTest.php
-
-		-
-			message: "#^Constructor of class Drupal\\\\Tests\\\\Component\\\\Plugin\\\\Factory\\\\ArgumentsMany has an unused parameter \\$plugin_definition\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Component/Plugin/Factory/ReflectionFactoryTest.php
-
-		-
-			message: "#^Constructor of class Drupal\\\\Tests\\\\Component\\\\Plugin\\\\Factory\\\\ArgumentsMany has an unused parameter \\$plugin_id\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Component/Plugin/Factory/ReflectionFactoryTest.php
-
-		-
-			message: "#^Constructor of class Drupal\\\\Tests\\\\Component\\\\Plugin\\\\Factory\\\\ArgumentsMany has an unused parameter \\$what_am_i_doing_here\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Component/Plugin/Factory/ReflectionFactoryTest.php
-
-		-
-			message: "#^Constructor of class Drupal\\\\Tests\\\\Component\\\\Plugin\\\\Factory\\\\ArgumentsPluginId has an unused parameter \\$plugin_id\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Component/Plugin/Factory/ReflectionFactoryTest.php
-
-		-
-			message: "#^@coversDefaultClass defined on class method testHtmlClass\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Component/Utility/HtmlTest.php
+			path: tests/Drupal/Tests/Component/Annotation/Doctrine/DocParserTest.php
 
 		-
 			message: "#^Result of static method Drupal\\\\Composer\\\\Composer\\:\\:ensureComposerVersion\\(\\) \\(void\\) is used\\.$#"
@@ -2946,14 +2816,44 @@ parameters:
 			path: tests/Drupal/Tests/Core/Plugin/CategorizingPluginManagerTraitTest.php
 
 		-
-			message: "#^Constructor of class Drupal\\\\Tests\\\\Core\\\\Plugin\\\\Discovery\\\\TestContainerDerivativeDiscovery has an unused parameter \\$example_service\\.$#"
+			message: "#^Anonymous function has an unused use \\$self\\.$#"
 			count: 1
-			path: tests/Drupal/Tests/Core/Plugin/Discovery/TestContainerDerivativeDiscovery.php
+			path: tests/Drupal/Tests/Core/Render/MetadataBubblingUrlGeneratorTest.php
 
 		-
-			message: "#^Constructor of class Drupal\\\\Tests\\\\Core\\\\Plugin\\\\TestPluginManager has an unused parameter \\$namespaces\\.$#"
+			message: "#^\\#access_callback callback class '\\$this\\(Drupal\\\\Tests\\\\Core\\\\Render\\\\RendererCallbackTest\\)' at key '0' does not implement Drupal\\\\Core\\\\Security\\\\TrustedCallbackInterface\\.$#"
 			count: 1
-			path: tests/Drupal/Tests/Core/Plugin/TestPluginManager.php
+			path: tests/Drupal/Tests/Core/Render/RendererCallbackTest.php
+
+		-
+			message: "#^\\#lazy_builder callback '\\\\\\\\Drupal\\\\\\\\Tests\\\\\\\\Core…' at key '0' is not trusted\\.$#"
+			count: 1
+			path: tests/Drupal/Tests/Core/Render/RendererCallbackTest.php
+
+		-
+			message: "#^\\#post_render callback class 'static\\(Drupal\\\\Tests\\\\Core\\\\Render\\\\RendererCallbackTest\\)' at key '0' does not implement Drupal\\\\Core\\\\Security\\\\TrustedCallbackInterface\\.$#"
+			count: 1
+			path: tests/Drupal/Tests/Core/Render/RendererCallbackTest.php
+
+		-
+			message: "#^\\#pre_render callback '\\\\\\\\Drupal\\\\\\\\Tests\\\\\\\\Core…' at key '0' is not trusted\\.$#"
+			count: 1
+			path: tests/Drupal/Tests/Core/Render/RendererCallbackTest.php
+
+		-
+			message: "#^Anonymous function has an unused use \\$complex_child_template\\.$#"
+			count: 1
+			path: tests/Drupal/Tests/Core/Render/RendererRecursionTest.php
+
+		-
+			message: "#^Anonymous function has an unused use \\$parent_markup\\.$#"
+			count: 1
+			path: tests/Drupal/Tests/Core/Render/RendererRecursionTest.php
+
+		-
+			message: "#^Anonymous function has an unused use \\$renderer\\.$#"
+			count: 1
+			path: tests/Drupal/Tests/Core/Render/RendererRecursionTest.php
 
 		-
 			message: "#^Variable \\$value in isset\\(\\) always exists and is not nullable\\.$#"

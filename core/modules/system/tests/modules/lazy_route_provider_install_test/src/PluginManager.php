@@ -6,7 +6,6 @@ use Drupal\Component\Annotation\PluginID;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Plugin\DefaultPluginManager;
-use Drupal\Core\Routing\UrlGeneratorInterface;
 use Drupal\Core\Url;
 
 class PluginManager extends DefaultPluginManager {
@@ -25,10 +24,11 @@ class PluginManager extends DefaultPluginManager {
    *   A cache backend.
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
    *   The module handler.
-   * @param \Drupal\Core\Routing\UrlGeneratorInterface $url_generator
-   *   The URL generator.
    */
-  public function __construct(\Traversable $namespaces, CacheBackendInterface $cache_backend, ModuleHandlerInterface $module_handler, UrlGeneratorInterface $url_generator) {
+  public function __construct(\Traversable $namespaces, CacheBackendInterface $cache_backend, ModuleHandlerInterface $module_handler) {
+    // We enforce the plugin manager not to use a cache backend.
+    $cache_backend = NULL;
+    $this->cacheBackend = $cache_backend;
     // Generate a URL during construction to prove that URL generation works. If
     // the route was missing an exception would be thrown. This also forces the
     // route provider to be initialized very early during a module install.

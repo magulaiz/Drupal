@@ -26,20 +26,6 @@ use Drupal\migrate\Plugin\MigrationPluginManager as BaseMigrationPluginManager;
 class MigrationPluginManager extends BaseMigrationPluginManager {
 
   /**
-   * The Migrate source plugin manager service.
-   *
-   * @var \Drupal\migrate\Plugin\MigrateSourcePluginManager
-   */
-  protected $sourceManager;
-
-  /**
-   * The config factory service.
-   *
-   * @var \Drupal\Core\Config\ConfigFactoryInterface
-   */
-  protected $configFactory;
-
-  /**
    * The migration tags which will trigger source_module enforcement.
    *
    * @var string[]
@@ -53,17 +39,21 @@ class MigrationPluginManager extends BaseMigrationPluginManager {
    *   The module handler service.
    * @param \Drupal\Core\Cache\CacheBackendInterface $cache_backend
    *   The cache backend.
-   * @param \Drupal\Core\Language\LanguageManagerInterface $language_manager
+   * @param \Drupal\Core\Language\LanguageManagerInterface $languageManager
    *   The language manager service.
-   * @param \Drupal\migrate\Plugin\MigrateSourcePluginManager $source_manager
+   * @param \Drupal\migrate\Plugin\MigrateSourcePluginManager $sourceManager
    *   The Migrate source plugin manager service.
-   * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
+   * @param \Drupal\Core\Config\ConfigFactoryInterface $configFactory
    *   The config factory service.
    */
-  public function __construct(ModuleHandlerInterface $module_handler, CacheBackendInterface $cache_backend, LanguageManagerInterface $language_manager, MigrateSourcePluginManager $source_manager, ConfigFactoryInterface $config_factory) {
-    parent::__construct($module_handler, $cache_backend, $language_manager);
-    $this->sourceManager = $source_manager;
-    $this->configFactory = $config_factory;
+  public function __construct(
+    ModuleHandlerInterface $module_handler,
+    CacheBackendInterface $cache_backend,
+    protected LanguageManagerInterface $languageManager,
+    protected MigrateSourcePluginManager $sourceManager,
+    protected ConfigFactoryInterface $configFactory
+  ) {
+    parent::__construct($module_handler, $cache_backend);
   }
 
   /**

@@ -2,7 +2,6 @@
 
 namespace Drupal\link\Plugin\migrate\process;
 
-use Drupal\migrate\Plugin\MigrationInterface;
 use Drupal\migrate\MigrateExecutableInterface;
 use Drupal\migrate\ProcessPluginBase;
 use Drupal\migrate\Row;
@@ -42,7 +41,7 @@ class FieldLink extends ProcessPluginBase {
   /**
    * {@inheritdoc}
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, MigrationInterface $migration) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition) {
     $configuration += ['uri_scheme' => 'http://'];
     parent::__construct($configuration, $plugin_id, $plugin_definition);
   }
