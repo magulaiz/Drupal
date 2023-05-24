@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains helper function for the tests.
+ * Contains helper function for the announcements feed tests.
  */
 
 /**
