@@ -211,11 +211,6 @@ parameters:
 			path: lib/Drupal/Core/Asset/JsCollectionRenderer.php
 
 		-
-			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
-			count: 2
-			path: lib/Drupal/Core/Batch/BatchStorage.php
-
-		-
 			message: "#^Call to method getDefinitions\\(\\) on an unknown class Drupal\\\\Core\\\\Plugin\\\\CategorizingPluginManagerTrait\\.$#"
 			count: 1
 			path: lib/Drupal/Core/Block/BlockManager.php
@@ -2739,21 +2734,6 @@ parameters:
 			message: "#^Variable \\$expected_driver might not be defined\\.$#"
 			count: 2
 			path: tests/Drupal/KernelTests/Core/Database/DriverSpecificKernelTestBase.php
-
-		-
-			message: "#^\\#date_date_callbacks callback array\\{\\$this\\(Drupal\\\\KernelTests\\\\Core\\\\Datetime\\\\DatelistElementFormTest\\), string\\} at key '0' is not callable\\.$#"
-			count: 1
-			path: tests/Drupal/KernelTests/Core/Datetime/DatelistElementFormTest.php
-
-		-
-			message: "#^\\#date_date_callbacks callback array\\{\\$this\\(Drupal\\\\KernelTests\\\\Core\\\\Datetime\\\\DatetimeElementFormTest\\), string\\} at key '0' is not callable\\.$#"
-			count: 1
-			path: tests/Drupal/KernelTests/Core/Datetime/DatetimeElementFormTest.php
-
-		-
-			message: "#^\\#date_time_callbacks callback array\\{\\$this\\(Drupal\\\\KernelTests\\\\Core\\\\Datetime\\\\DatetimeElementFormTest\\), string\\} at key '0' is not callable\\.$#"
-			count: 1
-			path: tests/Drupal/KernelTests/Core/Datetime/DatetimeElementFormTest.php
 
 		-
 			message: "#^Missing call to parent\\:\\:setUp\\(\\) method\\.$#"
