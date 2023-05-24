@@ -236,7 +236,7 @@ function system_themes_page() {
 
   // There are two possible theme groups.
   $theme_group_titles = array(
-    'enabled' => format_plural(count($theme_groups['enabled']), 'Enabled theme', 'Enabled themes'),
+    'enabled' => format_plural(!empty($theme_groups['enabled']) ? count($theme_groups['enabled']) : 0, 'Enabled theme', 'Enabled themes'),
   );
   if (!empty($theme_groups['disabled'])) {
     $theme_group_titles['disabled'] = format_plural(count($theme_groups['disabled']), 'Disabled theme', 'Disabled themes');
