@@ -39,7 +39,7 @@ function announcements_feed_get_announcements() {
 }
 
 /**
- * Generate an array of announcements with keys to be used in the build array.
+ * Generate an array of announcements with keys.
  *
  * @return array
  *   An array of announcements.
