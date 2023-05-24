@@ -303,8 +303,8 @@ fieldgroup
 fieldgroups
 fieldlayout
 fieldlinks
-fieldnid
 fieldnames
+fieldnid
 fieldsets
 filemime
 filesort
