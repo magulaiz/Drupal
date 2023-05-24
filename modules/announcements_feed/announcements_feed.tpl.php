@@ -24,39 +24,40 @@
 <?php if ($count): ?>
   <div class="announcements">
     <ul class="admin-list">
-    <?php if ($featured): ?>
-      <div class="featured-announcements-wrapper">
-        <?php foreach ($featured as $key => $announcement): ?>
-          <li class="leaf">
-            <div class="announcement-title">
-              <h4>
-                <?php print $announcement['title']; ?>
-              </h4>
-            </div>
-            <div class="announcement-teaser">
-              <?php print strip_tags($announcement['teaser']); ?>
-            </div>
-            <div class="announcement-link">
-              <?php if($announcement['link']): ?>
+      <?php if ($featured): ?>
+        <div class="featured-announcements-wrapper">
+          <?php foreach ($featured as $key => $announcement): ?>
+            <li class="leaf">
+              <div class="announcement-title">
+                <h4>
+                  <?php print $announcement['title']; ?>
+                </h4>
+              </div>
+              <div class="announcement-teaser">
+                <?php print strip_tags($announcement['teaser']); ?>
+              </div>
+              <div class="announcement-link">
+                <?php if($announcement['link']): ?>
                   <a target="_blank" href="<?php print $announcement['link']; ?>">
                     <span>
                       <?php print t('Learn More'); ?>
                     </span>
                   </a>
-              <?php endif; ?>
-            </div>
-          </li>
-        <?php endforeach; ?>
-      </div>
-    <?php endif; ?>
-    <?php foreach ($standard as $key => $announcement): ?>
-      <li class="leaf">
-        <a target="_blank" href="<?php print $announcement['link']; ?>"><?php print $announcement['title']; ?></a>
-        <div class="description">
-          <?php print format_date(strtotime($announcement['date_published']), 'short'); ?>
+                <?php endif; ?>
+              </div>
+            </li>
+          <?php endforeach; ?>
         </div>
-      </li>
-    <?php endforeach; ?>
+      <?php endif; ?>
+      <?php foreach ($standard as $key => $announcement): ?>
+        <li class="leaf">
+          <a target="_blank" href="<?php print $announcement['link']; ?>"><?php print $announcement['title']; ?></a>
+          <div class="description">
+            <?php print format_date(strtotime($announcement['date_published']), 'short'); ?>
+          </div>
+        </li>
+      <?php endforeach; ?>
+    </ul>
     <?php if ($feed_link): ?>
       <div class="announcements--view-all">
         <a target="_blank" href="<?php print $feed_link; ?>"><?php print t('View all announcements'); ?></a>

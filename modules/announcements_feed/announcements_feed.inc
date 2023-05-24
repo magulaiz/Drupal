@@ -115,7 +115,6 @@ function announcements_feed_fetch(bool $force = FALSE) {
         WATCHDOG_ERROR
       );
       throw new Exception($response->error, $response->code);
-
     }
   }
   else {
