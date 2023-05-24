@@ -27,4 +27,5 @@ function announcements_feed_uninstall() {
   variable_del('announcements_feed_max_age');
   variable_del('announcements_feed_json_url');
   variable_del('announcements_feed_link');
+  variable_del('announcements_feed_last_fetch');
 }

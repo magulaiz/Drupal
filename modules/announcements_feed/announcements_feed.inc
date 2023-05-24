@@ -79,6 +79,9 @@ function announcements_feed_get_all_announcements() {
  *   - _drupalorg.featured: 1 if featured, 0 if not featured.
  *   - _drupalorg.version: Target version of Drupal, as a Composer version.
  *
+ * @param bool $force
+ *   (optional) Whether to always fetch new items or not. Defaults to FALSE.
+ *
  * @return array
  *   An array of announcements from the feed relevant to the Drupal version.
  *   The array is empty if there were no matching announcements. If an error
@@ -86,7 +89,7 @@ function announcements_feed_get_all_announcements() {
  *
  * @throws Exception
  */
-function announcements_feed_fetch() {
+function announcements_feed_fetch(bool $force = FALSE) {
   $announcements = cache_get('announcements_feed');
   if (empty($announcements)) {
     $announcements_feed_json_url = variable_get('announcements_feed_json_url');

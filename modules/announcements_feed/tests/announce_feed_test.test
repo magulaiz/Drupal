@@ -23,7 +23,7 @@ class AnnounceFeedTestValidateJsonFeed extends DrupalWebTestCase {
    */
   protected $responseJson;
   /**
-   * A test endpoint which include the new feeds.
+   * A test endpoint which include the new/updated feeds.
    *
    * @var string
    */
