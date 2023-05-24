@@ -50,8 +50,9 @@ Drupal.behaviors.verticalTabs = {
       if (!tab_focus) {
         // If the current URL has a fragment and one of the tabs contains an
         // element that matches the URL fragment, activate that tab.
-        if (window.location.hash && $(this).find(window.location.hash).length) {
-          tab_focus = $(this).find(window.location.hash).closest('.vertical-tabs-pane');
+        var hash = window.location.hash.replace(/[=%;,\/]/g, "");
+        if (hash !== '#' && $(this).find(hash).length) {
+          tab_focus = $(this).find(hash).closest('.vertical-tabs-pane');
         }
         else {
           tab_focus = $('> .vertical-tabs-pane:first', this);
