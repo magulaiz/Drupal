@@ -8,6 +8,7 @@ use Drupal\Component\Uuid\Php as UuidFactory;
 use Drupal\Core\Cache\NullBackend;
 use Drupal\Core\Condition\ConditionInterface;
 use Drupal\Core\Condition\ConditionManager;
+use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Plugin\Context\Context;
 use Drupal\Core\Plugin\Context\ContextDefinition;
@@ -15,6 +16,7 @@ use Drupal\Core\Plugin\Context\ContextHandler;
 use Drupal\Core\Plugin\ContextAwarePluginInterface;
 use Drupal\Core\TypedData\DataDefinition;
 use Drupal\Core\TypedData\Plugin\DataType\StringData;
+use Drupal\Core\TypedData\TypedDataManager;
 use Drupal\layout_builder\Event\SectionComponentBuildRenderArrayEvent;
 use Drupal\layout_builder\EventSubscriber\SectionComponentVisibility;
 use Drupal\layout_builder\SectionComponent;
@@ -35,6 +37,11 @@ class SectionComponentVisibilityTest extends UnitTestCase {
    */
   public function setUp(): void {
     parent::setUp();
+
+    $typed_data_manager = $this->prophesize(TypedDataManager::class);
+    $container = new ContainerBuilder();
+    $container->set('typed_data_manager', $typed_data_manager->reveal());
+    \Drupal::setContainer($container);
 
     $this->conditionManager = new ConditionManager(
       new \ArrayIterator([]),
