@@ -86,7 +86,7 @@ class FieldPluginBaseTest extends UnitTestCase {
   protected $display;
 
   /**
-   * The mocked url generator.
+   * The mocked URL generator.
    *
    * @var \Drupal\Core\Routing\UrlGeneratorInterface|\PHPUnit\Framework\MockObject\MockObject
    */
@@ -100,7 +100,7 @@ class FieldPluginBaseTest extends UnitTestCase {
   protected $pathValidator;
 
   /**
-   * The unrouted url assembler service.
+   * The unrouted URL assembler service.
    *
    * @var \Drupal\Core\Utility\UnroutedUrlAssemblerInterface|\PHPUnit\Framework\MockObject\MockObject
    */
@@ -170,7 +170,7 @@ class FieldPluginBaseTest extends UnitTestCase {
   }
 
   /**
-   * Sets up the unrouted url assembler and the link generator.
+   * Sets up the unrouted URL assembler and the link generator.
    */
   protected function setUpUrlIntegrationServices() {
     $this->pathProcessor = $this->createMock('Drupal\Core\PathProcessor\OutboundPathProcessorInterface');
@@ -235,7 +235,7 @@ class FieldPluginBaseTest extends UnitTestCase {
    * @param string $path
    *   An internal or external path.
    * @param string $url
-   *   The final url used by the more link.
+   *   The final URL used by the more link.
    *
    * @dataProvider providerTestRenderTrimmedWithMoreLinkAndPath
    * @covers ::renderText
@@ -288,9 +288,9 @@ class FieldPluginBaseTest extends UnitTestCase {
     $data[] = ['<front>', '/%3Cfront%3E'];
 
     // External URL.
-    $data[] = ['https://www.drupal.org', 'https://www.drupal.org'];
-    $data[] = ['http://www.drupal.org', 'http://www.drupal.org'];
-    $data[] = ['www.drupal.org', '/www.drupal.org'];
+    $data[] = ['https://www.example.com', 'https://www.example.com'];
+    $data[] = ['http://www.example.com', 'http://www.example.com'];
+    $data[] = ['www.example.com', '/www.example.com'];
 
     return $data;
   }
@@ -379,8 +379,8 @@ class FieldPluginBaseTest extends UnitTestCase {
     $data[] = ['test-path', ['suffix' => 'test_suffix'], '<a href="/test-path">value</a>', '<a href="/test-path">value</a>test_suffix'];
 
     // External URL.
-    $data[] = ['https://www.drupal.org', [], [], '<a href="https://www.drupal.org">value</a>'];
-    $data[] = ['www.drupal.org', ['external' => TRUE], [], '<a href="http://www.drupal.org">value</a>'];
+    $data[] = ['https://www.example.com', [], [], '<a href="https://www.example.com">value</a>'];
+    $data[] = ['www.example.com', ['external' => TRUE], [], '<a href="http://www.example.com">value</a>'];
     $data[] = ['', ['external' => TRUE], [], 'value'];
 
     return $data;
@@ -434,7 +434,7 @@ class FieldPluginBaseTest extends UnitTestCase {
     $url = Url::fromRoute('test_route');
     $data[] = [$url, [], clone $url, '/test-path', clone $url, '<a href="/test-path">value</a>'];
 
-    // Simple url with parameters.
+    // Simple URL with parameters.
     $url_parameters = Url::fromRoute('test_route', ['key' => 'value']);
     $data[] = [$url_parameters, [], clone $url_parameters, '/test-path/value', clone $url_parameters, '<a href="/test-path/value">value</a>'];
 
@@ -636,7 +636,7 @@ class FieldPluginBaseTest extends UnitTestCase {
   public function providerTestRenderAsExternalLinkWithPathAndTokens() {
     $data = [];
 
-    $data[] = ['{{ foo }}', ['{{ foo }}' => 'http://www.drupal.org'], '<a href="http://www.drupal.org">value</a>', ['context_path' => 'http://www.drupal.org']];
+    $data[] = ['{{ foo }}', ['{{ foo }}' => 'http://www.example.com'], '<a href="http://www.example.com">value</a>', ['context_path' => 'http://www.example.com']];
     $data[] = ['{{ foo }}', ['{{ foo }}' => ''], 'value', ['context_path' => '']];
     $data[] = ['{{ foo }}', ['{{ foo }}' => ''], 'value', ['context_path' => '', 'alter' => ['external' => TRUE]]];
     $data[] = ['{{ foo }}', ['{{ foo }}' => '/test-path/123'], '<a href="/test-path/123">value</a>', ['context_path' => '/test-path/123']];
@@ -777,7 +777,7 @@ class FieldPluginBaseTestField extends FieldPluginBase {
 
 }
 
-// @todo Remove as part of https://www.drupal.org/node/2529170.
+// @todo Remove as part of https://www.example.com/node/2529170.
 namespace Drupal\views\Plugin\views\field;
 
 if (!function_exists('base_path')) {

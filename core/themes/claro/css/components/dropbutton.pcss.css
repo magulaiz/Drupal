@@ -51,7 +51,7 @@
 }
 
 .js .dropbutton-wrapper.open .dropbutton-widget {
-  z-index: 100;
+  z-index: var(--dropbutton-widget-z-index);
 }
 
 /**
@@ -70,6 +70,15 @@
 .js .dropbutton {
   min-width: 6rem; /* Help mitigate long dropbutton text from obscuring other dropbuttons. */
   height: var(--dropbutton-toggle-size);
+}
+
+.js .dropbutton-widget {
+  border-radius: var(--button-border-radius-size);
+  background-color: var(--button-bg-color);
+}
+
+.js .dropbutton-action {
+  border-inline-end: var(--dropbutton-border-size) solid white;
 }
 
 /* Variants. */
