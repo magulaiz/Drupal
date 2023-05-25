@@ -178,7 +178,7 @@ class EntityReference extends ManyToOne {
       'default' => 'default:' . $this->getReferencedEntityType()->id(),
     ];
     $options['sub_handler_settings'] = ['default' => []];
-    $options['widget'] = ['default' => self::WIDGET_AUTOCOMPLETE];
+    $options['widget'] = ['default' => static::WIDGET_AUTOCOMPLETE];
 
     return $options;
   }
@@ -319,11 +319,11 @@ class EntityReference extends ManyToOne {
       '#title' => $this->t('Selection type'),
       '#default_value' => $this->options['widget'],
       '#options' => [
-        self::WIDGET_SELECT => $this->t('Select list'),
-        self::WIDGET_AUTOCOMPLETE => $this->t('Autocomplete'),
+        static::WIDGET_SELECT => $this->t('Select list'),
+        static::WIDGET_AUTOCOMPLETE => $this->t('Autocomplete'),
       ],
       '#description' => $this->t('For performance and UX reasons, maximum count of selectable entities for the "Select list" selection type is limited to @count. If more is expected, please select "Autocomplete" instead.', [
-        '@count' => self::WIDGET_SELECT_LIMIT,
+        '@count' => static::WIDGET_SELECT_LIMIT,
       ]),
     ];
   }
@@ -479,11 +479,11 @@ class EntityReference extends ManyToOne {
       return;
     }
     switch ($this->options['widget']) {
-      case self::WIDGET_SELECT:
+      case static::WIDGET_SELECT:
         $this->valueFormAddSelect($form, $form_state);
         break;
 
-      case self::WIDGET_AUTOCOMPLETE:
+      case static::WIDGET_AUTOCOMPLETE:
         $this->valueFormAddAutocomplete($form, $form_state);
         break;
     }
@@ -578,7 +578,7 @@ class EntityReference extends ManyToOne {
 
       if (empty($this->options['expose']['multiple'])) {
         if (empty($this->options['expose']['required']) && (empty($default_value) || !empty($this->options['expose']['reduce']))) {
-          $default_value = self::ALL_VALUE;
+          $default_value = static::ALL_VALUE;
         }
         elseif (empty($default_value)) {
           $keys = array_keys($options);
@@ -619,7 +619,7 @@ class EntityReference extends ManyToOne {
     $referenced_type_id = $this->getReferencedEntityType()->id();
     $entity_storage = $this->entityTypeManager->getStorage($referenced_type_id);
 
-    return !empty($this->value) && !isset($this->value[self::ALL_VALUE]) ? $entity_storage->loadMultiple($this->value) : [];
+    return !empty($this->value) && !isset($this->value[static::ALL_VALUE]) ? $entity_storage->loadMultiple($this->value) : [];
   }
 
   /**
@@ -635,8 +635,8 @@ class EntityReference extends ManyToOne {
    */
   protected function getValueOptionsCallback(SelectionInterface $selection_handler): array {
     $entity_data = [];
-    if ($this->options['widget'] === self::WIDGET_SELECT) {
-      $entity_data = $selection_handler->getReferenceableEntities(NULL, 'CONTAINS', self::WIDGET_SELECT_LIMIT);
+    if ($this->options['widget'] === static::WIDGET_SELECT) {
+      $entity_data = $selection_handler->getReferenceableEntities(NULL, 'CONTAINS', static::WIDGET_SELECT_LIMIT);
     }
 
     $options = [];
@@ -715,8 +715,8 @@ class EntityReference extends ManyToOne {
 
     // Set the validated exposed input from the select list when not the all
     // value option.
-    if ($this->options['widget'] == self::WIDGET_SELECT) {
-      if ($form_state->getValue($identifier) != self::ALL_VALUE) {
+    if ($this->options['widget'] == static::WIDGET_SELECT) {
+      if ($form_state->getValue($identifier) != static::ALL_VALUE) {
         $this->validatedExposedInput = (array) $form_state->getValue($identifier);
       }
       return;
