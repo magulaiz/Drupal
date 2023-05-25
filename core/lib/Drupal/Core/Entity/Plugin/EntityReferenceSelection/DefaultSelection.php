@@ -200,7 +200,7 @@ class DefaultSelection extends SelectionPluginBase implements ContainerFactoryPl
     else {
       $form['target_bundles'] = [
         '#type' => 'value',
-        '#value' => [],
+        '#value' => NULL,
       ];
     }
 
