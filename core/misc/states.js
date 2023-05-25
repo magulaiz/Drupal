@@ -93,7 +93,6 @@
    */
   Drupal.behaviors.states = {
     attach(context, settings) {
-
       const elements = once('states', '[data-drupal-states]', context);
       const il = elements.length;
 
