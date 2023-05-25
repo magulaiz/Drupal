@@ -98,6 +98,14 @@ class Renderer implements RendererInterface {
   protected static $contextCollection;
 
   /**
+   * A collection of keys that identify rendering in progress, used to prevent
+   * recursion.
+   *
+   * @var array
+   */
+  protected $recursionKeys = [];
+
+  /**
    * Constructs a new Renderer.
    *
    * @param \Drupal\Core\Utility\CallableResolver|\Drupal\Core\Controller\ControllerResolverInterface $callable_resolver
@@ -250,6 +258,7 @@ class Renderer implements RendererInterface {
     catch (\Exception $e) {
       // Mark the ::rootRender() call finished due to this exception & re-throw.
       $this->isRenderingRoot = FALSE;
+      $this->recursionKeys = [];
       throw $e;
     }
   }
@@ -440,7 +449,24 @@ class Renderer implements RendererInterface {
     $elements['#cache']['max-age'] = $elements['#cache']['max-age'] ?? Cache::PERMANENT;
     $elements['#attached'] = $elements['#attached'] ?? [];
 
-    // Allow #pre_render to abort rendering.
+    // Guard against recursive rendering now that all other early return
+    // possibilities are exhausted and it's time to render children.
+    $recursion_key = implode(':', $elements['#recursion_keys'] ?? []);
+    if ($recursion_key) {
+      if (isset($this->recursionKeys[$recursion_key])) {
+        \Drupal::logger('render')
+          ->error('Recursive rendering attempt aborted for %key. In progress: %guards', [
+            '%key' => $recursion_key,
+            '%guards' => print_r($this->recursionKeys, TRUE),
+          ]);
+        $elements['#printed'] = TRUE;
+      }
+      else {
+        $this->recursionKeys[$recursion_key] = $recursion_key;
+      }
+    }
+
+    // Allow #pre_render or #recursion_keys to abort rendering.
     if (!empty($elements['#printed'])) {
       // The #printed element contains all the bubbleable rendering metadata for
       // the subtree.
@@ -612,6 +638,7 @@ class Renderer implements RendererInterface {
     // Rendering is finished, all necessary info collected!
     $context->bubble();
 
+    unset($this->recursionKeys[$recursion_key]);
     $elements['#printed'] = TRUE;
     return $elements['#markup'];
   }

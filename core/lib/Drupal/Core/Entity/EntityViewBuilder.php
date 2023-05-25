@@ -195,22 +195,33 @@ class EntityViewBuilder extends EntityHandlerBase implements EntityHandlerInterf
       $build['#theme'] = $this->entityTypeId;
     }
 
+    $keys = [
+      'entity_view',
+      $this->entityTypeId,
+      $entity->id(),
+      $view_mode,
+    ];
+
     // Cache the rendered output if permitted by the view mode and global entity
     // type configuration.
     if ($this->isViewModeCacheable($view_mode) && !$entity->isNew() && $entity->isDefaultRevision() && $this->entityType->isRenderCacheable()) {
       $build['#cache'] += [
-        'keys' => [
-          'entity_view',
-          $this->entityTypeId,
-          $entity->id(),
-          $view_mode,
-        ],
+        'keys' => $keys,
         'bin' => $this->cacheBin,
       ];
 
       if ($entity instanceof TranslatableDataInterface && count($entity->getTranslationLanguages()) > 1) {
         $build['#cache']['keys'][] = $entity->language()->getId();
       }
+    }
+
+    // Add keys for the renderer to use to identify recursive rendering.
+    $build['#recursion_keys'] = $keys;
+    if ($entity instanceof RevisionableInterface) {
+      $build['#recursion_keys'][] = $entity->getRevisionId();
+    }
+    if ($entity instanceof TranslatableDataInterface && count($entity->getTranslationLanguages()) > 1) {
+      $build['#recursion_keys'][] = $entity->language()->getId();
     }
 
     return $build;
