@@ -98,8 +98,9 @@ class Renderer implements RendererInterface {
   protected static $contextCollection;
 
   /**
-   * A collection of keys that identify rendering in progress, used to prevent
-   * recursion.
+   * A collection of keys.
+   *
+   * It identifies rendering in progress, used to prevent recursion.
    *
    * @var array
    */
