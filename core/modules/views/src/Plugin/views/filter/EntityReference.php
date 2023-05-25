@@ -57,8 +57,9 @@ class EntityReference extends ManyToOne {
   protected $handlerOptions;
 
   /**
-   * Validated exposed input that will be set as the input value if the select
-   * list widget is chosen.
+   * Validated exposed input that will be set as the input value.
+   *
+   * If the select list widget is chosen.
    *
    * @var array
    */
