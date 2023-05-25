@@ -117,7 +117,7 @@ class OEmbedResourceConstraintValidator extends ConstraintValidator implements C
       $this->resourceFetcher->fetchResource($resource_url);
     }
     catch (ResourceException $e) {
-      $this->handleException($e, $constraint->invalidResourceMessage);
+      $this->handleException($e, $constraint->invalidResourceMessage . ' ' . $e->getMessage());
     }
   }
 
