@@ -13,7 +13,7 @@
   /**
   * Dropbutton
   */
-  --dropbutton-spacing-size: var(--space-m);
+  --dropbutton-spacing-size: var(--space-xl);
   --dropbutton-font-size: var(--font-size-base);
   --dropbutton-line-height: var(--space-m);
   --dropbutton-toggle-size: 3rem;
