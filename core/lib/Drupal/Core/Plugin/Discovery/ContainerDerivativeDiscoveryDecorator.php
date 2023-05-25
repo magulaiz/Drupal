@@ -35,7 +35,7 @@ class ContainerDerivativeDiscoveryDecorator extends DerivativeDiscoveryDecorator
    *   decorated.
    * @param \Drupal\Core\Extension\ModuleHandlerInterface|null $module_handler
    *   The module handler.
-   * @param string|null
+   * @param string|null $alter_hook
    *   Name of the alter hook if one should be invoked.
    */
   public function __construct(DiscoveryInterface $decorated, ModuleHandlerInterface $module_handler = NULL, $alter_hook = NULL) {
