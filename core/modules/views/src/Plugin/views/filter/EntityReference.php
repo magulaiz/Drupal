@@ -278,19 +278,20 @@ class EntityReference extends ManyToOne {
 
       // Workaround for https://www.drupal.org/project/drupal/issues/2651418.
       // @todo Remove the below when the referenced issue is fixed.
-      if (
-        \array_key_exists('target_bundles', $sub_handler_settings) &&
-        \array_key_exists('#ajax', $sub_handler_settings['target_bundles']) &&
-        !\is_array($sub_handler_settings['target_bundles']['#ajax'])
-      ) {
-        $sub_handler_settings['target_bundles']['#ajax'] = [];
-      }
-      if (
-        \array_key_exists('sort', $sub_handler_settings) &&
-        \array_key_exists('#ajax', $sub_handler_settings['sort']['field']) &&
-        !\is_array($sub_handler_settings['sort']['field']['#ajax'])
-      ) {
-        $sub_handler_settings['sort']['field']['#ajax'] = [];
+      foreach (Element::children($sub_handler_settings) as $key) {
+        if (\array_key_exists('#ajax', $sub_handler_settings[$key]) &&
+          !\is_array($sub_handler_settings[$key]['#ajax'])
+        ) {
+          $sub_handler_settings[$key]['#ajax'] = [];
+        }
+
+        foreach (Element::children($sub_handler_settings[$key]) as $sub_key) {
+          if (\array_key_exists('#ajax', $sub_handler_settings[$key][$sub_key]) &&
+            !\is_array($sub_handler_settings[$key][$sub_key]['#ajax'])
+          ) {
+            $sub_handler_settings[$key][$sub_key]['#ajax'] = [];
+          }
+        }
       }
 
       $form['reference_' . $sub_handler] = NestedArray::mergeDeepArray([
