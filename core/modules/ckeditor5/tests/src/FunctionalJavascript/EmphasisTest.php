@@ -127,10 +127,9 @@ class EmphasisTest extends WebDriverTestBase {
         FilterFormat::load('test_format')
       ))
     ));
-    $this->adminUser = $this->drupalCreateUser([
-      'use text format test_format',
-      'bypass node access',
-    ]);
+    $this->adminUser = $this->drupalCreateUser([]);
+    $this->adminUser->addRole($this->createAdminRole('admin', 'admin'));
+    $this->adminUser->save();
 
     $this->drupalCreateContentType(['type' => 'blog']);
     $this->host = $this->createNode([
