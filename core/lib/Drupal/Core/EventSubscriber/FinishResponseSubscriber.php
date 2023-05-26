@@ -112,7 +112,7 @@ class FinishResponseSubscriber implements EventSubscriberInterface {
       return;
     }
 
-    $config = $config_factory->get('system.performance');
+    $config = $this->config_factory->get('system.performance');
     $request = $event->getRequest();
     $response = $event->getResponse();
 
@@ -250,7 +250,7 @@ class FinishResponseSubscriber implements EventSubscriberInterface {
       $this->setExpiresNoCache($response);
     }
 
-    $config = $config_factory->get('system.performance');
+    $config = $this->config_factory->get('system.performance');
     $max_age = $config->get('cache.page.max_age');
     $response->headers->set('Cache-Control', 'public, max-age=' . $max_age);
 
