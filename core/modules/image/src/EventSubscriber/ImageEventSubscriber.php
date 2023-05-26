@@ -14,6 +14,7 @@ use Drupal\Core\Routing\RequestHelper;
 use Drupal\Core\Site\Settings;
 use Drupal\Core\StreamWrapper\StreamWrapperInterface;
 use Drupal\Core\StreamWrapper\StreamWrapperManagerInterface;
+use Drupal\Core\Theme\Registry;
 use Drupal\Core\Url;
 use Drupal\image\Entity\ImageStyle;
 use Drupal\image\Event\FlushSourceImageEvent;
@@ -77,6 +78,8 @@ class ImageEventSubscriber implements EventSubscriberInterface {
    *   The file system service.
    * @param \Drupal\Core\File\FileUrlGeneratorInterface $fileUrlGenerator
    *   The file URL generator.
+   * @param \Drupal\Core\Theme\Registry $themeRegistry
+   *   The theme registry.
    */
   public function __construct(
     protected readonly ImageFactory $imageFactory,
@@ -89,6 +92,7 @@ class ImageEventSubscriber implements EventSubscriberInterface {
     protected readonly LoggerInterface $logger,
     protected readonly FileSystemInterface $fileSystem,
     protected readonly FileUrlGeneratorInterface $fileUrlGenerator,
+    protected readonly Registry $themeRegistry,
   ) {
     $this->privateKey = $privateKey->get();
     $this->currentRequest = $requestStack->getCurrentRequest();
@@ -495,7 +499,7 @@ class ImageEventSubscriber implements EventSubscriberInterface {
     $this->moduleHandler->invokeAllDeprecated("is deprecated since version 9.x.x and will be removed in y.y.y.", 'image_style_flush', [$image_style]);
 
     // Clear caches so that formatters may be added for this style.
-    drupal_theme_rebuild();
+    $themeRegistry->reset();
 
     Cache::invalidateTags($image_style->getCacheTagsToInvalidate());
   }

@@ -340,17 +340,14 @@ class ResponsiveImageFieldDisplayTest extends ImageFieldTestBase {
     }
     $this->assertSession()->responseHeaderContains('X-Drupal-Cache-Tags', 'config:image.style.large');
 
-    // Test the fallback image style.
-    $image = \Drupal::service('image.factory')->get($image_uri);
-    $large_style_pipeline = \Drupal::service(ImageProcessor::class)->createInstance('derivative')
+    // Test the fallback image style. Copy the source image:
+    $fallback_image = $image;
+    // Set the fallback image style uri:
+    $large_style_pipeline = \Drupal::service(ImageProcessor::class)
+      ->createInstance('derivative')
       ->setImageStyle(ImageStyle::load('large'))
-      ->setSourceImageUri($image->getSource());
-    $fallback_image = [
-      '#theme' => 'image',
-      '#alt' => $alt,
-      '#uri' => $this->fileUrlGenerator->transformRelative($large_style_pipeline->getDerivativeImageUrl()->toString()),
-      '#attributes' => ['loading' => 'lazy'],
-    ];
+      ->setSourceImageUri($image_uri);
+    $fallback_image['#uri'] = $this->fileUrlGenerator->transformRelative($large_style_pipeline->getDerivativeImageUrl()->toString());
     // The image.html.twig template has a newline after the <img> tag but
     // responsive-image.html.twig doesn't have one after the fallback image, so
     // we remove it here.
