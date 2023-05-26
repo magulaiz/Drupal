@@ -136,18 +136,21 @@ class ImageStyleDownloadController extends FileDownloadController {
     // filename, resulting in filenames like image.png.jpeg. So to find the real
     // source image, we remove the extension and check if that image exists.
     $target = $request->query->get('file');
-    $request_image_uri = $scheme . '://' . $target;
-    if (file_exists($request_image_uri)) {
-      $image_uri = $request_image_uri;
-    }
-    else {
-      $path_info = pathinfo(StreamWrapperManager::getTarget($request_image_uri));
-      $dir_name = $path_info['dirname'] !== '.' ? $path_info['dirname'] . DIRECTORY_SEPARATOR : '';
-      $original_image_uri = sprintf('%s://%s%s', $scheme, $dir_name, $path_info['filename']);
-      if (file_exists($original_image_uri)) {
-        $image_uri = $original_image_uri;
+    $image_uri = $scheme . '://' . $target;
+    $image_uri = $this->streamWrapperManager->normalizeUri($image_uri);
+
+    if ($this->streamWrapperManager->isValidScheme($scheme)) {
+      $normalized_target = $this->streamWrapperManager->getTarget($image_uri);
+      if ($normalized_target !== FALSE) {
+        if (!in_array($scheme, Settings::get('file_sa_core_2023_005_schemes', []))) {
+          $parts = explode('/', $normalized_target);
+          if (array_intersect($parts, ['.', '..'])) {
+            throw new NotFoundHttpException();
+          }
+        }
       }
     }
+
     // Don't try to generate file if source is missing.
     if (!isset($image_uri)) {
       $this->logger->notice('Source image at %source_image_path not found while trying to generate derivative image.', ['%source_image_path' => $request_image_uri]);
