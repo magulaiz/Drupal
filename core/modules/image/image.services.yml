@@ -13,3 +13,8 @@ services:
     public: false
     tags:
       - { name: page_cache_response_policy }
+
+  image.event_subscriber:
+    class: Drupal\image\EventSubscriber\ImageStyle404Subscriber
+    tags:
+      - { name: event_subscriber }
