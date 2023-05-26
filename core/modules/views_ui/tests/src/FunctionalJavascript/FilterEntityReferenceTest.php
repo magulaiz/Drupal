@@ -180,14 +180,12 @@ class FilterEntityReferenceTest extends WebDriverTestBase {
 
     // The Views Reference filter has a title Filter to a single result, so
     // ensure only that result is available as an option.
-    $this->assertCount(1, count($page->findAll('css', 'select[name="field_test_target_id_reference[]"] option')));
-
-    // The Views Reference filter has a title Filter to a single result, so
-    // ensure only that result is available as an option.
     $this->assertSession()->waitForElementRemoved('css', '.ui-dialog');
+
     $page = $this->getSession()->getPage();
     $this->htmlOutput($page->getHtml());
-    $this->assertCount(1, count($page->findAll('css', 'select[name="field_test_target_id_reference[]"] option')));
+
+    $this->assertCount(1, $page->findAll('css', 'select[name="field_test_target_id_reference[]"] option'));
 
     // Change to an autocomplete filter.
     // Opening the settings form and change the handler to use an Entity
