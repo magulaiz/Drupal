@@ -499,7 +499,7 @@ class ImageEventSubscriber implements EventSubscriberInterface {
     $this->moduleHandler->invokeAllDeprecated("is deprecated since version 9.x.x and will be removed in y.y.y.", 'image_style_flush', [$image_style]);
 
     // Clear caches so that formatters may be added for this style.
-    $themeRegistry->reset();
+    $this->themeRegistry->reset();
 
     Cache::invalidateTags($image_style->getCacheTagsToInvalidate());
   }
