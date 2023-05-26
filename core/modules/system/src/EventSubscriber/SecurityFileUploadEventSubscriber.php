@@ -28,7 +28,7 @@ class SecurityFileUploadEventSubscriber implements EventSubscriberInterface {
    *   The config factory.
    */
   public function __construct(ConfigFactoryInterface $config_factory) {
-    $this->config_factory = $config_factory->get('system.file');
+    $this->config_factory = $config_factory;
   }
 
   /**
