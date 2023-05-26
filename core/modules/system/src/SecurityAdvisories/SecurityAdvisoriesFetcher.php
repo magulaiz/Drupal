@@ -28,11 +28,11 @@ final class SecurityAdvisoriesFetcher {
   protected const ADVISORIES_JSON_EXPIRABLE_KEY = 'advisories_response';
 
   /**
-   * The 'system.advisories' configuration.
+   * The config factory.
    *
-   * @var \Drupal\Core\Config\ImmutableConfig
+   * @var \Drupal\Core\Config\ConfigFactoryInterface
    */
-  protected $config;
+  protected $config_factory;
 
   /**
    * The HTTP client.
@@ -90,7 +90,7 @@ final class SecurityAdvisoriesFetcher {
    *   The settings instance.
    */
   public function __construct(ConfigFactoryInterface $config_factory, KeyValueExpirableFactoryInterface $key_value_factory, ClientInterface $client, ModuleExtensionList $module_list, ThemeExtensionList $theme_list, ProfileExtensionList $profile_list, LoggerInterface $logger, Settings $settings) {
-    $this->config = $config_factory->get('system.advisories');
+    $this->config_factory = $config_factory;
     $this->keyValueExpirable = $key_value_factory->get('system');
     $this->httpClient = $client;
     $this->extensionLists['module'] = $module_list;
@@ -119,6 +119,7 @@ final class SecurityAdvisoriesFetcher {
    *   Thrown if an error occurs while retrieving security advisories.
    */
   public function getSecurityAdvisories(bool $allow_outgoing_request = TRUE, int $timeout = 0): ?array {
+    $config = $this->config_factory->get('system.advisories');
     $advisories = [];
 
     $json_payload = $this->keyValueExpirable->get(self::ADVISORIES_JSON_EXPIRABLE_KEY);
@@ -129,7 +130,7 @@ final class SecurityAdvisoriesFetcher {
         return NULL;
       }
       $response = $this->doRequest($timeout);
-      $interval_seconds = $this->config->get('interval_hours') * 60 * 60;
+      $interval_seconds = $config->get('interval_hours') * 60 * 60;
       $json_payload = Json::decode($response);
       if (is_array($json_payload)) {
         // Only store and use the response if it could be successfully
