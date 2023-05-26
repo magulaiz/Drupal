@@ -275,7 +275,7 @@ class FilterNumericTest extends ViewsKernelTestBase {
   }
 
   /**
-   * Tests the numeric filter handler with the negated 'regular_expression' operator.
+   * Tests the numeric filter with negated 'regular_expression' operator.
    */
   public function testFilterNumericNotRegularExpression() {
     $view = Views::getView('test_view');
@@ -348,6 +348,8 @@ class FilterNumericTest extends ViewsKernelTestBase {
   }
 
   /**
+   * Tests the numeric filter with grouped exposed filters.
+   *
    * Tests the numeric filter handler with the 'not_regular_expression' operator
    * to grouped exposed filters.
    */

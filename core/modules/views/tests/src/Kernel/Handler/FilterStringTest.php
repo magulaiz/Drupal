@@ -415,6 +415,9 @@ class FilterStringTest extends ViewsKernelTestBase {
     $this->assertIdenticalResultset($view, $resultset, $this->columnMap);
   }
 
+  /**
+   * Tests the string filter with negated 'regular_expression' operator.
+   */
   public function testFilterStringGroupedNotRegularExpression() {
     $filters = $this->getGroupedExposedFilters();
     $view = $this->getBasicPageView();
