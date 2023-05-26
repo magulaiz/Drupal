@@ -2,9 +2,15 @@
 
 namespace Drupal\field_ui\Form;
 
+use Drupal\Component\Serialization\Json;
+use Drupal\Core\Ajax\AjaxResponse;
+use Drupal\Core\Ajax\CloseModalDialogCommand;
+use Drupal\Core\Ajax\RedirectCommand;
+use Drupal\Core\Ajax\ReplaceCommand;
 use Drupal\Core\Entity\EntityForm;
 use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
 use Drupal\Core\Field\FieldFilteredMarkup;
+use Drupal\Core\Form\FormBuilderInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Url;
@@ -153,6 +159,11 @@ class FieldConfigEditForm extends EntityForm {
 
       $form['default_value'] = $element;
     }
+    if ($this->getRequest()->isXmlHttpRequest()) {
+      $form['#prefix'] = '<div id="field-ui-edit-form">';
+      $form['#suffix'] = '</div>';
+      $form['#attached']['library'][] = 'core/drupal.dialog';
+    }
 
     return $form;
   }
@@ -207,16 +218,31 @@ class FieldConfigEditForm extends EntityForm {
    * {@inheritdoc}
    */
   protected function actions(array $form, FormStateInterface $form_state) {
+    $target_entity_type = $this->entityTypeManager->getDefinition($this->entity->getTargetEntityTypeId());
+    $route_parameters = [
+      'field_config' => $this->entity->id(),
+    ] + FieldUI::getRouteBundleParameter($target_entity_type, $this->entity->getTargetBundle());
+    if ($this->entity->getTargetEntityTypeId() == 'node') {
+      $route_parameters['node_type'] = $this->entity->getTargetBundle();
+    }
+    $url = new Url('entity.field_config.' . $target_entity_type->id() . '_field_edit_form', $route_parameters);
+
     $actions = parent::actions($form, $form_state);
     $actions['submit']['#value'] = $this->t('Save settings');
+    if ($this->getRequest()->isXmlHttpRequest()) {
+      $actions['submit']['#ajax'] = [
+        'callback' => [$this, 'ajaxSubmitForm'],
+        'url' => $url,
+        'options' => [
+          'query' => [
+            FormBuilderInterface::AJAX_FORM_REQUEST => TRUE,
+          ],
+        ],
+      ];
+    }
 
     if (!$this->entity->isNew()) {
-      $target_entity_type = $this->entityTypeManager->getDefinition($this->entity->getTargetEntityTypeId());
-      $route_parameters = [
-        'field_config' => $this->entity->id(),
-      ] + FieldUI::getRouteBundleParameter($target_entity_type, $this->entity->getTargetBundle());
       $url = new Url('entity.field_config.' . $target_entity_type->id() . '_field_delete_form', $route_parameters);
-
       if ($this->getRequest()->query->has('destination')) {
         $query = $url->getOption('query');
         $query['destination'] = $this->getRequest()->query->get('destination');
@@ -231,9 +257,31 @@ class FieldConfigEditForm extends EntityForm {
           'class' => ['button', 'button--danger'],
         ],
       ];
+      if ($this->getRequest()->isXmlHttpRequest()) {
+        $actions['delete']['#attributes']['class'][] = 'use-ajax';
+        $actions['delete']['#attributes']['data-dialog-type'] = 'modal';
+        $actions['delete']['#attributes']['data-dialog-options'] = Json::encode([
+          'width' => '700',
+        ]);
+      }
     }
 
     return $actions;
+  }
+
+  /**
+   * Ajax callback for submit.
+   */
+  public function ajaxSubmitForm(array &$form, FormStateInterface $form_state) {
+    $response = new AjaxResponse();
+    if ($form_state::hasAnyErrors()) {
+      $response->addCommand(new ReplaceCommand('#field-ui-edit-form', $form));
+      return $response;
+    }
+
+    $response->addCommand(new CloseModalDialogCommand());
+    $response->addCommand(new RedirectCommand(FieldUI::getOverviewRouteInfo($this->entity->getTargetEntityTypeId(), $this->entity->getTargetBundle())->toString()));
+    return $response;
   }
 
   /**
