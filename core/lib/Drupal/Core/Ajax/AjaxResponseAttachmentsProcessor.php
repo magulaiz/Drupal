@@ -30,11 +30,11 @@ class AjaxResponseAttachmentsProcessor implements AttachmentsResponseProcessorIn
   protected $assetResolver;
 
   /**
-   * A config object for the system performance configuration.
+   * The config factory.
    *
-   * @var \Drupal\Core\Config\Config
+   * @var \Drupal\Core\Config\ConfigFactoryInterface
    */
-  protected $config;
+  protected $config_factory;
 
   /**
    * The CSS asset collection renderer service.
@@ -93,7 +93,7 @@ class AjaxResponseAttachmentsProcessor implements AttachmentsResponseProcessorIn
    */
   public function __construct(AssetResolverInterface $asset_resolver, ConfigFactoryInterface $config_factory, AssetCollectionRendererInterface $css_collection_renderer, AssetCollectionRendererInterface $js_collection_renderer, RequestStack $request_stack, RendererInterface $renderer, ModuleHandlerInterface $module_handler, protected ?LanguageManagerInterface $languageManager = NULL) {
     $this->assetResolver = $asset_resolver;
-    $this->config = $config_factory->get('system.performance');
+    $this->config_factory = $config_factory;
     $this->cssCollectionRenderer = $css_collection_renderer;
     $this->jsCollectionRenderer = $js_collection_renderer;
     $this->requestStack = $request_stack;
