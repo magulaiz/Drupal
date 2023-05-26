@@ -63,11 +63,19 @@ class MediaLibraryEditorOpener implements MediaLibraryOpenerInterface {
    */
   public function getSelectionResponse(MediaLibraryState $state, array $selected_ids) {
     $selected_media = $this->mediaStorage->load(reset($selected_ids));
+    $selected_source = $selected_media->getSource();
+    $plugin_id = $selected_source->getPluginId();
+
+    // Get type id
+    $type_id = $state->getSelectedTypeId();
+
+    // Assume source type
+    $src_type = $plugin_id;
 
     $alt = '';
     $url = '';
     if ($selected_media) {
-      $fid = $selected_media->getSource()->getSourceFieldValue($selected_media);
+      $fid = $selected_source->getSourceFieldValue($selected_media);
       $file = File::load($fid);
       if ($file) {
         $url = $file->createFileUrl();
@@ -75,7 +83,9 @@ class MediaLibraryEditorOpener implements MediaLibraryOpenerInterface {
         $url = $fid;
       }
 
-      if ($selected_media->field_media_image) $alt = $selected_media->field_media_image->alt;
+      if ($src_type == 'image') {
+        $alt = $selected_source->getMetadata($selected_media, 'thumbnail_alt_value');
+      }
     }
 
     $response = new AjaxResponse();
@@ -86,7 +96,8 @@ class MediaLibraryEditorOpener implements MediaLibraryOpenerInterface {
         'data-align' => 'center',
         'src' => $url,
         'alt' => $alt,
-        'src-type' => $state->getSelectedTypeId(),
+        'data-entity-type' => $type_id,
+        'src-type' => $src_type,
       ],
     ];
     $response->addCommand(new EditorDialogSave($values));
