@@ -29,11 +29,11 @@ class FinishResponseSubscriber implements EventSubscriberInterface {
   protected $languageManager;
 
   /**
-   * A config object for the system performance configuration.
+   * The config factory.
    *
-   * @var \Drupal\Core\Config\Config
+   * @var \Drupal\Core\Config\ConfigFactoryInterface
    */
-  protected $config;
+  protected $config_factory;
 
   /**
    * A policy rule determining the cacheability of a request.
@@ -79,7 +79,7 @@ class FinishResponseSubscriber implements EventSubscriberInterface {
    */
   public function __construct(LanguageManagerInterface $language_manager, ConfigFactoryInterface $config_factory, RequestPolicyInterface $request_policy, ResponsePolicyInterface $response_policy, CacheContextsManager $cache_contexts_manager, $http_response_debug_cacheability_headers = FALSE) {
     $this->languageManager = $language_manager;
-    $this->config = $config_factory->get('system.performance');
+    $this->config_factory = $config_factory;
     $this->requestPolicy = $request_policy;
     $this->responsePolicy = $response_policy;
     $this->cacheContextsManager = $cache_contexts_manager;
@@ -112,6 +112,7 @@ class FinishResponseSubscriber implements EventSubscriberInterface {
       return;
     }
 
+    $config = $config_factory->get('system.performance');
     $request = $event->getRequest();
     $response = $event->getResponse();
 
@@ -168,7 +169,7 @@ class FinishResponseSubscriber implements EventSubscriberInterface {
 
     // Add headers necessary to specify whether the response should be cached by
     // proxies and/or the browser.
-    if ($is_cacheable && $this->config->get('cache.page.max_age') > 0) {
+    if ($is_cacheable && $config->get('cache.page.max_age') > 0) {
       if (!$this->isCacheControlCustomized($response)) {
         // Only add the default Cache-Control header if the controller did not
         // specify one on the response.
@@ -249,7 +250,8 @@ class FinishResponseSubscriber implements EventSubscriberInterface {
       $this->setExpiresNoCache($response);
     }
 
-    $max_age = $this->config->get('cache.page.max_age');
+    $config = $config_factory->get('system.performance');
+    $max_age = $config->get('cache.page.max_age');
     $response->headers->set('Cache-Control', 'public, max-age=' . $max_age);
 
     // In order to support HTTP cache-revalidation, ensure that there is a
