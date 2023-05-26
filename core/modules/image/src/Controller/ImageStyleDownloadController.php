@@ -151,12 +151,6 @@ class ImageStyleDownloadController extends FileDownloadController {
       }
     }
 
-    // Don't try to generate file if source is missing.
-    if (!isset($image_uri)) {
-      $this->logger->notice('Source image at %source_image_path not found while trying to generate derivative image.', ['%source_image_path' => $request_image_uri]);
-      return new Response($this->t('Error generating image, missing source file.'), 404);
-    }
-
     // Create an image process pipeline.
     $pipeline = $this->imageProcessor->createInstance('derivative');
     $pipeline

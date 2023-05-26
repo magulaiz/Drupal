@@ -36,6 +36,7 @@ use Drupal\image\ImageProcessor;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
@@ -45,17 +46,13 @@ class ImageEventSubscriber implements EventSubscriberInterface {
 
   /**
    * The Drupal private key.
-   *
-   * @var string
    */
-  protected $privateKey;
+  protected string $privateKey;
 
   /**
    * The current request.
-   *
-   * @var \Symfony\Component\HttpFoundation\Request
    */
-  protected $currentRequest;
+  protected Request $currentRequest;
 
   /**
    * Constructs a new ImageDerivativeSubscriber.
