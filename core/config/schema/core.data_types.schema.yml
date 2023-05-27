@@ -109,6 +109,13 @@ _core_config_info:
     default_config_hash:
       type: string
       label: 'Default configuration hash'
+    test:
+      # @see \Drupal\Core\Validation\Plugin\Validation\Constraint\ValidKeysConstraintValidator::convertViolationsToDeprecation()
+      # @see \Drupal\Core\Config\Schema\SchemaCheckTrait::convertViolationsToDeprecation()
+      # @see \Drupal\KernelTests\Core\Config\SchemaCheckTraitTest::testDeprecationForNewKeysInTests()
+      requiredKey: false
+      type: boolean
+      label: 'Whether this configuration was imported during a test.'
 
 config_object:
   type: mapping
@@ -319,7 +326,7 @@ config_entity:
       sequence:
         type: '[%parent.%parent.%type].third_party.[%key]'
     _core:
-      # This only exists for merging configuration; it's not required.
+      # @see https://www.drupal.org/node/2653358
       requiredKey: false
       type: _core_config_info
 
