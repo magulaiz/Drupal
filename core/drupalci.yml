@@ -23,3 +23,8 @@ build:
         suppress-deprecations: false
         halt-on-fail: false
         testgroups: --file core/tests/Drupal/KernelTests/Core/Config/SchemaCheckTraitTest.php
+      run_tests.functional:
+        types: 'PHPUnit-Functional'
+        suppress-deprecations: false
+        halt-on-fail: false
+        testgroups: --file core/profiles/standard/tests/src/Functional/StandardTest.php
