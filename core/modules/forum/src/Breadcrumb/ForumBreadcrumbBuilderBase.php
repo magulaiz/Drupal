@@ -22,11 +22,11 @@ abstract class ForumBreadcrumbBuilderBase implements BreadcrumbBuilderInterface 
   use StringTranslationTrait;
 
   /**
-   * Configuration object for this builder.
+   * The config factory.
    *
-   * @var \Drupal\Core\Config\Config
+   * @var \Drupal\Core\Config\ConfigFactoryInterface
    */
-  protected $config;
+  protected $configFactory;
 
   /**
    * The entity type manager.
@@ -43,13 +43,6 @@ abstract class ForumBreadcrumbBuilderBase implements BreadcrumbBuilderInterface 
   protected $forumManager;
 
   /**
-   * The taxonomy term storage.
-   *
-   * @var \Drupal\taxonomy\TermStorageInterface
-   */
-  protected $termStorage;
-
-  /**
    * Constructs a forum breadcrumb builder object.
    *
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
@@ -63,10 +56,9 @@ abstract class ForumBreadcrumbBuilderBase implements BreadcrumbBuilderInterface 
    */
   public function __construct(EntityTypeManagerInterface $entity_type_manager, ConfigFactoryInterface $config_factory, ForumManagerInterface $forum_manager, TranslationInterface $string_translation) {
     $this->entityTypeManager = $entity_type_manager;
-    $this->config = $config_factory->get('forum.settings');
+    $this->configFactory = $config_factory;
     $this->forumManager = $forum_manager;
     $this->setStringTranslation($string_translation);
-    $this->termStorage = $entity_type_manager->getStorage('taxonomy_term');
   }
 
   /**
@@ -75,12 +67,13 @@ abstract class ForumBreadcrumbBuilderBase implements BreadcrumbBuilderInterface 
   public function build(RouteMatchInterface $route_match) {
     $breadcrumb = new Breadcrumb();
     $breadcrumb->addCacheContexts(['route']);
+    $config = $this->configFactory->get('forum.settings');
 
     $links[] = Link::createFromRoute($this->t('Home'), '<front>');
 
     $vocabulary = $this->entityTypeManager
       ->getStorage('taxonomy_vocabulary')
-      ->load($this->config->get('vocabulary'));
+      ->load($config->get('vocabulary'));
     $breadcrumb->addCacheableDependency($vocabulary);
     $links[] = Link::createFromRoute($vocabulary->label(), 'forum.index');
 

@@ -26,7 +26,7 @@ class ForumNodeBreadcrumbBuilder extends ForumBreadcrumbBuilderBase {
     $breadcrumb = parent::build($route_match);
     $breadcrumb->addCacheContexts(['route']);
 
-    $parents = $this->termStorage->loadAllParents($route_match->getParameter('node')->forum_tid);
+    $parents = $this->entityTypeManager->getStorage('taxonomy_term')->loadAllParents($route_match->getParameter('node')->forum_tid);
     if ($parents) {
       $parents = array_reverse($parents);
       foreach ($parents as $parent) {
