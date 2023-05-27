@@ -9,6 +9,7 @@ use Drupal\Core\TypedData\Type\BooleanInterface;
 use Drupal\Core\TypedData\Type\StringInterface;
 use Drupal\Core\TypedData\Type\FloatInterface;
 use Drupal\Core\TypedData\Type\IntegerInterface;
+use Symfony\Component\Validator\ConstraintViolation;
 
 /**
  * Provides a trait for checking configuration schema.
@@ -57,6 +58,17 @@ trait SchemaCheckTrait {
       $errors[] = $this->checkValue($key, $value);
     }
     $errors = array_merge(...$errors);
+    // Also perform explicit validation. Note this does NOT require every node
+    // in the config schema tree to have validation constraints defined.
+    $violations = $this->schema->validate();
+    $validation_errors = array_map(
+      fn (ConstraintViolation $v) => sprintf("[%s] %s", $v->getPropertyPath(), (string) $v->getMessage()),
+      iterator_to_array($violations)
+    );
+    // @todo Remove this condition in https://www.drupal.org/project/drupal/issues/3361534
+    if (str_starts_with($config_name, 'config_test.')) {
+      $errors = array_merge($errors, $validation_errors);
+    }
     if (empty($errors)) {
       return TRUE;
     }
