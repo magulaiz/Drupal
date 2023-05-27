@@ -66,7 +66,7 @@ class PathBasedBreadcrumbBuilder implements BreadcrumbBuilderInterface {
    *
    * @var \Drupal\Core\Config\ConfigFactoryInterface
    */
-  protected $config_factory;
+  protected $configFactory;
 
   /**
    * The title resolver.
@@ -123,7 +123,7 @@ class PathBasedBreadcrumbBuilder implements BreadcrumbBuilderInterface {
     $this->accessManager = $access_manager;
     $this->router = $router;
     $this->pathProcessor = $path_processor;
-    $this->config_factory = $config_factory;
+    $this->configFactory = $config_factory;
     $this->titleResolver = $title_resolver;
     $this->currentUser = $current_user;
     $this->currentPath = $current_path;
@@ -159,7 +159,7 @@ class PathBasedBreadcrumbBuilder implements BreadcrumbBuilderInterface {
     $path = trim($this->context->getPathInfo(), '/');
     $path_elements = explode('/', $path);
     $exclude = [];
-    $config = $this->config_factory->get('system.site');
+    $config = $this->configFactory->get('system.site');
     // Don't show a link to the front-page path.
     $front = $config->get('page.front');
     $exclude[$front] = TRUE;

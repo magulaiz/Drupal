@@ -19,7 +19,7 @@ class SecurityFileUploadEventSubscriber implements EventSubscriberInterface {
    *
    * @var \Drupal\Core\Config\ConfigFactoryInterface
    */
-  protected $config_factory;
+  protected $configFactory;
 
   /**
    * Constructs a new file event listener.
@@ -28,7 +28,7 @@ class SecurityFileUploadEventSubscriber implements EventSubscriberInterface {
    *   The config factory.
    */
   public function __construct(ConfigFactoryInterface $config_factory) {
-    $this->config_factory = $config_factory;
+    $this->configFactory = $config_factory;
   }
 
   /**
@@ -48,7 +48,7 @@ class SecurityFileUploadEventSubscriber implements EventSubscriberInterface {
    *   File upload sanitize name event.
    */
   public function sanitizeName(FileUploadSanitizeNameEvent $event): void {
-    $config = $this->config_factory->get('system.file');
+    $config = $this->configFactory->get('system.file');
     $filename = $event->getFilename();
     // Dot files are renamed regardless of security settings.
     $filename = trim($filename, '.');

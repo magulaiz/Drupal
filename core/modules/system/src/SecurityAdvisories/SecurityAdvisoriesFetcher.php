@@ -32,7 +32,7 @@ final class SecurityAdvisoriesFetcher {
    *
    * @var \Drupal\Core\Config\ConfigFactoryInterface
    */
-  protected $config_factory;
+  protected $configFactory;
 
   /**
    * The HTTP client.
@@ -90,7 +90,7 @@ final class SecurityAdvisoriesFetcher {
    *   The settings instance.
    */
   public function __construct(ConfigFactoryInterface $config_factory, KeyValueExpirableFactoryInterface $key_value_factory, ClientInterface $client, ModuleExtensionList $module_list, ThemeExtensionList $theme_list, ProfileExtensionList $profile_list, LoggerInterface $logger, Settings $settings) {
-    $this->config_factory = $config_factory;
+    $this->configFactory = $config_factory;
     $this->keyValueExpirable = $key_value_factory->get('system');
     $this->httpClient = $client;
     $this->extensionLists['module'] = $module_list;
@@ -119,7 +119,7 @@ final class SecurityAdvisoriesFetcher {
    *   Thrown if an error occurs while retrieving security advisories.
    */
   public function getSecurityAdvisories(bool $allow_outgoing_request = TRUE, int $timeout = 0): ?array {
-    $config = $this->config_factory->get('system.advisories');
+    $config = $this->configFactory->get('system.advisories');
     $advisories = [];
 
     $json_payload = $this->keyValueExpirable->get(self::ADVISORIES_JSON_EXPIRABLE_KEY);
