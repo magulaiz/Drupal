@@ -46,6 +46,9 @@ mapping:
   label: Mapping
   class: '\Drupal\Core\Config\Schema\Mapping'
   definition_class: '\Drupal\Core\TypedData\MapDataDefinition'
+  constraints:
+    # All keys defined in subtypes of `mapping` are valid.
+    ValidKeys: '<infer>'
 sequence:
   label: Sequence
   class: '\Drupal\Core\Config\Schema\Sequence'
@@ -266,8 +269,6 @@ config_dependencies_base:
           NotBlank: []
           ExtensionName: []
           ExtensionExists: theme
-  constraints:
-    ValidKeys: '<infer>'
 
 config_dependencies:
   type: config_dependencies_base
@@ -276,8 +277,6 @@ config_dependencies:
     enforced:
       type: config_dependencies_base
       label: 'Enforced configuration dependencies'
-  constraints:
-    ValidKeys: '<infer>'
 
 config_entity:
   type: mapping
