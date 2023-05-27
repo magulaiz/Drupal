@@ -40,7 +40,7 @@ class CommentDefaultFormatter extends FormatterBase {
   }
 
   /**
-   *  The entity type manager.
+   * The entity type manager.
    *
    * @var \Drupal\Core\Entity\EntityTypeManagerInterface
    */
