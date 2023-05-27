@@ -94,7 +94,7 @@ field_formatter.entity_view_display:
       type: string
       label: 'Region'
   constraints:
-    # TRICKY: to suport the special `links` case, we must not inherit additionally required
+    # TRICKY: to support the special `links` case, we must not inherit additionally required
     # keys from `type: field_formatter`.
     # @todo Improve: only allow this exemption in the `links` case?
     RequiredKeys:
