@@ -100,6 +100,14 @@ trait SchemaCheckTrait {
     }
 
     if ($element instanceof Undefined) {
+      // Allow older Drupal extensions to test on older versions of Drupal core
+      // and other Drupal extensions, which means that during tests we should be
+      // forgiving about keys present in the config data that the test setup's
+      // config schema may not know about.
+      // @see \Drupal\Core\Validation\Plugin\Validation\Constraint\ValidKeysConstraintValidator
+      if (self::convertViolationsToDeprecation($this->schema->getRoot())) {
+        return [];
+      }
       return [$error_key => 'missing schema'];
     }
 
@@ -152,6 +160,20 @@ trait SchemaCheckTrait {
     }
     // No errors found.
     return [];
+  }
+
+  /**
+   * Whether violations should be mapped to a deprecation instead.
+   *
+   * @param \Drupal\Core\Config\Schema\Mapping $root
+   *   The root of the config to check.
+   *
+   * @return bool
+   */
+  private static function convertViolationsToDeprecation(Mapping $root): bool {
+    assert($root === $root->getRoot());
+    $config_data = $root->getValue();
+    return isset($config_data['_core']) && isset($config_data['_core']['test']) && $config_data['_core']['test'] === TRUE;
   }
 
 }
