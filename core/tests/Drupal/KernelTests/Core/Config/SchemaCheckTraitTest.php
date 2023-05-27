@@ -50,6 +50,22 @@ class SchemaCheckTraitTest extends KernelTestBase {
     $ret = $this->checkConfigSchema($this->typedConfig, 'config_test.types', $config_data);
     $this->assertTrue($ret);
 
+    // Test all types are nullable.
+    $nulled_config_data = array_fill_keys(array_keys($config_data), NULL);
+    $nulled_config_data['_core'] = $config_data['_core'];
+    $ret = $this->checkConfigSchema($this->typedConfig, 'config_test.types', $nulled_config_data);
+    $this->assertEquals([
+      '[array] This value should not be null.',
+      '[boolean] This value should not be null.',
+      '[exp] This value should not be null.',
+      '[float] This value should not be null.',
+      '[float_as_integer] This value should not be null.',
+      '[hex] This value should not be null.',
+      '[int] This value should not be null.',
+      '[string] This value should not be null.',
+      '[string_int] This value should not be null.',
+    ], $ret);
+
     // Add a new key, a new array and overwrite boolean with array to test the
     // error messages.
     $config_data = ['new_key' => 'new_value', 'new_array' => []] + $config_data;
