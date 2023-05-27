@@ -39,7 +39,7 @@ field.value.text:
 
 field.storage_settings.text_long:
   label: 'Text (formatted, long) settings'
-  # TRICKY: this used to inherit the config schema for the field INSTANCE, which contains the `alloed_formats` setting!
+  # TRICKY: this used to inherit the config schema for the field INSTANCE, which contains the `allowed_formats` setting!
   type: mapping
   mapping: {}
 
