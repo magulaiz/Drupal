@@ -34,6 +34,13 @@ class RequiredKeysConstraint extends Constraint {
   public string $requiredKeys;
 
   /**
+   * Keys inherited from a parent mapping, but are optional in this subtype.
+   *
+   * @var array
+   */
+  public array $markInheritedKeysAsOptional = [];
+
+  /**
    * {@inheritdoc}
    */
   public function getDefaultOption() {
@@ -65,7 +72,18 @@ class RequiredKeysConstraint extends Constraint {
     // Important! This infers keys from the config schema definition, not the
     // provided data.
     $inferred_keys = static::inferKeys($context->getObject());
-    return $inferred_keys;
+
+    // Exclude inherited required keys explicitly marked as optional.
+    assert(
+      array_diff($this->markInheritedKeysAsOptional, $inferred_keys) == [],
+      sprintf(
+        "Some inherited keys that is marked as optional are already optional in the parent type: %s.\nKeys marked as optional: %s. \nInferred required keys: %s.\n",
+        implode(', ', array_diff($this->markInheritedKeysAsOptional, $inferred_keys)),
+        implode(', ', $this->markInheritedKeysAsOptional),
+        implode(', ', $inferred_keys)
+      )
+    );
+    return array_diff($inferred_keys, $this->markInheritedKeysAsOptional);
   }
 
   /**

@@ -93,6 +93,16 @@ field_formatter.entity_view_display:
     region:
       type: string
       label: 'Region'
+  constraints:
+    # TRICKY: to suport the special `links` case, we must not inherit additionally required
+    # keys from `type: field_formatter`.
+    # @todo Improve: only allow this exemption in the `links` case?
+    RequiredKeys:
+      requiredKeys: '<infer>'
+      markInheritedKeysAsOptional:
+        - type
+        - label
+        - settings
 
 # Overview configuration information for form mode displays.
 core.entity_form_display.*.*.*:
