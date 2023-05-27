@@ -120,6 +120,12 @@ class TypedConfigManager extends TypedDataManager implements TypedConfigManagerI
         $data_definition[$key] = $value;
       }
     }
+
+    // All types are required by default: configuration is expected to be
+    // complete.
+    // @see \Drupal\Core\TypedData\TypedDataManager::getDefaultConstraints()
+    $data_definition->setRequired(!isset($data_definition['nullable']) || $data_definition['nullable'] === FALSE);
+
     return $data_definition;
   }
 
