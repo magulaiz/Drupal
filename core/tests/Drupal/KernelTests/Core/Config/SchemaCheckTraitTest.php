@@ -70,6 +70,10 @@ class SchemaCheckTraitTest extends KernelTestBase {
     // error messages.
     $config_data = ['new_key' => 'new_value', 'new_array' => []] + $config_data;
     $config_data['boolean'] = [];
+    // Simulate that this is not running in a test: simulate what end users
+    // would see.
+    // @see ::testDeprecationForNewKeysInTests()
+    $config_data['_core']['test'] = FALSE;
     $ret = $this->checkConfigSchema($this->typedConfig, 'config_test.types', $config_data);
     $expected = [
       'config_test.types:new_key' => 'missing schema',
@@ -107,6 +111,25 @@ class SchemaCheckTraitTest extends KernelTestBase {
       "[] 'nullable_string_int' is a required key.",
     ];
     $this->assertEquals($expected, $ret);
+  }
+
+  /**
+   * @group legacy
+   */
+  public function testDeprecationForNewKeysInTests(): void {
+    // Test an existing schema with valid data.
+    $config_data = $this->config('config_test.types')->get();
+    $ret = $this->checkConfigSchema($this->typedConfig, 'config_test.types', $config_data);
+    $this->assertTrue($ret);
+
+    // Add a new key, a new array and overwrite boolean with array to test the
+    // error messages.
+    $config_data = ['new_key' => 'new_value', 'new_array' => []] + $config_data;
+    $config_data['boolean'] = [];
+
+    $this->expectDeprecation("Unsilenced deprecation: The 'config_test.types' configuration contains invalid keys at the property path ''. The following keys are either invalid or only exist in newer versions of the config schema: 'new_key', 'new_array'.");
+    $this->checkConfigSchema($this->typedConfig, 'config_test.types', $config_data);
+    $this->assertTrue(TRUE);
   }
 
 }

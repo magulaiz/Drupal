@@ -285,7 +285,7 @@ class ConfigCRUDTest extends KernelTestBase {
       'string' => 'string',
       'string_int' => '1',
     ];
-    $data = ['_core' => ['default_config_hash' => Crypt::hashBase64(serialize($data))]] + $data;
+    $data = ['_core' => ['default_config_hash' => Crypt::hashBase64(serialize($data)), 'test' => TRUE]] + $data;
     $this->assertSame($data, $config->get());
 
     // Re-set each key using Config::set().
