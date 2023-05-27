@@ -43,7 +43,7 @@ class HtmlResponseAttachmentsProcessor implements AttachmentsResponseProcessorIn
    *
    * @var \Drupal\Core\Config\ConfigFactoryInterface
    */
-  protected $config_factory;
+  protected $configFactory;
 
   /**
    * The CSS asset collection renderer service.
@@ -102,7 +102,7 @@ class HtmlResponseAttachmentsProcessor implements AttachmentsResponseProcessorIn
    */
   public function __construct(AssetResolverInterface $asset_resolver, ConfigFactoryInterface $config_factory, AssetCollectionRendererInterface $css_collection_renderer, AssetCollectionRendererInterface $js_collection_renderer, RequestStack $request_stack, RendererInterface $renderer, ModuleHandlerInterface $module_handler, protected ?LanguageManagerInterface $languageManager = NULL) {
     $this->assetResolver = $asset_resolver;
-    $this->config_factory = $config_factory;
+    $this->configFactory = $config_factory;
     $this->cssCollectionRenderer = $css_collection_renderer;
     $this->jsCollectionRenderer = $js_collection_renderer;
     $this->requestStack = $request_stack;
@@ -310,7 +310,7 @@ class HtmlResponseAttachmentsProcessor implements AttachmentsResponseProcessorIn
    */
   protected function processAssetLibraries(AttachedAssetsInterface $assets, array $placeholders) {
     $variables = [];
-    $config = $this->config_factory->get('system.performance');
+    $config = $this->configFactory->get('system.performance');
 
     // Print styles - if present.
     if (isset($placeholders['styles'])) {
