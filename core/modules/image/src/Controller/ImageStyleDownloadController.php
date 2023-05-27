@@ -226,7 +226,7 @@ class ImageStyleDownloadController extends FileDownloadController {
           ->createInstance('derivative')
           ->setImageStyle($image_style)
           ->setSourceImageUri($image_uri);
-        }
+      }
     }
 
     // Don't start generating the image if the derivative already exists or if
