@@ -33,7 +33,7 @@ class FinishResponseSubscriber implements EventSubscriberInterface {
    *
    * @var \Drupal\Core\Config\ConfigFactoryInterface
    */
-  protected $config_factory;
+  protected $configFactory;
 
   /**
    * A policy rule determining the cacheability of a request.
@@ -79,7 +79,7 @@ class FinishResponseSubscriber implements EventSubscriberInterface {
    */
   public function __construct(LanguageManagerInterface $language_manager, ConfigFactoryInterface $config_factory, RequestPolicyInterface $request_policy, ResponsePolicyInterface $response_policy, CacheContextsManager $cache_contexts_manager, $http_response_debug_cacheability_headers = FALSE) {
     $this->languageManager = $language_manager;
-    $this->config_factory = $config_factory;
+    $this->configFactory = $config_factory;
     $this->requestPolicy = $request_policy;
     $this->responsePolicy = $response_policy;
     $this->cacheContextsManager = $cache_contexts_manager;
@@ -112,7 +112,7 @@ class FinishResponseSubscriber implements EventSubscriberInterface {
       return;
     }
 
-    $config = $this->config_factory->get('system.performance');
+    $config = $this->configFactory->get('system.performance');
     $request = $event->getRequest();
     $response = $event->getResponse();
 
@@ -250,7 +250,7 @@ class FinishResponseSubscriber implements EventSubscriberInterface {
       $this->setExpiresNoCache($response);
     }
 
-    $config = $this->config_factory->get('system.performance');
+    $config = $this->configFactory->get('system.performance');
     $max_age = $config->get('cache.page.max_age');
     $response->headers->set('Cache-Control', 'public, max-age=' . $max_age);
 
