@@ -90,6 +90,8 @@ config_test.types:
       type: integer
       label: 'Integer'
     octal:
+      # @see https://www.drupal.org/project/drupal/issues/3205480
+      requiredKey: false
       type: integer
       label: 'Octal'
     string:
@@ -121,6 +123,9 @@ config_test.system:
       type: string
       label: 'Foo'
     baz:
+      # @todo Decide: either keep this optional or add it to the default config.
+      # @see core/modules/config/tests/config_test/config/install/config_test.dynamic.dotted.default.yml
+      requiredKey: false
       type: string
       label: 'Baz'
     '404':
