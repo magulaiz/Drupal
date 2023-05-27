@@ -50,6 +50,8 @@ mapping:
   constraints:
     # By default, only allow the explicitly listed mapping keys.
     ValidKeys: '<infer>'
+    # All keys that do NOT have `requiredKey: false` are required.
+    RequiredKeys: '<infer>'
 sequence:
   label: Sequence
   class: '\Drupal\Core\Config\Schema\Sequence'
