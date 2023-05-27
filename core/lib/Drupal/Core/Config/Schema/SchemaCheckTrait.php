@@ -121,8 +121,10 @@ trait SchemaCheckTrait {
           // Null values are allowed for all primitive types.
           ($value === NULL);
       }
-      // Array elements can also opt-in for allowing a NULL value.
-      elseif ($element instanceof ArrayElement && $element->isNullable() && $value === NULL) {
+      // Array elements can also opt-in for allowing a NULL value, and
+      // disallowed NULL values are detect through validation.
+      // @see \Drupal\Core\Validation\Plugin\Validation\Constraint\NotNullConstraintValidator::validate
+      elseif ($element instanceof ArrayElement) {
         $success = TRUE;
       }
       $class = get_class($element);
