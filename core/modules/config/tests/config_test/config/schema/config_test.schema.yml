@@ -13,12 +13,33 @@ config_test_dynamic:
       type: integer
       label: 'Weight'
     style:
+      # TRICKY: Because \Drupal\config_test\Entity\ConfigTest always sets this, this does not cause
+      # YAML exports without this key to trigger validation errors for the key. But without `nullable`,
+      # it would then complain about the default NULL value.
+      # @todo Decide: either keep this optional or add it to the default config.
+      # @see core/modules/config/tests/config_test/config/install/config_test.dynamic.dotted.default.yml
+      requiredKey: false
+      nullable: true
       type: string
       label: 'style'
     size:
+      # TRICKY: Because \Drupal\config_test\Entity\ConfigTest always sets this, this does not cause
+      # YAML exports without this key to trigger validation errors for the key. But without `nullable`,
+      # it would then complain about the default NULL value.
+      # @todo Decide: either keep this optional or add it to the default config.
+      # @see core/modules/config/tests/config_test/config/install/config_test.dynamic.dotted.default.yml
+      requiredKey: false
+      nullable: true
       type: string
       label: 'Size'
     size_value:
+      # TRICKY: Because \Drupal\config_test\Entity\ConfigTest always sets this, this does not cause
+      # YAML exports without this key to trigger validation errors for the key. But without `nullable`,
+      # it would then complain about the default NULL value.
+      # @todo Decide: either keep this optional or add it to the default config.
+      # @see core/modules/config/tests/config_test/config/install/config_test.dynamic.dotted.default.yml
+      requiredKey: false
+      nullable: true
       type: string
       label: 'Size value'
     protected_property:
