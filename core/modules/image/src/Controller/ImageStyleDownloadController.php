@@ -152,8 +152,8 @@ class ImageStyleDownloadController extends FileDownloadController {
     }
 
     // Create an image process pipeline.
-    $pipeline = $this->imageProcessor->createInstance('derivative');
-    $pipeline
+    $pipeline = $this->imageProcessor
+      ->createInstance('derivative')
       ->setImageStyle($image_style)
       ->setSourceImageUri($image_uri);
 
@@ -221,7 +221,12 @@ class ImageStyleDownloadController extends FileDownloadController {
       else {
         // The converted file does exist, use it as the source.
         $image_uri = $converted_image_uri;
-      }
+        // Re-create the image process pipeline as the source has changed.
+        $pipeline = $this->imageProcessor
+          ->createInstance('derivative')
+          ->setImageStyle($image_style)
+          ->setSourceImageUri($image_uri);
+        }
     }
 
     // Don't start generating the image if the derivative already exists or if
