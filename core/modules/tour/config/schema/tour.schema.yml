@@ -43,9 +43,11 @@ tour.tip:
       type: integer
       label: 'Weight'
     position:
+      requiredKey: false
       type: string
       label: 'Position'
     selector:
+      requiredKey: false
       type: string
       label: 'Selector'
 

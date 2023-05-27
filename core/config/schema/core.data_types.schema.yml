@@ -166,6 +166,11 @@ action_configuration_default:
   label: 'Action configuration'
   sequence:
     type: string
+  # No configuration by default.
+  # TRICKY: this default to `type: sequence` to allow no configuration by default. Because f.e.
+  # action.configuration.user_remove_role_action uses `type: mapping` instead.
+  # @todo Refactor this base type, it serves no real purpose.
+  nullable: true
 
 theme_settings:
   type: config_object
@@ -221,10 +226,13 @@ theme_settings:
         url:
           type: uri
           label: 'URL'
+          nullable: true
         use_default:
           type: boolean
           label: 'Use default'
     third_party_settings:
+      # Third party settings are always optional: they're an optional extension point.
+      requiredKey: false
       type: sequence
       label: 'Third party settings'
       sequence:
@@ -239,6 +247,8 @@ route:
       type: string
       label: 'Route Name'
     route_params:
+      # Some routes have no params.
+      requiredKey: false
       type: sequence
       label: 'Route Params'
       sequence:
@@ -347,18 +357,28 @@ block_settings:
       type: string
       label: 'Display title'
     provider:
+      # @todo Move this key to the correct place (block.settings.*) in https://www.drupal.org/project/drupal/issues/2663376
+      requiredKey: false
       type: string
       label: 'Provider'
     status:
+      # @todo Move this key to the correct place (block.settings.*) in https://www.drupal.org/project/drupal/issues/2663376
+      requiredKey: false
       type: boolean
       label: 'Status'
     info:
+      # @todo Move this key to the correct place (block.settings.*) in https://www.drupal.org/project/drupal/issues/2663376
+      requiredKey: false
       type: label
       label: 'Admin info'
     view_mode:
+      # @todo Move this key to the correct place (block.settings.*) in https://www.drupal.org/project/drupal/issues/2663376
+      requiredKey: false
       type: string
       label: 'View mode'
     context_mapping:
+      # Not every block consumes context.
+      requiredKey: false
       type: sequence
       label: 'Context assignments'
       sequence:
@@ -535,6 +555,7 @@ field.storage_settings.string:
 field.field_settings.string:
   type: mapping
   label: 'String settings'
+  mapping: {}
 
 field.value.string:
   type: mapping
@@ -855,6 +876,8 @@ entity_reference_selection:
   label: 'Entity reference selection handler settings'
   mapping:
     target_type:
+      # All selection handler settings are optional; it falls back to defaults automatically.
+      requiredKey: false
       type: string
       label: 'Type of item to reference'
 
@@ -869,6 +892,8 @@ entity_reference_selection.default:
   label: 'Default selection handler settings'
   mapping:
     target_bundles:
+      # All selection handler settings are optional; it falls back to defaults automatically.
+      requiredKey: false
       type: sequence
       label: 'types'
       nullable: true
@@ -876,6 +901,8 @@ entity_reference_selection.default:
         type: string
         label: 'Bundle'
     sort:
+      # All selection handler settings are optional; it falls back to defaults automatically.
+      requiredKey: false
       type: mapping
       label: 'Sort settings'
       mapping:
@@ -883,12 +910,18 @@ entity_reference_selection.default:
           type: string
           label: 'Sort by'
         direction:
+          # If there is no field to sort by, there's also no need for direction.
+          requiredKey: false
           type: string
           label: 'Sort direction'
     auto_create:
+      # All selection handler settings are optional; it falls back to defaults automatically.
+      requiredKey: false
       type: boolean
       label: 'Create referenced entities if they don''t already exist'
     auto_create_bundle:
+      # All selection handler settings are optional; it falls back to defaults automatically.
+      requiredKey: false
       type: string
       label: 'Bundle assigned to the auto-created entities.'
 

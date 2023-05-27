@@ -8,6 +8,7 @@ media.settings:
     iframe_domain:
       type: uri
       label: 'Domain from which to serve oEmbed content in an iframe'
+      nullable: true
     oembed_providers_url:
       type: uri
       label: 'The URL of the oEmbed providers database in JSON format'

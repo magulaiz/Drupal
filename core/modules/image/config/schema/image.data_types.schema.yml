@@ -6,15 +6,18 @@ image_size:
     width:
       type: integer
       label: 'Width'
+      nullable: true
     height:
       type: integer
       label: 'Height'
+      nullable: true
 
 field_default_image:
   type: mapping
   mapping:
     uuid:
       type: uuid
+      nullable: true
     alt:
       type: label
       label: 'Alternative text'
@@ -24,6 +27,8 @@ field_default_image:
     width:
       type: integer
       label: 'Width'
+      nullable: true
     height:
       type: integer
       label: 'Height'
+      nullable: true
