@@ -60,6 +60,7 @@ class Update {
    *
    * @return array
    *   A requirements info array.
+   *
    * @internal
    */
   public function systemSchemaRequirements(): array {
@@ -109,6 +110,7 @@ class Update {
    *
    * @todo: remove in a major version after
    *   https://www.drupal.org/project/drupal/issues/3130037 has been fixed.
+   *
    * @internal
    */
   public function fixMissingSchema(): void {
