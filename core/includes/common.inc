@@ -532,13 +532,13 @@ function drupal_flush_all_caches($kernel = NULL) {
  * Changing the dummy query string appended to CSS and JavaScript files forces
  * all browsers to reload fresh files.
  *
- * @deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use
+ * @deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use
  *   Use \Drupal\Core\Asset\AssetQueryStringInterface::reset() instead.
  *
  * @see https://www.drupal.org/node/3358337
  */
 function _drupal_flush_css_js() {
-  @trigger_error('_drupal_flush_css_js is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use \Drupal\Core\Asset\AssetQueryStringInterface::reset() instead. See https://www.drupal.org/node/3358337', E_USER_DEPRECATED);
+  @trigger_error('_drupal_flush_css_js is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use \Drupal\Core\Asset\AssetQueryStringInterface::reset() instead. See https://www.drupal.org/node/3358337', E_USER_DEPRECATED);
   \Drupal::service('asset.query_string')->reset();
 }
 
