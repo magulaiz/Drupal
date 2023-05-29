@@ -34,7 +34,7 @@ class UpdateLegacyTest extends KernelTestBase {
    * Tests update_check_incompatibility() function.
    */
   public function testUpdateCheckIncompatibility() {
-    $this->expectDeprecation('_update_fix_missing_schema() is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use \Drupal\Core\Update\DeprecatedUpdate::fixMissingSchema() instead. See https://www.drupal.org/node/3013060');
+    $this->expectDeprecation('_update_fix_missing_schema() is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use \Drupal\Core\Update\Update::fixMissingSchema() instead. See https://www.drupal.org/node/3013060');
     _update_fix_missing_schema();
     $this->assertTrue(TRUE);
   }
@@ -43,7 +43,7 @@ class UpdateLegacyTest extends KernelTestBase {
    * Tests update_system_schema_requirements() function.
    */
   public function testUpdateSystemSchemaRequirements() {
-    $this->expectDeprecation('update_system_schema_requirements() is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use \Drupal\Core\Update\DeprecatedUpdate::systemSchemaRequirements() instead. See https://www.drupal.org/node/3013060');
+    $this->expectDeprecation('update_system_schema_requirements() is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use \Drupal\Core\Update\Update::systemSchemaRequirements() instead. See https://www.drupal.org/node/3013060');
     include $this->root . '/core/includes/install.inc';
     $requirements = update_system_schema_requirements();
     $this->assertEquals('The installed schema version does not meet the minimum.', $requirements['minimum schema']['value']);

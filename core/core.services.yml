@@ -1751,12 +1751,7 @@ services:
     class: Drupal\Core\Update\Update
     autowire: true
   Drupal\Core\Update\Update: "@update"
-  update.deprecated:
-    class: Drupal\Core\Update\DeprecatedUpdate
-    autowire: true
-    deprecated: The "%service_id%" service is deprecated. You should use the 'Drupal\Core\Update\Update' service
-      instead. See https://www.drupal.org/node/3013060
-  Drupal\Core\Update\DeprecatedUpdate: "@update.deprecated"
+  Drupal\Core\Update\Update: "@update"
   update.update_hook_registry:
     class: Drupal\Core\Update\UpdateHookRegistry
     factory: ['@update.update_hook_registry_factory', create]

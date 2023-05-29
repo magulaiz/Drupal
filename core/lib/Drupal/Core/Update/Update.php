@@ -60,8 +60,9 @@ class Update {
    *
    * @return array
    *   A requirements info array.
+   * @internal
    */
-  protected function systemSchemaRequirements(): array {
+  public function systemSchemaRequirements(): array {
     $requirements = [];
 
     $system_schema = $this->updateRegistry->getInstalledVersion('system');
@@ -108,8 +109,9 @@ class Update {
    *
    * @todo: remove in a major version after
    *   https://www.drupal.org/project/drupal/issues/3130037 has been fixed.
+   * @internal
    */
-  protected function fixMissingSchema(): void {
+  public function fixMissingSchema(): void {
     $versions = $this->updateRegistry->getAllInstalledVersions();
     $enabled_modules = $this->moduleHandler->getModuleList();
 

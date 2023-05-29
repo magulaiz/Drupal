@@ -8,7 +8,6 @@
  * installation. It is included and used extensively by update.php.
  */
 
-use Drupal\Core\Update\DeprecatedUpdate;
 use Drupal\Core\Update\Update;
 
 /**
@@ -18,15 +17,15 @@ use Drupal\Core\Update\Update;
  *   A requirements info array.
  *
  * @deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use
- *   \Drupal\Core\Update\DeprecatedUpdate::systemSchemaRequirements() instead.
+ *   \Drupal\Core\Update\Update::systemSchemaRequirements() instead.
  *
  * @see https://www.drupal.org/node/3013060
- * @see \Drupal\Core\Update\DeprecatedUpdate::systemSchemaRequirements()
+ * @see \Drupal\Core\Update\Update::systemSchemaRequirements()
  */
 function update_system_schema_requirements() {
-  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use \Drupal\Core\Update\DeprecatedUpdate::systemSchemaRequirements() instead. See https://www.drupal.org/node/3013060', E_USER_DEPRECATED);
-  /** @var \Drupal\Core\Update\DeprecatedUpdate $update */
-  $update = \Drupal::service(DeprecatedUpdate::class);
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use \Drupal\Core\Update\Update::systemSchemaRequirements() instead. See https://www.drupal.org/node/3013060', E_USER_DEPRECATED);
+  /** @var \Drupal\Core\Update\Update $update */
+  $update = \Drupal::service(Update::class);
   return $update->systemSchemaRequirements();
 }
 
@@ -58,15 +57,16 @@ function update_check_requirements() {
  *   https://www.drupal.org/project/drupal/issues/3130037 has been fixed.
  *
  * @deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use
- *   \Drupal\Core\Update\DeprecatedUpdate::fixMissingSchema() instead.
+ *   \Drupal\Core\Update\Update::fixMissingSchema() instead.
  *
  * @see https://www.drupal.org/node/3013060
- * @see \Drupal\Core\Update\DeprecatedUpdate::fixMissingSchema()
+ * @see \Drupal\Core\Update\Update::fixMissingSchema()
  */
 function _update_fix_missing_schema() {
-  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use \Drupal\Core\Update\DeprecatedUpdate::fixMissingSchema() instead. See https://www.drupal.org/node/3013060', E_USER_DEPRECATED);
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use \Drupal\Core\Update\Update::fixMissingSchema() instead. See https://www.drupal.org/node/3013060', E_USER_DEPRECATED);
   /** @var \Drupal\Core\Update\DeprecatedUpdate $update */
-  $update = \Drupal::service(DeprecatedUpdate::class);
+  /** @var \Drupal\Core\Update\Update $update */
+  $update = \Drupal::service(Update::class);
   $update->fixMissingSchema();
 }
 
