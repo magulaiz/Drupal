@@ -1751,7 +1751,6 @@ services:
     class: Drupal\Core\Update\Update
     autowire: true
   Drupal\Core\Update\Update: "@update"
-  Drupal\Core\Update\Update: "@update"
   update.update_hook_registry:
     class: Drupal\Core\Update\UpdateHookRegistry
     factory: ['@update.update_hook_registry_factory', create]
