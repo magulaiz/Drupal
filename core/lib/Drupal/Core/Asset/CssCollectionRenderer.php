@@ -52,7 +52,7 @@ class CssCollectionRenderer implements AssetCollectionRendererInterface {
   /**
    * {@inheritdoc}
    */
-  public function render(array $assets) {
+  public function render(array $css_assets) {
     $elements = [];
 
     // A dummy query-string is added to filenames, to gain control over
@@ -70,24 +70,24 @@ class CssCollectionRenderer implements AssetCollectionRendererInterface {
       ],
     ];
 
-    foreach ($assets as $asset) {
+    foreach ($css_assets as $css_asset) {
       $element = $link_element_defaults;
-      $element['#attributes']['media'] = $asset['media'];
+      $element['#attributes']['media'] = $css_asset['media'];
 
-      switch ($asset['type']) {
+      switch ($css_asset['type']) {
         // For file items, output a LINK tag for file CSS assets.
         case 'file':
-          $element['#attributes']['href'] = $this->fileUrlGenerator->generateString($asset['data']);
+          $element['#attributes']['href'] = $this->fileUrlGenerator->generateString($css_asset['data']);
           // Only add the cache-busting query string if this isn't an aggregate
           // file.
-          if (!isset($asset['preprocessed'])) {
-            $query_string_separator = str_contains($asset['data'], '?') ? '&' : '?';
+          if (!isset($css_asset['preprocessed'])) {
+            $query_string_separator = str_contains($css_asset['data'], '?') ? '&' : '?';
             $element['#attributes']['href'] .= $query_string_separator . $query_string;
           }
           break;
 
         case 'external':
-          $element['#attributes']['href'] = $asset['data'];
+          $element['#attributes']['href'] = $css_asset['data'];
           break;
 
         default:
@@ -95,8 +95,8 @@ class CssCollectionRenderer implements AssetCollectionRendererInterface {
       }
 
       // Merge any additional attributes.
-      if (!empty($asset['attributes'])) {
-        $element['#attributes'] += $asset['attributes'];
+      if (!empty($css_asset['attributes'])) {
+        $element['#attributes'] += $css_asset['attributes'];
       }
 
       $elements[] = $element;
