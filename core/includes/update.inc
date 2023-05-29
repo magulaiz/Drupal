@@ -64,7 +64,6 @@ function update_check_requirements() {
  */
 function _update_fix_missing_schema() {
   @trigger_error(__FUNCTION__ . '() is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use \Drupal\Core\Update\Update::fixMissingSchema() instead. See https://www.drupal.org/node/3013060', E_USER_DEPRECATED);
-  /** @var \Drupal\Core\Update\DeprecatedUpdate $update */
   /** @var \Drupal\Core\Update\Update $update */
   $update = \Drupal::service(Update::class);
   $update->fixMissingSchema();
