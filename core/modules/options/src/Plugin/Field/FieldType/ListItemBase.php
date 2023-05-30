@@ -108,23 +108,38 @@ abstract class ListItemBase extends FieldItemBase implements OptionsProviderInte
    */
   public function storageSettingsForm(array &$form, FormStateInterface $form_state, $has_data) {
     $allowed_values = $this->getSetting('allowed_values');
+    $predefined_options_plugin = $this->getSetting('predefined_options_plugin');
     $allowed_values_function = $this->getSetting('allowed_values_function');
+    $options = ['' => $this->t('Custom')] + $this->predefinedOptionsManager->getAvailablePlugins();
+
+    $element['predefined_options_plugin'] = [
+      '#type' => 'select',
+      '#title' => $this->t('Allowed values'),
+      '#options' => $options,
+      '#default_value' => !empty($predefined_options_plugin) ? $predefined_options_plugin : NULL,
+      '#weight' => -20,
+    ];
 
     $element['allowed_values'] = [
       '#type' => 'textarea',
       '#title' => $this->t('Allowed values list'),
       '#default_value' => $this->allowedValuesString($allowed_values),
       '#rows' => 10,
-      '#access' => empty($allowed_values_function),
       '#element_validate' => [[static::class, 'validateAllowedValues']],
       '#field_has_data' => $has_data,
       '#field_name' => $this->getFieldDefinition()->getName(),
       '#entity_type' => $this->getEntity()->getEntityTypeId(),
       '#allowed_values' => $allowed_values,
       '#required' => TRUE,
+      '#access' => empty($allowed_values_function),
     ];
 
     $element['allowed_values']['#description'] = $this->allowedValuesDescription();
+    $element['allowed_values']['#states'] = [
+      'invisible' => [
+        '[name*="predefined_options_plugin"]' => ['!value' => ''],
+      ],
+    ];
 
     $element['allowed_values_function'] = [
       '#type' => 'item',
