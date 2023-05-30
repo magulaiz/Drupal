@@ -146,7 +146,7 @@ class NumericFilter extends FilterPluginBase {
         'values' => 1,
       ],
       'not_regular_expression' => [
-        'title' => $this->t('Negated Regular expression'),
+        'title' => $this->t('Negated regular expression'),
         'short' => $this->t('not regex'),
         'method' => 'opNotRegex',
         'values' => 1,
