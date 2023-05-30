@@ -366,14 +366,14 @@ class OptionsFieldUITest extends FieldTestBase {
    * @param string $message
    *   Message to display.
    */
-  public function assertPredefinedOptionsInput($plugin_id, $result, $message) {
+  public function assertPredefinedOptionsInput(string $plugin_id, $result, string $message): void {
     $edit = ['settings[predefined_options_plugin]' => $plugin_id];
     $this->drupalGet($this->adminPath);
     $this->submitForm($edit, t('Save field settings'));
     $this->assertSession()->responseNotContains('&amp;lt;');
 
     if (is_string($result)) {
-      $this->assertText($result, $message);
+      $this->assertSession()->pageTextContains($result);
     }
     else {
       $field_storage = FieldStorageConfig::loadByName('node', $this->fieldName);
