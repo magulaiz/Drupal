@@ -163,6 +163,7 @@
  * unsaved changes until "Save layout" is submitted.
  * @todo create issue for todo.
  */
-.layout-builder-components-table .tabledrag-changed-warning {
+.layout-builder-components-table .tabledrag-changed-warning,
+.layout-builder-sections-table .tabledrag-changed-warning {
   display: none !important;
 }

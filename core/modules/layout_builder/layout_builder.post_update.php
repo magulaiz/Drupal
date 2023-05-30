@@ -69,3 +69,10 @@ function layout_builder_post_update_timestamp_formatter(array &$sandbox = NULL):
     return $update;
   });
 }
+
+/**
+ * Clear caches due to new routes and UI elements.
+ */
+function layout_builder_post_update_section_move_form() {
+  // Empty post-update hook.
+}
