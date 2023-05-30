@@ -15,6 +15,7 @@ process:
   pass: pass
   mail: mail
   created: created
+  changed: changed
   access: access
   login: login
   status: status
