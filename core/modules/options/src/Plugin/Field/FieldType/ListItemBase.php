@@ -125,13 +125,13 @@ abstract class ListItemBase extends FieldItemBase implements OptionsProviderInte
       '#title' => $this->t('Allowed values list'),
       '#default_value' => $this->allowedValuesString($allowed_values),
       '#rows' => 10,
+      '#access' => empty($allowed_values_function),
       '#element_validate' => [[static::class, 'validateAllowedValues']],
       '#field_has_data' => $has_data,
       '#field_name' => $this->getFieldDefinition()->getName(),
       '#entity_type' => $this->getEntity()->getEntityTypeId(),
       '#allowed_values' => $allowed_values,
       '#required' => TRUE,
-      '#access' => empty($allowed_values_function),
     ];
 
     $element['allowed_values']['#description'] = $this->allowedValuesDescription();
