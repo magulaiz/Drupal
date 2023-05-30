@@ -43,7 +43,7 @@ class JsCollectionRenderer implements AssetCollectionRendererInterface {
    */
   public function __construct(AssetQueryStringInterface|StateInterface $asset_query_string, FileUrlGeneratorInterface $file_url_generator) {
     if ($asset_query_string instanceof StateInterface) {
-      @trigger_error('Calling ' . __METHOD__ . '() with the $asset_query_string argument as \Drupal\Core\State\StateInterface instead of \Drupal\Core\Asset\AssetQueryStringInterface is deprecated in drupal:10.1.0 and will be required in drupal:11.0.0. See https://www.drupal.org/node/3358337', E_USER_DEPRECATED);
+      @trigger_error('Calling ' . __METHOD__ . '() with the $asset_query_string argument as \Drupal\Core\State\StateInterface instead of \Drupal\Core\Asset\AssetQueryStringInterface is deprecated in drupal:10.2.0 and will be required in drupal:11.0.0. See https://www.drupal.org/node/3358337', E_USER_DEPRECATED);
       $asset_query_string = \Drupal::service('asset.query_string');
     }
     $this->assetQueryString = $asset_query_string;
