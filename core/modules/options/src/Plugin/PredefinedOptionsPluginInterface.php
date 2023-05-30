@@ -12,7 +12,7 @@ use Drupal\Core\Field\FieldStorageDefinitionInterface;
 interface PredefinedOptionsPluginInterface extends PluginInspectionInterface {
 
   /**
-   * Returns the of allowed values.
+   * Returns the allowed values.
    *
    * @param \Drupal\Core\Field\FieldStorageDefinitionInterface $definition
    *   The field storage definition.
@@ -22,8 +22,8 @@ interface PredefinedOptionsPluginInterface extends PluginInspectionInterface {
    * @param bool &$cacheable
    *   (optional) If an $entity is provided, the $cacheable parameter should be
    *   modified by reference and set to FALSE if the set of allowed values
-   *   returned was specifically adjusted for that entity and cannot not be
-   *   reused for other entities. Defaults to TRUE.
+   *   returned was specifically adjusted for that entity and can not be reused
+   *   for other entities. Defaults to TRUE.
    *
    * @return array
    *   The array of allowed values. Keys of the array are the raw stored values
