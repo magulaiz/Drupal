@@ -4,11 +4,3 @@ toolbar.subtrees:
     _controller: '\Drupal\toolbar\Controller\ToolbarController::subtreesAjax'
   requirements:
     _custom_access: '\Drupal\toolbar\Controller\ToolbarController::checkSubTreeAccess'
-
-toolbar.settings:
-  path: '/admin/config/user-interface/toolbar'
-  defaults:
-    _form: '\Drupal\toolbar\Form\ToolbarSettingsForm'
-    _title: 'Toolbar settings'
-  requirements:
-    _permission: 'administer site configuration'

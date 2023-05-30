@@ -77,37 +77,4 @@ class ToolbarMenuNavigationTest extends WebDriverTestBase {
     $this->assertSame('Basic site settings Cron', trim($system_submenu_menu->getText()));
   }
 
-  /**
-   * Test configurable menu depth.
-   */
-  public function testMenuDepthConfig() {
-    $page = $this->getSession()->getPage();
-    $assert_session = $this->assertSession();
-    $this->getSession()->resizeWindow(1200, 600);
-
-    // Test changing the menu depth
-    $this->drupalGet('admin/config/user-interface/toolbar');
-
-    // Before changing the menu depth, expect 10 expanded menus and zero that
-    // are collapsed. Note that expanded does not mean visible, but it does mean
-    // they are already in the DOM.
-    $assert_session->elementsCount('css', '.menu-item.menu-item--expanded', 10);
-    $assert_session->elementsCount('css', '.menu-item.menu-item--collapsed', 0);
-
-    $this->submitForm(['menu_depth' => 1], 'Save configuration');
-
-    // After changing the menu depth, expect 0 expanded menus and two that are
-    // collapsed (i.e. they have submenu items but they were not added to the
-    // DOM.
-    $assert_session->elementsCount('css', '.menu-item.menu-item--expanded', 0);
-    $assert_session->elementsCount('css', '.menu-item.menu-item--collapsed', 2);
-
-    $configuration_tab = $page->find('css', 'div.toolbar-menu-administration > ul > li:nth-child(3)');
-    $this->assertTrue(strpos($configuration_tab->getText(), 'Configuration') === 0);
-    $this->assertFalse($configuration_tab->hasClass('hover-intent'));
-    $this->getSession()->getPage()->find('css', '#toolbar-link-system-admin_config')->mouseOver();
-    $assert_session->waitForElementRemoved('css', 'div.toolbar-menu-administration > ul > li:nth-child(3).hover-intent');
-    $this->assertFalse($configuration_tab->hasClass('hover-intent'));
-  }
-
 }
