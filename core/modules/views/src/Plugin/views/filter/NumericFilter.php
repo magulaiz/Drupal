@@ -384,7 +384,7 @@ class NumericFilter extends FilterPluginBase {
   }
 
   /**
-   * Filters by a negative regular expression.
+   * Filters by a negated regular expression.
    *
    * @param string $field
    *   The expression pointing to the queries field, for example "foo.bar".
