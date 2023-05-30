@@ -196,7 +196,10 @@ class EmphasisTest extends WebDriverTestBase {
     $this->assertEquals('Test', $emphasis_source[0]->textContent);
     $page->pressButton('Save');
 
+    // Check, that the icon is generally present in the response:
     $assert_session->responseContains('<i class="test">Test</i>');
+    // Check, that the icon is NOT wrapped in an em tag:
+    $assert_session->responseNotContains('<em><i class="test">Test</i></em>');
   }
 
   /**
