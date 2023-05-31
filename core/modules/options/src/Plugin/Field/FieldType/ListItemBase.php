@@ -30,11 +30,19 @@ abstract class ListItemBase extends FieldItemBase implements OptionsProviderInte
   protected $predefinedOptionsManager;
 
   /**
+   * The logger for the options channel.
+   *
+   * @var \Psr\Log\LoggerInterface
+   */
+  protected $logger;
+
+  /**
    * {@inheritdoc}
    */
   public function __construct(DataDefinitionInterface $definition, $name = NULL, TypedDataInterface $parent = NULL) {
     parent::__construct($definition, $name, $parent);
     $this->predefinedOptionsManager = \Drupal::service('plugin.manager.options.predefined_options');
+    $this->logger = \Drupal::logger('options');
   }
 
   /**
@@ -171,7 +179,7 @@ abstract class ListItemBase extends FieldItemBase implements OptionsProviderInte
         ];
       }
       catch (\Exception $e) {
-        watchdog_exception('options', $e);
+        $this->logger->error($e);
         $this->messenger()->addError($e->getMessage());
       }
     }

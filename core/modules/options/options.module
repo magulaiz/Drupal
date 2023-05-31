@@ -95,13 +95,13 @@ function options_allowed_values(FieldStorageDefinitionInterface $definition, Fie
       }
       catch (\Exception $e) {
         // Fail silently if the plugin does not exists or cannot be instantiated.
-        watchdog_exception('options', $e);
+        \Drupal::logger('options')->error($e);
         return [];
       }
     }
     // @TODO To be removed once the predefined options plugin feature is completed.
     elseif (is_callable($definition->getSetting('allowed_values_function'))) {
-      watchdog_exception('options', new \RuntimeException(t("The use of 'allowed_values_function' is deprecated, use :class plugins instead", [
+      \Drupal::logger('options')->error(new \RuntimeException(t("The use of 'allowed_values_function' is deprecated, use :class plugins instead", [
         ':class' => PredefinedOptions::class,
       ])));
       $function = $definition->getSetting('allowed_values_function');
