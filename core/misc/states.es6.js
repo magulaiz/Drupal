@@ -520,8 +520,16 @@
   states.Trigger.states = {
     // 'empty' describes the state to be monitored.
     empty: {
-      // 'keyup' is the (native DOM) event that we watch for.
+      // 'keyup' is the (native DOM) event that we watch for for most input
+      // fields.
       keyup() {
+        // The function associated with that trigger returns the new value for
+        // the state.
+        return this.val() === '';
+      },
+      // Some input fields like 'number' also have mouse input options so
+      // change must also be watched.
+      change() {
         // The function associated with that trigger returns the new value for
         // the state.
         return this.val() === '';
