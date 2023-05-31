@@ -171,9 +171,11 @@ class BookNavigationBlock extends BlockBase implements ContainerFactoryPluginInt
         $tree = $this->bookManager->bookTreeAllData($node->book['bid'], $node->book);
         // There should only be one element at the top level.
         $data = array_shift($tree);
-        $below = $this->bookManager->bookTreeOutput($data['below']);
-        if (!empty($below)) {
-          return $below;
+        if (!empty($data['below'])) {
+          $below = $this->bookManager->bookTreeOutput($data['below']);
+          if (!empty($below)) {
+            return $below;
+          }
         }
       }
     }
