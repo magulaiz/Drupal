@@ -295,7 +295,7 @@ class OptionsFieldUITest extends FieldTestBase {
     $this->fieldName = 'field_options_predefined_options';
     $this->createOptionsField('list_string');
     $plugin_id = 'timezones';
-    $expected = \Drupal\Core\Datetime\TimeZoneFormHelper::getOptionsListByRegion();
+    $expected = TimeZoneFormHelper::getOptionsListByRegion();
     $this->assertPredefinedOptionsInput($plugin_id, $expected, 'The plugin is loaded and selected.');
   }
 
