@@ -4,6 +4,8 @@ namespace Drupal\form_test\Form;
 
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\form_test\FormTestIntEnum;
+use Drupal\form_test\FormTestStringEnum;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 /**
@@ -37,6 +39,17 @@ class FormTestCheckboxesRadiosForm extends FormBase {
         '>' => "<em>Special Char</em><script>alert('checkboxes');</script>",
       ],
     ];
+    $form['checkboxes_string_enum'] = [
+      '#type' => 'checkboxes',
+      '#title' => 'Checkboxes from string enum',
+      '#options' => FormTestStringEnum::class,
+    ];
+    $form['checkboxes_int_enum'] = [
+      '#type' => 'checkboxes',
+      '#title' => 'Checkboxes from int enum',
+      '#options' => FormTestIntEnum::class,
+    ];
+
     if ($customize) {
       $form['checkboxes'] += [
         'foo' => [

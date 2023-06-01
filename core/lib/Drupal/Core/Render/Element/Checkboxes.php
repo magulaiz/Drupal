@@ -55,12 +55,24 @@ class Checkboxes extends FormElement {
     ];
   }
 
+  static protected function extractOptions(array|\Countable|string $options): array|\Countable {
+    if (is_string($options) && enum_exists($options)) {
+      $cases = $options::cases();
+      return array_combine(
+        array_map(fn (\UnitEnum $enum) => $enum->name, $cases),
+        array_map(fn (\UnitEnum $enum) => $enum->value, $cases),
+      );
+    }
+    return $options;
+  }
+
   /**
    * Processes a checkboxes form element.
    */
   public static function processCheckboxes(&$element, FormStateInterface $form_state, &$complete_form) {
     $value = is_array($element['#value']) ? $element['#value'] : [];
     $element['#tree'] = TRUE;
+    $element['#options'] = static::extractOptions($element['#options']);
     if (count($element['#options']) > 0) {
       if (!isset($element['#default_value']) || $element['#default_value'] == 0) {
         $element['#default_value'] = [];
