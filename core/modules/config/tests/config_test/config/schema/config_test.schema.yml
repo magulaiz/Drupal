@@ -13,12 +13,15 @@ config_test_dynamic:
       type: integer
       label: 'Weight'
     style:
+      nullable: true
       type: string
       label: 'style'
     size:
+      nullable: true
       type: string
       label: 'Size'
     size_value:
+      nullable: true
       type: string
       label: 'Size value'
     protected_property:
