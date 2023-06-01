@@ -139,6 +139,7 @@ class Toolbar extends RenderElement {
           '#type' => 'html_tag',
           '#tag' => 'a',
           '#aria-label' => t('...'),
+          '#value' => '😎',
           '#attributes' => [
             'type' => 'button',
             'data-toolbar-extra-item-toggle-button' => TRUE,
