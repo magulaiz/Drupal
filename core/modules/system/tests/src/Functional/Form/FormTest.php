@@ -9,6 +9,8 @@ use Drupal\Core\Form\FormState;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Url;
 use Drupal\form_test\Form\FormTestDisabledElementsForm;
+use Drupal\form_test\FormTestIntEnum;
+use Drupal\form_test\FormTestStringEnum;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\user\RoleInterface;
 use Drupal\filter\Entity\FilterFormat;
@@ -427,6 +429,8 @@ class FormTest extends BrowserTestBase {
       'no_default_optional',
       'no_default_empty_option_optional',
       'no_default_empty_value_optional',
+      'string_enum',
+      'int_enum',
       'multiple',
       'multiple_no_default',
     ];
@@ -452,6 +456,8 @@ class FormTest extends BrowserTestBase {
       'no_default_empty_value' => 'three',
       'no_default_empty_value_one' => 'three',
       'multiple_no_default_required[]' => 'three',
+      'string_enum' => FormTestStringEnum::Diamonds->name,
+      'int_enum' => FormTestIntEnum::ALMOST_ALL->name,
     ];
     $this->submitForm($edit, 'Submit');
     $values = Json::decode($this->getSession()->getPage()->getContent());
@@ -469,6 +475,8 @@ class FormTest extends BrowserTestBase {
       'no_default_empty_value' => 'three',
       'no_default_empty_value_one' => 'three',
       'no_default_empty_value_optional' => 0,
+      'string_enum' => FormTestStringEnum::Diamonds->name,
+      'int_enum' => FormTestIntEnum::ALMOST_ALL->name,
       'multiple' => ['two' => 'two'],
       'multiple_no_default' => [],
       'multiple_no_default_required' => ['three' => 'three'],
