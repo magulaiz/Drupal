@@ -39,9 +39,13 @@ class OpenOffCanvasDialogCommand extends OpenDialogCommand {
    */
   public function __construct($title, $content, array $dialog_options = [], $settings = NULL, $position = 'side') {
     parent::__construct('#drupal-off-canvas', $title, $content, $dialog_options, $settings);
+
+    // Force default off-canvas dialog options, with a few exceptions.
     $this->dialogOptions['modal'] = FALSE;
     $this->dialogOptions['autoResize'] = FALSE;
-    $this->dialogOptions['resizable'] = 'w';
+    if (empty($this->dialogOptions['resizable'])) {
+      $this->dialogOptions['resizable'] = 'w';
+    }
     $this->dialogOptions['draggable'] = FALSE;
     $this->dialogOptions['drupalAutoButtons'] = FALSE;
     $this->dialogOptions['drupalOffCanvasPosition'] = $position;
