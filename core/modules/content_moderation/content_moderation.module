@@ -5,6 +5,7 @@
  * Contains content_moderation.module.
  */
 
+use Drupal\content_moderation\ContentModerationState;
 use Drupal\content_moderation\EntityOperations;
 use Drupal\content_moderation\EntityTypeInfo;
 use Drupal\content_moderation\ContentPreprocess;
@@ -30,6 +31,7 @@ use Drupal\Core\Action\Plugin\Action\PublishAction;
 use Drupal\Core\Action\Plugin\Action\UnpublishAction;
 use Drupal\workflows\Entity\Workflow;
 use Drupal\views\Entity\View;
+use Drupal\workspaces\WorkspaceInterface;
 
 /**
  * Implements hook_help().

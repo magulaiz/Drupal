@@ -21,16 +21,6 @@ parameters:
 			path: includes/form.inc
 
 		-
-			message: "#^Function install_config_download_translations\\(\\) should return string but return statement is missing\\.$#"
-			count: 1
-			path: includes/install.core.inc
-
-		-
-			message: "#^Function install_download_translation\\(\\) should return string but return statement is missing\\.$#"
-			count: 1
-			path: includes/install.core.inc
-
-		-
 			message: "#^Variable \\$items might not be defined\\.$#"
 			count: 1
 			path: includes/theme.inc
@@ -876,11 +866,6 @@ parameters:
 			path: modules/contact/src/ContactFormEditForm.php
 
 		-
-			message: "#^Method Drupal\\\\contact\\\\Entity\\\\Message\\:\\:getPersonalRecipient\\(\\) should return Drupal\\\\user\\\\UserInterface but return statement is missing\\.$#"
-			count: 1
-			path: modules/contact/src/Entity/Message.php
-
-		-
 			message: "#^Method Drupal\\\\contact\\\\MessageForm\\:\\:save\\(\\) should return int but return statement is missing\\.$#"
 			count: 1
 			path: modules/contact/src/MessageForm.php
@@ -1131,19 +1116,9 @@ parameters:
 			path: modules/filter/src/Plugin/Filter/FilterHtml.php
 
 		-
-			message: "#^Method Drupal\\\\forum\\\\ForumManager\\:\\:getTopicOrder\\(\\) should return array but return statement is missing\\.$#"
-			count: 1
-			path: modules/forum/src/ForumManager.php
-
-		-
 			message: "#^Variable \\$vocabulary in empty\\(\\) always exists and is not falsy\\.$#"
 			count: 1
 			path: modules/forum/src/ForumUninstallValidator.php
-
-		-
-			message: "#^Method Drupal\\\\history\\\\Plugin\\\\views\\\\field\\\\HistoryUserTimestamp\\:\\:render\\(\\) should return Drupal\\\\Component\\\\Render\\\\MarkupInterface\\|string but return statement is missing\\.$#"
-			count: 1
-			path: modules/history/src/Plugin/views/field/HistoryUserTimestamp.php
 
 		-
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
@@ -1269,21 +1244,6 @@ parameters:
 			message: "#^Constructor of class Drupal\\\\link\\\\Plugin\\\\migrate\\\\process\\\\FieldLink has an unused parameter \\$migration\\.$#"
 			count: 1
 			path: modules/link/src/Plugin/migrate/process/FieldLink.php
-
-		-
-			message: "#^Function locale_config_batch_update_components\\(\\) should return array but return statement is missing\\.$#"
-			count: 1
-			path: modules/locale/locale.bulk.inc
-
-		-
-			message: "#^Function locale_translation_check_projects\\(\\) should return array but return statement is missing\\.$#"
-			count: 1
-			path: modules/locale/locale.compare.inc
-
-		-
-			message: "#^Variable \\$item in empty\\(\\) always exists and is not falsy\\.$#"
-			count: 1
-			path: modules/locale/src/Form/ExportForm.php
 
 		-
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
@@ -1691,11 +1651,6 @@ parameters:
 			path: modules/responsive_image/src/ResponsiveImageStyleForm.php
 
 		-
-			message: "#^Method Drupal\\\\rest\\\\Routing\\\\ResourceRoutes\\:\\:onDynamicRouteEvent\\(\\) should return array but return statement is missing\\.$#"
-			count: 1
-			path: modules/rest/src/Routing/ResourceRoutes.php
-
-		-
 			message: "#^Variable \\$created_entity might not be defined\\.$#"
 			count: 4
 			path: modules/rest/tests/src/Functional/EntityResource/EntityResourceTestBase.php
@@ -1946,16 +1901,6 @@ parameters:
 			path: modules/toolbar/src/Controller/ToolbarController.php
 
 		-
-			message: "#^Method Drupal\\\\tour\\\\TipPluginBase\\:\\:get\\(\\) should return string but return statement is missing\\.$#"
-			count: 1
-			path: modules/tour/src/TipPluginBase.php
-
-		-
-			message: "#^Variable \\$location on left side of \\?\\? always exists and is not nullable\\.$#"
-			count: 1
-			path: modules/tour/src/TipPluginBase.php
-
-		-
 			message: "#^Variable \\$violation_messages might not be defined\\.$#"
 			count: 1
 			path: modules/update/src/ProjectRelease.php
@@ -2126,11 +2071,6 @@ parameters:
 			path: modules/views/src/Plugin/views/argument/Date.php
 
 		-
-			message: "#^Method Drupal\\\\views\\\\Plugin\\\\views\\\\cache\\\\CachePluginBase\\:\\:cacheGet\\(\\) should return bool but return statement is missing\\.$#"
-			count: 1
-			path: modules/views/src/Plugin/views/cache/CachePluginBase.php
-
-		-
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 1
 			path: modules/views/src/Plugin/views/cache/Time.php
@@ -2204,16 +2144,6 @@ parameters:
 			message: "#^Variable \\$style in isset\\(\\) always exists and is not nullable\\.$#"
 			count: 1
 			path: modules/views/src/Plugin/views/field/FieldPluginBase.php
-
-		-
-			message: "#^Method Drupal\\\\views\\\\Plugin\\\\views\\\\field\\\\Markup\\:\\:render\\(\\) should return Drupal\\\\Component\\\\Render\\\\MarkupInterface\\|string but return statement is missing\\.$#"
-			count: 1
-			path: modules/views/src/Plugin/views/field/Markup.php
-
-		-
-			message: "#^Method Drupal\\\\views\\\\Plugin\\\\views\\\\field\\\\PrerenderList\\:\\:renderItems\\(\\) should return string but return statement is missing\\.$#"
-			count: 1
-			path: modules/views/src/Plugin/views/field/PrerenderList.php
 
 		-
 			message: "#^Variable \\$items might not be defined\\.$#"

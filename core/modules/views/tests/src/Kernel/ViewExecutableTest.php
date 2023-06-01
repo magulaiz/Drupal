@@ -301,7 +301,7 @@ class ViewExecutableTest extends ViewsKernelTestBase {
 
     $view->setDisplay();
     // There should be no pager set initially.
-    $this->assertNull($view->usePager());
+    $this->assertFalse($view->usePager());
 
     // Add a pager, initialize, and test.
     $view->displayHandlers->get('default')->overrideOption('pager', [
