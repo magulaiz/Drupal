@@ -8,7 +8,6 @@ use Drupal\Core\TypedData\Plugin\DataType\BooleanData;
 use Drupal\Core\TypedData\Plugin\DataType\IntegerData;
 use Drupal\Core\TypedData\Plugin\DataType\StringData;
 use Drupal\KernelTests\KernelTestBase;
-use Symfony\Component\Validator\ConstraintViolation;
 
 /**
  * Tests entity adapter for configuration entities.
