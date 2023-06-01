@@ -77,7 +77,10 @@ class FieldTest extends WebDriverTestBase {
 
     $page = $this->getSession()->getPage();
 
-    $page->clickLink('Body field');
+    $link = $page->findLink('Body field');
+    if ($link === NULL) {
+      $this->fail("Body field link not found.");
+    }
     $web_assert->assertWaitOnAjaxRequest();
 
     $page->fillField('options[type]', 'text_trimmed');

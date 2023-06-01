@@ -56,6 +56,9 @@ services:
   plugin.manager.views.wizard:
     class: Drupal\views\Plugin\ViewsPluginManager
     arguments: [wizard, '@container.namespaces', '@cache.discovery', '@module_handler']
+  plugin.manager.views.field_type_views_data:
+    class: Drupal\views\Plugin\FieldTypeViewsDataPluginManager
+    arguments: ['@container.namespaces', '@cache.discovery', '@module_handler']
   views.views_data:
     class: Drupal\views\ViewsData
     arguments: ['@cache.default', '@config.factory', '@module_handler', '@language_manager']
