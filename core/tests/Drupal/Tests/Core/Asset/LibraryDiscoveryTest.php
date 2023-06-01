@@ -108,9 +108,10 @@ class LibraryDiscoveryTest extends UnitTestCase {
       if ($severity === E_USER_DEPRECATED) {
         throw new \ErrorException($message, 0, $severity, $file, $line);
       }
-      if ($previous_error_handler) {
-        return $previous_error_handler($severity, $message, $file, $line);
-      }
+
+      return $previous_error_handler ?
+        $previous_error_handler($severity, $message, $file, $line)
+        : NULL;
     });
 
     try {

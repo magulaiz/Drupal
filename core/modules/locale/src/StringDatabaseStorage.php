@@ -59,11 +59,14 @@ class StringDatabaseStorage implements StringStorageInterface {
       ->execute()
       ->fetchAssoc();
 
-    if (!empty($values)) {
-      $string = new SourceString($values);
-      $string->setStorage($this);
-      return $string;
+    if (!$values) {
+      return NULL;
     }
+
+    $string = new SourceString($values);
+    $string->setStorage($this);
+
+    return $string;
   }
 
   /**
@@ -74,12 +77,15 @@ class StringDatabaseStorage implements StringStorageInterface {
       ->execute()
       ->fetchAssoc();
 
-    if (!empty($values)) {
-      $string = new TranslationString($values);
-      $this->checkVersion($string, \Drupal::VERSION);
-      $string->setStorage($this);
-      return $string;
+    if (!$values) {
+      return NULL;
     }
+
+    $string = new TranslationString($values);
+    $this->checkVersion($string, \Drupal::VERSION);
+    $string->setStorage($this);
+
+    return $string;
   }
 
   /**
@@ -272,12 +278,9 @@ class StringDatabaseStorage implements StringStorageInterface {
    *   The table name.
    */
   protected function dbStringTable($string) {
-    if ($string->isSource()) {
-      return 'locales_source';
-    }
-    elseif ($string->isTranslation()) {
-      return 'locales_target';
-    }
+    return $string->isSource() ?
+      'locales_source'
+      : 'locales_target';
   }
 
   /**

@@ -39,6 +39,8 @@ class DenyNoCacheRoutes implements ResponsePolicyInterface {
     if (($route = $this->routeMatch->getRouteObject()) && $route->getOption('no_cache')) {
       return static::DENY;
     }
+
+    return NULL;
   }
 
 }

@@ -23,10 +23,12 @@ class PathAliasForm extends ContentEntityForm {
    * {@inheritdoc}
    */
   public function save(array $form, FormStateInterface $form_state) {
-    parent::save($form, $form_state);
+    $status = parent::save($form, $form_state);
 
     $this->messenger()->addStatus($this->t('The alias has been saved.'));
     $form_state->setRedirect('entity.path_alias.collection');
+
+    return $status;
   }
 
 }

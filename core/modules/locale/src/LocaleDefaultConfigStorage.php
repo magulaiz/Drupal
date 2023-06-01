@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace Drupal\locale;
 
 use Drupal\Core\Config\ExtensionInstallStorage;
@@ -73,17 +75,19 @@ class LocaleDefaultConfigStorage {
    * @param string $name
    *   Configuration object name.
    *
-   * @return array
+   * @return null|array
    *   Configuration data from install storage or default language.
    */
   public function read($name) {
     if ($this->requiredInstallStorage->exists($name)) {
       return $this->requiredInstallStorage->read($name);
     }
-    elseif ($this->optionalInstallStorage->exists($name)) {
+
+    if ($this->optionalInstallStorage->exists($name)) {
       return $this->optionalInstallStorage->read($name);
     }
-    elseif (str_starts_with($name, 'language.entity.')) {
+
+    if (str_starts_with($name, 'language.entity.')) {
       // Simulate default languages as if they were shipped as default
       // configuration.
       $langcode = str_replace('language.entity.', '', $name);
@@ -94,6 +98,8 @@ class LocaleDefaultConfigStorage {
         return $data;
       }
     }
+
+    return NULL;
   }
 
   /**

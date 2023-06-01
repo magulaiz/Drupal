@@ -26,6 +26,8 @@ class DenyTestAuthRequests implements RequestPolicyInterface {
     if ($request->headers->has('REST-test-auth') || $request->headers->has('REST-test-auth-global')) {
       return self::DENY;
     }
+
+    return NULL;
   }
 
 }

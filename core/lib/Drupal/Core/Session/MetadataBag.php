@@ -44,9 +44,7 @@ class MetadataBag extends SymfonyMetadataBag {
    *   The per-session CSRF token seed or null when no value is set.
    */
   public function getCsrfTokenSeed() {
-    if (isset($this->meta[static::CSRF_TOKEN_SEED])) {
-      return $this->meta[static::CSRF_TOKEN_SEED];
-    }
+    return $this->meta[static::CSRF_TOKEN_SEED] ?? NULL;
   }
 
   /**

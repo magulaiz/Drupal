@@ -163,7 +163,7 @@ class Feed extends PathPluginBase implements ResponseDisplayPluginInterface {
     $sections = parent::defaultableSections($section);
 
     if (in_array($section, ['style', 'row'])) {
-      return FALSE;
+      return [];
     }
 
     // Tell views our sitename_title option belongs in the title section.

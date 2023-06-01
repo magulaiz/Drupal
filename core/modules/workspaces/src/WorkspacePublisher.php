@@ -179,6 +179,7 @@ class WorkspacePublisher implements WorkspacePublisherInterface {
     // Nothing to do for now, we can not get to a conflicting state because an
     // entity which is being edited in a workspace can not be edited in any
     // other workspace.
+    return [];
   }
 
   /**

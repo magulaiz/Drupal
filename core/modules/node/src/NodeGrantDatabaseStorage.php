@@ -194,6 +194,8 @@ class NodeGrantDatabaseStorage implements NodeGrantDatabaseStorageInterface {
         $query->exists($subquery);
       }
     }
+
+    return 0;
   }
 
   /**

@@ -234,4 +234,6 @@ function batch_test_stack($data = NULL, $reset = FALSE) {
   $stack = $state->get('batch_test.stack');
   $stack[] = $data;
   $state->set('batch_test.stack', $stack);
+
+  return NULL;
 }

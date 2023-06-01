@@ -188,9 +188,7 @@ class EntityAccessControlHandler extends EntityHandlerBase implements EntityAcce
    */
   protected function getCache($cid, $operation, $langcode, AccountInterface $account) {
     // Return from cache if a value has been set for it previously.
-    if (isset($this->accessCache[$account->id()][$cid][$langcode][$operation])) {
-      return $this->accessCache[$account->id()][$cid][$langcode][$operation];
-    }
+    return $this->accessCache[$account->id()][$cid][$langcode][$operation] ?? NULL;
   }
 
   /**

@@ -394,7 +394,7 @@ class ModuleHandler implements ModuleHandlerInterface {
    */
   public function invoke($module, $hook, array $args = []) {
     if (!$this->hasImplementations($hook, $module)) {
-      return;
+      return NULL;
     }
     $hookInvoker = \Closure::fromCallable($module . '_' . $hook);
     return call_user_func_array($hookInvoker, $args);

@@ -87,7 +87,7 @@ class ConfigImportSubscriber extends ConfigImportValidateEventSubscriberBase {
   protected function getWorkflow($config_name) {
     $entity_type_id = $this->configManager->getEntityTypeIdByName($config_name);
     if ($entity_type_id !== 'workflow') {
-      return;
+      return NULL;
     }
 
     /** @var \Drupal\Core\Config\Entity\ConfigEntityTypeInterface $entity_type */

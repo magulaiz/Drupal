@@ -139,6 +139,8 @@ class VocabularyForm extends BundleEntityFormBase {
 
     $form_state->setValue('vid', $vocabulary->id());
     $form_state->set('vid', $vocabulary->id());
+
+    return $status;
   }
 
   /**

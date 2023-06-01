@@ -196,12 +196,7 @@ abstract class StylePluginBase extends PluginBase {
    * Used to ensure we don't fetch tokens when not needed for performance.
    */
   public function usesTokens() {
-    if ($this->usesRowClass()) {
-      $class = $this->options['row_class'];
-      if (str_contains($class, '{{')) {
-        return TRUE;
-      }
-    }
+    return $this->usesRowClass() && str_contains($this->options['row_class'], '{{');
   }
 
   /**
@@ -217,18 +212,21 @@ abstract class StylePluginBase extends PluginBase {
    * Return the token replaced row class for the specified row.
    */
   public function getRowClass($row_index) {
-    if ($this->usesRowClass()) {
-      $class = $this->options['row_class'];
-      if ($this->usesFields() && $this->view->field) {
-        $class = strip_tags($this->tokenizeValue($class, $row_index));
-      }
-
-      $classes = explode(' ', $class);
-      foreach ($classes as &$class) {
-        $class = Html::cleanCssIdentifier($class);
-      }
-      return implode(' ', $classes);
+    if (!$this->usesRowClass()) {
+      return '';
     }
+
+    $class = $this->options['row_class'];
+    if ($this->usesFields() && $this->view->field) {
+      $class = strip_tags($this->tokenizeValue($class, $row_index));
+    }
+
+    $classes = explode(' ', $class);
+    foreach ($classes as &$class) {
+      $class = Html::cleanCssIdentifier($class);
+    }
+
+    return implode(' ', $classes);
   }
 
   /**
@@ -786,6 +784,8 @@ abstract class StylePluginBase extends PluginBase {
     if (isset($this->rendered_fields[$index][$field])) {
       return $this->rendered_fields[$index][$field];
     }
+
+    return NULL;
   }
 
   /**

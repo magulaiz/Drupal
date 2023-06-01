@@ -43,10 +43,12 @@ class ProfileForm extends AccountForm {
    */
   public function save(array $form, FormStateInterface $form_state) {
     $account = $this->entity;
-    $account->save();
+    $status = $account->save();
     $form_state->setValue('uid', $account->id());
 
     $this->messenger()->addStatus($this->t('The changes have been saved.'));
+
+    return $status;
   }
 
 }

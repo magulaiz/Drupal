@@ -98,6 +98,8 @@ class SearchPageRepository implements SearchPageRepositoryInterface {
   public function setDefaultSearchPage(SearchPageInterface $search_page) {
     $this->configFactory->getEditable('search.settings')->set('default_page', $search_page->id())->save();
     $search_page->enable()->save();
+
+    return $this;
   }
 
   /**

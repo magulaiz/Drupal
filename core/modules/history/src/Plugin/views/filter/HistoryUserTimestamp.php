@@ -104,9 +104,9 @@ class HistoryUserTimestamp extends FilterPluginBase {
    * {@inheritdoc}
    */
   public function adminSummary() {
-    if (!empty($this->options['exposed'])) {
-      return $this->t('exposed');
-    }
+    return !empty($this->options['exposed']) ?
+      $this->t('exposed')
+      : NULL;
   }
 
 }

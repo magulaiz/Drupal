@@ -115,6 +115,8 @@ class Table extends FormElement {
         return is_array($input) ? array_combine($input, $input) : [];
       }
     }
+
+    return NULL;
   }
 
   /**

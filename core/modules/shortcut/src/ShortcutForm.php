@@ -59,6 +59,8 @@ class ShortcutForm extends ContentEntityForm {
       'entity.shortcut_set.customize_form',
       ['shortcut_set' => $entity->bundle()]
     );
+
+    return $status;
   }
 
 }

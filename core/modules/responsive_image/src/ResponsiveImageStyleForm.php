@@ -275,7 +275,7 @@ class ResponsiveImageStyleForm extends EntityForm {
         }
       }
     }
-    $responsive_image_style->save();
+    $status = $responsive_image_style->save();
 
     $this->logger('responsive_image')->notice('Responsive image style @label saved.', ['@label' => $responsive_image_style->label()]);
     $this->messenger()->addStatus($this->t('Responsive image style %label saved.', ['%label' => $responsive_image_style->label()]));
@@ -291,6 +291,8 @@ class ResponsiveImageStyleForm extends EntityForm {
     else {
       $form_state->setRedirectUrl($this->entity->toUrl('collection'));
     }
+
+    return $status;
   }
 
 }

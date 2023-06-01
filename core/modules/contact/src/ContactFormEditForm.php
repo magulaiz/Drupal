@@ -188,6 +188,8 @@ class ContactFormEditForm extends EntityForm implements ContainerInjectionInterf
     }
 
     $form_state->setRedirectUrl($contact_form->toUrl('collection'));
+
+    return $status;
   }
 
 }

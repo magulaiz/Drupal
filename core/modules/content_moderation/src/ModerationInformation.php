@@ -100,6 +100,8 @@ class ModerationInformation implements ModerationInformationInterface {
         return key($result);
       }
     }
+
+    return NULL;
   }
 
   /**
@@ -112,6 +114,8 @@ class ModerationInformation implements ModerationInformationInterface {
         return $translation;
       }
     }
+
+    return NULL;
   }
 
   /**

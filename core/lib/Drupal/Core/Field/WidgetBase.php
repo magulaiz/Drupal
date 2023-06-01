@@ -323,7 +323,7 @@ abstract class WidgetBase extends PluginSettingsBase implements WidgetInterface,
 
     // Ensure the widget allows adding additional items.
     if ($element['#cardinality'] != FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED) {
-      return;
+      return NULL;
     }
 
     // Add a DIV around the delta receiving the Ajax effect.

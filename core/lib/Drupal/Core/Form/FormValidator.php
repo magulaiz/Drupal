@@ -126,6 +126,8 @@ class FormValidator implements FormValidatorInterface {
   public function setInvalidTokenError(FormStateInterface $form_state) {
     // Setting this error will cause the form to fail validation.
     $form_state->setErrorByName('form_token', $this->t('The form has become outdated. Press the back button, copy any unsaved work in the form, and then reload the page.'));
+
+    return $this;
   }
 
   /**

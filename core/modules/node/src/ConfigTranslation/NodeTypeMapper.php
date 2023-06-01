@@ -22,6 +22,8 @@ class NodeTypeMapper extends ConfigEntityMapper {
     if (!$config->isNew()) {
       $this->addConfigName($config->getName());
     }
+
+    return TRUE;
   }
 
 }

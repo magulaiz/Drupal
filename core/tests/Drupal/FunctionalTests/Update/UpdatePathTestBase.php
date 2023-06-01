@@ -265,8 +265,8 @@ abstract class UpdatePathTestBase extends BrowserTestBase {
   protected function runUpdates() {
     if (!$this->zlibInstalled) {
       $this->fail('Missing zlib requirement for update tests.');
-      return FALSE;
     }
+
     $this->doRunUpdates($this->updateUrl);
   }
 

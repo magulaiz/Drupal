@@ -101,6 +101,8 @@ class PathItem extends FieldItemBase {
         $path_alias_storage->deleteRevision($path_alias->getRevisionID());
       }
     }
+
+    return FALSE;
   }
 
   /**

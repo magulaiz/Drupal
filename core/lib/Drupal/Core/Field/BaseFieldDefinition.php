@@ -567,6 +567,7 @@ class BaseFieldDefinition extends ListDataDefinition implements FieldDefinitionI
     }
     // @todo: Allow setting custom options provider, see
     // https://www.drupal.org/node/2002138.
+    return NULL;
   }
 
   /**
@@ -579,6 +580,8 @@ class BaseFieldDefinition extends ListDataDefinition implements FieldDefinitionI
     if (isset($this->propertyDefinitions[$name])) {
       return $this->propertyDefinitions[$name];
     }
+
+    return NULL;
   }
 
   /**

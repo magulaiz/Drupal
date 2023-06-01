@@ -68,6 +68,8 @@ class TopLevelBook extends Node {
         return $node->book['bid'];
       }
     }
+
+    return NULL;
   }
 
 }

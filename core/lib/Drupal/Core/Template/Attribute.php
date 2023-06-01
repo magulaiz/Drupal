@@ -92,9 +92,7 @@ class Attribute implements \ArrayAccess, \IteratorAggregate, MarkupInterface {
    */
   #[\ReturnTypeWillChange]
   public function offsetGet($name) {
-    if (isset($this->storage[$name])) {
-      return $this->storage[$name];
-    }
+    return $this->storage[$name] ?? NULL;
   }
 
   /**

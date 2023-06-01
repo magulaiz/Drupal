@@ -152,6 +152,7 @@ class Config extends DestinationBase implements ContainerFactoryPluginInterface,
    */
   public function fields() {
     // @todo Dynamically fetch fields using Config Schema API.
+    return [];
   }
 
   /**

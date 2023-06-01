@@ -72,27 +72,30 @@ abstract class PrerenderList extends FieldPluginBase implements MultiItemsFieldH
    * {@inheritdoc}
    */
   public function renderItems($items) {
-    if (!empty($items)) {
-      if ($this->options['type'] == 'separator') {
-        $render = [
-          '#type' => 'inline_template',
-          '#template' => '{{ items|safe_join(separator) }}',
-          '#context' => [
-            'items' => $items,
-            'separator' => $this->sanitizeValue($this->options['separator'], 'xss_admin'),
-          ],
-        ];
-      }
-      else {
-        $render = [
-          '#theme' => 'item_list',
-          '#items' => $items,
-          '#title' => NULL,
-          '#list_type' => $this->options['type'],
-        ];
-      }
-      return \Drupal::service('renderer')->render($render);
+    if (empty($items)) {
+      return NULL;
     }
+
+    if ($this->options['type'] == 'separator') {
+      $render = [
+        '#type' => 'inline_template',
+        '#template' => '{{ items|safe_join(separator) }}',
+        '#context' => [
+          'items' => $items,
+          'separator' => $this->sanitizeValue($this->options['separator'], 'xss_admin'),
+        ],
+      ];
+    }
+    else {
+      $render = [
+        '#theme' => 'item_list',
+        '#items' => $items,
+        '#title' => NULL,
+        '#list_type' => $this->options['type'],
+      ];
+    }
+
+    return \Drupal::service('renderer')->render($render);
   }
 
   /**

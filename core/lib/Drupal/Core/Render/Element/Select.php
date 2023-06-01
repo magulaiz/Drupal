@@ -162,31 +162,32 @@ class Select extends FormElement {
    * {@inheritdoc}
    */
   public static function valueCallback(&$element, $input, FormStateInterface $form_state) {
-    if ($input !== FALSE) {
-      if (isset($element['#multiple']) && $element['#multiple']) {
-        // If an enabled multi-select submits NULL, it means all items are
-        // unselected. A disabled multi-select always submits NULL, and the
-        // default value should be used.
-        if (empty($element['#disabled'])) {
-          return (is_array($input)) ? array_combine($input, $input) : [];
-        }
-        else {
-          return (isset($element['#default_value']) && is_array($element['#default_value'])) ? $element['#default_value'] : [];
-        }
-      }
-      // Non-multiple select elements may have an empty option prepended to them
-      // (see \Drupal\Core\Render\Element\Select::processSelect()). When this
-      // occurs, usually #empty_value is an empty string, but some forms set
-      // #empty_value to integer 0 or some other non-string constant. PHP
-      // receives all submitted form input as strings, but if the empty option
-      // is selected, set the value to match the empty value exactly.
-      elseif (isset($element['#empty_value']) && $input === (string) $element['#empty_value']) {
-        return $element['#empty_value'];
-      }
-      else {
-        return $input;
-      }
+    if ($input === FALSE) {
+      return NULL;
     }
+
+    if (isset($element['#multiple']) && $element['#multiple']) {
+      // If an enabled multi-select submits NULL, it means all items are
+      // unselected. A disabled multi-select always submits NULL, and the
+      // default value should be used.
+      if (empty($element['#disabled'])) {
+        return (is_array($input)) ? array_combine($input, $input) : [];
+      }
+
+      return (isset($element['#default_value']) && is_array($element['#default_value'])) ? $element['#default_value'] : [];
+    }
+
+    // Non-multiple select elements may have an empty option prepended to them
+    // (see \Drupal\Core\Render\Element\Select::processSelect()). When this
+    // occurs, usually #empty_value is an empty string, but some forms set
+    // #empty_value to integer 0 or some other non-string constant. PHP
+    // receives all submitted form input as strings, but if the empty option
+    // is selected, set the value to match the empty value exactly.
+    if (isset($element['#empty_value']) && $input === (string) $element['#empty_value']) {
+      return $element['#empty_value'];
+    }
+
+    return $input;
   }
 
   /**

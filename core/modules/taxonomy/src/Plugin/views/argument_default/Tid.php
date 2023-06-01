@@ -194,6 +194,8 @@ class Tid extends ArgumentDefaultPluginBase implements CacheableDependencyInterf
         }
       }
     }
+
+    return NULL;
   }
 
   /**

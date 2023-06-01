@@ -478,7 +478,7 @@ class Connection extends DatabaseConnection implements SupportsTemporaryTablesIn
       }
 
       trigger_error('Rollback attempted when there is no active transaction. This can cause data integrity issues.', E_USER_WARNING);
-      return;
+      return NULL;
     }
     return parent::rollBack($savepoint_name);
   }

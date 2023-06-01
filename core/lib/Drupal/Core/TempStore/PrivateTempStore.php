@@ -98,7 +98,7 @@ class PrivateTempStore {
    * @param string $key
    *   The key of the data to retrieve.
    *
-   * @return mixed
+   * @return null|mixed
    *   The data associated with the key, or NULL if the key does not exist.
    */
   public function get($key) {
@@ -106,6 +106,8 @@ class PrivateTempStore {
     if (($object = $this->storage->get($key)) && ($object->owner == $this->getOwner())) {
       return $object->data;
     }
+
+    return NULL;
   }
 
   /**
@@ -168,6 +170,8 @@ class PrivateTempStore {
       unset($object->data);
       return new Lock($object->owner, $object->updated);
     }
+
+    return NULL;
   }
 
   /**

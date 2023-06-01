@@ -128,9 +128,9 @@ class Extension {
    * @return string|null
    */
   public function getExtensionPathname() {
-    if ($this->filename) {
-      return $this->getPath() . '/' . $this->filename;
-    }
+    return $this->filename ?
+      $this->getPath() . '/' . $this->filename
+      : NULL;
   }
 
   /**

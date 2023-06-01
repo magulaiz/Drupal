@@ -258,8 +258,10 @@ class WorkflowEditForm extends EntityForm {
         ->submitConfigurationForm($form['type_settings'], $subform_state);
     }
 
-    $workflow->save();
+    $status = $workflow->save();
     $this->messenger()->addStatus($this->t('Saved the %label Workflow.', ['%label' => $workflow->label()]));
+
+    return $status;
   }
 
   /**

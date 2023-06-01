@@ -129,9 +129,9 @@ class Message extends ContentEntityBase implements MessageInterface {
    * {@inheritdoc}
    */
   public function getPersonalRecipient() {
-    if ($this->isPersonal()) {
-      return $this->get('recipient')->entity;
-    }
+    return $this->isPersonal() ?
+      $this->get('recipient')->entity
+      : NULL;
   }
 
   /**

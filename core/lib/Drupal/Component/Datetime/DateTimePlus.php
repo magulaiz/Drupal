@@ -682,7 +682,7 @@ class DateTimePlus {
 
     // If there were construction errors, we can't format the date.
     if ($this->hasErrors()) {
-      return;
+      return NULL;
     }
 
     // Format the date and catch errors.

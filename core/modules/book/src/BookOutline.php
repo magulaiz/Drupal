@@ -30,7 +30,7 @@ class BookOutline {
    * @param array $book_link
    *   A fully loaded book link that is part of the book hierarchy.
    *
-   * @return array
+   * @return null|array
    *   A fully loaded book link for the page before the one represented in
    *   $book_link.
    */
@@ -49,7 +49,7 @@ class BookOutline {
       next($flat);
     } while ($key && $key != $book_link['nid']);
 
-    if ($key == $book_link['nid']) {
+    if ($key == $book_link['nid'] && is_array($prev)) {
       // The previous page in the book may be a child of the previous visible link.
       if ($prev['depth'] == $book_link['depth']) {
         // The subtree will have only one link at the top level - get its data.
@@ -67,6 +67,8 @@ class BookOutline {
         return $prev;
       }
     }
+
+    return NULL;
   }
 
   /**
@@ -75,7 +77,7 @@ class BookOutline {
    * @param array $book_link
    *   A fully loaded book link that is part of the book hierarchy.
    *
-   * @return array
+   * @return null|array
    *   A fully loaded book link for the page after the one represented in
    *   $book_link.
    */
@@ -91,9 +93,12 @@ class BookOutline {
       $next = current($flat);
       if ($next) {
         $this->bookManager->bookLinkTranslate($next);
+
+        return $next;
       }
-      return $next;
     }
+
+    return NULL;
   }
 
   /**
@@ -102,8 +107,9 @@ class BookOutline {
    * @param array $book_link
    *   A fully loaded book link that is part of the book hierarchy.
    *
-   * @return array
-   *   HTML for the links to the child pages of the current page.
+   * @return array|string
+   *   HTML for the links to the child pages of the current page or an empty
+   *   string.
    */
   public function childrenLinks(array $book_link) {
     $flat = $this->bookManager->bookTreeGetFlat($book_link);

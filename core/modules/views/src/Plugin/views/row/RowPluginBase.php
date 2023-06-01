@@ -173,7 +173,7 @@ abstract class RowPluginBase extends PluginBase {
    * @param object $row
    *   A single row of the query result, so an element of $view->result.
    *
-   * @return string
+   * @return mixed
    *   The rendered output of a single row, used by the style plugin.
    */
   public function render($row) {

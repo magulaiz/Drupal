@@ -247,6 +247,8 @@ abstract class ConfigTranslationFormBase extends FormBase implements BaseFormIdI
       $class = $definition['form_element_class'];
       return $class::create($schema);
     }
+
+    return NULL;
   }
 
 }

@@ -432,6 +432,8 @@ function _batch_next_set() {
     }
     return TRUE;
   }
+
+  return NULL;
 }
 
 /**
@@ -543,6 +545,8 @@ function _batch_finished() {
       return new RedirectResponse($_batch['source_url']->setAbsolute()->toString());
     }
   }
+
+  return NULL;
 }
 
 /**

@@ -271,13 +271,14 @@ use Drupal\Core\Access\AccessResult;
  * @see hook_jsonapi_ENTITY_TYPE_filter_access()
  */
 function hook_jsonapi_entity_filter_access(\Drupal\Core\Entity\EntityTypeInterface $entity_type, \Drupal\Core\Session\AccountInterface $account) {
+  $results = [];
   // For every entity type that has an admin permission, allow access to filter
   // by all entities of that type to users with that permission.
   if ($admin_permission = $entity_type->getAdminPermission()) {
-    return ([
-      JSONAPI_FILTER_AMONG_ALL => AccessResult::allowedIfHasPermission($account, $admin_permission),
-    ]);
+    $results[JSONAPI_FILTER_AMONG_ALL] = AccessResult::allowedIfHasPermission($account, $admin_permission);
   }
+
+  return $results;
 }
 
 /**

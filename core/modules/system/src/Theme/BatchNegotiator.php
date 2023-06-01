@@ -60,6 +60,8 @@ class BatchNegotiator implements ThemeNegotiatorInterface {
     if (!empty($batch['theme'])) {
       return $batch['theme'];
     }
+
+    return NULL;
   }
 
 }

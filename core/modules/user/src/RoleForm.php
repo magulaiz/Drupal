@@ -65,6 +65,8 @@ class RoleForm extends EntityForm {
       $this->logger('user')->info('Role %label has been added.', ['%label' => $entity->label(), 'link' => $edit_link]);
     }
     $form_state->setRedirect('entity.user_role.collection');
+
+    return $status;
   }
 
 }

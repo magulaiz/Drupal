@@ -275,9 +275,10 @@ class ItemList extends TypedData implements \IteratorAggregate, ListInterface {
         if (call_user_func($callback, $item)) {
           return TRUE;
         }
-        else {
-          $removed = TRUE;
-        }
+
+        $removed = TRUE;
+
+        return FALSE;
       });
       if ($removed) {
         $this->rekey();

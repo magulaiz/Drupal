@@ -115,9 +115,8 @@ class Raw extends ArgumentDefaultPluginBase implements CacheableDependencyInterf
     // Drop the empty first element created by the leading slash since the path
     // component index doesn't take it into account.
     array_shift($args);
-    if (isset($args[$this->options['index']])) {
-      return $args[$this->options['index']];
-    }
+
+    return $args[$this->options['index']] ?? NULL;
   }
 
   /**

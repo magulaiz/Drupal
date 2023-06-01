@@ -9,6 +9,10 @@ use Drupal\Core\Entity\TranslatableInterface;
 
 /**
  * Provides a key value backend for content entities.
+ *
+ * @todo Complete the content entity storage implementation.
+ *
+ * @see https://www.drupal.org/node/2618436.
  */
 class KeyValueContentEntityStorage extends KeyValueEntityStorage implements ContentEntityStorageInterface {
 
@@ -16,8 +20,7 @@ class KeyValueContentEntityStorage extends KeyValueEntityStorage implements Cont
    * {@inheritdoc}
    */
   public function createTranslation(ContentEntityInterface $entity, $langcode, array $values = []) {
-    // @todo Complete the content entity storage implementation in
-    //   https://www.drupal.org/node/2618436.
+    throw new \LogicException('Not implemented yet.');
   }
 
   /**
@@ -31,13 +34,15 @@ class KeyValueContentEntityStorage extends KeyValueEntityStorage implements Cont
    * {@inheritdoc}
    */
   public function createRevision(RevisionableInterface $entity, $default = TRUE, $keep_untranslatable_fields = NULL) {
-    return NULL;
+    throw new \LogicException('Not implemented yet.');
   }
 
   /**
    * {@inheritdoc}
    */
-  public function createWithSampleValues($bundle = FALSE, array $values = []) {}
+  public function createWithSampleValues($bundle = FALSE, array $values = []) {
+    throw new \LogicException('Not implemented yet.');
+  }
 
   /**
    * {@inheritdoc}

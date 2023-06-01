@@ -306,6 +306,8 @@ class LocaleLookupTest extends UnitTestCase {
           case 'by':
             return ['ru'];
         }
+
+        return NULL;
       });
     $this->cache->expects($this->once())
       ->method('get')
