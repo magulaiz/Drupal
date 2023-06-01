@@ -53,7 +53,7 @@ abstract class TipPluginBase extends PluginBase implements TipPluginInterface {
    * {@inheritdoc}
    */
   public function get($key) {
-    return $this->configuration[$key] ?? NULL;
+    return $this->configuration[$key] ?? '';
   }
 
   /**
@@ -71,7 +71,7 @@ abstract class TipPluginBase extends PluginBase implements TipPluginInterface {
 
     // The location values accepted by PopperJS, the library used for
     // positioning the tip.
-    assert(in_array(trim($location ?? ''), [
+    assert(in_array(trim($location), [
       'auto',
       'auto-start',
       'auto-end',
