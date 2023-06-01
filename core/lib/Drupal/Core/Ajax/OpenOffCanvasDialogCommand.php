@@ -41,6 +41,7 @@ class OpenOffCanvasDialogCommand extends OpenDialogCommand {
     parent::__construct('#drupal-off-canvas', $title, $content, $dialog_options, $settings);
 
     // Force default off-canvas dialog options, with a few exceptions.
+    // For a full list of options see https://api.jqueryui.com/dialog/.
     $this->dialogOptions['modal'] = FALSE;
     $this->dialogOptions['autoResize'] = FALSE;
     if (empty($this->dialogOptions['resizable'])) {
