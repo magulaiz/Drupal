@@ -5,6 +5,8 @@ namespace Drupal\form_test\Form;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\form_test\FormTestIntEnum;
+use Drupal\form_test\FormTestStringEnum;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 /**
@@ -103,6 +105,15 @@ class FormTestSelectForm extends FormBase {
       '#description' => 'Should result in 0 because it is optional.',
     ];
 
+    $form['string_enum'] = array_merge($base, [
+        '#title' => 'String enum',
+        '#options' => FormTestStringEnum::class,
+      ]);
+    $form['int_enum'] = array_merge($base, [
+      '#title' => 'Int enum',
+      '#options' => FormTestIntEnum::class,
+    ]);
+
     $form['multiple'] = $base + [
       '#title' => '#multiple, #default_value two',
       '#default_value' => ['two'],
@@ -117,6 +128,17 @@ class FormTestSelectForm extends FormBase {
       '#required' => TRUE,
       '#multiple' => TRUE,
     ];
+
+    $form['multiple_string_enum'] = array_merge($base, [
+      '#title' => 'String enum multiple',
+      '#options' => FormTestStringEnum::class,
+      '#multiple' => TRUE,
+    ]);
+    $form['multiple_int_enum'] = array_merge($base, [
+      '#title' => 'Int enum multiple',
+      '#options' => FormTestIntEnum::class,
+      '#multiple' => TRUE,
+    ]);
 
     $form['opt_groups'] = [
       '#type' => 'select',
