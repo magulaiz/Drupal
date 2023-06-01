@@ -8,6 +8,7 @@ use Drupal\Core\TypedData\Plugin\DataType\BooleanData;
 use Drupal\Core\TypedData\Plugin\DataType\IntegerData;
 use Drupal\Core\TypedData\Plugin\DataType\StringData;
 use Drupal\KernelTests\KernelTestBase;
+use Symfony\Component\Validator\ConstraintViolation;
 
 /**
  * Tests entity adapter for configuration entities.
@@ -45,6 +46,7 @@ class ConfigEntityAdapterTest extends KernelTestBase {
       'id' => 'system',
       'label' => 'foobar',
       'weight' => 1,
+      'protected_property' => '',
     ]);
   }
 
@@ -71,10 +73,14 @@ class ConfigEntityAdapterTest extends KernelTestBase {
     ]);
     $adapter = ConfigEntityAdapter::createFromEntity($this->entity);
     $violations = $adapter->validate();
-    $this->assertCount(1, $violations);
+    $this->assertCount(2, $violations);
     $violation = $violations->get(0);
     $this->assertEquals('This value should be of the correct primitive type.', $violation->getMessage());
     $this->assertEquals('weight', $violation->getPropertyPath());
+    $violation = $violations->get(1);
+    $this->assertEquals('This value should not be null.', $violation->getMessage());
+    $this->assertEquals('protected_property', $violation->getPropertyPath());
+
   }
 
   /**

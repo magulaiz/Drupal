@@ -28,6 +28,10 @@ class BaseFieldOverrideValidationTest extends ConfigEntityValidationTestBase {
       ->getBaseFieldDefinitions('user');
 
     $this->entity = BaseFieldOverride::createFromBaseFieldDefinition(reset($fields), 'user');
+    $this->entity->set('settings', [
+      'min' => 0,
+      'max' => 0,
+    ]);
     $this->entity->save();
   }
 
