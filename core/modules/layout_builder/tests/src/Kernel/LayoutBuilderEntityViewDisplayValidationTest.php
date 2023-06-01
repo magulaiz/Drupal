@@ -35,6 +35,7 @@ class LayoutBuilderEntityViewDisplayValidationTest extends ConfigEntityValidatio
       'label' => 'Layout',
       'targetEntityType' => 'user',
       'bundle' => 'user',
+      'status' => FALSE,
     ]);
     $this->entity->save();
   }

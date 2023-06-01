@@ -27,6 +27,8 @@ class BlockValidationTest extends ConfigEntityValidationTestBase {
       'id' => 'test_block',
       'theme' => 'stark',
       'plugin' => 'system_powered_by_block',
+      'weight' => 0,
+      'provider' => '',
     ]);
     $this->entity->save();
   }

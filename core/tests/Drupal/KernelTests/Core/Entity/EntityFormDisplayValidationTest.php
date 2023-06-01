@@ -24,6 +24,7 @@ class EntityFormDisplayValidationTest extends EntityFormModeValidationTest {
       'bundle' => 'user',
       // The mode was created by the parent class.
       'mode' => 'test',
+      'status' => FALSE,
     ]);
     $this->entity->save();
   }

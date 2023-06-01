@@ -26,6 +26,8 @@ class BlockContentTypeValidationTest extends ConfigEntityValidationTestBase {
     $this->entity = BlockContentType::create([
       'id' => 'test',
       'label' => 'Test',
+      'revision' => FALSE,
+      'description' => '',
     ]);
     $this->entity->save();
   }

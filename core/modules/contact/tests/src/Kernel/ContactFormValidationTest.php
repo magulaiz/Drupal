@@ -26,6 +26,8 @@ class ContactFormValidationTest extends ConfigEntityValidationTestBase {
     $this->entity = ContactForm::create([
       'id' => 'test',
       'label' => 'Test',
+      'message' => '',
+      'redirect' => '',
     ]);
     $this->entity->save();
   }
