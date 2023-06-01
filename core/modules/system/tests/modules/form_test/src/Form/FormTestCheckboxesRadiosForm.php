@@ -39,16 +39,6 @@ class FormTestCheckboxesRadiosForm extends FormBase {
         '>' => "<em>Special Char</em><script>alert('checkboxes');</script>",
       ],
     ];
-    $form['checkboxes_string_enum'] = [
-      '#type' => 'checkboxes',
-      '#title' => 'Checkboxes from string enum',
-      '#options' => FormTestStringEnum::class,
-    ];
-    $form['checkboxes_int_enum'] = [
-      '#type' => 'checkboxes',
-      '#title' => 'Checkboxes from int enum',
-      '#options' => FormTestIntEnum::class,
-    ];
 
     if ($customize) {
       $form['checkboxes'] += [
@@ -60,6 +50,17 @@ class FormTestCheckboxesRadiosForm extends FormBase {
         ],
       ];
     }
+
+    $form['checkboxes_string_enum'] = [
+      '#type' => 'checkboxes',
+      '#title' => 'Checkboxes from string enum',
+      '#options' => FormTestStringEnum::class,
+    ];
+    $form['checkboxes_int_enum'] = [
+      '#type' => 'checkboxes',
+      '#title' => 'Checkboxes from int enum',
+      '#options' => FormTestIntEnum::class,
+    ];
 
     // Expand #type radios, setting custom element properties for some but not
     // all options.
@@ -84,6 +85,16 @@ class FormTestCheckboxesRadiosForm extends FormBase {
         ],
       ];
     }
+    $form['radios_string_enum'] = [
+      '#type' => 'radios',
+      '#title' => 'Radios from string enum',
+      '#options' => FormTestStringEnum::class,
+    ];
+    $form['radios_int_enum'] = [
+      '#type' => 'radios',
+      '#title' => 'Radios from int enum',
+      '#options' => FormTestIntEnum::class,
+    ];
 
     $form['submit'] = ['#type' => 'submit', '#value' => 'Submit'];
 

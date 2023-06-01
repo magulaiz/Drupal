@@ -55,10 +55,22 @@ class Radios extends FormElement {
     ];
   }
 
+  static protected function extractOptions(array|\Countable|string $options): array|\Countable {
+    if (is_string($options) && enum_exists($options)) {
+      $cases = $options::cases();
+      return array_combine(
+        array_map(fn (\UnitEnum $enum) => $enum->name, $cases),
+        array_map(fn (\UnitEnum $enum) => $enum->value, $cases),
+      );
+    }
+    return $options;
+  }
+
   /**
    * Expands a radios element into individual radio elements.
    */
   public static function processRadios(&$element, FormStateInterface $form_state, &$complete_form) {
+    $element['#options'] = static::extractOptions($element['#options']);
     if (count($element['#options']) > 0) {
       $weight = 0;
       foreach ($element['#options'] as $key => $choice) {
