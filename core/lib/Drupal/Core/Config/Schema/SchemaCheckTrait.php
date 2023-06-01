@@ -66,7 +66,8 @@ trait SchemaCheckTrait {
       iterator_to_array($violations)
     );
     // @todo Remove this condition in https://www.drupal.org/project/drupal/issues/3361534
-    if (str_starts_with($config_name, 'config_test.')) {
+    // @todo Consider testing for all `config_test` config.
+    if (str_starts_with($config_name, 'config_test.types')) {
       $errors = array_merge($errors, $validation_errors);
     }
     if (empty($errors)) {
