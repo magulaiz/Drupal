@@ -294,6 +294,8 @@ class ThemeInitialization implements ThemeInitializationInterface {
     if (isset($extensions[$token])) {
       return str_replace($token_candidate, $extensions[$token]->getPath(), $css_file);
     }
+
+    return NULL;
   }
 
 }

@@ -315,9 +315,7 @@ class Tables implements TablesInterface {
    * {@inheritdoc}
    */
   public function isFieldCaseSensitive($field_name) {
-    if (isset($this->caseSensitiveFields[$field_name])) {
-      return $this->caseSensitiveFields[$field_name];
-    }
+    return $this->caseSensitiveFields[$field_name] ?? NULL;
   }
 
   /**

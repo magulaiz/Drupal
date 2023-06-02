@@ -160,7 +160,7 @@ interface FieldHandlerInterface extends ViewsHandlerInterface {
    * @param \Drupal\views\ResultRow $values
    *   The values retrieved from a single row of a view's query result.
    *
-   * @return string|\Drupal\Component\Render\MarkupInterface
+   * @return null|string|\Drupal\Component\Render\MarkupInterface
    *   The rendered output. If the output is safe it will be wrapped in an
    *   object that implements MarkupInterface. If it is empty or unsafe it
    *   will be a string.

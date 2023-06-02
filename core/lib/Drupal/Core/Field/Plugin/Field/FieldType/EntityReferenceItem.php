@@ -385,6 +385,8 @@ class EntityReferenceItem extends FieldItemBase implements OptionsProviderInterf
       unset($recursion_tracker[$key]);
       return $values;
     }
+
+    return [];
   }
 
   /**
@@ -408,6 +410,8 @@ class EntityReferenceItem extends FieldItemBase implements OptionsProviderInterf
       }
       return array_rand($bundle_ids);
     }
+
+    return NULL;
   }
 
   /**

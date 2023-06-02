@@ -583,7 +583,7 @@ class ForumTest extends BrowserTestBase {
     if ($container) {
       $this->assertSession()->pageTextNotContains("Forum topic $title has been created.");
       $this->assertSession()->pageTextContains("The item {$forum['name']} is a forum container, not a forum.");
-      return;
+      return NULL;
     }
     else {
       $this->assertSession()->pageTextContains("Forum topic $title has been created.");

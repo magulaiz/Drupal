@@ -1363,7 +1363,7 @@ abstract class FilterPluginBase extends HandlerBase implements CacheableDependen
    */
   public function exposedInfo() {
     if (empty($this->options['exposed'])) {
-      return;
+      return NULL;
     }
 
     if ($this->isAGroup()) {
@@ -1429,6 +1429,8 @@ abstract class FilterPluginBase extends HandlerBase implements CacheableDependen
         return FALSE;
       }
     }
+
+    return NULL;
   }
 
   /**
@@ -1467,7 +1469,7 @@ abstract class FilterPluginBase extends HandlerBase implements CacheableDependen
     }
 
     if (empty($this->options['group_info']['remember'])) {
-      return;
+      return NULL;
     }
 
     // Figure out which display id is responsible for the filters, so we
@@ -1491,6 +1493,8 @@ abstract class FilterPluginBase extends HandlerBase implements CacheableDependen
     if (!empty($views_session)) {
       $session->set('views', $views_session);
     }
+
+    return NULL;
   }
 
   /**
@@ -1562,7 +1566,7 @@ abstract class FilterPluginBase extends HandlerBase implements CacheableDependen
     }
 
     if (empty($this->options['expose']['remember'])) {
-      return;
+      return NULL;
     }
 
     // Check if we store exposed value for current user.
@@ -1570,7 +1574,7 @@ abstract class FilterPluginBase extends HandlerBase implements CacheableDependen
     $allowed_rids = empty($this->options['expose']['remember_roles']) ? [] : array_filter($this->options['expose']['remember_roles']);
     $intersect_rids = array_intersect(array_keys($allowed_rids), $user->getRoles());
     if (empty($intersect_rids)) {
-      return;
+      return NULL;
     }
 
     // Figure out which display id is responsible for the filters, so we
@@ -1611,6 +1615,8 @@ abstract class FilterPluginBase extends HandlerBase implements CacheableDependen
     if (!empty($views_session)) {
       $session->set('views', $views_session);
     }
+
+    return NULL;
   }
 
   /**
@@ -1674,6 +1680,8 @@ abstract class FilterPluginBase extends HandlerBase implements CacheableDependen
     if (!empty($this->options['exposed']) && $error = $this->validateIdentifier($this->options['expose']['identifier'])) {
       return [$error];
     }
+
+    return NULL;
   }
 
   /**

@@ -68,6 +68,8 @@ function update_manager_download_batch_finished($success, $results) {
     // but just in case, we have to tell them something.
     \Drupal::messenger()->addError(t('Fatal error trying to download.'));
   }
+
+  return NULL;
 }
 
 /**

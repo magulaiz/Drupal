@@ -82,9 +82,10 @@ class Language extends TypedData {
     if (isset($this->id)) {
       return $this->id;
     }
-    elseif (isset($this->language)) {
-      return $this->language->getId();
-    }
+
+    return isset($this->language) ?
+      $this->language->getId()
+      : NULL;
   }
 
 }

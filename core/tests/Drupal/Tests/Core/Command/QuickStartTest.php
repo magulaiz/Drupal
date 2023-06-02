@@ -110,6 +110,8 @@ class QuickStartTest extends TestCase {
         $port = $match[1];
         return TRUE;
       }
+
+      return FALSE;
     });
     // The progress bar uses STDERR to write messages.
     $this->assertStringContainsString('Congratulations, you installed Drupal!', $process->getErrorOutput());
@@ -175,6 +177,8 @@ class QuickStartTest extends TestCase {
         $port = $match[1];
         return TRUE;
       }
+
+      return FALSE;
     });
     $this->assertEquals('', $server_process->getErrorOutput());
     $this->assertStringContainsString("127.0.0.1:$port/user/reset/1/", $server_process->getOutput());

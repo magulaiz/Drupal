@@ -222,6 +222,8 @@ abstract class Database {
       self::$activeKey = $key;
       return $old_key;
     }
+
+    return NULL;
   }
 
   /**
@@ -339,9 +341,9 @@ abstract class Database {
    * @return array|null
    */
   final public static function getConnectionInfo($key = 'default') {
-    if (!empty(self::$databaseInfo[$key])) {
-      return self::$databaseInfo[$key];
-    }
+    return !empty(self::$databaseInfo[$key]) ?
+      self::$databaseInfo[$key]
+      : NULL;
   }
 
   /**

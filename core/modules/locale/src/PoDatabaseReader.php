@@ -166,6 +166,8 @@ class PoDatabaseReader implements PoReaderInterface {
       $po_item->setFromArray($values);
       return $po_item;
     }
+
+    return NULL;
   }
 
 }

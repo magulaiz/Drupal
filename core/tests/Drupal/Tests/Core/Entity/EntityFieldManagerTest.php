@@ -212,9 +212,7 @@ class EntityFieldManagerTest extends UnitTestCase {
       });
     $this->entityTypeManager->getDefinition(Argument::type('string'), FALSE)
       ->will(function ($args) use ($definitions) {
-        if (isset($definitions[$args[0]])) {
-          return $definitions[$args[0]];
-        }
+        return $definitions[$args[0]] ?? NULL;
       });
     $this->entityTypeManager->getDefinitions()->willReturn($definitions);
 

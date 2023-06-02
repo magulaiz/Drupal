@@ -131,6 +131,8 @@ class EntityAutocomplete extends Textfield {
 
       return static::getEntityLabels($entities);
     }
+
+    return NULL;
   }
 
   /**
@@ -349,6 +351,8 @@ class EntityAutocomplete extends Textfield {
       // Take the one and only matching entity.
       return key($entities);
     }
+
+    return NULL;
   }
 
   /**

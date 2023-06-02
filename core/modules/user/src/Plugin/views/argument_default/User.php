@@ -97,6 +97,8 @@ class User extends ArgumentDefaultPluginBase implements CacheableDependencyInter
         return $node->getOwnerId();
       }
     }
+
+    return NULL;
   }
 
   /**

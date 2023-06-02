@@ -100,7 +100,7 @@ class EntityLabel extends FieldPluginBase {
     $value = $this->getValue($values);
 
     if (empty($this->loadedReferencers[$type][$value])) {
-      return;
+      return '';
     }
 
     /** @var \Drupal\Core\Entity\EntityInterface $entity */

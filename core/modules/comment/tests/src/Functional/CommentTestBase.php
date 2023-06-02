@@ -186,6 +186,8 @@ abstract class CommentTestBase extends BrowserTestBase {
       \Drupal::entityTypeManager()->getStorage('comment')->resetCache([$match[1]]);
       return Comment::load($match[1]);
     }
+
+    return NULL;
   }
 
   /**

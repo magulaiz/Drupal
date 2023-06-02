@@ -40,6 +40,8 @@ function help_topics_help($route_name, RouteMatchInterface $route_match) {
         ':help_page' => $help_home,
       ]) . '</p>';
   }
+
+  return NULL;
 }
 
 /**

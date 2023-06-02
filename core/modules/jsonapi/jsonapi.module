@@ -163,16 +163,17 @@ function jsonapi_entity_delete(EntityInterface $entity) {
  * Implements hook_jsonapi_entity_filter_access().
  */
 function jsonapi_jsonapi_entity_filter_access(EntityTypeInterface $entity_type, AccountInterface $account) {
+  $results = [];
   // All core entity types and most or all contrib entity types allow users
   // with the entity type's administrative permission to view all of the
   // entities, so enable similarly permissive filtering to those users as well.
   // A contrib module may override this decision by returning
   // AccessResult::forbidden() from its implementation of this hook.
   if ($admin_permission = $entity_type->getAdminPermission()) {
-    return ([
-      JSONAPI_FILTER_AMONG_ALL => AccessResult::allowedIfHasPermission($account, $admin_permission),
-    ]);
+    $results[JSONAPI_FILTER_AMONG_ALL] = AccessResult::allowedIfHasPermission($account, $admin_permission);
   }
+
+  return $results;
 }
 
 /**

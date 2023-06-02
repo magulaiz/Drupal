@@ -70,6 +70,8 @@ class ArchiverManager extends DefaultPluginManager {
         }
       }
     }
+
+    return NULL;
   }
 
   /**

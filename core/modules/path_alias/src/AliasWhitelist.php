@@ -95,6 +95,8 @@ class AliasWhitelist extends CacheCollector implements AliasWhitelistInterface {
     elseif (array_key_exists($offset, $this->storage)) {
       return $this->resolveCacheMiss($offset);
     }
+
+    return NULL;
   }
 
   /**
@@ -104,9 +106,8 @@ class AliasWhitelist extends CacheCollector implements AliasWhitelistInterface {
     $exists = $this->pathAliasRepository->pathHasMatchingAlias('/' . $root);
     $this->storage[$root] = $exists;
     $this->persist($root);
-    if ($exists) {
-      return TRUE;
-    }
+
+    return $exists ? TRUE : NULL;
   }
 
   /**

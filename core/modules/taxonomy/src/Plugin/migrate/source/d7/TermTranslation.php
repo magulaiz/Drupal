@@ -50,6 +50,8 @@ class TermTranslation extends Term {
       return FALSE;
     }
     $row->setSourceProperty('language', $row->getSourceProperty('td_language'));
+
+    return TRUE;
   }
 
   /**

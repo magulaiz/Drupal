@@ -32,6 +32,8 @@ class DateTimeIso8601 extends StringData implements DateTimeInterface {
       }
       return $datetime;
     }
+
+    return NULL;
   }
 
   /**

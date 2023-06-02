@@ -62,7 +62,7 @@ class ViewUIConverter extends AdminPathConfigEntityConverter implements ParamCon
    */
   public function convert($value, $definition, $name, array $defaults) {
     if (!$entity = parent::convert($value, $definition, $name, $defaults)) {
-      return;
+      return NULL;
     }
 
     // Get the temp store for this variable if it needs one. Attempt to load the

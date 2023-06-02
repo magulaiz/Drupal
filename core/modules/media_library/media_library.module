@@ -74,6 +74,8 @@ function media_library_help($route_name, RouteMatchInterface $route_match) {
       $output .= '</ul>';
       return $output;
   }
+
+  return NULL;
 }
 
 /**
@@ -374,6 +376,8 @@ function media_library_image_style_access(EntityInterface $entity, $operation, A
   if ($operation === 'delete' && $entity->id() === 'media_library') {
     return AccessResult::forbidden();
   }
+
+  return NULL;
 }
 
 /**

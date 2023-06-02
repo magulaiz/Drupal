@@ -316,7 +316,7 @@ class DbLogController extends ControllerBase {
   protected function buildFilterQuery(Request $request) {
     $session_filters = $request->getSession()->get('dblog_overview_filter', []);
     if (empty($session_filters)) {
-      return;
+      return NULL;
     }
 
     $this->moduleHandler()->loadInclude('dblog', 'admin.inc');

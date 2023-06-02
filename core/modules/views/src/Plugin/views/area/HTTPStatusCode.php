@@ -62,6 +62,8 @@ class HTTPStatusCode extends AreaPluginBase {
       $build['#attached']['http_header'][] = ['Status', $this->options['status_code']];
       return $build;
     }
+
+    return NULL;
   }
 
 }

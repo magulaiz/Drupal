@@ -23,6 +23,8 @@ trait DeprecatedServicePropertyTrait {
       @trigger_error("The property $name ($service_name service) is deprecated in $class_name and will be removed before Drupal 11.0.0.", E_USER_DEPRECATED);
       return \Drupal::service($service_name);
     }
+
+    return NULL;
   }
 
 }

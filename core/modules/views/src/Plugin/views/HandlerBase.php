@@ -614,9 +614,8 @@ abstract class HandlerBase extends PluginBase implements ViewsHandlerInterface {
     }
 
     $join = $this->getTableJoin($this->table, $base_table);
-    if ($join) {
-      return clone $join;
-    }
+
+    return $join ? clone $join : NULL;
   }
 
   /**
@@ -710,6 +709,8 @@ abstract class HandlerBase extends PluginBase implements ViewsHandlerInterface {
 
       return $join;
     }
+
+    return NULL;
   }
 
   /**

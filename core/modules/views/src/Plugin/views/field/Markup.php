@@ -54,6 +54,8 @@ class Markup extends FieldPluginBase {
       $value = str_replace('<!--break-->', '', $value);
       return check_markup($value, $format);
     }
+
+    return NULL;
   }
 
   /**

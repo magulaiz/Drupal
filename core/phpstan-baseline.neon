@@ -21,16 +21,6 @@ parameters:
 			path: includes/form.inc
 
 		-
-			message: "#^Function install_config_download_translations\\(\\) should return string but return statement is missing\\.$#"
-			count: 1
-			path: includes/install.core.inc
-
-		-
-			message: "#^Function install_download_translation\\(\\) should return string but return statement is missing\\.$#"
-			count: 1
-			path: includes/install.core.inc
-
-		-
 			message: "#^Variable \\$items might not be defined\\.$#"
 			count: 1
 			path: includes/theme.inc
@@ -171,11 +161,6 @@ parameters:
 			path: lib/Drupal/Core/Access/AccessResult.php
 
 		-
-			message: "#^Method Drupal\\\\Core\\\\Access\\\\CsrfRequestHeaderAccessCheck\\:\\:applies\\(\\) should return bool but return statement is missing\\.$#"
-			count: 1
-			path: lib/Drupal/Core/Access/CsrfRequestHeaderAccessCheck.php
-
-		-
 			message: "#^Method Drupal\\\\Core\\\\Executable\\\\ExecutableInterface\\:\\:execute\\(\\) invoked with 1 parameter, 0 required\\.$#"
 			count: 1
 			path: lib/Drupal/Core/Action/ActionBase.php
@@ -189,11 +174,6 @@ parameters:
 			message: "#^Call to method getSortedDefinitions\\(\\) on an unknown class Drupal\\\\Core\\\\Plugin\\\\CategorizingPluginManagerTrait\\.$#"
 			count: 1
 			path: lib/Drupal/Core/Action/ActionManager.php
-
-		-
-			message: "#^Method Drupal\\\\Core\\\\Archiver\\\\ArchiverManager\\:\\:getInstance\\(\\) should return object\\|false but return statement is missing\\.$#"
-			count: 1
-			path: lib/Drupal/Core/Archiver/ArchiverManager.php
 
 		-
 			message: "#^Variable \\$group_keys might not be defined\\.$#"
@@ -271,11 +251,6 @@ parameters:
 			path: lib/Drupal/Core/Config/ExtensionInstallStorage.php
 
 		-
-			message: "#^Method Drupal\\\\Core\\\\Config\\\\TypedConfigManager\\:\\:replaceVariable\\(\\) should return string but return statement is missing\\.$#"
-			count: 1
-			path: lib/Drupal/Core/Config/TypedConfigManager.php
-
-		-
 			message: "#^Variable \\$statement might not be defined\\.$#"
 			count: 1
 			path: lib/Drupal/Core/Database/Connection.php
@@ -339,11 +314,6 @@ parameters:
 			message: "#^Variable \\$current_affected in isset\\(\\) always exists and is not nullable\\.$#"
 			count: 1
 			path: lib/Drupal/Core/Entity/ContentEntityStorageBase.php
-
-		-
-			message: "#^Method Drupal\\\\Core\\\\Entity\\\\Controller\\\\EntityController\\:\\:deleteTitle\\(\\) should return string but return statement is missing\\.$#"
-			count: 1
-			path: lib/Drupal/Core/Entity/Controller/EntityController.php
 
 		-
 			message: "#^Variable \\$candidate_ids might not be defined\\.$#"
@@ -426,16 +396,6 @@ parameters:
 			path: lib/Drupal/Core/Entity/Sql/SqlContentEntityStorage.php
 
 		-
-			message: "#^Method Drupal\\\\Core\\\\Entity\\\\Sql\\\\SqlContentEntityStorageSchema\\:\\:processDataTable\\(\\) should return array but return statement is missing\\.$#"
-			count: 1
-			path: lib/Drupal/Core/Entity/Sql/SqlContentEntityStorageSchema.php
-
-		-
-			message: "#^Method Drupal\\\\Core\\\\Entity\\\\Sql\\\\SqlContentEntityStorageSchema\\:\\:processRevisionDataTable\\(\\) should return array but return statement is missing\\.$#"
-			count: 1
-			path: lib/Drupal/Core/Entity/Sql/SqlContentEntityStorageSchema.php
-
-		-
 			message: "#^Variable \\$initial_storage_value in empty\\(\\) always exists and is not falsy\\.$#"
 			count: 1
 			path: lib/Drupal/Core/Entity/Sql/SqlContentEntityStorageSchema.php
@@ -464,11 +424,6 @@ parameters:
 			message: "#^Method Drupal\\\\Core\\\\Field\\\\FieldItemBase\\:\\:postSave\\(\\) should return bool but return statement is missing\\.$#"
 			count: 1
 			path: lib/Drupal/Core/Field/FieldItemBase.php
-
-		-
-			message: "#^Method Drupal\\\\Core\\\\Field\\\\FieldItemList\\:\\:defaultValuesForm\\(\\) should return array but return statement is missing\\.$#"
-			count: 1
-			path: lib/Drupal/Core/Field/FieldItemList.php
 
 		-
 			message: "#^Variable \\$values might not be defined\\.$#"
@@ -501,11 +456,6 @@ parameters:
 			path: lib/Drupal/Core/Field/Plugin/Field/FieldType/CreatedItem.php
 
 		-
-			message: "#^Method Drupal\\\\Core\\\\Field\\\\Plugin\\\\Field\\\\FieldType\\\\EntityReferenceItem\\:\\:generateSampleValue\\(\\) should return array but return statement is missing\\.$#"
-			count: 1
-			path: lib/Drupal/Core/Field/Plugin/Field/FieldType/EntityReferenceItem.php
-
-		-
 			message: "#^Access to an undefined property Drupal\\\\Core\\\\Field\\\\Plugin\\\\Field\\\\FieldType\\\\NumericItemBase\\:\\:\\$value\\.$#"
 			count: 1
 			path: lib/Drupal/Core/Field/Plugin/Field/FieldType/NumericItemBase.php
@@ -518,11 +468,6 @@ parameters:
 		-
 			message: "#^Access to an undefined property Drupal\\\\Core\\\\FileTransfer\\\\FileTransfer\\:\\:\\$chroot\\.$#"
 			count: 3
-			path: lib/Drupal/Core/FileTransfer/FileTransfer.php
-
-		-
-			message: "#^Method Drupal\\\\Core\\\\FileTransfer\\\\FileTransfer\\:\\:__get\\(\\) should return bool\\|string but return statement is missing\\.$#"
-			count: 1
 			path: lib/Drupal/Core/FileTransfer/FileTransfer.php
 
 		-
@@ -601,11 +546,6 @@ parameters:
 			path: lib/Drupal/Core/Menu/Form/MenuLinkDefaultForm.php
 
 		-
-			message: "#^Method Drupal\\\\Core\\\\Menu\\\\MenuLinkManager\\:\\:getInstance\\(\\) should return object\\|false but return statement is missing\\.$#"
-			count: 1
-			path: lib/Drupal/Core/Menu/MenuLinkManager.php
-
-		-
 			message: "#^Method Drupal\\\\Core\\\\Menu\\\\MenuLinkManager\\:\\:menuNameInUse\\(\\) should return bool but return statement is missing\\.$#"
 			count: 1
 			path: lib/Drupal/Core/Menu/MenuLinkManager.php
@@ -676,11 +616,6 @@ parameters:
 			path: lib/Drupal/Core/Site/SettingsEditor.php
 
 		-
-			message: "#^Method Drupal\\\\Core\\\\Template\\\\AttributeValueBase\\:\\:render\\(\\) should return string but return statement is missing\\.$#"
-			count: 1
-			path: lib/Drupal/Core/Template/AttributeValueBase.php
-
-		-
 			message: "#^Constructor of class Drupal\\\\Core\\\\Template\\\\TwigEnvironment has an unused parameter \\$root\\.$#"
 			count: 1
 			path: lib/Drupal/Core/Template/TwigEnvironment.php
@@ -694,11 +629,6 @@ parameters:
 			message: "#^Constructor of class Drupal\\\\Core\\\\Test\\\\TestRunnerKernel has an unused parameter \\$allow_dumping\\.$#"
 			count: 1
 			path: lib/Drupal/Core/Test/TestRunnerKernel.php
-
-		-
-			message: "#^Method Drupal\\\\Core\\\\Theme\\\\ThemeInitialization\\:\\:resolveStyleSheetPlaceholders\\(\\) should return string but return statement is missing\\.$#"
-			count: 1
-			path: lib/Drupal/Core/Theme/ThemeInitialization.php
 
 		-
 			message: "#^Variable \\$candidate in isset\\(\\) is never defined\\.$#"
@@ -811,16 +741,6 @@ parameters:
 			path: modules/book/src/BookExport.php
 
 		-
-			message: "#^Method Drupal\\\\book\\\\BookOutline\\:\\:nextLink\\(\\) should return array but return statement is missing\\.$#"
-			count: 1
-			path: modules/book/src/BookOutline.php
-
-		-
-			message: "#^Method Drupal\\\\book\\\\BookOutline\\:\\:prevLink\\(\\) should return array but return statement is missing\\.$#"
-			count: 1
-			path: modules/book/src/BookOutline.php
-
-		-
 			message: "#^Method Drupal\\\\book\\\\Form\\\\BookOutlineForm\\:\\:save\\(\\) should return int but return statement is missing\\.$#"
 			count: 1
 			path: modules/book/src/Form/BookOutlineForm.php
@@ -879,11 +799,6 @@ parameters:
 			message: "#^Variable \\$state might not be defined\\.$#"
 			count: 1
 			path: modules/comment/src/Plugin/migrate/destination/EntityComment.php
-
-		-
-			message: "#^Method Drupal\\\\comment\\\\Plugin\\\\views\\\\field\\\\NodeNewComments\\:\\:render\\(\\) should return Drupal\\\\Component\\\\Render\\\\MarkupInterface\\|string but return statement is missing\\.$#"
-			count: 1
-			path: modules/comment/src/Plugin/views/field/NodeNewComments.php
 
 		-
 			message: "#^Variable \\$comment in empty\\(\\) always exists and is not falsy\\.$#"
@@ -951,11 +866,6 @@ parameters:
 			path: modules/contact/src/ContactFormEditForm.php
 
 		-
-			message: "#^Method Drupal\\\\contact\\\\Entity\\\\Message\\:\\:getPersonalRecipient\\(\\) should return Drupal\\\\user\\\\UserInterface but return statement is missing\\.$#"
-			count: 1
-			path: modules/contact/src/Entity/Message.php
-
-		-
 			message: "#^Method Drupal\\\\contact\\\\MessageForm\\:\\:save\\(\\) should return int but return statement is missing\\.$#"
 			count: 1
 			path: modules/contact/src/MessageForm.php
@@ -967,11 +877,6 @@ parameters:
 
 		-
 			message: "#^Method Drupal\\\\content_moderation\\\\ModerationInformation\\:\\:getAffectedRevisionTranslation\\(\\) should return Drupal\\\\Core\\\\Entity\\\\ContentEntityInterface but return statement is missing\\.$#"
-			count: 1
-			path: modules/content_moderation/src/ModerationInformation.php
-
-		-
-			message: "#^Method Drupal\\\\content_moderation\\\\ModerationInformation\\:\\:getDefaultRevisionId\\(\\) should return int but return statement is missing\\.$#"
 			count: 1
 			path: modules/content_moderation/src/ModerationInformation.php
 
@@ -1016,11 +921,6 @@ parameters:
 			path: modules/contextual/tests/src/FunctionalJavascript/EditModeTest.php
 
 		-
-			message: "#^Method Drupal\\\\datetime\\\\Plugin\\\\Field\\\\FieldType\\\\DateTimeFieldItemList\\:\\:defaultValuesForm\\(\\) should return array but return statement is missing\\.$#"
-			count: 1
-			path: modules/datetime/src/Plugin/Field/FieldType/DateTimeFieldItemList.php
-
-		-
 			message: "#^Access to an undefined property Drupal\\\\datetime\\\\Plugin\\\\Field\\\\FieldType\\\\DateTimeItem\\:\\:\\$date\\.$#"
 			count: 1
 			path: modules/datetime/src/Plugin/Field/FieldType/DateTimeItem.php
@@ -1049,11 +949,6 @@ parameters:
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 1
 			path: modules/datetime/tests/src/Kernel/Views/FilterDateTimeTest.php
-
-		-
-			message: "#^Method Drupal\\\\datetime_range\\\\Plugin\\\\Field\\\\FieldType\\\\DateRangeFieldItemList\\:\\:defaultValuesForm\\(\\) should return array but return statement is missing\\.$#"
-			count: 1
-			path: modules/datetime_range/src/Plugin/Field/FieldType/DateRangeFieldItemList.php
 
 		-
 			message: "#^Access to an undefined property Drupal\\\\datetime_range\\\\Plugin\\\\Field\\\\FieldType\\\\DateRangeItem\\:\\:\\$end_date\\.$#"
@@ -1119,11 +1014,6 @@ parameters:
 			message: "#^Variable \\$entity_display might not be defined\\.$#"
 			count: 1
 			path: modules/field_ui/src/Access/ViewModeAccessCheck.php
-
-		-
-			message: "#^Method Drupal\\\\field_ui\\\\FieldUI\\:\\:getOverviewRouteInfo\\(\\) should return Drupal\\\\Core\\\\Url but return statement is missing\\.$#"
-			count: 1
-			path: modules/field_ui/src/FieldUI.php
 
 		-
 			message: "#^Variable \\$updated_columns might not be defined\\.$#"
@@ -1226,19 +1116,9 @@ parameters:
 			path: modules/filter/src/Plugin/Filter/FilterHtml.php
 
 		-
-			message: "#^Method Drupal\\\\forum\\\\ForumManager\\:\\:getTopicOrder\\(\\) should return array but return statement is missing\\.$#"
-			count: 1
-			path: modules/forum/src/ForumManager.php
-
-		-
 			message: "#^Variable \\$vocabulary in empty\\(\\) always exists and is not falsy\\.$#"
 			count: 1
 			path: modules/forum/src/ForumUninstallValidator.php
-
-		-
-			message: "#^Method Drupal\\\\history\\\\Plugin\\\\views\\\\field\\\\HistoryUserTimestamp\\:\\:render\\(\\) should return Drupal\\\\Component\\\\Render\\\\MarkupInterface\\|string but return statement is missing\\.$#"
-			count: 1
-			path: modules/history/src/Plugin/views/field/HistoryUserTimestamp.php
 
 		-
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
@@ -1294,11 +1174,6 @@ parameters:
 			message: "#^Variable \\$reason in empty\\(\\) always exists and is not falsy\\.$#"
 			count: 1
 			path: modules/jsonapi/src/Context/FieldResolver.php
-
-		-
-			message: "#^Method Drupal\\\\jsonapi\\\\JsonApiResource\\\\ResourceIdentifier\\:\\:getDataReferencePropertyName\\(\\) should return string but return statement is missing\\.$#"
-			count: 1
-			path: modules/jsonapi/src/JsonApiResource/ResourceIdentifier.php
 
 		-
 			message: "#^Variable \\$entity in isset\\(\\) always exists and is not nullable\\.$#"
@@ -1371,29 +1246,9 @@ parameters:
 			path: modules/link/src/Plugin/migrate/process/FieldLink.php
 
 		-
-			message: "#^Function locale_config_batch_update_components\\(\\) should return array but return statement is missing\\.$#"
-			count: 1
-			path: modules/locale/locale.bulk.inc
-
-		-
-			message: "#^Function locale_translation_check_projects\\(\\) should return array but return statement is missing\\.$#"
-			count: 1
-			path: modules/locale/locale.compare.inc
-
-		-
-			message: "#^Variable \\$item in empty\\(\\) always exists and is not falsy\\.$#"
-			count: 1
-			path: modules/locale/src/Form/ExportForm.php
-
-		-
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 1
 			path: modules/locale/src/Form/TranslationStatusForm.php
-
-		-
-			message: "#^Method Drupal\\\\locale\\\\LocaleDefaultConfigStorage\\:\\:read\\(\\) should return array but return statement is missing\\.$#"
-			count: 1
-			path: modules/locale/src/LocaleDefaultConfigStorage.php
 
 		-
 			message: "#^Method Drupal\\\\locale\\\\LocaleProjectStorage\\:\\:deleteAll\\(\\) should return array but return statement is missing\\.$#"
@@ -1404,21 +1259,6 @@ parameters:
 			message: "#^Variable \\$cache in isset\\(\\) is never defined\\.$#"
 			count: 1
 			path: modules/locale/src/LocaleProjectStorage.php
-
-		-
-			message: "#^Method Drupal\\\\locale\\\\PluralFormula\\:\\:loadFormulae\\(\\) should return array but return statement is missing\\.$#"
-			count: 1
-			path: modules/locale/src/PluralFormula.php
-
-		-
-			message: "#^Method Drupal\\\\locale\\\\PoDatabaseReader\\:\\:readItem\\(\\) should return Drupal\\\\Component\\\\Gettext\\\\PoItem but return statement is missing\\.$#"
-			count: 1
-			path: modules/locale/src/PoDatabaseReader.php
-
-		-
-			message: "#^Method Drupal\\\\locale\\\\PoDatabaseWriter\\:\\:importString\\(\\) should return int but return statement is missing\\.$#"
-			count: 1
-			path: modules/locale/src/PoDatabaseWriter.php
 
 		-
 			message: "#^Variable \\$plural in isset\\(\\) always exists and is not nullable\\.$#"
@@ -1756,29 +1596,9 @@ parameters:
 			path: modules/node/tests/src/Kernel/Migrate/d7/MigrateNodeTest.php
 
 		-
-			message: "#^Method Drupal\\\\options\\\\Plugin\\\\Field\\\\FieldType\\\\ListFloatItem\\:\\:validateAllowedValue\\(\\) should return string but return statement is missing\\.$#"
-			count: 1
-			path: modules/options/src/Plugin/Field/FieldType/ListFloatItem.php
-
-		-
-			message: "#^Method Drupal\\\\options\\\\Plugin\\\\Field\\\\FieldType\\\\ListIntegerItem\\:\\:validateAllowedValue\\(\\) should return string but return statement is missing\\.$#"
-			count: 1
-			path: modules/options/src/Plugin/Field/FieldType/ListIntegerItem.php
-
-		-
 			message: "#^Access to an undefined property Drupal\\\\options\\\\Plugin\\\\Field\\\\FieldType\\\\ListItemBase\\:\\:\\$value\\.$#"
 			count: 1
 			path: modules/options/src/Plugin/Field/FieldType/ListItemBase.php
-
-		-
-			message: "#^Method Drupal\\\\options\\\\Plugin\\\\Field\\\\FieldType\\\\ListItemBase\\:\\:validateAllowedValue\\(\\) should return string but return statement is missing\\.$#"
-			count: 1
-			path: modules/options/src/Plugin/Field/FieldType/ListItemBase.php
-
-		-
-			message: "#^Method Drupal\\\\options\\\\Plugin\\\\Field\\\\FieldType\\\\ListStringItem\\:\\:validateAllowedValue\\(\\) should return string but return statement is missing\\.$#"
-			count: 1
-			path: modules/options/src/Plugin/Field/FieldType/ListStringItem.php
 
 		-
 			message: "#^Method Drupal\\\\path\\\\PathAliasForm\\:\\:save\\(\\) should return int but return statement is missing\\.$#"
@@ -1829,11 +1649,6 @@ parameters:
 			message: "#^Method Drupal\\\\responsive_image\\\\ResponsiveImageStyleForm\\:\\:save\\(\\) should return int but return statement is missing\\.$#"
 			count: 1
 			path: modules/responsive_image/src/ResponsiveImageStyleForm.php
-
-		-
-			message: "#^Method Drupal\\\\rest\\\\Routing\\\\ResourceRoutes\\:\\:onDynamicRouteEvent\\(\\) should return array but return statement is missing\\.$#"
-			count: 1
-			path: modules/rest/src/Routing/ResourceRoutes.php
 
 		-
 			message: "#^Variable \\$created_entity might not be defined\\.$#"
@@ -1936,11 +1751,6 @@ parameters:
 			path: modules/system/src/Form/DateFormatFormBase.php
 
 		-
-			message: "#^Method Drupal\\\\system\\\\Form\\\\ModulesListNonStableConfirmForm\\:\\:getQuestion\\(\\) should return Drupal\\\\Core\\\\StringTranslation\\\\TranslatableMarkup but return statement is missing\\.$#"
-			count: 1
-			path: modules/system/src/Form/ModulesListNonStableConfirmForm.php
-
-		-
 			message: "#^Variable \\$default_theme in isset\\(\\) always exists and is not nullable\\.$#"
 			count: 1
 			path: modules/system/src/Form/ThemeSettingsForm.php
@@ -2026,11 +1836,6 @@ parameters:
 			path: modules/taxonomy/src/Form/OverviewTerms.php
 
 		-
-			message: "#^Method Drupal\\\\taxonomy\\\\Plugin\\\\migrate\\\\source\\\\d7\\\\TermTranslation\\:\\:prepareRow\\(\\) should return bool but return statement is missing\\.$#"
-			count: 1
-			path: modules/taxonomy/src/Plugin/migrate/source/d7/TermTranslation.php
-
-		-
 			message: "#^Variable \\$inner_count might not be defined\\.$#"
 			count: 1
 			path: modules/taxonomy/src/Plugin/views/argument/IndexTidDepth.php
@@ -2096,16 +1901,6 @@ parameters:
 			path: modules/toolbar/src/Controller/ToolbarController.php
 
 		-
-			message: "#^Method Drupal\\\\tour\\\\TipPluginBase\\:\\:get\\(\\) should return string but return statement is missing\\.$#"
-			count: 1
-			path: modules/tour/src/TipPluginBase.php
-
-		-
-			message: "#^Variable \\$location on left side of \\?\\? always exists and is not nullable\\.$#"
-			count: 1
-			path: modules/tour/src/TipPluginBase.php
-
-		-
 			message: "#^Variable \\$violation_messages might not be defined\\.$#"
 			count: 1
 			path: modules/update/src/ProjectRelease.php
@@ -2149,11 +1944,6 @@ parameters:
 			message: "#^Variable \\$items in isset\\(\\) always exists and is not nullable\\.$#"
 			count: 1
 			path: modules/user/src/Plugin/Validation/Constraint/UserMailRequiredValidator.php
-
-		-
-			message: "#^Method Drupal\\\\user\\\\Plugin\\\\views\\\\field\\\\UserData\\:\\:render\\(\\) should return Drupal\\\\Component\\\\Render\\\\MarkupInterface\\|string but return statement is missing\\.$#"
-			count: 1
-			path: modules/user/src/Plugin/views/field/UserData.php
 
 		-
 			message: "#^Method Drupal\\\\user\\\\ProfileForm\\:\\:save\\(\\) should return int but return statement is missing\\.$#"
@@ -2246,11 +2036,6 @@ parameters:
 			path: modules/views/src/Plugin/views/HandlerBase.php
 
 		-
-			message: "#^Method Drupal\\\\views\\\\Plugin\\\\views\\\\HandlerBase\\:\\:getTableJoin\\(\\) should return Drupal\\\\views\\\\Plugin\\\\views\\\\join\\\\JoinPluginBase but return statement is missing\\.$#"
-			count: 1
-			path: modules/views/src/Plugin/views/HandlerBase.php
-
-		-
 			message: "#^Variable \\$group_types might not be defined\\.$#"
 			count: 1
 			path: modules/views/src/Plugin/views/HandlerBase.php
@@ -2259,11 +2044,6 @@ parameters:
 			message: "#^Variable \\$items might not be defined\\.$#"
 			count: 1
 			path: modules/views/src/Plugin/views/area/Broken.php
-
-		-
-			message: "#^Method Drupal\\\\views\\\\Plugin\\\\views\\\\area\\\\HTTPStatusCode\\:\\:render\\(\\) should return array but return statement is missing\\.$#"
-			count: 1
-			path: modules/views/src/Plugin/views/area/HTTPStatusCode.php
 
 		-
 			message: "#^Variable \\$options_name might not be defined\\.$#"
@@ -2289,11 +2069,6 @@ parameters:
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 1
 			path: modules/views/src/Plugin/views/argument/Date.php
-
-		-
-			message: "#^Method Drupal\\\\views\\\\Plugin\\\\views\\\\cache\\\\CachePluginBase\\:\\:cacheGet\\(\\) should return bool but return statement is missing\\.$#"
-			count: 1
-			path: modules/views/src/Plugin/views/cache/CachePluginBase.php
 
 		-
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
@@ -2341,22 +2116,12 @@ parameters:
 			path: modules/views/src/Plugin/views/field/Date.php
 
 		-
-			message: "#^Method Drupal\\\\views\\\\Plugin\\\\views\\\\field\\\\Date\\:\\:render\\(\\) should return Drupal\\\\Component\\\\Render\\\\MarkupInterface\\|string but return statement is missing\\.$#"
-			count: 1
-			path: modules/views/src/Plugin/views/field/Date.php
-
-		-
 			message: "#^Variable \\$custom_format might not be defined\\.$#"
 			count: 9
 			path: modules/views/src/Plugin/views/field/Date.php
 
 		-
 			message: "#^Method Drupal\\\\views\\\\Plugin\\\\views\\\\field\\\\EntityField\\:\\:getFieldStorageDefinition\\(\\) should return Drupal\\\\Core\\\\Field\\\\FieldStorageDefinitionInterface but return statement is missing\\.$#"
-			count: 1
-			path: modules/views/src/Plugin/views/field/EntityField.php
-
-		-
-			message: "#^Method Drupal\\\\views\\\\Plugin\\\\views\\\\field\\\\EntityField\\:\\:renderItems\\(\\) should return string but return statement is missing\\.$#"
 			count: 1
 			path: modules/views/src/Plugin/views/field/EntityField.php
 
@@ -2379,16 +2144,6 @@ parameters:
 			message: "#^Variable \\$style in isset\\(\\) always exists and is not nullable\\.$#"
 			count: 1
 			path: modules/views/src/Plugin/views/field/FieldPluginBase.php
-
-		-
-			message: "#^Method Drupal\\\\views\\\\Plugin\\\\views\\\\field\\\\Markup\\:\\:render\\(\\) should return Drupal\\\\Component\\\\Render\\\\MarkupInterface\\|string but return statement is missing\\.$#"
-			count: 1
-			path: modules/views/src/Plugin/views/field/Markup.php
-
-		-
-			message: "#^Method Drupal\\\\views\\\\Plugin\\\\views\\\\field\\\\PrerenderList\\:\\:renderItems\\(\\) should return string but return statement is missing\\.$#"
-			count: 1
-			path: modules/views/src/Plugin/views/field/PrerenderList.php
 
 		-
 			message: "#^Variable \\$items might not be defined\\.$#"
@@ -2649,11 +2404,6 @@ parameters:
 			message: "#^Method Drupal\\\\workflows\\\\Form\\\\WorkflowTransitionEditForm\\:\\:save\\(\\) should return int but return statement is missing\\.$#"
 			count: 1
 			path: modules/workflows/src/Form/WorkflowTransitionEditForm.php
-
-		-
-			message: "#^Method Drupal\\\\workspaces\\\\EntityTypeInfo\\:\\:entityBaseFieldInfo\\(\\) should return array\\<Drupal\\\\Core\\\\Field\\\\FieldDefinitionInterface\\> but return statement is missing\\.$#"
-			count: 1
-			path: modules/workspaces/src/EntityTypeInfo.php
 
 		-
 			message: "#^Method Drupal\\\\workspaces\\\\Form\\\\WorkspaceForm\\:\\:save\\(\\) should return int but return statement is missing\\.$#"

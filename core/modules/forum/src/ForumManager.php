@@ -289,22 +289,32 @@ class ForumManager implements ForumManagerInterface {
    *   An array with the following values:
    *   - field: A field for an SQL query.
    *   - sort: 'asc' or 'desc'.
+   *
+   * @see NEWEST_FIRST
+   * @see OLDEST_FIRST
+   * @see MOST_POPULAR_FIRST
+   * @see LEAST_POPULAR_FIRST
    */
   protected function getTopicOrder($sortby) {
-    switch ($sortby) {
-      case static::NEWEST_FIRST:
-        return ['field' => 'f.last_comment_timestamp', 'sort' => 'desc'];
-
-      case static::OLDEST_FIRST:
-        return ['field' => 'f.last_comment_timestamp', 'sort' => 'asc'];
-
-      case static::MOST_POPULAR_FIRST:
-        return ['field' => 'f.comment_count', 'sort' => 'desc'];
-
-      case static::LEAST_POPULAR_FIRST:
-        return ['field' => 'f.comment_count', 'sort' => 'asc'];
-
-    }
+    return match ($sortby) {
+      static::OLDEST_FIRST => [
+        'field' => 'f.last_comment_timestamp',
+        'sort' => 'asc',
+      ],
+      static::MOST_POPULAR_FIRST => [
+        'field' => 'f.comment_count',
+        'sort' => 'desc',
+      ],
+      static::LEAST_POPULAR_FIRST => [
+        'field' => 'f.comment_count',
+        'sort' => 'asc',
+      ],
+      // NEWEST_FIRST.
+      default => [
+        'field' => 'f.last_comment_timestamp',
+        'sort' => 'desc',
+      ],
+    };
   }
 
   /**
@@ -400,9 +410,7 @@ class ForumManager implements ForumManagerInterface {
         ->fetchAllAssoc('tid');
     }
 
-    if (!empty($this->forumStatistics[$tid])) {
-      return $this->forumStatistics[$tid];
-    }
+    return $this->forumStatistics[$tid] ?? NULL;
   }
 
   /**

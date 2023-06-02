@@ -60,6 +60,8 @@ function image_help($route_name, RouteMatchInterface $route_match) {
       $effect_definition = $effect->getPluginDefinition();
       return isset($effect_definition['description']) ? ('<p>' . $effect_definition['description'] . '</p>') : NULL;
   }
+
+  return NULL;
 }
 
 /**
@@ -167,6 +169,8 @@ function image_file_download($uri) {
     }
     return -1;
   }
+
+  return NULL;
 }
 
 /**

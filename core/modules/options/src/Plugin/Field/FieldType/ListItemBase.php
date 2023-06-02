@@ -202,7 +202,7 @@ abstract class ListItemBase extends FieldItemBase implements OptionsProviderInte
         $generated_keys = TRUE;
       }
       else {
-        return;
+        return NULL;
       }
 
       $values[$key] = $value;
@@ -210,7 +210,7 @@ abstract class ListItemBase extends FieldItemBase implements OptionsProviderInte
 
     // We generate keys only if the list contains no explicit key at all.
     if ($explicit_keys && $generated_keys) {
-      return;
+      return NULL;
     }
 
     return $values;
@@ -222,10 +222,12 @@ abstract class ListItemBase extends FieldItemBase implements OptionsProviderInte
    * @param string $option
    *   The option value entered by the user.
    *
-   * @return string
+   * @return null|string
    *   The error message if the specified value is invalid, NULL otherwise.
    */
-  protected static function validateAllowedValue($option) {}
+  protected static function validateAllowedValue($option) {
+    return NULL;
+  }
 
   /**
    * Generates a string representation of an array of 'allowed values'.

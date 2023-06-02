@@ -61,21 +61,23 @@ class OptionsSelectWidget extends OptionsWidgetBase {
   protected function getEmptyLabel() {
     if ($this->multiple) {
       // Multiple select: add a 'none' option for non-required fields.
-      if (!$this->required) {
-        return $this->t('- None -');
-      }
+      return !$this->required ?
+        $this->t('- None -')
+        : NULL;
     }
-    else {
-      // Single select: add a 'none' option for non-required fields,
-      // and a 'select a value' option for required fields that do not come
-      // with a value selected.
-      if (!$this->required) {
-        return $this->t('- None -');
-      }
-      if (!$this->has_value) {
-        return $this->t('- Select a value -');
-      }
+
+    // Single select: add a 'none' option for non-required fields,
+    // and a 'select a value' option for required fields that do not come
+    // with a value selected.
+    if (!$this->required) {
+      return $this->t('- None -');
     }
+
+    if (!$this->has_value) {
+      return $this->t('- Select a value -');
+    }
+
+    return NULL;
   }
 
 }

@@ -588,13 +588,10 @@ abstract class ArgumentPluginBase extends HandlerBase implements CacheableDepend
     }
 
     if ($which) {
-      if (!empty($defaults[$which])) {
-        return $defaults[$which];
-      }
+      return $defaults[$which] ?? NULL;
     }
-    else {
-      return $defaults;
-    }
+
+    return $defaults;
   }
 
   /**
@@ -849,10 +846,9 @@ abstract class ArgumentPluginBase extends HandlerBase implements CacheableDepend
    * Get a default argument, if available.
    */
   public function getDefaultArgument() {
-    $plugin = $this->getPlugin('argument_default');
-    if ($plugin) {
-      return $plugin->getArgument();
-    }
+    return $this
+      ->getPlugin('argument_default')
+      ?->getArgument();
   }
 
   /**
@@ -1149,7 +1145,7 @@ abstract class ArgumentPluginBase extends HandlerBase implements CacheableDepend
     switch ($type) {
       case 'argument_default':
         if (!isset($this->options['default_argument_type'])) {
-          return;
+          return NULL;
         }
         $plugin_name = $this->options['default_argument_type'];
         $options_name = 'default_argument_options';
@@ -1157,7 +1153,7 @@ abstract class ArgumentPluginBase extends HandlerBase implements CacheableDepend
 
       case 'argument_validator':
         if (!isset($this->options['validate']['type'])) {
-          return;
+          return NULL;
         }
         $plugin_name = $this->options['validate']['type'];
         $options_name = 'validate_options';
@@ -1165,7 +1161,7 @@ abstract class ArgumentPluginBase extends HandlerBase implements CacheableDepend
 
       case 'style':
         if (!isset($this->options['summary']['format'])) {
-          return;
+          return NULL;
         }
         $plugin_name = $this->options['summary']['format'];
         $options_name = 'summary_options';
@@ -1191,6 +1187,8 @@ abstract class ArgumentPluginBase extends HandlerBase implements CacheableDepend
       }
       return $plugin;
     }
+
+    return NULL;
   }
 
   /**

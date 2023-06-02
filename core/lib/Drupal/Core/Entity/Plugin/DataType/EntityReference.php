@@ -85,6 +85,8 @@ class EntityReference extends DataReferenceBase {
     elseif ($entity = $this->getValue()) {
       return $entity->id();
     }
+
+    return NULL;
   }
 
   /**

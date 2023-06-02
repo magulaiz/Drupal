@@ -197,6 +197,8 @@ class PathBasedBreadcrumbBuilderTest extends UnitTestCase {
             '_raw_variables' => new InputBag([]),
           ];
         }
+
+        return NULL;
       });
 
     $this->setupAccessManagerToAllow();
@@ -237,13 +239,16 @@ class PathBasedBreadcrumbBuilderTest extends UnitTestCase {
             '_raw_variables' => new InputBag([]),
           ];
         }
-        elseif ($request->getPathInfo() == '/example') {
+
+        if ($request->getPathInfo() == '/example') {
           return [
             RouteObjectInterface::ROUTE_NAME => 'example',
             RouteObjectInterface::ROUTE_OBJECT => $route_2,
             '_raw_variables' => new InputBag([]),
           ];
         }
+
+        return NULL;
       });
 
     $this->accessManager->expects($this->any())
@@ -372,6 +377,8 @@ class PathBasedBreadcrumbBuilderTest extends UnitTestCase {
             '_raw_variables' => new InputBag([]),
           ];
         }
+
+        return NULL;
       });
 
     $this->setupAccessManagerToAllow();
