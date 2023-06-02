@@ -55,7 +55,9 @@ class OpenOffCanvasDialogCommand extends OpenDialogCommand {
     // #drupal-off-canvas:not(.drupal-off-canvas-reset).
     $this->dialogOptions['classes']['ui-dialog-content'] = 'drupal-off-canvas-reset';
 
-    /* Conditional defaults */
+    // Conditional defaults
+    // These dialogOptions can be overridden by defining them in
+    // '#attributes' => ['data-dialog-options' => ['key' => 'value']]
 
     if (empty($dialog_options['dialogClass'])) {
       $this->dialogOptions['dialogClass'] = "ui-dialog-off-canvas ui-dialog-position-$position";
