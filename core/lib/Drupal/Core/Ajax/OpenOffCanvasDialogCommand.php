@@ -55,15 +55,13 @@ class OpenOffCanvasDialogCommand extends OpenDialogCommand {
     // #drupal-off-canvas:not(.drupal-off-canvas-reset).
     $this->dialogOptions['classes']['ui-dialog-content'] = 'drupal-off-canvas-reset';
 
-    // Conditional defaults
-    // These dialogOptions can be overridden by defining them in
-    // '#attributes' => ['data-dialog-options' => Json::encode(['key' => 'value']])
+    // Conditional defaults.
 
     if (empty($dialog_options['dialogClass'])) {
       $this->dialogOptions['dialogClass'] = "ui-dialog-off-canvas ui-dialog-position-$position";
     }
 
-    // 3364302: Allow off-canvas dialog to disallow expansion.
+    // Allow off-canvas dialog to disallow expansion.
     if (!array_key_exists('resizable', $this->dialogOptions)) {
       $this->dialogOptions['resizable'] = 'w';
     }
