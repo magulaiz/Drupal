@@ -77,14 +77,19 @@ class EntityAutocompleteController extends ControllerBase {
    */
   public function handleAutocomplete(Request $request, $target_type, $selection_handler, $selection_settings_key) {
     $matches = [];
+    // Selection settings are passed in as a hashed key of a serialized array
+    // stored in the key/value store.
+    $selection_settings = $this->keyValue->get($selection_settings_key, FALSE);
     // Get the typed string from the URL, if it exists.
-    if ($input = $request->query->get('q')) {
+    $input = $request->query->get('q');
+    // Validate the autocomplete minimum size.
+    if ($input === '' && $selection_settings['match_limit'] !== 0) {
+      return new JsonResponse([]);
+    }
+    if ($input !== NULL) {
       $tag_list = Tags::explode($input);
       $typed_string = !empty($tag_list) ? mb_strtolower(array_pop($tag_list)) : '';
 
-      // Selection settings are passed in as a hashed key of a serialized array
-      // stored in the key/value store.
-      $selection_settings = $this->keyValue->get($selection_settings_key, FALSE);
       if ($selection_settings !== FALSE) {
         $selection_settings_hash = Crypt::hmacBase64(serialize($selection_settings) . $target_type . $selection_handler, Settings::getHashSalt());
         if (!hash_equals($selection_settings_hash, $selection_settings_key)) {

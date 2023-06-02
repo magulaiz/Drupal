@@ -157,7 +157,9 @@ class EntityAutocompleteTest extends EntityKernelTestBase {
     $request = Request::create('entity_reference_autocomplete/' . $this->entityType . '/default');
     $request->query->set('q', $input);
 
-    $selection_settings = [];
+    $selection_settings = [
+      'match_limit' => $input,
+    ];
     $selection_settings_key = Crypt::hmacBase64(serialize($selection_settings) . $this->entityType . 'default', Settings::getHashSalt());
     \Drupal::keyValue('entity_autocomplete')->set($selection_settings_key, $selection_settings);
 
