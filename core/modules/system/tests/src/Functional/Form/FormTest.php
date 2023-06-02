@@ -445,6 +445,7 @@ class FormTest extends BrowserTestBase {
       'no_default_empty_value_one',
       'multiple_no_default_required',
     ];
+    dump($this->getSession()->getPage()->getContent());
     foreach ($expected_errors as $key) {
       $this->assertSession()->pageTextContains($form[$key]['#title'] . ' field is required.');
     }

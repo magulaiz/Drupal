@@ -60,4 +60,24 @@ class FormElementHelper {
     return $title;
   }
 
+  /**
+   * Helper function to extract form options.
+   *
+   * @param array|\Countable|string|null $options
+   *   Provided options, might be an enum.
+   *
+   * @return array|\Countable|null
+   *   The extracted options.
+   */
+  public static function extractOptions(null|array|\Countable|string $options): null|array|\Countable {
+    if (is_string($options) && enum_exists($options)) {
+      $cases = $options::cases();
+      return array_combine(
+        array_map(fn(\UnitEnum $enum) => $enum->name, $cases),
+        array_map(fn(\UnitEnum $enum) => $enum->value, $cases),
+      );
+    }
+    return $options;
+  }
+
 }

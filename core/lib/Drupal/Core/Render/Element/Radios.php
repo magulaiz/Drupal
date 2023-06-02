@@ -2,8 +2,9 @@
 
 namespace Drupal\Core\Render\Element;
 
-use Drupal\Core\Form\FormStateInterface;
 use Drupal\Component\Utility\Html as HtmlUtility;
+use Drupal\Core\Form\FormElementHelper;
+use Drupal\Core\Form\FormStateInterface;
 
 /**
  * Provides a form element for a set of radio buttons.
@@ -59,7 +60,7 @@ class Radios extends FormElement {
    * Expands a radios element into individual radio elements.
    */
   public static function processRadios(&$element, FormStateInterface $form_state, &$complete_form) {
-    $element['#options'] = form_options_extract($element['#options']);
+    $element['#options'] = FormElementHelper::extractOptions($element['#options']);
     if (count($element['#options']) > 0) {
       $weight = 0;
       foreach ($element['#options'] as $key => $choice) {

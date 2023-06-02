@@ -2,6 +2,7 @@
 
 namespace Drupal\Core\Render\Element;
 
+use Drupal\Core\Form\FormElementHelper;
 use Drupal\Core\Form\FormStateInterface;
 
 /**
@@ -61,7 +62,7 @@ class Checkboxes extends FormElement {
   public static function processCheckboxes(&$element, FormStateInterface $form_state, &$complete_form) {
     $value = is_array($element['#value']) ? $element['#value'] : [];
     $element['#tree'] = TRUE;
-    $element['#options'] = form_options_extract($element['#options']);
+    $element['#options'] = FormElementHelper::extractOptions($element['#options']);
     if (count($element['#options']) > 0) {
       if (!isset($element['#default_value']) || $element['#default_value'] == 0) {
         $element['#default_value'] = [];

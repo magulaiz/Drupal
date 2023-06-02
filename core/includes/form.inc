@@ -6,6 +6,7 @@
  */
 
 use Drupal\Component\Utility\UrlHelper;
+use Drupal\Core\Form\FormElementHelper;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Render\Element\RenderElement;
 use Drupal\Core\Template\Attribute;
@@ -38,20 +39,6 @@ function template_preprocess_select(&$variables) {
 }
 
 /**
- * Helper function to extract form options.
- */
-function form_options_extract(array|\Countable|string $options): array|\Countable {
-  if (is_string($options) && enum_exists($options)) {
-    $cases = $options::cases();
-    return array_combine(
-      array_map(fn (\UnitEnum $enum) => $enum->name, $cases),
-      array_map(fn (\UnitEnum $enum) => $enum->value, $cases),
-    );
-  }
-  return $options;
-}
-
-/**
  * Converts the options in a select element into a structured array for output.
  *
  * This function calls itself recursively to obtain the values for each optgroup
@@ -81,7 +68,7 @@ function form_options_extract(array|\Countable|string $options): array|\Countabl
  *   - value: A string that contains the value attribute for the option.
  */
 function form_select_options($element, $choices = NULL) {
-  $element['#options'] = form_options_extract($element['#options']);
+  $element['#options'] = FormElementHelper::extractOptions($element['#options']);
   if (!isset($choices)) {
     if (empty($element['#options'])) {
       return [];

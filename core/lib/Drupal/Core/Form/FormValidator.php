@@ -337,11 +337,9 @@ class FormValidator implements FormValidatorInterface {
     if (isset($elements['#options']) && isset($elements['#value'])) {
       $name = empty($elements['#title']) ? $elements['#parents'][0] : $elements['#title'];
       $message_arguments = ['%name' => $name];
+      $options = FormElementHelper::extractOptions($elements['#options']);
       if ($elements['#type'] == 'select') {
-        $options = OptGroup::flattenOptions($elements['#options']);
-      }
-      else {
-        $options = $elements['#options'];
+        $options = OptGroup::flattenOptions($options);
       }
       if (is_array($elements['#value'])) {
         $value = in_array($elements['#type'], ['checkboxes', 'tableselect']) ? array_keys($elements['#value']) : $elements['#value'];
