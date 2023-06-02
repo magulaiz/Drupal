@@ -382,11 +382,10 @@ class OptionsWidgetsTest extends FieldTestBase {
 
     // Display form: with no field data, nothing is selected
     $this->drupalGet('entity_test/manage/' . $entity->id() . '/edit');
-    dump($this->getSession()->getPage()->getContent());
-    $this->assertTrue($this->assertSession()->optionExists('card_1', 'H')->isSelected());
-    $this->assertTrue($this->assertSession()->optionExists('card_1', 'D')->isSelected());
-    $this->assertTrue($this->assertSession()->optionExists('card_1', 'C')->isSelected());
-    $this->assertTrue($this->assertSession()->optionExists('card_1', 'S')->isSelected());
+    $this->assertFalse($this->assertSession()->optionExists('card_1', 'Hearts')->isSelected());
+    $this->assertFalse($this->assertSession()->optionExists('card_1', 'Diamonds')->isSelected());
+    $this->assertFalse($this->assertSession()->optionExists('card_1', 'Clubs')->isSelected());
+    $this->assertFalse($this->assertSession()->optionExists('card_1', 'Spades')->isSelected());
   }
 
   /**
