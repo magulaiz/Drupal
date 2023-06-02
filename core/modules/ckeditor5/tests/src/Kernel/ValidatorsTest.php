@@ -1107,13 +1107,17 @@ class ValidatorsTest extends KernelTestBase {
             'drupalMedia',
           ],
         ],
-        'plugins' => [],
+        'plugins' => [
+          'media_media' => [
+            'allow_view_mode_override' => FALSE,
+          ],
+        ],
       ],
       'image_upload' => [
         'status' => FALSE,
       ],
       'filters' => [
-        'filter_html' => [
+        'media_embed' => [
           'id' => 'media_embed',
           'provider' => 'media',
           'status' => TRUE,
@@ -1125,9 +1129,7 @@ class ValidatorsTest extends KernelTestBase {
           ],
         ],
       ],
-      'violations' => [
-        'settings.toolbar.items.0' => 'The <em class="placeholder">Drupal media</em> toolbar item requires the <em class="placeholder">Embed media</em> filter to be enabled.',
-      ],
+      'violations' => [],
     ];
     $data['VALID: HTML format: very minimal toolbar + wildcard in source editing HTML'] = [
       'settings' => [
