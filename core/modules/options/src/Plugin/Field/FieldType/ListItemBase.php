@@ -22,6 +22,7 @@ abstract class ListItemBase extends FieldItemBase implements OptionsProviderInte
     return [
       'allowed_values' => [],
       'allowed_values_function' => '',
+      'allowed_values_enum' => '',
     ] + parent::defaultStorageSettings();
   }
 
@@ -135,7 +136,10 @@ abstract class ListItemBase extends FieldItemBase implements OptionsProviderInte
   public static function validateAllowedValues($element, FormStateInterface $form_state) {
     $values = static::extractAllowedValues($element['#value'], $element['#field_has_data']);
 
-    if (!is_array($values)) {
+    // Allow to provide the values as enum.
+    if (is_string($values) && enum_exists($values)) {
+    }
+    elseif (!is_array($values)) {
       $form_state->setError($element, new TranslatableMarkup('Allowed values list: invalid input.'));
     }
     else {
