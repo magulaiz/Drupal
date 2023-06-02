@@ -14,7 +14,7 @@ class ToolbarIntegrationTest extends WebDriverTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['toolbar', 'node'];
+  protected static $modules = ['toolbar', 'node','toolbar_items'];
 
   /**
    * {@inheritdoc}
@@ -83,6 +83,37 @@ class ToolbarIntegrationTest extends WebDriverTestBase {
     $this->assertSession()->elementNotExists('css', '#toolbar-item-administration-tray .toolbar-toggle-orientation');
     $button = $page->findButton('Vertical orientation');
     $this->assertFalse($button->isVisible(), 'Orientation toggle from other tray is not visible');
+  }
+
+  /**
+   * Tests that the toolbar items collapse in mobile view.
+   */
+  public function testCollapsibleToolbarItems() {
+    $admin_user = $this->drupalCreateUser([
+      'access toolbar',
+      'administer site configuration',
+      'access content overview',
+    ]);
+    $this->drupalLogin($admin_user);
+
+    $this->assertSession()->waitForElement('css','#toolbar-item-user');
+    $this->assertSession()->pageTextContains('Toolbar-item1');
+
+    // Test that the toolbar items are clickable.
+    $page = $this->getSession()->getPage();
+    $page->clickLink('Toolbar-item1');
+
+    // Set size for horizontal toolbar.
+    $this->getSession()->resizeWindow(400, 400);
+
+    // Check that the toolbar items are not visible.
+    $this->assertSession()->pageTextNotContains('Toolbar-item1');
+
+    // Click the toggle button to see the toolbar items.
+    $this->click('#toolbar-bar div:nth-child(5) a');
+
+    // Check that the toolbar items are now visible.
+    $this->assertSession()->pageTextContains('Toolbar-item1');
   }
 
 }
