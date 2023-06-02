@@ -14,7 +14,7 @@ class ToolbarIntegrationTest extends WebDriverTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['toolbar', 'node','toolbar_items'];
+  protected static $modules = ['toolbar', 'node', 'toolbar_items'];
 
   /**
    * {@inheritdoc}
@@ -96,7 +96,7 @@ class ToolbarIntegrationTest extends WebDriverTestBase {
     ]);
     $this->drupalLogin($admin_user);
 
-    $this->assertSession()->waitForElement('css','#toolbar-item-user');
+    $this->assertSession()->waitForElement('css', '#toolbar-item-user');
     $this->assertSession()->pageTextContains('Toolbar-item1');
 
     // Test that the toolbar items are clickable.
