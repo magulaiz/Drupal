@@ -1379,6 +1379,10 @@ PHP,
         ],
         'text_editor_settings' => [
           'plugins' => [],
+          // Deviate from the default toolbar items because that would cause
+          // the `ckeditor5_heading` plugin to be enabled.
+          // @see \Drupal\ckeditor5\Plugin\Editor\CKEditor5::getDefaultSettings()
+          'toolbar' => ['items' => ['bold', 'italic']],
         ],
         'expected_elements' => [
           'p' => [
