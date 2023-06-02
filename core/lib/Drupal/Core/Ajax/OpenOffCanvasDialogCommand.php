@@ -44,22 +44,28 @@ class OpenOffCanvasDialogCommand extends OpenDialogCommand {
     // For a full list of options see https://api.jqueryui.com/dialog/.
     $this->dialogOptions['modal'] = FALSE;
     $this->dialogOptions['autoResize'] = FALSE;
-    if (!array_key_exists('resizable', $this->dialogOptions)) {
-      $this->dialogOptions['resizable'] = 'w';
-    }
     $this->dialogOptions['draggable'] = FALSE;
     $this->dialogOptions['drupalAutoButtons'] = FALSE;
     $this->dialogOptions['drupalOffCanvasPosition'] = $position;
     // @todo drupal.ajax.js does not respect drupalAutoButtons properly, pass an
     //   empty set of buttons until https://www.drupal.org/node/2793343 is in.
     $this->dialogOptions['buttons'] = [];
-    if (empty($dialog_options['dialogClass'])) {
-      $this->dialogOptions['dialogClass'] = "ui-dialog-off-canvas ui-dialog-position-$position";
-    }
     // Add CSS class to #drupal-off-canvas element. This enables developers to
     // select previous versions of off-canvas styles by using custom selector:
     // #drupal-off-canvas:not(.drupal-off-canvas-reset).
     $this->dialogOptions['classes']['ui-dialog-content'] = 'drupal-off-canvas-reset';
+
+    /* Conditional defaults */
+
+    if (empty($dialog_options['dialogClass'])) {
+      $this->dialogOptions['dialogClass'] = "ui-dialog-off-canvas ui-dialog-position-$position";
+    }
+
+    // 3364302: Allow off-canvas dialog to disallow expansion.
+    if (!array_key_exists('resizable', $this->dialogOptions)) {
+      $this->dialogOptions['resizable'] = 'w';
+    }
+
     // If no width option is provided then use the default width to avoid the
     // dialog staying at the width of the previous instance when opened
     // more than once, with different widths, on a single page.
