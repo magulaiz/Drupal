@@ -5,8 +5,8 @@ namespace Drupal\Tests\options\Functional;
 use Drupal\entity_test\Entity\EntityTest;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
+use Drupal\options_test\OptionsTestStringEnum;
 use Drupal\Tests\field\Functional\FieldTestBase;
-use src\OptionsTestStringEnum;
 
 /**
  * Tests the Options widgets.
