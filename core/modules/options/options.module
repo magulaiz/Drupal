@@ -88,6 +88,15 @@ function options_allowed_values(FieldStorageDefinitionInterface $definition, Fie
     if (!empty($function)) {
       $values = $function($definition, $entity, $cacheable);
     }
+    elseif ($enum_class = $definition->getSetting('allowed_values_enum')) {
+      if (is_string($enum_class) && enum_exists($enum_class)) {
+        $cases = $enum_class::cases();
+        $values = array_combine(
+          array_map(fn(\UnitEnum $enum) => $enum->name, $cases),
+          array_map(fn(\UnitEnum $enum) => $enum->value, $cases),
+        );
+      }
+    }
     else {
       $values = $definition->getSetting('allowed_values');
     }

@@ -6,6 +6,7 @@ use Drupal\entity_test\Entity\EntityTest;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\Tests\field\Functional\FieldTestBase;
+use src\OptionsTestStringEnum;
 
 /**
  * Tests the Options widgets.
@@ -372,6 +373,20 @@ class OptionsWidgetsTest extends FieldTestBase {
     $this->drupalGet('entity_test/manage/' . $entity->id() . '/edit');
     $this->submitForm($edit, 'Save');
     $this->assertFieldValues($entity_init, 'card_1', []);
+
+    // Test enum support.
+    $this->card1->setSetting('allowed_values', []);
+    $this->card1->setSetting('allowed_values_function', '');
+    $this->card1->setSetting('allowed_values_enum', OptionsTestStringEnum::class);
+    $this->card1->save();
+
+    // Display form: with no field data, nothing is selected
+    $this->drupalGet('entity_test/manage/' . $entity->id() . '/edit');
+    dump($this->getSession()->getPage()->getContent());
+    $this->assertTrue($this->assertSession()->optionExists('card_1', 'H')->isSelected());
+    $this->assertTrue($this->assertSession()->optionExists('card_1', 'D')->isSelected());
+    $this->assertTrue($this->assertSession()->optionExists('card_1', 'C')->isSelected());
+    $this->assertTrue($this->assertSession()->optionExists('card_1', 'S')->isSelected());
   }
 
   /**
