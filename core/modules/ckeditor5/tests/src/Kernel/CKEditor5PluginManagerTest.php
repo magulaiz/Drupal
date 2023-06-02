@@ -8,6 +8,7 @@ use Drupal\ckeditor5\Annotation\DrupalAspectsOfCKEditor5Plugin;
 use Drupal\ckeditor5\HTMLRestrictions;
 use Drupal\ckeditor5\Plugin\CKEditor5Plugin\Heading;
 use Drupal\ckeditor5\Plugin\CKEditor5PluginDefinition;
+use Drupal\Component\FileCache\FileCacheFactory;
 use Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\editor\Entity\Editor;
@@ -62,6 +63,12 @@ class CKEditor5PluginManagerTest extends KernelTestBase {
    */
   protected function setUp(): void {
     parent::setUp();
+
+    // To discover per-test case config schema YAML files, disable the static
+    // file cache that \Drupal\Core\Extension\ExtensionDiscovery uses.
+    FileCacheFactory::setConfiguration([FileCacheFactory::DISABLE_CACHE => TRUE]);
+    // Ensure that FileCacheFactory has a prefix.
+    FileCacheFactory::setPrefix('prefix');
 
     FilterFormat::create(
       Yaml::parseFile('core/profiles/standard/config/install/filter.format.basic_html.yml')
