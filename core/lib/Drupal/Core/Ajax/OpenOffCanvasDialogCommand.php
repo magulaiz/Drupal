@@ -57,7 +57,7 @@ class OpenOffCanvasDialogCommand extends OpenDialogCommand {
 
     // Conditional defaults
     // These dialogOptions can be overridden by defining them in
-    // '#attributes' => ['data-dialog-options' => ['key' => 'value']]
+    // '#attributes' => ['data-dialog-options' => Json::encode(['key' => 'value']])
 
     if (empty($dialog_options['dialogClass'])) {
       $this->dialogOptions['dialogClass'] = "ui-dialog-off-canvas ui-dialog-position-$position";
