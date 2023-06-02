@@ -1,0 +1,168 @@
+<?php
+
+/**
+ * @file
+ * A dummy module to test API interaction with the Toolbar module.
+ */
+
+use Drupal\Core\Link;
+use Drupal\Core\Url;
+
+/**
+ * Implements hook_toolbar().
+ */
+function toolbar_items_toolbar() {
+
+  $items['testing'] = [
+    '#type' => 'toolbar_item',
+    'tab' => [
+      '#type' => 'link',
+      '#title' => t('Test tab'),
+      '#url' => Url::fromRoute('<front>'),
+      '#options' => [
+        'attributes' => [
+          'id' => 'toolbar-tab-testing',
+          'title' => t('Test tab'),
+        ],
+      ],
+    ],
+    'tray' => [
+      '#heading' => t('Test tray'),
+      '#wrapper_attributes' => [
+        'id' => 'toolbar-tray-testing',
+      ],
+      'content' => [
+        '#theme' => 'item_list',
+        '#items' => [
+          Link::fromTextAndUrl(t('link 1'), Url::fromRoute('<front>', [], ['attributes' => ['title' => 'Test link 1 title']]))->toRenderable(),
+          Link::fromTextAndUrl(t('link 2'), Url::fromRoute('<front>', [], ['attributes' => ['title' => 'Test link 2 title']]))->toRenderable(),
+          Link::fromTextAndUrl(t('link 3'), Url::fromRoute('<front>', [], ['attributes' => ['title' => 'Test link 3 title']]))->toRenderable(),
+        ],
+        '#attributes' => [
+          'class' => ['toolbar-menu'],
+        ],
+      ],
+    ],
+    '#weight' => 50,
+  ];
+  $items['item1'] = [
+    '#type' => 'toolbar_item',
+    'tab' => [
+      '#type' => 'link',
+      '#title' => t('Toolbar-item1'),
+      '#url' => Url::fromRoute('<front>'),
+    ],
+    '#wrapper_attributes' => [
+      'class' => ['home-toolbar-tab'],
+    ],
+    '#attached' => [
+      'library' => [
+        'toolbar/toolbar.escapeAdmin',
+      ],
+    ],
+    '#weight' => 120,
+  ];
+  $items['item2'] = [
+    '#type' => 'toolbar_item',
+    'tab' => [
+      '#type' => 'link',
+      '#title' => t('Toolbar-item2'),
+      '#url' => Url::fromRoute('<front>'),
+    ],
+    '#wrapper_attributes' => [
+      'class' => ['home-toolbar-tab'],
+    ],
+    '#attached' => [
+      'library' => [
+        'toolbar/toolbar.escapeAdmin',
+      ],
+    ],
+    '#weight' => 130,
+  ];
+
+  $items['item3'] = [
+    '#type' => 'toolbar_item',
+    'tab' => [
+      '#type' => 'link',
+      '#title' => t('Toolbar-item3'),
+      '#url' => Url::fromRoute('<front>'),
+    ],
+    '#wrapper_attributes' => [
+      'class' => ['home-toolbar-tab'],
+    ],
+    '#attached' => [
+      'library' => [
+        'toolbar/toolbar.escapeAdmin',
+      ],
+    ],
+    '#weight' => 140,
+  ];
+  $items['item4'] = [
+    '#type' => 'toolbar_item',
+    'tab' => [
+      '#type' => 'link',
+      '#title' => t('Toolbar-item4'),
+      '#url' => Url::fromRoute('<front>'),
+    ],
+    '#wrapper_attributes' => [
+      'class' => ['home-toolbar-tab'],
+    ],
+    '#attached' => [
+      'library' => [
+        'toolbar/toolbar.escapeAdmin',
+      ],
+    ],
+    '#weight' => 150,
+  ];
+  $items['home5'] = [
+    '#type' => 'toolbar_item',
+    'tab' => [
+      '#type' => 'link',
+      '#title' => t('Toolbar-item5'),
+      '#url' => Url::fromRoute('<front>'),
+    ],
+    '#wrapper_attributes' => [
+      'class' => ['home-toolbar-tab'],
+    ],
+    '#attached' => [
+      'library' => [
+        'toolbar/toolbar.escapeAdmin',
+      ],
+    ],
+    '#weight' => 40,
+  ];
+  $items['item6'] = [
+    '#type' => 'toolbar_item',
+    'tab' => [
+      '#type' => 'link',
+      '#title' => t('Toolbar-item6'),
+      '#url' => Url::fromRoute('<front>'),
+    ],
+    '#wrapper_attributes' => [
+      'class' => ['home-toolbar-tab'],
+    ],
+    '#attached' => [
+      'library' => [
+        'toolbar/toolbar.escapeAdmin',
+      ],
+    ],
+    '#weight' => 170,
+  ];
+
+  $items['empty'] = [
+    '#type' => 'toolbar_item',
+  ];
+
+  return $items;
+}
+
+/**
+ * Implements hook_preprocess_HOOK().
+ */
+function toolbar_items_preprocess_menu(&$variables) {
+  // All the standard hook_theme variables should be populated when the
+  // Toolbar module is rendering a menu.
+  foreach (['menu_name', 'items', 'attributes'] as $variable) {
+    $variables[$variable];
+  }
+}
