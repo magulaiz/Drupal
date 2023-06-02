@@ -1083,7 +1083,7 @@ class ValidatorsTest extends KernelTestBase {
       'filters' => [],
       'violations' => [],
     ];
-    $data['INVALID: drupalMedia toolbar item condition NOT met: media filter enabled'] = [
+    $data['INVALID: drupalMedia toolbar item condition NOT met: media filter disabled'] = [
       'settings' => [
         'toolbar' => [
           'items' => [
