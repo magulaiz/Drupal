@@ -44,7 +44,7 @@ class OpenOffCanvasDialogCommand extends OpenDialogCommand {
     // For a full list of options see https://api.jqueryui.com/dialog/.
     $this->dialogOptions['modal'] = FALSE;
     $this->dialogOptions['autoResize'] = FALSE;
-    if (empty($this->dialogOptions['resizable'])) {
+    if (!array_key_exists('resizable', $this->dialogOptions)) {
       $this->dialogOptions['resizable'] = 'w';
     }
     $this->dialogOptions['draggable'] = FALSE;
