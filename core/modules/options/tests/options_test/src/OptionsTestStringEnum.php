@@ -1,6 +1,6 @@
 <?php
 
-namespace src;
+namespace Drupal\options_test;
 
 enum OptionsTestStringEnum: string {
 
