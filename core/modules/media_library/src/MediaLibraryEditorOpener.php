@@ -95,7 +95,7 @@ class MediaLibraryEditorOpener implements MediaLibraryOpenerInterface {
         'data-entity-uuid' => $selected_media->uuid(),
         'src' => $url,
         'alt' => $alt,
-        'data-entity-type' => $type_id,
+        'type-id' => $type_id,
         'src-type' => $src_type,
       ],
     ];

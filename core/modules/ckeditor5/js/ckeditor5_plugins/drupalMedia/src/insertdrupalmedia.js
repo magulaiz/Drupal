@@ -87,7 +87,11 @@ export default class InsertDrupalMediaCommand extends Command {
     }
 
     this.editor.model.change((writer) => {
+      const insert_image_command = this.editor.commands.get( 'insertImage' );
+      const insert_image_enabled = !(insert_image_command === undefined || insert_image_command === null);
+
       if (
+        insert_image_enabled &&
         drupalMediaOptions.useImgTag === 1 &&
         modelAttributes.drupalMediaSrcType === 'image'
       ) {
