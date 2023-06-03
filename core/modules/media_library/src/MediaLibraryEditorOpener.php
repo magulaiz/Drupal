@@ -96,7 +96,7 @@ class MediaLibraryEditorOpener implements MediaLibraryOpenerInterface {
         'data-align' => 'center',
         'src' => $url,
         'alt' => $alt,
-        'data-entity-type' => $type_id,
+        'type-id' => $type_id,
         'src-type' => $src_type,
       ],
     ];
