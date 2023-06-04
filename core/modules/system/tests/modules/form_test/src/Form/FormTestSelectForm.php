@@ -106,9 +106,9 @@ class FormTestSelectForm extends FormBase {
     ];
 
     $form['string_enum'] = array_merge($base, [
-        '#title' => 'String enum',
-        '#options' => FormTestStringEnum::class,
-      ]);
+      '#title' => 'String enum',
+      '#options' => FormTestStringEnum::class,
+    ]);
     $form['int_enum'] = array_merge($base, [
       '#title' => 'Int enum',
       '#options' => FormTestIntEnum::class,

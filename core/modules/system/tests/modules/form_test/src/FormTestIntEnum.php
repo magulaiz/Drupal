@@ -2,6 +2,9 @@
 
 namespace Drupal\form_test;
 
+/**
+ * Test enum used in select/checkboxes and radio tests.
+ */
 enum FormTestIntEnum: int {
 
   case NONE = 0;
