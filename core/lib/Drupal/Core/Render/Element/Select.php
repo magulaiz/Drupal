@@ -9,9 +9,9 @@ use Drupal\Core\Render\Element;
  * Provides a form element for a drop-down menu or scrolling selection box.
  *
  * Properties:
- * - #options: An associative array of options for the select. Do not use
- *   placeholders that sanitize data in any labels, as doing so will lead to
- *   double-escaping. Each array value can be:
+ * - #options: An associative array or enum of options for the select. Do not
+ *   use placeholders that sanitize data in any labels, as doing so will lead to
+ *   double-escaping. Each array or enum value can be:
  *   - A single translated string representing an HTML option element, where
  *     the outer array key is the option value and the translated string array
  *     value is the option label. The option value will be visible in the HTML
@@ -27,6 +27,9 @@ use Drupal\Core\Render\Element;
  *     is ignored, and the contents of the 'option' property are interpreted as
  *     an array of options to be merged with any other regular options and
  *     option groups found in the outer array.
+ *   - In case of using an enum it needs to be a backend enum, see
+ *     https://www.php.net/manual/en/language.enumerations.backed.php. The name
+ *     of each case is used as storage, and the value as the visible option.
  * - #sort_options: (optional) If set to TRUE (default is FALSE), sort the
  *   options by their labels, after rendering and translation is complete.
  *   Can be set within an option group to sort that group.
@@ -74,6 +77,15 @@ use Drupal\Core\Render\Element;
  *     ],
  *     '3' => $this->t('Three'),
  *   ],
+ * ];
+ * @endcode
+ *
+ * Usage example:
+ * @code
+ * $form['example_select'] = [
+ *   '#type' => 'select',
+ *   '#title' => $this->t('Select element'),
+ *   '#options' => ExampleEnum::class,
  * ];
  * @endcode
  *

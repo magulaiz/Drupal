@@ -9,16 +9,29 @@ use Drupal\Core\Form\FormStateInterface;
  * Provides a form element for a set of checkboxes.
  *
  * Properties:
- * - #options: An associative array whose keys are the values returned for each
- *   checkbox, and whose values are the labels next to each checkbox. The
- *   #options array cannot have a 0 key, as it would not be possible to discern
- *   checked and unchecked states.
+ * - #options: An associative array or enum whose keys are the values returned
+ *   for each checkbox, and whose values are the labels next to each checkbox.
+ *   The #options array cannot have a 0 key, as it would not be possible to
+ *   discern checked and unchecked states.
+ *   In case of using an enum it needs to be a backend enum, see
+ *   https://www.php.net/manual/en/language.enumerations.backed.php. The name of
+ *   each case is used as storage, and the value as the visible option.
  *
  * Usage example:
  * @code
  * $form['favorites']['colors'] = array(
  *   '#type' => 'checkboxes',
  *   '#options' => array('blue' => $this->t('Blue'), 'red' => $this->t('Red')),
+ *   '#title' => $this->t('Which colors do you like?'),
+ *   ...
+ * );
+ * @endcode
+ *
+ * Usage example:
+ * @code
+ * $form['favorites']['colors'] = array(
+ *   '#type' => 'checkboxes',
+ *   '#options' => ColorEnum::class,
  *   '#title' => $this->t('Which colors do you like?'),
  *   ...
  * );

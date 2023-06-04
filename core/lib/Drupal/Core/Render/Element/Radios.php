@@ -10,8 +10,11 @@ use Drupal\Core\Form\FormStateInterface;
  * Provides a form element for a set of radio buttons.
  *
  * Properties:
- * - #options: An associative array, where the keys are the returned values for
- *   each radio button, and the values are the labels next to each radio button.
+ * - #options: An associative array or enum, where the keys are the returned
+ *   values for each radio button, and the values are the labels next to each
+ *   radio button. In case of using an enum it needs to be a backend enum, see
+ *   https://www.php.net/manual/en/language.enumerations.backed.php. The name
+ *   of each case is used as storage, and the value as the visible option.
  *
  * Usage example:
  * @code
@@ -20,6 +23,16 @@ use Drupal\Core\Form\FormStateInterface;
  *   '#title' => $this->t('Poll status'),
  *   '#default_value' => 1,
  *   '#options' => array(0 => $this->t('Closed'), 1 => $this->t('Active')),
+ * );
+ * @endcode
+ *
+ * Usage example for enum:
+ * @code
+ * $form['settings']['active'] = array(
+ *   '#type' => 'radios',
+ *   '#title' => $this->t('Poll status'),
+ *   '#default_value' => 1,
+ *   '#options' => ActiveEnum::class,
  * );
  * @endcode
  *
