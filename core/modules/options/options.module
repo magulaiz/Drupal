@@ -96,6 +96,9 @@ function options_allowed_values(FieldStorageDefinitionInterface $definition, Fie
           array_map(fn(\UnitEnum $enum) => $enum->value, $cases),
         );
       }
+      else {
+        throw new \Exception(sprintf('Invalid enum %s defined for field %s on entity %s', $enum_class, $definition->getName(), $definition->getTargetEntityTypeId()));
+      }
     }
     else {
       $values = $definition->getSetting('allowed_values');
