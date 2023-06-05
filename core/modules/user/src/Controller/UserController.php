@@ -318,7 +318,9 @@ class UserController extends ControllerBase {
     if ($this->currentUser()->isAuthenticated()) {
       user_logout();
     }
-    return $this->redirect('<front>');
+    $response = $this->redirect('<front>');
+    $response->headers->set('Clear-Site-Data', 'cache');
+    return $response;
   }
 
   /**
