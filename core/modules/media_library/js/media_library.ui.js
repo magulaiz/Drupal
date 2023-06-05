@@ -163,6 +163,37 @@
         $('.js-media-library-selected-count').html(selectItemsText);
       }
 
+      function selectAllMedia() {
+        var $view = $('.js-media-library-view[data-view-display-id="widget_table"]', context);
+
+        if ($view.length && $view.find('.js-media-library-item').length) {
+          if ($('th.views-field-media-library-select-form').length) {
+            $('th.views-field-media-library-select-form').html('<input type="checkbox" class="checkedAllMedia">');
+          }
+
+          $('.checkedAllMedia').click(function () {
+            var checked = this.checked;
+            $('.js-media-library-item input[type="checkbox"]').prop('checked', checked);
+            $('.js-media-library-item input[type="checkbox"]').trigger('change');
+          });
+          $(".js-media-library-item .form-checkbox").click(function () {
+            if ($(this).is(":checked")) {
+              var isAllChecked = 0;
+              $(".js-media-library-item .form-checkbox").each(function () {
+                if (!this.checked) isAllChecked = 1;
+              });
+
+              if (isAllChecked == 0) {
+                $(".checkedAllMedia").prop("checked", true);
+              }
+            } else {
+              $(".checkedAllMedia").prop("checked", false);
+            }
+          });
+        }
+      }
+
+      selectAllMedia();
       $(once('media-item-change', $mediaItems)).on('change', function (e) {
         var id = e.currentTarget.value;
         var position = currentSelection.indexOf(id);
