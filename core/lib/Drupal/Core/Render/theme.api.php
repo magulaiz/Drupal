@@ -810,6 +810,8 @@ function hook_element_info_alter(array &$info) {
  *
  * @see \Drupal\Core\Render\ElementInfoManager
  * @see \Drupal\Core\Render\Element\ElementInterface
+ *
+ * @ingroup plugin_api
  */
 function hook_element_plugin_alter(array &$definitions) {
   // Use a custom class for the LayoutBuilder element.
