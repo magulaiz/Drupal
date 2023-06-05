@@ -15,11 +15,16 @@ trait TaxonomyTestTrait {
   /**
    * Returns a new vocabulary with random properties.
    *
+   * @param array $values
+   *   (optional) An array of values to set, keyed by property name.
+   *
    * @return \Drupal\taxonomy\VocabularyInterface
-   *   A vocabulary used for testing.
+   *   The new taxonomy vocabulary object.
+   *
+   * @throws \Drupal\Core\Entity\EntityStorageException
    */
-  public function createVocabulary() {
-    $vocabulary = Vocabulary::create([
+  public function createVocabulary(array $values = []) {
+    $vocabulary = Vocabulary::create($values + [
       'name' => $this->randomMachineName(),
       'description' => $this->randomMachineName(),
       'vid' => mb_strtolower($this->randomMachineName()),

@@ -95,8 +95,12 @@ function taxonomy_tokens($type, $tokens, array $data, array $options, Bubbleable
   $token_service = \Drupal::token();
 
   $replacements = [];
+
+  $langcode = isset($options['langcode']) ? $options['langcode'] : NULL;
+
   if ($type == 'term' && !empty($data['term'])) {
-    $term = $data['term'];
+    /** @var \Drupal\taxonomy\TermInterface $term */
+    $term = \Drupal::service('entity.repository')->getTranslationFromContext($data['term'], $langcode, ['operation' => 'term_tokens']);
 
     foreach ($tokens as $name => $original) {
       switch ($name) {
@@ -109,9 +113,7 @@ function taxonomy_tokens($type, $tokens, array $data, array $options, Bubbleable
           break;
 
         case 'description':
-          // "processed" returns a \Drupal\Component\Render\MarkupInterface via
-          // check_markup().
-          $replacements[$original] = $term->description->processed;
+          $replacements[$original] = $term->getDescription();
           break;
 
         case 'url':
@@ -127,15 +129,21 @@ function taxonomy_tokens($type, $tokens, array $data, array $options, Bubbleable
           break;
 
         case 'vocabulary':
+          /** @var \Drupal\taxonomy\VocabularyInterface $vocabulary */
+          $language_manager = \Drupal::languageManager();
+          $language = $language_manager->getLanguage($langcode);
+          $original_language = $language_manager->getConfigOverrideLanguage();
+          $language_manager->setConfigOverrideLanguage($language);
           $vocabulary = Vocabulary::load($term->bundle());
           $bubbleable_metadata->addCacheableDependency($vocabulary);
           $replacements[$original] = $vocabulary->label();
+          $language_manager->setConfigOverrideLanguage($original_language);
           break;
 
         case 'parent':
           $taxonomy_storage = \Drupal::entityTypeManager()->getStorage('taxonomy_term');
           if ($parents = $taxonomy_storage->loadParents($term->id())) {
-            $parent = array_pop($parents);
+            $parent = \Drupal::service('entity.repository')->getTranslationFromContext(array_pop($parents), $langcode, ['operation' => 'term_tokens']);
             $bubbleable_metadata->addCacheableDependency($parent);
             $replacements[$original] = $parent->getName();
           }
@@ -144,8 +152,14 @@ function taxonomy_tokens($type, $tokens, array $data, array $options, Bubbleable
     }
 
     if ($vocabulary_tokens = $token_service->findWithPrefix($tokens, 'vocabulary')) {
+      /** @var \Drupal\taxonomy\VocabularyInterface $vocabulary */
+      $language_manager = \Drupal::languageManager();
+      $language = $language_manager->getLanguage($langcode);
+      $original_language = $language_manager->getConfigOverrideLanguage();
+      $language_manager->setConfigOverrideLanguage($language);
       $vocabulary = Vocabulary::load($term->bundle());
       $replacements += $token_service->generate('vocabulary', $vocabulary_tokens, ['vocabulary' => $vocabulary], $options, $bubbleable_metadata);
+      $language_manager->setConfigOverrideLanguage($original_language);
     }
 
     if (($vocabulary_tokens = $token_service->findWithPrefix($tokens, 'parent'))) {
@@ -158,6 +172,7 @@ function taxonomy_tokens($type, $tokens, array $data, array $options, Bubbleable
   }
 
   elseif ($type == 'vocabulary' && !empty($data['vocabulary'])) {
+    /** @var \Drupal\taxonomy\VocabularyInterface $vocabulary */
     $vocabulary = $data['vocabulary'];
 
     foreach ($tokens as $name => $original) {
