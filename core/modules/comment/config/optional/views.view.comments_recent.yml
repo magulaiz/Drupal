@@ -232,6 +232,7 @@ display:
           hide_empty: false
       query:
         type: views_query
+        options: {  }
       relationships:
         node:
           id: node

@@ -806,6 +806,8 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
     if ($type == 'query') {
       $views_data = Views::viewsData()->get($this->view->storage->get('base_table'));
       $name = $views_data['table']['base']['query_id'] ?? 'views_query';
+      $options['type'] = $name;
+      $this->setOption($type, $options);
     }
     else {
       $name = $options['type'];
