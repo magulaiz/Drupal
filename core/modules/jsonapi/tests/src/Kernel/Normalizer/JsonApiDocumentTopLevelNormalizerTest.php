@@ -195,7 +195,7 @@ class JsonApiDocumentTopLevelNormalizerTest extends JsonapiKernelTestBase {
     $this->node = Node::create([
       'title' => 'dummy_title',
       'type' => 'article',
-      'uid' => 1,
+      'uid' => $this->user,
       'body' => [
         'format' => 'plain_text',
         'value' => $this->randomStringValidate(42),
@@ -259,7 +259,7 @@ class JsonApiDocumentTopLevelNormalizerTest extends JsonapiKernelTestBase {
    * @covers ::normalize
    */
   public function testNormalize() {
-    [$request, $resource_type] = $this->generateProphecies('node', 'article');
+    $resource_type = $this->container->get('jsonapi.resource_type.repository')->get('node', 'article');
 
     $resource_object = ResourceObject::createFromEntity($resource_type, $this->node);
     $includes = $this->includeResolver->resolve($resource_object, 'uid,field_tags,field_image');
@@ -359,43 +359,6 @@ class JsonApiDocumentTopLevelNormalizerTest extends JsonapiKernelTestBase {
   /**
    * @covers ::normalize
    */
-  public function testNormalizeRelated() {
-    $this->markTestIncomplete('This fails and should be fixed by https://www.drupal.org/project/drupal/issues/3213752');
-
-    [$request, $resource_type] = $this->generateProphecies('node', 'article');
-    $request->query = new ParameterBag([
-      'fields' => [
-        'user--user' => 'name,roles',
-      ],
-      'include' => 'roles',
-    ]);
-    $document_wrapper = $this->prophesize(JsonApiDocumentTopLevel::class);
-    $author = $this->node->get('uid')->entity;
-    $document_wrapper->getData()->willReturn($author);
-
-    $jsonapi_doc_object = $this
-      ->getNormalizer()
-      ->normalize(
-        $document_wrapper->reveal(),
-        'api_json',
-        [
-          'resource_type' => $resource_type,
-          'account' => NULL,
-        ]
-      );
-    $normalized = $jsonapi_doc_object->getNormalization();
-    $this->assertSame($normalized['data']['attributes']['name'], 'user1');
-    $this->assertEquals($normalized['data']['id'], User::load(1)->uuid());
-    $this->assertEquals('user--user', $normalized['data']['type']);
-    // Make sure that the cache tags for the includes and the requested entities
-    // are bubbling as expected.
-    $this->assertSame(['user:1'], $jsonapi_doc_object->getCacheTags());
-    $this->assertSame(Cache::PERMANENT, $jsonapi_doc_object->getCacheMaxAge());
-  }
-
-  /**
-   * @covers ::normalize
-   */
   public function testNormalizeUuid() {
     [$request, $resource_type] = $this->generateProphecies('node', 'article');
     $resource_object = ResourceObject::createFromEntity($resource_type, $this->node);
@@ -487,11 +450,11 @@ class JsonApiDocumentTopLevelNormalizerTest extends JsonapiKernelTestBase {
     $this->assertSame('user_roles', $this->resourceTypeRepository->getByTypeName('user--user')->getPublicName('roles'));
 
     // Create the request to fetch the articles and fetch included user.
-    [$request, $resource_type] = $this->generateProphecies('node', 'article');
+    $resource_type = $this->container->get('jsonapi.resource_type.repository')->get('node', 'article');
     $user = User::load($this->node->getOwnerId());
 
     $resource_object = ResourceObject::createFromEntity($resource_type, $this->node);
-    [$request, $user_resource_type] = $this->generateProphecies('user', 'user');
+    [, $user_resource_type] = $this->generateProphecies('user', 'user');
     $resource_object_user = LabelOnlyResourceObject::createFromEntity($user_resource_type, $user);
     $includes = $this->includeResolver->resolve($resource_object_user, 'user_roles');
 
@@ -534,7 +497,7 @@ class JsonApiDocumentTopLevelNormalizerTest extends JsonapiKernelTestBase {
    * @covers ::normalize
    */
   public function testNormalizeConfig() {
-    [$request, $resource_type] = $this->generateProphecies('node_type', 'node_type');
+    [, $resource_type] = $this->generateProphecies('node_type', 'node_type');
     $resource_object = ResourceObject::createFromEntity($resource_type, $this->nodeType);
     $document_wrapper = new JsonApiDocumentTopLevel(new ResourceObjectData([$resource_object], 1), new NullIncludedData(), new LinkCollection([]));
 
@@ -800,15 +763,11 @@ class JsonApiDocumentTopLevelNormalizerTest extends JsonapiKernelTestBase {
    *
    * @param \Drupal\Core\Cache\CacheableMetadata $expected_metadata
    *   The expected cacheable metadata.
-   * @param array|null $fields
-   *   Fields to include in the response, keyed by resource type.
-   * @param array|null $includes
-   *   Resources paths to include in the response.
    *
    * @dataProvider testCacheableMetadataProvider
    */
-  public function testCacheableMetadata(CacheableMetadata $expected_metadata, $fields = NULL, $includes = NULL) {
-    [$request, $resource_type] = $this->generateProphecies('node', 'article');
+  public function testCacheableMetadata(CacheableMetadata $expected_metadata) {
+    $resource_type = $this->container->get('jsonapi.resource_type.repository')->get('node', 'article');
     $resource_object = ResourceObject::createFromEntity($resource_type, $this->node);
     $context = [
       'resource_type' => $resource_type,
