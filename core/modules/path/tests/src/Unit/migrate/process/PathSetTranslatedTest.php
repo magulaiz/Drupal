@@ -65,6 +65,11 @@ class PathSetTranslatedTest extends MigrateProcessTestCase {
         'node_translation' => [3, 'en'],
         'expected_result' => '/node/3',
       ],
+      'valid_transform_no_leading_slash' => [
+        'path' => 'node/1',
+        'node_translation' => ['3', 'en'],
+        'expected_result' => 'node/3',
+      ],
     ];
   }
 

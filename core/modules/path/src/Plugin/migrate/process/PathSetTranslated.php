@@ -14,7 +14,7 @@ use Drupal\migrate\Row;
  * - source: An array of two values, the first being the original path, and the
  *   second being an array of the format [nid, langcode] if a translated node
  *   exists (likely from a migration lookup). Paths not of the format
- *   '/node/<nid>' will pass through unchanged, as will any inputs with invalid
+ *   '/node/<nid>' or 'node/<nid>' will pass through unchanged, as will any inputs with invalid
  *   or missing translated nodes.
  *
  * This plugin will return the correct path for the translated node if the above
@@ -48,7 +48,9 @@ use Drupal\migrate\Row;
  *
  * In the example above, if the node_translation lookup succeeds and the
  * original path is of the format '/node/<original node nid>', then the new path
- * will be set to '/node/<translated node nid>'
+ * will be set to '/node/<translated node nid>'. If the original path is of the
+ * format 'node/<original node nid>', then the new path will be set to
+ * 'node/<translated node nid>'.
  *
  * @MigrateProcessPlugin(
  *   id = "path_set_translated"
@@ -66,8 +68,14 @@ class PathSetTranslated extends ProcessPluginBase {
 
     $path = $value[0] ?? '';
     $nid = (is_array($value[1]) && isset($value[1][0])) ? $value[1][0] : FALSE;
-    if (preg_match('/^\/node\/\d+$/', $path) && $nid) {
-      return '/node/' . $nid;
+    // Match both /node/<nid> and node/<nid>.
+    if (preg_match('/^\/?node\/\d+$/', $path) && $nid) {
+      $path_translated = 'node/' . $nid;
+      // If original path start with a slash, then the translated path should.
+      if (substr($path, 0, 1) === '/') {
+        $path_translated = '/' . $path_translated;
+      }
+      return $path_translated;
     }
     return $path;
   }
