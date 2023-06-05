@@ -21,6 +21,12 @@ function olivero_form_system_theme_settings_alter(&$form, FormStateInterface $fo
     '#default_value' => theme_get_setting('mobile_menu_all_widths'),
     '#description' => t('Enables the mobile menu toggle at all widths.'),
   ];
+  $form['olivero_settings']['olivero_utilities']['sticky_sidebar'] = [
+    '#type' => 'checkbox',
+    '#title' => t('Sticky sidebar'),
+    '#default_value' => theme_get_setting('sticky_sidebar'),
+    '#description' => t('Enables the sidebar to stick to the top of the viewport when scrolled to.'),
+  ];
   $form['olivero_settings']['olivero_utilities']['site_branding_bg_color'] = [
     '#type' => 'select',
     '#title' => t('Header site branding background color'),

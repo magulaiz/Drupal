@@ -21,3 +21,6 @@ olivero.settings:
     site_branding_bg_color:
       type: string
       label: "Site branding background color"
+    sticky_sidebar:
+      type: integer
+      label: "Sticky sidebar"
