@@ -33,6 +33,12 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *   should be included, defaults to TRUE.
  * - add_revision_id: (optional) Indicates if the revision key is added to the
  *   source IDs, defaults to TRUE.
+ * - conditions: (optional) An array of conditions to apply to the source's
+ *   entity query. Each condition should be an array with the following
+ *   properties:
+ *    - field: The name of the field, in the same format that
+ *      \Drupal\Core\Entity\Query\QueryInterface::condition() accepts.
+ *    - value: The value for the condition.
  *
  * Examples:
  *
@@ -107,6 +113,7 @@ class ContentEntity extends SourcePluginBase implements ContainerFactoryPluginIn
   protected $defaultConfiguration = [
     'bundle' => NULL,
     'include_translations' => TRUE,
+    'conditions' => [],
     'add_revision_id' => TRUE,
   ];
 
@@ -231,6 +238,16 @@ class ContentEntity extends SourcePluginBase implements ContainerFactoryPluginIn
       ->accessCheck(FALSE);
     if (!empty($this->configuration['bundle'])) {
       $query->condition($this->entityType->getKey('bundle'), $this->configuration['bundle']);
+    }
+    foreach ($this->configuration['conditions'] as $condition) {
+      if (!isset($condition['field'])) {
+        throw new InvalidPluginDefinitionException($this->getPluginId(), "Plugin configuration 'conditions' array items must specify 'field'.");
+      }
+      if (!isset($condition['value'])) {
+        throw new InvalidPluginDefinitionException($this->getPluginId(), "Plugin configuration 'conditions' array items must specify 'value'.");
+      }
+
+      $query->condition($condition['field'], $condition['value']);
     }
     // Exclude anonymous user account.
     if ($this->entityType->id() === 'user' && !empty($this->entityType->getKey('id'))) {
