@@ -146,6 +146,7 @@ abstract class Entity extends DestinationBase implements ContainerFactoryPluginI
    */
   public function fields() {
     // TODO: Implement fields() method.
+    return [];
   }
 
   /**

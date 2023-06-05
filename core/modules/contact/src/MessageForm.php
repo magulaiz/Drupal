@@ -219,7 +219,7 @@ class MessageForm extends ContentEntityForm {
     // Save the message. In core this is a no-op but should contrib wish to
     // implement message storage, this will make the task of swapping in a real
     // storage controller straight-forward.
-    $message->save();
+    $status = $message->save();
     $this->mailHandler->sendMailMessages($message, $user);
     $contact_form = $message->getContactForm();
 
@@ -236,6 +236,8 @@ class MessageForm extends ContentEntityForm {
     else {
       $form_state->setRedirectUrl($contact_form->getRedirectUrl());
     }
+
+    return $status;
   }
 
 }

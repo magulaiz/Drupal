@@ -342,12 +342,14 @@ class ViewEditForm extends ViewFormBase {
       $form_state->setRedirectUrl(Url::fromUri("base:$destination"));
     }
 
-    $view->save();
+    $status = $view->save();
 
     $this->messenger()->addStatus($this->t('The view %name has been saved.', ['%name' => $view->label()]));
 
     // Remove this view from cache so we can edit it properly.
     $this->tempStore->delete($view->id());
+
+    return $status;
   }
 
   /**

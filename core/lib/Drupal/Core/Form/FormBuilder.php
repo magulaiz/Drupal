@@ -874,6 +874,8 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
    */
   public function setInvalidTokenError(FormStateInterface $form_state) {
     $this->formValidator->setInvalidTokenError($form_state);
+
+    return $this;
   }
 
   /**

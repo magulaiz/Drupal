@@ -662,6 +662,8 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
       }
     }
     $this->addServiceFiles(Settings::get('container_yamls', []));
+
+    return $this->serviceProviderClasses;
   }
 
   /**

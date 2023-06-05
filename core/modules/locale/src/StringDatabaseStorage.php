@@ -278,12 +278,9 @@ class StringDatabaseStorage implements StringStorageInterface {
    *   The table name.
    */
   protected function dbStringTable($string) {
-    if ($string->isSource()) {
-      return 'locales_source';
-    }
-    elseif ($string->isTranslation()) {
-      return 'locales_target';
-    }
+    return $string->isSource() ?
+      'locales_source'
+      : 'locales_target';
   }
 
   /**

@@ -159,11 +159,13 @@ class WorkflowStateAddForm extends EntityForm {
         ->submitConfigurationForm($form['type_settings'], $subform_state);
     }
 
-    $workflow->save();
+    $status = $workflow->save();
     $this->messenger()->addStatus($this->t('Created %label state.', [
       '%label' => $workflow->getTypePlugin()->getState($form_state->getValue('id'))->label(),
     ]));
     $form_state->setRedirectUrl($workflow->toUrl('edit-form'));
+
+    return $status;
   }
 
   /**

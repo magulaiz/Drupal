@@ -153,6 +153,8 @@ class WorkspaceForm extends ContentEntityForm implements WorkspaceFormInterface 
       $this->messenger->addError($this->t('The workspace could not be saved.'));
       $form_state->setRebuild();
     }
+
+    return $status;
   }
 
 }

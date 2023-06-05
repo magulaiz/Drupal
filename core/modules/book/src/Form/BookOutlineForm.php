@@ -114,12 +114,14 @@ class BookOutlineForm extends ContentEntityForm {
     $book_link = $form_state->getValue('book');
     if (!$book_link['bid']) {
       $this->messenger()->addStatus($this->t('No changes were made'));
-      return;
+      return \SAVED_UPDATED;
     }
 
+    $status = \SAVED_UPDATED;
     $this->entity->book = $book_link;
     if ($this->bookManager->updateOutline($this->entity)) {
       if (isset($this->entity->book['parent_mismatch']) && $this->entity->book['parent_mismatch']) {
+        $status = \SAVED_NEW;
         // This will usually only happen when JS is disabled.
         $this->messenger()->addStatus($this->t('The post has been added to the selected book. You may now position it relative to other pages.'));
         $form_state->setRedirectUrl($this->entity->toUrl('book-outline-form'));
@@ -131,6 +133,8 @@ class BookOutlineForm extends ContentEntityForm {
     else {
       $this->messenger()->addError($this->t('There was an error adding the post to the book.'));
     }
+
+    return $status;
   }
 
 }

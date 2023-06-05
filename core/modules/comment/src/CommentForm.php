@@ -376,8 +376,9 @@ class CommentForm extends ContentEntityForm {
     $uri = $entity->toUrl();
     $logger = $this->logger('comment');
 
+    $status = \SAVED_NEW;
     if ($this->currentUser->hasPermission('post comments') && ($this->currentUser->hasPermission('administer comments') || $entity->{$field_name}->status == CommentItemInterface::OPEN)) {
-      $comment->save();
+      $status = $comment->save();
       $form_state->setValue('cid', $comment->id());
 
       // Add a log entry.
@@ -412,6 +413,8 @@ class CommentForm extends ContentEntityForm {
       // Redirect the user to the entity they are commenting on.
     }
     $form_state->setRedirectUrl($uri);
+
+    return $status;
   }
 
 }

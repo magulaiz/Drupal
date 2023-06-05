@@ -110,6 +110,8 @@ class BlockContentTypeForm extends BundleEntityFormBase {
     }
 
     $form_state->setRedirectUrl($this->entity->toUrl('collection'));
+
+    return $status;
   }
 
 }

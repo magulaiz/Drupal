@@ -28,8 +28,9 @@ class UpdateKernel extends DrupalKernel {
    */
   public function discoverServiceProviders() {
     parent::discoverServiceProviders();
-
     $this->serviceProviderClasses['app']['update_kernel'] = 'Drupal\Core\Update\UpdateServiceProvider';
+
+    return $this->serviceProviderClasses;
   }
 
   /**

@@ -114,6 +114,8 @@ class ModerationInformation implements ModerationInformationInterface {
         return $translation;
       }
     }
+
+    return NULL;
   }
 
   /**

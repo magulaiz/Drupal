@@ -36,7 +36,9 @@ class NullLockBackend implements LockBackendInterface {
   /**
    * {@inheritdoc}
    */
-  public function wait($name, $delay = 30) {}
+  public function wait($name, $delay = 30) {
+    return FALSE;
+  }
 
   /**
    * {@inheritdoc}

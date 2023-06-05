@@ -253,6 +253,8 @@ class NodeTypeForm extends BundleEntityFormBase {
 
     $this->entityFieldManager->clearCachedFieldDefinitions();
     $form_state->setRedirectUrl($type->toUrl('collection'));
+
+    return $status;
   }
 
 }

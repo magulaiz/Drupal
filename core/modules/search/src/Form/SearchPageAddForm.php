@@ -39,9 +39,11 @@ class SearchPageAddForm extends SearchPageFormBase {
       $this->searchPageRepository->setDefaultSearchPage($this->entity);
     }
 
-    parent::save($form, $form_state);
+    $status = parent::save($form, $form_state);
 
     $this->messenger()->addStatus($this->t('The %label search page has been added.', ['%label' => $this->entity->label()]));
+
+    return $status;
   }
 
 }

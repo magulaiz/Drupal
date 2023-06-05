@@ -139,6 +139,7 @@ class Module extends Updater implements UpdaterInterface {
   public function postUpdateTasks() {
     // We don't want to check for DB updates here, we do that once for all
     // updated modules on the landing page.
+    return [];
   }
 
 }

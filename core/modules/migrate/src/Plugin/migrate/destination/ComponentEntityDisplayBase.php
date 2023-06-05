@@ -97,7 +97,8 @@ abstract class ComponentEntityDisplayBase extends DestinationBase implements Con
    * {@inheritdoc}
    */
   public function fields() {
-    // This is intentionally left empty.
+    // @todo This method should be abstract.
+    return [];
   }
 
   /**

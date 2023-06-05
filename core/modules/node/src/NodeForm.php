@@ -267,7 +267,7 @@ class NodeForm extends ContentEntityForm {
   public function save(array $form, FormStateInterface $form_state) {
     $node = $this->entity;
     $insert = $node->isNew();
-    $node->save();
+    $status = $node->save();
     $node_link = $node->toLink($this->t('View'))->toString();
     $context = ['@type' => $node->getType(), '%title' => $node->label(), 'link' => $node_link];
     $t_args = ['@type' => node_get_type_label($node), '%title' => $node->toLink()->toString()];
@@ -304,6 +304,8 @@ class NodeForm extends ContentEntityForm {
       $this->messenger()->addError($this->t('The post could not be saved.'));
       $form_state->setRebuild();
     }
+
+    return $status;
   }
 
 }

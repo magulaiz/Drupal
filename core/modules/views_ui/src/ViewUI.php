@@ -182,6 +182,8 @@ class ViewUI implements ViewEntityInterface {
     else {
       $this->{$property_name} = $value;
     }
+
+    return $this;
   }
 
   /**
@@ -189,6 +191,8 @@ class ViewUI implements ViewEntityInterface {
    */
   public function setSyncing($syncing) {
     $this->isSyncing = $syncing;
+
+    return $this;
   }
 
   /**
@@ -1240,7 +1244,7 @@ class ViewUI implements ViewEntityInterface {
    * {@inheritdoc}
    */
   public function getTypedData() {
-    $this->storage->getTypedData();
+    return $this->storage->getTypedData();
   }
 
   /**
