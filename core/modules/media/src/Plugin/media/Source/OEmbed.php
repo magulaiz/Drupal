@@ -234,7 +234,7 @@ class OEmbed extends MediaSourceBase implements OEmbedInterface {
   /**
    * {@inheritdoc}
    */
-  public function getMetadata(MediaInterface $media, $name) {
+  protected function getRawMetadata(MediaInterface $media, $name) {
     $media_url = $this->getSourceFieldValue($media);
     // The URL may be NULL if the source field is empty, in which case just
     // return NULL.
@@ -259,10 +259,10 @@ class OEmbed extends MediaSourceBase implements OEmbedInterface {
         elseif ($url = $this->getMetadata($media, 'url')) {
           return $url;
         }
-        return parent::getMetadata($media, 'default_name');
+        return parent::getRawMetadata($media, 'default_name');
 
       case 'thumbnail_uri':
-        return $this->getLocalThumbnailUri($resource) ?: parent::getMetadata($media, 'thumbnail_uri');
+        return $this->getLocalThumbnailUri($resource) ?: parent::getRawMetadata($media, 'thumbnail_uri');
 
       case 'type':
         return $resource->getType();

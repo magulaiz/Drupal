@@ -57,12 +57,12 @@ class File extends MediaSourceBase {
   /**
    * {@inheritdoc}
    */
-  public function getMetadata(MediaInterface $media, $attribute_name) {
+  protected function getRawMetadata(MediaInterface $media, $attribute_name) {
     /** @var \Drupal\file\FileInterface $file */
     $file = $media->get($this->configuration['source_field'])->entity;
     // If the source field is not required, it may be empty.
     if (!$file) {
-      return parent::getMetadata($media, $attribute_name);
+      return parent::getRawMetadata($media, $attribute_name);
     }
     switch ($attribute_name) {
       case static::METADATA_ATTRIBUTE_NAME:
@@ -76,10 +76,10 @@ class File extends MediaSourceBase {
         return $file->getSize();
 
       case 'thumbnail_uri':
-        return $this->getThumbnail($file) ?: parent::getMetadata($media, $attribute_name);
+        return $this->getThumbnail($file) ?: parent::getRawMetadata($media, $attribute_name);
 
       default:
-        return parent::getMetadata($media, $attribute_name);
+        return parent::getRawMetadata($media, $attribute_name);
     }
   }
 

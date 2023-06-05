@@ -20,7 +20,7 @@ class TestTranslation extends Test {
   /**
    * {@inheritdoc}
    */
-  public function getMetadata(MediaInterface $media, $attribute_name) {
+  protected function getRawMetadata(MediaInterface $media, $attribute_name) {
     if ($attribute_name == 'thumbnail_uri') {
       return 'public://' . $media->language()->getId() . '.png';
     }
@@ -30,7 +30,7 @@ class TestTranslation extends Test {
       return $this->t('Test Thumbnail @language', ['@language' => $langcode], ['langcode' => $langcode]);
     }
 
-    return parent::getMetadata($media, $attribute_name);
+    return parent::getRawMetadata($media, $attribute_name);
   }
 
 }

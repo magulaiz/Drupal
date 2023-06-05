@@ -38,7 +38,7 @@ class Test extends MediaSourceBase {
   /**
    * {@inheritdoc}
    */
-  public function getMetadata(MediaInterface $media, $attribute_name) {
+  protected function getRawMetadata(MediaInterface $media, $attribute_name) {
     $attributes = \Drupal::state()->get('media_source_test_attributes', [
       'attribute_1' => ['label' => $this->t('Attribute 1'), 'value' => 'Value 1'],
       'attribute_2' => ['label' => $this->t('Attribute 2'), 'value' => 'Value 1'],
@@ -48,7 +48,7 @@ class Test extends MediaSourceBase {
       return $attributes[$attribute_name]['value'];
     }
 
-    return parent::getMetadata($media, $attribute_name);
+    return parent::getRawMetadata($media, $attribute_name);
   }
 
   /**
