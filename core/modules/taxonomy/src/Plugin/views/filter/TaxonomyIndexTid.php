@@ -331,15 +331,7 @@ class TaxonomyIndexTid extends ManyToOne {
       return FALSE;
     }
 
-    $rc = parent::acceptExposedInput($input);
-    if ($rc) {
-      // If we have previously validated input, override.
-      if (isset($this->validated_exposed_input)) {
-        $this->value = $this->validated_exposed_input;
-      }
-    }
-
-    return $rc;
+    return parent::acceptExposedInput($input);
   }
 
   public function validateExposed(&$form, FormStateInterface $form_state) {
