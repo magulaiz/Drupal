@@ -278,7 +278,8 @@ class EntityViewBuilder extends EntityHandlerBase implements EntityHandlerInterf
 
     // Build content for the displays represented by the entities.
     foreach ($view_modes as $view_mode => $view_mode_entities) {
-      $displays = EntityViewDisplay::collectRenderDisplays($view_mode_entities, $view_mode);
+      $class = $this->entityManager->getDefinition('entity_view_display')->getClass();
+      $displays = $class::collectRenderDisplays($view_mode_entities, $view_mode);
       $this->buildComponents($build_list, $view_mode_entities, $displays, $view_mode);
       foreach (array_keys($view_mode_entities) as $key) {
         // Allow for alterations while building, before rendering.

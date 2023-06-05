@@ -9,7 +9,6 @@ use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element;
-use Drupal\Core\Entity\Entity\EntityFormDisplay;
 use Drupal\Core\TempStore\PrivateTempStoreFactory;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -131,7 +130,8 @@ class QuickEditFieldForm extends FormBase {
 
     // Fetch the display used by the form. It is the display for the 'default'
     // form mode, with only the current field visible.
-    $display = EntityFormDisplay::collectRenderDisplay($entity, 'default');
+    $class = \Drupal::entityTypeManager()->getDefinition('entity_form_display');
+    $display = $class::collectRenderDisplay($entity, 'default');
     foreach ($display->getComponents() as $name => $options) {
       if ($name != $field_name) {
         $display->removeComponent($name);
