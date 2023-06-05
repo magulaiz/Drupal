@@ -62,6 +62,7 @@ class TestForm extends FormBase {
         1 => 'one',
         2 => 'two',
         3 => 'three',
+        0 => 'zero',
       ],
       '#default_value' => 2,
     ];
