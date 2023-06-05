@@ -93,6 +93,10 @@ class HtmlResponseBigPipeSubscriber implements EventSubscriberInterface {
 
     $big_pipe_response = new BigPipeResponse($response);
     $big_pipe_response->setBigPipeService($this->getBigPipeService($event));
+
+    // A BigPipe response's length is impossible to predict.
+    $big_pipe_response->headers->remove('content-length');
+
     $event->setResponse($big_pipe_response);
   }
 
