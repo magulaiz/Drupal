@@ -117,6 +117,9 @@ class Role extends ConfigEntityBase implements RoleInterface {
    * {@inheritdoc}
    */
   public function hasPermission($permission) {
+    if (!str_contains($permission, ':')) {
+      @trigger_error('Calling the \Drupal\user\RoleInterface::hasPermission method without a namespaced permission is deprecated in drupal:9.4.0, a namespaced permission will be required instead in drupal:10.0.0. See https://www.drupal.org/node/2726421', E_USER_DEPRECATED);
+    }
     if ($this->isAdmin()) {
       return TRUE;
     }
@@ -127,6 +130,9 @@ class Role extends ConfigEntityBase implements RoleInterface {
    * {@inheritdoc}
    */
   public function grantPermission($permission) {
+    if (!str_contains($permission, ':')) {
+      @trigger_error('Calling the \Drupal\user\RoleInterface::grantPermission method without a namespaced permission is deprecated in drupal:9.4.0, a namespaced permission will be required instead in drupal:10.0.0. See https://www.drupal.org/node/2726421', E_USER_DEPRECATED);
+    }
     if ($this->isAdmin()) {
       return $this;
     }
@@ -140,6 +146,9 @@ class Role extends ConfigEntityBase implements RoleInterface {
    * {@inheritdoc}
    */
   public function revokePermission($permission) {
+    if (!str_contains($permission, ':')) {
+      @trigger_error('Calling the \Drupal\user\RoleInterface::revokePermission method without a namespaced permission is deprecated in drupal:9.4.0, a namespaced permission will be required instead in drupal:10.0.0. See https://www.drupal.org/node/2726421', E_USER_DEPRECATED);
+    }
     if ($this->isAdmin()) {
       return $this;
     }
