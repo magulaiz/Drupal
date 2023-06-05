@@ -223,6 +223,7 @@ class ContentTranslationSettingsTest extends BrowserTestBase {
       'site_default',
       'current_interface',
       'authors_default',
+      'current_content',
       'en',
       'und',
       'zxx',
