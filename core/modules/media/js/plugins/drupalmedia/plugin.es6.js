@@ -231,6 +231,10 @@
               this.element.removeAttribute(attrName);
             });
           }
+
+          // Adds the media entity's label as the data-entity-name attribute.
+          this.data.attributes['data-entity-name'] = this.data.label;
+
           // Add attributes to drupal-media element within the widget.
           this.element.setAttributes(this.data.attributes);
 
