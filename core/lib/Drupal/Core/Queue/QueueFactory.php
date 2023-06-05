@@ -58,7 +58,9 @@ class QueueFactory implements ContainerAwareInterface {
       if (empty($service_name)) {
         $service_name = $this->settings->get('queue_service_' . $name, $this->settings->get('queue_default', 'queue.database'));
       }
-      $this->queues[$name] = $this->container->get($service_name)->get($name);
+      /** @var \Drupal\Core\Queue\QueueFactoryInterface $queueFactory */
+      $queueFactory = $this->container->get($service_name);
+      $this->queues[$name] = $queueFactory->get($name);
     }
     return $this->queues[$name];
   }
