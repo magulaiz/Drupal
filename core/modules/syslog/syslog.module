@@ -58,7 +58,18 @@ function syslog_form_system_logging_settings_alter(&$form, FormStateInterface $f
     '#required'      => TRUE,
     '#description'   => t('Specify the format of the syslog entry. Available variables are: <dl><dt><code>!base_url</code></dt><dd>Base URL of the site.</dd><dt><code>!timestamp</code></dt><dd>Unix timestamp of the log entry.</dd><dt><code>!type</code></dt><dd>The category to which this message belongs.</dd><dt><code>!ip</code></dt><dd>IP address of the user triggering the message.</dd><dt><code>!request_uri</code></dt><dd>The requested URI.</dd><dt><code>!referer</code></dt><dd>HTTP Referer if available.</dd><dt><code>!severity</code></dt><dd>The severity level of the event; ranges from 0 (Emergency) to 7 (Debug).</dd><dt><code>!uid</code></dt><dd>User ID.</dd><dt><code>!link</code></dt><dd>A link to associate with the message.</dd><dt><code>!message</code></dt><dd>The message to store in the log.</dd></dl>'),
   ];
-
+  $form['syslog_hostname'] = [
+    '#type' => 'textfield',
+    '#title' => t('Syslog hostname'),
+    '#default_value' => $config->get('hostname'),
+    '#description' => t('(optional) Specify a remote hostname to send syslog messages to.'),
+  ];
+  $form['syslog_port'] = [
+    '#type' => 'number',
+    '#title' => t('Syslog port'),
+    '#default_value' => $config->get('port') ?? 514,
+    '#description' => t('(optional) Specify a remote port to send syslog messages to.'),
+  ];
   $form['#submit'][] = 'syslog_logging_settings_submit';
 }
 
@@ -72,6 +83,8 @@ function syslog_logging_settings_submit($form, FormStateInterface $form_state) {
     ->set('identity', $form_state->getValue('syslog_identity'))
     ->set('facility', $form_state->getValue('syslog_facility'))
     ->set('format', $form_state->getValue('syslog_format'))
+    ->set('hostname', $form_state->getValue('syslog_hostname'))
+    ->set('port', $form_state->getValue('syslog_port'))
     ->save();
 }
 

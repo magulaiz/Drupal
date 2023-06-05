@@ -7,6 +7,8 @@ use Drupal\Core\Logger\LogMessageParserInterface;
 use Drupal\Core\Logger\RfcLoggerTrait;
 use Psr\Log\LoggerInterface;
 
+// cspell:ignore DGRAM
+
 /**
  * Redirects logging messages to syslog.
  */
@@ -19,6 +21,34 @@ class SysLog implements LoggerInterface {
    * @var \Drupal\Core\Config\Config
    */
   protected $config;
+
+  /**
+   * Remote Syslog server hostname.
+   *
+   * @var \Drupal\Core\Config\Config
+   */
+  protected $hostname;
+
+  /**
+   * Remote Syslog server port (default 514).
+   *
+   * @var mixed
+   */
+  protected $port;
+
+  /**
+   * Syslog identity (usually "drupal").
+   *
+   * @var mixed
+   */
+  protected $identity;
+
+  /**
+   * Remote Syslog server port (default LOG_LOCAL0 / 128).
+   *
+   * @var mixed
+   */
+  protected $facility;
 
   /**
    * The message's placeholders parser.
@@ -44,6 +74,10 @@ class SysLog implements LoggerInterface {
    */
   public function __construct(ConfigFactoryInterface $config_factory, LogMessageParserInterface $parser) {
     $this->config = $config_factory->get('syslog.settings');
+    $this->hostname = $this->config->get("hostname") ?? '';
+    $this->port = $this->config->get("port") ?? 514;
+    $this->identity = $this->config->get("identity") ?? '';
+    $this->facility = $this->config->get("facility") ?? LOG_LOCAL0;
     $this->parser = $parser;
   }
 
@@ -52,8 +86,7 @@ class SysLog implements LoggerInterface {
    */
   protected function openConnection() {
     if (!$this->connectionOpened) {
-      $facility = $this->config->get('facility');
-      $this->connectionOpened = openlog($this->config->get('identity'), LOG_NDELAY, $facility);
+      $this->connectionOpened = openlog($this->identity, LOG_NDELAY, $this->facility);
     }
   }
 
@@ -70,9 +103,6 @@ class SysLog implements LoggerInterface {
     if (empty($format)) {
       return;
     }
-
-    // Ensure we have a connection available.
-    $this->openConnection();
 
     // Populate the message placeholders and then replace them in the message.
     $message_placeholders = $this->parser->parseMessagePlaceholders($message, $context);
@@ -103,7 +133,29 @@ class SysLog implements LoggerInterface {
    *   The message to send to syslog function.
    */
   protected function syslogWrapper($level, $entry) {
-    syslog($level, $entry);
+    if (empty($this->hostname)) {
+      // Ensure we have a connection available.
+      $this->openConnection();
+
+      syslog($level, $entry);
+      return;
+    }
+    $this->sendUdp($level, $entry);
+  }
+
+  /**
+   * Sends a syslog message to a UDP socket.
+   *
+   * @param int $level
+   *   The syslog priority.
+   * @param string $entry
+   *   The message to send to syslog function.
+   */
+  protected function sendUdp($level, $entry) {
+    $sock = socket_create(AF_INET, SOCK_DGRAM, SOL_UDP);
+    $msg = '<' . $this->facility . '>' . $this->identity . ': ' . $entry;
+    socket_sendto($sock, $msg, strlen($msg), 0, $this->hostname, $this->port);
+    socket_close($sock);
   }
 
 }
