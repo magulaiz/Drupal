@@ -55,6 +55,17 @@ interface DataDefinitionInterface {
   public function getDataType();
 
   /**
+   * Sets the data type.
+   *
+   * @param string $type
+   *   The data type to set.
+   *
+   * @return static
+   *   The object itself for chaining.
+   */
+  public function setDataType($type);
+
+  /**
    * Returns a human readable label.
    *
    * @return string|\Drupal\Core\StringTranslation\TranslatableMarkup
@@ -62,6 +73,17 @@ interface DataDefinitionInterface {
    *   based on the way the label translation is handled.
    */
   public function getLabel();
+
+  /**
+   * Sets the human-readable label.
+   *
+   * @param string $label
+   *   The label to set.
+   *
+   * @return static
+   *   The object itself for chaining.
+   */
+  public function setLabel($label);
 
   /**
    * Returns a human readable description.
@@ -73,6 +95,17 @@ interface DataDefinitionInterface {
    *   The description, or NULL if no description is available.
    */
   public function getDescription();
+
+  /**
+   * Sets the human-readable description.
+   *
+   * @param string $description
+   *   The description to set.
+   *
+   * @return static
+   *   The object itself for chaining.
+   */
+  public function setDescription($description);
 
   /**
    * Returns whether the data is multi-valued, i.e. a list of data items.
@@ -94,6 +127,17 @@ interface DataDefinitionInterface {
   public function isReadOnly();
 
   /**
+   * Sets whether the data is read-only.
+   *
+   * @param bool $read_only
+   *   Whether the data is read-only.
+   *
+   * @return static
+   *   The object itself for chaining.
+   */
+  public function setReadOnly($read_only);
+
+  /**
    * Determines whether the data value is computed.
    *
    * For example, data could be computed depending on some other values.
@@ -102,6 +146,17 @@ interface DataDefinitionInterface {
    *   Whether the data value is computed.
    */
   public function isComputed();
+
+  /**
+   * Sets whether the data is computed.
+   *
+   * @param bool $computed
+   *   Whether the data is computed.
+   *
+   * @return static
+   *   The object itself for chaining.
+   */
+  public function setComputed($computed);
 
   /**
    * Determines whether a data value is required.
@@ -114,6 +169,17 @@ interface DataDefinitionInterface {
   public function isRequired();
 
   /**
+   * Sets whether the data is required.
+   *
+   * @param bool $required
+   *   Whether the data is required.
+   *
+   * @return static
+   *   The object itself for chaining.
+   */
+  public function setRequired($required);
+
+  /**
    * Returns the class used for creating the typed data object.
    *
    * If not specified, the default class of the data type will be returned.
@@ -122,6 +188,17 @@ interface DataDefinitionInterface {
    *   The class used for creating the typed data object.
    */
   public function getClass();
+
+  /**
+   * Sets the class used for creating the typed data object.
+   *
+   * @param string|null $class
+   *   The class to use.
+   *
+   * @return static
+   *   The object itself for chaining.
+   */
+  public function setClass($class);
 
   /**
    * Returns the array of settings, as required by the used class.
@@ -134,6 +211,17 @@ interface DataDefinitionInterface {
   public function getSettings();
 
   /**
+   * Sets the array of settings, as required by the used class.
+   *
+   * @param array $settings
+   *   The array of settings.
+   *
+   * @return static
+   *   The object itself for chaining.
+   */
+  public function setSettings(array $settings);
+
+  /**
    * Returns the value of a given setting.
    *
    * @param string $setting_name
@@ -143,6 +231,19 @@ interface DataDefinitionInterface {
    *   The setting value.
    */
   public function getSetting($setting_name);
+
+  /**
+   * Sets a definition setting.
+   *
+   * @param string $setting_name
+   *   The definition setting to set.
+   * @param mixed $value
+   *   The value to set.
+   *
+   * @return static
+   *   The object itself for chaining.
+   */
+  public function setSetting($setting_name, $value);
 
   /**
    * Returns an array of validation constraints.
@@ -184,6 +285,18 @@ interface DataDefinitionInterface {
    * @see \Symfony\Component\Validator\Constraint
    */
   public function getConstraints();
+
+  /**
+   * Sets an array of validation constraints.
+   *
+   * @param array $constraints
+   *   An array of validation constraint definitions, keyed by constraint name.
+   *   Each constraint definition can be used for instantiating
+   *   \Symfony\Component\Validator\Constraint objects.
+   *
+   * @return $this
+   */
+  public function setConstraints(array $constraints);
 
   /**
    * Returns a validation constraint.
@@ -233,5 +346,17 @@ interface DataDefinitionInterface {
    *   Whether the data value is internal.
    */
   public function isInternal();
+
+  /**
+   * Sets the whether the data value should be internal.
+   *
+   * @param bool $internal
+   *   Whether the data value should be internal.
+   *
+   * @return $this
+   *
+   * @see \Drupal\Core\TypedData\DataDefinitionInterface::isInternal
+   */
+  public function setInternal($internal);
 
 }
