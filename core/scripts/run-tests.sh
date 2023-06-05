@@ -300,6 +300,9 @@ All arguments are long options.
 
   --verbose   Output detailed assertion messages in addition to summary.
 
+  --fail-only When paired with --verbose, do not print the detailed
+	
+              messages for passing tests.
   --keep-results
 
               Keeps detailed assertion results (in the database) after tests
@@ -388,6 +391,7 @@ function simpletest_script_parse_args() {
     'keep-results' => FALSE,
     'keep-results-table' => FALSE,
     'test_names' => [],
+    'fail-only' => FALSE,
     'repeat' => 1,
     'die-on-fail' => FALSE,
     'suppress-deprecations' => FALSE,
@@ -1336,7 +1340,7 @@ function simpletest_script_reporter_display_results() {
     }
     $test_class = '';
     foreach ($results as $result) {
-      if (isset($results_map[$result->status])) {
+      if (isset($results_map[$result->status]) && (!$args['fail-only'] || $result->status !== 'pass')) {
         if ($result->test_class != $test_class) {
           // Display test class every time results are for new test class.
           echo "\n\n---- $result->test_class ----\n\n\n";
