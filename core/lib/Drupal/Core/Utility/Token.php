@@ -296,7 +296,7 @@ class Token {
       :              # : - separator
       ([^\[\]]+)     # match $name not containing [ or ]
       \]             # ] - pattern end
-      /x', $text, $matches);
+      /x', $text ?? '', $matches);
 
     $types = $matches[1];
     $tokens = $matches[2];
