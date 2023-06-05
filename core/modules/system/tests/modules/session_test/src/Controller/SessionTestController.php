@@ -2,6 +2,7 @@
 
 namespace Drupal\session_test\Controller;
 
+use Drupal\Component\Utility\Crypt;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\session_test\Session\TestSessionBag;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -244,6 +245,60 @@ class SessionTestController extends ControllerBase {
       ? $this->t('Flag is absent from session bag')
       : $this->t('Flag is present in session bag')
     );
+  }
+
+  /**
+   * Retrieves the session ID without checking for session existence.
+   *
+   * @param \Symfony\Component\HttpFoundation\Request $request
+   *   The request object.
+   *
+   * @return \Symfony\Component\HttpFoundation\JsonResponse
+   *   A response object containing the session values and the user ID.
+   */
+  public function deprecatedSessionIdAccess(Request $request) {
+    $session = $request->getSession();
+    $id = $session->getId();
+    // Store something in the session to have it saved.
+    $session->set('generated_id', $id);
+
+    return new JsonResponse(['session' => $session->all(), 'user' => $this->currentUser()->id()]);
+  }
+
+  /**
+   * Clears the session.
+   *
+   * @param \Symfony\Component\HttpFoundation\Request $request
+   *   The request object.
+   *
+   * @return \Symfony\Component\HttpFoundation\Response
+   *   The response object.
+   */
+  public function clearSession(Request $request) {
+    $request->getSession()->clear();
+    return new Response();
+  }
+
+  /**
+   * Generates a "legacy" session ID.
+   *
+   * @param \Symfony\Component\HttpFoundation\Request $request
+   *   The request object.
+   *
+   * @return \Symfony\Component\HttpFoundation\Response
+   *   The response object.
+   */
+  public function generateLegacySessionId(Request $request) {
+    // Generate an ID that contains at least one illegal character.
+    // @see \Drupal\Core\Session\SessionManager::getId()
+    // @see session_id()
+    $id = Crypt::randomBytesBase64(31) . '_';
+    $session = $request->getSession();
+    $session->setId($id);
+    // Make sure the session is saved by setting a value in it.
+    $session->set('legacy_session', TRUE);
+
+    return new Response($id);
   }
 
 }
