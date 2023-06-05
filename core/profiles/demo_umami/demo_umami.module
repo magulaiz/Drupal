@@ -1,0 +1,18 @@
+<?php
+
+/**
+ * @file
+ * Enables the demo_umami demo profile.
+ */
+
+/**
+ * Implements hook_modules_installed().
+ */
+function demo_umami_modules_installed($modules) {
+  if (in_array('demo_umami', $modules)) {
+    // Enable the demo content module. This can't be specified as a dependency
+    // in the demo_umami.info.yml file, as it requires configuration provided by
+    // the profile (fields etc.).
+    \Drupal::service('module_installer')->install(['demo_umami_content'], TRUE);
+  }
+}
