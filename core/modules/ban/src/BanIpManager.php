@@ -3,6 +3,7 @@
 namespace Drupal\ban;
 
 use Drupal\Core\Database\Connection;
+use Drupal\Core\Database\Query\PagerSelectExtender;
 
 /**
  * Ban IP manager.
@@ -37,7 +38,12 @@ class BanIpManager implements BanIpManagerInterface {
    * {@inheritdoc}
    */
   public function findAll() {
-    return $this->connection->query('SELECT * FROM {ban_ip}');
+    return $this->connection
+      ->select('ban_ip', 'b')
+      ->extend(PagerSelectExtender::class)
+      ->limit(50)
+      ->fields('b')
+      ->execute();
   }
 
   /**
