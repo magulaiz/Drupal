@@ -175,7 +175,7 @@ class PathBasedBreadcrumbBuilder implements BreadcrumbBuilderInterface {
         $breadcrumb = $breadcrumb->addCacheableDependency($access);
         if ($access->isAllowed()) {
           $title = $this->titleResolver->getTitle($route_request, $route_match->getRouteObject());
-          if (!isset($title)) {
+          if (empty($title)) {
             // Fallback to using the raw path component as the title if the
             // route is missing a _title or _title_callback attribute.
             $title = str_replace(['-', '_'], ' ', Unicode::ucfirst(end($path_elements)));
