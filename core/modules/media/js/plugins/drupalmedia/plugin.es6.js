@@ -237,6 +237,14 @@
           // Track the previous state to allow checking if preview needs
           // server side update.
           this.oldData = CKEDITOR.tools.clone(this.data);
+
+          // The way the drupal-media custom tag is rendered, adding or
+          // altering a link to the media element will not trigger the change
+          // event in the editor. We need to trigger it manually.
+          // @see https://www.drupal.org/project/drupal/issues/3275613
+          if (this.oldData.link !== this.data.link) {
+            editor.fire('change');
+          }
         },
 
         downcast() {
