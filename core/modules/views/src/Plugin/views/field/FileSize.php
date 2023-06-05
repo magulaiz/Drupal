@@ -53,7 +53,7 @@ class FileSize extends FieldPluginBase {
 
         case 'formatted':
         default:
-          return ByteSizeMarkup::create($value);
+          return ByteSizeMarkup::create((int) $value);
       }
     }
     else {

@@ -88,7 +88,7 @@ class FormAjaxSubscriber implements EventSubscriberInterface {
     // the configured upload limit.
     if ($exception instanceof BrokenPostRequestException && $request->query->has(FormBuilderInterface::AJAX_FORM_REQUEST)) {
       $this->messenger->addError($this->t('An unrecoverable error occurred. The uploaded file likely exceeded the maximum file size (@size) that this server supports.', [
-        '@size' => ByteSizeMarkup::create($exception->getSize()),
+        '@size' => ByteSizeMarkup::create((int) $exception->getSize()),
       ]));
       $response = new AjaxResponse(NULL, 200);
       $status_messages = ['#type' => 'status_messages'];
@@ -152,12 +152,13 @@ class FormAjaxSubscriber implements EventSubscriberInterface {
    * @return string
    *   The formatted size.
    *
-   * @deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use
+   * @deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use
    *   \Drupal\Core\StringTranslation\ByteSizeMarkup::create() instead.
    *
    * @see https://www.drupal.org/node/2999981
    */
   protected function formatSize($size) {
+    @trigger_error(__METHOD__ . '() is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use \Drupal\Core\StringTranslation\ByteSizeMarkup::create() instead. See https://www.drupal.org/node/2999981', E_USER_DEPRECATED);
     return format_size($size);
   }
 

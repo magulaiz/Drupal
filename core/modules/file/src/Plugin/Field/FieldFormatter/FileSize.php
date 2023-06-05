@@ -34,7 +34,7 @@ class FileSize extends FormatterBase {
     $elements = [];
 
     foreach ($items as $delta => $item) {
-      $elements[$delta] = ['#markup' => ByteSizeMarkup::create($item->value)];
+      $elements[$delta] = ['#markup' => ByteSizeMarkup::create((int) $item->value)];
     }
 
     return $elements;
