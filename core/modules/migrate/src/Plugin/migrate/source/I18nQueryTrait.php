@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\content_translation\Plugin\migrate\source;
+namespace Drupal\migrate\Plugin\migrate\source;
 
 use Drupal\migrate\Plugin\MigrateIdMapInterface;
 use Drupal\migrate\MigrateException;
