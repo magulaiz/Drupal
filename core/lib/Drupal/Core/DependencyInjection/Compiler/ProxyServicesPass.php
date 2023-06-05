@@ -24,6 +24,7 @@ class ProxyServicesPass implements CompilerPassInterface {
           $definition->setLazy(FALSE);
           // Ensure that the service is accessible.
           $definition->setPublic(TRUE);
+          $definition->setTags([]);
           $new_service_id = 'drupal.proxy_original_service.' . $service_id;
           $container->setDefinition($new_service_id, $definition);
 
