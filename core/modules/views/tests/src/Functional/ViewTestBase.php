@@ -110,6 +110,26 @@ abstract class ViewTestBase extends BrowserTestBase {
   }
 
   /**
+   * Ensures that a given list of items appear on the view result.
+   *
+   * @param array $expected_ids
+   *   An array of IDs.
+   * @param string $selector
+   *   CSS selector to be used for views results search.
+   */
+  protected function assertIds(array $expected_ids = [], string $selector = '.view-content span.field-content'): void {
+    // First verify the count.
+    $elements = $this->cssSelect($selector);
+    $this->assertCount(count($expected_ids), $elements);
+
+    $actual_ids = [];
+    foreach ($elements as $element) {
+      $actual_ids[] = (int) $element->getText();
+    }
+    $this->assertEquals($expected_ids, $actual_ids);
+  }
+
+  /**
    * Executes a view.
    *
    * @param \Drupal\views\ViewExecutable $view

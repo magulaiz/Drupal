@@ -409,24 +409,6 @@ class ExposedFormTest extends ViewTestBase {
   }
 
   /**
-   * Checks whether the specified ids are the ones displayed in the view output.
-   *
-   * @param int[] $ids
-   *   The ids to check.
-   *
-   * @internal
-   */
-  protected function assertIds(array $ids): void {
-    $elements = $this->cssSelect('div.view-test-exposed-form-sort-items-per-page div.views-row span.field-content');
-    $actual_ids = [];
-    foreach ($elements as $element) {
-      $actual_ids[] = (int) $element->getText();
-    }
-
-    $this->assertSame($ids, $actual_ids);
-  }
-
-  /**
    * Returns a views exposed form ID.
    *
    * @param \Drupal\views\ViewExecutable $view
