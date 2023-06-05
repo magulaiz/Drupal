@@ -525,6 +525,8 @@ trait FunctionalTestSetupTrait {
       unset($connection_info['default']['password']);
       unset($connection_info['default']['host']);
       unset($connection_info['default']['port']);
+
+      $connection_info['default']['init_commands']['busy_timeout'] = "PRAGMA busy_timeout=100";
     }
     $parameters = [
       'interactive' => FALSE,
