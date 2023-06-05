@@ -280,6 +280,16 @@ class Migration extends PluginBase implements MigrationInterface, RequirementsIn
   protected $dependencies = [];
 
   /**
+   * The behaviour in case a missing source or destination property is referenced.
+   *
+   * The value is a MigrationInterface::MISSING_PROPERTY_* constant, for example:
+   * MISSING_PROPERTY_SKIP_ROW.
+   *
+   * @var string
+   */
+  protected $missing_property_behavior;
+
+  /**
    * The migration plugin manager for loading other migration plugins.
    *
    * @var \Drupal\migrate\Plugin\MigrationPluginManagerInterface
@@ -778,6 +788,13 @@ class Migration extends PluginBase implements MigrationInterface, RequirementsIn
    */
   public function isAuditable() {
     return (bool) $this->audit;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getMissingPropertyBehavior() {
+    return $this->missing_property_behavior;
   }
 
 }
