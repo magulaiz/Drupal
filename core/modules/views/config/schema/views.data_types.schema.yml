@@ -698,6 +698,9 @@ views_filter:
         description:
           type: label
           label: 'Description'
+        visually_hidden:
+          type: boolean
+          label: 'Visually hide the exposed filter form'
         use_operator:
           type: boolean
           label: 'Expose operator'

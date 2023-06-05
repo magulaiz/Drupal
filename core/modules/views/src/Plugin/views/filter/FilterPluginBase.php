@@ -126,6 +126,7 @@ abstract class FilterPluginBase extends HandlerBase implements CacheableDependen
         'operator_id' => ['default' => FALSE],
         'label' => ['default' => ''],
         'description' => ['default' => ''],
+        'visually_hidden' => ['default' => FALSE],
         'use_operator' => ['default' => FALSE],
         'operator' => ['default' => ''],
         'operator_limit_selection' => ['default' => FALSE],
@@ -349,6 +350,10 @@ abstract class FilterPluginBase extends HandlerBase implements CacheableDependen
    */
   protected function valueForm(&$form, FormStateInterface $form_state) {
     $form['value'] = [];
+
+    if ($this->options['expose']['visually_hidden']) {
+      $form['value']['#attributes']['class'][] = 'visually-hidden';
+    }
   }
 
   /**
@@ -551,6 +556,12 @@ abstract class FilterPluginBase extends HandlerBase implements CacheableDependen
       '#default_value' => $this->options['expose']['description'],
       '#title' => $this->t('Description'),
       '#size' => 60,
+    ];
+    
+    $form['expose']['visually_hidden'] = [
+      '#type' => 'checkbox',
+      '#title' => $this->t('Visually hide the exposed filter form'),
+      '#default_vaule' => $this->options['expose']['visually_hidden'],
     ];
 
     if (!empty($form['operator']['#type'])) {
@@ -824,6 +835,7 @@ abstract class FilterPluginBase extends HandlerBase implements CacheableDependen
       'identifier' => $this->options['id'],
       'label' => $this->definition['title'],
       'description' => NULL,
+      'visually_hidden' => FALSE,
       'remember' => FALSE,
       'multiple' => FALSE,
       'required' => FALSE,
