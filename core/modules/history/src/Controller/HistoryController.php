@@ -2,6 +2,7 @@
 
 namespace Drupal\history\Controller;
 
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
@@ -13,6 +14,22 @@ use Drupal\node\NodeInterface;
  * Returns responses for History module routes.
  */
 class HistoryController extends ControllerBase {
+
+  /**
+   * The history repository service.
+   *
+   * @var \Drupal\history\HistoryRepositoryInterface
+   */
+  protected $historyRepository;
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container) {
+    $instance = parent::create($container);
+    $instance->historyRepository = $container->get('history.repository');
+    return $instance;
+  }
 
   /**
    * Returns a set of nodes' last read timestamps.
@@ -32,7 +49,8 @@ class HistoryController extends ControllerBase {
     if (!isset($nids)) {
       throw new NotFoundHttpException();
     }
-    return new JsonResponse(history_read_multiple($nids));
+    // Default to 0 if never viewed.
+    return new JsonResponse($this->historyRepository->getTimes('node', $nids, $this->currentUser(), 0));
   }
 
   /**
@@ -49,9 +67,11 @@ class HistoryController extends ControllerBase {
     }
 
     // Update the history table, stating that this user viewed this node.
-    history_write($node->id());
-
-    return new JsonResponse((int) history_read($node->id()));
+    // Default to 0 if never viewed.
+    $timestamp = $this->historyRepository
+      ->setTime($node, $this->currentUser())
+      ->getTime($node, $this->currentUser(), 0);
+    return new JsonResponse($timestamp);
   }
 
 }
