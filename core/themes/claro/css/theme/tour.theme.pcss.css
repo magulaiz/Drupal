@@ -15,7 +15,7 @@
 
 .shepherd-element:focus {
   outline: 2px dotted transparent;
-  box-shadow: 0 0 0 2px var(--color-white), 0 0 0 5px var(--color-focus);
+  box-shadow: 0 0 0 2px var(--color-gray), 0 0 0 5px var(--color-focus);
 }
 
 /* Mobile */
@@ -86,5 +86,5 @@
 
 .shepherd-content *:focus {
   outline: 2px dotted transparent;
-  box-shadow: 0 0 0 2px var(--color-white), 0 0 0 5px var(--color-focus);
+  box-shadow: 0 0 0 2px var(--color-gray), 0 0 0 5px var(--color-focus);
 }
