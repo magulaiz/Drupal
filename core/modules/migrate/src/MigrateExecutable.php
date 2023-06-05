@@ -3,6 +3,7 @@
 namespace Drupal\migrate;
 
 use Drupal\Component\Utility\Bytes;
+use Drupal\Core\StringTranslation\ByteSizeMarkup;
 use Drupal\Core\Utility\Error;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\migrate\Event\MigrateEvents;
@@ -537,8 +538,8 @@ class MigrateExecutable implements MigrateExecutableInterface {
           'Memory usage is @usage (@pct% of limit @limit), reclaiming memory.',
           [
             '@pct' => round($pct_memory * 100),
-            '@usage' => $this->formatSize($usage),
-            '@limit' => $this->formatSize($this->memoryLimit),
+            '@usage' => ByteSizeMarkup::create($usage, NULL, $this->stringTranslation),
+            '@limit' => ByteSizeMarkup::create($this->memoryLimit, NULL, $this->stringTranslation),
           ]
         ),
         'warning'
@@ -553,8 +554,8 @@ class MigrateExecutable implements MigrateExecutableInterface {
             'Memory usage is now @usage (@pct% of limit @limit), not enough reclaimed, starting new batch',
             [
               '@pct' => round($pct_memory * 100),
-              '@usage' => $this->formatSize($usage),
-              '@limit' => $this->formatSize($this->memoryLimit),
+              '@usage' => ByteSizeMarkup::create($usage, NULL, $this->stringTranslation),
+              '@limit' => ByteSizeMarkup::create($this->memoryLimit, NULL, $this->stringTranslation),
             ]
           ),
           'warning'
@@ -567,8 +568,8 @@ class MigrateExecutable implements MigrateExecutableInterface {
             'Memory usage is now @usage (@pct% of limit @limit), reclaimed enough, continuing',
             [
               '@pct' => round($pct_memory * 100),
-              '@usage' => $this->formatSize($usage),
-              '@limit' => $this->formatSize($this->memoryLimit),
+              '@usage' => ByteSizeMarkup::create($usage, NULL, $this->stringTranslation),
+              '@limit' => ByteSizeMarkup::create($this->memoryLimit, NULL, $this->stringTranslation),
             ]
           ),
           'warning');
@@ -620,6 +621,12 @@ class MigrateExecutable implements MigrateExecutableInterface {
    *
    * @return string
    *   A translated string representation of the size.
+   *
+   * @deprecated in drupal:9.4.0 and is removed from drupal:10.0.0. Use
+   *   \Drupal\Core\StringTranslation\ByteSizeMarkup::create($size, $langcode)
+   *   instead.
+   *
+   * @see https://www.drupal.org/node/2999981
    */
   protected function formatSize($size) {
     return format_size($size);

@@ -8,6 +8,7 @@
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldFilteredMarkup;
 use Drupal\Core\Render\Element;
+use Drupal\Core\StringTranslation\ByteSizeMarkup;
 
 /**
  * Prepares variables for multi file form widget templates.
@@ -153,7 +154,7 @@ function template_preprocess_file_upload_help(&$variables) {
     }
   }
   if (isset($upload_validators['file_validate_size'])) {
-    $descriptions[] = t('@size limit.', ['@size' => format_size($upload_validators['file_validate_size'][0])]);
+    $descriptions[] = t('@size limit.', ['@size' => ByteSizeMarkup::create($upload_validators['file_validate_size'][0])]);
   }
   if (isset($upload_validators['file_validate_extensions'])) {
     $descriptions[] = t('Allowed types: @extensions.', ['@extensions' => $upload_validators['file_validate_extensions'][0]]);

@@ -21,6 +21,7 @@ use Drupal\Core\Messenger\MessengerInterface;
 use Drupal\Core\Render\BubbleableMetadata;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\StringTranslation\ByteSizeMarkup;
 use Drupal\Core\Template\Attribute;
 use Drupal\Core\Url;
 use Drupal\file\Entity\File;
@@ -196,12 +197,18 @@ function file_validate_size(FileInterface $file, $file_limit = 0, $user_limit = 
   $errors = [];
 
   if ($file_limit && $file->getSize() > $file_limit) {
-    $errors[] = t('The file is %filesize exceeding the maximum file size of %maxsize.', ['%filesize' => format_size($file->getSize()), '%maxsize' => format_size($file_limit)]);
+    $errors[] = t('The file is %filesize exceeding the maximum file size of %maxsize.', [
+      '%filesize' => ByteSizeMarkup::create($file->getSize()),
+      '%maxsize' => ByteSizeMarkup::create($file_limit),
+    ]);
   }
 
   // Save a query by only calling spaceUsed() when a limit is provided.
   if ($user_limit && (\Drupal::entityTypeManager()->getStorage('file')->spaceUsed($user->id()) + $file->getSize()) > $user_limit) {
-    $errors[] = t('The file is %filesize which would exceed your disk quota of %quota.', ['%filesize' => format_size($file->getSize()), '%quota' => format_size($user_limit)]);
+    $errors[] = t('The file is %filesize which would exceed your disk quota of %quota.', [
+      '%filesize' => ByteSizeMarkup::create($file->getSize()),
+      '%quota' => ByteSizeMarkup::create($user_limit),
+    ]);
   }
 
   return $errors;
@@ -666,7 +673,7 @@ function file_save_upload($form_field_name, $validators = [], $destination = FAL
     catch (IniSizeFileException | FormSizeFileException $e) {
       \Drupal::messenger()->addError(t('The file %file could not be saved because it exceeds %maxsize, the maximum allowed size for uploads.', [
         '%file' => $uploaded_file->getFilename(),
-        '%maxsize' => format_size(Environment::getUploadMaxSize()),
+        '%maxsize' => ByteSizeMarkup::create(Environment::getUploadMaxSize()),
       ]));
       $files[$i] = FALSE;
     }
@@ -783,7 +790,7 @@ function file_tokens($type, $tokens, array $data, array $options, BubbleableMeta
           break;
 
         case 'size':
-          $replacements[$original] = format_size($file->getSize());
+          $replacements[$original] = ByteSizeMarkup::create($file->getSize());
           break;
 
         case 'url':
@@ -1073,7 +1080,7 @@ function template_preprocess_file_link(&$variables) {
   // Set file classes to the options array.
   $variables['attributes'] = new Attribute($variables['attributes']);
   $variables['attributes']->addClass($classes);
-  $variables['file_size'] = format_size($file->getSize() ?? 0);
+  $variables['file_size'] = ByteSizeMarkup::create($file->getSize() ?? 0);
 
   $variables['link'] = Link::fromTextAndUrl($link_text, $url->mergeOptions($options))->toRenderable();
 }
