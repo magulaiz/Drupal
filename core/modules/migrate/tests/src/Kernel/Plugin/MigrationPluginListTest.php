@@ -40,6 +40,7 @@ class MigrationPluginListTest extends KernelTestBase {
     'file',
     'filter',
     'forum',
+    'history',
     'image',
     'language',
     'locale',
