@@ -96,7 +96,7 @@ abstract class Data implements \IteratorAggregate, \Countable {
    * {@inheritdoc}
    */
   public function setTotalCount($count) {
-    $this->count = $count;
+    $this->count = (int) $count;
   }
 
   /**
