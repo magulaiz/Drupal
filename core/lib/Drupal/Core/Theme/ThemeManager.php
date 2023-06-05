@@ -354,7 +354,7 @@ class ThemeManager implements ThemeManagerInterface {
       if (!isset($default_attributes)) {
         $default_attributes = new Attribute();
       }
-      foreach (['attributes', 'title_attributes', 'content_attributes'] as $key) {
+      foreach ($info['attribute variables'] as $key) {
         if (isset($variables[$key]) && !($variables[$key] instanceof Attribute)) {
           if ($variables[$key]) {
             $variables[$key] = new Attribute($variables[$key]);
