@@ -5,9 +5,8 @@ namespace Drupal\Core\Logger;
 /**
  * Wrapper methods for the logger factory service.
  *
- * This utility trait should only be used in application-level code, such as
- * classes that would implement ContainerInjectionInterface. Services registered
- * in the Container should not use this trait but inject the appropriate service
+ * This utility trait should not be added to classes implemented by contributed
+ * modules. Instead, they should inject the appropriate logger channel service
  * directly for easier testing.
  *
  * @see \Drupal\Core\DependencyInjection\ContainerInjectionInterface
