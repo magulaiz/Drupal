@@ -269,7 +269,11 @@ class UpdateContribTest extends UpdateTestBase {
     $this->config('update_test.settings')->set('system_info', $system_info)->save();
 
     foreach (['1.1', '1.2', '2.0'] as $version) {
-      foreach (['-beta1', '-alpha1', ''] as $extra_version) {
+      // Test pre-stable release '-alpha1' and '-beta1' as well as post-stable
+      // release '-bugfix'. There is no special logic for these strings to
+      // determine if they are pre or post stable but rather it is determined by
+      // the order of the releases in the XML.
+      foreach (['-beta1', '-alpha1', '-bugfix', ''] as $extra_version) {
         $full_version = "8.x-$version$extra_version";
         $this->refreshUpdateStatus([
           'drupal' => '0.0',
@@ -288,7 +292,7 @@ class UpdateContribTest extends UpdateTestBase {
           case '1.1':
             // Both stable and unstable releases are available.
             // A stable release is the latest.
-            if ($extra_version == '') {
+            if ($extra_version === '' || $extra_version === '-bugfix') {
               $assert_session->elementTextNotContains('css', $this->updateTableLocator, 'Up to date');
               $assert_session->elementTextContains('css', $this->updateTableLocator, 'Update available');
               $this->assertVersionUpdateLinks('Recommended version', $full_version);
@@ -309,7 +313,7 @@ class UpdateContribTest extends UpdateTestBase {
           case '1.2':
             // Both stable and unstable releases are available.
             // A stable release is the latest.
-            if ($extra_version == '') {
+            if ($extra_version === '' || $extra_version === '-bugfix') {
               $assert_session->elementTextNotContains('css', $this->updateTableLocator, 'Up to date');
               $assert_session->elementTextContains('css', $this->updateTableLocator, 'Update available');
               $this->assertVersionUpdateLinks('Recommended version:', $full_version);
