@@ -202,12 +202,18 @@ function template_preprocess_update_project_status(&$variables) {
       if (!empty($project['security updates'])) {
         $security_class[] = 'version-security';
         foreach ($project['security updates'] as $security_update) {
-          $versions_inner[] = [
-            '#theme' => 'update_version',
-            '#version' => $security_update,
-            '#title' => t('Security update:'),
-            '#attributes' => ['class' => $security_class],
-          ];
+          // Show only the latest security update for the series. For core, the
+          // series is the minor version (8.1.x vs. 8.2.x). For other projects,
+          // this is the major version, (8.x-1.x vs. 8.x-2.x).
+          $key = 'sec-' . $project['project_type'] === 'core' ? $project['existing_minor'] : $project['existing_major'];
+          if (!isset($versions_inner[$key]) || version_compare($security_update['version'], $versions_inner[$key]['#version']['version']) === 1) {
+            $versions_inner[$key] = [
+              '#theme' => 'update_version',
+              '#version' => $security_update,
+              '#title' => t('Security update:'),
+              '#attributes' => ['class' => $security_class],
+            ];
+          }
         }
       }
     }
