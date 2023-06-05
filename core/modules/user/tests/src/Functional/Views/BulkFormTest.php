@@ -63,7 +63,7 @@ class BulkFormTest extends UserTestBase {
     $this->assertFalse($account->hasRole($role), 'The user currently does not have a custom role.');
     $edit = [
       'user_bulk_form[1]' => TRUE,
-      'action' => 'user_add_role_action.' . $role,
+      'action' => 'user_add_role_' . $role . '_action',
     ];
     $this->submitForm($edit, 'Apply to selected items');
     // Re-load the user and check their roles.
@@ -73,7 +73,7 @@ class BulkFormTest extends UserTestBase {
 
     $edit = [
       'user_bulk_form[1]' => TRUE,
-      'action' => 'user_remove_role_action.' . $role,
+      'action' => 'user_remove_role_' . $role . '_action',
     ];
     $this->submitForm($edit, 'Apply to selected items');
     // Re-load the user and check their roles.
@@ -119,7 +119,7 @@ class BulkFormTest extends UserTestBase {
       'administer views',
       'administer users',
     ]));
-    $action_id = 'user_add_role_action.' . $role;
+    $action_id = 'user_add_role_' . $role . '_action';
     $edit = [
       'options[include_exclude]' => 'exclude',
       "options[selected_actions][$action_id]" => $action_id,

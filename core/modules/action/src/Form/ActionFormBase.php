@@ -63,9 +63,10 @@ abstract class ActionFormBase extends EntityForm {
       '#default_value' => $this->entity->id(),
       '#disabled' => !$this->entity->isNew(),
       '#maxlength' => 64,
-      '#description' => $this->t('A unique name for this action. It must only contain lowercase letters, numbers and underscores.'),
+      '#description' => $this->t('A unique name for this action. It must only contain lowercase letters, numbers, underscores and dots.'),
       '#machine_name' => [
         'exists' => [$this, 'exists'],
+        'replace_pattern' => '[^a-z0-9_.]+',
       ],
     ];
     $form['plugin'] = [
