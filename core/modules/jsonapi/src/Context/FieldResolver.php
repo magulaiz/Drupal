@@ -116,6 +116,13 @@ class FieldResolver {
   protected $currentUser;
 
   /**
+   * Parameter indicating support for drupal internal ID meta in linkages.
+   *
+   * @var bool
+   */
+  protected bool $includeDrupalIds;
+
+  /**
    * Creates a FieldResolver instance.
    *
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
@@ -130,8 +137,10 @@ class FieldResolver {
    *   The module handler.
    * @param \Drupal\Core\Session\AccountInterface|null $current_user
    *   The current user account.
+   * @param bool $include_drupal_ids
+   *   Parameter indicating support for drupal internal ID meta in linkages.
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager, EntityFieldManagerInterface $field_manager, EntityTypeBundleInfoInterface $entity_type_bundle_info, ResourceTypeRepositoryInterface $resource_type_repository, ModuleHandlerInterface $module_handler, AccountInterface $current_user = NULL) {
+  public function __construct(EntityTypeManagerInterface $entity_type_manager, EntityFieldManagerInterface $field_manager, EntityTypeBundleInfoInterface $entity_type_bundle_info, ResourceTypeRepositoryInterface $resource_type_repository, ModuleHandlerInterface $module_handler, AccountInterface $current_user = NULL, bool $include_drupal_ids = TRUE) {
     if (is_null($current_user)) {
       @trigger_error('Calling ' . __METHOD__ . '() without the $current_user argument is deprecated in drupal:9.3.0 and will be required in drupal:10.0.0.', E_USER_DEPRECATED);
       $current_user = \Drupal::currentUser();
@@ -143,6 +152,7 @@ class FieldResolver {
     $this->entityTypeBundleInfo = $entity_type_bundle_info;
     $this->resourceTypeRepository = $resource_type_repository;
     $this->moduleHandler = $module_handler;
+    $this->includeDrupalIds = $include_drupal_ids;
   }
 
   /**
@@ -359,7 +369,9 @@ class FieldResolver {
           }
           if ($is_data_reference_definition) {
             $at_least_one_entity_reference_field = TRUE;
-            $property_names[] = "drupal_internal__$property_name";
+            if ($this->includeDrupalIds) {
+              $property_names[] = "drupal_internal__$property_name";
+            }
           }
           return $property_names;
         }, []);
