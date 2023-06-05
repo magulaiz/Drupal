@@ -3,6 +3,7 @@
 namespace Drupal\Tests\update\Functional;
 
 use Drupal\Core\Url;
+use Drupal\Tests\update\Traits\ProjectTestTrait;
 
 /**
  * Tests the Update Manager module through a series of functional tests using
@@ -12,6 +13,7 @@ use Drupal\Core\Url;
  */
 class UpdateSemverCoreTest extends UpdateSemverTestBase {
 
+  use ProjectTestTrait;
   /**
    * {@inheritdoc}
    */
@@ -39,7 +41,7 @@ class UpdateSemverCoreTest extends UpdateSemverTestBase {
         'version' => $version,
       ],
     ];
-    $this->config('update_test.settings')->set('system_info', $setting)->save();
+    $this->setProjectsInfo($setting);
   }
 
   /**
@@ -288,7 +290,7 @@ class UpdateSemverCoreTest extends UpdateSemverTestBase {
         'datestamp' => '1000000000',
       ],
     ];
-    $this->config('update_test.settings')->set('system_info', $system_info)->save();
+    $this->setProjectsInfo($system_info);
     $this->refreshUpdateStatus(['drupal' => 'dev']);
     $this->assertSession()->pageTextNotContains('2001-Sep-');
     $this->assertSession()->pageTextContains('Up to date');

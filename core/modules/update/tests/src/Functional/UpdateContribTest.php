@@ -3,6 +3,7 @@
 namespace Drupal\Tests\update\Functional;
 
 use Drupal\Core\Utility\ProjectInfo;
+use Drupal\Tests\update\Traits\ProjectTestTrait;
 use Drupal\update\UpdateManagerInterface;
 
 /**
@@ -13,6 +14,7 @@ use Drupal\update\UpdateManagerInterface;
  */
 class UpdateContribTest extends UpdateTestBase {
 
+  use ProjectTestTrait;
   /**
    * {@inheritdoc}
    */
@@ -61,7 +63,7 @@ class UpdateContribTest extends UpdateTestBase {
         'hidden' => FALSE,
       ],
     ];
-    $this->config('update_test.settings')->set('system_info', $system_info)->save();
+    $this->setProjectsInfo($system_info);
     $this->refreshUpdateStatus(['drupal' => '0.0', 'aaa_update_test' => 'no-releases']);
     // Cannot use $this->standardTests() because we need to check for the
     // 'No available releases found' string.
@@ -93,7 +95,7 @@ class UpdateContribTest extends UpdateTestBase {
         'hidden' => FALSE,
       ],
     ];
-    $this->config('update_test.settings')->set('system_info', $system_info)->save();
+    $this->setProjectsInfo($system_info);
     $this->refreshUpdateStatus(
       [
         'drupal' => '0.0',
@@ -110,7 +112,7 @@ class UpdateContribTest extends UpdateTestBase {
     // Since aaa_update_test is installed the fact it is hidden and in the
     // Testing package means it should not appear.
     $system_info['aaa_update_test']['hidden'] = TRUE;
-    $this->config('update_test.settings')->set('system_info', $system_info)->save();
+    $this->setProjectsInfo($system_info);
     $this->refreshUpdateStatus(
       [
         'drupal' => '0.0',
@@ -122,7 +124,7 @@ class UpdateContribTest extends UpdateTestBase {
 
     // A hidden and installed project not in the Testing package should appear.
     $system_info['aaa_update_test']['package'] = 'aaa_update_test';
-    $this->config('update_test.settings')->set('system_info', $system_info)->save();
+    $this->setProjectsInfo($system_info);
     $this->refreshUpdateStatus(
       [
         'drupal' => '0.0',
@@ -178,7 +180,7 @@ class UpdateContribTest extends UpdateTestBase {
         'hidden' => FALSE,
       ],
     ];
-    $this->config('update_test.settings')->set('system_info', $system_info)->save();
+    $this->setProjectsInfo($system_info);
     $this->refreshUpdateStatus(['drupal' => '0.0', '#all' => '1_0']);
     $this->standardTests();
     // We're expecting the report to say all projects are up to date.
@@ -238,7 +240,7 @@ class UpdateContribTest extends UpdateTestBase {
         'hidden' => FALSE,
       ],
     ];
-    $this->config('update_test.settings')->set('system_info', $system_info)->save();
+    $this->setProjectsInfo($system_info);
     $xml_mapping = [
       'drupal' => '0.0',
       'update_test_subtheme' => '1_0',
@@ -266,7 +268,7 @@ class UpdateContribTest extends UpdateTestBase {
         'hidden' => FALSE,
       ],
     ];
-    $this->config('update_test.settings')->set('system_info', $system_info)->save();
+    $this->setProjectsInfo($system_info);
 
     foreach (['1.1', '1.2', '2.0'] as $version) {
       foreach (['-beta1', '-alpha1', ''] as $extra_version) {
@@ -384,7 +386,7 @@ class UpdateContribTest extends UpdateTestBase {
     // of update_max_fetch_attempts. Therefore this variable is set very high
     // to avoid test failures in those cases.
     $update_settings->set('fetch.max_attempts', 99999)->save();
-    $this->config('update_test.settings')->set('system_info', $system_info)->save();
+    $this->setProjectsInfo($system_info);
     $xml_mapping = [
       'drupal' => '0.0',
       'update_test_subtheme' => '1_0',
@@ -436,7 +438,7 @@ class UpdateContribTest extends UpdateTestBase {
         'hidden' => FALSE,
       ],
     ];
-    $this->config('update_test.settings')->set('system_info', $system_info)->save();
+    $this->setProjectsInfo($system_info);
     $projects = \Drupal::service('update.manager')->getProjects();
     $theme_data = \Drupal::service('theme_handler')->rebuildThemeData();
     $project_info = new ProjectInfo();
@@ -469,7 +471,7 @@ class UpdateContribTest extends UpdateTestBase {
         'hidden' => FALSE,
       ],
     ];
-    $this->config('update_test.settings')->set('system_info', $system_info)->save();
+    $this->setProjectsInfo($system_info);
 
     // Ensure that the update information is correct before testing.
     $this->drupalGet('admin/reports/updates');
@@ -516,13 +518,12 @@ class UpdateContribTest extends UpdateTestBase {
    * update, then assert if we see the appropriate warnings on the right pages.
    */
   public function testHookUpdateStatusAlter() {
-    $update_test_config = $this->config('update_test.settings');
     $update_admin_user = $this->drupalCreateUser([
       'administer site configuration',
       'administer software updates',
     ]);
     $this->drupalLogin($update_admin_user);
-
+    $update_test_config = $this->config('update_test.settings');
     $system_info = [
       '#all' => [
         'version' => '8.0.0',
@@ -533,7 +534,7 @@ class UpdateContribTest extends UpdateTestBase {
         'hidden' => FALSE,
       ],
     ];
-    $update_test_config->set('system_info', $system_info)->save();
+    $this->setProjectsInfo($system_info);
     $update_status = [
       'aaa_update_test' => [
         'status' => UpdateManagerInterface::NOT_SECURE,
@@ -585,7 +586,7 @@ class UpdateContribTest extends UpdateTestBase {
         'hidden' => FALSE,
       ],
     ];
-    $this->config('update_test.settings')->set('system_info', $system_info)->save();
+    $this->setProjectsInfo($system_info);
 
     // Confirm that messages are displayed for recommended and latest updates.
     // @todo In https://www.drupal.org/project/drupal/issues/3112962:
@@ -636,7 +637,7 @@ class UpdateContribTest extends UpdateTestBase {
         'hidden' => FALSE,
       ],
     ];
-    $this->config('update_test.settings')->set('system_info', $system_info)->save();
+    $this->setProjectsInfo($system_info);
     $this->refreshUpdateStatus(['drupal' => '0.0', 'aaa_update_test' => $fixture]);
     $this->assertSecurityUpdates('aaa_update_test', $expected_security_releases, $expected_update_message_type, 'table.update:nth-of-type(2)');
   }
@@ -763,7 +764,7 @@ class UpdateContribTest extends UpdateTestBase {
         'hidden' => FALSE,
       ],
     ];
-    $this->config('update_test.settings')->set('system_info', $system_info)->save();
+    $this->setProjectsInfo($system_info);
     $this->refreshUpdateStatus([
       'drupal' => '0.0',
       $this->updateProject => '1_0-supported',
@@ -802,7 +803,7 @@ class UpdateContribTest extends UpdateTestBase {
         'hidden' => FALSE,
       ],
     ];
-    $this->config('update_test.settings')->set('system_info', $system_info)->save();
+    $this->setProjectsInfo($system_info);
     $this->refreshUpdateStatus([
       'drupal' => '0.0',
       $this->updateProject => '1_0-supported',
@@ -845,7 +846,7 @@ class UpdateContribTest extends UpdateTestBase {
       if (isset($version_info['version'])) {
         $system_info['aaa_update_test']['version'] = $version_info['version'];
       }
-      $this->config('update_test.settings')->set('system_info', $system_info)->save();
+      $this->setProjectsInfo($system_info);
       $this->refreshUpdateStatus([
         'drupal' => '0.0',
         $this->updateProject => '1_0-supported',

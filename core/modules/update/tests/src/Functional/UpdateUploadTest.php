@@ -6,6 +6,7 @@ use Drupal\Core\Extension\InfoParserDynamic;
 use Drupal\Core\Updater\Updater;
 use Drupal\Core\Url;
 use Drupal\Tests\TestFileCreationTrait;
+use Drupal\Tests\update\Traits\ProjectTestTrait;
 
 /**
  * Tests the Update Manager module's upload and extraction functionality.
@@ -14,6 +15,7 @@ use Drupal\Tests\TestFileCreationTrait;
  */
 class UpdateUploadTest extends UpdateUploaderTestBase {
 
+  use ProjectTestTrait;
   use TestFileCreationTrait {
     getTestFiles as drupalGetTestFiles;
   }
@@ -121,13 +123,12 @@ class UpdateUploadTest extends UpdateUploaderTestBase {
 
     // Define the update XML such that the new module downloaded above needs an
     // update from 8.x-1.0 to 8.x-1.1.
-    $update_test_config = $this->config('update_test.settings');
     $system_info = [
       'update_test_new_module' => [
         'project' => 'update_test_new_module',
       ],
     ];
-    $update_test_config->set('system_info', $system_info)->save();
+    $this->setProjectsInfo($system_info);
     $xml_mapping = [
       'update_test_new_module' => '1_1',
     ];
@@ -166,8 +167,8 @@ class UpdateUploadTest extends UpdateUploaderTestBase {
         'version' => '8.0.0',
       ],
     ];
+    $this->setProjectsInfo($setting);
     $this->config('update_test.settings')
-      ->set('system_info', $setting)
       ->set('xml_map', ['drupal' => '0.2-sec'])
       ->save();
     $this->config('update.settings')

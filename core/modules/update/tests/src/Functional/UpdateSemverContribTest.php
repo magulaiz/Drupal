@@ -2,6 +2,8 @@
 
 namespace Drupal\Tests\update\Functional;
 
+use Drupal\Tests\update\Traits\ProjectTestTrait;
+
 /**
  * Tests the Update Manager module with a contrib module with semver versions.
  *
@@ -9,6 +11,7 @@ namespace Drupal\Tests\update\Functional;
  */
 class UpdateSemverContribTest extends UpdateSemverTestBase {
 
+  use ProjectTestTrait;
   /**
    * {@inheritdoc}
    */
@@ -46,7 +49,7 @@ class UpdateSemverContribTest extends UpdateSemverTestBase {
         'hidden' => FALSE,
       ],
     ];
-    $this->config('update_test.settings')->set('system_info', $system_info)->save();
+    $this->setProjectsInfo($system_info);
   }
 
 }
