@@ -146,16 +146,8 @@ class EntityController implements ContainerInjectionInterface {
     if ($bundle_entity_type_id) {
       $bundle_argument = $bundle_entity_type_id;
       $bundle_entity_type = $this->entityTypeManager->getDefinition($bundle_entity_type_id);
-      $bundle_entity_type_label = $bundle_entity_type->getSingularLabel();
       $build['#cache']['tags'] = $bundle_entity_type->getListCacheTags();
 
-      // Build the message shown when there are no bundles.
-      $link_text = $this->t('Add a new @entity_type.', ['@entity_type' => $bundle_entity_type_label]);
-      $link_route_name = 'entity.' . $bundle_entity_type->id() . '.add_form';
-      $build['#add_bundle_message'] = $this->t('There is no @entity_type yet. @add_link', [
-        '@entity_type' => $bundle_entity_type_label,
-        '@add_link' => Link::createFromRoute($link_text, $link_route_name)->toString(),
-      ]);
       // Filter out the bundles the user doesn't have access to.
       $access_control_handler = $this->entityTypeManager->getAccessControlHandler($entity_type_id);
       foreach ($bundles as $bundle_name => $bundle_info) {
@@ -174,11 +166,18 @@ class EntityController implements ContainerInjectionInterface {
 
     $form_route_name = 'entity.' . $entity_type_id . '.add_form';
     // Redirect if there's only one bundle available.
-    if (count($bundles) == 1) {
+    $bundle_count = count($bundles);
+    if ($bundle_count === 1) {
       $bundle_names = array_keys($bundles);
       $bundle_name = reset($bundle_names);
       return $this->redirect($form_route_name, [$bundle_argument => $bundle_name]);
     }
+    // Show a message shown when there are no bundles.
+    elseif ($bundle_entity_type_id && $bundle_count === 0) {
+      $build['#add_bundle_message'] = $this->buildAddBundleMessage($bundle_entity_type);
+      return $build;
+    }
+
     // Prepare the #bundles array for the template.
     foreach ($bundles as $bundle_name => $bundle_info) {
       $build['#bundles'][$bundle_name] = [
@@ -343,6 +342,34 @@ class EntityController implements ContainerInjectionInterface {
     }
 
     return $bundles;
+  }
+
+  /**
+   * Builds the message displayed when there is no bundle available.
+   *
+   * @param \Drupal\Core\Entity\EntityTypeInterface $bundle_entity_type
+   *   The entity type providing the bundles for the entity.
+   *
+   * @return \Drupal\Core\StringTranslation\TranslatableMarkup
+   *   The translated message.
+   */
+  protected function buildAddBundleMessage(EntityTypeInterface $bundle_entity_type) {
+    $bundle_entity_type_id = $bundle_entity_type->id();
+    $bundle_entity_type_label = $bundle_entity_type->getSingularLabel();
+
+    $link_route_name = NULL;
+    if ($bundle_entity_type->hasLinkTemplate('add-page')) {
+      $link_route_name = "entity.{$bundle_entity_type_id}.add_page";
+    }
+    else {
+      $link_route_name = "entity.{$bundle_entity_type_id}.add_form";
+    }
+
+    $link_text = $this->t('Add a new @entity_type.', ['@entity_type' => $bundle_entity_type_label]);
+    return $this->t('There is no @entity_type yet. @add_link', [
+      '@entity_type' => $bundle_entity_type_label,
+      '@add_link' => Link::createFromRoute($link_text, $link_route_name)->toString(),
+    ]);
   }
 
 }
