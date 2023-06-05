@@ -159,6 +159,9 @@ class DataDefinition implements DataDefinitionInterface, \ArrayAccess {
    *   The object itself for chaining.
    */
   public function setComputed($computed) {
+    if (count($this->getConstraints()) > 0) {
+      throw new \LogicException('Properties with validation constraints cannot be marked computed, as they are not validated.');
+    }
     $this->definition['computed'] = $computed;
     return $this;
   }
@@ -259,6 +262,9 @@ class DataDefinition implements DataDefinitionInterface, \ArrayAccess {
    * {@inheritdoc}
    */
   public function getConstraints() {
+    if ($this->isComputed()) {
+      return [];
+    }
     $constraints = $this->definition['constraints'] ?? [];
     $constraints += $this->getTypedDataManager()->getDefaultConstraints($this);
     return $constraints;
@@ -281,8 +287,15 @@ class DataDefinition implements DataDefinitionInterface, \ArrayAccess {
    *   \Symfony\Component\Validator\Constraint objects.
    *
    * @return $this
+   *
+   * @throws \LogicException
+   *   Thrown if constraints are set for a computed property as computed
+   *   properties are ignored during validation.
    */
   public function setConstraints(array $constraints) {
+    if ($this->isComputed()) {
+      throw new \LogicException('Validation constraints cannot be set on computed properties as those are not validated.');
+    }
     $this->definition['constraints'] = $constraints;
     return $this;
   }
@@ -291,6 +304,9 @@ class DataDefinition implements DataDefinitionInterface, \ArrayAccess {
    * {@inheritdoc}
    */
   public function addConstraint($constraint_name, $options = NULL) {
+    if ($this->isComputed()) {
+      throw new \LogicException('Validation constraints cannot be added to computed properties as those are not validated.');
+    }
     $this->definition['constraints'][$constraint_name] = $options;
     return $this;
   }
