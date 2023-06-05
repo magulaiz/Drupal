@@ -45,7 +45,7 @@ class MigrateMenuLinkTranslationTest extends MigrateDrupal7TestBase {
    * Tests migration of menu link translations.
    */
   public function testMenuLinkTranslation() {
-    $this->assertEntity(467, 'fr', 'fr - Google', 'menu-test-menu', 'fr - Google description', TRUE, FALSE, ['attributes' => ['title' => 'Google']], 'http://google.com', 0);
+    $this->assertEntity(467, 'fr', 'fr - Google', 'menu-test-menu', 'fr - Google description', TRUE, FALSE, ['attributes' => ['title' => 'Google']], 'https://google.com', 0);
   }
 
 }

@@ -85,7 +85,7 @@ abstract class MenuLinkContentResourceTestBase extends EntityResourceTestBase {
       ],
       'link' => [
         [
-          'uri' => 'http://www.urbandictionary.com/define.php?term=drama%20llama',
+          'uri' => 'https://www.urbandictionary.com/define.php?term=drama%20llama',
           'options' => [
             'fragment' => 'a-fragment',
             'attributes' => [
