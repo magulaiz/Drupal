@@ -52,6 +52,9 @@ class AccessAwareRouter implements AccessAwareRouterInterface {
    *   The account to use in access checks.
    */
   public function __construct(RequestMatcherInterface $router, AccessManagerInterface $access_manager, AccountInterface $account) {
+    if (!$router instanceof RouterInterface) {
+      throw new \InvalidArgumentException('Router must implement RouterInterface');
+    }
     $this->router = $router;
     $this->accessManager = $access_manager;
     $this->account = $account;
@@ -127,18 +130,14 @@ class AccessAwareRouter implements AccessAwareRouterInterface {
    * {@inheritdoc}
    */
   public function getRouteCollection(): RouteCollection {
-    if ($this->router instanceof RouterInterface) {
-      return $this->router->getRouteCollection();
-    }
+    return $this->router->getRouteCollection();
   }
 
   /**
    * {@inheritdoc}
    */
   public function generate($name, $parameters = [], $referenceType = self::ABSOLUTE_PATH): string {
-    if ($this->router instanceof UrlGeneratorInterface) {
-      return $this->router->generate($name, $parameters, $referenceType);
-    }
+    return $this->router->generate($name, $parameters, $referenceType);
   }
 
   /**
