@@ -551,7 +551,7 @@ class FileSystem implements FileSystemInterface {
   /**
    * {@inheritdoc}
    */
-  public function getDestinationFilename($destination, $replace): string|bool {
+  public function getDestinationFilename($destination, $replace): string|false {
     $basename = $this->basename($destination);
     if (!Unicode::validateUtf8($basename)) {
       throw new FileException(sprintf("Invalid filename '%s'", $basename));
