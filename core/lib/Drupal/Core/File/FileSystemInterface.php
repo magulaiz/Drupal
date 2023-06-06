@@ -2,8 +2,6 @@
 
 namespace Drupal\Core\File;
 
-use phpDocumentor\Reflection\PseudoTypes\False_;
-
 /**
  * Provides an interface for helpers that operate on files and stream wrappers.
  */
