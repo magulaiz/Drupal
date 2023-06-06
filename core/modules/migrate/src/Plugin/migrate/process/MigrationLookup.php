@@ -7,6 +7,7 @@ use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\migrate\MigrateException;
 use Drupal\migrate\MigrateLookupInterface;
 use Drupal\migrate\MigrateSkipProcessException;
+use Drupal\migrate\MigrateSkipProcessPluginException;
 use Drupal\migrate\MigrateSkipRowException;
 use Drupal\migrate\MigrateStubInterface;
 use Drupal\migrate\ProcessPluginBase;
@@ -33,6 +34,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *   any stub entities.
  * - no_stub: (optional) Prevents the creation of a stub entity when no
  *   relationship is found in the migration map.
+ * - continue_on_empty: (optional) Continue processing the row if no source_ids
+ *   or migrations are found. Defaults to false.
  *
  * Examples:
  *
@@ -260,7 +263,12 @@ class MigrationLookup extends ProcessPluginBase implements ContainerFactoryPlugi
         throw $e;
       }
       catch (MigrateSkipRowException $e) {
-        throw $e;
+        if (empty($this->configuration['continue_on_empty'])) {
+          throw $e;
+        }
+        else {
+          throw new MigrateSkipProcessPluginException($e->getMessage());
+        }
       }
       catch (\Exception $e) {
         throw new MigrateException(sprintf('%s was thrown while attempting to stub: %s', get_class($e), $e->getMessage()), $e->getCode(), $e);
