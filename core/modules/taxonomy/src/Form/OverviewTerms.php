@@ -162,7 +162,6 @@ class OverviewTerms extends FormBase {
     // vocabularies. Needed terms are loaded explicitly afterward.
     $tree = $this->storageController->loadTree($taxonomy_vocabulary->id(), 0, NULL, FALSE);
     $tree_index = 0;
-    $id_key = $this->storageController->getEntityType()->getKey('id');
     $complete_tree = NULL;
     do {
       // In case this tree is completely empty.
@@ -183,7 +182,7 @@ class OverviewTerms extends FormBase {
 
       // Do not let a term start the page that is not at the root.
       $raw_term = $tree[$tree_index];
-      $term = $this->storageController->load($raw_term->{$id_key});
+      $term = $this->storageController->load($raw_term->tid);
       $term->depth = $raw_term->depth;
       $term->parents = $raw_term->parents;
       if (isset($term->depth) && ($term->depth > 0) && !isset($back_step)) {
@@ -518,7 +517,9 @@ class OverviewTerms extends FormBase {
 
     $vocabulary = $form_state->get(['taxonomy', 'vocabulary']);
     $changed_terms = [];
-    $tree = $this->storageController->loadTree($vocabulary->id(), 0, NULL, TRUE);
+    // Terms are not loaded to avoid excessive memory consumption for large
+    // vocabularies. Needed terms are loaded explicitly afterward.
+    $tree = $this->storageController->loadTree($vocabulary->id(), 0, NULL, FALSE);
 
     if (empty($tree)) {
       return;
@@ -526,9 +527,10 @@ class OverviewTerms extends FormBase {
 
     // Build a list of all terms that need to be updated on previous pages.
     $weight = 0;
-    $term = $tree[0];
-    while ($term->id() != $form['#first_tid']) {
-      if ($term->parents[0] == 0 && $term->getWeight() != $weight) {
+    $raw_term = $tree[0];
+    while ($raw_term->tid != $form['#first_tid']) {
+      if ($raw_term->parents[0] == 0 && $raw_term->weight != $weight) {
+        $term = $this->storageController->load($raw_term->tid);
         $term->setWeight($weight);
         $changed_terms[$term->id()] = $term;
       }
@@ -565,8 +567,9 @@ class OverviewTerms extends FormBase {
 
     // Build a list of all terms that need to be updated on following pages.
     for ($weight; $weight < count($tree); $weight++) {
-      $term = $tree[$weight];
-      if ($term->parents[0] == 0 && $term->getWeight() != $weight) {
+      $raw_term = $tree[$weight];
+      if ($term->parents[0] == 0 && $term->weight != $weight) {
+        $term = $this->storageController->load($raw_term->tid);
         $term->parent->target_id = $term->parents[0];
         $term->setWeight($weight);
         $changed_terms[$term->id()] = $term;
