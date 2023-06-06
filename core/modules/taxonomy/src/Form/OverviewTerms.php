@@ -568,7 +568,7 @@ class OverviewTerms extends FormBase {
     // Build a list of all terms that need to be updated on following pages.
     for ($weight; $weight < count($tree); $weight++) {
       $raw_term = $tree[$weight];
-      if ($term->parents[0] == 0 && $term->weight != $weight) {
+      if ($raw_term->parents[0] == 0 && $raw_term->weight != $weight) {
         $term = $this->storageController->load($raw_term->tid);
         $term->parent->target_id = $term->parents[0];
         $term->setWeight($weight);
