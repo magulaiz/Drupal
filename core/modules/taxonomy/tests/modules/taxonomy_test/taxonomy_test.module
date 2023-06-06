@@ -46,3 +46,16 @@ function taxonomy_test_form_taxonomy_term_form_alter(&$form, FormStateInterface 
     $form['relations']['parent']['#disabled'] = TRUE;
   }
 }
+
+/**
+ * Implements hook_ENTITY_TYPE_load() for the taxonomy term.
+ */
+function taxonomy_test_taxonomy_term_load($entities) {
+  $value = \Drupal::state()->get(__FUNCTION__);
+  if (isset($value)) {
+    foreach ($entities as $entity) {
+      $value[$entity->id()] = $entity;
+    }
+    \Drupal::state()->set(__FUNCTION__, $value);
+  }
+}
