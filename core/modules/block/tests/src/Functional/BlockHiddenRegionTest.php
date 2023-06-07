@@ -68,7 +68,7 @@ class BlockHiddenRegionTest extends BrowserTestBase {
     \Drupal::service('router.builder')->rebuildIfNeeded();
 
     // Ensure that "block_test_theme" is set as the default theme.
-    $this->drupalGet('admin/structure/block');
+    $this->drupalGet('admin/appearance/block');
     $this->assertSession()->pageTextContains('Block test theme(active tab)');
 
     // Ensure that the search form block is displayed.

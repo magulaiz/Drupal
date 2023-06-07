@@ -51,9 +51,9 @@ class SearchBlockTest extends BrowserTestBase {
   public function testSearchFormBlock() {
 
     // Test availability of the search block in the admin "Place blocks" list.
-    $this->drupalGet('admin/structure/block');
+    $this->drupalGet('admin/appearance/block');
     $this->getSession()->getPage()->findLink('Place block')->click();
-    $this->assertSession()->linkByHrefExists('/admin/structure/block/add/search_form_block/stark', 0,
+    $this->assertSession()->linkByHrefExists('/admin/appearance/block/add/search_form_block/stark', 0,
       'Did not find the search block in block candidate list.');
 
     $block = $this->drupalPlaceBlock('search_form_block');
@@ -130,7 +130,7 @@ class SearchBlockTest extends BrowserTestBase {
 
     // Edit the block configuration so that it searches users instead of nodes,
     // and test.
-    $this->drupalGet('admin/structure/block/manage/' . $block->id());
+    $this->drupalGet('admin/appearance/block/manage/' . $block->id());
     $this->submitForm(['settings[page_id]' => 'user_search'], 'Save block');
 
     $name = $this->adminUser->getAccountName();

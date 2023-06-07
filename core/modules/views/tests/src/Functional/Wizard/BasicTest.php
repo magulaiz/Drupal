@@ -55,7 +55,7 @@ class BasicTest extends WizardTestBase {
     $this->assertSession()->pageTextNotContains('REST export');
 
     // This view should not have a block.
-    $this->drupalGet('admin/structure/block');
+    $this->drupalGet('admin/appearance/block');
     $this->assertSession()->pageTextNotContains($view1['label']);
 
     // Create two nodes.
@@ -109,7 +109,7 @@ class BasicTest extends WizardTestBase {
     $this->assertSession()->pageTextNotContains('REST export');
 
     // This view should not have a block.
-    $this->drupalGet('admin/structure/block');
+    $this->drupalGet('admin/appearance/block');
     $this->assertSession()->pageTextNotContains('View: ' . $view2['label']);
 
     // Create a view with a page and a block, and filter the listing.
@@ -145,7 +145,7 @@ class BasicTest extends WizardTestBase {
     $this->assertSession()->pageTextNotContains('REST export');
 
     // Confirm that the block is available in the block administration UI.
-    $this->drupalGet('admin/structure/block/list/' . $this->config('system.theme')->get('default'));
+    $this->drupalGet('admin/appearance/block/list/' . $this->config('system.theme')->get('default'));
     $this->clickLink('Place block');
     $this->assertSession()->pageTextContains($view3['label']);
 

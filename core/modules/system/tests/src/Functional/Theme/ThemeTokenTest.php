@@ -12,7 +12,7 @@ use Drupal\Tests\BrowserTestBase;
 class ThemeTokenTest extends BrowserTestBase {
 
   /**
-   * We want to visit the 'admin/structure/block' page.
+   * We want to visit the 'admin/appearance/block' page.
    *
    * @var array
    */
@@ -42,7 +42,7 @@ class ThemeTokenTest extends BrowserTestBase {
     // Visit the block administrative page with default theme. We use that page
     // because 'misc/ajax.js' is loaded there and we can test the token
     // generation.
-    $this->drupalGet('admin/structure/block');
+    $this->drupalGet('admin/appearance/block');
     $settings = $this->getDrupalSettings();
     $this->assertNull($settings['ajaxPageState']['theme_token']);
 
@@ -52,7 +52,7 @@ class ThemeTokenTest extends BrowserTestBase {
 
     // Revisit the page. This time the page is displayed using the 'claro' theme
     // and that is different from the default theme ('stark').
-    $this->drupalGet('admin/structure/block');
+    $this->drupalGet('admin/appearance/block');
     $settings = $this->getDrupalSettings();
     $this->assertNotNull($settings['ajaxPageState']['theme_token']);
     // The CSRF token is a 43 length string.

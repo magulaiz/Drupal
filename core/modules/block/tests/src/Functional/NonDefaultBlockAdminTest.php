@@ -44,7 +44,7 @@ class NonDefaultBlockAdminTest extends BrowserTestBase {
     $new_theme = 'olivero';
     \Drupal::service('theme_installer')->install([$new_theme]);
     // Ensure that the Olivero tab is shown.
-    $this->drupalGet('admin/structure/block/list/' . $new_theme);
+    $this->drupalGet('admin/appearance/block/list/' . $new_theme);
     $this->assertSession()->pageTextContains('Olivero(active tab)');
   }
 

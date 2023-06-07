@@ -1,5 +1,10 @@
 block.admin_display:
   title: 'Block layout'
-  parent: system.admin_structure
+  parent: system.themes_page
   description: 'Configure what block content appears in your site''s sidebars and other regions.'
   route_name: block.admin_display
+block.admin_display.bc:
+  title: 'Block layout (legacy link)'
+  parent: system.admin_structure
+  description: 'Block layout is now under Appearance. This link will be removed in a future update.'
+  route_name: block.admin_display.bc

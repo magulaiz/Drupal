@@ -1,5 +1,5 @@
 entity.block.settings_tray_form:
-  path: '/admin/structure/block/manage/{block}/settings-tray'
+  path: '/admin/appearance/block/manage/{block}/settings-tray'
   defaults:
     _entity_form: 'block.settings_tray'
     _title_callback: '\Drupal\settings_tray\Block\BlockEntitySettingTrayForm::title'

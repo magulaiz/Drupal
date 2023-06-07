@@ -145,7 +145,7 @@ class NodeBlockFunctionalTest extends NodeTestBase {
 
     // Enable the "Powered by Drupal" block only on article nodes.
     $theme = \Drupal::service('theme_handler')->getDefault();
-    $this->drupalGet("admin/structure/block/add/system_powered_by_block/{$theme}");
+    $this->drupalGet("admin/appearance/block/add/system_powered_by_block/{$theme}");
     $this->assertSession()->pageTextContains('Content type');
     $edit = [
       'id' => strtolower($this->randomMachineName()),
@@ -230,8 +230,8 @@ class NodeBlockFunctionalTest extends NodeTestBase {
     $this->assertSession()->pageTextContains($label);
     $this->assertSession()->pageTextContains('Displaying node #' . $node1->id() . ', revision #' . $node1->getRevisionId() . ': Node revision 2 title');
 
-    $this->drupalGet('admin/structure/block');
-    // Check that block is displayed on the admin/structure/block page.
+    $this->drupalGet('admin/appearance/block');
+    // Check that block is displayed on the admin/appearance/block page.
     $this->assertSession()->pageTextContains($label);
     $this->assertSession()->linkByHrefExists($block->toUrl()->toString());
   }

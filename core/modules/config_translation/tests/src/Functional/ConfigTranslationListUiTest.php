@@ -108,9 +108,9 @@ class ConfigTranslationListUiTest extends BrowserTestBase {
     $this->drupalPlaceBlock('system_powered_by_block', ['id' => $id]);
 
     // Get the Block listing.
-    $this->drupalGet('admin/structure/block');
+    $this->drupalGet('admin/appearance/block');
 
-    $translate_link = 'admin/structure/block/manage/' . $id . '/translate';
+    $translate_link = 'admin/appearance/block/manage/' . $id . '/translate';
     // Test if the link to translate the block is on the page.
     $this->assertSession()->linkByHrefExists($translate_link);
 

@@ -111,7 +111,7 @@ class RedirectTest extends BrowserTestBase {
 
     // Visit the block admin page (403 page) and submit the form. Verify it
     // ends up at the right URL.
-    $this->drupalGet('admin/structure/block');
+    $this->drupalGet('admin/appearance/block');
     $this->assertSession()->statusCodeEquals(403);
     $this->submitForm([], 'Submit');
     $this->assertSession()->statusCodeEquals(200);

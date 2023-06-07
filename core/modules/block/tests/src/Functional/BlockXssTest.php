@@ -58,7 +58,7 @@ class BlockXssTest extends BrowserTestBase {
       'access administration pages',
     ]));
     $default_theme = $this->config('system.theme')->get('default');
-    $this->drupalGet('admin/structure/block/list/' . $default_theme);
+    $this->drupalGet('admin/appearance/block/list/' . $default_theme);
     // Check that the block title was properly sanitized in Block Plugin UI
     // Admin page.
     $this->assertSession()->responseNotContains("<script>alert('XSS subject');</script>");

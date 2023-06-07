@@ -97,7 +97,7 @@ class MenuUiJavascriptTest extends WebDriverTestBase {
     $this->assertSession()->pageTextContains($label);
 
     // Confirm that the custom menu block is available.
-    $this->drupalGet('admin/structure/block/list/' . $this->config('system.theme')->get('default'));
+    $this->drupalGet('admin/appearance/block/list/' . $this->config('system.theme')->get('default'));
     $this->clickLink('Place block');
     // Wait for the modal dialog to be loaded.
     $this->assertSession()->waitForElement('css', "div[aria-describedby=drupal-modal]");

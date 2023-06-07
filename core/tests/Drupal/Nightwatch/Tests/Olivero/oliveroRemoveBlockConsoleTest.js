@@ -9,7 +9,7 @@ module.exports = {
       })
       .drupalLoginAsAdmin(() => {
         browser
-          .drupalRelativeURL('/admin/structure/block')
+          .drupalRelativeURL('/admin/appearance/block')
 
           // Disable narrow search form block.
           .click(
