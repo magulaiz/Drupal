@@ -299,10 +299,7 @@ abstract class SourcePluginBase extends PluginBase implements MigrateSourceInter
           [$row, $this, $this->migration]);
       // We will skip if any hook returned FALSE.
       $skip = ($result_hook && in_array(FALSE, $result_hook)) || ($result_named_hook && in_array(FALSE, $result_named_hook)) || $row->shouldSkip();
-      $save_to_map = $row->shouldSkip() ? $row->saveToMapOnSkip() : TRUE;
-      if ($row->skipMessage()) {
-        $this->idMap->saveMessage($row->getSourceIdValues(), $row->skipMessage(), MigrationInterface::MESSAGE_INFORMATIONAL);
-      }
+      $save_to_map = !$row->shouldSkip() || $row->saveToMapOnSkip();
     }
     catch (MigrateSkipRowException $e) {
       $skip = TRUE;
@@ -320,6 +317,9 @@ abstract class SourcePluginBase extends PluginBase implements MigrateSourceInter
         $this->idMap->saveIdMapping($row, [], MigrateIdMapInterface::STATUS_IGNORED);
         $this->currentRow = NULL;
         $this->currentSourceIds = NULL;
+        if ($row->skipMessage()) {
+          $this->idMap->saveMessage($row->getSourceIdValues(), $row->skipMessage(), MigrationInterface::MESSAGE_INFORMATIONAL);
+        }
       }
       $result = FALSE;
     }
