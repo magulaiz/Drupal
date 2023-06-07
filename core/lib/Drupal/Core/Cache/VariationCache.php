@@ -101,6 +101,8 @@ class VariationCache implements VariationCacheInterface {
             // Check whether we have an overlap scenario as we need to manually
             // create an extra redirect in that case.
             $common_contexts = array_intersect($result_contexts, $contexts);
+            // != is the most appropriate comparison operator here, since we
+            // only want to know if any keys or values don't match.
             if ($common_contexts != $contexts) {
               // Set the redirect to the common contexts at the current address.
               // In the above example this is essentially overwriting the
