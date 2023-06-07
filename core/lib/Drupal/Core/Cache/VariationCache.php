@@ -171,7 +171,7 @@ class VariationCache implements VariationCacheInterface {
    *   Every cache get that lead to the final result, keyed by the cache ID used
    *   to query the cache for that result.
    */
-  protected function getRedirectChain(array $keys, CacheableDependencyInterface $initial_cacheability) {
+  protected function getRedirectChain(array $keys, CacheableDependencyInterface $initial_cacheability): array {
     $cid = $this->createCacheIdFast($keys, $initial_cacheability);
     $chain[$cid] = $result = $this->cacheBackend->get($cid);
 
