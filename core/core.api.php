@@ -1999,6 +1999,10 @@ function hook_queue_info_alter(&$queues) {
  */
 function hook_condition_info_alter(array &$definitions) {
   // Add custom or modify existing condition definitions.
+  if (isset($definitions['node_type']) && $definitions['node_type']['class'] == 'Drupal\node\Plugin\Condition\NodeType') {
+    // If the node_type's class is unaltered, use a custom implementation.
+    $definitions['node_type']['class'] = 'Drupal\mymodule\Plugin\Condition\NodeType';
+  }
 }
 
 /**
