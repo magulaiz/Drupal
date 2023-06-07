@@ -192,93 +192,187 @@ class LocalTaskManager extends DefaultPluginManager implements LocalTaskManagerI
   }
 
   /**
+   * Return active-trail of task definition plugin ids for the current route.
+   *
+   * @param string $route_name
+   *   The route used to find active-trail of local tasks.
+   *
+   * @return array
+   *   The task definition plugin ids for the route's active-trail.
+   */
+  protected function getActiveTrail(string $route_name): array {
+    $ancestors = [];
+    $definitions = $this->getDefinitions();
+    // Build smaller arrays that are faster and easier to parse.
+    $route_ids = array_keys($definitions);
+    $route_names = array_combine($route_ids, array_column($definitions, 'route_name'));
+    $route_parents = array_combine($route_ids, array_column($definitions, 'parent_id'));
+    // Find all applicable plugin definition ids for this route_name.
+    $route_name_options = array_keys($route_names, $route_name);
+    // Use last available plugin definition match to find ancestors.
+    if ($definition_id = end($route_name_options)) {
+      // Find the deepest level of children for this route name.
+      do {
+        // Track previous definition IDs to not allow recursion.
+        $definition_ids[] = $definition_id;
+        // Find possible next definition ID.
+        $definition_id = array_search($definition_id, $route_parents);
+      } while (is_string($definition_id) && !in_array($definition_id, $definition_ids) && \array_key_exists($definition_id, $definitions) && $route_name == $definitions[$definition_id]['route_name']);
+      // Start ancestors array with last-available non-NULL active task id
+      // gathered from route and work upwards.
+      $task_id = end($definition_ids);
+      while (\array_key_exists($task_id, $definitions)) {
+        if (!in_array($task_id, $ancestors)) {
+          $ancestors[] = $task_id;
+          $task_id = $definitions[$task_id]['parent_id'];
+        }
+        else {
+          $task_id = NULL;
+        }
+      }
+    }
+    // Get active trail from furthest-up task_id.
+    return array_reverse($ancestors);
+  }
+
+  /**
+   * Find children for each plugin definition of a list of plugin definitions.
+   *
+   * @param array $definitions
+   *   The plugin definitions list, 'parent_id' key is expected.
+   *
+   * @return array
+   *   The modified plugin definitions list with children sub-arrays.
+   */
+  protected function generateChildrenForDefinitions(array $definitions): array {
+    foreach ($definitions as $id => &$definition) {
+      $parent_id = $definition['parent_id'];
+      // Create children array on definition for uniformity.
+      if (!array_key_exists('children', $definition)) {
+        $definition['children'] = [];
+      }
+      // If the definition isn't the parent of itself, add a
+      // definition pointer to the parent's child array.
+      if (isset($definitions[$parent_id]) && $parent_id !== $id) {
+        $definitions[$parent_id]['children'][$id] = &$definition;
+        // Fill in the base_route from the parent route to insure consistency.
+        $definition['base_route'] = $definitions[$parent_id]['route_name'];
+      }
+    }
+    return $definitions;
+  }
+
+  /**
+   * Builds a nested tree of plugin definitions based on the active_trail.
+   *
+   * (specific task definition plugins).
+   *
+   * @param array $active_trail
+   *   An array of local task definition plugin IDs used to build a nested tree.
+   *
+   * @return array
+   *   A nested menu tree array, starting at the base_route.
+   */
+  protected function getTaskTreeByActiveTrail(array $active_trail): array {
+    // Generate task tree from definitions.
+    $definitions = $this->getDefinitions();
+    $task_tree = $this->generateChildrenForDefinitions($definitions);
+    // Get top-level parent plugin information.
+    $active_top_level = current($active_trail);
+    $base_route = ($active_top_level && array_key_exists($active_top_level, $definitions)) ? $definitions[$active_top_level]['base_route'] : NULL;
+    // Unset if both not top-level active-trail and one of the following:
+    // - Base route isn't set.
+    // - Current task base_route isn't same as the active trail base route.
+    // - Parent ID is set (making it an nested-level local task)
+    foreach ($task_tree as $task_id => $task) {
+      if ($active_top_level !== $task_id && (is_null($base_route) || $task['base_route'] !== $base_route || $task['parent_id'] !== NULL)) {
+        unset($task_tree[$task_id]);
+      }
+    }
+    // Remove unrelated children from tree.
+    $task_tree_pointer = &$task_tree;
+    foreach ($active_trail as $active_plugin_id) {
+      foreach (array_keys($task_tree_pointer) as $task_tree_key) {
+        if ($task_tree_key !== $active_plugin_id) {
+          $task_tree_pointer[$task_tree_key]['children'] = [];
+        }
+      }
+      // Exit if current active trail plugin id doesn't exist in current tree.
+      if (!array_key_exists($active_plugin_id, $task_tree_pointer)) {
+        break;
+      }
+      // Move down a level in the tree.
+      $task_tree_pointer = &$task_tree_pointer[$active_plugin_id]['children'];
+    }
+    return $task_tree;
+  }
+
+  /**
+   * Return an array containing tree and breadcrumb data for the given route.
+   *
+   * @param string $route_name
+   *   The current route to retrieve route breadcrumb and tree data array.
+   *
+   * @return array
+   *   An array containing
+   *   - tree: The current route's task tree.
+   *   - active_trail: The current route's active task ids.
+   */
+  protected function getTaskTreeData(string $route_name): array {
+    if ($cache = $this->cacheBackend->get($this->cacheKey . ':' . $route_name)) {
+      $data = $cache->data;
+    }
+    else {
+      $active_trail = $this->getActiveTrail($route_name);
+      $task_tree = $this->getTaskTreeByActiveTrail($active_trail);
+      $data = [
+        'tree' => $task_tree,
+        'active_trail' => $active_trail,
+      ];
+      $this->cacheBackend->set($this->cacheKey . ':' . $route_name, $data, Cache::PERMANENT, $this->cacheTags);
+    }
+    return $data;
+  }
+
+  /**
    * {@inheritdoc}
    */
   public function getLocalTasksForRoute($route_name) {
     if (!isset($this->instances[$route_name])) {
       $this->instances[$route_name] = [];
-      if ($cache = $this->cacheBackend->get($this->cacheKey . ':' . $route_name)) {
-        $base_routes = $cache->data['base_routes'];
-        $parents = $cache->data['parents'];
-        $children = $cache->data['children'];
-      }
-      else {
-        $definitions = $this->getDefinitions();
-        // We build the hierarchy by finding all tabs that should
-        // appear on the current route.
-        $base_routes = [];
-        $parents = [];
-        $children = [];
-        foreach ($definitions as $plugin_id => $task_info) {
-          // Fill in the base_route from the parent to insure consistency.
-          if (!empty($task_info['parent_id']) && !empty($definitions[$task_info['parent_id']])) {
-            $task_info['base_route'] = $definitions[$task_info['parent_id']]['base_route'];
-            // Populate the definitions we use in the next loop. Using a
-            // reference like &$task_info causes bugs.
-            $definitions[$plugin_id]['base_route'] = $definitions[$task_info['parent_id']]['base_route'];
+      $data = $this->getTaskTreeData($route_name);
+      $task_tree = $data['tree'];
+      $active_trail = $data['active_trail'];
+      $levels = count($active_trail);
+      // Convert the tree keyed by plugin IDs into a simple one with
+      // integer depth.  Create instances for each plugin along the way.
+      $task_tree_pointer = &$task_tree;
+      foreach ($active_trail as $level => $active_plugin_id) {
+        foreach (array_keys($task_tree_pointer) as $plugin_id) {
+          // Create a plugin instance for each element of the hierarchy.
+          $plugin = $this->createInstance($plugin_id);
+          // Set parent-level active-trail plugins as active.
+          if ($plugin_id == $active_plugin_id && ($level + 1) < $levels && $plugin instanceof LocalTaskDefault) {
+            $plugin->setActive();
           }
-          if ($route_name == $task_info['route_name']) {
-            if (!empty($task_info['base_route'])) {
-              $base_routes[$task_info['base_route']] = $task_info['base_route'];
-            }
-            // Tabs that link to the current route are viable parents
-            // and their parent and children should be visible also.
-            // @todo - this only works for 2 levels of tabs.
-            // instead need to iterate up.
-            $parents[$plugin_id] = TRUE;
-            if (!empty($task_info['parent_id'])) {
-              $parents[$task_info['parent_id']] = TRUE;
-            }
-          }
+          $this->instances[$route_name][$level][$plugin_id] = $plugin;
         }
-        if ($base_routes) {
-          // Find all the plugins with the same root and that are at the top
-          // level or that have a visible parent.
-          foreach ($definitions as $plugin_id => $task_info) {
-            if (!empty($base_routes[$task_info['base_route']]) && (empty($task_info['parent_id']) || !empty($parents[$task_info['parent_id']]))) {
-              // Concat '> ' with root ID for the parent of top-level tabs.
-              $parent = empty($task_info['parent_id']) ? '> ' . $task_info['base_route'] : $task_info['parent_id'];
-              $children[$parent][$plugin_id] = $task_info;
-            }
-          }
+        // Exit if current active trail plugin id doesn't exist in current tree.
+        if (!array_key_exists($active_plugin_id, $task_tree_pointer)) {
+          break;
         }
-        $data = [
-          'base_routes' => $base_routes,
-          'parents' => $parents,
-          'children' => $children,
-        ];
-        $this->cacheBackend->set($this->cacheKey . ':' . $route_name, $data, Cache::PERMANENT, $this->cacheTags);
+        // Move down a level in the task tree.
+        $task_tree_pointer = &$task_tree_pointer[$active_plugin_id]['children'];
       }
-      // Create a plugin instance for each element of the hierarchy.
-      foreach ($base_routes as $base_route) {
-        // Convert the tree keyed by plugin IDs into a simple one with
-        // integer depth.  Create instances for each plugin along the way.
-        $level = 0;
-        // We used this above as the top-level parent array key.
-        $next_parent = '> ' . $base_route;
-        do {
-          $parent = $next_parent;
-          $next_parent = FALSE;
-          foreach ($children[$parent] as $plugin_id => $task_info) {
-            $plugin = $this->createInstance($plugin_id);
-            $this->instances[$route_name][$level][$plugin_id] = $plugin;
-            // Normally, the link generator compares the href of every link with
-            // the current path and sets the active class accordingly. But the
-            // parents of the current local task may be on a different route in
-            // which case we have to set the class manually by flagging it
-            // active.
-            if (!empty($parents[$plugin_id]) && $route_name != $task_info['route_name']) {
-              $plugin->setActive();
-            }
-            if (isset($children[$plugin_id])) {
-              // This tab has visible children.
-              $next_parent = $plugin_id;
-            }
-          }
-          $level++;
-        } while ($next_parent);
+      // Print children that aren't in active-trail.
+      if (!empty($task_tree_pointer)) {
+        $level = isset($level) ? $level + 1 : 0;
+        foreach (array_keys($task_tree_pointer) as $plugin_id) {
+          // Create a plugin instance for each element of the hierarchy.
+          $plugin = $this->createInstance($plugin_id);
+          $this->instances[$route_name][$level][$plugin_id] = $plugin;
+        }
       }
-
     }
     return $this->instances[$route_name];
   }
@@ -318,7 +412,6 @@ class LocalTaskManager extends DefaultPluginManager implements LocalTaskManagerI
         // one of its child tabs is the active tab.
         $active = $active || $child->getActive();
         // @todo It might make sense to use link render elements instead.
-
         $link = [
           'title' => $this->getTitle($child),
           'url' => Url::fromRoute($route_name, $route_parameters),
