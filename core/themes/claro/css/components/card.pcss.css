@@ -143,12 +143,12 @@
   margin-top: var(--space-l);
 }
 
-.card__footer .action-links,
-[dir="rtl"] .card__footer .action-links {
+.card__footer .action-links {
   margin-top: 0;
   margin-bottom: 0;
   text-align: right; /* LTR */
-}
-[dir="rtl"] .card__footer .action-links {
-  text-align: left;
+
+  @nest [dir="rtl"] & {
+    text-align: left;
+  }
 }
