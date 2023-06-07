@@ -611,7 +611,23 @@ $(function () {
 
 //Attach all behaviors.
 $(function () {
-  Drupal.attachBehaviors(document, Drupal.settings);
+  // Only attach behaviors on 'complete' document state to make sure the scripts
+  // using 'defer' are already loaded (otherwise the behaviors
+  // might not get attached).
+  // This is a workaround for jQuery ready being fired too soon
+  // (see https://github.com/jquery/jquery/issues/3271).
+  // If the state is 'complete' attach behaviors immediately.
+  if (document.readyState === 'complete') {
+    Drupal.attachBehaviors(document, Drupal.settings);
+  }
+  // If we have a different state, wait for the state to change to 'complete'.
+  else {
+    document.addEventListener('readystatechange', function() {
+      if (document.readyState === 'complete') {
+        Drupal.attachBehaviors(document, Drupal.settings);
+      }
+    });
+  }
 });
 
 /**
