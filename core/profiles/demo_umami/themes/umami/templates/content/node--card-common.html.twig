@@ -66,8 +66,23 @@
  * @see template_preprocess_node()
  */
 #}
+{%
+  set classes = [
+    'node',
+    'node--type-' ~ node.bundle|clean_class,
+    node.isPromoted() ? 'node--promoted',
+    node.isSticky() ? 'node--sticky',
+    not node.isPublished() ? 'node--unpublished',
+    'view-mode-card',
+    view_mode ? 'node--view-mode-' ~ view_mode|clean_class,
+  ]
+%}
+
 {{ include('umami:card-common', {
   node: node,
   url: url,
   content: content,
+  attributes: attributes.addClass(classes),
+  title_attributes,
+  content_attributes
 })}}

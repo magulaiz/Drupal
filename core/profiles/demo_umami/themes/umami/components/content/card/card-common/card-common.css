@@ -3,6 +3,6 @@
 * This file is used to style the 'Card common' view mode.
 */
 
-.node--view-mode-card-common .read-more {
+.card--common .read-more {
   margin-bottom: 1em;
 }
