@@ -449,18 +449,16 @@ class OptionsFieldUITest extends FieldTestBase {
       $this->drupalGet($this->adminPath);
       $page->findButton('Save field settings')->click();
 
-      if($field_type == 'list_string'){
+      if ($field_type == 'list_string') {
         // Asserting only name field as there is no value field for list_string.
         $this->assertSession()->pageTextContains('Name field is required.');
       }
-      else{
+      else {
         // Confirmation message that name and value are required fields for
         // list_float and list_integer.
         $this->assertSession()->pageTextContains('Name field is required.');
         $this->assertSession()->pageTextContains('Value field is required.');
       }
-
-
     }
   }
 
