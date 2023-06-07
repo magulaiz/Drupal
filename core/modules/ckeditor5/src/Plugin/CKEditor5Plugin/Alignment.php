@@ -57,9 +57,10 @@ class Alignment extends CKEditor5PluginDefault implements CKEditor5PluginConfigu
 
     foreach ($this->getPluginDefinition()->getCKEditor5Config()['alignment']['options'] as $alignment_option) {
       $name = $alignment_option['name'];
+      $title = $alignment_option['title'];
       $form['enabled_alignments'][$name] = [
         '#type' => 'checkbox',
-        '#title' => $this->t($name),
+        '#title' => $this->t($title),
         '#return_value' => $name,
         '#default_value' => in_array($name, $this->configuration['enabled_alignments'], TRUE) ? $name : NULL,
       ];
