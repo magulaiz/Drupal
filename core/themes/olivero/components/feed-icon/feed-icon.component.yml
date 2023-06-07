@@ -1,0 +1,14 @@
+name: Feed Icon
+status: experimental
+group: Misc
+props:
+  type: object
+  properties:
+    attributes:
+      type: Drupal\Core\Template\Attribute
+    title:
+      type: string
+    url:
+      type: url
+slots:
+  minimal: {}
