@@ -90,10 +90,12 @@ class AlignmentPluginTest extends UnitTestCase {
             'options' => [
               [
                 'name' => 'left',
+                'title' => 'Left',
                 'className' => 'text-align-left',
               ],
               [
                 'name' => 'justify',
+                'title' => 'Justify',
                 'className' => 'text-align-justify',
               ],
             ],
