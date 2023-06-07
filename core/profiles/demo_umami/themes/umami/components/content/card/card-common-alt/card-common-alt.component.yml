@@ -11,6 +11,12 @@ props:
       description: The title of the node
       examples:
         - A recipe for success!
+slots:
+  type: object
+  title:
+    title: Title
+    required: true
+    description: The card title.
 libraryOverrides:
   dependencies:
     - sdc/umami--card
