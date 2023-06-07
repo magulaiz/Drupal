@@ -1,0 +1,9 @@
+delete:
+  - '/src/StarterKit.php'
+  - '/starterkit_theme.starterkit.yml'
+no_edit: null
+no_rename: null
+info:
+  hidden: null
+  starterkit: null
+  version: 1.0.0
