@@ -725,7 +725,7 @@ class TwigExtension extends AbstractExtension {
     }
 
     foreach ($used_variables as $name) {
-      if (isset($context['deprecations'][$name]) && array_key_exists($name, $context)) {
+      if (isset($context['deprecations'][$name]) && \array_key_exists($name, $context)) {
         @trigger_error($context['deprecations'][$name], E_USER_DEPRECATED);
       }
     }
