@@ -1,0 +1,5 @@
+services:
+  user_events_test.user_authentication_subscriber:
+    class: Drupal\user_events_test\EventSubscriber\UserAuthenticationSubscriber
+    tags:
+      - { name: event_subscriber }

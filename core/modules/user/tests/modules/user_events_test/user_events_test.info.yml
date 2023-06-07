@@ -1,0 +1,5 @@
+name: 'User module events tests'
+type: module
+description: 'Support module for user events testing.'
+package: Testing
+version: VERSION
