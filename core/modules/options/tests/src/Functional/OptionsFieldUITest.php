@@ -443,13 +443,24 @@ class OptionsFieldUITest extends FieldTestBase {
     foreach ($field_types as $field_type) {
       $this->fieldName = "field_options_$field_type";
       $this->createOptionsField($field_type);
+      $page = $this->getSession()->getPage();
 
       // Try to proceed without entering any value.
       $this->drupalGet($this->adminPath);
-      $this->submitForm([], 'Save field settings');
+      $page->findButton('Save field settings')->click();
 
-      // Confirmation message that this is a required field.
-      $this->assertSession()->pageTextContains('Allowed values list field is required.');
+      if($field_type == 'list_string'){
+        // Asserting only name field as there is no value field for list_string.
+        $this->assertSession()->pageTextContains('Name field is required.');
+      }
+      else{
+        // Confirmation message that name and value are required fields for
+        // list_float and list_integer.
+        $this->assertSession()->pageTextContains('Name field is required.');
+        $this->assertSession()->pageTextContains('Value field is required.');
+      }
+
+
     }
   }
 
