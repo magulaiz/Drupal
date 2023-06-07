@@ -3,7 +3,7 @@
 * This file is used to style the 'Card' view mode.
 */
 
-.card {
+.umami-card {
   display: flex;
   flex-direction: column;
   width: 100%;
@@ -11,36 +11,36 @@
   border: 1px solid #fcece7;
 }
 
-.card .card__title {
+.umami-card .umami-card__title {
   flex-grow: 1;
 }
 
-.card .card__title {
+.umami-card .umami-card__title {
   text-decoration: none;
   color: #000;
   font-size: 1.424rem;
   font-weight: 400;
 }
 
-.card .card__link {
+.umami-card .umami-card__link {
   text-decoration: none;
   color: #000;
   background-color: inherit;
 }
 
-.card .card__link:focus,
-.card .card__link:hover {
+.umami-card .umami-card__link:focus,
+.umami-card .umami-card__link:hover {
   text-decoration: underline;
   color: #000;
 }
 
-.card .card__content img {
+.umami-card .umami-card__content img {
   display: block;
   width: 100%;
   margin-bottom: 1.2em;
 }
 
-.card .label-items {
+.umami-card .label-items {
   color: #5f635d;
   font-size: 0.889rem;
 }

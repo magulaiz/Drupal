@@ -1,12 +1,12 @@
 {% set classes = [
-  'card',
-  'card--common'
+  'umami-card',
+  'umami-card--common'
 ] %}
 <article{{ attributes.addClass(classes) }}>
 
   {{ title_prefix }}
   {% if label and not page %}
-    <h2{{ title_attributes.addClass('card__title') }}>
+    <h2{{ title_attributes.addClass('umami-card__title') }}>
       {{ label }}
     </h2>
   {% endif %}
@@ -18,7 +18,7 @@
     </a>
   </div>
 
-  <div{{ content_attributes.addClass('card__content') }}>
+  <div{{ content_attributes.addClass('umami-card__content') }}>
     {{ content }}
   </div>
 
