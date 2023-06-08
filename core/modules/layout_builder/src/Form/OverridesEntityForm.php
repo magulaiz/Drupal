@@ -210,27 +210,6 @@ class OverridesEntityForm extends ContentEntityForm {
       '#submit' => ['::redirectOnSubmit'],
       '#redirect' => 'revert',
     ];
-    $actions['move_sections'] = [
-      '#type' => 'link',
-      '#title' => $this->t('Reorder sections'),
-      '#url' => Url::fromRoute('layout_builder.move_sections_form',
-        [
-          'section_storage_type' => $this->sectionStorage->getStorageType(),
-          'section_storage' => $this->sectionStorage->getStorageId(),
-        ],
-        [
-          'attributes' => [
-            'class' => [
-              'use-ajax',
-              'button',
-            ],
-            'data-dialog-type' => 'dialog',
-            'data-dialog-renderer' => 'off_canvas',
-            'data-disable-refocus' => 'true',
-          ],
-        ]
-      ),
-    ];
     $actions['preview_toggle'] = $this->buildContentPreviewToggle();
     return $actions;
   }
