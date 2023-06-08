@@ -1,0 +1,37 @@
+$schema: https://git.drupalcode.org/project/sdc/-/raw/1.x/src/metadata.schema.json
+name: Comment
+status: experimental
+group: Content
+props:
+  type: object
+  properties:
+    attributes:
+      type: Drupal\Core\Template\Attribute
+      title: Attributes
+    user_picture:
+      type: array
+      title: User Picture
+    author:
+      type: Drupal\Core\Render\Markup
+      title: Author
+    created:
+      type: Drupal\Core\StringTranslation\TranslatableMarkup
+      title: Created
+    parent:
+      type: string
+      title: Parent
+    title:
+      type: Drupal\Core\GeneratedLink
+      title: Title
+    title_prefix:
+      type: array
+      title: Title Prefix
+    title_suffix:
+      type: array
+      title: Title Suffix
+    title_attributes:
+      type: Drupal\Core\Template\Attribute
+      title: Title Attributes
+    content:
+      type: array
+      title: Content
