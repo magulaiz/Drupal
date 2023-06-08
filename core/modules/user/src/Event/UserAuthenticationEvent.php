@@ -33,7 +33,7 @@ class UserAuthenticationEvent extends Event {
    * @return \Drupal\Core\Session\AccountInterface
    *   The user participating in authentication.
    */
-  public function getUser() {
+  public function getUser(): object {
     return $this->user;
   }
 
