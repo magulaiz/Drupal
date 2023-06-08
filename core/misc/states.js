@@ -164,15 +164,9 @@
       if (!Array.isArray(value)) {
         return false;
       }
-      // Convert all comparisons to strings for indexOf to work with integers
-      // comparing to strings.
-      reference = reference.map(String);
-      value = value.map(String);
-      // We iterate through each value provided in the reference. If all of them
-      // exist in value array, we return true. Otherwise return false.
-      return Object.entries(reference).every(([key, referenceValue]) =>
-        value.includes(referenceValue),
-      );
+
+      // The arrays values should match.
+      return JSON.stringify(reference) === JSON.stringify(value);
     },
     Number(reference, value) {
       // If "reference" is a number and "value" is a string, then cast
