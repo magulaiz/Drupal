@@ -81,8 +81,6 @@ comments:
   css:
     component:
       css/components/comments.css: {}
-  js:
-    js/comments.js: {}
 
 content-below:
   version: VERSION
