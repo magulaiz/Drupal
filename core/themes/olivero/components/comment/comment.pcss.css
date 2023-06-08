@@ -5,6 +5,7 @@
 
 @import "../../css/base/media-queries.pcss.css";
 
+<<<<<<<< HEAD:core/themes/olivero/components/comment/comment.pcss.css
 :root {
   --comment-indentation: var(--sp2);
   --comment-indentation--md: var(--sp4);
@@ -58,6 +59,57 @@
 }
 
 .comment__picture {
+========
+.comments__title {
+  display: flex;
+  align-items: center;
+  margin-block-start: 0;
+}
+
+.comments__count {
+  position: relative;
+  display: inline-block;
+  min-width: 34px;
+  margin-block-start: 0;
+  margin-block-end: var(--sp0-5);
+  margin-inline-start: var(--sp);
+  margin-inline-end: var(--sp);
+  padding-block: 0;
+  padding-inline-start: 5px;
+  padding-inline-end: 5px;
+  text-align: center;
+  color: var(--color--white);
+  border-radius: 2px;
+  background-color: var(--color--primary-40);
+  font-size: 11px;
+  line-height: 21px;
+
+  &::after {
+    position: absolute;
+    inset-block-end: -7px;
+    inset-inline-start: 8px;
+    width: 0;
+    height: 0;
+    content: "";
+    border-block-start: 7px solid var(--color--primary-40);
+    border-inline-end: 8px solid transparent;
+  }
+}
+
+.comment-form {
+  padding-block-end: var(--sp2);
+}
+
+.add-comment__form {
+  padding-inline-start: 0;
+}
+
+.add-comment__picture-wrapper {
+  inset-block-start: calc(var(--line-height-base) + var(--sp0-5));
+}
+
+.add-comment__picture {
+>>>>>>>> 757cf4d9cc (including styles and js as part of the comment component):core/themes/olivero/css/components/comments.pcss.css
   position: absolute;
   inset-inline-start: 0;
   overflow: hidden;
@@ -94,91 +146,5 @@
     inset-inline-start: calc(-1 * var(--sp5));
     width: var(--sp3);
     height: var(--sp3);
-  }
-}
-
-.indented .comment__picture {
-  @media (--grid-md) {
-    inset-inline-start: calc(-1 * var(--sp4));
-    width: var(--sp2);
-    height: var(--sp2);
-  }
-}
-
-.comment__meta {
-  & * {
-    display: inline;
-  }
-}
-
-.comment__author {
-  margin-inline-end: var(--sp);
-  font-family: var(--font-sans);
-  font-size: 16px;
-  font-weight: 700;
-  line-height: var(--sp);
-
-  & a {
-    text-decoration: none;
-  }
-}
-
-.comment__time {
-  margin: 0;
-  color: var(--color-text-neutral-soft);
-  font-family: var(--font-sans);
-  font-size: 14px;
-  line-height: var(--sp);
-}
-
-.indented {
-  margin-inline-start: var(--comment-indentation);
-
-  & > .comment:not(:last-of-type, .has-children)::before {
-    position: absolute;
-    inset-block-start: var(--sp2);
-    inset-inline-start: calc(-1 * var(--comment-indentation) - var(--sp)); /* Comment's padding-top */
-    width: 0;
-    height: 100%;
-    content: "";
-    border-inline-start: solid 1px var(--color--gray-95);
-
-    @media (--md) {
-      inset-inline-start: calc(-1 * var(--comment-indentation--md) + var(--sp));
-    }
-  }
-
-  @media (--md) {
-    margin-inline-start: var(--comment-indentation--md);
-  }
-}
-
-.show-hide-btn {
-  margin-block-start: var(--sp2);
-  margin-block-end: 0;
-  margin-inline-start: var(--sp3);
-  margin-inline-end: 0;
-  padding-block: 0;
-  padding-inline-start: 0;
-  padding-inline-end: 0;
-  cursor: pointer;
-  color: var(--color-text-neutral-medium);
-  border: 0;
-  background: none;
-  font-size: 14px;
-  font-weight: 600;
-  line-height: 18px;
-  appearance: none;
-
-  &[aria-expanded="true"]::after {
-    content: "\0020 -";
-  }
-
-  &[aria-expanded="false"]::after {
-    content: "\0020 +";
-  }
-
-  @media (--grid-md) {
-    margin-inline-start: 0;
   }
 }

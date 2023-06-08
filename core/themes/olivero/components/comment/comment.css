@@ -10,6 +10,7 @@
  * Comment section and individual comments.
  */
 
+<<<<<<<< HEAD:core/themes/olivero/components/comment/comment.css
 :root {
   --comment-indentation: var(--sp2);
   --comment-indentation--md: var(--sp4);
@@ -68,6 +69,57 @@
 }
 
 .comment__picture {
+========
+.comments__title {
+  display: flex;
+  align-items: center;
+  margin-block-start: 0;
+}
+
+.comments__count {
+  position: relative;
+  display: inline-block;
+  min-width: 2.125rem;
+  margin-block-start: 0;
+  margin-block-end: var(--sp0-5);
+  margin-inline-start: var(--sp);
+  margin-inline-end: var(--sp);
+  padding-block: 0;
+  padding-inline-start: 0.3125rem;
+  padding-inline-end: 0.3125rem;
+  text-align: center;
+  color: var(--color--white);
+  border-radius: 2px;
+  background-color: var(--color--primary-40);
+  font-size: 0.6875rem;
+  line-height: 1.3125rem;
+}
+
+.comments__count::after {
+  position: absolute;
+  inset-block-end: -0.4375rem;
+  inset-inline-start: 0.5rem;
+  width: 0;
+  height: 0;
+  content: "";
+  border-block-start: 0.4375rem solid var(--color--primary-40);
+  border-inline-end: 0.5rem solid transparent;
+}
+
+.comment-form {
+  padding-block-end: var(--sp2);
+}
+
+.add-comment__form {
+  padding-inline-start: 0;
+}
+
+.add-comment__picture-wrapper {
+  inset-block-start: calc(var(--line-height-base) + var(--sp0-5));
+}
+
+.add-comment__picture {
+>>>>>>>> 757cf4d9cc (including styles and js as part of the comment component):core/themes/olivero/css/components/comments.css
   position: absolute;
   inset-inline-start: 0;
   overflow: hidden;
@@ -77,13 +129,21 @@
   background-color: var(--color--gray-95);
 }
 
+<<<<<<<< HEAD:core/themes/olivero/components/comment/comment.css
 .comment__picture *:not(img) {
+========
+.add-comment__picture *:not(img) {
+>>>>>>>> 757cf4d9cc (including styles and js as part of the comment component):core/themes/olivero/css/components/comments.css
   display: inherit;
   width: inherit;
   height: inherit;
 }
 
+<<<<<<<< HEAD:core/themes/olivero/components/comment/comment.css
 .comment__picture img {
+========
+.add-comment__picture img {
+>>>>>>>> 757cf4d9cc (including styles and js as part of the comment component):core/themes/olivero/css/components/comments.css
   width: 100%;
   height: 100%;
   object-fit: cover;
@@ -92,7 +152,11 @@
 }
 
 @media all and (-ms-high-contrast: active), (-ms-high-contrast: none) {
+<<<<<<<< HEAD:core/themes/olivero/components/comment/comment.css
   .comment__picture img {
+========
+  .add-comment__picture img {
+>>>>>>>> 757cf4d9cc (including styles and js as part of the comment component):core/themes/olivero/css/components/comments.css
     position: absolute;
     /* stylelint-disable csstools/use-logical */
     top: 50%;
@@ -105,101 +169,13 @@
 }
 
 @media (min-width: 43.75rem) {
+<<<<<<<< HEAD:core/themes/olivero/components/comment/comment.css
   .comment__picture {
+========
+  .add-comment__picture {
+>>>>>>>> 757cf4d9cc (including styles and js as part of the comment component):core/themes/olivero/css/components/comments.css
     inset-inline-start: calc(-1 * var(--sp5));
     width: var(--sp3);
     height: var(--sp3);
-  }
-}
-
-@media (min-width: 43.75rem) {
-  .indented .comment__picture {
-    inset-inline-start: calc(-1 * var(--sp4));
-    width: var(--sp2);
-    height: var(--sp2);
-  }
-}
-
-.comment__meta * {
-  display: inline;
-}
-
-.comment__author {
-  margin-inline-end: var(--sp);
-  font-family: var(--font-sans);
-  font-size: 1rem;
-  font-weight: 700;
-  line-height: var(--sp);
-}
-
-.comment__author a {
-  -webkit-text-decoration: none;
-  text-decoration: none;
-}
-
-.comment__time {
-  margin: 0;
-  color: var(--color-text-neutral-soft);
-  font-family: var(--font-sans);
-  font-size: 0.875rem;
-  line-height: var(--sp);
-}
-
-.indented {
-  margin-inline-start: var(--comment-indentation);
-}
-
-.indented > .comment:not(:last-of-type, .has-children)::before {
-  position: absolute;
-  inset-block-start: var(--sp2);
-  inset-inline-start: calc(-1 * var(--comment-indentation) - var(--sp)); /* Comment's padding-top */
-  width: 0;
-  height: 100%;
-  content: "";
-  border-inline-start: solid 1px var(--color--gray-95);
-}
-
-@media (min-width: 43.75rem) {
-  .indented > .comment:not(:last-of-type, .has-children)::before {
-    inset-inline-start: calc(-1 * var(--comment-indentation--md) + var(--sp));
-  }
-}
-
-@media (min-width: 43.75rem) {
-  .indented {
-    margin-inline-start: var(--comment-indentation--md);
-  }
-}
-
-.show-hide-btn {
-  margin-block-start: var(--sp2);
-  margin-block-end: 0;
-  margin-inline-start: var(--sp3);
-  margin-inline-end: 0;
-  padding-block: 0;
-  padding-inline-start: 0;
-  padding-inline-end: 0;
-  cursor: pointer;
-  color: var(--color-text-neutral-medium);
-  border: 0;
-  background: none;
-  font-size: 0.875rem;
-  font-weight: 600;
-  line-height: 1.125rem;
-  -webkit-appearance: none;
-  appearance: none;
-}
-
-.show-hide-btn[aria-expanded="true"]::after {
-  content: "\0020 -";
-}
-
-.show-hide-btn[aria-expanded="false"]::after {
-  content: "\0020 +";
-}
-
-@media (min-width: 43.75rem) {
-  .show-hide-btn {
-    margin-inline-start: 0;
   }
 }
