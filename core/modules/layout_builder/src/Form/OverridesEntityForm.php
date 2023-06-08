@@ -9,7 +9,6 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityRepositoryInterface;
 use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Url;
 use Drupal\layout_builder\LayoutTempstoreRepositoryInterface;
 use Drupal\layout_builder\OverridesSectionStorageInterface;
 use Drupal\layout_builder\Plugin\SectionStorage\OverridesSectionStorage;
