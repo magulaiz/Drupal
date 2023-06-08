@@ -1,0 +1,6 @@
+<figure role="group"{%- if classes %} class="{{ classes }}"{%- endif %}>
+  {% block content %}
+    {{ node }}
+  {% endblock %}
+  <figcaption>{{ caption }}</figcaption>
+</figure>
