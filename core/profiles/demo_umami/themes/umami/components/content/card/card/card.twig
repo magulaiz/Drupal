@@ -1,21 +1,31 @@
-<article{{ attributes.addClass('umami-card') }}>
+{% set classes = [
+  'umami-card'
+] %}
 
-  {{ title_prefix }}
-  {% if label and not page %}
-    <h2{{ title_attributes.addClass('umami-card__title') }}>
-      {{ title }}
-    </h2>
-  {% endif %}
-  {{ title_suffix }}
+<article{{ attributes.addClass(classes) }}>
+  {% block card %}
 
-  <div{{ content_attributes.addClass('umami-card__content') }}>
-    {{ content }}
-  </div>
+    {% block title %}
+      {{ title_prefix }}
+        <h2{{ title_attributes.addClass('umami-card__title') }}>
+          {{ title }}
+        </h2>
+      {{ title_suffix }}
+    {% endblock %}
 
-  <div class="read-more">
-    <a class="read-more__link" href="{{ url }}">
-      {% trans %}View {{ node.type.entity.label() }}{% endtrans %} <span class="visually-hidden"> - {{ label }}</span>
-    </a>
-  </div>
+    {% block content %}
+      <div{{ content_attributes.addClass('umami-card__content') }}>
+        {{ content }}
+      </div>
+    {% endblock %}
 
+    {% block read_more %}
+      <div class="read-more">
+        <a class="read-more__link" href="{{ url }}">
+          {% trans %}View {{ node.type.entity.label() }}{% endtrans %} <span class="visually-hidden"> - {{ label }}</span>
+        </a>
+      </div>
+    {% endblock %}
+
+  {% endblock %}
 </article>

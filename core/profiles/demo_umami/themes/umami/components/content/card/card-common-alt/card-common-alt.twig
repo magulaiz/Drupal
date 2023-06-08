@@ -1,27 +1,19 @@
-{% set classes = [
-  'umami-card',
-  'umami-card--common-alt'
-] %}
-<article{{ attributes.addClass(classes) }}>
+{% extends 'umami:card' %}
 
-  <div{{ content_attributes.addClass('umami-card__content') }}>
-    {{ content }}
-  </div>
+{% do attributes.addClass('umami-card--common-alt') %}
 
-  {{ title_prefix }}
-  {% if label and not page %}
-    <h2{{ title_attributes.addClass('umami-card__title') }}>
-      {{ title }}
-    </h2>
-  {% endif %}
-  {{ title_suffix }}
+{% block card %}
 
-  <div class="read-more">
-    <a class="read-more__link" href="{{ url }}">
-      {% trans %}View {{ node.type.entity.label() }}{% endtrans %} <span class="visually-hidden"> - {{ label }}</span>
-    </a>
-  </div>
+  {% block content %}
+    {{ parent() }}
+  {% endblock %}
 
+  {% block title %}
+    {{ parent() }}
+  {% endblock %}
 
+  {% block read_more %}
+    {{ parent() }}
+  {% endblock %}
 
-</article>
+{% endblock %}
