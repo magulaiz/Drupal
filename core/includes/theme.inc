@@ -853,7 +853,7 @@ function template_preprocess_image(&$variables) {
       // Prepare a unique key to prevent the case when we have several preloaded
       // images on the page and the IDs of the html_head attachments
       // will conflict.
-      $key = hash('crc32', serialize($image_src));
+      $key = hash('xxh32', serialize($image_src));
       $html_heads[] = [
         ['#tag' => 'link', '#attributes' => $attributes],
         'image_preload_' . $key,
