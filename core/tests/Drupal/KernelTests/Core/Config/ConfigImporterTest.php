@@ -95,6 +95,14 @@ class ConfigImporterTest extends KernelTestBase {
         $this->assertMatchesRegularExpression("/$log_row/", $actual_message);
       }
     }
+
+    // Check with no uuid.
+    unset($config_data['uuid']);
+    $sync->write('system.site', $config_data);
+    $config_importer->reset();
+    $config_importer->import();
+    $logs = $config_importer->getErrors();
+    $this->assertCount(0, $logs);
   }
 
   /**
