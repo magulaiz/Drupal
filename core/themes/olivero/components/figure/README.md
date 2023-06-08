@@ -1,4 +1,5 @@
 Provides a figure element for a captioned image, audio, video or other tag.
 
 ## Usage
-Use this component as a top level component.
+Call this component passing a string containing the rendered tag (image, audio,
+video) and a caption.
