@@ -2,32 +2,31 @@ machineName: tags
 name: Tags
 status: experimental
 
-schemas:
-  props:
-    type: object
-    required:
-      - label
-    properties:
-      attributes:
-        type: Drupal\Core\Template\Attribute
-      label_hidden:
-        type: boolean
-      label_display:
-        type: boolean
-      title_attributes:
-        type: Drupal\Core\Template\Attribute
-      label:
-        type: string
-      field_name:
-        type: string
-      field_type:
-        type: string
+props:
+  type: object
+  required:
+    - label
+  properties:
+    attributes:
+      type: Drupal\Core\Template\Attribute
+    label_hidden:
+      type: boolean
+    label_display:
+      type: boolean
+    title_attributes:
+      type: Drupal\Core\Template\Attribute
+    label:
+      type: string
+    field_name:
+      type: string
+    field_type:
+      type: string
+    items:
+      type: array
       items:
-        type: array
-        items:
-          type: object
-          properties:
-            content:
-              type: string
-            attributes:
-              type: Drupal\Core\Template\Attribute
+        type: object
+        properties:
+          content:
+            type: string
+          attributes:
+            type: Drupal\Core\Template\Attribute
