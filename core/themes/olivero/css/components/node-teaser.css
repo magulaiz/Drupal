@@ -20,18 +20,9 @@
   inset-block-end: 0;
   width: var(--sp3);
   height: 0;
-  content: "";
+  content: '';
   /* Intentionally not using CSS logical properties. */
   border-top: solid 2px var(--color--gray-95);
-}
-
-.node--view-mode-teaser .node__meta {
-  margin-block-end: var(--sp);
-}
-
-.node--view-mode-teaser .node__meta a {
-  color: var(--color-text-primary-medium);
-  font-weight: bold;
 }
 
 .node--view-mode-teaser .node__top-wrapper {

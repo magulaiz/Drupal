@@ -1,0 +1,24 @@
+# This is so your IDE knows about the syntax for fixes and autocomplete.
+$schema: https://git.drupalcode.org/project/sdc/-/raw/1.x/src/metadata.schema.json
+
+# The human readable name.
+name: Node Metadata
+
+# Status can be: "experimental", "stable", "deprecated", "obsolete".
+status: experimental
+
+props:
+  type: object
+  properties:
+    author_attributes:
+      title: Author Attributes
+      type: Drupal\Core\Template\Attribute
+    author_name:
+      title: Author Name
+      type: string
+    author_picture:
+      title: Author Picture
+      type: object
+    date:
+      title: Node Creation Date
+      type: string

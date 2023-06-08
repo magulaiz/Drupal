@@ -22,7 +22,6 @@
  *   of a given child element.
  * - author_picture: The node author user entity, rendered using the "compact"
  *   view mode.
- * - metadata: Metadata for this node.
  * - date: (optional) Themed creation date field.
  * - author_name: (optional) Themed author name field.
  * - url: Direct URL of the current node.
@@ -67,39 +66,43 @@
  */
 #}
 
-{%
-  set classes = [
-    'node',
-    'node--type-' ~ node.bundle|clean_class,
-    node.isPromoted() ? 'node--promoted',
-    node.isSticky() ? 'node--sticky',
-    not node.isPublished() ? 'node--unpublished',
-    view_mode ? 'node--view-mode-' ~ view_mode|clean_class,
-  ]
-%}
+{% set classes = [
+  'node',
+  'node--type-' ~ (node.bundle|clean_class),
+  node.isPromoted() ? 'node--promoted',
+  node.isSticky() ? 'node--sticky',
+  not node.isPublished() ? 'node--unpublished',
+  view_mode ? 'node--view-mode-' ~ (view_mode|clean_class)
+] %}
 
-<article{{ attributes.addClass(classes) }}>
+<article {{ attributes.addClass(classes) }}>
   <header>
     {{ title_prefix }}
     {{ title_suffix }}
     {% if display_submitted %}
-      <div class="node__meta">
-        <span{{ author_attributes }}>
-          {{ 'By'|t }} {% apply spaceless %}<span class="node__author">{{ author_name }}</span>{% endapply %}, {{ date }}
-        </span>
-        {{ metadata }}
-      </div>
+      {{
+        include(
+          'olivero:node-meta',
+          {
+            author_attributes: author_attributes,
+            author_name: author_name,
+            author_picture: author_picture|default({}),
+            date: date
+          },
+          with_context = false
+        )
+      }}
     {% endif %}
     {% if label and not page %}
       <div class="node__top-wrapper">
         {{ content.field_image }}
-        <h2{{ title_attributes.addClass('node__title') }}>
+        <h2 {{ title_attributes.addClass('node__title') }}>
           <a href="{{ url }}" rel="bookmark">{{ label }}</a>
         </h2>
       </div>
     {% endif %}
   </header>
-  <div{{ content_attributes.addClass('node__content') }}>
+  <div {{ content_attributes.addClass('node__content') }}>
     {{ content|without('field_image', 'links') }}
   </div>
 </article>
