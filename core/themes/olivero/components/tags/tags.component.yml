@@ -1,0 +1,35 @@
+machineName: tags
+name: Tags
+status: experimental
+schemas:
+  props:
+    type: object
+    required:
+      - label
+    properties:
+      attributes:
+        type: Drupal\Core\Template\Attribute
+      label_hidden:
+        type: bool
+      label_display:
+        type: bool
+      title_attributes:
+        type: Drupal\Core\Template\Attribute
+      label:
+        type: string
+      field_name:
+        type: string
+      field_type:
+        type: string
+      items:
+        type: array
+        title: items
+        items:
+          type: object
+          properties:
+            content:
+              type: string
+            attributes:
+              type: Drupal\Core\Template\Attribute
+
+
