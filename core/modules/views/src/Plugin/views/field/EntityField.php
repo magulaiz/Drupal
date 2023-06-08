@@ -338,7 +338,7 @@ class EntityField extends FieldPluginBase implements CacheableDependencyInterfac
   /**
    * Gets the field storage definition.
    *
-   * @return \Drupal\Core\Field\FieldStorageDefinitionInterface
+   * @return \Drupal\Core\Field\FieldStorageDefinitionInterface|null
    *   The field storage definition used by this handler.
    */
   protected function getFieldStorageDefinition() {
