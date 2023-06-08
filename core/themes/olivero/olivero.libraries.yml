@@ -279,9 +279,3 @@ tabs:
       css/components/tabs.css: {}
   js:
     js/tabs.js: {}
-
-tags:
-  version: VERSION
-  css:
-    theme:
-      css/components/tags.css: {}
