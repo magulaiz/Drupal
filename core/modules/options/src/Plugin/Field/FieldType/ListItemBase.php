@@ -139,6 +139,12 @@ abstract class ListItemBase extends FieldItemBase implements OptionsProviderInte
     });
     $current_keys = array_keys($allowed_values);
     for ($delta = 0; $delta <= $max; $delta++) {
+      if ($delta === 0) {
+        $required_field = TRUE;
+      }
+      else {
+        $required_field = FALSE;
+      }
       $key = $current_keys[$delta] ?? '';
       $element['allowed_values']['table'][$delta] = [
         '#attributes' => [
@@ -152,7 +158,7 @@ abstract class ListItemBase extends FieldItemBase implements OptionsProviderInte
           '#title' => $this->t('Name'),
           '#weight' => -30,
           '#default_value' => isset($current_keys[$delta]) ? $allowed_values[$current_keys[$delta]] : '',
-          '#required' => TRUE,
+          '#required' => $required_field,
         ],
       ];
       if ($field_type == 'list_string') {
@@ -182,7 +188,7 @@ abstract class ListItemBase extends FieldItemBase implements OptionsProviderInte
             '#default_value' => $current_keys[$delta] ?? '',
             '#step' => ($field_type == 'list_float' ? 'any' : ''),
             '#weight' => -20,
-            '#required' => TRUE,
+            '#required' => $required_field,
           ],
         ];
       }
