@@ -4,6 +4,7 @@ namespace Drupal\Tests\entity_test\Functional\Rest;
 
 use Drupal\Core\Cache\Cache;
 use Drupal\Tests\rest\Functional\AnonResourceTestTrait;
+use Drupal\entity_test\Entity\EntityTestComputedFieldBundle;
 
 /**
  * Test normalization of computed field.
@@ -45,8 +46,24 @@ class EntityTestComputedFieldNormalizerTest extends EntityTestResourceTestBase {
   /**
    * {@inheritdoc}
    */
+  protected function createEntity() {
+    $bundle = EntityTestComputedFieldBundle::create([
+      'name' => 'Entity Test Computed Field Bundle',
+      'type' => 'entity_test_computed_field',
+      'id' => 'entity_test_computed_field',
+    ]);
+    $bundle->save();
+
+    $entity_test = parent::createEntity();
+    return $entity_test;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   protected function getExpectedNormalizedEntity() {
     $expected = parent::getExpectedNormalizedEntity();
+    $bundle = EntityTestComputedFieldBundle::load('entity_test_computed_field');
     $expected['computed_reference_field'] = [];
     $expected['computed_string_field'] = [];
     unset($expected['field_test_text'], $expected['langcode'], $expected['type'], $expected['uuid']);
@@ -60,6 +77,14 @@ class EntityTestComputedFieldNormalizerTest extends EntityTestResourceTestBase {
     $expected['uuid'] = [
       0 => [
         'value' => $this->entity->uuid(),
+      ],
+    ];
+
+    $expected['type'] = [
+      0 => [
+        'target_id' => 'entity_test_computed_field',
+        'target_type' => 'entity_test_comp_field_bundle',
+        'target_uuid' => $bundle->uuid(),
       ],
     ];
 
