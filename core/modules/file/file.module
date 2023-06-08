@@ -257,6 +257,11 @@ function file_validate_is_image(FileInterface $file) {
  *   containing the error message will be returned.
  *
  * @see hook_file_validate()
+ *
+ * @deprecated in drupal:11.0.0. and is removed from drupal:11.3.0.
+ * Use Drupal\core\modules\file\src\FileUsage\ImageResiver::fileValidateImageResolution
+ * instead.
+ * @see https://www.drupal.org/node/3363839
  */
 function file_validate_image_resolution(FileInterface $file, $maximum_dimensions = 0, $minimum_dimensions = 0) {
   $errors = [];

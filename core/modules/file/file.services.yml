@@ -10,3 +10,5 @@ services:
   file.repository:
     class: Drupal\file\FileRepository
     arguments: [ '@file_system', '@stream_wrapper_manager', '@entity_type.manager', '@module_handler', '@file.usage', '@current_user' ]
+  image.resizer:
+    class: Drupal\file\FileUsage\ImageResizer
