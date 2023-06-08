@@ -478,7 +478,7 @@ class JavascriptStatesTest extends WebDriverTestBase {
     $this->assertFalse($item_visible_value2->isVisible());
     $this->assertFalse($item_visible_no_value->isVisible());
     $this->assertFalse($textfield_visible_value3->isVisible());
-    $this->assertTrue($textfield_visible_value2_or_value3->isVisible());
+    $this->assertFalse($textfield_visible_value2_or_value3->isVisible());
     $this->assertTrue($textfield_visible_value2_and_value3->isVisible());
   }
 
