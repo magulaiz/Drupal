@@ -31,5 +31,3 @@ schemas:
               type: string
             attributes:
               type: Drupal\Core\Template\Attribute
-
-
