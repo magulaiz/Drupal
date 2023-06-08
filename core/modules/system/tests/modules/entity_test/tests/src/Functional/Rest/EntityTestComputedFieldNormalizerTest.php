@@ -103,4 +103,5 @@ class EntityTestComputedFieldNormalizerTest extends EntityTestResourceTestBase {
     // Delete test not required.
     $this->markTestSkipped();
   }
+
 }
