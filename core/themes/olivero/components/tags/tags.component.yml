@@ -1,6 +1,7 @@
 machineName: tags
 name: Tags
 status: experimental
+
 schemas:
   props:
     type: object
@@ -10,9 +11,9 @@ schemas:
       attributes:
         type: Drupal\Core\Template\Attribute
       label_hidden:
-        type: bool
+        type: boolean
       label_display:
-        type: bool
+        type: boolean
       title_attributes:
         type: Drupal\Core\Template\Attribute
       label:
@@ -23,7 +24,6 @@ schemas:
         type: string
       items:
         type: array
-        title: items
         items:
           type: object
           properties:
