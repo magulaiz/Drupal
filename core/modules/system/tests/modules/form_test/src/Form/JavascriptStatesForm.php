@@ -111,6 +111,17 @@ class JavascriptStatesForm extends FormBase {
       '#title' => 'Number trigger',
     ];
 
+    $form['multiple_select_trigger'] = [
+      '#type' => 'select',
+      '#multiple' => TRUE,
+      '#title' => 'Multiple select trigger',
+      '#options' => [
+        'value1' => 'Value 1',
+        'value2' => 'Value 2',
+        'value3' => 'Value 3',
+      ],
+    ];
+
     // Tested fields.
     // Checkbox trigger.
     $form['textfield_invisible_when_checkbox_trigger_checked'] = [
@@ -432,6 +443,61 @@ class JavascriptStatesForm extends FormBase {
           ':input[name="select_trigger"]' => [
             ['value' => 'value2'],
             ['value' => 'value3'],
+          ],
+        ],
+      ],
+    ];
+
+    // Multiple Select trigger
+    $form['item_visible_when_multiple_select_trigger_has_value2'] = [
+      '#type' => 'item',
+      '#title' => 'Item visible when multiple select trigger has value2',
+      '#states' => [
+        'visible' => [
+          'select[name="multiple_select_trigger[]"]' => ['value' => ['value2']],
+        ],
+      ],
+    ];
+    $form['item_visible_when_multiple_select_trigger_has_no_value'] = [
+      '#type' => 'item',
+      '#title' => 'Item visible when multiple select trigger has no value',
+      '#states' => [
+        'visible' => [
+          'select[name="multiple_select_trigger[]"]' => ['value' => []],
+        ],
+      ],
+    ];
+    $form['textfield_visible_when_multiple_select_trigger_has_value3'] = [
+      '#type' => 'textfield',
+      '#title' => 'Textfield visible when multiple select trigger has value3',
+      '#states' => [
+        'visible' => [
+          'select[name="multiple_select_trigger[]"]' => ['value' => ['value3']],
+        ],
+      ],
+    ];
+    $form['textfield_visible_when_multiple_select_trigger_has_value2_or_value3'] = [
+      '#type' => 'textfield',
+      '#title' => 'Textfield visible when multiple select trigger has value2 or value3',
+      '#states' => [
+        'visible' => [
+          'select[name="multiple_select_trigger[]"]' => [
+            ['value' => ['value2']],
+            ['value' => ['value3']],
+          ],
+        ],
+      ],
+    ];
+    $form['textfield_visible_when_multiple_select_trigger_has_value2_and_value3'] = [
+      '#type' => 'textfield',
+      '#title' => 'Textfield visible when multiple select trigger has value2 and value3',
+      '#states' => [
+        'visible' => [
+          'select[name="multiple_select_trigger[]"]' => [
+            'value' => [
+              'value2',
+              'value3',
+            ],
           ],
         ],
       ],

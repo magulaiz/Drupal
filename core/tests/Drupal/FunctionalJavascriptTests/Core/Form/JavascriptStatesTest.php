@@ -67,6 +67,7 @@ class JavascriptStatesTest extends WebDriverTestBase {
     $this->doTextfieldTriggerTests();
     $this->doRadiosTriggerTests();
     $this->doSelectTriggerTests();
+    $this->doMultipleSelectTriggerTests();
     $this->doMultipleTriggerTests();
     $this->doNestedTriggerTests();
   }
@@ -432,6 +433,53 @@ class JavascriptStatesTest extends WebDriverTestBase {
     $this->assertFalse($item_visible_value2->isVisible());
     $this->assertTrue($textfield_visible_value3->isVisible());
     $this->assertTrue($textfield_visible_value2_or_value3->isVisible());
+  }
+
+  /**
+   * Tests states of elements triggered by a multiple select element.
+   */
+  protected function doMultipleSelectTriggerTests() {
+    $this->drupalGet('form-test/javascript-states-form');
+    $page = $this->getSession()->getPage();
+    // Find trigger and target elements.
+    $trigger = $page->findField('multiple_select_trigger[]');
+    $this->assertNotEmpty($trigger);
+    $item_visible_value2 = $this->assertSession()->elementExists('css', '#edit-item-visible-when-multiple-select-trigger-has-value2');
+    $item_visible_no_value = $this->assertSession()->elementExists('css', '#edit-item-visible-when-multiple-select-trigger-has-no-value');
+    $textfield_visible_value3 = $page->findField('textfield_visible_when_multiple_select_trigger_has_value3');
+    $this->assertNotEmpty($textfield_visible_value3);
+    $textfield_visible_value2_or_value3 = $page->findField('textfield_visible_when_multiple_select_trigger_has_value2_or_value3');
+    $this->assertNotEmpty($textfield_visible_value2_or_value3);
+    $textfield_visible_value2_and_value3 = $page->findField('textfield_visible_when_multiple_select_trigger_has_value2_and_value3');
+    $this->assertNotEmpty($textfield_visible_value2_and_value3);
+
+    // Verify initial state.
+    $this->assertFalse($item_visible_value2->isVisible());
+    $this->assertTrue($item_visible_no_value->isVisible());
+    $this->assertFalse($textfield_visible_value3->isVisible());
+    $this->assertFalse($textfield_visible_value2_or_value3->isVisible());
+    $this->assertFalse($textfield_visible_value2_and_value3->isVisible());
+    // Change state: select the 'Value 2' option.
+    $trigger->setValue('value2');
+    $this->assertTrue($item_visible_value2->isVisible());
+    $this->assertFalse($item_visible_no_value->isVisible());
+    $this->assertFalse($textfield_visible_value3->isVisible());
+    $this->assertTrue($textfield_visible_value2_or_value3->isVisible());
+    $this->assertFalse($textfield_visible_value2_and_value3->isVisible());
+    // Change state: select the 'Value 3' option.
+    $trigger->setValue('value3');
+    $this->assertFalse($item_visible_value2->isVisible());
+    $this->assertFalse($item_visible_no_value->isVisible());
+    $this->assertTrue($textfield_visible_value3->isVisible());
+    $this->assertTrue($textfield_visible_value2_or_value3->isVisible());
+    $this->assertFalse($textfield_visible_value2_and_value3->isVisible());
+    // Change state: select 'Value2' and 'Value 3' options.
+    $trigger->setValue(['value2', 'value3']);
+    $this->assertFalse($item_visible_value2->isVisible());
+    $this->assertFalse($item_visible_no_value->isVisible());
+    $this->assertFalse($textfield_visible_value3->isVisible());
+    $this->assertTrue($textfield_visible_value2_or_value3->isVisible());
+    $this->assertTrue($textfield_visible_value2_and_value3->isVisible());
   }
 
   /**
