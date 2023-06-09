@@ -122,12 +122,11 @@ class BlockAdminThemeTest extends BrowserTestBase {
     $final_url = $this->buildUrl($new_path, ['query' => $query]);
 
     $this->expectDeprecation('The path /admin/structure/block, with its child paths, is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use /admin/appearance/block. See https://www.drupal.org/node/3320855.');
-    $this->drupalGet("$old_path", ['query' => $query]);
+    $this->drupalGet($old_path, ['query' => $query]);
     $this->assertEquals($final_url, $this->getUrl());
     if ($message) {
-      $base_path = parse_url($this->baseUrl, PHP_URL_PATH) ?? '';
       $this->assertSession()
-        ->statusMessageContains("You have been redirected from {$base_path}{$old_path}. Update links, shortcuts, and bookmarks to use {$base_path}{$new_path}.");
+        ->statusMessageContains("You have been redirected from {$old_path}. Update links, shortcuts, and bookmarks to use {$new_path}.");
     }
     else {
       $this->assertSession()
@@ -141,33 +140,33 @@ class BlockAdminThemeTest extends BrowserTestBase {
   public function providerTestBlockPageRedirects(): array {
     return [
       'block.admin_demo' => [
-        '/admin/structure/block/demo/{theme}',
-        '/admin/appearance/block/demo/{theme}',
+        'admin/structure/block/demo/{theme}',
+        'admin/appearance/block/demo/{theme}',
         FALSE,
       ],
       'entity.block.delete_form' => [
-        '/admin/structure/block/manage/{block}/delete',
-        '/admin/appearance/block/manage/{block}/delete',
+        'admin/structure/block/manage/{block}/delete',
+        'admin/appearance/block/manage/{block}/delete',
       ],
       'entity.block.edit_form' => [
-        '/admin/structure/block/manage/{block}',
-        '/admin/appearance/block/manage/{block}',
+        'admin/structure/block/manage/{block}',
+        'admin/appearance/block/manage/{block}',
       ],
       'block.admin_display' => [
-        '/admin/structure/block',
-        '/admin/appearance/block',
+        'admin/structure/block',
+        'admin/appearance/block',
       ],
       'block.admin_display_theme' => [
-        '/admin/structure/block/list/{theme}',
-        '/admin/appearance/block/list/{theme}',
+        'admin/structure/block/list/{theme}',
+        'admin/appearance/block/list/{theme}',
       ],
       'block.admin_library' => [
-        '/admin/structure/block/library/{theme}',
-        '/admin/appearance/block/library/{theme}',
+        'admin/structure/block/library/{theme}',
+        'admin/appearance/block/library/{theme}',
       ],
       'block.admin_add' => [
-        '/admin/structure/block/add/{plugin_id}/{theme}',
-        '/admin/appearance/block/add/{plugin_id}/{theme}',
+        'admin/structure/block/add/{plugin_id}/{theme}',
+        'admin/appearance/block/add/{plugin_id}/{theme}',
       ],
     ];
   }
