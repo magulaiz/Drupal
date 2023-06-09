@@ -75,11 +75,7 @@ class SkipOnEmpty extends ProcessPluginBase {
    *   with the $row above.
    *
    * @return mixed
-   *   The input value, $value, if it is not empty.
-   *
-   * @throws \Drupal\migrate\MigrateSkipRowException
-   *   Thrown if the source property is not set and the row should be skipped,
-   *   records with STATUS_IGNORED status in the map.
+   *   If the input value, $value, is any kind of empty, return NULL. Otherwise, return $value.
    */
   public function row($value, MigrateExecutableInterface $migrate_executable, Row $row, $destination_property) {
     if (!$value) {
