@@ -152,7 +152,7 @@ class ExtensionMimeTypeGuesser implements MimeTypeGuesserInterface {
       129 => 'application/x-iphone',
       130 => 'application/x-iso9660-image',
       131 => 'application/x-java-jnlp-file',
-      132 => 'application/javascript',
+      132 => 'text/javascript',
       133 => 'application/x-jmol',
       134 => 'application/x-kchart',
       135 => 'application/x-killustrator',
@@ -379,6 +379,7 @@ class ExtensionMimeTypeGuesser implements MimeTypeGuesserInterface {
       343 => 'x-conference/x-cooltalk',
       344 => 'x-epoc/x-sisx-app',
       345 => 'x-world/x-vrml',
+      361 => 'application/json',
     ],
 
     // Extensions added to this list MUST be lower-case.
@@ -620,7 +621,6 @@ class ExtensionMimeTypeGuesser implements MimeTypeGuesserInterface {
       'kar' => 187,
       'mpega' => 188,
       'mpga' => 188,
-      'm4a' => 188,
       'mp3' => 188,
       'mp2' => 188,
       'ogg' => 189,
@@ -847,6 +847,7 @@ class ExtensionMimeTypeGuesser implements MimeTypeGuesserInterface {
       'vrml' => 345,
       'f4a' => 346,
       'f4b' => 346,
+      'm4a' => 346,
       'flv' => 347,
       'm4v' => 348,
       'azw' => 349,
@@ -860,7 +861,9 @@ class ExtensionMimeTypeGuesser implements MimeTypeGuesserInterface {
       'webm' => 357,
       'vtt' => 358,
       'gz' => 359,
+      'mjs' => 132,
       'aac' => 360,
+      'json' => 361,
     ],
   ];
 

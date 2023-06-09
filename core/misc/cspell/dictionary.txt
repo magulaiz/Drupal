@@ -53,7 +53,6 @@ attrval
 attrvals
 authless
 autocompletefocus
-autocompleteresponses
 autocompletesearch
 autocompleteselect
 autocompleting
@@ -64,6 +63,7 @@ autoescape
 autoescaped
 autoescaping
 autofix
+autoformat
 autogenerator
 autoloadable
 autoloaded
@@ -106,8 +106,8 @@ behaviour
 bergmann
 berne
 bgblue
-bggya
 bgred
+bidi
 bigpipe
 bikeshed
 bikesheds
@@ -152,6 +152,7 @@ buttonpane
 buttonset
 buttontext
 buytaert
+bytea
 cacheability
 cacheable
 cachebackend
@@ -214,6 +215,7 @@ cnfi
 cochez
 codesniffer
 colgroups
+colinodell
 collegehumor
 colonpos
 colour
@@ -275,7 +277,6 @@ daycount
 dblog
 dbtng
 dburl
-ddev
 dealerdirect
 deckard
 deconstructor
@@ -302,6 +303,7 @@ dependees
 depenencies
 deprioritize
 derivedfrom
+derp
 desaturate
 desaturated
 desaturates
@@ -325,7 +327,6 @@ dnumber
 docroot
 docroots
 dolore
-dotenv
 downcasting
 doxygen
 dragtable
@@ -360,6 +361,7 @@ drupallink
 drupalmedia
 drupalmediaediting
 drupalmediatoolbar
+drupalorg
 drupaltest
 druplicon
 drush
@@ -372,6 +374,7 @@ egulias
 eins
 elbonia
 elems
+embeddable
 encapsed
 endapply
 endautoescape
@@ -413,6 +416,7 @@ fakepath
 falsey
 falsish
 fapi
+fastcgi
 fatals
 favourite
 favstar
@@ -424,6 +428,7 @@ fieldable
 fieldapi
 fieldblock
 fieldbody
+fieldgroup
 fieldgroups
 fielditem
 fieldlayout
@@ -449,7 +454,6 @@ fodt
 fooalert
 foobarbaz
 foobargorilla
-foobars
 foofoo
 foos
 formattable
@@ -461,7 +465,6 @@ fqcn
 fraîche
 frombracket
 frontpage
-fsdf
 fudgy
 fulldata
 fulldate
@@ -477,7 +480,6 @@ gethttpclient
 getlist
 getview
 gids
-giggabyte
 gloop
 gnumeric
 goldfinger
@@ -511,6 +513,7 @@ hinode
 hippopotamidae
 hisu
 hisue
+hmac
 hoglet
 hola
 hookname
@@ -531,7 +534,6 @@ iconwrap
 idconflict
 idekey
 idempotency
-idempotently
 iframes
 iframeupload
 ignoretag
@@ -553,7 +555,6 @@ invalididentifier
 invokable
 iopt
 isam
-isdst
 isinstallable
 itoa
 itok
@@ -615,7 +616,6 @@ lified
 lightninggreen
 linebreak
 linebreaks
-linefeeds
 linkability
 linkback
 linkgenerator
@@ -650,6 +650,7 @@ lstitle
 ltitle
 ltlanguage
 lundi
+lzma
 lzop
 maailma
 macbinary
@@ -660,7 +661,6 @@ mainpage
 makealternatemessage
 makedefaultmessage
 makewarningmessage
-makz
 mame
 mank
 maryjane
@@ -696,7 +696,6 @@ mikey
 milli
 mimetypes
 minifyzombies
-minimatch
 minimise
 minipager
 minky
@@ -773,8 +772,8 @@ newfieldinitial
 newnode
 newstr
 newterm
+newwin
 nids
-nightlies
 nightwatch
 nightwatchjs
 nikic
@@ -788,6 +787,7 @@ nocache
 nocase
 nocdata
 nocookie
+nodelist
 nodereference
 nodir
 nodo
@@ -833,7 +833,6 @@ onoff
 opendocument
 openxmlformats
 optgroups
-optimizable
 optin
 optionchecker
 orgchart
@@ -967,7 +966,6 @@ qzzz
 ragdoll
 ralouphie
 rasterizable
-rasterized
 rasterizes
 rawurlencoded
 readmore
@@ -977,6 +975,7 @@ realpaths
 realword
 rebuilder
 reclosed
+recolorable
 redeclaration
 redirections
 redstrawberryhiddenfield
@@ -989,7 +988,6 @@ referencers
 referer
 refinable
 regexes
-reindex
 reindexing
 reinject
 relname
@@ -1036,6 +1034,7 @@ safa
 sameline
 samename
 sameorigin
+samesite
 sata
 savepoints
 sayre
@@ -1049,6 +1048,7 @@ screenreaders
 scriptable
 scrollbars
 searchdirs
+sebastianbergmann
 sebe
 seld
 selectbox
@@ -1087,6 +1087,7 @@ spacebar
 spagna
 specialchars
 spiffiness
+splitbutton
 splitbuttons
 spreadsheetml
 sqlpassword
@@ -1103,6 +1104,7 @@ starterkit
 starzzzz
 statuscode
 stdclass
+stddev
 stickied
 stitle
 streamwrapper
@@ -1223,6 +1225,7 @@ testk
 testkey
 testlist
 testload
+testlogger
 testname
 testproject
 testservice
@@ -1308,7 +1311,6 @@ unaliased
 unallowed
 unassigning
 unassigns
-unhides
 unban
 unbans
 unbundleable
@@ -1327,6 +1329,7 @@ ungenerated
 ungroup
 ungroupable
 unhashed
+unhides
 unindented
 unindexed
 uninstallation
@@ -1389,7 +1392,6 @@ userid
 userinfo
 userref
 userreference
-userspace
 usuario
 vampirize
 varchar
@@ -1404,6 +1406,7 @@ vocabs
 volgende
 vorige
 vous
+wcag
 wcprops
 webassert
 webcal
@@ -1413,7 +1416,6 @@ webhosting
 webmention
 webmozart
 webroot
-webserver
 webservers
 webtest
 webuser
@@ -1439,7 +1441,6 @@ xbap
 xbeg
 xbitmap
 xfbml
-xgbql
 xjkm
 xlen
 xlgp
