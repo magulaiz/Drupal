@@ -9,6 +9,6 @@ props:
     title:
       type: string
     url:
-      type: url
+      type: string
 slots:
   minimal: {}
