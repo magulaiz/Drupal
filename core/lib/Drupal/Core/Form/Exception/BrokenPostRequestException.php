@@ -14,14 +14,14 @@ class BrokenPostRequestException extends BadRequestHttpException {
   /**
    * The maximum upload size.
    *
-   * @var int|float
+   * @var int
    */
-  protected int|float $size;
+  protected int $size;
 
   /**
    * Constructs a new BrokenPostRequestException.
    *
-   * @param int|float $max_upload_size
+   * @param int $max_upload_size
    *   The size of the maximum upload size in bytes.
    * @param string $message
    *   The internal exception message.
@@ -30,7 +30,7 @@ class BrokenPostRequestException extends BadRequestHttpException {
    * @param int $code
    *   The internal exception code.
    */
-  public function __construct(int|float $max_upload_size, string $message = '', \Exception $previous = NULL, int $code = 0) {
+  public function __construct(int $max_upload_size, string $message = '', \Exception $previous = NULL, int $code = 0) {
     parent::__construct($message, $previous, $code);
 
     $this->size = $max_upload_size;
@@ -39,11 +39,11 @@ class BrokenPostRequestException extends BadRequestHttpException {
   /**
    * Returns the maximum upload size in bytes.
    *
-   * @return int|float
+   * @return int
    *   The file size limit in bytes based on the PHP upload_max_filesize and
    *   post_max_size.
    */
-  public function getSize(): int|float {
+  public function getSize(): int {
     return $this->size;
   }
 

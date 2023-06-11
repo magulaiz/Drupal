@@ -1399,11 +1399,11 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
   /**
    * Wraps file_upload_max_size().
    *
-   * @return int|float
+   * @return int
    *   The file size limit in bytes based on the PHP upload_max_filesize and
    *   post_max_size.
    */
-  protected function getFileUploadMaxSize(): int|float {
+  protected function getFileUploadMaxSize(): int {
     return Environment::getUploadMaxSize();
   }
 
