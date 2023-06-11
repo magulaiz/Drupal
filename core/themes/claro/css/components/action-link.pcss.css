@@ -85,11 +85,13 @@
  *
  * Add the same margin for action-link inside form-actions as button has.
  */
-.form-actions .action-link {
+.form-actions .action-link,
+.multiple-value-form-actions & {
   margin-right: var(--space-s); /* LTR */
   margin-left: 0; /* LTR */
 }
-[dir="rtl"] .form-actions .action-link {
+[dir="rtl"] .form-actions .action-link,
+[dir="rtl"] .multiple-value-form-actions .action-link & {
   margin-right: 0;
   margin-left: var(--space-s);
 }
