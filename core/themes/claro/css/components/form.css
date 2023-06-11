@@ -149,7 +149,8 @@ tr .form-item,
  * Form actions.
  */
 
-.form-actions {
+.form-actions,
+.multiple-value-form-actions {
   display: flex;
   flex-wrap: wrap;
   align-items: flex-start;
@@ -158,12 +159,15 @@ tr .form-item,
 }
 
 .form-actions .button,
-.form-actions .action-link {
+.form-actions .action-link,
+.multiple-value-form-actions .button,
+.multiple-value-form-actions .action-link {
   margin-top: var(--space-m);
   margin-bottom: var(--space-m);
 }
 
-.form-actions .ajax-progress--throbber {
+.form-actions .ajax-progress--throbber,
+.multiple-value-form-actions .ajax-progress--throbber {
   align-self: center;
 }
 
