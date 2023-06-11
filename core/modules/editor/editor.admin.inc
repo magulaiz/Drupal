@@ -6,6 +6,7 @@
  */
 
 use Drupal\Component\Utility\Environment;
+use Drupal\Core\Form\States\FormElementStatesBuilder;
 use Drupal\Core\StreamWrapper\StreamWrapperInterface;
 use Drupal\editor\Entity\Editor;
 
@@ -45,11 +46,12 @@ function editor_image_upload_settings_form(Editor $editor) {
     ],
     '#description' => t('When enabled, images can only be uploaded. When disabled, images can only be added by URL.'),
   ];
-  $show_if_image_uploads_enabled = [
-    'visible' => [
-      ':input[data-editor-image-upload="status"]' => ['checked' => TRUE],
-    ],
-  ];
+  $states = new FormElementStatesBuilder();
+  $show_if_image_uploads_enabled = $states->addStates(
+    $states->state()->setInvisible(
+      $states->watch(':input[data-editor-image-upload="status"]')->isChecked()
+    )
+  )->toArray();
 
   // Any visible, writable wrapper can potentially be used for uploads,
   // including a remote file system that integrates with a CDN.

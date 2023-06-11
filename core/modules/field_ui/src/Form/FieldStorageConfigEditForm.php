@@ -5,6 +5,7 @@ namespace Drupal\field_ui\Form;
 use Drupal\Core\Entity\EntityForm;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Form\States\FormElementStatesBuilder;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field_ui\FieldUI;
@@ -138,6 +139,9 @@ class FieldStorageConfigEditForm extends EntityForm {
         ],
         '#default_value' => ($cardinality == FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED) ? FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED : 'number',
       ];
+
+      $states_builder = new FormElementStatesBuilder();
+
       $form['cardinality_number'] = [
         '#type' => 'number',
         '#default_value' => $cardinality != FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED ? $cardinality : 1,
@@ -145,14 +149,15 @@ class FieldStorageConfigEditForm extends EntityForm {
         '#title' => $this->t('Limit'),
         '#title_display' => 'invisible',
         '#size' => 2,
-        '#states' => [
-          'visible' => [
-            ':input[name="cardinality"]' => ['value' => 'number'],
-          ],
-          'disabled' => [
-            ':input[name="cardinality"]' => ['value' => FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED],
-          ],
-        ],
+        '#states' => $states_builder->addStates(
+          $states_builder->state()->setVisible(
+            $states_builder->watch(':input[name="cardinality"]')->valueEqualTo('number')
+          ),
+          $states_builder->state()->setDisabled(
+            $states_builder->watch(':input[name="cardinality"]')
+              ->valueEqualTo(FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED)
+          )
+        )->toArray(),
       ];
     }
 

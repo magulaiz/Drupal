@@ -8,6 +8,7 @@ use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Form\States\FormElementStatesBuilder;
 use Drupal\language\Entity\ContentLanguageSettings;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -148,17 +149,19 @@ class ContentLanguageSettingsForm extends FormBase {
     foreach ($labels as $entity_type_id => $label) {
       $entity_type = $entity_types[$entity_type_id];
 
+      $states_builder = new FormElementStatesBuilder();
+
       $form['settings'][$entity_type_id] = [
         '#title' => $label,
         '#type' => 'container',
         '#entity_type' => $entity_type_id,
         '#theme' => 'language_content_settings_table',
         '#bundle_label' => $entity_type->getBundleLabel() ?: $label,
-        '#states' => [
-          'visible' => [
-            ':input[name="entity_types[' . $entity_type_id . ']"]' => ['checked' => TRUE],
-          ],
-        ],
+        '#states' => $states_builder->addStates(
+          $states_builder->state()->setVisible(
+            $states_builder->watch(':input[name="entity_types[' . $entity_type_id . ']"]')->isChecked()
+          )
+        )->toArray(),
       ];
 
       foreach ($bundles[$entity_type_id] as $bundle => $bundle_info) {

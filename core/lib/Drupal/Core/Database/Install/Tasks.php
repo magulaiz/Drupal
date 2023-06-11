@@ -3,6 +3,9 @@
 namespace Drupal\Core\Database\Install;
 
 use Drupal\Core\Database\Database;
+use Drupal\Core\Form\FormStatesBuilderProviderInterface;
+use Drupal\Core\Form\States\FormElementStatesBuilder;
+use Drupal\Core\Form\States\FormElementStatesBuilderInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 
 /**
@@ -12,7 +15,7 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
  * Every database driver implementation must provide a concrete implementation
  * of it to support special handling required by that database.
  */
-abstract class Tasks {
+abstract class Tasks implements FormStatesBuilderProviderInterface {
 
   /**
    * The name of the PDO driver this database type requires.
@@ -255,31 +258,27 @@ abstract class Tasks {
     $reflection = new \ReflectionClass($this);
     $dir_parts = explode(DIRECTORY_SEPARATOR, dirname($reflection->getFileName(), 2));
     $driver = array_pop($dir_parts);
-
+    $states = $this->getStatesBuilder();
     $form['database'] = [
       '#type' => 'textfield',
       '#title' => t('Database name'),
       '#default_value' => empty($database['database']) ? '' : $database['database'],
       '#size' => 45,
       '#required' => TRUE,
-      '#states' => [
-        'required' => [
-          ':input[name=driver]' => ['value' => $driver],
-        ],
-      ],
+      '#states' => $states->addStates(
+        $states->state()->setRequired(
+          $states->watch(':input[name=driver]')
+            ->valueEqualTo($driver)
+        )
+      )->toArray(),
     ];
-
     $form['username'] = [
       '#type' => 'textfield',
       '#title' => t('Database username'),
       '#default_value' => empty($database['username']) ? '' : $database['username'],
       '#size' => 45,
       '#required' => TRUE,
-      '#states' => [
-        'required' => [
-          ':input[name=driver]' => ['value' => $driver],
-        ],
-      ],
+      '#states' => $states->toArray(),
     ];
 
     $form['password'] = [
@@ -402,6 +401,13 @@ abstract class Tasks {
     else {
       $this->fail(t('<a href="https://www.drupal.org/docs/system-requirements">Database connection does not support JSON.</a>'));
     }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getStatesBuilder(): FormElementStatesBuilderInterface {
+    return new FormElementStatesBuilder();
   }
 
 }

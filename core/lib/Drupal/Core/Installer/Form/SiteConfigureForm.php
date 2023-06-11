@@ -226,15 +226,16 @@ class SiteConfigureForm extends ConfigFormBase {
       '#default_value' => 1,
       '#access' => empty($install_state['config_install_path']),
     ];
+    $states = $this->getStatesBuilder();
     $form['update_notifications']['enable_update_status_emails'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Receive email notifications'),
       '#default_value' => 1,
-      '#states' => [
-        'visible' => [
-          'input[name="enable_update_status_module"]' => ['checked' => TRUE],
-        ],
-      ],
+      '#states' => $states->addStates(
+        $states->state()->setVisible(
+          $states->watch('input[name="enable_update_status_module"]')->isChecked()
+        )
+      )->toArray(),
       '#access' => empty($install_state['config_install_path']),
     ];
 

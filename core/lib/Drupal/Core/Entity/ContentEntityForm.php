@@ -442,13 +442,14 @@ class ContentEntityForm extends EntityForm implements ContentEntityFormInterface
     // Get log message field's key from definition.
     $log_message_field = $entity_type->getRevisionMetadataKey('revision_log_message');
     if ($log_message_field && isset($form[$log_message_field])) {
+      $state = $this->getStatesBuilder();
       $form[$log_message_field] += [
         '#group' => 'revision_information',
-        '#states' => [
-          'visible' => [
-            ':input[name="revision"]' => ['checked' => TRUE],
-          ],
-        ],
+        '#states' => $state->addStates(
+          $state->state()->setVisible(
+            $state->watch(':input[name="revision"]')->isChecked()
+          )
+        )->toArray(),
       ];
     }
   }

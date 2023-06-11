@@ -13,6 +13,7 @@ use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Form\States\FormElementStatesBuilder;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Render\Element;
 
@@ -119,19 +120,19 @@ function _content_translation_form_language_content_settings_form_alter(array &$
       if ($content_translation_manager instanceof BundleTranslationSettingsInterface) {
         $settings = $content_translation_manager->getBundleTranslationSettings($entity_type_id, $bundle);
         $force_hidden = ContentTranslationManager::isPendingRevisionSupportEnabled($entity_type_id, $bundle);
+        $states = new FormElementStatesBuilder();
         $form['settings'][$entity_type_id][$bundle]['settings']['content_translation']['untranslatable_fields_hide'] = [
           '#type' => 'checkbox',
           '#title' => t('Hide non translatable fields on translation forms'),
           '#default_value' => $force_hidden || !empty($settings['untranslatable_fields_hide']),
           '#disabled' => $force_hidden,
           '#description' => $force_hidden ? t('Moderated content requires non-translatable fields to be edited in the original language form.') : '',
-          '#states' => [
-            'visible' => [
-              ':input[name="settings[' . $entity_type_id . '][' . $bundle . '][translatable]"]' => [
-                'checked' => TRUE,
-              ],
-            ],
-          ],
+          '#states' => $states->addStates(
+            $states->state()->setVisible(
+              $states->watch(':input[name="settings[' . $entity_type_id . '][' . $bundle . '][translatable]"]')
+                ->isChecked()
+            )
+          )->toArray(),
         ];
       }
 

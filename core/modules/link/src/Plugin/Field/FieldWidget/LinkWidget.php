@@ -2,6 +2,7 @@
 
 namespace Drupal\link\Plugin\Field\FieldWidget;
 
+use Drupal\Core\Form\States\FormElementStatesBuilder;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Url;
 use Drupal\Core\Entity\Element\EntityAutocomplete;
@@ -239,9 +240,12 @@ class LinkWidget extends WidgetBase {
         $selector = $root . '[' . implode('][', $parents) . ']';
       }
 
-      $element['uri']['#states']['required'] = [
-        ':input[name="' . $selector . '[' . $delta . '][title]"]' => ['filled' => TRUE],
-      ];
+      $states_builder = new FormElementStatesBuilder();
+      $element['uri']['#states'] = $states_builder->addStates(
+        $states_builder->state()->setRequired(
+          $states_builder->watch(':input[name="' . $selector . '[' . $delta . '][title]"]')->isFilled()
+        )
+      )->toArray();
     }
 
     $element['title'] = [
@@ -273,9 +277,12 @@ class LinkWidget extends WidgetBase {
           $selector = $root . '[' . implode('][', $parents) . ']';
         }
 
-        $element['title']['#states']['required'] = [
-          ':input[name="' . $selector . '[' . $delta . '][uri]"]' => ['filled' => TRUE],
-        ];
+        $states_builder = new FormElementStatesBuilder();
+        $element['title']['#states'] = $states_builder->addStates(
+          $states_builder->state()->setRequired(
+            $states_builder->watch(':input[name="' . $selector . '[' . $delta . '][uri]"]')->isFilled()
+          )
+        )->toArray();
       }
     }
 
@@ -371,16 +378,17 @@ class LinkWidget extends WidgetBase {
       '#default_value' => $this->getSetting('placeholder_url'),
       '#description' => $this->t('Text that will be shown inside the field until a value is entered. This hint is usually a sample value or a brief description of the expected format.'),
     ];
+    $states = new FormElementStatesBuilder();
     $elements['placeholder_title'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Placeholder for link text'),
       '#default_value' => $this->getSetting('placeholder_title'),
       '#description' => $this->t('Text that will be shown inside the field until a value is entered. This hint is usually a sample value or a brief description of the expected format.'),
-      '#states' => [
-        'invisible' => [
-          ':input[name="instance[settings][title]"]' => ['value' => DRUPAL_DISABLED],
-        ],
-      ],
+      '#states' => $states->addStates(
+        $states->state()->setInvisible(
+          $states->watch(':input[name="instance[settings][title]"]')->valueEqualTo(DRUPAL_DISABLED)
+        )
+      )->toArray(),
     ];
 
     return $elements;

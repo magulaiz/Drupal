@@ -3,6 +3,7 @@
 namespace Drupal\Core\Form;
 
 use Drupal\Component\Serialization\Json;
+use Drupal\Core\Form\States\FormElementStatesBuilderInterface;
 use Drupal\Core\Render\Element;
 
 /**
@@ -209,7 +210,10 @@ class FormHelper {
     // input element available, setting #attributes does not make sense, but a
     // wrapper is available, so setting #wrapper_attributes makes it work.
     $key = ($elements['#type'] == 'item') ? '#wrapper_attributes' : '#attributes';
-    $elements[$key]['data-drupal-states'] = Json::encode($elements['#states']);
+    $states = $elements['#states'] instanceof FormElementStatesBuilderInterface ?
+      $elements['#states']->toArray() :
+      $elements['#states'];
+    $elements[$key]['data-drupal-states'] = Json::encode($states);
   }
 
 }

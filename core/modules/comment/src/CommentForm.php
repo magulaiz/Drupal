@@ -194,11 +194,12 @@ class CommentForm extends ContentEntityForm {
     if ($is_admin) {
       // When editing a comment only display the name textfield if the uid field
       // is empty.
-      $form['author']['name']['#states'] = [
-        'visible' => [
-          ':input[name="uid"]' => ['empty' => TRUE],
-        ],
-      ];
+      $states = $this->getStatesBuilder();
+      $form['author']['name']['#states'] = $states->addStates(
+        $states->state()->setVisible(
+          $states->watch(':input[name="uid"]')->isEmpty()
+        )
+      )->toArray();
     }
 
     // Add author email and homepage fields depending on the current user.

@@ -6,6 +6,7 @@ use Drupal\Component\Utility\Html;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheableDependencyInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Form\States\FormElementStatesBuilder;
 use Drupal\views\Plugin\views\wizard\WizardInterface;
 
 /**
@@ -242,16 +243,17 @@ class Table extends StylePluginBase implements CacheableDependencyInterface {
       '#fieldset' => 'accessibility_details',
     ];
 
+    $states = new FormElementStatesBuilder();
     $form['description'] = [
       '#title' => $this->t('Table description'),
       '#type' => 'textarea',
       '#description' => $this->t('Provide additional details about the table to increase accessibility.'),
       '#default_value' => $this->options['description'],
-      '#states' => [
-        'visible' => [
-          'input[name="style_options[summary]"]' => ['filled' => TRUE],
-        ],
-      ],
+      '#states' => $states->addStates(
+        $states->state()->setVisible(
+          $states->watch('input[name="style_options[summary]"]')->isFilled()
+        )
+      )->toArray(),
       '#fieldset' => 'accessibility_details',
     ];
 
@@ -285,30 +287,33 @@ class Table extends StylePluginBase implements CacheableDependencyInterface {
         '#default_value' => $column,
       ];
       if ($handlers[$field]->clickSortable()) {
+        $states = new FormElementStatesBuilder();
         $form['info'][$field]['sortable'] = [
           '#title' => $this->t('Sortable for @field', ['@field' => $field]),
           '#title_display' => 'invisible',
           '#type' => 'checkbox',
           '#default_value' => !empty($this->options['info'][$field]['sortable']),
-          '#states' => [
-            'visible' => [
-              $column_selector => ['value' => $field],
-            ],
-          ],
+          '#states' => $states->addStates(
+            $states->state()->setVisible(
+              $states->watch($column_selector)->valueEqualTo($field)
+            )
+          )->toArray(),
         ];
+        $states = new FormElementStatesBuilder();
         $form['info'][$field]['default_sort_order'] = [
           '#title' => $this->t('Default sort order for @field', ['@field' => $field]),
           '#title_display' => 'invisible',
           '#type' => 'select',
           '#options' => ['asc' => $this->t('Ascending'), 'desc' => $this->t('Descending')],
           '#default_value' => !empty($this->options['info'][$field]['default_sort_order']) ? $this->options['info'][$field]['default_sort_order'] : 'asc',
-          '#states' => [
-            'visible' => [
-              $column_selector => ['value' => $field],
-              ':input[name="style_options[info][' . $field . '][sortable]"]' => ['checked' => TRUE],
-            ],
-          ],
+          '#states' => $states->addStates(
+            $states->state()->setVisible(
+              $states->watch($column_selector)->valueEqualTo($field),
+              $states->watch(':input[name="style_options[info][' . $field . '][sortable]"]')->isChecked()
+            )
+          )->toArray(),
         ];
+        $states = new FormElementStatesBuilder();
         // Provide an ID so we can have such things.
         $radio_id = Html::getUniqueId('edit-default-' . $field);
         $form['default'][$field] = [
@@ -321,11 +326,11 @@ class Table extends StylePluginBase implements CacheableDependencyInterface {
           // because 'radio' doesn't fully support '#id' =(
           '#attributes' => ['id' => $radio_id],
           '#default_value' => $default,
-          '#states' => [
-            'visible' => [
-              $column_selector => ['value' => $field],
-            ],
-          ],
+          '#states' => $states->addStates(
+            $states->state()->setVisible(
+              $states->watch($column_selector)->valueEqualTo($field)
+            )
+          )->toArray(),
         ];
       }
       $form['info'][$field]['align'] = [
@@ -339,11 +344,7 @@ class Table extends StylePluginBase implements CacheableDependencyInterface {
           'views-align-center' => $this->t('Center', [], ['context' => 'Text alignment']),
           'views-align-right' => $this->t('Right', [], ['context' => 'Text alignment']),
         ],
-        '#states' => [
-          'visible' => [
-            $column_selector => ['value' => $field],
-          ],
-        ],
+        '#states' => $states->toArray(),
       ];
       $form['info'][$field]['separator'] = [
         '#title' => $this->t('Separator for @field', ['@field' => $field]),
@@ -351,22 +352,14 @@ class Table extends StylePluginBase implements CacheableDependencyInterface {
         '#type' => 'textfield',
         '#size' => 10,
         '#default_value' => $this->options['info'][$field]['separator'] ?? '',
-        '#states' => [
-          'visible' => [
-            $column_selector => ['value' => $field],
-          ],
-        ],
+        '#states' => $states->toArray(),
       ];
       $form['info'][$field]['empty_column'] = [
         '#title' => $this->t('Hide empty column for @field', ['@field' => $field]),
         '#title_display' => 'invisible',
         '#type' => 'checkbox',
         '#default_value' => $this->options['info'][$field]['empty_column'] ?? FALSE,
-        '#states' => [
-          'visible' => [
-            $column_selector => ['value' => $field],
-          ],
-        ],
+        '#states' => $states->toArray(),
       ];
       $form['info'][$field]['responsive'] = [
         '#title' => $this->t('Responsive setting for @field', ['@field' => $field]),
@@ -374,11 +367,7 @@ class Table extends StylePluginBase implements CacheableDependencyInterface {
         '#type' => 'select',
         '#default_value' => $this->options['info'][$field]['responsive'] ?? '',
         '#options' => ['' => $this->t('High'), RESPONSIVE_PRIORITY_MEDIUM => $this->t('Medium'), RESPONSIVE_PRIORITY_LOW => $this->t('Low')],
-        '#states' => [
-          'visible' => [
-            $column_selector => ['value' => $field],
-          ],
-        ],
+        '#states' => $states->toArray(),
       ];
 
       // markup for the field name

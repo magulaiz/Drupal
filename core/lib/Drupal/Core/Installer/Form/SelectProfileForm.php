@@ -101,6 +101,7 @@ class SelectProfileForm extends FormBase {
         }
         if (!function_exists($extensions['profile'] . '_install')) {
           $form['profile']['#options'][static::CONFIG_INSTALL_PROFILE_KEY] = $this->t('Use existing configuration');
+          $states = $this->getStatesBuilder();
           $form['profile'][static::CONFIG_INSTALL_PROFILE_KEY]['#description'] = [
             'description' => [
               '#markup' => $this->t('Install %name using existing configuration.', ['%name' => $site['name']]),
@@ -111,11 +112,11 @@ class SelectProfileForm extends FormBase {
               '#wrapper_attributes' => [
                 'class' => ['messages', 'messages--status'],
               ],
-              '#states' => [
-                'visible' => [
-                  ':input[name="profile"]' => ['value' => static::CONFIG_INSTALL_PROFILE_KEY],
-                ],
-              ],
+              '#states' => $states->addStates(
+                $states->state()->setVisible(
+                  $states->watch(':input[name="profile"]')->valueEqualTo(static::CONFIG_INSTALL_PROFILE_KEY)
+                )
+              )->toArray(),
             ],
           ];
         }

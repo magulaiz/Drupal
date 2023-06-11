@@ -68,16 +68,17 @@ class SelectLanguageForm extends FormBase {
       '#default_value' => !empty($browser_langcode) ? $browser_langcode : 'en',
     ];
     $link_to_english = install_full_redirect_url(['parameters' => ['langcode' => 'en']]);
+    $states = $this->getStatesBuilder();
     $form['help'] = [
       '#type' => 'item',
       // #markup is XSS admin filtered which ensures unsafe protocols will be
       // removed from the URL.
       '#markup' => '<p>Translations will be downloaded from the <a href="https://localize.drupal.org/download">Drupal Translation website</a>. If you do not want this, select <a href="' . $link_to_english . '">English</a>.</p>',
-      '#states' => [
-        'invisible' => [
-          'select[name="langcode"]' => ['value' => 'en'],
-        ],
-      ],
+      '#states' => $states->addStates(
+        $states->state()->setInvisible(
+          $states->watch('select[name="langcode"]')->valueEqualTo('en')
+        )
+      )->toArray(),
     ];
     $form['actions'] = ['#type' => 'actions'];
     $form['actions']['submit'] = [

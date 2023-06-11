@@ -15,6 +15,7 @@ use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Field\Plugin\Field\FieldType\EntityReferenceItem;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Form\States\FormElementStatesBuilder;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\user\EntityOwnerInterface;
@@ -252,6 +253,7 @@ class DefaultSelection extends SelectionPluginBase implements ContainerFactoryPl
         '#process' => [[EntityReferenceItem::class, 'formProcessMergeParent']],
       ];
 
+      $states = new FormElementStatesBuilder();
       $form['sort']['settings']['direction'] = [
         '#type' => 'select',
         '#title' => $this->t('Sort direction'),
@@ -261,13 +263,12 @@ class DefaultSelection extends SelectionPluginBase implements ContainerFactoryPl
           'DESC' => $this->t('Descending'),
         ],
         '#default_value' => $configuration['sort']['direction'],
-        '#states' => [
-          'visible' => [
-            ':input[name="settings[handler_settings][sort][field]"]' => [
-              '!value' => '_none',
-            ],
-          ],
-        ],
+        '#states' => $states->addStates(
+          $states->state()->setVisible(
+            $states->watch(':input[name="settings[handler_settings][sort][field]"]')
+              ->valueEqualTo('_none', TRUE)
+          )
+        )->toArray(),
       ];
       if ($entity_type->hasKey('bundle')) {
         $form['sort']['settings']['direction']['#states']['visible'][] = [
@@ -287,17 +288,19 @@ class DefaultSelection extends SelectionPluginBase implements ContainerFactoryPl
     ];
 
     if ($entity_type->hasKey('bundle')) {
+      $states = new FormElementStatesBuilder();
       $form['auto_create_bundle'] = [
         '#type' => 'select',
         '#title' => $this->t('Store new items in'),
         '#options' => $selected_bundles,
         '#default_value' => $configuration['auto_create_bundle'],
         '#access' => count($selected_bundles) > 1,
-        '#states' => [
-          'visible' => [
-            ':input[name="settings[handler_settings][auto_create]"]' => ['checked' => TRUE],
-          ],
-        ],
+        '#states' => $states->addStates(
+          $states->state()->setVisible(
+            $states->watch(':input[name="settings[handler_settings][auto_create]"]')
+              ->isChecked()
+          )
+        )->toArray(),
         '#weight' => -1,
       ];
     }
