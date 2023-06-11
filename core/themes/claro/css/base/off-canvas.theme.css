@@ -82,6 +82,7 @@
   color: #99b8ff;
 }
 
-#drupal-off-canvas .form-actions {
+#drupal-off-canvas .form-actions,
+#drupal-off-canvas .multiple-value-form-actions {
   display: block;
 }

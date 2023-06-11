@@ -300,7 +300,8 @@
   flex-wrap: wrap;
 }
 
-.media-library-views-form > .form-actions {
+.media-library-views-form > .form-actions,
+.media-library-views-form > .multiple-value-form-actions {
   flex-basis: 100%;
 }
 
@@ -474,7 +475,8 @@
   align-items: center;
 }
 
-.media-library-widget-modal .ui-dialog-buttonpane .form-actions {
+.media-library-widget-modal .ui-dialog-buttonpane .form-actions,
+.media-library-widget-modal .ui-dialog-buttonpane .multiple-value-form-actions {
   flex: 1;
 }
 
