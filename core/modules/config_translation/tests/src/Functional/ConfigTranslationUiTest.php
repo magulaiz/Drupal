@@ -892,6 +892,9 @@ class ConfigTranslationUiTest extends BrowserTestBase {
     $this->assertSession()->pageTextContains('Configuration saved.');
 
     // Delete English language
+    // First, we need to remove the english from content usage.
+    // Change the admin user language.
+    $this->adminUser->set('langcode', LanguageInterface::LANGCODE_NOT_SPECIFIED)->save();
     $this->drupalGet('admin/config/regional/language/delete/en');
     $this->submitForm([], 'Delete');
     $this->assertSession()->pageTextContains('The English (en) language has been removed.');

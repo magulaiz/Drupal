@@ -122,6 +122,9 @@ class LanguageConfigurationTest extends BrowserTestBase {
 
     // Remove English language and add a new Language to check if langcode of
     // Language entity is 'en'.
+    // First, we need to remove the english from content usage.
+    // Change the admin user language.
+    $admin_user->set('langcode', LanguageInterface::LANGCODE_NOT_SPECIFIED)->save();
     $this->drupalGet('admin/config/regional/language/delete/en');
     $this->submitForm([], 'Delete');
     $this->rebuildContainer();
