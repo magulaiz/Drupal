@@ -232,11 +232,13 @@ class LayoutBuilder extends RenderElement implements ContainerFactoryPluginInter
     foreach ($layout_definition->getRegions() as $region => $info) {
       if (!empty($build[$region])) {
         foreach (Element::children($build[$region]) as $uuid) {
-          $build[$region][$uuid]['#attributes']['class'][] = 'js-layout-builder-block';
-          $build[$region][$uuid]['#attributes']['class'][] = 'layout-builder-block';
-          $build[$region][$uuid]['#attributes']['data-layout-block-uuid'] = $uuid;
-          $build[$region][$uuid]['#attributes']['data-layout-builder-highlight-id'] = $this->blockUpdateHighlightId($uuid);
-          $build[$region][$uuid]['#contextual_links'] = [
+          $component = &$build[$region][$uuid];
+
+          $component['#attributes']['class'][] = 'js-layout-builder-block';
+          $component['#attributes']['class'][] = 'layout-builder-block';
+          $component['#attributes']['data-layout-block-uuid'] = $uuid;
+          $component['#attributes']['data-layout-builder-highlight-id'] = $this->blockUpdateHighlightId($uuid);
+          $component['#contextual_links'] = [
             'layout_builder_block' => [
               'route_parameters' => [
                 'section_storage_type' => $storage_type,
@@ -254,6 +256,21 @@ class LayoutBuilder extends RenderElement implements ContainerFactoryPluginInter
               ],
             ],
           ];
+
+          if ($component['#base_plugin_id'] === 'inline_block' && $component['content']['#block_content']?->isReusable() === FALSE) {
+            $component['#contextual_links']['layout_builder_content_block'] = [
+              'route_parameters' => [
+                'section_storage_type' => $storage_type,
+                'section_storage' => $storage_id,
+                'delta' => $delta,
+                'region' => $region,
+                'uuid' => $uuid,
+              ],
+              'metadata' => [
+                'operations' => 'reusable',
+              ],
+            ];
+          }
         }
       }
 
