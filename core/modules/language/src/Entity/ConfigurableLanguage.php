@@ -304,7 +304,7 @@ class ConfigurableLanguage extends ConfigEntityBase implements ConfigurableLangu
    *   The language code to check against.
    *
    * @return bool
-   *   TRUE if the specified lancode is used by content, FALSE otherwise.
+   *   TRUE if the specified langcode is used by content, FALSE otherwise.
    */
   public static function languageUsedByContent($langcode) {
     $entity_type_manager = \Drupal::entityTypeManager();
