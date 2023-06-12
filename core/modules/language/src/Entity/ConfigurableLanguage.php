@@ -175,7 +175,7 @@ class ConfigurableLanguage extends ConfigEntityBase implements ConfigurableLangu
   public static function preDelete(EntityStorageInterface $storage, array $entities) {
     $default_langcode = static::getDefaultLangcode();
     foreach ($entities as $entity) {
-      $langcode =  $entity->id();
+      $langcode = $entity->id();
       if ($langcode == $default_langcode && !$entity->isUninstalling()) {
         throw new DeleteDefaultLanguageException('Can not delete the default language');
       }
@@ -297,6 +297,7 @@ class ConfigurableLanguage extends ConfigEntityBase implements ConfigurableLangu
 
   /**
    * Check if there is any content that uses a given langcode.
+   *
    * Returns TRUE at first content entity found.
    *
    * @param string $langcode
@@ -308,17 +309,17 @@ class ConfigurableLanguage extends ConfigEntityBase implements ConfigurableLangu
   public static function languageUsedByContent($langcode) {
     $entity_type_manager = \Drupal::entityTypeManager();
     foreach ($entity_type_manager->getDefinitions() as $entity_type_id => $entity_type) {
-     if ($entity_type instanceof ContentEntityType && $entity_type->isTranslatable()) {
-        $query = $entity_type_manager->getStorage($entity_type_id)->getQuery()
-          ->condition($entity_type->getKey('langcode'), $langcode)->accessCheck(FALSE);
-        if ($entity_type->isRevisionable()) {
+      if ($entity_type instanceof ContentEntityType && $entity_type->isTranslatable()) {
+       $query = $entity_type_manager->getStorage($entity_type_id)->getQuery()
+         ->condition($entity_type->getKey('langcode'), $langcode)->accessCheck(FALSE);
+       if ($entity_type->isRevisionable()) {
           $query->allRevisions();
-        }
-        $results = $query->range(0, 1)->execute();
+       }
+       $results = $query->range(0, 1)->execute();
 
-        if ($results) {
-          return TRUE;
-        }
+       if ($results) {
+         return TRUE;
+       }
       }
     }
     return FALSE;

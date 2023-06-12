@@ -15,8 +15,7 @@ class LanguageDeleteForm extends EntityDeleteForm {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, FormStateInterface $form_state)
-  {
+  public function buildForm(array $form, FormStateInterface $form_state) {
     $form = parent::buildForm($form, $form_state);
     $langcode = $this->entity->id();
     if ($this->entity->languageUsedByContent($langcode)) {
