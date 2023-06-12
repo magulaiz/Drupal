@@ -92,6 +92,19 @@ class EntityAutocompleteElementFormTest extends EntityKernelTestBase implements 
       $entity->save();
       $this->referencedEntities[] = $entity;
     }
+
+    // Add two entities that have commas in their names
+    $names = [
+      'Nodes, am I right?',
+      'Alpha, beta, kiwi, mango',
+    ];
+    foreach ($names as $name) {
+      $entity = EntityTest::create([
+        'name' => $name,
+      ]);
+      $entity->save();
+      $this->referencedEntities[] = $entity;
+    }
   }
 
   /**
@@ -106,6 +119,7 @@ class EntityAutocompleteElementFormTest extends EntityKernelTestBase implements 
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
     $form['single'] = [
+      '#title' => 'single',
       '#type' => 'entity_autocomplete',
       '#target_type' => 'entity_test',
     ];
@@ -182,6 +196,20 @@ class EntityAutocompleteElementFormTest extends EntityKernelTestBase implements 
       '#type' => 'entity_autocomplete',
       '#target_type' => 'entity_test_string_id',
       '#tags' => TRUE,
+    ];
+
+    $form['single_prepopulated'] = [
+      '#title' => 'single prepopulated',
+      '#type' => 'entity_autocomplete',
+      '#target_type' => 'entity_test',
+      '#default_value' => $this->referencedEntities[4],
+    ];
+    $form['tags_prepopulated'] = [
+      '#title' => 'tags prepopulated',
+      '#type' => 'entity_autocomplete',
+      '#target_type' => 'entity_test',
+      '#tags' => TRUE,
+      '#default_value' => [$this->referencedEntities[4], $this->referencedEntities[5]],
     ];
 
     return $form;
@@ -277,6 +305,16 @@ class EntityAutocompleteElementFormTest extends EntityKernelTestBase implements 
       ['target_id' => $this->referencedEntities[3]->id()],
     ];
     $this->assertEquals($expected, $form_state->getValue('tags_string_id'));
+
+    // Test the 'single_prepopulated' element.
+    $this->assertEquals($this->referencedEntities[4]->id(), $form_state->getValue('single_prepopulated'));
+
+    // Test the 'tags_prepopulated' element.
+    $expected = [
+      ['target_id' => $this->referencedEntities[4]->id()],
+      ['target_id' => $this->referencedEntities[5]->id()],
+    ];
+    $this->assertEquals($expected, $form_state->getValue('tags_prepopulated'));
   }
 
   /**
@@ -327,6 +365,19 @@ class EntityAutocompleteElementFormTest extends EntityKernelTestBase implements 
     // The input is complete (i.e. contains an entity ID at the end), no errors
     // are triggered.
     $this->assertCount(0, $form_state->getErrors());
+
+    // Test 'single' with multiple, comma-delimited entity IDs being provided in
+    // the same delta, which is not allowed.
+    $form_state = (new FormState())
+      ->setValues([
+        'single' => EntityAutocomplete::getEntityLabels([
+          $this->referencedEntities[0],
+          $this->referencedEntities[1],
+        ]),
+      ]);
+    $form_builder->submitForm($this, $form_state);
+    $this->assertCount(1, $form_state->getErrors());
+    $this->assertEquals(t('%name: each element can reference only a single value.', ['%name' => 'single']), $form_state->getErrors()['single']);
   }
 
   /**

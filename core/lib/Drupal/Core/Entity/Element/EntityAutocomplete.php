@@ -212,7 +212,7 @@ class EntityAutocomplete extends Textfield {
         $value = $element['#value'];
       }
       else {
-        $input_values = $element['#tags'] ? Tags::explode($element['#value']) : [$element['#value']];
+        $input_values = Tags::explode($element['#value']);
 
         foreach ($input_values as $input) {
           $match = static::extractEntityIdFromAutocompleteInput($input);
@@ -283,11 +283,15 @@ class EntityAutocomplete extends Textfield {
         }
       }
 
-      // Use only the last value if the form element does not support multiple
-      // matches (tags).
+      // If the form element does not support multiple matches (tags), ensure
+      // we have only one target ID.
       if (!$element['#tags'] && !empty($value)) {
-        $last_value = $value[count($value) - 1];
-        $value = $last_value['target_id'] ?? $last_value;
+        if (count($value) > 1) {
+          $form_state->setError($element, t('%name: each element can reference only a single value.', ['%name' => $element['#title']]));
+        }
+        else {
+          $value = $value[0]['target_id'] ?? $value[0];
+        }
       }
     }
 
