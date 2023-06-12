@@ -19,13 +19,27 @@
  */
 #}
 
+{%
+  set classes = [
+  'field',
+  'field--name-' ~ field_name|clean_class,
+  'field--type-' ~ field_type|clean_class,
+  'field--label-' ~ label_display,
+  'field--tags',
+]
+%}
+{%
+  set title_classes = [
+  'field__label',
+  'field--tags__label',
+  label_display == 'visually_hidden' ? 'visually-hidden',
+]
+%}
+
 {{ include('olivero:tags', {
-  attributes,
+  attributes: attributes.addClass(classes),
   label_hidden,
-  label_display,
-  title_attributes,
+  title_attributes: title_attributes.addClass(title_classes),
   label,
-  field_name,
-  field_type,
   items
-}) only }}
+}) }}
