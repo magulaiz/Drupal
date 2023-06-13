@@ -142,13 +142,13 @@ class AssetResolver implements AssetResolverInterface {
           $options['license'] = $definition['license'];
 
           // Files with a query string cannot be preprocessed.
-          if ($options['type'] === 'file' && $options['preprocess'] && strpos($options['data'], '?') !== FALSE) {
+          if ($options['type'] === 'file' && $options['preprocess'] && str_contains($options['data'], '?')) {
             $options['preprocess'] = FALSE;
           }
 
           // Always add a tiny value to the weight, to conserve the insertion
           // order.
-          $options['weight'] += count($css) / 1000;
+          $options['weight'] += count($css) / 30000;
 
           // CSS files are being keyed by the full path.
           $css[$options['data']] = $options;
@@ -259,7 +259,7 @@ class AssetResolver implements AssetResolverInterface {
 
             // Always add a tiny value to the weight, to conserve the insertion
             // order.
-            $options['weight'] += count($javascript) / 1000;
+            $options['weight'] += count($javascript) / 30000;
 
             // Local and external files must keep their name as the associative
             // key so the same JavaScript file is not added twice.

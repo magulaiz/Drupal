@@ -3,7 +3,7 @@
  * Claro styles for Tables.
  */
 
-table {
+ table {
   width: 100%;
   margin-block: var(--space-l);
   border-collapse: collapse;
