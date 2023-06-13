@@ -211,7 +211,7 @@ function forum_update_10100(&$sandbox = NULL) {
  */
 function forum_update_10101(&$sandbox = NULL) {
   $connection = \Drupal::database();
-  if ($connection->schema()->tableExists('forum_index') && $connection->databaseType() != 'sqlite') {
+  if ($connection->schema()->tableExists('forum_index')) {
     $connection->schema()->addPrimaryKey('forum_index', ['nid', 'tid']);
     return \t('Added primary key to the forum_index table.');
   }
