@@ -191,6 +191,10 @@ abstract class OptionsWidgetBase extends WidgetBase {
       }
     }
 
+    if (isset($flat_options['_none']) && $selected_options === []) {
+      $selected_options[] = '_none';
+    }
+
     return $selected_options;
   }
 
