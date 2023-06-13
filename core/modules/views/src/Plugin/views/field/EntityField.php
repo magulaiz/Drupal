@@ -379,7 +379,7 @@ class EntityField extends FieldPluginBase implements CacheableDependencyInterfac
     // Check for computed bundle base fields too.
     $bundles = $this->entityTypeBundleInfo->getBundleInfo($entity_type_id);
     foreach ($bundles as $bundle_id => $bundle) {
-      $bundle_fields = $this->entityFieldManager->getFieldDefinitions($entity_type_id, 'entity_test_comp_bund_fld_bund');
+      $bundle_fields = $this->entityFieldManager->getFieldDefinitions($entity_type_id, $bundle_id);
       if (isset($bundle_fields[$this->definition['field_name']])) {
         return $bundle_fields[$this->definition['field_name']]->getFieldStorageDefinition();
       }
