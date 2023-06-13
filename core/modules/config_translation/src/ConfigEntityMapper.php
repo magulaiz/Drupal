@@ -160,7 +160,7 @@ class ConfigEntityMapper extends ConfigNamesMapper implements ConfigEntityMapper
   /**
    * {@inheritdoc}
    */
-  public function setType($entity_type_id) {
+  public function setType(string $entity_type_id): bool {
     if (isset($this->entityType)) {
       return FALSE;
     }
@@ -171,7 +171,7 @@ class ConfigEntityMapper extends ConfigNamesMapper implements ConfigEntityMapper
   /**
    * {@inheritdoc}
    */
-  public function getType() {
+  public function getType(): string {
     return $this->entityType;
   }
 
