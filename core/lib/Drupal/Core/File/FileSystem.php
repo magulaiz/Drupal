@@ -73,20 +73,30 @@ class FileSystem implements FileSystemInterface {
    * {@inheritdoc}
    */
   public function moveUploadedFile($filename, $uri) {
-    $result = @move_uploaded_file($filename, $uri);
-    // PHP's move_uploaded_file() does not properly support streams if
-    // open_basedir is enabled so if the move failed, try finding a real path
-    // and retry the move operation.
-    if (!$result) {
-      if ($realpath = $this->realpath($uri)) {
-        $result = move_uploaded_file($filename, $realpath);
-      }
-      else {
-        $result = move_uploaded_file($filename, $uri);
+    $target_real_path = $this->realpath($uri);
+    $source = fopen($filename, 'r');
+    $target = fopen($target_real_path, 'w');
+
+    // Use stream_copy_to_stream() instead of move_uploaded_file() as the latter
+    // could run into memory issues if too big files are uploaded.
+    $written_bytes = stream_copy_to_stream($source, $target);
+
+    fclose($source);
+    fclose($target);
+
+    // If the copy failed clean-up the file.
+    try {
+      if ($written_bytes === FALSE || $written_bytes !== filesize($filename)) {
+        @unlink($target_real_path);
+        return FALSE;
       }
     }
+    finally {
+      // Remove source file.
+      @unlink($filename);
+    }
 
-    return $result;
+    return TRUE;
   }
 
   /**
