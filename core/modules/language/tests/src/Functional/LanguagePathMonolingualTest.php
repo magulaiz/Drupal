@@ -2,7 +2,9 @@
 
 namespace Drupal\Tests\language\Functional;
 
+use Drupal\Core\Language\LanguageInterface;
 use Drupal\Tests\BrowserTestBase;
+use Drupal\user\Entity\User;
 
 /**
  * Confirm that paths are not changed on monolingual non-English sites.
@@ -49,6 +51,12 @@ class LanguagePathMonolingualTest extends BrowserTestBase {
     ];
     $this->drupalGet('admin/config/regional/language');
     $this->submitForm($edit, 'Save configuration');
+
+    // First, we need to remove the english from content usage.
+    // Change language for all users.
+    foreach (User::loadMultiple() as $account) {
+      $account->set('langcode', LanguageInterface::LANGCODE_NOT_SPECIFIED)->save();
+    }
 
     // Delete English.
     $this->drupalGet('admin/config/regional/language/delete/en');

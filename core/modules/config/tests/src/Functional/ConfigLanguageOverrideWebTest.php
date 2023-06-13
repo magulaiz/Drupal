@@ -5,6 +5,7 @@ namespace Drupal\Tests\config\Functional;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\Tests\BrowserTestBase;
+use Drupal\user\Entity\User;
 
 /**
  * Tests language overrides applied through the website.
@@ -84,6 +85,11 @@ class ConfigLanguageOverrideWebTest extends BrowserTestBase {
     // Set the xx language to be the default language and delete the English
     // language so the site is no longer multilingual and confirm configuration
     // overrides still work.
+    // First, we need to remove the english from content usage.
+    // Change language for all users.
+    foreach (User::loadMultiple() as $account) {
+      $account->set('langcode', LanguageInterface::LANGCODE_NOT_SPECIFIED)->save();
+    }
     $language_manager = \Drupal::languageManager()->reset();
     $this->assertTrue($language_manager->isMultilingual(), 'The test site is multilingual.');
     $this->config('system.site')->set('default_langcode', 'xx')->save();
