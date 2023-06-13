@@ -89,34 +89,38 @@ class OptionsFieldUITest extends WebDriverTestBase {
     $this->drupalGet($this->adminPath);
 
     $page->fillField('settings[allowed_values][table][0][item][label]', 'First');
+    $page->pressButton('Add another item');
+    $this->assertSession()->waitForElementVisible('css', '[name="settings[allowed_values][table][1][item][label]"]');
     $page->fillField('settings[allowed_values][table][1][item][label]', 'Second');
+    $page->pressButton('Add another item');
+    $this->assertSession()->waitForElementVisible('css', '[name="settings[allowed_values][table][2][item][label]"]');
     $page->fillField('settings[allowed_values][table][2][item][label]', 'Third');
     $this->assertSession()->waitForText('Machine name: third');
     $page->pressButton('Save field settings');
 
     $this->drupalGet($this->adminPath);
-    $this->assertOrder(['First', 'Second', 'Third', '', '', '']);
+    $this->assertOrder(['First', 'Second', 'Third', '']);
     $drag_handle = $page->find('css', '[data-drupal-selector="edit-settings-allowed-values-table-0"] .tabledrag-handle');
     $target = $page->find('css', '[data-drupal-selector="edit-settings-allowed-values-table-2"]');
 
     // Change the order the items appear.
     $drag_handle->dragTo($target);
-    $this->assertOrder(['Second', 'Third', 'First', '', '', '']);
+    $this->assertOrder(['Second', 'Third', 'First', '']);
     $page->pressButton('Save field settings');
     $this->drupalGet($this->adminPath);
 
     // Confirm the change in order was saved.
-    $this->assertOrder(['Second', 'Third', 'First', '', '', '']);
+    $this->assertOrder(['Second', 'Third', 'First', '']);
 
     // Delete an item.
     $page->pressButton('remove_row_button__1');
     $this->assertSession()->assertWaitOnAjaxRequest();
-    $this->assertOrder(['Second', 'First', '', '', '']);
+    $this->assertOrder(['Second', 'First', '']);
     $page->pressButton('Save field settings');
     $this->drupalGet($this->adminPath);
 
     // Confirm the item removal was saved.
-    $this->assertOrder(['Second', 'First', '', '', '']);
+    $this->assertOrder(['Second', 'First', '']);
   }
 
   protected function assertOrder($expected) {

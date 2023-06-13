@@ -97,7 +97,7 @@ abstract class ListItemBase extends FieldItemBase implements OptionsProviderInte
     $allowed_values_meta = $this->getSetting('allowed_values_meta');
 
     if (!$form_state->get('items_count')) {
-      $form_state->set('items_count', max(count($allowed_values), 5));
+      $form_state->set('items_count', max(count($allowed_values), 0));
     }
 
     $wrapper_id = Html::getUniqueId('allowed-values-wrapper');
@@ -133,8 +133,8 @@ abstract class ListItemBase extends FieldItemBase implements OptionsProviderInte
     $field_name = $this->getFieldDefinition()->getName();
     $field_type = $this->getFieldDefinition()->getType();
     uksort($allowed_values, function ($a, $b) use ($allowed_values_meta) {
-      $a_weight = isset($allowed_values_meta[$a]) ? $allowed_values_meta[$a] : 0;
-      $b_weight = isset($allowed_values_meta[$b]) ? $allowed_values_meta[$b] : 0;
+      $a_weight = $allowed_values_meta[$a] ?? 0;
+      $b_weight = $allowed_values_meta[$b] ?? 0;
       return $a_weight <=> $b_weight;
     });
     $current_keys = array_keys($allowed_values);
@@ -205,7 +205,7 @@ abstract class ListItemBase extends FieldItemBase implements OptionsProviderInte
         '#title' => $this->t('Weight for row @number', ['@number' => $delta + 1]),
         '#title_display' => 'invisible',
         '#delta' => 50,
-        '#default_value' => isset($allowed_values_meta[$key]['weight']) ? $allowed_values_meta[$key]['weight'] : 0,
+        '#default_value' => $allowed_values_meta[$key]['weight'] ?? 0,
         '#attributes' => ['class' => ['weight']],
       ];
       if ($delta < count($allowed_values)) {
@@ -232,6 +232,9 @@ abstract class ListItemBase extends FieldItemBase implements OptionsProviderInte
       '#name' => 'add_more_allowed_values',
       '#value' => $this->t('Add another item'),
       '#attributes' => ['class' => ['field-add-more-submit']],
+      // Allow users to add another row without filling in the
+      // first row for a smoother user experience.
+      '#limit_validation_errors' => [],
       '#submit' => [[static::class, 'addMoreSubmit']],
       '#ajax' => [
         'callback' => [static::class, 'addMoreAjax'],
@@ -241,6 +244,7 @@ abstract class ListItemBase extends FieldItemBase implements OptionsProviderInte
     ];
 
     $element['allowed_values']['help_text']['#markup'] = $this->allowedValuesDescription();
+    $element['allowed_values']['help_text']['#weight'] = -1;
 
     $element['allowed_values_function'] = [
       '#type' => 'item',

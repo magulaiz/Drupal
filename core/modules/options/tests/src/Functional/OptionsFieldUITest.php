@@ -366,6 +366,11 @@ class OptionsFieldUITest extends FieldTestBase {
    */
   public function assertAllowedValuesInput(array $input, $result, string $message): void {
     $this->drupalGet($this->adminPath);
+    $page = $this->getSession()->getPage();
+    $add_button = $page->findButton('Add another item');
+    $add_button->click();
+    $add_button->click();
+
     $this->submitForm($input, 'Save field settings');
     // Verify that the page does not have double escaped HTML tags.
     $this->assertSession()->responseNotContains('&amp;lt;');
@@ -397,6 +402,8 @@ class OptionsFieldUITest extends FieldTestBase {
     ];
 
     $this->drupalGet($this->adminPath);
+    $page = $this->getSession()->getPage();
+    $page->findButton('Add another item')->click();
     $this->submitForm($edit, 'Save field settings');
     $this->assertSession()->pageTextContains('Updated field ' . $this->fieldName . ' field settings.');
 
