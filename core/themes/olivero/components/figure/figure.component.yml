@@ -1,7 +1,4 @@
-$schema: https://git.drupalcode.org/project/sdc/-/raw/1.x/src/metadata.schema.json
 name: Figure
-status: experimental
-group: Media
 props:
   type: object
   properties:
