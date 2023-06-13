@@ -20,7 +20,7 @@ class LanguageDeleteForm extends EntityDeleteForm {
     $langcode = $this->entity->id();
     if ($this->entity->languageUsedByContent($langcode)) {
       $form['description']['#markup'] = $this->t('The %language can not be deleted because it is used by some content.', [
-        '%label' => $this->entity->label() . '(' . $langcode . ')',
+        '%language' => $this->entity->label() . ' (' . $langcode . ')',
       ]);
       $form['actions']['submit']['#disabled'] = TRUE;
     }

@@ -5,6 +5,8 @@ namespace Drupal\Tests\language\Functional;
 use Drupal\Core\Url;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\language\Entity\ConfigurableLanguage;
+use Drupal\language\Exception\DeleteDefaultLanguageException;
+use Drupal\language\Exception\LanguageException;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\user\Entity\User;
 
@@ -33,7 +35,8 @@ class LanguageConfigurationTest extends BrowserTestBase {
   public function testLanguageConfiguration() {
     // Ensure the after installing the language module the weight of the English
     // language is still 0.
-    $this->assertEquals(0, ConfigurableLanguage::load('en')->getWeight(), 'The English language has a weight of 0.');
+    $english = ConfigurableLanguage::load('en');
+    $this->assertEquals(0, $english->getWeight(), 'The English language has a weight of 0.');
 
     // User to add and remove language.
     $admin_user = $this->drupalCreateUser([
@@ -123,6 +126,23 @@ class LanguageConfigurationTest extends BrowserTestBase {
 
     // Remove English language and add a new Language to check if langcode of
     // Language entity is 'en'.
+
+    // Language used by content can not be deleted.
+    // Test programmatically.
+    try {
+      $english->delete();
+      $this->fail('Expected LanguageException thrown.');
+    }
+    catch (LanguageException $e) {
+      // Expected exception; just continue testing.
+    }
+
+    // UI Test.
+    $this->drupalGet('admin/config/regional/language/delete/en');
+    $delete_button = $this->getSession()->getPage()->findButton('Delete');
+    $this->assertTrue($delete_button->hasAttribute('disabled'), 'The delete button is disabled.');
+    $this->assertSession()->pageTextContains('The English (en) can not be deleted because it is used by some content.', 'error');
+
     // First, we need to remove the english from content usage.
     // Change language for all users.
     foreach (User::loadMultiple() as $account) {

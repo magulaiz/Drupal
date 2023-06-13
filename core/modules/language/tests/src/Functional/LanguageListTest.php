@@ -183,6 +183,7 @@ class LanguageListTest extends BrowserTestBase {
     foreach (User::loadMultiple() as $account) {
       $account->set('langcode', LanguageInterface::LANGCODE_NOT_SPECIFIED)->save();
     }
+
     $this->drupalGet('admin/config/regional/language/delete/en');
     $this->submitForm([], 'Delete');
     $this->assertSession()->statusMessageContains('The English (en) language has been removed.', 'status');
