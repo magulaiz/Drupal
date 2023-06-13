@@ -49,7 +49,7 @@ interface ConfigEntityMapperInterface extends ConfigMapperInterface {
    * @return bool
    *   TRUE if the entity type ID was set correctly; FALSE otherwise.
    */
-  public function setType($entity_type_id);
+  public function setType(string $entity_type_id): bool;
 
   /**
    * Gets the entity type ID from this mapper.
@@ -57,6 +57,6 @@ interface ConfigEntityMapperInterface extends ConfigMapperInterface {
    * @return string
    *   The entity type ID.
    */
-  public function getType();
+  public function getType(): string;
 
 }
