@@ -376,12 +376,9 @@ class EntityField extends FieldPluginBase implements CacheableDependencyInterfac
       return $base_fields[$this->definition['field_name']]->getFieldStorageDefinition();
     }
 
+    // Check for computed bundle base fields too.
     $bundles = $this->entityTypeBundleInfo->getBundleInfo($entity_type_id);
     foreach ($bundles as $bundle_id => $bundle) {
-      // FIGURE OUT WHY THE ACTUAL BUNDLES ARE NOT WORKING.
-      // I am creating two bundles 'entity_test_comp_bund_fld_bund' and 'entity_test_comp_bund_fld_bund_2'
-      // But getBundleInfo() is returning just 'entity_test_comp_bund_fld'
-      // Figure out why.
       $bundle_fields = $this->entityFieldManager->getFieldDefinitions($entity_type_id, 'entity_test_comp_bund_fld_bund');
       if (isset($bundle_fields[$this->definition['field_name']])) {
         return $bundle_fields[$this->definition['field_name']]->getFieldStorageDefinition();
