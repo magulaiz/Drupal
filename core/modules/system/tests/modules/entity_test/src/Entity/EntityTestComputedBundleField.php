@@ -13,12 +13,12 @@ use Drupal\entity_test\Plugin\Field\ComputedTestCacheableStringItemList;
 use Drupal\entity_test\Plugin\Field\ComputedTestFieldItemList;
 
 /**
- * An entity used for testing computed field values.
+ * An entity used for testing computed bundle field values.
  *
  * @ContentEntityType(
- *   id = "entity_test_computed_bund_fld",
+ *   id = "entity_test_comp_bund_fld",
  *   label = @Translation("Entity Test computed bundle field"),
- *   base_table = "entity_test_computed_bund_fld",
+ *   base_table = "entity_test_comp_bund_fld",
  *   handlers = {
  *     "views_data" = "Drupal\entity_test\EntityTestViewsData"
  *   },
@@ -30,7 +30,7 @@ use Drupal\entity_test\Plugin\Field\ComputedTestFieldItemList;
  *   },
  *   admin_permission = "administer entity_test content",
  *   links = {
- *     "canonical" = "/entity_test_computed_bund_fld/{entity_test_computed_bund_fld}",
+ *     "canonical" = "/entity_test_comp_bund_fld/{entity_test_comp_bund_fld}",
  *   },
  *   bundle_entity_type = "entity_test_comp_bund_fld_bundle"
  * )

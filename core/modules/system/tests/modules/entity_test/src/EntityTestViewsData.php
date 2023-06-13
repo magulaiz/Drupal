@@ -26,8 +26,8 @@ class EntityTestViewsData extends EntityViewsData {
         ],
       ];
     }
-    if ($this->entityType->id() === 'entity_test_computed_bund_fld') {
-      $views_data['entity_test_computed_bund_fld']['computed_bundle_field'] = [
+    /* if ($this->entityType->id() === 'entity_test_comp_bund_fld') {
+      $views_data['entity_test_comp_bund_fld']['computed_bundle_field'] = [
         'title' => $this->t('Computed Bundle Field'),
         'field' => [
           'id' => 'field',
@@ -39,7 +39,7 @@ class EntityTestViewsData extends EntityViewsData {
           ],
         ],
       ];
-    }
+    } */
 
     if ($this->entityType->id() != 'entity_test') {
       return $views_data;

@@ -28,12 +28,12 @@ class EntityTestComputedBundleFieldTest extends ResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $entityTypeId = 'entity_test_computed_bund_fld';
+  protected static $entityTypeId = 'entity_test_comp_bund_fld';
 
   /**
    * {@inheritdoc}
    */
-  protected static $resourceTypeName = 'entity_test_computed_bund_fld--entity_test_computed_bund_fld';
+  protected static $resourceTypeName = 'entity_test_comp_bund_fld--entity_test_comp_bund_fld';
 
   /**
    * {@inheritdoc}
@@ -75,13 +75,13 @@ class EntityTestComputedBundleFieldTest extends ResourceTestBase {
   protected function createEntity() {
     $bundle = EntityTestComputedBundleFieldBundle::create([
       'name' => 'Entity Test Computed Bundle Field Bundle',
-      'type' => 'entity_test_computed_bund_fld',
-      'id' => 'entity_test_computed_bund_fld',
+      'type' => 'entity_test_comp_bund_fld',
+      'id' => 'entity_test_comp_bund_fld',
     ]);
     $bundle->save();
     $entity_test = EntityTestComputedBundleField::create([
       'name' => 'Llama',
-      'type' => 'entity_test_computed_bund_fld',
+      'type' => 'entity_test_comp_bund_fld',
     ]);
 
     $entity_test->setOwnerId(0);
@@ -96,7 +96,7 @@ class EntityTestComputedBundleFieldTest extends ResourceTestBase {
   protected function getExpectedDocument() {
     $self_url = Url::fromUri('base:/jsonapi/entity_test_computed_bundle_field/entity_test_computed_bundle_field/' . $this->entity->uuid())->setAbsolute()->toString(TRUE)->getGeneratedUrl();
     $author = User::load(0);
-    $bundle = EntityTestComputedBundleFieldBundle::load('entity_test_computed_bund_fld');
+    $bundle = EntityTestComputedBundleFieldBundle::load('entity_test_comp_bund_fld');
     return [
       'jsonapi' => [
         'meta' => [
@@ -143,17 +143,17 @@ class EntityTestComputedBundleFieldTest extends ResourceTestBase {
               'self' => ['href' => $self_url . '/relationships/user_id'],
             ],
           ],
-          'entity_test_computed_bund_fld_type' => [
+          'entity_test_comp_bund_fld_type' => [
             'data' => [
               'id' => $bundle->uuid(),
               'meta' => [
-                'drupal_internal__target_id' => 'entity_test_computed_bund_fld',
+                'drupal_internal__target_id' => 'entity_test_comp_bund_fld',
               ],
               'type' => 'entity_test_comp_bund_fld_bundle--entity_test_comp_bund_fld_bundle',
             ],
             'links' => [
-              'related' => ['href' => $self_url . '/entity_test_computed_bund_fld_type'],
-              'self' => ['href' => $self_url . '/relationships/entity_test_computed_bund_fld_type'],
+              'related' => ['href' => $self_url . '/entity_test_comp_bund_fld_type'],
+              'self' => ['href' => $self_url . '/relationships/entity_test_comp_bund_fld_type'],
             ],
           ],
         ],
@@ -167,7 +167,7 @@ class EntityTestComputedBundleFieldTest extends ResourceTestBase {
   protected function getPostDocument() {
     return [
       'data' => [
-        'type' => 'entity_test_computed_bund_fld--entity_test_computed_bund_fld',
+        'type' => 'entity_test_comp_bund_fld--entity_test_comp_bund_fld',
         'attributes' => [
           'name' => 'Dramallama',
         ],

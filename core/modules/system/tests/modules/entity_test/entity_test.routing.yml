@@ -98,12 +98,12 @@ entity.entity_test_computed_field.canonical:
     _entity_access: 'entity_test_computed_field.view'
 
 entity.entity_test_computed_bundle_field.canonical:
-  path: '/entity_test_computed_bundle_field/{entity_test_computed_bund_fld}'
+  path: '/entity_test_computed_bundle_field/{entity_test_comp_bund_fld}'
   defaults:
-    _entity_view: 'entity_test_computed_bund_fld.full'
+    _entity_view: 'entity_test_comp_bund_fld.full'
     _title: 'Test full view mode'
   requirements:
-    _entity_access: 'entity_test_computed_bund_fld.view'
+    _entity_access: 'entity_test_comp_bund_fld.view'
 
 route_callbacks:
   - '\Drupal\entity_test\Routing\EntityTestRoutes::routes'

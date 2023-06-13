@@ -9,6 +9,7 @@ use Drupal\Core\Cache\CacheableDependencyInterface;
 use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityRepositoryInterface;
+use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Field\FieldTypePluginManagerInterface;
@@ -127,6 +128,13 @@ class EntityField extends FieldPluginBase implements CacheableDependencyInterfac
   protected $entityFieldRenderer;
 
   /**
+   * The entity type bundle info service.
+   *
+   * @var \Drupal\Core\Entity\EntityTypeBundleInfoInterface
+   */
+  protected $entityTypeBundleInfo;
+
+  /**
    * The fields that we are actually grouping on.
    */
   public array $group_fields;
@@ -154,8 +162,10 @@ class EntityField extends FieldPluginBase implements CacheableDependencyInterfac
    *   The entity repository.
    * @param \Drupal\Core\Entity\EntityFieldManagerInterface $entity_field_manager
    *   The entity field manager.
+   * @param \Drupal\Core\Entity\EntityTypeBundleInfoInterface $entity_type_bundle_info
+   *   The entity type bundle info service.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityTypeManagerInterface $entity_type_manager, FormatterPluginManager $formatter_plugin_manager, FieldTypePluginManagerInterface $field_type_plugin_manager, LanguageManagerInterface $language_manager, RendererInterface $renderer, EntityRepositoryInterface $entity_repository, EntityFieldManagerInterface $entity_field_manager) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityTypeManagerInterface $entity_type_manager, FormatterPluginManager $formatter_plugin_manager, FieldTypePluginManagerInterface $field_type_plugin_manager, LanguageManagerInterface $language_manager, RendererInterface $renderer, EntityRepositoryInterface $entity_repository, EntityFieldManagerInterface $entity_field_manager, EntityTypeBundleInfoInterface $entity_type_bundle_info) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
 
     $this->entityTypeManager = $entity_type_manager;
@@ -165,6 +175,7 @@ class EntityField extends FieldPluginBase implements CacheableDependencyInterfac
     $this->renderer = $renderer;
     $this->entityRepository = $entity_repository;
     $this->entityFieldManager = $entity_field_manager;
+    $this->entityTypeBundleInfo = $entity_type_bundle_info;
 
     // @todo Unify 'entity field'/'field_name' instead of converting back and
     //   forth. https://www.drupal.org/node/2410779
@@ -188,7 +199,8 @@ class EntityField extends FieldPluginBase implements CacheableDependencyInterfac
       $container->get('language_manager'),
       $container->get('renderer'),
       $container->get('entity.repository'),
-      $container->get('entity_field.manager')
+      $container->get('entity_field.manager'),
+      $container->get('entity_type.bundle.info')
     );
   }
 
@@ -356,28 +368,26 @@ class EntityField extends FieldPluginBase implements CacheableDependencyInterfac
     }
 
     // The list of field storage definitions above does not include computed
-    // fields, so we need to explicitly fetch a list of all fields in order to
-    // support them. If this is a bundle base computed field, then use the field
-    // map to locate the first bundle to define the field, and load the storage.
+    // base fields, so we need to explicitly fetch a list of all base fields in
+    // order to support them.
     // @see \Drupal\Core\Entity\EntityFieldManager::getFieldStorageDefinitions()
-    if (!isset($this->definition['field_name'])) {
-      return NULL;
-    }
-
     $base_fields = $this->entityFieldManager->getBaseFieldDefinitions($entity_type_id);
-    if (!empty($base_fields[$this->definition['field_name']])) {
+    if (isset($this->definition['field_name']) && isset($base_fields[$this->definition['field_name']])) {
       return $base_fields[$this->definition['field_name']]->getFieldStorageDefinition();
     }
 
-    if (isset($this->definition['bundles'])) {
-      foreach ($this->definition['bundles'] as $bundle) {
-        $fields = $this->entityFieldManager->getFieldDefinitions($entity_type_id, $bundle);
-        if (isset($fields[$this->definition['field_name']])) {
-          return $fields[$this->definition['field_name']]->getFieldStorageDefinition();
-        }
+    $bundles = $this->entityTypeBundleInfo->getBundleInfo($entity_type_id);
+    foreach ($bundles as $bundle_id => $bundle) {
+      // FIGURE OUT WHY THE ACTUAL BUNDLES ARE NOT WORKING.
+      // I am creating two bundles 'entity_test_comp_bund_fld_bund' and 'entity_test_comp_bund_fld_bund_2'
+      // But getBundleInfo() is returning just 'entity_test_comp_bund_fld'
+      // Figure out why.
+      $bundle_fields = $this->entityFieldManager->getFieldDefinitions($entity_type_id, 'entity_test_comp_bund_fld_bund');
+      if (isset($bundle_fields[$this->definition['field_name']])) {
+        return $bundle_fields[$this->definition['field_name']]->getFieldStorageDefinition();
       }
     }
-    return NULL;
+
   }
 
   /**

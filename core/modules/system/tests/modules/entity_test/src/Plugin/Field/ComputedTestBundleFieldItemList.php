@@ -16,7 +16,7 @@ class ComputedTestBundleFieldItemList extends FieldItemList {
    * Compute the list property from state.
    */
   protected function computeValue() {
-    foreach (\Drupal::state()->get('entity_test_computed_bund_fld_item_list_value', []) as $delta => $item) {
+    foreach (\Drupal::state()->get('entity_test_comp_bund_fld_item_list_value', []) as $delta => $item) {
       $this->list[$delta] = $this->createItem($delta, $item);
     }
   }

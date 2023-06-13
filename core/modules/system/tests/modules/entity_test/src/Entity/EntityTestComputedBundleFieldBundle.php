@@ -17,7 +17,7 @@ use Drupal\Core\Entity\EntityDescriptionInterface;
  *     },
  *   },
  *   config_prefix = "entity_test_comp_bund_fld_bundle",
- *   bundle_of = "entity_test_computed_bund_fld",
+ *   bundle_of = "entity_test_comp_bund_fld",
  *   entity_keys = {
  *     "id" = "id",
  *     "label" = "label"

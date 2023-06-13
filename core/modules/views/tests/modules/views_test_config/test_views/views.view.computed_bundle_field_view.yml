@@ -8,7 +8,7 @@ label: 'Computed Bundled Field View'
 module: views
 description: ''
 tag: ''
-base_table: entity_test_computed_bund_fld
+base_table: entity_test_comp_bund_fld
 base_field: id
 display:
   default:
@@ -76,7 +76,7 @@ display:
       fields:
         computed_string_field:
           id: computed_string_field
-          table: entity_test_computed_bund_fld
+          table: entity_test_comp_bund_fld
           field: computed_string_field
           relationship: none
           group_type: group
@@ -140,7 +140,7 @@ display:
           plugin_id: field
         computed_bundle_field:
           id: computed_bundle_field
-          table: entity_test_computed_bund_fld
+          table: entity_test_comp_bund_fld
           field: computed_bundle_field
           relationship: none
           group_type: group
@@ -200,7 +200,7 @@ display:
           multi_type: separator
           separator: ', '
           field_api_classes: false
-          entity_type: entity_test_computed_bund_fld
+          entity_type: entity_test_comp_bund_fld
           plugin_id: field
       filters: {  }
       sorts: {  }

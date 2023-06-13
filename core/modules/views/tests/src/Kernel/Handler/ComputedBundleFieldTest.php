@@ -34,17 +34,17 @@ class ComputedBundleFieldTest extends ViewsKernelTestBase {
   protected function setUp($import_test_views = TRUE): void {
     parent::setUp($import_test_views);
 
-    $this->installEntitySchema('entity_test_computed_bund_fld');
+    $this->installEntitySchema('entity_test_comp_bund_fld');
     $this->installEntitySchema('entity_test_comp_bund_fld_bundle');
 
     // Create a default bundle that has a computed field.
-    entity_test_create_bundle('entity_test_comp_bund_fld_bund', NULL, 'entity_test_computed_bund_fld');
+    entity_test_create_bundle('entity_test_comp_bund_fld_bund', NULL, 'entity_test_comp_bund_fld');
 
     // Create a second bundle that also has a computed field.
-    entity_test_create_bundle('entity_test_comp_bund_fld_bund_2', NULL, 'entity_test_computed_bund_fld');
+    entity_test_create_bundle('entity_test_comp_bund_fld_bund_2', NULL, 'entity_test_comp_bund_fld');
 
     // Create a bundle that does not have the computed field.
-    entity_test_create_bundle('entity_test_bundle_no_comp_field', NULL, 'entity_test_computed_bund_fld');
+    entity_test_create_bundle('entity_test_bundle_no_comp_field', NULL, 'entity_test_comp_bund_fld');
 
     // Create an entity using the default bundle with a computed field.
     $entity_with_comp_field = EntityTestComputedBundleField::create([
@@ -73,7 +73,7 @@ class ComputedBundleFieldTest extends ViewsKernelTestBase {
    */
   public function testComputedFieldHandler() {
     \Drupal::state()->set('entity_test_computed_field_item_list_value', ['computed string']);
-    \Drupal::state()->set('entity_test_computed_bund_fld_item_list_value', ['some other string that is also computed']);
+    \Drupal::state()->set('entity_test_comp_bund_fld_item_list_value', ['some other string that is also computed']);
 
     $view = Views::getView('computed_bundle_field_view');
     $this->executeView($view);
