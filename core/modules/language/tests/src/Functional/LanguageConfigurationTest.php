@@ -5,7 +5,6 @@ namespace Drupal\Tests\language\Functional;
 use Drupal\Core\Url;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\language\Entity\ConfigurableLanguage;
-use Drupal\language\Exception\DeleteDefaultLanguageException;
 use Drupal\language\Exception\LanguageException;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\user\Entity\User;
