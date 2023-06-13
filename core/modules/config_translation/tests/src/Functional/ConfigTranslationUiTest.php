@@ -12,6 +12,7 @@ use Drupal\filter\Entity\FilterFormat;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\node\Entity\NodeType;
 use Drupal\Tests\BrowserTestBase;
+use Drupal\user\Entity\User;
 
 // cspell:ignore viewsviewfiles
 
@@ -893,8 +894,10 @@ class ConfigTranslationUiTest extends BrowserTestBase {
 
     // Delete English language
     // First, we need to remove the english from content usage.
-    // Change the admin user language.
-    $this->adminUser->set('langcode', LanguageInterface::LANGCODE_NOT_SPECIFIED)->save();
+    // Change language for all users.
+    foreach (User::loadMultiple() as $account) {
+      $account->set('langcode', LanguageInterface::LANGCODE_NOT_SPECIFIED)->save();
+    }
     $this->drupalGet('admin/config/regional/language/delete/en');
     $this->submitForm([], 'Delete');
     $this->assertSession()->pageTextContains('The English (en) language has been removed.');

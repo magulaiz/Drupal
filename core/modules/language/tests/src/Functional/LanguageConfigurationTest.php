@@ -6,6 +6,7 @@ use Drupal\Core\Url;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\Tests\BrowserTestBase;
+use Drupal\user\Entity\User;
 
 /**
  * Adds and configures languages to check negotiation changes.
@@ -123,8 +124,10 @@ class LanguageConfigurationTest extends BrowserTestBase {
     // Remove English language and add a new Language to check if langcode of
     // Language entity is 'en'.
     // First, we need to remove the english from content usage.
-    // Change the admin user language.
-    $admin_user->set('langcode', LanguageInterface::LANGCODE_NOT_SPECIFIED)->save();
+    // Change language for all users.
+    foreach (User::loadMultiple() as $account) {
+      $account->set('langcode', LanguageInterface::LANGCODE_NOT_SPECIFIED)->save();
+    }
     $this->drupalGet('admin/config/regional/language/delete/en');
     $this->submitForm([], 'Delete');
     $this->rebuildContainer();
