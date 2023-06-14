@@ -53,6 +53,17 @@ entity.block_content.canonical:
     _entity_access: 'block_content.view'
     block_content: \d+
 
+# @todo Deprecate this route once
+entity.block_content.canonical.bc:
+  path: '/admin/content/block/{block_content}'
+  defaults:
+    _entity_form: 'block_content.edit'
+  options:
+    _admin_route: TRUE
+  requirements:
+    _entity_access: 'block_content.update'
+    block_content: \d+
+
 entity.block_content.edit_form:
   path: '/admin/content/block/{block_content}/edit'
   defaults:
