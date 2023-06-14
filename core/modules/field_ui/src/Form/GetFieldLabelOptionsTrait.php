@@ -13,7 +13,7 @@ trait GetFieldLabelOptionsTrait {
    * @return array
    *   An array of visibility options.
    */
-  public function getFieldLabelOptions() {
+  public function getFieldLabelOptions(): array {
     return [
       'above' => $this->t('Above'),
       'inline' => $this->t('Inline'),
