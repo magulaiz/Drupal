@@ -15,7 +15,7 @@ class ModuleHandler implements ModuleHandlerInterface {
   /**
    * List of loaded files.
    *
-   * @var array
+   * @var array<string, true>
    *   An associative array whose keys are file paths of loaded files, relative
    *   to the application's root directory.
    */
@@ -53,7 +53,7 @@ class ModuleHandler implements ModuleHandlerInterface {
   /**
    * Information returned by hook_hook_info() implementations.
    *
-   * @var array
+   * @var array<string, array>|null
    */
   protected $hookInfo;
 
@@ -88,7 +88,7 @@ class ModuleHandler implements ModuleHandlerInterface {
   /**
    * A list of module include file keys.
    *
-   * @var array
+   * @var array<string, string|false>
    */
   protected $includeFileKeys = [];
 
@@ -97,7 +97,7 @@ class ModuleHandler implements ModuleHandlerInterface {
    *
    * @param string $root
    *   The app root.
-   * @param array $module_list
+   * @param array<string, array> $module_list
    *   An associative array whose keys are the names of installed modules and
    *   whose values are Extension class parameters. This is normally the
    *   %container.modules% parameter being set up by DrupalKernel.
