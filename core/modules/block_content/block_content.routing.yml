@@ -45,18 +45,16 @@ block_content.add_form:
     _entity_create_access: 'block_content:{block_content_type}'
 
 entity.block_content.canonical:
-  path: '/admin/content/block/{block_content}'
+  path: '/block/{block_content}'
   defaults:
-    _entity_form: 'block_content.edit'
+    _entity_view: 'block_content.full'
     _title_callback: '\Drupal\Core\Entity\Controller\EntityController::title'
-  options:
-    _admin_route: TRUE
   requirements:
-    _entity_access: 'block_content.update'
+    _entity_access: 'block_content.view'
     block_content: \d+
 
 entity.block_content.edit_form:
-  path: '/admin/content/block/{block_content}'
+  path: '/admin/content/block/{block_content}/edit'
   defaults:
     _entity_form: 'block_content.edit'
   options:

@@ -4,6 +4,7 @@ namespace Drupal\Tests\block_content\Functional;
 
 use Drupal\block_content\Entity\BlockContent;
 use Drupal\Core\Database\Database;
+use Drupal\Core\Url;
 
 /**
  * Create a block and test saving it.
@@ -53,10 +54,13 @@ class BlockContentCreationTest extends BlockContentTestBase {
   public function testBlockContentCreation() {
     $this->drupalLogin($this->adminUser);
 
+    $title = 'Test Block';
+    $body = $this->randomMachineName(16);
+
     // Create a block.
     $edit = [];
-    $edit['info[0][value]'] = 'Test Block';
-    $edit['body[0][value]'] = $this->randomMachineName(16);
+    $edit['info[0][value]'] = $title;
+    $edit['body[0][value]'] = $body;
     $this->drupalGet('block/add/basic');
     $this->submitForm($edit, 'Save');
 
@@ -72,6 +76,12 @@ class BlockContentCreationTest extends BlockContentTestBase {
       ->loadByProperties(['info' => $edit['info[0][value]']]);
     $block = reset($blocks);
     $this->assertNotEmpty($block, 'Content Block found in database.');
+
+    // Check that view mode works.
+    $this->drupalGet(Url::fromRoute('entity.block_content.canonical', ['block_content' => $block->id()]));
+    $this->assertSession()->statusCodeEquals(200);
+    $this->assertSession()->pageTextContains($title);
+    $this->assertSession()->pageTextContains($body);
   }
 
   /**
