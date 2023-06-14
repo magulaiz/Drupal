@@ -1,0 +1,16 @@
+<div{{ attributes.addClass(classes) }} style="background-image: url({{ background_image }})">
+  <div class="block-inner">
+    {{ title_prefix }}
+    {% if label %}
+      <h2{{ title_attributes }}>{{ label }}</h2>
+    {% endif %}
+    {{ title_suffix }}
+
+    {% block content %}
+    {{ content.field_media_image }}
+    <div class="summary">
+      {{ content|without('field_media_image') }}
+    </div>
+   {% endblock %}
+  </div>
+</div>
