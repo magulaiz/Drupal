@@ -74,8 +74,15 @@ class FileSystem implements FileSystemInterface {
    */
   public function moveUploadedFile($filename, $uri) {
     $target_real_path = $this->realpath($uri);
+
     $source = fopen($filename, 'r');
     $target = fopen($target_real_path, 'w');
+
+    // If either the source or target file failed to be opened, return with a
+    // FALSE here.
+    if ($source === FALSE || $target === FALSE) {
+      return FALSE;
+    }
 
     // Use stream_copy_to_stream() instead of move_uploaded_file() as the latter
     // could run into memory issues if too big files are uploaded.
