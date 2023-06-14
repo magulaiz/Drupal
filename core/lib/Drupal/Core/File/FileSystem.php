@@ -84,19 +84,14 @@ class FileSystem implements FileSystemInterface {
     fclose($source);
     fclose($target);
 
-    // If the copy failed clean-up the file.
-    try {
-      if ($written_bytes === FALSE || $written_bytes !== filesize($filename)) {
-        @unlink($target_real_path);
-        return FALSE;
-      }
+    // Clean-up files.
+    $is_successful = $written_bytes !== FALSE && $written_bytes === filesize($filename);
+    if (!$is_successful) {
+      @unlink($target_real_path);
     }
-    finally {
-      // Remove source file.
-      @unlink($filename);
-    }
+    @unlink($filename);
 
-    return TRUE;
+    return $is_successful;
   }
 
   /**
