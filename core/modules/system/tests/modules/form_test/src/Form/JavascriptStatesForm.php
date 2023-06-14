@@ -23,6 +23,12 @@ class JavascriptStatesForm extends FormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
+
+    $form['header_triggers'] = [
+      '#type' => 'html_tag',
+      '#tag' => 'h2',
+      '#value' => 'Triggers',
+    ];
     $form['checkbox_trigger'] = [
       '#type' => 'checkbox',
       '#title' => 'Checkbox trigger',
@@ -123,7 +129,18 @@ class JavascriptStatesForm extends FormBase {
     ];
 
     // Tested fields.
+    $form['header_tested_elements'] = [
+      '#type' => 'html_tag',
+      '#tag' => 'h2',
+      '#value' => 'Tested elements',
+    ];
+
     // Checkbox trigger.
+    $form['header_checkbox'] = [
+      '#type' => 'html_tag',
+      '#tag' => 'h3',
+      '#value' => 'Checkbox tests',
+    ];
     $form['textfield_invisible_when_checkbox_trigger_checked'] = [
       '#type' => 'textfield',
       '#title' => 'Textfield invisible when checkbox trigger checked',
@@ -328,6 +345,11 @@ class JavascriptStatesForm extends FormBase {
     ];
 
     // Checkboxes trigger.
+    $form['header_checkboxes'] = [
+      '#type' => 'html_tag',
+      '#tag' => 'h3',
+      '#value' => 'Checkboxes tests',
+    ];
     $form['textfield_visible_when_checkboxes_trigger_value2_checked'] = [
       '#type' => 'textfield',
       '#title' => 'Textfield visible when checkboxes trigger value2 checked',
@@ -348,6 +370,11 @@ class JavascriptStatesForm extends FormBase {
     ];
 
     // Radios trigger.
+    $form['header_radios'] = [
+      '#type' => 'html_tag',
+      '#tag' => 'h3',
+      '#value' => 'Radios tests',
+    ];
     $form['fieldset_visible_when_radios_trigger_has_value2'] = [
       '#type' => 'fieldset',
       '#title' => 'Fieldset visible when radio trigger has value2',
@@ -417,6 +444,11 @@ class JavascriptStatesForm extends FormBase {
     ];
 
     // Select trigger
+    $form['header_select'] = [
+      '#type' => 'html_tag',
+      '#tag' => 'h3',
+      '#value' => 'Select tests',
+    ];
     $form['item_visible_when_select_trigger_has_value2'] = [
       '#type' => 'item',
       '#title' => 'Item visible when select trigger has value2',
@@ -448,7 +480,12 @@ class JavascriptStatesForm extends FormBase {
       ],
     ];
 
-    // Multiple Select trigger
+    // Multiple select trigger.
+    $form['header_multiple_select'] = [
+      '#type' => 'html_tag',
+      '#tag' => 'h3',
+      '#value' => 'Multiple select tests',
+    ];
     $form['item_visible_when_multiple_select_trigger_has_value2'] = [
       '#type' => 'item',
       '#title' => 'Item visible when multiple select trigger has value2',
@@ -478,7 +515,7 @@ class JavascriptStatesForm extends FormBase {
     ];
     $form['textfield_visible_when_multiple_select_trigger_has_value2_or_value3'] = [
       '#type' => 'textfield',
-      '#title' => 'Textfield visible when multiple select trigger has value2 or value3',
+      '#title' => 'Textfield visible when multiple select trigger has value2 OR value3',
       '#states' => [
         'visible' => [
           'select[name="multiple_select_trigger[]"]' => [
@@ -490,7 +527,7 @@ class JavascriptStatesForm extends FormBase {
     ];
     $form['textfield_visible_when_multiple_select_trigger_has_value2_and_value3'] = [
       '#type' => 'textfield',
-      '#title' => 'Textfield visible when multiple select trigger has value2 and value3',
+      '#title' => 'Textfield visible when multiple select trigger has value2 AND value3',
       '#states' => [
         'visible' => [
           'select[name="multiple_select_trigger[]"]' => [
@@ -504,6 +541,11 @@ class JavascriptStatesForm extends FormBase {
     ];
 
     // Textfield trigger.
+    $form['header_textfield'] = [
+      '#type' => 'html_tag',
+      '#tag' => 'h3',
+      '#value' => 'Textfield tests',
+    ];
     $form['checkbox_checked_when_textfield_trigger_filled'] = [
       '#type' => 'checkbox',
       '#title' => 'Checkbox checked when textfield trigger filled',
@@ -568,6 +610,11 @@ class JavascriptStatesForm extends FormBase {
     ];
 
     // Multiple triggers.
+    $form['header_multiple_triggers'] = [
+      '#type' => 'html_tag',
+      '#tag' => 'h3',
+      '#value' => 'Multiple triggers tests',
+    ];
     $form['item_visible_when_select_trigger_has_value2_and_textfield_trigger_filled'] = [
       '#type' => 'item',
       '#title' => 'Item visible when select trigger has value2 and textfield trigger filled',
@@ -580,6 +627,11 @@ class JavascriptStatesForm extends FormBase {
     ];
 
     // Number triggers.
+    $form['header_number'] = [
+      '#type' => 'html_tag',
+      '#tag' => 'h3',
+      '#value' => 'Number tests',
+    ];
     $form['item_visible_when_number_trigger_filled_by_spinner'] = [
       '#type' => 'item',
       '#title' => 'Item visible when number trigger filled by spinner widget',
