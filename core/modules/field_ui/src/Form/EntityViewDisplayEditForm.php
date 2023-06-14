@@ -15,7 +15,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * @internal
  */
 class EntityViewDisplayEditForm extends EntityDisplayFormBase {
-
+  use GetFieldLabelOptionsTrait;
   /**
    * {@inheritdoc}
    */
@@ -145,21 +145,6 @@ class EntityViewDisplayEditForm extends EntityDisplayFormBase {
     return Url::fromRoute('entity.entity_view_display.' . $this->entity->getTargetEntityTypeId() . '.view_mode', [
       'view_mode_name' => $mode,
     ] + FieldUI::getRouteBundleParameter($entity_type, $this->entity->getTargetBundle()));
-  }
-
-  /**
-   * Returns an array of visibility options for field labels.
-   *
-   * @return array
-   *   An array of visibility options.
-   */
-  protected function getFieldLabelOptions() {
-    return [
-      'above' => $this->t('Above'),
-      'inline' => $this->t('Inline'),
-      'hidden' => '- ' . $this->t('Hidden') . ' -',
-      'visually_hidden' => '- ' . $this->t('Visually Hidden') . ' -',
-    ];
   }
 
   /**
