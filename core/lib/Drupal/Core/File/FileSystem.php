@@ -75,7 +75,7 @@ class FileSystem implements FileSystemInterface {
   public function moveUploadedFile($filename, $uri) {
     $target_real_path = $this->realpath($uri);
 
-    $source = fopen($filename, 'r');
+    $source = @fopen($filename, 'r');
     if ($source === FALSE) {
       $this->logger->error('Failed to open %file file for reading.', [
         '%file' => $filename,
@@ -83,7 +83,7 @@ class FileSystem implements FileSystemInterface {
       return FALSE;
     }
 
-    $target = fopen($target_real_path, 'w');
+    $target = @fopen($target_real_path, 'w');
     if ($target === FALSE) {
       $this->logger->error('Failed to open %file file for writing.', [
         '%file' => $target_real_path,
@@ -95,13 +95,13 @@ class FileSystem implements FileSystemInterface {
     // could run into memory issues if too big files are uploaded.
     $written_bytes = stream_copy_to_stream($source, $target);
 
-    if (!fclose($source)) {
+    if (!@fclose($source)) {
       $this->logger->warning('Failed to close %file source file.', [
         '%file' => $filename,
       ]);
     }
 
-    if (!fclose($target)) {
+    if (!@fclose($target)) {
       $this->logger->warning('Failed to close %file target file.', [
         '%file' => $target_real_path,
       ]);
@@ -110,7 +110,7 @@ class FileSystem implements FileSystemInterface {
     // Clean-up files.
     $is_successful = $written_bytes !== FALSE && $written_bytes === filesize($filename);
     if (!$is_successful) {
-      if (!unlink($target_real_path)) {
+      if (!@unlink($target_real_path)) {
         $this->logger->error('Failed to clean-up %file file after it failed to copy.', [
           '%file' => $target_real_path,
         ]);
@@ -122,7 +122,7 @@ class FileSystem implements FileSystemInterface {
       }
     }
 
-    if (!unlink($filename)) {
+    if (!@unlink($filename)) {
       $this->logger->warning('Failed to remove the source %file file.', [
         '%file' => $filename,
       ]);
