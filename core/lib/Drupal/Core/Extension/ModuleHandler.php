@@ -288,7 +288,7 @@ class ModuleHandler implements ModuleHandlerInterface {
    * {@inheritdoc}
    */
   public function getHookInfo() {
-    if (!isset($this->hookInfo)) {
+    if ($this->hookInfo === NULL) {
       if ($cache = $this->cacheBackend->get('hook_info')) {
         $this->hookInfo = $cache->data;
       }
