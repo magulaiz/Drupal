@@ -285,7 +285,7 @@ class OptionsFieldUITest extends FieldTestBase {
     // Create a node with actual data for the field.
     $settings = [
       'type' => $this->type,
-      $this->fieldName => [['value' => 'One']],
+      $this->fieldName => [['value' => 'one']],
     ];
     $node = $this->drupalCreateNode($settings);
 
@@ -293,7 +293,9 @@ class OptionsFieldUITest extends FieldTestBase {
     $this->drupalGet($this->adminPath);
     $assert_session->elementExists('css', '#remove_row_button__1');
     $delete_button_1 = $page->findById('remove_row_button__1');
+    $value_field_1 = $page->findField('settings[allowed_values][table][1][item][key]');
     $this->assertTrue($delete_button_1->hasAttribute('disabled'), 'Button is disabled');
+    $this->assertTrue($value_field_1->hasAttribute('disabled'), 'Button is disabled');
 
     // Delete the node, remove the value.
     $node->delete();
