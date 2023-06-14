@@ -2,7 +2,11 @@
 
 namespace Drupal\field_ui\Form;
 
+/**
+ * Method getFieldLabelOptions originally from EntityViewDisplayEditForm file.
+ */
 trait GetFieldLabelOptionsTrait {
+
   /**
    * Returns an array of visibility options for field labels.
    *
