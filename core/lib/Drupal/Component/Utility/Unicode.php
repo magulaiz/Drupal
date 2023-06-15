@@ -98,7 +98,7 @@ EOD;
    *   - \Drupal\Component\Utility\Unicode::STATUS_ERROR
    *     An error occurred. No unicode support.
    *
-   * @deprecated in Drupal 10.2.0 and will be removed before Drupal 11.0.0. In
+   * @deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. In
    *   Drupal 11 this is part of system_requirements().
    */
   public static function getStatus() {
@@ -124,7 +124,7 @@ EOD;
    *   A string identifier of a failed multibyte extension check, if any.
    *   Otherwise, an empty string.
    *
-   * @deprecated in Drupal 10.2.0 and will be removed before Drupal 11.0.0. In
+   * @deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. In
    *   Drupal 11 this is part of system_requirements().
    *
    * @see https://www.drupal.org/node/@todo
