@@ -42,7 +42,7 @@
         // Add the aria-atomic attribute for WCAG compliance
         liveElement.setAttribute('aria-atomic', 'true');
         // Check to see if <main> element exists, as aria-live region should be appended to a landmark. If it exists, append aria-live element to it. If not, append it to <body> element
-        let main = document.getElementsByTagName('main');
+        const main = document.getElementsByTagName('main');
         if (main.length !== 0) {
           main[0].appendChild(liveElement);
         } else {
@@ -113,7 +113,7 @@
    *   A string to indicate the priority of the message. Can be either
    *   'polite' or 'assertive'.
    * @param {string} [atomic='true']
-   *  A string to inidcate whether the aria-atomic attribute should be
+   *  A string to indicate whether the aria-atomic attribute should be
    *  true or false
    * @return {function}
    *   The return of the call to debounce.
