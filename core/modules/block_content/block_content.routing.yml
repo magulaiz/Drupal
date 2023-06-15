@@ -47,7 +47,7 @@ block_content.add_form:
 entity.block_content.canonical:
   path: '/block-content/{block_content}'
   defaults:
-    _entity_view: 'block_content.full'
+    _controller: '\Drupal\block_content\Controller\BlockContentController::buildView'
     _title_callback: '\Drupal\Core\Entity\Controller\EntityController::title'
   requirements:
     _entity_access: 'block_content.view'

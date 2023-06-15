@@ -269,4 +269,23 @@ class BlockContentController extends ControllerBase {
     return $helper->redirect();
   }
 
+  /**
+   * Provides renders array to preview a block_content without placing on a page.
+   *
+   * @param Drupal\block_content\BlockContentInterface $block_content
+   *   The block to be edited.
+   *
+   * @return array
+   */
+  public function buildView(BlockContentInterface $block_content): array {
+    $build = [
+      '#theme' => 'block_content',
+      '#cache' => [
+        'tags' => $this->entityTypeManager()->getDefinition('block_content')->getListCacheTags(),
+      ],
+    ];
+    $build['#content'] = $this->entityTypeManager->getViewBuilder('block_content')->view($block_content);
+    return $build;
+  }
+
 }

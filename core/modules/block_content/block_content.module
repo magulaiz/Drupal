@@ -5,7 +5,6 @@
  * Allows the creation of content blocks through the user interface.
  */
 
-use Drupal\Core\Render\Element;
 use Drupal\Core\Url;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\field\Entity\FieldConfig;
@@ -45,7 +44,9 @@ function block_content_theme($existing, $type, $theme, $path) {
       'file' => 'block_content.pages.inc',
     ],
     'block_content' => [
-      'render element' => 'elements',
+      'variables' => [
+        'content' => NULL,
+      ],
     ],
   ];
 }
@@ -186,26 +187,4 @@ function _block_content_has_reusable_condition(array $condition, array $tables) 
 
   }
   return FALSE;
-}
-
-/**
- * Preprocess function for block content template.
- */
-function template_preprocess_block_content(&$variables) {
-  $block_content = $variables['elements']['#block_content'];
-  $variables['id'] = $block_content->id();
-  $variables['bundle'] = $block_content->bundle();
-  $variables['view_mode'] = $variables['elements']['#view_mode'];
-  $variables['content'] = [];
-
-  if (isset($variables['elements']['_layout_builder'][0])) {
-    $variables['content'][] = $variables['elements']['_layout_builder'];
-  }
-  else {
-    $content = [];
-    foreach (Element::children($variables['elements']) as $key) {
-      $content[$key] = $variables['elements'][$key];
-    }
-    $variables['content'] = $content;
-  }
 }
