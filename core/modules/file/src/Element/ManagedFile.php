@@ -289,6 +289,16 @@ class ManagedFile extends FormElement {
           '#weight' => -20,
         ];
       }
+      elseif ($implementation == 'session') {
+        $element[ini_get('session.upload_progress.name')] = [
+          '#type' => 'hidden',
+          '#value' => $upload_progress_key,
+          '#attributes' => ['class' => ['file-progress']],
+          // Uploadprogress extension requires this field to be at the top of
+          // the form.
+          '#weight' => -20,
+        ];
+      }
 
       // Add the upload progress callback.
       $element['upload_button']['#ajax']['progress']['url'] = Url::fromRoute('file.ajax_progress', ['key' => $upload_progress_key]);
