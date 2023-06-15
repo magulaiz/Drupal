@@ -268,4 +268,5 @@ class BlockContentController extends ControllerBase {
 
     return $helper->redirect();
   }
+
 }
