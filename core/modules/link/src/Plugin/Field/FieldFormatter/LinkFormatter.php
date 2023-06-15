@@ -269,14 +269,13 @@ class LinkFormatter extends FormatterBase {
    *
    * @param \Drupal\Core\Url $url
    *   The link field item being rendered.
-   *
    * @param string $langcode
    *   The language that should be used to render the field.
    *
    * @return \Drupal\Core\Url
    *   An Url object.
    */
-  private function urlOfNonTranslatedContent (Url $url, string $langcode) {
+  private function urlOfNonTranslatedContent(Url $url, string $langcode) {
     $link_title = $url->toString();
     if (!UrlHelper::isExternal($link_title) && ($url->isRouted())) {
       $node_parameters = $url->getRouteParameters();
@@ -285,7 +284,7 @@ class LinkFormatter extends FormatterBase {
           // If the node has no translation, the URL must be the original language's.
           if ($entity = \Drupal::entityTypeManager()->getStorage($entity_type)->load($id)) {
             if (!$entity->hasTranslation($langcode)) {
-              //Obtain the original langcode
+              // Obtain the original langcode
               $original_langcode = $entity->language();
               $url->setOption('language', $original_langcode);
             }
@@ -295,4 +294,5 @@ class LinkFormatter extends FormatterBase {
     }
     return $url;
   }
+
 }
