@@ -54,12 +54,11 @@ class BlockContentCreationTest extends BlockContentTestBase {
   public function testBlockContentCreation() {
     $this->drupalLogin($this->adminUser);
 
-    $title = 'Test Block';
     $body = $this->randomMachineName(16);
 
     // Create a block.
     $edit = [];
-    $edit['info[0][value]'] = $title;
+    $edit['info[0][value]'] = 'Test Block';
     $edit['body[0][value]'] = $body;
     $this->drupalGet('block/add/basic');
     $this->submitForm($edit, 'Save');
@@ -79,8 +78,7 @@ class BlockContentCreationTest extends BlockContentTestBase {
 
     // Check that view mode works.
     $this->drupalGet(Url::fromRoute('entity.block_content.canonical', ['block_content' => $block->id()]));
-    $this->assertSession()->statusCodeEquals(200);
-    $this->assertSession()->pageTextContains($title);
+    $this->assertSession()->addressEquals('/block-content/' . $block->id());
     $this->assertSession()->pageTextContains($body);
   }
 
