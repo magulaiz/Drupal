@@ -124,8 +124,8 @@
     &:active,
     &:hover,
     &:focus {
-      background-color: transparent;
       border-color: transparent;
+      background-color: transparent;
     }
 
     &:focus {

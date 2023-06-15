@@ -129,12 +129,14 @@
 }
 
 /* Override styles from button--primary */
+
 /* @todo can we just drop that class? */
+
 .block-search-wide__wrapper .search-form__submit:active,
-.block-search-wide__wrapper .search-form__submit:focus,
-.block-search-wide__wrapper .search-form__submit:hover {
-  background-color: transparent;
+.block-search-wide__wrapper .search-form__submit:hover,
+.block-search-wide__wrapper .search-form__submit:focus {
   border-color: transparent;
+  background-color: transparent;
 }
 
 .block-search-wide__wrapper .search-form__submit:focus {

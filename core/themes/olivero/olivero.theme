@@ -134,7 +134,7 @@ function olivero_preprocess_block(&$variables) {
       }
 
       // @todo can this move to SDC?
-      if ($variables['base_plugin_id'] === 'search_form_block' && in_array($region, ['primary_menu','secondary_menu'], TRUE)) {
+      if ($variables['base_plugin_id'] === 'search_form_block' && in_array($region, ['primary_menu', 'secondary_menu'], TRUE)) {
         $variables['content']['actions']['submit']['#theme_wrappers'] = ['input__submit__header_search'];
       }
     }
