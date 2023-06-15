@@ -177,6 +177,7 @@ class LinkFormatter extends FormatterBase {
     foreach ($items as $delta => $item) {
       // By default use the full URL as the link text.
       $url = $this->buildUrl($item);
+      $url = $this->urlOfNonTranslatedContent($url, $langcode);
       $link_title = $url->toString();
 
       // If the title field value is available, use it for the link text.
@@ -260,4 +261,36 @@ class LinkFormatter extends FormatterBase {
     return $url;
   }
 
+  /**
+   * Builds the \Drupal\Core\Url object for a link field item when
+   * the translation is not available in the referenced content.
+   *
+   * @param \Drupal\Core\Url $url
+   *   The link field item being rendered.
+   *
+   * @param string $langcode
+   *   The language that should be used to render the field.
+   *
+   * @return \Drupal\Core\Url
+   *   An Url object.
+   */
+  private function urlOfNonTranslatedContent (Url $url, string $langcode) {
+    $link_title = $url->toString();
+    if (!UrlHelper::isExternal($link_title) && ($url->isRouted())) {
+      $node_parameters = $url->getRouteParameters();
+      if (!empty($node_parameters)) {
+        foreach ($node_parameters as $entity_type => $id) {
+          // If the node has no translation, the URL must be the original language's.
+          if ($entity = \Drupal::entityTypeManager()->getStorage($entity_type)->load($id)) {
+            if (!$entity->hasTranslation($langcode)) {
+              //Obtain the original langcode
+              $original_langcode = $entity->language();
+              $url->setOption('language', $original_langcode);
+            }
+          }
+        }
+      }
+    }
+    return $url;
+  }
 }
