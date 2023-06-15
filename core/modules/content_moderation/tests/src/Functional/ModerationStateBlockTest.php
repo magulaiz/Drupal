@@ -94,7 +94,7 @@ class ModerationStateBlockTest extends ModerationStateTestBase {
       'body[0][value]' => $updated_body,
       'moderation_state[0][state]' => 'draft',
     ];
-    $this->drupalGet('admin/content/block/' . $block->id());
+    $this->drupalGet('admin/content/block/' . $block->id() . '/edit');
     $this->submitForm($edit, 'Save');
     $this->assertSession()->pageTextContains('basic Moderated block has been updated.');
 
@@ -138,7 +138,7 @@ class ModerationStateBlockTest extends ModerationStateTestBase {
 
     // Check that revision is checked by default when content moderation is
     // enabled.
-    $this->drupalGet('/admin/content/block/' . $block->id());
+    $this->drupalGet('/admin/content/block/' . $block->id() . '/edit');
     $this->assertSession()->checkboxChecked('revision');
     $this->assertSession()->pageTextContains('Revisions must be required when moderation is enabled.');
     $this->assertSession()->fieldDisabled('revision');
