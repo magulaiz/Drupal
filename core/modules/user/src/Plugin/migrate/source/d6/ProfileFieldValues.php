@@ -2,6 +2,8 @@
 
 namespace Drupal\user\Plugin\migrate\source\d6;
 
+use Drupal\Core\Database\DatabaseNotFoundException;
+use Drupal\migrate\Exception\RequirementsException;
 use Drupal\migrate\Row;
 use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
 
@@ -72,13 +74,19 @@ class ProfileFieldValues extends DrupalSqlBase {
       'value' => $this->t('The value for this field.'),
     ];
 
-    $query = $this->select('profile_values', 'pv')
-      ->fields('pv', ['fid', 'value']);
-    $query->leftJoin('profile_fields', 'pf', '[pf].[fid] = [pv].[fid]');
-    $query->fields('pf', ['name', 'title']);
-    $results = $query->execute();
-    foreach ($results as $profile) {
-      $fields[$profile['name']] = $this->t($profile['title']);
+    // The database connection may not exist, for example, when building
+    // the Migrate Message form.
+    try {
+      $query = $this->select('profile_values', 'pv')
+        ->fields('pv', ['fid', 'value']);
+      $query->leftJoin('profile_fields', 'pf', '[pf].[fid] = [pv].[fid]');
+      $query->fields('pf', ['name', 'title']);
+      $results = $query->execute();
+      foreach ($results as $profile) {
+        $fields[$profile['name']] = $this->t($profile['title']);
+      }
+    }
+    catch (DatabaseNotFoundException | RequirementsException | \PDOException $e) {
     }
 
     return $fields;

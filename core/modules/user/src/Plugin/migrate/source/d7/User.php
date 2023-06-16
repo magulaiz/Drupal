@@ -52,12 +52,16 @@ class User extends FieldableEntity {
       'roles' => $this->t('Roles'),
     ];
 
+    // The database connection may not exist, for example, when building
+    // the Migrate Message form.
     // Profile fields.
-    if ($this->moduleExists('profile')) {
-      $fields += $this->select('profile_fields', 'pf')
-        ->fields('pf', ['name', 'title'])
-        ->execute()
-        ->fetchAllKeyed();
+    if ($this->database) {
+      if ($this->moduleExists('profile')) {
+        $fields += $this->select('profile_fields', 'pf')
+          ->fields('pf', ['name', 'title'])
+          ->execute()
+          ->fetchAllKeyed();
+      }
     }
 
     return $fields;
