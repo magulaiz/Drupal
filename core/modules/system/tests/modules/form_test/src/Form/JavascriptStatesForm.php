@@ -532,8 +532,8 @@ class JavascriptStatesForm extends FormBase {
         'visible' => [
           'select[name="multiple_select_trigger[]"]' => [
             'value' => [
-              'value2',
               'value3',
+              'value2',
             ],
           ],
         ],

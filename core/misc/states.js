@@ -166,7 +166,7 @@
       }
 
       // The arrays values should match.
-      return JSON.stringify(reference) === JSON.stringify(value);
+      return JSON.stringify(reference.sort()) === JSON.stringify(value.sort());
     },
     Number(reference, value) {
       // If "reference" is a number and "value" is a string, then cast
