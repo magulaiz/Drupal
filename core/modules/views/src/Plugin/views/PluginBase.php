@@ -432,55 +432,17 @@ abstract class PluginBase extends ComponentPluginBase implements ContainerFactor
    * {@inheritdoc}
    */
   public function getAvailableGlobalTokens($prepared = FALSE, array $types = []) {
-    $info = \Drupal::token()->getInfo();
     // Site and view tokens should always be available.
     $types += ['site', 'view'];
-    $available = array_intersect_key($info['tokens'], array_flip($types));
-
-    // Construct the token string for each token.
-    if ($prepared) {
-      $prepared = [];
-      foreach ($available as $type => $tokens) {
-        foreach (array_keys($tokens) as $token) {
-          $prepared[$type][] = "[$type:$token]";
-        }
-      }
-
-      return $prepared;
-    }
-
-    return $available;
+    return \Drupal::token()->getAvailableGlobalTokens($prepared, $types);
   }
 
   /**
    * {@inheritdoc}
    */
   public function globalTokenForm(&$form, FormStateInterface $form_state) {
-    $token_items = [];
-
-    foreach ($this->getAvailableGlobalTokens() as $type => $tokens) {
-      $item = [
-        '#markup' => $type,
-        'children' => [],
-      ];
-      foreach ($tokens as $name => $info) {
-        $item['children'][$name] = "[$type:$name]" . ' - ' . $info['name'] . ': ' . $info['description'];
-      }
-
-      $token_items[$type] = $item;
-    }
-
-    $form['global_tokens'] = [
-      '#type' => 'details',
-      '#title' => $this->t('Available global token replacements'),
-    ];
-    $form['global_tokens']['list'] = [
-      '#theme' => 'item_list',
-      '#items' => $token_items,
-      '#attributes' => [
-        'class' => ['global-tokens'],
-      ],
-    ];
+    $tokens = $this->getAvailableGlobalTokens();
+    \Drupal::token()->globalTokenForm($form, $form_state, $tokens);
   }
 
   /**
