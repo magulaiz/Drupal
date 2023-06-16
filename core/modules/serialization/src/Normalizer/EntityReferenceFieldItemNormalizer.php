@@ -16,11 +16,6 @@ class EntityReferenceFieldItemNormalizer extends FieldItemNormalizer {
   use EntityReferenceFieldItemNormalizerTrait;
 
   /**
-   * {@inheritdoc}
-   */
-  protected $supportedInterfaceOrClass = EntityReferenceItem::class;
-
-  /**
    * The entity repository.
    *
    * @var \Drupal\Core\Entity\EntityRepositoryInterface
@@ -90,6 +85,15 @@ class EntityReferenceFieldItemNormalizer extends FieldItemNormalizer {
       }
     }
     return parent::constructValue($data, $context);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getSupportedTypes(?string $format): array {
+    return [
+      EntityReferenceItem::class => TRUE,
+    ];
   }
 
 }

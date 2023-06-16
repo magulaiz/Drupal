@@ -18,6 +18,7 @@
 }
 
 .views-admin a:hover {
+  -webkit-text-decoration: none;
   text-decoration: none;
 }
 
@@ -395,7 +396,8 @@ td.group-title {
   vertical-align: top;
 }
 
-@media screen and (min-width: 45em) { /* 720px */
+@media screen and (min-width: 45em) {
+  /* 720px */
   .view-preview-form .form-type-textfield .description {
     white-space: nowrap;
   }
