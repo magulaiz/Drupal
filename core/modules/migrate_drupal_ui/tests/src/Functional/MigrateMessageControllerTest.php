@@ -4,7 +4,6 @@ namespace Drupal\Tests\migrate_drupal_ui\Functional;
 
 use Drupal\Core\Database\Database;
 use Drupal\migrate\Plugin\MigrateIdMapInterface;
-use Drupal\Tests\BrowserTestBase;
 
 /**
  * Tests for the MigrateController class.
