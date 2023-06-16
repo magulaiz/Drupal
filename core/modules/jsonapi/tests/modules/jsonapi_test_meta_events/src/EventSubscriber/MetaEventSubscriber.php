@@ -2,6 +2,7 @@
 
 namespace Drupal\jsonapi_test_meta_events\EventSubscriber;
 
+use Drupal\Core\Field\EntityReferenceFieldItemListInterface;
 use Drupal\jsonapi\Events\CollectRelationshipMetaEvent;
 use Drupal\jsonapi\Events\CollectResourceObjectMetaEvent;
 use Drupal\jsonapi\Events\MetaDataEvents;
@@ -68,12 +69,17 @@ class MetaEventSubscriber implements EventSubscriberInterface {
     }
 
     // Only continue if this is the correct relation.
-    if ($config['enabled_relation'] === FALSE || $config['enabled_relation'] !== $event->getRelationshipField()->getName()) {
+    if ($config['enabled_relation'] === FALSE || $config['enabled_relation'] !== $event->getRelationshipFieldName()) {
       return;
     }
 
-    $referencedEntities = $event->getRelationshipField()->referencedEntities();
-    $event->addCacheTags(['jsonapi_test_meta_events.relationship_meta']);
+    $relationshipFieldName = $event->getRelationshipFieldName();
+
+    $field = $event->getResourceObject()->getField($relationshipFieldName);
+    if($field instanceof EntityReferenceFieldItemListInterface) {
+      $referencedEntities = $field->referencedEntities();
+      $event->addCacheTags(['jsonapi_test_meta_events.relationship_meta']);
+    }
 
     // If no fields are specified we just add a list of uuids to the relations
     if ($config['fields'] === FALSE) {
@@ -82,7 +88,7 @@ class MetaEventSubscriber implements EventSubscriberInterface {
         $referencedEntityIds[] = $entity->uuid();
       }
 
-      $event->setMetaValue('relationship_meta_' . $event->getRelationshipField()->getName(), $referencedEntityIds);
+      $event->setMetaValue('relationship_meta_' . $event->getRelationshipFieldName(), $referencedEntityIds);
       return;
     }
 

@@ -599,7 +599,7 @@ class EntityResource {
     // service, so we don't need to call ::getAccessCheckedResourceObject().
     $resource_object = ResourceObject::createFromEntity($resource_type, $entity);
 
-    $collect_meta_event = new CollectRelationshipMetaEvent($resource_object, $field_list);
+    $collect_meta_event = new CollectRelationshipMetaEvent($resource_object, $related);
     $this->eventDispatcher->dispatch($collect_meta_event, MetaDataEvents::COLLECT_RELATIONSHIP_META);
 
     $relationship = Relationship::createFromEntityReferenceField($resource_object, $field_list, NULL, $collect_meta_event->getMeta());

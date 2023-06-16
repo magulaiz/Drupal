@@ -27,11 +27,11 @@ final class CollectRelationshipMetaEvent extends Event implements RefinableCache
   private ResourceObject $resourceObject;
 
   /**
-   * The relationship field.
+   * The relationship field's public name.
    *
-   * @var \Drupal\Core\Field\EntityReferenceFieldItemListInterface
+   * @var string
    */
-  private EntityReferenceFieldItemListInterface $relationshipField;
+  private string $relationshipFieldName;
 
   /**
    * The metadata.
@@ -45,12 +45,12 @@ final class CollectRelationshipMetaEvent extends Event implements RefinableCache
    *
    * @param \Drupal\jsonapi\JsonApiResource\ResourceObject $resource_object
    *   The resource object.
-   * @param \Drupal\Core\Field\EntityReferenceFieldItemListInterface $relationship_field
+   * @param string $relationship_field_name
    *   The relationship field.
    */
-  public function __construct(ResourceObject $resource_object, EntityReferenceFieldItemListInterface $relationship_field) {
+  public function __construct(ResourceObject $resource_object, string $relationship_field_name) {
     $this->resourceObject = $resource_object;
-    $this->relationshipField = $relationship_field;
+    $this->relationshipFieldName = $relationship_field_name;
   }
 
   /**
@@ -66,11 +66,11 @@ final class CollectRelationshipMetaEvent extends Event implements RefinableCache
   /**
    * Gets the relationship field.
    *
-   * @return \Drupal\Core\Field\EntityReferenceFieldItemListInterface
-   *   The relationship field.
+   * @return string
+   *   The relationship field name.
    */
-  public function getRelationshipField(): EntityReferenceFieldItemListInterface {
-    return $this->relationshipField;
+  public function getRelationshipFieldName(): string {
+    return $this->relationshipFieldName;
   }
 
   /**
