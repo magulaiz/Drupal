@@ -253,10 +253,7 @@ class FieldBlock extends BlockBase implements ContextAwarePluginInterface, Conta
     $form['formatter']['label'] = [
       '#type' => 'select',
       '#title' => $this->t('Label'),
-      // @todo resolve this in https://www.drupal.org/project/drupal/issues/2933924.
-      '#options' => [
-        $this->getFieldLabelOptions(),
-      ],
+      '#options' => $this->getFieldLabelOptions(),
       '#default_value' => $config['formatter']['label'],
     ];
 
