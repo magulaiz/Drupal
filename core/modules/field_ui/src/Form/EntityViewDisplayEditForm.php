@@ -8,6 +8,7 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
 use Drupal\field_ui\FieldUI;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Drupal\field\GetFieldLabelOptionsTrait;
 
 /**
  * Edit form for the EntityViewDisplay entity type.

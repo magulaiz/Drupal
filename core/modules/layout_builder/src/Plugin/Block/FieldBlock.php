@@ -23,7 +23,7 @@ use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Drupal\field_ui\Form\GetFieldLabelOptionsTrait;
+use Drupal\field\GetFieldLabelOptionsTrait;
 
 /**
  * Provides a block that renders a field from an entity.
