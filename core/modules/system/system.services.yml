@@ -12,6 +12,7 @@ services:
       - { name: access_check, applies_to: _access_system_update }
   system.manager:
     class: Drupal\system\SystemManager
+  Drupal\system\SystemManager: '@system.manager'
   system.breadcrumb.default:
     class: Drupal\system\PathBasedBreadcrumbBuilder
     tags:

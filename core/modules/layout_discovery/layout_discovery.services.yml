@@ -2,6 +2,8 @@ services:
   plugin.manager.core.layout:
     class: Drupal\Core\Layout\LayoutPluginManager
     autowire: true
+  Drupal\Core\Layout\LayoutPluginManagerInterface: '@plugin.manager.core.layout'
   layout.icon_builder:
     class: Drupal\Core\Layout\Icon\SvgIconBuilder
     shared: false
+  Drupal\Core\Layout\Icon\IconBuilderInterface: '@layout.icon_builder'

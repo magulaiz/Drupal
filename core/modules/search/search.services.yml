@@ -8,11 +8,13 @@ services:
 
   search.search_page_repository:
     class: Drupal\search\SearchPageRepository
+  Drupal\search\SearchPageRepositoryInterface: '@search.search_page_repository'
 
   search.index:
     class: Drupal\search\SearchIndex
     tags:
       - { name: backend_overridable }
+  Drupal\search\SearchIndexInterface: '@search.index'
 
   search.text_processor:
     class: Drupal\search\SearchTextProcessor

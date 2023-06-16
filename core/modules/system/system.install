@@ -516,8 +516,7 @@ function system_requirements($phase) {
     }
     else {
       // Make sure at least one supported database driver exists.
-      $drivers = drupal_detect_database_types();
-      if (empty($drivers)) {
+      if (empty(Database::getDriverList()->getInstallableList())) {
         $database_ok = FALSE;
         $pdo_message = t('Your web server does not appear to support any common PDO database extensions. Check with your hosting provider to see if they support PDO (PHP Data Objects) and offer any databases that <a href=":drupal-databases">Drupal supports</a>.', [
           ':drupal-databases' => 'https://www.drupal.org/docs/system-requirements/database-server-requirements',
@@ -1532,6 +1531,37 @@ function system_requirements($phase) {
     }
   }
 
+  // Add warning when twig debug option is enabled.
+  if ($phase === 'runtime') {
+    $twig_debug = \Drupal::state()->get('twig_debug', FALSE);
+    $twig_cache_disable = \Drupal::state()->get('twig_cache_disable', FALSE);
+    if ($twig_debug || $twig_cache_disable) {
+      $requirements['twig_debug_enabled'] = [
+        'title' => t('Twig development mode'),
+        'value' => t('Twig development mode settings are turned on. Go to @link to disable them.', [
+          '@link' => Link::createFromRoute(
+            'development settings page',
+            'system.development_settings',
+          )->toString(),
+        ]),
+        'severity' => REQUIREMENT_WARNING,
+      ];
+    }
+    $render_cache_disabled = \Drupal::state()->get('disable_rendered_output_cache_bins', FALSE);
+    if ($render_cache_disabled) {
+      $requirements['render_cache_disabled'] = [
+        'title' => t('Markup caching disabled'),
+        'value' => t('Render cache, dynamic page cache, and page cache are bypassed. Go to @link to enable them.', [
+          '@link' => Link::createFromRoute(
+            'development settings page',
+            'system.development_settings',
+          )->toString(),
+        ]),
+        'severity' => REQUIREMENT_WARNING,
+      ];
+    }
+  }
+
   return $requirements;
 }
 
@@ -1559,6 +1589,9 @@ function system_install() {
  * Implements hook_schema().
  */
 function system_schema() {
+  // @deprecated The sequences table has been deprecated in drupal:10.2.0 and is
+  // removed from drupal:12.0.0. See https://www.drupal.org/node/3220378.
+  // @todo: Remove sequences table in Drupal 12. See https://www.drupal.org/i/3335756
   $schema['sequences'] = [
     'description' => 'Stores IDs.',
     'fields' => [
@@ -1779,6 +1812,25 @@ function system_update_10100(&$sandbox = NULL) {
       ];
       $schema->changeField($table, 'expire', 'expire', $new);
     }
+  }
+
+}
+
+/**
+ * Change the {batch} table [bid] field to serial.
+ */
+function system_update_10101(&$sandbox = NULL) {
+  $connection = \Drupal::database();
+  $schema = $connection->schema();
+
+  // Update batch table.
+  if ($schema->tableExists('batch')) {
+    $schema->changeField('batch', 'bid', 'bid', [
+      'description' => 'Primary Key: Unique batch ID.',
+      'type' => 'serial',
+      'unsigned' => TRUE,
+      'not null' => TRUE,
+    ]);
   }
 
 }

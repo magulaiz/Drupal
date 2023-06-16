@@ -4,3 +4,4 @@ services:
     autowire: true
     tags:
       - { name: plugin_manager_cache_clear }
+  Drupal\breakpoint\BreakpointManagerInterface: '@breakpoint.manager'

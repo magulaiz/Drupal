@@ -3,6 +3,7 @@ services:
     autowire: true
   media_library.ui_builder:
     class: Drupal\media_library\MediaLibraryUiBuilder
+  Drupal\media_library\MediaLibraryUiBuilder: '@media_library.ui_builder'
   media_library.route_subscriber:
     class: Drupal\media_library\Routing\RouteSubscriber
     tags:

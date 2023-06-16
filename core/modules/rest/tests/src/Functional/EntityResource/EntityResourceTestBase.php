@@ -8,6 +8,7 @@ use Drupal\Component\Utility\Random;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheableResponseInterface;
 use Drupal\Core\Cache\CacheableMetadata;
+use Drupal\Core\Cache\CacheRedirect;
 use Drupal\Core\Config\Entity\ConfigEntityInterface;
 use Drupal\Core\Entity\ContentEntityNullStorage;
 use Drupal\Core\Entity\EntityInterface;
@@ -87,20 +88,18 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
   protected static $patchProtectedFieldNames;
 
   /**
-   * The unique field names.
+   * A list of fields that need a unique value.
    *
-   * The fields that need a different (random) value for each new entity created
-   * by a POST request.
+   * This is for each new each entity created by a POST request.
    *
    * @var string[]
    */
   protected static $uniqueFieldNames = [];
 
   /**
-   * The field name for the label.
+   * Optionally specify which field is the 'label' field.
    *
-   * Optionally specify which field is the 'label' field. Some entities do not
-   * specify a 'label' entity key. For example: User.
+   * Some entities do not specify a 'label' entity key. For example: User.
    *
    * @see ::getInvalidNormalizedEntityToCreate
    *
@@ -537,9 +536,8 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
       $found_cached_200_response = FALSE;
       $other_cached_responses_are_4xx = TRUE;
       foreach ($cache_items as $cache_item) {
-        $cached_data = unserialize($cache_item->data);
-        if (!isset($cached_data['#cache_redirect'])) {
-          $cached_response = $cached_data['#response'];
+        $cached_response = unserialize($cache_item->data);
+        if (!$cached_response instanceof CacheRedirect) {
           if ($cached_response->getStatusCode() === 200) {
             $found_cached_200_response = TRUE;
           }

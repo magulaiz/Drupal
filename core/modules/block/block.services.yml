@@ -10,3 +10,4 @@ services:
   block.repository:
     class: Drupal\block\BlockRepository
     autowire: true
+  Drupal\block\BlockRepositoryInterface: '@block.repository'

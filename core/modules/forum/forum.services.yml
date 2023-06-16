@@ -19,6 +19,7 @@ services:
     class: Drupal\forum\ForumIndexStorage
     tags:
       - { name: backend_overridable }
+  Drupal\forum\ForumIndexStorageInterface: '@forum.index_storage'
 
   forum.uninstall_validator:
     class: Drupal\forum\ForumUninstallValidator

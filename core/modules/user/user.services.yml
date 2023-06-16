@@ -49,6 +49,7 @@ services:
   Drupal\user\UserAuthInterface: '@user.auth'
   user.permissions:
     class: Drupal\user\PermissionHandler
+  Drupal\user\PermissionHandlerInterface: '@user.permissions'
   user.current_user_context:
     class: Drupal\user\ContextProvider\CurrentUserContext
     tags:
@@ -57,6 +58,7 @@ services:
     class: Drupal\user\ToolbarLinkBuilder
   user.flood_control:
     class: Drupal\user\UserFloodControl
+  Drupal\user\UserFloodControlInterface: '@user.flood_control'
   user.flood_subscriber:
     class: Drupal\user\EventSubscriber\UserFloodSubscriber
     tags:

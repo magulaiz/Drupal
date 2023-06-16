@@ -11,8 +11,10 @@ services:
   Drupal\book\BookManagerInterface: '@book.manager'
   book.outline:
     class: Drupal\book\BookOutline
+  Drupal\book\BookOutline: '@book.outline'
   book.export:
     class: Drupal\book\BookExport
+  Drupal\book\BookExport: '@book.export'
   book.outline_storage:
     class: Drupal\book\BookOutlineStorage
     tags:

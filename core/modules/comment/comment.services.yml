@@ -15,9 +15,11 @@ services:
     class: Drupal\comment\CommentStatistics
     tags:
       - { name: backend_overridable }
+  Drupal\comment\CommentStatisticsInterface: '@comment.statistics'
 
   comment.lazy_builders:
     class: Drupal\comment\CommentLazyBuilders
 
   comment.link_builder:
     class: Drupal\comment\CommentLinkBuilder
+  Drupal\comment\CommentLinkBuilderInterface: '@comment.link_builder'

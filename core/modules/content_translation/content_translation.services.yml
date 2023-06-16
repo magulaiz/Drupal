@@ -4,6 +4,7 @@ services:
 
   content_translation.synchronizer:
     class: Drupal\content_translation\FieldTranslationSynchronizer
+  Drupal\content_translation\FieldTranslationSynchronizerInterface: '@content_translation.synchronizer'
 
   content_translation.subscriber:
     class: Drupal\content_translation\Routing\ContentTranslationRouteSubscriber
@@ -28,3 +29,4 @@ services:
   content_translation.manager:
     class: Drupal\content_translation\ContentTranslationManager
   Drupal\content_translation\ContentTranslationManagerInterface: '@content_translation.manager'
+  Drupal\content_translation\BundleTranslationSettingsInterface: '@content_translation.manager'

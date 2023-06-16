@@ -13,8 +13,10 @@ services:
     parent: default_plugin_manager
   ckeditor5.smart_default_settings:
     class: Drupal\ckeditor5\SmartDefaultSettings
+  Drupal\ckeditor5\SmartDefaultSettings: '@ckeditor5.smart_default_settings'
   ckeditor5.stylesheets.message:
     class: Drupal\ckeditor5\CKEditor5StylesheetsMessage
+  Drupal\ckeditor5\CKEditor5StylesheetsMessage: '@ckeditor5.stylesheets.message'
   ckeditor5.ckeditor5_cache_tag:
     class: Drupal\ckeditor5\EventSubscriber\CKEditor5CacheTag
     tags:

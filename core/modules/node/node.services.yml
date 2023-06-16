@@ -10,6 +10,7 @@ services:
     class: Drupal\node\NodeGrantDatabaseStorage
     tags:
       - { name: backend_overridable }
+  Drupal\node\NodeGrantDatabaseStorageInterface: '@node.grant_storage'
   access_check.node.preview:
     class: Drupal\node\Access\NodePreviewAccessCheck
     tags:

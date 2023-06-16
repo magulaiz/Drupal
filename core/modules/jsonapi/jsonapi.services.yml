@@ -164,8 +164,10 @@ services:
   # Controller.
   jsonapi.entity_resource:
     class: Drupal\jsonapi\Controller\EntityResource
+  Drupal\jsonapi\Controller\EntityResource: '@jsonapi.entity_resource'
   jsonapi.file_upload:
     class: Drupal\jsonapi\Controller\FileUpload
+  Drupal\jsonapi\Controller\FileUpload: '@jsonapi.file_upload'
 
   # Event subscribers.
   jsonapi.custom_query_parameter_names_validator.subscriber:

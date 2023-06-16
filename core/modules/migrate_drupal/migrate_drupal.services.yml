@@ -13,5 +13,7 @@ services:
     arguments: ['migrate_drupal']
   migrate_drupal.field_discovery:
     class: Drupal\migrate_drupal\FieldDiscovery
+  Drupal\migrate_drupal\FieldDiscoveryInterface: '@migrate_drupal.field_discovery'
   migrate_drupal.migration_state:
     class: Drupal\migrate_drupal\MigrationState
+  Drupal\migrate_drupal\MigrationState: '@migrate_drupal.migration_state'

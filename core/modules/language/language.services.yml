@@ -18,6 +18,8 @@ services:
     tags:
       - { name: config.factory.override, priority: -254 }
       - { name: event_subscriber }
+  Drupal\language\Config\LanguageConfigFactoryOverrideInterface: '@language.config_factory_override'
+  Drupal\Core\Config\ConfigFactoryOverrideInterface: '@language.config_factory_override'
   language_converter:
     class: Drupal\language\LanguageConverter
     tags:

@@ -135,7 +135,6 @@ class JsonApiDocumentTopLevelNormalizerTest extends JsonapiKernelTestBase {
     $this->installEntitySchema('taxonomy_term');
     $this->installEntitySchema('file');
     // Add the additional table schemas.
-    $this->installSchema('system', ['sequences']);
     $this->installSchema('node', ['node_access']);
     $this->installSchema('user', ['users_data']);
     $this->installSchema('file', ['file_usage']);
@@ -422,8 +421,7 @@ class JsonApiDocumentTopLevelNormalizerTest extends JsonapiKernelTestBase {
   }
 
   /**
-   * Test the message and exceptions thrown when we are requesting additional
-   * field values for Label only resource.
+   * Tests the message and exceptions when requesting a Label only resource.
    */
   public function testAliasFieldRouteException() {
     $this->assertSame('uid', $this->resourceTypeRepository->getByTypeName('node--article')->getPublicName('uid'));

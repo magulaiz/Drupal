@@ -8,6 +8,7 @@ services:
       - { name: access_check, applies_to: _access_update_manager }
   update.manager:
     class: Drupal\update\UpdateManager
+  Drupal\update\UpdateManagerInterface: '@update.manager'
   update.processor:
     class: Drupal\update\UpdateProcessor
   Drupal\update\UpdateProcessorInterface: '@update.processor'

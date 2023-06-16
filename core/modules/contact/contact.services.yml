@@ -8,6 +8,7 @@ services:
       - { name: access_check, applies_to: _access_contact_personal_tab }
   contact.mail_handler:
     class: Drupal\contact\MailHandler
+  Drupal\contact\MailHandlerInterface: '@contact.mail_handler'
   logger.channel.contact:
     class: Drupal\Core\Logger\LoggerChannel
     factory: ['@logger.factory', 'get']
