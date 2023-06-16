@@ -105,5 +105,6 @@
 
 .site-header__inner__container {
   display: flex;
+  align-items: center;
   justify-content: space-between;
 }
