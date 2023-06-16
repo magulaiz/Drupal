@@ -7,13 +7,11 @@ namespace Drupal\jsonapi\Events;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Cache\RefinableCacheableDependencyInterface;
 use Drupal\Core\Cache\RefinableCacheableDependencyTrait;
-use Drupal\Core\Field\EntityReferenceFieldItemListInterface;
 use Drupal\jsonapi\JsonApiResource\ResourceObject;
 use Drupal\Component\EventDispatcher\Event;
 
 /**
- * An event used for collecting resource object metadata of a JSON:API resource
- * type relation.
+ * An event used for collecting resource object metadata of a JSON:API resource type relation.
  */
 final class CollectRelationshipMetaEvent extends Event implements RefinableCacheableDependencyInterface {
 

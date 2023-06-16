@@ -563,19 +563,28 @@ class JsonApiFunctionalTest extends JsonApiFunctionalTestBase {
       'enabled_type' => 'node--article',
       'enabled_id' => $node->uuid(),
       'fields' => ['title'],
+      'user_is_superuser_context' => TRUE,
     ]);
+
+    $this->drupalLogin($this->user);
 
     // Tests if relationship has correct metadata when loading a single resource.
     $result = Json::decode($this->drupalGet('jsonapi/node/article/' . $node->uuid()));
-    $this->assertEquals(['resource_meta_title' => $node->getTitle()], $result['data']['meta']);
+    $expectedMeta = [
+      'resource_meta_user_is_superuser' => 'no',
+      'resource_meta_user_id' => $this->user->id(),
+      'resource_meta_title' => $node->getTitle(),
+    ];
+    $this->assertEquals($expectedMeta, $result['data']['meta']);
     // Test if the cache tags bubbled up
     $this->assertSession()->responseHeaderContains('X-Drupal-Cache-Tags', 'jsonapi_test_meta_events.object_meta');
+    $this->assertSession()->responseHeaderContains('X-Drupal-Cache-Contexts', 'user.is_super_user');
 
     // Test if relationship has correct metadata when loading a resource collection
     $result = Json::decode($this->drupalGet('jsonapi/node/article'));
     foreach ($result['data'] as $resource) {
       if ($resource['id'] === $node->uuid()) {
-        $this->assertEquals(['resource_meta_title' => $node->getTitle()], $resource['meta']);
+        $this->assertEquals($expectedMeta, $resource['meta']);
       }
 
       else {
@@ -586,6 +595,32 @@ class JsonApiFunctionalTest extends JsonApiFunctionalTestBase {
 
     // Test if the cache tags bubbled up
     $this->assertSession()->responseHeaderContains('X-Drupal-Cache-Tags', 'jsonapi_test_meta_events.object_meta');
+    $this->assertSession()->responseHeaderContains('X-Drupal-Cache-Contexts', 'user.is_super_user');
+
+    // Now try the same requests with a superuser, see if we get other caches
+    $this->mink->resetSessions();
+    $this->drupalLogin($this->rootUser);
+
+    // Tests if relationship has correct metadata when loading a single resource.
+    $result = Json::decode($this->drupalGet('jsonapi/node/article/' . $node->uuid()));
+    $expectedMeta = [
+      'resource_meta_user_is_superuser' => 'yes',
+      'resource_meta_user_id' => '1',
+      'resource_meta_title' => $node->getTitle(),
+    ];
+    $this->assertEquals($expectedMeta, $result['data']['meta']);
+    // Test if the cache tags bubbled up
+    $this->assertSession()->responseHeaderContains('X-Drupal-Cache-Tags', 'jsonapi_test_meta_events.object_meta');
+    $this->assertSession()->responseHeaderContains('X-Drupal-Cache-Contexts', 'user.is_super_user');
+    $this->assertSession()->responseHeaderEquals('X-Drupal-Dynamic-Cache', 'MISS');
+
+    // Tests if relationship has correct metadata when loading a single resource.
+    $result = Json::decode($this->drupalGet('jsonapi/node/article/' . $node->uuid()));
+    $this->assertEquals($expectedMeta, $result['data']['meta']);
+    // Test if the cache tags bubbled up
+    $this->assertSession()->responseHeaderContains('X-Drupal-Cache-Tags', 'jsonapi_test_meta_events.object_meta');
+    $this->assertSession()->responseHeaderContains('X-Drupal-Cache-Contexts', 'user.is_super_user');
+    $this->assertSession()->responseHeaderEquals('X-Drupal-Dynamic-Cache', 'HIT');
   }
 
   /**

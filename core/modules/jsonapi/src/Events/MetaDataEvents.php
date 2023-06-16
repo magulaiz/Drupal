@@ -5,8 +5,7 @@ declare(strict_types = 1);
 namespace Drupal\jsonapi\Events;
 
 /**
- * Contains all events emitted that allow changing metadata for JSON:API
- * resources and relationships.
+ * Contains all events emitted that allow changing metadata for JSON:API resources and relationships.
  *
  * @see \Drupal\jsonapi\Events\CollectRelationshipMetaEvent
  * @see \Drupal\jsonapi\Events\CollectResourceObjectMetaEvent

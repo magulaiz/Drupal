@@ -25,6 +25,7 @@ class MetaEventSubscriber implements EventSubscriberInterface {
       'enabled_type' => FALSE,
       'enabled_id' => FALSE,
       'fields' => FALSE,
+      'user_is_superuser_context' => FALSE,
     ]);
 
     // Only continue if the recourse type is enabled.
@@ -39,6 +40,12 @@ class MetaEventSubscriber implements EventSubscriberInterface {
 
     if ($config['fields'] === FALSE) {
       return;
+    }
+
+    if ($config['user_is_superuser_context']) {
+      $event->addCacheContexts(['user.is_super_user']);
+      $event->setMeta('resource_meta_user_is_superuser', (int) \Drupal::currentUser()->id() === 1 ? 'yes' : 'no');
+      $event->setMeta('resource_meta_user_id', \Drupal::currentUser()->id());
     }
 
     // Fields expect an array of field names, the value of the fields are then
@@ -56,6 +63,7 @@ class MetaEventSubscriber implements EventSubscriberInterface {
       'enabled_id' => FALSE,
       'enabled_relation' => FALSE,
       'fields' => FALSE,
+      'user_is_superuser_context' => FALSE,
     ]);
 
     // Only continue if the recourse type is enabled.
@@ -76,9 +84,15 @@ class MetaEventSubscriber implements EventSubscriberInterface {
     $relationshipFieldName = $event->getRelationshipFieldName();
 
     $field = $event->getResourceObject()->getField($relationshipFieldName);
-    if($field instanceof EntityReferenceFieldItemListInterface) {
+    $referencedEntities = [];
+    if ($field instanceof EntityReferenceFieldItemListInterface) {
       $referencedEntities = $field->referencedEntities();
       $event->addCacheTags(['jsonapi_test_meta_events.relationship_meta']);
+    }
+
+    if ($config['user_is_superuser_context']) {
+      $event->addCacheContexts(['user.is_super_user']);
+      $event->setMetaValue('resource_meta_user_is_superuser', (int) \Drupal::currentUser()->id() === 1 ? 'yes' : 'no');
     }
 
     // If no fields are specified we just add a list of uuids to the relations
