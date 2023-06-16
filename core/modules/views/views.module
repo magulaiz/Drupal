@@ -565,6 +565,9 @@ function views_hook_info() {
   $hooks['field_views_data_alter'] = [
     'group' => 'views',
   ];
+  $hooks['field_views_data_views_data_alter'] = [
+    'group' => 'views',
+  ];
 
   return $hooks;
 }
