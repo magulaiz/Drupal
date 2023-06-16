@@ -56,13 +56,7 @@ class GenerateTheme extends Command {
    */
   private $source_theme;
 
-  /**
-   * Array of filepaths, directories, or globs relative to the theme root.
-   * Matching files/dirs will be removed from $this->temp_dir before other operations.
-   *
-   * @var String[]
-   */
-  private $paths_to_delete;
+  private $source_theme_info;
 
   /**
    * Array of filepaths, directories, or globs relative to the theme root.
@@ -70,7 +64,10 @@ class GenerateTheme extends Command {
    *
    * @var String[]
    */
-  private $paths_to_skip_edit;
+  private $paths_to_delete = [
+    '/src/StarterKit.php',
+    '/*.starterkit.yml'
+  ];
 
   /**
    * Array of filepaths, directories, or globs relative to the theme root.
@@ -78,14 +75,28 @@ class GenerateTheme extends Command {
    *
    * @var String[]
    */
-  private $paths_to_skip_rename;
+  private $paths_to_skip_edit = [];
+
+  /**
+   * Array of filepaths, directories, or globs relative to the theme root.
+   * Matching files/dirs will be removed from $this->temp_dir before other operations.
+   *
+   * @var String[]
+   */
+  private $paths_to_skip_rename = [];
 
   /**
    * Key-value pairs that will be set in the new theme's *.info.yml file.
    *
    * @var []
    */
-  private $info_overrides;
+  private $info_overrides = [
+    'hidden' => NULL,
+    'starterkit' => NULL,
+    'version' => '1.0.0',
+  ];
+
+  private $destination_theme;
 
   /**
    * The human-readable name of the destination theme.
@@ -100,6 +111,20 @@ class GenerateTheme extends Command {
    * @var String
    */
   private $destination_theme_description;
+
+  /**
+   * Storage of find-and-replace strings.
+   *  - old patterns point to the source theme
+   *  - new patterns point to the destination theme
+   *  - token patterns are strings that do not contain and are not contained by either old or new patterns
+   *
+   * @var array
+   */
+  private $find_and_replace_patterns = [
+    'old' => [],
+    'new' => [],
+    'token' => [],
+  ];
 
   /**
    * {@inheritdoc}
@@ -136,6 +161,8 @@ class GenerateTheme extends Command {
 
     // Get all command args & options.
     $destination_theme = $input->getArgument('machine-name');
+    $this->destination_theme = $destination_theme;
+
     $destination = trim($input->getOption('path'), '/') . '/' . $destination_theme;
     $this->source_theme_name = $input->getOption('starterkit');
     $this->destination_theme_label = $input->getOption('name') ?: $destination_theme;
@@ -164,29 +191,26 @@ class GenerateTheme extends Command {
     // Alter THEMENAME.info.yml for new theme.
     $this->overrideThemeInfo();
 
-    /**
-     * We replace theme names with tokens that do not overlap with
-     * source or destination theme names. This prevents issues where
-     * similar source & destination theme names end up re-running
-     * on the same file name/content items.
-     */
-
-    // Replace theme name usage in filenames.
-    $this->prepareForRename();
-
-    // Replace theme name usage in file contents.
-    $this->prepareForContentEdit();
+    // Get all the source/dest/token strings needed for renaming & editing.
+    $this->prepareForRenameAndEdit();
 
     // Replace temporary placeholder tokens with final strings.
     $this->doRenameAndEdit();
 
-    // @todo This is specific to the starterkit_theme. We need to find a way to generalize this.
-    // Readme is specific to Starterkit, so remove it from the generated theme.
+    // @todo: This is specific to the starterkit_theme.
+    // We need to either find a way to generalize this or move it into the postProcess.
     $readme_file = "$this->tmp_dir/README.md";
     if (!file_put_contents($readme_file, "$destination_theme theme, generated from $this->source_theme_name. Additional information on generating themes can be found in the [Starterkit documentation](https://www.drupal.org/docs/core-modules-and-themes/core-themes/starterkit-theme).")) {
       $this->io->getErrorStyle()->error("The readme could not be rewritten.");
       return 1;
     }
+
+    // @todo: Re-add the StarterKit::postProcess() call
+
+    // Move altered theme to final destination.
+    $filesystem->mirror($this->tmp_dir, $destination);
+
+    return 0;
   }
 
   /**
@@ -214,6 +238,8 @@ class GenerateTheme extends Command {
       $io->getErrorStyle()->error("Theme source theme $source_theme_name is not a valid starter kit.");
       return false;
     }
+
+    return true;
   }
 
   /**
@@ -225,7 +251,7 @@ class GenerateTheme extends Command {
     $source_path = $this->source_theme->getPath();
     $themename = $this->source_theme_name;
 
-    if ($config_file = file_get_contents($source_path . '/' . $themename . 'starterkit.yml')) {
+    if ($config_file = file_get_contents($source_path . '/' . $themename . '.starterkit.yml')) {
       $config = Yaml::decode($config_file);
 
       if (isset($config['delete']) && is_array($config['delete'])) {
@@ -255,8 +281,6 @@ class GenerateTheme extends Command {
       if (isset($config['info']) && is_array($config['info'])) {
         $this->info_overrides = $config['info'];
       }
-    } else {
-      // @todo: set defaults
     }
   }
 
@@ -270,10 +294,13 @@ class GenerateTheme extends Command {
     if (isset($paths) && is_array($paths) && !empty($paths)) {
       $finder = new Finder();
       $filesystem = new Filesystem();
-      foreach ($paths as $path) {
+      foreach (array_map(fn ($path) => trim($path, '/'), $paths) as $path) {
         if (is_string($path)) {
-          $files = $finder->in($this->tmp_dir)->name($path);
-          $filesystem->remove($files);
+          $files = $finder->in($this->tmp_dir)->path($path);
+          foreach ($files as $file) {
+            $filesystem->remove($file->getRealPath());
+          }
+          // @todo: Is there a way to find & remove empty directories?
         }
       }
     }
@@ -286,14 +313,15 @@ class GenerateTheme extends Command {
    */
   private function overrideThemeInfo() {
     $info_overrides = $this->info_overrides;
-    if (isset($info_overrides) && is_array($info_overrides) && !empty($info_overrides)) {
-      $theme = $this->source_theme_name;
-      $tmp_dir = $this->tmp_dir;
-      $source_info_file = "$tmp_dir/$theme.info.yml";
+    $theme = $this->source_theme_name;
+    $tmp_dir = $this->tmp_dir;
+    $source_info_file = "$tmp_dir/$theme.info.yml";
 
-      if ($source_info_contents = file_get_contents($source_info_file)) {
-        $source_info = Yaml::decode($source_info_contents);
+    if ($source_info_contents = file_get_contents($source_info_file)) {
+      $source_info = Yaml::decode($source_info_contents);
+      $this->source_theme_info = $source_info;
 
+      if (isset($info_overrides) && is_array($info_overrides) && !empty($info_overrides)) {
         foreach ($info_overrides as $key => $value) {
           if ($value === NULL) {
             unset($source_info[$key]);
@@ -301,49 +329,162 @@ class GenerateTheme extends Command {
             $source_info[$key] = $value;
           }
         }
+      }
 
-        $source_info_contents = Yaml::encode($source_info);
-        file_put_contents($source_info_file, $source_info_contents);
+      $source_info_contents = Yaml::encode($source_info);
+      file_put_contents($source_info_file, $source_info_contents);
+    }
+
+  }
+
+  /**
+   * Compiles strings from source theme that will need replaced with strings from destination theme.
+   */
+  private function prepareForRenameAndEdit() {
+    $old_machine_name = $this->source_theme_name;
+    $old_label = $this->source_theme_info['name'] ?? $this->source_theme_name;
+    $new_machine_name = $this->destination_theme;
+    $new_label = $this->destination_theme_label;
+
+    $this->find_and_replace_patterns = [
+      'old' => [
+        'machine_name' => $old_machine_name,
+        'label' => $old_label,
+        'machine_class_name' => u($old_machine_name)->camel()->title(),
+        'label_class_name' => u($old_label)->camel()->title(),
+      ],
+      'new' => [
+        'machine_name' => $new_machine_name,
+        'label' => $new_label,
+        'machine_class_name' => u($new_machine_name)->camel()->title(),
+        'label_class_name' => u($new_label)->camel()->title(),
+      ]
+    ];
+
+    $this->generateFindAndReplaceTokens();
+  }
+
+  /**
+   * Generates an intermidiary token that does not contain, and is not contained
+   * within the source or destination theme strings. This prevents issues where
+   * source/destination string overlaps result in recursive renaming.
+   *
+   * @return void
+   */
+  private function generateFindAndReplaceTokens() {
+    $old_strings = $this->find_and_replace_patterns['old'];
+    $new_strings = $this->find_and_replace_patterns['new'];
+
+    $this->find_and_replace_patterns['token'] = [];
+
+    foreach ($old_strings as $key => $string) {
+      if (isset($new_strings[$key])) {
+        $token = NULL;
+        $token_needs_generated = TRUE;
+        while ($token_needs_generated) {
+          $token = uniqid('sk');
+
+          $token_needs_generated = (
+            str_contains($token, $old_strings[$key]) ||
+            str_contains($token, $new_strings[$key]) ||
+            str_contains($old_strings[$key], $token) ||
+            str_contains($new_strings[$key], $token)
+          );
+        }
+
+        $this->find_and_replace_patterns['token'][$key] = $token;
       }
     }
   }
 
-  private function prepareForRename() {
-    $machine_name = $this->source_theme_name;
-    $class_name = u($machine_name)->camel()->title();
-    $label = $this->source_theme->info['name'];
-
-    $finder = new Finder();
-    $files = $finder
-      ->in($this->tmp_dir)
-      ->files()
-      ->name($machine_name)
-      ->filter(fn ($file) => !in_array($file->getRelativePathname(), $this->paths_to_skip_rename));
-
-    foreach ($files as $file) {
-      // @todo Replace source string with token
-    }
-  }
-
-  private function prepareForContentEdit() {
-    $machine_name = $this->source_theme_name;
-    $class_name = u($machine_name)->camel()->title();
-    $label = $this->source_theme->info['name'];
-
-    $finder = new Finder();
-    $files = $finder
-      ->in($this->tmp_dir)
-      ->files()
-      ->contains($machine_name)
-      ->filter(fn ($file) => !in_array($file->getRelativePathname(), $this->paths_to_skip_edit));
-
-    foreach ($files as $file) {
-      // @todo Replace source string with token
-    }
-  }
-
+  /**
+   * Replaces source strings with destination strings by way of an intermediary token
+   */
   private function doRenameAndEdit() {
-    // @todo Replace token with destination string
+    $fs = new Filesystem();
+
+    $patterns = $this->find_and_replace_patterns;
+
+    /**
+     * Replace source strings with tokens, then tokens with destination strings.
+     * File contents must be changed first so Finder filter is given the correct paths.
+     */
+
+    // Replace source patterns with tokens in file contents
+    foreach ($patterns['token'] as $pattern_id => $token) {
+      $old_str = $patterns['old'][$pattern_id];
+
+      $finder = new Finder();
+      $files = $finder
+        ->in($this->tmp_dir)
+        ->files()
+        ->contains("/$old_str/")
+        ->filter(fn ($file) => !in_array($file->getRelativePathname(), $this->paths_to_skip_edit));
+
+      foreach ($files as $file) {
+        $contents = file_get_contents($file->getRealPath());
+        $contents = str_replace($old_str, $token, $contents);
+        file_put_contents($file->getRealPath(), $contents);
+      }
+    }
+
+    // Replace token with destination patterns in file contents
+    foreach ($patterns['token'] as $pattern_id => $token) {
+      $new_str = $patterns['new'][$pattern_id];
+
+      $finder = new Finder();
+      $files = $finder
+        ->in($this->tmp_dir)
+        ->files()
+        ->contains("/$token/")
+        ->filter(fn ($file) => !in_array($file->getRelativePathname(), $this->paths_to_skip_edit));
+
+      foreach ($files as $file) {
+        $contents = file_get_contents($file->getRealPath());
+        $contents = str_replace($token, $new_str, $contents);
+        file_put_contents($file->getRealPath(), $contents);
+      }
+    }
+
+    // Replace source patterns with tokens in filenames
+    foreach ($patterns['token'] as $pattern_id => $token) {
+      $old_str = $patterns['old'][$pattern_id];
+
+      $finder = new Finder();
+      $files = $finder
+        ->in($this->tmp_dir)
+        ->files()
+        ->name("/$old_str/")
+        ->filter(fn ($file) => !in_array($file->getRelativePathname(), $this->paths_to_skip_rename));
+
+      foreach ($files as $file) {
+        $filepath_segments = explode('/', $file->getRealPath());
+        $filename = array_pop($filepath_segments);
+        $filename = str_replace($old_str, $token, $filename);
+        $filepath_segments[] = $filename;
+        $fs->rename($file->getRealPath(), implode('/', $filepath_segments));
+      }
+    }
+
+    // Replace tokens with destination patterns in filenames
+    foreach ($patterns['token'] as $pattern_id => $token) {
+      $new_str = $patterns['new'][$pattern_id];
+
+      $finder = new Finder();
+      $files = $finder
+        ->in($this->tmp_dir)
+        ->files()
+        ->name("/$token/")
+        ->filter(fn ($file) => !in_array($file->getRelativePathname(), $this->paths_to_skip_rename));
+
+      foreach ($files as $file) {
+        $filepath_segments = explode('/', $file->getRealPath());
+        $filename = array_pop($filepath_segments);
+        $filename = str_replace($token, $new_str, $filename);
+        $filepath_segments[] = $filename;
+        $fs->rename($file->getRealPath(), implode('/', $filepath_segments));
+      }
+    }
   }
 
   /**
