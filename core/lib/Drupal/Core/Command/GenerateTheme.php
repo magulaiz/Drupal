@@ -31,7 +31,7 @@ class GenerateTheme extends Command {
   /**
    * The Symfony output decorator.
    *
-   * @var SymfonyStyle
+   * @var Symfony\Component\Console\Style\SymfonyStyle
    */
   private $io;
 
@@ -43,7 +43,7 @@ class GenerateTheme extends Command {
   private $tmp_dir;
 
   /**
-   * The machine name of the source theme
+   * The machine name of the source theme.
    *
    * @var String
    */
@@ -52,13 +52,15 @@ class GenerateTheme extends Command {
   /**
    * The theme to be duplicated.
    *
-   * @var Extension
+   * @var Drupal\Core\Extension\Extension
    */
   private $source_theme;
 
   private $source_theme_info;
 
   /**
+   * Paths to delete.
+   *
    * Array of filepaths, directories, or globs relative to the theme root.
    * Matching files/dirs will be removed from $this->temp_dir before other operations.
    *
@@ -66,20 +68,24 @@ class GenerateTheme extends Command {
    */
   private $paths_to_delete = [
     '/src/StarterKit.php',
-    '/*.starterkit.yml'
+    '/*.starterkit.yml',
   ];
 
   /**
+   * Paths to skip editing.
+   *
    * Array of filepaths, directories, or globs relative to the theme root.
-   * Matching files/dirs will be removed from $this->temp_dir before other operations.
+   * Matching files/dirs will not have their contents edited.
    *
    * @var String[]
    */
   private $paths_to_skip_edit = [];
 
   /**
+   * Paths to skip renaming.
+   *
    * Array of filepaths, directories, or globs relative to the theme root.
-   * Matching files/dirs will be removed from $this->temp_dir before other operations.
+   * Matching files/dirs will not be renamed.
    *
    * @var String[]
    */
@@ -114,6 +120,7 @@ class GenerateTheme extends Command {
 
   /**
    * Storage of find-and-replace strings.
+   *
    *  - old patterns point to the source theme
    *  - new patterns point to the destination theme
    *  - token patterns are strings that do not contain and are not contained by either old or new patterns
@@ -216,34 +223,36 @@ class GenerateTheme extends Command {
   /**
    * Performs various checks to ensure command failures happen more gracefully.
    *
-   * @param String $destination_theme
-   * @param String $destination
-   * @param String $source_theme_name
-   * @return Boolean
+   * @param string $destination
+   *   Path of the destination theme.
+   * @param string $source_theme_name
+   *   Path of the source theme.
+   *
+   * @return bool
    */
   private function checkValidCommand($destination, $source_theme_name) {
     $io = $this->io;
 
     if (is_dir($destination)) {
       $io->getErrorStyle()->error("Theme could not be generated because the destination directory $destination exists already.");
-      return false;
+      return FALSE;
     }
 
     if (!$source_theme = $this->getThemeInfo($source_theme_name)) {
       $io->getErrorStyle()->error("Theme source theme $source_theme_name cannot be found.");
-      return false;
+      return FALSE;
     }
 
     if (!$this->isStarterkitTheme($source_theme)) {
       $io->getErrorStyle()->error("Theme source theme $source_theme_name is not a valid starter kit.");
-      return false;
+      return FALSE;
     }
 
-    return true;
+    return TRUE;
   }
 
   /**
-   * Reads THEMENAME.starterkit.yml
+   * Reads THEMENAME.starterkit.yml.
    *
    * @return void
    */
@@ -291,7 +300,7 @@ class GenerateTheme extends Command {
    */
   private function removeDeletableFiles() {
     $paths = $this->paths_to_delete;
-    if (isset($paths) && is_array($paths) && !empty($paths)) {
+    if (is_array($paths) && !empty($paths)) {
       $finder = new Finder();
       $filesystem = new Filesystem();
       foreach (array_map(fn ($path) => trim($path, '/'), $paths) as $path) {
@@ -325,7 +334,8 @@ class GenerateTheme extends Command {
         foreach ($info_overrides as $key => $value) {
           if ($value === NULL) {
             unset($source_info[$key]);
-          } else {
+          }
+          else {
             $source_info[$key] = $value;
           }
         }
@@ -358,14 +368,16 @@ class GenerateTheme extends Command {
         'label' => $new_label,
         'machine_class_name' => u($new_machine_name)->camel()->title(),
         'label_class_name' => u($new_label)->camel()->title(),
-      ]
+      ],
     ];
 
     $this->generateFindAndReplaceTokens();
   }
 
   /**
-   * Generates an intermidiary token that does not contain, and is not contained
+   * Generates intermediary tokens.
+   *
+   * Generates tokens that do not contain, and are not contained
    * within the source or destination theme strings. This prevents issues where
    * source/destination string overlaps result in recursive renaming.
    *
@@ -398,7 +410,7 @@ class GenerateTheme extends Command {
   }
 
   /**
-   * Replaces source strings with destination strings by way of an intermediary token
+   * Replaces source strings with destination strings by way of an intermediary token.
    */
   private function doRenameAndEdit() {
     $fs = new Filesystem();
@@ -529,4 +541,5 @@ class GenerateTheme extends Command {
 
     return $info['starterkit'] ?? FALSE === TRUE;
   }
+
 }
