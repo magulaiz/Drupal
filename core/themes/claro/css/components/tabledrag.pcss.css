@@ -232,6 +232,9 @@ body.drag {
 .tabledrag-cell-content__item:empty {
   display: none;
 }
+.tabledrag-cell-content__item .form-item {
+  display: inline-table;
+}
 
 .tabledrag-cell-content .indentation,
 [dir="rtl"] .tabledrag-cell-content .indentation {
