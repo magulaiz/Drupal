@@ -149,6 +149,7 @@
    *
    * @prop {function} RegExp
    * @prop {function} Function
+   * @prop {function} Array
    * @prop {function} Number
    */
   states.Dependent.comparisons = {
