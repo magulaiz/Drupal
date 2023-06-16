@@ -141,8 +141,7 @@ class RandomTest extends TestCase {
     $random = new Random();
     $this->expectException(\RuntimeException::class);
     for ($i = 0; $i <= 100; $i++) {
-      $str = $random->machineName(1, TRUE);
-      $names[$str] = TRUE;
+      $random->machineName(1, TRUE);
     }
   }
 
@@ -158,7 +157,7 @@ class RandomTest extends TestCase {
     for ($i = 0; $i <= 100; $i++) {
       $random->machineName(1);
     }
-    $this->assertTrue(TRUE, 'No exception thrown when uniqueness is not enforced.');
+    $this->expectNotToPerformAssertions();
   }
 
   /**
