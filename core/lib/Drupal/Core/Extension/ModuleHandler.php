@@ -260,7 +260,7 @@ class ModuleHandler implements ModuleHandlerInterface {
    * {@inheritdoc}
    */
   public function loadInclude($module, $type, $name = NULL) {
-    if ($type == 'install') {
+    if ($type === 'install') {
       // Make sure the installation API is available
       include_once $this->root . '/core/includes/install.inc';
     }
