@@ -6,7 +6,7 @@ use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\workspaces\WorkspaceInterface;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 /**
  * Defines the session workspace negotiator.
@@ -39,12 +39,12 @@ class SessionWorkspaceNegotiator implements WorkspaceNegotiatorInterface {
    *
    * @param \Drupal\Core\Session\AccountInterface $current_user
    *   The current user.
-   * @param \Symfony\Component\HttpFoundation\Session\Session $session
+   * @param \Symfony\Component\HttpFoundation\Session\SessionInterface $session
    *   The session.
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    *   The entity type manager.
    */
-  public function __construct(AccountInterface $current_user, Session $session, EntityTypeManagerInterface $entity_type_manager) {
+  public function __construct(AccountInterface $current_user, SessionInterface $session, EntityTypeManagerInterface $entity_type_manager) {
     $this->currentUser = $current_user;
     $this->session = $session;
     $this->workspaceStorage = $entity_type_manager->getStorage('workspace');
