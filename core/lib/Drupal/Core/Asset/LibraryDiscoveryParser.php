@@ -4,6 +4,7 @@ namespace Drupal\Core\Asset;
 
 use Drupal\Component\Serialization\Exception\InvalidDataTypeException;
 use Drupal\Component\Utility\NestedArray;
+use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Asset\Exception\IncompleteLibraryDefinitionException;
 use Drupal\Core\Asset\Exception\InvalidLibrariesOverrideSpecificationException;
 use Drupal\Core\Asset\Exception\InvalidLibraryFileException;
@@ -206,33 +207,26 @@ class LibraryDiscoveryParser {
           elseif ($type == 'css') {
             $options['group'] = $extension_type == 'theme' ? CSS_AGGREGATE_THEME : CSS_AGGREGATE_DEFAULT;
           }
-          // By default, all library assets are files.
+          // All library assets are files by default, except  external URLs.
           if (!isset($options['type'])) {
-            $options['type'] = 'file';
+            $options['type'] = UrlHelper::isExternal($source) ? 'external' : 'file';
           }
-          if ($options['type'] == 'external') {
+          if ($options['type'] === 'external') {
             $options['data'] = $source;
           }
           // Determine the file asset URI.
           else {
             if ($source[0] === '/') {
               // An absolute path maps to DRUPAL_ROOT / base_path().
-              if ($source[1] !== '/') {
-                $source = substr($source, 1);
-                // Non core provided libraries can be in multiple locations.
-                if (str_starts_with($source, 'libraries/')) {
-                  $path_to_source = $this->librariesDirectoryFileFinder->find(substr($source, 10));
-                  if ($path_to_source) {
-                    $source = $path_to_source;
-                  }
+              $source = substr($source, 1);
+              // Non core provided libraries can be in multiple locations.
+              if (str_starts_with($source, 'libraries/')) {
+                $path_to_source = $this->librariesDirectoryFileFinder->find(substr($source, 10));
+                if ($path_to_source) {
+                  $source = $path_to_source;
                 }
-                $options['data'] = $source;
               }
-              // A protocol-free URI (e.g., //cdn.com/example.js) is external.
-              else {
-                $options['type'] = 'external';
-                $options['data'] = $source;
-              }
+              $options['data'] = $source;
             }
             // A stream wrapper URI (e.g., public://generated_js/example.js).
             elseif ($this->streamWrapperManager->isValidUri($source)) {
@@ -455,7 +449,7 @@ class LibraryDiscoveryParser {
    * Determines if the supplied string is a valid URI.
    */
   protected function isValidUri($string) {
-    return count(explode('://', $string)) === 2;
+    return UrlHelper::isExternal($string) || $this->streamWrapperManager->isValidUri($string);
   }
 
   /**

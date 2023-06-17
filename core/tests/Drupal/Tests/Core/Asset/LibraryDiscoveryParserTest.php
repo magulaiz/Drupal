@@ -311,6 +311,8 @@ class LibraryDiscoveryParserTest extends UnitTestCase {
 
     $this->assertEquals('http://example.com/css/example_external.css', $library['css'][0]['data']);
     $this->assertEquals('http://example.com/example_external.js', $library['js'][0]['data']);
+    $this->assertEquals('external', $library['css'][0]['type']);
+    $this->assertEquals('external', $library['js'][0]['type']);
     $this->assertEquals('3.14', $library['version']);
   }
 
