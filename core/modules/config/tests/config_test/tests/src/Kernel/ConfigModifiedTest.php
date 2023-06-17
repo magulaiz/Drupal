@@ -43,7 +43,7 @@ class ConfigModifiedTest extends KernelTestBase {
       ->save();
     $this->assertTrue($comparator->isModified($config_name));
 
-    // After config is updated.
+    // After config is updated assert that configuration is modified.
     $active = $editable_config->getRawData();
     unset($active['uuid']);
     unset($active['_core']);
