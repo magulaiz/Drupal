@@ -232,7 +232,7 @@ class CommentNonNodeTest extends BrowserTestBase {
     $edit = [];
     $edit['operation'] = $operation;
     $edit['comments[' . $comment->id() . ']'] = TRUE;
-    $this->drupalGet('admin/content/comment/approval');
+    $this->drupalGet('admin/content/comment' . ($unpublished ? '/unpublished' : ''));
     $this->submitForm($edit, 'Update');
 
     if ($operation == 'delete') {
