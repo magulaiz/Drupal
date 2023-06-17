@@ -232,13 +232,6 @@ class LibraryDiscoveryParser {
             elseif ($this->streamWrapperManager->isValidUri($source)) {
               $options['data'] = $source;
             }
-            // A regular URI (e.g., http://example.com/example.js) without
-            // 'external' explicitly specified, which may happen if, e.g.
-            // libraries-override is used.
-            elseif ($this->isValidUri($source)) {
-              $options['type'] = 'external';
-              $options['data'] = $source;
-            }
             // By default, file paths are relative to the registering extension.
             else {
               $options['data'] = $path . '/' . $source;
