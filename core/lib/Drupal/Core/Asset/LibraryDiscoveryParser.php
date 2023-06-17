@@ -216,6 +216,13 @@ class LibraryDiscoveryParser {
           }
           // Determine the file asset URI.
           else {
+            // A regular URI (e.g., http://example.com/example.js) without
+            // 'external' explicitly specified, which may happen if, e.g.
+            // libraries-override is used.
+            if (UrlHelper::isExternal($source)) {
+              $options['type'] = 'external';
+              $options['data'] = $source;
+            }
             if ($source[0] === '/') {
               // An absolute path maps to DRUPAL_ROOT / base_path().
               $source = substr($source, 1);
