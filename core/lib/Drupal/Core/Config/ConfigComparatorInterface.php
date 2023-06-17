@@ -11,7 +11,7 @@ interface ConfigComparatorInterface {
    * Checks if a config item has been modified since its installation.
    *
    * @param string $config_name
-   *   The configuration item's full name.
+   *   The name of the configuration object.
    *
    * @return bool
    *   Returns TRUE is modified, FALSE if original configuration.
