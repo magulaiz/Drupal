@@ -5,7 +5,7 @@ namespace Drupal\Core\Config;
 use Drupal\Component\Utility\Crypt;
 
 /**
- * The ConfigComparator provides helper functions for the configuration system.
+ * Provides methods to compare configuration.
  */
 class ConfigComparator implements ConfigComparatorInterface {
 
