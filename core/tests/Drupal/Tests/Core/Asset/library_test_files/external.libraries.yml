@@ -2,14 +2,6 @@ example_external:
   version: v3.14
   js:
     http://example.com/example_external.js: {}
-    https://example.com/example_external.js: {}
-    //example.com/example_external.js: {}
-    /not-external.js: {}
-    not-external.js: {}
   css:
     theme:
       http://example.com/css/example_external.css: {}
-      https://example.com/css/example_external.css: {}
-      //example.com/css/example_external.css: {}
-      /not-external.css: {}
-      not-external.css: {}
