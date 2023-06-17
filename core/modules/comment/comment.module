@@ -39,8 +39,6 @@ use Drupal\user\UserInterface;
  */
 define('COMMENT_NEW_LIMIT', ((int) $_SERVER['REQUEST_TIME']) - 30 * 24 * 60 * 60);
 
-define('COMMENT_ANONYMOUS_MAYNOT_CONTACT', 0);
-
 /**
  * Implements hook_help().
  */
