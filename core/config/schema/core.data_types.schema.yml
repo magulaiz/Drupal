@@ -921,6 +921,10 @@ entity_reference_selection.default:
     auto_create_bundle:
       type: string
       label: 'Bundle assigned to the auto-created entities.'
+    config_include_disabled:
+      type: boolean
+      label: 'Include disabled configuration entities.'
+      nullable: true
 
 # Schema for all entity reference 'default:*' selection handlers that are not
 # providing a specific schema.
