@@ -35,13 +35,13 @@ class ConfigModifiedTest extends KernelTestBase {
       ->getEditable($config_name);
 
     // Confirm that the configuration has not changed.
-    $this->assertFalse($comparator->isModified($config_name), 'Configuration is not changed after install.');
+    $this->assertFalse($comparator->isModified($config_name));
 
-    // After config is change.
+    // After config is changed assert that configuration is modified.
     $editable_config
       ->set('404', 'user/login')
       ->save();
-    $this->assertTrue($comparator->isModified($config_name), 'Configuration is modified after last install.');
+    $this->assertTrue($comparator->isModified($config_name));
 
     // After config is updated.
     $active = $editable_config->getRawData();
@@ -50,9 +50,9 @@ class ConfigModifiedTest extends KernelTestBase {
     $editable_config
       ->set('_core.default_config_hash', Crypt::hashBase64(serialize($active)))
       ->save();
-    $this->assertFalse($comparator->isModified($config_name), 'Configuration is not changed after last update.');
+    $this->assertFalse($comparator->isModified($config_name));
 
-    // After config is removed.
+    // After config is removed assert that configuration is modified.
     $editable_config->delete();
 
     // We cannot use $this->setExpectedException() because PHPUnit would skip.
@@ -61,7 +61,8 @@ class ConfigModifiedTest extends KernelTestBase {
       $this->fail('Configuration does not exist.');
     }
     catch (ConfigNameException $e) {
-      $this->assertEquals(sprintf('Configuration "%s" does not exist.', $config_name), $e->getMessage());
+      $this->expectException(ConfigNameException::class);
+      $this->expectExceptionMessage('Configuration "config_test.system" does not exist.');
     }
   }
 
@@ -82,7 +83,8 @@ class ConfigModifiedTest extends KernelTestBase {
       $this->fail('Configuration does not exist.');
     }
     catch (ConfigNameException $e) {
-      $this->assertEquals(sprintf('Configuration "%s" does not exist.', $not_existing_config), $e->getMessage());
+      $this->expectException(ConfigNameException::class);
+      $this->expectExceptionMessage('Configuration "config_test.not_existing" does not exist.');
     }
   }
 
