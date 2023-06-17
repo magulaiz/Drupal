@@ -17,7 +17,7 @@ interface ConfigComparatorInterface {
    *   Returns TRUE is modified, FALSE if original configuration.
    *
    * @throws ConfigNameException
-   *   When configuration is not found.
+   *   Thrown when the configuration is not found.
    */
   public function isModified(string $config_name);
 
