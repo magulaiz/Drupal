@@ -9,3 +9,8 @@ services:
       - { name: module_install.uninstall_validator }
     arguments: ['@plugin.manager.filter', '@entity_type.manager', '@string_translation']
     lazy: true
+
+  access_check.filter_plugin_enabled:
+    class: Drupal\filter\Access\FilterFormatEnabledAccessCheck
+    tags:
+      - { name: access_check, applies_to: _filter_plugin_enabled }

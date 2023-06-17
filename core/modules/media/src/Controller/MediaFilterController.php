@@ -137,6 +137,11 @@ class MediaFilterController implements ContainerInjectionInterface {
    *
    * @return \Drupal\Core\Access\AccessResultInterface
    *   The access result.
+   *
+   * @deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use
+   *   \Drupal\filter\Access\FilterFormatEnabledAccessCheck instead.
+   *
+   * @see https://www.drupal.org/project/drupal/issues/3365716
    */
   public static function formatUsesMediaEmbedFilter(FilterFormatInterface $filter_format) {
     $filters = $filter_format->filters();

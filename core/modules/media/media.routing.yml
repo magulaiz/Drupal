@@ -35,7 +35,7 @@ media.filter.preview:
   methods: [GET]
   requirements:
     _entity_access: 'filter_format.use'
-    _custom_access: '\Drupal\media\Controller\MediaFilterController::formatUsesMediaEmbedFilter'
+    _filter_format_enabled: 'media_embed'
 
 editor.media_dialog:
   path: '/editor/dialog/media/{editor}'
