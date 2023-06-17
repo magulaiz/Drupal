@@ -3,7 +3,7 @@
 namespace Drupal\Core\Config;
 
 /**
- * Provides an interface for configuration comparator.
+ * Provides an interface for the configuration comparator.
  */
 interface ConfigComparatorInterface {
 
