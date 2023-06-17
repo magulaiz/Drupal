@@ -15,7 +15,7 @@ class ConfigComparator implements ConfigComparatorInterface {
   protected StorageInterface $activeStorage;
 
   /**
-   * Creates ConfigComparator objects.
+   * Creates a ConfigComparator object.
    *
    * @param \Drupal\Core\Config\StorageInterface $active_storage
    *   The active configuration storage.
