@@ -23,10 +23,10 @@ comment.admin_new:
   route_name: comment.admin
   parent_id: comment.admin
 
-comment.admin_approval:
-  title: 'Unapproved comments'
+comment.admin_unpublished:
+  title: 'Unpublished comments'
   route_name: comment.admin_approval
-  class: Drupal\comment\Plugin\Menu\LocalTask\UnapprovedComments
+  class: Drupal\comment\Plugin\Menu\LocalTask\UnpublishedComments
   parent_id: comment.admin
   weight: 1
   cache_tags:

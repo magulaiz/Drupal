@@ -9,7 +9,7 @@ use Drupal\user\RoleInterface;
 use Drupal\comment\Entity\Comment;
 
 /**
- * Tests comment approval functionality.
+ * Tests comment administration functionality.
  *
  * @group comment
  */
@@ -30,9 +30,9 @@ class CommentAdminTest extends CommentTestBase {
   }
 
   /**
-   * Tests comment approval functionality through admin/content/comment.
+   * Tests comment overview with published and unpublished comments.
    */
-  public function testApprovalAdminInterface() {
+  public function testContentAdminPages() {
     // Set anonymous comments to require approval.
     user_role_change_permissions(RoleInterface::ANONYMOUS_ID, [
       'access comments' => TRUE,
@@ -56,9 +56,9 @@ class CommentAdminTest extends CommentTestBase {
     $this->postComment($this->node, $body, $subject, TRUE);
     $this->assertSession()->pageTextContains('Your comment has been queued for review by site administrators and will be published after approval.');
 
-    // Get unapproved comment id.
+    // Get unpublished comment id.
     $this->drupalLogin($this->adminUser);
-    $anonymous_comment4 = $this->getUnapprovedComment($subject);
+    $anonymous_comment4 = $this->getUnpublishedComment($subject);
     $anonymous_comment4 = Comment::create([
       'cid' => $anonymous_comment4,
       'subject' => $subject,
@@ -71,7 +71,7 @@ class CommentAdminTest extends CommentTestBase {
 
     $this->assertFalse($this->commentExists($anonymous_comment4), 'Anonymous comment was not published.');
 
-    // Approve comment.
+    // Publish comment.
     $this->drupalLogin($this->adminUser);
     $this->performCommentOperation($anonymous_comment4, 'publish', TRUE);
     $this->drupalLogout();
@@ -85,14 +85,14 @@ class CommentAdminTest extends CommentTestBase {
 
     // Publish multiple comments in one operation.
     $this->drupalLogin($this->adminUser);
-    $this->drupalGet('admin/content/comment/approval');
-    $this->assertSession()->pageTextContains('Unapproved comments (2)');
+    $this->drupalGet('admin/content/comment/unpublished');
+    $this->assertSession()->pageTextContains('unpublished comments (2)');
     $edit = [
       "comments[{$comments[0]->id()}]" => 1,
       "comments[{$comments[1]->id()}]" => 1,
     ];
     $this->submitForm($edit, 'Update');
-    $this->assertSession()->pageTextContains('Unapproved comments (0)');
+    $this->assertSession()->pageTextContains('unpublished comments (0)');
 
     // Delete multiple comments in one operation.
     $edit = [
@@ -144,9 +144,9 @@ class CommentAdminTest extends CommentTestBase {
     $this->postComment($this->node, $body, $subject, TRUE);
     $this->assertSession()->pageTextContains('Your comment has been queued for review by site administrators and will be published after approval.');
 
-    // Get unapproved comment id.
+    // Get unpublished comment id.
     $this->drupalLogin($this->adminUser);
-    $anonymous_comment4 = $this->getUnapprovedComment($subject);
+    $anonymous_comment4 = $this->getUnpublishedComment($subject);
     $anonymous_comment4 = Comment::create([
       'cid' => $anonymous_comment4,
       'subject' => $subject,
@@ -161,20 +161,33 @@ class CommentAdminTest extends CommentTestBase {
 
     // Ensure comments cannot be approved without a valid token.
     $this->drupalLogin($this->adminUser);
-    $this->drupalGet('comment/1/approve');
+    $this->drupalGet('comment/1/publish');
     $this->assertSession()->statusCodeEquals(403);
-    $this->drupalGet('comment/1/approve', ['query' => ['token' => 'forged']]);
+    $this->drupalGet('comment/1/publish', ['query' => ['token' => 'forged']]);
     $this->assertSession()->statusCodeEquals(403);
 
-    // Approve comment.
+    // Publish comment.
     $this->drupalGet('comment/1/edit');
     $this->assertSession()->checkboxChecked('edit-status-0');
     $this->drupalGet('node/' . $this->node->id());
-    $this->clickLink('Approve');
+    $this->clickLink('Publish');
     $this->drupalLogout();
 
     $this->drupalGet('node/' . $this->node->id());
     $this->assertTrue($this->commentExists($anonymous_comment4), 'Anonymous comment visible.');
+
+    // Unpublish comment.
+    $this->drupalLogin($this->adminUser);
+    $this->drupalGet('comment/1/unpublish');
+    $this->assertSession()->statusCodeEquals(403);
+    $this->drupalGet('comment/1/unpublish', ['query' => ['token' => 'forged']]);
+    $this->assertSession()->statusCodeEquals(403);
+    $this->drupalGet('node/' . $this->node->id());
+    $this->clickLink('Unpublish');
+    $this->drupalLogout();
+
+    $this->drupalGet('node/' . $this->node->id());
+    $this->assertFalse($this->commentExists($anonymous_comment4), 'Anonymous comment not visible.');
   }
 
   /**

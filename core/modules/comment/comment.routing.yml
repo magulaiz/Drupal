@@ -8,11 +8,11 @@ comment.admin:
     _permission: 'administer comments'
 
 comment.admin_approval:
-  path: '/admin/content/comment/approval'
+  path: '/admin/content/comment/unpublished'
   defaults:
-    _title: 'Unapproved comments'
+    _title: 'Unpublished comments'
     _form: '\Drupal\comment\Form\CommentAdminOverview'
-    type: 'approval'
+    type: 'unpublished'
   requirements:
     _permission: 'administer comments'
 
@@ -25,14 +25,25 @@ entity.comment.edit_form:
     _entity_access: 'comment.update'
     comment: \d+
 
-comment.approve:
-  path: '/comment/{comment}/approve'
+comment.publish:
+  path: '/comment/{comment}/publish'
   defaults:
-    _title: 'Approve'
-    _controller: '\Drupal\comment\Controller\CommentController::commentApprove'
+    _title: 'Publish'
+    _controller: '\Drupal\comment\Controller\CommentController::commentPublish'
     entity_type: 'comment'
   requirements:
-    _entity_access: 'comment.approve'
+    _entity_access: 'comment.publish'
+    _csrf_token: 'TRUE'
+    comment: \d+
+
+comment.unpublish:
+  path: '/comment/{comment}/unpublish'
+  defaults:
+    _title: 'Unpublish'
+    _content: '\Drupal\comment\Controller\CommentController::commentUnpublish'
+    entity_type: 'comment'
+  requirements:
+    _entity_access: 'comment.unpublish'
     _csrf_token: 'TRUE'
     comment: \d+
 
