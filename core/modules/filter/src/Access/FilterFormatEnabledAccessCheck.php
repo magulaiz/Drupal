@@ -20,7 +20,7 @@ class FilterFormatEnabledAccessCheck implements AccessInterface {
    * @code
    * pattern: '/foo/{filter_format}'
    * requirements:
-   *   _filter_format_plugin_enabled: 'my_filter'
+   *   _filter_format_enabled: 'my_filter'
    * @endcode
    *
    * @param \Symfony\Component\Routing\Route $route

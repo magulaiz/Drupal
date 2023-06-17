@@ -10,7 +10,7 @@ services:
     arguments: ['@plugin.manager.filter', '@entity_type.manager', '@string_translation']
     lazy: true
 
-  access_check.filter_plugin_enabled:
+  access_check.filter_format_enabled:
     class: Drupal\filter\Access\FilterFormatEnabledAccessCheck
     tags:
-      - { name: access_check, applies_to: _filter_format_plugin_enabled }
+      - { name: access_check, applies_to: _filter_format_enabled }
