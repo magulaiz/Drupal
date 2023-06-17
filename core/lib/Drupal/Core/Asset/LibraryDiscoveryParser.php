@@ -223,7 +223,7 @@ class LibraryDiscoveryParser {
               $options['type'] = 'external';
               $options['data'] = $source;
             }
-            if ($source[0] === '/') {
+            elseif ($source[0] === '/') {
               // An absolute path maps to DRUPAL_ROOT / base_path().
               $source = substr($source, 1);
               // Non core provided libraries can be in multiple locations.
