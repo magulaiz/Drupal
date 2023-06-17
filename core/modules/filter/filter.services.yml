@@ -13,4 +13,4 @@ services:
   access_check.filter_plugin_enabled:
     class: Drupal\filter\Access\FilterFormatEnabledAccessCheck
     tags:
-      - { name: access_check, applies_to: _filter_plugin_enabled }
+      - { name: access_check, applies_to: _filter_format_plugin_enabled }
