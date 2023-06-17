@@ -118,6 +118,7 @@ class DynamicPageCacheSubscriber implements EventSubscriberInterface {
     RequestPolicyInterface $request_policy,
     #[Autowire(service: 'dynamic_page_cache_response_policy')]
     ResponsePolicyInterface $response_policy,
+    #[Autowire(service: 'variation_cache.dynamic_page_cache')]
     VariationCacheInterface $cache,
     CacheContextsManager $cache_contexts_manager,
     #[Autowire('%renderer.config%')]
