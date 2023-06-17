@@ -21,7 +21,7 @@ class ConfigModifiedTest extends KernelTestBase {
   protected static $modules = ['config_test', 'system'];
 
   /**
-   * Verify config is not modified, modify it. Verify shows up as modified.
+   * Verifies that changes to configuration are detected.
    */
   public function testIsModified() {
     $this->installConfig(['config_test']);
