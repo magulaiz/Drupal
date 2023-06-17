@@ -3,7 +3,7 @@ example:
     theme:
       # External URL.
       'http://example.com/test.css': {}
-      'https://example.com/test.css': {}
+      https://example.com/test.css: {}
       # Absolute path.
       /tmp/test.css: {}
       # Protocol free.
