@@ -7,7 +7,7 @@ use Drupal\Core\Config\ConfigNameException;
 use Drupal\KernelTests\KernelTestBase;
 
 /**
- * Check is a configuration has been modified.
+ * Tests that changes to configuration are found.
  *
  * @group config
  */
