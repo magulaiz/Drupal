@@ -544,7 +544,7 @@ parameters:
 
 		-
 			message: "#^Variable \\$selected_bundles might not be defined\\.$#"
-			count: 2
+			count: 3
 			path: lib/Drupal/Core/Entity/Plugin/EntityReferenceSelection/DefaultSelection.php
 
 		-
