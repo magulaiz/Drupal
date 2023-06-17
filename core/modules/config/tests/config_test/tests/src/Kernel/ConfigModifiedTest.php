@@ -34,7 +34,7 @@ class ConfigModifiedTest extends KernelTestBase {
     $editable_config = $this->container->get('config.factory')
       ->getEditable($config_name);
 
-    // Not changed config.
+    // Confirm that the configuration has not changed.
     $this->assertFalse($comparator->isModified($config_name), 'Configuration is not changed after install.');
 
     // After config is change.
