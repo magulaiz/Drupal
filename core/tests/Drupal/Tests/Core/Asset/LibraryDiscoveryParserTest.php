@@ -135,6 +135,7 @@ class LibraryDiscoveryParserTest extends UnitTestCase {
     $this->assertCount(2, $library['css']);
     $this->assertCount(0, $library['dependencies']);
     $this->assertEquals($path . '/css/example.css', $library['css'][0]['data']);
+    $this->assertEquals('file', $library['css'][0]['data']);
 
     // Ensures that VERSION is replaced by the current core version.
     $this->assertEquals(\Drupal::VERSION, $library['version']);
@@ -309,19 +310,32 @@ class LibraryDiscoveryParserTest extends UnitTestCase {
     $libraries = $this->libraryDiscoveryParser->buildByExtension('external');
     $library = $libraries['example_external'];
 
-    $this->assertSame('http://example.com/css/example_external.css', $library['css'][0]['data']);
-    $this->assertSame('http://example.com/example_external.js', $library['js'][0]['data']);
-    $this->assertSame('external', $library['css'][0]['type']);
+    $this->assertEquals('3.14', $library['version']);
+
+    // Test the external assets.
+    $this->assertEquals('http://example.com/css/example_external.css', $library['css'][0]['data']);
+    $this->assertEquals('http://example.com/example_external.js', $library['js'][0]['data']);
+    $this->assertEquals('external', $library['css'][0]['type']);
     $this->assertEquals('external', $library['js'][0]['type']);
-    $this->assertSame('https://example.com/css/example_external.css', $library['css'][1]['data']);
-    $this->assertSame('https://example.com/example_external.js', $library['js'][1]['data']);
-    $this->assertSame('external', $library['css'][1]['type']);
-    $this->assertSame('external', $library['js'][1]['type']);
-    $this->assertSame('//example.com/css/example_external.css', $library['css'][2]['data']);
-    $this->assertSame('//example.com/example_external.js', $library['js'][2]['data']);
-    $this->assertSame('external', $library['css'][2]['type']);
-    $this->assertSame('external', $library['js'][2]['type']);
-    $this->assertSame('3.14', $library['version']);
+    $this->assertEquals('https://example.com/css/example_external.css', $library['css'][1]['data']);
+    $this->assertEquals('https://example.com/example_external.js', $library['js'][1]['data']);
+    $this->assertEquals('external', $library['css'][1]['type']);
+    $this->assertEquals('external', $library['js'][1]['type']);
+    $this->assertEquals('//example.com/css/example_external.css', $library['css'][2]['data']);
+    $this->assertEquals('//example.com/example_external.js', $library['js'][2]['data']);
+    $this->assertEquals('external', $library['css'][2]['type']);
+    $this->assertEquals('external', $library['js'][2]['type']);
+
+    // Test the non-external assets.
+    $this->assertEquals('/not-external.css', $library['css'][3]['data']);
+    $this->assertEquals('/not-external.js', $library['js'][3]['data']);
+    $this->assertEquals('file', $library['css'][3]['type']);
+    $this->assertEquals('file', $library['js'][3]['type']);
+    $this->assertEquals($path . '/not-external.css', $library['css'][4]['data']);
+    $this->assertEquals($path . '/not-external.js', $library['js'][4]['data']);
+    $this->assertEquals('file', $library['css'][4]['type']);
+    $this->assertEquals('file', $library['js'][4]['type']);
+
   }
 
   /**
