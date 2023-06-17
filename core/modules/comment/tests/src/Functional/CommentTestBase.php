@@ -358,14 +358,14 @@ abstract class CommentTestBase extends BrowserTestBase {
    *   Comment to perform operation on.
    * @param string $operation
    *   Operation to perform.
-   * @param bool $approval
-   *   Operation is found on approval page.
+   * @param bool $unpublished
+   *   Operation is found on unpublished comments page.
    */
-  public function performCommentOperation(CommentInterface $comment, $operation, $approval = FALSE) {
+  public function performCommentOperation(CommentInterface $comment, $operation, $unpublished = FALSE) {
     $edit = [];
     $edit['operation'] = $operation;
     $edit['comments[' . $comment->id() . ']'] = TRUE;
-    $this->drupalGet('admin/content/comment' . ($approval ? '/approval' : ''));
+    $this->drupalGet('admin/content/comment' . ($unpublished ? '/unpublished' : ''));
     $this->submitForm($edit, 'Update');
 
     if ($operation == 'delete') {
@@ -378,7 +378,7 @@ abstract class CommentTestBase extends BrowserTestBase {
   }
 
   /**
-   * Gets the comment ID for an unapproved comment.
+   * Gets the comment ID for an unapproved (unpublished) comment.
    *
    * @param string $subject
    *   Comment subject to find.
@@ -386,8 +386,8 @@ abstract class CommentTestBase extends BrowserTestBase {
    * @return int
    *   Comment id.
    */
-  public function getUnapprovedComment($subject) {
-    $this->drupalGet('admin/content/comment/approval');
+  public function getUnpublishedComment($subject) {
+    $this->drupalGet('admin/content/comment/unpublished');
     preg_match('/href="(.*?)#comment-([^"]+)"(.*?)>(' . $subject . ')/', $this->getSession()->getPage()->getContent(), $match);
 
     return $match[2];

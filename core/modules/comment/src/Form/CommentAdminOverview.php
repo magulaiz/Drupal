@@ -116,7 +116,7 @@ class CommentAdminOverview extends FormBase {
       '#attributes' => ['class' => ['container-inline']],
     ];
 
-    if ($type == 'approval') {
+    if ($type == 'unpublished') {
       $options['publish'] = $this->t('Publish the selected comments');
     }
     else {
@@ -137,7 +137,7 @@ class CommentAdminOverview extends FormBase {
     ];
 
     // Load the comments that need to be displayed.
-    $status = ($type == 'approval') ? CommentInterface::NOT_PUBLISHED : CommentInterface::PUBLISHED;
+    $status = ($type == 'unpublished') ? CommentInterface::NOT_PUBLISHED : CommentInterface::PUBLISHED;
     $header = [
       'subject' => [
         'data' => $this->t('Subject'),

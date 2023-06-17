@@ -225,14 +225,14 @@ class CommentNonNodeTest extends BrowserTestBase {
    *   Comment to perform operation on.
    * @param string $operation
    *   Operation to perform.
-   * @param bool $approval
-   *   Operation is found on approval page.
+   * @param bool $unpublished
+   *   Operation is found on unpublished comments page.
    */
-  public function performCommentOperation($comment, $operation, $approval = FALSE) {
+  public function performCommentOperation($comment, $operation, $unpublished = FALSE) {
     $edit = [];
     $edit['operation'] = $operation;
     $edit['comments[' . $comment->id() . ']'] = TRUE;
-    $this->drupalGet('admin/content/comment' . ($approval ? '/approval' : ''));
+    $this->drupalGet('admin/content/comment/approval');
     $this->submitForm($edit, 'Update');
 
     if ($operation == 'delete') {
@@ -245,7 +245,7 @@ class CommentNonNodeTest extends BrowserTestBase {
   }
 
   /**
-   * Gets the comment ID for an unapproved comment.
+   * Gets the comment ID for an unpublished comment.
    *
    * @param string $subject
    *   Comment subject to find.
@@ -253,8 +253,8 @@ class CommentNonNodeTest extends BrowserTestBase {
    * @return int
    *   Comment ID.
    */
-  public function getUnapprovedComment($subject) {
-    $this->drupalGet('admin/content/comment/approval');
+  public function getUnpublishedComment($subject) {
+    $this->drupalGet('admin/content/comment/unpublished');
     preg_match('/href="(.*?)#comment-([^"]+)"(.*?)>(' . $subject . ')/', $this->getSession()->getPage()->getContent(), $match);
 
     return $match[2];
@@ -319,7 +319,7 @@ class CommentNonNodeTest extends BrowserTestBase {
 
     // Unpublish the comment.
     $this->performCommentOperation($comment1, 'unpublish');
-    $this->drupalGet('admin/content/comment/approval');
+    $this->drupalGet('admin/content/comment/unpublished');
     $this->assertSession()->responseContains('comments[' . $comment1->id() . ']');
 
     // Publish the comment.
