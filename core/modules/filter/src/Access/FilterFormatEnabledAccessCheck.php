@@ -43,7 +43,6 @@ class FilterFormatEnabledAccessCheck implements AccessInterface {
     else {
       $filter_format = $route_match->getParameter('filter_format');
     }
-    throw new \RuntimeException(var_export($filter_format, TRUE));
 
     $access_result = AccessResult::allowedIf($filter_format instanceof FilterFormatInterface)
       ->addCacheableDependency($filter_format);
