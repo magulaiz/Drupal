@@ -4,8 +4,10 @@ namespace Drupal\user;
 
 use Drupal\Core\Discovery\YamlDiscovery;
 use Drupal\Core\Controller\ControllerResolverInterface;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\StringTranslation\TranslationInterface;
 
 /**
@@ -54,6 +56,13 @@ class PermissionHandler implements PermissionHandlerInterface {
   use StringTranslationTrait;
 
   /**
+   * The entity type manager.
+   *
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
+   */
+  protected $entityTypeManager;
+
+  /**
    * The module handler.
    *
    * @var \Drupal\Core\Extension\ModuleHandlerInterface
@@ -77,6 +86,8 @@ class PermissionHandler implements PermissionHandlerInterface {
   /**
    * Constructs a new PermissionHandler.
    *
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   *   The entity type manager.
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
    *   The module handler.
    * @param \Drupal\Core\StringTranslation\TranslationInterface $string_translation
@@ -84,9 +95,10 @@ class PermissionHandler implements PermissionHandlerInterface {
    * @param \Drupal\Core\Controller\ControllerResolverInterface $controller_resolver
    *   The controller resolver.
    */
-  public function __construct(ModuleHandlerInterface $module_handler, TranslationInterface $string_translation, ControllerResolverInterface $controller_resolver) {
+  public function __construct(EntityTypeManagerInterface $entity_type_manager, ModuleHandlerInterface $module_handler, TranslationInterface $string_translation, ControllerResolverInterface $controller_resolver) {
     // @todo It would be nice if you could pull all module directories from the
     //   container.
+    $this->entityTypeManager = $entity_type_manager;
     $this->moduleHandler = $module_handler;
     $this->stringTranslation = $string_translation;
     $this->controllerResolver = $controller_resolver;
@@ -110,7 +122,7 @@ class PermissionHandler implements PermissionHandlerInterface {
    */
   public function getPermissions() {
     $all_permissions = $this->buildPermissionsYaml();
-
+    $all_permissions += $this->buildEntityTypePermissions();
     return $this->sortPermissions($all_permissions);
   }
 
@@ -191,6 +203,27 @@ class PermissionHandler implements PermissionHandlerInterface {
   }
 
   /**
+   * Builds all permissions provided by entity permission providers.
+   *
+   * @return array[]
+   *   The permissions.
+   *   Each permission is an array with the following keys:
+   *   - title: The title of the permission.
+   *   - description: The description of the permission, defaults to NULL.
+   *   - provider: The provider of the permission.
+   */
+  protected function buildEntityTypePermissions() {
+    $permissions = [];
+    /** @var \Drupal\Core\Entity\EntityTypeInterface[] $entity_types */
+    foreach ($this->entityTypeManager->getDefinitions() as $entity_type) {
+      $permission_provider = $this->entityTypeManager->getPermissionProvider($entity_type->id());
+      $permissions = $permission_provider->buildPermissions();
+    }
+
+    return $permissions;
+  }
+
+  /**
    * Sorts the given permissions by provider name and title.
    *
    * @param array $all_permissions
@@ -209,7 +242,7 @@ class PermissionHandler implements PermissionHandlerInterface {
 
     uasort($all_permissions, function (array $permission_a, array $permission_b) use ($modules) {
       if ($modules[$permission_a['provider']] == $modules[$permission_b['provider']]) {
-        return $permission_a['title'] <=> $permission_b['title'];
+        return TranslatableMarkup::compare($permission_a['title'], $permission_b['title']);
       }
       else {
         return $modules[$permission_a['provider']] <=> $modules[$permission_b['provider']];

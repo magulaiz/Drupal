@@ -229,4 +229,18 @@ class TranslatableMarkup extends FormattableMarkup {
     return mb_strlen($this->render());
   }
 
+  /**
+   * Provides a comparison function so instances of this class can be sorted.
+   *
+   * @param \Drupal\Core\StringTranslation\TranslatableMarkup|string $a
+   *   The first instance.
+   * @param \Drupal\Core\StringTranslation\TranslatableMarkup|string $b
+   *   The second instance.
+   *
+   * @return int
+   */
+  public static function compare($a, $b) {
+    return strcmp($a instanceof self ? $a->render() : $a, $b instanceof self ? $b->render() : $b);
+  }
+
 }
