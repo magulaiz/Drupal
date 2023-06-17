@@ -66,7 +66,7 @@ class ConfigModifiedTest extends KernelTestBase {
   }
 
   /**
-   * Verify that not existing config will throw exception.
+   * Verifies that non existing config will throw an exception.
    */
   public function testIsModifiedNotExisting() {
     $this->installConfig(['config_test']);
