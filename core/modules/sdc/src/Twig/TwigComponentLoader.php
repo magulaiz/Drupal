@@ -7,6 +7,7 @@ use Drupal\sdc\ComponentPluginManager;
 use Drupal\sdc\Exception\ComponentNotFoundException;
 use Drupal\Component\Discovery\YamlDirectoryDiscovery;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Twig\Error\LoaderError;
 use Twig\Loader\LoaderInterface;
 use Twig\Source;
@@ -28,6 +29,7 @@ final class TwigComponentLoader implements LoaderInterface {
    */
   public function __construct(
     protected ComponentPluginManager $pluginManager,
+    #[Autowire(service: 'logger.channel.default')]
     protected LoggerInterface $logger,
   ) {}
 

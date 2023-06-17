@@ -1,30 +1,22 @@
 services:
   _defaults:
     public: false
+    autowire: true
 
   # Twig loader to allow embedding templates with a component identifier.
   # Note that this service name is not guaranteed to remain the same once this
   # module is out of the experimental phase.
   Drupal\sdc\Twig\TwigComponentLoader:
-    arguments:
-      - '@plugin.manager.sdc'
-      - '@logger.channel.default'
     tags:
       - { name: twig.loader, priority: 5 }
 
   # Note that this service name is not guaranteed to remain the same once this
   # module is out of the experimental phase.
-  Drupal\sdc\ComponentNegotiator:
-    arguments:
-      - '@theme.manager'
-      - '@extension.list.module'
+  Drupal\sdc\ComponentNegotiator: {}
 
   # Note that this service name is not guaranteed to remain the same once this
   # module is out of the experimental phase.
   Drupal\sdc\Twig\TwigExtension:
-    arguments:
-      - '@plugin.manager.sdc'
-      - '@Drupal\sdc\Component\ComponentValidator'
     tags:
       - { name: twig.extension }
 
@@ -33,17 +25,7 @@ services:
   plugin.manager.sdc:
     public: true
     class: Drupal\sdc\ComponentPluginManager
-    arguments:
-      - '@module_handler'
-      - '@theme_handler'
-      - '@cache.discovery'
-      - '@config.factory'
-      - '@theme.manager'
-      - '@Drupal\sdc\ComponentNegotiator'
-      - '@file_system'
-      - '@Drupal\sdc\Component\SchemaCompatibilityChecker'
-      - '@Drupal\sdc\Component\ComponentValidator'
-      - '%app.root%'
+  Drupal\sdc\ComponentPluginManager: '@plugin.manager.sdc'
 
   # Note that this service name is not guaranteed to remain the same once this
   # module is out of the experimental phase.
