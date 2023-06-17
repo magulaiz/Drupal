@@ -32,7 +32,7 @@ class FilterFormatEnabledAccessCheck implements AccessInterface {
    *   The access result.
    */
   public function access(Route $route, RouteMatchInterface $route_match) {
-    $expected_filter_format = $route->getRequirement('_embed_filter_format_enabled');
+    $expected_filter_format = $route->getRequirement('_filter_format_enabled');
     assert(is_string($expected_filter_format));
 
     // This will work for both filter_format parameters and editor parameters.
