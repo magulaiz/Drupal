@@ -2,10 +2,13 @@
 
 namespace Drupal\Core\Command;
 
+use Composer\Autoload\ClassLoader;
+use Composer\Semver\VersionParser;
 use Drupal\Component\Serialization\Yaml;
 use Drupal\Core\Extension\Extension;
 use Drupal\Core\Extension\ExtensionDiscovery;
 use Drupal\Core\Extension\InfoParser;
+use Drupal\Core\Theme\StarterKitInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
@@ -13,7 +16,9 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Question\ConfirmationQuestion;
 use Symfony\Component\Console\Style\SymfonyStyle;
+use Symfony\Component\Process\Process;
 use function Symfony\Component\String\u;
 
 /**
@@ -204,18 +209,15 @@ class GenerateTheme extends Command {
     // Replace temporary placeholder tokens with final strings.
     $this->doRenameAndEdit();
 
-    // @todo: This is specific to the starterkit_theme.
-    // We need to either find a way to generalize this or move it into the postProcess.
-    $readme_file = "$this->tmp_dir/README.md";
-    if (!file_put_contents($readme_file, "$destination_theme theme, generated from $this->source_theme_name. Additional information on generating themes can be found in the [Starterkit documentation](https://www.drupal.org/docs/core-modules-and-themes/core-themes/starterkit-theme).")) {
-      $this->io->getErrorStyle()->error("The readme could not be rewritten.");
+    // Let source theme define additional tasks.
+    if (!$this->doPostProcess()) {
       return 1;
     }
 
-    // @todo: Re-add the StarterKit::postProcess() call
-
     // Move altered theme to final destination.
     $filesystem->mirror($this->tmp_dir, $destination);
+
+    $output->writeln(sprintf('Theme generated successfully to %s', $destination));
 
     return 0;
   }
@@ -324,25 +326,61 @@ class GenerateTheme extends Command {
     $info_overrides = $this->info_overrides;
     $theme = $this->source_theme_name;
     $tmp_dir = $this->tmp_dir;
-    $source_info_file = "$tmp_dir/$theme.info.yml";
+    $info_file = "$tmp_dir/$theme.info.yml";
 
-    if ($source_info_contents = file_get_contents($source_info_file)) {
-      $source_info = Yaml::decode($source_info_contents);
-      $this->source_theme_info = $source_info;
+    if ($info_contents = file_get_contents($info_file)) {
+      $info = Yaml::decode($info_contents);
+      $this->source_theme_info = $info;
 
       if (isset($info_overrides) && is_array($info_overrides) && !empty($info_overrides)) {
         foreach ($info_overrides as $key => $value) {
           if ($value === NULL) {
-            unset($source_info[$key]);
+            unset($info[$key]);
           }
           else {
-            $source_info[$key] = $value;
+            $info[$key] = $value;
           }
         }
       }
 
-      $source_info_contents = Yaml::encode($source_info);
-      file_put_contents($source_info_file, $source_info_contents);
+      if ($this->destination_theme_description) {
+        $info['description'] = $this->destination_theme_description;
+      }
+
+      $source_version = $info['version'] ?? 'unknown-version';
+      if ($source_version === 'VERSION') {
+        $source_version = \Drupal::VERSION;
+      }
+
+      // A version in the generator string like "9.4.0-dev" is not very helpful.
+      // When this occurs, generate a version string that points to a commit.
+      if (VersionParser::parseStability($source_version) === 'dev') {
+        $git_check = Process::fromShellCommandline('git --help');
+        $git_check->run();
+        if ($git_check->getExitCode()) {
+          $this->io->error(sprintf('The source theme %s has a development version number (%s). Determining a specific commit is not possible because git is not installed. Either install git or use a tagged release to generate a theme.', $this->source_theme->getName(), $source_version));
+          return 1;
+        }
+
+        // Get the git commit for the source theme.
+        $source_path = $this->source_theme->getPath();
+        $git_get_commit = Process::fromShellCommandline("git rev-list --max-count=1 --abbrev-commit HEAD -C $source_path");
+        $git_get_commit->run();
+        if ($git_get_commit->getOutput() === '') {
+          $confirm_packaged_dev_release = new ConfirmationQuestion(sprintf('The source theme %s has a development version number (%s). Because it is not a git checkout, a specific commit could not be identified. This makes tracking changes in the source theme difficult. Are you sure you want to continue?', $this->source_theme->getName(), $source_version));
+          if (!$this->io->askQuestion($confirm_packaged_dev_release)) {
+            return 0;
+          }
+          $source_version .= '#unknown-commit';
+        }
+        else {
+          $source_version .= '#' . trim($git_get_commit->getOutput());
+        }
+      }
+      $info['generator'] = "$this->source_theme_name:$source_version";
+
+      $info_contents = Yaml::encode($info);
+      file_put_contents($info_file, $info_contents);
     }
 
   }
@@ -497,6 +535,26 @@ class GenerateTheme extends Command {
         $fs->rename($file->getRealPath(), implode('/', $filepath_segments));
       }
     }
+  }
+
+  private function doPostProcess() {
+    $theme_name = $this->source_theme_name;
+    $theme_path = $this->source_theme->getPath();
+    $loader = new ClassLoader();
+    $loader->addPsr4("Drupal\\$theme_name\\", "$theme_path/src");
+    $loader->register();
+
+    $generator_classname = "Drupal\\$this->source_theme_name\\StarterKit";
+    if (class_exists($generator_classname)) {
+      if (is_a($generator_classname, StarterKitInterface::class, TRUE)) {
+        $generator_classname::postProcess($this->tmp_dir, $this->destination_theme, $this->destination_theme_label);
+      }
+      else {
+        $this->io->getErrorStyle()->error("The $generator_classname does not implement \Drupal\Core\Theme\StarterKitInterface and cannot perform post-processing.");
+        return FALSE;
+      }
+    }
+    return TRUE;
   }
 
   /**
