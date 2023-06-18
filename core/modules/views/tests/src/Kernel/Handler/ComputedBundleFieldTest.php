@@ -4,6 +4,7 @@ namespace Drupal\Tests\views\Kernel\Handler;
 
 use Drupal\entity_test\Entity\EntityTestComputedBundleField;
 use Drupal\Tests\views\Kernel\ViewsKernelTestBase;
+use Drupal\views\Tests\ViewTestData;
 use Drupal\views\Views;
 
 /**
@@ -32,7 +33,8 @@ class ComputedBundleFieldTest extends ViewsKernelTestBase {
    * {@inheritdoc}
    */
   protected function setUp($import_test_views = TRUE): void {
-    parent::setUp($import_test_views);
+    // Don't install the test view until the bundles are defined.
+    parent::setUp(FALSE);
 
     $this->installEntitySchema('entity_test_comp_bund_fld');
     $this->installEntitySchema('entity_test_comp_bund_fld_bundle');
@@ -45,6 +47,8 @@ class ComputedBundleFieldTest extends ViewsKernelTestBase {
 
     // Create a bundle that does not have the computed field.
     entity_test_create_bundle('entity_test_bundle_no_comp_field', NULL, 'entity_test_comp_bund_fld');
+
+    ViewTestData::createTestViews(static::class, ['views_test_config']);
 
     // Create an entity using the default bundle with a computed field.
     $entity_with_comp_field = EntityTestComputedBundleField::create([
