@@ -270,48 +270,6 @@ class BlockContentController extends ControllerBase {
   }
 
   /**
-   * Provides a redirect to block edit page.
-   *
-   * @param \Drupal\Core\Routing\RouteMatchInterface $route_match
-   *   A route match object, used for the route name and the parameters.
-   * @param \Symfony\Component\HttpFoundation\Request $request
-   *   The current request object.
-   * @param Drupal\block_content\BlockContentInterface $block_content
-   *   The block to be edited.
-   *
-   * @return \Symfony\Component\HttpFoundation\RedirectResponse
-   *
-   * @deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use
-   *   /admin/content/block/{block_content}/edit directly instead of
-   *   /block/{block_content}.
-   *
-   * @see https://www.drupal.org/node/3320855
-   */
-  public function editViewRedirect(RouteMatchInterface $route_match, Request $request, BlockContentInterface $block_content): RedirectResponse {
-    @trigger_error('The path /admin/content/block/{block_content} is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use /admin/content/block/{block_content}/edit. See https://www.drupal.org/node/3320855.', E_USER_DEPRECATED);
-
-    $args = $route_match->getRawParameters()->all();
-    $options = [
-      'absolute' => TRUE,
-      'query' => array_diff_key($request->query->all(), ['destination' => '']),
-    ];
-
-    $newUrl = Url::fromRoute('entity.block_content.edit_form', $args, $options);
-    $oldUrl = Url::fromRoute($route_match->getRouteName(), $args, $options);
-
-    $params = [
-      '%old_path' => $oldUrl->getInternalPath(),
-      '%new_path' => $newUrl->getInternalPath(),
-      '%change_record' => 'https://www.drupal.org/node/3320855',
-    ];
-    $warning_message = $this->t('You have been redirected from %old_path. Update links, shortcuts, and bookmarks to use %new_path.', $params);
-    $this->messenger()->addWarning($warning_message);
-    $this->getLogger('block_content')->warning('A user was redirected from %old_path to %new_path. This redirect will be removed in a future version of Drupal. Update links, shortcuts, and bookmarks to use %new_path. See %change_record for more information.', $params);
-
-    return new RedirectResponse($newUrl->toString(), 301);
-  }
-
-  /**
    * Provides renders array to preview a block_content without placing on a page.
    *
    * @param Drupal\block_content\BlockContentInterface $block_content

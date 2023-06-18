@@ -50,7 +50,7 @@ use Drupal\user\UserInterface;
  *   revision_data_table = "block_content_field_revision",
  *   show_revision_ui = TRUE,
  *   links = {
- *     "canonical" = "/block-content/{block_content}",
+ *     "canonical" = "/admin/content/block/{block_content}",
  *     "delete-form" = "/admin/content/block/{block_content}/delete",
  *     "edit-form" = "/admin/content/block/{block_content}/edit",
  *     "collection" = "/admin/content/block",

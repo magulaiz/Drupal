@@ -29,7 +29,7 @@ class BlockContentPageViewTest extends BlockContentTestBase {
     $block = $this->createBlockContent();
 
     // Attempt to view the block.
-    $this->drupalGet('block-content/' . $block->id());
+    $this->drupalGet('admin/content/block/' . $block->id());
 
     // Ensure user was able to view the block.
     $this->assertSession()->statusCodeEquals(200);

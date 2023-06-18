@@ -78,7 +78,8 @@ class BlockContentCreationTest extends BlockContentTestBase {
 
     // Check that view mode works.
     $this->drupalGet(Url::fromRoute('entity.block_content.canonical', ['block_content' => $block->id()]));
-    $this->assertSession()->addressEquals('/block-content/' . $block->id());
+    $this->assertSession()->addressEquals('/admin/content/block/' . $block->id());
+    $this->assertSession()->pageTextContains('Test Block');
     $this->assertSession()->pageTextContains($body);
   }
 
