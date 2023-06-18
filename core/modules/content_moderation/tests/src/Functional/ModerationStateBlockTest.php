@@ -127,7 +127,7 @@ class ModerationStateBlockTest extends ModerationStateTestBase {
     $edit = [
       'new_state' => 'published',
     ];
-    $this->drupalGet('block-content/' . $block->id() . '/latest');
+    $this->drupalGet('admin/content/block/' . $block->id() . '/latest');
     $this->submitForm($edit, 'Apply');
     $this->assertSession()->pageTextContains('The moderation state has been updated.');
 
