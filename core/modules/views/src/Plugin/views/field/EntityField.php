@@ -391,6 +391,7 @@ class EntityField extends FieldPluginBase implements CacheableDependencyInterfac
       }
     }
 
+    return NULL;
   }
 
   /**
