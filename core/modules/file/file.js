@@ -263,7 +263,6 @@
         $progressId.attr(
           'name',
           originalName.match(/[^\[\]]+(?!.*[^\[\]]+)/)[0],
-          'prettier/prettier',
         );
 
         // Restore the original name after the upload begins to prevent this
