@@ -17,10 +17,8 @@
   text-decoration: none;
   color: var(--color-text-neutral-loud);
   background-color: transparent;
-  background-image: linear-gradient(
-    var(--color--primary-50),
-    var(--color--primary-50)
-  ); /* Two values are needed for IE11 support. */
+  background-image: linear-gradient(var(--color--primary-50), var(--color--primary-50)); /* Two values are needed for IE11 support. */
+
   background-repeat: no-repeat;
   background-position: bottom left; /* LTR */
   background-size: 0 0.1875rem;
@@ -31,7 +29,7 @@
   color: var(--color-text-primary-medium);
 }
 
-[dir='rtl'] .node__title {
+[dir="rtl"] .node__title {
   background-position: bottom right;
 }
 

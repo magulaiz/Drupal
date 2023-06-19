@@ -16,6 +16,7 @@
       var(--color--primary-50),
       var(--color--primary-50)
     ); /* Two values are needed for IE11 support. */
+
     background-repeat: no-repeat;
     background-position: bottom left; /* LTR */
     background-size: 0 3px;

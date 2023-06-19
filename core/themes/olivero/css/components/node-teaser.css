@@ -20,7 +20,7 @@
   inset-block-end: 0;
   width: var(--sp3);
   height: 0;
-  content: '';
+  content: "";
   /* Intentionally not using CSS logical properties. */
   border-top: solid 2px var(--color--gray-95);
 }
