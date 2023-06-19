@@ -207,7 +207,7 @@ class LibraryDiscoveryParser {
           elseif ($type == 'css') {
             $options['group'] = $extension_type == 'theme' ? CSS_AGGREGATE_THEME : CSS_AGGREGATE_DEFAULT;
           }
-          // All library assets are files by default.
+          // By default, all library assets are files.
           if (!isset($options['type'])) {
             $options['type'] = 'file';
           }
