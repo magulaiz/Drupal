@@ -209,7 +209,10 @@ class BlockContentBlock extends BlockBase implements ContainerFactoryPluginInter
     if (!isset($this->blockContent)) {
       $uuid = $this->getDerivativeId();
       if ($id = $this->uuidLookup->get($uuid)) {
-        $this->blockContent = $this->entityTypeManager->getStorage('block_content')->load($id);
+        $blockContent = $this->entityTypeManager->getStorage('block_content')->load($id);
+        if ($blockContent->get('status') !== NULL && $blockContent->get('status')->value) {
+          $this->blockContent = $this->entityTypeManager->getStorage('block_content')->load($id);
+        }
       }
     }
     return $this->blockContent;
