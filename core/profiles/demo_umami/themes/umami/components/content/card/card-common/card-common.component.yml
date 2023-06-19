@@ -3,18 +3,40 @@ name: Card Common
 props:
   type: object
   properties:
-    label:
+    title:
       type: string
       title: Title
-      description: The title of the node
+      description: The title of the node.
       examples:
         - A recipe for success!
+    url:
+      type: string
+      title: Url
+      description: Card link URL.
+    attributes:
+      type: string
+      title: Attributes
+      description: Wrapper attributes.
+    content_attributes:
+      type: string
+      title: Content attributes
+      description: Content wrapper attributes.
+    title_attributes:
+      type: string
+      title: Title attributes
+      description: Title attributes object.
+    title_prefix:
+      type: array
+      title: Title prefix
+    title_suffix:
+      type: array
+      title: Title suffix
 slots:
   type: object
-  title:
-    title: Title
+  content:
+    title: Content
     required: true
-    description: The card title.
+    description: The card content.
 libraryOverrides:
   dependencies:
     - sdc/umami--card

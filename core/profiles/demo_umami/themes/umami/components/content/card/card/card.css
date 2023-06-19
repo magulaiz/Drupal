@@ -11,17 +11,6 @@
   border: 1px solid #fcece7;
 }
 
-.umami-card .umami-card__title {
-  flex-grow: 1;
-}
-
-.umami-card .umami-card__title {
-  text-decoration: none;
-  color: #000;
-  font-size: 1.424rem;
-  font-weight: 400;
-}
-
 .umami-card .umami-card__link {
   text-decoration: none;
   color: #000;

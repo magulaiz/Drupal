@@ -1,5 +1,6 @@
 $schema: https://git.drupalcode.org/project/sdc/-/raw/1.x/src/metadata.schema.json
-name: Card Common Alt
+name: Card Title
+description: A card title.
 props:
   type: object
   properties:
@@ -9,18 +10,6 @@ props:
       description: The title of the node.
       examples:
         - A recipe for success!
-    url:
-      type: string
-      title: Url
-      description: Card link URL.
-    attributes:
-      type: string
-      title: Attributes
-      description: Wrapper attributes.
-    content_attributes:
-      type: string
-      title: Content attributes
-      description: Content wrapper attributes.
     title_attributes:
       type: string
       title: Title attributes
@@ -31,12 +20,3 @@ props:
     title_suffix:
       type: array
       title: Title suffix
-slots:
-  type: object
-  content:
-    title: Content
-    required: true
-    description: The card content.
-libraryOverrides:
-  dependencies:
-    - sdc/umami--card

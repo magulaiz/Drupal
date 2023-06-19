@@ -6,11 +6,12 @@
   {% block card %}
 
     {% block title %}
-      {{ title_prefix }}
-        <h2{{ title_attributes.addClass('umami-card__title') }}>
-          {{ title }}
-        </h2>
-      {{ title_suffix }}
+      {{ include('umami:card-title', {
+        title,
+        title_attributes,
+        title_prefix,
+        title_suffix
+      }, with_context = false) }}
     {% endblock %}
 
     {% block content %}
