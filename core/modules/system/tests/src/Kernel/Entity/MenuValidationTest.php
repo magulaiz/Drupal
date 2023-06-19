@@ -19,7 +19,7 @@ class MenuValidationTest extends ConfigEntityValidationTestBase {
     parent::setUp();
 
     $this->entity = Menu::create([
-      'id' => 'test',
+      'id' => 'test-menu',
       'label' => 'Test',
     ]);
     $this->entity->save();

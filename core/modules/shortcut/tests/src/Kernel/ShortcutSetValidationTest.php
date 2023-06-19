@@ -26,7 +26,7 @@ class ShortcutSetValidationTest extends ConfigEntityValidationTestBase {
     $this->installEntitySchema('shortcut');
 
     $this->entity = ShortcutSet::create([
-      'id' => 'test',
+      'id' => 'test-shortcut-set',
       'label' => 'Test',
     ]);
     $this->entity->save();
