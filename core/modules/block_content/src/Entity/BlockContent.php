@@ -68,6 +68,7 @@ use Drupal\block_content\BlockContentInterface;
  *     "label" = "info",
  *     "langcode" = "langcode",
  *     "uuid" = "uuid",
+ *     "status" = "status",
  *     "published" = "status",
  *   },
  *   revision_metadata_keys = {
