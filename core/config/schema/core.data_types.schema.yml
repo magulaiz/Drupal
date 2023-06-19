@@ -101,7 +101,8 @@ machine_name:
   constraints:
     Regex: '/^[a-z0-9_]+$/'
     Length:
-      max: 64
+      # @see \Drupal\Core\Config\Entity\ConfigEntityStorage::MAX_ID_LENGTH
+      max: 166
 
 # Complex extended data types:
 
