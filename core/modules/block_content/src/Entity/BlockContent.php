@@ -67,6 +67,7 @@ use Drupal\user\UserInterface;
  *     "label" = "info",
  *     "langcode" = "langcode",
  *     "uuid" = "uuid",
+ *     "status" = "status",
  *     "published" = "status",
  *   },
  *   revision_metadata_keys = {
