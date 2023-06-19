@@ -261,9 +261,9 @@
         // element sends its upload identifier. The upload identifier is the
         // last string in the name that does not contain square brackets.
         $progressId.attr(
-            'name',
-            originalName.match(/[^[\]]+(?!.*[^[\]]+)/)[0],
-            "prettier/prettier",
+          'name',
+          originalName.match(/[^[\]]+(?!.*[^[\]]+)/)[0],
+          'prettier/prettier',
         );
 
         // Restore the original name after the upload begins to prevent this
