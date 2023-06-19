@@ -262,7 +262,7 @@
         // last string in the name that does not contain square brackets.
         $progressId.attr(
           'name',
-          originalName.match(/[^[\]]+(?!.*[^[\]]+)/)[0],
+          originalName.match(/[^\[\]]+(?!.*[^\[\]]+)/)[0],
         );
 
         // Restore the original name after the upload begins to prevent this
