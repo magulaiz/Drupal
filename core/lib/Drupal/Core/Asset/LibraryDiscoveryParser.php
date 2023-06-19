@@ -207,9 +207,9 @@ class LibraryDiscoveryParser {
           elseif ($type == 'css') {
             $options['group'] = $extension_type == 'theme' ? CSS_AGGREGATE_THEME : CSS_AGGREGATE_DEFAULT;
           }
-          // All library assets are files by default, except external URLs.
+          // All library assets are files by default.
           if (!isset($options['type'])) {
-            $options['type'] = UrlHelper::isExternal($source) ? 'external' : 'file';
+            $options['type'] = 'file';
           }
           if ($options['type'] === 'external') {
             $options['data'] = $source;
