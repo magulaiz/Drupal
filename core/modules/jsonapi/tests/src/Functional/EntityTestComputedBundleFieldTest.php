@@ -94,7 +94,7 @@ class EntityTestComputedBundleFieldTest extends ResourceTestBase {
    * {@inheritdoc}
    */
   protected function getExpectedDocument() {
-    $self_url = Url::fromUri('base:/jsonapi/entity_test_computed_bundle_field/entity_test_computed_bundle_field/' . $this->entity->uuid())->setAbsolute()->toString(TRUE)->getGeneratedUrl();
+    $self_url = Url::fromUri('base:/jsonapi/entity_test_comp_bund_fld/entity_test_comp_bund_fld/' . $this->entity->uuid())->setAbsolute()->toString(TRUE)->getGeneratedUrl();
     $author = User::load(0);
     $bundle = EntityTestComputedBundleFieldBundle::load('entity_test_comp_bund_fld');
     return [
@@ -111,7 +111,7 @@ class EntityTestComputedBundleFieldTest extends ResourceTestBase {
       ],
       'data' => [
         'id' => $this->entity->uuid(),
-        'type' => 'entity_test_computed_bundle_field--entity_test_computed_bundle_field',
+        'type' => 'entity_test_comp_bund_fld--entity_test_comp_bund_fld',
         'links' => [
           'self' => ['href' => $self_url],
         ],
