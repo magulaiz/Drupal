@@ -108,6 +108,7 @@ function file_requirements($phase) {
     }
     if ($implementation == 'session') {
       $value = t('Enabled (<a href="http://php.net/manual/en/session.upload-progress.php">PHP session upload progress</a>)');
+      /** @var Drupal\Core\Session\SessionManager $session_manager */
       $session_manager = \Drupal::service('session_manager');
       if (!method_exists($session_manager, 'getPHPSessionName') || $session_manager->getPHPSessionName() != session_name()) {
         $description = [
