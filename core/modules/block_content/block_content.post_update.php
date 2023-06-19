@@ -6,6 +6,7 @@
  */
 
 use Drupal\Core\Config\Entity\ConfigEntityUpdater;
+use Drupal\Core\Entity\Display\EntityDisplayInterface;
 use Drupal\user\Entity\Role;
 use Drupal\views\Entity\View;
 
@@ -75,6 +76,24 @@ function block_content_post_update_sort_permissions(&$sandbox = NULL) {
       $role->grantPermission('administer block content');
       $role->grantPermission('access block library');
       $role->grantPermission('administer block types');
+      return TRUE;
+    }
+    return FALSE;
+  });
+}
+
+/**
+ * Add status with settings to all form displays for block_content entities.
+ */
+function block_content_post_update_configure_status_field_widget(&$sandbox = NULL) {
+  \Drupal::classResolver(ConfigEntityUpdater::class)->update($sandbox, 'entity_form_display', function (EntityDisplayInterface $entity_form_display) {
+    if ($entity_form_display->getTargetEntityTypeId() == 'block_content' && empty($entity_form_display->getComponent('status'))) {
+      $entity_form_display->setComponent('status', [
+        'type' => 'boolean_checkbox',
+        'settings' => [
+          'display_label' => TRUE,
+        ],
+      ]);
       return TRUE;
     }
     return FALSE;
