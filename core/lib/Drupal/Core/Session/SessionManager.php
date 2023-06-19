@@ -278,7 +278,7 @@ class SessionManager extends NativeSessionStorage implements SessionManagerInter
    *
    * @return string
    */
- public function getPHPSessionHandler(): string {
+  public function getPHPSessionHandler(): string {
     return $this->PHPSessionHandler;
   }
 
