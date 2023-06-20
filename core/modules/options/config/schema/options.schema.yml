@@ -20,18 +20,6 @@ field.storage_settings.list_integer:
     allowed_values_function:
       type: string
       label: 'Allowed values function'
-    allowed_values_meta:
-      type: sequence
-      label: 'Allowed values meta'
-      sequence:
-        type: mapping
-        mapping:
-          value:
-            type: integer
-            label: 'Value'
-          weight:
-            type: integer
-            label: 'Weight'
 
 field.field_settings.list_integer:
   label: 'List (integer) settings'
@@ -65,18 +53,6 @@ field.storage_settings.list_float:
     allowed_values_function:
       type: string
       label: 'Allowed values function'
-    allowed_values_meta:
-      type: sequence
-      label: 'Allowed values meta'
-      sequence:
-        type: mapping
-        mapping:
-          value:
-            type: float
-            label: 'Value'
-          weight:
-            type: integer
-            label: 'Weight'
 
 field.field_settings.list_float:
   label: 'List (float) settings'
@@ -110,18 +86,6 @@ field.storage_settings.list_string:
     allowed_values_function:
       type: string
       label: 'Allowed values function'
-    allowed_values_meta:
-      type: sequence
-      label: 'Allowed values meta'
-      sequence:
-        type: mapping
-        mapping:
-          value:
-            type: string
-            label: 'Value'
-          weight:
-            type: integer
-            label: 'Weight'
 
 field.field_settings.list_string:
   label: 'List (text) settings'

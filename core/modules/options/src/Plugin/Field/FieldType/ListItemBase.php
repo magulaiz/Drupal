@@ -25,7 +25,6 @@ abstract class ListItemBase extends FieldItemBase implements OptionsProviderInte
     return [
       'allowed_values' => [],
       'allowed_values_function' => '',
-      'allowed_values_meta' => [],
     ] + parent::defaultStorageSettings();
   }
 
@@ -94,7 +93,6 @@ abstract class ListItemBase extends FieldItemBase implements OptionsProviderInte
 
     $allowed_values = $form_state->getStorage()['allowed_values'];
     $allowed_values_function = $this->getSetting('allowed_values_function');
-    $allowed_values_meta = $this->getSetting('allowed_values_meta');
 
     if (!$form_state->get('items_count')) {
       $form_state->set('items_count', max(count($allowed_values), 0));
@@ -132,14 +130,8 @@ abstract class ListItemBase extends FieldItemBase implements OptionsProviderInte
     $entity_type_id = $this->getFieldDefinition()->getTargetEntityTypeId();
     $field_name = $this->getFieldDefinition()->getName();
     $field_type = $this->getFieldDefinition()->getType();
-    uksort($allowed_values, function ($a, $b) use ($allowed_values_meta) {
-      $a_weight = $allowed_values_meta[$a] ?? 0;
-      $b_weight = $allowed_values_meta[$b] ?? 0;
-      return $a_weight <=> $b_weight;
-    });
     $current_keys = array_keys($allowed_values);
     for ($delta = 0; $delta <= $max; $delta++) {
-      $key = $current_keys[$delta] ?? '';
       $element['allowed_values']['table'][$delta] = [
         '#attributes' => [
           'class' => ['draggable'],
@@ -205,7 +197,7 @@ abstract class ListItemBase extends FieldItemBase implements OptionsProviderInte
         '#title' => $this->t('Weight for row @number', ['@number' => $delta + 1]),
         '#title_display' => 'invisible',
         '#delta' => 50,
-        '#default_value' => $allowed_values_meta[$key]['weight'] ?? 0,
+        '#default_value' => 0,
         '#attributes' => ['class' => ['weight']],
       ];
       if ($delta < count($allowed_values)) {
@@ -378,6 +370,13 @@ abstract class ListItemBase extends FieldItemBase implements OptionsProviderInte
     }, Element::children($element['table'])), function ($item) {
       return $item;
     });
+    if ($reordered_items = $form_state->getValue(['settings', 'allowed_values', 'table'])) {
+      uksort($items, function ($a, $b) use ($reordered_items) {
+        $a_weight = $reordered_items[$a]['weight'] ?? 0;
+        $b_weight = $reordered_items[$b]['weight'] ?? 0;
+        return $a_weight <=> $b_weight;
+      });
+    }
     $values = static::extractAllowedValues($items, $element['#field_has_data']);
 
     if (!is_array($values)) {
@@ -393,15 +392,6 @@ abstract class ListItemBase extends FieldItemBase implements OptionsProviderInte
       }
 
       $form_state->setValueForElement($element, $values);
-      $table = $form_state->getUserInput()['settings']['allowed_values']['table'];
-      $allowed_values_meta = [];
-      foreach ($table as $item) {
-        if (isset($item['item']['key']) && $item['item']['key'] !== '' && isset($item['weight'])) {
-          $allowed_values_meta[$item['item']['key']]['weight'] = $item['weight'];
-        }
-      }
-
-      $form_state->setValue(['settings', 'allowed_values_meta'], $allowed_values_meta);
     }
   }
 
@@ -504,9 +494,6 @@ abstract class ListItemBase extends FieldItemBase implements OptionsProviderInte
     if (isset($settings['allowed_values'])) {
       $settings['allowed_values'] = static::structureAllowedValues($settings['allowed_values']);
     }
-    if (isset($settings['allowed_values_meta'])) {
-      $settings['allowed_values_meta'] = static::structureAllowedValuesMeta($settings['allowed_values_meta']);
-    }
     return $settings;
   }
 
@@ -516,9 +503,6 @@ abstract class ListItemBase extends FieldItemBase implements OptionsProviderInte
   public static function storageSettingsFromConfigData(array $settings) {
     if (isset($settings['allowed_values'])) {
       $settings['allowed_values'] = static::simplifyAllowedValues($settings['allowed_values']);
-    }
-    if (isset($settings['allowed_values_meta'])) {
-      $settings['allowed_values_meta'] = static::simplifyAllowedValuesMeta($settings['allowed_values_meta']);
     }
     return $settings;
   }
