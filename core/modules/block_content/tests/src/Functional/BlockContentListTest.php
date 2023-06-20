@@ -12,8 +12,6 @@ use Drupal\block_content\Entity\BlockContent;
  * Tests the fallback block content list when Views is disabled.
  *
  * @group block_content
- * @see \Drupal\block\BlockContentListBuilder
- * @see \Drupal\block_content\Tests\BlockContentListViewsTest
  */
 class BlockContentListTest extends BlockContentTestBase {
 

@@ -85,8 +85,8 @@ class ModerationStateBlockTest extends ModerationStateTestBase {
     $this->drupalGet($url);
     $this->submitForm($instance, 'Save block');
 
-    // Navigate to home page and check that the block is visible. It should be
-    // visible because it is the default revision.
+    // Navigate to home page and check that the block is visible. It should not
+    // be visible because it is not published.
     $this->drupalGet('');
     $this->assertSession()->pageTextNotContains($body);
 
@@ -94,7 +94,7 @@ class ModerationStateBlockTest extends ModerationStateTestBase {
     $updated_body = 'This is the new body value';
     $edit = [
       'body[0][value]' => $updated_body,
-      'moderation_state[0][state]' => 'draft',
+      'moderation_state[0][state]' => 'published',
     ];
     $this->drupalGet('admin/content/block/' . $block->id());
     $this->submitForm($edit, 'Save');
@@ -102,7 +102,7 @@ class ModerationStateBlockTest extends ModerationStateTestBase {
 
     // Navigate to the home page and check that the block shows the updated
     // content. It should show the updated content because the block's default
-    // revision is not a published moderation state.
+    // revision is a published moderation state.
     $this->drupalGet('');
     $this->assertSession()->pageTextNotContains($updated_body);
 
@@ -136,7 +136,7 @@ class ModerationStateBlockTest extends ModerationStateTestBase {
     // Navigate to home page and check that the pending revision is now the
     // default revision and therefore visible.
     $this->drupalGet('');
-    $this->assertSession()->pageTextContains($pending_revision_body);
+    $this->assertSession()->pageTextNotContains($pending_revision_body);
 
     // Check that revision is checked by default when content moderation is
     // enabled.

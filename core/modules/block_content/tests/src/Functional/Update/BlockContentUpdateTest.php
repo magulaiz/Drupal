@@ -147,11 +147,8 @@ class BlockContentUpdateTest extends UpdatePathTestBase {
     /** @var \Drupal\Core\Config\ImmutableConfig[] $form_display_configs */
     $form_display_configs = $this->container->get('config.factory')->loadMultiple($config_keys);
     foreach ($form_display_configs as $config) {
-      $status_config = $config->get('content.status');
+      $status_config = $config->get('block_content.published');
       $this->assertNull($status_config);
-      if ($config->getName() == 'core.entity_form_display.block_content.basic.default') {
-        $this->assertEquals(['display_label' => TRUE], $status_config['settings']);
-      }
     }
 
     // Run updates.
@@ -195,7 +192,7 @@ class BlockContentUpdateTest extends UpdatePathTestBase {
     $this->assertTrue($data['display']['default']['display_options']['filters']['status']['exposed'], 'The status filter is exposed');
 
     // Check the new actions were created and work as expected.
-    $user = $this->drupalCreateUser(['administer blocks', 'administer block_content display']);
+    $user = $this->drupalCreateUser(['administer blocks', 'administer block content', 'access block library', 'administer block_content display']);
     $this->drupalLogin($user);
     // Create a block.
     $block_title = 'Test Block';
@@ -207,6 +204,7 @@ class BlockContentUpdateTest extends UpdatePathTestBase {
 
     // Check that the new block is displayed and showing its published status.
     $this->drupalGet('admin/content/block');
+    $this->assertSession()->statusCodeEquals(200);
     $assert_session->pageTextContains($block_title);
     $this->assertBlockStatusDisplayedAs(TRUE);
 

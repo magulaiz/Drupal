@@ -14,7 +14,7 @@ trait BlockContentTestBulkOperationsTrait {
     $edit = [];
     $edit['action'] = 'block_content_unpublish_action';
     $edit["block_content_bulk_form[0]"] = TRUE;
-    $this->drupalGet('admin/structure/block/block-content');
+    $this->drupalGet('admin/content/block');
     $this->submitForm($edit, 'Apply to selected items');
     $this->assertSession()->pageTextContains('Unpublish block content was applied to 1 item.');
   }
@@ -26,7 +26,7 @@ trait BlockContentTestBulkOperationsTrait {
     $edit = [];
     $edit['action'] = 'block_content_publish_action';
     $edit['block_content_bulk_form[0]'] = TRUE;
-    $this->drupalGet('admin/structure/block/block-content');
+    $this->drupalGet('admin/content/block');
     $this->submitForm($edit, 'Apply to selected items');
     $this->assertSession()->pageTextContains('Publish block content was applied to 1 item.');
   }
