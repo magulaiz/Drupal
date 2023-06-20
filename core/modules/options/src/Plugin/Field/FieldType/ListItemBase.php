@@ -533,27 +533,6 @@ abstract class ListItemBase extends FieldItemBase implements OptionsProviderInte
   }
 
   /**
-   * Converts allowed values from a numeric array to an associative array.
-   *
-   * @param array $structured_values
-   *   Array of items with the metadata (for eg: weight), each for the allowed
-   *   values.
-   *
-   * @return array
-   *   Metadata for allowed values as nested array keyed by the allowed
-   *   values.
-   *
-   * @see \Drupal\options\Plugin\Field\FieldType\ListItemBase::structureAllowedValuesMeta()
-   */
-  protected static function simplifyAllowedValuesMeta(array $structured_values) {
-    $values = [];
-    foreach ($structured_values as $item) {
-      $values[$item['value']] = array_diff_key($item, ['value' => '']);
-    }
-    return $values;
-  }
-
-  /**
    * Creates a structured array of allowed values from a key-value array.
    *
    * @param array $values
@@ -578,21 +557,6 @@ abstract class ListItemBase extends FieldItemBase implements OptionsProviderInte
       ];
     }
     return $structured_values;
-  }
-
-  /**
-   * Creates a numeric array of allowed values metadata from an associative array.
-   *
-   * @param array $values
-   *   Nested array of the allowed values metadata keyed by its value.
-   *
-   * @return array
-   *   Numeric array having value and metadata of each allowed value.
-   *
-   * @see \Drupal\options\Plugin\Field\FieldType\ListItemBase::simplifyAllowedValuesMeta()
-   */
-  protected static function structureAllowedValuesMeta(array $values) {
-    return array_map(fn($value, $meta) => [...$meta, 'value' => static::castAllowedValue($value)], array_keys($values), $values);
   }
 
   /**
