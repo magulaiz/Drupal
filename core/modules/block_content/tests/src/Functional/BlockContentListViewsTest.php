@@ -10,6 +10,8 @@ use Drupal\block_content\Entity\BlockContent;
  * Tests the Views-powered listing of content blocks.
  *
  * @group block_content
+ * @see \Drupal\block\BlockContentListBuilder
+ * @see \Drupal\block_content\Tests\BlockContentListTest
  */
 class BlockContentListViewsTest extends BlockContentTestBase {
 
