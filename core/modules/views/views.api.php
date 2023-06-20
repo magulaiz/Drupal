@@ -423,7 +423,7 @@ function hook_views_data() {
   // Computed field example. Computed fields are not associated with actual data
   // tables and fields, and therefore have no schema. Instead, they are computed
   // when the value is read from the entity. Here's the definition of a computed
-  // field that exists for a particular entity type the value of the field will
+  // field that exists for a particular entity type. The value of the field will
   // be calculated by a defined class. If the defined class for the computed
   // fields differs between multiple bundles of the same entity type, then each
   // of those fields should be added separately.
