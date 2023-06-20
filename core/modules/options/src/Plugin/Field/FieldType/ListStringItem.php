@@ -112,4 +112,13 @@ class ListStringItem extends ListItemBase {
     return $element;
   }
 
+  /**
+   * Checks for existing keys for allowed values.
+   */
+  public static function exists(): bool {
+    // Without access to the current form state, we cannot know if a given key
+    // is in use. Return FALSE in all cases.
+    return FALSE;
+  }
+
 }
