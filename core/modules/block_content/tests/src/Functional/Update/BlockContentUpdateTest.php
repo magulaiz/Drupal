@@ -148,12 +148,9 @@ class BlockContentUpdateTest extends UpdatePathTestBase {
     $form_display_configs = $this->container->get('config.factory')->loadMultiple($config_keys);
     foreach ($form_display_configs as $config) {
       $status_config = $config->get('content.status');
+      $this->assertNull($status_config);
       if ($config->getName() == 'core.entity_form_display.block_content.basic.default') {
-        $this->assertNotNull($status_config);
         $this->assertEquals(['display_label' => TRUE], $status_config['settings']);
-      }
-      else {
-        $this->assertNull($status_config);
       }
     }
 
@@ -175,7 +172,7 @@ class BlockContentUpdateTest extends UpdatePathTestBase {
   /**
    * Tests updating the block_content view for publishable block_content blocks.
    *
-   * @see block_content_update_8700()
+   * @see block_content_update_10201()
    */
   public function testBlockContentPublishableUIUpdate() {
     $this->runUpdates();

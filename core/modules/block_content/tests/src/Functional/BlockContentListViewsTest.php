@@ -133,7 +133,7 @@ class BlockContentListViewsTest extends BlockContentTestBase {
     // Filter by published to show only published blocks.
     $edit = [];
     $edit['status'] = 1;
-    $this->drupalGet('admin/structure/block/block-content');
+    $this->drupalGet('admin/content/block');
     $this->submitForm($edit, 'Apply');
     $this->assertSession()->pageTextContains($label);
 

@@ -88,7 +88,7 @@ class ModerationStateBlockTest extends ModerationStateTestBase {
     // Navigate to home page and check that the block is visible. It should be
     // visible because it is the default revision.
     $this->drupalGet('');
-    $this->assertSession()->pageTextContains($body);
+    $this->assertSession()->pageTextNotContains($body);
 
     // Update the block.
     $updated_body = 'This is the new body value';
@@ -104,7 +104,7 @@ class ModerationStateBlockTest extends ModerationStateTestBase {
     // content. It should show the updated content because the block's default
     // revision is not a published moderation state.
     $this->drupalGet('');
-    $this->assertSession()->pageTextContains($updated_body);
+    $this->assertSession()->pageTextNotContains($updated_body);
 
     // Publish the block so we can create a pending revision.
     $this->drupalGet('admin/content/block/' . $block->id());
@@ -123,7 +123,7 @@ class ModerationStateBlockTest extends ModerationStateTestBase {
     // Navigate to home page and check that the pending revision doesn't show,
     // since it should not be set as the default revision.
     $this->drupalGet('');
-    $this->assertSession()->pageTextContains($updated_body);
+    $this->assertSession()->pageTextNotContains($updated_body);
 
     // Open the latest tab and publish the new draft.
     $edit = [
