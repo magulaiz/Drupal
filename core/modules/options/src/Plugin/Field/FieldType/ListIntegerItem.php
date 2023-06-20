@@ -4,6 +4,8 @@ namespace Drupal\options\Plugin\Field\FieldType;
 
 use Drupal\Core\Field\FieldFilteredMarkup;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Render\Element;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\TypedData\DataDefinition;
 
@@ -71,6 +73,19 @@ class ListIntegerItem extends ListItemBase {
    */
   protected static function castAllowedValue($value) {
     return (int) $value;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function storageSettingsForm(array &$form, FormStateInterface $form_state, $has_data) {
+    $element = parent::storageSettingsForm($form, $form_state, $has_data);
+
+    foreach (Element::children($element['allowed_values']['table']) as $delta => $row) {
+      $element['allowed_values']['table'][$delta]['item']['key']['#type'] = 'number';
+    }
+
+    return $element;
   }
 
 }

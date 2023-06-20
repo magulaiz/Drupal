@@ -4,6 +4,8 @@ namespace Drupal\options\Plugin\Field\FieldType;
 
 use Drupal\Core\Field\FieldFilteredMarkup;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Render\Element;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\TypedData\DataDefinition;
 
@@ -107,19 +109,31 @@ class ListFloatItem extends ListItemBase {
   /**
    * {@inheritdoc}
    */
-  protected static function simplifyAllowedValuesMeta(array $structured_values) {
-    $values = [];
-    foreach ($structured_values as $item) {
-      $values[(string) (float) $item['value']] = array_diff_key($item, ['value' => '']);
-    }
-    return $values;
+  protected static function castAllowedValue($value) {
+    return (float) $value;
   }
 
   /**
    * {@inheritdoc}
    */
-  protected static function castAllowedValue($value) {
-    return (float) $value;
+  public function storageSettingsForm(array &$form, FormStateInterface $form_state, $has_data) {
+    $element = parent::storageSettingsForm($form, $form_state, $has_data);
+
+    foreach (Element::children($element['allowed_values']['table']) as $delta => $row) {
+      $element['allowed_values']['table'][$delta]['item']['key']['#step'] = 'any';
+      $element['allowed_values']['table'][$delta]['item']['key']['#type'] = 'number';
+    }
+
+    return $element;
+  }
+
+  /**
+   * Checks for existing keys for allowed values.
+   */
+  public static function exists(): bool {
+    // Without access to the current form state, we cannot know if a given key
+    // is in use. Return FALSE in all cases.
+    return FALSE;
   }
 
 }

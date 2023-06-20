@@ -129,7 +129,6 @@ abstract class ListItemBase extends FieldItemBase implements OptionsProviderInte
     $max = $form_state->get('items_count');
     $entity_type_id = $this->getFieldDefinition()->getTargetEntityTypeId();
     $field_name = $this->getFieldDefinition()->getName();
-    $field_type = $this->getFieldDefinition()->getType();
     $current_keys = array_keys($allowed_values);
     for ($delta = 0; $delta <= $max; $delta++) {
       $element['allowed_values']['table'][$delta] = [
@@ -146,38 +145,15 @@ abstract class ListItemBase extends FieldItemBase implements OptionsProviderInte
           '#default_value' => isset($current_keys[$delta]) ? $allowed_values[$current_keys[$delta]] : '',
           '#required' => $delta == 0,
         ],
+        'key' => [
+          '#type' => 'textfield',
+          '#maxlength' => 255,
+          '#title' => $this->t('Value'),
+          '#default_value' => $current_keys[$delta] ?? '',
+          '#weight' => -20,
+          '#required' => $delta == 0,
+        ],
       ];
-      if ($field_type == 'list_string') {
-        $element['allowed_values']['table'][$delta]['item'] += [
-          'key' => [
-            '#type' => 'machine_name',
-            '#required' => FALSE,
-            '#maxlength' => 255,
-            '#default_value' => $current_keys[$delta] ?? '',
-            '#machine_name' => [
-              'exists' => [static::class, 'exists'],
-            ],
-            '#weight' => -20,
-            '#process' => array_merge(
-              [[static::class, 'processAllowedValuesKey']],
-              // Workaround for https://drupal.org/i/1300290#comment-12873635.
-              \Drupal::service('plugin.manager.element_info')->getInfoProperty('machine_name', '#process', []),
-            ),
-          ],
-        ];
-      }
-      else {
-        $element['allowed_values']['table'][$delta]['item'] += [
-          'key' => [
-            '#type' => 'number',
-            '#title' => $this->t('Value'),
-            '#default_value' => $current_keys[$delta] ?? '',
-            '#step' => ($field_type == 'list_float' ? 'any' : ''),
-            '#weight' => -20,
-            '#required' => $delta == 0,
-          ],
-        ];
-      }
       $element['allowed_values']['table'][$delta]['delete'] = [
         '#type' => 'submit',
         '#value' => $this->t('Remove'),
@@ -246,26 +222,6 @@ abstract class ListItemBase extends FieldItemBase implements OptionsProviderInte
       '#value' => $allowed_values_function,
     ];
 
-    return $element;
-  }
-
-  /**
-   * Checks for existing keys for allowed values.
-   */
-  public static function exists(): bool {
-    // Without access to the current form state, we cannot know if a given key
-    // is in use. Return FALSE in all cases.
-    return FALSE;
-  }
-
-  /**
-   * Sets the machine name source to be the label.
-   */
-  public static function processAllowedValuesKey(array &$element): array {
-    $parents = $element['#parents'];
-    array_pop($parents);
-    $parents[] = 'label';
-    $element['#machine_name']['source'] = $parents;
     return $element;
   }
 
