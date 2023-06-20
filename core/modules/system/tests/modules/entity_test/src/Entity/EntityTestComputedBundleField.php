@@ -32,7 +32,6 @@ use Drupal\entity_test\Plugin\Field\ComputedTestFieldItemList;
  *   links = {
  *     "canonical" = "/entity_test_comp_bund_fld/{entity_test_comp_bund_fld}",
  *   },
- *   bundle_entity_type = "entity_test_comp_bund_fld_bundle"
  * )
  */
 class EntityTestComputedBundleField extends EntityTest {

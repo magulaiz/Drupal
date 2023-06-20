@@ -37,7 +37,6 @@ class ComputedBundleFieldTest extends ViewsKernelTestBase {
     parent::setUp(FALSE);
 
     $this->installEntitySchema('entity_test_comp_bund_fld');
-    $this->installEntitySchema('entity_test_comp_bund_fld_bundle');
 
     // Create a default bundle that has a computed field.
     entity_test_create_bundle('entity_test_comp_bund_fld_bund', NULL, 'entity_test_comp_bund_fld');
