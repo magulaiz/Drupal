@@ -106,6 +106,7 @@ abstract class ListItemBase extends FieldItemBase implements OptionsProviderInte
       '#required' => TRUE,
       '#prefix' => '<div id="' . $wrapper_id . '">',
       '#suffix' => '</div>',
+      '#access' => empty($allowed_values_function),
     ];
     $element['allowed_values']['table'] = [
       '#type' => 'table',
