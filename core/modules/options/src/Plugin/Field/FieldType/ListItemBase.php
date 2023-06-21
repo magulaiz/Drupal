@@ -144,7 +144,7 @@ abstract class ListItemBase extends FieldItemBase implements OptionsProviderInte
           '#title' => $this->t('Name'),
           '#weight' => -30,
           '#default_value' => isset($current_keys[$delta]) ? $allowed_values[$current_keys[$delta]] : '',
-          '#required' => $delta == 0,
+          '#required' => $delta === 0,
         ],
         'key' => [
           '#type' => 'textfield',
