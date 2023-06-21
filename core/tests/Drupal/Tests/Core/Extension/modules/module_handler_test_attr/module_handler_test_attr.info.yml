@@ -1,0 +1,5 @@
+name: module handler test attributes
+type: module
+description: 'Test module with attribute hooks.'
+package: Testing
+version: VERSION

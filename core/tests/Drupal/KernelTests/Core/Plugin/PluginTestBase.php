@@ -3,12 +3,15 @@
 namespace Drupal\KernelTests\Core\Plugin;
 
 use Drupal\Core\Cache\MemoryBackend;
+use Drupal\Core\Extension\Hook\HookMap;
+use Drupal\Core\Extension\Hook\Source\EmptyImplementationSource;
 use Drupal\Core\Extension\ModuleHandler;
 use Drupal\Core\Plugin\Context\EntityContextDefinition;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\plugin_test\Plugin\DefaultsTestPluginManager;
 use Drupal\plugin_test\Plugin\MockBlockManager;
 use Drupal\plugin_test\Plugin\TestPluginManager;
+use Symfony\Component\EventDispatcher\EventDispatcher;
 
 /**
  * Base class for Plugin API unit tests.
@@ -45,7 +48,19 @@ abstract class PluginTestBase extends KernelTestBase {
     //   as derivatives and ReflectionFactory.
     $this->testPluginManager = new TestPluginManager();
     $this->mockBlockManager = new MockBlockManager();
-    $module_handler = new ModuleHandler($this->root, [], new MemoryBackend());
+    $cache_backend = new MemoryBackend();
+    $hook_map = new HookMap(
+      $cache_backend,
+      $this->container,
+      new EmptyImplementationSource(),
+      new EventDispatcher(),
+    );
+    $module_handler = new ModuleHandler(
+      $this->root,
+      [],
+      $cache_backend,
+      $hook_map,
+    );
     $this->defaultsTestPluginManager = new DefaultsTestPluginManager($module_handler);
 
     // The expected plugin definitions within each manager. Several tests assert

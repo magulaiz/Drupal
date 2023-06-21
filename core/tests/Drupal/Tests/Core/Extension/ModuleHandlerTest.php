@@ -2,12 +2,22 @@
 
 namespace Drupal\Tests\Core\Extension;
 
+use Composer\Autoload\ClassLoader;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Cache\MemoryBackend;
 use Drupal\Core\Extension\Exception\UnknownExtensionException;
 use Drupal\Core\Extension\Extension;
+use Drupal\Core\Extension\Hook\CompactList\CompactImplementationList;
+use Drupal\Core\Extension\Hook\HookMap;
+use Drupal\Core\Extension\Hook\HookMapInterface;
+use Drupal\Core\Extension\Hook\Source\CachedImplementationSource;
+use Drupal\Core\Extension\Hook\Source\ImplementationSourceInterface;
+use Drupal\Core\Extension\Hook\Source\ServiceMethodAttributeHookDiscovery;
 use Drupal\Core\Extension\ModuleHandler;
 use Drupal\Core\Extension\ModuleHandlerInterface;
+use Drupal\module_handler_test_attr\Hooks\CustomOrder;
+use Drupal\module_handler_test_attr\Hooks\TestHooks;
+use Drupal\module_handler_test_attr\Hooks\TypeAlter;
 use Drupal\Tests\Traits\ExceptionSerializationTrait;
 use Drupal\Tests\UnitTestCase;
 use Drupal\TestTools\MockCallQueue;
@@ -38,6 +48,8 @@ class ModuleHandlerTest extends UnitTestCase {
     'module_handler_test',
   ];
 
+  protected array $serviceClassesByModule = [];
+
   /**
    * @var \Drupal\TestTools\RuntimeAutowireContainer
    */
@@ -49,6 +61,11 @@ class ModuleHandlerTest extends UnitTestCase {
   private MockCallQueue $queue;
 
   /**
+   * @var \Composer\Autoload\ClassLoader
+   */
+  private ClassLoader $classLoader;
+
+  /**
    * {@inheritdoc}
    *
    * @covers ::__construct
@@ -57,6 +74,7 @@ class ModuleHandlerTest extends UnitTestCase {
     parent::setUp();
 
     $this->queue = new MockCallQueue();
+    $this->classLoader = require $this->root . '/autoload.php';
 
     $this->container = $this->createContainer();
   }
@@ -88,16 +106,30 @@ class ModuleHandlerTest extends UnitTestCase {
         $list[$module] = [
           'type' => 'module',
           'pathname' => $path . '/' . $module . '.info.yml',
-          'filename' => $module . '.module',
+          'filename' => NULL,
         ];
+        if (is_file($this->root . '/' . $path . '/' . $module . '.module')) {
+          $list[$module]['filename'] = $module . '.module';
+        }
       }
       return $list;
     });
+    $container->setParameterCallback('array $serviceClassesByModule', function (): array {
+      $list = array_fill_keys($this->modules, TRUE);
+      $list = array_intersect_key($list, $this->serviceClassesByModule);
+      $list = array_replace($list, $this->serviceClassesByModule);
+      return $list;
+    });
     $container->addClass(MemoryBackend::class);
+    $container->addClass(HookMap::class);
+    $container->addClass(ServiceMethodAttributeHookDiscovery::class);
+    $container->addDecoratorClass(CachedImplementationSource::class, [2 => 'hook_implementation_source']);
     $container->addClass(ModuleHandler::class);
     $container->addClass(EventDispatcher::class);
 
     $container->addService($this->queue);
+
+    $container->addService($this->classLoader);
 
     return $container;
   }
@@ -120,6 +152,30 @@ class ModuleHandlerTest extends UnitTestCase {
    */
   protected function addTestModule(string $module): void {
     $this->modules[] = $module;
+    $classes_dir = __DIR__ . '/modules/' . $module . '/src';
+    if (is_dir($classes_dir)) {
+      $this->classLoader->addPsr4('Drupal\\' . $module . '\\', __DIR__ . '/modules/' . $module . '/src');
+    }
+  }
+
+  /**
+   * Adds a service class that contains hook implementation methods.
+   *
+   * @param class-string $class
+   *   Class to add.
+   */
+  protected function addHookServiceClass(string $class): void {
+    $module = explode('\\', $class, 3)[1];
+    $this->container->addClass($class);
+    $this->serviceClassesByModule[$module][$class] = $class;
+  }
+
+  /**
+   * Tests that the runtime container is properly set up.
+   */
+  public function testContainerSetup(): void {
+    $source = $this->container->get(ImplementationSourceInterface::class);
+    $this->assertInstanceOf(CachedImplementationSource::class, $source);
   }
 
   /**
@@ -355,6 +411,43 @@ class ModuleHandlerTest extends UnitTestCase {
     ], $values);
   }
 
+  public function testInvokeMethodAttributes(): void {
+    // Simulate another module being enabled.
+    $this->addTestModule('module_handler_test_attr');
+    $this->addHookServiceClass(TestHooks::class);
+
+    $module_handler = $this->container->get(ModuleHandler::class);
+
+    // Implementations from the included file now work.
+    $this->assertSame(
+      [
+        'module_handler_test_attr_merge',
+        TestHooks::class . '::merge',
+        TestHooks::class . '::mergeTwice',
+        TestHooks::class . '::mergeTwice',
+      ],
+      $module_handler->invoke('module_handler_test_attr', 'merge'),
+      'Module is installed, implementation exists.',
+    );
+
+    // Test by-reference arguments.
+    $values = [];
+    $this->assertNull($module_handler->invoke(
+      'module_handler_test_attr',
+      'byref',
+      [&$values],
+    ));
+    $this->assertSameListsOfStrings([
+      TestHooks::class . '::byrefNegWeight',
+      TestHooks::class . '::byrefAfterOther',
+      TestHooks::class . '::byrefBefore',
+      'module_handler_test_attr_byref',
+      TestHooks::class . '::byref',
+      TestHooks::class . '::byref2',
+      TestHooks::class . '::byrefAfter',
+    ], $values);
+  }
+
   /**
    * Tests implementations methods when module is enabled.
    *
@@ -378,14 +471,17 @@ class ModuleHandlerTest extends UnitTestCase {
    * @covers ::hasImplementations
    */
   public function testHasImplementations() {
-    $module_handler = $this->container->getMock(ModuleHandler::class, [
-      'buildImplementationInfo',
+    $mock_hook_map = $this->container->getMock(HookMap::class, [
+      'findProceduralImplementations',
     ]);
-    $module_handler_wrapper = $this->queue->wrapMockObject($module_handler)
-      ->observeMethod('buildImplementationInfo');
+    $hook_map_wrapper = $this->queue->wrapMockObject($mock_hook_map)
+      ->observeMethod('findProceduralImplementations');
+    $module_handler = $this->container->get(ModuleHandler::class);
 
     // Simulate no implementations found.
-    $module_handler_wrapper->queueReturn('buildImplementationInfo', ['hook'], []);
+    $hook_map_wrapper
+      ->queueReturn('findProceduralImplementations', ['hook'], [])
+      ->queueReturn('findProceduralImplementations', ['module_implements_alter'], []);
 
     // ModuleHandler::buildImplementationInfo mock returns no implementations.
     $this->assertFalse($module_handler->hasImplementations('hook'));
@@ -396,9 +492,9 @@ class ModuleHandlerTest extends UnitTestCase {
     $module_handler->resetImplementations();
 
     // Simulate one implementation found.
-    $module_handler_wrapper->queueReturn('buildImplementationInfo', ['hook'], [
-      'mymodule' => FALSE,
-    ]);
+    $hook_map_wrapper
+      ->queueReturn('findProceduralImplementations', ['hook'], ['mymodule' => FALSE])
+      ->queueReturn('findProceduralImplementations', ['module_implements_alter'], []);
 
     // ModuleHandler::buildImplementationInfo mock returns an implementation.
     $this->assertTrue($module_handler->hasImplementations('hook'));
@@ -411,13 +507,16 @@ class ModuleHandlerTest extends UnitTestCase {
    */
   public function testCachedGetImplementations() {
     $cache_backend = $this->container->getMock(CacheBackendInterface::class);
-    $module_handler = $this->container->getMock(ModuleHandler::class, ['loadInclude', 'buildImplementationInfo']);
+    $hook_map = $this->container->getMock(HookMap::class, ['findProceduralImplementations']);
+    $module_handler = $this->container->getMock(ModuleHandler::class, ['loadInclude']);
 
     // Observe mocked methods.
     $cache_wrapper = $this->queue->wrapMockObject($cache_backend)
       ->observeMethod('get');
+    $this->queue->wrapMockObject($hook_map)
+      ->observeMethod('findProceduralImplementations');
     $module_handler_wrapper = $this->queue->wrapMockObject($module_handler)
-      ->observeMethods(['loadInclude', 'buildImplementationInfo']);
+      ->observeMethod('loadInclude');
 
     // The ->load() does not trigger any of the observed methods.
     $module_handler->load('module_handler_test');
@@ -429,8 +528,14 @@ class ModuleHandlerTest extends UnitTestCase {
     // Simulate a warm cache.
     $cache_wrapper->queueReturn(
       'get',
-      ['module_implements'],
-      (object) ['data' => ['hook' => ['module_handler_test' => 'test']]],
+      ['module_implements_cacheable'],
+      (object) [
+        'data' => [
+          'hook' => CompactImplementationList::build('hook')
+            ->addProcedural('module_handler_test', 'test')
+            ->build(),
+        ],
+      ],
     );
 
     // The 'module_handler_test.test.inc' is included.
@@ -454,13 +559,16 @@ class ModuleHandlerTest extends UnitTestCase {
    */
   public function testCachedGetImplementationsMissingMethod() {
     $cache_backend = $this->container->getMock(CacheBackendInterface::class);
-    $module_handler = $this->container->getMock(ModuleHandler::class, ['loadInclude', 'buildImplementationInfo']);
+    $hook_map = $this->container->getMock(HookMap::class, ['findProceduralImplementations']);
+    $module_handler = $this->container->getMock(ModuleHandler::class, ['loadInclude']);
 
     // Observe mocked methods.
     $cache_wrapper = $this->queue->wrapMockObject($cache_backend)
       ->observeMethods(['get', 'set', 'delete']);
+    $this->queue->wrapMockObject($hook_map)
+      ->observeMethod('findProceduralImplementations');
     $module_handler_wrapper = $this->queue->wrapMockObject($module_handler)
-      ->observeMethods(['loadInclude', 'buildImplementationInfo']);
+      ->observeMethod('loadInclude');
 
     // The ->load() does not trigger any of the observed methods.
     $module_handler->load('module_handler_test');
@@ -472,13 +580,13 @@ class ModuleHandlerTest extends UnitTestCase {
     // Simulate a warm cache with some missing implementations.
     $cache_wrapper->queueReturn(
       'get',
-      ['module_implements'],
+      ['module_implements_cacheable'],
       (object) [
         'data' => [
-          'hook' => [
-            'module_handler_test' => 'test',
-            'module_handler_test_missing' => FALSE,
-          ],
+          'hook' => CompactImplementationList::build('hook')
+            ->addProcedural('module_handler_test', 'test')
+            ->addProcedural('module_handler_test_missing')
+            ->build(),
         ],
       ],
     );
@@ -498,15 +606,18 @@ class ModuleHandlerTest extends UnitTestCase {
     $this->queue->assertEmpty();
 
     // Prepare for ->writeCache().
-    // The 'module_implements' cache is updated. The missing implementation is
-    // removed.
+    // The 'module_implements_cacheable' cache is updated. The missing
+    // implementation is removed.
     $cache_wrapper->queueVoid('set', [
-      'module_implements', [
-        'hook' => ['module_handler_test' => 'test'],
+      'module_implements_cacheable',
+      [
+        'hook' => CompactImplementationList::build('hook')
+          ->addProcedural('module_handler_test', 'test')
+          ->build(),
       ],
-    ]);
+    ], FALSE);
 
-    $module_handler->writeCache();
+    $hook_map->writeCache();
   }
 
   /**
@@ -550,6 +661,15 @@ class ModuleHandlerTest extends UnitTestCase {
   public function testHookOrder(array $modules, array $expected, array $expected_alter, array $expected_alter_combined, array $expected_alter_combined_2): void {
     foreach ($modules as $module) {
       $this->addTestModule($module);
+    }
+    foreach ([
+      CustomOrder::class,
+      TypeAlter::class,
+    ] as $hook_service_class) {
+      $module = explode('\\', $hook_service_class, 3)[1];
+      if (in_array($module, $modules)) {
+        $this->addHookServiceClass($hook_service_class);
+      }
     }
     // Prevent discovery of hook info, to avoid loading fake module files.
     $this->container->get(CacheBackendInterface::class)->set('hook_info', []);
@@ -604,18 +724,27 @@ class ModuleHandlerTest extends UnitTestCase {
         // *.info.yml file, but they do have procedural hook implementations.
         // Note that 'module_handler_test' is already installed.
         'module_handler_test1',
+        'module_handler_test_attr',
         'module_handler_test2',
       ],
       [
         // Implementations of hook_custom_order().
+        CustomOrder::class . '::negativeWeight',
         'module_handler_test_custom_order',
+        CustomOrder::class . '::beforeTest1',
         'module_handler_test1_custom_order',
+        CustomOrder::class . '::onBehalfOfTest1',
+        CustomOrder::class . '::afterTest1',
+        CustomOrder::class . '::attrModule',
         'module_handler_test2_custom_order',
+        CustomOrder::class . '::positiveWeight',
       ],
       [
         // Implementations of hook_type_alter().
         'module_handler_test_type_alter',
         'module_handler_test1_type_alter',
+        TypeAlter::class . '::alter',
+        TypeAlter::class . '::alterWithHookAttribute',
         'module_handler_test2_type_alter',
       ],
       [
@@ -626,6 +755,9 @@ class ModuleHandlerTest extends UnitTestCase {
         'module_handler_test1_type_alter',
         'module_handler_test1_subtype_alter',
         'module_handler_test1_unaltered_alter',
+        TypeAlter::class . '::alter',
+        TypeAlter::class . '::alterWithHookAttribute',
+        TypeAlter::class . '::alterSubtype',
         'module_handler_test2_type_alter',
         'module_handler_test2_subtype_alter',
         'module_handler_test2_unaltered_alter',
@@ -636,6 +768,7 @@ class ModuleHandlerTest extends UnitTestCase {
         'module_handler_test_subtype_alter',
         'module_handler_test1_unaltered_alter',
         'module_handler_test1_subtype_alter',
+        TypeAlter::class . '::alterSubtype',
         'module_handler_test2_unaltered_alter',
         'module_handler_test2_subtype_alter',
       ],
@@ -644,16 +777,25 @@ class ModuleHandlerTest extends UnitTestCase {
       [
         // Change the order of modules.
         'module_handler_test2',
+        'module_handler_test_attr',
         'module_handler_test1',
       ],
       [
+        CustomOrder::class . '::negativeWeight',
         'module_handler_test_custom_order',
         'module_handler_test2_custom_order',
+        CustomOrder::class . '::attrModule',
+        CustomOrder::class . '::beforeTest1',
         'module_handler_test1_custom_order',
+        CustomOrder::class . '::onBehalfOfTest1',
+        CustomOrder::class . '::afterTest1',
+        CustomOrder::class . '::positiveWeight',
       ],
       [
         'module_handler_test_type_alter',
         'module_handler_test2_type_alter',
+        TypeAlter::class . '::alter',
+        TypeAlter::class . '::alterWithHookAttribute',
         'module_handler_test1_type_alter',
       ],
       [
@@ -663,6 +805,9 @@ class ModuleHandlerTest extends UnitTestCase {
         'module_handler_test2_type_alter',
         'module_handler_test2_subtype_alter',
         'module_handler_test2_unaltered_alter',
+        TypeAlter::class . '::alter',
+        TypeAlter::class . '::alterWithHookAttribute',
+        TypeAlter::class . '::alterSubtype',
         'module_handler_test1_type_alter',
         'module_handler_test1_subtype_alter',
         'module_handler_test1_unaltered_alter',
@@ -672,6 +817,7 @@ class ModuleHandlerTest extends UnitTestCase {
         'module_handler_test_subtype_alter',
         'module_handler_test2_unaltered_alter',
         'module_handler_test2_subtype_alter',
+        TypeAlter::class . '::alterSubtype',
         'module_handler_test1_unaltered_alter',
         'module_handler_test1_subtype_alter',
       ],
@@ -679,17 +825,26 @@ class ModuleHandlerTest extends UnitTestCase {
     $datasets['last'] = [
       [
         'module_handler_test1',
+        'module_handler_test_attr',
         'module_handler_test2',
         // Add a *_module_implements_alter() that makes *_test run last.
         'module_handler_test_last',
       ],
       [
+        CustomOrder::class . '::negativeWeight',
+        CustomOrder::class . '::beforeTest1',
         'module_handler_test1_custom_order',
+        CustomOrder::class . '::onBehalfOfTest1',
+        CustomOrder::class . '::afterTest1',
+        CustomOrder::class . '::attrModule',
         'module_handler_test2_custom_order',
         'module_handler_test_custom_order',
+        CustomOrder::class . '::positiveWeight',
       ],
       [
         'module_handler_test1_type_alter',
+        TypeAlter::class . '::alter',
+        TypeAlter::class . '::alterWithHookAttribute',
         'module_handler_test2_type_alter',
         'module_handler_test_type_alter',
       ],
@@ -697,6 +852,9 @@ class ModuleHandlerTest extends UnitTestCase {
         'module_handler_test1_type_alter',
         'module_handler_test1_subtype_alter',
         'module_handler_test1_unaltered_alter',
+        TypeAlter::class . '::alter',
+        TypeAlter::class . '::alterWithHookAttribute',
+        TypeAlter::class . '::alterSubtype',
         'module_handler_test2_type_alter',
         'module_handler_test2_subtype_alter',
         'module_handler_test2_unaltered_alter',
@@ -709,6 +867,7 @@ class ModuleHandlerTest extends UnitTestCase {
         'module_handler_test_subtype_alter',
         'module_handler_test1_unaltered_alter',
         'module_handler_test1_subtype_alter',
+        TypeAlter::class . '::alterSubtype',
         'module_handler_test2_unaltered_alter',
         'module_handler_test2_subtype_alter',
       ],
@@ -716,17 +875,26 @@ class ModuleHandlerTest extends UnitTestCase {
     $datasets['test1_last'] = [
       [
         'module_handler_test1',
+        'module_handler_test_attr',
         'module_handler_test2',
         // Add a *_module_implements_alter() that makes *_test1 run last.
         'module_handler_test1_last',
       ],
       [
+        CustomOrder::class . '::negativeWeight',
         'module_handler_test_custom_order',
+        CustomOrder::class . '::beforeTest1',
+        CustomOrder::class . '::afterTest1',
+        CustomOrder::class . '::attrModule',
         'module_handler_test2_custom_order',
         'module_handler_test1_custom_order',
+        CustomOrder::class . '::onBehalfOfTest1',
+        CustomOrder::class . '::positiveWeight',
       ],
       [
         'module_handler_test_type_alter',
+        TypeAlter::class . '::alter',
+        TypeAlter::class . '::alterWithHookAttribute',
         'module_handler_test2_type_alter',
         'module_handler_test1_type_alter',
       ],
@@ -734,6 +902,9 @@ class ModuleHandlerTest extends UnitTestCase {
         'module_handler_test_type_alter',
         'module_handler_test_subtype_alter',
         'module_handler_test_unaltered_alter',
+        TypeAlter::class . '::alter',
+        TypeAlter::class . '::alterWithHookAttribute',
+        TypeAlter::class . '::alterSubtype',
         'module_handler_test2_type_alter',
         'module_handler_test2_subtype_alter',
         'module_handler_test2_unaltered_alter',
@@ -746,6 +917,7 @@ class ModuleHandlerTest extends UnitTestCase {
         'module_handler_test_subtype_alter',
         'module_handler_test1_unaltered_alter',
         'module_handler_test1_subtype_alter',
+        TypeAlter::class . '::alterSubtype',
         'module_handler_test2_unaltered_alter',
         'module_handler_test2_subtype_alter',
       ],
@@ -753,18 +925,27 @@ class ModuleHandlerTest extends UnitTestCase {
     $datasets['between'] = [
       [
         'module_handler_test1',
+        'module_handler_test_attr',
         'module_handler_test2',
         // Add a *_module_implements_alter() to let *_test run after *_test1.
         'module_handler_test_between',
       ],
       [
+        CustomOrder::class . '::negativeWeight',
+        CustomOrder::class . '::beforeTest1',
         'module_handler_test1_custom_order',
+        CustomOrder::class . '::onBehalfOfTest1',
         'module_handler_test_custom_order',
+        CustomOrder::class . '::afterTest1',
+        CustomOrder::class . '::attrModule',
         'module_handler_test2_custom_order',
+        CustomOrder::class . '::positiveWeight',
       ],
       [
         'module_handler_test1_type_alter',
         'module_handler_test_type_alter',
+        TypeAlter::class . '::alter',
+        TypeAlter::class . '::alterWithHookAttribute',
         'module_handler_test2_type_alter',
       ],
       [
@@ -774,6 +955,9 @@ class ModuleHandlerTest extends UnitTestCase {
         'module_handler_test_type_alter',
         'module_handler_test_subtype_alter',
         'module_handler_test_unaltered_alter',
+        TypeAlter::class . '::alter',
+        TypeAlter::class . '::alterWithHookAttribute',
+        TypeAlter::class . '::alterSubtype',
         'module_handler_test2_type_alter',
         'module_handler_test2_subtype_alter',
         'module_handler_test2_unaltered_alter',
@@ -783,6 +967,7 @@ class ModuleHandlerTest extends UnitTestCase {
         'module_handler_test_subtype_alter',
         'module_handler_test1_unaltered_alter',
         'module_handler_test1_subtype_alter',
+        TypeAlter::class . '::alterSubtype',
         'module_handler_test2_unaltered_alter',
         'module_handler_test2_subtype_alter',
       ],
@@ -790,18 +975,27 @@ class ModuleHandlerTest extends UnitTestCase {
     $datasets['first'] = [
       [
         'module_handler_test1',
+        'module_handler_test_attr',
         'module_handler_test2',
         // Add a *_module_implements_alter() to let *_test run first.
         'module_handler_test1_first',
       ],
       [
+        CustomOrder::class . '::negativeWeight',
         'module_handler_test1_custom_order',
+        CustomOrder::class . '::onBehalfOfTest1',
         'module_handler_test_custom_order',
+        CustomOrder::class . '::beforeTest1',
+        CustomOrder::class . '::afterTest1',
+        CustomOrder::class . '::attrModule',
         'module_handler_test2_custom_order',
+        CustomOrder::class . '::positiveWeight',
       ],
       [
         'module_handler_test1_type_alter',
         'module_handler_test_type_alter',
+        TypeAlter::class . '::alter',
+        TypeAlter::class . '::alterWithHookAttribute',
         'module_handler_test2_type_alter',
       ],
       [
@@ -811,6 +1005,9 @@ class ModuleHandlerTest extends UnitTestCase {
         'module_handler_test_type_alter',
         'module_handler_test_subtype_alter',
         'module_handler_test_unaltered_alter',
+        TypeAlter::class . '::alter',
+        TypeAlter::class . '::alterWithHookAttribute',
+        TypeAlter::class . '::alterSubtype',
         'module_handler_test2_type_alter',
         'module_handler_test2_subtype_alter',
         'module_handler_test2_unaltered_alter',
@@ -820,6 +1017,7 @@ class ModuleHandlerTest extends UnitTestCase {
         'module_handler_test_subtype_alter',
         'module_handler_test1_unaltered_alter',
         'module_handler_test1_subtype_alter',
+        TypeAlter::class . '::alterSubtype',
         'module_handler_test2_unaltered_alter',
         'module_handler_test2_subtype_alter',
       ],
@@ -827,22 +1025,33 @@ class ModuleHandlerTest extends UnitTestCase {
     $datasets['remove'] = [
       [
         'module_handler_test1',
+        'module_handler_test_attr',
         'module_handler_test2',
         // Add a *_module_implements_alter() to remove *_test.
         'module_handler_test_remove',
       ],
       [
+        CustomOrder::class . '::negativeWeight',
         'module_handler_test_custom_order',
+        CustomOrder::class . '::beforeTest1',
+        CustomOrder::class . '::afterTest1',
+        CustomOrder::class . '::attrModule',
         'module_handler_test2_custom_order',
+        CustomOrder::class . '::positiveWeight',
       ],
       [
         'module_handler_test_type_alter',
+        TypeAlter::class . '::alter',
+        TypeAlter::class . '::alterWithHookAttribute',
         'module_handler_test2_type_alter',
       ],
       [
         'module_handler_test_type_alter',
         'module_handler_test_subtype_alter',
         'module_handler_test_unaltered_alter',
+        TypeAlter::class . '::alter',
+        TypeAlter::class . '::alterWithHookAttribute',
+        TypeAlter::class . '::alterSubtype',
         'module_handler_test2_type_alter',
         'module_handler_test2_subtype_alter',
         'module_handler_test2_unaltered_alter',
@@ -851,7 +1060,7 @@ class ModuleHandlerTest extends UnitTestCase {
         'module_handler_test_unaltered_alter',
         'module_handler_test_subtype_alter',
         'module_handler_test1_unaltered_alter',
-        'module_handler_test1_subtype_alter',
+        TypeAlter::class . '::alterSubtype',
         'module_handler_test2_unaltered_alter',
         'module_handler_test2_subtype_alter',
       ],
@@ -863,30 +1072,38 @@ class ModuleHandlerTest extends UnitTestCase {
     $datasets['fake_extra_modules'] = [
       [
         'module_handler_test1',
+        'module_handler_test_attr',
         'module_handler_test2',
         // Add a *_module_implements_alter() to insert fake modules.
         'module_handler_test_fake',
       ],
       [
+        CustomOrder::class . '::negativeWeight',
         '_module_handler_test_early_custom_order',
         'module_handler_test_custom_order',
+        CustomOrder::class . '::beforeTest1',
         'module_handler_test1_custom_order',
+        CustomOrder::class . '::onBehalfOfTest1',
         '_module_handler_test_between_custom_order',
+        CustomOrder::class . '::afterTest1',
+        CustomOrder::class . '::attrModule',
         'module_handler_test2_custom_order',
         '_module_handler_test_late_custom_order',
+        CustomOrder::class . '::positiveWeight',
       ],
       [
         '_module_handler_test_early_type_alter',
         'module_handler_test_type_alter',
         'module_handler_test1_type_alter',
         '_module_handler_test_between_type_alter',
+        TypeAlter::class . '::alter',
+        TypeAlter::class . '::alterWithHookAttribute',
         'module_handler_test2_type_alter',
         '_module_handler_test_late_type_alter',
       ],
       [
         '_module_handler_test_early_type_alter',
         '_module_handler_test_early_subtype_alter',
-        '_module_handler_test_early_unaltered_alter',
         'module_handler_test_type_alter',
         'module_handler_test_subtype_alter',
         'module_handler_test_unaltered_alter',
@@ -895,24 +1112,78 @@ class ModuleHandlerTest extends UnitTestCase {
         'module_handler_test1_unaltered_alter',
         '_module_handler_test_between_type_alter',
         '_module_handler_test_between_subtype_alter',
-        '_module_handler_test_between_unaltered_alter',
+        TypeAlter::class . '::alter',
+        TypeAlter::class . '::alterWithHookAttribute',
+        TypeAlter::class . '::alterSubtype',
         'module_handler_test2_type_alter',
         'module_handler_test2_subtype_alter',
         'module_handler_test2_unaltered_alter',
         '_module_handler_test_late_type_alter',
         '_module_handler_test_late_subtype_alter',
-        '_module_handler_test_late_unaltered_alter',
       ],
       [
         'module_handler_test_unaltered_alter',
         'module_handler_test_subtype_alter',
         'module_handler_test1_unaltered_alter',
         'module_handler_test1_subtype_alter',
+        TypeAlter::class . '::alterSubtype',
         'module_handler_test2_unaltered_alter',
         'module_handler_test2_subtype_alter',
+        '_module_handler_test_early_subtype_alter',
+        '_module_handler_test_between_subtype_alter',
+        '_module_handler_test_late_subtype_alter',
       ],
     ];
     return $datasets;
+  }
+
+  /**
+   * Tests a pattern like #[Hook('(node|user)_(update|insert)')].
+   */
+  public function testHookMultiPattern(): void {
+    $this->addTestModule('module_handler_test_attr');
+    $this->addHookServiceClass(TestHooks::class);
+    $module_handler = $this->container->get(ModuleHandlerInterface::class);
+    $results = array_map($module_handler->invokeAll(...), [
+      'node_update',
+      'user_update',
+      'node_insert',
+      'user_insert',
+      'user_delete',
+    ]);
+    $this->assertSame([
+      [TestHooks::class . '::nodeOrUserUpdateOrInsert'],
+      [TestHooks::class . '::nodeOrUserUpdateOrInsert'],
+      [TestHooks::class . '::nodeOrUserUpdateOrInsert'],
+      [TestHooks::class . '::nodeOrUserUpdateOrInsert'],
+      [],
+    ], $results);
+  }
+
+  /**
+   * Tests a pattern like #[Alter('(node|user)_view')].
+   */
+  public function testAlterHookMultiPattern(): void {
+    $this->addTestModule('module_handler_test_attr');
+    $this->addHookServiceClass(TestHooks::class);
+    $module_handler = $this->container->get(ModuleHandlerInterface::class);
+    $results = array_map(
+      static function (string $type) use ($module_handler): array {
+        $values = [];
+        $module_handler->alter($type, $values);
+        return $values;
+      },
+      [
+        'node_view',
+        'user_view',
+        'other_view',
+      ]
+    );
+    $this->assertSame([
+      [TestHooks::class . '::nodeOrUserViewAlter'],
+      [TestHooks::class . '::nodeOrUserViewAlter'],
+      [],
+    ], $results);
   }
 
   /**
@@ -927,7 +1198,7 @@ class ModuleHandlerTest extends UnitTestCase {
       ->observeMethods(['get', 'set']);
 
     // Prepare for ->invokeAllWith().
-    $cache_wrapper->queueReturn('get', ['module_implements'], NULL);
+    $cache_wrapper->queueReturn('get', ['module_implements_cacheable'], NULL);
     $cache_wrapper->queueReturn('get', ['hook_info'], NULL);
     $cache_wrapper->queueVoid('set', [
       'hook_info',
@@ -935,6 +1206,8 @@ class ModuleHandlerTest extends UnitTestCase {
         'hook' => ['group' => 'hook'],
       ],
     ]);
+    $cache_wrapper->queueReturn('get', ['hook_implementation_source'], NULL);
+    $cache_wrapper->queueVoid('set', ['hook_implementation_source', []]);
 
     $module_handler->invokeAllWith('hook', static function (callable $hook, string $module) {});
 
@@ -942,21 +1215,24 @@ class ModuleHandlerTest extends UnitTestCase {
 
     // Prepare for ->writeCache().
     $cache_wrapper->queueVoid('set', [
-      'module_implements',
+      'module_implements_cacheable',
       [
-        'module_implements_alter' => [],
-        'hook' => ['module_handler_test' => FALSE],
+        'module_implements_alter' => CompactImplementationList::createEmpty(),
+        'hook' => CompactImplementationList::build('hook')
+          ->addProcedural('module_handler_test', FALSE)
+          ->build(),
       ],
-    ]);
+    ], FALSE);
 
-    $module_handler->writeCache();
+    $hook_map = $this->container->get(HookMapInterface::class);
+    $hook_map->writeCache();
   }
 
   /**
    * Tests hook_hook_info() fetching through getHookInfo().
    *
    * @covers ::getHookInfo
-   * @covers ::buildHookInfo
+   * @covers \Drupal\Core\Extension\Hook\HookMap::buildHookInfo
    */
   public function testGetHookInfo() {
     $cache_backend = $this->container->getMock(CacheBackendInterface::class);
@@ -1009,10 +1285,11 @@ class ModuleHandlerTest extends UnitTestCase {
       ->observeMethods(['delete', 'set', 'get']);
 
     // Prepare for ->resetImplementations().
-    // The 'module_implements' cache is set to [].
-    $cache_wrapper->queueVoid('set', ['module_implements', []]);
+    // The 'module_implements_cacheable' cache is set to [].
+    $cache_wrapper->queueVoid('set', ['module_implements_cacheable', []]);
     // The 'hook_info' cache is deleted.
     $cache_wrapper->queueVoid('delete', ['hook_info']);
+    $cache_wrapper->queueVoid('delete', ['hook_implementation_source']);
 
     // Reset cached implementations.
     $module_handler->resetImplementations();
@@ -1020,16 +1297,15 @@ class ModuleHandlerTest extends UnitTestCase {
     $this->queue->assertEmpty();
 
     // Prepare for ->invokeAllWith().
-    // It tries to load 'module_implements' from cache.
-    // This returns the [] that was previously set.
-    $cache_wrapper->queueReturn('get', ['module_implements'], (object) ['data' => []]);
-    // It then tries to load 'hook_info' from cache, which is a miss.
+    // It tries to load 'hook_info' from cache, which is a miss.
     $cache_wrapper->queueReturn('get', ['hook_info'], NULL);
     // New 'hook_info' is discovered and written to the cache.
     $cache_wrapper->queueVoid('set', [
       'hook_info',
       ['hook' => ['group' => 'hook']],
     ]);
+    $cache_wrapper->queueReturn('get', ['hook_implementation_source'], NULL);
+    $cache_wrapper->queueVoid('set', ['hook_implementation_source', []]);
 
     $module_handler->invokeAllWith('hook', static function (callable $hook, string $module) {});
 
@@ -1038,14 +1314,17 @@ class ModuleHandlerTest extends UnitTestCase {
     // Prepare for ->writeCache().
     // The newly discovered implementations are written to the cache.
     $cache_wrapper->queueVoid('set', [
-      'module_implements',
+      'module_implements_cacheable',
       [
-        'module_implements_alter' => [],
-        'hook' => ['module_handler_test' => FALSE],
+        'module_implements_alter' => CompactImplementationList::createEmpty(),
+        'hook' => CompactImplementationList::build('hook')
+          ->addProcedural('module_handler_test')
+          ->build(),
       ],
-    ]);
+    ], FALSE);
 
-    $module_handler->writeCache();
+    $hook_map = $this->container->get(HookMapInterface::class);
+    $hook_map->writeCache();
   }
 
   /**

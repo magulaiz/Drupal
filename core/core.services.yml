@@ -581,6 +581,26 @@ services:
   default_plugin_manager:
     abstract: true
     arguments: ['@container.namespaces', '@cache.discovery', '@module_handler']
+  hook_method_discovery:
+    class: Drupal\Core\Extension\Hook\Source\ServiceMethodAttributeHookDiscovery
+    autowire: true
+    tags:
+      - { name: hook_implementation_source }
+  hook_implementation_source:
+    class: Drupal\Core\Extension\Hook\Source\CompositeImplementationSource
+    # Autowire does not work well with 'service_id_collector'.
+    arguments: ['@service_container']
+    tags:
+      - { name: service_id_collector }
+  hook_implementation_source.cache:
+    decorates: hook_implementation_source
+    class: Drupal\Core\Extension\Hook\Source\CachedImplementationSource
+    autowire: true
+  Drupal\Core\Extension\Hook\Source\ImplementationSourceInterface: '@hook_implementation_source'
+  hook_map:
+    class: Drupal\Core\Extension\Hook\HookMap
+    autowire: true
+  Drupal\Core\Extension\Hook\HookMapInterface: '@hook_map'
   module_handler:
     class: Drupal\Core\Extension\ModuleHandler
     autowire: true
@@ -825,6 +845,7 @@ services:
     class: Drupal\Component\EventDispatcher\ContainerAwareEventDispatcher
     arguments: ['@service_container']
   Symfony\Contracts\EventDispatcher\EventDispatcherInterface: '@event_dispatcher'
+  Symfony\Component\EventDispatcher\EventDispatcherInterface: '@event_dispatcher'
   controller_resolver:
     class: Drupal\Core\Controller\ControllerResolver
     arguments: ['@callable_resolver']
