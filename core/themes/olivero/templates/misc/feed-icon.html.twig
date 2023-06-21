@@ -12,10 +12,8 @@
  */
 #}
 
-{% include 'olivero:feed-icon' with {
-  title,
-  attributes,
-  url,
-} only %}
-
-{% endembed %}
+{{ include('olivero:feed-icon', {
+  title: title,
+  attributes: attributes,
+  url: url,
+}) }}

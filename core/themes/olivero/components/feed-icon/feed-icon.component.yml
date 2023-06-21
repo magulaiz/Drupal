@@ -1,6 +1,4 @@
 name: Feed Icon
-status: experimental
-group: Misc
 props:
   type: object
   properties:
@@ -10,5 +8,3 @@ props:
       type: string
     url:
       type: string
-slots:
-  minimal: {}
