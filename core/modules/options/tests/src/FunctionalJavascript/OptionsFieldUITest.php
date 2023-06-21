@@ -29,13 +29,6 @@ class OptionsFieldUITest extends WebDriverTestBase {
   protected $defaultTheme = 'stark';
 
   /**
-   * The name of the created content type.
-   *
-   * @var string
-   */
-  protected $typeName;
-
-  /**
    * Machine name of the created content type.
    *
    * @var string
@@ -76,8 +69,7 @@ class OptionsFieldUITest extends WebDriverTestBase {
     ]);
     $this->drupalLogin($admin_user);
 
-    $this->typeName = 'plan';
-    $type = $this->drupalCreateContentType(['name' => $this->typeName, 'type' => $this->typeName]);
+    $type = $this->drupalCreateContentType(['name' => 'plan', 'type' => 'plan']);
     $this->type = $type->id();
   }
 
