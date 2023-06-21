@@ -38,5 +38,6 @@ slots:
     title: Content
     required: true
     description: The card content.
-libraryDependencies:
-  - umami/more-link
+libraryOverrides:
+  dependencies:
+    - umami/more-link
