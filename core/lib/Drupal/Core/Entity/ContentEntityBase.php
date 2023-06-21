@@ -666,9 +666,8 @@ abstract class ContentEntityBase extends EntityBase implements \IteratorAggregat
     if (!isset($this->fieldDefinitions)) {
       $this->getFieldDefinitions();
     }
-    if (isset($this->fieldDefinitions[$name])) {
-      return $this->fieldDefinitions[$name];
-    }
+
+    return $this->fieldDefinitions[$name] ?? [];
   }
 
   /**
@@ -1258,9 +1257,9 @@ abstract class ContentEntityBase extends EntityBase implements \IteratorAggregat
    * {@inheritdoc}
    */
   public function label() {
-    if ($this->getEntityType()->getKey('label')) {
-      return $this->getEntityKey('label');
-    }
+    return $this->getEntityType()->getKey('label') ?
+      $this->getEntityKey('label')
+      : NULL;
   }
 
   /**

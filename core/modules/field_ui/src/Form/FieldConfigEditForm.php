@@ -267,7 +267,7 @@ class FieldConfigEditForm extends EntityForm {
    * {@inheritdoc}
    */
   public function save(array $form, FormStateInterface $form_state) {
-    $this->entity->save();
+    $status = $this->entity->save();
 
     $this->messenger()->addStatus($this->t('Saved %label configuration.', ['%label' => $this->entity->getLabel()]));
 
@@ -279,6 +279,8 @@ class FieldConfigEditForm extends EntityForm {
     else {
       $form_state->setRedirectUrl(FieldUI::getOverviewRouteInfo($this->entity->getTargetEntityTypeId(), $this->entity->getTargetBundle()));
     }
+
+    return $status;
   }
 
   /**

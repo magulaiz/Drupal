@@ -131,10 +131,12 @@ abstract class ActionFormBase extends EntityForm {
    * {@inheritdoc}
    */
   public function save(array $form, FormStateInterface $form_state) {
-    $this->entity->save();
+    $status = $this->entity->save();
     $this->messenger()->addStatus($this->t('The action has been successfully saved.'));
 
     $form_state->setRedirect('entity.action.collection');
+
+    return $status;
   }
 
   /**

@@ -131,6 +131,8 @@ class LocaleProjectStorage implements LocaleProjectStorageInterface {
   public function deleteAll() {
     $this->keyValueStore->deleteAll();
     $this->resetCache();
+
+    return [];
   }
 
   /**

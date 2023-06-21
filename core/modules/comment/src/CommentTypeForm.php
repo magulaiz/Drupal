@@ -187,6 +187,8 @@ class CommentTypeForm extends EntityForm {
     }
 
     $form_state->setRedirectUrl($comment_type->toUrl('collection'));
+
+    return $status;
   }
 
 }

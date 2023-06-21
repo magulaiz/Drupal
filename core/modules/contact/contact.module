@@ -38,6 +38,8 @@ function contact_help($route_name, RouteMatchInterface $route_match) {
       return $output;
 
   }
+
+  return NULL;
 }
 
 /**

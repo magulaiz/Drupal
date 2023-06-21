@@ -199,6 +199,8 @@ class Log {
         ];
       }
     }
+
+    return NULL;
   }
 
   /**

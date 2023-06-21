@@ -23,6 +23,8 @@ class DisallowBasicAuthRequests implements RequestPolicyInterface {
     if (isset($username) && isset($password)) {
       return self::DENY;
     }
+
+    return NULL;
   }
 
 }

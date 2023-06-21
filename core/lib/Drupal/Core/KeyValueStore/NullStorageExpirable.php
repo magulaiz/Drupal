@@ -64,7 +64,9 @@ class NullStorageExpirable implements KeyValueStoreExpirableInterface {
   /**
    * {@inheritdoc}
    */
-  public function setIfNotExists($key, $value) {}
+  public function setIfNotExists($key, $value) {
+    return FALSE;
+  }
 
   /**
    * {@inheritdoc}
@@ -112,6 +114,8 @@ class NullStorageExpirable implements KeyValueStoreExpirableInterface {
   /**
    * {@inheritdoc}
    */
-  public function setWithExpireIfNotExists($key, $value, $expire) {}
+  public function setWithExpireIfNotExists($key, $value, $expire) {
+    return FALSE;
+  }
 
 }

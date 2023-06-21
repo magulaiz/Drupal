@@ -34,6 +34,8 @@ class VocabularyRouteProvider extends AdminHtmlRouteProvider {
       $route->setRequirement('_permission', 'access taxonomy overview+administer taxonomy');
       return $route;
     }
+
+    return NULL;
   }
 
   /**

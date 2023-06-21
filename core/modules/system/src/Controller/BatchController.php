@@ -73,6 +73,8 @@ class BatchController implements ContainerInjectionInterface {
 
       return $page;
     }
+
+    return [];
   }
 
   /**

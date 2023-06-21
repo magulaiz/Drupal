@@ -246,24 +246,26 @@ class TypedConfigManager extends TypedDataManager implements TypedConfigManagerI
   protected function getFallbackName($name) {
     // Check for definition of $name with filesystem marker.
     $replaced = preg_replace('/([^\.:]+)([\.:\*]*)$/', '*\2', $name);
-    if ($replaced != $name) {
-      if (isset($this->definitions[$replaced])) {
-        return $replaced;
-      }
-      else {
-        // No definition for this level. Collapse multiple wildcards to a single
-        // wildcard to see if there is a greedy match. For example,
-        // breakpoint.breakpoint.*.* becomes
-        // breakpoint.breakpoint.*
-        $one_star = preg_replace('/\.([:\.\*]*)$/', '.*', $replaced);
-        if ($one_star != $replaced && isset($this->definitions[$one_star])) {
-          return $one_star;
-        }
-        // Check for next level. For example, if breakpoint.breakpoint.* has
-        // been checked and no match found then check breakpoint.*.*
-        return $this->getFallbackName($replaced);
-      }
+    if ($replaced === $name) {
+      return NULL;
     }
+
+    if (isset($this->definitions[$replaced])) {
+      return $replaced;
+    }
+
+    // No definition for this level. Collapse multiple wildcards to a single
+    // wildcard to see if there is a greedy match. For example,
+    // "breakpoint.breakpoint.*.*" becomes
+    // "breakpoint.breakpoint.*".
+    $one_star = preg_replace('/\.([:\.\*]*)$/', '.*', $replaced);
+    if ($one_star != $replaced && isset($this->definitions[$one_star])) {
+      return $one_star;
+    }
+
+    // Check for next level. For example, if breakpoint.breakpoint.* has
+    // been checked and no match found then check "breakpoint.*.*".
+    return $this->getFallbackName($replaced);
   }
 
   /**
@@ -360,6 +362,8 @@ class TypedConfigManager extends TypedDataManager implements TypedConfigManagerI
         }
       }
     }
+
+    return $value;
   }
 
   /**

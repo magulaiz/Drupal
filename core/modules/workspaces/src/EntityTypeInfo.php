@@ -123,6 +123,7 @@ class EntityTypeInfo implements ContainerInjectionInterface {
    * @see hook_entity_base_field_info()
    */
   public function entityBaseFieldInfo(EntityTypeInterface $entity_type) {
+    $fields = [];
     if ($this->workspaceManager->isEntityTypeSupported($entity_type)) {
       $field_name = $entity_type->getRevisionMetadataKey('workspace');
       $fields[$field_name] = BaseFieldDefinition::create('entity_reference')
@@ -132,9 +133,9 @@ class EntityTypeInfo implements ContainerInjectionInterface {
         ->setInternal(TRUE)
         ->setTranslatable(FALSE)
         ->setRevisionable(TRUE);
-
-      return $fields;
     }
+
+    return $fields;
   }
 
 }

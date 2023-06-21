@@ -218,9 +218,10 @@ class FieldStorageConfigEditForm extends EntityForm {
    * {@inheritdoc}
    */
   public function save(array $form, FormStateInterface $form_state) {
+    $status = \SAVED_UPDATED;
     $field_label = $form_state->get('field_config')->label();
     try {
-      $this->entity->save();
+      $status = $this->entity->save();
       $this->messenger()->addStatus($this->t('Updated field %label field settings.', ['%label' => $field_label]));
       $request = $this->getRequest();
       if (($destinations = $request->query->all('destinations')) && $next_destination = FieldUI::getNextDestination($destinations)) {
@@ -234,6 +235,8 @@ class FieldStorageConfigEditForm extends EntityForm {
     catch (\Exception $e) {
       $this->messenger()->addStatus($this->t('Attempt to update field %label failed: %message.', ['%label' => $field_label, '%message' => $e->getMessage()]));
     }
+
+    return $status;
   }
 
   /**

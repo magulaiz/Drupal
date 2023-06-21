@@ -32,9 +32,10 @@ class StaticReflectionParser extends BaseStaticReflectionParser {
     // Ensure the class has been parsed before accessing the parentClassName
     // property.
     $parser->parse();
-    if ($parser->parentClassName) {
-      return new static($parser->parentClassName, $finder, $parser->classAnnotationOptimize);
-    }
+
+    return $parser->parentClassName ?
+      new static($parser->parentClassName, $finder, $parser->classAnnotationOptimize)
+      : NULL;
   }
 
 }

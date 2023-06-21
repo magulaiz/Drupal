@@ -19,6 +19,7 @@ class ViewsFormMainForm implements FormInterface, TrustedCallbackInterface {
    * {@inheritdoc}
    */
   public function getFormId() {
+    return '';
   }
 
   /**

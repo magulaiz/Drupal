@@ -69,7 +69,7 @@ class Rss extends RssPluginBase {
 
     $cid = $row->{$this->field_alias};
     if (!is_numeric($cid)) {
-      return;
+      return NULL;
     }
 
     $view_mode = $this->options['view_mode'];
@@ -81,7 +81,7 @@ class Rss extends RssPluginBase {
     /** @var \Drupal\comment\CommentInterface $comment */
     $comment = $this->comments[$cid];
     if (empty($comment)) {
-      return;
+      return NULL;
     }
 
     $comment->rss_namespaces = [];

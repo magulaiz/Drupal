@@ -97,7 +97,7 @@ class RegisterForm extends AccountForm {
 
     // Save has no return value so this cannot be tested.
     // Assume save has gone through correctly.
-    $account->save();
+    $status = $account->save();
 
     $form_state->set('user', $account);
     $form_state->setValue('uid', $account->id());
@@ -142,6 +142,8 @@ class RegisterForm extends AccountForm {
       $this->messenger()->addStatus($this->t('Thank you for applying for an account. Your account is currently pending approval by the site administrator.<br />In the meantime, a welcome message with further instructions has been sent to your email address.'));
       $form_state->setRedirect('<front>');
     }
+
+    return $status;
   }
 
 }

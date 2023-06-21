@@ -237,6 +237,8 @@ class Router extends UrlMatcher implements RequestMatcherInterface, RouterInterf
 
       return $attributes;
     }
+
+    return NULL;
   }
 
   /**

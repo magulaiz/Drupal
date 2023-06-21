@@ -128,6 +128,8 @@ abstract class ContentTranslationTestBase extends BrowserTestBase {
     if ($permission_granularity = $entity_type->getPermissionGranularity()) {
       return $permission_granularity == 'bundle' ? "translate {$this->bundle} {$this->entityTypeId}" : "translate {$this->entityTypeId}";
     }
+
+    return NULL;
   }
 
   /**

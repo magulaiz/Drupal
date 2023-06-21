@@ -32,6 +32,7 @@ class NullDestination extends DestinationBase {
    * {@inheritdoc}
    */
   public function import(Row $row, array $old_destination_id_values = []) {
+    return TRUE;
   }
 
 }

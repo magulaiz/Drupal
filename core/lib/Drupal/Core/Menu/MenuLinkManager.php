@@ -198,9 +198,9 @@ class MenuLinkManager implements MenuLinkManagerInterface {
    * {@inheritdoc}
    */
   public function getInstance(array $options) {
-    if (isset($options['id'])) {
-      return $this->createInstance($options['id']);
-    }
+    return isset($options['id']) ?
+      $this->createInstance($options['id'])
+      : NULL;
   }
 
   /**
@@ -259,7 +259,7 @@ class MenuLinkManager implements MenuLinkManagerInterface {
    * {@inheritdoc}
    */
   public function menuNameInUse($menu_name) {
-    $this->treeStorage->menuNameInUse($menu_name);
+    return $this->treeStorage->menuNameInUse($menu_name);
   }
 
   /**

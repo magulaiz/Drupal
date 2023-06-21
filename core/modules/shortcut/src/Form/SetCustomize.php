@@ -103,12 +103,15 @@ class SetCustomize extends EntityForm {
    * {@inheritdoc}
    */
   public function save(array $form, FormStateInterface $form_state) {
+    $status = \SAVED_UPDATED;
     foreach ($this->entity->getShortcuts() as $shortcut) {
       $weight = $form_state->getValue(['shortcuts', 'links', $shortcut->id(), 'weight']);
       $shortcut->setWeight($weight);
-      $shortcut->save();
+      $status = $shortcut->save();
     }
     $this->messenger()->addStatus($this->t('The shortcut set has been updated.'));
+
+    return $status;
   }
 
 }

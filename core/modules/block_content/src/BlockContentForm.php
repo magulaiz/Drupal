@@ -45,7 +45,7 @@ class BlockContentForm extends ContentEntityForm {
     $block = $this->entity;
 
     $insert = $block->isNew();
-    $block->save();
+    $status = $block->save();
     $context = ['@type' => $block->bundle(), '%info' => $block->label()];
     $logger = $this->logger('block_content');
     $block_type = $this->getBundleEntity();
@@ -85,6 +85,8 @@ class BlockContentForm extends ContentEntityForm {
       $this->messenger()->addError($this->t('The block could not be saved.'));
       $form_state->setRebuild();
     }
+
+    return $status;
   }
 
 }

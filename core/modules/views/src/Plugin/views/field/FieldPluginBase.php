@@ -456,9 +456,8 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
    */
   public function getValue(ResultRow $values, $field = NULL) {
     $alias = isset($field) ? $this->aliases[$field] : $this->field_alias;
-    if (isset($values->{$alias})) {
-      return $values->{$alias};
-    }
+
+    return $values->{$alias} ?? NULL;
   }
 
   /**

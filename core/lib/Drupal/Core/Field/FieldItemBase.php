@@ -156,6 +156,8 @@ abstract class FieldItemBase extends Map implements FieldItemInterface {
     elseif (isset($this->values[$name])) {
       return $this->values[$name];
     }
+
+    return NULL;
   }
 
   /**
@@ -210,7 +212,9 @@ abstract class FieldItemBase extends Map implements FieldItemInterface {
   /**
    * {@inheritdoc}
    */
-  public function postSave($update) {}
+  public function postSave($update) {
+    return FALSE;
+  }
 
   /**
    * {@inheritdoc}
@@ -220,7 +224,10 @@ abstract class FieldItemBase extends Map implements FieldItemInterface {
   /**
    * {@inheritdoc}
    */
-  public static function generateSampleValue(FieldDefinitionInterface $field_definition) {}
+  public static function generateSampleValue(FieldDefinitionInterface $field_definition) {
+    // @todo This method should be abstract.
+    return [];
+  }
 
   /**
    * {@inheritdoc}

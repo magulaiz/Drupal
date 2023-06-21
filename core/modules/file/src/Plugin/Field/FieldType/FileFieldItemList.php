@@ -13,7 +13,9 @@ class FileFieldItemList extends EntityReferenceFieldItemList {
   /**
    * {@inheritdoc}
    */
-  public function defaultValuesForm(array &$form, FormStateInterface $form_state) {}
+  public function defaultValuesForm(array &$form, FormStateInterface $form_state) {
+    return [];
+  }
 
   /**
    * {@inheritdoc}
@@ -43,7 +45,7 @@ class FileFieldItemList extends EntityReferenceFieldItemList {
         foreach ($files as $file) {
           \Drupal::service('file.usage')->add($file, 'file', $entity->getEntityTypeId(), $entity->id());
         }
-        return;
+        return FALSE;
       }
 
       // Get the file IDs attached to the field before this update.
@@ -72,6 +74,8 @@ class FileFieldItemList extends EntityReferenceFieldItemList {
         }
       }
     }
+
+    return FALSE;
   }
 
   /**

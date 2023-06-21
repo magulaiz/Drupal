@@ -85,7 +85,7 @@ interface ViewsHandlerInterface extends ViewsPluginInterface {
    * @param string $base_table
    *   The table to join to.
    *
-   * @return \Drupal\views\Plugin\views\join\JoinPluginBase
+   * @return null|\Drupal\views\Plugin\views\join\JoinPluginBase
    */
   public static function getTableJoin($table, $base_table);
 
@@ -139,6 +139,9 @@ interface ViewsHandlerInterface extends ViewsPluginInterface {
 
   /**
    * Provide text for the administrative summary.
+   *
+   * @return null|string|\Drupal\Core\StringTranslation\TranslatableMarkup
+   *   Administrative summary.
    */
   public function adminSummary();
 

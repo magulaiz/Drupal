@@ -151,6 +151,8 @@ abstract class EntityBase implements EntityInterface {
     if (($label_key = $this->getEntityType()->getKey('label')) && isset($this->{$label_key})) {
       return $this->{$label_key};
     }
+
+    return NULL;
   }
 
   /**

@@ -152,6 +152,8 @@ abstract class DateFormatFormBase extends EntityForm {
       $this->messenger()->addStatus($this->t('Custom date format added.'));
     }
     $form_state->setRedirectUrl($this->entity->toUrl('collection'));
+
+    return $status;
   }
 
 }

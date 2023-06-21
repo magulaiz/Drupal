@@ -50,7 +50,7 @@ class ShortcutSetForm extends BundleEntityFormBase {
   public function save(array $form, FormStateInterface $form_state) {
     $entity = $this->entity;
     $is_new = !$entity->getOriginalId();
-    $entity->save();
+    $status = $entity->save();
 
     if ($is_new) {
       $this->messenger()->addStatus($this->t('The %set_name shortcut set has been created. You can edit it from this page.', ['%set_name' => $entity->label()]));
@@ -59,6 +59,8 @@ class ShortcutSetForm extends BundleEntityFormBase {
       $this->messenger()->addStatus($this->t('Updated set name to %set-name.', ['%set-name' => $entity->label()]));
     }
     $form_state->setRedirectUrl($this->entity->toUrl('customize-form'));
+
+    return $status;
   }
 
 }

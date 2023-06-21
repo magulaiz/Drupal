@@ -66,7 +66,7 @@ interface ModerationInformationInterface {
    * @param int $entity_id
    *   The entity ID.
    *
-   * @return int
+   * @return null|int
    *   The revision ID of the default revision, or NULL if the entity was
    *   not found.
    */
@@ -78,8 +78,8 @@ interface ModerationInformationInterface {
    * @param \Drupal\Core\Entity\ContentEntityInterface $entity
    *   The content entity.
    *
-   * @return \Drupal\Core\Entity\ContentEntityInterface
-   *   The revision translation affected translation.
+   * @return null|\Drupal\Core\Entity\ContentEntityInterface
+   *   The revision translation affected translation or NULL.
    */
   public function getAffectedRevisionTranslation(ContentEntityInterface $entity);
 

@@ -69,7 +69,7 @@ class PagerSelectExtender extends SelectExtender {
 
     // A NULL limit is the "kill switch" for pager queries.
     if (empty($this->limit)) {
-      return;
+      return NULL;
     }
     $this->ensureElement();
 

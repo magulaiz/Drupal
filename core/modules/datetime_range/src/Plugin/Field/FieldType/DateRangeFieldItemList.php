@@ -53,6 +53,8 @@ class DateRangeFieldItemList extends DateTimeFieldItemList {
 
       return $element;
     }
+
+    return [];
   }
 
   /**

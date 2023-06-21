@@ -266,9 +266,9 @@ class EntityController implements ContainerInjectionInterface {
    *   The title for the entity view page, if an entity was found.
    */
   public function title(RouteMatchInterface $route_match, EntityInterface $_entity = NULL) {
-    if ($entity = $this->doGetEntity($route_match, $_entity)) {
-      return $entity->label();
-    }
+    return $this
+      ->doGetEntity($route_match, $_entity)
+      ?->label();
   }
 
   /**
@@ -286,6 +286,8 @@ class EntityController implements ContainerInjectionInterface {
     if ($entity = $this->doGetEntity($route_match, $_entity)) {
       return $this->t('Edit %label', ['%label' => $entity->label()]);
     }
+
+    return NULL;
   }
 
   /**
@@ -304,6 +306,8 @@ class EntityController implements ContainerInjectionInterface {
     if ($entity = $this->doGetEntity($route_match, $_entity)) {
       return $this->t('Delete %label', ['%label' => $entity->label()]);
     }
+
+    return NULL;
   }
 
   /**
@@ -332,9 +336,10 @@ class EntityController implements ContainerInjectionInterface {
         }
       }
     }
-    if (isset($entity)) {
-      return $this->entityRepository->getTranslationFromContext($entity);
-    }
+
+    return isset($entity) ?
+      $this->entityRepository->getTranslationFromContext($entity)
+      : NULL;
   }
 
   /**

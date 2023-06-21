@@ -79,6 +79,8 @@ class AdminPathConfigEntityConverter extends EntityConverter {
       // Make sure no overrides are loaded.
       return $storage->loadOverrideFree($value);
     }
+
+    return NULL;
   }
 
   /**

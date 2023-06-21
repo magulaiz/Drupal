@@ -81,6 +81,8 @@ class QueryTest extends DatabaseTestBase {
       if ($previous_error_handler) {
         return $previous_error_handler($severity, $message, $filename, $lineno);
       }
+
+      return NULL;
     });
     try {
       $result = $this->connection->select('test', 't')

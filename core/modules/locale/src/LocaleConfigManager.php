@@ -516,6 +516,8 @@ class LocaleConfigManager {
     if (!empty($active)) {
       return !empty($active['langcode']) ? $active['langcode'] : 'en';
     }
+
+    return NULL;
   }
 
   /**

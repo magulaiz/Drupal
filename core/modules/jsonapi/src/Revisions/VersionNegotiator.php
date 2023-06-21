@@ -77,6 +77,8 @@ class VersionNegotiator {
     catch (InvalidVersionIdentifierException $exception) {
       static::throwBadRequestHttpException($resource_version_identifier);
     }
+    // All possible exception is handled, no return value is needed.
+    // @see \Drupal\jsonapi\Revisions\VersionNegotiatorInterface::getRevision.
   }
 
   /**

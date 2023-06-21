@@ -189,6 +189,8 @@ class MenuForm extends EntityForm {
     }
 
     $form_state->setRedirectUrl($this->entity->toUrl('edit-form'));
+
+    return $status;
   }
 
   /**

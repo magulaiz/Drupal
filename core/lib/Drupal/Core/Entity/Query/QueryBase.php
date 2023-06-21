@@ -498,8 +498,9 @@ abstract class QueryBase implements QueryInterface {
    * @param string $short_class_name
    *   A class name without namespace.
    *
-   * @return string
-   *   The fully qualified name of the class.
+   * @return null|string
+   *   The fully qualified name of the class or NULL if none of the candidates
+   *   is exists.
    */
   public static function getClass(array $namespaces, $short_class_name) {
     foreach ($namespaces as $namespace) {
@@ -508,6 +509,8 @@ abstract class QueryBase implements QueryInterface {
         return $class;
       }
     }
+
+    return NULL;
   }
 
 }

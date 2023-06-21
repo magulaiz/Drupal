@@ -95,6 +95,8 @@ class RenderCache implements RenderCacheInterface {
       CacheableMetadata::createFromRenderArray($data)->addCacheTags(['rendered']),
       CacheableMetadata::createFromRenderArray($pre_bubbling_elements)
     );
+
+    return NULL;
   }
 
   /**

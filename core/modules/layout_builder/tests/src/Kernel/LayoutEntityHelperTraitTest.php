@@ -208,6 +208,8 @@ class LayoutEntityHelperTraitTest extends KernelTestBase {
         $entity = $contexts['entity']->getContextData()->getValue();
         return $storages[$entity_storages[$entity->getName()]];
       }
+
+      return NULL;
     });
 
     $this->container->set('plugin.manager.layout_builder.section_storage', $section_storage_manager->reveal());

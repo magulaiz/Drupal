@@ -95,13 +95,11 @@ class ModulesListNonStableConfirmForm extends ModulesListConfirmForm {
       );
     }
 
-    if ($hasDeprecatedModulesToEnable) {
-      return $this->formatPlural(
-        count($this->groupedModuleInfo[ExtensionLifecycle::DEPRECATED]),
-        'Are you sure you wish to enable a deprecated module?',
-        'Are you sure you wish to enable deprecated modules?'
-      );
-    }
+    return $this->formatPlural(
+      count($this->groupedModuleInfo[ExtensionLifecycle::DEPRECATED]),
+      'Are you sure you wish to enable a deprecated module?',
+      'Are you sure you wish to enable deprecated modules?'
+    );
   }
 
   /**

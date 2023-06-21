@@ -399,6 +399,8 @@ class ResourceIdentifier implements ResourceIdentifierInterface {
         return $property_name;
       }
     }
+
+    return NULL;
   }
 
   /**

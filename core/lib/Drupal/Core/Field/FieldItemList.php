@@ -115,6 +115,8 @@ class FieldItemList extends ItemList implements FieldItemListInterface {
     if ($item = $this->first()) {
       return $item->__get($property_name);
     }
+
+    return NULL;
   }
 
   /**
@@ -292,6 +294,8 @@ class FieldItemList extends ItemList implements FieldItemListInterface {
         return ['#markup' => $this->t('No widget available for: %type.', ['%type' => $this->getFieldDefinition()->getType()])];
       }
     }
+
+    return [];
   }
 
   /**

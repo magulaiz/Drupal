@@ -66,6 +66,8 @@ function comment_help($route_name, RouteMatchInterface $route_match) {
       $output = '<p>' . t('This page provides a list of all comment types on the site and allows you to manage the fields, form and display settings for each.') . '</p>';
       return $output;
   }
+
+  return NULL;
 }
 
 /**
@@ -441,6 +443,8 @@ function comment_node_search_result(EntityInterface $node) {
   if ($comments > 0 || $open) {
     return ['comment' => \Drupal::translation()->formatPlural($comments, '1 comment', '@count comments')];
   }
+
+  return NULL;
 }
 
 /**

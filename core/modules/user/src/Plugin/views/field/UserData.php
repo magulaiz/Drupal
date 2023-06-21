@@ -99,9 +99,9 @@ class UserData extends FieldPluginBase {
     $data = $this->userData->get($this->options['data_module'], $uid, $this->options['data_name']);
 
     // Don't sanitize if no value was found.
-    if (isset($data)) {
-      return $this->sanitizeValue($data);
-    }
+    return isset($data) ?
+      $this->sanitizeValue($data)
+      : NULL;
   }
 
 }

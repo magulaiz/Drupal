@@ -19,6 +19,8 @@ function system_test_help($route_name, RouteMatchInterface $route_match) {
       $output .= '<p>' . t('This is a test help page for the system_test module for the purpose of testing if the "Help" link displays properly.') . '</p>';
       return $output;
   }
+
+  return NULL;
 }
 
 /**

@@ -394,6 +394,8 @@ class MediaTypeForm extends EntityForm {
     }
 
     $form_state->setRedirectUrl($media_type->toUrl('collection'));
+
+    return $status;
   }
 
 }

@@ -66,6 +66,8 @@ class ListDataDefinition extends DataDefinition implements ListDataDefinitionInt
     if ($type != 'list') {
       throw new \LogicException('Lists must always be of data type "list".');
     }
+
+    return $this;
   }
 
   /**
