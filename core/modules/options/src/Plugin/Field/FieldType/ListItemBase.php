@@ -144,7 +144,7 @@ abstract class ListItemBase extends FieldItemBase implements OptionsProviderInte
           '#title' => $this->t('Name'),
           '#weight' => -30,
           '#default_value' => isset($current_keys[$delta]) ? $allowed_values[$current_keys[$delta]] : '',
-          '#required' => $delta == 0,
+          '#required' => $delta === 0,
         ],
         'key' => [
           '#type' => 'textfield',
@@ -188,7 +188,7 @@ abstract class ListItemBase extends FieldItemBase implements OptionsProviderInte
           $element['allowed_values']['table'][$delta]['delete'] += [
             'message' => [
               '#type' => 'item',
-              '#markup' => $this->t('Option in use cannot be removed.'),
+              '#markup' => $this->t('Cannot be removed: option in use.'),
             ],
           ];
         }
