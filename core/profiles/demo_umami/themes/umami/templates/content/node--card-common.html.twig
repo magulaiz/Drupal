@@ -78,15 +78,13 @@
   ]
 %}
 
-{{
-  include('umami:card-common', {
-    title: label,
-    url: url,
-    attributes: attributes.addClass(classes),
-    content,
-    content_attributes,
-    title_attributes,
-    title_prefix,
-    title_suffix
-  })
-}}
+{% include 'umami:card-common' with {
+  title: label,
+  url: url,
+  attributes: attributes.addClass(classes),
+  content,
+  content_attributes,
+  title_attributes,
+  title_prefix,
+  title_suffix
+} only %}
