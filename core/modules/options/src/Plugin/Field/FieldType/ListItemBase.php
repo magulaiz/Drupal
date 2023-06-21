@@ -201,8 +201,8 @@ abstract class ListItemBase extends FieldItemBase implements OptionsProviderInte
       '#name' => 'add_more_allowed_values',
       '#value' => $this->t('Add another item'),
       '#attributes' => ['class' => ['field-add-more-submit']],
-      // Allow users to add another row without filling in the
-      // first row for a smoother user experience.
+      // Allow users to add another row without requiring
+      // existing rows to have values.
       '#limit_validation_errors' => [],
       '#submit' => [[static::class, 'addMoreSubmit']],
       '#ajax' => [
