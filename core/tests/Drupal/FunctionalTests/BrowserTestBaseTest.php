@@ -13,6 +13,8 @@ use Drupal\Tests\Traits\Core\CronRunTrait;
 use Drupal\user\Entity\Role;
 use PHPUnit\Framework\ExpectationFailedException;
 
+// cspell:ignore Anmelden
+
 /**
  * Tests BrowserTestBase functionality.
  *
