@@ -23,7 +23,7 @@
     {% block read_more %}
       <div class="read-more">
         <a class="read-more__link" href="{{ url }}">
-          {% trans %}View {{ node.type.entity.label() }}{% endtrans %} <span class="visually-hidden"> - {{ label }}</span>
+          {% trans %}View {% endtrans %} {{ read_more_label }} <span class="visually-hidden"> - {{ read_more_label }}</span>
         </a>
       </div>
     {% endblock %}

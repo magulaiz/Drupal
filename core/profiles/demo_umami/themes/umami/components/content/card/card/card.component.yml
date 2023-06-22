@@ -32,6 +32,10 @@ props:
     title_suffix:
       type: array
       title: Title suffix
+    read_more_label:
+      type: string
+      title: View more label
+      description: Label for read more link.
 slots:
   type: object
   content:
