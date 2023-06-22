@@ -1,0 +1,44 @@
+.toggletip__tip {
+  z-index: 1;
+  width: max-content;
+  max-width: 800px;
+  margin: 0 1rem;
+  padding: 4px 16px 6px;
+  opacity: 0.9;
+  color: white;
+  border-radius: 2px;
+  background: #232429;
+  font-size: 14px;
+  font-weight: 400;
+}
+
+.toggletip__tip a,
+.toggletip__tip .link {
+  color: #ffd23f;
+}
+
+.toggletip__toggle {
+  width: 24px;
+  height: 24px;
+  color: #55565b;
+  border: 1px solid #d3d4d9;
+  border-radius: 100%;
+  background: #fff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  font-size: 1rem;
+  margin-inline: 12px;
+  padding-inline: 3.5px;
+  padding-block: 3px;
+}
+
+.toggletip__toggle:hover {
+  cursor: pointer;
+}
+
+.toggletip__arrow {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  transform: rotate(45deg);
+  background: #222;
+}
