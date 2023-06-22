@@ -800,6 +800,7 @@ optin
 optionchecker
 orgchart
 ossp
+otel
 otlp
 otsikko
 outdent

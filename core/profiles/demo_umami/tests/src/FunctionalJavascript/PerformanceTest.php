@@ -19,8 +19,13 @@ class PerformanceTest extends PerformanceTestBase {
   /**
    * Just load the front page.
    */
-  public function testFrontPage(): void {
+  public function testPagesAnonymous(): void {
     $this->drupalGet('<front>');
+    $this->assertSession()->pageTextContains('Umami');
+    $this->assertSame(2, $this->stylesheetCount);
+    $this->assertSame(1, $this->scriptCount);
+
+    $this->drupalGet('node/1');
     $this->assertSession()->pageTextContains('Umami');
     $this->assertSame(2, $this->stylesheetCount);
     $this->assertSame(1, $this->scriptCount);
