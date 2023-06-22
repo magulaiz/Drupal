@@ -239,6 +239,8 @@ class Xss {
               'property',
               'class',
               'datetime',
+              'media',
+              'sizes'
             ]);
 
             $working = $mode = 1;
