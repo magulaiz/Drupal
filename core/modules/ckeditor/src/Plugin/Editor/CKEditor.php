@@ -334,7 +334,7 @@ class CKEditor extends EditorBase implements ContainerFactoryPluginInterface {
       // set stylesSet according to the user's settings, if the "Styles" button
       // is enabled. We cannot get rid of this until CKEditor will stop loading
       // styles.js by default.
-      // See http://dev.ckeditor.com/ticket/9992#comment:9.
+      // See https://dev.ckeditor.com/ticket/9992#comment:9.
       'stylesSet' => FALSE,
     ];
 
