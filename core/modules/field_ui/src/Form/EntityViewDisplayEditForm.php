@@ -8,7 +8,7 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
 use Drupal\field_ui\FieldUI;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Drupal\field\GetFieldLabelOptionsTrait;
+use Drupal\field\FieldLabelOptionsTrait;
 
 /**
  * Edit form for the EntityViewDisplay entity type.
@@ -16,7 +16,7 @@ use Drupal\field\GetFieldLabelOptionsTrait;
  * @internal
  */
 class EntityViewDisplayEditForm extends EntityDisplayFormBase {
-  use GetFieldLabelOptionsTrait;
+  use FieldLabelOptionsTrait;
   /**
    * {@inheritdoc}
    */

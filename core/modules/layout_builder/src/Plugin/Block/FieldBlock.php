@@ -23,7 +23,7 @@ use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Drupal\field\GetFieldLabelOptionsTrait;
+use Drupal\field\FieldLabelOptionsTrait;
 
 /**
  * Provides a block that renders a field from an entity.
@@ -38,7 +38,7 @@ use Drupal\field\GetFieldLabelOptionsTrait;
  */
 class FieldBlock extends BlockBase implements ContextAwarePluginInterface, ContainerFactoryPluginInterface {
 
-  use GetFieldLabelOptionsTrait;
+  use FieldLabelOptionsTrait;
   /**
    * The entity field manager.
    *
