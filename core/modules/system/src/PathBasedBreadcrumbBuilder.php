@@ -62,11 +62,11 @@ class PathBasedBreadcrumbBuilder implements BreadcrumbBuilderInterface {
   protected $pathProcessor;
 
   /**
-   * Site config object.
+   * The config factory.
    *
-   * @var \Drupal\Core\Config\Config
+   * @var \Drupal\Core\Config\ConfigFactoryInterface
    */
-  protected $config;
+  protected $configFactory;
 
   /**
    * The title resolver.
@@ -123,7 +123,7 @@ class PathBasedBreadcrumbBuilder implements BreadcrumbBuilderInterface {
     $this->accessManager = $access_manager;
     $this->router = $router;
     $this->pathProcessor = $path_processor;
-    $this->config = $config_factory->get('system.site');
+    $this->configFactory = $config_factory;
     $this->titleResolver = $title_resolver;
     $this->currentUser = $current_user;
     $this->currentPath = $current_path;
@@ -159,8 +159,9 @@ class PathBasedBreadcrumbBuilder implements BreadcrumbBuilderInterface {
     $path = trim($this->context->getPathInfo(), '/');
     $path_elements = explode('/', $path);
     $exclude = [];
+    $config = $this->configFactory->get('system.site');
     // Don't show a link to the front-page path.
-    $front = $this->config->get('page.front');
+    $front = $config->get('page.front');
     $exclude[$front] = TRUE;
     // /user is just a redirect, so skip it.
     // @todo Find a better way to deal with /user.

@@ -15,11 +15,11 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 class SecurityFileUploadEventSubscriber implements EventSubscriberInterface {
 
   /**
-   * The system.file configuration.
+   * The config factory.
    *
-   * @var \Drupal\Core\Config\Config
+   * @var \Drupal\Core\Config\ConfigFactoryInterface
    */
-  protected $config;
+  protected $configFactory;
 
   /**
    * Constructs a new file event listener.
@@ -28,7 +28,7 @@ class SecurityFileUploadEventSubscriber implements EventSubscriberInterface {
    *   The config factory.
    */
   public function __construct(ConfigFactoryInterface $config_factory) {
-    $this->config = $config_factory->get('system.file');
+    $this->configFactory = $config_factory;
   }
 
   /**
@@ -48,6 +48,7 @@ class SecurityFileUploadEventSubscriber implements EventSubscriberInterface {
    *   File upload sanitize name event.
    */
   public function sanitizeName(FileUploadSanitizeNameEvent $event): void {
+    $config = $this->configFactory->get('system.file');
     $filename = $event->getFilename();
     // Dot files are renamed regardless of security settings.
     $filename = trim($filename, '.');
@@ -67,7 +68,7 @@ class SecurityFileUploadEventSubscriber implements EventSubscriberInterface {
     // e.g. .htaccess. In this scenario there is only one 'part' and the
     // extension becomes the filename. We use the original filename from the
     // event rather than the trimmed version above.
-    $insecure_uploads = $this->config->get('allow_insecure_uploads');
+    $insecure_uploads = $config->get('allow_insecure_uploads');
     if (!$insecure_uploads && $final_extension === '' && str_contains($event->getFilename(), '.') && in_array(strtolower($filename), FileSystemInterface::INSECURE_EXTENSIONS, TRUE)) {
       $final_extension = $filename;
       $filename = '';
