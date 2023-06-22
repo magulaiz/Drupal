@@ -5,7 +5,7 @@ namespace Drupal\field;
 /**
  * Method getFieldLabelOptions originally from EntityViewDisplayEditForm file.
  */
-trait GetFieldLabelOptionsTrait {
+trait FieldLabelOptionsTrait {
 
   /**
    * Returns an array of visibility options for field labels.
@@ -13,7 +13,7 @@ trait GetFieldLabelOptionsTrait {
    * @return array
    *   An array of visibility options.
    */
-  public function getFieldLabelOptions(): array {
+  protected function getFieldLabelOptions(): array {
     return [
       'above' => $this->t('Above'),
       'inline' => $this->t('Inline'),
