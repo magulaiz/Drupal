@@ -18,7 +18,7 @@ class Xss {
    *
    * @see \Drupal\Component\Utility\Xss::filterAdmin()
    */
-  protected static $adminTags = ['a', 'abbr', 'acronym', 'address', 'article', 'aside', 'b', 'bdi', 'bdo', 'big', 'blockquote', 'br', 'caption', 'cite', 'code', 'col', 'colgroup', 'command', 'dd', 'del', 'details', 'dfn', 'div', 'dl', 'dt', 'em', 'figcaption', 'figure', 'footer', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'header', 'hgroup', 'hr', 'i', 'img', 'ins', 'kbd', 'li', 'mark', 'menu', 'meter', 'nav', 'ol', 'output', 'p', 'pre', 'progress', 'q', 'rp', 'rt', 'ruby', 's', 'samp', 'section', 'small', 'span', 'strong', 'sub', 'summary', 'sup', 'table', 'tbody', 'td', 'tfoot', 'th', 'thead', 'time', 'tr', 'tt', 'u', 'ul', 'var', 'wbr'];
+  protected static $adminTags = ['a', 'abbr', 'acronym', 'address', 'article', 'aside', 'b', 'bdi', 'bdo', 'big', 'blockquote', 'br', 'caption', 'cite', 'code', 'col', 'colgroup', 'command', 'dd', 'del', 'details', 'dfn', 'div', 'dl', 'dt', 'em', 'figcaption', 'figure', 'footer', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'header', 'hgroup', 'hr', 'i', 'img', 'ins', 'kbd', 'li', 'mark', 'menu', 'meter', 'nav', 'noscript', 'ol', 'output', 'p', 'picture', 'pre', 'progress', 'q', 'rp', 'rt', 'ruby', 's', 'samp', 'section', 'small', 'source', 'span', 'strong', 'sub', 'summary', 'sup', 'table', 'tbody', 'td', 'tfoot', 'th', 'thead', 'time', 'tr', 'tt', 'u', 'ul', 'var', 'video', 'wbr'];
 
   /**
    * The default list of HTML tags allowed by filter().
@@ -42,10 +42,10 @@ class Xss {
    * - Makes sure no HTML tags contain URLs with a disallowed protocol (e.g.
    *   javascript:).
    *
-   * @param string $string
+   * @param $string
    *   The string with raw HTML in it. It will be stripped of everything that
    *   can cause an XSS attack.
-   * @param string[] $html_tags
+   * @param array $html_tags
    *   An array of HTML tags.
    *
    * @return string
@@ -140,7 +140,7 @@ class Xss {
    *   If the element isn't allowed, an empty string. Otherwise, the cleaned up
    *   version of the HTML element.
    */
-  protected static function split($string, array $html_tags, $class) {
+  protected static function split($string, $html_tags, $class) {
     if (substr($string, 0, 1) != '<') {
       // We matched a lone ">" character.
       return '&gt;';
@@ -238,7 +238,8 @@ class Xss {
               'rel',
               'property',
               'class',
-              'datetime',
+              'media',
+              'sizes'
             ]);
 
             $working = $mode = 1;
@@ -329,15 +330,15 @@ class Xss {
   /**
    * Whether this element needs to be removed altogether.
    *
-   * @param string[] $html_tags
+   * @param $html_tags
    *   The list of HTML tags.
-   * @param string $elem
+   * @param $elem
    *   The name of the HTML element.
    *
    * @return bool
    *   TRUE if this element needs to be removed.
    */
-  protected static function needsRemoval(array $html_tags, $elem) {
+  protected static function needsRemoval($html_tags, $elem) {
     return !isset($html_tags[strtolower($elem)]);
   }
 

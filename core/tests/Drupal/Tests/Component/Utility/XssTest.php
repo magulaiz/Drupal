@@ -508,6 +508,18 @@ class XssTest extends TestCase {
         ['a'],
       ],
       [
+        '<source media="print and (resolution:300dpi)" />',
+        '<source media="print and (resolution:300dpi)" />',
+        'Source tag with media attribute',
+        ['source'],
+      ],
+      [
+        '<img src="http://example.com/foo.jpg" sizes="(min-width: 768px) 50vw, 100vw">',
+        '<img src="http://example.com/foo.jpg" sizes="(min-width: 768px) 50vw, 100vw">',
+        'Image tag with sizes attribute',
+        ['img'],
+      ],
+      [
         '<span property="dc:subject">Drupal 8: The best release ever.</span>',
         '<span property="dc:subject">Drupal 8: The best release ever.</span>',
         'Span tag with property attribute',
@@ -542,24 +554,6 @@ class XssTest extends TestCase {
         '<img />',
         'Image tag with malformed SRC',
         ['img'],
-      ],
-      [
-        '<del datetime="1789-08-22T12:30:00.1-04:00">deleted text</del>',
-        '<del datetime="1789-08-22T12:30:00.1-04:00">deleted text</del>',
-        'Del with datetime attribute',
-        ['del'],
-      ],
-      [
-        '<ins datetime="1986-01-28 11:38:00.010">inserted text</ins>',
-        '<ins datetime="1986-01-28 11:38:00.010">inserted text</ins>',
-        'Ins with datetime attribute',
-        ['ins'],
-      ],
-      [
-        '<time datetime="1978-11-19T05:00:00Z">#DBD</time>',
-        '<time datetime="1978-11-19T05:00:00Z">#DBD</time>',
-        'Time with datetime attribute',
-        ['time'],
       ],
     ];
   }
