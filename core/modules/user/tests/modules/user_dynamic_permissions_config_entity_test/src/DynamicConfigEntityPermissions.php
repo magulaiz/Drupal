@@ -13,7 +13,7 @@ class DynamicConfigEntityPermissions {
   use StringTranslationTrait;
 
   /**
-   * Returns an array of permissions
+   * Returns an array of permissions.
    *
    * @return array
    */
