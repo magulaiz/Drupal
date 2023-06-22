@@ -3,6 +3,7 @@
 namespace Drupal\Core\Render\Element;
 
 use Drupal\Component\Render\MarkupInterface;
+use Drupal\Component\Serialization\Json;
 use Drupal\Component\Utility\Html as HtmlUtility;
 use Drupal\Core\Render\Attribute\RenderElement;
 use Drupal\Core\Render\Markup;
@@ -82,6 +83,9 @@ class HtmlTag extends RenderElementBase {
    */
   public static function preRenderHtmlTag($element) {
     $attributes = isset($element['#attributes']) ? new Attribute($element['#attributes']) : '';
+    if (isset($element['#toggletip']['content'])) {
+      $attributes['data-drupal-toggletip'] = Json::encode([...$element['#toggletip'], 'rendered' => TRUE]);
+    }
 
     // An HTML tag should not contain any special characters. Escape them to
     // ensure this cannot be abused.
