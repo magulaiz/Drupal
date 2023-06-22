@@ -19,8 +19,6 @@ class OptionsFieldUITest extends WebDriverTestBase {
   protected static $modules = [
     'node',
     'options',
-    'field_test',
-    'taxonomy',
     'field_ui',
   ];
   /**
@@ -50,6 +48,13 @@ class OptionsFieldUITest extends WebDriverTestBase {
   protected $adminPath;
 
   /**
+   * Node form path for created content type.
+   *
+   * @var string
+   */
+  protected $nodeFormPath;
+
+  /**
    * {@inheritdoc}
    */
   protected function setUp(): void {
@@ -57,71 +62,114 @@ class OptionsFieldUITest extends WebDriverTestBase {
 
     // Create test user.
     $admin_user = $this->drupalCreateUser([
-      'access content',
-      'administer taxonomy',
-      'access administration pages',
-      'administer site configuration',
-      'administer content types',
-      'administer nodes',
       'bypass node access',
       'administer node fields',
       'administer node display',
     ]);
     $this->drupalLogin($admin_user);
 
-    $type = $this->drupalCreateContentType(['name' => 'plan', 'type' => 'plan']);
+    $type = $this->drupalCreateContentType(['type' => 'plan']);
     $this->type = $type->id();
+    $this->nodeFormPath = 'node/add/' . $this->type;
   }
 
-  public function testOptionsAllowedValuesText() {
+  /**
+   * Tests option types allowed values.
+   *
+   * @dataProvider providerTestOptionsAllowedValues
+   */
+  public function testOptionsAllowedValues($option_type, $options, $is_string_option) {
     $this->fieldName = 'field_options_text';
-    $this->createOptionsField('list_string');
+    $this->createOptionsField($option_type);
     $page = $this->getSession()->getPage();
 
     $this->drupalGet($this->adminPath);
 
-    $page->fillField('settings[allowed_values][table][0][item][label]', 'First');
-    $page->pressButton('Add another item');
-    $this->assertSession()->waitForElementVisible('css', '[name="settings[allowed_values][table][1][item][label]"]');
-    $page->fillField('settings[allowed_values][table][1][item][label]', 'Second');
-    $page->pressButton('Add another item');
-    $this->assertSession()->waitForElementVisible('css', '[name="settings[allowed_values][table][2][item][label]"]');
-    $page->fillField('settings[allowed_values][table][2][item][label]', 'Third');
-    $this->assertSession()->waitForText('Machine name: third');
+    $i = 0;
+    foreach ($options as $option_key => $option_label) {
+      $page->fillField("settings[allowed_values][table][$i][item][label]", $option_label);
+      // Add keys if not string option list.
+      if (!$is_string_option) {
+        $page->fillField("settings[allowed_values][table][$i][item][key]", $option_key);
+      }
+      $page->pressButton('Add another item');
+      $i++;
+      $this->assertSession()->waitForElementVisible('css', "[name='settings[allowed_values][table][$i][item][label]']");
+    }
     $page->pressButton('Save field settings');
 
+    // Test the order of the option list on node form.
+    $this->drupalGet($this->nodeFormPath);
+    $this->assertNodeFormOrder(['- None -', 'First', 'Second', 'Third']);
+
+    // Test the order of the option list on admin path.
     $this->drupalGet($this->adminPath);
-    $this->assertOrder(['First', 'Second', 'Third', '']);
+    $this->assertOrder(['First', 'Second', 'Third', ''], $is_string_option);
     $drag_handle = $page->find('css', '[data-drupal-selector="edit-settings-allowed-values-table-0"] .tabledrag-handle');
     $target = $page->find('css', '[data-drupal-selector="edit-settings-allowed-values-table-2"]');
 
     // Change the order the items appear.
     $drag_handle->dragTo($target);
-    $this->assertOrder(['Second', 'Third', 'First', '']);
+    $this->assertOrder(['Second', 'Third', 'First', ''], $is_string_option);
     $page->pressButton('Save field settings');
+
+    $this->drupalGet($this->nodeFormPath);
+    $this->assertNodeFormOrder(['- None -', 'Second', 'Third', 'First']);
+
     $this->drupalGet($this->adminPath);
 
     // Confirm the change in order was saved.
-    $this->assertOrder(['Second', 'Third', 'First', '']);
+    $this->assertOrder(['Second', 'Third', 'First', ''], $is_string_option);
 
     // Delete an item.
     $page->pressButton('remove_row_button__1');
     $this->assertSession()->assertWaitOnAjaxRequest();
-    $this->assertOrder(['Second', 'First', '']);
+    $this->assertOrder(['Second', 'First', ''], $is_string_option);
     $page->pressButton('Save field settings');
+
+    $this->drupalGet($this->nodeFormPath);
+    $this->assertNodeFormOrder(['- None -', 'Second', 'First']);
+
     $this->drupalGet($this->adminPath);
 
     // Confirm the item removal was saved.
-    $this->assertOrder(['Second', 'First', '']);
+    $this->assertOrder(['Second', 'First', ''], $is_string_option);
   }
 
-  protected function assertOrder($expected) {
+  /**
+   * Asserts the order of provided option list on admin path.
+   *
+   * @param array $expected
+   *   Expected order.
+   * @param bool $is_string_option
+   *   Whether the request is for string option list.
+   */
+  protected function assertOrder($expected, $is_string_option) {
     $page = $this->getSession()->getPage();
-    $inputs = $page->findAll('css', '.draggable .form-text.machine-name-source');
+    if ($is_string_option) {
+      $inputs = $page->findAll('css', '.draggable .form-text.machine-name-source');
+    }
+    else {
+      $inputs = $page->findAll('css', '.draggable .form-text');
+    }
     foreach ($expected as $step => $expected_input_value) {
       $value = $inputs[$step]->getValue();
       $this->assertSame($expected_input_value, $value, "Item $step should be $expected_input_value, but got $value");
     }
+  }
+
+  /**
+   * Asserts the order of provided option list on node form.
+   *
+   * @param array $expected
+   *   Expected order.
+   */
+  protected function assertNodeFormOrder($expected) {
+    $elements = $this->assertSession()->selectExists('field_options_text')->findAll('css', 'option');
+    $elements = array_map(function ($element) {
+      return $element->getText();
+    }, $elements);
+    $this->assertSame($expected, $elements);
   }
 
   /**
@@ -149,6 +197,35 @@ class OptionsFieldUITest extends WebDriverTestBase {
       ->save();
 
     $this->adminPath = 'admin/structure/types/manage/' . $this->type . '/fields/node.' . $this->type . '.' . $this->fieldName . '/storage';
+  }
+
+  /**
+   * Data provider for testOptionsAllowedValues().
+   *
+   * @return array
+   *   Array of arrays with the following elements:
+   *   - Option type.
+   *   - Array of option type values.
+   *   - Whether option type is string type or not.
+   */
+  public function providerTestOptionsAllowedValues() {
+    return [
+      'List integer' => [
+        'list_integer',
+        [1 => 'First', 2 => 'Second', 3 => 'Third'],
+        FALSE,
+      ],
+      'List float' => [
+        'list_float',
+        ['0.1' => 'First', '0.2' => 'Second', '0.3' => 'Third'],
+        FALSE,
+      ],
+      'List string' => [
+        'list_string',
+        ['first' => 'First', 'second' => 'Second', 'third' => 'Third'],
+        TRUE,
+      ],
+    ];
   }
 
 }
