@@ -173,8 +173,7 @@ class BrowserTestBaseTest extends BrowserTestBase {
     $this->submitForm([], 'Save', 'node-page-form--2');
     $this->assertSession()->pageTextContains('Page form2 has been created.');
   }
-  
-  
+
   /**
    * Tests drupalLogin() when the site has more than one language.
    */
