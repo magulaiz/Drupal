@@ -24,7 +24,7 @@ trait SynchronizeCsrfTokenSeedTrait {
   /**
    * {@inheritdoc}
    */
-  protected function drupalLogin(AccountInterface $account) {
+  protected function drupalLogin(AccountInterface $account, NULL) {
     parent::drupalLogin($account);
     $session_data = $this->container->get('session_handler.write_safe')->read($this->getSession()->getCookie($this->getSessionName()));
     $csrf_token_seed = unserialize(explode('_sf2_meta|', $session_data)[1])['s'];

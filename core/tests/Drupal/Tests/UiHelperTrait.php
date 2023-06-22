@@ -247,7 +247,7 @@ trait UiHelperTrait {
    *
    * @see drupalCreateUser()
    */
-  protected function drupalLogin(AccountInterface $account, string $label = 'Log in') {
+  protected function drupalLogin(AccountInterface $account, $label = 'Log in') {
     if ($this->loggedInUser) {
       $this->drupalLogout();
     }
