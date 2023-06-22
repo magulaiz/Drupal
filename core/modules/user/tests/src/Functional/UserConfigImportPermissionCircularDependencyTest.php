@@ -35,7 +35,7 @@ class UserConfigImportPermissionCircularDependencyTest extends BrowserTestBase {
    */
   public function testInstallProfileValidation(): void {
     $role = Role::load('role_1');
-    $this->assertEquals($role->hasPermission('role_1'));
+    $this->assertTrue($role->hasPermission('role_1'));
   }
 
 }
