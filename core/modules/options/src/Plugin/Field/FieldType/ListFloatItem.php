@@ -120,6 +120,8 @@ class ListFloatItem extends ListItemBase {
     $element = parent::storageSettingsForm($form, $form_state, $has_data);
 
     foreach (Element::children($element['allowed_values']['table']) as $delta => $row) {
+      // @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/number
+      // @see \Drupal\Core\Field\Plugin\Field\FieldWidget\NumberWidget::formElement()
       $element['allowed_values']['table'][$delta]['item']['key']['#step'] = 'any';
       $element['allowed_values']['table'][$delta]['item']['key']['#type'] = 'number';
     }
