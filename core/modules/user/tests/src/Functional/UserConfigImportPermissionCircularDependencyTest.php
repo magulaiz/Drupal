@@ -20,20 +20,9 @@ class UserConfigImportPermissionCircularDependencyTest extends BrowserTestBase {
   protected $profile = 'testing_config_install_circular_perm_dependency';
 
   /**
-   * {@inheritdoc}
-   */
-  protected function setUp(): void {
-    parent::setUp();
-
-    $this->webUser = $this->drupalCreateUser(['synchronize configuration']);
-    $this->drupalLogin($this->webUser);
-    $this->copyConfig($this->container->get('config.storage'), $this->container->get('config.storage.sync'));
-  }
-
-  /**
    * Tests that dynamic permissions based on config is correctly imported.
    */
-  public function testInstallProfileValidation(): void {
+  public function testDynamicPermissionsDuringConfigImport(): void {
     $role = Role::load('role_1');
     $this->assertTrue($role->hasPermission('role_1'));
   }
