@@ -30,11 +30,11 @@ class AjaxResponseAttachmentsProcessor implements AttachmentsResponseProcessorIn
   protected $assetResolver;
 
   /**
-   * A config object for the system performance configuration.
+   * The config factory.
    *
-   * @var \Drupal\Core\Config\Config
+   * @var \Drupal\Core\Config\ConfigFactoryInterface
    */
-  protected $config;
+  protected $configFactory;
 
   /**
    * The CSS asset collection renderer service.
@@ -93,7 +93,7 @@ class AjaxResponseAttachmentsProcessor implements AttachmentsResponseProcessorIn
    */
   public function __construct(AssetResolverInterface $asset_resolver, ConfigFactoryInterface $config_factory, AssetCollectionRendererInterface $css_collection_renderer, AssetCollectionRendererInterface $js_collection_renderer, RequestStack $request_stack, RendererInterface $renderer, ModuleHandlerInterface $module_handler, protected ?LanguageManagerInterface $languageManager = NULL) {
     $this->assetResolver = $asset_resolver;
-    $this->config = $config_factory->get('system.performance');
+    $this->configFactory = $config_factory;
     $this->cssCollectionRenderer = $css_collection_renderer;
     $this->jsCollectionRenderer = $js_collection_renderer;
     $this->requestStack = $request_stack;
@@ -133,10 +133,11 @@ class AjaxResponseAttachmentsProcessor implements AttachmentsResponseProcessorIn
    */
   protected function buildAttachmentsCommands(AjaxResponse $response, Request $request) {
     $ajax_page_state = $request->get('ajax_page_state');
+    $config = $this->configFactory->get('system.performance');
 
     // Aggregate CSS/JS if necessary, but only during normal site operation.
-    $optimize_css = !defined('MAINTENANCE_MODE') && $this->config->get('css.preprocess');
-    $optimize_js = !defined('MAINTENANCE_MODE') && $this->config->get('js.preprocess');
+    $optimize_css = !defined('MAINTENANCE_MODE') && $config->get('css.preprocess');
+    $optimize_js = !defined('MAINTENANCE_MODE') && $config->get('js.preprocess');
 
     $attachments = $response->getAttachments();
 
