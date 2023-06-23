@@ -143,8 +143,8 @@
       'ul.js-pager__items > li > a, th.views-field a, .attachment .views-summary a',
     );
     once('ajax-pager', this.$pager_links).forEach(
-        $.proxy(this.attachPagerLinkAjax, this),
-      );
+      $.proxy(this.attachPagerLinkAjax, this),
+    );
 
     // Add a trigger to update this view specifically. In order to trigger a
     // refresh use the following code.
