@@ -196,7 +196,6 @@
     const $link = $(linkElement);
     const viewData = {};
     const href = $link.attr('href');
-    // console.log(link);
     // Construct an object using the settings defaults and then overriding
     // with data specific to the link.
     $.extend(
