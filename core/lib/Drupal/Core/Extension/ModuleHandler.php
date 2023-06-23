@@ -101,19 +101,19 @@ class ModuleHandler implements ModuleHandlerInterface {
    *   An associative array whose keys are the names of installed modules and
    *   whose values are Extension class parameters. This is normally the
    *   %container.modules% parameter being set up by DrupalKernel.
-   * @param \Drupal\Core\Cache\CacheBackendInterface $cache_backend
+   * @param \Drupal\Core\Cache\CacheBackendInterface $cacheBackend
    *   Cache backend for storing module hook implementation information.
    *
    * @see \Drupal\Core\DrupalKernel
    * @see \Drupal\Core\CoreServiceProvider
    */
-  public function __construct(string $root, array $module_list, CacheBackendInterface $cache_backend) {
+  public function __construct(string $root, array $module_list, CacheBackendInterface $cacheBackend) {
     $this->root = $root;
     $this->moduleList = [];
     foreach ($module_list as $name => $module) {
       $this->moduleList[$name] = new Extension($this->root, $module['type'], $module['pathname'], $module['filename']);
     }
-    $this->cacheBackend = $cache_backend;
+    $this->cacheBackend = $cacheBackend;
   }
 
   /**
