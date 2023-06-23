@@ -4,8 +4,8 @@ dependencies:
   module:
     - node
     - text
-id: node.field_recipe_instruction
-field_name: field_recipe_instruction
+id: node.field_how_to_make_it
+field_name: field_how_to_make_it
 entity_type: node
 type: text_long
 settings: {  }

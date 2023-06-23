@@ -95,7 +95,7 @@ class UninstallDefaultContentTest extends BrowserTestBase {
     $nodes = $node_storage->loadByProperties(['title' => 'Gluten free pizza']);
     $this->assertCount(1, $nodes);
     $node = reset($nodes);
-    $this->assertStringContainsString('Mix some of the milk and water in a jug', $node->field_recipe_instruction->value);
+    $this->assertStringContainsString('Mix some of the milk and water in a jug', $node->field_how_to_make_it->value);
   }
 
   /**

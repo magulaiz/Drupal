@@ -4,12 +4,12 @@ dependencies:
   config:
     - field.field.node.recipe.field_cooking_time
     - field.field.node.recipe.field_difficulty
+    - field.field.node.recipe.field_how_to_make_it
     - field.field.node.recipe.field_ingredients
     - field.field.node.recipe.field_media_image
     - field.field.node.recipe.field_number_of_servings
     - field.field.node.recipe.field_preparation_time
     - field.field.node.recipe.field_recipe_category
-    - field.field.node.recipe.field_recipe_instruction
     - field.field.node.recipe.field_summary
     - field.field.node.recipe.field_tags
     - field.field.node.recipe.layout_builder__layout
@@ -43,6 +43,14 @@ content:
     weight: 5
     region: content
     settings: {  }
+    third_party_settings: {  }
+  field_how_to_make_it:
+    type: text_textarea
+    weight: 13
+    region: content
+    settings:
+      rows: 5
+      placeholder: ''
     third_party_settings: {  }
   field_ingredients:
     type: string_textfield
@@ -78,14 +86,6 @@ content:
     weight: 6
     region: content
     settings: {  }
-    third_party_settings: {  }
-  field_recipe_instruction:
-    type: text_textarea
-    weight: 13
-    region: content
-    settings:
-      rows: 5
-      placeholder: ''
     third_party_settings: {  }
   field_summary:
     type: text_textarea
