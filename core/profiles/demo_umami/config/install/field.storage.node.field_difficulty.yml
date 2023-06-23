@@ -20,6 +20,7 @@ settings:
       value: hard
       label: Hard
   allowed_values_function: ''
+  predefined_options_plugin: ''
 module: options
 locked: false
 cardinality: 1

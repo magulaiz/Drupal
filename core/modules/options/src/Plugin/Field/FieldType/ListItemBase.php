@@ -6,14 +6,44 @@ use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Form\OptGroup;
+use Drupal\Core\Link;
+use Drupal\Core\Messenger\MessengerTrait;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\Core\TypedData\DataDefinitionInterface;
 use Drupal\Core\TypedData\OptionsProviderInterface;
+use Drupal\Core\TypedData\TypedDataInterface;
+use Drupal\Core\Url;
 
 /**
  * Plugin base class inherited by the options field types.
  */
 abstract class ListItemBase extends FieldItemBase implements OptionsProviderInterface {
+
+  use MessengerTrait;
+
+  /**
+   * The predefined options plugin manager service.
+   *
+   * @var \Drupal\options\Plugin\PredefinedOptionsPluginManager
+   */
+  protected $predefinedOptionsManager;
+
+  /**
+   * The logger for the options channel.
+   *
+   * @var \Psr\Log\LoggerInterface
+   */
+  protected $logger;
+
+  /**
+   * {@inheritdoc}
+   */
+  public function __construct(DataDefinitionInterface $definition, $name = NULL, TypedDataInterface $parent = NULL) {
+    parent::__construct($definition, $name, $parent);
+    $this->predefinedOptionsManager = \Drupal::service('plugin.manager.options.predefined_options');
+    $this->logger = \Drupal::logger('options');
+  }
 
   /**
    * {@inheritdoc}
@@ -21,6 +51,7 @@ abstract class ListItemBase extends FieldItemBase implements OptionsProviderInte
   public static function defaultStorageSettings() {
     return [
       'allowed_values' => [],
+      'predefined_options_plugin' => '',
       'allowed_values_function' => '',
     ] + parent::defaultStorageSettings();
   }
@@ -85,7 +116,17 @@ abstract class ListItemBase extends FieldItemBase implements OptionsProviderInte
    */
   public function storageSettingsForm(array &$form, FormStateInterface $form_state, $has_data) {
     $allowed_values = $this->getSetting('allowed_values');
+    $predefined_options_plugin = $this->getSetting('predefined_options_plugin');
     $allowed_values_function = $this->getSetting('allowed_values_function');
+    $options = ['' => $this->t('Custom')] + $this->predefinedOptionsManager->getAvailablePlugins();
+
+    $element['predefined_options_plugin'] = [
+      '#type' => 'select',
+      '#title' => $this->t('Allowed values'),
+      '#options' => $options,
+      '#default_value' => !empty($predefined_options_plugin) ? $predefined_options_plugin : NULL,
+      '#weight' => -20,
+    ];
 
     $element['allowed_values'] = [
       '#type' => 'textarea',
@@ -102,6 +143,11 @@ abstract class ListItemBase extends FieldItemBase implements OptionsProviderInte
     ];
 
     $element['allowed_values']['#description'] = $this->allowedValuesDescription();
+    $element['allowed_values']['#states'] = [
+      'invisible' => [
+        '[name*="predefined_options_plugin"]' => ['!value' => ''],
+      ],
+    ];
 
     $element['allowed_values_function'] = [
       '#type' => 'item',
@@ -110,6 +156,36 @@ abstract class ListItemBase extends FieldItemBase implements OptionsProviderInte
       '#access' => !empty($allowed_values_function),
       '#value' => $allowed_values_function,
     ];
+
+    $this->throwDeprecationMessage($allowed_values_function);
+
+    return $element;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function fieldSettingsForm(array $form, FormStateInterface $form_state) {
+    $element = parent::fieldSettingsForm($form, $form_state);
+    $plugin_id = $this->getSetting('predefined_options_plugin');
+
+    if (!empty($plugin_id)) {
+      try {
+        $plugin = $this->predefinedOptionsManager->getDefinition($plugin_id);
+        $element['predefined_options_plugin'] = [
+          '#markup' => $this->t('<b>Predefined options plugin</b>: %plugin', [
+            '%plugin' => $plugin['label'],
+          ]),
+        ];
+      }
+      catch (\Exception $e) {
+        $this->logger->error($e);
+        $this->messenger()->addError($e->getMessage());
+      }
+    }
+    elseif (!empty($allowed_values_function = $this->getSetting('allowed_values_function'))) {
+      $this->throwDeprecationMessage($allowed_values_function);
+    }
 
     return $element;
   }
@@ -123,17 +199,17 @@ abstract class ListItemBase extends FieldItemBase implements OptionsProviderInte
   abstract protected function allowedValuesDescription();
 
   /**
-   * #element_validate callback for options field allowed values.
+   * The #element_validate callback for options field allowed values.
    *
-   * @param $element
+   * @param array $element
    *   An associative array containing the properties and children of the
    *   generic form element.
-   * @param $form_state
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
    *   The current state of the form for the form this element belongs to.
    *
    * @see \Drupal\Core\Render\Element\FormElement::processPattern()
    */
-  public static function validateAllowedValues($element, FormStateInterface $form_state) {
+  public static function validateAllowedValues(array $element, FormStateInterface $form_state) {
     $values = static::extractAllowedValues($element['#value'], $element['#field_has_data']);
 
     if (!is_array($values)) {
@@ -241,7 +317,7 @@ abstract class ListItemBase extends FieldItemBase implements OptionsProviderInte
    *    - Values are separated by a carriage return.
    *    - Each value is in the format "value|label" or "value".
    */
-  protected function allowedValuesString($values) {
+  protected function allowedValuesString(array $values) {
     $lines = [];
     foreach ($values as $key => $value) {
       $lines[] = "$key|$value";
@@ -332,6 +408,26 @@ abstract class ListItemBase extends FieldItemBase implements OptionsProviderInte
    */
   protected static function castAllowedValue($value) {
     return $value;
+  }
+
+  /**
+   * Throw an error message warning about callback deprecation.
+   *
+   * This is a temporary method to warn developers using callback
+   * 'allowed_values_function'. This can be safely removed on any minor
+   * release after the predefined options plugin feature is added to core.
+   *
+   * @param string $allowed_values_function
+   *   The 'allowed_values_function' name.
+   */
+  private function throwDeprecationMessage($allowed_values_function) {
+    if (!empty($allowed_values_function)) {
+      $this->messenger()
+        ->addWarning($this->t('The use of callback functions is deprecated. Please replace %function function with a plugin. :link.', [
+          '%function' => $allowed_values_function,
+          ':link' => Link::fromTextAndUrl('Check the docs.', Url::fromUri('https://www.drupal.org/docs/8/core/modules/options')),
+        ]), TRUE);
+    }
   }
 
 }
