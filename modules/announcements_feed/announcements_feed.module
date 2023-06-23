@@ -33,7 +33,7 @@ function announcements_feed_menu() {
     'page callback' => 'announcements_feed_get_announcements',
     'access arguments' => array('access announcements'),
     'position' => 'left',
-    'weight' => 10,
+    'weight' => 2,
     'file' => 'announcements_feed.inc',
     'options' => array(
       'attributes' => array(
