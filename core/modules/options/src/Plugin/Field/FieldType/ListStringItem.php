@@ -85,7 +85,7 @@ class ListStringItem extends ListItemBase {
   public function storageSettingsForm(array &$form, FormStateInterface $form_state, $has_data) {
     $element = parent::storageSettingsForm($form, $form_state, $has_data);
 
-    // Improve user experience by using automatically generated machine name.
+    // Improve user experience by using an automatically generated machine name.
     foreach (Element::children($element['allowed_values']['table']) as $delta => $row) {
       $element['allowed_values']['table'][$delta]['item']['key']['#type'] = 'machine_name';
       $element['allowed_values']['table'][$delta]['item']['key']['#machine_name'] = [

@@ -107,6 +107,7 @@ abstract class ListItemBase extends FieldItemBase implements OptionsProviderInte
       '#prefix' => '<div id="' . $wrapper_id . '">',
       '#suffix' => '</div>',
       '#access' => empty($allowed_values_function),
+      'help_text' => ['#markup' => $this->allowedValuesDescription()],
     ];
     $element['allowed_values']['table'] = [
       '#type' => 'table',
@@ -201,8 +202,8 @@ abstract class ListItemBase extends FieldItemBase implements OptionsProviderInte
       '#name' => 'add_more_allowed_values',
       '#value' => $this->t('Add another item'),
       '#attributes' => ['class' => ['field-add-more-submit']],
-      // Allow users to add another row without requiring
-      // existing rows to have values.
+      // Allow users to add another row without requiring existing rows to have
+      // values.
       '#limit_validation_errors' => [],
       '#submit' => [[static::class, 'addMoreSubmit']],
       '#ajax' => [
@@ -212,8 +213,6 @@ abstract class ListItemBase extends FieldItemBase implements OptionsProviderInte
       ],
     ];
 
-    $element['allowed_values']['help_text']['#markup'] = $this->allowedValuesDescription();
-    $element['allowed_values']['help_text']['#weight'] = -1;
 
     $element['allowed_values_function'] = [
       '#type' => 'item',
