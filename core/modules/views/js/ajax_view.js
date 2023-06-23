@@ -51,7 +51,7 @@
   Drupal.views.instances = {};
 
   /**
-	 * JavaScript object for a certain view.
+   * JavaScript object for a certain view.
    * Sort the view Javascript objects by nesting level.
    *
    * @param {object} ajaxViews
@@ -143,7 +143,7 @@
       'ul.js-pager__items > li > a, th.views-field a, .attachment .views-summary a',
     );
     once('ajax-pager', this.$pager_links).forEach((linkElement) => {
-      $.proxy(this.attachPagerLinkAjax(linkElement), this)
+      $.proxy(this.attachPagerLinkAjax(linkElement), this);
     });
 
     // Add a trigger to update this view specifically. In order to trigger a
