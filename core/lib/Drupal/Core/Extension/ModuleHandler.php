@@ -58,13 +58,6 @@ class ModuleHandler implements ModuleHandlerInterface {
   protected $hookInfo;
 
   /**
-   * Cache backend for storing module hook implementation information.
-   *
-   * @var \Drupal\Core\Cache\CacheBackendInterface
-   */
-  protected CacheBackendInterface $cacheBackend;
-
-  /**
    * Whether the cache needs to be written.
    *
    * @var bool
@@ -77,13 +70,6 @@ class ModuleHandler implements ModuleHandlerInterface {
    * @var array
    */
   protected $alterFunctions;
-
-  /**
-   * The app root.
-   *
-   * @var string
-   */
-  protected string $root;
 
   /**
    * A list of module include file keys.
@@ -107,13 +93,15 @@ class ModuleHandler implements ModuleHandlerInterface {
    * @see \Drupal\Core\DrupalKernel
    * @see \Drupal\Core\CoreServiceProvider
    */
-  public function __construct(string $root, array $module_list, CacheBackendInterface $cacheBackend) {
-    $this->root = $root;
+  public function __construct(
+    protected string $root,
+    array $module_list,
+    protected CacheBackendInterface $cacheBackend,
+  ) {
     $this->moduleList = [];
     foreach ($module_list as $name => $module) {
       $this->moduleList[$name] = new Extension($this->root, $module['type'], $module['pathname'], $module['filename']);
     }
-    $this->cacheBackend = $cacheBackend;
   }
 
   /**
