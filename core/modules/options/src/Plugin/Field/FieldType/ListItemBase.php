@@ -213,7 +213,6 @@ abstract class ListItemBase extends FieldItemBase implements OptionsProviderInte
       ],
     ];
 
-
     $element['allowed_values_function'] = [
       '#type' => 'item',
       '#title' => $this->t('Allowed values list'),
