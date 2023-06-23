@@ -383,15 +383,11 @@ function file_theme() {
     'file_video' => [
       'variables' => ['files' => [], 'attributes' => NULL],
     ],
-
-    // From file.field.inc.
     'file_widget_multiple' => [
       'render element' => 'element',
-      'file' => 'file.field.inc',
     ],
     'file_upload_help' => [
       'variables' => ['description' => NULL, 'upload_validators' => NULL, 'cardinality' => NULL],
-      'file' => 'file.field.inc',
     ],
   ];
 }
