@@ -116,6 +116,7 @@ class CommentEntityReferenceTest extends CommentTestBase {
 
     // But not as anonymous.
     $this->drupalLogout();
+    $this->drupalGet('node/' . $this->node2->id());
     $this->assertSession()->pageTextNotContains($this->comment->label());
   }
 
