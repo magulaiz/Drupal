@@ -141,7 +141,7 @@
       };
 
       const defaultConfig = {
-        atDescription: Drupal.t('More info about this'),
+        atDescription: '',
         placement: 'top-end',
         offset: 24,
         positionOffsetPrimary: 0,
@@ -160,11 +160,20 @@
 
           tipElement.classList.add('toggletip');
           const config = { ...defaultConfig, ...toggletipConfig };
+
           // Create unique ids for each part of the toggletip.
           const id = generateId();
           const toggleId = `${id}-toggle`;
           const descriptionId = `${id}-description`;
           const tipId = `${id}-tip`;
+
+          if (!config.atDescription.length) {
+            console.warn(
+              `The atDescription property of toggle button ${toggleId} is empty, and is using a default value. To be sufficiently accessible, this property should describe the information this button reveals.`,
+            );
+            config.atDescription = Drupal.t('More info about this');
+          }
+
 
           // Create the toggle button.
           const button = document.createElement('button');
@@ -182,8 +191,7 @@
           const tip = document.createElement('div');
           tip.classList.add('toggletip__tip');
           tip.setAttribute('tabindex', '0');
-          tip.setAttribute('role', 'region');
-          // tip.setAttribute('hidden', 'true');
+          tip.setAttribute('role', 'status');
           tip.setAttribute('data-drupal-toggletip-tip', true);
           tip.id = tipId;
           tip.setAttribute('popover', '');
