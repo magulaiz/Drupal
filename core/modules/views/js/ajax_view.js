@@ -51,7 +51,7 @@
   Drupal.views.instances = {};
 
   /**
-		-   * JavaScript object for a certain view.
+	 * JavaScript object for a certain view.
    * Sort the view Javascript objects by nesting level.
    *
    * @param {object} ajaxViews
@@ -142,9 +142,9 @@
     this.$pager_links = this.$view.find(
       'ul.js-pager__items > li > a, th.views-field a, .attachment .views-summary a',
     );
-    once('ajax-pager', this.$pager_links).forEach(
-      $.proxy(this.attachPagerLinkAjax, this),
-    );
+    once('ajax-pager', this.$pager_links).forEach((linkElement) => {
+      $.proxy(this.attachPagerLinkAjax(linkElement), this)
+    });
 
     // Add a trigger to update this view specifically. In order to trigger a
     // refresh use the following code.
@@ -189,15 +189,14 @@
   /**
    * Attach the ajax behavior to a singe link.
    *
-   * @param {string} [id]
-   *   The ID of the link.
-   * @param {HTMLElement} link
+   * @param {HTMLElement} linkElement
    *   The link element.
    */
-  Drupal.views.ajaxView.prototype.attachPagerLinkAjax = function (id, link) {
-    const $link = $(link);
+  Drupal.views.ajaxView.prototype.attachPagerLinkAjax = function (linkElement) {
+    const $link = $(linkElement);
     const viewData = {};
     const href = $link.attr('href');
+    // console.log(link);
     // Construct an object using the settings defaults and then overriding
     // with data specific to the link.
     $.extend(
@@ -211,7 +210,7 @@
     const selfSettings = $.extend({}, this.element_settings, {
       submit: viewData,
       base: false,
-      element: link,
+      element: linkElement,
       httpMethod: 'GET',
     });
     // Remove unwanted parameter.
