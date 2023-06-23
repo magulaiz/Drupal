@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\Tests\config\Functional;
+namespace Drupal\Tests\user\Functional;
 
 use Drupal\Tests\BrowserTestBase;
 use Drupal\user\Entity\Role;
