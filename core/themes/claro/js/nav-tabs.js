@@ -39,10 +39,8 @@
       }
     };
 
-    const toggleCollapsed = _ref => {
-      let {
-        matches
-      } = _ref;
+    const toggleCollapsed = (_ref) => {
+      const { matches } = _ref;
 
       if (matches) {
         if ($tab.hasClass('is-horizontal') && !$tab.attr('data-width')) {
