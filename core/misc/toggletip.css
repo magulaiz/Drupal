@@ -41,6 +41,7 @@
 
 .toggletip__arrow {
   position: absolute;
+  z-index: 1;
   width: 8px;
   height: 8px;
   transform: rotate(45deg);
