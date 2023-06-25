@@ -27,6 +27,12 @@ class CommentValidationTest extends EntityKernelTestBase {
   protected function setUp(): void {
     parent::setUp();
     $this->installSchema('comment', ['comment_entity_statistics']);
+
+    // Insert the anonymous user into the database.
+    User::create([
+      'uid' => 0,
+      'name' => '',
+    ])->save();
   }
 
   /**

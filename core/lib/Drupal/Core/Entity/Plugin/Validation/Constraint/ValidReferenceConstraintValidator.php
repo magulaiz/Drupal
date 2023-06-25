@@ -80,8 +80,8 @@ class ValidReferenceConstraintValidator extends ConstraintValidator implements C
         $new_entities[$delta] = $item->entity;
       }
 
-      // '0' or NULL are considered valid empty references.
-      if (!empty($target_id)) {
+      // '0' is considered a valid reference.
+      if ($target_id !== '' && $target_id !== NULL) {
         $target_ids[$delta] = $target_id;
       }
     }

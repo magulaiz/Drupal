@@ -5,6 +5,7 @@ namespace Drupal\Tests\node\Kernel\Migrate;
 use Drupal\Tests\migrate_drupal\Kernel\MigrateDrupalTestBase;
 use Drupal\migrate_drupal\Tests\StubTestTrait;
 use Drupal\node\Entity\NodeType;
+use Drupal\user\Entity\User;
 
 /**
  * Test stub creation for nodes.
@@ -30,6 +31,12 @@ class MigrateNodeStubTest extends MigrateDrupalTestBase {
     NodeType::create([
       'type' => 'testnodetype',
       'name' => 'Test node type',
+    ])->save();
+
+    // Insert the anonymous user into the database.
+    User::create([
+      'uid' => 0,
+      'name' => '',
     ])->save();
   }
 

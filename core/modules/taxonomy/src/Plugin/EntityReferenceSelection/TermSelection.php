@@ -138,4 +138,19 @@ class TermSelection extends DefaultSelection {
     return $entities;
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function validateReferenceableEntities(array $ids) {
+    $result = parent::validateReferenceableEntities($ids);
+
+    // '0' is valid reference for taxonomy parents, even if the storage doesn't
+    // have any term with that ID.
+    if (in_array(0, $ids)) {
+      $result += [0];
+    }
+
+    return $result;
+  }
+
 }

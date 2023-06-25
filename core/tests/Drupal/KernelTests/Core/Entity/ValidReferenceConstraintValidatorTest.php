@@ -226,6 +226,27 @@ class ValidReferenceConstraintValidatorTest extends EntityKernelTestBase {
       '%type' => 'node',
       '%id' => $deleted_node->id(),
     ]), $violations[1]->getMessage());
+
+    // Create an entity and a field definition that will fail validation.
+    $anonymous_user = $this->createUser(['uid' => 0]);
+    $definition = BaseFieldDefinition::create('entity_reference')
+      ->setSettings([
+        'target_type' => 'user',
+        'handler_settings' => [
+          'include_anonymous' => FALSE,
+        ],
+      ]);
+
+    $typed_data = $this->typedData->create($definition, ['target_id' => $anonymous_user->id()]);
+    $violations = $typed_data->validate();
+    $this->assertTrue($violations->count(), 'Validation failed for incorrect value.');
+
+    // Make sure the information provided by a violation is correct.
+    $violation = $violations[0];
+    $this->assertEqual($violation->getMessage(), t('This entity (%type: %id) cannot be referenced.', [
+      '%type' => 'user',
+      '%id' => $anonymous_user->id(),
+    ]), 'The message for invalid value is correct.');
   }
 
 }

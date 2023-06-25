@@ -383,7 +383,7 @@ class DefaultSelection extends SelectionPluginBase implements ContainerFactoryPl
         ->execute();
     }
 
-    return $result;
+    return array_values($result);
   }
 
   /**
