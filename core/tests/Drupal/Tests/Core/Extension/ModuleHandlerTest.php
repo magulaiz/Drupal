@@ -302,11 +302,20 @@ class ModuleHandlerTest extends UnitTestCase {
     $this->assertFalse($module_handler->invoke('module_handler_test', 'hook', [FALSE]), 'Module is installed, implementation exists, different argument value.');
     $this->assertNull($module_handler->invoke('module_handler_test', 'hook1', [5]), 'Module is installed, implementation not loaded.');
     $this->assertNull($module_handler->invoke('module_handler_test_new', 'hook', [5]), 'Module is not installed, implementation not loaded.');
+
     // Files like *.install can be included _after_ initial discovery.
     require_once __DIR__ . '/ModuleHandlerTest.functions.inc';
     // Implementations from the included file now work.
     $this->assertSame(5, $module_handler->invoke('module_handler_test', 'hook1', [5]), 'Module is installed, implementation exists.');
     $this->assertSame(5, $module_handler->invoke('module_handler_test_new', 'hook', [5]), 'Module is not installed, implementation exists.');
+
+    // Test by-reference arguments.
+    $values = ['x'];
+    $this->assertSame('', $module_handler->invoke('module_handler_test', 'byref', [&$values]));
+    $this->assertSame([
+      'x',
+      'module_handler_test_byref',
+    ], $values);
   }
 
   /**
@@ -446,6 +455,16 @@ class ModuleHandlerTest extends UnitTestCase {
     $module_handler->addModule('module_handler_test_all1', 'core/tests/Drupal/Tests/Core/Extension/modules/module_handler_test_all1');
     $module_handler->addModule('module_handler_test_all2', 'core/tests/Drupal/Tests/Core/Extension/modules/module_handler_test_all2');
     $this->assertEquals([TRUE, TRUE, TRUE], $module_handler->invokeAll('hook', [TRUE]));
+
+    // Test by-reference arguments.
+    $values = ['x'];
+    $this->assertSame(['', 'all1', 'all2'], $module_handler->invokeAll('byref', [&$values]));
+    $this->assertSame([
+      'x',
+      'module_handler_test_byref',
+      'module_handler_test_all1_byref',
+      'module_handler_test_all2_byref',
+    ], $values);
   }
 
   /**
