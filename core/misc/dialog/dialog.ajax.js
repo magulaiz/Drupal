@@ -55,8 +55,8 @@
           : [];
 
         // If the opener element was in an ajax container, and focus is on the
-        // body element, we can assume focus was lost. To recover, focus is moved
-        // to the first focusable element in the container.
+        // body element, we can assume focus was lost. To recover, focus is
+        // moved to the first focusable element in the container.
         if (
           ajaxContainer.length &&
           (document.activeElement === document.body ||
@@ -64,9 +64,12 @@
         ) {
           const focusableChildren = focusable(ajaxContainer[0]);
           if (focusableChildren.length > 0) {
-            focusableChildren[0].focus();
+            setTimeout(() => {
+              focusableChildren[0].focus();
+            }, 0);
           }
         }
+
         $(event.target).remove();
       };
     },
@@ -83,7 +86,7 @@
     prepareDialogButtons($dialog) {
       const buttons = [];
       const $buttons = $dialog.find(
-        '.form-actions input[type=submit], .form-actions a.button',
+        '.form-actions input[type=submit], .form-actions a.button, .form-actions a.action-link',
       );
       $buttons.each(function () {
         const $originalButton = $(this).css({ display: 'none' });
