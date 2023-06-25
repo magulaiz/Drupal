@@ -15,16 +15,14 @@ class NodeUpdateTest extends UpdatePathTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setDatabaseDumpFiles() {
-    $this->databaseDumpFiles[] = __DIR__ . '/../../../../../system/tests/fixtures/update/drupal-8.8.0.bare.standard.php.gz';
+  protected function setDatabaseDumpFiles(): void {
+    $this->databaseDumpFiles[] = __DIR__ . '/../../../../../system/tests/fixtures/update/drupal-9.4.0.bare.standard.php.gz';
   }
 
   /**
-   * Tests node_post_update_plural_variants().
-   *
-   * @see node_post_update_plural_variants()
+   * @covers \node_post_update_plural_variants
    */
-  public function testPostUpdatePluralVariants() {
+  public function testPostUpdatePluralVariants(): void {
     $properties = ['label_singular', 'label_plural', 'label_count'];
 
     // Check that plural label variant properties are not present before update.
