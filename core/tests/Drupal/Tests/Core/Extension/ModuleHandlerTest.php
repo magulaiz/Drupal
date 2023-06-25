@@ -292,15 +292,21 @@ class ModuleHandlerTest extends UnitTestCase {
   }
 
   /**
-   * Tests invoke methods when module is enabled.
+   * Tests the ->invoke() method.
    *
    * @covers ::invoke
    */
-  public function testInvokeModuleEnabled() {
+  public function testInvoke() {
     $module_handler = $this->getModuleHandler();
-    $this->assertTrue($module_handler->invoke('module_handler_test', 'hook', [TRUE]), 'Installed module runs hook.');
-    $this->assertFalse($module_handler->invoke('module_handler_test', 'hook', [FALSE]), 'Installed module runs hook.');
-    $this->assertNull($module_handler->invoke('module_handler_test_fake', 'hook', [FALSE]), 'Installed module runs hook.');
+    $this->assertTrue($module_handler->invoke('module_handler_test', 'hook', [TRUE]), 'Module is installed, implementation exists.');
+    $this->assertFalse($module_handler->invoke('module_handler_test', 'hook', [FALSE]), 'Module is installed, implementation exists, different argument value.');
+    $this->assertNull($module_handler->invoke('module_handler_test', 'hook1', [5]), 'Module is installed, implementation not loaded.');
+    $this->assertNull($module_handler->invoke('module_handler_test_new', 'hook', [5]), 'Module is not installed, implementation not loaded.');
+    // Files like *.install can be included _after_ initial discovery.
+    require_once __DIR__ . '/ModuleHandlerTest.functions.inc';
+    // Implementations from the included file now work.
+    $this->assertSame(5, $module_handler->invoke('module_handler_test', 'hook1', [5]), 'Module is installed, implementation exists.');
+    $this->assertSame(5, $module_handler->invoke('module_handler_test_new', 'hook', [5]), 'Module is not installed, implementation exists.');
   }
 
   /**
