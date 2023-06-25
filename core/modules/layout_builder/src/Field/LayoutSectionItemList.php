@@ -92,7 +92,14 @@ class LayoutSectionItemList extends FieldItemList implements SectionListInterfac
         return $section->toArray();
       }, $list->getSections());
     };
-    return $convert($this) === $convert($list_to_compare);
+
+    // Use == instead of === to compare items from different reference
+    // but the identical content. For example, ->load(x) and ->loadUnchanged(x)
+    // will return the same content in regular case but the reference will be
+    // different. A section array might contain translatable text (object of
+    // TranslatableMarkup) like component label. Comparison with === will
+    // fail for those items.
+    return $convert($this) == $convert($list_to_compare);
   }
 
   /**
