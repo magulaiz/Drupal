@@ -72,7 +72,7 @@ class LinkViewsTokensTest extends ViewTestBase {
   public function testLinkViewsTokens() {
     // Array of URI's to test.
     $uris = [
-      'http://www.drupal.org' => 'Drupal.org',
+      'https://www.drupal.org' => 'Drupal.org',
     ];
 
     // Add nodes with the URI's and titles.

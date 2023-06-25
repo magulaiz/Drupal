@@ -17,7 +17,7 @@ use Drupal\migrate\Row;
  *
  * Available configuration keys
  * - uri_scheme: (optional) The URI scheme prefix to use for URLs without a
- *   scheme. Defaults to 'http://', which was the default in Drupal 6 and
+ *   scheme. Defaults to 'https://', which was the default in Drupal 6 and
  *   Drupal 7.
  *
  * Examples:
@@ -43,7 +43,7 @@ class FieldLink extends ProcessPluginBase {
    * {@inheritdoc}
    */
   public function __construct(array $configuration, $plugin_id, $plugin_definition, MigrationInterface $migration) {
-    $configuration += ['uri_scheme' => 'http://'];
+    $configuration += ['uri_scheme' => 'https://'];
     parent::__construct($configuration, $plugin_id, $plugin_definition);
   }
 
