@@ -3,9 +3,9 @@
 namespace Drupal\Tests\Core\Extension;
 
 use Drupal\Core\Cache\CacheBackendInterface;
+use Drupal\Core\Extension\Exception\UnknownExtensionException;
 use Drupal\Core\Extension\Extension;
 use Drupal\Core\Extension\ModuleHandler;
-use Drupal\Core\Extension\Exception\UnknownExtensionException;
 use Drupal\Tests\UnitTestCase;
 
 /**
@@ -472,6 +472,290 @@ class ModuleHandlerTest extends UnitTestCase {
   }
 
   /**
+   * Tests order of implementations in ->invokeAll().
+   *
+   * @dataProvider providerTestHookOrder
+   *
+   * @param list<string> $modules
+   *   Modules to enable.
+   * @param list<string> $expected
+   *   Expected functions for ->invokeAll('custom_order').
+   * @param list<string> $expected_alter
+   *   Expected functions for ->alter('type').
+   * @param list<string> $expected_alter_combined
+   *   Expected functions for ->alter(['type', 'subtype', 'unaltered']).
+   * @param list<string> $expected_alter_combined_2
+   *   Expected functions for ->alter(['unaltered', 'subtype']).
+   */
+  public function testHookOrder(array $modules, array $expected, array $expected_alter, array $expected_alter_combined, array $expected_alter_combined_2): void {
+    $module_handler = $this->getModuleHandler();
+    require_once __DIR__ . '/ModuleHandlerTest.functions.inc';
+    require_once __DIR__ . '/ModuleHandlerTest.functions.alter.inc';
+    require_once __DIR__ . '/ModuleHandlerTest.functions.module_implements_alter.inc';
+
+    // Within this test it is ok to add mismatching extension objects.
+    $fake_module_object = new Extension($this->root, 'module', self::TEST_MODULE_PATH . '/module_handler_test.info.yml');
+    $module_list = $module_handler->getModuleList();
+    foreach ($modules as $module) {
+      $module_list[$module] = $fake_module_object;
+    }
+    $module_handler->setModuleList($module_list);
+
+    $result = $module_handler->invokeAll('custom_order');
+    $this->assertSameListsOfStrings($expected, $result, 'invokeAll(custom_order)');
+
+    $altered = [];
+    $module_handler->alter('type', $altered);
+    $this->assertSameListsOfStrings($expected_alter, $altered, 'alter(type)');
+
+    $altered = [];
+    $module_handler->alter(['type', 'subtype', 'unaltered'], $altered);
+    $this->assertSameListsOfStrings($expected_alter_combined, $altered, 'alter([type, subtype, unaltered])');
+
+    // Scenario where the main type order is not altered, but the subtype is.
+    $altered = [];
+    $module_handler->alter(['unaltered', 'subtype'], $altered);
+    $this->assertSameListsOfStrings($expected_alter_combined_2, $altered, 'alter([unaltered, subtype])');
+  }
+
+  /**
+   * Data provider.
+   *
+   * @return array
+   */
+  public function providerTestHookOrder(): array {
+    $datasets = [];
+    $datasets['basic'] = [
+      [
+        // Add additional modules with hook implementations.
+        // Some of these modules are 'fake', meaning they don't have an actual
+        // *.info.yml file, but they do have procedural hook implementations.
+        // Note that 'module_handler_test' is already installed.
+        'module_handler_test1',
+        'module_handler_test2',
+      ],
+      [
+        // Implementations of hook_custom_order().
+        'module_handler_test_custom_order',
+        'module_handler_test1_custom_order',
+        'module_handler_test2_custom_order',
+      ],
+      [
+        // Implementations of hook_type_alter().
+        'module_handler_test_type_alter',
+        'module_handler_test1_type_alter',
+        'module_handler_test2_type_alter',
+      ],
+      [
+        // Implementations for ->alter(['type', 'subtype', 'unaltered'], ..).
+        'module_handler_test_type_alter',
+        'module_handler_test_subtype_alter',
+        'module_handler_test_unaltered_alter',
+        'module_handler_test1_type_alter',
+        'module_handler_test1_subtype_alter',
+        'module_handler_test1_unaltered_alter',
+        'module_handler_test2_type_alter',
+        'module_handler_test2_subtype_alter',
+        'module_handler_test2_unaltered_alter',
+      ],
+      [
+        // Implementations for ->alter(['unaltered', 'subtype'], ..).
+        'module_handler_test_unaltered_alter',
+        'module_handler_test_subtype_alter',
+        'module_handler_test1_unaltered_alter',
+        'module_handler_test1_subtype_alter',
+        'module_handler_test2_unaltered_alter',
+        'module_handler_test2_subtype_alter',
+      ],
+    ];
+    $datasets['swapped'] = [
+      [
+        // Change the order of modules.
+        'module_handler_test2',
+        'module_handler_test1',
+      ],
+      [
+        'module_handler_test_custom_order',
+        'module_handler_test2_custom_order',
+        'module_handler_test1_custom_order',
+      ],
+      [
+        'module_handler_test_type_alter',
+        'module_handler_test2_type_alter',
+        'module_handler_test1_type_alter',
+      ],
+      [
+        'module_handler_test_type_alter',
+        'module_handler_test_subtype_alter',
+        'module_handler_test_unaltered_alter',
+        'module_handler_test2_type_alter',
+        'module_handler_test2_subtype_alter',
+        'module_handler_test2_unaltered_alter',
+        'module_handler_test1_type_alter',
+        'module_handler_test1_subtype_alter',
+        'module_handler_test1_unaltered_alter',
+      ],
+      [
+        'module_handler_test_unaltered_alter',
+        'module_handler_test_subtype_alter',
+        'module_handler_test2_unaltered_alter',
+        'module_handler_test2_subtype_alter',
+        'module_handler_test1_unaltered_alter',
+        'module_handler_test1_subtype_alter',
+      ],
+    ];
+    $datasets['last'] = [
+      [
+        'module_handler_test1',
+        'module_handler_test2',
+        // Add a *_module_implements_alter() that makes *_test run last.
+        'module_handler_test_last',
+      ],
+      [
+        'module_handler_test1_custom_order',
+        'module_handler_test2_custom_order',
+        'module_handler_test_custom_order',
+      ],
+      [
+        'module_handler_test1_type_alter',
+        'module_handler_test2_type_alter',
+        'module_handler_test_type_alter',
+      ],
+      [
+        'module_handler_test1_type_alter',
+        'module_handler_test1_subtype_alter',
+        'module_handler_test1_unaltered_alter',
+        'module_handler_test2_type_alter',
+        'module_handler_test2_subtype_alter',
+        'module_handler_test2_unaltered_alter',
+        'module_handler_test_type_alter',
+        'module_handler_test_subtype_alter',
+        'module_handler_test_unaltered_alter',
+      ],
+      [
+        'module_handler_test_unaltered_alter',
+        'module_handler_test_subtype_alter',
+        'module_handler_test1_unaltered_alter',
+        'module_handler_test1_subtype_alter',
+        'module_handler_test2_unaltered_alter',
+        'module_handler_test2_subtype_alter',
+      ],
+    ];
+    $datasets['test1_last'] = [
+      [
+        'module_handler_test1',
+        'module_handler_test2',
+        // Add a *_module_implements_alter() that makes *_test1 run last.
+        'module_handler_test1_last',
+      ],
+      [
+        'module_handler_test_custom_order',
+        'module_handler_test2_custom_order',
+        'module_handler_test1_custom_order',
+      ],
+      [
+        'module_handler_test_type_alter',
+        'module_handler_test2_type_alter',
+        'module_handler_test1_type_alter',
+      ],
+      [
+        'module_handler_test_type_alter',
+        'module_handler_test_subtype_alter',
+        'module_handler_test_unaltered_alter',
+        'module_handler_test2_type_alter',
+        'module_handler_test2_subtype_alter',
+        'module_handler_test2_unaltered_alter',
+        'module_handler_test1_type_alter',
+        'module_handler_test1_subtype_alter',
+        'module_handler_test1_unaltered_alter',
+      ],
+      [
+        'module_handler_test_unaltered_alter',
+        'module_handler_test_subtype_alter',
+        'module_handler_test1_unaltered_alter',
+        'module_handler_test1_subtype_alter',
+        'module_handler_test2_unaltered_alter',
+        'module_handler_test2_subtype_alter',
+      ],
+    ];
+    $datasets['between'] = [
+      [
+        'module_handler_test1',
+        'module_handler_test2',
+        // Add a *_module_implements_alter() to let *_test run after *_test1.
+        'module_handler_test_between',
+      ],
+      [
+        'module_handler_test1_custom_order',
+        'module_handler_test_custom_order',
+        'module_handler_test2_custom_order',
+      ],
+      [
+        'module_handler_test1_type_alter',
+        'module_handler_test_type_alter',
+        'module_handler_test2_type_alter',
+      ],
+      [
+        'module_handler_test1_type_alter',
+        'module_handler_test1_subtype_alter',
+        'module_handler_test1_unaltered_alter',
+        'module_handler_test_type_alter',
+        'module_handler_test_subtype_alter',
+        'module_handler_test_unaltered_alter',
+        'module_handler_test2_type_alter',
+        'module_handler_test2_subtype_alter',
+        'module_handler_test2_unaltered_alter',
+      ],
+      [
+        'module_handler_test_unaltered_alter',
+        'module_handler_test_subtype_alter',
+        'module_handler_test1_unaltered_alter',
+        'module_handler_test1_subtype_alter',
+        'module_handler_test2_unaltered_alter',
+        'module_handler_test2_subtype_alter',
+      ],
+    ];
+    $datasets['first'] = [
+      [
+        'module_handler_test1',
+        'module_handler_test2',
+        // Add a *_module_implements_alter() to let *_test run first.
+        'module_handler_test1_first',
+      ],
+      [
+        'module_handler_test1_custom_order',
+        'module_handler_test_custom_order',
+        'module_handler_test2_custom_order',
+      ],
+      [
+        'module_handler_test1_type_alter',
+        'module_handler_test_type_alter',
+        'module_handler_test2_type_alter',
+      ],
+      [
+        'module_handler_test1_type_alter',
+        'module_handler_test1_subtype_alter',
+        'module_handler_test1_unaltered_alter',
+        'module_handler_test_type_alter',
+        'module_handler_test_subtype_alter',
+        'module_handler_test_unaltered_alter',
+        'module_handler_test2_type_alter',
+        'module_handler_test2_subtype_alter',
+        'module_handler_test2_unaltered_alter',
+      ],
+      [
+        'module_handler_test_unaltered_alter',
+        'module_handler_test_subtype_alter',
+        'module_handler_test1_unaltered_alter',
+        'module_handler_test1_subtype_alter',
+        'module_handler_test2_unaltered_alter',
+        'module_handler_test2_subtype_alter',
+      ],
+    ];
+    return $datasets;
+  }
+
+  /**
    * Tests that write cache calls through to cache library correctly.
    *
    * @covers ::writeCache
@@ -560,6 +844,28 @@ class ModuleHandlerTest extends UnitTestCase {
     $module_handler->setModuleList([]);
     $module_handler->addModule('node', 'core/modules/node');
     $this->assertEquals(['node' => $this->root . '/core/modules/node'], $module_handler->getModuleDirectories());
+  }
+
+  /**
+   * Asserts that two lists of strings are the same, with simplified format.
+   *
+   * This gets rid of noise due to numbered indices.
+   *
+   * @param array $expected
+   *   Expected value.
+   * @param array $actual
+   *   Actual value.
+   * @param string $message
+   *   Message.
+   */
+  protected function assertSameListsOfStrings(array $expected, array $actual, string $message = '') {
+    $this->assertSame(
+      implode("\n", $expected) . "\n",
+      implode("\n", $actual) . "\n",
+      $message,
+    );
+    // Make sure that array keys are as expected.
+    $this->assertSame($expected, $actual);
   }
 
 }
