@@ -16,6 +16,10 @@ use Drupal\Tests\UnitTestCase;
  */
 class ModuleHandlerTest extends UnitTestCase {
 
+  protected const MODULES_PATH = 'core/tests/Drupal/Tests/Core/Extension/modules';
+
+  protected const TEST_MODULE_PATH = self::MODULES_PATH . '/module_handler_test';
+
   /**
    * The mocked cache backend.
    *
@@ -51,7 +55,7 @@ class ModuleHandlerTest extends UnitTestCase {
     $module_handler = new ModuleHandler($this->root, [
       'module_handler_test' => [
         'type' => 'module',
-        'pathname' => 'core/tests/Drupal/Tests/Core/Extension/modules/module_handler_test/module_handler_test.info.yml',
+        'pathname' => self::TEST_MODULE_PATH . '/module_handler_test.info.yml',
         'filename' => 'module_handler_test.module',
       ],
     ], $this->cacheBackend);
@@ -69,7 +73,7 @@ class ModuleHandlerTest extends UnitTestCase {
     $this->assertTrue($module_handler->load('module_handler_test'));
     $this->assertTrue(function_exists('module_handler_test_hook'));
 
-    $module_handler->addModule('module_handler_test_added', 'core/tests/Drupal/Tests/Core/Extension/modules/module_handler_test_added');
+    $module_handler->addModule('module_handler_test_added', self::MODULES_PATH . '/module_handler_test_added');
     $this->assertFalse(function_exists('module_handler_test_added_hook'), 'Function does not exist before being loaded.');
     $this->assertTrue($module_handler->load('module_handler_test_added'));
     $this->assertTrue(function_exists('module_handler_test_added_helper'), 'Function exists after being loaded.');
@@ -85,8 +89,8 @@ class ModuleHandlerTest extends UnitTestCase {
    */
   public function testLoadAllModules() {
     $module_handler = $this->getModuleHandler();
-    $module_handler->addModule('module_handler_test_all1', 'core/tests/Drupal/Tests/Core/Extension/modules/module_handler_test_all1');
-    $module_handler->addModule('module_handler_test_all2', 'core/tests/Drupal/Tests/Core/Extension/modules/module_handler_test_all2');
+    $module_handler->addModule('module_handler_test_all1', self::MODULES_PATH . '/module_handler_test_all1');
+    $module_handler->addModule('module_handler_test_all2', self::MODULES_PATH . '/module_handler_test_all2');
     $this->assertFalse(function_exists('module_handler_test_all1_hook'), 'Function does not exist before being loaded.');
     $this->assertFalse(function_exists('module_handler_test_all2_hook'), 'Function does not exist before being loaded.');
     $module_handler->loadAll();
@@ -106,7 +110,7 @@ class ModuleHandlerTest extends UnitTestCase {
         [
           'module_handler_test' => [
             'type' => 'module',
-            'pathname' => 'core/tests/Drupal/Tests/Core/Extension/modules/module_handler_test/module_handler_test.info.yml',
+            'pathname' => self::TEST_MODULE_PATH . '/module_handler_test.info.yml',
             'filename' => 'module_handler_test.module',
           ],
         ], $this->cacheBackend,
@@ -123,7 +127,7 @@ class ModuleHandlerTest extends UnitTestCase {
         ['module_handler_test_added'],
       );
     $module_handler->reload();
-    $module_handler->addModule('module_handler_test_added', 'core/tests/Drupal/Tests/Core/Extension/modules/module_handler_test_added');
+    $module_handler->addModule('module_handler_test_added', self::MODULES_PATH . '/module_handler_test_added');
     $module_handler->reload();
   }
 
@@ -146,7 +150,7 @@ class ModuleHandlerTest extends UnitTestCase {
    */
   public function testGetModuleList() {
     $this->assertEquals($this->getModuleHandler()->getModuleList(), [
-      'module_handler_test' => new Extension($this->root, 'module', 'core/tests/Drupal/Tests/Core/Extension/modules/module_handler_test/module_handler_test.info.yml', 'module_handler_test.module'),
+      'module_handler_test' => new Extension($this->root, 'module', self::TEST_MODULE_PATH . '/module_handler_test.info.yml', 'module_handler_test.module'),
     ]);
   }
 
@@ -156,7 +160,7 @@ class ModuleHandlerTest extends UnitTestCase {
    * @covers ::getModule
    */
   public function testGetModuleWithExistingModule() {
-    $this->assertEquals($this->getModuleHandler()->getModule('module_handler_test'), new Extension($this->root, 'module', 'core/tests/Drupal/Tests/Core/Extension/modules/module_handler_test/module_handler_test.info.yml', 'module_handler_test.module'));
+    $this->assertEquals($this->getModuleHandler()->getModule('module_handler_test'), new Extension($this->root, 'module', self::TEST_MODULE_PATH . '/module_handler_test.info.yml', 'module_handler_test.module'));
   }
 
   /**
@@ -212,7 +216,7 @@ class ModuleHandlerTest extends UnitTestCase {
     // Ensure we reset implementations when settings a new modules list.
     $module_handler->expects($this->once())->method('resetImplementations');
 
-    $module_handler->addModule('module_handler_test', 'core/tests/Drupal/Tests/Core/Extension/modules/module_handler_test');
+    $module_handler->addModule('module_handler_test', self::TEST_MODULE_PATH);
     $this->assertTrue($module_handler->moduleExists('module_handler_test'));
   }
 
@@ -235,7 +239,7 @@ class ModuleHandlerTest extends UnitTestCase {
     $module_handler->expects($this->once())->method('resetImplementations');
 
     // @todo this should probably fail since its a module not a profile.
-    $module_handler->addProfile('module_handler_test', 'core/tests/Drupal/Tests/Core/Extension/modules/module_handler_test');
+    $module_handler->addProfile('module_handler_test', self::TEST_MODULE_PATH);
     $this->assertTrue($module_handler->moduleExists('module_handler_test'));
   }
 
@@ -261,7 +265,7 @@ class ModuleHandlerTest extends UnitTestCase {
         [
           'module_handler_test' => [
             'type' => 'module',
-            'pathname' => 'core/tests/Drupal/Tests/Core/Extension/modules/module_handler_test/module_handler_test.info.yml',
+            'pathname' => self::TEST_MODULE_PATH . '/module_handler_test.info.yml',
             'filename' => 'module_handler_test.module',
           ],
         ], $this->cacheBackend,
@@ -328,10 +332,10 @@ class ModuleHandlerTest extends UnitTestCase {
     $module_handler = $this->getModuleHandler();
     $this->assertTrue($module_handler->hasImplementations('hook', 'module_handler_test'), 'Installed module implementation found.');
 
-    $module_handler->addModule('module_handler_test_added', 'core/tests/Drupal/Tests/Core/Extension/modules/module_handler_test_added');
+    $module_handler->addModule('module_handler_test_added', self::MODULES_PATH . '/module_handler_test_added');
     $this->assertTrue($module_handler->hasImplementations('hook', 'module_handler_test_added'), 'Runtime added module with implementation in include found.');
 
-    $module_handler->addModule('module_handler_test_no_hook', 'core/tests/Drupal/Tests/Core/Extension/modules/module_handler_test_no_hook');
+    $module_handler->addModule('module_handler_test_no_hook', self::MODULES_PATH . '/module_handler_test_no_hook');
     $this->assertFalse($module_handler->hasImplementations('hook', 'module_handler_test_no_hook'), 'Missing implementation not found.');
   }
 
@@ -381,7 +385,7 @@ class ModuleHandlerTest extends UnitTestCase {
         $this->root, [
           'module_handler_test' => [
             'type' => 'module',
-            'pathname' => 'core/tests/Drupal/Tests/Core/Extension/modules/module_handler_test/module_handler_test.info.yml',
+            'pathname' => self::TEST_MODULE_PATH . '/module_handler_test.info.yml',
             'filename' => 'module_handler_test.module',
           ],
         ], $this->cacheBackend,
@@ -425,7 +429,7 @@ class ModuleHandlerTest extends UnitTestCase {
         $this->root, [
           'module_handler_test' => [
             'type' => 'module',
-            'pathname' => 'core/tests/Drupal/Tests/Core/Extension/modules/module_handler_test/module_handler_test.info.yml',
+            'pathname' => self::TEST_MODULE_PATH . '/module_handler_test.info.yml',
             'filename' => 'module_handler_test.module',
           ],
         ], $this->cacheBackend,
@@ -452,8 +456,8 @@ class ModuleHandlerTest extends UnitTestCase {
    */
   public function testInvokeAll() {
     $module_handler = $this->getModuleHandler();
-    $module_handler->addModule('module_handler_test_all1', 'core/tests/Drupal/Tests/Core/Extension/modules/module_handler_test_all1');
-    $module_handler->addModule('module_handler_test_all2', 'core/tests/Drupal/Tests/Core/Extension/modules/module_handler_test_all2');
+    $module_handler->addModule('module_handler_test_all1', self::MODULES_PATH . '/module_handler_test_all1');
+    $module_handler->addModule('module_handler_test_all2', self::MODULES_PATH . '/module_handler_test_all2');
     $this->assertEquals([TRUE, TRUE, TRUE], $module_handler->invokeAll('hook', [TRUE]));
 
     // Test by-reference arguments.
