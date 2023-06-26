@@ -1,5 +1,5 @@
 /* eslint-disable import/no-extraneous-dependencies */
-// cSpell:words linkimageediting emptyelement downcastdispatcher drupalimagealignment drupalimagesize
+// cSpell:words linkimageediting emptyelement downcastdispatcher drupalimagealignment drupalimagesize drupalimagecaption
 import { Plugin } from 'ckeditor5/src/core';
 import { setViewAttributes } from '@ckeditor/ckeditor5-html-support/src/utils';
 import viewCaptionToCaptionAttribute from './drupalimagecaption';
