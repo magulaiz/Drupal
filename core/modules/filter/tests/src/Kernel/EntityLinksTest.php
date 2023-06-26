@@ -225,17 +225,25 @@ class EntityLinksTest extends KernelTestBase {
   /**
    * @covers ::getUrl
    * @covers \Drupal\media\Entity\MediaLinkTarget
-   * @testWith [true,  "file", {"target_id": 1}, "/<SITE_DIRECTORY>/files/druplicon.txt", ["file:1", "media:1"]]
-   *           [false, "file", {"target_id": 1}, "/<SITE_DIRECTORY>/files/druplicon.txt", ["file:1", "media:1"]]
-   *           [true,  "oembed:video", {"value": "https://www.youtube.com/watch?v=dQw4w9WgXcQ"}, "https://www.youtube.com/watch?v=dQw4w9WgXcQ", ["media:1"]]
-   *           [false, "oembed:video", {"value": "https://www.youtube.com/watch?v=dQw4w9WgXcQ"}, "https://www.youtube.com/watch?v=dQw4w9WgXcQ", ["media:1"]]
-   *           [true,  "test", {"value": "foobar"}, "/media/1", ["media:1"]]
-   *           [false, "test", {"value": "foobar"}, "", ["media:1"]]
+   * @testWith [true,  "file", false, {"target_id": 1}, "/media/1", ["media:1"]]
+   *           [true,  "file", true,  {"target_id": 1}, "/<SITE_DIRECTORY>/files/druplicon.txt", ["file:1", "media:1"]]
+   *           [false, "file", false, {"target_id": 1}, "/<SITE_DIRECTORY>/files/druplicon.txt", ["file:1", "media:1"]]
+   *           [false, "file", true,  {"target_id": 1}, "/<SITE_DIRECTORY>/files/druplicon.txt", ["file:1", "media:1"]]
+   *           [true,  "oembed:video", false, {"value": "https://www.youtube.com/watch?v=dQw4w9WgXcQ"}, "/media/1", ["media:1"]]
+   *           [true,  "oembed:video", true,  {"value": "https://www.youtube.com/watch?v=dQw4w9WgXcQ"}, "https://www.youtube.com/watch?v=dQw4w9WgXcQ", ["media:1"]]
+   *           [false, "oembed:video", false, {"value": "https://www.youtube.com/watch?v=dQw4w9WgXcQ"}, "https://www.youtube.com/watch?v=dQw4w9WgXcQ", ["media:1"]]
+   *           [false, "oembed:video", true,  {"value": "https://www.youtube.com/watch?v=dQw4w9WgXcQ"}, "https://www.youtube.com/watch?v=dQw4w9WgXcQ", ["media:1"]]
+   *           [true,  "test", false, {"value": "foobar"}, "/media/1", ["media:1"]]
+   *           [true,  "test", true,  {"value": "foobar"}, "/media/1", ["media:1"]]
+   *           [false, "test", false, {"value": "foobar"}, "", ["media:1"]]
+   *           [false, "test", true,  {"value": "foobar"}, "", ["media:1"]]
    *
    * @param bool $standalone_url_setting
    *   Whether the standalone_url setting is off (Drupal's default) or on.
    * @param string $media_source
    *   Which media source to use.
+   * @param bool $has_download_attribute
+   *   Whether the "download" attribute is set on the tested link.
    * @param array $media_entity_values
    *   Which values to assign to the media entity.
    * @param string $expected_url
@@ -243,7 +251,7 @@ class EntityLinksTest extends KernelTestBase {
    * @param string[] $expected_cache_tags
    *   The expected cache tags.
    */
-  public function testMediaEntity(bool $standalone_url_setting, string $media_source, array $media_entity_values, string $expected_url, array $expected_cache_tags): void {
+  public function testMediaEntity(bool $standalone_url_setting, string $media_source, bool $has_download_attribute, array $media_entity_values, string $expected_url, array $expected_cache_tags): void {
     \Drupal::configFactory()
       ->getEditable('media.settings')
       ->set('standalone_url', $standalone_url_setting)
@@ -280,11 +288,14 @@ class EntityLinksTest extends KernelTestBase {
     $media->save();
 
     $expected_url = str_replace('<SITE_DIRECTORY>', $this->siteDirectory, $expected_url);
+    $download_attribute_or_not = $has_download_attribute ? ' download' : '';
+    // @todo Remove this in https://www.drupal.org/project/drupal/issues/2441811.
+    $download_attribute_or_not_filtered = $has_download_attribute ? ' download=""' : '';
     $this->assertFilterProcessResult(
-      '<a data-entity-type="media" data-entity-uuid="' . $media->uuid() . '" href="something?query=string#fragment">Link text</a>',
+      '<a data-entity-type="media" data-entity-uuid="' . $media->uuid() . '"' . $download_attribute_or_not . ' href="something?query=string#fragment">Link text</a>',
       'en',
       (new FilterProcessResult())
-        ->setProcessedText(sprintf('<a data-entity-type="media" data-entity-uuid="%s" href="%s?query=string#fragment">Link text</a>', $media->uuid(), $expected_url))
+        ->setProcessedText(sprintf('<a data-entity-type="media" data-entity-uuid="%s"%s href="%s?query=string#fragment">Link text</a>', $media->uuid(), $download_attribute_or_not_filtered, $expected_url))
         ->setCacheTags($expected_cache_tags)
         ->setCacheContexts([])
         ->setCacheMaxAge(Cache::PERMANENT)
