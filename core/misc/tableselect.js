@@ -50,7 +50,7 @@
         .find('th.select-all input[type="checkbox"]')
         .each(function () {
           const $checkbox = $(this);
-          const stateChanged = $checkbox.prop('checked') !== state;
+          const stateChanged = this.checked !== state;
 
           $checkbox.attr(
             'title',
@@ -61,7 +61,8 @@
            * @checkbox {HTMLElement}
            */
           if (stateChanged) {
-            $checkbox.prop('checked', state).trigger('change');
+            this.checked = state;
+            $checkbox.trigger('change');
           }
         });
     };
@@ -76,14 +77,14 @@
           // checkbox' state.
           checkboxes.each(function () {
             const $checkbox = $(this);
-            const stateChanged =
-              $checkbox.prop('checked') !== event.target.checked;
+            const stateChanged = this.checked !== event.target.checked;
 
             /**
              * @checkbox {HTMLElement}
              */
             if (stateChanged) {
-              $checkbox.prop('checked', event.target.checked).trigger('change');
+              this.checked = event.target.checked;
+              $checkbox.trigger('change');
             }
             // Either add or remove the selected class based on the state of the
             // check all checkbox.
@@ -160,7 +161,9 @@
       // Either add or remove the selected class based on the state of the
       // target checkbox.
       $i.toggleClass('selected', state);
-      $i.find('input[type="checkbox"]').prop('checked', state);
+      $i.find('input[type="checkbox"]').each(function () {
+        this.checked = state;
+      });
 
       if (to.nodeType) {
         // If we are at the end of the range, stop.
