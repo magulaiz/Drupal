@@ -902,7 +902,7 @@
     // interaction while the Ajax request is in progress. ajax.ajaxing prevents
     // the element from triggering a new request, but does not prevent the user
     // from changing its value.
-    $(this.element).prop('disabled', true);
+    this.element.disabled = true;
 
     if (!this.progress || !this.progress.type) {
       return;
@@ -1069,7 +1069,7 @@
     if (this.progress.object) {
       this.progress.object.stopMonitoring();
     }
-    $(this.element).prop('disabled', false);
+    this.element.disabled = false;
 
     // Save element's ancestors tree so if the element is removed from the dom
     // we can try to refocus one of its parents. Using addBack reverse the
@@ -1209,7 +1209,7 @@
     // Undo hide.
     $(this.wrapper).show();
     // Re-enable the element.
-    $(this.element).prop('disabled', false);
+    this.element.disabled = false;
     // Reattach behaviors, if they were detached in beforeSerialize(), and the
     // form is still part of the document.
     if (this.$form && document.body.contains(this.$form.get(0))) {
