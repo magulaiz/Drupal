@@ -48,7 +48,7 @@ use Drupal\user\EntityOwnerTrait;
  *       "revision" = \Drupal\Core\Entity\Routing\RevisionHtmlRouteProvider::class,
  *     },
  *     "link_target" = {
- *       "view" = "\Drupal\media\Entity\MediaLinkTarget",
+ *       "view" = "\Drupal\media\Entity\MediaLinkTargetStandaloneWhenAvailable",
  *       "download" = "\Drupal\media\Entity\MediaLinkTarget",
  *     },
  *   },
