@@ -146,10 +146,6 @@
   border-bottom-left-radius: 0;
 }
 
-.tabs--secondary .tabs__tab:not(.is-active) {
-  display: block;
-}
-
 .tabs.is-open > .tabs__tab {
   display: flex;
 }
