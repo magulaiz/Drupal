@@ -7,15 +7,22 @@ use Drupal\Core\Routing\AccessAwareRouter;
 use Drupal\Core\Routing\AccessAwareRouterInterface;
 use Drupal\Tests\UnitTestCase;
 use Drupal\Core\Routing\RouteObjectInterface;
+use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\Routing\Route;
+use Symfony\Component\Routing\RouterInterface;
 
 /**
  * @coversDefaultClass \Drupal\Core\Routing\AccessAwareRouter
  * @group Routing
  */
 class AccessAwareRouterTest extends UnitTestCase {
+
+  /**
+   * @var \Symfony\Component\Routing\RouterInterface|\PHPUnit\Framework\MockObject\MockObject
+   */
+  protected RouterInterface|MockObject $router;
 
   /**
    * @var \Symfony\Component\Routing\Route
@@ -61,7 +68,7 @@ class AccessAwareRouterTest extends UnitTestCase {
       ->getMock();
     $this->router->expects($this->once())
       ->method('matchRequest')
-      ->will($this->returnValue([RouteObjectInterface::ROUTE_OBJECT => $this->route]));
+      ->willReturn([RouteObjectInterface::ROUTE_OBJECT => $this->route]);
     $this->accessAwareRouter = new AccessAwareRouter($this->router, $this->accessManager, $this->currentUser);
   }
 
@@ -123,11 +130,11 @@ class AccessAwareRouterTest extends UnitTestCase {
    * @covers ::__call
    */
   public function testCall() {
-    $mock_router = $this->createMock('Symfony\Component\Routing\RouterInterface');
+    $mock_router = $this->createMock(RouterInterface::class);
 
-    $this->router = $this->getMockBuilder('Drupal\Core\Routing\Router')
+    $this->router = $this->getMockBuilder(MockRouterInterface::class)
       ->disableOriginalConstructor()
-      ->addMethods(['add'])
+      ->onlyMethods(['getRouteCollection', 'match', 'getContext', 'setContext', 'generate', 'add'])
       ->getMock();
     $this->router->expects($this->once())
       ->method('add')
@@ -137,5 +144,20 @@ class AccessAwareRouterTest extends UnitTestCase {
 
     $this->accessAwareRouter->add($mock_router);
   }
+
+}
+
+/**
+ * Interface used in the mocking process of this test.
+ */
+interface MockRouterInterface extends RouterInterface {
+
+  /**
+   * Function used in the mocking process of this test.
+   *
+   * @param \Symfony\Component\Routing\RouterInterface $router
+   *   The mocked router.
+   */
+  public function add(RouterInterface $router);
 
 }

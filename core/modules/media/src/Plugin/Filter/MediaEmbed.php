@@ -235,7 +235,6 @@ class MediaEmbed extends FilterBase implements ContainerFactoryPluginInterface, 
       ->view($media, $view_mode, $langcode);
 
     // Allows other modules to treat embedded media items differently.
-    // @see quickedit_entity_view_alter()
     $build['#embed'] = TRUE;
 
     // There are a few concerns when rendering an embedded media entity:
@@ -463,7 +462,7 @@ class MediaEmbed extends FilterBase implements ContainerFactoryPluginInterface, 
         // explicitly empty instead so it can be ignored by assistive
         // technologies, such as screen readers.
         if ($node->getAttribute('alt') === '""') {
-          $node->setAttribute('alt', NULL);
+          $node->setAttribute('alt', '');
         }
         $media->{$image_field}->alt = $node->getAttribute('alt');
         // All media entities have a thumbnail. In the case of image media, it

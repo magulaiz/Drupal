@@ -1,7 +1,7 @@
 const mobileNavButtonSelector = 'button.mobile-nav-button';
 const headerNavSelector = '#header-nav';
-const linkSubMenuId = 'home-submenu-1';
-const buttonSubMenuId = 'button-submenu-2';
+const linkSubMenuId = 'primary-menu-item-1';
+const buttonSubMenuId = 'primary-menu-item-12';
 
 /**
  * Sends arbitrary number of tab keys, and then checks that the last focused
@@ -42,7 +42,7 @@ module.exports = {
           'core/tests/Drupal/TestSite/TestSiteOliveroInstallTestScript.php',
         installProfile: 'minimal',
       })
-      .resizeWindow(1000, 800);
+      .setWindowSize(1000, 800);
   },
   after(browser) {
     browser.drupalUninstall();
@@ -171,5 +171,14 @@ module.exports = {
       .waitForElementVisible(headerNavSelector)
       .click('[href="#footer"]')
       .waitForElementNotVisible(headerNavSelector);
+  },
+  'Verify mobile menu works when Big Pipe when authenticated': (browser) => {
+    browser.drupalInstallModule('big_pipe').drupalLoginAsAdmin(() => {
+      browser
+        .drupalRelativeURL('/')
+        .assert.not.visible(headerNavSelector)
+        .click(mobileNavButtonSelector)
+        .waitForElementVisible(headerNavSelector);
+    });
   },
 };

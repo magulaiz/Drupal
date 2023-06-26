@@ -44,7 +44,6 @@ class ContentModerationAccessTest extends KernelTestBase {
     $this->installEntitySchema('node');
     $this->installEntitySchema('user');
     $this->installConfig(['content_moderation', 'filter']);
-    $this->installSchema('system', ['sequences']);
     $this->installSchema('node', ['node_access']);
 
     // Add a moderated node type.
@@ -67,6 +66,7 @@ class ContentModerationAccessTest extends KernelTestBase {
     /** @var \Drupal\user\RoleInterface $authenticated */
     $authenticated = Role::create([
       'id' => 'authenticated',
+      'label' => 'Authenticated',
     ]);
     $authenticated->grantPermission('access content');
     $authenticated->grantPermission('edit any page content');

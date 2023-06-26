@@ -10,6 +10,8 @@ use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\views\ManyToOneHelper;
 
 /**
+ * Argument handler for string.
+ *
  * Basic argument handler to implement string arguments that may have length
  * limits.
  *
@@ -18,6 +20,11 @@ use Drupal\views\ManyToOneHelper;
  * @ViewsArgument("string")
  */
 class StringArgument extends ArgumentPluginBase {
+
+  /**
+   * The many-to-one helper.
+   */
+  public ManyToOneHelper $helper;
 
   /**
    * {@inheritdoc}
@@ -178,7 +185,7 @@ class StringArgument extends ArgumentPluginBase {
     if ($this->options['case'] != 'none') {
       // Support case-insensitive substring comparisons for SQLite by using the
       // 'NOCASE_UTF8' collation.
-      // @see Drupal\Core\Database\Driver\sqlite\Connection::open()
+      // @see Drupal\sqlite\Driver\Database\sqlite\Connection::open()
       if (Database::getConnection()->databaseType() == 'sqlite') {
         $formula .= ' COLLATE NOCASE_UTF8';
       }

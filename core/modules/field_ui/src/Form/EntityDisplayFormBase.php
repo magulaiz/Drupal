@@ -4,6 +4,10 @@ namespace Drupal\field_ui\Form;
 
 use Drupal\Component\Plugin\Factory\DefaultFactory;
 use Drupal\Component\Plugin\PluginManagerBase;
+use Drupal\Component\Utility\Html;
+use Drupal\Core\Ajax\AjaxResponse;
+use Drupal\Core\Ajax\ReplaceCommand;
+use Drupal\Core\Ajax\TabledragWarningCommand;
 use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Entity\EntityForm;
 use Drupal\Core\Entity\EntityInterface;
@@ -299,7 +303,7 @@ abstract class EntityDisplayFormBase extends EntityForm {
 
     // Disable fields without any applicable plugins.
     if (empty($this->getApplicablePluginOptions($field_definition))) {
-      $this->entity->removeComponent($field_name)->save();
+      $this->entity->removeComponent($field_name);
       $display_options = $this->entity->getComponent($field_name);
     }
 
@@ -604,7 +608,7 @@ abstract class EntityDisplayFormBase extends EntityForm {
           // Only store settings actually used by the selected plugin.
           $default_settings = $this->pluginManager->getDefaultSettings($options['type']);
           $options['settings'] = isset($values['settings_edit_form']['settings']) ? array_intersect_key($values['settings_edit_form']['settings'], $default_settings) : [];
-          $options['third_party_settings'] = isset($values['settings_edit_form']['third_party_settings']) ? $values['settings_edit_form']['third_party_settings'] : [];
+          $options['third_party_settings'] = $values['settings_edit_form']['third_party_settings'] ?? [];
           $form_state->set('plugin_settings_update', NULL);
         }
 
@@ -679,6 +683,7 @@ abstract class EntityDisplayFormBase extends EntityForm {
    * Ajax handler for multistep buttons.
    */
   public function multistepAjax($form, FormStateInterface $form_state) {
+    $response = new AjaxResponse();
     $trigger = $form_state->getTriggeringElement();
     $op = $trigger['#op'];
 
@@ -704,13 +709,24 @@ abstract class EntityDisplayFormBase extends EntityForm {
     foreach ($updated_rows as $name) {
       foreach ($updated_columns as $key) {
         $element = &$form['fields'][$name][$key];
-        $element['#prefix'] = '<div class="ajax-new-content">' . (isset($element['#prefix']) ? $element['#prefix'] : '');
-        $element['#suffix'] = (isset($element['#suffix']) ? $element['#suffix'] : '') . '</div>';
+        $element['#prefix'] = '<div class="ajax-new-content">' . ($element['#prefix'] ?? '');
+        $element['#suffix'] = ($element['#suffix'] ?? '') . '</div>';
       }
     }
 
-    // Return the whole table.
-    return $form['fields'];
+    // Replace the whole table.
+    $response->addCommand(new ReplaceCommand('#field-display-overview-wrapper', $form['fields']));
+
+    // Add "row updated" warning after the table has been replaced.
+    if (!in_array($op, ['cancel', 'edit'])) {
+      foreach ($updated_rows as $name) {
+        // The ID of the rendered table row is `$name` processed by getClass().
+        // @see \Drupal\field_ui\Element\FieldUiTable::tablePreRender
+        $response->addCommand(new TabledragWarningCommand(Html::getClass($name), 'field-display-overview'));
+      }
+    }
+
+    return $response;
   }
 
   /**
@@ -724,7 +740,7 @@ abstract class EntityDisplayFormBase extends EntityForm {
   protected function getExtraFields() {
     $context = $this->displayContext == 'view' ? 'display' : $this->displayContext;
     $extra_fields = $this->entityFieldManager->getExtraFields($this->entity->getTargetEntityTypeId(), $this->entity->getTargetBundle());
-    return isset($extra_fields[$context]) ? $extra_fields[$context] : [];
+    return $extra_fields[$context] ?? [];
   }
 
   /**
@@ -829,7 +845,7 @@ abstract class EntityDisplayFormBase extends EntityForm {
     $ids = $this->configFactory()->listAll($config_prefix . '.' . $this->entity->getTargetEntityTypeId() . '.' . $this->entity->getTargetBundle() . '.');
     foreach ($ids as $id) {
       $config_id = str_replace($config_prefix . '.', '', $id);
-      list(,, $display_mode) = explode('.', $config_id);
+      [,, $display_mode] = explode('.', $config_id);
       if ($display_mode != 'default') {
         $load_ids[] = $config_id;
       }

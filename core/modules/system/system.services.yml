@@ -10,6 +10,7 @@ services:
   system.manager:
     class: Drupal\system\SystemManager
     arguments: ['@module_handler', '@request_stack', '@menu.link_tree', '@menu.active_trail']
+  Drupal\system\SystemManager: '@system.manager'
   system.breadcrumb.default:
     class: Drupal\system\PathBasedBreadcrumbBuilder
     arguments: ['@router.request_context', '@access_manager', '@router', '@path_processor_manager', '@config.factory',  '@title_resolver', '@current_user', '@path.current', '@path.matcher']
@@ -30,7 +31,7 @@ services:
       - { name: theme_negotiator, priority: 1000 }
   theme.negotiator.system.db_update:
     class: Drupal\system\Theme\DbUpdateNegotiator
-    arguments: ['@config.factory']
+    arguments: ['@config.factory', '@theme_handler']
     tags:
       - { name: theme_negotiator, priority: 100 }
   system.config_subscriber:
@@ -59,8 +60,14 @@ services:
   system.sa_fetcher:
     class: Drupal\system\SecurityAdvisories\SecurityAdvisoriesFetcher
     arguments: ['@config.factory', '@keyvalue.expirable', '@http_client', '@extension.list.module', '@extension.list.theme', '@extension.list.profile', '@logger.channel.system', '@settings']
+  Drupal\system\SecurityAdvisories\SecurityAdvisoriesFetcher: '@system.sa_fetcher'
   system.advisories_config_subscriber:
     class: Drupal\system\EventSubscriber\AdvisoriesConfigSubscriber
     arguments: ['@system.sa_fetcher']
+    tags:
+      - { name: event_subscriber }
+  system.menus.route_subscriber:
+    class: Drupal\system\Routing\MenuLinksetRoutes
+    arguments: ['%authentication_providers%', '@config.factory', '@router.builder']
     tags:
       - { name: event_subscriber }

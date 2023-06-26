@@ -200,9 +200,15 @@ class EntityType extends PluginDefinition implements EntityTypeInterface {
   /**
    * A definite singular/plural name of the type.
    *
-   * Needed keys: "singular" and "plural".
+   * Needed keys: "singular" and "plural". Can also have key: "context".
+   * @code
+   * [
+   *    'singular' => '@count entity',
+   *    'plural' => '@count entities',
+   *    'context' => 'Entity context',
+   * ]
    *
-   * @var string|\Drupal\Core\StringTranslation\TranslatableMarkup
+   * @var string[]
    *
    * @see \Drupal\Core\Entity\EntityTypeInterface::getCountLabel()
    */
@@ -219,6 +225,8 @@ class EntityType extends PluginDefinition implements EntityTypeInterface {
    * The machine name of the entity type group.
    *
    * @var string
+   *
+   * @see self::getGroup()
    */
   protected $group;
 
@@ -332,10 +340,10 @@ class EntityType extends PluginDefinition implements EntityTypeInterface {
    */
   public function get($property) {
     if (property_exists($this, $property)) {
-      $value = isset($this->{$property}) ? $this->{$property} : NULL;
+      $value = $this->{$property} ?? NULL;
     }
     else {
-      $value = isset($this->additional[$property]) ? $this->additional[$property] : NULL;
+      $value = $this->additional[$property] ?? NULL;
     }
     return $value;
   }
@@ -393,7 +401,7 @@ class EntityType extends PluginDefinition implements EntityTypeInterface {
    */
   public function getKey($key) {
     $keys = $this->getKeys();
-    return isset($keys[$key]) ? $keys[$key] : FALSE;
+    return $keys[$key] ?? FALSE;
   }
 
   /**
@@ -429,14 +437,6 @@ class EntityType extends PluginDefinition implements EntityTypeInterface {
    */
   public function entityClassImplements($interface) {
     return is_subclass_of($this->getClass(), $interface);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function isSubclassOf($class) {
-    @trigger_error(__METHOD__ . '() is deprecated in drupal:8.3.0 and is removed from drupal:10.0.0. Use Drupal\Core\Entity\EntityTypeInterface::entityClassImplements() instead. See https://www.drupal.org/node/2842808', E_USER_DEPRECATED);
-    return $this->entityClassImplements($class);
   }
 
   /**
@@ -627,7 +627,7 @@ class EntityType extends PluginDefinition implements EntityTypeInterface {
    */
   public function getLinkTemplate($key) {
     $links = $this->getLinkTemplates();
-    return isset($links[$key]) ? $links[$key] : FALSE;
+    return $links[$key] ?? FALSE;
   }
 
   /**

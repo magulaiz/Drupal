@@ -84,7 +84,11 @@ class SecurityFileUploadEventSubscriberTest extends UnitTestCase {
       'filename is munged' => ['foo.phar.png.php.jpg', 'jpg png', 'foo.phar_.png_.php_.jpg'],
       'filename is munged regardless of case' => ['FOO.pHAR.PNG.PhP.jpg', 'jpg png', 'FOO.pHAR_.PNG_.PhP_.jpg'],
       'null bytes are removed' => ['foo' . chr(0) . '.txt' . chr(0), '', 'foo.txt'],
-      'dot files are renamed' => ['.htaccess', '', 'htaccess'],
+      'dot files are renamed' => ['.git', '', 'git'],
+      'htaccess files are renamed even if allowed' => ['.htaccess', 'htaccess txt', '.htaccess_.txt', '.htaccess'],
+      '.phtml extension allowed with .phtml file' => ['foo.phtml', 'phtml', 'foo.phtml'],
+      '.phtml, .txt extension allowed with .phtml file' => ['foo.phtml', 'phtml txt', 'foo.phtml_.txt', 'foo.phtml'],
+      'All extensions allowed with .phtml file' => ['foo.phtml', '', 'foo.phtml_.txt', 'foo.phtml'],
     ];
   }
 
@@ -113,7 +117,7 @@ class SecurityFileUploadEventSubscriberTest extends UnitTestCase {
 
     // Check the results of the configured sanitization.
     $this->assertSame($filename, $event->getFilename());
-    $this->assertSame(FALSE, $event->isSecurityRename());
+    $this->assertFalse($event->isSecurityRename());
 
     $config_factory = $this->getConfigFactoryStub([
       'system.file' => [
@@ -127,7 +131,7 @@ class SecurityFileUploadEventSubscriberTest extends UnitTestCase {
 
     // Check the results of the configured sanitization.
     $this->assertSame($filename, $event->getFilename());
-    $this->assertSame(FALSE, $event->isSecurityRename());
+    $this->assertFalse($event->isSecurityRename());
   }
 
   /**
@@ -138,7 +142,7 @@ class SecurityFileUploadEventSubscriberTest extends UnitTestCase {
    */
   public function provideFilenamesNoMunge() {
     return [
-      // The following filename would be rejected by file_validate_extension()
+      // The following filename would be rejected by 'FileExtension' constraint
       // and therefore remains unchanged.
       '.php is not munged when it would be rejected' => ['foo.php.php', 'jpg'],
       '.php is not munged when it would be rejected and filename contains null byte character' => ['foo.' . chr(0) . 'php.php', 'jpg'],

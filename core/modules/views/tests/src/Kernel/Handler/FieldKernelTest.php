@@ -104,13 +104,10 @@ class FieldKernelTest extends ViewsKernelTestBase {
    *   messages: use \Drupal\Component\Render\FormattableMarkup to embed
    *   variables in the message text, not t(). If left blank, a default message
    *   will be displayed.
-   * @param string $group
-   *   (optional) The group this message is in, which is displayed in a column
-   *   in test output. Use 'Debug' to indicate this is debugging output. Do not
-   *   translate this string. Defaults to 'Other'; most tests do not override
-   *   this default.
+   *
+   * @internal
    */
-  protected function assertSubString($haystack, $needle, $message = '', $group = 'Other') {
+  protected function assertSubString(string $haystack, string $needle, string $message = ''): void {
     $this->assertStringContainsString($needle, $haystack, $message);
   }
 
@@ -126,13 +123,10 @@ class FieldKernelTest extends ViewsKernelTestBase {
    *   messages: use \Drupal\Component\Render\FormattableMarkup to embed
    *   variables in the message text, not t(). If left blank, a default message
    *   will be displayed.
-   * @param string $group
-   *   (optional) The group this message is in, which is displayed in a column
-   *   in test output. Use 'Debug' to indicate this is debugging output. Do not
-   *   translate this string. Defaults to 'Other'; most tests do not override
-   *   this default.
+   *
+   * @internal
    */
-  protected function assertNotSubString($haystack, $needle, $message = '', $group = 'Other') {
+  protected function assertNotSubString(string $haystack, string $needle, string $message = ''): void {
     $this->assertStringNotContainsString($needle, $haystack, $message);
   }
 
@@ -339,7 +333,7 @@ class FieldKernelTest extends ViewsKernelTestBase {
     $output = $renderer->executeInRenderContext(new RenderContext(), function () use ($job_field, $row) {
       return $job_field->advancedRender($row);
     });
-    $this->assertEquals('<h1>&lt;span&gt;' . $random_text . '&lt;/span&gt;</h1>', $output, 'Valid tags are allowed in rewrite templates and token replacements.');
+    $this->assertSame('<h1>&lt;span&gt;' . $random_text . '&lt;/span&gt;</h1>', (string) $output, 'Valid tags are allowed in rewrite templates and token replacements.');
 
     // Verify <script> tags are correctly removed from rewritten text.
     $rewrite_template = '<script>alert("malicious");</script>';

@@ -23,6 +23,9 @@ class ForumIndexTest extends BrowserTestBase {
    */
   protected $defaultTheme = 'stark';
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
 
@@ -59,7 +62,7 @@ class ForumIndexTest extends BrowserTestBase {
 
     // Check that the node exists in the database.
     $node = $this->drupalGetNodeByTitle($title);
-    $this->assertTrue(!empty($node), 'New forum node found in database.');
+    $this->assertNotEmpty($node, 'New forum node found in database.');
 
     // Create a child forum.
     $edit = [

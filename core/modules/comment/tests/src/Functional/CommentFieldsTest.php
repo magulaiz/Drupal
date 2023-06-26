@@ -25,7 +25,7 @@ class CommentFieldsTest extends CommentTestBase {
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'classy';
+  protected $defaultTheme = 'stark';
 
   /**
    * Tests that the default 'comment_body' field is correctly added.
@@ -38,7 +38,7 @@ class CommentFieldsTest extends CommentTestBase {
 
     // Check that the 'comment_body' field is present on the comment bundle.
     $field = FieldConfig::loadByName('comment', 'comment', 'comment_body');
-    $this->assertTrue(!empty($field), 'The comment_body field is added when a comment bundle is created');
+    $this->assertNotEmpty($field, 'The comment_body field is added when a comment bundle is created');
 
     $field->delete();
 
@@ -85,13 +85,13 @@ class CommentFieldsTest extends CommentTestBase {
     $this->drupalLogin($this->webUser);
 
     $this->drupalGet('node/' . $node->nid->value);
-    $elements = $this->cssSelect('.field--type-comment');
+    $elements = $this->cssSelect('.comment-form');
     $this->assertCount(2, $elements, 'There are two comment fields on the node.');
 
     // Delete the first comment field.
     FieldStorageConfig::loadByName('node', 'comment')->delete();
     $this->drupalGet('node/' . $node->nid->value);
-    $elements = $this->cssSelect('.field--type-comment');
+    $elements = $this->cssSelect('.comment-form');
     $this->assertCount(1, $elements, 'There is one comment field on the node.');
   }
 
@@ -165,7 +165,7 @@ class CommentFieldsTest extends CommentTestBase {
     $this->drupalGet('admin/config/people/accounts/fields/user.user.field_user_comment/storage');
     $this->submitForm($edit, 'Save field settings');
     // We should get an error message.
-    $this->assertSession()->pageTextContains('An illegal choice has been detected. Please contact the site administrator.');
+    $this->assertSession()->pageTextContains('The submitted value in the Comment type element is not allowed.');
 
     // Create a comment type for users.
     $bundle = CommentType::create([
@@ -183,7 +183,16 @@ class CommentFieldsTest extends CommentTestBase {
     $this->drupalGet('admin/config/people/accounts/fields/user.user.field_user_comment/storage');
     $this->submitForm($edit, 'Save field settings');
     // We shouldn't get an error message.
-    $this->assertSession()->pageTextNotContains('An illegal choice has been detected. Please contact the site administrator.');
+    $this->assertSession()->pageTextNotContains('The submitted value in the Comment type element is not allowed.');
+
+    // Try to save the comment field with "Comments per page"
+    // setting value as zero.
+    $edit = [
+      'settings[per_page]' => 0,
+    ];
+    $this->drupalGet('admin/config/people/accounts/fields/user.user.field_user_comment');
+    $this->submitForm($edit, 'Save settings');
+    $this->assertSession()->statusMessageContains('Saved User comment configuration.', 'status');
   }
 
   /**

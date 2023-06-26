@@ -66,7 +66,7 @@ class NodeGrantDatabaseStorage implements NodeGrantDatabaseStorageInterface {
 
     // If no module implements the hook or the node does not have an id there is
     // no point in querying the database for access grants.
-    if (!$this->moduleHandler->getImplementations('node_grants') || !$node->id()) {
+    if (!$this->moduleHandler->hasImplementations('node_grants') || !$node->id()) {
       // Return the equivalent of the default grant, defined by
       // self::writeDefault().
       if ($operation === 'view') {
@@ -146,7 +146,7 @@ class NodeGrantDatabaseStorage implements NodeGrantDatabaseStorageInterface {
   /**
    * {@inheritdoc}
    */
-  public function alterQuery($query, array $tables, $op, AccountInterface $account, $base_table) {
+  public function alterQuery($query, array $tables, $operation, AccountInterface $account, $base_table) {
     if (!$langcode = $query->getMetaData('langcode')) {
       $langcode = FALSE;
     }
@@ -154,7 +154,7 @@ class NodeGrantDatabaseStorage implements NodeGrantDatabaseStorageInterface {
     // Find all instances of the base table being joined -- could appear
     // more than once in the query, and could be aliased. Join each one to
     // the node_access table.
-    $grants = node_access_grants($op, $account);
+    $grants = node_access_grants($operation, $account);
     // If any grant exists for the specified user, then user has access to the
     // node for the specified operation.
     $grant_conditions = $this->buildGrantsQueryCondition($grants);
@@ -172,7 +172,7 @@ class NodeGrantDatabaseStorage implements NodeGrantDatabaseStorageInterface {
         if ($grants_exist) {
           $subquery->condition($grant_conditions);
         }
-        $subquery->condition('na.grant_' . $op, 1, '>=');
+        $subquery->condition('na.grant_' . $operation, 1, '>=');
 
         // Add langcode-based filtering if this is a multilingual site.
         if ($is_multilingual) {
@@ -208,7 +208,7 @@ class NodeGrantDatabaseStorage implements NodeGrantDatabaseStorageInterface {
       $query->execute();
     }
     // Only perform work when node_access modules are active.
-    if (!empty($grants) && count($this->moduleHandler->getImplementations('node_grants'))) {
+    if (!empty($grants) && $this->moduleHandler->hasImplementations('node_grants')) {
       $query = $this->database->insert('node_access')->fields(['nid', 'langcode', 'fallback', 'realm', 'gid', 'grant_view', 'grant_update', 'grant_delete']);
       // If we have defined a granted langcode, use it. But if not, add a grant
       // for every language this node is translated to.
@@ -256,13 +256,13 @@ class NodeGrantDatabaseStorage implements NodeGrantDatabaseStorageInterface {
   public function writeDefault() {
     $this->database->insert('node_access')
       ->fields([
-          'nid' => 0,
-          'realm' => 'all',
-          'gid' => 0,
-          'grant_view' => 1,
-          'grant_update' => 0,
-          'grant_delete' => 0,
-        ])
+        'nid' => 0,
+        'realm' => 'all',
+        'gid' => 0,
+        'grant_view' => 1,
+        'grant_update' => 0,
+        'grant_delete' => 0,
+      ])
       ->execute();
   }
 

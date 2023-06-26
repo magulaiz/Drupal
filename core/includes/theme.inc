@@ -84,16 +84,23 @@ const RESPONSIVE_PRIORITY_LOW = 'priority-low';
  *   ArrayObject which allows it to be accessed with array syntax and isset(),
  *   and should be more lightweight than the full registry. Defaults to TRUE.
  *
- * @return
+ * @return array|\Drupal\Core\Utility\ThemeRegistry
  *   The complete theme registry array, or an instance of the
  *   Drupal\Core\Utility\ThemeRegistry class.
+ *
+ * @deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use
+ *   theme.registry service methods get() or getRuntime() instead.
+ *
+ * @see https://www.drupal.org/node/3348850
  */
 function theme_get_registry($complete = TRUE) {
   $theme_registry = \Drupal::service('theme.registry');
   if ($complete) {
+    @trigger_error(__FUNCTION__ . '() is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use theme.registry service method get() instead. See https://www.drupal.org/node/3348850', E_USER_DEPRECATED);
     return $theme_registry->get();
   }
   else {
+    @trigger_error(__FUNCTION__ . '() is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use theme.registry service method getRuntime() instead. See https://www.drupal.org/node/3348850', E_USER_DEPRECATED);
     return $theme_registry->getRuntime();
   }
 }
@@ -118,68 +125,15 @@ function _system_default_theme_features() {
  *
  * This function should be called when modules are added to the system, or when
  * a dynamic system needs to add more theme hooks.
+ *
+ * @deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use
+ *   theme.registry service reset() method instead.
+ *
+ * @see https://www.drupal.org/node/3348853
  */
 function drupal_theme_rebuild() {
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use theme.registry service reset() method instead. See https://www.drupal.org/node/3348853', E_USER_DEPRECATED);
   \Drupal::service('theme.registry')->reset();
-}
-
-/**
- * Allows themes and/or theme engines to discover overridden theme functions.
- *
- * @param array $cache
- *   The existing cache of theme hooks to test against.
- * @param array $prefixes
- *   An array of prefixes to test, in reverse order of importance.
- *
- * @return array
- *   The functions found, suitable for returning from hook_theme;
- */
-function drupal_find_theme_functions($cache, $prefixes) {
-  $implementations = [];
-  $grouped_functions = \Drupal::service('theme.registry')->getPrefixGroupedUserFunctions($prefixes);
-
-  foreach ($cache as $hook => $info) {
-    foreach ($prefixes as $prefix) {
-      // Find theme functions that implement possible "suggestion" variants of
-      // registered theme hooks and add those as new registered theme hooks.
-      // The 'pattern' key defines a common prefix that all suggestions must
-      // start with. The default is the name of the hook followed by '__'. A
-      // 'base hook' key is added to each entry made for a found suggestion,
-      // so that common functionality can be implemented for all suggestions of
-      // the same base hook. To keep things simple, deep hierarchy of
-      // suggestions is not supported: each suggestion's 'base hook' key
-      // refers to a base hook, not to another suggestion, and all suggestions
-      // are found using the base hook's pattern, not a pattern from an
-      // intermediary suggestion.
-      $pattern = isset($info['pattern']) ? $info['pattern'] : ($hook . '__');
-      // Grep only the functions which are within the prefix group.
-      list($first_prefix,) = explode('_', $prefix, 2);
-      if (!isset($info['base hook']) && !empty($pattern) && isset($grouped_functions[$first_prefix])) {
-        $matches = preg_grep('/^' . $prefix . '_' . $pattern . '/', $grouped_functions[$first_prefix]);
-        if ($matches) {
-          foreach ($matches as $match) {
-            $new_hook = substr($match, strlen($prefix) + 1);
-            $arg_name = isset($info['variables']) ? 'variables' : 'render element';
-            $implementations[$new_hook] = [
-              'function' => $match,
-              $arg_name => $info[$arg_name],
-              'base hook' => $hook,
-            ];
-          }
-        }
-      }
-      // Find theme functions that implement registered theme hooks and include
-      // that in what is returned so that the registry knows that the theme has
-      // this implementation.
-      if (function_exists($prefix . '_' . $hook)) {
-        $implementations[$hook] = [
-          'function' => $prefix . '_' . $hook,
-        ];
-      }
-    }
-  }
-
-  return $implementations;
 }
 
 /**
@@ -212,7 +166,7 @@ function drupal_find_theme_templates($cache, $extension, $path) {
     }
   }
   $theme = \Drupal::theme()->getActiveTheme()->getName();
-  $subtheme_paths = isset($theme_paths[$theme]) ? $theme_paths[$theme] : [];
+  $subtheme_paths = $theme_paths[$theme] ?? [];
 
   // Escape the periods in the extension.
   $regex = '/' . str_replace('.', '\.', $extension) . '$/';
@@ -227,7 +181,7 @@ function drupal_find_theme_templates($cache, $extension, $path) {
   // implementation.
   foreach ($files as $template => $file) {
     // Ignore sub-theme templates for the current theme.
-    if (strpos($file->uri, str_replace($subtheme_paths, '', $file->uri)) !== 0) {
+    if (!str_starts_with($file->uri, str_replace($subtheme_paths, '', $file->uri))) {
       continue;
     }
     // Remove the extension from the filename.
@@ -257,11 +211,11 @@ function drupal_find_theme_templates($cache, $extension, $path) {
 
   // Find templates that implement possible "suggestion" variants of registered
   // theme hooks and add those as new registered theme hooks. See
-  // drupal_find_theme_functions() for more information about suggestions and
+  // hook_theme_suggestions_alter() for more information about suggestions and
   // the use of 'pattern' and 'base hook'.
   $patterns = array_keys($files);
   foreach ($cache as $hook => $info) {
-    $pattern = isset($info['pattern']) ? $info['pattern'] : ($hook . '__');
+    $pattern = $info['pattern'] ?? ($hook . '__');
     if (!isset($info['base hook']) && !empty($pattern)) {
       // Transform _ in pattern to - to match file naming scheme
       // for the purposes of searching.
@@ -304,7 +258,7 @@ function drupal_find_theme_templates($cache, $extension, $path) {
  * @param $theme
  *   The name of a given theme; defaults to the current theme.
  *
- * @return
+ * @return mixed
  *   The value of the requested setting, NULL if the setting does not exist.
  */
 function theme_get_setting($setting_name, $theme = NULL) {
@@ -403,13 +357,14 @@ function theme_get_setting($setting_name, $theme = NULL) {
  * @throws \Exception
  *   Thrown when an object is passed in which cannot be printed.
  *
- * @see \Drupal\Core\Template\TwigExtension::escapeFilter()
+ * @deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. There is no
+ *   replacement. Theme engines must handle escaping by themselves.
  *
- * @todo Discuss deprecating this in https://www.drupal.org/node/2575081.
- * @todo Refactor this to keep it in sync with Twig filtering in
- *   https://www.drupal.org/node/2575065
+ * @see https://www.drupal.org/node/3336253
  */
 function theme_render_and_autoescape($arg) {
+  @trigger_error('theme_render_and_autoescape() is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. There is no replacement. Theme engines must handle escaping by themselves. See https://www.drupal.org/node/3336253', E_USER_DEPRECATED);
+
   // If it's a renderable, then it'll be up to the generated render array it
   // returns to contain the necessary cacheability & attachment metadata. If
   // it doesn't implement CacheableDependencyInterface or AttachmentsInterface
@@ -473,7 +428,7 @@ function theme_render_and_autoescape($arg) {
  * @param \Drupal\Core\Config\Config $config
  *   The configuration object to update.
  *
- * @return
+ * @return \Drupal\Core\Config\Config
  *   The Config object with updated data.
  */
 function theme_settings_convert_to_config(array $theme_settings, Config $config) {
@@ -664,7 +619,7 @@ function template_preprocess_datetime_wrapper(&$variables) {
  *   - attributes: A keyed array of attributes for the <ul> containing the list
  *     of links.
  *   - set_active_class: (optional) Whether each link should compare the
- *     route_name + route_parameters or url (path), language, and query options
+ *     route_name + route_parameters or URL (path), language, and query options
  *     to the current URL, to determine whether the link is "active". If so,
  *     attributes will be added to the HTML elements for both the link and the
  *     list item that contains it, which will result in an "is-active" class
@@ -1020,7 +975,7 @@ function template_preprocess_table(&$variables) {
           unset($cell['data']);
         }
         // Flag the cell as a header or not and remove the flag.
-        $is_header = isset($cell['header']) ? $cell['header'] : TRUE;
+        $is_header = $cell['header'] ?? TRUE;
         unset($cell['header']);
 
         // Track responsive classes for each column as needed. Only the header
@@ -1061,7 +1016,7 @@ function template_preprocess_table(&$variables) {
         // Check if we're dealing with a simple or complex row
         if (isset($row['data'])) {
           $cells = $row['data'];
-          $variables['no_striping'] = isset($row['no_striping']) ? $row['no_striping'] : FALSE;
+          $variables['no_striping'] = $row['no_striping'] ?? FALSE;
 
           // Set the attributes array and exclude 'data' and 'no_striping'.
           $row_attributes = $row;
@@ -1433,7 +1388,7 @@ function template_preprocess_page(&$variables) {
     $variables['db_is_active'] = FALSE;
   }
 
-  if ($node = \Drupal::routeMatch()->getParameter('node')) {
+  if (($node = \Drupal::routeMatch()->getParameter('node')) || ($node = \Drupal::routeMatch()->getParameter('node_preview'))) {
     $variables['node'] = $node;
   }
 }
@@ -1456,7 +1411,7 @@ function template_preprocess_page(&$variables) {
  *   of '__' is appropriate for theme hook suggestions. '-' is appropriate for
  *   extra classes.
  *
- * @return
+ * @return array
  *   An array of suggestions, suitable for adding to
  *   hook_theme_suggestions_HOOK_alter() or to $variables['attributes']['class']
  *   if the suggestions represent extra CSS classes.
@@ -1627,7 +1582,7 @@ function template_preprocess_field(&$variables, $hook) {
   while (!empty($element[$delta])) {
     $variables['items'][$delta]['content'] = $element[$delta];
 
-    // Modules (e.g., rdf.module) can add field item attributes (to
+    // Modules can add field item attributes (to
     // $item->_attributes) within hook_entity_prepare_view(). Some field
     // formatters move those attributes into some nested formatter-specific
     // element in order have them rendered on the desired HTML element (e.g., on
@@ -1666,9 +1621,10 @@ function template_preprocess_field_multiple_value_form(&$variables) {
     $header = [
       [
         'data' => [
-          '#prefix' => '<h4' . $header_attributes . '>',
-          '#markup' => $element['#title'],
-          '#suffix' => '</h4>',
+          '#type' => 'html_tag',
+          '#tag' => 'h4',
+          '#value' => $element['#title'],
+          '#attributes' => $header_attributes,
         ],
         'colspan' => 2,
         'class' => ['field-label'],
@@ -1788,7 +1744,7 @@ function template_preprocess_pager(&$variables) {
   $parameters = $variables['pager']['#parameters'];
   $quantity = empty($variables['pager']['#quantity']) ? 0 : $variables['pager']['#quantity'];
   $route_name = $variables['pager']['#route_name'];
-  $route_parameters = isset($variables['pager']['#route_parameters']) ? $variables['pager']['#route_parameters'] : [];
+  $route_parameters = $variables['pager']['#route_parameters'] ?? [];
 
   /** @var \Drupal\Core\Pager\PagerManagerInterface $pager_manager */
   $pager_manager = \Drupal::service('pager.manager');
@@ -1858,26 +1814,24 @@ function template_preprocess_pager(&$variables) {
     }
   }
 
-  if ($i != $pager_max) {
-    // Add an ellipsis if there are further previous pages.
-    if ($i > 1) {
-      $variables['ellipses']['previous'] = TRUE;
+  // Add an ellipsis if there are further previous pages.
+  if ($i > 1) {
+    $variables['ellipses']['previous'] = TRUE;
+  }
+  // Now generate the actual pager piece.
+  for (; $i <= $pager_last && $i <= $pager_max; $i++) {
+    $options = [
+      'query' => $pager_manager->getUpdatedParameters($parameters, $element, $i - 1),
+    ];
+    $items['pages'][$i]['href'] = Url::fromRoute($route_name, $route_parameters, $options)->toString();
+    $items['pages'][$i]['attributes'] = new Attribute();
+    if ($i == $pager_current) {
+      $variables['current'] = $i;
     }
-    // Now generate the actual pager piece.
-    for (; $i <= $pager_last && $i <= $pager_max; $i++) {
-      $options = [
-        'query' => $pager_manager->getUpdatedParameters($parameters, $element, $i - 1),
-      ];
-      $items['pages'][$i]['href'] = Url::fromRoute($route_name, $route_parameters, $options)->toString();
-      $items['pages'][$i]['attributes'] = new Attribute();
-      if ($i == $pager_current) {
-        $variables['current'] = $i;
-      }
-    }
-    // Add an ellipsis if there are further next pages.
-    if ($i < $pager_max + 1) {
-      $variables['ellipses']['next'] = TRUE;
-    }
+  }
+  // Add an ellipsis if there are further next pages.
+  if ($i < $pager_max + 1) {
+    $variables['ellipses']['next'] = TRUE;
   }
 
   // Create the "next" and "last" links if we are not on the last page.
@@ -2082,7 +2036,6 @@ function drupal_common_theme() {
     'pager' => [
       'render element' => 'pager',
     ],
-    // From menu.inc.
     'menu' => [
       'variables' => ['menu_name' => NULL, 'items' => [], 'attributes' => []],
     ],

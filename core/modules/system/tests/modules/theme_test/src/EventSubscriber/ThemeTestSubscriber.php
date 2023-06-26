@@ -40,6 +40,7 @@ class ThemeTestSubscriber implements EventSubscriberInterface {
    * Constructs a new ThemeTestSubscriber.
    *
    * @param \Drupal\Core\Routing\RouteMatchInterface $current_route_match
+   *   The route match handler.
    * @param \Drupal\Core\Render\RendererInterface $renderer
    *   The renderer.
    */
@@ -58,7 +59,7 @@ class ThemeTestSubscriber implements EventSubscriberInterface {
       // First, force the theme registry to be rebuilt on this page request.
       // This allows us to test a full initialization of the theme system in
       // the code below.
-      drupal_theme_rebuild();
+      \Drupal::service('theme.registry')->reset();
       // Next, initialize the theme system by storing themed text in a global
       // variable. We will use this later in
       // theme_test_request_listener_page_callback() to test that even when the
@@ -92,7 +93,7 @@ class ThemeTestSubscriber implements EventSubscriberInterface {
   /**
    * {@inheritdoc}
    */
-  public static function getSubscribedEvents() {
+  public static function getSubscribedEvents(): array {
     $events[KernelEvents::REQUEST][] = ['onRequest'];
     $events[KernelEvents::VIEW][] = ['onView', -1000];
     return $events;

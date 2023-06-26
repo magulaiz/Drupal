@@ -485,7 +485,7 @@ final class DocParser
             'attribute_types'  => array(),
             'targets_literal'  => null,
             'targets'          => Target::TARGET_ALL,
-            'is_annotation'    => false !== strpos($docComment, '@Annotation'),
+            'is_annotation'    => str_contains($docComment, '@Annotation'),
         );
 
         // verify that the class is really meant to be an annotation
@@ -519,16 +519,16 @@ final class DocParser
 
                     $attribute = new Attribute();
 
-                    $attribute->required = (false !== strpos($propertyComment, '@Required'));
+                    $attribute->required = str_contains($propertyComment, '@Required');
                     $attribute->name     = $property->name;
-                    $attribute->type     = (false !== strpos($propertyComment, '@var') && preg_match('/@var\s+([^\s]+)/',$propertyComment, $matches))
+                    $attribute->type     = (str_contains($propertyComment, '@var') && preg_match('/@var\s+([^\s]+)/',$propertyComment, $matches))
                         ? $matches[1]
                         : 'mixed';
 
                     $this->collectAttributeTypeMetadata($metadata, $attribute);
 
                     // checks if the property has @Enum
-                    if (false !== strpos($propertyComment, '@Enum')) {
+                    if (str_contains($propertyComment, '@Enum')) {
                         $context = 'property ' . $class->name . "::\$" . $property->name;
 
                         self::$metadataParser->setTarget(Target::TARGET_PROPERTY);
@@ -896,8 +896,8 @@ final class DocParser
     {
         $identifier = $this->Identifier();
 
-        if ( ! defined($identifier) && false !== strpos($identifier, '::') && '\\' !== $identifier[0]) {
-            list($className, $const) = explode('::', $identifier);
+        if ( ! defined($identifier) && str_contains($identifier, '::') && '\\' !== $identifier[0]) {
+            [$className, $const] = explode('::', $identifier);
 
             $alias = (false === $pos = strpos($className, '\\')) ? $className : substr($className, 0, $pos);
             $found = false;
@@ -1099,7 +1099,7 @@ final class DocParser
         $this->match(DocLexer::T_CLOSE_CURLY_BRACES);
 
         foreach ($values as $value) {
-            list ($key, $val) = $value;
+             [$key, $val] = $value;
 
             if ($key !== null) {
                 $array[$key] = $val;

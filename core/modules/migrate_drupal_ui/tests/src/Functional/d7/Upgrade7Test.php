@@ -6,7 +6,7 @@ use Drupal\node\Entity\Node;
 use Drupal\Tests\migrate_drupal_ui\Functional\MigrateUpgradeExecuteTestBase;
 use Drupal\user\Entity\User;
 
-// cspell:ignore Multiupload Imagefield
+// cspell:ignore Filefield Multiupload Imagefield
 
 /**
  * Tests Drupal 7 upgrade using the migrate UI.
@@ -21,11 +21,10 @@ class Upgrade7Test extends MigrateUpgradeExecuteTestBase {
    * {@inheritdoc}
    */
   protected static $modules = [
-    'aggregator',
     'book',
     'config_translation',
     'content_translation',
-    'forum',
+    'datetime_range',
     'language',
     'migrate_drupal_ui',
     'statistics',
@@ -45,6 +44,7 @@ class Upgrade7Test extends MigrateUpgradeExecuteTestBase {
   protected function setUp(): void {
     parent::setUp();
 
+    // @todo remove in https://www.drupal.org/project/drupal/issues/3267040
     // Delete the existing content made to test the ID Conflict form. Migrations
     // are to be done on a site without content. The test of the ID Conflict
     // form is being moved to its own issue which will remove the deletion
@@ -69,9 +69,7 @@ class Upgrade7Test extends MigrateUpgradeExecuteTestBase {
    */
   protected function getEntityCounts() {
     return [
-      'aggregator_item' => 11,
-      'aggregator_feed' => 1,
-      'block' => 25,
+      'block' => 28,
       'block_content' => 1,
       'block_content_type' => 1,
       'comment' => 4,
@@ -89,14 +87,13 @@ class Upgrade7Test extends MigrateUpgradeExecuteTestBase {
       'file' => 3,
       'filter_format' => 7,
       'image_style' => 7,
-      'language_content_settings' => 22,
+      'language_content_settings' => 24,
       'node' => 7,
       'node_type' => 8,
-      'rdf_mapping' => 8,
-      'search_page' => 2,
+      'search_page' => 3,
       'shortcut' => 6,
       'shortcut_set' => 2,
-      'action' => 21,
+      'action' => 27,
       'menu' => 7,
       'taxonomy_term' => 25,
       'taxonomy_vocabulary' => 8,
@@ -105,13 +102,13 @@ class Upgrade7Test extends MigrateUpgradeExecuteTestBase {
       'user' => 4,
       'user_role' => 4,
       'menu_link_content' => 12,
-      'view' => 16,
-      'date_format' => 11,
-      'entity_form_display' => 24,
+      'view' => 14,
+      'date_format' => 12,
+      'entity_form_display' => 23,
       'entity_form_mode' => 1,
-      'entity_view_display' => 37,
-      'entity_view_mode' => 14,
-      'base_field_override' => 4,
+      'entity_view_display' => 33,
+      'entity_view_mode' => 12,
+      'base_field_override' => 3,
     ];
   }
 
@@ -135,12 +132,10 @@ class Upgrade7Test extends MigrateUpgradeExecuteTestBase {
    */
   protected function getAvailablePaths() {
     return [
-      'Aggregator',
       'Block languages',
       'Block',
       'Book',
       'Chaos tools',
-      'Color',
       'Comment',
       'Contact',
       'Content translation',
@@ -154,7 +149,6 @@ class Upgrade7Test extends MigrateUpgradeExecuteTestBase {
       'Field',
       'File',
       'Filter',
-      'Forum',
       'Image',
       'Internationalization',
       'Locale',
@@ -170,7 +164,6 @@ class Upgrade7Test extends MigrateUpgradeExecuteTestBase {
       'Options',
       'Path',
       'Phone',
-      'RDF',
       'Search',
       'Shortcut',
       'Statistics',
@@ -205,6 +198,10 @@ class Upgrade7Test extends MigrateUpgradeExecuteTestBase {
    */
   protected function getMissingPaths() {
     return [
+      'Aggregator',
+      'Color',
+      'Forum',
+      'RDF',
       'References',
       'Translation sets',
       'Variable realm',
@@ -213,6 +210,7 @@ class Upgrade7Test extends MigrateUpgradeExecuteTestBase {
       // These modules are in the missing path list because they are installed
       // on the source site but they are not installed on the destination site.
       'Syslog',
+      // @todo Remove tracker in https://www.drupal.org/project/drupal/issues/3261452
       'Tracker',
       'Update manager',
     ];
@@ -229,15 +227,19 @@ class Upgrade7Test extends MigrateUpgradeExecuteTestBase {
     $this->assertUserLogIn(2, 'a password');
 
     $this->assertFollowUpMigrationResults();
+    $this->assertEntityRevisionsCount('node', 19);
+    $this->assertEmailsSent();
   }
 
   /**
    * Tests that follow-up migrations have been run successfully.
+   *
+   * @internal
    */
-  protected function assertFollowUpMigrationResults() {
+  protected function assertFollowUpMigrationResults(): void {
     $node = Node::load(2);
     $this->assertSame('4', $node->get('field_reference')->target_id);
-    $this->assertSame('4', $node->get('field_reference_2')->target_id);
+    $this->assertSame('6', $node->get('field_reference_2')->target_id);
     $translation = $node->getTranslation('is');
     $this->assertSame('4', $translation->get('field_reference')->target_id);
     $this->assertSame('4', $translation->get('field_reference_2')->target_id);

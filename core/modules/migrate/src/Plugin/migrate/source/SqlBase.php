@@ -4,6 +4,7 @@ namespace Drupal\migrate\Plugin\migrate\source;
 
 use Drupal\Core\Database\ConnectionNotDefinedException;
 use Drupal\Core\Database\Database;
+use Drupal\Core\Database\DatabaseException;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\State\StateInterface;
 use Drupal\migrate\Exception\RequirementsException;
@@ -13,6 +14,8 @@ use Drupal\migrate\Plugin\migrate\id_map\Sql;
 use Drupal\migrate\Plugin\MigrateIdMapInterface;
 use Drupal\migrate\Plugin\RequirementsInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+
+// cspell:ignore destid sourceid
 
 /**
  * Sources whose data may be fetched via a database connection.
@@ -180,20 +183,10 @@ abstract class SqlBase extends SourcePluginBase implements ContainerFactoryPlugi
    *   Thrown if no source database connection is configured.
    */
   protected function setUpDatabase(array $database_info) {
-    if (isset($database_info['key'])) {
-      $key = $database_info['key'];
-    }
-    else {
-      // If there is no explicit database configuration at all, fall back to a
-      // connection named 'migrate'.
-      $key = 'migrate';
-    }
-    if (isset($database_info['target'])) {
-      $target = $database_info['target'];
-    }
-    else {
-      $target = 'default';
-    }
+    // If there is no explicit database configuration at all, fall back to a
+    // connection named 'migrate'.
+    $key = $database_info['key'] ?? 'migrate';
+    $target = $database_info['target'] ?? 'default';
     if (isset($database_info['database'])) {
       Database::addConnectionInfo($key, $target, $database_info['database']);
     }
@@ -218,7 +211,12 @@ abstract class SqlBase extends SourcePluginBase implements ContainerFactoryPlugi
    */
   public function checkRequirements() {
     if ($this->pluginDefinition['requirements_met'] === TRUE) {
-      $this->getDatabase();
+      try {
+        $this->getDatabase();
+      }
+      catch (\PDOException | DatabaseException $e) {
+        throw new RequirementsException("No database connection available for source plugin " . $this->pluginId, [], 0, $e);
+      }
     }
   }
 
@@ -263,9 +261,6 @@ abstract class SqlBase extends SourcePluginBase implements ContainerFactoryPlugi
     // If a batch has run the query is already setup.
     if ($this->batch == 0) {
       $this->prepareQuery();
-
-      // Get the key values, for potential use in joining to the map table.
-      $keys = [];
 
       // The rules for determining what conditions to add to the query are as
       // follows (applying first applicable rule):
@@ -375,6 +370,16 @@ abstract class SqlBase extends SourcePluginBase implements ContainerFactoryPlugi
     $this->batch++;
     unset($this->iterator);
     $this->getIterator()->rewind();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function rewind(): void {
+    $this->batch = 0;
+    // Database queries have to be run again as they cannot be rewound.
+    unset($this->iterator);
+    parent::rewind();
   }
 
   /**

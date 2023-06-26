@@ -8,8 +8,10 @@ use Drupal\field\Entity\FieldConfig;
 use Drupal\file\Entity\File;
 
 /**
- * Tests validation functions such as file type, max file size, max size per
- * node, and required.
+ * Tests file field validation functions.
+ *
+ * Values validated include the file type, max file size, max size per node,
+ * and whether the field is required.
  *
  * @group file
  */
@@ -132,7 +134,7 @@ class FileFieldValidateTest extends FileFieldTestBase {
     $this->createFileField($field_name, 'node', $type_name);
 
     $test_file = $this->getTestFile('image');
-    list(, $test_file_extension) = explode('.', $test_file->getFilename());
+    [, $test_file_extension] = explode('.', $test_file->getFilename());
 
     // Disable extension checking.
     $this->updateFileField($field_name, $type_name, ['file_extensions' => '']);

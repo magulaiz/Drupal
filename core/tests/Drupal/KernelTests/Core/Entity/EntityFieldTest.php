@@ -21,6 +21,7 @@ use Drupal\Core\TypedData\Type\StringInterface;
 use Drupal\Core\TypedData\TypedDataInterface;
 use Drupal\entity_test\Entity\EntityTest;
 use Drupal\entity_test\Entity\EntityTestComputedField;
+use Drupal\entity_test\Entity\EntityTestRev;
 use Drupal\node\Entity\Node;
 use Drupal\node\Entity\NodeType;
 
@@ -53,6 +54,9 @@ class EntityFieldTest extends EntityKernelTestBase {
    */
   protected $entityFieldText;
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
 
@@ -64,7 +68,7 @@ class EntityFieldTest extends EntityKernelTestBase {
     }
 
     // Create the test field.
-    module_load_install('entity_test');
+    $this->container->get('module_handler')->loadInclude('entity_test', 'install');
     entity_test_install();
 
     // Install required default configuration for filter module.
@@ -93,6 +97,38 @@ class EntityFieldTest extends EntityKernelTestBase {
     $entity->field_test_text->value = $this->entityFieldText;
 
     return $entity;
+  }
+
+  /**
+   * Test setting field values on revisionable entities.
+   */
+  public function testFieldEntityRevisionWrite() {
+    $storage = \Drupal::entityTypeManager()->getStorage('entity_test_rev');
+
+    // Create a new entity, with a field value 'foo'.
+    $entity = EntityTestRev::create();
+    $entity->field_test_text->value = 'foo';
+    $entity->save();
+
+    // Create a new non-default revision and set the field value to 'bar'.
+    $entity->setNewRevision(TRUE);
+    $entity->isDefaultRevision(FALSE);
+    $entity->field_test_text->value = 'bar';
+    $entity->save();
+
+    $forward_revision_id = $entity->getRevisionId();
+
+    // Load the forward revision and set the field value to equal the value of
+    // the default revision.
+    $forward_revision = $storage->loadRevision($forward_revision_id);
+    $forward_revision->field_test_text->value = 'foo';
+    $forward_revision->save();
+
+    $storage->resetCache();
+
+    // The updated field value should have correctly saved as 'foo'.
+    $forward_revision = $storage->loadRevision($forward_revision_id);
+    $this->assertEquals('foo', $forward_revision->field_test_text->value);
   }
 
   /**
@@ -195,14 +231,14 @@ class EntityFieldTest extends EntityKernelTestBase {
     unset($entity->name->value);
     $this->assertFalse(isset($entity->name->value), new FormattableMarkup('%entity_type: Name is not set.', ['%entity_type' => $entity_type]));
     $this->assertFalse(isset($entity->name[0]->value), new FormattableMarkup('%entity_type: Name is not set.', ['%entity_type' => $entity_type]));
-    $this->assertTrue(empty($entity->name->value), new FormattableMarkup('%entity_type: Name is empty.', ['%entity_type' => $entity_type]));
-    $this->assertTrue(empty($entity->name[0]->value), new FormattableMarkup('%entity_type: Name is empty.', ['%entity_type' => $entity_type]));
+    $this->assertEmpty($entity->name->value, new FormattableMarkup('%entity_type: Name is empty.', ['%entity_type' => $entity_type]));
+    $this->assertEmpty($entity->name[0]->value, new FormattableMarkup('%entity_type: Name is empty.', ['%entity_type' => $entity_type]));
 
     $entity->name->value = 'a value';
     $this->assertTrue(isset($entity->name->value), new FormattableMarkup('%entity_type: Name is set.', ['%entity_type' => $entity_type]));
     $this->assertTrue(isset($entity->name[0]->value), new FormattableMarkup('%entity_type: Name is set.', ['%entity_type' => $entity_type]));
-    $this->assertFalse(empty($entity->name->value), new FormattableMarkup('%entity_type: Name is not empty.', ['%entity_type' => $entity_type]));
-    $this->assertFalse(empty($entity->name[0]->value), new FormattableMarkup('%entity_type: Name is not empty.', ['%entity_type' => $entity_type]));
+    $this->assertNotEmpty($entity->name->value, new FormattableMarkup('%entity_type: Name is not empty.', ['%entity_type' => $entity_type]));
+    $this->assertNotEmpty($entity->name[0]->value, new FormattableMarkup('%entity_type: Name is not empty.', ['%entity_type' => $entity_type]));
     $this->assertTrue(isset($entity->name[0]), new FormattableMarkup('%entity_type: Name string item is set.', ['%entity_type' => $entity_type]));
     $this->assertFalse(isset($entity->name[1]), new FormattableMarkup('%entity_type: Second name string item is not set as it does not exist', ['%entity_type' => $entity_type]));
     $this->assertTrue(isset($entity->name), new FormattableMarkup('%entity_type: Name field is set.', ['%entity_type' => $entity_type]));
@@ -590,8 +626,7 @@ class EntityFieldTest extends EntityKernelTestBase {
   }
 
   /**
-   * Recursive helper for getting all contained strings,
-   * i.e. properties of type string.
+   * Gets all contained strings recursively.
    */
   public function getContainedStrings(TypedDataInterface $wrapper, $depth, array &$strings) {
 
@@ -912,14 +947,14 @@ class EntityFieldTest extends EntityKernelTestBase {
     $entity->field_test_text->format = filter_default_format();
 
     $target = "<p>The &lt;strong&gt;text&lt;/strong&gt; text to filter.</p>\n";
-    $this->assertEquals($target, $entity->field_test_text->processed, new FormattableMarkup('%entity_type: Text is processed with the default filter.', ['%entity_type' => $entity_type]));
+    $this->assertSame($target, (string) $entity->field_test_text->processed, new FormattableMarkup('%entity_type: Text is processed with the default filter.', ['%entity_type' => $entity_type]));
 
     // Save and load entity and make sure it still works.
     $entity->save();
     $entity = $this->container->get('entity_type.manager')
       ->getStorage($entity_type)
       ->load($entity->id());
-    $this->assertEquals($target, $entity->field_test_text->processed, new FormattableMarkup('%entity_type: Text is processed with the default filter.', ['%entity_type' => $entity_type]));
+    $this->assertSame($target, (string) $entity->field_test_text->processed, new FormattableMarkup('%entity_type: Text is processed with the default filter.', ['%entity_type' => $entity_type]));
   }
 
   /**

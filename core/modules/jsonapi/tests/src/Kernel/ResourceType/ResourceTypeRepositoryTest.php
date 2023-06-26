@@ -19,6 +19,7 @@ class ResourceTypeRepositoryTest extends JsonapiKernelTestBase {
    * {@inheritdoc}
    */
   protected static $modules = [
+    'file',
     'field',
     'node',
     'serialization',
@@ -43,7 +44,6 @@ class ResourceTypeRepositoryTest extends JsonapiKernelTestBase {
     $this->installEntitySchema('node');
     $this->installEntitySchema('user');
     // Add the additional table schemas.
-    $this->installSchema('system', ['sequences']);
     $this->installSchema('node', ['node_access']);
     $this->installSchema('user', ['users_data']);
     NodeType::create([
@@ -114,8 +114,7 @@ class ResourceTypeRepositoryTest extends JsonapiKernelTestBase {
   }
 
   /**
-   * Ensures that a naming conflict in the mapping causes an exception to be
-   * thrown.
+   * Ensures that a naming conflict in mapping causes an exception to be thrown.
    *
    * @covers ::getFields
    * @dataProvider getFieldsProvider

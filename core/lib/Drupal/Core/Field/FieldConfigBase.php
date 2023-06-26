@@ -184,8 +184,10 @@ abstract class FieldConfigBase extends ConfigEntityBase implements FieldConfigIn
   protected $constraints = [];
 
   /**
-   * Array of property constraint options keyed by property ID. The values are
-   * associative array of constraint options keyed by constraint plugin ID.
+   * Array of property constraint options keyed by property ID.
+   *
+   * The values are associative array of constraint options keyed by constraint
+   * plugin ID.
    *
    * @var array[]
    */
@@ -276,6 +278,21 @@ abstract class FieldConfigBase extends ConfigEntityBase implements FieldConfigIn
     // from the field storage, so that it gets saved in the config record.
     if (empty($this->field_type)) {
       $this->field_type = $this->getFieldStorageDefinition()->getType();
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function postDelete(EntityStorageInterface $storage, array $fields) {
+    // Clear the cache upfront, to refresh the results of getBundles().
+    \Drupal::service('entity_field.manager')->clearCachedFieldDefinitions();
+
+    // Notify the entity storage.
+    foreach ($fields as $field) {
+      if (!$field->deleted) {
+        \Drupal::service('field_definition.listener')->onFieldDefinitionDelete($field);
+      }
     }
   }
 
@@ -505,7 +522,7 @@ abstract class FieldConfigBase extends ConfigEntityBase implements FieldConfigIn
    */
   public function getConstraint($constraint_name) {
     $constraints = $this->getConstraints();
-    return isset($constraints[$constraint_name]) ? $constraints[$constraint_name] : NULL;
+    return $constraints[$constraint_name] ?? NULL;
   }
 
   /**

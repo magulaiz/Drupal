@@ -24,9 +24,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *   label = @Translation("Comment list"),
  *   field_types = {
  *     "comment"
- *   },
- *   quickedit = {
- *     "editor" = "disabled"
  *   }
  * )
  */
@@ -178,7 +175,7 @@ class CommentDefaultFormatter extends FormatterBase {
             // where a specific comment appears and does a subrequest pointing to
             // that page, we need to pass that subrequest route to our pager to
             // keep the pager working.
-            $build['pager']['#route_name'] = $this->routeMatch->getRouteObject();
+            $build['pager']['#route_name'] = $this->routeMatch->getRouteName();
             $build['pager']['#route_parameters'] = $this->routeMatch->getRawParameters()->all();
             if ($this->getSetting('pager_id')) {
               $build['pager']['#element'] = $this->getSetting('pager_id');
@@ -251,7 +248,7 @@ class CommentDefaultFormatter extends FormatterBase {
   public function settingsSummary() {
     $view_mode = $this->getSetting('view_mode');
     $view_modes = $this->getViewModes();
-    $view_mode_label = isset($view_modes[$view_mode]) ? $view_modes[$view_mode] : 'default';
+    $view_mode_label = $view_modes[$view_mode] ?? 'default';
     $summary = [$this->t('Comment view mode: @mode', ['@mode' => $view_mode_label])];
     if ($pager_id = $this->getSetting('pager_id')) {
       $summary[] = $this->t('Pager ID: @id', ['@id' => $pager_id]);

@@ -23,6 +23,8 @@ class ClientFactoryTest extends UnitTestCase {
    * {@inheritdoc}
    */
   protected function setUp(): void {
+    parent::setUp();
+
     $stack = $this->getMockBuilder('GuzzleHttp\HandlerStack')
       ->disableOriginalConstructor()
       ->getMock();
@@ -34,8 +36,11 @@ class ClientFactoryTest extends UnitTestCase {
    * @dataProvider providerTestCreateFromOptions
    *
    * @param array $settings_config
+   *   The settings configuration.
    * @param array $parameter_config
+   *   The parameter configuration.
    * @param array $expected_config_keys
+   *   The expected config keys.
    */
   public function testCreateFromOptions($settings_config, $parameter_config, $expected_config_keys) {
     if ($settings_config) {

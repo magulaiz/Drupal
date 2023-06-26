@@ -12,8 +12,10 @@ use Drupal\tour\Entity\Tour;
 use Drupal\user\Entity\Role;
 
 /**
- * Tests installation and removal of configuration objects in install, disable
- * and uninstall functionality.
+ * Tests that configuration objects are correct after various operations.
+ *
+ * The installation and removal of configuration objects in install, disable
+ * and uninstall functionality is tested.
  *
  * @group config
  */
@@ -52,7 +54,7 @@ class ConfigInstallProfileOverrideTest extends BrowserTestBase {
       ],
       'logging' => 1,
     ];
-    $expected_profile_data['_core']['default_config_hash'] = Crypt::hashBase64(serialize($expected_profile_data));
+    $expected_profile_data = ['_core' => ['default_config_hash' => Crypt::hashBase64(serialize($expected_profile_data))]] + $expected_profile_data;
 
     // Verify that the original data matches. We have to read the module config
     // file directly, because the install profile default system.cron.yml

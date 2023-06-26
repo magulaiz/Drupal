@@ -11,6 +11,7 @@ use Drupal\Component\Render\MarkupInterface;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Access\AccessResultInterface;
 use Drupal\Core\Cache\Cache;
+use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Security\TrustedCallbackInterface;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Render\Markup;
@@ -218,10 +219,11 @@ class RendererTest extends RendererTestBase {
     $data[] = [
       [
         '#markup' => 'foo',
-        '#pre_render' => [function ($elements) {
-          $elements['#markup'] .= '<script>alert("bar");</script>';
-          return $elements;
-        },
+        '#pre_render' => [
+          function ($elements) {
+            $elements['#markup'] .= '<script>alert("bar");</script>';
+            return $elements;
+          },
         ],
       ],
       'fooalert("bar");',
@@ -231,10 +233,11 @@ class RendererTest extends RendererTestBase {
       [
         '#markup' => 'foo',
         '#allowed_tags' => ['script'],
-        '#pre_render' => [function ($elements) {
-          $elements['#markup'] .= '<script>alert("bar");</script>';
-          return $elements;
-        },
+        '#pre_render' => [
+          function ($elements) {
+            $elements['#markup'] .= '<script>alert("bar");</script>';
+            return $elements;
+          },
         ],
       ],
       'foo<script>alert("bar");</script>',
@@ -244,10 +247,11 @@ class RendererTest extends RendererTestBase {
     $data[] = [
       [
         '#plain_text' => 'foo',
-        '#pre_render' => [function ($elements) {
-          $elements['#plain_text'] .= '<script>alert("bar");</script>';
-          return $elements;
-        },
+        '#pre_render' => [
+          function ($elements) {
+            $elements['#plain_text'] .= '<script>alert("bar");</script>';
+            return $elements;
+          },
         ],
       ],
       'foo&lt;script&gt;alert(&quot;bar&quot;);&lt;/script&gt;',
@@ -298,7 +302,7 @@ class RendererTest extends RendererTestBase {
           if ($theme == 'container') {
             return '<div' . (string) (new Attribute($vars['#attributes'])) . '>' . $vars['#children'] . "</div>\n";
           }
-          $attributes = new Attribute(['href' => $vars['#url']] + (isset($vars['#attributes']) ? $vars['#attributes'] : []));
+          $attributes = new Attribute(['href' => $vars['#url']] + ($vars['#attributes'] ?? []));
           return '<a' . (string) $attributes . '>' . $vars['#title'] . '</a>';
         });
     };
@@ -731,10 +735,12 @@ class RendererTest extends RendererTestBase {
    *
    * @param array $build
    *   A render array with either #access or #access_callback.
-   * @param bool $access
+   * @param \Drupal\Core\Access\AccessResultInterface|bool $access
    *   Whether the render array is accessible or not.
+   *
+   * @internal
    */
-  protected function assertAccess($build, $access) {
+  protected function assertAccess(array $build, $access): void {
     $sensitive_content = $this->randomContextValue();
     $build['#markup'] = $sensitive_content;
     if (($access instanceof AccessResultInterface && $access->isAllowed()) || $access === TRUE) {
@@ -790,7 +796,6 @@ class RendererTest extends RendererTestBase {
    * @covers ::doRender
    * @covers \Drupal\Core\Render\RenderCache::get
    * @covers \Drupal\Core\Render\RenderCache::set
-   * @covers \Drupal\Core\Render\RenderCache::createCacheID
    */
   public function testRenderCache() {
     $this->setUpRequest();
@@ -834,7 +839,7 @@ class RendererTest extends RendererTestBase {
     $this->assertEquals($expected_tags, $element['#cache']['tags'], 'Cache tags were collected from the element and its subchild.');
 
     // The cache item also has a 'rendered' cache tag.
-    $cache_item = $this->cacheFactory->get('render')->get('render_cache_test:en:stark');
+    $cache_item = $this->cacheFactory->get('render')->get(['render_cache_test'], CacheableMetadata::createFromRenderArray($element));
     $this->assertSame(Cache::mergeTags($expected_tags, ['rendered']), $cache_item->tags);
   }
 
@@ -843,7 +848,6 @@ class RendererTest extends RendererTestBase {
    * @covers ::doRender
    * @covers \Drupal\Core\Render\RenderCache::get
    * @covers \Drupal\Core\Render\RenderCache::set
-   * @covers \Drupal\Core\Render\RenderCache::createCacheID
    *
    * @dataProvider providerTestRenderCacheMaxAge
    */
@@ -860,7 +864,7 @@ class RendererTest extends RendererTestBase {
     ];
     $this->renderer->renderRoot($element);
 
-    $cache_item = $this->cacheFactory->get('render')->get('render_cache_test:en:stark');
+    $cache_item = $this->cacheFactory->get('render')->get(['render_cache_test'], CacheableMetadata::createFromRenderArray($element));
     if (!$is_render_cached) {
       $this->assertFalse($cache_item);
     }
@@ -888,7 +892,6 @@ class RendererTest extends RendererTestBase {
    * @covers ::doRender
    * @covers \Drupal\Core\Render\RenderCache::get
    * @covers \Drupal\Core\Render\RenderCache::set
-   * @covers \Drupal\Core\Render\RenderCache::createCacheID
    * @covers \Drupal\Core\Render\RenderCache::getCacheableRenderArray
    *
    * @dataProvider providerTestRenderCacheProperties
@@ -913,7 +916,7 @@ class RendererTest extends RendererTestBase {
     $this->renderer->renderRoot($element);
 
     $cache = $this->cacheFactory->get('render');
-    $data = $cache->get('render_cache_test:en:stark')->data;
+    $data = $cache->get(['render_cache_test'], CacheableMetadata::createFromRenderArray($element))->data;
 
     // Check that parent markup is ignored when caching children's markup.
     $this->assertEquals($data['#markup'] === '', (bool) Element::children($data));

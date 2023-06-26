@@ -10,7 +10,7 @@ use Drupal\Tests\user\Traits\UserCreationTrait;
 use Drupal\Tests\workspaces\Kernel\WorkspaceTestTrait;
 use Drupal\workflows\Entity\Workflow;
 use Drupal\workflows\WorkflowInterface;
-use Drupal\workspaces\WorkspaceAccessException;
+use Drupal\workspaces\WorkspacePublishException;
 
 /**
  * Tests that Workspaces and Content Moderation work together properly.
@@ -42,8 +42,6 @@ class WorkspacesContentModerationStateTest extends ContentModerationStateTest {
    */
   protected function setUp(): void {
     parent::setUp();
-
-    $this->installSchema('system', ['sequences']);
 
     $this->initializeWorkspacesModule();
     $this->switchToWorkspace('stage');
@@ -118,7 +116,7 @@ class WorkspacesContentModerationStateTest extends ContentModerationStateTest {
       $this->workspaces['stage']->publish();
       $this->fail('The expected exception was not thrown.');
     }
-    catch (WorkspaceAccessException $e) {
+    catch (WorkspacePublishException $e) {
       $this->assertEquals('The Stage workspace can not be published because it contains 3 items in an unpublished moderation state.', $e->getMessage());
     }
 
@@ -130,7 +128,7 @@ class WorkspacesContentModerationStateTest extends ContentModerationStateTest {
       $this->workspaces['stage']->publish();
       $this->fail('The expected exception was not thrown.');
     }
-    catch (WorkspaceAccessException $e) {
+    catch (WorkspacePublishException $e) {
       $this->assertEquals('The Stage workspace can not be published because it contains 2 items in an unpublished moderation state.', $e->getMessage());
     }
 
@@ -142,7 +140,7 @@ class WorkspacesContentModerationStateTest extends ContentModerationStateTest {
       $this->workspaces['stage']->publish();
       $this->fail('The expected exception was not thrown.');
     }
-    catch (WorkspaceAccessException $e) {
+    catch (WorkspacePublishException $e) {
       $this->assertEquals('The Stage workspace can not be published because it contains 1 item in an unpublished moderation state.', $e->getMessage());
     }
 
@@ -253,7 +251,7 @@ class WorkspacesContentModerationStateTest extends ContentModerationStateTest {
   /**
    * {@inheritdoc}
    */
-  protected function assertDefaultRevision(EntityInterface $entity, $revision_id, $published = TRUE) {
+  protected function assertDefaultRevision(EntityInterface $entity, int $revision_id, $published = TRUE): void {
     // In the context of a workspace, the default revision ID is always the
     // latest workspace-specific revision, so we need to adjust the expectation
     // of the parent assertion.

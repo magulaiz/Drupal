@@ -44,7 +44,7 @@ class ExceptionLoggingSubscriber implements EventSubscriberInterface {
     $error = Error::decodeException($exception);
     unset($error['@backtrace_string']);
     $error['@uri'] = $event->getRequest()->getRequestUri();
-    $this->logger->get('access denied')->warning('Path: @uri. %type: @message in %function (line %line of %file).', $error);
+    $this->logger->get('access denied')->warning('Path: @uri. ' . Error::DEFAULT_ERROR_MESSAGE, $error);
   }
 
   /**
@@ -67,7 +67,7 @@ class ExceptionLoggingSubscriber implements EventSubscriberInterface {
   public function onError(ExceptionEvent $event) {
     $exception = $event->getThrowable();
     $error = Error::decodeException($exception);
-    $this->logger->get('php')->log($error['severity_level'], '%type: @message in %function (line %line of %file).', $error);
+    $this->logger->get('php')->log($error['severity_level'], Error::DEFAULT_ERROR_MESSAGE, $error);
 
     $is_critical = !$exception instanceof HttpExceptionInterface || $exception->getStatusCode() >= 500;
     if ($is_critical) {
@@ -100,7 +100,7 @@ class ExceptionLoggingSubscriber implements EventSubscriberInterface {
   /**
    * {@inheritdoc}
    */
-  public static function getSubscribedEvents() {
+  public static function getSubscribedEvents(): array {
     $events[KernelEvents::EXCEPTION][] = ['onException', 50];
     return $events;
   }

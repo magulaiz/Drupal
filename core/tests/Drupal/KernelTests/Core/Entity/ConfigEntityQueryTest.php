@@ -2,6 +2,7 @@
 
 namespace Drupal\KernelTests\Core\Entity;
 
+use Drupal\Core\Config\Entity\ConfigEntityStorageInterface;
 use Drupal\Core\Config\Entity\Query\QueryFactory;
 use Drupal\config_test\Entity\ConfigQueryTest;
 use Drupal\KernelTests\KernelTestBase;
@@ -36,11 +37,9 @@ class ConfigEntityQueryTest extends KernelTestBase {
   protected $factory;
 
   /**
-   * The entity storage used for testing.
-   *
-   * @var \Drupal\Core\Entity\EntityStorageInterface
+   * The config entity storage used for testing.
    */
-  protected $entityStorage;
+  protected ConfigEntityStorageInterface $entityStorage;
 
   /**
    * Stores all config entities created for the test.
@@ -49,6 +48,9 @@ class ConfigEntityQueryTest extends KernelTestBase {
    */
   protected $entities;
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
 
@@ -510,8 +512,8 @@ class ConfigEntityQueryTest extends KernelTestBase {
    */
   public function testTableSort() {
     $header = [
-      ['data' => t('ID'), 'specifier' => 'id'],
-      ['data' => t('Number'), 'specifier' => 'number'],
+      ['data' => 'ID', 'specifier' => 'id'],
+      ['data' => 'Number', 'specifier' => 'number'],
     ];
 
     // Sort key: id
@@ -726,8 +728,10 @@ class ConfigEntityQueryTest extends KernelTestBase {
    *
    * @param array $expected
    *   Array of expected entity IDs.
+   *
+   * @internal
    */
-  protected function assertResults($expected) {
+  protected function assertResults(array $expected): void {
     $expected_count = count($expected);
     $this->assertCount($expected_count, $this->queryResults);
     foreach ($expected as $value) {

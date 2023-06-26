@@ -37,10 +37,16 @@ class MigrateFieldWidgetSettingsTest extends MigrateDrupal6TestBase {
 
     // Text field.
     $component = $form_display->getComponent('field_test');
-    $expected = ['weight' => 1, 'type' => 'text_textfield'];
-    $expected['settings'] = ['size' => 60, 'placeholder' => ''];
-    $expected['third_party_settings'] = [];
-    $expected['region'] = 'content';
+    $expected = [
+      'type' => 'text_textfield',
+      'weight' => 1,
+      'region' => 'content',
+      'settings' => [
+        'size' => 60,
+        'placeholder' => '',
+      ],
+      'third_party_settings' => [],
+    ];
     $this->assertSame($expected, $component, 'Text field settings are correct.');
 
     // Integer field.
@@ -121,6 +127,11 @@ class MigrateFieldWidgetSettingsTest extends MigrateDrupal6TestBase {
       ->getComponent('field_company_3');
     $this->assertIsArray($component);
     $this->assertSame('entity_reference_autocomplete_tags', $component['type']);
+
+    $component = $display_repository->getFormDisplay('node', 'employee', 'default')
+      ->getComponent('field_company_4');
+    $this->assertIsArray($component);
+    $this->assertSame('entity_reference_autocomplete', $component['type']);
 
     $component = $display_repository->getFormDisplay('node', 'employee', 'default')
       ->getComponent('field_commander');

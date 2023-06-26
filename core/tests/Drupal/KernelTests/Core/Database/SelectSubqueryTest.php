@@ -97,8 +97,7 @@ class SelectSubqueryTest extends DatabaseTestBase {
   }
 
   /**
-   * Tests that we can use a subquery with a relational operator in a WHERE
-   * clause.
+   * Tests we can use a subquery with a relational operator in a WHERE clause.
    */
   public function testConditionSubquerySelect2() {
     // Create a subquery, which is just a normal query object.
@@ -119,8 +118,7 @@ class SelectSubqueryTest extends DatabaseTestBase {
   }
 
   /**
-   * Tests that we can use 2 subqueries with a relational operator in a WHERE
-   * clause.
+   * Tests we can use 2 subqueries with a relational operator in a WHERE clause.
    */
   public function testConditionSubquerySelect3() {
     // Create subquery 1, which is just a normal query object.
@@ -232,7 +230,7 @@ class SelectSubqueryTest extends DatabaseTestBase {
     // Subquery to {test_people}.
     $subquery = $this->connection->select('test_people', 'tp')
       ->fields('tp', ['name'])
-      ->where('[tp].[name] = [t].[name]');
+      ->where('[tp].[age] = [t].[age]');
     $query->exists($subquery);
     $result = $query->execute();
 
@@ -263,7 +261,7 @@ class SelectSubqueryTest extends DatabaseTestBase {
     // Subquery to {test_people}.
     $subquery = $this->connection->select('test_people', 'tp')
       ->fields('tp', ['name'])
-      ->where('[tp].[name] = [t].[name]');
+      ->where('[tp].[age] = [t].[age]');
     $query->notExists($subquery);
 
     // Ensure that we got the right number of records.

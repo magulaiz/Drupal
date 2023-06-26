@@ -19,6 +19,9 @@ class DatabaseStorageExpirableTest extends StorageTestBase {
    */
   protected static $modules = ['system'];
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
     $this->factory = 'keyvalue.expirable';
@@ -148,7 +151,7 @@ class DatabaseStorageExpirableTest extends StorageTestBase {
     $all = $stores[0]->getAll();
     $this->assertCount(2, $all);
     foreach (['troubles', 'still'] as $key) {
-      $this->assertTrue(!empty($all[$key]));
+      $this->assertArrayHasKey($key, $all);
     }
 
     // Test DatabaseStorageExpirable::setWithExpireIfNotExists() will overwrite

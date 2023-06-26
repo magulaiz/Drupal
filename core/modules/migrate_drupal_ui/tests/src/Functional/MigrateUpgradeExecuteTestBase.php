@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\migrate_drupal_ui\Functional;
 
+use Drupal\Core\Entity\ContentEntityStorageInterface;
 use Drupal\Tests\migrate_drupal\Traits\CreateTestContentEntitiesTrait;
 
 /**
@@ -14,7 +15,7 @@ abstract class MigrateUpgradeExecuteTestBase extends MigrateUpgradeTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     // Create content.
@@ -36,10 +37,10 @@ abstract class MigrateUpgradeExecuteTestBase extends MigrateUpgradeTestBase {
     // Test the review form.
     $this->assertReviewForm();
 
+    $this->useTestMailCollector();
     $this->submitForm([], 'Perform upgrade');
     $this->assertUpgrade($this->getEntityCounts());
 
-    \Drupal::service('module_installer')->install(['forum']);
     \Drupal::service('module_installer')->install(['book']);
 
     // Test incremental migration.
@@ -55,6 +56,50 @@ abstract class MigrateUpgradeExecuteTestBase extends MigrateUpgradeTestBase {
     // Run the incremental migration and check the results.
     $this->submitForm([], 'Perform upgrade');
     $this->assertUpgrade($this->getEntityCountsIncremental());
+  }
+
+  /**
+   * Helper to set the test mail collector in settings.php.
+   */
+  public function useTestMailCollector() {
+    // Set up an override.
+    $settings['config']['system.mail']['interface']['default'] = (object) [
+      'value' => 'test_mail_collector',
+      'required' => TRUE,
+    ];
+    $this->writeSettings($settings);
+  }
+
+  /**
+   * Checks the number of the specified entity's revisions.
+   *
+   * Revision translations are excluded.
+   *
+   * @param string $content_entity_type_id
+   *   The entity type ID of the content entity, e.g. 'node', 'media',
+   *   'block_content'.
+   * @param int $expected_revision_count
+   *   The expected number of the revisions.
+   *
+   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
+   */
+  protected function assertEntityRevisionsCount(string $content_entity_type_id, int $expected_revision_count) {
+    $entity_storage = \Drupal::entityTypeManager()->getStorage($content_entity_type_id);
+    assert($entity_storage instanceof ContentEntityStorageInterface);
+    $revision_ids = $entity_storage
+      ->getQuery()
+      ->allRevisions()
+      ->accessCheck(FALSE)
+      ->execute();
+    $this->assertCount(
+      $expected_revision_count,
+      $revision_ids,
+      sprintf(
+        "The number of %s revisions is different than expected",
+        $content_entity_type_id
+      )
+    );
   }
 
 }

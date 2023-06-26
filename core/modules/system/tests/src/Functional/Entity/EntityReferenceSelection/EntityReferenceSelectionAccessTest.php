@@ -55,7 +55,6 @@ class EntityReferenceSelectionAccessTest extends KernelTestBase {
   protected function setUp(): void {
     parent::setUp();
 
-    $this->installSchema('system', 'sequences');
     $this->installSchema('comment', ['comment_entity_statistics']);
     $this->installSchema('file', ['file_usage']);
 
@@ -91,8 +90,10 @@ class EntityReferenceSelectionAccessTest extends KernelTestBase {
    *   An array of tests to run.
    * @param string $handler_name
    *   The name of the entity type selection handler being tested.
+   *
+   * @internal
    */
-  protected function assertReferenceable(array $selection_options, $tests, $handler_name) {
+  protected function assertReferenceable(array $selection_options, array $tests, string $handler_name): void {
     $handler = \Drupal::service('plugin.manager.entity_reference_selection')->getInstance($selection_options);
 
     foreach ($tests as $test) {

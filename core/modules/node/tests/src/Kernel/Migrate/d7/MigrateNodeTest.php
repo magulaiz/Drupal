@@ -25,6 +25,7 @@ class MigrateNodeTest extends MigrateDrupal7TestBase {
     'content_translation',
     'comment',
     'datetime',
+    'datetime_range',
     'image',
     'language',
     'link',
@@ -102,8 +103,10 @@ class MigrateNodeTest extends MigrateDrupal7TestBase {
    *   Whether the node is expected to be promoted to the front page.
    * @param bool $sticky
    *   Whether the node is expected to be sticky.
+   *
+   * @internal
    */
-  protected function assertEntity($id, $type, $langcode, $title, $uid, $status, $created, $changed, $promoted, $sticky) {
+  protected function assertEntity(string $id, string $type, string $langcode, string $title, int $uid, bool $status, int $created, int $changed, bool $promoted, bool $sticky): void {
     /** @var \Drupal\node\NodeInterface $node */
     $node = Node::load($id);
     $this->assertInstanceOf(NodeInterface::class, $node);
@@ -129,12 +132,14 @@ class MigrateNodeTest extends MigrateDrupal7TestBase {
    *   The expected title.
    * @param int $uid
    *   The revision author ID.
-   * @param string $log
+   * @param string|null $log
    *   The revision log message.
    * @param int $timestamp
    *   The revision's time stamp.
+   *
+   * @internal
    */
-  protected function assertRevision($id, $title, $uid, $log, $timestamp) {
+  protected function assertRevision(int $id, string $title, int $uid, ?string $log, int $timestamp): void {
     $revision = \Drupal::entityTypeManager()->getStorage('node')->loadRevision($id);
     $this->assertInstanceOf(NodeInterface::class, $revision);
     $this->assertEquals($title, $revision->getTitle());
@@ -272,7 +277,7 @@ class MigrateNodeTest extends MigrateDrupal7TestBase {
     $this->assertTrue($metadata_fr->isOutdated());
     $this->assertSame('2', $node_fr->getOwnerId());
     $this->assertSame('1529615802', $node_fr->getCreatedTime());
-    $this->assertSame('1529615802', $node_fr->getChangedTime());
+    $this->assertSame(1529615802, $node_fr->getChangedTime());
     $this->assertTrue($node_fr->isPublished());
 
     // Test that the Icelandic translation metadata is correctly migrated.
@@ -281,7 +286,7 @@ class MigrateNodeTest extends MigrateDrupal7TestBase {
     $this->assertFalse($metadata_is->isOutdated());
     $this->assertSame('1', $node_is->getOwnerId());
     $this->assertSame('1529615813', $node_is->getCreatedTime());
-    $this->assertSame('1529615813', $node_is->getChangedTime());
+    $this->assertSame(1529615813, $node_is->getChangedTime());
     $this->assertFalse($node_is->isPublished());
   }
 

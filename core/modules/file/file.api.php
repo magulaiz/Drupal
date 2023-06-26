@@ -6,8 +6,10 @@
  */
 
 /**
- * @addtogroup file
+ * @defgroup file File interface
  * @{
+ * Common file handling functions.
+ *
  * @section file_security Uploading files and security considerations
  *
  * Using \Drupal\file\Element\ManagedFile field with a defined list of allowed
@@ -92,11 +94,11 @@ function hook_file_validate(\Drupal\file\FileInterface $file) {
  * @param \Drupal\file\FileInterface $source
  *   The original file before the copy.
  *
- * @see file_copy()
+ * @see \Drupal\file\FileRepositoryInterface::copy()
  */
 function hook_file_copy(\Drupal\file\FileInterface $file, \Drupal\file\FileInterface $source) {
   // Make sure that the file name starts with the owner's user name.
-  if (strpos($file->getFilename(), $file->getOwner()->name) !== 0) {
+  if (!str_starts_with($file->getFilename(), $file->getOwner()->name)) {
     $file->setFilename($file->getOwner()->name . '_' . $file->getFilename());
     $file->save();
 
@@ -112,11 +114,11 @@ function hook_file_copy(\Drupal\file\FileInterface $file, \Drupal\file\FileInter
  * @param \Drupal\file\FileInterface $source
  *   The original file entity before the move.
  *
- * @see file_move()
+ * @see \Drupal\file\FileRepositoryInterface::move()
  */
 function hook_file_move(\Drupal\file\FileInterface $file, \Drupal\file\FileInterface $source) {
   // Make sure that the file name starts with the owner's user name.
-  if (strpos($file->getFilename(), $file->getOwner()->name) !== 0) {
+  if (!str_starts_with($file->getFilename(), $file->getOwner()->name)) {
     $file->setFilename($file->getOwner()->name . '_' . $file->getFilename());
     $file->save();
 

@@ -44,7 +44,6 @@ class MediaLibraryStateTest extends KernelTestBase {
     $this->installEntitySchema('user');
     $this->installEntitySchema('file');
     $this->installSchema('file', 'file_usage');
-    $this->installSchema('system', 'sequences');
     $this->installEntitySchema('media');
     $this->installConfig([
       'field',
@@ -286,6 +285,7 @@ class MediaLibraryStateTest extends KernelTestBase {
       $this->expectException(BadRequestHttpException::class);
       $this->expectExceptionMessage("Invalid media library parameters specified.");
     }
+
     $state = MediaLibraryState::fromRequest(new Request($query));
     $this->assertInstanceOf(MediaLibraryState::class, $state);
   }

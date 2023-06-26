@@ -21,6 +21,7 @@ class MigrateFieldInstanceLabelDescriptionTest extends MigrateDrupal7TestBase im
     'comment',
     'config_translation',
     'datetime',
+    'datetime_range',
     'field',
     'file',
     'image',
@@ -38,7 +39,7 @@ class MigrateFieldInstanceLabelDescriptionTest extends MigrateDrupal7TestBase im
   /**
    * {@inheritdoc}
    */
-  public function setUp(): void {
+  protected function setUp(): void {
     parent::setUp();
 
     $this->installEntitySchema('node');

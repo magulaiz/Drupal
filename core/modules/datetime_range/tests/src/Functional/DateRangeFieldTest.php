@@ -30,7 +30,7 @@ class DateRangeFieldTest extends DateTestBase {
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'classy';
+  protected $defaultTheme = 'stark';
 
   /**
    * The default display settings to use for the formatters.
@@ -138,10 +138,10 @@ class DateRangeFieldTest extends DateTestBase {
 
       $start_expected = $this->dateFormatter->format($start_date->getTimestamp(), 'long', '', DateTimeItemInterface::STORAGE_TIMEZONE);
       $start_expected_iso = $this->dateFormatter->format($start_date->getTimestamp(), 'custom', 'Y-m-d\TH:i:s\Z', DateTimeItemInterface::STORAGE_TIMEZONE);
-      $start_expected_markup = '<time datetime="' . $start_expected_iso . '" class="datetime">' . $start_expected . '</time>';
+      $start_expected_markup = '<time datetime="' . $start_expected_iso . '">' . $start_expected . '</time>';
       $end_expected = $this->dateFormatter->format($end_date->getTimestamp(), 'long', '', DateTimeItemInterface::STORAGE_TIMEZONE);
       $end_expected_iso = $this->dateFormatter->format($end_date->getTimestamp(), 'custom', 'Y-m-d\TH:i:s\Z', DateTimeItemInterface::STORAGE_TIMEZONE);
-      $end_expected_markup = '<time datetime="' . $end_expected_iso . '" class="datetime">' . $end_expected . '</time>';
+      $end_expected_markup = '<time datetime="' . $end_expected_iso . '">' . $end_expected . '</time>';
       $output = $this->renderTestEntity($id);
       $this->assertStringContainsString($start_expected_markup, $output, new FormattableMarkup('Formatted date field using %value format displayed as %expected with %expected_iso attribute in %timezone.', [
         '%value' => 'long',
@@ -226,9 +226,9 @@ class DateRangeFieldTest extends DateTestBase {
         'type' => 'daterange_default',
         'label' => 'hidden',
         'settings' => [
-            'format_type' => 'long',
-            'separator' => 'THESEPARATOR',
-          ] + $this->defaultSettings,
+          'format_type' => 'long',
+          'separator' => 'THESEPARATOR',
+        ] + $this->defaultSettings,
       ];
 
       $display_repository->getViewDisplay($this->field->getTargetEntityTypeId(), $this->field->getTargetBundle(), 'full')
@@ -237,7 +237,7 @@ class DateRangeFieldTest extends DateTestBase {
 
       $start_expected = $this->dateFormatter->format($start_date->getTimestamp(), 'long', '', DateTimeItemInterface::STORAGE_TIMEZONE);
       $start_expected_iso = $this->dateFormatter->format($start_date->getTimestamp(), 'custom', 'Y-m-d\TH:i:s\Z', DateTimeItemInterface::STORAGE_TIMEZONE);
-      $start_expected_markup = '<time datetime="' . $start_expected_iso . '" class="datetime">' . $start_expected . '</time>';
+      $start_expected_markup = '<time datetime="' . $start_expected_iso . '">' . $start_expected . '</time>';
       $output = $this->renderTestEntity($id);
       $this->assertStringContainsString($start_expected_markup, $output, new FormattableMarkup('Formatted date field using %value format displayed as %expected with %expected_iso attribute in %timezone.', [
         '%value' => 'long',
@@ -345,10 +345,10 @@ class DateRangeFieldTest extends DateTestBase {
 
     $start_expected = $this->dateFormatter->format($start_date->getTimestamp(), 'long');
     $start_expected_iso = $this->dateFormatter->format($start_date->getTimestamp(), 'custom', 'Y-m-d\TH:i:s\Z', 'UTC');
-    $start_expected_markup = '<time datetime="' . $start_expected_iso . '" class="datetime">' . $start_expected . '</time>';
+    $start_expected_markup = '<time datetime="' . $start_expected_iso . '">' . $start_expected . '</time>';
     $end_expected = $this->dateFormatter->format($end_date->getTimestamp(), 'long');
     $end_expected_iso = $this->dateFormatter->format($end_date->getTimestamp(), 'custom', 'Y-m-d\TH:i:s\Z', 'UTC');
-    $end_expected_markup = '<time datetime="' . $end_expected_iso . '" class="datetime">' . $end_expected . '</time>';
+    $end_expected_markup = '<time datetime="' . $end_expected_iso . '">' . $end_expected . '</time>';
     $output = $this->renderTestEntity($id);
     $this->assertStringContainsString($start_expected_markup, $output, new FormattableMarkup('Formatted date field using %value format displayed as %expected with %expected_iso attribute.', ['%value' => 'long', '%expected' => $start_expected, '%expected_iso' => $start_expected_iso]));
     $this->assertStringContainsString($end_expected_markup, $output, new FormattableMarkup('Formatted date field using %value format displayed as %expected with %expected_iso attribute.', ['%value' => 'long', '%expected' => $end_expected, '%expected_iso' => $end_expected_iso]));
@@ -427,7 +427,7 @@ class DateRangeFieldTest extends DateTestBase {
 
     $start_expected = $this->dateFormatter->format($start_date->getTimestamp(), 'long');
     $start_expected_iso = $this->dateFormatter->format($start_date->getTimestamp(), 'custom', 'Y-m-d\TH:i:s\Z', 'UTC');
-    $start_expected_markup = '<time datetime="' . $start_expected_iso . '" class="datetime">' . $start_expected . '</time>';
+    $start_expected_markup = '<time datetime="' . $start_expected_iso . '">' . $start_expected . '</time>';
     $output = $this->renderTestEntity($id);
     $this->assertStringContainsString($start_expected_markup, $output, new FormattableMarkup('Formatted date field using %value format displayed as %expected with %expected_iso attribute.', ['%value' => 'long', '%expected' => $start_expected, '%expected_iso' => $start_expected_iso]));
     $this->assertStringNotContainsString(' THESEPARATOR ', $output, 'Separator not found on page');
@@ -518,10 +518,10 @@ class DateRangeFieldTest extends DateTestBase {
 
     $start_expected = $this->dateFormatter->format($start_date->getTimestamp(), 'long');
     $start_expected_iso = $this->dateFormatter->format($start_date->getTimestamp(), 'custom', 'Y-m-d\TH:i:s\Z', 'UTC');
-    $start_expected_markup = '<time datetime="' . $start_expected_iso . '" class="datetime">' . $start_expected . '</time>';
+    $start_expected_markup = '<time datetime="' . $start_expected_iso . '">' . $start_expected . '</time>';
     $end_expected = $this->dateFormatter->format($end_date->getTimestamp(), 'long');
     $end_expected_iso = $this->dateFormatter->format($end_date->getTimestamp(), 'custom', 'Y-m-d\TH:i:s\Z', 'UTC');
-    $end_expected_markup = '<time datetime="' . $end_expected_iso . '" class="datetime">' . $end_expected . '</time>';
+    $end_expected_markup = '<time datetime="' . $end_expected_iso . '">' . $end_expected . '</time>';
     $output = $this->renderTestEntity($id);
     $this->assertStringContainsString($start_expected_markup, $output, new FormattableMarkup('Formatted date field using %value format displayed as %expected with %expected_iso attribute.', ['%value' => 'long', '%expected' => $start_expected, '%expected_iso' => $start_expected_iso]));
     $this->assertStringContainsString($end_expected_markup, $output, new FormattableMarkup('Formatted date field using %value format displayed as %expected with %expected_iso attribute.', ['%value' => 'long', '%expected' => $end_expected, '%expected_iso' => $end_expected_iso]));
@@ -599,10 +599,10 @@ class DateRangeFieldTest extends DateTestBase {
 
     $start_expected = $this->dateFormatter->format($start_date->getTimestamp(), 'long');
     $start_expected_iso = $this->dateFormatter->format($start_date->getTimestamp(), 'custom', 'Y-m-d\TH:i:s\Z', 'UTC');
-    $start_expected_markup = '<time datetime="' . $start_expected_iso . '" class="datetime">' . $start_expected . '</time>';
+    $start_expected_markup = '<time datetime="' . $start_expected_iso . '">' . $start_expected . '</time>';
     $end_expected = $this->dateFormatter->format($end_date->getTimestamp(), 'long');
     $end_expected_iso = $this->dateFormatter->format($end_date->getTimestamp(), 'custom', 'Y-m-d\TH:i:s\Z', 'UTC');
-    $end_expected_markup = '<time datetime="' . $end_expected_iso . '" class="datetime">' . $end_expected . '</time>';
+    $end_expected_markup = '<time datetime="' . $end_expected_iso . '">' . $end_expected . '</time>';
     $output = $this->renderTestEntity($id);
     $this->assertStringContainsString($start_expected_markup, $output, new FormattableMarkup('Formatted date field using %value format displayed as %expected with %expected_iso attribute.', ['%value' => 'long', '%expected' => $start_expected, '%expected_iso' => $start_expected_iso]));
     $this->assertStringContainsString($end_expected_markup, $output, new FormattableMarkup('Formatted date field using %value format displayed as %expected with %expected_iso attribute.', ['%value' => 'long', '%expected' => $end_expected, '%expected_iso' => $end_expected_iso]));
@@ -854,7 +854,7 @@ class DateRangeFieldTest extends DateTestBase {
 
     // Test the widget for validation notifications.
     foreach ($this->datelistDataProvider() as $data) {
-      list($start_date_value, $end_date_value, $expected) = $data;
+      [$start_date_value, $end_date_value, $expected] = $data;
 
       // Display creation form.
       $this->drupalGet('entity_test/add');
@@ -1017,6 +1017,7 @@ class DateRangeFieldTest extends DateTestBase {
 
     // Set now as default_value.
     $field_edit = [
+      'set_default_value' => '1',
       'default_value_input[default_date_type]' => 'now',
       'default_value_input[default_end_date_type]' => 'now',
     ];
@@ -1047,6 +1048,7 @@ class DateRangeFieldTest extends DateTestBase {
 
     // Set an invalid relative default_value to test validation.
     $field_edit = [
+      'set_default_value' => '1',
       'default_value_input[default_date_type]' => 'relative',
       'default_value_input[default_date]' => 'invalid date',
       'default_value_input[default_end_date_type]' => 'relative',
@@ -1057,6 +1059,7 @@ class DateRangeFieldTest extends DateTestBase {
     $this->assertSession()->pageTextContains('The relative start date value entered is invalid.');
 
     $field_edit = [
+      'set_default_value' => '1',
       'default_value_input[default_date_type]' => 'relative',
       'default_value_input[default_date]' => '+1 day',
       'default_value_input[default_end_date_type]' => 'relative',
@@ -1068,6 +1071,7 @@ class DateRangeFieldTest extends DateTestBase {
 
     // Set a relative default_value.
     $field_edit = [
+      'set_default_value' => '1',
       'default_value_input[default_date_type]' => 'relative',
       'default_value_input[default_date]' => '+45 days',
       'default_value_input[default_end_date_type]' => 'relative',
@@ -1101,6 +1105,7 @@ class DateRangeFieldTest extends DateTestBase {
 
     // Remove default value.
     $field_edit = [
+      'set_default_value' => '',
       'default_value_input[default_date_type]' => '',
       'default_value_input[default_end_date_type]' => '',
     ];
@@ -1118,7 +1123,7 @@ class DateRangeFieldTest extends DateTestBase {
 
     // Check if default_date has been stored successfully.
     $config_entity = $this->config('field.field.node.date_content.' . $field_name)->get();
-    $this->assertTrue(empty($config_entity['default_value']), 'Empty default value has been stored successfully');
+    $this->assertEmpty($config_entity['default_value'], 'Empty default value has been stored successfully');
 
     // Clear field cache in order to avoid stale cache values.
     \Drupal::service('entity_field.manager')->clearCachedFieldDefinitions();
@@ -1138,6 +1143,7 @@ class DateRangeFieldTest extends DateTestBase {
     $expected_date = new DrupalDateTime('now', DateTimeItemInterface::STORAGE_TIMEZONE);
 
     $field_edit = [
+      'set_default_value' => '1',
       'default_value_input[default_date_type]' => 'now',
       'default_value_input[default_end_date_type]' => '',
     ];
@@ -1151,6 +1157,7 @@ class DateRangeFieldTest extends DateTestBase {
 
     // Set now as default_value for end date only.
     $field_edit = [
+      'set_default_value' => '1',
       'default_value_input[default_date_type]' => '',
       'default_value_input[default_end_date_type]' => 'now',
     ];
@@ -1416,9 +1423,7 @@ class DateRangeFieldTest extends DateTestBase {
     $this->drupalGet('node/add/date_content');
     $this->submitForm($edit, 'Save');
     $this->drupalGet('admin/structure/types/manage/date_content/fields/node.date_content.' . $field_name . '/storage');
-    $result = $this->xpath("//*[@id='edit-settings-datetime-type' and contains(@disabled, 'disabled')]");
-    $this->assertCount(1, $result, "Changing datetime setting is disabled.");
-    $this->assertSession()->pageTextContains('There is data for this field in the database. The field settings can no longer be changed.');
+    $this->assertSession()->elementsCount('xpath', "//*[@id='edit-settings-datetime-type' and contains(@disabled, 'disabled')]", 1);
   }
 
 }

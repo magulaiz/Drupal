@@ -8,6 +8,7 @@ use Drupal\Core\Form\FormHelper;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Render\Element\Checkboxes;
+use Drupal\user\Entity\Role;
 use Drupal\user\RoleInterface;
 use Drupal\views\Plugin\views\HandlerBase;
 use Drupal\Component\Utility\Html;
@@ -46,6 +47,8 @@ use Drupal\views\ViewExecutable;
 abstract class FilterPluginBase extends HandlerBase implements CacheableDependencyInterface {
 
   /**
+   * The value.
+   *
    * Contains the actual value of the field,either configured in the views ui
    * or entered in the exposed filters.
    */
@@ -80,6 +83,13 @@ abstract class FilterPluginBase extends HandlerBase implements CacheableDependen
    * Disable the possibility to allow an exposed input to be optional.
    */
   public $always_required = FALSE;
+
+  /**
+   * Keyed array by alias of table relations.
+   *
+   * @var string[]
+   */
+  public ?array $tableAliases;
 
   /**
    * Overrides \Drupal\views\Plugin\views\HandlerBase::init().
@@ -185,6 +195,7 @@ abstract class FilterPluginBase extends HandlerBase implements CacheableDependen
 
   /**
    * Determine if a filter can be converted into a group.
+   *
    * Only exposed filters with operators available can be converted into groups.
    */
   protected function canBuildGroup() {
@@ -200,6 +211,7 @@ abstract class FilterPluginBase extends HandlerBase implements CacheableDependen
 
   /**
    * Provide the basic form which calls through to subforms.
+   *
    * If overridden, it is best to call through to the parent,
    * or to at least make sure all of the functions in this form
    * are called.
@@ -332,8 +344,8 @@ abstract class FilterPluginBase extends HandlerBase implements CacheableDependen
   protected function showValueForm(&$form, FormStateInterface $form_state) {
     $this->valueForm($form, $form_state);
     if (empty($this->no_operator)) {
-      $form['value']['#prefix'] = '<div class="views-group-box views-right-70">' . (isset($form['value']['#prefix']) ? $form['value']['#prefix'] : '');
-      $form['value']['#suffix'] = (isset($form['value']['#suffix']) ? $form['value']['#suffix'] : '') . '</div>';
+      $form['value']['#prefix'] = '<div class="views-group-box views-right-70">' . ($form['value']['#prefix'] ?? '');
+      $form['value']['#suffix'] = ($form['value']['#suffix'] ?? '') . '</div>';
     }
   }
 
@@ -629,7 +641,7 @@ abstract class FilterPluginBase extends HandlerBase implements CacheableDependen
       '#default_value' => $this->options['expose']['remember'],
     ];
 
-    $role_options = array_map('\Drupal\Component\Utility\Html::escape', user_role_names());
+    $role_options = array_map(fn(RoleInterface $role) => Html::escape($role->label()), Role::loadMultiple());
     $form['expose']['remember_roles'] = [
       '#type' => 'checkboxes',
       '#title' => $this->t('User roles'),
@@ -702,7 +714,7 @@ abstract class FilterPluginBase extends HandlerBase implements CacheableDependen
         // types). Ensure at least the minimum number of values is present for
         // this entry to be considered valid.
         $min_values = $operators[$group['operator']]['values'];
-        $actual_values = count(array_filter($group['value'], 'static::arrayFilterZero'));
+        $actual_values = count(array_filter($group['value'], [static::class, 'arrayFilterZero']));
         return $actual_values >= $min_values;
       }
     }
@@ -748,8 +760,9 @@ abstract class FilterPluginBase extends HandlerBase implements CacheableDependen
    * @param string $identifier
    *   The identifier to check.
    * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   (optional) The current state of the form.
    * @param array $form_group
-   *   The form element to set any errors on.
+   *   (optional) The form element to set any errors on.
    *
    * @return string
    */
@@ -846,8 +859,10 @@ abstract class FilterPluginBase extends HandlerBase implements CacheableDependen
   }
 
   /**
-   * Build a form containing a group of operator | values to apply as a
-   * single filter.
+   * Builds a group form.
+   *
+   * The form contains a group of operator or values to apply as a single
+   * filter.
    */
   public function groupForm(&$form, FormStateInterface $form_state) {
     if (!empty($this->options['group_info']['optional']) && !$this->multipleExposedInput()) {
@@ -855,7 +870,7 @@ abstract class FilterPluginBase extends HandlerBase implements CacheableDependen
     }
     foreach ($this->options['group_info']['group_items'] as $id => $group) {
       if (!empty($group['title'])) {
-        $groups[$id] = $id != 'All' ? $this->t($group['title']) : $group['title'];
+        $groups[$id] = $group['title'];
       }
     }
 
@@ -879,7 +894,7 @@ abstract class FilterPluginBase extends HandlerBase implements CacheableDependen
         }
         unset($form[$value]['#default_value']);
         $user_input = $form_state->getUserInput();
-        if (empty($user_input)) {
+        if (empty($user_input[$value])) {
           $user_input[$value] = $this->group_info;
           $form_state->setUserInput($user_input);
         }
@@ -1269,8 +1284,7 @@ abstract class FilterPluginBase extends HandlerBase implements CacheableDependen
   }
 
   /**
-   * Make some translations to a form item to make it more suitable to
-   * exposing.
+   * Make some translations to a form item to make it more suitable to exposing.
    */
   protected function exposedTranslate(&$form, $type) {
     if (!isset($form['#type'])) {
@@ -1334,8 +1348,10 @@ abstract class FilterPluginBase extends HandlerBase implements CacheableDependen
   }
 
   /**
-   * Tell the renderer about our exposed form. This only needs to be
-   * overridden for particularly complex forms. And maybe not even then.
+   * Tell the renderer about our exposed form.
+   *
+   * This only needs to be overridden for particularly complex forms. And maybe
+   * not even then.
    *
    * @return array|null
    *   For standard exposed filters. An array with the following keys:
@@ -1395,13 +1411,17 @@ abstract class FilterPluginBase extends HandlerBase implements CacheableDependen
         return FALSE;
       }
       if (isset($selected_group) && isset($this->options['group_info']['group_items'][$selected_group])) {
-        $input[$this->options['expose']['operator']] = $this->options['group_info']['group_items'][$selected_group]['operator'];
+        $selected_group_options = $this->options['group_info']['group_items'][$selected_group];
+
+        $operator_id = $this->options['expose']['operator'];
+        $input[$operator_id] = $selected_group_options['operator'];
+        $this->options['expose']['operator_id'] = $operator_id;
+        $this->options['expose']['use_operator'] = TRUE;
 
         // Value can be optional, For example for 'empty' and 'not empty' filters.
-        if (isset($this->options['group_info']['group_items'][$selected_group]['value']) && $this->options['group_info']['group_items'][$selected_group]['value'] !== '') {
-          $input[$this->options['group_info']['identifier']] = $this->options['group_info']['group_items'][$selected_group]['value'];
+        if (isset($selected_group_options['value']) && $selected_group_options['value'] !== '') {
+          $input[$this->options['group_info']['identifier']] = $selected_group_options['value'];
         }
-        $this->options['expose']['use_operator'] = TRUE;
 
         $this->group_info = $input[$this->options['group_info']['identifier']];
         return TRUE;
@@ -1413,6 +1433,8 @@ abstract class FilterPluginBase extends HandlerBase implements CacheableDependen
   }
 
   /**
+   * Group multiple exposed input.
+   *
    * Returns the options available for a grouped filter that users checkboxes
    * as widget, and therefore has to be applied several times, one per
    * item selected.
@@ -1425,6 +1447,8 @@ abstract class FilterPluginBase extends HandlerBase implements CacheableDependen
   }
 
   /**
+   * Multiple exposed input.
+   *
    * Returns TRUE if users can select multiple groups items of a
    * grouped exposed filter.
    */
@@ -1434,6 +1458,7 @@ abstract class FilterPluginBase extends HandlerBase implements CacheableDependen
 
   /**
    * If set to remember exposed input in the session, store it there.
+   *
    * This function is similar to storeExposedInput but modified to
    * work properly when the filter is a group.
    */
@@ -1503,7 +1528,7 @@ abstract class FilterPluginBase extends HandlerBase implements CacheableDependen
         }
 
         if ($this->operator != 'empty' && $this->operator != 'not empty') {
-          if ($value == 'All' || $value === []) {
+          if ($value == 'All' || $value === 0 || $value === []) {
             return FALSE;
           }
 

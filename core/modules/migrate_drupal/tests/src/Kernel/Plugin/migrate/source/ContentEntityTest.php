@@ -93,9 +93,7 @@ class ContentEntityTest extends KernelTestBase {
     $this->installEntitySchema('file');
     $this->installEntitySchema('media');
     $this->installEntitySchema('taxonomy_term');
-    $this->installEntitySchema('taxonomy_vocabulary');
     $this->installEntitySchema('user');
-    $this->installSchema('system', ['sequences']);
     $this->installSchema('user', 'users_data');
     $this->installSchema('file', 'file_usage');
     $this->installSchema('node', ['node_access']);
@@ -186,8 +184,10 @@ class ContentEntityTest extends KernelTestBase {
    *   The source plugin.
    * @param array $configuration
    *   The source plugin configuration (Nope, no getter available).
+   *
+   * @internal
    */
-  protected function assertIds(MigrateSourceInterface $source, array $configuration) {
+  protected function assertIds(MigrateSourceInterface $source, array $configuration): void {
     $ids = $source->getIds();
     [, $entity_type_id] = explode(PluginBase::DERIVATIVE_SEPARATOR, $source->getPluginId());
     $entity_type = \Drupal::entityTypeManager()->getDefinition($entity_type_id);

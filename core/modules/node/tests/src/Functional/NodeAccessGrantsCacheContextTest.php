@@ -3,6 +3,7 @@
 namespace Drupal\Tests\node\Functional;
 
 use Drupal\Core\Database\Database;
+use Drupal\user\Entity\User;
 
 /**
  * Tests the node access grants cache context service.
@@ -33,6 +34,18 @@ class NodeAccessGrantsCacheContextTest extends NodeTestBase {
    * User without permission to view content.
    */
   protected $noAccessUser;
+
+  /**
+   * User without permission to view content.
+   *
+   * @var \Drupal\user\Entity\User
+   */
+  protected User $noAccessUser2;
+
+  /**
+   * @var array
+   */
+  protected array $userMapping;
 
   /**
    * {@inheritdoc}
@@ -76,8 +89,10 @@ class NodeAccessGrantsCacheContextTest extends NodeTestBase {
    *
    * @param array $expected
    *   Expected values, keyed by user ID, expected cache contexts as values.
+   *
+   * @internal
    */
-  protected function assertUserCacheContext(array $expected) {
+  protected function assertUserCacheContext(array $expected): void {
     foreach ($expected as $uid => $context) {
       if ($uid > 0) {
         $this->drupalLogin($this->userMapping[$uid]);

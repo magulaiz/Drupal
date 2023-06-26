@@ -21,7 +21,7 @@ class WhosOnlineBlockTest extends KernelTestBase {
   /**
    * The block being tested.
    *
-   * @var \Drupal\block\Entity\BlockInterface
+   * @var \Drupal\block\BlockInterface
    */
   protected $block;
 
@@ -45,7 +45,6 @@ class WhosOnlineBlockTest extends KernelTestBase {
   protected function setUp(): void {
     parent::setUp();
     $this->installConfig(['system', 'block', 'views', 'user']);
-    $this->installSchema('system', ['sequences']);
     $this->installEntitySchema('user');
 
     $this->controller = $this->container

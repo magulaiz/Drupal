@@ -30,6 +30,9 @@ class NodeAccessMenuLinkTest extends NodeTestBase {
    */
   protected $contentAdminUser;
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
 
@@ -38,6 +41,7 @@ class NodeAccessMenuLinkTest extends NodeTestBase {
     $this->contentAdminUser = $this->drupalCreateUser([
       'access content',
       'administer content types',
+      'bypass node access',
       'administer menu',
     ]);
 

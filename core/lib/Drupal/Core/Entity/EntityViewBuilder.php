@@ -176,8 +176,7 @@ class EntityViewBuilder extends EntityHandlerBase implements EntityHandlerInterf
    */
   protected function getBuildDefaults(EntityInterface $entity, $view_mode) {
     // Allow modules to change the view mode.
-    $context = [];
-    $this->moduleHandler()->alter('entity_view_mode', $view_mode, $entity, $context);
+    $this->moduleHandler()->alter('entity_view_mode', $view_mode, $entity);
 
     $build = [
       "#{$this->entityTypeId}" => $entity,
@@ -482,7 +481,7 @@ class EntityViewBuilder extends EntityHandlerBase implements EntityHandlerInterf
     $elements = $this->viewField($clone->{$field_name}, $display);
 
     // Extract the part of the render array we need.
-    $output = isset($elements[0]) ? $elements[0] : [];
+    $output = $elements[0] ?? [];
     if (isset($elements['#access'])) {
       $output['#access'] = $elements['#access'];
     }

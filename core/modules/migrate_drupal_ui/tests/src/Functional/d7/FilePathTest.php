@@ -2,9 +2,12 @@
 
 namespace Drupal\Tests\migrate_drupal_ui\Functional\d7;
 
+use Drupal\Core\Database\Database;
 use Drupal\Core\File\FileSystemInterface;
 use Drupal\Tests\ExtensionListTestTrait;
 use Drupal\Tests\migrate_drupal_ui\Functional\MigrateUpgradeTestBase;
+
+// cspell:ignore terok
 
 /**
  * Tests the Drupal 7 public and private file migrations.
@@ -122,9 +125,11 @@ class FilePathTest extends MigrateUpgradeTestBase {
 
     // Use the driver connection form to get the correct options out of the
     // database settings. This supports all of the databases we test against.
-    $drivers = drupal_get_database_types();
-    $form = $drivers[$driver]->getFormOptions($connection_options);
+    $drivers = Database::getDriverList()->getInstallableList();
+    $form = $drivers[$driver]->getInstallTasks()->getFormOptions($connection_options);
     $connection_options = array_intersect_key($connection_options, $form + $form['advanced_options']);
+    // Remove isolation_level since that option is not configurable in the UI.
+    unset($connection_options['isolation_level']);
     $edit = [
       $driver => $connection_options,
       'version' => '7',
@@ -285,30 +290,35 @@ class FilePathTest extends MigrateUpgradeTestBase {
    * {@inheritdoc}
    */
   protected function getEntityCounts() {
+    return [];
   }
 
   /**
    * {@inheritdoc}
    */
   protected function getEntityCountsIncremental() {
+    return [];
   }
 
   /**
    * {@inheritdoc}
    */
   protected function getAvailablePaths() {
+    return [];
   }
 
   /**
    * {@inheritdoc}
    */
   protected function getMissingPaths() {
+    return [];
   }
 
   /**
    * {@inheritdoc}
    */
   protected function getSourceBasePath() {
+    return '';
   }
 
 }

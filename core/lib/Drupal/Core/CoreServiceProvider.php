@@ -9,8 +9,8 @@ use Drupal\Core\DependencyInjection\Compiler\BackendCompilerPass;
 use Drupal\Core\DependencyInjection\Compiler\CorsCompilerPass;
 use Drupal\Core\DependencyInjection\Compiler\DeprecatedServicePass;
 use Drupal\Core\DependencyInjection\Compiler\ContextProvidersPass;
+use Drupal\Core\DependencyInjection\Compiler\DevelopmentSettingsPass;
 use Drupal\Core\DependencyInjection\Compiler\ProxyServicesPass;
-use Drupal\Core\DependencyInjection\Compiler\DependencySerializationTraitPass;
 use Drupal\Core\DependencyInjection\Compiler\StackedKernelPass;
 use Drupal\Core\DependencyInjection\Compiler\StackedSessionHandlerPass;
 use Drupal\Core\DependencyInjection\Compiler\RegisterStreamWrappersPass;
@@ -19,7 +19,6 @@ use Drupal\Core\DependencyInjection\ServiceModifierInterface;
 use Drupal\Core\DependencyInjection\ServiceProviderInterface;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\DependencyInjection\Compiler\ModifyServiceDefinitionsPass;
-use Drupal\Core\DependencyInjection\Compiler\MimeTypePass;
 use Drupal\Core\DependencyInjection\Compiler\TaggedHandlersPass;
 use Drupal\Core\DependencyInjection\Compiler\RegisterEventSubscribersPass;
 use Drupal\Core\DependencyInjection\Compiler\RegisterAccessChecksPass;
@@ -28,6 +27,7 @@ use Drupal\Core\Plugin\PluginManagerPass;
 use Drupal\Core\Render\MainContent\MainContentRenderersPass;
 use Drupal\Core\Site\Settings;
 use Symfony\Component\DependencyInjection\Compiler\PassConfig;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
  * ServiceProvider class for mandatory core services.
@@ -60,6 +60,8 @@ class CoreServiceProvider implements ServiceProviderInterface, ServiceModifierIn
     // list-building passes are operating on the post-alter services list.
     $container->addCompilerPass(new ModifyServiceDefinitionsPass());
 
+    $container->addCompilerPass(new DevelopmentSettingsPass());
+
     $container->addCompilerPass(new ProxyServicesPass());
 
     $container->addCompilerPass(new BackendCompilerPass());
@@ -74,7 +76,6 @@ class CoreServiceProvider implements ServiceProviderInterface, ServiceModifierIn
 
     // Collect tagged handler services as method calls on consumer services.
     $container->addCompilerPass(new TaggedHandlersPass());
-    $container->addCompilerPass(new MimeTypePass());
     $container->addCompilerPass(new RegisterStreamWrappersPass());
     $container->addCompilerPass(new TwigExtensionPass());
 
@@ -95,8 +96,10 @@ class CoreServiceProvider implements ServiceProviderInterface, ServiceModifierIn
     // Register plugin managers.
     $container->addCompilerPass(new PluginManagerPass());
 
-    $container->addCompilerPass(new DependencySerializationTraitPass());
     $container->addCompilerPass(new DeprecatedServicePass());
+
+    $container->registerForAutoconfiguration(EventSubscriberInterface::class)
+      ->addTag('event_subscriber');
   }
 
   /**

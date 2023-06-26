@@ -32,13 +32,13 @@ class DisplayPageWebTest extends ViewTestBase {
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'classy';
+  protected $defaultTheme = 'starterkit_theme';
 
   /**
    * {@inheritdoc}
    */
-  protected function setUp($import_test_views = TRUE): void {
-    parent::setUp($import_test_views);
+  protected function setUp($import_test_views = TRUE, $modules = ['views_test_config']): void {
+    parent::setUp($import_test_views, $modules);
 
     $this->enableViewsTestModule();
     $this->drupalPlaceBlock('local_tasks_block');
@@ -148,12 +148,45 @@ class DisplayPageWebTest extends ViewTestBase {
   }
 
   /**
+   * Tests the 'use_admin_theme' page display option.
+   */
+  public function testAdminTheme(): void {
+    $account = $this->drupalCreateUser(['view the administration theme']);
+    $this->drupalLogin($account);
+    // Use distinct default and administrative themes for this test.
+    /** @var \Drupal\Core\Extension\ThemeHandlerInterface $theme_handler */
+    $theme_handler = $this->container->get('theme_handler');
+    /** @var \Drupal\Core\Extension\ThemeInstallerInterface $theme_installer */
+    $theme_installer = $this->container->get('theme_installer');
+    $theme_installer->install(['claro']);
+    $this->container->get('config.factory')
+      ->getEditable('system.theme')
+      ->set('admin', 'claro')
+      ->set('default', 'stable')
+      ->save();
+    $theme_handler->refreshInfo();
+    // Check that the page has been served with the default theme.
+    $this->drupalGet('test_page_display_200');
+    $this->assertSession()->responseNotContains('core/themes/claro/css/base/elements.css');
+
+    $view = $this->config('views.view.test_page_display');
+    $view->set('display.page_3.display_options.use_admin_theme', TRUE)->save();
+    $this->container->get('router.builder')->rebuild();
+
+    // Check that the page was served with the administrative theme.
+    $this->drupalGet('test_page_display_200');
+    $this->assertSession()->responseContains('core/themes/claro/css/base/elements.css');
+  }
+
+  /**
    * Tests that we can successfully change a view page display path.
    *
    * @param string $path
    *   Path that will be set as the view page display path.
+   *
+   * @internal
    */
-  public function assertPagePath($path) {
+  public function assertPagePath(string $path): void {
     $view = Views::getView('test_page_display_path');
     $view->initDisplay('page_1');
     $view->displayHandlers->get('page_1')->overrideOption('path', $path);

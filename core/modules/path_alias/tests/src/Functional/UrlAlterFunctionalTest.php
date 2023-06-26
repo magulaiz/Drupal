@@ -6,7 +6,6 @@ use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Url;
 use Drupal\Tests\BrowserTestBase;
-use Drupal\taxonomy\Entity\Term;
 use Drupal\Tests\Traits\Core\PathAliasTestTrait;
 
 /**
@@ -23,7 +22,7 @@ class UrlAlterFunctionalTest extends BrowserTestBase {
    *
    * @var array
    */
-  protected static $modules = ['path', 'forum', 'url_alter_test'];
+  protected static $modules = ['path', 'url_alter_test'];
 
   /**
    * {@inheritdoc}
@@ -39,7 +38,7 @@ class UrlAlterFunctionalTest extends BrowserTestBase {
 
     // User names can have quotes and plus signs so we should ensure that URL
     // altering works with this.
-    $account = $this->drupalCreateUser(['administer url aliases'], "a'foo+bar");
+    $account = $this->drupalCreateUser(['administer url aliases'], "it's+bar");
     $this->drupalLogin($account);
 
     $uid = $account->id();
@@ -69,22 +68,6 @@ class UrlAlterFunctionalTest extends BrowserTestBase {
     $uid++;
     $this->assertUrlOutboundAlter("/user/$uid", "/user/$uid");
 
-    // Test that 'forum' is altered to 'community' correctly, both at the root
-    // level and for a specific existing forum.
-    $this->drupalGet('community');
-    $this->assertSession()->pageTextContains('General discussion');
-    $this->assertUrlOutboundAlter('/forum', '/community');
-    $forum_vid = $this->config('forum.settings')->get('vocabulary');
-    $term_name = $this->randomMachineName();
-    $term = Term::create([
-      'name' => $term_name,
-      'vid' => $forum_vid,
-    ]);
-    $term->save();
-    $this->drupalGet("community/" . $term->id());
-    $this->assertSession()->pageTextContains($term_name);
-    $this->assertUrlOutboundAlter("/forum/" . $term->id(), "/community/" . $term->id());
-
     // Test outbound query string altering.
     $url = Url::fromRoute('user.login');
     $this->assertSame(\Drupal::request()->getBaseUrl() . '/user/login?foo=bar', $url->toString());
@@ -93,12 +76,14 @@ class UrlAlterFunctionalTest extends BrowserTestBase {
   /**
    * Assert that an outbound path is altered to an expected value.
    *
-   * @param $original
+   * @param string $original
    *   A string with the original path that is run through generateFrommPath().
-   * @param $final
+   * @param string $final
    *   A string with the expected result after generateFrommPath().
+   *
+   * @internal
    */
-  protected function assertUrlOutboundAlter($original, $final) {
+  protected function assertUrlOutboundAlter(string $original, string $final): void {
     // Test outbound altering.
     $result = $this->container->get('path_processor_manager')->processOutbound($original);
     $this->assertSame($final, $result, new FormattableMarkup('Altered outbound URL %original, expected %final, and got %result.', ['%original' => $original, '%final' => $final, '%result' => $result]));
@@ -107,12 +92,14 @@ class UrlAlterFunctionalTest extends BrowserTestBase {
   /**
    * Assert that an inbound path is altered to an expected value.
    *
-   * @param $original
+   * @param string $original
    *   The original path before it has been altered by inbound URL processing.
-   * @param $final
+   * @param string $final
    *   A string with the expected result.
+   *
+   * @internal
    */
-  protected function assertUrlInboundAlter($original, $final) {
+  protected function assertUrlInboundAlter(string $original, string $final): void {
     // Test inbound altering.
     $result = $this->container->get('path_alias.manager')->getPathByAlias($original);
     $this->assertSame($final, $result, new FormattableMarkup('Altered inbound URL %original, expected %final, and got %result.', ['%original' => $original, '%final' => $final, '%result' => $result]));

@@ -45,16 +45,20 @@ abstract class FieldKernelTestBase extends KernelTestBase {
   protected $fieldTestData;
 
   /**
+   * @var string
+   */
+  protected string $entityId;
+
+  /**
    * Set the default field storage backend for fields created during tests.
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $this->fieldTestData = new \ArrayObject([], \ArrayObject::ARRAY_AS_PROPS);
 
     $this->installEntitySchema('entity_test');
     $this->installEntitySchema('user');
-    $this->installSchema('system', ['sequences']);
 
     // Set default storage backend and configure the theme system.
     $this->installConfig(['field', 'system']);
@@ -164,7 +168,7 @@ abstract class FieldKernelTestBase extends KernelTestBase {
    * @param $cardinality
    *   Number of values to generate.
    *
-   * @return
+   * @return array
    *   An array of random values, in the format expected for field values.
    */
   protected function _generateTestFieldValues($cardinality) {

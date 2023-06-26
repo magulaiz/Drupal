@@ -18,6 +18,7 @@ class LayoutBuilderAccessTest extends BrowserTestBase {
   protected static $modules = [
     'layout_builder',
     'block_test',
+    'field_ui',
     'node',
     'user',
   ];
@@ -25,7 +26,7 @@ class LayoutBuilderAccessTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'classy';
+  protected $defaultTheme = 'starterkit_theme';
 
   /**
    * {@inheritdoc}
@@ -279,7 +280,7 @@ class LayoutBuilderAccessTest extends BrowserTestBase {
    * @param bool $expected_access
    *   The expected access.
    */
-  private function assertExpectedAccess($expected_access) {
+  private function assertExpectedAccess(bool $expected_access): void {
     $expected_status_code = $expected_access ? 200 : 403;
     $this->assertSession()->statusCodeEquals($expected_status_code);
   }

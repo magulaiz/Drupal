@@ -55,6 +55,7 @@ class RoutePreloader implements EventSubscriberInterface {
    * @param \Drupal\Core\State\StateInterface $state
    *   The state key value store.
    * @param \Drupal\Core\Cache\CacheBackendInterface $cache
+   *   The cache backend.
    */
   public function __construct(RouteProviderInterface $route_provider, StateInterface $state, CacheBackendInterface $cache) {
     $this->routeProvider = $route_provider;
@@ -99,7 +100,7 @@ class RoutePreloader implements EventSubscriberInterface {
   public function onAlterRoutes(RouteBuildEvent $event) {
     $collection = $event->getRouteCollection();
     foreach ($collection->all() as $name => $route) {
-      if (strpos($route->getPath(), '/admin/') !== 0 && $route->getPath() != '/admin' && static::isGetAndHtmlRoute($route)) {
+      if (!str_starts_with($route->getPath(), '/admin/') && $route->getPath() != '/admin' && static::isGetAndHtmlRoute($route)) {
         $this->nonAdminRoutesOnRebuild[] = $name;
       }
     }
@@ -117,7 +118,7 @@ class RoutePreloader implements EventSubscriberInterface {
   /**
    * {@inheritdoc}
    */
-  public static function getSubscribedEvents() {
+  public static function getSubscribedEvents(): array {
     // Set a really low priority to catch as many as possible routes.
     $events[RoutingEvents::ALTER] = ['onAlterRoutes', -1024];
     $events[RoutingEvents::FINISHED] = ['onFinishedRoutes'];

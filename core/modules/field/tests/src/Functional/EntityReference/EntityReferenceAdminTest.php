@@ -227,6 +227,7 @@ class EntityReferenceAdminTest extends BrowserTestBase {
     $this->submitForm($edit, 'Save settings');
     $this->drupalGet($bundle_path . '/fields/' . $field_path);
     $edit = [
+      'set_default_value' => '1',
       // A term that doesn't yet exist.
       'default_value_input[field_' . $taxonomy_term_field_name . '][0][target_id]' => $term_name,
     ];
@@ -299,8 +300,10 @@ class EntityReferenceAdminTest extends BrowserTestBase {
   }
 
   /**
-   * Tests field settings for an entity reference field when the field has
-   * multiple target bundles and is set to auto-create the target entity.
+   * Tests field settings for an entity reference field.
+   *
+   * The tested entity reference field has multiple target bundles and is set
+   * to auto-create the target entity.
    */
   public function testMultipleTargetBundles() {
     /** @var \Drupal\taxonomy\Entity\Vocabulary[] $vocabularies */
@@ -398,8 +401,10 @@ class EntityReferenceAdminTest extends BrowserTestBase {
    *   The field name.
    * @param array $expected_options
    *   An array of expected options.
+   *
+   * @internal
    */
-  protected function assertFieldSelectOptions($name, array $expected_options) {
+  protected function assertFieldSelectOptions(string $name, array $expected_options): void {
     $options = $this->assertSession()->selectExists($name)->findAll('xpath', 'option');
     array_walk($options, function (NodeElement &$option) {
       $option = $option->getValue();

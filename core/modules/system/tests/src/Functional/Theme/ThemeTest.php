@@ -23,7 +23,7 @@ class ThemeTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'classy';
+  protected $defaultTheme = 'starterkit_theme';
 
   /**
    * {@inheritdoc}
@@ -42,7 +42,7 @@ class ThemeTest extends BrowserTestBase {
    */
   public function testPreprocessForSuggestions() {
     // Test with both an unprimed and primed theme registry.
-    drupal_theme_rebuild();
+    \Drupal::service('theme.registry')->reset();
     for ($i = 0; $i < 2; $i++) {
       $this->drupalGet('theme-test/suggestion');
       $this->assertSession()->pageTextContains('Theme hook implementor=theme-test--suggestion.html.twig. Foo=template_preprocess_theme_test');
@@ -149,8 +149,7 @@ class ThemeTest extends BrowserTestBase {
    */
   public function testPreprocessHtml() {
     $this->drupalGet('');
-    $attributes = $this->xpath('/body[@theme_test_page_variable="Page variable is an array."]');
-    $this->assertCount(1, $attributes, 'In template_preprocess_html(), the page variable is still an array (not rendered yet).');
+    $this->assertSession()->elementsCount('xpath', '/body[@theme_test_page_variable="Page variable is an array."]', 1);
     $this->assertSession()->pageTextContains('theme test page bottom markup');
   }
 
@@ -161,7 +160,9 @@ class ThemeTest extends BrowserTestBase {
     \Drupal::service('module_installer')->install(['block', 'theme_region_test']);
 
     // Place a block.
-    $this->drupalPlaceBlock('system_main_block');
+    $this->drupalPlaceBlock('system_main_block', [
+      'region' => 'sidebar_first',
+    ]);
     $this->drupalGet('');
     $elements = $this->cssSelect(".region-sidebar-first.new_class");
     $this->assertCount(1, $elements, 'New class found.');
@@ -177,7 +178,7 @@ class ThemeTest extends BrowserTestBase {
   public function testSuggestionPreprocessForDefaults() {
     $this->config('system.theme')->set('default', 'test_theme')->save();
     // Test with both an unprimed and primed theme registry.
-    drupal_theme_rebuild();
+    \Drupal::service('theme.registry')->reset();
     for ($i = 0; $i < 2; $i++) {
       $this->drupalGet('theme-test/preprocess-suggestions');
       $items = $this->cssSelect('.suggestion');
@@ -192,6 +193,14 @@ class ThemeTest extends BrowserTestBase {
         $this->assertEquals((string) $value, $items[$key]->getText());
       }
     }
+  }
+
+  /**
+   * Ensures that preprocess callbacks can be defined.
+   */
+  public function testPreprocessCallback() {
+    $this->drupalGet('theme-test/preprocess-callback');
+    $this->assertSession()->pageTextContains('Make Drupal full of kittens again!');
   }
 
 }

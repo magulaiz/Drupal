@@ -29,6 +29,9 @@ class TwigRegistryLoaderTest extends BrowserTestBase {
    */
   protected $twig;
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
     \Drupal::service('theme_installer')->install(['test_theme_twig_registry_loader', 'test_theme_twig_registry_loader_theme', 'test_theme_twig_registry_loader_subtheme']);
@@ -37,8 +40,10 @@ class TwigRegistryLoaderTest extends BrowserTestBase {
 
   /**
    * Checks to see if a value is a Twig template.
+   *
+   * @internal
    */
-  public function assertTwigTemplate($value, $message = '') {
+  public function assertTwigTemplate($value, string $message = ''): void {
     $this->assertInstanceOf(TemplateWrapper::class, $value, $message);
   }
 

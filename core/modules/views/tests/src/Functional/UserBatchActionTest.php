@@ -17,7 +17,11 @@ class UserBatchActionTest extends BrowserTestBase {
    *
    * @var array
    */
-  protected static $modules = ['user', 'user_batch_action_test', 'views'];
+  protected static $modules = [
+    'user',
+    'user_batch_action_test',
+    'views',
+  ];
 
   /**
    * {@inheritdoc}
@@ -28,7 +32,7 @@ class UserBatchActionTest extends BrowserTestBase {
    * Tests user admin batch.
    */
   public function testUserAction() {
-    $themes = ['classy', 'seven', 'bartik', 'test_subseven'];
+    $themes = ['stark', 'olivero', 'claro'];
     $this->container->get('theme_installer')->install($themes);
 
     $this->drupalLogin($this->rootUser);

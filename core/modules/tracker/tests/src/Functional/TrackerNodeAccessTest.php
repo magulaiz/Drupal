@@ -11,6 +11,7 @@ use Drupal\Tests\BrowserTestBase;
  * Tests for private node access on /tracker.
  *
  * @group tracker
+ * @group legacy
  */
 class TrackerNodeAccessTest extends BrowserTestBase {
 
@@ -33,6 +34,9 @@ class TrackerNodeAccessTest extends BrowserTestBase {
    */
   protected $defaultTheme = 'stark';
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
     node_access_rebuild();
@@ -50,7 +54,7 @@ class TrackerNodeAccessTest extends BrowserTestBase {
     // queries run for the anonymous user will miss it.
     $author = $this->drupalCreateUser();
     $private_node = $this->drupalCreateNode([
-      'title' => t('Private node test'),
+      'title' => 'Private node test',
       'private' => TRUE,
       'uid' => $author->id(),
     ]);
@@ -85,11 +89,11 @@ class TrackerNodeAccessTest extends BrowserTestBase {
 
     // Create some nodes.
     $private_node = $this->drupalCreateNode([
-      'title' => t('Private node test'),
+      'title' => 'Private node test',
       'private' => TRUE,
     ]);
     $public_node = $this->drupalCreateNode([
-      'title' => t('Public node test'),
+      'title' => 'Public node test',
       'private' => FALSE,
     ]);
 

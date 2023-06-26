@@ -33,7 +33,7 @@ class FileFieldWidgetTest extends FileFieldTestBase {
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'classy';
+  protected $defaultTheme = 'stark';
 
   /**
    * {@inheritdoc}
@@ -55,7 +55,9 @@ class FileFieldWidgetTest extends FileFieldTestBase {
    *   A file object, or FALSE on error.
    */
   protected function createTemporaryFile($data, UserInterface $user = NULL) {
-    $file = file_save_data($data, NULL, NULL);
+    /** @var \Drupal\file\FileRepositoryInterface $file_repository */
+    $file_repository = \Drupal::service('file.repository');
+    $file = $file_repository->writeData($data, "public://");
 
     if ($file) {
       if ($user) {
@@ -111,7 +113,7 @@ class FileFieldWidgetTest extends FileFieldTestBase {
     // Save the node and ensure it does not have the file.
     $this->submitForm([], 'Save');
     $node = $node_storage->loadUnchanged($nid);
-    $this->assertTrue(empty($node->{$field_name}->target_id), 'File was successfully removed from the node.');
+    $this->assertEmpty($node->{$field_name}->target_id, 'File was successfully removed from the node.');
   }
 
   /**
@@ -137,7 +139,7 @@ class FileFieldWidgetTest extends FileFieldTestBase {
     // Visit the node creation form, and upload 3 files for each field. Since
     // the field has cardinality of 3, ensure the "Upload" button is displayed
     // until after the 3rd file, and after that, isn't displayed. Because
-    // SimpleTest triggers the last button with a given name, so upload to the
+    // the last button with a given name is triggered by default, upload to the
     // second field first.
     $this->drupalGet("node/add/$type_name");
     foreach ([$field_name2, $field_name] as $each_field_name) {
@@ -202,7 +204,7 @@ class FileFieldWidgetTest extends FileFieldTestBase {
     preg_match('/node\/([0-9])/', $this->getUrl(), $matches);
     $nid = $matches[1];
     $node = $node_storage->loadUnchanged($nid);
-    $this->assertTrue(empty($node->{$field_name}->target_id), 'Node was successfully saved without any files.');
+    $this->assertEmpty($node->{$field_name}->target_id, 'Node was successfully saved without any files.');
 
     // Try to upload more files than allowed on revision.
     $upload_files_node_revision = [$test_file, $test_file, $test_file, $test_file];
@@ -228,7 +230,7 @@ class FileFieldWidgetTest extends FileFieldTestBase {
     $this->assertSameSize($upload_files_node_creation, $node->{$field_name}, 'Node was successfully saved with multiple files.');
 
     // Try to upload exactly the allowed number of files on revision.
-    $this->uploadNodeFile($test_file, $field_name, $node->id(), 1, [], TRUE);
+    $this->uploadNodeFile($test_file, $field_name, $node->id(), 1);
     $node = $node_storage->loadUnchanged($nid);
     $this->assertCount($cardinality, $node->{$field_name}, 'Node was successfully revised to maximum number of files.');
 
@@ -393,23 +395,19 @@ class FileFieldWidgetTest extends FileFieldTestBase {
     $html_name = str_replace('_', '-', $field_name);
     $this->createFileField($field_name, 'node', 'article', ['cardinality' => FieldStorageConfig::CARDINALITY_UNLIMITED]);
     $file = $this->getTestFile('text');
-    $xpath = "//details[@data-drupal-selector='edit-$html_name']/div[@class='details-wrapper']/table";
+    $xpath = "//details[@data-drupal-selector='edit-$html_name']/table";
 
     $this->drupalGet('node/add/article');
 
-    $elements = $this->xpath($xpath);
-
     // If the field has no item, the table should not be visible.
-    $this->assertCount(0, $elements);
+    $this->assertSession()->elementNotExists('xpath', $xpath);
 
     // Upload a file.
     $edit['files[' . $field_name . '_0][]'] = $this->container->get('file_system')->realpath($file->getFileUri());
     $this->submitForm($edit, "{$field_name}_0_upload_button");
 
-    $elements = $this->xpath($xpath);
-
     // If the field has at least one item, the table should be visible.
-    $this->assertCount(1, $elements);
+    $this->assertSession()->elementsCount('xpath', $xpath, 1);
 
     // Test for AJAX error when using progress bar on file field widget.
     $http_client = $this->getHttpClient();
@@ -573,7 +571,7 @@ class FileFieldWidgetTest extends FileFieldTestBase {
     $victim_tmp_file = $this->createTemporaryFile('some text', $victim_user);
     $victim_tmp_file = File::load($victim_tmp_file->id());
     $this->assertTrue($victim_tmp_file->isTemporary(), 'New file saved to disk is temporary.');
-    $this->assertFalse(empty($victim_tmp_file->id()), 'New file has an fid.');
+    $this->assertNotEmpty($victim_tmp_file->id(), 'New file has an fid.');
     $this->assertEquals($victim_user->id(), $victim_tmp_file->getOwnerId(), 'New file belongs to the victim.');
 
     // Have attacker create a new node with a different uploaded file and

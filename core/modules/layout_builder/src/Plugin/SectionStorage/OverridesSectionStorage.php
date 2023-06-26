@@ -194,8 +194,8 @@ class OverridesSectionStorage extends SectionStorageBase implements ContainerFac
    * @see \Drupal\Core\ParamConverter\ParamConverterInterface::convert()
    */
   private function extractEntityFromRoute($value, array $defaults) {
-    if (strpos($value, '.') !== FALSE) {
-      list($entity_type_id, $entity_id) = explode('.', $value, 2);
+    if (str_contains($value, '.')) {
+      [$entity_type_id, $entity_id] = explode('.', $value, 2);
     }
     elseif (isset($defaults['entity_type_id']) && !empty($defaults[$defaults['entity_type_id']])) {
       $entity_type_id = $defaults['entity_type_id'];
@@ -311,7 +311,6 @@ class OverridesSectionStorage extends SectionStorageBase implements ContainerFac
   public function getContextsDuringPreview() {
     $contexts = parent::getContextsDuringPreview();
 
-    // @todo Remove this in https://www.drupal.org/node/3018782.
     if (isset($contexts['entity'])) {
       $contexts['layout_builder.entity'] = $contexts['entity'];
       unset($contexts['entity']);

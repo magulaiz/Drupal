@@ -35,6 +35,9 @@ class LanguageUrlRewritingTest extends BrowserTestBase {
    */
   protected $webUser;
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
 
@@ -92,7 +95,7 @@ class LanguageUrlRewritingTest extends BrowserTestBase {
     $rewritten_path = trim(str_replace($base_path, '', Url::fromRoute('<front>', [], $options)->toString()), '/');
     $segments = explode('/', $rewritten_path, 2);
     $prefix = $segments[0];
-    $path = isset($segments[1]) ? $segments[1] : $prefix;
+    $path = $segments[1] ?? $prefix;
 
     // If the rewritten URL has not a language prefix we pick a random prefix so
     // we can always check the prefixed URL.
@@ -134,7 +137,7 @@ class LanguageUrlRewritingTest extends BrowserTestBase {
 
     // In case index.php is part of the URLs, we need to adapt the asserted
     // URLs as well.
-    $index_php = strpos(Url::fromRoute('<front>', [], ['absolute' => TRUE])->toString(), 'index.php') !== FALSE;
+    $index_php = str_contains(Url::fromRoute('<front>', [], ['absolute' => TRUE])->toString(), 'index.php');
 
     $request = Request::createFromGlobals();
     $server = $request->server->all();

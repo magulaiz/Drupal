@@ -14,6 +14,9 @@ use Drupal\field\Entity\FieldStorageConfig;
  */
 class FieldAttachStorageTest extends FieldKernelTestBase {
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
     $this->installEntitySchema('entity_test_rev');
@@ -365,8 +368,8 @@ class FieldAttachStorageTest extends FieldKernelTestBase {
     $controller->resetCache();
     $entity = $controller->load($entity->id());
 
-    $this->assertTrue(empty($entity->{$this->fieldTestData->field_name}), 'No data for first field');
-    $this->assertTrue(empty($entity->{$field_name}), 'No data for second field');
+    $this->assertEmpty($entity->{$this->fieldTestData->field_name}, 'No data for first field');
+    $this->assertEmpty($entity->{$field_name}, 'No data for second field');
 
     // Verify that the fields are gone.
     $this->assertNull(FieldConfig::load('entity_test.' . $this->fieldTestData->field->getTargetBundle() . '.' . $this->fieldTestData->field_name), "First field is deleted");

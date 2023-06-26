@@ -3,7 +3,7 @@
 namespace Drupal\Tests\statistics\Functional\Views;
 
 use Drupal\Tests\views\Functional\ViewTestBase;
-use Drupal\views\Tests\ViewTestData;
+use Drupal\user\Entity\User;
 
 /**
  * Tests basic integration of views data from the statistics module.
@@ -34,6 +34,13 @@ class IntegrationTest extends ViewTestBase {
   protected $webUser;
 
   /**
+   * A test user with node viewing access only.
+   *
+   * @var \Drupal\user\Entity\User
+   */
+  protected User $deniedUser;
+
+  /**
    * Stores the node object which is used by the test.
    *
    * @var \Drupal\node\Entity\Node
@@ -47,10 +54,11 @@ class IntegrationTest extends ViewTestBase {
    */
   public static $testViews = ['test_statistics_integration'];
 
-  protected function setUp($import_test_views = TRUE): void {
-    parent::setUp($import_test_views);
-
-    ViewTestData::createTestViews(static::class, ['statistics_test_views']);
+  /**
+   * {@inheritdoc}
+   */
+  protected function setUp($import_test_views = TRUE, $modules = ['statistics_test_views']): void {
+    parent::setUp($import_test_views, $modules);
 
     // Create a new user for viewing nodes and statistics.
     $this->webUser = $this->drupalCreateUser([

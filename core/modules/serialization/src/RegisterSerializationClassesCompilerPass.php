@@ -12,10 +12,10 @@ use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 class RegisterSerializationClassesCompilerPass implements CompilerPassInterface {
 
   /**
-   * Adds services to the Serializer.
+   * {@inheritdoc}
    *
-   * @param \Symfony\Component\DependencyInjection\ContainerBuilder $container
-   *   The container to process.
+   * phpcs:ignore Drupal.Commenting.FunctionComment.VoidReturn
+   * @return void
    */
   public function process(ContainerBuilder $container) {
     $definition = $container->getDefinition('serializer');
@@ -25,14 +25,14 @@ class RegisterSerializationClassesCompilerPass implements CompilerPassInterface 
       // The 'serializer' service is the public API: mark normalizers private.
       $container->getDefinition($id)->setPublic(FALSE);
 
-      $priority = isset($attributes[0]['priority']) ? $attributes[0]['priority'] : 0;
+      $priority = $attributes[0]['priority'] ?? 0;
       $normalizers[$priority][] = new Reference($id);
     }
     foreach ($container->findTaggedServiceIds('encoder') as $id => $attributes) {
       // The 'serializer' service is the public API: mark encoders private.
       $container->getDefinition($id)->setPublic(FALSE);
 
-      $priority = isset($attributes[0]['priority']) ? $attributes[0]['priority'] : 0;
+      $priority = $attributes[0]['priority'] ?? 0;
       $encoders[$priority][] = new Reference($id);
     }
 
@@ -74,15 +74,8 @@ class RegisterSerializationClassesCompilerPass implements CompilerPassInterface 
    *   to low priority.
    */
   protected function sort($services) {
-    $sorted = [];
     krsort($services);
-
-    // Flatten the array.
-    foreach ($services as $a) {
-      $sorted = array_merge($sorted, $a);
-    }
-
-    return $sorted;
+    return array_merge(...$services);
   }
 
 }

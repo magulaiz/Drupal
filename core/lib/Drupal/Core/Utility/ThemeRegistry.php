@@ -79,7 +79,7 @@ class ThemeRegistry extends CacheCollector implements DestructableInterface {
   /**
    * Initializes the full theme registry.
    *
-   * @return
+   * @return array
    *   An array with the keys of the full theme registry, but the values
    *   initialized to NULL.
    */
@@ -98,7 +98,7 @@ class ThemeRegistry extends CacheCollector implements DestructableInterface {
     // are not registered, just check the existence of the key in the registry.
     // Use array_key_exists() here since a NULL value indicates that the theme
     // hook exists but has not yet been requested.
-    return isset($this->storage[$key]) || array_key_exists($key, $this->storage);
+    return \array_key_exists($key, $this->storage);
   }
 
   /**

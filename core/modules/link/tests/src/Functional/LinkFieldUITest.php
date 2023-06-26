@@ -28,7 +28,7 @@ class LinkFieldUITest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'classy';
+  protected $defaultTheme = 'stark';
 
   /**
    * A user that can edit content types.
@@ -74,7 +74,7 @@ class LinkFieldUITest extends BrowserTestBase {
    */
   public function testFieldUI() {
     foreach ($this->providerTestFieldUI() as $item) {
-      list($cardinality, $link_type, $title, $label, $field_name, $default_uri) = $item;
+      [$cardinality, $link_type, $title, $label, $field_name, $default_uri] = $item;
       $this->runFieldUIItem($cardinality, $link_type, $title, $label, $field_name, $default_uri);
     }
   }
@@ -94,7 +94,7 @@ class LinkFieldUITest extends BrowserTestBase {
       DRUPAL_OPTIONAL,
     ];
     $link_types = [
-      LinkItemInterface::LINK_EXTERNAL => 'http://drupal.org',
+      LinkItemInterface::LINK_EXTERNAL => 'http://example.com',
       LinkItemInterface::LINK_GENERIC => '',
       LinkItemInterface::LINK_INTERNAL => '<front>',
     ];
@@ -160,6 +160,7 @@ class LinkFieldUITest extends BrowserTestBase {
       'settings[link_type]' => (int) $link_type,
     ];
     if (!empty($default_uri)) {
+      $field_edit['set_default_value'] = '1';
       $field_edit['default_value_input[field_' . $field_name . '][0][uri]'] = $default_uri;
       $field_edit['default_value_input[field_' . $field_name . '][0][title]'] = 'Default title';
     }
@@ -218,8 +219,10 @@ class LinkFieldUITest extends BrowserTestBase {
    *   The name of the field to check.
    * @param string $text
    *   The text to check.
+   *
+   * @internal
    */
-  protected function assertFieldContainsRawText($field_name, $text) {
+  protected function assertFieldContainsRawText(string $field_name, string $text): void {
     $this->assertTrue((bool) preg_match('/' . preg_quote($text, '/') . '/ui', $this->getFieldHtml($field_name)));
   }
 
@@ -230,8 +233,10 @@ class LinkFieldUITest extends BrowserTestBase {
    *   The name of the field to check.
    * @param string $text
    *   The text to check.
+   *
+   * @internal
    */
-  protected function assertNoFieldContainsRawText($field_name, $text) {
+  protected function assertNoFieldContainsRawText(string $field_name, string $text): void {
     $this->assertFalse((bool) preg_match('/' . preg_quote($text, '/') . '/ui', $this->getFieldHtml($field_name)));
   }
 

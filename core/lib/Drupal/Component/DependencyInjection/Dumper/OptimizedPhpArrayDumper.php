@@ -56,7 +56,7 @@ class OptimizedPhpArrayDumper extends Dumper {
   /**
    * {@inheritdoc}
    */
-  public function dump(array $options = []) {
+  public function dump(array $options = []): string|array {
     return serialize($this->getArray());
   }
 
@@ -156,9 +156,6 @@ class OptimizedPhpArrayDumper extends Dumper {
       if (is_array($value)) {
         $value = $this->prepareParameters($value, $escape);
       }
-      elseif ($value instanceof Reference) {
-        $value = $this->dumpValue($value);
-      }
 
       $filtered[$key] = $value;
     }
@@ -250,8 +247,8 @@ class OptimizedPhpArrayDumper extends Dumper {
       $service['shared'] = $definition->isShared();
     }
 
-    if (($decorated = $definition->getDecoratedService()) !== NULL) {
-      throw new InvalidArgumentException("The 'decorated' definition is not supported by the Drupal 8 run-time container. The Container Builder should have resolved that during the DecoratorServicePass compiler pass.");
+    if ($definition->getDecoratedService() !== NULL) {
+      throw new InvalidArgumentException("The 'decorated' definition is not supported by the Drupal run-time container. The Container Builder should have resolved that during the DecoratorServicePass compiler pass.");
     }
 
     if ($callable = $definition->getFactory()) {
@@ -410,7 +407,7 @@ class OptimizedPhpArrayDumper extends Dumper {
     elseif ($value instanceof Parameter) {
       return $this->getParameterCall((string) $value);
     }
-    elseif (is_string($value) && FALSE !== strpos($value, '%')) {
+    elseif (is_string($value) && str_contains($value, '%')) {
       if (preg_match('/^%([^%]+)%$/', $value, $matches)) {
         return $this->getParameterCall($matches[1]);
       }
@@ -433,6 +430,7 @@ class OptimizedPhpArrayDumper extends Dumper {
     elseif (is_object($value)) {
       // Drupal specific: Instantiated objects have a _serviceId parameter.
       if (isset($value->_serviceId)) {
+        @trigger_error('_serviceId is deprecated in drupal:9.5.0 and is removed from drupal:11.0.0. Use \Drupal\Core\DrupalKernelInterface::getServiceIdMapping() instead. See https://www.drupal.org/node/3292540', E_USER_DEPRECATED);
         return $this->getReferenceCall($value->_serviceId);
       }
       throw new RuntimeException('Unable to dump a service container if a parameter is an object without _serviceId.');

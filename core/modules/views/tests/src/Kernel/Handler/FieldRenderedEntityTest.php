@@ -129,7 +129,7 @@ class FieldRenderedEntityTest extends ViewsKernelTestBase {
     $renderer->renderPlain($build);
     for ($i = 1; $i <= 3; $i++) {
       $view_field = $view->style_plugin->getField($i - 1, 'rendered_entity');
-      $search_result = strpos($view_field, "Test $i") !== FALSE;
+      $search_result = str_contains($view_field, "Test $i");
       $this->assertFalse($search_result, "The text 'Test $i' not found in the view.");
     }
 
@@ -142,8 +142,10 @@ class FieldRenderedEntityTest extends ViewsKernelTestBase {
    *
    * @param array $build
    *   The render array
+   *
+   * @internal
    */
-  protected function assertCacheabilityMetadata($build) {
+  protected function assertCacheabilityMetadata(array $build): void {
     $this->assertEqualsCanonicalizing([
       'config:core.entity_view_display.entity_test.entity_test.foobar',
       'config:views.view.test_field_entity_test_rendered',
@@ -167,8 +169,11 @@ class FieldRenderedEntityTest extends ViewsKernelTestBase {
    * Ensures that the config dependencies are calculated the right way.
    *
    * @param \Drupal\views\Entity\View $storage
+   *   The view storage.
+   *
+   * @internal
    */
-  protected function assertConfigDependencies(View $storage) {
+  protected function assertConfigDependencies(View $storage): void {
     $storage->calculateDependencies();
     $this->assertEquals([
       'config' => ['core.entity_view_mode.entity_test.foobar'],
@@ -197,7 +202,7 @@ class FieldRenderedEntityTest extends ViewsKernelTestBase {
     $renderer->renderPlain($build);
     for ($i = 1; $i <= 3; $i++) {
       $view_field = $view->style_plugin->getField($i - 1, 'rendered_entity');
-      $search_result = strpos($view_field, "Test $i") !== FALSE;
+      $search_result = str_contains($view_field, "Test $i");
       $this->assertTrue($search_result, "The text 'Test $i' found in the view.");
     }
 

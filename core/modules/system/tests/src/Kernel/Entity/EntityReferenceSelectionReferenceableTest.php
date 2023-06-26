@@ -89,8 +89,9 @@ class EntityReferenceSelectionReferenceableTest extends KernelTestBase {
   }
 
   /**
-   * Tests values returned by SelectionInterface::getReferenceableEntities()
-   * when the target entity type has no 'label' key.
+   * Tests referenceable entities with no target entity type 'label' key.
+   *
+   * @see \Drupal\Core\Entity\EntityReferenceSelection\SelectionInterface::getReferenceableEntities()
    *
    * @param mixed $match
    *   The input text to be checked.
@@ -113,7 +114,7 @@ class EntityReferenceSelectionReferenceableTest extends KernelTestBase {
 
     // Number of returned items.
     if (empty($count_limited)) {
-      $this->assertTrue(empty($referenceables[$this->bundle]));
+      $this->assertArrayNotHasKey($this->bundle, $referenceables);
     }
     else {
       $this->assertCount($count_limited, $referenceables[$this->bundle]);

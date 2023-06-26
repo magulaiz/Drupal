@@ -12,10 +12,9 @@ use Drupal\Core\Access\CustomAccessCheck;
 use Drupal\Core\Controller\ControllerResolver;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\Core\Utility\CallableResolver;
 use Drupal\Tests\UnitTestCase;
 use Symfony\Component\Routing\Route;
-use Drupal\Core\DependencyInjection\ClassResolverInterface;
-use Symfony\Bridge\PsrHttpMessage\HttpMessageFactoryInterface;
 
 /**
  * @coversDefaultClass \Drupal\Core\Access\CustomAccessCheck
@@ -72,15 +71,15 @@ class CustomAccessCheckTest extends UnitTestCase {
     $resolver0 = $this->createMock('Drupal\Component\Utility\ArgumentsResolverInterface');
     $resolver0->expects($this->once())
       ->method('getArguments')
-      ->will($this->returnValue([]));
+      ->willReturn([]);
     $resolver1 = $this->createMock('Drupal\Component\Utility\ArgumentsResolverInterface');
     $resolver1->expects($this->once())
       ->method('getArguments')
-      ->will($this->returnValue([]));
+      ->willReturn([]);
     $resolver2 = $this->createMock('Drupal\Component\Utility\ArgumentsResolverInterface');
     $resolver2->expects($this->once())
       ->method('getArguments')
-      ->will($this->returnValue(['parameter' => 'TRUE']));
+      ->willReturn(['parameter' => 'TRUE']);
 
     $this->argumentsResolverFactory->expects($this->exactly(3))
       ->method('getArgumentsResolver')
@@ -105,13 +104,13 @@ class CustomAccessCheckTest extends UnitTestCase {
    * Tests the access method exception for invalid access callbacks.
    */
   public function testAccessException() {
-    // Create two mocks for the ControllerResolver constructor.
-    $httpMessageFactory = $this->getMockBuilder(HttpMessageFactoryInterface::class)->getMock();
-    $controllerResolver = $this->getMockBuilder(ClassResolverInterface::class)->getMock();
+    $callableResolver = $this->createMock(CallableResolver::class);
+    $callableResolver->method('getCallableFromDefinition')
+      ->willThrowException(new \InvalidArgumentException());
 
     // Re-create the controllerResolver mock with proxy to original methods.
     $this->controllerResolver = $this->getMockBuilder(ControllerResolver::class)
-      ->setConstructorArgs([$httpMessageFactory, $controllerResolver])
+      ->setConstructorArgs([$callableResolver])
       ->enableProxyingToOriginalMethods()
       ->getMock();
 

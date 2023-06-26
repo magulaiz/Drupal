@@ -14,7 +14,7 @@ use Drupal\Tests\UnitTestCase;
 class FieldLinkTest extends UnitTestCase {
 
   /**
-   * Tests the url transformations in the FieldLink process plugin.
+   * Tests the URL transformations in the FieldLink process plugin.
    *
    * @dataProvider canonicalizeUriDataProvider
    */
@@ -65,6 +65,10 @@ class FieldLinkTest extends UnitTestCase {
         'yahoo.com',
         'https://yahoo.com',
         ['uri_scheme' => 'https://'],
+      ],
+      'Absolute URL without explicit protocol (protocol-relative)' => [
+        '//example.com',
+        'http://example.com',
       ],
       'Absolute URL with non-standard characters' => [
         'http://www.ßÀÑÐ¥ƒå¢ë.com',

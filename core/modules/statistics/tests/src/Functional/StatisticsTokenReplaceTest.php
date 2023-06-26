@@ -5,8 +5,7 @@ namespace Drupal\Tests\statistics\Functional;
 use Drupal\Component\Render\FormattableMarkup;
 
 /**
- * Generates text using placeholders for dummy content to check statistics token
- * replacement.
+ * Tests statistics token replacement.
  *
  * @group statistics
  */
@@ -36,7 +35,7 @@ class StatisticsTokenReplaceTest extends StatisticsTestBase {
     $tests = [];
     $tests['[node:total-count]'] = 0;
     $tests['[node:day-count]'] = 0;
-    $tests['[node:last-view]'] = t('never');
+    $tests['[node:last-view]'] = 'never';
     $tests['[node:last-view:short]'] = $date_formatter->format($request_time, 'short');
 
     foreach ($tests as $input => $expected) {

@@ -3,7 +3,6 @@
 namespace Drupal\taxonomy\Form;
 
 use Drupal\Component\Utility\Unicode;
-use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Entity\EntityRepositoryInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\FormBase;
@@ -161,6 +160,7 @@ class OverviewTerms extends FormBase {
     $term_deltas = [];
     $tree = $this->storageController->loadTree($taxonomy_vocabulary->id(), 0, NULL, TRUE);
     $tree_index = 0;
+    $complete_tree = NULL;
     do {
       // In case this tree is completely empty.
       if (empty($tree[$tree_index])) {
@@ -192,7 +192,7 @@ class OverviewTerms extends FormBase {
           }
         }
       }
-      $back_step = isset($back_step) ? $back_step : 0;
+      $back_step = $back_step ?? 0;
 
       // Continue rendering the tree until we reach the a new root item.
       if ($page_entries >= $page_increment + $back_step + 1 && $term->depth == 0 && $root_entries > 1) {
@@ -230,7 +230,7 @@ class OverviewTerms extends FormBase {
     // error. Ensure the form is rebuilt in the same order as the user
     // submitted.
     $user_input = $form_state->getUserInput();
-    if (!empty($user_input)) {
+    if (!empty($user_input['terms'])) {
       // Get the POST order.
       $order = array_flip(array_keys($user_input['terms']));
       // Update our form with the new order.
@@ -299,13 +299,14 @@ class OverviewTerms extends FormBase {
 
     // Only allow access to change parents and reorder the tree if there are no
     // pending revisions and there are no terms with multiple parents.
-    $update_tree_access = AccessResult::allowedIf(empty($pending_term_ids) && $vocabulary_hierarchy !== VocabularyInterface::HIERARCHY_MULTIPLE);
-
+    $update_tree_access = $taxonomy_vocabulary->access('reset all weights', NULL, TRUE);
     $form['help'] = [
       '#type' => 'container',
       'message' => ['#markup' => $help_message],
     ];
-    if (!$update_tree_access->isAllowed()) {
+
+    $operations_access = !empty($pending_term_ids) || $vocabulary_hierarchy === VocabularyInterface::HIERARCHY_MULTIPLE;
+    if ($operations_access) {
       $form['help']['#attributes']['class'] = ['messages', 'messages--warning'];
     }
 
@@ -326,7 +327,7 @@ class OverviewTerms extends FormBase {
       '#header' => [
         'term' => $this->t('Name'),
         'operations' => $this->t('Operations'),
-        'weight' => $update_tree_access->isAllowed() ? $this->t('Weight') : NULL,
+        'weight' => !$operations_access ? $this->t('Weight') : NULL,
       ],
       '#attributes' => [
         'id' => 'taxonomy',
@@ -393,8 +394,6 @@ class OverviewTerms extends FormBase {
           ],
         ];
       }
-      $update_access = $term->access('update', NULL, TRUE);
-      $update_tree_access = $update_tree_access->andIf($update_access);
 
       if ($update_tree_access->isAllowed()) {
         $form['terms'][$key]['weight'] = [
@@ -434,7 +433,7 @@ class OverviewTerms extends FormBase {
 
       // Add an error class if this row contains a form error.
       foreach ($errors as $error_key => $error) {
-        if (strpos($error_key, $key) === 0) {
+        if (str_starts_with($error_key, $key)) {
           $form['terms'][$key]['#attributes']['class'][] = 'error';
         }
       }

@@ -50,8 +50,8 @@ class BookRelationshipTest extends ViewTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp($import_test_views = TRUE): void {
-    parent::setUp($import_test_views);
+  protected function setUp($import_test_views = TRUE, $modules = []): void {
+    parent::setUp($import_test_views, $modules);
 
     // Create users.
     $this->bookAuthor = $this->drupalCreateUser(
@@ -116,8 +116,8 @@ class BookRelationshipTest extends ViewTestBase {
     static $number = 0;
 
     $edit = [];
-    $edit['title[0][value]'] = $number . ' - SimpleTest test node ' . $this->randomMachineName(10);
-    $edit['body[0][value]'] = 'SimpleTest test body ' . $this->randomMachineName(32) . ' ' . $this->randomMachineName(32);
+    $edit['title[0][value]'] = $number . ' - test node ' . $this->randomMachineName(10);
+    $edit['body[0][value]'] = 'test body ' . $this->randomMachineName(32) . ' ' . $this->randomMachineName(32);
     $edit['book[bid]'] = $book_nid;
 
     if ($parent !== NULL) {
@@ -128,7 +128,7 @@ class BookRelationshipTest extends ViewTestBase {
       $this->submitForm($edit, 'Save');
       // Make sure the parent was flagged as having children.
       $parent_node = \Drupal::entityTypeManager()->getStorage('node')->loadUnchanged($parent);
-      $this->assertFalse(empty($parent_node->book['has_children']), 'Parent node is marked as having children');
+      $this->assertNotEmpty($parent_node->book['has_children'], 'Parent node is marked as having children');
     }
     else {
       $this->drupalGet('node/add/book');

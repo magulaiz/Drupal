@@ -25,7 +25,6 @@ class HandlerAllTest extends ViewTestBase {
    * @var array
    */
   protected static $modules = [
-    'aggregator',
     'book',
     'block',
     'comment',
@@ -33,13 +32,11 @@ class HandlerAllTest extends ViewTestBase {
     'field',
     'filter',
     'file',
-    'forum',
     'history',
     'language',
     'locale',
     'node',
     'search',
-    'statistics',
     'taxonomy',
     'user',
   ];

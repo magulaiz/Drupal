@@ -198,8 +198,23 @@ class BigPipeStrategy implements PlaceholderStrategyInterface {
   protected static function createBigPipeJsPlaceholder($original_placeholder, array $placeholder_render_array) {
     $big_pipe_placeholder_id = static::generateBigPipePlaceholderId($original_placeholder, $placeholder_render_array);
 
+    $interface_preview = [];
+    if (isset($placeholder_render_array['#lazy_builder'])) {
+      $interface_preview = [
+        '#theme' => 'big_pipe_interface_preview',
+        '#callback' => $placeholder_render_array['#lazy_builder'][0],
+        '#arguments' => $placeholder_render_array['#lazy_builder'][1],
+      ];
+      if (isset($placeholder_render_array['#preview'])) {
+        $interface_preview['#preview'] = $placeholder_render_array['#preview'];
+        unset($placeholder_render_array['#preview']);
+      }
+    }
+
     return [
-      '#markup' => '<span data-big-pipe-placeholder-id="' . Html::escape($big_pipe_placeholder_id) . '"></span>',
+      '#prefix' => '<span data-big-pipe-placeholder-id="' . Html::escape($big_pipe_placeholder_id) . '">',
+      'interface_preview' => $interface_preview,
+      '#suffix' => '</span>',
       '#cache' => [
         'max-age' => 0,
         'contexts' => [
@@ -274,6 +289,16 @@ class BigPipeStrategy implements PlaceholderStrategyInterface {
     // Generate a BigPipe placeholder ID (to be used by BigPipe's JavaScript).
     // @see \Drupal\Core\Render\PlaceholderGenerator::createPlaceholder()
     if (isset($placeholder_render_array['#lazy_builder'])) {
+      // Be sure cache contexts and tags are sorted before serializing them and
+      // making hash. Issue #3225328 removes sort from contexts and tags arrays
+      // for performances reasons.
+      if (isset($placeholder_render_array['#cache']['contexts'])) {
+        sort($placeholder_render_array['#cache']['contexts']);
+      }
+      if (isset($placeholder_render_array['#cache']['tags'])) {
+        sort($placeholder_render_array['#cache']['tags']);
+      }
+
       $callback = $placeholder_render_array['#lazy_builder'][0];
       $arguments = $placeholder_render_array['#lazy_builder'][1];
       $token = Crypt::hashBase64(serialize($placeholder_render_array));

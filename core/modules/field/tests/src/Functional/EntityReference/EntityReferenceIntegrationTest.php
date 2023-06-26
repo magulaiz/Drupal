@@ -161,6 +161,7 @@ class EntityReferenceIntegrationTest extends BrowserTestBase {
 
       // Set first entity as the default_value.
       $field_edit = [
+        'set_default_value' => '1',
         'default_value_input[' . $this->fieldName . '][0][target_id]' => $referenced_entities[0]->label() . ' (' . $referenced_entities[0]->id() . ')',
       ];
       if ($key == 'content') {
@@ -196,8 +197,10 @@ class EntityReferenceIntegrationTest extends BrowserTestBase {
    *   The name of the test entity.
    * @param \Drupal\Core\Entity\EntityInterface[] $referenced_entities
    *   An array of referenced entities.
+   *
+   * @internal
    */
-  protected function assertFieldValues($entity_name, $referenced_entities) {
+  protected function assertFieldValues(string $entity_name, array $referenced_entities): void {
     $entity = current($this->container->get('entity_type.manager')->getStorage(
     $this->entityType)->loadByProperties(['name' => $entity_name]));
 

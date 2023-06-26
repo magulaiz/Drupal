@@ -7,8 +7,6 @@
  *    contrast mode Firefox.
  */
 
-@import "../base/variables.pcss.css";
-
 :root {
   /**
   * Dropbutton
@@ -20,6 +18,7 @@
   --dropbutton-border-size: 1px;
   --dropbutton-toggle-size-spacing: var(--dropbutton-border-size);
   --dropbutton-border-radius-size: 2px;
+  --dropbutton-item-max-width: 12.5rem;
   /* Variant variables: small. */
   --dropbutton-small-spacing-size: 0.625rem;
   --dropbutton-small-font-size: var(--font-size-xs);
@@ -52,7 +51,7 @@
 }
 
 .js .dropbutton-wrapper.open .dropbutton-widget {
-  z-index: 100;
+  z-index: var(--dropbutton-widget-z-index);
 }
 
 /**
@@ -68,43 +67,56 @@
   margin: 0;
 }
 
-.js .dropbutton {
+.dropbutton {
+  min-width: 6rem; /* Help mitigate long dropbutton text from obscuring other dropbuttons. */
   height: var(--dropbutton-toggle-size);
 }
 
+.dropbutton-widget {
+  border-radius: var(--button-border-radius-size);
+  background-color: var(--button-bg-color);
+}
+
+.dropbutton-action {
+  border-inline-end: var(--dropbutton-border-size) solid white;
+}
+
 /* Variants. */
-.js.no-touchevents .dropbutton--small {
+.dropbutton--small {
   height: var(--dropbutton-small-toggle-size);
 }
 
-.js.no-touchevents .dropbutton--extrasmall {
+.dropbutton--extrasmall {
   height: var(--dropbutton-extrasmall-toggle-size);
 }
 
 /**
  * First dropbutton list item.
  */
-.js .dropbutton--multiple .dropbutton__item:first-of-type {
+.dropbutton--multiple .dropbutton__item:first-of-type {
   margin-right: calc(var(--dropbutton-toggle-size) + var(--dropbutton-toggle-size-spacing)); /* LTR */
+  white-space: nowrap;
 }
-[dir="rtl"].js .dropbutton--multiple .dropbutton__item:first-of-type {
+[dir="rtl"] .dropbutton--multiple .dropbutton__item:first-of-type {
   margin-right: 0;
   margin-left: calc(var(--dropbutton-toggle-size) + var(--dropbutton-toggle-size-spacing));
 }
 
 /* First dropbutton list item variants */
-.js.no-touchevents .dropbutton--multiple.dropbutton--small .dropbutton__item:first-of-type {
+.no-touchevents .dropbutton--multiple.dropbutton--small .dropbutton__item:first-of-type {
   margin-right: calc(var(--dropbutton-small-toggle-size) + var(--dropbutton-toggle-size-spacing)); /* LTR */
+  white-space: nowrap;
 }
-[dir="rtl"].js.no-touchevents .dropbutton--multiple.dropbutton--small .dropbutton__item:first-of-type {
+[dir="rtl"].no-touchevents .dropbutton--multiple.dropbutton--small .dropbutton__item:first-of-type {
   margin-right: 0;
   margin-left: calc(var(--dropbutton-small-toggle-size) + var(--dropbutton-toggle-size-spacing));
 }
 
-.js.no-touchevents .dropbutton--multiple.dropbutton--extrasmall .dropbutton__item:first-of-type {
+.no-touchevents .dropbutton--multiple.dropbutton--extrasmall .dropbutton__item:first-of-type {
   margin-right: calc(var(--dropbutton-extrasmall-toggle-size) + var(--dropbutton-toggle-size-spacing)); /* LTR */
+  white-space: nowrap;
 }
-[dir="rtl"].js.no-touchevents .dropbutton--multiple.dropbutton--extrasmall .dropbutton__item:first-of-type {
+[dir="rtl"].no-touchevents .dropbutton--multiple.dropbutton--extrasmall .dropbutton__item:first-of-type {
   margin-right: 0;
   margin-left: calc(var(--dropbutton-extrasmall-toggle-size) + var(--dropbutton-toggle-size-spacing));
 }
@@ -140,7 +152,7 @@
   height: 0.5625rem;
   content: "";
   transform: translate(50%, -50%) rotate(0);
-  background: url(../../images/icons/222330/chevron-down.svg) no-repeat center;
+  background: url(../../images/icons/000f33/chevron-down.svg) no-repeat center;
   background-size: contain;
 }
 
@@ -184,7 +196,7 @@
 }
 
 /* High contrast. */
-@media screen and (-ms-high-contrast: active) {
+@media (forced-colors: active) {
   /* Default. */
   .dropbutton__toggle::before {
     width: 0.5625rem;
@@ -291,10 +303,10 @@
   z-index: 2;
 }
 
-.js .dropbutton--multiple .dropbutton__item:first-of-type > * {
+.dropbutton--multiple .dropbutton__item:first-of-type > * {
   border-radius: var(--button-border-radius-size) 0 0 var(--button-border-radius-size); /* LTR */
 }
-[dir="rtl"].js .dropbutton--multiple .dropbutton__item:first-of-type > * {
+[dir="rtl"] .dropbutton--multiple .dropbutton__item:first-of-type > * {
   border-radius: 0 var(--button-border-radius-size) var(--button-border-radius-size) 0;
 }
 
@@ -311,8 +323,8 @@
   text-align: right;
 }
 
-.js .dropbutton-wrapper:not(.open) .dropbutton__item:first-of-type ~ .dropbutton__item {
-  display: none;
+.dropbutton-wrapper:not(.open) .dropbutton__item:first-of-type ~ .dropbutton__item {
+  visibility: hidden;
 }
 
 /**
@@ -336,6 +348,10 @@
 /**
  * Dropbutton items of non-first dropbutton list elements.
  */
+.dropbutton__item:first-of-type ~ .dropbutton__item {
+  max-width: var(--dropbutton-item-max-width);
+}
+
 .dropbutton__item:first-of-type ~ .dropbutton__item > a,
 .dropbutton__item:first-of-type ~ .dropbutton__item > .button {
   position: relative;
@@ -350,17 +366,6 @@
   font-weight: normal;
   line-height: var(--dropbutton-line-height);
   -webkit-font-smoothing: antialiased;
-}
-
-/**
- * Set the inherited button border color to transparent for high contrast
- * mode.
- */
-@media screen and (-ms-high-contrast: active) {
-  .dropbutton__item:first-of-type ~ .dropbutton__item > a,
-  .dropbutton__item:first-of-type ~ .dropbutton__item > .button {
-    border-color: transparent !important;
-  }
 }
 
 .dropbutton__item:first-of-type ~ .dropbutton__item > a:not(:focus),

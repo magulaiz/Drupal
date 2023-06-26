@@ -9,8 +9,7 @@ use Drupal\node\Entity\NodeType;
 use Drupal\user\Entity\User;
 
 /**
- * Tests node_access and select queries with node_access tag functionality with
- * multiple languages with a test node access module that is not language-aware.
+ * Tests multilingual node access with a module that is not language-aware.
  *
  * @group node
  */
@@ -231,7 +230,7 @@ class NodeAccessLanguageTest extends NodeAccessTestBase {
     $nids = $select->execute()->fetchAllAssoc('nid');
 
     // Because no nodes are created in German, no nodes are returned.
-    $this->assertTrue(empty($nids), 'Query returns an empty result.');
+    $this->assertEmpty($nids, 'Query returns an empty result.');
 
     // Query the nodes table as admin user (full access) with the node access
     // tag and no specific langcode.

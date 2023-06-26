@@ -6,8 +6,9 @@ tour:
     - core/jquery
     - core/once
     - core/drupal
-    - core/backbone
-    - core/shepherd
+    # @todo Remove this in https://www.drupal.org/project/drupal/issues/3204011
+    - core/internal.backbone
+    - core/internal.shepherd
     - tour/tour-styling
 
 tour-styling:

@@ -9,8 +9,10 @@ use Drupal\Core\Site\Settings;
 use Drupal\KernelTests\KernelTestBase;
 
 /**
- * Tests \Drupal::formBuilder()->setCache() and
- * \Drupal::formBuilder()->getCache().
+ * Tests FormBuilder caching.
+ *
+ * @covers \Drupal\Core\Form\FormBuilder::getCache
+ * @covers \Drupal\Core\Form\FormBuilder::setCache
  *
  * @group Form
  */
@@ -38,6 +40,9 @@ class FormCacheTest extends KernelTestBase {
    */
   protected $formState;
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
 
@@ -94,7 +99,7 @@ class FormCacheTest extends KernelTestBase {
     $cached_form_state = new FormState();
     $cached_form = \Drupal::formBuilder()->getCache($this->formBuildId, $cached_form_state);
     $this->assertEquals($this->form['#property'], $cached_form['#property']);
-    $this->assertTrue(empty($cached_form['#cache_token']), 'Form has no cache token');
+    $this->assertArrayNotHasKey('#cache_token', $cached_form, 'Form has no cache token');
     $this->assertEquals($this->formState->get('example'), $cached_form_state->get('example'));
 
     // Restore user account.

@@ -92,6 +92,21 @@ class MediaUiFunctionalTest extends MediaFunctionalTestBase {
       ->loadUnchanged($media_id);
     $this->assertSame($media->getName(), $media_name2);
 
+    // Change the authored by field to an empty string, which should assign
+    // authorship to the anonymous user (uid 0).
+    $this->drupalGet('media/' . $media_id . '/edit');
+    $edit['uid[0][target_id]'] = '';
+    $this->submitForm($edit, 'Save');
+    /** @var \Drupal\media\MediaInterface $media */
+    $media = $this->container->get('entity_type.manager')
+      ->getStorage('media')
+      ->loadUnchanged($media_id);
+    $uid = $media->getOwnerId();
+    // Most SQL database drivers stringify fetches but entities are not
+    // necessarily stored in a SQL database. At the same time, NULL/FALSE/""
+    // won't do.
+    $this->assertTrue($uid === 0 || $uid === '0', 'Media authored by anonymous user.');
+
     // Test that there is no empty vertical tabs element, if the container is
     // empty (see #2750697).
     // Make the "Publisher ID" and "Created" fields hidden.
@@ -475,8 +490,10 @@ class MediaUiFunctionalTest extends MediaFunctionalTestBase {
    *   A list of the help texts to check.
    * @param string $selector
    *   (optional) The selector to search.
+   *
+   * @internal
    */
-  public function assertHelpTexts(array $texts, $selector = '') {
+  public function assertHelpTexts(array $texts, string $selector = ''): void {
     $assert_session = $this->assertSession();
     foreach ($texts as $text) {
       // We only want to escape single quotes, so use str_replace() rather than
@@ -496,8 +513,10 @@ class MediaUiFunctionalTest extends MediaFunctionalTestBase {
    *
    * @param string[] $texts
    *   A list of the help texts to check.
+   *
+   * @internal
    */
-  public function assertNoHelpTexts(array $texts) {
+  public function assertNoHelpTexts(array $texts): void {
     $assert_session = $this->assertSession();
     foreach ($texts as $text) {
       $assert_session->pageTextNotContains($text);
@@ -514,8 +533,10 @@ class MediaUiFunctionalTest extends MediaFunctionalTestBase {
    * @param string[] $attributes
    *   An associative array of any expected attributes, keyed by the
    *   attribute name.
+   *
+   * @internal
    */
-  protected function assertHelpLink(NodeElement $element, $text, array $attributes = []) {
+  protected function assertHelpLink(NodeElement $element, string $text, array $attributes = []): void {
     // Find all the links inside the element.
     $link = $element->findLink($text);
 
@@ -532,8 +553,10 @@ class MediaUiFunctionalTest extends MediaFunctionalTestBase {
    *   The element to search.
    * @param string $text
    *   The link text.
+   *
+   * @internal
    */
-  protected function assertNoHelpLink(NodeElement $element, $text) {
+  protected function assertNoHelpLink(NodeElement $element, string $text): void {
     $assert_session = $this->assertSession();
     // Assert that the link and its text are not present anywhere on the page.
     $assert_session->elementNotExists('named', ['link', $text], $element);

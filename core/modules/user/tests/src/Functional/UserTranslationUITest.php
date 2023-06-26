@@ -44,8 +44,11 @@ class UserTranslationUITest extends ContentTranslationUITestBase {
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'classy';
+  protected $defaultTheme = 'stark';
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     $this->entityTypeId = 'user';
     $this->testLanguageSelector = FALSE;
@@ -109,7 +112,7 @@ class UserTranslationUITest extends ContentTranslationUITestBase {
       ['language' => $this->container->get('language_manager')->getLanguage('en')]
     );
     $this->drupalGet($url);
-    $this->submitForm([], 'Cancel account');
+    $this->clickLink('Cancel account');
     $this->assertSession()->statusCodeEquals(200);
   }
 

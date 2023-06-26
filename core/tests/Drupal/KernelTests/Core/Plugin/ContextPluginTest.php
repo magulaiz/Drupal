@@ -32,7 +32,6 @@ class ContextPluginTest extends KernelTestBase {
   public function testContext() {
     $this->installEntitySchema('user');
     $this->installEntitySchema('node');
-    $this->installEntitySchema('node_type');
     $type = NodeType::create(['type' => 'page', 'name' => 'Page']);
     $type->save();
 
@@ -52,7 +51,7 @@ class ContextPluginTest extends KernelTestBase {
     }
 
     // Test the getContextDefinitions() method.
-    $user_context_definition = EntityContextDefinition::fromEntityTypeId('user')->setLabel(t('User'));
+    $user_context_definition = EntityContextDefinition::fromEntityTypeId('user')->setLabel('User');
     $this->assertEquals($plugin->getContextDefinitions()['user']->getLabel(), $user_context_definition->getLabel());
 
     // Test the getContextDefinition() method for a valid context.
@@ -72,7 +71,7 @@ class ContextPluginTest extends KernelTestBase {
     // Try to pass the wrong class type as a context value.
     $plugin->setContextValue('user', $node);
     $violations = $plugin->validateContexts();
-    $this->assertTrue(!empty($violations), 'The provided context value does not pass validation.');
+    $this->assertNotEmpty($violations, 'The provided context value does not pass validation.');
 
     // Set an appropriate context value and check to make sure its methods work
     // as expected.

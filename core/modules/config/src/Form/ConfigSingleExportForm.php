@@ -136,7 +136,7 @@ class ConfigSingleExportForm extends FormBase {
    */
   public function updateConfigurationType($form, FormStateInterface $form_state) {
     $form['config_name']['#options'] = $this->findConfiguration($form_state->getValue('config_type'));
-    unset($form['export']['#value']);
+    $form['export']['#value'] = NULL;
     return $form;
   }
 
@@ -191,7 +191,7 @@ class ConfigSingleExportForm extends FormBase {
       $names = array_combine($names, $names);
       foreach ($names as $config_name) {
         foreach ($config_prefixes as $config_prefix) {
-          if (strpos($config_name, $config_prefix) === 0) {
+          if (str_starts_with($config_name, $config_prefix)) {
             unset($names[$config_name]);
           }
         }

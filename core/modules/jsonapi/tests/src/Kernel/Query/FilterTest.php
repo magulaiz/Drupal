@@ -54,9 +54,14 @@ class FilterTest extends JsonapiKernelTestBase {
   protected $resourceTypeRepository;
 
   /**
+   * @var \Drupal\jsonapi\Context\FieldResolver
+   */
+  protected FieldResolver $fieldResolver;
+
+  /**
    * {@inheritdoc}
    */
-  public function setUp(): void {
+  protected function setUp(): void {
     parent::setUp();
 
     $this->setUpSchemas();
@@ -265,7 +270,6 @@ class FilterTest extends JsonapiKernelTestBase {
    * Sets up the schemas.
    */
   protected function setUpSchemas() {
-    $this->installSchema('system', ['sequences']);
     $this->installSchema('node', ['node_access']);
     $this->installSchema('user', ['users_data']);
 

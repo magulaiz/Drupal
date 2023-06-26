@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\config\Functional;
 
+use Drupal\Component\Serialization\Json;
 use Drupal\Core\Routing\RedirectDestinationTrait;
 use Drupal\config_test\Entity\ConfigTest;
 use Drupal\Core\Entity\EntityStorageInterface;
@@ -26,7 +27,7 @@ class ConfigEntityListTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'classy';
+  protected $defaultTheme = 'stark';
 
   /**
    * {@inheritdoc}
@@ -59,18 +60,25 @@ class ConfigEntityListTest extends BrowserTestBase {
     // Test getOperations() method.
     $expected_operations = [
       'edit' => [
-        'title' => t('Edit'),
+        'title' => 'Edit',
         'weight' => 10,
         'url' => $entity->toUrl()->setOption('query', $this->getRedirectDestination()->getAsArray()),
       ],
       'disable' => [
-        'title' => t('Disable'),
+        'title' => 'Disable',
         'weight' => 40,
         'url' => $entity->toUrl('disable')->setOption('query', $this->getRedirectDestination()->getAsArray()),
       ],
       'delete' => [
-        'title' => t('Delete'),
+        'title' => 'Delete',
         'weight' => 100,
+        'attributes' => [
+          'class' => ['use-ajax'],
+          'data-dialog-type' => 'modal',
+          'data-dialog-options' => Json::encode([
+            'width' => 880,
+          ]),
+        ],
         'url' => $entity->toUrl('delete-form')->setOption('query', $this->getRedirectDestination()->getAsArray()),
       ],
     ];
@@ -134,13 +142,20 @@ class ConfigEntityListTest extends BrowserTestBase {
     // Test getOperations() method.
     $expected_operations = [
       'edit' => [
-        'title' => t('Edit'),
+        'title' => 'Edit',
         'weight' => 10,
         'url' => $entity->toUrl()->setOption('query', $this->getRedirectDestination()->getAsArray()),
       ],
       'delete' => [
-        'title' => t('Delete'),
+        'title' => 'Delete',
         'weight' => 100,
+        'attributes' => [
+          'class' => ['use-ajax'],
+          'data-dialog-type' => 'modal',
+          'data-dialog-options' => Json::encode([
+            'width' => 880,
+          ]),
+        ],
         'url' => $entity->toUrl('delete-form')->setOption('query', $this->getRedirectDestination()->getAsArray()),
       ],
     ];
@@ -179,14 +194,14 @@ class ConfigEntityListTest extends BrowserTestBase {
     $this->assertSession()->elementTextEquals('xpath', '//div[@class="layout-content"]//table/thead/tr/th[3]', 'Operations');
 
     // Check the number of table row cells.
-    $this->assertSession()->elementsCount('xpath', '//div[@class="layout-content"]//table/tbody/tr[@class="odd"]/td', 3);
+    $this->assertSession()->elementsCount('xpath', '//div[@class="layout-content"]//table/tbody/tr[1]/td', 3);
 
     // Check the contents of each row cell. The first cell contains the label,
     // the second contains the machine name, and the third contains the
     // operations list.
-    $this->assertSession()->elementTextEquals('xpath', '//div[@class="layout-content"]//table/tbody/tr[@class="odd"]/td[1]', 'Default');
-    $this->assertSession()->elementTextEquals('xpath', '//div[@class="layout-content"]//table/tbody/tr[@class="odd"]/td[2]', 'dotted.default');
-    $this->assertSession()->elementExists('xpath', '//div[@class="layout-content"]//table/tbody/tr[@class="odd"]/td[3]//ul');
+    $this->assertSession()->elementTextEquals('xpath', '//div[@class="layout-content"]//table/tbody/tr[1]/td[1]', 'Default');
+    $this->assertSession()->elementTextEquals('xpath', '//div[@class="layout-content"]//table/tbody/tr[1]/td[2]', 'dotted.default');
+    $this->assertSession()->elementExists('xpath', '//div[@class="layout-content"]//table/tbody/tr[1]/td[3]//ul');
 
     // Add a new entity using the operations link.
     $this->assertSession()->linkExists('Add test configuration');

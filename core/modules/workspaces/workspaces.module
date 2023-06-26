@@ -30,7 +30,7 @@ function workspaces_help($route_name, RouteMatchInterface $route_match) {
     case 'help.page.workspaces':
       $output = '';
       $output .= '<h3>' . t('About') . '</h3>';
-      $output .= '<p>' . t('The Workspaces module allows workspaces to be defined and switched between. Content is then assigned to the active workspace when created. For more information, see the <a href=":workspaces">online documentation for the Workspaces module</a>.', [':workspaces' => 'https://www.drupal.org/node/2824024']) . '</p>';
+      $output .= '<p>' . t('The Workspaces module allows workspaces to be defined and switched between. Content is then assigned to the active workspace when created. For more information, see the <a href=":workspaces">online documentation for the Workspaces module</a>.', [':workspaces' => 'https://www.drupal.org/docs/8/core/modules/workspace/overview']) . '</p>';
       return $output;
   }
 }
@@ -141,6 +141,26 @@ function workspaces_entity_predelete(EntityInterface $entity) {
   return \Drupal::service('class_resolver')
     ->getInstanceFromDefinition(EntityOperations::class)
     ->entityPredelete($entity);
+}
+
+/**
+ * Implements hook_entity_delete().
+ */
+function workspaces_entity_delete(EntityInterface $entity) {
+  if (\Drupal::service('workspaces.manager')->isEntityTypeSupported($entity->getEntityType())) {
+    \Drupal::service('workspaces.association')
+      ->deleteAssociations(NULL, $entity->getEntityTypeId(), [$entity->id()]);
+  }
+}
+
+/**
+ * Implements hook_entity_revision_delete().
+ */
+function workspaces_entity_revision_delete(EntityInterface $entity) {
+  if (\Drupal::service('workspaces.manager')->isEntityTypeSupported($entity->getEntityType())) {
+    \Drupal::service('workspaces.association')
+      ->deleteAssociations(NULL, $entity->getEntityTypeId(), [$entity->id()], [$entity->getRevisionId()]);
+  }
 }
 
 /**

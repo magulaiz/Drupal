@@ -7,6 +7,7 @@ use Drupal\Core\Language\Language;
 use Drupal\Core\Session\UserSession;
 use Drupal\Core\Site\Settings;
 use Drupal\Core\Test\HttpClientMiddleware\TestHttpClientMiddleware;
+use Drupal\Core\Utility\PhpRequirements;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\RequirementsPageTrait;
 use GuzzleHttp\HandlerStack;
@@ -27,7 +28,9 @@ abstract class InstallerTestBase extends BrowserTestBase {
    *
    * @var array
    *   An array of settings to write out, in the format expected by
-   *   drupal_rewrite_settings().
+   *   SettingsEditor::rewrite().
+   *
+   * @see \Drupal\Core\Site\SettingsEditor::rewrite()
    */
   protected $settings = [];
 
@@ -75,18 +78,20 @@ abstract class InstallerTestBase extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
-    parent::setUpAppRoot();
+  protected function installParameters() {
+    $params = parent::installParameters();
+    // Set the checkbox values to FALSE so that
+    // \Drupal\Tests\BrowserTestBase::translatePostValues() does not remove
+    // them.
+    $params['forms']['install_configure_form']['enable_update_status_module'] = FALSE;
+    $params['forms']['install_configure_form']['enable_update_status_emails'] = FALSE;
+    return $params;
+  }
 
-    $this->isInstalled = FALSE;
-
-    $this->setupBaseUrl();
-
-    $this->prepareDatabasePrefix();
-
-    // Install Drupal test site.
-    $this->prepareEnvironment();
-
+  /**
+   * We are testing the installer, so set up a minimal environment for that.
+   */
+  public function installDrupal() {
     // Define information about the user 1 account.
     $this->rootUser = new UserSession([
       'uid' => 1,
@@ -141,12 +146,13 @@ abstract class InstallerTestBase extends BrowserTestBase {
     $this->container
       ->setParameter('app.root', DRUPAL_ROOT);
     \Drupal::setContainer($this->container);
+  }
 
-    // Setup Mink.
-    $this->initMink();
-
-    // Set up the browser test output file.
-    $this->initBrowserOutputFile();
+  /**
+   * {@inheritdoc}
+   */
+  protected function setUp(): void {
+    parent::setUp();
 
     $this->visitInstaller();
 
@@ -239,7 +245,10 @@ abstract class InstallerTestBase extends BrowserTestBase {
    * Installer step: Configure settings.
    */
   protected function setUpSettings() {
-    $edit = $this->translatePostValues($this->parameters['forms']['install_settings_form']);
+    $parameters = $this->parameters['forms']['install_settings_form'];
+    $driver = $parameters['driver'];
+    unset($parameters[$driver]['dependencies']);
+    $edit = $this->translatePostValues($parameters);
     $this->submitForm($edit, $this->translations['Save and continue']);
   }
 
@@ -252,7 +261,9 @@ abstract class InstallerTestBase extends BrowserTestBase {
    * @see system_requirements()
    */
   protected function setUpRequirementsProblem() {
-    // Do nothing.
+    if (version_compare(phpversion(), PhpRequirements::getMinimumSupportedPhp()) < 0) {
+      $this->continueOnExpectedWarnings(['PHP']);
+    }
   }
 
   /**

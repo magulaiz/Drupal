@@ -20,13 +20,10 @@ class BlockConfigSchemaTest extends KernelTestBase {
    */
   protected static $modules = [
     'block',
-    'aggregator',
     'book',
     'block_content',
     'comment',
-    'forum',
     'node',
-    'statistics',
     // \Drupal\block\Entity\Block->preSave() calls system_region_list().
     'system',
     'taxonomy',
@@ -70,7 +67,7 @@ class BlockConfigSchemaTest extends KernelTestBase {
       $id = strtolower($this->randomMachineName());
       $block = Block::create([
         'id' => $id,
-        'theme' => 'classy',
+        'theme' => 'stark',
         'weight' => 00,
         'status' => TRUE,
         'region' => 'content',

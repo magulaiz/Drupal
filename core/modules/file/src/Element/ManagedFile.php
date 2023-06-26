@@ -15,6 +15,8 @@ use Drupal\Core\Url;
 use Drupal\file\Entity\File;
 use Symfony\Component\HttpFoundation\Request;
 
+// cspell:ignore filefield
+
 /**
  * Provides an AJAX/progress aware widget for uploading and saving a file.
  *
@@ -134,11 +136,11 @@ class ManagedFile extends FormElement {
     // default value.
     if ($input === FALSE || $force_default) {
       if ($element['#extended']) {
-        $default_fids = isset($element['#default_value']['fids']) ? $element['#default_value']['fids'] : [];
-        $return = isset($element['#default_value']) ? $element['#default_value'] : ['fids' => []];
+        $default_fids = $element['#default_value']['fids'] ?? [];
+        $return = $element['#default_value'] ?? ['fids' => []];
       }
       else {
-        $default_fids = isset($element['#default_value']) ? $element['#default_value'] : [];
+        $default_fids = $element['#default_value'] ?? [];
         $return = ['fids' => []];
       }
 
@@ -192,10 +194,6 @@ class ManagedFile extends FormElement {
     if (isset($form['#file_upload_delta']) && $current_file_count < $form['#file_upload_delta']) {
       $form[$current_file_count]['#attributes']['class'][] = 'ajax-new-content';
     }
-    // Otherwise just add the new content class on a placeholder.
-    else {
-      $form['#suffix'] .= '<span class="ajax-new-content"></span>';
-    }
 
     $status_messages = ['#type' => 'status_messages'];
     $form['#prefix'] .= $renderer->renderRoot($status_messages);
@@ -218,7 +216,7 @@ class ManagedFile extends FormElement {
     // This is used sometimes so let's implode it just once.
     $parents_prefix = implode('_', $element['#parents']);
 
-    $fids = isset($element['#value']['fids']) ? $element['#value']['fids'] : [];
+    $fids = $element['#value']['fids'] ?? [];
 
     // Set some default element properties.
     $element['#progress_indicator'] = empty($element['#progress_indicator']) ? 'none' : $element['#progress_indicator'];
@@ -362,8 +360,15 @@ class ManagedFile extends FormElement {
     }
 
     // Add the extension list to the page as JavaScript settings.
-    if (isset($element['#upload_validators']['file_validate_extensions'][0])) {
-      $extension_list = implode(',', array_filter(explode(' ', $element['#upload_validators']['file_validate_extensions'][0])));
+    if (isset($element['#upload_validators']['file_validate_extensions'][0]) || isset($element['#upload_validators']['FileExtension']['extensions'])) {
+      if (isset($element['#upload_validators']['file_validate_extensions'][0])) {
+        @trigger_error('\'file_validate_extensions\' is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use the \'FileExtension\' constraint instead. See https://www.drupal.org/node/3363700', E_USER_DEPRECATED);
+        $allowed_extensions = $element['#upload_validators']['file_validate_extensions'][0];
+      }
+      else {
+        $allowed_extensions = $element['#upload_validators']['FileExtension']['extensions'];
+      }
+      $extension_list = implode(',', array_filter(explode(' ', $allowed_extensions)));
       $element['upload']['#attached']['drupalSettings']['file']['elements']['#' . $id] = $extension_list;
     }
 
@@ -413,7 +418,8 @@ class ManagedFile extends FormElement {
    * Render API callback: Validates the managed_file element.
    */
   public static function validateManagedFile(&$element, FormStateInterface $form_state, &$complete_form) {
-    $clicked_button = end($form_state->getTriggeringElement()['#parents']);
+    $triggering_element = $form_state->getTriggeringElement();
+    $clicked_button = isset($triggering_element['#parents']) ? end($triggering_element['#parents']) : '';
     if ($clicked_button != 'remove_button' && !empty($element['fids']['#value'])) {
       $fids = $element['fids']['#value'];
       foreach ($fids as $fid) {

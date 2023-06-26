@@ -361,8 +361,11 @@ class ViewExecutableTest extends ViewsKernelTestBase {
    * Asserts that expected view properties have been unset by destroy().
    *
    * @param \Drupal\views\ViewExecutable $view
+   *   The view executable.
+   *
+   * @internal
    */
-  protected function assertViewDestroy(ViewExecutable $view) {
+  protected function assertViewDestroy(ViewExecutable $view): void {
     $reflection = new \ReflectionClass($view);
     $defaults = $reflection->getDefaultProperties();
     // The storage and user should remain.
@@ -443,7 +446,7 @@ class ViewExecutableTest extends ViewsKernelTestBase {
     $count = 0;
     foreach ($view->displayHandlers as $id => $display) {
       $match = function ($value) use ($display) {
-        return strpos($value, $display->display['display_title']) !== FALSE;
+        return str_contains($value, $display->display['display_title']);
       };
       $this->assertNotEmpty(array_filter($validate[$id], $match), new FormattableMarkup('Error message found for @id display', ['@id' => $id]));
       $count++;

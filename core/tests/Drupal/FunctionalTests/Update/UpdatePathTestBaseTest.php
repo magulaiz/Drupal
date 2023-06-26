@@ -22,7 +22,7 @@ class UpdatePathTestBaseTest extends UpdatePathTestBase {
    * {@inheritdoc}
    */
   protected function setDatabaseDumpFiles() {
-    $this->databaseDumpFiles[] = __DIR__ . '/../../../../modules/system/tests/fixtures/update/drupal-9.0.0.bare.standard.php.gz';
+    $this->databaseDumpFiles[] = __DIR__ . '/../../../../modules/system/tests/fixtures/update/drupal-9.4.0.bare.standard.php.gz';
     $this->databaseDumpFiles[] = __DIR__ . '/../../../../modules/system/tests/fixtures/update/drupal-8.update-test-schema-enabled.php';
     $this->databaseDumpFiles[] = __DIR__ . '/../../../../modules/system/tests/fixtures/update/drupal-8.update-test-semver-update-n-enabled.php';
   }
@@ -36,7 +36,7 @@ class UpdatePathTestBaseTest extends UpdatePathTestBase {
 
     /** @var \Drupal\Core\Update\UpdateHookRegistry $update_registry */
     $update_registry = \Drupal::service('update.update_hook_registry');
-    foreach (['user' => 8100, 'node' => 8700, 'system' => 8901, 'update_test_schema' => 8000] as $module => $schema) {
+    foreach (['user' => 9301, 'node' => 8700, 'system' => 8901, 'update_test_schema' => 8000] as $module => $schema) {
       $this->assertEquals($schema, $update_registry->getInstalledVersion($module), new FormattableMarkup('Module @module schema is @schema', ['@module' => $module, '@schema' => $schema]));
     }
 
@@ -91,13 +91,19 @@ class UpdatePathTestBaseTest extends UpdatePathTestBase {
     \Drupal::state()->set('update_test_schema_version', 8001);
     $this->runUpdates();
 
+    // Ensure that after running the updates the update functions have been
+    // loaded. If they have not then the tests carried out in
+    // \Drupal\Tests\UpdatePathTestTrait::runUpdates() can result in false
+    // positives.
+    $this->assertTrue(function_exists('update_test_semver_update_n_update_8001'), 'The update_test_semver_update_n_update_8001() has been loaded');
+
     $select = $connection->select('watchdog');
     $select->orderBy('wid', 'DESC');
     $select->range(0, 5);
     $select->fields('watchdog', ['message']);
 
     $container_cannot_be_saved_messages = array_filter(iterator_to_array($select->execute()), function ($row) {
-      return strpos($row->message, 'Container cannot be saved to cache.') !== FALSE;
+      return str_contains($row->message, 'Container cannot be saved to cache.');
     });
     $this->assertEquals([], $container_cannot_be_saved_messages);
 

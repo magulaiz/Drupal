@@ -57,8 +57,7 @@ class ProgrammaticTest extends KernelTestBase {
   }
 
   /**
-   * Helper function used to programmatically submit the form defined in
-   * form_test.module with the given values.
+   * Programmatically submits the form_test.module form with the given values.
    *
    * @param $values
    *   An array of field values to be submitted.
@@ -76,7 +75,7 @@ class ProgrammaticTest extends KernelTestBase {
     $valid_form = empty($errors);
     $args = [
       '%values' => print_r($values, TRUE),
-      '%errors' => $valid_form ? t('None') : implode(' ', $errors),
+      '%errors' => $valid_form ? 'None' : implode(' ', $errors),
     ];
     $this->assertSame($valid_form, $valid_input, new FormattableMarkup('Input values: %values<br />Validation handler errors: %errors', $args));
 

@@ -44,6 +44,11 @@ use Drupal\field\FieldConfigInterface;
  *     "default_value_callback",
  *     "settings",
  *     "field_type",
+ *   },
+ *   constraints = {
+ *     "RequiredConfigDependencies" = {
+ *       "field_storage_config"
+ *     }
  *   }
  * )
  */
@@ -70,6 +75,11 @@ class FieldConfig extends FieldConfigBase implements FieldConfigInterface {
    * @var \Drupal\field\Entity\FieldStorageConfig
    */
   protected $fieldStorage;
+
+  /**
+   * The original FieldConfig entity.
+   */
+  public FieldConfig $original;
 
   /**
    * Constructs a FieldConfig object.
@@ -222,16 +232,7 @@ class FieldConfig extends FieldConfigBase implements FieldConfigInterface {
    * {@inheritdoc}
    */
   public static function postDelete(EntityStorageInterface $storage, array $fields) {
-    // Clear the cache upfront, to refresh the results of getBundles().
-    \Drupal::service('entity_field.manager')->clearCachedFieldDefinitions();
-
-    // Notify the entity storage.
-    foreach ($fields as $field) {
-      if (!$field->deleted) {
-        \Drupal::service('field_definition.listener')->onFieldDefinitionDelete($field);
-      }
-    }
-
+    parent::postDelete($storage, $fields);
     // If this is part of a configuration synchronization then the following
     // configuration updates are not necessary.
     $entity = reset($fields);
@@ -312,10 +313,10 @@ class FieldConfig extends FieldConfigBase implements FieldConfigInterface {
       }
 
       if (!$field_storage_definition) {
-        throw new FieldException("Attempt to create a field {$this->field_name} that does not exist on entity type {$this->entity_type}.");
+        throw new FieldException("Attempted to create an instance of field with name {$this->field_name} on entity type {$this->entity_type} when the field storage does not exist.");
       }
       if (!$field_storage_definition instanceof FieldStorageConfigInterface) {
-        throw new FieldException("Attempt to create a configurable field of non-configurable field storage {$this->field_name}.");
+        throw new FieldException("Attempted to create a configurable field of non-configurable field storage {$this->field_name}.");
       }
       $this->fieldStorage = $field_storage_definition;
     }
@@ -369,7 +370,7 @@ class FieldConfig extends FieldConfigBase implements FieldConfigInterface {
    * @param string $field_name
    *   Name of the field.
    *
-   * @return Drupal\field\FieldConfigInterface|null
+   * @return \Drupal\field\FieldConfigInterface|null
    *   The field config entity if one exists for the provided field
    *   name, otherwise NULL.
    */
