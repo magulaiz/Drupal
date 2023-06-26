@@ -99,3 +99,13 @@ function module_handler_test_fake_module_implements_alter(array &$implementation
     + $implementations
     + ['_module_handler_test_late' => FALSE];
 }
+
+/**
+ * Implements hook_module_implements_alter().
+ */
+function module_handler_test_remove_module_implements_alter(array &$implementations, string $hook): void {
+  if (str_contains($hook, 'unaltered')) {
+    return;
+  }
+  unset($implementations['module_handler_test1']);
+}
