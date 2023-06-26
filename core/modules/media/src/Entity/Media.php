@@ -47,7 +47,10 @@ use Drupal\user\EntityOwnerTrait;
  *       "html" = "Drupal\media\Routing\MediaRouteProvider",
  *       "revision" = \Drupal\Core\Entity\Routing\RevisionHtmlRouteProvider::class,
  *     },
- *     "link_target" = "\Drupal\media\Entity\MediaLinkTarget",
+ *     "link_target" = {
+ *       "view" = "\Drupal\media\Entity\MediaLinkTarget",
+ *       "download" = "\Drupal\media\Entity\MediaLinkTarget",
+ *     },
  *   },
  *   base_table = "media",
  *   data_table = "media_field_data",

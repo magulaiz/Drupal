@@ -39,7 +39,10 @@ use Drupal\user\EntityOwnerTrait;
  *     "route_provider" = {
  *       "html" = "Drupal\file\Entity\FileRouteProvider",
  *     },
- *     "link_target" = "\Drupal\file\Entity\FileLinkTarget",
+ *     "link_target" = {
+ *       "view" = "\Drupal\file\Entity\FileLinkTarget",
+ *       "download" = "\Drupal\file\Entity\FileLinkTarget",
+ *     }
  *   },
  *   base_table = "file_managed",
  *   entity_keys = {
