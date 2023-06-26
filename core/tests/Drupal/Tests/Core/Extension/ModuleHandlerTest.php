@@ -752,6 +752,62 @@ class ModuleHandlerTest extends UnitTestCase {
         'module_handler_test2_subtype_alter',
       ],
     ];
+    // Use hook_module_implements_alter() to insert implementations for fake
+    // modules early, late and between.
+    // The test covers the _current_ behavior, which might not be ideal in all
+    // cases.
+    $datasets['fake_extra_modules'] = [
+      [
+        'module_handler_test1',
+        'module_handler_test2',
+        // Add a *_module_implements_alter() to insert fake modules.
+        'module_handler_test_fake',
+      ],
+      [
+        '_module_handler_test_early_custom_order',
+        'module_handler_test_custom_order',
+        'module_handler_test1_custom_order',
+        '_module_handler_test_between_custom_order',
+        'module_handler_test2_custom_order',
+        '_module_handler_test_late_custom_order',
+      ],
+      [
+        '_module_handler_test_early_type_alter',
+        'module_handler_test_type_alter',
+        'module_handler_test1_type_alter',
+        '_module_handler_test_between_type_alter',
+        'module_handler_test2_type_alter',
+        '_module_handler_test_late_type_alter',
+      ],
+      [
+        '_module_handler_test_early_type_alter',
+        '_module_handler_test_early_subtype_alter',
+        '_module_handler_test_early_unaltered_alter',
+        'module_handler_test_type_alter',
+        'module_handler_test_subtype_alter',
+        'module_handler_test_unaltered_alter',
+        'module_handler_test1_type_alter',
+        'module_handler_test1_subtype_alter',
+        'module_handler_test1_unaltered_alter',
+        '_module_handler_test_between_type_alter',
+        '_module_handler_test_between_subtype_alter',
+        '_module_handler_test_between_unaltered_alter',
+        'module_handler_test2_type_alter',
+        'module_handler_test2_subtype_alter',
+        'module_handler_test2_unaltered_alter',
+        '_module_handler_test_late_type_alter',
+        '_module_handler_test_late_subtype_alter',
+        '_module_handler_test_late_unaltered_alter',
+      ],
+      [
+        'module_handler_test_unaltered_alter',
+        'module_handler_test_subtype_alter',
+        'module_handler_test1_unaltered_alter',
+        'module_handler_test1_subtype_alter',
+        'module_handler_test2_unaltered_alter',
+        'module_handler_test2_subtype_alter',
+      ],
+    ];
     return $datasets;
   }
 

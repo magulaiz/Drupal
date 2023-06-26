@@ -79,3 +79,23 @@ function module_handler_test1_first_module_implements_alter(array &$implementati
     $implementations = ['module_handler_test1' => $group] + $implementations;
   }
 }
+
+/**
+ * Implements hook_module_implements_alter().
+ */
+function module_handler_test_fake_module_implements_alter(array &$implementations, string $hook): void {
+  if (str_contains($hook, 'unaltered')) {
+    return;
+  }
+
+  $offset = array_search('module_handler_test1', array_keys($implementations));
+  if ($offset !== FALSE) {
+    $implementations = array_slice($implementations, 0, $offset + 1, TRUE)
+      + ['_module_handler_test_between' => FALSE]
+      + array_slice($implementations, $offset + 1, NULL, TRUE);
+  }
+
+  $implementations = ['_module_handler_test_early' => FALSE]
+    + $implementations
+    + ['_module_handler_test_late' => FALSE];
+}
