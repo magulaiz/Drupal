@@ -187,7 +187,9 @@
     attach() {
       // Disable interactive elements inside preview blocks.
       const $blocks = $('#layout-builder [data-layout-block-uuid]');
-      $blocks.find('input, textarea, select').prop('disabled', true);
+      $blocks.find('input, textarea, select').each(function () {
+        this.disabled = true;
+      });
       $blocks
         .find('a')
         // Don't disable contextual links.
