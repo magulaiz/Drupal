@@ -324,7 +324,9 @@
 
         // Disabled elements do not appear in POST ajax data, so we mark the
         // elements disabled only after firing the request.
-        $(ajaxElements).prop('disabled', true);
+        $(ajaxElements).each(function () {
+          this.disabled = true;
+        });
       }
     },
   };
