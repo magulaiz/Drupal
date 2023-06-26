@@ -39,3 +39,24 @@ function module_handler_test1_custom_order(): mixed {
 function module_handler_test2_custom_order(): mixed {
   return __FUNCTION__;
 }
+
+/**
+ * Implements hook_custom_order().
+ */
+function _module_handler_test_early_custom_order(): mixed {
+  return __FUNCTION__;
+}
+
+/**
+ * Implements hook_custom_order().
+ */
+function _module_handler_test_between_custom_order(): mixed {
+  return __FUNCTION__;
+}
+
+/**
+ * Implements hook_custom_order().
+ */
+function _module_handler_test_late_custom_order(): mixed {
+  return __FUNCTION__;
+}

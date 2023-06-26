@@ -27,6 +27,27 @@ function module_handler_test2_type_alter(array &$value): void {
 }
 
 /**
+ * Implements hook_type_alter().
+ */
+function _module_handler_test_early_type_alter(array &$value): void {
+  $value[] = __FUNCTION__;
+}
+
+/**
+ * Implements hook_type_alter().
+ */
+function _module_handler_test_between_type_alter(array &$value): void {
+  $value[] = __FUNCTION__;
+}
+
+/**
+ * Implements hook_type_alter().
+ */
+function _module_handler_test_late_type_alter(array &$value): void {
+  $value[] = __FUNCTION__;
+}
+
+/**
  * Implements hook_subtype_alter().
  */
 function module_handler_test_subtype_alter(array &$value): void {
@@ -50,6 +71,27 @@ function module_handler_test2_subtype_alter(array &$value): void {
 /**
  * Implements hook_subtype_alter().
  */
+function _module_handler_test_early_subtype_alter(array &$value): void {
+  $value[] = __FUNCTION__;
+}
+
+/**
+ * Implements hook_subtype_alter().
+ */
+function _module_handler_test_between_subtype_alter(array &$value): void {
+  $value[] = __FUNCTION__;
+}
+
+/**
+ * Implements hook_subtype_alter().
+ */
+function _module_handler_test_late_subtype_alter(array &$value): void {
+  $value[] = __FUNCTION__;
+}
+
+/**
+ * Implements hook_subtype_alter().
+ */
 function module_handler_test_unaltered_alter(array &$value): void {
   $value[] = __FUNCTION__;
 }
@@ -65,5 +107,26 @@ function module_handler_test1_unaltered_alter(array &$value): void {
  * Implements hook_subtype_alter().
  */
 function module_handler_test2_unaltered_alter(array &$value): void {
+  $value[] = __FUNCTION__;
+}
+
+/**
+ * Implements hook_subtype_alter().
+ */
+function _module_handler_test_early_unaltered_alter(array &$value): void {
+  $value[] = __FUNCTION__;
+}
+
+/**
+ * Implements hook_subtype_alter().
+ */
+function _module_handler_test_between_unaltered_alter(array &$value): void {
+  $value[] = __FUNCTION__;
+}
+
+/**
+ * Implements hook_subtype_alter().
+ */
+function _module_handler_test_late_unaltered_alter(array &$value): void {
   $value[] = __FUNCTION__;
 }
