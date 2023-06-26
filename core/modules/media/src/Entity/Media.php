@@ -45,7 +45,7 @@ use Drupal\user\EntityOwnerTrait;
  *       "html" = "Drupal\media\Routing\MediaRouteProvider",
  *     },
  *     "link_target" = {
- *       "view" = "\Drupal\media\Entity\MediaLinkTarget",
+ *       "view" = "\Drupal\media\Entity\MediaLinkTargetStandaloneWhenAvailable",
  *       "download" = "\Drupal\media\Entity\MediaLinkTarget",
  *     },
  *   },
