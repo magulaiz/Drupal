@@ -65,9 +65,16 @@
           $element.length &&
           $element[0].matches(`input[value="${column}"]:checked`)
         ) {
-          $fields.prop('checked', true).not($element).prop('disabled', true);
+          $fields.each(function () {
+            this.checked = true;
+          });
+          $fields.not($element).each(function () {
+            this.disabled = true;
+          });
         } else {
-          $fields.prop('disabled', false);
+          $fields.each(function () {
+            this.disabled = false;
+          });
         }
       });
     },
@@ -116,8 +123,12 @@
           if (e.target.checked) {
             $bundleSettings
               .find('.operations :input[name$="[language_alterable]"]')
-              .prop('checked', true);
-            $fieldSettings.find('.translatable :input').prop('checked', true);
+              .each(function () {
+                this.checked = true;
+              });
+            $fieldSettings.find('.translatable :input').each(function () {
+              this.checked = true;
+            });
             $settings.show();
           } else {
             $settings.hide();
