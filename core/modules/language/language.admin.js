@@ -24,7 +24,7 @@
         $checkbox
           .closest('.table-language-group')
           .find('table, .tabledrag-toggle-weight')
-          .toggle($checkbox.prop('checked'));
+          .toggle(checkbox.checked);
       }
 
       // Bind hide/show and rearrange customization checkboxes.
