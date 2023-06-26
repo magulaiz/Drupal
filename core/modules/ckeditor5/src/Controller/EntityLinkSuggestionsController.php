@@ -214,8 +214,7 @@ class EntityLinkSuggestionsController implements ContainerInjectionInterface {
       // @see \Drupal\filter\Plugin\Filter\EntityLinks
       'path' => sprintf('entity:%s/%s', $entity->getEntityTypeId(), $entity->id()),
       'exposed_attributes' => [
-        // @todo ⚠️ COMPUTE THIS INSTEAD OF HARDCODING!
-        'download' => $entity->getEntityTypeId() === 'file' || ($entity->getEntityTypeId() === 'media' && $entity->bundle() === 'document'),
+        'download' =>  $entity->getEntityType()->hasHandlerClass('link_target', 'download'),
       ],
     ];
   }
