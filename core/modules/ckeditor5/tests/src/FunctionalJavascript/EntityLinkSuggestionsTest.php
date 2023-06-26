@@ -82,10 +82,11 @@ class EntityLinkSuggestionsTest extends WebDriverTestBase {
     // Create a node type for testing.
     $this->drupalCreateContentType(['type' => 'page']);
 
+    // Create an account with "f" in the username.
     $account = $this->drupalCreateUser([
       'create page content',
       'use text format test_format',
-    ]);
+    ], 'Sofie');
 
     $this->drupalLogin($account);
   }
@@ -127,7 +128,20 @@ class EntityLinkSuggestionsTest extends WebDriverTestBase {
 
     // Find all the autocomplete results.
     $results = $page->findAll('css', '.linkit-result-line.ui-menu-item');
+    $this->assertCount(2, $results);
+    $this->assertSame('Foo', $results[0]->find('css', '.linkit-result-line--title')->getText());
+    $this->assertSame('Sofie', $results[1]->find('css', '.linkit-result-line--title')->getText());
+
+    // Make the search term longer to narrow down the results.
+    $autocomplete_field->setValue('fo');
+    $this->getSession()->getDriver()->keyDown($autocomplete_field->getXpath(), ' ');
+    $assert_session->assertWaitOnAjaxRequest();
+    $assert_session->waitForElementRemoved('xpath', '//span[@class="linkit-result-line--title" and text()="Sofie"]');
+
+    // Find all the autocomplete results.
+    $results = $page->findAll('css', '.linkit-result-line.ui-menu-item');
     $this->assertCount(1, $results);
+    $this->assertSame('Foo', $results[0]->find('css', '.linkit-result-line--title')->getText());
 
     // Find the first result and click it.
     $results[0]->click();
