@@ -26,7 +26,8 @@
         const $input = $(event.currentTarget)
           .closest('.js-click-to-select')
           .find('.js-click-to-select-checkbox input');
-        $input.prop('checked', !$input.prop('checked')).trigger('change');
+        $input[0].checked = !$input[0].checked;
+        $input.trigger('change');
       });
 
       $(
@@ -39,7 +40,7 @@
         .on('change', ({ currentTarget }) => {
           $(currentTarget)
             .closest('.js-click-to-select')
-            .toggleClass('checked', $(currentTarget).prop('checked'));
+            .toggleClass('checked', currentTarget.checked);
         })
         // Adds is-focus class to the click-to-select element.
         .on('focus blur', ({ currentTarget, type }) => {
