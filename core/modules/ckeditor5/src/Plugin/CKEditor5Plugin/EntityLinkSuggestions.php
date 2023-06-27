@@ -9,6 +9,7 @@ use Drupal\ckeditor5\Plugin\CKEditor5PluginConfigurableTrait;
 use Drupal\ckeditor5\Plugin\CKEditor5PluginDefault;
 use Drupal\ckeditor5\Plugin\CKEditor5PluginElementsSubsetInterface;
 use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
+use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
@@ -92,6 +93,21 @@ class EntityLinkSuggestions extends CKEditor5PluginDefault implements CKEditor5P
   }
 
   /**
+   * Whether the given entity type is linkable.
+   *
+   * Entity types must either have links or specify a link_target handler.
+   *
+   * @param \Drupal\Core\Entity\EntityTypeInterface $entity_type
+   *   The entity type to evaluate.
+   *
+   * @return bool
+   *   TRUE if it is linkable, FALSE if not.
+   */
+  public static function isLinkableEntityType(EntityTypeInterface $entity_type): bool {
+    return $entity_type->hasLinkTemplate('canonical') || $entity_type->hasHandlerClass('link_target', 'view');
+  }
+
+  /**
    * {@inheritdoc}
    */
   public function buildConfigurationForm(array $form, FormStateInterface $form_state) {
@@ -106,8 +122,7 @@ class EntityLinkSuggestions extends CKEditor5PluginDefault implements CKEditor5P
     $common_reference_targets = [];
     $bundle_entity_type_ids = [];
     foreach ($this->entityTypeManager->getDefinitions() as $entity_type_id => $entity_type) {
-      // Entity types must either have links or specify a link_target handler.
-      if (!$entity_type->hasLinkTemplate('canonical') && !$entity_type->hasHandlerClass('link_target', 'view')) {
+      if (!static::isLinkableEntityType($entity_type)) {
         continue;
       }
       $entity_type_options[$entity_type_id] = $entity_type->getCollectionLabel();
