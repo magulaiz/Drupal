@@ -5,6 +5,7 @@ declare(strict_types = 1);
 namespace Drupal\ckeditor5\Controller;
 
 use Drupal\Component\Utility\Html;
+use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Datetime\DateFormatterInterface;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Entity\EntityInterface;
@@ -12,8 +13,10 @@ use Drupal\Core\Entity\EntityReferenceSelection\SelectionPluginManagerInterface;
 use Drupal\Core\Entity\EntityRepositoryInterface;
 use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\editor\EditorInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -38,6 +41,8 @@ class EntityLinkSuggestionsController implements ContainerInjectionInterface {
   /**
    * Constructs a EntityLinkSuggestionsController.
    *
+   * @param \Drupal\Core\Session\AccountInterface $currentUser
+   *   The currently authenticated user.
    * @param \Drupal\Core\Entity\EntityReferenceSelection\SelectionPluginManagerInterface $selectionPluginManager
    *   The entity reference selection plugin manager.
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
@@ -50,6 +55,7 @@ class EntityLinkSuggestionsController implements ContainerInjectionInterface {
    *   The date formatter service.
    */
   public function __construct(
+    protected readonly AccountInterface $currentUser,
     protected readonly SelectionPluginManagerInterface $selectionPluginManager,
     protected readonly EntityTypeManagerInterface $entityTypeManager,
     protected readonly EntityTypeBundleInfoInterface $entityTypeBundleInfo,
@@ -62,12 +68,31 @@ class EntityLinkSuggestionsController implements ContainerInjectionInterface {
    */
   public static function create(ContainerInterface $container) {
     return new static(
+      $container->get('current_user'),
       $container->get(SelectionPluginManagerInterface::class),
       $container->get('entity_type.manager'),
       $container->get('entity_type.bundle.info'),
       $container->get('entity.repository'),
       $container->get('date.formatter')
     );
+  }
+
+  /**
+   * Checks access based on entity_links filter status on the text format.
+   *
+   * Note that access to the filter format is not checked here because the route
+   * is configured to check entity access to the filter format.
+   *
+   * @param \Drupal\editor\Entity\Editor $editor
+   *   The text editor for which to check access.
+   *
+   * @return \Drupal\Core\Access\AccessResultInterface
+   *   The access result.
+   */
+  public static function formatUsesEntityLinksFilter(EditorInterface $editor) {
+    $filters = $editor->getFilterFormat()->filters();
+    return AccessResult::allowedIf($filters->has('entity_links') && $filters->get('entity_links')->status)
+      ->addCacheableDependency($editor);
   }
 
   /**

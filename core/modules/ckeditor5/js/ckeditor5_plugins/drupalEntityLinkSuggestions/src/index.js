@@ -146,9 +146,13 @@ class DrupalEntityLinkSuggestions extends Plugin {
         let selected;
 
         initializeAutocomplete(linkFormView.urlInputView.fieldView.element, {
-          autocompleteUrl: Drupal.url(
-            `ckeditor5/entity-link-suggestions/${hostEntityTypeId}/${hostEntityLangcode}`,
-          ),
+          // @see \Drupal\ckeditor5\Plugin\CKEditor5Plugin\EntityLinkSuggestions::getDynamicPluginConfig()
+          autocompleteUrl: this.editor.config
+            .get('drupalEntityLinkSuggestions')
+            .suggestionsUrl.replace(
+              '/_/_',
+              `/${hostEntityTypeId}/${hostEntityLangcode}`,
+            ),
           selectHandler: (event, { item }) => {
             if (!item.path) {
               throw 'Missing path param.' + JSON.stringify(item);

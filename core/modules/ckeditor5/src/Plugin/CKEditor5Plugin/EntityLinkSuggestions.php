@@ -13,6 +13,8 @@ use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Render\Element\Checkboxes;
+use Drupal\Core\Url;
+use Drupal\editor\EditorInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -24,6 +26,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class EntityLinkSuggestions extends CKEditor5PluginDefault implements CKEditor5PluginConfigurableInterface, CKEditor5PluginElementsSubsetInterface, ContainerFactoryPluginInterface {
 
   use CKEditor5PluginConfigurableTrait;
+  use DynamicPluginConfigWithCsrfTokenUrlTrait;
 
   /**
    * EntityLinkSuggestions constructor.
@@ -60,6 +63,21 @@ class EntityLinkSuggestions extends CKEditor5PluginDefault implements CKEditor5P
       $container->get('entity_type.manager'),
       $container->get('entity_type.bundle.info')
     );
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getDynamicPluginConfig(array $static_plugin_config, EditorInterface $editor): array {
+    $dynamic_plugin_config = $static_plugin_config;
+    $dynamic_plugin_config['drupalEntityLinkSuggestions']['suggestionsUrl'] = self::getUrlWithReplacedCsrfTokenPlaceholder(
+      Url::fromRoute('ckeditor5.entity_link_suggestions')
+        ->setRouteParameter('editor', $editor->id())
+        // @see initializeAutocomplete() in core/modules/ckeditor5/js/ckeditor5_plugins/drupalEntityLinkSuggestions/src/index.js
+        ->setRouteParameter('host_entity_type_id', '_')
+        ->setRouteParameter('host_entity_langcode', '_')
+    );
+    return $dynamic_plugin_config;
   }
 
   /**
