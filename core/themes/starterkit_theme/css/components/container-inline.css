@@ -13,6 +13,13 @@
 .form-type-checkboxes .container-inline label::after {
   content: "";
 }
+/**
+ * Remove the trailing colon from the label of the last checkbox in a group of
+ * nested checkboxes inside an element with the class ".container-inline"
+ */
+.container-inline .form-item label:last-child::after {
+  content: none;
+}
 .form-type-radios .container-inline .form-type-radio,
 .form-type-checkboxes .container-inline .form-type-checkbox {
   margin: 0 1em;
@@ -21,12 +28,4 @@
 .container-inline.form-actions {
   margin-top: 0;
   margin-bottom: 0;
-}
-
-/* remove the trailing colon from the label
-of the last checkbox in a group of nested checkboxes
-inside an element with the class ".container-inline" */
-
-.container-inline .form-item label:last-child::after {
-  content: none;
 }
