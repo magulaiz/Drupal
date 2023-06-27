@@ -191,8 +191,8 @@ abstract class FormElement extends RenderElement implements FormElementInterface
     if (!empty($element['#autocomplete_route_name'])) {
       $parameters = $element['#autocomplete_route_parameters'] ?? [];
       $options = [];
-      if (!empty($element['#autocomplete_query_parameters'])) {
-        $options['query'] = $element['#autocomplete_query_parameters'];
+      if (!empty($parameters)) {
+        $options['query'] = $parameters;
       }
       $url = Url::fromRoute($element['#autocomplete_route_name'], $parameters, $options)->toString(TRUE);
       /** @var \Drupal\Core\Access\AccessManagerInterface $access_manager */

@@ -100,7 +100,7 @@ class EntityAutocompleteController extends ControllerBase {
       }
 
       $entity_type_id = $request->query->get('entity_type');
-      if ($this->entityTypeManager()->hasDefinition($entity_type_id)) {
+      if ($entity_type_id && $this->entityTypeManager()->hasDefinition($entity_type_id)) {
         $entity_id = $request->query->get('entity_id');
         if ($entity_id) {
           $entity = $this->entityTypeManager()->getStorage($entity_type_id)->load($entity_id);
