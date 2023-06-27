@@ -93,7 +93,7 @@ class EntityLinkSuggestionsController implements ContainerInjectionInterface {
     if ($input) {
       // First, find suggestions for the host entity type.
       $entity_type = $this->entityTypeManager->getDefinition($host_entity_type_id);
-      $host_entity_type_is_linkable = $entity_type->hasLinkTemplate('canonical') || $entity_type->hasHandlerClass('link_target');
+      $host_entity_type_is_linkable = $entity_type->hasLinkTemplate('canonical') || $entity_type->hasHandlerClass('link_target', 'view');
       if ($host_entity_type_is_linkable) {
         $suggestions = $this->getSuggestions($host_entity_type_id, $input);
       }
