@@ -92,7 +92,7 @@ class PhpTransliteration implements TransliterationInterface {
    */
   public function removeDiacritics($string) {
     $result = '';
-    $string_parts = $string ? preg_split('//u', $string, 0, PREG_SPLIT_NO_EMPTY) : [];
+    $string_parts = !empty($string) ? preg_split('//u', $string, 0, PREG_SPLIT_NO_EMPTY) : [];
 
     foreach ($string_parts as $character) {
       $code = self::ordUTF8($character);
