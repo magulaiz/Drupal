@@ -88,6 +88,10 @@ class ConfigurablePluginTest extends KernelTestBase {
           ['language' => 'xml', 'label' => 'XML'],
         ],
       ],
+      'ckeditor5_link_entity_suggestions' => [
+        'allow_download_links' => TRUE,
+        'suggestions' => NULL,
+      ],
       'ckeditor5_list' => [
         'reversed' => TRUE,
         'startIndex' => TRUE,
