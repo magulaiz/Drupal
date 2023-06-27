@@ -4,6 +4,7 @@ declare(strict_types = 1);
 
 namespace Drupal\ckeditor5\Controller;
 
+use Drupal\ckeditor5\Plugin\CKEditor5Plugin\EntityLinkSuggestions;
 use Drupal\Component\Utility\Html;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Datetime\DateFormatterInterface;
@@ -103,6 +104,8 @@ class EntityLinkSuggestionsController implements ContainerInjectionInterface {
    *
    * @param \Symfony\Component\HttpFoundation\Request $request
    *   The request.
+   * @param \Drupal\editor\EditorInterface $editor
+   *   The text editor whose drupalEntityLinkSuggestions configuration to use.
    * @param string $host_entity_type_id
    *   The host entity type ID.
    * @param string $host_entity_langcode
@@ -111,29 +114,38 @@ class EntityLinkSuggestionsController implements ContainerInjectionInterface {
    * @return \Symfony\Component\HttpFoundation\JsonResponse
    *   A JSON response containing the autocomplete suggestions.
    */
-  public function suggestions(Request $request, string $host_entity_type_id, string $host_entity_langcode) {
+  public function suggestions(Request $request, EditorInterface $editor, string $host_entity_type_id, string $host_entity_langcode) {
     $input = mb_strtolower($request->query->get('q'));
     $suggestions = [];
 
     if ($input) {
-      // First, find suggestions for the host entity type.
-      $entity_type = $this->entityTypeManager->getDefinition($host_entity_type_id);
-      $host_entity_type_is_linkable = $entity_type->hasLinkTemplate('canonical') || $entity_type->hasHandlerClass('link_target', 'view');
-      if ($host_entity_type_is_linkable) {
+      $plugin_config = $editor->getSettings()['plugins']['ckeditor5_link_entity_suggestions'];
+      $allowed_entity_type_ids = is_array($plugin_config['suggestions'])
+        // When configured to an array: suggestions for listed entity types.
+        ? array_column($plugin_config['suggestions'], 'entity_type_id')
+        // When configured to NULL: suggestions for every linkable entity type.
+        : array_keys(array_filter(
+          $this->entityTypeManager->getDefinitions(),
+          [EntityLinkSuggestions::class, 'isLinkableEntityType']
+        ));
+
+      // First, find suggestions for the host entity type, if the config allows
+      // it.
+      if (in_array($host_entity_type_id, $allowed_entity_type_ids, TRUE)) {
         $suggestions = $this->getSuggestions($host_entity_type_id, $input);
       }
 
-      // Second, find suggestions for all other entity types that are common
-      // reference targets (that aren't ignored).
+      // Second, find suggestions for all other entity types.
       foreach ($this->entityTypeManager->getDefinitions() as $entity_type_id => $entity_type) {
         if ($host_entity_type_id === $entity_type_id) {
           continue;
         }
-        // @todo Move this to filter configuration?
-        if ($entity_type->isCommonReferenceTarget()) {
+        if (in_array($entity_type_id, $allowed_entity_type_ids, TRUE)) {
           $suggestions = array_merge($suggestions, $this->getSuggestions($entity_type_id, $input));
         }
       }
+
+      // @todo respect the bundle restrictions too!
 
       // If no suggestions were found, add a special suggestion that has the
       // same path as the given string so users can select it and use it anyway.
