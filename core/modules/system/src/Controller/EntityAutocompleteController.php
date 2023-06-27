@@ -105,7 +105,7 @@ class EntityAutocompleteController extends ControllerBase {
         if ($entity_id) {
           $entity = $this->entityTypeManager()->getStorage($entity_type_id)->load($entity_id);
           if ($entity->access('update')) {
-            $selection_settings['entity'] = $this->entityTypeManager()->getStorage($entity_type_id)->load($entity_id);
+            $selection_settings['entity'] = $entity;
           }
         }
       }
