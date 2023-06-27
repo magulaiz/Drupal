@@ -132,7 +132,11 @@ class EntityLinkSuggestionsController implements ContainerInjectionInterface {
       // First, find suggestions for the host entity type, if the config allows
       // it.
       if (in_array($host_entity_type_id, $allowed_entity_type_ids, TRUE)) {
-        $suggestions = $this->getSuggestions($host_entity_type_id, $input);
+        $suggestions = $this->getSuggestions(
+          $host_entity_type_id,
+          EntityLinkSuggestions::getAllowedBundlesForEntityType($plugin_config, $host_entity_type_id),
+          $input
+        );
       }
 
       // Second, find suggestions for all other entity types.
@@ -141,11 +145,13 @@ class EntityLinkSuggestionsController implements ContainerInjectionInterface {
           continue;
         }
         if (in_array($entity_type_id, $allowed_entity_type_ids, TRUE)) {
-          $suggestions = array_merge($suggestions, $this->getSuggestions($entity_type_id, $input));
+          $suggestions = array_merge($suggestions, $this->getSuggestions(
+            $entity_type_id,
+            EntityLinkSuggestions::getAllowedBundlesForEntityType($plugin_config, $entity_type_id),
+            $input
+          ));
         }
       }
-
-      // @todo respect the bundle restrictions too!
 
       // If no suggestions were found, add a special suggestion that has the
       // same path as the given string so users can select it and use it anyway.
@@ -181,10 +187,15 @@ class EntityLinkSuggestionsController implements ContainerInjectionInterface {
    *
    * @param string $target_entity_type_id
    *   An entity type to get suggestions for.
+   * @param null|string[] $target_bundles
+   *   NULL to allow all bundles, a list of bundle names to restrict to those
+   *   bundles.
    * @param string $string
    *   The string to search.
+   *
+   * @see \Drupal\Core\Entity\Plugin\EntityReferenceSelection\DefaultSelection::defaultConfiguration()
    */
-  public function getSuggestions(string $target_entity_type_id, string $string) {
+  public function getSuggestions(string $target_entity_type_id, ?array $target_bundles, string $string) {
     // If the user input is a current entity URL, don't get more suggestions.
     if ($entity_id = static::findEntityIdByUrl($target_entity_type_id, $string)) {
       $entity = $this->entityTypeManager->getStorage($target_entity_type_id)->load($entity_id);
@@ -207,7 +218,10 @@ class EntityLinkSuggestionsController implements ContainerInjectionInterface {
     $plugin_id = array_key_exists($link_target_selection_plugin_id, $selection_handler_groups['default'])
       ? $link_target_selection_plugin_id
       : key($selection_handler_groups['default']);
-    $selection = $this->selectionPluginManager->createInstance($plugin_id, ['target_type' => $target_entity_type_id]);
+    $selection = $this->selectionPluginManager->createInstance($plugin_id, [
+      'target_type' => $target_entity_type_id,
+      'target_bundles' => $target_bundles,
+    ]);
 
     $entities_by_bundle = $selection->getReferenceableEntities($string, 'CONTAINS', static::DEFAULT_LIMIT);
     // DefaultSelection::getReferenceableEntities() loads entities and even
