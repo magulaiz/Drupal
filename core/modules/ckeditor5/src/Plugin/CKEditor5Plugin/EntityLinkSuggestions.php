@@ -108,6 +108,32 @@ class EntityLinkSuggestions extends CKEditor5PluginDefault implements CKEditor5P
   }
 
   /**
+   * Gets the allowed bundles for the given entity type from plugin config.
+   *
+   * @param array $configuration
+   *   The complete plugin configuration.
+   * @param string $entity_type_id
+   *   The entity type to find the suggestion configuration for.
+   *
+   * @return null|array
+   *   NULL if all bundles are allowed, a list of bundle names otherwise.
+   *
+   * @see \Drupal\Core\Entity\Plugin\EntityReferenceSelection\DefaultSelection::defaultConfiguration()
+   */
+  public static function getAllowedBundlesForEntityType(array $configuration, string $entity_type_id): ?array {
+    assert(array_keys($configuration) === ['allow_download_links', 'suggestions']);
+    $filtered = array_filter(
+      $configuration['suggestions'] ?? [],
+      fn(array $s) => $s['entity_type_id'] === $entity_type_id
+    );
+    if (empty($filtered)) {
+      return NULL;
+    }
+    assert(count($filtered) === 1 && array_keys(reset($filtered)) === ['entity_type_id', 'bundles']);
+    return reset($filtered)['bundles'];
+  }
+
+  /**
    * {@inheritdoc}
    */
   public function buildConfigurationForm(array $form, FormStateInterface $form_state) {
@@ -182,12 +208,6 @@ class EntityLinkSuggestions extends CKEditor5PluginDefault implements CKEditor5P
         '#weight' => array_search($entity_type_id, array_keys($entity_type_options)),
       ];
 
-      $current_configuration_for_entity_type = array_filter(
-        $this->configuration['suggestions'] ?? [],
-        fn(array $s) => $s['entity_type_id'] === $entity_type_id
-      );
-      $current_configuration_for_entity_type = empty($current_configuration_for_entity_type) ? NULL : reset($current_configuration_for_entity_type);
-
       $form['per_bundle'][$entity_type_id]['bundle'] = [
         '#title' => $this->t('Limit %entity-type-label link suggestions per %bundle-label', [
           '%entity-type-label' => $entity_type->getCollectionLabel(),
@@ -198,9 +218,7 @@ class EntityLinkSuggestions extends CKEditor5PluginDefault implements CKEditor5P
           array_keys($bundles_for_entity_type),
           array_column($bundles_for_entity_type, 'label')
         ),
-        '#default_value' => $current_configuration_for_entity_type
-          ? $current_configuration_for_entity_type['bundles'] ?? []
-          : [],
+        '#default_value' => self::getAllowedBundlesForEntityType($this->configuration, $entity_type_id),
         '#description' => $this->t('If none are selected, all will be allowed.'),
       ];
     }
@@ -223,11 +241,19 @@ class EntityLinkSuggestions extends CKEditor5PluginDefault implements CKEditor5P
         'entity_type_id' => $entity_type_id,
         'bundles' => Checkboxes::getCheckedCheckboxes($form_state->getValue(['per_bundle', $entity_type_id, 'bundle'], [])),
       ];
+      // When no bundle checkboxes are checked, all bundles are allowed. The
+      // configuration schema requires this to be NULL then instead of the empty
+      // array. This is inspired by the existing `target_bundles` setting in the
+      // default entity reference selection plugin which this functionality very
+      // much relies on.
+      // @see \Drupal\Core\Entity\Plugin\EntityReferenceSelection\DefaultSelection::defaultConfiguration()
       if (empty($suggestion['bundles'])) {
         $suggestion['bundles'] = NULL;
       }
       $suggestions[] = $suggestion;
     }
+    // Apply the same "NULL when everything is allowed" pattern as above at the
+    // entity type level.
     if (empty($entity_type_ids)) {
       $suggestions = NULL;
     }
