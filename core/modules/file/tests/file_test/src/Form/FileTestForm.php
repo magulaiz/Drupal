@@ -115,7 +115,7 @@ class FileTestForm implements FormInterface {
       define('SIMPLETEST_COLLECT_ERRORS', FALSE);
     }
 
-    $file = file_save_upload('file_test_upload', $validators, $destination, 0, $form_state->getValue('file_test_replace'));
+    $file = \Drupal::service('file_save.upload')->file_save_upload('file_test_upload', $validators, $destination, 0, $form_state->getValue('file_test_replace'));
     if ($file) {
       $form_state->setValue('file_test_upload', $file);
       \Drupal::messenger()->addStatus(t('File @filepath was uploaded.', ['@filepath' => $file->getFileUri()]));

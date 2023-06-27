@@ -5,15 +5,10 @@
  * Defines a "managed_file" Form API field and a "file" field for Field module.
  */
 
-use Drupal\Component\Utility\Environment;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Datetime\Entity\DateFormat;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
-use Drupal\Core\File\Exception\FileException;
-use Drupal\Core\File\Exception\FileExistsException;
-use Drupal\Core\File\Exception\FileWriteException;
-use Drupal\Core\File\Exception\InvalidStreamWrapperException;
 use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Link;
@@ -25,16 +20,8 @@ use Drupal\Core\Template\Attribute;
 use Drupal\Core\Url;
 use Drupal\file\Entity\File;
 use Drupal\file\FileInterface;
-use Drupal\file\Upload\FileValidationException;
-use Drupal\file\Upload\FormUploadedFile;
-use Symfony\Component\HttpFoundation\File\Exception\FileException as SymfonyFileException;
-use Symfony\Component\HttpFoundation\File\Exception\FormSizeFileException;
-use Symfony\Component\HttpFoundation\File\Exception\IniSizeFileException;
-use Symfony\Component\HttpFoundation\File\Exception\NoFileException;
-use Symfony\Component\HttpFoundation\File\Exception\PartialFileException;
 
 // cspell:ignore abiword
-
 // Load all Field module hooks for File.
 require_once __DIR__ . '/file.field.inc';
 
@@ -532,7 +519,7 @@ function _file_save_upload_from_form(array $element, FormStateInterface $form_st
   $upload_name = implode('_', $element['#parents']);
   $upload_validators = $element['#upload_validators'] ?? [];
 
-  $result = file_save_upload($upload_name, $upload_validators, $upload_location, $delta, $replace);
+  $result = \Drupal::service('file_save.upload')->file_save_upload($upload_name, $upload_validators, $upload_location, $delta, $replace);
 
   // Get new errors that are generated while trying to save the upload. This
   // will also clear them from the messenger service.
@@ -672,7 +659,7 @@ function file_tokens($type, $tokens, array $data, array $options, BubbleableMeta
           $replacements[$original] = $file->id();
           break;
 
-        // Essential file data
+        // Essential file data.
         case 'name':
           $replacements[$original] = $file->getFilename();
           break;
@@ -1130,7 +1117,7 @@ function file_icon_map($mime_type) {
     case 'application/x-pef-executable':
       return 'application-x-executable';
 
-    // Acrobat types
+    // Acrobat types.
     case 'application/pdf':
     case 'application/x-pdf':
     case 'applications/vnd.pdf':
