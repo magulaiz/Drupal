@@ -29,9 +29,6 @@ use Drupal\entity_test\Plugin\Field\ComputedTestFieldItemList;
  *     "bundle" = "type",
  *   },
  *   admin_permission = "administer entity_test content",
- *   links = {
- *     "canonical" = "/entity_test_comp_bund_fld/{entity_test_comp_bund_fld}",
- *   },
  * )
  */
 class EntityTestComputedBundleField extends EntityTest {

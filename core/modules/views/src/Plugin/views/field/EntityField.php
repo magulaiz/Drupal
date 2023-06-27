@@ -350,7 +350,7 @@ class EntityField extends FieldPluginBase implements CacheableDependencyInterfac
   /**
    * Gets the field storage definition.
    *
-   * @return \Drupal\Core\Field\FieldStorageDefinitionInterface|null
+   * @return \Drupal\Core\Field\FieldStorageDefinitionInterface
    *   The field storage definition used by this handler.
    */
   protected function getFieldStorageDefinition() {
@@ -371,10 +371,6 @@ class EntityField extends FieldPluginBase implements CacheableDependencyInterfac
     // base fields, so we need to explicitly fetch a list of all base fields in
     // order to support them.
     // @see \Drupal\Core\Entity\EntityFieldManager::getFieldStorageDefinitions()
-    if (!isset($this->definition['field_name'])) {
-      return NULL;
-    }
-
     $base_fields = $this->entityFieldManager->getBaseFieldDefinitions($entity_type_id);
     if (isset($this->definition['field_name']) && isset($base_fields[$this->definition['field_name']])) {
       return $base_fields[$this->definition['field_name']]->getFieldStorageDefinition();
@@ -386,7 +382,7 @@ class EntityField extends FieldPluginBase implements CacheableDependencyInterfac
     $bundles = $this->entityTypeBundleInfo->getBundleInfo($entity_type_id);
     foreach ($bundles as $bundle_id => $bundle) {
       $bundle_fields = $this->entityFieldManager->getFieldDefinitions($entity_type_id, $bundle_id);
-      if (isset($bundle_fields[$this->definition['field_name']])) {
+      if (isset($this->definition['field_name']) && isset($bundle_fields[$this->definition['field_name']])) {
         return $bundle_fields[$this->definition['field_name']]->getFieldStorageDefinition();
       }
     }

@@ -8,7 +8,7 @@ use Drupal\views\Tests\ViewTestData;
 use Drupal\views\Views;
 
 /**
- * Provides some integration tests for the Field handler.
+ * Provides some integration tests for computed bundle fields.
  *
  * @see \Drupal\views\Plugin\views\field\EntityField
  * @group views
