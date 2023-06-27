@@ -3,13 +3,13 @@
  * Inline items.
  */
 
-.container-inline label:after,
-.container-inline .label:after {
+.container-inline label::after,
+.container-inline .label::after {
   content: ":";
 }
-.container-inline .form-type--checkbox label:after,
-.form-type-radios .container-inline label:after,
-.form-type-checkboxes .container-inline label:after {
+.container-inline .form-type--checkbox label::after,
+.form-type-radios .container-inline label::after,
+.form-type-checkboxes .container-inline label::after {
   content: "";
 }
 .form-type-radios .container-inline .form-type-radio,

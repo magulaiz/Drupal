@@ -1208,7 +1208,7 @@
  * Drupal has several distinct types of information, each with its own methods
  * for storage and retrieval:
  * - Content: Information meant to be displayed on your site: articles, basic
- *   pages, images, files, custom blocks, etc. Content is stored and accessed
+ *   pages, images, files, content blocks, etc. Content is stored and accessed
  *   using @link entity_api Entities @endlink.
  * - Session: Information about individual users' interactions with the site,
  *   such as whether they are logged in. This is really "state" information, but
@@ -1798,6 +1798,7 @@
  * The queue system allows placing items in a queue and processing them later.
  * The system tries to ensure that only one consumer can process an item.
  *
+ * @section create_queues Creating queues
  * Before a queue can be used it needs to be created by
  * Drupal\Core\Queue\QueueInterface::createQueue().
  *
@@ -1822,6 +1823,7 @@
  * needs to be passed to Drupal\Core\Queue\QueueInterface::deleteItem() once
  * processing is completed.
  *
+ * @section queue_backends Queue backends
  * There are two kinds of queue backends available: reliable, which preserves
  * the order of messages and guarantees that every item will be executed at
  * least once. The non-reliable kind only does a best effort to preserve order
@@ -1914,6 +1916,8 @@
  * instead of executing the tasks directly. To do this, first define one or
  * more queues via a \Drupal\Core\Annotation\QueueWorker plugin. Then, add items
  * that need to be processed to the defined queues.
+ *
+ * @see queue
  */
 function hook_cron() {
   // Short-running operation example, not using a queue:
@@ -1973,11 +1977,27 @@ function hook_data_type_info_alter(&$data_types) {
  * @see \Drupal\Core\Queue\QueueWorkerInterface
  * @see \Drupal\Core\Annotation\QueueWorker
  * @see \Drupal\Core\Cron
+ *
+ * @ingroup queue
  */
 function hook_queue_info_alter(&$queues) {
   // This site has many feeds so let's spend 90 seconds on each cron run
   // updating feeds instead of the default 60.
   $queues['mymodule_feeds']['cron']['time'] = 90;
+}
+
+/**
+ * Alter the information provided in \Drupal\Core\Condition\ConditionManager::getDefinitions().
+ *
+ * @param array $definitions
+ *   The array of condition definitions.
+ */
+function hook_condition_info_alter(array &$definitions) {
+  // Add custom or modify existing condition definitions.
+  if (isset($definitions['node_type']) && $definitions['node_type']['class'] == 'Drupal\node\Plugin\Condition\NodeType') {
+    // If the node_type's class is unaltered, use a custom implementation.
+    $definitions['node_type']['class'] = 'Drupal\mymodule\Plugin\Condition\NodeType';
+  }
 }
 
 /**

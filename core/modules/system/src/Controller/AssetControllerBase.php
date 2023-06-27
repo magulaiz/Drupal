@@ -112,7 +112,7 @@ abstract class AssetControllerBase extends FileDownloadController {
    *   supplied.
    */
   public function deliver(Request $request, string $file_name) {
-    $uri = 'public://' . $this->assetType . '/' . $file_name;
+    $uri = 'assets://' . $this->assetType . '/' . $file_name;
 
     // Check to see whether a file matching the $uri already exists, this can
     // happen if it was created while this request was in progress.
@@ -136,6 +136,10 @@ abstract class AssetControllerBase extends FileDownloadController {
       throw new BadRequestHttpException('The libraries to include must be passed as a query argument');
     }
     $file_parts = explode('_', basename($file_name, '.' . $this->fileExtension), 2);
+    // Ensure the filename is correctly prefixed.
+    if ($file_parts[0] !== $this->fileExtension) {
+      throw new BadRequestHttpException('The filename prefix must match the file extension');
+    }
 
     // The hash is the second segment of the filename.
     if (!isset($file_parts[1])) {

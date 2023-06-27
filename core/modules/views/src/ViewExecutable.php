@@ -254,7 +254,7 @@ class ViewExecutable {
   public $override_url;
 
   /**
-   * Allow to override the path used for generated urls.
+   * Allow to override the path used for generated URLs.
    *
    * @var string
    */
@@ -705,7 +705,7 @@ class ViewExecutable {
 
       $this->exposed_input = \Drupal::request()->query->all();
       // unset items that are definitely not our input:
-      foreach (['page', 'q'] as $key) {
+      foreach (['page', 'q', 'ajax_page_state'] as $key) {
         if (isset($this->exposed_input[$key])) {
           unset($this->exposed_input[$key]);
         }
