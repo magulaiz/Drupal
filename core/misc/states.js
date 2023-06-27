@@ -710,7 +710,7 @@
         .toggleClass('form-readonly', e.value)
         .find('input, textarea')
         .each(function () {
-          this.readonly = e.value;
+          this.readOnly = e.value;
         });
     }
   });
