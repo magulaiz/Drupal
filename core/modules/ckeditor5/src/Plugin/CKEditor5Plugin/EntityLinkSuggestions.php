@@ -45,7 +45,6 @@ class EntityLinkSuggestions extends CKEditor5PluginDefault implements CKEditor5P
     $plugin_definition,
     protected readonly EntityTypeManagerInterface $entityTypeManager,
     protected readonly EntityTypeBundleInfoInterface $entityTypeBundleInfo,
-
   ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
   }
@@ -82,7 +81,7 @@ class EntityLinkSuggestions extends CKEditor5PluginDefault implements CKEditor5P
       '#title' => $this->t('Allow the user to create <em>download links</em>'),
       '#type' => 'checkbox',
       '#description' => $this->t('Allow content creators to create a download link on entities that support it, by adding a <a href=":url"><code>download</code></a> attribute that will cause the browser to download the linked file.', [':url' => 'https://developer.mozilla.org/en-US/docs/Web/HTML/Element/a#download']),
-      '#default_value' => $this->configuration['allow_download_links']
+      '#default_value' => $this->configuration['allow_download_links'],
     ];
 
     $entity_type_options = [];
