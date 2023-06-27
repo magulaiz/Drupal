@@ -104,7 +104,7 @@ class EntityReferenceAutocompleteWidget extends WidgetBase {
     ];
 
     // Append the entity if it is already created.
-    if ($entity->id()) {
+    if (!$entity->isNew()) {
       $selection_settings['entity'] = $entity;
     }
 
