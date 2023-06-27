@@ -346,10 +346,10 @@ ckeditor5_link_entity_suggestions:
       - drupalEntityLinkSuggestions.DrupalEntityLinkSuggestions
   drupal:
     label: Entity link suggestions
+    class: \Drupal\ckeditor5\Plugin\CKEditor5Plugin\EntityLinkSuggestions
     library: ckeditor5/internal.drupal.ckeditor5.link-entity-suggestions
     elements:
       - <a data-entity-type data-entity-uuid>
-      # @todo make configurable in the EntityLinks filter?
       - <a download>
     conditions:
       filter: entity_links

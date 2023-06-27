@@ -198,3 +198,44 @@ ckeditor5.plugin.ckeditor5_style:
                     minAttributeValueCount: 1
               StyleSensibleElement: []
             label: 'Style tag + classes'
+
+# Plugin \Drupal\ckeditor5\Plugin\CKEditor5Plugin\EntityLinkSuggestions
+ckeditor5.plugin.ckeditor5_link_entity_suggestions:
+  type: mapping
+  label: Entity link suggestions
+  mapping:
+    allow_download_links:
+      type: boolean
+      label: 'Allow download links'
+      constraints:
+        NotNull: []
+    suggestions:
+      type: sequence
+      orderby: ~
+      label: 'Allowed linkable entity types'
+      nullable: true
+      constraints:
+        NotBlank:
+          allowNull: true
+          message: "Allow suggestions for at least one entity type, or specify null to allow suggestions for all."
+        UniqueLabelInList:
+          labelKey: entity_type_id
+      sequence:
+        type: mapping
+        mapping:
+          entity_type_id:
+            type: string
+            label: 'Allowed linkable entity type'
+            constraints:
+              PluginExists:
+                manager: entity_type.manager
+          bundles:
+            type: sequence
+            label: 'Allowed bundles (if this entity type supports bundles)'
+            nullable: true
+            sequence:
+              type: string
+              label: 'Allowed bundle'
+              constraints:
+                # @todo validation constraint to verify this is one of the bundles on the entity type
+                Regex: '/^[a-z0-9_]+$/'
