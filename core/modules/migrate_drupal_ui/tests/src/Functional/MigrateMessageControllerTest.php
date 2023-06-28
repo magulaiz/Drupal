@@ -60,8 +60,8 @@ class MigrateMessageControllerTest extends MigrateUpgradeTestBase {
       'd7_user',
     ];
 
-    // Log in as user 1. Migrations in the UI can only be performed as user 1.
-    $this->drupalLogin($this->rootUser);
+    $user = $this->createUser(['view migration messages']);
+    $this->drupalLogin($user);
     $this->database = \Drupal::database();
   }
 
@@ -87,10 +87,10 @@ class MigrateMessageControllerTest extends MigrateUpgradeTestBase {
 
     // Test overview with no source database connection and with message tables.
     $this->drupalGet('/admin/reports/migration-messages');
+    $session->statusCodeEquals(200);
     $session->pageTextContains('Failed to connect to your database server');
     $session->pageTextContains('database connection configured for source plugin variable.');
     foreach ($this->migrationIds as $migration_id) {
-      $session->statusCodeEquals(200);
       $session->pageTextContains($migration_id);
     }
 
@@ -101,9 +101,9 @@ class MigrateMessageControllerTest extends MigrateUpgradeTestBase {
 
     // Now, test with a source database connection and with message tables.
     $this->drupalGet('/admin/reports/migration-messages');
+    $session->statusCodeEquals(200);
     $session->pageTextNotContains('Failed to connect to your database server');
     foreach ($this->migrationIds as $migration_id) {
-      $session->statusCodeEquals(200);
       $session->pageTextContains($migration_id);
     }
   }
@@ -141,8 +141,8 @@ class MigrateMessageControllerTest extends MigrateUpgradeTestBase {
     // Test overview without a source database connection and with message
     // tables.
     $this->drupalGet('/admin/reports/migration-messages');
+    $session->statusCodeEquals(200);
     foreach ($this->migrationIds as $migration_id) {
-      $session->statusCodeEquals(200);
       $session->pageTextContains($migration_id);
     }
 

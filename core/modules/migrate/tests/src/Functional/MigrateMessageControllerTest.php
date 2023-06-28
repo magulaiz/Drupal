@@ -44,8 +44,8 @@ class MigrateMessageControllerTest extends BrowserTestBase {
     parent::setUp();
     $this->database = \Drupal::service('database');
 
-    // Log in as user 1. Migrations in the UI can only be performed as user 1.
-    $this->drupalLogin($this->rootUser);
+    $user = $this->createUser(['view migration messages']);
+    $this->drupalLogin($user);
     $this->database = \Drupal::database();
   }
 
