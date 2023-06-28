@@ -168,7 +168,7 @@ class UpdateManagerInstall extends FormBase {
     }
     elseif (!empty($all_files['project_upload']) && $this->moduleHandler->moduleExists('file')) {
       $validators = ['FileExtension' => ['extensions' => $this->archiverManager->getExtensions()]];
-      if (!($finfo = \Drupal::service('file_save.upload')->file_save_upload('project_upload', $validators, NULL, 0, FileSystemInterface::EXISTS_REPLACE))) {
+      if (!($finfo = file_save_upload('project_upload', $validators, NULL, 0, FileSystemInterface::EXISTS_REPLACE))) {
         // Failed to upload the file. file_save_upload() calls
         // \Drupal\Core\Messenger\MessengerInterface::addError() on failure.
         return;
