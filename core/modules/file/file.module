@@ -531,7 +531,7 @@ function _file_save_upload_from_form(array $element, FormStateInterface $form_st
   $upload_name = implode('_', $element['#parents']);
   $upload_validators = $element['#upload_validators'] ?? [];
 
-  $result = \Drupal::service('file_save.upload')->file_save_upload($upload_name, $upload_validators, $upload_location, $delta, $replace);
+  $result = file_save_upload($upload_name, $upload_validators, $upload_location, $delta, $replace);
 
   // Get new errors that are generated while trying to save the upload. This
   // will also clear them from the messenger service.
