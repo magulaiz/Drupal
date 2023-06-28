@@ -193,11 +193,16 @@ class MediaUiFunctionalTest extends MediaFunctionalTestBase {
     $assert_session = $this->assertSession();
 
     $this->drupalCreateContentType(['type' => 'page', 'name' => 'Page']);
+    $this->createMediaType('image', ['id' => 'image', 'new_revision' => TRUE]);
     $this->drupalGet('/admin/structure/types/manage/page/fields/add-field');
     $page->selectFieldOption('new_storage_type', 'field_ui:entity_reference:media');
     $page->fillField('label', 'Foo field');
     $page->fillField('field_name', 'foo_field');
-    $page->pressButton('Save and continue');
+    $page->pressButton('Continue');
+    $page->pressButton('Continue');
+    // Select image media type.
+    $edit["settings[handler_settings][target_bundles][image]"] = TRUE;
+    $this->submitForm($edit, "Save settings");
     $this->drupalGet('/admin/structure/types/manage/page/display');
     $assert_session->fieldValueEquals('fields[field_foo_field][type]', 'entity_reference_entity_view');
   }
@@ -347,12 +352,12 @@ class MediaUiFunctionalTest extends MediaFunctionalTestBase {
       'field_name' => 'media_reference',
     ];
     $this->drupalGet("admin/structure/types/manage/{$content_type->id()}/fields/add-field");
-    $this->submitForm($edit, 'Save and continue');
+    $this->submitForm($edit, 'Continue');
+    $this->submitForm([], 'Continue');
     $edit = [];
     foreach ($media_types as $type) {
       $edit["settings[handler_settings][target_bundles][$type]"] = TRUE;
     }
-    $this->drupalGet("admin/structure/types/manage/{$content_type->id()}/fields/node.{$content_type->id()}.field_media_reference");
     $this->submitForm($edit, "Save settings");
     \Drupal::entityTypeManager()
       ->getStorage('entity_form_display')

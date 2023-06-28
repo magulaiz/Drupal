@@ -296,7 +296,9 @@ class ContentTranslationSettingsTest extends BrowserTestBase {
       'field_name' => 'article_text',
     ];
     $this->drupalGet('admin/structure/types/manage/article/fields/add-field');
-    $this->submitForm($edit, 'Save and continue');
+    $this->submitForm($edit, 'Continue');
+    $this->submitForm([], 'Continue');
+    $this->submitForm([], 'Save settings');
 
     // Tests that field doesn't have translatable setting if bundle is not
     // translatable.

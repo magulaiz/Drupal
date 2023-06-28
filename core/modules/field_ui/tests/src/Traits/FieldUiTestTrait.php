@@ -47,14 +47,11 @@ trait FieldUiTestTrait {
     if ($bundle_path !== NULL) {
       $this->drupalGet($bundle_path);
     }
-    $this->submitForm($initial_edit, 'Save and continue');
+    $this->submitForm($initial_edit, 'Continue');
     $this->assertSession()->pageTextContains("These settings apply to the $label field everywhere it is used.");
-    // Test Breadcrumbs.
-    $this->assertSession()->linkExists($label, 0, 'Field label is correct in the breadcrumb of the storage settings page.');
 
     // Second step: 'Storage settings' form.
-    $this->submitForm($storage_edit, 'Save field settings');
-    $this->assertSession()->pageTextContains("Updated field $label field settings.");
+    $this->submitForm($storage_edit, 'Continue');
 
     // Third step: 'Field settings' form.
     $this->submitForm($field_edit, 'Save settings');

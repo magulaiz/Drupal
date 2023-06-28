@@ -126,7 +126,7 @@ class EntityReferenceAdminTest extends WebDriverTestBase {
     $assert_session->waitForField('label')->setValue('Test');
     $machine_name = $assert_session->waitForElement('xpath', '//*[@id="edit-label-machine-name-suffix"]/span[contains(text(), "field_test")]');
     $this->assertNotEmpty($machine_name);
-    $page->pressButton('Save and continue');
+    $page->pressButton('Continue');
 
     // Node should be selected by default.
     $this->assertSession()->fieldValueEquals('settings[target_type]', 'node');
@@ -135,7 +135,7 @@ class EntityReferenceAdminTest extends WebDriverTestBase {
     $this->assertFieldSelectOptions('settings[target_type]', array_keys(\Drupal::entityTypeManager()->getDefinitions()));
 
     // Second step: 'Field settings' form.
-    $this->submitForm([], 'Save field settings');
+    $this->submitForm([], 'Continue');
 
     // The base handler should be selected by default.
     $this->assertSession()->fieldValueEquals('settings[handler]', 'default:node');
@@ -267,7 +267,7 @@ class EntityReferenceAdminTest extends WebDriverTestBase {
       'settings[target_type]' => 'taxonomy_term',
     ];
     $this->drupalGet($bundle_path . '/fields/' . $field_name . '/storage');
-    $this->submitForm($edit, 'Save field settings');
+    $this->submitForm($edit, 'Continue');
     $this->drupalGet($bundle_path . '/fields/' . $field_name);
     $this->assertSession()->fieldExists('settings[handler_settings][auto_create]');
 
@@ -278,7 +278,7 @@ class EntityReferenceAdminTest extends WebDriverTestBase {
       'settings[target_type]' => 'user',
     ];
     $this->drupalGet($bundle_path . '/fields/' . $field_name . '/storage');
-    $this->submitForm($edit, 'Save field settings');
+    $this->submitForm($edit, 'Continue');
     $this->drupalGet($bundle_path . '/fields/' . $field_name);
     $this->assertSession()->fieldValueEquals('settings[handler_settings][filter][type]', '_none');
     $this->assertSession()->fieldValueEquals('settings[handler_settings][sort][field]', '_none');
@@ -298,7 +298,7 @@ class EntityReferenceAdminTest extends WebDriverTestBase {
       'settings[target_type]' => 'node',
     ];
     $this->drupalGet($bundle_path . '/fields/' . $field_name . '/storage');
-    $this->submitForm($edit, 'Save field settings');
+    $this->submitForm($edit, 'Continue');
 
     // Try to select the views handler.
     $this->drupalGet($bundle_path . '/fields/' . $field_name);
@@ -331,7 +331,7 @@ class EntityReferenceAdminTest extends WebDriverTestBase {
       'settings[target_type]' => 'entity_test',
     ];
     $this->drupalGet($bundle_path . '/fields/' . $field_name . '/storage');
-    $this->submitForm($edit, 'Save field settings');
+    $this->submitForm($edit, 'Continue');
     $this->drupalGet($bundle_path . '/fields/' . $field_name);
     $page->findField('settings[handler]')->setValue('views');
     $assert_session

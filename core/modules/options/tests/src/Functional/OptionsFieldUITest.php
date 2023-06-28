@@ -323,7 +323,7 @@ class OptionsFieldUITest extends FieldTestBase {
   public function assertAllowedValuesInput(string $input_string, $result, string $message): void {
     $edit = ['settings[allowed_values]' => $input_string];
     $this->drupalGet($this->adminPath);
-    $this->submitForm($edit, 'Save field settings');
+    $this->submitForm($edit, 'Continue');
     // Verify that the page does not have double escaped HTML tags.
     $this->assertSession()->responseNotContains('&amp;lt;');
 
@@ -351,8 +351,7 @@ class OptionsFieldUITest extends FieldTestBase {
     ];
 
     $this->drupalGet($this->adminPath);
-    $this->submitForm($edit, 'Save field settings');
-    $this->assertSession()->pageTextContains('Updated field ' . $this->fieldName . ' field settings.');
+    $this->submitForm($edit, 'Continue');
 
     // Select a default value.
     $edit = [
@@ -400,7 +399,7 @@ class OptionsFieldUITest extends FieldTestBase {
 
       // Try to proceed without entering any value.
       $this->drupalGet($this->adminPath);
-      $this->submitForm([], 'Save field settings');
+      $this->submitForm([], 'Continue');
 
       // Confirmation message that this is a required field.
       $this->assertSession()->pageTextContains('Allowed values list field is required.');

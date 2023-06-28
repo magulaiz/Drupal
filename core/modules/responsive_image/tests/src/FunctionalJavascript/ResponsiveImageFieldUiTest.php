@@ -89,7 +89,13 @@ class ResponsiveImageFieldUiTest extends WebDriverTestBase {
     $assert_session->waitForElementVisible('css', '[name="label"] + * .machine-name-value');
 
     // Save the current page.
-    $save_button = $page->findButton('Save and continue');
+    $save_button = $page->findButton('Continue');
+    $save_button->click();
+    // Save field storage settings in temp storage.
+    $save_button = $page->findButton('Continue');
+    $save_button->click();
+    // Save field storage and field settings.
+    $save_button = $page->findButton('Save settings');
     $save_button->click();
 
     // Display the "Manage display" page.

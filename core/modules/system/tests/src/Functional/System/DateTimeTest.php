@@ -218,19 +218,18 @@ class DateTimeTest extends BrowserTestBase {
       'field_name' => 'dt',
     ];
     $this->drupalGet('admin/structure/types/manage/page_with_date/fields/add-field');
-    $this->submitForm($edit, 'Save and continue');
+    $this->submitForm($edit, 'Continue');
     // Check that the new datetime field was created, and process is now set
     // to continue for configuration.
     $this->assertSession()->pageTextContains('These settings apply to the');
 
-    $this->drupalGet('admin/structure/types/manage/page_with_date/fields/node.page_with_date.field_dt/storage');
     $edit = [
       'settings[datetime_type]' => 'datetime',
       'cardinality' => 'number',
       'cardinality_number' => '1',
     ];
-    $this->drupalGet('admin/structure/types/manage/page_with_date/fields/node.page_with_date.field_dt/storage');
-    $this->submitForm($edit, 'Save field settings');
+    $this->submitForm($edit, 'Continue');
+    $this->submitForm([], 'Save settings');
 
     $this->drupalGet('admin/structure/types/manage/page_with_date/fields');
     $this->assertSession()->pageTextContains('field_dt');

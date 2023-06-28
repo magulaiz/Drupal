@@ -26,7 +26,12 @@ class FieldConfigEditFormTest extends UnitTestCase {
     parent::setUp();
 
     $entity_type_bundle_info = $this->createMock('\Drupal\Core\Entity\EntityTypeBundleInfoInterface');
-    $this->fieldConfigEditForm = new FieldConfigEditForm($entity_type_bundle_info);
+    $temp_store = $this->createMock('\Drupal\Core\TempStore\PrivateTempStoreFactory');
+    $typed_data_manager = $this->createMock('\Drupal\Core\TypedData\TypedDataManagerInterface');
+    $entity_display_repository = $this->createMock('\Drupal\Core\Entity\EntityDisplayRepositoryInterface');
+    $plugin_manager = $this->createMock('\Drupal\Component\Plugin\PluginManagerBase');
+    $selection_manager = $this->createMock('\Drupal\Core\Entity\EntityReferenceSelection\SelectionPluginManagerInterface');
+    $this->fieldConfigEditForm = new FieldConfigEditForm($entity_type_bundle_info, $temp_store, $typed_data_manager, $entity_display_repository, $plugin_manager, $selection_manager);
   }
 
   /**

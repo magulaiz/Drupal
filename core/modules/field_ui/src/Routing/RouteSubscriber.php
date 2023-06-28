@@ -110,6 +110,28 @@ class RouteSubscriber extends RouteSubscriberBase {
         $collection->add("field_ui.field_storage_config_add_$entity_type_id", $route);
 
         $route = new Route(
+          "$path/add-field/{entity_type}/{field_name}",
+          [
+            '_controller' => '\Drupal\field_ui\Controller\FieldConfigAddController::fieldConfigAddConfigureForm',
+            '_title' => 'Add field',
+          ] + $defaults,
+          ['_permission' => 'administer ' . $entity_type_id . ' fields'],
+          $options
+        );
+        $collection->add("field_ui.field_add_$entity_type_id", $route);
+
+        $route = new Route(
+          "$path/add-storage/{entity_type}/{field_name}",
+          [
+            '_controller' => '\Drupal\field_ui\Controller\FieldStorageAddController::storageAddConfigureForm',
+            '_title' => 'Add storage',
+          ] + $defaults,
+          ['_permission' => 'administer ' . $entity_type_id . ' fields'],
+          $options
+        );
+        $collection->add("field_ui.field_storage_add_$entity_type_id", $route);
+
+        $route = new Route(
           "$path/fields/reuse",
           [
             '_form' => '\Drupal\field_ui\Form\FieldStorageReuseForm',

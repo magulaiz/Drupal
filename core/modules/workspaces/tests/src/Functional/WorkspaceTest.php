@@ -231,9 +231,9 @@ class WorkspaceTest extends BrowserTestBase {
       'field_name' => $field_name,
     ];
     $this->drupalGet("admin/config/workflow/workspaces/fields/add-field");
-    $this->submitForm($edit, 'Save and continue');
+    $this->submitForm($edit, 'Continue');
     $page = $this->getSession()->getPage();
-    $page->pressButton('Save field settings');
+    $page->pressButton('Continue');
     $page->pressButton('Save settings');
 
     // Check that the field is displayed on the manage form display page.

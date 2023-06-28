@@ -6,6 +6,8 @@ use Drupal\Core\Config\Entity\ConfigEntityBase;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Entity\FieldableEntityStorageInterface;
+use Drupal\Core\Entity\Plugin\DataType\EntityAdapter;
+use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\Field\FieldException;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\TypedData\OptionsProviderInterface;
@@ -666,7 +668,13 @@ class FieldStorageConfig extends ConfigEntityBase implements FieldStorageConfigI
     // runtime item object, so that it can be used as the options provider
     // without modifying the entity being worked on.
     if (is_subclass_of($this->getFieldItemClass(), OptionsProviderInterface::class)) {
-      $items = $entity->get($this->getName());
+      // Create a new field item list using a temporary base field definition.
+      // This step is necessary since there may not be a field configuration for
+      // the storage when creating a new field.
+      $field_storage = BaseFieldDefinition::createFromFieldStorageDefinition($this);
+      $entity_adapter = EntityAdapter::createFromEntity($entity);
+      $items = \Drupal::typedDataManager()->create($field_storage, NULL, $field_storage->getName(), $entity_adapter);
+
       return \Drupal::service('plugin.manager.field.field_type')->createFieldItem($items, 0);
     }
     // @todo: Allow setting custom options provider, see

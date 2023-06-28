@@ -119,13 +119,13 @@ class EntityReferenceAdminTest extends BrowserTestBase {
       'field_name' => $field_name,
     ];
     $this->drupalGet($bundle_path . '/fields/add-field');
-    $this->submitForm($edit, 'Save and continue');
+    $this->submitForm($edit, 'Continue');
 
     // Set to unlimited.
     $edit = [
       'cardinality' => FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED,
     ];
-    $this->submitForm($edit, 'Save field settings');
+    $this->submitForm($edit, 'Continue');
 
     // Add the view to the test field.
     $edit = [
@@ -211,7 +211,7 @@ class EntityReferenceAdminTest extends BrowserTestBase {
     $edit = [
       'cardinality' => -1,
     ];
-    $this->submitForm($edit, 'Save field settings');
+    $this->submitForm($edit, 'Continue');
     $this->drupalGet($bundle_path . '/fields/' . $field_path);
     $term_name = $this->randomString();
     $result = \Drupal::entityQuery('taxonomy_term')

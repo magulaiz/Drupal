@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\field\Functional\EntityReference;
 
+use Drupal\Tests\field_ui\Traits\FieldUiTestTrait;
 use Drupal\Tests\SchemaCheckTestTrait;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
@@ -16,6 +17,7 @@ use Drupal\Tests\BrowserTestBase;
 class EntityReferenceFieldDefaultValueTest extends BrowserTestBase {
 
   use SchemaCheckTestTrait;
+  use FieldUiTestTrait;
 
   /**
    * Modules to install.
@@ -37,6 +39,13 @@ class EntityReferenceFieldDefaultValueTest extends BrowserTestBase {
   protected $adminUser;
 
   /**
+   * The name of the content type created for testing purposes.
+   *
+   * @var string
+   */
+  protected $type;
+
+  /**
    * {@inheritdoc}
    */
   protected function setUp(): void {
@@ -55,6 +64,11 @@ class EntityReferenceFieldDefaultValueTest extends BrowserTestBase {
       'bypass node access',
     ]);
     $this->drupalLogin($this->adminUser);
+
+    // Create a content type, with underscores.
+    $type_name = strtolower($this->randomMachineName(8)) . '_test';
+    $type = $this->drupalCreateContentType(['name' => $type_name, 'type' => $type_name]);
+    $this->type = $type->id();
   }
 
   /**
@@ -170,6 +184,20 @@ class EntityReferenceFieldDefaultValueTest extends BrowserTestBase {
     $config_entity = $this->config('field.field.node.reference_content.' . $field_name)->get();
     $this->assertNotContains($referenced_node_type->getConfigDependencyName(), $config_entity['dependencies']['config'], 'The node type referenced_config_to_delete not a dependency of the field.');
     $this->assertContains($referenced_node_type2->getConfigDependencyName(), $config_entity['dependencies']['config'], 'The node type referenced_config_to_preserve is a dependency of the field.');
+  }
+
+  /**
+   * Tests that the user entities can be referenced.
+   */
+  public function testUserEntityReference() {
+    $bundle_path = 'admin/structure/types/manage/' . $this->type;
+    $field_name = mb_strtolower($this->randomMachineName());
+
+    $field_edit = [
+      'set_default_value' => '1',
+      'default_value_input[field_' . $field_name . '][0][target_id]' => $this->adminUser->label() . ' (' . $this->adminUser->id() . ')',
+    ];
+    $this->fieldUIAddNewField($bundle_path, $field_name, NULL, 'field_ui:entity_reference:user', [], $field_edit);
   }
 
 }

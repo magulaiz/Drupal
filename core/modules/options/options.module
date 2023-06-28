@@ -79,7 +79,7 @@ function options_allowed_values(FieldStorageDefinitionInterface $definition, Fie
   }
   $cache_id = implode(':', $cache_keys);
 
-  if (!isset($allowed_values[$cache_id])) {
+  if (!isset($allowed_values[$cache_id]) || $allowed_values[$cache_id] !== $definition->getSetting('allowed_values')) {
     $function = $definition->getSetting('allowed_values_function');
     // If $cacheable is FALSE, then the allowed values are not statically
     // cached. See options_test_dynamic_values_callback() for an example of

@@ -450,8 +450,8 @@ class LayoutBuilderTest extends BrowserTestBase {
       'field_name' => 'my_text',
     ];
     $this->drupalGet("{$field_ui_prefix}/fields/add-field");
-    $this->submitForm($edit, 'Save and continue');
-    $page->pressButton('Save field settings');
+    $this->submitForm($edit, 'Continue');
+    $page->pressButton('Continue');
     $page->pressButton('Save settings');
     $this->drupalGet("$field_ui_prefix/display/default/layout");
     $assert_session->pageTextContains('My text field');

@@ -161,10 +161,13 @@ class SearchPageCacheTagsTest extends BrowserTestBase {
       'label' => 'Test label',
       'field_name' => 'test__ref',
       'new_storage_type' => 'entity_reference',
-    ], 'Save and continue');
+    ], 'Continue');
 
     // Second step: 'Field settings' form.
-    $this->submitForm([], 'Save field settings');
+    $this->submitForm([], 'Continue');
+    // Select the page content type checkbox.
+    $this->getSession()->getPage()->findField('settings[handler_settings][target_bundles][page]')->setValue(TRUE);
+    $this->submitForm([], 'Save settings');
 
     // Create a new node of our newly created node type and fill in the entity
     // reference field.

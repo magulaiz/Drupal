@@ -3,12 +3,12 @@
 namespace Drupal\field_ui\Form;
 
 use Drupal\Core\Config\ConfigFactoryInterface;
-use Drupal\Core\Entity\EntityDisplayRepositoryInterface;
 use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Field\FieldTypePluginManagerInterface;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\TempStore\PrivateTempStoreFactory;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\field_ui\FieldUI;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -19,8 +19,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * @internal
  */
 class FieldStorageAddForm extends FormBase {
-
-  use FieldStorageCreationTrait;
 
   /**
    * The name of the entity type.
@@ -51,13 +49,6 @@ class FieldStorageAddForm extends FormBase {
   protected $entityFieldManager;
 
   /**
-   * The entity display repository.
-   *
-   * @var \Drupal\Core\Entity\EntityDisplayRepositoryInterface
-   */
-  protected $entityDisplayRepository;
-
-  /**
    * The field type plugin manager.
    *
    * @var \Drupal\Core\Field\FieldTypePluginManagerInterface
@@ -72,6 +63,13 @@ class FieldStorageAddForm extends FormBase {
   protected $configFactory;
 
   /**
+   * The tempstore object.
+   *
+   * @var \Drupal\Core\TempStore\PrivateTempStoreFactory
+   */
+  protected $tempStore;
+
+  /**
    * Constructs a new FieldStorageAddForm object.
    *
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
@@ -80,17 +78,17 @@ class FieldStorageAddForm extends FormBase {
    *   The field type plugin manager.
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   The configuration factory.
+   * @param \Drupal\Core\TempStore\PrivateTempStoreFactory $temp_store_factory
+   *   The tempstore factory.
    * @param \Drupal\Core\Entity\EntityFieldManagerInterface|null $entity_field_manager
    *   (optional) The entity field manager.
-   * @param \Drupal\Core\Entity\EntityDisplayRepositoryInterface $entity_display_repository
-   *   (optional) The entity display repository.
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager, FieldTypePluginManagerInterface $field_type_plugin_manager, ConfigFactoryInterface $config_factory, EntityFieldManagerInterface $entity_field_manager = NULL, EntityDisplayRepositoryInterface $entity_display_repository = NULL) {
+  public function __construct(EntityTypeManagerInterface $entity_type_manager, FieldTypePluginManagerInterface $field_type_plugin_manager, ConfigFactoryInterface $config_factory, PrivateTempStoreFactory $temp_store_factory, EntityFieldManagerInterface $entity_field_manager = NULL) {
     $this->entityTypeManager = $entity_type_manager;
     $this->fieldTypePluginManager = $field_type_plugin_manager;
     $this->configFactory = $config_factory;
+    $this->tempStore = $temp_store_factory->get('field_ui');
     $this->entityFieldManager = $entity_field_manager;
-    $this->entityDisplayRepository = $entity_display_repository;
   }
 
   /**
@@ -108,8 +106,8 @@ class FieldStorageAddForm extends FormBase {
       $container->get('entity_type.manager'),
       $container->get('plugin.manager.field.field_type'),
       $container->get('config.factory'),
-      $container->get('entity_field.manager'),
-      $container->get('entity_display.repository')
+      $container->get('tempstore.private'),
+      $container->get('entity_field.manager')
     );
   }
 
@@ -190,7 +188,7 @@ class FieldStorageAddForm extends FormBase {
     $form['actions'] = ['#type' => 'actions'];
     $form['actions']['submit'] = [
       '#type' => 'submit',
-      '#value' => $this->t('Save and continue'),
+      '#value' => $this->t('Continue'),
       '#button_type' => 'primary',
     ];
 
@@ -289,38 +287,32 @@ class FieldStorageAddForm extends FormBase {
     ];
 
     try {
-      // Create the field storage.
-      $this->entityTypeManager->getStorage('field_storage_config')
-        ->create($field_storage_values)->save();
-
-      // Create the field.
-      $field = $this->entityTypeManager->getStorage('field_config')
-        ->create($field_values);
-      $field->save();
-
-      // Configure the display modes.
-      $this->configureEntityFormDisplay($field_name, $default_options['entity_form_display'] ?? []);
-      $this->configureEntityViewDisplay($field_name, $default_options['entity_view_display'] ?? []);
+      $field_storage_entity = $this->entityTypeManager->getStorage('field_storage_config')->create($field_storage_values);
     }
     catch (\Exception $e) {
       $this->messenger()->addError($this->t('There was a problem creating field %label: @message', ['%label' => $values['label'], '@message' => $e->getMessage()]));
       return;
     }
 
+    $field_values += [
+      'field_storage' => $field_storage_entity,
+    ];
+
+    // Save field and field storage values in tempstore.
+    $this->tempStore->set($this->currentUser()->id() . ':' . $this->entityTypeId . ':' . $field_name, [
+      'field_storage' => $field_storage_entity,
+      'field_values' => $field_values,
+      'default_options' => $default_options,
+    ]);
+
     // Configure next steps in the multi-part form.
     $destinations = [];
     $route_parameters = [
-      'field_config' => $field->id(),
+      'entity_type' => $this->entityTypeId,
+      'field_name' => $field_name,
     ] + FieldUI::getRouteBundleParameter($entity_type, $this->bundle);
-    // Always show the field settings step, as the cardinality needs to be
-    // configured for new fields.
     $destinations[] = [
-      'route_name' => "entity.field_config.{$this->entityTypeId}_storage_edit_form",
-      'route_parameters' => $route_parameters,
-    ];
-
-    $destinations[] = [
-      'route_name' => "entity.field_config.{$this->entityTypeId}_field_edit_form",
+      'route_name' => "field_ui.field_add_{$this->entityTypeId}",
       'route_parameters' => $route_parameters,
     ];
     $destinations[] = [
@@ -332,11 +324,9 @@ class FieldStorageAddForm extends FormBase {
     $form_state->setRedirectUrl(
       FieldUI::getNextDestination($destinations)
     );
-
     // Store new field information for any additional submit handlers.
     $form_state->set(['fields_added', '_add_new_field'], $field_name);
 
-    $this->messenger()->addMessage($this->t('Your settings have been saved.'));
   }
 
   /**

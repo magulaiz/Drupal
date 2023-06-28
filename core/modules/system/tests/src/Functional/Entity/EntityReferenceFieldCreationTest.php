@@ -39,7 +39,7 @@ class EntityReferenceFieldCreationTest extends BrowserTestBase {
       'label' => 'Test Field',
       'field_name' => 'test_reference_field',
     ];
-    $this->submitForm($edit, 'Save and continue');
+    $this->submitForm($edit, 'Continue');
     $this->assertSession()->optionNotExists('settings[target_type]', 'entity_test_no_id');
 
     // Trying to do it programmatically should raise an exception.
