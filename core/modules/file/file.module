@@ -614,7 +614,7 @@ function _file_save_upload_from_form(array $element, FormStateInterface $form_st
  *
  * @see _file_save_upload_from_form()
  *
- * @todo: move this logic to a service in https://www.drupal.org/node/2244513.
+ * @todo move this logic to a service in https://www.drupal.org/node/2244513.
  * @deprecated in drupal:11.0.0 and is removed from drupal:11.0.3.
  * Use FileSaveUpload service instead.
  *
@@ -665,33 +665,40 @@ function file_save_upload($form_field_name, $validators = [], $destination = FAL
       if ($result->isRenamed()) {
         if ($result->isSecurityRename()) {
           $message = t('For security reasons, your upload has been renamed to %filename.', ['%filename' => $file->getFilename()]);
-        } else {
+        }
+        else {
           $message = t('Your upload has been renamed to %filename.', ['%filename' => $file->getFilename()]);
         }
         \Drupal::messenger()->addStatus($message);
       }
       $files[$i] = $file;
-    } catch (FileExistsException $e) {
+    }
+    catch (FileExistsException $e) {
       \Drupal::messenger()->addError(t('Destination file "%file" exists', ['%file' => $destination . $uploaded_file->getFilename()]));
       $files[$i] = FALSE;
-    } catch (InvalidStreamWrapperException $e) {
+    }
+    catch (InvalidStreamWrapperException $e) {
       \Drupal::messenger()->addError(t('The file could not be uploaded because the destination "%destination" is invalid.', ['%destination' => $destination]));
       $files[$i] = FALSE;
-    } catch (IniSizeFileException | FormSizeFileException $e) {
+    }
+    catch (IniSizeFileException | FormSizeFileException $e) {
       \Drupal::messenger()->addError(t('The file %file could not be saved because it exceeds %maxsize, the maximum allowed size for uploads.', [
         '%file' => $uploaded_file->getFilename(),
         '%maxsize' => format_size(Environment::getUploadMaxSize()),
       ]));
       $files[$i] = FALSE;
-    } catch (PartialFileException | NoFileException $e) {
+    }
+    catch (PartialFileException | NoFileException $e) {
       \Drupal::messenger()->addError(t('The file %file could not be saved because the upload did not complete.', [
         '%file' => $uploaded_file->getFilename(),
       ]));
       $files[$i] = FALSE;
-    } catch (SymfonyFileException $e) {
+    }
+    catch (SymfonyFileException $e) {
       \Drupal::messenger()->addError(t('The file %file could not be saved. An unknown error has occurred.', ['%file' => $uploaded_file->getFilename()]));
       $files[$i] = FALSE;
-    } catch (FileValidationException $e) {
+    }
+    catch (FileValidationException $e) {
       $message = [
         'error' => [
           '#markup' => t('The specified file %name could not be uploaded.', ['%name' => $e->getFilename()]),
@@ -706,11 +713,13 @@ function file_save_upload($form_field_name, $validators = [], $destination = FAL
       // @see https://www.drupal.org/node/2505497.
       \Drupal::messenger()->addError($renderer->renderPlain($message));
       $files[$i] = FALSE;
-    } catch (FileWriteException $e) {
+    }
+    catch (FileWriteException $e) {
       \Drupal::messenger()->addError(t('File upload error. Could not move uploaded file.'));
       \Drupal::logger('file')->notice('Upload error. Could not move uploaded file %file to destination %destination.', ['%file' => $uploaded_file->getClientOriginalName(), '%destination' => $destination . '/' . $uploaded_file->getClientOriginalName()]);
       $files[$i] = FALSE;
-    } catch (FileException $e) {
+    }
+    catch (FileException $e) {
       \Drupal::messenger()->addError(t('The file %filename could not be uploaded because the name is invalid.', ['%filename' => $uploaded_file->getClientOriginalName()]));
       $files[$i] = FALSE;
     }
