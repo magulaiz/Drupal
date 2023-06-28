@@ -42,7 +42,6 @@ class MigrateMessageControllerTest extends BrowserTestBase {
    */
   protected function setUp(): void {
     parent::setUp();
-    $this->database = \Drupal::service('database');
 
     $user = $this->createUser(['view migration messages']);
     $this->drupalLogin($user);
