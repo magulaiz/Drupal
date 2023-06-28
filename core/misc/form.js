@@ -119,11 +119,11 @@
       function onFormSubmit(e) {
         const $form = $(e.currentTarget);
         const formValues = $form.serialize();
-        const previousValues = $form.attr('data-drupal-form-submit-last');
+        const previousValues = $form[0].getAttribute('data-drupal-form-submit-last');
         if (previousValues === formValues) {
           e.preventDefault();
         } else {
-          $form.attr('data-drupal-form-submit-last', formValues);
+          $form[0].getAttribute('data-drupal-form-submit-last', formValues);
         }
       }
 
@@ -202,7 +202,7 @@
       if (contextIsForm) {
         formFields = fieldsList(context).join(',');
         // @todo replace with form.getAttribute() when #1979468 is in.
-        const currentFields = $(context).attr('data-drupal-form-fields');
+        const currentFields = $(context)[0].getAttribute('data-drupal-form-fields');
         // If there has been a change in the fields or their order, trigger
         // formUpdated.
         if (formFields !== currentFields) {
@@ -250,7 +250,7 @@
           }
           const emptyValue = $element[0].value === '';
           const defaultValue =
-            $element.attr('data-drupal-default-value') === $element[0].value;
+            $element[0].getAttribute('data-drupal-default-value') === $element[0].value;
           if (browserData && (emptyValue || defaultValue)) {
             $element.each(function (index, item) {
               item.value = browserData;
