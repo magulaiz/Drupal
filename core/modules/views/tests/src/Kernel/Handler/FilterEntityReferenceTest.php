@@ -17,7 +17,7 @@ use Drupal\views\Views;
  *
  * @group views
  */
-class FieldEntityReferenceTest extends ViewsKernelTestBase {
+class FilterEntityReferenceTest extends ViewsKernelTestBase {
 
   use ContentTypeCreationTrait;
   use EntityReferenceTestTrait;
