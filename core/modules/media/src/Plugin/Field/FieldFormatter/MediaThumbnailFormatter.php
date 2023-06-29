@@ -146,8 +146,8 @@ class MediaThumbnailFormatter extends ImageFormatter {
       $elements[$delta] = [
         '#theme' => 'image_formatter',
         '#item' => $media->hasField($source_field) && !$media->get($source_field)->isEmpty() ?
-          $media->get($source_field)->first() :
-          $media->get('thumbnail')->first(),
+        $media->get($source_field)->first() :
+        $media->get('thumbnail')->first(),
         '#item_attributes' => [
           'loading' => $this->getSetting('image_loading')['attribute'],
         ],
