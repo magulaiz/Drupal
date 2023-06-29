@@ -25,11 +25,14 @@ class EntityFieldManager implements EntityFieldManagerInterface {
   use StringTranslationTrait;
 
   /**
-   * Extra fields by bundle.
+   * Extra fields info, if initialized.
    *
-   * @var array
+   * The fields are keyed by entity type, bundle, type ('form' or 'display'),
+   * and the extra field name.
+   *
+   * @var array[][][][]|null
    */
-  protected $extraFields = [];
+  protected ?array $extraFields = NULL;
 
   /**
    * Static cache of base field definitions.
@@ -619,7 +622,7 @@ class EntityFieldManager implements EntityFieldManagerInterface {
     $this->fieldMap = [];
     $this->fieldMapByFieldType = [];
     $this->entityDisplayRepository->clearDisplayModeInfo();
-    $this->extraFields = [];
+    $this->extraFields = NULL;
     Cache::invalidateTags(['entity_field_info']);
     // The typed data manager statically caches prototype objects with injected
     // definitions, clear those as well.
@@ -643,21 +646,13 @@ class EntityFieldManager implements EntityFieldManagerInterface {
    * {@inheritdoc}
    */
   public function getExtraFields($entity_type_id, $bundle) {
-    // Read from the "static" cache.
-    if (isset($this->extraFields[$entity_type_id][$bundle])) {
-      return $this->extraFields[$entity_type_id][$bundle];
-    }
-
-    $defaults = [
-      'form' => [],
-      'display' => [],
-    ];
-
-    // Populate the static cache in case we have cached data but this bundle
-    // does not have extra fields.
-    if (count($this->extraFields) > 0) {
-      $this->extraFields[$entity_type_id][$bundle] = $defaults;
-      return $this->extraFields[$entity_type_id][$bundle];
+    if ($this->extraFields !== NULL) {
+      // Read from the "static" cache.
+      // Return an empty fallback if the bundle has no extra fields.
+      return $this->extraFields[$entity_type_id][$bundle] ?? [
+        'form' => [],
+        'display' => [],
+      ];
     }
 
     // Read from the persistent cache. Since hook_entity_extra_field_info() and
@@ -675,7 +670,10 @@ class EntityFieldManager implements EntityFieldManagerInterface {
       // Apply default values to each bundle.
       foreach ($extra as &$extra_fields_by_bundle) {
         foreach ($extra_fields_by_bundle as &$bundle_extra_fields) {
-          $bundle_extra_fields += $defaults;
+          $bundle_extra_fields += [
+            'form' => [],
+            'display' => [],
+          ];
         }
       }
 
@@ -685,12 +683,10 @@ class EntityFieldManager implements EntityFieldManagerInterface {
       ]);
     }
 
-    $info = $this->extraFields[$entity_type_id][$bundle] ?? $defaults;
-
-    // Store in the 'static' cache.
-    $this->extraFields[$entity_type_id][$bundle] = $info;
-
-    return $this->extraFields[$entity_type_id][$bundle];
+    return $this->extraFields[$entity_type_id][$bundle] ?? [
+      'form' => [],
+      'display' => [],
+    ];
   }
 
 }
