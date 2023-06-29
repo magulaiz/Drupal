@@ -110,7 +110,7 @@ class ToolbarIntegrationTest extends WebDriverTestBase {
     $this->assertSession()->pageTextNotContains('Toolbar-item1');
 
     // Click the toggle button to see the toolbar items.
-    $this->click('#toolbar-bar div:nth-child(5) a');
+    $this->click("#toolbar-bar > div[data-drupal-selector=toolbar-extra-item-toggle] > a");
 
     // Check that the toolbar items are now visible.
     $this->assertSession()->pageTextContains('Toolbar-item1');
