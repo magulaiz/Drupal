@@ -646,47 +646,51 @@ class EntityFieldManager implements EntityFieldManagerInterface {
    * {@inheritdoc}
    */
   public function getExtraFields($entity_type_id, $bundle) {
-    if ($this->extraFields !== NULL) {
-      // Read from the "static" cache.
-      // Return an empty fallback if the bundle has no extra fields.
-      return $this->extraFields[$entity_type_id][$bundle] ?? [
-        'form' => [],
-        'display' => [],
-      ];
-    }
+    $this->extraFields ??= $this->loadExtraFields();
 
+    // Read from the "static" cache.
+    // Return an empty fallback if the bundle has no extra fields.
+    return $this->extraFields[$entity_type_id][$bundle] ?? [
+      'form' => [],
+      'display' => [],
+    ];
+  }
+
+  /**
+   * Loads extra fields from cache, or rebuilds them.
+   *
+   * @return array[][][][]
+   *   Extra fields by entity type, bundle name, type (form/display) and
+   *   extra field name.
+   */
+  protected function loadExtraFields(): array {
     // Read from the persistent cache. Since hook_entity_extra_field_info() and
     // hook_entity_extra_field_info_alter() might contain t() calls, we cache
     // per language.
     $cache_id = 'entity_extra_field_info:' . $this->languageManager->getCurrentLanguage()->getId();
     $cached = $this->cacheGet($cache_id);
     if ($cached) {
-      $this->extraFields = $cached->data;
+      return $cached->data;
     }
-    else {
-      $extra = $this->moduleHandler->invokeAll('entity_extra_field_info');
-      $this->moduleHandler->alter('entity_extra_field_info', $extra);
 
-      // Apply default values to each bundle.
-      foreach ($extra as &$extra_fields_by_bundle) {
-        foreach ($extra_fields_by_bundle as &$bundle_extra_fields) {
-          $bundle_extra_fields += [
-            'form' => [],
-            'display' => [],
-          ];
-        }
+    $extra = $this->moduleHandler->invokeAll('entity_extra_field_info');
+    $this->moduleHandler->alter('entity_extra_field_info', $extra);
+
+    // Apply default values to each bundle.
+    foreach ($extra as &$extra_fields_by_bundle) {
+      foreach ($extra_fields_by_bundle as &$bundle_extra_fields) {
+        $bundle_extra_fields += [
+          'form' => [],
+          'display' => [],
+        ];
       }
-
-      $this->extraFields = $extra;
-      $this->cacheSet($cache_id, $extra, Cache::PERMANENT, [
-        'entity_field_info',
-      ]);
     }
 
-    return $this->extraFields[$entity_type_id][$bundle] ?? [
-      'form' => [],
-      'display' => [],
-    ];
+    $this->cacheSet($cache_id, $extra, Cache::PERMANENT, [
+      'entity_field_info',
+    ]);
+
+    return $extra;
   }
 
 }
