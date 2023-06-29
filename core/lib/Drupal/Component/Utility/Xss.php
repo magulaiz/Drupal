@@ -240,7 +240,7 @@ class Xss {
               'class',
               'datetime',
               'media',
-              'sizes'
+              'sizes',
             ]);
 
             $working = $mode = 1;
