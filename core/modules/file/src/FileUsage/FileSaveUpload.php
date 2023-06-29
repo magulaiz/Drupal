@@ -97,7 +97,7 @@ class FileSaveUpload {
         ]));
         $files[$i] = FALSE;
       }
-      catch (SymfonyFileException $e) {
+      catch (FileValidationException $e) {
         \Drupal::messenger()->addError(t('The file %file could not be saved. An unknown error has occurred.', ['%file' => $uploaded_file->getFilename()]));
         $files[$i] = FALSE;
       }
