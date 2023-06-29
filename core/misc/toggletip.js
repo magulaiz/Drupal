@@ -1,3 +1,4 @@
+// cspell:ignore popovertarget
 /**
  * @file
  * Attaches behaviors for adding toggle tip functionality.
@@ -173,7 +174,6 @@
             );
             config.atDescription = Drupal.t('More info about this');
           }
-
 
           // Create the toggle button.
           const button = document.createElement('button');
