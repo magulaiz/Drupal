@@ -463,6 +463,15 @@ class FormValidatorTest extends UnitTestCase {
         'Test cannot be longer than <em class="placeholder">7</em> characters but is currently <em class="placeholder">8</em> characters long.',
         FALSE,
       ],
+      [
+        [
+          '#type' => 'password',
+          '#maxlength' => 12,
+          '#value' => $this->randomMachineName(13),
+        ],
+        'Test cannot be longer than <em class="placeholder">12</em> characters but is currently <em class="placeholder">13</em> characters long.',
+        FALSE,
+      ],
     ];
   }
 
