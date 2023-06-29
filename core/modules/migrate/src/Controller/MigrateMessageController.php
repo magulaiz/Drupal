@@ -4,6 +4,7 @@ namespace Drupal\migrate\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Database\Connection;
+use Drupal\Core\Database\DatabaseConnectionRefusedException;
 use Drupal\Core\Database\DatabaseNotFoundException;
 use Drupal\Core\Form\FormBuilderInterface;
 use Drupal\Core\Url;
@@ -165,7 +166,7 @@ class MigrateMessageController extends ControllerBase {
     try {
       $fields = $source_plugin->fields();
     }
-    catch (DatabaseNotFoundException | RequirementsException | \PDOException $e) {
+    catch (DatabaseConnectionRefusedException | DatabaseNotFoundException | RequirementsException | \PDOException $e) {
     }
 
     $source_id_field_names = array_keys($source_plugin->getIds());
