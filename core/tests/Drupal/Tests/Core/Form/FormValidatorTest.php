@@ -467,7 +467,7 @@ class FormValidatorTest extends UnitTestCase {
         [
           '#type' => 'password',
           '#maxlength' => 12,
-          '#value' => $this->randomMachineName(13),
+          '#value' => Random::machineName(13),
         ],
         'Test cannot be longer than <em class="placeholder">12</em> characters but is currently <em class="placeholder">13</em> characters long.',
         FALSE,
