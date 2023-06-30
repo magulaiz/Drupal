@@ -198,13 +198,13 @@ class TokenReplaceKernelTest extends TokenReplaceKernelTestBase {
       '#uri' => theme_get_setting('logo.url', 'olivero'),
       '#alt' => 'The site logo',
     ];
-    $olivero_logo = $renderer->renderPlain($build);
+    $olivero_logo = (string) $renderer->renderPlain($build);
     $build = [
       '#theme' => 'image',
       '#uri' => theme_get_setting('logo.url', 'claro'),
       '#alt' => 'The site logo',
     ];
-    $claro_logo = $renderer->renderPlain($build);
+    $claro_logo = (string) $renderer->renderPlain($build);
 
     $tests = [];
     $tests['[site:logo]'] = $claro_logo;
@@ -233,7 +233,7 @@ class TokenReplaceKernelTest extends TokenReplaceKernelTestBase {
     foreach ($tests as $input => $expected) {
       $bubbleable_metadata = new BubbleableMetadata();
       $output = $this->tokenService->replace($input, [], [], $bubbleable_metadata);
-      $this->assertEquals($expected, $output, new FormattableMarkup('System site information token %token replaced.', ['%token' => $input]));
+      $this->assertSame($expected, $output, new FormattableMarkup('System site information token %token replaced.', ['%token' => $input]));
       $this->assertEquals($metadata_tests[$input], $bubbleable_metadata, new FormattableMarkup('Asserting metadata for token %token.', ['%token' => $input]));
     }
   }
@@ -267,7 +267,7 @@ class TokenReplaceKernelTest extends TokenReplaceKernelTestBase {
       '#uri' => theme_get_setting('logo.url', 'olivero'),
       '#alt' => 'The site logo',
     ];
-    $olivero_logo = $renderer->renderPlain($build);
+    $olivero_logo = (string) $renderer->renderPlain($build);
 
     // Generate and test tokens.
     $tests = [];
@@ -300,7 +300,7 @@ class TokenReplaceKernelTest extends TokenReplaceKernelTestBase {
     foreach ($tests as $input => $expected) {
       $bubbleable_metadata = new BubbleableMetadata();
       $output = $this->tokenService->replace($input, [], [], $bubbleable_metadata);
-      $this->assertEquals($expected, $output, new FormattableMarkup('System site information token %token replaced.', ['%token' => $input]));
+      $this->assertSame($expected, $output, new FormattableMarkup('System site information token %token replaced.', ['%token' => $input]));
       $this->assertEquals($metadata_tests[$input], $bubbleable_metadata, new FormattableMarkup('Asserting metadata for token %token.', ['%token' => $input]));
     }
   }
