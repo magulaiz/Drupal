@@ -35,8 +35,6 @@ use Symfony\Component\HttpFoundation\File\Exception\NoFileException;
 use Symfony\Component\HttpFoundation\File\Exception\PartialFileException;
 
 // cspell:ignore abiword
-// Load all Field module hooks for File.
-require_once __DIR__ . '/file.field.inc';
 
 /**
  * Implements hook_help().
