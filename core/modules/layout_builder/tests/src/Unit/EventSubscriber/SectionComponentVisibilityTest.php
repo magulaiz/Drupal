@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\layout_builder\Unit\EventSubscriber;
 
+use Drupal\Component\Plugin\Context\Context;
 use Drupal\Component\Plugin\Exception\PluginNotFoundException;
 use Drupal\Component\Plugin\PluginInspectionInterface;
 use Drupal\Component\Uuid\Php as UuidFactory;
@@ -10,7 +11,6 @@ use Drupal\Core\Condition\ConditionInterface;
 use Drupal\Core\Condition\ConditionManager;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\Extension\ModuleHandlerInterface;
-use Drupal\Core\Plugin\Context\Context;
 use Drupal\Core\Plugin\Context\ContextDefinition;
 use Drupal\Core\Plugin\Context\ContextHandler;
 use Drupal\Core\Plugin\ContextAwarePluginInterface;
