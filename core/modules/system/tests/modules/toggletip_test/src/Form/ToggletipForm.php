@@ -7,7 +7,6 @@ use Drupal\Component\Serialization\Json;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Provides a page for testing toggletips.
@@ -104,7 +103,7 @@ class ToggletipForm extends FormBase {
         '#title' => 'A Textfield',
         '#maxlength' => '254',
         '#toggletip' => [
-          'content' => '<p>TEXTFIELD. A movie like this is a deep mystery. It asks the question: What went wrong? "Clifford" is not bad on the acting, directing or even writing levels. It fails on a deeper level still, the level of the underlying conception. Something about the material itself is profoundly not funny. Irredeemably not funny, so that it doesn\'t matter what the actors do, because they are in a movie that should never have been made.</p>
+          'content' => '<p>TEXTFIELD: A movie like this is a deep mystery. It asks the question: What went wrong? "Clifford" is not bad on the acting, directing or even writing levels. It fails on a deeper level still, the level of the underlying conception. Something about the material itself is profoundly not funny. Irredeemably not funny, so that it doesn\'t matter what the actors do, because they are in a movie that should never have been made.</p>
             <p>The story opens in the year 2050, when a kindly old priest is trying to reason with a rebellious kid in a home for troubled kids. The priest (Short) tells the kid that he was once a troubled kid, himself. That sets up three flashbacks that make up most of the movie. To deal with the 2050 scenes right up front: They are completely unnecessary. Their only apparent function is to show Martin Short made up as an old man.</p>',
         ],
       ],
@@ -220,7 +219,6 @@ class ToggletipForm extends FormBase {
         ],
       ],
     ];
-//    return $form;
   }
 
   /**
