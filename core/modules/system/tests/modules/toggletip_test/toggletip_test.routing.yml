@@ -1,6 +1,6 @@
 tooltips:
   path: '/toggletip-test/toggletips'
   defaults:
-    _controller: '\Drupal\toggletip_test\Controller\ToggletipController::page'
+    _form: '\Drupal\toggletip_test\Form\ToggletipForm'
   requirements:
     _access: 'TRUE'

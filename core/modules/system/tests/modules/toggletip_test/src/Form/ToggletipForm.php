@@ -1,23 +1,23 @@
 <?php
 
-namespace Drupal\toggletip_test\Controller;
+namespace Drupal\toggletip_test\Form;
 
 // cspell:ignore Beale
 use Drupal\Component\Serialization\Json;
+use Drupal\Core\Form\FormBase;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Provides a page for testing toggletips.
  */
-class ToggletipController {
+class ToggletipForm extends FormBase {
 
   /**
-   * Content for testing toggletips.
-   *
-   * @return array
-   *   A render array.
+   * {@inheritdoc}
    */
-  public function page() {
+  public function buildForm(array $form, FormStateInterface $form_state) {
     return [
       '#attached' => [
         'library' => [
@@ -220,6 +220,20 @@ class ToggletipController {
         ],
       ],
     ];
+//    return $form;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getFormId() {
+    return 'toggletip_test_form';
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function submitForm(array &$form, FormStateInterface $form_state) {
   }
 
 }
