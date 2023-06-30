@@ -663,6 +663,20 @@ drupal.progress:
     - core/jquery
     - core/drupalSettings
 
+drupal.splitbutton:
+  version: VERSION
+  js:
+    misc/splitbutton/splitbutton.js: {}
+    misc/splitbutton/splitbutton-init.js: {}
+  css:
+    component:
+      misc/splitbutton/splitbutton.css: {}
+  dependencies:
+    - core/drupal
+    - core/once
+    - core/internal.floating-ui
+    - core/popover.polyfill
+
 drupal.states:
   version: VERSION
   js:
@@ -790,6 +804,17 @@ jquery:
     gpl-compatible: true
   js:
     assets/vendor/jquery/jquery.min.js: { minified: true, weight: -20 }
+
+internal.floating-ui:
+  remote: https://github.com/floating-ui/floating-ui
+  version: "1.4.1"
+  license:
+    name: MIT
+    url: https://github.com/floating-ui/floating-ui/blob/v2.11.6/LICENSE
+    gpl-compatible: true
+  js:
+    assets/vendor/floating-ui/floating-ui.core.umd.js: { minified: true }
+    assets/vendor/floating-ui/floating-ui.dom.umd.js: { minified: true }
 
 internal.jquery.form:
   # Internal library. Do not depend on it outside core nor add new core usage.
@@ -940,6 +965,7 @@ drupal.dialog.off_canvas:
       misc/dialog/off-canvas/css/dropbutton.css: {}
       misc/dialog/off-canvas/css/titlebar.css: {}
       misc/dialog/off-canvas/css/wrapper.css: {}
+      misc/dialog/off-canvas/css/splitbutton.css: {}
   dependencies:
     - core/jquery
     - core/once
@@ -968,3 +994,16 @@ drupal.fieldListKeyboardNavigation:
   dependencies:
     - core/drupal
     - core/tabbable
+
+popover.polyfill:
+  remote: https://github.com/oddbird/popover-polyfill
+  version: "0.2.2"
+  license:
+    name: BSD 3-Clause
+    url: https://raw.githubusercontent.com/oddbird/popover-polyfill/v0.2.2/LICENSE
+    gpl-compatible: true
+  js:
+    assets/vendor/oddbird/popover-polyfill/popover.iife.min.js: {}
+  css:
+    component:
+      assets/vendor/oddbird/popover-polyfill/popover.css: {}

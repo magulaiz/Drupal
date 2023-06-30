@@ -1,0 +1,48 @@
+{#
+/**
+ * @file
+ * Theme override for a splitbutton.
+ *
+ * Available variables:
+ * - main_element: A render array of either a link, button, or submit element.
+ *   This is the element that is always visible in a splitbutton.
+ * - additional_elements: A render array where each item is either a link,
+ *   button, or submit element.  This is the element that is shown in the
+ *   toggleable tray.
+ * - variants: An array of strings defined in #splitbutton_type, used for
+ *   adding type-specific classes to elements within the splitbutton.
+ * - attributes: HTML attributes added to the splitbutton container.
+ * - toggle_attributes: HTML attributes added to the toggle button.
+ * - title: This is a string that, when present, instructs splitbutton to
+ *   function like a dropdown. This becomes the label of the main element, and
+ *   this main element is what toggles the item list.
+ * - exclude_toggle: Boolean that defaults to FALSE. When TRUE, this will
+ *   prevent a dedicated toggle button from rendering. This is for elements
+ *   that extend splitbutton that don't necessarily want the toggle button.
+ *
+ * @see template_preprocess_splitbutton()
+ */
+#}
+{% set toggle_with_title = main_element is empty and title is not empty %}
+
+<div{{ attributes }}>
+  <div data-drupal-selector="splitbutton-main">
+    {{ main_element }}
+    {% if splitbutton_multiple and exclude_toggle == FALSE %}
+      <button{{ toggle_attributes }}{{ toggle_with_title ? ' data-drupal-splitbutton-toggle-with-title' }}>
+        {% if title is empty %}
+          &nbsp;
+        {% else %}
+          {{ title }}
+        {% endif %}
+      </button>
+    {% endif %}
+  </div>
+  {% if additional_elements|length > 0 %}
+    <ul data-drupal-selector="splitbutton-item-list">
+      {% for item in additional_elements %}
+        <li>{{ item }}</li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+</div>

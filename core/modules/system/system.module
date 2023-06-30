@@ -1421,3 +1421,23 @@ function system_entity_form_mode_presave(EntityFormModeInterface $entity_form_mo
     $entity_form_mode->set('description', '');
   }
 }
+
+/**
+ * Implements hook_page_attachments_alter().
+ */
+function system_page_attachments_alter(array &$attachments) {
+  $query_string = \Drupal::state()->get('system.css_js_query_string') ?: '0';
+  // Add a splitbutton stylesheet that is only present when JavaScript is not.
+  // This styles the splitbutton list items to be visible by default.
+  $attachments['#attached']['html_head'][] = [
+    [
+      '#tag' => 'link',
+      '#noscript' => TRUE,
+      '#attributes' => [
+        'rel' => 'stylesheet',
+        'href' => $GLOBALS['base_url'] . '/core/misc/splitbutton/splitbutton-noscript.css?' . $query_string,
+      ],
+    ],
+    'splitbutton_noscript',
+  ];
+}

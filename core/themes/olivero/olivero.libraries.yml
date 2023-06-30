@@ -276,6 +276,12 @@ search-wide:
   dependencies:
     - olivero/navigation-primary
 
+splitbutton:
+  version: VERSION
+  css:
+    component:
+      css/components/splitbutton.css: {}
+
 sidebar:
   version: VERSION
   css:

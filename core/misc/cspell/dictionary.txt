@@ -456,6 +456,8 @@ idekey
 idempotency
 iframes
 iframeupload
+ignoretag
+iife
 imagecache
 imagecreatefrom
 imagetextalternative
@@ -667,6 +669,8 @@ nyan
 nyancat
 nyans
 nœud
+objectindex
+oddbird
 oembed
 officedocument
 olivero
@@ -734,6 +738,8 @@ pluggable
 pluralforms
 plusthick
 poink
+ponedjeljak
+popovertarget
 porterstemmer
 português
 postbar

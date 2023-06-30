@@ -155,6 +155,18 @@ const assetsFolder = `${coreFolder}/assets/vendor`;
       ],
     },
     {
+      pack: '@floating-ui/core',
+      folder: 'floating-ui',
+      library: 'internal.floating-ui',
+      files: [{ from: 'dist/floating-ui.core.umd.js', to: 'floating-ui.core.umd.js' }],
+    },
+    {
+      pack: '@floating-ui/dom',
+      folder: 'floating-ui',
+      library: 'internal.floating-ui',
+      files: [{ from: 'dist/floating-ui.dom.umd.js', to: 'floating-ui.dom.umd.js' }],
+    },
+    {
       pack: 'jquery-ui',
       folder: 'jquery.ui',
       process: {

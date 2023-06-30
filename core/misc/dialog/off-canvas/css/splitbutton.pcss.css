@@ -1,0 +1,186 @@
+/**
+ * @file
+ * Base styles for splitbuttons.
+ */
+
+#drupal-off-canvas {
+  .splitbutton {
+    --splitbutton-border-radius: 0;
+    --splitbutton-icon-width: 7px;
+    --splitbutton-main-height: 34px;
+    --splitbutton-main-height-s: 24px;
+    --splitbutton-main-height-xs: 18px;
+    --splitbutton-main-padding-x: 10px;
+    --splitbutton-main-gap: 2px;
+    --splitbutton-main-background: var(--off-canvas-button-background-color);
+    --splitbutton-main-text-color: var(--off-canvas-button-text-color);
+    --splitbutton-main-text-color-dark: var(--off-canvas-button-text-color);
+    --splitbutton-main-text-color-light: var(--off-canvas-button-text-color);
+    --splitbutton-main-font-size: 14px;
+    --splitbutton-main-background-primary: var(--off-canvas-button-background-color);
+    --splitbutton-main-background-danger: darkred;
+    --splitbutton-dropdown-padding-x: 10px;
+    --splitbutton-dropdown-padding-y: 5px;
+    --splitbutton-dropdown-background-color: #f5f5f5;
+    --splitbutton-dropdown-border-color: darkgray;
+    --splitbutton-dropdown-link-color: darkblue;
+    --splitbutton-dropdown-link-hover-color: blue;
+    --splitbutton-dropdown-font-size: 14px;
+
+    display: inline-flex;
+    margin-block: var(--off-canvas-vertical-spacing-unit);
+
+    * {
+      box-sizing: border-box;
+    }
+  }
+
+  /* <div> wrapper around main primary button and toggle. */
+  .splitbutton__main {
+    display: inline-flex;
+    align-items: start;
+    font-size: var(--splitbutton-main-font-size);
+    gap: var(--splitbutton-main-gap);
+
+    :is(a, button, .button) {
+      --splitbutton-main-text-color: var(--splitbutton-main-text-color-dark);
+
+      display: flex;
+      align-items: center;
+      height: auto;
+      min-height: var(--splitbutton-main-height);
+      margin: 0;
+      padding-block: 0;
+      padding-inline: var(--splitbutton-main-padding-x);
+      text-align: start;
+      text-decoration: none;
+      color: var(--splitbutton-main-text-color);
+      border: solid 1px transparent;
+      border-radius: var(--splitbutton-border-radius);
+      background: var(--splitbutton-main-background);
+      font-family: inherit;
+      font-size: inherit;
+      font-weight: inherit;
+      appearance: none;
+
+      &:hover,
+      &:focus {
+        color: var(--splitbutton-main-text-color);
+        border: solid 1px transparent;
+        background: var(--splitbutton-main-background);
+        font-weight: inherit;
+      }
+
+      &:focus {
+        z-index: 1;
+      }
+
+      :where(.splitbutton--small) & {
+        min-height: var(--splitbutton-main-height-s);
+        line-height: 1;
+      }
+
+      :where(.splitbutton--extrasmall) & {
+        min-height: var(--splitbutton-main-height-xs);
+        line-height: 1;
+      }
+
+      :where(.splitbutton--primary) & {
+        --splitbutton-main-background: var(--splitbutton-main-background-primary);
+        --splitbutton-main-text-color: var(--splitbutton-main-text-color-light);
+      }
+
+      :where(.splitbutton--danger) & {
+        --splitbutton-main-background: var(--splitbutton-main-background-danger);
+        --splitbutton-main-text-color: var(--splitbutton-main-text-color-light);
+      }
+    }
+  }
+
+  .splitbutton__trigger {
+    position: relative; /* Anchor pseudo-element. */
+    width: calc(var(--splitbutton-icon-width) + 2 * var(--splitbutton-main-padding-x));
+    cursor: pointer;
+
+    &::after {
+      position: absolute;
+      inset-block-start: 50%;
+      inset-inline-end: 50%;
+      width: var(--splitbutton-icon-width);
+      aspect-ratio: 6 / 5;
+      content: "";
+      translate: 50% -50%; /* LTR */
+      clip-path: polygon(100% 0, 0 0, 50% 100%);
+      background: currentColor;
+
+      &:dir(rtl) {
+        translate: -50% -50%;
+      }
+
+      @media (forced-colors: active) {
+        background: buttonText;
+      }
+    }
+
+    &[aria-expanded="true"]::after {
+      inset-block-start: 48%;
+      scale: -1;
+    }
+
+    /* When the trigger is the same element as the splitbutton. */
+    &.splitbutton__trigger--with-title {
+      width: auto;
+      padding-inline-end: calc(2 * var(--splitbutton-main-padding-x) + var(--splitbutton-icon-width));
+
+      &::after {
+        inset-inline-end: calc(var(--splitbutton-main-padding-x));
+        translate: 0 -50%;
+      }
+    }
+  }
+
+  /* <ul> dropdown wrapper. */
+  .splitbutton__list {
+    position: absolute;
+    z-index: 4;
+    display: none;
+    width: max-content;
+    max-width: 100%;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    border: solid 1px var(--splitbutton-dropdown-border-color);
+    background-color: var(--splitbutton-dropdown-background-color);
+    font-size: var(--splitbutton-dropdown-font-size);
+
+    :is(a, button, .button) {
+      display: block;
+      width: 100%;
+      height: auto;
+      margin: 0;
+      cursor: pointer;
+      text-align: start;
+      text-decoration: none;
+      color: var(--splitbutton-dropdown-link-color);
+      border: 0;
+      border-radius: 0;
+      background: transparent;
+      font-size: inherit;
+      font-weight: normal;
+      line-height: 1.5;
+      padding-inline: var(--splitbutton-dropdown-padding-x);
+      padding-block: var(--splitbutton-dropdown-padding-y);
+      appearance: none;
+
+      &:hover {
+        text-decoration: underline;
+        color: var(--splitbutton-dropdown-link-hover-color);
+      }
+
+      &:focus {
+        outline: solid 2px currentColor;
+        outline-offset: -4px;
+      }
+    }
+  }
+}

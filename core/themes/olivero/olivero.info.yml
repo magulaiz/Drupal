@@ -65,6 +65,8 @@ libraries-extend:
     - olivero/drupal.dialog
   core/drupal.progress:
     - olivero/progress
+  core/drupal.splitbutton:
+    - olivero/splitbutton
   layout_discovery/onecol:
     - olivero/layout_discovery_section
   layout_discovery/twocol_bricks:

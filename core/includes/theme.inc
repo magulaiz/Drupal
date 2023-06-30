@@ -1144,6 +1144,37 @@ function template_preprocess_item_list(&$variables) {
 }
 
 /**
+ * Prepares variables for splitbutton templates.
+ *
+ * @param array $variables
+ *   An associative array containing:
+ *   - main_element: A render array of either a link, button, or submit element.
+ *     This is the element that is always visible in a splitbutton.
+ *   - variants: An array of strings defined in #splitbutton_type, used for
+ *     adding type-specific classes to elements within the splitbutton.
+ *   - attributes: The attributes added to the splitbutton container.
+ *   - toggle_attributes: The attributes added to the toggle button.
+ *   - splitbutton_item_list: an array of render elements that will populate the
+ *     list items.
+ *   - title: This is a string that, when present, instructs splitbutton to
+ *     function like a dropdown. This becomes the label of the main element, and
+ *     this main element is what toggles the item list.
+ *   - exclude_toggle: Boolean that defaults to FALSE. When TRUE, this will
+ *     prevent a dedicated toggle button from rendering. This is for elements
+ *     that extend splitbutton that don't necessarily want the toggle button.
+ */
+function template_preprocess_splitbutton(array &$variables) {
+  $variables['toggle_attributes'] = new Attribute($variables['toggle_attributes']);
+
+  // If the main element is present, ensure there is an attributes array with a
+  // class property. This facilitates the addition of classes to the main
+  // element within templates.
+  if (!empty($variables['main_element']) && !isset($variables['main_element']['#attributes']['class'])) {
+    $variables['main_element']['#attributes']['class'] = [];
+  }
+}
+
+/**
  * Prepares variables for container templates.
  *
  * Default template: container.html.twig.
@@ -2018,6 +2049,18 @@ function drupal_common_theme() {
     ],
     'item_list' => [
       'variables' => ['items' => [], 'title' => '', 'list_type' => 'ul', 'wrapper_attributes' => [], 'attributes' => [], 'empty' => NULL, 'context' => []],
+    ],
+    'splitbutton' => [
+      'variables' => [
+        'splitbutton_multiple' => TRUE,
+        'main_element' => NULL,
+        'additional_elements' => [],
+        'variants' => [],
+        'attributes' => [],
+        'toggle_attributes' => [],
+        'title' => NULL,
+        'exclude_toggle' => FALSE,
+      ],
     ],
     'feed_icon' => [
       'variables' => ['url' => NULL, 'title' => NULL],
