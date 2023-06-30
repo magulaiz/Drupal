@@ -486,6 +486,54 @@ class ConfigTranslationListUiTest extends BrowserTestBase {
   }
 
   /**
+   * Test entity form translation operation.
+   */
+  public function doEntityFormTest() {
+    $content_type = $this->drupalCreateContentType([
+      'type' => mb_strtolower($this->randomMachineName(16)),
+      'name' => $this->randomMachineName(),
+    ]);
+
+    ConfigurableLanguage::createFromLangcode('de')->save();
+
+    $this->drupalGet('admin/config/regional/config-translation');
+    $this->assertSession()->linkByHrefExists('admin/config/regional/config-translation/node_form_display');
+
+    $this->drupalGet('admin/config/regional/config-translation/node_form_display');
+    $this->assertSession()->statusCodeEquals(200);
+    $this->assertSession()->linkByHrefExists('admin/structure/types/manage/' . $content_type->id() . '/form-display/default/translate');
+
+    $this->drupalGet('admin/structure/types/manage/' . $content_type->id() . '/form-display/default/translate');
+    $this->assertSession()->statusCodeEquals(200);
+
+    $this->drupalGet('admin/structure/types/manage/' . $content_type->id() . '/form-display/default/translate/de/edit');
+    $this->assertSession()->statusCodeEquals(200);
+    $this->assertSession()->pageTextContains('Field widgets');
+    $this->assertSession()->pageTextContains('Body');
+  }
+
+  /**
+   * Test entity view display translation operation.
+   */
+  public function doViewDisplayTest() {
+    $content_type = $this->drupalCreateContentType([
+      'type' => mb_strtolower($this->randomMachineName(16)),
+      'name' => $this->randomMachineName(),
+    ]);
+
+    $this->drupalGet('admin/config/regional/config-translation');
+    $this->assertSession()->linkByHrefExists('admin/config/regional/config-translation/node_view_display');
+
+    $this->drupalGet('admin/config/regional/config-translation/node_view_display');
+    $this->assertSession()->statusCodeEquals(200);
+    $this->assertSession()->linkByHrefExists('/admin/structure/types/manage/' . $content_type->id() . '/display/default/translate');
+
+    // There are no translatable fields so 403 will be thrown.
+    $this->drupalGet('admin/structure/types/manage/' . $content_type->id() . '/display/default/translate');
+    $this->assertSession()->statusCodeEquals(403);
+  }
+
+  /**
    * Tests if translate link is added to operations in all configuration lists.
    */
   public function testTranslateOperationInListUi() {
@@ -504,9 +552,10 @@ class ConfigTranslationListUiTest extends BrowserTestBase {
     $this->doResponsiveImageListTest();
     $this->doDateFormatListTest();
     $this->doFieldListTest();
+    $this->doEntityFormTest();
+    $this->doViewDisplayTest();
 
-    // Views is tested in Drupal\config_translation\Tests\ConfigTranslationViewListUiTest
-
+    // Views is tested in Drupal\config_translation\Tests\ConfigTranslationViewListUiTest.
     // Test the maintenance settings page.
     $this->doSettingsPageTest('admin/config/development/maintenance');
     // Test the site information settings page.
