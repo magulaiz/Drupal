@@ -5,9 +5,9 @@ namespace Drupal\jsonapi;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
-use Drupal\Core\Entity\TypedData\EntityDataDefinitionInterface;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\Plugin\Field\FieldType\EntityReferenceItemInterface;
+use Drupal\Core\TypedData\DataReferenceDefinitionInterface;
 use Drupal\jsonapi\Access\EntityAccessChecker;
 use Drupal\jsonapi\Context\FieldResolver;
 use Drupal\jsonapi\Exception\EntityAccessDeniedHttpException;
@@ -140,7 +140,7 @@ class IncludeResolver {
         }
         if (is_subclass_of($field_list->getItemDefinition()->getClass(), EntityReferenceItemInterface::class)) {
           foreach ($field_list as $field_item) {
-            if (!($field_item->getDataDefinition()->getPropertyDefinition('entity') instanceof EntityDataDefinitionInterface)) {
+            if (!($field_item->getDataDefinition()->getPropertyDefinition('entity') instanceof DataReferenceDefinitionInterface)) {
               continue;
             }
 
