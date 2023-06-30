@@ -58,7 +58,7 @@ function comment_help($route_name, RouteMatchInterface $route_match) {
       $output .= '<dt>' . t('Adding comment types') . '</dt>';
       $output .= '<dd>' . t('Additional <em>comment types</em> can be created per entity sub-type and added on the <a href=":field">Comment types page</a>. If there are multiple comment types available you can select the appropriate one after adding a <em>Comments field</em>.', [':field' => Url::fromRoute('entity.comment_type.collection')->toString()]) . '</dd>';
       $output .= '<dt>' . t('Approving and managing comments') . '</dt>';
-      $output .= '<dd>' . t('Comments from users who have the <em>Skip comment approval</em> permission are published immediately. All other comments are placed in the <a href=":comment-approval">Unapproved comments</a> queue, until a user who has permission to <em>Administer comments and comment settings</em> publishes or deletes them. Published comments can be bulk managed on the <a href=":admin-comment">Published comments</a> administration page. When a comment has no replies, it remains editable by its author, as long as the author has <em>Edit own comments</em> permission.', [':comment-approval' => Url::fromRoute('comment.admin_approval')->toString(), ':admin-comment' => Url::fromRoute('comment.admin')->toString()]) . '</dd>';
+      $output .= '<dd>' . t('Comments from users who have the <em>Skip comment approval</em> permission are published immediately. All other comments are placed in the <a href="!comment-approval">Unpublished comments</a> queue, until a user who has permission to <em>Administer comments and comment settings</em> publishes or deletes them. Published comments can be bulk managed on the <a href="!admin-comment">Published comments</a> administration page. When a comment has no replies, it remains editable by its author, as long as the author has <em>Edit own comments</em> permission.', ['!comment-approval' => Url::fromRoute('comment.admin_unpublished')->toString(), '!admin-comment' => Url::fromRoute('comment.admin')->toString()]) . '</dd>';
       $output .= '</dl>';
       return $output;
 
@@ -190,7 +190,6 @@ function comment_node_links_alter(array &$links, NodeInterface $node, array &$co
   // can do so by implementing a new field formatter.
   // @todo Make this configurable from the formatter. See
   //   https://www.drupal.org/node/1901110.
-
   $comment_links = \Drupal::service('comment.link_builder')->buildCommentedEntityLinks($node, $context);
   $links += $comment_links;
 }
@@ -599,7 +598,7 @@ function template_preprocess_comment(&$variables) {
     $variables['author_id'] = $comment->getOwnerId();
     $variables['new_indicator_timestamp'] = $comment->getChangedTime();
     $variables['created'] = $date_formatter->format($comment->getCreatedTime());
-    // Avoid calling DateFormatterInterface::format() twice on the same timestamp.
+    // Avoid calling DateFormatterInterface::format() twice on same timestamp.
     if ($comment->getChangedTime() == $comment->getCreatedTime()) {
       $variables['changed'] = $variables['created'];
     }
@@ -618,7 +617,8 @@ function template_preprocess_comment(&$variables) {
       $variables['user_picture'] = [];
     }
 
-    $variables['submitted'] = t('Submitted by @username on @datetime', ['@username' => $variables['author'], '@datetime' => $variables['created']]);
+    $variables['submitted'] = t('Submitted by @username on @datetime',
+    ['@username' => $variables['author'], '@datetime' => $variables['created']]);
   }
 
   if (isset($comment->in_preview)) {
@@ -652,7 +652,10 @@ function template_preprocess_comment(&$variables) {
     $variables['parent_title'] = Link::fromTextAndUrl($comment_parent->getSubject(), $permalink_uri_parent)->toString();
     $variables['parent_permalink'] = Link::fromTextAndUrl(t('Parent permalink'), $permalink_uri_parent)->toString();
     $variables['parent'] = t('In reply to @parent_title by @parent_username',
-        ['@parent_username' => $variables['parent_author'], '@parent_title' => $variables['parent_title']]);
+        [
+          '@parent_username' => $variables['parent_author'],
+          '@parent_title' => $variables['parent_title'],
+        ]);
   }
   else {
     $variables['parent_comment'] = '';

@@ -28,13 +28,13 @@ views.field.comment_last_timestamp:
   type: views.field.date
   label: 'Last comment date'
 
-views.field.comment_link_approve:
+views.field.comment_link_publish:
   type: views.field.comment_link
-  label: 'Comment approve link'
-  mapping:
-    text:
-      type: label
-      label: 'Text to display'
+  label: 'Comment publish link'
+
+views.field.comment_link_unpublish:
+  type: views.field.comment_link
+  label: 'Comment unpublish link'
 
 views.field.comment_link_reply:
   type: views.field.comment_link

@@ -16,6 +16,7 @@ use Drupal\Core\Entity\Sql\SqlContentEntityStorage;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Drupal\Core\Entity\ContentEntityStorageInterface;
 
 /**
  * Defines the storage handler class for comments.
@@ -23,7 +24,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * This extends the Drupal\Core\Entity\Sql\SqlContentEntityStorage class,
  * adding required special handling for comment entities.
  */
-class CommentStorage extends SqlContentEntityStorage implements CommentStorageInterface {
+class CommentStorage extends SqlContentEntityStorage implements ContentEntityStorageInterface {
 
   /**
    * The current user.
@@ -159,7 +160,6 @@ class CommentStorage extends SqlContentEntityStorage implements CommentStorageIn
     }
     else {
       // Threaded comments.
-
       // 1. Find all the threads with a new comment.
       $unread_threads_query = $this->database->select($data_table, 'comment')
         ->fields('comment', ['thread'])
@@ -339,7 +339,7 @@ class CommentStorage extends SqlContentEntityStorage implements CommentStorageIn
   /**
    * {@inheritdoc}
    */
-  public function getUnapprovedCount() {
+  public function getUnpublishedCount() {
     return $this->database->select($this->getDataTable(), 'c')
       ->condition('status', CommentInterface::NOT_PUBLISHED, '=')
       ->condition('default_langcode', 1)

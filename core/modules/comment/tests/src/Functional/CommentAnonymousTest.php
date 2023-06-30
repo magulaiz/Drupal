@@ -148,7 +148,7 @@ class CommentAnonymousTest extends CommentTestBase {
     // Unpublish comment.
     $this->performCommentOperation($anonymous_comment3, 'unpublish');
 
-    $this->drupalGet('admin/content/comment/approval');
+    $this->drupalGet('admin/content/comment/unpublished');
     $this->assertSession()->responseContains('comments[' . $anonymous_comment3->id() . ']');
 
     // Publish comment.

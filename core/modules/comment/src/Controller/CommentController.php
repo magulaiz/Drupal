@@ -99,11 +99,31 @@ class CommentController extends ControllerBase {
    *
    * @return \Symfony\Component\HttpFoundation\RedirectResponse
    */
-  public function commentApprove(CommentInterface $comment) {
+  public function commentPublish(CommentInterface $comment) {
     $comment->setPublished();
     $comment->save();
 
-    $this->messenger()->addStatus($this->t('Comment approved.'));
+    $this->messenger()->addStatus($this->t('Comment published.'));
+    \Drupal::messenger()->addMessage($this->t('Comment published.'));
+    $permalink_uri = $comment->permalink();
+    $permalink_uri->setAbsolute();
+    return new RedirectResponse($permalink_uri->toString());
+  }
+
+  /**
+   * Unpublishes the specified comment.
+   *
+   * @param \Drupal\comment\CommentInterface $comment
+   *   A comment entity.
+   *
+   * @return \Symfony\Component\HttpFoundation\RedirectResponse
+   *   Redirects to the permalink URL for this comment.
+   */
+  public function commentUnpublish(CommentInterface $comment) {
+    $comment->setPublished(FALSE);
+    $comment->save();
+
+    \Drupal::messenger()->addMessage($this->t('Comment unpublished.'));
     $permalink_uri = $comment->permalink();
     $permalink_uri->setAbsolute();
     return new RedirectResponse($permalink_uri->toString());
@@ -141,7 +161,7 @@ class CommentController extends ControllerBase {
 
       // Find the current display page for this comment.
       $page = $this->entityTypeManager()->getStorage('comment')->getDisplayOrdinal($comment, $field_definition->getSetting('default_mode'), $field_definition->getSetting('per_page'));
-      // @todo: Cleaner sub request handling.
+      // @todo Cleaner sub request handling.
       $subrequest_url = $entity->toUrl()->setOption('query', ['page' => $page])->toString(TRUE);
       $redirect_request = Request::create($subrequest_url->getGeneratedUrl(), 'GET', $request->query->all(), $request->cookies->all(), [], $request->server->all());
       // Carry over the session to the subrequest.
@@ -206,7 +226,7 @@ class CommentController extends ControllerBase {
    *
    * There are several cases that have to be handled, including:
    *   - replies to comments
-   *   - replies to entities
+   *   - replies to entities.
    *
    * @param \Symfony\Component\HttpFoundation\Request $request
    *   The current request object.
@@ -355,7 +375,9 @@ class CommentController extends ControllerBase {
       $query = $page_number ? ['page' => $page_number] : NULL;
       $links[$nid] = [
         'new_comment_count' => (int) $new,
-        'first_new_comment_link' => Url::fromRoute('entity.node.canonical', ['node' => $node->id()], ['query' => $query, 'fragment' => 'new'])->toString(),
+        'first_new_comment_link' => Url::fromRoute('entity.node.canonical',
+        ['node' => $node->id()],
+        ['query' => $query, 'fragment' => 'new'])->toString(),
       ];
     }
 

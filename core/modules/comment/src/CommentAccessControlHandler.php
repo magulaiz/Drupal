@@ -36,8 +36,10 @@ class CommentAccessControlHandler extends EntityAccessControlHandler {
 
     switch ($operation) {
       case 'view':
-        $access_result = AccessResult::allowedIf($account->hasPermission('access comments') && $entity->isPublished())->cachePerPermissions()->addCacheableDependency($entity)
-          ->andIf($entity->getCommentedEntity()->access($operation, $account, TRUE));
+        $access_result = AccessResult::allowedIfHasPermission($account, 'access comments')
+          ->andIf(AccessResult::allowedIf($entity->isPublished()))
+          ->andIf(AccessResult::allowedIf($entity->getCommentedEntity()->access($operation, $account, TRUE)))
+          ->addCacheContexts(['user.roles:anonymous'])->addCacheableDependency($entity);
         if (!$access_result->isAllowed()) {
           $access_result->setReason("The 'access comments' permission is required and the comment must be published.");
         }
@@ -45,12 +47,19 @@ class CommentAccessControlHandler extends EntityAccessControlHandler {
         return $access_result;
 
       case 'update':
-        $access_result = AccessResult::allowedIf($account->id() && $account->id() == $entity->getOwnerId() && $entity->isPublished() && $account->hasPermission('edit own comments'))
-          ->cachePerPermissions()->cachePerUser()->addCacheableDependency($entity);
+        $access_result = AccessResult::allowedIfHasPermission($account, 'edit own comments')
+          ->andIf(AccessResult::allowedIf($account->id() && $account->id() == $entity->getOwnerId() && $entity->isPublished()))
+          ->addCacheContexts(['user.roles:anonymous'])->addCacheableDependency($entity);
         if (!$access_result->isAllowed()) {
           $access_result->setReason("The 'edit own comments' permission is required, the user must be the comment author, and the comment must be published.");
         }
         return $access_result;
+
+      case 'publish':
+        return AccessResult::allowedIfHasPermission($account, 'administer comments');
+
+      case 'unpublish':
+        return AccessResult::allowedIfHasPermission($account, 'administer comments');
 
       default:
         // No opinion.
@@ -120,13 +129,14 @@ class CommentAccessControlHandler extends EntityAccessControlHandler {
           // access.
           return AccessResult::forbidden();
         }
-        $is_name = $field_definition->getName() === 'name';
+
         /** @var \Drupal\comment\CommentInterface $entity */
         $entity = $items->getEntity();
         $commented_entity = $entity->getCommentedEntity();
         $anonymous_contact = $commented_entity->get($entity->getFieldName())->getFieldDefinition()->getSetting('anonymous');
         $admin_access = AccessResult::allowedIfHasPermission($account, 'administer comments');
-        $anonymous_access = AccessResult::allowedIf($entity->isNew() && $account->isAnonymous() && ($anonymous_contact != CommentInterface::ANONYMOUS_MAYNOT_CONTACT || $is_name) && $account->hasPermission('post comments'))
+        $anonymous_access = AccessResult::allowedIfHasPermission($account, 'post comments')
+          ->andIf(AccessResult::allowedIf($entity->isNew() && $account->isAnonymous() && $anonymous_contact != CommentInterface::ANONYMOUS_MAYNOT_CONTACT))
           ->cachePerPermissions()
           ->addCacheableDependency($entity)
           ->addCacheableDependency($field_definition->getConfig($commented_entity->bundle()))

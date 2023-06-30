@@ -13,7 +13,7 @@ use Drupal\Core\Entity\EntityChangedInterface;
 interface CommentInterface extends ContentEntityInterface, EntityChangedInterface, EntityOwnerInterface, EntityPublishedInterface {
 
   /**
-   * Comment is awaiting approval.
+   * Comment is unpublished and awaiting approval.
    */
   const NOT_PUBLISHED = 0;
 
