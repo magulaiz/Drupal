@@ -52,6 +52,7 @@ class User extends FieldableEntity {
       'roles' => $this->t('Roles'),
     ];
 
+    // Profile fields.
     if ($this->moduleExists('profile')) {
       $fields += $this->select('profile_fields', 'pf')
         ->fields('pf', ['name', 'title'])
