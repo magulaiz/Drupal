@@ -48,8 +48,7 @@ class PasswordConfirm extends FormElement {
    */
   public static function valueCallback(&$element, $input, FormStateInterface $form_state) {
     if ($input === FALSE) {
-      $element += ['#default_value' => []];
-      return $element['#default_value'] + ['pass1' => '', 'pass2' => ''];
+      return '';
     }
 
     $value = '';
@@ -103,8 +102,8 @@ class PasswordConfirm extends FormElement {
    * Validates a password_confirm element.
    */
   public static function validatePasswordConfirm(&$element, FormStateInterface $form_state, &$complete_form) {
-    $pass1 = trim($form_state->getValue('password')['pass1']);
-    $pass2 = trim($form_state->getValue('password')['pass2']);
+    $pass1 = trim($element['pass1']['#value']);
+    $pass2 = trim($element['pass2']['#value']);
     if (strlen($pass1) > 0 || strlen($pass2) > 0) {
       if (strcmp($pass1, $pass2)) {
         $form_state->setError($element, t('The specified passwords do not match.'));
