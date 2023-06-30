@@ -447,7 +447,7 @@ class ResourceTypeRepository implements ResourceTypeRepositoryInterface {
     }
     else {
       @trigger_error(
-        sprintf('Entity reference field items not implementing %s is deprecated in drupal:10.1.0 and will be required in drupal:11.0.0. See https://www.drupal.org/node/3279140', EntityReferenceItemInterface::class),
+        sprintf('Entity reference field items not implementing %s is deprecated in drupal:10.2.0 and will be required in drupal:11.0.0. See https://www.drupal.org/node/3279140', EntityReferenceItemInterface::class),
         E_USER_DEPRECATED
       );
       $handler_settings = $item_definition->getSetting('handler_settings');
