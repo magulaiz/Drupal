@@ -47,7 +47,7 @@ class SectionComponentVisibility implements EventSubscriberInterface {
   /**
    * {@inheritdoc}
    */
-  public static function getSubscribedEvents() {
+  public static function getSubscribedEvents(): array {
     // Run before BlockComponentRenderArray (priority 100), so that we can
     // stop propagation and prevent rendering the component.
     $events[LayoutBuilderEvents::SECTION_COMPONENT_BUILD_RENDER_ARRAY] = ['onBuildRender', 255];
