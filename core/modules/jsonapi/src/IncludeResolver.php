@@ -5,6 +5,7 @@ namespace Drupal\jsonapi;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Entity\TypedData\EntityDataDefinitionInterface;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\Plugin\Field\FieldType\EntityReferenceItemInterface;
 use Drupal\jsonapi\Access\EntityAccessChecker;
@@ -139,11 +140,17 @@ class IncludeResolver {
         }
         if (is_subclass_of($field_list->getItemDefinition()->getClass(), EntityReferenceItemInterface::class)) {
           foreach ($field_list as $field_item) {
-            if ($field_item->entity instanceof EntityInterface) {
-              // Support entity reference fields that don't have the referenced
-              // target type stored in settings.
-              $references[$field_item->entity->getEntityTypeId()][] = $field_item->get($field_item::mainPropertyName())->getValue();
+            if (!($field_item->getDataDefinition()->getPropertyDefinition('entity') instanceof EntityDataDefinitionInterface)) {
+              continue;
             }
+
+            if (!($field_item->entity instanceof EntityInterface)) {
+              continue;
+            }
+
+            // Support entity reference fields that don't have the referenced
+            // target type stored in settings.
+            $references[$field_item->entity->getEntityTypeId()][] = $field_item->get($field_item::mainPropertyName())->getValue();
           }
         }
         else {
