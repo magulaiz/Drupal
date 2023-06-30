@@ -461,11 +461,12 @@ class ResourceTypeRepository implements ResourceTypeRepositoryInterface {
       foreach ($target_bundles as $target_bundle) {
         if ($resource_type = static::lookupResourceType($resource_types, $entity_type_id, $target_bundle)) {
           $relatable_resource_types[] = $resource_type;
+          continue;
         }
         // Do not warn during site installation since system integrity
         // is not guaranteed during this period and may cause confusing and
         // unnecessary warnings.
-        elseif (!InstallerKernel::installationAttempted()) {
+        if (!InstallerKernel::installationAttempted()) {
           trigger_error(
             sprintf(
               'The "%s" at "%s:%s" references the "%s:%s" entity type that does not exist. Please take action.',
