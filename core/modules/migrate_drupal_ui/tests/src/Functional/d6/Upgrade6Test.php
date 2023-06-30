@@ -22,7 +22,6 @@ class Upgrade6Test extends MigrateUpgradeExecuteTestBase {
     'config_translation',
     'content_translation',
     'datetime_range',
-    'forum',
     'language',
     'migrate_drupal_ui',
     'statistics',
@@ -67,7 +66,7 @@ class Upgrade6Test extends MigrateUpgradeExecuteTestBase {
    */
   protected function getEntityCounts() {
     return [
-      'block' => 36,
+      'block' => 37,
       'block_content' => 2,
       'block_content_type' => 1,
       'comment' => 8,
@@ -88,7 +87,7 @@ class Upgrade6Test extends MigrateUpgradeExecuteTestBase {
       // The 'book' module provides the 'book' node type, and the migration
       // creates 12 node types.
       'node_type' => 14,
-      'search_page' => 2,
+      'search_page' => 3,
       'shortcut' => 2,
       'shortcut_set' => 1,
       'action' => 33,
@@ -102,11 +101,11 @@ class Upgrade6Test extends MigrateUpgradeExecuteTestBase {
       'menu_link_content' => 10,
       'view' => 14,
       'date_format' => 12,
-      'entity_form_display' => 31,
+      'entity_form_display' => 30,
       'entity_form_mode' => 1,
-      'entity_view_display' => 58,
+      'entity_view_display' => 57,
       'entity_view_mode' => 12,
-      'base_field_override' => 41,
+      'base_field_override' => 40,
     ];
   }
 
@@ -143,7 +142,6 @@ class Upgrade6Test extends MigrateUpgradeExecuteTestBase {
       'Email',
       'FileField',
       'Filter',
-      'Forum',
       'ImageCache',
       'ImageField',
       'Internationalization',
@@ -152,6 +150,7 @@ class Upgrade6Test extends MigrateUpgradeExecuteTestBase {
       'Menu translation',
       'Node',
       'Node Reference',
+      'Node Reference URL Widget',
       'Option Widgets',
       'Path',
       'Profile translation',
@@ -186,6 +185,7 @@ class Upgrade6Test extends MigrateUpgradeExecuteTestBase {
   protected function getMissingPaths() {
     return [
       'Aggregator',
+      'Forum',
     ];
   }
 
@@ -200,7 +200,7 @@ class Upgrade6Test extends MigrateUpgradeExecuteTestBase {
     $this->assertUserLogIn(2, 'john.doe_pass');
 
     $this->assertFollowUpMigrationResults();
-
+    $this->assertEntityRevisionsCount('node', 26);
     $this->assertEmailsSent();
   }
 

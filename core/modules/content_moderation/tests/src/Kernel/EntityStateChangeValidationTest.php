@@ -49,7 +49,6 @@ class EntityStateChangeValidationTest extends KernelTestBase {
     $this->installEntitySchema('user');
     $this->installEntitySchema('content_moderation_state');
     $this->installConfig('content_moderation');
-    $this->installSchema('system', ['sequences']);
 
     $this->adminUser = $this->createUser(array_keys($this->container->get('user.permissions')->getPermissions()));
   }
@@ -111,7 +110,7 @@ class EntityStateChangeValidationTest extends KernelTestBase {
     $violations = $node->validate();
     $this->assertCount(1, $violations);
 
-    $this->assertEquals('Invalid state transition from <em class="placeholder">Draft</em> to <em class="placeholder">Archived</em>', $violations->get(0)->getMessage());
+    $this->assertEquals('Invalid state transition from Draft to Archived', $violations->get(0)->getMessage());
   }
 
   /**
@@ -134,7 +133,7 @@ class EntityStateChangeValidationTest extends KernelTestBase {
     $violations = $node->validate();
 
     $this->assertCount(1, $violations);
-    $this->assertEquals('State <em class="placeholder">invalid_state</em> does not exist on <em class="placeholder">Editorial</em> workflow', $violations->get(0)->getMessage());
+    $this->assertEquals('State invalid_state does not exist on Editorial workflow', $violations->get(0)->getMessage());
   }
 
   /**
@@ -226,7 +225,7 @@ class EntityStateChangeValidationTest extends KernelTestBase {
     $node->moderation_state = 'archived';
     $violations = $node->validate();
     $this->assertCount(1, $violations);
-    $this->assertEquals('Invalid state transition from <em class="placeholder">Draft</em> to <em class="placeholder">Archived</em>', $violations->get(0)->getMessage());
+    $this->assertEquals('Invalid state transition from Draft to Archived', $violations->get(0)->getMessage());
 
     // From the default french published revision, there should be none.
     $node_fr = Node::load($node->id())->getTranslation('fr');
@@ -362,12 +361,12 @@ class EntityStateChangeValidationTest extends KernelTestBase {
       'Invalid transition, no permissions validated' => [
         [],
         'archived',
-        ['Invalid state transition from <em class="placeholder">Draft</em> to <em class="placeholder">Archived</em>'],
+        ['Invalid state transition from Draft to Archived'],
       ],
       'Valid transition, missing permission' => [
         [],
         'published',
-        ['You do not have access to transition from <em class="placeholder">Draft</em> to <em class="placeholder">Published</em>'],
+        ['You do not have access to transition from Draft to Published'],
       ],
       'Valid transition, granted published permission' => [
         ['use editorial transition publish'],
@@ -382,7 +381,7 @@ class EntityStateChangeValidationTest extends KernelTestBase {
       'Valid transition, incorrect permission granted' => [
         ['use editorial transition create_new_draft'],
         'published',
-        ['You do not have access to transition from <em class="placeholder">Draft</em> to <em class="placeholder">Published</em>'],
+        ['You do not have access to transition from Draft to Published'],
       ],
       // Test with an additional state and set of transitions, since the
       // "published" transition can start from either "draft" or "published", it
@@ -396,7 +395,7 @@ class EntityStateChangeValidationTest extends KernelTestBase {
       'Valid transition, incorrect  foo permission granted' => [
         ['use editorial transition foo_to_foo'],
         'foo',
-        ['You do not have access to transition from <em class="placeholder">Draft</em> to <em class="placeholder">Foo</em>'],
+        ['You do not have access to transition from Draft to Foo'],
       ],
     ];
   }
