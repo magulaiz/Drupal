@@ -610,7 +610,7 @@ function _file_save_upload_from_form(array $element, FormStateInterface $form_st
  * @see _file_save_upload_from_form()
  *
  * @todo move this logic to a service in https://www.drupal.org/node/2244513.
- * @deprecated in drupal:11.0.0 and is removed from drupal:11.0.3.
+ * @deprecated in drupal:10.2.0 and is removed from drupal:11.0.0.
  * Use FileSaveUpload service instead.
  *
  * @see https://www.drupal.org/node/2244513
