@@ -296,6 +296,7 @@ EOD;
     }
     if (isset($table['unique keys']) && is_array($table['unique keys'])) {
       foreach ($table['unique keys'] as $key_name => $key) {
+        $this->validateUniqueKeySchema($key, $table['fields']);
         // Use the createPrimaryKeySql(), which already discards any prefix
         // lengths passed as part of the key column specifiers. (Postgres
         // doesn't support setting a prefix length for PRIMARY or UNIQUE

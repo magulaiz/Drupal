@@ -392,7 +392,7 @@ abstract class Schema implements PlaceholderInterface {
     $fixed_key_fields = [];
     foreach ($key_fields as $key_field) {
       if (is_array($key_field)) {
-        @trigger_error('Specification of primary key with column length is deprecated in drupal:9.3.0 and is throwing a SchemaException from drupal:10.0.0. There is no replacement. See https://www.drupal.org/node/1234567', E_USER_DEPRECATED);
+        @trigger_error('Specification of primary key with column length is deprecated in drupal:9.3.0 and is throwing a SchemaException from drupal:10.0.0. There is no replacement. See https://www.drupal.org/node/4444555', E_USER_DEPRECATED);
         $fixed_key_fields[] = $key_field[0];
       }
       else {
@@ -477,7 +477,7 @@ abstract class Schema implements PlaceholderInterface {
   protected function validateUniqueKeySchema(array $key_fields, array $fields = []): void {
     foreach ($key_fields as $key_field) {
       if (is_array($key_field)) {
-        @trigger_error('Specification of unique keys with column length is deprecated in drupal:9.3.0 and is throwing a SchemaException from drupal:10.0.0. There is no replacement. See https://www.drupal.org/node/1234567', E_USER_DEPRECATED);
+        @trigger_error('Specification of unique keys with column length is deprecated in drupal:9.3.0 and is throwing a SchemaException from drupal:10.0.0. There is no replacement. See https://www.drupal.org/node/4444555', E_USER_DEPRECATED);
       }
     }
   }
@@ -789,10 +789,10 @@ abstract class Schema implements PlaceholderInterface {
    * @deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Use
    *   ::validatePrimaryKeySchema() instead.
    *
-   * @see https://www.drupal.org/node/1234567
+   * @see https://www.drupal.org/node/4444555
    */
   protected function ensureNotNullPrimaryKey(array $primary_key, array $fields) {
-    @trigger_error(__METHOD__ . ' is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Use ::validatePrimaryKeySchema() instead. See https://www.drupal.org/node/1234567', E_USER_DEPRECATED);
+    @trigger_error(__METHOD__ . ' is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Use ::validatePrimaryKeySchema() instead. See https://www.drupal.org/node/4444555', E_USER_DEPRECATED);
     foreach (array_intersect($primary_key, array_keys($fields)) as $field_name) {
       if (!isset($fields[$field_name]['not null']) || $fields[$field_name]['not null'] !== TRUE) {
         throw new SchemaException("The '$field_name' field specification does not define 'not null' as TRUE.");
