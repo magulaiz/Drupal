@@ -49,7 +49,7 @@ class RenderElementTest extends UnitTestCase {
     // Test no AJAX element.
     $element_no_ajax = [
       '#type' => 'select',
-      '#id' => 'test'
+      '#id' => 'test',
     ];
     $element = RenderElement::preRenderAjaxForm($element_no_ajax);
     $this->assertFalse($element['#ajax_processed']);
