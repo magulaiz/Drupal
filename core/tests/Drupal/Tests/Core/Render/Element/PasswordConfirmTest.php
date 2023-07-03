@@ -27,12 +27,12 @@ class PasswordConfirmTest extends UnitTestCase {
    */
   public function providerTestValueCallback() {
     $data = [];
-    $data[] = [['pass1' => '', 'pass2' => ''], [], NULL];
-    $data[] = [['pass1' => '', 'pass2' => ''], ['#default_value' => ['pass2' => 'value']], NULL];
-    $data[] = [['pass2' => 'value', 'pass1' => ''], ['#default_value' => ['pass2' => 'value']], FALSE];
-    $data[] = [['pass1' => '123456', 'pass2' => 'qwerty'], [], ['pass1' => '123456', 'pass2' => 'qwerty']];
-    $data[] = [['pass1' => '123', 'pass2' => '234'], [], ['pass1' => 123, 'pass2' => 234]];
-    $data[] = [['pass1' => '', 'pass2' => '234'], [], ['pass1' => ['array'], 'pass2' => 234]];
+    $data[] = ['', [], NULL];
+    $data[] = ['', ['#default_value' => ['pass2' => 'value']], NULL];
+    $data[] = ['', ['#default_value' => ['pass2' => 'value']], FALSE];
+    $data[] = ['123456', [], ['pass1' => '123456', 'pass2' => 'qwerty']];
+    $data[] = ['123', [], ['pass1' => 123, 'pass2' => 234]];
+    $data[] = ['', [], ['pass1' => ['array'], 'pass2' => 234]];
 
     return $data;
   }
