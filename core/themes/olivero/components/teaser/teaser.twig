@@ -1,41 +1,18 @@
-{#
-/**
- * @file
- * Olivero's theme implementation to display a node teaser component.
- *
- * Available variables:
- * attributes,
- * classes,
- * label,
- * content,
- * title_prefix,
- * title_suffix,
- * display_submitted,
- * label,
- * author_name,
- * url,
- * metadata,
- * date,
- * page,
-
- */
-#}
-
 <article{{attributes.addClass(classes)}}>
-	<header>
-		{{ title_prefix }}
-		{{ title_suffix }}
-		{% if display_submitted %}
-			<div class="teaser__meta"> 
+  <header>
+    {{ title_prefix }}
+    {{ title_suffix }}
+    {% if display_submitted %}
+      <div class="teaser__meta"> 
         {% block author %}{% endblock %}
-				{{ metadata }}
-			</div>
-		{% endif %}
-		{% if label and not page %}
-			<div class="teaser__top-wrapper"> 
+        {{ metadata }}
+      </div>
+    {% endif %}
+    {% if label and not page %}
+      <div class="teaser__top-wrapper"> 
         {% block description %}{% endblock %}
       </div>
-			{% endif %}
+      {% endif %}
   </header>
   <div{{content_attributes.addClass('teaser__content')}}>
     {{ content|without('field_image', 'links') }}
