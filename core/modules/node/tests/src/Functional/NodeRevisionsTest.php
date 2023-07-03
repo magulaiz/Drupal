@@ -158,7 +158,7 @@ class NodeRevisionsTest extends NodeTestBase {
     // Confirm the correct revision text appears on "view revisions" page.
     $this->drupalGet("node/" . $node->id() . "/revisions/" . $node->getRevisionId() . "/view");
     $this->assertSession()->pageTextContains($node->body->value);
-    
+
     // Confirm the revision operations appears on the "view revision" page.
     $this->assertSession()->pageTextContains('Revert Revision');
     $this->assertSession()->linkByHrefExists('node/' . $node->id() . '/revisions/' . $node->getRevisionId() . '/revert');
