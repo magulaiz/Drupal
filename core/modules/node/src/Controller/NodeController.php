@@ -131,7 +131,7 @@ class NodeController extends ControllerBase implements ContainerInjectionInterfa
     $languageManager = \Drupal::languageManager();
     $defaultLanguage = $languageManager->getDefaultLanguage();
     $defaultTranslation = $defaultLanguage->getId();
-    if($langcode === $defaultTranslation) {
+    if ($langcode === $defaultTranslation) {
       $page['revert'] = [
         '#type' => 'link',
         '#title' => t('Revert Revision'),
@@ -141,7 +141,8 @@ class NodeController extends ControllerBase implements ContainerInjectionInterfa
         ],
         '#weight' => 9999999,
       ];
-    } else {
+    }
+    else {
       $page['revert'] = [
         '#type' => 'link',
         '#title' => t('Revert Revision'),
