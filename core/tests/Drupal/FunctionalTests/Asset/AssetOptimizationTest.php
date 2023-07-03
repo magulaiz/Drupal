@@ -33,11 +33,45 @@ class AssetOptimizationTest extends BrowserTestBase {
    * Tests that asset aggregates are rendered and created on disk.
    */
   public function testAssetAggregation(): void {
+    // Test aggregation with a custom file_assets_path.
     $this->fileAssetsPath = $this->publicFilesDirectory . '/test-assets';
     $settings['settings']['file_assets_path'] = (object) [
       'value' => $this->fileAssetsPath,
       'required' => TRUE,
     ];
+    $this->doTestAggregation($settings);
+
+    // Test aggregation with no configured file_assets_path or file_public_path,
+    // since tests run in a multisite, this tests multisite installs where
+    // settings.php is the default.
+    $this->fileAssetsPath = $this->publicFilesDirectory;
+    $settings['settings']['file_public_path'] = (object) [
+      'value' => NULL,
+      'required' => TRUE,
+    ];
+    $settings['settings']['file_assets_path'] = (object) [
+      'value' => NULL,
+      'required' => TRUE,
+    ];
+    $this->doTestAggregation($settings);
+  }
+
+  /**
+   * Creates a user and requests a page.
+   */
+  protected function requestPage(): void {
+    $user = $this->createUser();
+    $this->drupalLogin($user);
+    $this->drupalGet('');
+  }
+
+  /**
+   * Helper to test aggregate file URLs.
+   *
+   * @param array $settings
+   *   A settings array to pass to ::writeSettings()
+   */
+  protected function doTestAggregation(array $settings): void {
     $this->writeSettings($settings);
     $this->rebuildAll();
     $this->config('system.performance')->set('css', [
@@ -48,44 +82,35 @@ class AssetOptimizationTest extends BrowserTestBase {
       'preprocess' => TRUE,
       'gzip' => TRUE,
     ])->save();
-    $user = $this->createUser();
-    $this->drupalLogin($user);
-    $this->drupalGet('');
+    $this->requestPage();
     $session = $this->getSession();
     $page = $session->getPage();
 
-    $elements = $page->findAll('xpath', '//link[@rel="stylesheet"]');
-    $urls = [];
-    foreach ($elements as $element) {
+    // Collect all the URLs for all the script and styles prior to making any
+    // more requests.
+    $style_elements = $page->findAll('xpath', '//link[@rel="stylesheet"]');
+    $script_elements = $page->findAll('xpath', '//script');
+    $style_urls = [];
+    foreach ($style_elements as $element) {
       if ($element->hasAttribute('href')) {
-        $urls[] = $element->getAttribute('href');
+        $style_urls[] = $element->getAttribute('href');
       }
     }
-    foreach ($urls as $url) {
+    $script_urls = [];
+    foreach ($script_elements as $element) {
+      if ($element->hasAttribute('src')) {
+        $script_urls[] = $element->getAttribute('src');
+      }
+    }
+    foreach ($style_urls as $url) {
       $this->assertAggregate($url);
-    }
-    foreach ($urls as $url) {
       $this->assertAggregate($url, FALSE);
-    }
-
-    foreach ($urls as $url) {
       $this->assertInvalidAggregates($url);
     }
 
-    $elements = $page->findAll('xpath', '//script');
-    $urls = [];
-    foreach ($elements as $element) {
-      if ($element->hasAttribute('src')) {
-        $urls[] = $element->getAttribute('src');
-      }
-    }
-    foreach ($urls as $url) {
+    foreach ($script_urls as $url) {
       $this->assertAggregate($url);
-    }
-    foreach ($urls as $url) {
       $this->assertAggregate($url, FALSE);
-    }
-    foreach ($urls as $url) {
       $this->assertInvalidAggregates($url);
     }
   }
@@ -100,16 +125,20 @@ class AssetOptimizationTest extends BrowserTestBase {
    */
   protected function assertAggregate(string $url, bool $from_php = TRUE): void {
     $url = $this->getAbsoluteUrl($url);
-    $this->assertStringContainsString($this->fileAssetsPath, $url);
+    // Not every script or style on a page is aggregated.
+    if (!str_contains($url, $this->fileAssetsPath)) {
+      return;
+    }
     $session = $this->getSession();
     $session->visit($url);
     $this->assertSession()->statusCodeEquals(200);
     $headers = $session->getResponseHeaders();
     if ($from_php) {
       $this->assertEquals(['no-store, private'], $headers['Cache-Control']);
+      $this->assertArrayHasKey('X-Generator', $headers);
     }
     else {
-      $this->assertArrayNotHasKey('Cache-Control', $headers);
+      $this->assertArrayNotHasKey('X-Generator', $headers);
     }
   }
 
@@ -122,6 +151,11 @@ class AssetOptimizationTest extends BrowserTestBase {
    * @throws \Behat\Mink\Exception\ExpectationException
    */
   protected function assertInvalidAggregates(string $url): void {
+    $url = $this->getAbsoluteUrl($url);
+    // Not every script or style on a page is aggregated.
+    if (!str_contains($url, $this->fileAssetsPath)) {
+      return;
+    }
     $session = $this->getSession();
     $session->visit($this->replaceGroupDelta($url));
     $this->assertSession()->statusCodeEquals(200);
@@ -136,6 +170,9 @@ class AssetOptimizationTest extends BrowserTestBase {
     $this->assertSession()->statusCodeEquals(400);
 
     $session->visit($this->invalidExclude($url));
+    $this->assertSession()->statusCodeEquals(400);
+
+    $session->visit($this->replaceFileNamePrefix($url));
     $this->assertSession()->statusCodeEquals(400);
 
     $session->visit($this->setInvalidLibrary($url));
@@ -183,6 +220,19 @@ class AssetOptimizationTest extends BrowserTestBase {
     $hash = strtok($parts[1], '.');
     $parts[1] = str_replace($hash, 'abcdefghijklmnop', $parts[1]);
     return $this->getAbsoluteUrl(implode('_', $parts));
+  }
+
+  /**
+   * Replaces the filename prefix in the given URL.
+   *
+   * @param string $url
+   *   The source URL.
+   *
+   * @return string
+   *   The URL with the file name prefix replaced.
+   */
+  protected function replaceFileNamePrefix(string $url): string {
+    return str_replace(['/css_', '/js_'], '/xyz_', $url);
   }
 
   /**

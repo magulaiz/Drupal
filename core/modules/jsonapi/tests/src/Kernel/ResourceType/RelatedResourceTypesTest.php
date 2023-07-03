@@ -19,6 +19,7 @@ class RelatedResourceTypesTest extends JsonapiKernelTestBase {
    * {@inheritdoc}
    */
   protected static $modules = [
+    'file',
     'node',
     'jsonapi',
     'serialization',
@@ -58,7 +59,6 @@ class RelatedResourceTypesTest extends JsonapiKernelTestBase {
     $this->installEntitySchema('user');
 
     // Add the additional table schemas.
-    $this->installSchema('system', ['sequences']);
     $this->installSchema('node', ['node_access']);
     $this->installSchema('user', ['users_data']);
 

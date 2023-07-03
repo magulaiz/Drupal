@@ -44,7 +44,6 @@ class MenuLinksTest extends KernelTestBase {
 
     $this->menuLinkManager = \Drupal::service('plugin.manager.menu.link');
 
-    $this->installSchema('system', ['sequences']);
     $this->installSchema('user', ['users_data']);
     $this->installEntitySchema('entity_test_external');
     $this->installEntitySchema('menu_link_content');
@@ -327,7 +326,7 @@ class MenuLinksTest extends KernelTestBase {
   /**
    * Tests handling of pending revisions.
    *
-   * @coversDefaultClass \Drupal\menu_link_content\Plugin\Validation\Constraint\MenuTreeHierarchyConstraintValidator
+   * @covers \Drupal\menu_link_content\Plugin\Validation\Constraint\MenuTreeHierarchyConstraintValidator::validate
    */
   public function testPendingRevisions() {
     /** @var \Drupal\Core\Entity\RevisionableStorageInterface $storage */
