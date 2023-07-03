@@ -603,7 +603,7 @@ function template_preprocess_node(&$variables) {
     $languageManager = \Drupal::languageManager();
     $defaultLanguage = $languageManager->getDefaultLanguage();
     $defaultTranslation = $defaultLanguage->getId();
-    if($langcode === $defaultTranslation) {
+    if ($langcode === $defaultTranslation) {
       $variables['content']['revert'] = [
         '#type' => 'link',
         '#title' => t('Revert Revision'),
@@ -613,7 +613,8 @@ function template_preprocess_node(&$variables) {
         ],
         '#weight' => 9999999,
       ];
-    } else {
+    }
+    else {
       $variables['content']['revert'] = [
         '#type' => 'link',
         '#title' => t('Revert Revision'),
