@@ -11,7 +11,7 @@ use Drupal\node\NodeInterface;
  * This is tested with the core modules that are enabled in the 'standard'
  * profile.
  *
- * @group Common
+ * @group Performance
  */
 class NoJavaScriptAnonymousTest extends PerformanceTestBase {
 
