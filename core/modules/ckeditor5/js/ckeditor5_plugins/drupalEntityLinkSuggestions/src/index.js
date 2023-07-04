@@ -45,6 +45,31 @@ class DrupalEntityLinkSuggestions extends Plugin {
     this._enableLinkAutocomplete();
     this._handleExtraFormFieldSubmit();
     this._handleDataLoadingIntoExtraFormField();
+    this._handleEntityLinkPreviews();
+  }
+
+  _handleEntityLinkPreviews() {
+    const editor = this.editor;
+    const linkActionsView = editor.plugins.get('LinkUI').actionsView;
+    const previewButton = linkActionsView.previewButtonView;
+    previewButton.unbind('isEnabled');
+    previewButton
+      .bind('isEnabled')
+      .to(
+        linkActionsView,
+        'href',
+        (href) => !!href && !href.startsWith('entity:'),
+      );
+    previewButton.unbind('label');
+    previewButton.bind('label').to(linkActionsView, 'href', (href) => {
+      if (href && href.startsWith('entity:')) {
+        console.log('TODO: intercept clicks to this link');
+        return Drupal.t('Internal link to !entity-uri', {
+          '!entity-uri': href,
+        });
+      }
+      return href || Drupal.t('This link has no URL');
+    });
   }
 
   _createExtraButtonView(modelName, options) {
