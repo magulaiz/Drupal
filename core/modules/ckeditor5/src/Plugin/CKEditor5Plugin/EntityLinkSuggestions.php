@@ -220,7 +220,7 @@ class EntityLinkSuggestions extends CKEditor5PluginDefault implements CKEditor5P
           array_keys($bundles_for_entity_type),
           array_column($bundles_for_entity_type, 'label')
         ),
-        '#default_value' => self::getAllowedBundlesForEntityType($this->configuration, $entity_type_id),
+        '#default_value' => self::getAllowedBundlesForEntityType($this->configuration, $entity_type_id) ?? [],
         '#description' => $this->t('If none are selected, all will be allowed.'),
       ];
     }
