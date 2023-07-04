@@ -55,7 +55,7 @@ class AggregatorCronTest extends AggregatorTestBase {
     $edit = $this->getFeedEditArray();
     $this->drupalGet('aggregator/sources/' . $feed->id() . '/configure');
     $this->submitForm($edit, t('Save'));
-    $this->assertSession()->pageTextContains(t('The feed @name has been updated.', array('@name' => $edit['title[0][value]'])));
+    $this->assertSession()->pageTextContains(t('The feed @name has been updated.', ['@name' => $edit['title[0][value]']]));
     // Reload the feed with the new values.
     \Drupal::entityTypeManager()->getStorage('aggregator_feed')->loadUnchanged($feed->id());
     $feed = Feed::load($feed->id());
