@@ -19,3 +19,6 @@ services:
     autowire: true
     tags:
       - { name: access_check, applies_to: _field_ui_field_reuse_access }
+  plugin.manager.field_type_category_info:
+    class: \Drupal\field_ui\Plugin\FieldTypeCategoryInfoManager
+    arguments: [ '@module_handler', '@cache.discovery' ]
