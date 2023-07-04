@@ -104,7 +104,9 @@ class EntityLinkSuggestions extends CKEditor5PluginDefault implements CKEditor5P
    *   TRUE if it is linkable, FALSE if not.
    */
   public static function isLinkableEntityType(EntityTypeInterface $entity_type): bool {
-    return $entity_type->hasLinkTemplate('canonical') || $entity_type->hasHandlerClass('link_target', 'view');
+    $canonical = $entity_type->getLinkTemplate('canonical');
+    $edit_form = $entity_type->getLinkTemplate('edit-form');
+    return ($canonical !== FALSE && $canonical !== $edit_form) || $entity_type->hasHandlerClass('link_target', 'view');
   }
 
   /**
