@@ -43,6 +43,8 @@ parameters:
   filter_protocols:
     - http
     - https
+    # @see \Drupal\Core\Url::fromEntityUri()
+    - entity
     - ftp
     - news
     - nntp
