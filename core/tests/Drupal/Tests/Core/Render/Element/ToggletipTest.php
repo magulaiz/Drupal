@@ -4,7 +4,7 @@ namespace Drupal\FunctionalJavascriptTests\Core\Render\Element;
 
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 
-// cSpell:ignore toggletip popovertarget.
+// cspell:ignore toggletip popovertarget
 
 /**
  * Tests for the toggletip element.
