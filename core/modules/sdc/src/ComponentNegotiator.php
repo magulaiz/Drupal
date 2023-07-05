@@ -4,7 +4,6 @@ namespace Drupal\sdc;
 
 use Drupal\Core\Extension\Extension;
 use Drupal\Core\Extension\ModuleExtensionList;
-use Drupal\Core\Theme\ActiveTheme;
 use Drupal\Core\Theme\ThemeManagerInterface;
 
 /**
@@ -13,13 +12,6 @@ use Drupal\Core\Theme\ThemeManagerInterface;
  * @internal
  */
 final class ComponentNegotiator {
-
-  /**
-   * The active theme.
-   *
-   * @var \Drupal\Core\Theme\ActiveTheme
-   */
-  protected ActiveTheme $activeTheme;
 
   /**
    * Holds the component IDs from previous negotiations.
@@ -40,7 +32,6 @@ final class ComponentNegotiator {
     protected ThemeManagerInterface $themeManager,
     protected ModuleExtensionList $moduleExtensionList
   ) {
-    $this->activeTheme = $this->themeManager->getActiveTheme();
   }
 
   /**
@@ -102,12 +93,13 @@ final class ComponentNegotiator {
    *   The plugin ID for the negotiated component, or NULL if none was found.
    */
   private function maybeNegotiateByTheme(array $candidates): ?string {
+    $active_theme = $this->themeManager->getActiveTheme();
     // Prepare the error message.
-    $theme_name = $this->activeTheme->getName();
+    $theme_name = $active_theme->getName();
     // Let's do theme based negotiation.
     $base_theme_names = array_map(
       static fn(Extension $extension) => $extension->getName(),
-      $this->activeTheme->getBaseThemeExtensions()
+      $active_theme->getBaseThemeExtensions()
     );
     $considered_themes = [$theme_name, ...$base_theme_names];
     // Only consider components in the theme hierarchy tree.
@@ -168,10 +160,11 @@ final class ComponentNegotiator {
    *   The cache key.
    */
   private function generateCacheKey(string $component_id): string {
+    $active_theme = $this->themeManager->getActiveTheme();
     return sprintf(
       'sdc-negotiation::%s::%s',
       $component_id,
-      $this->activeTheme->getName()
+      $active_theme->getName()
     );
   }
 
