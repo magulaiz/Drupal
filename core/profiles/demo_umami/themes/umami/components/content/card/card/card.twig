@@ -4,7 +4,6 @@
 
 <article{{ attributes.addClass(classes) }}>
   {% block card %}
-
     {% block title %}
       {{ include('umami:card-title', {
         title,
@@ -27,6 +26,5 @@
         </a>
       </div>
     {% endblock %}
-
   {% endblock %}
 </article>

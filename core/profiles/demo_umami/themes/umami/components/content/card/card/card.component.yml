@@ -15,15 +15,15 @@ props:
       title: Url
       description: Card link URL.
     attributes:
-      type: string
+      type: Drupal\Core\Template\Attribute
       title: Attributes
       description: Wrapper attributes.
     content_attributes:
-      type: string
+      type: Drupal\Core\Template\Attribute
       title: Content attributes
       description: Content wrapper attributes.
     title_attributes:
-      type: string
+      type: Drupal\Core\Template\Attribute
       title: Title attributes
       description: Title attributes object.
     title_prefix:
