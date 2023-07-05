@@ -215,31 +215,6 @@ class MigrateBlockTest extends MigrateDrupal6TestBase {
     ];
     $this->assertEntity('book', [], 'sidebar', 'olivero', -4, $settings);
 
-    // Check forum block settings.
-    $settings = [
-      'id' => 'forum_active_block',
-      'label' => '',
-      'provider' => 'forum',
-      'label_display' => '0',
-      'block_count' => 3,
-      'properties' => [
-        'administrative' => '1',
-      ],
-    ];
-    $this->assertEntity('forum', [], 'sidebar', 'olivero', -8, $settings);
-
-    $settings = [
-      'id' => 'forum_new_block',
-      'label' => '',
-      'provider' => 'forum',
-      'label_display' => '0',
-      'block_count' => 4,
-      'properties' => [
-        'administrative' => '1',
-      ],
-    ];
-    $this->assertEntity('forum_1', [], 'sidebar', 'olivero', -9, $settings);
-
     // Check statistic block settings.
     $settings = [
       'id' => 'broken',

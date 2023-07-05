@@ -27,6 +27,7 @@ class MigrateTaxonomyTermTest extends MigrateDrupal7TestBase {
     'taxonomy',
     'telephone',
     'text',
+    'views',
   ];
 
   /**
