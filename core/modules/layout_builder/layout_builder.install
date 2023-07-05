@@ -14,8 +14,6 @@ use Drupal\layout_builder\Section;
  * Implements hook_install().
  */
 function layout_builder_install() {
-  $display_changed = FALSE;
-
   $displays = LayoutBuilderEntityViewDisplay::loadMultiple();
   /** @var \Drupal\layout_builder\Entity\LayoutEntityDisplayInterface[] $displays */
   foreach ($displays as $display) {
@@ -27,17 +25,22 @@ function layout_builder_install() {
         ->enableLayoutBuilder()
         ->appendSection(new Section($field_layout['id'], $field_layout['settings']))
         ->save();
-      $display_changed = TRUE;
     }
   }
 
-  // Clear the rendered cache to ensure the new layout builder flow is used.
-  // While in many cases the above change will not affect the rendered output,
+  // Clear rendered cache to ensure 1) the new layout builder flow is used;
+  // while in many cases the above change will not affect the rendered output,
   // the cacheability metadata will have changed and should be processed to
-  // prepare for future changes.
-  if ($display_changed) {
-    Cache::invalidateTags(['rendered']);
-  }
+  // prepare for future changes and 2) operation links are removed from cache.
+  Cache::invalidateTags(['rendered']);
+}
+
+/**
+ * Implements hook_uninstall().
+ */
+function layout_builder_uninstall() {
+  // Clear rendered cache so that operation links are removed from cache.
+  Cache::invalidateTags(['rendered']);
 }
 
 /**
