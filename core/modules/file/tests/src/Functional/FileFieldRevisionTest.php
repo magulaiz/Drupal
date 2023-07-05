@@ -132,7 +132,7 @@ class FileFieldRevisionTest extends FileFieldTestBase {
     $connection = Database::getConnection();
     $connection->update('file_managed')
       ->fields([
-        'changed' => REQUEST_TIME - ($this->config('system.file')->get('temporary_maximum_age') + 1),
+        'changed' => $this->testRequestTime - ($this->config('system.file')->get('temporary_maximum_age') + 1),
       ])
       ->condition('fid', $node_file_r3->id())
       ->execute();
@@ -150,7 +150,7 @@ class FileFieldRevisionTest extends FileFieldTestBase {
     // would set the timestamp.
     $connection->update('file_managed')
       ->fields([
-        'changed' => REQUEST_TIME - ($this->config('system.file')->get('temporary_maximum_age') + 1),
+        'changed' => $this->testRequestTime - ($this->config('system.file')->get('temporary_maximum_age') + 1),
       ])
       ->condition('fid', $node_file_r1->id())
       ->execute();
