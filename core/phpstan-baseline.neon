@@ -1016,11 +1016,6 @@ parameters:
 			path: modules/dblog/dblog.module
 
 		-
-			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
-			count: 1
-			path: modules/dblog/tests/src/Kernel/DbLogTest.php
-
-		-
 			message: "#^Variable \\$items in empty\\(\\) always exists and is not falsy\\.$#"
 			count: 1
 			path: modules/field/tests/modules/field_test/src/Plugin/Field/FieldFormatter/TestFieldEmptySettingFormatter.php
@@ -1976,6 +1971,16 @@ parameters:
 			path: modules/user/src/RoleForm.php
 
 		-
+			message: "#^Variable \\$name in isset\\(\\) always exists and is not nullable\\.$#"
+			count: 1
+			path: modules/user/tests/src/Functional/UserLoginHttpTest.php
+
+		-
+			message: "#^Variable \\$pass in isset\\(\\) always exists and is not nullable\\.$#"
+			count: 1
+			path: modules/user/tests/src/Functional/UserLoginHttpTest.php
+
+		-
 			message: "#^Call to an undefined method Drupal\\\\Tests\\\\user\\\\Functional\\\\UserRegistrationRestTest\\:\\:getExpectedUnauthorizedEntityAccessCacheability\\(\\)\\.$#"
 			count: 1
 			path: modules/user/tests/src/Functional/UserRegistrationRestTest.php
@@ -2304,11 +2309,6 @@ parameters:
 			message: "#^Variable \\$rand3 might not be defined\\.$#"
 			count: 2
 			path: modules/views/tests/src/Kernel/Plugin/StyleTest.php
-
-		-
-			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
-			count: 2
-			path: modules/views/tests/src/Kernel/RenderCacheIntegrationTest.php
 
 		-
 			message: "#^Variable \\$relationship_handler in empty\\(\\) always exists and is not falsy\\.$#"
