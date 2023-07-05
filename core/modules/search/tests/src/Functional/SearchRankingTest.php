@@ -33,7 +33,7 @@ class SearchRankingTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['node', 'search', 'comment', 'statistics'];
+  protected static $modules = ['node', 'search', 'comment'];
 
   /**
    * {@inheritdoc}
@@ -116,18 +116,7 @@ class SearchRankingTest extends BrowserTestBase {
     $this->submitForm($edit, 'Preview');
     $this->submitForm($edit, 'Save');
 
-    // Enable counting of statistics.
-    $this->config('statistics.settings')->set('count_content_views', 1)->save();
-
-    // Simulating content views is kind of difficult in the test. Leave that
-    // to the Statistics module. So instead go ahead and manually update the
-    // counter for this node.
-    $nid = $nodes['views'][1]->id();
-    Database::getConnection()->insert('node_counter')
-      ->fields(['totalcount' => 5, 'daycount' => 5, 'timestamp' => \Drupal::time()->getRequestTime(), 'nid' => $nid])
-      ->execute();
-
-    // Run cron to update the search index and comment/statistics totals.
+    // Run cron to update the search index totals.
     $this->cronRun();
 
     // Test that the settings form displays the content ranking section.
