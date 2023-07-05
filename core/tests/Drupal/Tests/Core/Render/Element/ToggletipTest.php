@@ -4,7 +4,7 @@ namespace Drupal\FunctionalJavascriptTests\Core\Render\Element;
 
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 
-// cSpell:ignore toggletip popovertarget
+// cSpell:ignore toggletip popovertarget.
 
 /**
  * Tests for the toggletip element.
@@ -35,29 +35,31 @@ class ToggletipTest extends WebDriverTestBase {
 
   /**
    * Tests toggletip functionality.
+   *
+   * @param string $element_selector
+   *   Selector of element the toggle tip is for.
+   * @param string $text
+   *   Text inside the toggle tip.
+   *
+   *  @dataProvider dataProvider
    */
-  public function testToggletip() {
+  public function testToggletip(string $element_selector, string $text) {
     $page = $this->getSession()->getPage();
-    $data = $this->dataProvider();
-    foreach ($data as $item) {
-      $element_selector = $item[0];
-      $text = $item[1];
-      $toggle_button = $page->find('css', "$element_selector > button.toggletip__toggle");
-      // Get tooltip id from button.
-      $tooltip_id = $toggle_button->getAttribute('popovertarget');
-      $popover_element = $page->find('css', "#$tooltip_id");
-      // Confirm popover is not visible.
-      $this->assertFalse($popover_element->isVisible(), "Popover for $element_selector should not be visible before click");
-      $toggle_button->click();
-      // Confirm popover is visible.
-      $this->assertTrue($popover_element->isVisible(), "Popover $element_selector should be visible after click");
-      // Check for text.
-      $this->assertEquals($text, $popover_element->getText());
-      // Click to close popover.
-      $toggle_button->click();
-      // Confirm popover is not visible anymore.
-      $this->assertFalse($popover_element->isVisible(), "Popover for $element_selector should not be visible after clicking off it");
-    }
+    $toggle_button = $page->find('css', "$element_selector > button.toggletip__toggle");
+    // Get tooltip id from button.
+    $tooltip_id = $toggle_button->getAttribute('popovertarget');
+    $popover_element = $page->find('css', "#$tooltip_id");
+    // Confirm popover is not visible.
+    $this->assertFalse($popover_element->isVisible(), "Popover for $element_selector should not be visible before click");
+    $toggle_button->click();
+    // Confirm popover is visible.
+    $this->assertTrue($popover_element->isVisible(), "Popover $element_selector should be visible after click");
+    // Check for text.
+    $this->assertEquals($text, $popover_element->getText());
+    // Click to close popover.
+    $toggle_button->click();
+    // Confirm popover is not visible anymore.
+    $this->assertFalse($popover_element->isVisible(), "Popover for $element_selector should not be visible after clicking off it");
   }
 
   /**
