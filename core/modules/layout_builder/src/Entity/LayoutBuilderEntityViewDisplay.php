@@ -316,6 +316,8 @@ class LayoutBuilderEntityViewDisplay extends BaseEntityViewDisplay implements La
     if ($storage) {
       foreach ($storage->getSections() as $delta => $section) {
         $build[$delta] = $section->toRenderArray($contexts);
+        $section_cacheability = CacheableMetadata::createFromRenderArray($build[$delta]);
+        $cacheability->addCacheableDependency($section_cacheability);
       }
     }
     // The render array is built based on decisions made by @SectionStorage
