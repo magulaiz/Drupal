@@ -24,6 +24,7 @@ class MigrateForumTest extends MigrateNodeTestBase {
     'forum',
     'menu_ui',
     'taxonomy',
+    'views',
   ];
 
   /**
