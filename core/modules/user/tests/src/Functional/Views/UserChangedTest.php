@@ -49,7 +49,7 @@ class UserChangedTest extends ViewTestBase {
 
     $this->drupalGet($path, $options);
 
-    $this->assertSession()->pageTextContains('Updated date: ' . date('Y-m-d', $this->testRequestTime));
+    $this->assertSession()->pageTextContains('Updated date: ' . date('Y-m-d', \Drupal::time()->getRequestTime()));
   }
 
 }
