@@ -1,7 +1,7 @@
 .toggletip__tip {
   width: max-content;
   max-width: 800px;
-  margin: 0 1rem;
+  margin: 0;
   padding: 4px 16px 6px;
   opacity: 0.9;
   color: white;
