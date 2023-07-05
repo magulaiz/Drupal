@@ -26,24 +26,24 @@ class NodeRevisionWizardTest extends WizardTestBase {
     // Create two nodes with two revision.
     $node_storage = \Drupal::entityTypeManager()->getStorage('node');
     /** @var \Drupal\node\NodeInterface $node */
-    $node = $node_storage->create(['title' => $this->randomString(), 'type' => 'article', 'changed' => $this->testRequestTime + 40]);
+    $node = $node_storage->create(['title' => $this->randomString(), 'type' => 'article', 'changed' => \Drupal::time()->getRequestTime() + 40]);
     $node->save();
 
     $node = $node->createDuplicate();
     $node->setNewRevision();
-    $node->changed->value = $this->testRequestTime + 20;
+    $node->changed->value = \Drupal::time()->getRequestTime() + 20;
     $node->save();
 
-    $node = $node_storage->create(['title' => $this->randomString(), 'type' => 'article', 'changed' => $this->testRequestTime + 30]);
+    $node = $node_storage->create(['title' => $this->randomString(), 'type' => 'article', 'changed' => \Drupal::time()->getRequestTime() + 30]);
     $node->save();
 
     $node = $node->createDuplicate();
     $node->setNewRevision();
-    $node->changed->value = $this->testRequestTime + 10;
+    $node->changed->value = \Drupal::time()->getRequestTime() + 10;
     $node->save();
 
     $this->drupalCreateContentType(['type' => 'not-article']);
-    $node = $node_storage->create(['title' => $this->randomString(), 'type' => 'not-article', 'changed' => $this->testRequestTime + 80]);
+    $node = $node_storage->create(['title' => $this->randomString(), 'type' => 'not-article', 'changed' => \Drupal::time()->getRequestTime() + 80]);
     $node->save();
 
     $type = [

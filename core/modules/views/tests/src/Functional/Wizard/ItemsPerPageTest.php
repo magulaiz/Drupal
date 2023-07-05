@@ -31,14 +31,14 @@ class ItemsPerPageTest extends WizardTestBase {
 
     // Create articles, each with a different creation time so that we can do a
     // meaningful sort.
-    $node1 = $this->drupalCreateNode(['type' => 'article', 'created' => $this->testRequestTime]);
-    $node2 = $this->drupalCreateNode(['type' => 'article', 'created' => $this->testRequestTime + 1]);
-    $node3 = $this->drupalCreateNode(['type' => 'article', 'created' => $this->testRequestTime + 2]);
-    $node4 = $this->drupalCreateNode(['type' => 'article', 'created' => $this->testRequestTime + 3]);
-    $node5 = $this->drupalCreateNode(['type' => 'article', 'created' => $this->testRequestTime + 4]);
+    $node1 = $this->drupalCreateNode(['type' => 'article', 'created' => \Drupal::time()->getRequestTime()]);
+    $node2 = $this->drupalCreateNode(['type' => 'article', 'created' => \Drupal::time()->getRequestTime() + 1]);
+    $node3 = $this->drupalCreateNode(['type' => 'article', 'created' => \Drupal::time()->getRequestTime() + 2]);
+    $node4 = $this->drupalCreateNode(['type' => 'article', 'created' => \Drupal::time()->getRequestTime() + 3]);
+    $node5 = $this->drupalCreateNode(['type' => 'article', 'created' => \Drupal::time()->getRequestTime() + 4]);
 
     // Create a page. This should never appear in the view created below.
-    $page_node = $this->drupalCreateNode(['type' => 'page', 'created' => $this->testRequestTime + 2]);
+    $page_node = $this->drupalCreateNode(['type' => 'page', 'created' => \Drupal::time()->getRequestTime() + 2]);
 
     // Create a view that sorts newest first, and shows 4 items in the page and
     // 3 in the block.
