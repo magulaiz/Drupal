@@ -92,9 +92,9 @@ class ToggletipTest extends WebDriverTestBase {
       ['div[data-drupal-selector="edit-a-long-div-custom-positioning-top"]', "Toggletip content for long div custom positioned button, top"],
       ['div[data-drupal-selector="edit-a-long-div-custom-positioning-bottom"]', "Toggletip content for long div custom positioned button, bottom"],
       ['div[data-drupal-selector="edit-a-long-div-custom-positioning-bottom-end"]', "Toggletip content for long div custom positioned button, bottom-end"],
-      ['div[data-drupal-selector="edit-a-long-div-custom-positioning-right"]', "Toggletip content for long div custom positioned button, right"],
       ['div[data-drupal-selector="edit-a-long-div-custom-positioning-right-start"]', "Toggletip content for long div custom positioned button, right-start"],
       ['div[data-drupal-selector="edit-a-long-div-custom-positioning-right-end"]', "Toggletip content for long div custom positioned button, right-end"],
+      ['div[data-drupal-selector="edit-a-long-div-custom-positioning-right"]', "Toggletip content for long div custom positioned button, right"],
     ];
 
   }
