@@ -5,7 +5,9 @@ namespace Drupal\field_ui\Plugin;
 use Drupal\Core\Plugin\PluginBase;
 
 /**
+ * Default object used for field_type_category_info plugins.
  *
+ * @see \Drupal\field_ui\Plugin\FieldTypeCategoryInfoManager
  */
 class FieldTypeCategoryInfo extends PluginBase implements FieldTypeCategoryInfoInterface {
 

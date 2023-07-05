@@ -95,6 +95,8 @@ class FieldStorageAddForm extends FormBase {
    *   (optional) The entity field manager.
    * @param \Drupal\Core\Entity\EntityDisplayRepositoryInterface $entity_display_repository
    *   (optional) The entity display repository.
+   * @param \Drupal\Component\Plugin\PluginManagerInterface $field_type_category_info_manager
+   *   The field type category info plugin manager.
    */
   public function __construct(EntityTypeManagerInterface $entity_type_manager, FieldTypePluginManagerInterface $field_type_plugin_manager, ConfigFactoryInterface $config_factory, EntityFieldManagerInterface $entity_field_manager = NULL, EntityDisplayRepositoryInterface $entity_display_repository = NULL, PluginManagerInterface $field_type_category_info_manager) {
     $this->entityTypeManager = $entity_type_manager;
