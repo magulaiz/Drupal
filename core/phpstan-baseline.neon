@@ -856,11 +856,6 @@ parameters:
 			path: modules/comment/src/Plugin/views/row/Rss.php
 
 		-
-			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
-			count: 1
-			path: modules/comment/tests/src/Functional/CommentBlockTest.php
-
-		-
 			message: "#^Variable \\$position might not be defined\\.$#"
 			count: 1
 			path: modules/comment/tests/src/Functional/CommentBlockTest.php
@@ -876,24 +871,9 @@ parameters:
 			path: modules/comment/tests/src/Functional/CommentTestBase.php
 
 		-
-			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
-			count: 1
-			path: modules/comment/tests/src/Functional/CommentTranslationUITest.php
-
-		-
-			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
-			count: 1
-			path: modules/comment/tests/src/Functional/Views/DefaultViewRecentCommentsTest.php
-
-		-
 			message: "#^Variable \\$data might not be defined\\.$#"
 			count: 2
 			path: modules/config/src/Form/ConfigSingleImportForm.php
-
-		-
-			message: "#^Method Drupal\\\\config_test\\\\ConfigTestForm\\:\\:save\\(\\) should return int but return statement is missing\\.$#"
-			count: 1
-			path: modules/config/tests/config_test/src/ConfigTestForm.php
 
 		-
 			message: "#^Variable \\$settings_locations in empty\\(\\) always exists and is not falsy\\.$#"
@@ -1559,11 +1539,6 @@ parameters:
 			message: "#^Method Drupal\\\\node\\\\NodeTypeForm\\:\\:save\\(\\) should return int but return statement is missing\\.$#"
 			count: 1
 			path: modules/node/src/NodeTypeForm.php
-
-		-
-			message: "#^Call to an undefined method Drupal\\\\Tests\\\\node\\\\Functional\\\\NodeRevisionsTest\\:\\:drupalPost\\(\\)\\.$#"
-			count: 1
-			path: modules/node/tests/src/Functional/NodeRevisionsAllTest.php
 
 		-
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
@@ -2434,16 +2409,6 @@ parameters:
 			message: "#^Call to an undefined method Drupal\\\\TestSite\\\\Commands\\\\TestSiteInstallCommand\\:\\:fail\\(\\)\\.$#"
 			count: 1
 			path: tests/Drupal/TestSite/Commands/TestSiteInstallCommand.php
-
-		-
-			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
-			count: 1
-			path: tests/Drupal/TestSite/Commands/TestSiteInstallCommand.php
-
-		-
-			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
-			count: 1
-			path: tests/Drupal/Tests/BrowserTestBase.php
 
 		-
 			message: "#^Constructor of class Symfony\\\\Component\\\\ExpressionLanguage\\\\Expression has an unused parameter \\$expression\\.$#"
