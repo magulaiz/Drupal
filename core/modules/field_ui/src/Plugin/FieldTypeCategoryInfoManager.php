@@ -8,7 +8,27 @@ use Drupal\Core\Plugin\Discovery\YamlDiscovery;
 use Drupal\Core\Plugin\DefaultPluginManager;
 
 /**
+ * Defines a field type category info plugin manager.
  *
+ * A module can define field type categories in a
+ * MODULE_NAME.field_type_category_info.yml file contained in the module's
+ * base directory. Each plugin has the following structure:
+ * @code
+ *   CATEGORY_NAME:
+ *     label: STRING
+ *     description: STRING
+ *     weight: INTEGER
+ * @endcode
+ * For example:
+ * @code
+ * text:
+ *   label: Text
+ *   description: Text fields.
+ *   weight: 2
+ * @endcode
+ *
+ * @see \Drupal\field_ui\Plugin\FieldTypeCategoryInfoInterface
+ * @see \Drupal\field_ui\Plugin\FieldTypeCategoryInfo
  */
 class FieldTypeCategoryInfoManager extends DefaultPluginManager {
 
@@ -19,6 +39,7 @@ class FieldTypeCategoryInfoManager extends DefaultPluginManager {
     'label' => '',
     'description' => '',
     'weight' => NULL,
+    'class' => 'Drupal\field_ui\Plugin\FieldTypeCategoryInfo',
   ];
 
   /**

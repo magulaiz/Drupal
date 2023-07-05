@@ -160,13 +160,13 @@ class FieldStorageAddForm extends FormBase {
     $field_type_options = $unique_definitions = [];
     $grouped_definitions = $this->fieldTypePluginManager->getGroupedDefinitions($this->fieldTypePluginManager->getUiDefinitions());
     // Invoke a hook to get category properties.
-    $category_info = \Drupal::moduleHandler()->invokeAll('field_type_category_info');
     foreach ($grouped_definitions as $category => $field_types) {
       foreach ($field_types as $name => $field_type) {
         $unique_definitions[$category][$name] = ['unique_identifier' => $name] + $field_type;
-        if (isset($category_info[$category])) {
+        if ($this->fieldTypeCategoryInfoManager->hasDefinition($category)) {
+          $category_plugin = $this->fieldTypeCategoryInfoManager->createInstance($category);
           // Get the category label from the hook if it is defined in the hook.
-          $field_type_options[$category_info[$category]['label']->render()] = ['unique_identifier' => $name] + $field_type;
+          $field_type_options[$category_plugin->getLabel()->render()] = ['unique_identifier' => $name] + $field_type;
         }
         else {
           $field_type_options[$field_type['label']->render()] = ['unique_identifier' => $name] + $field_type;
@@ -187,12 +187,8 @@ class FieldStorageAddForm extends FormBase {
     ];
     $field_type_options_radios = [];
     foreach ($field_type_options as $field_option => $val) {
-      // Boolean flag for whether a field option is to be displayed as a group.
-      // When an option should be displayed as a group, its category value
-      // is a string id instead of TranslatableMarkup. The string id maps
-      // to the values returned by the field_type_category_info hook.
-      $display_as_group = is_string($val['category']) && $val['category'] !== FieldTypePluginManager::DEFAULT_CATEGORY;
-      $option_info = $display_as_group ? $category_info[$val['category']] : $val;
+      $display_as_group = ($val['category'] !== FieldTypePluginManager::DEFAULT_CATEGORY);
+      $option_info = $display_as_group ? $this->fieldTypeCategoryInfoManager->getDefinition($val['category']) : $val;
       $cleaned_class_name = Html::getClass($val['unique_identifier']);
       $field_type_options_radios[$field_option] = [
         '#type' => 'container',

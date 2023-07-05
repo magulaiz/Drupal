@@ -162,10 +162,10 @@ class FieldTypePluginManager extends DefaultPluginManager implements FieldTypePl
    */
   public function getGroupedDefinitions(array $definitions = NULL, $label_key = 'label') {
     $grouped_categories = $this->getGroupedDefinitionsTrait($definitions, $label_key);
-    $category_info = \Drupal::moduleHandler()->invokeAll('field_type_category_info');
+    $category_info = \Drupal::service('plugin.manager.field_type_category_info')->getDefinitions();
     foreach ($grouped_categories as $group => $definitions) {
       if (!isset($category_info[$group]) && $group !== static::DEFAULT_CATEGORY) {
-        assert(FALSE, "\"$group\" must be defined in hook_field_type_category_info().");
+        assert(FALSE, "\"$group\" must be defined in field_type_category_info.yml");
         $grouped_categories[static::DEFAULT_CATEGORY] += $definitions;
         unset($grouped_categories[$group]);
       }

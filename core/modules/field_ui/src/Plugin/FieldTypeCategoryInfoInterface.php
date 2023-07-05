@@ -8,6 +8,11 @@ namespace Drupal\field_ui\Plugin;
 interface FieldTypeCategoryInfoInterface {
 
   /**
+   * Returns the field group label.
+   */
+  public function getLabel();
+
+  /**
    * Returns the field group description.
    */
   public function getDescription();

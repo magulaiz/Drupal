@@ -12,8 +12,15 @@ class FieldTypeCategoryInfo extends PluginBase implements FieldTypeCategoryInfoI
   /**
    * {@inheritdoc}
    */
+  public function getLabel() {
+    return $this->t($this->pluginDefinition['label']);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function getDescription() {
-    return $this->pluginDefinition['description'];
+    return $this->t($this->pluginDefinition['description']);
   }
 
   /**
