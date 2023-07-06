@@ -25,6 +25,7 @@ class LegacyStateTest extends KernelTestBase {
     $state->set('system.css_js_query_string', 'foo');
     $this->expectDeprecation('The \'system.css_js_query_string\' state is deprecated in drupal:10.2.0. Use \Drupal\Core\Asset\AssetQueryStringInterface::get() and ::reset() instead. See https://www.drupal.org/node/3358337.');
     $this->assertEquals('foo', $state->get('system.css_js_query_string'));
+    $this->assertEquals('foo', \Drupal::service('asset.query_string')->get());
   }
 
 }
