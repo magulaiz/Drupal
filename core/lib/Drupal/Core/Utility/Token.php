@@ -263,13 +263,15 @@ class Token {
           $unaliased_tokens[$token] = "[{$unaliased_token_name}]";
           $alias_tokens_mapping["[{$unaliased_token_name}]"] = "{$type}{{$alias}}:$token";
         }
+        // @todo Check if need to add else condition ?
+        if (isset($data["{$type}{{$alias}}"])) {
+          $data_for_current_token[$type] = $data["{$type}{{$alias}}"];
+          $replacements_unaliased = $this->generate($type, $unaliased_tokens, $data_for_current_token, $options, $bubbleable_metadata);
 
-        $data_for_current_token[$type] = $data["{$type}{{$alias}}"];
-        $replacements_unaliased = $this->generate($type, $unaliased_tokens, $data_for_current_token, $options, $bubbleable_metadata);
-
-        foreach ($replacements_unaliased as $unaliased_token_name => $value) {
-          $aliased_token_name = $alias_tokens_mapping[$unaliased_token_name];
-          $replacements["[{$aliased_token_name}]"] = $value;
+          foreach ($replacements_unaliased as $unaliased_token_name => $value) {
+            $aliased_token_name = $alias_tokens_mapping[$unaliased_token_name];
+            $replacements["[{$aliased_token_name}]"] = $value;
+          }
         }
       }
     }
