@@ -17,7 +17,7 @@
   --splitbutton-trigger-chevron-light: url(../../images/icons/ffffff/chevron-down.svg);
 }
 
-.splitbutton__main :is(button, a, .button) {
+.splitbutton__main :is(button, a, .button):not(:focus) {
   box-shadow: none;
 }
 

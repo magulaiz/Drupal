@@ -163,6 +163,10 @@
   font-size: var(--splitbutton-dropdown-font-size);
 }
 
+.splitbutton__list:not([popover]) {
+  display: none;
+}
+
 .splitbutton__list :is(a, button, .button) {
   display: block;
   width: 100%;

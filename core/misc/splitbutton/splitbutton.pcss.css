@@ -146,7 +146,9 @@
   border: solid 1px var(--splitbutton-dropdown-border-color);
   background-color: var(--splitbutton-dropdown-background-color);
   font-size: var(--splitbutton-dropdown-font-size);
-
+  &:not([popover]) {
+     display: none;
+  }
   :is(a, button, .button) {
     display: block;
     width: 100%;
