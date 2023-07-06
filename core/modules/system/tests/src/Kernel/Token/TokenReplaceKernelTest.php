@@ -154,7 +154,7 @@ class TokenReplaceKernelTest extends TokenReplaceKernelTestBase {
    */
   public function testSystemDateTokenReplacement() {
     // Set time to one hour before request.
-    $date = $this->requestTime - 3600;
+    $date = REQUEST_TIME - 3600;
 
     // Generate and test tokens.
     $tests = [];

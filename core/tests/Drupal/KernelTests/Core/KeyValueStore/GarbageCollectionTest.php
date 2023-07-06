@@ -43,7 +43,7 @@ class GarbageCollectionTest extends KernelTestBase {
           'collection' => $collection,
         ])
         ->fields([
-          'expire' => $this->requestTime - 1,
+          'expire' => REQUEST_TIME - 1,
         ])
         ->execute();
     }

@@ -42,7 +42,7 @@ class CacheTest extends ViewsKernelTestBase {
     $this->installEntitySchema('user');
 
     // Setup the current time properly.
-    \Drupal::request()->server->set('REQUEST_TIME', \Drupal::time()->getCurrentTime());
+    \Drupal::request()->server->set('REQUEST_TIME', time());
   }
 
   /**

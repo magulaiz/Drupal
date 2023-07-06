@@ -2,7 +2,6 @@
 
 namespace Drupal\KernelTests;
 
-use Drupal\Component\Datetime\Time;
 use Drupal\Component\FileCache\ApcuFileCacheBackend;
 use Drupal\Component\FileCache\FileCache;
 use Drupal\Component\FileCache\FileCacheFactory;
@@ -221,20 +220,6 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
   protected $strictConfigSchema = TRUE;
 
   /**
-   * The Drupal time service.
-   *
-   * @var \Drupal\Component\Datetime\Time
-   */
-  protected Time $timeService;
-
-  /**
-   * The request time.
-   *
-   * @var int
-   */
-  protected int $requestTime;
-
-  /**
    * An array of config object names that are excluded from schema checking.
    *
    * @var string[]
@@ -274,10 +259,6 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
     $this->initFileCache();
     $this->bootEnvironment();
     $this->bootKernel();
-
-    // Don't know where best to put this yet?
-    $this->timeService = $this->container->get('datetime.time');
-    $this->requestTime = $this->timeService->getRequestTime();
   }
 
   /**

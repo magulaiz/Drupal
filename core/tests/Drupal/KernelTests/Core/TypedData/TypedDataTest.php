@@ -202,12 +202,12 @@ class TypedDataTest extends KernelTestBase {
     $this->assertNull($typed_data->getDateTime());
 
     // Timestamp type.
-    $value = $this->requestTime;
+    $value = REQUEST_TIME;
     $typed_data = $this->createTypedData(['type' => 'timestamp'], $value);
     $this->assertInstanceOf(DateTimeInterface::class, $typed_data);
     $this->assertSame($typed_data->getValue(), $value, 'Timestamp value was fetched.');
     $this->assertEquals(0, $typed_data->validate()->count());
-    $new_value = $this->requestTime + 1;
+    $new_value = REQUEST_TIME + 1;
     $typed_data->setValue($new_value);
     $this->assertSame($typed_data->getValue(), $new_value, 'Timestamp value was changed and set.');
     $this->assertEquals(0, $typed_data->validate()->count());
@@ -217,10 +217,10 @@ class TypedDataTest extends KernelTestBase {
     $typed_data->setValue('invalid');
     $this->assertEquals(1, $typed_data->validate()->count(), 'Validation detected invalid value.');
     // Check implementation of DateTimeInterface.
-    $typed_data = $this->createTypedData(['type' => 'timestamp'], $this->requestTime);
+    $typed_data = $this->createTypedData(['type' => 'timestamp'], REQUEST_TIME);
     $this->assertInstanceOf(DrupalDateTime::class, $typed_data->getDateTime());
-    $typed_data->setDateTime(DrupalDateTime::createFromTimestamp($this->requestTime + 1));
-    $this->assertEquals($this->requestTime + 1, $typed_data->getValue());
+    $typed_data->setDateTime(DrupalDateTime::createFromTimestamp(REQUEST_TIME + 1));
+    $this->assertEquals(REQUEST_TIME + 1, $typed_data->getValue());
     $typed_data->setValue(NULL);
     $this->assertNull($typed_data->getDateTime());
 

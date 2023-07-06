@@ -42,7 +42,7 @@ trait AssertViewsCacheTagsTrait {
     /** @var \Symfony\Component\HttpFoundation\RequestStack $request_stack */
     $request_stack = \Drupal::service('request_stack');
     $request = Request::createFromGlobals();
-    $request->server->set('REQUEST_TIME', $this->requestTime);
+    $request->server->set('REQUEST_TIME', REQUEST_TIME);
     $view->setRequest($request);
     $request_stack->push($request);
     $renderer->renderRoot($build);
@@ -122,7 +122,7 @@ trait AssertViewsCacheTagsTrait {
     /** @var \Symfony\Component\HttpFoundation\RequestStack $request_stack */
     $request_stack = \Drupal::service('request_stack');
     $request = new Request();
-    $request->server->set('REQUEST_TIME', $this->requestTime);
+    $request->server->set('REQUEST_TIME', REQUEST_TIME);
     $request_stack->push($request);
     $renderer->renderRoot($build);
 

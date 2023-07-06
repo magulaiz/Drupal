@@ -167,8 +167,8 @@ class EntityCrudHookTest extends EntityKernelTestBase {
       'promote' => 0,
       'sticky' => 0,
       'langcode' => LanguageInterface::LANGCODE_NOT_SPECIFIED,
-      'created' => $this->requestTime,
-      'changed' => $this->requestTime,
+      'created' => REQUEST_TIME,
+      'changed' => REQUEST_TIME,
     ]);
     $node->save();
     $nid = $node->id();
@@ -182,8 +182,8 @@ class EntityCrudHookTest extends EntityKernelTestBase {
       'field_name' => 'comment',
       'uid' => $account->id(),
       'subject' => 'Test comment',
-      'created' => $this->requestTime,
-      'changed' => $this->requestTime,
+      'created' => REQUEST_TIME,
+      'changed' => REQUEST_TIME,
       'status' => 1,
       'langcode' => LanguageInterface::LANGCODE_NOT_SPECIFIED,
     ]);
@@ -249,8 +249,8 @@ class EntityCrudHookTest extends EntityKernelTestBase {
       'filemime' => 'text/plain',
       'filesize' => filesize($url),
       'status' => 1,
-      'created' => $this->requestTime,
-      'changed' => $this->requestTime,
+      'created' => REQUEST_TIME,
+      'changed' => REQUEST_TIME,
     ]);
 
     $this->assertHookMessageOrder([
@@ -312,8 +312,8 @@ class EntityCrudHookTest extends EntityKernelTestBase {
       'promote' => 0,
       'sticky' => 0,
       'langcode' => LanguageInterface::LANGCODE_NOT_SPECIFIED,
-      'created' => $this->requestTime,
-      'changed' => $this->requestTime,
+      'created' => REQUEST_TIME,
+      'changed' => REQUEST_TIME,
     ]);
 
     $this->assertHookMessageOrder([
@@ -497,7 +497,7 @@ class EntityCrudHookTest extends EntityKernelTestBase {
     $account = User::create([
       'name' => 'Test user',
       'mail' => 'test@example.com',
-      'created' => $this->requestTime,
+      'created' => REQUEST_TIME,
       'status' => 1,
       'language' => 'en',
     ]);

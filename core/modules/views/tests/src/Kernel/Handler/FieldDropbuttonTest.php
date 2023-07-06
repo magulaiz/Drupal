@@ -92,21 +92,21 @@ class FieldDropbuttonTest extends ViewsKernelTestBase {
       'title' => 'bazs',
       'status' => 1,
       'uid' => $admin->id(),
-      'created' => $this->requestTime - 10,
+      'created' => REQUEST_TIME - 10,
     ]);
     $this->node2 = $this->createNode([
       'type' => 'foo',
       'title' => 'foos',
       'status' => 1,
       'uid' => $admin->id(),
-      'created' => $this->requestTime - 5,
+      'created' => REQUEST_TIME - 5,
     ]);
     $this->node3 = $this->createNode([
       'type' => 'bar',
       'title' => 'bars',
       'status' => 1,
       'uid' => $admin->id(),
-      'created' => $this->requestTime,
+      'created' => REQUEST_TIME,
     ]);
 
     // Now create a user with the ability to edit bar but not foo.

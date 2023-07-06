@@ -228,7 +228,7 @@ class SearchMultilingualEntityTest extends BrowserTestBase {
     // The request time is always the same throughout test runs. Update the
     // request time to a previous time, to simulate it having been marked
     // previously.
-    $current = $this->requestTime;
+    $current = REQUEST_TIME;
     $old = $current - 10;
     $connection = Database::getConnection();
     $connection->update('search_dataset')

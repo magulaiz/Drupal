@@ -86,7 +86,7 @@ class NodeAdminTest extends NodeTestBase {
   public function testContentAdminSort() {
     $this->drupalLogin($this->adminUser);
 
-    $changed = $this->requestTime;
+    $changed = REQUEST_TIME;
     $connection = Database::getConnection();
     foreach (['dd', 'aa', 'DD', 'bb', 'cc', 'CC', 'AA', 'BB'] as $prefix) {
       $changed += 1000;

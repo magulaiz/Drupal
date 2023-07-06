@@ -102,7 +102,7 @@ class TempStoreDatabaseTest extends KernelTestBase {
     // Now manually expire the item (this is not exposed by the API) and then
     // assert it is no longer accessible.
     $database->update('key_value_expire')
-      ->fields(['expire' => $this->requestTime - 1])
+      ->fields(['expire' => REQUEST_TIME - 1])
       ->condition('collection', "tempstore.shared.$collection")
       ->condition('name', $key)
       ->execute();
