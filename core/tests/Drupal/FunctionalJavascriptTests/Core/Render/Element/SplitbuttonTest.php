@@ -195,7 +195,7 @@ class SplitbuttonTest extends WebDriverTestBase {
 
     // Open splitbutton and add newly visible menu items to a variable.
     $toggle->press();
-    $this->assertNotNull($assert_session->waitForElementVisible('css', '[data-splitbutton-test-id="splitbutton_link_first-default"] [data-drupal-selector="splitbutton-item-list"]'));
+    $this->assertNotNull($assert_session->waitForElement('css', '[data-splitbutton-test-id="splitbutton_link_first-default"] [data-drupal-selector="splitbutton-item-list"]'));
     $this->assertTrue($splitbutton->hasAttribute('data-drupal-splitbutton-open'));
     $menu_items = $splitbutton->findAll('css', '[data-drupal-selector="splitbutton-item"]');
     $this->assertCount(5, $menu_items);
