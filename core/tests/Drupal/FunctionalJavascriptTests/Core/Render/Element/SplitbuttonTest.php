@@ -107,7 +107,7 @@ class SplitbuttonTest extends WebDriverTestBase {
         $toggle->press();
         $open_splitbutton = $assert_session->waitForElement('css', $splitbutton_selector . '[data-drupal-splitbutton-open]');
         $this->assertNotNull($open_splitbutton);
-        $operation_list = $assert_session->waitForElement('css', "$splitbutton_selector [data-drupal-selector='splitbutton-item-list']");
+        $operation_list = $assert_session->waitForElementVisible('css', "$splitbutton_selector [data-drupal-selector='splitbutton-item-list']");
         $this->assertNotNull($operation_list, "$splitbutton_selector [data-drupal-selector='splitbutton-item-list']");
         $operation_list_links = $operation_list->findAll('css', 'a');
         $operation_list_submits = $operation_list->findAll('css', 'input');
@@ -195,7 +195,7 @@ class SplitbuttonTest extends WebDriverTestBase {
 
     // Open splitbutton and add newly visible menu items to a variable.
     $toggle->press();
-    $this->assertNotNull($assert_session->waitForElement('css', '[data-splitbutton-test-id="splitbutton_link_first-default"] [data-drupal-selector="splitbutton-item-list"]'));
+    $this->assertNotNull($assert_session->waitForElementVisible('css', '[data-splitbutton-test-id="splitbutton_link_first-default"] [data-drupal-selector="splitbutton-item-list"]'));
     $this->assertTrue($splitbutton->hasAttribute('data-drupal-splitbutton-open'));
     $menu_items = $splitbutton->findAll('css', '[data-drupal-selector="splitbutton-item"]');
     $this->assertCount(5, $menu_items);

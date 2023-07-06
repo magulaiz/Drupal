@@ -143,7 +143,6 @@
   .splitbutton__list {
     position: absolute;
     z-index: 4;
-    display: none;
     width: max-content;
     max-width: 100%;
     margin: 0;
