@@ -39,12 +39,12 @@
 }
 
 /**
- * Remove margin from ajax throbbers following small buttons because buttons already
+ * Remove margin from ajax throbbers following buttons because buttons already
  * have a large margin set.
  */
 
-.js .button--small:not(.js-hide) + .ajax-progress--throbber {
-  margin-inline-start: 0;
+.js .button--action:not(.js-hide) + .ajax-progress--throbber {
+  margin-inline-start: 0.625rem;
 }
 
 /**
