@@ -12,7 +12,7 @@ use Drupal\Tests\field\Traits\EntityReferenceTestTrait;
  *
  * @group node
  */
-class NodeAccessCacheabilityWithNodeGrants extends BrowserTestBase {
+class NodeAccessCacheabilityWithNodeGrantsTest extends BrowserTestBase {
 
   use EntityReferenceTestTrait;
 
