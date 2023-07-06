@@ -2,6 +2,7 @@
 
 namespace Drupal\Core\State;
 
+use Drupal\Core\Asset\AssetQueryString;
 use Drupal\Core\KeyValueStore\KeyValueFactoryInterface;
 
 /**
@@ -22,7 +23,7 @@ class State implements StateInterface {
    */
   private static array $deprecatedState = [
     'system.css_js_query_string' => [
-      'replacement' => '',
+      'replacement' => AssetQueryString::STATE_KEY,
       'message' => 'The \'system.css_js_query_string\' state is deprecated in drupal:10.2.0. Use \Drupal\Core\Asset\AssetQueryStringInterface::get() and ::reset() instead. See https://www.drupal.org/node/3358337.',
     ],
   ];
@@ -59,6 +60,7 @@ class State implements StateInterface {
     // deprecation message about it.
     if (isset(self::$deprecatedState[$key])) {
       @trigger_error(self::$deprecatedState[$key]['message'], E_USER_DEPRECATED);
+      $key = self::$deprecatedState[$key]['replacement'];
     }
     $values = $this->getMultiple([$key]);
     return $values[$key] ?? $default;
@@ -105,6 +107,7 @@ class State implements StateInterface {
   public function set($key, $value) {
     if (isset(self::$deprecatedState[$key])) {
       @trigger_error(self::$deprecatedState[$key]['message'], E_USER_DEPRECATED);
+      $key = self::$deprecatedState[$key]['replacement'];
     }
     $this->cache[$key] = $value;
     $this->keyValueStore->set($key, $value);
