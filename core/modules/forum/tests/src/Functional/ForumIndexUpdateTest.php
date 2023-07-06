@@ -18,7 +18,7 @@ final class ForumIndexUpdateTest extends UpdatePathTestBase {
    */
   protected function setDatabaseDumpFiles() {
     $this->databaseDumpFiles = [
-      dirname(__DIR__, 2) . '/fixtures/update/drupal-10.1.0.empty.standard.forum.gz',
+      dirname(__DIR__, 2) . '/fixtures/update/drupal-10.1.0.empty.testing.forum.gz',
     ];
   }
 
@@ -27,9 +27,15 @@ final class ForumIndexUpdateTest extends UpdatePathTestBase {
    */
   public function testUpdatePath(): void {
     $schema = \Drupal::database()->schema();
-    $this->assertFalse($schema->indexExists('forum_index', 'PRIMARY'));
+    // We can't reliably call ::indexExists for each database driver as sqlite
+    // doesn't have named indexes for primary keys like mysql (PRIMARY) and
+    // pgsql (pkey).
+    $find_primary_key_columns = new \ReflectionMethod(get_class($schema), 'findPrimaryKeyColumns');
+    $find_primary_key_columns->setAccessible(TRUE);
+    $columns = $find_primary_key_columns->invoke($schema, 'forum_index');
+    $this->assertEmpty($columns);
     $this->runUpdates();
-    $this->assertTrue($schema->indexExists('forum_index', 'PRIMARY'));
+    $this->assertEquals(['nid', 'tid'], $find_primary_key_columns->invoke($schema, 'forum_index'));
   }
 
 }
