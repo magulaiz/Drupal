@@ -14,7 +14,7 @@ use Drupal\Core\File\Event\FileUploadSanitizeNameEvent;
 use Drupal\Core\File\Exception\FileException;
 use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Lock\LockBackendInterface;
-use Drupal\Core\Session\AccountInterface;
+use Drupal\Core\Session\AccountProxyInterface;
 use Drupal\editor\Entity\Editor;
 use Drupal\Core\Validation\DrupalTranslator;
 use Drupal\file\Entity\File;
@@ -46,7 +46,7 @@ class CKEditor5ImageController extends ControllerBase {
   /**
    * The currently authenticated user.
    *
-   * @var \Drupal\Core\Session\AccountInterface
+   * @var \Drupal\Core\Session\AccountProxyInterface
    */
   protected $currentUser;
 
@@ -76,7 +76,7 @@ class CKEditor5ImageController extends ControllerBase {
    *
    * @param \Drupal\Core\File\FileSystemInterface $file_system
    *   The file system service.
-   * @param \Drupal\Core\Session\AccountInterface $current_user
+   * @param \Drupal\Core\Session\AccountProxyInterface $current_user
    *   The currently authenticated user.
    * @param \Symfony\Component\Mime\MimeTypeGuesserInterface $mime_type_guesser
    *   The MIME type guesser.
@@ -85,7 +85,7 @@ class CKEditor5ImageController extends ControllerBase {
    * @param \Symfony\Contracts\EventDispatcher\EventDispatcherInterface $event_dispatcher
    *   The event dispatcher.
    */
-  public function __construct(FileSystemInterface $file_system, AccountInterface $current_user, MimeTypeGuesserInterface $mime_type_guesser, LockBackendInterface $lock, EventDispatcherInterface $event_dispatcher) {
+  public function __construct(FileSystemInterface $file_system, AccountProxyInterface $current_user, MimeTypeGuesserInterface $mime_type_guesser, LockBackendInterface $lock, EventDispatcherInterface $event_dispatcher) {
     $this->fileSystem = $file_system;
     $this->currentUser = $current_user;
     $this->mimeTypeGuesser = $mime_type_guesser;

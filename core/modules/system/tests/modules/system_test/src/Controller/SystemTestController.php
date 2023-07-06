@@ -9,7 +9,7 @@ use Drupal\Core\Messenger\MessengerInterface;
 use Drupal\Core\Security\TrustedCallbackInterface;
 use Drupal\Core\Render\RendererInterface;
 use Drupal\Core\Render\Markup;
-use Drupal\Core\Session\AccountInterface;
+use Drupal\Core\Session\AccountProxyInterface;
 use Drupal\Core\Url;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -39,7 +39,7 @@ class SystemTestController extends ControllerBase implements TrustedCallbackInte
   /**
    * The current user.
    *
-   * @var \Drupal\Core\Session\AccountInterface
+   * @var \Drupal\Core\Session\AccountProxyInterface
    */
   protected $currentUser;
 
@@ -64,14 +64,14 @@ class SystemTestController extends ControllerBase implements TrustedCallbackInte
    *   The lock service.
    * @param \Drupal\Core\Lock\LockBackendInterface $persistent_lock
    *   The persistent lock service.
-   * @param \Drupal\Core\Session\AccountInterface $current_user
+   * @param \Drupal\Core\Session\AccountProxyInterface $current_user
    *   The current user.
    * @param \Drupal\Core\Render\RendererInterface $renderer
    *   The renderer.
    * @param \Drupal\Core\Messenger\MessengerInterface $messenger
    *   The messenger service.
    */
-  public function __construct(LockBackendInterface $lock, LockBackendInterface $persistent_lock, AccountInterface $current_user, RendererInterface $renderer, MessengerInterface $messenger) {
+  public function __construct(LockBackendInterface $lock, LockBackendInterface $persistent_lock, AccountProxyInterface $current_user, RendererInterface $renderer, MessengerInterface $messenger) {
     $this->lock = $lock;
     $this->persistentLock = $persistent_lock;
     $this->currentUser = $current_user;

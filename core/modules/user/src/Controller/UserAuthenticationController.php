@@ -247,7 +247,7 @@ class UserAuthenticationController extends ControllerBase implements ContainerIn
       $users = $this->userStorage->loadByProperties(['mail' => trim($credentials['mail'])]);
     }
 
-    /** @var \Drupal\Core\Session\AccountInterface $account */
+    /** @var \Drupal\Core\Session\AccountProxyInterface $account */
     $account = reset($users);
     if ($account && $account->id()) {
       if ($this->userIsBlocked($account->getAccountName())) {

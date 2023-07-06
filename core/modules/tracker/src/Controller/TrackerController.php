@@ -10,7 +10,7 @@ use Drupal\Core\Database\Connection;
 use Drupal\Core\Database\Query\PagerSelectExtender;
 use Drupal\Core\Datetime\DateFormatterInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
-use Drupal\Core\Session\AccountInterface;
+use Drupal\Core\Session\AccountProxyInterface;
 use Drupal\user\UserInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -108,13 +108,13 @@ class TrackerController extends ControllerBase {
    *
    * @param \Drupal\user\UserInterface $user
    *   The user being viewed.
-   * @param \Drupal\Core\Session\AccountInterface $account
+   * @param \Drupal\Core\Session\AccountProxyInterface $account
    *   The account viewing the page.
    *
    * @return \Drupal\Core\Access\AccessResult
    *   The access result.
    */
-  public function checkAccess(UserInterface $user, AccountInterface $account) {
+  public function checkAccess(UserInterface $user, AccountProxyInterface $account) {
     return AccessResult::allowedIf($account->isAuthenticated() && $user->id() == $account->id())
       ->cachePerUser();
   }
