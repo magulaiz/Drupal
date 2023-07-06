@@ -52,7 +52,7 @@
  * to ensure that it does not overlap with the green border.
  */
 
-.js .button:not(.js-hide).button--primary + .ajax-progress--throbber {
+.button.button--primary + .ajax-progress--throbber.ajax-progress--throbber {
   margin-inline-start: 0.625rem;
 }
 
