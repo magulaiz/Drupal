@@ -52,7 +52,7 @@ class BlockContentRevisionsTest extends BlockContentTestBase {
       $block->setNewRevision(TRUE);
       $block->setRevisionLogMessage($this->randomMachineName(32));
       $block->setRevisionUser($this->adminUser);
-      $block->setRevisionCreationTime(time());
+      $block->setRevisionCreationTime(\Drupal::time()->getRequestTime());
       $logs[] = $block->getRevisionLogMessage();
       $block->save();
       $blocks[] = $block->getRevisionId();
