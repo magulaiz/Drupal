@@ -16,6 +16,11 @@ use Drupal\Core\State\StateInterface;
 class AssetQueryString implements AssetQueryStringInterface {
 
   /**
+   * The key used for state.
+   */
+  const STATE_KEY = 'asset.css_js_query_string';
+
+  /**
    * Creates a new AssetQueryString instance.
    *
    * @param \Drupal\Core\State\StateInterface $state
@@ -33,14 +38,14 @@ class AssetQueryString implements AssetQueryStringInterface {
    */
   public function reset(): void {
     // The timestamp is converted to base 36 in order to make it more compact.
-    $this->state->set('system.css_js_query_string', base_convert(strval($this->time->getRequestTime()), 10, 36));
+    $this->state->set(self::STATE_KEY, base_convert(strval($this->time->getRequestTime()), 10, 36));
   }
 
   /**
    * {@inheritdoc}
    */
   public function get(): string {
-    return $this->state->get('system.css_js_query_string', '0');
+    return $this->state->get(self::STATE_KEY, '0');
   }
 
 }
