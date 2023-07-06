@@ -39,21 +39,12 @@
 }
 
 /**
- * Remove margin from ajax throbbers following buttons because buttons already
+ * Remove margin from ajax throbbers following small buttons because buttons already
  * have a large margin set.
  */
 
-.js .button:not(.js-hide) + .ajax-progress--throbber {
+.js .button--small:not(.js-hide) + .ajax-progress--throbber {
   margin-inline-start: 0;
-}
-
-/**
- * If the button is a primary button then we need to add some space
- * to ensure that it does not overlap with the green border.
- */
-
-.button.button--primary + .ajax-progress--throbber.ajax-progress--throbber {
-  margin-inline-start: 0.625rem;
 }
 
 /**
