@@ -262,8 +262,9 @@ trait FunctionalTestSetupTrait {
     $server = array_merge($request->server->all(), $override_server_vars);
 
     $request = Request::create($request_path, 'GET', [], [], [], $server);
-    $this->container->get('request_stack')->push($request);
-
+    // Ensure the request time is \Drupal::time()->getRequestTime() to ensure
+    // that API calls in the test use the right timestamp.
+    $request->server->set('REQUEST_TIME', \Drupal::time()->getRequestTime());
     $this->container->get('request_stack')->push($request);
     // The request context is normally set by the router_listener from within
     // its KernelEvents::REQUEST listener. In the parent site this event is not
