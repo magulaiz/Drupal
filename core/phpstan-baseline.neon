@@ -36,6 +36,11 @@ parameters:
 			path: includes/theme.inc
 
 		-
+			message: "#^Variable \\$current might not be defined\\.$#"
+			count: 1
+			path: includes/update.inc
+
+		-
 			message: "#^Variable \\$custom_theme might not be defined\\.$#"
 			count: 1
 			path: includes/theme.maintenance.inc
@@ -871,24 +876,24 @@ parameters:
 			path: modules/comment/src/Plugin/views/row/Rss.php
 
 		-
-			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
+			message: "#^Access to an undefined property Drupal\\\\comment\\\\Plugin\\\\views\\\\sort\\\\StatisticsLastCommentName\\:\\:\\$user_field\\.$#"
 			count: 1
-			path: modules/comment/tests/src/Functional/CommentBlockTest.php
+			path: modules/comment/src/Plugin/views/sort/StatisticsLastCommentName.php
 
 		-
-			message: "#^Variable \\$position might not be defined\\.$#"
+			message: "#^Access to an undefined property Drupal\\\\comment\\\\Plugin\\\\views\\\\sort\\\\StatisticsLastCommentName\\:\\:\\$user_table\\.$#"
 			count: 1
-			path: modules/comment/tests/src/Functional/CommentBlockTest.php
+			path: modules/comment/src/Plugin/views/sort/StatisticsLastCommentName.php
 
 		-
-			message: "#^Variable \\$comment_values might not be defined\\.$#"
+			message: "#^Access to an undefined property Drupal\\\\comment\\\\Plugin\\\\views\\\\sort\\\\StatisticsLastUpdated\\:\\:\\$field_alias\\.$#"
 			count: 1
-			path: modules/comment/tests/src/Functional/CommentLanguageTest.php
+			path: modules/comment/src/Plugin/views/sort/StatisticsLastUpdated.php
 
 		-
-			message: "#^Variable \\$mode_text might not be defined\\.$#"
+			message: "#^Access to an undefined property Drupal\\\\comment\\\\Plugin\\\\views\\\\sort\\\\StatisticsLastUpdated\\:\\:\\$node_table\\.$#"
 			count: 1
-			path: modules/comment/tests/src/Functional/CommentTestBase.php
+			path: modules/comment/src/Plugin/views/sort/StatisticsLastUpdated.php
 
 		-
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
@@ -904,6 +909,9 @@ parameters:
 			message: "#^Variable \\$data might not be defined\\.$#"
 			count: 2
 			path: modules/config/src/Form/ConfigSingleImportForm.php
+			message: "#^Method Drupal\\\\config_test\\\\ConfigTestForm\\:\\:save\\(\\) should return int but return statement is missing\\.$#"
+			count: 1
+			path: modules/config/tests/config_test/src/ConfigTestForm.php
 
 		-
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
@@ -976,21 +984,6 @@ parameters:
 			path: modules/content_translation/src/Controller/ContentTranslationController.php
 
 		-
-			message: "#^Variable \\$source_name might not be defined\\.$#"
-			count: 1
-			path: modules/content_translation/src/Controller/ContentTranslationController.php
-
-		-
-			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
-			count: 1
-			path: modules/content_translation/tests/src/Functional/ContentTranslationUITestBase.php
-
-		-
-			message: "#^Variable \\$unrestricted_tab_count might not be defined\\.$#"
-			count: 1
-			path: modules/contextual/tests/src/FunctionalJavascript/EditModeTest.php
-
-		-
 			message: "#^Method Drupal\\\\datetime\\\\Plugin\\\\Field\\\\FieldType\\\\DateTimeFieldItemList\\:\\:defaultValuesForm\\(\\) should return array but return statement is missing\\.$#"
 			count: 1
 			path: modules/datetime/src/Plugin/Field/FieldType/DateTimeFieldItemList.php
@@ -999,31 +992,6 @@ parameters:
 			message: "#^Access to an undefined property Drupal\\\\datetime\\\\Plugin\\\\Field\\\\FieldType\\\\DateTimeItem\\:\\:\\$date\\.$#"
 			count: 1
 			path: modules/datetime/src/Plugin/Field/FieldType/DateTimeItem.php
-
-		-
-			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
-			count: 1
-			path: modules/datetime/src/Plugin/Field/FieldType/DateTimeItem.php
-
-		-
-			message: "#^Variable \\$date_part_order might not be defined\\.$#"
-			count: 3
-			path: modules/datetime/src/Plugin/Field/FieldWidget/DateTimeDatelistWidget.php
-
-		-
-			message: "#^Variable \\$item in isset\\(\\) always exists and is not nullable\\.$#"
-			count: 1
-			path: modules/datetime/src/Plugin/Validation/Constraint/DateTimeFormatConstraintValidator.php
-
-		-
-			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
-			count: 4
-			path: modules/datetime/tests/src/Functional/DateTimeFieldTest.php
-
-		-
-			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
-			count: 1
-			path: modules/datetime/tests/src/Kernel/Views/FilterDateTimeTest.php
 
 		-
 			message: "#^Method Drupal\\\\datetime_range\\\\Plugin\\\\Field\\\\FieldType\\\\DateRangeFieldItemList\\:\\:defaultValuesForm\\(\\) should return array but return statement is missing\\.$#"
@@ -1036,23 +1004,8 @@ parameters:
 			path: modules/datetime_range/src/Plugin/Field/FieldType/DateRangeItem.php
 
 		-
-			message: "#^Access to an undefined property Drupal\\\\datetime_range\\\\Plugin\\\\Field\\\\FieldType\\\\DateRangeItem\\:\\:\\$start_date\\.$#"
+			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 1
-			path: modules/datetime_range/src/Plugin/Field/FieldType/DateRangeItem.php
-
-		-
-			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
-			count: 1
-			path: modules/datetime_range/src/Plugin/Field/FieldType/DateRangeItem.php
-
-		-
-			message: "#^Variable \\$view in isset\\(\\) always exists and is not nullable\\.$#"
-			count: 1
-			path: modules/dblog/dblog.module
-
-		-
-			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
-			count: 3
 			path: modules/dblog/tests/src/Functional/DbLogTest.php
 
 		-
@@ -1061,6 +1014,8 @@ parameters:
 			path: modules/dblog/tests/src/Kernel/DbLogTest.php
 
 		-
+<<<<<<< HEAD
+<<<<<<< HEAD
 			message: "#^Variable \\$items in empty\\(\\) always exists and is not falsy\\.$#"
 			count: 1
 			path: modules/field/tests/modules/field_test/src/Plugin/Field/FieldFormatter/TestFieldEmptySettingFormatter.php
@@ -1069,33 +1024,20 @@ parameters:
 			message: "#^Variable \\$items in empty\\(\\) always exists and is not falsy\\.$#"
 			count: 1
 			path: modules/field/tests/modules/field_test/src/Plugin/Field/FieldFormatter/TestFieldMultipleFormatter.php
+=======
+			message: "#^Access to an undefined property Drupal\\\\field\\\\Entity\\\\FieldConfig\\:\\:\\$original\\.$#"
+			count: 4
+			path: modules/field/src/Entity/FieldConfig.php
 
 		-
-			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
-			count: 2
-			path: modules/field/tests/src/Functional/NestedFormTest.php
+			message: "#^Access to an undefined property Drupal\\\\field\\\\Entity\\\\FieldStorageConfig\\:\\:\\$original\\.$#"
+			count: 6
+			path: modules/field/src/Entity/FieldStorageConfig.php
+>>>>>>> 90c14d93cb (Recalculated PHPStan baseline)
 
 		-
-			message: "#^Variable \\$values might not be defined\\.$#"
-			count: 1
-			path: modules/field/tests/src/Kernel/FieldAttachStorageTest.php
-
-		-
-			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
-			count: 1
-			path: modules/field/tests/src/Kernel/Timestamp/TimestampFormatterTest.php
-
-		-
-			message: "#^Variable \\$entity_display might not be defined\\.$#"
-			count: 1
-			path: modules/field_ui/src/Access/FormModeAccessCheck.php
-
-		-
-			message: "#^Variable \\$entity_display might not be defined\\.$#"
-			count: 1
-			path: modules/field_ui/src/Access/ViewModeAccessCheck.php
-
-		-
+=======
+>>>>>>> 8f8dacbc3907fef381f655c1511969db570e80f4
 			message: "#^Method Drupal\\\\field_ui\\\\FieldUI\\:\\:getOverviewRouteInfo\\(\\) should return Drupal\\\\Core\\\\Url but return statement is missing\\.$#"
 			count: 1
 			path: modules/field_ui/src/FieldUI.php
@@ -1156,21 +1098,22 @@ parameters:
 			path: modules/file/src/Plugin/Field/FieldType/FileFieldItemList.php
 
 		-
-			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
+<<<<<<< HEAD
+=======
+			message: "#^Access to an undefined property Drupal\\\\file\\\\Plugin\\\\Field\\\\FieldWidget\\\\FileWidget\\:\\:\\$elementInfo\\.$#"
 			count: 2
-			path: modules/file/tests/src/Functional/FileFieldPathTest.php
+			path: modules/file/src/Plugin/Field/FieldWidget/FileWidget.php
 
 		-
-			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
-			count: 2
-			path: modules/file/tests/src/Functional/FileFieldRevisionTest.php
-
-		-
-			message: "#^Variable \\$unexpected in empty\\(\\) always exists and is not falsy\\.$#"
+			message: "#^Access to an undefined property Drupal\\\\file\\\\Plugin\\\\migrate\\\\process\\\\d6\\\\FieldFile\\:\\:\\$migration\\.$#"
 			count: 1
-			path: modules/file/tests/src/Functional/FileManagedTestBase.php
+			path: modules/file/src/Plugin/migrate/process/d6/FieldFile.php
 
 		-
+<<<<<<< HEAD
+>>>>>>> 90c14d93cb (Recalculated PHPStan baseline)
+=======
+>>>>>>> 8f8dacbc3907fef381f655c1511969db570e80f4
 			message: "#^Call to an undefined method Drupal\\\\Tests\\\\file\\\\Functional\\\\FileUploadJsonBasicAuthTest\\:\\:getExpectedUnauthorizedEntityAccessCacheability\\(\\)\\.$#"
 			count: 1
 			path: modules/file/tests/src/Functional/FileUploadJsonBasicAuthTest.php
@@ -1181,22 +1124,15 @@ parameters:
 			path: modules/file/tests/src/Functional/FileUploadJsonCookieTest.php
 
 		-
-			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
-			count: 2
-			path: modules/file/tests/src/Kernel/DeleteTest.php
-
-		-
-			message: "#^Variable \\$unexpected in empty\\(\\) always exists and is not falsy\\.$#"
-			count: 1
-			path: modules/file/tests/src/Kernel/FileManagedUnitTestBase.php
-
-		-
-			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
-			count: 2
-			path: modules/file/tests/src/Kernel/UsageTest.php
-
-		-
+<<<<<<< HEAD
+<<<<<<< HEAD
 			message: "#^Variable \\$rows might not be defined\\.$#"
+=======
+			message: "#^\\#lazy_builder value 'string' at key '0' is invalid\\.$#"
+>>>>>>> 90c14d93cb (Recalculated PHPStan baseline)
+=======
+			message: "#^Access to an undefined property Drupal\\\\filter\\\\Plugin\\\\migrate\\\\process\\\\d6\\\\FilterFormatPermission\\:\\:\\$migration\\.$#"
+>>>>>>> 8f8dacbc3907fef381f655c1511969db570e80f4
 			count: 1
 			path: modules/filter/src/Plugin/Filter/FilterHtml.php
 
@@ -1221,11 +1157,8 @@ parameters:
 			path: modules/history/src/Plugin/views/filter/HistoryUserTimestamp.php
 
 		-
-			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
-			count: 2
-			path: modules/history/tests/src/Kernel/Views/HistoryTimestampTest.php
-
-		-
+<<<<<<< HEAD
+<<<<<<< HEAD
 			message: "#^Variable \\$image_style in empty\\(\\) always exists and is not falsy\\.$#"
 			count: 1
 			path: modules/image/src/Controller/ImageStyleDownloadController.php
@@ -1236,6 +1169,10 @@ parameters:
 			path: modules/image/src/Controller/ImageStyleDownloadController.php
 
 		-
+=======
+>>>>>>> 90c14d93cb (Recalculated PHPStan baseline)
+=======
+>>>>>>> 8f8dacbc3907fef381f655c1511969db570e80f4
 			message: "#^Method Drupal\\\\image\\\\Form\\\\ImageStyleEditForm\\:\\:save\\(\\) should return int but return statement is missing\\.$#"
 			count: 1
 			path: modules/image/src/Form/ImageStyleEditForm.php
@@ -1406,26 +1343,6 @@ parameters:
 			path: modules/locale/src/StringDatabaseStorage.php
 
 		-
-			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
-			count: 5
-			path: modules/locale/tests/src/Functional/LocaleUpdateBase.php
-
-		-
-			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
-			count: 1
-			path: modules/locale/tests/src/Functional/LocaleUpdateCronTest.php
-
-		-
-			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
-			count: 2
-			path: modules/locale/tests/src/Functional/LocaleUpdateInterfaceTest.php
-
-		-
-			message: "#^Variable \\$error in empty\\(\\) always exists and is not falsy\\.$#"
-			count: 1
-			path: modules/media/media.install
-
-		-
 			message: "#^Method Drupal\\\\media\\\\MediaTypeForm\\:\\:save\\(\\) should return int but return statement is missing\\.$#"
 			count: 1
 			path: modules/media/src/MediaTypeForm.php
@@ -1449,16 +1366,6 @@ parameters:
 			message: "#^Method Drupal\\\\menu_link_content\\\\Form\\\\MenuLinkContentForm\\:\\:save\\(\\) should return int but return statement is missing\\.$#"
 			count: 1
 			path: modules/menu_link_content/src/Form/MenuLinkContentForm.php
-
-		-
-			message: "#^Variable \\$uuid might not be defined\\.$#"
-			count: 1
-			path: modules/menu_link_content/src/Plugin/Menu/MenuLinkContent.php
-
-		-
-			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
-			count: 2
-			path: modules/menu_link_content/tests/src/Kernel/MenuLinksTest.php
 
 		-
 			message: "#^Method Drupal\\\\menu_ui\\\\MenuForm\\:\\:save\\(\\) should return int but return statement is missing\\.$#"
@@ -1661,26 +1568,24 @@ parameters:
 			path: modules/node/src/NodeTypeForm.php
 
 		-
+<<<<<<< HEAD
 			message: "#^Variable \\$node in empty\\(\\) always exists and is not falsy\\.$#"
 			count: 1
 			path: modules/node/src/Plugin/views/row/Rss.php
 
 		-
+<<<<<<< HEAD
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
-			count: 1
-			path: modules/node/tests/src/Functional/NodeAdminTest.php
-
-		-
-			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
-			count: 1
-			path: modules/node/tests/src/Functional/NodeRevisionsAllTest.php
-
-		-
-			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
+=======
+=======
+>>>>>>> 8f8dacbc3907fef381f655c1511969db570e80f4
+			message: "#^Call to an undefined method Drupal\\\\Tests\\\\node\\\\Functional\\\\NodeRevisionsTest\\:\\:drupalPost\\(\\)\\.$#"
+>>>>>>> 90c14d93cb (Recalculated PHPStan baseline)
 			count: 1
 			path: modules/node/tests/src/Functional/NodeRevisionsTest.php
 
 		-
+<<<<<<< ours
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 2
 			path: modules/node/tests/src/Functional/NodeSaveTest.php
@@ -1706,11 +1611,19 @@ parameters:
 			path: modules/node/tests/src/Functional/Views/Wizard/NodeRevisionWizardTest.php
 
 		-
+=======
+<<<<<<< HEAD
+<<<<<<< HEAD
+>>>>>>> theirs
 			message: "#^Variable \\$changed in isset\\(\\) always exists and is not nullable\\.$#"
 			count: 1
 			path: modules/node/tests/src/Kernel/Migrate/d7/MigrateNodeTest.php
 
 		-
+=======
+>>>>>>> 90c14d93cb (Recalculated PHPStan baseline)
+=======
+>>>>>>> 8f8dacbc3907fef381f655c1511969db570e80f4
 			message: "#^Method Drupal\\\\options\\\\Plugin\\\\Field\\\\FieldType\\\\ListFloatItem\\:\\:validateAllowedValue\\(\\) should return string but return statement is missing\\.$#"
 			count: 1
 			path: modules/options/src/Plugin/Field/FieldType/ListFloatItem.php
@@ -1828,12 +1741,16 @@ parameters:
 		-
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 1
+<<<<<<< ours
 			path: modules/search/tests/src/Functional/SearchMultilingualEntityTest.php
 
 		-
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 2
 			path: modules/search/tests/src/Functional/SearchRankingTest.php
+=======
+			path: modules/search/tests/modules/search_extra_type/src/Plugin/Search/SearchExtraTypeSearch.php
+>>>>>>> theirs
 
 		-
 			message: "#^Call to an undefined method Drupal\\\\serialization\\\\Normalizer\\\\EntityNormalizer\\:\\:getCustomSerializedPropertyNames\\(\\)\\.$#"
@@ -1916,9 +1833,24 @@ parameters:
 			path: modules/system/system.install
 
 		-
-			message: "#^Variable \\$pdo_message might not be defined\\.$#"
+			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
+			count: 6
+			path: modules/system/system.tokens.inc
+
+		-
+			message: "#^Access to an undefined property Drupal\\\\accept_header_routing_test\\\\AcceptHeaderMiddleware\\:\\:\\$app\\.$#"
+			count: 2
+			path: modules/system/tests/modules/accept_header_routing_test/src/AcceptHeaderMiddleware.php
+
+		-
+			message: "#^Class Drupal\\\\advisory_feed_test\\\\AdvisoriesTestHttpClient extends @final class GuzzleHttp\\\\Client\\.$#"
 			count: 1
-			path: modules/system/system.install
+			path: modules/system/tests/modules/advisory_feed_test/src/AdvisoriesTestHttpClient.php
+
+		-
+			message: "#^File core/modules/system/tests/modules/entity_test/entity_test\\.inc could not be loaded from Drupal\\\\Core\\\\Extension\\\\ModuleHandlerInterface\\:\\:loadInclude$#"
+			count: 2
+			path: modules/system/tests/modules/entity_test/entity_test.install
 
 		-
 			message: "#^Variable \\$site_path might not be defined\\.$#"
@@ -1931,17 +1863,19 @@ parameters:
 			path: modules/system/tests/modules/batch_test/batch_test.callbacks.inc
 
 		-
-			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
-			count: 1
-			path: modules/system/tests/modules/entity_test/src/Plugin/Field/FieldType/ChangedTestItem.php
-
-		-
+<<<<<<< HEAD
+<<<<<<< HEAD
 			message: "#^Variable \\$options might not be defined\\.$#"
 			count: 1
 			path: modules/system/tests/modules/form_test/src/Form/FormTestTableSelectJsSelectForm.php
 
 		-
 			message: "#^Constructor of class Drupal\\\\lazy_route_provider_install_test\\\\PluginManager has an unused parameter \\$cache_backend\\.$#"
+=======
+=======
+>>>>>>> 8f8dacbc3907fef381f655c1511969db570e80f4
+			message: "#^Access to an undefined property Drupal\\\\error_service_test\\\\Controller\\\\LonelyMonkeyController\\:\\:\\$class\\.$#"
+>>>>>>> 90c14d93cb (Recalculated PHPStan baseline)
 			count: 1
 			path: modules/system/tests/modules/lazy_route_provider_install_test/src/PluginManager.php
 
@@ -1961,6 +1895,21 @@ parameters:
 			path: modules/system/tests/src/Functional/Form/FormTest.php
 
 		-
+<<<<<<< ours
+=======
+<<<<<<< HEAD
+<<<<<<< HEAD
+			message: "#^Variable \\$goto in isset\\(\\) always exists and is not nullable\\.$#"
+			count: 1
+			path: modules/system/tests/src/Functional/Menu/BreadcrumbFrontCacheContextsTest.php
+
+		-
+			message: "#^Variable \\$goto in isset\\(\\) always exists and is not nullable\\.$#"
+			count: 1
+			path: modules/system/tests/src/Functional/Menu/BreadcrumbTest.php
+
+		-
+>>>>>>> theirs
 			message: "#^Variable \\$parent might not be defined\\.$#"
 			count: 3
 			path: modules/system/tests/src/Functional/Menu/BreadcrumbTest.php
@@ -1971,16 +1920,10 @@ parameters:
 			path: modules/system/tests/src/Functional/Theme/ThemeUiTest.php
 
 		-
-			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
-			count: 1
-			path: modules/system/tests/src/Kernel/Token/TokenReplaceKernelTest.php
-
-		-
-			message: "#^Variable \\$help_message might not be defined\\.$#"
-			count: 1
-			path: modules/taxonomy/src/Form/OverviewTerms.php
-
-		-
+=======
+>>>>>>> 90c14d93cb (Recalculated PHPStan baseline)
+=======
+>>>>>>> 8f8dacbc3907fef381f655c1511969db570e80f4
 			message: "#^Method Drupal\\\\taxonomy\\\\Plugin\\\\migrate\\\\source\\\\d7\\\\TermTranslation\\:\\:prepareRow\\(\\) should return bool but return statement is missing\\.$#"
 			count: 1
 			path: modules/taxonomy/src/Plugin/migrate/source/d7/TermTranslation.php
@@ -2096,41 +2039,12 @@ parameters:
 			path: modules/user/src/RoleForm.php
 
 		-
-			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
-			count: 2
-			path: modules/user/tests/src/Functional/UserCreateTest.php
-
-		-
-			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
-			count: 1
-			path: modules/user/tests/src/Functional/UserEditTest.php
-
-		-
-			message: "#^Variable \\$name in isset\\(\\) always exists and is not nullable\\.$#"
-			count: 1
-			path: modules/user/tests/src/Functional/UserLoginHttpTest.php
-
-		-
-			message: "#^Variable \\$pass in isset\\(\\) always exists and is not nullable\\.$#"
-			count: 1
-			path: modules/user/tests/src/Functional/UserLoginHttpTest.php
-
-		-
-			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
-			count: 5
-			path: modules/user/tests/src/Functional/UserPasswordResetTest.php
-
-		-
-			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
-			count: 1
-			path: modules/user/tests/src/Functional/UserPictureTest.php
-
-		-
 			message: "#^Call to an undefined method Drupal\\\\Tests\\\\user\\\\Functional\\\\UserRegistrationRestTest\\:\\:getExpectedUnauthorizedEntityAccessCacheability\\(\\)\\.$#"
 			count: 1
 			path: modules/user/tests/src/Functional/UserRegistrationRestTest.php
 
 		-
+<<<<<<< ours
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 1
 			path: modules/user/tests/src/Functional/UserRegistrationTest.php
@@ -2141,6 +2055,10 @@ parameters:
 			path: modules/user/tests/src/Functional/Views/UserChangedTest.php
 
 		-
+=======
+<<<<<<< HEAD
+<<<<<<< HEAD
+>>>>>>> theirs
 			message: "#^Variable \\$result in isset\\(\\) always exists and is not nullable\\.$#"
 			count: 1
 			path: modules/user/tests/src/Unit/UserAccessControlHandlerTest.php
@@ -2151,6 +2069,10 @@ parameters:
 			path: modules/views/src/Form/ViewsExposedForm.php
 
 		-
+=======
+>>>>>>> 90c14d93cb (Recalculated PHPStan baseline)
+=======
+>>>>>>> 8f8dacbc3907fef381f655c1511969db570e80f4
 			message: "#^Method Drupal\\\\views\\\\Form\\\\ViewsFormMainForm\\:\\:getFormId\\(\\) should return string but return statement is missing\\.$#"
 			count: 1
 			path: modules/views/src/Form/ViewsFormMainForm.php
@@ -2428,64 +2350,11 @@ parameters:
 		-
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 1
-			path: modules/views/tests/src/Functional/BulkFormTest.php
+			path: modules/views/tests/modules/views_test_data/src/Plugin/views/filter/FilterTest.php
 
 		-
-			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
-			count: 2
-			path: modules/views/tests/src/Functional/DefaultViewsTest.php
-
-		-
-			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
-			count: 2
-			path: modules/views/tests/src/Functional/GlossaryTest.php
-
-		-
-			message: "#^Variable \\$link might not be defined\\.$#"
-			count: 1
-			path: modules/views/tests/src/Functional/TaxonomyGlossaryTest.php
-
-		-
-			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
-			count: 6
-			path: modules/views/tests/src/Functional/Wizard/ItemsPerPageTest.php
-
-		-
-			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
-			count: 1
-			path: modules/views/tests/src/Functional/Wizard/PagerTest.php
-
-		-
-			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
-			count: 3
-			path: modules/views/tests/src/Functional/Wizard/SortingTest.php
-
-		-
-			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
-			count: 2
-			path: modules/views/tests/src/FunctionalJavascript/ClickSortingAJAXTest.php
-
-		-
-			message: "#^Offset 'display_id' on array\\{\\} in isset\\(\\) does not exist\\.$#"
-			count: 1
-			path: modules/views/tests/src/Kernel/Handler/AreaDisplayLinkTest.php
-
-		-
-			message: "#^Offset 'view_mode' on array\\{\\} in isset\\(\\) does not exist\\.$#"
-			count: 1
-			path: modules/views/tests/src/Kernel/Handler/AreaEntityTest.php
-
-		-
-			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
-			count: 3
-			path: modules/views/tests/src/Kernel/Handler/FieldDropbuttonTest.php
-
-		-
-			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
-			count: 1
-			path: modules/views/tests/src/Kernel/Handler/FieldFieldTest.php
-
-		-
+<<<<<<< HEAD
+<<<<<<< HEAD
 			message: "#^Variable \\$rand1 might not be defined\\.$#"
 			count: 2
 			path: modules/views/tests/src/Kernel/Plugin/StyleTest.php
@@ -2501,11 +2370,6 @@ parameters:
 			path: modules/views/tests/src/Kernel/Plugin/StyleTest.php
 
 		-
-			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
-			count: 2
-			path: modules/views/tests/src/Kernel/RenderCacheIntegrationTest.php
-
-		-
 			message: "#^Variable \\$relationship_handler in empty\\(\\) always exists and is not falsy\\.$#"
 			count: 1
 			path: modules/views_ui/src/Form/Ajax/ConfigHandler.php
@@ -2514,6 +2378,36 @@ parameters:
 			message: "#^Cannot unset offset '\\#title' on array\\{\\#theme_wrappers\\: array\\{'container'\\}, \\#attributes\\: array\\{class\\: array\\{'scroll'\\}, data\\-drupal\\-views\\-scroll\\: true\\}\\}\\.$#"
 			count: 1
 			path: modules/views_ui/src/Form/Ajax/Display.php
+=======
+=======
+>>>>>>> 8f8dacbc3907fef381f655c1511969db570e80f4
+			message: "#^Call to an undefined method Drupal\\\\Tests\\\\views\\\\Kernel\\\\RenderCacheIntegrationTest\\:\\:assertSession\\(\\)\\.$#"
+			count: 2
+			path: modules/views/tests/src/Kernel/RenderCacheIntegrationTest.php
+
+		-
+			message: "#^Call to an undefined method Drupal\\\\Tests\\\\views\\\\Kernel\\\\RenderCacheIntegrationTest\\:\\:drupalGet\\(\\)\\.$#"
+			count: 2
+			path: modules/views/tests/src/Kernel/RenderCacheIntegrationTest.php
+
+		-
+			message: "#^Call to an undefined method Drupal\\\\Tests\\\\views\\\\Kernel\\\\RenderCacheIntegrationTest\\:\\:getSession\\(\\)\\.$#"
+			count: 3
+			path: modules/views/tests/src/Kernel/RenderCacheIntegrationTest.php
+<<<<<<< HEAD
+>>>>>>> 90c14d93cb (Recalculated PHPStan baseline)
+=======
+
+		-
+			message: "#^Cannot unset offset mixed on array\\.$#"
+			count: 1
+			path: modules/views/views.theme.inc
+
+		-
+			message: "#^Cannot unset offset '\\#title' on array\\{\\#theme_wrappers\\: array\\{'container'\\}, \\#attributes\\: array\\{class\\: array\\{'scroll'\\}, data\\-drupal\\-views\\-scroll\\: true\\}\\}\\.$#"
+			count: 1
+			path: modules/views_ui/src/Form/Ajax/Display.php
+>>>>>>> 8f8dacbc3907fef381f655c1511969db570e80f4
 
 		-
 			message: "#^Method Drupal\\\\views_ui\\\\ViewEditForm\\:\\:save\\(\\) should return int but return statement is missing\\.$#"
@@ -2621,6 +2515,7 @@ parameters:
 			path: profiles/demo_umami/modules/demo_umami_content/src/InstallHelper.php
 
 		-
+<<<<<<< ours
 			message: "#^Variable \\$structured_content might not be defined\\.$#"
 			count: 1
 			path: profiles/demo_umami/modules/demo_umami_content/src/InstallHelper.php
@@ -2671,11 +2566,16 @@ parameters:
 			path: tests/Drupal/KernelTests/Core/Entity/EntityCrudHookTest.php
 
 		-
+=======
+<<<<<<< HEAD
+<<<<<<< HEAD
+>>>>>>> theirs
 			message: "#^Variable \\$previous_untranslatable_field_value in isset\\(\\) always exists and is not nullable\\.$#"
 			count: 2
 			path: tests/Drupal/KernelTests/Core/Entity/EntityDecoupledTranslationRevisionsTest.php
 
 		-
+<<<<<<< ours
 			message: "#^Variable \\$field might not be defined\\.$#"
 			count: 9
 			path: tests/Drupal/KernelTests/Core/Entity/EntitySchemaTest.php
@@ -2691,12 +2591,26 @@ parameters:
 			path: tests/Drupal/KernelTests/Core/Entity/FieldableEntityDefinitionUpdateTest.php
 
 		-
-			message: "#^Variable \\$entity might not be defined\\.$#"
-			count: 1
-			path: tests/Drupal/KernelTests/Core/Entity/FieldableEntityDefinitionUpdateTest.php
+=======
+			message: "#^Method Drupal\\\\KernelTests\\\\Core\\\\Entity\\\\EntityKernelTestBase\\:\\:createUser\\(\\) invoked with 4 parameters, 0\\-2 required\\.$#"
+=======
+=======
+>>>>>>> 8f8dacbc3907fef381f655c1511969db570e80f4
+			message: "#^Call to an undefined method Drupal\\\\KernelTests\\\\Core\\\\Entity\\\\EntityDisplayFormBaseTest\\:\\:getComponent\\(\\)\\.$#"
+>>>>>>> 90c14d93cb (Recalculated PHPStan baseline)
+			count: 3
+			path: tests/Drupal/KernelTests/Core/Entity/EntityKernelTestBase.php
 
 		-
-			message: "#^Variable \\$new_field_schema_data might not be defined\\.$#"
+			message: "#^Relying on entity queries to check access by default is deprecated in drupal\\:9\\.2\\.0 and an error will be thrown from drupal\\:10\\.0\\.0\\. Call \\\\Drupal\\\\Core\\\\Entity\\\\Query\\\\QueryInterface\\:\\:accessCheck\\(\\) with TRUE or FALSE to specify whether access should be checked\\.$#"
+			count: 1
+			path: tests/Drupal/KernelTests/Core/Entity/EntityQueryTest.php
+
+		-
+<<<<<<< HEAD
+<<<<<<< HEAD
+>>>>>>> theirs
+			message: "#^Variable \\$entity might not be defined\\.$#"
 			count: 1
 			path: tests/Drupal/KernelTests/Core/Entity/FieldableEntityDefinitionUpdateTest.php
 
@@ -2711,11 +2625,24 @@ parameters:
 			path: tests/Drupal/KernelTests/Core/Image/ToolkitGdTest.php
 
 		-
+<<<<<<< ours
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 1
 			path: tests/Drupal/KernelTests/Core/KeyValueStore/GarbageCollectionTest.php
 
 		-
+=======
+=======
+>>>>>>> 90c14d93cb (Recalculated PHPStan baseline)
+=======
+>>>>>>> 8f8dacbc3907fef381f655c1511969db570e80f4
+			message: "#^\\#pre_render callback 'element_info_test…' at key '1' is not trusted\\.$#"
+			count: 1
+			path: tests/Drupal/KernelTests/Core/Render/Element/WeightTest.php
+
+		-
+<<<<<<< HEAD
+>>>>>>> theirs
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 1
 			path: tests/Drupal/KernelTests/Core/TempStore/TempStoreDatabaseTest.php
@@ -2727,6 +2654,19 @@ parameters:
 
 		-
 			message: "#^Variable \\$value in isset\\(\\) always exists and is not nullable\\.$#"
+=======
+			message: "#^Instantiated class Drupal\\\\FunctionalTests\\\\BrowserMissingDependentModuleMethodTest not found\\.$#"
+			count: 1
+			path: tests/Drupal/KernelTests/Core/Test/BrowserTestBaseTest.php
+
+		-
+			message: "#^Instantiated class Drupal\\\\FunctionalTests\\\\BrowserMissingDependentModuleTest not found\\.$#"
+			count: 1
+			path: tests/Drupal/KernelTests/Core/Test/BrowserTestBaseTest.php
+
+		-
+			message: "#^Parameter \\$template of method Drupal\\\\KernelTests\\\\KernelTestBase\\:\\:prepareTemplate\\(\\) has invalid type Text_Template\\.$#"
+>>>>>>> 8f8dacbc3907fef381f655c1511969db570e80f4
 			count: 1
 			path: tests/Drupal/KernelTests/KernelTestBase.php
 
@@ -2741,37 +2681,53 @@ parameters:
 			path: tests/Drupal/TestSite/Commands/TestSiteInstallCommand.php
 
 		-
+<<<<<<< HEAD
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 1
 			path: tests/Drupal/TestSite/Commands/TestSiteInstallCommand.php
 
 		-
+<<<<<<< HEAD
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 1
 			path: tests/Drupal/Tests/BrowserTestBase.php
 
 		-
+<<<<<<< ours
 			message: "#^Constructor of class Symfony\\\\Component\\\\ExpressionLanguage\\\\Expression has an unused parameter \\$expression\\.$#"
+=======
+			message: "#^Access to an undefined property Drupal\\\\TestSite\\\\Commands\\\\TestSiteInstallCommand\\:\\:\\$requestTime\\.$#"
+=======
+=======
+			message: "#^A file could not be loaded from Drupal\\\\Core\\\\Extension\\\\ModuleHandlerInterface\\:\\:loadInclude$#"
+			count: 1
+			path: tests/Drupal/TestTools/Extension/SchemaInspector.php
+
+		-
+>>>>>>> 8f8dacbc3907fef381f655c1511969db570e80f4
+			message: "#^Array has 2 duplicate keys with value 'ClassWithConstants\\.SOME_KEY' \\(\\\\Drupal\\\\Tests\\\\Component\\\\Annotation\\\\Doctrine\\\\Fixtures\\\\ClassWithConstants\\:\\:SOME_KEY, \\\\Drupal\\\\Tests\\\\Component\\\\Annotation\\\\Doctrine\\\\Fixtures\\\\ClassWithConstants\\:\\:SOME_KEY\\)\\.$#"
+>>>>>>> 90c14d93cb (Recalculated PHPStan baseline)
+			count: 1
+			path: tests/Drupal/Tests/Component/Annotation/Doctrine/DocParserTest.php
+
+		-
+			message: "#^Access to an undefined property Drupal\\\\TestSite\\\\Commands\\\\TestSiteInstallCommand\\:\\:\\$translationFilesDirectory\\.$#"
+>>>>>>> theirs
 			count: 1
 			path: tests/Drupal/Tests/Component/DependencyInjection/Dumper/OptimizedPhpArrayDumperTest.php
 
 		-
-			message: "#^Constructor of class Drupal\\\\Tests\\\\Component\\\\Plugin\\\\Factory\\\\ArgumentsAllNull has an unused parameter \\$charismatic\\.$#"
+			message: "#^Call to an undefined method Drupal\\\\TestSite\\\\Commands\\\\TestSiteInstallCommand\\:\\:assertTrue\\(\\)\\.$#"
 			count: 1
 			path: tests/Drupal/Tests/Component/Plugin/Factory/ReflectionFactoryTest.php
 
 		-
-			message: "#^Constructor of class Drupal\\\\Tests\\\\Component\\\\Plugin\\\\Factory\\\\ArgumentsAllNull has an unused parameter \\$delightful\\.$#"
+			message: "#^Call to an undefined method Drupal\\\\TestSite\\\\Commands\\\\TestSiteInstallCommand\\:\\:fail\\(\\)\\.$#"
 			count: 1
 			path: tests/Drupal/Tests/Component/Plugin/Factory/ReflectionFactoryTest.php
 
 		-
 			message: "#^Constructor of class Drupal\\\\Tests\\\\Component\\\\Plugin\\\\Factory\\\\ArgumentsAllNull has an unused parameter \\$demure\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Component/Plugin/Factory/ReflectionFactoryTest.php
-
-		-
-			message: "#^Constructor of class Drupal\\\\Tests\\\\Component\\\\Plugin\\\\Factory\\\\ArgumentsAllNull has an unused parameter \\$electrostatic\\.$#"
 			count: 1
 			path: tests/Drupal/Tests/Component/Plugin/Factory/ReflectionFactoryTest.php
 

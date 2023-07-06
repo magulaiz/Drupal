@@ -77,7 +77,7 @@ class SearchRankingTest extends BrowserTestBase {
         'title' => 'Drupal rocks',
         'body' => [['value' => "Drupal's search rocks"]],
         // Node is one day old.
-        'created' => REQUEST_TIME - 24 * 3600,
+        'created' => $this->requestTime - 24 * 3600,
         'sticky' => 0,
         'promote' => 0,
       ];
@@ -95,7 +95,7 @@ class SearchRankingTest extends BrowserTestBase {
 
             case 'recent':
               // Node is 1 hour hold.
-              $settings['created'] = REQUEST_TIME - 3600;
+              $settings['created'] = $this->requestTime - 3600;
               break;
 
             case 'comments':
@@ -115,7 +115,22 @@ class SearchRankingTest extends BrowserTestBase {
     $this->submitForm($edit, 'Preview');
     $this->submitForm($edit, 'Save');
 
+<<<<<<< ours
     // Run cron to update the search index totals.
+=======
+    // Enable counting of statistics.
+    $this->config('statistics.settings')->set('count_content_views', 1)->save();
+
+    // Simulating content views is kind of difficult in the test. Leave that
+    // to the Statistics module. So instead go ahead and manually update the
+    // counter for this node.
+    $nid = $nodes['views'][1]->id();
+    Database::getConnection()->insert('node_counter')
+      ->fields(['totalcount' => 5, 'daycount' => 5, 'timestamp' => $this->requestTime, 'nid' => $nid])
+      ->execute();
+
+    // Run cron to update the search index and comment/statistics totals.
+>>>>>>> theirs
     $this->cronRun();
 
     // Test that the settings form displays the content ranking section.

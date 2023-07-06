@@ -60,6 +60,11 @@ trait FunctionalTestSetupTrait {
   protected $apcuEnsureUniquePrefix = FALSE;
 
   /**
+   * The request time.
+   */
+  protected int $requestTime;
+
+  /**
    * Prepares site settings and services before installation.
    */
   protected function prepareSettings() {
@@ -251,7 +256,23 @@ trait FunctionalTestSetupTrait {
    */
   protected function prepareRequestForGenerator($clean_urls = TRUE, $override_server_vars = []) {
     $request = Request::createFromGlobals();
+<<<<<<< ours
     $base_path = $request->getBasePath();
+=======
+    $server = $request->server->all();
+    $this->requestTime = $server['REQUEST_TIME'];
+    if (basename($server['SCRIPT_FILENAME']) != basename($server['SCRIPT_NAME'])) {
+      // We need this for when the test is executed by run-tests.sh.
+      // @todo Remove this once run-tests.sh has been converted to use a Request
+      //   object.
+      $cwd = getcwd();
+      $server['SCRIPT_FILENAME'] = $cwd . '/' . basename($server['SCRIPT_NAME']);
+      $base_path = rtrim($server['REQUEST_URI'], '/');
+    }
+    else {
+      $base_path = $request->getBasePath();
+    }
+>>>>>>> theirs
     if ($clean_urls) {
       $request_path = $base_path ? $base_path . '/user' : 'user';
     }
@@ -262,9 +283,13 @@ trait FunctionalTestSetupTrait {
     $server = array_merge($request->server->all(), $override_server_vars);
 
     $request = Request::create($request_path, 'GET', [], [], [], $server);
+<<<<<<< ours
     // Ensure the request time is REQUEST_TIME to ensure that API calls
     // in the test use the right timestamp.
     $request->server->set('REQUEST_TIME', REQUEST_TIME);
+=======
+    $this->container->get('request_stack')->push($request);
+>>>>>>> theirs
 
     $this->container->get('request_stack')->push($request);
     // The request context is normally set by the router_listener from within
