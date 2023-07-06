@@ -18,8 +18,6 @@ class State implements StateInterface {
    *   - 'message': The deprecation message to use for trigger_error().
    *
    * @var array
-   *
-   * @see self::handleDeprecations()
    */
   private static array $deprecatedState = [
     'system.css_js_query_string' => [
