@@ -52,7 +52,7 @@ class BlockContentRevisionsTest extends BlockContentTestBase {
       $block->setNewRevision(TRUE);
       $block->setRevisionLogMessage($this->randomMachineName(32));
       $block->setRevisionUser($this->adminUser);
-      $block->setRevisionCreationTime(time());
+      $block->setRevisionCreationTime(\Drupal::time()->getRequestTime());
       $logs[] = $block->getRevisionLogMessage();
       $block->save();
       $blocks[] = $block->getRevisionId();
@@ -97,7 +97,7 @@ class BlockContentRevisionsTest extends BlockContentTestBase {
 
     // Confirm that revision body text is not present on default version of
     // block.
-    $this->drupalGet('admin/content/block/' . $loaded->id());
+    $this->drupalGet('block/' . $loaded->id());
     $this->assertSession()->pageTextNotContains($loaded->body->value);
 
     // Verify that the non-default revision id is greater than the default
