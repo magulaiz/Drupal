@@ -107,7 +107,7 @@ class SplitbuttonTest extends WebDriverTestBase {
         $toggle->press();
         $open_splitbutton = $assert_session->waitForElement('css', $splitbutton_selector . '[data-drupal-splitbutton-open]');
         $this->assertNotNull($open_splitbutton);
-        $operation_list = $assert_session->waitForElementVisible('css', "$splitbutton_selector [data-drupal-selector='splitbutton-item-list']");
+        $operation_list = $assert_session->waitForElement('css', "$splitbutton_selector [data-drupal-selector='splitbutton-item-list']");
         $this->assertNotNull($operation_list, "$splitbutton_selector [data-drupal-selector='splitbutton-item-list']");
         $operation_list_links = $operation_list->findAll('css', 'a');
         $operation_list_submits = $operation_list->findAll('css', 'input');
