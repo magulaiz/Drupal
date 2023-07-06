@@ -267,6 +267,9 @@ trait FunctionalTestSetupTrait {
     $server = array_merge($request->server->all(), $override_server_vars);
 
     $request = Request::create($request_path, 'GET', [], [], [], $server);
+    // Ensure the request time is REQUEST_TIME to ensure that API calls
+    // in the test use the right timestamp.
+    $request->server->set('REQUEST_TIME', $this->requestTim);
 
     $this->container->get('request_stack')->push($request);
     // The request context is normally set by the router_listener from within
