@@ -43,8 +43,12 @@
  * have a large margin set.
  */
 
+.js .button:not(.js-hide) + .ajax-progress--throbber {
+  margin-inline-start: 0;
+}
+
 .js .button--action:not(.js-hide) + .ajax-progress--throbber {
-  margin-inline-start: 0.625rem;
+  margin-inline-start: var(--ajax-progress-margin-horizontal);
 }
 
 /**
