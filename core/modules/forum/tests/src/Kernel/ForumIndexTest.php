@@ -8,6 +8,8 @@ use Drupal\KernelTests\KernelTestBase;
 
 /**
  * Defines a class for testing the forum_index table.
+ *
+ * @group forum
  */
 final class ForumIndexTest extends KernelTestBase {
 
