@@ -467,21 +467,16 @@ class DbUpdateController extends ControllerBase {
           foreach ($updates as $name => $queries) {
             $messages = [];
             foreach ($queries as $query) {
-              // If there is no message for this update, don't show anything.
-              if (empty($query['query'])) {
-                continue;
-              }
-
               if ($query['success']) {
                 $messages[] = [
                   '#wrapper_attributes' => ['class' => ['success']],
-                  '#markup' => $query['query'],
+                  '#markup' => $query['message'],
                 ];
               }
               else {
                 $messages[] = [
                   '#wrapper_attributes' => ['class' => ['failure']],
-                  '#markup' => '<strong>' . $this->t('Failed:') . '</strong> ' . $query['query'],
+                  '#markup' => '<strong>' . $this->t('Failed:') . '</strong> ' . $query['message'],
                 ];
               }
             }

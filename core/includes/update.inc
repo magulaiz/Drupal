@@ -106,7 +106,10 @@ function _update_fix_missing_schema() {
         $last_update = max($last_update, $last_removed);
       }
       $update_registry->setInstalledVersion($module, $last_update);
-      $args = ['%module' => $module, '%last_update_hook' => $module . '_update_' . $last_update . '()'];
+      $args = [
+        '%module' => $module,
+        '%last_update_hook' => $module . '_update_' . $last_update . '()',
+      ];
       \Drupal::messenger()->addWarning(t('Schema information for module %module was missing from the database. You should manually review the module updates and your database to check if any updates have been skipped up to, and including, %last_update_hook.', $args));
       \Drupal::logger('update')->warning('Schema information for module %module was missing from the database. You should manually review the module updates and your database to check if any updates have been skipped up to, and including, %last_update_hook.', $args);
     }
@@ -119,17 +122,34 @@ function _update_fix_missing_schema() {
  * Performs one update and stores the results for display on the results page.
  *
  * If an update function completes successfully, it should return a message
- * as a string indicating success, for example:
+ * as a string indicating success. For example:
  * @code
  * return t('New index added successfully.');
  * @endcode
  *
- * Alternatively, it may return nothing. In that case, no message
- * will be displayed at all.
+ * For more complicated update functions, an array of messages may be returned
+ * instead. For example:
+ * @code
+ * $messages = [];
+ * // Load a few user accounts that need to be updated.
+ * // ...
+ * foreach ($accounts as $account) {
+ *   // Perform the update.
+ *   // ...
+ *   $messages[] = t('Updated account information for user %name', array('%name' => $account->name));
+ * }
+ * return $messages;
+ * @endcode
  *
- * If it fails for whatever reason, it should throw an instance of
- * Drupal\Core\Utility\UpdateException with an appropriate error message, for
- * example:
+ * Alternatively, the update function may return nothing. In that case, no
+ * message will be displayed at all. Module authors should use their discretion
+ * in determining when to return messages and how many to return; in general,
+ * as few messages should be returned as possible, so as not to overwhelm the
+ * user with unnecessary text.
+ *
+ * If the update function fails for whatever reason, it should throw an
+ * instance of Drupal\Core\Utility\UpdateException with an appropriate error
+ * message. For example:
  * @code
  * use Drupal\Core\Utility\UpdateException;
  * throw new UpdateException('Description of what went wrong');
@@ -143,22 +163,24 @@ function _update_fix_missing_schema() {
  * If an update function needs to be re-run as part of a batch process, it
  * should accept the $sandbox array by reference as its first parameter
  * and set the #finished property to the percentage completed that it is, as a
- * fraction of 1.
+ * fraction of 1. Each time the update function is called, any messages that it
+ * returns will be accumulated into a list, so that all messages associated
+ * with it can be displayed together at the end of the update process.
  *
- * @param $module
+ * @param string $module
  *   The module whose update will be run.
- * @param $number
+ * @param int $number
  *   The update number to run.
- * @param $dependency_map
+ * @param array $dependency_map
  *   An array whose keys are the names of all update functions that will be
  *   performed during this batch process, and whose values are arrays of other
  *   update functions that each one depends on.
- * @param $context
+ * @param array $context
  *   The batch context array.
  *
  * @see update_resolve_dependencies()
  */
-function update_do_one($module, $number, $dependency_map, &$context) {
+function update_do_one($module, $number, array $dependency_map, array &$context) {
   $function = $module . '_update_' . $number;
 
   // If this update was aborted in a previous step, or has a dependency that
@@ -167,17 +189,23 @@ function update_do_one($module, $number, $dependency_map, &$context) {
     return;
   }
 
-  $ret = [];
-  $equivalent_update = \Drupal::service('update.update_hook_registry')->getEquivalentUpdate($module, $number);
-  if ($equivalent_update instanceof EquivalentUpdate) {
-    $ret['results']['query'] = $equivalent_update->toSkipMessage();
-    $ret['results']['success'] = TRUE;
-    $context['sandbox']['#finished'] = TRUE;
-  }
-  elseif (function_exists($function)) {
+  $results = [];
+  if (function_exists($function)) {
     try {
-      $ret['results']['query'] = $function($context['sandbox']);
-      $ret['results']['success'] = TRUE;
+      // Update functions can return a single message, an array of messages, or
+      // nothing at all.
+      $messages = $function($context['sandbox']);
+      if ($messages) {
+        if (!is_array($messages)) {
+          $messages = [$messages];
+        }
+        foreach ($messages as $message) {
+          $results[] = [
+            'message' => $message,
+            'success' => TRUE,
+          ];
+        }
+      }
     }
     // @todo We may want to do different error handling for different
     // exception types, but for now we'll just log the exception and
@@ -188,7 +216,11 @@ function update_do_one($module, $number, $dependency_map, &$context) {
       \Drupal::logger('update')->error(Error::DEFAULT_ERROR_MESSAGE, $variables);
 
       unset($variables['backtrace'], $variables['exception'], $variables['severity_level']);
-      $ret['#abort'] = ['success' => FALSE, 'query' => t(Error::DEFAULT_ERROR_MESSAGE, $variables)];
+      $results[] = [
+        'message' => t('%type: !message in %function (line %line of %file).', $variables),
+        'success' => FALSE,
+      ];
+      $abort = TRUE;
     }
   }
 
@@ -203,15 +235,15 @@ function update_do_one($module, $number, $dependency_map, &$context) {
   if (!isset($context['results'][$module][$number])) {
     $context['results'][$module][$number] = [];
   }
-  $context['results'][$module][$number] = array_merge($context['results'][$module][$number], $ret);
+  $context['results'][$module][$number] = array_merge($context['results'][$module][$number], $results);
 
-  if (!empty($ret['#abort'])) {
+  if (!empty($abort)) {
     // Record this function in the list of updates that were aborted.
     $context['results']['#abort'][] = $function;
   }
 
   // Record the schema update if it was completed successfully.
-  if ($context['finished'] == 1 && empty($ret['#abort'])) {
+  if ($context['finished'] == 1 && empty($abort)) {
     \Drupal::service('update.update_hook_registry')->setInstalledVersion($module, $number);
   }
 
@@ -226,7 +258,7 @@ function update_do_one($module, $number, $dependency_map, &$context) {
  * @param array $context
  *   The batch context array.
  */
-function update_invoke_post_update($function, &$context) {
+function update_invoke_post_update($function, array &$context) {
   $ret = [];
 
   // If this update was aborted in a previous step, or has a dependency that was
@@ -396,7 +428,7 @@ function update_get_update_list() {
  * dependency chain for each update, as provided by the depth-first search
  * algorithm in Drupal\Component\Graph\Graph::searchAndSort().
  *
- * @param $starting_updates
+ * @param array $starting_updates
  *   An array whose keys contain the names of modules with updates to be run
  *   and whose values contain the number of the first requested update for that
  *   module.
@@ -423,7 +455,7 @@ function update_get_update_list() {
  *
  * @see \Drupal\Component\Graph\Graph::searchAndSort()
  */
-function update_resolve_dependencies($starting_updates) {
+function update_resolve_dependencies(array $starting_updates) {
   // Obtain a dependency graph for the requested update functions.
   $update_functions = update_get_update_function_list($starting_updates);
   $graph = update_build_dependency_graph($update_functions);
@@ -463,7 +495,7 @@ function update_resolve_dependencies($starting_updates) {
 /**
  * Returns an organized list of update functions for a set of modules.
  *
- * @param $starting_updates
+ * @param array $starting_updates
  *   An array whose keys contain the names of modules and whose values contain
  *   the number of the first requested update for that module.
  *
@@ -476,7 +508,7 @@ function update_resolve_dependencies($starting_updates) {
  *
  * @see update_resolve_dependencies()
  */
-function update_get_update_function_list($starting_updates) {
+function update_get_update_function_list(array $starting_updates) {
   // Go through each module and find all updates that we need (including the
   // first update that was requested and any updates that run after it).
   $update_functions = [];
@@ -521,7 +553,7 @@ function update_get_update_function_list($starting_updates) {
  * modules which implement hook_update_dependencies(), and builds them into the
  * graph as well.
  *
- * @param $update_functions
+ * @param array $update_functions
  *   An organized array of update functions, in the format returned by
  *   update_get_update_function_list().
  *
@@ -542,7 +574,7 @@ function update_get_update_function_list($starting_updates) {
  * @see \Drupal\Component\Graph\Graph::searchAndSort()
  * @see update_resolve_dependencies()
  */
-function update_build_dependency_graph($update_functions) {
+function update_build_dependency_graph(array $update_functions) {
   // Initialize an array that will define a directed graph representing the
   // dependencies between update functions.
   $graph = [];
@@ -584,11 +616,11 @@ function update_build_dependency_graph($update_functions) {
 /**
  * Determines if a module update is missing or unavailable.
  *
- * @param $module
+ * @param string $module
  *   The name of the module.
- * @param $number
+ * @param int $number
  *   The number of the update within that module.
- * @param $update_functions
+ * @param array $update_functions
  *   An organized array of update functions, in the format returned by
  *   update_get_update_function_list(). This should represent all module
  *   updates that are requested to run at the time this function is called.
@@ -597,16 +629,16 @@ function update_build_dependency_graph($update_functions) {
  *   TRUE if the provided module update is not installed or is not in the
  *   provided list of updates to run; FALSE otherwise.
  */
-function update_is_missing($module, $number, $update_functions) {
+function update_is_missing($module, $number, array $update_functions) {
   return !isset($update_functions[$module][$number]) || !function_exists($update_functions[$module][$number]);
 }
 
 /**
  * Determines if a module update has already been performed.
  *
- * @param $module
+ * @param string $module
  *   The name of the module.
- * @param $number
+ * @param int $number
  *   The number of the update within that module.
  *
  * @return bool
