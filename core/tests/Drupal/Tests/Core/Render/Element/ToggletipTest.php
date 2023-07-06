@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\FunctionalJavascriptTests\Core\Render\Element;
+namespace Drupal\Tests\Core\Render\Element;
 
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 
