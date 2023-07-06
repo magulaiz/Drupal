@@ -77,16 +77,9 @@ EOF;
   }
 
   /**
-   * Tests installing from config is not available due to hook_INSTALL().
+   * Tests installing from config is available even with to hook_INSTALL().
    */
   public function testConfigSync() {
-    $this->assertSession()->titleEquals('Select an installation profile | Drupal');
-    $this->assertSession()->responseNotContains('Use existing configuration');
-
-    // Remove the install hook and the option to install from existing
-    // configuration will be available.
-    unlink("{$this->siteDirectory}/profiles/{$this->profile}/{$this->profile}.install");
-    $this->getSession()->reload();
     $this->assertSession()->titleEquals('Select an installation profile | Drupal');
     $this->assertSession()->responseContains('Use existing configuration');
   }

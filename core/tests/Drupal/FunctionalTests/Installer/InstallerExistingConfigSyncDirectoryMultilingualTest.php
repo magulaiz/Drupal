@@ -52,6 +52,23 @@ class InstallerExistingConfigSyncDirectoryMultilingualTest extends InstallerExis
   /**
    * {@inheritdoc}
    */
+  protected function visitInstaller() {
+    // Create an .install file with a hook_install() implementation.
+    $path = $this->siteDirectory . '/profiles/' . $this->profile;
+    $contents = <<<EOF
+      <?php
+
+      function testing_config_install_multilingual_install() {
+        throw new Exception("Install hook should not be called");
+      }
+      EOF;
+    file_put_contents("$path/{$this->profile}.install", $contents);
+    parent::visitInstaller();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   protected function getConfigTarball() {
     return __DIR__ . '/../../../fixtures/config_install/multilingual.tar.gz';
   }
