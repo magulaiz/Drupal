@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\field_ui\Plugin;
+namespace Drupal\Core\Field;
 
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
@@ -27,8 +27,8 @@ use Drupal\Core\Plugin\DefaultPluginManager;
  *   weight: 2
  * @endcode
  *
- * @see \Drupal\field_ui\Plugin\FieldTypeCategoryInfoInterface
- * @see \Drupal\field_ui\Plugin\FieldTypeCategoryInfo
+ * @see \Drupal\Core\Field\FieldTypeCategoryInfoInterface
+ * @see \Drupal\Core\Field\FieldTypeCategoryInfo
  */
 class FieldTypeCategoryInfoManager extends DefaultPluginManager {
 
@@ -39,19 +39,33 @@ class FieldTypeCategoryInfoManager extends DefaultPluginManager {
     'label' => '',
     'description' => '',
     'weight' => NULL,
-    'class' => 'Drupal\field_ui\Plugin\FieldTypeCategoryInfo',
+    'class' => FieldTypeCategoryInfo::class,
   ];
+
+  /**
+   * The app root.
+   *
+   * @var string
+   */
+  protected $root;
 
   /**
    * Constructs a new FieldTypeCategoryInfoManager.
    *
+   * @param string $root
+   *   The app root.
+   * @param \Traversable $namespaces
+   *   An object that implements \Traversable which contains the root paths
+   *   keyed by the corresponding namespace to look for plugin implementations.
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
    *   The module handler.
    * @param \Drupal\Core\Cache\CacheBackendInterface $cache_backend
    *   The cache backend.
    */
-  public function __construct(ModuleHandlerInterface $module_handler, CacheBackendInterface $cache_backend) {
-    $this->moduleHandler = $module_handler;
+  public function __construct($root, \Traversable $namespaces, ModuleHandlerInterface $module_handler, CacheBackendInterface $cache_backend) {
+    parent::__construct('', $namespaces, $module_handler, FieldTypeCategoryInfoInterface::class, FieldTypeCategoryInfo::class);
+    $this->root = $root;
+    $this->alterInfo('category_info');
     $this->setCacheBackend($cache_backend, 'field_type_category_info_plugins', ['field_type_category_info']);
   }
 
@@ -60,7 +74,12 @@ class FieldTypeCategoryInfoManager extends DefaultPluginManager {
    */
   protected function getDiscovery() {
     if (!isset($this->discovery)) {
-      $this->discovery = new YamlDiscovery('field_type_category_info', $this->moduleHandler->getModuleDirectories());
+      $directories = ['core' => $this->root . '/core'];
+      $directories += $this->moduleHandler->getModuleDirectories();
+      $this->discovery = new YamlDiscovery('field_type_category_info', $directories);
+      $this->discovery
+        ->addTranslatableProperty('label')
+        ->addTranslatableProperty('description');
     }
     return $this->discovery;
   }

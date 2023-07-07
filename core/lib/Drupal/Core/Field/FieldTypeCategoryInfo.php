@@ -1,8 +1,9 @@
 <?php
 
-namespace Drupal\field_ui\Plugin;
+namespace Drupal\Core\Field;
 
 use Drupal\Core\Plugin\PluginBase;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 
 /**
  * Default object used for field_type_category_info plugins.
@@ -14,21 +15,21 @@ class FieldTypeCategoryInfo extends PluginBase implements FieldTypeCategoryInfoI
   /**
    * {@inheritdoc}
    */
-  public function getLabel() {
-    return $this->t($this->pluginDefinition['label']);
+  public function getLabel(): TranslatableMarkup {
+    return $this->pluginDefinition['label'];
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getDescription() {
-    return $this->t($this->pluginDefinition['description']);
+  public function getDescription(): TranslatableMarkup {
+    return $this->pluginDefinition['description'];
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getWeight() {
+  public function getWeight(): int {
     return $this->pluginDefinition['weight'];
   }
 

@@ -98,7 +98,7 @@ class FieldStorageAddForm extends FormBase {
    * @param \Drupal\Component\Plugin\PluginManagerInterface $field_type_category_info_manager
    *   The field type category info plugin manager.
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager, FieldTypePluginManagerInterface $field_type_plugin_manager, ConfigFactoryInterface $config_factory, EntityFieldManagerInterface $entity_field_manager = NULL, EntityDisplayRepositoryInterface $entity_display_repository = NULL, PluginManagerInterface $field_type_category_info_manager) {
+  public function __construct(EntityTypeManagerInterface $entity_type_manager, FieldTypePluginManagerInterface $field_type_plugin_manager, ConfigFactoryInterface $config_factory, EntityFieldManagerInterface $entity_field_manager, EntityDisplayRepositoryInterface $entity_display_repository, PluginManagerInterface $field_type_category_info_manager) {
     $this->entityTypeManager = $entity_type_manager;
     $this->fieldTypePluginManager = $field_type_plugin_manager;
     $this->configFactory = $config_factory;
@@ -167,7 +167,6 @@ class FieldStorageAddForm extends FormBase {
         $unique_definitions[$category][$name] = ['unique_identifier' => $name] + $field_type;
         if ($this->fieldTypeCategoryInfoManager->hasDefinition($category)) {
           $category_plugin = $this->fieldTypeCategoryInfoManager->createInstance($category);
-          // Get the category label from the hook if it is defined in the hook.
           $field_type_options[$category_plugin->getLabel()->render()] = ['unique_identifier' => $name] + $field_type;
         }
         else {

@@ -165,7 +165,7 @@ class FieldTypePluginManager extends DefaultPluginManager implements FieldTypePl
     $category_info = \Drupal::service('plugin.manager.field_type_category_info')->getDefinitions();
     foreach ($grouped_categories as $group => $definitions) {
       if (!isset($category_info[$group]) && $group !== static::DEFAULT_CATEGORY) {
-        assert(FALSE, "\"$group\" must be defined in field_type_category_info.yml");
+        assert(FALSE, "\"$group\" must be defined in MODULE_NAME.field_type_category_info.yml");
         $grouped_categories[static::DEFAULT_CATEGORY] += $definitions;
         unset($grouped_categories[$group]);
       }
