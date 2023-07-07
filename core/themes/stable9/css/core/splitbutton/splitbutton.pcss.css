@@ -98,15 +98,15 @@
   cursor: pointer;
 
   &::after {
-     position: absolute;
-     inset-block-start: 50%;
-     inset-inline-end: 50%;
-     width: var(--splitbutton-icon-width);
-     aspect-ratio: 6 / 5;
-     content: "";
-     translate: 50% -50%; /* LTR */
-     clip-path: polygon(100% 0, 0 0, 50% 100%);
-     background: currentColor;
+    position: absolute;
+    inset-block-start: 50%;
+    inset-inline-end: 50%;
+    width: var(--splitbutton-icon-width);
+    aspect-ratio: 6 / 5;
+    content: "";
+    translate: 50% -50%; /* LTR */
+    clip-path: polygon(100% 0, 0 0, 50% 100%);
+    background: currentColor;
 
     &:dir(rtl) {
        translate: -50% -50%;
@@ -148,7 +148,7 @@
   font-size: var(--splitbutton-dropdown-font-size);
   &:not([popover]) {
      display: none;
-   }
+  }
   :is(a, button, .button) {
     display: block;
     width: 100%;
