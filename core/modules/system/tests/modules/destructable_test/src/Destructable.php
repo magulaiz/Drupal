@@ -24,7 +24,7 @@ final class Destructable implements DestructableInterface {
   }
 
   /**
-   * {@inheritDoc}
+   * {@inheritdoc}
    */
   public function destruct() {
     sleep(3);

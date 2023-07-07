@@ -267,7 +267,7 @@ class ConfigurableLanguageManagerTest extends BrowserTestBase {
   }
 
   /**
-   * {@inheritDoc}
+   * {@inheritdoc}
    */
   protected function drupalGet($path, array $options = [], array $headers = []) {
     $response = parent::drupalGet($path, $options, $headers);
