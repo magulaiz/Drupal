@@ -1863,8 +1863,8 @@
       // more complex such as a modal popup. Recurse up the DOM
       // and scroll the first element that has a non-zero top.
       let scrollTarget = response.selector;
-      while ($(scrollTarget).scrollTop() === 0 && $(scrollTarget).parent()) {
-        scrollTarget = $(scrollTarget).parent();
+      while ($(scrollTarget).scrollTop() === 0 && scrollTarget.parentElement) {
+        scrollTarget = scrollTarget.parentElement;
       }
 
       // Only scroll upward.

@@ -27,7 +27,7 @@
           $ancestor = $table.prev();
           method = 'after';
         } else {
-          $ancestor = $table.parent();
+          $ancestor = $(table.parentElement);
           method = 'append';
         }
         $table.detach();
