@@ -6,6 +6,7 @@ use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Extension\Exception\UnknownExtensionException;
 use Drupal\Core\Extension\Extension;
 use Drupal\Core\Extension\ModuleHandler;
+use Drupal\Tests\Traits\ExceptionSerializationTrait;
 use Drupal\Tests\UnitTestCase;
 
 /**
@@ -15,6 +16,8 @@ use Drupal\Tests\UnitTestCase;
  * @group Extension
  */
 class ModuleHandlerTest extends UnitTestCase {
+
+  use ExceptionSerializationTrait;
 
   protected const MODULES_PATH = 'core/tests/Drupal/Tests/Core/Extension/modules';
 
