@@ -15,7 +15,8 @@ use Drupal\KernelTests\KernelTestBase;
 class AssetQueryStringTest extends KernelTestBase {
 
   /**
-   * Tests resetting and getting the query string value.
+   * @covers ::get
+   * @covers ::reset
    */
   public function testResetGet(): void {
     $state = $this->container->get('state');
