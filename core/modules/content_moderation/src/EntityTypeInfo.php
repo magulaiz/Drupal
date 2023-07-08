@@ -295,9 +295,8 @@ class EntityTypeInfo implements ContainerInjectionInterface {
    *   The entity form operation.
    * @param \Drupal\Core\Form\FormStateInterface $form_state
    *   The form state.
-   *
-   * @see hook_entity_prepare_form()
    */
+  #[Hook('entity_prepare_form')]
   public function entityPrepareForm(EntityInterface $entity, $operation, FormStateInterface $form_state) {
     /** @var \Drupal\Core\Entity\EntityFormInterface $form_object */
     $form_object = $form_state->getFormObject();
