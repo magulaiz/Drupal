@@ -108,13 +108,6 @@ function workspaces_menu_link_content_update(EntityInterface $entity) {
 }
 
 /**
- * Implements hook_cron().
- */
-function workspaces_cron() {
-  \Drupal::service('workspaces.manager')->purgeDeletedWorkspacesBatch();
-}
-
-/**
  * Implements hook_toolbar().
  */
 function workspaces_toolbar() {

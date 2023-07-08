@@ -4,6 +4,7 @@ services:
     arguments: ['@request_stack', '@entity_type.manager', '@entity.memory_cache', '@current_user', '@state', '@logger.channel.workspaces', '@class_resolver', '@workspaces.association']
     tags:
       - { name: service_id_collector, tag: workspace_negotiator }
+      - { name: hooks }
   Drupal\workspaces\WorkspaceManagerInterface: '@workspaces.manager'
   workspaces.operation_factory:
     class: Drupal\workspaces\WorkspaceOperationFactory
