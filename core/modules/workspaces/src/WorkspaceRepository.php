@@ -145,7 +145,7 @@ class WorkspaceRepository implements WorkspaceRepositoryInterface {
   /**
    * {@inheritdoc}
    */
-  #[Hook('workspace_(insert|update)')]
+  #[Hook('workspace_(insert|update|predelete)')]
   public function resetCache() {
     $this->cache->invalidate('workspace_tree');
     $this->tree = NULL;
