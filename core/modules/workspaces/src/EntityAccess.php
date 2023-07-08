@@ -96,9 +96,8 @@ class EntityAccess implements ContainerInjectionInterface {
    *
    * @return \Drupal\Core\Access\AccessResult
    *   The result of the access check.
-   *
-   * @see hook_entity_create_access()
    */
+  #[Hook('entity_create_access')]
   public function entityCreateAccess(AccountInterface $account, array $context, $entity_bundle) {
     // Workspaces themselves are handled by their own access handler and we
     // should not try to do any access checks for entity types that can not

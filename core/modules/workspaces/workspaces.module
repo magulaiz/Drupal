@@ -11,9 +11,7 @@ use Drupal\Core\Entity\EntityFormInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
-use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Url;
-use Drupal\workspaces\EntityAccess;
 use Drupal\workspaces\EntityOperations;
 use Drupal\workspaces\FormOperations;
 
@@ -91,17 +89,6 @@ function workspaces_entity_revision_delete(EntityInterface $entity) {
     \Drupal::service('workspaces.association')
       ->deleteAssociations(NULL, $entity->getEntityTypeId(), [$entity->id()], [$entity->getRevisionId()]);
   }
-}
-
-/**
- * Implements hook_entity_create_access().
- *
- * @see \Drupal\workspaces\EntityAccess
- */
-function workspaces_entity_create_access(AccountInterface $account, array $context, $entity_bundle) {
-  return \Drupal::service('class_resolver')
-    ->getInstanceFromDefinition(EntityAccess::class)
-    ->entityCreateAccess($account, $context, $entity_bundle);
 }
 
 /**
