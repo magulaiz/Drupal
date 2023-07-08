@@ -7,6 +7,7 @@ use Drupal\content_moderation\Entity\Handler\ModerationHandler;
 use Drupal\content_moderation\Entity\Handler\NodeModerationHandler;
 use Drupal\content_moderation\Entity\Routing\EntityModerationRouteProvider;
 use Drupal\content_moderation\Plugin\Field\ModerationStateFieldItemList;
+use Drupal\Core\Attribute\Hook\Alter;
 use Drupal\Core\Attribute\Hook\Hook;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Entity\BundleEntityFormBase;
@@ -127,9 +128,8 @@ class EntityTypeInfo implements ContainerInjectionInterface {
    *
    * @param \Drupal\Core\Entity\EntityTypeInterface[] $entity_types
    *   The master entity type list to alter.
-   *
-   * @see hook_entity_type_alter()
    */
+  #[Alter('entity_type')]
   public function entityTypeAlter(array &$entity_types) {
     foreach ($entity_types as $entity_type_id => $entity_type) {
       // Internal entity types should never be moderated, and the 'path_alias'
