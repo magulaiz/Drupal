@@ -105,9 +105,8 @@ class EntityOperations implements ContainerInjectionInterface {
    *
    * @param \Drupal\Core\Entity\EntityInterface $entity
    *   The entity being saved.
-   *
-   * @see hook_entity_presave()
    */
+  #[Hook('entity_presave')]
   public function entityPresave(EntityInterface $entity) {
     $entity_type = $entity->getEntityType();
 

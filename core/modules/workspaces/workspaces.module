@@ -46,15 +46,6 @@ function workspaces_form_alter(&$form, FormStateInterface $form_state, $form_id)
 }
 
 /**
- * Implements hook_entity_presave().
- */
-function workspaces_entity_presave(EntityInterface $entity) {
-  return \Drupal::service('class_resolver')
-    ->getInstanceFromDefinition(EntityOperations::class)
-    ->entityPresave($entity);
-}
-
-/**
  * Implements hook_entity_insert().
  */
 function workspaces_entity_insert(EntityInterface $entity) {
