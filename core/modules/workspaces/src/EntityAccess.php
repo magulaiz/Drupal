@@ -3,6 +3,7 @@
 namespace Drupal\workspaces;
 
 use Drupal\Core\Access\AccessResult;
+use Drupal\Core\Attribute\Hook\Hook;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
@@ -71,6 +72,7 @@ class EntityAccess implements ContainerInjectionInterface {
    *
    * @see hook_entity_access()
    */
+  #[Hook('entity_access')]
   public function entityOperationAccess(EntityInterface $entity, $operation, AccountInterface $account) {
     // Workspaces themselves are handled by their own access handler and we
     // should not try to do any access checks for entity types that can not

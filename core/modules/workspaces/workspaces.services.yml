@@ -15,6 +15,11 @@ services:
     tags:
       - { name: backend_overridable }
       - { name: event_subscriber }
+  Drupal\workspaces\EntityAccess:
+    class: Drupal\workspaces\EntityAccess
+    autowire: true
+    tags:
+      - { name: hooks }
   Drupal\workspaces\WorkspaceAssociationInterface: '@workspaces.association'
   workspaces.repository:
     class: Drupal\workspaces\WorkspaceRepository

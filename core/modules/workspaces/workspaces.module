@@ -165,17 +165,6 @@ function workspaces_entity_revision_delete(EntityInterface $entity) {
 }
 
 /**
- * Implements hook_entity_access().
- *
- * @see \Drupal\workspaces\EntityAccess
- */
-function workspaces_entity_access(EntityInterface $entity, $operation, AccountInterface $account) {
-  return \Drupal::service('class_resolver')
-    ->getInstanceFromDefinition(EntityAccess::class)
-    ->entityOperationAccess($entity, $operation, $account);
-}
-
-/**
  * Implements hook_entity_create_access().
  *
  * @see \Drupal\workspaces\EntityAccess
