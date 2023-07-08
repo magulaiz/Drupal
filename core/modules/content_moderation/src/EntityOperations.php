@@ -140,9 +140,8 @@ class EntityOperations implements ContainerInjectionInterface {
   /**
    * @param \Drupal\Core\Entity\EntityInterface $entity
    *   The entity that was just saved.
-   *
-   * @see hook_entity_update()
    */
+  #[Hook('entity_update')]
   public function entityUpdate(EntityInterface $entity) {
     if ($this->moderationInfo->isModeratedEntity($entity)) {
       $this->updateOrCreateFromEntity($entity);

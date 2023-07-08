@@ -76,15 +76,6 @@ function content_moderation_entity_bundle_field_info(EntityTypeInterface $entity
 }
 
 /**
- * Implements hook_entity_update().
- */
-function content_moderation_entity_update(EntityInterface $entity) {
-  return \Drupal::service('class_resolver')
-    ->getInstanceFromDefinition(EntityOperations::class)
-    ->entityUpdate($entity);
-}
-
-/**
  * Implements hook_entity_delete().
  */
 function content_moderation_entity_delete(EntityInterface $entity) {
