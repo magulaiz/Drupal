@@ -33,6 +33,11 @@ services:
     autowire: true
     tags:
       - { name: hooks }
+  Drupal\workspaces\EntityOperations:
+    class: Drupal\workspaces\EntityOperations
+    autowire: true
+    tags:
+      - { name: hooks }
   Drupal\workspaces\WorkspaceAssociationInterface: '@workspaces.association'
   workspaces.repository:
     class: Drupal\workspaces\WorkspaceRepository

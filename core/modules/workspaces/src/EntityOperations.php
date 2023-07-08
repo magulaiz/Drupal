@@ -2,6 +2,7 @@
 
 namespace Drupal\workspaces;
 
+use Drupal\Core\Attribute\Hook\Hook;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
@@ -71,9 +72,8 @@ class EntityOperations implements ContainerInjectionInterface {
 
   /**
    * Acts on entity IDs before they are loaded.
-   *
-   * @see hook_entity_preload()
    */
+  #[Hook('entity_preload')]
   public function entityPreload(array $ids, $entity_type_id) {
     $entities = [];
 
