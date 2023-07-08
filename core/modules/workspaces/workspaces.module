@@ -14,13 +14,10 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Url;
-use Drupal\views\Plugin\views\query\QueryPluginBase;
-use Drupal\views\ViewExecutable;
 use Drupal\workspaces\EntityAccess;
 use Drupal\workspaces\EntityOperations;
 use Drupal\workspaces\EntityTypeInfo;
 use Drupal\workspaces\FormOperations;
-use Drupal\workspaces\ViewsQueryAlter;
 
 /**
  * Implements hook_help().
@@ -189,15 +186,6 @@ function workspaces_menu_link_content_update(EntityInterface $entity) {
     $cache_tags = Cache::buildTags('config:system.menu', [$entity->getMenuName()], '.');
     \Drupal::service('cache_tags.invalidator')->invalidateTags($cache_tags);
   }
-}
-
-/**
- * Implements hook_views_query_alter().
- */
-function workspaces_views_query_alter(ViewExecutable $view, QueryPluginBase $query) {
-  return \Drupal::service('class_resolver')
-    ->getInstanceFromDefinition(ViewsQueryAlter::class)
-    ->alterQuery($view, $query);
 }
 
 /**

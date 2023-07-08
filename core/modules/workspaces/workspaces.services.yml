@@ -20,6 +20,14 @@ services:
     autowire: true
     tags:
       - { name: hooks }
+  Drupal\workspaces\ViewsQueryAlter:
+    class: Drupal\workspaces\ViewsQueryAlter
+    autowire: true
+    arguments:
+      '$views_join_plugin_manager': '@plugin.manager.views.join'
+    tags:
+      - { name: hooks }
+      - { name: require_module, module: 'views' }
   Drupal\workspaces\WorkspaceAssociationInterface: '@workspaces.association'
   workspaces.repository:
     class: Drupal\workspaces\WorkspaceRepository
