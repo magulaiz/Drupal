@@ -71,10 +71,6 @@ function workspaces_entity_predelete(EntityInterface $entity) {
   if ($entity->getEntityTypeId() === 'workspace') {
     \Drupal::service('workspaces.repository')->resetCache();
   }
-
-  return \Drupal::service('class_resolver')
-    ->getInstanceFromDefinition(EntityOperations::class)
-    ->entityPredelete($entity);
 }
 
 /**

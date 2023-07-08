@@ -217,9 +217,8 @@ class EntityOperations implements ContainerInjectionInterface {
    *
    * @param \Drupal\Core\Entity\EntityInterface $entity
    *   The entity being deleted.
-   *
-   * @see hook_entity_predelete()
    */
+  #[Hook('entity_predelete')]
   public function entityPredelete(EntityInterface $entity) {
     $entity_type = $entity->getEntityType();
 
