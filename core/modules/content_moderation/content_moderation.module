@@ -6,7 +6,6 @@
  */
 
 use Drupal\content_moderation\ContentPreprocess;
-use Drupal\content_moderation\EntityOperations;
 use Drupal\content_moderation\EntityTypeInfo;
 use Drupal\content_moderation\Plugin\Action\ModerationOptOutPublish;
 use Drupal\content_moderation\Plugin\Action\ModerationOptOutUnpublish;
@@ -14,7 +13,6 @@ use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Action\Plugin\Action\PublishAction;
 use Drupal\Core\Action\Plugin\Action\UnpublishAction;
 use Drupal\Core\Entity\Display\EntityFormDisplayInterface;
-use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityPublishedInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
@@ -109,15 +107,6 @@ function content_moderation_entity_extra_field_info() {
   return \Drupal::service('class_resolver')
     ->getInstanceFromDefinition(EntityTypeInfo::class)
     ->entityExtraFieldInfo();
-}
-
-/**
- * Implements hook_entity_view().
- */
-function content_moderation_entity_view(array &$build, EntityInterface $entity, EntityViewDisplayInterface $display, $view_mode) {
-  \Drupal::service('class_resolver')
-    ->getInstanceFromDefinition(EntityOperations::class)
-    ->entityView($build, $entity, $display, $view_mode);
 }
 
 /**

@@ -263,9 +263,9 @@ class EntityOperations implements ContainerInjectionInterface {
   /**
    * Act on entities being assembled before rendering.
    *
-   * @see hook_entity_view()
    * @see EntityFieldManagerInterface::getExtraFields()
    */
+  #[Hook('entity_view')]
   public function entityView(array &$build, EntityInterface $entity, EntityViewDisplayInterface $display, $view_mode) {
     /** @var \Drupal\Core\Entity\ContentEntityInterface $entity */
     if (!$this->moderationInfo->isModeratedEntity($entity)) {
