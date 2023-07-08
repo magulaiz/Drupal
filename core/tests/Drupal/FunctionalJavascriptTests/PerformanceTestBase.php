@@ -170,7 +170,7 @@ class PerformanceTestBase extends WebDriverTestBase {
     $first_request_timestamp = $entry['requestStart'] * static::NANOSECONDS_PER_MILLISECOND;
     $first_response_timestamp = $entry['responseStart'] * static::NANOSECONDS_PER_MILLISECOND;
 
-    $ttfb = $entry['responseStart'] - $entry['requestStart'];
+    $time_to_first_byte = $entry['responseStart'] - $entry['requestStart'];
 
     $router = \Drupal::service('router.no_access_checks');
     $route_provider = \Drupal::service('router.route_provider');
@@ -226,7 +226,7 @@ class PerformanceTestBase extends WebDriverTestBase {
     // request as '0' and calculate offsets against that.
     $first_byte_timestamp = (int) ($timestamp + ($first_response_timestamp - $first_request_timestamp));
     $span->addEvent('Time to first byte', [], $first_byte_timestamp);
-    $span->setAttribute('browser.ttfb', $ttfb);
+    $span->setAttribute('browser.time_to_first_byte', $time_to_first_byte);
     $span->end($first_byte_timestamp);
     $tracerProvider->shutdown();
   }
