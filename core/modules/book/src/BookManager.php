@@ -300,6 +300,16 @@ class BookManager implements BookManagerInterface {
   }
 
   /**
+   * Implements hook_node_predelete().
+   */
+  #[Hook('node_predelete')]
+  public function nodePreDelete(NodeInterface $node): void {
+    if (!empty($node->book['bid'])) {
+      $this->deleteFromBook($node->book['nid']);
+    }
+  }
+
+  /**
    * {@inheritdoc}
    */
   #[Hook('node_(insert|update)')]
