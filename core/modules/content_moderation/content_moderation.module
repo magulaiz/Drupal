@@ -76,15 +76,6 @@ function content_moderation_entity_bundle_field_info(EntityTypeInterface $entity
 }
 
 /**
- * Implements hook_entity_translation_delete().
- */
-function content_moderation_entity_translation_delete(EntityInterface $translation) {
-  return \Drupal::service('class_resolver')
-    ->getInstanceFromDefinition(EntityOperations::class)
-    ->entityTranslationDelete($translation);
-}
-
-/**
  * Implements hook_entity_prepare_form().
  */
 function content_moderation_entity_prepare_form(EntityInterface $entity, $operation, FormStateInterface $form_state) {

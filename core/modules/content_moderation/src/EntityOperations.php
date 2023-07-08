@@ -246,9 +246,8 @@ class EntityOperations implements ContainerInjectionInterface {
   /**
    * @param \Drupal\Core\Entity\EntityInterface $translation
    *   The entity translation being deleted.
-   *
-   * @see hook_entity_translation_delete()
    */
+  #[Hook('entity_translation_delete')]
   public function entityTranslationDelete(EntityInterface $translation) {
     /** @var \Drupal\Core\Entity\ContentEntityInterface $translation */
     if (!$translation->isDefaultTranslation()) {
