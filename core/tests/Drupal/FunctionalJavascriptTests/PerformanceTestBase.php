@@ -164,8 +164,38 @@ class PerformanceTestBase extends WebDriverTestBase {
    *   The ChromeDriver performance log messages.
    */
   protected function openTelemetryTracing($path, array $messages): void {
+    $timestamp = NULL;
+    $dom_loaded_timestamp_page = NULL;
+    $dom_loaded_timestamp_timeline = NULL;
+    foreach ($messages as $message) {
+      // Since chrome timestamps are since OS start, we take the first network
+      // request as '0' and calculate offsets against that.
+      if ($timestamp === NULL && $message['method'] === 'Network.requestWillBeSent') {
+        $timestamp = (int) ($message['params']['wallTime'] * static::NANOSECONDS_PER_SECOND);
+        // Network timestamps are formatted as a second float with three point
+        // precision. Record this so it can be compared against other
+        // timestamps.
+        $timestamp_since_os_boot = (int) ($message['params']['timestamp'] * static::NANOSECONDS_PER_SECOND);
+      }
+      // The DOM content loaded event is in both the 'page' and 'timeline'
+      // sections of the performance log in different formats. This lets us
+      // compare 'ts' and 'timestamp' which are not only in two different
+      // formats, but appear to start from slightly different points in time.
+      // By subtracting one from the other, we can generate an offset to apply
+      // to all other 'ts' timestamps. Note that if the two events actually
+      // happen at different times, then the offset will be wrong by that
+      // difference.
+      if ($dom_loaded_timestamp_page === NULL && $message['method'] === 'Page.domContentEventFired') {
+        $dom_loaded_timestamp_page = $message['params']['timestamp'] * static::NANOSECONDS_PER_SECOND;
+      }
+      if ($dom_loaded_timestamp_timeline === NULL && $message['method'] === 'Tracing.dataCollected' && isset($message['params']['args']['data']['type']) && $message['params']['args']['data']['type'] === 'DOMContentLoaded') {
+        $dom_loaded_timestamp_timeline = $message['params']['ts'] * static::NANOSECONDS_PER_MICROSECOND;
+      }
+    }
+
+    $offset = $dom_loaded_timestamp_page - $dom_loaded_timestamp_timeline;
+
     // Open telemetry timestamps are always in nanoseconds.
-    $timestamp = (int) (\Drupal::service('datetime.time')->getCurrentMicroTime() * static::NANOSECONDS_PER_SECOND);
     $collector = $_ENV['OTEL_COLLECTOR'] ?? NULL;
     if ($collector === NULL) {
       return;
@@ -249,17 +279,14 @@ class PerformanceTestBase extends WebDriverTestBase {
       // window.performance::getEntriesByType() so use the performance log
       // messages to get it instead.
       $lcp_timestamp = NULL;
-      $message_first_request_timestamp = NULL;
       foreach ($messages as $message) {
-        // Since chrome timestamps are since OS start, we take the first network
-        // request as '0' and calculate offsets against that.
-        if ($message_first_request_timestamp === NULL && $message['method'] === 'Network.requestWillBeSent') {
-          $message_first_request_timestamp = (int) ($message['params']['timestamp'] * static::NANOSECONDS_PER_SECOND);
-        }
         // There can be multiple largestContentfulPaint candidates so just keep
         // overriding if there is more than one.
         if ($message['method'] === 'Tracing.dataCollected' && $message['params']['name'] === 'largestContentfulPaint::Candidate') {
-          $lcp_timestamp = $message['params']['ts'] * static::NANOSECONDS_PER_MICROSECOND;
+          // Tracing timestamps are microseconds since OS boot. However they
+          // appear to start from a slightly different point from page
+          // timestamps, so apply an offset calculated from DOM content loaded.
+          $lcp_timestamp = ($message['params']['ts'] * static::NANOSECONDS_PER_MICROSECOND) + $offset;
         }
       }
       if (isset($lcp_timestamp)) {
@@ -267,7 +294,8 @@ class PerformanceTestBase extends WebDriverTestBase {
           ->setStartTimestamp($timestamp)
           ->setAttribute('http.url', $path)
           ->startSpan();
-        $last_timestamp = $largest_contentful_paint_timestamp = (int) ($timestamp + ($lcp_timestamp - $message_first_request_timestamp));
+        $last_timestamp = $largest_contentful_paint_timestamp = (int) ($timestamp + ($lcp_timestamp - $timestamp_since_os_boot));
+
         $lcp_span->end($largest_contentful_paint_timestamp);
       }
     }
