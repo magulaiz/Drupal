@@ -40,15 +40,6 @@ function workspaces_form_alter(&$form, FormStateInterface $form_state, $form_id)
 }
 
 /**
- * Implements hook_entity_update().
- */
-function workspaces_entity_update(EntityInterface $entity) {
-  if ($entity->getEntityTypeId() === 'workspace') {
-    \Drupal::service('workspaces.repository')->resetCache();
-  }
-}
-
-/**
  * Implements hook_entity_predelete().
  */
 function workspaces_entity_predelete(EntityInterface $entity) {
