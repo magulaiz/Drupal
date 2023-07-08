@@ -2,6 +2,7 @@
 
 namespace Drupal\comment;
 
+use Drupal\Core\Attribute\Hook\Hook;
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Entity\FieldableEntityInterface;
@@ -160,6 +161,7 @@ class CommentStatistics implements CommentStatisticsInterface {
   /**
    * {@inheritdoc}
    */
+  #[Hook('ranking')]
   public function getRankingInfo() {
     return [
       'comments' => [
