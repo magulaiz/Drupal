@@ -6,7 +6,6 @@
  */
 
 use Drupal\content_moderation\ContentPreprocess;
-use Drupal\content_moderation\EntityTypeInfo;
 use Drupal\content_moderation\Plugin\Action\ModerationOptOutPublish;
 use Drupal\content_moderation\Plugin\Action\ModerationOptOutUnpublish;
 use Drupal\Core\Access\AccessResult;
@@ -18,7 +17,6 @@ use Drupal\Core\Entity\EntityPublishedInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemListInterface;
-use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Url;
@@ -71,15 +69,6 @@ function content_moderation_entity_bundle_field_info(EntityTypeInterface $entity
       'moderation_state' => $base_field_definitions['moderation_state'],
     ];
   }
-}
-
-/**
- * Implements hook_form_alter().
- */
-function content_moderation_form_alter(&$form, FormStateInterface $form_state, $form_id) {
-  \Drupal::service('class_resolver')
-    ->getInstanceFromDefinition(EntityTypeInfo::class)
-    ->formAlter($form, $form_state, $form_id);
 }
 
 /**

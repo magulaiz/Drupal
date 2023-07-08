@@ -8,6 +8,7 @@ use Drupal\content_moderation\Entity\Handler\NodeModerationHandler;
 use Drupal\content_moderation\Entity\Routing\EntityModerationRouteProvider;
 use Drupal\content_moderation\Plugin\Field\ModerationStateFieldItemList;
 use Drupal\Core\Attribute\Hook\Alter;
+use Drupal\Core\Attribute\Hook\FormAlter;
 use Drupal\Core\Attribute\Hook\Hook;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Entity\BundleEntityFormBase;
@@ -328,9 +329,8 @@ class EntityTypeInfo implements ContainerInjectionInterface {
    *   The current state of the form.
    * @param string $form_id
    *   The form id.
-   *
-   * @see hook_form_alter()
    */
+  #[FormAlter]
   public function formAlter(array &$form, FormStateInterface $form_state, $form_id) {
     $form_object = $form_state->getFormObject();
     if ($form_object instanceof BundleEntityFormBase) {
