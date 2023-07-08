@@ -118,9 +118,8 @@ class EntityTypeInfo implements ContainerInjectionInterface {
    *
    * @return \Drupal\Core\Field\FieldDefinitionInterface[]
    *   An array of field definitions, keyed by field name.
-   *
-   * @see hook_entity_base_field_info()
    */
+  #[Hook('entity_base_field_info')]
   public function entityBaseFieldInfo(EntityTypeInterface $entity_type) {
     if ($this->workspaceManager->isEntityTypeSupported($entity_type)) {
       $field_name = $entity_type->getRevisionMetadataKey('workspace');

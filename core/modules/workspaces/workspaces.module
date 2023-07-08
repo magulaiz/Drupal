@@ -9,14 +9,12 @@ use Drupal\Component\Serialization\Json;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Entity\EntityFormInterface;
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Url;
 use Drupal\workspaces\EntityAccess;
 use Drupal\workspaces\EntityOperations;
-use Drupal\workspaces\EntityTypeInfo;
 use Drupal\workspaces\FormOperations;
 
 /**
@@ -45,15 +43,6 @@ function workspaces_form_alter(&$form, FormStateInterface $form_state, $form_id)
   \Drupal::service('class_resolver')
     ->getInstanceFromDefinition(FormOperations::class)
     ->formAlter($form, $form_state, $form_id);
-}
-
-/**
- * Implements hook_entity_base_field_info().
- */
-function workspaces_entity_base_field_info(EntityTypeInterface $entity_type) {
-  return \Drupal::service('class_resolver')
-    ->getInstanceFromDefinition(EntityTypeInfo::class)
-    ->entityBaseFieldInfo($entity_type);
 }
 
 /**
