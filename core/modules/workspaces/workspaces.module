@@ -7,12 +7,9 @@
 
 use Drupal\Component\Serialization\Json;
 use Drupal\Core\Cache\Cache;
-use Drupal\Core\Entity\EntityFormInterface;
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Url;
-use Drupal\workspaces\EntityOperations;
 
 /**
  * Implements hook_help().
@@ -25,17 +22,6 @@ function workspaces_help($route_name, RouteMatchInterface $route_match) {
       $output .= '<h3>' . t('About') . '</h3>';
       $output .= '<p>' . t('The Workspaces module allows workspaces to be defined and switched between. Content is then assigned to the active workspace when created. For more information, see the <a href=":workspaces">online documentation for the Workspaces module</a>.', [':workspaces' => 'https://www.drupal.org/docs/8/core/modules/workspace/overview']) . '</p>';
       return $output;
-  }
-}
-
-/**
- * Implements hook_form_alter().
- */
-function workspaces_form_alter(&$form, FormStateInterface $form_state, $form_id) {
-  if ($form_state->getFormObject() instanceof EntityFormInterface) {
-    \Drupal::service('class_resolver')
-      ->getInstanceFromDefinition(EntityOperations::class)
-      ->entityFormAlter($form, $form_state, $form_id);
   }
 }
 
