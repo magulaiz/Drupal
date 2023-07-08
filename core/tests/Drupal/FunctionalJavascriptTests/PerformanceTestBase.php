@@ -39,6 +39,13 @@ class PerformanceTestBase extends WebDriverTestBase {
   const NANOSECONDS_PER_MILLISECOND = 1000000;
 
   /**
+   * The number of nanoseconds in a second.
+   *
+   * @var int
+   */
+  const NANOSECONDS_PER_MICROSECOND = 1000;
+
+  /**
    * The number of stylesheets requested.
    */
   protected int $stylesheetCount = 0;
@@ -90,8 +97,7 @@ class PerformanceTestBase extends WebDriverTestBase {
       'performanceTimeline' => 'ALL',
     ];
     $driver_args[1]['chromeOptions']['perfLoggingPrefs'] = [
-      'traceCategories' => 'devtools.timeline',
-      'enableNetwork' => TRUE,
+      'traceCategories' => 'timeline,devtools.timeline,browser',
     ];
 
     return json_encode($driver_args);
@@ -160,7 +166,6 @@ class PerformanceTestBase extends WebDriverTestBase {
   protected function openTelemetryTracing($path, array $messages): void {
     // Open telemetry timestamps are always in nanoseconds.
     $timestamp = (int) (\Drupal::service('datetime.time')->getCurrentMicroTime() * static::NANOSECONDS_PER_SECOND);
-
     $collector = $_ENV['OTEL_COLLECTOR'] ?? NULL;
     if ($collector === NULL) {
       return;
@@ -221,14 +226,58 @@ class PerformanceTestBase extends WebDriverTestBase {
       ->setAttribute('http.url', $path)
       ->setSpanKind(SpanKind::KIND_SERVER)
       ->startSpan();
+    $last_timestamp = $first_byte_timestamp = (int) ($timestamp + ($first_response_timestamp - $first_request_timestamp));
 
-    // Since chrome timestamps are since OS start, we take the first network
-    // request as '0' and calculate offsets against that.
-    $first_byte_timestamp = (int) ($timestamp + ($first_response_timestamp - $first_request_timestamp));
-    $span->addEvent('Time to first byte', [], $first_byte_timestamp);
-    $span->setAttribute('browser.time_to_first_byte', $time_to_first_byte);
-    $span->end($first_byte_timestamp);
-    $tracerProvider->shutdown();
+    try {
+      $first_request_timestamp = NULL;
+      $scope = $span->activate();
+      $first_byte_span = $tracer->spanBuilder('First Byte')
+        ->setStartTimestamp($timestamp)
+        ->setAttribute('http.url', $path)
+        ->startSpan();
+      $first_byte_span->end($first_byte_timestamp);
+      if (isset($entry['domContentLoadedEventStart'])) {
+        $dom_span = $tracer->spanBuilder('domContentLoadedEventStart')
+          ->setStartTimestamp($timestamp)
+          ->setAttribute('http.url', $path)
+          ->startSpan();
+        $dom_timestamp = $entry['domContentLoadedEventStart'] * static::NANOSECONDS_PER_MILLISECOND;
+        $last_timestamp = $dom_content_loaded_timestamp = (int) ($timestamp + ($dom_timestamp - $first_request_timestamp));
+        $dom_span->end($dom_content_loaded_timestamp);
+      }
+      // Largest contentful paint is not available from
+      // window.performance::getEntriesByType() so use the performance log
+      // messages to get it instead.
+      $lcp_timestamp = NULL;
+      $message_first_request_timestamp = NULL;
+      foreach ($messages as $message) {
+        // Since chrome timestamps are since OS start, we take the first network
+        // request as '0' and calculate offsets against that.
+        if ($message_first_request_timestamp === NULL && $message['method'] === 'Network.requestWillBeSent') {
+          $message_first_request_timestamp = (int) ($message['params']['timestamp'] * static::NANOSECONDS_PER_SECOND);
+        }
+        // There can be multiple largestContentfulPaint candidates so just keep
+        // overriding if there is more than one.
+        if ($message['method'] === 'Tracing.dataCollected' && $message['params']['name'] === 'largestContentfulPaint::Candidate') {
+          $lcp_timestamp = $message['params']['ts'] * static::NANOSECONDS_PER_MICROSECOND;
+        }
+      }
+      if (isset($lcp_timestamp)) {
+        $lcp_span = $tracer->spanBuilder('largestContentfulPaint')
+          ->setStartTimestamp($timestamp)
+          ->setAttribute('http.url', $path)
+          ->startSpan();
+        $last_timestamp = $largest_contentful_paint_timestamp = (int) ($timestamp + ($lcp_timestamp - $message_first_request_timestamp));
+        $lcp_span->end($largest_contentful_paint_timestamp);
+      }
+    }
+    finally {
+      if (isset($scope)) {
+        $scope->detach();
+      }
+      $span->end($last_timestamp);
+      $tracerProvider->shutdown();
+    }
   }
 
 }
