@@ -5,6 +5,7 @@ namespace Drupal\content_moderation;
 use Drupal\content_moderation\Entity\ContentModerationState as ContentModerationStateEntity;
 use Drupal\content_moderation\Entity\ContentModerationStateInterface;
 use Drupal\content_moderation\Form\EntityModerationForm;
+use Drupal\Core\Attribute\Hook\Hook;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
@@ -99,9 +100,8 @@ class EntityOperations implements ContainerInjectionInterface {
    *
    * @param \Drupal\Core\Entity\EntityInterface $entity
    *   The entity being saved.
-   *
-   * @see hook_entity_presave()
    */
+  #[Hook('entity_presave')]
   public function entityPresave(EntityInterface $entity) {
     if (!$this->moderationInfo->isModeratedEntity($entity)) {
       return;

@@ -3,6 +3,11 @@ services:
     class: Drupal\content_moderation\StateTransitionValidation
     arguments: ['@content_moderation.moderation_information']
   Drupal\content_moderation\StateTransitionValidationInterface: '@content_moderation.state_transition_validation'
+  Drupal\content_moderation\EntityOperations:
+    class: Drupal\content_moderation\EntityOperations
+    autowire: true
+    tags:
+      - { name: hooks }
   content_moderation.moderation_information:
     class: Drupal\content_moderation\ModerationInformation
     arguments: ['@entity_type.manager', '@entity_type.bundle.info']
