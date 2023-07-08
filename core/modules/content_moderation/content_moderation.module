@@ -101,15 +101,6 @@ function content_moderation_preprocess_node(&$variables) {
 }
 
 /**
- * Implements hook_entity_extra_field_info().
- */
-function content_moderation_entity_extra_field_info() {
-  return \Drupal::service('class_resolver')
-    ->getInstanceFromDefinition(EntityTypeInfo::class)
-    ->entityExtraFieldInfo();
-}
-
-/**
  * Implements hook_entity_form_display_alter().
  */
 function content_moderation_entity_form_display_alter(EntityFormDisplayInterface $form_display, array $context) {

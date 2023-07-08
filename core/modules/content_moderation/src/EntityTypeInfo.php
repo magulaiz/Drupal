@@ -205,9 +205,8 @@ class EntityTypeInfo implements ContainerInjectionInterface {
    *   - delete: (optional) String containing markup (normally a link) used as
    *     the element's 'delete' operation in the administration interface. Only
    *     for 'form' context.
-   *
-   * @see hook_entity_extra_field_info()
    */
+  #[Hook('entity_extra_field_info')]
   public function entityExtraFieldInfo() {
     $return = [];
     foreach ($this->getModeratedBundles() as $bundle) {
