@@ -216,9 +216,8 @@ class EntityOperations implements ContainerInjectionInterface {
   /**
    * @param \Drupal\Core\Entity\EntityInterface $entity
    *   The entity being deleted.
-   *
-   * @see hook_entity_delete()
    */
+  #[Hook('entity_delete')]
   public function entityDelete(EntityInterface $entity) {
     $content_moderation_state = ContentModerationStateEntity::loadFromModeratedEntity($entity);
     if ($content_moderation_state) {
