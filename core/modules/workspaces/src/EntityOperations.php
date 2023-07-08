@@ -162,9 +162,8 @@ class EntityOperations implements ContainerInjectionInterface {
    *
    * @param \Drupal\Core\Entity\EntityInterface $entity
    *   The entity that was just saved.
-   *
-   * @see hook_entity_insert()
    */
+  #[Hook('entity_insert')]
   public function entityInsert(EntityInterface $entity) {
     /** @var \Drupal\Core\Entity\RevisionableInterface|\Drupal\Core\Entity\EntityPublishedInterface $entity */
     // Only run if the entity type can belong to a workspace and we are in a

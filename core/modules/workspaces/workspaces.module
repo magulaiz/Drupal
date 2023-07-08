@@ -53,10 +53,6 @@ function workspaces_entity_insert(EntityInterface $entity) {
     \Drupal::service('workspaces.association')->workspaceInsert($entity);
     \Drupal::service('workspaces.repository')->resetCache();
   }
-
-  return \Drupal::service('class_resolver')
-    ->getInstanceFromDefinition(EntityOperations::class)
-    ->entityInsert($entity);
 }
 
 /**
