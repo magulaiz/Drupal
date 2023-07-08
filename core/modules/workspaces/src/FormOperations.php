@@ -2,6 +2,7 @@
 
 namespace Drupal\workspaces;
 
+use Drupal\Core\Attribute\Hook\FormAlter;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element;
@@ -52,9 +53,8 @@ class FormOperations implements ContainerInjectionInterface {
    *   The current state of the form.
    * @param string $form_id
    *   The form ID.
-   *
-   * @see hook_form_alter()
    */
+  #[FormAlter]
   public function formAlter(array &$form, FormStateInterface $form_state, $form_id) {
     // No alterations are needed if we're not in a workspace context.
     if (!$this->workspaceManager->hasActiveWorkspace()) {

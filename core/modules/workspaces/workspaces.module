@@ -13,7 +13,6 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Url;
 use Drupal\workspaces\EntityOperations;
-use Drupal\workspaces\FormOperations;
 
 /**
  * Implements hook_help().
@@ -38,9 +37,6 @@ function workspaces_form_alter(&$form, FormStateInterface $form_state, $form_id)
       ->getInstanceFromDefinition(EntityOperations::class)
       ->entityFormAlter($form, $form_state, $form_id);
   }
-  \Drupal::service('class_resolver')
-    ->getInstanceFromDefinition(FormOperations::class)
-    ->formAlter($form, $form_state, $form_id);
 }
 
 /**
