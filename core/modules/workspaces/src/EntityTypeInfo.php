@@ -2,6 +2,7 @@
 
 namespace Drupal\workspaces;
 
+use Drupal\Core\Attribute\Hook\Alter;
 use Drupal\Core\Attribute\Hook\Hook;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
@@ -79,9 +80,8 @@ class EntityTypeInfo implements ContainerInjectionInterface {
    *
    * @param \Drupal\Core\Entity\EntityTypeInterface[] $entity_types
    *   An array of entity types.
-   *
-   * @see hook_entity_type_alter()
    */
+  #[Alter('entity_type')]
   public function entityTypeAlter(array &$entity_types) {
     foreach ($entity_types as $entity_type) {
       // Non-default workspaces display the active revision on the canonical
