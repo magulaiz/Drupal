@@ -2,6 +2,7 @@
 
 namespace Drupal\workspaces;
 
+use Drupal\Core\Attribute\Hook\Hook;
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Entity\RevisionableInterface;
@@ -132,6 +133,7 @@ class WorkspaceAssociation implements WorkspaceAssociationInterface, EventSubscr
   /**
    * {@inheritdoc}
    */
+  #[Hook('workspace_insert')]
   public function workspaceInsert(WorkspaceInterface $workspace) {
     // When a new workspace has been saved, we need to copy all the associations
     // of its parent.

@@ -16,6 +16,7 @@ services:
     tags:
       - { name: backend_overridable }
       - { name: event_subscriber }
+      - { name: hooks }
   Drupal\workspaces\EntityAccess:
     class: Drupal\workspaces\EntityAccess
     autowire: true
@@ -48,6 +49,8 @@ services:
   workspaces.repository:
     class: Drupal\workspaces\WorkspaceRepository
     arguments: ['@entity_type.manager', '@cache.default']
+    tags:
+      - { name: hooks }
   Drupal\workspaces\WorkspaceRepositoryInterface: '@workspaces.repository'
 
   workspaces.negotiator.session:
