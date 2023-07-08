@@ -5,12 +5,14 @@
  * Contains content_moderation.module.
  */
 
+use Drupal\content_moderation\ContentPreprocess;
 use Drupal\content_moderation\EntityOperations;
 use Drupal\content_moderation\EntityTypeInfo;
-use Drupal\content_moderation\ContentPreprocess;
 use Drupal\content_moderation\Plugin\Action\ModerationOptOutPublish;
 use Drupal\content_moderation\Plugin\Action\ModerationOptOutUnpublish;
 use Drupal\Core\Access\AccessResult;
+use Drupal\Core\Action\Plugin\Action\PublishAction;
+use Drupal\Core\Action\Plugin\Action\UnpublishAction;
 use Drupal\Core\Entity\Display\EntityFormDisplayInterface;
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Entity\EntityInterface;
@@ -22,14 +24,12 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Url;
+use Drupal\views\Entity\View;
 use Drupal\views\Plugin\views\filter\Broken;
 use Drupal\views\ViewExecutable;
 use Drupal\views\Views;
-use Drupal\workflows\WorkflowInterface;
-use Drupal\Core\Action\Plugin\Action\PublishAction;
-use Drupal\Core\Action\Plugin\Action\UnpublishAction;
 use Drupal\workflows\Entity\Workflow;
-use Drupal\views\Entity\View;
+use Drupal\workflows\WorkflowInterface;
 
 /**
  * Implements hook_help().

@@ -4,6 +4,7 @@ namespace Drupal\content_moderation;
 
 use Drupal\content_moderation\Entity\ContentModerationState as ContentModerationStateEntity;
 use Drupal\content_moderation\Entity\ContentModerationStateInterface;
+use Drupal\content_moderation\Form\EntityModerationForm;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
@@ -12,7 +13,6 @@ use Drupal\Core\Entity\EntityPublishedInterface;
 use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\FormBuilderInterface;
-use Drupal\content_moderation\Form\EntityModerationForm;
 use Drupal\Core\Routing\RouteBuilderInterface;
 use Drupal\workflows\Entity\Workflow;
 use Symfony\Component\DependencyInjection\ContainerInterface;

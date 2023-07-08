@@ -2,10 +2,14 @@
 
 namespace Drupal\content_moderation;
 
+use Drupal\content_moderation\Entity\Handler\BlockContentModerationHandler;
+use Drupal\content_moderation\Entity\Handler\ModerationHandler;
+use Drupal\content_moderation\Entity\Handler\NodeModerationHandler;
+use Drupal\content_moderation\Entity\Routing\EntityModerationRouteProvider;
 use Drupal\content_moderation\Plugin\Field\ModerationStateFieldItemList;
+use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Entity\BundleEntityFormBase;
 use Drupal\Core\Entity\ContentEntityFormInterface;
-use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Entity\ContentEntityTypeInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
@@ -17,10 +21,6 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\StringTranslation\TranslationInterface;
-use Drupal\content_moderation\Entity\Handler\BlockContentModerationHandler;
-use Drupal\content_moderation\Entity\Handler\ModerationHandler;
-use Drupal\content_moderation\Entity\Handler\NodeModerationHandler;
-use Drupal\content_moderation\Entity\Routing\EntityModerationRouteProvider;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
