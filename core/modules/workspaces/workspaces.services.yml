@@ -28,6 +28,11 @@ services:
     tags:
       - { name: hooks }
       - { name: require_module, module: 'views' }
+  Drupal\workspaces\EntityTypeInfo:
+    class: Drupal\workspaces\EntityTypeInfo
+    autowire: true
+    tags:
+      - { name: hooks }
   Drupal\workspaces\WorkspaceAssociationInterface: '@workspaces.association'
   workspaces.repository:
     class: Drupal\workspaces\WorkspaceRepository

@@ -2,6 +2,7 @@
 
 namespace Drupal\workspaces;
 
+use Drupal\Core\Attribute\Hook\Hook;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
@@ -62,9 +63,8 @@ class EntityTypeInfo implements ContainerInjectionInterface {
    * @param \Drupal\Core\Entity\EntityTypeInterface[] $entity_types
    *   An associative array of all entity type definitions, keyed by the entity
    *   type name. Passed by reference.
-   *
-   * @see hook_entity_type_build()
    */
+  #[Hook('entity_type_build')]
   public function entityTypeBuild(array &$entity_types) {
     foreach ($entity_types as $entity_type) {
       if ($this->workspaceManager->isEntityTypeSupported($entity_type)) {

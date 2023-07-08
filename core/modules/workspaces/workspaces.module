@@ -34,15 +34,6 @@ function workspaces_help($route_name, RouteMatchInterface $route_match) {
 }
 
 /**
- * Implements hook_entity_type_build().
- */
-function workspaces_entity_type_build(array &$entity_types) {
-  return \Drupal::service('class_resolver')
-    ->getInstanceFromDefinition(EntityTypeInfo::class)
-    ->entityTypeBuild($entity_types);
-}
-
-/**
  * Implements hook_entity_type_alter().
  */
 function workspaces_entity_type_alter(array &$entity_types) {
