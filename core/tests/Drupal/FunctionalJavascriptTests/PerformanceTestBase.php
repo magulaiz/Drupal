@@ -120,6 +120,12 @@ class PerformanceTestBase extends WebDriverTestBase {
    * Gets the chromedriver performance log and extracts metrics from it.
    */
   protected function getChromeDriverPerformanceMetrics(string|Url $path): void {
+    // Sleep for 5 seconds, this allows the page to finish rendering so that
+    // events like firstContentfulPaint and largestContentfulPaint fire before
+    // we get the logs.
+    if (isset($_ENV['OTEL_COLLECTOR'])) {
+      sleep(5);
+    }
     $session = $this->getSession();
     $performance_log = $session->getDriver()->getWebDriverSession()->log('performance');
 
@@ -279,14 +285,16 @@ class PerformanceTestBase extends WebDriverTestBase {
       // window.performance::getEntriesByType() so use the performance log
       // messages to get it instead.
       $lcp_timestamp = NULL;
+      $lcp_size = 0;
       foreach ($messages as $message) {
         // There can be multiple largestContentfulPaint candidates so just keep
         // overriding if there is more than one.
-        if ($message['method'] === 'Tracing.dataCollected' && $message['params']['name'] === 'largestContentfulPaint::Candidate') {
+        if ($message['method'] === 'Tracing.dataCollected' && $message['params']['name'] === 'largestContentfulPaint::Candidate' && $message['params']['args']['data']['size'] > $lcp_size) {
           // Tracing timestamps are microseconds since OS boot. However they
           // appear to start from a slightly different point from page
           // timestamps, so apply an offset calculated from DOM content loaded.
           $lcp_timestamp = ($message['params']['ts'] * static::NANOSECONDS_PER_MICROSECOND) + $offset;
+          $lcp_size = $message['params']['args']['data']['size'];
         }
       }
       if (isset($lcp_timestamp)) {
