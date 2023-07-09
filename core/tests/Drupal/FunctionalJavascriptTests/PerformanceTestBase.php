@@ -173,6 +173,7 @@ class PerformanceTestBase extends WebDriverTestBase {
     $timestamp = NULL;
     $dom_loaded_timestamp_page = NULL;
     $dom_loaded_timestamp_timeline = NULL;
+    $timestamp_since_os_boot = NULL;
     foreach ($messages as $message) {
       // Since chrome timestamps are since OS start, we take the first network
       // request as '0' and calculate offsets against that.
