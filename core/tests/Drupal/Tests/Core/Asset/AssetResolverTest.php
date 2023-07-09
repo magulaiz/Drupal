@@ -5,7 +5,6 @@ namespace Drupal\Tests\Core\Asset;
 use Drupal\Core\Asset\AssetResolver;
 use Drupal\Core\Asset\AttachedAssets;
 use Drupal\Core\Asset\AttachedAssetsInterface;
-use Drupal\Core\Cache\MemoryBackend;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Tests\UnitTestCase;
 use Drupal\TestTools\TestMemoryBackend;
@@ -168,12 +167,4 @@ if (!defined('CSS_AGGREGATE_DEFAULT')) {
 
 if (!defined('JS_DEFAULT')) {
   define('JS_DEFAULT', 0);
-}
-
-class TestMemoryBackend extends MemoryBackend {
-
-  public function getAllCids() {
-    return array_keys($this->cache);
-  }
-
 }
