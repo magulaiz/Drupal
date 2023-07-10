@@ -8,6 +8,7 @@ use Drupal\Core\Asset\AttachedAssetsInterface;
 use Drupal\Core\Cache\MemoryBackend;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Tests\UnitTestCase;
+use Drupal\TestTools\TestMemoryBackend;
 
 /**
  * @coversDefaultClass \Drupal\Core\Asset\AssetResolver
