@@ -168,6 +168,10 @@ class ModuleHandler implements ModuleHandlerInterface {
    * {@inheritdoc}
    */
   public function setModuleList(array $module_list = []) {
+    assert(array_keys($module_list) === array_map(
+      static fn (Extension $module): string => $module->getName(),
+      array_values($module_list),
+    ));
     $this->moduleList = $module_list;
     // Reset the implementations, so a new call triggers a reloading of the
     // available hooks.

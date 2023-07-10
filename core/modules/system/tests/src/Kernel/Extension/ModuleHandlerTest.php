@@ -4,6 +4,7 @@ namespace Drupal\Tests\system\Kernel\Extension;
 
 use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Entity\ContentEntityTypeInterface;
+use Drupal\Core\Extension\Extension;
 use Drupal\Core\Extension\MissingDependencyException;
 use Drupal\Core\Extension\ModuleUninstallValidatorException;
 use Drupal\Core\Extension\ProfileExtensionList;
@@ -50,8 +51,18 @@ class ModuleHandlerTest extends KernelTestBase {
 
     // Test the fixed list feature.
     $fixed_list = [
-      'system' => 'core/modules/system/system.module',
-      'menu' => 'core/modules/menu/menu.module',
+      'system' => new Extension(
+        $this->root,
+        'module',
+        'core/modules/system/system.info.yml',
+        'system.module',
+      ),
+      'menu_ui' => new Extension(
+        $this->root,
+        'module',
+        'core/modules/menu_ui/menu_ui.info.yml',
+        'menu_ui.module',
+      ),
     ];
     $this->moduleHandler()->setModuleList($fixed_list);
     $new_module_list = array_combine(array_keys($fixed_list), array_keys($fixed_list));
