@@ -21,9 +21,10 @@ function olivero_preprocess_html(&$variables) {
 
   // Until olivero stabilizes, we should warn site admins to not subtheme it.
   $theme = \Drupal::theme()->getActiveTheme();
+  $user = \Drupal::service('current_user');
+
   if (
-    $variables['user'] &&
-    $variables['user']->hasPermission('administer themes') &&
+    $user->hasPermission('administer themes') &&
     in_array('olivero', array_keys($theme->getBaseThemeExtensions()))
   ) {
     $warning = t(
