@@ -2,13 +2,13 @@
 
 namespace Drupal\KernelTests\Core\Plugin;
 
-use Drupal\Core\Plugin\Context\EntityContextDefinition;
-use Drupal\KernelTests\KernelTestBase;
-use Drupal\plugin_test\Plugin\TestPluginManager;
-use Drupal\plugin_test\Plugin\MockBlockManager;
-use Drupal\plugin_test\Plugin\DefaultsTestPluginManager;
 use Drupal\Core\Cache\MemoryBackend;
 use Drupal\Core\Extension\ModuleHandler;
+use Drupal\Core\Plugin\Context\EntityContextDefinition;
+use Drupal\KernelTests\KernelTestBase;
+use Drupal\plugin_test\Plugin\DefaultsTestPluginManager;
+use Drupal\plugin_test\Plugin\MockBlockManager;
+use Drupal\plugin_test\Plugin\TestPluginManager;
 
 /**
  * Base class for Plugin API unit tests.
