@@ -53,4 +53,32 @@ class FieldConfigValidationTest extends FieldStorageConfigValidationTest {
     ]);
   }
 
+  public function providerImmutableFields(): array {
+    return [
+      'field_name' => [
+        ['field_name' => 'broken'],
+      ],
+      'entity_type' => [
+        ['entity_type' => 'entity_test_mul'],
+      ],
+      'field_type' => [
+        ['field_type' => 'email'],
+      ],
+      'bundle' => [
+        ['bundle' => 'foo'],
+      ],
+    ];
+  }
+
+  /**
+   * Tests that the field type plugin is validated.
+   */
+  public function testFieldTypePlugin(): void {
+    $this->entity->set('field_type', 'non_existent');
+    $this->assertValidationErrors([
+      '' => "The 'field_type' property cannot be changed.",
+      'field_type' => "The 'non_existent' plugin does not exist.",
+    ]);
+  }
+
 }
