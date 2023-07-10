@@ -16,6 +16,8 @@ use Symfony\Component\Finder\Finder;
  * @group Component
  *
  * @coversNothing
+ *
+ * @requires externalCommand composer
  */
 class ComponentsIsolatedBuildTest extends ComposerBuildTestBase {
 

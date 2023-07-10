@@ -15,6 +15,8 @@ use Drupal\Composer\Composer;
  * @group Component
  *
  * @coversNothing
+ *
+ * @requires externalCommand composer
  */
 class ComponentsTaggedReleaseTest extends ComposerBuildTestBase {
 
