@@ -411,6 +411,29 @@ function hook_field_purge_field(\Drupal\field\Entity\FieldConfig $field) {
 }
 
 /**
+ * Allows modules to alter the field type category information.
+ *
+ * This hook provides a way for modules to modify or add to the existing
+ * category information. Modules can use this hook to define custom field type
+ * categories or modify the properties of existing categories.
+ *
+ * @param array &$categories
+ *   An associative array of field type categories, keyed by category machine
+ *    name.
+ *
+ * @see \Drupal\Core\Field\FieldTypeCategoryInfoManager
+ */
+function hook_field_type_category_info_alter(array &$categories) {
+  // Modify or add field type categories.
+  $categories['my_custom_category'] = [
+    'label' => 'My Custom Category',
+    'description' => 'This is a custom category for my field types.',
+  ];
+  // Modify the properties of an existing category.
+  $categories['text']['description'] = 'Modified Text';
+}
+
+/**
  * @} End of "addtogroup field_purge".
  */
 

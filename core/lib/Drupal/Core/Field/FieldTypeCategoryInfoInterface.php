@@ -11,16 +11,25 @@ interface FieldTypeCategoryInfoInterface {
 
   /**
    * Returns the field group label.
+   *
+   * @return \Drupal\Core\StringTranslation\TranslatableMarkup
+   *   The category label.
    */
   public function getLabel(): TranslatableMarkup;
 
   /**
    * Returns the field group description.
+   *
+   * @return \Drupal\Core\StringTranslation\TranslatableMarkup
+   *   The category description.
    */
   public function getDescription(): TranslatableMarkup;
 
   /**
    * Returns the field group weight.
+   *
+   * @return int
+   *   The weight.
    */
   public function getWeight(): int;
 

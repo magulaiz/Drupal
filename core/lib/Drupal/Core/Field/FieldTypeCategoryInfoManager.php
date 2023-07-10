@@ -62,7 +62,7 @@ class FieldTypeCategoryInfoManager extends DefaultPluginManager {
   public function __construct($root, ModuleHandlerInterface $module_handler, CacheBackendInterface $cache_backend) {
     $this->root = $root;
     $this->moduleHandler = $module_handler;
-    $this->alterInfo('category_info');
+    $this->alterInfo('field_type_category_info');
     $this->setCacheBackend($cache_backend, 'field_type_category_info_plugins', ['field_type_category_info']);
   }
 
