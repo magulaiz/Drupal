@@ -65,7 +65,7 @@ class FieldStorageConfigValidationTest extends ConfigEntityValidationTestBase {
     $expected_messages = [];
     foreach ($fields_to_change as $field_name => $new_value) {
       $this->entity->set($field_name, $new_value);
-      $expected_messages[] = "The '$field_name' property cannot be changed.";
+      $expected_messages[''] = "The '$field_name' property cannot be changed.";
     }
     $this->assertValidationErrors($expected_messages);
   }
@@ -76,8 +76,8 @@ class FieldStorageConfigValidationTest extends ConfigEntityValidationTestBase {
   public function testFieldTypePlugin(): void {
     $this->entity->set('type', 'non_existent');
     $this->assertValidationErrors([
-      "The 'type' property cannot be changed.",
-      "The 'non_existent' plugin does not exist.",
+      '' => "The 'type' property cannot be changed.",
+      'type' => "The 'non_existent' plugin does not exist.",
     ]);
   }
 
@@ -90,7 +90,7 @@ class FieldStorageConfigValidationTest extends ConfigEntityValidationTestBase {
 
     $this->entity->set('entity_type', 'strange_entity');
     $this->assertValidationErrors([
-      "The 'entity_type' property cannot be changed.",
+      '' => "The 'entity_type' property cannot be changed.",
       "The 'strange_entity' plugin does not exist.",
     ]);
 
