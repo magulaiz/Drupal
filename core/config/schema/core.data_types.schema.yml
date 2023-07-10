@@ -434,7 +434,6 @@ field_config_base:
       label: 'Field name'
       constraints:
         NotNull: []
-        MachineName: []
         UniqueField: []
     entity_type:
       type: string

@@ -32,8 +32,6 @@ field.storage.*.*:
       label: 'Field name'
       constraints:
         NotNull: []
-        # Note: typically but optionally, this would use `field_ui.settings`' `field_prefix` value as the first part.
-        MachineName: []
         UniqueField: []
     entity_type:
       type: string
