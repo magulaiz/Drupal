@@ -91,14 +91,14 @@ class FieldStorageConfigValidationTest extends ConfigEntityValidationTestBase {
     $this->entity->set('entity_type', 'strange_entity');
     $this->assertValidationErrors([
       '' => "The 'entity_type' property cannot be changed.",
-      "The 'strange_entity' plugin does not exist.",
+      'entity_type' => "The 'strange_entity' plugin does not exist.",
     ]);
 
     // A valid, but non-fieldable, entity type should raise an error.
     $this->entity->set('entity_type', 'field_config');
     $this->assertValidationErrors([
-      "The 'entity_type' property cannot be changed.",
-      "The 'field_config' plugin must implement or extend \Drupal\Core\Entity\FieldableEntityInterface.",
+      '' => "The 'entity_type' property cannot be changed.",
+      'entity_type' => "The 'field_config' plugin must implement or extend \Drupal\Core\Entity\FieldableEntityInterface.",
     ]);
   }
 
