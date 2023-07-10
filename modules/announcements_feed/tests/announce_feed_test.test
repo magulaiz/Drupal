@@ -16,24 +16,28 @@ class AnnounceFeedTestValidateJsonFeed extends DrupalWebTestCase {
    * @var object
    */
   protected $user;
+
   /**
    * A test endpoint which contains the community feeds.
    *
    * @var string
    */
   protected $responseJson;
+
   /**
    * A test endpoint which include the new/updated feeds.
    *
    * @var string
    */
   protected $updatedJson;
+
   /**
    * A test endpoint which displays an empty json.
    *
    * @var string
    */
   protected $emptyJson;
+
   /**
    * A test endpoint that will have some feeds removed.
    *
@@ -60,7 +64,6 @@ class AnnounceFeedTestValidateJsonFeed extends DrupalWebTestCase {
     global $base_path;
     $module_path = drupal_get_path('module', 'announcements_feed');
     module_load_include('inc', 'announce_feed_test', 'announce_feed_test');
-    $modules[] = array('user');
     parent::setUp('user', 'toolbar', 'announcements_feed', 'announce_feed_test');
     $this->user = $this->drupalCreateUser(array(
       'access toolbar',
@@ -172,7 +175,7 @@ class AnnounceFeedTestValidateUrl extends DrupalUnitTestCase {
     );
     foreach ($urls as $url) {
       $result = announcements_feed_validate_url($url[0]);
-      $this->assertEqual($url[1], $result, 'Returned' . $url[1]);
+      $this->assertEqual($url[1], $result, 'Returned ' . ($url[1] ? 'TRUE' : 'FALSE'));
     }
   }
 
@@ -222,7 +225,7 @@ class AnnounceFeedTestRelevantVersion extends DrupalUnitTestCase {
     );
     foreach ($version_strings as $strings) {
       $result = announcements_feed_is_relevant_item($strings[0]);
-      $this->assertEqual($strings[1], $result, 'Returned' . $strings[1]);
+      $this->assertEqual($strings[1], $result, 'Returned ' . ($strings[1] ? 'TRUE' : 'FALSE'));
     }
   }
 
@@ -251,7 +254,6 @@ class AnnounceFeedTestValidateLoginTestCase extends DrupalWebTestCase {
     global $base_path;
     $module_path = drupal_get_path('module', 'announcements_feed');
     module_load_include('inc', 'announce_feed_test', 'announce_feed_test');
-    $modules[] = array('user');
     parent::setUp('user', 'toolbar', 'announcements_feed', 'announce_feed_test');
     $response_json = $base_url . $base_path . $module_path . '/tests/announce_feed/community-feeds.json';
     set_announce_feed_test_endpoint($response_json);

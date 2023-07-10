@@ -109,7 +109,13 @@ function announcements_feed_cron() {
   $last_check = variable_get('announcements_feed_last_fetch', 0);
   $time = time();
   if (($time - $last_check) > $cron_interval) {
-    announcements_feed_fetch(TRUE);
-    variable_set('announcements_feed_last_fetch', $time);
+    try {
+      announcements_feed_fetch(TRUE);
+      // Update the last_fetch variable to the current time.
+      variable_set('announcements_feed_last_fetch', $time);
+    }
+    catch (Exception $e) {
+      watchdog('announcements_feed', 'Exception occurred: @message', array('@message' => $e->getMessage()), WATCHDOG_ERROR);
+    }
   }
 }

@@ -23,7 +23,7 @@ function announcements_feed_get_announcements() {
   }
   catch (Exception $e) {
     drupal_set_message(t('An error occurred while parsing the announcements feed, check the logs for more information.'), 'error');
-    return '';
+    return array();
   }
   $build = array();
   foreach ($announcements as $announcement) {
@@ -89,7 +89,7 @@ function announcements_feed_get_all_announcements() {
  *
  * @throws Exception
  */
-function announcements_feed_fetch(bool $force = FALSE) {
+function announcements_feed_fetch($force = FALSE) {
   $announcements = cache_get('announcements_feed');
   if (empty($announcements)) {
     $announcements_feed_json_url = variable_get('announcements_feed_json_url');
