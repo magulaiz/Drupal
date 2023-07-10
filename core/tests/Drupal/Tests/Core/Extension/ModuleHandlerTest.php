@@ -4,7 +4,6 @@ namespace Drupal\Tests\Core\Extension;
 
 use Composer\Autoload\ClassLoader;
 use Drupal\Core\Cache\CacheBackendInterface;
-use Drupal\Core\Cache\MemoryBackend;
 use Drupal\Core\Extension\Exception\UnknownExtensionException;
 use Drupal\Core\Extension\Extension;
 use Drupal\Core\Extension\Hook\CompactList\CompactImplementationList;
@@ -21,7 +20,9 @@ use Drupal\module_handler_test_attr\Hooks\TypeAlter;
 use Drupal\Tests\Traits\ExceptionSerializationTrait;
 use Drupal\Tests\UnitTestCase;
 use Drupal\TestTools\MockCallQueue;
+use Drupal\TestTools\ObjectIdInsensitiveExporter;
 use Drupal\TestTools\RuntimeAutowireContainer;
+use Drupal\TestTools\TestMemoryBackend;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
@@ -120,7 +121,7 @@ class ModuleHandlerTest extends UnitTestCase {
       $list = array_replace($list, $this->serviceClassesByModule);
       return $list;
     });
-    $container->addClass(MemoryBackend::class);
+    $container->addClass(TestMemoryBackend::class);
     $container->addClass(HookMap::class);
     $container->addClass(ServiceMethodAttributeHookDiscovery::class);
     $container->addDecoratorClass(CachedImplementationSource::class, [2 => 'hook_implementation_source']);
@@ -1273,7 +1274,7 @@ class ModuleHandlerTest extends UnitTestCase {
    *
    * @covers ::resetImplementations
    */
-  public function testResetImplementations() {
+  public function testResetImplementationsCacheCalls(): void {
     $cache_backend = $this->container->getMock(CacheBackendInterface::class);
     $module_handler = $this->container->get(ModuleHandler::class);
 
@@ -1325,6 +1326,71 @@ class ModuleHandlerTest extends UnitTestCase {
 
     $hook_map = $this->container->get(HookMapInterface::class);
     $hook_map->writeCache();
+  }
+
+  /**
+   * Tests internal implementation cache reset.
+   *
+   * @covers ::resetImplementations
+   */
+  public function testResetImplementationsCacheContents(): void {
+    $cache_backend = $this->container->get(CacheBackendInterface::class);
+    $module_handler = $this->container->get(ModuleHandler::class);
+
+    $this->assertCacheValues([], 'Empty Cache at the start.');
+
+    // Add other cache items that may or may not be removed.
+    $cache_backend->set('canary', 'alive');
+
+    // Add some bogus values to the cached implementations.
+    $cached_module_implements_data = [
+      'other_hook' => CompactImplementationList::build('other_hook')
+        ->addProcedural('other_module', FALSE)
+        ->build(),
+    ];
+    $cache_backend->set('module_implements_cacheable', $cached_module_implements_data, tags: ['module_list', 'hooks']);
+
+    $expected_cache_data = [
+      'canary' => 'alive',
+      'module_implements_cacheable' => $cached_module_implements_data,
+    ];
+    $this->assertCacheValues($expected_cache_data, 'Cache with synthetic values');
+
+    // Prime local caches.
+    $module_handler->invokeAllWith('hook', static function (callable $hook, string $module) {});
+
+    $expected_cache_data['hook_info'] = ['hook' => ['group' => 'hook']];
+    $expected_cache_data['hook_implementation_source'] = [];
+    $this->assertCacheValues($expected_cache_data, 'Cache after ->invokeAllWith(), I');
+
+    $module_handler->getHookInfo();
+
+    $this->assertCacheValues($expected_cache_data, 'Cache after ->getHookInfo()');
+
+    // Reset cached implementations.
+    $module_handler->resetImplementations();
+
+    unset($expected_cache_data['hook_info']);
+    $expected_cache_data['module_implements_cacheable'] = [];
+    unset($expected_cache_data['hook_implementation_source']);
+    $this->assertCacheValues($expected_cache_data, 'Cache after ->resetImplementations()');
+
+    $module_handler->invokeAllWith('hook', static function (callable $hook, string $module) {});
+
+    $expected_cache_data['hook_implementation_source'] = [];
+    $expected_cache_data['hook_info'] = ['hook' => ['group' => 'hook']];
+    $this->assertCacheValues($expected_cache_data, 'Cache after ->invokeAllWith(), II.');
+
+    $hook_map = $this->container->get(HookMap::class);
+    $hook_map->writeCache();
+
+    $expected_cache_data['module_implements_cacheable'] = [
+      'module_implements_alter' => CompactImplementationList::createEmpty(),
+      'hook' => CompactImplementationList::build('hook')
+        ->addProcedural('module_handler_test', FALSE)
+        ->build(),
+    ];
+    $this->assertCacheValues($expected_cache_data, 'Cache after ->writeCache()');
   }
 
   /**
@@ -1386,6 +1452,27 @@ class ModuleHandlerTest extends UnitTestCase {
     );
     // Make sure that array keys are as expected.
     $this->assertSame($expected, $actual);
+  }
+
+  /**
+   * Asserts that cached values in memory cache are as expected.
+   *
+   * @param array $expected
+   *   Expected values for all cache ids.
+   * @param string $message
+   *   Message.
+   */
+  protected function assertCacheValues(array $expected, string $message = ''): void {
+    $cache_backend = $this->container->get(TestMemoryBackend::class);
+    $actual = $cache_backend->getAllValues();
+    $exporter = new ObjectIdInsensitiveExporter();
+    ksort($expected);
+    ksort($actual);
+    self::assertSame(
+      $exporter->export($expected),
+      $exporter->export($actual),
+      $message,
+    );
   }
 
 }
