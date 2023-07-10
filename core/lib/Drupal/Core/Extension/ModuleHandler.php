@@ -2,11 +2,14 @@
 
 namespace Drupal\Core\Extension;
 
+use Drupal\Component\Event\ResetEvent;
 use Drupal\Component\Graph\Graph;
 use Drupal\Core\Cache\CacheBackendInterface;
+use Drupal\Core\Cache\CacheTagsInvalidatorInterface;
 use Drupal\Core\Extension\Exception\UnknownExtensionException;
-use Drupal\Core\Extension\Hook\HookMap;
+use Drupal\Core\Extension\Hook\HookMapInterface;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 /**
  * Class that manages modules in a Drupal installation.
@@ -54,8 +57,12 @@ class ModuleHandler implements ModuleHandlerInterface {
    *   %container.modules% parameter being set up by DrupalKernel.
    * @param \Drupal\Core\Cache\CacheBackendInterface $cacheBackend
    *   Cache backend for storing module hook implementation information.
-   * @param \Drupal\Core\Extension\Hook\HookMap $hookMap
+   * @param \Drupal\Core\Extension\Hook\HookMapInterface $hookMap
    *   Hook map.
+   * @param \Drupal\Core\Cache\CacheTagsInvalidatorInterface $cacheTagsInvalidator
+   *   Cache tags invalidator.
+   * @param \Symfony\Contracts\EventDispatcher\EventDispatcherInterface $eventDispatcher
+   *   Event dispatcher.
    *
    * @see \Drupal\Core\DrupalKernel
    * @see \Drupal\Core\CoreServiceProvider
@@ -67,8 +74,9 @@ class ModuleHandler implements ModuleHandlerInterface {
     array $module_list,
     #[Autowire('@cache.bootstrap')]
     protected readonly CacheBackendInterface $cacheBackend,
-    #[Autowire('@hook_map')]
-    protected readonly HookMap $hookMap,
+    protected readonly HookMapInterface $hookMap,
+    protected readonly CacheTagsInvalidatorInterface $cacheTagsInvalidator,
+    protected readonly EventDispatcherInterface $eventDispatcher,
   ) {
     $this->moduleList = [];
     foreach ($module_list as $name => $module) {
@@ -146,9 +154,10 @@ class ModuleHandler implements ModuleHandlerInterface {
       array_values($module_list),
     ));
     $this->moduleList = $module_list;
-    // Reset the implementations, so a new call triggers a reloading of the
-    // available hooks.
-    $this->resetImplementations();
+    $this->eventDispatcher->dispatch(
+      new ResetEvent(),
+      ExtensionEvents::MODULE_LIST_WAS_UPDATED,
+    );
   }
 
   /**
@@ -179,7 +188,10 @@ class ModuleHandler implements ModuleHandlerInterface {
     $pathname = "$path/$name.info.yml";
     $filename = file_exists($this->root . "/$path/$name.$type") ? "$name.$type" : NULL;
     $this->moduleList[$name] = new Extension($this->root, $type, $pathname, $filename);
-    $this->resetImplementations();
+    $this->eventDispatcher->dispatch(
+      new ResetEvent(),
+      ExtensionEvents::MODULE_LIST_WAS_UPDATED,
+    );
   }
 
   /**
@@ -265,13 +277,20 @@ class ModuleHandler implements ModuleHandlerInterface {
     // to write collected implementations to the cache.
     // Now this same functionality is done in HookMap instead.
     // The method is still here, because it is part of the interface.
+    $this->eventDispatcher->dispatch(
+      new ResetEvent(),
+      ModuleHandlerInterface::class . '::writeCache',
+    );
   }
 
   /**
    * {@inheritdoc}
    */
   public function resetImplementations() {
-    $this->hookMap->reset();
+    $this->eventDispatcher->dispatch(
+      new ResetEvent(),
+      ExtensionEvents::HOOKS_REBUILD_REQUESTED,
+    );
   }
 
   /**

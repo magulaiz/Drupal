@@ -3,9 +3,11 @@
 namespace Drupal\Tests\Core\Extension;
 
 use Composer\Autoload\ClassLoader;
+use Drupal\Component\Event\ResetEvent;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Extension\Exception\UnknownExtensionException;
 use Drupal\Core\Extension\Extension;
+use Drupal\Core\Extension\ExtensionEvents;
 use Drupal\Core\Extension\Hook\CompactList\CompactImplementationList;
 use Drupal\Core\Extension\Hook\HookMap;
 use Drupal\Core\Extension\Hook\HookMapInterface;
@@ -25,6 +27,8 @@ use Drupal\TestTools\RuntimeAutowireContainer;
 use Drupal\TestTools\TestMemoryBackend;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\EventDispatcher\EventDispatcher;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
  * @coversDefaultClass \Drupal\Core\Extension\ModuleHandler
@@ -90,7 +94,6 @@ class ModuleHandlerTest extends UnitTestCase {
     $container = new RuntimeAutowireContainer();
     $container->addService($this);
     $container->get(TestCase::class);
-
     $container->setParameter('string $root', $this->root);
     $container->setParameterCallback('array $module_list', function (): array {
       $list = [];
@@ -121,12 +124,43 @@ class ModuleHandlerTest extends UnitTestCase {
       $list = array_replace($list, $this->serviceClassesByModule);
       return $list;
     });
+    $container->addFactory(function (RuntimeAutowireContainer $container): EventDispatcher {
+      $dispatcher = new EventDispatcher();
+      foreach ($container->getNonAliasIds(EventSubscriberInterface::class) as $class) {
+        foreach ($class::getSubscribedEvents() as $eventName => $params) {
+          if (\is_string($params)) {
+            $dispatcher->addListener(
+              $eventName,
+              fn(...$args) => $container->get($class)->$params(...$args),
+            );
+          }
+          elseif (\is_string($params[0])) {
+            $dispatcher->addListener(
+              $eventName,
+              fn(...$args) => $container->get($class)->{$params[0]}(...$args),
+              $params[1] ?? 0,
+            );
+          }
+          else {
+            foreach ($params as $listener) {
+              $dispatcher->addListener(
+                $eventName,
+                fn(...$args) => $container->get($class)->{$listener[0]}(...$args),
+                $params[1] ?? 0,
+              );
+            }
+          }
+        }
+      }
+      return $dispatcher;
+    });
+    // Add a class that covers both CacheBackendInterface and
+    // CacheTagsInvalidatorInterface.
     $container->addClass(TestMemoryBackend::class);
     $container->addClass(HookMap::class);
     $container->addClass(ServiceMethodAttributeHookDiscovery::class);
     $container->addDecoratorClass(CachedImplementationSource::class, [2 => 'hook_implementation_source']);
     $container->addClass(ModuleHandler::class);
-    $container->addClass(EventDispatcher::class);
 
     $container->addService($this->queue);
 
@@ -294,22 +328,25 @@ class ModuleHandlerTest extends UnitTestCase {
     $no_modules_container = $this->createContainer();
     // This second container has an empty module list.
     $no_modules_container->setParameter('array $module_list', []);
-    $mock_module_handler = $no_modules_container->getMock(ModuleHandler::class, ['resetImplementations']);
+    /** @var \Symfony\Component\EventDispatcher\EventDispatcherInterface&\PHPUnit\Framework\MockObject\MockObject $mock_event_dispatcher */
+    $mock_event_dispatcher = $no_modules_container->getMock(EventDispatcherInterface::class);
+    $empty_module_handler = $no_modules_container->get(ModuleHandler::class);
 
-    $this->assertCount(0, $mock_module_handler->getModuleList());
+    $this->assertCount(0, $empty_module_handler->getModuleList());
     $this->assertCount(1, $fixture_module_handler->getModuleList());
 
     // Make sure we're starting empty.
-    $this->assertEquals([], $mock_module_handler->getModuleList());
+    $this->assertEquals([], $empty_module_handler->getModuleList());
 
     // Ensure that ->getModuleList() triggers ->resetImplementations().
-    $mock_module_handler->expects($this->once())->method('resetImplementations');
+    $mock_event_dispatcher->expects($this->once())->method('dispatch')
+      ->with(new ResetEvent(), ExtensionEvents::MODULE_LIST_WAS_UPDATED);
 
     // Replace the list with a prebuilt list.
-    $mock_module_handler->setModuleList($fixture_module_handler->getModuleList());
+    $empty_module_handler->setModuleList($fixture_module_handler->getModuleList());
 
     // Ensure those changes are stored.
-    $this->assertEquals($fixture_module_handler->getModuleList(), $mock_module_handler->getModuleList());
+    $this->assertEquals($fixture_module_handler->getModuleList(), $empty_module_handler->getModuleList());
   }
 
   /**
@@ -319,10 +356,12 @@ class ModuleHandlerTest extends UnitTestCase {
    * @covers ::add
    */
   public function testAddModule() {
-    $module_handler = $this->container->getMock(ModuleHandler::class, ['resetImplementations']);
+    $mock_event_dispatcher = $this->container->getMock(EventDispatcherInterface::class);
+    $module_handler = $this->container->get(ModuleHandler::class);
 
     // Ensure we reset implementations when settings a new modules list.
-    $module_handler->expects($this->once())->method('resetImplementations');
+    $mock_event_dispatcher->expects($this->once())->method('dispatch')
+      ->with(new ResetEvent(), ExtensionEvents::MODULE_LIST_WAS_UPDATED);
 
     $module_handler->addModule('module_handler_test', self::TEST_MODULE_PATH);
     $this->assertTrue($module_handler->moduleExists('module_handler_test'));
@@ -335,10 +374,12 @@ class ModuleHandlerTest extends UnitTestCase {
    * @covers ::add
    */
   public function testAddProfile() {
-    $module_handler = $this->container->getMock(ModuleHandler::class, ['resetImplementations']);
+    $mock_event_dispatcher = $this->container->getMock(EventDispatcherInterface::class);
+    $module_handler = $this->container->get(ModuleHandler::class);
 
     // Ensure we reset implementations when settings a new modules list.
-    $module_handler->expects($this->once())->method('resetImplementations');
+    $mock_event_dispatcher->expects($this->once())->method('dispatch')
+      ->with(new ResetEvent(), ExtensionEvents::MODULE_LIST_WAS_UPDATED);
 
     // @todo this should probably fail since its a module not a profile.
     $module_handler->addProfile('module_handler_test', self::TEST_MODULE_PATH);
@@ -1286,9 +1327,7 @@ class ModuleHandlerTest extends UnitTestCase {
       ->observeMethods(['delete', 'set', 'get']);
 
     // Prepare for ->resetImplementations().
-    // The 'module_implements_cacheable' cache is set to [].
-    $cache_wrapper->queueVoid('set', ['module_implements_cacheable', []]);
-    // The 'hook_info' cache is deleted.
+    $cache_wrapper->queueVoid('delete', ['module_implements_cacheable']);
     $cache_wrapper->queueVoid('delete', ['hook_info']);
     $cache_wrapper->queueVoid('delete', ['hook_implementation_source']);
 
@@ -1306,7 +1345,10 @@ class ModuleHandlerTest extends UnitTestCase {
       ['hook' => ['group' => 'hook']],
     ]);
     $cache_wrapper->queueReturn('get', ['hook_implementation_source'], NULL);
-    $cache_wrapper->queueVoid('set', ['hook_implementation_source', []]);
+    $cache_wrapper->queueVoid('set', [
+      'hook_implementation_source',
+      [],
+    ]);
 
     $module_handler->invokeAllWith('hook', static function (callable $hook, string $module) {});
 
@@ -1348,7 +1390,7 @@ class ModuleHandlerTest extends UnitTestCase {
         ->addProcedural('other_module', FALSE)
         ->build(),
     ];
-    $cache_backend->set('module_implements_cacheable', $cached_module_implements_data, tags: ['module_list', 'hooks']);
+    $cache_backend->set('module_implements_cacheable', $cached_module_implements_data);
 
     $expected_cache_data = [
       'canary' => 'alive',
@@ -1371,7 +1413,7 @@ class ModuleHandlerTest extends UnitTestCase {
     $module_handler->resetImplementations();
 
     unset($expected_cache_data['hook_info']);
-    $expected_cache_data['module_implements_cacheable'] = [];
+    unset($expected_cache_data['module_implements_cacheable']);
     unset($expected_cache_data['hook_implementation_source']);
     $this->assertCacheValues($expected_cache_data, 'Cache after ->resetImplementations()');
 

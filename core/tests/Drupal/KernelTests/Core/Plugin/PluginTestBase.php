@@ -49,17 +49,20 @@ abstract class PluginTestBase extends KernelTestBase {
     $this->testPluginManager = new TestPluginManager();
     $this->mockBlockManager = new MockBlockManager();
     $cache_backend = new MemoryBackend();
+    $event_dispatcher = new EventDispatcher();
     $hook_map = new HookMap(
       $cache_backend,
       $this->container,
       new EmptyImplementationSource(),
-      new EventDispatcher(),
+      $event_dispatcher,
     );
     $module_handler = new ModuleHandler(
       $this->root,
       [],
       $cache_backend,
       $hook_map,
+      $cache_backend,
+      $event_dispatcher,
     );
     $this->defaultsTestPluginManager = new DefaultsTestPluginManager($module_handler);
 

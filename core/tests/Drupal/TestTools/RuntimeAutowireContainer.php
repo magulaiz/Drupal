@@ -17,6 +17,11 @@ use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
 class RuntimeAutowireContainer implements ContainerInterface {
 
   /**
+   * @var array<class-string, array<class-string, true>>
+   */
+  private array $aliasMap = [];
+
+  /**
    * Service factories.
    *
    * @var array<class-string, \Closure(self): object>
@@ -404,12 +409,14 @@ class RuntimeAutowireContainer implements ContainerInterface {
         $interfaceName,
         static fn (self $container) => $container->get($class),
       );
+      $this->aliasMap[$interfaceName][$class] = TRUE;
     }
     while ($rc = $rc->getParentClass()) {
       $this->doAddFactory(
         $rc->name,
         static fn (self $container) => $container->get($class),
       );
+      $this->aliasMap[$rc->name][$class] = TRUE;
     }
   }
 
@@ -525,6 +532,27 @@ class RuntimeAutowireContainer implements ContainerInterface {
    */
   public function reset(): void {
     $this->services = [];
+  }
+
+  /**
+   * Gets explicitly registered ids, optionally filtered by a type.
+   *
+   * @phpstan-template T
+   *
+   * @param class-string|null $interface
+   *   Type to filter by.
+   *
+   * @return list<class-string|string>
+   *   List of matching ids.
+   *
+   * @phpstan-param class-string<T>|null $interface
+   * @phpstan-return list<class-string<T>|string>
+   */
+  public function getNonAliasIds(?string $interface): array {
+    if ($interface === NULL) {
+      return array_keys(array_merge(...$this->aliasMap));
+    }
+    return array_keys($this->aliasMap[$interface] ?? []);
   }
 
 }

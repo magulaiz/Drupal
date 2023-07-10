@@ -596,6 +596,8 @@ services:
     decorates: hook_implementation_source
     class: Drupal\Core\Extension\Hook\Source\CachedImplementationSource
     autowire: true
+    tags:
+      - { name: event_subscriber }
   Drupal\Core\Extension\Hook\Source\ImplementationSourceInterface: '@hook_implementation_source'
   hook_map:
     class: Drupal\Core\Extension\Hook\HookMap

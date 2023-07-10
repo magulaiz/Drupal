@@ -4,22 +4,23 @@ namespace Drupal\Core\Extension\Hook;
 
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Cache\CacheBackendInterface;
+use Drupal\Core\Extension\ExtensionEvents;
 use Drupal\Core\Extension\Hook\Builder\ImplementationListBuilder;
 use Drupal\Core\Extension\Hook\CallbackList\HookImplementationCallbackListInterface;
 use Drupal\Core\Extension\Hook\CompactList\CompactImplementationListInterface;
 use Drupal\Core\Extension\Hook\SingleModuleCallbackList\SingleModuleCallbackListInterface;
-use Drupal\Core\Extension\Hook\Source\CachedImplementationSource;
 use Drupal\Core\Extension\Hook\Source\ImplementationSourceInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\KernelEvents;
 
 /**
  * Map of hook implementations.
  */
-class HookMap implements HookMapInterface {
+class HookMap implements HookMapInterface, EventSubscriberInterface {
 
   const CACHE_ID = 'module_implements_cacheable';
 
@@ -125,6 +126,19 @@ class HookMap implements HookMapInterface {
       $this->cacheNeedsWriting = TRUE;
     };
     $eventDispatcher->addListener(KernelEvents::TERMINATE, $this->writeCache(...));
+    // Provide legacy support for ModuleHandler->writeCache().
+    $eventDispatcher->addListener(ModuleHandlerInterface::class . '::writeCache', $this->writeCache(...));
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function getSubscribedEvents(): array {
+    $events = [
+      ExtensionEvents::MODULE_LIST_WAS_UPDATED => 'reset',
+      ExtensionEvents::HOOKS_REBUILD_REQUESTED => 'reset',
+    ];
+    return $events;
   }
 
   /**
@@ -152,11 +166,10 @@ class HookMap implements HookMapInterface {
     $this->callbackLists = [];
     $this->singleModuleCallbackLists = [];
     $this->serviceMethodImplementations = NULL;
-    $this->cacheBackend->set(self::CACHE_ID, []);
-    $this->cacheBackend->delete('hook_info');
-    $this->cacheBackend->delete(CachedImplementationSource::CACHE_ID);
     $this->cacheNeedsWriting = FALSE;
     $this->moduleNumbers = array_flip(array_keys($this->moduleHandler->getModuleList()));
+    $this->cacheBackend->delete(self::CACHE_ID);
+    $this->cacheBackend->delete('hook_info');
   }
 
   /**
