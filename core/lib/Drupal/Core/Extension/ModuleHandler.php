@@ -6,6 +6,7 @@ use Drupal\Component\Graph\Graph;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Extension\Exception\UnknownExtensionException;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 
 /**
  * Class that manages modules in a Drupal installation.
@@ -94,8 +95,11 @@ class ModuleHandler implements ModuleHandlerInterface {
    * @see \Drupal\Core\CoreServiceProvider
    */
   public function __construct(
+    #[Autowire('%app.root%')]
     protected readonly string $root,
+    #[Autowire('%container.modules%')]
     array $module_list,
+    #[Autowire('@cache.bootstrap')]
     protected readonly CacheBackendInterface $cacheBackend,
   ) {
     $this->moduleList = [];
