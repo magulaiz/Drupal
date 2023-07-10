@@ -237,6 +237,9 @@ class ModuleHandlerTest extends UnitTestCase {
     $no_modules_container->setParameter('array $module_list', []);
     $mock_module_handler = $no_modules_container->getMock(ModuleHandler::class, ['resetImplementations']);
 
+    $this->assertCount(0, $mock_module_handler->getModuleList());
+    $this->assertCount(1, $fixture_module_handler->getModuleList());
+
     // Make sure we're starting empty.
     $this->assertEquals([], $mock_module_handler->getModuleList());
 
