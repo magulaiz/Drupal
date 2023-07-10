@@ -726,6 +726,11 @@ parameters:
 			path: lib/Drupal/Core/Utility/PhpRequirements.php
 
 		-
+			message: "#^Variable \\$alias_tokens_mapping might not be defined\\.$#"
+			count: 1
+			path: lib/Drupal/Core/Utility/Token.php
+
+		-
 			message: "#^Method Drupal\\\\action\\\\Form\\\\ActionFormBase\\:\\:save\\(\\) should return int but return statement is missing\\.$#"
 			count: 1
 			path: modules/action/src/Form/ActionFormBase.php
