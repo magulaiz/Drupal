@@ -12,6 +12,7 @@ field.storage.*.*:
   type: config_entity
   label: 'Field'
   constraints:
+    UniqueFieldCombination: [entity_type, field_name]
     IsUnchanged:
       selector: locked
     IsFalse:
@@ -32,7 +33,6 @@ field.storage.*.*:
       label: 'Field name'
       constraints:
         NotNull: []
-        UniqueField: []
     entity_type:
       type: string
       label: 'Entity type'

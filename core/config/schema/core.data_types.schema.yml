@@ -414,6 +414,7 @@ base_entity_reference_field_settings:
 field_config_base:
   type: config_entity
   constraints:
+    UniqueFieldCombination: [entity_type, bundle, field_name]
     FieldStorageExistsOnFieldableContentEntityType:
       entityType: entity_type
       fieldName: field_name
@@ -434,7 +435,6 @@ field_config_base:
       label: 'Field name'
       constraints:
         NotNull: []
-        UniqueField: []
     entity_type:
       type: string
       label: 'Entity type'
