@@ -58,7 +58,7 @@ class EntityDisplayMapper extends ConfigEntityMapper {
         '@mode' => $mode,
       ]);
     }
-    elseif ($this->entityType == 'entity_form_display') {
+    if ($this->entityType == 'entity_form_display') {
       return $this->t('@bundle @mode form display', [
         '@bundle' => $bundle,
         '@mode' => $mode,
