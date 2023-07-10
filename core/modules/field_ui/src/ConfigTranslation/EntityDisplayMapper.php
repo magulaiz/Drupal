@@ -79,7 +79,7 @@ class EntityDisplayMapper extends ConfigEntityMapper {
         '@label' => $base_entity_info->getLabel(),
       ]);
     }
-    elseif ($this->entityType == 'entity_form_display') {
+    if ($this->entityType == 'entity_form_display') {
       return $this->t('@label form display', [
         '@label' => $base_entity_info->getLabel(),
       ]);
