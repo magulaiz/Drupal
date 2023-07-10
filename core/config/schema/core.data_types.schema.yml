@@ -441,7 +441,7 @@ field_config_base:
       constraints:
         NotNull: []
         PluginExists:
-          manager: dentity_type.manager
+          manager: entity_type.manager
           interface: \Drupal\Core\Entity\FieldableEntityInterface
     bundle:
       type: string
