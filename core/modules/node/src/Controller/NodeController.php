@@ -139,7 +139,7 @@ class NodeController extends ControllerBase implements ContainerInjectionInterfa
         '#attributes' => [
           'class' => ['button revert'],
         ],
-        '#weight' => 9999999,
+        '#weight' => 100,
       ];
     }
     else {
@@ -150,7 +150,7 @@ class NodeController extends ControllerBase implements ContainerInjectionInterfa
         '#attributes' => [
           'class' => ['button revert'],
         ],
-        '#weight' => 9999999,
+        '#weight' => 100,
       ];
     }
     $page['revisions'] = [
@@ -160,7 +160,7 @@ class NodeController extends ControllerBase implements ContainerInjectionInterfa
       '#attributes' => [
         'class' => ['button revision'],
       ],
-      '#weight' => 10000000,
+      '#weight' => 101,
     ];
     $page['delete'] = [
       '#type' => 'link',
@@ -169,7 +169,7 @@ class NodeController extends ControllerBase implements ContainerInjectionInterfa
       '#attributes' => [
         'class' => ['button delete'],
       ],
-      '#weight' => 10000001,
+      '#weight' => 102,
     ];
     unset($page['nodes'][$node_revision->id()]['#cache']);
     return $page;

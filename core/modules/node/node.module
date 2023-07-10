@@ -594,6 +594,7 @@ function template_preprocess_node(&$variables) {
       }
     }
   }
+
 }
 
 /**
@@ -620,7 +621,6 @@ function node_cron() {
       \Drupal::state()->set('node.min_max_update_time', $array);
     }
   }
-
 }
 
 /**
