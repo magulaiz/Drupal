@@ -61,6 +61,11 @@ class PerformanceTestBase extends WebDriverTestBase {
   protected string $parentClass;
 
   /**
+   * Whether to send to Open Telemetry or not.
+   */
+  protected bool $sendTelemetry = FALSE;
+
+  /**
    * {@inheritdoc}
    */
   protected function setUp(): void {
@@ -123,7 +128,7 @@ class PerformanceTestBase extends WebDriverTestBase {
     // Sleep for 5 seconds, this allows the page to finish rendering so that
     // events like firstContentfulPaint and largestContentfulPaint fire before
     // we get the logs.
-    if (isset($_ENV['OTEL_COLLECTOR'])) {
+    if ($this->sendTelemetry && isset($_ENV['OTEL_COLLECTOR'])) {
       sleep(5);
     }
     $session = $this->getSession();
@@ -135,7 +140,9 @@ class PerformanceTestBase extends WebDriverTestBase {
       $messages[] = $decoded['message'];
     }
     $this->collectNetworkData($path, $messages);
-    $this->openTelemetryTracing($path, $messages);
+    if ($this->sendTelemetry) {
+      $this->openTelemetryTracing($path, $messages);
+    }
   }
 
   /**

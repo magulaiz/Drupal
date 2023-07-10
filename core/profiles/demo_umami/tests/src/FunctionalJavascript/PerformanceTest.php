@@ -20,6 +20,10 @@ class PerformanceTest extends PerformanceTestBase {
    * Just load the front page.
    */
   public function testPagesAnonymous(): void {
+    // Warm caches before sending data to Open Telemetry.
+    $this->sendTelemetry = FALSE;
+    $this->drupalGet('<front>');
+    $this->sendTelemetry = TRUE;
     $this->drupalGet('<front>');
     $this->assertSession()->pageTextContains('Umami');
     $this->assertSame(2, $this->stylesheetCount);
