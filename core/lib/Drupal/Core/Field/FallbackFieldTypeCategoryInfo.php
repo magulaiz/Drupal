@@ -1,0 +1,23 @@
+<?php
+
+namespace Drupal\Core\Field;
+
+/**
+ * Fallback plugin class for FieldTypeCategoryInfoManager.
+ */
+class FallbackFieldTypeCategoryInfo extends FieldTypeCategoryInfo {
+
+  /**
+   * {@inheritdoc}
+   */
+  public function __construct(array $configuration, $plugin_id) {
+
+    $plugin_definition = [
+      'label' => $configuration['label'] ?? '',
+      'description' => $configuration['description'] ?? '',
+      'weight' => $configuration['weight'] ?? 1,
+    ];
+    parent::__construct($configuration, $plugin_id, $plugin_definition);
+  }
+
+}

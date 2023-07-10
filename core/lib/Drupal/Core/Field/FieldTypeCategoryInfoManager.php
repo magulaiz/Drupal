@@ -54,17 +54,14 @@ class FieldTypeCategoryInfoManager extends DefaultPluginManager {
    *
    * @param string $root
    *   The app root.
-   * @param \Traversable $namespaces
-   *   An object that implements \Traversable which contains the root paths
-   *   keyed by the corresponding namespace to look for plugin implementations.
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
    *   The module handler.
    * @param \Drupal\Core\Cache\CacheBackendInterface $cache_backend
    *   The cache backend.
    */
-  public function __construct($root, \Traversable $namespaces, ModuleHandlerInterface $module_handler, CacheBackendInterface $cache_backend) {
-    parent::__construct('', $namespaces, $module_handler, FieldTypeCategoryInfoInterface::class, FieldTypeCategoryInfo::class);
+  public function __construct($root, ModuleHandlerInterface $module_handler, CacheBackendInterface $cache_backend) {
     $this->root = $root;
+    $this->moduleHandler = $module_handler;
     $this->alterInfo('category_info');
     $this->setCacheBackend($cache_backend, 'field_type_category_info_plugins', ['field_type_category_info']);
   }
@@ -82,6 +79,18 @@ class FieldTypeCategoryInfoManager extends DefaultPluginManager {
         ->addTranslatableProperty('description');
     }
     return $this->discovery;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function createInstance($plugin_id, array $configuration = []) {
+    try {
+      return parent::createInstance($plugin_id, $configuration);
+    }
+    catch (\Exception) {
+      return new FallbackFieldTypeCategoryInfo($configuration, $plugin_id);
+    }
   }
 
 }

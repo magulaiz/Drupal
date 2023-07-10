@@ -764,7 +764,7 @@ services:
     arguments: ['@menu.tree_storage', '@menu_link.static.overrides', '@module_handler']
   plugin.manager.field_type_category_info:
     class: \Drupal\Core\Field\FieldTypeCategoryInfoManager
-    arguments: ['%app.root%', '@container.namespaces', '@module_handler', '@cache.discovery' ]
+    arguments: ['%app.root%', '@module_handler', '@cache.discovery' ]
   Drupal\Core\Menu\MenuLinkManagerInterface: '@plugin.manager.menu.link'
   menu.link_tree:
     class: Drupal\Core\Menu\MenuLinkTree

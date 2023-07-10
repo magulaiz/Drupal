@@ -189,7 +189,7 @@ class FieldStorageAddForm extends FormBase {
     $field_type_options_radios = [];
     foreach ($field_type_options as $field_option => $val) {
       $display_as_group = ($val['category'] !== FieldTypePluginManager::DEFAULT_CATEGORY);
-      $option_info = $display_as_group ? $this->fieldTypeCategoryInfoManager->getDefinition($val['category']) : $val;
+      $option_info = $this->fieldTypeCategoryInfoManager->createInstance($val['category'], $val);
       $cleaned_class_name = Html::getClass($val['unique_identifier']);
       $field_type_options_radios[$field_option] = [
         '#type' => 'container',
@@ -197,7 +197,7 @@ class FieldStorageAddForm extends FormBase {
           'class' => ['field-option', 'js-click-to-select'],
           'checked' => $this->getRequest()->request->get('new_storage_type') !== NULL && $this->getRequest()->request->get('new_storage_type') == ($display_as_group ? $val['category'] : $val['unique_identifier']),
         ],
-        '#weight' => $option_info['weight'] ?? 1,
+        '#weight' => $option_info->getWeight() ?? 1,
         'thumb' => [
           '#type' => 'container',
           '#attributes' => [
@@ -241,7 +241,7 @@ class FieldStorageAddForm extends FormBase {
             '#attributes' => [
               'class' => ['field-option__description'],
             ],
-            '#markup' => $option_info['description'] ?? NULL,
+            '#markup' => $option_info->getDescription() ?? NULL,
           ],
           '#variant' => 'field-option',
         ],

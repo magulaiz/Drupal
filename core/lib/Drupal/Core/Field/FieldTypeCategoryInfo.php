@@ -8,7 +8,7 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
 /**
  * Default object used for field_type_category_info plugins.
  *
- * @see \Drupal\field_ui\Plugin\FieldTypeCategoryInfoManager
+ * @see \Drupal\Core\Field\FieldTypeCategoryInfoManager
  */
 class FieldTypeCategoryInfo extends PluginBase implements FieldTypeCategoryInfoInterface {
 
