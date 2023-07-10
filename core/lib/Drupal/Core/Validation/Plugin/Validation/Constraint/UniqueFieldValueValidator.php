@@ -51,8 +51,8 @@ class UniqueFieldValueValidator extends ConstraintValidator {
       ]);
     }
     // If not new, the only match must be *this* entity.
-    else if ($entity_id != reset($matching_entity_ids)) {
-      // @todo decide how to handle this without breaking BC — I think logging? For now, just an exception to allow making it relaible.
+    elseif ($entity_id != reset($matching_entity_ids)) {
+      // @todo decide how to handle this without breaking BC — I think logging? For now, just an exception to allow making it reliable.
       throw new \Exception(sprintf(
         'The existing %s entity (ID: %s) is being validated and it violates a uniqueness constraint: %s have the same value for the "%s" field: "%s".',
         $entity_type_id,
