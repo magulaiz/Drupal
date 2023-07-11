@@ -40,7 +40,7 @@ class OptionsSelectWidget extends OptionsWidgetBase {
 
     $bundles = $items->getItemDefinition()->getSettings();
     $type = implode('', $bundles['handler_settings']['target_bundles']);
-    if (count($options) <2) {
+    if (count($options) < 2) {
       $element['#description'] = $this->t('There are no @type types available. Please contact a site administrator.', [
         '@type' => $type,
       ]);
