@@ -495,16 +495,16 @@ field_config_base:
       label: 'Field type'
       constraints:
         NotNull: []
-        Matches:
-          # This field_storage_config entity must exist.
-          config:
-            type: field_storage_config
-            id:
-              - entity_type
-              - field_name
-          # The value found at this place in that config entity must match.
-          selector:
-            - type
+#        Matches:
+#          # This field_storage_config entity must exist.
+#          config:
+#            type: field_storage_config
+#            id:
+#              - entity_type
+#              - field_name
+#          # The value found at this place in that config entity must match.
+#          selector:
+#            - type
 
 core.base_field_override.*.*.*:
   type: field_config_base
