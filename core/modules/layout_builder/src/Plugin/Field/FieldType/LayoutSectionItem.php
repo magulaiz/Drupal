@@ -52,6 +52,9 @@ class LayoutSectionItem extends FieldItemBase {
     return parent::__get($name);
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function setValue($values, $notify = TRUE) {
     // If the key was passed as a UUID, convert it to the property name.
     if (is_array($values)) {
