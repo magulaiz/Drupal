@@ -17,6 +17,9 @@ layout_builder.section:
   type: mapping
   label: 'Layout section'
   mapping:
+    uuid:
+      type: uuid
+      label: 'UUID'
     layout_id:
       type: string
       label: 'Layout ID'
@@ -28,6 +31,9 @@ layout_builder.section:
       label: 'Components'
       sequence:
         type: layout_builder.component
+    weight:
+      type: integer
+      label: 'Weight'
     third_party_settings:
       type: sequence
       label: 'Third party settings'
