@@ -212,6 +212,18 @@ class HtmlResponseAttachmentsProcessor implements AttachmentsResponseProcessorIn
 
     // Set the HTTP headers and status code on the response if any bubbled.
     if (!empty($attached['http_header'])) {
+      static $headers = [];
+
+      // Remove duplicate headers.
+      foreach ($attached['http_header'] as $header_key => $header_value) {
+        if (in_array($header_value[1], $headers)) {
+          unset($attached['http_header'][$header_key]);
+        }
+        else {
+          $headers[] = $header_value[1];
+        }
+      }
+
       $this->setHeaders($response, $attached['http_header']);
     }
 
