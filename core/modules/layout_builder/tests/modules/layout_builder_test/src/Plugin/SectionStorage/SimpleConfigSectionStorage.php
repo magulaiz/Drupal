@@ -113,7 +113,10 @@ class SimpleConfigSectionStorage extends PluginBase implements SectionStorageInt
    * {@inheritdoc}
    */
   protected function setSections(array $sections) {
-    $this->sections = array_values($sections);
+    foreach (array_values($sections) as $weight => $section) {
+      $section->setWeight($weight);
+    }
+    $this->sections = $sections;
     return $this;
   }
 

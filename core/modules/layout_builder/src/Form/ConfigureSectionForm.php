@@ -197,7 +197,7 @@ class ConfigureSectionForm extends FormBase {
     $section = $this->getCurrentSection();
     $section->setLayoutSettings($configuration);
     if (!$this->isUpdate) {
-      $this->sectionStorage->insertSection($this->delta, $section);
+      $this->sectionStorage->insertSection($this->delta, $section->setUuid(\Drupal::service('uuid')->generate()));
     }
 
     $this->layoutTempstoreRepository->set($this->sectionStorage);
