@@ -448,7 +448,8 @@ field_config_base:
       label: 'Bundle'
       constraints:
         NotNull: []
-        BundleExists: []
+        EntityBundleExists:
+          entityTypeId: '%parent.entity_type'
     label:
       type: label
       label: 'Label'

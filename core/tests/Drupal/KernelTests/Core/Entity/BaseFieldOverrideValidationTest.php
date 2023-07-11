@@ -31,4 +31,23 @@ class BaseFieldOverrideValidationTest extends ConfigEntityValidationTestBase {
     $this->entity->save();
   }
 
+  /**
+   * Tests that the bundle is validated.
+   */
+  public function testBundle(): void {
+    $fields = $this->container->get('entity_field.manager')
+      ->getBaseFieldDefinitions('user');
+
+    // Try to create an instance of this base field override on a bundle that
+    // does not exist.
+    $this->entity = BaseFieldOverride::createFromBaseFieldDefinition(reset($fields), 'non_existent');
+    $this->assertValidationErrors([
+      'bundle' => "The 'non_existent' bundle does not exist on the 'user' entity type.",
+    ]);
+
+    // Next, try to create it on a bundle that does exist.
+    $this->entity = BaseFieldOverride::createFromBaseFieldDefinition(reset($fields), 'user');
+    $this->assertValidationErrors([]);
+  }
+
 }
