@@ -5,6 +5,7 @@ namespace Drupal\Core\Messenger;
 use Drupal\Component\Render\MarkupInterface;
 use Drupal\Core\PageCache\ResponsePolicy\KillSwitch;
 use Drupal\Core\Render\Markup;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 
 /**
@@ -27,16 +28,26 @@ class Messenger implements MessengerInterface {
   protected $killSwitch;
 
   /**
+   * The request stack.
+   *
+   * @var \Symfony\Component\HttpFoundation\RequestStack
+   */
+  protected $requestStack;
+
+  /**
    * Messenger constructor.
    *
    * @param \Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface $flash_bag
    *   The flash bag.
    * @param \Drupal\Core\PageCache\ResponsePolicy\KillSwitch $killSwitch
    *   The kill switch.
+   * @param \Symfony\Component\HttpFoundation\RequestStack $requestStack
+   *   The request stack.
    */
-  public function __construct(FlashBagInterface $flash_bag, KillSwitch $killSwitch) {
+  public function __construct(FlashBagInterface $flash_bag, KillSwitch $killSwitch, RequestStack $requestStack) {
     $this->flashBag = $flash_bag;
     $this->killSwitch = $killSwitch;
+    $this->requestStack = $requestStack;
   }
 
   /**
@@ -50,6 +61,10 @@ class Messenger implements MessengerInterface {
    * {@inheritdoc}
    */
   public function addMessage($message, $type = self::TYPE_STATUS, $repeat = FALSE) {
+    // No-op if the current request format is not HTML.
+    if ($this->requestStack->getCurrentRequest()->getRequestFormat() !== 'html') {
+      return $this;
+    }
     if (!($message instanceof Markup) && $message instanceof MarkupInterface) {
       $message = Markup::create((string) $message);
     }
