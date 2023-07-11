@@ -30,7 +30,8 @@ third_party_settings:
     enabled: true
     allow_custom: true
     sections:
-      -
+      91fcba70-1df5-4dee-abaa-993222020314:
+        uuid: 91fcba70-1df5-4dee-abaa-993222020314
         layout_id: layout_onecol
         layout_settings:
           label: ''
@@ -82,8 +83,10 @@ third_party_settings:
                 third_party_settings: {  }
             weight: 4
             additional: {  }
+        weight: 0
         third_party_settings: {  }
-      -
+      9482a6a2-918b-4f66-8bae-a5de0339727d:
+        uuid: 9482a6a2-918b-4f66-8bae-a5de0339727d
         layout_id: layout_oneplusfourgrid_section
         layout_settings:
           label: ''
@@ -192,8 +195,10 @@ third_party_settings:
                 third_party_settings: {  }
             weight: 0
             additional: {  }
+        weight: 1
         third_party_settings: {  }
-      -
+      3516576f-9b0a-4569-8c3a-5726fb873434:
+        uuid: 3516576f-9b0a-4569-8c3a-5726fb873434
         layout_id: layout_twocol_section
         layout_settings:
           label: ''
@@ -230,8 +235,10 @@ third_party_settings:
                 third_party_settings: {  }
             weight: 0
             additional: {  }
+        weight: 2
         third_party_settings: {  }
-      -
+      0ef23c3b-5c2c-41bb-bd1f-6c4d92f109bf:
+        uuid: 0ef23c3b-5c2c-41bb-bd1f-6c4d92f109bf
         layout_id: layout_onecol
         layout_settings:
           label: ''
@@ -246,6 +253,7 @@ third_party_settings:
                 entity: layout_builder.entity
             weight: 0
             additional: {  }
+        weight: 3
         third_party_settings: {  }
       -
         layout_id: layout_onecol
