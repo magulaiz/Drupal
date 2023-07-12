@@ -216,8 +216,7 @@ class ContentEntityForm extends EntityForm implements ContentEntityFormInterface
     // The entity was validated.
     $entity->setValidationRequired(FALSE);
     $form_state->setTemporaryValue('entity_validated', TRUE);
-
-    return $entity;
+    $this->entity = $entity;
   }
 
   /**
