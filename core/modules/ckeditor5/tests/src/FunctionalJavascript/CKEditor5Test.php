@@ -107,10 +107,10 @@ class CKEditor5Test extends CKEditor5TestBase {
     $this->waitForEditor();
     $page->fillField('title[0][value]', 'My test content');
 
-    // Ensure that CKEditor 5 is focused.
-    $this->click('.ck-content');
+    // Ensure that the body value CKEditor 5 is focused.
+    $this->click('.form-item-body-0-value .ck-content');
 
-    $this->assertNotEmpty($image_upload_field = $page->find('css', '.ck-file-dialog-button input[type="file"]'));
+    $this->assertNotEmpty($image_upload_field = $page->find('css', '.form-item-body-0-value .ck-file-dialog-button input[type="file"]'));
     $image = $this->getTestFiles('image')[0];
     $image_upload_field->attachFile($this->container->get('file_system')->realpath($image->uri));
     $assert_session->waitForElementVisible('css', '.ck-widget.image');
@@ -150,10 +150,10 @@ class CKEditor5Test extends CKEditor5TestBase {
     $this->drupalGet('node/add');
     $this->assertNotEmpty($assert_session->waitForElement('css', '.ck-heading-dropdown button'));
 
-    $page->find('css', '.ck-heading-dropdown button')->click();
+    $page->find('css', '.form-item-body-0-value .ck-heading-dropdown button')->click();
 
     // Get all the headings available in dropdown.
-    $headings_dropdown = $page->findAll('css', '.ck-heading-dropdown li .ck-button__label');
+    $headings_dropdown = $page->findAll('css', '.form-item-body-0-value .ck-heading-dropdown li .ck-button__label');
 
     // Create array of available headings.
     $available_headings = [];
@@ -189,12 +189,12 @@ class CKEditor5Test extends CKEditor5TestBase {
     $page->pressButton('Save configuration');
 
     $this->drupalGet('node/add');
-    $this->assertNotEmpty($assert_session->waitForElement('css', '.ck-heading-dropdown button'));
+    $this->assertNotEmpty($assert_session->waitForElement('css', '.form-item-body-0-value .ck-heading-dropdown button'));
 
-    $page->find('css', '.ck-heading-dropdown button')->click();
+    $page->find('css', '.form-item-body-0-value .ck-heading-dropdown button')->click();
 
     // Get all the headings available in dropdown.
-    $headings_dropdown = $page->findAll('css', '.ck-heading-dropdown li .ck-button__label');
+    $headings_dropdown = $page->findAll('css', '.form-item-body-0-value .ck-heading-dropdown li .ck-button__label');
 
     // Create array of available headings.
     $available_headings = [];
@@ -277,10 +277,10 @@ JS;
     $this->assertNotEmpty($assert_session->waitForText('Choose language'));
 
     // Click on the dropdown button.
-    $page->find('css', '.ck-text-fragment-language-dropdown button')->click();
+    $page->find('css', '.form-item-body-0-value .ck-text-fragment-language-dropdown button')->click();
 
     // Get all the languages available in dropdown.
-    $current_languages = $page->findAll('css', '.ck-text-fragment-language-dropdown li .ck-button__label');
+    $current_languages = $page->findAll('css', '.form-item-body-0-value .ck-text-fragment-language-dropdown li .ck-button__label');
 
     // Remove "Remove language" element from current languages.
     array_shift($current_languages);
@@ -522,15 +522,15 @@ JS;
     $page->fillField('title[0][value]', 'My test content');
 
     // Ensure that CKEditor 5 is focused.
-    $this->click('.ck-content');
+    $this->click('.form-item-body-0-value .ck-content');
 
-    $this->assertNotEmpty($image_upload_field = $page->find('css', '.ck-file-dialog-button input[type="file"]'));
+    $this->assertNotEmpty($image_upload_field = $page->find('css', '.form-item-body-0-value .ck-file-dialog-button input[type="file"]'));
     $image = $this->getTestFiles('image')[0];
     $image_upload_field->attachFile($this->container->get('file_system')->realpath($image->uri));
     // Wait until preview for the image has rendered to ensure that the image
     // upload has completed and the image has been downcast.
     // @see https://www.drupal.org/project/drupal/issues/3250587
-    $this->assertNotEmpty($assert_session->waitForElement('css', '.ck-content img[data-entity-uuid]'));
+    $this->assertNotEmpty($assert_session->waitForElement('css', '.form-item-body-0-value .ck-content img[data-entity-uuid]'));
 
     // Add alt text to the image.
     $this->assertNotEmpty($assert_session->waitForElementVisible('css', '.image.ck-widget > img'));

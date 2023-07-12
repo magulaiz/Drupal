@@ -180,7 +180,7 @@ class EditorLoadingTest extends BrowserTestBase {
     $this->assertSession()->elementsCount('xpath', $body, 1);
     $this->assertSession()->elementsCount('css', 'select.js-filter-list', 1);
     $select = $this->assertSession()->elementExists('css', 'select.js-filter-list');
-    $this->assertSame('edit-body-0-value', $select->getAttribute('data-editor-for'));
+    $this->assertSame('edit-body-0-value,edit-body-0-summary', $select->getAttribute('data-editor-for'));
 
     // Load the editor image dialog form and make sure it does not fatal.
     $this->drupalGet('editor/dialog/image/full_html');
@@ -221,7 +221,7 @@ class EditorLoadingTest extends BrowserTestBase {
     // a "data-editor-for" attribute with the correct value.
     $hidden_input = $this->assertSession()->hiddenFieldExists('body[0][format]');
     $this->assertSame('plain_text', $hidden_input->getValue());
-    $this->assertSame('edit-body-0-value', $hidden_input->getAttribute('data-editor-for'));
+    $this->assertSame('edit-body-0-value,edit-body-0-summary', $hidden_input->getAttribute('data-editor-for'));
 
     // Create an "article" node that uses the full_html text format, then try
     // to let the untrusted user edit it.
