@@ -20,17 +20,12 @@ class PerformanceTest extends PerformanceTestBase {
    * Just load the front page.
    */
   public function testPagesAnonymous(): void {
-    // Warm caches before sending data to Open Telemetry.
-    $this->sendTelemetry = FALSE;
-    $this->drupalGet('<front>');
-    $this->sendTelemetry = TRUE;
     $this->drupalGet('<front>');
     $this->assertSession()->pageTextContains('Umami');
     $this->assertSame(2, $this->stylesheetCount);
     $this->assertSame(1, $this->scriptCount);
 
     $this->drupalGet('node/1');
-    $this->assertSession()->pageTextContains('Umami');
     $this->assertSame(2, $this->stylesheetCount);
     $this->assertSame(1, $this->scriptCount);
   }
@@ -45,6 +40,78 @@ class PerformanceTest extends PerformanceTestBase {
     $this->assertSession()->pageTextContains('Umami');
     $this->assertSame(2, $this->stylesheetCount);
     $this->assertSame(2, $this->scriptCount);
+  }
+
+  /**
+   * Log front page tracing data with a cold cache.
+   */
+  public function testFrontPageColdCache() {
+    $this->sendTelemetry = TRUE;
+    $this->drupalGet('<front>');
+    $this->assertSession()->pageTextContains('Umami');
+  }
+
+  /**
+   * Log front page tracing data with a warm cache.
+   */
+  public function testFrontPageWarmCache() {
+    $this->sendTelemetry = FALSE;
+    // Request the page twice so that asset aggregates are definitely cached in
+    // the browser cache.
+    $this->drupalGet('<front>');
+    $this->drupalGet('<front>');
+    $this->sendTelemetry = TRUE;
+    $this->drupalGet('<front>');
+  }
+
+  /**
+   * Log front page tracing data with a lukewarm cache.
+   *
+   * Lukewarm here means that 'global' site caches are warm but anything
+   * specific to the front page is cold.
+   */
+  public function testFrontPageLukeWarmCache() {
+    $this->sendTelemetry = FALSE;
+    $this->drupalGet('/user/login');
+    $this->sendTelemetry = TRUE;
+    $this->drupalGet('<front>');
+  }
+
+  /**
+   * Log node page tracing data with a cold cache.
+   */
+  public function testNodePageColdCache() {
+    $this->sendTelemetry = TRUE;
+    $this->drupalGet('/node/1');
+    $this->assertSession()->pageTextContains('quiche');
+  }
+
+  /**
+   * Log node page tracing data with a warm cache.
+   */
+  public function testNodePageWarmCache() {
+    $this->sendTelemetry = FALSE;
+    // Request the page twice so that asset aggregates are definitely cached in
+    // the browser cache.
+    $this->drupalGet('node/1');
+    $this->drupalGet('node/1');
+    $this->sendTelemetry = TRUE;
+    $this->drupalGet('node/1');
+    $this->assertSession()->pageTextContains('quiche');
+  }
+
+  /**
+   * Log node/1 tracing data with a lukewarm cache.
+   *
+   * Lukewarm here means that 'global' site caches are warm but anything
+   * specific to the front page is cold.
+   */
+  public function testNodePageLukeWarmCache() {
+    $this->sendTelemetry = FALSE;
+    $this->drupalGet('/user/login');
+    $this->sendTelemetry = TRUE;
+    $this->drupalGet('/node/1');
+    $this->assertSession()->pageTextContains('quiche');
   }
 
 }
