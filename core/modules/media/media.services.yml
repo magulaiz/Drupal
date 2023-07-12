@@ -23,3 +23,7 @@ services:
     arguments: ['@router.builder', '@cache_tags.invalidator', '@entity_type.manager']
     tags:
       - { name: event_subscriber }
+  media.route_subscriber:
+    class: Drupal\media\Routing\RouteSubscriber
+    tags:
+      - { name: event_subscriber }
