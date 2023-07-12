@@ -110,14 +110,16 @@ class LayoutSectionTest extends BrowserTestBase {
       '',
       'MISS',
     ];
+    $section_1 = new Section('layout_onecol', [], [
+      'baz' => new SectionComponent('baz', 'content', [
+        'id' => 'system_powered_by_block',
+      ]),
+    ]);
+    $section_1->setUuid('fake_section_uuid_1')->setWeight(0);
     $data['single_section_single_block'] = [
       [
         [
-          'section' => new Section('layout_onecol', [], [
-            'baz' => new SectionComponent('baz', 'content', [
-              'id' => 'system_powered_by_block',
-            ]),
-          ]),
+          'section' => $section_1,
         ],
       ],
       '.layout--onecol',
@@ -126,26 +128,23 @@ class LayoutSectionTest extends BrowserTestBase {
       '',
       'MISS',
     ];
+    $section_2 = new Section('layout_twocol', [], [
+      'foo' => new SectionComponent('foo', 'first', [
+        'id' => 'test_block_instantiation',
+        'display_message' => 'foo text',
+      ]),
+      'bar' => new SectionComponent('bar', 'second', [
+        'id' => 'test_block_instantiation',
+        'display_message' => 'bar text',
+      ])]);
+    $section_2->setUuid('fake_section_uuid_2')->setWeight(1);
     $data['multiple_sections'] = [
       [
         [
-          'section' => new Section('layout_onecol', [], [
-            'baz' => new SectionComponent('baz', 'content', [
-              'id' => 'system_powered_by_block',
-            ]),
-          ]),
+          'section' => $section_1,
         ],
         [
-          'section' => new Section('layout_twocol', [], [
-            'foo' => new SectionComponent('foo', 'first', [
-              'id' => 'test_block_instantiation',
-              'display_message' => 'foo text',
-            ]),
-            'bar' => new SectionComponent('bar', 'second', [
-              'id' => 'test_block_instantiation',
-              'display_message' => 'bar text',
-            ]),
-          ]),
+          'section' => $section_2,
         ],
       ],
       [
