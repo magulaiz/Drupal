@@ -75,7 +75,8 @@ class TestPrepareLayout implements EventSubscriberInterface {
 
       // Node 1 or 2: Append a block to the layout.
       if (in_array($entity->id(), ['1', '2'])) {
-        $section = new Section('layout_onecol');
+        $section = (new Section('layout_onecol'))
+          ->setUuid(\Drupal::service('uuid')->generate());
         $section->appendComponent(new SectionComponent('fake-uuid', 'content', [
           'id' => 'static_block',
           'label' => 'Test static block title',
@@ -108,7 +109,8 @@ class TestPrepareLayout implements EventSubscriberInterface {
 
       // Node 1, 2, or 3: Append a block to the layout.
       if (in_array($entity->id(), ['1', '2', '3'])) {
-        $section = new Section('layout_onecol');
+        $section = (new Section('layout_onecol'))
+          ->setUuid(\Drupal::service('uuid')->generate());
         $section->appendComponent(new SectionComponent('fake-uuid', 'content', [
           'id' => 'static_block_two',
           'label' => 'Test second static block title',
