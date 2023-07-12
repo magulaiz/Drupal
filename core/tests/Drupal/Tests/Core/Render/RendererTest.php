@@ -16,7 +16,6 @@ use Drupal\Core\Security\TrustedCallbackInterface;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Render\Markup;
 use Drupal\Core\Template\Attribute;
-use DrupalCodeGenerator\Command\Misc\Drupal_7\CToolsPlugin\Access;
 
 /**
  * @coversDefaultClass \Drupal\Core\Render\Renderer
