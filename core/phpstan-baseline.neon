@@ -316,6 +316,16 @@ parameters:
 			path: lib/Drupal/Core/Entity/ContentEntityConfirmFormBase.php
 
 		-
+			message: "#^Method Drupal\\\\Core\\\\Entity\\\\ContentEntityConfirmFormBase\\:\\:validateForm\\(\\) should return Drupal\\\\Core\\\\Entity\\\\ContentEntityInterface but return statement is missing\\.$#"
+			count: 1
+			path: lib/Drupal/Core/Entity/ContentEntityConfirmFormBase.php
+
+		-
+			message: "#^Method Drupal\\\\Core\\\\Entity\\\\ContentEntityForm\\:\\:validateForm\\(\\) should return Drupal\\\\Core\\\\Entity\\\\ContentEntityInterface but return statement is missing\\.$#"
+			count: 1
+			path: lib/Drupal/Core/Entity/ContentEntityForm.php
+
+		-
 			message: "#^Method Drupal\\\\Core\\\\Entity\\\\ContentEntityNullStorage\\:\\:doLoadMultiple\\(\\) should return array\\<Drupal\\\\Core\\\\Entity\\\\EntityInterface\\> but return statement is missing\\.$#"
 			count: 1
 			path: lib/Drupal/Core/Entity/ContentEntityNullStorage.php
@@ -932,6 +942,11 @@ parameters:
 
 		-
 			message: "#^Method Drupal\\\\contact\\\\MessageForm\\:\\:save\\(\\) should return int but return statement is missing\\.$#"
+			count: 1
+			path: modules/contact/src/MessageForm.php
+
+		-
+			message: "#^Method Drupal\\\\contact\\\\MessageForm\\:\\:validateForm\\(\\) should return Drupal\\\\Core\\\\Entity\\\\ContentEntityInterface but return statement is missing\\.$#"
 			count: 1
 			path: modules/contact/src/MessageForm.php
 
