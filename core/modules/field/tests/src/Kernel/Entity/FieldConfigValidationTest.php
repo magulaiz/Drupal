@@ -24,7 +24,7 @@ class FieldConfigValidationTest extends FieldStorageConfigValidationTest {
 
     $this->entity = FieldConfig::create([
       'field_storage' => $field_storage,
-      'bundle' => 'user',
+      'bundle' => 'entity_test',
     ]);
     $this->entity->save();
   }
