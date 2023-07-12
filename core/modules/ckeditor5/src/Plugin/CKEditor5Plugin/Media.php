@@ -186,6 +186,8 @@ class Media extends CKEditor5PluginDefault implements ContainerFactoryPluginInte
         ->setRouteParameter('editor', $editor->id())
     );
     $dynamic_plugin_config['drupalMedia']['previewCsrfToken'] = \Drupal::csrfToken()->get('X-Drupal-MediaPreview-CSRF-Token');
+    $media_embed_filter = $editor->getFilterFormat()->filters('media_embed');
+    $dynamic_plugin_config['drupalMedia']['linkTextMediaTypes'] = $media_embed_filter->settings['link_text_media_types'];
     return $dynamic_plugin_config;
   }
 

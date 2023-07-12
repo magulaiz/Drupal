@@ -90,6 +90,12 @@ function media_theme() {
         'attributes' => [],
       ],
     ],
+    'media_link_text' => [
+      'variables' => [
+        'link' => NULL,
+        'text' => NULL,
+      ],
+    ],
   ];
 }
 

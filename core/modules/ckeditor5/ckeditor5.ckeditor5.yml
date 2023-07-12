@@ -658,7 +658,7 @@ media_media:
       - drupalMedia.DrupalElementStyle
     config:
       drupalMedia:
-        toolbar: [mediaImageTextAlternative]
+        toolbar: [mediaImageTextAlternative, mediaLinkTextAlternative]
         themeError:
           func:
             name: Drupal.theme
@@ -670,7 +670,7 @@ media_media:
     class: Drupal\ckeditor5\Plugin\CKEditor5Plugin\Media
     elements:
       - <drupal-media>
-      - <drupal-media data-entity-type data-entity-uuid alt>
+      - <drupal-media data-entity-type data-entity-uuid data-link-text alt>
       - <drupal-media data-view-mode>
     conditions:
       filter: media_embed
