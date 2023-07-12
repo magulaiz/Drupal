@@ -385,10 +385,12 @@ class TermTest extends TaxonomyTestBase {
     $this->assertSession()->pageTextContains($edit['name[0][value]']);
     $this->assertSession()->linkExists('Edit');
 
+    // Unpublish the term.
+    $this->drupalGet('taxonomy/term/' . $term->id() . '/edit');
+    $this->submitForm(["status[value]" => 0], 'Save');
     // Check that the term is now unpublished in the list.
-    $term->setUnpublished()->save();
     $this->drupalGet('admin/structure/taxonomy/manage/' . $this->vocabulary->id() . '/overview');
-    $this->assertSession()->elementTextContains('css', "#edit-terms-tid{$term->id()}-status", 'Unpublished');
+    $this->assertSession()->elementTextContains('css', "#edit-terms-tid{$term->id()}0-status", 'Unpublished');
 
     // Check the term link can be clicked through to the term page.
     $this->clickLink($edit['name[0][value]']);
