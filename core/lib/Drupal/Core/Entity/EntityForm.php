@@ -265,6 +265,14 @@ class EntityForm extends FormBase implements EntityFormInterface {
 
   /**
    * {@inheritdoc}
+   */
+  public function validateForm(array &$form, FormStateInterface $form_state) {
+    parent::validateForm($form, $form_state);
+    $this->entity = $this->buildEntity($form, $form_state);
+  }
+
+  /**
+   * {@inheritdoc}
    *
    * This is the default entity object builder function. It is called before any
    * other submit handler to build the new entity object to be used by the
