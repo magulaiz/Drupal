@@ -101,7 +101,11 @@ export default class LinkTextAlternativeFormView extends View {
       tag: 'form',
 
       attributes: {
-        class: ['ck', 'ck-media-alternative-data-link-text-form', 'ck-vertical-form'],
+        class: [
+          'ck',
+          'ck-media-alternative-data-link-text-form',
+          'ck-vertical-form',
+        ],
         tabindex: '-1',
       },
 
@@ -211,7 +215,8 @@ export default class LinkTextAlternativeFormView extends View {
         {
           tag: 'strong',
           attributes: {
-            class: 'ck-media-alternative-text-form__default-data-link-text-label',
+            class:
+              'ck-media-alternative-text-form__default-data-link-text-label',
           },
           children: [Drupal.t('Default link text:')],
         },
@@ -219,7 +224,8 @@ export default class LinkTextAlternativeFormView extends View {
         {
           tag: 'span',
           attributes: {
-            class: 'ck-media-alternative-text-form__default-data-link-text-value',
+            class:
+              'ck-media-alternative-text-form__default-data-link-text-value',
           },
           children: [
             {

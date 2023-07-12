@@ -197,7 +197,9 @@ export default class DrupalMediaEditing extends Plugin {
         this.editor.model.enqueueChange({ isUndoable: false }, (writer) => {
           writer.setAttribute(
             'drupalMediaIsFile',
-            this.editor.config.get('drupalMedia').linkTextMediaTypes.hasOwnProperty(metadata.type),
+            this.editor.config
+              .get('drupalMedia')
+              .linkTextMediaTypes.hasOwnProperty(metadata.type),
             modelElement,
           );
         });
