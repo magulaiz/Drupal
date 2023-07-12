@@ -26,7 +26,7 @@ class FieldStorageConfigValidationTest extends ConfigEntityValidationTestBase {
     $this->entity = FieldStorageConfig::create([
       'type' => 'boolean',
       'field_name' => 'test',
-      'entity_type' => 'entity_test',
+      'entity_type' => 'entity_test_mul_with_bundle',
       'custom_storage' => FALSE,
     ]);
     $this->entity->save();
@@ -38,7 +38,7 @@ class FieldStorageConfigValidationTest extends ConfigEntityValidationTestBase {
         ['field_name' => 'broken'],
       ],
       'entity_type' => [
-        ['entity_type' => 'entity_test_mul'],
+        ['entity_type' => 'entity_test'],
       ],
       'type' => [
         ['type' => 'email'],
