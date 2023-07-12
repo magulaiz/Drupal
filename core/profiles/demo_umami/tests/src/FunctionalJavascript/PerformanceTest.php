@@ -44,8 +44,16 @@ class PerformanceTest extends PerformanceTestBase {
 
   /**
    * Log front page tracing data with a cold cache.
+   *
+   * @group OpenTelemetry
    */
   public function testFrontPageColdCache() {
+    $this->sendTelemetry = FALSE;
+    // Chromedriver doesn't collect tracing performance logs for the very first
+    // request in a test, so warm it up.
+    // @todo: figure out why and remove this workaround.
+    $this->drupalGet('user/login');
+    $this->rebuildAll();
     $this->sendTelemetry = TRUE;
     $this->drupalGet('<front>');
     $this->assertSession()->pageTextContains('Umami');
@@ -53,6 +61,8 @@ class PerformanceTest extends PerformanceTestBase {
 
   /**
    * Log front page tracing data with a warm cache.
+   *
+   * @group OpenTelemetry
    */
   public function testFrontPageWarmCache() {
     $this->sendTelemetry = FALSE;
@@ -69,6 +79,8 @@ class PerformanceTest extends PerformanceTestBase {
    *
    * Lukewarm here means that 'global' site caches are warm but anything
    * specific to the front page is cold.
+   *
+   * @group OpenTelemetry
    */
   public function testFrontPageLukeWarmCache() {
     $this->sendTelemetry = FALSE;
@@ -79,8 +91,16 @@ class PerformanceTest extends PerformanceTestBase {
 
   /**
    * Log node page tracing data with a cold cache.
+   *
+   * @group OpenTelemetry
    */
   public function testNodePageColdCache() {
+    $this->sendTelemetry = FALSE;
+    // Chromedriver doesn't collect tracing performance logs for the very first
+    // request in a test, so warm it up.
+    // @todo: figure out why and remove this workaround.
+    $this->drupalGet('user/login');
+    $this->rebuildAll();
     $this->sendTelemetry = TRUE;
     $this->drupalGet('/node/1');
     $this->assertSession()->pageTextContains('quiche');
@@ -88,6 +108,8 @@ class PerformanceTest extends PerformanceTestBase {
 
   /**
    * Log node page tracing data with a warm cache.
+   *
+   * @group OpenTelemetry
    */
   public function testNodePageWarmCache() {
     $this->sendTelemetry = FALSE;
@@ -104,7 +126,12 @@ class PerformanceTest extends PerformanceTestBase {
    * Log node/1 tracing data with a lukewarm cache.
    *
    * Lukewarm here means that 'global' site caches are warm but anything
-   * specific to the front page is cold.
+   * specific to the page is cold.
+   *
+   * @todo: add a another method, maybe 'tepid' for when a different node page
+   * has already been visited but not node/1.
+   *
+   * @group OpenTelemetry
    */
   public function testNodePageLukeWarmCache() {
     $this->sendTelemetry = FALSE;

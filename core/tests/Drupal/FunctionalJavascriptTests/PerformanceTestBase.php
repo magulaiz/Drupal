@@ -129,7 +129,7 @@ class PerformanceTestBase extends WebDriverTestBase {
     // events like firstContentfulPaint and largestContentfulPaint fire before
     // we get the logs.
     if ($this->sendTelemetry && isset($_ENV['OTEL_COLLECTOR'])) {
-      sleep(5);
+      sleep(15);
     }
     $session = $this->getSession();
     $performance_log = $session->getDriver()->getWebDriverSession()->log('performance');
@@ -177,6 +177,11 @@ class PerformanceTestBase extends WebDriverTestBase {
    *   The ChromeDriver performance log messages.
    */
   protected function openTelemetryTracing($path, array $messages): void {
+    // Open telemetry timestamps are always in nanoseconds.
+    $collector = $_ENV['OTEL_COLLECTOR'] ?? NULL;
+    if ($collector === NULL) {
+      return;
+    }
     $timestamp = NULL;
     $dom_loaded_timestamp_page = NULL;
     $dom_loaded_timestamp_timeline = NULL;
@@ -209,11 +214,6 @@ class PerformanceTestBase extends WebDriverTestBase {
 
     $offset = $dom_loaded_timestamp_page - $dom_loaded_timestamp_timeline;
 
-    // Open telemetry timestamps are always in nanoseconds.
-    $collector = $_ENV['OTEL_COLLECTOR'] ?? NULL;
-    if ($collector === NULL) {
-      return;
-    }
 
     $entry = $this->getSession()->evaluateScript("window.performance.getEntriesByType('navigation')")[0];
     $first_request_timestamp = $entry['requestStart'] * static::NANOSECONDS_PER_MILLISECOND;
@@ -280,27 +280,31 @@ class PerformanceTestBase extends WebDriverTestBase {
         ->setAttribute('http.url', $path)
         ->startSpan();
       $first_byte_span->end($first_byte_timestamp);
-      if (isset($entry['domContentLoadedEventStart'])) {
-        $dom_span = $tracer->spanBuilder('domContentLoadedEventStart')
-          ->setStartTimestamp($timestamp)
-          ->setAttribute('http.url', $path)
-          ->startSpan();
-        $dom_timestamp = $entry['domContentLoadedEventStart'] * static::NANOSECONDS_PER_MILLISECOND;
-        $last_timestamp = $dom_content_loaded_timestamp = (int) ($timestamp + ($dom_timestamp - $first_request_timestamp));
-        $dom_span->end($dom_content_loaded_timestamp);
-      }
       // Largest contentful paint is not available from
       // window.performance::getEntriesByType() so use the performance log
       // messages to get it instead.
       $lcp_timestamp = NULL;
+      $fcp_timestamp = NULL;
       $lcp_size = 0;
       foreach ($messages as $message) {
-        // There can be multiple largestContentfulPaint candidates so just keep
-        // overriding if there is more than one.
+        if ($message['method'] === 'Tracing.dataCollected' && $message['params']['name'] === 'firstContentfulPaint') {
+          if (!isset($fcp_timestamp)) {
+            // Tracing timestamps are microseconds since OS boot. However they
+            // appear to start from a slightly different point from page
+            // timestamps, so apply an offset calculated from DOM content loaded.
+            $fcp_timestamp = ($message['params']['ts'] * static::NANOSECONDS_PER_MICROSECOND) + $offset;
+            $fcp_span = $tracer->spanBuilder('firstContentfulPaint')
+              ->setStartTimestamp($timestamp)
+              ->setAttribute('http.url', $path)
+              ->startSpan();
+            $last_timestamp = $first_contentful_paint_timestamp = (int) ($timestamp + ($fcp_timestamp - $timestamp_since_os_boot));
+            $fcp_span->end($first_contentful_paint_timestamp);
+          }
+        }
+
+        // There can be multiple largestContentfulPaint candidates, override
+        // when they're larger.
         if ($message['method'] === 'Tracing.dataCollected' && $message['params']['name'] === 'largestContentfulPaint::Candidate' && $message['params']['args']['data']['size'] > $lcp_size) {
-          // Tracing timestamps are microseconds since OS boot. However they
-          // appear to start from a slightly different point from page
-          // timestamps, so apply an offset calculated from DOM content loaded.
           $lcp_timestamp = ($message['params']['ts'] * static::NANOSECONDS_PER_MICROSECOND) + $offset;
           $lcp_size = $message['params']['args']['data']['size'];
         }
@@ -311,7 +315,7 @@ class PerformanceTestBase extends WebDriverTestBase {
           ->setAttribute('http.url', $path)
           ->startSpan();
         $last_timestamp = $largest_contentful_paint_timestamp = (int) ($timestamp + ($lcp_timestamp - $timestamp_since_os_boot));
-
+        $lcp_span->setAttribute('lcp.size', $lcp_size);
         $lcp_span->end($largest_contentful_paint_timestamp);
       }
     }
