@@ -48,6 +48,14 @@ class SimpleConfigValidationTest extends KernelTestBase {
     $this->assertCount(1, $violations);
     $this->assertSame('_core.default_config_hash', $violations[0]->getPropertyPath());
     $this->assertSame('This value is not valid.', (string) $violations[0]->getMessage());
+
+    $data['_core']['default_config_hash'] = 'abc123';
+    $data['_core']['invalid_key'] = 'Hello';
+    $violations = $typed_config_manager->createFromNameAndData($config->getName(), $data)
+      ->validate();
+    $this->assertCount(1, $violations);
+    $this->assertSame('_core', $violations[0]->getPropertyPath());
+    $this->assertSame("'invalid_key' is not a supported key.", (string) $violations[0]->getMessage());
   }
 
 }
