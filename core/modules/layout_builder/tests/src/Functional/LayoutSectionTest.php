@@ -136,7 +136,8 @@ class LayoutSectionTest extends BrowserTestBase {
       'bar' => new SectionComponent('bar', 'second', [
         'id' => 'test_block_instantiation',
         'display_message' => 'bar text',
-      ])]);
+      ]),
+    ]);
     $section_2->setUuid('fake_section_uuid_2')->setWeight(1);
     $data['multiple_sections'] = [
       [
