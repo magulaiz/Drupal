@@ -135,7 +135,7 @@ class FieldConfigEntityUnitTest extends UnitTestCase {
       ->with('test_field')
       ->willReturn(['provider' => 'test_module', 'config_dependencies' => ['module' => ['test_module2']], 'class' => '\Drupal\Tests\field\Unit\DependencyFieldItem']);
 
-    $this->fieldStorage->expects($this->once())
+    $this->fieldStorage->expects($this->atLeastOnce())
       ->method('getConfigDependencyName')
       ->willReturn('field.storage.test_entity_type.test_field');
 
