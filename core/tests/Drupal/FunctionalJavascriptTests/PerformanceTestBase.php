@@ -129,7 +129,7 @@ class PerformanceTestBase extends WebDriverTestBase {
     // events like firstContentfulPaint and largestContentfulPaint fire before
     // we get the logs.
     if ($this->sendTelemetry && isset($_ENV['OTEL_COLLECTOR'])) {
-      sleep(15);
+      sleep(8);
     }
     $session = $this->getSession();
     $performance_log = $session->getDriver()->getWebDriverSession()->log('performance');
@@ -264,7 +264,7 @@ class PerformanceTestBase extends WebDriverTestBase {
     $tracerProvider = new TracerProvider(new SimpleSpanProcessor($exporter), NULL, $resource);
     $tracer = $tracerProvider->getTracer('Drupal');
 
-    $span = $tracer->spanBuilder('GET ' . $route_path)
+    $span = $tracer->spanBuilder('main')
       ->setStartTimestamp($timestamp)
       ->setAttribute('http.method', 'GET')
       ->setAttribute('http.url', $path)
@@ -275,7 +275,7 @@ class PerformanceTestBase extends WebDriverTestBase {
     try {
       $first_request_timestamp = NULL;
       $scope = $span->activate();
-      $first_byte_span = $tracer->spanBuilder('First Byte')
+      $first_byte_span = $tracer->spanBuilder('firstByte')
         ->setStartTimestamp($timestamp)
         ->setAttribute('http.url', $path)
         ->startSpan();
