@@ -129,7 +129,7 @@ class PerformanceTestBase extends WebDriverTestBase {
     // events like firstContentfulPaint and largestContentfulPaint fire before
     // we get the logs.
     if ($this->sendTelemetry && isset($_ENV['OTEL_COLLECTOR'])) {
-      sleep(8);
+      sleep(10);
     }
     $session = $this->getSession();
     $performance_log = $session->getDriver()->getWebDriverSession()->log('performance');
