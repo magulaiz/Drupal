@@ -119,6 +119,18 @@ class PermissionHandler implements PermissionHandlerInterface {
   }
 
   /**
+   * Returns the value of getPermissions, but run through an alter hook.
+   *
+   * @return array
+   *   The hook-altered permissions.
+   */
+  public function getFilteredPermissions() {
+    $all_permissions = $this->getPermissions();
+    $this->moduleHandler->alter('user_permission_list', $all_permissions);
+    return $all_permissions;
+  }
+
+  /**
    * {@inheritdoc}
    */
   public function moduleProvidesPermissions($module_name) {
