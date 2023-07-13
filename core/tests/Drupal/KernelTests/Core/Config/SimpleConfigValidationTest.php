@@ -2,7 +2,6 @@
 
 namespace Drupal\KernelTests\Core\Config;
 
-
 use Drupal\KernelTests\KernelTestBase;
 
 /**
