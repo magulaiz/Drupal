@@ -8,6 +8,11 @@ use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 use Drupal\Tests\contextual\FunctionalJavascript\ContextualLinkClickTrait;
 use Drupal\Tests\system\Traits\OffCanvasTestTrait;
 
+/**
+ * Tests the Layout Builder element block reloading.
+ *
+ * @group layout_builder
+ */
 class LayoutBuilderBlockReloadTest extends WebDriverTestBase {
 
   use ContextualLinkClickTrait;
