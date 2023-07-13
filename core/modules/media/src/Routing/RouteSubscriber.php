@@ -17,6 +17,10 @@ class RouteSubscriber extends RouteSubscriberBase {
     }
   }
 
+
+  /**
+   * {@inheritdoc}
+   */
   public static function getSubscribedEvents() : array {
 
     // Come after field_ui.
@@ -26,4 +30,5 @@ class RouteSubscriber extends RouteSubscriberBase {
     ];
     return $events;
   }
+
 }
