@@ -71,7 +71,7 @@ class LayoutBuilderPrepareLayoutTest extends BrowserTestBase {
   /**
    * Tests that we can alter a Layout Builder element while preparing.
    *
-   * @see \Drupal\layout_builder_element_test\EventSubscriber\TestPrepareLayout;
+   * @see \Drupal\layout_builder_element_test\EventSubscriber\BlockRandomUuid;
    */
   public function testAlterPrepareLayout() {
     $assert_session = $this->assertSession();
