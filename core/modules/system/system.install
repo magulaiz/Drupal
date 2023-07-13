@@ -10,7 +10,6 @@ use Drupal\Component\Utility\Bytes;
 use Drupal\Component\Utility\Crypt;
 use Drupal\Component\Utility\Environment;
 use Drupal\Component\Utility\OpCodeCache;
-use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Database\Database;
 use Drupal\Core\DrupalKernel;
@@ -1253,33 +1252,37 @@ function system_requirements($phase) {
     }
   }
 
-  // Returns Unicode library status and errors.
-  $libraries = [
-    Unicode::STATUS_SINGLEBYTE => t('Standard PHP'),
-    Unicode::STATUS_MULTIBYTE => t('PHP Mbstring Extension'),
-    Unicode::STATUS_ERROR => t('Error'),
-  ];
-  $severities = [
-    Unicode::STATUS_SINGLEBYTE => REQUIREMENT_WARNING,
-    Unicode::STATUS_MULTIBYTE => NULL,
-    Unicode::STATUS_ERROR => REQUIREMENT_ERROR,
-  ];
-  $failed_check = Unicode::check();
-  $library = Unicode::getStatus();
-
+  // Determines Unicode library status and errors.
   $requirements['unicode'] = [
     'title' => t('Unicode library'),
-    'value' => $libraries[$library],
-    'severity' => $severities[$library],
   ];
-  switch ($failed_check) {
-    case 'mb_strlen':
-      $requirements['unicode']['description'] = t('Operations on Unicode strings are emulated on a best-effort basis. Install the <a href="http://php.net/mbstring">PHP mbstring extension</a> for improved Unicode support.');
-      break;
-
-    case 'mbstring.encoding_translation':
+  if (extension_loaded('mbstring')) {
+    $requirements['unicode']['value'] = t('PHP Mbstring Extension');
+    if (ini_get('mbstring.encoding_translation') != 0) {
       $requirements['unicode']['description'] = t('Multibyte string input conversion in PHP is active and must be disabled. Check the php.ini <em>mbstring.encoding_translation</em> setting. Please refer to the <a href="http://php.net/mbstring">PHP mbstring documentation</a> for more information.');
-      break;
+      $requirements['unicode']['severity'] = REQUIREMENT_ERROR;
+    }
+    elseif (ini_get('default_charset') != 'UTF-8') {
+      $requirements['unicode']['description'] = t('The default charset must be "UTF_8". Check the php.ini <em>default_charset</em> setting. Please refer to the <a href="https://www.php.net/manual/en/ini.core.php#ini.default-charset">PHP documentation</a> for more information.');
+      $requirements['unicode']['severity'] = REQUIREMENT_ERROR;
+    }
+    elseif (ini_get('input_encoding') != 'UTF-8' && !empty(ini_get('input_encoding'))) {
+      $requirements['unicode']['description'] = t('The input encoding charset must be unset or "UTF_8". Check the php.ini <em>input_encoding</em> setting. Please refer to the <a href="https://www.php.net/manual/en/ini.core.php#ini.input-encoding">PHP documentation</a> for more information.');
+      $requirements['unicode']['severity'] = REQUIREMENT_ERROR;
+    }
+    elseif (ini_get('output_encoding') != 'UTF-8' && !empty(ini_get('output_encoding'))) {
+      $requirements['unicode']['description'] = t('The output encoding charset must be unset or "UTF_8". Check the php.ini <em>output_encoding</em> setting. Please refer to the <a href="https://www.php.net/manual/en/ini.core.php#ini.output-encoding">PHP documentation</a> for more information.');
+      $requirements['unicode']['severity'] = REQUIREMENT_ERROR;
+    }
+    elseif (ini_get('internal_encoding') != 'UTF-8' && !empty(ini_get('internal_encoding'))) {
+      $requirements['unicode']['description'] = t('The internal encoding charset must be unset or "UTF_8". Check the php.ini <em>internal_encoding</em> setting. Please refer to the <a href="https://www.php.net/manual/en/ini.core.php#ini.internal-encoding">PHP documentation</a> for more information.');
+      $requirements['unicode']['severity'] = REQUIREMENT_ERROR;
+    }
+  }
+  else {
+    $requirements['unicode']['value'] = t('Standard PHP');
+    $requirements['unicode']['description'] = t('Operations on Unicode strings are emulated on a best-effort basis. Install the <a href="http://php.net/mbstring">PHP mbstring extension</a> for improved Unicode support.');
+    $requirements['unicode']['severity'] = REQUIREMENT_WARNING;
   }
 
   if ($phase == 'runtime') {

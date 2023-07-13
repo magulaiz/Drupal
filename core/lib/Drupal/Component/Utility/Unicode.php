@@ -97,8 +97,12 @@ EOD;
    *     Standard PHP (emulated) unicode support.
    *   - \Drupal\Component\Utility\Unicode::STATUS_ERROR
    *     An error occurred. No unicode support.
+   *
+   * @deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. In
+   *   Drupal 11 this is part of system_requirements().
    */
   public static function getStatus() {
+    @trigger_error('\Drupal\Component\Utility\Unicode::getStatus() is deprecated in Drupal 10.2.0 and will be removed before Drupal 11.0.0. In Drupal 11 this is part of system_requirements(). See https://www.drupal.org/node/@todo.', E_USER_DEPRECATED);
     switch (static::check()) {
       case 'mb_strlen':
         return Unicode::STATUS_SINGLEBYTE;
@@ -119,8 +123,14 @@ EOD;
    * @return string
    *   A string identifier of a failed multibyte extension check, if any.
    *   Otherwise, an empty string.
+   *
+   * @deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. In
+   *   Drupal 11 this is part of system_requirements().
+   *
+   * @see https://www.drupal.org/node/@todo
    */
   public static function check() {
+    @trigger_error('\Drupal\Component\Utility\Unicode::check() is deprecated in Drupal 10.2.0 and will be removed before Drupal 11.0.0. In Drupal 11 this is part of system_requirements(). See https://www.drupal.org/node/@todo.', E_USER_DEPRECATED);
     // Set appropriate configuration.
     mb_internal_encoding('utf-8');
     mb_language('uni');
