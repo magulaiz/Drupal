@@ -64,14 +64,14 @@ class LayoutSectionTest extends BrowserTestBase {
     $data['block_with_global_context'] = [
       [
         [
-          'section' => new Section('layout_onecol', [], [
+          'section' => (new Section('layout_onecol', [], [
             'baz' => new SectionComponent('baz', 'content', [
               'id' => 'test_context_aware',
               'context_mapping' => [
                 'user' => '@user.current_user_context:current_user',
               ],
             ]),
-          ]),
+          ]))->setUuid('fake_section_uuid'),
         ],
       ],
       [
@@ -88,14 +88,14 @@ class LayoutSectionTest extends BrowserTestBase {
     $data['block_with_entity_context'] = [
       [
         [
-          'section' => new Section('layout_onecol', [], [
+          'section' => (new Section('layout_onecol', [], [
             'baz' => new SectionComponent('baz', 'content', [
               'id' => 'field_block:node:bundle_with_section_field:body',
               'context_mapping' => [
                 'entity' => 'layout_builder.entity',
               ],
             ]),
-          ]),
+          ]))->setUuid('fake_section_uuid'),
         ],
       ],
       [
@@ -110,12 +110,13 @@ class LayoutSectionTest extends BrowserTestBase {
       '',
       'MISS',
     ];
-    $section_1 = new Section('layout_onecol', [], [
+
+    $section_1 = (new Section('layout_onecol', [], [
       'baz' => new SectionComponent('baz', 'content', [
         'id' => 'system_powered_by_block',
       ]),
-    ]);
-    $section_1->setUuid('fake_section_uuid_1')->setWeight(0);
+    ]))->setUuid('fake_section_uuid_1');
+
     $data['single_section_single_block'] = [
       [
         [
@@ -128,7 +129,8 @@ class LayoutSectionTest extends BrowserTestBase {
       '',
       'MISS',
     ];
-    $section_2 = new Section('layout_twocol', [], [
+
+    $section_2 = (new Section('layout_twocol', [], [
       'foo' => new SectionComponent('foo', 'first', [
         'id' => 'test_block_instantiation',
         'display_message' => 'foo text',
@@ -137,8 +139,8 @@ class LayoutSectionTest extends BrowserTestBase {
         'id' => 'test_block_instantiation',
         'display_message' => 'bar text',
       ]),
-    ]);
-    $section_2->setUuid('fake_section_uuid_2')->setWeight(1);
+    ]))->setUuid('fake_section_uuid_2')->setWeight(1);
+
     $data['multiple_sections'] = [
       [
         [
@@ -186,11 +188,11 @@ class LayoutSectionTest extends BrowserTestBase {
   public function testLayoutSectionFormatterAccess() {
     $node = $this->createSectionNode([
       [
-        'section' => new Section('layout_onecol', [], [
+        'section' => (new Section('layout_onecol', [], [
           'baz' => new SectionComponent('baz', 'content', [
             'id' => 'test_access',
           ]),
-        ]),
+        ]))->setUuid('fake_section_uuid'),
       ],
     ]);
 
