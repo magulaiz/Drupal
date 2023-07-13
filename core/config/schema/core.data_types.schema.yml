@@ -114,6 +114,9 @@ _core_config_info:
     default_config_hash:
       type: string
       label: 'Default configuration hash'
+      constraints:
+        NotNull: []
+        Regex: '/^[a-zA-Z0-9\-_]+$/'
 
 config_object:
   type: mapping
