@@ -117,6 +117,8 @@ _core_config_info:
       constraints:
         NotNull: []
         Regex: '/^[a-zA-Z0-9\-_]+$/'
+  constraints:
+    ValidKeys: ['default_config_hash']
 
 config_object:
   type: mapping

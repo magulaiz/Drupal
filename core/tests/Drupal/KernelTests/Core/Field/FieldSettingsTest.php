@@ -130,6 +130,7 @@ class FieldSettingsTest extends EntityKernelTestBase {
       'test_field_setting' => 'dummy test string',
       'translatable_field_setting' => 'a translatable field setting',
       'field_setting_from_config_data' => 'TRUE',
+      'storage_setting_from_config_data' => 'TRUE',
     ];
     $this->assertEquals($expected_settings, $field->getSettings());
 
