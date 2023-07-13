@@ -17,7 +17,6 @@ class RouteSubscriber extends RouteSubscriberBase {
     }
   }
 
-
   /**
    * {@inheritdoc}
    */
