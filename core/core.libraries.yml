@@ -554,6 +554,7 @@ drupal.dialog:
     - core/drupal.displace
     - core/tabbable.jquery.shim
     - core/drupal.jquery.position
+    - core/tua-body-scroll-lock
 
 drupal.dialog.ajax:
   version: VERSION
@@ -874,6 +875,16 @@ tabbable:
     gpl-compatible: true
   js:
     assets/vendor/tabbable/index.umd.min.js: { weight: -1, minified: true }
+
+tua-body-scroll-lock:
+  remote: https://github.com/tuax/tua-body-scroll-lock
+  version: "^1.2.1"
+  license:
+    name: MIT
+    url: https://raw.githubusercontent.com/tuax/tua-body-scroll-lock/master/LICENSE
+    gpl-compatible: true
+  js:
+    assets/vendor/tua-body-scroll-lock/tua-bsl.umd.js: { minified: true }
 
 transliteration:
   remote: https://github.com/dzcpy/transliteration

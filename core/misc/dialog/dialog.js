@@ -71,6 +71,8 @@
       settings = $.extend({}, drupalSettings.dialog, options, settings);
       // Trigger a global event to allow scripts to bind events to the dialog.
       $(window).trigger('dialog:beforecreate', [dialog, $element, settings]);
+      // Locks the body when the dialog opens.
+      bodyScrollLock.lock(document.body);
       $element.dialog(settings);
       dialog.open = true;
       $(window).trigger('dialog:aftercreate', [dialog, $element, settings]);
@@ -78,6 +80,8 @@
 
     function closeDialog(value) {
       $(window).trigger('dialog:beforeclose', [dialog, $element]);
+      // Unlocks the body when the dialog opens.
+      bodyScrollLock.unlock(document.body);
       $element.dialog('close');
       dialog.returnValue = value;
       dialog.open = false;
@@ -94,4 +98,5 @@
 
     return dialog;
   };
-})(jQuery, Drupal, drupalSettings);
+  // eslint-disable-next-line no-undef
+})(jQuery, Drupal, drupalSettings, bodyScrollLock.lock);
