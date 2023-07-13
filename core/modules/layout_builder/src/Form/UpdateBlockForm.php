@@ -2,7 +2,11 @@
 
 namespace Drupal\layout_builder\Form;
 
+use Drupal\Core\Ajax\AjaxResponse;
+use Drupal\Core\Ajax\CloseDialogCommand;
+use Drupal\Core\Ajax\ReplaceCommand;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\layout_builder\LayoutBuilderBlockBuildTrait;
 use Drupal\layout_builder\LayoutBuilderHighlightTrait;
 use Drupal\layout_builder\SectionStorageInterface;
 
@@ -14,6 +18,7 @@ use Drupal\layout_builder\SectionStorageInterface;
  */
 class UpdateBlockForm extends ConfigureBlockFormBase {
 
+  use LayoutBuilderBlockBuildTrait;
   use LayoutBuilderHighlightTrait;
 
   /**
@@ -53,6 +58,33 @@ class UpdateBlockForm extends ConfigureBlockFormBase {
    */
   protected function submitLabel() {
     return $this->t('Update');
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function rebuildAndClose(SectionStorageInterface $section_storage): AjaxResponse {
+    $response = $this->updateRebuildBlock($section_storage, $this->delta, $this->uuid);
+    $response->addCommand(new CloseDialogCommand('#drupal-off-canvas'));
+    return $response;
+  }
+
+  /**
+   * Builds the block and returns it.
+   *
+   * @param \Drupal\layout_builder\SectionStorageInterface $section_storage
+   *   The section storage.
+   * @param $delta
+   *   The section delta.
+   * @param $uuid
+   *   The block UUID.
+   *
+   * @return \Drupal\Core\Ajax\AjaxResponse
+   */
+  protected function updateRebuildBlock(SectionStorageInterface $section_storage, $delta, $uuid): AjaxResponse {
+    $response = new AjaxResponse();
+    $response->addCommand(new ReplaceCommand("[data-layout-block-uuid=$this->uuid]", $this->getBlockBuild($section_storage, $delta, $uuid)));
+    return $response;
   }
 
 }
