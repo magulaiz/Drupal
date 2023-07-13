@@ -32,6 +32,13 @@ class LayoutBuilderBlockReloadTest extends WebDriverTestBase {
   protected $defaultTheme = 'starterkit_theme';
 
   /**
+   * The node to customize with Layout Builder.
+   *
+   * @var \Drupal\node\NodeInterface
+   */
+  protected $node;
+
+  /**
    * {@inheritdoc}
    */
   protected function setUp(): void {
@@ -229,4 +236,5 @@ class LayoutBuilderBlockReloadTest extends WebDriverTestBase {
     $this->clickLink($block_title);
     $this->assertOffCanvasFormAfterWait('layout_builder_add_block');
   }
+
 }
