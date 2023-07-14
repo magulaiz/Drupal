@@ -112,19 +112,32 @@ class PerformanceTestBase extends WebDriverTestBase {
    * {@inheritdoc}
    */
   public function drupalGet($path, array $options = [], array $headers = []): string {
+    if (isset($options['service_name'])) {
+      $service_name = $options['service_name'];
+      unset($options['service_name']);
+    }
+    else {
+     $service_name = NULL;
+    }
     // Reset the performance log from any previous HTTP requests. The log is
     // cumulative until it is collected explicitly.
     $session = $this->getSession();
     $session->getDriver()->getWebDriverSession()->log('performance');
     $return = parent::drupalGet($path, $options, $headers);
-    $this->getChromeDriverPerformanceMetrics($path);
+    $this->getChromeDriverPerformanceMetrics($path, $service_name);
     return $return;
   }
 
   /**
    * Gets the chromedriver performance log and extracts metrics from it.
+   *
+   * @param string|\Drupal\Core\Url $path
+   *   The requested path.
+   * @param string $service_name
+   *   A unique identifier for this request or test so that it can be identified
+   *   in traces.
    */
-  protected function getChromeDriverPerformanceMetrics(string|Url $path): void {
+  protected function getChromeDriverPerformanceMetrics(string|Url $path, $service_name = NULL): void {
     // The performance log is cumulative, and is emptied each time it is
     // collected. If the log grows to the point it will overflow, it may also be
     // emptied resulting in lost messages. To ensure we get a realistic picture
@@ -148,14 +161,14 @@ class PerformanceTestBase extends WebDriverTestBase {
       // From manual testing, the maximum number of largestContentfulPaint
       // candidates is 2, so if we get that many, stop looking for any more.
       // @todo find a better way.
-      if ($lcp_count === 2) {
+      if ($lcp_count === 2 || !isset($service_name)) {
         break;
       }
       sleep(1);
     }
     $this->collectNetworkData($path, $messages);
-    if ($this->sendTelemetry) {
-      $this->openTelemetryTracing($path, $messages);
+    if (isset($service_name)) {
+      $this->openTelemetryTracing($path, $messages, $service_name);
     }
   }
 
@@ -189,8 +202,10 @@ class PerformanceTestBase extends WebDriverTestBase {
    *   The path as passed to static::drupalGet().
    * @param array $messages
    *   The ChromeDriver performance log messages.
+   * @param string $service_name
+   *   The service name to identify this trace in OpenTelemetry.
    */
-  protected function openTelemetryTracing($path, array $messages): void {
+  protected function openTelemetryTracing($path, array $messages, string $service_name): void {
     // Open telemetry timestamps are always in nanoseconds.
     $collector = $_ENV['OTEL_COLLECTOR'] ?? NULL;
     if ($collector === NULL) {
@@ -255,12 +270,6 @@ class PerformanceTestBase extends WebDriverTestBase {
       catch (\Exception $e) {
       }
     }
-
-    $backtrace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
-    // Most of the time the function will be the test method calling
-    // static::drupalGet() but sometimes it will be helper methods such as
-    // static::drupalLogin().
-    $service_name = str_replace('\\', '_', $backtrace[3]['class']) . '_' . $backtrace[3]['function'];
 
     // @todo: consider setting up the resource using environment variables
     // OTEL_SERVICE_NAME, OTEL_RESOURCE_ATTRIBUTES

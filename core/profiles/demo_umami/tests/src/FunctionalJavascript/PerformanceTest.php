@@ -47,98 +47,52 @@ class PerformanceTest extends PerformanceTestBase {
    *
    * @group OpenTelemetry
    */
-  public function testFrontPageColdCache() {
-    $this->sendTelemetry = FALSE;
+  public function testWithOpenTelemetry(): void {
     // Chromedriver doesn't collect tracing performance logs for the very first
     // request in a test, so warm it up.
     // @todo: figure out why and remove this workaround.
     $this->drupalGet('user/login');
+
+    $count = 0;
+    while ($count < 3) {
+      $count++;
+      $this->doTestWithOpenTelemetry();
+    }
+  }
+
+  protected function doTestWithOpenTelemetry(): void {
+    // Cold cache immediately after a rebuild.
     $this->rebuildAll();
-    $this->sendTelemetry = TRUE;
-    $this->drupalGet('<front>');
+    $this->drupalGet('<front>', ['service_name' => 'FrontPageColdCache']);
     $this->assertSession()->pageTextContains('Umami');
-  }
 
-  /**
-   * Log front page tracing data with a warm cache.
-   *
-   * @group OpenTelemetry
-   */
-  public function testFrontPageWarmCache() {
-    $this->sendTelemetry = FALSE;
-    // Request the page twice so that asset aggregates are definitely cached in
-    // the browser cache.
+    // Warm cache after two requests so that both back and front end caches
+    // are warm.
     $this->drupalGet('<front>');
-    $this->drupalGet('<front>');
-    $this->sendTelemetry = TRUE;
-    $this->drupalGet('<front>');
-  }
+    $this->drupalGet('<front>', ['service_name' => 'FrontPageWarmCache']);
+    $this->assertSession()->pageTextContains('Umami');
 
-  /**
-   * Log front page tracing data with a lukewarm cache.
-   *
-   * Lukewarm here means that 'global' site caches are warm but anything
-   * specific to the front page is cold.
-   *
-   * @group OpenTelemetry
-   */
-  public function testFrontPageLukeWarmCache() {
-    $this->sendTelemetry = FALSE;
-    $this->drupalGet('/user/login');
-    $this->sendTelemetry = TRUE;
-    $this->drupalGet('<front>');
-  }
-
-  /**
-   * Log node page tracing data with a cold cache.
-   *
-   * @group OpenTelemetry
-   */
-  public function testNodePageColdCache() {
-    $this->sendTelemetry = FALSE;
-    // Chromedriver doesn't collect tracing performance logs for the very first
-    // request in a test, so warm it up.
-    // @todo: figure out why and remove this workaround.
-    $this->drupalGet('user/login');
+    // 'Lukewarm' cache, a request after a rebuild, but also after a different
+    // route has been visited. This should mean that site-wide caches are warm
+    // but any route-specific caches are not.
     $this->rebuildAll();
-    $this->sendTelemetry = TRUE;
-    $this->drupalGet('/node/1');
-    $this->assertSession()->pageTextContains('quiche');
-  }
-
-  /**
-   * Log node page tracing data with a warm cache.
-   *
-   * @group OpenTelemetry
-   */
-  public function testNodePageWarmCache() {
-    $this->sendTelemetry = FALSE;
-    // Request the page twice so that asset aggregates are definitely cached in
-    // the browser cache.
-    $this->drupalGet('node/1');
-    $this->drupalGet('node/1');
-    $this->sendTelemetry = TRUE;
-    $this->drupalGet('node/1');
-    $this->assertSession()->pageTextContains('quiche');
-  }
-
-  /**
-   * Log node/1 tracing data with a lukewarm cache.
-   *
-   * Lukewarm here means that 'global' site caches are warm but anything
-   * specific to the page is cold.
-   *
-   * @todo: add a another method, maybe 'tepid' for when a different node page
-   * has already been visited but not node/1.
-   *
-   * @group OpenTelemetry
-   */
-  public function testNodePageLukeWarmCache() {
-    $this->sendTelemetry = FALSE;
     $this->drupalGet('/user/login');
-    $this->sendTelemetry = TRUE;
-    $this->drupalGet('/node/1');
+    $this->drupalGet('<front>', ['service_name' => 'FrontPageLukeWarmCache']);
+    $this->assertSession()->pageTextContains('Umami');
+
+    // Node page with a cold cache.
+    $this->rebuildAll();
+    $this->drupalGet('node/1');
+    $this->drupalGet('node/1', ['service_name' => 'NodePageWarmCache']);
     $this->assertSession()->pageTextContains('quiche');
+
+    // Node page with a lukewarm cache.
+    $this->rebuildAll();
+    $this->drupalGet('/user/login');
+    $this->drupalGet('/node/1', ['service_name' => 'NodePageLukeWarmCache']);
+    $this->assertSession()->pageTextContains('quiche');
+    //* @todo: add a another request, maybe 'tepid' for when a different node
+    //page has already been visited but not node/1.
   }
 
 }
