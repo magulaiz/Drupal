@@ -10,19 +10,21 @@ trait LayoutBuilderBlockBuildTrait {
   /**
    * Build a block for Layout Builder element.
    *
+   * @param array $component
+   *   The component being built.
    * @param \Drupal\layout_builder\SectionStorageInterface $section_storage
    *   The section storage.
-   * @param $delta
-   *   The section delta.
    * @param $region
    *   The region.
+   * @param $delta
+   *   The section delta.
    * @param $uuid
    *   The block UUID.
    *
    * @return array
    *   The block render array.
    */
-  protected function buildAdministrativeBlock($component, SectionStorageInterface $section_storage, $region, $delta, $uuid) {
+  protected function buildAdministrativeBlock(array $component, SectionStorageInterface $section_storage, $region, $delta, $uuid) {
     $component['#attributes']['class'][] = 'js-layout-builder-block';
     $component['#attributes']['class'][] = 'layout-builder-block';
     $component['#attributes']['data-layout-block-uuid'] = $uuid;
