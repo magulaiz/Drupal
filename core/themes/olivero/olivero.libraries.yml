@@ -288,3 +288,9 @@ tags:
   css:
     theme:
       css/components/tags.css: {}
+
+toggletip:
+  version: VERSION
+  css:
+    component:
+      css/components/toggletip.css: {}

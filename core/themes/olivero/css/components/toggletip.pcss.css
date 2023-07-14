@@ -1,0 +1,12 @@
+/**
+ * @file
+ * Toggletips
+ */
+
+.form-item-textarea > label > .toggletip__toggle {
+  top: unset!important;
+}
+
+.toggletip__tip {
+  line-height: var(--line-height-base)!important;
+}
