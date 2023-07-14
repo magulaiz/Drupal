@@ -38,7 +38,7 @@ trait EntityOwnerTrait {
         ->setLabel(new TranslatableMarkup('User ID'))
         ->setSetting('target_type', 'user')
         ->setTranslatable($entity_type->isTranslatable())
-        ->setDefaultValueCallback(static::class . '::getDefaultEntityOwner'),
+        ->setDefaultValueCallback('current_user:id'),
     ];
   }
 
@@ -82,8 +82,12 @@ trait EntityOwnerTrait {
    *
    * @return mixed
    *   A default value for the owner field.
+   *
+   * @deprecated The ::getDefaultEntityOwner method is deprecated in 11.0.x and
+   *   will be removed before 12.0.0.
    */
   public static function getDefaultEntityOwner() {
+    @trigger_error('The ::getCurrentUserId method is deprecated in 11.0.x and will be removed before 12.0.0.', E_USER_DEPRECATED);
     return \Drupal::currentUser()->id();
   }
 
