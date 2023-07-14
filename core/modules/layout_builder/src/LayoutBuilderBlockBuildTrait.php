@@ -22,10 +22,7 @@ trait LayoutBuilderBlockBuildTrait {
    * @return array
    *   The block render array.
    */
-  protected function getBlockBuild(SectionStorageInterface $section_storage, $delta, $uuid) {
-
-    $component = $this->getCurrentComponent()->toRenderArray($this->getPopulatedContexts($section_storage), TRUE);
-
+  protected function buildAdministrativeBlock($component, SectionStorageInterface $section_storage, $region, $delta, $uuid) {
     $component['#attributes']['class'][] = 'js-layout-builder-block';
     $component['#attributes']['class'][] = 'layout-builder-block';
     $component['#attributes']['data-layout-block-uuid'] = $uuid;
@@ -36,7 +33,7 @@ trait LayoutBuilderBlockBuildTrait {
           'section_storage_type' => $section_storage->getStorageType(),
           'section_storage' => $section_storage->getStorageId(),
           'delta' => $delta,
-          'region' => $this->getCurrentComponent()->getRegion(),
+          'region' => $region,
           'uuid' => $uuid,
         ],
         // Add metadata about the current operations available in

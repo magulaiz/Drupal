@@ -19,7 +19,6 @@ use Drupal\layout_builder\SectionStorageInterface;
  */
 class AddBlockForm extends ConfigureBlockFormBase {
 
-  use LayoutBuilderBlockBuildTrait;
   use LayoutBuilderHighlightTrait;
 
   /**
