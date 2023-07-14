@@ -5,7 +5,7 @@
  * @see http://www.whatwg.org/specs/web-apps/current-work/multipage/commands.html#the-dialog-element
  */
 
-(function ($, Drupal, drupalSettings) {
+(function ($, Drupal, drupalSettings, bodyScrollLock) {
   /**
    * Default dialog options.
    *
@@ -71,7 +71,6 @@
       settings = $.extend({}, drupalSettings.dialog, options, settings);
       // Trigger a global event to allow scripts to bind events to the dialog.
       $(window).trigger('dialog:beforecreate', [dialog, $element, settings]);
-      // Locks the body when the dialog opens.
       bodyScrollLock.lock(document.body);
       $element.dialog(settings);
       dialog.open = true;
@@ -99,4 +98,4 @@
     return dialog;
   };
   // eslint-disable-next-line no-undef
-})(jQuery, Drupal, drupalSettings, bodyScrollLock.lock);
+})(jQuery, Drupal, drupalSettings, bodyScrollLock);
