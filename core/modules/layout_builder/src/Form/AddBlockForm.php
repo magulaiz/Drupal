@@ -6,7 +6,6 @@ use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Ajax\BeforeCommand;
 use Drupal\Core\Ajax\CloseDialogCommand;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\layout_builder\LayoutBuilderHighlightTrait;
 use Drupal\layout_builder\SectionComponent;
 use Drupal\layout_builder\SectionStorageInterface;
 
@@ -18,7 +17,6 @@ use Drupal\layout_builder\SectionStorageInterface;
  */
 class AddBlockForm extends ConfigureBlockFormBase {
 
-  use LayoutBuilderHighlightTrait;
 
   /**
    * {@inheritdoc}

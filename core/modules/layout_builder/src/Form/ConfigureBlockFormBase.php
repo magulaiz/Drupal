@@ -19,6 +19,7 @@ use Drupal\Core\Plugin\PluginWithFormsInterface;
 use Drupal\layout_builder\Context\LayoutBuilderContextTrait;
 use Drupal\layout_builder\Controller\LayoutRebuildTrait;
 use Drupal\layout_builder\LayoutBuilderBlockBuildTrait;
+use Drupal\layout_builder\LayoutBuilderHighlightTrait;
 use Drupal\layout_builder\LayoutTempstoreRepositoryInterface;
 use Drupal\layout_builder\SectionComponent;
 use Drupal\layout_builder\SectionStorageInterface;
@@ -36,6 +37,7 @@ abstract class ConfigureBlockFormBase extends FormBase implements BaseFormIdInte
   use ContextAwarePluginAssignmentTrait;
   use LayoutBuilderBlockBuildTrait;
   use LayoutBuilderContextTrait;
+  use LayoutBuilderHighlightTrait;
   use LayoutRebuildTrait;
 
   /**
