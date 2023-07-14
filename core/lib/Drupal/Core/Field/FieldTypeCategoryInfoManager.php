@@ -65,7 +65,7 @@ class FieldTypeCategoryInfoManager extends DefaultPluginManager implements Fallb
     $this->root = $root;
     $this->moduleHandler = $module_handler;
     $this->alterInfo('field_type_category_info');
-    $this->setCacheBackend($cache_backend, 'field_type_category_info_plugins', ['field_type_category_info']);
+    $this->setCacheBackend($cache_backend, 'field_type_category_info_plugins');
   }
 
   /**
