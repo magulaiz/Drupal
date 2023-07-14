@@ -128,12 +128,12 @@ class PerformanceTestBase extends WebDriverTestBase {
     // The performance log is cumulative, and is emptied each time it is
     // collected. If the log grows to the point it will overflow, it may also be
     // emptied resulting in lost messages. To ensure we get a realistic picture
-    // of the page, collect log entries every second for up to 15 seconds.
+    // of the page, collect log entries every second for up to 30 seconds.
     $attempts = 0;
     $lcp_count = 0;
     $messages = [];
     $session = $this->getSession();
-    while ($attempts <= 15) {
+    while ($attempts <= 30) {
       $attempts++;
       $performance_log = $session->getDriver()->getWebDriverSession()->log('performance');
 
