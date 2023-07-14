@@ -40,6 +40,7 @@ use Drupal\workspaces\WorkspaceInterface;
  *       "activate" = "\Drupal\workspaces\Form\WorkspaceActivateForm",
  *     },
  *   },
+ *   workspace = \Drupal\workspaces\WorkspaceInformationInterface::IGNORED,
  *   admin_permission = "administer workspaces",
  *   base_table = "workspace",
  *   revision_table = "workspace_revision",
