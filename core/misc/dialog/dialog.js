@@ -71,7 +71,11 @@
       settings = $.extend({}, drupalSettings.dialog, options, settings);
       // Trigger a global event to allow scripts to bind events to the dialog.
       $(window).trigger('dialog:beforecreate', [dialog, $element, settings]);
-      bodyScrollLock.lock(document.body);
+      // Locks the body scroll only when it opens in modal.
+      if (settings.modal) {
+        // Locks the body when the dialog opens.
+        bodyScrollLock.lock(document.body);
+      }
       $element.dialog(settings);
       dialog.open = true;
       $(window).trigger('dialog:aftercreate', [dialog, $element, settings]);
