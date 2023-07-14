@@ -6,7 +6,6 @@ use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Ajax\CloseDialogCommand;
 use Drupal\Core\Ajax\ReplaceCommand;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\layout_builder\LayoutBuilderHighlightTrait;
 use Drupal\layout_builder\SectionStorageInterface;
 
 /**
@@ -16,8 +15,6 @@ use Drupal\layout_builder\SectionStorageInterface;
  *   Form classes are internal.
  */
 class UpdateBlockForm extends ConfigureBlockFormBase {
-
-  use LayoutBuilderHighlightTrait;
 
   /**
    * {@inheritdoc}

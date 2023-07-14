@@ -17,7 +17,6 @@ use Drupal\layout_builder\SectionStorageInterface;
  */
 class AddBlockForm extends ConfigureBlockFormBase {
 
-
   /**
    * {@inheritdoc}
    */
