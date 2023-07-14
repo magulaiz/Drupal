@@ -85,7 +85,8 @@ class PerformanceTest extends PerformanceTestBase {
     $this->drupalGet('node/1', ['service_name' => 'NodePageColdCache']);
     $this->assertSession()->pageTextContains('quiche');
 
-    // Node page with a warm cache.
+    // Node page with a cold cache.
+    $this->rebuildAll();
     $this->drupalGet('node/1');
     $this->drupalGet('node/1', ['service_name' => 'NodePageWarmCache']);
     $this->assertSession()->pageTextContains('quiche');
