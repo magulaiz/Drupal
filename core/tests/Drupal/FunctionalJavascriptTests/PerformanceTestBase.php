@@ -128,17 +128,28 @@ class PerformanceTestBase extends WebDriverTestBase {
     // The performance log is cumulative, and is emptied each time it is
     // collected. If the log grows to the point it will overflow, it may also be
     // emptied resulting in lost messages. To ensure we get a realistic picture
-    // of the page, collect log entries every second for 15 seconds.`
+    // of the page, collect log entries every second for up to 15 seconds.
     $attempts = 0;
+    $lcp_count = 0;
     $messages = [];
-    while ($attempts <= 30) {
+    $session = $this->getSession();
+    while ($attempts <= 15) {
       $attempts++;
-      $session = $this->getSession();
       $performance_log = $session->getDriver()->getWebDriverSession()->log('performance');
 
       foreach ($performance_log as $entry) {
         $decoded = json_decode($entry['message'], TRUE);
-        $messages[] = $decoded['message'];
+        $message = $decoded['message'];
+        if ($message['method'] === 'Tracing.dataCollected' && $message['params']['name'] === 'largestContentfulPaint::Candidate') {
+          $lcp_count++;
+        }
+        $messages[] = $message;
+      }
+      // From manual testing, the maximum number of largestContentfulPaint
+      // candidates is 2, so if we get that many, stop looking for any more.
+      // @todo find a better way.
+      if ($lcp_count === 2) {
+        break;
       }
       sleep(1);
     }
