@@ -291,6 +291,7 @@ abstract class ConfigureBlockFormBase extends FormBase implements BaseFormIdInte
    * Retrieves the build array for the current component.
    *
    * @param \Drupal\layout_builder\SectionStorageInterface $section_storage
+   *   The section storage.
    *
    * @return array
    *   The component build array.
