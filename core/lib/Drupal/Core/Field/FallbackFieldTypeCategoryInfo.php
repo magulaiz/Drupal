@@ -10,14 +10,14 @@ class FallbackFieldTypeCategoryInfo extends FieldTypeCategoryInfo {
   /**
    * {@inheritdoc}
    */
-  public function __construct(array $configuration, $plugin_id) {
+  public function __construct(array $configuration) {
 
     $plugin_definition = [
       'label' => $configuration['label'] ?? '',
       'description' => $configuration['description'] ?? '',
-      'weight' => $configuration['weight'] ?? 1,
+      'weight' => $configuration['weight'] ?? 0,
     ];
-    parent::__construct($configuration, $plugin_id, $plugin_definition);
+    parent::__construct($configuration, $configuration['id'], $plugin_definition);
   }
 
 }

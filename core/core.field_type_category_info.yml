@@ -14,3 +14,5 @@ date_time:
   label: 'Date and time'
   description: 'Field to store date and time values.'
   weight: -10
+general:
+  class: \Drupal\Core\Field\FallbackFieldTypeCategoryInfo

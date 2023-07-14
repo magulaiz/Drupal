@@ -3,6 +3,7 @@
 namespace Drupal\Core\Field;
 
 use Drupal\Component\Plugin\Factory\DefaultFactory;
+use Drupal\Component\Plugin\PluginManagerInterface;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
@@ -46,8 +47,10 @@ class FieldTypePluginManager extends DefaultPluginManager implements FieldTypePl
    *   The module handler.
    * @param \Drupal\Core\TypedData\TypedDataManagerInterface $typed_data_manager
    *   The typed data manager.
+   * @param \Drupal\Component\Plugin\PluginManagerInterface $fieldTypeCategoryInfoManager
+   *   The field type category info plugin manager.
    */
-  public function __construct(\Traversable $namespaces, CacheBackendInterface $cache_backend, ModuleHandlerInterface $module_handler, TypedDataManagerInterface $typed_data_manager) {
+  public function __construct(\Traversable $namespaces, CacheBackendInterface $cache_backend, ModuleHandlerInterface $module_handler, TypedDataManagerInterface $typed_data_manager, protected PluginManagerInterface $fieldTypeCategoryInfoManager) {
     parent::__construct('Plugin/Field/FieldType', $namespaces, $module_handler, 'Drupal\Core\Field\FieldItemInterface', 'Drupal\Core\Field\Annotation\FieldType');
     $this->alterInfo('field_info');
     $this->setCacheBackend($cache_backend, 'field_types_plugins');
@@ -162,7 +165,7 @@ class FieldTypePluginManager extends DefaultPluginManager implements FieldTypePl
    */
   public function getGroupedDefinitions(array $definitions = NULL, $label_key = 'label') {
     $grouped_categories = $this->getGroupedDefinitionsTrait($definitions, $label_key);
-    $category_info = \Drupal::service('plugin.manager.field_type_category_info')->getDefinitions();
+    $category_info = $this->fieldTypeCategoryInfoManager->getDefinitions();
     foreach ($grouped_categories as $group => $definitions) {
       if (!isset($category_info[$group]) && $group !== static::DEFAULT_CATEGORY) {
         assert(FALSE, "\"$group\" must be defined in MODULE_NAME.field_type_category_info.yml");

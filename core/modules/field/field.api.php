@@ -414,8 +414,10 @@ function hook_field_purge_field(\Drupal\field\Entity\FieldConfig $field) {
  * Allows modules to alter the field type category information.
  *
  * This hook provides a way for modules to modify or add to the existing
- * category information. Modules can use this hook to define custom field type
- * categories or modify the properties of existing categories.
+ * category information. Modules can use this hook to modify the properties of
+ * existing categories. It can also be used to define custom field type
+ * categories although the use of YAML-based plugins should be preferred over
+ * the hook.
  *
  * @param array &$categories
  *   An associative array of field type categories, keyed by category machine

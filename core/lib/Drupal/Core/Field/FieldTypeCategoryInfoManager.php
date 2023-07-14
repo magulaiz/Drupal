@@ -2,6 +2,7 @@
 
 namespace Drupal\Core\Field;
 
+use Drupal\Component\Plugin\FallbackPluginManagerInterface;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Plugin\Discovery\YamlDiscovery;
@@ -29,8 +30,9 @@ use Drupal\Core\Plugin\DefaultPluginManager;
  *
  * @see \Drupal\Core\Field\FieldTypeCategoryInfoInterface
  * @see \Drupal\Core\Field\FieldTypeCategoryInfo
+ * @see \hook_field_type_category_info_alter
  */
-class FieldTypeCategoryInfoManager extends DefaultPluginManager {
+class FieldTypeCategoryInfoManager extends DefaultPluginManager implements FallbackPluginManagerInterface {
 
   /**
    * {@inheritdoc}
@@ -38,7 +40,7 @@ class FieldTypeCategoryInfoManager extends DefaultPluginManager {
   protected $defaults = [
     'label' => '',
     'description' => '',
-    'weight' => NULL,
+    'weight' => 0,
     'class' => FieldTypeCategoryInfo::class,
   ];
 
@@ -84,13 +86,8 @@ class FieldTypeCategoryInfoManager extends DefaultPluginManager {
   /**
    * {@inheritdoc}
    */
-  public function createInstance($plugin_id, array $configuration = []) {
-    try {
-      return parent::createInstance($plugin_id, $configuration);
-    }
-    catch (\Exception) {
-      return new FallbackFieldTypeCategoryInfo($configuration, $plugin_id);
-    }
+  public function getFallbackPluginId($plugin_id, array $configuration = []) {
+    return 'general';
   }
 
 }

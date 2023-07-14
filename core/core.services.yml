@@ -744,7 +744,7 @@ services:
   Drupal\Core\Block\BlockManagerInterface: '@plugin.manager.block'
   plugin.manager.field.field_type:
     class: Drupal\Core\Field\FieldTypePluginManager
-    arguments: ['@container.namespaces', '@cache.discovery', '@module_handler', '@typed_data_manager']
+    arguments: ['@container.namespaces', '@cache.discovery', '@module_handler', '@typed_data_manager', '@plugin.manager.field_type_category_info']
   Drupal\Core\Field\FieldTypePluginManagerInterface: '@plugin.manager.field.field_type'
   plugin.manager.field.widget:
     class: Drupal\Core\Field\WidgetPluginManager
