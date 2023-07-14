@@ -89,7 +89,7 @@ trait EntityOwnerTrait {
    * @see https://www.drupal.org/node/3374738
    */
   public static function getDefaultEntityOwner() {
-    @trigger_error('The ::getCurrentUserId method is deprecated in 11.0.x and will be removed before 12.0.0.', E_USER_DEPRECATED);
+    @trigger_error('The ::getDefaultEntityOwner method is deprecated in 10.2.x and will be removed before 11.0.0.', E_USER_DEPRECATED);
     return \Drupal::currentUser()->id();
   }
 
