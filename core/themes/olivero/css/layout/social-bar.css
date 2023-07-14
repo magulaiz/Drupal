@@ -30,7 +30,7 @@
   .social-bar__inner {
     position: relative;
     width: var(--content-left);
-    padding-block: calc(5 * var(--sp));
+    padding-block: var(--sp5);
     padding-inline-start: 0;
     padding-inline-end: 0;
   }
