@@ -74,7 +74,7 @@
       // Locks the body scroll only when it opens in modal.
       if (settings.modal) {
         // Locks the body when the dialog opens.
-        bodyScrollLock.lock(document.body);
+        bodyScrollLock.lock($element.get(0));
       }
       $element.dialog(settings);
       dialog.open = true;
@@ -85,7 +85,7 @@
       $(window).trigger('dialog:beforeclose', [dialog, $element]);
       if (!dialog.open) {
         // Unlocks the body when the dialog opens.
-        bodyScrollLock.unlock($element);
+        bodyScrollLock.unlock($element.get(0));
       }
 
       $element.dialog('close');
