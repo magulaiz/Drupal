@@ -135,7 +135,7 @@
     const newFormatID = select.value;
     let checkContent = false;
     field.each(function () {
-       activeFormatID = this.getAttribute('data-editor-active-text-format');
+      activeFormatID = this.getAttribute('data-editor-active-text-format');
 
       // Prevent double-attaching if the change event is triggered manually.
       if (newFormatID === activeFormatID) {
@@ -148,7 +148,8 @@
       // markup to be stripped away.
       const supportContentFiltering =
         drupalSettings.editor.formats[newFormatID] &&
-        drupalSettings.editor.formats[newFormatID].editorSupportsContentFiltering;
+        drupalSettings.editor.formats[newFormatID]
+          .editorSupportsContentFiltering;
       // If there is no content yet, it's always safe to change the text format.
       const hasContent = field.value !== '';
       if (hasContent && supportContentFiltering) {
