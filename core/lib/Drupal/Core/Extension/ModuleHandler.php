@@ -17,33 +17,12 @@ use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 class ModuleHandler implements ModuleHandlerInterface {
 
   /**
-   * List of loaded files.
-   *
-   * @var array<string, true>
-   *   An associative array whose keys are file paths of loaded files, relative
-   *   to the application's root directory.
-   */
-  protected $loadedFiles;
-
-  /**
-   * Boolean indicating whether modules have been loaded.
-   *
-   * @var bool
-   */
-  protected $loaded = FALSE;
-
-  /**
-   * A list of module include file keys.
-   *
-   * @var array<string, string|false>
-   */
-  protected $includeFileKeys = [];
-
-  /**
    * Constructs a ModuleHandler object.
    *
    * @param string $root
    *   The app root.
+   * @param \Drupal\Core\Extension\ModuleLoaderInterface $moduleLoader
+   *   Module loader.
    * @param \Drupal\Core\Extension\WritableActiveModuleListInterface $activeModuleList
    *   List of active modules.
    * @param \Drupal\Core\Cache\CacheBackendInterface $cacheBackend
@@ -61,57 +40,41 @@ class ModuleHandler implements ModuleHandlerInterface {
   public function __construct(
     #[Autowire('%app.root%')]
     protected readonly string $root,
+    protected readonly ModuleLoaderInterface $moduleLoader,
     protected readonly WritableActiveModuleListInterface $activeModuleList,
     #[Autowire('@cache.bootstrap')]
     protected readonly CacheBackendInterface $cacheBackend,
     protected readonly HookMapInterface $hookMap,
     protected readonly CacheTagsInvalidatorInterface $cacheTagsInvalidator,
     protected readonly EventDispatcherInterface $eventDispatcher,
-  ) {
-    $hookMap->setModuleHandler($this);
-  }
+  ) {}
 
   /**
    * {@inheritdoc}
    */
   public function load($name) {
-    if (isset($this->loadedFiles[$name])) {
-      return TRUE;
-    }
-
-    if ($module_object = $this->activeModuleList->getModule($name)) {
-      $module_object->load();
-      $this->loadedFiles[$name] = TRUE;
-      return TRUE;
-    }
-    return FALSE;
+    return $this->moduleLoader->load($name);
   }
 
   /**
    * {@inheritdoc}
    */
   public function loadAll() {
-    if (!$this->loaded) {
-      foreach ($this->activeModuleList->getModules() as $name => $module) {
-        $this->load($name);
-      }
-      $this->loaded = TRUE;
-    }
+    $this->moduleLoader->loadAll();
   }
 
   /**
    * {@inheritdoc}
    */
   public function reload() {
-    $this->loaded = FALSE;
-    $this->loadAll();
+    $this->moduleLoader->reload();
   }
 
   /**
    * {@inheritdoc}
    */
   public function isLoaded() {
-    return $this->loaded;
+    return $this->moduleLoader->isLoaded();
   }
 
   /**
@@ -184,37 +147,14 @@ class ModuleHandler implements ModuleHandlerInterface {
    * {@inheritdoc}
    */
   public function loadAllIncludes($type, $name = NULL) {
-    foreach ($this->activeModuleList->getModules() as $module => $filename) {
-      $this->loadInclude($module, $type, $name);
-    }
+    $this->moduleLoader->loadAllIncludes($type, $name);
   }
 
   /**
    * {@inheritdoc}
    */
   public function loadInclude($module, $type, $name = NULL) {
-    if ($type === 'install') {
-      // Make sure the installation API is available
-      include_once $this->root . '/core/includes/install.inc';
-    }
-
-    $name = $name ?: $module;
-    $key = $type . ':' . $module . ':' . $name;
-    if (isset($this->includeFileKeys[$key])) {
-      return $this->includeFileKeys[$key];
-    }
-    if ($module_object = $this->activeModuleList->getModule($module)) {
-      $file = $this->root . '/' . $module_object->getPath() . "/$name.$type";
-      if (is_file($file)) {
-        require_once $file;
-        $this->includeFileKeys[$key] = $file;
-        return $file;
-      }
-      else {
-        $this->includeFileKeys[$key] = FALSE;
-      }
-    }
-    return FALSE;
+    return $this->moduleLoader->loadInclude($module, $type, $name);
   }
 
   /**

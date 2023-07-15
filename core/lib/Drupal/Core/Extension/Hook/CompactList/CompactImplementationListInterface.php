@@ -6,7 +6,7 @@ namespace Drupal\Core\Extension\Hook\CompactList;
 
 use Drupal\Core\Extension\Hook\CallbackList\HookImplementationCallbackListInterface;
 use Drupal\Core\Extension\Hook\SingleModuleCallbackList\SingleModuleCallbackListInterface;
-use Drupal\Core\Extension\ModuleHandlerInterface;
+use Drupal\Core\Extension\ModuleLoaderInterface;
 use Psr\Container\ContainerInterface;
 
 /**
@@ -32,8 +32,8 @@ interface CompactImplementationListInterface {
    *   Module name.
    * @param \Psr\Container\ContainerInterface $container
    *   Container.
-   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
-   *   Module handler.
+   * @param \Drupal\Core\Extension\ModuleLoaderInterface $module_loader
+   *   Module loader.
    * @param \Closure $invalidate
    *   Callback to be called when the list of implementations changes.
    *
@@ -45,7 +45,7 @@ interface CompactImplementationListInterface {
   public function buildSingleModuleCallbackList(
     string $module,
     ContainerInterface $container,
-    ModuleHandlerInterface $module_handler,
+    ModuleLoaderInterface $module_loader,
     \Closure $invalidate,
   ): SingleModuleCallbackListInterface;
 
@@ -56,8 +56,8 @@ interface CompactImplementationListInterface {
    *
    * @param \Psr\Container\ContainerInterface $container
    *   Container.
-   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
-   *   Module handler.
+   * @param \Drupal\Core\Extension\ModuleLoaderInterface $module_loader
+   *   Module loader.
    * @param \Closure $invalidate
    *   Callback to call when list of implementations changes.
    *
@@ -68,7 +68,7 @@ interface CompactImplementationListInterface {
    */
   public function buildCallbackList(
     ContainerInterface $container,
-    ModuleHandlerInterface $module_handler,
+    ModuleLoaderInterface $module_loader,
     \Closure $invalidate,
   ): HookImplementationCallbackListInterface;
 

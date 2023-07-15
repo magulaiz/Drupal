@@ -6,7 +6,7 @@ use Drupal\Core\Extension\Hook\CallbackList\HookImplementationCallbackListEmpty;
 use Drupal\Core\Extension\Hook\CallbackList\HookImplementationCallbackListInterface;
 use Drupal\Core\Extension\Hook\SingleModuleCallbackList\SingleModuleCallbackListEmpty;
 use Drupal\Core\Extension\Hook\SingleModuleCallbackList\SingleModuleCallbackListInterface;
-use Drupal\Core\Extension\ModuleHandlerInterface;
+use Drupal\Core\Extension\ModuleLoaderInterface;
 use Psr\Container\ContainerInterface;
 
 /**
@@ -29,7 +29,7 @@ class CompactImplementationListEmpty implements CompactImplementationListInterfa
   public function buildSingleModuleCallbackList(
     string $module,
     ContainerInterface $container,
-    ModuleHandlerInterface $module_handler,
+    ModuleLoaderInterface $module_loader,
     \Closure $invalidate,
   ): SingleModuleCallbackListInterface {
     return new SingleModuleCallbackListEmpty();
@@ -40,7 +40,7 @@ class CompactImplementationListEmpty implements CompactImplementationListInterfa
    */
   public function buildCallbackList(
     ContainerInterface $container,
-    ModuleHandlerInterface $module_handler,
+    ModuleLoaderInterface $module_loader,
     \Closure $invalidate,
   ): HookImplementationCallbackListInterface {
     return new HookImplementationCallbackListEmpty();

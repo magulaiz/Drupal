@@ -4,7 +4,7 @@ namespace Drupal\Core\Extension\Hook\CompactList;
 
 use Drupal\Core\Extension\Hook\CallbackList\HookImplementationCallbackListInterface;
 use Drupal\Core\Extension\Hook\SingleModuleCallbackList\SingleModuleCallbackListInterface;
-use Drupal\Core\Extension\ModuleHandlerInterface;
+use Drupal\Core\Extension\ModuleLoaderInterface;
 use Psr\Container\ContainerInterface;
 
 /**
@@ -54,13 +54,13 @@ class ModuleIncludeDecorator implements CompactImplementationListInterface {
   public function buildSingleModuleCallbackList(
     string $module,
     ContainerInterface $container,
-    ModuleHandlerInterface $module_handler,
+    ModuleLoaderInterface $module_loader,
     \Closure $invalidate,
   ): SingleModuleCallbackListInterface {
     foreach ($this->includeFileGroups[$module] ?? [] as $group => $true) {
-      $module_handler->loadInclude($module, 'inc', "$module.$group");
+      $module_loader->loadInclude($module, 'inc', "$module.$group");
     }
-    return $this->decorated->buildSingleModuleCallbackList($module, $container, $module_handler, $invalidate);
+    return $this->decorated->buildSingleModuleCallbackList($module, $container, $module_loader, $invalidate);
   }
 
   /**
@@ -68,15 +68,15 @@ class ModuleIncludeDecorator implements CompactImplementationListInterface {
    */
   public function buildCallbackList(
     ContainerInterface $container,
-    ModuleHandlerInterface $module_handler,
+    ModuleLoaderInterface $module_loader,
     \Closure $invalidate,
   ): HookImplementationCallbackListInterface {
     foreach ($this->includeFileGroups as $module => $groups) {
       foreach ($groups as $group => $true) {
-        $module_handler->loadInclude($module, 'inc', "$module.$group");
+        $module_loader->loadInclude($module, 'inc', "$module.$group");
       }
     }
-    return $this->decorated->buildCallbackList($container, $module_handler, $invalidate);
+    return $this->decorated->buildCallbackList($container, $module_loader, $invalidate);
   }
 
   /**

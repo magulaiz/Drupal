@@ -8,7 +8,7 @@ use Drupal\Core\Extension\Hook\SingleModuleCallbackList\SingleModuleCallbackList
 use Drupal\Core\Extension\Hook\SingleModuleCallbackList\SingleModuleCallbackListEmpty;
 use Drupal\Core\Extension\Hook\SingleModuleCallbackList\SingleModuleCallbackListInterface;
 use Drupal\Core\Extension\Hook\SingleModuleCallbackList\SingleModuleCallbackListSingle;
-use Drupal\Core\Extension\ModuleHandlerInterface;
+use Drupal\Core\Extension\ModuleLoaderInterface;
 use Psr\Container\ContainerInterface;
 
 /**
@@ -141,7 +141,7 @@ class CompactImplementationList implements CompactImplementationListInterface {
   public function buildSingleModuleCallbackList(
     string $module,
     ContainerInterface $container,
-    ModuleHandlerInterface $module_handler,
+    ModuleLoaderInterface $module_loader,
     \Closure $invalidate,
   ): SingleModuleCallbackListInterface {
     if (!$this->callbackStubs) {
@@ -217,7 +217,7 @@ class CompactImplementationList implements CompactImplementationListInterface {
    */
   public function buildCallbackList(
     ContainerInterface $container,
-    ModuleHandlerInterface $module_handler,
+    ModuleLoaderInterface $module_loader,
     \Closure $invalidate,
   ): HookImplementationCallbackList {
     if (!$this->callbackStubs) {

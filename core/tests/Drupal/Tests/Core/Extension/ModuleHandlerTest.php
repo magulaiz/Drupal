@@ -18,6 +18,7 @@ use Drupal\Core\Extension\Hook\Source\ImplementationSourceInterface;
 use Drupal\Core\Extension\Hook\Source\ServiceMethodAttributeHookDiscovery;
 use Drupal\Core\Extension\ModuleHandler;
 use Drupal\Core\Extension\ModuleHandlerInterface;
+use Drupal\Core\Extension\ModuleLoader;
 use Drupal\module_handler_test_attr\Hooks\CustomOrder;
 use Drupal\module_handler_test_attr\Hooks\TestHooks;
 use Drupal\module_handler_test_attr\Hooks\TypeAlter;
@@ -160,6 +161,7 @@ class ModuleHandlerTest extends UnitTestCase {
     // CacheTagsInvalidatorInterface.
     $container->addClass(TestMemoryBackend::class);
     $container->addFactory(ActiveModuleList::fromContainerParameter(...));
+    $container->addClass(ModuleLoader::class);
     $container->addClass(HookMap::class);
     $container->addClass(ServiceMethodAttributeHookDiscovery::class);
     $container->addDecoratorClass(CachedImplementationSource::class, [2 => 'hook_implementation_source']);
@@ -260,12 +262,14 @@ class ModuleHandlerTest extends UnitTestCase {
    * @covers ::reload
    */
   public function testModuleReloading() {
-    $module_handler = $this->container->getMock(ModuleHandler::class, ['load']);
-    $module_handler_wrapper = $this->queue->wrapMockObject($module_handler)
+    $module_loader = $this->container->getMock(ModuleLoader::class, ['load']);
+    $module_handler = $this->container->get(ModuleHandler::class);
+
+    $module_loader_wrapper = $this->queue->wrapMockObject($module_loader)
       ->observeMethod('load');
 
     // Prepare ->reload().
-    $module_handler_wrapper->queueReturn('load', ['module_handler_test'], TRUE);
+    $module_loader_wrapper->queueReturn('load', ['module_handler_test'], TRUE);
     $module_handler->reload();
     $this->queue->assertEmpty();
 
@@ -273,8 +277,8 @@ class ModuleHandlerTest extends UnitTestCase {
     $module_handler->addModule('module_handler_test_added', self::MODULES_PATH . '/module_handler_test_added');
 
     // Prepare for another ->reload().
-    $module_handler_wrapper->queueReturn('load', ['module_handler_test'], TRUE);
-    $module_handler_wrapper->queueReturn('load', ['module_handler_test_added'], TRUE);
+    $module_loader_wrapper->queueReturn('load', ['module_handler_test'], TRUE);
+    $module_loader_wrapper->queueReturn('load', ['module_handler_test_added'], TRUE);
     $module_handler->reload();
   }
 
@@ -407,10 +411,11 @@ class ModuleHandlerTest extends UnitTestCase {
    */
   public function testLoadAllIncludes() {
     $this->assertTrue(TRUE);
-    $module_handler = $this->container->getMock(ModuleHandler::class, ['loadInclude']);
+    $module_loader = $this->container->getMock(ModuleLoader::class, ['loadInclude']);
+    $module_handler = $this->container->get(ModuleHandler::class);
 
     // Ensure we reset implementations when settings a new modules list.
-    $module_handler->expects($this->once())->method('loadInclude');
+    $module_loader->expects($this->once())->method('loadInclude');
     $module_handler->loadAllIncludes('hook');
   }
 
@@ -554,15 +559,16 @@ class ModuleHandlerTest extends UnitTestCase {
    */
   public function testCachedGetImplementations() {
     $cache_backend = $this->container->getMock(CacheBackendInterface::class);
+    $module_loader = $this->container->getMock(ModuleLoader::class, ['loadInclude']);
     $hook_map = $this->container->getMock(HookMap::class, ['findProceduralImplementations']);
-    $module_handler = $this->container->getMock(ModuleHandler::class, ['loadInclude']);
+    $module_handler = $this->container->get(ModuleHandler::class);
 
     // Observe mocked methods.
     $cache_wrapper = $this->queue->wrapMockObject($cache_backend)
       ->observeMethod('get');
     $this->queue->wrapMockObject($hook_map)
       ->observeMethod('findProceduralImplementations');
-    $module_handler_wrapper = $this->queue->wrapMockObject($module_handler)
+    $module_loader_wrapper = $this->queue->wrapMockObject($module_loader)
       ->observeMethod('loadInclude');
 
     // The ->load() does not trigger any of the observed methods.
@@ -586,7 +592,8 @@ class ModuleHandlerTest extends UnitTestCase {
     );
 
     // The 'module_handler_test.test.inc' is included.
-    $module_handler_wrapper->queueVoid('loadInclude', ['module_handler_test', 'inc', 'module_handler_test.test']);
+    // Pretend that the file does not exist.
+    $module_loader_wrapper->queueReturn('loadInclude', ['module_handler_test', 'inc', 'module_handler_test.test'], FALSE);
 
     $implementors = [];
     $module_handler->invokeAllWith(
@@ -606,15 +613,17 @@ class ModuleHandlerTest extends UnitTestCase {
    */
   public function testCachedGetImplementationsMissingMethod() {
     $cache_backend = $this->container->getMock(CacheBackendInterface::class);
+    $module_loader = $this->container->getMock(ModuleLoader::class, ['loadInclude']);
     $hook_map = $this->container->getMock(HookMap::class, ['findProceduralImplementations']);
-    $module_handler = $this->container->getMock(ModuleHandler::class, ['loadInclude']);
+    $module_handler = $this->container->get(ModuleHandler::class);
 
     // Observe mocked methods.
     $cache_wrapper = $this->queue->wrapMockObject($cache_backend)
       ->observeMethods(['get', 'set', 'delete']);
+    // The discovery should never run.
     $this->queue->wrapMockObject($hook_map)
       ->observeMethod('findProceduralImplementations');
-    $module_handler_wrapper = $this->queue->wrapMockObject($module_handler)
+    $module_loader_wrapper = $this->queue->wrapMockObject($module_loader)
       ->observeMethod('loadInclude');
 
     // The ->load() does not trigger any of the observed methods.
@@ -638,7 +647,7 @@ class ModuleHandlerTest extends UnitTestCase {
       ],
     );
     // The 'module_handler_test.test.inc' is included.
-    $module_handler_wrapper->queueVoid('loadInclude', ['module_handler_test', 'inc', 'module_handler_test.test']);
+    $module_loader_wrapper->queueReturn('loadInclude', ['module_handler_test', 'inc', 'module_handler_test.test'], FALSE);
 
     $implementors = [];
     $module_handler->invokeAllWith(

@@ -7,6 +7,7 @@ use Drupal\Core\Extension\ActiveModuleList;
 use Drupal\Core\Extension\Hook\HookMap;
 use Drupal\Core\Extension\Hook\Source\EmptyImplementationSource;
 use Drupal\Core\Extension\ModuleHandler;
+use Drupal\Core\Extension\ModuleLoader;
 use Drupal\Core\Plugin\Context\EntityContextDefinition;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\plugin_test\Plugin\DefaultsTestPluginManager;
@@ -52,16 +53,18 @@ abstract class PluginTestBase extends KernelTestBase {
     $cache_backend = new MemoryBackend();
     $event_dispatcher = new EventDispatcher();
     $active_module_list = new ActiveModuleList($this->root, [], $event_dispatcher);
-    $event_dispatcher = new EventDispatcher();
+    $module_loader = new ModuleLoader($this->root, $active_module_list);
     $hook_map = new HookMap(
       $cache_backend,
       $this->container,
       new EmptyImplementationSource(),
       $active_module_list,
+      $module_loader,
       $event_dispatcher,
     );
     $module_handler = new ModuleHandler(
       $this->root,
+      $module_loader,
       $active_module_list,
       $cache_backend,
       $hook_map,

@@ -587,6 +587,10 @@ services:
     autowire: true
   Drupal\Core\Extension\ActiveModuleListInterface: '@active_module_list'
   Drupal\Core\Extension\WritableActiveModuleListInterface: '@active_module_list'
+  module_loader:
+    class: Drupal\Core\Extension\ModuleLoader
+    autowire: true
+  Drupal\Core\Extension\ModuleLoaderInterface: '@module_loader'
   hook_method_discovery:
     class: Drupal\Core\Extension\Hook\Source\ServiceMethodAttributeHookDiscovery
     autowire: true
