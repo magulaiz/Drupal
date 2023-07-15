@@ -113,7 +113,7 @@ function system_post_update_remove_asset_entries() {
 }
 
 /**
- * Implements hook_post_update_NAME().
+ * Remove redundant asset query string state.
  */
 function system_post_update_remove_asset_query_string() {
   \Drupal::state()->delete('system.css_js_query_string');
