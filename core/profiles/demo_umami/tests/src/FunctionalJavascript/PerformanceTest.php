@@ -84,6 +84,10 @@ class PerformanceTest extends PerformanceTestBase {
    */
   public function testFrontPageLukeWarmCache() {
     $this->sendTelemetry = FALSE;
+    // First of all visit the front page to ensure the image style is created.
+    $this->drupalGet('<front>');
+    $this->rebuildAll();
+    // Now visit a different page to warm non-route-specific caches.
     $this->drupalGet('/user/login');
     $this->sendTelemetry = TRUE;
     $this->drupalGet('<front>');
