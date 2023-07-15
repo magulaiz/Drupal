@@ -227,8 +227,6 @@ class PerformanceTestBase extends WebDriverTestBase {
     }
 
     $offset = $dom_loaded_timestamp_page - $dom_loaded_timestamp_timeline;
-
-
     $entry = $this->getSession()->evaluateScript("window.performance.getEntriesByType('navigation')")[0];
     $first_request_timestamp = $entry['requestStart'] * static::NANOSECONDS_PER_MILLISECOND;
     $first_response_timestamp = $entry['responseStart'] * static::NANOSECONDS_PER_MILLISECOND;
