@@ -13,6 +13,7 @@ use Drupal\Tests\UnitTestCase;
 use Drupal\TestTools\MockCallQueue;
 use Drupal\TestTools\RuntimeAutowireContainer;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\EventDispatcher\EventDispatcher;
 
 /**
  * @coversDefaultClass \Drupal\Core\Extension\ModuleHandler
@@ -94,6 +95,7 @@ class ModuleHandlerTest extends UnitTestCase {
     });
     $container->addClass(MemoryBackend::class);
     $container->addClass(ModuleHandler::class);
+    $container->addClass(EventDispatcher::class);
 
     $container->addService($this->queue);
 

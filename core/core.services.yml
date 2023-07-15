@@ -1333,9 +1333,6 @@ services:
     arguments: ['@unrouted_url_assembler', '@router.request_context']
   redirect_leading_slashes_subscriber:
     class: Drupal\Core\EventSubscriber\RedirectLeadingSlashesSubscriber
-  request_close_subscriber:
-    class: Drupal\Core\EventSubscriber\RequestCloseSubscriber
-    arguments: ['@module_handler']
   config_import_subscriber:
     class: Drupal\Core\EventSubscriber\ConfigImportSubscriber
     tags:

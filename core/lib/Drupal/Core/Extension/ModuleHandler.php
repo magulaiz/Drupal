@@ -7,6 +7,8 @@ use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Extension\Exception\UnknownExtensionException;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
+use Symfony\Component\HttpKernel\KernelEvents;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 /**
  * Class that manages modules in a Drupal installation.
@@ -90,6 +92,8 @@ class ModuleHandler implements ModuleHandlerInterface {
    *   %container.modules% parameter being set up by DrupalKernel.
    * @param \Drupal\Core\Cache\CacheBackendInterface $cacheBackend
    *   Cache backend for storing module hook implementation information.
+   * @param \Symfony\Component\EventDispatcher\EventDispatcherInterface $eventDispatcher
+   *   Event dispatcher.
    *
    * @see \Drupal\Core\DrupalKernel
    * @see \Drupal\Core\CoreServiceProvider
@@ -101,11 +105,13 @@ class ModuleHandler implements ModuleHandlerInterface {
     array $module_list,
     #[Autowire('@cache.bootstrap')]
     protected readonly CacheBackendInterface $cacheBackend,
+    EventDispatcherInterface $eventDispatcher,
   ) {
     $this->moduleList = [];
     foreach ($module_list as $name => $module) {
       $this->moduleList[$name] = new Extension($this->root, $module['type'], $module['pathname'], $module['filename']);
     }
+    $eventDispatcher->addListener(KernelEvents::TERMINATE, $this->writeCache(...));
   }
 
   /**
