@@ -150,7 +150,8 @@ YAML,
     // @see \Symfony\Component\DependencyInjection\Compiler\ResolveParameterPlaceHoldersPass
     // @see \Drupal\Core\DrupalKernel::guessApplicationRoot()
     $container->getDefinition('module_handler')->setArgument(0, '%app.root%');
-    $container->getDefinition('module_handler')->setArgument(1, '%container.modules%');
+    $container->getDefinition('active_module_list')->setArgument(0, '%app.root%');
+    $container->getDefinition('active_module_list')->setArgument(1, '%container.modules%');
 
     // To discover per-test case config schema YAML files, work around the
     // static file cache in \Drupal\Core\Extension\ExtensionDiscovery. There is

@@ -5,6 +5,8 @@ namespace Drupal\Tests\Core\Extension;
 use Composer\Autoload\ClassLoader;
 use Drupal\Component\Event\ResetEvent;
 use Drupal\Core\Cache\CacheBackendInterface;
+use Drupal\Core\Extension\ActiveModuleList;
+use Drupal\Core\Extension\ActiveModuleListInterface;
 use Drupal\Core\Extension\Exception\UnknownExtensionException;
 use Drupal\Core\Extension\Extension;
 use Drupal\Core\Extension\ExtensionEvents;
@@ -157,6 +159,7 @@ class ModuleHandlerTest extends UnitTestCase {
     // Add a class that covers both CacheBackendInterface and
     // CacheTagsInvalidatorInterface.
     $container->addClass(TestMemoryBackend::class);
+    $container->addFactory(ActiveModuleList::fromContainerParameter(...));
     $container->addClass(HookMap::class);
     $container->addClass(ServiceMethodAttributeHookDiscovery::class);
     $container->addDecoratorClass(CachedImplementationSource::class, [2 => 'hook_implementation_source']);
@@ -211,6 +214,8 @@ class ModuleHandlerTest extends UnitTestCase {
   public function testContainerSetup(): void {
     $source = $this->container->get(ImplementationSourceInterface::class);
     $this->assertInstanceOf(CachedImplementationSource::class, $source);
+    $active_module_list = $this->container->get(ActiveModuleListInterface::class);
+    $this->assertSame(['module_handler_test'], array_keys($active_module_list->getModules()));
   }
 
   /**
@@ -353,7 +358,7 @@ class ModuleHandlerTest extends UnitTestCase {
    * Tests adding a module.
    *
    * @covers ::addModule
-   * @covers ::add
+   * @covers \Drupal\Core\Extension\ActiveModuleList::add
    */
   public function testAddModule() {
     $mock_event_dispatcher = $this->container->getMock(EventDispatcherInterface::class);
@@ -371,7 +376,7 @@ class ModuleHandlerTest extends UnitTestCase {
    * Tests adding a profile.
    *
    * @covers ::addProfile
-   * @covers ::add
+   * @covers \Drupal\Core\Extension\ActiveModuleList::add
    */
   public function testAddProfile() {
     $mock_event_dispatcher = $this->container->getMock(EventDispatcherInterface::class);

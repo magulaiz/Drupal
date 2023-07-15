@@ -3,6 +3,7 @@
 namespace Drupal\KernelTests\Core\Plugin;
 
 use Drupal\Core\Cache\MemoryBackend;
+use Drupal\Core\Extension\ActiveModuleList;
 use Drupal\Core\Extension\Hook\HookMap;
 use Drupal\Core\Extension\Hook\Source\EmptyImplementationSource;
 use Drupal\Core\Extension\ModuleHandler;
@@ -50,15 +51,18 @@ abstract class PluginTestBase extends KernelTestBase {
     $this->mockBlockManager = new MockBlockManager();
     $cache_backend = new MemoryBackend();
     $event_dispatcher = new EventDispatcher();
+    $active_module_list = new ActiveModuleList($this->root, [], $event_dispatcher);
+    $event_dispatcher = new EventDispatcher();
     $hook_map = new HookMap(
       $cache_backend,
       $this->container,
       new EmptyImplementationSource(),
+      $active_module_list,
       $event_dispatcher,
     );
     $module_handler = new ModuleHandler(
       $this->root,
-      [],
+      $active_module_list,
       $cache_backend,
       $hook_map,
       $cache_backend,

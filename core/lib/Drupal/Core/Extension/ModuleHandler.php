@@ -26,13 +26,6 @@ class ModuleHandler implements ModuleHandlerInterface {
   protected $loadedFiles;
 
   /**
-   * List of installed modules.
-   *
-   * @var \Drupal\Core\Extension\Extension[]
-   */
-  protected $moduleList;
-
-  /**
    * Boolean indicating whether modules have been loaded.
    *
    * @var bool
@@ -51,10 +44,8 @@ class ModuleHandler implements ModuleHandlerInterface {
    *
    * @param string $root
    *   The app root.
-   * @param array<string, array> $module_list
-   *   An associative array whose keys are the names of installed modules and
-   *   whose values are Extension class parameters. This is normally the
-   *   %container.modules% parameter being set up by DrupalKernel.
+   * @param \Drupal\Core\Extension\WritableActiveModuleListInterface $activeModuleList
+   *   List of active modules.
    * @param \Drupal\Core\Cache\CacheBackendInterface $cacheBackend
    *   Cache backend for storing module hook implementation information.
    * @param \Drupal\Core\Extension\Hook\HookMapInterface $hookMap
@@ -70,18 +61,13 @@ class ModuleHandler implements ModuleHandlerInterface {
   public function __construct(
     #[Autowire('%app.root%')]
     protected readonly string $root,
-    #[Autowire('%container.modules%')]
-    array $module_list,
+    protected readonly WritableActiveModuleListInterface $activeModuleList,
     #[Autowire('@cache.bootstrap')]
     protected readonly CacheBackendInterface $cacheBackend,
     protected readonly HookMapInterface $hookMap,
     protected readonly CacheTagsInvalidatorInterface $cacheTagsInvalidator,
     protected readonly EventDispatcherInterface $eventDispatcher,
   ) {
-    $this->moduleList = [];
-    foreach ($module_list as $name => $module) {
-      $this->moduleList[$name] = new Extension($this->root, $module['type'], $module['pathname'], $module['filename']);
-    }
     $hookMap->setModuleHandler($this);
   }
 
@@ -93,8 +79,8 @@ class ModuleHandler implements ModuleHandlerInterface {
       return TRUE;
     }
 
-    if (isset($this->moduleList[$name])) {
-      $this->moduleList[$name]->load();
+    if ($module_object = $this->activeModuleList->getModule($name)) {
+      $module_object->load();
       $this->loadedFiles[$name] = TRUE;
       return TRUE;
     }
@@ -106,7 +92,7 @@ class ModuleHandler implements ModuleHandlerInterface {
    */
   public function loadAll() {
     if (!$this->loaded) {
-      foreach ($this->moduleList as $name => $module) {
+      foreach ($this->activeModuleList->getModules() as $name => $module) {
         $this->load($name);
       }
       $this->loaded = TRUE;
@@ -132,66 +118,36 @@ class ModuleHandler implements ModuleHandlerInterface {
    * {@inheritdoc}
    */
   public function getModuleList() {
-    return $this->moduleList;
+    return $this->activeModuleList->getModules();
   }
 
   /**
    * {@inheritdoc}
    */
   public function getModule($name) {
-    if (isset($this->moduleList[$name])) {
-      return $this->moduleList[$name];
-    }
-    throw new UnknownExtensionException(sprintf('The module %s does not exist.', $name));
+    return $this->activeModuleList->getModule($name)
+      ?? throw new UnknownExtensionException(sprintf('The module %s does not exist.', $name));
   }
 
   /**
    * {@inheritdoc}
    */
   public function setModuleList(array $module_list = []) {
-    assert(array_keys($module_list) === array_map(
-      static fn (Extension $module): string => $module->getName(),
-      array_values($module_list),
-    ));
-    $this->moduleList = $module_list;
-    $this->eventDispatcher->dispatch(
-      new ResetEvent(),
-      ExtensionEvents::MODULE_LIST_WAS_UPDATED,
-    );
+    $this->activeModuleList->setModules($module_list);
   }
 
   /**
    * {@inheritdoc}
    */
   public function addModule($name, $path) {
-    $this->add('module', $name, $path);
+    $this->activeModuleList->addModule($name, $path);
   }
 
   /**
    * {@inheritdoc}
    */
   public function addProfile($name, $path) {
-    $this->add('profile', $name, $path);
-  }
-
-  /**
-   * Adds a module or profile to the list of currently active modules.
-   *
-   * @param string $type
-   *   The extension type; either 'module' or 'profile'.
-   * @param string $name
-   *   The module name; e.g., 'node'.
-   * @param string $path
-   *   The module path; e.g., 'core/modules/node'.
-   */
-  protected function add($type, $name, $path) {
-    $pathname = "$path/$name.info.yml";
-    $filename = file_exists($this->root . "/$path/$name.$type") ? "$name.$type" : NULL;
-    $this->moduleList[$name] = new Extension($this->root, $type, $pathname, $filename);
-    $this->eventDispatcher->dispatch(
-      new ResetEvent(),
-      ExtensionEvents::MODULE_LIST_WAS_UPDATED,
-    );
+    $this->activeModuleList->addProfile($name, $path);
   }
 
   /**
@@ -221,14 +177,14 @@ class ModuleHandler implements ModuleHandlerInterface {
    * {@inheritdoc}
    */
   public function moduleExists($module) {
-    return isset($this->moduleList[$module]);
+    return $this->activeModuleList->moduleExists($module);
   }
 
   /**
    * {@inheritdoc}
    */
   public function loadAllIncludes($type, $name = NULL) {
-    foreach ($this->moduleList as $module => $filename) {
+    foreach ($this->activeModuleList->getModules() as $module => $filename) {
       $this->loadInclude($module, $type, $name);
     }
   }
@@ -247,8 +203,8 @@ class ModuleHandler implements ModuleHandlerInterface {
     if (isset($this->includeFileKeys[$key])) {
       return $this->includeFileKeys[$key];
     }
-    if (isset($this->moduleList[$module])) {
-      $file = $this->root . '/' . $this->moduleList[$module]->getPath() . "/$name.$type";
+    if ($module_object = $this->activeModuleList->getModule($module)) {
+      $file = $this->root . '/' . $module_object->getPath() . "/$name.$type";
       if (is_file($file)) {
         require_once $file;
         $this->includeFileKeys[$key] = $file;
@@ -311,7 +267,7 @@ class ModuleHandler implements ModuleHandlerInterface {
    * {@inheritdoc}
    */
   public function invoke($module, $hook, array $args = []): mixed {
-    if (!isset($this->moduleList[$module])) {
+    if (!$this->activeModuleList->moduleExists($module)) {
       // The module is not installed, so the implementation won't be part of the
       // list. Instead, just call the function, if it exists.
       $function = $module . '_' . $hook;
@@ -413,7 +369,7 @@ class ModuleHandler implements ModuleHandlerInterface {
    */
   public function getModuleDirectories() {
     $dirs = [];
-    foreach ($this->getModuleList() as $name => $module) {
+    foreach ($this->activeModuleList->getModules() as $name => $module) {
       $dirs[$name] = $this->root . '/' . $module->getPath();
     }
     return $dirs;

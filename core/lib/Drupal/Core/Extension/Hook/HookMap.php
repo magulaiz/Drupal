@@ -4,6 +4,7 @@ namespace Drupal\Core\Extension\Hook;
 
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Cache\CacheBackendInterface;
+use Drupal\Core\Extension\ActiveModuleListInterface;
 use Drupal\Core\Extension\ExtensionEvents;
 use Drupal\Core\Extension\Hook\Builder\ImplementationListBuilder;
 use Drupal\Core\Extension\Hook\CallbackList\HookImplementationCallbackListInterface;
@@ -112,6 +113,8 @@ class HookMap implements HookMapInterface, EventSubscriberInterface {
    *   Container.
    * @param \Drupal\Core\Extension\Hook\Source\ImplementationSourceInterface $implementationSource
    *   Source of non-procedural implementations.
+   * @param \Drupal\Core\Extension\ActiveModuleListInterface $activeModuleList
+   *   Active module list.
    * @param \Symfony\Component\EventDispatcher\EventDispatcherInterface $eventDispatcher
    *   Event dispatcher.
    */
@@ -120,8 +123,10 @@ class HookMap implements HookMapInterface, EventSubscriberInterface {
     private readonly CacheBackendInterface $cacheBackend,
     private readonly ContainerInterface $container,
     private readonly ImplementationSourceInterface $implementationSource,
+    private readonly ActiveModuleListInterface $activeModuleList,
     EventDispatcherInterface $eventDispatcher,
   ) {
+    $this->moduleNumbers = array_flip(array_keys($activeModuleList->getModules()));
     $this->invalidate = function (): void {
       $this->cacheNeedsWriting = TRUE;
     };
@@ -153,7 +158,6 @@ class HookMap implements HookMapInterface, EventSubscriberInterface {
    */
   public function setModuleHandler(ModuleHandlerInterface $module_handler): void {
     $this->moduleHandler = $module_handler;
-    $this->moduleNumbers = array_flip(array_keys($module_handler->getModuleList()));
   }
 
   /**
@@ -167,7 +171,7 @@ class HookMap implements HookMapInterface, EventSubscriberInterface {
     $this->singleModuleCallbackLists = [];
     $this->serviceMethodImplementations = NULL;
     $this->cacheNeedsWriting = FALSE;
-    $this->moduleNumbers = array_flip(array_keys($this->moduleHandler->getModuleList()));
+    $this->moduleNumbers = array_flip(array_keys($this->activeModuleList->getModules()));
     $this->cacheBackend->delete(self::CACHE_ID);
     $this->cacheBackend->delete('hook_info');
   }
@@ -453,7 +457,7 @@ class HookMap implements HookMapInterface, EventSubscriberInterface {
     // Make sure that the modules are loaded before checking.
     $this->moduleHandler->reload();
     // $this->invokeAll() would cause an infinite recursion.
-    foreach ($this->moduleHandler->getModuleList() as $module => $filename) {
+    foreach ($this->activeModuleList->getModules() as $module => $filename) {
       $function = $module . '_hook_info';
       if (function_exists($function)) {
         $result = $function();

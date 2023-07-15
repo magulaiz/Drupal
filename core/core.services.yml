@@ -581,6 +581,12 @@ services:
   default_plugin_manager:
     abstract: true
     arguments: ['@container.namespaces', '@cache.discovery', '@module_handler']
+  active_module_list:
+    class: Drupal\Core\Extension\ActiveModuleList
+    factory: [~, fromContainerParameter]
+    autowire: true
+  Drupal\Core\Extension\ActiveModuleListInterface: '@active_module_list'
+  Drupal\Core\Extension\WritableActiveModuleListInterface: '@active_module_list'
   hook_method_discovery:
     class: Drupal\Core\Extension\Hook\Source\ServiceMethodAttributeHookDiscovery
     autowire: true
