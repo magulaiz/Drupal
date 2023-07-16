@@ -48,7 +48,7 @@ class HookMap implements HookMapInterface, EventSubscriberInterface {
   private array $listBuilders = [];
 
   /**
-   * Cacheable lists by hook name(s).
+   * Compact lists by hook name(s).
    *
    * @var array<string, \Drupal\Core\Extension\Hook\CompactList\CompactImplementationListInterface>
    */
@@ -189,14 +189,14 @@ class HookMap implements HookMapInterface, EventSubscriberInterface {
         }
       }
     }
-    return $this->getCacheableList($hook)->hasImplementations($modules);
+    return $this->getCompactList($hook)->hasImplementations($modules);
   }
 
   /**
    * {@inheritdoc}
    */
   public function getPrintableNames(string ...$hooks): array {
-    return $this->getCacheableList(...$hooks)->getPrintableNames(FALSE);
+    return $this->getCompactList(...$hooks)->getPrintableNames(FALSE);
   }
 
   /**
@@ -205,7 +205,7 @@ class HookMap implements HookMapInterface, EventSubscriberInterface {
   public function getSingleModuleCallbackList(string $hook, string $module): SingleModuleCallbackListInterface {
     /** @var \Drupal\Core\Extension\Hook\SingleModuleCallbackList\SingleModuleCallbackListInterface|null $ref */
     $ref =& $this->singleModuleCallbackLists[$hook][$module];
-    $ref ??= $this->getCacheableList($hook)->buildSingleModuleCallbackList(
+    $ref ??= $this->getCompactList($hook)->buildSingleModuleCallbackList(
       $module,
       $this->container,
       $this->moduleLoader,
@@ -225,7 +225,7 @@ class HookMap implements HookMapInterface, EventSubscriberInterface {
     // trusted, and has to be discovered again.
     unset($this->listBuilders[$hook]);
     unset($this->compactLists[$hook]);
-    $ref = $this->getCacheableList($hook)->buildSingleModuleCallbackList(
+    $ref = $this->getCompactList($hook)->buildSingleModuleCallbackList(
       $module,
       $this->container,
       $this->moduleLoader,
@@ -240,7 +240,7 @@ class HookMap implements HookMapInterface, EventSubscriberInterface {
   public function getCallbackList(string $hook, string ...$extra_hooks): HookImplementationCallbackListInterface {
     if (!$extra_hooks) {
       return $this->callbackLists[$hook]
-        ??= $this->getCacheableList($hook)->buildCallbackList(
+        ??= $this->getCompactList($hook)->buildCallbackList(
           $this->container,
           $this->moduleLoader,
           $this->invalidate,
@@ -248,7 +248,7 @@ class HookMap implements HookMapInterface, EventSubscriberInterface {
     }
     $cid = $hook . '.' . implode('.', $extra_hooks);
     return $this->callbackLists[$cid]
-      ??= $this->getCacheableList($hook, ...$extra_hooks)->buildCallbackList(
+      ??= $this->getCompactList($hook, ...$extra_hooks)->buildCallbackList(
         $this->container,
         $this->moduleLoader,
         $this->invalidate,
@@ -258,7 +258,7 @@ class HookMap implements HookMapInterface, EventSubscriberInterface {
   /**
    * {@inheritdoc}
    */
-  public function getCacheableList(string $hook, string ...$extra_hooks): CompactImplementationListInterface {
+  public function getCompactList(string $hook, string ...$extra_hooks): CompactImplementationListInterface {
     $cid = $hook;
     if ($extra_hooks) {
       $cid .= '.' . implode('.', $extra_hooks);

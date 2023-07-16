@@ -67,7 +67,7 @@ interface HookMapInterface {
    * @return \Drupal\Core\Extension\Hook\CompactList\CompactImplementationListInterface
    *   Object with cacheable hook info.
    */
-  public function getCacheableList(string $hook, string ...$extra_hooks);
+  public function getCompactList(string $hook, string ...$extra_hooks);
 
   /**
    * Retrieves a list of hooks that are declared through hook_hook_info().
