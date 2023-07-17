@@ -295,16 +295,11 @@ function claro_element_info_alter(&$type) {
   if (isset($type['status_messages'])) {
     $type['status_messages']['#pre_render'][] = [ClaroPreRender::class, 'messagePlaceholder'];
   }
-}
 
-/**
- * Implements template_preprocess_filter_guidelines().
- */
-function claro_preprocess_filter_guidelines(&$variables) {
-  // Fix filter guidelines selector issue of 'filter/drupal.filter'.
-  // @todo Remove when https://www.drupal.org/node/2881212 is fixed.
-  $variables['attributes']['class'][] = 'filter-guidelines-item';
-  $variables['attributes']['class'][] = 'filter-guidelines-' . $variables['format']->id();
+  // Add a pre-render to tables to use CSS for sticky positioning.
+  if (isset($type['table'])) {
+    $type['table']['#pre_render'][] = [ClaroPreRender::class, 'tablePositionSticky'];
+  }
 }
 
 /**
