@@ -5,7 +5,6 @@ namespace Drupal\Tests\Core\Field;
 use Drupal\Component\Plugin\PluginManagerInterface;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\Field\BaseFieldDefinition;
-use Drupal\Core\Field\FieldTypeCategoryInfoInterface;
 use Drupal\Core\Field\FieldTypePluginManager;
 use Drupal\Core\TypedData\TypedDataManagerInterface;
 use Drupal\Tests\UnitTestCase;

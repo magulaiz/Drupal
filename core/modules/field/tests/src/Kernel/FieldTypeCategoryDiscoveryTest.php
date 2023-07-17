@@ -34,7 +34,7 @@ class FieldTypeCategoryDiscoveryTest extends KernelTestBase {
     $this->assertSame($expected, [
       $category->getLabel()->render(),
       $category->getDescription()->render(),
-      $category->getweight(),
+      $category->getWeight(),
     ]);
   }
 
