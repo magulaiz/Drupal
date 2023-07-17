@@ -245,7 +245,9 @@ class FieldConfigEntityUnitTest extends UnitTestCase {
       'default_value' => [],
       'default_value_callback' => '',
       'settings' => [],
-      'dependencies' => [],
+      'dependencies' => [
+        'config' => [NULL],
+      ],
       'field_type' => 'test_field',
     ];
     $this->entityTypeManager->expects($this->any())
@@ -271,7 +273,7 @@ class FieldConfigEntityUnitTest extends UnitTestCase {
   public function testGetType() {
     // Ensure that FieldConfig::getType() is not delegated to
     // FieldStorage.
-    $this->entityFieldManager->expects($this->never())
+    $this->entityFieldManager->expects($this->atLeastOnce())
       ->method('getFieldStorageDefinitions');
     $this->fieldStorage->expects($this->never())
       ->method('getType');
