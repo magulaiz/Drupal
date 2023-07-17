@@ -17,7 +17,7 @@ class FallbackFieldTypeCategoryInfo extends FieldTypeCategoryInfo {
       'description' => $configuration['description'] ?? '',
       'weight' => $configuration['weight'] ?? 0,
     ];
-    parent::__construct($configuration, $configuration['id'], $plugin_definition);
+    parent::__construct($configuration, $configuration['unique_identifier'], $plugin_definition);
   }
 
 }

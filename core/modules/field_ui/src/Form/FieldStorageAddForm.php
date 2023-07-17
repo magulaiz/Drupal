@@ -158,7 +158,7 @@ class FieldStorageAddForm extends FormBase {
       foreach ($field_types as $name => $field_type) {
         $unique_definitions[$category][$name] = ['unique_identifier' => $name] + $field_type;
         if ($this->fieldTypeCategoryInfoManager->hasDefinition($category)) {
-          $category_plugin = $this->fieldTypeCategoryInfoManager->createInstance($category, $field_type);
+          $category_plugin = $this->fieldTypeCategoryInfoManager->createInstance($category, $unique_definitions[$category][$name]);
           $field_type_options[$category_plugin->getPluginId()] = ['unique_identifier' => $name] + $field_type;
         }
       }
