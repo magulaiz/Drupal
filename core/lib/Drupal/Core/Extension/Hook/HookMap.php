@@ -423,7 +423,7 @@ class HookMap implements HookMapInterface, EventSubscriberInterface {
         $this->hookInfo = $cache->data;
       }
       else {
-        $this->buildHookInfo();
+        $this->hookInfo = $this->buildHookInfo();
         $this->cacheBackend->set('hook_info', $this->hookInfo);
       }
     }
@@ -433,10 +433,13 @@ class HookMap implements HookMapInterface, EventSubscriberInterface {
   /**
    * Builds hook_hook_info() information.
    *
+   * @return array<string, array>
+   *   Discovered hook info.
+   *
    * @see \Drupal\Core\Extension\ModuleHandlerInterface::getHookInfo()
    */
-  protected function buildHookInfo() {
-    $this->hookInfo = [];
+  protected function buildHookInfo(): array {
+    $hook_info = [];
     // Make sure that the modules are loaded before checking.
     $this->moduleLoader->reload();
     // $this->invokeAll() would cause an infinite recursion.
@@ -445,10 +448,11 @@ class HookMap implements HookMapInterface, EventSubscriberInterface {
       if (function_exists($function)) {
         $result = $function();
         if (isset($result) && is_array($result)) {
-          $this->hookInfo = NestedArray::mergeDeep($this->hookInfo, $result);
+          $hook_info = NestedArray::mergeDeep($hook_info, $result);
         }
       }
     }
+    return $hook_info;
   }
 
 }
