@@ -71,20 +71,22 @@
       settings = $.extend({}, drupalSettings.dialog, options, settings);
       // Trigger a global event to allow scripts to bind events to the dialog.
       $(window).trigger('dialog:beforecreate', [dialog, $element, settings]);
+      $element.dialog(settings);
+      dialog.open = true;
+
       // Locks the body scroll only when it opens in modal.
       if (settings.modal) {
         // Locks the body when the dialog opens.
-        bodyScrollLock.lock($element.find('.ui-dialog-content'));
+        bodyScrollLock.lock($element.get(0));
       }
-      $element.dialog(settings);
-      dialog.open = true;
+
       $(window).trigger('dialog:aftercreate', [dialog, $element, settings]);
     }
 
     function closeDialog(value) {
       $(window).trigger('dialog:beforeclose', [dialog, $element]);
       // Unlocks the body when the dialog closes.
-      bodyScrollLock.unlock($element.find('.ui-dialog-content'));
+      bodyScrollLock.unlock($element.get(0));
 
       $element.dialog('close');
       dialog.returnValue = value;
