@@ -74,8 +74,7 @@
       // Locks the body scroll only when it opens in modal.
       if (settings.modal) {
         // Locks the body when the dialog opens.
-        const selector = $element.attr('id');
-        bodyScrollLock.unlock(document.getElementById(selector));
+        bodyScrollLock.lock($element.find('#drupal-modal'));
       }
       $element.dialog(settings);
       dialog.open = true;
@@ -86,8 +85,7 @@
       $(window).trigger('dialog:beforeclose', [dialog, $element]);
       if (!dialog.open) {
         // Unlocks the body when the dialog opens.
-        const selector = $element.attr('id');
-        bodyScrollLock.unlock(document.getElementById(selector));
+        bodyScrollLock.unlock($element.find('#drupal-modal'));
       }
 
       $element.dialog('close');
