@@ -13,7 +13,7 @@ interface PathMatcherInterface {
    * @param string $path
    *   The path to match.
    * @param string|string[] $patterns
-   *   A set of patterns separated by a newline.
+   *   A single pattern, or set of patterns to match.
    *
    * @return bool
    *   TRUE if the path matches a pattern, FALSE otherwise.
