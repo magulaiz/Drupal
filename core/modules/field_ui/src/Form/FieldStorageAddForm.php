@@ -258,14 +258,13 @@ class FieldStorageAddForm extends FormBase {
     $selected_field_type = NULL;
     foreach ($field_type_options_radios as $field_type_options_radio) {
       if ($field_type_options_radio['#attributes']['checked']) {
-        $selected_field_label = $field_type_options_radio['radio']['#title'];
         $selected_field_type = $field_type_options_radio['radio']['#return_value'];
         $form_state->setValue('selected_field_type', $selected_field_type);
         break;
       }
     }
-    if (isset($selected_field_label)) {
-      $group_display = $field_type_options_radios[$selected_field_label]['#data']['#group_display'];
+    if (isset($selected_field_type)) {
+      $group_display = $field_type_options_radios[$selected_field_type]['#data']['#group_display'];
       if ($group_display) {
         $form['group_field_options_wrapper']['label'] = [
           '#type' => 'label',

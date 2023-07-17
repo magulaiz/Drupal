@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\Core\Field;
 
+use Drupal\Component\Plugin\PluginManagerInterface;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\Field\FieldTypeCategoryInfoInterface;
@@ -39,7 +40,7 @@ abstract class BaseFieldDefinitionTestBase extends UnitTestCase {
       ->with($module_name)
       ->willReturn(TRUE);
     $typed_data_manager = $this->createMock(TypedDataManagerInterface::class);
-    $field_type_category_info = $this->createMock(FieldTypeCategoryInfoInterface::class);
+    $field_type_category_info = $this->createMock(PluginManagerInterface::class);
     $plugin_manager = new FieldTypePluginManager(
       $namespaces,
       $this->createMock('Drupal\Core\Cache\CacheBackendInterface'),
