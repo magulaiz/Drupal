@@ -61,9 +61,13 @@ class PerformanceTestBase extends WebDriverTestBase {
   protected string $parentClass;
 
   /**
-   * Whether to send to Open Telemetry or not.
+   * The telemetry service name.
+   *
+   * A string that uniquely identifies the request being made, for example
+   * umamiFrontPageColdCache. Or FALSE to prevent telemetry data from being
+   * sent, for example when warming caches.
    */
-  protected bool $sendTelemetry = FALSE;
+  protected false|string $telemetryServiceNAme = FALSE;
 
   /**
    * {@inheritdoc}
@@ -147,14 +151,16 @@ class PerformanceTestBase extends WebDriverTestBase {
       }
       // From manual testing, the maximum number of largestContentfulPaint
       // candidates is 2, so if we get that many, stop looking for any more.
+      // Also only check once if $this->telemetryServiceName is false, since
+      // largestContentfulPaint is not currently asserted on.
       // @todo find a better way.
-      if ($lcp_count === 2) {
+      if ($lcp_count === 2 || !$this->telemetryServiceName) {
         break;
       }
       sleep(1);
     }
     $this->collectNetworkData($path, $messages);
-    if ($this->sendTelemetry) {
+    if ($this->telemetryServiceName) {
       $this->openTelemetryTracing($path, $messages);
     }
   }
@@ -254,18 +260,14 @@ class PerformanceTestBase extends WebDriverTestBase {
       }
     }
 
-    $backtrace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
-    // Most of the time the function will be the test method calling
-    // static::drupalGet() but sometimes it will be helper methods such as
-    // static::drupalLogin().
-    $service_name = str_replace('\\', '_', $backtrace[3]['class']) . '_' . $backtrace[3]['function'];
-
     // @todo: consider setting up the resource using environment variables
     // OTEL_SERVICE_NAME, OTEL_RESOURCE_ATTRIBUTES
     // See https://opentelemetry.io/docs/instrumentation/php/resources/
+    // @todo: get commit hash from an environment variable and add this as an
+    // additional attribute.
     $resource = ResourceInfoFactory::merge(ResourceInfo::create(Attributes::create([
       ResourceAttributes::SERVICE_NAMESPACE => 'Drupal',
-      ResourceAttributes::SERVICE_NAME => $service_name,
+      ResourceAttributes::SERVICE_NAME => $this->telemetryServiceName,
       ResourceAttributes::SERVICE_INSTANCE_ID => 1,
       ResourceAttributes::SERVICE_VERSION => \Drupal::VERSION,
       ResourceAttributes::DEPLOYMENT_ENVIRONMENT => 'local',

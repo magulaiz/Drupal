@@ -48,13 +48,13 @@ class PerformanceTest extends PerformanceTestBase {
    * @group OpenTelemetry
    */
   public function testFrontPageColdCache() {
-    $this->sendTelemetry = FALSE;
+    $this->telemetryServiceName = FALSE;
     // Chromedriver doesn't collect tracing performance logs for the very first
     // request in a test, so warm it up.
     // @todo: figure out why and remove this workaround.
     $this->drupalGet('user/login');
     $this->rebuildAll();
-    $this->sendTelemetry = TRUE;
+    $this->telemetryServiceName = 'umamiFrontPageColdCache';
     $this->drupalGet('<front>');
     $this->assertSession()->pageTextContains('Umami');
   }
@@ -65,12 +65,12 @@ class PerformanceTest extends PerformanceTestBase {
    * @group OpenTelemetry
    */
   public function testFrontPageWarmCache() {
-    $this->sendTelemetry = FALSE;
+    $this->telemetryServiceName = FALSE;
     // Request the page twice so that asset aggregates are definitely cached in
     // the browser cache.
     $this->drupalGet('<front>');
     $this->drupalGet('<front>');
-    $this->sendTelemetry = TRUE;
+    $this->telemetryServiceName = 'umamiFrontPageWarmCache';
     $this->drupalGet('<front>');
   }
 
@@ -82,14 +82,14 @@ class PerformanceTest extends PerformanceTestBase {
    *
    * @group OpenTelemetry
    */
-  public function testFrontPageLukeWarmCache() {
-    $this->sendTelemetry = FALSE;
-    // First of all visit the front page to ensure the image style is created.
+  public function testFrontPageLukewarmCache() {
+    $this->telemetryServiceName = FALSE;
+    // First of all visit the front page to ensure the image style exists.
     $this->drupalGet('<front>');
     $this->rebuildAll();
     // Now visit a different page to warm non-route-specific caches.
     $this->drupalGet('/user/login');
-    $this->sendTelemetry = TRUE;
+    $this->telemetryServiceName = 'umamiFrontPageLukewarmCache';
     $this->drupalGet('<front>');
   }
 
@@ -99,13 +99,13 @@ class PerformanceTest extends PerformanceTestBase {
    * @group OpenTelemetry
    */
   public function testNodePageColdCache() {
-    $this->sendTelemetry = FALSE;
+    $this->telemetryServiceName = FALSE;
     // Chromedriver doesn't collect tracing performance logs for the very first
     // request in a test, so warm it up.
     // @todo: figure out why and remove this workaround.
     $this->drupalGet('user/login');
     $this->rebuildAll();
-    $this->sendTelemetry = TRUE;
+    $this->telemetryServiceName = 'umamiNodePageColdCache';
     $this->drupalGet('/node/1');
     $this->assertSession()->pageTextContains('quiche');
   }
@@ -116,12 +116,12 @@ class PerformanceTest extends PerformanceTestBase {
    * @group OpenTelemetry
    */
   public function testNodePageWarmCache() {
-    $this->sendTelemetry = FALSE;
+    $this->telemetryServiceName = FALSE;
     // Request the page twice so that asset aggregates are definitely cached in
     // the browser cache.
     $this->drupalGet('node/1');
     $this->drupalGet('node/1');
-    $this->sendTelemetry = TRUE;
+    $this->telemetryServiceName = 'umamiNodePageWarmCache';
     $this->drupalGet('node/1');
     $this->assertSession()->pageTextContains('quiche');
   }
@@ -138,9 +138,9 @@ class PerformanceTest extends PerformanceTestBase {
    * @group OpenTelemetry
    */
   public function testNodePageLukeWarmCache() {
-    $this->sendTelemetry = FALSE;
+    $this->telemetryServiceName = FALSE;
     $this->drupalGet('/user/login');
-    $this->sendTelemetry = TRUE;
+    $this->telemetryServiceName = 'umamiNodePageLukeWarmCache';
     $this->drupalGet('/node/1');
     $this->assertSession()->pageTextContains('quiche');
   }
