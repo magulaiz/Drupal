@@ -105,5 +105,4 @@
       bodyScrollLock.unlock($scroll.get(0));
     }
   });
-
 })(jQuery, Drupal, drupalSettings, bodyScrollLock);
