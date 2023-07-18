@@ -565,7 +565,7 @@ class EntityReferenceWidgetTest extends MediaLibraryTestBase {
    * Checks for inclusion of text in #drupal-live-announce.
    *
    * @param string $expected_message
-   *   The text expected to be present in #drupal-live-announce.
+   *   The text that is expected to be present in the #drupal-live-announce element.
    *
    * @internal
    */
