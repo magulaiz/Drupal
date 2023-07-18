@@ -24,20 +24,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class NodeChanged extends ArgumentDefaultPluginBase implements CacheableDependencyInterface {
 
   /**
-   * The route match.
-   *
-   * @var \Drupal\Core\Routing\RouteMatchInterface
-   */
-  protected $routeMatch;
-
-  /**
-   * The date formatter service.
-   *
-   * @var \Drupal\Core\Datetime\DateFormatterInterface
-   */
-  protected $dateFormatter;
-
-  /**
    * Constructs a new NodeChanged instance.
    *
    * @param array $configuration
@@ -46,22 +32,19 @@ class NodeChanged extends ArgumentDefaultPluginBase implements CacheableDependen
    *   The plugin_id for the plugin instance.
    * @param mixed $plugin_definition
    *   The plugin implementation definition.
-   * @param \Drupal\Core\Routing\RouteMatchInterface $route_match
+   * @param \Drupal\Core\Routing\RouteMatchInterface $routeMatch
    *   The route match.
-   * @param \Drupal\Core\Datetime\DateFormatterInterface $date_formatter
+   * @param \Drupal\Core\Datetime\DateFormatterInterface $dateFormatter
    *   The date formatter service.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, RouteMatchInterface $route_match, DateFormatterInterface $date_formatter) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, protected RouteMatchInterface $routeMatch, protected DateFormatterInterface $dateFormatter) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
-
-    $this->routeMatch = $route_match;
-    $this->dateFormatter = $date_formatter;
   }
 
   /**
    * {@inheritdoc}
    */
-  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition): static {
     return new static(
       $configuration,
       $plugin_id,
@@ -74,7 +57,7 @@ class NodeChanged extends ArgumentDefaultPluginBase implements CacheableDependen
   /**
    * {@inheritdoc}
    */
-  public function getArgument() {
+  public function getArgument(): string|bool {
     // Return the current node changed time if a current node can be found.
     if (($node = $this->routeMatch->getParameter('node')) && $node instanceof NodeInterface) {
 
