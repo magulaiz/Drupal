@@ -208,7 +208,7 @@ class FieldStorageAddForm extends FormBase {
         ],
         'radio' => [
           '#type' => 'radio',
-          '#title' => $category_info->getLabel()->render(),
+          '#title' => $category_info->getLabel(),
           '#parents' => ['new_storage_type'],
           '#title_display' => 'before',
           '#description_display' => 'before',
@@ -282,7 +282,7 @@ class FieldStorageAddForm extends FormBase {
           $radio_element = [
             '#type' => 'radio',
             '#theme_wrappers' => ['form_element__new_storage_type'],
-            '#title' => $option['label']->render(),
+            '#title' => $option['label'],
             '#description' => [
               '#theme' => 'item_list',
               '#items' => $unique_definitions[$selected_field_type][$option_key]['description'],

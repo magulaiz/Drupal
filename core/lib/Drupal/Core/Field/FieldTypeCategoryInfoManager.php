@@ -64,7 +64,7 @@ class FieldTypeCategoryInfoManager extends DefaultPluginManager implements Fallb
   /**
    * {@inheritdoc}
    */
-  protected function getDiscovery() {
+  protected function getDiscovery(): YamlDiscovery {
     if (!isset($this->discovery)) {
       $directories = ['core' => $this->root . '/core'];
       $directories += $this->moduleHandler->getModuleDirectories();
